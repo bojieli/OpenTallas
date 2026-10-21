@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: ot-epyc7       admits   359 GB (avail 352, growth 101, headroom 0, waiters 0/0 GB) load 62/96 running 19 disk 4682 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1968351-1792605049 after 0 s
+{"baseline": {"relay_stations": 19767, "max_registered_arc_um": 404.10000000000036, "worst_cut_ratio": 4.5496524216524215, "windows_above_historical_0_60": 671}, "main": {"relay_stations": 28582, "max_registered_arc_um": 404.98319999999876, "worst_cut_ratio": 1.4225868945868947, "windows_above_historical_0_60": 704}, "fallback": {"relay_stations": 28550, "max_registered_arc_um": 404.84799999999996, "worst_cut_ratio": 1.4098233618233618, "windows_above_historical_0_60": 687}}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1968351-1792605049): exit 0

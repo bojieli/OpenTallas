@@ -1,0 +1,45 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: ot-epyc7       admits   502 GB (avail 452, growth 101, headroom 0, waiters 0/0 GB) load 90/96 running 19 disk 4700 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src_spread
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1913622-1792604897 after 0 s
+ROUTE 0 / 819 relay_stations 0
+ROUTE 25 / 819 relay_stations 0
+ROUTE 50 / 819 relay_stations 0
+ROUTE 75 / 819 relay_stations 0
+ROUTE 100 / 819 relay_stations 94
+ROUTE 125 / 819 relay_stations 755
+ROUTE 150 / 819 relay_stations 1019
+ROUTE 175 / 819 relay_stations 1114
+ROUTE 200 / 819 relay_stations 2024
+ROUTE 225 / 819 relay_stations 4218
+ROUTE 250 / 819 relay_stations 6041
+ROUTE 275 / 819 relay_stations 7719
+ROUTE 300 / 819 relay_stations 9643
+ROUTE 325 / 819 relay_stations 11728
+ROUTE 350 / 819 relay_stations 13594
+ROUTE 375 / 819 relay_stations 14971
+ROUTE 400 / 819 relay_stations 16500
+ROUTE 425 / 819 relay_stations 18158
+ROUTE 450 / 819 relay_stations 20015
+ROUTE 475 / 819 relay_stations 20997
+ROUTE 500 / 819 relay_stations 21389
+ROUTE 525 / 819 relay_stations 21630
+ROUTE 550 / 819 relay_stations 21743
+ROUTE 575 / 819 relay_stations 21796
+ROUTE 600 / 819 relay_stations 21846
+ROUTE 625 / 819 relay_stations 21880
+ROUTE 650 / 819 relay_stations 21897
+ROUTE 675 / 819 relay_stations 21897
+ROUTE 700 / 819 relay_stations 21897
+ROUTE 725 / 819 relay_stations 21897
+ROUTE 750 / 819 relay_stations 24383
+ROUTE 775 / 819 relay_stations 26610
+ROUTE 800 / 819 relay_stations 28467
+CONGESTION {"order": "descending bus width then endpoint Manhattan distance", "penalty": 20.0, "history_plan": "main_history.json", "history_rule": "prior window demand in excess of 50% of nominal capacity biases early wide paths; final ratios count actual current paths only", "layers": {"V": ["M2 H .640 usable .50", "M4 H .048 usable .70", "M6 H .064 usable .80", "M8 H .080 usable .80"], "H": ["M3 V .640 usable .50", "M5 V .048 usable .70", "M7 V .064 usable .80"]}, "nominal_capacity_per_260um": {"V": 9844.791666666666, "H": 7244.791666666666}, "layer_scope": "Current G8 M2..M8 signals, M9 clock/PG excluded; exact track pitch and routing adjustment. Macro-free source graph. Actual macro/via/local routes/clock occupancy/GRT still owed; no mathematical mincut.", "worst_nominal_directional_ratio": 0.7925002645222728, "windows_over_060": 76, "top_windows": [{"direction": "V", "coordinate_um": 17940, "interval_um": [17160, 17420], "bits": 7802, "nominal_tracks": 9844.791666666666, "ratio": 0.7925002645222728}, {"direction": "V", "coordinate_um": 21060, "interval_um": [1300, 1560], "bits": 7330, "nominal_tracks": 9844.791666666666, "ratio": 0.744556131626283}, {"direction": "V", "coordinate_um": 20800, "interval_um": [1300, 1560], "bits": 7330, "nominal_tracks": 9844.791666666666, "ratio": 0.744556131626283}, {"direction": "V", "coordinate_um": 20800, "interval_um": [2600, 2860], "bits": 7244, "nominal_tracks": 9844.791666666666, "ratio": 0.7358205480901492}, {"direction": "V", "coordinate_um": 21060, "interval_um": [0, 260], "bits": 7118, "nominal_tracks": 9844.791666666666, "ratio": 0.7230219024441858}, {"direction": "V", "coordinate_um": 21840, "interval_um": [0, 260], "bits": 7118, "nominal_tracks": 9844.791666666666, "ratio": 0.7230219024441858}, {"direction": "V", "coordinate_um": 20800, "interval_um": [0, 260], "bits": 7118, "nominal_tracks": 9844.791666666666, "ratio": 0.7230219024441858}, {"direction": "V", "coordinate_um": 21320, "interval_um": [0, 260], "bits": 7118, "nominal_tracks": 9844.791666666666, "ratio": 0.7230219024441858}, {"direction": "V", "coordinate_um": 21580, "interval_um": [0, 260], "bits": 7118, "nominal_tracks": 9844.791666666666, "ratio": 0.7230219024441858}, {"direction": "V", "coordinate_um": 17680, "interval_um": [17160, 17420], "bits": 7024, "nominal_tracks": 9844.791666666666, "ratio": 0.7134737064860862}, {"direction": "V", "coordinate_um": 21060, "interval_um": [17160, 17420], "bits": 6970, "nominal_tracks": 9844.791666666666, "ratio": 0.7079885726378161}, {"direction": "V", "coordinate_um": 18980, "interval_um": [2600, 2860], "bits": 6778, "nominal_tracks": 9844.791666666666, "ratio": 0.6884858745106338}, {"direction": "V", "coordinate_um": 21320, "interval_um": [1300, 1560], "bits": 6768, "nominal_tracks": 9844.791666666666, "ratio": 0.6874701089831764}, {"direction": "H", "coordinate_um": 6760, "interval_um": [18980, 19240], "bits": 4976, "nominal_tracks": 7244.791666666666, "ratio": 0.6868382458662833}, {"direction": "V", "coordinate_um": 17680, "interval_um": [10400, 10660], "bits": 6654, "nominal_tracks": 9844.791666666666, "ratio": 0.6758903819701619}, {"direction": "V", "coordinate_um": 18980, "interval_um": [25740, 26000], "bits": 6628, "nominal_tracks": 9844.791666666666, "ratio": 0.6732493915987726}, {"direction": "V", "coordinate_um": 19240, "interval_um": [25740, 26000], "bits": 6628, "nominal_tracks": 9844.791666666666, "ratio": 0.6732493915987726}, {"direction": "V", "coordinate_um": 24440, "interval_um": [17160, 17420], "bits": 6628, "nominal_tracks": 9844.791666666666, "ratio": 0.6732493915987726}, {"direction": "V", "coordinate_um": 18980, "interval_um": [24180, 24440], "bits": 6624, "nominal_tracks": 9844.791666666666, "ratio": 0.6728430853877897}, {"direction": "V", "coordinate_um": 19240, "interval_um": [24180, 24440], "bits": 6624, "nominal_tracks": 9844.791666666666, "ratio": 0.6728430853877897}]}
+ROUTE_DONE failed 0 stations 28647
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1913622-1792604897): exit 0

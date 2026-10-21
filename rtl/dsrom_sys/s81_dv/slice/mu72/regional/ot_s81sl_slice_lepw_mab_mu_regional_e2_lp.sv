@@ -73,10 +73,10 @@ module ot_s81sl_slice_lepw_mab_mu_regional_e2_lp #(
     // ---- OUTPUT REGISTER mu_rt: +3 edge(s) in region K (out_regs; port offset +3)
     ot_pl_pad #(.W(((31) - (0) + 1)), .N(3)) u_lpo_mu_rt (.ck(ck_K), .d(mu_rt__o), .q(mu_rt));
     // Manual regional hook: preserve existing K/ML/S/P E2 and reset ages.
-    wire [1:0] lpr_A_lanes;
-    ot_pl_land_reset_forest #(.DEPTH(10),.LEAVES(2),.ROOT_LOADS(1)) u_lpr_A (.ck(ck_A),.d(rst_n_A),.q(lpr_A_lanes));
-    wire [1:0] lpr_B_lanes;
-    ot_pl_land_reset_forest #(.DEPTH(10),.LEAVES(2),.ROOT_LOADS(1)) u_lpr_B (.ck(ck_B),.d(rst_n_B),.q(lpr_B_lanes));
+    wire [2:0] lpr_A_lanes;
+    ot_pl_land_reset_forest #(.DEPTH(10),.LEAVES(3),.ROOT_LOADS(1)) u_lpr_A (.ck(ck_A),.d(rst_n_A),.q(lpr_A_lanes));
+    wire [2:0] lpr_B_lanes;
+    ot_pl_land_reset_forest #(.DEPTH(10),.LEAVES(3),.ROOT_LOADS(1)) u_lpr_B (.ck(ck_B),.d(rst_n_B),.q(lpr_B_lanes));
     // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region None holds the root)
     // L2H-PSLICE 10-19 regional_reset_ports: one reset port per region, landed 10 stages on its own root
     // beside its pin; no reset root, no cross-region reset path (the die releases all on one edge)
@@ -155,12 +155,12 @@ module ot_s81sl_slice_lepw_mab_mu_regional_e2_lp #(
     #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0))
 `endif
     u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4), .ck_CAP_RT(ck_CAP_RT), .ck_CAP_CW(ck_CAP_CW), .ck_CAP_CE(ck_CAP_CE), .ck_CAP_RN(ck_CAP_RN), .ck_CAP_RS(ck_CAP_RS), .rst_n(lpr_c_u_sl), .sid(sid), .ri_w(lri__l_S), .ri_e(ri_e), .ro_e(ro_e), .ro_w(lro), .vi(vi), .vo(vo), .bi(bi), .bo(bo), .xc(xc), .rt(rt), .ck_line(ck_line), .ck_v(ck_v), .ck_xc(ck_xc), .ck_rt(ck_rt), .fault(sf));   // region S, t = 0
-    dsfd_coll_lane_w_safe8_ntf u_ln0 (.ck(ck_A), .rs(lpr_c_u_ln0), .chb(ch_b), .rx(lrx0), .tx(tx0), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));   // region A, t = 0
-    dsfd_coll_lane_w_safe8_ntf u_ln1 (.ck(ck_A), .rs(lpr_c_u_ln1), .chb(ch_b), .rx(lrx1), .tx(tx1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));   // region A, t = 0
-    dsfd_coll_lane_w_safe8_ntf u_ln2 (.ck(ck_B), .rs(lpr_c_u_ln2), .chb(ch_b), .rx(lrx2), .tx(tx2), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));   // region B, t = 0
-    dsfd_coll_lane_w_safe8_ntf u_ln3 (.ck(ck_B), .rs(lpr_c_u_ln3), .chb(ch_b), .rx(lrx3), .tx(tx3), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));   // region B, t = 0
-    ot_s81sl_lep_mu_ab_regional #(.DR(12),.CRED(12),.RX_SRAM(1),.IN_PIPE(1),.NATIVE32(1))
-    u_lep (.clk(ck_K),.clk_a(ck_A),.clk_b(ck_B), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c__l_K), .mu_rt(mu_rt__o), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv__l_K), .ml_rd(mrd__l_K), .ml_f(mf__l_K), .lo2_v(l2v), .lo2_r(l2r), .lo2_d(l2d), .lo3_v(l3v), .lo3_r(l3r), .lo3_d(l3d), .li2_v(i2v), .li2_r(i2r), .li2_d(i2d), .li3_v(i3v), .li3_r(i3r), .li3_d(i3d), .rxvb(rxvb), .l2_f(f2), .l3_f(f3), .fault(fault__o));   // region K, t = 0
+    dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln0 (.ck(ck_A), .rs(lpr_c_u_ln0), .chb(ch_b), .rx(lrx0), .tx(tx0), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));   // region A, t = 0
+    dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln1 (.ck(ck_A), .rs(lpr_c_u_ln1), .chb(ch_b), .rx(lrx1), .tx(tx1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));   // region A, t = 0
+    dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln2 (.ck(ck_B), .rs(lpr_c_u_ln2), .chb(ch_b), .rx(lrx2), .tx(tx2), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));   // region B, t = 0
+    dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(12)) u_ln3 (.ck(ck_B), .rs(lpr_c_u_ln3), .chb(ch_b), .rx(lrx3), .tx(tx3), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));   // region B, t = 0
+    ot_s81sl_lep_mu_ab_regional_r3r #(.DR(12),.CRED(12),.RX_SRAM(1),.IN_PIPE(1),.NATIVE32(1))
+    u_lep (.clk(ck_K),.clk_a(ck_A),.clk_b(ck_B), .rst_n(lpr_c_u_lep),.rst_n_a(lpr_A_lanes[2]),.rst_n_b(lpr_B_lanes[2]), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c__l_K), .mu_rt(mu_rt__o), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv__l_K), .ml_rd(mrd__l_K), .ml_f(mf__l_K), .lo2_v(l2v), .lo2_r(l2r), .lo2_d(l2d), .lo3_v(l3v), .lo3_r(l3r), .lo3_d(l3d), .li2_v(i2v), .li2_r(i2r), .li2_d(i2d), .li3_v(i3v), .li3_r(i3r), .li3_d(i3d), .rxvb(rxvb), .l2_f(f2), .l3_f(f3), .fault(fault__o));   // region K, t = 0
     dsdv_mu_land
 `ifndef SYNTHESIS
     #(.W(1104), .NB(80), .NS(1), .SRAM(1))

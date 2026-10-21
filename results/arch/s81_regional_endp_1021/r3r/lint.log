@@ -1,0 +1,334 @@
+%Warning-WIDTHEXPAND: rtl/common/ot_link_credit_rx_b64.sv:7:79: Operator VAR 'LOCAL_POP' expects 32 bits on the Initial value, but Initial value's CONST '1'h1' generates 1 bits.
+    7 |  parameter integer W=553, DEPTH=8, WFREE=1, NS=(W+15)/16, MUT=0, LOCAL_HIT=0, LOCAL_POP=0
+      |                                                                               ^~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:230:26: Operator VAR 'PTH2' expects 20 bits on the Initial value, but Initial value's SUB generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  230 |     localparam [PAW-1:0] PTH2    = 2 * PCOST - PHY_NUM;         
+      |                          ^~~~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:162:24: Operator VAR 'SAFE_STD' expects 32 bits on the Initial value, but Initial value's LOGAND generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  162 |     localparam integer SAFE_STD=(NATIVE32_STD!=0 && MU_EN==0);
+      |                        ^~~~~~~~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:163:44: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'SAFE_STD' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  163 |     localparam integer SAFE_FIFO=(MU_EN!=0 || SAFE_STD) && RX_SRAM!=0;
+      |                                            ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:163:24: Operator VAR 'SAFE_FIFO' expects 32 bits on the Initial value, but Initial value's LOGAND generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  163 |     localparam integer SAFE_FIFO=(MU_EN!=0 || SAFE_STD) && RX_SRAM!=0;
+      |                        ^~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:164:64: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'SAFE_STD' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  164 |     localparam integer SAFE_CONTROL=((NATIVE32!=0 && MU_EN!=0) || SAFE_STD) && RX_SRAM!=0;
+      |                                                                ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:164:24: Operator VAR 'SAFE_CONTROL' expects 32 bits on the Initial value, but Initial value's LOGAND generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  164 |     localparam integer SAFE_CONTROL=((NATIVE32!=0 && MU_EN!=0) || SAFE_STD) && RX_SRAM!=0;
+      |                        ^~~~~~~~~~~~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:172:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  172 |     localparam integer NRX_MEMRST=(SAFE_FIFO)?NL*RX_NS:0;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:173:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  173 |     localparam integer NRX_OUTRST=(SAFE_FIFO)?((1103+15)/16):0;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:179:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  179 |     localparam integer NTX_MEMRST=(SAFE_FIFO)?NL*TX_RST_STRIDE:0;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:180:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  180 |     localparam integer NFRAME_RST=(SAFE_FIFO)?FRAME_NS:0;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:181:45: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  181 |     localparam integer NHOST_RST=(SAFE_FIFO && HOST_EN!=0 )?37:0;
+      |                                             ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:186:45: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  186 |     localparam integer NCTRL_RST=(SAFE_FIFO)?NL+8+PUSH_GROUPS+NL+((HOST_EN!=0)?17:0):0;
+      |                                             ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:190:75: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SAFE_CONTROL' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  190 |     localparam integer NATIVE32_RXRSTBASE=NATIVE32_RSTBASE+((SAFE_CONTROL && HOST_EN!=0)?4:0);
+      |                                                                           ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:191:59: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_CONTROL' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  191 |     localparam integer NRX_RST=NRX_RST_OLD+((SAFE_CONTROL)?NL+((HOST_EN!=0)?4:0):0);
+      |                                                           ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:194:39: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  194 |     localparam integer NXR=(SAFE_FIFO && NL==4)?2:0;
+      |                                       ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:196:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  196 |     generate if(SAFE_FIFO) begin:g_reset_balanced
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:358:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  358 |     generate if(SAFE_FIFO) begin:g_frame_local
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:424:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  424 |     generate if(SAFE_FIFO) begin:g_push_groups
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:467:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  467 |         if(SAFE_FIFO && SRAM!=0) begin:g_safe_write
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:477:17: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SAFE_STD' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  477 |                 if(SAFE_STD) begin:g_std_qualify
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:584:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SAFE_CONTROL' generates 32 bits.
+                                                                           : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  584 |         if(SAFE_CONTROL) begin:g_native_pop
+      |         ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:608:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SAFE_CONTROL' generates 32 bits.
+                                                                           : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  608 |         if(SAFE_CONTROL) begin:g_nonempty_regions
+      |         ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:619:12: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  619 |         if(!SAFE_FIFO) begin:g_legacy_mem
+      |            ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:625:38: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'SAFE_STD' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  625 |         for (c = 0; c < ((MU_EN != 0 || SAFE_STD) ? 0 : RREP); c = c + 1) begin : g_c
+      |                                      ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:640:24: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'SAFE_STD' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  640 |         if (MU_EN != 0 || SAFE_STD) begin : g_sa
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:645:31: Logical operator LOGOR expects 1 bit on the RHS, but RHS's VARREF 'SAFE_STD' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  645 |               if((NATIVE32!=0 || SAFE_STD) && RX_SRAM!=0) begin:g_local
+      |                               ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:719:7: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SAFE_CONTROL' generates 32 bits.
+                                                                           : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  719 |       if(SAFE_CONTROL) begin:g_native
+      |       ^~
+%Warning-WIDTHTRUNC: rtl/lib/ot_sram_showahead_b64.sv:24:3: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LOCAL_HIT' generates 32 bits.
+                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ski.u_head'
+   24 |   if(LOCAL_HIT) begin:g_local
+      |   ^~
+%Warning-WIDTHCONCAT: rtl/link/ot_link_crc32.sv:29:26: Replication of more that --replication-limit 8192 is suspect: 18016
+                                                     : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep.u_rx_crc_hi'
+   29 |             masks = {32*W{1'b0}};
+      |                          ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/lib/ot_sram_showahead_1r1w.sv:36:3: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LOCAL_HIT' generates 32 bits.
+                                                           : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u.g_rx[1].g_sa.g_true_sram.u_rx_mem'
+   36 |   if(LOCAL_HIT) begin:g_local
+      |   ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:465:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  465 |         wire psh = (SAFE_FIFO)?push_lane[2*t+t/2]:pp[t / 2];
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:466:29: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'n' generates 10 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  466 |         wire wr = psh && (n != DT || iss);
+      |                             ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:524:35: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 9 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  524 |                 if (wr) wp <= (wp == DT - 1) ? 0 : wp + 1'b1;
+      |                                   ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:525:36: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rp' generates 9 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  525 |                 if (iss) rp <= (rp == DT - 1) ? 0 : rp + 1'b1;
+      |                                    ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:526:30: Operator COND expects 10 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  526 |                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:526:30: Operator COND expects 10 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  526 |                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:526:52: Operator COND expects 10 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  526 |                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
+      |                                                    ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:526:52: Operator COND expects 10 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  526 |                 n <= n + (wr ? 1'b1 : 1'b0) - (iss ? 1'b1 : 1'b0);
+      |                                                    ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:530:30: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'n' generates 10 bits.
+                                                                             : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  530 |                 if (psh && n == DT && !iss) of <= 1'b1;
+      |                              ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:580:40: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_FIFO' generates 32 bits.
+                                                                            : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  580 |         wire rx_state_reset=(SAFE_FIFO)?rr[CTRL_RSTBASE+t]:rnx;
+      |                                        ^
+%Warning-SELRANGE: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:725:55: Selection index out of range: 11:8 outside 7:0
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u'
+  725 |     wire [3:0] active_ring_flags=rpb?ring_meta_regions[2*4+:4]:ring_meta_regions[0+:4];
+      |                                                       ^
+                   ... For warning description see https://verilator.org/warn/SELRANGE?v=5.050
+                   ... Use "/* verilator lint_off SELRANGE */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/common/landed_parent/ot_pl_land.sv:230:20: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rc' generates 3 bits.
+                                                                   : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_from_pair.g_chunk[186].u_r'
+  230 |             if (rc == K-1) warm <= 1;
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv:70:44: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'ic' generates 11 bits.
+                                                                           : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_gb'
+   70 |     wire           idle_n = !idle_q && (ic == IDLE_P - 2);
+      |                                            ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:167:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TOREG' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  167 |     wire [TW-1:0]         ATO_S  = TOREG ? ato_q : ATO_W;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:247:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  247 |     wire            replaying = PIPE ? rep_r : (snd != nxt);
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:283:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  283 |     wire [FPW-1:0]  t_pay    = PIPE ? b_pay : l_pay;
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:284:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  284 |     wire            t_launch = PIPE ? b_v : launch;
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:367:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  367 |     wire            rr_ok   = PIPE ? s2v : rr_ok0;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:368:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  368 |     wire            rr_nak  = PIPE ? s2nak : rr_nak0;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:369:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  369 |     wire [SEQW-1:0] rr_ack  = PIPE ? s2ack : rr_ack0;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:370:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  370 |     wire [CW-1:0]   rr_fr   = PIPE ? s2fr : rr_fr0;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:371:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  371 |     wire [SEQW-1:0] d_ack   = PIPE ? s2dack : (rr_ack - una);
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:373:46: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PIPE' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  373 |     wire            ack_bad = rr_ok && (PIPE ? s2bad : (d_ack > occ));    
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:387:65: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TOREG' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  387 |     wire            timeout = (occ != 0) && !progress && (TOREG ? at_lim : (timer == ATO_W));
+      |                                                                 ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:875:28: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TOREG' generates 32 bits.
+                                                                          : ... note: In instance 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_ln3.u.u_ep'
+  875 |             else if (TOREG ? !at_lim : (timer != ATO_W)) begin timer <= timer + 1'b1; at_lim <= (timer + 1'b1 == ATO_S); end
+      |                            ^
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:314:16: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].u_core.u.g_mtx.mcq'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:317:92: ... Location of first driving block
+  317 |         always @(posedge clk or negedge command_reset) if(!command_reset) mcq[mb]<=0; else mcq[mb]<=mc_x[mb];
+      |                                                                                            ^~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:317:92: ... Location of other driving block
+  317 |         always @(posedge clk or negedge command_reset) if(!command_reset) mcq[mb]<=0; else mcq[mb]<=mc_x[mb];
+      |                                                                                            ^~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:314:16: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[0].u_core.u.g_mtx.mcq'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:317:92: ... Location of first driving block
+  317 |         always @(posedge clk or negedge command_reset) if(!command_reset) mcq[mb]<=0; else mcq[mb]<=mc_x[mb];
+      |                                                                                            ^~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:317:92: ... Location of other driving block
+  317 |         always @(posedge clk or negedge command_reset) if(!command_reset) mcq[mb]<=0; else mcq[mb]<=mc_x[mb];
+      |                                                                                            ^~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:163:31: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].g_lane[1].u_li.last'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:165:32: ... Location of first driving block
+  165 |  else begin first[W-1]<=i[W-1];last[W-1]<=first[W-1];end
+      |                                ^~~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:167:55: ... Location of other driving block
+  167 |    always @(posedge clk) begin first[W-2:0]<=i[W-2:0];last[W-2:0]<=first[W-2:0];end
+      |                                                       ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:163:31: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].g_lane[1].u_lo.last'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:165:32: ... Location of first driving block
+  165 |  else begin first[W-1]<=i[W-1];last[W-1]<=first[W-1];end
+      |                                ^~~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:167:55: ... Location of other driving block
+  167 |    always @(posedge clk) begin first[W-2:0]<=i[W-2:0];last[W-2:0]<=first[W-2:0];end
+      |                                                       ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:163:31: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].g_lane[0].u_li.last'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:165:32: ... Location of first driving block
+  165 |  else begin first[W-1]<=i[W-1];last[W-1]<=first[W-1];end
+      |                                ^~~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:167:55: ... Location of other driving block
+  167 |    always @(posedge clk) begin first[W-2:0]<=i[W-2:0];last[W-2:0]<=first[W-2:0];end
+      |                                                       ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:163:31: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[1].g_lane[0].u_lo.last'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:165:32: ... Location of first driving block
+  165 |  else begin first[W-1]<=i[W-1];last[W-1]<=first[W-1];end
+      |                                ^~~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:167:55: ... Location of other driving block
+  167 |    always @(posedge clk) begin first[W-2:0]<=i[W-2:0];last[W-2:0]<=first[W-2:0];end
+      |                                                       ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:163:31: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[0].g_lane[1].u_li.last'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:165:32: ... Location of first driving block
+  165 |  else begin first[W-1]<=i[W-1];last[W-1]<=first[W-1];end
+      |                                ^~~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:167:55: ... Location of other driving block
+  167 |    always @(posedge clk) begin first[W-2:0]<=i[W-2:0];last[W-2:0]<=first[W-2:0];end
+      |                                                       ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:163:31: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[0].g_lane[1].u_lo.last'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:165:32: ... Location of first driving block
+  165 |  else begin first[W-1]<=i[W-1];last[W-1]<=first[W-1];end
+      |                                ^~~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:167:55: ... Location of other driving block
+  167 |    always @(posedge clk) begin first[W-2:0]<=i[W-2:0];last[W-2:0]<=first[W-2:0];end
+      |                                                       ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:163:31: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[0].g_lane[0].u_li.last'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:165:32: ... Location of first driving block
+  165 |  else begin first[W-1]<=i[W-1];last[W-1]<=first[W-1];end
+      |                                ^~~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:167:55: ... Location of other driving block
+  167 |    always @(posedge clk) begin first[W-2:0]<=i[W-2:0];last[W-2:0]<=first[W-2:0];end
+      |                                                       ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:163:31: Signal has multiple driving blocks with different clocking: 'ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.u_lep.g_pair[0].g_lane[0].u_lo.last'
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:165:32: ... Location of first driving block
+  165 |  else begin first[W-1]<=i[W-1];last[W-1]<=first[W-1];end
+      |                                ^~~~
+                      rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv:167:55: ... Location of other driving block
+  167 |    always @(posedge clk) begin first[W-2:0]<=i[W-2:0];last[W-2:0]<=first[W-2:0];end
+      |                                                       ^~~~
+%Warning-MULTIDRIVEN: ../hier_current/ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.sv:30:25: Signal has multiple driving blocks with different clocking: 'tx3'
+                      rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv:135:27: ... Location of first driving block
+  135 |     always @(posedge clk) beat_tx[BW-1:3] <= {gpay, r_tx};
+      |                           ^~~~~~~
+                      rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv:91:13: ... Location of other driving block
+   91 |             beat_tx[2:0] <= idle_q ? {r_tx_v, 1'b1, 1'b0} : {r_tx_v, 1'b0, ph == 2'd0};
+      |             ^~~~~~~
+%Warning-MULTIDRIVEN: ../hier_current/ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.sv:29:25: Signal has multiple driving blocks with different clocking: 'tx2'
+                      rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv:135:27: ... Location of first driving block
+  135 |     always @(posedge clk) beat_tx[BW-1:3] <= {gpay, r_tx};
+      |                           ^~~~~~~
+                      rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv:91:13: ... Location of other driving block
+   91 |             beat_tx[2:0] <= idle_q ? {r_tx_v, 1'b1, 1'b0} : {r_tx_v, 1'b0, ph == 2'd0};
+      |             ^~~~~~~
+%Warning-MULTIDRIVEN: ../hier_current/ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.sv:26:25: Signal has multiple driving blocks with different clocking: 'tx1'
+                      rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv:135:27: ... Location of first driving block
+  135 |     always @(posedge clk) beat_tx[BW-1:3] <= {gpay, r_tx};
+      |                           ^~~~~~~
+                      rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv:91:13: ... Location of other driving block
+   91 |             beat_tx[2:0] <= idle_q ? {r_tx_v, 1'b1, 1'b0} : {r_tx_v, 1'b0, ph == 2'd0};
+      |             ^~~~~~~
+%Warning-MULTIDRIVEN: ../hier_current/ot_s81sl_slice_lepw_mab_mu_regional_e2_lp.sv:25:25: Signal has multiple driving blocks with different clocking: 'tx0'
+                      rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv:135:27: ... Location of first driving block
+  135 |     always @(posedge clk) beat_tx[BW-1:3] <= {gpay, r_tx};
+      |                           ^~~~~~~
+                      rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv:91:13: ... Location of other driving block
+   91 |             beat_tx[2:0] <= idle_q ? {r_tx_v, 1'b1, 1'b0} : {r_tx_v, 1'b0, ph == 2'd0};
+      |             ^~~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 3.222 MB sources in 98 modules, into 41.199 MB in 34 C++ files needing 0.000 MB
+- Verilator: Walltime 20.477 s (elab=6.555, cvt=12.799, bld=0.000); cpu 20.472 s on 1 threads; allocated 662.387 MB

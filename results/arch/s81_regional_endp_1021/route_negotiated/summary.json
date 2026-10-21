@@ -1,0 +1,520 @@
+{
+ "main": {
+  "routing_failures": [],
+  "links": 819,
+  "nominal_directional": {
+   "order": "descending bus width then endpoint Manhattan distance",
+   "penalty": 20.0,
+   "history_plan": "main_history.json",
+   "history_rule": "prior window demand in excess of 50% of nominal capacity biases early wide paths; final ratios count actual current paths only",
+   "layers": {
+    "V": [
+     "M2 H .640 usable .50",
+     "M4 H .048 usable .70",
+     "M6 H .064 usable .80",
+     "M8 H .080 usable .80"
+    ],
+    "H": [
+     "M3 V .640 usable .50",
+     "M5 V .048 usable .70",
+     "M7 V .064 usable .80"
+    ]
+   },
+   "nominal_capacity_per_260um": {
+    "V": 9844.791666666666,
+    "H": 7244.791666666666
+   },
+   "layer_scope": "Current G8 M2..M8 signals, M9 clock/PG excluded; exact track pitch and routing adjustment. Macro-free source graph. Actual macro/via/local routes/clock occupancy/GRT still owed; no mathematical mincut.",
+   "worst_nominal_directional_ratio": 0.7925002645222728,
+   "windows_over_060": 76,
+   "top_windows": [
+    {
+     "direction": "V",
+     "coordinate_um": 17940,
+     "interval_um": [
+      17160,
+      17420
+     ],
+     "bits": 7802,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7925002645222728
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21060,
+     "interval_um": [
+      1300,
+      1560
+     ],
+     "bits": 7330,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.744556131626283
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 20800,
+     "interval_um": [
+      1300,
+      1560
+     ],
+     "bits": 7330,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.744556131626283
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 20800,
+     "interval_um": [
+      2600,
+      2860
+     ],
+     "bits": 7244,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7358205480901492
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21060,
+     "interval_um": [
+      0,
+      260
+     ],
+     "bits": 7118,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7230219024441858
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21840,
+     "interval_um": [
+      0,
+      260
+     ],
+     "bits": 7118,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7230219024441858
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 20800,
+     "interval_um": [
+      0,
+      260
+     ],
+     "bits": 7118,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7230219024441858
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21320,
+     "interval_um": [
+      0,
+      260
+     ],
+     "bits": 7118,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7230219024441858
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21580,
+     "interval_um": [
+      0,
+      260
+     ],
+     "bits": 7118,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7230219024441858
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 17680,
+     "interval_um": [
+      17160,
+      17420
+     ],
+     "bits": 7024,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7134737064860862
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21060,
+     "interval_um": [
+      17160,
+      17420
+     ],
+     "bits": 6970,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7079885726378161
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 18980,
+     "interval_um": [
+      2600,
+      2860
+     ],
+     "bits": 6778,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6884858745106338
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21320,
+     "interval_um": [
+      1300,
+      1560
+     ],
+     "bits": 6768,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6874701089831764
+    },
+    {
+     "direction": "H",
+     "coordinate_um": 6760,
+     "interval_um": [
+      18980,
+      19240
+     ],
+     "bits": 4976,
+     "nominal_tracks": 7244.791666666666,
+     "ratio": 0.6868382458662833
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 17680,
+     "interval_um": [
+      10400,
+      10660
+     ],
+     "bits": 6654,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6758903819701619
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 18980,
+     "interval_um": [
+      25740,
+      26000
+     ],
+     "bits": 6628,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6732493915987726
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 19240,
+     "interval_um": [
+      25740,
+      26000
+     ],
+     "bits": 6628,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6732493915987726
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 24440,
+     "interval_um": [
+      17160,
+      17420
+     ],
+     "bits": 6628,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6732493915987726
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 18980,
+     "interval_um": [
+      24180,
+      24440
+     ],
+     "bits": 6624,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6728430853877897
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 19240,
+     "interval_um": [
+      24180,
+      24440
+     ],
+     "bits": 6624,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6728430853877897
+    }
+   ]
+  },
+  "max_registered_arc_um": 404.98319999999876,
+  "relay_stations": 28582,
+  "relay_bit_stages": 6955332,
+  "changed_links_vs_original_G8": 417,
+  "net_delta_edges_vs_original_G8": 8750,
+  "legacy_two_layer_metric": 1.4225868945868947,
+  "adopted": false
+ },
+ "fallback": {
+  "routing_failures": [],
+  "links": 819,
+  "nominal_directional": {
+   "order": "descending bus width then endpoint Manhattan distance",
+   "penalty": 20.0,
+   "history_plan": "fallback_history.json",
+   "history_rule": "prior window demand in excess of 50% of nominal capacity biases early wide paths; final ratios count actual current paths only",
+   "layers": {
+    "V": [
+     "M2 H .640 usable .50",
+     "M4 H .048 usable .70",
+     "M6 H .064 usable .80",
+     "M8 H .080 usable .80"
+    ],
+    "H": [
+     "M3 V .640 usable .50",
+     "M5 V .048 usable .70",
+     "M7 V .064 usable .80"
+    ]
+   },
+   "nominal_capacity_per_260um": {
+    "V": 9844.791666666666,
+    "H": 7244.791666666666
+   },
+   "layer_scope": "Current G8 M2..M8 signals, M9 clock/PG excluded; exact track pitch and routing adjustment. Macro-free source graph. Actual macro/via/local routes/clock occupancy/GRT still owed; no mathematical mincut.",
+   "worst_nominal_directional_ratio": 0.785389905830071,
+   "windows_over_060": 56,
+   "top_windows": [
+    {
+     "direction": "V",
+     "coordinate_um": 17940,
+     "interval_um": [
+      17160,
+      17420
+     ],
+     "bits": 7732,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.785389905830071
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 20800,
+     "interval_um": [
+      1300,
+      1560
+     ],
+     "bits": 7260,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7374457729340811
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21060,
+     "interval_um": [
+      1300,
+      1560
+     ],
+     "bits": 7260,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7374457729340811
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21060,
+     "interval_um": [
+      17160,
+      17420
+     ],
+     "bits": 6970,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7079885726378161
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 20800,
+     "interval_um": [
+      2600,
+      2860
+     ],
+     "bits": 6968,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7077854195323247
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 24700,
+     "interval_um": [
+      17160,
+      17420
+     ],
+     "bits": 6908,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7016908263675802
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21320,
+     "interval_um": [
+      0,
+      260
+     ],
+     "bits": 6908,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7016908263675802
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21060,
+     "interval_um": [
+      0,
+      260
+     ],
+     "bits": 6908,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7016908263675802
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21580,
+     "interval_um": [
+      0,
+      260
+     ],
+     "bits": 6908,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7016908263675802
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21840,
+     "interval_um": [
+      0,
+      260
+     ],
+     "bits": 6908,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7016908263675802
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 20800,
+     "interval_um": [
+      0,
+      260
+     ],
+     "bits": 6908,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.7016908263675802
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 18980,
+     "interval_um": [
+      24180,
+      24440
+     ],
+     "bits": 6834,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6941741614643954
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 19240,
+     "interval_um": [
+      24180,
+      24440
+     ],
+     "bits": 6834,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6941741614643954
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 19240,
+     "interval_um": [
+      25740,
+      26000
+     ],
+     "bits": 6764,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6870638027721935
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 18980,
+     "interval_um": [
+      25740,
+      26000
+     ],
+     "bits": 6764,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6870638027721935
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21320,
+     "interval_um": [
+      1300,
+      1560
+     ],
+     "bits": 6698,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6803597502909745
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 17680,
+     "interval_um": [
+      10400,
+      10660
+     ],
+     "bits": 6654,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6758903819701619
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 17680,
+     "interval_um": [
+      17160,
+      17420
+     ],
+     "bits": 6608,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6712178605438578
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 18980,
+     "interval_um": [
+      2600,
+      2860
+     ],
+     "bits": 6502,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.6604507459528093
+    },
+    {
+     "direction": "V",
+     "coordinate_um": 21580,
+     "interval_um": [
+      1300,
+      1560
+     ],
+     "bits": 6422,
+     "nominal_tracks": 9844.791666666666,
+     "ratio": 0.65232462173315
+    }
+   ]
+  },
+  "max_registered_arc_um": 404.84799999999996,
+  "relay_stations": 28550,
+  "relay_bit_stages": 6986460,
+  "changed_links_vs_original_G8": 414,
+  "net_delta_edges_vs_original_G8": 8718,
+  "legacy_two_layer_metric": 1.4098233618233618,
+  "adopted": false
+ }
+}
