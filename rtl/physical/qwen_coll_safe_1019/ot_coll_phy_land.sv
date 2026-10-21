@@ -119,23 +119,27 @@ module ot_qwen_static_slot_link_pl #(
     // later (static calendar: the replay read of a slot is far behind its write).
     for(genvar b=0;b<4;b=b+1)begin:g_bank
         wire bwe;
-        wire [5:0] bwa;
+        wire [5:0] bwa, bra;
         wire [BW-1:0] bdin;
         if (BWREG) begin : g_wreg
             reg we_q;
             reg [5:0] wa_q;
             reg [BW-1:0] din_q;
-            always @(posedge ck[b+1]) begin we_q <= issue_write; wa_q <= wr_slot; din_q <= wd[b*BW+:BW]; end
-            assign bwe = we_q; assign bwa = wa_q; assign bdin = din_q;
+            // read address: bank-entry copy of the calendar read counter, one edge AHEAD (rd_slot + rd_v is the counter's
+            // next value, rd_v = its enable), so ra_q == rd_slot in every cycle and the read timing is unchanged.  p_plg
+            // failed cross_clock SETUP -259.6 ps on u_txcal.u_cr.c[4] (cal_lck, W cal channel) -> bank ra.
+            reg [5:0] ra_q;
+            always @(posedge ck[b+1]) begin we_q <= issue_write; wa_q <= wr_slot; din_q <= wd[b*BW+:BW]; ra_q <= rd_slot + {5'd0, rd_v}; end
+            assign bwe = we_q; assign bwa = wa_q; assign bdin = din_q; assign bra = ra_q;
         end else begin : g_wdir
-            assign bwe = issue_write; assign bwa = wr_slot; assign bdin = wd[b*BW+:BW];
+            assign bwe = issue_write; assign bwa = wr_slot; assign bdin = wd[b*BW+:BW]; assign bra = rd_slot;
         end
 `ifdef OT_QFD_FACE_HARD
         ot_qkvd_llr_replay_sram_leaf u_store(
 `else
         ot_qkvd_llr_replay_sram_leaf #(.W(BW),.MUT(MUT==3 && b==0)) u_store(
 `endif
-            .ck(ck[b+1]),.we(bwe),.wa(bwa),.ra(rd_slot),
+            .ck(ck[b+1]),.we(bwe),.wa(bwa),.ra(bra),
             .din(bdin),.dout(rd[b*BW+:BW]));
     end
     // region resets: one 2-edge synchroniser per clock, kept copies per ring side
