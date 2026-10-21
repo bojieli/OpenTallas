@@ -1,0 +1,13 @@
+MISMATCH cyc 246 first diff bit 277
+MISMATCH cyc 247 first diff bit 277
+MISMATCH cyc 248 first diff bit 277
+MISMATCH cyc 249 first diff bit 260
+MISMATCH cyc 250 first diff bit 260
+MISMATCH cyc 251 first diff bit 260
+MISMATCH cyc 252 first diff bit 260
+MISMATCH cyc 253 first diff bit 260
+FAIL KV_DCFG_A_C32 mismatches116487 cycles121469
+- rtl/test/kv_ctl10_1020/tb_kv_dcfg_a_c32.sv:74: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1ms; walltime 0.162 s; speed 7.485 ms/s
+- Verilator: cpu 0.162 s on 1 threads; allocated 7 MB

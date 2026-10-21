@@ -1,0 +1,137 @@
+{
+  "snapshot_start_commit": "9213e27af7d0ca2c25b1ca7c9c57758b29c3c3eb",
+  "archive_sha256": "d52681ddc221447c58619e60aa971ec2df4e2a091b10d15e16ab8395e4be3bcf",
+  "manifest_sha256": "2cfe6a777efc4f274ad52d35328f5048dcbe4ec817d24ccf803edec6e695d415",
+  "files": [
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv",
+      "snapshot_sha256": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme.sv",
+      "snapshot_sha256": "505b84b501d1df0a45fa57999f310011d72ef1a11e7e9bacd388d9d165117232",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv",
+      "snapshot_sha256": "da3f8210eeb2d8407d36024d1dc238d0bacf61eb79d46cf8d22aee321d0bb453",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_dispatch.sv",
+      "snapshot_sha256": "d98fa56b2d32b29b12bc5cf8402cdd697d1f61ceeb6b28bd4d736f8e21cd14f6",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+      "snapshot_sha256": "5211b852aed6049fdf8793e151ed5eb4061002bced26a25728c9e28b8476ca12",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv",
+      "snapshot_sha256": "43dbe53dbaf8aef2a2051ed6b2f27edfd48af8dfde379eb59b7f101288aadd7e",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "snapshot_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_ownership_obs.sv",
+      "snapshot_sha256": "2d3e8cc31807b8d404fd076125ba6d22433cc1a52c0a66b09126a5b57c37347d",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv",
+      "snapshot_sha256": "dcf2a7b68d228286c776fda2333ef5d9aae8baabb04b9c233a9db8c3ae05b464",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv",
+      "snapshot_sha256": "9f9a016fcf25162786b6660b2cbb3aec8b2af3caa20a2bc15e02f3bc6991ac2e",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_die_cfg.sv",
+      "snapshot_sha256": "059e5c6360bf4b07b041f99c8c416c35a98d4c75ce176f8204aa6d46201f5fd9",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv",
+      "snapshot_sha256": "36b8433daf480bcaaacce9b36c56afbc09974dbdf449f4fbc2e8fe9ee0968efb",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_mu_rowoff.sv",
+      "snapshot_sha256": "d7804a6609afb16ec2641dc6d482fc06971fa3d6c356c965fa82b3463196c735",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_kv_static_writer_native_mu.sv",
+      "snapshot_sha256": "5d02427174bd61db0d145cb204ad8cc3226c4a46ddb29dcd5d5d043a3d5632a7",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_boot_dispatch_mu.sv",
+      "snapshot_sha256": "3c73919c5e52ed017dda4ef93dd42e83b9f9429de1dde58137fa7bcd61cb9b33",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv",
+      "snapshot_sha256": "220bcad45658820d5684585ad4362c4cfd49bc5a53fc833ef3475a8bc25ed95a",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/lib/ot_s32_cells.sv",
+      "snapshot_sha256": "d5e8aa8e51772826753cde1d01a73e5e51add7334f5f9c96f3f2a6d4bc6bbf03",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv",
+      "snapshot_sha256": "42837f7ca204a9fb511c2a1d39146920618b42a05d250385e75d1956b5e91192",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv",
+      "snapshot_sha256": "2ea0d30377419d0115758752db0d18975bb587670c1c532bfd19400c6c2951a5",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv",
+      "snapshot_sha256": "39348623bfbfc7866ff4f2691c550ca297b01c07004f633e345d3da0607ac988",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_boot.sv",
+      "snapshot_sha256": "f01492cd0902f6a2c70caad7aac685d33a921ec145726c71d0c8a5694bf164cd",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv",
+      "snapshot_sha256": "217da873ce0ae1f51388767685908fa5debfad39a554523f1d7a0bb4e214cbce",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv",
+      "snapshot_sha256": "691a97993693864e5cde1ce5055fefa7005f57d51044b2f2233b307886e16ef8",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32.sv",
+      "snapshot_sha256": "2804371d002ae52a1a3005361a7c9a19d69c2fdd6409e4217328dd972447c5f3",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "physical/ref_tile/qkd_kvs_ctl_c32a/spec.json",
+      "snapshot_sha256": "d0de7522c8152428dc5a3214c0af5f37c8c2f516860158411a354105a6b3e509",
+      "matches_9213e27af": true
+    },
+    {
+      "path": "physical/ref_tile/qkd_kvs_ctl_c32a/job.json",
+      "snapshot_sha256": "dc45911492c3fe9b02f9faaa0175fc355ba3c632d53e608c27219acf1e122657",
+      "matches_9213e27af": true
+    }
+  ]
+}
