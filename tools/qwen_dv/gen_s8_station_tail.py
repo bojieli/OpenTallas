@@ -20,4 +20,6 @@ def main():
     wire          eblo = plo && wlo == word_last, ebhi = phi && whi == word_last;'''
  assert s.count(old)==1;s=s.replace(old,new)
  (R/'rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv').write_text('`timescale 1ns/1ps\n// Opt-in selected S8 LASTK tail repair; same ports/stages, new unclosed view required.\n'+s+'\n')
+ import gen_s8_station_safe
+ gen_s8_station_safe.main()
 if __name__=='__main__':main()
