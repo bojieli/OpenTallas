@@ -80,11 +80,11 @@ module ot_hbm_svc_wb_kport_q #(parameter integer WOPEN=0, parameter integer MUT=
  reg rv_q,rb_q,fb_q,fs_q;reg[15:0]re_q,fe_q;reg[11:0]rt_q;reg[31:0]rbase_q;reg[2311:0]wd_q;reg q_s;
  (* keep="true",dont_touch="true" *) reg[1:0]stk_c[0:2];   // stack strap copies: slots 0..3, 4..7, base check
  (* keep="true",dont_touch="true" *) reg fs_c [0:7];      // fill_start pin copies for the core fill FSM copies
- (* keep="true",dont_touch="true" *) reg fb_c [0:15];     // wb_fill_bank pin copies: core 0..6/14/15, aepoch 7/11, window 8..10/12/13
+ (* keep="true",dont_touch="true" *) reg fb_c [0:16];     // wb_fill_bank pin copies: core 0..6/14/15, aepoch 7/11, window 8..10/12/13
  (* keep="true",dont_touch="true" *) reg rb_c;            // wb_reserve_bank pin copy for the core
  integer ci;
  always @(posedge stream_clk)begin
-  rb_q<=wb_reserve_bank;rb_c<=wb_reserve_bank;fb_q<=wb_fill_bank;for(ci=0;ci<16;ci=ci+1)fb_c[ci]<=wb_fill_bank;
+  rb_q<=wb_reserve_bank;rb_c<=wb_reserve_bank;fb_q<=wb_fill_bank;for(ci=0;ci<17;ci=ci+1)fb_c[ci]<=wb_fill_bank;
   re_q<=wb_reserve_epoch;fe_q<=wb_fill_epoch;rt_q<=wb_reserve_sectors;
   rbase_q<=wb_reserve_base;wd_q<=wd;for(ci=0;ci<3;ci=ci+1)stk_c[ci]<=stk;q_s<=(MUT==2)?1'b0:quad;
  end
@@ -110,7 +110,7 @@ module ot_hbm_svc_wb_kport_q #(parameter integer WOPEN=0, parameter integer MUT=
   .kp_rst_n(kr),
   .reserve_v(rv_q),.reserve_ready(reserve_ready),.reserve_bank(rb_c),.reserve_epoch(re_q),.reserve_base({2'b00,rbase_q[29:0]}),
   .reserve_total(rt_q),.fill_start_c({fs_c[7],fs_c[6],fs_c[5],fs_c[4],fs_c[3],fs_c[2],fs_c[1],fs_c[0]}),
-  .fill_bank_c({fb_c[15],fb_c[14],fb_c[6],fb_c[5],fb_c[4],fb_c[3],fb_c[2],fb_c[1],fb_c[0]}),.fill_start_epoch(fe_q),.wd(wd_l),
+  .fill_bank_c({fb_c[16],fb_c[15],fb_c[14],fb_c[6],fb_c[5],fb_c[4],fb_c[3],fb_c[2],fb_c[1],fb_c[0]}),.fill_start_epoch(fe_q),.wd(wd_l),
   .fill_done(fill_done),.done_v(done_v),.done_bank(done_bank),.done_epoch(done_epoch),.done_sectors(done_sectors),
   .bank_owned(owned),.fault(blk_fault),.q_h(q_h),
   .w_k_v(w_k_v),.w_k_rdy(w_k_rdy),.w_k_addr(w_k_addr),.w_k_wdata(w_k_wdata),.w_k_wr_done(w_k_wr_done));

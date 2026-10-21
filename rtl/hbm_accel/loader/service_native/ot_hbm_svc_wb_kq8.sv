@@ -46,7 +46,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  output wire [1:0] kp_rst_n,                      // stream-family reset leaves for the wrapper's control registers
  input wire reserve_v,output wire reserve_ready,input wire reserve_bank,
  input wire [15:0] reserve_epoch,input wire [31:0] reserve_base,input wire [11:0] reserve_total,
- input wire [7:0] fill_start_c,input wire [8:0] fill_bank_c,input wire [15:0] fill_start_epoch,input wire [2311:0] wd,
+ input wire [7:0] fill_start_c,input wire [9:0] fill_bank_c,input wire [15:0] fill_start_epoch,input wire [2311:0] wd,
  output reg fill_done,done_v,output wire [2:0] done_bank,output reg [15:0] done_epoch,output reg [11:0] done_sectors,
  output wire [1:0] bank_owned,output wire fault,
  input wire q_h,
@@ -86,7 +86,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  // ------------------------------------------------------------------------------------------------ stream state
  reg [1:0] allocated,started,staged;reg [15:0] epoch[0:1];reg [29:0] base[0:1];reg [11:0] total[0:1];
  reg [11:0] committed[0:1];
- reg copy_active;(* keep="true",dont_touch="true" *) reg copy_bank_c [0:6];
+ reg copy_active;(* keep="true",dont_touch="true" *) reg copy_bank_c [0:9];
  (* keep="true",dont_touch="true" *) reg dbk [0:2];   // done-bank copies (wrapper: accepted / aepoch / atotal)
  assign done_bank={dbk[2],dbk[1],dbk[0]};
  reg stream_sticky,hbm_sticky;(* async_reg = "true" *) reg hf1,hf2,sf1,sf2;
@@ -99,12 +99,14 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  (* keep="true",dont_touch="true" *) reg [8:0] ord_c [0:4];
  reg [14:0] exp_lo,exp_hi;reg [11:0] rem;          // expected sector of slot 0 (two halves), remaining sectors
  wire [29:0] exp_s={exp_hi,exp_lo};
- wire last=rem<=12'd8;
+ // last = (rem <= 8), held in kept registered copies computed from rem's next value (exact): 0 fill FSMs, 1 watermark
+ (* keep="true",dont_touch="true" *) reg lastq [0:1];
+ wire last=lastq[0];
  // fill-bank pin copies: 0 ownership check, 1 epoch check, 2/7 base [7:0]/[14:8], 3/8 base [22:15]/[29:23], 4 total,
  // 5 fill-copy bank, 6 state
  wire fsb0=fill_bank_c[0],fsb1=fill_bank_c[1],fsb2=fill_bank_c[2],fsb3=fill_bank_c[3],fsb4=fill_bank_c[4],
       fsb5=fill_bank_c[5],fsb6=fill_bank_c[6],fsb7=fill_bank_c[7],fsb8=fill_bank_c[8];
- wire ok_fill=sl_ok&&roots_ready&&!filling_c[4]&&allocated[fsb0]&&!started[fsb0]&&epoch[fsb1]==fill_start_epoch;
+ wire ok_fill=sl_ok&&roots_ready&&!filling_c[4]&&allocated[fsb0]&&!started[fsb0]&&epoch[fsb1][7:0]==fill_start_epoch[7:0]&&epoch[fill_bank_c[9]][15:8]==fill_start_epoch[15:8];
  wire [7:0] fill_go;
  genvar gi;
  generate for(gi=0;gi<8;gi=gi+1)begin:g_fg assign fill_go[gi]=fill_start_c[gi]&&ok_fill; end endgenerate
@@ -120,10 +122,11 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
   else if(filling_c[k]&&!flt_c[k])ord_c[k]<=ord_c[k]+9'd1;
  end
  wire [15:0] exp_lo_n={1'b0,exp_lo}+16'd8;
+ wire [11:0] rem_n=fill_go[7]?total[fsb4]:rem-12'd8;
  always @(posedge stream_clk)begin
   exp_lo<=fill_go[5]?{base[fsb7][14:8],base[fsb2][7:0]}:exp_lo_n[14:0];
   exp_hi<=fill_go[6]?{base[fsb8][29:23],base[fsb3][22:15]}:exp_hi+15'(exp_lo_n[15]);
-  rem<=fill_go[7]?total[fsb4]:rem-12'd8;
+  rem<=rem_n;lastq[0]<=rem_n<=12'd8;lastq[1]<=rem_n<=12'd8;
  end
  // reservation data: stored one edge after the reservation under kept write-enable copies (epoch / base lo / hi / total)
  reg [15:0] rsv_ep_q;reg [29:0] rsv_base_q;reg [11:0] rsv_tot_q;
@@ -147,10 +150,16 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  wire [1:0] copy_elig={staged[1]&&committed[1]!=0,staged[0]&&committed[0]!=0};
  wire meta_full,meta_empty,ack_full,ack_empty;wire [12:0] meta_rdata,ack_rdata;
  wire start_copy=sl_ok&&roots_ready&&!copy_active&&(|copy_elig)&&!meta_full&&!fault;
+ // meta FIFO write strobes from kept copy_active copies (each strobe feeds one reviewed FIFO's write side)
+ (* keep="true",dont_touch="true" *) reg cac [0:1];
+ wire start_copy_h=sl_ok&&roots_ready&&!cac[1]&&(|copy_elig)&&!meta_full&&!fault;
+ wire start_copy_l=sl_ok&&roots_ready&&!cac[0]&&(|copy_elig)&&!meta_full&&!fault;
  wire choose_bank=!copy_elig[0];
  wire ack_re=sl_ok&&!ack_empty&&!fault;
+ wire copy_active_n;
  // copy-bank copies: 0 watermark, 1 base lo, 2 ack check / ownership, 3 base hi, 4 epoch
  wire cb0=copy_bank_c[0],cb1=copy_bank_c[1],cb2=copy_bank_c[2],cb3=copy_bank_c[3],cb4=copy_bank_c[4];
+ wire ack_ok=ack_rdata[12]==cb2&&ack_rdata[11:0]=={total[copy_bank_c[9]][11:6],total[cb2][5:0]};
  wire [7:0] wd_v;
  generate for(gi=0;gi<8;gi=gi+1)begin:g_wv assign wd_v[gi]=wd[289*gi+288]; end endgenerate
  wire [8:0] ord_n=ord_c[4]+9'd1;
@@ -164,9 +173,9 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  end endgenerate
  always @(posedge stream_clk or negedge sl[0])begin
   if(!sl[0])begin
-   allocated<=0;started<=0;staged<=0;copy_active<=0;stream_sticky<=0;hf1<=0;hf2<=0;fill_done<=0;done_v<=0;
+   allocated<=0;started<=0;staged<=0;copy_active<=0;cac[0]<=0;cac[1]<=0;stream_sticky<=0;hf1<=0;hf2<=0;fill_done<=0;done_v<=0;
   end else begin
-   hf1<=hbm_sticky;hf2<=hf1;fill_done<=1'b0;done_v<=1'b0;
+   hf1<=hbm_sticky;hf2<=hf1;fill_done<=1'b0;done_v<=1'b0;cac[0]<=copy_active_n;cac[1]<=copy_active_n;
    if(reserve_v)begin
     if(!reserve_ready)stream_sticky<=1'b1;
     else begin allocated[reserve_bank]<=1'b1;started[reserve_bank]<=1'b0;staged[reserve_bank]<=1'b0;end
@@ -186,7 +195,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    if(ovf_any)stream_sticky<=1'b1;
    if(start_copy)begin copy_active<=1'b1;staged[choose_bank]<=1'b0;end
    if(ack_re)begin
-    if(!copy_active||ack_rdata[12]!=cb2||ack_rdata[11:0]!=total[cb2])stream_sticky<=1'b1;
+    if(!copy_active||!ack_ok)stream_sticky<=1'b1;
     else begin allocated[cb2]<=1'b0;copy_active<=1'b0;done_v<=1'b1;end
    end
   end
@@ -194,9 +203,10 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  always @(posedge stream_clk)begin
   for(k=0;k<2;k=k+1)begin
    if(res_acc&&reserve_bank==k[0])committed[k]<=12'd0;
-   else if(prog&&fbank_c[4]==k[0])committed[k]<=last?total[k]:{ord_n[8:2],5'd0};
+   else if(prog&&fbank_c[4]==k[0])committed[k]<=lastq[1]?total[k]:{ord_n[8:2],5'd0};
   end
-  if(start_copy)for(k=0;k<7;k=k+1)copy_bank_c[k]<=choose_bank;
+  // copy-bank copies follow choose_bank while idle and hold while a copy is active (captured on the start edge)
+  for(k=0;k<10;k=k+1)if(!cac[k/5])copy_bank_c[k]<=choose_bank;
   // done payload captured every edge: the wrapper reads it only with done_v (the edge after ack_re)
   for(k=0;k<3;k=k+1)dbk[k]<=copy_bank_c[5];done_epoch<={epoch[copy_bank_c[6]][15:8],epoch[cb4][7:0]};done_sectors<=ack_rdata[11:0];
  end
@@ -209,13 +219,14 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  (* keep="true",dont_touch="true" *) reg [14:0] cp_base_lo [0:3];
  (* keep="true",dont_touch="true" *) reg [28:0] cp_basem [0:3];
  wire [11:0] commit_cb=(MUT==6)?total[cb0]:committed[cb0];
- wire [29:0] base_cb={base[cb3][29:15],base[cb1][14:0]};
+ wire [29:0] base_cb={base[copy_bank_c[8]][29:23],base[cb3][22:15],base[copy_bank_c[7]][14:8],base[cb1][7:0]};
+ assign copy_active_n=start_copy?1'b1:(ack_re&&copy_active&&ack_ok)?1'b0:copy_active;
  wire [28:0] basem_cb=base_cb[28:0]-29'd32;
  always @(posedge stream_clk or negedge sl[1])
   if(!sl[1])for(k=0;k<16;k=k+1)begin st_r[k]<=1'b0;if(k<4)begin cp_on[k]<=1'b0;st1[k]<=1'b0;end end
   else for(k=0;k<16;k=k+1)begin
-   st_r[k]<=st1[k/4];
-   if(k<4)begin st1[k]<=start_copy;cp_on[k]<=copy_active&&!start_copy&&!st1[k]&&!st_r[4*k]&&!fault; end
+   st_r[k]<=st1[0];
+   if(k<4)begin st1[k]<=(k==0)?start_copy:1'b0;cp_on[k]<=copy_active&&!start_copy&&!st1[0]&&!st_r[4*k]&&!fault; end
   end
  always @(posedge stream_clk)for(k=0;k<4;k=k+1)begin
   cp_bank[k]<=cb0;cp_commit[k]<=commit_cb;cp_base_lo[k]<=base_cb[14:0];cp_basem[k]<=basem_cb;
@@ -332,23 +343,26 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  // meta / ack tokens cross as two <= 7-b reviewed FIFOs each (written and popped together: full / empty = either)
  wire [1:0] mf,me,af,ae;wire [12:0] mwd={choose_bank,total[choose_bank]};
  ot_link_afifo #(.W(7),.AW(2),.SYNC(2),.RCOPY(2)) u_meta_h(
-  .wclk(stream_clk),.wrst_n(sl[22]),.wr(start_copy),.wdata(mwd[12:6]),.wfull(mf[1]),.wfreed(),.ovf(),
+  .wclk(stream_clk),.wrst_n(sl[22]),.wr(start_copy_h),.wdata(mwd[12:6]),.wfull(mf[1]),.wfreed(),.ovf(),
   .rclk(hbm_clk),.rrst_n(hl[HM]),.rd(meta_re),.rempty(me[1]),.rdata(meta_rdata[12:6]),.rcount());
  ot_link_afifo #(.W(6),.AW(2),.SYNC(2),.RCOPY(2)) u_meta_l(
-  .wclk(stream_clk),.wrst_n(sl[27]),.wr(start_copy),.wdata(mwd[5:0]),.wfull(mf[0]),.wfreed(),.ovf(),
+  .wclk(stream_clk),.wrst_n(sl[27]),.wr(start_copy_l),.wdata(mwd[5:0]),.wfull(mf[0]),.wfreed(),.ovf(),
   .rclk(hbm_clk),.rrst_n(hl[HM+5]),.rd(meta_re),.rempty(me[0]),.rdata(meta_rdata[5:0]),.rcount());
  assign meta_full=|mf;assign meta_empty=|me;
  ot_link_afifo #(.W(7),.AW(2),.SYNC(2),.RCOPY(2)) u_ack_h(
-  .wclk(hbm_clk),.wrst_n(hl[HM+1]),.wr(ack_we),.wdata(meta_q[12:6]),.wfull(af[1]),.wfreed(),.ovf(),
+  .wclk(hbm_clk),.wrst_n(hl[HM+1]),.wr(ack_we_h),.wdata(meta_q[12:6]),.wfull(af[1]),.wfreed(),.ovf(),
   .rclk(stream_clk),.rrst_n(sl[23]),.rd(ack_re),.rempty(ae[1]),.rdata(ack_rdata[12:6]),.rcount());
  ot_link_afifo #(.W(6),.AW(2),.SYNC(2),.RCOPY(2)) u_ack_l(
-  .wclk(hbm_clk),.wrst_n(hl[HM+6]),.wr(ack_we),.wdata(meta_q[5:0]),.wfull(af[0]),.wfreed(),.ovf(),
+  .wclk(hbm_clk),.wrst_n(hl[HM+6]),.wr(ack_we_l),.wdata(meta_q[5:0]),.wfull(af[0]),.wfreed(),.ovf(),
   .rclk(stream_clk),.rrst_n(sl[28]),.rd(ack_re),.rempty(ae[0]),.rdata(ack_rdata[5:0]),.rcount());
  assign ack_full=|af;assign ack_empty=|ae;
  // ------------------------------------------------------------------------------------------------ hbm side
  wire hbm_fault=hbm_sticky||sf2||!hl_ok;
  assign meta_re=!meta_active&&!meta_empty&&!hbm_fault;
  assign ack_we=ack_pending&&!ack_full&&!hbm_fault;
+ // per-FIFO ack write strobes from kept ack_pending copies (each strobe feeds one reviewed FIFO's write side)
+ (* keep="true",dont_touch="true" *) reg apc [0:1];
+ wire ack_we_h=apc[1]&&!ack_full&&!hbm_fault, ack_we_l=apc[0]&&!ack_full&&!hbm_fault;
  assign meta_active_n=meta_re?1'b1:ack_we?1'b0:meta_active;
  reg [15:0] done_q;
  always @(posedge hbm_clk or negedge hl[HM+3])
@@ -436,7 +450,9 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  end
  // meta_q follows the head while no block is active and holds while active (a kept copy of meta_active selects)
  (* keep="true",dont_touch="true" *) reg mac;
- always @(posedge hbm_clk or negedge hl[HM+2])if(!hl[HM+2])mac<=1'b0;else mac<=meta_active_n;
+ wire ack_pending_n=meta_re?1'b0:ack_we?1'b0:(meta_active&&!hbm_fault&&acks!=0&&ack_count+12'(acks)==meta_q[11:0])?1'b1:ack_pending;
+ always @(posedge hbm_clk or negedge hl[HM+2])if(!hl[HM+2])begin mac<=1'b0;apc[0]<=1'b0;apc[1]<=1'b0;end
+  else begin mac<=meta_active_n;apc[0]<=ack_pending_n;apc[1]<=ack_pending_n;end
  always @(posedge hbm_clk)if(!mac)meta_q<=meta_rdata;
 endmodule
 `default_nettype wire
