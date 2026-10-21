@@ -1,0 +1,10 @@
+LANE 0 tx240 echo240 rxcredit240
+LANE 1 tx240 echo240 rxcredit240
+LANE 2 tx240 echo240 rxcredit240
+LANE 3 tx240 echo240 rxcredit240
+PASS lepab_regional: received400 landed160 NB80 bothpairs replay phases80/160ps first151 last2537
+PASS reset startup3roots +2edges and reassertion
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_lepab_regional_r4l.sv:137: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.691 s; speed 3.366 us/s
+- Verilator: cpu 0.691 s on 1 threads; allocated 11 MB

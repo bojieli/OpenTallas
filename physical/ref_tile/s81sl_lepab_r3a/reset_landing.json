@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_s81sl_lep_mu_ab_regional_r4l",
+ "enable": false,
+ "reason": "Source r4l has two same-root entrance stages C/A/B before every existing forest; +2resetstartup edges, no generatedwrapper. Exact native/textbook/bench must qualify."
+}
