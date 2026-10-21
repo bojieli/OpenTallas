@@ -270,10 +270,25 @@ module ot_hgi_coll_gq_issue #(
     localparam integer NFP = (IA > 0) ? 4 : 3;      // ISSUE_AHEAD > 0: copy 3 loads the slot banks
     wire [NFP-1:0] fire_allow_bank,fire_time_bank;
     wire fire_allow=fire_allow_bank[0],fire_time=fire_time_bank[0];
+`ifdef OT_GQ_N32
+    // R10 (HBM-OWN/GQ2 10-21): REGISTERED fire. k9q/k9r placement STA TT -213/-171 ps: cur_ohc -> row AND-OR -> tl == rc[18:3]
+    // (fire_prefix, ~360 ps) -> one fire net buffered across the tile (~490 ps) -> qa / qoh / slot / gather holds. The
+    // fire of edge n+1 is now computed at edge n (fire_next, below the period-end flags) and held in 2 x NFP kept flops
+    // (one allow / time pair per former prefix copy; every consumer still ANDs a pair). fire_next is exact: the row read
+    // becomes a 16-row start-time match vector (st == tl+1 / st == 0) read through the one-hot copies of cur (cur, cur+1),
+    // b0 (wrap) and the launch base (start). Same edges, same function (rf is static while a calendar runs; the
+    // OT_GQ_CHECK_INV bench checks fire == run && cur < lim && tl == st[cur] at every edge).
+    wire fire_next;
+    generate for(genvar g=0;g<NFP;g=g+1)begin:g_fire_prefix
+        ot_hgi_coll_gq_control_ff u_fa(.clk(clk),.rst_n(rn),.d(fire_next),.q(fire_allow_bank[g]));
+        ot_hgi_coll_gq_control_ff u_ft(.clk(clk),.rst_n(rn),.d(fire_next),.q(fire_time_bank[g]));
+    end endgenerate
+`else
     generate for(genvar g=0;g<NFP;g=g+1)begin:g_fire_prefix
         (* keep="true" *)ot_hgi_coll_gq_fire_prefix u_p(.run(run),.cur(cur),.lim(lim),.tl(tl),.start_time(rc[18:3]),
             .allow(fire_allow_bank[g]),.at_time(fire_time_bank[g]));
     end endgenerate
+`endif
     wire fire;
     (* keep = "true" *) ot_hgi_coll_gq_control_and u_main_fire(.a(fire_allow_bank[1]), .b(fire_time_bank[1]), .q(fire));
     wire [3:0] fire_cur;
@@ -343,6 +358,33 @@ module ot_hgi_coll_gq_issue #(
     end
 `endif
     wire run_next=p_sv?1'b1:(run&&!(tl_last_c[10]&&!lps_gt1_c[10]));
+    // R10 fire_next (value of fire at the next edge), same priority as the calendar FSM: launch (cur <= base, tl <= 0),
+    // period end (wrap: cur <= b0, tl <= 0; last loop: run <= 0), counting (tl <= tl+1, cur <= cur + fire).
+    wire[15:0]tl_p1=tl+16'd1;
+    reg[15:0]st_m,st_z;
+    always @* for(integer j=0;j<16;j=j+1)begin
+`ifdef OT_GQ_MUT_FIRE_LATE
+        st_m[j]=rf[j][18:3]==tl;                       // mutant: fires one edge late
+`else
+        st_m[j]=rf[j][18:3]==tl_p1;
+`endif
+        st_z[j]=rf[j][18:3]==16'd0;
+    end
+    wire[15:0]fp_oh=cur_ohc[2];                        // == 1 << cur (26 row legs + 2)
+    wire fp_a0=|(st_m&fp_oh),fp_a1=|(st_m&{fp_oh[14:0],fp_oh[15]});
+    wire fp_aw=|(st_z&b0_oh),fp_as=|(st_z&p_oh_bank[64+:16]);
+    wire[3:0]fp_c1=cur+4'd1;
+    assign fire_next=p_sv?(fp_as&&{1'b0,p_sb[3:0]}<p_sl[4:0]):
+                     !run?1'b0:
+                     tl_last_c[11]?(lps_gt1_c[11]&&fp_aw&&{1'b0,b0}<lim):
+                     fire?(fp_a1&&{1'b0,fp_c1}<lim):(fp_a0&&{1'b0,cur}<lim);
+`ifdef OT_GQ_CHECK_INV
+    always @(posedge clk) if(rn) begin
+        if(fire!==(run&&{1'b0,cur}<lim&&tl==rc[18:3]))$fatal(1,"GQ_R10_INV_FAIL fire=%0d run=%0d cur=%0d lim=%0d tl=%0d st=%0d",fire,run,cur,lim,tl,rc[18:3]);
+        if(cur_ohc[2]!==(16'd1<<cur))$fatal(1,"GQ_R10_INV_FAIL cur_ohc[2]=%h cur=%0d",cur_ohc[2],cur);
+        if(b0_oh!==(16'd1<<b0))$fatal(1,"GQ_R10_INV_FAIL b0_oh=%h b0=%0d",b0_oh,b0);
+    end
+`endif
 `else
     wire run_next=p_sv?1'b1:(run&&!(tl==per-16'd1&&lps<=16'd1));
 `endif
@@ -460,7 +502,11 @@ module ot_hgi_coll_gq_issue #(
 `endif
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
-            run <= 1'b0; busy <= 1'b0; iss <= 1'b0; fault <= 1'b0; active <= 1'b0; done <= 1'b0; drain <= '0;
+            run <= 1'b0; busy <= 1'b0; iss <= 1'b0;
+`ifndef OT_GQ_N32
+            fault <= 1'b0;
+`endif
+            active <= 1'b0; done <= 1'b0; drain <= '0;
             live <= '0; is_s <= '0; for (integer s = 0; s < NB; s = s + 1) dr[s] <= '0;
             cur <= 4'd0; b0 <= 4'd0; cur_oh <= 16'd1;
 `ifndef OT_GQ_FAN32
@@ -482,7 +528,7 @@ module ot_hgi_coll_gq_issue #(
             if (active && !(run || busy_any || p_sv)) done <= 1'b1;
             if (p_sv) begin
 `ifdef OT_GQ_N32
-                if (run || busy_any || p_sl > 9'd16 || per_rd_zero) fault <= 1'b1;
+                // R10: launch fault cause -> registered flag f_a (fault tree below)
                 run <= 1'b1; cur <= p_sb[3:0]; b0 <= p_sb[3:0]; cur_oh <= p_oh_bank[64+:16];
 `else
                 if (run || busy_any || p_sl > 9'd16 || rf[p_sb[3:0]][100:85] == 16'd0) fault <= 1'b1;
@@ -521,7 +567,9 @@ module ot_hgi_coll_gq_issue #(
                         for (integer c = 0; c < 4; c = c + 1) cur_ohc[c] <= b0_oh;
 `endif
                          end
+`ifndef OT_GQ_N32
                     if ({1'b0, cur} + (fire ? 5'd1 : 5'd0) != lim) fault <= 1'b1;   // a row never fired this period
+`endif
                 end
 `ifndef OT_GQ_FAN32
                 else tl <= tl + 16'd1;
@@ -529,11 +577,15 @@ module ot_hgi_coll_gq_issue #(
             end
             if (fire) begin
                 if (IA == 0) begin
+`ifndef OT_GQ_N32
                     if (busy || f_bad) fault <= 1'b1;
+`endif
                     busy <= 1'b1;
                 end else begin
                     // static checks only: the issue stream is serial; a slot is reused only after its gather drained
+`ifndef OT_GQ_N32
                     if (iss || (live[f_slot] && MUT != 8) || f_bad) fault <= 1'b1;
+`endif
                     live[f_slot] <= 1'b1; is_s <= f_slot;
                 end
                 iss <= 1'b1;
@@ -558,8 +610,10 @@ module ot_hgi_coll_gq_issue #(
                 if (live[s] && !(iss && is_s == SW'(s)) && !(fire && f_slot == SW'(s))) begin
                     if (dr[s] == '0) live[s] <= 1'b0; else dr[s] <= dr[s] - 1'b1;
                 end
+`ifndef OT_GQ_N32
             if (|(aq_fault_q & aq_vo_q)) fault <= 1'b1;
             if (flt_n) fault <= 1'b1;
+`endif
         end
     end
     // ld_fire / ld_desc: V = 0 as built (+ the slot field at ISSUE_AHEAD > 0); V > 0 below (VM_RT ring)
@@ -582,6 +636,33 @@ module ot_hgi_coll_gq_issue #(
         (* keep = "true" *) ot_hgi_coll_gq_control_and u_dec(.a(fire_allow), .b(fire_time), .q(fire_local));
         ot_hgi_coll_gq_control_ff u_ff(.clk(clk), .rst_n(rn), .d(fire_local), .q(fire_qc[fc]));
     end endgenerate
+`ifdef OT_GQ_N32
+    // R10 (HBM-OWN/GQ2 10-21): REGISTERED fault tree (k9q placement STA: fault D -197 ps through fire / row decode / the
+    // 7-term priority OR of the FSM). Every cause is registered on its own (each flag <= 4 sources, fire taken one edge
+    // late from the kept fire copy fire_qc[0]), then one 5-input OR sets the sticky fault: +1 edge for the launch, period
+    // and fire causes (the quantiser / landing faults are already registered: +0). fault is sticky and diagnostic only
+    // (off the token / VM path). MUT_FAULT_C (bench): the fire cause is dropped -> +fault=5 must ESCAPE.
+    reg f_a, f_wv, f_ne0, f_ne1, f_cb;
+    wire f_fq = fire_qc[0];                           // == fire one edge earlier
+    always @(posedge clk or negedge rn)
+        if (!rn) begin f_a <= 1'b0; f_wv <= 1'b0; f_ne0 <= 1'b0; f_ne1 <= 1'b0; f_cb <= 1'b0; end
+        else begin
+            f_a <= p_sv && (run || busy_any || p_sl > 9'd16 || per_rd_zero);
+            f_wv <= !p_sv && run && tl_last_c[11];
+            f_ne0 <= {1'b0, cur} != lim;
+            f_ne1 <= {1'b0, cur} + 5'd1 != lim;
+            f_cb <= (IA == 0) ? (busy || f_bad) : (iss || (live[f_slot] && MUT != 8) || f_bad);
+        end
+    wire f_b = f_wv && (f_fq ? f_ne1 : f_ne0);        // a row never fired this period
+`ifdef OT_GQ_MUT_FAULT_C
+    wire f_c = 1'b0;
+`else
+    wire f_c = f_fq && f_cb;                          // fire into a busy / live slot or a bad descriptor
+`endif
+    always @(posedge clk or negedge rn)
+        if (!rn) fault <= 1'b0;
+        else if (f_a || f_b || f_c || |(aq_fault_q & aq_vo_q) || flt_n) fault <= 1'b1;
+`endif
 `else
     (* keep = "true", dont_touch = "true" *) reg fire_q;   // r4: = ld_fire (own kept copy for the exponent-word clear)
     always @(posedge clk or negedge rn) if (!rn) fire_q <= 1'b0; else fire_q <= fire;
