@@ -1,0 +1,194 @@
+{
+ "name": "hidx_rootctl_am_g2gb_1021-g2gb-COMMIT",
+ "block": "ot_hbm_idx_rootctl_static_am",
+ "ref_tile": true,
+ "owner": "Codex:CODEX-HBM-IDX-1021",
+ "purpose": "FACEQ=1 recovery of g2ef EARLY_FAIL_SETUP: replace one-OR-level boundary outputs with kept literal face registers; ARGMAX request retimed with no external latency change. TOPK +1 per row, INDEX +2 round-trip (die lane pad -2); default FACEQ=0 preserved. One local spine region over 432x259.2 um, no regional clock crossings.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/hbm-idx-g2g-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/hbm_idx_static/run_banklat_idx.sh",
+   "rtl/test/hbm_idx_static/tb_vm_query_n12_lat.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk_lat.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path_lat.sv",
+   "rtl/test/hbm_idx_static/run_vm_query_n12.sh",
+   "rtl/test/hbm_idx_static/tb_vm_query_n12.sv",
+   "rtl/test/hbm_idx_static/run_idx_rootctl_am.sh",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_path.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_topk.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_query_owned_native.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+   "rtl/hdc/ot_hdc_delay_rf.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+   "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "tools/hbm_idx_static_query_vectors.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv",
+   "rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv",
+   "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv",
+   "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+   "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+   "rtl/gpu/ot_gpu_fadd.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "results/arch/hbm_banklat_1019/idx_budget.json",
+   "tools/hbm_die_v16/d4g_idx_lat_budget.py",
+   "rtl/hbm_accel/index/ot_hbm_idx_kreg.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_topk_static_f32.sv",
+   "rtl/hbm_accel/index/ot_hbm_idx_calendar_static_f32.sv",
+   "rtl/test/hbm_idx_static/tb_idx_rootctl_am_f32_eq.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_idx_rootctl_static_am #(.VM_RT(65), .CR_RT(36), .SEL_LAT(30), .RSTL(1), .FAN32(1), .FACEQ(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv rtl/hbm_accel/index/ot_hbm_idx_calendar_static.sv rtl/hbm_accel/index/ot_hbm_idx_topk_static.sv rtl/hbm_accel/generic/idx/ot_hgi_idx_tk2.sv rtl/hbm_accel/index/ot_hbm_idx_vm_share_static_amr.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/index/ot_hbm_idx_kreg.sv rtl/hbm_accel/index/ot_hbm_idx_topk_static_f32.sv rtl/hbm_accel/index/ot_hbm_idx_calendar_static_f32.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "g2gb_topk_fq",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/topk_fq topk_fq",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "IDX_AM_TOPK_LAT PASS",
+    "pass_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/topk_fq.log"
+   },
+   {
+    "name": "g2gb_am0_fq",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am0_fq am0_fq",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "IDX_AM_PATH_LAT PASS",
+    "pass_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/am0_fq.log"
+   },
+   {
+    "name": "g2gb_topk_fq_vm64",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/topk_fq_vm64 topk_fq_vm64",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "IDX_AM_TOPK_LAT FAIL",
+    "fail_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/topk_fq_vm64.log"
+   },
+   {
+    "name": "g2gb_am_fq_vmx76",
+    "cmd": "bash rtl/test/hbm_idx_static/run_banklat_idx.sh {RUN}/am_fq_vmx76 am_fq_vmx76",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 6,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "IDX_AM_PATH_LAT FAIL",
+    "fail_witness": "results/rtl/ref_tile/hidx_rootctl_am_g2g_1021/bench/am_fq_vmx76.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hidx_rootctl_am_g2gb_1021/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hidx_rootctl_am_g2gb_1021/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hidx_rootctl_am_g2gb_1021 --out {RUN}/record/views/ot_hbm_idx_rootctl_static_am --macro-view physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hidx_rootctl_am_g2gb_1021/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hidx_rootctl_am_g2e_1020/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hidx_rootctl_am_g2e_1020/hidx_rootctl_am_g2gb_1021-g2gb-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "FACEQ=1 recovery of g2ef EARLY_FAIL_SETUP: replace one-OR-level boundary outputs with kept literal face registers; ARGMAX request retimed with no external latency change. TOPK +1 per row, INDEX +2 round-trip (die lane pad -2); default FACEQ=0 preserved. One local spine region over 432x259.2 um, no regional clock crossings.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "vs": "hidx_rootctl_am_1018-r4-49a5acb8f",
+  "why": "FACEQ=1 recovery of g2ef EARLY_FAIL_SETUP: replace one-OR-level boundary outputs with kept literal face registers; ARGMAX request retimed with no external latency change. TOPK +1 per row, INDEX +2 round-trip (die lane pad -2); default FACEQ=0 preserved. One local spine region over 432x259.2 um, no regional clock crossings."
+ }
+}

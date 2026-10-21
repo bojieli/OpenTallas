@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_idx_rootctl_static_am",
+ "enable": false,
+ "reason": "FACEQ=1: literal S-face vm_rq and N-face index_rr output registers; ARGMAX rq uses the S-face request register. Existing same-region pins retain timing-qualified direct paths."
+}

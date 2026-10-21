@@ -11,6 +11,9 @@
 // The DUT's engine runs RT_EXTRA 66 / ACK 49 (the counter width fix CW 8 in ot_hbm_idx_topk_static is exercised).
 // Mutants (DUT params != model): VM_RT_P 1 / CR_RT_P 1 (the am_pin master on the GEN2c lanes), VM_RT_P 64, CR_RT_P 35.
 module tb_idx_rootctl_am_topk_lat;
+`ifndef FACEQ_P
+`define FACEQ_P 0
+`endif
 `ifndef FAN32_P
 `define FAN32_P 0  // HBM-IDX6: 1 = rootctl_am FAN32 (native32 structural forms; needs RSTL_P 1)
 `endif
@@ -35,7 +38,7 @@ module tb_idx_rootctl_am_topk_lat;
 `ifndef NREC
 `define NREC 240
 `endif
-    localparam integer RD = 8, ACKD = 12, RD1 = 7 + `VM_RT_M, ACKD1 = 11 + `CR_RT_M, DR = `VM_RT_M, PD = 128;
+    localparam integer RD = 8, ACKD = 12, RD1 = 7 + `VM_RT_M, ACKD1 = 11 + `CR_RT_M, DR = `VM_RT_M + `FACEQ_P, PD = 128;
     reg clk = 0, rst_n = 0; always #1 clk = ~clk;
     reg go = 0, order = 0, a_mirror = 0, o_mirror = 0, has_r = 0; reg [3:0] k = 0; reg [19:0] n = 0, m = 0;
     reg [17:0] a_base = 0, a_str = 0, o_base = 0, o_str = 0, r_base = 0, r_str = 0;
@@ -51,7 +54,7 @@ module tb_idx_rootctl_am_topk_lat;
     ot_hbm_idx_rootctl_static #(.PIN_IN(1)) rc0(.clk_program(clk), .clk_program_mem(clk), .clk_sel(clk), .clk_topk(clk), .clk_pair({4{clk}}),
         .rst_n(rst_n), `RC_TK, .argmax_rr(), .vm_rq(q0), .vm_rr(rr0), .cq(cq0), .cq_seq(s0), .cr(cr0),
         .topk_busy(b0), .topk_done(d0), .topk_fault(f0), .share_fault(sf0));
-    ot_hbm_idx_rootctl_static_am #(.AMMUT(`AMMUT), .VM_RT(`VM_RT_P), .CR_RT(`CR_RT_P), .SEL_LAT(30), .RSTL(`RSTL_P), .FAN32(`FAN32_P)) rc1(.clk(clk), .rst_n(rst_n), `RC_TK, .argmax_m(), .vm_rq(q1), .vm_rr(rr1),
+    ot_hbm_idx_rootctl_static_am #(.AMMUT(`AMMUT), .VM_RT(`VM_RT_P), .CR_RT(`CR_RT_P), .SEL_LAT(30), .RSTL(`RSTL_P), .FAN32(`FAN32_P), .FACEQ(`FACEQ_P)) rc1(.clk(clk), .rst_n(rst_n), `RC_TK, .argmax_m(), .vm_rq(q1), .vm_rr(rr1),
         .cq(cq1), .cq_seq(s1), .cr(cr1), .topk_busy(b1), .topk_done(d1), .topk_fault(f1), .share_fault(sf1));
     // ---------------- VM + client models (same function for both sides)
     function automatic [255:0] sdat(input [15:0] q, input integer l);
@@ -111,7 +114,7 @@ module tb_idx_rootctl_am_topk_lat;
         if (nq0 != nq1 || nw0 != nw1 || ne0 != ne1) begin errs = errs + 1; $display("COUNT q %0d/%0d w %0d/%0d e %0d/%0d", nq0, nq1, nw0, nw1, ne0, ne1); end
         for (i = 0; i < nq0 && i < nq1; i = i + 1) begin
             if (lq0[i] !== lq1[i]) begin errs = errs + 1; if (errs < 6) $display("RQ %0d differs", i); end
-            if (tq1[i] - tq0[i] != 1 + rq0r[i] * DR) begin errs = errs + 1; if (errs < 6) $display("RQ %0d offset %0d row %0d", i, tq1[i] - tq0[i], rq0r[i]); end
+            if (tq1[i] - tq0[i] != 1 + `FACEQ_P + rq0r[i] * DR) begin errs = errs + 1; if (errs < 6) $display("RQ %0d offset %0d row %0d", i, tq1[i] - tq0[i], rq0r[i]); end
             if (rq0r[i] > maxrow) maxrow = rq0r[i];
         end
         for (i = 0; i < nw0 && i < nw1; i = i + 1) begin

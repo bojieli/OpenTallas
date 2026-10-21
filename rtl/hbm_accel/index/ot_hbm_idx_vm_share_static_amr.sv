@@ -28,46 +28,74 @@
 // the steered valid (8 copies a bank: vm_rr valid pin-register copy AND own-tap copy, both loaded on the edges rr_q /
 // own[7+VM_RT] are), and the tree ORs the pre-masked data (AMNOMASK 1 = bench mutant AMMUT 3: data left unmasked).
 // Same argmax_m every edge. 0 = as built.
+// FACEQ (HBM-COLLECT11/IDX-ROOT 2026-10-21, g2ef hidx_rootctl_am_g2ef_1020-g2ef-f177abe69 EARLY_FAIL_SETUP -408 ps / 2,194
+// endpoints = vm_rq 136 + index_rr 2,056 (+2): both ports were ONE OR/AND level after flops on ANOTHER face -- arq_r (E face)
+// -> vm_rq (S face) 325 ps of wire, rr_q (S face) -> index_rr (N face) 216 um -- inside the 254.6 ps sender share of the
+// consistent link split): 1 = FACE output registers, kept, at their own face:
+//   * vm_rq_q (S face) holds the one-hot OR of the request sources (the OR moved one stage before the face flop); the owner
+//     is booked on the same edge, so the tap is own[7+VM_RT+1] (the leaf sees one more round-trip edge, exactly as if the
+//     die had one more rq lane stage); the caller feeds argmax_rq RAW from its port (argmax_rq pins sit at the S-E corner
+//     next to vm_rq: vm_rq_q is the argmax request's pin register too, ARGMAX port-to-port edges UNCHANGED) and index_rq /
+//     topk_rq from their registers (INDEX / TOPK request +1);
+//   * index_rr_q (N face) holds {rr_q valid && owner, rr_q data}: INDEX response +1.
+// Valid bits reset (control), data bits reset-free (data pin flops). 0 = bit-identical to the forms above.
 module ot_hbm_idx_vm_share_leaf_r #(parameter integer MUT = 0, parameter integer VM_RT = 0, parameter integer F32 = 0,
-    parameter integer AMNOMASK = 0)(
+    parameter integer AMNOMASK = 0, parameter integer FACEQ = 0)(
     input  wire          clk, rst_n,
     input  wire [33:0]   index_rq, topk_rq, argmax_rq,   // registered sources (pin flops / TOPK request register)
-    output reg  [33:0]   vm_rq,
+    output wire [33:0]   vm_rq,
     input  wire [513:0]  vm_rr,                          // port: registered here
     output wire [513:0]  index_rr, topk_rr, argmax_rr,   // from the vm_rr pin register
     output reg           fault
 );
-    reg [5:0] own [0:7+VM_RT];              // per bank b: {argmax, topk, index} at [3b +: 3]
-    wire [5:0] o = own[((MUT == 1) ? 6 : 7) + VM_RT];
+    localparam integer RT = VM_RT + FACEQ;  // FACEQ: the face request register is one more round-trip edge
+    reg [5:0] own [0:7+RT];                 // per bank b: {argmax, topk, index} at [3b +: 3]
+    wire [5:0] o = own[((MUT == 1) ? 6 : 7) + RT];
+    reg [33:0] vm_rq_c;
     reg [513:0] rr_q;                       // vm_rr pin register (no reset)
     always @(posedge clk) rr_q <= vm_rr;
     reg [5:0] issue; reg [2:0] v;
     always @* begin
-        vm_rq = 34'd0; issue = 6'd0; v = 3'd0;
+        vm_rq_c = 34'd0; issue = 6'd0; v = 3'd0;
         for (integer b = 0; b < 2; b = b + 1) begin
             v = {argmax_rq[17*b+16], topk_rq[17*b+16], index_rq[17*b+16]};
-            if (v == 3'b001) begin vm_rq[17*b +: 17] = index_rq[17*b +: 17]; issue[3*b] = 1'b1; end
-            else if (v == 3'b010) begin vm_rq[17*b +: 17] = topk_rq[17*b +: 17]; issue[3*b+1] = 1'b1; end
-            else if (v == 3'b100) begin vm_rq[17*b +: 17] = argmax_rq[17*b +: 17]; issue[3*b+2] = 1'b1; end
+            if (v == 3'b001) begin vm_rq_c[17*b +: 17] = index_rq[17*b +: 17]; issue[3*b] = 1'b1; end
+            else if (v == 3'b010) begin vm_rq_c[17*b +: 17] = topk_rq[17*b +: 17]; issue[3*b+1] = 1'b1; end
+            else if (v == 3'b100) begin vm_rq_c[17*b +: 17] = argmax_rq[17*b +: 17]; issue[3*b+2] = 1'b1; end
         end
     end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin fault <= 1'b0; for (integer d = 0; d < 8 + VM_RT; d = d + 1) own[d] <= 6'd0; end
+        if (!rst_n) begin fault <= 1'b0; for (integer d = 0; d < 8 + RT; d = d + 1) own[d] <= 6'd0; end
         else begin
-            own[0] <= issue;                    // sampled on the bank's own sampling edge n+1
-            for (integer d = 1; d < 8 + VM_RT; d = d + 1) own[d] <= own[d-1];
+            own[0] <= issue;                    // sampled on the bank's own sampling edge n+1 (FACEQ: the face flop's edge)
+            for (integer d = 1; d < 8 + RT; d = d + 1) own[d] <= own[d-1];
             for (integer b = 0; b < 2; b = b + 1)
                 if ({1'b0, index_rq[17*b+16]} + {1'b0, topk_rq[17*b+16]} + {1'b0, argmax_rq[17*b+16]} > 2'd1) fault <= 1'b1;
         end
+    wire [513:0] index_rr_c;
+    generate if (FACEQ != 0) begin : g_fq
+        (* keep *) reg [33:0] vm_rq_q;          // S-face request register: valid bits reset, data reset-free
+        (* keep *) reg [513:0] ir_q;            // N-face INDEX response register
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin vm_rq_q[16] <= 1'b0; vm_rq_q[33] <= 1'b0; ir_q[256] <= 1'b0; ir_q[513] <= 1'b0; end
+            else begin vm_rq_q[16] <= vm_rq_c[16]; vm_rq_q[33] <= vm_rq_c[33]; ir_q[256] <= index_rr_c[256]; ir_q[513] <= index_rr_c[513]; end
+        always @(posedge clk) begin
+            vm_rq_q[15:0] <= vm_rq_c[15:0]; vm_rq_q[32:17] <= vm_rq_c[32:17];
+            ir_q[255:0] <= index_rr_c[255:0]; ir_q[512:257] <= index_rr_c[512:257];
+        end
+        assign vm_rq = vm_rq_q; assign index_rr = ir_q;
+    end else begin : g_nfq
+        assign vm_rq = vm_rq_c; assign index_rr = index_rr_c;
+    end endgenerate
     for (genvar b = 0; b < 2; b = b + 1) begin : g_b
         // the bank answers n+7+VM_RT (port); rr_q holds it one edge later, own[7+VM_RT] holds the owner booked at n+1 then
-        assign index_rr[257*b +: 257]  = {rr_q[257*b+256] && o[3*b],   rr_q[257*b +: 256]};
+        assign index_rr_c[257*b +: 257] = {rr_q[257*b+256] && o[3*b],   rr_q[257*b +: 256]};
         assign topk_rr[257*b +: 257]   = {rr_q[257*b+256] && o[3*b+1], rr_q[257*b +: 256]};
         if (F32 == 0) begin : g_am
             assign argmax_rr[257*b +: 257] = {rr_q[257*b+256] && o[3*b+2], rr_q[257*b +: 256]};
         end else begin : g_am32
             wire [7:0] vc, oc;                  // kept copies: vm_rr valid pin register / argmax own tap of bank b
-            wire [5:0] o_pre = own[((MUT == 1) ? 6 : 7) + VM_RT - 1];
+            wire [5:0] o_pre = own[((MUT == 1) ? 6 : 7) + RT - 1];
             for (genvar w = 0; w < 8; w = w + 1) begin : g_w
                 ot_hbm_idx_kreg #(.W(1)) uv (.clk(clk), .rst_n(rst_n), .d(vm_rr[257*b+256]), .q(vc[w]));
                 ot_hbm_idx_kreg #(.W(1)) uo (.clk(clk), .rst_n(rst_n), .d(o_pre[3*b+2]), .q(oc[w]));
@@ -105,7 +133,7 @@ module ot_hbm_idx_vm_share_amtree #(parameter integer AMMUT = 0, parameter integ
     end
 endmodule
 module ot_hbm_idx_vm_share_static_amr #(parameter integer MUT = 0, parameter integer AMMUT = 0, parameter integer VM_RT = 0,
-    parameter integer F32 = 0)(
+    parameter integer F32 = 0, parameter integer FACEQ = 0)(
     input  wire          clk,
     input  wire          rst_n,
     input  wire [135:0]  index_rq, topk_rq, argmax_rq,   // registered sources
@@ -117,7 +145,7 @@ module ot_hbm_idx_vm_share_static_amr #(parameter integer MUT = 0, parameter int
 );
     wire [3:0] f; wire [2055:0] am;
     for (genvar p = 0; p < 4; p = p + 1) begin : g_pair
-        ot_hbm_idx_vm_share_leaf_r #(.MUT(MUT), .VM_RT(VM_RT), .F32(F32), .AMNOMASK(AMMUT == 3 ? 1 : 0)) leaf(.clk(clk), .rst_n(rst_n),
+        ot_hbm_idx_vm_share_leaf_r #(.MUT(MUT), .VM_RT(VM_RT), .F32(F32), .AMNOMASK(AMMUT == 3 ? 1 : 0), .FACEQ(FACEQ)) leaf(.clk(clk), .rst_n(rst_n),
             .index_rq(index_rq[34*p +: 34]), .topk_rq(topk_rq[34*p +: 34]), .argmax_rq(argmax_rq[34*p +: 34]),
             .vm_rq(vm_rq[34*p +: 34]), .vm_rr(vm_rr[514*p +: 514]), .index_rr(index_rr[514*p +: 514]),
             .topk_rr(topk_rr[514*p +: 514]), .argmax_rr(am[514*p +: 514]), .fault(f[p]));

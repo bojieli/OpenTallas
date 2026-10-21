@@ -55,8 +55,17 @@
 // NGO kept copies of the go pin register (same D topk_go, same reset), calendar ot_hbm_idx_calendar_static_f32
 // (one-hot word select; start as two kept pin-register copies), share F32 (ARGMAX data masked per 32-bit word by kept
 // valid copies in the leaves). Kept copies are ot_hbm_idx_kreg instances (keep_hierarchy). 0 (default) = as built.
+// FACEQ (HBM-COLLECT11/IDX-ROOT 2026-10-21; g2ef EARLY_FAIL_SETUP -408 ps, 2,194 endpoints = every vm_rq + index_rr bit:
+// the r3 statement "vm_rq/index_rr = one OR/AND level after those flops" left both ports driven by flops on ANOTHER face):
+// 1 = kept FACE registers in the share leaves (see ot_hbm_idx_vm_share_static_amr.sv): vm_rq_q at the S face (the one-hot
+// OR moved before it) and index_rr_q at the N face. argmax_rq enters the share RAW (its pins sit at the S-E corner beside
+// vm_rq: vm_rq_q is its pin register, arq_r is dropped), so ARGMAX port-to-port is UNCHANGED (argmax VMX 77 stays).
+// Latency vs FACEQ 0 at the ports: INDEX request +1, INDEX response +1 (round trip +2: the die's op_SW <-> ctl pad shrinks
+// by 2, operand reader VM_RT_EXTRA 171 unchanged), TOPK request +1 per row (engine RT_EXTRA 1+VM_RT+1, internal: row
+// period VM_RT+1), ARGMAX +0, every other port +0. The VM_RT / CR_RT parameters keep their meaning (edges OUTSIDE the tile).
 module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter integer SEL_LAT = 4,
- parameter integer VM_RT = 0, parameter integer CR_RT = 0, parameter integer RSTL = 0, parameter integer FAN32 = 0)(
+ parameter integer VM_RT = 0, parameter integer CR_RT = 0, parameter integer RSTL = 0, parameter integer FAN32 = 0,
+ parameter integer FACEQ = 0)(
  input wire clk,input wire rst_n,
  input wire program_we,input wire[7:0]program_addr,input wire[255:0]program_data,
  input wire start,input wire[11:0]length,
@@ -142,13 +151,13 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
   for (genvar c = 0; c < NGO; c = c + 1) begin : g_go
    ot_hbm_idx_kreg #(.W(1)) u(.clk(clk),.rst_n(rst_c[1]),.d(topk_go),.q(go_c[c]));   // reset-free: settles in reset
   end
-  ot_hbm_idx_topk_static_f32 #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT),.NGO(NGO)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(SID),
+  ot_hbm_idx_topk_static_f32 #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT + FACEQ),.NGO(NGO)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(SID),
    .go(tk_go_r),.go_c(go_c),
    .k(tk_k_r),.order(tk_ord_r),.n(tk_n_r),.m(tk_m_r),.a_mirror(tk_am_r),.a_base(tk_ab_r),.a_str(tk_as_r),.o_mirror(tk_om_r),
    .o_base(tk_ob_r),.o_str(tk_os_r),.has_r(tk_hr_r),.r_base(tk_rb_r),.r_str(tk_rs_r),
    .vm_rq(topk_rq),.vm_rr(topk_rr),.cq(tk_cq),.cq_seq(tk_cqs),.cr(cr),.busy(tk_busy),.done(tk_done),.fault(tk_fault));
  end else begin : g_tk
-  ot_hbm_idx_topk_static #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT),.RSPLIT((RSTL != 0) ? 1 : 0)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(SID),.go(tk_go_r),
+  ot_hbm_idx_topk_static #(.ACK(13 + CR_RT),.RT_EXTRA(((AMMUT == 5) ? 0 : 1) + VM_RT + FACEQ),.RSPLIT((RSTL != 0) ? 1 : 0)) topk(.clk(clk),.rst_n(rst_c[1]),.sid(SID),.go(tk_go_r),
    .k(tk_k_r),.order(tk_ord_r),.n(tk_n_r),.m(tk_m_r),.a_mirror(tk_am_r),.a_base(tk_ab_r),.a_str(tk_as_r),.o_mirror(tk_om_r),
    .o_base(tk_ob_r),.o_str(tk_os_r),.has_r(tk_hr_r),.r_base(tk_rb_r),.r_str(tk_rs_r),
    .vm_rq(topk_rq),.vm_rr(topk_rr),.cq(tk_cq),.cq_seq(tk_cqs),.cr(cr),.busy(tk_busy),.done(tk_done),.fault(tk_fault));
@@ -159,11 +168,19 @@ module ot_hbm_idx_rootctl_static_am #(parameter integer AMMUT = 0, parameter int
   else begin cq[337]<=tk_cq[337];topk_busy<=tk_busy;topk_done<=tk_done;topk_fault<=tk_fault;end
  always @(posedge clk)begin cq[336:0]<=tk_cq[336:0];cq_seq<=tk_cqs;end
  // share: INDEX / ARGMAX request pin registers here, vm_rr pin registers in the leaves
- (* keep *) reg[135:0]irq_r,arq_r;
- always @(posedge clk)begin irq_r<=index_rq;arq_r<=argmax_rq;end
+ (* keep *) reg[135:0]irq_r;
+ always @(posedge clk)irq_r<=index_rq;
+ wire[135:0]am_src;   // FACEQ: argmax_rq raw (registered by the S-face vm_rq_q at the S-E corner); else its pin register
+ generate if (FACEQ != 0) begin : g_amraw
+  assign am_src = argmax_rq;
+ end else begin : g_amreg
+  (* keep *) reg[135:0]arq_r;
+  always @(posedge clk)arq_r<=argmax_rq;
+  assign am_src = arq_r;
+ end endgenerate
  wire share_f;
- ot_hbm_idx_vm_share_static_amr #(.MUT((AMMUT == 7) ? 1 : 0),.AMMUT((AMMUT >= 1 && AMMUT <= 4) ? AMMUT : 0),.VM_RT(VM_RT),.F32(FAN32)) share(.clk(clk),
-  .rst_n(rst_c[2]),.index_rq(irq_r),.topk_rq(topk_rq),.argmax_rq(arq_r),.vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(index_rr),
+ ot_hbm_idx_vm_share_static_amr #(.MUT((AMMUT == 7) ? 1 : 0),.AMMUT((AMMUT >= 1 && AMMUT <= 4) ? AMMUT : 0),.VM_RT(VM_RT),.F32(FAN32),.FACEQ(FACEQ)) share(.clk(clk),
+  .rst_n(rst_c[2]),.index_rq(irq_r),.topk_rq(topk_rq),.argmax_rq(am_src),.vm_rq(vm_rq),.vm_rr(vm_rr),.index_rr(index_rr),
   .topk_rr(topk_rr),.argmax_m(argmax_m),.fault(share_f));
  always @(posedge clk or negedge rst_c[2]) if(!rst_c[2]) share_fault<=0; else share_fault<=share_f;
 endmodule

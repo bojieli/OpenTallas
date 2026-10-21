@@ -66,6 +66,10 @@ run() {
     topk_vm64_f32) topk topk_vm64_f32 -DRSTL_P=1 -DFAN32_P=1 -DVM_RT_P=64;; topk_cr35_f32) topk topk_cr35_f32 -DRSTL_P=1 -DFAN32_P=1 -DCR_RT_P=35;;
     am0_f32) am am0_f32 -DRSTL_P=1 -DFAN32_P=1 -DTIES=0;; am1_f32) am am1_f32 -DRSTL_P=1 -DFAN32_P=1 -DTIES=1;; am2_f32) am am2_f32 -DRSTL_P=1 -DFAN32_P=1 -DTIES=2;;
     am_vmx76_f32) am am_vmx76_f32 -DRSTL_P=1 -DFAN32_P=1 -DVMX_P=76;; am_ack51_f32) am am_ack51_f32 -DRSTL_P=1 -DFAN32_P=1 -DACK_P=51;;
+    topk_fq) topk topk_fq -DRSTL_P=1 -DFAN32_P=1 -DFACEQ_P=1;;
+    topk_fq_vm64) topk topk_fq_vm64 -DRSTL_P=1 -DFAN32_P=1 -DFACEQ_P=1 -DVM_RT_P=64;;
+    am0_fq) am am0_fq -DRSTL_P=1 -DFAN32_P=1 -DFACEQ_P=1 -DTIES=0;;
+    am_fq_vmx76) am am_fq_vmx76 -DRSTL_P=1 -DFAN32_P=1 -DFACEQ_P=1 -DVMX_P=76;;
     eq_f32) eq eq_f32;; eq_f32_s2) eq eq_f32_s2 -DSEED=2;; eq_f32_s3) eq eq_f32_s3 -DSEED=3;;
     eq_f32_m5) eq eq_f32_m5 -DMUT1=5;; eq_f32_m3) eq eq_f32_m3 -DMUT1=3;; eq_f32_m6) eq eq_f32_m6 -DMUT1=6;;
     reg_n12) bash $T/run_vm_query_n12.sh "$out/reg_n12" 0 | grep "^IDX_VM_QUERY_N12 "; return ${PIPESTATUS[0]};;
