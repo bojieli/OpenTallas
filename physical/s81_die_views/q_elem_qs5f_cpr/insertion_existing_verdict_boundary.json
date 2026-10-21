@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.existing_verdict_boundary_reference.v1",
+  "scope": "Existing routed boundary samples only; no all-FF/per-pin insertion claim",
+  "source": "results/arch/s81_qcpr_view_recovery_1021/routed_ioref.a1.json",
+  "closed_record": "cc0ec1c19",
+  "source_commit": "ffacf68cd054db36627c9f751ed3ea36febb9bc6",
+  "corners": {
+    "tt": {
+      "clock": "core_clk",
+      "mean": 487.8,
+      "min": 469.7,
+      "max": 496.6,
+      "n": 718,
+      "kind": "boundary"
+    },
+    "ff": {
+      "clock": "core_clk",
+      "mean": 386.1,
+      "min": 372.7,
+      "max": 394.0,
+      "n": 718,
+      "kind": "boundary"
+    }
+  },
+  "parent_closure": "OPEN"
+}
