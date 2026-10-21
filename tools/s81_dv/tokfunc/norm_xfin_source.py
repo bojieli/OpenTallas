@@ -10,6 +10,7 @@ import json
 import re
 import subprocess
 import sys
+import shutil
 from pathlib import Path
 
 
@@ -43,7 +44,10 @@ def main():
         source_sha256=leaf['source_sha256'],bench_sha256=sha(bench),NS=16,NVL=5,LM=5,LA=6,
         eps_fp32_bits=native['eps_fp32_bits'],partial_input_sha256=sha(a.out/'actual_partials80.hex'),
         expected_norm_input=False,actual_vn_partials=True,ring_transport='one registered edge per neighbour; COMPONENT MODEL ONLY',
-        die_clock_qualified=False,global_epoch_qualified=False,actual_rstd=[],actual_leaf_outputs=[])
+        die_clock_qualified=False,global_epoch_qualified=False,actual_rstd=[],actual_leaf_outputs=[],
+        leaf_input_component_cycles=dict(reset_release=32,native_sw128=[64+2*i for i in range(49)],
+            HLOAD=192,GAIN=224,NORMR=248,actual_rstd_replay=800),
+        XFIN_input_component_cycles=dict(reset_release=32,go=64,partial_leaf=[96+2*i for i in range(5)]))
     def save():(a.out/'receipt.json').write_text(json.dumps(receipt,indent=1)+'\n')
     v=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
     cmd=[str(v),'--binary','--timing','-O1','-fno-dfg','--unroll-count','4','-Wno-fatal','-Wno-WIDTH',
@@ -57,6 +61,24 @@ def main():
     sys.path.insert(0,str(gd));import verilator_nba_guard as G
     guard=G.scan(str(obj));(a.out/'nba_guard.json').write_text(json.dumps(guard,indent=1)+'\n')
     if guard['findings']:receipt['status']='NBA_GUARD_FAIL';save();sys.exit(86)
+    # Same leaf binary, one deliberate source-input corruption. Preserve the
+    # positive input directory and prove a real causal change in its partial.
+    context=next(c for c in leaf['contexts'] if c['sid']==1 and c['leaf']==0)
+    altered=a.out/'negative_zero_h_sid1_leaf0';shutil.copytree(context['directory'],altered)
+    data=(altered/'native_sw128.hex').read_text().splitlines()
+    data[:32]=['0'*32]*32
+    (altered/'native_sw128.hex').write_text('\n'.join(data)+'\n')
+    leaf_binary=(a.leaf_run/'obj/Vtb_norm_leaf_source').resolve()
+    neg=subprocess.run([str(leaf_binary),f'+DIR={altered.resolve()}','+SID=1','+LEAF=0'],capture_output=True,text=True)
+    neglog=neg.stdout+neg.stderr;(altered/'causal.log').write_text(neglog)
+    actual=re.findall(r'LEAF_PARTIAL .*data=([0-9a-fA-F]+)',neglog)
+    assert neg.returncode==0 and len(actual)==1 and actual[0]!=partials[5]['data32']
+    receipt['causal_input_mutation']=dict(status='REFERENCE_PARTIAL_REJECTED',mutation='zero native H rows0..31 only',
+        sid=1,leaf=0,same_binary_sha256=sha(leaf_binary),exit_code=neg.returncode,
+        positive_partial32=partials[5]['data32'],mutant_partial32=actual[0],
+        mutant_input_sha256=sha(altered/'native_sw128.hex'),rawlog_sha256=sha(altered/'causal.log'),
+        simulator_terminal_failure_claimed=False)
+    save()
     for name,mut in [('positive',0),('negative_duplicate_sid',1)]:
         r=subprocess.run([str((obj/'Vtb_norm_xfin_source').resolve()),f'+DIR={a.out.resolve()}',f'+MUT={mut}'],capture_output=True,text=True)
         log=r.stdout+r.stderr;(a.out/(name+'.log')).write_text(log)
@@ -70,6 +92,7 @@ def main():
             assert len({v[2] for v in values})==1 and {v[3] for v in values}=={native['eps_fp32_bits']}
             receipt['actual_rstd']=[dict(sid=int(s),cycle=int(c),data32=d) for s,c,d,e in values]
             (a.out/'actual_rstd.hex').write_text(values[0][2]+'\n')
+            receipt['positive_run']=dict(exit_code=r.returncode,rawlog_sha256=sha(a.out/(name+'.log')))
         save()
     # Reuse the existing immutable leaf binary and legitimate input contexts.
     binary=(a.leaf_run/'obj/Vtb_norm_leaf_source').resolve()
@@ -85,7 +108,7 @@ def main():
         xx=re.findall(r'LEAF_XF sid=(\d+) leaf=(\d+) cycle=(\d+) first=([01]) data=([0-9a-fA-F]+)',log)
         assert len(yy)==8 and [int(x[3]) for x in yy]==list(range(8)) and len(xx)==4
         receipt['actual_leaf_outputs'].append(dict(sid=context['sid'],leaf=context['leaf'],
-            log_sha256=sha(path),y=[dict(cycle=int(c),i=int(i),data256=d) for s,k,c,i,d in yy],
+            log_sha256=sha(path),exit_code=r.returncode,y=[dict(cycle=int(c),i=int(i),data256=d) for s,k,c,i,d in yy],
             xf=[dict(cycle=int(c),first=int(f),data276=d) for s,k,c,f,d in xx]))
         save()
     # Expectations are opened only after all simulator runs have finished.
