@@ -46,9 +46,11 @@ Status (L0, sliding window, TP4 rank 0 = heads 0..15):
   attn.max / exp: LOWERED (TOK-S81-GAPS/SVCP 10-19, PPATH): the SE job's e rows feed the on-die P path (SM -> BF16
       pbuf -> score-exchange P beats -> fold root PV frame -> entries' dn stream -> owners' p feed); bench_svc_p checks
       every P word at the root and on both entries' dn streams = bf16(fixture attn.exp) and the P.V bit-exact.
-  attn.den / sink: PARTIAL -- computed on-die by the same SE job (SM head), consumed only by the SO normalisation.
-  attn.normalize: GAP G9b -- the SO job's o rows leave only on w_* (no on-die consumer; the SO operand rows = P.V by
-      head would come back as SMJ frames from the slice band, and the other 3 quarters need the cross-die exchange).
+  attn.den / sink: PARTIAL -- computed by SE; the SO input programme is not emitted.
+  attn.normalize: GAP in the input lowering: current SMWIRE consumes w_* internally in dsdv_sm_so_target,
+      returns gather words through dsdv_sm_gw / the P.V tree and stamps pv_x. The compiler still emits no SO kind-5
+      parameters / operands or SOT type-14 booking. All-quarter P.V transpose, cos/sin ownership and the real
+      slice-band producer are required; fixture attn.pv is never substituted for that missing on-chip producer.
   attn.pv: PARTIAL -- the P.V words of quarter ST are bit-exact; ST is now the CFG field (G10 strap part fixed), but
       the other 3 quarters of the rank's 512 dims reach wo_a only through an unpriced cross-die exchange (G10).
   The q words reach the entry q pins from u_s_3S (W) / u_s_4S (E) ot_s81sl_xr band bo (pk[511:0], same cycle on both
@@ -98,6 +100,39 @@ QF_PRODUCER_GAP = ('the q words reach the entry q pins from u_s_3S (W) / u_s_4S 
                    'programme of the svc q stream (frame header rows + q / own-row payload rows) is not compiled, so a '
                    'cut holding the producer slice cannot be checked for these words (a cut holding the svc entry is '
                    'driven with them)')
+
+
+SO_INPUT_GAP = dict(
+    module='lower_svc SO input programme / all-quarter P.V transpose',
+    port='SMJ type 9 kind 5 + SOT type 14 on entry q; output pv_v/pv_d/pv_x',
+    missing='Current SMWIRE output is wired internally (SM -> dsdv_sm_so_target -> dsdv_sm_gw -> return tree -> '
+            'pv/pv_x); w_* are observation ports. Missing: source-owned all-four-quarter P.V transpose to '
+            '32 FP32 operand rows/head, five SO parameter rows (obase, cos lo/hi, sin lo/hi), and '
+            'SOT owner/read/retire booking. Job._frames emits SE kind 4 only. Do not replace the missing '
+            'on-chip producer with fixture attn.pv or claim SO completion from the raw P.V END.')
+
+
+def so_source_contract(die=None):
+    """Expose the selected source ABI without claiming an un-emitted programme."""
+    paths = ['rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv',
+             'rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv',
+             'rtl/dsrom_sys/s81_dv/sm_target/dsdv_sm_wire.sv',
+             'rtl/dsrom_sys/s81_dv/sm_target/dsdv_sm_so_target.sv',
+             'tools/s81_dv/sm_target/smwire_cal.py']
+    pins = {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+            for name in paths if (ROOT / name).is_file()}
+    return dict(schema='opentallas.s81.svc_so_contract.v1', source_sha256=pins,
+                status='INPUT_PROGRAMME_MISSING', output_path=['ot_s81_su_sms', 'dsdv_sm_so_target',
+                    'dsdv_sm_gw', 'P.V return tree', 'entry pv_v/pv_d/pv_x'],
+                current_frames=['CFG', 'OWN_ROW', 'WIN_LOAD', 'ATTN_Q0', 'ATTN_Q1', 'SMJ(SE4)', 'GO'],
+                required_frames=dict(target='SOT14 len2; owner={epoch2,user10,tag8} matches WIN_LOAD',
+                    parameters='SMJ9 kind5 start1, len5: obase, cos_lo, cos_hi, sin_lo, sin_hi',
+                    operands='SMJ9 operand bit13=1, headmask[29:14], len32 FP32 P.V rows/head'),
+                required_sources=['four P.V quarters with transaction identity',
+                    'head transpose and SMJ serializer', 'position-owned cos/sin rows',
+                    'allocation-owned epoch and booked write/read/retire edges'],
+                emitted_so_frames=0, fixture_substitution=False, full_normalize_qualified=False,
+                gap=SO_INPUT_GAP)
 
 
 def tile_of(sid):
@@ -433,7 +468,8 @@ def lower(die, op, ctx):
         r['port_valid'] = [dict(inst=i, ports=pp, bit=0) for i in ('u_rsv_05', 'u_rsv_11') for pp in (['q'], ['pv_v', 'pv_d'])]
         im = job.hbm_image()
         layer = ctx.get('layer')
-        r['files'] = {f'prog/svc/{layer}/hbm_window.hex': ''.join(f'{k:016x} {im[k]:064x}\n' for k in sorted(im)),
+        r['files'] = {f'prog/svc/{layer}/so_contract.json': json.dumps(so_source_contract(die), indent=2) + '\n',
+                      f'prog/svc/{layer}/hbm_window.hex': ''.join(f'{k:016x} {im[k]:064x}\n' for k in sorted(im)),
                       f'prog/svc/{layer}/qwd.hex': ''.join(f'{c} {x:0128x}\n' for c, x in s['words'])}
         st = 'LOWERED'
     elif name in ('attn.window_load', 'attn.scores'):
@@ -443,11 +479,7 @@ def lower(die, op, ctx):
         r['bench'] = BENCH_P
     elif name in ('attn.den', 'attn.sink') and PPATH:
         st = 'PARTIAL'
-        r['gap'] = dict(module='dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b',
-                        port='w_v / w_a / w_m / w_d (SO o rows)',
-                        missing='den / sink are computed on-die by the layer\'s SE job (the same SMJ frame as max / exp, '
-                                'lowered), but their only consumer is the SO normalisation, whose o rows have no on-die '
-                                'consumer (G9b): no bench checks den / sink')
+        r['gap'] = dict(SO_INPUT_GAP)
     elif name == 'attn.pv':
         st = 'PARTIAL'
         r['gap'] = dict(module='dsdv_svc_att quarter ST (pvown) -- die gap G10 (cross-die part)',
@@ -460,23 +492,7 @@ def lower(die, op, ctx):
                                 '(TOK.DS.XDIE / S81-DIE8 decision)')
     else:
         st = 'GAP'
-        r['gap'] = dict(module='results/arch/s81_dv_1016/bind_p4l3_g8/die.v u_rsv_00..15 (dsdv_svc_rs SM face) -- die gap G9',
-                        port='w_v / w_a / w_m / w_d / w_st',
-                        missing='the SM head (ot_s81_su_sms, dsdv_svc_rs.sv:215-219) computes the head\'s max / exp / '
-                                'den from the SE rows, but its write face has NO consumer anywhere in rtl/ (open outputs '
-                                'on all 16 u_rsv_*; die_port_bind does not count unconnected outputs, so strict bind '
-                                'PASSes and synthesis would remove the SM): the P operand of the PV frame (16 heads x 2 '
-                                'rows BF16 a word, from 16 different slices) and the normalised o rows have no on-die '
-                                'path; the bench feeds P = bf16(fixture attn.exp) as runtime data. Needs an RTL dataflow '
-                                'decision (gaps.json G9 options), not a lowering') if not PPATH else dict(
-                        module='dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b',
-                        port='w_v / w_a / w_m / w_d (SO o rows; die.v: open)',
-                        missing='the SO job (den divide + inverse RoPE -> BF16 o rows) runs in slice g, but its o rows '
-                                'leave only on w_*, which nothing on the die reads, and its operand rows (P.V of head g, '
-                                'all dims) exist on-die only as the owners\' P.V quarter words at the entry pv pins: '
-                                'needs (a) the SO operand rows back as SMJ frames (slice band send programme) or an '
-                                'in-grid head gather, (b) an o-row exit (return tree -> pv pins), (c) the cross-die '
-                                'quarters (G10)')
+        r['gap'] = dict(SO_INPUT_GAP)
     return dict(r, status=st)
 
 
