@@ -1,0 +1,20 @@
+%Warning-IMPLICIT: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:401:39: Signal definition not found, creating implicitly: 'nxt_rw2'
+                                                                        : ... Suggested alternative: 'nxt_rw'
+  401 |     ot_s81ph_rewind4 u_rw_ready (.nxt(nxt_rw2), .una(una_rw2), .ack_ok(ok_ready), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_ready));
+      |                                       ^~~~~~~
+                   ... For warning description see https://verilator.org/warn/IMPLICIT?v=5.050
+                   ... Use "/* verilator lint_off IMPLICIT */" and lint_on around source to disable this message.
+%Warning-IMPLICIT: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:401:54: Signal definition not found, creating implicitly: 'una_rw2'
+                                                                        : ... Suggested alternative: 'una_rw'
+  401 |     ot_s81ph_rewind4 u_rw_ready (.nxt(nxt_rw2), .una(una_rw2), .ack_ok(ok_ready), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_ready));
+      |                                                      ^~~~~~~
+%Error: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:760:43: Can't find definition of variable: 'ok_f2'
+                                                             : ... Suggested alternative: 'ok_f'
+  760 |     wire [CW-1:0]   cred_r  = credits + ((ok_f2 && !fr_bad) ? d_fr : {CW{1'b0}});
+      |                                           ^~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:869:17: Can't find definition of variable: 'ok_f3'
+                                                             : ... Suggested alternative: 'ok_f'
+  869 |             if (ok_f3) fr_seen <= rr_fr;
+      |                 ^~~~~
+%Error: Exiting due to 2 error(s)

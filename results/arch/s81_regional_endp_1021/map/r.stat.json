@@ -1,0 +1,65 @@
+{
+   "creator": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+   "invocation": "stat -json -liberty /srv/opentallas-scratch/claude/codex-s81-currentabi-native-prod-1021/out/map/lib/SEQ.lib -liberty /srv/opentallas-scratch/claude/codex-s81-currentabi-native-prod-1021/out/map/lib/SIMPLE.lib -liberty /srv/opentallas-scratch/claude/codex-s81-currentabi-native-prod-1021/out/map/lib/AO.lib -liberty /srv/opentallas-scratch/claude/codex-s81-currentabi-native-prod-1021/out/map/lib/OA.lib -liberty /srv/opentallas-scratch/claude/codex-s81-currentabi-native-prod-1021/out/map/lib/INVBUF.lib ",
+   "modules": {
+      "\\top": {
+         "num_wires":         72,
+         "num_wire_bits":     209,
+         "num_pub_wires":     15,
+         "num_pub_wire_bits": 152,
+         "num_ports":         8,
+         "num_port_bits":     90,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         70,
+         "num_submodules":       0,
+         "area":              8.631360,
+         "sequential_area":    4.957200,
+         "num_cells_by_type": {
+            "$scopeinfo": 1,
+            "AO21x1_ASAP7_75t_R": 1,
+            "AOI21xp33_ASAP7_75t_R": 10,
+            "AOI22xp33_ASAP7_75t_R": 18,
+            "DFFHQNx1_ASAP7_75t_R": 17,
+            "INVx1_ASAP7_75t_R": 14,
+            "NAND3xp33_ASAP7_75t_R": 1,
+            "NOR2xp33_ASAP7_75t_R": 4,
+            "O2A1O1Ixp33_ASAP7_75t_R": 1,
+            "OA21x2_ASAP7_75t_R": 1,
+            "OAI31xp33_ASAP7_75t_R": 1,
+            "OR2x2_ASAP7_75t_R": 1
+         }
+      }
+   },
+      "design": {
+         "num_wires":         72,
+         "num_wire_bits":     209,
+         "num_pub_wires":     15,
+         "num_pub_wire_bits": 152,
+         "num_ports":         8,
+         "num_port_bits":     90,
+         "num_memories":      0,
+         "num_memory_bits":   0,
+         "num_processes":     0,
+         "num_cells":         70,
+         "num_submodules":       0,
+         "area":              8.631360,
+         "sequential_area":    4.957200,
+         "num_cells_by_type": {
+            "$scopeinfo": 1,
+            "AO21x1_ASAP7_75t_R": 1,
+            "AOI21xp33_ASAP7_75t_R": 10,
+            "AOI22xp33_ASAP7_75t_R": 18,
+            "DFFHQNx1_ASAP7_75t_R": 17,
+            "INVx1_ASAP7_75t_R": 14,
+            "NAND3xp33_ASAP7_75t_R": 1,
+            "NOR2xp33_ASAP7_75t_R": 4,
+            "O2A1O1Ixp33_ASAP7_75t_R": 1,
+            "OA21x2_ASAP7_75t_R": 1,
+            "OAI31xp33_ASAP7_75t_R": 1,
+            "OR2x2_ASAP7_75t_R": 1
+         }
+      }
+}
+

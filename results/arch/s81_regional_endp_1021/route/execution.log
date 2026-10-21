@@ -1,0 +1,45 @@
+ot-run: ot-epyc5       admits   691 GB (avail 597, growth 113, headroom 0, waiters 0/0 GB) load 83/128 running 31 disk 2214 GB 
+ot-run: ot-epyc7       admits   570 GB (avail 500, growth 101, headroom 0, waiters 0/0 GB) load 52/96 running 23 disk 4678 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-pack-regional-1021/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1625779-1792603907 after 1 s
+ROUTE 0 / 819 relay_stations 52
+ROUTE 25 / 819 relay_stations 416
+ROUTE 50 / 819 relay_stations 500
+ROUTE 75 / 819 relay_stations 1056
+ROUTE 100 / 819 relay_stations 1056
+ROUTE 125 / 819 relay_stations 1796
+ROUTE 150 / 819 relay_stations 2928
+ROUTE 175 / 819 relay_stations 4729
+ROUTE 200 / 819 relay_stations 6031
+ROUTE 225 / 819 relay_stations 6703
+ROUTE 250 / 819 relay_stations 7582
+ROUTE 275 / 819 relay_stations 8470
+ROUTE 300 / 819 relay_stations 9449
+ROUTE 325 / 819 relay_stations 10299
+ROUTE 350 / 819 relay_stations 11052
+ROUTE 375 / 819 relay_stations 12114
+ROUTE 400 / 819 relay_stations 13434
+ROUTE 425 / 819 relay_stations 14371
+ROUTE 450 / 819 relay_stations 15372
+ROUTE 475 / 819 relay_stations 16190
+ROUTE 500 / 819 relay_stations 16957
+ROUTE 525 / 819 relay_stations 17089
+ROUTE 550 / 819 relay_stations 17225
+ROUTE 575 / 819 relay_stations 17465
+ROUTE 600 / 819 relay_stations 17465
+ROUTE 625 / 819 relay_stations 17465
+ROUTE 650 / 819 relay_stations 17465
+ROUTE 675 / 819 relay_stations 18133
+ROUTE 700 / 819 relay_stations 18669
+ROUTE 725 / 819 relay_stations 18864
+ROUTE 750 / 819 relay_stations 19390
+ROUTE 775 / 819 relay_stations 19562
+ROUTE 800 / 819 relay_stations 19621
+ROUTE_DONE failed 0 stations 19832
+{"baseline": {"relay_stations": 19767, "max_registered_arc_um": 404.10000000000036, "worst_cut_ratio": 4.5496524216524215, "windows_above_historical_0_60": 671}, "main": {"relay_stations": 19957, "max_registered_arc_um": 404.9499999999989, "worst_cut_ratio": 4.335589743589743, "windows_above_historical_0_60": 647}, "fallback": {"relay_stations": 19969, "max_registered_arc_um": 404.9499999999989, "worst_cut_ratio": 4.335589743589743, "windows_above_historical_0_60": 667}}
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1625779-1792603907): exit 0
