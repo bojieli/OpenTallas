@@ -32,7 +32,8 @@ def test_actual_chain_and_negative_witnesses():
     m, pos = fixture()
     facts = export_model(m, pos)
     assert check_facts(facts)['verdict'] == 'PASS'
-    assert len(facts['wires']) == 3
+    assert len(facts['wires']) == 1
+    assert len(facts['wires'][0]['segments']) == 3
     assert facts['crossings'][0]['landing'] == 'land'
     assert facts['regions']['clk_a']['root'] == 'pll/ca'
     for mutation, counter in [('landing', 'no_landing'), ('root', 'no_root'), ('reach', 'hops_over')]:
@@ -92,7 +93,7 @@ def test_case_hook_writes_final_output(tmp_path):
     assert v.case_real(m, tmp_path / 'case') == 'emitted'
     doc = json.loads((tmp_path / 'case/gen_safety_facts.json').read_text())
     assert doc['schema'] == 'opentallas.die_gen_safety_facts.v1'
-    assert len(doc['wires']) == 3
+    assert len(doc['wires']) == 1
 
 
 def test_foreign_reset_into_forwarded_lane_is_still_checked():
@@ -114,3 +115,36 @@ def test_port_clock_identity_beats_unrelated_shared_macro_clock():
     m['buses'] = [b for b in m['buses'] if b[0] != 'clk_b']
     cs = [c for c in export_model(m, pos)['crossings'] if c['id'] == 'direct']
     assert cs[0]['dst_region'] == 'UNDRIVEN:b/ck'
+
+
+def test_site_check_spans_unavailable_relay_sites_across_actual_chain():
+    m, pos = fixture()
+    m['insts'].append(Inst(name='wall', master='opaque', x=0, y=0, w=900, h=30, kind='block'))
+    f = export_model(m, pos)
+    r = check_facts(f)
+    assert r['counts']['hops_over'] == 0
+    assert r['counts']['wires_no_site'] == 1
+
+
+def test_worst_corresponding_bit_is_exported_not_group_centroid():
+    m, pos = fixture()
+    def bits(i, p, width):
+        x, y = pos(i, p)
+        return [(x + (200 if i == 'b' and k == 7 else 0), y) for k in range(width)]
+    pos.bits = bits
+    f = export_model(m, pos)
+    assert not f['centroid_only_segments']
+    assert f['wires'][0]['segments'][-1]['worst_net_bit'] == 7
+    # The paired edge really exists; no mixing an arbitrary source and sink bit.
+    assert f['wires'][0]['pts'][-1] == [650, 5.]
+
+
+def test_actual_two_stage_reset_landing_is_separately_described():
+    m, pos = fixture()
+    m['insts'].append(Inst(name='rstcap', master='qfd_rst_rep_p8', x=60, y=10, w=10, h=10, kind='reset_rep'))
+    m['buses'].append(('rstcap_ck', 'clock_trunk', 1, [('pll', 'cb'), ('rstcap', 'ck')]))
+    m['buses'].append(('rst_x', 'reset', 1, [('a', 'q'), ('rstcap', 'd')]))
+    f = export_model(m, pos)
+    assert f['reset_landings'][0]['landing'] == 'rstcap'
+    assert f['reset_landings'][0]['kind'] == 'two_stage_reset_synchronizer'
+    assert not [c for c in f['crossings'] if c['id'] == 'rst_x']
