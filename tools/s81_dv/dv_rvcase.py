@@ -568,6 +568,14 @@ def main():
                 elif n_ in clocknets and not n_.startswith('ck_'):
                     kinds.add('fclk_out' if d == 'output' else 'clock')
                     ln = FCK_RE.match(n_).group(1) if FCK_RE.match(n_) else None
+                    if ln is None and d == 'output':
+                        # S81-DIESTA (10-20, mu7v2 xk -23.5 ns): a SOURCE master's own forwarded-clock output (slice
+                        # ck_xc / ck_line / ck_v, frame xok, ctrl ck_o) feeding hop 0 (fwd_<lane>) of exactly one lane is
+                        # that lane's clock: its pin sits beside the lane's data launch point (was: projected toward the
+                        # centroid of all its loads -> 16 ck_xc on one face, up to 4.8 mm of unrepeated clock wire to
+                        # the gate on the far face, and a rising_edge DATA arc that left the whole lane unclocked).
+                        fw_ = [o[4:] for o in touch.get(n_, ()) if o.startswith('fwd_')]
+                        ln = fw_[0] if len(fw_) == 1 else None
                     L = links.get(ln)
                     if L and bname in (L['src'], L['dst']):
                         x, y = L['sxy'] if bname == L['src'] else L['dxy']
@@ -601,7 +609,7 @@ def main():
             if p == clk:
                 pk = 'clock'
             elif d == 'output':
-                pk = 'fclk_out' if 'fclk_out' in kinds and kinds <= {'fclk_out'} else 'data'
+                pk = 'fclk_out' if 'fclk_out' in kinds else 'data'     # S81-DIESTA: a forwarded-clock port stays a clock arc
             else:
                 pk = 'clock' if kinds and kinds <= {'clock'} else 'data'
             ports.append((p, d, wdt, bus, pk))
@@ -705,6 +713,25 @@ def main():
     # value (the tile native audit --case excludes exactly these pins, so die STA must not time them either)
     case_lines = case_strap_sdc(insts, kind, a.bind_dir / 'port_bind.json')
     sdc += case_lines
+    # S81-DIESTA (10-20) STATIC RELAY RELEASE: dv_bind opens every lane's hop-0 gate (ICG, ENA = calendar reset leaf)
+    # at an edge G after EVERY relay rs of that lane has released (relay_release_max + 1 <= G).  ICGx4 latches ENA while
+    # CLK is low, so no lane clock edge reaches any relay of the lane before G: the relay rs (rq on the lane clock) only
+    # changes while its clock is stopped and is never sampled in transition.  This, and only this, makes the
+    # region-root -> lane-clock rs paths untimed; lanes without the proven order keep every rs check (reported below).
+    srel, srel_bad = [], []
+    for row in list(bc.get('landings', {}).get('rows', [])) + list(bc.get('frame_hop0_gates', {}).get('rows', [])):
+        sr = row.get('static_release')
+        if not sr:
+            continue
+        nst_ = row.get('stages') or 0
+        if sr['relay_release_max'] + 1 <= sr['G'] and nst_:
+            lk_ = row['link']; pins_ = ' '.join(f'st_{lk_}_{k}/rs' for k in range(nst_))
+            srel.append(f'set_false_path -to [get_pins {{{pins_}}}]')
+        else:
+            srel_bad.append(row['link'])
+    if srel:
+        sdc += [f'# static relay release (dv_bind S81-DIESTA calendar): {len(srel)} lanes, gate edge G > every relay rs release'] + srel
+    print(f'DV_RVCASE static relay release lanes={len(srel)} unproven={len(srel_bad)} {srel_bad[:8]}')
     (out / 'landing.sdc').write_text('\n'.join(sdc) + '\n')
     no_model = [r['link'] for r in LP['links'] if r['link'] not in link_pins and f'ld_{r["link"]}' not in loc]
 
