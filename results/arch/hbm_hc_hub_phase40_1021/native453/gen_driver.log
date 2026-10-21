@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-gen-native-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-gen-native-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-gen-native-1021
+ot-run: ot-gold2       admits  -256 GB (avail 248, growth 427, headroom 0, waiters 4/48 GB) load 28/112 running 18 disk 2695 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-gen-native-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-gen-native-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-gen-native-1021
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-hc-p40-gen-native-1021 (1.1 GB) ot-gold2 -> ot-epyc5 (no host with --dir admits 16 GB now)
+ot-run: SPILL: copied 26597 changed entries in 29 s; running on ot-epyc5; written files go back to ot-gold2 after the run
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3383408-1792625398 after 0 s
+REF_TILE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it) -> pass --area-um2 / std_area_um2 from the synthesis smoke
+REF_TILE kit physical/ref_tile/hbm_hcq_hub_c7p40 outline 734.4 x 734.4 um (spec outline (exact: the closed view's sub-slot)); job hbm_hcq_hub_c7p40-c6r-7b99bdb63
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3383408-1792625398): exit 0
+ot-run: SPILL: outputs copied back ot-epyc5 -> ot-gold2; RAN on ot-epyc5: exit 0
