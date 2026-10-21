@@ -830,6 +830,25 @@ def clocks(spec, period):
     return '\n'.join(lines) + '\n'
 
 
+def forwarded_pre_cts_tcl(spec, entry_sdc):
+    """Restore the existing forwarded-clock contract in a fresh CTS process.
+
+    write_sdc preserves clocks, but not Tcl metadata.  The CTS wrapper needs
+    these exact generated dictionaries before it checks sink ownership; the
+    complete entry SDC is reapplied after CTS as before.  No clock, endpoint
+    policy or timing constraint is changed here.
+    """
+    if not forwarded_soft_clocks(spec):
+        return []
+    out = []
+    for prefix in ('set ::ot_ce_fwd_soft ', 'set ::ot_ce_refs '):
+        matches = [line for line in entry_sdc.splitlines() if line.startswith(prefix)]
+        if len(matches) != 1:
+            raise ValueError('forwarded pre-CTS: missing or duplicate generated contract ' + prefix)
+        out.extend(matches)
+    return out
+
+
 
 def domain_io_budget(name, d):
     """(in, out) outside-share fractions of a clock-entry domain's period.  Default 0.2 / 0.2 (the nominal native pin
@@ -2072,6 +2091,19 @@ proc ot_ce_forwarded_soft_visit {corner groups_name} {
 
 def forwarded_soft_body(body):
     substitutions = [
+        # Only explicit real-clock ports have propagated clock tags. Their hard
+        # and soft sinks must use the same phase-normalized clock metric. The
+        # legacy data-only forwarded class keeps its existing arrival query.
+        ('      set arr [ot_ce_fwd_arrival $pin]',
+         '      if {[dict exists $::ot_ce_fwd_soft $port]} {\n'
+         '        set info [dict get $::ot_ce_fwd_soft $port]\n'
+         '        set clock [get_clocks [dict get $info clock]]\n'
+         '        if {[llength $clock] != 1} {error "OT_FORWARDED_SOFT: missing clock $port"}\n'
+         '        set arr [ot_ce_clock_wire $pin $clock]\n'
+         '        puts "OT_FORWARDED_SOFT HARD_CLOCK_BASIS $corner $port $full clock=[get_full_name $clock] metric=phase_normalized_clock wire=$arr"\n'
+         '      } else {\n'
+         '        set arr [ot_ce_fwd_arrival $pin]\n'
+         '      }'),
         ('  set_propagated_clock [get_clocks ot_entry_*]',
          '  set_propagated_clock [get_clocks ot_entry_*]\n  set_propagated_clock [get_clocks ot_forwarded_*]'),
         ('  foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}',

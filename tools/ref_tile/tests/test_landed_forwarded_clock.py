@@ -111,7 +111,7 @@ class ForwardedOpenroad(unittest.TestCase):
     """Real clock_entries.tcl + TritonCTS on the two region roots; xk stays a data input (no create_clock); routed
     require-wire scene (judged)."""
 
-    def run_flow(self, mutant=''):
+    def run_flow(self, mutant='', restart_pre_cts=None):
         with tempfile.TemporaryDirectory() as d:
             w = Path(d)
             s = fixture(w, fwd2=dict(min=290, mean=300, max=310) if mutant == 'skewed' else None)
@@ -164,6 +164,11 @@ estimate_parasitics -placement
 source /w/entries.tcl
 puts "LANDED_RESULT PASS"
 '''
+            if restart_pre_cts is not None:
+                metadata = CE.forwarded_pre_cts_tcl(s, CE.generate(s, w)) if restart_pre_cts else []
+                restore = 'unset -nocomplain ::ot_ce_fwd_soft ::ot_ce_refs\n' + '\n'.join(metadata) + '\n'
+                flow = flow.replace('source /src/physical/common_flow/clock_entries.tcl',
+                                    restore + 'source /src/physical/common_flow/clock_entries.tcl')
             if pre:
                 flow = flow.replace(flow[flow.index('set ::ot_ce_cts_roots'):flow.index('source /w/entries.tcl')],
                                     'set ::ot_ce_cts_roots {ck_ra ck_rb}\n')
