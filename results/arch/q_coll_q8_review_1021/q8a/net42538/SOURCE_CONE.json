@@ -1,0 +1,228 @@
+{
+  "scope": "Bounded original mapped-source lookup for existing q8a failed net42538; no EDA/probe/reroute or legal-path claim",
+  "source_commit": "a153761f95cee63943c1c363ec80ccc9c4344b8a",
+  "mapped_file_sha256": "68b2d033b4603e1ce949fe697ea27bbd34b341981884c40f623839033814b1f5",
+  "mapped_module": "ot_coll_split_q_native32",
+  "failed_sink": "_06451_/A",
+  "physical_repair_driver": "hold42540/Y (saved ODB receipt a0db073d5)",
+  "original_input_net": "_00908_",
+  "original_mapped_driver": {
+    "cell": "\\srr_q[2][19]$_DFF_P_",
+    "type": "DFFHQNx1_ASAP7_75t_R",
+    "ports": {
+      "CLK": "clk",
+      "D": "sr2_data[19]",
+      "QN": "_00908_"
+    },
+    "exact_source": "  DFFHQNx1_ASAP7_75t_R \\srr_q[2][19]$_DFF_P_  (\n    .CLK(clk),\n    .D(sr2_data[19]),\n    .QN(_00908_)\n  );"
+  },
+  "original_mapped_sink_count": 1,
+  "whole_mapped_text_token_occurrences": 3,
+  "inverter_output_net": "_03057_",
+  "inverter_output_sink_count": 5,
+  "selected_cells": [
+    {
+      "cell": "\\srr_q[2][19]$_DFF_P_",
+      "type": "DFFHQNx1_ASAP7_75t_R",
+      "ports": {
+        "CLK": "clk",
+        "D": "sr2_data[19]",
+        "QN": "_00908_"
+      },
+      "exact_source": "  DFFHQNx1_ASAP7_75t_R \\srr_q[2][19]$_DFF_P_  (\n    .CLK(clk),\n    .D(sr2_data[19]),\n    .QN(_00908_)\n  );"
+    },
+    {
+      "cell": "_06451_",
+      "type": "INVx1_ASAP7_75t_R",
+      "ports": {
+        "A": "_00908_",
+        "Y": "_03057_"
+      },
+      "exact_source": "  INVx1_ASAP7_75t_R _06451_ (\n    .A(_00908_),\n    .Y(_03057_)\n  );"
+    },
+    {
+      "cell": "_06452_",
+      "type": "AO222x2_ASAP7_75t_R",
+      "ports": {
+        "A1": "_03055_",
+        "A2": "_03046_",
+        "B1": "_03026_",
+        "B2": "_03056_",
+        "C1": "_03048_",
+        "C2": "_03057_",
+        "Y": "_03058_"
+      },
+      "exact_source": "  AO222x2_ASAP7_75t_R _06452_ (\n    .A1(_03055_),\n    .A2(_03046_),\n    .B1(_03026_),\n    .B2(_03056_),\n    .C1(_03048_),\n    .C2(_03057_),\n    .Y(_03058_)\n  );"
+    },
+    {
+      "cell": "_06895_",
+      "type": "AO222x2_ASAP7_75t_R",
+      "ports": {
+        "A1": "_03055_",
+        "A2": "_03375_",
+        "B1": "_03371_",
+        "B2": "_03056_",
+        "C1": "_03376_",
+        "C2": "_03057_",
+        "Y": "_03378_"
+      },
+      "exact_source": "  AO222x2_ASAP7_75t_R _06895_ (\n    .A1(_03055_),\n    .A2(_03375_),\n    .B1(_03371_),\n    .B2(_03056_),\n    .C1(_03376_),\n    .C2(_03057_),\n    .Y(_03378_)\n  );"
+    },
+    {
+      "cell": "_07195_",
+      "type": "AO222x2_ASAP7_75t_R",
+      "ports": {
+        "A1": "_03055_",
+        "A2": "_03551_",
+        "B1": "_03547_",
+        "B2": "_03056_",
+        "C1": "_03552_",
+        "C2": "_03057_",
+        "Y": "_03554_"
+      },
+      "exact_source": "  AO222x2_ASAP7_75t_R _07195_ (\n    .A1(_03055_),\n    .A2(_03551_),\n    .B1(_03547_),\n    .B2(_03056_),\n    .C1(_03552_),\n    .C2(_03057_),\n    .Y(_03554_)\n  );"
+    },
+    {
+      "cell": "_07491_",
+      "type": "AO222x2_ASAP7_75t_R",
+      "ports": {
+        "A1": "_03055_",
+        "A2": "_03723_",
+        "B1": "_03719_",
+        "B2": "_03056_",
+        "C1": "_03724_",
+        "C2": "_03057_",
+        "Y": "_03726_"
+      },
+      "exact_source": "  AO222x2_ASAP7_75t_R _07491_ (\n    .A1(_03055_),\n    .A2(_03723_),\n    .B1(_03719_),\n    .B2(_03056_),\n    .C1(_03724_),\n    .C2(_03057_),\n    .Y(_03726_)\n  );"
+    },
+    {
+      "cell": "_07787_",
+      "type": "AO222x2_ASAP7_75t_R",
+      "ports": {
+        "A1": "_03055_",
+        "A2": "_03895_",
+        "B1": "_03891_",
+        "B2": "_03056_",
+        "C1": "_03896_",
+        "C2": "_03057_",
+        "Y": "_03898_"
+      },
+      "exact_source": "  AO222x2_ASAP7_75t_R _07787_ (\n    .A1(_03055_),\n    .A2(_03895_),\n    .B1(_03891_),\n    .B2(_03056_),\n    .C1(_03896_),\n    .C2(_03057_),\n    .Y(_03898_)\n  );"
+    },
+    {
+      "cell": "_06453_",
+      "type": "AOI211x1_ASAP7_75t_R",
+      "ports": {
+        "A1": "_03041_",
+        "A2": "_03054_",
+        "B": "_03058_",
+        "C": "_02995_",
+        "Y": "_03059_"
+      },
+      "exact_source": "  AOI211x1_ASAP7_75t_R _06453_ (\n    .A1(_03041_),\n    .A2(_03054_),\n    .B(_03058_),\n    .C(_02995_),\n    .Y(_03059_)\n  );"
+    },
+    {
+      "cell": "_06454_",
+      "type": "AOI21x1_ASAP7_75t_R",
+      "ports": {
+        "A1": "_02962_",
+        "A2": "_03053_",
+        "B": "_03059_",
+        "Y": "_00057_"
+      },
+      "exact_source": "  AOI21x1_ASAP7_75t_R _06454_ (\n    .A1(_02962_),\n    .A2(_03053_),\n    .B(_03059_),\n    .Y(_00057_)\n  );"
+    },
+    {
+      "cell": "\\out_data[19]$_DFF_P_",
+      "type": "DFFHQNx1_ASAP7_75t_R",
+      "ports": {
+        "CLK": "clk",
+        "D": "_00057_",
+        "QN": "_01411_"
+      },
+      "exact_source": "  DFFHQNx1_ASAP7_75t_R \\out_data[19]$_DFF_P_  (\n    .CLK(clk),\n    .D(_00057_),\n    .QN(_01411_)\n  );"
+    },
+    {
+      "cell": "_06896_",
+      "type": "AO21x1_ASAP7_75t_R",
+      "ports": {
+        "A1": "_03374_",
+        "A2": "_03054_",
+        "B": "_03378_",
+        "Y": "\\xs[403] "
+      },
+      "exact_source": "  AO21x1_ASAP7_75t_R _06896_ (\n    .A1(_03374_),\n    .A2(_03054_),\n    .B(_03378_),\n    .Y(\\xs[403] )\n  );"
+    },
+    {
+      "cell": "_07196_",
+      "type": "AO21x1_ASAP7_75t_R",
+      "ports": {
+        "A1": "_03550_",
+        "A2": "_03054_",
+        "B": "_03554_",
+        "Y": "\\xs[275] "
+      },
+      "exact_source": "  AO21x1_ASAP7_75t_R _07196_ (\n    .A1(_03550_),\n    .A2(_03054_),\n    .B(_03554_),\n    .Y(\\xs[275] )\n  );"
+    },
+    {
+      "cell": "_07492_",
+      "type": "AO21x1_ASAP7_75t_R",
+      "ports": {
+        "A1": "_03722_",
+        "A2": "_03054_",
+        "B": "_03726_",
+        "Y": "\\xs[147] "
+      },
+      "exact_source": "  AO21x1_ASAP7_75t_R _07492_ (\n    .A1(_03722_),\n    .A2(_03054_),\n    .B(_03726_),\n    .Y(\\xs[147] )\n  );"
+    },
+    {
+      "cell": "_07788_",
+      "type": "AO21x1_ASAP7_75t_R",
+      "ports": {
+        "A1": "_03894_",
+        "A2": "_03054_",
+        "B": "_03898_",
+        "Y": "\\xs[19] "
+      },
+      "exact_source": "  AO21x1_ASAP7_75t_R _07788_ (\n    .A1(_03894_),\n    .A2(_03054_),\n    .B(_03898_),\n    .Y(\\xs[19] )\n  );"
+    }
+  ],
+  "role": "unreset clocked SerDes input data capture, reused in gather/cross-fold data selection; not high-fanout write-control",
+  "rtl_source_sha256": "7253e9114443c81d0cb411eb0ceab7c2fe3a670021d069d9ad36a3f47593acdd",
+  "rtl_source_file": "rtl/rom/ot_coll_tp8_split_native32.sv",
+  "rtl_lines": {
+    "capture": [
+      "    reg [127:0] srr_q [0:2];",
+      "    generate for (j = 0; j < 3; j = j + 1) begin : g_sri",
+      "        always @(posedge clk) srr_q[j] <= (j == 0) ? sr0_data : (j == 1) ? sr1_data : sr2_data;",
+      "    end endgenerate"
+    ],
+    "xsrc": [
+      "    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_xsrc",
+      "        for (k = 0; k < 4; k = k + 1) begin : g_c",
+      "            wire [3:0] s = sel_r[(gq*4 + k)*4 +: 4];",
+      "            assign xsrc[gq*128 + k*32 +: 32] = (td_d[k*32 +: 32] & {32{s[3]}}) | (srr_q[2][k*32 +: 32] & {32{s[2]}})",
+      "                                             | (srr_q[1][k*32 +: 32] & {32{s[1]}}) | (srr_q[0][k*32 +: 32] & {32{s[0]}});",
+      "        end"
+    ],
+    "gather": [
+      "    wire [127:0] g_out;",
+      "    generate for (k = 0; k < 4; k = k + 1) begin : g_go",
+      "        wire [3:0] s = gs_r[k*4 +: 4];",
+      "        assign g_out[k*32 +: 32] = (td_d[k*32 +: 32] & {32{s[3]}}) | (srr_q[2][k*32 +: 32] & {32{s[2]}})",
+      "                                 | (srr_q[1][k*32 +: 32] & {32{s[1]}}) | (srr_q[0][k*32 +: 32] & {32{s[0]}});",
+      "    end endgenerate"
+    ]
+  },
+  "direct_destinations": [
+    "xs[403]",
+    "xs[275]",
+    "xs[147]",
+    "xs[19]",
+    "out_data[19] D through _06453_/_06454_"
+  ],
+  "comparison_qb12b": "qb12b net39744 original mapped source is AO21 read-result cone into qrow_part[176]; q8a original source is registered SerDes data. Physical macro topology differs, and neither original net is a high-fanout write-copy root.",
+  "limits": "Saved ODB dropped30 transient hook shapes; original mapper cone alone cannot prove exact failing maze state, legal bypass or repair. No high-fanout/control rewrite justified by this failed net.",
+  "rtl_source_git_blob": "32c8874c16b90a4f12d97a4aae95a01ee319aa9b"
+}
