@@ -48,6 +48,12 @@ for d in rtl tools configs; do [ -e "$SRC/$d" ] && cp -r "$SRC/$d" "$T/"; done
 [ -e "$SRC/physical" ] && cp -as "$SRC/physical" "$T/"
 cp -r "$S/fx_res/results" "$T/"
 cd "$T" || exit 3
+# Current LAST-K station consumes all running k blocks. Repair the benchmark cut
+# contract/lifecycle without changing RTL; preserve this overlay in the receipt.
+if ! grep -q 'producer_words_per_cluster_per_round' rtl/test/qwen_dv/dv_lower_mat_bench.py; then
+  patch -p1 < "$HERE/stg_mat_running.patch" > "$S/mat_contract_patch.log" 2>&1 || exit 3
+fi
+sha256sum tools/qwen_layerbench/dv_lower_mat.py rtl/test/qwen_dv/dv_lower_mat_bench.py > "$S/mat_contract_sources.sha256"
 t0=$(date +%s)
 
 # ---------------------------------------------------------------- 1. fixtures (background) + 3 builds (background)
