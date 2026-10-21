@@ -1,0 +1,11 @@
+# S81 VS opt-in FP native consumer partition
+
+Only the new ot_s81sl_fp_n32.sv source is changed. Existing shared FP files, defaults and closed consumers remain unchanged. The VS owner supplies opt-in OT_S81SL_VS_FP_N32 hooks for its four qmul and eight qadd consumers, with XL6 unchanged. Arithmetic is the released f12 add CUTS1101011 and mul CUTS01101011. Data/control cuts retain the original edges; no flow control or pipeline edge was added.
+
+Actual fullVS native roots traced to captured add swap137, normalized mul operands97, captured/combinational shift controls117, and shared output/mask predicates. The new source routes same-edge kept register copies to real bounded mux consumers; each variable shift level has kept four-output constant-distance groups, and real six-bit partial products remain before CSA compression. No dummy copy family, automatic fanout split, exception or relaxed native threshold is used. Mask arithmetic and output predicates are local to bounded consumer groups.
+
+The new wrappers have the original seven port positions, but reset port is width6: pipelinevalid on[0], output bytes on[1..4], err/valid on[5]. Parent supplies six independent tree3 leaves at identical depth/release per FP unit (VS owner128leaf profile, no scalar alias, no reset age change). Standalone equivalence deliberately drives six identical reset waveforms to prove the logical profile.
+
+Existing rtl/test/tb_dsrom_fp32_add_l6.{sv,cpp} is adapted only to bind the candidate DUT, with its original 2M biased vectors and seed12345; the multiplier uses the same existing harness with released fast multiplier as reference. Every valid/err/y bit is compared at LAT6, reference delayed3. Source07080c4df PASS add and mul each2000024cycles, zero mismatches. Current2f554833a rerun pending.
+
+Native diagnostics use the VS actual Liberty files, Yosys mapped netlist, standard kept-register hook and mandatory native census. Source070 r3 leaf measured add33/2violations and mul71/8, all roleerrors0. The only remaining add faults were two output predicates; mul remaining mask shc combinational roots and two output predicates. Source2f fixes those concrete cones; qualification remains pending mapped result and owner fullVS mechanism/native. No layout or adoption claim.
