@@ -1,0 +1,18 @@
+{
+  "reviewer": "codex coordinator (personal approval relayed by S81 lead)",
+  "time": "2026-10-21T14:08:56.258832-07:00",
+  "gate_commit": "f5bcbdfbe463653b1e25853a32b4871554dd8eaf",
+  "geometry_sha256": "50f5d5ddc7d5bc72e15b719adac1fbdccfc6441dd87c8797f5c920b40d2ae421",
+  "verdict": "APPROVED",
+  "approval_provenance": "ROOT coordinator personally reviewed all four exact PNGs, READMEs and gates; approval relayed by S81 lead. Receipt records this explicit personal approval.",
+  "source_archive_sha256": "f1c96b34f782a7322f88a650e2cf99962f7f2f0e45c972bc66f003bc994ffced",
+  "source_manifest_sha256": "0856e75c79f987177d3137af96ee495bd89561bb5dc7cca8279db24fb507879f",
+  "checklist": {
+    "lattice": "55 lattice SRAMs,725.76x583.2um, no visible overlap. Actual parent orientation/track checks still owed.",
+    "std_cell_band": "Distributed rows and open macro channels, no squeeze.",
+    "pin_spread": "Wide actual face distribution retained; exact CORE_CRED12 view only.",
+    "clock_entry": "W face centre; native32; TT/FF spread 54.0/57.0ps; preferred margin.",
+    "shape": "GRT0; final route owed. Preserve all prior failures; no timing/source waiver."
+  },
+  "contract": "CORE_CRED12/DEPTH12, two-edge data/credit relay, RTT+4, static circuits, no CRED8 alias."
+}
