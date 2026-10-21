@@ -7,6 +7,10 @@
 // {red_cmd edge, tag, value} = hdc_golden_v41.csum / canonical max; scalar_valid must rise exactly SCL edges after the
 // EXPORT command edge, in order, and no FAULT anywhere.  MUT: 1,3,4 pretree_s mutants (chunk order, max ignored, padding
 // off by one); 512 qcore late tree operand; 1024 join pairing (pretree_j MUT 2).
+// HBM-QCORE8 10-20: qcore top under test (default r5; su_pretree_r9_run.sh passes -DOT_PT_QCORE=ot_hbm_su_static_qcore_r9)
+`ifndef OT_PT_QCORE
+`define OT_PT_QCORE ot_hbm_su_static_qcore_r5
+`endif
 module tb_hbm_su_red_pretree;
  parameter integer MUT=0, SCL=11;
  parameter integer N=4096, NX=64;
@@ -32,7 +36,7 @@ module tb_hbm_su_red_pretree;
    .ro_x(rx),.ro_v(rv),.tree_o(slice_t[g*67+:67]),.fault(sf[g]));
  end
  wire red_sv, red_rf_v, cfault; wire [31:0] red_tag, red_x; wire [4*32-1:0] rf_bword; wire [4*9-1:0] rf_bcmd; wire [255:0] rf_dsec;
- ot_hbm_su_static_qcore_r5 #(.MUT((MUT==512||MUT==1024)?MUT:0),.COLLPORT(1),.RF_LOCAL(1),.PRETREE(1)) u_c(.clk_ctl(clk),.rst_n(rst_n),
+ `OT_PT_QCORE #(.MUT((MUT==512||MUT==1024)?MUT:0),.COLLPORT(1),.RF_LOCAL(1),.PRETREE(1)) u_c(.clk_ctl(clk),.rst_n(rst_n),
   .rf_rd_cmd(54'd0),.red_cmd(red_cmd),.rf_drain_cmd(2'd0),.slice_x(128'd0),.rf_wv(4'd0),.rf_wa(32'd0),.rf_wd(128'd0),
   .rf_bword(rf_bword),.rf_bcmd(rf_bcmd),.rf_dsec(rf_dsec),.red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.red_rf_v(red_rf_v),
   .rr_wv(1'b0),.rr_wa(5'd0),.rr_wd(256'd0),.sfu_x(32'd0),.slice_t(slice_t),.fault(cfault));
