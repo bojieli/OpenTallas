@@ -2334,14 +2334,19 @@ def place(m, K, geo, F):
         old = [es6.x, es6.y]
         m['insts'].remove(es6)
         try:
+            # LEAD-KV 10-21: es6p3/p4 left a 579 um krs_ES_6 hop with no relay site (21.6 um halo boxed the 1062-b
+            # response word in): OT_KV_KRT_ES6_HALO reserves a relay / landing corridor around the re-homed frame.
+            halo6 = float(os.environ.get('OT_KV_KRT_ES6_HALO', '21.6'))
             es6.x, es6.y = free_spot(m, es6.w + SH, es6.h + SH,
                                     (grp6.x + grp6.w / 2, grp6.y + grp6.h / 2),
-                                    GX, GY, rmax=2000.0)
+                                    GX, GY, halo=halo6, rmax=2000.0)
         finally:
             m['insts'].append(es6)
         m.setdefault('geo', {})['krt_es6_home'] = dict(
             instance=es6.name, old=old, new=[es6.x, es6.y],
-            group='slg_ES_6', response_budget=80)
+            group='slg_ES_6', response_budget=80, halo=halo6)
+        print(f"kv_static_die: KRT_ES6_HOME {es6.name} {old} -> {[es6.x, es6.y]} size {es6.w}x{es6.h} halo {halo6}; "
+              f"slg_ES_6 at {[grp6.x, grp6.y]} size {grp6.w}x{grp6.h}", file=sys.stderr)
     # centre tiles: free spots nearest their anchors
     d2d = by['d2d_kv']
     host = by['host']
