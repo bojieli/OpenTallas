@@ -8,7 +8,8 @@
  "source_state_bits": {
   "old_frame_banks": 7189,
   "new_frame_banks": 7189,
-  "delta": 0
+  "delta": 0,
+  "basis": "Observable output state: old draft data bits552:4 plus separately registered type3:0, versus one new553-bit bank. Old unused constant nibble declarations are excluded."
  },
  "mapped_state_cost": "More physical copies can survive; exact native/area not yet measured. Upper raw output FF inventory7189, cannot infer mapped delta from source declarations.",
  "output_boundary_bits_per_edge": {
@@ -34,5 +35,11 @@
   "MAIN1036.8square placementGPL0305 andFBclock89.5/98.5+SRAMslew218.2 failures preserved; no unchanged regate.",
   "No kit/view/source alias; parent currentHOSTB selected source remains8916 and unchanged."
  ],
- "next": "Existing actual controller bench adapted only top identity, then mapped native/reach; no physical campaign until actual proof and safe plan."
+ "next": "Existing actual controller bench adapted only top identity, then mapped native/reach; no physical campaign until actual proof and safe plan.",
+ "raw_output_reg_declarations": {
+  "old_frame_plus_type_bits": 7209,
+  "new_frame_bits": 7189,
+  "removed_unused_constant_nibble_bits": 20,
+  "mapped_ppa_credit": false
+ }
 }
