@@ -31,10 +31,14 @@ set ::ot_ag_pointer_msb [dict create {lane[0].u_fill} 3 {lane[1].u_fill} 3 {lane
 set ::ot_ag_targets [dict create {lane[0].u_fill} {{0} {{fill_data[0]}} {1} {{fill_data[1]}} {2} {{fill_data[2]}} {3} {{fill_data[3]}} {4} {{fill_data[4]}} {5} {{fill_data[5]}} {6} {{fill_data[6]}} {7} {{fill_data[7]}} {8} {{fill_data[8]}} {9} {{fill_data[9]}} {10} {{fill_data[10]}} {11} {{fill_data[11]}} {12} {{fill_data[12]}} {13} {{fill_data[13]}} {14} {{fill_data[14]}} {15} {{fill_data[15]}} {16} {{fill_data[16]}} {17} {{fill_data[17]}} {18} {{fill_data[18]}} {19} {{fill_data[19]}} {20} {{fill_data[20]}} {21} {{fill_data[21]}} {22} {{fill_data[22]}} {23} {{fill_data[23]}} {24} {{fill_data[24]}} {25} {{fill_data[25]}} {26} {{fill_data[26]}} {27} {{fill_data[27]}} {28} {{fill_data[28]}} {29} {{fill_data[29]}} {30} {{fill_data[30]}} {31} {{fill_data[31]}} {32} {{fill_data[32]}} {33} {{fill_data[33]}} {34} {{fill_data[34]}} {35} {{fill_data[35]}} {36} {{fill_data[36]}} {37} {{fill_data[37]}} {38} {{fill_data[38]}} {39} {{fill_data[39]}} {40} {{fill_data[40]}} {41} {{fill_data[41]}} {42} {{fill_data[42]}} {43} {{fill_data[43]}} {44} {{fill_data[44]}} {45} {{fill_data[45]}} {46} {{fill_data[46]}} {47} {{fill_data[47]}} {48} {{fill_data[48]}} {49} {{fill_data[49]}} {50} {{fill_data[50]}} {51} {{fill_data[51]}} {52} {{fill_data[52]}} {53} {{fill_data[53]}} {54} {{fill_data[54]}} {55} {{fill_data[55]}} {56} {{fill_data[56]}} {57} {{fill_data[57]}} {58} {{fill_data[58]}} {59} {{fill_data[59]}} {60} {{fill_data[60]}} {61} {{fill_data[61]}} {62} {{fill_data[62]}} {63} {{fill_data[63]}} {64} {{fill_data[64]}} {65} {{fill_data[65]}} {66} {{fill_data[66]}} {67} {{fill_data[67]}} {68} {{fill_data[68]}} {69} {{fill_data[69]}} {70} {{fill_data[70]}} {71} {{fill_data[71]}} {72} {{fill_data[72]}} {73} {{fill_data[73]}} {74} {{fill_data[74]}} {75} {{fill_data[75]}} {76} {{fill_data[76]}} {77} {{fill_data[77]}} {78} {{fill_data[78]}} {79} {{fill_data[79]}} {80} {{fill_data[80]}} {81} {{fill_data[81]}} {82} {{fill_data[82]}} {83} {{fill_data[83]}} {84} {{fill_data[84]}} {85} {{fill_data[85]}} {86} {{fill_data[86]}} {87} {{fill_data[87]}} {88} {{fill_data[88]}} {89} {{fill_data[89]}} {90} {{fill_data[90]}} {91} {{fill_data[91]}} {92} {{fill_data[92]}} {93} {{fill_data[93]}} {94} {{fill_data[94]}} {95} {{fill_data[95]}} {96} {{fill_data[96]}} {97} {{fill_data[97]}} {98} {{fill_data[98]}} {99} {{fill_data[99]}} {100} {{fill_data[100]}} {101} {{fill_data[101]}} {102} {{fill_data[102]}} {103} {{fill_data[103]}} {104} {{fill_data[104]}} {105} {{fill_data[105]}} {106} {{fill_data[106]}} {107} {{fill_data[107]}} {108} {{fill_data[108]}} {109} {{fill_data[109]}} {110} {{fill_data[110]}} {111} {{fill_data[111]}} {112} {{fill_data[112]}} {113} {{fill_data[113]}} {114} {{fill_data[114]}} {115} {{fill_data[115]}} {116} {{fill_data[116]}} {117} {{fill_data[117]}} {118} {{fill_data[118]}} {119} {{fill_data[119]}} {120} {{fill_data[120]}} {121} {{fill_data[121]}} {122} {{fill_data[122]}} {123} {{fill_data[123]}} {124} {{fill_data[124]}} {125} {{fill_data[125]}} {126} {{fill_data[126]}} {127} {{fill_data[127]}} {128} {{fill_data[128]}} {129} {{fill_data[129]}} {130} {{fill_data[130]}} {131} {{fill_data[131]}} {132} {{fill_data[132]}} {133} {{fill_data[133]}} {134} {{fill_data[134]}} {135} {{fill_data[135]}} {136} {{fill_data[136]}} {137} {{fill_data[137]}} {138} {{fill_data[138]}} {139} {{fill_data[139]}} {140} {{fill_data[140]}} {141} {{fill_data[141]}} {142} {{fill_data[142]}} {143} {{fill_data[143]}} {144} {{fill_data[144]}} {145} {{fill_data[145]}} {146} {{fill_data[146]}} {147} {{fill_data[147]}} {148} {{fill_data[148]}} {149} {{fill_data[149]}} {150} {{fill_data[150]}} {151} {{fill_data[151]}} {152} {{fill_data[152]}} {153} {{fill_data[153]}} {154} {{fill_data[154]}} {155} {{fill_data[155]}} {156} {{fill_data[156]}} {157} {{fill_data[157]}} {158} {{fill_data[158]}} {159} {{fill_data[159]}} {160} {{fill_data[160]}} {161} {{fill_data[161]}} {162} {{fill_data[162]}} {163} {{fill_data[163]}} {164} {{fill_data[164]}} {165} {{fill_data[165]}} {166} {{fill_data[166]}} {167} {{fill_data[167]}} {168} {{fill_data[168]}} {169} {{fill_data[169]}} {170} {{fill_data[170]}} {171} {{fill_data[171]}} {172} {{fill_data[172]}} {173} {{fill_data[173]}} {174} {{fill_data[174]}} {175} {{fill_data[175]}} {176} {{fill_data[176]}} {177} {{fill_data[177]}} {178} {{fill_data[178]}} {179} {{fill_data[179]}} {180} {{fill_data[180]}} {181} {{fill_data[181]}} {182} {{fill_data[182]}} {183} {{fill_data[183]}} {184} {{fill_data[184]}} {185} {{fill_data[185]}} {186} {{fill_data[186]}} {187} {{fill_data[187]}} {188} {{fill_data[188]}} {189} {{fill_data[189]}} {190} {{fill_data[190]}} {191} {{fill_data[191]}} {192} {{fill_data[192]}} {193} {{fill_data[193]}} {194} {{fill_data[194]}} {195} {{fill_data[195]}} {196} {{fill_data[196]}} {197} {{fill_data[197]}} {198} {{fill_data[198]}} {199} {{fill_data[199]}} {200} {{fill_data[200]}} {201} {{fill_data[201]}} {202} {{fill_data[202]}} {203} {{fill_data[203]}} {204} {{fill_data[204]}} {205} {{fill_data[205]}} {206} {{fill_data[206]}} {207} {{fill_data[207]}} {208} {{fill_data[208]}} {209} {{fill_data[209]}} {210} {{fill_data[210]}} {211} {{fill_data[211]}} {212} {{fill_data[212]}} {213} {{fill_data[213]}} {214} {{fill_data[214]}} {215} {{fill_data[215]}} {216} {{fill_data[216]}} {217} {{fill_data[217]}} {218} {{fill_data[218]}} {219} {{fill_data[219]}} {220} {{fill_data[220]}} {221} {{fill_data[221]}} {222} {{fill_data[222]}} {223} {{fill_data[223]}} {224} {{fill_data[224]}} {225} {{fill_data[225]}} {226} {{fill_data[226]}} {227} {{fill_data[227]}} {228} {{fill_data[228]}} {229} {{fill_data[229]}} {230} {{fill_data[230]}} {231} {{fill_data[231]}} {232} {{fill_data[232]}} {233} {{fill_data[233]}} {234} {{fill_data[234]}} {235} {{fill_data[235]}} {236} {{fill_data[236]}} {237} {{fill_data[237]}} {238} {{fill_data[238]}} {239} {{fill_data[239]}} {240} {{fill_data[240]}} {241} {{fill_data[241]}} {242} {{fill_data[242]}} {243} {{fill_data[243]}} {244} {{fill_data[244]}} {245} {{fill_data[245]}} {246} {{fill_data[246]}} {247} {{fill_data[247]}} {248} {{fill_data[248]}} {249} {{fill_data[249]}} {250} {{fill_data[250]}} {251} {{fill_data[251]}} {252} {{fill_data[252]}} {253} {{fill_data[253]}} {254} {{fill_data[254]}} {255} {{fill_data[255]}} {256} {{fill_slot[0]}} {257} {{fill_slot[1]}} {258} {{fill_slot[2]}} {259} {{fill_slot[3]}} {260} {{fill_slot[4]}} {261} {{fill_slot[5]}} {262} {{fill_epoch[0]}} {263} {{fill_epoch[1]}} {264} {{fill_epoch[2]}} {265} {{fill_epoch[3]}} {266} {{fill_epoch[4]}} {267} {{fill_epoch[5]}} {268} {{fill_epoch[6]}} {269} {{fill_epoch[7]}} {270} {{fill_epoch[8]}} {271} {{fill_epoch[9]}} {272} {{fill_epoch[10]}} {273} {{fill_epoch[11]}} {274} {{fill_epoch[12]}} {275} {{fill_epoch[13]}} {276} {{fill_epoch[14]}} {277} {{fill_epoch[15]}} {278} {{fill_bank[0]}}} {lane[1].u_fill} {{0} {{fill_data[256]}} {1} {{fill_data[257]}} {2} {{fill_data[258]}} {3} {{fill_data[259]}} {4} {{fill_data[260]}} {5} {{fill_data[261]}} {6} {{fill_data[262]}} {7} {{fill_data[263]}} {8} {{fill_data[264]}} {9} {{fill_data[265]}} {10} {{fill_data[266]}} {11} {{fill_data[267]}} {12} {{fill_data[268]}} {13} {{fill_data[269]}} {14} {{fill_data[270]}} {15} {{fill_data[271]}} {16} {{fill_data[272]}} {17} {{fill_data[273]}} {18} {{fill_data[274]}} {19} {{fill_data[275]}} {20} {{fill_data[276]}} {21} {{fill_data[277]}} {22} {{fill_data[278]}} {23} {{fill_data[279]}} {24} {{fill_data[280]}} {25} {{fill_data[281]}} {26} {{fill_data[282]}} {27} {{fill_data[283]}} {28} {{fill_data[284]}} {29} {{fill_data[285]}} {30} {{fill_data[286]}} {31} {{fill_data[287]}} {32} {{fill_data[288]}} {33} {{fill_data[289]}} {34} {{fill_data[290]}} {35} {{fill_data[291]}} {36} {{fill_data[292]}} {37} {{fill_data[293]}} {38} {{fill_data[294]}} {39} {{fill_data[295]}} {40} {{fill_data[296]}} {41} {{fill_data[297]}} {42} {{fill_data[298]}} {43} {{fill_data[299]}} {44} {{fill_data[300]}} {45} {{fill_data[301]}} {46} {{fill_data[302]}} {47} {{fill_data[303]}} {48} {{fill_data[304]}} {49} {{fill_data[305]}} {50} {{fill_data[306]}} {51} {{fill_data[307]}} {52} {{fill_data[308]}} {53} {{fill_data[309]}} {54} {{fill_data[310]}} {55} {{fill_data[311]}} {56} {{fill_data[312]}} {57} {{fill_data[313]}} {58} {{fill_data[314]}} {59} {{fill_data[315]}} {60} {{fill_data[316]}} {61} {{fill_data[317]}} {62} {{fill_data[318]}} {63} {{fill_data[319]}} {64} {{fill_data[320]}} {65} {{fill_data[321]}} {66} {{fill_data[322]}} {67} {{fill_data[323]}} {68} {{fill_data[324]}} {69} {{fill_data[325]}} {70} {{fill_data[326]}} {71} {{fill_data[327]}} {72} {{fill_data[328]}} {73} {{fill_data[329]}} {74} {{fill_data[330]}} {75} {{fill_data[331]}} {76} {{fill_data[332]}} {77} {{fill_data[333]}} {78} {{fill_data[334]}} {79} {{fill_data[335]}} {80} {{fill_data[336]}} {81} {{fill_data[337]}} {82} {{fill_data[338]}} {83} {{fill_data[339]}} {84} {{fill_data[340]}} {85} {{fill_data[341]}} {86} {{fill_data[342]}} {87} {{fill_data[343]}} {88} {{fill_data[344]}} {89} {{fill_data[345]}} {90} {{fill_data[346]}} {91} {{fill_data[347]}} {92} {{fill_data[348]}} {93} {{fill_data[349]}} {94} {{fill_data[350]}} {95} {{fill_data[351]}} {96} {{fill_data[352]}} {97} {{fill_data[353]}} {98} {{fill_data[354]}} {99} {{fill_data[355]}} {100} {{fill_data[356]}} {101} {{fill_data[357]}} {102} {{fill_data[358]}} {103} {{fill_data[359]}} {104} {{fill_data[360]}} {105} {{fill_data[361]}} {106} {{fill_data[362]}} {107} {{fill_data[363]}} {108} {{fill_data[364]}} {109} {{fill_data[365]}} {110} {{fill_data[366]}} {111} {{fill_data[367]}} {112} {{fill_data[368]}} {113} {{fill_data[369]}} {114} {{fill_data[370]}} {115} {{fill_data[371]}} {116} {{fill_data[372]}} {117} {{fill_data[373]}} {118} {{fill_data[374]}} {119} {{fill_data[375]}} {120} {{fill_data[376]}} {121} {{fill_data[377]}} {122} {{fill_data[378]}} {123} {{fill_data[379]}} {124} {{fill_data[380]}} {125} {{fill_data[381]}} {126} {{fill_data[382]}} {127} {{fill_data[383]}} {128} {{fill_data[384]}} {129} {{fill_data[385]}} {130} {{fill_data[386]}} {131} {{fill_data[387]}} {132} {{fill_data[388]}} {133} {{fill_data[389]}} {134} {{fill_data[390]}} {135} {{fill_data[391]}} {136} {{fill_data[392]}} {137} {{fill_data[393]}} {138} {{fill_data[394]}} {139} {{fill_data[395]}} {140} {{fill_data[396]}} {141} {{fill_data[397]}} {142} {{fill_data[398]}} {143} {{fill_data[399]}} {144} {{fill_data[400]}} {145} {{fill_data[401]}} {146} {{fill_data[402]}} {147} {{fill_data[403]}} {148} {{fill_data[404]}} {149} {{fill_data[405]}} {150} {{fill_data[406]}} {151} {{fill_data[407]}} {152} {{fill_data[408]}} {153} {{fill_data[409]}} {154} {{fill_data[410]}} {155} {{fill_data[411]}} {156} {{fill_data[412]}} {157} {{fill_data[413]}} {158} {{fill_data[414]}} {159} {{fill_data[415]}} {160} {{fill_data[416]}} {161} {{fill_data[417]}} {162} {{fill_data[418]}} {163} {{fill_data[419]}} {164} {{fill_data[420]}} {165} {{fill_data[421]}} {166} {{fill_data[422]}} {167} {{fill_data[423]}} {168} {{fill_data[424]}} {169} {{fill_data[425]}} {170} {{fill_data[426]}} {171} {{fill_data[427]}} {172} {{fill_data[428]}} {173} {{fill_data[429]}} {174} {{fill_data[430]}} {175} {{fill_data[431]}} {176} {{fill_data[432]}} {177} {{fill_data[433]}} {178} {{fill_data[434]}} {179} {{fill_data[435]}} {180} {{fill_data[436]}} {181} {{fill_data[437]}} {182} {{fill_data[438]}} {183} {{fill_data[439]}} {184} {{fill_data[440]}} {185} {{fill_data[441]}} {186} {{fill_data[442]}} {187} {{fill_data[443]}} {188} {{fill_data[444]}} {189} {{fill_data[445]}} {190} {{fill_data[446]}} {191} {{fill_data[447]}} {192} {{fill_data[448]}} {193} {{fill_data[449]}} {194} {{fill_data[450]}} {195} {{fill_data[451]}} {196} {{fill_data[452]}} {197} {{fill_data[453]}} {198} {{fill_data[454]}} {199} {{fill_data[455]}} {200} {{fill_data[456]}} {201} {{fill_data[457]}} {202} {{fill_data[458]}} {203} {{fill_data[459]}} {204} {{fill_data[460]}} {205} {{fill_data[461]}} {206} {{fill_data[462]}} {207} {{fill_data[463]}} {208} {{fill_data[464]}} {209} {{fill_data[465]}} {210} {{fill_data[466]}} {211} {{fill_data[467]}} {212} {{fill_data[468]}} {213} {{fill_data[469]}} {214} {{fill_data[470]}} {215} {{fill_data[471]}} {216} {{fill_data[472]}} {217} {{fill_data[473]}} {218} {{fill_data[474]}} {219} {{fill_data[475]}} {220} {{fill_data[476]}} {221} {{fill_data[477]}} {222} {{fill_data[478]}} {223} {{fill_data[479]}} {224} {{fill_data[480]}} {225} {{fill_data[481]}} {226} {{fill_data[482]}} {227} {{fill_data[483]}} {228} {{fill_data[484]}} {229} {{fill_data[485]}} {230} {{fill_data[486]}} {231} {{fill_data[487]}} {232} {{fill_data[488]}} {233} {{fill_data[489]}} {234} {{fill_data[490]}} {235} {{fill_data[491]}} {236} {{fill_data[492]}} {237} {{fill_data[493]}} {238} {{fill_data[494]}} {239} {{fill_data[495]}} {240} {{fill_data[496]}} {241} {{fill_data[497]}} {242} {{fill_data[498]}} {243} {{fill_data[499]}} {244} {{fill_data[500]}} {245} {{fill_data[501]}} {246} {{fill_data[502]}} {247} {{fill_data[503]}} {248} {{fill_data[504]}} {249} {{fill_data[505]}} {250} {{fill_data[506]}} {251} {{fill_data[507]}} {252} {{fill_data[508]}} {253} {{fill_data[509]}} {254} {{fill_data[510]}} {255} {{fill_data[511]}} {256} {{fill_slot[6]}} {257} {{fill_slot[7]}} {258} {{fill_slot[8]}} {259} {{fill_slot[9]}} {260} {{fill_slot[10]}} {261} {{fill_slot[11]}} {262} {{fill_epoch[16]}} {263} {{fill_epoch[17]}} {264} {{fill_epoch[18]}} {265} {{fill_epoch[19]}} {266} {{fill_epoch[20]}} {267} {{fill_epoch[21]}} {268} {{fill_epoch[22]}} {269} {{fill_epoch[23]}} {270} {{fill_epoch[24]}} {271} {{fill_epoch[25]}} {272} {{fill_epoch[26]}} {273} {{fill_epoch[27]}} {274} {{fill_epoch[28]}} {275} {{fill_epoch[29]}} {276} {{fill_epoch[30]}} {277} {{fill_epoch[31]}} {278} {{fill_bank[1]}}} {lane[2].u_fill} {{0} {{fill_data[512]}} {1} {{fill_data[513]}} {2} {{fill_data[514]}} {3} {{fill_data[515]}} {4} {{fill_data[516]}} {5} {{fill_data[517]}} {6} {{fill_data[518]}} {7} {{fill_data[519]}} {8} {{fill_data[520]}} {9} {{fill_data[521]}} {10} {{fill_data[522]}} {11} {{fill_data[523]}} {12} {{fill_data[524]}} {13} {{fill_data[525]}} {14} {{fill_data[526]}} {15} {{fill_data[527]}} {16} {{fill_data[528]}} {17} {{fill_data[529]}} {18} {{fill_data[530]}} {19} {{fill_data[531]}} {20} {{fill_data[532]}} {21} {{fill_data[533]}} {22} {{fill_data[534]}} {23} {{fill_data[535]}} {24} {{fill_data[536]}} {25} {{fill_data[537]}} {26} {{fill_data[538]}} {27} {{fill_data[539]}} {28} {{fill_data[540]}} {29} {{fill_data[541]}} {30} {{fill_data[542]}} {31} {{fill_data[543]}} {32} {{fill_data[544]}} {33} {{fill_data[545]}} {34} {{fill_data[546]}} {35} {{fill_data[547]}} {36} {{fill_data[548]}} {37} {{fill_data[549]}} {38} {{fill_data[550]}} {39} {{fill_data[551]}} {40} {{fill_data[552]}} {41} {{fill_data[553]}} {42} {{fill_data[554]}} {43} {{fill_data[555]}} {44} {{fill_data[556]}} {45} {{fill_data[557]}} {46} {{fill_data[558]}} {47} {{fill_data[559]}} {48} {{fill_data[560]}} {49} {{fill_data[561]}} {50} {{fill_data[562]}} {51} {{fill_data[563]}} {52} {{fill_data[564]}} {53} {{fill_data[565]}} {54} {{fill_data[566]}} {55} {{fill_data[567]}} {56} {{fill_data[568]}} {57} {{fill_data[569]}} {58} {{fill_data[570]}} {59} {{fill_data[571]}} {60} {{fill_data[572]}} {61} {{fill_data[573]}} {62} {{fill_data[574]}} {63} {{fill_data[575]}} {64} {{fill_data[576]}} {65} {{fill_data[577]}} {66} {{fill_data[578]}} {67} {{fill_data[579]}} {68} {{fill_data[580]}} {69} {{fill_data[581]}} {70} {{fill_data[582]}} {71} {{fill_data[583]}} {72} {{fill_data[584]}} {73} {{fill_data[585]}} {74} {{fill_data[586]}} {75} {{fill_data[587]}} {76} {{fill_data[588]}} {77} {{fill_data[589]}} {78} {{fill_data[590]}} {79} {{fill_data[591]}} {80} {{fill_data[592]}} {81} {{fill_data[593]}} {82} {{fill_data[594]}} {83} {{fill_data[595]}} {84} {{fill_data[596]}} {85} {{fill_data[597]}} {86} {{fill_data[598]}} {87} {{fill_data[599]}} {88} {{fill_data[600]}} {89} {{fill_data[601]}} {90} {{fill_data[602]}} {91} {{fill_data[603]}} {92} {{fill_data[604]}} {93} {{fill_data[605]}} {94} {{fill_data[606]}} {95} {{fill_data[607]}} {96} {{fill_data[608]}} {97} {{fill_data[609]}} {98} {{fill_data[610]}} {99} {{fill_data[611]}} {100} {{fill_data[612]}} {101} {{fill_data[613]}} {102} {{fill_data[614]}} {103} {{fill_data[615]}} {104} {{fill_data[616]}} {105} {{fill_data[617]}} {106} {{fill_data[618]}} {107} {{fill_data[619]}} {108} {{fill_data[620]}} {109} {{fill_data[621]}} {110} {{fill_data[622]}} {111} {{fill_data[623]}} {112} {{fill_data[624]}} {113} {{fill_data[625]}} {114} {{fill_data[626]}} {115} {{fill_data[627]}} {116} {{fill_data[628]}} {117} {{fill_data[629]}} {118} {{fill_data[630]}} {119} {{fill_data[631]}} {120} {{fill_data[632]}} {121} {{fill_data[633]}} {122} {{fill_data[634]}} {123} {{fill_data[635]}} {124} {{fill_data[636]}} {125} {{fill_data[637]}} {126} {{fill_data[638]}} {127} {{fill_data[639]}} {128} {{fill_data[640]}} {129} {{fill_data[641]}} {130} {{fill_data[642]}} {131} {{fill_data[643]}} {132} {{fill_data[644]}} {133} {{fill_data[645]}} {134} {{fill_data[646]}} {135} {{fill_data[647]}} {136} {{fill_data[648]}} {137} {{fill_data[649]}} {138} {{fill_data[650]}} {139} {{fill_data[651]}} {140} {{fill_data[652]}} {141} {{fill_data[653]}} {142} {{fill_data[654]}} {143} {{fill_data[655]}} {144} {{fill_data[656]}} {145} {{fill_data[657]}} {146} {{fill_data[658]}} {147} {{fill_data[659]}} {148} {{fill_data[660]}} {149} {{fill_data[661]}} {150} {{fill_data[662]}} {151} {{fill_data[663]}} {152} {{fill_data[664]}} {153} {{fill_data[665]}} {154} {{fill_data[666]}} {155} {{fill_data[667]}} {156} {{fill_data[668]}} {157} {{fill_data[669]}} {158} {{fill_data[670]}} {159} {{fill_data[671]}} {160} {{fill_data[672]}} {161} {{fill_data[673]}} {162} {{fill_data[674]}} {163} {{fill_data[675]}} {164} {{fill_data[676]}} {165} {{fill_data[677]}} {166} {{fill_data[678]}} {167} {{fill_data[679]}} {168} {{fill_data[680]}} {169} {{fill_data[681]}} {170} {{fill_data[682]}} {171} {{fill_data[683]}} {172} {{fill_data[684]}} {173} {{fill_data[685]}} {174} {{fill_data[686]}} {175} {{fill_data[687]}} {176} {{fill_data[688]}} {177} {{fill_data[689]}} {178} {{fill_data[690]}} {179} {{fill_data[691]}} {180} {{fill_data[692]}} {181} {{fill_data[693]}} {182} {{fill_data[694]}} {183} {{fill_data[695]}} {184} {{fill_data[696]}} {185} {{fill_data[697]}} {186} {{fill_data[698]}} {187} {{fill_data[699]}} {188} {{fill_data[700]}} {189} {{fill_data[701]}} {190} {{fill_data[702]}} {191} {{fill_data[703]}} {192} {{fill_data[704]}} {193} {{fill_data[705]}} {194} {{fill_data[706]}} {195} {{fill_data[707]}} {196} {{fill_data[708]}} {197} {{fill_data[709]}} {198} {{fill_data[710]}} {199} {{fill_data[711]}} {200} {{fill_data[712]}} {201} {{fill_data[713]}} {202} {{fill_data[714]}} {203} {{fill_data[715]}} {204} {{fill_data[716]}} {205} {{fill_data[717]}} {206} {{fill_data[718]}} {207} {{fill_data[719]}} {208} {{fill_data[720]}} {209} {{fill_data[721]}} {210} {{fill_data[722]}} {211} {{fill_data[723]}} {212} {{fill_data[724]}} {213} {{fill_data[725]}} {214} {{fill_data[726]}} {215} {{fill_data[727]}} {216} {{fill_data[728]}} {217} {{fill_data[729]}} {218} {{fill_data[730]}} {219} {{fill_data[731]}} {220} {{fill_data[732]}} {221} {{fill_data[733]}} {222} {{fill_data[734]}} {223} {{fill_data[735]}} {224} {{fill_data[736]}} {225} {{fill_data[737]}} {226} {{fill_data[738]}} {227} {{fill_data[739]}} {228} {{fill_data[740]}} {229} {{fill_data[741]}} {230} {{fill_data[742]}} {231} {{fill_data[743]}} {232} {{fill_data[744]}} {233} {{fill_data[745]}} {234} {{fill_data[746]}} {235} {{fill_data[747]}} {236} {{fill_data[748]}} {237} {{fill_data[749]}} {238} {{fill_data[750]}} {239} {{fill_data[751]}} {240} {{fill_data[752]}} {241} {{fill_data[753]}} {242} {{fill_data[754]}} {243} {{fill_data[755]}} {244} {{fill_data[756]}} {245} {{fill_data[757]}} {246} {{fill_data[758]}} {247} {{fill_data[759]}} {248} {{fill_data[760]}} {249} {{fill_data[761]}} {250} {{fill_data[762]}} {251} {{fill_data[763]}} {252} {{fill_data[764]}} {253} {{fill_data[765]}} {254} {{fill_data[766]}} {255} {{fill_data[767]}} {256} {{fill_slot[12]}} {257} {{fill_slot[13]}} {258} {{fill_slot[14]}} {259} {{fill_slot[15]}} {260} {{fill_slot[16]}} {261} {{fill_slot[17]}} {262} {{fill_epoch[32]}} {263} {{fill_epoch[33]}} {264} {{fill_epoch[34]}} {265} {{fill_epoch[35]}} {266} {{fill_epoch[36]}} {267} {{fill_epoch[37]}} {268} {{fill_epoch[38]}} {269} {{fill_epoch[39]}} {270} {{fill_epoch[40]}} {271} {{fill_epoch[41]}} {272} {{fill_epoch[42]}} {273} {{fill_epoch[43]}} {274} {{fill_epoch[44]}} {275} {{fill_epoch[45]}} {276} {{fill_epoch[46]}} {277} {{fill_epoch[47]}} {278} {{fill_bank[2]}}} {lane[3].u_fill} {{0} {{fill_data[768]}} {1} {{fill_data[769]}} {2} {{fill_data[770]}} {3} {{fill_data[771]}} {4} {{fill_data[772]}} {5} {{fill_data[773]}} {6} {{fill_data[774]}} {7} {{fill_data[775]}} {8} {{fill_data[776]}} {9} {{fill_data[777]}} {10} {{fill_data[778]}} {11} {{fill_data[779]}} {12} {{fill_data[780]}} {13} {{fill_data[781]}} {14} {{fill_data[782]}} {15} {{fill_data[783]}} {16} {{fill_data[784]}} {17} {{fill_data[785]}} {18} {{fill_data[786]}} {19} {{fill_data[787]}} {20} {{fill_data[788]}} {21} {{fill_data[789]}} {22} {{fill_data[790]}} {23} {{fill_data[791]}} {24} {{fill_data[792]}} {25} {{fill_data[793]}} {26} {{fill_data[794]}} {27} {{fill_data[795]}} {28} {{fill_data[796]}} {29} {{fill_data[797]}} {30} {{fill_data[798]}} {31} {{fill_data[799]}} {32} {{fill_data[800]}} {33} {{fill_data[801]}} {34} {{fill_data[802]}} {35} {{fill_data[803]}} {36} {{fill_data[804]}} {37} {{fill_data[805]}} {38} {{fill_data[806]}} {39} {{fill_data[807]}} {40} {{fill_data[808]}} {41} {{fill_data[809]}} {42} {{fill_data[810]}} {43} {{fill_data[811]}} {44} {{fill_data[812]}} {45} {{fill_data[813]}} {46} {{fill_data[814]}} {47} {{fill_data[815]}} {48} {{fill_data[816]}} {49} {{fill_data[817]}} {50} {{fill_data[818]}} {51} {{fill_data[819]}} {52} {{fill_data[820]}} {53} {{fill_data[821]}} {54} {{fill_data[822]}} {55} {{fill_data[823]}} {56} {{fill_data[824]}} {57} {{fill_data[825]}} {58} {{fill_data[826]}} {59} {{fill_data[827]}} {60} {{fill_data[828]}} {61} {{fill_data[829]}} {62} {{fill_data[830]}} {63} {{fill_data[831]}} {64} {{fill_data[832]}} {65} {{fill_data[833]}} {66} {{fill_data[834]}} {67} {{fill_data[835]}} {68} {{fill_data[836]}} {69} {{fill_data[837]}} {70} {{fill_data[838]}} {71} {{fill_data[839]}} {72} {{fill_data[840]}} {73} {{fill_data[841]}} {74} {{fill_data[842]}} {75} {{fill_data[843]}} {76} {{fill_data[844]}} {77} {{fill_data[845]}} {78} {{fill_data[846]}} {79} {{fill_data[847]}} {80} {{fill_data[848]}} {81} {{fill_data[849]}} {82} {{fill_data[850]}} {83} {{fill_data[851]}} {84} {{fill_data[852]}} {85} {{fill_data[853]}} {86} {{fill_data[854]}} {87} {{fill_data[855]}} {88} {{fill_data[856]}} {89} {{fill_data[857]}} {90} {{fill_data[858]}} {91} {{fill_data[859]}} {92} {{fill_data[860]}} {93} {{fill_data[861]}} {94} {{fill_data[862]}} {95} {{fill_data[863]}} {96} {{fill_data[864]}} {97} {{fill_data[865]}} {98} {{fill_data[866]}} {99} {{fill_data[867]}} {100} {{fill_data[868]}} {101} {{fill_data[869]}} {102} {{fill_data[870]}} {103} {{fill_data[871]}} {104} {{fill_data[872]}} {105} {{fill_data[873]}} {106} {{fill_data[874]}} {107} {{fill_data[875]}} {108} {{fill_data[876]}} {109} {{fill_data[877]}} {110} {{fill_data[878]}} {111} {{fill_data[879]}} {112} {{fill_data[880]}} {113} {{fill_data[881]}} {114} {{fill_data[882]}} {115} {{fill_data[883]}} {116} {{fill_data[884]}} {117} {{fill_data[885]}} {118} {{fill_data[886]}} {119} {{fill_data[887]}} {120} {{fill_data[888]}} {121} {{fill_data[889]}} {122} {{fill_data[890]}} {123} {{fill_data[891]}} {124} {{fill_data[892]}} {125} {{fill_data[893]}} {126} {{fill_data[894]}} {127} {{fill_data[895]}} {128} {{fill_data[896]}} {129} {{fill_data[897]}} {130} {{fill_data[898]}} {131} {{fill_data[899]}} {132} {{fill_data[900]}} {133} {{fill_data[901]}} {134} {{fill_data[902]}} {135} {{fill_data[903]}} {136} {{fill_data[904]}} {137} {{fill_data[905]}} {138} {{fill_data[906]}} {139} {{fill_data[907]}} {140} {{fill_data[908]}} {141} {{fill_data[909]}} {142} {{fill_data[910]}} {143} {{fill_data[911]}} {144} {{fill_data[912]}} {145} {{fill_data[913]}} {146} {{fill_data[914]}} {147} {{fill_data[915]}} {148} {{fill_data[916]}} {149} {{fill_data[917]}} {150} {{fill_data[918]}} {151} {{fill_data[919]}} {152} {{fill_data[920]}} {153} {{fill_data[921]}} {154} {{fill_data[922]}} {155} {{fill_data[923]}} {156} {{fill_data[924]}} {157} {{fill_data[925]}} {158} {{fill_data[926]}} {159} {{fill_data[927]}} {160} {{fill_data[928]}} {161} {{fill_data[929]}} {162} {{fill_data[930]}} {163} {{fill_data[931]}} {164} {{fill_data[932]}} {165} {{fill_data[933]}} {166} {{fill_data[934]}} {167} {{fill_data[935]}} {168} {{fill_data[936]}} {169} {{fill_data[937]}} {170} {{fill_data[938]}} {171} {{fill_data[939]}} {172} {{fill_data[940]}} {173} {{fill_data[941]}} {174} {{fill_data[942]}} {175} {{fill_data[943]}} {176} {{fill_data[944]}} {177} {{fill_data[945]}} {178} {{fill_data[946]}} {179} {{fill_data[947]}} {180} {{fill_data[948]}} {181} {{fill_data[949]}} {182} {{fill_data[950]}} {183} {{fill_data[951]}} {184} {{fill_data[952]}} {185} {{fill_data[953]}} {186} {{fill_data[954]}} {187} {{fill_data[955]}} {188} {{fill_data[956]}} {189} {{fill_data[957]}} {190} {{fill_data[958]}} {191} {{fill_data[959]}} {192} {{fill_data[960]}} {193} {{fill_data[961]}} {194} {{fill_data[962]}} {195} {{fill_data[963]}} {196} {{fill_data[964]}} {197} {{fill_data[965]}} {198} {{fill_data[966]}} {199} {{fill_data[967]}} {200} {{fill_data[968]}} {201} {{fill_data[969]}} {202} {{fill_data[970]}} {203} {{fill_data[971]}} {204} {{fill_data[972]}} {205} {{fill_data[973]}} {206} {{fill_data[974]}} {207} {{fill_data[975]}} {208} {{fill_data[976]}} {209} {{fill_data[977]}} {210} {{fill_data[978]}} {211} {{fill_data[979]}} {212} {{fill_data[980]}} {213} {{fill_data[981]}} {214} {{fill_data[982]}} {215} {{fill_data[983]}} {216} {{fill_data[984]}} {217} {{fill_data[985]}} {218} {{fill_data[986]}} {219} {{fill_data[987]}} {220} {{fill_data[988]}} {221} {{fill_data[989]}} {222} {{fill_data[990]}} {223} {{fill_data[991]}} {224} {{fill_data[992]}} {225} {{fill_data[993]}} {226} {{fill_data[994]}} {227} {{fill_data[995]}} {228} {{fill_data[996]}} {229} {{fill_data[997]}} {230} {{fill_data[998]}} {231} {{fill_data[999]}} {232} {{fill_data[1000]}} {233} {{fill_data[1001]}} {234} {{fill_data[1002]}} {235} {{fill_data[1003]}} {236} {{fill_data[1004]}} {237} {{fill_data[1005]}} {238} {{fill_data[1006]}} {239} {{fill_data[1007]}} {240} {{fill_data[1008]}} {241} {{fill_data[1009]}} {242} {{fill_data[1010]}} {243} {{fill_data[1011]}} {244} {{fill_data[1012]}} {245} {{fill_data[1013]}} {246} {{fill_data[1014]}} {247} {{fill_data[1015]}} {248} {{fill_data[1016]}} {249} {{fill_data[1017]}} {250} {{fill_data[1018]}} {251} {{fill_data[1019]}} {252} {{fill_data[1020]}} {253} {{fill_data[1021]}} {254} {{fill_data[1022]}} {255} {{fill_data[1023]}} {256} {{fill_slot[18]}} {257} {{fill_slot[19]}} {258} {{fill_slot[20]}} {259} {{fill_slot[21]}} {260} {{fill_slot[22]}} {261} {{fill_slot[23]}} {262} {{fill_epoch[48]}} {263} {{fill_epoch[49]}} {264} {{fill_epoch[50]}} {265} {{fill_epoch[51]}} {266} {{fill_epoch[52]}} {267} {{fill_epoch[53]}} {268} {{fill_epoch[54]}} {269} {{fill_epoch[55]}} {270} {{fill_epoch[56]}} {271} {{fill_epoch[57]}} {272} {{fill_epoch[58]}} {273} {{fill_epoch[59]}} {274} {{fill_epoch[60]}} {275} {{fill_epoch[61]}} {276} {{fill_epoch[62]}} {277} {{fill_epoch[63]}} {278} {{fill_bank[3]}}} {u_cmd} {{0} {{cm_col[0]} {cmd_q[0]} {lane[0].col[1]} {lane[0].vm_addr[8]} {lane[1].col[1]} {lane[1].vm_addr[8]} {lane[2].col[1]} {lane[2].vm_addr[8]} {lane[3].col[1]} {lane[3].vm_addr[8]}} {1} {{cm_col[1]} {cmd_q[1]} {lane[0].col[2]} {lane[0].vm_addr[9]} {lane[1].col[2]} {lane[1].vm_addr[9]} {lane[2].col[2]} {lane[2].vm_addr[9]} {lane[3].col[2]} {lane[3].vm_addr[9]}} {2} {{cm_col[2]} {cmd_q[2]} {lane[0].col[3]} {lane[0].vm_addr[10]} {lane[1].col[3]} {lane[1].vm_addr[10]} {lane[2].col[3]} {lane[2].vm_addr[10]} {lane[3].col[3]} {lane[3].vm_addr[10]}} {3} {{cm_col[3]} {cmd_q[3]} {lane[0].col[4]} {lane[0].vm_addr[11]} {lane[1].col[4]} {lane[1].vm_addr[11]} {lane[2].col[4]} {lane[2].vm_addr[11]} {lane[3].col[4]} {lane[3].vm_addr[11]}} {4} {{cm_row[0]} {cmd_q[4]} {lane[0].bhi5[3]} {lane[0].vm_addr[15]} {lane[1].bhi5[3]} {lane[1].vm_addr[15]} {lane[2].bhi5[3]} {lane[2].vm_addr[15]} {lane[3].bhi5[3]} {lane[3].vm_addr[15]}} {5} {{cm_row[1]} {cmd_q[5]} {lane[0].bhi5[4]} {lane[0].vm_addr[16]} {lane[1].bhi5[4]} {lane[1].vm_addr[16]} {lane[2].bhi5[4]} {lane[2].vm_addr[16]} {lane[3].bhi5[4]} {lane[3].vm_addr[16]}} {6} {{cm_row[2]} {cmd_q[6]} {lane[0].vm_addr[17]} {lane[1].vm_addr[17]} {lane[2].vm_addr[17]} {lane[3].vm_addr[17]}} {7} {{cm_row[3]} {cmd_q[7]} {lane[0].vm_addr[18]} {lane[1].vm_addr[18]} {lane[2].vm_addr[18]} {lane[3].vm_addr[18]}} {8} {{cm_row[4]} {cmd_q[8]} {lane[0].vm_addr[19]} {lane[1].vm_addr[19]} {lane[2].vm_addr[19]} {lane[3].vm_addr[19]}} {9} {{cm_row[5]} {cmd_q[9]} {lane[0].vm_addr[20]} {lane[1].vm_addr[20]} {lane[2].vm_addr[20]} {lane[3].vm_addr[20]}} {10} {{cm_row[6]} {cmd_q[10]} {lane[0].vm_addr[21]} {lane[1].vm_addr[21]} {lane[2].vm_addr[21]} {lane[3].vm_addr[21]}} {11} {{cm_row[7]} {cmd_q[11]} {lane[0].vm_addr[22]} {lane[1].vm_addr[22]} {lane[2].vm_addr[22]} {lane[3].vm_addr[22]}} {12} {{cm_row[8]} {cmd_q[12]} {lane[0].vm_addr[23]} {lane[1].vm_addr[23]} {lane[2].vm_addr[23]} {lane[3].vm_addr[23]}} {13} {{cm_row[9]} {cmd_q[13]} {lane[0].vm_addr[24]} {lane[1].vm_addr[24]} {lane[2].vm_addr[24]} {lane[3].vm_addr[24]}} {14} {{cm_row[10]} {cmd_q[14]} {lane[0].vm_addr[25]} {lane[1].vm_addr[25]} {lane[2].vm_addr[25]} {lane[3].vm_addr[25]}} {15} {{cm_row[11]} {cmd_q[15]} {lane[0].vm_addr[26]} {lane[1].vm_addr[26]} {lane[2].vm_addr[26]} {lane[3].vm_addr[26]}} {16} {{cm_row[12]} {cmd_q[16]} {lane[0].vm_addr[27]} {lane[1].vm_addr[27]} {lane[2].vm_addr[27]} {lane[3].vm_addr[27]}} {17} {{cm_row[13]} {cmd_q[17]} {lane[0].vm_addr[28]} {lane[1].vm_addr[28]} {lane[2].vm_addr[28]} {lane[3].vm_addr[28]}} {18} {{cm_row[14]} {cmd_q[18]} {lane[0].vm_addr[29]} {lane[1].vm_addr[29]} {lane[2].vm_addr[29]} {lane[3].vm_addr[29]}} {19} {{cm_epoch[0]} {cmd_q[19]} {lane[0].f_d[262]} {lane[0].vm_tag[4]} {lane[1].f_d[262]} {lane[1].vm_tag[4]} {lane[2].f_d[262]} {lane[2].vm_tag[4]} {lane[3].f_d[262]} {lane[3].vm_tag[4]}} {20} {{cm_epoch[1]} {cmd_q[20]} {lane[0].f_d[263]} {lane[0].vm_tag[5]} {lane[1].f_d[263]} {lane[1].vm_tag[5]} {lane[2].f_d[263]} {lane[2].vm_tag[5]} {lane[3].f_d[263]} {lane[3].vm_tag[5]}} {21} {{cm_epoch[2]} {cmd_q[21]} {lane[0].f_d[264]} {lane[0].vm_tag[6]} {lane[1].f_d[264]} {lane[1].vm_tag[6]} {lane[2].f_d[264]} {lane[2].vm_tag[6]} {lane[3].f_d[264]} {lane[3].vm_tag[6]}} {22} {{cm_epoch[3]} {cmd_q[22]} {lane[0].f_d[265]} {lane[0].vm_tag[7]} {lane[1].f_d[265]} {lane[1].vm_tag[7]} {lane[2].f_d[265]} {lane[2].vm_tag[7]} {lane[3].f_d[265]} {lane[3].vm_tag[7]}} {23} {{cm_epoch[4]} {cmd_q[23]} {lane[0].f_d[266]} {lane[0].vm_tag[8]} {lane[1].f_d[266]} {lane[1].vm_tag[8]} {lane[2].f_d[266]} {lane[2].vm_tag[8]} {lane[3].f_d[266]} {lane[3].vm_tag[8]}} {24} {{cm_epoch[5]} {cmd_q[24]} {lane[0].f_d[267]} {lane[0].vm_tag[9]} {lane[1].f_d[267]} {lane[1].vm_tag[9]} {lane[2].f_d[267]} {lane[2].vm_tag[9]} {lane[3].f_d[267]} {lane[3].vm_tag[9]}} {25} {{cm_epoch[6]} {cmd_q[25]} {lane[0].f_d[268]} {lane[0].vm_tag[10]} {lane[1].f_d[268]} {lane[1].vm_tag[10]} {lane[2].f_d[268]} {lane[2].vm_tag[10]} {lane[3].f_d[268]} {lane[3].vm_tag[10]}} {26} {{cm_epoch[7]} {cmd_q[26]} {lane[0].f_d[269]} {lane[0].vm_tag[11]} {lane[1].f_d[269]} {lane[1].vm_tag[11]} {lane[2].f_d[269]} {lane[2].vm_tag[11]} {lane[3].f_d[269]} {lane[3].vm_tag[11]}} {27} {{cm_epoch[8]} {cmd_q[27]} {lane[0].f_d[270]} {lane[0].vm_tag[12]} {lane[1].f_d[270]} {lane[1].vm_tag[12]} {lane[2].f_d[270]} {lane[2].vm_tag[12]} {lane[3].f_d[270]} {lane[3].vm_tag[12]}} {28} {{cm_epoch[9]} {cmd_q[28]} {lane[0].f_d[271]} {lane[0].vm_tag[13]} {lane[1].f_d[271]} {lane[1].vm_tag[13]} {lane[2].f_d[271]} {lane[2].vm_tag[13]} {lane[3].f_d[271]} {lane[3].vm_tag[13]}} {29} {{cm_epoch[10]} {cmd_q[29]} {lane[0].f_d[272]} {lane[0].vm_tag[14]} {lane[1].f_d[272]} {lane[1].vm_tag[14]} {lane[2].f_d[272]} {lane[2].vm_tag[14]} {lane[3].f_d[272]} {lane[3].vm_tag[14]}} {30} {{cm_epoch[11]} {cmd_q[30]} {lane[0].f_d[273]} {lane[0].vm_tag[15]} {lane[1].f_d[273]} {lane[1].vm_tag[15]} {lane[2].f_d[273]} {lane[2].vm_tag[15]} {lane[3].f_d[273]} {lane[3].vm_tag[15]}} {31} {{cm_epoch[12]} {cmd_q[31]} {lane[0].f_d[274]} {lane[1].f_d[274]} {lane[2].f_d[274]} {lane[3].f_d[274]}} {32} {{cm_epoch[13]} {cmd_q[32]} {lane[0].f_d[275]} {lane[1].f_d[275]} {lane[2].f_d[275]} {lane[3].f_d[275]}} {33} {{cm_epoch[14]} {cmd_q[33]} {lane[0].f_d[276]} {lane[1].f_d[276]} {lane[2].f_d[276]} {lane[3].f_d[276]}} {34} {{cm_epoch[15]} {cmd_q[34]} {lane[0].f_d[277]} {lane[1].f_d[277]} {lane[2].f_d[277]} {lane[3].f_d[277]}} {35} {{cm_bank} {cmd_q[35]} {lane[0].f_d[278]} {lane[0].vm_tag[16]} {lane[1].f_d[278]} {lane[1].vm_tag[16]} {lane[2].f_d[278]} {lane[2].vm_tag[16]} {lane[3].f_d[278]} {lane[3].vm_tag[16]}}} {u_fault_cdc.u_status} {{0} {{hfault_stream} {u_fault_cdc.dst_fault} {u_fault_cdc.sticky}}} {u_wcmd} {{0} {{lane[0].wn[0]} {wcmd_q[0]}} {1} {{lane[0].wn[1]} {wcmd_q[1]}} {2} {{lane[0].wn[2]} {wcmd_q[2]}} {3} {{lane[0].wn[3]} {wcmd_q[3]}} {4} {{lane[0].wn[4]} {wcmd_q[4]}} {5} {{lane[0].wn[5]} {wcmd_q[5]}} {6} {{lane[0].wn[6]} {wcmd_q[6]}} {7} {{lane[0].wn[7]} {wcmd_q[7]}} {8} {{lane[1].wn[0]} {wcmd_q[8]}} {9} {{lane[1].wn[1]} {wcmd_q[9]}} {10} {{lane[1].wn[2]} {wcmd_q[10]}} {11} {{lane[1].wn[3]} {wcmd_q[11]}} {12} {{lane[1].wn[4]} {wcmd_q[12]}} {13} {{lane[1].wn[5]} {wcmd_q[13]}} {14} {{lane[1].wn[6]} {wcmd_q[14]}} {15} {{lane[1].wn[7]} {wcmd_q[15]}} {16} {{lane[2].wn[0]} {wcmd_q[16]}} {17} {{lane[2].wn[1]} {wcmd_q[17]}} {18} {{lane[2].wn[2]} {wcmd_q[18]}} {19} {{lane[2].wn[3]} {wcmd_q[19]}} {20} {{lane[2].wn[4]} {wcmd_q[20]}} {21} {{lane[2].wn[5]} {wcmd_q[21]}} {22} {{lane[2].wn[6]} {wcmd_q[22]}} {23} {{lane[2].wn[7]} {wcmd_q[23]}} {24} {{lane[3].wn[0]} {wcmd_q[24]}} {25} {{lane[3].wn[1]} {wcmd_q[25]}} {26} {{lane[3].wn[2]} {wcmd_q[26]}} {27} {{lane[3].wn[3]} {wcmd_q[27]}} {28} {{lane[3].wn[4]} {wcmd_q[28]}} {29} {{lane[3].wn[5]} {wcmd_q[29]}} {30} {{lane[3].wn[6]} {wcmd_q[30]}} {31} {{lane[3].wn[7]} {wcmd_q[31]}} {32} {{wend_q[0]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[1]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[2]} {wend_q[30]} {wend_q[3]} {wend_q[4]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {33} {{wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[1]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[2]} {wend_q[30]} {wend_q[3]} {wend_q[4]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {34} {{wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[2]} {wend_q[30]} {wend_q[3]} {wend_q[4]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {35} {{wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[3]} {wend_q[4]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {36} {{wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[4]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {37} {{wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {38} {{wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {39} {{wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {40} {{wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[8]} {wend_q[9]}} {41} {{wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[9]}} {42} {{wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {43} {{wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {44} {{wc_base[0]} {wcmd_q[44]} {wend_q[0]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[1]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[2]} {wend_q[30]} {wend_q[3]} {wend_q[4]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {45} {{wc_base[1]} {wcmd_q[45]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[1]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[2]} {wend_q[30]} {wend_q[3]} {wend_q[4]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {46} {{wc_base[2]} {wcmd_q[46]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[2]} {wend_q[30]} {wend_q[3]} {wend_q[4]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {47} {{wc_base[3]} {wcmd_q[47]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[3]} {wend_q[4]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {48} {{wc_base[4]} {wcmd_q[48]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[4]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {49} {{wc_base[5]} {wcmd_q[49]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[5]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {50} {{wc_base[6]} {wcmd_q[50]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[6]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {51} {{wc_base[7]} {wcmd_q[51]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[7]} {wend_q[8]} {wend_q[9]}} {52} {{wc_base[8]} {wcmd_q[52]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[8]} {wend_q[9]}} {53} {{wc_base[9]} {wcmd_q[53]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]} {wend_q[9]}} {54} {{wc_base[10]} {wcmd_q[54]} {wend_q[10]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {55} {{wc_base[11]} {wcmd_q[55]} {wend_q[11]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {56} {{wc_base[12]} {wcmd_q[56]} {wend_q[12]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {57} {{wc_base[13]} {wcmd_q[57]} {wend_q[13]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {58} {{wc_base[14]} {wcmd_q[58]} {wend_q[14]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {59} {{wc_base[15]} {wcmd_q[59]} {wend_q[15]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {60} {{wc_base[16]} {wcmd_q[60]} {wend_q[16]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {61} {{wc_base[17]} {wcmd_q[61]} {wend_q[17]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {62} {{wc_base[18]} {wcmd_q[62]} {wend_q[18]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {63} {{wc_base[19]} {wcmd_q[63]} {wend_q[19]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {64} {{wc_base[20]} {wcmd_q[64]} {wend_q[20]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {65} {{wc_base[21]} {wcmd_q[65]} {wend_q[21]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {66} {{wc_base[22]} {wcmd_q[66]} {wend_q[22]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {67} {{wc_base[23]} {wcmd_q[67]} {wend_q[23]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {68} {{wc_base[24]} {wcmd_q[68]} {wend_q[24]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {69} {{wc_base[25]} {wcmd_q[69]} {wend_q[25]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {70} {{wc_base[26]} {wcmd_q[70]} {wend_q[26]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {71} {{wc_base[27]} {wcmd_q[71]} {wend_q[27]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {72} {{wc_base[28]} {wcmd_q[72]} {wend_q[28]} {wend_q[29]} {wend_q[30]}} {73} {{wc_base[29]} {wcmd_q[73]} {wend_q[29]} {wend_q[30]}}}]
 set ::ot_ag_outputs [dict create {lane[0].u_fill} {} {lane[1].u_fill} {} {lane[2].u_fill} {} {lane[3].u_fill} {} {u_cmd} {} {u_fault_cdc.u_status} {} {u_wcmd} {}]
 set ::ot_ag_primitive 0
+set ::ot_ag_reset_syncs [list {lane[0].u_fill.u_rd_reset} {lane[0].u_fill.u_wr_reset} {lane[1].u_fill.u_rd_reset} {lane[1].u_fill.u_wr_reset} {lane[2].u_fill.u_rd_reset} {lane[2].u_fill.u_wr_reset} {lane[3].u_fill.u_rd_reset} {lane[3].u_fill.u_wr_reset} {u_cmd.u_rd_reset} {u_cmd.u_wr_reset} {u_fault_cdc.u_dst_reset} {u_fault_cdc.u_src_reset} {u_fault_cdc.u_status.u_rd_reset} {u_fault_cdc.u_status.u_wr_reset} {u_wcmd.u_rd_reset} {u_wcmd.u_wr_reset}]
+set ::ot_ag_reset_alias [list {lane[0].u_fill.rd_reset} {lane[0].u_fill.u_rd_reset.sync_rst_n} {lane[0].u_fill.u_wr_reset.sync_rst_n} {lane[0].u_fill.wr_reset} {lane[1].u_fill.rd_reset} {lane[1].u_fill.u_rd_reset.sync_rst_n} {lane[1].u_fill.u_wr_reset.sync_rst_n} {lane[1].u_fill.wr_reset} {lane[2].u_fill.rd_reset} {lane[2].u_fill.u_rd_reset.sync_rst_n} {lane[2].u_fill.u_wr_reset.sync_rst_n} {lane[2].u_fill.wr_reset} {lane[3].u_fill.rd_reset} {lane[3].u_fill.u_rd_reset.sync_rst_n} {lane[3].u_fill.u_wr_reset.sync_rst_n} {lane[3].u_fill.wr_reset} {u_cmd.rd_reset} {u_cmd.u_rd_reset.sync_rst_n} {u_cmd.u_wr_reset.sync_rst_n} {u_cmd.wr_reset} {u_fault_cdc.dst_reset} {u_fault_cdc.src_reset} {u_fault_cdc.u_dst_reset.sync_rst_n} {u_fault_cdc.u_src_reset.sync_rst_n} {u_fault_cdc.u_status.rd_reset} {u_fault_cdc.u_status.u_rd_reset.sync_rst_n} {u_fault_cdc.u_status.u_wr_reset.sync_rst_n} {u_fault_cdc.u_status.wr_reset} {u_wcmd.rd_reset} {u_wcmd.u_rd_reset.sync_rst_n} {u_wcmd.u_wr_reset.sync_rst_n} {u_wcmd.wr_reset}]
+set ::ot_ag_reset_bound [dict create core 773.333 hbm 964.0]
 
 # Source fingerprint is checked by the generator before this audited profile is
 # emitted. Fail if mapping loses public register identities; never guess names.
 set ::ot_ag_seen {}
+set ::ot_ag_reset_seen {}
 proc ot_ag_public_nets {cell} {
   set result {}
   # The mapped register instance keeps its Yosys register name plus the cell-type suffix ($_DFF_PN0_, $_DFFE_PN0P_, ...)
@@ -103,9 +107,51 @@ proc ot_ag_target {scope source_bit cell pin} {
   }
   return 0
 }
-proc ot_ag_async_control {pin} {
-  # Reset recovery/removal stays timed. A FIFO data/pointer publication must
-  # never acquire an async-control exception by sharing a legitimate D target.
+proc ot_ag_reset_stage {cell} {
+  # QF-SFAULT 10-18 Gate-Rule: a reset_pipe stage of an elaborated, fingerprint-bound ot_reset_sync instance.
+  set inst [string map {\\ {}} [get_full_name [get_cells $cell]]]
+  set names [ot_ag_public_nets $cell]
+  lappend names $inst
+  if {[regexp {^(.*)\$_[A-Z0-9_]+_$} $inst unused reg]} {lappend names $reg}
+  foreach name $names {
+    # the output stage under its output / parent-net name (generator-derived exact aliases, not a pattern)
+    if {[regsub {_reg$} $name {} bare] && $bare in $::ot_ag_reset_alias} {return 1}
+    if {$name in $::ot_ag_reset_alias} {return 1}
+    foreach scope $::ot_ag_reset_syncs {
+      set prefix "$scope."
+      if {[string first $prefix $name]!=0} continue
+      if {[regexp {^reset_pipe(?:_reg)?(?:\[[0-9]+\])?$} [string range $name [string length $prefix] end]]} {return 1}
+    }
+  }
+  return 0
+}
+proc ot_ag_reset_bound {start pin bound} {
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    set launch [get_ports [get_full_name $start]]
+  } else {
+    set launch [get_cells -quiet -of_objects $start]
+    if {[llength $launch] != 1} {error "OT_ASYNC_GRAY: missing unique reset launch register"}
+  }
+  set_max_delay -ignore_clock_latency $bound -from $launch -to $pin
+  set_min_delay -ignore_clock_latency 0.0 -from $launch -to $pin
+  foreach kind {max min} {
+    set paths [find_timing_paths -from $launch -to $pin -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+    if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+      puts "OT_ASYNC_GRAY PATH_DEFERRED reset [get_full_name $start] -> [get_full_name $pin] $kind (strict at sign-off)"
+      continue
+    }
+    if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+      error "OT_ASYNC_GRAY: missing finite bounded reset $kind path [get_full_name $start] -> [get_full_name $pin]"
+    }
+  }
+}
+proc ot_ag_async_control {pin cells inputs} {
+  # Reset recovery/removal stays timed within a domain. A FIFO data/pointer publication must
+  # never acquire an async-control exception by sharing a legitimate D target.  A cross-domain asynchronous control
+  # is admitted only into a reviewed ot_reset_sync pipe stage (QF-SFAULT 10-18 Gate-Rule, gray_fifo_cdc rule (c)).
+  set target [get_full_name [get_cells -of_objects $pin]]
+  if {![dict exists $cells $target]} {error "OT_ASYNC_GRAY: unowned asynchronous control register $target"}
+  set domain [dict get $cells $target]
   foreach start [get_fanin -flat -startpoints_only -to $pin] {
     # A tie-driven async pin (ASAP7 DFFASRHQNx1 SETN/RESETN tied by TIEHI/TIELO) has no driving register: OpenSTA returns
     # the pin itself as its only startpoint (HBMA-SVC 10-17, hdie_svc_stack_fault SETN of u_ca.u_status.rd_bin[2]).
@@ -119,11 +165,30 @@ proc ot_ag_async_control {pin} {
       if {!$tied} {error "OT_ASYNC_GRAY: asynchronous control without a register or tie driver [get_full_name $pin]"}
       continue
     }
-    set cell [get_cells -quiet -of_objects $start]
-    if {[llength $cell]!=1} continue
-    if {[llength [ot_ag_role [get_full_name $cell]]]} {
-      error "OT_ASYNC_GRAY: FIFO publication drives asynchronous control [get_full_name $pin]"
+    set name [get_full_name $start]
+    if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+      if {![dict exists $inputs $name]} {error "OT_ASYNC_GRAY: undeclared input $name drives asynchronous control [get_full_name $pin]"}
+      set source_domain [dict get $inputs $name]
+    } else {
+      set cell [get_cells -quiet -of_objects $start]
+      if {[llength $cell]!=1} continue
+      if {[llength [ot_ag_role [get_full_name $cell]]]} {
+        error "OT_ASYNC_GRAY: FIFO publication drives asynchronous control [get_full_name $pin]"
+      }
+      set source [get_full_name $cell]
+      if {![dict exists $cells $source]} {
+        if {[ot_ce_constant_cone $start]} continue
+        error "OT_ASYNC_GRAY: unowned asynchronous control $source -> [get_full_name $pin]"
+      }
+      set source_domain [dict get $cells $source]
     }
+    if {$source_domain eq $domain} continue
+    if {![ot_ag_reset_stage $target]} {
+      error "OT_ASYNC_GRAY: cross-domain asynchronous control $name ($source_domain) -> [get_full_name $pin] ($domain); only an ot_reset_sync pipe may take it"
+    }
+    ot_ag_reset_bound $start $pin [dict get $::ot_ag_reset_bound $domain]
+    dict incr ::ot_ag_reset_seen $domain
+    puts "OT_ASYNC_GRAY BOUNDED reset $name -> [get_full_name $pin]"
   }
 }
 proc ot_ag_bound {start target} {
@@ -184,10 +249,22 @@ proc ot_ag_online_merged {scope role domains} {
   # merges them into ONE chain that keeps a single scope's name.  Admit a missing online crossing only when (a) no mapped
   # cell of this scope's online chain is left (it was merged away, not left unaudited) and (b) another FIFO scope with
   # the same writer/reader domains has that online crossing audited.  Gray pointers and payload are never merged here.
+  # HBM-KITS-B 10-18 (hdie_svc_vm_kshare gate e1d441878): the reviewed FIFO resets BOTH sides from wr_rst_n&&rd_rst_n, so
+  # the writer-side online chain of a core->hbm FIFO (wr_online on core, wr_online_r1/r2 on hbm) is bit-identical to the
+  # reader-side chain of an hbm->core FIFO (rd_online on core, rd_online_w1/w2 on hbm); synthesis merged u_cmd wr_online
+  # into lane[0].u_fill rd_online.  Admit that as the same launch->capture clock pair with the role swapped, under the
+  # same two conditions; the bounded crossing it is admitted against is the actual audited one.
   if {[llength [get_cells -quiet "$scope.${role}*"]]} {return 0}
+  set swapped [string map {wr_online rd_online rd_online wr_online} $role]
+  set reversed [list [lindex $domains 1] [lindex $domains 0]]
   dict for {other od} $::ot_ag_fifo_domains {
-    if {$other ne $scope && $od eq $domains && [dict exists $::ot_ag_seen [list $other $role]]} {
+    if {$other eq $scope} continue
+    if {$od eq $domains && [dict exists $::ot_ag_seen [list $other $role]]} {
       puts "OT_ASYNC_GRAY MERGED_ONLINE $scope $role -> $other"
+      return 1
+    }
+    if {$od eq $reversed && [dict exists $::ot_ag_seen [list $other $swapped]]} {
+      puts "OT_ASYNC_GRAY MERGED_ONLINE $scope $role -> $other $swapped"
       return 1
     }
   }
@@ -202,9 +279,159 @@ proc ot_ag_complete {} {
     }
   }
   if {$::ot_ag_primitive && ![dict exists $::ot_ag_seen [list {} payload]]} {error "OT_ASYNC_GRAY: missing primitive payload crossing"}
-  puts "OT_ASYNC_GRAY STRUCTURAL_PASS $::ot_ag_seen (bounded CDC; no physical closure claim)"
+  puts "OT_ASYNC_GRAY STRUCTURAL_PASS $::ot_ag_seen reset_sync_inputs=$::ot_ag_reset_seen (bounded CDC; no physical closure claim)"
 }
 
+# Actual OpenSTA clock ancestry and physical propagated-clock measurements.
+# OpenSTA's Clock wrapper has no master accessor. Its canonical SDC exporter
+# resolves inferred masters; evaluate only its generated-clock declarations in
+# an isolated safe interpreter, never replay constraints in the live session.
+proc ot_cf_record {args} {
+  set ni [lsearch -exact $args -name]; set mi [lsearch -exact $args -master_clock]
+  set si [lsearch -exact $args -source]
+  if {$ni < 0 || $mi < 0 || $si < 0} {error "OT_CLOCK_FAMILY: canonical generated clock lacks resolved name/master/source"}
+  set name [lindex $args [expr {$ni+1}]]
+  set master [lindex $args [expr {$mi+1}]]; set source [lindex $args [expr {$si+1}]]
+  if {[llength $master] != 1 || [llength $source] != 1 || [dict exists $::ot_cf_master $name]} {
+    error "OT_CLOCK_FAMILY: ambiguous generated clock $name"
+  }
+  set parent [get_full_name $master]
+  if {[sta::object_type $source] eq "Port"} {set source [sta::get_port_pin $source]}
+  set owners {}; foreach c [get_property $source clocks] {lappend owners [get_full_name $c]}
+  if {[lsort -unique $owners] ne [list $parent]} {
+    error "OT_CLOCK_FAMILY: generated source of $name has owners $owners, expected $parent"
+  }
+  dict set ::ot_cf_master $name $parent
+}
+proc ot_cf_refresh {} {
+  set ::ot_cf_master {}; set ::ot_cf_active_cache {}; set generated {}
+  foreach c [all_clocks] {if {[$c is_generated]} {lappend generated [get_full_name $c]}}
+  if {![llength $generated]} {return}
+  sta::update_generated_clks
+  # Iterating paths alone does not initialize generated source insertion.
+  # A native timing search fills the complete root-to-bank physical arrivals.
+  find_timing_paths -group_path_count 1
+  set fd [file tempfile path ot-clock-family-]; close $fd
+  set ip [interp create -safe]
+  try {
+    write_sdc $path
+    foreach cmd {get_ports get_pins get_clocks} {interp alias $ip $cmd {} $cmd}
+    interp alias $ip create_generated_clock {} ot_cf_record
+    set fd [open $path r]; set text [read $fd]; close $fd
+    set command {}
+    foreach line [split $text \n] {
+      append command $line \n
+      if {![info complete $command]} continue
+      if {[regexp {^\s*create_generated_clock\s} $command]} {interp eval $ip $command}
+      set command {}
+    }
+    if {[string trim $command] ne ""} {error "OT_CLOCK_FAMILY: incomplete canonical SDC"}
+    if {[lsort [dict keys $::ot_cf_master]] ne [lsort $generated]} {error "OT_CLOCK_FAMILY: incomplete generated-clock ancestry"}
+    foreach c $generated {ot_cf_root $c}
+  } finally {interp delete $ip; file delete -force $path}
+}
+proc ot_cf_root {name} {
+  set seen {}
+  while {[dict exists $::ot_cf_master $name]} {
+    if {$name in $seen} {error "OT_CLOCK_FAMILY: ancestry cycle $name"}
+    lappend seen $name; set name [dict get $::ot_cf_master $name]
+  }
+  set c [get_clocks -quiet $name]
+  if {[llength $c] != 1 || [$c is_generated]} {error "OT_CLOCK_FAMILY: unresolved root $name"}
+  return $name
+}
+proc ot_cf_pins {root} {
+  set name [get_full_name $root]
+  if {[ot_cf_root $name] ne $name} {error "OT_CLOCK_FAMILY: requested root $name is generated"}
+  # Ordinary roots retain the existing all_registers ownership query. In
+  # pre-CTS ideal sessions get_property(pin, clocks) can be empty on check-only
+  # macro entries; all_registers -clock still proves actual graph membership.
+  if {![dict size $::ot_cf_master]} {
+    set pins [all_registers -clock_pins -clock $root]; set owners {}
+    foreach p $pins {dict set owners [get_full_name $p] $root}
+    return [list $pins $owners]
+  }
+  set pins {}; set owners {}
+  foreach c [all_clocks] {
+    if {[ot_cf_root [get_full_name $c]] ne $name} continue
+    foreach p [all_registers -clock_pins -clock $c] {
+      set pn [get_full_name $p]
+      set actual {}; foreach owner [get_property $p clocks] {lappend actual [get_full_name $owner]}
+      if {[llength [lsort -unique $actual]] != 1} {
+        error "OT_CLOCK_FAMILY: ambiguous clock sink $pn ($actual)"
+      }
+      if {[ot_cf_root [lindex $actual 0]] ne $name} {error "OT_CLOCK_FAMILY: foreign sink $pn"}
+      if {[lindex $actual 0] ne [get_full_name $c]} continue
+      if {[dict exists $owners $pn]} {error "OT_CLOCK_FAMILY: duplicate sink $pn"}
+      dict set owners $pn $c; lappend pins $p
+    }
+  }
+  return [list $pins $owners]
+}
+proc ot_cf_active {p} {
+  set cell [get_cells -of_objects $p]
+  set key [list [get_property $cell ref_name] [get_property $p lib_pin_name]]
+  if {[dict exists $::ot_cf_active_cache $key]} {return [dict get $::ot_cf_active_cache $key]}
+  sta::redirect_string_begin
+  set failed [catch {report_edges -from $p} message]
+  set report [sta::redirect_string_end]; set on 0; set edges {}
+  if {$failed} {error "OT_CLOCK_FAMILY: active-edge query failed [get_full_name $p]: $message"}
+  foreach line [split $report \n] {
+    if {[regexp {^\S} $line]} {set on [regexp {(Clk|En) to Q} $line]; continue}
+    if {$on && [regexp {^\s+([\^v])\s+->} $line -> edge] && $edge ni $edges} {lappend edges $edge}
+  }
+  if {![llength $edges] && [llength [info commands ord::get_db]]} {
+    # Check-only hard entries (notably SRAM write clocks) have no clock-to-Q
+    # arc. Only an actual physical BLOCK with unique loaded Liberty clock
+    # timing-check edges is supported; missing soft-register arcs still fail.
+    set master [[ord::get_db] findMaster [get_property $cell ref_name]]
+    if {$master ne "NULL" && [$master isBlock]} {
+      set on 0
+      foreach line [split $report \n] {
+        if {[regexp {^\S} $line]} {set on [regexp { (setup|hold|recovery|removal)$} $line]; continue}
+        if {$on && [regexp {^\s+([\^v])\s+->} $line -> edge] && $edge ni $edges} {lappend edges $edge}
+      }
+    }
+  }
+  if {[llength $edges] != 1} {error "OT_CLOCK_FAMILY: missing unique active clock edge [get_full_name $p] ($edges)"}
+  set active [expr {[lindex $edges 0] eq "^" ? "rise" : "fall"}]
+  dict set ::ot_cf_active_cache $key $active
+  return $active
+}
+proc ot_cf_wire {pin clock {scene {}}} {
+  if {$scene eq ""} {set scene [get_property [sta::cmd_scene] name]}
+  set cn [get_full_name $clock]; set waveform {}
+  foreach time [$clock waveform] {lappend waveform [sta::time_sta_ui $time]}
+  if {[llength $waveform] != 2} {error "OT_CLOCK_FAMILY: invalid waveform $cn"}
+  foreach time $waveform {if {![string is double -strict $time] || [regexp -nocase {inf|nan} $time]} {error "OT_CLOCK_FAMILY: nonfinite waveform $cn"}}
+  set transition [ot_cf_active $pin]; set marker [expr {$transition eq "rise" ? "^max" : "vmax"}]
+  set values {}
+  foreach vertex [$pin vertices] {
+    if {$vertex eq "NULL"} continue
+    set paths [$vertex path_iterator $transition max]
+    while {[$paths has_next]} {
+      set path [$paths next]; set tag [$path tag]; set edge [lindex $tag 4]
+      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne $marker || [lindex $tag 3] ne $cn || $edge ni {^ v} || [string first "(clock prop)" $tag] < 0} continue
+      set arrival [sta::time_sta_ui [$path arrival]]
+      if {![string is double -strict $arrival] || [regexp -nocase {inf|nan} $arrival]} {$paths finish; error "OT_CLOCK_FAMILY: nonfinite clock arrival [get_full_name $pin]"}
+      lappend values [expr {$arrival-[lindex $waveform [expr {$edge eq "^" ? 0 : 1}]]}]
+    }
+    $paths finish
+  }
+  if {[llength $values] != 1} {error "OT_CLOCK_FAMILY: missing unique physical clock arrival [get_full_name $pin] clock=$cn scene=$scene"}
+  return [lindex $values 0]
+}
+
+proc ot_ce_clock_wire {pin clock} {
+  if {[info exists ::ot_cf_master] && [dict size $::ot_cf_master]} {
+    set owners [get_property $pin clocks]
+    if {[llength $owners] != 1 || [ot_cf_root [get_full_name $owners]] ne [ot_cf_root [get_full_name $clock]]} {
+      error "OT_CLOCK_FAMILY: wrong/ambiguous source ownership [get_full_name $pin]"
+    }
+    return [ot_cf_wire $pin $owners]
+  }
+  return [ot_ce_legacy_clock_wire $pin $clock]
+}
 
 # Constants are proved from actual OpenDB connectivity and the loaded Liberty
 # output functions. Cell/port names, case analysis and timing-graph constant
@@ -294,11 +521,12 @@ proc ot_ce_startpoint_class {start purpose memo_name} {
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
 proc ot_ce_leaf_ownership {inputs outputs} {
+  ot_cf_refresh
   set expected {}
   dict for {domain info} $::ot_ce_domains {lappend expected [dict get $info clock]}
   for {set i 0} {$i < [llength $::ot_ce_ports]} {incr i} {lappend expected ot_entry_$i}
   set actual {}
-  foreach c [all_clocks] {lappend actual [get_full_name $c]}
+  foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}
   if {[lsort $actual] ne [lsort $expected]} {error "OT_MULTI_ROOT: undeclared clock alias or relationship"}
   set ::ot_ag_seen {}
   set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}
@@ -306,7 +534,8 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     set domain [dict get $::ot_ce_source_domains $root]
     dict set domain_roots $domain $root
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $root]]
-    foreach pin [all_registers -clock [get_full_name $clock] -clock_pins] {
+    lassign [ot_cf_pins $clock] ot_ce_family_pins ot_ce_family_owners
+    foreach pin $ot_ce_family_pins {
       set cell [get_full_name [get_cells -of_objects $pin]]
       if {[dict exists $cells $cell]} { error "OT_MULTI_ROOT: duplicate clock ownership $cell" }
       dict set cells $cell $domain
@@ -327,7 +556,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   set async_pins {}
   foreach pin [all_registers -async_pins] {dict set async_pins [get_full_name $pin] 1}
   foreach pin [all_registers -data_pins] {
-    if {[dict exists $async_pins [get_full_name $pin]]} {ot_ag_async_control $pin; continue}
+    if {[dict exists $async_pins [get_full_name $pin]]} {ot_ag_async_control $pin $cells $inputs; continue}
     set cell [get_full_name [get_cells -of_objects $pin]]
     set expected [dict get $cells $cell]
     foreach start [get_fanin -flat -startpoints_only -to $pin] {
@@ -450,7 +679,7 @@ proc ot_ce_corner {} {
 proc ot_ce_finite {value} {
   return [expr {[string is double -strict $value] && ![regexp -nocase {inf|nan} $value]}]
 }
-proc ot_ce_clock_wire {pin clock} {
+proc ot_ce_legacy_clock_wire {pin clock} {
   set scene [get_property [sta::cmd_scene] name]
   set clock_name [get_full_name $clock]
   set by_transition [dict create rise {} fall {}]
@@ -501,23 +730,62 @@ proc ot_ce_clock_wire {pin clock} {
   }
   return [lindex $values 0]
 }
-# Match ck_insertion.py's exported insertion.json boundary population: input
-# timing endpoints plus output timing launch registers, intersected with this root.
+# Match the structural IO boundary population in ck_insertion.py and io_ref_routed.sdc.
 proc ot_ce_boundary_cells {} {
-  set boundary {}
-  set inputs [all_inputs -no_clocks]
-  if {[llength $inputs]} {
-    foreach path [find_timing_paths -path_delay max -from $inputs -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {
-      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}] 1
-    }
+  set regs {}
+  foreach p [all_registers -clock_pins] {
+    set n [get_full_name $p]
+    dict set regs [regsub {/[^/]+$} $n {}] $n
   }
-  if {[llength [all_outputs]]} {
-    foreach path [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
-      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}] 1
-    }
-  }
-  return $boundary
+
+set bnd {}
+set ot_ck_data {}
+set ot_ck_async {}
+foreach p [all_registers -async_pins] { dict set ot_ck_async [get_full_name $p] 1 }
+foreach p [all_registers -data_pins] {
+  set n [get_full_name $p]
+  if {![dict exists $ot_ck_async $n]} { dict set ot_ck_data $n 1 }
 }
+set din [all_inputs -no_clocks]
+if {[llength $din]} {
+  foreach p [get_fanout -from $din -flat -endpoints_only -trace_arcs all] {
+    set n [get_full_name $p]
+    if {![dict exists $ot_ck_data $n]} continue
+    set i [regsub {/[^/]+$} $n {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+set dout [all_outputs]
+if {[llength $dout]} {
+  foreach p [get_fanin -to $dout -flat -startpoints_only -trace_arcs all] {
+    set i [regsub {/[^/]+$} [get_full_name $p] {}]
+    if {[dict exists $regs $i]} { dict set bnd $i 1 }
+  }
+}
+
+  return $bnd
+}
+# Owner 2026-10-17 0dq clock rule for one glue CTS root in the current scene: FAIL iff the pin-flop spread
+# (pin_hi - pin_lo over the boundary registers, or every sink when none is at the boundary) exceeds 80 ps at
+# TT or FF; SS is sensitivity only.  > 15k sinks and > 300 ps insertion only WARN.
+proc ot_ce_clock_rule {corner name sinks all_mean pin_mean pin_lo pin_hi scope} {
+  set spread [expr {$pin_hi - $pin_lo}]
+  set warn {}
+  if {$sinks > 15000} { lappend warn "sinks $sinks > 15000 (guidance)" }
+  if {$all_mean > 300 || $pin_mean > 300} {
+    lappend warn "insertion all_mean [format %.1f $all_mean] / pin_mean [format %.1f $pin_mean] ps > 300 (guidance)"
+  }
+  if {[string tolower $corner] in {tt ff} && $spread > 80} {
+    set level FAIL
+  } elseif {[llength $warn]} {
+    set level WARN
+  } else {
+    set level PASS
+  }
+  puts "OT_HYBRID CLOCK_RULE $corner $name $level pin_spread=[format %.1f $spread] scope=$scope sinks=$sinks[expr {[llength $warn] ? " WARN: [join $warn {; }]" : ""}]"
+  return $level
+}
+
 proc ot_ce_boundary_pins {pins boundary_cells} {
   set regs {}; set boundary {}
   foreach pin $pins {dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin}
@@ -554,6 +822,7 @@ proc ot_ce_apply {} {
   }
   if {[lsort $names] ne [lsort $::ot_ce_ports]} { error "OT_ENTRIES: source clock coverage differs from spec" }
   foreach c [get_clocks ot_entry_*] { set_clock_latency -source 0 $c }
+  ot_cf_refresh
   sta::worst_slack_cmd max
   set rows {}; set seen {}; set counts {}
   foreach cell [get_cells -quiet -hierarchical *] {
@@ -606,7 +875,7 @@ proc ot_ce_apply {} {
   # clock sink in the current scene; never substitute a declared/common phase.
   foreach name $::ot_ce_cts_roots {
     set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
-    set pins [all_registers -clock [get_full_name $clock] -clock_pins]
+    lassign [ot_cf_pins $clock] pins ot_ce_family_owners
     if {![llength $pins]} { error "OT_HYBRID: glue root $name has no actual sequential clock sinks" }
     set arrivals {}; set measured {}; set total 0.0
     foreach pin $pins {
@@ -625,9 +894,6 @@ proc ot_ce_apply {} {
     if {[info exists ::ot_ce_require_wire] && $::ot_ce_require_wire && $mean <= 0} {
       error "OT_HYBRID: glue root $name lacks a positive actual propagated CTS insertion"
     }
-    if {[llength $arrivals] > 15000 && ($tree_mean > 300 || $hi-$lo > 80)} {
-      error "OT_HYBRID: glue root $name exceeds measured large-root insertion/spread limits"
-    }
     if {!$boundary_cells_ready} {
       set boundary_cells [ot_ce_boundary_cells]; set boundary_cells_ready 1
     }
@@ -642,8 +908,12 @@ proc ot_ce_apply {} {
     set arrivals [lsort -real $arrivals]
     set lo [lindex $arrivals 0]; set hi [lindex $arrivals end]
     set mean [expr {$total / [llength $arrivals]}]
-    if {[llength $pins] > 15000 && $mean > 300} {
-      error "OT_HYBRID: glue root $name exceeds boundary insertion limit"
+    # Clock rule (owner 2026-10-17 0dq, textbook_lint.clock_rule_eval): FAIL only on the pin-flop (boundary
+    # register; child-flop on a region-rooted parent) spread > 80 ps at TT or FF.  > 15k sinks on one root and
+    # insertion > 300 ps are guidance (WARN): the neighbour boundary is matched by the source-latency
+    # compensation below / a ring crossing and judged by native_pin_audit --relative-to.
+    if {[ot_ce_clock_rule $corner $name [llength $pins] $tree_mean $mean $lo $hi $scope] eq "FAIL"} {
+      error "OT_HYBRID: glue root $name pin-flop spread [format %.1f [expr {$hi-$lo}]] ps > 80 at $corner ($scope, [llength $boundary] of [llength $pins] sinks)"
     }
     set domain [dict get $::ot_ce_source_domains $name]
     lappend rows [list [get_ports $name] [lindex $pins 0] 0 $lo $mean $hi $clock $mean $domain]
@@ -694,9 +964,13 @@ proc ot_ce_apply {} {
   foreach name $::ot_ce_cts_roots { lappend ot_ce_glue [get_full_name [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]] }
   set ot_ce_high {}
   foreach c $highclocks { lappend ot_ce_high [get_full_name $c] }
-  foreach a [get_clocks ot_entry_*] {
-    foreach b [get_clocks ot_entry_*] {
-      set an [get_full_name $a]; set bn [get_full_name $b]
+  set ot_ce_family_clocks {}
+  foreach c [all_clocks] {
+    if {[ot_cf_root [get_full_name $c]] in [lmap x [get_clocks ot_entry_*] {get_full_name $x}]} {lappend ot_ce_family_clocks $c}
+  }
+  foreach a $ot_ce_family_clocks {
+    foreach b $ot_ce_family_clocks {
+      set an [ot_cf_root [get_full_name $a]]; set bn [ot_cf_root [get_full_name $b]]
       if {$an eq $bn && $an in $ot_ce_glue} { continue }
       set_clock_uncertainty -setup [expr {($an in $ot_ce_high || $bn in $ot_ce_high) ? 210 : 150}] -from $a -to $b
       set_clock_uncertainty -hold 100 -from $a -to $b
