@@ -1,0 +1,9 @@
+Completed g2g MAIN gate review (owner choice pending)
+
+Gate WARN; native max32; GRT RC0/overflow0. TT/FF pin-flop spread64.4/67.1ps, insertion747.7/608.8ps; 17,651 sinks. Existing same-source fleet TOPK+ARGMAX positives and VM_RT64/VMX76 causal mutants passed the aggregate qualification (bench receipt committed separately).
+
+PNG viewed: one SRAM at43.2/86.4 (43.2 lattice),5.4halo; continuous N/S/E cell bands. Density is sparse20.7% overall, lower and E bands green with small brown E spots, no red mass; measured GRT0. This is guidance, not new die STA evidence. ClockSW, output banks remain physically on S(vm_rq)/N(index_rr). Existing actual pin geometry check PASS in complete CLI evidence.
+
+FACEQ1 preserves ARGMAX edges but adds TOPK1/INDEX RTT2 versus old unlanded source; die selected compiler must explicitly match. g2e CLOSED eba0f5911 is a different source/params and is not automatically replaceable or aliased. No current-die source binding claimed. No REVIEW/approval created; root chooses exact nextGEN source+params before submission or alternate cancellation.
+
+Reset balanced_proof PASS twoedges,8 first roots/192 final, firstmax24/finalmax21. Raw reset_landing metadata also retains okfalse/over rst_n despite balanced proof; packet reports this directly. Gate verdict contains no ERROR.

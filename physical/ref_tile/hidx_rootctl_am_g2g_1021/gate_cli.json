@@ -1,0 +1,137 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: FACEQ=1: literal S-face vm_rq and N-face index_rr output registers; ARGMAX rq uses the S-face request register. Existing same-region pins retain timing-qualified direct paths.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc5 for 40 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hidx_rootctl_am_g2g_1021_20261021-094311.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hidx_rootctl_am_g2g_1021_20261021-094311.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hidx_rootctl_am_g2g_1021-20261021-094311",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc5 in 152 s (gate total 1990 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 5877, 'pin_rectangles': 5877, 'pin_track_checked': 5877, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 2adc662a88df25c505e38b2ee90b15d1075031301b93ca61a5dd107b7f45793d",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 11076 um2 + macros 7092 in core 85959: util 14% (std-cell density 14.5% of placeable 76441 um2; total fill 21.1%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hbm_idx_rootctl_static_am cells 79,727 flops 17,650 depth 505.1 ps util 0.2132 reach 49.5 um (1.8 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 17,650 flops > 15,000 on one root (+0 ICGs, 1 macro clock pins; e.g. argmax_m[0]$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 17,651 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 17,651 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 910.3..973.7 ps (spread 63.4), boundary mean 934.9; tt insertion all 674.6..747.7 ps (spread 73.1), boundary mean 696.8; ff insertion all 533.0..608.8 ps (spread 75.8), boundary mean 553.1; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.400 vs spec PD 0.40",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 4 (fine) leaves 2215 sinks 17632 cells 21900 leaf arrival 583.9..628.1 ps (spread 44.2) pad 73.9 / 16.1 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 5 (fine) leaves 2215 sinks 17632 cells 22390 leaf arrival 599.5..628.1 ps (spread 28.6) pad 73.9 / 16.2 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/hidx_rootctl_am_g2g_1021/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      600 paths, worst slack 9.2 ps (e.g. u_ot_pr_core.g_tk32.topk.g_chk[6].u/q[1]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 9.174772053199831e-12 hold WNS -1.0176470777167879e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 17,651 sinks on the largest root; measured TT insertion 747.7 ps, FF insertion 608.8 ps, TT pin-flop spread 64.4 ps, FF pin-flop spread 67.1 ps; WARN: 17,651 sinks on one clock root > 15,000 (guidance); insertion 747.7 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-hbm-idx-g2g-1021/physical/ref_tile/hidx_rootctl_am_g2g_1021/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-hbm-idx-g2g-1021/physical/ref_tile/hidx_rootctl_am_g2g_1021/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 30.01% used; GRT 686 s",
+   "fix": ""
+  }
+ ]
+}
