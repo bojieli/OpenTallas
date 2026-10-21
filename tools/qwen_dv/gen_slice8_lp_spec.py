@@ -19,7 +19,7 @@ CHILD_SOURCES=[x for x in g7.CHILD_SOURCES if x not in ['rtl/qwen_dv/s5/p3/qfd_d
 # allowed to omit these just because the future physical child is unclosed.
 CHILD_SOURCES=list(dict.fromkeys(CHILD_SOURCES+[
     'rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv',
-    'rtl/qwen_dv/qfd_dv_station_math_g.sv',
+    'rtl/qwen_dv/s5/s8/qfd_dv_s8_legacy_math_g.sv',
     'rtl/qwen_dv/qfd_dv_ring_delay.sv',
     'rtl/qwen_dv/qfd_dv_reset_tree.sv',
     'rtl/common/landed_parent/ot_pl_land_physical.sv',
@@ -31,6 +31,13 @@ def make_flat():
     gen_slice8_rp_source.main()
     import gen_s8_station_tail
     gen_s8_station_tail.main()
+    # Imported legacy helper modules also enter this parent readset. Their
+    # original names collide with the hard controller's scalar helper defs.
+    # Rename every definition/reference together; source equations/FFs unchanged.
+    legacy=(ROOT/'rtl/qwen_dv/qfd_dv_station_math_g.sv').read_text()
+    (ROOT/'rtl/qwen_dv/s5/s8/qfd_dv_s8_legacy_math_g.sv').write_text(
+        '// Parent-only namespace closure; equations and stages are original.\n'+
+        legacy.replace('qfd_bmath_', 'qfd_s8legacy_bmath_'))
     g7.make_flat()
     text=g7.FLAT6.read_text().replace('module qfd_dv_s7_flat (','module qfd_dv_s8_flat (',1)
     text=text.replace('qfd_dv_redstn2_region u_r','qfd_dv_s8_station_tail1 u_r')
