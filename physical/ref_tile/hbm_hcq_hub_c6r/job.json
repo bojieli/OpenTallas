@@ -1,5 +1,5 @@
 {
- "name": "hbm_hcq_hub_c6r-c6r-c01cb8fe4",
+ "name": "hbm_hcq_hub_c6r-c6r-375a8bd00",
  "block": "ot_hbm_hc_qhub_static",
  "ref_tile": true,
  "owner": "Codex:CODEX-HBM-1021",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "codex/hbm-c5-native-clock-1340-1021",
-  "commit": "c01cb8fe4",
+  "commit": "375a8bd00",
   "extra_paths": [
    "rtl/test/run_hbm_hc_eng4_ring.sh",
    "rtl/test/tb_hbm_hc_eng4_static.sv",
@@ -209,7 +209,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_hcq_hub_c6r/hbm_hcq_hub_c6r-c6r-c01cb8fe4"
+   "to": "results/rtl/ref_tile/hbm_hcq_hub_c6r/hbm_hcq_hub_c6r-c6r-375a8bd00"
   }
  ],
  "cycles_added": 0,
@@ -220,8 +220,8 @@
  "merge_target": null,
  "structural_change": "HBM-COLLECT10/COL-HC 10-21 c1r: hbm_hcq_hub_c1p re-gate (10-21 08:30, ot-gold1) REFUSED by the in-gate mapped native census (PRE_GATE_NATIVE_CENSUS, limit 32): 75 drivers, max 217 -- gathered reader rs_c[] QN 139..217 (ABC folded the rk==b one-hot decode into the 32-b AND-OR selects), qcal programme captured[23..25] QN 76..80 (npos-1 folded into the 3 x 19-b gb masks), 3 decode nets 33/34. Fix: the decode / n1 on KEPT wires (ABC boundaries): decode bit -> 32 select loads, rs_c bit -> one 3->8 decoder, n1 bit -> one 19-b mask. Same function, same edges (0 added), port-identical. Prior: HBM-HCBANK6 10-20 (H.STA.BLK.17.2) structural successor of hbm_hcq_hub_s1/s1b/s2/s2b (all --cts gates FAILED: GATE_STALL rc137 in post-CTS repair_timing -hold, 28,269 hold endpoints at margin 30 with ONE 51,334-sink root whose arrival spread 566..849 ps; mapped native32 census 1,057 / 960 drivers > 32). (1) REGISTER MASS OUT OF THE GLUE: levels 1..4 of the quarter subtree (60 of 63 LAT-7 adders, ~37k flops) are 4 hard children ot_hbm_hc_qtree16_static (one master x4, kit hbm_hcq_tree16_c1) beside the W-face s_i pins, each with its own clock entry clk_t[c] (hybrid_entries: the die delivers phi",
  "reroute_reason": {
-  "kind": "structural",
-  "failed_job": "ref_gate hbm_hcq_hub_c4r 0460a864c native census FAIL one load-control33",
-  "why": "split is_c1 launch accept into independent eight-bit halves (GL16 copies), retains hidden predecode rung, no interface or output edge change"
+  "kind": "structural_clock_binding",
+  "failed_job": "C5r source e6c44aa64 CTS OT_HYBRID rejected actual programme SRAM clk omitted from soft_root_macro_bindings",
+  "why": "Declare exact actual u_q.g_qcal.programme.u_program/master ot_sram_1r1w_1024x256_m2_r2c2/clk/root clk using existing strict raw-memory contract with TT/FF Liberty validation; zero RTL/phase/geometry/data-edge change"
  }
 }
