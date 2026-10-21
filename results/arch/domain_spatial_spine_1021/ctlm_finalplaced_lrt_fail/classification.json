@@ -1,0 +1,58 @@
+{
+  "status": "ACTUAL_ENGINE_FAIL_AFTER_BOTH_CLEAN_SPINES",
+  "remote": "ot-agidock128:/srv/opentallas-scratch/claude/codex-cdc-liberty-1021/domain_ctlm_finalplaced_engine_1549",
+  "source_scene": "Exact final3_place raw6780a6479402db782c5cb3d1586ae18172770636c022e9091b990d16472f68cd",
+  "engine_unchanged_sha256": "aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83",
+  "helpers": {
+    "src/physical/common_flow/clock_spine.tcl": "aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83",
+    "src/physical/common_flow/domain_spatial_spine.tcl": "06f44345085a8e40d4b4182aea99de1bb439d0844ee113005e2af029a4f0faf8",
+    "src/physical/common_flow/clock_entries.tcl": "44be6a68ed1dcfdfafdbe845181ea7076b72b032e699a2dc1726e4f04434e620",
+    "src/physical/common_flow/landed_raw_tap.tcl": "51bb3492c807a795104763a5b45f8b938a4fbff450e98fbdd3dbfbd7f39e0565",
+    "src/physical/ref_tile/qfd_tt_ctlm_dv_safe12c/pre_cts.tcl": "8ad1931ec1a6b6f941386df9f559227e814b231db46045151db8b602c07cff24",
+    "src/physical/ref_tile/qfd_tt_ctlm_dv_safe12c/clock_entry.sdc": "50f4baf641a7c654a47336bd9dd316f4d331781c159e494680c01c84743c7565"
+  },
+  "actual_spines": {
+    "ck_core": {
+      "buffers": 6878,
+      "spread_ps": 25.0,
+      "placement": "check_placement clean"
+    },
+    "ck_hr": {
+      "buffers": 2192,
+      "spread_ps": 26.1,
+      "placement": "check_placement clean"
+    }
+  },
+  "failure": {
+    "error": "ODB-0372",
+    "terminal": "u_hr/ck_pm0",
+    "protected_net": "clkbuf_sp_d2_L346_net",
+    "operation": "landed_raw_tap.tcl113 raw ITerm disconnect before first delay buffer",
+    "raw_minus_reference_ps": -5.7,
+    "required_record_target_tt_ps": 287.9
+  },
+  "source_order": [
+    "canonical aab clock_spine",
+    "clock_entries",
+    "domain_spatial_spine admission",
+    "landed_raw_tap",
+    "boundary wrapper"
+  ],
+  "call_order": [
+    "boundary wrapper",
+    "landed_raw_tap wrapper",
+    "domain admission",
+    "clock_entries wrapper",
+    "canonical spine",
+    "return into LRT post-CTS restoration"
+  ],
+  "cause": "Canonical engine710-711 protects all created root/output nets before returning. Existing LRT requires changing the raw terminal connection AFTER actual CTS to restore child record delay, so its first disconnect collides with protected spine ownership.",
+  "constraints": [
+    "Do not move LRT before spine: targets depend on actual post-CTS reference arrival",
+    "Do not source spine last: aab normally owns roots and returns without calling inner CTS, silently skipping LRT",
+    "Macro-leaf flags do not remove mandatory protection conflict",
+    "No global dont_touch removal, target/tolerance/SDC changes or restoration skip",
+    "Any repair needs explicit source-owned post-spine raw-tap custody protocol and unchanged final guards"
+  ],
+  "actions": "Read-only classification only; no helper change/EDA launch/API promotion"
+}
