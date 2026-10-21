@@ -224,6 +224,11 @@
   "excluded_owed": [
     "rxv/rxvb startup-enable flops reach opposite W lane RX[0] face (>725um), requires real source disposition",
     "actual ML E2/land placement bound ecdd507d1 must be instantiated and reprojected",
-    "actual macro routing/channel/clock closure; this pin model does not qualify physical fit"
-  ]
+    "actual macro routing/channel/clock closure; this pin model does not qualify physical fit",
+    "actual per-leaf check_macro_track_alignment, currently impossible without CRED12 LEF",
+    "actual cell/clock/data/PG corridor access; minimum2.16um vertical gap is not a qualified corridor"
+  ],
+  "orientation_status": "UNQUALIFIED: no exported/published CRED12 LEF yet. Existing check_macro_track_alignment must test the actual leaf at each proposed MX placement. No legacy CRED8 view alias.",
+  "placement_lattice_status": "All proposed x/y are on 2.16um source placement lattice only; this does not establish actual LEF per-layer track residues or mirror legality.",
+  "corridor_status": "17.28um core/lane channel and as little as2.16um inter-lane clearance are geometric candidates only, not route/clock/PG/cell-placement proofs; enlarge reserve and actual corridors if required, without pin/access waiver."
 }
