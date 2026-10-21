@@ -17409,72 +17409,7 @@ QWEN_VM_RO6_PIN_E3_COMPOSITION_1016 = dict(
     SU_VL=20, row_RL=18, compiler_adopted=False, physical_qualified=False)
 
 
-def s81_svc7_hgrp_native_candidate_model():
-    """Conservative source-sized candidate; no physical/performance admission.
-
-    The measured hgrp_ns maps 3196 drivers above32 loads. Preserve the
-    golden eight-product left fold and four-chunk binary tree. Partitioning
-    alone does not cure the existing FP arithmetic's internal control loads.
-    A bit-cone arithmetic probe measures whether independent kept cones
-    actually meet32 before committing the full parent to that implementation.
-    """
-    return dict(
-        status="pre-synthesis candidate; NOT adopted",
-        measured_base=dict(std_um2=85061.950740, flops=90823,
-                           over32_drivers=3196, core_latency_edges=42),
-        heads=4, chunks_per_head=4, products_per_chunk=8,
-        products_per_edge=128, products_per_engine_edge=16*128,
-        fp_adds_per_group=4*(4*7+3),
-        arithmetic_order="each chunk left-fold8; chunk sums binary tree4",
-        stationary_bits_per_chunk=5*8*16,
-        stationary_bits_per_group=4*4*5*8*16,
-        skew_policy="replace every delay>=3 with synchronous SRAM ring",
-        skew_rings_per_chunk=6,
-        skew_ring=dict(word_data_bits=21,packet_valid_bits=1,physical_word_bits=64,
-                       depth=32,required_delays=[5,10,15,20,25,30],
-                       read_offset="write_pointer-(D-2)",
-                       macro_read_edges=1,registered_capture_edges=1,
-                       capacity_note="D<=31 avoids same-address read/write; no bulk flop delay",
-                       reset="two equal-age landed run copies; fill/epoch packet validity"),
-        provisional_macro="ot_sram_1r1w_32x64_m1",
-        provisional_skew_macros_per_group=4*4*6,
-        provisional_skew_macro_um2=4*4*6*31.968*17.28,
-        arithmetic_probe=dict(status="REJECTED native378 over32; output-bit cones"),
-        arithmetic_graph_candidate=dict(
-            status="native retained<=32; conditional, no physical gate/adoption",
-            baseline="golden add4/mul6 plus one real input-pin edge each",
-            register_and_logic_replication="recursive same-input primitive copies; SCC frontier refuses cycles",
-            maximum_logical_loads=24,
-            add=dict(edges=5,std_um2=310.7727,flops=388,depth_ps=438.4,depth_levels=13,
-                     clones=30,replica_delta_std_um2=1.0935,replica_delta_flops=14),
-            mul=dict(edges=7,std_um2=173.58948,flops=305,depth_ps=406.7,depth_levels=12,
-                     clones=11,replica_delta_std_um2=2.85768,replica_delta_flops=11),
-            required_proof="exact cell models ASR544/HQN128 coupons; independent-init first-valid/reset proof; golden arithmetic",
-            area_status="arithmetic measured; parent mux/dequant/control and complete metadata storage still owed"),
-        selected_input_core_edges=7+7*5,
-        measured_full_chunk=dict(edges=43,std_um2=4181.13576,flops=6454,sram32x64=8,
-                                 native_max_loads=32,replicated_cells=88,replicated_flops=60,
-                                 status="native PASS; caller/reset and clone-first-use admission HOLD"),
-        metadata_sram_per_chunk=2,
-        complete_sram_per_chunk=8,
-        candidate_core_latency_edges=43+2*5,
-        candidate_group_latency_edges=2+(43+2*5)+1,
-        old_group_latency_edges=2+42+1,
-        provisional_added_edges=11,
-        candidate_latency_note="fullchunk43 includes realinputpin1; group56 vs45 is minimum before physical crossings/clocklanding; not adopted",
-        measured_arithmetic_std_um2_per_chunk=8*173.58948+7*310.7727,
-        metadata_storage_note="measured fullchunk8SRAM:6operand-bank skew,1packed8lane dq-fault/valid,1packed7stage carryfault+valid same-age history; stationary640FFbits below2kb",
-        boundary_bits=dict(chunk_load=8*16, chunk_operand=8*18,
-                           chunk_result=33, head_result=33),
-        floorplan=dict(chunk_um=[259.2,259.2],
-                       aspect=1, utilization_target=[0.4,0.6],
-                       one_hop_reach_um=405, max_pins_per_um=6,
-                       chunk_pin_face_capacity=259.2*6,
-                       status="provisional envelope; resize from native synthesis"),
-        obligations=["all composed parent drivers native<=32",
-                     "mul and dequant native<=32",
-                     "reset equal-age regional leaves<=32",
-                     "all pins registered; no functional ties",
-                     "SRAM skew golden offset and production period1",
-                     "compile measured added edges before adoption"],
-        physical_qualified=False, compiler_adopted=False)
+def qwen_release_programme_store_candidate_model():
+    """Finite SU/MU programme storage; physical/native gates remain mandatory."""
+    from uarch_model_qwen_programme_store import model
+    return model()
