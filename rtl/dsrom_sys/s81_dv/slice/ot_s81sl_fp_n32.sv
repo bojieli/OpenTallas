@@ -290,12 +290,9 @@ module ot_s81sl_fp_mul_n32 #(
     wire power_c;
     ot_hdc_ksadd_k #(.W(12)) u_pw (.a(p_ap), .b(p_bp), .cin(1'b0), .s(power), .cout(power_c));
     wire [48*8-1:0] rows;
-    wire [24*8-1:0] row_a,row_b;
-    ot_s81sl_fp_copy #(.W(24),.N(8),.CUT(K1)) u_row_a(.clk(clk),.d(a_n),.q(row_a));
-    ot_s81sl_fp_copy #(.W(24),.N(8),.CUT(K1)) u_row_b(.clk(clk),.d(b_n),.q(row_b));
     wire [48*16-1:0] row_l1; wire [48*11-1:0] row_l2;
     for(genvar g=0;g<8;g=g+1)begin:g_row_group
-      ot_s81sl_fp_rows3 #(.FIRST(3*g)) u_rg(.a(row_a[24*g+:24]),.b(row_b[24*g+:24]),.y(row_l1[96*g+:96]));
+      ot_s81sl_fp_rows3 #(.FIRST(3*g)) u_rg(.a(p_a),.b(p_b),.y(row_l1[96*g+:96]));
     end
     for(genvar g=0;g<5;g=g+1)begin:g_row_l2
       assign row_l2[96*g+:96]=csa(row_l1[144*g+:48],row_l1[144*g+48+:48],row_l1[144*g+96+:48]);
@@ -468,9 +465,15 @@ endmodule
  assign y=v[LO+:OW];
 endmodule
 (* keep_hierarchy=1 *) module ot_s81sl_fp_rows3 #(parameter integer FIRST=0)(input wire[23:0] a,b,output wire[95:0] y);
- wire[47:0] r0=({24'd0,a}&{48{b[FIRST]}})<<FIRST;
- wire[47:0] r1=({24'd0,a}&{48{b[FIRST+1]}})<<(FIRST+1);
- wire[47:0] r2=({24'd0,a}&{48{b[FIRST+2]}})<<(FIRST+2);
+ wire[23:0] pp[0:2];
+ for(genvar r=0;r<3;r=r+1)begin:g_r
+  for(genvar g=0;g<4;g=g+1)begin:g_g
+   ot_s81sl_fp_pp6 u_pp(.a(a[6*g+:6]),.b(b[FIRST+r]),.y(pp[r][6*g+:6]));
+  end
+ end
+ wire[47:0] r0={24'd0,pp[0]}<<FIRST;
+ wire[47:0] r1={24'd0,pp[1]}<<(FIRST+1);
+ wire[47:0] r2={24'd0,pp[2]}<<(FIRST+2);
  assign y[47:0]=r0^r1^r2;
  assign y[95:48]=((r0&r1)|(r0&r2)|(r1&r2))<<1;
 endmodule
@@ -485,4 +488,10 @@ module ot_s81sl_qmul_n32 #(parameter integer LAT=6)(input wire clk,rst_n,v,input
  if(LAT!=6)begin:g_bad ot_s81sl_FP_LAT_must_equal_6 u_bad();end
  ot_s81sl_fp_mul_n32 u(.clk(clk),.rst_n(rst_n),.valid_in(v),.a(a),.b(b),.y(y),.err(err),.valid_out(vo));
  assign fault=vo&&(err!=0);
+endmodule
+
+// Retain actual partial products before the CSA: each operand bit has exactly
+//24 AND consumers instead of ABC duplicating its predicate into CSA gates.
+(* keep_hierarchy=1 *) module ot_s81sl_fp_pp6(input wire[5:0] a,input wire b,output wire[5:0] y);
+ assign y=a&{6{b}};
 endmodule
