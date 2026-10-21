@@ -64,6 +64,33 @@ SFAULT_MASK = (1 << 14) | (1 << 11) | (1 << 10)      # hleaf_SW s_fault: hc_SW h
 SREADY_MASK = (1 << 10) | (1 << 7)                   # hleaf_SW s_ready: hc_SW configured, calendar_SW tgt_configured
 
 
+GEN2 = dict(resp_phase=RESP_PHASE, lg_arrive_r=LG_ARRIVE, lg_arrive_w=LG_ARRIVE, emit_after_row0=EMIT_AFTER_ROW0,
+            src="GEN2 defaults (sw2 bundle)")
+
+
+def timing_from_contract(contract, l12=None, q="SW"):
+    """TOK-FUNC-HBM-PAY (10-21): the record timing on a die revision's functional contract (l12 bank-latency layer applied).
+    GATHER_PHASE = the qhub's response phase (hc_SW param).  The l12 pads sit on the REQUEST lanes of the HC LG chain
+    (hc_SW<k>.near_rq -> sfu_SW<k>.far_rq -> su_SW<k>.far_rq -> su lg_rq -> vmb rq0) and on the w_done RETURN lanes, never
+    on the write request (wq) lanes: a read reaches the bank sum(N) edges later than on GEN2 (the faces bank registers rq
+    AND rslot at its pins, so its +1 shifts both), a write request does not -> calendar read slot = tap grant + 6 + sum(N),
+    write slot = tap grant + 6."""
+    import json as _j
+    c = _j.loads(Path(contract).read_text())["instances"]
+    hp = c[f"hc_{q}"]["params"]
+    pads = 0
+    detail = {}
+    if l12:
+        P = _j.loads(Path(l12).read_text())["pads"]
+        for pre in (f"l12p_hc_{q}0_near_rq_", f"l12p_sfu_{q}0_near_rq_", f"l12p_su_{q}0_lg_rq_vmb_{q}0_"):
+            n = max([x["N"] for x in P if x["pad"].startswith(pre)] or [0])
+            detail[pre] = n
+            pads += n
+    return dict(resp_phase=int(hp.get("GATHER_PHASE", RESP_PHASE)), lg_arrive_r=LG_ARRIVE + pads,
+                lg_arrive_w=LG_ARRIVE, emit_after_row0=EMIT_AFTER_ROW0, read_pads=detail,
+                hc_params=hp, src=f"contract {Path(contract).name} hc_{q} + l12 request pads")
+
+
 def qhub_word(**f):
     w = 0
     for k, v in f.items():
@@ -96,21 +123,23 @@ def cal_spec():
     return C, C.layout(abi, "SW", universal=True)
 
 
-def cal_programme(n, grants, base):
-    """calendar_SW rows: n words, grants = [(word, 'r'|'w', bank)] -> tap-2 LG bit at word, group-0 slot at word+6."""
+def cal_programme(n, grants, base, arrive=None):
+    """calendar_SW rows: n words, grants = [(word, 'r'|'w', bank)] -> tap-2 LG bit at word, group-0 slot at word+arrive."""
     C, spec = cal_spec()
     cyc = [dict() for _ in range(n)]
+    arrive = arrive or {"r": LG_ARRIVE, "w": LG_ARRIVE}
     for w, kind, b in grants:
         f = "lg_local_read" if kind == "r" else "lg_local_write"
         cyc[w][f] = cyc[w].get(f, 0) | (1 << (16 + b))
-        a = w + LG_ARRIVE
+        a = w + arrive[kind]
         sv = "rslot_v" if kind == "r" else "wslot_v"
         cyc[a][sv] = cyc[a].get(sv, 0) | (1 << b)              # owner field 0 = LG group 0
-    prog = C.compile_schedule(spec, dict(base=base, loops=1, cycles=cyc))
+    prog = C.compile_schedule(spec, dict(base=base, loops=1, cycles=cyc,
+                                         lg_pad={"read": arrive["r"] - LG_ARRIVE, "write": arrive["w"] - LG_ARRIVE}))
     return [int(x["data"], 16) for x in prog["configuration_writes"]], cyc
 
 
-def mix_post_record(A, O, i_rec, q=0, a_idx=0x40, o_idx=0x48, t0=16, res_shift=0, grant_shift=0, flip=None):
+def mix_post_record(A, O, i_rec, q=0, a_idx=0x40, o_idx=0x48, t0=16, res_shift=0, grant_shift=0, flip=None, tim=None):
     """HC_MIX_POST (G22 form) for quadrant q: gather A (24 FP32) from VM -> gathered_mix outputs; root result O (24 FP32)
     replayed on hc_eng__result -> stored to VM.  Mutant knobs: res_shift (far-end edges), grant_shift (calendar read
     grant word), flip (bit of the A preload)."""
@@ -118,6 +147,10 @@ def mix_post_record(A, O, i_rec, q=0, a_idx=0x40, o_idx=0x48, t0=16, res_shift=0
     A = np.asarray(A, np.uint32)
     O = np.asarray(O, np.uint32)
     assert len(A) == 24 and len(O) == 24
+    tim = tim or GEN2
+    RESP_PHASE, EMIT_AFTER_ROW0 = tim["resp_phase"], tim["emit_after_row0"]
+    GATHER_WORDS = RESP_PHASE + 3
+    arr = {"r": tim["lg_arrive_r"], "w": tim["lg_arrive_w"]}
     asec, osec = sec16(q, a_idx), sec16(q, o_idx)
     # ---- qhub programme: segment A (rows 0..) gather, segment B store
     wa = [qhub_word(gather_phase=1, gather_launch=1, gather_npos=1, gather_base=asec, gather_stride=0)] + \
@@ -128,9 +161,9 @@ def mix_post_record(A, O, i_rec, q=0, a_idx=0x40, o_idx=0x48, t0=16, res_shift=0
     q_rows = prog_rows(wa, 0) + prog_rows(wb, nA)
     # ---- calendar_SW: segment A read grants (word 3 + shift), segment B write grants (word s + 2)
     ga = 1 + LG_GRANT + grant_shift
-    ca, cyc_a = cal_programme(ga + LG_ARRIVE + 2, [(ga, "r", (asec + j) % 8) for j in range(3)], 0)
-    cb, cyc_b = cal_programme(s + LG_GRANT + LG_ARRIVE + 2, [(s + LG_GRANT, "w", (osec + j) % 8) for j in range(3)],
-                              len(ca))
+    ca, cyc_a = cal_programme(ga + arr["r"] + 2, [(ga, "r", (asec + j) % 8) for j in range(3)], 0, arr)
+    cb, cyc_b = cal_programme(s + LG_GRANT + arr["w"] + 2, [(s + LG_GRANT, "w", (osec + j) % 8) for j in range(3)],
+                              len(ca), arr)
     ev, chk = [], []
     bus = CpBus(t0, src="image:HC")
     bus.install(HC_TGT, q_rows, 0)
@@ -201,6 +234,7 @@ def mix_post_record(A, O, i_rec, q=0, a_idx=0x40, o_idx=0x48, t0=16, res_shift=0
                 a_sector=asec, o_sector=osec, launch=[cL, cL2], word0_edge=[A0, cL2 + PROG_OUT + 1], gather_row0_at=G0,
                 result_pins_after=T_res, store_word=s, check_cyc=T, qhub_rows=dict(A=nA, B=nB),
                 calendar_rows=dict(A=len(ca), B=len(cb)), emit_after_row0=EMIT_AFTER_ROW0,
+                timing={k: v for k, v in tim.items() if k != "hc_params"},
                 words_checked=24 + 24, events=ev, chk=chk)
 
 
@@ -241,7 +275,18 @@ def main():
     ap.add_argument("--name-prefix", default=None)
     ap.add_argument("--pre-events", type=Path, help="also write <name>.events.txt for tb_hc_replay.sv here")
     ap.add_argument("--mutants", action="store_true", help="also write mutant pre-check event files (witnesses)")
+    ap.add_argument("--contract", type=Path, help="die functional contract (l12 applied): hc_SW GATHER_PHASE etc.")
+    ap.add_argument("--l12", type=Path, help="l12 report (pads) of that contract: read-request lane pads")
+    ap.add_argument("--arrive-r", type=int, help="override calendar read slot offset (tap grant -> bank slot)")
+    ap.add_argument("--arrive-w", type=int, help="override calendar write slot offset")
+    ap.add_argument("--suffix", default="", help="replay name suffix (timing variants)")
+    ap.add_argument("--lane", default="VEH-FMT-COLL2")
     a = ap.parse_args()
+    tim = dict(timing_from_contract(a.contract, a.l12)) if a.contract else dict(GEN2)
+    if a.arrive_r is not None:
+        tim["lg_arrive_r"] = a.arrive_r
+    if a.arrive_w is not None:
+        tim["lg_arrive_w"] = a.arrive_w
     meta = json.loads((a.fixtures / "records.json").read_text())
     z = np.load(a.fixtures / "operands.npz")
     recs = meta["records"][str(a.rank)]
@@ -267,7 +312,7 @@ def main():
             continue
         A = z[x["inputs"]["A"]["array"]]
         O = z[x["outputs"]["O"]["array"]]
-        g = mix_post_record(A, O, i_rec)
+        g = mix_post_record(A, O, i_rec, tim=tim)
         evs = sorted(g["events"] + g["chk"], key=lambda e: (e["dom"], e["cyc"], e["k"]))
         n_nm = sum(1 for e in evs if e["k"] != "M")
         assert n_nm <= a.nev - 1, n_nm
@@ -276,9 +321,9 @@ def main():
                 assert e["port"] in ins, e["port"]
             elif e["k"] == "C" and not e["port"].startswith("vm:"):
                 assert e["port"] in outs, e["port"]
-        name = f"{prefix}_hc_r{i_rec:03d}"
+        name = f"{prefix}_hc_r{i_rec:03d}{a.suffix}"
         rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design="ds", layer=str(L),
-                   record=i_rec, tag=x["tag"], lane="VEH-FMT-COLL2",
+                   record=i_rec, tag=x["tag"], lane=a.lane, scope="component_probe", timing=g["timing"],
                    assumptions=["G22 gathered-mix form = fixture TP-96 rank 0 (no own mix rows): qhub gathers the 24 raw "
                                 "mixes (HC_MIX_POST A) to the root, root result (HC_MIX_POST O) replayed as far end",
                                 f"root emit {EMIT_AFTER_ROW0} edges after gathered row 0 (rtl_hbm_hc_eng_static_gate g22 "
@@ -295,7 +340,7 @@ def main():
             if a.mutants:
                 for mn, kw in (("res_late", dict(res_shift=1)), ("grant_late", dict(grant_shift=1)),
                                ("a_bit", dict(flip=37))):
-                    gm = mix_post_record(A, O, i_rec, **kw)
+                    gm = mix_post_record(A, O, i_rec, tim=tim, **kw)
                     (a.pre_events / f"mut_{mn}_{name}.events.txt").write_text(pre_events(gm["events"] + gm["chk"]))
         ent.update({k: v for k, v in g.items() if k not in ("events", "chk")})
         ent.update(status="emitted", replays=[dict(name=name, events=n_nm, vm_preload=sum(1 for e in evs if e["k"] == "M"),
