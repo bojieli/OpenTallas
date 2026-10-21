@@ -506,11 +506,11 @@ integer first_or=-1,first_oq=-1,first_nr=-1,first_nq=-1,edge_count=0;
         end
         $display("S5_XH3_COVER ops %0d lw_v %0d en %0d lr_v %0d go %0d xvalid %0d xnz %0d fault %0d resets %0d",
                  n_ops, n_lw, n_en, n_lr, n_go, n_vd, n_bits_nz, c_flt, n_rst);
-        if (mism == 0 && compares > 0 && n_en > 0 && n_vd > 0)
+        if (mism == 0 && compares > 0 && n_en > 0 && n_vd > 0) begin
             if(first_or<0 || first_nr<0 || first_oq<0 || first_nq<0)$fatal(1,"S8_COLUMN no real read coverage");
             $display("S8_COLUMN_AGES first_req old=%0d new=%0d first_q old=%0d new=%0d; local leaf read=%0d/%0d",first_or,first_nr,first_oq,first_nq,first_oq-first_or,first_nq-first_nr);
             $display("S5_XH3_EQ PASS %0d compares seed %0d cid %0d", compares, seed, cid);
-        else begin
+        end else begin
             $display("S5_XH3_EQ FAIL %0d mismatches of %0d compares seed %0d cid %0d", mism, compares, seed, cid);
             $fatal(1, "S5_XH3_EQ FAIL");
         end

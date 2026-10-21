@@ -39,6 +39,7 @@ def main():
 '''
     t=t.replace('    integer seed, cycles,',monitor+'    integer seed, cycles,',1)
     t=t.replace('$display("S5_XH3_EQ PASS', 'if(first_or<0 || first_nr<0 || first_oq<0 || first_nq<0)$fatal(1,"S8_COLUMN no real read coverage");\n            $display("S8_COLUMN_AGES first_req old=%0d new=%0d first_q old=%0d new=%0d; local leaf read=%0d/%0d",first_or,first_nr,first_oq,first_nq,first_oq-first_or,first_nq-first_nr);\n            $display("S5_XH3_EQ PASS',1)
+    t=t.replace('if (mism == 0 && compares > 0 && n_en > 0 && n_vd > 0)\n','if (mism == 0 && compares > 0 && n_en > 0 && n_vd > 0) begin\n').replace('        else begin\n            $display("S5_XH3_EQ FAIL','        end else begin\n            $display("S5_XH3_EQ FAIL')
     t='// GENERATED: exact selected s8 column0 NCH4 READ1/FILL1 chains, real leaf returns. No whole-parent age claim.\n'+t
     (R/'rtl/test/qwen_dv/s8/tb_s8_column.sv').write_text(t)
     print('column source',hashlib.sha256(col.encode()).hexdigest(),'8 actual leaf instances per side')
