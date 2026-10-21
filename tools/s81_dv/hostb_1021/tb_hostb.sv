@@ -36,6 +36,9 @@ module tb_hostb;
  dsdv_hostb_head h(.ck(ck),.rst_n(rst_n),.configured(1'b1),.return_slot(returnslot),.expected_stage(8'd1),.expected_rank(2'd0),.local_group(2'd2),
  .expected_tid(mode==19?16'd38:16'd37),.expected_user(10'd0),.expected_position(21'd1048575),.expected_token(21'd16754),.epoch_id(32'h1021),
  .programme_id(64'hf1c617d9224a57bf),.receiver_edge(48'(cyc)),.ring_i(ret),.to_ctl(toctl),.htv(htv),.htd(htd),.fault(hf));
+`ifdef HBE_REAL_CONSUMER
+ `include "consumer_instance.svh"
+`endif
  initial begin
   if(!$value$plusargs("VECTORS=%s",vectors))$fatal(1,"VECTORS required");
   if(!$value$plusargs("STOP=%d",stopat))$fatal(1,"STOP required");
