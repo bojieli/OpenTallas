@@ -680,8 +680,8 @@
   "S": 5.35
  },
  "job": {
-  "owner": "Claude LEAD3-HBM/L2H-PGVM-G7 1019",
-  "branch": "claude/vm-glue-g7-1019",
+  "owner": "Codex HBM-COLLECT11/VMT",
+  "branch": "codex/hbm-vms-sw-evidence-1021",
   "tag": "g7s",
   "purpose": "OWNERS-HBM/VM-GLUE + HBM-KITS-C/VMGLUE 2026-10-18 g2 + HOURLY-HBM/HH-3 g3 + HBM-SAFE-VMGLUE g4 10-19 (HBM d4g plan (b), glue goes into a hardened tile): VM hub glue tile for SW (hb_vms_SW) = hfd_vms_glue_core_lt (ot_vms_hub_lt + 2 ot_vms_rstop_lt + ot_vms_rcl_lt + ot_vms_status_static), the 8 banks are die-level instances. g3 = the g2 setup fix: ring stop bit-sliced per lane band (per-band tx control / header decode copies, rce lane-OR tree), hub request scatter and response gather registered per bank face group, replay select replicated, 7 reset regions. Tile top hfd_hgi_vms_glue_sw_t (gen_vms_glue_tiles.py): one clock, per-bank and per-lane ring ports, one landing / relay stage on every bank-side port (COMMIT_DELAY 8). Contract vs the historical glue: bank-side ports +1 each way; g3 stop inputs +1, rce +2, hub pq +1, pr / response enables +1; reset release +3 (lockstep bench vs <tile>_ref). g4 (SAFE-DESIGN checklist): reach stages (no single-cycle wire > ~405 um): bank-side ports pin flop + 2 relays (xq_done + 3, COMMIT_DELAY 13), hub client ports pin flop + 2 relays, hub <-> ring-stop relays (pi / ri / cco / rce / faults +1), stop inputs +2 with per-half relay copies, 3-level rce tree; registered one-hot schedule selects (bank / tx / replay); 11 reset regions; reset_landing on. g5: hub response stage 1 (bank returns +1: pr +1), hub-side registered bank select (pq +1), kept per-port relay chains, recipe 4 die boundary hold budget. g6: no edge change; every mapped root <= 32 (kept per-slice copies, one-hot commit pointer, reset forest). g7: reach relays on a planned lattice (kit hook vms_relay_lattice.tcl), eg tile depth 1 (eg -2), hub landing br removed (pr -1); g7s: + symmetric spine topology (OT_SPINE_SYM=1), balance by construction across RC bases / corners.",
   "extra_paths": [
