@@ -44,8 +44,35 @@ def helpers(prefix):
 endmodule'''
     return '\n\n'+local+'\n\n'+chunk+'\n\n'+cell+'\n'
 
+def alias_contract(text):
+    """Pin selected writer fields to their real source equations, never phase correlation."""
+    import hashlib
+    leafpath=ROOT/'rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv'
+    fdnpath=ROOT/'rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv'
+    leaves=leafpath.read_text();fdn=fdnpath.read_text()
+    compact=lambda value:re.sub(r'\s+','',value)
+    contracts=[]
+    for fam,port,mod in [('rss','rs_s','qfd_dv_s5_frs'),('rsn','rs_n','qfd_dv_s5_fn')]:
+        start=leaves.index('module '+mod+' (');body=leaves[start:leaves.index('endmodule',start)]
+        inst=re.search(r'\b'+mod+r' u_\w+ \([^;]+;',text)
+        assert inst and f'.{port}({port})' in compact(inst[0])
+        for region in range(8):
+            equation=f'assign {port}_r{region} = {{{port}[1027:1026],{port}[513:512],{port}[{577+region*64}:{514+region*64}],{port}[{63+region*64}:{region*64}]}};'
+            assert compact(equation) in compact(body)
+            assert f'.{port}_r{region}({fam}_r{region})' in compact(inst[0])
+            contracts.append(dict(writer_signal=f'{fam}_r{region}',field=[131,128],raw_bits=[f'{port}[1027]',f'{port}[1026]',f'{port}[513]',f'{port}[512]'],equation=equation))
+    inst=re.search(r'\bqfd_dv_s8_fdn_arf1 #[^;]+;',text)
+    assert inst and '.l9_i(l9_i)' in compact(inst[0])
+    for region in range(8):
+        equation=f'assign l9_r{region} = {{l9_i[513:512],l9_i[{63+region*64}:{region*64}]}};'
+        assert compact(equation) in compact(fdn)
+        assert f'.l9_r{region}(nb_r{region})' in compact(inst[0])
+        contracts.append(dict(writer_signal=f'nb_r{region}',field=[65,64],raw_bits=['l9_i[513]','l9_i[512]'],equation=equation))
+    return dict(equations=contracts,source_files={str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in [leafpath,fdnpath]})
+
 def transform(text):
     assert '_flags_mask_' not in text,'already transformed'
+    alias_contract(text)
     top=re.search(r'module (\w+)\s*[#(]',text)[1];prefix=top+'_flags_mask'
     pattern=re.compile(r'    ot_pl_land_n32_chunk_w #[^\n]+ u_lpl_(\d+)_w [^\n]+;')
     groups={'rss':[],'rsn':[],'nb':[]}
