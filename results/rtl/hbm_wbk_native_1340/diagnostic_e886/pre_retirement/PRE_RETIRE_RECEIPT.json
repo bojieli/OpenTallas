@@ -1,0 +1,22 @@
+{
+  "time_utc": "2026-10-21T22:55:50.179284+00:00",
+  "host": "ot-epyc9",
+  "unit": "oth-ubuntu-2891515-1792618756.scope",
+  "pids": [
+    2891515,
+    2893098
+  ],
+  "scope_only": true,
+  "source_commit": "e886cd0b889340939e5d67989d577ca9de8bfb3e",
+  "runtime_root": "/srv/opentallas-scratch/claude/codex-hbm-wbk-native-1340-1021",
+  "resolved_root": "/home/ubuntu/ot-scratch/claude/codex-hbm-wbk-native-1340-1021",
+  "preserved_root": "/srv/opentallas-scratch2/claude/codex-hbm-wbk-e886-preserve-1556-1021",
+  "source_files": 14833,
+  "source_wbk_sha256": "711725992d382210774643502ba0a45cf90b26e942d52939add41942f0225f74",
+  "partial_netlist_exists": false,
+  "partial_netlist_note": "Yosys temporary netlist absent at inspection; process holds graph in memory, no retained partial netlist/fd. No netlist reconstructed.",
+  "outputs": "Only native/gen.log exists (0 bytes at snapshot); no canonical CDC verdict, no mapped native census, no physical result.",
+  "obsolete_reason": "Pooled per-PP credit can grant expected-A while only B return visible; canonical production-ledger counterexample demonstrates this on pooled MUT11. Constant AND(A,1) cells cannot qualify under native policy. e886 superseded; no independent selected-source use or adoption permitted.",
+  "preserve_original_root": true,
+  "action": "Preservation only; processes remain active. No cancel/signal/launch performed."
+}
