@@ -1,0 +1,20 @@
+[
+  {
+    "path": "tools/preroute_gate.tcl",
+    "git_blob": "f2ad9a44d8ea657526a074bf723d4554c0ebd09d",
+    "expected_sha256": "cb26dd3c1faa53058290838dd53e53b2f6ba55a0cece82c0e833c6b0c3fcea68",
+    "actual_sha256": "cb26dd3c1faa53058290838dd53e53b2f6ba55a0cece82c0e833c6b0c3fcea68",
+    "bytes": 7156,
+    "recovered_path": "/home/ubuntu/scratch/sc2b-surviving-source-1021/exact_missing_git_blobs/tools/preroute_gate.tcl",
+    "source": "Exact recorded immutable Git blob, no HEAD lookup"
+  },
+  {
+    "path": "tools/tt_views/view_export.py",
+    "git_blob": "40eb1af3421ba610609521cb8e381c9bb2e68849",
+    "expected_sha256": "578418117d3547dc46dcf08c119533d1fc36db122a7a8c22f44cf6d4ae7b82b3",
+    "actual_sha256": "578418117d3547dc46dcf08c119533d1fc36db122a7a8c22f44cf6d4ae7b82b3",
+    "bytes": 62971,
+    "recovered_path": "/home/ubuntu/scratch/sc2b-surviving-source-1021/exact_missing_git_blobs/tools/tt_views/view_export.py",
+    "source": "Exact recorded immutable Git blob, no HEAD lookup"
+  }
+]
