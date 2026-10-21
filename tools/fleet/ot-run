@@ -71,8 +71,7 @@ component below a lane root (/srv/opentallas-scratch*/claude/<lane>/X) of every 
 the command or in a *.sh it names (NAME=/srv/... assignments substituted) is created on the emptier root at the mirrored
 path (/srv/opentallas-scratch2/claude/<lane>/X) and a symlink is put at the named path, so collectors keep their paths.
 Idempotent: a path that already exists (dir, file or symlink) is used unchanged -- resumes, reruns and running jobs are
-never touched; SPILL copies and hand-made lane symlinks are left alone.  A missing --dir now qualifies a host whose lane
-root exists there (ot-run creates it, redirected).  Disk admission of a scratch --dir counts the free space of the best
+never touched; SPILL copies and hand-made lane symlinks are left alone. Disk admission of a scratch --dir counts the free space of the best
 root on the host (new output dirs land there), unless the named root itself has < SCRATCH_OWN_FLOOR_GB.  SPILL copies the lane's
 twin root (same lane on the other scratch root) when the lane holds symlinks into it. --dir must already exist on the
 chosen host, including its exact nested path or a staged symlink; missing source dirs are never created. OT_RUN_NO_SCRATCH2=1 disables output placement.
