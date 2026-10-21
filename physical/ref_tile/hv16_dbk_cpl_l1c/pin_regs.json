@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_dma_back_static_vp4_banks_cpl",
+ "enable": false,
+ "reason": "The parent registers its own boundary in RTL (ot_hgi_dma_back_static_vp4_banks_cpl): every rr bit lands in a kept clk_rst register at its face (valid twice: bank copy + controller copy), wd/rq/host bus/status are child pin flops (bank wd_payload/wd_valid, controller rq/status registers, collar pin flops), wb_fill_* are relayed; a generic parent pin flop would add a second unpriced cycle on rr/wd/rq and the F20 host bus."
+}
