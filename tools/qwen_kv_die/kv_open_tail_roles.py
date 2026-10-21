@@ -86,7 +86,8 @@ SOURCES = {
 # SQK-DIE 10-21: re-pin after 8c06b1180/dc3a6373f/8ed15aacb (default-off OT_KV_KRT_ES6_HOME placement block only;
 # no instance, port or chain-end text changed).
 # CODEX-K-DIE 10-21: QKC-GRP adds opt-in S6C masters/slots; legacy chain strings below stay asserted.
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'da9774af70772374c0bcffe288507dc9727fd4b4837eee4fc164f1b7b9e74419')
+# Central CTL/corridor successor changes geometry only; all admitted chain-end assertions remain checked.
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '88c210e3c22d7e4b3ec5c0c355771f55151f96ca9e622d408d12d57837acf540')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
