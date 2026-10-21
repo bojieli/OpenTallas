@@ -1,0 +1,64 @@
+{
+ "slots_with_plan_block": 70,
+ "slots_own_centre": 395,
+ "schema": "opentallas.hbm.d4g_channel_cuts.v1",
+ "spec": {
+  "plan": "R16_bF",
+  "why": "HBM-OWN/DIE2 10-21 r16b: X cuts [[3950.0, 86.4], [4800.0, 86.4], [20300.0, 86.4], [21170.0, 86.4]] in every band; Y unchanged (reticle 500 um margin)",
+  "bands": [
+   {
+    "name": "all",
+    "y0": -1000000000.0,
+    "y1": 1000000000.0,
+    "cuts": [
+     [
+      3950.0,
+      86.4
+     ],
+     [
+      4800.0,
+      86.4
+     ],
+     [
+      20300.0,
+      86.4
+     ],
+     [
+      21170.0,
+      86.4
+     ]
+    ]
+   }
+  ],
+  "ycuts": []
+ },
+ "die_um": [
+  25124.8,
+  32464.72
+ ],
+ "new_die_um": [
+  25470.4,
+  32464.72
+ ],
+ "die_mm2": 815.67,
+ "new_die_mm2": 826.89,
+ "dX": 345.6,
+ "dY": 0,
+ "reticle": {
+  "die_um": [
+   25470.4,
+   32464.72
+  ],
+  "long_margin_um": 535.28,
+  "short_margin_um": 529.6,
+  "margin_req_um": 500.0,
+  "ok": true
+ },
+ "new_overlaps": {
+  "plan": [],
+  "slots": [],
+  "slot_vs_plan": []
+ },
+ "verdict": "PASS",
+ "rule": "rigid block shifts by centre per band; slots move with their plan block; no block resized"
+}

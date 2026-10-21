@@ -1,0 +1,164 @@
+{
+ "source_manifest_sha256": "6f11bec500be4436c3bb9fe37e7af3859df46b16037d547ef456dac593981685",
+ "source_input_sha256": {
+  "contract": "e1320424d81a2c80a659729b42f4f71c7f106714e1dd63faa85f7b6052ff9545",
+  "plan": "484ff5dd23813676284f6adc9f2d847c5174ca8831fb637714961b0defed89e5",
+  "grants": "078dfb46e2e320537dc7e584326cc7734c4faf55f1ae88fdf9f42615e5494dff",
+  "lanes": "d2c336a654b60be2f668431e28d2c577316b1554ca3ad83cdf698ea9b6b06c56",
+  "view_inventory": "ff5b6401a22fb3fe50511325d6223e768a6425b2f5c8b3fcdfa910d60e72e0ce",
+  "generator": "458eb935f4379efec714181086b976908de5d089be6940d329c5beab149bc1b1"
+ },
+ "repaired_overlap_count": 8,
+ "die_um": [
+  25124.8,
+  32464.72
+ ],
+ "resized_stale_grants": [
+  "cxdl_NE0_s",
+  "cxdl_NE1_s",
+  "cxdl_NE2_s",
+  "cxdl_NE3_s",
+  "cxdl_NW1_s",
+  "cxdl_NW2_s",
+  "cxdl_NW3_s",
+  "cxdl_SE0_s",
+  "cxdl_SE1_s",
+  "cxdl_SE2_s",
+  "cxdl_SE3_s",
+  "cxdl_SW0_s",
+  "cxdl_SW1_s",
+  "cxdl_SW2_s",
+  "cxdl_SW3_s"
+ ],
+ "moves": [
+  {
+   "instance": "cxdl_NE1_s",
+   "old": [
+    19634.4,
+    20012.4
+   ],
+   "new": [
+    20217.6,
+    20174.4
+   ],
+   "displacement_um": 605.2819508295258
+  },
+  {
+   "instance": "cxdl_NE3_s",
+   "old": [
+    18133.2,
+    18219.6
+   ],
+   "new": [
+    18014.4,
+    18403.2
+   ],
+   "displacement_um": 218.68333269822057
+  },
+  {
+   "instance": "cxdl_NW1_s",
+   "old": [
+    6080.4,
+    20012.4
+   ],
+   "new": [
+    5400.0,
+    20001.6
+   ],
+   "displacement_um": 680.485708887409
+  },
+  {
+   "instance": "cxdl_NW3_s",
+   "old": [
+    5529.6,
+    18219.6
+   ],
+   "new": [
+    5313.6,
+    18100.8
+   ],
+   "displacement_um": 246.51458374708753
+  },
+  {
+   "instance": "cxdl_SE1_s",
+   "old": [
+    19634.4,
+    12409.2
+   ],
+   "new": [
+    20217.6,
+    12484.8
+   ],
+   "displacement_um": 588.0795864506746
+  },
+  {
+   "instance": "cxdl_SW1_s",
+   "old": [
+    5886.0,
+    12409.2
+   ],
+   "new": [
+    5227.2,
+    12398.4
+   ],
+   "displacement_um": 658.8885186433288
+  }
+ ],
+ "bays": [
+  {
+   "instance": "cxdl_NE1_s",
+   "x": 20174.4,
+   "y": 20131.2,
+   "w": 216.0,
+   "h": 302.4,
+   "cell_band_um": 43.2,
+   "owner": "die regional clock and relay rows"
+  },
+  {
+   "instance": "cxdl_NE3_s",
+   "x": 17971.2,
+   "y": 18360.0,
+   "w": 216.0,
+   "h": 302.4,
+   "cell_band_um": 43.2,
+   "owner": "die regional clock and relay rows"
+  },
+  {
+   "instance": "cxdl_NW1_s",
+   "x": 5356.8,
+   "y": 19958.4,
+   "w": 216.0,
+   "h": 302.4,
+   "cell_band_um": 43.2,
+   "owner": "die regional clock and relay rows"
+  },
+  {
+   "instance": "cxdl_NW3_s",
+   "x": 5270.4,
+   "y": 18057.6,
+   "w": 216.0,
+   "h": 302.4,
+   "cell_band_um": 43.2,
+   "owner": "die regional clock and relay rows"
+  },
+  {
+   "instance": "cxdl_SE1_s",
+   "x": 20174.4,
+   "y": 12441.6,
+   "w": 216.0,
+   "h": 302.4,
+   "cell_band_um": 43.2,
+   "owner": "die regional clock and relay rows"
+  },
+  {
+   "instance": "cxdl_SW1_s",
+   "x": 5184.0,
+   "y": 12355.2,
+   "w": 216.0,
+   "h": 302.4,
+   "cell_band_um": 43.2,
+   "owner": "die regional clock and relay rows"
+  }
+ ],
+ "qualification": "PLAN_ONLY; existing placement GEN and new S4 relay/latency planning required"
+}

@@ -673,7 +673,10 @@ def main():
             continue
         n = users[0]; sl = slots[s]
         x_, y_, o_ = sl['origin']['x'], sl['origin']['y'], sl['origin'].get('orient', 'R0')
-        if re.fullmatch(r'sm_S[WE]\d+', n) and o_ == 'R0' and not str(sl.get('pin_status', '')).startswith('COLUMN_PIN_FILE_EXACT'):
+        # HBM-OWN/DIE2 10-21 r16b: floorplan.sm_orient_exact = the grant orients ARE the SM orients (S row even R0 / odd MY, N row
+        # even MX / odd R180: one SYNTH abstract sees its xq stack E+N and its stripe S in every instance) -> no MX rewrite.
+        if re.fullmatch(r'sm_S[WE]\d+', n) and o_ == 'R0' and not G['floorplan'].get('sm_orient_exact') \
+                and not str(sl.get('pin_status', '')).startswith('COLUMN_PIN_FILE_EXACT'):
             # H-DIE/V790 10-16: the H-SM frame has its SM_HBM window on N; the die grant puts the packet face toward the PC
             # band (S for the S quadrants) -> S-quadrant SM frames placed MX (carve row + XC at the S edge); H-SM: an MX'd
             # frame's y origin must be 0.024 mod 0.048 um so the M4 W/E pins stay on track
