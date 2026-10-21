@@ -1,0 +1,15 @@
+{
+ "status": "PURE_PARSER_CHECKS_PASS_SYNTHETIC_TEXT_ONLY",
+ "hardware_executed": false,
+ "exact_words": 512,
+ "rejected_mutants": [
+  "missing",
+  "extra",
+  "duplicate",
+  "mismatch",
+  "bad_address",
+  "outside_window",
+  "missing_summary",
+  "bad_summary"
+ ]
+}
