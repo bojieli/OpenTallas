@@ -1,6 +1,6 @@
 {
  "top": "ot_hidx_s3_flat",
- "why": "L2H-IDXSEL s3 (LEAD3-HBM route B, 10-19/20): the HBM IDX selector as a landed cluster. s1a/s1b (one 42,772-sink root) and s2a/s2b (five roots inside one leaf, ~7k unlanded inter-root reg->reg crossings) stall in CTS hold repair. Regions: ctl (u_ctl: control-word pin flops, reset landing, choose pipeline, fault) + q0..q3 (four instances of ONE hardened quadrant tile ot_hidx_s3_q: 16 lanes, histogram, pack, 3 SRAMs). Only control crosses (cw 14 b + thr 16 b out, ties 14 b per quadrant out, ret 25 b + qf 1 b per quadrant back); the 2 x 2,368-bit line faces are per-quadrant ports on the quadrant's own clock. ctl <-> quadrant is a loop: reschedule mode, every landed net +3 edges, handed to the IDX compiler (sel_in 7, sel_choose_rt 8).",
+ "why": "L2H-IDXSEL s3 (LEAD3-HBM route B, 10-19/20): the HBM IDX selector as a landed cluster. s1a/s1b (one 42,772-sink root) and s2a/s2b (five roots inside one leaf, ~7k unlanded inter-root reg->reg crossings) stall in CTS hold repair. Regions: ctl (u_ctl: control-word pin flops, reset landing, choose pipeline, fault) + q0..q3 (four instances of ONE hardened quadrant tile ot_hidx_s3_q: 16 lanes, histogram, pack, 3 SRAMs). Only control crosses (cw 14 b + thr 16 b out, ties 14 b per quadrant out, ret 25 b + qf 1 b per quadrant back); the 2 x 2,368-bit line faces are per-quadrant ports on the quadrant's own clock. ctl <-> quadrant is a loop: reschedule mode, every landed net +3 edges, handed to the IDX compiler (sel_in 7, sel_choose_rt 8). Native gate53drivers/max108 in binaryreadselectors/reset, beforelayout: useexisting kept24-bitlocal onehotringprimitive, sameD4/E2/resetage/edges; actual691.2x648regioncentres.",
  "sources": [
   "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_flat.sv"
  ],
@@ -34,8 +34,8 @@
     "u_ctl"
    ],
    "centre": [
-    300.0,
-    225.0
+    316.98,
+    316.98
    ]
   },
   {
@@ -44,8 +44,8 @@
     "u_q0"
    ],
    "centre": [
-    140.4,
-    334.8
+    172.8,
+    496.8
    ]
   },
   {
@@ -54,8 +54,8 @@
     "u_q1"
    ],
    "centre": [
-    140.4,
-    115.2
+    518.4,
+    496.8
    ]
   },
   {
@@ -64,8 +64,8 @@
     "u_q2"
    ],
    "centre": [
-    459.6,
-    334.8
+    172.8,
+    151.2
    ]
   },
   {
@@ -74,8 +74,8 @@
     "u_q3"
    ],
    "centre": [
-    459.6,
-    115.2
+    518.4,
+    151.2
    ]
   }
  ],
@@ -86,5 +86,6 @@
  },
  "mut_child": "u_ctl",
  "tb_stimulus": "rtl/hbm_accel/index/sel_s3/lp/tb_hidx_s3_stim.svh",
- "mut4_stages": 200
+ "mut4_stages": 200,
+ "landing_chunk_bits": 24
 }

@@ -424,7 +424,7 @@
   "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
  },
  "flops": {
-  "landing": 1252,
+  "landing": 1472,
   "pads": 0,
   "reset": 6
  },
@@ -683,9 +683,18 @@
  },
  "warnings": [],
  "landing_implementation": {
-  "chunk_bits": 0,
+  "chunk_bits": 24,
   "direct_quarter_period_timing": false,
-  "reset_lead": true
+  "reset_lead": true,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
  },
  "die_obligations": [
   "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
