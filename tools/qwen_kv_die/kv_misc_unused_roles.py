@@ -197,12 +197,21 @@ def derive(die_v, record, root, existing, pins=None):
         if sorted(lanes) != list(range(16)):
             raise ValueError('KPV_LOCKSTEP: head without 16 lanes ' + h)
         r0 = rd.get(outbit.get((lanes[0], 'kpv_o', 0)), [])
-        if not r0 or any(not (x[0] == 'ot_qkh_ktree' and x[2] == 'kpv_in') for x in r0):
+        # LEAD10-KV 10-20 (OT_KV_KPV_LK=1 heads _s_lk): u_kt = ot_qkh_ktree_lk reads EVERY lane's kpv (.kpv_in(kpv_k)), so
+        # no kpv_o bit is unused: require lane t's kpv_o[0] read only by this head's own ktree_lk kpv_in[t]; admit nothing.
+        lk = bool(r0) and all(x[0] == 'ot_qkh_ktree_lk' for x in r0)
+        if lk:
+            for t in range(16):
+                rt = rd.get(outbit.get((lanes[t], 'kpv_o', 0)), [])
+                if not rt or any(x[:4] != ('ot_qkh_ktree_lk', h + '__u_kt', 'kpv_in', t) for x in rt):
+                    raise ValueError('KPV_LOCKSTEP: lockstep K-tree does not read lane %d kpv in %s' % (t, h))
+        elif not r0 or any(not (x[0] == 'ot_qkh_ktree' and x[2] == 'kpv_in') for x in r0):
             raise ValueError('KPV_LOCKSTEP: lane 0 kpv not read by the K-tree in ' + h)
         if not all(rd.get(outbit.get((lanes[t], 'kp_o', b))) for t in range(16) for b in range(32)):
             raise ValueError('KPV_LOCKSTEP: a lane partial kp_o is not consumed in ' + h)
-        for t in range(1, 16):
-            admit('KPV_LOCKSTEP', lanes[t], 'kpv_o', [0])
+        if not lk:
+            for t in range(1, 16):
+                admit('KPV_LOCKSTEP', lanes[t], 'kpv_o', [0])
     # ECTL_ER_ADDR
     for inst in insts_of('qkd_ectl3_kiss_st'):
         r0 = rd.get(outbit.get((inst, 'so', 0)), [])
