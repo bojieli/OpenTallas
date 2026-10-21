@@ -1,0 +1,7 @@
+# Bounded XG cap0 fallback census repair
+
+Actual failed fallback source5feb5dc07 had exactly two combinational drivers at33 dynamic loads, no role errors. `_147973_/Y` (`_138273_`) and `_148010_/Y` (`_138277_`) implement BF group2/group0 parity `h>=48`; their shared parity roots feed the external unit subtraction and both lookup-copy predecoders. The raw9-bit `h` bits are captured `hb_q` outputs. Full immutable netlist and report remain at gold2 `/srv/opentallas-scratch/claude/ref_gate/s81sl_xgtxo_b-20261021-090218/routes/gate/work/orfs`.
+
+Sourcec41af8f64 changes only existing kept `ot_s81sl_xs4_bdec` inputs from `(par,bu)` to raw `h`, with the same parity/subtraction computed inside each copy. Its80 one-hot outputs retain the exact original Boolean expression, and every state element, edge, parameter, external port and default remains unchanged. Each copy now owns a local arithmetic/decode cone. The remaining external parity/subtract still feeds row/mac/bad state. No extra cycle, exception, buffer-only alias or changed default.
+
+Qualification runs only existing XGTXO lockstep and XS4 reference/mutant mechanisms, plus original failedgate ORFS configuration and exact mapped native census. Full native synthesis (same keep_modules, keep_regs hook, TT setup and original Liberty list) is running independently in a fresh fleet directory; no new layout gate. MAIN cap0 and original failed snapshots are preserved. Candidate must measure<=32 before any replacement layout gate or adoption.

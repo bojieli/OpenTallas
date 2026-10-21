@@ -1,0 +1,48 @@
+{
+  "source_commit": "c41af8f64",
+  "baseline_actual_source": "5feb5dc07",
+  "baseline_netlist_sha256": "0af6454f44ea066dfa217d1b2c8d3d94d113bf1037a08e98de41b18cbabe00b6",
+  "config_sha256": "fee0d1a6f5fd5f44f12f070d2d974559e9b8881eeea2e3292166a1641b5074c1",
+  "files": [
+    {
+      "path": "/src/rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "path": "/src/rtl/v41rom/ot_v41_kreg.sv",
+      "sha256": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca"
+    },
+    {
+      "path": "/src/rtl/common/ot_prefix.sv",
+      "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+    },
+    {
+      "path": "/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+      "sha256": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe"
+    },
+    {
+      "path": "/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+      "sha256": "ee97d4e905fc1a4c6ba5a9be9d045d8c394e77ad5b60f43255eed014642a419a"
+    },
+    {
+      "path": "/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv",
+      "sha256": "53832356d7401d9c7af6fbcb7da5349548537c5c7771467d4cb740e053f74214"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "sha256": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+      "sha256": "50f52b313018d6fc981a5df7ddf0558cb6e76af1bda8cb699d3218f1e414e878"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v",
+      "sha256": "fa0158fc9b3bd261501646c89b8732603e9818a15251506f28a32daf2bade93b"
+    },
+    {
+      "path": "/src/physical/common_flow/ot_keep_regs.tcl",
+      "sha256": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b"
+    }
+  ]
+}
