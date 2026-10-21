@@ -28,7 +28,7 @@ c+=''.join('export '+k+' = '+v+'\n' for k,v in overrides.items());(w/'config.mk'
 (w/'constraint.sdc').write_text('create_clock -name ck -period 770 [get_ports ck]\n')
 (w/'io_constraints.tcl').write_text('')
 inputs=f+[m+e for m in macros for e in ['_tt.lib','_ff.lib','.lef']]
-manifest={'rtl_commit':'602383e79','top':'dsdv_eng_rr','params':{'RETURN_AGE':640,'XQ_TXD':8,'AQ_LATENCY':18},
+manifest={'snapshot_commit':(r/'snapshot_ref.txt').read_text().strip(),'top':'dsdv_eng_rr','params':{'RETURN_AGE':640,'XQ_TXD':8,'AQ_LATENCY':18},
  'defines':['SYNTHESIS','OT_ENGRAM_CRCMAT','OT_S81ENG_RR_N32'],'mode':'ACTUAL_ORFS_SYNTH_NATIVE_ONLY_NO_PHYSICAL',
  'configuration_template':'agidock128/ref_gate/s81engm_lkp_ra640a-20261021-134946/routes/gate/work/orfs/config.mk',
  'source_sha256':{p:hashlib.sha256((s/p).read_bytes()).hexdigest() for p in inputs},
