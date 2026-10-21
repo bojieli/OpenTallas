@@ -1,0 +1,15 @@
+# H16 final descriptor validity cache qualification
+
+Exact source: `c0ad783cd`, SHA256 `75dbd1cee62fe7e9bb6c41b68a92b8f0180cf6794f29e058a925a64f461acc63`.
+
+Independent static review found no correctness defect. The five held predicates sample precisely the actual inactive descriptor write edge. Their asynchronous reset values describe zero META, GDESC and GSTOP values exactly. META combines only the original static shape/magic/reserved checks; count and stage remain checked by the original expressions. GDESC magic presence still comes from the existing exact `gp_r`; valid/nonzero holds reproduce both the present and absent branches. Seen bits continue to require every descriptor. A reload retains both actual descriptor contents and their held predicates until the descriptors are rewritten. The source leaves H16X 0/1/2 behavior unchanged.
+
+The actual-module positive comparison retains all 24 prior cases and adds ten focused descriptor cases. The new legal case writes GSTOP immediately before seal. New invalid cases write bad GSTOP magic or zero stop, bad META magic/reserved/zero shape/shape 61, zero-base GDESC, nonzero GDESC when G is absent, and nonzero GSTOP when G is absent. Each relevant descriptor is the final programming write immediately before seal, with the real one-edge `pw_addr_pre` pipeline and no bubble. The new invalid fields are chosen to expose the held check without relying on duplicate-descriptor rejection.
+
+H16X2 and H16X3 compare every module output every edge. All built-in assertions remain active. Programming uses actual ports, without internal forcing; previous poison/reset/reload and final row/copy write checks remain present. The original 19/605 and 24/765 packets are preserved separately.
+
+Fleet unit `oth-ubuntu-2776791-1792607592` on ep7 admits 8 GB and two threads. Positive result: **34 cases, 1085 edges, PASS**. The three isolated mutants retain the built-in reference assertions: stale next-count, stale next-prefix, and stale GSTOP validity (calculating the write predicate from previous `gstop_q`). Exact mutant outcomes are retained in the logs and receipt. This qualifies bounded programming and seal semantics only; native timing, execution, PPA and full-head qualification remain with the coordinator.
+
+To reproduce, run `python3 prepare.py` in this directory, stage the prepared files to fleet scratch, then run admitted `bash run.sh`. The preparer extracts byte-exact actual source and helpers from the pinned commit and checks hashes before generating only the isolated mutant copies. No local simulation ran.
+
+All three causal mutants are rejected with rc 1 by the actual built-in `H16V seal_bad 1 != reference 0` assertion. Count: 905 ns on legal META-after-rows reload. Prefix: 6675 ns on legal final-copy-row-to-seal. GSTOP: 315 ns on the first legal final-GSTOP-to-seal case. Positive rc 0 and all three expected mutant failures yield overall runner rc 0. The pinned extraction reproducer was executed locally and every generated source/helper/mutant hash matched the actual fleet input; no local simulation ran.
