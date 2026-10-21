@@ -48,7 +48,10 @@ DHOBS_LISTS = ('NS', 'USER_SEQ', 'STG_SEQ', 'RES_SEQ')
 CTXRX_MASTER = 'qfd_mu_ctx_rx_die'               # MU-DQ-BOOTCTX: filler runtime context leaf (dv_case.CTXRX) -> tt_ctlm.ctx_x
 # QW-GENPREP 10-21: OT_QWEN_D2D_IMAGE selects the ONE shared compute<->KV pair image (KV-PROG17
 # d2d_cal_image_mu_ew595_r16.svh; TXDP_C/K identical to d2d_cal_image.svh, so qfd_d2d_static.TXDP is unchanged)
-IMAGE = ROOT / os.environ.get('OT_QWEN_D2D_IMAGE', 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh')
+DEFAULT_IMAGE = ('rtl/qwen_sys/d2d_static_20261015/d2d_cal_image_mu_ew1627_r16_rope.svh'
+                 if os.environ.get('OT_QWEN_ROPE', '0') == '1'
+                 else 'rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh')
+IMAGE = ROOT / os.environ.get('OT_QWEN_D2D_IMAGE', DEFAULT_IMAGE)
 TRAP_BODY = re.compile(r'\$error|\$fatal|\w*NOT_COMPILED\w*|\w+__set_\w+')
 GEN_IF = re.compile(r'generate\s+if\s*\(', re.S)
 SENTINELS = (-1, 0)
@@ -153,6 +156,13 @@ def gen_params(insts, hr_rows, image=IMAGE):
             out.setdefault('qfd_sys_face', {}).update(MU_HEAD=1)
             out['qfd_sys_face']['_source'] = 'MU-DQ-BOOTCTX: MU_HEAD 1 (filler head contexts not checked by the HOST RX)'
         rec['fctx'] = 1
+    if os.environ.get('OT_QWEN_ROPE', '0') == '1':
+        for master in ('qfd_sys_face', 'qfd_embedding_word_provider', 'qfd_native59_dv_service'):
+            if master in masters:
+                out.setdefault(master, {}).update(ROPE=1)
+        rec['rope'] = dict(words=8, payload_flag=512, expected_args=list(range(65, 73)),
+                           read_bank='embed_code_addr = 9723904 + token*8 + beat',
+                           scope='requires the shared 73-item pair image and matching source-complete views')
     if D2D_MASTER in masters:
         v, r = txdp_from_image(image)
         out[D2D_MASTER] = dict(TXDP=v, _source=f"QXF-LINK/QLB-GEN: D2D_TXDP_C of {r['image']} (die stages {r['die_stages']})")

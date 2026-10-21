@@ -153,7 +153,8 @@ module ot_coll_lcal_tx #(parameter integer KC = 4, parameter integer KW = 2, SAF
 endmodule
 
 module ot_coll_lcal_rx #(parameter integer KC = 4, parameter integer KW = 2, parameter integer PHY = 14,
-                         parameter integer L = 40, parameter integer R = 0, parameter integer PEER_R = R, SAFE_RING = 0, LAND_CORE = 0) (
+                         parameter integer L = 40, parameter integer R = 0, parameter integer PEER_R = R, SAFE_RING = 0, LAND_CORE = 0,
+                         parameter integer WX = 0) (   // WX: extra codec RX edges (PHY landing ring) before the CDC write
     input  wire clk, lck, rs_c, rs_l,
     input  wire rs_c2, rs_l2,                               // second same-depth reset copies (counters / CDC-write side); = rs_c/rs_l when not split
     input  wire exp,                                        // core: the peer's compiled send slot
@@ -185,7 +186,7 @@ module ot_coll_lcal_rx #(parameter integer KC = 4, parameter integer KW = 2, par
 `endif (.clk(lck), .rs_n(rs_l), .d(exp), .q(rx_expect_v));
     end
     ot_coll_slotcnt u_ec (.clk(lck), .rs_n(rs_l2), .en(rx_expect_v), .addr(rx_expect_slot), .version(unused_v));
-    ot_coll_dly1 #(.N(2),.SAFE_RING(SAFE_RING)) u_w (.clk(lck), .rs_n(rs_l2), .d(rx_expect_v), .q(w_slot));   // codec: pin capture 1 + RX 1
+    ot_coll_dly1 #(.N(2 + WX),.SAFE_RING(SAFE_RING)) u_w (.clk(lck), .rs_n(rs_l2), .d(rx_expect_v), .q(w_slot));   // codec: pin capture 1 + landing WX + RX 1
     ot_coll_slotcnt u_wc (.clk(lck), .rs_n(rs_l2), .en(w_slot), .addr(w_addr), .version(w_version));
 `ifdef OT_LCAL_MUT_RX_EARLY
     ot_coll_dly1 #(.N(L - 5 - 2 * R),.SAFE_RING(SAFE_RING)) u_r (.clk(clk), .rs_n(rs_c), .d(exp), .q(r_slot));    // negative control: read 1 early
