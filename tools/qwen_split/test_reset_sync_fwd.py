@@ -44,6 +44,24 @@ assert p['reclock'] == {'rstt_21': 'pll_fwd'} and not p['errors'], p
 assert [e['pin'] for e in p['endpoints']] == ['rstt_21/d'] and 'fwd:pll_fwd' in p['endpoints'][0]['why']
 rclk = {c[0]: p['reclock'].get(c[0], 'clk_d2d') for c in cells}
 assert R.audit(wires, rclk, ckof, mof, p['endpoints'], fwd=fwd) == []
+# Production-shaped clock graph: hop 0 is both a clock receiver and the
+# DRIVER of the next forwarded net. Only its input clocks sample reset/en.
+production = dict(buses=model['buses'] + [
+    ('fck_epoch__h1', 'clock_trunk', 1, [('rly_ep_0', 'ck_o'), ('rly_mid', 'ckf')])])
+inputs = R.clock_inputs(production)
+assert inputs['rly_ep_0'] == [('pll_fwd', 'ck')], inputs
+assert inputs['rly_mid'] == [('fck_epoch__h1', 'ckf')], inputs
+assert 'ckb_rom' not in inputs and 'ckb_core' not in inputs
+pp = R.plan(cells, wires, ck_of_bus, inputs, mof, {}, None, fwd=fwd)
+assert pp['reclock'] == {'rstt_21': 'pll_fwd'} and not pp['errors'], pp
+assert R.audit(wires, {c[0]: pp['reclock'].get(c[0], 'clk_d2d') for c in cells},
+               inputs, mof, pp['endpoints'], fwd=fwd) == []
+# Causal negative: the old all-endpoint map makes the output look like a
+# second sampling clock and loses the production synchronizer assignment.
+wrong = {i: list(cs) for i, cs in inputs.items()}
+wrong['rly_ep_0'].append(('fck_epoch__h1', 'ck_o'))
+pw = R.plan(cells, wires, ck_of_bus, wrong, mof, {}, None, fwd=fwd)
+assert 'rstt_21' not in pw['reclock'], pw
 # mutant: the g5 form (no forwarded domain) -> no re-clock; the fwd-aware audit names the untreated release
 p0 = R.plan(cells, wires, ck_of_bus, ckof, mof, {}, None)
 assert p0['reclock'] == {}
