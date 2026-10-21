@@ -1,0 +1,22 @@
+{
+ "verified": true,
+ "manifest_sha256": "fd3fa509aab2e25e10274ee2ec4eeea374e4f239c432e78e1e69530eed68e1b8",
+ "files": 14028,
+ "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+ "mode": "STAGING_ONLY_NO_APPLY_NO_READY_NO_EDA",
+ "runtime": "/srv/opentallas-scratch2/claude/codex-ve-linked-runtime-1021/s81sl_ve_r5-f51f4ec42-linked-eco-1021",
+ "host": "ot-epyc9",
+ "new_name": "s81sl_ve_r5-f51f4ec42-linked-eco-1021",
+ "published_commit": "8292524470ffd9ef8a381d1969c789e843a30e19",
+ "published_helper_sha256": "5477cd9cf843ea48200c8afff952d22de0392e040e34cb6179628873c7e16423",
+ "manifest_file_sha256": "95cadddb56c61f0454e17eb502ce830319542de8f3a5781394ff9934b982fa23",
+ "parent_state_sha256": "b8bd7df0caddbf3e0b4380887665a11d28786d9339ad9f5eb983b1668bae15a8",
+ "actual_source_files": 13972,
+ "runtime_ram_gb": 64,
+ "runtime_docker_cap_gb": 64,
+ "original_corner_sha256": "8a1a5e2cda568ce2ab9fc7a46cd405bf4255db5fd4e3e9baaf98375b50898aa5",
+ "historical_provenance": {
+  "original_route_loaded_image_libraries": "HISTORICAL_PROVENANCE_UNVERIFIED",
+  "new_runtime": "Immutable16470/25RVT; reconstructed source with exact pinned deterministic transforms. New filesystem identity; no historical tar alias."
+ }
+}
