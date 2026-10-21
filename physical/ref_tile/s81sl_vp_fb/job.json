@@ -2,12 +2,12 @@
  "name": "s81sl_vp_fb-s81sl_vp_fb1-COMMIT",
  "block": "ot_s81sl_vp",
  "ref_tile": true,
- "owner": "Claude:S81-SLICE/VP",
+ "owner": "Codex:S81-SLICE/VP",
  "purpose": "S81-SLICE/VP SAFE FALLBACK of ot_s81sl_vp: lane feed/output relay stages (OT_S81SL_VP_RELAY, POST +2 edges), same outline/pins.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/s81sl-vp-safe-1021",
+  "branch": "codex/s81-slice-collect-1021",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",

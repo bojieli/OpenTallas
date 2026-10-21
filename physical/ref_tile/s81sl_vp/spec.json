@@ -257,8 +257,8 @@
  },
  "structural_change": "S81-SLICE/VP SAFE 10-21 (after c318a2024 NEEDS_RTL TT -102 / FF -7.8): fault sources registered where they arise (per-lane fault/valid flops, per-row reduce, fold; sticky fault +2..3 edges, diagnostic only); kept copies (<=~40 loads) for every wide select (NORM load decode, bank write-port selects per 32-bit word group, dswp/dodd/xsw2 read muxes, wvl hw_d mux, cf capture one-hot); lr/ly kept per lane (Yosys had merged 4 column copies + hs_d); 33-deep write-back lines -> ring + burst counters. Ports and all data latencies unchanged. Earlier: S81-SLICE (stream 0cm): beat-leaf store + hc_post sub-leaf of the DV slice: command sequencer, 2 x 512x128 leaf-store banks, 16 hard s81sl_hcpl lanes (closed lane_pr re-kit). 10-18: vp op 7 NORMR (hc_pre = leaf row a0, one-step sequencer read) + POST coefficient rows in the G-unit's order (post a0, comb a0+1..a0+4).",
  "job": {
-  "owner": "Claude:S81-SLICE/VP",
-  "branch": "claude/s81sl-vp-safe-1021",
+  "owner": "Codex:S81-SLICE/VP",
+  "branch": "codex/s81-slice-collect-1021",
   "tag": "s81sl_vp_s1",
   "purpose": "S81-SLICE/VP SAFE redesign of ot_s81sl_vp (beat leaf store + hc_post, x5 per slice) after c318a2024 NEEDS_RTL TT -102 / FF -7.8: MAIN (spine, same outline/pins).",
   "extra_paths": [
