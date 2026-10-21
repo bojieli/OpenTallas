@@ -35,6 +35,7 @@
     "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg_xo.sv",
     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop_xo.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
     "rtl/lib/ot_rst_relay.sv",
     "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
   ],
@@ -332,13 +333,14 @@
       ]
     },
     {
-      "view": "physical/ref_tile/s81sl_xr1f/views/ot_s81sl_xr1",
       "count": 1,
       "inst": "u_sl.u_xr",
       "at": [
         1598.4,
         4060.8
-      ]
+      ],
+      "master": "ot_s81sl_xrt1",
+      "binding_state": "UNBOUND: ot_s81sl_xrt1 view owed (S81-RTLGAP/ffn); never old ot_s81sl_xr1 alias"
     },
     {
       "view": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg",
@@ -566,7 +568,12 @@
       ],
       "count": 1,
       "orient": "R0",
-      "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias"
+      "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias",
+      "params": {
+        "RX_SRAM": 1,
+        "IN_PIPE": 1,
+        "NATIVE32": 1
+      }
     },
     {
       "inst": "u_land",

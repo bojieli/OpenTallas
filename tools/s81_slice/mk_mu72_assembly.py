@@ -67,6 +67,12 @@ def assemble(normal, flavor, bindings):
             c.pop("view", None)
             c.update(master="ot_s81sl_xg_xo",
                      binding_state="UNBOUND: ot_s81sl_xg_xo view to gate (S81-RTLGAP/head); never old ot_s81sl_xg alias")
+        if c["inst"] == "u_sl.u_xr":
+            # S81-LINK5B G7: S81-RTLGAP/ffn 59a8155d3 -- the cap5r_lp end slice instantiates u_xr as ot_s81sl_xrt1 (FFN row-pair
+            # V transport, same ports). The old ot_s81sl_xr1 (xr1f) view is NOT this master -> UNBOUND until an xrt1 view closes.
+            c.pop("view", None)
+            c.update(master="ot_s81sl_xrt1",
+                     binding_state="UNBOUND: ot_s81sl_xrt1 view owed (S81-RTLGAP/ffn); never old ot_s81sl_xr1 alias")
         if c["inst"] == "u_sl.u_cap":
             # S81-LINK5B G6: the cap5r_lp end slice instantiates u_cap as ot_s81sl_capc5r (region-landed reset ports).
             # The normal spec's capc5c view is NOT this master: bind the CLOSED capc5r view only via --bindings
@@ -88,6 +94,8 @@ def assemble(normal, flavor, bindings):
     for inst,(at,envelope,orient) in roles.items():
         c = dict(inst=inst, master=modules[inst], at=at, reserved_envelope_um=envelope,
                  count=1, orient=orient)
+        if inst == "u_lep" and mab:
+            c["params"] = dict(LEP_AB_PARAMS)   # S81-LINK5B G7 (lead): lepmu t5c/t5d kit params
         if modules[inst] in bindings:
             c.update(copy.deepcopy(bindings[modules[inst]]))
         else:
@@ -107,6 +115,7 @@ def assemble(normal, flavor, bindings):
             "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
             "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg_xo.sv",      # S81-RTLGAP/head 589110357: u_sl.u_xg master
             "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop_xo.sv",
+            "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",        # S81-LINK5B G7: u_sl.u_xr master ot_s81sl_xrt1 (ffn 59a8155d3)
             "rtl/lib/ot_rst_relay.sv",   # S81-LINK5: u_land #(SRAM 1) = the CLOSED dsdv_mu_land view's sources
             "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"],
         defines=normal.get("defines", []),
@@ -151,6 +160,7 @@ def assemble(normal, flavor, bindings):
                         ("S81-LINK5 copy-A/B end (4 lanes, lep_mu_ab): u_lep reservation 561.6x1987.2 needs the s81sl_lepmu kit re-floorplanned (475.2x1900.8, pair A+B on W); no old lepmu gate/view alias"
                          if mab else "No copy-B/AB physical release alias: this two-lane envelope is copy-A only")])
 
+LEP_AB_PARAMS = {"RX_SRAM": 1, "IN_PIPE": 1, "NATIVE32": 1}   # S81-LINK5B G7: s_0N u_lep (IN_PIPE +1 cycle on ro and mu_c)
 _LN = {"u_ln0": ("l0","i0","f0","rxv[0]"), "u_ln1": ("l1","i1","f1","rxv[1]"),
        "u_ln2": ("l2","i2","f2","rxvb[0]"), "u_ln3": ("l3","i3","f3","rxvb[1]")}
 def _centre(r):

@@ -5,6 +5,8 @@
 // relay/landing transport and protocol age alignment. No old parent CLOSED alias.
 // Original LP +3 crossings and +2 fault output stages remain unchanged.
 // G3 (LEAD-S81-G3 10-21): u_sl = ot_s81sl_slice_c1x_k8_cap5r_lp (capc5r + fixed-depth CAP reset forests, one release edge).
+// S81-LINK5B G7 (lead 10-21): u_lep #(.RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) = the lepmu t5c/t5d kit params (claude/s81-link5-lepmu-1021
+// @64ad9ca55 ot_s81sl_slice_lep.sv); IN_PIPE adds +1 cycle on ro and mu_c.
 // S81-LINK5 (owner 10-21 06:00, 5th lane pair): s_0N copy-A/B end = ot_s81sl_slice_lepw_mu_72 with u_lep ->
 // ot_s81sl_lep_mu_ab (AB_EN 1, HOST_EN 0; kit s81sl_lepmu) and pair B lanes u_ln2 / u_ln3 (same dsfd_coll_lane_w_safe8_ntf
 // as u_ln0 / u_ln1, HF-3 CH_BOARD 700, strap ch_b) on new die ports tx2 / tx3 / rx2 / rx3 (die SerDes link_0_4 / link_0_5).
@@ -108,7 +110,7 @@ module ot_s81sl_slice_lepw_mab_mu_72 #(
     dsfd_coll_lane_w_safe8_ntf u_ln1 (.ck(ck_K), .rs(lpr_c_u_ln1), .chb(ch_b), .rx(lrx1), .tx(tx1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));   // region K, t = 0
     dsfd_coll_lane_w_safe8_ntf u_ln2 (.ck(ck_K), .rs(lpr_c_u_ln2), .chb(ch_b), .rx(lrx2), .tx(tx2), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));   // region K, t = 0 (pair B)
     dsfd_coll_lane_w_safe8_ntf u_ln3 (.ck(ck_K), .rs(lpr_c_u_ln3), .chb(ch_b), .rx(lrx3), .tx(tx3), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));   // region K, t = 0 (pair B)
-    ot_s81sl_lep_mu_ab u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf),
+    ot_s81sl_lep_mu_ab #(.RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf),
         .lo2_v(l2v), .lo2_r(l2r), .lo2_d(l2d), .lo3_v(l3v), .lo3_r(l3r), .lo3_d(l3d), .li2_v(i2v), .li2_r(i2r), .li2_d(i2d), .li3_v(i3v), .li3_r(i3r), .li3_d(i3d), .rxvb(rxvb), .l2_f(f2), .l3_f(f3), .fault(fault__o));   // region K, t = 0
     dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)) u_land (.clk(ck_ML), .rst_n(lpr_c_u_land), .wv(mwv_ml), .wd(mwd_ml), .rc(mu_rc_ml), .rv(mrv_ml), .rd(mrd_ml), .fault(mf_ml)); // region ML
 endmodule

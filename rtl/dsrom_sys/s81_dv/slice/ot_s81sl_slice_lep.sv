@@ -189,9 +189,12 @@ module ot_s81sl_lep_core #(
     localparam integer NATIVE32_RSTBASE=4+NRX_RST_OLD;
     localparam integer NATIVE32_RXRSTBASE=NATIVE32_RSTBASE+((SAFE_CONTROL && HOST_EN!=0)?4:0);
     localparam integer NRX_RST=NRX_RST_OLD+((SAFE_CONTROL)?NL+((HOST_EN!=0)?4:0):0);
-    wire [3+NRX_RST:0] rr;
+    // L5B-LEPMU 10-21: AB_EN 1 + SAFE_FIFO adds two leaves (lanes 2 / 3 TX state) so rr[0] / rr[1] stop driving 40 / 38
+    // reset pins (native census); same release edge as every leaf.
+    localparam integer NXR=(SAFE_FIFO && NL==4)?2:0;
+    wire [3+NRX_RST+NXR:0] rr;
     generate if(SAFE_FIFO) begin:g_reset_balanced
-      ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
+      ot_rst_relay_tree3 #(.REGIONS(4+NRX_RST+NXR)) u_rstr(.clk(clk),.rst_n_in(rst_n),.rst_n(rr));
     end else begin:g_reset_legacy
       ot_rst_relay #(.REGIONS(4+NRX_RST), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rstr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
     end endgenerate
@@ -452,7 +455,7 @@ module ot_s81sl_lep_core #(
     localparam integer CW = $clog2(CRED + 1);
     genvar t;
     generate for (t = 0; t < NL; t = t + 1) begin : g_tx
-        wire rt = rr[t % 2];
+        wire rt = (NXR != 0 && t >= 2) ? rr[4+NRX_RST+t-2] : rr[t % 2];
         reg [AT-1:0] wp, rp; reg [AT:0] n; reg [CW-1:0] cnt;
         reg inf, of, ov; reg [H:0] od;
         wire inq; wire [H:0] qd;                      // read word / valid one stage before the lo pin flops
@@ -851,24 +854,37 @@ module ot_s81sl_lep_core #(
 `endif
     localparam integer CG=(OREP+7)/8;
     wire [CG*6-1:0] control_local;
+    wire [CG-1:0] pb_next;                            // L5B-LEPMU: rpb one edge early, per control group (AB_EN 1)
     if(RX_SRAM!=0) begin:g_control_groups
         for(genvar cg=0;cg<CG;cg=cg+1) begin:g_group
             (* keep=1 *) ot_s81sl_lep_rx_control u_ctrl(.ne({{(4-NL){1'b0}},rnex}),.ring({{(4-NL){1'b0}},rringx}),
                 .hk({{(4-NL){1'b0}},rhkx}),.tag({{(4-NL){1'b0}},rtagx}),
                 .mv(ml_rv),.mt({ml_rd[TG],ml_rd[3:0]}),.sel(control_local[cg*6+:6]));
+            if(NATIVE32!=0 && NL==4) begin:g_pb
+                (* keep=1 *) ot_s81sl_lep_bsel_next u_pb(.ne(rnex),.q(pb_next[cg]));
+            end else begin:g_npb assign pb_next[cg]=1'b0; end
         end
+    end else begin:g_no_control_groups
+        assign pb_next='0;
     end
+    // L5B-LEPMU 10-21 (native census: rpb drove the 1,104-bit mwd pair select, 1,109 / 1,102 loads): at NATIVE32 + AB_EN 1
+    // mwd takes per-16-bit-group registered copies of rpb (pb_r <= rpb's next value), exact and same edge.
+    wire [1103:0] mwd_n;
+    wire [OREP-1:0] pb_g;
     for (c = 0; c < OREP; c = c + 1) begin : g_o
         localparam integer LO = 1 + c * OW, HI = (1 + (c + 1) * OW > 1104) ? 1104 : 1 + (c + 1) * OW;
         if (LO < 1104) begin : g_on
             if(RX_SRAM!=0) begin:g_registered_select
-                (* keep *) reg sa_r, sb_r, sm_r, ta_r, tb_r, tm_r;
+                (* keep *) reg sa_r, sb_r, sm_r, ta_r, tb_r, tm_r, pb_r;
                 wire reset_o=rr[4+NRX_MEMRST+c];
                 always @(posedge clk or negedge reset_o)
-                    if(!reset_o) begin sa_r<=0; sb_r<=0; sm_r<=0; ta_r<=0; tb_r<=0; tm_r<=0; end
+                    if(!reset_o) begin sa_r<=0; sb_r<=0; sm_r<=0; ta_r<=0; tb_r<=0; tm_r<=0; pb_r<=0; end
                     else begin
                         {tm_r,tb_r,ta_r,sm_r,sb_r,sa_r}<=control_local[(c/8)*6+:6];
+                        pb_r<=pb_next[c/8];
                     end
+                assign pb_g[c]=pb_r;
+                assign mwd_n[HI-1:LO]=(NATIVE32!=0 && NL==4) ? (pb_r ? bB[HI-1:LO] : bA[HI-1:LO]) : rb[HI-1:LO];
                 genvar ob;
                 for(ob=LO;ob<HI;ob=ob+1) begin:g_bit
                     wire da, dbit, dm;
@@ -885,21 +901,39 @@ module ot_s81sl_lep_core #(
             (* keep = "true" *) wire sM = mrv && !(gA && !ldA) && !(gB && !ldB);
             assign nrid[HI-1:LO] = ({(HI - LO){sA}} & sbA[HI-1:LO]) | ({(HI - LO){sB}} & sbB[HI-1:LO])
                                  | ({(HI - LO){sM}} & sbM[HI-1:LO]);
+            assign pb_g[c]=1'b0; assign mwd_n[HI-1:LO]=rb[HI-1:LO];
             end
         end
     end
     always @(posedge clk) begin
         rid <= nrid;
-        mwd <= rb;
+        mwd[1103:1] <= mwd_n[1103:1];
 
     end
+    // L5B-LEPMU: the return tag / code bits and mwd[0] take the released frame through their own kept copies of rpb
+    // (3 x ot_s81sl_lep_vcopy of pb_next, <= 16 bits each) at NATIVE32 + AB_EN 1; rb elsewhere.
+    wire [1103:0] rbx;
+    if(NATIVE32!=0 && RX_SRAM!=0 && NL==4) begin:g_rbx
+      wire [2:0] pbx;
+      for(genvar px=0;px<3;px=px+1) begin:g_pbx
+        (* keep=1 *) ot_s81sl_lep_vcopy u_pbx(.clk(clk),.d(pb_next[px]),.q(pbx[px]));
+      end
+      assign rbx[TG+2+:16]=pbx[0]?bB[TG+2+:16]:bA[TG+2+:16];
+      assign rbx[TG+18+:15]=pbx[1]?bB[TG+18+:15]:bA[TG+18+:15];
+      assign rbx[TG+1:TG]=pbx[2]?bB[TG+1:TG]:bA[TG+1:TG];
+      assign rbx[3:0]=pbx[2]?bB[3:0]:bA[3:0];
+      assign rbx[TG-1:4]=rb[TG-1:4]; assign rbx[1103:TG+33]=rb[1103:TG+33];
+    end else begin:g_nrbx
+      assign rbx=rb;
+    end
+    always @(posedge clk) mwd[0] <= rbx[0];
     if(NATIVE32!=0 && RX_SRAM!=0) begin:g_native_return
-      wire [31:0] ring_tag={1'b1,rb[TG+2+:10],rb[TG+12+:21]};
+      wire [31:0] ring_tag={1'b1,rbx[TG+2+:10],rbx[TG+12+:21]};
       wire [31:0] replay_tag={1'b1,mrd[TG+2+:10],mrd[TG+12+:21]};
       for(genvar rt=0;rt<4;rt=rt+1) begin:g_byte
         wire [7:0] next_tag;
         (* keep=1 *) ot_s81sl_lep_return8 u_tag(.ne({{(4-NL){1'b0}},rne_return}),
-          .ring({((NL==4)?ring_meta_regions[2*4+3]:1'b0),ring_meta_regions[3]}),.land({ldB,ldA}),.ring_code({rb[TG],rb[3:1],active_ring_flags[2]}),
+          .ring({((NL==4)?ring_meta_regions[2*4+3]:1'b0),ring_meta_regions[3]}),.land({ldB,ldA}),.ring_code({rbx[TG],rbx[3:1],active_ring_flags[2]}),
           .replay_code({mrd[TG],mrd[3:0]}),.ring_data(ring_tag[rt*8+:8]),
           .replay_data(replay_tag[rt*8+:8]),.q(next_tag));
         always @(posedge clk) rtq[rt*8+:8]<=next_tag;
@@ -1139,7 +1173,7 @@ endmodule
 // E ring + mu_c / mu_rt.
 module ot_s81sl_lep_mu_ab #(
     parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,
-    parameter integer NB = 80, parameter integer RX_SRAM = 0
+    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -1169,7 +1203,8 @@ module ot_s81sl_lep_mu_ab #(
     input  wire [2:0]      l3_f,
     output wire            fault
 );
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB),
+        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),
@@ -1537,4 +1572,10 @@ endmodule
  input wire push,input wire [AT:0] count,input wire [CW-1:0] credit,output wire wr,rd);
  assign rd=(count!=0)&&(credit!=0);
  assign wr=push&&((count!=(AT+1)'(DT))||rd);
+endmodule
+
+// L5B-LEPMU 10-21: next value of rpb (pair B releases, pair A does not) from the RX non-empty next states; one kept copy
+// per rx control group so rnex fans <= CG and each pb_r group register drives <= 16 mwd select bits.
+(* keep_hierarchy=1 *) module ot_s81sl_lep_bsel_next (input wire [3:0] ne, output wire q);
+    assign q = ne[2] && ne[3] && !(ne[0] && ne[1]);
 endmodule
