@@ -1,0 +1,22 @@
+{
+  "status": "STOP_CLAUDE_IS_BACK",
+  "branch": "codex/qw-gc3-payload-1020",
+  "head": "95479c6a318c9d259d804ac12a91dcaf6492cf33",
+  "worktree": "/home/ubuntu/wt/codex-qw-seam-current-main-proof-1020",
+  "dirty_uncommitted": true,
+  "consumer_probe_result": "NO_RESULT: no simulation admitted/completed",
+  "compiler_result": "payload_complete2 terminal0 unit2134580-1792562282;1032words e8483cb880835702",
+  "candidate_result": "sysfacecfgimagebuilt fromactualg5programwithruntimeCTXmagicmask0; digest49c83cb880835724; OPSEGUNBOUND noadoption",
+  "last_attempt": "preSTOPcommandissued session28187/client3477551, unadmitted memorywaitcancelled atSTOP: NOT RUN exit143, no retry",
+  "source_and_payload_sha256": {
+    "tools/qwen_split/gc3_payload/build.py": "b21ad7374198ef4c7312717682343cc38d553d84337b4e6234c3bf6fadf0f317",
+    "tools/qwen_split/gc3_payload/prepare_probe.py": "50f96ebad1375d664769a1e7df0b7706214778106c77f5b925bc97e1608dbc53",
+    "tools/qwen_split/gc3_payload/probe.py": "487f5f95cda34ba260cb88694a6b3090eb087076ef64a30afbec20bf6be03087",
+    "rtl/test/qwen_dv/tb_gc3_cfg_load.sv": "36c0df7bd882a430540482debfe69b930c01c0abdf3e0d4d923fa424646d4844",
+    "results/rtl/qw_gc3_payload_1020/payload_complete2/program.memh": "7e8786631723082504f79684a661cc61ff2f2be7b31563a5e3fbd011fc531652",
+    "results/rtl/qw_gc3_payload_1020/cfg_candidate/program.memh": "a4d4ba091e419df996ad16f3426644bee3f0a4c6644cac2b80561e7e7f997d59",
+    "results/rtl/qw_gc3_payload_1020/cfg_candidate/sys_face_cfg.viamap.hex": "45ff8c72b49b9ac465a7e15ad392f5a7c6d321653e6fbc77f09c71176e55395f",
+    "results/rtl/qw_gc3_payload_1020/actual_die_params.json": "9dba60c2481bb817dca40af4e13ddda34258ac02ef9a0e8b4f3de420bbc5a480",
+    "results/rtl/qw_gc3_payload_1020/actual_fwd_lanes.json": "56d798022deddeb4db8c2e6c032dfc482d7cd5a4d1fb4767915641e16082607a"
+  }
+}
