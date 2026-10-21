@@ -93,6 +93,10 @@ IDX3_W, IDX3_H = 1036.8, 1036.8   # --idxrd 3 reader-pair slot (24 x 43.2 square
                                   # 174.744 wide + halos / std band (~1.075 mm2 for 2 regions; 0.537 a region)
 IDX3_RSV_H = 1100.0               # --idxrd 3 service slice height (band 9.55 .. 22.42 mm -> slice 1,512 x 1,100 = 1.663 mm2)
 IDX_QF_W, IDX_QF_H = 259.2, 432.0  # query fan-out / frame source dsdv_idx_qf (S81-L20DIE)
+IDX4_Y0 = 200.0                   # --idxrd 4 (S81-IDX3M 10-20): reader strip bottom (PHY corner strips y 0.2 .. 1.24 mm)
+IDX4_RQ, IDX4_RD = 92, 544        # --idxrd 4 RTL payload per controller (2 PCs): rqo 2 x 46 b, rri 2 x 272 b
+IDX4_RQ_LANE, IDX4_RD_LANE = 276, 562   # ... carried on the closed relay masters (dsfd_dvrlyh_276 / _562): lane quantisation
+IDX4_TRACKS_UM = 27.9             # M2/M4/M6 tracks a um at the GRT adjustment, before M8 (S81-IDX3R channel-load rule)
 STREET_PITCH = 34.0               # PATHFIX: 276 street lanes 34 um apart (relay 32.4 across + 1.6 um); 11 slots -170..+170
 COL_EXW, COL_EXE = {}, {}         # p4k: extra slice-column width W / E of the slice, per column (um)
 SVC_CH = 512                      # p4i: svc_rs chain lane per direction (S81U-1 sp_w / sp_e partial-score lane, 512 b)
@@ -260,7 +264,7 @@ def place_rsv(P, facts):
     Slice k serves controller k: lower row = even controllers, upper row = odd ones.  The upper slices' rq / rd come
     down the column gaps (the gap left of column j, column 0 shares gap 1), so the gaps are sized for 1,244 b per
     controller at cut <= 0.55 (21.1 tracks/um on two layers at 75%: 1,244 / 0.55 / 21.1 = 107 um)."""
-    rows1 = [P.blocks[P.idx[f'f_{c}{s}0{2 if IDXRD else 1}']] for c, s in P4H_DROP]
+    rows1 = [P.blocks[P.idx[f'f_{c}{s}0{2 if IDXRD == 3 else 1}']] for c, s in P4H_DROP]
     x0 = min(b['x'] for b in rows1); x1 = max(b['x'] + b['w'] for b in rows1)
     ytop = min(b['y'] for b in rows1) - 30.0
     ctop = 1200.0 + CTRL_H
@@ -672,7 +676,7 @@ def mu_lanes(P, facts, colx, streets):
         yl = rbot - 60.0 + 30.0 * k                    # between the rsv bottoms and the controller tops
         xs = S['x'] + S['w'] / 2.0 + (120.0 if sn == 's_0S' else -120.0)
         pts = [(qw, yq), (xm, yq), (xm, yb), (xg, yb), (xg, yl), (xs, yl), (xs, S['y'])]
-        if IDXRD:     # reader row under the band: the strip above the band is free (row-1 frames gone) only over the
+        if IDXRD == 3:     # reader row under the band: the strip above the band is free (row-1 frames gone) only over the
             # dropped footprints; leave the band at its W / E end below the reader row top, then under the frames
             rs_ = [B(f'rsv_{i:02d}') for i in range(16)]
             yb = rtop + 130.0 + 34.0 * k
@@ -740,7 +744,7 @@ def build():
                     if r == 2:
                         y = streets[t] + STREET
                     h = hs[4 * t + r]
-                    if P4H and t == 0 and (r == 0 or (r == 1 and IDXRD)) and (c, side) in P4H_DROP:
+                    if P4H and t == 0 and (r == 0 or (r == 1 and IDXRD == 3)) and (c, side) in P4H_DROP:
                         y += h      # p4h: this footprint becomes the regional service region (no frame)
                         continue
                     mst = ('col_h9' if h == H9 else 'col_h10') + ('_MX' if ((ROW0_MX or LAYOUT == 'p3') and r == 0) or (P4F and r == 2) else '')
@@ -1112,6 +1116,8 @@ def build():
         mu_lanes(P, facts, colx, streets)
     if P4L and IDXRD == 3:
         idx_readers3(P, facts)
+    if P4L and IDXRD == 4:
+        idx_readers4(P, facts)
     return P, facts
 
 
@@ -1174,6 +1180,137 @@ def idx_readers3(P, facts):
                           frames_dropped_row01=[f'f_{c}{s}01' for c, s in P4H_DROP],
                           lanes={n: dict(bits=L[n]['b'], stations=L[n]['s'], um=L[n]['L']) for n in
                                  ('hrq_01', 'hrd_01', 'hrqc_00', 'hrdc_00', 'iq_00_01_l0', 'iq_qf_l0', 'iq_src_l0', 'iq_src_l1', 'is_tail')})
+
+
+def idx_readers4(P, facts):
+    """S81-IDX3M (10-20) --idxrd 4 (MU.BAL.SX.3 option (c), lanes/S81-IDX3R.md): 8 NON-INLINE index readers dsdv_idx_rg3,
+    one per controller pair (regions 2p, 2p+1), in the two PHY corner strips (W: irg_00..03 x ~7.5-11.7 mm, E: irg_04..07
+    x ~20.3-24.5 mm, y 0.2-1.24 mm, 1,062.5-um pitch), as static-slot CLIENTS of the controllers (dsfd_ctrl_rg3).  The
+    svc_rs <-> ctrl hrq / hrd links are UNCHANGED (no retarget).  New per controller k (r = k % 2, reader p = k // 2):
+      hrrq_k  irg_p rqo[92r +: 92] -> ctrl_k rrq   (92-b payload on a 276-b relay lane, 405-um stations)
+      hrrd_k  ctrl_k rrd -> irg_p rri[544r +: 544] (544-b payload on a 562-b relay lane)
+    routed from the reader N face through the under-frame strip into the CTRL-top channel (ctop .. rsv bottoms), one
+    level a lane (nearer controllers lower: a drop never crosses a lane that continues), down to the controller N face.
+    Strip order is the CHAIN order (irg_00 at the far W .. irg_03 beside the PHY W edge, irg_04 beside the E edge ..
+    irg_07 at the far E), so the W->E chain crossing irg_03 -> irg_04 is the 8.5-mm inner-edge span the bench priced
+    (XD 21) and every pair sits ~4.2 mm from its reader (s ~11 each way, inside the benched s <= 18 envelope).
+    Chains: iq (513 b = 2 x 276) + is (276) between neighbours in a strip; ONE W->E crossing iq_03_04_l0/l1 + is_03_04
+    over the channel; iqf W of irg_00 fed by 2 x 276 from s_3S (column-3 void -> band -> column-2 gap -> under-frame
+    strip); is_tail irg_07 so -> bk_sel W face (E gap -> band -> column-4 W margin), as idx_readers3."""
+    cw = 8500.0 / CTRL_N
+    pw = 2 * cw
+    PH = P.blocks[P.idx['phy_hbm']]
+    px0, px1 = PH['x'], PH['x'] + PH['w']
+    NR = CTRL_N // 2; NH = NR // 2
+    y0 = IDX4_Y0; yt = y0 + IDX3_H
+    for p in range(NR):
+        x = (px0 - 40.0 - IDX3_W - (NH - 1 - p) * pw) if p < NH else (px1 + 40.0 + (p - NH) * pw)
+        P.block(f'irg_{p:02d}', 'dsdv_idx_rg3', 'idx', 'south', x, y0, IDX3_W, IDX3_H)
+    R0 = P.blocks[P.idx['irg_00']]
+    P.block('iqf', 'dsdv_idx_qf', 'idx', 'south', R0['x'] - 40.0 - IDX_QF_W, y0, IDX_QF_W, IDX_QF_H)
+    for k in range(CTRL_N):
+        P.blocks[P.idx[f'ctrl_{k:02d}']]['master'] = 'dsfd_ctrl_rg3'
+    C0 = P.blocks[P.idx['ctrl_00']]
+    ctop = C0['y'] + C0['h']
+    rs = [b for b in P.blocks if b['name'].startswith('rsv_')]
+    rbot = min(b['y'] for b in rs); rtop_b = max(b['y'] + b['h'] for b in rs)
+    rx0 = min(b['x'] for b in rs); rx1 = max(b['x'] + b['w'] for b in rs)
+    # channel levels: 5-um pitch between ctop + 8 and rbot - 8, clear (>= 6 um) of every existing horizontal piece there
+    busy = sorted({round(h[1], 1) for l in P.links for h in l['h'] if abs(h[1] - h[3]) < 1e-6 and ctop < h[1] < rbot})
+    lv = [y for y in (ctop + 8.0 + 5.0 * i for i in range(int((rbot - ctop - 16.0) // 5.0) + 1))
+          if all(abs(y - b) >= 6.0 for b in busy)]
+    need = 2 * (CTRL_N // 2) + 3
+    assert len(lv) >= need, ('idxrd 4: CTRL-top channel levels', len(lv), need, busy)
+    for k in range(CTRL_N):
+        p, r = k // 2, k % 2
+        I = P.blocks[P.idx[f'irg_{p:02d}']]; C = P.blocks[P.idx[f'ctrl_{k:02d}']]
+        west = p < NH
+        m = k if west else CTRL_N - 1 - k            # rank from the reader's PHY edge
+        xc = C['x'] + C['w'] / 2
+        xa_q = I['x'] + 120.0 + 400.0 * r if west else I['x'] + I['w'] - 120.0 - 400.0 * r
+        xa_d = I['x'] + 260.0 + 400.0 * r if west else I['x'] + I['w'] - 260.0 - 400.0 * r
+        yq, yd = lv[2 * m], lv[2 * m + 1]
+        P.link(f'hrrq_{k:02d}', 'hbm', IDX4_RQ_LANE, (I['name'], 'rqo', (xa_q, yt)), (C['name'], 'rrq', (xc - 120.0, ctop)),
+               [(xa_q, yt), (xa_q, yq), (xc - 120.0, yq), (xc - 120.0, ctop)],
+               f'reader HBM read requests of 2 PCs ({IDX4_RQ}-b payload; static reader slots, no credits) -> controller')
+        P.link(f'hrrd_{k:02d}', 'hbm', IDX4_RD_LANE, (C['name'], 'rrd', (xc + 120.0, ctop)), (I['name'], 'rri', (xa_d, yt)),
+               [(xc + 120.0, ctop), (xc + 120.0, yd), (xa_d, yd), (xa_d, yt)],
+               f'reader-tag read beats + pops of 2 PCs ({IDX4_RD}-b payload) -> reader')
+    for p in range(NR - 1):
+        A, Bk = P.blocks[P.idx[f'irg_{p:02d}']], P.blocks[P.idx[f'irg_{p + 1:02d}']]
+        for j, (cls_, po, pi, yf) in enumerate((('iq', 'qo', 'qi', 0.30), ('iq', 'qo', 'qi', 0.36), ('is', 'so', 'si', 0.50))):
+            nm = f'{cls_}_{p:02d}_{p + 1:02d}' + (f'_l{j}' if cls_ == 'iq' else '')
+            note = 'index query chain {d, v}' if cls_ == 'iq' else 'index score chain'
+            if p == NH - 1:      # the one W -> E crossing over the CTRL-top channel (inner strip ends)
+                xa, xb = A['x'] + A['w'] - 60.0 - 40.0 * j, Bk['x'] + 60.0 + 40.0 * j
+                yl = lv[need - 3 + j]
+                P._link(nm, 'idx', 276, (A['name'], po, (xa, yt)), (Bk['name'], pi, (xb, yt)),
+                        [(xa, yt), (xa, yl), (xb, yl), (xb, yt)], note + ' (W -> E strip crossing, CTRL-top channel)')
+                continue
+            ya = A['y'] + A['h'] * yf
+            P._link(nm, 'idx', 276, (A['name'], po, (A['x'] + A['w'], ya)), (Bk['name'], pi, (Bk['x'], ya)),
+                    [(A['x'] + A['w'], ya), (Bk['x'], ya)], note + ' (neighbour)')
+    Q = P.blocks[P.idx['iqf']]
+    for j, yf in enumerate((0.30, 0.36)):
+        ya = R0['y'] + R0['h'] * yf
+        P._link(f'iq_qf_l{j}', 'idx', 276, ('iqf', 'qo', (Q['x'] + Q['w'], ya)), ('irg_00', 'qi', (R0['x'], ya)),
+                [(Q['x'] + Q['w'], ya), (R0['x'], ya)], 'query frame into the chain head')
+    S3 = P.blocks[P.idx['s_3S']]; S4 = P.blocks[P.idx['s_4S']]
+    f2 = [b for b in P.blocks if b['kind'] == 'frame' and b['x'] + b['w'] <= rx0 + 1 and b['y'] < rtop_b and b['y'] + b['h'] > rbot]
+    xg_w = (max(b['x'] + b['w'] for b in f2) + rx0) / 2 if f2 else rx0 - 400.0      # column-2 gap (frame | band W end)
+    f5 = [b for b in P.blocks if b['kind'] == 'frame' and b['x'] >= rx1 - 1 and b['y'] < rtop_b and b['y'] + b['h'] > rbot]
+    xg_e = (min(b['x'] for b in f5) + rx1) / 2 if f5 else rx1 + 400.0                # column-5 gap (band E end | frame)
+    for j in range(2):      # s_3S S face (column-3 void) -> rsv-top band -> column-2 gap -> under-frame strip -> qf N face
+        xs = S3['x'] + 200.0 + 34.0 * j
+        yb = rtop_b + 10.0 + 10.0 * j
+        xg = xg_w - 17.0 + 34.0 * j
+        yh = yt + 30.0 + 34.0 * j
+        xm = Q['x'] + 60.0 + 40.0 * j
+        pts = [(xs, S3['y']), (xs, yb), (xg, yb), (xg, yh), (xm, yh), (xm, Q['y'] + Q['h'])]
+        P._link(f'iq_src_l{j}', 'idx', 276, ('s_3S', 'iq', pts[0]), ('iqf', 'qs', pts[-1]), pts, 'index query frame source (s_3S -> qf)')
+    R7 = P.blocks[P.idx[f'irg_{NR - 1:02d}']]; BK = P.blocks[P.idx['bk_sel']]
+    x7 = R7['x'] + R7['w'] - 40.0
+    xl = S4['x'] - 71.0
+    pts = [(x7, yt), (x7, yt + 30.0), (xg_e, yt + 30.0), (xg_e, rtop_b + 15.0), (xl, rtop_b + 15.0), (xl, BK['y'] + 60.0), (BK['x'], BK['y'] + 60.0)]
+    P._link('is_tail', 'idx', 276, (R7['name'], 'so', pts[0]), ('bk_sel', 'vi_idx', pts[-1]), pts, 'score chain tail -> vmux at the bk_sel W face')
+    L = {l['i']: l for l in P.links}
+    # PHY-edge window load (the S81-IDX3R channel-load rule): bits crossing the PHY W / E edge x between the PHY top and
+    # the frame bottoms, over the usable height (CTRL-top channel + under-frame strip)
+    fbot = min(b['y'] for b in P.blocks if b['kind'] == 'frame' and b['y'] > ctop)
+    def xing(x, ya, yb_):
+        n = 0
+        for l in P.links:
+            if any(abs(h[1] - h[3]) < 1e-6 and ya <= h[1] <= yb_ and min(h[0], h[2]) < x < max(h[0], h[2]) for h in l['h']):
+                n += l['b']
+        return n
+    hu = fbot - (y0 + IDX3_H)
+    edge = {}
+    for side, x in (('W', px0 - 20.0), ('E', px1 + 20.0)):
+        b_all = xing(x, PH['y'] + PH['h'], fbot)
+        b_new = sum(l['b'] for l in P.links if l['i'][:5] in ('hrrq_', 'hrrd_') or l['i'][:6] in ('iq_03_', 'is_03_')
+                    if any(abs(h[1] - h[3]) < 1e-6 and min(h[0], h[2]) < x < max(h[0], h[2]) for h in l['h']))
+        edge[side] = dict(x_um=round(x, 1), bits_all=b_all, bits_idx=b_new,
+                          payload_idx=(NR // 2) * 2 * (IDX4_RQ + IDX4_RD) + 789, height_um=round(hu, 1),
+                          cut=round(b_all / hu / IDX4_TRACKS_UM, 3), cut_payload_idx=round(((NR // 2) * 2 * (IDX4_RQ + IDX4_RD) + 789) / hu / IDX4_TRACKS_UM, 3))
+    ch = {}
+    for k in range(CTRL_N):     # channel-only window just inside each controller's W face (lanes cannot dip over the ctrl row)
+        C = P.blocks[P.idx[f'ctrl_{k:02d}']]
+        x = C['x'] + 1.0
+        ch[f'ctrl_{k:02d}'] = xing(x, ctop, rbot)
+    wk = max(ch, key=ch.get)
+    facts['idxrd'] = dict(n=NR, regions_per_reader=2, master='dsdv_idx_rg3', ctrl_master='dsfd_ctrl_rg3', um=[IDX3_W, IDX3_H],
+                          mm2=round(NR * IDX3_W * IDX3_H / 1e6, 2), pitch_um=pw,
+                          place='PHY corner strips y %.1f-%.1f: W x %.1f-%.1f (irg_00..03), E x %.1f-%.1f (irg_04..07); chain order'
+                                % (y0, yt, R0['x'], px0 - 40.0, px1 + 40.0, R7['x'] + R7['w']),
+                          lanes={n: dict(bits=L[n]['b'], stations=L[n]['s'], um=L[n]['L']) for n in
+                                 ['hrrq_%02d' % k for k in range(CTRL_N)] + ['hrrd_%02d' % k for k in range(CTRL_N)] +
+                                 ['iq_03_04_l0', 'iq_03_04_l1', 'is_03_04', 'iq_00_01_l0', 'iq_qf_l0', 'iq_src_l0', 'iq_src_l1', 'is_tail']},
+                          payload=dict(hrrq=IDX4_RQ, hrrd=IDX4_RD, lane_quantisation='92 -> 276 / 544 -> 562 (closed relay widths)'),
+                          stations_per_pair={p: max(L['hrrq_%02d' % k]['s'] for k in (2 * p, 2 * p + 1)) for p in range(NR)},
+                          phy_edge_cut=edge, channel_bits_worst=dict(at=wk, bits=ch[wk], height_um=round(rbot - ctop, 1),
+                                                                    cut=round(ch[wk] / (rbot - ctop) / IDX4_TRACKS_UM, 3)),
+                          channel_levels=dict(n=len(lv), used=need, busy=busy),
+                          owed=['slice s_3S iq source port', 'bk_sel + dsdv_idx_vmux wrapper (vi_idx)', 'land plan E/K of the new lanes (K 1 default)'])
 
 
 def geometry_facts(P, facts):
@@ -1451,7 +1588,7 @@ def main():
     ap.add_argument('--p4l', action='store_true', help='p4l (S81-DIE6): p4k + no-mix4 + lepw/lepe endpoints (rx 514 on 562 lanes), host plane lanes hf_7N / ht_7N, jd_W, svc up 16')
     ap.add_argument('--mu', type=int, default=0, choices=(0, 1, 2), help='MU-S81/DIE (p4l only): 0 single-user (default, byte-identical), 1 multi-user MU_EN masters + mu lanes, 2 + copy-A/B lane pair on s_0S (+2 SerDes lk_WS2/3)')
     ap.add_argument('--lk-slots', default=None, help='MU-S81-2/DIE: copy the lk_* slot geometry of this plan.json (p4l_lkcol rev2) onto the output plan (post-hoc, after every fact)')
-    ap.add_argument('--idxrd', type=int, default=0, choices=(0, 3), help='S81-DIEPLACE2 (p4l MU): 3 = 8 in-line index readers dsdv_idx_rg2 (one per controller pair) above the controllers, service band widened into the column-2/5 voids, row-1 band frames dropped (0 default, byte-identical)')
+    ap.add_argument('--idxrd', type=int, default=0, choices=(0, 3, 4), help='S81-DIEPLACE2 (p4l MU): 3 = 8 in-line index readers dsdv_idx_rg2 (one per controller pair) above the controllers, service band widened into the column-2/5 voids, row-1 band frames dropped; 4 = S81-IDX3M: 8 NON-INLINE readers dsdv_idx_rg3 in the PHY corner strips as static-slot clients of dsfd_ctrl_rg3 (122 frames kept, svc_rs <-> ctrl links unchanged) (0 default, byte-identical)')
     ap.add_argument('--ctrl-view-size', nargs=2, type=float, metavar=('W', 'H'), help='MODEL ONLY: actual controller body centered in each unchanged 531.25-um PHY pitch; rederive reader/service rows and all links')
     ap.add_argument('--rsv-vcol', type=int, default=0, help='S81-DIE11 mu7 (p4l MU): add K x 43.2-um lattice columns to every svc_rs column gap (V die channels)')
     ap.add_argument('--array-y-shift', type=float, default=0.0, help='MODEL ONLY: move the array/street origins north, retaining die outline and the 250-um north frame guard')
