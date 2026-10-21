@@ -1,0 +1,24 @@
+{
+  "source_base": "263ad92c3",
+  "baseline_hashes": {
+    "npl.sv": "aa8696447db4f693c0f42b38a6fa1ba8b5d9af965d9e905a568b57ddfa697d29",
+    "rr2.sv": "7b81ef212d6bfcf88aeb4cfbfcc7fb578d5da78640d64f647a99ddcbb8d04747",
+    "helpers.sv": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f"
+  },
+  "candidate_sha256": "cf82d273a9ccd40c7236a76f929d7595db3b1aa90e4cf73901b4dd7e412d3de2",
+  "helpers_sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+  "placement_source": "safe12c-20261021-131509/3_3_place_gp.odb actualGPLRC0",
+  "placement_sha256": "5eb64373c219615ce07eba5b7e43c1615119df2592594142ce3faaf8b7795135",
+  "copy_regions": 82,
+  "old_copy_membership": "All80existing mappedowners ot_lcr_core;2newcombcopy owners; noHRcopy moved",
+  "functional_edges": {
+    "FF_added": 0,
+    "data_edges_added": 0,
+    "clock_ports_changed": 0,
+    "landing_edges_added": 0,
+    "SRAM_capture_edges_added": 0,
+    "compiler_delta": 0
+  },
+  "not_selected73": true,
+  "proof_scope": "Sourcecanonical driver identity only, chainfrom provenlp9d_npl\u2192RR2\u2192spatialcopy; existingbehavioralwitnesses reused forunchangedfunction. Actualmappedcensus/clock/reach/route timing pending."
+}
