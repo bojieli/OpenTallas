@@ -332,7 +332,7 @@ def pre(v, m, G):
     # QW-G5FROOT 10-20: each reserved base relay / landing box carries a RES_HALO_UM halo: _relays books a frame as
     # w + SHAVE by h + SHAVE and its spot search snaps within a tolerance, so a root touching the bare box still moved the
     # base frame (dv2f20g5rf rfs try 1: 12 q3h_col 516-b nets over 405 next to the cluster row-gap group roots)
-    RH = float(os.environ.get('OT_SPLIT_FAULT_RES_HALO_UM', '43.2'))   # rfs try 2: 10.8 -> 20 data nets over 405, 43.2 -> 0
+    RH = float(os.environ.get('OT_SPLIT_FAULT_RES_HALO_UM', '4.32'))   # with the deferred roots (_relays OT_SPLIT_FAULT_DEFER) the data placement no longer sees the roots: the halo only keeps roots off the base frames' edges
     plan['reserved'] = [[r_[0] - RH, r_[1] - RH, r_[2] + RH, r_[3] + RH] for r_ in plan.get('reserved', ())]
     for r_ in plan.get('reserved', ()):
         occ.add(tuple(r_))      # the relay / landing sites the same GEN used without the tree: roots keep off them

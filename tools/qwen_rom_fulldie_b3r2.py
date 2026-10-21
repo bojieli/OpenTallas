@@ -2119,7 +2119,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     if q[0] < r[2] + gap - 1e-6 and r[0] < q[2] + gap - 1e-6 and q[1] < r[3] + gap - 1e-6 and r[1] < q[3] + gap - 1e-6:
                         return False
         return True
+    # QW-G5FROOT 10-20 (OT_SPLIT_FAULT_DEFER, default on with OT_SPLIT_FAULT_EMIT): the fault-OR roots (kind 'fault',
+    # observation only) are INVISIBLE to the data relays -- not obstacles, not in the pass-2 site grid -- and land on the
+    # grid only once every data bus is placed, right before the first fault-tree edge is searched (_fault_land below).
+    # So the data placement is the base data-only GEN's exactly (rfs tries 1-3: any root box near the row gaps / slice faces
+    # moved some q3h_col / sf_* frame: 2-20 data nets over 405 whatever the halo).
+    _flt_defer = _os_r.environ.get('OT_SPLIT_FAULT_EMIT', '0') == '1' and _os_r.environ.get('OT_SPLIT_FAULT_DEFER', '1') == '1'
     for it in m['insts']:
+        if _flt_defer and it.kind == 'fault':
+            continue
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
     # Q-DIEPLAN3 q3h5: reserved keep-outs (DIE-CLOCK regional root sites, dedicated lanes): no relay may take them
     for r_ in m.get('relay_keepouts', ()):
@@ -3429,6 +3437,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     site_cache = {}
     grid0 = {}
     for it in m['insts']:              # sites ignore relays (ok() re-checks every site against the live grid)
+        if _flt_defer and it.kind == 'fault':
+            continue
         r_ = (it.x, it.y, it.x + it.w, it.y + it.h)
         for gx in range(int(r_[0] // BK), int(r_[2] // BK) + 1):
             for gy in range(int(r_[1] // BK), int(r_[3] // BK) + 1):
@@ -3866,9 +3876,52 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     ripped = set()
     rounds = 0
     RIP_ROUNDS = int(_os.environ.get('OT_RELAY_RIP_ROUNDS', '40'))   # QW-G5F2: rip-up budget (default the historical 40)
+    _fl_done = [not _flt_defer]
+
+    def _fault_land():
+        # QW-G5FROOT: every data bus stands; each deferred fault root takes its box if still free, else the nearest free
+        # box (moved roots: their fault edges' end points re-derived from the live pins)
+        moved, far = [], 0.0
+        _pp = _pin_pos(v, m)
+        for it in m['insts']:
+            if it.kind != 'fault':
+                continue
+            r_ = (it.x, it.y, it.x + it.w, it.y + it.h)
+            if not free(r_, 0.432):
+                sp_ = None
+                for ring in range(1, 120):
+                    st = ring * 4.32
+                    cs_ = [(i * 4.32, s_ * st) for s_ in (-1, 1) for i in range(-ring, ring + 1)] + \
+                          [(s_ * st, i * 4.32) for s_ in (-1, 1) for i in range(-ring + 1, ring)]
+                    for dx, dy in sorted(cs_, key=lambda t: (abs(t[0]) + abs(t[1]), t)):
+                        x0, y0 = v.dn(it.x + dx, v.GX), v.dn(it.y + dy, v.GY)
+                        if free((x0, y0, x0 + it.w, y0 + it.h), 0.432):
+                            sp_ = (x0, y0)
+                            break
+                    if sp_:
+                        break
+                if sp_ is None:
+                    raise ValueError(f'relays: deferred fault root {it.name} has no free box within 518 um')
+                far = max(far, abs(sp_[0] - it.x) + abs(sp_[1] - it.y))
+                it.x, it.y = sp_
+                moved.append(it.name)
+                r_ = (it.x, it.y, it.x + it.w, it.y + it.h)
+            add_rect(r_)
+        mv = set(moved)
+        for idx_, pl_ in plans.items():
+            if str(pl_['bid']).startswith('flt_') and any(e_[0] in mv for e_ in pl_['eps']):
+                pl_['P0'], pl_['P1'] = _pp(*pl_['eps'][0]), _pp(*pl_['eps'][1])
+                pl_['d'] = abs(pl_['P0'][0] - pl_['P1'][0]) + abs(pl_['P0'][1] - pl_['P1'][1])
+                pl_['path'] = [pl_['P0'], (pl_['P0'][0], pl_['P1'][1]), pl_['P1']]
+        m.setdefault('fault_emit', {})['deferred_roots_moved'] = dict(n=len(moved), max_um=round(far, 1), names=moved[:40])
+        print(f'FAULT_EMIT defer: fault roots landed after the data relays; {len(moved)} moved (max {far:.0f} um)', flush=True)
+        _fl_done[0] = True
+
     while work:
         idx = work.pop(0)
         pl = plans[idx]
+        if not _fl_done[0] and str(pl['bid']).startswith('flt_'):
+            _fault_land()
         if not needs_repair(pl):
             continue
         _ok1 = repair(idx, pl)
@@ -3902,6 +3955,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for j in redo:
             ripped.discard(j)
         work = redo + work
+    if not _fl_done[0]:
+        _fault_land()       # QW-G5FROOT: no fault edge needed a search: the roots still land before any later step
     if GATE:
         # r9: the chains still open are searched again once everything else stands (their sites may have been held by a
         # chain that has since moved); a chain that stays open keeps its pass-1 frames and is reported
