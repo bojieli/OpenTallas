@@ -17,6 +17,7 @@
 // Lockstep vs the originals: rtl/test/mu_qwen_1018/run_kv_ctl_s32_d2.sh.
 module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer SRQ=0,parameter integer RS=24)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[9:0]boot_addr_b,input wire[3:0]boot_image_target,
+ input wire[4:0]boot_gix,input wire[2:0]boot_rem6,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
  input wire[63:0]boot_image_digest,input wire execution_active,
  input wire[159:0]sink_applied,input wire[2:0]local_configured,input wire sink_fault,
@@ -103,7 +104,10 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
  (* keep *) reg[RS-1:0]rs_s;
  always @(posedge ck)rs_s<={RS{rst_n}};
  // ---- held registers, sliced <= 16 bits (ot_s32_sel leaves, distinct select nets) ----
- wire[9:0]a6=10'(int'(addr_b)%6);
+ // KV-CTL12 10-21 (gate222038 c32a/b: boot_image_epoch -> o_hroot 1037 ps, the /6 chain u_gix ~350 ps in series behind the
+ // MU seal re-address mux): the parent computes addr/6 and addr%6 of the RAW address in parallel with the seal accept and
+ // selects the constants of word 326 (54 r 2) on an accepted seal.  Same values as addr/6, addr%6 of the re-addressed word.
+ wire[9:0]a6={7'd0,boot_rem6};
  wire[5:0]lk_a=(addr_b<64)?{1'b0,addr_b[5:1]}:((MUT==6)?6'd0:6'b100000);
  wire[7:0]es_a=ok13?{5'd0,addr_b[2:0]}:((MUT==7)?{addr_b[2:0],addr_b[7:3]}:addr_b[7:0]);
  wire[72:0]s_layer={addr_b[8:0],data};
@@ -180,14 +184,13 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
  assign installed_isa_digest=isa_q;
  // ---- one-hot write strobes (no hold: 0 unless a word is accepted): group-select leaves over shared 16-way decodes ----
  // Keep each small remainder step separate: monolithic /6 remapping gave addr[9] 37 loads.
- wire[4:0]gix;
- qkd_kv_ctl_c32_div6 u_gix(.a(addr),.q(gix));
+ wire[4:0]gix=boot_gix;
  wire[15:0]dg,dp;
  generate for(gi_=0;gi_<16;gi_=gi_+1)begin:g_dec
   assign dg[gi_]=gix[3:0]==gi_;
   assign dp[gi_]={addr[8:6],addr[5]^(MUT==2)}==gi_;
  end endgenerate
- wire l5=(MUT!=4)&&int'(addr)%6==5;
+ wire l5=(MUT!=4)&&boot_rem6==3'd5;
  wire c31=addr[4:0]==31;
  reg[31:0]lw_q,fw_q,fl_q;reg[127:0]cw_q,cl_q;
  wire[31:0]lw_n,fw_n,fl_n;wire[127:0]cw_n,cl_n;
@@ -295,10 +298,10 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
  output wire[15:0]installed_epoch,output wire[63:0]installed_isa_digest
 );
  wire o_lw,o_fault;wire[8:0]o_la;wire[63:0]o_ld;wire[7:0]o_fc;wire o_setup;
- wire[142:0]pr_o;wire[9:0]pr_ab;
+ wire[142:0]pr_o;wire[9:0]pr_ab;wire[4:0]pr_gix;wire[2:0]pr_rem6;
  reg x_fault;reg[7:0]x_fc;
  qkd_static_kv_boot_dispatch_c32 #(.MUT(MUT),.DIECFG(DIECFG),.NRST(NRST),.LINKCFG(LINKCFG),.ESCFG(ESCFG),.DIECAP(DIECAP),.SRQ(SRQ))u_disp(
-  .ck(ck),.rst_n(rst_n),.boot_pr(pr_o),.boot_addr_b(pr_ab),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),
+  .ck(ck),.rst_n(rst_n),.boot_pr(pr_o),.boot_addr_b(pr_ab),.boot_gix(pr_gix),.boot_rem6(pr_rem6),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),
   .boot_image_fault(boot_image_fault),.boot_image_epoch(boot_image_epoch),.boot_image_digest(boot_image_digest),
   .execution_active(execution_active),.sink_applied(sink_applied),.local_configured(local_configured),.sink_fault(sink_fault),
   .diecfg_sealed(diecfg_sealed),.diecfg_fault(diecfg_fault),
@@ -313,6 +316,7 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
   .setup_ready(o_setup),.fault(o_fault),.fault_code(o_fc),.installed_epoch(installed_epoch),.installed_isa_digest(installed_isa_digest));
  generate if(MU==0)begin:g_plain
   assign pr_o=boot_pr;assign pr_ab=boot_pr[73:64];assign setup_ready=o_setup;
+  qkd_kv_ctl_c32_div6r u_gixr(.a(boot_pr[73:64]),.q(pr_gix),.r(pr_rem6));
   always @*begin layer_we=o_lw;layer_addr=o_la;layer_data=o_ld;fault=o_fault;fault_code=o_fc;x_fault=0;x_fc=0;end
  end else begin:g_mu
   wire[9:0]addr=boot_pr[73:64];wire[63:0]data=boot_pr[63:0];
@@ -335,6 +339,10 @@ module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter in
   wire[9:0]pa_a;
   ot_s32_sel #(.W(10)) u_pa(.s(as&&rs_a[0]),.a(10'd326),.b(boot_pr[73:64]),.y(pa_a));
   ot_s32_sel #(.W(10)) u_pb(.s(as&&rs_a[1]),.a(10'd326),.b(boot_pr[73:64]),.y(pr_ab));
+  // KV-CTL12: /6 and %6 of the RAW address (parallel to the seal accept), then the word-326 constants on an accepted seal
+  wire[4:0]gix_r;wire[2:0]rem_r;
+  qkd_kv_ctl_c32_div6r u_gixr(.a(boot_pr[73:64]),.q(gix_r),.r(rem_r));
+  ot_s32_sel #(.W(8)) u_pg(.s(as&&rs_a[0]),.a({5'd22,3'd2}),.b({gix_r,rem_r}),.y({pr_gix,pr_rem6}));
   wire v74=gap_w?1'b0:(seal_w?(ok_seal&&!bad_epoch):boot_pr[74]);
   assign pr_o={boot_pr[142:75],v74,pa_a,boot_pr[63:0]};
   always @(posedge ck or negedge rst_n)
@@ -401,6 +409,18 @@ module qkd_kv_ctl_c32_div6(input wire[9:0]a, output wire[4:0]q);
  generate for(j=0;j<5;j=j+1)begin:g_s
   qkd_kv_ctl_c32_div6_step u_s(.r(r[j+1]),.b(a[j]),.s(r[j]),.q(q[j]));
  end endgenerate
+endmodule
+
+// KV-CTL12 10-21: qkd_kv_ctl_c32_div6 plus the final remainder (= a % 6).
+(* keep_hierarchy *)
+module qkd_kv_ctl_c32_div6r(input wire[9:0]a, output wire[4:0]q, output wire[2:0]r);
+ wire[2:0]rr[0:5];
+ qkd_kv_ctl_c32_rem6 u_hi(.a(a[9:5]),.r(rr[5]));
+ genvar j;
+ generate for(j=0;j<5;j=j+1)begin:g_s
+  qkd_kv_ctl_c32_div6_step u_s(.r(rr[j+1]),.b(a[j]),.s(rr[j]),.q(q[j]));
+ end endgenerate
+ assign r=rr[0];
 endmodule
 
 // KV-CTL10 10-20: 2-bit one-hot predecode of a 4-bit target (kept hierarchy: the ABC boundary that keeps the boot target
