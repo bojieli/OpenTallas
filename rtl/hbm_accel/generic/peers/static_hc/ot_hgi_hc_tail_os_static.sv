@@ -169,7 +169,8 @@ module ot_hgi_hc_tail_os_static #(
     for(genvar j=0;j<16;j=j+1)assign se[j*32+:32]=t[j+8];
     wire sr,sv,sf,sbusy;
     reg sink_fault;
-    if (SKCE != 0 && SKP != 0) begin : g_skce
+    // HCTAIL: the SKP form is g_skcp; the multicycle form keeps g_skce (the kit SDC's sk_ tag = g_skce.sink.)
+    if (SKCE != 0 && SKP != 0) begin : g_skcp
         ot_hdc_sinkhorn_cp #(.ITERS(ITERS),.EPS(HC_EPS),.CUT(1)) sink(
             .clk(clk),.rst_n(rst_n),.ce(sink_clk),.in_valid(sink_launch),.in_ready(sr),
             .in_e(se),.out_valid(sv),.y(sy),.fault(sf),.busy(sbusy));
@@ -177,7 +178,7 @@ module ot_hgi_hc_tail_os_static #(
             if(!rst_n)sink_fault<=0;
             else if(sink_clk&&((sink_launch&&!sr)||sf))sink_fault<=1;
         end
-    end else if (SKCE != 0) begin : g_skce0
+    end else if (SKCE != 0) begin : g_skce
         ot_hdc_sinkhorn_ce #(.ITERS(ITERS),.EPS(HC_EPS)) sink(
             .clk(clk),.rst_n(rst_n),.ce(sink_clk),.in_valid(sink_launch),.in_ready(sr),
             .in_e(se),.out_valid(sv),.y(sy),.fault(sf),.busy(sbusy));
