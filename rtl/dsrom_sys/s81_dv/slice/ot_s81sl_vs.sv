@@ -139,13 +139,18 @@ module ot_s81sl_vs #(
         begin s = {1'b0, x} + 33'h7FFF + {32'd0, x[16]}; bf16 = {s[31:16], 16'd0}; end
     endfunction
 
+`ifdef OT_S81SL_VS_SRAM
+`define S81_VS_CONTROL_KEEP (* keep="true" *)
+`else
+`define S81_VS_CONTROL_KEEP
+`endif
     // ---------------------------------------------------------------- input pin flops
-    reg sv_c, xqv_c, rav_c, raf_c, swv_c, swf_c; reg [159:0] sd_c; reg [255:0] xq_c; reg [31:0] rar_c; reg [63:0] swr_c;
+    `S81_VS_CONTROL_KEEP reg sv_c, xqv_c, rav_c, raf_c, swv_c, swf_c; reg [159:0] sd_c; reg [255:0] xq_c; reg [31:0] rar_c; reg [63:0] swr_c;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin sv_c <= 1'b0; xqv_c <= 1'b0; rav_c <= 1'b0; raf_c <= 1'b0; swv_c <= 1'b0; swf_c <= 1'b0; end
         else begin sv_c <= s_v; xqv_c <= x_qv; rav_c <= ra_vi; raf_c <= ra_fi; swv_c <= sw_vi; swf_c <= sw_fi; end
     always @(posedge clk) begin sd_c <= s_d; xq_c <= x_qd; rar_c <= ra_ri; swr_c <= sw_ri; end
-    reg vpv_c, vov_c, vef_c, gv_c; reg [1:0] vpc_c, voc_c, gc_c; reg [95:0] vpd_c; reg [255:0] voy_c; reg [31:0] gd_c;
+    `S81_VS_CONTROL_KEEP reg vpv_c, vov_c, vef_c, gv_c; reg [1:0] vpc_c, voc_c, gc_c; reg [95:0] vpd_c; reg [255:0] voy_c; reg [31:0] gd_c;
     always @(posedge clk or negedge rs_c)
         if (!rs_c) begin vpv_c <= 1'b0; vov_c <= 1'b0; vef_c <= 1'b0; gv_c <= 1'b0; end
         else begin vpv_c <= ve_pv; vov_c <= ve_ov; vef_c <= ve_fi; gv_c <= g_v; end
@@ -165,7 +170,7 @@ module ot_s81sl_vs #(
                  (c_op == OP_ENG && (c_ph ? (c_n != 8'd32 || gmask != 4'hF) : c_n != 8'd64)) ||
                  (c_n == 8'd0) || (c_op == OP_SW && c_n > 8'd16) || (c_op == OP_MOE && c_n != 8'd8) ||
                  (c_uq && (c_op == OP_SW || c_op == OP_QB) && ((c_op == OP_SW && c_n[0]) || ({5'd0, c_j0} + c_nsb) > 8'd8));
-    reg busy, done; reg [3:0] op; reg [9:0] a0, a1, ob; reg [7:0] n; reg wb, uq, ph, wr; reg [2:0] j0, wsel; reg [31:0] lim, w0, w1;
+    `S81_VS_CONTROL_KEEP reg busy, done; reg [3:0] op; reg [9:0] a0, a1, ob; reg [7:0] n; reg wb, uq, ph, wr; reg [2:0] j0, wsel; reg [31:0] lim, w0, w1;
     wire c_wr = c_op == OP_SW && c_imm[25];
     wire acc_cmd = sv_c && !busy && !c_bad;
     always @(posedge clk or negedge rs_c)
@@ -225,7 +230,7 @@ module ot_s81sl_vs #(
     generate for (gl = 0; gl < 8; gl = gl + 1) begin : g_xw
         assign xw[gl] = xq_c[32 * gl +: 32];
     end endgenerate
-    reg [7:0] ka;                                    // arrivals of the running op
+    `S81_VS_CONTROL_KEEP reg [7:0] ka;                                    // arrivals of the running op
     always @(posedge clk or negedge rs_c)
         if (!rs_c) ka <= 8'd0;
         else if (acc_cmd) ka <= 8'd0;
@@ -258,9 +263,26 @@ module ot_s81sl_vs #(
     wire qr_a = arr && op == OP_QR;
     reg  qr_b; reg [127:0] qr_st;                  // pair 1 stash {s', c', q3, q2}
     always @(posedge clk or negedge rs_x) if (!rs_x) qr_b <= 1'b0; else qr_b <= qr_a;
+`ifdef OT_S81SL_VS_SRAM
+    (* keep="true" *) reg [15:0] qr_capture, qr_phase;
+    always @(posedge clk) begin
+      qr_capture <= {16{rs_c && x_qv && hbusy_n && hop_n == OP_QR}};
+      qr_phase <= {16{qr_a}};
+    end
+    wire [127:0] qr_second = {xw[7],xw[6],xw[3],xw[2]};
+    wire [127:0] qr_first = {xw[5],xw[4],xw[1],xw[0]};
+    wire [127:0] qr_pair;
+    genvar qg;
+    generate for(qg=0;qg<16;qg=qg+1) begin:g_qr_byte
+      always @(posedge clk) if(qr_capture[qg]) qr_st[8*qg+:8] <= qr_second[8*qg+:8];
+      assign qr_pair[8*qg+:8] = qr_phase[qg] ? qr_st[8*qg+:8] : qr_first[8*qg+:8];
+    end endgenerate
+    wire [31:0] qm0=qr_pair[31:0],qm1=qr_pair[63:32],qc=qr_pair[95:64],qs=qr_pair[127:96];
+`else
     always @(posedge clk) if (qr_a) qr_st <= {xw[7], xw[6], xw[3], xw[2]};
     wire [31:0] qm0 = qr_b ? qr_st[31:0] : xw[0], qm1 = qr_b ? qr_st[63:32] : xw[1];
     wire [31:0] qc  = qr_b ? qr_st[95:64] : xw[4], qs = qr_b ? qr_st[127:96] : xw[5];
+`endif
     wire qr_in = qr_a || qr_b;
     wire [31:0] mp [0:3]; wire [3:0] mf; wire [XL:0] vmq;
     ot_hdc_vline #(.D(XL)) u_vmq (.clk(clk), .rst_n(rs_x), .v(qr_in), .vd(vmq));
@@ -328,7 +350,7 @@ module ot_s81sl_vs #(
         if (ra_ld) begin ras <= xq_c[255:32]; ra_x <= xq_c[31:0]; end
         else begin ras <= {32'd0, ras[223:32]}; ra_x <= ras[31:0]; end
     end
-    reg [7:0] k_ra; reg [95:0] rad;                // results returned; the row being assembled (words 0..2)
+    `S81_VS_CONTROL_KEEP reg [7:0] k_ra; reg [95:0] rad;                // results returned; the row being assembled (words 0..2)
     always @(posedge clk or negedge rs_o)
         if (!rs_o) k_ra <= 8'd0;
         else if (acc_cmd) k_ra <= 8'd0;
@@ -340,11 +362,11 @@ module ot_s81sl_vs #(
 `ifndef OT_S81SL_VS_SRAM
     reg [255:0] hst [0:15];                          // the beat's h half rows (vn layout), updated in place by ADD
 `endif
-    reg [2:0] kp_e; reg [5:0] ko_e; reg [4:0] fl_e; reg fl_on;
+    `S81_VS_CONTROL_KEEP reg [2:0] kp_e; reg [5:0] ko_e; reg [4:0] fl_e; reg fl_on;
     reg [31:0]  gate [0:3];
     wire eng_r = arr && op == OP_ENG && !ph, eng_a = arr && op == OP_ENG && ph;
     wire [7:0] er = ka - 8'd16;                      // REDUCE K / W arrival r (16 .. 79): K pair even r, W pair odd r
-    reg  [255:0] kst; reg [127:0] wst; (* keep *) reg epend;    // K pair stash, W upper half, second quad pending
+    `S81_VS_CONTROL_KEEP reg  [255:0] kst; reg [127:0] wst; (* keep *) reg epend;    // K pair stash, W upper half, second quad pending
     wire [5:0] eq0 = {er[6:4], er[3:1], 1'b0}; reg [5:0] eqp;
     wire [5:0] eq = epend ? eqp : eq0;              // quad 16 j + i (W arrival: even quad; next cycle: odd)
     reg [255:0] hrow, hra, hrb, xwsel; reg [31:0] gsel;
@@ -486,7 +508,7 @@ module ot_s81sl_vs #(
     always @(posedge clk) begin e_c <= vpc_c; e_d <= vpd_c; end
 
     // ================================================================ results: leaf-store write port, vq stream, done
-    reg [7:0] k_out; reg [127:0] sw_prev;
+    `S81_VS_CONTROL_KEEP reg [7:0] k_out; reg [127:0] sw_prev;
     wire [127:0] sw_w32 = {swr_c[63:48], 16'd0, swr_c[47:32], 16'd0, swr_c[31:16], 16'd0, swr_c[15:0], 16'd0};
     always @(posedge clk or negedge rs_o)
         if (!rs_o) begin x_wv <= 1'b0; u_v <= 1'b0; um_v <= 1'b0; k_out <= 8'd0; done <= 1'b0; end
@@ -558,5 +580,6 @@ module ot_s81sl_vs #(
             f_unit <= (|mf) | (|af) | raf_c | swf_c | vef_c;
             fault <= fault | f_cmd | f_unit;
         end
+`undef S81_VS_CONTROL_KEEP
 endmodule
 
