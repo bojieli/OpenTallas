@@ -20,7 +20,8 @@ Same instance names, same frames, same placement: only the masters and the clock
 own tie_hi / tie_lo (never a netlist literal), K = (planned E + h0(n)) mod 8 (contract L5: E = max over corners of
 1 + ceil(-S1/T); until the die STA measures S1 the S81 p4j half-cycle fit ceil((n-1)/2) + 1, >= 2, as
 tools/qwen_split/fwd_lane_price.py; h0 = 1 for an n = 1 qkd_landsh0 (QK-LANDEN: en registered on ck_s before the ICG moves
-the write epoch one source edge later, lane_groups.HOP0_EN_REG), else 0; the calendar G - R0 is 0 on the KV die).
+the write epoch one source edge later). Every multi-station lane also captures en at its FIRST hop; h0 =
+lane_groups.HOP0_EN_REG for every nonempty lane. The calendar G - R0 is 0 in the legacy KV plan).
 KVR-FWDAGE 10-19: the landing delivers the source word o = w(t - L), L = E + 1 core edges, for EVERY n (the in-band lane
 epoch makes the ring absorb the station delay; L = K + 1 - h0, ot_qfd_land), so the compiled age ceil(landed - 1) needs
 landed = E + 2 (+ post-landing stages): not 1 + (n-2)/2 + 1 + E + 1, which counted the station delay twice (1..47 edges
@@ -85,8 +86,8 @@ def planned_e(n):
 
 
 def hop0_en_reg(n):
-    """release edges the landing adds to its write epoch: 1 for an n = 1 qkd_landsh0 (en registered on ck_s), else 0"""
-    return LG.HOP0_EN_REG if n == 1 else 0
+    """Actual FIRST capture adds one source epoch edge on every nonempty lane."""
+    return LG.hop0_en_reg(dict(n=n))
 
 
 def strap_k(n, E):

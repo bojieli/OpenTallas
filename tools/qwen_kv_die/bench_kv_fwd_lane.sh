@@ -3,7 +3,7 @@
 # KV lane masters exactly as the die binds them (rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv: qkd_rlysh0_36 hop 0,
 # qkd_rlysh_36 half-cycle stations, qkd_landsh_36 / qkd_landsh0_36 landing; rtl/qwen_split/qfd_fwd_lane.sv) -- Verilator 5.050.
 # Lanes n = 1, 2, 5, 15, 40 (n 40: 0.1 ns forwarded clock legs, total 0.4 T) with the KV GEN strap (tools/qwen_kv_die/kv_fwd_lanes.py strap_k: E = planned_e(n) =
-# max(2, ceil((n-1)/2)+1), K = (E + h0(n)) mod 8, h0 = 1 for n = 1 (QK-LANDEN en register)), source and receiver released on
+# max(2, ceil((n-1)/2)+1), K = (E + h0(n)) mod 8, h0 = 1 for every lane (FIRST en register)), source and receiver released on
 # the same edge (the KV GEN calendar G = R0), small forwarded legs (0.4 T/10 clock, 0.2 data) and the receiver root 0.2 T
 # after the source root.  Every receiver edge checks o = w(t - L):
 #   hw       L = K + 1 - h0(n)   (tools/qwen_split/land_lag_sim.py kv-check L_hw)                                  -> PASS
@@ -29,7 +29,7 @@ module lane #(parameter integer NF = 5, parameter integer LM = 0, parameter real
     input wire cks, input wire ckd, input wire [31:0] es, input wire [31:0] ed, output integer err, output integer chk, output wire flt);
     localparam integer W = 36;
     localparam integer E = (NF <= 3) ? 2 : ((NF - 1 + 1) / 2 + 1);           // planned_e(n) = max(2, ceil((n-1)/2) + 1)
-    localparam integer H0 = (NF == 1) ? 1 : 0;
+    localparam integer H0 = 1; // FIRST=1 registers en for both landsh0 and rlysh0
     localparam integer K = (LM == 2) ? E % 8 : (E + H0) % 8;                  // kv_fwd_lanes.strap_k (8 ties 000); oldgen K = E
     localparam integer LHW = ((K - H0 - E + 4 + 64) % 8) - 4 + E + 1;         // land_lag_sim kv-check L_hw (rep nearest E)
     // compiled ceil(landed - 1), in half units: landed = E + 2 (kv_fwd_lanes.landed_cost); oldgen 1 + (n-2)/2 + 1 + E + 1

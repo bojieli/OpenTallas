@@ -38,7 +38,7 @@ there is no die_glue.sv: the wrappers are that RTL file, the glue is the die net
                      fwd_lanes.json row (stations, n, S); a netlist landing without a row or a row without a landing;
           strap      the K straps k2..k0 are not the instance's OWN tie_hi / tie_lo, or K != (E + cal + h0(n)) mod 8
                      (lane_groups rule: cal = G - R0, 0 on the KV die (G = R0, kv_fwd_lanes); h0 = HOP0_EN_REG = 1 for an
-                     n = 1 landing: ot_qfd_land FIRST=1 registers en on ck_s, QK-LANDEN 10-19);
+                     nonempty lane: both ot_qfd_land FIRST=1 and ot_qfd_lane_st FIRST=1 register en);
           window     the age the straps implement, E_hw = (K - cal - h0) (mod 8, the representative nearest the row E), is
                      outside the ring window: E_sta = E_hw - fwd_e_est(n) + 2 must be in [2, D - 1] (2 = the zero-delay
                      arrival; a measured row E_sta must equal it);
@@ -409,7 +409,7 @@ def kv_check(die_v, lanes_path, relay_stages=None, lane_stations=None):
             fails['structure'] += probs
         E = kv_e(r)
         raw_cal = int(r.get('cal', KV_CAL)) if r.get('cal') is not None else KV_CAL
-        h = LG.HOP0_EN_REG if n == 1 else 0
+        h = LG.hop0_en_reg(dict(n=n))
         # Canonical seam tables use cal=G-R0+h0; legacy KV rows use
         # cal=G-R0. Do not add the registered hop-0 epoch twice.
         basis = r.get('cal_basis')
@@ -466,7 +466,7 @@ def kv_check(die_v, lanes_path, relay_stages=None, lane_stations=None):
                lanes_sha256=hashlib.sha256(Path(lanes_path).read_bytes()).hexdigest(),
                die_v_sha256=hashlib.sha256(Path(die_v).read_bytes()).hexdigest(),
                relay_stages=str(relay_stages) if relay_stages else None, lane_stations=str(lane_stations) if lane_stations else None,
-               rules=dict(strap='K = (E + cal + h0(n)) mod 8 (lane_groups; h0 = HOP0_EN_REG for n = 1); straps from the '
+               rules=dict(strap='K = (E + cal + h0(n)) mod 8 (lane_groups; h0 = HOP0_EN_REG for every nonempty lane); straps from the '
                                 'instance own tie cells', calendar=f'cal = G - R0 = {KV_CAL} (KV GEN: G = R0; en / rs nets recorded)',
                           window=f'E_sta = E_hw - fwd_e_est(n) + 2 in [{FWD_E0}, {KV_D - 1}]',
                           latency='L_hw = E_hw + 1 + post_stages == compiled ceil(landed - 1)',
