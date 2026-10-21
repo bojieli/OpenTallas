@@ -1999,6 +1999,15 @@ def build(*args, **kwargs):
             _sb = kv_bundle_eq.seq_kvn_bundle(m, {i.name: i for i in m['insts']}, KSD.ATTN_LAND)
             if _sb:
                 m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_sb)
+        # KV-AHUB8 10-20 (COORD 19:23): a FIXED-offset hub view (closed a7) -> pad the die to its AP_OFS / FR_OFS
+        if kv_bundle_eq.ahub_pad_on():
+            _ho = KSD.ahub_ofs_bound()
+            if not _ho:
+                raise ValueError('kv_die: OT_KV_AHUB_PAD=1 needs OT_KV_AHUB_OFS (the hub view's hardened offsets)')
+            for _f in (kv_bundle_eq.ahub_ap_bundle, kv_bundle_eq.ahub_fr_bundle):
+                _ab = _f(m, {i.name: i for i in m['insts']}, _ho)
+                if _ab:
+                    m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_ab)
         print('kv die BUNDLE_EQ: ' + ', '.join(f"{n_} {r_.get('stages', r_.get('skipped'))}"
                                                for n_, r_ in m['bundle_eq']['bundles'].items())
               + f" ({len(m['bundle_eq']['added'])} pad relays)", file=sys.stderr)

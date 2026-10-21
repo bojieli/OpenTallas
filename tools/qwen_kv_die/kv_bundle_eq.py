@@ -87,6 +87,61 @@ def seq_kvn_bundle(m, by, land):
     return {'S.seq_kvn': [('kvs_attn', 'prg', 'seq', hits[0] + int(land)), ('d2d_kv', 'skw', 'seq', 0)]}
 
 
+AHUB_STACKS = ('WS', 'WN', 'ES', 'EN')
+
+
+def ahub_pad_on():
+    """KV-AHUB8 10-20 (COORD 19:23 decision): OT_KV_AHUB_PAD=1 binds a FIXED-offset hub view (the closed a7
+    qkd_ahub_sdw-a7-c6c412b4c, hardened at AP_OFS / FR_OFS = OT_KV_AHUB_OFS) by padding the die to its offsets"""
+    return os.environ.get('OT_KV_AHUB_PAD', '0') == '1'
+
+
+def _bus_src(m, bid):
+    """the source pin of the generator bus bid (its first hop keeps the plain id)"""
+    for b in m['buses']:
+        if b is not None and b[0] == bid:
+            return _norm(b[3][0])
+    return None
+
+
+def ahub_ap_bundle(m, by, target):
+    """KV-AHUB8: the hub's FIXED input ages.  kv_static_die.ahub_ages: AP_OFS_s = 2 + L_s + D(ap_s) - D(ks_ahs) (L_s = 0 on
+    the die).  A hub hardened at AP_OFS T_s needs D(ap_s) + (2 - T_s) == D(ks_ahs) for every stack: ONE bundle (the
+    attention root's hs word shared by the four stacks) with member ap_s carrying offset 2 - T_s; the shorter side gets
+    sink-end pads (a stack's ap word waits beside the hub, or hs waits when a stack is the longer side)."""
+    if not all(i in by for i in ('ahub', 'kvs_attn')):
+        return None
+    mem = [('kvs_attn', 'ahs', 'ahub', 0)]
+    for k, st in enumerate(AHUB_STACKS):
+        src = _bus_src(m, f'ap_{st}')
+        if src is None:
+            raise ValueError(f'kv_bundle_eq: AHUB_PAD: no die bus ap_{st}')
+        mem.append((src[0], src[1], 'ahub', 2 - int(target['AP_OFS'][k])))
+    return {'A.hub_ap': mem}
+
+
+def ahub_fr_bundle(m, by, target, pv_lead=0):
+    """KV-AHUB8: FR_OFS = D(ks_pvfst) - PV_LEAD - D(ks_ahfr) - D(ks_ahs) - 1 (fr lands on pvfin's R slot).  A hub hardened
+    at FR_OFS F needs D(ks_pvfst) == D(ks_ahfr) + D(ks_ahs) + 1 + F + PV_LEAD: member ks_ahfr carries offset
+    D(ks_ahs) + 1 + F + PV_LEAD (D(ks_ahs) AFTER the ap bundle's pads; run this pass second)."""
+    if not all(i in by for i in ('ahub', 'kvs_attn', 'pvfin')):
+        return None
+    hits = [v[0] for k, v in _walk(m, by, ('kvs_attn', 'ahs')).items() if k[0] == 'ahub']
+    if len(hits) != 1:
+        raise ValueError(f'kv_bundle_eq: AHUB_PAD: kvs_attn.ahs reaches ahub on {len(hits)} pins (one expected)')
+    return {'A.hub_fr': [('kvs_attn', 'pvfst', 'pvfin', 0),
+                         ('ahub', 'fr', 'pvfin', hits[0] + 1 + int(target['FR_OFS']) + int(pv_lead))]}
+
+
+def ahub_check(stages, target, pv_lead=0):
+    """the offsets a stage table {ks_ahs, ks_ahfr, ks_pvfst, ap_<st>} gives vs the hub's fixed ones -> list of misses"""
+    dh, df, dp = stages['ks_ahs'], stages['ks_ahfr'], stages['ks_pvfst']
+    ap = [2 + stages[f'ap_{st}'] - dh for st in AHUB_STACKS]
+    fr = dp - pv_lead - df - dh - 1
+    out = [f'AP_OFS {st} {a} != {t}' for st, a, t in zip(AHUB_STACKS, ap, target['AP_OFS']) if a != int(t)]
+    return out + ([f'FR_OFS {fr} != {target["FR_OFS"]}'] if fr != int(target['FR_OFS']) else [])
+
+
 # ----------------------------------------------------------------------------------------------- table form
 def _chain_buses(T, si, port, di):
     return [b for p in CHAIN_PORTS.get((si, port), (port,)) for b in T.match(src_inst=si, src_port=p, dst_inst=di)]
