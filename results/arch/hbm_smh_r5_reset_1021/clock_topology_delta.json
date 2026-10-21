@@ -1,0 +1,469 @@
+{
+  "grade": "STRUCTURAL_SOURCE_DELTA_CONFIRMED_CLOCK_MODEL_GAP_NO_GATE_ADMISSION",
+  "qualified_source_commit": "27cecb44b",
+  "forms": {
+    "n_m": {
+      "r4_source": "5ea7d281e",
+      "r4_kit": "smh_rp4ahn_r4sp",
+      "r4_clock_kind": "spine",
+      "r4_clock_port": "clk",
+      "r5_clock_kind": "multiple_cts_roots",
+      "r5_clock_ports": [
+        "ck_c",
+        "ck_x",
+        "ck_m"
+      ],
+      "hard_geometry_semantics_unchanged": true,
+      "outline_unchanged": true,
+      "real_hard_children_by_region": {
+        "c": [
+          "u_qk0",
+          "u_bdc0",
+          "u_h00",
+          "u_h10",
+          "u_row0",
+          "u_rowe0"
+        ],
+        "x": [
+          "u_xs0"
+        ],
+        "m": [
+          "u_mg0.u_merge"
+        ]
+      },
+      "regions": {
+        "c": {
+          "clock_port": "ck_c",
+          "children": [
+            "u_bdc0",
+            "u_cap0",
+            "u_h00",
+            "u_h10",
+            "u_pr_n",
+            "u_pub0",
+            "u_qk0",
+            "u_row0",
+            "u_rowe0",
+            "u_rst_c10",
+            "u_rst_c9"
+          ]
+        },
+        "x": {
+          "clock_port": "ck_x",
+          "children": [
+            "u_as",
+            "u_be1",
+            "u_be2",
+            "u_bk0",
+            "u_bt1",
+            "u_bt2",
+            "u_gi1",
+            "u_landn",
+            "u_oh0",
+            "u_pb",
+            "u_rst_x7",
+            "u_sr_n",
+            "u_st0",
+            "u_xb1",
+            "u_xb2",
+            "u_xq0",
+            "u_xs0"
+          ]
+        },
+        "m": {
+          "clock_port": "ck_m",
+          "children": [
+            "u_fp0",
+            "u_gi2",
+            "u_gn",
+            "u_go0",
+            "u_mg0",
+            "u_rst_m10",
+            "u_rst_m13",
+            "u_xbo",
+            "u_xgo",
+            "u_xgr",
+            "u_xpo",
+            "u_xpr"
+          ]
+        }
+      },
+      "landings": 23,
+      "landing_flops": 31282,
+      "reset_forest_flops_original_record": 495,
+      "clock_pins": {
+        "ck_c": [
+          559.46,
+          560.54
+        ],
+        "ck_x": [
+          1079.46,
+          1080.54
+        ],
+        "ck_m": [
+          159.46,
+          160.54
+        ]
+      },
+      "added_gout_edges_vs_r3": 8
+    },
+    "n_f": {
+      "r4_source": "bca22fc7b",
+      "r4_kit": "smh_rp4ahn_r4spb",
+      "r4_clock_kind": "spine",
+      "r4_clock_port": "clk",
+      "r5_clock_kind": "multiple_cts_roots",
+      "r5_clock_ports": [
+        "ck_c",
+        "ck_x"
+      ],
+      "hard_geometry_semantics_unchanged": true,
+      "outline_unchanged": true,
+      "real_hard_children_by_region": {
+        "c": [
+          "u_mg0.u_merge",
+          "u_qk0",
+          "u_bdc0",
+          "u_h00",
+          "u_h10",
+          "u_row0",
+          "u_rowe0"
+        ],
+        "x": [
+          "u_xs0"
+        ]
+      },
+      "regions": {
+        "c": {
+          "clock_port": "ck_c",
+          "children": [
+            "u_bdc0",
+            "u_cap0",
+            "u_fp0",
+            "u_gi2",
+            "u_gn",
+            "u_go0",
+            "u_h00",
+            "u_h10",
+            "u_mg0",
+            "u_pr_n",
+            "u_pub0",
+            "u_qk0",
+            "u_row0",
+            "u_rowe0",
+            "u_rst_c10",
+            "u_rst_c7",
+            "u_rst_c9",
+            "u_xbo",
+            "u_xgo",
+            "u_xgr",
+            "u_xpo",
+            "u_xpr"
+          ]
+        },
+        "x": {
+          "clock_port": "ck_x",
+          "children": [
+            "u_as",
+            "u_be1",
+            "u_be2",
+            "u_bk0",
+            "u_bt1",
+            "u_bt2",
+            "u_gi1",
+            "u_landn",
+            "u_oh0",
+            "u_pb",
+            "u_rst_x7",
+            "u_sr_n",
+            "u_st0",
+            "u_xb1",
+            "u_xb2",
+            "u_xq0",
+            "u_xs0"
+          ]
+        }
+      },
+      "landings": 8,
+      "landing_flops": 27289,
+      "reset_forest_flops_original_record": 415,
+      "clock_pins": {
+        "ck_c": [
+          559.46,
+          560.54
+        ],
+        "ck_x": [
+          1079.46,
+          1080.54
+        ]
+      },
+      "added_gout_edges_vs_r3": 5
+    },
+    "s_m": {
+      "r4_source": "10bc424e7",
+      "r4_kit": "smh_rp4ahs_r4sp",
+      "r4_clock_kind": "spine",
+      "r4_clock_port": "clk",
+      "r5_clock_kind": "multiple_cts_roots",
+      "r5_clock_ports": [
+        "ck_c",
+        "ck_x",
+        "ck_m"
+      ],
+      "hard_geometry_semantics_unchanged": true,
+      "outline_unchanged": true,
+      "real_hard_children_by_region": {
+        "c": [
+          "u_qk1",
+          "u_bdc1",
+          "u_h01",
+          "u_h11",
+          "u_row1",
+          "u_rowe1"
+        ],
+        "x": [
+          "u_xs1"
+        ],
+        "m": [
+          "u_mg1.u_merge"
+        ]
+      },
+      "regions": {
+        "c": {
+          "clock_port": "ck_c",
+          "children": [
+            "u_bdc1",
+            "u_cap1",
+            "u_h01",
+            "u_h11",
+            "u_pr_s",
+            "u_prl",
+            "u_pst",
+            "u_pub1",
+            "u_qk1",
+            "u_row1",
+            "u_rowe1",
+            "u_rst_c14",
+            "u_rst_c15"
+          ]
+        },
+        "x": {
+          "clock_port": "ck_x",
+          "children": [
+            "u_bk1",
+            "u_lands",
+            "u_oh1",
+            "u_rl1",
+            "u_rst_x12",
+            "u_rst_x9",
+            "u_st1",
+            "u_xg2",
+            "u_xgi",
+            "u_xp2",
+            "u_xpi",
+            "u_xq1",
+            "u_xs1"
+          ]
+        },
+        "m": {
+          "clock_port": "ck_m",
+          "children": [
+            "u_as",
+            "u_fp1",
+            "u_g1p",
+            "u_go1",
+            "u_gs",
+            "u_mg1",
+            "u_rst_m16",
+            "u_rst_m18",
+            "u_sr_s"
+          ]
+        }
+      },
+      "landings": 25,
+      "landing_flops": 19767,
+      "reset_forest_flops_original_record": 329,
+      "clock_pins": {
+        "ck_c": [
+          559.46,
+          560.54
+        ],
+        "ck_x": [
+          959.46,
+          960.54
+        ],
+        "ck_m": [
+          159.46,
+          160.54
+        ]
+      },
+      "added_gout_edges_vs_r3": 8
+    },
+    "s_f": {
+      "r4_source": "5d86ea639",
+      "r4_kit": "smh_rp4ahs_r4spb",
+      "r4_clock_kind": "spine",
+      "r4_clock_port": "clk",
+      "r5_clock_kind": "multiple_cts_roots",
+      "r5_clock_ports": [
+        "ck_c",
+        "ck_x"
+      ],
+      "hard_geometry_semantics_unchanged": true,
+      "outline_unchanged": true,
+      "real_hard_children_by_region": {
+        "c": [
+          "u_mg1.u_merge",
+          "u_qk1",
+          "u_bdc1",
+          "u_h01",
+          "u_h11",
+          "u_row1",
+          "u_rowe1"
+        ],
+        "x": [
+          "u_xs1"
+        ]
+      },
+      "regions": {
+        "c": {
+          "clock_port": "ck_c",
+          "children": [
+            "u_as",
+            "u_bdc1",
+            "u_cap1",
+            "u_fp1",
+            "u_g1p",
+            "u_go1",
+            "u_gs",
+            "u_h01",
+            "u_h11",
+            "u_mg1",
+            "u_pr_s",
+            "u_prl",
+            "u_pst",
+            "u_pub1",
+            "u_qk1",
+            "u_row1",
+            "u_rowe1",
+            "u_rst_c13",
+            "u_rst_c14",
+            "u_rst_c15",
+            "u_sr_s"
+          ]
+        },
+        "x": {
+          "clock_port": "ck_x",
+          "children": [
+            "u_bk1",
+            "u_lands",
+            "u_oh1",
+            "u_rl1",
+            "u_rst_x12",
+            "u_rst_x9",
+            "u_st1",
+            "u_xg2",
+            "u_xgi",
+            "u_xp2",
+            "u_xpi",
+            "u_xq1",
+            "u_xs1"
+          ]
+        }
+      },
+      "landings": 9,
+      "landing_flops": 15602,
+      "reset_forest_flops_original_record": 245,
+      "clock_pins": {
+        "ck_c": [
+          559.46,
+          560.54
+        ],
+        "ck_x": [
+          959.46,
+          960.54
+        ]
+      },
+      "added_gout_edges_vs_r3": 5
+    }
+  },
+  "actual_old_r4_boundary_FAIL_ps": {
+    "n_m": [
+      232.7,
+      253.7
+    ],
+    "n_f": [
+      137.6,
+      141.4
+    ],
+    "s_f": [
+      191.1,
+      209.5
+    ]
+  },
+  "r5_vs_r4": "Actual topology differs: one root feeding all hard/soft consumers becomes3MAIN/2FB region roots. Every crossing has a real source ring/read landing. Hard placements unchanged. r5 has never reached CTS (oldr5stoppednative120); no measuredr5clock verdict exists.",
+  "boundary_reference_envelopes_uncompensated_ps": {
+    "c": {
+      "tt": [
+        104.3,
+        188.1
+      ],
+      "ff": [
+        85.2,
+        154.9
+      ]
+    },
+    "x": {
+      "tt": [
+        453.5,
+        528.9
+      ],
+      "ff": [
+        366.8,
+        425.7
+      ]
+    },
+    "m": {
+      "tt": [
+        263.2,
+        313.2
+      ],
+      "ff": [
+        215.4,
+        262.4
+      ]
+    },
+    "fb_c_plus_m": {
+      "tt": [
+        104.3,
+        313.2
+      ],
+      "ff": [
+        85.2,
+        262.4
+      ]
+    }
+  },
+  "mechanism": "PinnedOpenROAD6cb3f2b704 default insertion-delay compensation ISenabled. computeInsertionDelay/LatencyBalancer use average of max-rise/max-fall Liberty clocktree paths. Uncompensated envelopes are NOT hardlowerbounds. Actualoldr5config CTS_ARGS=-sink_clustering_enable -repair_clock_nets -delay_buffer_derate0.75; no privateclockspine. Account actual TT/FF parentclock delivery versus ALLexportedboundaryrefs, not equality to allinternal targets.",
+  "potential_target_mismatch_not_measured_FAILURE": {
+    "selected_PVM_TT_Lib_max_rise": 362.72147,
+    "selected_PVM_TT_Lib_max_fall": 389.84634,
+    "TritonCTS_max_average": 376.283905,
+    "actual_exported_PVM_TT_boundary": [
+      263.2,
+      313.2
+    ],
+    "actual_exported_PVM_TT_boundary_mean": 294.1,
+    "actual_exported_PVM_TT_all": [
+      251.1,
+      362.7
+    ],
+    "actual_exported_PVM_FF_all": [
+      198.9,
+      308.8
+    ],
+    "scope": "Retain intrinsic111.6TT/109.9FF allspan and unchangedleafinternalSTAqualification. ALLactualchildBOUNDARYrefs defineparentrule. .75derate/pathgeometry change compensation; no actualr5clockfailure inferred fromscalarinterval."
+  },
+  "source_mechanism_url": "https://raw.githubusercontent.com/The-OpenROAD-Project/OpenROAD/6cb3f2b704/src/cts/src/TritonCTS.cpp",
+  "disposition": "Fourphysicalgates PAUSED perROOT prerequisite. Existingmodel/sourcefactssubmitted tolead beforeproceeding orfoldingrealclockstructuralfix. GENmayfinish; preservealloldjobs."
+}
