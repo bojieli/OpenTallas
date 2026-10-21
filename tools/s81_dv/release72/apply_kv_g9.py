@@ -40,7 +40,7 @@ def apply(plan, table, source_ref):
     block['master'] = key
     sources = ['rtl/dsrom_sys/s81_dv/slice/' + n for n in
                ('ot_s81sl_slice_kv512.sv', 'ot_s81sl_slice.sv', 'ot_s81sl_kv_leaf.sv', 'ot_s81sl_kv_bank.sv',
-                'ot_s81sl_xgt.sv', 'ot_s81sl_rstopt.sv', 'ot_s81sl_xrt.sv')]
+                'ot_s81sl_xgt.sv', 'ot_s81sl_rstopt.sv', 'ot_s81sl_xrt.sv', 'ot_s81sl_xs4.sv')]
     refs = table.setdefault('rtl_refs', {}).setdefault(source_ref, [])
     prefer = table.setdefault('prefer', [])
     for path in sources:
