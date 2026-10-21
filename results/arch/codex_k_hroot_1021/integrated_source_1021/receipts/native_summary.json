@@ -1,0 +1,51 @@
+{
+ "controller": {
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "status": "PASS",
+  "roots_examined": 100404,
+  "max_dynamic_loads": 32,
+  "role_errors": [],
+  "netlist": {
+   "path": "resynth.v",
+   "sha256": "e2708dfa4f7a2ec8001e5cafa281dbcae78b4b6622c61f7e52464b9c39a313e5"
+  },
+  "violations": [],
+  "full_report_sha256": "f4916d6ab2de350f09bf540e9bbba584b16aa799efb31da130a4fc7c1e19a400",
+  "qualified": false
+ },
+ "raw_whole": {
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "status": "FAIL",
+  "roots_examined": 115249,
+  "max_dynamic_loads": 179,
+  "role_errors": [],
+  "netlist": {
+   "path": "whole_integrated.v",
+   "sha256": "6616ca93971881d5d9a5c508f0ba08b3fc4041eea5f337fb24ca2d18ad4afe0e"
+  },
+  "violations": [
+   {
+    "driver": "host_rst_n",
+    "driver_role": "input_port",
+    "net": "host_rst_n",
+    "loads": 179
+   }
+  ],
+  "full_report_sha256": "e368c67d65e5ab89f4fea302a90143f17efdf422a50ff1f38340508868711525",
+  "qualified": false
+ },
+ "reset_context": {
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "status": "PASS",
+  "roots_examined": 115266,
+  "max_dynamic_loads": 32,
+  "role_errors": [],
+  "netlist": {
+   "path": "reset_context/whole_reset_context.v",
+   "sha256": "a42b7f18951737d93320bbabb7f9d91d0f36d4925c6e3c2cea8ce712abf8e6be"
+  },
+  "violations": [],
+  "full_report_sha256": "2d373a255835616965a99461159b1a66390251f5ccb45a0203dabcf8dc72b035",
+  "qualified": false
+ }
+}

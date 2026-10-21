@@ -1,0 +1,10 @@
+ENGINE_RESET_RELEASE epoch=0 reset_held_edges=8 cycle=8
+ENGINE_FIRST_ACCEPT epoch=0 release_cycle=8 accepted_cycle=8 ready_wait_edges=0 postrelease_burnin_edges=0
+ENGINE_OCCUPIED_RESET cycle=132 busy=1 accepted_beats=64 writes=0
+ENGINE_RESET_RELEASE epoch=1 reset_held_edges=8 cycle=140
+ENGINE_FIRST_ACCEPT epoch=1 release_cycle=140 accepted_cycle=140 ready_wait_edges=0 postrelease_burnin_edges=0
+ENGINE_COLD_SAMPLE PASS checks=4603 writes=1728 descriptors=9 occupied_resets=1 MUT_CLOCK=0 independent_random_init=1 SRAM_no_init=1
+- tb_engine_cold.sv:101: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 46us; walltime 0.660 s; speed 70.012 us/s
+- Verilator: cpu 0.660 s on 1 threads; allocated 14 MB

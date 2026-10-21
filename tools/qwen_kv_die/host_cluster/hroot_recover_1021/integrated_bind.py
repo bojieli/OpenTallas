@@ -92,6 +92,12 @@ for pn,item in plan.items():
   records.append(dict(pin=name,new_net=b,loads=sum(e['loads'] for e in group),endpoints=group))
 parent['cells'][oldname]=dict(hide_name=0,type=g['top'],parameters={},attributes={},port_directions=dirs,connections=connections)
 del mods['native_soft']
+# Libraries are loaded independently from their pinned actual bytes. Retain
+# source SRAM blackboxes, but avoid re-defining imported ASAP7 library modules.
+for name in list(mods):
+ if 'ASAP7' in name:
+  assert str(mods[name].get('attributes',{}).get('blackbox','0')).strip('0'),('non-library module',name)
+  del mods[name]
 a.out.write_text(json.dumps(j,separators=(',',':'))+'\n')
 @functools.lru_cache(None)
 def flop_count(typ):

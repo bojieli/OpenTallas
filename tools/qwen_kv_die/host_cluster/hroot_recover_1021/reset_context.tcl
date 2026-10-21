@@ -11,7 +11,5 @@ set ::env(OT_RST_LAND_STAGES) 2
 set ::env(OT_RST_LAND_COPIES) host_rst_n=16
 set ::env(OT_RST_COPIES_MAX) 32
 set ::env(OT_RST_COPIES_RE) {host_rst_n__ot_rlv$}
-source /work/helpers/ot_pin_regs.tcl
-yosys hierarchy -check -top qkd_hr_ingest_qm
-yosys proc
-source /work/helpers/ot_rst_copies.tcl
+# Full canonical hook supplies kept-register bit techmap before reset copies.
+source /work/helpers/ot_keep_regs.tcl
