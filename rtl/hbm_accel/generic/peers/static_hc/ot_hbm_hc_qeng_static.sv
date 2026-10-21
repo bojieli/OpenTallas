@@ -156,6 +156,26 @@ module ot_hbm_hc_qeng_static #(
     `define OT_HCQ_BFCK .clk_c(clk), .clk_a(clk), `OT_HCQ_RLW
     `undef OT_HCQ_B0CK
     `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
+ `elsif HC_BANK_RW2
+    // HBM-HCBANK9 10-21: _rl + per-SRAM write-data copies on clk_d<r> (+define+HC_BANK_RW3: hold / asm on clk)
+    `define OT_HCQ_B0 ot_hbm_hc_bankq0_rw2_static
+  `ifdef HC_BANK_RW3
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rw3_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rw3_static
+    `define OT_HCQ_RWA
+  `else
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rw2_static
+    `define OT_HCQ_BQ ot_hbm_hc_bankq_rw2_static
+    `define OT_HCQ_RWA .clk_a(clk),
+  `endif
+    `define OT_HCQ_RLW .clk_w0(clk), .clk_w1(clk), .clk_w2(clk), .clk_w3(clk), .clk_x0(clk), .clk_x1(clk), .clk_x2(clk), \
+        .clk_x3(clk), .clk_e0(clk), .clk_e1(clk), .clk_e2(clk), .clk_e3(clk), .clk_d0(clk), .clk_d1(clk), .clk_d2(clk), \
+        .clk_d3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+    `define OT_HCQ_BCK .clk_c(clk), .clk_o(clk), .clk_q0(clk), .clk_q1(clk), .clk_q2(clk), .clk_q3(clk), `OT_HCQ_RLW
+    `define OT_HCQ_BQCK `OT_HCQ_BCK `OT_HCQ_RWA .clk_i0(clk), .clk_i1(clk), .clk_i2(clk), .clk_i3(clk),
+    `define OT_HCQ_BFCK .clk_c(clk), `OT_HCQ_RWA `OT_HCQ_RLW
+    `undef OT_HCQ_B0CK
+    `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
  `elsif HC_BANK_RM
     `define OT_HCQ_B0 ot_hbm_hc_bankq0_rm_static
     `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rm_static
@@ -247,6 +267,9 @@ module ot_hbm_hc_qeng_static #(
 `endif
 `ifdef OT_HCQ_RMW
     `undef OT_HCQ_RMW
+`endif
+`ifdef OT_HCQ_RWA
+    `undef OT_HCQ_RWA
 `endif
     `undef OT_HCQ_B0CK
     `undef OT_HCQ_M3

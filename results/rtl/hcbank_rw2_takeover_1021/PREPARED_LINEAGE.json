@@ -1,0 +1,19 @@
+{
+  "time": "2026-10-21T01:26:30.720148-07:00",
+  "prepared_source": "/home/ubuntu/wt/hcbank6-bank-1020",
+  "files": {
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankrc_static.sv": {
+      "paused_prepared_sha256": "d0f183a8018711f0cccf465c1d9332dee7113ac88c1f1d98bba3a7726de079c4",
+      "copied_exactly": true
+    },
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qeng_static.sv": {
+      "paused_prepared_sha256": "b9dc1df8c98cc17107d6ab7d8459d48a603567321e9f0c6111e05f88758cc4a8",
+      "copied_exactly": true
+    },
+    "tools/ref_tile/specs_hbm_b_rtl2_1017/hc9bank_rw.py": {
+      "paused_prepared_sha256": "2efe709cbfd81ca7d5f412b53e63456144e167c03a5ca8899c1a5f4563b112f3",
+      "copied_exactly": true
+    }
+  },
+  "scope": "rw2 only3kits; no pausedWT mutation, no broad helper change"
+}
