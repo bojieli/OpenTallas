@@ -4,7 +4,7 @@
 // match the legacy receiver. Same-depth local reset copies must cover the head
 // forwarding flags; caller expands its existing relay, adding no release stage.
 module ot_link_credit_rx_b64 #(
- parameter integer W=553, DEPTH=8, WFREE=1, NS=(W+15)/16, MUT=0, LOCAL_HIT=0
+ parameter integer W=553, DEPTH=8, WFREE=1, NS=(W+15)/16, MUT=0, LOCAL_HIT=0, LOCAL_POP=0
 )(input wire clk,rst_n,input wire [NS-1:0] head_rst_n,
  input wire l_valid,input wire [W-1:0] l_data,(* keep *) output reg l_credit,
  output wire o_valid,input wire o_ready,output wire [W-1:0] o_data,output reg fault);
@@ -12,9 +12,18 @@ module ot_link_credit_rx_b64 #(
  reg v_q,nz_r; reg [W-1:0] d_q; reg [AW-1:0] wp,rp; reg [CW-1:0] n;
  assign o_valid=nz_r;
  wire pop=o_valid&&o_ready, full=n==CW'(DEPTH);
+ wire pop_count,pop_addr;
+ generate if(LOCAL_POP!=0) begin:g_local_pop
+  // CORE_CRED12 AW4 grows the shared pop cone to42 mapped loads. Independent
+  // kept predicates retain the same edge while bounding count and address cones.
+  (* keep=1 *) ot_link_credit_rx_b64_pop u_count(.a(o_valid),.b(o_ready),.q(pop_count));
+  (* keep=1 *) ot_link_credit_rx_b64_pop u_addr(.a(o_valid),.b(o_ready),.q(pop_addr));
+ end else begin:g_legacy_pop
+  assign pop_count=pop;assign pop_addr=pop;
+ end endgenerate
  wire wr=v_q&&(!full || ((WFREE==0)&&pop));
- wire [CW-1:0] nnext=n+CW'(wr)-CW'(pop);
- wire [AW-1:0] rnext=pop ? ((rp==AW'(DEPTH-1))?'0:rp+1'b1):rp;
+ wire [CW-1:0] nnext=n+CW'(wr)-CW'(pop_count);
+ wire [AW-1:0] rnext=pop_addr ? ((rp==AW'(DEPTH-1))?'0:rp+1'b1):rp;
  always @(posedge clk or negedge rst_n)
   if(!rst_n) begin v_q<=0;wp<=0;rp<=0;n<=0;l_credit<=0;fault<=0;nz_r<=0;end
   else begin
@@ -29,4 +38,8 @@ module ot_link_credit_rx_b64 #(
 `ifndef SYNTHESIS
  initial if(DEPTH<2 || DEPTH>32 || WFREE<0 || WFREE>2) $fatal(1,"credit SRAM unsupported shape");
 `endif
+endmodule
+
+(* keep_hierarchy="yes" *) module ot_link_credit_rx_b64_pop(input wire a,b,output wire q);
+ assign q=a&&b;
 endmodule
