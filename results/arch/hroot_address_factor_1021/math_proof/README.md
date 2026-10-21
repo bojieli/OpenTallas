@@ -1,0 +1,3 @@
+Binary formal results add/mul3/mul5 PASS and wrong-carry negative FAIL as required, run under agidock ot-heavy unit oth-ubuntu-3926743-1792620740. Original run also had6168 four-state comparisons PASS. The initial X/Z loop accumulated unknowns across bit iterations; its logs/fixture are retained accurately. Corrected fixture restores known operands before EACH X/Z injection: fourstate_per_bit/ contains this corrected6168-comparison PASS from independent follow-up unit oth-ubuntu-3930968-1792620905. No binary formal rerun was needed; production helper bytes identical.
+
+These source-bound helper proofs do not qualify the new mapped/native engine or reset context. Actual production address projection and fresh native mapping have independent pending receipts.
