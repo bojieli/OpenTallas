@@ -44,7 +44,11 @@ module ot_s81sl_lep_mu_ab_regional #(
     reg [NW-1:0] remain;
     reg pair_b, dispatch_fault;
     wire bad_copy=mu_c[0] && mu_c[1] && mu_c[12:3]==0;
+    `ifdef OT_S81SL_LEP_MUT_WRONGCOPY
+    wire selected_b=1'b0; // causal mutant: centre drops the static copy-B route
+`else
     wire selected_b=pair_b && remain!=0;
+`endif
     always @(posedge clk or negedge reset_c[0]) begin
       if(!reset_c[0]) begin remain<=0;pair_b<=0;dispatch_fault<=0;end
       else begin
