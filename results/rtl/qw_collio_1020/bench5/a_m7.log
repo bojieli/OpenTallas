@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       admits   519 GB (avail 476, growth 113, headroom 0, waiters 0/0 GB) load 202/128 running 34 disk 156 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src5
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src5
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src5
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src5
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc5 at 1.64 x cores
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-37506-1792578790 after 0 s
+MUT=7 PHI=0 ERR fault at 449 cdc 0000/0100 abort 00 cause 00000000/00000000
+MUT=7 PHI=0 ERR fault at 450 cdc 0000/0100 abort 10 cause 00000000/00000100
+MUT=7 PHI=0 ERR fault at 451 cdc 0000/0100 abort 10 cause 00000000/00000100
+MUT=7 PHI=0 ERR fault at 452 cdc 0000/0100 abort 10 cause 00000000/00000100
+MUT=7 PHI=0 ERR face 1 word 1 at 471 (sent 90, expected 471) data BAD
+MUT=7 PHI=0 ERR face 1 word 2 at 472 (sent 91, expected 472) data BAD
+MUT=7 PHI=0 ERR face 1 word 3 at 473 (sent 92, expected 473) data BAD
+MUT=7 PHI=0 ERR face 1 word 4 at 474 (sent 93, expected 474) data BAD
+MUT=7 PHI=0 ERR face 1 word 5 at 475 (sent 94, expected 475) data BAD
+MUT=7 PHI=0 ERR face 1 word 6 at 476 (sent 95, expected 476) data BAD
+MUT=7 PHI=0 COLL_FACE_BENCH PLAND=1 PLD=2 PLK=1 PPH=0 TOK_REG=1 FW=546 PHY=339 L=381 R=0 PEER_R=0 XS=0 PHI=0 words 240 240 got 240 240 latency 381 errors 453 faults 594 unexpected 0
+MUT=7 PHI=0 COLL_STATIC_FACE FAIL
+COLL_STATIC_FACE_BENCH FAIL MUT=7
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-37506-1792578790): exit 1

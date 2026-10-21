@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       admits   519 GB (avail 476, growth 113, headroom 0, waiters 0/0 GB) load 202/128 running 34 disk 156 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src5
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src5
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src5
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src5
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src5
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc5 at 1.64 x cores
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-38492-1792578791 after 0 s
+MUT=6 PHI=0 ERR fault at 93 cdc 0010/0000 abort 00 cause 00000000/00000000
+MUT=6 PHI=0 ERR fault at 94 cdc 0010/0000 abort 00 cause 00000000/00000000
+MUT=6 PHI=0 ERR fault at 95 cdc 0010/0000 abort 00 cause 00000000/00000000
+MUT=6 PHI=0 ERR fault at 96 cdc 0010/0000 abort 00 cause 00000000/00000000
+MUT=6 PHI=0 COLL_FACE_BENCH PLAND=1 PLD=2 PLK=1 PPH=0 TOK_REG=1 FW=546 PHY=339 L=381 R=0 PEER_R=0 XS=0 PHI=0 words 240 240 got 240 240 latency 381 errors 0 faults 950 unexpected 0
+MUT=6 PHI=0 COLL_STATIC_FACE FAIL
+COLL_STATIC_FACE_BENCH FAIL MUT=6
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-38492-1792578791): exit 1
