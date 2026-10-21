@@ -208,35 +208,57 @@ def layer_segments(dag, cyc, F2, extra):
 
 
 # ------------------------------------------------------------------------------------------------ single-user timeline
-def stage_items(st):
+def stage_items(st, dsplit=False):
     d = st['dense_layer']
     tail = [('X', l, b - a + 1) for l, a, b in st['experts'] if d is None or l < d]
+    if dsplit:
+        tail = [y for l in st.get('d_here', []) for y in [('D2', l, None)] + [x for x in tail if x[1] == l]] + \
+            [x for x in tail if x[1] not in st.get('d_here', [])]
     head = [('X', l, b - a + 1) for l, a, b in st['experts'] if d is not None and l >= d]
     return tail + ([('D', d, None)] if d is not None else []) + head
 
 
-def timeline(stages, seg, add, embed_end=0.0, alap=False):
+def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False):
     """forward-x single-user schedule: per stage [start, end] hold window, item log, chain end; + legacy-equivalent"""
     last_stage = {}
     for i, st in enumerate(stages):
         for l, a, b in st['experts']:
             if b == 383:
                 last_stage[l] = i
+    if dsplit:                                   # S81-SWEET --dsplit: D_l on the first downstream stage with l experts
+        seen = set()
+        for i, st in enumerate(stages):
+            st['d_here'] = []
+            for l, a, b in st['experts']:
+                if l not in seen and (st['dense_layer'] is None or l < st['dense_layer']):
+                    seen.add(l)
+                    st['d_here'].append(l)
+        assert seen == set(range(40)), 'dsplit: a layer has no expert stage after its dense stage'
     x_arr, p_arr, comb = {}, {}, {}          # per layer: x arrival at the current stage, partial arrival, combined out
     win, log = [], []
     links = []
     for i, st in enumerate(stages):
         cur, first = None, None
         part_out = {}
-        for kind, l, N in stage_items(st):
+        for kind, l, N in stage_items(st, dsplit):
+            if kind == 'D2':
+                s0 = max(cur or 0.0, x_arr[l])
+                x_arr[l] = s0 + seg[l]['D']
+                e0 = x_arr[l]
+                busy = [(s0 + a, s0 + b, k) for a, b, k in IVS.get((l, 'D'), [])]
+                log.append(dict(stage=st['stage'], item=f'ffn pre-expert L{l} (dsplit)', start=s0, end=e0, busy=busy))
+                first = s0 if first is None else first
+                cur = e0
+                continue
             if kind == 'D':
                 ready = comb.get(l - 1, embed_end) if l > 0 else embed_end
                 s0 = max(cur or 0.0, ready)
-                xl = s0 + seg[l]['A'] + seg[l]['D']
+                xl = s0 + seg[l]['A'] + (0.0 if dsplit else seg[l]['D'])
                 x_arr[l] = xl                               # x leaves now (forwarded to the next stage below)
                 e0 = xl
                 busy = [(s0 + a, s0 + b, k) for a, b, k in IVS.get((l, 'A'), [])] + \
-                       [(s0 + seg[l]['A'] + a, s0 + seg[l]['A'] + b, k) for a, b, k in IVS.get((l, 'D'), [])]
+                       ([] if dsplit else
+                        [(s0 + seg[l]['A'] + a, s0 + seg[l]['A'] + b, k) for a, b, k in IVS.get((l, 'D'), [])])
                 log.append(dict(stage=st['stage'], item=f'dense L{l}', start=s0, end=e0, busy=busy))
             else:
                 R = seg[l]['E'] * min(6, N) / 6.0
@@ -325,11 +347,34 @@ def check(model, users, P, col):
     return bad, {r: len(v) for r, v in by.items()}
 
 
+def assign_k(shifts, P, win, k):
+    """S81-SWEET: k >= 3 copies of one stage: users round-robin over the copies in shift order (latency user on A);
+    every circular gap on a copy must be >= the window (same rule as LEG.copy_ok, k labels)"""
+    labels = 'ABCDEFGH'[:k]
+    order = sorted(range(len(shifts)), key=lambda u: shifts[u])
+    pos = order.index(0)
+    seq = order[pos:] + order[:pos]
+    for rot in range(len(seq)):                       # where the short wrap gap falls when n % k != 0
+        col = {u: labels[(i if i < len(seq) - rot else i + 1) % k] for i, u in enumerate(seq)} if rot else \
+            {u: labels[i % k] for i, u in enumerate(seq)}
+        ok = True
+        for cp in labels:
+            us = sorted(shifts[u] for u in col if col[u] == cp)
+            for i, x in enumerate(us):
+                nxt = us[(i + 1) % len(us)] + (P if i + 1 == len(us) else 0)
+                if (len(us) > 1 and nxt - x < win) or (len(us) == 1 and P < win):
+                    ok = False
+        if ok and col[0] == 'A':
+            return col
+    return None
+
+
 def colour(model, shifts, P, mode):
     col = {}
     for st in model['stages']:
         if st['copies'] > 1:
-            c = LEG.assign_copies(shifts, P, st['step'] if mode == 'mtp' else st['occ'])
+            w = st['step'] if mode == 'mtp' else st['occ']
+            c = LEG.assign_copies(shifts, P, w) if st['copies'] == 2 else assign_k(shifts, P, w, st['copies'])
             if c is None:
                 return None, st['stage']
             col[st['stage']] = c
@@ -575,7 +620,7 @@ def calendar3(model, mode, N=None, users=None, cap=2):
 
 
 # ------------------------------------------------------------------------------------------------ build
-def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1):
+def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, dsplit=False):
     mp = json.loads(Path(mapp).read_text())
     sha = hashlib.sha256(Path(mapp).read_bytes()).hexdigest()
     stages = mp['stages']
@@ -591,7 +636,7 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1):
     eadd = [cnode[n['id']] for n in dag['nodes'] if n.get('op') == 'eng.add']
     add = max(eadd) if eadd else 120.0
     embed = sum(cnode[n['id']] for n in dag['nodes'] if n.get('op') == 'embed')
-    win, log, links, chain, legacy = timeline(stages, seg, add, embed, alap)
+    win, log, links, chain, legacy = timeline(stages, seg, add, embed, alap, dsplit)
     # token: composer T + cal2 structural + 20 added hops + the forward-x / reservation change of the chain
     s_ar = sum(cal2_delta(n, F2) for n in dag['nodes'] if n.get('critical'))
     dagm, cycm = dags['mtp']
@@ -605,7 +650,7 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1):
         occ = math.ceil(b - a)
         sc = scan.get(st['dense_layer'], 0.0) if st['dense_layer'] is not None else 0.0
         st_rec.append(dict(stage=st['stage'], dense_layer=st['dense_layer'], experts=st['experts'],
-                           copies=2 if st['copy_b'] else 1, t=math.floor(a), occ=occ,
+                           copies=int(st.get('copies') or (2 if st['copy_b'] else 1)), t=math.floor(a), occ=occ,
                            step=math.ceil(6 * (b - a) - 5 * sc), scan=round(sc, 1)))
     wave_old = sum(cycm[n['id']] for n in dagm['nodes'] if n.get('op') == 'wave.busy' and n.get('critical'))
     wave_new = 5 * max(s['occ'] - s['scan'] for s in st_rec)

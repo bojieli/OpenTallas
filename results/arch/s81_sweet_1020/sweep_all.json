@@ -1,0 +1,3744 @@
+[
+ {
+  "variant": "redeal",
+  "stages": 141,
+  "dies": 648,
+  "dense_balance": 1.08,
+  "bound_model": 24688,
+  "expert_stages_min": 101,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1010.1,
+   "agg": 48486,
+   "per_die": 74.82,
+   "period": 1187980,
+   "max_occ": 24688,
+   "mean_occ": 9127,
+   "balance": 2.71,
+   "top": "R050 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3035.1,
+   "agg": 30351,
+   "per_die": 46.84,
+   "period": 1644376,
+   "max_occ": 147976,
+   "mean_occ": 54234,
+   "balance": 2.73,
+   "top": "R050 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R007: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 142,
+  "dies": 652,
+  "dense_balance": 1.06,
+  "bound_model": 24469,
+  "expert_stages_min": 102,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1009.2,
+   "agg": 48441,
+   "per_die": 74.3,
+   "period": 1189068,
+   "max_occ": 24470,
+   "mean_occ": 9125,
+   "balance": 2.68,
+   "top": "R072 L20 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3037.2,
+   "agg": 30372,
+   "per_die": 46.58,
+   "period": 1643208,
+   "max_occ": 146618,
+   "mean_occ": 54224,
+   "balance": 2.7,
+   "top": "R007 L2 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R007: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 143,
+  "dies": 656,
+  "dense_balance": 1.06,
+  "bound_model": 24366,
+  "expert_stages_min": 103,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1008.3,
+   "agg": 48397,
+   "per_die": 73.78,
+   "period": 1190160,
+   "max_occ": 24366,
+   "mean_occ": 9096,
+   "balance": 2.68,
+   "top": "R014 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3038.3,
+   "agg": 30383,
+   "per_die": 46.32,
+   "period": 1642644,
+   "max_occ": 146194,
+   "mean_occ": 54055,
+   "balance": 2.7,
+   "top": "R061 L17 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R007: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 157,
+  "dies": 712,
+  "dense_balance": 1.14,
+  "bound_model": 24143,
+  "expert_stages_min": 113,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 48,
+   "per_user": 996.6,
+   "agg": 47836,
+   "per_die": 67.19,
+   "period": 1204108,
+   "max_occ": 24144,
+   "mean_occ": 8278,
+   "balance": 2.92,
+   "top": "R089 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3028.5,
+   "agg": 30285,
+   "per_die": 42.54,
+   "period": 1647964,
+   "max_occ": 144861,
+   "mean_occ": 49195,
+   "balance": 2.94,
+   "top": "R089 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 158,
+  "dies": 716,
+  "dense_balance": 1.14,
+  "bound_model": 23434,
+  "expert_stages_min": 118,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 50,
+   "per_user": 995.8,
+   "agg": 49791,
+   "per_die": 69.54,
+   "period": 1205032,
+   "max_occ": 23434,
+   "mean_occ": 8133,
+   "balance": 2.88,
+   "top": "R032 L8 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 52,
+     "result": "FAULT",
+     "why": "R032: no A/B colouring"
+    },
+    {
+     "users": 51,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3026.8,
+   "agg": 30268,
+   "per_die": 42.27,
+   "period": 1648892,
+   "max_occ": 140452,
+   "mean_occ": 48328,
+   "balance": 2.91,
+   "top": "R032 L8 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 159,
+  "dies": 720,
+  "dense_balance": 1.13,
+  "bound_model": 22944,
+  "expert_stages_min": 119,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 37,
+  "ar": {
+   "users": 52,
+   "per_user": 995.1,
+   "agg": 51743,
+   "per_die": 71.87,
+   "period": 1205960,
+   "max_occ": 22944,
+   "mean_occ": 8045,
+   "balance": 2.85,
+   "top": "R057 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 52,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3034.1,
+   "agg": 30341,
+   "per_die": 42.14,
+   "period": 1644916,
+   "max_occ": 137512,
+   "mean_occ": 47802,
+   "balance": 2.88,
+   "top": "R057 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "FAULT",
+     "why": "R057: no A/B colouring"
+    },
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 160,
+  "dies": 724,
+  "dense_balance": 1.13,
+  "bound_model": 22944,
+  "expert_stages_min": 119,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 37,
+  "ar": {
+   "users": 52,
+   "per_user": 994.2,
+   "agg": 51696,
+   "per_die": 71.4,
+   "period": 1207048,
+   "max_occ": 22944,
+   "mean_occ": 8017,
+   "balance": 2.86,
+   "top": "R058 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 52,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3032.1,
+   "agg": 30321,
+   "per_die": 41.88,
+   "period": 1646008,
+   "max_occ": 137512,
+   "mean_occ": 47637,
+   "balance": 2.89,
+   "top": "R058 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "FAULT",
+     "why": "R058: no A/B colouring"
+    },
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 161,
+  "dies": 728,
+  "dense_balance": 1.13,
+  "bound_model": 22944,
+  "expert_stages_min": 119,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 37,
+  "ar": {
+   "users": 52,
+   "per_user": 993.3,
+   "agg": 51650,
+   "per_die": 70.95,
+   "period": 1208140,
+   "max_occ": 22944,
+   "mean_occ": 7989,
+   "balance": 2.87,
+   "top": "R059 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 53,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 52,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3030.1,
+   "agg": 30301,
+   "per_die": 41.62,
+   "period": 1647096,
+   "max_occ": 137512,
+   "mean_occ": 47474,
+   "balance": 2.9,
+   "top": "R059 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "FAULT",
+     "why": "R059: no A/B colouring"
+    },
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 162,
+  "dies": 732,
+  "dense_balance": 1.13,
+  "bound_model": 22944,
+  "expert_stages_min": 119,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 37,
+  "ar": {
+   "users": 52,
+   "per_user": 992.4,
+   "agg": 51603,
+   "per_die": 70.5,
+   "period": 1209228,
+   "max_occ": 22944,
+   "mean_occ": 7962,
+   "balance": 2.88,
+   "top": "R060 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 53,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 52,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3028.1,
+   "agg": 30281,
+   "per_die": 41.37,
+   "period": 1648188,
+   "max_occ": 137512,
+   "mean_occ": 47313,
+   "balance": 2.91,
+   "top": "R060 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "FAULT",
+     "why": "R060: no A/B colouring"
+    },
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 163,
+  "dies": 736,
+  "dense_balance": 1.13,
+  "bound_model": 22944,
+  "expert_stages_min": 119,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 37,
+  "ar": {
+   "users": 52,
+   "per_user": 991.5,
+   "agg": 51557,
+   "per_die": 70.05,
+   "period": 1210320,
+   "max_occ": 22944,
+   "mean_occ": 7935,
+   "balance": 2.89,
+   "top": "R061 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 53,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 52,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3026.1,
+   "agg": 30261,
+   "per_die": 41.12,
+   "period": 1649276,
+   "max_occ": 137512,
+   "mean_occ": 47154,
+   "balance": 2.92,
+   "top": "R061 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "FAULT",
+     "why": "R061: no A/B colouring"
+    },
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 140,
+  "dies": 660,
+  "dense_balance": 1.1,
+  "bound_model": 24366,
+  "expert_stages_min": 100,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1011.0,
+   "agg": 48527,
+   "per_die": 73.53,
+   "period": 1186972,
+   "max_occ": 24366,
+   "mean_occ": 8929,
+   "balance": 2.73,
+   "top": "R014 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 2989.5,
+   "agg": 29895,
+   "per_die": 45.3,
+   "period": 1669436,
+   "max_occ": 146194,
+   "mean_occ": 53082,
+   "balance": 2.75,
+   "top": "R059 L17 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R007: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 144,
+  "dies": 676,
+  "dense_balance": 1.09,
+  "bound_model": 24298,
+  "expert_stages_min": 101,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1007.1,
+   "agg": 48343,
+   "per_die": 71.51,
+   "period": 1191496,
+   "max_occ": 24299,
+   "mean_occ": 8835,
+   "balance": 2.75,
+   "top": "R021 L5 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 2981.4,
+   "agg": 29814,
+   "per_die": 44.1,
+   "period": 1673960,
+   "max_occ": 145791,
+   "mean_occ": 52528,
+   "balance": 2.78,
+   "top": "R021 L5 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R031: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 148,
+  "dies": 692,
+  "dense_balance": 1.09,
+  "bound_model": 24143,
+  "expert_stages_min": 108,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1003.5,
+   "agg": 48166,
+   "per_die": 69.6,
+   "period": 1195856,
+   "max_occ": 24144,
+   "mean_occ": 8651,
+   "balance": 2.79,
+   "top": "R079 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R007: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 2973.7,
+   "agg": 29737,
+   "per_die": 42.97,
+   "period": 1678320,
+   "max_occ": 144861,
+   "mean_occ": 51440,
+   "balance": 2.82,
+   "top": "R079 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R030: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 152,
+  "dies": 708,
+  "dense_balance": 1.08,
+  "bound_model": 22790,
+  "expert_stages_min": 112,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1000.0,
+   "agg": 47998,
+   "per_die": 67.79,
+   "period": 1200052,
+   "max_occ": 22791,
+   "mean_occ": 8249,
+   "balance": 2.76,
+   "top": "R004 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 52,
+     "result": "FAULT",
+     "why": "R007: no A/B colouring"
+    },
+    {
+     "users": 51,
+     "result": "FAULT",
+     "why": "R091: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2966.3,
+   "agg": 35595,
+   "per_die": 50.28,
+   "period": 1682516,
+   "max_occ": 136743,
+   "mean_occ": 49037,
+   "balance": 2.79,
+   "top": "R004 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 153,
+  "dies": 712,
+  "dense_balance": 1.03,
+  "bound_model": 19302,
+  "expert_stages_min": 113,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 60,
+   "per_user": 1000.9,
+   "agg": 60054,
+   "per_die": 84.35,
+   "period": 1198928,
+   "max_occ": 19303,
+   "mean_occ": 7885,
+   "balance": 2.45,
+   "top": "R004 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 62,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 61,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2968.3,
+   "agg": 35619,
+   "per_die": 50.03,
+   "period": 1681392,
+   "max_occ": 115815,
+   "mean_occ": 46855,
+   "balance": 2.47,
+   "top": "R004 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 154,
+  "dies": 716,
+  "dense_balance": 1.03,
+  "bound_model": 19302,
+  "expert_stages_min": 113,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 60,
+   "per_user": 1000.0,
+   "agg": 59999,
+   "per_die": 83.8,
+   "period": 1200016,
+   "max_occ": 19303,
+   "mean_occ": 7857,
+   "balance": 2.46,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 62,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 61,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2966.3,
+   "agg": 35596,
+   "per_die": 49.72,
+   "period": 1682480,
+   "max_occ": 115815,
+   "mean_occ": 46689,
+   "balance": 2.48,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 155,
+  "dies": 720,
+  "dense_balance": 1.03,
+  "bound_model": 19302,
+  "expert_stages_min": 113,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 60,
+   "per_user": 999.1,
+   "agg": 59945,
+   "per_die": 83.26,
+   "period": 1201108,
+   "max_occ": 19303,
+   "mean_occ": 7829,
+   "balance": 2.47,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 62,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 61,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2964.4,
+   "agg": 35573,
+   "per_die": 49.41,
+   "period": 1683572,
+   "max_occ": 115815,
+   "mean_occ": 46526,
+   "balance": 2.49,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 156,
+  "dies": 724,
+  "dense_balance": 1.03,
+  "bound_model": 19302,
+  "expert_stages_min": 113,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 60,
+   "per_user": 998.2,
+   "agg": 59890,
+   "per_die": 82.72,
+   "period": 1202196,
+   "max_occ": 19303,
+   "mean_occ": 7802,
+   "balance": 2.47,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 62,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 61,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2962.5,
+   "agg": 35550,
+   "per_die": 49.1,
+   "period": 1684660,
+   "max_occ": 115815,
+   "mean_occ": 46365,
+   "balance": 2.5,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 164,
+  "dies": 756,
+  "dense_balance": 1.03,
+  "bound_model": 19302,
+  "expert_stages_min": 113,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 60,
+   "per_user": 991.0,
+   "agg": 59459,
+   "per_die": 78.65,
+   "period": 1210916,
+   "max_occ": 19303,
+   "mean_occ": 7595,
+   "balance": 2.54,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 62,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 61,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2947.2,
+   "agg": 35367,
+   "per_die": 46.78,
+   "period": 1693380,
+   "max_occ": 115815,
+   "mean_occ": 45149,
+   "balance": 2.57,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 172,
+  "dies": 788,
+  "dense_balance": 1.03,
+  "bound_model": 19302,
+  "expert_stages_min": 113,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 60,
+   "per_user": 983.9,
+   "agg": 59034,
+   "per_die": 74.92,
+   "period": 1219636,
+   "max_occ": 19303,
+   "mean_occ": 7408,
+   "balance": 2.61,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 63,
+     "result": "FAULT",
+     "why": "R111: no A/B colouring"
+    },
+    {
+     "users": 62,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2932.1,
+   "agg": 35186,
+   "per_die": 44.65,
+   "period": 1702100,
+   "max_occ": 115815,
+   "mean_occ": 44045,
+   "balance": 2.63,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 180,
+  "dies": 820,
+  "dense_balance": 1.03,
+  "bound_model": 19302,
+  "expert_stages_min": 113,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 60,
+   "per_user": 976.9,
+   "agg": 58615,
+   "per_die": 71.48,
+   "period": 1228356,
+   "max_occ": 19303,
+   "mean_occ": 7237,
+   "balance": 2.67,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 63,
+     "result": "FAULT",
+     "why": "R116: no A/B colouring"
+    },
+    {
+     "users": 62,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2917.2,
+   "agg": 35006,
+   "per_die": 42.69,
+   "period": 1710820,
+   "max_occ": 115815,
+   "mean_occ": 43039,
+   "balance": 2.69,
+   "top": "R005 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3",
+  "stages": 200,
+  "dies": 900,
+  "dense_balance": 1.03,
+  "bound_model": 19302,
+  "expert_stages_min": 113,
+  "max_fill_pct": 99.02,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 60,
+   "per_user": 959.9,
+   "agg": 57593,
+   "per_die": 63.99,
+   "period": 1250156,
+   "max_occ": 19303,
+   "mean_occ": 6871,
+   "balance": 2.81,
+   "top": "R006 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 64,
+     "result": "FAULT",
+     "why": "R012: no A/B colouring"
+    },
+    {
+     "users": 63,
+     "result": "FAULT",
+     "why": "R123: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2880.5,
+   "agg": 34566,
+   "per_die": 38.41,
+   "period": 1732620,
+   "max_occ": 115815,
+   "mean_occ": 40877,
+   "balance": 2.83,
+   "top": "R006 L1 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R012: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R012: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 140,
+  "dies": 664,
+  "dense_balance": 1.1,
+  "bound_model": 24298,
+  "expert_stages_min": 100,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1010.8,
+   "agg": 48517,
+   "per_die": 73.07,
+   "period": 1187216,
+   "max_occ": 24299,
+   "mean_occ": 8919,
+   "balance": 2.72,
+   "top": "R010 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 2989.1,
+   "agg": 29891,
+   "per_die": 45.02,
+   "period": 1669680,
+   "max_occ": 145791,
+   "mean_occ": 53019,
+   "balance": 2.75,
+   "top": "R010 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R003: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 144,
+  "dies": 680,
+  "dense_balance": 1.1,
+  "bound_model": 24298,
+  "expert_stages_min": 100,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1007.1,
+   "agg": 48339,
+   "per_die": 71.09,
+   "period": 1191576,
+   "max_occ": 24299,
+   "mean_occ": 8770,
+   "balance": 2.77,
+   "top": "R013 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 2981.3,
+   "agg": 29813,
+   "per_die": 43.84,
+   "period": 1674040,
+   "max_occ": 145791,
+   "mean_occ": 52141,
+   "balance": 2.8,
+   "top": "R013 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 148,
+  "dies": 696,
+  "dense_balance": 1.09,
+  "bound_model": 24143,
+  "expert_stages_min": 108,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1003.4,
+   "agg": 48163,
+   "per_die": 69.2,
+   "period": 1195936,
+   "max_occ": 24144,
+   "mean_occ": 8600,
+   "balance": 2.81,
+   "top": "R079 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R003: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 2973.5,
+   "agg": 29735,
+   "per_die": 42.72,
+   "period": 1678400,
+   "max_occ": 144861,
+   "mean_occ": 51134,
+   "balance": 2.83,
+   "top": "R079 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R003: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 149,
+  "dies": 700,
+  "dense_balance": 1.09,
+  "bound_model": 24143,
+  "expert_stages_min": 108,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1002.5,
+   "agg": 48119,
+   "per_die": 68.74,
+   "period": 1197028,
+   "max_occ": 24144,
+   "mean_occ": 8567,
+   "balance": 2.82,
+   "top": "R080 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 2971.6,
+   "agg": 29716,
+   "per_die": 42.45,
+   "period": 1679492,
+   "max_occ": 144861,
+   "mean_occ": 50935,
+   "balance": 2.84,
+   "top": "R080 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 150,
+  "dies": 704,
+  "dense_balance": 1.09,
+  "bound_model": 24143,
+  "expert_stages_min": 108,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1001.6,
+   "agg": 48075,
+   "per_die": 68.29,
+   "period": 1198116,
+   "max_occ": 24144,
+   "mean_occ": 8533,
+   "balance": 2.83,
+   "top": "R081 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 2969.7,
+   "agg": 29697,
+   "per_die": 42.18,
+   "period": 1680580,
+   "max_occ": 144861,
+   "mean_occ": 50738,
+   "balance": 2.86,
+   "top": "R081 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 151,
+  "dies": 708,
+  "dense_balance": 1.09,
+  "bound_model": 24143,
+  "expert_stages_min": 108,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1000.7,
+   "agg": 48032,
+   "per_die": 67.84,
+   "period": 1199208,
+   "max_occ": 24144,
+   "mean_occ": 8500,
+   "balance": 2.84,
+   "top": "R082 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 2967.8,
+   "agg": 29678,
+   "per_die": 41.92,
+   "period": 1681672,
+   "max_occ": 144861,
+   "mean_occ": 50544,
+   "balance": 2.87,
+   "top": "R082 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 152,
+  "dies": 712,
+  "dense_balance": 1.03,
+  "bound_model": 19152,
+  "expert_stages_min": 112,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 60,
+   "per_user": 1001.7,
+   "agg": 60104,
+   "per_die": 84.42,
+   "period": 1197920,
+   "max_occ": 19153,
+   "mean_occ": 7867,
+   "balance": 2.43,
+   "top": "R015 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 62,
+     "result": "FAULT",
+     "why": "R007: no A/B colouring"
+    },
+    {
+     "users": 61,
+     "result": "FAULT",
+     "why": "R003: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2970.0,
+   "agg": 35640,
+   "per_die": 50.06,
+   "period": 1680384,
+   "max_occ": 114916,
+   "mean_occ": 46747,
+   "balance": 2.46,
+   "top": "R065 L17 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R007: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R003: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 156,
+  "dies": 728,
+  "dense_balance": 1.03,
+  "bound_model": 19152,
+  "expert_stages_min": 112,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 60,
+   "per_user": 998.1,
+   "agg": 59886,
+   "per_die": 82.26,
+   "period": 1202280,
+   "max_occ": 19153,
+   "mean_occ": 7757,
+   "balance": 2.47,
+   "top": "R019 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 62,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 61,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2962.3,
+   "agg": 35548,
+   "per_die": 48.83,
+   "period": 1684744,
+   "max_occ": 114916,
+   "mean_occ": 46098,
+   "balance": 2.49,
+   "top": "R069 L17 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 164,
+  "dies": 760,
+  "dense_balance": 1.05,
+  "bound_model": 19086,
+  "expert_stages_min": 119,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 35,
+  "ar": {
+   "users": 60,
+   "per_user": 991.3,
+   "agg": 59475,
+   "per_die": 78.26,
+   "period": 1210588,
+   "max_occ": 19086,
+   "mean_occ": 7437,
+   "balance": 2.57,
+   "top": "R014 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 63,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 62,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2947.8,
+   "agg": 35374,
+   "per_die": 46.54,
+   "period": 1693052,
+   "max_occ": 114513,
+   "mean_occ": 44198,
+   "balance": 2.59,
+   "top": "R014 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 172,
+  "dies": 792,
+  "dense_balance": 1.09,
+  "bound_model": 18997,
+  "expert_stages_min": 127,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 28,
+  "ar": {
+   "users": 60,
+   "per_user": 984.6,
+   "agg": 59078,
+   "per_die": 74.59,
+   "period": 1218736,
+   "max_occ": 18998,
+   "mean_occ": 7108,
+   "balance": 2.67,
+   "top": "R104 L22 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 64,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 63,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2933.7,
+   "agg": 35204,
+   "per_die": 44.45,
+   "period": 1701200,
+   "max_occ": 113985,
+   "mean_occ": 42247,
+   "balance": 2.7,
+   "top": "R104 L22 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 13,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 180,
+  "dies": 824,
+  "dense_balance": 1.11,
+  "bound_model": 18930,
+  "expert_stages_min": 134,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 24,
+  "ar": {
+   "users": 60,
+   "per_user": 977.9,
+   "agg": 58674,
+   "per_die": 71.21,
+   "period": 1227128,
+   "max_occ": 18931,
+   "mean_occ": 6862,
+   "balance": 2.76,
+   "top": "R102 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 64,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 63,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2919.3,
+   "agg": 35032,
+   "per_die": 42.51,
+   "period": 1709592,
+   "max_occ": 113583,
+   "mean_occ": 40787,
+   "balance": 2.78,
+   "top": "R102 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "c3L1",
+  "stages": 200,
+  "dies": 904,
+  "dense_balance": 1.02,
+  "bound_model": 15664,
+  "expert_stages_min": 152,
+  "max_fill_pct": 91.6,
+  "dense_with_experts": 7,
+  "ar": {
+   "users": 78,
+   "per_user": 962.3,
+   "agg": 75063,
+   "per_die": 83.03,
+   "period": 1246960,
+   "max_occ": 15665,
+   "mean_occ": 6249,
+   "balance": 2.51,
+   "top": "R020 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 79,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 78,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2951.7,
+   "agg": 35421,
+   "per_die": 39.18,
+   "period": 1690816,
+   "max_occ": 93987,
+   "mean_occ": 37150,
+   "balance": 2.53,
+   "top": "R020 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "ds",
+  "stages": 140,
+  "infeasible": "AssertionError()"
+ },
+ {
+  "variant": "ds",
+  "stages": 144,
+  "infeasible": "AssertionError()"
+ },
+ {
+  "variant": "ds",
+  "stages": 148,
+  "infeasible": "AssertionError()"
+ },
+ {
+  "variant": "ds",
+  "stages": 152,
+  "infeasible": "AssertionError()"
+ },
+ {
+  "variant": "ds",
+  "stages": 156,
+  "infeasible": "AssertionError()"
+ },
+ {
+  "variant": "ds",
+  "stages": 164,
+  "dies": 740,
+  "dense_balance": 1.25,
+  "bound_model": 22064,
+  "expert_stages_min": 124,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 36,
+  "ar": {
+   "users": 54,
+   "per_user": 991.7,
+   "agg": 53553,
+   "per_die": 72.37,
+   "period": 1210016,
+   "max_occ": 22064,
+   "mean_occ": 7778,
+   "balance": 2.84,
+   "top": "R008 L2 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 56,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 55,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 3042.9,
+   "agg": 36514,
+   "per_die": 49.34,
+   "period": 1640168,
+   "max_occ": 132226,
+   "mean_occ": 46213,
+   "balance": 2.86,
+   "top": "R008 L2 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "ds",
+  "stages": 172,
+  "dies": 772,
+  "dense_balance": 1.22,
+  "bound_model": 21418,
+  "expert_stages_min": 126,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 34,
+  "ar": {
+   "users": 56,
+   "per_user": 984.8,
+   "agg": 55147,
+   "per_die": 71.43,
+   "period": 1218572,
+   "max_occ": 21418,
+   "mean_occ": 7556,
+   "balance": 2.83,
+   "top": "R066 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 68,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 67,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 3039.0,
+   "agg": 36468,
+   "per_die": 47.24,
+   "period": 1642264,
+   "max_occ": 128352,
+   "mean_occ": 44902,
+   "balance": 2.86,
+   "top": "R066 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R040: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "ds",
+  "stages": 180,
+  "dies": 804,
+  "dense_balance": 1.22,
+  "bound_model": 21418,
+  "expert_stages_min": 126,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 34,
+  "ar": {
+   "users": 56,
+   "per_user": 977.8,
+   "agg": 54755,
+   "per_die": 68.1,
+   "period": 1227292,
+   "max_occ": 21418,
+   "mean_occ": 7379,
+   "balance": 2.9,
+   "top": "R070 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 68,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 67,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 3022.9,
+   "agg": 36275,
+   "per_die": 45.12,
+   "period": 1650984,
+   "max_occ": 128352,
+   "mean_occ": 43858,
+   "balance": 2.93,
+   "top": "R070 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R040: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "ds",
+  "stages": 200,
+  "dies": 884,
+  "dense_balance": 1.22,
+  "bound_model": 21418,
+  "expert_stages_min": 126,
+  "max_fill_pct": 85.25,
+  "dense_with_experts": 34,
+  "ar": {
+   "users": 58,
+   "per_user": 960.7,
+   "agg": 55720,
+   "per_die": 63.03,
+   "period": 1249092,
+   "max_occ": 21418,
+   "mean_occ": 6998,
+   "balance": 3.06,
+   "top": "R070 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 70,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 69,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2983.5,
+   "agg": 35802,
+   "per_die": 40.5,
+   "period": 1672784,
+   "max_occ": 128352,
+   "mean_occ": 41615,
+   "balance": 3.08,
+   "top": "R070 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R040: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 140,
+  "infeasible": "AssertionError()"
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 144,
+  "infeasible": "AssertionError()"
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 148,
+  "infeasible": "AssertionError()"
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 152,
+  "infeasible": "AssertionError()"
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 156,
+  "infeasible": "AssertionError()"
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 164,
+  "dies": 760,
+  "dense_balance": 1.06,
+  "bound_model": 17824,
+  "expert_stages_min": 121,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 66,
+   "per_user": 991.5,
+   "agg": 65440,
+   "per_die": 86.11,
+   "period": 1210260,
+   "max_occ": 17825,
+   "mean_occ": 7542,
+   "balance": 2.36,
+   "top": "R019 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 67,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 66,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 3006.5,
+   "agg": 36078,
+   "per_die": 47.47,
+   "period": 1660020,
+   "max_occ": 106946,
+   "mean_occ": 44828,
+   "balance": 2.39,
+   "top": "R019 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 172,
+  "dies": 792,
+  "dense_balance": 1.11,
+  "bound_model": 17757,
+  "expert_stages_min": 128,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 32,
+  "ar": {
+   "users": 66,
+   "per_user": 984.9,
+   "agg": 65003,
+   "per_die": 82.07,
+   "period": 1218408,
+   "max_occ": 17758,
+   "mean_occ": 7212,
+   "balance": 2.46,
+   "top": "R015 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 68,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 67,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2991.8,
+   "agg": 35902,
+   "per_die": 45.33,
+   "period": 1668164,
+   "max_occ": 106544,
+   "mean_occ": 42867,
+   "balance": 2.49,
+   "top": "R015 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 180,
+  "dies": 824,
+  "dense_balance": 1.19,
+  "bound_model": 17669,
+  "expert_stages_min": 136,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 24,
+  "ar": {
+   "users": 66,
+   "per_user": 978.4,
+   "agg": 64575,
+   "per_die": 78.37,
+   "period": 1226472,
+   "max_occ": 17670,
+   "mean_occ": 6891,
+   "balance": 2.56,
+   "top": "R107 L22 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 69,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 68,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2977.4,
+   "agg": 35729,
+   "per_die": 43.36,
+   "period": 1676228,
+   "max_occ": 106015,
+   "mean_occ": 40962,
+   "balance": 2.59,
+   "top": "R107 L22 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 184,
+  "dies": 840,
+  "dense_balance": 1.25,
+  "bound_model": 17602,
+  "expert_stages_min": 142,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 18,
+  "ar": {
+   "users": 66,
+   "per_user": 975.3,
+   "agg": 64372,
+   "per_die": 76.63,
+   "period": 1230340,
+   "max_occ": 17603,
+   "mean_occ": 6703,
+   "balance": 2.63,
+   "top": "R101 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 69,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 68,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2970.5,
+   "agg": 35647,
+   "per_die": 42.44,
+   "period": 1680096,
+   "max_occ": 105613,
+   "mean_occ": 39839,
+   "balance": 2.65,
+   "top": "R101 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 188,
+  "dies": 856,
+  "dense_balance": 1.25,
+  "bound_model": 17602,
+  "expert_stages_min": 142,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 18,
+  "ar": {
+   "users": 66,
+   "per_user": 971.9,
+   "agg": 64145,
+   "per_die": 74.94,
+   "period": 1234700,
+   "max_occ": 17603,
+   "mean_occ": 6636,
+   "balance": 2.65,
+   "top": "R105 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 70,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 69,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2962.9,
+   "agg": 35554,
+   "per_die": 41.54,
+   "period": 1684456,
+   "max_occ": 105613,
+   "mean_occ": 39447,
+   "balance": 2.68,
+   "top": "R105 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 192,
+  "dies": 872,
+  "dense_balance": 1.23,
+  "bound_model": 15870,
+  "expert_stages_min": 152,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 8,
+  "ar": {
+   "users": 78,
+   "per_user": 969.1,
+   "agg": 75591,
+   "per_die": 86.69,
+   "period": 1238240,
+   "max_occ": 15870,
+   "mean_occ": 6404,
+   "balance": 2.48,
+   "top": "R096 L20 x3",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 98,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 97,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2978.8,
+   "agg": 35745,
+   "per_die": 40.99,
+   "period": 1675456,
+   "max_occ": 90978,
+   "mean_occ": 38064,
+   "balance": 2.39,
+   "top": "R037 L8 x3",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 196,
+  "dies": 888,
+  "dense_balance": 1.13,
+  "bound_model": 14393,
+  "expert_stages_min": 156,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 4,
+  "ar": {
+   "users": 84,
+   "per_user": 966.0,
+   "agg": 81142,
+   "per_die": 91.38,
+   "period": 1242272,
+   "max_occ": 14393,
+   "mean_occ": 6340,
+   "balance": 2.27,
+   "top": "R176 L36 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 98,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 97,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2995.7,
+   "agg": 35949,
+   "per_die": 40.48,
+   "period": 1665964,
+   "max_occ": 85568,
+   "mean_occ": 37687,
+   "balance": 2.27,
+   "top": "R069 L14 x3",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R039: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc3L1",
+  "stages": 200,
+  "dies": 904,
+  "dense_balance": 1.14,
+  "bound_model": 14278,
+  "expert_stages_min": 159,
+  "max_fill_pct": 85.25,
+  "dense_with_experts": 1,
+  "ar": {
+   "users": 84,
+   "per_user": 962.8,
+   "agg": 80874,
+   "per_die": 89.46,
+   "period": 1246384,
+   "max_occ": 14279,
+   "mean_occ": 6270,
+   "balance": 2.28,
+   "top": "R070 L14 x3",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 98,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 97,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2988.4,
+   "agg": 35860,
+   "per_die": 39.67,
+   "period": 1670080,
+   "max_occ": 85568,
+   "mean_occ": 37275,
+   "balance": 2.3,
+   "top": "R070 L14 x3",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "FAULT",
+     "why": "R040: no A/B colouring"
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc4L1",
+  "stages": 164,
+  "dies": 776,
+  "dense_balance": 1.08,
+  "bound_model": 17824,
+  "expert_stages_min": 121,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 66,
+   "per_user": 991.5,
+   "agg": 65440,
+   "per_die": 84.33,
+   "period": 1210260,
+   "max_occ": 17825,
+   "mean_occ": 7448,
+   "balance": 2.39,
+   "top": "R019 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 67,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 66,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 14,
+   "per_user": 3006.5,
+   "agg": 42091,
+   "per_die": 54.24,
+   "period": 1660020,
+   "max_occ": 106946,
+   "mean_occ": 44279,
+   "balance": 2.42,
+   "top": "R019 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc4L1",
+  "stages": 172,
+  "dies": 808,
+  "dense_balance": 1.14,
+  "bound_model": 17757,
+  "expert_stages_min": 128,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 32,
+  "ar": {
+   "users": 68,
+   "per_user": 984.9,
+   "agg": 66973,
+   "per_die": 82.89,
+   "period": 1218408,
+   "max_occ": 17758,
+   "mean_occ": 7122,
+   "balance": 2.49,
+   "top": "R015 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 68,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 14,
+   "per_user": 2991.8,
+   "agg": 41885,
+   "per_die": 51.84,
+   "period": 1668164,
+   "max_occ": 106544,
+   "mean_occ": 42344,
+   "balance": 2.52,
+   "top": "R015 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc4L1",
+  "stages": 180,
+  "dies": 840,
+  "dense_balance": 1.22,
+  "bound_model": 17669,
+  "expert_stages_min": 136,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 24,
+  "ar": {
+   "users": 68,
+   "per_user": 978.4,
+   "agg": 66532,
+   "per_die": 79.2,
+   "period": 1226472,
+   "max_occ": 17670,
+   "mean_occ": 6806,
+   "balance": 2.6,
+   "top": "R107 L22 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 69,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 68,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 14,
+   "per_user": 2977.4,
+   "agg": 41684,
+   "per_die": 49.62,
+   "period": 1676228,
+   "max_occ": 106015,
+   "mean_occ": 40462,
+   "balance": 2.62,
+   "top": "R107 L22 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc4L1",
+  "stages": 192,
+  "dies": 888,
+  "dense_balance": 1.15,
+  "bound_model": 14393,
+  "expert_stages_min": 152,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 8,
+  "ar": {
+   "users": 84,
+   "per_user": 969.1,
+   "agg": 81406,
+   "per_die": 91.67,
+   "period": 1238240,
+   "max_occ": 14393,
+   "mean_occ": 6319,
+   "balance": 2.28,
+   "top": "R172 L36 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 98,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 97,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 14,
+   "per_user": 2956.6,
+   "agg": 41393,
+   "per_die": 46.61,
+   "period": 1687996,
+   "max_occ": 75668,
+   "mean_occ": 37568,
+   "balance": 2.01,
+   "top": "R018 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc4L1",
+  "stages": 194,
+  "dies": 896,
+  "dense_balance": 1.16,
+  "bound_model": 14305,
+  "expert_stages_min": 154,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 6,
+  "ar": {
+   "users": 84,
+   "per_user": 967.5,
+   "agg": 81274,
+   "per_die": 90.71,
+   "period": 1240256,
+   "max_occ": 14305,
+   "mean_occ": 6281,
+   "balance": 2.28,
+   "top": "R114 L24 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 98,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 97,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 14,
+   "per_user": 2953.1,
+   "agg": 41344,
+   "per_die": 46.14,
+   "period": 1690012,
+   "max_occ": 75668,
+   "mean_occ": 37342,
+   "balance": 2.03,
+   "top": "R018 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc4L1",
+  "stages": 195,
+  "dies": 900,
+  "dense_balance": 1.03,
+  "bound_model": 12611,
+  "expert_stages_min": 155,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 5,
+  "ar": {
+   "users": 96,
+   "per_user": 966.8,
+   "agg": 92809,
+   "per_die": 103.12,
+   "period": 1241264,
+   "max_occ": 12612,
+   "mean_occ": 6262,
+   "balance": 2.01,
+   "top": "R018 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 98,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 97,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 14,
+   "per_user": 2951.4,
+   "agg": 41319,
+   "per_die": 45.91,
+   "period": 1691020,
+   "max_occ": 75668,
+   "mean_occ": 37231,
+   "balance": 2.03,
+   "top": "R018 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R004: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc4L1",
+  "stages": 196,
+  "dies": 904,
+  "dense_balance": 1.03,
+  "bound_model": 12611,
+  "expert_stages_min": 155,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 5,
+  "ar": {
+   "users": 96,
+   "per_user": 965.9,
+   "agg": 92727,
+   "per_die": 102.57,
+   "period": 1242352,
+   "max_occ": 12612,
+   "mean_occ": 6249,
+   "balance": 2.02,
+   "top": "R019 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 98,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 97,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 14,
+   "per_user": 2949.5,
+   "agg": 41292,
+   "per_die": 45.68,
+   "period": 1692112,
+   "max_occ": 75668,
+   "mean_occ": 37150,
+   "balance": 2.04,
+   "top": "R019 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc4L1",
+  "stages": 198,
+  "dies": 912,
+  "dense_balance": 1.03,
+  "bound_model": 12611,
+  "expert_stages_min": 155,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 5,
+  "ar": {
+   "users": 96,
+   "per_user": 964.2,
+   "agg": 92565,
+   "per_die": 101.5,
+   "period": 1244532,
+   "max_occ": 12612,
+   "mean_occ": 6222,
+   "balance": 2.03,
+   "top": "R020 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 98,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 97,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 14,
+   "per_user": 2945.7,
+   "agg": 41239,
+   "per_die": 45.22,
+   "period": 1694292,
+   "max_occ": 75668,
+   "mean_occ": 36991,
+   "balance": 2.05,
+   "top": "R020 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "dsc4L1",
+  "stages": 200,
+  "dies": 920,
+  "dense_balance": 1.03,
+  "bound_model": 12611,
+  "expert_stages_min": 155,
+  "max_fill_pct": 85.25,
+  "dense_with_experts": 5,
+  "ar": {
+   "users": 96,
+   "per_user": 962.5,
+   "agg": 92403,
+   "per_die": 100.44,
+   "period": 1246712,
+   "max_occ": 12612,
+   "mean_occ": 6195,
+   "balance": 2.04,
+   "top": "R020 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 98,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 97,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 14,
+   "per_user": 2941.9,
+   "agg": 41186,
+   "per_die": 44.77,
+   "period": 1696472,
+   "max_occ": 75668,
+   "mean_occ": 36835,
+   "balance": 2.05,
+   "top": "R020 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 15,
+     "result": "FAULT",
+     "why": "R005: no A/B colouring"
+    },
+    {
+     "users": 14,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 140,
+  "dies": 644,
+  "dense_balance": 1.13,
+  "bound_model": 26041,
+  "expert_stages_min": 100,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 44,
+   "per_user": 1011.0,
+   "agg": 44483,
+   "per_die": 69.07,
+   "period": 1186972,
+   "max_occ": 26041,
+   "mean_occ": 9182,
+   "balance": 2.84,
+   "top": "R028 L8 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 46,
+     "result": "FAULT",
+     "why": "R028: no A/B colouring"
+    },
+    {
+     "users": 45,
+     "result": "FAULT",
+     "why": "R007: no A/B colouring"
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3012.1,
+   "agg": 30121,
+   "per_die": 46.77,
+   "period": 1656896,
+   "max_occ": 156090,
+   "mean_occ": 54559,
+   "balance": 2.86,
+   "top": "R028 L8 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 144,
+  "dies": 660,
+  "dense_balance": 1.06,
+  "bound_model": 24366,
+  "expert_stages_min": 103,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1007.3,
+   "agg": 48353,
+   "per_die": 73.26,
+   "period": 1191248,
+   "max_occ": 24366,
+   "mean_occ": 9058,
+   "balance": 2.69,
+   "top": "R015 L4 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3036.3,
+   "agg": 30363,
+   "per_die": 46.0,
+   "period": 1643732,
+   "max_occ": 146194,
+   "mean_occ": 53829,
+   "balance": 2.72,
+   "top": "R062 L17 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 148,
+  "dies": 676,
+  "dense_balance": 1.07,
+  "bound_model": 24298,
+  "expert_stages_min": 105,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 40,
+  "ar": {
+   "users": 48,
+   "per_user": 1003.8,
+   "agg": 48183,
+   "per_die": 71.28,
+   "period": 1195444,
+   "max_occ": 24299,
+   "mean_occ": 8841,
+   "balance": 2.75,
+   "top": "R014 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3028.5,
+   "agg": 30285,
+   "per_die": 44.8,
+   "period": 1647928,
+   "max_occ": 145791,
+   "mean_occ": 52545,
+   "balance": 2.77,
+   "top": "R014 L3 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R009: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 152,
+  "dies": 692,
+  "dense_balance": 1.15,
+  "bound_model": 24210,
+  "expert_stages_min": 112,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 48,
+   "per_user": 1001.2,
+   "agg": 48057,
+   "per_die": 69.45,
+   "period": 1198576,
+   "max_occ": 24211,
+   "mean_occ": 8415,
+   "balance": 2.88,
+   "top": "R088 L22 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3038.7,
+   "agg": 30387,
+   "per_die": 43.91,
+   "period": 1642432,
+   "max_occ": 145263,
+   "mean_occ": 50002,
+   "balance": 2.91,
+   "top": "R088 L22 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R008: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 156,
+  "dies": 708,
+  "dense_balance": 1.14,
+  "bound_model": 24143,
+  "expert_stages_min": 113,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 39,
+  "ar": {
+   "users": 48,
+   "per_user": 997.5,
+   "agg": 47880,
+   "per_die": 67.63,
+   "period": 1203016,
+   "max_occ": 24144,
+   "mean_occ": 8308,
+   "balance": 2.91,
+   "top": "R088 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 49,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 48,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 10,
+   "per_user": 3030.5,
+   "agg": 30305,
+   "per_die": 42.8,
+   "period": 1646876,
+   "max_occ": 144861,
+   "mean_occ": 49373,
+   "balance": 2.93,
+   "top": "R088 L21 x1",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 11,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 10,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 164,
+  "dies": 740,
+  "dense_balance": 1.13,
+  "bound_model": 22944,
+  "expert_stages_min": 119,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 37,
+  "ar": {
+   "users": 52,
+   "per_user": 990.6,
+   "agg": 51510,
+   "per_die": 69.61,
+   "period": 1211408,
+   "max_occ": 22944,
+   "mean_occ": 7909,
+   "balance": 2.9,
+   "top": "R062 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 53,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 52,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 3024.1,
+   "agg": 36289,
+   "per_die": 49.04,
+   "period": 1650368,
+   "max_occ": 137512,
+   "mean_occ": 46998,
+   "balance": 2.93,
+   "top": "R062 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 172,
+  "dies": 772,
+  "dense_balance": 1.13,
+  "bound_model": 22944,
+  "expert_stages_min": 119,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 37,
+  "ar": {
+   "users": 52,
+   "per_user": 983.5,
+   "agg": 51142,
+   "per_die": 66.25,
+   "period": 1220128,
+   "max_occ": 22944,
+   "mean_occ": 7707,
+   "balance": 2.98,
+   "top": "R070 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 53,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 52,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 3008.2,
+   "agg": 36098,
+   "per_die": 46.76,
+   "period": 1659088,
+   "max_occ": 137512,
+   "mean_occ": 45808,
+   "balance": 3.0,
+   "top": "R070 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 180,
+  "dies": 804,
+  "dense_balance": 1.13,
+  "bound_model": 22944,
+  "expert_stages_min": 119,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 37,
+  "ar": {
+   "users": 52,
+   "per_user": 976.5,
+   "agg": 50779,
+   "per_die": 63.16,
+   "period": 1228848,
+   "max_occ": 22944,
+   "mean_occ": 7523,
+   "balance": 3.05,
+   "top": "R070 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 53,
+     "result": "FAULT",
+     "why": "R010: no A/B colouring"
+    },
+    {
+     "users": 52,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2992.4,
+   "agg": 35909,
+   "per_die": 44.66,
+   "period": 1667808,
+   "max_occ": 137512,
+   "mean_occ": 44724,
+   "balance": 3.07,
+   "top": "R070 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ },
+ {
+  "variant": "redeal",
+  "stages": 200,
+  "dies": 884,
+  "dense_balance": 1.13,
+  "bound_model": 22944,
+  "expert_stages_min": 119,
+  "max_fill_pct": 99.32,
+  "dense_with_experts": 37,
+  "ar": {
+   "users": 54,
+   "per_user": 959.5,
+   "agg": 51813,
+   "per_die": 58.61,
+   "period": 1250648,
+   "max_occ": 22944,
+   "mean_occ": 7128,
+   "balance": 3.22,
+   "top": "R072 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 54,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  },
+  "mtp": {
+   "users": 12,
+   "per_user": 2953.8,
+   "agg": 35446,
+   "per_die": 40.1,
+   "period": 1689608,
+   "max_occ": 137512,
+   "mean_occ": 42394,
+   "balance": 3.24,
+   "top": "R072 L14 x2",
+   "checker": "PASS+neg",
+   "why": [
+    {
+     "users": 12,
+     "result": "PASS",
+     "collisions": 0,
+     "first": null
+    }
+   ]
+  }
+ }
+]

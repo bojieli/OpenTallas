@@ -1,0 +1,1317 @@
+{
+ "schema": "opentallas.s81_dv.mu_calendar_phys.v1",
+ "lane": "S81-MUCAL140",
+ "mode": "mtp",
+ "map": "results/arch/s81_sweet_1020/stage_map_s153_c3.json",
+ "compose": "romopt",
+ "map_sha256": "fef28886e895e14b0ab9683a0a289c1b87ab4536b483aaeb9e3deb26e0af63a5",
+ "alap": true,
+ "job_contexts": 1,
+ "map_capacity_verdict": "UNQUALIFIED (model only)",
+ "stages": 153,
+ "copy_b_stages": [
+  "R008",
+  "R031",
+  "R054",
+  "R077",
+  "R092",
+  "R107",
+  "R122",
+  "R137"
+ ],
+ "period": 1681392,
+ "users": 12,
+ "per_user_tok_s": 2968.3,
+ "aggregate_tok_s": 35619,
+ "bound_window": {
+  "cycles": 115815,
+  "stage": "R004"
+ },
+ "checker": {
+  "result": "PASS",
+  "collisions": 0,
+  "resources": 343,
+  "windows": 5124,
+  "negative_n_plus_1": {
+   "users": 13,
+   "result": "FAULT",
+   "collisions": 1
+  },
+  "negative_injected_shift": {
+   "collisions": 499,
+   "result": "FAULT"
+  }
+ },
+ "search": [
+  {
+   "users": 14,
+   "result": "FAULT",
+   "why": "R008: no A/B colouring"
+  },
+  {
+   "users": 13,
+   "result": "FAULT",
+   "why": "R008: no A/B colouring"
+  },
+  {
+   "users": 12,
+   "result": "PASS",
+   "collisions": 0,
+   "first": null
+  }
+ ],
+ "stage_windows": [
+  {
+   "stage": "R000",
+   "dense_layer": 0,
+   "copies": 1,
+   "t": 1074,
+   "occ": 18946,
+   "step": 113675
+  },
+  {
+   "stage": "R001",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 17540,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R002",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 18630,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R003",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 19720,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R004",
+   "dense_layer": 1,
+   "copies": 1,
+   "t": 25941,
+   "occ": 19303,
+   "step": 115815
+  },
+  {
+   "stage": "R005",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 46251,
+   "occ": 3488,
+   "step": 20928
+  },
+  {
+   "stage": "R006",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 47259,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R007",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 48349,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R008",
+   "dense_layer": 2,
+   "copies": 3,
+   "t": 49439,
+   "occ": 50669,
+   "step": 303701
+  },
+  {
+   "stage": "R009",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 97627,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R010",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 98717,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R011",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 99807,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R012",
+   "dense_layer": 3,
+   "copies": 1,
+   "t": 106028,
+   "occ": 19086,
+   "step": 114513
+  },
+  {
+   "stage": "R013",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 122634,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R014",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 123724,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R015",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 124814,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R016",
+   "dense_layer": 4,
+   "copies": 1,
+   "t": 131035,
+   "occ": 19153,
+   "step": 114915
+  },
+  {
+   "stage": "R017",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 147707,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R018",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 148797,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R019",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 149887,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R020",
+   "dense_layer": 5,
+   "copies": 1,
+   "t": 156108,
+   "occ": 19086,
+   "step": 114513
+  },
+  {
+   "stage": "R021",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 172714,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R022",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 173804,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R023",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 174894,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R024",
+   "dense_layer": 6,
+   "copies": 1,
+   "t": 181115,
+   "occ": 19153,
+   "step": 114915
+  },
+  {
+   "stage": "R025",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 197787,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R026",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 198877,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R027",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 199967,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R028",
+   "dense_layer": 7,
+   "copies": 1,
+   "t": 206188,
+   "occ": 19086,
+   "step": 114513
+  },
+  {
+   "stage": "R029",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 222794,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R030",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 223884,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R031",
+   "dense_layer": 8,
+   "copies": 3,
+   "t": 224974,
+   "occ": 52082,
+   "step": 312181
+  },
+  {
+   "stage": "R032",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 274576,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R033",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 275666,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R034",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 276756,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R035",
+   "dense_layer": 9,
+   "copies": 1,
+   "t": 282977,
+   "occ": 19086,
+   "step": 114513
+  },
+  {
+   "stage": "R036",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 299582,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R037",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 300672,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R038",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 301762,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R039",
+   "dense_layer": 10,
+   "copies": 1,
+   "t": 307983,
+   "occ": 19086,
+   "step": 114513
+  },
+  {
+   "stage": "R040",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 324589,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R041",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 325679,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R042",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 326769,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R043",
+   "dense_layer": 11,
+   "copies": 1,
+   "t": 332990,
+   "occ": 19153,
+   "step": 114915
+  },
+  {
+   "stage": "R044",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 349662,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R045",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 350752,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R046",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 351842,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R047",
+   "dense_layer": 12,
+   "copies": 1,
+   "t": 358063,
+   "occ": 19086,
+   "step": 114513
+  },
+  {
+   "stage": "R048",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 374669,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R049",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 375759,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R050",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 376849,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R051",
+   "dense_layer": 13,
+   "copies": 1,
+   "t": 383070,
+   "occ": 19153,
+   "step": 114915
+  },
+  {
+   "stage": "R052",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 399742,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R053",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 400832,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R054",
+   "dense_layer": 14,
+   "copies": 3,
+   "t": 401922,
+   "occ": 54590,
+   "step": 327229
+  },
+  {
+   "stage": "R055",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 454032,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R056",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 455122,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R057",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 456212,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R058",
+   "dense_layer": 15,
+   "copies": 1,
+   "t": 462433,
+   "occ": 19153,
+   "step": 114915
+  },
+  {
+   "stage": "R059",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 479105,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R060",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 480195,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R061",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 481285,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R062",
+   "dense_layer": 16,
+   "copies": 1,
+   "t": 487506,
+   "occ": 19086,
+   "step": 114513
+  },
+  {
+   "stage": "R063",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 504112,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R064",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 505202,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R065",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 506292,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R066",
+   "dense_layer": 17,
+   "copies": 1,
+   "t": 512513,
+   "occ": 19153,
+   "step": 114916
+  },
+  {
+   "stage": "R067",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 529185,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R068",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 530275,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R069",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 531365,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R070",
+   "dense_layer": 18,
+   "copies": 1,
+   "t": 537586,
+   "occ": 19086,
+   "step": 114513
+  },
+  {
+   "stage": "R071",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 554192,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R072",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 555282,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R073",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 556372,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R074",
+   "dense_layer": 19,
+   "copies": 1,
+   "t": 562593,
+   "occ": 19153,
+   "step": 114915
+  },
+  {
+   "stage": "R075",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 579265,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R076",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 580355,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R077",
+   "dense_layer": 20,
+   "copies": 3,
+   "t": 581445,
+   "occ": 54152,
+   "step": 294917
+  },
+  {
+   "stage": "R078",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 633117,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R079",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 634207,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R080",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 635297,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R081",
+   "dense_layer": 21,
+   "copies": 1,
+   "t": 641518,
+   "occ": 18931,
+   "step": 113583
+  },
+  {
+   "stage": "R082",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 657969,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R083",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 659059,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R084",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 660149,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R085",
+   "dense_layer": 22,
+   "copies": 1,
+   "t": 666370,
+   "occ": 18998,
+   "step": 113985
+  },
+  {
+   "stage": "R086",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 682887,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R087",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 683977,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R088",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 685067,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R089",
+   "dense_layer": 23,
+   "copies": 1,
+   "t": 691288,
+   "occ": 18931,
+   "step": 113583
+  },
+  {
+   "stage": "R090",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 707738,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R091",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 708828,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R092",
+   "dense_layer": 24,
+   "copies": 2,
+   "t": 709918,
+   "occ": 35151,
+   "step": 181450
+  },
+  {
+   "stage": "R093",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 742589,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R094",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 743679,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R095",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 744769,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R096",
+   "dense_layer": 25,
+   "copies": 1,
+   "t": 750990,
+   "occ": 18931,
+   "step": 113583
+  },
+  {
+   "stage": "R097",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 767441,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R098",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 768531,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R099",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 769621,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R100",
+   "dense_layer": 26,
+   "copies": 1,
+   "t": 775842,
+   "occ": 18998,
+   "step": 113985
+  },
+  {
+   "stage": "R101",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 792359,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R102",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 793449,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R103",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 794539,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R104",
+   "dense_layer": 27,
+   "copies": 1,
+   "t": 800760,
+   "occ": 18931,
+   "step": 113583
+  },
+  {
+   "stage": "R105",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 817210,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R106",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 818300,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R107",
+   "dense_layer": 28,
+   "copies": 2,
+   "t": 819390,
+   "occ": 35370,
+   "step": 182765
+  },
+  {
+   "stage": "R108",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 852280,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R109",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 853370,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R110",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 854460,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R111",
+   "dense_layer": 29,
+   "copies": 1,
+   "t": 860681,
+   "occ": 18931,
+   "step": 113583
+  },
+  {
+   "stage": "R112",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 877132,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R113",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 878222,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R114",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 879312,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R115",
+   "dense_layer": 30,
+   "copies": 1,
+   "t": 885533,
+   "occ": 18931,
+   "step": 113583
+  },
+  {
+   "stage": "R116",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 901983,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R117",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 903073,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R118",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 904163,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R119",
+   "dense_layer": 31,
+   "copies": 1,
+   "t": 910384,
+   "occ": 18998,
+   "step": 113985
+  },
+  {
+   "stage": "R120",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 926902,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R121",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 927992,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R122",
+   "dense_layer": 32,
+   "copies": 2,
+   "t": 929082,
+   "occ": 35283,
+   "step": 182243
+  },
+  {
+   "stage": "R123",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 961884,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R124",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 962974,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R125",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 964064,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R126",
+   "dense_layer": 33,
+   "copies": 1,
+   "t": 970285,
+   "occ": 18998,
+   "step": 113985
+  },
+  {
+   "stage": "R127",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 986803,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R128",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 987893,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R129",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 988983,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R130",
+   "dense_layer": 34,
+   "copies": 1,
+   "t": 995204,
+   "occ": 18931,
+   "step": 113583
+  },
+  {
+   "stage": "R131",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1011654,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R132",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1012744,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R133",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1013834,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R134",
+   "dense_layer": 35,
+   "copies": 1,
+   "t": 1020055,
+   "occ": 18998,
+   "step": 113985
+  },
+  {
+   "stage": "R135",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1036573,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R136",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1037663,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R137",
+   "dense_layer": 36,
+   "copies": 2,
+   "t": 1038753,
+   "occ": 35327,
+   "step": 182507
+  },
+  {
+   "stage": "R138",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1071600,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R139",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1072690,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R140",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1073780,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R141",
+   "dense_layer": 37,
+   "copies": 1,
+   "t": 1080001,
+   "occ": 18998,
+   "step": 113985
+  },
+  {
+   "stage": "R142",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1096518,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R143",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1097608,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R144",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1098698,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R145",
+   "dense_layer": 38,
+   "copies": 1,
+   "t": 1104919,
+   "occ": 18931,
+   "step": 113583
+  },
+  {
+   "stage": "R146",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1121369,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R147",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1122459,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R148",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1123549,
+   "occ": 5213,
+   "step": 31278
+  },
+  {
+   "stage": "R149",
+   "dense_layer": 39,
+   "copies": 1,
+   "t": 1129770,
+   "occ": 18931,
+   "step": 113583
+  },
+  {
+   "stage": "R150",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1146221,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R151",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1147311,
+   "occ": 3570,
+   "step": 21420
+  },
+  {
+   "stage": "R152",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1148401,
+   "occ": 5213,
+   "step": 31278
+  }
+ ],
+ "composition": {
+  "composer": "tools/toksim_s81_compose.py --scenario calpipe + S81-ROMOPT o3mix compiled spans (results/rtl/s81_romopt_1020/c/compose/o3mix_prop_compiled.json.gz)",
+  "ar": {
+   "T_composer": 1153402.6,
+   "tok_s_composer": 1040.4,
+   "pct_measured": 69.74,
+   "cal2_structural": 2418,
+   "added_hops": 33264,
+   "forward_x_chain_delta": 9840.0,
+   "T": 1198924.6,
+   "tok_s": 1000.9
+  },
+  "mtp": {
+   "T_composer": 1562863.8,
+   "tok_s_composer": 3193.4,
+   "pct_measured": 61.15,
+   "cal2_structural": 2556,
+   "added_hops": 33264,
+   "forward_x_chain_delta": 9840.0,
+   "wave_composer": 199775.0,
+   "wave_physical": 272640.0,
+   "T": 1681388.8,
+   "tok_s": 2968.3
+  },
+  "partial_add_cycles": 82.0,
+  "partial_add_grade": "priced (= measured eng.add SU add instance)"
+ },
+ "grade": "node cycles: composer grades; stage split / reservation / forward-x / MTP law: MODEL"
+}
