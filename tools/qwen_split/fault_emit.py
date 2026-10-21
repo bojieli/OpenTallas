@@ -362,10 +362,11 @@ def pre(v, m, G):
         tx, ty = zn.target(*r['xy'], owner=by[o])
         okz = lambda b: zn.of_box(b) is not None
         s = None
-        if ROOT_MODE == 'cover' and r.get('pts'):
+        if ROOT_MODE == 'cover':
             # rfs try 2 (dv2f20g5rh 'flt_root_dvs_E2 has no input'): the primary root sits within CAP_UM of one of the
-            # owner's landings (nearest the gap target), so it always captures at least one source
-            pts_ = sorted(map(tuple, r['pts']), key=lambda p_: _man(p_, (tx, ty)))
+            # owner's landings (nearest the gap target), so it always captures at least one source; a hard fault owner
+            # (no landing pts) within CAP_UM of its fault port median (rfs try 8: 'flt_root_mu_dhobs has no input')
+            pts_ = sorted(map(tuple, r.get('pts') or [r['xy']]), key=lambda p_: _man(p_, (tx, ty)))
             for p_ in pts_[:8]:
                 s = occ.site(v, p_[0], p_[1], rmax=CAP_UM, step=8.64,
                              ok=lambda b, p_=p_: okz(b) and _man(((b[0] + b[2]) / 2, (b[1] + b[3]) / 2), p_) <= CAP_UM)
