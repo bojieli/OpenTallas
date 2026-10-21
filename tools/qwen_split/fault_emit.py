@@ -373,8 +373,11 @@ def pre(v, m, G):
         # (GROUP_KEEP_UM) over the same insts + reserved relay sites + every root already placed
         gk = float(os.environ.get('OT_SPLIT_FAULT_GROUP_KEEP_UM', '100'))
         occ_g = Occ(m)      # m['insts'] already holds the primary roots
+        occ_0 = Occ(m)      # second try: insts + reserved relay sites only (no keep-clear)
         for r_ in plan.get('reserved', ()):
             occ_g.add(tuple(r_))
+            occ_0.add(tuple(r_))
+        unplaced = []
         for bid, cl, bits, eps in m['buses']:
             if bits >= WIDE_BITS and cl not in ('clock_trunk', 'reset', 'constant'):
                 for e in eps:
@@ -396,11 +399,13 @@ def pre(v, m, G):
                 if any(rr['cj'] == roots[o]['cj'] and _man(rr['xy'], (gx, gy)) <= GROUP_UM for rr in roots.values()):
                     continue                        # a root of the same clock already serves this group
                 okz2 = lambda b: zn.of_box(b) is not None
-                s = occ_g.site(v, gx, gy, rmax=GROUP_UM, ok=okz2)
-                if s is not None:
-                    occ.add((s[0], s[1], s[0] + W, s[1] + H))
+                s = occ_g.site(v, gx, gy, rmax=GROUP_UM, ok=okz2) or occ_0.site(v, gx, gy, rmax=GROUP_UM, ok=okz2)
                 if s is None:
-                    raise ValueError(f'fault emit: no free site within {GROUP_UM:.0f} um for the group root of {o} near ({gx:.0f}, {gy:.0f})')
+                    # recorded; post fails closed (ORPHAN default fail) if this group's leaves then have no route
+                    unplaced.append((o, round(gx), round(gy), len(ps)))
+                    continue
+                for oc_ in (occ, occ_g, occ_0):
+                    oc_.add((s[0], s[1], s[0] + W, s[1] + H))
                 z = zn.of_box((s[0], s[1], s[0] + W, s[1] + H))
                 k_ = 0
                 while f'{o}_g{k_}' in roots:
@@ -416,6 +421,9 @@ def pre(v, m, G):
                 follow[(nm, 'ck')] = o
                 roots[key] = dict(roots[o], inst=nm, xy=_ctr(it), children=[], zone=z, landings_in_zone=len(ps))
                 nz += 1
+        rec['group_roots_unplaced'] = unplaced
+        print(f'FAULT_EMIT groups: {nz} group roots placed, {len(unplaced)} groups without a free site within '
+              f'{GROUP_UM:.0f} um: {unplaced[:20]}', flush=True)
     # degree-capped Prim MST from the sys_face root
     done, parent = {ROOT_OWNER}, {}
     left = set(roots) - done
