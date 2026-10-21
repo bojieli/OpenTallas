@@ -49,18 +49,21 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  // reserve stage 2: KEPT per-slot enables [slot*4+c] (c0: valid/epoch/count 24, c1/c2: seen halves 32, c3: received 7)
  (* keep="true",dont_touch="true" *) reg[LBANKS*4-1:0]ren_k;
  reg[15:0]r_epoch;reg[6:0]r_count;
- reg [LBANKS-1:0] valid_q;reg [15:0] epoch_q[0:LBANKS-1];reg [6:0] count_q[0:LBANKS-1],received_q[0:LBANKS-1];
- reg [63:0] seen_q[0:LBANKS-1];reg sticky;
+ // bank state as FLAT vectors (rel8c): reg arrays indexed by the registered h_bank were inferred as yosys $mem and
+ // MEMORY_DFF cloned h_bank into an anonymous read-address flop (gate r1 OT_GF unapproved crossing mem -> _318839_)
+ reg [LBANKS-1:0] valid_q;reg [LBANKS*16-1:0] epoch_q;reg [LBANKS*7-1:0] count_q,received_q;
+ reg [LBANKS*64-1:0] seen_q;reg sticky;
  // stage A: raw head registers (h_v = popped this edge)
  reg h_v;reg [255:0] h_data;reg [10:0] h_ordinal;reg [LB-1:0] h_bank;reg [15:0] h_epoch;
  // stage B on registers only
  wire [5:0] row=h_ordinal[8:3];
- wire identity_ok=valid_q[h_bank]&&epoch_q[h_bank]==h_epoch&&h_ordinal[2:0]==BANK&&
-                 {1'b0,row}<count_q[h_bank]&&!seen_q[h_bank][row];
+ wire [15:0] b_epoch=epoch_q[h_bank*16+:16];wire [6:0] b_count=count_q[h_bank*7+:7],b_rcv=received_q[h_bank*7+:7];
+ wire identity_ok=valid_q[h_bank]&&b_epoch==h_epoch&&h_ordinal[2:0]==BANK&&
+                 {1'b0,row}<b_count&&!seen_q[{h_bank,row}];
  wire take_b=h_v&&!sticky;
  wire landing_write=take_b&&identity_ok;
  assign packet_take=packet_v&&!stop&&!sticky;
- wire complete_now=landing_write&&received_q[h_bank]+1'b1==count_q[h_bank];
+ wire complete_now=landing_write&&b_rcv+1'b1==b_count;
  reg w_ce_q,cmp_q;reg [LB-1:0] w_bank_q;reg [5:0] w_row_q;reg [255:0] w_data_q;
  assign complete_v=cmp_q;assign complete_bank=w_bank_q;assign fault=sticky||underflow;
 `ifdef SVGH_MUT
@@ -85,12 +88,14 @@ module ot_hbm_svc_sm8_landing_bank_h #(
   if(cap_en[9])h_epoch<=packet[271:256];
   if(take_b)begin w_bank_q<=h_bank;w_row_q<=(HM==6)?(row^6'd1):row;w_data_q<=h_data;end
   for(b=0;b<LBANKS;b=b+1)begin
-   if(ren_k[b*4])begin epoch_q[b]<=r_epoch;count_q[b]<=r_count;end
-   if(ren_k[b*4+1])seen_q[b][31:0]<=0;
-   if(ren_k[b*4+2])seen_q[b][63:32]<=0;
-   if(ren_k[b*4+3])received_q[b]<=0;
+   if(ren_k[b*4])begin epoch_q[b*16+:16]<=r_epoch;count_q[b*7+:7]<=r_count;end
+   if(ren_k[b*4+1])seen_q[b*64+:32]<=0;
+   else if(landing_write&&h_bank==b&&!row[5])seen_q[b*64+row[4:0]]<=1'b1;
+   if(ren_k[b*4+2])seen_q[b*64+32+:32]<=0;
+   else if(landing_write&&h_bank==b&&row[5])seen_q[b*64+32+row[4:0]]<=1'b1;
+   if(ren_k[b*4+3])received_q[b*7+:7]<=0;
+   else if(landing_write&&h_bank==b)received_q[b*7+:7]<=b_rcv+1'b1;
   end
-  if(landing_write)begin seen_q[h_bank][row]<=1;received_q[h_bank]<=received_q[h_bank]+1'b1;end
  end
  ot_sram_1r1w_256x256_m2_r2c2 u_payload(
   .clk(stream_clk),.r_ce_in(read_v&&!stop&&!sticky),.r_addr_in({read_bank,read_row}),.rd_out(read_data),
