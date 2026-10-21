@@ -47,5 +47,31 @@
     "slice2 tall-slot views pending",
     "class packing structural alternate owned separately",
     "head LPF lacks SEGCAL; measured h16y span3135 vs3101"
-  ]
+  ],
+  "fault_successor": {
+    "kit": "/srv/opentallas-scratch/claude/mu-die-qw/qcodex-kit2",
+    "overlay_sha256": "51f8c06a6a4c28b5fe597503c5ef1a10a3dbfe531860117549e9e1aaa01ca521",
+    "materialized_helper": "results/rtl/qw_g5froot_1020/mkplan_rfs.py",
+    "helper_git_blob": "4985d4dc52ecf192c9bc1f5d1c14c4f5edf12269",
+    "helper_imports": "python stdlib json,re,sys,statistics,collections",
+    "helper_reads": [
+      "BASE/out/case/fwd_lanes.json",
+      "BASE/out/case/place.tcl",
+      "BASE/out/case/die.v",
+      "BASE/out/case/elements.lef"
+    ],
+    "runs": [
+      {
+        "tag": "dv2f21g5r7af",
+        "base": "dv2f21g5r4a",
+        "sgap_um": 129.6
+      },
+      {
+        "tag": "dv2f21g5r7bf",
+        "base": "dv2f21g5r6b",
+        "sgap_um": 172.8
+      }
+    ],
+    "supersedes": "r6af FAILED missing helper; waiting r6bf cancelled; r6b GEN preserved"
+  }
 }
