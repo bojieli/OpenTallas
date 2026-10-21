@@ -336,7 +336,7 @@
     "cmd": "bash rtl/hbm_accel/generic/vm/static/run_ptgt_fan32.sh {RUN}/bench/p1 1",
     "expect": "fail",
     "pass_regex": "^PTGT_FAN32 PASS MUT=1",
-    "fail_regex": "PTGT_FAN32 FAIL MUT=1",
+    "fail_regex": "^MISMATCH cyc=[0-9]+ c |PTGT_FAN32 FAIL MUT=1",
     "threads": 4,
     "peak_ram_gb": 4,
     "needs": [
