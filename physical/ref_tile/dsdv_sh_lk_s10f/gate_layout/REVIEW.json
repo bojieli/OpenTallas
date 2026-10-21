@@ -1,7 +1,7 @@
 {
   "reviewer": "codex coordinator takeover 2026-10-20",
-  "time": "2026-10-20T12:45:23.169237-07:00",
-  "gate_commit": "2026-10-20T05:59:24-0700",
+  "time": "2026-10-20T22:17:15.976642-07:00",
+  "gate_commit": "1ff6b81c9",
   "verdict": "APPROVED",
   "geometry_sha256": "a6b0aef4a33acec6911bbe24ce442e71905277d418d99735f54cec1f59457394",
   "geometry": {
@@ -31,6 +31,7 @@
     "gate_setup_ps": 46,
     "gate_hold_ps": 35,
     "depth_warning": "610ps/17levels judged by gate/route per owner09:14 freeze",
-    "scope": "geometry approval for route submission only; final route timing/DRC/function decides; no closure claim"
+    "scope": "ROOT signed off exact unchanged geometry after original floorplan+density viewing. Timing/census metrics here refer to old gate2026-10-20T05:59:24-0700; update to exact new terminal regate before submit. Geometry approval does not override failed new gate.",
+    "metrics_basis": "old gate2026-10-20T05:59:24-0700"
   }
 }
