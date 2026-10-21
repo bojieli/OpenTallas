@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.qwen.status.observability.v1",
+ "kind": 15,
+ "layer": 63,
+ "frame_bits": 548,
+ "data_bits": 512,
+ "legacy_data_bits": [
+  155,
+  0
+ ],
+ "fields": [
+  {
+   "name": "version",
+   "hi": 511,
+   "lo": 508
+  },
+  {
+   "name": "ctx_seen",
+   "hi": 507,
+   "lo": 507
+  },
+  {
+   "name": "ctx_user",
+   "hi": 506,
+   "lo": 505
+  },
+  {
+   "name": "ctx_tag",
+   "hi": 504,
+   "lo": 446
+  },
+  {
+   "name": "res_seen",
+   "hi": 445,
+   "lo": 445
+  },
+  {
+   "name": "res_user",
+   "hi": 444,
+   "lo": 443
+  },
+  {
+   "name": "res_dh_run",
+   "hi": 442,
+   "lo": 399
+  },
+  {
+   "name": "native_seen",
+   "hi": 398,
+   "lo": 398
+  },
+  {
+   "name": "native_overflow",
+   "hi": 397,
+   "lo": 397
+  },
+  {
+   "name": "native_completion_count",
+   "hi": 396,
+   "lo": 365
+  },
+  {
+   "name": "native_last_optag",
+   "hi": 364,
+   "lo": 306
+  },
+  {
+   "name": "reserved_ext",
+   "hi": 305,
+   "lo": 304
+  },
+  {
+   "name": "reserved_gap",
+   "hi": 303,
+   "lo": 156
+  }
+ ],
+ "callback_widths": {
+  "obs_ctx": 62,
+  "obs_res": 47,
+  "obs_native": 60
+ },
+ "unknown_version": "reject, including legacy version0 on explicitly selected obs1 receiver",
+ "reserved": "reserved_ext and reserved_gap must be zero; unseen identity must be zero",
+ "counter_law": "32-bit saturating cumulative accepted completed events in current STATUS receipt epoch. Cold reset or status_epoch16 change clears count/seen/overflow; coincident event starts count1. Link epoch_begin alone does not clear. TX never clears. Overflow becomes sticky and raises codec fault until next receipt epoch/reset. Header receipt epoch is independent of actual last operation tag epoch/user/token.",
+ "extra_frames": 0,
+ "extra_codec_capture_edges": 0,
+ "new_callback_top_PR_edges": 1,
+ "legacy_defaults": "Original source modules byte-identical, explicit obs1 source ABI only; no old view aliases.",
+ "verification": "PENDING causal positive/mutant + callback/KV/HOST tests + physical/native qualification"
+}
