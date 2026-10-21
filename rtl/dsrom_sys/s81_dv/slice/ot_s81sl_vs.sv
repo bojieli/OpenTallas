@@ -309,15 +309,20 @@ module ot_s81sl_vs #(
     // second latched copy of the read base (same accept edge) for the MOE / RA / SW / QR address adders
     (* keep="true" *) reg [9:0] a0_b;
     always @(posedge clk) if(cmd_accept[118]) a0_b <= c_a0;
+    // and of the read step (same reset / accept edge / increment as rs)
+    (* keep="true" *) reg [8:0] rs_b;
+    always @(posedge clk or negedge rs_r)
+      if(!rs_r) rs_b<=0;else if(cmd_accept[124]) rs_b<=0;else if(rrun) rs_b<=rs_b+1'b1;
 `else
     wire [9:0] a0_b = a0;
+    wire [8:0] rs_b = rs;
 `endif
     always @(posedge clk)
         case (op)
-            OP_MOE: x_ra <= a0_b + {3'd0, rs[5:3], 4'd0} + {6'd0, rs[2:0], 1'b0};
-            OP_RA:  x_ra <= a0_b + {2'd0, rs[8:3], 1'b0};
-            OP_SW:  x_ra <= (wr && rs == 9'd0) ? a1 : a0_b + {1'b0, rs[8:2] - {6'd0, wr}, 1'b0};
-            OP_QR:  x_ra <= a0_b + {rs[8:1], 1'b0};
+            OP_MOE: x_ra <= a0_b + {3'd0, rs_b[5:3], 4'd0} + {6'd0, rs_b[2:0], 1'b0};
+            OP_RA:  x_ra <= a0_b + {2'd0, rs_b[8:3], 1'b0};
+            OP_SW:  x_ra <= (wr && rs_b == 9'd0) ? a1 : a0_b + {1'b0, rs_b[8:2] - {6'd0, wr}, 1'b0};
+            OP_QR:  x_ra <= a0_b + {rs_b[8:1], 1'b0};
             OP_ENG: x_ra <= ph ? a0 + 10'd128 + {6'd0, rs[2:0], 1'b0} :
                            (rs < 9'd16) ? a0 + {rs[8:0], 1'b0} :
                            a1 + {3'd0, rs_e[0], 6'd0} + {3'd0, rs_e[6:4], 4'd0} + {6'd0, rs_e[3:1], 1'b0};
