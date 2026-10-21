@@ -135,6 +135,8 @@ def main():
             d=ROOT/OUT_DIR
             kept_fdn_selectors(d/f'{name}_lp.sv',D,E)
             kept_tap_copies(d/f'{name}_lp.sv')
+            from s8_landing_masks import apply as mask_flags
+            mask_flags(d/f'{name}_lp.sv')
             # Generated shell intentionally receives exact-source simulation flag.
             f=d/f'{name}_lp_bench.sh';f.write_text(f.read_text().replace('-DOT_S5_HARD','-DOT_S5_HARD -DOT_S8_SIM'))
             if name!='qfd_dv_s8':

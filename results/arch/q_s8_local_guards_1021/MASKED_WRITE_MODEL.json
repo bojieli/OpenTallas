@@ -1,0 +1,44 @@
+{
+  "scope": "Four-state procedural RTL write mechanism plus exact generated-source restoration; not executed full RTL or mapped-native qualification",
+  "four_state_write_comparisons": 3072,
+  "AND_instead_of_OR_mutant_counterexamples": 444,
+  "independent_selectors": true,
+  "reset_or_phase_correlation_assumed": false,
+  "new_state_or_capture_edges": 0,
+  "max_group_writers": 3,
+  "target_fields": {
+    "rss/rsn": [
+      128,
+      129,
+      130,
+      131
+    ],
+    "nb": [
+      64,
+      65
+    ]
+  },
+  "source_binding": {
+    "rtl/qwen_dv/s5/s8/lp/qfd_dv_s8_lp.sv": {
+      "old_sha256": "027348b1bc6d43074072ec84658afb53651628d3a224531f76efdc218e846ccf",
+      "new_sha256": "4f8c7e89e1444d1a866981177819a3b62bf7377b04afd0538e674987a9c3933f",
+      "writer_instances": 23,
+      "full_original_parent_restoration": true,
+      "local_state_declarations_and_all_always_statements_unchanged_except_dq_rhs": true,
+      "D": 4,
+      "source_input_gate_loads": 12,
+      "rs_s_source_input_loads_with_existing_direct_consumer": 13
+    },
+    "rtl/qwen_dv/s5/s8/lp/qfd_dv_s8b_lp.sv": {
+      "old_sha256": "61a4fb5a68f52c838a6a6d9b48f34c084699ff6e12dac7cd7881a2f86323d130",
+      "new_sha256": "c6be1d2f1813b94e91641c8342ab65d7c36ff4f7ddb686827c9b5f7a8287e6d0",
+      "writer_instances": 23,
+      "full_original_parent_restoration": true,
+      "local_state_declarations_and_all_always_statements_unchanged_except_dq_rhs": true,
+      "D": 8,
+      "source_input_gate_loads": 24,
+      "rs_s_source_input_loads_with_existing_direct_consumer": 25
+    }
+  },
+  "selector_load_note": "One added real OR input per selected original OH slot; mask output <=3 writer D cones. Actual mapped census including selector/control loads remains required."
+}

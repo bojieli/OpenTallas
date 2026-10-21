@@ -775,6 +775,111 @@ module qfd_dv_s8b_lp #(
     wire lpr_r_hc3_c2;  ot_pl_land_rst_copy #(.ID(83)) u_lpr_r_hc3_c2 (.ck(ck_r_hc3), .d(lpr_r_hc3_p), .q(lpr_r_hc3_c2));   // regional_reset_copies: 32 loads
     wire lpr_r_hc3_c3;  ot_pl_land_rst_copy #(.ID(84)) u_lpr_r_hc3_c3 (.ck(ck_r_hc3), .d(lpr_r_hc3_p), .q(lpr_r_hc3_c3));   // regional_reset_copies: 5 loads
     wire lpr_r_su_c4b; ot_pl_land_rst_copy #(.ID(9002)) u_lpr_r_su_c4b(.ck(ck_r_su),.d(lpr_r_su_p),.q(lpr_r_su_c4b));
+    // Shared real flag gates conditioned on the actual independent slot enables.
+    wire [7:0] flag_oh_117;
+    wire [7:0] flag_oh_124;
+    wire [7:0] flag_oh_131;
+    wire [7:0] flag_oh_138;
+    wire [7:0] flag_oh_145;
+    wire [7:0] flag_oh_152;
+    wire [7:0] flag_oh_159;
+    wire [31:0] flag_mask_rss_0;
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(0)) u_fmask_rss_0_0 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_117[0]),.b(flag_oh_124[0]),.c(flag_oh_131[0]),.y(flag_mask_rss_0[0+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(1)) u_fmask_rss_0_1 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_117[1]),.b(flag_oh_124[1]),.c(flag_oh_131[1]),.y(flag_mask_rss_0[4+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(2)) u_fmask_rss_0_2 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_117[2]),.b(flag_oh_124[2]),.c(flag_oh_131[2]),.y(flag_mask_rss_0[8+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(3)) u_fmask_rss_0_3 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_117[3]),.b(flag_oh_124[3]),.c(flag_oh_131[3]),.y(flag_mask_rss_0[12+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(4)) u_fmask_rss_0_4 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_117[4]),.b(flag_oh_124[4]),.c(flag_oh_131[4]),.y(flag_mask_rss_0[16+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(5)) u_fmask_rss_0_5 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_117[5]),.b(flag_oh_124[5]),.c(flag_oh_131[5]),.y(flag_mask_rss_0[20+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(6)) u_fmask_rss_0_6 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_117[6]),.b(flag_oh_124[6]),.c(flag_oh_131[6]),.y(flag_mask_rss_0[24+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(7)) u_fmask_rss_0_7 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_117[7]),.b(flag_oh_124[7]),.c(flag_oh_131[7]),.y(flag_mask_rss_0[28+:4]));
+    wire [31:0] flag_mask_rss_1;
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(8)) u_fmask_rss_1_0 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_138[0]),.b(flag_oh_145[0]),.c(flag_oh_152[0]),.y(flag_mask_rss_1[0+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(9)) u_fmask_rss_1_1 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_138[1]),.b(flag_oh_145[1]),.c(flag_oh_152[1]),.y(flag_mask_rss_1[4+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(10)) u_fmask_rss_1_2 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_138[2]),.b(flag_oh_145[2]),.c(flag_oh_152[2]),.y(flag_mask_rss_1[8+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(11)) u_fmask_rss_1_3 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_138[3]),.b(flag_oh_145[3]),.c(flag_oh_152[3]),.y(flag_mask_rss_1[12+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(12)) u_fmask_rss_1_4 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_138[4]),.b(flag_oh_145[4]),.c(flag_oh_152[4]),.y(flag_mask_rss_1[16+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(13)) u_fmask_rss_1_5 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_138[5]),.b(flag_oh_145[5]),.c(flag_oh_152[5]),.y(flag_mask_rss_1[20+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(14)) u_fmask_rss_1_6 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_138[6]),.b(flag_oh_145[6]),.c(flag_oh_152[6]),.y(flag_mask_rss_1[24+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(15)) u_fmask_rss_1_7 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_138[7]),.b(flag_oh_145[7]),.c(flag_oh_152[7]),.y(flag_mask_rss_1[28+:4]));
+    wire [31:0] flag_mask_rss_2;
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(16)) u_fmask_rss_2_0 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_159[0]),.b(1'b0),.c(1'b0),.y(flag_mask_rss_2[0+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(17)) u_fmask_rss_2_1 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_159[1]),.b(1'b0),.c(1'b0),.y(flag_mask_rss_2[4+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(18)) u_fmask_rss_2_2 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_159[2]),.b(1'b0),.c(1'b0),.y(flag_mask_rss_2[8+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(19)) u_fmask_rss_2_3 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_159[3]),.b(1'b0),.c(1'b0),.y(flag_mask_rss_2[12+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(20)) u_fmask_rss_2_4 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_159[4]),.b(1'b0),.c(1'b0),.y(flag_mask_rss_2[16+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(21)) u_fmask_rss_2_5 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_159[5]),.b(1'b0),.c(1'b0),.y(flag_mask_rss_2[20+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(22)) u_fmask_rss_2_6 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_159[6]),.b(1'b0),.c(1'b0),.y(flag_mask_rss_2[24+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(23)) u_fmask_rss_2_7 (.i({rs_s[1027:1026],rs_s[513:512]}),.a(flag_oh_159[7]),.b(1'b0),.c(1'b0),.y(flag_mask_rss_2[28+:4]));
+    wire [7:0] flag_oh_112;
+    wire [7:0] flag_oh_118;
+    wire [7:0] flag_oh_125;
+    wire [7:0] flag_oh_132;
+    wire [7:0] flag_oh_139;
+    wire [7:0] flag_oh_146;
+    wire [7:0] flag_oh_153;
+    wire [7:0] flag_oh_160;
+    wire [31:0] flag_mask_rsn_0;
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(0)) u_fmask_rsn_0_0 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_112[0]),.b(flag_oh_118[0]),.c(flag_oh_125[0]),.y(flag_mask_rsn_0[0+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(1)) u_fmask_rsn_0_1 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_112[1]),.b(flag_oh_118[1]),.c(flag_oh_125[1]),.y(flag_mask_rsn_0[4+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(2)) u_fmask_rsn_0_2 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_112[2]),.b(flag_oh_118[2]),.c(flag_oh_125[2]),.y(flag_mask_rsn_0[8+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(3)) u_fmask_rsn_0_3 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_112[3]),.b(flag_oh_118[3]),.c(flag_oh_125[3]),.y(flag_mask_rsn_0[12+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(4)) u_fmask_rsn_0_4 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_112[4]),.b(flag_oh_118[4]),.c(flag_oh_125[4]),.y(flag_mask_rsn_0[16+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(5)) u_fmask_rsn_0_5 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_112[5]),.b(flag_oh_118[5]),.c(flag_oh_125[5]),.y(flag_mask_rsn_0[20+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(6)) u_fmask_rsn_0_6 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_112[6]),.b(flag_oh_118[6]),.c(flag_oh_125[6]),.y(flag_mask_rsn_0[24+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(7)) u_fmask_rsn_0_7 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_112[7]),.b(flag_oh_118[7]),.c(flag_oh_125[7]),.y(flag_mask_rsn_0[28+:4]));
+    wire [31:0] flag_mask_rsn_1;
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(8)) u_fmask_rsn_1_0 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_132[0]),.b(flag_oh_139[0]),.c(flag_oh_146[0]),.y(flag_mask_rsn_1[0+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(9)) u_fmask_rsn_1_1 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_132[1]),.b(flag_oh_139[1]),.c(flag_oh_146[1]),.y(flag_mask_rsn_1[4+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(10)) u_fmask_rsn_1_2 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_132[2]),.b(flag_oh_139[2]),.c(flag_oh_146[2]),.y(flag_mask_rsn_1[8+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(11)) u_fmask_rsn_1_3 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_132[3]),.b(flag_oh_139[3]),.c(flag_oh_146[3]),.y(flag_mask_rsn_1[12+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(12)) u_fmask_rsn_1_4 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_132[4]),.b(flag_oh_139[4]),.c(flag_oh_146[4]),.y(flag_mask_rsn_1[16+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(13)) u_fmask_rsn_1_5 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_132[5]),.b(flag_oh_139[5]),.c(flag_oh_146[5]),.y(flag_mask_rsn_1[20+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(14)) u_fmask_rsn_1_6 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_132[6]),.b(flag_oh_139[6]),.c(flag_oh_146[6]),.y(flag_mask_rsn_1[24+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(15)) u_fmask_rsn_1_7 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_132[7]),.b(flag_oh_139[7]),.c(flag_oh_146[7]),.y(flag_mask_rsn_1[28+:4]));
+    wire [31:0] flag_mask_rsn_2;
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(16)) u_fmask_rsn_2_0 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_153[0]),.b(flag_oh_160[0]),.c(1'b0),.y(flag_mask_rsn_2[0+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(17)) u_fmask_rsn_2_1 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_153[1]),.b(flag_oh_160[1]),.c(1'b0),.y(flag_mask_rsn_2[4+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(18)) u_fmask_rsn_2_2 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_153[2]),.b(flag_oh_160[2]),.c(1'b0),.y(flag_mask_rsn_2[8+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(19)) u_fmask_rsn_2_3 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_153[3]),.b(flag_oh_160[3]),.c(1'b0),.y(flag_mask_rsn_2[12+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(20)) u_fmask_rsn_2_4 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_153[4]),.b(flag_oh_160[4]),.c(1'b0),.y(flag_mask_rsn_2[16+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(21)) u_fmask_rsn_2_5 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_153[5]),.b(flag_oh_160[5]),.c(1'b0),.y(flag_mask_rsn_2[20+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(22)) u_fmask_rsn_2_6 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_153[6]),.b(flag_oh_160[6]),.c(1'b0),.y(flag_mask_rsn_2[24+:4]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(4),.ID(23)) u_fmask_rsn_2_7 (.i({rs_n[1027:1026],rs_n[513:512]}),.a(flag_oh_153[7]),.b(flag_oh_160[7]),.c(1'b0),.y(flag_mask_rsn_2[28+:4]));
+    wire [7:0] flag_oh_113;
+    wire [7:0] flag_oh_119;
+    wire [7:0] flag_oh_126;
+    wire [7:0] flag_oh_133;
+    wire [7:0] flag_oh_140;
+    wire [7:0] flag_oh_147;
+    wire [7:0] flag_oh_154;
+    wire [7:0] flag_oh_161;
+    wire [15:0] flag_mask_nb_0;
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(0)) u_fmask_nb_0_0 (.i({l9_i[513:512]}),.a(flag_oh_113[0]),.b(flag_oh_119[0]),.c(flag_oh_126[0]),.y(flag_mask_nb_0[0+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(1)) u_fmask_nb_0_1 (.i({l9_i[513:512]}),.a(flag_oh_113[1]),.b(flag_oh_119[1]),.c(flag_oh_126[1]),.y(flag_mask_nb_0[2+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(2)) u_fmask_nb_0_2 (.i({l9_i[513:512]}),.a(flag_oh_113[2]),.b(flag_oh_119[2]),.c(flag_oh_126[2]),.y(flag_mask_nb_0[4+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(3)) u_fmask_nb_0_3 (.i({l9_i[513:512]}),.a(flag_oh_113[3]),.b(flag_oh_119[3]),.c(flag_oh_126[3]),.y(flag_mask_nb_0[6+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(4)) u_fmask_nb_0_4 (.i({l9_i[513:512]}),.a(flag_oh_113[4]),.b(flag_oh_119[4]),.c(flag_oh_126[4]),.y(flag_mask_nb_0[8+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(5)) u_fmask_nb_0_5 (.i({l9_i[513:512]}),.a(flag_oh_113[5]),.b(flag_oh_119[5]),.c(flag_oh_126[5]),.y(flag_mask_nb_0[10+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(6)) u_fmask_nb_0_6 (.i({l9_i[513:512]}),.a(flag_oh_113[6]),.b(flag_oh_119[6]),.c(flag_oh_126[6]),.y(flag_mask_nb_0[12+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(7)) u_fmask_nb_0_7 (.i({l9_i[513:512]}),.a(flag_oh_113[7]),.b(flag_oh_119[7]),.c(flag_oh_126[7]),.y(flag_mask_nb_0[14+:2]));
+    wire [15:0] flag_mask_nb_1;
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(8)) u_fmask_nb_1_0 (.i({l9_i[513:512]}),.a(flag_oh_133[0]),.b(flag_oh_140[0]),.c(flag_oh_147[0]),.y(flag_mask_nb_1[0+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(9)) u_fmask_nb_1_1 (.i({l9_i[513:512]}),.a(flag_oh_133[1]),.b(flag_oh_140[1]),.c(flag_oh_147[1]),.y(flag_mask_nb_1[2+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(10)) u_fmask_nb_1_2 (.i({l9_i[513:512]}),.a(flag_oh_133[2]),.b(flag_oh_140[2]),.c(flag_oh_147[2]),.y(flag_mask_nb_1[4+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(11)) u_fmask_nb_1_3 (.i({l9_i[513:512]}),.a(flag_oh_133[3]),.b(flag_oh_140[3]),.c(flag_oh_147[3]),.y(flag_mask_nb_1[6+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(12)) u_fmask_nb_1_4 (.i({l9_i[513:512]}),.a(flag_oh_133[4]),.b(flag_oh_140[4]),.c(flag_oh_147[4]),.y(flag_mask_nb_1[8+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(13)) u_fmask_nb_1_5 (.i({l9_i[513:512]}),.a(flag_oh_133[5]),.b(flag_oh_140[5]),.c(flag_oh_147[5]),.y(flag_mask_nb_1[10+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(14)) u_fmask_nb_1_6 (.i({l9_i[513:512]}),.a(flag_oh_133[6]),.b(flag_oh_140[6]),.c(flag_oh_147[6]),.y(flag_mask_nb_1[12+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(15)) u_fmask_nb_1_7 (.i({l9_i[513:512]}),.a(flag_oh_133[7]),.b(flag_oh_140[7]),.c(flag_oh_147[7]),.y(flag_mask_nb_1[14+:2]));
+    wire [15:0] flag_mask_nb_2;
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(16)) u_fmask_nb_2_0 (.i({l9_i[513:512]}),.a(flag_oh_154[0]),.b(flag_oh_161[0]),.c(1'b0),.y(flag_mask_nb_2[0+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(17)) u_fmask_nb_2_1 (.i({l9_i[513:512]}),.a(flag_oh_154[1]),.b(flag_oh_161[1]),.c(1'b0),.y(flag_mask_nb_2[2+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(18)) u_fmask_nb_2_2 (.i({l9_i[513:512]}),.a(flag_oh_154[2]),.b(flag_oh_161[2]),.c(1'b0),.y(flag_mask_nb_2[4+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(19)) u_fmask_nb_2_3 (.i({l9_i[513:512]}),.a(flag_oh_154[3]),.b(flag_oh_161[3]),.c(1'b0),.y(flag_mask_nb_2[6+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(20)) u_fmask_nb_2_4 (.i({l9_i[513:512]}),.a(flag_oh_154[4]),.b(flag_oh_161[4]),.c(1'b0),.y(flag_mask_nb_2[8+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(21)) u_fmask_nb_2_5 (.i({l9_i[513:512]}),.a(flag_oh_154[5]),.b(flag_oh_161[5]),.c(1'b0),.y(flag_mask_nb_2[10+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(22)) u_fmask_nb_2_6 (.i({l9_i[513:512]}),.a(flag_oh_154[6]),.b(flag_oh_161[6]),.c(1'b0),.y(flag_mask_nb_2[12+:2]));
+    qfd_dv_s8b_lp_flags_mask_gate #(.FW(2),.ID(23)) u_fmask_nb_2_7 (.i({l9_i[513:512]}),.a(flag_oh_154[7]),.b(flag_oh_161[7]),.c(1'b0),.y(flag_mask_nb_2[14+:2]));
     // ---- LANDING 0: chu_q r_fe -> r_fw, 1095 b (u_fdn.chu_q)
     wire [8*((1094) - (0) + 1)-1:0] lpl_0_bank;  wire [31:0] lpl_0_epo;  wire [8*(((((1094) - (0) + 1))+24-1)/24)-1:0] lpl_0_vld;  wire [1094:0] chu_q__l_r_fw, lpl_0_o;
     ot_pl_land_n32_split_w #(.W(((1094) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_0_w (.ck(ck_r_fe), .rsi({lpr_r_fe_c5, lpr_r_fe_c0}), .i(chu_q), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));
@@ -1323,12 +1428,12 @@ module qfd_dv_s8b_lp #(
     assign stn_cfg__l_r_st0 = lpl_111_o;
     // ---- LANDING 112: rsn_r0 r_hc1 -> r_st0, 132 b (u_r0.rs_n_lo_p, u_r0.rs_n_hi_p, u_r0.rs_n_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_112_bank;  wire [31:0] lpl_112_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_112_vld;  wire [131:0] rsn_r0__l_r_st0, lpl_112_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_112_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c2), .i(rsn_r0), .bank(lpl_112_bank), .epo(lpl_112_epo), .vld(lpl_112_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_112_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c2), .i(rsn_r0), .masked(flag_mask_rsn_0), .flags_oh(flag_oh_112), .bank(lpl_112_bank), .epo(lpl_112_epo), .vld(lpl_112_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_112_r (.ck(ck_r_st0), .rsi(lpr_r_st0_c1), .bank(lpl_112_bank), .epo(lpl_112_epo), .vld(lpl_112_vld), .o(lpl_112_o));
     assign rsn_r0__l_r_st0 = lpl_112_o;
     // ---- LANDING 113: nb_r0 r_fw -> r_st0, 66 b (u_r0.nb_d_p, u_r0.nb_c_p)
     wire [8*((65) - (0) + 1)-1:0] lpl_113_bank;  wire [31:0] lpl_113_epo;  wire [8*(((((65) - (0) + 1))+24-1)/24)-1:0] lpl_113_vld;  wire [65:0] nb_r0__l_r_st0, lpl_113_o;
-    ot_pl_land_n32_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_113_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c7), .i(nb_r0), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(2),.FLO(64)) u_lpl_113_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c7), .i(nb_r0), .masked(flag_mask_nb_0), .flags_oh(flag_oh_113), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld));
     ot_pl_land_chunk_r #(.W(((65) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_113_r (.ck(ck_r_st0), .rsi(lpr_r_st0_c3), .bank(lpl_113_bank), .epo(lpl_113_epo), .vld(lpl_113_vld), .o(lpl_113_o));
     assign nb_r0__l_r_st0 = lpl_113_o;
     // ---- LANDING 114: flt_b2 r_st2 -> r_st0, 4 b (u_r0.flt_bank_i)
@@ -1347,17 +1452,17 @@ module qfd_dv_s8b_lp #(
     assign stn_cfg__l_r_st1 = lpl_116_o;
     // ---- LANDING 117: rss_r1 r_st0 -> r_st1, 132 b (u_r1.rs_s_lo_p, u_r1.rs_s_hi_p, u_r1.rs_s_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_117_bank;  wire [31:0] lpl_117_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_117_vld;  wire [131:0] rss_r1__l_r_st1, lpl_117_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_117_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c1), .i(rss_r1), .bank(lpl_117_bank), .epo(lpl_117_epo), .vld(lpl_117_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_117_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c1), .i(rss_r1), .masked(flag_mask_rss_0), .flags_oh(flag_oh_117), .bank(lpl_117_bank), .epo(lpl_117_epo), .vld(lpl_117_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_117_r (.ck(ck_r_st1), .rsi(lpr_r_st1), .bank(lpl_117_bank), .epo(lpl_117_epo), .vld(lpl_117_vld), .o(lpl_117_o));
     assign rss_r1__l_r_st1 = lpl_117_o;
     // ---- LANDING 118: rsn_r1 r_hc1 -> r_st1, 132 b (u_r1.rs_n_lo_p, u_r1.rs_n_hi_p, u_r1.rs_n_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_118_bank;  wire [31:0] lpl_118_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_118_vld;  wire [131:0] rsn_r1__l_r_st1, lpl_118_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_118_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c3), .i(rsn_r1), .bank(lpl_118_bank), .epo(lpl_118_epo), .vld(lpl_118_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_118_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c3), .i(rsn_r1), .masked(flag_mask_rsn_0), .flags_oh(flag_oh_118), .bank(lpl_118_bank), .epo(lpl_118_epo), .vld(lpl_118_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_118_r (.ck(ck_r_st1), .rsi(lpr_r_st1), .bank(lpl_118_bank), .epo(lpl_118_epo), .vld(lpl_118_vld), .o(lpl_118_o));
     assign rsn_r1__l_r_st1 = lpl_118_o;
     // ---- LANDING 119: nb_r1 r_fw -> r_st1, 66 b (u_r1.nb_d_p, u_r1.nb_c_p)
     wire [8*((65) - (0) + 1)-1:0] lpl_119_bank;  wire [31:0] lpl_119_epo;  wire [8*(((((65) - (0) + 1))+24-1)/24)-1:0] lpl_119_vld;  wire [65:0] nb_r1__l_r_st1, lpl_119_o;
-    ot_pl_land_n32_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_119_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r1), .bank(lpl_119_bank), .epo(lpl_119_epo), .vld(lpl_119_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(2),.FLO(64)) u_lpl_119_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r1), .masked(flag_mask_nb_0), .flags_oh(flag_oh_119), .bank(lpl_119_bank), .epo(lpl_119_epo), .vld(lpl_119_vld));
     ot_pl_land_chunk_r #(.W(((65) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_119_r (.ck(ck_r_st1), .rsi(lpr_r_st1), .bank(lpl_119_bank), .epo(lpl_119_epo), .vld(lpl_119_vld), .o(lpl_119_o));
     assign nb_r1__l_r_st1 = lpl_119_o;
     // ---- LANDING 120: bt_q1 r_st0 -> r_st1, 32 b (u_r1.bt_q_p)
@@ -1381,17 +1486,17 @@ module qfd_dv_s8b_lp #(
     assign stn_cfg__l_r_st2 = lpl_123_o;
     // ---- LANDING 124: rss_r2 r_st0 -> r_st2, 132 b (u_r2.rs_s_lo_p, u_r2.rs_s_hi_p, u_r2.rs_s_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_124_bank;  wire [31:0] lpl_124_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_124_vld;  wire [131:0] rss_r2__l_r_st2, lpl_124_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_124_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c1), .i(rss_r2), .bank(lpl_124_bank), .epo(lpl_124_epo), .vld(lpl_124_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_124_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c1), .i(rss_r2), .masked(flag_mask_rss_0), .flags_oh(flag_oh_124), .bank(lpl_124_bank), .epo(lpl_124_epo), .vld(lpl_124_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_124_r (.ck(ck_r_st2), .rsi(lpr_r_st2), .bank(lpl_124_bank), .epo(lpl_124_epo), .vld(lpl_124_vld), .o(lpl_124_o));
     assign rss_r2__l_r_st2 = lpl_124_o;
     // ---- LANDING 125: rsn_r2 r_hc1 -> r_st2, 132 b (u_r2.rs_n_lo_p, u_r2.rs_n_hi_p, u_r2.rs_n_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_125_bank;  wire [31:0] lpl_125_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_125_vld;  wire [131:0] rsn_r2__l_r_st2, lpl_125_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_125_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c3), .i(rsn_r2), .bank(lpl_125_bank), .epo(lpl_125_epo), .vld(lpl_125_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_125_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c3), .i(rsn_r2), .masked(flag_mask_rsn_0), .flags_oh(flag_oh_125), .bank(lpl_125_bank), .epo(lpl_125_epo), .vld(lpl_125_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_125_r (.ck(ck_r_st2), .rsi(lpr_r_st2), .bank(lpl_125_bank), .epo(lpl_125_epo), .vld(lpl_125_vld), .o(lpl_125_o));
     assign rsn_r2__l_r_st2 = lpl_125_o;
     // ---- LANDING 126: nb_r2 r_fw -> r_st2, 66 b (u_r2.nb_d_p, u_r2.nb_c_p)
     wire [8*((65) - (0) + 1)-1:0] lpl_126_bank;  wire [31:0] lpl_126_epo;  wire [8*(((((65) - (0) + 1))+24-1)/24)-1:0] lpl_126_vld;  wire [65:0] nb_r2__l_r_st2, lpl_126_o;
-    ot_pl_land_n32_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_126_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r2), .bank(lpl_126_bank), .epo(lpl_126_epo), .vld(lpl_126_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(2),.FLO(64)) u_lpl_126_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r2), .masked(flag_mask_nb_0), .flags_oh(flag_oh_126), .bank(lpl_126_bank), .epo(lpl_126_epo), .vld(lpl_126_vld));
     ot_pl_land_chunk_r #(.W(((65) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_126_r (.ck(ck_r_st2), .rsi(lpr_r_st2), .bank(lpl_126_bank), .epo(lpl_126_epo), .vld(lpl_126_vld), .o(lpl_126_o));
     assign nb_r2__l_r_st2 = lpl_126_o;
     // ---- LANDING 127: bt_q2 r_st0 -> r_st2, 32 b (u_r2.bt_q_p)
@@ -1415,17 +1520,17 @@ module qfd_dv_s8b_lp #(
     assign stn_cfg__l_r_st3 = lpl_130_o;
     // ---- LANDING 131: rss_r3 r_st0 -> r_st3, 132 b (u_r3.rs_s_lo_p, u_r3.rs_s_hi_p, u_r3.rs_s_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_131_bank;  wire [31:0] lpl_131_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_131_vld;  wire [131:0] rss_r3__l_r_st3, lpl_131_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_131_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c2), .i(rss_r3), .bank(lpl_131_bank), .epo(lpl_131_epo), .vld(lpl_131_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_131_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c2), .i(rss_r3), .masked(flag_mask_rss_0), .flags_oh(flag_oh_131), .bank(lpl_131_bank), .epo(lpl_131_epo), .vld(lpl_131_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_131_r (.ck(ck_r_st3), .rsi(lpr_r_st3), .bank(lpl_131_bank), .epo(lpl_131_epo), .vld(lpl_131_vld), .o(lpl_131_o));
     assign rss_r3__l_r_st3 = lpl_131_o;
     // ---- LANDING 132: rsn_r3 r_hc1 -> r_st3, 132 b (u_r3.rs_n_lo_p, u_r3.rs_n_hi_p, u_r3.rs_n_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_132_bank;  wire [31:0] lpl_132_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_132_vld;  wire [131:0] rsn_r3__l_r_st3, lpl_132_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_132_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c3), .i(rsn_r3), .bank(lpl_132_bank), .epo(lpl_132_epo), .vld(lpl_132_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_132_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c3), .i(rsn_r3), .masked(flag_mask_rsn_1), .flags_oh(flag_oh_132), .bank(lpl_132_bank), .epo(lpl_132_epo), .vld(lpl_132_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_132_r (.ck(ck_r_st3), .rsi(lpr_r_st3), .bank(lpl_132_bank), .epo(lpl_132_epo), .vld(lpl_132_vld), .o(lpl_132_o));
     assign rsn_r3__l_r_st3 = lpl_132_o;
     // ---- LANDING 133: nb_r3 r_fw -> r_st3, 66 b (u_r3.nb_d_p, u_r3.nb_c_p)
     wire [8*((65) - (0) + 1)-1:0] lpl_133_bank;  wire [31:0] lpl_133_epo;  wire [8*(((((65) - (0) + 1))+24-1)/24)-1:0] lpl_133_vld;  wire [65:0] nb_r3__l_r_st3, lpl_133_o;
-    ot_pl_land_n32_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_133_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r3), .bank(lpl_133_bank), .epo(lpl_133_epo), .vld(lpl_133_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(2),.FLO(64)) u_lpl_133_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r3), .masked(flag_mask_nb_1), .flags_oh(flag_oh_133), .bank(lpl_133_bank), .epo(lpl_133_epo), .vld(lpl_133_vld));
     ot_pl_land_chunk_r #(.W(((65) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_133_r (.ck(ck_r_st3), .rsi(lpr_r_st3), .bank(lpl_133_bank), .epo(lpl_133_epo), .vld(lpl_133_vld), .o(lpl_133_o));
     assign nb_r3__l_r_st3 = lpl_133_o;
     // ---- LANDING 134: bt_q3 r_st0 -> r_st3, 32 b (u_r3.bt_q_p)
@@ -1449,17 +1554,17 @@ module qfd_dv_s8b_lp #(
     assign stn_cfg__l_r_st4 = lpl_137_o;
     // ---- LANDING 138: rss_r4 r_st0 -> r_st4, 132 b (u_r4.rs_s_lo_p, u_r4.rs_s_hi_p, u_r4.rs_s_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_138_bank;  wire [31:0] lpl_138_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_138_vld;  wire [131:0] rss_r4__l_r_st4, lpl_138_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_138_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c2), .i(rss_r4), .bank(lpl_138_bank), .epo(lpl_138_epo), .vld(lpl_138_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_138_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c2), .i(rss_r4), .masked(flag_mask_rss_1), .flags_oh(flag_oh_138), .bank(lpl_138_bank), .epo(lpl_138_epo), .vld(lpl_138_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_138_r (.ck(ck_r_st4), .rsi(lpr_r_st4), .bank(lpl_138_bank), .epo(lpl_138_epo), .vld(lpl_138_vld), .o(lpl_138_o));
     assign rss_r4__l_r_st4 = lpl_138_o;
     // ---- LANDING 139: rsn_r4 r_hc1 -> r_st4, 132 b (u_r4.rs_n_lo_p, u_r4.rs_n_hi_p, u_r4.rs_n_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_139_bank;  wire [31:0] lpl_139_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_139_vld;  wire [131:0] rsn_r4__l_r_st4, lpl_139_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_139_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c3), .i(rsn_r4), .bank(lpl_139_bank), .epo(lpl_139_epo), .vld(lpl_139_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_139_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c3), .i(rsn_r4), .masked(flag_mask_rsn_1), .flags_oh(flag_oh_139), .bank(lpl_139_bank), .epo(lpl_139_epo), .vld(lpl_139_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_139_r (.ck(ck_r_st4), .rsi(lpr_r_st4), .bank(lpl_139_bank), .epo(lpl_139_epo), .vld(lpl_139_vld), .o(lpl_139_o));
     assign rsn_r4__l_r_st4 = lpl_139_o;
     // ---- LANDING 140: nb_r4 r_fw -> r_st4, 66 b (u_r4.nb_d_p, u_r4.nb_c_p)
     wire [8*((65) - (0) + 1)-1:0] lpl_140_bank;  wire [31:0] lpl_140_epo;  wire [8*(((((65) - (0) + 1))+24-1)/24)-1:0] lpl_140_vld;  wire [65:0] nb_r4__l_r_st4, lpl_140_o;
-    ot_pl_land_n32_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_140_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r4), .bank(lpl_140_bank), .epo(lpl_140_epo), .vld(lpl_140_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(2),.FLO(64)) u_lpl_140_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r4), .masked(flag_mask_nb_1), .flags_oh(flag_oh_140), .bank(lpl_140_bank), .epo(lpl_140_epo), .vld(lpl_140_vld));
     ot_pl_land_chunk_r #(.W(((65) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_140_r (.ck(ck_r_st4), .rsi(lpr_r_st4), .bank(lpl_140_bank), .epo(lpl_140_epo), .vld(lpl_140_vld), .o(lpl_140_o));
     assign nb_r4__l_r_st4 = lpl_140_o;
     // ---- LANDING 141: bt_q4 r_st0 -> r_st4, 32 b (u_r4.bt_q_p)
@@ -1483,17 +1588,17 @@ module qfd_dv_s8b_lp #(
     assign stn_cfg__l_r_st5 = lpl_144_o;
     // ---- LANDING 145: rss_r5 r_st0 -> r_st5, 132 b (u_r5.rs_s_lo_p, u_r5.rs_s_hi_p, u_r5.rs_s_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_145_bank;  wire [31:0] lpl_145_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_145_vld;  wire [131:0] rss_r5__l_r_st5, lpl_145_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_145_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c2), .i(rss_r5), .bank(lpl_145_bank), .epo(lpl_145_epo), .vld(lpl_145_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_145_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c2), .i(rss_r5), .masked(flag_mask_rss_1), .flags_oh(flag_oh_145), .bank(lpl_145_bank), .epo(lpl_145_epo), .vld(lpl_145_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_145_r (.ck(ck_r_st5), .rsi(lpr_r_st5), .bank(lpl_145_bank), .epo(lpl_145_epo), .vld(lpl_145_vld), .o(lpl_145_o));
     assign rss_r5__l_r_st5 = lpl_145_o;
     // ---- LANDING 146: rsn_r5 r_hc1 -> r_st5, 132 b (u_r5.rs_n_lo_p, u_r5.rs_n_hi_p, u_r5.rs_n_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_146_bank;  wire [31:0] lpl_146_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_146_vld;  wire [131:0] rsn_r5__l_r_st5, lpl_146_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_146_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c3), .i(rsn_r5), .bank(lpl_146_bank), .epo(lpl_146_epo), .vld(lpl_146_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_146_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c3), .i(rsn_r5), .masked(flag_mask_rsn_1), .flags_oh(flag_oh_146), .bank(lpl_146_bank), .epo(lpl_146_epo), .vld(lpl_146_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_146_r (.ck(ck_r_st5), .rsi(lpr_r_st5), .bank(lpl_146_bank), .epo(lpl_146_epo), .vld(lpl_146_vld), .o(lpl_146_o));
     assign rsn_r5__l_r_st5 = lpl_146_o;
     // ---- LANDING 147: nb_r5 r_fw -> r_st5, 66 b (u_r5.nb_d_p, u_r5.nb_c_p)
     wire [8*((65) - (0) + 1)-1:0] lpl_147_bank;  wire [31:0] lpl_147_epo;  wire [8*(((((65) - (0) + 1))+24-1)/24)-1:0] lpl_147_vld;  wire [65:0] nb_r5__l_r_st5, lpl_147_o;
-    ot_pl_land_n32_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_147_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r5), .bank(lpl_147_bank), .epo(lpl_147_epo), .vld(lpl_147_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(2),.FLO(64)) u_lpl_147_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r5), .masked(flag_mask_nb_1), .flags_oh(flag_oh_147), .bank(lpl_147_bank), .epo(lpl_147_epo), .vld(lpl_147_vld));
     ot_pl_land_chunk_r #(.W(((65) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_147_r (.ck(ck_r_st5), .rsi(lpr_r_st5), .bank(lpl_147_bank), .epo(lpl_147_epo), .vld(lpl_147_vld), .o(lpl_147_o));
     assign nb_r5__l_r_st5 = lpl_147_o;
     // ---- LANDING 148: bt_q5 r_st0 -> r_st5, 32 b (u_r5.bt_q_p)
@@ -1517,17 +1622,17 @@ module qfd_dv_s8b_lp #(
     assign stn_cfg__l_r_st6 = lpl_151_o;
     // ---- LANDING 152: rss_r6 r_st0 -> r_st6, 132 b (u_r6.rs_s_lo_p, u_r6.rs_s_hi_p, u_r6.rs_s_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_152_bank;  wire [31:0] lpl_152_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_152_vld;  wire [131:0] rss_r6__l_r_st6, lpl_152_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_152_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c2), .i(rss_r6), .bank(lpl_152_bank), .epo(lpl_152_epo), .vld(lpl_152_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_152_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c2), .i(rss_r6), .masked(flag_mask_rss_1), .flags_oh(flag_oh_152), .bank(lpl_152_bank), .epo(lpl_152_epo), .vld(lpl_152_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_152_r (.ck(ck_r_st6), .rsi(lpr_r_st6), .bank(lpl_152_bank), .epo(lpl_152_epo), .vld(lpl_152_vld), .o(lpl_152_o));
     assign rss_r6__l_r_st6 = lpl_152_o;
     // ---- LANDING 153: rsn_r6 r_hc1 -> r_st6, 132 b (u_r6.rs_n_lo_p, u_r6.rs_n_hi_p, u_r6.rs_n_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_153_bank;  wire [31:0] lpl_153_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_153_vld;  wire [131:0] rsn_r6__l_r_st6, lpl_153_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_153_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c4), .i(rsn_r6), .bank(lpl_153_bank), .epo(lpl_153_epo), .vld(lpl_153_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_153_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c4), .i(rsn_r6), .masked(flag_mask_rsn_2), .flags_oh(flag_oh_153), .bank(lpl_153_bank), .epo(lpl_153_epo), .vld(lpl_153_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_153_r (.ck(ck_r_st6), .rsi(lpr_r_st6), .bank(lpl_153_bank), .epo(lpl_153_epo), .vld(lpl_153_vld), .o(lpl_153_o));
     assign rsn_r6__l_r_st6 = lpl_153_o;
     // ---- LANDING 154: nb_r6 r_fw -> r_st6, 66 b (u_r6.nb_d_p, u_r6.nb_c_p)
     wire [8*((65) - (0) + 1)-1:0] lpl_154_bank;  wire [31:0] lpl_154_epo;  wire [8*(((((65) - (0) + 1))+24-1)/24)-1:0] lpl_154_vld;  wire [65:0] nb_r6__l_r_st6, lpl_154_o;
-    ot_pl_land_n32_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_154_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r6), .bank(lpl_154_bank), .epo(lpl_154_epo), .vld(lpl_154_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(2),.FLO(64)) u_lpl_154_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r6), .masked(flag_mask_nb_2), .flags_oh(flag_oh_154), .bank(lpl_154_bank), .epo(lpl_154_epo), .vld(lpl_154_vld));
     ot_pl_land_chunk_r #(.W(((65) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_154_r (.ck(ck_r_st6), .rsi(lpr_r_st6), .bank(lpl_154_bank), .epo(lpl_154_epo), .vld(lpl_154_vld), .o(lpl_154_o));
     assign nb_r6__l_r_st6 = lpl_154_o;
     // ---- LANDING 155: bt_q6 r_st0 -> r_st6, 32 b (u_r6.bt_q_p)
@@ -1551,17 +1656,17 @@ module qfd_dv_s8b_lp #(
     assign stn_cfg__l_r_st7 = lpl_158_o;
     // ---- LANDING 159: rss_r7 r_st0 -> r_st7, 132 b (u_r7.rs_s_lo_p, u_r7.rs_s_hi_p, u_r7.rs_s_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_159_bank;  wire [31:0] lpl_159_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_159_vld;  wire [131:0] rss_r7__l_r_st7, lpl_159_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_159_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c2), .i(rss_r7), .bank(lpl_159_bank), .epo(lpl_159_epo), .vld(lpl_159_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_159_w (.ck(ck_r_st0), .rsi(lpr_r_st0_c2), .i(rss_r7), .masked(flag_mask_rss_2), .flags_oh(flag_oh_159), .bank(lpl_159_bank), .epo(lpl_159_epo), .vld(lpl_159_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_159_r (.ck(ck_r_st7), .rsi(lpr_r_st7), .bank(lpl_159_bank), .epo(lpl_159_epo), .vld(lpl_159_vld), .o(lpl_159_o));
     assign rss_r7__l_r_st7 = lpl_159_o;
     // ---- LANDING 160: rsn_r7 r_hc1 -> r_st7, 132 b (u_r7.rs_n_lo_p, u_r7.rs_n_hi_p, u_r7.rs_n_c_p)
     wire [8*((131) - (0) + 1)-1:0] lpl_160_bank;  wire [31:0] lpl_160_epo;  wire [8*(((((131) - (0) + 1))+24-1)/24)-1:0] lpl_160_vld;  wire [131:0] rsn_r7__l_r_st7, lpl_160_o;
-    ot_pl_land_n32_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_160_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c4), .i(rsn_r7), .bank(lpl_160_bank), .epo(lpl_160_epo), .vld(lpl_160_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((131) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(4),.FLO(128)) u_lpl_160_w (.ck(ck_r_hc1), .rsi(lpr_r_hc1_c4), .i(rsn_r7), .masked(flag_mask_rsn_2), .flags_oh(flag_oh_160), .bank(lpl_160_bank), .epo(lpl_160_epo), .vld(lpl_160_vld));
     ot_pl_land_chunk_r #(.W(((131) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_160_r (.ck(ck_r_st7), .rsi(lpr_r_st7), .bank(lpl_160_bank), .epo(lpl_160_epo), .vld(lpl_160_vld), .o(lpl_160_o));
     assign rsn_r7__l_r_st7 = lpl_160_o;
     // ---- LANDING 161: nb_r7 r_fw -> r_st7, 66 b (u_r7.nb_d_p, u_r7.nb_c_p)
     wire [8*((65) - (0) + 1)-1:0] lpl_161_bank;  wire [31:0] lpl_161_epo;  wire [8*(((((65) - (0) + 1))+24-1)/24)-1:0] lpl_161_vld;  wire [65:0] nb_r7__l_r_st7, lpl_161_o;
-    ot_pl_land_n32_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24)) u_lpl_161_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r7), .bank(lpl_161_bank), .epo(lpl_161_epo), .vld(lpl_161_vld));
+    qfd_dv_s8b_lp_flags_mask_chunk_w #(.W(((65) - (0) + 1)), .D(8), .CHUNK_BITS(24),.FW(2),.FLO(64)) u_lpl_161_w (.ck(ck_r_fw), .rsi(lpr_r_fw_c8), .i(nb_r7), .masked(flag_mask_nb_2), .flags_oh(flag_oh_161), .bank(lpl_161_bank), .epo(lpl_161_epo), .vld(lpl_161_vld));
     ot_pl_land_chunk_r #(.W(((65) - (0) + 1)), .D(8), .K(4), .CHUNK_BITS(24)) u_lpl_161_r (.ck(ck_r_st7), .rsi(lpr_r_st7), .bank(lpl_161_bank), .epo(lpl_161_epo), .vld(lpl_161_vld), .o(lpl_161_o));
     assign nb_r7__l_r_st7 = lpl_161_o;
     // ---- LANDING 162: bt_q7 r_st0 -> r_st7, 32 b (u_r7.bt_q_p)
@@ -1882,4 +1987,106 @@ module qfd_dv_s8b_lp #(
     ot_qfd_xs_leaf u_xl3_5 (.clk(ck_r_hc3), .rst_n(lpr_c_u_xl3_5), .w_v(x31wv1), .w_ep(x31wep1), .w_off(x31woff1), .w_m(x31wm1), .w_d(x31wd1), .w_ctl(x31wc1), .c_v(x31cv1), .c_ep(x31cep1), .wo_v(x31wv2), .wo_ep(x31wep2), .wo_off(x31woff2), .wo_m(x31wm2), .wo_d(x31wd2), .wo_ctl(x31wc2), .co_v(x31cv2), .co_ep(x31cep2), .r_v(lr_v3[5]), .r_t(lr_t3[5]), .r_ep(lr_ep3[5]), .r_p(lr_p3[167:140]), .q_v(lq_v3[5]), .q(lq3[383:320]), .q_bad(lqb3[5]));   // region r_hc3, t = 0
     ot_qfd_xs_leaf u_xl3_6 (.clk(ck_r_hc3), .rst_n(lpr_c_u_xl3_6), .w_v(x31wv2), .w_ep(x31wep2), .w_off(x31woff2), .w_m(x31wm2), .w_d(x31wd2), .w_ctl(x31wc2), .c_v(x31cv2), .c_ep(x31cep2), .wo_v(x31wv3), .wo_ep(x31wep3), .wo_off(x31woff3), .wo_m(x31wm3), .wo_d(x31wd3), .wo_ctl(x31wc3), .co_v(x31cv3), .co_ep(x31cep3), .r_v(lr_v3[6]), .r_t(lr_t3[6]), .r_ep(lr_ep3[6]), .r_p(lr_p3[195:168]), .q_v(lq_v3[6]), .q(lq3[447:384]), .q_bad(lqb3[6]));   // region r_hc3, t = 0
     ot_qfd_xs_leaf u_xl3_7 (.clk(ck_r_hc3), .rst_n(lpr_c_u_xl3_7), .w_v(x31wv3), .w_ep(x31wep3), .w_off(x31woff3), .w_m(x31wm3), .w_d(x31wd3), .w_ctl(x31wc3), .c_v(x31cv3), .c_ep(x31cep3), .wo_v(x31wv4), .wo_ep(x31wep4), .wo_off(x31woff4), .wo_m(x31wm4), .wo_d(x31wd4), .wo_ctl(x31wc4), .co_v(x31cv4), .co_ep(x31cep4), .r_v(lr_v3[7]), .r_t(lr_t3[7]), .r_ep(lr_ep3[7]), .r_p(lr_p3[223:196]), .q_v(lq_v3[7]), .q(lq3[511:448]), .q_bad(lqb3[7]));   // region r_hc3, t = 0
+endmodule
+
+
+module qfd_dv_s8b_lp_flags_mask_local_w #(
+    parameter integer W = 24, D = 4, FW=2, FLO=16,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D),
+    parameter integer GB = 12                                  // data bits per kept selector copy (~2 GB + 2 loads)
+) (
+    input wire ck, rsi,
+    input wire [W-1:0] i,
+    input wire [D*FW-1:0] masked,
+    output wire [D-1:0] flags_oh,
+    output wire [D*W-1:0] bank,
+    output wire [D*(AW+1)-1:0] epo,
+    output wire [D-1:0] vld
+);
+    localparam integer NC = (W + GB - 1) / GB;
+    reg rq;
+    reg [D-1:0] valid;
+    wire [NC*D-1:0] oh;                                        // copy g = oh[g*D +: D]
+    always @(posedge ck) rq <= rsi;
+    genvar s, g;
+    generate for (g = 0; g < NC; g = g + 1) begin : g_oh
+        ot_pl_land_n32_oh #(.D(D), .ID(g)) u_oh (.ck(ck), .rq(rq), .oh(oh[g*D +: D]));
+    end endgenerate
+    assign flags_oh=oh[(FLO/GB)*D+:D];
+    always @(posedge ck)
+        if (!rq) valid <= 0;
+        else     valid <= valid | oh[D-1:0];
+    generate for (s=0;s<D;s=s+1) begin:g_slot
+        for (g = 0; g < NC; g = g + 1) begin : g_grp
+            localparam integer LO = g * GB;
+            localparam integer GW = (W - LO < GB) ? W - LO : GB;
+            reg [GW-1:0] dq;
+            wire [GW-1:0] slot_i;
+            for(genvar h=0;h<GW;h=h+1)begin:g_input
+                if(LO+h>=FLO && LO+h<FLO+FW)begin:g_masked
+                    assign slot_i[h]=masked[s*FW+LO+h-FLO];
+                end else begin:g_original
+                    assign slot_i[h]=i[LO+h];
+                end
+            end
+            always @(posedge ck) if (oh[g*D + s]) dq <= slot_i;
+            assign bank[s*W + LO +: GW] = dq;
+        end
+    end endgenerate
+    assign vld = valid;
+`ifndef SYNTHESIS
+    reg [AW:0] wc;
+    reg [AW:0] epoch [0:D-1];
+    always @(posedge ck) if (!rq) wc <= 0; else wc <= wc + 1'b1;
+    generate for (s=0;s<D;s=s+1) begin:g_ep
+        always @(posedge ck) if (rq && oh[s]) epoch[s] <= wc;
+        assign epo[s*(AW+1)+:AW+1] = epoch[s];
+    end endgenerate
+`else
+    assign epo = {(D*(AW+1)){1'b0}};
+`endif
+endmodule
+
+module qfd_dv_s8b_lp_flags_mask_chunk_w #(
+    parameter integer W = 514, D = 4, CHUNK_BITS = 24, FW=2, FLO=64,
+    parameter integer AW = (D <= 2) ? 1 : $clog2(D)
+) (
+    input wire ck, rsi,
+    input wire [W-1:0] i,
+    input wire [D*FW-1:0] masked,
+    output wire [D-1:0] flags_oh,
+    output wire [D*W-1:0] bank,
+    output wire [D*(AW+1)-1:0] epo,
+    output wire [D*((W+CHUNK_BITS-1)/CHUNK_BITS)-1:0] vld
+);
+    genvar c, s;
+    generate for (c = 0; c < (W + CHUNK_BITS - 1) / CHUNK_BITS; c = c + 1) begin : g_chunk
+        localparam integer CW = (W - c*CHUNK_BITS < CHUNK_BITS) ? W - c*CHUNK_BITS : CHUNK_BITS;
+        wire [D*CW-1:0] cb;
+        wire [D*(AW+1)-1:0] ce;
+        wire [D-1:0] cv;
+        if(c==FLO/CHUNK_BITS)begin:g_mask_target
+        (* keep_hierarchy = "yes" *) qfd_dv_s8b_lp_flags_mask_local_w #(.W(CW), .D(D),.FW(FW),.FLO(FLO-c*CHUNK_BITS)) u_local (
+            .ck(ck), .rsi(rsi), .i(i[c*CHUNK_BITS +: CW]), .masked(masked), .flags_oh(flags_oh), .bank(cb), .epo(ce), .vld(cv));
+        end else begin:g_unchanged
+        (* keep_hierarchy = "yes" *) ot_pl_land_n32_local_w #(.W(CW), .D(D)) u_local (
+            .ck(ck), .rsi(rsi), .i(i[c*CHUNK_BITS +: CW]), .bank(cb), .epo(ce), .vld(cv));
+        end
+        for (s = 0; s < D; s = s + 1) begin : g_slot
+            assign bank[s*W + c*CHUNK_BITS +: CW] = cb[s*CW +: CW];
+        end
+        assign vld[c*D +: D] = cv;
+        if (c == 0) begin : g_tags
+            assign epo = ce;
+        end
+    end endgenerate
+`ifndef SYNTHESIS
+    initial if (CHUNK_BITS < 1 || CHUNK_BITS > 24) $fatal(1, "ot_pl_land_n32_chunk_w: CHUNK_BITS must be 1..24");
+`endif
+endmodule
+
+(* keep_hierarchy="yes" *) module qfd_dv_s8b_lp_flags_mask_gate #(parameter integer FW=2,ID=0)(
+ input wire [FW-1:0] i,input wire a,b,c,output wire [FW-1:0] y);
+ wire any_en=a|b|c;
+ assign y=any_en ? i : {FW{1'b0}};
 endmodule
