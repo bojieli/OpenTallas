@@ -214,6 +214,12 @@ def pinned_env(job):
 def verify_runtime(manifest):
     """Read-only verification of already restored fresh runtime; never copy or mutate a parent."""
     r = manifest['runtime']; root = Path(r['run']); canonical_root=root.resolve()
+    declared = {p for p in manifest['file_hashes'] if p.startswith('src/')}
+    actual = {str(p.relative_to(root)) for p in (root/'src').rglob('*')
+              if p.is_file() or p.is_symlink()}
+    if actual != declared:
+        raise ValueError('actual source path set differs from canonical readset: extra=%s missing=%s' %
+                         (sorted(actual-declared)[:3], sorted(declared-actual)[:3]))
     for rel, expected in manifest['file_hashes'].items():
         p = root/relative(rel)
         if not p.resolve().is_relative_to(canonical_root) or file_sha(p) != expected:

@@ -148,6 +148,18 @@ class LinkedECOTests(unittest.TestCase):
                 verify.assert_not_called()
             self.assertFalse((runtime/'cl/linked_infra_eco').exists())
 
+    def test_extra_actual_source_and_escaping_source_symlink_refused_before_guard(self):
+        extra=self.runtime/'src/rtl/undeclared.sv';extra.write_text('module undeclared; endmodule')
+        with self.assertRaisesRegex(ValueError,'actual source path set'):
+            ie.prepare_runtime(self.manifest,self.parent)
+        self.assertFalse((self.runtime/'cl/linked_infra_eco').exists());extra.unlink()
+        expected=self.runtime/'src/rtl/actual.sv'
+        outside=self.root/'outside.sv';outside.write_bytes(expected.read_bytes())
+        expected.unlink();expected.symlink_to(outside)
+        with self.assertRaisesRegex(ValueError,'restored input differs'):
+            ie.prepare_runtime(self.manifest,self.parent)
+        self.assertFalse((self.runtime/'cl/linked_infra_eco').exists())
+
     def test_successful_preparation_seals_existing_guard_and_is_exclusive(self):
         with patch.object(ie.subprocess,'check_output',return_value=self.manifest['runtime']['image']+'\n'), \
              patch.object(ie.subprocess,'run'):
