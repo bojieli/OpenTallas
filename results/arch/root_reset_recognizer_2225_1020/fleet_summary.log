@@ -1,0 +1,32 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-root-reset-recognizer-2225-1020
+ot-run: ot-epyc6       admits   230 GB (avail 274, growth 113, headroom 0, waiters 0/0 GB) load 54/128 running 39 disk 2039 GB 
+ot-run: ot-epyc7       admits   988 GB (avail 756, growth 64, headroom 0, waiters 0/0 GB) load 60/96 running 13 disk 4995 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-root-reset-recognizer-2225-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-root-reset-recognizer-2225-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-root-reset-recognizer-2225-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3105192-1792560466 after 1 s
+base closure_loop rc=1 20 failed, 1150 passed, 17 skipped, 195 subtests passed in 117.22s (0:01:57)
+cand closure_loop rc=1 19 failed, 1151 passed, 17 skipped, 195 subtests passed in 118.31s (0:01:58)
+NEW closure_loop []
+FIXED closure_loop ['FAILED test_helper_overlay.py::HelperOverlay::test_restart_during_publish_refresh_ship_is_safe']
+base ref_tile rc=1 112 failed, 782 passed, 24 skipped, 418 subtests passed in 295.00s (0:04:54)
+cand ref_tile rc=1 112 failed, 782 passed, 24 skipped, 418 subtests passed in 300.17s (0:05:00)
+NEW ref_tile []
+FIXED ref_tile []
+base fleet rc=1 7 failed, 55 passed, 1 deselected in 8.63s
+cand fleet rc=1 7 failed, 55 passed, 1 deselected in 9.15s
+NEW fleet []
+FIXED fleet []
+base landed_parent rc=1 2 failed, 10 passed in 0.36s
+cand landed_parent rc=1 2 failed, 10 passed in 0.49s
+NEW landed_parent []
+FIXED landed_parent []
+.........................                                                [100%]
+25 passed in 1.76s
+...................................                                      [100%]
+35 passed in 2.00s
+0
+
+
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3105192-1792560466): exit 0

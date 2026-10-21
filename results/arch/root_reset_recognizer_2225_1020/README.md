@@ -1,0 +1,7 @@
+# Qualified ASR relay recognition candidate; superseded for current QDQ
+
+Source candidate3110d264e against7d72bb981, same helper sources as current mainf4c1582ab. Narrow mapped synchronizer proof from f12832286, source/native identity checks03752652b, ROOT review3110d264e restricts consumer clear and buffer polarity to supported ASAP7 families and rejects tied/derived clocks. No name-based instance exemption. Original gate FAIL preserved immutable.
+
+Full paired fleet unit oth-ubuntu-3105192-1792560466 ep7 exit0: closure20F1150P baseline vs19F1151P candidate (baseline-only restart test flake), ref_tile112F782P both, fleet7F55P both, landed_parent2F10P both. Exact NEW failure IDs ZERO in every cohort. All textbook tests25P baseline ->35P candidate. Actual mapped positive passes rawclear6/regional4/max27/release3 and all four causal negatives refuse. Early10test focused run independently passed on unit3156777. Guard PASS2 helper commits classified.
+
+Current QDQ no longer needs this relaxation: Claude source6b7a3b1ee replaces original ot_rst_relay with2 raw-reset faceFFs followed by4 regionalFFs asynchronously cleared by rst_l1. Fresh gatectl_r4s PASSED and jobdbf0a4db8 submitted independently of this candidate. Retain this validated helper/evidence branch for review/archive. ROOT recommends NO MAIN ADOPTION solely to unblock obsolete QDQ reset fanout finding; no extra regate/daemon reload required. No physical closure claim made by this topology proof.

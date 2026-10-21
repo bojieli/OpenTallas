@@ -1,0 +1,28 @@
+{
+  "actual": {
+    "pass": true,
+    "raw_clear_loads": 6,
+    "sync_stages": 2,
+    "regional_stages": 1,
+    "regional_leaves": 4,
+    "release_edges": 3,
+    "max_regional_loads": 27,
+    "clock": "port clk"
+  },
+  "wrong_clock": {
+    "pass": false,
+    "reason": "relay clocks differ or are not one literal input clock"
+  },
+  "raw_functional_bypass": {
+    "pass": false,
+    "reason": "second synchronizer bypasses the regional edge or has wrong polarity"
+  },
+  "insufficient_stage": {
+    "pass": false,
+    "reason": "first synchronizer is exposed or lacks one positive second edge"
+  },
+  "wrong_polarity": {
+    "pass": false,
+    "reason": "first synchronizer is exposed or lacks one positive second edge"
+  }
+}
