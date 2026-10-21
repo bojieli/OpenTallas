@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbfd_rly_1136_ew_rfc",
  "verdict": "WARN",
- "generated": "2026-10-21T04:27:59-0700",
- "host": "ot-pve1",
+ "generated": "2026-10-21T04:34:28-0700",
+ "host": "ot-epyc5",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "3abad379774ead18420dbafd4268f693afdbd4ea",
+  "start_commit": "fd631332487bda7f518f45c74622562d5a1372c4",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,7 +25,7 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "c9578faba2740580fc715c5d182569ca88bb31fd993c30010a4f2f4e81db48e9",
+  "archive_sha256": "83ab9120932f6fcef34c5f15a1009c444413d4b4ad86785608f311fee80585de",
   "manifest_sha256": "31e252de9178874639f68048281355fd0f3690fdbaa27a409d8f286298557f25",
   "files": [
    {
@@ -97847,7 +97847,7 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 61327214,
+   "archive_bytes": 61327179,
    "unpacked_bytes": 269303808,
    "pick_gb": 22,
    "runtime_gb": 22
@@ -98407,16 +98407,16 @@
    },
    "digest": "fbf97cef3d38a35fa11899c6dbd942bcb7deda31b7b4d91012875be71e740efe"
   },
-  "captured": "2026-10-21T04:02:02-0700",
+  "captured": "2026-10-21T04:29:00-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hbfd_rly_1136_ew_rfc/signoff.sdc"
   },
-  "remote_script_sha256": "60cee4f033d033ba1e4a8f6fe8882f01e8d9a2950c9b4593ff7852324686a6a1",
+  "remote_script_sha256": "da33090a160b2b62b467cfae2feed4ac71022d42fa5bdc66458242c876238909",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-pve1",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbfd_rly_1136_ew_rfc-20261021-040146",
+  "remote_host": "ot-epyc5",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbfd_rly_1136_ew_rfc-20261021-042847",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -98506,7 +98506,7 @@
   "kind": "tile",
   "skip_incremental_repair": true,
   "rc": "0",
-  "grt_s": 178,
+  "grt_s": 39,
   "layers": [
    {
     "layer": "M1",
