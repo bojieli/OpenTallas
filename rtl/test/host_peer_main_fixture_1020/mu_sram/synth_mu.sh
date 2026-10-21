@@ -3,7 +3,7 @@
 # qkd_hr_core_peer_sram_mu (sources.txt) -> synth_mu/results/asap7/peer_mu_census/base/1_2_yosys.v + native census.
 # usage (repo root): bash rtl/test/host_peer_main_fixture_1020/mu_sram/synth_mu.sh
 set -eu
-R=$PWD;D=rtl/test/host_peer_main_fixture_1020;mkdir -p synth_mu
+R=$PWD;D=rtl/test/host_peer_main_fixture_1020;SYN=${SYN:-synth_mu};mkdir -p $SYN;export SYN
 python3 - <<'PYS'
 from pathlib import Path
 import shlex
@@ -18,11 +18,11 @@ while i<len(args):
 v.update(OT_RST_LAND_COPIES='por_n=64,host_rst_n=64',OT_RST_LAND_FIRST_COPIES='por_n=2,host_rst_n=2',OT_RST_COPIES_MAX='32',OT_RST_COPIES_WIDE='1')
 c+=''.join('export '+k+' = '+value+'\n' for k,value in v.items())
 c+='export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros/'+n+'/'+n+'_ss.lib\nexport SYNTH_BLACKBOXES = '+n+'\n'
-Path('synth_mu/config.mk').write_text(c)
+Path(__import__("os").environ.get("SYN","synth_mu")+"/config.mk").write_text(c)
 PYS
-docker run --rm -v "$R:/src:ro" -v "$R/synth_mu:/work" -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base /work/results/asap7/peer_mu_census/base/1_2_yosys.v' > synth_mu.log 2>&1
+docker run --rm -v "$R:/src:ro" -v "$R/$SYN:/work" -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base /work/results/asap7/peer_mu_census/base/1_2_yosys.v' > $SYN.log 2>&1
 mkdir -p real5
 docker run --rm -v "$R/real5:/libs" openroad/orfs:latest bash -lc 'cp /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_{AO,INVBUF,OA,SEQ,SIMPLE}_RVT_SS_nldm* /libs/'
 libs=();for f in "$R"/real5/* "$R"/physical/asap7_memory_macros/*p192_mir/*_ss.lib;do libs+=(--liberty "$f");done
-python3 $D/coupon_tools/ref_tile/native_census.py --netlist synth_mu/results/asap7/peer_mu_census/base/1_2_yosys.v --top qkd_hr_core_peer_sram_mu "${libs[@]}" --out native_mu.json
-sha256sum synth_mu/results/asap7/peer_mu_census/base/1_2_yosys.v
+python3 $D/coupon_tools/ref_tile/native_census.py --netlist $SYN/results/asap7/peer_mu_census/base/1_2_yosys.v --top qkd_hr_core_peer_sram_mu "${libs[@]}" --out $SYN.native.json
+sha256sum $SYN/results/asap7/peer_mu_census/base/1_2_yosys.v
