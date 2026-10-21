@@ -114,7 +114,7 @@
     "cmd": "bash tools/hbm_static/qcore_r13_lockstep_run.sh {RUN}/bench/m128 128",
     "expect": "fail",
     "fail_regex": "QCORE_RG FAIL",
-    "fail_witness": "results/rtl/hbm_qcore_r16_write_1021/source3_mut128_rejected.log",
+    "fail_witness": "results/rtl/hbm_qcore_r16_write_1021/source4_mut128_rejected.log",
     "threads": 8,
     "peak_ram_gb": 32,
     "needs": [

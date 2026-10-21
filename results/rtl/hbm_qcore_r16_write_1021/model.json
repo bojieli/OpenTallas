@@ -19,7 +19,7 @@
   "storage_note": "old4groups*(5addr+1valid)=24, new4groups*4rowhits=16; resettable bits4->16",
   "native": "source1 FAIL16/max34; source2 FAIL16/max84; source3 sector7 PASS10939/max32 but fullparent1 FAIL2 reset36/39. Exact source4 dd9a11282 fullparent2 PASS119694roots/max32/0violations after distinct rowhit resetports, same strict32 splitter/24landingcopies.",
   "function": "exact source4 existing qcore lockstep PASS9104/scalars312/5918validreads/fault_lags0, source4 COL wrongword MUT128 rejected27938errors",
-  "physical": "new r16a canonical CTS gate active; firstfloorplan actual complete, standardcell area28549.200140um2; same302.4x280.8 geometrycandidate/off43.2 SRAM origins/10pinsum explicitrisk. No clock/GRT/route qualification yet",
+  "physical": "new r16a canonical CTS gate active; firstfloorplan actual complete, reported synthesis chip area28549.200140um2 (not a standard-cell-only area); same302.4x280.8 geometrycandidate/off43.2 SRAM origins/10pinsum explicitrisk. No clock/GRT/route qualification yet",
   "qualification": "fullparent native and exactsource4 componentfunctional qualified; physicalpending, no main adoption/sourcealias",
   "source4_sha256": "d6f717ec7a14bbd43dc291fd150f78101ea9a8b7cddb04c798960ef0843894ec"
 }
