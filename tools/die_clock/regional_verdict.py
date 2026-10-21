@@ -45,7 +45,7 @@ def main():
     spine = dict(present=bool(sp), balance=sp.get('balance'), cells=sp.get('cells'), levels=sp.get('levels'),
                  pads=(sp.get('model') or {}).get('pads'), model_insertion_ps=(sp.get('model') or {}).get('model_insertion_ps'))
     ok = dict(intra=intra['classes'] > 0 and intra['over'] == 0 and bool(nc.get('ff_measured')),
-              landed=owed['neighbour_bits'] == 0 and owed['gap_bits'] == 0,
+              landed=all(owed[k] == 0 for k in ('neighbour_bits', 'gap_bits', 'no_root', 'bump', 'reset_xdom')),
               drift=drift['measured'] > 0 and drift['over_half_T'] == 0,
               spine=(not spine['present']) or (spine['balance'] is False and not spine['pads']))
     eligible = m.get('physical_qualification_eligible') is not False and check.get('physical_qualification_eligible') is not False
