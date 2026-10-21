@@ -97,9 +97,12 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   always @(posedge clk)q<=cw;
   assign p1[i]=q;
  end
- // threshold copies: 0..3 compare (4 lanes each), 4..5 histogram (8 lanes each)
- wire [15:0] thq[0:5];
- for(genvar j=0;j<6;j=j+1)begin:gt
+ // threshold copies: 0..15 compare (ONE PER LANE, placed beside that lane's compare / rawc copy), 16..17 histogram
+ // (8 lanes each).  IDXSFU10 10-21: the s3t_b route failed TT -155 ps on S2 (gt[2].q -> 180 ps of wire to the far lane
+ // compares -> eq compare -> loc / gtot / ecnt popcount -> s2_ecnt; 49 D pins = the S2 popcount registers); a per-lane
+ // copy keeps the threshold wire lane-local (thr pin bit -> 18 flop loads <= 32).  Same edge: no calendar change.
+ wire [15:0] thq[0:17];
+ for(genvar j=0;j<18;j=j+1)begin:gt
   (* keep *) reg [15:0] q;
   always @(posedge clk)q<=thr;
   assign thq[j]=q;
@@ -204,17 +207,17 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   s1_addr<=raddr;rawr<=raw[LW-1:0];
  end
  // ---------------- S2 stage ----------------
- reg [7:0] s2_addr;reg [LW-1:0] s2_line;reg [15:0] s2_gt,s2_eq;reg [1:0] s2_loc[0:15];reg [2:0] s2_gtot[0:3];reg [4:0] s2_ecnt;
+ reg [7:0] s2_addr;reg [LW-1:0] s2_line;reg [15:0] s2_gt,s2_eq;reg [1:0] s2_loc[0:15];reg [2:0] s2_gtot[0:3];
  (* keep *) reg [3:0] s2v_l;           // selected-lane valid (per 4 lanes)
  (* keep *) reg [7:0] s2v_t;           // tie replicas (2 per replica)
  (* keep *) reg s2v_m;                 // s3 copies, sel_v, hazards
- reg [15:0] c_gt,c_eq;reg [15:0] c_ky;reg [1:0] c_loc[0:15];reg [2:0] c_gtot[0:3];reg [4:0] c_ecnt;
+ reg [15:0] c_gt,c_eq;reg [15:0] c_ky;reg [1:0] c_loc[0:15];reg [2:0] c_gtot[0:3];
  always @*begin
   for(integer l=0;l<W;l=l+1)begin
    c_ky=rawc[l][16:1];                  // already the order key
-   c_gt[l]=rawc[l][0]&&(c_ky>thq[l/4]);
-   c_eq[l]=rawc[l][0]&&(c_ky==thq[l/4]);
-   if(DMUT==1)begin c_gt[l]=rawc[l][0]&&(c_ky>=thq[l/4]);c_eq[l]=0;end
+   c_gt[l]=rawc[l][0]&&(c_ky>thq[l]);
+   c_eq[l]=rawc[l][0]&&(c_ky==thq[l]);
+   if(DMUT==1)begin c_gt[l]=rawc[l][0]&&(c_ky>=thq[l]);c_eq[l]=0;end
   end
   for(integer g=0;g<4;g=g+1)begin
    c_loc[4*g]=2'd0;
@@ -223,10 +226,9 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
    c_loc[4*g+3]=(2'(c_eq[4*g])+2'(c_eq[4*g+1]))+2'(c_eq[4*g+2]);
    c_gtot[g]=(3'(c_eq[4*g])+3'(c_eq[4*g+1]))+(3'(c_eq[4*g+2])+3'(c_eq[4*g+3]));
   end
-  c_ecnt=(5'(c_gtot[0])+5'(c_gtot[1]))+(5'(c_gtot[2])+5'(c_gtot[3]));
  end
  always @(posedge clk)begin
-  s2_addr<=s1_addr;s2_line<=rawr;s2_gt<=c_gt;s2_eq<=c_eq;s2_ecnt<=c_ecnt;
+  s2_addr<=s1_addr;s2_line<=rawr;s2_gt<=c_gt;s2_eq<=c_eq;
   for(integer l=0;l<W;l=l+1)s2_loc[l]<=c_loc[l];
   for(integer g=0;g<4;g=g+1)s2_gtot[g]<=c_gtot[g];
  end
@@ -236,6 +238,9 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   c_gb[0]=4'd0;c_gb[1]=4'(s2_gtot[0]);c_gb[2]=4'(s2_gtot[0])+4'(s2_gtot[1]);
   c_gb[3]=(4'(s2_gtot[0])+4'(s2_gtot[1]))+4'(s2_gtot[2]);
  end
+ // tie-group equal count, summed here from the registered group totals (was the S2 register s2_ecnt: the 5-bit sum is
+ // the last 2 adder levels of the S2 popcount, which closed TT -155 ps; S3 reads it on the same edge)
+ wire [4:0] s2_ecnt=(5'(s2_gtot[0])+5'(s2_gtot[1]))+(5'(s2_gtot[2])+5'(s2_gtot[3]));
  wire [15:0] c_choose;
  for(genvar g=0;g<4;g=g+1)begin:gtie
   (* keep *) reg [13:0] tg;             // ties pin flop copy
@@ -364,7 +369,7 @@ module ot_hidx_s3_q #(parameter integer DMUT=0)(
   wire [16:0] hs={(f_ing[l][1]?in_p2[l*EW+9+:8]:rawh[l][16:9]),(f_ing[l][0]?in_p2[l*EW+:9]:rawh[l][8:0])};
   wire [1:0] hp=f_ing[l][1]?2'd0:spq[l];
   wire [15:0] hk=orderkey(hs[16:1]);
-  wire hm=(f_ing[l][1]||h_scan)&&hs[0]&&((hk&pmask(hp))==(thq[4+l/8]&pmask(hp)));
+  wire hm=(f_ing[l][1]||h_scan)&&hs[0]&&((hk&pmask(hp))==(thq[16+l/8]&pmask(hp)));
   wire [5:0] hb=6'((hk>>pshift(hp))&pbins(hp));
   (* keep *) reg [3:0] mq;
   (* keep *) reg [15:0] b4;             // 4 bin-quarter copies of hb[3:0] (packed)
