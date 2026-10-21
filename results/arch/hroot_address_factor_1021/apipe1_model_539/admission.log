@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hroot-apipe1-model-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hroot-apipe1-model-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hroot-apipe1-model-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hroot-apipe1-model-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hroot-apipe1-model-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hroot-apipe1-model-1021
+ot-run: ot-agidock128  admits   103 GB (avail 79, growth 3, headroom 0, waiters 0/0 GB) load 10/64 running 7 disk 212 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-4113434-1792625100 after 0 s
+{"current_qualified_prefix": {"worst_address": {"endpoint": "w_addr[31]", "estimate_ps": 1238.6, "levels": 37, "start": "_167052_"}, "reg_to_reg_worst": {"estimate_ps": 1148.6, "start": "_170164_", "end": "_169754_/D"}}, "apipe1_registered_model": {"worst_address": {"endpoint": "w_addr[30]", "estimate_ps": 1051.9, "levels": 32, "start": "_169625_"}, "reg_to_reg_worst": {"estimate_ps": 1183.6, "start": "_169695_", "end": "_166477_/D"}}}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-4113434-1792625100): exit 0
