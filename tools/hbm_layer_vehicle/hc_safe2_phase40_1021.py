@@ -28,7 +28,7 @@ def source_profile(name=LEGACY):
                 hcp_arithmetic_period=24, execution_qualified=False)
 
 
-def root_rows_for_profile(legacy_root_rows, parameters, response_phase, *, profile=LEGACY, npos=1):
+def root_rows_for_profile(legacy_root_rows, parameters, response_phase, *, profile=None, npos=1):
     """Keep legacy rows by default; explicitly bind the separate SAFE2 model.
 
     G22 MIX_POST uses the gathered-mix store and tail, not quarter reductions.
@@ -37,11 +37,13 @@ def root_rows_for_profile(legacy_root_rows, parameters, response_phase, *, profi
     QCHX12 changes SYS_LAT100->101 / SYS146->147 and ring RAW178->179 for
     quarter reductions; those paths require their own matching programme price.
     """
+    if profile is None:
+        return legacy_root_rows(parameters, response_phase)
     if npos != 1:
         raise ValueError("existing G22 root_rows programme covers only k31 npos1; no multi-position calendar qualification")
     model = source_profile(profile)
-    if profile == SAFE2_P40 and response_phase != 39:
-        raise ValueError("SAFE2 phase40 profile requires response phase39")
+    if response_phase != 39:
+        raise ValueError("explicit phase40 profiles require response phase39")
     table, words, schedule = legacy_root_rows(parameters, response_phase)
     schedule = dict(schedule, source_profile=model,
                     quarter_reduction_active=False,
