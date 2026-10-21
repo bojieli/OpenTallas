@@ -41,14 +41,18 @@ def plan(source, receiver, gap, west, baseline_w, baseline_h, max_width=33000.):
     return out
 
 
-def expand_channel(source, receiver, extra, baseline_w, baseline_h):
+def expand_channel(source, receiver, extra, baseline_w, baseline_h, west=0., max_width=33000.):
     """Add physical receiver-column land area without compressing another seam.
 
     Unlike the initial missing-channel repair, this grows an existing channel
-    and the die outline. The western service column and all western blocks stay
-    fixed. No relay/stage is invented; GEN places the existing split classes in
+    with an explicit array translation and outline budget. The western service
+    column stays fixed. No relay/stage is invented; GEN places split classes in
     the added real footprint and retains its strict native-pin reach limit.
     """
+    if west < 0 or abs(west / 43.2 - round(west / 43.2)) > 1e-6:
+        raise ValueError('array translation must be nonnegative multiples of 43.2 um')
+    if baseline_w + extra - west > max_width + 1e-6:
+        raise ValueError('proposed die exceeds the reticle width')
     if extra <= 0 or abs(extra / 43.2 - round(extra / 43.2)) > 1e-6:
         raise ValueError('channel expansion must be positive multiples of 43.2 um')
     out = copy.deepcopy(source)
@@ -61,8 +65,10 @@ def expand_channel(source, receiver, extra, baseline_w, baseline_h):
         raise ValueError('receiver overlaps its western slice')
     moved = []
     for i in out['insts']:
-        if i['n'].startswith(('c16_', 'dvs_')) and i['x'] >= boundary - 1e-3:
-            i['x'] = round(i['x'] + extra, 3)
+        if i['n'].startswith(('c16_', 'dvs_')):
+            i['x'] = round(i['x'] - west + (extra if i['x'] >= boundary - 1e-3 else 0), 3)
+            if i['x'] < 0:
+                raise ValueError('array translation crosses western die edge')
             moved.append(i['n'])
     prior = out.get('receiver_channel_plan')
     history = out.setdefault('receiver_channel_history', [])
@@ -70,17 +76,17 @@ def expand_channel(source, receiver, extra, baseline_w, baseline_h):
         history.append(prior)
     out['receiver_channel_plan'] = dict(
         receiver=receiver, prior_gap_um=old_gap, added_gap_um=extra,
-        gap_um=round(old_gap + extra, 3), array_west_um=0,
+        gap_um=round(old_gap + extra, 3), array_west_um=west,
         baseline_die_um=[baseline_w, baseline_h],
-        proposed_die_um=[round(baseline_w + extra, 3), baseline_h],
-        die_area_delta_mm2=round(extra * baseline_h / 1e6, 9),
+        proposed_die_um=[round(baseline_w + extra - west, 3), baseline_h],
+        die_area_delta_mm2=round((extra-west) * baseline_h / 1e6, 9),
         moved_array_instances=len(moved), moved_instances=moved,
         reservation=dict(split_lanes=2, class_frame_um=[104, 106],
-                         independent_frames=True, row_endcap_pitch_um=43.2,
-                         required_width_um=2*104+3*43.2),
+                         independent_frames=True, row_endcap_pitch_um=12.96,
+                         required_width_um=2*104+3*12.96),
         added_pipeline_stages=0, token_age_delta=0,
         scope='physical channel/outline expansion; actual GEN decides placement; calendar remains HOLD')
-    out['source'] = out.get('source', '') + f' | expand {receiver} channel by {extra} um, outline +{extra} um'
+    out['source'] = out.get('source', '') + f' | expand {receiver} channel by {extra} um, array west {west} um, outline +{extra-west} um'
     return out
 
 
