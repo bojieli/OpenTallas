@@ -62,14 +62,17 @@
     "positive": "six real opaque descriptors, fixed q4 span, exact original seqhost first-command edge, six opaque KIT retirements",
     "negative_modes": {
       "1": "missing descriptor",
-      "2": "late descriptor",
-      "3": "wrong user",
+      "2": "wrong user",
+      "3": "late descriptor",
       "4": "wrong epoch",
       "5": "wrong issuer phase",
       "6": "wrong graph tag",
       "7": "programme-write race"
     },
-    "negative_primary_fault_bits": "mode1..3 bit0; mode4..7 bit1, as existing fc7 bench"
+    "negative_primary_fault_bits": {
+      "observed_modes1_to3": "bit0 (fault=1)",
+      "asserted_modes4_to7": "bit1 required by fc7 bench; observed fault3/3/3/2"
+    }
   },
   "holds": [
     "layout/SS setup/FF hold/DRC/clock/native boundary context not measured",
