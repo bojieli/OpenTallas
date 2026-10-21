@@ -60,12 +60,38 @@
     "scope": "identical FF endpoints and Libs/ABC; component only, not physical SHLK/wholeingress timing"
   },
   "host_fixture": {
-    "status": "OPEN",
-    "first_attempt": "same existing source bench but incomplete profile flags; hx_pop replica assertion at62ns bothseeds; preserved rawdiagnostic, no sourcePASS/waiver",
-    "corrected_recipe": "run_seq.sh uses exact10cbb committed profile flags +CSA; freshout_seq_exact pending"
+    "status": "PASS",
+    "unit": "oth-ubuntu-3803529-1792618378",
+    "host": "ot-epyc5 (fleet spill)",
+    "exit": 0,
+    "recipe": "run_seq.sh exact10cbb selected flags plus OT_N32_ADDR_CSA",
+    "seeds": [
+      1,
+      2
+    ],
+    "jobs_each": 6,
+    "cmds_N_S_G_J_each": [
+      72,
+      72,
+      72,
+      72
+    ],
+    "cw_each": 96,
+    "host_writes_each": 20,
+    "host_completions_each": 5,
+    "mismatches_each": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "faults_each": 0,
+    "first_incomplete_flag_profile": "retained FAIL hx_pop assertion; corrected completeflags pass; no waiver"
   },
   "open": [
-    "Exact-profile legal HOST fixture terminal",
     "Wholeingress/SHLK mapped native and exactphysical timing, clock/reset/geometry",
     "Current immutable gs/hs gates terminal; no successor gate launched"
   ]
