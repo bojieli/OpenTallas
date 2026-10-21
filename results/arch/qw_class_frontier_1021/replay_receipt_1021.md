@@ -1,0 +1,5 @@
+Both full-source c129/c173 diagnostics reached the pre-pack dump and failed original greedy packing. The immutable-dump exact frontier replay also fails: c129 at rly_dvw_dd_wo__s0_13, c173 at rly_dvw_dd_wo__s0_0. No successor or qualification claim follows.
+
+For c173, the first class part is qfd_rlyh0_128_NS_65x30 at1684.8,12052.8,64.776x30.216. Its width110 source edge from dvs_W5 demands v=x-y in[-10374.720,-9606.576]. Its next class part s0_1 at1684.8,12506.4 demands v in[-11196.576,-10386.576]. The intersection is empty by11.856um before testing obstacles. This is a simultaneous chain placement issue: the provisional next class location is a fixed constraint in the current algorithm. Moving classes only one at a time cannot establish a structural capacity failure. A future candidate must solve coupled chain positions while retaining every final physical bit/reach and collision audit.
+
+Source output and failed dumps remain on gold1 under /srv/opentallas-scratch/claude/qkd-class/{c129,c173}; parent retains jobs/failures. No main merge and no default flag change.
