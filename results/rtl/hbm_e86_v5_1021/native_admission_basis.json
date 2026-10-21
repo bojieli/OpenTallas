@@ -1,0 +1,28 @@
+{
+ "candidate_source": "aefb9c8c7becf0924a31742ae8dcc0aa614e498f",
+ "source_archive_sha256": "564f4d73fa5ffb2f3ea27ae208a27878dc754e79f4757e783c447bdf74836bb1",
+ "request_GiB": 64,
+ "threads": 8,
+ "actual_host": "ot-epyc5",
+ "actual_unit": "oth-ubuntu-3270445-1792623826",
+ "client_PID": 4103853,
+ "comparable_original": {
+  "log": "/tmp/ref_gate_hcoll_v7_tkm_tile_e86v4b_20261020-223049.log",
+  "request_cap_GiB": 48,
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-3188422-1792560681",
+  "exit": 0,
+  "mapped_area_um2": 47528.77338,
+  "shape_um": [
+   302.4,
+   302.4
+  ],
+  "top": "ot_hgi_coll_tkm_tile_e86",
+  "scope": "sameEW86/PT64/statecount/FAN322/SEAM1 leaf; no fullTP192 compile extrapolation"
+ },
+ "qualification_scope": "synthesis/native actual loaded5TTLiberty only; no layout or timing qualification; fullsource M0/mutants still OPEN",
+ "same_RTL": {
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv": "1b2d00fd1193a4343f38145e370649457468e0364b11276173a19933c6f86887",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_tile_e86_v5.sv": "b52d71989e6d8d86ed5c90f4bbd4099d9824aa50285ebdeae6a9a8ee9a1c19c7"
+ }
+}
