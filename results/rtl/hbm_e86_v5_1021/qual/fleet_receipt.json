@@ -5,8 +5,9 @@
  "admission": "unpinned ot-run96GiB8threads",
  "remote_root": "/srv/opentallas-scratch/claude/codex-e86-v5-6c9b2dbf3",
  "fourstate": "PASS actual Icarus4state widths1/6/85 oldbitwise vschunked, GN exact ternary caseequality includingX/Z;9506ns",
- "source_full_lockstep_mutants": "M0PASS, requiredCMUT1/3/4/5/6 PENDING serial",
+ "source_full_lockstep_mutants": "M0PASS/M1REJECTED, requiredCMUT3/4/5/6 PENDING serial",
  "physical": "NOT LAUNCHED/no timing or native qualification claim",
  "local_diagnostic": "not qualification; preserved separately scratch/codex-e86-v5-fourstate/local_diagnostic_nonqualification.log",
- "positive": "PASS cycles4000 ins2139 ovf2034 up173 tau1995 errors0; exact existing every-output/every-edge leaf miter"
+ "positive": "PASS cycles4000 ins2139 ovf2034 up173 tau1995 errors0; exact existing every-output/every-edge leaf miter",
+ "causal_M1": "REJECTED errors132 exactlyoriginalnegativecount, rc1 expected"
 }
