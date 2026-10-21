@@ -1,0 +1,5306 @@
+{
+ "schema": "opentallas.hbm_d4g_reprice_1019.v1",
+ "lane": "HBM-VMEARLY",
+ "generated_utc": "2026-10-20T04:28:33Z",
+ "rule": "HBM-REPRICE (10-19): re-price the HBM d4g token (DS AR + Qwen3-8B AR; MTP is the next release) with EVERY latency /\nthroughput change recorded since GEN2, each one an explicit knob of this file (TERMS below; no hidden constants).\n\nBASE = d4g_2ring_qbg of the HBM-B-RTL3 / HBM-PRICE5 pricer (hgi_sim.d4g_quadrant_1017: plan_study machinery + quadrant\nplacement + static-schedule adders AG/XQT/D2/SU/SFUD/SFUC/BD, two rings + QBG) with the latency ledger AS PRICED\n(hc_tree 28 + 2 XQ: the ledger snapshot of the price of record, 1905.4 / 946.2).  This is the basis of the token\ncomposition (tools/token_compose_xdie.py hbm_ds: hds_sched reproduces 629,775.1 cycles).  The accepted-cost ledger price of\nrecord (HBM.D4G_PLAN_B, DS AR 1849.2) = BASE + term `collq` below.\n\nEvery term is priced ALONE on top of BASE (`only_<term>`) and ALL together (`all`); the composed delta of `all` minus the\nsum of the single-term deltas is reported as the interaction.  Grades: measured (the latency is a bench / RTL measurement\non current RTL; the exposure comes from the S2 static schedule), priced (analytic rule / contract on a measured anchor),\nmodelled (estimate pending an RTL measurement or a lane decision).\n\nThe per-record rules (`rp` knob on the d4g knob; applied after d4g_quadrant_1017.d4g_added on the record's unit cost):\n  collq        MEASURED COLL gather master spans + ISA ring-A +2 (HBM-COLLQ, d4g_collq_price_1018: ag_collq + ra_extra).\n  pg_cmd       pgslice_lg LANDED region form (TW-HBM-PGLG e7ea9096c, bench m0 PASS 8db52396a): lane commands r1/r2 +2,\n               r0/r3 +5 edges; the 128 lanes are lockstep, so an SU-executed record ends on the slowest region: +5.\n  pg_operand   same: red_sel / tree_cmd / rf_dsec issued +10, slice_x / tree_o / pt_ro / inj_q +10: +10 on an SU\n               reduction record (sut.red) -- the reducer operand reaches qcore 10 edges later.\n  pg_vmwrite   same: drain VM write +12 serial (+16 stream): +12 on an SU-executed record that writes VM.\n  pg_reset     same: pg_stream reset/epoch +1 epoch of the 4:3 pg_clk (4 fast edges), once per token (programme start).\n  hc_tree      HC chain pin registers +11 (HH-9 CPR, bench RAW0 165 -> 176) + U-relay/DRLY 2 (+2): ledger hc_tree 28 -> 41.\n               Closed-ring layout (DIE-HBM-LEAD 10-19 01:40, HC-RINGPLAN 9d1689ba4): the b7->b0 die relay goes but its edge\n               moves into bank 0 (bankq0 DRLY 1 -> 2), so hub/root params and the calendar stay at 41: +13 a HC_MIX /\n               HC_PRE_NORM record.\n  hc_xr        HC root<->quarter crossings LANDED (HC-XRDU l7_wire land smoke: XRD 11 + XRU 11) instead of the priced\n               2 x COLL_RING relay stages: +(22 - 2 COLL_RING) a HC record (modelled: GEN2b land smoke, not die STA).\n  bank_pin     VM bank pin flop (hfd_vms_bank_native_q0_faces, HBM-BANKLAT / VEH-TOPKFIX2): every fixed-latency VM read\n               client answer +1 edge: +1 on every record with a VM-space operand read (x-load, SU/SFU taps, COLL reads,\n               IDX op readers, ARGMAX, DMA back).  The GEN2c relay-lane depths (1..75 stages/dir) are NOT this term (see\n               info_gen2c_xload).\n  su_red       SU reducer ingress widened to 128 words/edge (HH-6 per-pgslice csum8 pre-tree, PT 70 edges, bench measured\n               211 vs model 234 edges): hgi_sim.d4g_su_red_1018 su_red = \"pretree\".\n  e86_tkm      e86 TKM tile input register (HH-4 tile_rg PRE=1, tkm_static TLAT 4): +2 NT = +64 edges a TKM op at TP192:\n               +64 on a COLL.TOPK_MERGE record.\n  qcore_r6     qcore r6 write-conflict fault flag +1 edge: status only (coordinator ACCEPTED, HBM-HCBANK 02:40): 0 cycles.\n  att_s32      (HBM-REPRICE2) HBM-ATTGAP choice S32: 32-row sub-runs keep the QK+PV programme resident (1,019 / 971 words);\n               busiest-SM span QK 861 / PV 1,171 (2 sub-runs + go bubble, GEN2b die SM master, 40/40 bit-exact) replaces\n               the SM COMPONENT of the priced record (b_measured_model T640 qk 288 / pv 386); first access / dispatch\n               (fa 259) and publish 64 stay at price because the span excludes them (LB2-HBM VEH-ATT note).  T128 records:\n               component x the one-op ratio 684/288, 839/386 (modelled).  Variant `bigprog` (2,048-word programme store,\n               COORD 0jx, HBM-SMBUDGET): one op a SM at 684 / 839.\n  att_merge    DS: HBM-ATTGAP on-die SU PV merge model 400.8 (T640; one-op 335.5) / 335.5 (T128) minus the priced merge\n               99 / 79 already inside the PV record (modelled; SU RTL bench pending).  Qwen: 16-SM pairwise tree\n               4 x (1 XQ + DEP 10 + LAT 9) (modelled).\n  att_qwen     VEH-ATT3 MEASURED Qwen spans (D4G8 L0 + chained L1, 80/80 bit-exact, P 8192, 512 rows/SM): the attention\n               stream at the per-SM line rate QK 65,536 B / 1,195 = 54.84, PV 65,536 / 2,364 = 27.72 B/cyc/SM on 16 SMs\n               instead of the die HBM rate.\n  att_prog     0: S32 resident programmes (measured).   att_desc  0: window staging (modelled check PASS; Qwen: no ring).\n  pt_p2        HBM-PRETREE p2 (registered operand select): pre-tree PT 70 -> 81 edges, applied on the su_red pre-tree\n               (attribution = su_red+pt_p2 minus su_red).\n  idx_link     idx_link pipelined successor ot_hbm_idx_topk_link_static_p (HBM-IDXPIPE, AD-HBM-IDXK): +5 edges on every\n               link output (frame 1397 -> 1402): +5 on IDX.INDEX / IDX.TOPK.\n  idx_pin      rootctl_am_pin pair (VEH-TOPKFIX2 05b86e194, HBM-IDXAM2 r3): INDEX round trip +2 (r3) +1 (am_pin, op_SW\n               n12 -> n13) = +3 an IDX.INDEX; TOPK per record of m rows +(m + 3) (r3) +1 (RT_EXTRA 2 / ACK 14);\n               ARGMAX r2 done +7 (+1 VMX 5 -> 6) = +8 an ARGMAX record.  (These ledger rows were 'measured' without a\n               knob, i.e. never charged.)\n  land         d4g landed half-cycle hops (HBM-LANDING/DCC hland-dcc 447dfe960, priced -1.13 % DS AR / -0.07 % Qwen):\n               applied as the recorded factor (priced; the land plan is not in this bundle).\n\nInfo variants (not composed): info_gen2c_xload (x-load VM round trip at the GEN2c measured 51 edges: SM_X 25.5 stages),\ninfo_attgap_total[_bigprog] (HBM-ATTGAP's own accounting: span vs the exposed record total, whole merge added; reproduces\nits 1,787.3 / 1,847.4 as a check), info_bl_coll / info_bl_dma / info_bl_idx / info_banklat_all (HBM-BANKLAT GEN2c relay-lane\nbudgets, INFO_TERMS; info_banklat_all is on top of `all`).\n\n    PYTHONPATH=tools python3 -m hgi_sim.d4g_reprice_1019 --jobs 40 --out results/arch/hbm_reprice_1019/price.json\n",
+ "base_knob": {
+  "on": [
+   "AG",
+   "BD",
+   "D2",
+   "SFUC",
+   "SFUD",
+   "SU",
+   "XQT"
+  ],
+  "xq": 9.38,
+  "r_hop": 9.38,
+  "G1": 192,
+  "lanes": 4,
+  "nominal": true,
+  "stages": {
+   "HBM_K": 0.0,
+   "SM_X": 10.16,
+   "SM_HBM": 4.5,
+   "LG_SU": 0.09,
+   "LG_HC": 0.5,
+   "LG_SFU": 0.5,
+   "HC_CORE": 15.56,
+   "VM_RING": 9.5,
+   "COLL_VM": 14.91,
+   "VM_HUB": 16.41,
+   "HC_ENG": 5.54,
+   "COLL_RING": 9.38,
+   "COLL_EP": 9.6,
+   "EP_SERDES": 0.0,
+   "QUANT_VM": 0.0,
+   "SM_OUT": 9.0,
+   "HBM_VM": 18.88,
+   "VM_HBM": 18.69,
+   "SFU_CORE": 9.25,
+   "SU_CORE": 3.67,
+   "KV_DESC": 8.94
+  },
+  "su_start": 4.0,
+  "sfu_d": 1.0,
+  "sfu_chain": 6.0,
+  "su_tree": 28.0,
+  "hc_tree": 46.760000000000005,
+  "idx_merge": 17.380000000000003,
+  "rings": 2,
+  "ag_qbg": true
+ },
+ "terms": {
+  "collq": {
+   "value": 1,
+   "grade": "measured",
+   "applies": "C1 gathers: measured gather-master span; non-gather COLL +2 (ring-A merge register)",
+   "source": "d4g_collq_price_1018 ag_collq + ra_extra 2 (HBM-COLLQ c8d42a3a4; ledger HBM.D4G_PLAN_B)"
+  },
+  "pg_cmd": {
+   "value": 6,
+   "grade": "measured",
+   "applies": "+6 slowest SU command region (+3 inner, +6 outer)",
+   "source": "HBM-PGLG2 6799b58ee face relay"
+  },
+  "pg_operand": {
+   "value": 11,
+   "grade": "measured",
+   "applies": "+11 SU reduction operand; tree/control relative issue +10 unchanged",
+   "source": "HBM-PGLG2 6799b58ee"
+  },
+  "pg_vmwrite": {
+   "value": 12,
+   "grade": "measured",
+   "applies": "+12 an SU-executed record writing VM (drain write +12 serial; +16 stream)",
+   "source": "TW-HBM-PGLG e7ea9096c / HH-14 tb r2 4a91027b0 (SWQ 16)"
+  },
+  "pg_reset": {
+   "value": 4,
+   "grade": "modelled",
+   "applies": "+4 once per token (pg_stream +1 epoch of the 4:3 pg_clk)",
+   "source": "TW-HBM-PGLG pg_stream split (lanes/TW-HBM-PGLG.md)"
+  },
+  "hc_tree": {
+   "value": 41,
+   "grade": "measured",
+   "applies": "hc_tree 28 -> 41 (+13 a HC_MIX / HC_PRE_NORM record); closed ring keeps 41 (b0 DRLY 2)",
+   "source": "HH-9 c4e9df3fe RAW0 176, HBM-RTL5 U +2, HBM-HCRING fc916e52b, DIE-HBM-LEAD 10-19 01:40, HC-RINGPLAN 9d1689ba4"
+  },
+  "hc_xr": {
+   "value": 22,
+   "grade": "modelled",
+   "applies": "HC root<->quarter crossings XRD 11 + XRU 11 landed vs 2 x COLL_RING priced",
+   "source": "HC-XRDU cca87123f l7_wire land smoke (GEN2b), hc_eng XRD/XRU 11/11"
+  },
+  "bank_pin": {
+   "value": 1,
+   "grade": "priced",
+   "applies": "+1 a record with a VM-space operand read (bank pin flop on every answer)",
+   "source": "HBM-BANKLAT main 01636549a (contract rule), measured on IDX TOPK (VEH-TOPKFIX2 05b86e194)"
+  },
+  "su_red": {
+   "value": "pretree",
+   "grade": "priced",
+   "applies": "SU reduction = 128-word pre-tree (PT 70 edges) + reducer pairwise tree",
+   "source": "HH-6 claude/hh6-sured-1018 bc43419eb, d4g_su_red_1018 pretree (bench 211 vs model 234 edges)"
+  },
+  "e86_tkm": {
+   "value": 64,
+   "grade": "measured",
+   "applies": "+64 a COLL.TOPK_MERGE record (+2 NT at TP192)",
+   "source": "HH-4 claude/hh4-e86-1018 a5f17ebc7 tkm_static TLAT 4, calendar mutant MUT 3"
+  },
+  "qcore_r6": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "write-conflict fault flag +1 edge: status only, 0 token cycles",
+   "source": "HH-11 c663070f1; coordinator ACCEPTED (HBM-HCBANK 10-19 02:40)"
+  },
+  "att_s32": {
+   "value": {
+    "qk": 861,
+    "pv": 1171,
+    "qk1": 684,
+    "pv1": 839
+   },
+   "grade": "measured",
+   "applies": "DS T640 SM component qk 288 -> 861, pv 386 -> 1,171 (HBM-ATTGAP S32: busiest SM, 2 x 32-row sub-runs + 5 go bubble; fa 259 / publish 64 kept at price -- the span excludes HBM first access, x-load, publish, merge); T128 at the one-op ratio 684/288, 839/386 (modelled); BIGPROG variant: one op 684 / 839",
+   "source": "HBM-ATTGAP main 7f35a3e4b results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json (40/40 bit-exact, resident 1,019 / 971 words); one-op VEH-ATT 07a99bc0a"
+  },
+  "att_merge": {
+   "value": {
+    "ds640": 400.8,
+    "ds128": 335.5,
+    "ds640_one": 335.5,
+    "levels": 4,
+    "dep": 10,
+    "lat": 9
+   },
+   "grade": "priced",
+   "applies": "DS PV + (HBM-ATTGAP SU merge 400.8 T640 / 335.5 T128 [one-op 335.5] - priced merge 99 / 79); Qwen PV + 4 x (1 XQ + DEP 10 + LAT 9) (16-SM pairwise tree, no priced merge)",
+   "source": "HBM-ATTGAP att_gap_price.py merge model (SU quadrant programme + ring AG + top levels in norm; SU RTL bench pending); Qwen VEH-ATT finding (3); SU merge RTL bench PASS + 4 mutants FAIL TW4 78bf1fdc8 (function; latency = model)"
+  },
+  "att_qwen": {
+   "value": {
+    "qk_bytes_rate": 54.8418410041841,
+    "pv_bytes_rate": 27.722504230118442,
+    "nsm": 16
+   },
+   "grade": "measured",
+   "applies": "Qwen ATT at the measured per-SM line rate (QK 54.84 / PV 27.72 B/cyc/SM, P 8192, 512 rows/SM) on 16 SMs instead of the die HBM rate (spans measured; exposure from the S2 schedule)",
+   "source": "VEH-ATT3 claude/veh-att3-1019 fb8fd695b results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/{L0_L0_pos,chain_L1_pos}.json (80/80 bit-exact; QK 1,195 / PV 4 x 591 = 2,364)"
+  },
+  "att_prog": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "2048 words: 1019 attention + 152 matvec resident; one-op spans enabled",
+   "source": "HBM-SMBUDGET main e248c89e7"
+  },
+  "att_desc": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "256 token-resident relative descriptors; no rewrite",
+   "source": "HBM-SMBUDGET main e248c89e7"
+  },
+  "pt_p2": {
+   "value": 81,
+   "grade": "measured",
+   "applies": "SU pre-tree PT 70 -> 81 edges (p2 registered operand select, PT_RED 69 -> 80); only with su_red; p3 PT_RED80 retained",
+   "source": "HBM-PRETREE claude/hh6-sured-1018 0d52a4877 (bench MUT 0 PASS / MUT 512 FAIL); COORD 0kb; HBM-SAFE-PRETREE 9d56cae39"
+  },
+  "idx_link": {
+   "value": 5,
+   "grade": "measured",
+   "applies": "+5 an IDX.INDEX / IDX.TOPK record (link outputs +5)",
+   "source": "HBM-IDXPIPE b4717e464 / AD-HBM-IDXK c94204038 (frame 1397 -> 1402)"
+  },
+  "idx_pin": {
+   "value": {
+    "index": 3,
+    "topk_fixed": 4,
+    "argmax": 8
+   },
+   "grade": "measured",
+   "applies": "IDX.INDEX +3, IDX.TOPK +(m + 4), ARGMAX +8",
+   "source": "HBM-IDXAM2 r3 bench + VEH-TOPKFIX2 am_pin bench (RT_EXTRA 2 / ACK 14, VMX 6, op_SW n13)"
+  },
+  "land": {
+   "value": {
+    "ds": -1.13,
+    "qwen": -0.07
+   },
+   "grade": "priced",
+   "applies": "recorded factor on tok/s (half-cycle landed hops)",
+   "source": "HBM-LANDING/DCC hland-dcc 447dfe960 (HANDOFF 10-18 07:35)"
+  },
+  "hbm_bw": {
+   "value": 90.67,
+   "grade": "priced",
+   "applies": "SM, attention and DMA stream floor at measured per-SM bandwidth; incremental exposure over99",
+   "source": "HBM-BW9e8fcf77e controller production stream"
+  },
+  "pg_inject": {
+   "value": 1,
+   "grade": "priced",
+   "applies": "+1 SU VM read record conservatively exposes split-stream inject edge; only inject users pay physically",
+   "source": "TW3-PGSTREAM 5ac202325; HBM-PGSTREAM-B unchanged edges"
+  },
+  "pg_fault": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "fault +2 serial is status only, no successful token latency",
+   "source": "TW3-PGSTREAM"
+  },
+  "sm_svc": {
+   "value": 16688,
+   "grade": "priced",
+   "applies": "fully exposed partial block granularity, worst layer 388 x43 + head4",
+   "source": "HBM-SMBUDGET sm_svc_granularity.json"
+  },
+  "qwen_int8": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "INT8 path within price; opt-in successor, all9984 rows bit-exact",
+   "source": "SMB-INT8 e592ae5d0; default-off die adoption owed"
+  },
+  "pvm_fold": {
+   "value": 1,
+   "grade": "priced",
+   "applies": "+1 per Qwen PV 128-token block per SM column; DS no fold",
+   "source": "HBM-PVM-SAFE node0 publication F0+23 vs22; node1 unchanged"
+  },
+  "gen2e_su": {
+   "value": {
+    "read": 8,
+    "write": 8
+   },
+   "grade": "priced",
+   "applies": "+8 an SU-executed record reading VM (tap READ_RETURN 18 vs 10), +8 writing VM (WRITE_RETURN 15 vs 7); exposed once a record",
+   "source": "GEN2e sourceprofile 708d112f3 (TW5-GEN2E 09:54), HBM-BANKLAT-SU rt18 (TW5-BANKLATSU)"
+  },
+  "hbm_bridge": {
+   "value": 1,
+   "grade": "measured",
+   "applies": "+1 edge a record with an HBM-space operand (successor cold bridge +1)",
+   "source": "HBM-BW predicate-truth native bridge 277b256/II1/+1 (lanes/HBM-BW.md 11:21; successor not adopted)"
+  }
+ },
+ "info_terms": {
+  "gen2c_xload": {
+   "value": {
+    "SM_X": 32.5
+   },
+   "applies": "xload max RD_LAT55 plus g4 roundtrip10, half per stage",
+   "source": "HBM-BANKLAT-XL + VMGLUE g4"
+  },
+  "bl_coll": {
+   "value": {
+    "COLL_VM": 42.0
+   },
+   "applies": "COLL VM_RT74 + g4 roundtrip10",
+   "source": "HBM-BANKLAT-COLL + VMGLUE g4"
+  },
+  "bl_dma": {
+   "value": {
+    "VM_HBM": 46.5
+   },
+   "applies": "DMA lag83 + g4 roundtrip10",
+   "source": "HBM-BANKLAT-DMA + VMGLUE g4"
+  },
+  "bl_idx": {
+   "value": {
+    "idx": 181,
+    "argmax": 75
+   },
+   "applies": "IDX171/rootctl65 + g4 roundtrip10; fully exposed upper bound",
+   "source": "HBM-BANKLAT-IDX + VMGLUE g4"
+  }
+ },
+ "table": {
+  "base": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.2,
+   "terms": [],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_collq": {
+   "ds_ar_cycles": 648934.2,
+   "qwen_cycles": 1268223.8,
+   "ds_ar_tok_s": 1849.2,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "collq"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -2.95,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 19159.1,
+   "d_qwen_cycles": 2.0
+  },
+  "only_pg_cmd": {
+   "ds_ar_cycles": 633357.1,
+   "qwen_cycles": 1271257.8,
+   "ds_ar_tok_s": 1894.7,
+   "qwen_tok_s": 943.9,
+   "terms": [
+    "pg_cmd"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "pg_cmd": 8136.0
+    },
+    "qwen": {
+     "pg_cmd": 3042.0
+    }
+   },
+   "d_ds_ar_pct": -0.56,
+   "d_qwen_pct": -0.24,
+   "d_ds_ar_cycles": 3582.0,
+   "d_qwen_cycles": 3036.0
+  },
+  "only_pg_operand": {
+   "ds_ar_cycles": 631172.1,
+   "qwen_cycles": 1269013.8,
+   "ds_ar_tok_s": 1901.2,
+   "qwen_tok_s": 945.6,
+   "terms": [
+    "pg_operand"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "pg_operand": 2266.0
+    },
+    "qwen": {
+     "pg_operand": 792.0
+    }
+   },
+   "d_ds_ar_pct": -0.22,
+   "d_qwen_pct": -0.06,
+   "d_ds_ar_cycles": 1397.0,
+   "d_qwen_cycles": 792.0
+  },
+  "only_pg_vmwrite": {
+   "ds_ar_cycles": 635883.1,
+   "qwen_cycles": 1273861.8,
+   "ds_ar_tok_s": 1887.1,
+   "qwen_tok_s": 942.0,
+   "terms": [
+    "pg_vmwrite"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "pg_vmwrite": 14280.0
+    },
+    "qwen": {
+     "pg_vmwrite": 5640.0
+    }
+   },
+   "d_ds_ar_pct": -0.96,
+   "d_qwen_pct": -0.44,
+   "d_ds_ar_cycles": 6108.0,
+   "d_qwen_cycles": 5640.0
+  },
+  "only_hc_tree": {
+   "ds_ar_cycles": 630828.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1902.3,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "hc_tree"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -0.16,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 1053.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_hc_xr": {
+   "ds_ar_cycles": 630037.5,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1904.6,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "hc_xr"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_xr": 521.6
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -0.04,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 262.4,
+   "d_qwen_cycles": 0.0
+  },
+  "only_bank_pin": {
+   "ds_ar_cycles": 631916.1,
+   "qwen_cycles": 1269198.8,
+   "ds_ar_tok_s": 1899.0,
+   "qwen_tok_s": 945.5,
+   "terms": [
+    "bank_pin"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "bank_pin": 3558.0
+    },
+    "qwen": {
+     "bank_pin": 978.0
+    }
+   },
+   "d_ds_ar_pct": -0.34,
+   "d_qwen_pct": -0.07,
+   "d_ds_ar_cycles": 2141.0,
+   "d_qwen_cycles": 977.0
+  },
+  "only_su_red": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1269733.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 945.1,
+   "terms": [
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": -0.12,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 1512.0
+  },
+  "only_e86_tkm": {
+   "ds_ar_cycles": 630351.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1903.7,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "e86_tkm"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "e86_tkm": 576.0
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -0.09,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 576.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_att_s32": {
+   "ds_ar_cycles": 662023.9,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1812.6,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "att_s32"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_s32": 33097.8
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -4.87,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 32248.8,
+   "d_qwen_cycles": 0.0
+  },
+  "only_att_merge": {
+   "ds_ar_cycles": 639038.6,
+   "qwen_cycles": 1276683.2,
+   "ds_ar_tok_s": 1877.8,
+   "qwen_tok_s": 939.9,
+   "terms": [
+    "att_merge"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_merge": 9500.0
+    },
+    "qwen": {
+     "att_merge": 8461.4
+    }
+   },
+   "d_ds_ar_pct": -1.45,
+   "d_qwen_pct": -0.67,
+   "d_ds_ar_cycles": 9263.5,
+   "d_qwen_cycles": 8461.4
+  },
+  "only_att_qwen": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1444387.7,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 830.8,
+   "terms": [
+    "att_qwen"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {
+     "att_qwen": 176165.9
+    }
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": -12.2,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 176165.9
+  },
+  "only_idx_link": {
+   "ds_ar_cycles": 630015.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1904.7,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "idx_link"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "idx_link": 240.0
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -0.04,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 240.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_idx_pin": {
+   "ds_ar_cycles": 629999.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1904.8,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "idx_pin"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "idx_pin": 232.0
+    },
+    "qwen": {
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -0.03,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 224.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_hbm_bw": {
+   "ds_ar_cycles": 639100.1,
+   "qwen_cycles": 1386716.4,
+   "ds_ar_tok_s": 1877.6,
+   "qwen_tok_s": 865.4,
+   "terms": [
+    "hbm_bw"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hbm_bw": 12397.8
+    },
+    "qwen": {
+     "hbm_bw": 118565.6
+    }
+   },
+   "d_ds_ar_pct": -1.46,
+   "d_qwen_pct": -8.54,
+   "d_ds_ar_cycles": 9325.0,
+   "d_qwen_cycles": 118494.6
+  },
+  "only_pg_inject": {
+   "ds_ar_cycles": 630372.1,
+   "qwen_cycles": 1268727.8,
+   "ds_ar_tok_s": 1903.6,
+   "qwen_tok_s": 945.8,
+   "terms": [
+    "pg_inject"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "pg_inject": 1356.0
+    },
+    "qwen": {
+     "pg_inject": 507.0
+    }
+   },
+   "d_ds_ar_pct": -0.09,
+   "d_qwen_pct": -0.04,
+   "d_ds_ar_cycles": 597.0,
+   "d_qwen_cycles": 506.0
+  },
+  "only_pg_fault": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "pg_fault"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_sm_svc": {
+   "ds_ar_cycles": 646463.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1856.3,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "sm_svc"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -2.58,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 16688.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_qwen_int8": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "qwen_int8"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 0.0
+  },
+  "only_pvm_fold": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268509.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.0,
+   "terms": [
+    "pvm_fold"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {
+     "pvm_fold": 288.0
+    }
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": -0.02,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 288.0
+  },
+  "only_gen2e_su": {
+   "ds_ar_cycles": 638935.0,
+   "qwen_cycles": 1276029.8,
+   "ds_ar_tok_s": 1878.1,
+   "qwen_tok_s": 940.4,
+   "terms": [
+    "gen2e_su"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "gen2e_su": 20368.0
+    },
+    "qwen": {
+     "gen2e_su": 7816.0
+    }
+   },
+   "d_ds_ar_pct": -1.43,
+   "d_qwen_pct": -0.61,
+   "d_ds_ar_cycles": 9159.9,
+   "d_qwen_cycles": 7808.0
+  },
+  "only_hbm_bridge": {
+   "ds_ar_cycles": 630693.1,
+   "qwen_cycles": 1268729.8,
+   "ds_ar_tok_s": 1902.7,
+   "qwen_tok_s": 945.8,
+   "terms": [
+    "hbm_bridge"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hbm_bridge": 1724.0
+    },
+    "qwen": {
+     "hbm_bridge": 655.0
+    }
+   },
+   "d_ds_ar_pct": -0.14,
+   "d_qwen_pct": -0.04,
+   "d_ds_ar_cycles": 918.0,
+   "d_qwen_cycles": 508.0
+  },
+  "all": {
+   "ds_ar_cycles": 751514.1,
+   "qwen_cycles": 1585164.7,
+   "ds_ar_tok_s": 1596.8,
+   "qwen_tok_s": 757.0,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "bank_pin",
+    "collq",
+    "e86_tkm",
+    "gen2e_su",
+    "hbm_bridge",
+    "hbm_bw",
+    "hc_tree",
+    "hc_xr",
+    "idx_link",
+    "idx_pin",
+    "land",
+    "pg_cmd",
+    "pg_fault",
+    "pg_inject",
+    "pg_operand",
+    "pg_reset",
+    "pg_vmwrite",
+    "pt_p2",
+    "pvm_fold",
+    "qcore_r6",
+    "qwen_int8",
+    "sm_svc",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0,
+     "hc_xr": 521.6,
+     "bank_pin": 3558.0,
+     "hbm_bridge": 1724.0,
+     "hbm_bw": 12397.8,
+     "pg_cmd": 8136.0,
+     "pg_operand": 2266.0,
+     "pg_inject": 1356.0,
+     "gen2e_su": 20368.0,
+     "pg_vmwrite": 14280.0,
+     "att_s32": 33097.8,
+     "att_merge": 9500.0,
+     "idx_link": 240.0,
+     "idx_pin": 232.0,
+     "e86_tkm": 576.0
+    },
+    "qwen": {
+     "hbm_bw": 109807.9,
+     "hbm_bridge": 655.0,
+     "pg_cmd": 3042.0,
+     "pg_vmwrite": 5640.0,
+     "bank_pin": 978.0,
+     "pg_inject": 507.0,
+     "gen2e_su": 7816.0,
+     "att_qwen": 176165.9,
+     "pg_operand": 792.0,
+     "att_merge": 8461.4,
+     "pvm_fold": 288.0,
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -16.2,
+   "d_qwen_pct": -20.0,
+   "d_ds_ar_cycles": 121739.0,
+   "d_qwen_cycles": 316942.9
+  },
+  "all_no_collq": {
+   "ds_ar_cycles": 732227.1,
+   "qwen_cycles": 1585162.7,
+   "ds_ar_tok_s": 1638.8,
+   "qwen_tok_s": 757.0,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "bank_pin",
+    "e86_tkm",
+    "gen2e_su",
+    "hbm_bridge",
+    "hbm_bw",
+    "hc_tree",
+    "hc_xr",
+    "idx_link",
+    "idx_pin",
+    "land",
+    "pg_cmd",
+    "pg_fault",
+    "pg_inject",
+    "pg_operand",
+    "pg_reset",
+    "pg_vmwrite",
+    "pt_p2",
+    "pvm_fold",
+    "qcore_r6",
+    "qwen_int8",
+    "sm_svc",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0,
+     "hc_xr": 521.6,
+     "bank_pin": 3558.0,
+     "hbm_bridge": 1724.0,
+     "hbm_bw": 12397.8,
+     "pg_cmd": 8136.0,
+     "pg_operand": 2266.0,
+     "pg_inject": 1356.0,
+     "gen2e_su": 20368.0,
+     "pg_vmwrite": 14280.0,
+     "att_s32": 33097.8,
+     "att_merge": 9500.0,
+     "idx_link": 240.0,
+     "idx_pin": 232.0,
+     "e86_tkm": 576.0
+    },
+    "qwen": {
+     "hbm_bw": 109807.9,
+     "hbm_bridge": 655.0,
+     "pg_cmd": 3042.0,
+     "pg_vmwrite": 5640.0,
+     "bank_pin": 978.0,
+     "pg_inject": 507.0,
+     "gen2e_su": 7816.0,
+     "att_qwen": 176165.9,
+     "pg_operand": 792.0,
+     "att_merge": 8461.4,
+     "pvm_fold": 288.0,
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -13.99,
+   "d_qwen_pct": -20.0,
+   "d_ds_ar_cycles": 102452.0,
+   "d_qwen_cycles": 316940.9
+  },
+  "all_bigprog": {
+   "ds_ar_cycles": 751514.1,
+   "qwen_cycles": 1585164.7,
+   "ds_ar_tok_s": 1596.8,
+   "qwen_tok_s": 757.0,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "bank_pin",
+    "collq",
+    "e86_tkm",
+    "gen2e_su",
+    "hbm_bridge",
+    "hbm_bw",
+    "hc_tree",
+    "hc_xr",
+    "idx_link",
+    "idx_pin",
+    "land",
+    "pg_cmd",
+    "pg_fault",
+    "pg_inject",
+    "pg_operand",
+    "pg_reset",
+    "pg_vmwrite",
+    "pt_p2",
+    "pvm_fold",
+    "qcore_r6",
+    "qwen_int8",
+    "sm_svc",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0,
+     "hc_xr": 521.6,
+     "bank_pin": 3558.0,
+     "hbm_bridge": 1724.0,
+     "hbm_bw": 12397.8,
+     "pg_cmd": 8136.0,
+     "pg_operand": 2266.0,
+     "pg_inject": 1356.0,
+     "gen2e_su": 20368.0,
+     "pg_vmwrite": 14280.0,
+     "att_s32": 33097.8,
+     "att_merge": 9500.0,
+     "idx_link": 240.0,
+     "idx_pin": 232.0,
+     "e86_tkm": 576.0
+    },
+    "qwen": {
+     "hbm_bw": 109807.9,
+     "hbm_bridge": 655.0,
+     "pg_cmd": 3042.0,
+     "pg_vmwrite": 5640.0,
+     "bank_pin": 978.0,
+     "pg_inject": 507.0,
+     "gen2e_su": 7816.0,
+     "att_qwen": 176165.9,
+     "pg_operand": 792.0,
+     "att_merge": 8461.4,
+     "pvm_fold": 288.0,
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -16.2,
+   "d_qwen_pct": -20.0,
+   "d_ds_ar_cycles": 121739.0,
+   "d_qwen_cycles": 316942.9
+  },
+  "rec": {
+   "ds_ar_cycles": 648934.2,
+   "qwen_cycles": 1268223.8,
+   "ds_ar_tok_s": 1849.2,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "collq"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -2.95,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 19159.1,
+   "d_qwen_cycles": 2.0
+  },
+  "rec_lat": {
+   "ds_ar_cycles": 709527.4,
+   "qwen_cycles": 1409171.8,
+   "ds_ar_tok_s": 1691.3,
+   "qwen_tok_s": 851.6,
+   "terms": [
+    "bank_pin",
+    "collq",
+    "e86_tkm",
+    "gen2e_su",
+    "hbm_bridge",
+    "hbm_bw",
+    "hc_tree",
+    "hc_xr",
+    "idx_link",
+    "idx_pin",
+    "land",
+    "pg_cmd",
+    "pg_fault",
+    "pg_inject",
+    "pg_operand",
+    "pg_reset",
+    "pg_vmwrite",
+    "pt_p2",
+    "pvm_fold",
+    "qcore_r6",
+    "qwen_int8",
+    "sm_svc",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0,
+     "hc_xr": 521.6,
+     "bank_pin": 3558.0,
+     "hbm_bridge": 1724.0,
+     "hbm_bw": 12397.8,
+     "pg_cmd": 8136.0,
+     "pg_operand": 2266.0,
+     "pg_inject": 1356.0,
+     "gen2e_su": 20368.0,
+     "pg_vmwrite": 14280.0,
+     "idx_link": 240.0,
+     "idx_pin": 232.0,
+     "e86_tkm": 576.0
+    },
+    "qwen": {
+     "hbm_bw": 118565.6,
+     "hbm_bridge": 655.0,
+     "pg_cmd": 3042.0,
+     "pg_vmwrite": 5640.0,
+     "bank_pin": 978.0,
+     "pg_inject": 507.0,
+     "gen2e_su": 7816.0,
+     "pg_operand": 792.0,
+     "pvm_fold": 288.0,
+     "idx_pin": 8.0
+    }
+   },
+   "d_ds_ar_pct": -11.24,
+   "d_qwen_pct": -10.0,
+   "d_ds_ar_cycles": 79752.3,
+   "d_qwen_cycles": 140950.0
+  },
+  "rec_att": {
+   "ds_ar_cycles": 690446.5,
+   "qwen_cycles": 1452851.1,
+   "ds_ar_tok_s": 1738.0,
+   "qwen_tok_s": 826.0,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "collq"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_s32": 33097.8,
+     "att_merge": 9500.0
+    },
+    "qwen": {
+     "att_qwen": 176165.9,
+     "att_merge": 8461.4
+    }
+   },
+   "d_ds_ar_pct": -8.79,
+   "d_qwen_pct": -12.7,
+   "d_ds_ar_cycles": 60671.4,
+   "d_qwen_cycles": 184629.3
+  },
+  "rec_att_bigprog": {
+   "ds_ar_cycles": 690446.5,
+   "qwen_cycles": 1452851.1,
+   "ds_ar_tok_s": 1738.0,
+   "qwen_tok_s": 826.0,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "collq"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_s32": 33097.8,
+     "att_merge": 9500.0
+    },
+    "qwen": {
+     "att_qwen": 176165.9,
+     "att_merge": 8461.4
+    }
+   },
+   "d_ds_ar_pct": -8.79,
+   "d_qwen_pct": -12.7,
+   "d_ds_ar_cycles": 60671.4,
+   "d_qwen_cycles": 184629.3
+  },
+  "only_su_red_p2": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1270129.8,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 944.8,
+   "terms": [
+    "pt_p2",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {},
+    "qwen": {}
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": -0.15,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 1908.0
+  },
+  "only_att_s32_bigprog": {
+   "ds_ar_cycles": 662023.9,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1812.6,
+   "qwen_tok_s": 946.2,
+   "terms": [
+    "att_s32"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_s32": 33097.8
+    },
+    "qwen": {}
+   },
+   "d_ds_ar_pct": -4.87,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 32248.8,
+   "d_qwen_cycles": 0.0
+  },
+  "only_att_merge_bigprog": {
+   "ds_ar_cycles": 639038.6,
+   "qwen_cycles": 1276683.2,
+   "ds_ar_tok_s": 1877.8,
+   "qwen_tok_s": 939.9,
+   "terms": [
+    "att_merge"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_merge": 9500.0
+    },
+    "qwen": {
+     "att_merge": 8461.4
+    }
+   },
+   "d_ds_ar_pct": -1.45,
+   "d_qwen_pct": -0.67,
+   "d_ds_ar_cycles": 9263.5,
+   "d_qwen_cycles": 8461.4
+  },
+  "info_attgap_total": {
+   "ds_ar_cycles": 649075.6,
+   "qwen_cycles": 1276683.2,
+   "ds_ar_tok_s": 1848.8,
+   "qwen_tok_s": 939.9,
+   "terms": [
+    "att_merge",
+    "att_s32"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_merge": 13420.0,
+     "att_s32": 6384.0
+    },
+    "qwen": {
+     "att_merge": 8461.4
+    }
+   },
+   "d_ds_ar_pct": -2.97,
+   "d_qwen_pct": -0.67,
+   "d_ds_ar_cycles": 19300.5,
+   "d_qwen_cycles": 8461.4
+  },
+  "info_attgap_total_bigprog": {
+   "ds_ar_cycles": 649075.6,
+   "qwen_cycles": 1276683.2,
+   "ds_ar_tok_s": 1848.8,
+   "qwen_tok_s": 939.9,
+   "terms": [
+    "att_merge",
+    "att_s32"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "att_merge": 13420.0,
+     "att_s32": 6384.0
+    },
+    "qwen": {
+     "att_merge": 8461.4
+    }
+   },
+   "d_ds_ar_pct": -2.97,
+   "d_qwen_pct": -0.67,
+   "d_ds_ar_cycles": 19300.5,
+   "d_qwen_cycles": 8461.4
+  },
+  "info_gen2c_xload": {
+   "ds_ar_cycles": 673028.4,
+   "qwen_cycles": 1281134.3,
+   "ds_ar_tok_s": 1783.0,
+   "qwen_tok_s": 936.7,
+   "terms": [],
+   "rp_added_sum": {
+    "ds": {
+     "vme:xl:base": 52499.0,
+     "vme_L0:xl:base": 1340.4,
+     "vme:xl:records": 1175.0,
+     "vme:xl:exposed": 52499.0,
+     "vme_L0:xl:exposed": 1340.4,
+     "vme_L1:xl:base": 1340.4,
+     "vme_L1:xl:exposed": 1340.4,
+     "vme_L2:xl:base": 1385.1,
+     "vme_L2:xl:exposed": 1385.1,
+     "vme_L3:xl:base": 1295.7,
+     "vme_L3:xl:exposed": 1295.7,
+     "vme_L4:xl:base": 1295.7,
+     "vme_L4:xl:exposed": 1295.7,
+     "vme_L5:xl:base": 1295.7,
+     "vme_L5:xl:exposed": 1295.7,
+     "vme_L6:xl:base": 1295.7,
+     "vme_L6:xl:exposed": 1295.7,
+     "vme_L7:xl:base": 1295.7,
+     "vme_L7:xl:exposed": 1295.7,
+     "vme_L8:xl:base": 1385.1,
+     "vme_L8:xl:exposed": 1385.1,
+     "vme_L9:xl:base": 1295.7,
+     "vme_L9:xl:exposed": 1295.7,
+     "vme_L10:xl:base": 1295.7,
+     "vme_L10:xl:exposed": 1295.7,
+     "vme_L11:xl:base": 1295.7,
+     "vme_L11:xl:exposed": 1295.7,
+     "vme_L12:xl:base": 1295.7,
+     "vme_L12:xl:exposed": 1295.7,
+     "vme_L13:xl:base": 1295.7,
+     "vme_L13:xl:exposed": 1295.7,
+     "vme_L14:xl:base": 1429.8,
+     "vme_L14:xl:exposed": 1429.8,
+     "vme_L15:xl:base": 1295.7,
+     "vme_L15:xl:exposed": 1295.7,
+     "vme_L16:xl:base": 1295.7,
+     "vme_L16:xl:exposed": 1295.7,
+     "vme_L17:xl:base": 1295.7,
+     "vme_L17:xl:exposed": 1295.7,
+     "vme_L18:xl:base": 1295.7,
+     "vme_L18:xl:exposed": 1295.7,
+     "vme_L19:xl:base": 1295.7,
+     "vme_L19:xl:exposed": 1295.7,
+     "vme_L20:xl:base": 1385.1,
+     "vme_L20:xl:exposed": 1385.1,
+     "vme_L21:xl:base": 1295.7,
+     "vme_L21:xl:exposed": 1295.7,
+     "vme_L22:xl:base": 1295.7,
+     "vme_L22:xl:exposed": 1295.7,
+     "vme_L23:xl:base": 1295.7,
+     "vme_L23:xl:exposed": 1295.7,
+     "vme_L24:xl:base": 1340.4,
+     "vme_L24:xl:exposed": 1340.4,
+     "vme_L25:xl:base": 1295.7,
+     "vme_L25:xl:exposed": 1295.7,
+     "vme_L26:xl:base": 1295.7,
+     "vme_L26:xl:exposed": 1295.7,
+     "vme_L27:xl:base": 1295.7,
+     "vme_L27:xl:exposed": 1295.7,
+     "vme_L28:xl:base": 1340.4,
+     "vme_L28:xl:exposed": 1340.4,
+     "vme_L29:xl:base": 1295.7,
+     "vme_L29:xl:exposed": 1295.7,
+     "vme_L30:xl:base": 1295.7,
+     "vme_L30:xl:exposed": 1295.7,
+     "vme_L31:xl:base": 1295.7,
+     "vme_L31:xl:exposed": 1295.7,
+     "vme_L32:xl:base": 1340.4,
+     "vme_L32:xl:exposed": 1340.4,
+     "vme_L33:xl:base": 1295.7,
+     "vme_L33:xl:exposed": 1295.7,
+     "vme_L34:xl:base": 1295.7,
+     "vme_L34:xl:exposed": 1295.7,
+     "vme_L35:xl:base": 1295.7,
+     "vme_L35:xl:exposed": 1295.7,
+     "vme_L36:xl:base": 1340.4,
+     "vme_L36:xl:exposed": 1340.4,
+     "vme_L37:xl:base": 1295.7,
+     "vme_L37:xl:exposed": 1295.7,
+     "vme_L38:xl:base": 1295.7,
+     "vme_L38:xl:exposed": 1295.7,
+     "vme_L39:xl:base": 1295.7,
+     "vme_L39:xl:exposed": 1295.7
+    },
+    "qwen": {
+     "vme:xl:base": 12912.5,
+     "vme_L0:xl:base": 12912.5,
+     "vme:xl:records": 289.0,
+     "vme:xl:exposed": 12912.5,
+     "vme_L0:xl:exposed": 12912.5
+    }
+   },
+   "d_ds_ar_pct": -6.42,
+   "d_qwen_pct": -1.0,
+   "d_ds_ar_cycles": 43253.3,
+   "d_qwen_cycles": 12912.5
+  },
+  "info_bl_coll": {
+   "ds_ar_cycles": 673582.0,
+   "qwen_cycles": 1274154.5,
+   "ds_ar_tok_s": 1781.5,
+   "qwen_tok_s": 941.8,
+   "terms": [],
+   "rp_added_sum": {
+    "ds": {
+     "vme:coll:base": 30449.2,
+     "vme_L0:coll:base": 758.5,
+     "vme:coll:records": 562.0,
+     "vme:coll:exposed": 30449.2,
+     "vme_L0:coll:exposed": 758.5,
+     "vme_L1:coll:base": 812.7,
+     "vme_L1:coll:exposed": 812.7,
+     "vme_L2:coll:base": 975.2,
+     "vme_L2:coll:exposed": 975.2,
+     "vme_L3:coll:base": 704.3,
+     "vme_L3:coll:exposed": 704.3,
+     "vme_L4:coll:base": 704.3,
+     "vme_L4:coll:exposed": 704.3,
+     "vme_L5:coll:base": 704.3,
+     "vme_L5:coll:exposed": 704.3,
+     "vme_L6:coll:base": 704.3,
+     "vme_L6:coll:exposed": 704.3,
+     "vme_L7:coll:base": 704.3,
+     "vme_L7:coll:exposed": 704.3,
+     "vme_L8:coll:base": 975.2,
+     "vme_L8:coll:exposed": 975.2,
+     "vme_L9:coll:base": 704.3,
+     "vme_L9:coll:exposed": 704.3,
+     "vme_L10:coll:base": 704.3,
+     "vme_L10:coll:exposed": 704.3,
+     "vme_L11:coll:base": 704.3,
+     "vme_L11:coll:exposed": 704.3,
+     "vme_L12:coll:base": 704.3,
+     "vme_L12:coll:exposed": 704.3,
+     "vme_L13:coll:base": 704.3,
+     "vme_L13:coll:exposed": 704.3,
+     "vme_L14:coll:base": 1083.6,
+     "vme_L14:coll:exposed": 1083.6,
+     "vme_L15:coll:base": 704.3,
+     "vme_L15:coll:exposed": 704.3,
+     "vme_L16:coll:base": 704.3,
+     "vme_L16:coll:exposed": 704.3,
+     "vme_L17:coll:base": 704.3,
+     "vme_L17:coll:exposed": 704.3,
+     "vme_L18:coll:base": 704.3,
+     "vme_L18:coll:exposed": 704.3,
+     "vme_L19:coll:base": 704.3,
+     "vme_L19:coll:exposed": 704.3,
+     "vme_L20:coll:base": 1029.4,
+     "vme_L20:coll:exposed": 1029.4,
+     "vme_L21:coll:base": 704.3,
+     "vme_L21:coll:exposed": 704.3,
+     "vme_L22:coll:base": 704.3,
+     "vme_L22:coll:exposed": 704.3,
+     "vme_L23:coll:base": 704.3,
+     "vme_L23:coll:exposed": 704.3,
+     "vme_L24:coll:base": 921.1,
+     "vme_L24:coll:exposed": 921.1,
+     "vme_L25:coll:base": 704.3,
+     "vme_L25:coll:exposed": 704.3,
+     "vme_L26:coll:base": 704.3,
+     "vme_L26:coll:exposed": 704.3,
+     "vme_L27:coll:base": 704.3,
+     "vme_L27:coll:exposed": 704.3,
+     "vme_L28:coll:base": 921.1,
+     "vme_L28:coll:exposed": 921.1,
+     "vme_L29:coll:base": 704.3,
+     "vme_L29:coll:exposed": 704.3,
+     "vme_L30:coll:base": 704.3,
+     "vme_L30:coll:exposed": 704.3,
+     "vme_L31:coll:base": 704.3,
+     "vme_L31:coll:exposed": 704.3,
+     "vme_L32:coll:base": 921.1,
+     "vme_L32:coll:exposed": 921.1,
+     "vme_L33:coll:base": 704.3,
+     "vme_L33:coll:exposed": 704.3,
+     "vme_L34:coll:base": 704.3,
+     "vme_L34:coll:exposed": 704.3,
+     "vme_L35:coll:base": 704.3,
+     "vme_L35:coll:exposed": 704.3,
+     "vme_L36:coll:base": 921.1,
+     "vme_L36:coll:exposed": 921.1,
+     "vme_L37:coll:base": 704.3,
+     "vme_L37:coll:exposed": 704.3,
+     "vme_L38:coll:base": 704.3,
+     "vme_L38:coll:exposed": 704.3,
+     "vme_L39:coll:base": 704.3,
+     "vme_L39:coll:exposed": 704.3
+    },
+    "qwen": {
+     "vme:coll:base": 3955.1,
+     "vme_L0:coll:base": 3955.1,
+     "vme:coll:records": 73.0,
+     "vme:coll:exposed": 3955.1,
+     "vme_L0:coll:exposed": 3955.1
+    }
+   },
+   "d_ds_ar_pct": -6.5,
+   "d_qwen_pct": -0.47,
+   "d_ds_ar_cycles": 43806.9,
+   "d_qwen_cycles": 5932.7
+  },
+  "info_bl_dma": {
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1270224.1,
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 944.7,
+   "terms": [],
+   "rp_added_sum": {
+    "ds": {
+     "vme:dma:base": 1112.4,
+     "vme_L0:dma:base": 27.8,
+     "vme:dma:records": 40.0,
+     "vme:dma:exposed": 1112.4,
+     "vme_L0:dma:exposed": 27.8,
+     "vme_L1:dma:base": 27.8,
+     "vme_L1:dma:exposed": 27.8,
+     "vme_L2:dma:base": 27.8,
+     "vme_L2:dma:exposed": 27.8,
+     "vme_L3:dma:base": 27.8,
+     "vme_L3:dma:exposed": 27.8,
+     "vme_L4:dma:base": 27.8,
+     "vme_L4:dma:exposed": 27.8,
+     "vme_L5:dma:base": 27.8,
+     "vme_L5:dma:exposed": 27.8,
+     "vme_L6:dma:base": 27.8,
+     "vme_L6:dma:exposed": 27.8,
+     "vme_L7:dma:base": 27.8,
+     "vme_L7:dma:exposed": 27.8,
+     "vme_L8:dma:base": 27.8,
+     "vme_L8:dma:exposed": 27.8,
+     "vme_L9:dma:base": 27.8,
+     "vme_L9:dma:exposed": 27.8,
+     "vme_L10:dma:base": 27.8,
+     "vme_L10:dma:exposed": 27.8,
+     "vme_L11:dma:base": 27.8,
+     "vme_L11:dma:exposed": 27.8,
+     "vme_L12:dma:base": 27.8,
+     "vme_L12:dma:exposed": 27.8,
+     "vme_L13:dma:base": 27.8,
+     "vme_L13:dma:exposed": 27.8,
+     "vme_L14:dma:base": 27.8,
+     "vme_L14:dma:exposed": 27.8,
+     "vme_L15:dma:base": 27.8,
+     "vme_L15:dma:exposed": 27.8,
+     "vme_L16:dma:base": 27.8,
+     "vme_L16:dma:exposed": 27.8,
+     "vme_L17:dma:base": 27.8,
+     "vme_L17:dma:exposed": 27.8,
+     "vme_L18:dma:base": 27.8,
+     "vme_L18:dma:exposed": 27.8,
+     "vme_L19:dma:base": 27.8,
+     "vme_L19:dma:exposed": 27.8,
+     "vme_L20:dma:base": 27.8,
+     "vme_L20:dma:exposed": 27.8,
+     "vme_L21:dma:base": 27.8,
+     "vme_L21:dma:exposed": 27.8,
+     "vme_L22:dma:base": 27.8,
+     "vme_L22:dma:exposed": 27.8,
+     "vme_L23:dma:base": 27.8,
+     "vme_L23:dma:exposed": 27.8,
+     "vme_L24:dma:base": 27.8,
+     "vme_L24:dma:exposed": 27.8,
+     "vme_L25:dma:base": 27.8,
+     "vme_L25:dma:exposed": 27.8,
+     "vme_L26:dma:base": 27.8,
+     "vme_L26:dma:exposed": 27.8,
+     "vme_L27:dma:base": 27.8,
+     "vme_L27:dma:exposed": 27.8,
+     "vme_L28:dma:base": 27.8,
+     "vme_L28:dma:exposed": 27.8,
+     "vme_L29:dma:base": 27.8,
+     "vme_L29:dma:exposed": 27.8,
+     "vme_L30:dma:base": 27.8,
+     "vme_L30:dma:exposed": 27.8,
+     "vme_L31:dma:base": 27.8,
+     "vme_L31:dma:exposed": 27.8,
+     "vme_L32:dma:base": 27.8,
+     "vme_L32:dma:exposed": 27.8,
+     "vme_L33:dma:base": 27.8,
+     "vme_L33:dma:exposed": 27.8,
+     "vme_L34:dma:base": 27.8,
+     "vme_L34:dma:exposed": 27.8,
+     "vme_L35:dma:base": 27.8,
+     "vme_L35:dma:exposed": 27.8,
+     "vme_L36:dma:base": 27.8,
+     "vme_L36:dma:exposed": 27.8,
+     "vme_L37:dma:base": 27.8,
+     "vme_L37:dma:exposed": 27.8,
+     "vme_L38:dma:base": 27.8,
+     "vme_L38:dma:exposed": 27.8,
+     "vme_L39:dma:base": 27.8,
+     "vme_L39:dma:exposed": 27.8
+    },
+    "qwen": {
+     "vme:dma:base": 2002.3,
+     "vme_L0:dma:base": 2002.3,
+     "vme:dma:records": 72.0,
+     "vme:dma:exposed": 2002.3,
+     "vme_L0:dma:exposed": 2002.3
+    }
+   },
+   "d_ds_ar_pct": 0.0,
+   "d_qwen_pct": -0.16,
+   "d_ds_ar_cycles": 0.0,
+   "d_qwen_cycles": 2002.3
+  },
+  "info_bl_idx": {
+   "ds_ar_cycles": 638463.1,
+   "qwen_cycles": 1268221.8,
+   "ds_ar_tok_s": 1879.5,
+   "qwen_tok_s": 946.2,
+   "terms": [],
+   "rp_added_sum": {
+    "ds": {
+     "bl_idx": 8763.0,
+     "vme:idx:base": 8763.0,
+     "vme_L0:idx:base": 256.0,
+     "vme:idx:records": 49.0,
+     "vme:idx:exposed": 8763.0,
+     "vme_L0:idx:exposed": 256.0,
+     "vme_L1:idx:base": 181.0,
+     "vme_L1:idx:exposed": 181.0,
+     "vme_L2:idx:base": 362.0,
+     "vme_L2:idx:exposed": 362.0,
+     "vme_L3:idx:base": 181.0,
+     "vme_L3:idx:exposed": 181.0,
+     "vme_L4:idx:base": 181.0,
+     "vme_L4:idx:exposed": 181.0,
+     "vme_L5:idx:base": 181.0,
+     "vme_L5:idx:exposed": 181.0,
+     "vme_L6:idx:base": 181.0,
+     "vme_L6:idx:exposed": 181.0,
+     "vme_L7:idx:base": 181.0,
+     "vme_L7:idx:exposed": 181.0,
+     "vme_L8:idx:base": 362.0,
+     "vme_L8:idx:exposed": 362.0,
+     "vme_L9:idx:base": 181.0,
+     "vme_L9:idx:exposed": 181.0,
+     "vme_L10:idx:base": 181.0,
+     "vme_L10:idx:exposed": 181.0,
+     "vme_L11:idx:base": 181.0,
+     "vme_L11:idx:exposed": 181.0,
+     "vme_L12:idx:base": 181.0,
+     "vme_L12:idx:exposed": 181.0,
+     "vme_L13:idx:base": 181.0,
+     "vme_L13:idx:exposed": 181.0,
+     "vme_L14:idx:base": 362.0,
+     "vme_L14:idx:exposed": 362.0,
+     "vme_L15:idx:base": 181.0,
+     "vme_L15:idx:exposed": 181.0,
+     "vme_L16:idx:base": 181.0,
+     "vme_L16:idx:exposed": 181.0,
+     "vme_L17:idx:base": 181.0,
+     "vme_L17:idx:exposed": 181.0,
+     "vme_L18:idx:base": 181.0,
+     "vme_L18:idx:exposed": 181.0,
+     "vme_L19:idx:base": 181.0,
+     "vme_L19:idx:exposed": 181.0,
+     "vme_L20:idx:base": 362.0,
+     "vme_L20:idx:exposed": 362.0,
+     "vme_L21:idx:base": 181.0,
+     "vme_L21:idx:exposed": 181.0,
+     "vme_L22:idx:base": 181.0,
+     "vme_L22:idx:exposed": 181.0,
+     "vme_L23:idx:base": 181.0,
+     "vme_L23:idx:exposed": 181.0,
+     "vme_L24:idx:base": 362.0,
+     "vme_L24:idx:exposed": 362.0,
+     "vme_L25:idx:base": 181.0,
+     "vme_L25:idx:exposed": 181.0,
+     "vme_L26:idx:base": 181.0,
+     "vme_L26:idx:exposed": 181.0,
+     "vme_L27:idx:base": 181.0,
+     "vme_L27:idx:exposed": 181.0,
+     "vme_L28:idx:base": 362.0,
+     "vme_L28:idx:exposed": 362.0,
+     "vme_L29:idx:base": 181.0,
+     "vme_L29:idx:exposed": 181.0,
+     "vme_L30:idx:base": 181.0,
+     "vme_L30:idx:exposed": 181.0,
+     "vme_L31:idx:base": 181.0,
+     "vme_L31:idx:exposed": 181.0,
+     "vme_L32:idx:base": 362.0,
+     "vme_L32:idx:exposed": 362.0,
+     "vme_L33:idx:base": 181.0,
+     "vme_L33:idx:exposed": 181.0,
+     "vme_L34:idx:base": 181.0,
+     "vme_L34:idx:exposed": 181.0,
+     "vme_L35:idx:base": 181.0,
+     "vme_L35:idx:exposed": 181.0,
+     "vme_L36:idx:base": 362.0,
+     "vme_L36:idx:exposed": 362.0,
+     "vme_L37:idx:base": 181.0,
+     "vme_L37:idx:exposed": 181.0,
+     "vme_L38:idx:base": 181.0,
+     "vme_L38:idx:exposed": 181.0,
+     "vme_L39:idx:base": 181.0,
+     "vme_L39:idx:exposed": 181.0
+    },
+    "qwen": {
+     "bl_idx": 75.0
+    }
+   },
+   "d_ds_ar_pct": -1.36,
+   "d_qwen_pct": 0.0,
+   "d_ds_ar_cycles": 8688.0,
+   "d_qwen_cycles": 0.0
+  },
+  "info_banklat_all": {
+   "ds_ar_cycles": 843726.2,
+   "qwen_cycles": 1606026.8,
+   "ds_ar_tok_s": 1422.3,
+   "qwen_tok_s": 747.2,
+   "terms": [
+    "att_desc",
+    "att_merge",
+    "att_prog",
+    "att_qwen",
+    "att_s32",
+    "bank_pin",
+    "collq",
+    "e86_tkm",
+    "gen2e_su",
+    "hbm_bridge",
+    "hbm_bw",
+    "hc_tree",
+    "hc_xr",
+    "idx_link",
+    "idx_pin",
+    "land",
+    "pg_cmd",
+    "pg_fault",
+    "pg_inject",
+    "pg_operand",
+    "pg_reset",
+    "pg_vmwrite",
+    "pt_p2",
+    "pvm_fold",
+    "qcore_r6",
+    "qwen_int8",
+    "sm_svc",
+    "su_red"
+   ],
+   "rp_added_sum": {
+    "ds": {
+     "hc_tree": 2093.0,
+     "hc_xr": 521.6,
+     "bank_pin": 3558.0,
+     "hbm_bridge": 1724.0,
+     "hbm_bw": 12039.8,
+     "pg_cmd": 8136.0,
+     "pg_operand": 2266.0,
+     "pg_inject": 1356.0,
+     "gen2e_su": 20368.0,
+     "pg_vmwrite": 14280.0,
+     "att_s32": 33097.8,
+     "att_merge": 9500.0,
+     "idx_link": 240.0,
+     "idx_pin": 232.0,
+     "bl_idx": 8763.0,
+     "vme:xl:base": 52499.0,
+     "vme_L0:xl:base": 1340.4,
+     "vme:xl:records": 1175.0,
+     "vme:xl:exposed": 52499.0,
+     "vme_L0:xl:exposed": 1340.4,
+     "vme:coll:base": 30449.2,
+     "vme_L0:coll:base": 758.5,
+     "vme:coll:records": 562.0,
+     "vme:coll:exposed": 30449.2,
+     "vme_L0:coll:exposed": 758.5,
+     "vme:dma:base": 1112.4,
+     "vme_L0:dma:base": 27.8,
+     "vme:dma:records": 40.0,
+     "vme:dma:exposed": 1112.4,
+     "vme_L0:dma:exposed": 27.8,
+     "vme:idx:base": 8763.0,
+     "vme_L0:idx:base": 256.0,
+     "vme:idx:records": 49.0,
+     "vme:idx:exposed": 8763.0,
+     "vme_L0:idx:exposed": 256.0,
+     "vme_L1:coll:base": 812.7,
+     "vme_L1:coll:exposed": 812.7,
+     "vme_L1:xl:base": 1340.4,
+     "vme_L1:xl:exposed": 1340.4,
+     "vme_L1:dma:base": 27.8,
+     "vme_L1:dma:exposed": 27.8,
+     "vme_L1:idx:base": 181.0,
+     "vme_L1:idx:exposed": 181.0,
+     "e86_tkm": 576.0,
+     "vme_L2:coll:base": 975.2,
+     "vme_L2:coll:exposed": 975.2,
+     "vme_L2:xl:base": 1385.1,
+     "vme_L2:xl:exposed": 1385.1,
+     "vme_L2:idx:base": 362.0,
+     "vme_L2:idx:exposed": 362.0,
+     "vme_L2:dma:base": 27.8,
+     "vme_L2:dma:exposed": 27.8,
+     "vme_L3:xl:base": 1295.7,
+     "vme_L3:xl:exposed": 1295.7,
+     "vme_L3:coll:base": 704.3,
+     "vme_L3:coll:exposed": 704.3,
+     "vme_L3:dma:base": 27.8,
+     "vme_L3:dma:exposed": 27.8,
+     "vme_L3:idx:base": 181.0,
+     "vme_L3:idx:exposed": 181.0,
+     "vme_L4:xl:base": 1295.7,
+     "vme_L4:xl:exposed": 1295.7,
+     "vme_L4:coll:base": 704.3,
+     "vme_L4:coll:exposed": 704.3,
+     "vme_L4:dma:base": 27.8,
+     "vme_L4:dma:exposed": 27.8,
+     "vme_L4:idx:base": 181.0,
+     "vme_L4:idx:exposed": 181.0,
+     "vme_L5:xl:base": 1295.7,
+     "vme_L5:xl:exposed": 1295.7,
+     "vme_L5:coll:base": 704.3,
+     "vme_L5:coll:exposed": 704.3,
+     "vme_L5:dma:base": 27.8,
+     "vme_L5:dma:exposed": 27.8,
+     "vme_L5:idx:base": 181.0,
+     "vme_L5:idx:exposed": 181.0,
+     "vme_L6:xl:base": 1295.7,
+     "vme_L6:xl:exposed": 1295.7,
+     "vme_L6:coll:base": 704.3,
+     "vme_L6:coll:exposed": 704.3,
+     "vme_L6:dma:base": 27.8,
+     "vme_L6:dma:exposed": 27.8,
+     "vme_L6:idx:base": 181.0,
+     "vme_L6:idx:exposed": 181.0,
+     "vme_L7:xl:base": 1295.7,
+     "vme_L7:xl:exposed": 1295.7,
+     "vme_L7:coll:base": 704.3,
+     "vme_L7:coll:exposed": 704.3,
+     "vme_L7:dma:base": 27.8,
+     "vme_L7:dma:exposed": 27.8,
+     "vme_L7:idx:base": 181.0,
+     "vme_L7:idx:exposed": 181.0,
+     "vme_L8:coll:base": 975.2,
+     "vme_L8:coll:exposed": 975.2,
+     "vme_L8:xl:base": 1385.1,
+     "vme_L8:xl:exposed": 1385.1,
+     "vme_L8:idx:base": 362.0,
+     "vme_L8:idx:exposed": 362.0,
+     "vme_L8:dma:base": 27.8,
+     "vme_L8:dma:exposed": 27.8,
+     "vme_L9:xl:base": 1295.7,
+     "vme_L9:xl:exposed": 1295.7,
+     "vme_L9:coll:base": 704.3,
+     "vme_L9:coll:exposed": 704.3,
+     "vme_L9:dma:base": 27.8,
+     "vme_L9:dma:exposed": 27.8,
+     "vme_L9:idx:base": 181.0,
+     "vme_L9:idx:exposed": 181.0,
+     "vme_L10:xl:base": 1295.7,
+     "vme_L10:xl:exposed": 1295.7,
+     "vme_L10:coll:base": 704.3,
+     "vme_L10:coll:exposed": 704.3,
+     "vme_L10:dma:base": 27.8,
+     "vme_L10:dma:exposed": 27.8,
+     "vme_L10:idx:base": 181.0,
+     "vme_L10:idx:exposed": 181.0,
+     "vme_L11:xl:base": 1295.7,
+     "vme_L11:xl:exposed": 1295.7,
+     "vme_L11:coll:base": 704.3,
+     "vme_L11:coll:exposed": 704.3,
+     "vme_L11:dma:base": 27.8,
+     "vme_L11:dma:exposed": 27.8,
+     "vme_L11:idx:base": 181.0,
+     "vme_L11:idx:exposed": 181.0,
+     "vme_L12:xl:base": 1295.7,
+     "vme_L12:xl:exposed": 1295.7,
+     "vme_L12:coll:base": 704.3,
+     "vme_L12:coll:exposed": 704.3,
+     "vme_L12:dma:base": 27.8,
+     "vme_L12:dma:exposed": 27.8,
+     "vme_L12:idx:base": 181.0,
+     "vme_L12:idx:exposed": 181.0,
+     "vme_L13:xl:base": 1295.7,
+     "vme_L13:xl:exposed": 1295.7,
+     "vme_L13:coll:base": 704.3,
+     "vme_L13:coll:exposed": 704.3,
+     "vme_L13:dma:base": 27.8,
+     "vme_L13:dma:exposed": 27.8,
+     "vme_L13:idx:base": 181.0,
+     "vme_L13:idx:exposed": 181.0,
+     "vme_L14:coll:base": 1083.6,
+     "vme_L14:coll:exposed": 1083.6,
+     "vme_L14:xl:base": 1429.8,
+     "vme_L14:xl:exposed": 1429.8,
+     "vme_L14:dma:base": 27.8,
+     "vme_L14:dma:exposed": 27.8,
+     "vme_L14:idx:base": 362.0,
+     "vme_L14:idx:exposed": 362.0,
+     "vme_L15:xl:base": 1295.7,
+     "vme_L15:xl:exposed": 1295.7,
+     "vme_L15:coll:base": 704.3,
+     "vme_L15:coll:exposed": 704.3,
+     "vme_L15:dma:base": 27.8,
+     "vme_L15:dma:exposed": 27.8,
+     "vme_L15:idx:base": 181.0,
+     "vme_L15:idx:exposed": 181.0,
+     "vme_L16:xl:base": 1295.7,
+     "vme_L16:xl:exposed": 1295.7,
+     "vme_L16:coll:base": 704.3,
+     "vme_L16:coll:exposed": 704.3,
+     "vme_L16:dma:base": 27.8,
+     "vme_L16:dma:exposed": 27.8,
+     "vme_L16:idx:base": 181.0,
+     "vme_L16:idx:exposed": 181.0,
+     "vme_L17:xl:base": 1295.7,
+     "vme_L17:xl:exposed": 1295.7,
+     "vme_L17:coll:base": 704.3,
+     "vme_L17:coll:exposed": 704.3,
+     "vme_L17:dma:base": 27.8,
+     "vme_L17:dma:exposed": 27.8,
+     "vme_L17:idx:base": 181.0,
+     "vme_L17:idx:exposed": 181.0,
+     "vme_L18:xl:base": 1295.7,
+     "vme_L18:xl:exposed": 1295.7,
+     "vme_L18:coll:base": 704.3,
+     "vme_L18:coll:exposed": 704.3,
+     "vme_L18:dma:base": 27.8,
+     "vme_L18:dma:exposed": 27.8,
+     "vme_L18:idx:base": 181.0,
+     "vme_L18:idx:exposed": 181.0,
+     "vme_L19:xl:base": 1295.7,
+     "vme_L19:xl:exposed": 1295.7,
+     "vme_L19:coll:base": 704.3,
+     "vme_L19:coll:exposed": 704.3,
+     "vme_L19:dma:base": 27.8,
+     "vme_L19:dma:exposed": 27.8,
+     "vme_L19:idx:base": 181.0,
+     "vme_L19:idx:exposed": 181.0,
+     "vme_L20:coll:base": 1029.4,
+     "vme_L20:coll:exposed": 1029.4,
+     "vme_L20:xl:base": 1385.1,
+     "vme_L20:xl:exposed": 1385.1,
+     "vme_L20:idx:base": 362.0,
+     "vme_L20:idx:exposed": 362.0,
+     "vme_L20:dma:base": 27.8,
+     "vme_L20:dma:exposed": 27.8,
+     "vme_L21:xl:base": 1295.7,
+     "vme_L21:xl:exposed": 1295.7,
+     "vme_L21:coll:base": 704.3,
+     "vme_L21:coll:exposed": 704.3,
+     "vme_L21:dma:base": 27.8,
+     "vme_L21:dma:exposed": 27.8,
+     "vme_L21:idx:base": 181.0,
+     "vme_L21:idx:exposed": 181.0,
+     "vme_L22:xl:base": 1295.7,
+     "vme_L22:xl:exposed": 1295.7,
+     "vme_L22:coll:base": 704.3,
+     "vme_L22:coll:exposed": 704.3,
+     "vme_L22:dma:base": 27.8,
+     "vme_L22:dma:exposed": 27.8,
+     "vme_L22:idx:base": 181.0,
+     "vme_L22:idx:exposed": 181.0,
+     "vme_L23:xl:base": 1295.7,
+     "vme_L23:xl:exposed": 1295.7,
+     "vme_L23:coll:base": 704.3,
+     "vme_L23:coll:exposed": 704.3,
+     "vme_L23:dma:base": 27.8,
+     "vme_L23:dma:exposed": 27.8,
+     "vme_L23:idx:base": 181.0,
+     "vme_L23:idx:exposed": 181.0,
+     "vme_L24:coll:base": 921.1,
+     "vme_L24:coll:exposed": 921.1,
+     "vme_L24:xl:base": 1340.4,
+     "vme_L24:xl:exposed": 1340.4,
+     "vme_L24:idx:base": 362.0,
+     "vme_L24:idx:exposed": 362.0,
+     "vme_L24:dma:base": 27.8,
+     "vme_L24:dma:exposed": 27.8,
+     "vme_L25:xl:base": 1295.7,
+     "vme_L25:xl:exposed": 1295.7,
+     "vme_L25:coll:base": 704.3,
+     "vme_L25:coll:exposed": 704.3,
+     "vme_L25:dma:base": 27.8,
+     "vme_L25:dma:exposed": 27.8,
+     "vme_L25:idx:base": 181.0,
+     "vme_L25:idx:exposed": 181.0,
+     "vme_L26:xl:base": 1295.7,
+     "vme_L26:xl:exposed": 1295.7,
+     "vme_L26:coll:base": 704.3,
+     "vme_L26:coll:exposed": 704.3,
+     "vme_L26:dma:base": 27.8,
+     "vme_L26:dma:exposed": 27.8,
+     "vme_L26:idx:base": 181.0,
+     "vme_L26:idx:exposed": 181.0,
+     "vme_L27:xl:base": 1295.7,
+     "vme_L27:xl:exposed": 1295.7,
+     "vme_L27:coll:base": 704.3,
+     "vme_L27:coll:exposed": 704.3,
+     "vme_L27:dma:base": 27.8,
+     "vme_L27:dma:exposed": 27.8,
+     "vme_L27:idx:base": 181.0,
+     "vme_L27:idx:exposed": 181.0,
+     "vme_L28:coll:base": 921.1,
+     "vme_L28:coll:exposed": 921.1,
+     "vme_L28:xl:base": 1340.4,
+     "vme_L28:xl:exposed": 1340.4,
+     "vme_L28:idx:base": 362.0,
+     "vme_L28:idx:exposed": 362.0,
+     "vme_L28:dma:base": 27.8,
+     "vme_L28:dma:exposed": 27.8,
+     "vme_L29:xl:base": 1295.7,
+     "vme_L29:xl:exposed": 1295.7,
+     "vme_L29:coll:base": 704.3,
+     "vme_L29:coll:exposed": 704.3,
+     "vme_L29:dma:base": 27.8,
+     "vme_L29:dma:exposed": 27.8,
+     "vme_L29:idx:base": 181.0,
+     "vme_L29:idx:exposed": 181.0,
+     "vme_L30:xl:base": 1295.7,
+     "vme_L30:xl:exposed": 1295.7,
+     "vme_L30:coll:base": 704.3,
+     "vme_L30:coll:exposed": 704.3,
+     "vme_L30:dma:base": 27.8,
+     "vme_L30:dma:exposed": 27.8,
+     "vme_L30:idx:base": 181.0,
+     "vme_L30:idx:exposed": 181.0,
+     "vme_L31:xl:base": 1295.7,
+     "vme_L31:xl:exposed": 1295.7,
+     "vme_L31:coll:base": 704.3,
+     "vme_L31:coll:exposed": 704.3,
+     "vme_L31:dma:base": 27.8,
+     "vme_L31:dma:exposed": 27.8,
+     "vme_L31:idx:base": 181.0,
+     "vme_L31:idx:exposed": 181.0,
+     "vme_L32:coll:base": 921.1,
+     "vme_L32:coll:exposed": 921.1,
+     "vme_L32:xl:base": 1340.4,
+     "vme_L32:xl:exposed": 1340.4,
+     "vme_L32:idx:base": 362.0,
+     "vme_L32:idx:exposed": 362.0,
+     "vme_L32:dma:base": 27.8,
+     "vme_L32:dma:exposed": 27.8,
+     "vme_L33:xl:base": 1295.7,
+     "vme_L33:xl:exposed": 1295.7,
+     "vme_L33:coll:base": 704.3,
+     "vme_L33:coll:exposed": 704.3,
+     "vme_L33:dma:base": 27.8,
+     "vme_L33:dma:exposed": 27.8,
+     "vme_L33:idx:base": 181.0,
+     "vme_L33:idx:exposed": 181.0,
+     "vme_L34:xl:base": 1295.7,
+     "vme_L34:xl:exposed": 1295.7,
+     "vme_L34:coll:base": 704.3,
+     "vme_L34:coll:exposed": 704.3,
+     "vme_L34:dma:base": 27.8,
+     "vme_L34:dma:exposed": 27.8,
+     "vme_L34:idx:base": 181.0,
+     "vme_L34:idx:exposed": 181.0,
+     "vme_L35:xl:base": 1295.7,
+     "vme_L35:xl:exposed": 1295.7,
+     "vme_L35:coll:base": 704.3,
+     "vme_L35:coll:exposed": 704.3,
+     "vme_L35:dma:base": 27.8,
+     "vme_L35:dma:exposed": 27.8,
+     "vme_L35:idx:base": 181.0,
+     "vme_L35:idx:exposed": 181.0,
+     "vme_L36:coll:base": 921.1,
+     "vme_L36:coll:exposed": 921.1,
+     "vme_L36:xl:base": 1340.4,
+     "vme_L36:xl:exposed": 1340.4,
+     "vme_L36:idx:base": 362.0,
+     "vme_L36:idx:exposed": 362.0,
+     "vme_L36:dma:base": 27.8,
+     "vme_L36:dma:exposed": 27.8,
+     "vme_L37:xl:base": 1295.7,
+     "vme_L37:xl:exposed": 1295.7,
+     "vme_L37:coll:base": 704.3,
+     "vme_L37:coll:exposed": 704.3,
+     "vme_L37:dma:base": 27.8,
+     "vme_L37:dma:exposed": 27.8,
+     "vme_L37:idx:base": 181.0,
+     "vme_L37:idx:exposed": 181.0,
+     "vme_L38:xl:base": 1295.7,
+     "vme_L38:xl:exposed": 1295.7,
+     "vme_L38:coll:base": 704.3,
+     "vme_L38:coll:exposed": 704.3,
+     "vme_L38:dma:base": 27.8,
+     "vme_L38:dma:exposed": 27.8,
+     "vme_L38:idx:base": 181.0,
+     "vme_L38:idx:exposed": 181.0,
+     "vme_L39:xl:base": 1295.7,
+     "vme_L39:xl:exposed": 1295.7,
+     "vme_L39:coll:base": 704.3,
+     "vme_L39:coll:exposed": 704.3,
+     "vme_L39:dma:base": 27.8,
+     "vme_L39:dma:exposed": 27.8,
+     "vme_L39:idx:base": 181.0,
+     "vme_L39:idx:exposed": 181.0
+    },
+    "qwen": {
+     "hbm_bw": 109807.9,
+     "hbm_bridge": 655.0,
+     "pg_cmd": 3042.0,
+     "pg_vmwrite": 5640.0,
+     "bank_pin": 978.0,
+     "pg_inject": 507.0,
+     "gen2e_su": 7816.0,
+     "att_qwen": 176165.9,
+     "pg_operand": 792.0,
+     "att_merge": 8461.4,
+     "pvm_fold": 288.0,
+     "bl_idx": 75.0,
+     "idx_pin": 8.0,
+     "vme:xl:base": 12912.5,
+     "vme_L0:xl:base": 12912.5,
+     "vme:xl:records": 289.0,
+     "vme:xl:exposed": 12912.5,
+     "vme_L0:xl:exposed": 12912.5,
+     "vme:dma:base": 2002.3,
+     "vme_L0:dma:base": 2002.3,
+     "vme:dma:records": 72.0,
+     "vme:dma:exposed": 2002.3,
+     "vme_L0:dma:exposed": 2002.3,
+     "vme:coll:base": 3955.1,
+     "vme_L0:coll:base": 3955.1,
+     "vme:coll:records": 73.0,
+     "vme:coll:exposed": 3955.1,
+     "vme_L0:coll:exposed": 3955.1
+    }
+   },
+   "d_ds_ar_pct": -25.35,
+   "d_qwen_pct": -21.03,
+   "d_ds_ar_cycles": 213951.1,
+   "d_qwen_cycles": 337805.0
+  }
+ },
+ "attribution": {
+  "collq": {
+   "value": 1,
+   "grade": "measured",
+   "applies": "C1 gathers: measured gather-master span; non-gather COLL +2 (ring-A merge register)",
+   "source": "d4g_collq_price_1018 ag_collq + ra_extra 2 (HBM-COLLQ c8d42a3a4; ledger HBM.D4G_PLAN_B)",
+   "ds_ar_cycles": 19159.1,
+   "qwen_cycles": 2.0,
+   "ds_ar_pct": -2.95,
+   "qwen_pct": -0.0,
+   "flag_over_5pct": false
+  },
+  "pg_cmd": {
+   "value": 6,
+   "grade": "measured",
+   "applies": "+6 slowest SU command region (+3 inner, +6 outer)",
+   "source": "HBM-PGLG2 6799b58ee face relay",
+   "ds_ar_cycles": 3582.0,
+   "qwen_cycles": 3036.0,
+   "ds_ar_pct": -0.57,
+   "qwen_pct": -0.24,
+   "flag_over_5pct": false
+  },
+  "pg_operand": {
+   "value": 11,
+   "grade": "measured",
+   "applies": "+11 SU reduction operand; tree/control relative issue +10 unchanged",
+   "source": "HBM-PGLG2 6799b58ee",
+   "ds_ar_cycles": 1397.0,
+   "qwen_cycles": 792.0,
+   "ds_ar_pct": -0.22,
+   "qwen_pct": -0.06,
+   "flag_over_5pct": false
+  },
+  "pg_vmwrite": {
+   "value": 12,
+   "grade": "measured",
+   "applies": "+12 an SU-executed record writing VM (drain write +12 serial; +16 stream)",
+   "source": "TW-HBM-PGLG e7ea9096c / HH-14 tb r2 4a91027b0 (SWQ 16)",
+   "ds_ar_cycles": 6108.0,
+   "qwen_cycles": 5640.0,
+   "ds_ar_pct": -0.96,
+   "qwen_pct": -0.44,
+   "flag_over_5pct": false
+  },
+  "pg_reset": {
+   "value": 4,
+   "grade": "modelled",
+   "applies": "+4 once per token (pg_stream +1 epoch of the 4:3 pg_clk)",
+   "source": "TW-HBM-PGLG pg_stream split (lanes/TW-HBM-PGLG.md)",
+   "ds_ar_cycles": 4.0,
+   "qwen_cycles": 4.0,
+   "ds_ar_pct": -0.0,
+   "qwen_pct": -0.0,
+   "flag_over_5pct": false
+  },
+  "hc_tree": {
+   "value": 41,
+   "grade": "measured",
+   "applies": "hc_tree 28 -> 41 (+13 a HC_MIX / HC_PRE_NORM record); closed ring keeps 41 (b0 DRLY 2)",
+   "source": "HH-9 c4e9df3fe RAW0 176, HBM-RTL5 U +2, HBM-HCRING fc916e52b, DIE-HBM-LEAD 10-19 01:40, HC-RINGPLAN 9d1689ba4",
+   "ds_ar_cycles": 1053.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -0.17,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "hc_xr": {
+   "value": 22,
+   "grade": "modelled",
+   "applies": "HC root<->quarter crossings XRD 11 + XRU 11 landed vs 2 x COLL_RING priced",
+   "source": "HC-XRDU cca87123f l7_wire land smoke (GEN2b), hc_eng XRD/XRU 11/11",
+   "ds_ar_cycles": 262.4,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -0.04,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "bank_pin": {
+   "value": 1,
+   "grade": "priced",
+   "applies": "+1 a record with a VM-space operand read (bank pin flop on every answer)",
+   "source": "HBM-BANKLAT main 01636549a (contract rule), measured on IDX TOPK (VEH-TOPKFIX2 05b86e194)",
+   "ds_ar_cycles": 2141.0,
+   "qwen_cycles": 977.0,
+   "ds_ar_pct": -0.34,
+   "qwen_pct": -0.08,
+   "flag_over_5pct": false
+  },
+  "su_red": {
+   "value": "pretree",
+   "grade": "priced",
+   "applies": "SU reduction = 128-word pre-tree (PT 70 edges) + reducer pairwise tree",
+   "source": "HH-6 claude/hh6-sured-1018 bc43419eb, d4g_su_red_1018 pretree (bench 211 vs model 234 edges)",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 1512.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": -0.12,
+   "flag_over_5pct": false
+  },
+  "e86_tkm": {
+   "value": 64,
+   "grade": "measured",
+   "applies": "+64 a COLL.TOPK_MERGE record (+2 NT at TP192)",
+   "source": "HH-4 claude/hh4-e86-1018 a5f17ebc7 tkm_static TLAT 4, calendar mutant MUT 3",
+   "ds_ar_cycles": 576.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -0.09,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "qcore_r6": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "write-conflict fault flag +1 edge: status only, 0 token cycles",
+   "source": "HH-11 c663070f1; coordinator ACCEPTED (HBM-HCBANK 10-19 02:40)",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "att_s32": {
+   "value": {
+    "qk": 861,
+    "pv": 1171,
+    "qk1": 684,
+    "pv1": 839
+   },
+   "grade": "measured",
+   "applies": "DS T640 SM component qk 288 -> 861, pv 386 -> 1,171 (HBM-ATTGAP S32: busiest SM, 2 x 32-row sub-runs + 5 go bubble; fa 259 / publish 64 kept at price -- the span excludes HBM first access, x-load, publish, merge); T128 at the one-op ratio 684/288, 839/386 (modelled); BIGPROG variant: one op 684 / 839",
+   "source": "HBM-ATTGAP main 7f35a3e4b results/rtl/hbm_ds_layer_tput_1018/hbm_attgap_1019/unit/L2_s32_pos.json (40/40 bit-exact, resident 1,019 / 971 words); one-op VEH-ATT 07a99bc0a",
+   "ds_ar_cycles": 32248.8,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -4.87,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "att_merge": {
+   "value": {
+    "ds640": 400.8,
+    "ds128": 335.5,
+    "ds640_one": 335.5,
+    "levels": 4,
+    "dep": 10,
+    "lat": 9
+   },
+   "grade": "priced",
+   "applies": "DS PV + (HBM-ATTGAP SU merge 400.8 T640 / 335.5 T128 [one-op 335.5] - priced merge 99 / 79); Qwen PV + 4 x (1 XQ + DEP 10 + LAT 9) (16-SM pairwise tree, no priced merge)",
+   "source": "HBM-ATTGAP att_gap_price.py merge model (SU quadrant programme + ring AG + top levels in norm; SU RTL bench pending); Qwen VEH-ATT finding (3); SU merge RTL bench PASS + 4 mutants FAIL TW4 78bf1fdc8 (function; latency = model)",
+   "ds_ar_cycles": 9263.5,
+   "qwen_cycles": 8461.4,
+   "ds_ar_pct": -1.45,
+   "qwen_pct": -0.66,
+   "flag_over_5pct": false
+  },
+  "att_qwen": {
+   "value": {
+    "qk_bytes_rate": 54.8418410041841,
+    "pv_bytes_rate": 27.722504230118442,
+    "nsm": 16
+   },
+   "grade": "measured",
+   "applies": "Qwen ATT at the measured per-SM line rate (QK 54.84 / PV 27.72 B/cyc/SM, P 8192, 512 rows/SM) on 16 SMs instead of the die HBM rate (spans measured; exposure from the S2 schedule)",
+   "source": "VEH-ATT3 claude/veh-att3-1019 fb8fd695b results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/unit/{L0_L0_pos,chain_L1_pos}.json (80/80 bit-exact; QK 1,195 / PV 4 x 591 = 2,364)",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 176165.9,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": -12.2,
+   "flag_over_5pct": true
+  },
+  "att_prog": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "2048 words: 1019 attention + 152 matvec resident; one-op spans enabled",
+   "source": "HBM-SMBUDGET main e248c89e7",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "att_desc": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "256 token-resident relative descriptors; no rewrite",
+   "source": "HBM-SMBUDGET main e248c89e7",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "pt_p2": {
+   "value": 81,
+   "grade": "measured",
+   "applies": "SU pre-tree PT 70 -> 81 edges (p2 registered operand select, PT_RED 69 -> 80); only with su_red; p3 PT_RED80 retained",
+   "source": "HBM-PRETREE claude/hh6-sured-1018 0d52a4877 (bench MUT 0 PASS / MUT 512 FAIL); COORD 0kb; HBM-SAFE-PRETREE 9d56cae39",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 396.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": -0.03,
+   "flag_over_5pct": false
+  },
+  "idx_link": {
+   "value": 5,
+   "grade": "measured",
+   "applies": "+5 an IDX.INDEX / IDX.TOPK record (link outputs +5)",
+   "source": "HBM-IDXPIPE b4717e464 / AD-HBM-IDXK c94204038 (frame 1397 -> 1402)",
+   "ds_ar_cycles": 240.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -0.04,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "idx_pin": {
+   "value": {
+    "index": 3,
+    "topk_fixed": 4,
+    "argmax": 8
+   },
+   "grade": "measured",
+   "applies": "IDX.INDEX +3, IDX.TOPK +(m + 4), ARGMAX +8",
+   "source": "HBM-IDXAM2 r3 bench + VEH-TOPKFIX2 am_pin bench (RT_EXTRA 2 / ACK 14, VMX 6, op_SW n13)",
+   "ds_ar_cycles": 224.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -0.04,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "land": {
+   "value": {
+    "ds": -1.13,
+    "qwen": -0.07
+   },
+   "grade": "priced",
+   "applies": "recorded factor on tok/s (half-cycle landed hops)",
+   "source": "HBM-LANDING/DCC hland-dcc 447dfe960 (HANDOFF 10-18 07:35)",
+   "ds_ar_cycles": 7197.8,
+   "qwen_cycles": 888.4,
+   "ds_ar_pct": -1.13,
+   "qwen_pct": -0.07,
+   "flag_over_5pct": false
+  },
+  "hbm_bw": {
+   "value": 90.67,
+   "grade": "priced",
+   "applies": "SM, attention and DMA stream floor at measured per-SM bandwidth; incremental exposure over99",
+   "source": "HBM-BW9e8fcf77e controller production stream",
+   "ds_ar_cycles": 9325.0,
+   "qwen_cycles": 118494.6,
+   "ds_ar_pct": -1.46,
+   "qwen_pct": -8.54,
+   "flag_over_5pct": true
+  },
+  "pg_inject": {
+   "value": 1,
+   "grade": "priced",
+   "applies": "+1 SU VM read record conservatively exposes split-stream inject edge; only inject users pay physically",
+   "source": "TW3-PGSTREAM 5ac202325; HBM-PGSTREAM-B unchanged edges",
+   "ds_ar_cycles": 597.0,
+   "qwen_cycles": 506.0,
+   "ds_ar_pct": -0.09,
+   "qwen_pct": -0.04,
+   "flag_over_5pct": false
+  },
+  "pg_fault": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "fault +2 serial is status only, no successful token latency",
+   "source": "TW3-PGSTREAM",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "sm_svc": {
+   "value": 16688,
+   "grade": "priced",
+   "applies": "fully exposed partial block granularity, worst layer 388 x43 + head4",
+   "source": "HBM-SMBUDGET sm_svc_granularity.json",
+   "ds_ar_cycles": 16688.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": -2.58,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "qwen_int8": {
+   "value": 0,
+   "grade": "measured",
+   "applies": "INT8 path within price; opt-in successor, all9984 rows bit-exact",
+   "source": "SMB-INT8 e592ae5d0; default-off die adoption owed",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 0.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": 0.0,
+   "flag_over_5pct": false
+  },
+  "pvm_fold": {
+   "value": 1,
+   "grade": "priced",
+   "applies": "+1 per Qwen PV 128-token block per SM column; DS no fold",
+   "source": "HBM-PVM-SAFE node0 publication F0+23 vs22; node1 unchanged",
+   "ds_ar_cycles": 0.0,
+   "qwen_cycles": 288.0,
+   "ds_ar_pct": 0.0,
+   "qwen_pct": -0.02,
+   "flag_over_5pct": false
+  },
+  "gen2e_su": {
+   "value": {
+    "read": 8,
+    "write": 8
+   },
+   "grade": "priced",
+   "applies": "+8 an SU-executed record reading VM (tap READ_RETURN 18 vs 10), +8 writing VM (WRITE_RETURN 15 vs 7); exposed once a record",
+   "source": "GEN2e sourceprofile 708d112f3 (TW5-GEN2E 09:54), HBM-BANKLAT-SU rt18 (TW5-BANKLATSU)",
+   "ds_ar_cycles": 9159.9,
+   "qwen_cycles": 7808.0,
+   "ds_ar_pct": -1.43,
+   "qwen_pct": -0.61,
+   "flag_over_5pct": false
+  },
+  "hbm_bridge": {
+   "value": 1,
+   "grade": "measured",
+   "applies": "+1 edge a record with an HBM-space operand (successor cold bridge +1)",
+   "source": "HBM-BW predicate-truth native bridge 277b256/II1/+1 (lanes/HBM-BW.md 11:21; successor not adopted)",
+   "ds_ar_cycles": 918.0,
+   "qwen_cycles": 508.0,
+   "ds_ar_pct": -0.15,
+   "qwen_pct": -0.04,
+   "flag_over_5pct": false
+  }
+ },
+ "interaction": {
+  "ds_ar_cycles": 1594.5,
+  "qwen_cycles": -8536.4
+ },
+ "by_grade": {
+  "measured": {
+   "ds_ar_cycles": 65505.9,
+   "qwen_cycles": 186539.9
+  },
+  "modelled": {
+   "ds_ar_cycles": 266.4,
+   "qwen_cycles": 4.0
+  },
+  "priced": {
+   "ds_ar_cycles": 54372.2,
+   "qwen_cycles": 138935.4
+  }
+ },
+ "composed": {
+  "ds_ar_tok_s": 1596.8,
+  "qwen_tok_s": 757.0,
+  "ds_ar_pct_vs_base": -16.2,
+  "qwen_pct_vs_base": -20.0,
+  "ds_ar_pct_vs_record": -13.65,
+  "groups": {
+   "rec_lat": {
+    "ds_ar_tok_s": 1691.3,
+    "qwen_tok_s": 851.6,
+    "ds_ar_pct_vs_record": -8.54,
+    "qwen_pct_vs_record": -10.0
+   },
+   "rec_att": {
+    "ds_ar_tok_s": 1738.0,
+    "qwen_tok_s": 826.0,
+    "ds_ar_pct_vs_record": -6.01,
+    "qwen_pct_vs_record": -12.7
+   },
+   "rec_att_bigprog": {
+    "ds_ar_tok_s": 1738.0,
+    "qwen_tok_s": 826.0,
+    "ds_ar_pct_vs_record": -6.01,
+    "qwen_pct_vs_record": -12.7
+   },
+   "all_bigprog": {
+    "ds_ar_tok_s": 1596.8,
+    "qwen_tok_s": 757.0,
+    "ds_ar_pct_vs_record": -13.65,
+    "qwen_pct_vs_record": -20.0
+   }
+  }
+ },
+ "bandwidth": {
+  "bytes_per_cycle_per_sm": 90.67,
+  "previous_die_bytes_per_cycle": 3166.7,
+  "measured_current_master": false,
+  "successor_not_physically_qualified": false,
+  "source": "HBM-BW 9e8fcf77e: baseline45.03; production3seed95.19/95.69/95.25; successor capacity/SAFE closure outstanding; full4layer MR@88 FAIL24/66ops,37/154gos; L14 only PASS"
+ },
+ "qualification": "Provisional model price: current bandwidth measured; successor INT8/relative-service/safe tiles require die binding and physical closure. Bank pads are conservative fully exposed budgets, not measured die latency.",
+ "record_0kq": {
+  "ds_ar_tok_s": 1677.2,
+  "qwen_tok_s": 803.1
+ },
+ "banklat_projected": {
+  "ds_ar_cycles": 843726.2,
+  "qwen_cycles": 1606026.8,
+  "ds_ar_tok_s": 1422.3,
+  "qwen_tok_s": 747.2,
+  "terms": [
+   "att_desc",
+   "att_merge",
+   "att_prog",
+   "att_qwen",
+   "att_s32",
+   "bank_pin",
+   "collq",
+   "e86_tkm",
+   "gen2e_su",
+   "hbm_bridge",
+   "hbm_bw",
+   "hc_tree",
+   "hc_xr",
+   "idx_link",
+   "idx_pin",
+   "land",
+   "pg_cmd",
+   "pg_fault",
+   "pg_inject",
+   "pg_operand",
+   "pg_reset",
+   "pg_vmwrite",
+   "pt_p2",
+   "pvm_fold",
+   "qcore_r6",
+   "qwen_int8",
+   "sm_svc",
+   "su_red"
+  ],
+  "rp_added_sum": {
+   "ds": {
+    "hc_tree": 2093.0,
+    "hc_xr": 521.6,
+    "bank_pin": 3558.0,
+    "hbm_bridge": 1724.0,
+    "hbm_bw": 12039.8,
+    "pg_cmd": 8136.0,
+    "pg_operand": 2266.0,
+    "pg_inject": 1356.0,
+    "gen2e_su": 20368.0,
+    "pg_vmwrite": 14280.0,
+    "att_s32": 33097.8,
+    "att_merge": 9500.0,
+    "idx_link": 240.0,
+    "idx_pin": 232.0,
+    "bl_idx": 8763.0,
+    "vme:xl:base": 52499.0,
+    "vme_L0:xl:base": 1340.4,
+    "vme:xl:records": 1175.0,
+    "vme:xl:exposed": 52499.0,
+    "vme_L0:xl:exposed": 1340.4,
+    "vme:coll:base": 30449.2,
+    "vme_L0:coll:base": 758.5,
+    "vme:coll:records": 562.0,
+    "vme:coll:exposed": 30449.2,
+    "vme_L0:coll:exposed": 758.5,
+    "vme:dma:base": 1112.4,
+    "vme_L0:dma:base": 27.8,
+    "vme:dma:records": 40.0,
+    "vme:dma:exposed": 1112.4,
+    "vme_L0:dma:exposed": 27.8,
+    "vme:idx:base": 8763.0,
+    "vme_L0:idx:base": 256.0,
+    "vme:idx:records": 49.0,
+    "vme:idx:exposed": 8763.0,
+    "vme_L0:idx:exposed": 256.0,
+    "vme_L1:coll:base": 812.7,
+    "vme_L1:coll:exposed": 812.7,
+    "vme_L1:xl:base": 1340.4,
+    "vme_L1:xl:exposed": 1340.4,
+    "vme_L1:dma:base": 27.8,
+    "vme_L1:dma:exposed": 27.8,
+    "vme_L1:idx:base": 181.0,
+    "vme_L1:idx:exposed": 181.0,
+    "e86_tkm": 576.0,
+    "vme_L2:coll:base": 975.2,
+    "vme_L2:coll:exposed": 975.2,
+    "vme_L2:xl:base": 1385.1,
+    "vme_L2:xl:exposed": 1385.1,
+    "vme_L2:idx:base": 362.0,
+    "vme_L2:idx:exposed": 362.0,
+    "vme_L2:dma:base": 27.8,
+    "vme_L2:dma:exposed": 27.8,
+    "vme_L3:xl:base": 1295.7,
+    "vme_L3:xl:exposed": 1295.7,
+    "vme_L3:coll:base": 704.3,
+    "vme_L3:coll:exposed": 704.3,
+    "vme_L3:dma:base": 27.8,
+    "vme_L3:dma:exposed": 27.8,
+    "vme_L3:idx:base": 181.0,
+    "vme_L3:idx:exposed": 181.0,
+    "vme_L4:xl:base": 1295.7,
+    "vme_L4:xl:exposed": 1295.7,
+    "vme_L4:coll:base": 704.3,
+    "vme_L4:coll:exposed": 704.3,
+    "vme_L4:dma:base": 27.8,
+    "vme_L4:dma:exposed": 27.8,
+    "vme_L4:idx:base": 181.0,
+    "vme_L4:idx:exposed": 181.0,
+    "vme_L5:xl:base": 1295.7,
+    "vme_L5:xl:exposed": 1295.7,
+    "vme_L5:coll:base": 704.3,
+    "vme_L5:coll:exposed": 704.3,
+    "vme_L5:dma:base": 27.8,
+    "vme_L5:dma:exposed": 27.8,
+    "vme_L5:idx:base": 181.0,
+    "vme_L5:idx:exposed": 181.0,
+    "vme_L6:xl:base": 1295.7,
+    "vme_L6:xl:exposed": 1295.7,
+    "vme_L6:coll:base": 704.3,
+    "vme_L6:coll:exposed": 704.3,
+    "vme_L6:dma:base": 27.8,
+    "vme_L6:dma:exposed": 27.8,
+    "vme_L6:idx:base": 181.0,
+    "vme_L6:idx:exposed": 181.0,
+    "vme_L7:xl:base": 1295.7,
+    "vme_L7:xl:exposed": 1295.7,
+    "vme_L7:coll:base": 704.3,
+    "vme_L7:coll:exposed": 704.3,
+    "vme_L7:dma:base": 27.8,
+    "vme_L7:dma:exposed": 27.8,
+    "vme_L7:idx:base": 181.0,
+    "vme_L7:idx:exposed": 181.0,
+    "vme_L8:coll:base": 975.2,
+    "vme_L8:coll:exposed": 975.2,
+    "vme_L8:xl:base": 1385.1,
+    "vme_L8:xl:exposed": 1385.1,
+    "vme_L8:idx:base": 362.0,
+    "vme_L8:idx:exposed": 362.0,
+    "vme_L8:dma:base": 27.8,
+    "vme_L8:dma:exposed": 27.8,
+    "vme_L9:xl:base": 1295.7,
+    "vme_L9:xl:exposed": 1295.7,
+    "vme_L9:coll:base": 704.3,
+    "vme_L9:coll:exposed": 704.3,
+    "vme_L9:dma:base": 27.8,
+    "vme_L9:dma:exposed": 27.8,
+    "vme_L9:idx:base": 181.0,
+    "vme_L9:idx:exposed": 181.0,
+    "vme_L10:xl:base": 1295.7,
+    "vme_L10:xl:exposed": 1295.7,
+    "vme_L10:coll:base": 704.3,
+    "vme_L10:coll:exposed": 704.3,
+    "vme_L10:dma:base": 27.8,
+    "vme_L10:dma:exposed": 27.8,
+    "vme_L10:idx:base": 181.0,
+    "vme_L10:idx:exposed": 181.0,
+    "vme_L11:xl:base": 1295.7,
+    "vme_L11:xl:exposed": 1295.7,
+    "vme_L11:coll:base": 704.3,
+    "vme_L11:coll:exposed": 704.3,
+    "vme_L11:dma:base": 27.8,
+    "vme_L11:dma:exposed": 27.8,
+    "vme_L11:idx:base": 181.0,
+    "vme_L11:idx:exposed": 181.0,
+    "vme_L12:xl:base": 1295.7,
+    "vme_L12:xl:exposed": 1295.7,
+    "vme_L12:coll:base": 704.3,
+    "vme_L12:coll:exposed": 704.3,
+    "vme_L12:dma:base": 27.8,
+    "vme_L12:dma:exposed": 27.8,
+    "vme_L12:idx:base": 181.0,
+    "vme_L12:idx:exposed": 181.0,
+    "vme_L13:xl:base": 1295.7,
+    "vme_L13:xl:exposed": 1295.7,
+    "vme_L13:coll:base": 704.3,
+    "vme_L13:coll:exposed": 704.3,
+    "vme_L13:dma:base": 27.8,
+    "vme_L13:dma:exposed": 27.8,
+    "vme_L13:idx:base": 181.0,
+    "vme_L13:idx:exposed": 181.0,
+    "vme_L14:coll:base": 1083.6,
+    "vme_L14:coll:exposed": 1083.6,
+    "vme_L14:xl:base": 1429.8,
+    "vme_L14:xl:exposed": 1429.8,
+    "vme_L14:dma:base": 27.8,
+    "vme_L14:dma:exposed": 27.8,
+    "vme_L14:idx:base": 362.0,
+    "vme_L14:idx:exposed": 362.0,
+    "vme_L15:xl:base": 1295.7,
+    "vme_L15:xl:exposed": 1295.7,
+    "vme_L15:coll:base": 704.3,
+    "vme_L15:coll:exposed": 704.3,
+    "vme_L15:dma:base": 27.8,
+    "vme_L15:dma:exposed": 27.8,
+    "vme_L15:idx:base": 181.0,
+    "vme_L15:idx:exposed": 181.0,
+    "vme_L16:xl:base": 1295.7,
+    "vme_L16:xl:exposed": 1295.7,
+    "vme_L16:coll:base": 704.3,
+    "vme_L16:coll:exposed": 704.3,
+    "vme_L16:dma:base": 27.8,
+    "vme_L16:dma:exposed": 27.8,
+    "vme_L16:idx:base": 181.0,
+    "vme_L16:idx:exposed": 181.0,
+    "vme_L17:xl:base": 1295.7,
+    "vme_L17:xl:exposed": 1295.7,
+    "vme_L17:coll:base": 704.3,
+    "vme_L17:coll:exposed": 704.3,
+    "vme_L17:dma:base": 27.8,
+    "vme_L17:dma:exposed": 27.8,
+    "vme_L17:idx:base": 181.0,
+    "vme_L17:idx:exposed": 181.0,
+    "vme_L18:xl:base": 1295.7,
+    "vme_L18:xl:exposed": 1295.7,
+    "vme_L18:coll:base": 704.3,
+    "vme_L18:coll:exposed": 704.3,
+    "vme_L18:dma:base": 27.8,
+    "vme_L18:dma:exposed": 27.8,
+    "vme_L18:idx:base": 181.0,
+    "vme_L18:idx:exposed": 181.0,
+    "vme_L19:xl:base": 1295.7,
+    "vme_L19:xl:exposed": 1295.7,
+    "vme_L19:coll:base": 704.3,
+    "vme_L19:coll:exposed": 704.3,
+    "vme_L19:dma:base": 27.8,
+    "vme_L19:dma:exposed": 27.8,
+    "vme_L19:idx:base": 181.0,
+    "vme_L19:idx:exposed": 181.0,
+    "vme_L20:coll:base": 1029.4,
+    "vme_L20:coll:exposed": 1029.4,
+    "vme_L20:xl:base": 1385.1,
+    "vme_L20:xl:exposed": 1385.1,
+    "vme_L20:idx:base": 362.0,
+    "vme_L20:idx:exposed": 362.0,
+    "vme_L20:dma:base": 27.8,
+    "vme_L20:dma:exposed": 27.8,
+    "vme_L21:xl:base": 1295.7,
+    "vme_L21:xl:exposed": 1295.7,
+    "vme_L21:coll:base": 704.3,
+    "vme_L21:coll:exposed": 704.3,
+    "vme_L21:dma:base": 27.8,
+    "vme_L21:dma:exposed": 27.8,
+    "vme_L21:idx:base": 181.0,
+    "vme_L21:idx:exposed": 181.0,
+    "vme_L22:xl:base": 1295.7,
+    "vme_L22:xl:exposed": 1295.7,
+    "vme_L22:coll:base": 704.3,
+    "vme_L22:coll:exposed": 704.3,
+    "vme_L22:dma:base": 27.8,
+    "vme_L22:dma:exposed": 27.8,
+    "vme_L22:idx:base": 181.0,
+    "vme_L22:idx:exposed": 181.0,
+    "vme_L23:xl:base": 1295.7,
+    "vme_L23:xl:exposed": 1295.7,
+    "vme_L23:coll:base": 704.3,
+    "vme_L23:coll:exposed": 704.3,
+    "vme_L23:dma:base": 27.8,
+    "vme_L23:dma:exposed": 27.8,
+    "vme_L23:idx:base": 181.0,
+    "vme_L23:idx:exposed": 181.0,
+    "vme_L24:coll:base": 921.1,
+    "vme_L24:coll:exposed": 921.1,
+    "vme_L24:xl:base": 1340.4,
+    "vme_L24:xl:exposed": 1340.4,
+    "vme_L24:idx:base": 362.0,
+    "vme_L24:idx:exposed": 362.0,
+    "vme_L24:dma:base": 27.8,
+    "vme_L24:dma:exposed": 27.8,
+    "vme_L25:xl:base": 1295.7,
+    "vme_L25:xl:exposed": 1295.7,
+    "vme_L25:coll:base": 704.3,
+    "vme_L25:coll:exposed": 704.3,
+    "vme_L25:dma:base": 27.8,
+    "vme_L25:dma:exposed": 27.8,
+    "vme_L25:idx:base": 181.0,
+    "vme_L25:idx:exposed": 181.0,
+    "vme_L26:xl:base": 1295.7,
+    "vme_L26:xl:exposed": 1295.7,
+    "vme_L26:coll:base": 704.3,
+    "vme_L26:coll:exposed": 704.3,
+    "vme_L26:dma:base": 27.8,
+    "vme_L26:dma:exposed": 27.8,
+    "vme_L26:idx:base": 181.0,
+    "vme_L26:idx:exposed": 181.0,
+    "vme_L27:xl:base": 1295.7,
+    "vme_L27:xl:exposed": 1295.7,
+    "vme_L27:coll:base": 704.3,
+    "vme_L27:coll:exposed": 704.3,
+    "vme_L27:dma:base": 27.8,
+    "vme_L27:dma:exposed": 27.8,
+    "vme_L27:idx:base": 181.0,
+    "vme_L27:idx:exposed": 181.0,
+    "vme_L28:coll:base": 921.1,
+    "vme_L28:coll:exposed": 921.1,
+    "vme_L28:xl:base": 1340.4,
+    "vme_L28:xl:exposed": 1340.4,
+    "vme_L28:idx:base": 362.0,
+    "vme_L28:idx:exposed": 362.0,
+    "vme_L28:dma:base": 27.8,
+    "vme_L28:dma:exposed": 27.8,
+    "vme_L29:xl:base": 1295.7,
+    "vme_L29:xl:exposed": 1295.7,
+    "vme_L29:coll:base": 704.3,
+    "vme_L29:coll:exposed": 704.3,
+    "vme_L29:dma:base": 27.8,
+    "vme_L29:dma:exposed": 27.8,
+    "vme_L29:idx:base": 181.0,
+    "vme_L29:idx:exposed": 181.0,
+    "vme_L30:xl:base": 1295.7,
+    "vme_L30:xl:exposed": 1295.7,
+    "vme_L30:coll:base": 704.3,
+    "vme_L30:coll:exposed": 704.3,
+    "vme_L30:dma:base": 27.8,
+    "vme_L30:dma:exposed": 27.8,
+    "vme_L30:idx:base": 181.0,
+    "vme_L30:idx:exposed": 181.0,
+    "vme_L31:xl:base": 1295.7,
+    "vme_L31:xl:exposed": 1295.7,
+    "vme_L31:coll:base": 704.3,
+    "vme_L31:coll:exposed": 704.3,
+    "vme_L31:dma:base": 27.8,
+    "vme_L31:dma:exposed": 27.8,
+    "vme_L31:idx:base": 181.0,
+    "vme_L31:idx:exposed": 181.0,
+    "vme_L32:coll:base": 921.1,
+    "vme_L32:coll:exposed": 921.1,
+    "vme_L32:xl:base": 1340.4,
+    "vme_L32:xl:exposed": 1340.4,
+    "vme_L32:idx:base": 362.0,
+    "vme_L32:idx:exposed": 362.0,
+    "vme_L32:dma:base": 27.8,
+    "vme_L32:dma:exposed": 27.8,
+    "vme_L33:xl:base": 1295.7,
+    "vme_L33:xl:exposed": 1295.7,
+    "vme_L33:coll:base": 704.3,
+    "vme_L33:coll:exposed": 704.3,
+    "vme_L33:dma:base": 27.8,
+    "vme_L33:dma:exposed": 27.8,
+    "vme_L33:idx:base": 181.0,
+    "vme_L33:idx:exposed": 181.0,
+    "vme_L34:xl:base": 1295.7,
+    "vme_L34:xl:exposed": 1295.7,
+    "vme_L34:coll:base": 704.3,
+    "vme_L34:coll:exposed": 704.3,
+    "vme_L34:dma:base": 27.8,
+    "vme_L34:dma:exposed": 27.8,
+    "vme_L34:idx:base": 181.0,
+    "vme_L34:idx:exposed": 181.0,
+    "vme_L35:xl:base": 1295.7,
+    "vme_L35:xl:exposed": 1295.7,
+    "vme_L35:coll:base": 704.3,
+    "vme_L35:coll:exposed": 704.3,
+    "vme_L35:dma:base": 27.8,
+    "vme_L35:dma:exposed": 27.8,
+    "vme_L35:idx:base": 181.0,
+    "vme_L35:idx:exposed": 181.0,
+    "vme_L36:coll:base": 921.1,
+    "vme_L36:coll:exposed": 921.1,
+    "vme_L36:xl:base": 1340.4,
+    "vme_L36:xl:exposed": 1340.4,
+    "vme_L36:idx:base": 362.0,
+    "vme_L36:idx:exposed": 362.0,
+    "vme_L36:dma:base": 27.8,
+    "vme_L36:dma:exposed": 27.8,
+    "vme_L37:xl:base": 1295.7,
+    "vme_L37:xl:exposed": 1295.7,
+    "vme_L37:coll:base": 704.3,
+    "vme_L37:coll:exposed": 704.3,
+    "vme_L37:dma:base": 27.8,
+    "vme_L37:dma:exposed": 27.8,
+    "vme_L37:idx:base": 181.0,
+    "vme_L37:idx:exposed": 181.0,
+    "vme_L38:xl:base": 1295.7,
+    "vme_L38:xl:exposed": 1295.7,
+    "vme_L38:coll:base": 704.3,
+    "vme_L38:coll:exposed": 704.3,
+    "vme_L38:dma:base": 27.8,
+    "vme_L38:dma:exposed": 27.8,
+    "vme_L38:idx:base": 181.0,
+    "vme_L38:idx:exposed": 181.0,
+    "vme_L39:xl:base": 1295.7,
+    "vme_L39:xl:exposed": 1295.7,
+    "vme_L39:coll:base": 704.3,
+    "vme_L39:coll:exposed": 704.3,
+    "vme_L39:dma:base": 27.8,
+    "vme_L39:dma:exposed": 27.8,
+    "vme_L39:idx:base": 181.0,
+    "vme_L39:idx:exposed": 181.0
+   },
+   "qwen": {
+    "hbm_bw": 109807.9,
+    "hbm_bridge": 655.0,
+    "pg_cmd": 3042.0,
+    "pg_vmwrite": 5640.0,
+    "bank_pin": 978.0,
+    "pg_inject": 507.0,
+    "gen2e_su": 7816.0,
+    "att_qwen": 176165.9,
+    "pg_operand": 792.0,
+    "att_merge": 8461.4,
+    "pvm_fold": 288.0,
+    "bl_idx": 75.0,
+    "idx_pin": 8.0,
+    "vme:xl:base": 12912.5,
+    "vme_L0:xl:base": 12912.5,
+    "vme:xl:records": 289.0,
+    "vme:xl:exposed": 12912.5,
+    "vme_L0:xl:exposed": 12912.5,
+    "vme:dma:base": 2002.3,
+    "vme_L0:dma:base": 2002.3,
+    "vme:dma:records": 72.0,
+    "vme:dma:exposed": 2002.3,
+    "vme_L0:dma:exposed": 2002.3,
+    "vme:coll:base": 3955.1,
+    "vme_L0:coll:base": 3955.1,
+    "vme:coll:records": 73.0,
+    "vme:coll:exposed": 3955.1,
+    "vme_L0:coll:exposed": 3955.1
+   }
+  },
+  "d_ds_ar_pct": -25.35,
+  "d_qwen_pct": -21.03,
+  "d_ds_ar_cycles": 213951.1,
+  "d_qwen_cycles": 337805.0
+ },
+ "tool": "tools/hgi_sim/d4g_vmearly_1019.py (wraps d4g_reprice3b_1019 with an early-issue timing.schedule)",
+ "scenario": {
+  "bw_bytes_per_edge_per_sm": 90.67,
+  "hbm_bridge": 1,
+  "gen2e_su": {
+   "read": 8,
+   "write": 8
+  }
+ },
+ "area": {
+  "base_die_mm2": 641.83,
+  "base_source": "hd4g-gen2e results/arch/hbm_die_d4g/grants_d4g.json die_um",
+  "adds": {
+   "hbm_bw_safe_pc_ctrl": {
+    "um2_each": 181099.93,
+    "n": 64,
+    "mm2": 11.59,
+    "source": "codex/hbm-bw-safe-1019 432x475.2 vs h9b/c 155.52 square; 64 GEN2e PCs (conditional)"
+   },
+   "smh_xs_ring_1019": {
+    "um2_each": 101616.8,
+    "n": 256,
+    "mm2": 26.014,
+    "source": "codex/hbm-smhxs-ring-rg2-1019 432x345.6 vs 302.4x157.68; one xs per SM tile, 16 SM x 16"
+   },
+   "hcoll_gq_issue_sram_1019": {
+    "um2_each": 98836.4,
+    "n": 4,
+    "mm2": 0.395,
+    "source": "codex/hbm-gqissue-sram-1019 432x345.6 vs 224.64 square; one per quadrant"
+   }
+  },
+  "total_mm2": 679.82,
+  "reticle_mm2": 858.0,
+  "margin_mm2": 178.18,
+  "note": "outline deltas (slot growth), conservative; die height 31.77 of 33 mm -> growth goes in width"
+ },
+ "accepted": {
+  "ds_ar_tok_s": 1973.3,
+  "ds_ar_tok_s_alt": 1955.7,
+  "note": "owner 10-16 accepted demonstrated rate"
+ },
+ "composed_banklat": {
+  "ds_ar_tok_s": 1422.3,
+  "qwen_tok_s": 747.2,
+  "ds_vs_1973_3_pct": -27.92,
+  "ds_vs_1955_7_pct": -27.27
+ },
+ "vme": {
+  "issue_ahead": {
+   "xl": 0,
+   "coll": 0,
+   "dma": 0,
+   "idx": 0
+  },
+  "bl_dma": "kvwb",
+  "layout": "rotated",
+  "bw": 90.67,
+  "rule": "HBM-VMEARLY (10-19): compiler early issue of on-chip VM-bank reads into double-buffered consumer operand slots.\n\nWHAT IS PRICED.  LH-REPRICE3 (d4g_reprice3b_1019, row info_banklat_all = 1,206.3 DS / 407.0 Qwen) charges the d4g VM-bank\nclient round trips (x-load RD_LAT 55 + g4 10 = 65, COLL VM_RT 74 + 10 = 84, DMA lag 83 + 10 = 93, IDX op readers 171 + 10 =\n181 / rootctl 65 + 10 = 75) as extra COST of every record.  In the S2 schedule (timing.schedule) a record's cost is unit\nOCCUPANCY, so the round trip serialises even independent back-to-back records of one unit: fully exposed.\n\nWHAT CHANGES.  The static schedule knows every address, so the compiler issues record i's VM read ISSUE_AHEAD = N records\nearly into NBUF = N + 1 operand slots at the consumer (slot = i mod NBUF, static; no credits / ready).  This module re-runs\nthe SAME programmes and the SAME LH-REPRICE3 terms with timing.schedule replaced by a copy whose only change is (S2/SX):\n\n    d_i     = hideable bank-latency edges of record i (below); the record's occupancy becomes cost_i - d_i\n    t_iss_i = min(t0_i, max(RAW producers of its VM operands retired + their retire wire,      (data ready)\n                            start(i - N) of the same unit,                                     (issue-ahead window)\n                            end(i - N - 1) of the same unit - d_i))                            (slot of i free on landing)\n    start_i = max(t0_i, t_iss_i + d_i)          t0_i = the unchanged S2 start (dispatch + wire, unit free, pipelining)\n    exposed_i = start_i - t0_i                  (N = 0: t_iss = t0, exposed = d_i: reproduces LH-REPRICE3 exactly)\n\nd_i per client (the banklat increment of the record = RL.added at the plan_b_blall stages minus plan_b, and the bl_idx\nconstants), only the READ part:\n    xl    SM.* / ATT.* records: the whole x-leg increment (SM_X 7.29 -> 32.5 inside max(x leg, weight-fetch leg))\n    coll  COLL.* records: 2 of the 3 COLL_VM crossings (read request + read data); the result write stays exposed\n    dma   DMA STORE / KVWB / SWAP-out (VM -> HBM, the dbk VM read): the VM_HBM increment; DMA LOAD / FENCE (HBM request\n          leg) stay exposed (conservative)\n    idx   IDX.INDEX / IDX.TOPK 181, ARGMAX 75 (bl_idx); the IDX result write (COLL_VM x1) stays exposed\nSegments: DS schedules per layer segment (ds_mtp_verify.run), so no record prefetches across a layer boundary\n(conservative).  Exposed / base edges are reported per client and per layer (rp_added keys vme:<client>:<base|exposed>,\nvme_L<layer>:<client>:<base|exposed>).\n\nPER-CLIENT RULES (integration 10-19 ~22:00, sub-lanes HBM-VMEARLY-DMA bc57f015e / -IDX 0b423e28d; N >= 1 enables a rule):\n    xl, coll  the generic rule above (NBUF = N + 1 consumer operand slots; HBM-VMEARLY-XLCOLL builds them)\n    dma       the DMA-back controller holds ONE move (ISSUE_AHEAD 0 is the only calendar the RTL takes):\n              t_iss = min(t0, max(RAW, end(prev DMA record on the unit) - DMA_NEXT_CMD_K + DMA_CMD_LEAD))\n              = d4g_bank_latency.dma_min_next_issue (issue_at(i+1) >= drain_at(i) + nchunk(i) + 4, >= producer retire);\n              N is ignored beyond on/off.  bl_dma is charged only on VM-read DMA records (KVWB / STORE / swap-out);\n              DMA.LOAD / FENCE keep the plan_b VM_HBM request stage (d4g_bl_dma_split_1019 --mode kvwb).\n              OT_VME_BLDMA=all restores the committed every-DMA-record charge (LH-REPRICE3 reproduction).\n    idx       the n12 reader is fully pipelined and the query store is the one static slot (NBUF 1):\n              A_i = t_iss = min(t0, max(RAW_i, F_i - LB)), F_i = frame_start(i) = last use(i-1) + 1 (taken as\n              end(i-1) + 1 of the unit: conservative), LB = VM_RT_EXTRA + 12 = bl_idx + 2 (183 at 171, measured)\nLAYOUT (owner 10-19, HBM-MC2 89200325b): every HBM stream uses the ROTATED bank layout (blocks rotated across bank sets,\nexpert copies alternated).  It is what the successor PC controller's 90.67 B/edge/SM (+ bridge 1) assumes; without it the\nsuccessor gives 26-55 B/edge.  OT_VME_LAYOUT (default rotated) is recorded in the output; a run at a successor bandwidth\n(--bw > 59.08, above H9b's packed 59.08) with any other layout is REFUSED (fail closed).\n\n    PYTHONPATH=tools OT_VME_N=1 python3 -m hgi_sim.d4g_vmearly_1019 --bw 45.03 --out vme_n1.json\n    PYTHONPATH=tools OT_VME_N=1 python3 -m hgi_sim.d4g_vmearly_1019 --bw 90.67 --bridge 1 --out vme_n1_succ.json\n    OT_VME_N: issue-ahead N for every client, or per client \"xl:1,coll:2,dma:1,idx:1\" (missing client = 0).\n"
+ },
+ "vme_summary": {
+  "base": {
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_collq": {
+   "ds_ar_tok_s": 1849.2,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 648934.2,
+   "qwen_cycles": 1268223.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_pg_cmd": {
+   "ds_ar_tok_s": 1894.7,
+   "qwen_tok_s": 943.9,
+   "ds_ar_cycles": 633357.1,
+   "qwen_cycles": 1271257.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_pg_operand": {
+   "ds_ar_tok_s": 1901.2,
+   "qwen_tok_s": 945.6,
+   "ds_ar_cycles": 631172.1,
+   "qwen_cycles": 1269013.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_pg_vmwrite": {
+   "ds_ar_tok_s": 1887.1,
+   "qwen_tok_s": 942.0,
+   "ds_ar_cycles": 635883.1,
+   "qwen_cycles": 1273861.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_hc_tree": {
+   "ds_ar_tok_s": 1902.3,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 630828.1,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_hc_xr": {
+   "ds_ar_tok_s": 1904.6,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 630037.5,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_bank_pin": {
+   "ds_ar_tok_s": 1899.0,
+   "qwen_tok_s": 945.5,
+   "ds_ar_cycles": 631916.1,
+   "qwen_cycles": 1269198.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_su_red": {
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 945.1,
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1269733.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_e86_tkm": {
+   "ds_ar_tok_s": 1903.7,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 630351.1,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_att_s32": {
+   "ds_ar_tok_s": 1812.6,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 662023.9,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_att_merge": {
+   "ds_ar_tok_s": 1877.8,
+   "qwen_tok_s": 939.9,
+   "ds_ar_cycles": 639038.6,
+   "qwen_cycles": 1276683.2,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_att_qwen": {
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 830.8,
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1444387.7,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_idx_link": {
+   "ds_ar_tok_s": 1904.7,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 630015.1,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_idx_pin": {
+   "ds_ar_tok_s": 1904.8,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 629999.1,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_hbm_bw": {
+   "ds_ar_tok_s": 1877.6,
+   "qwen_tok_s": 865.4,
+   "ds_ar_cycles": 639100.1,
+   "qwen_cycles": 1386716.4,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_pg_inject": {
+   "ds_ar_tok_s": 1903.6,
+   "qwen_tok_s": 945.8,
+   "ds_ar_cycles": 630372.1,
+   "qwen_cycles": 1268727.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_pg_fault": {
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_sm_svc": {
+   "ds_ar_tok_s": 1856.3,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 646463.1,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_qwen_int8": {
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_pvm_fold": {
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 946.0,
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1268509.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_gen2e_su": {
+   "ds_ar_tok_s": 1878.1,
+   "qwen_tok_s": 940.4,
+   "ds_ar_cycles": 638935.0,
+   "qwen_cycles": 1276029.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_hbm_bridge": {
+   "ds_ar_tok_s": 1902.7,
+   "qwen_tok_s": 945.8,
+   "ds_ar_cycles": 630693.1,
+   "qwen_cycles": 1268729.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "all": {
+   "ds_ar_tok_s": 1596.8,
+   "qwen_tok_s": 757.0,
+   "ds_ar_cycles": 751514.1,
+   "qwen_cycles": 1585164.7,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "all_no_collq": {
+   "ds_ar_tok_s": 1638.8,
+   "qwen_tok_s": 757.0,
+   "ds_ar_cycles": 732227.1,
+   "qwen_cycles": 1585162.7,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "all_bigprog": {
+   "ds_ar_tok_s": 1596.8,
+   "qwen_tok_s": 757.0,
+   "ds_ar_cycles": 751514.1,
+   "qwen_cycles": 1585164.7,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "rec": {
+   "ds_ar_tok_s": 1849.2,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 648934.2,
+   "qwen_cycles": 1268223.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "rec_lat": {
+   "ds_ar_tok_s": 1691.3,
+   "qwen_tok_s": 851.6,
+   "ds_ar_cycles": 709527.4,
+   "qwen_cycles": 1409171.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "rec_att": {
+   "ds_ar_tok_s": 1738.0,
+   "qwen_tok_s": 826.0,
+   "ds_ar_cycles": 690446.5,
+   "qwen_cycles": 1452851.1,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "rec_att_bigprog": {
+   "ds_ar_tok_s": 1738.0,
+   "qwen_tok_s": 826.0,
+   "ds_ar_cycles": 690446.5,
+   "qwen_cycles": 1452851.1,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_su_red_p2": {
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 944.8,
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1270129.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_att_s32_bigprog": {
+   "ds_ar_tok_s": 1812.6,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 662023.9,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "only_att_merge_bigprog": {
+   "ds_ar_tok_s": 1877.8,
+   "qwen_tok_s": 939.9,
+   "ds_ar_cycles": 639038.6,
+   "qwen_cycles": 1276683.2,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "info_attgap_total": {
+   "ds_ar_tok_s": 1848.8,
+   "qwen_tok_s": 939.9,
+   "ds_ar_cycles": 649075.6,
+   "qwen_cycles": 1276683.2,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "info_attgap_total_bigprog": {
+   "ds_ar_tok_s": 1848.8,
+   "qwen_tok_s": 939.9,
+   "ds_ar_cycles": 649075.6,
+   "qwen_cycles": 1276683.2,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "info_gen2c_xload": {
+   "ds_ar_tok_s": 1783.0,
+   "qwen_tok_s": 936.7,
+   "ds_ar_cycles": 673028.4,
+   "qwen_cycles": 1281134.3,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 52499.0,
+      "exposed": 52499.0,
+      "records": 1175.0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 12912.5,
+      "exposed": 12912.5,
+      "records": 289.0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "info_bl_coll": {
+   "ds_ar_tok_s": 1781.5,
+   "qwen_tok_s": 941.8,
+   "ds_ar_cycles": 673582.0,
+   "qwen_cycles": 1274154.5,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 30449.2,
+      "exposed": 30449.2,
+      "records": 562.0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 3955.1,
+      "exposed": 3955.1,
+      "records": 73.0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "info_bl_dma": {
+   "ds_ar_tok_s": 1905.4,
+   "qwen_tok_s": 944.7,
+   "ds_ar_cycles": 629775.1,
+   "qwen_cycles": 1270224.1,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 1112.4,
+      "exposed": 1112.4,
+      "records": 40.0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 2002.3,
+      "exposed": 2002.3,
+      "records": 72.0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "info_bl_idx": {
+   "ds_ar_tok_s": 1879.5,
+   "qwen_tok_s": 946.2,
+   "ds_ar_cycles": 638463.1,
+   "qwen_cycles": 1268221.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 8763.0,
+      "exposed": 8763.0,
+      "records": 49.0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  },
+  "info_banklat_all": {
+   "ds_ar_tok_s": 1422.3,
+   "qwen_tok_s": 747.2,
+   "ds_ar_cycles": 843726.2,
+   "qwen_cycles": 1606026.8,
+   "clients": {
+    "ds": {
+     "xl": {
+      "base": 52499.0,
+      "exposed": 52499.0,
+      "records": 1175.0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 30449.2,
+      "exposed": 30449.2,
+      "records": 562.0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 1112.4,
+      "exposed": 1112.4,
+      "records": 40.0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 8763.0,
+      "exposed": 8763.0,
+      "records": 49.0,
+      "raw_bound": 0
+     }
+    },
+    "qwen": {
+     "xl": {
+      "base": 12912.5,
+      "exposed": 12912.5,
+      "records": 289.0,
+      "raw_bound": 0
+     },
+     "coll": {
+      "base": 3955.1,
+      "exposed": 3955.1,
+      "records": 73.0,
+      "raw_bound": 0
+     },
+     "dma": {
+      "base": 2002.3,
+      "exposed": 2002.3,
+      "records": 72.0,
+      "raw_bound": 0
+     },
+     "idx": {
+      "base": 0.0,
+      "exposed": 0.0,
+      "records": 0,
+      "raw_bound": 0
+     }
+    }
+   }
+  }
+ }
+}

@@ -110,6 +110,9 @@ def extract(specfile):
                                           all_x_inputs_equal_added_edges=len(added)==1)
     sources = {f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()
                for f in spec['sources']+spec['child_sources']}
+    materialized = 'rtl/dsrom_sys/s81_dv/frame_lp/'+spec['top']+'_lp.sv'
+    if (ROOT/materialized).is_file():
+        sources[materialized] = hashlib.sha256((ROOT/materialized).read_bytes()).hexdigest()
     return dict(schema='opentallas.s81.frame_schedule.v1', source_sha256=sources,
                 spec=str(Path(specfile).relative_to(ROOT)), added_edges_per_crossing=p.A,
                 station_inputs=stations, topology=topo,

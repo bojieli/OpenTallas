@@ -1,0 +1,177 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'clk'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:65:26: ... Location of port declaration
+   65 |     input  wire          clk,
+      |                          ^~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'rst_n'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:66:26: ... Location of port declaration
+   66 |     input  wire          rst_n,
+      |                          ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'sa_r'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:68:26: ... Location of port declaration
+   68 |     input  wire [5:0]    sa_r, input wire [223:0] sa_d, input wire [5:0] sb_r, input wire [223:0] sb_d,
+      |                          ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'sa_d'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:68:51: ... Location of port declaration
+   68 |     input  wire [5:0]    sa_r, input wire [223:0] sa_d, input wire [5:0] sb_r, input wire [223:0] sb_d,
+      |                                                   ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'sb_r'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:68:74: ... Location of port declaration
+   68 |     input  wire [5:0]    sa_r, input wire [223:0] sa_d, input wire [5:0] sb_r, input wire [223:0] sb_d,
+      |                                                                          ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'sb_d'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:68:99: ... Location of port declaration
+   68 |     input  wire [5:0]    sa_r, input wire [223:0] sa_d, input wire [5:0] sb_r, input wire [223:0] sb_d,
+      |                                                                                                   ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'we'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:69:26: ... Location of port declaration
+   69 |     input  wire [13:0]   we,                  
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'c_go'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:70:26: ... Location of port declaration
+   70 |     input  wire          c_go, input wire c_fw, input wire c_l, input wire [2:0] c_bn, input wire [4:0] c_lvn,
+      |                          ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'c_fw'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:70:43: ... Location of port declaration
+   70 |     input  wire          c_go, input wire c_fw, input wire c_l, input wire [2:0] c_bn, input wire [4:0] c_lvn,
+      |                                           ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'c_l'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:70:60: ... Location of port declaration
+   70 |     input  wire          c_go, input wire c_fw, input wire c_l, input wire [2:0] c_bn, input wire [4:0] c_lvn,
+      |                                                            ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'c_bn'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:70:82: ... Location of port declaration
+   70 |     input  wire          c_go, input wire c_fw, input wire c_l, input wire [2:0] c_bn, input wire [4:0] c_lvn,
+      |                                                                                  ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'c_lvn'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:70:105: ... Location of port declaration
+   70 |     input  wire          c_go, input wire c_fw, input wire c_l, input wire [2:0] c_bn, input wire [4:0] c_lvn,
+      |                                                                                                         ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 're'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:71:26: ... Location of port declaration
+   71 |     input  wire          re, input wire [3:0] ra,                          
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'ra'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:71:47: ... Location of port declaration
+   71 |     input  wire          re, input wire [3:0] ra,                          
+      |                                               ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'bw_e'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:72:26: ... Location of port declaration
+   72 |     input  wire [1:0]    bw_e, input wire [3:0] bw_a, input wire [255:0] bw_d,  
+      |                          ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'bw_a'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:72:49: ... Location of port declaration
+   72 |     input  wire [1:0]    bw_e, input wire [3:0] bw_a, input wire [255:0] bw_d,  
+      |                                                 ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'bw_d'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:72:74: ... Location of port declaration
+   72 |     input  wire [1:0]    bw_e, input wire [3:0] bw_a, input wire [255:0] bw_d,  
+      |                                                                          ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'g_go'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:74:26: ... Location of port declaration
+   74 |     input  wire          g_go, input wire [5:0] g_hit, input wire [41:0] g_a,   
+      |                          ^~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'g_hit'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:74:49: ... Location of port declaration
+   74 |     input  wire          g_go, input wire [5:0] g_hit, input wire [41:0] g_a,   
+      |                                                 ^~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'g_a'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:74:74: ... Location of port declaration
+   74 |     input  wire          g_go, input wire [5:0] g_hit, input wire [41:0] g_a,   
+      |                                                                          ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'o_v'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:75:26: ... Location of port declaration
+   75 |     output reg           o_v, output reg o_f, output reg o_l, output reg o_g, output reg [245:0] o_d,
+      |                          ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'o_f'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:75:42: ... Location of port declaration
+   75 |     output reg           o_v, output reg o_f, output reg o_l, output reg o_g, output reg [245:0] o_d,
+      |                                          ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'o_l'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:75:58: ... Location of port declaration
+   75 |     output reg           o_v, output reg o_f, output reg o_l, output reg o_g, output reg [245:0] o_d,
+      |                                                          ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'o_g'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:75:74: ... Location of port declaration
+   75 |     output reg           o_v, output reg o_f, output reg o_l, output reg o_g, output reg [245:0] o_d,
+      |                                                                          ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'o_d'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:75:98: ... Location of port declaration
+   75 |     output reg           o_v, output reg o_f, output reg o_l, output reg o_g, output reg [245:0] o_d,
+      |                                                                                                  ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/drives81-l1f/out/ot_lint_top.sv:1:36: Instance has missing pin: 'o_flt'
+    1 | module ot_lint_top; dsdv_gunit_l1f u_top (); endmodule
+      |                                    ^~~~~
+                     rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1f.sv:76:26: ... Location of port declaration
+   76 |     output reg           o_flt
+      |                          ^~~~~
+%Warning-UNUSEDPARAM: rtl/dsrom_sys/s81_dv/eng/ot_s81sl_ve_fp.sv:588:45: Parameter is not used: 'LAT'
+                                                                       : ... note: In instance 'ot_lint_top.u_top.g_add[15].u'
+  588 | module ot_s81sl_ve_qadd #(parameter integer LAT = 4) (
+      |                                             ^~~
+                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050
+                      ... Use "/* verilator lint_off UNUSEDPARAM */" and lint_on around source to disable this message.
+%Warning-UNDRIVEN: physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v:9:25: Signal is not driven: 'rd_out'
+                                                                                                                      : ... note: In instance 'ot_lint_top.u_top.g_m[1].u_b'
+    9 |     output wire [255:0] rd_out,
+      |                         ^~~~~~
+                   ... For warning description see https://verilator.org/warn/UNDRIVEN?v=5.050
+                   ... Use "/* verilator lint_off UNDRIVEN */" and lint_on around source to disable this message.
+%Warning-UNUSEDPARAM: rtl/lib/ot_rst_relay.sv:25:24: Parameter is not used: 'RELEASE_CYCLES'
+                                                   : ... note: In instance 'ot_lint_top.u_top.u_rst'
+   25 |     localparam integer RELEASE_CYCLES = SYNC_STAGES + TREE_STAGES;
+      |                        ^~~~~~~~~~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.396 MB sources in 39 modules, into 0.013 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 5.996 s (elab=0.385, cvt=5.520, bld=0.000); cpu 5.995 s on 1 threads; allocated 435.547 MB

@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: ot-epyc5       admits  1063 GB (avail 858, growth 113, headroom 0, waiters 0/0 GB) load 115/128 running 31 disk 761 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019/pickup
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-497838-1792454830 after 1 s
+AUTHORITY_GENERATE_PASS top=qwk_pv_P0 paths=34 captures=989 depths=[9, 5, 69, 69, 67, 63, 56, 47, 34, 51, 68, 68, 66, 61, 53, 43, 31, 49, 6, 4, 6, 4, 6, 4, 6, 4, 6, 4, 6, 4, 6, 4, 6, 4] fault_probes=28
+slice_smoke: /srv/opentallas-scratch/claude/kv-tok3-1019/lint_g7_P0/tb_qwk_pv_P0.sv: 342 inputs (5 clock, 2 reset), 483 outputs
+Terminated                 /usr/local/bin/ot-heavy --mem 64 --tag otrun-ubuntu-4091341-454830518 --max-wait 120 -- bash lint_fixture.sh /srv/opentallas-scratch/claude/kv-tok/veh/g7/P0/cut /srv/opentallas-scratch/claude/qwen-kvsys/wt-kvs14r-4db097403-codexmub /srv/opentallas-scratch/claude/kv-tok3-1019/lint_g7_P0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-497838-1792454830): exit 143

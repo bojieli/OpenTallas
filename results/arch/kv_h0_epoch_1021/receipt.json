@@ -1,0 +1,45 @@
+{
+  "status": "MECHANISM_ONLY_NOT_DIE_QUALIFIED",
+  "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "source_sha256": {
+    "rtl/qwen_sys/kv_fwd_lane_20261018/qkd_rlysh.sv": "a40160aeeb388dd333b6495f9ce01175bd2117d4086822db1ccd9f46d68af849",
+    "rtl/qwen_split/qfd_fwd_lane.sv": "16d2375b15110a3613eaf684c727e50933a1b877b48347364a383ad3c3ef7622",
+    "rtl/hdc/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv": "62c15fc98ea519674d8f1e606b936b89e6e5718867c571d0939dd9ca985f4d7e",
+    "tools/qwen_kv_die/bench_kv_fwd_lane.sh": "d9a86fd5d6f186594490a15f2406df475a31f91cb53e27992f4dc5551e1d2e9a"
+  },
+  "bench_sha256": "45698515294f9e48d61f57544047806c2ad08e341d14a622b038c45209887547",
+  "source_reset_edges": 89,
+  "receiver_reset_edges": 0,
+  "results": [
+    {
+      "mode": "calendar",
+      "expected_outcome_observed": true,
+      "summaries": [
+        "KV_FWD_BENCH PASS 0 errors in 2400 checks (faults 0)"
+      ]
+    },
+    {
+      "mode": "stale_calendar",
+      "expected_outcome_observed": true,
+      "summaries": [
+        "KV_FWD_BENCH FAIL 2400 errors in 2400 checks (faults 2)"
+      ]
+    },
+    {
+      "mode": "missing_capture",
+      "expected_outcome_observed": true,
+      "summaries": [
+        "KV_FWD_BENCH FAIL 2397 errors in 2400 checks (faults 0)"
+      ]
+    },
+    {
+      "mode": "legacy_hop0",
+      "expected_outcome_observed": true,
+      "summaries": [
+        "KV_FWD_BENCH FAIL 1920 errors in 2400 checks (faults 2)"
+      ]
+    }
+  ],
+  "topology": "all"
+}

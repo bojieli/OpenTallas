@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hcoll_link_e2u-safe-band-crcpre-34f85027d bench bench_link_e2_mut_data host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/hcoll_link_e2u-safe-band-crcpre-34f85027d log cl/bench_link_e2_mut_data.a1b1.log captured 2026-10-21T07:54:58-07:00
+# fail_regex 'LINK_E2_MUTANT m_data REJECTED'
+Verilator 5.050 2026-07-01 rev v5.050
+m_data LINK_EQ_MISMATCH cyc=19 tx_v 0/0 rx_v 0/0 abort 0/0 fc 000/000 tx_eq 0 rx_eq 1
+m_data LINK_EQ_MISMATCH cyc=20 tx_v 0/0 rx_v 0/0 abort 0/0 fc 000/000 tx_eq 0 rx_eq 1
+m_data LINK_EQ_MISMATCH cyc=21 tx_v 0/0 rx_v 0/0 abort 0/0 fc 000/000 tx_eq 0 rx_eq 1
+m_data LINK_EQ_MISMATCH cyc=22 tx_v 0/0 rx_v 0/0 abort 0/0 fc 000/000 tx_eq 0 rx_eq 1
+m_data LINK_EQ_MISMATCH cyc=23 tx_v 1/1 rx_v 0/0 abort 0/0 fc 000/000 tx_eq 0 rx_eq 1
+m_data LINK_EQ_MISMATCH cyc=24 tx_v 1/1 rx_v 0/0 abort 0/0 fc 000/000 tx_eq 0 rx_eq 1
+LINK_E2_MUTANT m_data REJECTED

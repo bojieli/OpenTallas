@@ -37,8 +37,13 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--replay", action="append", default=[])
     ap.add_argument("--nev", type=int, default=0, help="event array depth (default: max replay events + 1, >= 16)")
+    ap.add_argument("--trace-bit", action="append", default=[], metavar="NET:BIT",
+                    help="opt-in (TOK-FUNC2-HBM-SM 10-21): print 'SLICE_TRACE NET cyc' on every stream edge where slice net "
+                         "dut.NET[BIT] is 1 (measured commit cycles of internal writers); default none = TB unchanged")
     a = ap.parse_args()
     b = json.loads(Path(a.boundary).read_text())
+    if 'hb_ckgen' not in b['instances']:
+        sys.exit('gen_slice_tb: selected source cut must retain actual hb_ckgen clock/reset generator')
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     ins = [e for e in b["inputs"] if e["driver"].split(".")[0] != "<die_pin>"]
@@ -48,18 +53,47 @@ def main():
     iidx = {e["name"]: k for k, e in enumerate(ins)}
     oidx = {e["name"]: k for k, e in enumerate(outs)}
     width = {e["name"]: e["width"] for e in ins + outs}
+    import re as _re
+    quarters = {'SW':0, 'SE':1, 'NW':2, 'NE':3}
+    bank_names = [n for n in b['instances'] if _re.fullmatch(r'vmb_[A-Z]{2}\d', n)]
+    if any(n[4:6] not in quarters for n in bank_names):
+        sys.exit('gen_slice_tb: unknown actual VM bank quadrant')
+    multi_vm = any(n[4:6]!='SW' for n in bank_names)
+    banks = sorted(((quarters[n[4:6]]*8 if multi_vm else 0)+int(n[-1]), n) for n in bank_names)
+    if len({index for index,_ in banks})!=len(banks):
+        sys.exit('gen_slice_tb: ambiguous actual VM bank identity')
+    bank_indices = {index for index,_ in banks}
+
+    def vm_location(sector, event_quarter=None):
+        if not 0<=sector<65536:
+            sys.exit('gen_slice_tb: VM sector outside explicit16-bit address ABI')
+        q,mir,bank = (sector>>13)&3, (sector>>15)&1, sector&7
+        if event_quarter is not None and (type(event_quarter) is not int or event_quarter!=q):
+            sys.exit('gen_slice_tb: VM event quarter disagrees with physical sector')
+        if multi_vm and mir:
+            sys.exit('gen_slice_tb: quarter-primary VM ABI does not encode mirror addresses')
+        if not multi_vm and q:
+            sys.exit('gen_slice_tb: foreign quarter cannot alias a SW-only VM backdoor')
+        if (q*8+bank if multi_vm else bank) not in bank_indices:
+            sys.exit('gen_slice_tb: physical VM bank is absent from selected boundary')
+        return q,mir,bank
 
     nev_max = 16
     for rp in a.replay:
         r = json.loads(Path(rp).read_text())
         name = Path(rp).stem if Path(rp).name != "replay.json" else Path(rp).parent.name
         ev = r["events"]
-        vm = [e for e in ev if e["k"] == "M"]
+        vm = [e for e in ev if e["k"] == "M" and e.get("mem") != "hbm"]
+        hbm = [e for e in ev if e["k"] == "M" and e.get("mem") == "hbm"]
         ev = [e for e in ev if e["k"] != "M"]
         if a.nev and len(ev) + 1 > a.nev:
             sys.exit(f"gen_slice_tb: replay {name} needs {len(ev) + 1} event slots, --nev={a.nev}; split the replay")
         if any(e.get("cyc", 0) != 0 or e.get("mem") != "vm" for e in vm):
             sys.exit("gen_slice_tb: only cyc-0 VM preload (M) events are supported")
+        # HBM image M events (TOK-FUNC2-HBM-SM 10-21): {"k":"M","mem":"hbm","inst":<PHY instance>,"sector":int,"val":hex}
+        # -> replay/<name>/hbm/<inst>.hex, read by the off-chip PHY+DRAM model (+HBM_IMG_DIR=<replay>/hbm, cyc 0 only).
+        if any(e.get("cyc", 0) != 0 or e.get("inst") not in b["instances"] for e in hbm):
+            sys.exit("gen_slice_tb: HBM preload events need cyc 0 and a PHY instance of the slice")
         bad = [e for e in ev if not (e["port"] in (iidx if e["k"] == "D" else oidx) or
                                      (e["k"] == "C" and e["port"].startswith("vm:")))]
         if bad:
@@ -72,7 +106,9 @@ def main():
             k = 1 if e["k"] == "D" else 2
             if e["port"].startswith("vm:"):
                 s = int(e["port"][3:], 16)
-                pi = 0x8000 | ((s >> 15) & 1) << 14 | (s & 7) << 10 | ((s >> 3) & 0x3FF)
+                q,mir,bank = vm_location(s,e.get('quarter'))
+                pi = (0x8000 | (q<<13 if multi_vm else mir<<14) |
+                      bank<<10 | ((s>>3)&0x3ff))
                 width[e["port"]] = 256
             else:
                 pi = iidx[e["port"]] if k == 1 else oidx[e["port"]]
@@ -93,15 +129,33 @@ def main():
         vlines = []
         for e in vm:
             s = int(e["sector"]) if not isinstance(e["sector"], str) else int(e["sector"], 16)
+            q,mir,bank = vm_location(s,e.get('quarter'))
             assert (s & 7) == e["bank"] and ((s >> 3) & 0x3FF) == e["row"], e
-            vlines.append(f"{(s >> 15) & 1:x} {s & 7:x} {(s >> 3) & 0x3FF:03x} {int(e['val'], 16):064x}")
+            vlines.append((f'{q:x} ' if multi_vm else '')+
+                          f"{mir:x} {bank:x} {(s >> 3) & 0x3FF:03x} {int(e['val'], 16):064x}")
         (d / "vm_pre.txt").write_text("\n".join(vlines) + ("\n" if vlines else ""))
+        hbm_n = {}
+        if hbm:
+            (d / "hbm").mkdir(exist_ok=True)
+            for inst in sorted({e["inst"] for e in hbm}):
+                sec = {}
+                for e in hbm:
+                    if e["inst"] == inst:
+                        s_ = int(e["sector"])
+                        if s_ in sec and sec[s_] != int(e["val"], 16):
+                            sys.exit(f"gen_slice_tb: HBM sector {s_:x} of {inst} preloaded twice with different data")
+                        sec[s_] = int(e["val"], 16)
+                (d / "hbm" / f"{inst}.hex").write_text("".join(f"{k_:08x} {v_:064x}\n" for k_, v_ in sorted(sec.items())))
+                hbm_n[inst] = len(sec)
         last = max([e["cyc"] for e in ev if e["dom"] == "stream"] + [0])
         (d / "index.json").write_text(json.dumps({"events": len(ev), "drives": sum(e["k"] == "D" for e in ev),
                                                   "checks": sum(e["k"] == "C" for e in ev), "vm_preload_words": len(vm), "last_stream_cyc": last,
+                                                  **({"hbm_preload_sectors": hbm_n} if hbm_n else {}),
                                                   "scope": r.get("scope", "unspecified"),
                                                   "qualifies_native_layer": False, "qualifies_native_chain": False,
                                                   "state_seed_provenance": r.get("state_seed_provenance", ["unspecified"]),
+                                                  **(dict(vm_addressing=dict(abi='quarter_primary_v1',quarters=quarters,
+                                                                            mirrors_supported=False)) if multi_vm else {}),
                                                   "records": sorted({e["rec"] for e in ev if "rec" in e})}, indent=1))
         nev_max = max(nev_max, len(ev) + 1)
     nev = a.nev or nev_max
@@ -165,8 +219,6 @@ def main():
     L += ["            default: ;",
           "        endcase",
           "    endfunction"]
-    import re as _re
-    banks = sorted((int(n[-1]), n) for n in b["instances"] if _re.match(r"^vmb_[A-Z]{2}\d$", n))
     L += ["    // VM bank backdoor (cells of the bank's real SRAM macro models; layout of ot_sram_1r1w_1024x256_m2_r2c2: MUX 2)",
           "    function automatic [6:0] vchk(input [31:0] d);",
           "        integer i, j, a0, b0, c0, n; reg [6:0] c, col; reg [31:0] rm;",
@@ -207,12 +259,15 @@ def main():
           "    endfunction",
           "    integer vm_words = 0;",
           "    initial begin : VMPRE",
-          "        integer fd, mir, bk, row; reg [255:0] dv; reg [6:0] ck;",
+          ("        integer fd, quad, mir, bk, row; reg [255:0] dv; reg [6:0] ck;" if multi_vm else
+           "        integer fd, mir, bk, row; reg [255:0] dv; reg [6:0] ck;"),
           "        #1;",
           "        if (rdir.len() > 0) begin",
           "            fd = $fopen({rdir, \"/vm_pre.txt\"}, \"r\");",
           "            if (fd != 0) begin",
-          "                while ($fscanf(fd, \"%h %h %h %h\\n\", mir, bk, row, dv) == 4) begin",
+          ("                while ($fscanf(fd, \"%h %h %h %h %h\\n\", quad, mir, bk, row, dv) == 5) begin" if multi_vm else
+           "                while ($fscanf(fd, \"%h %h %h %h\\n\", mir, bk, row, dv) == 4) begin"),
+          *(["                    bk = (quad << 3) | bk;"] if multi_vm else []),
           "                    for (integer i = 0; i < 256; i = i + 1) vm_cell(bk, mir ? 2 : 0, row, i, dv[i]);",
           "                    for (integer k = 0; k < 8; k = k + 1) begin",
           "                        ck = vchk(dv[k*32 +: 32]);",
@@ -236,7 +291,8 @@ def main():
           "            end else if (hdr[p][63:62] == 2'd1) begin",
           "                drive(hdr[p][59:44], val[p]); drives = drives + 1;",
           "            end else begin",
-          "                got = hdr[p][59] ? vm_rd(hdr[p][58], hdr[p][56:54], hdr[p][53:44]) : sample(hdr[p][59:44]); checks = checks + 1;",
+          ("                got = hdr[p][59] ? vm_rd(0, {hdr[p][58:57], hdr[p][56:54]}, hdr[p][53:44]) : sample(hdr[p][59:44]); checks = checks + 1;" if multi_vm else
+           "                got = hdr[p][59] ? vm_rd(hdr[p][58], hdr[p][56:54], hdr[p][53:44]) : sample(hdr[p][59:44]); checks = checks + 1;"),
           "                if (((got ^ val[p]) & msk[p]) != '0) begin",
           "                    fails = fails + 1;",
           "                    $display(\"SLICE_CHECK_FAIL out=%0d dom=%0d cyc=%0d rec=%0d\", hdr[p][59:44], d, cnt[d], rec);",
@@ -254,6 +310,9 @@ def main():
         L.append(f"    reg [{e['width'] - 1}:0] po{k} = '0; integer f{k} = -1, l{k} = -1, n{k} = 0;")
     L += ["    always @(posedge ck0) if (rs0) begin",
           "        step(0);"]
+    for tb_ in a.trace_bit:            # sampled value of the edge cnt[0] (opt-in; absent = TB unchanged)
+        net, bit = tb_.rsplit(":", 1)
+        L.append(f"        if (dut.{net}[{int(bit)}]) $display(\"SLICE_TRACE {net} %0d\", cnt[0]);")
     for k, e in enumerate(outs):
         L.append(f"        if ({e['name']} != po{k}) begin if (f{k} < 0) f{k} = cnt[0]; l{k} = cnt[0]; n{k} = n{k} + 1; po{k} = {e['name']}; end")
     L += ["        if (cnt[0] >= cycles) begin"]

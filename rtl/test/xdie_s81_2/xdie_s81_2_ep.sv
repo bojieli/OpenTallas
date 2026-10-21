@@ -18,6 +18,8 @@
 // MU = 2 (XDIE-S81-MU 10-19): the MU release die's endpoints exactly as bind_p4l3_mu (mu3 ceaed19c4 / mu4 bind) instantiates
 // them through ot_s81sl_slice_lep_mux: s_0S / s_0N / s_7S = ot_s81sl_lep_mu_a (MU_EN 1, AB_EN 0, HOST_EN 0; kit
 // s81sl_lepmua), s_7N = ot_s81sl_lep_mu #(.HOST_EN(1), .AB_EN(0)) (host plane idle here); pair A only (2 lane tiles).
+// AB = 1 (S81-LINK5 10-21, tb XL5): this endpoint (WN) is ot_s81sl_lep_mu_ab with 4 lane tiles whatever MU is: pair A =
+// stage NEXT TX, pair B = stage PREV RX (the owner-approved 5th lane pair); the other endpoints keep their MU leaves.
 // MU = 1 stays the copy-A/B superset (ot_s81sl_lep_mu_ab at every endpoint, 4 lane tiles; the MAB die has it at s_0S).
 // ---------------------------------------------------------------------------------------------------------------------
 module xdie2_icg (input wire CLK, input wire ENA, output wire GCLK);
@@ -55,9 +57,13 @@ module xdie_s81_2_ep #(
     parameter integer SIDE = 0,        // 0 = W end (outward = W), 1 = E end
     parameter integer HOST = 0,        // 1 = s_7N (host plane present, inputs idle); MU endpoints carry none
     parameter integer MU = 0,          // 1 = ot_s81sl_lep_mu_ab + pair B; 2 = MU-die leaves (lep_mu_a / lep_mu host)
+    parameter integer AB = 0,          // 1 = ot_s81sl_lep_mu_ab + pair B at this endpoint (S81-LINK5 WN)
     parameter integer LEG = 1,         // 1 = the die's lane leg (relays + landing) between lane tile and PHY
     parameter integer PLAT_S = 4,
-    parameter integer DMUT = 0
+    parameter integer DMUT = 0,
+    parameter integer LRXS = 0,        // TOK-FUNC-S81/MURATE 10-21: lep_mu_ab RX_SRAM / IN_PIPE / NATIVE32 (G7 s_0N binds 1/1/1;
+    parameter integer LINP = 0,        // defaults 0 = the bench as before)
+    parameter integer LN32 = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -73,7 +79,7 @@ module xdie_s81_2_ep #(
     output wire          fault,
     output wire [3:0]    live
 );
-    localparam integer NL = (MU == 1) ? 4 : 2;
+    localparam integer NL = (MU == 1 || AB != 0) ? 4 : 2;
     // regional resets (die: per-region synchronised trees; one released edge here: E = K + R0 - G with R0 = G)
     reg [1:0] rsy;
     always @(posedge clk or negedge rst_n) if (!rst_n) rsy <= 2'b00; else rsy <= {rsy[0], 1'b1};
@@ -126,7 +132,16 @@ module xdie_s81_2_ep #(
     assign lgf = {|lgf2[7:6], |lgf2[5:4], |lgf2[3:2], |lgf2[1:0]};
     // ---- link-port leaf
     wire lepf;
-    generate if (MU == 2 && HOST != 0) begin : g_muh      // s_7N of the MU die
+    generate if (MU == 1 || AB != 0) begin : g_mu
+        ot_s81sl_lep_mu_ab #(.RX_SRAM(LRXS), .IN_PIPE(LINP), .NATIVE32(LN32)) u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
+            .lo0_v(lov[0]), .lo0_r(lor[0]), .lo0_d(lod[0 +: 553]), .lo1_v(lov[1]), .lo1_r(lor[1]), .lo1_d(lod[553 +: 553]),
+            .li0_v(liv[0]), .li0_r(lir[0]), .li0_d(lid[0 +: 553]), .li1_v(liv[1]), .li1_r(lir[1]), .li1_d(lid[553 +: 553]),
+            .rxv(rxv4[1:0]), .sl_f(sf), .l0_f(lf[2:0]), .l1_f(lf[5:3]),
+            .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
+            .lo2_v(lov[2]), .lo2_r(lor[2]), .lo2_d(lod[1106 +: 553]), .lo3_v(lov[3]), .lo3_r(lor[3]), .lo3_d(lod[1659 +: 553]),
+            .li2_v(liv[2]), .li2_r(lir[2]), .li2_d(lid[1106 +: 553]), .li3_v(liv[3]), .li3_r(lir[3]), .li3_d(lid[1659 +: 553]),
+            .rxvb(rxv4[3:2]), .l2_f(lf[8:6]), .l3_f(lf[11:9]), .fault(lepf));
+    end else if (MU == 2 && HOST != 0) begin : g_muh      // s_7N of the MU die
         wire [1:0] st0 = {g_l[0].st_t[1], g_l[0].st_t[0]}, st1 = {g_l[1].st_t[1], g_l[1].st_t[0]};
         ot_s81sl_lep_mu #(.HOST_EN(1), .AB_EN(0)) u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
             .lo0_v(lov[0]), .lo0_r(lor[0]), .lo0_d(lod[0 +: 553]), .lo1_v(lov[1]), .lo1_r(lor[1]), .lo1_d(lod[553 +: 553]),
@@ -145,15 +160,6 @@ module xdie_s81_2_ep #(
             .rxv(rxv4[1:0]), .sl_f(sf), .l0_f(lf[2:0]), .l1_f(lf[5:3]),
             .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0), .fault(lepf));
         assign rxv4[3:2] = 2'b00;
-    end else if (MU != 0) begin : g_mu
-        ot_s81sl_lep_mu_ab u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
-            .lo0_v(lov[0]), .lo0_r(lor[0]), .lo0_d(lod[0 +: 553]), .lo1_v(lov[1]), .lo1_r(lor[1]), .lo1_d(lod[553 +: 553]),
-            .li0_v(liv[0]), .li0_r(lir[0]), .li0_d(lid[0 +: 553]), .li1_v(liv[1]), .li1_r(lir[1]), .li1_d(lid[553 +: 553]),
-            .rxv(rxv4[1:0]), .sl_f(sf), .l0_f(lf[2:0]), .l1_f(lf[5:3]),
-            .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(), .ml_wd(), .ml_rv(1'b0), .ml_rd(1104'd0), .ml_f(1'b0),
-            .lo2_v(lov[2]), .lo2_r(lor[2]), .lo2_d(lod[1106 +: 553]), .lo3_v(lov[3]), .lo3_r(lor[3]), .lo3_d(lod[1659 +: 553]),
-            .li2_v(liv[2]), .li2_r(lir[2]), .li2_d(lid[1106 +: 553]), .li3_v(liv[3]), .li3_r(lir[3]), .li3_d(lid[1659 +: 553]),
-            .rxvb(rxv4[3:2]), .l2_f(lf[8:6]), .l3_f(lf[11:9]), .fault(lepf));
     end else if (HOST != 0) begin : g_h
         wire [1:0] st0 = {g_l[0].st_t[1], g_l[0].st_t[0]}, st1 = {g_l[1].st_t[1], g_l[1].st_t[0]};
         ot_s81sl_lep u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),

@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.hbm_preload_prestate_fix.v1",
+  "grade": "pure source/input provenance proof; no new RTL simulation",
+  "source": "5fbd4d07a selectedSU params18/15, additive corrected Qwen images",
+  "policy": "M inputwords frozen as immutable FP32 bitstrings before expectedO mutates aliased state; expected outputs stay checks only",
+  "cases": {
+    "L0_r0": {
+      "checked_preload_words": 15488,
+      "corrected_words": 9214,
+      "prestate_mismatches": 0,
+      "all_commands_checks_cycles_unchanged": true,
+      "original_replay_sha256": "f539a902c969f56f7c366427eee66270c36e60ad1b27d4db85f270921dda32d4",
+      "corrected_replay_sha256": "6df42c448862256902b87fd49c486c4c1b693483d5bd4e6d32e7d4de3283709f",
+      "operand_sha256": "075855527dc26477ef1758d2327132f988a5d861df36ac9334dae8af314a8b4f"
+    },
+    "L0_r5": {
+      "checked_preload_words": 15488,
+      "corrected_words": 9215,
+      "prestate_mismatches": 0,
+      "all_commands_checks_cycles_unchanged": true,
+      "original_replay_sha256": "6a760279f48b0e783ca889465964fc92bf2bbb8aa33bf140205252542c0363b2",
+      "corrected_replay_sha256": "90ab8fa7035ec24fd18639b562766eaa035f3d78be3cc477ffcbd0b5a1fa98a1",
+      "operand_sha256": "075855527dc26477ef1758d2327132f988a5d861df36ac9334dae8af314a8b4f"
+    },
+    "chain_r0": {
+      "checked_preload_words": 21760,
+      "corrected_words": 9214,
+      "prestate_mismatches": 0,
+      "all_commands_checks_cycles_unchanged": true,
+      "original_replay_sha256": "b8dc80d142a17f745308344d678a28732ab0a0efa7ec4ea0a326d7626708b939",
+      "corrected_replay_sha256": "613df82dc772064c9f4618cdc4665e849efde8015ebbd41786779a9f054efe37",
+      "operand_sha256": "dc5f4b4ed692c1d1776d330838ab6b72563e298ca99cd2c8f0733d79e513551c"
+    },
+    "chain_r5": {
+      "checked_preload_words": 21760,
+      "corrected_words": 9215,
+      "prestate_mismatches": 0,
+      "all_commands_checks_cycles_unchanged": true,
+      "original_replay_sha256": "9fa86ab740dffe100c42d8bab68cb1d22b5c1d23648b5c118e3ae15505821642",
+      "corrected_replay_sha256": "4215ca06339c59b8b6c26b561dac133f1f603a27e3da455de3b3ba0c896cf71f",
+      "operand_sha256": "dc5f4b4ed692c1d1776d330838ab6b72563e298ca99cd2c8f0733d79e513551c"
+    }
+  },
+  "corrected_packets": "/home/ubuntu/scratch/tok-func-hbm/qwen_prestatefix",
+  "pending_original_inputs": "preserved unchanged; historical QwenSU images have defectivealiaspreloads and do not qualify numeric coverage",
+  "unaffected": "selectedDS emittedrecords have noinput/outputalias; standaloneATT/QMV/SMservice inputdrivers separate",
+  "remaining_scope": "component probes only; native layer/chain/fulltoken INCOMPLETE"
+}

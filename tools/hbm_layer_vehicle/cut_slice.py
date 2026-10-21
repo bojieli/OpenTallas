@@ -20,6 +20,7 @@ import argparse, gzip, json, re, sys
 from pathlib import Path
 
 ID = re.compile(r"\b([A-Za-z_]\w*)\b")
+CKRST = re.compile(r"ckgen|clk|clock|ck_|_ck\b|por|rst|reset", re.I)
 QUAD = re.compile(r"(?<![A-Za-z])(SW|SE|NW|NE)")
 
 
@@ -64,6 +65,11 @@ def main():
     ap.add_argument("--set", choices=["sw", "se", "nw", "ne"])
     ap.add_argument("--include", action="append", default=[])
     ap.add_argument("--exclude", action="append", default=[])
+    ap.add_argument("--with-relays", nargs="?", const=r"^rf\d+_", default=None, metavar="REGEX",
+                    help="also take in every die relay station (instance name REGEX, default ^rf\\d+_) on a chain into or "
+                         "out of the slice, transitively, so the boundary is the ORIGINAL producer/consumer nets and the "
+                         "die's relay stages stay inside the slice (GEN2e4+ dies: every link is relayed/landed)")
+    ap.add_argument("--relays-out", action="store_true", help="with --with-relays: also pull in output relay chains")
     ap.add_argument("--top")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
@@ -103,6 +109,27 @@ def main():
     undriven = sorted(n for n in readers if n not in driver)
     if undriven:
         sys.exit(f"cut_slice: {len(undriven)} read nets without a driver, e.g. {undriven[:5]}")
+
+    if a.with_relays:
+        rre = re.compile(a.with_relays)
+        refs = lambda x: {r for _, e in x["conns"]
+                          for r in ID.findall(re.sub(r"\d+'[bdhoBDHO][0-9a-fA-FxXzZ_]+", " ", e)) if r in wires or r in ports}
+        reads = {n: refs(names[n]) - {f"{n}__{p}" for p, _ in names[n]["conns"]} for n in names if rre.search(n)}
+        drives = {n: {f"{n}__{p}" for p, _ in names[n]["conns"] if f"{n}__{p}" in wires} for n in reads}
+        before = len(S)
+        while True:
+            s_reads = set().union(*(refs(names[n]) for n in S))
+            # data nets only: clock / reset nets (hb_ckgen, regional roots, reset relays) reach every relay
+            s_drives = {dn for dn, dv in driver.items() if dv[0] in S and not CKRST.search(dv[0] + "." + dv[1])}
+            # input chains only: the slice outputs stay the original slice-driven nets (replay checks keep their
+            # port names and cycles); input relays are pulled in so the die's relay stages delay the drives
+            add = {n for n in reads if n not in S and (drives[n] & s_reads)}
+            if a.relays_out:
+                add |= {n for n in reads if n not in S and (reads[n] & s_drives)}
+            if not add:
+                break
+            S |= add
+        print(f"WITH_RELAYS {len(S) - before} relay stations added ({a.with_relays})")
 
     width = lambda n: wires[n] if n in wires else ports[n][1]
     used = set()

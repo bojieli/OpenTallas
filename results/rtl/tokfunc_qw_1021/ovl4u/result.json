@@ -1,0 +1,184 @@
+{
+ "stage": "ovl4u",
+ "grade": "DIAG (OVL end overlay; rest source assembly)",
+ "src_commit": "c0f8097f3",
+ "verdict": "PASS",
+ "golden": "every C->K and K->C D2D frame of the 4-user F16 frame bit-exact against the compiled producer words (tb_d2d_ovl_mu checks), per-user exchanges/tokens = compiled counts",
+ "cycles": {
+  "H_frame": 4026800,
+  "frames_C2K": 63098,
+  "frames_K2C": 57783,
+  "aggregate_tok_s_bench": 13708.2,
+  "tokens_per_frame": {
+   "0": 16,
+   "1": 15,
+   "2": 8,
+   "3": 7
+  },
+  "exchanges_per_frame": {
+   "0": 576,
+   "1": 540,
+   "2": 288,
+   "3": 252
+  },
+  "cycles_per_token_per_user": {
+   "0": 251675.0,
+   "1": 268453.3,
+   "2": 503350.0,
+   "3": 575257.1
+  },
+  "tok_s_per_user_833ps": {
+   "0": 4768.1,
+   "1": 4470.1,
+   "2": 2384.0,
+   "3": 2086.0
+  },
+  "aggregate_cycles_per_token": 87539.1,
+  "aggregate_tok_s_833ps": 13708.2,
+  "codec": 2,
+  "codec1_H_frame": 4026800,
+  "codec1_aggregate_tok_s_833ps": 13708.2
+ },
+ "mutants": {
+  "codec1_asbuilt_one_playhead": "FAIL as required",
+  "codec1_mut_collide": "FAIL as required",
+  "codec1_mut_slot": "FAIL as required",
+  "codec1_mut_user": "FAIL as required",
+  "codec2_asbuilt_one_playhead": "FAIL as required",
+  "codec2_mut_collide": "FAIL as required",
+  "codec2_mut_slot": "FAIL as required",
+  "codec2_mut_user": "FAIL as required"
+ },
+ "stand_ins": [
+  "OVL link end overlay: rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv from codex/sysface-ovl-1019 967c24eed (sha 82bb11f1151e): assembly end has no OVL form",
+  "UCIe PHY = ot_qkvd_ucie_x64_phy_model (modelled off-chip leg)",
+  "producers/consumers at both ends are tb models emitting the compiled words (as on 10-19); the link ends, OVL sequencers, codecs, CRC, LLR and SRAM are assembly RTL"
+ ],
+ "logs": [
+  "runs/codec1.out",
+  "runs/codec1/SUMMARY.txt",
+  "runs/codec2.out",
+  "runs/codec2/SUMMARY.txt"
+ ],
+ "runs": {
+  "codec1": {
+   "configs": {
+    "asbuilt_one_playhead": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_collide": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_slot": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_user": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "pass": {
+     "expect": "PASS",
+     "got": "PASS",
+     "ok": true
+    }
+   },
+   "H_frame": 4026800,
+   "frames_C2K": 63098,
+   "frames_K2C": 57783,
+   "aggregate_tok_s_bench": 13708.2,
+   "tokens_per_frame": {
+    "0": 16,
+    "1": 15,
+    "2": 8,
+    "3": 7
+   },
+   "exchanges_per_frame": {
+    "0": 576,
+    "1": 540,
+    "2": 288,
+    "3": 252
+   },
+   "cycles_per_token_per_user": {
+    "0": 251675.0,
+    "1": 268453.3,
+    "2": 503350.0,
+    "3": 575257.1
+   },
+   "tok_s_per_user_833ps": {
+    "0": 4768.1,
+    "1": 4470.1,
+    "2": 2384.0,
+    "3": 2086.0
+   },
+   "aggregate_cycles_per_token": 87539.1,
+   "aggregate_tok_s_833ps": 13708.2
+  },
+  "codec2": {
+   "configs": {
+    "asbuilt_one_playhead": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_collide": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_slot": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "mut_user": {
+     "expect": "FAIL",
+     "got": "FAIL",
+     "ok": true
+    },
+    "pass": {
+     "expect": "PASS",
+     "got": "PASS",
+     "ok": true
+    }
+   },
+   "H_frame": 4026800,
+   "frames_C2K": 63098,
+   "frames_K2C": 57783,
+   "aggregate_tok_s_bench": 13708.2,
+   "tokens_per_frame": {
+    "0": 16,
+    "1": 15,
+    "2": 8,
+    "3": 7
+   },
+   "exchanges_per_frame": {
+    "0": 576,
+    "1": 540,
+    "2": 288,
+    "3": 252
+   },
+   "cycles_per_token_per_user": {
+    "0": 251675.0,
+    "1": 268453.3,
+    "2": 503350.0,
+    "3": 575257.1
+   },
+   "tok_s_per_user_833ps": {
+    "0": 4768.1,
+    "1": 4470.1,
+    "2": 2384.0,
+    "3": 2086.0
+   },
+   "aggregate_cycles_per_token": 87539.1,
+   "aggregate_tok_s_833ps": 13708.2
+  }
+ },
+ "compiler_patch": "tools/qwen_static_schedule/mu_calendar.py + f98fd830f (claude/tokfunc-qw-link-fix-1021: attn_extra/att_windows consumer)"
+}

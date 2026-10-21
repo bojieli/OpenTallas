@@ -1,0 +1,10 @@
+ot-run: ot-epyc5       admits   854 GB (avail 711, growth 113, headroom 0, waiters 0/0 GB) load 64/128 running 35 disk 631 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-rtlgap-l20/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-rtlgap-l20/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-rtlgap-l20/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-rtlgap-l20/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-rtlgap-l20/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1812356-1792587746 after 0 s
+TREE_RD PASS {"pass_": true, "mismatches": 0, "first": [], "faults": [], "tx_span": {"1": [17963, 19406, 1431], "2": [19564, 20987, 1424]}}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1812356-1792587746): exit 0

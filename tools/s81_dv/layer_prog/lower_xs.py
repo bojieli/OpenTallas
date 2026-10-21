@@ -166,9 +166,37 @@ def rank_plan(plan, rank_rows):
     return out
 
 
+def dense_split2():
+    """DENSE2 (10-20, opt-in; unset = the one-stage layout, byte-identical): a dense layer's a_proj rows split over the
+    TWO consecutive stage die-groups of a split stage map.  OT_XS_DENSE_SPLIT2 = A (the upstream stage: it owns
+    rank-local a_proj rows [0, R)) | B (the downstream stage: rows [R, 448) + every other dense op of the layer) |
+    X (an expert-only stage of a split map: no a_proj phase at all).  R = OT_XS_DENSE_SPLIT2_ROWS (default half).
+    Output-row split: every a_proj output is ONE complete dot product on one die (same rows, same K order, same
+    arithmetic as the one-stage layout), so no partial sum crosses the die link; B lands A's outputs in rank-row
+    order (A rows ++ B rows = the one-stage order) before q_norm / kv_norm."""
+    v = os.environ.get('OT_XS_DENSE_SPLIT2', '')
+    assert v in ('', 'A', 'B', 'X'), ('OT_XS_DENSE_SPLIT2', v)
+    assert not v or aproj_topology_enabled(), 'DENSE2 split requires the actual topology owner map (OT_XS_APROJ_TOPO=1)'
+    assert not (v and aproj_rank_tags_enabled()) or os.environ.get('OT_XS_APROJ_ALIGN4', '0') == '1', \
+        'DENSE2 rank-tag CAP requires the aligned native-row ownership contract'
+    return v or None
+
+
+def dense_split2_rows(total):
+    """(lo, hi) rank-local a_proj rows this stage owns, or None (one-stage layout)"""
+    v = dense_split2()
+    if v is None:
+        return None
+    r = int(os.environ.get('OT_XS_DENSE_SPLIT2_ROWS', total // 2))
+    assert 0 < r < total, ('DENSE2 split rows', r, total)
+    return {'A': (0, r), 'B': (r, total), 'X': (0, 0)}[v]
+
+
 def placement(die, sl, fx=None):
     frames = die.frames_of(sl)
     g = slice_index(die, sl)
+    if dense_split2() == 'X':
+        return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=[]) for f in frames]
     if aproj_topology_enabled():
         # One real phase on EVERY real frame: preserve tensor row order, keep
         # wq_a/wkv in separate frames, and never exceed the measured four rows.
@@ -177,24 +205,56 @@ def placement(die, sl, fx=None):
         slices = sorted(die.slices(), key=lambda s: slice_index(die, s))
         all_frames = [f for s in slices for f in die.frames_of(s)]
         tensors = [('wq_a', fx['w']['wq_a'][0].shape[0]), ('wkv', fx['w']['wkv'][0].shape[0])]
+        own = dense_split2_rows(sum(n for _, n in tensors))
+        if own is None:
+            starts = [0, tensors[0][1]]
+        else:
+            # DENSE2: this stage owns the contiguous rank-local rows [lo, hi) of wq_a ++ wkv; each tensor keeps its
+            # owned contiguous sub-range (tensor row order kept), tensors with no owned rows get no frames.
+            lo, hi = own
+            t0, rng = 0, []
+            for name, n in tensors:
+                a, b = max(lo, t0), min(hi, t0 + n)
+                if b > a:
+                    rng.append((name, a, b - a))
+                t0 += n
+            starts = [a for _, a, _ in rng]
+            tensors = [(name, n) for name, _, n in rng]
         total = sum(n for _, n in tensors)
-        numer = [n * len(all_frames) for _, n in tensors]
-        counts = [n // total for n in numer]
-        for i in sorted(range(len(counts)), key=lambda i: (-(numer[i] % total), i))[:len(all_frames) - sum(counts)]:
-            counts[i] += 1
+        align4 = os.environ.get('OT_XS_APROJ_ALIGN4', '0') == '1'
+        source_frames = all_frames
+        if align4:
+            # RD transports whole 256-bit pairs: choose even active frame counts
+            # per slice, so every owner boundary is eight captured values aligned.
+            source_frames = [frame for sl_ in slices for frame in die.frames_of(sl_)[:2 * (len(die.frames_of(sl_)) // 2)]]
+            # Whole native SRAM rows: four captured FP32/BF16-expanded values.
+            # Real frames beyond this subset are idle, never phantom owners.
+            assert own is not None, 'aligned a_proj map requires a selected DENSE2 stage'
+            assert all(n % 8 == 0 and start % 8 == 0 for (_, n), start in zip(tensors, starts))
+            counts = [n // 4 for _, n in tensors]
+            assert sum(counts) <= len(source_frames), ('aligned a_proj actual capacity', counts, len(source_frames))
+        else:
+            numer = [n * len(all_frames) for _, n in tensors]
+            counts = [n // total for n in numer]
+            for i in sorted(range(len(counts)), key=lambda i: (-(numer[i] % total), i))[:len(all_frames) - sum(counts)]:
+                counts[i] += 1
         assigned, row0, fi = {}, 0, 0
-        for (name, nrows), nf in zip(tensors, counts):
+        for (name, nrows), nf, start in zip(tensors, counts, starts):
             assert 0 < nf <= nrows and nrows <= nf * ROWS_PER_FRAME, ('a_proj one-phase capacity', name, nrows, nf)
+            assert start == (row0 if own is None else start)
+            row0 = start
             q, rem = divmod(nrows, nf)
             off = row0
             for j in range(nf):
                 n = q + (j < rem)
-                assigned[all_frames[fi]] = list(range(off, off + n))
+                assigned[source_frames[fi]] = list(range(off, off + n))
                 off += n
                 fi += 1
             assert off == row0 + nrows
             row0 += nrows
-        assert fi == len(all_frames) and row0 == total
+        assert fi == sum(counts) and row0 == (total if own is None else own[1])
+        for frame in all_frames:
+            assigned.setdefault(frame, [])
         return g, [dict(frame=f, master=die.inst[f]['master'], lk=die.strap(f, 'lk'), rows=assigned[f]) for f in frames]
     out = []
     for j, f in enumerate(frames):
@@ -232,13 +292,25 @@ def aproj_capture_contract(die, sl, fx, flags):
 
 
 def base_master(m):
-    return re.sub(r'(_MX)?_l4$', '', m)
+    return re.sub(r'(_MX)?_l4(_lp)?$', '', m)   # TOK-FUNC-S81: 72-frame die binds the landed-parent wrappers col_h*_l4_lp
 
 
 def land_e(lk):
     ks = {(lk >> (3 * k)) & 7 for k in range(4)}
     assert len(ks) == 1, f'one landing E per frame expected, lk {lk:03x}'
     return ks.pop()
+
+
+def source_frame_schedule(master):
+    """LP models are immutable source-qualified inputs, never inferred flat timing."""
+    if not master.endswith('_lp'):
+        return None
+    directory = Path(os.environ.get('OT_XS_FRAME_SCHEDULE_DIR',
+                     str(ROOT / 'results/arch/s81_dv_1016/frame_l4_cluster/compiler')))
+    path = directory / (base_master(master) + '_schedule.json')
+    if not path.is_file():
+        raise ValueError('selected LP master requires its exact source frame schedule: ' + str(path))
+    return path
 
 
 # ------------------------------------------------------------------------------------------------ one frame programme
@@ -249,6 +321,8 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, ran
     import v41_die_images_w17w10 as I
     import v41_rom_ksplit_bankmap as S
     q, _bf = B.frame_pairs(base_master(master))
+    # plan_phase verifies every source hash in this extracted compiler schedule.
+    frame_schedule = source_frame_schedule(master)
     assert len(mats) == 1, 'a frame phase mixing wq_a and wkv rows: plan_phase takes one matrix (not needed at 28 / slice)'
     ret_score = None
     if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1':
@@ -271,7 +345,8 @@ def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, ran
             return cache[key]
     best = None
     for cand in ([pairs] if pairs else [q[:NPAIRS], q[len(q) - NPAIRS:], q[1:1 + NPAIRS]]):
-        plan = P.plan_phase(base_master(master), cand, mats[0], x, NSEG, seed=seed, iters=iters, land_e=land_e(lk), ret_score=ret_score)
+        plan = P.plan_phase(base_master(master), cand, mats[0], x, NSEG, seed=seed, iters=iters,
+                            land_e=land_e(lk), frame_schedule=frame_schedule, ret_score=ret_score)
         finish_faults = ret_score(plan['ret']) if ret_score is not None else 0
         key = (plan['faults'] + finish_faults, plan['ret_words'])
         if best is None or key < best[0]:
@@ -369,19 +444,40 @@ def lower(die, op, ctx):
                                                 'ROM images carry the checkpoint rows of the layer'))
     fx = load_fixture(fxd)
     g, pl = placement(die, sl, fx)
+    native = bool(dense_split2()) and aproj_topology_enabled() and aproj_rank_tags_enabled() and \
+        os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1'
+    if native and any(p['master'].endswith('_lp') for p in pl) and not callable(globals().get('source_frame_schedule')):
+        return dict(rec, status='GAP', gap=dict(module='lower_xs.source_frame_schedule', port='actual LP source schedule',
+            missing='native LP GO/FIN lowering requires the source-qualified LP resolver and prepared models'))
+    shared_phase = None
+    native_error = None
+    capture = aproj_capture_contract(die, sl, fx, 1) if native and any(p['rows'] for p in pl) else None
     frames = []
     for p in pl:
         if not p['rows']:
-            frames.append(dict(p, phase=None, note='no a_proj rows (28 rows / slice = 7 frames x 4)'))
+            frames.append(dict(p, phase=None, note='idle actual frame: no a_proj rows in selected ownership map'))
             continue
         mats, gidx = frame_mats(fx, p['rows'])
         field, ph, plan, qa, q, bf = frame_programme(p['master'], p['lk'], mats, fx['x'], rank_rows=p['rows'],
                            cap_cfg=aproj_capture_contract(die, sl, fx, 1)['cfg'] if os.environ.get('OT_XS_APROJ_CAP_PLAN', '0') == '1' else None)
+        if native:
+            from layer_prog.aproj_native import phase_material
+            material = phase_material(field)
+            if shared_phase is None:
+                shared_phase = material
+            elif material != shared_phase:
+                native_error = 'active frame phase/stream words differ: one shared XS broadcast is not established'
+            plan = rank_plan(plan, p['rows'])
         frames.append(dict(p, out_index=gidx, pairs=qa, nseg=NSEG, faults=plan['faults'], ret_words=plan['ret_words'],
                            merges=plan['merges'], ret=plan['ret'], placement=plan['placement'],
-                           cfg_words={str(k): [f'{w:012x}' for w in field.cfg[0][s]] for s, k in enumerate(qa)},
+                           cfg_words={str(k): [f'{w:012x}' for w in
+                               (rank_cfg_words(field.cfg[0][s], p['rows']) if native else field.cfg[0][s])]
+                                      for s, k in enumerate(qa)},
                            phase=dict((k, v) for k, v in ph.items() if k != 'matrices'),
                            emission=plan['emission']))
+        if native:
+            model = source_frame_schedule(p['master'])
+            frames[-1]['source_schedule'] = dict(path=str(model), sha256=sha(model.read_bytes())) if model else None
     ok = all(f['phase'] is None or f['faults'] == 0 for f in frames)
     rec['files'] = {f'prog/xs/{op["id"]}.json': json.dumps(dict(
         schema='opentallas.s81_dv.xs_lowering.v1', op=op, slice=sl, slice_index=g, nseg=NSEG, rows_per_slice=sum(len(p['rows']) for p in pl),
@@ -390,6 +486,23 @@ def lower(die, op, ctx):
     if not ok:
         return dict(rec, status='GAP', gap=dict(module='tools/s81_dv/frame_return_plan.py', port='legalise',
                                                 missing='return plan faults on ' + ', '.join(f['frame'] for f in frames if f['phase'] and f['faults'])))
+    if native and shared_phase is not None:
+        from layer_prog.aproj_native import programme
+        try:
+            if native_error:
+                raise ValueError(native_error)
+            lowered = programme(die, op, ctx, shared_phase, frames, capture)
+        except ValueError as exc:
+            return dict(rec, status='GAP', gap=dict(module='aproj_native', port='current source XS/CAP native programme',
+                                                   missing=str(exc)))
+        rec['files'].update(lowered.pop('files'))
+        rec.update(lowered)
+        rec['unit'] = 'actual frame cfg7/MAT + XS phase/stream/calendar ROMs + native XR target2/3 command rows'
+        return dict(rec, status='PARTIAL', gap=dict(module='selected XS4/frame/cap5r native programme',
+            port='actual VQ/rstopt_xo/ring gather ownership and aggregate CAP fixed retirement',
+            missing='Real target2/3 command rows, rank-tag cfg words and XS calendar ROMs are emitted. '
+                    'Sealed programme is held: incoming gather producer, all-frame FIN/clock retirement, '
+                    'per-instance MAT image binding and whole A/B schedule adoption remain unqualified.'))
     return dict(rec, status='PARTIAL', gap=gap_rest)
 
 
@@ -453,6 +566,10 @@ def cmd_gen(a):
                                                                          'weights/wkv.bin', 'weights/wkv.scale.bin',
                                                                          'ops/attn.norm.scale.bin', 'ops/attn.a_proj.bin')}),
                 images={n: sha((out / n).read_bytes()) for n in names + xsn})
+    schedule = source_frame_schedule(p['master'])
+    if schedule is not None:
+        (out / 'frame_schedule.json').write_bytes(schedule.read_bytes())
+        meta['frame_schedule'] = dict(file='frame_schedule.json', sha256=sha(schedule.read_bytes()))
     (out / 'return_plan.json').write_text(json.dumps(plan, indent=1) + '\n')
     (out / 'meta.json').write_text(json.dumps(meta, indent=1) + '\n')
     (out / 'T').write_text(f'{a.cycles}\n')

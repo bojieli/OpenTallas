@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/dsdv_eng_tap_w-dsdv_eng_tap_w-27ffa71c6/record/views/dsdv_eng_tap_w/provenance/dsdv_eng_tap_w.candidate.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "dsdv_eng_tap_w 172.8 x 108.0: PG M5 VDD 32 stripes (97% spread, 100% cov) / VSS 32 stripes (97% spread, 100% cov); strap M6; face pins 1590 blocked-above 0 blocked-same 0; clock ck insertion 197 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "dsdv_eng_tap_w",
+  "W": 172.8,
+  "H": 108.0,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 32,
+     "dir": "V",
+     "spread": 0.969,
+     "coverage": 1.0,
+     "shapes_on_top": 32
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 32,
+     "dir": "V",
+     "spread": 0.969,
+     "coverage": 1.0,
+     "shapes_on_top": 32
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 1590,
+   "blocked_above": 0,
+   "covered_below": 520,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "ck": {
+    "max_ps": 196.86,
+    "min_ps": 153.75
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 568
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  },
+  "pin_access_violations": 0
+ }
+}

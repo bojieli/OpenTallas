@@ -1,0 +1,10 @@
+ot-run: ot-epyc4       skipped: no /home/ubuntu/scratch/kv-ahub7/src
+ot-run: ot-epyc5       skipped: no /home/ubuntu/scratch/kv-ahub7/src
+ot-run: ot-epyc6       skipped: no /home/ubuntu/scratch/kv-ahub7/src
+ot-run: ot-epyc7       admits  1090 GB (avail 831, growth 68, headroom 0, waiters 0/0 GB) load 74/96 running 29 disk 6499 GB 
+ot-run: ot-epyc8       admits  1028 GB (avail 833, growth 113, headroom 0, waiters 0/0 GB) load 64/128 running 24 disk 410 GB 
+ot-run: ot-pve1        skipped: no /home/ubuntu/scratch/kv-ahub7/src
+ot-run: ot-agidock128  skipped: no /home/ubuntu/scratch/kv-ahub7/src
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-1499191-1792418316 after 0 s
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-1499191-1792418316): exit 1

@@ -28,10 +28,10 @@ if {[llength [get_ports -quiet ck_o]]} {
   unset_output_delay [get_ports ck_o]
   if {![llength [get_clocks -quiet ck_o_fwd]]} {
     if {[llength [get_ports -quiet ckf]]} {
-      create_generated_clock -name ck_o_fwd -source [get_ports ckf] -divide_by 1 -invert [get_ports ck_o]
+      create_generated_clock -name ck_o_fwd -source [get_ports ckf] -master_clock $ot_fl_ck -divide_by 1 -invert [get_ports ck_o]
       puts "OT_FWD_LANE: station ck_o = ~ckf (generated ck_o_fwd INVERTED, half-cycle hop)"
     } elseif {[llength [get_ports -quiet ck]]} {
-      create_generated_clock -name ck_o_fwd -source [get_ports ck] -divide_by 1 -invert [get_ports ck_o]
+      create_generated_clock -name ck_o_fwd -source [get_ports ck] -master_clock $ot_fl_ck -divide_by 1 -invert [get_ports ck_o]
       puts "OT_FWD_LANE: hop-0 ck_o = ~(ck gated) (generated ck_o_fwd INVERTED), capture on the rising ck edge"
     }
   }
