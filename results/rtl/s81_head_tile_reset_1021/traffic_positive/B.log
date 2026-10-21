@@ -1,0 +1,7 @@
+POS 0 RES 22141 40cdce35 0 8366
+LOGITS t0 128/128 t1 0/0
+TB_PASS positions 1
+- tools/s81_head_r3/tb_s81hd_mini.sv:110: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 27.664 s; speed 332.998 ns/s
+- Verilator: cpu 27.663 s on 1 threads; allocated 74 MB

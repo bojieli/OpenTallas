@@ -1,0 +1,37 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: ot-epyc7       admits   119 GB (avail 158, growth 75, headroom 0, waiters 0/0 GB) load 129/96 running 16 disk 4690 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-head-chain-1021
+ot-run: LOAD SPILL: ot-epyc7 would run at 1.42 x cores; moving to ot-gold2
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-head-chain-1021 (10.0 GB) ot-epyc7 -> ot-gold2 (no host with --dir admits 24 GB now)
+ot-run: SPILL: copied 329049 changed entries in 76 s; running on ot-gold2; written files go back to ot-epyc7 after the run
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-2874975-1792607938 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/codex-s81-head-chain-1021/tile_r3_bench/out/cells.v
+A: POS 0 RES 21946 4173a558 0 8366
+A: POS 1 RES 21946 4173a558 0 8366
+A: LOGITS t0 256/256 t1 256/256
+A: TB_PASS positions 2
+B: POS 0 RES 22141 40cdce35 0 8366
+B: LOGITS t0 128/128 t1 0/0
+B: TB_PASS positions 1
+C: POS 0 RES 21818 4173a558 0 8366
+C: LOGITS t0 128/128 t1 128/128
+C: TB_PASS positions 1
+D: LOGIT_MISMATCH t0 row 0 40490935 != 40476e2f
+D: LOGIT_MISMATCH t0 row 32 3f0d7fbc != 3f03f89c
+D: LOGIT_MISMATCH t0 row 64 bf08adee != bf06fbc0
+D: LOGIT_MISMATCH t1 row 0 bff2b09b != bff3471f
+D: LOGIT_MISMATCH t1 row 32 3ffb946b != 3ff84eef
+D: LOGIT_MISMATCH t1 row 64 bf1d0ba8 != bf1d7458
+D: LOGIT_MISMATCH t0 row 96 403355a5 != 403376ef
+D: LOGIT_MISMATCH t1 row 96 bdb3e4e0 != bda93870
+D: POS 0 RES 21946 4173a558 1 8366
+D: LOGITS t0 124/128 t1 124/128
+D: TB_PASS positions 1
+BENCH_PASS s81hd_mini SCEN=ALL MUT=none (4/4)
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-2874975-1792607938): exit 0
+ot-run: SPILL: outputs copied back ot-gold2 -> ot-epyc7; RAN on ot-gold2: exit 0
