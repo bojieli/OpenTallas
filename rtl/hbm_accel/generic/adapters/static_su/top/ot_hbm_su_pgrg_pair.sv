@@ -24,6 +24,10 @@ endmodule
 module ot_hbm_su_pgrg_kmux #(parameter integer W=8, ID=0)(input wire s, input wire [W-1:0] a, b, output wire [W-1:0] y);
  assign y=s?a:b;
 endmodule
+(* keep_hierarchy = "yes" *)
+module ot_hbm_su_pgrg_kand2 #(parameter integer ID=0)(input wire a, b, output wire y);
+ assign y=a&b;
+endmodule
 
 module ot_hbm_su_pgrg_pair #(
  parameter integer QID=1,G=2,MUT=0
@@ -84,20 +88,24 @@ module ot_hbm_su_pgrg_pair #(
  assign ra[5*9+:9]=ra5_l; assign rv[5]=rv5_l;
  assign brv=rv; assign bra=ra;
  wire lw=vm_we|kv_we;
- // lane store word (r3): fw ? fdat : dwn ? dwd : vm_we ? vm : kv, regrouped so the registered fill / delivery word is
- // selected first and the lane's late vm_we is the LAST select: one kept 8-bit 2:1 per byte (vm_we pin -> 4 kept muxes
- // + the 9-bit address mux + lw + idf), then one 2:1 on the registered fw/dwn copy of that byte.
+ // lane store word (r3): fw ? fdat : dwn ? dwd : vm_we ? vm : kv, regrouped in KEPT stages so synthesis cannot bury
+ // the late lane select (abc sees equal input arrivals): per byte g a kept AND2 s = vm_we & !pv (pv = registered fw/dwn
+ // copy of that byte), a kept 8-bit 2:1 vk = s ? vm : kv, then a kept 2:1 on pv.  vm_we pin loads: 4 AND2 + the kept
+ // 9-bit address mux + lw + idf; the address path is the same two kept stages on the registered c0 copies.
  for(genvar g=0;g<4;g=g+1)begin:g_sel
-  wire [7:0] vk;
-  ot_hbm_su_pgrg_kmux #(.W(8),.ID(g)) u_vk (.s(vm_we), .a(vm_wdata[8*g+:8]), .b(kv_wdata[8*g+:8]), .y(vk));
   wire pv=fwq[1+g]|dwq[1+g];
+  wire s; wire [7:0] vk;
   wire [7:0] pd=fwq[1+g]?fdat_q[8*g+:8]:dwd_q[8*g+:8];
-  assign bwd[8*g+:8]=pv?pd:vk;
+  ot_hbm_su_pgrg_kand2 #(.ID(g)) u_svm (.a(vm_we), .b(~pv), .y(s));
+  ot_hbm_su_pgrg_kmux #(.W(8),.ID(g)) u_vk (.s(s), .a(vm_wdata[8*g+:8]), .b(kv_wdata[8*g+:8]), .y(vk));
+  ot_hbm_su_pgrg_kmux #(.W(8),.ID(4+g)) u_wd (.s(pv), .a(pd), .b(vk), .y(bwd[8*g+:8]));
  end
- wire [8:0] la9=vm_we?{vm_waddr[17:16],vm_waddr[13:7]}:{kv_waddr[17:16],kv_waddr[13:7]};
+ wire [8:0] la9;
+ ot_hbm_su_pgrg_kmux #(.W(9),.ID(8)) u_la9 (.s(vm_we), .a({vm_waddr[17:16],vm_waddr[13:7]}), .b({kv_waddr[17:16],kv_waddr[13:7]}), .y(la9));
+ wire pa=fwq[0]|dwq[0];
+ ot_hbm_su_pgrg_kmux #(.W(9),.ID(9)) u_wa (.s(pa), .a(fwq[0]?frow_q:dwr_q), .b(la9), .y(bwa));
  wire st_conflict=(fwq[0]&&lw)||(fwq[0]&&dwq[0])||(dwq[0]&&lw);
- assign bwv[0]=lw|fwq[0]|dwq[0];
- assign bwa=(fwq[0]|dwq[0])?(fwq[0]?frow_q:dwr_q):la9;
+ assign bwv[0]=lw|pa;
  reg idf; integer p2;
  always @*begin
   idf=(vm_we&&(vm_waddr[6:0]!=st_lid||vm_waddr[15:14]!=q_id))||(kv_we&&!vm_we&&(kv_waddr[6:0]!=st_lid||kv_waddr[15:14]!=q_id));
