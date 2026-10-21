@@ -1,0 +1,5 @@
+PG982 existing-bench qualification (source 982c1f5494, assets af7271568, helpers 46f), ep5 unit oth-ubuntu-3495190-1792609227, Verilator 5.050
+M0 pair_lockstep (HREG=1 MUT=0 EDGES=1200): PASS checks=29952 resets=2 data_edges=2319 vm_writes=1786 ref_fault_edges=2496
+M4 pair_mut4 (RF select early, EDGES=300): FAIL errors=48 (serial mismatches) -- expected FAIL, witness m4/bench.log
+bench.sh exit 0: PG982_EXISTING_M0_M4_EXPECTATIONS_MET
+Run root: ot-epyc5:/srv/opentallas-scratch/claude/codex-hbm-pgrg982-qual-1021/proof982 (collected by HBM-OWN/PHY-PG 2026-10-21 12:3x)

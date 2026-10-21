@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       admits   780 GB (avail 659, growth 113, headroom 0, waiters 0/0 GB) load 58/128 running 29 disk 2079 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pgrg982-qual-1021/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pgrg982-qual-1021/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pgrg982-qual-1021/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pgrg982-qual-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-pgrg982-qual-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-pgrg982-qual-1021/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3495190-1792609227 after 0 s
+PG982_EXISTING_M0_M4_EXPECTATIONS_MET
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3495190-1792609227): exit 0
