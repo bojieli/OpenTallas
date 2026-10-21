@@ -135,6 +135,11 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  end
  wire fire=k_v&&k_ready;
  wire [3:0] seen_ret=seen_r|(4'b1<<kr_beat);
+ wire[3:0] response_take_local;
+ genvar rt;
+ generate for(rt=0;rt<4;rt=rt+1)begin:response_local
+  ot_hbm_svc_local_and2 u_buf(.a(response_take),.b(1'b1),.y(response_take_local[rt]));
+ end endgenerate
  wire ret_done=response_take&&seen_ret==mask_for(length_r);
  // next valid (allocate at fire, free at the last beat)
  reg [ENTRIES-1:0] valid_n;integer e;
@@ -175,7 +180,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
     length_q[e]<=length_local[e/8];
     seen_q[e]<=0;permuted_q[e]<=length_local[e/8][2];row_low_q[e]<=row_local[e/8];
    end
-   else if(response_take&&ret==e)seen_q[e]<=seen_q[e]|(4'b1<<kr_beat);
+   else if(response_take_local[e/8]&&ret==e)seen_q[e]<=seen_q[e]|(4'b1<<kr_beat);
   end
  end
 endmodule

@@ -116,26 +116,44 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
                 {3'b0,desc_data[A0+29:A0]}+desc_data[T0+11:T0]<=33'h040000000;
  // block-field captures: while no block issues AND the descriptor FIFO head is valid (storage read only under
  // rd_valid); one AND per <= 32-bit slice, each with its own KEPT idle copy
- wire[3:0]hcap=hidle_k&{4{desc_rd_valid}};
+ // Real library gates split each capture hold-mux fanout into <=10-bit groups.
+ wire[10:0]hcap;
+ genvar ch;
+ generate for(ch=0;ch<11;ch=ch+1)begin:cap_local
+  localparam integer IDLE=(ch<2)?0:(ch<5)?1:(ch<9)?2:3;
+  ot_hbm_svc_local_and2 u_gate(.a(hidle_k[IDLE]),.b(desc_rd_valid),.y(hcap[ch]));
+ end endgenerate
  always @(posedge hbm_clk)begin
-  if(hcap[0])h_pcs<=desc_data[P0+19:P0];
-  if(hcap[1])h_base<=desc_data[A0+29:A0];
-  if(hcap[2])begin h_row_base<=desc_data[R0+14:R0];h_total<=desc_data[T0+11:T0];end
-  if(hcap[3])begin h_bank<=desc_data[T0-1:16];h_epoch<=desc_data[15:0];end
+  if(hcap[0])h_pcs[9:0]<=desc_data[P0+:10];
+  if(hcap[1])h_pcs[19:10]<=desc_data[P0+10+:10];
+  if(hcap[2])h_base[9:0]<=desc_data[A0+:10];
+  if(hcap[3])h_base[19:10]<=desc_data[A0+10+:10];
+  if(hcap[4])h_base[29:20]<=desc_data[A0+20+:10];
+  if(hcap[5])h_row_base[9:0]<=desc_data[R0+:10];
+  if(hcap[6])h_row_base[14:10]<=desc_data[R0+10+:5];
+  if(hcap[7])h_total[9:0]<=desc_data[T0+:10];
+  if(hcap[8])h_total[11:10]<=desc_data[T0+10+:2];
+  if(hcap[9])begin h_bank<=desc_data[T0-1:16];h_epoch[7:0]<=desc_data[7:0];end
+  if(hcap[10])h_epoch[15:8]<=desc_data[15:8];
  end
  wire [7:0] fifo_wr_ready,fifo_ov;wire [7:0] fifo_wr_valid;wire [IW-1:0] fifo_wr_data[0:7];
  wire [3:0] ri_v,ri_r,ko_v,ko_r;wire [67:0] ri_tag,ko_tag;wire [15:0] ri_beat,ko_len;wire [1023:0] ri_data;wire [119:0] ko_addr;
  wire [3:0] lane_bad;
+ wire [3:0] ri_owner,ri_pop,ri_feed,ri_count;
  genvar pc,g;
  generate for(pc=0;pc<4;pc=pc+1)begin:pc_owner
   wire[3:0]pr;
+  ot_hbm_svc_local_and2 u_ownbuf(.a(ri_r[pc]),.b(1'b1),.y(ri_owner[pc]));
+  ot_hbm_svc_local_and2 u_popbuf(.a(ri_r[pc]),.b(1'b1),.y(ri_pop[pc]));
+  ot_hbm_svc_local_and2 u_feedbuf(.a(ri_r[pc]),.b(1'b1),.y(ri_feed[pc]));
+  ot_hbm_svc_local_and2 u_countbuf(.a(ri_r[pc]),.b(1'b1),.y(ri_count[pc]));
   ot_rst_fanout #(.N(4)) u_pr(.clk(hbm_clk),.rst_n_in(h_rst[2+pc]),.rst_n(pr));
   ot_hbm_svc_prefetch_owner_rel_h #(.OWNER_AW(OWNER_AW),.LB(LB)) u_owner(
    .pc_id({id_sm,2'(pc)}),.clk(hbm_clk),.rst_n(pr[2:0]),.blk_start(h_fresh),
    .block_active(h_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base(h_row_base),.block_total(h_total),
    .block_bank(h_bank),.block_epoch(h_epoch),.stop(hbm_fault),
    .k_ready(ko_r[pc]),.kr_v(ri_v[pc]),.kr_tag(ri_tag[17*pc+:17]),
-   .kr_beat(ri_beat[4*pc+:4]),.response_take(ri_r[pc]),
+   .kr_beat(ri_beat[4*pc+:4]),.response_take(ri_owner[pc]),
    .k_v(ko_v[pc]),.k_addr(ko_addr[30*pc+:30]),.k_len(ko_len[4*pc+:4]),.k_tag(ko_tag[17*pc+:17]),
    .response_ok(response_ok[pc]),.response_ordinal(response_ordinal[pc]),
    .response_epoch(response_epoch[pc]),.response_bank(response_bank[pc]),.fault(pc_fault[pc]),.issue_done(issue_done[pc]));
@@ -143,21 +161,21 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
    .in_data({ko_tag[17*pc+:17],ko_len[4*pc+:4],ko_addr[30*pc+:30]}),.out_v(k_v[pc]),.out_r(k_rdy[pc]),
    .out_data({k_tag[17*pc+:17],k_len[4*pc+:4],k_addr[30*pc+:30]}));
   ot_hbm_svc_pin_skid2_r32 #(.WIDTH(277)) u_kr(.clk(hbm_clk),.rst_n(pr[3]),.in_v(kr_v[pc]),.in_r(kr_rdy[pc]),
-   .in_data({kr_data[256*pc+:256],kr_beat[4*pc+:4],kr_tag[17*pc+:17]}),.out_v(ri_v[pc]),.out_r(ri_r[pc]),
+   .in_data({kr_data[256*pc+:256],kr_beat[4*pc+:4],kr_tag[17*pc+:17]}),.out_v(ri_v[pc]),.out_r(ri_pop[pc]),
    .out_data({ri_data[256*pc+:256],ri_beat[4*pc+:4],ri_tag[17*pc+:17]}));
   // PC pc feeds landing FIFOs pc (ordinal[2]=0) and pc+4 (ordinal[2]=1) only
   assign lane_bad[pc]=response_ok[pc]&&response_ordinal[pc][1:0]!=2'(pc);
   assign ri_r[pc]=response_ok[pc]&&!lane_bad[pc]&&fifo_wr_ready[{response_ordinal[pc][2],2'(pc)}];
  end endgenerate
  generate for(g=0;g<8;g=g+1)begin:ffeed
-  assign fifo_wr_valid[g]=ri_r[g%4]&&response_ordinal[g%4][2]==(g/4);
+  assign fifo_wr_valid[g]=ri_feed[g%4]&&response_ordinal[g%4][2]==(g/4);
   assign fifo_wr_data[g]={response_ordinal[g%4],response_bank[g%4],response_epoch[g%4],ri_data[256*(g%4)+:256]};
  end endgenerate
  integer h_take_b[0:LBANKS-1];integer tp;
  always @*begin
   for(rb=0;rb<LBANKS;rb=rb+1)begin
    h_take_b[rb]=0;
-   for(tp=0;tp<4;tp=tp+1)if(ri_r[tp]&&response_bank[tp]==rb)h_take_b[rb]=h_take_b[rb]+1;
+   for(tp=0;tp<4;tp=tp+1)if(ri_count[tp]&&response_bank[tp]==rb)h_take_b[rb]=h_take_b[rb]+1;
   end
  end
  // hc[0]: h_active, h_fresh, hbm_fault, hidle copies (7); hc[1] / hc[2]: rx_left of landing blocks 0-1 / 2-3 (24 each)
