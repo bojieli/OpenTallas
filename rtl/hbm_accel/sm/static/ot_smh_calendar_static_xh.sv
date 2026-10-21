@@ -68,6 +68,11 @@ module ot_smh_calendar_static_xh #(
     (* keep="true",dont_touch="true" *) reg [NCS:0] wok_k;       // = word_ok of `captured` (registered one edge early)
     (* keep="true",dont_touch="true" *) reg [NVK-1:0] v1_k;      // = valid1
     wire busy=running|valid0|valid1;
+    // round 3: next running and KEPT !busy copies; the start fields load while the leaf is idle (an accepted start is an
+    // idle edge; every field is read only while running / with a valid word), no 144-flop start-accept enable net
+    wire start_ok=start_v_q && !(busy || cfg_we_q || !legal_start);
+    wire running_n=start_ok ? 1'b1 : ((running && {1'b0,pc}+1'b1==limit && (loops_left==1 || MUT==2)) ? 1'b0 : running);
+    (* keep="true",dont_touch="true" *) reg [5:0] idle_k;
     wire legal_start=start_limit_q>{1'b0,start_base_q} && start_limit_q<=(1<<AW) && start_loops_q!=0;
     wire final_issue=({1'b0,pc}+1'b1==limit) && loops_left==1;
     wire [255:0] idmask=256'((1<<AW)-1)<<224;
@@ -104,11 +109,11 @@ module ot_smh_calendar_static_xh #(
         for(cb=0;cb<W;cb=cb+1)calendar[cb]<=v1_k[cb/32]&&wok_k[cb/32]&&captured[cb];
         for(cb=0;cb<XW;cb=cb+1)calendar_ctx[cb]<=v1_k[NCS+cb/32]&&ctx1[cb];
         ordinal<=ord1;
-        if(start_v_q && !(busy || cfg_we_q || !legal_start))begin
-            pc<=start_base_q;base<=start_base_q;limit<=start_limit_q;
-            loops_left<=start_loops_q;issued<=0;iter_r<=0;
-            if(MUT!=3)ctx_r<=start_ctx_q;
-        end
+        if(idle_k[0])begin pc<=start_base_q;base<=start_base_q;end
+        if(idle_k[1])begin limit<=start_limit_q;loops_left<=start_loops_q;end
+        if(idle_k[2])issued<=0;
+        if(idle_k[3])iter_r<=0;
+        if(MUT!=3)for(cb=0;cb<XW;cb=cb+1)if(idle_k[4+cb/((XW+1)/2)])ctx_r[cb]<=start_ctx_q[cb];
         if(running)begin
             issued<=issued+1;
             if({1'b0,pc}+1'b1==limit)begin
@@ -142,6 +147,7 @@ module ot_smh_calendar_static_xh #(
             end
         end
     always @(posedge clk or negedge rst_n[1])
-        if(!rst_n[1])v1_k<=0;else v1_k<={NVK{valid0}};
+        if(!rst_n[1])begin v1_k<=0;idle_k<=6'h3f;end
+        else begin v1_k<={NVK{valid0}};idle_k<={6{!(running_n|running|valid0)}};end
 endmodule
 `default_nettype wire

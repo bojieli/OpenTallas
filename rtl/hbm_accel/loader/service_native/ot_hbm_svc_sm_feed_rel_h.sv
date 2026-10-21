@@ -45,9 +45,13 @@ module ot_hbm_svc_sm_feed_rel_h #(
  wire reserve_fire=reserve_v&&reserve_ready;
  reg[6:0]rows_q[0:LBANKS-1];reg[9:0]tag_q[0:LBANKS-1];reg open_q;reg[LB-1:0]open_land_q;reg[15:0]open_epoch_q;integer qb;
  wire open_bank_q=open_land_q[0];
+ (* keep="true",dont_touch="true" *) reg[LBANKS-1:0]olsel;   // one-hot open_land_q (rows / tag select)
+ reg[6:0]open_rows;reg[9:0]open_tag;
+ always @*begin open_rows=0;open_tag=0;for(qb=0;qb<LBANKS;qb=qb+1)if(olsel[qb])begin open_rows=open_rows|rows_q[qb];open_tag=open_tag|tag_q[qb];end end
  always @(posedge stream_clk)begin
   for(qb=0;qb<LBANKS;qb=qb+1)if(reserve_fire&&reserve_bank==qb)begin rows_q[qb]<=reserve_rows;tag_q[qb]<=reserve_tag_base;end
   open_land_q<=start_bank;open_epoch_q<=start_epoch;
+  for(qb=0;qb<LBANKS;qb=qb+1)olsel[qb]<=start_bank==qb;
  end
  wire out_v,out_last;wire[LB-1:0]out_bank;wire[3:0]out_mask;wire[1023:0]out_data;wire[10:0]out_ordinal;wire[15:0]out_epoch;
  ot_hbm_svc_sm4pc_cdc_rel_h #(.LBANKS(LBANKS)) producer(
@@ -115,7 +119,7 @@ module ot_hbm_svc_sm_feed_rel_h #(
  end
  assign sm_command=programme[82:0];
  ot_hbm_svc_static_sm_packed136_h rows(
-  .clk(stream_clk),.rst_n(st_rst[3]),.open_v(open_q),.open_bank(open_bank_q),.open_epoch(open_epoch_q),.open_count(rows_q[open_land_q]),.open_tag_base(tag_q[open_land_q]),
+  .clk(stream_clk),.rst_n(st_rst[3]),.open_v(open_q),.open_bank(open_bank_q),.open_epoch(open_epoch_q),.open_count(open_rows),.open_tag_base(open_tag),
   .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
   .read_v(programme_v_q&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
   .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),

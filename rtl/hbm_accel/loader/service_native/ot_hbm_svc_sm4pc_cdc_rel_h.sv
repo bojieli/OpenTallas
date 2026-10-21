@@ -105,7 +105,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  end
  wire [7:0] fifo_wr_ready,fifo_ov;wire [7:0] fifo_wr_valid;wire [IW-1:0] fifo_wr_data[0:7];
  wire [3:0] ri_v,ri_r,ko_v,ko_r;wire [67:0] ri_tag,ko_tag;wire [15:0] ri_beat,ko_len;wire [1023:0] ri_data;wire [119:0] ko_addr;
- wire [3:0] lane_bad;
+ wire [3:0] lane_bad;wire [255:0] ri_oh;   // per PC {copy B, copy A} one-hot of the response tag [4:0]
  genvar pc,g;
  generate for(pc=0;pc<4;pc=pc+1)begin:pc_owner
   wire[3:0]pr;
@@ -115,16 +115,17 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
    .block_active(h_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base(h_row_base),.block_total(h_total),
    .block_bank(h_bank),.block_epoch(h_epoch),.stop(hbm_fault),
    .k_ready(ko_r[pc]),.kr_v(ri_v[pc]),.kr_tag(ri_tag[17*pc+:17]),
-   .kr_beat(ri_beat[4*pc+:4]),.response_take(ri_r[pc]),
+   .kr_ret_oh(ri_oh[64*pc+:64]),.kr_beat(ri_beat[4*pc+:4]),.response_take(ri_r[pc]),
    .k_v(ko_v[pc]),.k_addr(ko_addr[30*pc+:30]),.k_len(ko_len[4*pc+:4]),.k_tag(ko_tag[17*pc+:17]),
    .response_ok(response_ok[pc]),.response_ordinal(response_ordinal[pc]),
    .response_epoch(response_epoch[pc]),.response_bank(response_bank[pc]),.fault(pc_fault[pc]),.issue_done(issue_done[pc]));
-  ot_hbm_svc_pin_skid2_r32 #(.WIDTH(51)) u_kq(.clk(hbm_clk),.rst_n(pr[3]),.in_v(ko_v[pc]),.in_r(ko_r[pc]),
+  ot_hbm_svc_pin_skid2_r32 #(.WIDTH(51),.RW(16)) u_kq(.clk(hbm_clk),.rst_n(pr[3]),.in_v(ko_v[pc]),.in_r(ko_r[pc]),
    .in_data({ko_tag[17*pc+:17],ko_len[4*pc+:4],ko_addr[30*pc+:30]}),.out_v(k_v[pc]),.out_r(k_rdy[pc]),
    .out_data({k_tag[17*pc+:17],k_len[4*pc+:4],k_addr[30*pc+:30]}));
-  ot_hbm_svc_pin_skid2_r32 #(.WIDTH(277)) u_kr(.clk(hbm_clk),.rst_n(pr[3]),.in_v(kr_v[pc]),.in_r(kr_rdy[pc]),
-   .in_data({kr_data[256*pc+:256],kr_beat[4*pc+:4],kr_tag[17*pc+:17]}),.out_v(ri_v[pc]),.out_r(ri_r[pc]),
-   .out_data({ri_data[256*pc+:256],ri_beat[4*pc+:4],ri_tag[17*pc+:17]}));
+  wire [31:0] kr_oh=32'd1<<kr_tag[17*pc+:5];
+  ot_hbm_svc_pin_skid2_r32 #(.WIDTH(341),.RW(16)) u_kr(.clk(hbm_clk),.rst_n(pr[3]),.in_v(kr_v[pc]),.in_r(kr_rdy[pc]),
+   .in_data({kr_oh,kr_oh,kr_data[256*pc+:256],kr_beat[4*pc+:4],kr_tag[17*pc+:17]}),.out_v(ri_v[pc]),.out_r(ri_r[pc]),
+   .out_data({ri_oh[64*pc+:64],ri_data[256*pc+:256],ri_beat[4*pc+:4],ri_tag[17*pc+:17]}));
   // PC pc feeds landing FIFOs pc (ordinal[2]=0) and pc+4 (ordinal[2]=1) only
   assign lane_bad[pc]=response_ok[pc]&&response_ordinal[pc][1:0]!=2'(pc);
   assign ri_r[pc]=response_ok[pc]&&!lane_bad[pc]&&fifo_wr_ready[{response_ordinal[pc][2],2'(pc)}];
@@ -172,15 +173,29 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  reg draining;reg [LB-1:0] drain_bank;reg [10:0] drain_ordinal;reg [2:0] drain_phase;
  wire [2:0] drain_count=drain_phase==4?3'd1:3'd4;
  wire [255:0] macro_data[0:7];
- wire [11:0] drain_total=bank_total[drain_bank];
+ // round 3: next drain bank / ordinal / allocation (as the control block below) and KEPT copies of them (no reset: pure
+ // functions of the reset control state, updated every edge): ordinal per bank pair, bank one-hot per field, !allocated
+ reg [LBANKS-1:0] alloc_n;reg [LB-1:0] dbank_n;reg [10:0] dord_n;
+ (* keep="true",dont_touch="true" *) reg [43:0] dord_k;          // 4 copies of drain_ordinal (banks 2c, 2c+1)
+ (* keep="true",dont_touch="true" *) reg [LBANKS-1:0] dsel_t,dsel_e;   // one-hot drain_bank: total / epoch selects
+ (* keep="true",dont_touch="true" *) reg [2*LBANKS-1:0] unal_k;   // [b*2+c] = !allocated[b]: c0 epoch/total, c1 completion init
+ reg [11:0] drain_total;reg [15:0] drain_epoch;integer di;
+ always @*begin
+  drain_total=0;drain_epoch=0;
+  for(di=0;di<LBANKS;di=di+1)begin
+   if(dsel_t[di])drain_total=drain_total|bank_total[di];
+   if(dsel_e[di])drain_epoch=drain_epoch|bank_epoch[di];
+  end
+ end
  generate for(g=0;g<8;g=g+1)begin:ordinal_bank
-  wire [11:0] candidate={3'b0,drain_ordinal[8:3],3'(g)}+((g<drain_ordinal[2:0])?12'd8:12'd0);
+  wire [10:0] dord=dord_k[11*(g/2)+:11];
+  wire [11:0] candidate={3'b0,dord[8:3],3'(g)}+((g<dord[2:0])?12'd8:12'd0);
   ot_hbm_svc_sm8_landing_bank_h #(.BANK(g),.RESPONSE_DEPTH(RESPONSE_DEPTH),.LBANKS(LBANKS)) u_bank(
    .hbm_clk(hbm_clk),.hbm_rst_n(h_rst[6+g]),.stream_clk(stream_clk),.stream_rst_n(s_rst[4+g]),
    .in_v(fifo_wr_valid[g]),.in_ready(fifo_wr_ready[g]),.in_data(fifo_wr_data[g]),.overflow(fifo_ov[g]),
    .reserve_v(rsv_v_k[g]),.reserve_bank(rsv_bank_k[g]),.reserve_epoch(rsv_epoch_k[g]),.reserve_total(rsv_total_k[g]),.stop(fault),
    .complete_v(bank_complete[g]),.complete_bank(bank_complete_bank[g]),.fault(bank_fault[g]),
-   .read_v(draining&&candidate<drain_ordinal+drain_count&&candidate<drain_total),.read_bank(drain_bank),.read_row(candidate[8:3]),.read_data(macro_data[g]));
+   .read_v(draining&&candidate<dord+drain_count&&candidate<drain_total),.read_bank(drain_bank),.read_row(candidate[8:3]),.read_data(macro_data[g]));
  end endgenerate
  integer ci;
  always @*begin
@@ -204,18 +219,31 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  // stream datapath: bank fields load while the landing block is unallocated (read only while allocated)
  integer si,sb;
  always @(posedge stream_clk)begin
-  for(sb=0;sb<LBANKS;sb=sb+1)if(!allocated[sb])begin
+  for(sb=0;sb<LBANKS;sb=sb+1)if(unal_k[sb*2])begin
    bank_epoch[sb]<=reserve_epoch;bank_total[sb]<=reserve_total;
   end
-  if(draining&&!fault)begin out_bank<=drain_bank;out_epoch<=bank_epoch[drain_bank];out_ordinal<=drain_ordinal;end
+  if(draining&&!fault)begin out_bank<=drain_bank;out_epoch<=drain_epoch;out_ordinal<=drain_ordinal;end
  end
  // sc[1]: completion masks (32)
  always @(posedge stream_clk or negedge sc[1])begin
   if(!sc[1])for(sb=0;sb<LBANKS;sb=sb+1)completed_q[sb]<=0;
   else for(sb=0;sb<LBANKS;sb=sb+1)begin
-   if(!allocated[sb])for(si=0;si<8;si=si+1)completed_q[sb][si]<=reserve_total<=si;
+   if(unal_k[sb*2+1])for(si=0;si<8;si=si+1)completed_q[sb][si]<=reserve_total<=si;
    else if(|complete_event[sb])completed_q[sb]<=completed_q[sb]|complete_event[sb];
   end
+ end
+ always @*begin
+  alloc_n=allocated;dbank_n=drain_bank;dord_n=drain_ordinal;
+  if(reserve_v&&reserve_ready&&descriptor_ok)alloc_n[reserve_bank]=1;
+  if(start_v&&!(draining||!ready_q[start_bank]||start_epoch!=bank_epoch[start_bank]||fault))begin dbank_n=start_bank;dord_n=0;end
+  if(draining&&!fault)begin
+   if(drain_ordinal+drain_count>=drain_total)alloc_n[drain_bank]=0;
+   else dord_n=drain_ordinal+drain_count;
+  end
+ end
+ always @(posedge stream_clk)begin
+  dord_k<={4{dord_n}};
+  for(di=0;di<LBANKS;di=di+1)begin dsel_t[di]<=dbank_n==di;dsel_e[di]<=dbank_n==di;unal_k[di*2]<=!alloc_n[di];unal_k[di*2+1]<=!alloc_n[di];end
  end
  // sc[0]: control (32 flops)
  always @(posedge stream_clk or negedge sc[0])begin

@@ -187,11 +187,16 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  wire[23:0]p_id_d=24'(a_id)*24'(a[172:158]);
  wire[142:0]st_d={p[142:47],s_blk[17:3],p[31:10],s_blk[2:0],p[6:0]};
  wire[QW-1:0]s_ent_d={p[199],p[196:195],p[194:191],p[188:177],p[81:72],p[142:119],p[118:103],p[190],p[102:92],p[189],p[91:82],p[64:49],p[47+:LB]};
+ (* keep="true",dont_touch="true" *) reg[2:0]iq_k;
+ always @(posedge clk or negedge rst_n[2])if(!rst_n[2])iq_k<=0;else iq_k<=3'b111;
+ wire[2:0]ids_cap=iq_k&{3{ids_v}};
  integer ab;
  always @(posedge clk)begin
   // same statement order as ot_hbm_svc_sm_issuer_rel (last assignment wins)
   if(run_ok)begin rp<=run_base;n_rd<=run_count;n_go<=run_count;rc<=0;layer_q<=run_layer;end
-  if(ids_ok)begin ids_layer_q<=ids_layer;ids_q<=ids;end
+  // round 3: ids capture on ids_v through per-slice ANDs with KEPT qualifier flops (a rejected ids_v is a sticky fault)
+  if(ids_cap[0])ids_layer_q<=ids_layer;
+  for(ab=0;ab<IDW*NID;ab=ab+1)if(ids_cap[1+ab/32])ids_q[ab]<=ids[ab];
   rp_q<=rp;rsel_k<={NRS{rp[DAW-1]}};
   if(running&&!run_v)rc<=rc+24'd1;
   if(rd_go)begin rp<=rp+1'b1;n_rd<=n_rd-1'b1;end
