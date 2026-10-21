@@ -249,8 +249,15 @@ module ot_hbm_hc_qcen_static #(
         wire [4*32-1:0] ty; wire [3:0] tv;
         for (genvar c = 0; c < 4; c = c + 1) begin : g_qt
             wire [14:0] snv; wire [29:0] se;
+            // hard child: synthesis (the hub kit, hard_define SYNTHESIS) binds the hardened view with NO overrides
+            // (defaults TLA 7 / MUT 0 = the closed tree16 config; TLA 7 is asserted above); simulation keeps the mutant knob.
+`ifndef SYNTHESIS
             ot_hbm_hc_qtree16_static #(.TLA(TLA), .MUT((MUT == 4) ? 4 : 0)) u_t (.clk(clk_t[c]), .rst_n(rcn_t[c]),
                 .v_i(vl[VD-2]), .s_in(s_i[c*512 +: 512]), .y(ty[c*32 +: 32]), .v(tv[c]), .nv_o(snv), .e_o(se));
+`else
+            ot_hbm_hc_qtree16_static u_t (.clk(clk_t[c]), .rst_n(rcn_t[c]),
+                .v_i(vl[VD-2]), .s_in(s_i[c*512 +: 512]), .y(ty[c*32 +: 32]), .v(tv[c]), .nv_o(snv), .e_o(se));
+`endif
             // slice node j (level l = 1..4) = centre node OFF(l) + (N(l) * c) + (j - SOFF(l))
             for (genvar j = 0; j < 15; j = j + 1) begin : g_m
                 localparam integer L = (j < 8) ? 1 : (j < 12) ? 2 : (j < 14) ? 3 : 4;
