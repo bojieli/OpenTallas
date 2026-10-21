@@ -1,0 +1,296 @@
+{
+  "scope": "PRIVATE source-derived fullsix CAP lowering; consumer retirement/deadline OPEN",
+  "full_stage_qualified": false,
+  "model_faults": [],
+  "predicted_CW_words": 512,
+  "calibrated_frame_offsets": {
+    "L01": 1434,
+    "L02": 1430,
+    "L03": 1436,
+    "R01": 1434,
+    "R02": 1430,
+    "R03": 1436
+  },
+  "selected_CAP_delays": {
+    "L01": 0,
+    "L02": 0,
+    "L03": 0,
+    "R01": 16,
+    "R02": 24,
+    "R03": 24
+  },
+  "actual_row_flags_rule": "cfg7 per-frame launch counter (phase+1) mod4; distinct from XS tag0/2",
+  "descriptors": [
+    {
+      "phase": 0,
+      "earliest_CAP_pin_word": 1779,
+      "first_FIN_edge": 1819,
+      "xr_ctl_pin_edge": 1816,
+      "body": "00000000000000000000000000678b0010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 22528,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 1,
+      "earliest_CAP_pin_word": 1905,
+      "first_FIN_edge": 1945,
+      "xr_ctl_pin_edge": 1942,
+      "body": "0000000000000000000000000067930010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 38912,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 2,
+      "earliest_CAP_pin_word": 2031,
+      "first_FIN_edge": 2071,
+      "xr_ctl_pin_edge": 2068,
+      "body": "00000000000000000000000000679b0010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 55296,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 3,
+      "earliest_CAP_pin_word": 2157,
+      "first_FIN_edge": 2197,
+      "xr_ctl_pin_edge": 2194,
+      "body": "0000000000000000000000000067830010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 6144,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 4,
+      "earliest_CAP_pin_word": 2283,
+      "first_FIN_edge": 2323,
+      "xr_ctl_pin_edge": 2320,
+      "body": "00000000000000000000000000678b0010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 22528,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 5,
+      "earliest_CAP_pin_word": 2409,
+      "first_FIN_edge": 2449,
+      "xr_ctl_pin_edge": 2446,
+      "body": "0000000000000000000000000067930010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 38912,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 6,
+      "earliest_CAP_pin_word": 2535,
+      "first_FIN_edge": 2575,
+      "xr_ctl_pin_edge": 2572,
+      "body": "00000000000000000000000000679b0010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 55296,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 7,
+      "earliest_CAP_pin_word": 2661,
+      "first_FIN_edge": 2701,
+      "xr_ctl_pin_edge": 2698,
+      "body": "0000000000000000000000000067830010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 6144,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 8,
+      "earliest_CAP_pin_word": 2787,
+      "first_FIN_edge": 2827,
+      "xr_ctl_pin_edge": 2824,
+      "body": "00000000000000000000000000678b0010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 22528,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 9,
+      "earliest_CAP_pin_word": 2913,
+      "first_FIN_edge": 2953,
+      "xr_ctl_pin_edge": 2950,
+      "body": "0000000000000000000000000067930010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 38912,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 10,
+      "earliest_CAP_pin_word": 3039,
+      "first_FIN_edge": 3079,
+      "xr_ctl_pin_edge": 3076,
+      "body": "00000000000000000000000000679b0010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 55296,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 11,
+      "earliest_CAP_pin_word": 3165,
+      "first_FIN_edge": 3205,
+      "xr_ctl_pin_edge": 3202,
+      "body": "0000000000000000000000000067830010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 6144,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 12,
+      "earliest_CAP_pin_word": 3291,
+      "first_FIN_edge": 3331,
+      "xr_ctl_pin_edge": 3328,
+      "body": "00000000000000000000000000678b0010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 22528,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 13,
+      "earliest_CAP_pin_word": 3417,
+      "first_FIN_edge": 3457,
+      "xr_ctl_pin_edge": 3454,
+      "body": "0000000000000000000000000067930010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 38912,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    },
+    {
+      "phase": 14,
+      "earliest_CAP_pin_word": 3548,
+      "first_FIN_edge": 3588,
+      "xr_ctl_pin_edge": 3585,
+      "body": "00000000000000000000000000679b0010000000",
+      "cfg": {
+        "obase": 0,
+        "ops": 0,
+        "np": 0,
+        "fmt": 2,
+        "rbase": 55296,
+        "rcnt": 828,
+        "rsplit": 0,
+        "lo32": 0,
+        "hi32": 0
+      }
+    }
+  ],
+  "model_contract_sha256": "0c7f33b5cbea66d9d14c0b5259ed5be17489747340cea0fae480d02f53582ee1"
+}

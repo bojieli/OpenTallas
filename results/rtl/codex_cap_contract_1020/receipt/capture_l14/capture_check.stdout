@@ -1,0 +1,24 @@
+{
+  "scope": "CAP/CW/VP component only; consumer read/retirement/deadline proof OPEN",
+  "full_stage_qualified": false,
+  "component_capture_PASS": true,
+  "fixture": "/srv/opentallas-scratch/claude/toksim-s81d-wqbp/fixtures/L14",
+  "fixture_meta_sha256": "21e4630930eb54a6928f5142ed2087fb25a2a25e2256d68c712659b691c86056",
+  "expected_rows": 512,
+  "cw_words": 512,
+  "vp_words": 512,
+  "missing": [],
+  "extra": [],
+  "duplicates": [],
+  "bad_values": [],
+  "missing_commits": [],
+  "extra_commits": [],
+  "fault_observations": 0,
+  "source_assertions": [
+    "RETAINED_CONTROL_MISMATCH gos15 ends1 gws1 macwrites40 lastcommit1260",
+    "FULLSIX_SOURCE_CHECK errors=3 rawwrites=320 gathers=20 epochs=15",
+    "FULLSIX_PREPARATORY_TRACE_END CAPfault=0 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL"
+  ],
+  "terminal_receipt_PASS": true,
+  "simulator_exit": 1
+}

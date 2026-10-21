@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-epyc9       admits    75 GB (avail 227, growth 175, headroom 0, waiters 0/0 GB) load 55/128 running 33 disk 152 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-cap-contract-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-536150-1792486016 after 0 s
+{
+  "scope": "Frozen compiler return plan + calibrated frame offsets + unchanged CAP model; consumer OPEN",
+  "source_plan_frame_PASS": true,
+  "source_plan_frame_words": 625,
+  "cfg_program_PIN_PASS": true,
+  "cfg_words": 15,
+  "model_capture_PASS": true,
+  "model_faults": [],
+  "expected_cw_words": 512,
+  "actual_cw_words": 512,
+  "frame_missing": [],
+  "frame_extra": [],
+  "cw_missing": [],
+  "cw_extra": [],
+  "full_stage_qualified": false
+}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-536150-1792486016): exit 0
