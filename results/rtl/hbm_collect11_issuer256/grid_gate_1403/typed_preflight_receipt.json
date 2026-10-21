@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.issuer_metadata_preflight_receipt.v1",
+ "source_commit": "bf2c4863a",
+ "classification_inputs_commit": "9d06896b6",
+ "published_classifier_commit": "1a872af33c8d10d8123f8d4c69198e09cc04fd43",
+ "typed_validator": {
+  "grid": [],
+  "gridb": []
+ },
+ "normal_submit_exact_dryrun": {
+  "grid": {
+   "rc": 0,
+   "would_submit": "hcoll_issuer_r256v8_grid-grid-bf2c4863a"
+  },
+  "gridb": {
+   "rc": 0,
+   "would_submit": "hcoll_issuer_r256v8_gridb-gridb-bf2c4863a",
+   "stdout": "/home/ubuntu/scratch/codex-issuer-typed-1545/gridb.submit_exact.dryrun.log"
+  }
+ },
+ "actual_submit": false,
+ "publisher": "ROOT integration",
+ "remote_archive_verified": false,
+ "scope": "metadata classification only; original physical FAIL and archive identity preserved"
+}

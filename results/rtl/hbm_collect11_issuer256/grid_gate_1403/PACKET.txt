@@ -13,3 +13,5 @@ physical/ref_tile/hcoll_issuer_r256v8_gridb/gate_layout/floorplan.png sha256 193
 physical/ref_tile/hcoll_issuer_r256v8_gridb/gate_layout/density.png sha256 11a80c1569069b0c05240fdb97896c9dc4b7e7dc5a47ddfa08b016a3be7ce387
 grid exact geometry_sha256 35abe916ded48c6af303d5549dbc0d949e6e5dc9b81650d267b45be189b1658f
 gridb exact geometry_sha256 0979d6233628c9ecfdf73e9b445854c66792a8e2c144416a909088e1020df201
+
+[CODEX15:53] Superseding typed provenance packet: frozen9d06896b6, outputsbf2c4863a, published1a872af33 all23 actual classifier module hashes exact. NEW committed typed_classification/{grid,gridb}/classification_inputs.tar.gz + execution.json; actual canonical replay WARN/noFAIL, typedvalidator[] both, normal submit_exact dryrunsrc0 both. Original physical FAIL/rawlog/binding/manifest preserved; new remote_archive_verifiedFalse. Only fill_reason.pin_bound physical-spec delta. Prior b4/188/2ba packets historical, no physical execution/re-gate. Rootintegration exclusive publisher owns actual submissions after review.
