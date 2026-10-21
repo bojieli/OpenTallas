@@ -19,7 +19,9 @@ ROOT = Path(__file__).resolve().parents[2]
 # HBM-CHAIN3 10-18: ot-epyc5 added -- push_prefer scp'd the prefer list only to the hosts named here, so a retry admitted
 # on ot-epyc5 died FILELIST_FAIL (GEN2 S2: ot_hbm_idx_query_static, ot_hgi_coll_gq_issue)
 # LH-GEN2E 10-19: ot-epyc6 (GEN2e2 data host) added so push_prefer reaches it
-HOSTS = {'regular-crane': 'ot-epyc4', 'vm-xry57mhfyn': 'ot-agidock128', 'ot-pve1': 'ot-pve1', 'ot-epyc5': 'ot-epyc5', 'ot-epyc6': 'ot-epyc6'}
+# HBM-SYNTHSPREAD 10-20: ot-epyc7/9 added (the chain stages src there; a retry placed there needs the prefer list)
+HOSTS = {'regular-crane': 'ot-epyc4', 'vm-xry57mhfyn': 'ot-agidock128', 'ot-pve1': 'ot-pve1', 'ot-epyc5': 'ot-epyc5', 'ot-epyc6': 'ot-epyc6',
+         'ot-epyc7': 'ot-epyc7', 'ot-epyc9': 'ot-epyc9'}
 PREFER = {'ot_hbm_lk_ep': ['rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv',
                            'rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_cl.sv',
                            'rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram_dp.sv'],
@@ -80,8 +82,8 @@ def run(cell, row, a, idx, lock, summary):
             return ''
         pf = f'v16w/prefer_{cell}.txt'
         (Path(a.views) / 'wrap' / f'prefer_{cell}.txt').write_text('\n'.join(prefs) + '\n')
-        for h in HOSTS.values():
-            subprocess.run(['scp', '-q', str(Path(a.views) / 'wrap' / f'prefer_{cell}.txt'), f'{h}:{S}/{pf}'])
+        for h in sorted(set(HOSTS.values()) - {'ot-epyc4'}):   # ot-epyc4 drained; scp to it only stalls
+            subprocess.run(['scp', '-q', '-o', 'ConnectTimeout=8', str(Path(a.views) / 'wrap' / f'prefer_{cell}.txt'), f'{h}:{S}/{pf}'])
         return f' --prefer {pf}'
     for k in range(8):
         prefer = push_prefer()
@@ -92,7 +94,9 @@ def run(cell, row, a, idx, lock, summary):
         log = drive / f'{cell}.r{k}.log'
         with open(log, 'w') as f:
             rc = subprocess.run(['python3', '/home/ubuntu/bin/ot-run', '--mem', str(mem), '--threads', '4', '--dir', S,
-                                 '--priority', 'die', '--', 'bash', '-c', cmd],
+                                 # HBM-SYNTHSPREAD 10-20: no --priority die -- a per-cell synth is tile-sized work; the die
+                                 # tag made ot-run skip the throughput hosts ot-epyc7/9, so r11 S6 queued ~575 cells on ot-epyc6
+                                 '--', 'bash', '-c', cmd],
                                 stdout=f, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL).returncode
         txt = log.read_text()
         hm = re.search(r'^HOST (\S+)', txt, re.M)
