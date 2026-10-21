@@ -1,0 +1,286 @@
+{
+ "schema": "opentallas.die_gen_safety.v1",
+ "design": "qwen_compute",
+ "reach_um": 405.0,
+ "verdict": "FAIL",
+ "counts": {
+  "crossings": 3614,
+  "no_landing": 3565,
+  "no_root": 1,
+  "wires": 16864,
+  "hops": 19024,
+  "hops_over": 0,
+  "wires_over": 0,
+  "wires_no_site": 0
+ },
+ "max_hop_um": 377.6,
+ "channels_declared": true,
+ "fails": [
+  "C1 3565/3614 region crossings without a landing ring",
+  "C2 1/3614 region crossings without a clock root on a side"
+ ],
+ "examples": {
+  "no_landing": [
+   {
+    "id": "lnk_fwd_lrst",
+    "src": "pll_fwd",
+    "dst": "clk_d2d",
+    "bits": 1
+   },
+   {
+    "id": "rst_fwd",
+    "src": "UNDRIVEN:ckb_rom",
+    "dst": "clk_d2d",
+    "bits": 1
+   },
+   {
+    "id": "dv_l9_E0",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 514
+   },
+   {
+    "id": "dv_st_E0_cmd_cmd",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 116
+   },
+   {
+    "id": "dv_st_E0_hr_hr",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 453
+   },
+   {
+    "id": "dv_st_E0_st_d_st",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 1088
+   },
+   {
+    "id": "dv_st_E0_st_u_st",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 1088
+   },
+   {
+    "id": "dv_st_E0_sc_d_sc",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 48
+   },
+   {
+    "id": "dv_st_E0_sc_u_sc",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 48
+   },
+   {
+    "id": "dv_ch_E0_ar_arv",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_ar_art",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 32
+   },
+   {
+    "id": "dv_ch_E0_ar_arm",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_ar_arl",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_ar_ard",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 512
+   },
+   {
+    "id": "dv_ch_E0_dd_dd",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 548
+   },
+   {
+    "id": "dv_ch_E0_rt_rv",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_rt_re",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_rt_rr",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 3
+   },
+   {
+    "id": "dv_ch_E0_rt_rl",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 1
+   },
+   {
+    "id": "dv_ch_E0_rt_rd",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 512
+   },
+   {
+    "id": "dv_ch_E0_dr_dr",
+    "src": "clk_r95",
+    "dst": "clk_r121",
+    "bits": 520
+   },
+   {
+    "id": "dv_ch_E0_ag_ag",
+    "src": "clk_r121",
+    "dst": "clk_r95",
+    "bits": 10
+   },
+   {
+    "id": "rst_fwd_s",
+    "src": "clk_d2d",
+    "dst": "clk_r664",
+    "bits": 1
+   },
+   {
+    "id": "rst_fwd_s__t1",
+    "src": "clk_r664",
+    "dst": "clk_r662",
+    "bits": 1
+   },
+   {
+    "id": "rst_fwd_s__t5",
+    "src": "clk_r662",
+    "dst": "clk_r661",
+    "bits": 1
+   },
+   {
+    "id": "rst_fwd_s__t11",
+    "src": "clk_r661",
+    "dst": "clk_r658",
+    "bits": 1
+   },
+   {
+    "id": "rst_fwd_s__t14",
+    "src": "clk_r658",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq",
+    "src": "clk_r54",
+    "dst": "clk_d2d",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t28",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq__t62",
+    "src": "clk_d2d",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t1",
+    "src": "clk_r54",
+    "dst": "clk_r659",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t2",
+    "src": "clk_r659",
+    "dst": "clk_r180",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t7",
+    "src": "clk_r659",
+    "dst": "clk_r658",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t18",
+    "src": "clk_r658",
+    "dst": "clk_r657",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t23",
+    "src": "clk_r657",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t28",
+    "src": "clk_r657",
+    "dst": "clk_r54",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t32",
+    "src": "clk_r658",
+    "dst": "clk_r660",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t34",
+    "src": "clk_r660",
+    "dst": "clk_r665",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t40",
+    "src": "clk_r658",
+    "dst": "clk_r661",
+    "bits": 1
+   },
+   {
+    "id": "rst_seq_ctlm__t41",
+    "src": "clk_r661",
+    "dst": "clk_r55",
+    "bits": 1
+   }
+  ],
+  "no_root": [
+   {
+    "id": "rst_fwd",
+    "regions_without_root": [
+     "UNDRIVEN:ckb_rom"
+    ]
+   }
+  ],
+  "hops_over": [],
+  "wires_no_site": []
+ },
+ "regions": 1592,
+ "regions_without_root": [
+  "UNDRIVEN:bump_die_ps",
+  "UNDRIVEN:bump_fwd_epoch",
+  "UNDRIVEN:bump_fwd_lrst",
+  "UNDRIVEN:bump_pkg_s0",
+  "UNDRIVEN:bump_pkg_s1",
+  "UNDRIVEN:ckb_rom"
+ ],
+ "summaries": []
+}

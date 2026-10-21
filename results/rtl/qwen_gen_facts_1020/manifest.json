@@ -1,0 +1,71 @@
+{
+ "scope": "Diagnostic pinned production-config exporter and reset audit; centroid geometry, initial incomplete crossing classification, no die qualification",
+ "original": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5r2b",
+ "source_commit": "cfc5a82ac (QW-G5REACH edge-column slice landings cfc5a82ac+a74ec0436 + QW-G5STA: + channel sites b23a11d9d, d502ea9ae + slice landing channels xg1296 e915c1f56 + E/W landing frames b3e959583 + widest-first b9d0f9189; run dv2f20g5r2b plan=bi)",
+ "runs": [
+  {
+   "path": "/srv/opentallas-scratch/claude/codex-qw-facts2210",
+   "insts_identical": true,
+   "bus_identities_identical": true,
+   "files": {
+    "gen.sh": "066560d1e5531463b2811bc8bdab877ee3027019af86abc684579817c93fc9e4",
+    "run.sh": "6c8f428a4b99128ad57e41753c28229aaaa9e27ddf7adf9ee2aa40cab17fbc4c",
+    "src/tools/qwen_rom_fulldie_b3r2.py": "0019533bf0b69cec362fbcba7aeafd8d635c83888874df2d1bcef53cd7af1a9c",
+    "src/tools/qwen_split/gen_safety_facts.py": "1cc3db964ed16d48780b6899faefe3a8b6c1a9299fa1ce00d234c190fb7cc01d",
+    "src/tools/qwen_split/reset_sync_contract.py": "390fd9255b7e934a90d50b5ce11d1886e9b3c8566924db9e1694c739316059ff",
+    "out/case/die.v": "a0b22dd494b27b22ae38aa1ba2a6e3340320a9d067df17f780846fe1fb6f8158",
+    "out/case/reset_sync.json": "7307da1bbd308efaffdb2eb60a9e57b42aaff48d15072a598afd0e32cbdc69d3",
+    "out/case/gen_safety_facts.json": "21fd91409a0311582847299b73e6f6eb1b1d3cfb535db9ca8c3b24f05667df2a",
+    "out/rom_tp8b.json": "2763ec9ee365c221394a5294efb2194161f621c8c4dcd3c462a2cb62c53ef9fb",
+    "land_plan_bi_chain.json": "78188090e4d936e0bfede8b759ab25b6c90cc1ba7f21450f34c8fd8e0c98e513",
+    "reset_release_prior_g4try3.json": "8da7bea87d1e1f71cf2322075dc4db84097ec7ce185e54355245425ba13bcf36"
+   }
+  },
+  {
+   "path": "/srv/opentallas-scratch/claude/codex-qw-facts2210-noroot",
+   "insts_identical": true,
+   "bus_identities_identical": true,
+   "files": {
+    "gen.sh": "961d9d8c508a5dbe075aebbc3933f7f152b686011a5b81fc991572f4f93ac210",
+    "run.sh": "ecc9b6a6ad4486c0d90fe5fc81bed8f6e2979fc1421e69ead47113f72bf8c24a",
+    "src/tools/qwen_rom_fulldie_b3r2.py": "6b54fa627ec2ab8889f98a836bbd7fe361bf6d953d85f3421f77a77460f023a5",
+    "src/tools/qwen_split/gen_safety_facts.py": "1cc3db964ed16d48780b6899faefe3a8b6c1a9299fa1ce00d234c190fb7cc01d",
+    "src/tools/qwen_split/reset_sync_contract.py": "6ee33148cd72d1359aef028e6ef91a4daf0640c6235369fc4970462ad146e62e",
+    "out/case/die.v": "a0b22dd494b27b22ae38aa1ba2a6e3340320a9d067df17f780846fe1fb6f8158",
+    "out/case/reset_sync.json": "504c1ec671fed21b05e603d049fed31063b0ab5ac5efd7b12f6acd971fb50a1f",
+    "out/case/gen_safety_facts.json": "21fd91409a0311582847299b73e6f6eb1b1d3cfb535db9ca8c3b24f05667df2a",
+    "out/rom_tp8b.json": "2763ec9ee365c221394a5294efb2194161f621c8c4dcd3c462a2cb62c53ef9fb",
+    "land_plan_bi_chain.json": "78188090e4d936e0bfede8b759ab25b6c90cc1ba7f21450f34c8fd8e0c98e513",
+    "reset_release_prior_g4try3.json": "8da7bea87d1e1f71cf2322075dc4db84097ec7ce185e54355245425ba13bcf36"
+   }
+  },
+  {
+   "path": "/srv/opentallas-scratch/claude/codex-qw-facts2210-v2",
+   "insts_identical": true,
+   "bus_identities_identical": true,
+   "files": {
+    "gen.sh": "2a9ce048d630db4138877a75aa9aa0609baa991b8d522340fa6a54fed6186867",
+    "run.sh": "a83e45e82815232c62a35722c3289bcfc5a9c49403087d3da5fe8dbac885b062",
+    "src/tools/qwen_rom_fulldie_b3r2.py": "6b54fa627ec2ab8889f98a836bbd7fe361bf6d953d85f3421f77a77460f023a5",
+    "src/tools/qwen_split/gen_safety_facts.py": "a8c0a259b0ec62e472bc336ed9b3b144f97f9e026d45077d48278522f458f924",
+    "src/tools/qwen_split/reset_sync_contract.py": "6ee33148cd72d1359aef028e6ef91a4daf0640c6235369fc4970462ad146e62e",
+    "out/case/die.v": "a0b22dd494b27b22ae38aa1ba2a6e3340320a9d067df17f780846fe1fb6f8158",
+    "out/case/reset_sync.json": "504c1ec671fed21b05e603d049fed31063b0ab5ac5efd7b12f6acd971fb50a1f",
+    "out/case/gen_safety_facts.json": "3e35ee626104d306d273c16d135c118bbe2dba9bd0a8c6bb7041120c3148ca76",
+    "out/rom_tp8b.json": "2763ec9ee365c221394a5294efb2194161f621c8c4dcd3c462a2cb62c53ef9fb",
+    "land_plan_bi_chain.json": "78188090e4d936e0bfede8b759ab25b6c90cc1ba7f21450f34c8fd8e0c98e513",
+    "reset_release_prior_g4try3.json": "8da7bea87d1e1f71cf2322075dc4db84097ec7ce185e54355245425ba13bcf36"
+   }
+  }
+ ],
+ "geometry_analysis": {
+  "path": "/srv/opentallas-scratch/claude/codex-qw-facts-analysis2210",
+  "files": {
+   "gen_safety_facts.py": "79617332fa35bd280065553233aed13498ee7b527e19c48736415d52fda72ac2",
+   "gen_check.py": "57e0e0fff10e994fc219359d0ca28ce47199f870b8750e0e4f84d41e5a312c7e",
+   "rechain.py": "feec2bf7f08402ac177581b6e35d8174e621c6aedbd1e0d2256ce1f5fbb072e5",
+   "baseline/facts_chains.json": "702b256af287d6c1b8f51fe21d646e48dac8c0f0852e7f12787b364c0d442d7d",
+   "baseline/report_chains.json": "0f7a1f6e335339034736243c9bf85ef440c5217dd9374a04b12f3910c8c2eea2"
+  }
+ }
+}
