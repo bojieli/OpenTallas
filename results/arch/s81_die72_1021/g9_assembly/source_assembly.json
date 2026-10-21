@@ -132,6 +132,43 @@
       "scope": "Native/functional source candidate only; four physicalgates live, no CLOSED/wholeRRalias",
       "boot": "staticSID settles2clocks while reset; original3 resetreleaseedges; no protocolagechange",
       "handover": "owner /root/s81_lead/lepab_struct14:05; exactsource receipt supplied by owner before selection"
+    },
+    "ctrl": {
+      "master": "dsfd_ctrl_rg3",
+      "sources": "same8RTL files as original kitd040 and G8source553, exact hashes in CTRL65ed receipt",
+      "source_candidate": "65ed752dbd6877b74f6ed41a961398fb349e6060",
+      "defines": [
+        "S81CTRL_SRAM_FIFO",
+        "S81CTRL_SRAM_P192",
+        "S81CTRL_NATIVE32"
+      ],
+      "configured_successor": true,
+      "G8_strict_table_defines": [
+        "DSFD_PQ_STATIC_X2"
+      ],
+      "scope": "File identity does not establish configured G8 equivalence. First CLOSED must bind native configured implementation explicitly.",
+      "reset_contract": "NATIVE32 enables kept G12 groups + srbank/hrbank; each leafbank adds one reset-distribution edge in its own clk/ckh domain versus defaultG8. Composite die reset/boot dates must be derived; no blanket runtime+1.",
+      "physical_change": "Cohort candidate reassigns exact PC0 hrbank.q0 CLK within existing positiveckh source; no D/reset/port/FF/root count change; nominal runtime edge delta0 vs original configured kit, timing pending",
+      "native": "Both new candidate gates actualPASSmax32/zero viol/roles at14:17; physical not CLOSED",
+      "original_MAIN": "NEEDS_RTL3RESETNremovals FF\u221213.28",
+      "original_FB": "postrouteECO live; preECO FF\u221234.49 I2R/SRAMdata class, noRESETNviolations"
+    },
+    "h10wide": {
+      "source": "91dcb1c93",
+      "branch": "codex/s81-frameh10w-1340-1021",
+      "master": "col_h10_l4_lp",
+      "outline_um": [
+        1782.432,
+        3672
+      ],
+      "original_outline_um": [
+        1436.832,
+        3672
+      ],
+      "added_mm2_each": 1.2690432,
+      "added_mm2_12": 15.2285184,
+      "scope": "NEW_UNBOUND_FIT_OPEN source/model only; not launched, not selected",
+      "physical_hold": "Requires actual33x26 packing preserving72frames; no cumulative8column assumption. FRAME95+aa helper pair must publish before gate perowner"
     }
   },
   "selection": "Only actual CLOSED exactmaster/source/params/defines views may be added; source repair and available-view progression continue independently; no old-master aliases",
