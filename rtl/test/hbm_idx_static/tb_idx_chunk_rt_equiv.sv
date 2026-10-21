@@ -48,9 +48,17 @@ module tb_idx_chunk_rt_equiv;
  // Only the online boot release gains edges: +1 column reset landing (HBM-IDXSQ8), +1 more with the glue RESET_F32 tree.
  // Data valid / numeric results keep their exact active-operation edge after the bench waits for both online.
 `ifdef OT_IDX_GLUE_F32
+`ifdef OT_IDX_COL8
+ localparam integer ONL_LAG = 3;
+`else
+ localparam integer ONL_LAG = 2;
+`endif
+`else
+`ifdef OT_IDX_COL8
  localparam integer ONL_LAG = 2;
 `else
  localparam integer ONL_LAG = 1;
+`endif
 `endif
  reg [ONL_LAG-1:0] a_on_d = 0;
  always @(posedge clk or negedge rst_n) if (!rst_n) a_on_d <= 0; else a_on_d <= (ONL_LAG == 1) ? a_on : {a_on_d, a_on};

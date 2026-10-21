@@ -624,7 +624,12 @@ module ot_hbm_idx_chunk_rt_c #(
         .col_cs(ccs), .col_cf(ccf), .col_prdy(cprdy));
     genvar g;
     for (g = 0; g < 4; g = g + 1) begin : g_col
-        ot_hidx_score_col u_col (.clk(clk), .rst_n(crst[g]), .qv_b(cqv), .q_b(cq), .key(ckey[g*544 +: 544]), .hid(chid),
+`ifdef OT_IDX_COL8
+        ot_hidx_score_col8
+`else
+        ot_hidx_score_col
+`endif
+        u_col (.clk(clk), .rst_n(crst[g]), .qv_b(cqv), .q_b(cq), .key(ckey[g*544 +: 544]), .hid(chid),
             .cs_out(ccs[32*g +: 32]), .cf_out(ccf[g]), .prdy(cprdy[4*g +: 4]));
     end
 endmodule
