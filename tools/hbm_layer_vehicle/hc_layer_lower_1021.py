@@ -177,6 +177,120 @@ def lower_mix_post(A, expected_O, parameters, timing, *, a_sector, o_sector,
                 qhub_timing={k:v for k,v in g.items() if k not in ("events", "chk")})
 
 
+
+
+def lower_hc_post_io(*, D, quadrant, y_word, residual_word, coefficient_word,
+                     output_word, one_word, component_allocation, selected_core):
+    """Runtime scalar + real VM round-trip lowering; no output fixture argument.
+
+    Each segment is a separate resident install/launch. Intermediate results are
+    drained to VM before the next segment stages them into input group C. The
+    returned fixed source schedule still requires the selected coupled RTL proof.
+    All addresses are caller allocations in SW VM words, never logical defaults.
+    """
+    from hbm_layer_vehicle import sfu_images as SI
+    from hbm_layer_vehicle import sfu_fused_compile as SF
+    from sfu_vector_calendar import compile_vector
+    from sfu_control_image import pack, unpack
+
+    expected = dict(LWB=15, LG_PATH=15, TAP_RR=24, TAP_WR=21)
+    if selected_core.get("master") != "ot_hgi_sfu_core_split3":
+        raise ValueError("HC_POST requires the actual selected split3 core")
+    params = selected_core.get("params", {})
+    if any(int(params.get(k, -1)) != v for k,v in expected.items()):
+        raise ValueError(f"unsupported selected SFU parameters: {params}")
+    if D <= 0 or D % 32 or quadrant not in range(4):
+        raise ValueError("HC_POST requires four sector-aligned quadrant slices")
+    n = D // 4
+    if n > (1 << 15):
+        raise ValueError("HC_POST slice exceeds the actual operand group capacity")
+    spans = [(y_word,D), (residual_word,4*D), (coefficient_word,20),
+             (output_word,4*D), (one_word,1)]
+    if any(a < 0 or a+size > 8192*8 for a,size in spans):
+        raise ValueError("HC_POST caller allocation is outside SW VM")
+    if any(a % 8 for a in (y_word,residual_word,output_word)):
+        raise ValueError("vector allocations must be sector aligned")
+    for j,(a,size) in enumerate(spans):
+        for b,other in spans[j+1:]:
+            if max(a,b) < min(a+size,b+other):
+                raise ValueError("HC_POST caller allocations overlap")
+    # Actual selected split3 bridge: LG_PATH+1 registers in each direction.
+    read_return = expected["TAP_RR"] + 2*(expected["LG_PATH"]+1)
+    write_return = expected["TAP_WR"] + 2*(expected["LG_PATH"]+1)
+    segments = SF.hc_post_passes(D=D, quadrant=quadrant, A=y_word,
+                                B=residual_word, C=coefficient_word,
+                                O=output_word, one=one_word)
+    payloads=[]
+    for seg in segments:
+        # Four physical input groups are independent of the output SRAM group.
+        ctl = compile_vector(words=n, bases=(0,0,0,0,0), m1=1, ad=1,
+                             strides=(1,0,1,0,1), rnd=seg["rnd"])
+        fields = [dict(row["fields"], cm_qm=1) for row in ctl["rows"]]
+        # Keep arithmetic controls stable beyond the OUT stage, including BF16.
+        fields += [dict(fields[-1], emit=0, ld=0) for _ in range(16)]
+        control = [pack(f) for f in fields]
+        io=[]; transfers=[]
+        def add(fields=None):
+            io.append(dict(scalar_enable=0xa, **(fields or {})))
+            return len(io)-1
+        # Serialized requests avoid both physical-bank and scalar-group clashes.
+        for group,key in ((0,"a"),(2,"c"),(1,"b"),(3,"d")):
+            count = n//8 if group in (0,2) else 1
+            for j in range(count):
+                word = seg[key] + 8*j
+                sector, lane = divmod(word,8)
+                bank = sector % 8
+                scalar = group in (1,3)
+                row = add(dict(prefetch_v=1<<bank, prefetch_sector=sector<<(16*bank),
+                               prefetch_group=group<<(2*bank),
+                               prefetch_local_addr=(8*j)<<(15*bank),
+                               prefetch_scalar=int(scalar)<<bank,
+                               prefetch_word=lane<<(3*bank)))
+                transfers.append(dict(io_row=row, kind="scalar_read" if scalar else "vector_stage",
+                                      vm_sector=sector, bank=bank, group=group,
+                                      local_word=0 if scalar else 8*j, scalar_word=lane if scalar else None))
+        # Metadata has [0:READ_RETURN], plus operand capture; explicit guard.
+        arithmetic_start = len(io) + read_return + 8
+        while len(io) <= arithmetic_start:
+            add()
+        io[arithmetic_start]["arithmetic_start"] = 1
+        control_start = arithmetic_start + SI.IO_TO_CTL
+        drain_start = control_start + len(control) + 8
+        while len(io) < drain_start:
+            add()
+        for j in range(n//8):
+            sector = seg["o"]//8+j
+            row = add(dict(drain_v=1, drain_addr=8*j, drain_vm_sector=sector))
+            transfers.append(dict(io_row=row, kind="output_drain", vm_sector=sector,
+                                  bank=sector%8, local_output_word=8*j))
+        # Real VM commit precedes the next segment's stage; no local O alias.
+        for _ in range(write_return+10):
+            add()
+        if len(io)>SI.ROWS or len(control)>SI.ROWS:
+            raise ValueError("HC_POST segment does not fit the actual resident store")
+        io_words=[SI.pack_io(f) for f in io]
+        payloads.append(dict(pass_index=seg["p"], output_index=seg["k"],
+                             input_vm_words={k:seg[k] for k in "abcd"}, output_vm_word=seg["o"],
+                             scalar_enable=0xa, scalar_local_addresses=[0,0,0,0],
+                             ctl_rows=[f"{w:0436x}" for w in control],
+                             io_rows=[f"{w:0118x}" for w in io_words],
+                             prm=f"{SI.prm_row(0,len(control),0,len(io_words)):064x}",
+                             transfers=transfers, arithmetic_start_io_row=arithmetic_start,
+                             first_control_io_row=control_start, first_drain_io_row=drain_start,
+                             io_cycles=len(io), ctl_cycles=len(control),
+                             next_segment_requires="all fixed VM completion edges, then reinstall/launch"))
+    return dict(schema="opentallas.hc_post_runtime_io.v1", status="source_assembly_only",
+                execution_qualified=False, qualifies_native_layer=False,
+                component_allocation=component_allocation, D=D, quadrant=quadrant,
+                selected_core=selected_core, fixed_bridge=dict(read_return=read_return,
+                   write_return=write_return, metadata_last_index=read_return),
+                constant_input=dict(vm_word=one_word,required_bits="3f800000",must_be_installed=True),
+                coefficients="runtime VM: post[4], comb[4,4], root HC output excludes pre[4]",
+                arithmetic="four ordered FP32 passes; BF16 rounding only final pass",
+                physical_operand_groups=dict(A=0,B=1,C=2,D=3,output="separate SRAM drained to VM"),
+                calendar_integration_required=True, segments=payloads)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     for name in ("fixtures", "contract", "l12", "bundle", "checkpoint", "out"):

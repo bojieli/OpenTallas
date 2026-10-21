@@ -1,0 +1,25 @@
+{
+  "status": "source_assembly_only",
+  "execution_qualified": false,
+  "calendar_integration_required": true,
+  "checks": [
+    {
+      "D": 160,
+      "segments": 16,
+      "max_ctl": 73,
+      "max_io": 232,
+      "bank_and_scalar_collisions": 0,
+      "output_fixture_argument": false
+    },
+    {
+      "D": 5120,
+      "segments": 16,
+      "max_ctl": 150,
+      "max_io": 774,
+      "bank_and_scalar_collisions": 0,
+      "output_fixture_argument": false
+    }
+  ],
+  "wrong_selected_core_refused": true,
+  "actual_source_sha256": "eedc69ceb1998e37c9ec7ad42bacbd75eae9eeeb663f64f4d728a10c4335d79f"
+}
