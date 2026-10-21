@@ -1,0 +1,52 @@
+{
+  "name": "qfd_tt_head_static_h16za-h16za-4934271d7",
+  "status": "READY",
+  "stage_tag": "eco_install.a1",
+  "updated": "2026-10-21T15:39:09-07:00",
+  "eco": {
+    "tried": true,
+    "kind": "combo",
+    "rb": "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16za-h16za-4934271d7/routes/qfd_tt_head_static_h16za_h16za_4934271d7/work/orfs/results/asap7/opentallas_ot_qfd_tt_ctlm_static_hr_safe32_native32_1r_asap7_ref_qfd_tt_head_static_h16za_h16za_4934271d7/base",
+    "ob": "/home/ubuntu/ot-scratch/claude/closure-loop/qfd_tt_head_static_h16za-h16za-4934271d7/routes/qfd_tt_head_static_h16za_h16za_4934271d7/work/orfs/results/asap7/opentallas_ot_qfd_tt_ctlm_static_hr_safe32_native32_1r_asap7_ref_qfd_tt_head_static_h16za_h16za_4934271d7/base",
+    "combo_vtswap": "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16za-h16za-4934271d7/cl/eco-combo1-vt",
+    "out": "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_head_static_h16za-h16za-4934271d7/cl/eco-combo1",
+    "post_sdc": [
+      "physical/ref_tile/qfd_tt_head_static_h16za/signoff.sdc",
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "pre": {
+      "ss_ps": -21.32,
+      "ff_ps": -10.45
+    },
+    "started": "2026-10-21T15:11:40-07:00",
+    "lvt_cap_pct": 2.0,
+    "auto": true,
+    "result": {
+      "ss_ps": 9.47,
+      "tt_ps": 9.47,
+      "ff_ps": 17.98,
+      "drc": 0,
+      "sdc_name": "6_final.sdc",
+      "setup_post_sdc": [],
+      "setup_corner": "tt",
+      "ss_sensitivity_ps": -312.32,
+      "cells_added": 311,
+      "errors": [],
+      "pass": 1,
+      "session": "mm",
+      "window": "endpoints_below_hm 242 fixable 242 tight 0 infeasible 0 nodata 0 (hm 24.0 filt 40 accept_ss 0 accept_ff 0 r 2.4)",
+      "route_strategy": [
+        "incremental_original_guides"
+      ],
+      "score": 9.47,
+      "rank": 9.47
+    },
+    "rc": 0,
+    "completed_at": "2026-10-21T15:38:08-07:00",
+    "installed": "2026-10-21T15:39:09-07:00"
+  },
+  "scope": "Existing daemon combo ECO result only. Not CLOSED until exact installed native/clock/reach audits complete. TT setup pathfinding, SS sensitivity separate. No extra audit launched.",
+  "daemon_raw_sha256": "1ac13d734c22b97ba299ea73f0376da2eb97db1271dcce7053797ed8d30a345e"
+}
