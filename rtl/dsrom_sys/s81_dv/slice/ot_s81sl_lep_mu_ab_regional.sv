@@ -121,9 +121,18 @@ module ot_s81sl_lep_mu_ab_regional #(
     wire [4:0] select_in={b_wv,a_wv,ml_rv,b_ri[0],a_ri[0]};
     wire [2239:0] data_a={a_wd,a_rt,a_ri},data_b={b_wd,b_rt,b_ri};
     wire [1103:0] replay_stripped;
-    wire replay_tag=ml_rd[0] && (ml_rd[3:1]==1 || ml_rd[3:1]==2) && ml_rd[1045];
-    assign replay_stripped={ml_rd[1103:1078],(replay_tag?33'd0:ml_rd[1077:1045]),ml_rd[1044:0]};
-    wire [31:0] replay_rt=replay_tag?{1'b1,ml_rd[1047+:10],ml_rd[1057+:21]}:32'd0;
+    assign replay_stripped[1044:0]=ml_rd[1044:0];
+    assign replay_stripped[1103:1078]=ml_rd[1103:1078];
+    for(genvar tc=0;tc<3;tc=tc+1) begin:g_replay_strip
+      localparam integer W=(33-12*tc<12)?33-12*tc:12;
+      (* keep=1 *) ot_s81sl_lepab_replay_slice #(.W(W),.STRIP(1)) u_strip(
+        .code({ml_rd[1045],ml_rd[3:0]}),.i(ml_rd[1045+12*tc+:W]),.o(replay_stripped[1045+12*tc+:W]));
+    end
+    wire [31:0] replay_rt,replay_identity={1'b1,ml_rd[1047+:10],ml_rd[1057+:21]};
+    for(genvar tc=0;tc<4;tc=tc+1) begin:g_replay_identity
+      (* keep=1 *) ot_s81sl_lepab_replay_slice #(.W(8),.STRIP(0)) u_identity(
+        .code({ml_rd[1045],ml_rd[3:0]}),.i(replay_identity[tc*8+:8]),.o(replay_rt[tc*8+:8]));
+    end
     wire [2239:0] data_m={1104'd0,replay_rt,replay_stripped};
     wire [2239:0] merged;
     wire [4:0] valid_out;
@@ -186,7 +195,7 @@ endmodule
 
 module ot_s81sl_lepab_merge(input wire clk,rn,input wire [4:0] sel,
  input wire [2239:0] a,b,m,output wire [2239:0] o,output wire [4:0] valid);
- localparam integer N=140,NG=(N+7)/8;
+ localparam integer N=140,NG=(N+15)/16;
  wire [NG*5-1:0] decoded;
  wire [N+NG-1:0] rr;
  ot_rst_relay_tree3 #(.REGIONS(N+NG)) u_rr(.clk(clk),.rst_n_in(rn),.rst_n(rr));
@@ -197,7 +206,7 @@ module ot_s81sl_lepab_merge(input wire clk,rn,input wire [4:0] sel,
    localparam integer LO=16*c;
    (* keep *) reg [4:0] s;
    reg [15:0] da,db,dm,qo;
-   always @(posedge clk or negedge rr[c]) if(!rr[c]) s<=0;else s<=decoded[5*(c/8)+:5];
+   always @(posedge clk or negedge rr[c]) if(!rr[c]) s<=0;else s<=decoded[5*(c/16)+:5];
    always @(posedge clk) begin
      da<=a[LO+:16];db<=b[LO+:16];dm<=m[LO+:16];
      if(LO<1136) qo<=({16{s[0]}}&da)|({16{s[1]}}&db)|({16{s[2]}}&dm);
@@ -209,5 +218,11 @@ module ot_s81sl_lepab_merge(input wire clk,rn,input wire [4:0] sel,
  always @(posedge clk or negedge rr[0]) if(!rr[0]) begin v1<=0;v2<=0;end
  else begin v1<={sel[4] && !sel[3],sel[3],sel[2] && !sel[0] && !sel[1],sel[1] && !sel[0],sel[0]};v2<=v1;end
  assign valid=v2;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_lepab_replay_slice #(parameter integer W=12,STRIP=1)(
+ input wire [4:0] code,input wire [W-1:0] i,output wire [W-1:0] o);
+ wire tagged_beat=code[4] && code[0] && (code[3:1]==1 || code[3:1]==2);
+ assign o=(STRIP!=0)?(tagged_beat?{W{1'b0}}:i):(tagged_beat?i:{W{1'b0}});
 endmodule
 `default_nettype wire
