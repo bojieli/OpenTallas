@@ -1,0 +1,3 @@
+EPCHECK FAIL 0/480 hop beats exact (0 tagged), 564 beats observed vs 480 expected at u_s_7N,u_s_7S; MU faults 1, other endpoint fault sources [('u_s_7S', 'sl', 72), ('u_s_7S', 'ep', 74), ('u_s_7N', 'sl', 106), ('u_s_7N', 'ep', 108)]; unexpected beat u_s_7N edge 8224 pair 0 kind 2 tag 1; missing beat u_s_7N edge 8226 (substage_hop0 user 0 tag 1); unexpected beat u_s_7N edge 8227 pair 0 kind 2 tag 1; missing beat u_s_7N edge 8229 (substage_hop0 user 0 tag 1); unexpected beat u_s_7N edge 8230 pair 0 kind 2 tag 1
+EPCHECK_SCOPE hop consumer_checks 480 errors 961 verdict FAIL
+EPCHECK_MUTANT CAUGHT (961 consumer errors)

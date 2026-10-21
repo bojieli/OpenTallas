@@ -1,0 +1,1340 @@
+{
+ "schema": "opentallas.s81_dv.lowering.v1",
+ "layer": "L0",
+ "status_counts": {
+  "PARTIAL": 32,
+  "LOWERED": 23,
+  "GAP": 10
+ },
+ "die_gaps": [],
+ "ops": [
+  {
+   "id": "L0.attn.hc.fn",
+   "op": "attn.hc.fn",
+   "start": 0.0,
+   "end": 229.0,
+   "unit": "dsdv_gunit",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.attn.hc.sumsq",
+   "op": "attn.hc.sumsq",
+   "start": -0.0,
+   "end": 400.6,
+   "unit": "dsdv_gunit",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.attn.hc_pre",
+   "op": "attn.hc_pre",
+   "start": 0.0,
+   "end": 3.0,
+   "unit": "slice vp NORMR (previous-sublayer pre row) -> vn n_pre",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "dv_layer_compile / previous-sublayer pre transfer",
+    "port": "NORMR a0",
+    "missing": "entry previous-ffn HC row 1008: arithmetic is benched, but the full producer/transfer/row-lifetime binding is absent; current-block hc.coef_row0 is not the pre operand"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.attn.norm.rsqrt",
+   "op": "attn.norm.rsqrt",
+   "start": 3.0,
+   "end": 3.0,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.attn.norm.scale",
+   "op": "attn.norm.scale",
+   "start": 3.0,
+   "end": 3.0,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.attn.norm.sumsq",
+   "op": "attn.norm.sumsq",
+   "start": 3.0,
+   "end": 3.0,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.attn.quant",
+   "op": "attn.quant",
+   "start": 3.0,
+   "end": 473.0,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "hc_pre reaches vn through vp op 7 NORMR from the G-unit L5 leaf row R (S81-SLICE 10-18, beat bench g_b37 PASS / g_mni FAIL) and the compiler issues it (lower_norm_smoke); the norm is still compiled on ONE slice: the xfin NX snake + XQ all-gather beats of all 16 slices (rstd, act-quant x) are not composed"
+   },
+   "emitted": {
+    "slice": "u_s_0S",
+    "rows": 131,
+    "templates": 130
+   }
+  },
+  {
+   "id": "L0.attn.hc.rsqrt",
+   "op": "attn.hc.rsqrt",
+   "start": 400.6,
+   "end": 564.9,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.attn.a_proj",
+   "op": "attn.a_proj",
+   "start": 473.0,
+   "end": 1129.0,
+   "unit": "frames (cfg7 programme, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np, return fields), cap cfg_d",
+    "missing": "the frame images, the return calendar and the xs phase / stream ROM images are lowered and benched (bench_xs PASS: real L0 wq_a rows 0-3 on die frame u_f_0L00, col_h9_l4 E 5, cycle-exact calendar, fixture BF16; the other 6 a_proj frames of the slice (col_h10_l4 E 2, col_h9_MX_l4 E 1) are legalised fault-free but not benched; ELEM_EXTRA is measured for the (2 units, 2 rows) class only); the slice xs CALENDAR images (the 75-b action words: stream requests, VM responses, cfg / launch / retire, tools/s81_slice/xs_program.py is bench stimulus for the c26l stages only), the is_d GO word and the cap write-back cfg_d for the DV placement are not emitted yet, and no bench drives ot_s81sl_xs into a frame (the frame bench drives the frame through the w17w10 spine with the same phase / stream words)"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L00",
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R00",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xs"
+  },
+  {
+   "id": "L0.attn.hc.pre_post",
+   "op": "attn.hc.pre_post",
+   "start": 564.9,
+   "end": 744.2,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.attn.hc.sinkhorn",
+   "op": "attn.hc.sinkhorn",
+   "start": 744.2,
+   "end": 1377.4,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.attn.a_allgather",
+   "op": "attn.a_allgather",
+   "start": 1129.0,
+   "end": 1563.0,
+   "unit": "end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+    "port": "a_proj capture rows -> end slices",
+    "missing": "the endpoint send / receive ABI is lowered and benched (bench_vpx: s_0S <-> peer s_7S through the real lep + lane tiles); the production rows of the own part at the 3 end slices (the capture rows of the a_proj return + the on-die move to s_0S / s_7S / s_7N) and the consumer placement of the 3 received parts are not compiled yet"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S",
+    "u_s_7S",
+    "u_s_7N"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.attn.kv_norm.sumsq",
+   "op": "attn.kv_norm.sumsq",
+   "start": 1563.0,
+   "end": 1566.0,
+   "unit": "KV RMSNorm -> RoPE -> FP8 QDQ (no die unit)",
+   "status": "GAP",
+   "gap": {
+    "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+    "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+    "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+   }
+  },
+  {
+   "id": "L0.attn.q_norm.sumsq",
+   "op": "attn.q_norm.sumsq",
+   "start": 1563.0,
+   "end": 1566.0,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py + xfin over 4 slices",
+    "port": "q_lora (qa) rows -> vn h copy 0",
+    "missing": "q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice xfin composition is not compiled"
+   }
+  },
+  {
+   "id": "L0.attn.rows_allgather",
+   "op": "attn.rows_allgather",
+   "start": 1563.0,
+   "end": 2587.0,
+   "unit": "end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive",
+   "status": "GAP",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+    "port": "a_proj capture rows -> end slices",
+    "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+   },
+   "family": "vpx",
+   "insts": [],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.attn.kv_norm.rsqrt",
+   "op": "attn.kv_norm.rsqrt",
+   "start": 1566.0,
+   "end": 1566.0,
+   "unit": "KV RMSNorm -> RoPE -> FP8 QDQ (no die unit)",
+   "status": "GAP",
+   "gap": {
+    "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+    "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+    "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+   }
+  },
+  {
+   "id": "L0.attn.kv_norm.scale",
+   "op": "attn.kv_norm.scale",
+   "start": 1566.0,
+   "end": 1566.0,
+   "unit": "KV RMSNorm -> RoPE -> FP8 QDQ (no die unit)",
+   "status": "GAP",
+   "gap": {
+    "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+    "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+    "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+   }
+  },
+  {
+   "id": "L0.attn.kv_rope_qdq",
+   "op": "attn.kv_rope_qdq",
+   "start": 1566.0,
+   "end": 1805.5,
+   "unit": "KV RMSNorm -> RoPE -> FP8 QDQ (no die unit)",
+   "status": "GAP",
+   "gap": {
+    "module": "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+    "port": "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+    "missing": "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+   }
+  },
+  {
+   "id": "L0.attn.q_norm.rsqrt",
+   "op": "attn.q_norm.rsqrt",
+   "start": 1566.0,
+   "end": 1566.0,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py + xfin over 4 slices",
+    "port": "q_lora (qa) rows -> vn h copy 0",
+    "missing": "q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice xfin composition is not compiled"
+   }
+  },
+  {
+   "id": "L0.attn.q_norm.scale",
+   "op": "attn.q_norm.scale",
+   "start": 1566.0,
+   "end": 1566.0,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py + xfin over 4 slices",
+    "port": "q_lora (qa) rows -> vn h copy 0",
+    "missing": "q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice xfin composition is not compiled"
+   }
+  },
+  {
+   "id": "L0.attn.q_quant",
+   "op": "attn.q_quant",
+   "start": 1566.0,
+   "end": 1832.5,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py + xfin over 4 slices",
+    "port": "q_lora (qa) rows -> vn h copy 0",
+    "missing": "q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice xfin composition is not compiled"
+   }
+  },
+  {
+   "id": "L0.attn.own_row_write",
+   "op": "attn.own_row_write",
+   "start": 1805.5,
+   "end": 2455.3,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.wq_b",
+   "op": "attn.wq_b",
+   "start": 1832.5,
+   "end": 2898.9,
+   "unit": "frames (multi-phase cfg7 field, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d (xs_calendar.py cap) are emitted and benched (bench_xs_slice: ot_s81sl_xs drives the frame, cycle-exact = plan + D); open: xs_place frame images still tag rows phase-local 0..R-1 (the cap needs the rank-local row: gen --tags rank proves the rewrite, the image writer must emit it), and the die-wide multi-phase xs calendar (all phases of the layer + one gather per x vector in one calendar) is not compiled"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L00",
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R00",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp"
+  },
+  {
+   "id": "L0.attn.q_rope",
+   "op": "attn.q_rope",
+   "start": 2898.9,
+   "end": 3003.0,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.attn.window_load",
+   "op": "attn.window_load",
+   "start": 3003.0,
+   "end": 3303.9,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.scores",
+   "op": "attn.scores",
+   "start": 3303.9,
+   "end": 3407.8,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.max",
+   "op": "attn.max",
+   "start": 3407.8,
+   "end": 3561.7,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc_p"
+  },
+  {
+   "id": "L0.attn.exp",
+   "op": "attn.exp",
+   "start": 3561.7,
+   "end": 3765.0,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc_p"
+  },
+  {
+   "id": "L0.attn.den",
+   "op": "attn.den",
+   "start": 3765.0,
+   "end": 3804.0,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b",
+    "port": "w_v / w_a / w_m / w_d (SO o rows)",
+    "missing": "den / sink are computed on-die by the layer's SE job (the same SMJ frame as max / exp, lowered), but their only consumer is the SO normalisation, whose o rows have no on-die consumer (G9b): no bench checks den / sink"
+   },
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.pv",
+   "op": "attn.pv",
+   "start": 3765.0,
+   "end": 3908.9,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "dsdv_svc_att quarter ST (pvown) -- die gap G10 (cross-die part)",
+    "port": "P.V quarters 4 ST .. 4 ST + 3 (one die) -> wo_a (all 512 dims of the rank)",
+    "missing": "by design (results/arch/s81_dv_1016/svc_rs/decisions.json, svc_c rule) a die emits the P.V of its stack's output quarter only (tiles 4 ST .. 4 ST + 3, dsdv_svc_att pvown); the quarter words are bench-exact with P produced ON-DIE (PPATH).  ST is the CFG frame field [32] / [31:30] since TOK-S81-GAPS/SVCP (one die netlist, 4 stack positions); the other 3 quarters reach wo_a only through a cross-die exchange that no layer op prices or lowers (TOK.DS.XDIE / S81-DIE8 decision)"
+   },
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.sink",
+   "op": "attn.sink",
+   "start": 3804.0,
+   "end": 3967.0,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b",
+    "port": "w_v / w_a / w_m / w_d (SO o rows)",
+    "missing": "den / sink are computed on-die by the layer's SE job (the same SMJ frame as max / exp, lowered), but their only consumer is the SO normalisation, whose o rows have no on-die consumer (G9b): no bench checks den / sink"
+   },
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.normalize",
+   "op": "attn.normalize",
+   "start": 3967.0,
+   "end": 4178.9,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "GAP",
+   "gap": {
+    "module": "dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b",
+    "port": "w_v / w_a / w_m / w_d (SO o rows; die.v: open)",
+    "missing": "the SO job (den divide + inverse RoPE -> BF16 o rows) runs in slice g, but its o rows leave only on w_*, which nothing on the die reads, and its operand rows (P.V of head g, all dims) exist on-die only as the owners' P.V quarter words at the entry pv pins: needs (a) the SO operand rows back as SMJ frames (slice band send programme) or an in-grid head gather, (b) an o-row exit (return tree -> pv pins), (c) the cross-die quarters (G10)"
+   },
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.wo_a",
+   "op": "attn.wo_a",
+   "start": 4178.9,
+   "end": 6507.0,
+   "unit": "frames: BF pairs (dsfd_bf_front_roots + 2 dsfd_bf_col, cfg7_seq_bfp static programme in the cfg spare columns) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d (xs_calendar.py cap) are emitted and benched (bench_xs_slice: ot_s81sl_xs drives the frame, cycle-exact = plan + D); open: xs_place frame images still tag rows phase-local 0..R-1 (the cap needs the rank-local row: gen --tags rank proves the rewrite, the image writer must emit it), and the die-wide multi-phase xs calendar (all phases of the layer + one gather per x vector in one calendar) is not compiled"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L00",
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R00",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb"
+  },
+  {
+   "id": "L0.attn.z_quant",
+   "op": "attn.z_quant",
+   "start": 6507.0,
+   "end": 6586.0,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.attn.wo_b",
+   "op": "attn.wo_b",
+   "start": 6586.0,
+   "end": 7161.4,
+   "unit": "frames (multi-phase cfg7 field, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d (xs_calendar.py cap) are emitted and benched (bench_xs_slice: ot_s81sl_xs drives the frame, cycle-exact = plan + D); open: xs_place frame images still tag rows phase-local 0..R-1 (the cap needs the rank-local row: gen --tags rank proves the rewrite, the image writer must emit it), and the die-wide multi-phase xs calendar (all phases of the layer + one gather per x vector in one calendar) is not compiled"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L00",
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R00",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp"
+  },
+  {
+   "id": "L0.attn.out_allreduce",
+   "op": "attn.out_allreduce",
+   "start": 7161.4,
+   "end": 7988.4,
+   "unit": "RS + AG over the end-slice endpoints + owner fold",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs (SU add) / TOKEN-PASS-S81",
+    "port": "owner fold ((p0+p1)+(p2+p3))",
+    "missing": "RS + AG transport uses the benched RD endpoint ABI; the owning slice fold (an SU op on vs) has no encoder yet (vs fork) and the RS row ownership is not placed"
+   },
+   "family": "vpx",
+   "insts": [],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.attn.hc_post",
+   "op": "attn.hc_post",
+   "start": 7988.4,
+   "end": 8053.3,
+   "unit": "slice vp POST (a0 = R + 1: post row, comb R+2..R+5) -> vn h store",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / lower_xs (wo_b / down return rows)",
+    "port": "POST a1 (y rows)",
+    "missing": "POST a0 = R + 1 matches the G-unit rows (bench_vp g_b37 PASS, old order g_mpl FAIL); its a1 = the y rows of the sublayer output (attn wo_b / ffn down + combine all-reduce result) whose leaf-store placement is not compiled (GAP_XS_ROM / GAP_FOLD), so no POST command can be issued yet"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.substage_hop0",
+   "op": "substage_hop0",
+   "start": 8053.3,
+   "end": 9126.3,
+   "unit": "end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive",
+   "status": "GAP",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+    "port": "a_proj capture rows -> end slices",
+    "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+   },
+   "family": "vpx",
+   "insts": [],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.ffn.hc.fn",
+   "op": "ffn.hc.fn",
+   "start": 9126.3,
+   "end": 9355.3,
+   "unit": "dsdv_gunit",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.hc.sumsq",
+   "op": "ffn.hc.sumsq",
+   "start": 9126.3,
+   "end": 9526.9,
+   "unit": "dsdv_gunit",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.hc_pre",
+   "op": "ffn.hc_pre",
+   "start": 9126.3,
+   "end": 9135.2,
+   "unit": "slice vp NORMR (previous-sublayer pre row) -> vn n_pre",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "dv_layer_compile / previous-sublayer pre transfer",
+    "port": "NORMR a0",
+    "missing": "attn HC row 1000: arithmetic is benched, but the full producer/transfer/row-lifetime binding is absent; current-block hc.coef_row0 is not the pre operand"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.ffn.norm.rsqrt",
+   "op": "ffn.norm.rsqrt",
+   "start": 9135.2,
+   "end": 9135.2,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.ffn.norm.scale",
+   "op": "ffn.norm.scale",
+   "start": 9135.2,
+   "end": 9587.2,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.ffn.norm.sumsq",
+   "op": "ffn.norm.sumsq",
+   "start": 9135.2,
+   "end": 9135.2,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.ffn.hc.rsqrt",
+   "op": "ffn.hc.rsqrt",
+   "start": 9526.9,
+   "end": 9691.2,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.quant",
+   "op": "ffn.quant",
+   "start": 9587.2,
+   "end": 9605.2,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "hc_pre reaches vn through vp op 7 NORMR from the G-unit L5 leaf row R (S81-SLICE 10-18, beat bench g_b37 PASS / g_mni FAIL) and the compiler issues it (lower_norm_smoke); the norm is still compiled on ONE slice: the xfin NX snake + XQ all-gather beats of all 16 slices (rstd, act-quant x) are not composed"
+   }
+  },
+  {
+   "id": "L0.ffn.router",
+   "op": "ffn.router",
+   "start": 9587.2,
+   "end": 10593.9,
+   "unit": "frames: BF pairs (dsfd_bf_front_roots + 2 dsfd_bf_col, cfg7_seq_bfp static programme in the cfg spare columns) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d (xs_calendar.py cap) are emitted and benched (bench_xs_slice: ot_s81sl_xs drives the frame, cycle-exact = plan + D); open: xs_place frame images still tag rows phase-local 0..R-1 (the cap needs the rank-local row: gen --tags rank proves the rewrite, the image writer must emit it), and the die-wide multi-phase xs calendar (all phases of the layer + one gather per x vector in one calendar) is not compiled"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L00",
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R00",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb"
+  },
+  {
+   "id": "L0.ffn.hc.pre_post",
+   "op": "ffn.hc.pre_post",
+   "start": 9691.2,
+   "end": 9870.5,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.hc.sinkhorn",
+   "op": "ffn.hc.sinkhorn",
+   "start": 9870.5,
+   "end": 10503.7,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.shared_gu",
+   "op": "ffn.shared_gu",
+   "start": 10593.9,
+   "end": 11254.9,
+   "unit": "frames (multi-phase cfg7 field, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d (xs_calendar.py cap) are emitted and benched (bench_xs_slice: ot_s81sl_xs drives the frame, cycle-exact = plan + D); open: xs_place frame images still tag rows phase-local 0..R-1 (the cap needs the rank-local row: gen --tags rank proves the rewrite, the image writer must emit it), and the die-wide multi-phase xs calendar (all phases of the layer + one gather per x vector in one calendar) is not compiled"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L00",
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R00",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp"
+  },
+  {
+   "id": "L0.ffn.softplus_sqrt",
+   "op": "ffn.softplus_sqrt",
+   "start": 10593.9,
+   "end": 10779.5,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.router_allgather",
+   "op": "ffn.router_allgather",
+   "start": 10779.5,
+   "end": 11201.4,
+   "unit": "end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive",
+   "status": "GAP",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+    "port": "a_proj capture rows -> end slices",
+    "missing": "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+   },
+   "family": "vpx",
+   "insts": [],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.ffn.bias",
+   "op": "ffn.bias",
+   "start": 11201.4,
+   "end": 11286.0,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.shared_swiglu",
+   "op": "ffn.shared_swiglu",
+   "start": 11254.9,
+   "end": 11467.5,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.top6",
+   "op": "ffn.top6",
+   "start": 11286.0,
+   "end": 11294.9,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.top6_order",
+   "op": "ffn.top6_order",
+   "start": 11294.9,
+   "end": 11402.4,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.experts_gu",
+   "op": "ffn.experts_gu",
+   "start": 11402.4,
+   "end": 12750.4,
+   "unit": "frames (multi-phase cfg7 field, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d (xs_calendar.py cap) are emitted and benched (bench_xs_slice: ot_s81sl_xs drives the frame, cycle-exact = plan + D); open: xs_place frame images still tag rows phase-local 0..R-1 (the cap needs the rank-local row: gen --tags rank proves the rewrite, the image writer must emit it), and the die-wide multi-phase xs calendar (all phases of the layer + one gather per x vector in one calendar) is not compiled"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L00",
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R00",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp"
+  },
+  {
+   "id": "L0.ffn.weights",
+   "op": "ffn.weights",
+   "start": 11402.4,
+   "end": 11628.3,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.shared_quant",
+   "op": "ffn.shared_quant",
+   "start": 11467.5,
+   "end": 11529.2,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.swiglu",
+   "op": "ffn.swiglu",
+   "start": 12750.4,
+   "end": 12753.4,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.route_w",
+   "op": "ffn.route_w",
+   "start": 12753.4,
+   "end": 12759.3,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.quant2",
+   "op": "ffn.quant2",
+   "start": 12759.3,
+   "end": 12949.3,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.down",
+   "op": "ffn.down",
+   "start": 12949.3,
+   "end": 14600.1,
+   "unit": "frames (multi-phase cfg7 field, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d (xs_calendar.py cap) are emitted and benched (bench_xs_slice: ot_s81sl_xs drives the frame, cycle-exact = plan + D); open: xs_place frame images still tag rows phase-local 0..R-1 (the cap needs the rank-local row: gen --tags rank proves the rewrite, the image writer must emit it), and the die-wide multi-phase xs calendar (all phases of the layer + one gather per x vector in one calendar) is not compiled"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L00",
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R00",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp"
+  },
+  {
+   "id": "L0.ffn.combine_allreduce",
+   "op": "ffn.combine_allreduce",
+   "start": 14600.1,
+   "end": 15427.1,
+   "unit": "RS + AG over the end-slice endpoints + owner fold",
+   "status": "GAP",
+   "gap": {
+    "module": "ot_s81sl_vs (SU add) / TOKEN-PASS-S81",
+    "port": "owner fold ((p0+p1)+(p2+p3))",
+    "missing": "RS + AG transport uses the benched RD endpoint ABI; the owning slice fold (an SU op on vs) has no encoder yet (vs fork) and the RS row ownership is not placed"
+   },
+   "family": "vpx",
+   "insts": [],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.ffn.hc_post",
+   "op": "ffn.hc_post",
+   "start": 15427.1,
+   "end": 15492.0,
+   "unit": "slice vp POST (a0 = R + 1: post row, comb R+2..R+5) -> vn h store",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / lower_xs (wo_b / down return rows)",
+    "port": "POST a1 (y rows)",
+    "missing": "POST a0 = R + 1 matches the G-unit rows (bench_vp g_b37 PASS, old order g_mpl FAIL); its a1 = the y rows of the sublayer output (attn wo_b / ffn down + combine all-reduce result) whose leaf-store placement is not compiled (GAP_XS_ROM / GAP_FOLD), so no POST command can be issued yet"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  }
+ ],
+ "gaps": [
+  [
+   "dsdv_svc_att quarter ST (pvown) -- die gap G10 (cross-die part)",
+   "P.V quarters 4 ST .. 4 ST + 3 (one die) -> wo_a (all 512 dims of the rank)",
+   "by design (results/arch/s81_dv_1016/svc_rs/decisions.json, svc_c rule) a die emits the P.V of its stack's output quarter only (tiles 4 ST .. 4 ST + 3, dsdv_svc_att pvown); the quarter words are bench-exact with P produced ON-DIE (PPATH).  ST is the CFG frame field [32] / [31:30] since TOK-S81-GAPS/SVCP (one die netlist, 4 stack positions); the other 3 quarters reach wo_a only through a cross-die exchange that no layer op prices or lowers (TOK.DS.XDIE / S81-DIE8 decision)"
+  ],
+  [
+   "dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b",
+   "w_v / w_a / w_m / w_d (SO o rows)",
+   "den / sink are computed on-die by the layer's SE job (the same SMJ frame as max / exp, lowered), but their only consumer is the SO normalisation, whose o rows have no on-die consumer (G9b): no bench checks den / sink"
+  ],
+  [
+   "dsdv_svc_rs SM head (ot_s81_su_sms) SO job -- die gap G9b",
+   "w_v / w_a / w_m / w_d (SO o rows; die.v: open)",
+   "the SO job (den divide + inverse RoPE -> BF16 o rows) runs in slice g, but its o rows leave only on w_*, which nothing on the die reads, and its operand rows (P.V of head g, all dims) exist on-die only as the owners' P.V quarter words at the entry pv pins: needs (a) the SO operand rows back as SMJ frames (slice band send programme) or an in-grid head gather, (b) an o-row exit (return tree -> pv pins), (c) the cross-die quarters (G10)"
+  ],
+  [
+   "dv_layer_compile / previous-sublayer pre transfer",
+   "NORMR a0",
+   "attn HC row 1000: arithmetic is benched, but the full producer/transfer/row-lifetime binding is absent; current-block hc.coef_row0 is not the pre operand"
+  ],
+  [
+   "dv_layer_compile / previous-sublayer pre transfer",
+   "NORMR a0",
+   "entry previous-ffn HC row 1008: arithmetic is benched, but the full producer/transfer/row-lifetime binding is absent; current-block hc.coef_row0 is not the pre operand"
+  ],
+  [
+   "ot_s81sl_vs (SU add) / TOKEN-PASS-S81",
+   "owner fold ((p0+p1)+(p2+p3))",
+   "RS + AG transport uses the benched RD endpoint ABI; the owning slice fold (an SU op on vs) has no encoder yet (vs fork) and the RS row ownership is not placed"
+  ],
+  [
+   "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+   "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+   "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+  ],
+  [
+   "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+   "16-slice norm composition",
+   "hc_pre reaches vn through vp op 7 NORMR from the G-unit L5 leaf row R (S81-SLICE 10-18, beat bench g_b37 PASS / g_mni FAIL) and the compiler issues it (lower_norm_smoke); the norm is still compiled on ONE slice: the xfin NX snake + XQ all-gather beats of all 16 slices (rstd, act-quant x) are not composed"
+  ],
+  [
+   "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+   "16-slice norm composition",
+   "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+  ],
+  [
+   "ot_s81sl_xs / ot_s81sl_cap",
+   "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+   "per-phase slice xs programme (calendar action / time ROMs, is_d GO, gathers: xs_calendar.py gen) and cap cfg_d (xs_calendar.py cap) are emitted and benched (bench_xs_slice: ot_s81sl_xs drives the frame, cycle-exact = plan + D); open: xs_place frame images still tag rows phase-local 0..R-1 (the cap needs the rank-local row: gen --tags rank proves the rewrite, the image writer must emit it), and the die-wide multi-phase xs calendar (all phases of the layer + one gather per x vector in one calendar) is not compiled"
+  ],
+  [
+   "ot_s81sl_xs / ot_s81sl_cap",
+   "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np, return fields), cap cfg_d",
+   "the frame images, the return calendar and the xs phase / stream ROM images are lowered and benched (bench_xs PASS: real L0 wq_a rows 0-3 on die frame u_f_0L00, col_h9_l4 E 5, cycle-exact calendar, fixture BF16; the other 6 a_proj frames of the slice (col_h10_l4 E 2, col_h9_MX_l4 E 1) are legalised fault-free but not benched; ELEM_EXTRA is measured for the (2 units, 2 rows) class only); the slice xs CALENDAR images (the 75-b action words: stream requests, VM responses, cfg / launch / retire, tools/s81_slice/xs_program.py is bench stimulus for the c26l stages only), the is_d GO word and the cap write-back cfg_d for the DV placement are not emitted yet, and no bench drives ot_s81sl_xs into a frame (the frame bench drives the frame through the w17w10 spine with the same phase / stream words)"
+  ],
+  [
+   "p4l die.v (no KV / compressor norm unit) / ot_s81sl_vs",
+   "SPEC section 2 slice SU lanes \"KV 32\" (RMSNorm -> RoPE -> FP8 QDQ, D 512)",
+   "TOK-S81-GAPS/VS 10-18: NOT a compiler encoder gap -- no unit on the p4l die computes these ops.  ot_s81sl_vs ops are SW / QB / RA / RB / QR / MOE / ENG (no RMSNorm, no KV QDQ); vn NORM is the hc_pre-mixed h norm (4 HC copies, 64-element beats); the hub KV unit ot_s81_su_kv (rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv: kvt / kve / qnh / qnr / kvq masters, D 512 exact) has 0 instances in bind_p4l3_g8 die.v.  Die decision owed (S81-DIE8 / S81-SLICE): instantiate the KV unit on the die (fed by the kv / compressed rows, result rows to the svc KV write) or add a vs RMS / KVQDQ op; then this compiler lowers it"
+  ],
+  [
+   "tools/s81_dv/frame_return_plan.py + xfin over 4 slices",
+   "q_lora (qa) rows -> vn h copy 0",
+   "q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice xfin composition is not compiled"
+  ],
+  [
+   "tools/s81_dv/frame_return_plan.py / lower_xs (wo_b / down return rows)",
+   "POST a1 (y rows)",
+   "POST a0 = R + 1 matches the G-unit rows (bench_vp g_b37 PASS, old order g_mpl FAIL); its a1 = the y rows of the sublayer output (attn wo_b / ffn down + combine all-reduce result) whose leaf-store placement is not compiled (GAP_XS_ROM / GAP_FOLD), so no POST command can be issued yet"
+  ],
+  [
+   "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+   "a_proj capture rows -> end slices",
+   "same endpoint ABI as attn.a_allgather (bench_vpx); the production rows of this op are not placed"
+  ],
+  [
+   "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+   "a_proj capture rows -> end slices",
+   "the endpoint send / receive ABI is lowered and benched (bench_vpx: s_0S <-> peer s_7S through the real lep + lane tiles); the production rows of the own part at the 3 end slices (the capture rows of the a_proj return + the on-die move to s_0S / s_7S / s_7N) and the consumer placement of the 3 received parts are not compiled yet"
+  ]
+ ]
+}

@@ -1,0 +1,7 @@
+00:22 ot-run rc 0
+00:22 out_base all  rc 0 | EPCHECK_SCOPE all consumer_checks 564 errors 0 verdict PASS
+00:22 out_base hop  rc 0 | EPCHECK_SCOPE hop consumer_checks 480 errors 0 verdict PASS
+00:22 out_base_tagdrop hop --expect-fail rc 0 | EPCHECK_MUTANT CAUGHT (240 consumer errors)
+00:22 out_base_wrongcopy hop --expect-fail rc 0 | EPCHECK_MUTANT CAUGHT (1 consumer errors)
+00:22 out_rtl_tagdrop hop --expect-fail rc 0 | EPCHECK_MUTANT CAUGHT (480 consumer errors)
+CHAIN_DONE

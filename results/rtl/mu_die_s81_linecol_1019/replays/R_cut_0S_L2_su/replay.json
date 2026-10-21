@@ -1,0 +1,8349 @@
+{
+ "schema": "opentallas.s81_dv.cut_replay.v1",
+ "tool": "tools/s81_dv/dv_cut_replay.py",
+ "die_v": "/home/ubuntu/scratch/mu-die-s81/tok/tree_mu/results/arch/s81_dv_1016/bind9/die.v.gz",
+ "die_v_sha256": "81498f42b9ead925dc6c8c03d17fb72314a21e7764ebeb603e3105f75d9df360",
+ "prog": "/home/ubuntu/scratch/mu-die-s81/linecol/prog_L2_su",
+ "prog_manifest_sha256": "8aa780eafcac833fa8d41089da4c7e5a4bb3993f7a29cd11d6d485dc69679e79",
+ "cut": "/home/ubuntu/scratch/mu-die-s81/tok/cuts/cut_0S",
+ "layer": "L2",
+ "t0": 100,
+ "mutant": null,
+ "lane_age": false,
+ "equalize": [],
+ "host_boot": null,
+ "verdict_kind": "SCHEDULE",
+ "stale": {
+  "link_age_diffs": [],
+  "die_v_sha256_build": "81498f42b9ead925dc6c8c03d17fb72314a21e7764ebeb603e3105f75d9df360",
+  "die_v_sha256_compiled": "81498f42b9ead925dc6c8c03d17fb72314a21e7764ebeb603e3105f75d9df360",
+  "die_sha_match": true,
+  "stale": false
+ },
+ "traces": {},
+ "boundary": [
+  {
+   "port": "i__w_lr_lk_WS0_src",
+   "dir": "input",
+   "lane": "lr_lk_WS0",
+   "age": 6,
+   "K": 3,
+   "stations": 3,
+   "source": "idle",
+   "peers": [
+    "u_lk_WS0"
+   ]
+  },
+  {
+   "port": "i__w_lr_lk_WS1_src",
+   "dir": "input",
+   "lane": "lr_lk_WS1",
+   "age": 6,
+   "K": 3,
+   "stations": 3,
+   "source": "idle",
+   "peers": [
+    "u_lk_WS1"
+   ]
+  },
+  {
+   "port": "o__w_lt_lk_WS0_lnd",
+   "dir": "output",
+   "lane": "lt_lk_WS0",
+   "age": 6,
+   "K": 3,
+   "stations": 3,
+   "source": "unchecked",
+   "peers": [
+    "u_lk_WS0"
+   ],
+   "strict": false
+  },
+  {
+   "port": "o__w_lt_lk_WS1_lnd",
+   "dir": "output",
+   "lane": "lt_lk_WS1",
+   "age": 6,
+   "K": 3,
+   "stations": 3,
+   "source": "unchecked",
+   "peers": [
+    "u_lk_WS1"
+   ],
+   "strict": false
+  },
+  {
+   "port": "i__w_mu_0S_src",
+   "dir": "input",
+   "lane": "mu_0S",
+   "age": 40,
+   "K": 1,
+   "stations": 76,
+   "source": "idle",
+   "peers": [
+    "u_seqhost"
+   ]
+  },
+  {
+   "port": "o__w_tvN_s_0S_lnd",
+   "dir": "output",
+   "lane": "tvN_s_0S",
+   "age": 18,
+   "K": 9,
+   "stations": 16,
+   "source": "unchecked",
+   "peers": [
+    "u_s_0N"
+   ],
+   "strict": false
+  },
+  {
+   "port": "i__w_tvS_s_0N_src",
+   "dir": "input",
+   "lane": "tvS_s_0N",
+   "age": 18,
+   "K": 9,
+   "stations": 16,
+   "source": "idle",
+   "peers": [
+    "u_s_0N"
+   ]
+  },
+  {
+   "port": "o__w_xrE_0S_l0_lnd",
+   "dir": "output",
+   "lane": "xrE_0S_l0",
+   "age": 9,
+   "K": 4,
+   "stations": 7,
+   "source": "unchecked",
+   "peers": [
+    "u_s_1S"
+   ],
+   "strict": false
+  },
+  {
+   "port": "o__w_xrE_0S_l1_lnd",
+   "dir": "output",
+   "lane": "xrE_0S_l1",
+   "age": 9,
+   "K": 4,
+   "stations": 7,
+   "source": "unchecked",
+   "peers": [
+    "u_s_1S"
+   ],
+   "strict": false
+  },
+  {
+   "port": "o__w_xrE_0S_l2_lnd",
+   "dir": "output",
+   "lane": "xrE_0S_l2",
+   "age": 9,
+   "K": 4,
+   "stations": 7,
+   "source": "unchecked",
+   "peers": [
+    "u_s_1S"
+   ],
+   "strict": false
+  },
+  {
+   "port": "o__w_xrE_0S_l3_lnd",
+   "dir": "output",
+   "lane": "xrE_0S_l3",
+   "age": 9,
+   "K": 4,
+   "stations": 7,
+   "source": "unchecked",
+   "peers": [
+    "u_s_1S"
+   ],
+   "strict": false
+  },
+  {
+   "port": "i__w_xrW_0S_l0_src",
+   "dir": "input",
+   "lane": "xrW_0S_l0",
+   "age": 10,
+   "K": 5,
+   "stations": 7,
+   "source": "schedule",
+   "peers": [
+    "u_s_1S"
+   ]
+  },
+  {
+   "port": "i__w_xrW_0S_l1_src",
+   "dir": "input",
+   "lane": "xrW_0S_l1",
+   "age": 10,
+   "K": 5,
+   "stations": 7,
+   "source": "schedule",
+   "peers": [
+    "u_s_1S"
+   ]
+  },
+  {
+   "port": "i__w_xrW_0S_l2_src",
+   "dir": "input",
+   "lane": "xrW_0S_l2",
+   "age": 10,
+   "K": 5,
+   "stations": 7,
+   "source": "schedule",
+   "peers": [
+    "u_s_1S"
+   ]
+  },
+  {
+   "port": "i__w_xrW_0S_l3_src",
+   "dir": "input",
+   "lane": "xrW_0S_l3",
+   "age": 10,
+   "K": 5,
+   "stations": 7,
+   "source": "schedule",
+   "peers": [
+    "u_s_1S"
+   ]
+  }
+ ],
+ "in_words": [
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.HLOAD",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 71,
+   "drive_cycle": 162,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 124,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.HLOAD",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 71,
+   "drive_cycle": 162,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 124,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.HLOAD",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 71,
+   "drive_cycle": 162,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 124,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.HLOAD",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 71,
+   "drive_cycle": 162,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 124,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.GAIN",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 111,
+   "drive_cycle": 202,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 125,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.GAIN",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 111,
+   "drive_cycle": 202,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 125,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.GAIN",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 111,
+   "drive_cycle": 202,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 125,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.GAIN",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 111,
+   "drive_cycle": 202,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 125,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.NORMR.k0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 131,
+   "drive_cycle": 222,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 126,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.NORMR.k0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 131,
+   "drive_cycle": 222,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 126,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.NORMR.k0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 131,
+   "drive_cycle": 222,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 126,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.NORMR.k0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 131,
+   "drive_cycle": 222,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 126,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.NORMR.k1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 132,
+   "drive_cycle": 223,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 127,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.NORMR.k1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 132,
+   "drive_cycle": 223,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 127,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.NORMR.k1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 132,
+   "drive_cycle": 223,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 127,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.NORMR.k1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 132,
+   "drive_cycle": 223,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 127,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.NORMR.k2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 133,
+   "drive_cycle": 224,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 128,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.NORMR.k2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 133,
+   "drive_cycle": 224,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 128,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.NORMR.k2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 133,
+   "drive_cycle": 224,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 128,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.NORMR.k2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 133,
+   "drive_cycle": 224,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 128,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.NORMR.k3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 134,
+   "drive_cycle": 225,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 129,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.NORMR.k3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 134,
+   "drive_cycle": 225,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 129,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.NORMR.k3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 134,
+   "drive_cycle": 225,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 129,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.NORMR.k3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 134,
+   "drive_cycle": 225,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 129,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.NORMR.k4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 135,
+   "drive_cycle": 226,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 130,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.NORMR.k4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 135,
+   "drive_cycle": 226,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 130,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.NORMR.k4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 135,
+   "drive_cycle": 226,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 130,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.NORMR.k4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 135,
+   "drive_cycle": 226,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 130,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.XFIN_GO",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 136,
+   "drive_cycle": 227,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 131,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.XFIN_GO",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 136,
+   "drive_cycle": 227,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 131,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.XFIN_GO",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 136,
+   "drive_cycle": 227,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 131,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.XFIN_GO",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 136,
+   "drive_cycle": 227,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 131,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3747,
+   "drive_cycle": 3838,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 1,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3747,
+   "drive_cycle": 3838,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 1,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3747,
+   "drive_cycle": 3838,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 1,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3747,
+   "drive_cycle": 3838,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 1,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3752,
+   "drive_cycle": 3843,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 2,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3752,
+   "drive_cycle": 3843,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 2,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3752,
+   "drive_cycle": 3843,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 2,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3752,
+   "drive_cycle": 3843,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 2,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3757,
+   "drive_cycle": 3848,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 3,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3757,
+   "drive_cycle": 3848,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 3,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3757,
+   "drive_cycle": 3848,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 3,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3757,
+   "drive_cycle": 3848,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 3,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3761,
+   "drive_cycle": 3852,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 4,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3761,
+   "drive_cycle": 3852,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 4,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3761,
+   "drive_cycle": 3852,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 4,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3761,
+   "drive_cycle": 3852,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 4,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3762,
+   "drive_cycle": 3853,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 5,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3762,
+   "drive_cycle": 3853,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 5,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3762,
+   "drive_cycle": 3853,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 5,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3762,
+   "drive_cycle": 3853,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 5,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3766,
+   "drive_cycle": 3857,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 6,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3766,
+   "drive_cycle": 3857,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 6,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3766,
+   "drive_cycle": 3857,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 6,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3766,
+   "drive_cycle": 3857,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 6,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3767,
+   "drive_cycle": 3858,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 7,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3767,
+   "drive_cycle": 3858,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 7,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3767,
+   "drive_cycle": 3858,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 7,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3767,
+   "drive_cycle": 3858,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 7,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3771,
+   "drive_cycle": 3862,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 8,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3771,
+   "drive_cycle": 3862,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 8,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3771,
+   "drive_cycle": 3862,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 8,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3771,
+   "drive_cycle": 3862,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 8,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3772,
+   "drive_cycle": 3863,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 9,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3772,
+   "drive_cycle": 3863,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 9,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3772,
+   "drive_cycle": 3863,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 9,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3772,
+   "drive_cycle": 3863,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 9,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3776,
+   "drive_cycle": 3867,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 10,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3776,
+   "drive_cycle": 3867,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 10,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3776,
+   "drive_cycle": 3867,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 10,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3776,
+   "drive_cycle": 3867,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 10,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3777,
+   "drive_cycle": 3868,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 11,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3777,
+   "drive_cycle": 3868,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 11,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3777,
+   "drive_cycle": 3868,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 11,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3777,
+   "drive_cycle": 3868,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 11,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3781,
+   "drive_cycle": 3872,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 12,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3781,
+   "drive_cycle": 3872,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 12,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3781,
+   "drive_cycle": 3872,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 12,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3781,
+   "drive_cycle": 3872,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 12,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3782,
+   "drive_cycle": 3873,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 13,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3782,
+   "drive_cycle": 3873,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 13,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3782,
+   "drive_cycle": 3873,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 13,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3782,
+   "drive_cycle": 3873,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 13,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3786,
+   "drive_cycle": 3877,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 14,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3786,
+   "drive_cycle": 3877,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 14,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3786,
+   "drive_cycle": 3877,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 14,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3786,
+   "drive_cycle": 3877,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 14,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3787,
+   "drive_cycle": 3878,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 15,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3787,
+   "drive_cycle": 3878,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 15,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3787,
+   "drive_cycle": 3878,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 15,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3787,
+   "drive_cycle": 3878,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 15,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3791,
+   "drive_cycle": 3882,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 16,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3791,
+   "drive_cycle": 3882,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 16,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3791,
+   "drive_cycle": 3882,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 16,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3791,
+   "drive_cycle": 3882,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 16,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3792,
+   "drive_cycle": 3883,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 17,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3792,
+   "drive_cycle": 3883,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 17,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3792,
+   "drive_cycle": 3883,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 17,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3792,
+   "drive_cycle": 3883,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 17,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3796,
+   "drive_cycle": 3887,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 18,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3796,
+   "drive_cycle": 3887,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 18,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3796,
+   "drive_cycle": 3887,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 18,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3796,
+   "drive_cycle": 3887,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 18,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3797,
+   "drive_cycle": 3888,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 19,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3797,
+   "drive_cycle": 3888,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 19,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3797,
+   "drive_cycle": 3888,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 19,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3797,
+   "drive_cycle": 3888,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 19,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3801,
+   "drive_cycle": 3892,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 20,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3801,
+   "drive_cycle": 3892,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 20,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3801,
+   "drive_cycle": 3892,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 20,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3801,
+   "drive_cycle": 3892,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 20,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3802,
+   "drive_cycle": 3893,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 21,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3802,
+   "drive_cycle": 3893,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 21,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3802,
+   "drive_cycle": 3893,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 21,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3802,
+   "drive_cycle": 3893,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 21,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3806,
+   "drive_cycle": 3897,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 22,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3806,
+   "drive_cycle": 3897,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 22,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3806,
+   "drive_cycle": 3897,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 22,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3806,
+   "drive_cycle": 3897,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 22,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3807,
+   "drive_cycle": 3898,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 23,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3807,
+   "drive_cycle": 3898,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 23,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3807,
+   "drive_cycle": 3898,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 23,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3807,
+   "drive_cycle": 3898,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 23,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3811,
+   "drive_cycle": 3902,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 24,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3811,
+   "drive_cycle": 3902,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 24,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3811,
+   "drive_cycle": 3902,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 24,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3811,
+   "drive_cycle": 3902,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 24,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3812,
+   "drive_cycle": 3903,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 25,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3812,
+   "drive_cycle": 3903,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 25,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3812,
+   "drive_cycle": 3903,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 25,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3812,
+   "drive_cycle": 3903,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 25,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3816,
+   "drive_cycle": 3907,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 26,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3816,
+   "drive_cycle": 3907,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 26,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3816,
+   "drive_cycle": 3907,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 26,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3816,
+   "drive_cycle": 3907,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 26,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3821,
+   "drive_cycle": 3912,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 27,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3821,
+   "drive_cycle": 3912,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 27,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3821,
+   "drive_cycle": 3912,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 27,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3821,
+   "drive_cycle": 3912,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 27,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3826,
+   "drive_cycle": 3917,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 28,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3826,
+   "drive_cycle": 3917,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 28,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3826,
+   "drive_cycle": 3917,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 28,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3826,
+   "drive_cycle": 3917,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 28,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6047,
+   "drive_cycle": 6138,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 85,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6047,
+   "drive_cycle": 6138,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 85,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6047,
+   "drive_cycle": 6138,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 85,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6047,
+   "drive_cycle": 6138,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 85,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6048,
+   "drive_cycle": 6139,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 86,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6048,
+   "drive_cycle": 6139,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 86,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6048,
+   "drive_cycle": 6139,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 86,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6048,
+   "drive_cycle": 6139,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 86,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6049,
+   "drive_cycle": 6140,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 87,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6049,
+   "drive_cycle": 6140,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 87,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6049,
+   "drive_cycle": 6140,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 87,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6049,
+   "drive_cycle": 6140,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 87,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6050,
+   "drive_cycle": 6141,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 88,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6050,
+   "drive_cycle": 6141,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 88,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6050,
+   "drive_cycle": 6141,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 88,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6050,
+   "drive_cycle": 6141,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 88,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6051,
+   "drive_cycle": 6142,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 89,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6051,
+   "drive_cycle": 6142,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 89,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6051,
+   "drive_cycle": 6142,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 89,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6051,
+   "drive_cycle": 6142,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 89,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6052,
+   "drive_cycle": 6143,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 90,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6052,
+   "drive_cycle": 6143,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 90,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6052,
+   "drive_cycle": 6143,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 90,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6052,
+   "drive_cycle": 6143,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 90,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6053,
+   "drive_cycle": 6144,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 91,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6053,
+   "drive_cycle": 6144,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 91,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6053,
+   "drive_cycle": 6144,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 91,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6053,
+   "drive_cycle": 6144,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 91,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6054,
+   "drive_cycle": 6145,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 92,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6054,
+   "drive_cycle": 6145,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 92,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6054,
+   "drive_cycle": 6145,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 92,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6054,
+   "drive_cycle": 6145,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 92,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6055,
+   "drive_cycle": 6146,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 93,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6055,
+   "drive_cycle": 6146,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 93,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6055,
+   "drive_cycle": 6146,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 93,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6055,
+   "drive_cycle": 6146,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 93,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6056,
+   "drive_cycle": 6147,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 94,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6056,
+   "drive_cycle": 6147,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 94,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6056,
+   "drive_cycle": 6147,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 94,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6056,
+   "drive_cycle": 6147,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 94,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6057,
+   "drive_cycle": 6148,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 95,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6057,
+   "drive_cycle": 6148,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 95,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6057,
+   "drive_cycle": 6148,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 95,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6057,
+   "drive_cycle": 6148,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 95,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6058,
+   "drive_cycle": 6149,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 96,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6058,
+   "drive_cycle": 6149,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 96,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6058,
+   "drive_cycle": 6149,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 96,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6058,
+   "drive_cycle": 6149,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 96,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6059,
+   "drive_cycle": 6150,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 97,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6059,
+   "drive_cycle": 6150,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 97,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6059,
+   "drive_cycle": 6150,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 97,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6059,
+   "drive_cycle": 6150,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 97,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6060,
+   "drive_cycle": 6151,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 98,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6060,
+   "drive_cycle": 6151,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 98,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6060,
+   "drive_cycle": 6151,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 98,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6060,
+   "drive_cycle": 6151,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 98,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.14",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6061,
+   "drive_cycle": 6152,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 99,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.14",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6061,
+   "drive_cycle": 6152,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 99,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.14",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6061,
+   "drive_cycle": 6152,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 99,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.14",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6061,
+   "drive_cycle": 6152,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 99,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.row.s0m1f.15",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6062,
+   "drive_cycle": 6153,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 100,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.row.s0m1f.15",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6062,
+   "drive_cycle": 6153,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 100,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.row.s0m1f.15",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6062,
+   "drive_cycle": 6153,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 100,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.row.s0m1f.15",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6062,
+   "drive_cycle": 6153,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 100,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.q_rope.QR.s0m1f",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6063,
+   "drive_cycle": 6154,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 101,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.q_rope.QR.s0m1f",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6063,
+   "drive_cycle": 6154,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 101,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.q_rope.QR.s0m1f",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6063,
+   "drive_cycle": 6154,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 101,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.q_rope.QR.s0m1f",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 6063,
+   "drive_cycle": 6154,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 101,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.z_quant.QB.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17161,
+   "drive_cycle": 17252,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 104,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.z_quant.QB.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17161,
+   "drive_cycle": 17252,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 104,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.z_quant.QB.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17161,
+   "drive_cycle": 17252,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 104,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.z_quant.QB.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17161,
+   "drive_cycle": 17252,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 104,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.z_quant.QB.s0m02",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17162,
+   "drive_cycle": 17253,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 105,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.z_quant.QB.s0m02",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17162,
+   "drive_cycle": 17253,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 105,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.z_quant.QB.s0m02",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17162,
+   "drive_cycle": 17253,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 105,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.z_quant.QB.s0m02",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17162,
+   "drive_cycle": 17253,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 105,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.z_quant.QB.s0m04",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17163,
+   "drive_cycle": 17254,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 106,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.z_quant.QB.s0m04",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17163,
+   "drive_cycle": 17254,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 106,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.z_quant.QB.s0m04",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17163,
+   "drive_cycle": 17254,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 106,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.z_quant.QB.s0m04",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17163,
+   "drive_cycle": 17254,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 106,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.z_quant.QB.s0m08",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17164,
+   "drive_cycle": 17255,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 107,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.z_quant.QB.s0m08",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17164,
+   "drive_cycle": 17255,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 107,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.z_quant.QB.s0m08",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17164,
+   "drive_cycle": 17255,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 107,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.z_quant.QB.s0m08",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17164,
+   "drive_cycle": 17255,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 107,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.attn.z_quant.QB.s0m10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17165,
+   "drive_cycle": 17256,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 108,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.attn.z_quant.QB.s0m10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17165,
+   "drive_cycle": 17256,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 108,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.attn.z_quant.QB.s0m10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17165,
+   "drive_cycle": 17256,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 108,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.attn.z_quant.QB.s0m10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 17165,
+   "drive_cycle": 17256,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 108,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "bk.attn.idx.topk_final.drain",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 18288,
+   "drive_cycle": 18379,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 103,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "bk.attn.idx.topk_final.drain",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 18288,
+   "drive_cycle": 18379,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 103,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "bk.attn.idx.topk_final.drain",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 18288,
+   "drive_cycle": 18379,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 103,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "bk.attn.idx.topk_final.drain",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 18288,
+   "drive_cycle": 18379,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 103,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.softplus_sqrt.RA.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22324,
+   "drive_cycle": 22415,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 110,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.softplus_sqrt.RA.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22324,
+   "drive_cycle": 22415,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 110,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.softplus_sqrt.RA.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22324,
+   "drive_cycle": 22415,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 110,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.softplus_sqrt.RA.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22324,
+   "drive_cycle": 22415,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 110,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.bias.row.s0m01.0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22923,
+   "drive_cycle": 23014,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 111,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.bias.row.s0m01.0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22923,
+   "drive_cycle": 23014,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 111,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.bias.row.s0m01.0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22923,
+   "drive_cycle": 23014,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 111,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.bias.row.s0m01.0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22923,
+   "drive_cycle": 23014,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 111,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.bias.row.s0m01.1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22924,
+   "drive_cycle": 23015,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 112,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.bias.row.s0m01.1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22924,
+   "drive_cycle": 23015,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 112,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.bias.row.s0m01.1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22924,
+   "drive_cycle": 23015,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 112,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.bias.row.s0m01.1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22924,
+   "drive_cycle": 23015,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 112,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.bias.row.s0m01.2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22925,
+   "drive_cycle": 23016,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 113,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.bias.row.s0m01.2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22925,
+   "drive_cycle": 23016,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 113,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.bias.row.s0m01.2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22925,
+   "drive_cycle": 23016,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 113,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.bias.row.s0m01.2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22925,
+   "drive_cycle": 23016,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 113,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.bias.row.s0m01.3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22926,
+   "drive_cycle": 23017,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 114,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.bias.row.s0m01.3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22926,
+   "drive_cycle": 23017,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 114,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.bias.row.s0m01.3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22926,
+   "drive_cycle": 23017,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 114,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.bias.row.s0m01.3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22926,
+   "drive_cycle": 23017,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 114,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.bias.row.s0m01.4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22927,
+   "drive_cycle": 23018,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 115,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.bias.row.s0m01.4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22927,
+   "drive_cycle": 23018,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 115,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.bias.row.s0m01.4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22927,
+   "drive_cycle": 23018,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 115,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.bias.row.s0m01.4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22927,
+   "drive_cycle": 23018,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 115,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.bias.row.s0m01.5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22928,
+   "drive_cycle": 23019,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 116,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.bias.row.s0m01.5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22928,
+   "drive_cycle": 23019,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 116,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.bias.row.s0m01.5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22928,
+   "drive_cycle": 23019,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 116,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.bias.row.s0m01.5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22928,
+   "drive_cycle": 23019,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 116,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.bias.RB.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22929,
+   "drive_cycle": 23020,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 117,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.bias.RB.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22929,
+   "drive_cycle": 23020,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 117,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.bias.RB.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22929,
+   "drive_cycle": 23020,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 117,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.bias.RB.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22929,
+   "drive_cycle": 23020,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 117,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.swiglu.SW.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25041,
+   "drive_cycle": 25132,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 119,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.swiglu.SW.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25041,
+   "drive_cycle": 25132,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 119,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.swiglu.SW.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25041,
+   "drive_cycle": 25132,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 119,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.swiglu.SW.s0m01",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25041,
+   "drive_cycle": 25132,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 119,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.swiglu.SW.s0m02",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25042,
+   "drive_cycle": 25133,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 120,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.swiglu.SW.s0m02",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25042,
+   "drive_cycle": 25133,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 120,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.swiglu.SW.s0m02",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25042,
+   "drive_cycle": 25133,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 120,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.swiglu.SW.s0m02",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25042,
+   "drive_cycle": 25133,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 120,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.swiglu.SW.s0m04",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25043,
+   "drive_cycle": 25134,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 121,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.swiglu.SW.s0m04",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25043,
+   "drive_cycle": 25134,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 121,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.swiglu.SW.s0m04",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25043,
+   "drive_cycle": 25134,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 121,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.swiglu.SW.s0m04",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25043,
+   "drive_cycle": 25134,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 121,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.swiglu.SW.s0m08",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25044,
+   "drive_cycle": 25135,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 122,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.swiglu.SW.s0m08",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25044,
+   "drive_cycle": 25135,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 122,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.swiglu.SW.s0m08",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25044,
+   "drive_cycle": 25135,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 122,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.swiglu.SW.s0m08",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25044,
+   "drive_cycle": 25135,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 122,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "vs.ffn.swiglu.SW.s0m10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25045,
+   "drive_cycle": 25136,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 123,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "vs.ffn.swiglu.SW.s0m10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25045,
+   "drive_cycle": 25136,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 123,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "vs.ffn.swiglu.SW.s0m10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25045,
+   "drive_cycle": 25136,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 123,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "vs.ffn.swiglu.SW.s0m10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 25045,
+   "drive_cycle": 25136,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 123,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "bk.attn.idx.topk_local.drain",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 26109,
+   "drive_cycle": 26200,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": null,
+   "template": 102,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "bk.attn.idx.topk_local.drain",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 26109,
+   "drive_cycle": 26200,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": null,
+   "template": 102,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "bk.attn.idx.topk_local.drain",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 26109,
+   "drive_cycle": 26200,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": null,
+   "template": 102,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "bk.attn.idx.topk_local.drain",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 26109,
+   "drive_cycle": 26200,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": null,
+   "template": 102,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3749,
+   "drive_cycle": 3840,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3737",
+   "template": 29,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3749,
+   "drive_cycle": 3840,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3737",
+   "template": 29,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3749,
+   "drive_cycle": 3840,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3737",
+   "template": 29,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3749,
+   "drive_cycle": 3840,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3737",
+   "template": 29,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3754,
+   "drive_cycle": 3845,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3742",
+   "template": 30,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3754,
+   "drive_cycle": 3845,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3742",
+   "template": 30,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3754,
+   "drive_cycle": 3845,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3742",
+   "template": 30,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3754,
+   "drive_cycle": 3845,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3742",
+   "template": 30,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3759,
+   "drive_cycle": 3850,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3747",
+   "template": 31,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3759,
+   "drive_cycle": 3850,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3747",
+   "template": 31,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3759,
+   "drive_cycle": 3850,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3747",
+   "template": 31,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3759,
+   "drive_cycle": 3850,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3747",
+   "template": 31,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3763,
+   "drive_cycle": 3854,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3751",
+   "template": 32,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3763,
+   "drive_cycle": 3854,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3751",
+   "template": 32,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3763,
+   "drive_cycle": 3854,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3751",
+   "template": 32,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3763,
+   "drive_cycle": 3854,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3751",
+   "template": 32,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3764,
+   "drive_cycle": 3855,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3752",
+   "template": 33,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3764,
+   "drive_cycle": 3855,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3752",
+   "template": 33,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3764,
+   "drive_cycle": 3855,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3752",
+   "template": 33,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3764,
+   "drive_cycle": 3855,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3752",
+   "template": 33,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3768,
+   "drive_cycle": 3859,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3756",
+   "template": 34,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3768,
+   "drive_cycle": 3859,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3756",
+   "template": 34,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3768,
+   "drive_cycle": 3859,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3756",
+   "template": 34,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3768,
+   "drive_cycle": 3859,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3756",
+   "template": 34,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3769,
+   "drive_cycle": 3860,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3757",
+   "template": 35,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3769,
+   "drive_cycle": 3860,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3757",
+   "template": 35,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3769,
+   "drive_cycle": 3860,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3757",
+   "template": 35,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3769,
+   "drive_cycle": 3860,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3757",
+   "template": 35,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3773,
+   "drive_cycle": 3864,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3761",
+   "template": 36,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3773,
+   "drive_cycle": 3864,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3761",
+   "template": 36,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3773,
+   "drive_cycle": 3864,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3761",
+   "template": 36,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3773,
+   "drive_cycle": 3864,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3761",
+   "template": 36,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3774,
+   "drive_cycle": 3865,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3762",
+   "template": 37,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3774,
+   "drive_cycle": 3865,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3762",
+   "template": 37,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3774,
+   "drive_cycle": 3865,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3762",
+   "template": 37,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3774,
+   "drive_cycle": 3865,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3762",
+   "template": 37,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3778,
+   "drive_cycle": 3869,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3766",
+   "template": 38,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3778,
+   "drive_cycle": 3869,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3766",
+   "template": 38,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3778,
+   "drive_cycle": 3869,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3766",
+   "template": 38,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3778,
+   "drive_cycle": 3869,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3766",
+   "template": 38,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3779,
+   "drive_cycle": 3870,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3767",
+   "template": 39,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3779,
+   "drive_cycle": 3870,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3767",
+   "template": 39,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3779,
+   "drive_cycle": 3870,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3767",
+   "template": 39,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3779,
+   "drive_cycle": 3870,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3767",
+   "template": 39,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3783,
+   "drive_cycle": 3874,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3771",
+   "template": 40,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3783,
+   "drive_cycle": 3874,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3771",
+   "template": 40,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3783,
+   "drive_cycle": 3874,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3771",
+   "template": 40,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3783,
+   "drive_cycle": 3874,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3771",
+   "template": 40,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3784,
+   "drive_cycle": 3875,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3772",
+   "template": 41,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3784,
+   "drive_cycle": 3875,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3772",
+   "template": 41,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3784,
+   "drive_cycle": 3875,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3772",
+   "template": 41,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3784,
+   "drive_cycle": 3875,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3772",
+   "template": 41,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3788,
+   "drive_cycle": 3879,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3776",
+   "template": 42,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3788,
+   "drive_cycle": 3879,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3776",
+   "template": 42,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3788,
+   "drive_cycle": 3879,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3776",
+   "template": 42,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3788,
+   "drive_cycle": 3879,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3776",
+   "template": 42,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3789,
+   "drive_cycle": 3880,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3777",
+   "template": 43,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3789,
+   "drive_cycle": 3880,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3777",
+   "template": 43,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3789,
+   "drive_cycle": 3880,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3777",
+   "template": 43,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3789,
+   "drive_cycle": 3880,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3777",
+   "template": 43,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3793,
+   "drive_cycle": 3884,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3781",
+   "template": 44,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3793,
+   "drive_cycle": 3884,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3781",
+   "template": 44,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3793,
+   "drive_cycle": 3884,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3781",
+   "template": 44,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg6",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3793,
+   "drive_cycle": 3884,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3781",
+   "template": 44,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3794,
+   "drive_cycle": 3885,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3782",
+   "template": 45,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3794,
+   "drive_cycle": 3885,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3782",
+   "template": 45,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3794,
+   "drive_cycle": 3885,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3782",
+   "template": 45,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3794,
+   "drive_cycle": 3885,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3782",
+   "template": 45,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3798,
+   "drive_cycle": 3889,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3786",
+   "template": 46,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3798,
+   "drive_cycle": 3889,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3786",
+   "template": 46,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3798,
+   "drive_cycle": 3889,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3786",
+   "template": 46,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg7",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3798,
+   "drive_cycle": 3889,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3786",
+   "template": 46,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3799,
+   "drive_cycle": 3890,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3787",
+   "template": 47,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3799,
+   "drive_cycle": 3890,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3787",
+   "template": 47,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3799,
+   "drive_cycle": 3890,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3787",
+   "template": 47,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3799,
+   "drive_cycle": 3890,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3787",
+   "template": 47,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3803,
+   "drive_cycle": 3894,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3791",
+   "template": 48,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3803,
+   "drive_cycle": 3894,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3791",
+   "template": 48,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3803,
+   "drive_cycle": 3894,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3791",
+   "template": 48,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg8",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3803,
+   "drive_cycle": 3894,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3791",
+   "template": 48,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3804,
+   "drive_cycle": 3895,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3792",
+   "template": 49,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3804,
+   "drive_cycle": 3895,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3792",
+   "template": 49,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3804,
+   "drive_cycle": 3895,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3792",
+   "template": 49,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3804,
+   "drive_cycle": 3895,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3792",
+   "template": 49,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3808,
+   "drive_cycle": 3899,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3796",
+   "template": 50,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3808,
+   "drive_cycle": 3899,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3796",
+   "template": 50,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3808,
+   "drive_cycle": 3899,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3796",
+   "template": 50,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg9",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3808,
+   "drive_cycle": 3899,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3796",
+   "template": 50,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3809,
+   "drive_cycle": 3900,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3797",
+   "template": 51,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3809,
+   "drive_cycle": 3900,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3797",
+   "template": 51,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3809,
+   "drive_cycle": 3900,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3797",
+   "template": 51,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3809,
+   "drive_cycle": 3900,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3797",
+   "template": 51,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3813,
+   "drive_cycle": 3904,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3801",
+   "template": 52,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3813,
+   "drive_cycle": 3904,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3801",
+   "template": 52,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3813,
+   "drive_cycle": 3904,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3801",
+   "template": 52,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg10",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3813,
+   "drive_cycle": 3904,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3801",
+   "template": 52,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "rdout13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3814,
+   "drive_cycle": 3905,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3802",
+   "template": 53,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "rdout13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3814,
+   "drive_cycle": 3905,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3802",
+   "template": 53,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "rdout13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3814,
+   "drive_cycle": 3905,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3802",
+   "template": 53,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "rdout13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3814,
+   "drive_cycle": 3905,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3802",
+   "template": 53,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3818,
+   "drive_cycle": 3909,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3806",
+   "template": 54,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3818,
+   "drive_cycle": 3909,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3806",
+   "template": 54,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3818,
+   "drive_cycle": 3909,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3806",
+   "template": 54,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg11",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3818,
+   "drive_cycle": 3909,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3806",
+   "template": 54,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3823,
+   "drive_cycle": 3914,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3811",
+   "template": 55,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3823,
+   "drive_cycle": 3914,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3811",
+   "template": 55,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3823,
+   "drive_cycle": 3914,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3811",
+   "template": 55,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg12",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3823,
+   "drive_cycle": 3914,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3811",
+   "template": 55,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "cfg13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3828,
+   "drive_cycle": 3919,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_s_7S@3816",
+   "template": 56,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "cfg13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3828,
+   "drive_cycle": 3919,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_s_7S@3816",
+   "template": 56,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "cfg13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3828,
+   "drive_cycle": 3919,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_s_7S@3816",
+   "template": 56,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "cfg13",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 3828,
+   "drive_cycle": 3919,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_s_7S@3816",
+   "template": 56,
+   "hops": 1,
+   "src_sid": 8
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.hc.coef_row0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1537,
+   "drive_cycle": 1628,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@1489 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.hc.coef_row0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1537,
+   "drive_cycle": 1628,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@1489 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.hc.coef_row0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1537,
+   "drive_cycle": 1628,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@1489 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.hc.coef_row0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1537,
+   "drive_cycle": 1628,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@1489 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.hc.coef_row1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1538,
+   "drive_cycle": 1629,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@1490 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.hc.coef_row1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1538,
+   "drive_cycle": 1629,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@1490 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.hc.coef_row1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1538,
+   "drive_cycle": 1629,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@1490 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.hc.coef_row1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1538,
+   "drive_cycle": 1629,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@1490 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.hc.coef_row2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1539,
+   "drive_cycle": 1630,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@1491 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.hc.coef_row2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1539,
+   "drive_cycle": 1630,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@1491 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.hc.coef_row2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1539,
+   "drive_cycle": 1630,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@1491 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.hc.coef_row2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1539,
+   "drive_cycle": 1630,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@1491 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.hc.coef_row3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1540,
+   "drive_cycle": 1631,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@1492 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.hc.coef_row3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1540,
+   "drive_cycle": 1631,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@1492 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.hc.coef_row3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1540,
+   "drive_cycle": 1631,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@1492 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.hc.coef_row3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1540,
+   "drive_cycle": 1631,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@1492 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.hc.coef_row4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1541,
+   "drive_cycle": 1632,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@1493 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.hc.coef_row4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1541,
+   "drive_cycle": 1632,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@1493 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.hc.coef_row4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1541,
+   "drive_cycle": 1632,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@1493 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.hc.coef_row4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1541,
+   "drive_cycle": 1632,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@1493 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "attn.hc.coef_row5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1542,
+   "drive_cycle": 1633,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@1494 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "attn.hc.coef_row5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1542,
+   "drive_cycle": 1633,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@1494 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "attn.hc.coef_row5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1542,
+   "drive_cycle": 1633,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@1494 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "attn.hc.coef_row5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 1542,
+   "drive_cycle": 1633,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@1494 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "ffn.hc.coef_row0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22318,
+   "drive_cycle": 22409,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@22270 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "ffn.hc.coef_row0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22318,
+   "drive_cycle": 22409,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@22270 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "ffn.hc.coef_row0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22318,
+   "drive_cycle": 22409,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@22270 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "ffn.hc.coef_row0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22318,
+   "drive_cycle": 22409,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@22270 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "ffn.hc.coef_row1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22319,
+   "drive_cycle": 22410,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@22271 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "ffn.hc.coef_row1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22319,
+   "drive_cycle": 22410,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@22271 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "ffn.hc.coef_row1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22319,
+   "drive_cycle": 22410,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@22271 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "ffn.hc.coef_row1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22319,
+   "drive_cycle": 22410,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@22271 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "ffn.hc.coef_row2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22320,
+   "drive_cycle": 22411,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@22272 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "ffn.hc.coef_row2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22320,
+   "drive_cycle": 22411,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@22272 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "ffn.hc.coef_row2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22320,
+   "drive_cycle": 22411,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@22272 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "ffn.hc.coef_row2",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22320,
+   "drive_cycle": 22411,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@22272 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "ffn.hc.coef_row3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22321,
+   "drive_cycle": 22412,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@22273 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "ffn.hc.coef_row3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22321,
+   "drive_cycle": 22412,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@22273 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "ffn.hc.coef_row3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22321,
+   "drive_cycle": 22412,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@22273 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "ffn.hc.coef_row3",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22321,
+   "drive_cycle": 22412,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@22273 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "ffn.hc.coef_row4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22322,
+   "drive_cycle": 22413,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@22274 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "ffn.hc.coef_row4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22322,
+   "drive_cycle": 22413,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@22274 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "ffn.hc.coef_row4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22322,
+   "drive_cycle": 22413,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@22274 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "ffn.hc.coef_row4",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22322,
+   "drive_cycle": 22413,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@22274 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "ffn.hc.coef_row5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22323,
+   "drive_cycle": 22414,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@22275 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "ffn.hc.coef_row5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22323,
+   "drive_cycle": 22414,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@22275 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "ffn.hc.coef_row5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22323,
+   "drive_cycle": 22414,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@22275 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "ffn.hc.coef_row5",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 22323,
+   "drive_cycle": 22414,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@22275 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "ffn.router.ids",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23004,
+   "drive_cycle": 23095,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@22956 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "ffn.router.ids",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23004,
+   "drive_cycle": 23095,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@22956 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "ffn.router.ids",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23004,
+   "drive_cycle": 23095,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@22956 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "ffn.router.ids",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23004,
+   "drive_cycle": 23095,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@22956 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "ffn.router.w0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23125,
+   "drive_cycle": 23216,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@23077 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "ffn.router.w0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23125,
+   "drive_cycle": 23216,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@23077 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "ffn.router.w0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23125,
+   "drive_cycle": 23216,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@23077 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "ffn.router.w0",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23125,
+   "drive_cycle": 23216,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@23077 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l0",
+   "tag": "ffn.router.w1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23126,
+   "drive_cycle": 23217,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l0_src"
+   ],
+   "derived": "u_gunit.vo_s@23078 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l1",
+   "tag": "ffn.router.w1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23126,
+   "drive_cycle": 23217,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l1_src"
+   ],
+   "derived": "u_gunit.vo_s@23078 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l2",
+   "tag": "ffn.router.w1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23126,
+   "drive_cycle": 23217,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l2_src"
+   ],
+   "derived": "u_gunit.vo_s@23078 via u_s_3S"
+  },
+  {
+   "lane": "xrW_0S_l3",
+   "tag": "ffn.router.w1",
+   "kind": "CTL",
+   "at": "u_s_0S.ri_e",
+   "cycle_land": 23126,
+   "drive_cycle": 23217,
+   "lane_age": 10,
+   "bundle_age": 10,
+   "ports": [
+    "i__w_xrW_0S_l3_src"
+   ],
+   "derived": "u_gunit.vo_s@23078 via u_s_3S"
+  }
+ ],
+ "out_checks": [],
+ "internal_words": 0,
+ "unencoded": [
+  {
+   "cycle": 261,
+   "inst": "u_s_0S",
+   "port": "(xfin NX exchange out: ro_e / ro_w / vo)",
+   "dir": "out",
+   "kind": "NX",
+   "tag": "attn.partial_roots",
+   "payload": "golden-subtree roots (fixture)",
+   "plan_only": true,
+   "gap": "the norm is lowered on ONE slice (smoke); the xfin NX snake (rstop K_NX) and the XQ all-gather are exchanges among all 16 slices whose beat cycles follow from every slice's go edge: the words need the 16-slice norm composition (lower_norm on every slice + the snake / all-gather schedule), not compiled"
+  },
+  {
+   "cycle": 574,
+   "inst": "u_s_0S",
+   "port": "ro_e / ro_w",
+   "dir": "out",
+   "kind": "XQ",
+   "tag": "attn.x_allgather",
+   "payload": "act-quant x beats of the slice (fixture: golden FP8 codes)",
+   "plan_only": true,
+   "gap": "the norm is lowered on ONE slice (smoke); the xfin NX snake (rstop K_NX) and the XQ all-gather are exchanges among all 16 slices whose beat cycles follow from every slice's go edge: the words need the 16-slice norm composition (lower_norm on every slice + the snake / all-gather schedule), not compiled"
+  }
+ ],
+ "unencoded_total": 2,
+ "partial": true,
+ "offdie": [
+  {
+   "cycle": 3774,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 0..7 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3779,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 8..15 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3784,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 16..23 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3789,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 24..31 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3794,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 32..39 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3799,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 40..47 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3804,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 48..55 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3809,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 56..63 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3814,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 64..71 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3819,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 72..79 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3824,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 320..327 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3829,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 328..335 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3834,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 336..343 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  },
+  {
+   "cycle": 3839,
+   "inst": "u_s_0S",
+   "port": "lep (outward line port)",
+   "dir": "out",
+   "kind": "RD",
+   "tag": "rows 344..351 -> sid 14",
+   "payload": "fixture a_allgather words",
+   "boundary": "offdie",
+   "observe": "u_s_0S outward ring port (ro_w of the slice inside the lep master) -> lt_lk link lanes",
+   "data_masked": "row pairs [1075:52] = leaf rows (fixture)"
+  }
+ ],
+ "internal_events": [
+  {
+   "cycle": 5997,
+   "inst": "u_s_0S.leaf0.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "attn.q_rope.QR",
+   "payload": "n=16 busy until 6054",
+   "issue": 5997,
+   "carried_by": "template 101",
+   "ctl_at": 6065
+  },
+  {
+   "cycle": 5997,
+   "inst": "u_s_0S.leaf1.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "attn.q_rope.QR",
+   "payload": "n=16 busy until 6054",
+   "issue": 5997,
+   "carried_by": "template 101",
+   "ctl_at": 6065
+  },
+  {
+   "cycle": 5997,
+   "inst": "u_s_0S.leaf2.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "attn.q_rope.QR",
+   "payload": "n=16 busy until 6054",
+   "issue": 5997,
+   "carried_by": "template 101",
+   "ctl_at": 6065
+  },
+  {
+   "cycle": 5997,
+   "inst": "u_s_0S.leaf3.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "attn.q_rope.QR",
+   "payload": "n=16 busy until 6054",
+   "issue": 5997,
+   "carried_by": "template 101",
+   "ctl_at": 6065
+  },
+  {
+   "cycle": 5997,
+   "inst": "u_s_0S.leaf4.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "attn.q_rope.QR",
+   "payload": "n=16 busy until 6054",
+   "issue": 5997,
+   "carried_by": "template 101",
+   "ctl_at": 6065
+  },
+  {
+   "cycle": 17095,
+   "inst": "u_s_0S.leaf0.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "attn.z_quant.QB",
+   "payload": "n=8 busy until 17114",
+   "issue": 17095,
+   "carried_by": "template 104",
+   "ctl_at": 17163
+  },
+  {
+   "cycle": 17096,
+   "inst": "u_s_0S.leaf1.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "attn.z_quant.QB",
+   "payload": "n=8 busy until 17115",
+   "issue": 17096,
+   "carried_by": "template 105",
+   "ctl_at": 17164
+  },
+  {
+   "cycle": 17097,
+   "inst": "u_s_0S.leaf2.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "attn.z_quant.QB",
+   "payload": "n=8 busy until 17116",
+   "issue": 17097,
+   "carried_by": "template 106",
+   "ctl_at": 17165
+  },
+  {
+   "cycle": 17098,
+   "inst": "u_s_0S.leaf3.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "attn.z_quant.QB",
+   "payload": "n=8 busy until 17117",
+   "issue": 17098,
+   "carried_by": "template 107",
+   "ctl_at": 17166
+  },
+  {
+   "cycle": 17099,
+   "inst": "u_s_0S.leaf4.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "attn.z_quant.QB",
+   "payload": "n=8 busy until 17118",
+   "issue": 17099,
+   "carried_by": "template 108",
+   "ctl_at": 17167
+  },
+  {
+   "cycle": 22258,
+   "inst": "u_s_0S.leaf0.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "ffn.softplus_sqrt.RA",
+   "payload": "n=6 busy until 22405",
+   "issue": 22258,
+   "carried_by": "template 110",
+   "ctl_at": 22326
+  },
+  {
+   "cycle": 22863,
+   "inst": "u_s_0S.leaf0.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "ffn.bias.RB",
+   "payload": "n=6 busy until 22888",
+   "issue": 22863,
+   "carried_by": "template 117",
+   "ctl_at": 22931
+  },
+  {
+   "cycle": 24975,
+   "inst": "u_s_0S.leaf0.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "ffn.swiglu.SW",
+   "payload": "n=16 busy until 25170",
+   "issue": 24975,
+   "carried_by": "template 119",
+   "ctl_at": 25043
+  },
+  {
+   "cycle": 24976,
+   "inst": "u_s_0S.leaf1.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "ffn.swiglu.SW",
+   "payload": "n=16 busy until 25171",
+   "issue": 24976,
+   "carried_by": "template 120",
+   "ctl_at": 25044
+  },
+  {
+   "cycle": 24977,
+   "inst": "u_s_0S.leaf2.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "ffn.swiglu.SW",
+   "payload": "n=16 busy until 25172",
+   "issue": 24977,
+   "carried_by": "template 121",
+   "ctl_at": 25045
+  },
+  {
+   "cycle": 24978,
+   "inst": "u_s_0S.leaf3.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "ffn.swiglu.SW",
+   "payload": "n=16 busy until 25173",
+   "issue": 24978,
+   "carried_by": "template 122",
+   "ctl_at": 25046
+  },
+  {
+   "cycle": 24979,
+   "inst": "u_s_0S.leaf4.vs",
+   "port": "s_d",
+   "dir": "internal",
+   "kind": "VS",
+   "tag": "ffn.swiglu.SW",
+   "payload": "n=16 busy until 25174",
+   "issue": 24979,
+   "carried_by": "template 123",
+   "ctl_at": 25047
+  }
+ ],
+ "by_kind": {
+  "CTL": {
+   "in_words": 464
+  },
+  "NX": {
+   "unencoded": 1
+  },
+  "RD": {
+   "offdie": 14
+  },
+  "VS": {
+   "internal": 17
+  },
+  "XQ": {
+   "unencoded": 1
+  }
+ },
+ "in_events": 152,
+ "out_check_lines": 0,
+ "half_cycle_inputs": 0,
+ "ncyc": 26251,
+ "expected_out": {}
+}

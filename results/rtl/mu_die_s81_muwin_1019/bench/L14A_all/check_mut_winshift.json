@@ -1,0 +1,29 @@
+{
+ "verdict": "FAIL",
+ "expected": 360,
+ "matched": 314,
+ "errors": [
+  "missing MC0 at 23707 value 6001",
+  "missing MC0 at 66331 value 196015",
+  "missing MC0 at 108959 value 326025",
+  "missing MC0 at 151587 value 4b6035",
+  "missing MC0 at 194215 value 646045",
+  "missing MC0 at 236843 value 7d6055",
+  "missing MC0 at 279467 value 966065",
+  "missing MC0 at 322095 value af6075",
+  "missing MC0 at 364723 value c86085",
+  "missing MC0 at 407351 value e16095",
+  "unexpected MC0 at 23708 value 6001",
+  "unexpected MC0 at 66332 value 196015",
+  "unexpected MC0 at 108960 value 326025",
+  "unexpected MC0 at 151588 value 4b6035",
+  "unexpected MC0 at 194216 value 646045",
+  "unexpected MC0 at 236844 value 7d6055",
+  "unexpected MC0 at 279468 value 966065",
+  "unexpected MC0 at 322096 value af6075",
+  "unexpected MC0 at 364724 value c86085",
+  "unexpected MC0 at 407352 value e16095"
+ ],
+ "log": "/srv/opentallas-scratch/claude/mu-die-s81-muwin/stage2/out_L14A_all/run_mut_winshift.log",
+ "note": null
+}

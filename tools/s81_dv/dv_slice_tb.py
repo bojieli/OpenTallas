@@ -31,7 +31,18 @@ def main(argv=None):
     ap.add_argument('--ports', required=True)
     ap.add_argument('--top', default='slice_top')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--ep-probe', action='append', default=[], help='MU-DIE-S81/HOP: INST of an MU end-slice lep master '
+                    'in the slice top (e.g. u_s_7N): observe its lep core frame mux (every ring beat pushed to the link '
+                    'lanes: pair, kind, MU tag) and its fault sources at the instance (+EP=<file>); the master .fault is '
+                    'unconnected in the die, so an endpoint fault (or its MU part) is seen only here')
+    ap.add_argument('--ep-check', action='store_true', help='TOK-B3 (10-19): also CHECK the probed consumer beats in '
+                    'the simulator against +EPX=<gold> (dv_cut_replay epx: <edge> <probe idx> <pair> <kind> <tag> <hop>, '
+                    'gold from the compiled schedule): every expected beat bit-exact on its edge (pair, kind, MU tag), '
+                    'missing / unexpected beats (+EPSTRICT=0: untagged unexpected beats ignored), MU faults te / land '
+                    '/ mcol and beats left past the run (deadline) are mismatches; zero total checks = TB FAIL')
     a = ap.parse_args(argv)
+    if a.ep_check and not a.ep_probe:
+        ap.error('--ep-check needs --ep-probe')
     P = json.loads(Path(a.ports).read_text())['ports']
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     names = list(P)
@@ -67,7 +78,7 @@ def main(argv=None):
            not (P[n]['kind'] == 'die_input' and P[n]['net'] == 'rst_n')]
     outs = [(i, n) for i, n in enumerate(names) if P[n]['dir'] == 'output']
     v += ['    // ---- replay inputs',
-          '    integer fin = 0, fout = 0, ftr = 0, rc, n_in = 0, n_chk = 0, n_bad = 0, n_flt = 0, first_flt = -1;',
+          '    integer fin = 0, fout = 0, ftr = 0, ' + ('fep = 0, ' if a.ep_probe else '') + 'rc, n_in = 0, n_chk = 0, n_bad = 0, n_flt = 0, first_flt = -1;',
           '    real ec; integer ep; reg [MAXW-1:0] ev, em; reg have_ev = 0;',
           '    real oc; integer op; reg [MAXW-1:0] ov, om; reg have_ov = 0;',
           '    string fn;',
@@ -121,13 +132,85 @@ def main(argv=None):
         v.append(f'        if (ftr != 0 && get({i}) !== prev[{i}]) begin $fdisplay(ftr, "%0d {i} %h", cyc, get({i})); prev[{i}] = get({i}); end')
     if flt:
         v.append(f'        if ({" | ".join(flt)}) begin n_flt = n_flt + 1; if (first_flt < 0) first_flt = cyc; end')
-    v += ['    end',
-          '    initial begin',
+    v.append('    end')
+    # MU-DIE-S81/HOP endpoint probes: the lep core (ot_s81sl_lep_core inside ot_s81sl_slice_lep g_mu.u_lep) of each
+    # probed end slice.  Lines (falling edge after rising edge k, like the checks):
+    #   EPB <k> <inst> <pair 0 A / 1 B> <kind> <tag [1077:1045] hex>   every ring beat on the lep ro pin flop (rov)
+    #   EPF <k> <inst> <src> 1                                         first edge a fault source is high
+    # src: ep = the master .fault port; te = TX window fault (window over an open one / non-XB-XQ beat in a window / ab
+    # with user 0 or AB_EN 0); land = dsdv_mu_land fault; mcol = replay against a cut-through beat; sl = slice fault;
+    # ln = link lane tile faults {meso, gearbox, endpoint}; io = TX landing overflow / RX pair-protocol / host-plane fault.
+    for j, inst in enumerate(a.ep_probe):
+        c = f'u_slice.{inst}.u.g_mu.u_lep.u'
+        g = f'u_slice.{inst}.u.g_mu'
+        v += [f'    // ---- endpoint probe {inst}',
+              f'    reg [6:0] epf{j} = 0;',
+              f'    always @(negedge ck) if (rst_n && cyc >= 0 && fep != 0) begin',
+              f'        if ({c}.rov) $fdisplay(fep, "EPB %0d {inst} %0d %0d %h", cyc, {c}.bsel, {c}.roq[3:1], '
+              f'{c}.fr[1077:1045]);',
+              f'        if ({c}.fault && !epf{j}[0]) begin epf{j}[0] = 1; $fdisplay(fep, "EPF %0d {inst} ep 1", cyc); end',
+              f'        if ({c}.terr && !epf{j}[1]) begin epf{j}[1] = 1; $fdisplay(fep, "EPF %0d {inst} te 1", cyc); end',
+              f'        if ({g}.mf && !epf{j}[2]) begin epf{j}[2] = 1; $fdisplay(fep, "EPF %0d {inst} land 1", cyc); end',
+              f'        if ({c}.mcol_w && !epf{j}[3]) begin epf{j}[3] = 1; $fdisplay(fep, "EPF %0d {inst} mcol 1", cyc); end',
+              f'        if ({c}.sl_f && !epf{j}[4]) begin epf{j}[4] = 1; $fdisplay(fep, "EPF %0d {inst} sl 1", cyc); end',
+              f'        if ((|{c}.l0_f || |{c}.l1_f) && !epf{j}[5]) begin epf{j}[5] = 1; $fdisplay(fep, "EPF %0d {inst} ln 1", cyc); end',
+              f'        if (((|{c}.ovf) || {c}.perr || {c}.herr) && !epf{j}[6]) begin epf{j}[6] = 1; $fdisplay(fep, "EPF %0d {inst} io 1", cyc); end',
+              '    end']
+    if a.ep_check:
+        n = len(a.ep_probe)
+        v += ['    // ---- TOK-B3 consumer check: probed endpoint beats vs compiled gold (+EPX), in the simulator',
+              '    integer fepx = 0, ex_c = 0, ex_i = 0, ex_p = 0, ex_k = 0, ex_h = 0, ep_strict = 1;',
+              '    integer n_ep = 0, n_ep_hop = 0, n_ep_bad = 0, n_ep_late = 0;',
+              '    reg [32:0] ex_t; reg have_ex = 0;',
+              f'    reg [{n - 1}:0] ep_seen; reg [{3 * n - 1}:0] epm = 0;',
+              '    task next_ex;',
+              '        begin have_ex = 0;',
+              '            if (fepx != 0 && !$feof(fepx)) begin',
+              '                rc = $fscanf(fepx, "%d %d %d %d %h %d", ex_c, ex_i, ex_p, ex_k, ex_t, ex_h);',
+              '                have_ex = (rc == 6); end',
+              '        end',
+              '    endtask',
+              '    task automatic ep_bad(input integer k, input integer j, input integer why);',
+              '        begin n_ep_bad = n_ep_bad + 1; n_bad = n_bad + 1;',
+              '            if (n_ep_bad <= 20) $display("TB_DV_SLICE EP_MISMATCH edge %0d probe %0d why %0d (1 missing 2 value '
+              '3 unexpected 4 MU fault)", k, j, why);',
+              '        end',
+              '    endtask',
+              '    always @(negedge ck) if (rst_n && cyc >= 0 && fepx != 0) begin',
+              '        ep_seen = 0;',
+              '        while (have_ex && ex_c < cyc) begin ep_bad(ex_c, ex_i, 1); next_ex(); end',
+              '        while (have_ex && ex_c == cyc) begin',
+              '            n_ep = n_ep + 1; if (ex_h != 0) n_ep_hop = n_ep_hop + 1;',
+              '            case (ex_i)']
+        for j, inst in enumerate(a.ep_probe):
+            c = f'u_slice.{inst}.u.g_mu.u_lep.u'
+            v += [f'                {j}: begin ep_seen[{j}] = 1;',
+                  f'                    if (!{c}.rov) ep_bad(cyc, {j}, 1);',
+                  f'                    else if ({c}.bsel != ex_p[0] || {c}.roq[3:1] != ex_k[2:0] || '
+                  f'{{1\'b0, {c}.fr[1077:1045]}} != ex_t) ep_bad(cyc, {j}, 2);',
+                  '                end']
+        v += ['                default: ep_bad(cyc, ex_i, 1);',
+              '            endcase',
+              '            next_ex();',
+              '        end']
+        for j, inst in enumerate(a.ep_probe):
+            c = f'u_slice.{inst}.u.g_mu.u_lep.u'
+            g = f'u_slice.{inst}.u.g_mu'
+            v += [f'        if ({c}.rov && !ep_seen[{j}] && (ep_strict != 0 || |{c}.fr[1077:1045])) ep_bad(cyc, {j}, 3);',
+                  f'        if ({c}.terr && !epm[{3 * j}]) begin epm[{3 * j}] = 1; ep_bad(cyc, {j}, 4); end',
+                  f'        if ({g}.mf && !epm[{3 * j + 1}]) begin epm[{3 * j + 1}] = 1; ep_bad(cyc, {j}, 4); end',
+                  f'        if ({c}.mcol_w && !epm[{3 * j + 2}]) begin epm[{3 * j + 2}] = 1; ep_bad(cyc, {j}, 4); end']
+        v += ['    end']
+    v += ['    initial begin',
           '        for (k = 0; k < %d; k = k + 1) prev[k] = 0;' % len(names),
+          *(['        if ($value$plusargs("EP=%s", fn)) fep = $fopen(fn, "w");'] if a.ep_probe else []),
           '        if (!$value$plusargs("NCYC=%d", NCYC)) NCYC = 2000;',
           '        if ($value$plusargs("IN=%s", fn)) begin fin = $fopen(fn, "r"); if (fin == 0) begin $display("TB_DV_SLICE FAIL no IN %s", fn); $finish; end end',
           '        if ($value$plusargs("OUT=%s", fn)) begin fout = $fopen(fn, "r"); if (fout == 0) begin $display("TB_DV_SLICE FAIL no OUT %s", fn); $finish; end end',
           '        if ($value$plusargs("TRACE=%s", fn)) ftr = $fopen(fn, "w");',
+          *(['        if ($value$plusargs("EPX=%s", fn)) begin fepx = $fopen(fn, "r"); if (fepx == 0) begin $display("TB_DV_SLICE FAIL no EPX %s", fn); $finish; end end',
+             '        if (!$value$plusargs("EPSTRICT=%d", ep_strict)) ep_strict = 1;',
+             '        next_ex();'] if a.ep_check else []),
           '        next_in(); next_out();',
           '        #0.1 rst_n = 1\'b0;',
           '        repeat (NRST) @(posedge ck);',
@@ -141,7 +224,14 @@ def main(argv=None):
           '        if (have_ev) begin $display("TB_DV_SLICE replay events left unapplied from cycle %0.1f", ec); n_bad = n_bad + 1; end',
           '        $display("DV_SLICE cycles=%0d in_events=%0d out_checks=%0d mismatches=%0d fault_cycles=%0d first_fault=%0d",'
           ' NCYC, n_in, n_chk, n_bad, n_flt, first_flt);',
+          *(['        while (have_ex) begin n_ep_late = n_ep_late + 1; n_bad = n_bad + 1; next_ex(); end',
+             '        $display("DV_SLICE_EP consumer_checks=%0d hop_checks=%0d ep_mismatches=%0d past_deadline=%0d strict=%0d", '
+             'n_ep, n_ep_hop, n_ep_bad, n_ep_late, ep_strict);'] if a.ep_check else []),
+          # a bench that compares nothing is not evidence (TOK-B3 10-19): zero output + consumer checks = FAIL
+          '        if (n_chk%s == 0) begin $display("TB_DV_SLICE FAIL zero checks (nothing compared)"); n_bad = n_bad + 1; end'
+          % (' + n_ep' if a.ep_check else ''),
           '        if (ftr != 0) $fclose(ftr);',
+          *(['        if (fep != 0) $fclose(fep);'] if a.ep_probe else []),
           '        if (n_bad == 0 && n_flt == 0) $display("TB_DV_SLICE PASS"); else $display("TB_DV_SLICE FAIL");',
           '        $finish;',
           '    end',
@@ -150,7 +240,8 @@ def main(argv=None):
     (out / 'tb_ports.json').write_text(json.dumps([dict(index=i, port=n, dir=P[n]['dir'], kind=P[n]['kind'],
                                                         width=P[n]['width'], lo=P[n]['lo'], bits=P[n]['bits'])
                                                    for i, n in enumerate(names)], indent=0) + '\n')
-    print(f'dv_slice_tb: tb_{a.top}.sv ports {len(names)} driven {len(drv)} checked {len(outs)} fault vectors {len(flt)}')
+    print(f'dv_slice_tb: tb_{a.top}.sv ports {len(names)} driven {len(drv)} checked {len(outs)} fault vectors {len(flt)}'
+          + (f' endpoint probes {a.ep_probe}' if a.ep_probe else ''))
 
 
 if __name__ == '__main__':

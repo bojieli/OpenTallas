@@ -78,15 +78,22 @@ def rd_beat(src, hops, dst_mask, leaf, row, pairs, data, kind=K_RD):
 
 # Edge constants of the send / receive path, from the RTL edge chain below; bench_vpx asserts every one of them on
 # every run (send edges, read-back edges and the receive latency must match exactly); edge chain (inward port = the edge the beat is on the slice pin):
-#   CTL beat on the slice pin -> rstop pin flop + delivery flop (2) -> xr pin flop (1) -> cvld: CFG_AT = 3
+#   CTL beat on the slice pin -> rstop pin flop + delivery flop (2) -> xr pin flop (1) -> XR2 classify flop (1) -> cvld/tg: CFG_AT = 4
 #   cvld (target 0) -> c_d flop (1) -> leaf relay DL 4 -> vp pin flop (1) -> sequencer step 0 (1) -> macro + output
-#   register + dv (2) -> lo flop (1) -> relay DL 4 -> xr lo pin flop (1): first lo pair at xr = CFG_AT + LO_AFTER_CTL
+#   register + dv (2) -> lo flop (1) -> relay DL 4 -> xr lo pin flop (1) -> XR2 lov1 flop (1): first lo pair at xr = CFG_AT + LO_AFTER_CTL
 #   pk_go the edge after the 4th pair; snd -> ci flop -> rstop ci flop -> ro flop: beat on the outward port SEND_AFTER_GO
-CFG_AT = 3
-LO_AFTER_CTL = 15
+CFG_AT = 4
+LO_AFTER_CTL = 16
 SEND_AFTER_GO = 3
-RX_WR_AFTER_PIN = 5          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> unpacker
-                             # busy flop (1) -> sw row-pair write flop (1); pair j one edge later each
+RX_WR_AFTER_PIN = 6          # RD beat on the slice pin -> rstop pin + delivery flops (2) -> xr pin flop (1) -> unpacker
+                             # XR2 classify flop (1) -> busy flop (1) -> sw row-pair write flop (1); pair j one edge later each
+# SEND frame (TOK4 10-19, die cut_7 L0 epcheck): leg_program / hop_leg cycles are SLICE-PIN cycles (bench_vpx frame), but
+# ctl_path()['edges'] and every CTL 'in' event are compiler EVENT edges = landed slice pin + RSTOP_HOP (dv_cut_replay lands
+# a CTL event e on the slice pin at e - RSTOP_HOP).  So a CTL issued at t0 + c - first is on the pin at
+# t0 + c - first + lat - RSTOP_HOP, and its pin-relative send lands RSTOP_HOP edges before t0 + s - first + lat.  The old
+# CFG_AT 3 / LO 15 were 2 low and hid this (cut_7 HOP 480/480); with 4 / 16 every compiled send was 2 late
+# (564/564 beats observed, all at gold - 2).
+RSTOP_HOP = 2                # ot_s81sl_rstop: line in pin -> line out pin (= dv_cut_replay / dv_layer_compile RSTOP_HOP)
 PAIRS = 4                    # row pairs per RD beat (the 1,024-b payload)
 
 
@@ -172,9 +179,126 @@ GAP_FFN_COMBINE = dict(module='final_ffn.py / xs_calendar --final-ffn-placement'
                                'and allgather arrivals on all four ranks before issuing the production calendar')
 
 
+# ------------------------------------------------------------------------------------------------ stage h hop (XB)
+# MU-DIE-S81/HOP (10-19, parent decision after MUWIN 2244fc3c0): the end-slice stage hop (substage_hop<i>) is lowered as
+# XB beats, the only kind the MU lep TX window stamps / lands (ot_s81sl_lep_core K_XB / K_XQ; MU tag in the spare bits
+# [1077:1045], MU-S81/LINK 258c9894b).  RTL as is: the only path that sends a beat out of an end slice's OUTWARD port
+# (the lep ro) with an explicit hop count is the xr send packer (rstop: a control-plane beat with hops != 0 leaves
+# unchanged; vq's own XB beats take the line default hops, which never cross the end slice).  Per end slice:
+#   send config (CTL target 4) {dir outward (E at s_7*, W at s_0*), kind 2 XB, hops 1 (delivered at the peer die's end
+#   slice), dst mask / leaf / row 0 (unused by an XB receive), pairs 3}, then two vp RDOUTs of 120 row pairs each (vp
+#   steps rows by si[6:0]: <= 128 pairs per command; the 2nd command one edge after the 1st completes, no busy hit).
+#   The packer emits a beat every 3 lo pairs -> HOP_NB = 80 beats a hop, one every 3 cycles (1 gap cycle at beat 40),
+#   rate 1/3 < the lep lane rate 0.764.
+# Why 3 pairs: the packer places the pairs at beat [52 +: 1024] (RD layout).  With 4 pairs, pair 3 bits [1023:993] sit
+# on the MU tag field [1077:1045]: a window stamp overwrites them, the RX strip zeroes them, and an UNstamped data bit
+# 1045 = 1 is taken as a tag (tagd) -- a single-user beat would be landed / stripped.  3 pairs (768 b at [819:52])
+# leave [1103:820] zero, so the beat is a clean XB beat for the window logic.
+HOP_LEGS = [('u_s_7N', 'E'), ('u_s_7S', 'E'), ('u_s_0N', 'W'), ('u_s_0S', 'W')]   # hwin ep order 0..3 (dv_mu_win EPS)
+K_XB = 2
+HOP_NB = 80                 # beats per end-slice h share per hop (ot_s81sl_lep_core NB, dsdv_mu_land NB)
+HOP_PAIRS = 3               # row pairs per beat: tag field [1077:1045] clear
+HOP_RD_N = 120              # row pairs per RDOUT (vp rr0 = a0 + {si[6:0], 0}: <= 128)
+HOP_LEAF = 0
+HOP_ROW0 = 0                # stand-in rows (GAP_HOP (1)): leaf 0 rows 0 .. 479
+GAP_HOP = dict(module='tools/s81_dv/frame_return_plan.py / hc_post h store + ot_s81sl_xr send pack (XB layout)',
+               port='h share rows at the end slices; XB payload layout',
+               missing='TX timing is lowered (cfg + 2 RDOUT a slice, 80 XB beats on the lep ro at fixed edges, the MU '
+                       'window anchors on them); NOT compiled: (1) the on-die move of the 16 slices\' h to the 4 end '
+                       'slices and the leaf rows it occupies (leaf 0 rows 0..479 stand in); (2) payload: the xr packer '
+                       'puts the pairs at beat [1075:52], so a kind-2 beat keeps the MU tag field [1077:1045] clear only '
+                       'with <= 3 pairs (768 b): NB 80 beats carry 7,680 B of the 10,240-B share, and the peer gather '
+                       'reads an XB beat in the vq layout (gidx [20:13], bf [1044:21]) -> the hop beat arrives 31 b '
+                       'shifted with gidx 0.  Exact h transport needs an xr XB-layout pack mode (RTL) or NB 107 + a '
+                       're-laid receive (parent / RTL decision)')
+
+
+def hop_leg(sid, dir_, leaf=HOP_LEAF, row0=HOP_ROW0, nb=HOP_NB, pairs=HOP_PAIRS, rd_n=HOP_RD_N):
+    """one end slice's hop leg, pin-relative cycles (cycle 0 = the first RDOUT CTL on the slice pin): CTL arrivals and
+    the beats on the outward port (the rstop ro register edge, SEND edge of bench_vpx)"""
+    npairs = nb * pairs
+    assert rd_n % pairs == 0 and npairs % rd_n == 0 and rd_n <= 128 and row0 + 2 * npairs <= 1024
+    ctl, lo = [], []
+    tr = 0
+    for j in range(npairs // rd_n):
+        ctl.append(dict(cycle=tr, target=0, body=_vp(VP_RDOUT, a0=row0 + 2 * rd_n * j, n=rd_n), tag=f'hrd{j}',
+                        leaf_mask=1 << leaf))
+        lo += [tr + CFG_AT + LO_AFTER_CTL + i for i in range(rd_n)]
+        tr += rd_n + 1                              # vp: next command one edge after the running one completes
+    tc = lo[0] - 1 - CFG_AT                        # config on xr the lo-free edge before the first pair
+    ctl.append(dict(cycle=tc, target=4, body=send_cfg(dir_, K_XB, 1, 0, 0, 0, pairs), tag='hcfg', leaf_mask=0))
+    assert len({c['cycle'] for c in ctl}) == len(ctl)
+    sends = []
+    for k in range(nb):
+        last = lo[pairs * k + pairs - 1]
+        sends.append(dict(cycle=last + 1 + SEND_AFTER_GO, beat=k, rows=[row0 + 2 * p + r for p in
+                                                                          range(pairs * k, pairs * k + pairs) for r in (0, 1)]))
+    return dict(ctl=sorted(ctl, key=lambda c: c['cycle']), sends=sends, lo=lo)
+
+
+def lower_hop(die, op, t0):
+    """8 V rows a hop: per tier (engine vo_n / vo_s) the two RDOUT commands are ONE CTL beat each, slice-masked to both
+    end slices of the tier (the column-4 re-injection carries it both ways; each end slice runs it on its own arrival
+    edge), plus one send config per end slice (pin cycle 14 at the E end, 13 at the W end: distinct V edges, both on xr
+    before the first lo pair).  Fewer rows keep the layer's hop inside issuer job 0 (NOPS 128: 12 rows split the L0
+    calendar at the hop and moved the job-0 KIT before the replay edges)."""
+    from dv_layer_compile import ctl_path   # noqa: E402 (plugin runs inside the compiler)
+    name = op['op']
+    sl = die.slices()
+    rows, templates, events, insts = [], [], [], []
+    for eng, tier in ((0, 'N'), (1, 'S')):
+        legs = [(src, d) for src, d in HOP_LEGS if src.endswith(tier) and src in sl]
+        if not legs:
+            continue
+        progs = {src: hop_leg(sl[src]['sid'], d) for src, d in legs}
+        mask = 0
+        for src, _ in legs:
+            mask |= 1 << sl[src]['sid']
+        ref = progs[legs[0][0]]
+        first = min(c['cycle'] for c in ref['ctl'] if c['target'] == 0)
+        shared = []
+        for c in ref['ctl']:
+            if c['target'] != 0:
+                continue
+            ti = len(templates)
+            templates.append((f'{tier}.{name}.{c["tag"]}', _payload(mask, 0, c['leaf_mask'], c['body'])))
+            rows.append(dict(eng=eng, issue=t0 + c['cycle'] - first, arg=ti,
+                             what=f'{"+".join(s for s, _ in legs)} {c["tag"]}'))
+            shared.append((c, ti))
+        for j, (src, d) in enumerate(legs):
+            sid = sl[src]['sid']
+            lat = ctl_path(die, src)['edges']
+            cfg = next(c for c in progs[src]['ctl'] if c['target'] == 4)
+            cc = cfg['cycle'] - j                     # W end one edge earlier: one V row per engine per edge
+            ti = len(templates)
+            templates.append((f'{src}.{name}.hcfg', _payload(1 << sid, 4, 0, cfg['body'])))
+            rows.append(dict(eng=eng, issue=t0 + cc - first, arg=ti, what=f'{src} hcfg'))
+            for c, tj in shared + [(dict(cfg, cycle=cc), ti)]:
+                events.append(dict(cycle=t0 + c['cycle'] - first + lat, inst=src, port='ri_e' if d == 'W' else 'ri_w',
+                                   dir='in', kind='CTL', tag=f'{name}.{c["tag"]}', payload=f'template {tj}'))
+            hdr = rd_beat(sid, 1, 0, 0, 0, HOP_PAIRS, 0, kind=K_XB)
+            for s_ in progs[src]['sends']:
+                ce = t0 + s_['cycle'] - first + lat - RSTOP_HOP   # TOK4: lat is an event edge (pin + RSTOP_HOP)
+                events.append(dict(cycle=ce, inst=src, port='lep (outward line port)', dir='out', kind='XB',
+                                   tag=f'{name} h beat {s_["beat"]} rows {s_["rows"][0]}..{s_["rows"][-1]}', hop=name,
+                                   beat=s_['beat'], payload='h share (stand-in leaf rows)', boundary='offdie',
+                                   observe=f'{src} outward ring port ({"ro_w" if d == "W" else "ro_e"} inside the lep '
+                                           f'master) -> lep core frame mux (MU tag stamp) -> lt_lk link lanes',
+                                   words=[[ce, f'{hdr:x}', f'{(1 << 52) - 1:x}']],
+                                   data_masked='row pairs [819:52] = leaf rows (stand-in); [1103:820] = 0 (MU tag field)'))
+            insts.append(src)
+        assert len({r['issue'] for r in rows if r['eng'] == eng}) == sum(r['eng'] == eng for r in rows)
+    return dict(status='PARTIAL' if insts else 'GAP', unit='end-slice send cfg (XB, hops 1) + 2 x vp RDOUT 120 -> lep '
+                'ro (MU TX window) -> peer end slice', insts=insts, gap=GAP_HOP, rows=rows, templates=templates,
+                events=events, bench=BENCH, atomic=True, hop=dict(nb=HOP_NB, pairs=HOP_PAIRS, rd_n=HOP_RD_N, leaf=HOP_LEAF,
+                                                     row0=HOP_ROW0))
+
+
 def lower(die, op, ctx):
     name = op['op']
     t0 = int(ctx.get('t_issue', 0))
+    if re.search(r'(^|\.)substage_hop\d+$', name):
+        return lower_hop(die, op, t0)
     if name.endswith('hc_pre'):
         # The arithmetic bench proves row reads, not the layer's row producer.
         # run_layer uses entry pre for attn and attn pre for ffn. Current-block
@@ -201,8 +325,7 @@ def lower(die, op, ctx):
                                  missing='actual source paths and all-leaf calendars; actual POST/native timing'))
         return dict(status='PARTIAL', unit='slice vp POST (a0 = R + 1: post row, comb R+2..R+5) -> vn h store',
                     insts=[ctx.get('slice')], gap=GAP_POST, bench=BENCH_VP)
-    if name.endswith('a_allgather') or name.endswith('rows_allgather') or name.endswith('router_allgather') \
-            or re.search(r'substage_hop\d+$', name):
+    if name.endswith('a_allgather') or name.endswith('rows_allgather') or name.endswith('router_allgather'):
         rank = int(ctx.get('rank', 0))
         sl = die.slices()
         rows, templates, events, insts = [], [], [], []
@@ -238,7 +361,7 @@ def lower(die, op, ctx):
                 # The outward port is INSIDE the end-slice lep master: at the die cut it continues as the reliable
                 # link lanes lt_lk_* (seq / CRC / credits: flow control at the off-die boundary, owner 10-14), so no
                 # cut sees this word at a fixed cycle -> boundary 'offdie' (bench_vpx checks it through the real lep)
-                ce = t0 + s['cycle'] - first + lat
+                ce = t0 + s['cycle'] - first + lat - RSTOP_HOP    # TOK4: see SEND frame note at RSTOP_HOP
                 hdr = rd_beat(s['src'], 1, s['dst_mask'], s['leaf'], s['dst_row'], s['pairs'], 0)
                 events.append(dict(cycle=ce, inst=src, port='lep (outward line port)', dir='out', kind='RD',
                                    tag=f'rows {s["rows"][0]}..{s["rows"][-1]} -> sid {psid}',

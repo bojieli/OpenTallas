@@ -158,8 +158,11 @@ def shares(sid, k):
     return s
 
 
-def plan(die, sched, sl, fixtures=None):
-    """the slice's whole vs programme for the layer: per op {templates, rows, leaf windows}, leaves serialised"""
+def plan(die, sched, sl, fixtures=None, line_delay=None):
+    """the slice's whole vs programme for the layer: per op {templates, rows, leaf windows}, leaves serialised.
+    line_delay {op: edges} (MU-DIE-S81/LINECOL 10-19): dv_layer_compile's tier-line slot reservation moves an op's first
+    command this many edges past its priced start (the leaf windows that follow re-serialise from it)"""
+    line_delay = line_delay or {}
     info = die.slices()[sl]
     sid, tier = info['sid'], sl[-1]
     eng = ENG_V[tier]
@@ -183,8 +186,10 @@ def plan(die, sched, sl, fixtures=None):
                          'ffn.swiglu') if o in by]
     order.sort(key=lambda o: by[o]['start'])
     for name in order:
-        t_op = int(math.floor(by[name]['start']))
+        t_op = int(math.floor(by[name]['start'])) + line_delay.get(name, 0)
         rec = dict(templates=[], rows=[], leaves={}, notes=[])
+        if line_delay.get(name):
+            rec['notes'].append(f'line slot reservation: start +{line_delay[name]} edges (dv_layer_compile line_slots)')
         cmds = {}                                      # body -> leaf mask (identical commands share one template)
         pre = []                                       # target-5 row writes before the command
         for k in range(5):
@@ -313,9 +318,10 @@ def lower(die, op, ctx):
         sl0 = ctx['slice'] if ctx['slice'].startswith('u_') else 'u_' + ctx['slice']
         return lower_eng(die, op, ctx, sl0, die.slices()[sl0]['sid'])
     sl = ctx['slice'] if ctx['slice'].startswith('u_') else 'u_' + ctx['slice']
-    key = (id(die), ctx.get('layer'), sl, str(ctx.get('fixtures')))
+    ld = dict(ctx.get('line_delay') or {})
+    key = (id(die), ctx.get('layer'), sl, str(ctx.get('fixtures')), tuple(sorted(ld.items())))
     if key not in _cache:
-        _cache[key] = plan(die, ctx['sched'], sl, ctx.get('fixtures'))
+        _cache[key] = plan(die, ctx['sched'], sl, ctx.get('fixtures'), line_delay=ld)
     P = _cache[key]
     sid = die.slices()[sl]['sid']
     base = dict(unit=UNIT, insts=[sl], gunit_rows=[], svc_jobs=[], files={}, bench=BENCH)

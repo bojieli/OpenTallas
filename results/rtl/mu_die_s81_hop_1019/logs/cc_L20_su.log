@@ -1,0 +1,3 @@
+LINE_SLOTS L20: 3 collisions [('line', ['u_s_2S', 'ri_e', 25009]), ('line', ['u_s_1S', 'ri_e', 25021]), ('line', ['u_s_0S', 'ri_e', 25033])] -> line_delay {'ffn.softplus_sqrt': 2}
+{"layer": "L20", "ops": 84, "status": {"PARTIAL": 37, "LOWERED": 18, "GAP": 29}, "rows": 140, "templates": 140, "line_delay": {"ffn.softplus_sqrt": 2}, "line_collisions": 0}
+SMOKE u_s_0S sid 0: CTL latency 68 edges, last partial 261, rstd 495, XQ at ring 574

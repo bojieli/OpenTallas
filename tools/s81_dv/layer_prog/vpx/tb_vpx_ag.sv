@@ -68,10 +68,10 @@ module tb_vpx_ag #(parameter integer SA = 0, parameter integer SB = 14, paramete
         if (B.u.lro[0]) $display("SEND B %0d %h", cyc, B.u.lro);
         if (A.u.lri[0]) $display("LRI A %0d %h", cyc, A.u.lri);
         if (B.u.lri[0]) $display("LRI B %0d %h", cyc, B.u.lri);
-        if (A.u.g_w.u_sl.g_c1.u_xr.u.cvld) $display("CTL A %0d %0d", cyc, A.u.g_w.u_sl.g_c1.u_xr.u.tgt);
-        if (B.u.g_e.u_sl.g_c1.u_xr.u.cvld) $display("CTL B %0d %0d", cyc, B.u.g_e.u_sl.g_c1.u_xr.u.tgt);
-        if (|A.u.g_w.u_sl.g_c1.u_xr.u.lov) $display("LO A %0d %b", cyc, A.u.g_w.u_sl.g_c1.u_xr.u.lov);
-        if (|B.u.g_e.u_sl.g_c1.u_xr.u.lov) $display("LO B %0d %b", cyc, B.u.g_e.u_sl.g_c1.u_xr.u.lov);
+        if (A.u.g_w.u_sl.g_c1.u_xr.u.cvld) $display("CTL A %0d %0d", cyc, A.u.g_w.u_sl.g_c1.u_xr.u.tg[4] ? 4 : A.u.g_w.u_sl.g_c1.u_xr.u.tg[0] ? 0 : A.u.g_w.u_sl.g_c1.u_xr.u.tg[2] ? 2 : A.u.g_w.u_sl.g_c1.u_xr.u.tg[3] ? 3 : A.u.g_w.u_sl.g_c1.u_xr.u.tg[1] ? 1 : 5);  // TOK2: post-XR2 stage-1 (tg one-hot)
+        if (B.u.g_e.u_sl.g_c1.u_xr.u.cvld) $display("CTL B %0d %0d", cyc, B.u.g_e.u_sl.g_c1.u_xr.u.tg[4] ? 4 : B.u.g_e.u_sl.g_c1.u_xr.u.tg[0] ? 0 : B.u.g_e.u_sl.g_c1.u_xr.u.tg[2] ? 2 : B.u.g_e.u_sl.g_c1.u_xr.u.tg[3] ? 3 : B.u.g_e.u_sl.g_c1.u_xr.u.tg[1] ? 1 : 5);  // TOK2: post-XR2 stage-1 (tg one-hot)
+        if (|A.u.g_w.u_sl.g_c1.u_xr.u.lov1) $display("LO A %0d %b", cyc, A.u.g_w.u_sl.g_c1.u_xr.u.lov1);  // TOK2: post-XR2 packer-side lo (lov1)
+        if (|B.u.g_e.u_sl.g_c1.u_xr.u.lov1) $display("LO B %0d %b", cyc, B.u.g_e.u_sl.g_c1.u_xr.u.lov1);  // TOK2: post-XR2 packer-side lo (lov1)
         for (k = 0; k < 5; k = k + 1) begin
             if (A.u.g_w.u_sl.sw_v_x[k]) $display("WR A %0d %0d %0d %h %h", cyc, k, A.u.g_w.u_sl.sw_a_x[10 * k +: 10],
                                                  A.u.g_w.u_sl.sw_m_x[8 * k +: 8], A.u.g_w.u_sl.sw_d_x[256 * k +: 256]);

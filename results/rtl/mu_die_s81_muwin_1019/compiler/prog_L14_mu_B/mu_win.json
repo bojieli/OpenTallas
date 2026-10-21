@@ -1,0 +1,463 @@
+{
+ "schema": "opentallas.s81_dv.mu_win.v1",
+ "layer": "L14",
+ "group": "S020",
+ "copy": "B",
+ "mode": "ar",
+ "period": 980428,
+ "nw": 23,
+ "gaps": [
+  42628,
+  42628,
+  42624,
+  42628,
+  42628,
+  42628,
+  42628,
+  42628,
+  42624,
+  42628,
+  42628,
+  42628,
+  42628,
+  42624,
+  42628,
+  42628,
+  42628,
+  42628,
+  42628,
+  42624,
+  42628,
+  42628,
+  42628
+ ],
+ "RL": 22844,
+ "kit_age": 22837,
+ "layer_issue0": -64,
+ "NB": 80,
+ "LEAD_TX": 4,
+ "REPLAY_LAT": 6,
+ "cap_to_layer": 4,
+ "lanes": [
+  {
+   "ep": 0,
+   "name": "7n",
+   "inst": "u_s_7N",
+   "lane": "ht_7N",
+   "age": 59
+  },
+  {
+   "ep": 1,
+   "name": "7s",
+   "inst": "u_s_7S",
+   "lane": "mu_7S",
+   "age": 37
+  },
+  {
+   "ep": 2,
+   "name": "0n",
+   "inst": "u_s_0N",
+   "lane": "mu_0N",
+   "age": 35
+  },
+  {
+   "ep": 3,
+   "name": "0s",
+   "inst": "u_s_0S",
+   "lane": "mu_0S",
+   "age": 40
+  }
+ ],
+ "hops": [
+  {
+   "op": "substage_hop0",
+   "start": 19640.3,
+   "end": 20713.3
+  }
+ ],
+ "events": [
+  {
+   "i": 0,
+   "kind": "tx",
+   "k": 0,
+   "ep": 0,
+   "inst": "u_s_7N",
+   "port": "mu_c",
+   "lane": "ht_7N",
+   "age": 59,
+   "D": 19646,
+   "pin_layer": 19637,
+   "out_layer": 19579,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 19641,
+    "what": "ceil(start): first h beat may reach ro"
+   }
+  },
+  {
+   "i": 1,
+   "kind": "tx",
+   "k": 0,
+   "ep": 1,
+   "inst": "u_s_7S",
+   "port": "mu_c",
+   "lane": "mu_7S",
+   "age": 37,
+   "D": 19668,
+   "pin_layer": 19637,
+   "out_layer": 19601,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 19641,
+    "what": "ceil(start): first h beat may reach ro"
+   }
+  },
+  {
+   "i": 2,
+   "kind": "tx",
+   "k": 0,
+   "ep": 2,
+   "inst": "u_s_0N",
+   "port": "mu_c",
+   "lane": "mu_0N",
+   "age": 35,
+   "D": 19670,
+   "pin_layer": 19637,
+   "out_layer": 19603,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 19641,
+    "what": "ceil(start): first h beat may reach ro"
+   }
+  },
+  {
+   "i": 3,
+   "kind": "tx",
+   "k": 0,
+   "ep": 3,
+   "inst": "u_s_0S",
+   "port": "mu_c",
+   "lane": "mu_0S",
+   "age": 40,
+   "D": 19665,
+   "pin_layer": 19637,
+   "out_layer": 19598,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 19641,
+    "what": "ceil(start): first h beat may reach ro"
+   }
+  },
+  {
+   "i": 4,
+   "kind": "replay",
+   "k": 1,
+   "ep": 0,
+   "inst": "u_s_7N",
+   "port": "mu_rc",
+   "lane": "ht_7N",
+   "age": 59,
+   "D": 20637,
+   "pin_layer": 20628,
+   "out_layer": 20570,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 20634,
+    "what": "ceil(end) - NB: first h beat on ri (cut-through)"
+   }
+  },
+  {
+   "i": 5,
+   "kind": "replay",
+   "k": 1,
+   "ep": 1,
+   "inst": "u_s_7S",
+   "port": "mu_rc",
+   "lane": "mu_7S",
+   "age": 37,
+   "D": 20659,
+   "pin_layer": 20628,
+   "out_layer": 20592,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 20634,
+    "what": "ceil(end) - NB: first h beat on ri (cut-through)"
+   }
+  },
+  {
+   "i": 6,
+   "kind": "replay",
+   "k": 1,
+   "ep": 2,
+   "inst": "u_s_0N",
+   "port": "mu_rc",
+   "lane": "mu_0N",
+   "age": 35,
+   "D": 20661,
+   "pin_layer": 20628,
+   "out_layer": 20594,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 20634,
+    "what": "ceil(end) - NB: first h beat on ri (cut-through)"
+   }
+  },
+  {
+   "i": 7,
+   "kind": "replay",
+   "k": 1,
+   "ep": 3,
+   "inst": "u_s_0S",
+   "port": "mu_rc",
+   "lane": "mu_0S",
+   "age": 40,
+   "D": 20656,
+   "pin_layer": 20628,
+   "out_layer": 20589,
+   "hop": "substage_hop0",
+   "anchor": {
+    "op": "substage_hop0",
+    "edge": 20634,
+    "what": "ceil(end) - NB: first h beat on ri (cut-through)"
+   }
+  }
+ ],
+ "slots": [
+  {
+   "slot": 0,
+   "user": 1,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 332525
+  },
+  {
+   "slot": 1,
+   "user": 3,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 375153
+  },
+  {
+   "slot": 2,
+   "user": 5,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 417781
+  },
+  {
+   "slot": 3,
+   "user": 7,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 460405
+  },
+  {
+   "slot": 4,
+   "user": 9,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 503033
+  },
+  {
+   "slot": 5,
+   "user": 11,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 545661
+  },
+  {
+   "slot": 6,
+   "user": 13,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 588289
+  },
+  {
+   "slot": 7,
+   "user": 15,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 630917
+  },
+  {
+   "slot": 8,
+   "user": 17,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 673545
+  },
+  {
+   "slot": 9,
+   "user": 19,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 716169
+  },
+  {
+   "slot": 10,
+   "user": 21,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 758797
+  },
+  {
+   "slot": 11,
+   "user": 23,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 801425
+  },
+  {
+   "slot": 12,
+   "user": 25,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 844053
+  },
+  {
+   "slot": 13,
+   "user": 27,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 886681
+  },
+  {
+   "slot": 14,
+   "user": 29,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 929305
+  },
+  {
+   "slot": 15,
+   "user": 31,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 971933
+  },
+  {
+   "slot": 16,
+   "user": 33,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 1014561
+  },
+  {
+   "slot": 17,
+   "user": 35,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 1057189
+  },
+  {
+   "slot": 18,
+   "user": 37,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 1099817
+  },
+  {
+   "slot": 19,
+   "user": 39,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 1142445
+  },
+  {
+   "slot": 20,
+   "user": 41,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 1185069
+  },
+  {
+   "slot": 21,
+   "user": 43,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 1227697
+  },
+  {
+   "slot": 22,
+   "user": 45,
+   "kind": "ar",
+   "land": 1,
+   "ab": 1,
+   "start": 1270325
+  }
+ ],
+ "checks": [
+  {
+   "check": "nev",
+   "verdict": "PASS",
+   "why": "8 event rows (1 hops x 4 ends x 2), master NEV 8"
+  },
+  {
+   "check": "nslot",
+   "verdict": "PASS",
+   "why": "23 slots of copy B, master NSLOT 47"
+  },
+  {
+   "check": "gaps",
+   "verdict": "PASS",
+   "why": "gaps [42624, 42628] >= nw 23"
+  },
+  {
+   "check": "rl",
+   "verdict": "PASS",
+   "why": "RL 22844 (job-0 KIT age 22837 + 7) > nw 23"
+  },
+  {
+   "check": "d_range",
+   "verdict": "PASS",
+   "why": "every D in [nw + 2, RL - 2] = [25, 22842]"
+  },
+  {
+   "check": "port_edge",
+   "verdict": "PASS",
+   "why": "one command per end-slice port per edge over the period (184 commands)"
+  },
+  {
+   "check": "port_alone",
+   "verdict": "PASS",
+   "why": "42 scheduled outbound lep events of 23 users vs 4 TX windows"
+  },
+  {
+   "check": "hops",
+   "verdict": "PASS",
+   "why": "1 substage hop ops in the programme"
+  }
+ ],
+ "verdict": "PASS",
+ "mu1_uniform": false,
+ "status": "PRICED: D anchored on the priced substage_hop ops (hop lowering GAP: no h beat reaches the lep ro yet); seq_host side exact (run_mu_win_prog_bench.sh)"
+}

@@ -55,6 +55,12 @@ edge k; cycles are layer cycles + --t0.
                             expect-shift:<KIND>:<n>] [--lane-age] [--allow-stale]
   dv_cut_replay.py check   --replay DIR --run RUN [--out check.json]      (trace vs every encoded word, no extras)
   dv_cut_replay.py compose --cut NAME=REPLAY_DIR:RUN_DIR ... --out compose.json   (cross-cut lane consistency)
+  dv_cut_replay.py gen ... --mu PROG/prog/mu_slots.json --users 0,1,2 [--copy A] [--mu-pass P] [--mu-win W.json]
+                           [--mutant mu-drop:<user> | mu-offgrid:<user>:<n>]      (multi-user superposition)
+  dv_cut_replay.py mucheck --replay MU_DIR --run RUN [--su-replay SU_DIR --su-run SU_RUN] [--out mucheck.json]
+MU mode (MU-DIE-S81/MUREPLAY 10-19; see the "multi-user" section): users of ONE group copy at their q4 calendar shifts,
+the seq_host context {user, pos, tok} spliced into ctx V beats, per-user starts on f_ks for seq_host cuts; without --mu
+every output is byte-identical to the single-user tool.  mucheck: user 0 = the single-user run, user k = user 0 shifted.
 Mutants (negative controls; replay.json verdict_kind MUTANT): shift moves every word of ONE boundary input lane by n
 cycles, corrupt flips one bit of its first word, shift-kind:<KIND>:<n> moves every driven word of one event class,
 expect-shift:<KIND>:<n> moves every check of one event class (the RTL trace must then miss it) -- the bench / check
@@ -228,16 +234,39 @@ class Cut:
 
 
 # ================================================================================================= programme -> words
-def ctl_beat(T, ev, die, inst):
-    """the template beat as <inst> receives it on its line face (hops / src rewritten as ot_s81sl_rstop delivers it)"""
+def ctl_beat(T, ev, die, inst, ctx=None):
+    """the template beat as <inst> receives it on its line face (hops / src rewritten as ot_s81sl_rstop delivers it);
+    ctx (MU mode) = {template: (context mode, cx 52 = {user 10, pos 21, tok 21})}: the seq_host context splice of the
+    V command (dsdv_seq_host beat(): mode 1 body[159:108] = cx, mode 2 body[159:139] = pos)"""
     ti = int(ev['payload'].split()[1].rstrip(';'))
     beat = int(T[ti]['beat'], 16)
     if (beat >> 4) & 0x1F:
         raise ValueError(f'template {ti} carries hops {(beat >> 4) & 0x1F}: only line-default (0) beats are modelled')
+    if ctx and ti in ctx:
+        beat = mu_splice(beat, *ctx[ti])
     col, tier = int(inst[4]), inst[5]
     hops = col + 1 if ev['port'] == 'ri_e' else 8 - col
     src = die.sid(f'u_s_{LINE_INJECT_COL}{tier}')
     return (beat & ~(0x1F << 4) & ~(0xF << 9)) | (hops & 0x1F) << 4 | (src & 0xF) << 9, ti, hops, src
+
+
+# MU-DIE-S81/MUREPLAY 10-19: the CTL beat [21 +: 186] = payload {body 160, leaf mask 5, target 5, slice mask 16}, so body
+# bit b is beat bit 47 + b (dsdv_seq_host header)
+CTX_BODY_AT = 21 + 26
+
+
+def mu_splice(beat, md, cx):
+    """dsdv_seq_host beat(): context mode 1 overwrites body[159:108] with cx = {user 10, pos 21, tok 21}, mode 2
+    overwrites body[159:139] with pos = cx[41:21]; mode 0 leaves the template"""
+    if md == 1:
+        lo, n, v = CTX_BODY_AT + 108, 52, cx
+    elif md == 2:
+        lo, n, v = CTX_BODY_AT + 139, 21, (cx >> 21) & ((1 << 21) - 1)
+    elif md == 0:
+        return beat
+    else:
+        raise ValueError(f'V command context mode {md} = seq_host fault')
+    return (beat & ~(((1 << n) - 1) << lo)) | (v << lo)
 
 
 def line_link_age(die, a, b):
@@ -421,9 +450,10 @@ def hp_gap(evs):
                 e['producer_gap'] = SC_PRODUCER_GAP
 
 
-def landed_words(S, T, die):
+def landed_words(S, T, die, ctx=None):
     """(consumer inst, port) words at the consumer pin: [{event, inst, port, cycle_land, bits {(net, bit): v}}];
-    the events no cut can check at a fixed cycle (offdie) and the slice-internal ones are returned apart"""
+    the events no cut can check at a fixed cycle (offdie) and the slice-internal ones are returned apart.
+    ctx (MU mode): the user's seq_host context splice per template (ctl_beat)"""
     words, unenc, offdie, internal = [], [], [], []
     evs = S['events'] + derive_line_events(S, die) + derive_vctl_line_events(S, die)
     hp_gap(evs)
@@ -452,7 +482,7 @@ def landed_words(S, T, die):
             unenc.append(dict(e, why=f'no port {inst}.{e["port"]} in the die build'))
             continue
         if e['kind'] == 'CTL':
-            val, ti, hops, src = ctl_beat(T, e, die, inst)
+            val, ti, hops, src = ctl_beat(T, e, die, inst, ctx)
             meta = dict(template=ti, hops=hops, src_sid=src)
         else:
             val, meta = int(e['payload'], 16), {}
@@ -494,10 +524,22 @@ def gen(a):
         print(f'dv_cut_replay: STALE -- {len(st["link_age_diffs"])} lane ages differ from the die build '
               f'(e.g. {st["link_age_diffs"][:3]}); recompile the programme on {a.die_v}')
         return 2
-    words, unenc, offdie, internal_ev = landed_words(S, T, die)
+    mu = mu_setup(a, prog) if getattr(a, 'mu', None) else None
+    if mu is None:
+        words, unenc, offdie, internal_ev = landed_words(S, T, die)
+    else:
+        # MU-DIE-S81/MUREPLAY: the superposition of every selected user's words = the ONE compiled programme shifted by
+        # the user's calendar start (shift lemma), with the user's seq_host context spliced into its ctx V beats
+        words, per_user = [], {}
+        for u in mu['users']:
+            wu, unenc, offdie, internal_ev = landed_words(S, T, die, ctx=u['ctx'])
+            per_user[u['user']] = wu
+            words += [dict(w, cycle_land=w['cycle_land'] + u['shift'], mu_user=u['user']) for w in wu]
+        words += mu_win_words(a, die, mu)
+        mu['identity'] = mu_identity(mu, per_user)
     host = None
     if a.host_boot is not None or a.idle_run:
-        words, host = host_boot_words(a, die, prog, S, words, cut)
+        words, host = host_boot_words(a, die, prog, S, words, cut, mu)
     traces = {}
     for spec in a.trace:
         pdir, run = spec.split('=', 1)
@@ -510,6 +552,10 @@ def gen(a):
     checks = defaultdict(lambda: defaultdict(lambda: [0, 0]))   # out port -> cycle -> [mask, value]
     rec_in, rec_out, internal, outside = [], [], 0, 0
     pgap, gap_lanes = set(), set()
+    if mut and mut['kind'] in ('mu-drop', 'mu-offgrid') and (mu is None or mut['user'] not in
+                                                                {u['user'] for u in mu['users']}):
+        raise SystemExit(f'mutant {a.mutant}: needs --mu with user {mut["user"]} selected')
+    mu_mut = defaultdict(int)
     if mut and mut['kind'] == 'corrupt':
         firsts = [w['cycle_land'] for w in words if w['inst'] in cut.insts and
                   any(die.by_out.get(n) == mut['link'] for n, _ in w['bits'])]
@@ -560,6 +606,11 @@ def gen(a):
                     if pin is None:
                         raise SystemExit(f'lane {lk} bit {bit}: source net {sb[0]} is not a cut input port')
                     kk, vv = k, v
+                    if mut and mut['kind'] in ('mu-drop', 'mu-offgrid') and w.get('mu_user') == mut['user']:
+                        mu_mut[mut['kind']] += 1
+                        if mut['kind'] == 'mu-drop':
+                            continue                    # MUTANT: the user's traffic never reaches the cut
+                        kk = k + mut['n']               # MUTANT: the user starts off its calendar grid
                     if mut and mut['kind'] == 'shift-kind' and w['event']['kind'] == mut['ev']:
                         kk = k + mut['n']
                     if mut and mut.get('link') == lk:
@@ -574,7 +625,7 @@ def gen(a):
                 rec_in.append(dict(lane=lk, tag=w['event']['tag'], kind=w['event']['kind'], at=f'{w["inst"]}.{w["port"]}',
                                    cycle_land=w['cycle_land'], drive_cycle=k, lane_age=L['age'], bundle_age=bage,
                                    ports=sorted(hit), derived=w['event'].get('derived_from'),
-                                   **{x: w[x] for x in ('template', 'hops', 'src_sid') if x in w}))
+                                   **{x: w[x] for x in ('template', 'hops', 'src_sid', 'mu_user') if x in w}))
             else:                                       # cut -> neighbour: check the landed word
                 if w['event'].get('producer_gap'):
                     key = (w['event']['kind'], w['event']['tag'], w['inst'])
@@ -604,7 +655,8 @@ def gen(a):
                 checks[op['port']][tc][1] |= v
                 rec_out.append(dict(lane=lk, tag=w['event']['tag'], kind=w['event']['kind'], at=f'{w["inst"]}.{w["port"]}',
                                     cycle_land=w['cycle_land'], check_cycle=tc, lane_age=L['age'], bundle_age=bage,
-                                    port=op['port'], derived=w['event'].get('derived_from')))
+                                    port=op['port'], derived=w['event'].get('derived_from'),
+                                    **({'mu_user': w['mu_user']} if 'mu_user' in w else {})))
     ins = []
     for port, cyc in setm.items():                      # schedule words: a pulse, 0 the next cycle unless set again
         idx = cut.ports[port]['index']
@@ -689,8 +741,16 @@ def gen(a):
     for x, n in ((unenc_here, 'unencoded'), (offdie_here, 'offdie'), (internal_here, 'internal')):
         for e in x:
             by_kind[e['kind']][n] += 1
-    kind = 'MUTANT' if mut else ('DIAGNOSTIC' if (a.lane_age or st['stale'] or a.equalize) else 'SCHEDULE')
+    # HOP: a compiled window table whose TX rows anchor on the lowered hop beats is schedule, a hand table diagnostic
+    hand_win = bool(mu and mu['win'] and not (mu['win'].get('schema') == 'opentallas.s81_dv.mu_win.v1'
+                                              and mu['win'].get('lowered')))
+    kind = 'MUTANT' if mut else ('DIAGNOSTIC' if (a.lane_age or st['stale'] or a.equalize or hand_win) else 'SCHEDULE')
     ncyc = int(max([c for c, *_ in outs] + [c for c, *_ in ins] + [a.t0]) + 50)
+    if mu is not None:
+        ncyc = max(ncyc, int(a.t0 + mu['users'][-1]['shift'] + mu['window'] + 50))
+        mu['mutant_bits'] = dict(mu_mut)
+        mu['lanes'] = mu_lanes(die, cut, bnd)
+        mu['ep'] = ep_expect(a, S, mu, cut, out)
     doc = dict(schema=SCHEMA, tool='tools/s81_dv/dv_cut_replay.py', die_v=str(a.die_v), die_v_sha256=die.sha256,
                prog=str(prog), prog_manifest_sha256=hashlib.sha256((prog / 'manifest.json').read_bytes()).hexdigest()
                if (prog / 'manifest.json').exists() else None, cut=cut.dir, layer=S.get('layer'), t0=a.t0,
@@ -702,13 +762,200 @@ def gen(a):
                in_events=len(ins), out_check_lines=len(outs), half_cycle_inputs=len(halves), ncyc=ncyc,
                expected_out={p: {fmt(c): [f'{mv[0]:x}', f'{mv[1]:x}'] for c, mv in sorted(cc.items())}
                              for p, cc in checks.items()})
+    if mu is not None:
+        doc['mu'] = dict((k, v) for k, v in mu.items() if k != 'users') | dict(
+            users=[dict((k, v) for k, v in u.items() if k != 'ctx') | dict(ctx={str(t): [md, f'{cx:x}'] for t, (md, cx)
+                                                                                 in u['ctx'].items()})
+                   for u in mu['users']])
     (out / 'replay.json').write_text(json.dumps(doc, indent=1) + '\n')
     print(f'dv_cut_replay gen {Path(cut.dir).name}: {kind}; {len(rec_in)} lane words in ({len(ins)} events), '
           f'{len(rec_out)} lane words checked ({len(outs)} check lines); boundary {len(bnd)} lanes '
           f'({sum(b["source"] == "trace" for b in bnd)} trace-fed); unencoded boundary events {len(unenc_here)} '
           f'({sorted({e["kind"] for e in unenc_here})}), offdie {len(offdie_here)}, internal {len(internal_here)}; '
           f'stale {st["stale"]} die sha match {st["die_sha_match"]}; ncyc {ncyc}')
+    if mu is not None:
+        print(f'  MU {mu["layer"]} {mu["group"]} copy {mu["copy"]} pass {mu["pass"]}: users ' +
+              ', '.join(f'{u["user"]}@{u["shift"]}' for u in mu['users']) + f'; window {mu["window"]}; ctx templates '
+              f'{sorted(mu["ctx_templates"])}; identity {mu["identity"]["verdict"]} '
+              f'({mu["identity"]["why"]}); MU lanes {len(mu["lanes"])}; mutated drive bits {dict(mu_mut)}')
     return 0
+
+
+# ================================================================================================= multi-user (MU mode)
+# MU-DIE-S81/MUREPLAY 10-19.  Owner MU.DECIDE option A: user k runs the ONE compiled layer programme shifted by its
+# calendar start (dv_mu_calendar shift lemma, q4 grid: every start a multiple of 4 edges after the latency user's).  What
+# differs per user is data the programme states per slot (dv_layer_compile --mu-cal / --mu-ctx, prog/mu_slots.json):
+#   * the seq_host context of the job start {user 10, pos 21, tok 21}: spliced by the issuer into every V command whose
+#     calendar arg[8:7] is 1 (body[159:108]) or 2 (body[159:139] = pos) -- the HLOAD beat under --mu-ctx;
+#   * the group copy (A / B) the user runs on: a die is ONE copy, so a replay selects users of one copy;
+#   * the per-user HBM bases (wb / sb / ikb): the compiled svc job words do not carry them on this die (svc_jobs.json is
+#     the same for every user), recorded only;
+#   * MU lanes (seq_host mu_c / mu_rc -> end slices, mu_rt <- end slices): driven only from a --mu-win file of
+#     dsdv_mu_hslot event rows {kind tx | replay, inst, edge = user-0 layer edge at the slice pin}, because the compiler
+#     emits no hslot rows yet (and a per-layer programme has no stage h hop) -> such a replay is DIAGNOSTIC; without
+#     --mu-win the MU lanes are idle inputs and strict (no tag may appear) outputs.
+MU_PORTS = ('mu_c', 'mu_rc', 'mu_rt')
+
+
+def mu_setup(a, prog):
+    slots = Path(a.mu) if a.mu != 'auto' else prog / 'prog/mu_slots.json'
+    M = json.loads(slots.read_text())
+    if M.get('lemma') != 'PASS':
+        raise SystemExit(f'--mu {slots}: calendar lemma {M.get("lemma")} (a colliding calendar is a compile fault)')
+    rows = {r['user']: r for r in M['rows']}
+    r0 = rows.get(0)
+    if r0 is None or r0['copy'] != 'A':
+        raise SystemExit(f'--mu {slots}: no latency user 0 on copy A')
+    users = [int(x) for x in a.users.split(',')] if a.users else [0]
+    if sorted(users) != users or len(set(users)) != len(users):
+        raise SystemExit('--users: give distinct users in start order')
+    copy = a.copy or rows[users[0]]['copy']
+    cal = json.loads((prog / 'prog/calendar.json').read_text())
+    ctxmd = {}
+    for job in cal.get('job', [dict(rows=cal['rows'], templates=None)]):
+        for r in job['rows']:
+            if r['engine'] not in (0, 1):
+                continue
+            md = (r['arg'] >> 7) & 3
+            ti = job['templates'][r['arg'] & 0x7F] if job.get('templates') is not None else r['arg'] & 0x7F
+            if ctxmd.get(ti, md) != md:
+                raise SystemExit(f'template {ti} issued with context modes {ctxmd[ti]} and {md}: the replay keys the '
+                                 f'splice by template')
+            ctxmd[ti] = md
+    ctxmd = {t: m for t, m in ctxmd.items() if m}
+    out = []
+    for k in users:
+        r = rows.get(k)
+        if r is None:
+            raise SystemExit(f'--users: user {k} has no slot in {slots}')
+        if r['copy'] != copy:
+            raise SystemExit(f'--users: user {k} runs on copy {r["copy"]}, this die replays copy {copy} (one die = one '
+                             f'copy of the group)')
+        cs = r['start'] - r0['start']                  # calendar shift after the latency user
+        if cs % 4 or cs < 0:
+            raise SystemExit(f'user {k}: start {r["start"]} is not on the q4 grid after user 0 ({r0["start"]})')
+        sh = r['start'] - rows[users[0]]['start']        # bench shift: the die's first selected user starts at t0
+        pos = r['pos0'] + a.mu_pass * r['stride']
+        tok = 0
+        cx = (k << 42) | (pos << 21) | tok
+        if a.mu_pass == 0 and int(r['ctx_body'], 16) != cx << 108:
+            raise SystemExit(f'user {k}: ctx_body {r["ctx_body"]} != {{user, pos0, tok 0}} of the slot row')
+        out.append(dict(user=k, slot=r['slot'], kind=r['kind'], copy=r['copy'], local=r['local'], start=r['start'],
+                        calendar_shift=cs, shift=sh, pos=pos, tok=tok, cx=cx, bases={b: r[b] for b in ('wb', 'sb', 'ikb') if b in r},
+                        ctx={t: (md, cx) for t, md in ctxmd.items()}))
+    gaps = [b['shift'] - x['shift'] for x, b in zip(out, out[1:])]
+    win = None
+    if a.mu_win:
+        # MU-DIE-S81/MUWIN: 'auto' = the compiler's table (dv_layer_compile --mu-win -> prog/mu_win.json)
+        wp = prog / 'prog/mu_win.json' if a.mu_win == 'auto' else Path(a.mu_win)
+        win = json.loads(wp.read_text())
+        if win.get('schema') == 'opentallas.s81_dv.mu_win.v1':
+            if win['verdict'] != 'PASS':
+                raise SystemExit(f'--mu-win {wp}: compiled table verdict {win["verdict"]} '
+                                 f'({[c["check"] for c in win["checks"] if c["verdict"] != "PASS"]})')
+            if win['copy'] != copy:
+                raise SystemExit(f'--mu-win {wp}: table of copy {win["copy"]}, this replay is copy {copy}')
+            win['path'], win['sha256'] = str(wp), hashlib.sha256(wp.read_bytes()).hexdigest()
+    return dict(slots=str(slots), slots_sha256=hashlib.sha256(slots.read_bytes()).hexdigest(), layer=M['layer'],
+                group=M['group'], mode=M['mode'], copy=copy, period=M['period'], slot=M['slot'],
+                **{'pass': a.mu_pass}, users=out, window=min(gaps) if gaps else int(M['slot']),
+                ctx_templates=sorted(ctxmd), win=win,
+                bases_note='per-user HBM bases are slot-row data only: the compiled svc job words are the same for '
+                           'every user on this die (not encoded)')
+
+
+def mu_win_compiled(W, die):
+    """MU-DIE-S81/MUWIN: the compiled table (dv_mu_win.py) as --mu-win rows: edge = the user-0 landed edge at the slice
+    pin (pin_layer), per-user {land, ab} from the copy's slot rows; the lane ages must equal this build's"""
+    for e in W['events']:
+        lk = lane_of_net(die, next(nb[0] for nb in die.port_bits(e['inst'], e['port']) if nb))
+        if lk != e['lane'] or die.links[lk]['age'] != e['age']:
+            raise SystemExit(f'--mu-win: event {e["i"]} lane {e["lane"]} age {e["age"]} != this build '
+                             f'({lk}, age {die.links[lk]["age"] if lk else None}): recompile the programme')
+    return dict(events=[dict(i=e['i'], kind=e['kind'], inst=e['inst'], edge=e['pin_layer']) for e in W['events']],
+                users={str(s['user']): dict(land=s['land'], ab=s['ab']) for s in W['slots']})
+
+
+def mu_win_words(a, die, mu):
+    """--mu-win rows {kind: tx | replay, inst, edge} (+ per-user {land, ab}, default land = user != 0, ab 0) -> the
+    dsdv_mu_hslot window / replay commands at the slice's mu_c / mu_rc pin, edge + the user's shift.
+    Mutants (MUWIN): mu-win-shift:<event>:<n> moves one row n edges, mu-win-drop:<event> drops one row (TX row: the
+    window never opens, the user's h beats leave untagged = tag dropped); HOP: mu-win-ab:<event> flips the TX row's copy
+    select ab (wrong copy: pair B / a copy-B command on an AB_EN 0 endpoint).  --mu-win-kinds limits the driven rows
+    (HOP: cut_7 drives tx only -- the RX lanes have no peer die in a one-die cut, so a landing replay would read an empty
+    slot, a correct dsdv_mu_land fault)"""
+    if not mu['win']:
+        return []
+    W = mu['win']
+    if W.get('schema') == 'opentallas.s81_dv.mu_win.v1':
+        W = mu_win_compiled(W, die)
+    m = parse_mutant(a.mutant)
+    kinds = set((getattr(a, 'mu_win_kinds', None) or 'tx,replay').split(','))
+    att = {int(k): v for k, v in W.get('users', {}).items()}
+    out = []
+    for i, ev in enumerate(W['events']):
+        if m and m['kind'] == 'mu-win-drop' and m['ev'] == i:
+            continue                                        # MUTANT: the row is never issued
+        if m and m['kind'] == 'mu-win-shift' and m['ev'] == i:
+            ev = dict(ev, edge=ev['edge'] + m['n'])          # MUTANT: the row moved n edges
+        if ev['kind'] not in kinds:
+            continue
+        port = dict(tx='mu_c', replay='mu_rc')[ev['kind']]
+        for u in mu['users']:
+            k, at = u['user'], att.get(u['user'], {})
+            land, ab = int(at.get('land', k != 0)), int(at.get('ab', 0))
+            if m and m['kind'] == 'mu-win-ab' and m['ev'] == i:
+                ab ^= 1                                     # MUTANT: wrong copy select
+            if ev['kind'] == 'tx':
+                v = (u['pos'] & 0x1FFFFF) << 13 | k << 3 | land << 2 | ab << 1 | 1
+            elif not land:
+                continue                                    # a replay only where the user landed
+            else:
+                v = k << 1 | 1
+            w = word_at(die, ev['inst'], port, v, ev['edge'] + u['shift'], 'MUWIN', f'mu win {i} {ev["kind"]} user {k}')
+            out.append(dict(w, mu_user=k))
+    return out
+
+
+def mu_identity(mu, per_user):
+    """generator-side shift lemma: every user's words = user 0's words shifted, bit for bit, except the context splice
+    bits of ctx templates (the only per-user data the programme carries)"""
+    ref = mu['users'][0]
+    key = lambda w: (w['inst'], w['port'], w['event'].get('tag'), w['event'].get('derived_from'), w['cycle_land'])
+    base = sorted(per_user[ref['user']], key=lambda w: str(key(w)))
+    rows, ok = [], True
+    for u in mu['users']:
+        cur = sorted(per_user[u['user']], key=lambda w: str(key(w)))
+        same = ctxd = other = 0
+        if len(cur) != len(base) or any(key(x) != key(y) for x, y in zip(cur, base)):
+            other = -1
+        else:
+            for x, y in zip(cur, base):
+                if x['bits'] == y['bits']:
+                    same += 1
+                elif x.get('template') in u['ctx']:
+                    ctxd += 1
+                else:
+                    other += 1
+        rows.append(dict(user=u['user'], shift=u['shift'], words=len(cur), identical=same, ctx_only_diff=ctxd,
+                         other_diff=other))
+        ok &= other == 0 and (u['cx'] != ref['cx'] or ctxd == 0)
+    return dict(verdict='PASS' if ok else 'FAIL', rows=rows,
+                why=f'{len(mu["users"])} users vs user {ref["user"]}: ' + '; '.join(
+                    f'u{r["user"]} {r["identical"]} same + {r["ctx_only_diff"]} ctx-only, other {r["other_diff"]}'
+                    for r in rows))
+
+
+def mu_lanes(die, cut, bnd):
+    """the MU lanes on the cut boundary: lanes whose cut-side endpoint is an end slice's mu_c / mu_rc / mu_rt pin"""
+    nets = set()
+    for i in cut.insts:
+        for p in MU_PORTS:
+            nets |= {nb[0] for nb in die.port_bits(i, p) if nb}
+    lanes = {lane_of_net(die, n) for n in nets} - {None}
+    return [dict((k, b[k]) for k in ('port', 'dir', 'lane', 'age', 'K', 'source') if k in b) | (
+        {'strict': b['strict']} if 'strict' in b else {}) for b in bnd if b['lane'] in lanes]
+
 
 
 def word_at(die, inst, port, val, cycle_land, kind, tag, hold=None):
@@ -746,7 +993,7 @@ def seqhost_live(die, cut, idle_run):
     raise SystemExit(f'--idle-run: t_host alive never seen on {port["port"]} in {tr}')
 
 
-def host_boot_words(a, die, prog, S, words, cut=None):
+def host_boot_words(a, die, prog, S, words, cut=None, mu=None):
     """--host-boot B: the compiled host boot stream (prog/host_boot.memh, 515-b host words, the dsdv_seq_host L0
     format) delivered on u_seqhost.f_host one word every 5th edge from bench cycle B (tb_dv_prog_seqhost's host slots),
     the lane-live flags f_lf = 4'b0101 held from cycle 0, and ONE job start on f_ks at bench cycle --ks (word
@@ -765,25 +1012,197 @@ def host_boot_words(a, die, prog, S, words, cut=None):
         if a.host_boot < live['live'] + 2:
             raise SystemExit(f'--host-boot {a.host_boot} lands before u_seqhost leaves reset (live at {live["live"]}, '
                              f'idle run {a.idle_run}): the boot header would be dropped; use >= {live["live"] + 2}')
-    ks = a.ks if a.ks is not None else a.host_boot + 5 * len(hs) + 64
+    mb = []
+    if mu is not None and mu.get('win') and mu['win'].get('schema') == 'opentallas.s81_dv.mu_win.v1':
+        mb = [int(x, 16) for x in (prog / 'prog/mu_boot.memh').read_text().split()]
+    ks = a.ks if a.ks is not None else a.host_boot + 5 * (len(hs) + len(mb)) + 64
     a.t0 = ks + 5
     ksw = int(a.ks_word, 16)
     end = int(max([w['cycle_land'] for w in words] + [0]) + a.t0 + 64)
     out = list(words)
     out += [word_at(die, 'u_seqhost', 'f_host', h, a.host_boot + 5 * i - a.t0, 'HOST', f'host_boot[{i}]')
             for i, h in enumerate(hs)]
-    out.append(word_at(die, 'u_seqhost', 'f_ks', ksw, ks - a.t0, 'KS', 'job start'))
+    if mu is not None and mu.get('win') and mu['win'].get('schema') == 'opentallas.s81_dv.mu_win.v1':
+        # MU-DIE-S81/MUWIN: the compiled CSR 0x15 / 0x16 boot words follow the programme on the host lane (boot only:
+        # hslot / hwin take them while idle, before the first start)
+        out += [word_at(die, 'u_seqhost', 'f_host', h, a.host_boot + 5 * (len(hs) + i) - a.t0, 'HOST', f'mu_boot[{i}]')
+                for i, h in enumerate(mb)]
+    if mu is None:
+        out.append(word_at(die, 'u_seqhost', 'f_ks', ksw, ks - a.t0, 'KS', 'job start'))
+    else:
+        # MU: one start a user on its calendar shift, {start, user 10, tok 21, pos 21} = the user's context (the issuer
+        # splices it into every ctx V beat, so the start word and the replayed beats carry the same {user, pos, tok})
+        for u in mu['users']:
+            cx = u['cx']
+            w = (1 << 52) | ((cx >> 42) & 0x3FF) << 42 | (cx & 0x1FFFFF) << 21 | ((cx >> 21) & 0x1FFFFF)
+            out.append(dict(word_at(die, 'u_seqhost', 'f_ks', w, ks + u['shift'] - a.t0, 'KS', f'job start user {u["user"]}'),
+                            mu_user=u['user']))
+        ksw = None
     lf_age = max(die.links[die.by_out[n]]['age'] for n, _ in die.port_bits('u_seqhost', 'f_lf') if n in die.by_out)
     c0 = math.ceil(lf_age - 1)                        # the first landed cycle the producer can reach from bench 0
     out += [word_at(die, 'u_seqhost', 'f_lf', 0b0101, c - a.t0, 'LF', 'lane live', hold=c0 - a.t0)
             for c in range(c0, end)]
     return out, dict(boot_start=a.host_boot, seqhost_live=live, words=len(hs), last_word=a.host_boot + 5 * (len(hs) - 1), ks=ks,
-                     ks_word=f'{ksw:x}', t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}',
+                     ks_word=f'{ksw:x}' if ksw is not None else 'per user (mu)', t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}',
                      memh_sha256=hashlib.sha256((prog / 'prog/host_boot.memh').read_bytes()).hexdigest())
 
 
 def src_ports_of(cut, L):
     return {cut.in_by_net[sb[0]]['port'] for sb in L['src_bits'] if sb and sb[0] in cut.in_by_net}
+
+
+# ================================================================================================= endpoint (HOP)
+# MU-DIE-S81/HOP (10-19).  The stage h hop is lowered (lower_vpx: XB beats on each end slice's lep ro at fixed edges) and
+# the compiled TX windows (dv_mu_win) open on them.  What the window does is visible only INSIDE the end-slice master:
+# the stamped beats leave on the elastic link lanes (offdie) and the master .fault is unconnected in the die.  So the
+# bench observes the lep core frame mux of each end slice in the cut (dv_slice_tb --ep-probe: EPB / EPF lines, +EP=) and
+# the replay states, per probed end slice and user, every ring beat the lep pushes: bench edge (the ro register edge of
+# the out event + t0 + 1 for the lep ro pin flop + the user's shift), pair (copy A 0 / B 1), kind, and the MU tag
+# [1077:1045] = {pos 21, user 10, land, 1} on the beats of the user's TX window (the hop's NB beats), 0 elsewhere.
+EP_INSTS = ('u_s_7N', 'u_s_7S', 'u_s_0N', 'u_s_0S')
+EP_PIN = 1                      # rstop ro register edge -> lep core ro pin flop (rov)
+EP_KIND = dict(XQ=1, XB=2, RD=4, CL=6)
+EP_MU_FAULTS = ('te', 'land', 'mcol')
+
+
+def ep_expect(a, S, mu, cut, out):
+    """endpoint beat expectation of the probed end slices (nominal calendar, also for mutants)"""
+    W = mu.get('win') or {}
+    if W.get('schema') != 'opentallas.s81_dv.mu_win.v1':
+        return None
+    insts = [i for i in EP_INSTS if i in cut.insts]
+    kinds = set((getattr(a, 'mu_win_kinds', None) or 'tx,replay').split(','))
+    att = {s['user']: s for s in W['slots']}
+    win = {(e['hop'], e['inst']) for e in W['events'] if e['kind'] == 'tx'} if 'tx' in kinds else set()
+    rows = []
+    for x in S.get('events', []):
+        if x.get('dir') != 'out' or x.get('inst') not in insts or 'lep' not in str(x.get('port', '')):
+            continue
+        for u in mu['users']:
+            s = att[u['user']]
+            tag = 0
+            if x.get('hop') and (x['hop'], x['inst']) in win:
+                tag = (u['pos'] & 0x1FFFFF) << 12 | u['user'] << 2 | s['land'] << 1 | 1
+            rows.append((x['cycle'] + a.t0 + EP_PIN + u['shift'], x['inst'], s['ab'] if tag else 0,
+                         EP_KIND[x['kind']], tag, x.get('hop') or '', u['user']))
+    rows.sort()
+    (out / 'ep_expect.txt').write_text(''.join(f'{c} {i} {p} {k} {t:x} {h or "-"} {u}\n' for c, i, p, k, t, h, u in rows))
+    return dict(insts=insts, beats=len(rows), hop_beats=sum(1 for r in rows if r[5]),
+                tagged=sum(1 for r in rows if r[4]), file='ep_expect.txt', pin_edge=EP_PIN,
+                note='tb --ep-probe lines EPB <edge> <inst> <pair> <kind> <tag>; MU faults te / land / mcol must not rise')
+
+
+def epcheck(a):
+    """endpoint check of a probed run: every EPB line of the probed end slices equals the replay's ep_expect (edge, pair,
+    kind, MU tag), and no MU fault source (TX window te, landing, replay collision) rises; other endpoint fault sources
+    (lane tiles without a peer, slice) are reported"""
+    rp = json.loads((Path(a.replay) / 'replay.json').read_text())
+    ep = (rp.get('mu') or {}).get('ep')
+    if not ep:
+        raise SystemExit(f'{a.replay}: no endpoint expectation (gen --mu ... --mu-win auto on a cut with an end slice)')
+    scope = getattr(a, 'scope', None) or 'all'
+    exp = {}
+    for l in (Path(a.replay) / ep['file']).read_text().splitlines():
+        c, i, p, k, t, h, u = l.split()
+        if scope == 'hop' and h == '-':
+            continue
+        exp[(int(c), i)] = (int(p), int(k), int(t, 16), h, int(u))
+    ef = Path(a.run) / 'ep.txt'
+    txt = ef.read_text() if ef.exists() else ''
+    got, flt = {}, []
+    for l in txt.splitlines():
+        f = l.split()
+        if f[0] == 'EPB':
+            got[(int(f[1]), f[2])] = (int(f[3]), int(f[4]), int(f[5], 16))
+        elif f[0] == 'EPF':
+            flt.append(dict(edge=int(f[1]), inst=f[2], src=f[3]))
+    runlog = (Path(a.run) / 'run.log').read_text() if (Path(a.run) / 'run.log').exists() else ''
+    done = 'DV_SLICE cycles=' in runlog
+    errs = []
+    ncyc = rp['ncyc']
+    # TOK-B3 (10-19): the run must cover every expected consumer beat (deadline = the beat's compiled edge; a beat the
+    # compiler scheduled past the replay window is an error, not skipped), and a check that compares nothing FAILS
+    m = re.search(r'DV_SLICE cycles=(\d+)', runlog)
+    run_cyc = int(m.group(1)) if m else -1
+    late = [k for k in exp if k[0] > ncyc or k[0] > run_cyc]
+    errs += [f'expected beat {k[1]} edge {k[0]} beyond the run window (ncyc {ncyc}, run cycles {run_cyc}): deadline '
+             f'not observable' for k in sorted(late)]
+    if not [k for k in exp if k[0] <= ncyc]:
+        errs.append(f'ZERO consumer checks: no expected endpoint beat in scope {scope} (a bench that compares nothing '
+                    f'is not evidence)')
+    for key in sorted(set(exp) | set(got)):
+        if key[0] > ncyc:
+            continue
+        e, g = exp.get(key), got.get(key)
+        if e is None and scope == 'hop' and not g[2]:
+            continue                    # hop scope: untagged non-hop beats are out of scope (checked in scope all)
+        if e is None:
+            errs.append(f'unexpected beat {key[1]} edge {key[0]} pair {g[0]} kind {g[1]} tag {g[2]:x}')
+        elif g is None:
+            errs.append(f'missing beat {key[1]} edge {key[0]} ({e[3]} user {e[4]} tag {e[2]:x})')
+        elif g != e[:3]:
+            errs.append(f'beat {key[1]} edge {key[0]} ({e[3]} user {e[4]}): got pair {g[0]} kind {g[1]} tag {g[2]:x}, '
+                        f'want pair {e[0]} kind {e[1]} tag {e[2]:x}')
+    mu_f = [f for f in flt if f['src'] in EP_MU_FAULTS]
+    errs += [f'MU endpoint fault {f["src"]} at {f["inst"]} edge {f["edge"]}' for f in mu_f]
+    other = [f for f in flt if f['src'] not in EP_MU_FAULTS]
+    unexplained = [f for f in other if f['src'] == 'ep' and not any(
+        o['inst'] == f['inst'] and o['src'] in ('sl', 'ln', 'io') and o['edge'] <= f['edge'] for o in other)
+        and not any(m['inst'] == f['inst'] and m['edge'] <= f['edge'] for m in mu_f)]
+    errs += [f'endpoint fault at {f["inst"]} edge {f["edge"]} with no recorded source' for f in unexplained]
+    if not done:
+        errs.append('run incomplete (no DV_SLICE cycles line in run.log)')
+    if not txt:
+        errs.append(f'no endpoint probe output {ef}')
+    hop_exp = [k for k, v in exp.items() if v[3] != '-' and k[0] <= ncyc]
+    hop_ok = [k for k in hop_exp if got.get(k) == exp[k][:3]]
+    tag_ok = [k for k in hop_ok if exp[k][2]]
+    n_cmp = len([k for k in exp if k[0] <= ncyc])
+    doc = dict(schema=SCHEMA + '.epcheck', replay=str(a.replay), run=str(a.run), verdict='PASS' if not errs else 'FAIL',
+               scope=scope, consumer_checks=n_cmp, run_cycles=run_cyc, expect_fail=bool(getattr(a, 'expect_fail', False)),
+               mutant=rp.get('mutant'), insts=ep['insts'], expected=n_cmp,
+               observed=len(got), hop_beats_expected=len(hop_exp), hop_beats_ok=len(hop_ok), tagged_ok=len(tag_ok),
+               errors=errs[:40], n_errors=len(errs), mu_faults=mu_f, other_faults=other)
+    Path(a.out or (Path(a.run) / 'epcheck.json')).write_text(json.dumps(doc, indent=1) + '\n')
+    print(f'EPCHECK {doc["verdict"]} {len(hop_ok)}/{len(hop_exp)} hop beats exact ({len(tag_ok)} tagged), '
+          f'{doc["observed"]} beats observed vs {doc["expected"]} expected at {",".join(ep["insts"])}; '
+          f'MU faults {len(mu_f)}, other endpoint fault sources {[(f["inst"], f["src"], f["edge"]) for f in other]}'
+          + ('' if not errs else '; ' + '; '.join(errs[:5])))
+    print(f'EPCHECK_SCOPE {scope} consumer_checks {n_cmp} errors {len(errs)} verdict {doc["verdict"]}')
+    if getattr(a, 'expect_fail', False):
+        # mutant witness: the mutant must be caught BY THE CONSUMER COMPARISON (beat / tag / MU fault), on a run that
+        # completed and compared a nonzero number of beats -- not by an incomplete or empty run
+        caught = [e for e in errs if not e.startswith(('run incomplete', 'no endpoint probe', 'ZERO consumer'))]
+        ok = bool(caught) and done and n_cmp > 0
+        print(f'EPCHECK_MUTANT {"CAUGHT" if ok else "NOT_CAUGHT"} ({len(caught)} consumer errors)')
+        return 0 if ok else 1
+    return 0 if not errs else 1
+
+
+def epx(a):
+    """TOK-B3: numeric consumer-beat gold for the in-simulator endpoint check (dv_slice_tb --ep-check, +EPX=<file>):
+    one line per expected beat '<edge> <probe idx> <pair> <kind> <tag hex> <hop 0/1>', probe idx = position of the
+    instance in --probe (the TB's --ep-probe order).  Gold = the compiler's event schedule (replay ep_expect), never
+    a DUT trace."""
+    rp = json.loads((Path(a.replay) / 'replay.json').read_text())
+    ep = (rp.get('mu') or {}).get('ep')
+    if not ep:
+        raise SystemExit(f'{a.replay}: no endpoint expectation')
+    idx = {p: j for j, p in enumerate(a.probe)}
+    rows = []
+    for l in (Path(a.replay) / ep['file']).read_text().splitlines():
+        c, i, p, k, t, h, u = l.split()
+        if i not in idx:
+            raise SystemExit(f'{a.replay}: expected beat at {i} which is not probed ({a.probe})')
+        if a.scope == 'hop' and h == '-':
+            continue
+        rows.append((int(c), idx[i], int(p), int(k), t, 0 if h == '-' else 1))
+    rows.sort()
+    if not rows:
+        raise SystemExit(f'{a.replay}: zero expected beats in scope {a.scope}')
+    Path(a.out).write_text(''.join(f'{c} {j} {p} {k} {t} {h}\n' for c, j, p, k, t, h in rows))
+    print(f'dv_cut_replay epx: {len(rows)} beats ({sum(r[5] for r in rows)} hop) scope {a.scope} -> {a.out}')
+    return 0
 
 
 def parse_mutant(s):
@@ -796,8 +1215,19 @@ def parse_mutant(s):
         return dict(kind='corrupt', link=f[1], bit=int(f[2]) if len(f) == 3 else None)
     if f[0] in ('shift-kind', 'expect-shift') and len(f) == 3:
         return dict(kind=f[0], ev=f[1], n=int(f[2]))
+    if f[0] == 'mu-drop' and len(f) == 2:
+        return dict(kind='mu-drop', user=int(f[1]))
+    if f[0] == 'mu-offgrid' and len(f) == 3:
+        return dict(kind='mu-offgrid', user=int(f[1]), n=int(f[2]))
+    if f[0] == 'mu-win-shift' and len(f) == 3:
+        return dict(kind='mu-win-shift', ev=int(f[1]), n=int(f[2]))
+    if f[0] == 'mu-win-drop' and len(f) == 2:
+        return dict(kind='mu-win-drop', ev=int(f[1]))
+    if f[0] == 'mu-win-ab' and len(f) == 2:
+        return dict(kind='mu-win-ab', ev=int(f[1]))
     raise SystemExit(f'bad --mutant {s!r}: shift:<link>:<n> | corrupt:<link>[:<bit>] | shift-kind:<KIND>:<n> | '
-                     f'expect-shift:<KIND>:<n>')
+                     f'expect-shift:<KIND>:<n> | mu-drop:<user> | mu-offgrid:<user>:<n> | mu-win-shift:<ev>:<n> | '
+                     f'mu-win-drop:<ev> | mu-win-ab:<ev>')
 
 
 def trace_sources(die, cut, traces):
@@ -881,6 +1311,88 @@ def check(a):
     print(f'dv_cut_replay check: {doc["verdict"]} (sim {"PASS" if sim_pass else "FAIL"}, trace mismatches {bad}, '
           f'{rp["verdict_kind"]}, partial {rp["partial"]})')
     return 0 if doc['verdict'] == 'PASS' else 1
+
+
+def window_diff(tA, offA, tB, offB, n):
+    """value-change traces tA over [offA, offA + n) vs tB over [offB, offB + n), every port: the relative cycles where
+    the held values differ (at every change cycle of either window)"""
+    bad = {}
+    for i in sorted(set(tA) | set(tB)):
+        a_, b_ = tA.get(i, []), tB.get(i, [])
+        cyc = sorted({c - offA for c, _ in a_ if offA <= c < offA + n} | {c - offB for c, _ in b_ if offB <= c < offB + n})
+        m = [c for c in cyc if value_at(a_, c + offA) != value_at(b_, c + offB)]
+        if m:
+            bad[i] = m
+    return bad
+
+
+def changes_in(tr, lo, n):
+    return sum(1 for ch in tr.values() for c, _ in ch if lo <= c < lo + n)
+
+
+def mucheck(a):
+    """MU replay verdict: (1) the strict trace check of every encoded word (check); (2) the generator's shift identity
+    (replay.json mu.identity); (3) user 0's window [0, W) of the MU run equals the single-user run over the same cycles
+    on every output port, and the MU stimulus over [0, W) equals the single-user stimulus (--su-replay / --su-run);
+    (4) every other user's window [shift, shift + W) equals user 0's window shifted, on every output port.  W = the
+    smallest start gap of the selected users.  A mutant replay is judged against its NOMINAL calendar (it must FAIL)."""
+    rp = json.loads((Path(a.replay) / 'replay.json').read_text())
+    mu = rp.get('mu')
+    if not mu:
+        raise SystemExit(f'{a.replay}: not an MU replay (gen --mu)')
+    out = Path(a.out or (Path(a.replay) / 'mucheck.json'))
+    rc = check(argparse.Namespace(replay=a.replay, run=a.run, out=str(out.with_suffix('.check.json'))))
+    chk = json.loads(out.with_suffix('.check.json').read_text())
+    tr = read_trace(a.run)
+    W = mu['window']
+    users = mu['users']
+    rows, bad = [], 0
+    ref = users[0]
+    for u in users:
+        if u is ref:
+            continue
+        d = window_diff(tr, u['shift'], tr, ref['shift'], W)
+        n = sum(len(v) for v in d.values())
+        bad += n
+        rows.append(dict(user=u['user'], vs=ref['user'], shift=u['shift'] - ref['shift'], changes=changes_in(tr, u['shift'], W),
+                         ref_changes=changes_in(tr, ref['shift'], W), mismatch_cycles=n,
+                         first={str(i): v[:5] for i, v in list(d.items())[:8]}, ok=n == 0))
+    su = None
+    if a.su_run:
+        st = read_trace(a.su_run)
+        d = window_diff(tr, ref['shift'], st, 0, W)
+        n = sum(len(v) for v in d.values())
+        ins = None
+        if a.su_replay:
+            sp = json.loads((Path(a.su_replay) / 'replay.json').read_text())
+            if sp['t0'] != rp['t0'] or 'mu' in sp:
+                raise SystemExit('--su-replay: needs a single-user replay of the same t0')
+            rd = lambda f: sorted(ln for ln in Path(f).read_text().splitlines()
+                                  if ref['shift'] <= float(ln.split()[0]) < ref['shift'] + W)
+            mi, si = rd(Path(a.replay) / 'in.txt'), rd(Path(a.su_replay) / 'in.txt')
+            ins = dict(mu_lines=len(mi), su_lines=len(si), identical=mi == si)
+        su = dict(run=str(a.su_run), changes=changes_in(st, 0, W), mu_changes=changes_in(tr, ref['shift'], W),
+                  mismatch_cycles=n, first={str(i): v[:5] for i, v in list(d.items())[:8]}, stimulus=ins,
+                  ok=n == 0 and (ins is None or ins['identical']))
+        bad += 0 if su['ok'] else max(n, 1)
+    ident = mu.get('identity', {}).get('verdict') == 'PASS'
+    verdict = 'PASS' if (chk['verdict'] == 'PASS' and ident and bad == 0 and all(r['changes'] for r in rows) or False) \
+        else 'FAIL'
+    if verdict == 'PASS' and rows and not rows[0]['ref_changes']:
+        verdict = 'FAIL'                                    # an idle reference window proves nothing
+    doc = dict(schema=SCHEMA + '.mucheck', replay=str(a.replay), run=str(a.run), verdict_kind=rp['verdict_kind'],
+               mutant=rp.get('mutant'), window=W, check=dict(verdict=chk['verdict'], sim_pass=chk['sim_pass'],
+               trace_mismatches=chk['trace_mismatches'], partial=chk['partial']), identity=mu.get('identity'),
+               users=rows, user0_vs_su=su, verdict=verdict)
+    out.write_text(json.dumps(doc, indent=1) + '\n')
+    print(f'dv_cut_replay mucheck: {verdict} ({rp["verdict_kind"]}{" " + rp["mutant"] if rp.get("mutant") else ""}; '
+          f'check {chk["verdict"]} sim {"PASS" if chk["sim_pass"] else "FAIL"}; identity '
+          f'{mu.get("identity", {}).get("verdict")}; window {W}; ' +
+          '; '.join(f'u{r["user"]}=u{r["vs"]}+{r["shift"]}: {r["changes"]}/{r["ref_changes"]} changes, '
+                    f'{r["mismatch_cycles"]} mismatching' for r in rows) +
+          (f'; u{ref["user"]} vs SU: {su["mismatch_cycles"]} mismatching, {su["mu_changes"]}/{su["changes"]} changes, '
+           f'stimulus {su["stimulus"]}' if su else '') + ')')
+    return 0 if verdict == 'PASS' else 1
 
 
 def compose(a):
@@ -970,15 +1482,44 @@ def main(argv=None):
                    'release; --host-boot defaults to it + 8 and is refused below it + 2')
     g.add_argument('--ks', type=int, default=None)
     g.add_argument('--ks-word', default=f'{(1 << 52) | (37 << 42) | (1000 << 21) | 5000:x}')
+    g.add_argument('--mu', default=None, help='MU mode: prog/mu_slots.json of the MU programme (or "auto"); the replay '
+                   'is the superposition of --users on their calendar shifts')
+    g.add_argument('--users', default=None, help='MU: users in start order, e.g. 0,1,2 (default 0)')
+    g.add_argument('--copy', default=None, choices=('A', 'B'), help='MU: the group copy this die runs (default: the '
+                   'first user\'s)')
+    g.add_argument('--mu-pass', type=int, default=0, help='MU: pass index (pos = pos0 + pass x stride)')
+    g.add_argument('--mu-win', default=None, help='MU: window / replay rows: auto = the compiled prog/mu_win.json '
+                   '(dv_layer_compile --mu-win; TX anchored on the lowered hop beats), or a hand JSON (DIAGNOSTIC)')
+    g.add_argument('--mu-win-kinds', default='tx,replay', help='MU-DIE-S81/HOP: compiled rows driven (tx, replay); a '
+                   'one-die cut with the end slice has no RX peer, so drive tx only there')
     g = sp.add_parser('check')
     g.add_argument('--replay', required=True)
     g.add_argument('--run', required=True)
+    g.add_argument('--out')
+    g = sp.add_parser('epcheck')
+    g.add_argument('--replay', required=True)
+    g.add_argument('--run', required=True)
+    g.add_argument('--out')
+    g.add_argument('--scope', choices=('all', 'hop'), default='all', help='all = every compiled end-slice beat; hop = '
+                   'only the lowered stage-hop beats (untagged non-hop beats ignored)')
+    g.add_argument('--expect-fail', action='store_true', help='mutant witness: exit 0 only if the consumer comparison '
+                   'catches it on a complete run with a nonzero check count')
+    g = sp.add_parser('epx')
+    g.add_argument('--replay', required=True)
+    g.add_argument('--probe', action='append', required=True)
+    g.add_argument('--scope', choices=('all', 'hop'), default='all')
+    g.add_argument('--out', required=True)
+    g = sp.add_parser('mucheck')
+    g.add_argument('--replay', required=True)
+    g.add_argument('--run', required=True)
+    g.add_argument('--su-replay')
+    g.add_argument('--su-run')
     g.add_argument('--out')
     g = sp.add_parser('compose')
     g.add_argument('--cut', action='append', required=True, help='NAME=REPLAY_DIR:RUN_DIR')
     g.add_argument('--out', required=True)
     a = ap.parse_args(argv)
-    return dict(ages=ages, gen=gen, check=check, compose=compose)[a.cmd](a)
+    return dict(ages=ages, gen=gen, check=check, compose=compose, mucheck=mucheck, epcheck=epcheck, epx=epx)[a.cmd](a)
 
 
 if __name__ == '__main__':

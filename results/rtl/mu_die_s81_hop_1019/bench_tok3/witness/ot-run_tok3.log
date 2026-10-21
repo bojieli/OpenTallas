@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-tok3
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-tok3
+ot-run: ot-epyc7       admits   529 GB (avail 471, growth 101, headroom 0, waiters 0/0 GB) load 122/96 running 25 disk 6011 GB 
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/s81-tok3
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-tok3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-tok3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-tok3
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1900366-1792460233 after 0 s
+RUN R_cut_7_L0_hop012_wrongcopy obj out_base -> out_base_wrongcopy rc 0
+RUN R_cut_7_L0_hop012 obj out_base -> out_base rc 0
+RUN R_cut_7_L0_hop012 obj out_rtl_tagdrop -> out_rtl_tagdrop rc 0
+RUN R_cut_7_L0_hop012_tagdrop obj out_base -> out_base_tagdrop rc 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1900366-1792460233): exit 0

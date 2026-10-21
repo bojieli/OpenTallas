@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MUWIN_PROG PASS 728/728 compiled events on their edge [issuer fault code 8 at 9085 = first start 5092 + svc done age 3987 + 6: no svc_rs responder in this bench (status only)]
+MUWIN_PROG FAIL 636/728 compiled events on their edge; missing MC0 at 13085 value 6001; missing MC0 at 34397 value ce00d; missing MC0 at 55709 value 196015; missing MC0 at 77025 value 25e01d; missing MC0 at 98337 value 326025; missing MC0 at 119653 value 3ee02d [issuer fault code 8 at 9085 = first start 5092 + svc done age 3987 + 6: no svc_rs responder in this bench (status only)]
+MUWIN_PROG FAIL 638/728 compiled events on their edge; missing MR0 at 35148 value 3; missing MR0 at 56460 value 5; missing MR0 at 77776 value 7; missing MR0 at 99088 value 9; missing MR0 at 120404 value b; missing MR0 at 141716 value d [issuer fault code 8 at 8845 = first start 4852 + svc done age 3987 + 6: no svc_rs responder in this bench (status only)]
+mutant winshift detected (FAIL as required)
+mutant replaydrop detected (FAIL as required)
+MU_WIN_PROG_GATE PASS

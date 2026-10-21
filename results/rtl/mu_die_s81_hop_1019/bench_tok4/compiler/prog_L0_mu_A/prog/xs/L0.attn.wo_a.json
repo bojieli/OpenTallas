@@ -1,0 +1,267 @@
+{
+ "schema": "opentallas.s81_dv.xs_place_bf.v1",
+ "op": {
+  "id": "L0.attn.wo_a",
+  "op": "attn.wo_a",
+  "cls": "field",
+  "start": 4178.9,
+  "end": 6507.0,
+  "cycles": 2328.1,
+  "delta": 106.1,
+  "critical": true
+ },
+ "slice": "u_s_0S",
+ "slice_index": 0,
+ "phases_die_wide": 12,
+ "frames": [
+  {
+   "frame": "u_f_0L00",
+   "master": "col_h9",
+   "land_e": 5,
+   "bf_pairs": [
+    4,
+    8,
+    13
+   ],
+   "shape": "col_h9|E5|bseg1024",
+   "calendar": "measured_shape",
+   "phases": 12,
+   "rows_per_phase": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "frame": "u_f_0L01",
+   "master": "col_h10",
+   "land_e": 2,
+   "bf_pairs": [
+    1,
+    5,
+    10,
+    15
+   ],
+   "shape": "col_h10|E2|bseg1024",
+   "calendar": "measured_shape",
+   "phases": 12,
+   "rows_per_phase": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "frame": "u_f_0L02",
+   "master": "col_h9",
+   "land_e": 1,
+   "bf_pairs": [
+    4,
+    8,
+    13
+   ],
+   "shape": "col_h9|E1|bseg1024",
+   "calendar": "predicted_lane_shift",
+   "phases": 12,
+   "rows_per_phase": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "frame": "u_f_0L03",
+   "master": "col_h9",
+   "land_e": 2,
+   "bf_pairs": [
+    4,
+    8,
+    13
+   ],
+   "shape": "col_h9|E2|bseg1024",
+   "calendar": "predicted_lane_shift",
+   "phases": 12,
+   "rows_per_phase": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "frame": "u_f_0R00",
+   "master": "col_h9",
+   "land_e": 5,
+   "bf_pairs": [
+    4,
+    8,
+    13
+   ],
+   "shape": "col_h9|E5|bseg1024",
+   "calendar": "measured_shape",
+   "phases": 12,
+   "rows_per_phase": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "frame": "u_f_0R01",
+   "master": "col_h10",
+   "land_e": 2,
+   "bf_pairs": [
+    1,
+    5,
+    10,
+    15
+   ],
+   "shape": "col_h10|E2|bseg1024",
+   "calendar": "measured_shape",
+   "phases": 12,
+   "rows_per_phase": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "frame": "u_f_0R02",
+   "master": "col_h9",
+   "land_e": 1,
+   "bf_pairs": [
+    4,
+    8,
+    13
+   ],
+   "shape": "col_h9|E1|bseg1024",
+   "calendar": "predicted_lane_shift",
+   "phases": 12,
+   "rows_per_phase": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    4,
+    4,
+    4,
+    4
+   ]
+  },
+  {
+   "frame": "u_f_0R03",
+   "master": "col_h9",
+   "land_e": 2,
+   "bf_pairs": [
+    4,
+    8,
+    13
+   ],
+   "shape": "col_h9|E2|bseg1024",
+   "calendar": "predicted_lane_shift",
+   "phases": 12,
+   "rows_per_phase": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    4,
+    4,
+    4,
+    4
+   ]
+  }
+ ],
+ "bench": {
+  "name": "p65",
+  "op": "attn.wo_a",
+  "mat": "wo_a",
+  "fmt": "bf16",
+  "field_phase": 65,
+  "nphases": 82,
+  "calendar": "measured_shape",
+  "elem_class": [
+   "bf16",
+   1024
+  ],
+  "mutant": null,
+  "words": 6,
+  "fixture_rows": 6,
+  "value_errors": [],
+  "ret_edge_offsets_vs_plan": [
+   0
+  ],
+  "witness": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb/run_p65.log",
+  "pass": true,
+  "record": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb"
+ },
+ "measured_shapes": [
+  "col_h10|E2|bseg1024",
+  "col_h9|E1|bseg1024",
+  "col_h9|E2|bseg1024",
+  "col_h9|E5|bseg1024"
+ ],
+ "unmeasured_shapes": [],
+ "images": "python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (BF phases appended after the FP8 / FP4 phases; gen --op OP for one phase's bench vectors)"
+}

@@ -1,0 +1,20 @@
+{
+ "verdict": "FAIL",
+ "expected": 360,
+ "matched": 316,
+ "errors": [
+  "missing MR0 at 69915 value 5",
+  "missing MR0 at 112543 value 9",
+  "missing MR0 at 155171 value d",
+  "missing MR0 at 197799 value 11",
+  "missing MR0 at 240427 value 15",
+  "missing MR0 at 283051 value 19",
+  "missing MR0 at 325679 value 1d",
+  "missing MR0 at 368307 value 21",
+  "missing MR0 at 410935 value 25",
+  "missing MR0 at 453563 value 29",
+  "t_mf 1100 (want 0000)"
+ ],
+ "log": "/srv/opentallas-scratch/claude/mu-die-s81-muwin/stage2/out_L20A_all/run_mut_replaydrop.log",
+ "note": null
+}

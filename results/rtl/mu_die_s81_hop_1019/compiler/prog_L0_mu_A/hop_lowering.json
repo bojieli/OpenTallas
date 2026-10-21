@@ -1,0 +1,23 @@
+[
+ {
+  "id": "L0.substage_hop0",
+  "op": "substage_hop0",
+  "start": 8053.3,
+  "end": 9126.3,
+  "unit": "end-slice send cfg (XB, hops 1) + 2 x vp RDOUT 120 -> lep ro (MU TX window) -> peer end slice",
+  "status": "PARTIAL",
+  "gap": {
+   "module": "tools/s81_dv/frame_return_plan.py / hc_post h store + ot_s81sl_xr send pack (XB layout)",
+   "port": "h share rows at the end slices; XB payload layout",
+   "missing": "TX timing is lowered (cfg + 2 RDOUT a slice, 80 XB beats on the lep ro at fixed edges, the MU window anchors on them); NOT compiled: (1) the on-die move of the 16 slices' h to the 4 end slices and the leaf rows it occupies (leaf 0 rows 0..479 stand in); (2) payload: the xr packer puts the pairs at beat [1075:52], so a kind-2 beat keeps the MU tag field [1077:1045] clear only with <= 3 pairs (768 b): NB 80 beats carry 7,680 B of the 10,240-B share, and the peer gather reads an XB beat in the vq layout (gidx [20:13], bf [1044:21]) -> the hop beat arrives 31 b shifted with gidx 0.  Exact h transport needs an xr XB-layout pack mode (RTL) or NB 107 + a re-laid receive (parent / RTL decision)"
+  },
+  "family": "vpx",
+  "insts": [
+   "u_s_7N",
+   "u_s_0N",
+   "u_s_7S",
+   "u_s_0S"
+  ],
+  "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+ }
+]
