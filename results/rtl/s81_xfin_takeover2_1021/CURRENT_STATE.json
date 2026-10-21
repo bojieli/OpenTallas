@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T15:50:20.563109-07:00",
+  "updated": "2026-10-21T15:54:20.451448-07:00",
   "owner": "CODEX-S81-XFV-1021 /root/s81_lead/slice_collect",
   "qualified_FP": {
     "source": "560abe5d2",
@@ -81,6 +81,14 @@
     "mem_gib": 32,
     "state": "LIVE compile",
     "stage": "ot-epyc7:/srv/opentallas-scratch/claude/codex-xfin-r27-1021",
-    "all18_sha_match_git": true
+    "all18_sha_match_git": true,
+    "NORM": {
+      "unit": "oth-ubuntu-1802536-1792623178",
+      "client": 4051846,
+      "mem_gib": 32,
+      "actual_MemoryMax": 34359738368,
+      "state": "LIVE existing base xfin compile"
+    },
+    "actual_MemoryMax": 34359738368
   }
 }
