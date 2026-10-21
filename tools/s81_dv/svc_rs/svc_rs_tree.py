@@ -92,6 +92,11 @@ def main():
           f'localparam integer RS_ENTRY_W = {es["W"]}, RS_ENTRY_E = {es["E"]}, RS_CROOT_W = {E.sid(CROOT["W"])}, '
           f'RS_CROOT_E = {E.sid(CROOT["E"])}, RS_FOLD = {base["root"]};',
           f'localparam integer RS_HOP = {HOP}, RS_DMAX = {dmax}, RS_G0 = {G0}, RS_PVW = {PVW}, RS_OFFMAX = {offmax};']
+    # Preserve the current PPATH face contract in both regional role headers.
+    L += ['function automatic [7:0] rs_pface(input [3:0] sid);',
+          '    case (sid)', "        4'd7: rs_pface = 8'h20;",
+          "        4'd9: rs_pface = 8'h08;", "        default: rs_pface = 8'h00;",
+          '    endcase', 'endfunction']
     suffix = '_group72' if LINK_EXTRA else ''
     open(os.path.join(root, f'rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs_roles{suffix}.svh'), 'w').write('\n'.join(L) + '\n')
     json.dump(dict(generator='tools/s81_dv/svc_rs/svc_rs_tree.py', plan='S81-DV p4j', hop=HOP, g0=G0, dmax=dmax,
