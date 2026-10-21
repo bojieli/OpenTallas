@@ -48,8 +48,7 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 4,
-    "fail_regex": "^QF_EQ FAIL ",
-    "fail_witness": "results/rtl/tokfunc2_idx_qf_1021/eq_mut2.log"
+    "fail_regex": "^QF_EQ FAIL "
    }
   ],
   "calibrate": {
