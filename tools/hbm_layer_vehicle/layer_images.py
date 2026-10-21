@@ -805,6 +805,9 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None):
                     value=[None if x is None else f"{x:08x}" for x in vals] if R.m > 1 else f"{vals[0]:08x}",
                     source=f"fixture record(s) {sorted({j for _, j in refs if j is not None})} input (later consumer), "
                            "comparison only", matched=res["status"] == "emitted")
+    elif unit == 2 and tree_ok and SL.rows_bcast_profile(sut, desc):
+        res = attempt("rows_bcast", lambda: SL.lower_rows_bcast(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                                timing=timing, rf_local=a.rf_local))
     elif unit == 2 and tree_ok and SL.scalar_rf_profile(sut, desc) and not (
             SL.rsqrt_profile(sut, desc) and desc["A"].n == 1 and desc["A"].base % 8 == 0
             and desc["O"].base % 8 == 0):

@@ -1368,3 +1368,223 @@ def lower_scalar_rf(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
                              side_lane="su_SW0 lane 0 KIND 2", RF_LOCAL=rf_local, side_depth=extra),
         timing_obligations=dict(serial_edges=len(lines), stream_edges=math.ceil(4 * len(lines) / 3),
                                 old_price_preserved=False, connected_selected_case_RTL_required=True))
+
+
+def move_words_to_rf(ql, *, words, rf_addrs, q, data, place, tag, timing, row0=0, edge0=0, red_d0=0):
+    """Lateral move of VM words at any sector position into RF words on real hardware: VM sector -> store group of
+    its VM port -> copy op (lanes 0..L live) -> reducer LOAD of lane L at the lane output edge -> EXPORT -> stree ->
+    RF.  Returns the schedule facts (rf write pins of the last word, last LOAD edge, fills, preload)."""
+    from hbm_layer_vehicle import layer_images as LI
+    from su_arith_compile import pack, physical_word
+    import su_pretree_lower as PT
+    secs = sorted({w // 8 for w in words})
+    fills, preload, row_of, next_fill = [], {}, {}, [edge0] * 8
+    lane_of = {}
+    for k, ls_ in enumerate(secs):
+        port = place.map[ls_] % 8 if ls_ in place.map else 0
+        ps = place.get(ls_, port, f"{tag}:mv")
+        row_of[ls_] = row0 + k
+        ql.vmr(next_fill[port], port, ps, port, row0 + k)
+        fills.append((ls_, next_fill[port]))
+        next_fill[port] += 1
+        if ls_ not in place.written:
+            preload[ps] = list(range(8 * ls_, 8 * ls_ + 8))
+        for w in range(8 * ls_, 8 * ls_ + 8):
+            data.setdefault(w, np.float32(0))
+            lane_of[w] = 8 * port + (w & 7)
+    S1 = max(e for _, e in fills) + timing.fill_commit + 1
+    ident = 0
+    for s_ in range(4):
+        for b in range(7):
+            ident |= (1 << b) << (24 * (s_ * 10 + b))
+    ctl = dict(no=1, ni=max(lane_of[w] for w in words) + 1, ls=7, lvw=7, srcs=0, dst=0, co_dst=0, ld_c=ident)
+    vb0 = sum(physical_word(q, row_of[secs[0]]) << (24 * s_) for s_ in range(4))
+    ql.f["control"][S1] = pack(dict(ctl, ld=1, vb=vb0))
+    exports, last_load, d = [], 0, red_d0
+    for c, (w, ra) in enumerate(zip(words, rf_addrs)):
+        issue = S1 + LI.SETUP_TO_EMIT + c
+        vb = sum(physical_word(q, row_of[w // 8]) << (24 * s_) for s_ in range(4))
+        ql.f["control"][issue] = pack(dict(ctl, emit=1, vb=vb))
+        load = issue + LI.FIRST_OUT - LI.SETUP_TO_EMIT
+        if load in ql.f["red"]:
+            raise ValueError("reducer slot busy")
+        ql.f["red"][load] = PT.red_cmd_word(dict(op=PT.OP_LOAD, a=0, b=0, d=d, tag=0, osel=0, lane=lane_of[w]))
+        ex = load + PT.DEP
+        while ex in ql.f["red"]:
+            ex += 1
+        ql.f["red"][ex] = PT.red_cmd_word(dict(op=PT.OP_EXPORT, a=d, b=0, d=0, tag=0x100 | ra, osel=0, lane=0))
+        exports.append(ex)
+        d += 1
+        last_load = load
+    for e in range(S1, last_load + 1):
+        ql.f["control"].setdefault(e, pack(dict(ctl, vb=vb0)))
+    return dict(rf_ready=max(exports) + 12 + 32, last_load=last_load, fills=fills, preload=preload, exports=exports,
+                next_red_d=d, rows_used=len(secs))
+
+
+def rows_bcast_profile(sut, desc):
+    """per-row scalar broadcast B[r] (B stride 1, m rows) on short rows (<= 32 elements): swiglu class"""
+    b = desc.get("B")
+    if b is None or not b.ibcast or b.m < 2 or b.stride != 1 or b.indexed or "O" not in desc or sut["red"]:
+        return False
+    if sut["qm"] or sut["b_half"] or sut["c_pair"] or sut["a_ind"] or sut["ad"] == 1 or sut["dst"] != 1:
+        return False
+    if sut["sfu"] not in SFU_EXTRA or not set(desc) <= set("ABCDO"):
+        return False
+    n, m = desc["O"].n, desc["O"].m
+    if n > SFU_LANES or b.m != m:
+        return False
+    for r_, md in desc.items():
+        if r_ == "B":
+            continue
+        if (md.space != "VM" or md.fmt != "FP32" or md.n != n or md.m != m or (md.istride or 1) != 1 or md.ibcast
+                or md.indexed or md.base % 8 or md.stride % 8 or md.stride < n):
+            return False
+    return True
+
+
+def lower_rows_bcast(raw, q=0, data=None, place=None, tag="", timing=None, rf_local=None, **unused):
+    from hbm_layer_vehicle import layer_images as LI
+    from hbm_layer_vehicle.native_profile import NativeTiming
+    from su_program_inventory import decode
+    from su_arith_compile import pack, physical_word
+    _, unit, sut, desc = decode(raw)
+    refusal = lambda why, st="unsupported_lowering": dict(status=st, reasons=[why], sut=sut,
+                                                          lowering=dict(supported=False, owner="TOK-FUNC2-HBM-SU"))
+    if unit != 2 or not rows_bcast_profile(sut, desc):
+        return refusal("per_row_broadcast_short_row_profile_only")
+    if q != 0 or not isinstance(timing, NativeTiming) or timing != NativeTiming(18, 15) or rf_local not in (0, 1):
+        return refusal("selected_quarter0_native_timing_and_RF_LOCAL_required")
+    if data is None:
+        return refusal("real_pre_operation_VM_words_required")
+    place = place if place is not None else LI.Placement(q)
+    o, b = desc["O"], desc["B"]
+    n, m = o.n, o.m
+    roles = [r_ for r_ in "ACD" if r_ in desc]
+    # SFU-layout ports for every row sector (row sector j -> port j), checked before any placement
+    for r_ in roles + ["O"]:
+        md = desc[r_]
+        for i in range(m):
+            for j in range(-(-n // 8)):
+                ls_ = (md.base + i * md.stride + 8 * j) // 8
+                if ls_ in place.map and place.map[ls_] % 8 != j:
+                    return refusal(f"operand_{r_}_row_sector_on_port_{place.map[ls_] % 8}_not_{j}", "v1_unsupported")
+    rf_b = [((b.base + i) & 255) for i in range(m)]
+    ql = TreeLines()
+    mv = move_words_to_rf(ql, words=[b.base + i for i in range(m)], rf_addrs=rf_b, q=q, data=data, place=place,
+                          tag=tag + ":B", timing=timing)
+    row_next = mv["rows_used"]
+    rows, fills, preload, next_fill, last_fill = {}, list(mv["fills"]), dict(mv["preload"]), [1] * 8, 0
+    for r_ in roles:
+        md = desc[r_]
+        for i in range(m):
+            rows[(r_, i)] = row_next
+            row_next += 1
+            for j in range(-(-n // 8)):
+                first = md.base + i * md.stride + 8 * j
+                ls_ = first // 8
+                ps = place.get(ls_, j, f"{tag}:{r_}")
+                e = next_fill[j]
+                next_fill[j] += 1
+                ql.vmr(e, j, ps, j, rows[(r_, i)])
+                fills.append((ls_, e))
+                last_fill = max(last_fill, e)
+                if ls_ not in place.written:
+                    preload[ps] = list(range(first, first + 8))
+                for w in range(first, first + 8):
+                    data.setdefault(w, np.float32(0))
+    orow = {i: row_next + i for i in range(m)}
+    if row_next + m > 512:
+        return refusal("store_rows_exceeded")
+    terms = 0
+    for s_, r_ in enumerate("ABCDO"):
+        if r_ == "B":
+            continue
+        for k in range(7):
+            terms |= (1 << k) << (24 * (s_ * 10 + k))
+    ctl = dict(no=1, ni=n, ls=5, lvw=5, srcs=1 << 2, dst=1, co_dst=1, aind=0, cpair=0,
+               cx_arnd=sut["a_rnd"], cx_arelu=sut["a_relu"], cx_amin=sut["a_min"], cx_cclip=sut["c_clip"],
+               cx_imm3=sut["imm3"], cp_m1=sut["m1"], cp_imm1=sut["imm1"], cm_m1=sut["m1"], cm_m2=sut["m2"], cm_qm=0,
+               cm_imm1=sut["imm1"], ca_ad=sut["ad"], ca_imm2=sut["imm2"], ci_sfu=sut["sfu"], cs_sfu=sut["sfu"],
+               cs_e1=sut["e1"], cs_imm2=sut["imm2"], ce_e2=sut["e2"], ce_imm1=sut["imm1"], co_rnd=sut["rnd"],
+               ld_c=terms)
+
+    def vb_of(i):
+        v = 0
+        for s_, r_ in enumerate("ABCDO"):
+            if r_ == "O":
+                v |= physical_word(q, orow[i]) << (24 * s_)
+            elif r_ == "B":
+                v |= rf_b[i] << (24 * s_)
+            else:
+                v |= physical_word(q, rows[(r_ if r_ in roles else roles[0], i)]) << (24 * s_)
+        return v
+    S2 = max(last_fill + timing.fill_commit + 1, mv["rf_ready"] + 4 + rf_local, mv["last_load"] + 1)
+    ql.f["control"][S2] = pack(dict(ctl, ld=1, vb=vb_of(0)))
+    extra = (15 if sut["m1"] in (4, 5) else 0) + SFU_EXTRA[sut["sfu"]]
+    lat = LI.FIRST_OUT - LI.SETUP_TO_EMIT + extra
+    W = LI.FIRST_OUT + 2 + rf_local + LI.SETUP_TO_EMIT
+    issues = []
+    for i in range(m):
+        I = S2 + LI.SETUP_TO_EMIT + i * W
+        issues.append(I)
+        ql.f["control"][I] = pack(dict(ctl, emit=1, vb=vb_of(i)))
+        for e in range(I - LI.SETUP_TO_EMIT - 1 - rf_local, I + LI.FIRST_OUT + 1):
+            ql.put("rf", e, 9, 9, 256 | rf_b[i])
+    for i, I in enumerate(issues):
+        nxt = issues[i + 1] if i + 1 < m else I + 1
+        for e in range(I, nxt):
+            ql.f["control"].setdefault(e, pack(dict(ctl, vb=vb_of(i))))
+    ops = {}
+    for r_ in roles:
+        md = desc[r_]
+        ops[r_] = np.array([[data[md.base + i * md.stride + e] for e in range(n)] for i in range(m)], np.float32)
+    ops["B"] = np.array([[data[b.base + i]] * n for i in range(m)], np.float32)
+    with np.errstate(all="ignore"):
+        outbits = np.stack([sfu_lane_golden(sut, {k: v[i] for k, v in ops.items()}) for i in range(m)])
+    drain_e, expect, drains, commits, post = [0] * 8, [], [], [], {}
+    for i in range(m):
+        ready = issues[i] + lat + 1
+        for j in range(-(-n // 8)):
+            lo = 8 * j
+            msk = [lo + t < n for t in range(8)]
+            de = max(ready, drain_e[j])
+            drain_e[j] = de + 1
+            first = o.base + i * o.stride + lo
+            ls_ = first // 8
+            ps = place.get(ls_, j, f"{tag}:O")
+            mask = sum(1 << t for t in range(8) if msk[t])
+            ql.vmw(de, j, 0, j, orow[i], ps, mask)
+            c = de + timing.drain_done
+            commits.append(c)
+            drains.append((ls_, c))
+            expect.append(dict(sector=ps, mask=mask, edge=c, words=list(range(first, first + 8)),
+                               value=[int(outbits[i][lo + t]) if msk[t] else None for t in range(8)]))
+    commit = max(commits)
+    for e in range(0, commit + 1):
+        ql.f["control"].setdefault(e, pack(dict(ctl, vb=vb_of(m - 1))))
+    lines = ql.lines()
+    if len(lines) > LI.EDGES_MAX:
+        return refusal("native_programme_capacity_exceeded")
+    pre_words = {str(w): f"{int(np.float32(data[w] if w in data else 0).view(np.uint32)):08x}"
+                 for ws in preload.values() for w in ws}
+    for ls_, _ in drains:
+        place.written.add(ls_)
+    for i in range(m):
+        for e in range(n):
+            a_ = o.base + i * o.stride + e
+            post[str(a_)] = f"{int(outbits[i][e]):08x}"
+            data[a_] = np.uint32(outbits[i][e]).view(np.float32)
+    return dict(status="emitted", reasons=[], ql=ql, lines=lines, fills=fills, drains=drains, preload=preload,
+        data=pre_words, inputs_placeholder=False, expect=expect, setup_edge=S2, issue_edges=issues, last_commit=commit,
+        fill_sectors=len(preload), drain_sectors=len(expect), sut=sut, native_timing=timing.as_dict(),
+        lowering=dict(supported=True, owner="TOK-FUNC2-HBM-SU", execution_qualified=False,
+                      mode="per-row B[r] lane->reducer->RF moves + KIND1 32-lane rows with class-1 RF stream",
+                      rows=m, extra_depth=extra),
+        rf_events=[dict(kind="B_exports", edges=mv["exports"])],
+        control_reservation=dict(first=0, last=commit, policy="exclusive_record"),
+        expected_post_state=post, expected_post_state_only=True,
+        expected_reference=dict(role="comparison_only", source="hdc_golden(+v41) KIND-1 lane model, per-row B"),
+        source_contract=dict(RF_LOCAL=rf_local, B_srcs_code=1, lanes="quarter-local 0..31"),
+        timing_obligations=dict(serial_edges=len(lines), stream_edges=math.ceil(4 * len(lines) / 3),
+                                old_price_preserved=False, connected_selected_case_RTL_required=True))
