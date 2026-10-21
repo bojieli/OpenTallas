@@ -1,0 +1,7 @@
+Verilator 5.050 2026-07-01 rev v5.050
+CALR_REL_SUMMARY mut=0 cycles=839068 loads=0 u0=0 u1=0 u2=0 u3=0 bad=0 latency=-1 fault=0 fc=000000
+CALR_REL_FAIL
+- /srv/opentallas-scratch/claude/qw-tlprod-1020/src/rtl/test/qwen_dv/calr_rel/tb_qfd_dv_cmd_cal_mu_calr_rel.sv:70: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8ms; walltime 10.716 s; speed 783.016 us/s
+- Verilator: cpu 10.716 s on 1 threads; allocated 7 MB

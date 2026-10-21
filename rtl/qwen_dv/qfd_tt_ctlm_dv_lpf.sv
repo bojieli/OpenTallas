@@ -42,7 +42,8 @@ module qfd_tt_ctlm_dv_lpf #(
     parameter OPSEG_VIAMAP = ""       ,
     parameter OPSEG_INST = "qfd_tt_ctlm_opseg",
     parameter integer PRIVATE_CALR = 0,          // QW-F16PROG4: CALR two-ROM calendar + 9-bit table request lane (table_req)
-    parameter integer F16WTN = 0                 // QW-F16PROG4: F16 typed witness control (SAFE_PHYS) in u_gi (f16_*)
+    parameter integer F16WTN = 0,                // QW-F16PROG4: F16 typed witness control (SAFE_PHYS) in u_gi (f16_*)
+    parameter integer CAL_MUT = 0                // QW-TLPROD (bench only): u_gi.u_cal MUT (35 = drop the stage-17 REL table load)
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -109,7 +110,7 @@ module qfd_tt_ctlm_dv_lpf #(
     wire [379:0] ib_hr;
     qfd_tt_ctlm_dv_gi #(.LAST_STAGE(LAST_STAGE), .STAGE_ME(STAGE_ME), .NU(NU), .UVM_STRIDE(UVM_STRIDE),
         .PIDX_STRIDE(PIDX_STRIDE), .UTAG_LSB(UTAG_LSB), .INIT_U0(INIT_U0), .INIT_FIRST(INIT_FIRST), .INIT_CNT(INIT_CNT), .CTX_SRC(CTX_SRC), .FCTX(FCTX), .NCTX_BASE(NCTX_BASE), .OPSEG(OPSEG), .OPSEG_EXPANDED(OPSEG_EXPANDED), .OPSEG_PINREG(OPSEG_PINREG), .OPSEG_VIAMAP1(OPSEG_VIAMAP1), .OPSEG_VIAMAP2(OPSEG_VIAMAP2), .OPSEG_INST1(OPSEG_INST1), .OPSEG_INST2(OPSEG_INST2), .OPSEG_VIAMAP(OPSEG_VIAMAP), .OPSEG_INST(OPSEG_INST),
-        .PRIVATE_CALR(PRIVATE_CALR), .F16WTN(F16WTN))
+        .PRIVATE_CALR(PRIVATE_CALR), .F16WTN(F16WTN), .CAL_MUT(CAL_MUT))
         u_gi (.ck(ck), .rst_n(rst_n), .pw(pw), .f16_auth(f16_auth), .f16_obs(f16_obs), .f16_st(g_f16_st), .treq(g_treq), .dh(dh), .dh_user(dh_user), .ctx_x(ctx_x), .init_u0(init_u0), .mu_fault(mu_fault), .ss5(ss5),
         .ag5(ag5), .fab(fab), .cmd(g_cmd), .tl(tl), .cal_program_obs(g_cal_program_obs), .cal_descriptor_obs(g_cal_descriptor_obs),
         .cal_image_ready(g_cal_image_ready), .emb_start(g_emb_start), .emb_token(g_emb_token), .s_start(s_start),

@@ -38,7 +38,8 @@ module qfd_tt_ctlm_dv_gi #(
     parameter OPSEG_VIAMAP = ""       ,
     parameter OPSEG_INST = "qfd_tt_ctlm_opseg",
     parameter integer PRIVATE_CALR = 0,          // QW-F16PROG4: 1 = CALR two-ROM calendar + LOCAL4 table-load request lane
-    parameter integer F16WTN = 0                 // QW-F16PROG4: 1 = F16 typed witness control (SAFE_PHYS) in the core
+    parameter integer F16WTN = 0,                // QW-F16PROG4: 1 = F16 typed witness control (SAFE_PHYS) in the core
+    parameter integer CAL_MUT = 0                // QW-TLPROD (bench only): u_cal MUT (35 = drop the stage-17 REL table load)
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -152,7 +153,7 @@ module qfd_tt_ctlm_dv_gi #(
     wire [11:0] c_base; wire [8:0] c_pidx;
     wire [UB-1:0] c_user, c_done_user; wire [NU-1:0] c_run_u; wire [5:0] c_fcode;
     wire        c_tload; wire [5:0] c_tstage; wire [1:0] c_tuser;
-    qfd_dv_cmd_cal_mu #(.MUT(0), .LAST_STAGE(LAST_STAGE), .NU(NU), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE),
+    qfd_dv_cmd_cal_mu #(.MUT(CAL_MUT), .LAST_STAGE(LAST_STAGE), .NU(NU), .UVM_STRIDE(UVM_STRIDE), .PIDX_STRIDE(PIDX_STRIDE),
         .UTAG_LSB(UTAG_LSB), .UFOLD((NU > 1) ? 1 : 0), .CTX_DW(OPS), .TABLE_ROM(PRIVATE_CALR), .CALENDAR_ROM(PRIVATE_CALR))
         u_cal (.ck(ck), .rst_n(rst_n), .table_load(c_tload), .table_stage(c_tstage), .table_user(c_tuser),
         .pw_v(dh_q[118]), .pw_addr(dh_q[117:108]), .pw_data(dh_q[107:44]),

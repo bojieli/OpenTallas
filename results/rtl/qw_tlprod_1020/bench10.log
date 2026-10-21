@@ -1,0 +1,108 @@
+Verilator 5.050 2026-07-01 rev v5.050
+LP_LOCKSTEP PASS MUT=0 compared=186922 cycles=10000 calrdir=0 warm=38
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 1.054 s; speed 9.489 us/s
+- Verilator: cpu 1.045 s on 1 threads; allocated 12 MB
+CASE rnd_mut0 expect PASS OK
+LP_MISMATCH port=command_stage cycle=58 flat=10 landed=11
+LP_LOCKSTEP FAIL MUT=1 mismatches=9838 of 186922
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 1.062 s; speed 9.417 us/s
+- Verilator: cpu 1.043 s on 1 threads; allocated 12 MB
+CASE rnd_mut1 expect FAIL OK
+LP_MISMATCH port=command_stage cycle=60 flat=18 landed=10
+LP_LOCKSTEP FAIL MUT=2 mismatches=4866 of 186922
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 1.136 s; speed 8.799 us/s
+- Verilator: cpu 1.054 s on 1 threads; allocated 12 MB
+CASE rnd_mut2 expect FAIL OK
+CALRDIR_SUMMARY starts=39 flat_cmd_edges=4510 table_req=0 f16_st_nonzero=59976 image_ready=0
+LP_LOCKSTEP PASS MUT=0 compared=1138974 cycles=60000 calrdir=1 warm=38
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 6.564 s; speed 9.141 us/s
+- Verilator: cpu 6.457 s on 1 threads; allocated 12 MB
+CASE calr_mut0 expect PASS OK
+CALRDIR_SUMMARY starts=39 flat_cmd_edges=4510 table_req=0 f16_st_nonzero=59976 image_ready=0
+LP_LOCKSTEP FAIL MUT=0 mismatches=9217 of 1138974
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 6.103 s; speed 9.831 us/s
+- Verilator: cpu 6.059 s on 1 threads; allocated 12 MB
+CASE calr_rommut expect FAIL OK
+CALRDIR_SUMMARY starts=38 flat_cmd_edges=14931 table_req=36 f16_st_nonzero=237276 image_ready=1
+LP_LOCKSTEP PASS MUT=0 compared=4507674 cycles=237300 calrdir=2 warm=38
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 237us; walltime 21.427 s; speed 11.075 us/s
+- Verilator: cpu 21.330 s on 1 threads; allocated 12 MB
+CASE tok_rel expect PASS OK
+CALRDIR_SUMMARY starts=39 flat_cmd_edges=4510 table_req=7 f16_st_nonzero=59976 image_ready=0
+LP_LOCKSTEP PASS MUT=0 compared=1138974 cycles=60000 calrdir=1 warm=38
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 5.813 s; speed 10.322 us/s
+- Verilator: cpu 5.811 s on 1 threads; allocated 12 MB
+CASE tok_rel_rnd expect PASS OK
+CALRDIR_SUMMARY starts=38 flat_cmd_edges=14931 table_req=0 f16_st_nonzero=237276 image_ready=1
+LP_LOCKSTEP FAIL MUT=0 mismatches=1 of 4507674
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 237us; walltime 22.524 s; speed 10.536 us/s
+- Verilator: cpu 22.473 s on 1 threads; allocated 12 MB
+CASE tok_norel expect FAIL OK
+CALRDIR_SUMMARY starts=38 flat_cmd_edges=14931 table_req=36 f16_st_nonzero=237276 image_ready=1
+LP_LOCKSTEP FAIL MUT=0 mismatches=1 of 4507674
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 237us; walltime 23.771 s; speed 9.983 us/s
+- Verilator: cpu 23.514 s on 1 threads; allocated 12 MB
+CASE tok_abs1 expect FAIL OK
+CALRDIR_SUMMARY starts=38 flat_cmd_edges=14931 table_req=35 f16_st_nonzero=237276 image_ready=1
+LP_LOCKSTEP FAIL MUT=0 mismatches=2 of 4507674
+- tb_np10.sv:229: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 237us; walltime 22.306 s; speed 10.638 us/s
+- Verilator: cpu 22.016 s on 1 threads; allocated 12 MB
+CASE tok_drop17 expect FAIL OK
+== tok_rel
+TLOAD_CHECK side=     flat loads=36 bad=0 latency=11
+TLOAD_CHECK side=landed_np loads=36 bad=0 latency=11
+TLOAD_STAGE_STARTS 38 image_not_ready_edges=0
+TLOAD_PRODUCER PASS
+CALRDIR_SUMMARY starts=38 flat_cmd_edges=14931 table_req=36 f16_st_nonzero=237276 image_ready=1
+== tok_norel
+TLOAD_CHECK side=     flat loads=0 bad=0 latency=-1
+TLOAD_CHECK side=landed_np loads=0 bad=0 latency=-1
+TLOAD_STAGE_STARTS 38 image_not_ready_edges=0
+TLOAD_PRODUCER FAIL
+CALRDIR_SUMMARY starts=38 flat_cmd_edges=14931 table_req=0 f16_st_nonzero=237276 image_ready=1
+== tok_abs1
+TLOAD_BAD side=0 cyc=13726 stage=1 user=0 playing_stage=2 expect_stage=2
+TLOAD_BAD side=1 cyc=13726 stage=1 user=0 playing_stage=2 expect_stage=2
+TLOAD_BAD side=0 cyc=19926 stage=1 user=0 playing_stage=3 expect_stage=3
+TLOAD_BAD side=1 cyc=19926 stage=1 user=0 playing_stage=3 expect_stage=3
+TLOAD_BAD side=0 cyc=26126 stage=1 user=0 playing_stage=4 expect_stage=4
+TLOAD_BAD side=1 cyc=26126 stage=1 user=0 playing_stage=4 expect_stage=4
+TLOAD_BAD side=0 cyc=32326 stage=1 user=0 playing_stage=5 expect_stage=5
+TLOAD_BAD side=1 cyc=32326 stage=1 user=0 playing_stage=5 expect_stage=5
+TLOAD_BAD side=0 cyc=38526 stage=1 user=0 playing_stage=6 expect_stage=6
+TLOAD_BAD side=1 cyc=38526 stage=1 user=0 playing_stage=6 expect_stage=6
+TLOAD_CHECK side=     flat loads=36 bad=35 latency=11
+TLOAD_CHECK side=landed_np loads=36 bad=35 latency=11
+== tok_drop17
+TLOAD_BAD side=0 cyc=112926 stage=18 user=0 playing_stage=18 expect_stage=17
+TLOAD_BAD side=0 cyc=119126 stage=19 user=0 playing_stage=19 expect_stage=18
+TLOAD_BAD side=0 cyc=125326 stage=20 user=0 playing_stage=20 expect_stage=19
+TLOAD_BAD side=0 cyc=131526 stage=21 user=0 playing_stage=21 expect_stage=20
+TLOAD_BAD side=0 cyc=137726 stage=22 user=0 playing_stage=22 expect_stage=21
+TLOAD_CHECK side=     flat loads=35 bad=19 latency=11
+TLOAD_CHECK side=landed_np loads=36 bad=0 latency=11
+TLOAD_STAGE_STARTS 38 image_not_ready_edges=0
+TLOAD_PRODUCER FAIL
+CALRDIR_SUMMARY starts=38 flat_cmd_edges=14931 table_req=35 f16_st_nonzero=237276 image_ready=1
+BENCH10_RC 0
+BENCH_RC 0

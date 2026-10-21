@@ -1,0 +1,9 @@
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_gi.u_cal.g_calrom.u_rom.m1 <- calendar_m1
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_gi.u_cal.g_calrom.u_rom.m0 <- calendar_m0
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_calrom.u_rom.m1 <- calendar_m1
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_calrom.u_rom.m0 <- calendar_m0
+CALRDIR_STATE warm=1150 image_ready=1 cal_descriptor_obs=080000000000000000 dc=de3a4b5357ce5f cf=1
+CALRDIR_STATE warm=1499 image_ready=1 cal_descriptor_obs=080000000000000000 dc=5683ebd3ceb8f5 cf=1
+CALRDIR_STATE warm=9000 image_ready=0 cal_descriptor_obs=080000000000000000 dc=1e057ac4089bb9 cf=1
+CALRDIR_SUMMARY starts=39 flat_cmd_edges=4510 table_req=7 f16_st_nonzero=59976 image_ready=0
+LP_LOCKSTEP PASS MUT=0 compared=1138974 cycles=60000 calrdir=1 warm=38

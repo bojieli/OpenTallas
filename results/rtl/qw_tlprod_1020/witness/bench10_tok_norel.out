@@ -1,0 +1,13 @@
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_gi.u_cal.g_calrom.u_rom.m1 <- calendar_m1
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_gi.u_cal.g_calrom.u_rom.m0 <- calendar_m0
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_calrom.u_rom.m1 <- calendar_m1
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_calrom.u_rom.m0 <- calendar_m0
+CALRDIR_STATE warm=1150 image_ready=1 cal_descriptor_obs=080000000000000000 dc=9416ccfb56a197 cf=1
+CALRDIR_STATE warm=1499 image_ready=1 cal_descriptor_obs=080000000000000000 dc=dd5e216d88bdf4 cf=1
+CALRDIR_STATE warm=9000 image_ready=1 cal_descriptor_obs=080000000000000000 dc=5f283abcb0cc4b cf=1
+TLOAD_CHECK side=     flat loads=0 bad=0 latency=-1
+TLOAD_CHECK side=landed_np loads=0 bad=0 latency=-1
+TLOAD_STAGE_STARTS 38 image_not_ready_edges=0
+TLOAD_PRODUCER FAIL
+CALRDIR_SUMMARY starts=38 flat_cmd_edges=14931 table_req=0 f16_st_nonzero=237276 image_ready=1
+LP_LOCKSTEP FAIL MUT=0 mismatches=1 of 4507674

@@ -1,0 +1,14 @@
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_gi.u_cal.g_calrom.u_rom.m1 <- calendar_m0
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_gi.u_cal.g_calrom.u_rom.m0 <- calendar_m0
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_calrom.u_rom.m1 <- calendar_m1
+CALR_ROM_LOAD tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_calrom.u_rom.m0 <- calendar_m0
+CALRDIR_STATE warm=1150 image_ready=1 cal_descriptor_obs=080000000000000000 dc=5539bd086adf32 cf=1
+CALRDIR_STATE warm=1499 image_ready=1 cal_descriptor_obs=080000000000000000 dc=9ec1e01a9c7e98 cf=1
+LP_MISMATCH port=cal_image_ready cycle=1527 flat=1 landed=0
+LP_MISMATCH port=cal_image_ready cycle=1528 flat=1 landed=0
+LP_MISMATCH port=dc cycle=1528 flat=97d6718fb38c4d landed=9fd6718fb38c4d
+LP_MISMATCH port=cal_image_ready cycle=1529 flat=1 landed=0
+LP_MISMATCH port=dc cycle=1529 flat=57d6718fb38c4d landed=5fd6718fb38c4d
+CALRDIR_STATE warm=9000 image_ready=0 cal_descriptor_obs=080000000000000000 dc=9dc9a0ae1f5008 cf=1
+CALRDIR_SUMMARY starts=39 flat_cmd_edges=4510 table_req=0 f16_st_nonzero=59976 image_ready=0
+LP_LOCKSTEP FAIL MUT=0 mismatches=9217 of 1138974

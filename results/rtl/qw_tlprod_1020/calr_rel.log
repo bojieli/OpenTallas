@@ -1,0 +1,14 @@
+CALR_REL_m0 rc=0
+CALR_REL_SUMMARY mut=0 cycles=850012 loads=144 u0=36 u1=36 u2=36 u3=36 bad=0 latency=9 fault=0 fc=000000
+CALR_REL_PASS
+CALR_REL_m35 rc=1
+CALR_REL_SUMMARY mut=35 cycles=850012 loads=140 u0=35 u1=35 u2=35 u3=35 bad=0 latency=9 fault=0 fc=000000
+CALR_REL_FAIL
+CALR_REL_none rc=1
+CALR_REL_SUMMARY mut=0 cycles=839068 loads=0 u0=0 u1=0 u2=0 u3=0 bad=0 latency=-1 fault=0 fc=000000
+CALR_REL_FAIL
+CALR_REL_abs1 rc=1
+CALR_REL_BAD cyc=42357 stage=1 user=3 (playing 2/3) lat=9 first_lat=9
+CALR_REL_BAD cyc=48252 stage=1 user=0 (playing 3/0) lat=9 first_lat=9
+CALR_REL_SUMMARY mut=0 cycles=850012 loads=144 u0=36 u1=36 u2=36 u3=36 bad=140 latency=9 fault=0 fc=000000
+CALR_REL_FAIL

@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+CALR_REL_BAD cyc=42357 stage=1 user=3 (playing 2/3) lat=9 first_lat=9
+CALR_REL_BAD cyc=48252 stage=1 user=0 (playing 3/0) lat=9 first_lat=9
+CALR_REL_SUMMARY mut=0 cycles=850012 loads=144 u0=36 u1=36 u2=36 u3=36 bad=140 latency=9 fault=0 fc=000000
+CALR_REL_FAIL
+- /srv/opentallas-scratch/claude/qw-tlprod-1020/src/rtl/test/qwen_dv/calr_rel/tb_qfd_dv_cmd_cal_mu_calr_rel.sv:70: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9ms; walltime 10.792 s; speed 787.661 us/s
+- Verilator: cpu 10.788 s on 1 threads; allocated 7 MB

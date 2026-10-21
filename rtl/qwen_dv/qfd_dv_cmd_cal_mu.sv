@@ -106,6 +106,14 @@
 //   (tl_bad).  TABLE_ROM = 1 (with CALENDAR_ROM): LOCAL kind 4 = explicit table-load pulse {table_load, table_stage,
 //   table_user} on the issue register (stage 1..36, all other bits 0, else fault_code[4]); checks per playhead from the
 //   registered head, as TLOAD.  BOUNDARY_RELOC of QW-F16PROG3 is NOT ported (unused by the CTLM gi).
+// TABLE_REL (QW-TLPROD 10-20, under TABLE_ROM; the per-layer table-load PRODUCER): a LOCAL4 entry with bit [10] = 1 is
+//   STAGE-RELATIVE: its table_stage is the stage its playhead was started on (pst, loaded on every accepted start: the
+//   face's dh start for user 0, the OPSEG leaf start for a filler, 0 for BOOT), the image field [9:4] must be 0, and the
+//   playhead's stage must be 1..36 (else fault_code[4], as an absolute LOCAL4).  One entry in the decode-layer descriptor
+//   (shared by stages 1..36) thus issues the 36 per-layer slice-table loads {stage, user} at a compiler-placed T_k of
+//   every layer segment, for every user, on the static calendar (no handshake, no runtime readiness).  Bit [10] = 0:
+//   unchanged (an image without bit-10 entries is edge-identical).  MUT 35 (bench only): the REL load of stage 17 is
+//   dropped (no pulse, no fault).
 // =====================================================================================================================
 module qfd_dv_cmd_cal_mu #(
     parameter integer MUT = 0,
@@ -495,6 +503,13 @@ module qfd_dv_cmd_cal_mu #(
     // start refusal: own playhead playing (MUT 13: any playhead; MUT 14: never)
     wire busy_sel = (MUT == 13) ? (|run_q) : (MUT == 14) ? 1'b0 : run_q[go_user];
     wire start_bad = !sealed || busy_sel || (start && boot_go) || (start && stage > LAST_STAGE[5:0]) || rng_bad;
+    // TABLE_REL: the stage each playhead was started on (payload, unreset: read only by a REL LOCAL4 entry of the
+    // segment that this very start opened; loaded on the same edge and condition as the playhead's run state)
+    reg  [5:0]    pst [0:NU-1];
+    integer       pk;
+    always @(posedge ck)
+        for (pk = 0; pk < NU; pk = pk + 1)
+            if (go_u[pk] && !start_bad && g_cnt_nz) pst[pk] <= boot_go ? 6'd0 : stage;
 
     // ================================================================ fetch / head, per playhead (combinational)
     reg  [NU-1:0]  can_read, gnt, hv, late, hgo, zd;
@@ -650,6 +665,7 @@ module qfd_dv_cmd_cal_mu #(
     // the registered head, beside the issue select
     reg  [115:0]  rcu [0:NU-1];
     reg  [NU-1:0] rbad, tlk, tlb, trk, trb;
+    reg  [5:0]    tst [0:NU-1];
     reg  [UB-1:0] ruu [0:NU-1];
     reg  [115:0]  hu;
     reg  [24:0]   uvb, r_ar, r_dd, r_em, r_db;
@@ -695,12 +711,14 @@ module qfd_dv_cmd_cal_mu #(
             // CTLM7: row*16 < bend <=> row < ceil(bend/16) (registered bend_c); row*16 + 16 > base <=> row >= base[9:4]
             // TABLE_ROM (LOCAL kind 4): explicit table-load request, checked from the registered head
             trk[v] = (TABLE_ROM != 0) && (CALENDAR_ROM != 0) && hu[115:112] == 4'hE && hu[3:1] == 3'd4;
-            trb[v] = hu[111:10] != 102'd0 || hu[9:4] < 6'd1 || hu[9:4] > 6'd36;
+            // TABLE_REL: bit 10 = stage-relative (the playhead's started stage pst, image field [9:4] = 0)
+            tst[v] = hu[10] ? pst[v] : hu[9:4];
+            trb[v] = hu[111:11] != 101'd0 || (hu[10] && hu[9:4] != 6'd0) || tst[v] < 6'd1 || tst[v] > 6'd36;
         end
     end
     // the issuing playhead: the lowest with a go entry this edge (one-hot select); a second one is a collision
     reg  [NU-1:0] isel; reg i_any, i_col;
-    reg  [115:0]  ic, rc; reg r_bad, tl_bad, tl_go, tr_go, tr_bad; reg [UB-1:0] ru;
+    reg  [115:0]  ic, rc; reg r_bad, tl_bad, tl_go, tr_go, tr_bad; reg [UB-1:0] ru; reg [5:0] ts;
     integer       c;
     always @* begin
         i_any = 1'b0; i_col = 1'b0; isel = {NU{1'b0}};
@@ -708,12 +726,12 @@ module qfd_dv_cmd_cal_mu #(
             isel[c] = hgo[c] && !i_any;
             if (hgo[c]) begin if (i_any) i_col = 1'b1; i_any = 1'b1; end
         end
-        ic = 116'd0; rc = 116'd0; r_bad = 1'b0; tl_bad = 1'b0; tl_go = 1'b0; tr_go = 1'b0; tr_bad = 1'b0; ru = {UB{1'b0}};
+        ic = 116'd0; rc = 116'd0; r_bad = 1'b0; tl_bad = 1'b0; tl_go = 1'b0; tr_go = 1'b0; tr_bad = 1'b0; ru = {UB{1'b0}}; ts = 6'd0;
         // CTLM7: AND-OR select (isel one-hot), no per-playhead mux chain
         for (c = 0; c < NU; c = c + 1) begin
             ic = ic | ({116{isel[c]}} & hc_q[c]); rc = rc | ({116{isel[c]}} & rcu[c]); r_bad = r_bad | (isel[c] & rbad[c]);
             tl_bad = tl_bad | (isel[c] & tlb[c]); tl_go = tl_go | (isel[c] & tlk[c]); tr_go = tr_go | (isel[c] & trk[c]);
-            tr_bad = tr_bad | (isel[c] & trb[c]); ru = ru | ({UB{isel[c]}} & ruu[c]);
+            tr_bad = tr_bad | (isel[c] & trb[c]); ru = ru | ({UB{isel[c]}} & ruu[c]); ts = ts | ({6{isel[c]}} & tst[c]);
         end
     end
     wire [2:0]    i_kind = ic[3:1];
@@ -876,7 +894,7 @@ module qfd_dv_cmd_cal_mu #(
                     if (i_kind == 3'd1) loc_emb <= 1'b1;
                     else if (i_kind == 3'd2) begin loc_seg <= 1'b1; loc_base <= ic[15:4]; end
                     else if (tr_go) begin
-                        if (!tr_bad) begin table_load <= 1'b1; table_stage <= ic[9:4]; table_user <= 2'(ru); end
+                        if (!tr_bad && !(MUT == 35 && ic[10] && ts == 6'd17)) begin table_load <= 1'b1; table_stage <= ts; table_user <= 2'(ru); end
                     end
                     else if (i_kind == 3'd3) begin end
                     else begin end
