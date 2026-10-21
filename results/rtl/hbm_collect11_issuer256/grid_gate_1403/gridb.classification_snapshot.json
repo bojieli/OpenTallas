@@ -57524,14 +57524,14 @@
  ],
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "7581b384f5ae62eb409584501bf880dc7c159d06",
-  "commit": "7581b384f5ae62eb409584501bf880dc7c159d06",
+  "start_commit": "f05ec8ef1123164db9ff26ec83496635bd3457e4",
+  "commit": "f05ec8ef1123164db9ff26ec83496635bd3457e4",
   "identity": "commit",
   "daemon_tree": "/home/ubuntu/wt/codex-hbm-issuer-grid-collect-1403",
-  "daemon_start_commit": "7581b384f5ae62eb409584501bf880dc7c159d06",
+  "daemon_start_commit": "f05ec8ef1123164db9ff26ec83496635bd3457e4",
   "daemon_overlays": [],
-  "archive_sha256": "aa6c7f1918891e4e0663ef31103e323ba3e1400a58def40545827608ac88c072",
-  "manifest_sha256": "e7793037c335b22c3218d0e683af5f2fdabe29bfa1b70b4aa767e35a3266b536",
+  "archive_sha256": "1103a9c8bbebb0e46a2f225934db1bb71a2a9b8fad99e862770575edb9e929ad",
+  "manifest_sha256": "1f6a5e5b17779cdc7f7d65abdc69f8564dccf8e2fe32b659e84d7db6df82c7d4",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.json",
@@ -62736,8 +62736,8 @@
    {
     "path": "tools/closure_loop/helper_overlay.py",
     "kind": "file",
-    "sha256": "da55f118606ced4aede3942749e5f567aa768130e64f0e4c8b67ef813bef891b",
-    "git_blob": "2f6be69d3cc250e7b08c3c51862029698eb2af56",
+    "sha256": "c9079ffdb04aee03f1efe1294b7bd3be057ce7133de723f0b928ee13b0504ffd",
+    "git_blob": "92503d2957887ca674c3931dd7b7fe7c192e3b6c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -85504,8 +85504,8 @@
    {
     "path": "tools/ref_tile/clock_entry_constraints.py",
     "kind": "file",
-    "sha256": "10d74860727b5c77288666ef4c86b2e1a40865a3951038d050692447a5a220c7",
-    "git_blob": "81a8d45e2fa9357cc97fd04721f5187fa7bfe425",
+    "sha256": "1066f1522cf11ea98ecd627399b54c5032cc5dc20586fc88e3f967e92426683a",
+    "git_blob": "f6d9ad8a8fd27c2aa8a813563b583bbd372c9823",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -85680,8 +85680,8 @@
    {
     "path": "tools/ref_tile/gray_fifo_cdc_constraints.py",
     "kind": "file",
-    "sha256": "e77bf243c7c8316fec3dbd92c7052a1338cab0653221b0bfd627434108619968",
-    "git_blob": "fb46d237ec17171f79439b9f27a75788cf56844a",
+    "sha256": "3ea4f8296b915c75cf555cc6d98189203be21ce89ec9cd23986e3ae69ae11289",
+    "git_blob": "7ae8ec8c584f733925965fad96be88f55af39246",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -85848,8 +85848,8 @@
    {
     "path": "tools/ref_tile/ref_tile.py",
     "kind": "file",
-    "sha256": "116fb4ca90f9527485d81fa0af7bed5a173406f1b6728e7c8f186b9cacf1bad6",
-    "git_blob": "4d2b925ea52219429944ba3b78dd3396c2583ed1",
+    "sha256": "9b9de8f66532e83a71e2086b916c9cd41f63e5448076805bc554552e184c753b",
+    "git_blob": "2efba63775596842dbfca8afba38977d2b83a90a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -119068,7 +119068,7 @@
     "tools/closure_loop/gate_rule_guard.py": "0dfec3d022e1b5280b787d3e246bedb0c4df904a517e9a195681a7b6b1397a9b",
     "tools/closure_loop/git_mirror.py": "0b0f95715b065303493674aaf35040f7cdf2dd589865dbc7a850b24003ef3f68",
     "tools/closure_loop/h1_patch.py": "09c35b5d4e359eb3c1e0dd57f933ab92739962c6ac4df09ed8fc2fecdbbc2df1",
-    "tools/closure_loop/helper_overlay.py": "da55f118606ced4aede3942749e5f567aa768130e64f0e4c8b67ef813bef891b",
+    "tools/closure_loop/helper_overlay.py": "c9079ffdb04aee03f1efe1294b7bd3be057ce7133de723f0b928ee13b0504ffd",
     "tools/closure_loop/hold_corners_patch.py": "3899d47b1e2b8101685dd627d63384385feb0b7574dc108bb9ed65a20686cfe9",
     "tools/closure_loop/hold_eco.sh": "3e362671e57a81d36234591883f48f73544b981b0ec371fb514ec3c48d088b7d",
     "tools/closure_loop/hold_eco.tcl": "54124948665b04ce8e8b4aef076eeeabe7e8415ba5cfc1b81450f6654fa91e5b",
@@ -121914,7 +121914,7 @@
     "tools/ref_tile/ccfbp_s_aligned_pins.py": "8f3e6937e7ea13bc5a7bc0608424253455d5f087ce6dcce09eb148b75eaba741",
     "tools/ref_tile/cdc_fsm_guard.py": "97cbdb58795efa159c62da78c5f51c59e0f69b148a67781c84c47af4e4e7a769",
     "tools/ref_tile/cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
-    "tools/ref_tile/clock_entry_constraints.py": "10d74860727b5c77288666ef4c86b2e1a40865a3951038d050692447a5a220c7",
+    "tools/ref_tile/clock_entry_constraints.py": "1066f1522cf11ea98ecd627399b54c5032cc5dc20586fc88e3f967e92426683a",
     "tools/ref_tile/cluster_pg_phase.py": "116b0ab7c1326839c0117f06d9196e35f6257521dc63d4cc1685c9fc05555abe",
     "tools/ref_tile/composition_gates.json": "a7c638b7bc9e94b7d06b2e57caa17589323b55107f80c219e7e3a126c555d8a5",
     "tools/ref_tile/cross_clock_paths.tcl": "fa335ba51c5b7ec58d4565ce787d9af8429136ad2d6636397285eb8d4d5f0f59",
@@ -121936,7 +121936,7 @@
     "tools/ref_tile/examples/val_good_clt6.json": "46d348f2f469bd36af7593e9cc4d8d2582c532e8b1b61d41fe3dac8faeab6c1a",
     "tools/ref_tile/export_provenance.py": "2b771016bfc50bf0f0ca1aebdb5be42efc8e64c033c2ab573028992931addff1",
     "tools/ref_tile/face_land.py": "c40ffe9b76efd6820e055fae1897f046f82a2da8fc8909db1a5b0d5b64bf77ed",
-    "tools/ref_tile/gray_fifo_cdc_constraints.py": "e77bf243c7c8316fec3dbd92c7052a1338cab0653221b0bfd627434108619968",
+    "tools/ref_tile/gray_fifo_cdc_constraints.py": "3ea4f8296b915c75cf555cc6d98189203be21ce89ec9cd23986e3ae69ae11289",
     "tools/ref_tile/keep_module_audit.py": "d99f269a508ad9e28d9c523a626c56be3a43ef6d3f4ee7f53705b0f3366b37a8",
     "tools/ref_tile/kit_orfs_vars.py": "1e4348cfaf9e0140d382be94b51b03e4376190552d20f9c507b7c5dd52b8a5bf",
     "tools/ref_tile/layout_dump.tcl": "cc1a9fa11ecdbe323644c251fcd061eee26535894995967ed26b63d13d08d747",
@@ -121957,7 +121957,7 @@
     "tools/ref_tile/raw_macro_clocks.py": "178341a37d2613961625401dbe1a9a265f4869f59dbdabab5a35048f7cffb5a5",
     "tools/ref_tile/recover_gate_result.py": "b867b3ee499d06bbb37a892989f5a94452bac9150a656aa66f48f077b825377b",
     "tools/ref_tile/ref_route.sh": "471a153c17fdf26f2f2c6c8f39ab20c0907d5a6cc0bf3d05af905a1876d82bfe",
-    "tools/ref_tile/ref_tile.py": "116fb4ca90f9527485d81fa0af7bed5a173406f1b6728e7c8f186b9cacf1bad6",
+    "tools/ref_tile/ref_tile.py": "9b9de8f66532e83a71e2086b916c9cd41f63e5448076805bc554552e184c753b",
     "tools/ref_tile/refinalize_view.py": "bcb2a12cf6dbc0a7bf1a0347430505e4c75e3f30ea3f0d095e6810eddea1af9c",
     "tools/ref_tile/registered_cluster_budget.py": "aff65fba1f0e6eeb425ffec8b7a8d9f7b626299f7fb2fe33bd7071b4dddf2f4d",
     "tools/ref_tile/rekit_native_launch.py": "d55c9e572ec73577ded146c90d4726cb23385f7d7fd5de77bec375af03caafa8",
@@ -125186,9 +125186,9 @@
   }
  },
  "classification_archive": {
-  "path": "/home/ubuntu/scratch/codex-issuer-classification-1455/gridb.classification_inputs.tar.gz",
-  "sha256": "aa6c7f1918891e4e0663ef31103e323ba3e1400a58def40545827608ac88c072",
-  "bytes": 20400758
+  "path": "/home/ubuntu/scratch/codex-issuer-classification-main54b/gridb.classification_inputs.tar.gz",
+  "sha256": "1103a9c8bbebb0e46a2f225934db1bb71a2a9b8fad99e862770575edb9e929ad",
+  "bytes": 20402436
  },
  "physical_input_comparison": {
   "original_consumed_physical_count": 328,
