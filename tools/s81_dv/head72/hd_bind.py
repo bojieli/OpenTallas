@@ -115,6 +115,10 @@ def main():
                              clk='ck', rst=['rst_n', 'low'],
                              ports={'i.i': busb('i', land=True), 'iw.i': busb('iw', land=True), 'ie.i': busb('ie', land=True),
                                     'o.o': busb('o')})
+    if facts.get('spr_closed'):
+        selected=facts['spr_closed']
+        M['ot_s81hd_spr']['view']=selected['view']
+        M['ot_s81hd_spr']['view_note']='CLOSED '+selected['record']+' source '+selected['source']+'; exact R0 216-square body in prior 216x648 reserve; actual parent timing pending'
     # ---------------------------------------------------------------- ctl
     cp = {'sn_o.o': busb('sn_o'), 'ss_o.o': busb('ss_o'), 'sn_i.i': busb('sn_i', land=True), 'ss_i.i': busb('ss_i', land=True)}
     lanes_seen = []
