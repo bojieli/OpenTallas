@@ -9,3 +9,9 @@ Unpinned ot-run ep7 unit oth-ubuntu-2989071-1792559908 completed exit0. Exact ma
 ## Actual production replay supersedes synthetic mechanism success
 
 At22:24 die_qwen reported exact paired actual production GEN base and +8cd522a2f BOTH FAIL the latest forwarded-reset auditor: untreated2, same rstt_rst_d2d__fo1__r4_21 -> rly_lnk_fwd_epoch_0/en and rstt_rst_d2d__fo2__r4_6 -> rly_lnk_fwd_epoch__fo1_0/en. Both retain13761 repeaters/endpoints3. Synthetic mechanism tests pass but generator integration does not change production reset wiring. The8cd source is diagnostic/incomplete; no production reset fix or die timing qualification claimed. Original failures remain immutable. Logs ep6 codex-qw-facts2210{,-noroot}/reset_audit_8cd.log are die_qwen-owned pending source-pinned addendum and structural repair. Source/classifier diagnostics and fail-closed verdict correction remain useful; production adoption HOLD.
+
+## Follow-up: the two receiving-clock reset hops are repaired
+
+Main `35c37233c` includes the receiving-clock correction from `ed5b5c214`. The earlier production reset HOLD above is preserved as history. The source-bound follow-up in `results/rtl/qw_reset_inputs_1020/` shows the baseline and first candidate failing the same two releases, then the corrected reset audit passing with zero untreated releases. Repeater count stays 13,761; synchronizer endpoints increase from three to five. ROOT independently matched the narrow generator reset function and helper to the actual replay implementation; see `results/arch/root_qwen_reset_receivers_2243_1020/`.
+
+This supersedes the two-hop reset defect only. The replay used a broader production generator recipe, and its independent GEN safety facts still fail. No complete die GEN safety, routed timing, landing-calendar, or physical closure qualification follows from this correction. Original failure receipts remain unchanged.
