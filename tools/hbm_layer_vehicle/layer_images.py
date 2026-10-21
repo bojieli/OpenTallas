@@ -881,6 +881,15 @@ def main():
     ap.add_argument("--nev", type=int, default=0, help="(--su-lower2) built TB event depth: split into independent replays")
     ap.add_argument("--defer-records", default="", help="(--su-lower2, internal) records left unlowered because their "
                     "VM-linked programme group exceeds the TB event depth")
+    ap.add_argument("--cx", action="store_true", help="TOK-FUNC2-HBM-CX: COLL/HC component records CONNECTED in the layer "
+                    "(shared placement, interleaved SU/component epochs, producer-cone parts; cx_layer_1021)")
+    ap.add_argument("--cx-ops", default="COLL,HC")
+    ap.add_argument("--cx-contract", type=Path)
+    ap.add_argument("--cx-l12", type=Path)
+    ap.add_argument("--cx-checkpoint", type=Path)
+    ap.add_argument("--cx-chapters", default="", help="priced records starting a new VM chapter (quarter VM reset; "
+                    "parts never span chapters; values crossing it are imaged, listed)")
+    ap.add_argument("--cx-skip", default="", help="priced component records left as fixture-imaged probes (VM capacity)")
     ap.add_argument("--safe-calendar", action="store_true", help="opt-in tested 128-word A-to-O BF16 profile, exclusive controls and OLD-read drain gap")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
@@ -943,6 +952,15 @@ def main():
     events, manifest, t_su_free = [], [], 0
     rng = np.random.default_rng(1018)
     place, vm_data = Placement(a.quarter), {}
+    cx = None
+    if a.cx:
+        from hbm_layer_vehicle import cx_layer_1021 as CX
+        if not fx:
+            ap.error("--cx requires --fixtures")
+        place = CX.make_placement(Placement, a.quarter)
+        cx = CX.Cx(a.fixtures, a.rank, recs, place, contract=a.cx_contract, l12=a.cx_l12, checkpoint=a.cx_checkpoint,
+                   boundary=bnd, ops=set(a.cx_ops.split(",")), skip={int(x) for x in a.cx_skip.split(",") if x},
+                   chapters={int(x) for x in a.cx_chapters.split(",") if x})
     # layer t0 (serial): reset relay 3 edges + the first record's whole configuration load + slack
     pending = []
     for r in recs:
@@ -959,6 +977,17 @@ def main():
             ent["programme_tag_mismatch"] = prog[pk][2]["tag"]
         unit = r["orig_op"].split(".")[0]
         ent["target_ports"] = [p for p in UNIT_PORTS.get(unit, []) if p in inports]
+        if cx is not None:
+            cx.before_record(r["i"], fx.get(r["i"]), placed=(unit == "SU"))
+            if r["i"] in cx.comps:
+                e2, comp = cx.lower(r["i"], cap=(a.nev or 11651) - 1)
+                ent.update(e2)
+                if comp is not None:
+                    pending.append((r, ent, dict(cx_comp=comp)))
+                if ent["blocked_by"]:
+                    ent["status"] = "blocked:" + ent["status"]
+                manifest.append(ent)
+                continue
         if unit == "SU" and pk is not None and prog[pk][1] is not None:
             import su_bench as SB
             raw = SB.pack_rec(prog[pk][1])
@@ -995,6 +1024,8 @@ def main():
                 continue
             if fr is not None:
                 fixture_check(su, fr)
+            if cx is not None:
+                cx.after_su(r["i"], su, fr)
             ent.update(status=su["status"], reasons=su["reasons"], lowering=su["lowering"],
                        inputs_placeholder=su.get("inputs_placeholder"))
             if su.get("su_lower2_attempts") is not None:
@@ -1047,12 +1078,19 @@ def main():
     # SU programmes: adjacent SU records share ONE pgp programme (one start) when they fit EDGES 7111 and the gap to
     # the next is too short to reload; each programme is loaded while the producer is idle, >= CFG_LEAD before start.
     progs = []
+    cx_before, force_new = {}, False
     for r, ent, su in pending:
+        if "cx_comp" in su:                         # component barrier: SU programmes split around it
+            cx_before.setdefault(len(progs), []).append(su["cx_comp"])
+            force_new = True
+            continue
         want0 = serial(r["start"]) - su["setup_edge"]               # desired line-0 edge, relative to t0
         P = progs[-1] if progs else None
-        if P is None or want0 - P["end"] >= a.reload_gap or want0 - P["base"] + len(su["lines"]) > EDGES_MAX:
+        if (P is None or force_new or want0 - P["end"] >= a.reload_gap
+                or want0 - P["base"] + len(su["lines"]) > EDGES_MAX):
             P = dict(base=want0, end=want0, ql=QLine(), recs=[])
             progs.append(P)
+            force_new = False
         o = max(0, want0 - P["base"])
         if a.su_lower2:
             # opt-in: records of one programme run strictly after the previous record's last commit (store rows are
@@ -1078,7 +1116,44 @@ def main():
         P.update(lines=lines, cfg=cfg, man=man)
     t0 = 3 + (len(progs[0]["cfg"]) if progs else 0) + CFG_LEAD + START_ADVANCE + a.load_gap
     busy_until, shift, written_at = 3, 0, {}
+    cx_ev, cx_comp_place, cx_epochs = [], [], []
+    cx_state = dict(t=3, ep=None)
+
+    def cx_close_epoch():
+        ep = cx_state["ep"]
+        if ep is None:
+            return
+        last = max([CX.stream_of(e["cyc"]) if e["dom"] == "serial" else e["cyc"] for e in events[ep["start"]:]
+                    if e["k"] != "M"] or [ep["launch"]])
+        ev_, launch_, end_ = CX.epoch_calendar(ep["t_install"], last)
+        cx_ev.extend(ev_)
+        cx_epochs.append(dict(t_install=ep["t_install"], launch=launch_, end=end_, last_su_stream=last,
+                              programmes=ep["progs"]))
+        cx_state.update(t=end_ + CX.CP_GUARD, ep=None)
+
+    def cx_place_comps(lst):
+        for comp in lst:
+            nm = [e["cyc"] for e in comp["events"] if e["k"] != "M"]
+            sh = cx_state["t"] + CX.CP_GUARD - min(nm)
+            for e in comp["events"]:
+                e2 = dict(e, cx=comp["i"])
+                if e2["k"] != "M":
+                    e2["cyc"] = e2["cyc"] + sh
+                cx_ev.append(e2)
+            cx_comp_place.append(dict(i=comp["i"], op=comp["op"], start=min(nm) + sh, end=max(nm) + sh,
+                                      events=len(nm)))
+            cx_state["t"] = max(nm) + sh + CX.COMP_GAP
     for k, P in enumerate(progs):
+        if cx is not None and (k == 0 or k in cx_before):
+            cx_close_epoch()
+            cx_place_comps(cx_before.get(k, []))
+            launch_ = CX.epoch_launch(cx_state["t"])
+            cx_state["ep"] = dict(t_install=cx_state["t"], launch=launch_, start=len(events), progs=[])
+            min_s = -(-3 * (launch_ + CX.SU_START_GUARD) // 4) + 1
+            if t0 + P["base"] + shift - START_ADVANCE < min_s:
+                shift += min_s - (t0 + P["base"] + shift - START_ADVANCE)
+        if cx is not None:
+            cx_state["ep"]["progs"].append(k)
         line0 = t0 + P["base"] + shift
         s_edge = line0 - START_ADVANCE
         load0 = s_edge - CFG_LEAD - len(P["cfg"])
@@ -1131,6 +1206,15 @@ def main():
             ent["commit_slack_edges"] = ent["priced_end_serial"] - ent["compiled_commit_serial"]
             if note:
                 ent.setdefault("reasons", []).append(note)
+    if cx is not None:
+        cx_close_epoch()
+        cx_place_comps(cx_before.get(len(progs), []))
+        cx_img = {e["sector"] for e in cx_ev if e["k"] == "M"}
+        cx_dropped = [dict(rec=e.get("rec"), sector=e["sector"]) for e in events if e["k"] == "M" and e["sector"] in cx_img]
+        events = [e for e in events if not (e["k"] == "M" and e["sector"] in cx_img)]   # component image wins
+        for e in events:                       # SU programme of every SU event (parts)
+            if "prog" not in e:
+                e["prog"] = next((c["programme"] for c in cfgs if e.get("rec") in c["records"]), None)
     events.sort(key=lambda x: (x["dom"], x["cyc"], x["k"]))
 
     def drop_holds(evs):
@@ -1148,7 +1232,78 @@ def main():
         return kept, n
 
     dropped_holds, extra_parts = 0, []
-    if a.su_lower2:
+    cx_parts = None
+    if cx is not None:
+        # producer-cone parts: every part replays the real producer chain (drives + images) of everything it checks
+        nodes = []
+        prog_rw = {k_: (set(), set()) for k_ in range(len(progs))}
+        for k_, P in enumerate(progs):
+            for r_, ent_, su_, o_ in P["recs"]:
+                prog_rw[k_][0].update(ls_ for ls_, _ in su_["fills"])
+                prog_rw[k_][1].update(ls_ for ls_, _ in su_["drains"])
+        by_prog, by_cx = {}, {}
+        for e in events:
+            by_prog.setdefault(e.get("prog"), []).append(e)
+        for e in cx_ev:
+            if e.get("cx_epoch"):
+                by_cx.setdefault("epoch", []).append(e)
+            else:
+                by_cx.setdefault(e["cx"], []).append(e)
+        comps_by_i = {i_: c for i_, c in cx.comps.items() if c.get("lowered")}
+
+        def chap(i_):
+            return sum(1 for b_ in cx.chapters if i_ >= b_)
+
+        def mk(nid, evs, reads, writes):
+            i_ = nid[1] if nid[0] == "c" else progs[nid[1]]["recs"][0][0]["i"]
+            reads = {(chap(i_), x) for x in reads}
+            writes = {(chap(i_), x) for x in writes}
+            return dict(id=nid, chapter=chap(i_), drives=[e for e in evs if e["k"] == "D"], checks=[e for e in evs if e["k"] == "C"],
+                        images=[e for e in evs if e["k"] == "M"], reads=reads, writes=writes)
+        for k_ in range(len(progs) + 1):
+            for c in cx_before.get(k_, []):
+                nodes.append(mk(("c", c["i"]), by_cx.get(c["i"], []), c["reads"], c["writes"]))
+            if k_ < len(progs):
+                nodes.append(mk(("p", k_), by_prog.get(k_, []), *prog_rw[k_]))
+        stray = by_prog.get(None, [])
+        common = by_cx.get("epoch", []) + [e for e in stray if e["k"] == "D"]
+        cap = (a.nev or 11651) - 1 - len(common)
+        parts_, cone_ = CX.cones_parts(nodes, cap)
+        byid = {n["id"]: n for n in nodes}
+        parts_out = []
+        for p_ in parts_:
+            evs = list(common)
+            for nid in sorted(p_["members"], key=lambda x: [n["id"] for n in nodes].index(x)):
+                evs += byid[nid]["drives"] + byid[nid]["images"]
+                if nid in p_["targets"]:
+                    evs += byid[nid]["checks"]
+            ev_, n_ = drop_holds(sorted(evs, key=lambda x: (x["dom"], x["cyc"], x["k"])))
+            dropped_holds += n_
+            parts_out.append((ev_, sorted(k_ for t_, k_ in p_["members"] if t_ == "p")))
+            p_["events_after_hold_drop"] = sum(1 for e in ev_ if e["k"] != "M")
+        for P_ in cx.iso_parts:                # standalone components (no in-slice neighbour)
+            ev_, pl_ = CX.iso_part_events(P_)
+            cx_comp_place.extend(pl_)
+            parts_.append(dict(members={("c", x["i"]) for x in P_["comps"]}, targets=[("c", x["i"]) for x in P_["comps"]],
+                               drive_events=sum(e["k"] == "D" for e in ev_), check_events=sum(e["k"] == "C" for e in ev_)))
+            ev_, n_ = drop_holds(sorted(ev_, key=lambda x: (x["dom"], x["cyc"], x["k"])))
+            parts_[-1]["events_after_hold_drop"] = sum(1 for e in ev_ if e["k"] != "M")
+            parts_out.append((ev_, []))
+        events = parts_out[0][0] if parts_out else events
+        extra_parts = parts_out[1:]
+        cx_parts = [dict(part=n_, targets=[f"{t}{k}" for t, k in p_["targets"]],
+                         members=[f"{t}{k}" for t, k in sorted(p_["members"], key=lambda x: (x[1], x[0]))],
+                         drive_events=p_["drive_events"], check_events=p_["check_events"],
+                         events=p_["events_after_hold_drop"], fits_nev=p_["events_after_hold_drop"] <= (a.nev or 11651) - 1)
+                    for n_, p_ in enumerate(parts_)]
+        for P_k, P in enumerate(progs):
+            for r_, ent_, su_, o_ in P["recs"]:
+                ent_["replay_part"] = [n_ for n_, p_ in enumerate(parts_) if ("p", P_k) in p_["targets"]]
+        for m_ in manifest:
+            if m_["i"] in comps_by_i:
+                m_["replay_part"] = [n_ for n_, p_ in enumerate(parts_) if ("c", m_["i"]) in p_["targets"]]
+                m_["cx"]["timeline"] = next((x for x in cx_comp_place if x["i"] == m_["i"]), None)
+    elif a.su_lower2:
         # opt-in: when the layer does not fit NEV, split it into INDEPENDENT replays: programmes linked by a VM
         # producer -> consumer sector stay together (no expected-value carry, no intermediate injection)
         prog_of = {r_: c["programme"] for c in cfgs for r_ in c["records"]}
@@ -1226,7 +1381,16 @@ def main():
                             "VM operands as M preload events (no slice VM input port)",
                             f"start advance {START_ADVANCE}, config lead {CFG_LEAD} (pgcol.sv header)"],
                events=events)
-    if a.su_lower2:
+    if cx is not None:
+        rep.update(cx_scope="connected_layer_parts", lane="TOK-FUNC2-HBM-CX", connected_components=True,
+                   cx_epochs=cx_epochs, cx_components=cx_comp_place, cx_parts=cx_parts,
+                   data_connection="producer -> component -> consumer through the layer VM placement; non-slice "
+                                   "words imaged with provenance (manifest cx)")
+        rep["assumptions"] = rep["assumptions"] + [
+            "SU programmes split at every component; SU epochs (finite owner-0 calendar) and component CP epochs "
+            "alternate on compiled edges (no ready/credit)",
+            "part = union of producer cones of its checked nodes; cone members replay drives+images, not checks"]
+    if a.su_lower2 or cx is not None:
         rep["dropped_same_value_holds"] = dropped_holds
         rep["independent_parts"] = 1 + len(extra_parts)
     (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
@@ -1240,6 +1404,12 @@ def main():
                fixtures=str(a.fixtures) if a.fixtures else None,
                boundary=str(a.boundary), records=manifest, placement_conflicts=place.conflicts,
                placed_sectors=len(place.map), su_programmes=cfgs, t0_serial=t0,
+               **({} if cx is None else dict(cx=dict(versions=place.versions, epochs=cx_epochs,
+                                                     components=cx_comp_place, parts=cx_parts,
+                                                     su_images_superseded_by_component_image=cx_dropped,
+                                                     chapters=cx.chapters, chapter_resets=cx.chapter_carried,
+                                                     skipped_components=cx.skipped,
+                                                     component_runs_top_sector=place.top))),
                counts={k: sum(1 for m in manifest if m["status"] == k) for k in sorted({m["status"] for m in manifest})})
     (a.out / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
     print(json.dumps(dict(records=len(manifest), events=len(events), counts=man["counts"], t0_serial=t0)))

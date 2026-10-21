@@ -1151,7 +1151,7 @@ def lower_sfu_lanes(raw, q=0, data=None, place=None, tag="", timing=None, rf_loc
     if len(lines) > LI.EDGES_MAX:
         return refusal("native_programme_capacity_exceeded")
     if pro_core:
-        preload = dict(preload, **pro_core["preload"])
+        preload = {**preload, **pro_core["preload"]}
     pre_words = {str(w): f"{int(np.float32(data[w] if w in data else 0).view(np.uint32)):08x}"
                  for ws in preload.values() for w in ws}
     for ls_, _ in drains:
