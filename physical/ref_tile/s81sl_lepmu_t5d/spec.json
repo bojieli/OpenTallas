@@ -498,12 +498,13 @@
    "physical/common_flow/clock_split_km.tcl",
    "results/rtl/mu_s81_kit_1019",
    "results/rtl/mu_s81_2_rx_1019",
-   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "results/rtl/s81_link5_lepmu_1021"
   ],
   "benches": [
    {
     "name": "lepmu_exact_s1",
-    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_exact_s1 lepmu none 1",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_exact_s1 lepmu none 1 n32",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 12,
@@ -512,7 +513,7 @@
    },
    {
     "name": "lepmu_exact_s5",
-    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_exact_s5 lepmu none 5",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_exact_s5 lepmu none 5 n32",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 12,
@@ -520,39 +521,39 @@
    },
    {
     "name": "lepmu_mut_tagdrop",
-    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_mut_tagdrop lepmu TAGDROP 1",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_mut_tagdrop lepmu TAGDROP 1 n32",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 12,
     "fail_regex": "^FAIL lep_mu: .*mismatches [1-9]",
-    "fail_witness": "results/rtl/mu_s81_2_rx_1019/witness_lepmu_tagdrop.log"
+    "fail_witness": "results/rtl/s81_link5_lepmu_1021/n32_witness_lepmu_tagdrop.log"
    },
    {
     "name": "lepmu_mut_wrongcopy",
-    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_mut_wrongcopy lepmu WRONGCOPY 1",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_mut_wrongcopy lepmu WRONGCOPY 1 n32",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 12,
     "fail_regex": "^FAIL lep_mu: .* B 0/[1-9]",
-    "fail_witness": "results/rtl/mu_s81_2_rx_1019/witness_lepmu_wrongcopy.log"
+    "fail_witness": "results/rtl/s81_link5_lepmu_1021/n32_witness_lepmu_wrongcopy.log"
    },
    {
     "name": "lepmu_mut_landcut",
-    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_mut_landcut lepmu LANDCUT 1",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_mut_landcut lepmu LANDCUT 1 n32",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 12,
     "fail_regex": "^FAIL lep_mu: .*mismatches [1-9]",
-    "fail_witness": "results/rtl/mu_s81_2_rx_1019/witness_landcut.log"
+    "fail_witness": "results/rtl/s81_link5_lepmu_1021/n32_witness_landcut.log"
    },
    {
     "name": "lepmu_mut_stalehd",
-    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_mut_stalehd lepmu STALEHD 1",
+    "cmd": "bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmu_mut_stalehd lepmu STALEHD 1 n32",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 12,
     "fail_regex": "^FAIL lep_mu: .*mismatches [1-9]",
-    "fail_witness": "results/rtl/mu_s81_2_rx_1019/witness_stalehd.log"
+    "fail_witness": "results/rtl/s81_link5_lepmu_1021/n32_witness_stalehd.log"
    }
   ],
   "views_to": "physical/ref_tile/s81sl_lepmu_t5d/views",

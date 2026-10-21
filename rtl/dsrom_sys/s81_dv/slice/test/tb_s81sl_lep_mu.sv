@@ -21,8 +21,15 @@
 // Mutants: +define+OT_S81SL_LEP_MUT_TAGDROP, +define+OT_S81SL_LEP_MUT_WRONGCOPY, +define+OT_DSDV_MU_LAND_MUT_OVR,
 //          +define+OT_S81SL_LEP_MUT_LANDCUT (RX side: dies A / B).
 // Verdict: "PASS lep_mu ..." or "FAIL lep_mu ...".
+// S81-LINK5 L5B-LEPBENCH (10-21): P_RX_SRAM / P_IN_PIPE / P_NATIVE32 = die P's ot_s81sl_lep_mu_ab opt-ins (kits
+//   s81sl_lepmu_t5c / _t5d set all three to 1; defaults 0 = the original s81sl_lepmu bench).  IN_PIPE puts one registered
+//   face stage on ro / mu_c (+1 edge on both, same relative timing).  The lanes move flit pairs, so a +1 input shift is
+//   NOT a constant +1 at A's ri (a beat that queued behind its predecessor in the reference arrives at the same cycle);
+//   the single-user reference RP therefore sees the same face stage (rp_ro registered P_IN_PIPE times, as P's ro_x) and
+//   the latency-user identity stays cycle- and bit-exact A vs RA.
 module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, parameter integer R = 420,
-                         parameter integer SEED = 1, parameter integer WAIT = 8000);
+                         parameter integer SEED = 1, parameter integer WAIT = 8000,
+                         parameter integer P_RX_SRAM = 0, parameter integer P_IN_PIPE = 0, parameter integer P_NATIVE32 = 0);
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst_n = 0;
     integer cyc = 0; always @(posedge clk) cyc <= cyc + 1;
@@ -34,7 +41,7 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     wire [3:0] plv, plr, piv, pir; wire [4*553-1:0] pld, pid; wire [11:0] pf; wire [3:0] prxv;
     wire [4*512-1:0] ptx, prx; wire [7:0] pst; wire [4*513-1:0] ppa; wire [3:0] pta;
     // MU-S81/KIT: die P = the hardened copy A/B master ot_s81sl_lep_mu_ab (kit s81sl_lepmu; = lep_mu HOST_EN 0 AB_EN 1)
-    ot_s81sl_lep_mu_ab #(.SRAM(1), .NB(NB)) lp (.clk(clk), .rst_n(rst_n), .ro(p_ro), .ri(p_ri),
+    ot_s81sl_lep_mu_ab #(.SRAM(1), .NB(NB), .RX_SRAM(P_RX_SRAM), .IN_PIPE(P_IN_PIPE), .NATIVE32(P_NATIVE32)) lp (.clk(clk), .rst_n(rst_n), .ro(p_ro), .ri(p_ri),
         .lo0_v(plv[0]), .lo0_r(plr[0]), .lo0_d(pld[0 +: 553]), .lo1_v(plv[1]), .lo1_r(plr[1]), .lo1_d(pld[553 +: 553]),
         .li0_v(piv[0]), .li0_r(pir[0]), .li0_d(pid[0 +: 553]), .li1_v(piv[1]), .li1_r(pir[1]), .li1_d(pid[553 +: 553]),
         .rxv(prxv[1:0]), .sl_f(1'b0), .l0_f(pf[2:0]), .l1_f(pf[5:3]),
@@ -81,7 +88,9 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
     // ------------------------------------------------------------------ single-user reference RP -> RA (pre-MU tops)
     wire [1:0] rplv, rplr, rpiv, rpir, rprxv, ralv, ralr, raiv, rair, rarxv; wire [2*553-1:0] rpld, rpid, rald, raid;
     wire [5:0] rpfl, rafl; wire [1023:0] rptx, rprx, ratx, rarx; wire [3:0] rpst, rast;
-    ot_s81sl_lep_nh lrp (.clk(clk), .rst_n(rst_n), .ro(rp_ro), .ri(rp_ri),
+    reg [1103:0] rp_rod [0:3]; wire [1103:0] rp_rox = (P_IN_PIPE != 0) ? rp_rod[P_IN_PIPE - 1] : rp_ro;
+    always @(posedge clk) begin rp_rod[0] <= rp_ro; rp_rod[1] <= rp_rod[0]; rp_rod[2] <= rp_rod[1]; rp_rod[3] <= rp_rod[2]; end
+    ot_s81sl_lep_nh lrp (.clk(clk), .rst_n(rst_n), .ro(rp_rox), .ri(rp_ri),
         .lo0_v(rplv[0]), .lo0_r(rplr[0]), .lo0_d(rpld[0 +: 553]), .lo1_v(rplv[1]), .lo1_r(rplr[1]), .lo1_d(rpld[553 +: 553]),
         .li0_v(rpiv[0]), .li0_r(rpir[0]), .li0_d(rpid[0 +: 553]), .li1_v(rpiv[1]), .li1_r(rpir[1]), .li1_d(rpid[553 +: 553]),
         .rxv(rprxv), .sl_f(1'b0), .l0_f(rpfl[2:0]), .l1_f(rpfl[5:3]), .fault(rp_f));
@@ -254,7 +263,11 @@ module tb_s81sl_lep_mu #(parameter integer NB = 80, parameter integer S = 700, p
         f_main = {p_f, a_f, b_f, rp_f, ra_f, ma.fault, mb.fault};
         // ---- latency-user identity (A vs single-user RA)
         idok = (nia == nir && nia == 40 + NB) ? 1 : 0;
-        for (k = 0; k < nia && k < nir; k = k + 1) if (ica[k] != icr[k] || ida[k] !== idr[k]) idok = 0;
+        for (k = 0; k < nia && k < nir; k = k + 1) if (ica[k] != icr[k] || ida[k] !== idr[k]) begin
+            if (idok) $display("IDENT_MISMATCH beat %0d: A cyc %0d ref cyc %0d bits %0d", k, ica[k], icr[k],
+                ida[k] === idr[k]);
+            idok = 0;
+        end
         // ---- fault phase
         send_msg(6, 0, 0);                                            // F1: two landed messages to A without a replay
         while (cyc < T0 + 6 * S + 300) @(negedge clk);

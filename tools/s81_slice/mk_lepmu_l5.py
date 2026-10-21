@@ -117,6 +117,15 @@ for v, cfg in VARIANTS.items():
                     purpose='S81-LINK5: copy-A/B MU end-slice link endpoint (u_lep of ot_s81sl_slice_lepw_mab_mu_72, s_0N '
                             '5th lane pair; HOST_EN 0, MU_EN 1, AB_EN 1, NB 80) to closure (TT setup / FF hold / DRC 0).')
     if cfg.get('params'): s['job']['extra_paths'] = s['job']['extra_paths'] + [RXV]
+    if cfg.get('params'):   # L5B-LEPBENCH 10-21: kit benches drive lep_mu_ab with the kit params (bench arg n32)
+        WD = 'results/rtl/s81_link5_lepmu_1021'
+        s['job']['extra_paths'] = s['job']['extra_paths'] + [WD]
+        bl = []
+        for b in json.loads(json.dumps(BASE['job']['benches'])):
+            b['cmd'] += ' n32'
+            if 'fail_witness' in b: b['fail_witness'] = WD + '/n32_' + b['fail_witness'].rsplit('/', 1)[1]
+            bl.append(b)
+        s['job']['benches'] = bl
     s['fill_reason'] = {'pin_bound': (
         'Slot-bound: 475.2 x 1900.8 is the lepw_mab_mu u_lep slot (561.6 x 1987.2 at R0 (820.8,1728)) and its W face must '
         'face four 583.2-tall lane tiles on a 626.4 pitch (pair A + pair B, 4,456 lane pins), N face the landing (2,211 '
