@@ -2,7 +2,7 @@
 
 Read-only bounded model of the existing final r10bfp case, fleet unit `oth-ubuntu-2849181-1792615751`, admitted 4 GB / one thread, exit 0. No GEN rerun, new geometry, reach exception or source repair was needed.
 
-The `FAULT_EMIT late` line and the retained `unrepaired` strings describe the search before zero-stage cross-root landings. The final dump already has one stage on each supposedly open edge. The emitted actual `die.v` contains both landing instances, and the existing final pin-bit audit reports zero over 405 µm. This model resolves the intermediate/final ambiguity using the actual LEF rectangles, emitted nets and placement.
+The `FAULT_EMIT late` line and the retained `unrepaired` strings describe the search before zero-stage cross-root landings. The final dump already has one landing frame on each supposedly open edge. Frame count is not a cycle-price claim. The emitted actual `die.v` contains both landing instances, and the existing final pin-bit audit reports zero over 405 µm. This model resolves the intermediate/final ambiguity using the actual LEF rectangles, emitted nets and placement.
 
 | Actual chain | Master | Native pin-to-pin hops (µm) |
 | --- | --- | --- |
