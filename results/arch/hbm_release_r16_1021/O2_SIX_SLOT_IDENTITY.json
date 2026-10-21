@@ -1,0 +1,918 @@
+{
+  "status": "PLACEMENT_BINDING_ONLY_IDENTITY_VERIFIED",
+  "baseline_source": "83d057be0",
+  "prepared_source": "bdc375d09 + this identity receipt (no RTL change)",
+  "contract_path": "/home/ubuntu/artifacts/hdie-d4/codex_ucie_colh_bind_1021/pre_relay_colm.json",
+  "contract_sha256": "75721c31df7bbcafd2cccdf45279a6b829ff82a5e9137b04075cf13b9ae7906c",
+  "contract_input_identical_for_O_and_O2": true,
+  "instances": [
+    {
+      "instance": "refcfg_SW",
+      "master": "ot_hbm_pc_refresh_cfg",
+      "params": {
+        "NPC": 16
+      },
+      "original_contract_slot": "pc_SW0",
+      "new_placement_slot": "exact_o2_refcfg_SW",
+      "contract_instance_unchanged": true,
+      "source": [
+        {
+          "path": "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv",
+          "O_sha256": "8bdbe0ea302f882d8c92320cfa4e629d8b55698ec3516733fc75c4fbf033f58c",
+          "O2_sha256": "8bdbe0ea302f882d8c92320cfa4e629d8b55698ec3516733fc75c4fbf033f58c",
+          "identical": true
+        }
+      ],
+      "clock_reset_records_unchanged": [
+        {
+          "instance": "refcfg_SW",
+          "port": "clk",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ]
+        },
+        {
+          "instance": "refcfg_SW",
+          "port": "rst_n",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ]
+        },
+        {
+          "instance": "refcfg_SW",
+          "port": "clk_hbm",
+          "bits": 1,
+          "domain": "hbm",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_hbm"
+          ]
+        },
+        {
+          "instance": "refcfg_SW",
+          "port": "rst_hbm_n",
+          "bits": 1,
+          "domain": "hbm",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_hbm"
+          ]
+        }
+      ],
+      "ports_unchanged": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_hbm": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_hbm_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tgt": {
+          "direction": "input",
+          "bits": 8
+        },
+        "cfg_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cfg_target": {
+          "direction": "input",
+          "bits": 8
+        },
+        "cfg_addr": {
+          "direction": "input",
+          "bits": 12
+        },
+        "cfg_data": {
+          "direction": "input",
+          "bits": 256
+        },
+        "refresh_reload": {
+          "direction": "output",
+          "bits": 128
+        },
+        "pc_rst_n": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "active": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "body_um": [
+        51.84,
+        51.84
+      ],
+      "intended_xy": [
+        9200.4,
+        2073.6
+      ]
+    },
+    {
+      "instance": "refcfg_NW",
+      "master": "ot_hbm_pc_refresh_cfg",
+      "params": {
+        "NPC": 16
+      },
+      "original_contract_slot": "pc_NW0",
+      "new_placement_slot": "exact_o2_refcfg_NW",
+      "contract_instance_unchanged": true,
+      "source": [
+        {
+          "path": "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv",
+          "O_sha256": "8bdbe0ea302f882d8c92320cfa4e629d8b55698ec3516733fc75c4fbf033f58c",
+          "O2_sha256": "8bdbe0ea302f882d8c92320cfa4e629d8b55698ec3516733fc75c4fbf033f58c",
+          "identical": true
+        }
+      ],
+      "clock_reset_records_unchanged": [
+        {
+          "instance": "refcfg_NW",
+          "port": "clk",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ]
+        },
+        {
+          "instance": "refcfg_NW",
+          "port": "rst_n",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ]
+        },
+        {
+          "instance": "refcfg_NW",
+          "port": "clk_hbm",
+          "bits": 1,
+          "domain": "hbm",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_hbm"
+          ]
+        },
+        {
+          "instance": "refcfg_NW",
+          "port": "rst_hbm_n",
+          "bits": 1,
+          "domain": "hbm",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_hbm"
+          ]
+        }
+      ],
+      "ports_unchanged": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_hbm": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_hbm_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tgt": {
+          "direction": "input",
+          "bits": 8
+        },
+        "cfg_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cfg_target": {
+          "direction": "input",
+          "bits": 8
+        },
+        "cfg_addr": {
+          "direction": "input",
+          "bits": 12
+        },
+        "cfg_data": {
+          "direction": "input",
+          "bits": 256
+        },
+        "refresh_reload": {
+          "direction": "output",
+          "bits": 128
+        },
+        "pc_rst_n": {
+          "direction": "output",
+          "bits": 1
+        },
+        "ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "active": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "body_um": [
+        51.84,
+        51.84
+      ],
+      "intended_xy": [
+        9200.4,
+        30866.4
+      ]
+    },
+    {
+      "instance": "cij_SW",
+      "master": "ot_hgi_coll_inj_idx_join_rg",
+      "params": {
+        "INJLAT": 12
+      },
+      "original_contract_slot": "coll_SW",
+      "new_placement_slot": "exact_o2_cij_SW",
+      "contract_instance_unchanged": true,
+      "source": [
+        {
+          "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv",
+          "O_sha256": "e9882aef3213237403072c96832199ce529b4024a50b54103954fe6830288fc8",
+          "O2_sha256": "e9882aef3213237403072c96832199ce529b4024a50b54103954fe6830288fc8",
+          "identical": true
+        }
+      ],
+      "clock_reset_records_unchanged": [
+        {
+          "instance": "cij_SW",
+          "port": "clk_r0",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ]
+        },
+        {
+          "instance": "cij_SW",
+          "port": "clk_r1",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ]
+        },
+        {
+          "instance": "cij_SW",
+          "port": "rst_n",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ]
+        },
+        {
+          "instance": "cij_SW",
+          "port": "rst_n_r1",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ]
+        }
+      ],
+      "ports_unchanged": {
+        "clk_r0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "inj_rd": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_rd_r1": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_idx": {
+          "direction": "input",
+          "bits": 32
+        },
+        "inj_idx_r1": {
+          "direction": "input",
+          "bits": 32
+        },
+        "inj_addr": {
+          "direction": "input",
+          "bits": 160
+        },
+        "inj_addr_r1": {
+          "direction": "input",
+          "bits": 160
+        },
+        "su_inj_d_r0": {
+          "direction": "input",
+          "bits": 512
+        },
+        "su_inj_d_r1": {
+          "direction": "input",
+          "bits": 512
+        },
+        "idx_tx_v": {
+          "direction": "input",
+          "bits": 4
+        },
+        "idx_tx_v_r1": {
+          "direction": "input",
+          "bits": 4
+        },
+        "idx_tx_h": {
+          "direction": "input",
+          "bits": 132
+        },
+        "idx_tx_h_r1": {
+          "direction": "input",
+          "bits": 132
+        },
+        "idx_tx_r0": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "idx_tx_r1": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "inj_d_r0": {
+          "direction": "output",
+          "bits": 512
+        },
+        "inj_d_r1": {
+          "direction": "output",
+          "bits": 512
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "body_um": [
+        216.0,
+        432.0
+      ],
+      "intended_xy": [
+        7646.4,
+        15006.6
+      ]
+    },
+    {
+      "instance": "cij_SE",
+      "master": "ot_hgi_coll_inj_idx_join_rg",
+      "params": {
+        "INJLAT": 12
+      },
+      "original_contract_slot": "coll_SE",
+      "new_placement_slot": "exact_o2_cij_SE",
+      "contract_instance_unchanged": true,
+      "source": [
+        {
+          "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv",
+          "O_sha256": "e9882aef3213237403072c96832199ce529b4024a50b54103954fe6830288fc8",
+          "O2_sha256": "e9882aef3213237403072c96832199ce529b4024a50b54103954fe6830288fc8",
+          "identical": true
+        }
+      ],
+      "clock_reset_records_unchanged": [
+        {
+          "instance": "cij_SE",
+          "port": "clk_r0",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ]
+        },
+        {
+          "instance": "cij_SE",
+          "port": "clk_r1",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ]
+        },
+        {
+          "instance": "cij_SE",
+          "port": "rst_n",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ]
+        },
+        {
+          "instance": "cij_SE",
+          "port": "rst_n_r1",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ]
+        }
+      ],
+      "ports_unchanged": {
+        "clk_r0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "inj_rd": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_rd_r1": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_idx": {
+          "direction": "input",
+          "bits": 32
+        },
+        "inj_idx_r1": {
+          "direction": "input",
+          "bits": 32
+        },
+        "inj_addr": {
+          "direction": "input",
+          "bits": 160
+        },
+        "inj_addr_r1": {
+          "direction": "input",
+          "bits": 160
+        },
+        "su_inj_d_r0": {
+          "direction": "input",
+          "bits": 512
+        },
+        "su_inj_d_r1": {
+          "direction": "input",
+          "bits": 512
+        },
+        "idx_tx_v": {
+          "direction": "input",
+          "bits": 4
+        },
+        "idx_tx_v_r1": {
+          "direction": "input",
+          "bits": 4
+        },
+        "idx_tx_h": {
+          "direction": "input",
+          "bits": 132
+        },
+        "idx_tx_h_r1": {
+          "direction": "input",
+          "bits": 132
+        },
+        "idx_tx_r0": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "idx_tx_r1": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "inj_d_r0": {
+          "direction": "output",
+          "bits": 512
+        },
+        "inj_d_r1": {
+          "direction": "output",
+          "bits": 512
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "body_um": [
+        216.0,
+        432.0
+      ],
+      "intended_xy": [
+        18511.2,
+        15055.2
+      ]
+    },
+    {
+      "instance": "cij_NW",
+      "master": "ot_hgi_coll_inj_idx_join_rg",
+      "params": {
+        "INJLAT": 12
+      },
+      "original_contract_slot": "coll_NW",
+      "new_placement_slot": "exact_o2_cij_NW",
+      "contract_instance_unchanged": true,
+      "source": [
+        {
+          "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv",
+          "O_sha256": "e9882aef3213237403072c96832199ce529b4024a50b54103954fe6830288fc8",
+          "O2_sha256": "e9882aef3213237403072c96832199ce529b4024a50b54103954fe6830288fc8",
+          "identical": true
+        }
+      ],
+      "clock_reset_records_unchanged": [
+        {
+          "instance": "cij_NW",
+          "port": "clk_r0",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ]
+        },
+        {
+          "instance": "cij_NW",
+          "port": "clk_r1",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ]
+        },
+        {
+          "instance": "cij_NW",
+          "port": "rst_n",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ]
+        },
+        {
+          "instance": "cij_NW",
+          "port": "rst_n_r1",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ]
+        }
+      ],
+      "ports_unchanged": {
+        "clk_r0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "inj_rd": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_rd_r1": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_idx": {
+          "direction": "input",
+          "bits": 32
+        },
+        "inj_idx_r1": {
+          "direction": "input",
+          "bits": 32
+        },
+        "inj_addr": {
+          "direction": "input",
+          "bits": 160
+        },
+        "inj_addr_r1": {
+          "direction": "input",
+          "bits": 160
+        },
+        "su_inj_d_r0": {
+          "direction": "input",
+          "bits": 512
+        },
+        "su_inj_d_r1": {
+          "direction": "input",
+          "bits": 512
+        },
+        "idx_tx_v": {
+          "direction": "input",
+          "bits": 4
+        },
+        "idx_tx_v_r1": {
+          "direction": "input",
+          "bits": 4
+        },
+        "idx_tx_h": {
+          "direction": "input",
+          "bits": 132
+        },
+        "idx_tx_h_r1": {
+          "direction": "input",
+          "bits": 132
+        },
+        "idx_tx_r0": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "idx_tx_r1": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "inj_d_r0": {
+          "direction": "output",
+          "bits": 512
+        },
+        "inj_d_r1": {
+          "direction": "output",
+          "bits": 512
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "body_um": [
+        216.0,
+        432.0
+      ],
+      "intended_xy": [
+        7878.6,
+        17490.6
+      ]
+    },
+    {
+      "instance": "cij_NE",
+      "master": "ot_hgi_coll_inj_idx_join_rg",
+      "params": {
+        "INJLAT": 12
+      },
+      "original_contract_slot": "coll_NE",
+      "new_placement_slot": "exact_o2_cij_NE",
+      "contract_instance_unchanged": true,
+      "source": [
+        {
+          "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv",
+          "O_sha256": "e9882aef3213237403072c96832199ce529b4024a50b54103954fe6830288fc8",
+          "O2_sha256": "e9882aef3213237403072c96832199ce529b4024a50b54103954fe6830288fc8",
+          "identical": true
+        }
+      ],
+      "clock_reset_records_unchanged": [
+        {
+          "instance": "cij_NE",
+          "port": "clk_r0",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ]
+        },
+        {
+          "instance": "cij_NE",
+          "port": "clk_r1",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "clock",
+          "source": [
+            "hb_ckgen",
+            "pll_stream"
+          ]
+        },
+        {
+          "instance": "cij_NE",
+          "port": "rst_n",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ]
+        },
+        {
+          "instance": "cij_NE",
+          "port": "rst_n_r1",
+          "bits": 1,
+          "domain": "stream",
+          "kind": "reset",
+          "source": [
+            "hb_ckgen",
+            "por_stream"
+          ]
+        }
+      ],
+      "ports_unchanged": {
+        "clk_r0": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n_r1": {
+          "direction": "input",
+          "bits": 1
+        },
+        "inj_rd": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_rd_r1": {
+          "direction": "input",
+          "bits": 2
+        },
+        "inj_idx": {
+          "direction": "input",
+          "bits": 32
+        },
+        "inj_idx_r1": {
+          "direction": "input",
+          "bits": 32
+        },
+        "inj_addr": {
+          "direction": "input",
+          "bits": 160
+        },
+        "inj_addr_r1": {
+          "direction": "input",
+          "bits": 160
+        },
+        "su_inj_d_r0": {
+          "direction": "input",
+          "bits": 512
+        },
+        "su_inj_d_r1": {
+          "direction": "input",
+          "bits": 512
+        },
+        "idx_tx_v": {
+          "direction": "input",
+          "bits": 4
+        },
+        "idx_tx_v_r1": {
+          "direction": "input",
+          "bits": 4
+        },
+        "idx_tx_h": {
+          "direction": "input",
+          "bits": 132
+        },
+        "idx_tx_h_r1": {
+          "direction": "input",
+          "bits": 132
+        },
+        "idx_tx_r0": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "idx_tx_r1": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "inj_d_r0": {
+          "direction": "output",
+          "bits": 512
+        },
+        "inj_d_r1": {
+          "direction": "output",
+          "bits": 512
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "body_um": [
+        216.0,
+        432.0
+      ],
+      "intended_xy": [
+        18511.2,
+        17490.6
+      ]
+    }
+  ],
+  "maps": {
+    "d4g_region_map.json": {
+      "identical": true,
+      "sha256": "3a6d0f030e742fccb87b3dd212e33823039170578392dfbafe19edabb6c6c2fa"
+    },
+    "coord_map.json": {
+      "identical": true,
+      "sha256": "d57760fc9e8db787e9012e6ca402812338d18ff2c25abd76944033017f2b5a6d"
+    }
+  },
+  "clock_parent_change": false,
+  "semantic_clock_region_relabel": false,
+  "new_S2": 0,
+  "actual_GEN_required": true,
+  "actual_model_guard_before_PQ_and_S4": true,
+  "selected_graph_not_mutated": true
+}
