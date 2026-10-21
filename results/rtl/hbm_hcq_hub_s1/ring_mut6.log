@@ -1,0 +1,5 @@
+# QHUB-S1 10-19 fail witness ring lockstep MUT=6 (quarter 0 hub centre: s_i pin register without the leaf-valid delay; Verilator 5.050, ot-epyc5, @ca6cb0c03): HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1' run_hbm_hc_eng4_ring.sh OUT 6
+HC_ENG_FAULT t=2181 seq=0 ev=0 ps=1 qf=0000 core=0 mix=0 tbl=0 tail=0 tfl=0
+HC_RING_LOCKSTEP MUT=6 rc=1 (CPR=1 RAW0=179 XDEF=+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1)
+HC_RING_JOINTS names
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1384990-1792472109): exit 1

@@ -17,7 +17,10 @@ src=(rtl/test/tb_hbm_hc_eng4_static.sv $H/ot_hbm_hc_root_static.sv $H/ot_hbm_hc_
  rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv
  rtl/hdc/v41/ot_hdc_sinkhorn.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/lib/ot_rst_relay.sv
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
- physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
+ physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+ $H/ot_hbm_hc_qtree16_static.sv $H/ot_hc_rst_relay_k.sv rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v)
+# HBM-HCBANK6 10-20: the hub SAFE 2 tree slices use the native-fanout adder graph -> its PDK cell models (exact identity)
+python3 tools/prepare_fp32_fan32_models.py --out "$out/cells.v" > "$out/fan32_models.log"; src+=("$out/cells.v")
 # HC-RINGPLAN 10-19: HC_XDEF = extra verilator defines (e.g. the GEN2d closed ring "+define+HC_DRLY=2 +define+HC_XRLY=0":
 # bank 0 DRLY 2, no b7->b0 relay, hub/root DRLY 2); unset = byte-identical build.
 # HH-9 10-19: HC_CPR (default 1 = the adopted ring: bank chain pin registers, chain +11 edges -> RAW0 165 + 11)
@@ -26,7 +29,9 @@ cpr=${HC_CPR:-1}
 # DRLY register beyond 1 delays the raw return by 2 edges (centre desc relay + bank 0 exit relay; root SYS_LAT0 2*QDRLY;
 # HBM-RTL5 u0: DRLY 2 -> RAW0 165 -> 167). HC_QDRLY in HC_XDEF is a root mutant and does NOT move RAW0. HC_RAW0 overrides.
 drly=$(sed -n 's/.*+define+HC_DRLY=\([0-9][0-9]*\).*/\1/p' <<<"${HC_XDEF:-}"); drly=${drly:-1}
-raw0=${HC_RAW0:-$((165 + 11 * cpr + 2 * (drly - 1)))}
+# QHUB-S1 10-19: +define+HC_QSI=1 in HC_XDEF (hub centre s_i pin register) delays the subtree, so the raw return, by 1
+qsi=$(sed -n 's/.*+define+HC_QSI=\([0-9][0-9]*\).*/\1/p' <<<"${HC_XDEF:-}"); qsi=${qsi:-0}
+raw0=${HC_RAW0:-$((165 + 11 * cpr + 2 * (drly - 1) + qsi))}
 python3 tools/rtl_hbm_hc_eng_static_gate.py --run "$out/case" --split --npos 1 --raw0 $raw0 --rs 104 > "$out/vectors.log"
 # HCRING 10-19: HC_JOINT_MAP=<dir with hc_joint_map.svh> wires the 8 ring links as the bank tile faces abut
 # (tools/ref_tile/specs_hbm_b_rtl2_1017/hc_ring_joints.py --svh); unset = name-wired (unchanged).

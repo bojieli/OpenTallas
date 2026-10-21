@@ -1,0 +1,15 @@
+FAULTRISE cyc=67 cv=0 dv=0 lv=0 scan=0 armed=1 val=0 miss=1 pa=0 commit=00 addr=857
+FAULTRISE cyc=231 cv=0 dv=0 lv=0 scan=0 armed=1 val=0 miss=1 pa=0 commit=00 addr=250
+FAULTRISE cyc=418 cv=1 dv=0 lv=0 scan=1 armed=0 val=0 miss=0 pa=0 commit=00 addr=216
+FAULTRISE cyc=494 cv=1 dv=0 lv=0 scan=0 armed=0 val=1 miss=0 pa=0 commit=00 addr=668
+FAULTRISE cyc=556 cv=1 dv=0 lv=0 scan=1 armed=0 val=0 miss=0 pa=0 commit=00 addr=370
+FAULTRISE cyc=975 cv=1 dv=0 lv=0 scan=1 armed=0 val=0 miss=0 pa=0 commit=10 addr=950
+FAULTRISE cyc=1022 cv=1 dv=0 lv=0 scan=1 armed=0 val=0 miss=0 pa=0 commit=00 addr=849
+FAULTRISE cyc=1410 cv=1 dv=0 lv=0 scan=1 armed=0 val=0 miss=0 pa=0 commit=00 addr=545
+FAULTRISE cyc=1528 cv=1 dv=0 lv=0 scan=1 armed=0 val=0 miss=0 pa=0 commit=00 addr=777
+FAULTRISE cyc=1619 cv=0 dv=0 lv=0 scan=0 armed=1 val=0 miss=1 pa=0 commit=00 addr=806
+FAULTRISE cyc=1708 cv=0 dv=0 lv=0 scan=0 armed=1 val=0 miss=1 pa=0 commit=00 addr=547
+FAULTRISE cyc=1767 cv=1 dv=0 lv=0 scan=1 armed=0 val=0 miss=0 pa=0 commit=10 addr=514
+PTGT_FAN32 PASS MUT=0 configured=1335 starts=891 faults=512
+Verilator 5.050 2026-07-01 rev v5.050
+PT_RC m0_3 rc=0

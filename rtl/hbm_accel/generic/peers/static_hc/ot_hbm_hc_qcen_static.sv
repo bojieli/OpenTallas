@@ -11,15 +11,35 @@
 //            for bit the aligned 64-leaf subtree of the 256-leaf csum tree (as ot_hbm_hc_qeng_static).
 //   reset    ot_rst_relay, 9 regions: rst_b[k] -> bank k (each bank relays again), region 8 = this centre.
 //   fault    sticky: rx order, ingest (unsolicited / missing / wrong word / bad event), any bank's residual check.
-// MUT (bench): 3 = x landing one run off, 4 = tree level-1 pairs (0,2),(1,3).
+// MUT (bench): 3 = x landing one run off, 4 = tree level-1 pairs (0,2),(1,3),
+//   6 = (SAFE) s_i pin register without the leaf-valid / lane-fault delay (the tree adds the chunk sums one edge early).
+// SAFE (QHUB-S1 10-19, kit hbm_hcq_hub_s1; default 0 = unchanged bit for bit):
+//   s_i     the 2,049-b chunk-sum input lands in a PIN REGISTER (SAFE-DESIGN item 1; before, s_i drove the level-1 adders'
+//           decode logic straight from the port: 1,600 input endpoints > 3 levels).  +1 edge on the subtree: the leaf
+//           valid and the lane-fault pipe move one edge with it, every adder keeps LAT TLA (the P3 hub's LAT-6 level-1
+//           absorption measured -49.9 ps post-CTS and stalled CTS repair); ps_v / ps / ps_f leave ONE edge later than
+//           SAFE 0: the root takes it as QCHX + 1 (programme RAW0 + 1, bench HC_QSI=1).
+//   reset   the centre's own reset loads hang off u_rst_relay (RCN kept copies; the kit's reset_relay_split spreads them
+//           <= 32 a copy); the 8 bank resets keep their own relay u_rst (one copy per bank face).
+// SAFE 2 (HBM-HCBANK6 10-20, kit hbm_hcq_hub_c1; = SAFE 1 timing, 0 added edges): the register mass of the subtree
+//   (levels 1..4, 60 of the 63 LAT-7 adders, ~37k flops) leaves the hub glue for 4 HARD CHILD tree slices
+//   ot_hbm_hc_qtree16_static g_qt[c].u_t (16 chunk sums each, own clock entry clk_t[c] = their own CTS root beside their
+//   register mass: the SAFE 1 hub had one 51k-flop root whose 566..849 ps arrival spread stalled the hold repair on 28k
+//   endpoints).  Each slice registers its 512-b s_i slice (the SAFE 1 s_i pin register) and the leaf valid (handed one
+//   edge early, vl[VD-2]); its level-4 node feeds the 3 glue adders (levels 5, 6).  Every adder is the reviewed native
+//   fanout LAT-7 graph (ot_hdc_fp32_add_lat_fan32 SAFE_DIST 1, SAT-equal to the LAT-7 DRST-0 adder).  ps_f ORs the
+//   slices' node valid/err output registers on the same edge as SAFE 1.  The lane-fault bit s_i[2048] keeps its glue pin
+//   register.  clk_t is unused for SAFE < 2.
 module ot_hbm_hc_qcen_static #(
     parameter integer K    = 20480,
     parameter integer DRLY = 1,
     parameter integer TLA  = 7,
     parameter integer CHX  = 0,     // HH-9 10-19: extra chain edges (bank chain pin registers, ot_hbm_hc_qeng_static CPR)
-    parameter integer MUT  = 0
+    parameter integer MUT  = 0,
+    parameter integer SAFE = 0
 )(
     input  wire           clk, rst_n,
+    input  wire [3:0]     clk_t,                     // SAFE 2: clock entries of the 4 hard tree slices
     input  wire           d_v, d_ss, input wire [6:0] d_nv, input wire [9:0] d_wa, d_xa,
     input  wire           i_v, i_kind, input wire [1:0] i_slot, input wire [4:0] i_lo, i_w,
     input  wire [11:0]    i_cnt, input wire [9:0] i_word,
@@ -37,9 +57,35 @@ module ot_hbm_hc_qcen_static #(
     localparam integer SB = 1 + 7 * (LA + 1 + SOR) + 3 + 2 + (ML - 2) + LM + LA + SOR;
     initial if (K % 2048 != 0 || R > 16 || WPRQ > 32) $fatal(1, "K must be a multiple of 2,048, <= 32,768");
 
-    wire [8:0] rn;
-    ot_rst_relay #(.REGIONS(9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
-    wire rc = rn[8];
+    localparam integer RCN = 32;
+    wire [8:0] rn; wire rc;
+    if (SAFE >= 2) begin : g_rb2       // SAFE 2: kept-synchroniser relays (no shared synchroniser across the hub's relays)
+        ot_hc_rst_relay_k #(.REGIONS(8)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn[7:0]));
+    end else begin : g_rb1
+        ot_rst_relay #(.REGIONS((SAFE != 0) ? 8 : 9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn[((SAFE != 0) ? 7 : 8):0]));
+    end
+    wire [3:0] rcn_t;                                    // SAFE 2: one kept relay copy per hard tree slice
+    if (SAFE != 0) begin : g_rc
+        wire [RCN-1:0] rcn;
+        if (SAFE >= 2) begin : g_k
+            ot_hc_rst_relay_k #(.REGIONS(16)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rcn[15:0]));
+            assign rcn[RCN-1:16] = rcn[15:0];
+        end else begin : g_o
+            ot_rst_relay #(.REGIONS(RCN)) u_rst_relay (.clk(clk), .rst_n_in(rst_n), .rst_n(rcn));
+        end
+        assign rc = rcn[0];
+        assign rn[8] = 1'b1;
+        if (SAFE >= 2) begin : g_rt
+            wire [3:0] rtn;
+            ot_hc_rst_relay_k #(.REGIONS(4)) u_rst_t (.clk(clk), .rst_n_in(rst_n), .rst_n(rtn));
+            assign rcn_t = rtn;
+        end else begin : g_rt0
+            assign rcn_t = 4'hf;
+        end
+    end else begin : g_rc0
+        assign rc = rn[8];
+        assign rcn_t = 4'hf;
+    end
     assign rst_b = rn[7:0];
 
     // pin registers
@@ -74,33 +120,73 @@ module ot_hbm_hc_qcen_static #(
     wire [9:0] dwaddr = 10'(in_slot * 256 + in_lo * R + drun);
     reg ing_fault;
     (* keep = "true" *) reg [3:0] c_wv, c_xv, c_j; (* keep = "true" *) reg [9:0] c_a [0:3];
-    always @(posedge clk or negedge rc) begin
-        if (!rc) begin in_act <= 0; in_ph <= 0; c_wv <= 0; c_xv <= 0; ing_fault <= 0; end
-        else begin
-            c_wv <= {4{due && in_kind}}; c_xv <= {4{due && !in_kind}};
-            if (xv_q && !due) ing_fault <= 1'b1;
-            if (due) begin
-                if (!xv_q || xw_q != in_word) ing_fault <= 1'b1;
-                in_word <= in_word + 1'b1;
-                in_left <= in_left - 1'b1;
-                if (in_left == 12'd1) in_act <= 1'b0;
+    if (SAFE < 2) begin : g_ing1
+        always @(posedge clk or negedge rc) begin
+            if (!rc) begin in_act <= 0; in_ph <= 0; c_wv <= 0; c_xv <= 0; ing_fault <= 0; end
+            else begin
+                c_wv <= {4{due && in_kind}}; c_xv <= {4{due && !in_kind}};
+                if (xv_q && !due) ing_fault <= 1'b1;
+                if (due) begin
+                    if (!xv_q || xw_q != in_word) ing_fault <= 1'b1;
+                    in_word <= in_word + 1'b1;
+                    in_left <= in_left - 1'b1;
+                    if (in_left == 12'd1) in_act <= 1'b0;
+                    if (in_w == 5'(WPRQ - 1)) begin
+                        in_w <= 5'd0;
+                        if (in_kind && in_lo == 5'd23) begin in_lo <= 5'd0; in_slot <= in_slot + 1'b1; end
+                        else in_lo <= in_lo + 1'b1;
+                    end else in_w <= in_w + 1'b1;
+                end
+                if (in_act) in_ph <= in_ph + 1'b1;
+                if (iv_q) begin
+                    if (in_act || ic_q == 0 || iw_q >= WPRQ || ilo_q >= (ik_q ? 24 : 8)) ing_fault <= 1'b1;
+                    in_act <= 1'b1; in_kind <= ik_q; in_ph <= 2'd0; in_slot <= is_q; in_lo <= ilo_q; in_w <= iw_q;
+                    in_left <= ic_q; in_word <= iwd_q;
+                end
+            end
+        end
+        always @(posedge clk) begin
+            c_j <= {4{dj}};
+            for (integer f = 0; f < 4; f = f + 1) c_a[f] <= in_kind ? dwaddr : dxaddr;
+        end
+    end else begin : g_ing2
+        // SAFE 2 (native32): kept copies of the event valid (3 load groups), of in_kind (one per face copy of c_a) and of
+        // the issue edge `due`, which is registered one edge early from the next state (same values on every edge)
+        (* keep = "true", dont_touch = "true" *) reg [2:0] iv_c;
+        (* keep = "true", dont_touch = "true" *) reg [3:0] du_c, ik_c;
+        wire n_act = iv_q ? 1'b1 : (due && in_left == 12'd1) ? 1'b0 : in_act;
+        wire [1:0] n_ph = iv_q ? 2'd0 : in_act ? in_ph + 2'd1 : in_ph;
+        wire due_n = n_act && n_ph == 2'd0;
+        always @(posedge clk or negedge rc)
+            if (!rc) begin iv_c <= 0; du_c <= 0; end
+            else begin iv_c <= {3{i_v}}; du_c <= {4{due_n}}; end
+        always @(posedge clk) ik_c <= {4{iv_q ? ik_q : in_kind}};
+        always @(posedge clk or negedge rc) begin
+            if (!rc) begin in_act <= 0; in_ph <= 0; c_wv <= 0; c_xv <= 0; ing_fault <= 0; end
+            else begin
+                c_wv <= {4{du_c[0] && in_kind}}; c_xv <= {4{du_c[0] && !in_kind}};
+                if (xv_q && !du_c[0]) ing_fault <= 1'b1;
+                if (du_c[0] && (!xv_q || xw_q != in_word)) ing_fault <= 1'b1;
+                in_act <= n_act; in_ph <= n_ph;
+                if (iv_q && (in_act || ic_q == 0 || iw_q >= WPRQ || ilo_q >= (ik_q ? 24 : 8))) ing_fault <= 1'b1;
+            end
+        end
+        always @(posedge clk) begin
+            if (iv_c[0]) begin in_kind <= ik_q; in_slot <= is_q; in_lo <= ilo_q; in_w <= iw_q; end
+            else if (du_c[3]) begin
                 if (in_w == 5'(WPRQ - 1)) begin
                     in_w <= 5'd0;
                     if (in_kind && in_lo == 5'd23) begin in_lo <= 5'd0; in_slot <= in_slot + 1'b1; end
                     else in_lo <= in_lo + 1'b1;
                 end else in_w <= in_w + 1'b1;
             end
-            if (in_act) in_ph <= in_ph + 1'b1;
-            if (iv_q) begin
-                if (in_act || ic_q == 0 || iw_q >= WPRQ || ilo_q >= (ik_q ? 24 : 8)) ing_fault <= 1'b1;
-                in_act <= 1'b1; in_kind <= ik_q; in_ph <= 2'd0; in_slot <= is_q; in_lo <= ilo_q; in_w <= iw_q;
-                in_left <= ic_q; in_word <= iwd_q;
-            end
+            if (iv_c[1]) in_left <= ic_q; else if (du_c[2]) in_left <= in_left - 1'b1;
+            if (iv_c[2]) in_word <= iwd_q; else if (du_c[1]) in_word <= in_word + 1'b1;
         end
-    end
-    always @(posedge clk) begin
-        c_j <= {4{dj}};
-        for (integer f = 0; f < 4; f = f + 1) c_a[f] <= in_kind ? dwaddr : dxaddr;
+        always @(posedge clk) begin
+            c_j <= {4{dj}};
+            for (integer f = 0; f < 4; f = f + 1) c_a[f] <= ik_c[f] ? dwaddr : dxaddr;
+        end
     end
     assign wc_w = {c_wv[0], c_xv[0], c_j[0], c_a[0]};
     assign wc_n = {c_wv[1], c_xv[1], c_j[1], c_a[1]};
@@ -117,34 +203,82 @@ module ot_hbm_hc_qcen_static #(
     end
     assign {bd_v, bd_ss, bd_nv, bd_wa, bd_xa} = dr[DRLY-1];
 
-    // 6-level subtree over the chunk sums of the task whose valid entered bank 0 SB + DRLY edges ago
-    localparam integer VD = SB + DRLY + CHX;
+    localparam integer SID = (SAFE != 0 && MUT != 6) ? 1 : 0;   // MUT 6: landing without the valid delay
+    // 6-level subtree over the chunk sums of the task whose valid entered bank 0 SB + DRLY (+ SID) edges ago
+    localparam integer VD = SB + DRLY + CHX + SID;
     reg [VD-1:0] vl;
     always @(posedge clk or negedge rc) if (!rc) vl <= 0; else vl <= {vl[VD-2:0], bd_v};
     wire leaf_v = vl[VD-1];
-    wire [64*32-1:0] lv0;
-    for (genvar i = 0; i < 64; i = i + 1) begin : g_perm
-        localparam integer SRC = (MUT == 4) ? ((i & ~3) | ((i & 1) << 1) | ((i >> 1) & 1)) : i;
-        assign lv0[i*32 +: 32] = s_i[SRC*32 +: 32];
-    end
     wire [63*32-1:0] nd; wire [62:0] nv, ne;
-    for (genvar l = 1; l <= LT; l = l + 1) begin : g_lvl
-        localparam integer N = 64 >> l, OFF = 64 - (128 >> l), POFF = 64 - (256 >> l);
-        for (genvar i = 0; i < N; i = i + 1) begin : g_n
-            wire [31:0] a, b; wire va; wire [1:0] e;
-            if (l == 1) begin : g_leaf
-                assign a = lv0[(2*i)*32 +: 32]; assign b = lv0[(2*i+1)*32 +: 32]; assign va = leaf_v;
-            end else begin : g_up
-                assign a = nd[(POFF + 2*i)*32 +: 32]; assign b = nd[(POFF + 2*i + 1)*32 +: 32]; assign va = nv[POFF + 2*i];
+    wire s_lf;                                                 // lane-fault bit as the subtree sees it
+    if (SAFE < 2) begin : g_flat
+        // SAFE 1: the chunk-sum pin register (no reset: data + the lane-fault bit, qualified by the leaf valid below)
+        wire [2048:0] s_l;
+        if (SAFE != 0) begin : g_sireg
+            reg [2048:0] s_q;
+            always @(posedge clk) s_q <= s_i;
+            assign s_l = s_q;
+        end else begin : g_sidir
+            assign s_l = s_i;
+        end
+        assign s_lf = s_l[W*32];
+        wire [64*32-1:0] lv0;
+        for (genvar i = 0; i < 64; i = i + 1) begin : g_perm
+            localparam integer SRC = (MUT == 4) ? ((i & ~3) | ((i & 1) << 1) | ((i >> 1) & 1)) : i;
+            assign lv0[i*32 +: 32] = s_l[SRC*32 +: 32];
+        end
+        for (genvar l = 1; l <= LT; l = l + 1) begin : g_lvl
+            localparam integer N = 64 >> l, OFF = 64 - (128 >> l), POFF = 64 - (256 >> l);
+            for (genvar i = 0; i < N; i = i + 1) begin : g_n
+                wire [31:0] a, b; wire va; wire [1:0] e;
+                if (l == 1) begin : g_leaf
+                    assign a = lv0[(2*i)*32 +: 32]; assign b = lv0[(2*i+1)*32 +: 32]; assign va = leaf_v;
+                end else begin : g_up
+                    assign a = nd[(POFF + 2*i)*32 +: 32]; assign b = nd[(POFF + 2*i + 1)*32 +: 32]; assign va = nv[POFF + 2*i];
+                end
+                ot_hdc_fp32_add_lat #(.LAT(TLA), .DRST(0)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
+                    .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
+                assign ne[OFF + i] = nv[OFF + i] && (|e);
             end
-            ot_hdc_fp32_add_lat #(.LAT(TLA), .DRST(0)) u_a (.clk(clk), .rst_n(rc), .valid_in(va), .a(a), .b(b),
-                .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
-            assign ne[OFF + i] = nv[OFF + i] && (|e);
+        end
+    end else begin : g_hard
+        // SAFE 2: levels 1..4 in the 4 hard slices, levels 5..6 here (node numbering as g_flat)
+        initial if (TLA != 7 || VD < 2) $fatal(1, "SAFE 2: TLA 7 (native-fanout adder graph) and VD >= 2");
+        reg lf_q; always @(posedge clk) lf_q <= s_i[W*32];
+        assign s_lf = lf_q;
+        wire [4*32-1:0] ty; wire [3:0] tv;
+        for (genvar c = 0; c < 4; c = c + 1) begin : g_qt
+            wire [14:0] snv; wire [29:0] se;
+            ot_hbm_hc_qtree16_static #(.TLA(TLA), .MUT((MUT == 4) ? 4 : 0)) u_t (.clk(clk_t[c]), .rst_n(rcn_t[c]),
+                .v_i(vl[VD-2]), .s_in(s_i[c*512 +: 512]), .y(ty[c*32 +: 32]), .v(tv[c]), .nv_o(snv), .e_o(se));
+            // slice node j (level l = 1..4) = centre node OFF(l) + (N(l) * c) + (j - SOFF(l))
+            for (genvar j = 0; j < 15; j = j + 1) begin : g_m
+                localparam integer L = (j < 8) ? 1 : (j < 12) ? 2 : (j < 14) ? 3 : 4;
+                localparam integer SOFF = 16 - (32 >> L), N = 64 >> L, OFF = 64 - (128 >> L);
+                localparam integer G = OFF + (N / 4) * c + (j - SOFF);
+                assign nv[G] = snv[j];
+                assign ne[G] = snv[j] && (|se[j*2 +: 2]);
+                if (L == 4) begin : g_top
+                    assign nd[G*32 +: 32] = ty[c*32 +: 32];
+                end else begin : g_in
+                    assign nd[G*32 +: 32] = 32'd0;          // internal slice node: its sum stays in the slice
+                end
+            end
+        end
+        for (genvar l = 5; l <= LT; l = l + 1) begin : g_lvl
+            localparam integer N = 64 >> l, OFF = 64 - (128 >> l), POFF = 64 - (256 >> l);
+            for (genvar i = 0; i < N; i = i + 1) begin : g_n
+                wire [1:0] e;
+                ot_hdc_fp32_add_lat_fan32 #(.LAT(TLA), .DRST(0), .SAFE_DIST(1)) u_a (.clk(clk), .rst_n(rc),
+                    .valid_in(nv[POFF + 2*i]), .a(nd[(POFF + 2*i)*32 +: 32]), .b(nd[(POFF + 2*i + 1)*32 +: 32]),
+                    .y(nd[(OFF + i)*32 +: 32]), .err(e), .valid_out(nv[OFF + i]));
+                assign ne[OFF + i] = nv[OFF + i] && (|e);
+            end
         end
     end
     localparam integer RT = 62;
     reg [LT*TLA-1:0] lfd;
-    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_i[W*32] && leaf_v};
+    always @(posedge clk or negedge rc) if (!rc) lfd <= 0; else lfd <= {lfd[LT*TLA-2:0], s_lf && leaf_v};
     always @(posedge clk or negedge rc) begin
         if (!rc) begin ps_v <= 1'b0; ps_f <= 1'b0; fault <= 1'b0; end
         else begin

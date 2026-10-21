@@ -51,13 +51,13 @@
   },
   {
    "item": "HC partial-sum tree (root TPRE=6 + 4 quarter engines, 4x34 b up / 4x68 b down)",
-   "lane": "HBM-B-RTL2 / HBM-RTL5 / HH-9 / HBM-HCRING",
+   "lane": "HBM-B-RTL2 / HBM-RTL5 / HH-9 / HBM-HCRING / HBM-ELEMOWN3-QHUB",
    "status": "measured",
    "knob": "hc_tree",
-   "cycles_rule": "RAW0 165 + 2 (HBM-RTL5 U-ring b7->b0 die relay, hub DRLY / root QDRLY 2, coordinator 0fi) + 11 (HH-9 bank chain pin registers CPI/CPO, hub CHX / root QCHX 11) + XRD + XRU vs 137 single block = +41 (was +28: RAW0 165). XRD/XRU = die relay stages root<->quarter (0 in bench; xq_crossings). HC_MIX P1 996 -> ~1009. Compiler: ingest event 2 + XRD edges earlier; wave index quarter-local 0..19; pops / tail launches / emits + 13.",
-   "cycles": 41,
+   "cycles_rule": "RAW0 165 + 2 (HBM-RTL5 U-ring b7->b0 die relay, hub DRLY / root QDRLY 2, coordinator 0fi) + 11 (HH-9 bank chain pin registers CPI/CPO, hub CHX / root QCHX 11) + 1 (QHUB-S1 10-19: hub centre s_i chunk-sum pin register, hub kit hbm_hcq_hub_s1 SAFE 1 / root QCHX 12, programme RAW0 + 1) + XRD + XRU vs 137 single block = +42 (was +41 before the s_i pin register, +28 at RAW0 165). XRD/XRU = die relay stages root<->quarter (0 in bench; xq_crossings). HC_MIX P1 996 -> ~1010. Compiler: ingest event 2 + XRD edges earlier; wave index quarter-local 0..19; pops / tail launches / emits + 13.",
+   "cycles": 42,
    "xq_crossings": 2,
-   "evidence": "lanes/HBM-B-RTL2.md HC split lockstep P1/P2/P8/G22 PASS bit-exact (claude/hbm-b-rtl2-1017 b5b3af11b); MUT1/MUT4 verdict pending agidock out5 | +2 U relay: HBM-RTL5 ring lockstep XRLY 1 (results/rtl/hbm_rtl5_hc_uring_1018) | +11 CPR: HH-9 run_hbm_hc_eng4_ring.sh HC_CPR=1 RAW0 176 (claude/hh9-hcbank-1019 c4e9df3fe, 5.050 m0/m1 on ot-epyc5) and the HCRING geometry-wired ring (claude/hcring-1019, HC_JOINT_MAP)"
+   "evidence": "lanes/HBM-B-RTL2.md HC split lockstep P1/P2/P8/G22 PASS bit-exact (claude/hbm-b-rtl2-1017 b5b3af11b); MUT1/MUT4 verdict pending agidock out5 | +2 U relay: HBM-RTL5 ring lockstep XRLY 1 (results/rtl/hbm_rtl5_hc_uring_1018) | +11 CPR: HH-9 run_hbm_hc_eng4_ring.sh HC_CPR=1 RAW0 176 (claude/hh9-hcbank-1019 c4e9df3fe, 5.050 m0/m1 on ot-epyc5) and the HCRING geometry-wired ring (claude/hcring-1019, HC_JOINT_MAP) | +1 s_i pin register: run_hbm_hc_eng4_ring.sh HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1' (RAW0 179) MUT 0 PASS / MUT 6 FAIL (claude/hcq-hub-s1-1019, results/rtl/hbm_hcq_hub_s1)"
   },
   {
    "item": "IDX scorer quarters -> XQ node tree -> selector",

@@ -1,0 +1,598 @@
+{
+ "name": "hbm_hcq_hub_s2",
+ "top": "ot_hbm_hc_qhub_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+  "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_prefix.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "bd_v",
+   "bd_ss",
+   "bd_nv",
+   "bd_wa",
+   "bd_xa",
+   "s_i",
+   "xb_v",
+   "xb_beat",
+   "xb_d0",
+   "wc_w",
+   "rstb_w",
+   "wf_w"
+  ],
+  "N": [
+   "lg_rr",
+   "lg_w_done",
+   "xb_v_n",
+   "xb_beat_n",
+   "xb_d1",
+   "xb_d2",
+   "xb_d3",
+   "wc_n",
+   "rstb_n",
+   "wf_n"
+  ],
+  "E": [
+   "lg_wq",
+   "lg_rq",
+   "xb_v_e",
+   "xb_beat_e",
+   "xb_d4",
+   "wc_e",
+   "rstb_e",
+   "wf_e"
+  ],
+  "S": [
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "residual_done",
+   "gathered_mix_v",
+   "gathered_mix_row",
+   "gathered_mix_pos",
+   "gathered_mix_data",
+   "gather_done",
+   "result_v",
+   "result_position",
+   "result",
+   "program_active",
+   "program_done",
+   "hcq_fault",
+   "d_v",
+   "d_ss",
+   "d_nv",
+   "d_wa",
+   "d_xa",
+   "i_v",
+   "i_kind",
+   "i_slot",
+   "i_lo",
+   "i_w",
+   "i_cnt",
+   "i_word",
+   "ps_v",
+   "ps",
+   "ps_f",
+   "eng_fault",
+   "xb_v_s",
+   "xb_beat_s",
+   "xb_d5",
+   "xb_d6",
+   "xb_d7",
+   "wc_s",
+   "rstb_s",
+   "wf_s"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    259.2,
+    302.4
+   ],
+   "at_exact": true
+  }
+ ],
+ "outline": {
+  "w": 734.4,
+  "h": 734.4,
+  "exact": true
+ },
+ "route": {
+  "pd": 0.55,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hbm_hc_qhub_static SAFE 1 = ot_hbm_hc_q_static (every pin registered in RTL) + ot_hbm_hc_qcen_static (descriptor/event/beat-control/wfault pin flops, s_i chunk-sum pin register SAFE 1; bd_*, wc_*, rstb_*, ps* are flops); the bank beat slices xb_d* leave hc_q's x_wave output register, xb_v*/xb_beat* their own per-face kept copy; a kit flop stage would shift the compiled schedule"
+ },
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude:HBM-ELEMOWN3/QHUB",
+  "branch": "claude/hcq-hub-s1-1019",
+  "tag": "s2",
+  "purpose": "HC quarter hub SAFE successor of hbm_hcq_hub_1017 (10-19 --cts gate: CTS/GRT rc137 4 h stall): central std band, SAFE 1 RTL",
+  "views_to": "physical/ref_tile/hbm_hcq_hub_s2/views",
+  "record_to": "results/rtl/ref_tile/hbm_hcq_hub_s2",
+  "extra_paths": [
+   "rtl/test/run_hbm_hc_eng4_ring.sh",
+   "rtl/test/tb_hbm_hc_eng4_static.sv",
+   "rtl/test/tb_hbm_hc_eng4_static_hier.vlt",
+   "tools/rtl_hbm_hc_eng_static_gate.py",
+   "tools/hdc_golden_v41.py",
+   "tools/hdc_golden.py",
+   "tools/rtl_hdc_v41x_hcp_campaign.py",
+   "rtl/hbm_accel/generic/peers/static_hc",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/test/tb_hbm_hc_q_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_xw_rx_static.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv",
+   "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/test/full_sm_service/sram_models.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv",
+   "physical/hbm_hc_hub"
+  ],
+  "benches": [
+   {
+    "name": "hc_ring_s2_exact",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m0 0",
+    "expect": "pass",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=0 rc=0",
+    "min_count_regex": "HC_ENG_DONE mode=0 npos=1 mixes=(\\d+) mixbad=0",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hc_ring_s2_mut6",
+    "cmd": "HC_XDEF='+define+HC_DRLY=2 +define+HC_XRLY=0 +define+HC_QSI=1' bash rtl/test/run_hbm_hc_eng4_ring.sh {RUN}/bench/m6 6",
+    "expect": "fail",
+    "pass_regex": "^HC_RING_LOCKSTEP MUT=6 rc=0",
+    "fail_regex": "HC_ENG FAIL|HC_ENG_FAULT",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "note": "quarter 0 hub centre: s_i pin register without the leaf-valid delay",
+    "fail_witness": "results/rtl/hbm_hcq_hub_s1/ring_mut6.log"
+   },
+   {
+    "name": "hcq_s2_exact",
+    "cmd": "HCQ_SAFE=1 HCQ_GSTR=43 MUTS=0 OUT={RUN}/bench/all bash rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^HC_Q_STATIC BENCH PASS",
+    "min_count_regex": "^TB_HBM_HC_Q_STATIC PASS MUT=0 XWB=4 waves=(\\d+)"
+   },
+   {
+    "name": "hcq_s2_mut1",
+    "cmd": "HCQ_SAFE=1 HCQ_GSTR=43 MUTS=1 OUT={RUN}/bench/m1 bash rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^TB_HBM_HC_Q_STATIC PASS",
+    "fail_regex": "^TB_HBM_HC_Q_STATIC FAIL MUT=1 ",
+    "note": "residual wave word",
+    "fail_witness": "results/rtl/hbm_hcq_hub_s2/hcq_s2_mut1.log"
+   },
+   {
+    "name": "hcq_s2_mut7",
+    "cmd": "HCQ_SAFE=1 HCQ_GSTR=43 MUTS=7 OUT={RUN}/bench/m7 bash rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^TB_HBM_HC_Q_STATIC PASS",
+    "fail_regex": "^TB_HBM_HC_Q_STATIC FAIL MUT=7 ",
+    "note": "gathered-reader bounds from the previous programme word",
+    "fail_witness": "results/rtl/hbm_hcq_hub_s2/hcq_s2_mut7.log"
+   }
+  ]
+ },
+ "params": {
+  "DRLY": 2,
+  "CHX": 11,
+  "SAFE": 1
+ },
+ "structural_change": "QHUB-S2 10-19 SAFE successor (s1 RTL + the s1 gate textbook fixes: 24 kept return_sector select copies, shallow exact gb) of hbm_hcq_hub_1017 (its --cts gate 10-19 03:42 FAILED: CTS rc137 after a 4 h repair stall at WNS -155 ps / TNS -93 ns and trial GRT rc137, one 48.7k-flop root over 734.4 sq at ~10% util with pin flops anchored on all 4 faces, reset nets 2,193 / 1,063 / 299 loads, runtime part-select, calendar->issue_sector 678 ps / 17 lv, 1,600 s_i input endpoints > 3 lv). Structure: every std cell in ONE central band (345.6 um at 194.4..540.0, gpl region released before DPL, no face anchoring) so the single clock root serves a compact register mass; RTL SAFE 1: s_i pin register (+1 subtree edge, handed to the root as QCHX 12 and the programme as RAW0 179: HC_QSI=1), reset relay copies spread <= 32 loads (reset_relay_split), decoded assembly writes, gathered bounds precompute (0 edges), valid-only LG steering, 64 capture-enable copies, per-face beat-control copies; SRAM on the 43.2 lattice; pins/outline = the d4g contract (unchanged). Pin order: route.pin_balance {group_max 1} gives every face a defined, sorted bit order (gate pin_order; the hub<->bank joint ranges follow the die lead's open ring-vs-U geometry decision, unchanged from 1017).",
+ "pin_ranges": {
+  "clk": [
+   3,
+   4.0
+  ],
+  "rst_n": [
+   4.0,
+   5.0
+  ],
+  "bd_v": [
+   5.0,
+   6.0
+  ],
+  "bd_ss": [
+   6.0,
+   7.0
+  ],
+  "bd_nv": [
+   7.0,
+   15.872
+  ],
+  "bd_wa": [
+   15.872,
+   28.547
+  ],
+  "bd_xa": [
+   28.547,
+   41.222
+  ],
+  "xb_d0": [
+   41.222,
+   365.7
+  ],
+  "xb_v": [
+   366.2,
+   367.2
+  ],
+  "xb_beat": [
+   367.2,
+   368.2
+  ],
+  "s_i": [
+   368.7,
+   727.126
+  ],
+  "wc_w": [
+   727.126,
+   729.4
+  ],
+  "rstb_w": [
+   729.4,
+   730.4
+  ],
+  "wf_w": [
+   730.4,
+   731.4
+  ],
+  "lg_rr": [
+   3,
+   365.7
+  ],
+  "xb_v_n": [
+   366.2,
+   367.2
+  ],
+  "xb_beat_n": [
+   367.2,
+   368.2
+  ],
+  "lg_w_done": [
+   368.7,
+   372.35
+  ],
+  "xb_d1": [
+   372.35,
+   489.144
+  ],
+  "xb_d2": [
+   489.144,
+   605.938
+  ],
+  "xb_d3": [
+   605.938,
+   722.732
+  ],
+  "wc_n": [
+   722.732,
+   728.663
+  ],
+  "rstb_n": [
+   728.663,
+   730.031
+  ],
+  "wf_n": [
+   730.031,
+   731.4
+  ],
+  "lg_wq": [
+   3,
+   398.5
+  ],
+  "xb_v_e": [
+   399.0,
+   400.0
+  ],
+  "xb_beat_e": [
+   400.0,
+   401.0
+  ],
+  "lg_rq": [
+   401.5,
+   511.61
+  ],
+  "xb_d4": [
+   511.61,
+   718.875
+  ],
+  "wc_e": [
+   718.875,
+   729.4
+  ],
+  "rstb_e": [
+   729.4,
+   730.4
+  ],
+  "wf_e": [
+   730.4,
+   731.4
+  ],
+  "tgt": [
+   3,
+   5.498
+  ],
+  "cfg_v": [
+   5.498,
+   6.498
+  ],
+  "cfg_target": [
+   6.498,
+   8.996
+  ],
+  "cfg_addr": [
+   8.996,
+   12.743
+  ],
+  "cfg_data": [
+   12.743,
+   92.675
+  ],
+  "desc_v": [
+   92.675,
+   93.675
+  ],
+  "desc_base": [
+   93.675,
+   97.422
+  ],
+  "desc_limit": [
+   97.422,
+   101.481
+  ],
+  "desc_loops": [
+   101.481,
+   106.477
+  ],
+  "launch_v": [
+   106.477,
+   107.477
+  ],
+  "configured": [
+   107.477,
+   108.477
+  ],
+  "residual_done": [
+   108.477,
+   109.477
+  ],
+  "gathered_mix_v": [
+   109.477,
+   110.477
+  ],
+  "gathered_mix_row": [
+   110.477,
+   112.038
+  ],
+  "gathered_mix_pos": [
+   112.038,
+   112.975
+  ],
+  "gathered_mix_data": [
+   112.975,
+   122.966
+  ],
+  "gather_done": [
+   122.966,
+   123.966
+  ],
+  "result_v": [
+   123.966,
+   124.966
+  ],
+  "result_position": [
+   124.966,
+   125.903
+  ],
+  "result": [
+   125.903,
+   365.7
+  ],
+  "xb_v_s": [
+   366.2,
+   367.2
+  ],
+  "xb_beat_s": [
+   367.2,
+   368.2
+  ],
+  "program_active": [
+   368.7,
+   369.7
+  ],
+  "program_done": [
+   369.7,
+   370.7
+  ],
+  "hcq_fault": [
+   370.7,
+   371.7
+  ],
+  "d_v": [
+   371.7,
+   372.7
+  ],
+  "d_ss": [
+   372.7,
+   373.7
+  ],
+  "d_nv": [
+   373.7,
+   376.504
+  ],
+  "d_wa": [
+   376.504,
+   380.51
+  ],
+  "d_xa": [
+   380.51,
+   384.515
+  ],
+  "i_v": [
+   384.515,
+   385.515
+  ],
+  "i_kind": [
+   385.515,
+   386.515
+  ],
+  "i_slot": [
+   386.515,
+   387.515
+  ],
+  "i_lo": [
+   387.515,
+   389.518
+  ],
+  "i_w": [
+   389.518,
+   391.521
+  ],
+  "i_cnt": [
+   391.521,
+   396.328
+  ],
+  "i_word": [
+   396.328,
+   400.334
+  ],
+  "ps_v": [
+   400.334,
+   401.334
+  ],
+  "ps": [
+   401.334,
+   414.152
+  ],
+  "ps_f": [
+   414.152,
+   415.152
+  ],
+  "eng_fault": [
+   415.152,
+   416.152
+  ],
+  "xb_d5": [
+   416.152,
+   518.698
+  ],
+  "xb_d6": [
+   518.698,
+   621.243
+  ],
+  "xb_d7": [
+   621.243,
+   723.789
+  ],
+  "wc_s": [
+   723.789,
+   728.997
+  ],
+  "rstb_s": [
+   728.997,
+   730.198
+  ],
+  "wf_s": [
+   730.198,
+   731.4
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "io_flop_at_pins": false,
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\\.rst_n$|__ot_rlv$|__ot_rl0v$|(^|\\.)u_q\\.u_rst\\.rst_n$"
+ },
+ "orfs_vars": {
+  "PRE_GLOBAL_PLACE_TCL": "physical/hbm_hc_hub/hc_hub_band_gpl.tcl",
+  "PRE_DETAIL_PLACE_TCL": "physical/hbm_hc_hub/hc_hub_band_dpl.tcl",
+  "OT_HUB_BAND": "194.4,194.4,540.0,540.0"
+ },
+ "fill_reason": {
+  "pin_bound": "9,903 literal face pins on the die slot = the 734.4 um hole of the 3x3 HC bank ring (pins abut the banks; W 2,335 b on 0..731 um); the ~50k um2 of logic + SRAM sit in ONE central standard-cell band (345.6 um at 194.4..540.0), the collar carries only pin wires + repeaters"
+ }
+}

@@ -1,0 +1,5 @@
+# QHUB-S1 10-19 fail witness: HCQ_SAFE=1 MUTS=1 run_hc_q_static.sh (iverilog, ot-epyc5, bundle claude/hcq-hub-s1-1019 @ca6cb0c03; runs 0 1 2 3 4 7 in one call)
+TB_HBM_HC_Q_STATIC PASS MUT=0 XWB=4 waves=160 mixes=72 stores=12
+TB_HBM_HC_Q_STATIC FAIL MUT=1 XWB=4 errors=5120
+HC_Q_STATIC BENCH PASS (cases: 0 1 2 3 4 7 SAFE=1)
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1375697-1792471925): exit 0
