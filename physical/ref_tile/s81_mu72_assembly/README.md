@@ -108,3 +108,4 @@ was launched; ongoing die integration can exercise this next source generation.
 - Four 583.2 lanes cannot abut a 691.2 lep face, so the lep reservation is tall: 561.6 x 1987.2 (kit outline
   475.2 x 1900.8 + halo, pair A and pair B lane pins all on the W face, ~2.3 pins/um). The s81sl_lepmu kit
   (475.2 x 691.2, pair B on S) must be re-floorplanned to this shape before its gate. Lane and lep views: UNBOUND.
+- S81-LINK5 (lead-approved): every MU72 top instantiates `u_land` as `dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1))`, which binds the CLOSED view dsdv_mu_land-263e13fc3 exactly (`bindings.json`, regenerated with `--bindings`). Source blobs are identical to the closing commit.

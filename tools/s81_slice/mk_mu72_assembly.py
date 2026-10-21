@@ -82,7 +82,9 @@ def assemble(normal, flavor, bindings):
             "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
             "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
             "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
-            "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv"],
+            "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+            "rtl/lib/ot_rst_relay.sv",   # S81-LINK5: u_land #(SRAM 1) = the CLOSED dsdv_mu_land view's sources
+            "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"],
         defines=normal.get("defines", []),
         define_values=normal.get("define_values", {}),
         compiler_defines={"OT_S81_CAP5_C":"1"},
