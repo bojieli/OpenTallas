@@ -332,7 +332,7 @@ def pre(v, m, G):
     # QW-G5FROOT 10-20: each reserved base relay / landing box carries a RES_HALO_UM halo: _relays books a frame as
     # w + SHAVE by h + SHAVE and its spot search snaps within a tolerance, so a root touching the bare box still moved the
     # base frame (dv2f20g5rf rfs try 1: 12 q3h_col 516-b nets over 405 next to the cluster row-gap group roots)
-    RH = float(os.environ.get('OT_SPLIT_FAULT_RES_HALO_UM', '10.8'))
+    RH = float(os.environ.get('OT_SPLIT_FAULT_RES_HALO_UM', '43.2'))   # rfs try 2: 10.8 -> 20 data nets over 405, 43.2 -> 0
     plan['reserved'] = [[r_[0] - RH, r_[1] - RH, r_[2] + RH, r_[3] + RH] for r_ in plan.get('reserved', ())]
     for r_ in plan.get('reserved', ()):
         occ.add(tuple(r_))      # the relay / landing sites the same GEN used without the tree: roots keep off them
@@ -361,7 +361,17 @@ def pre(v, m, G):
             raise ValueError(f'fault emit: owner {o} without clock ({cj}) / reset ({rj}) bus')
         tx, ty = zn.target(*r['xy'], owner=by[o])
         okz = lambda b: zn.of_box(b) is not None
-        s = occ.site(v, tx, ty, ok=okz) or occ.site(v, tx, ty, rmax=2000.0, step=17.28, ok=okz)
+        s = None
+        if ROOT_MODE == 'cover' and r.get('pts'):
+            # rfs try 2 (dv2f20g5rh 'flt_root_dvs_E2 has no input'): the primary root sits within CAP_UM of one of the
+            # owner's landings (nearest the gap target), so it always captures at least one source
+            pts_ = sorted(map(tuple, r['pts']), key=lambda p_: _man(p_, (tx, ty)))
+            for p_ in pts_[:8]:
+                s = occ.site(v, p_[0], p_[1], rmax=CAP_UM, step=8.64,
+                             ok=lambda b, p_=p_: okz(b) and _man(((b[0] + b[2]) / 2, (b[1] + b[3]) / 2), p_) <= CAP_UM)
+                if s is not None:
+                    break
+        s = s or occ.site(v, tx, ty, ok=okz) or occ.site(v, tx, ty, rmax=2000.0, step=17.28, ok=okz)
         if s is None:
             raise ValueError(f'fault emit: no free site for the region root of {o} near {r["xy"]}')
         nm = f'flt_root_{o}'
@@ -665,7 +675,8 @@ def post(v, m, G):
                 if nodes[l]['n'] < FANIN and _man(_ctr(nodes[l]['it']), xy) <=
                 (CAP_POST_UM if ROOT_MODE == 'cover' and nodes[l]['root'] else LOCAL_UM)]
         if cand:
-            lf = min(cand, key=lambda l: _man(_ctr(nodes[l]['it']), xy))
+            # rfs try 2: an input-less root within reach takes the source first (no node may end without an input)
+            lf = min(cand, key=lambda l: (nodes[l]['n'] > 0, _man(_ctr(nodes[l]['it']), xy)))
         else:
             r0 = root_ck[cj][0]
             owner = owner_of_root[r0.name]
