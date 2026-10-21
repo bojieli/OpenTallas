@@ -1,0 +1,157 @@
+{
+  "scope": "EXECUTED_TEST_FIXTURE_DEMAND_ONLY_NOT_PRODUCTION",
+  "vectors_sha256": "5b58ac0a16ef90753f2d08fc85775938d53aad2a4d2b356ee9b33b2aed06d4e4",
+  "actual_records": 835,
+  "HOST_words": 417,
+  "distinct_contexts": 1,
+  "context": [
+    1,
+    0,
+    37,
+    0,
+    1048575,
+    16754,
+    4129,
+    17421638429879982015
+  ],
+  "actual_KS_descriptors": 1,
+  "distinct_users": 1,
+  "programme_epoch_global_in_this_fixture": true,
+  "book": {
+    "stage0_NEXT": {
+      "header_first": 100,
+      "header_stride": 16,
+      "word_count": 417,
+      "body_gap": 4,
+      "headers_last": 6756,
+      "body_last": 6760,
+      "KS_header": 6776
+    },
+    "stage1_NEXT": {
+      "header_first": 103,
+      "header_stride": 16,
+      "word_count": 417,
+      "body_gap": 4,
+      "headers_last": 6759,
+      "body_last": 6763,
+      "KS_header": 6779
+    },
+    "PREV": {
+      "source_TX_capture": 6993,
+      "transit_RX_capture": 6995,
+      "transit_TX_capture": 6996,
+      "head_capture": 6998,
+      "host_event_capture": 6999,
+      "host_event_output": 7000,
+      "actual_source_status_sample": 6990,
+      "actual_source_return_send": 6992
+    }
+  },
+  "NEXT_PREV_simultaneous_reads": 0,
+  "storage": {
+    "proposed_pattern_fields_bits": 512,
+    "context_and_pattern_entries": 1,
+    "indexed_context_array": false,
+    "source_payload_holds": "finite one-context configuration plus shadow; no512-row capacity inferred",
+    "SRAM_selection": "NONE; no storage RTL authorized, macro choice deferred until actual expanded selected programme demand"
+  },
+  "schema": [
+    {
+      "name": "TID",
+      "lo": 0,
+      "width": 16
+    },
+    {
+      "name": "user",
+      "lo": 16,
+      "width": 10
+    },
+    {
+      "name": "position",
+      "lo": 26,
+      "width": 21
+    },
+    {
+      "name": "token",
+      "lo": 47,
+      "width": 21
+    },
+    {
+      "name": "epoch_identity",
+      "lo": 68,
+      "width": 32
+    },
+    {
+      "name": "programme_identity",
+      "lo": 100,
+      "width": 64
+    },
+    {
+      "name": "local_epoch_at_config_body_capture",
+      "lo": 164,
+      "width": 48
+    },
+    {
+      "name": "first_NEXT_header",
+      "lo": 212,
+      "width": 48
+    },
+    {
+      "name": "NEXT_header_stride",
+      "lo": 260,
+      "width": 12
+    },
+    {
+      "name": "HOST_word_count",
+      "lo": 272,
+      "width": 10
+    },
+    {
+      "name": "target_body_gap",
+      "lo": 282,
+      "width": 8
+    },
+    {
+      "name": "transit_body_gap",
+      "lo": 290,
+      "width": 8
+    },
+    {
+      "name": "KS_capture",
+      "lo": 298,
+      "width": 48
+    },
+    {
+      "name": "PREV_return_input_capture",
+      "lo": 346,
+      "width": 48
+    },
+    {
+      "name": "local_status_sample",
+      "lo": 394,
+      "width": 48
+    },
+    {
+      "name": "local_return_send",
+      "lo": 442,
+      "width": 48
+    },
+    {
+      "name": "expected_data_stage",
+      "lo": 490,
+      "width": 8
+    },
+    {
+      "name": "expected_data_rank",
+      "lo": 498,
+      "width": 2
+    },
+    {
+      "name": "flags",
+      "lo": 500,
+      "width": 12
+    }
+  ],
+  "bootstrap_header_body_dates": "UNMEASURED/UNASSIGNED; no runtime image",
+  "production_global_stage_epoch_anchor": "OPEN"
+}
