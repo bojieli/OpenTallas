@@ -32,6 +32,8 @@ echo "$DEFS" > "$OUT/defines.txt"
 echo "TOKFUNC build ok"
 ROWS=$(grep -o 'XDIE_ROWS=[0-9]*' <<< "$DEFS" | cut -d= -f2); AR=$(grep -o 'XDIE_AR_ITER=[0-9]*' <<< "$DEFS" | cut -d= -f2)
 if [ "$AR" = 1 ]; then AI="--ar-iter --rows $ROWS --del-edge 1"; ADR=+ADRCHK; else AI=""; ADR=""; fi
+# the SAFE successor issuer (issuer_m_r128 = v7r128 core) keeps one counter per loop id < 32: dense ids (compiler --dense-lids)
+grep -q XDIE_DUT_MODULE <<< "$DEFS" && AI="$AI --dense-lids"
 stage() {  # tag swd xargs compile-args...
   local tag=$1 swd=$2 xa=$3 args; shift 3
   $C "$OUT/$tag" --swd "$swd" "$@" > "$OUT/$tag.compile.log" 2>&1 || { tail -3 "$OUT/$tag.compile.log"; echo "STAGE $tag COMPILE_FAIL"; return 3; }

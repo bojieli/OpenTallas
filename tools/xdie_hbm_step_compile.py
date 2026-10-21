@@ -382,6 +382,7 @@ def steps_between(a, b):
 
 
 NL_256 = 32                                 # ot_hgi_coll_static_issuer_v7 #(.NL)
+DENSE_LIDS = [False]                        # --dense-lids: v7 dense loop ids also at ROWS 64/128 (issuer_m_r128 = v7r128 core, NL 32)
 
 
 def lower(Sd, end, cap=64):
@@ -441,7 +442,7 @@ def lower(Sd, end, cap=64):
         pc7 = lambda v, lo, hi: ((v & 63) << lo) | (((v >> 6) & 1) << hi)
     lids = {}
     def lid_of(last):
-        if cap <= 128:
+        if cap <= 128 and not DENSE_LIDS[0]:
             return last
         if last not in lids:
             lids[last] = len(lids) + 1
@@ -590,9 +591,11 @@ def main():
     ap.add_argument('--ar-iter', action='store_true', help='iterated reduce tags (v8g AR_ITER=1, iter_ar_tag_step)')
     ap.add_argument('--del-edge', type=int, default=0, help='XDIE-HBM4 item 3: del_obase row = sink row + N (1: the '
                     'ctl_v5 delivery_obase pin then lands on the DEL0 valid edge; 0 = XDIE-HBM3 programmes)')
+    ap.add_argument('--dense-lids', action='store_true', help='TOK-FUNC-HBM-XDIE: dense loop ids (1, 2, ... < 32) at every ROWS: the SAFE successor issuer_m_r128 (v7r128 core, NL 32) faults on lid >= 32; injective rename, v6 behaviour identical')
     ap.add_argument('--rows', type=int, default=64, choices=[64, 128, 256], help='issuer ROWS (v8g #(.ROWS); 256 = issuer v7)')
     ap.add_argument('--blocks', type=int, default=0, help='RX pingpong blocks (0: 1 if P <= 64 else ceil(P / 64), equal sizes)')
     a = ap.parse_args()
+    DENSE_LIDS[0] = a.dense_lids
     check_layout()
     a.out.mkdir(parents=True, exist_ok=True)
     M = measure(a.frm) if a.frm != '-' else {0: {}, 1: {}, 'first_wr_row': None}
