@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.score_col8.source_qualification.v1",
-  "status": "PARTIAL_PENDING_SWAP_QLATE1",
+  "status": "PASS_ALL_EXISTING_MODES",
   "source_commit": "88fb6153c49d08b88e2db6580806c37409cdcf70",
   "gate_source_commit": "56210c530bd0ab22713ee24af2bea984fc1d4a7c",
   "tar_sha256": "25365f0e1133ea3bf8c5330531089e933e759866808247de5144442b95e150b3",
@@ -31,5 +31,29 @@
     ]
   },
   "selected_release_lineage": "Legacy quarter_static -> score_leaf -> ot_hbm_idx_chunk_rt (QLATE only); future Col8 adoption requires explicit source/online-lag binding. No RESET_F32=1 qualification claimed.",
-  "approval": "No critical geometry approval/submission; await actual CTS/GRT/PNG and ROOT review"
+  "approval": "No critical geometry approval/submission; await actual CTS/GRT/PNG and ROOT review",
+  "terminal_modes": [
+    {
+      "mode": "pos",
+      "rc": 0,
+      "qualified": true
+    },
+    {
+      "mode": "seam",
+      "rc": 1,
+      "qualified": true
+    },
+    {
+      "mode": "swap",
+      "rc": 1,
+      "qualified": true
+    },
+    {
+      "mode": "qlate1",
+      "rc": 1,
+      "qualified": true
+    }
+  ],
+  "qualifies_selected_r15": false,
+  "selected_r15_note": "selected r15 uses legacy chunk_rt; adopting col8 requires explicit source+online lag binding"
 }

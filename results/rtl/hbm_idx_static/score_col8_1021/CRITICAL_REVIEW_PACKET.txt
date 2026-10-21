@@ -1,0 +1,15 @@
+Actual Col8 regional rebuild critical review packet — owner approval REQUIRED
+
+Source56210c530 (RTL88fb6153c); gates all four hidx_score_pair8_r0..r3 at20261021-105117. Exact source manifests alongside each gate_result. No REVIEW.json written, no route submitted.
+Functional full existing chunk bench: positive2339 checks/1063 outputs/errors0; seam/swap/qlate1 all causally rejected. RESET_F32=0 and online lag2; no RESET_F32=1/current-r15 adoption claim. Selected r15 remains legacy chunk_rt. Explicit future Col8 parent/source/online-lag binding required.
+
+All4 actual floorplan+density PNGs viewed. Each216x172.8, no macros, continuous standard-cell rows and N/S wide query/key faces, narrow seam W/E; clock contact N by the query strip. Whole outline reach276.6um. Source kept regional query copies, every gate native max32. Query568/N216=2.63pins/um, key544/S216=2.52; literal pin geometry accessible all1165r0/1198r1..3. No power islands; standard-cell space remains connected. Actual densities show a lower-left green body, broad green central/right branches, small red bins on N/S ingress and central/right junctions (more inR1/R3); not hotspot-free. ActualGRTzero overflow all4 supports feasibility; parent clock/boundary and finalroute timing still owed.
+SAFE: pins retain per-head/regional input regs and literal outputregs; reset2stage regional forest. Reach<=405. Fanout native32. Existing arithmetic/seams preserved. Storage existing8KB fragments unchanged; no newly indexed largefloparray. NoSRAM lattice obligation. Aspect1.25; synthutil33/35/36/37%. Clock measured below; insertion/sinks warnings guidance only. Bootonline+1 priced asONL_LAG2 bench; active edges unchanged.
+
+RID | native | syntharea | TT/FFpinspreadps | TT/FFinsertionps | setup/holdplacementps | GRTM3usage
+0 |32|11796.94|28.8/21.5|314.7/251.4|108.02/36.28|27.35%
+1 |32|12461.89|29.6/26.8|358.8/288.5|118.58/35.42|28.98%
+2 |32|12828.11|34.3/28.6|331.7/263.8|104.33/30.14|30.25%
+3 |32|13220.42|33.1/28.0|374.2/298.9|108.94/31.47|31.02%
+
+All gates WARN on sink count/insertion/util guidance, no ERROR. All trialGRT overflow0. Sink counts16035/17342/18115/18905. All timing above TT placementRC diagnostic, not SS/FF finalclosure. Parent planned serpentine2x2 SW→SE→NE→NW,43.2channels,561.6x475.2; notyet hardened parent. Need exactsource adoption and clock/latencylandings, no oldcolumnbbox/viewalias.
