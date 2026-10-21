@@ -14,7 +14,7 @@
   "fixture_mtp": "MTP (results/rtl/s81_layer_tput_1018/fixtures/MTP.sha256.json; the regenerated 10-18 fixture of claude/lb2-s81-mtp-1018, generator fix in main: embed rows by Checkpoint.rows)"
  },
  "verdict": {
-  "lm_head": "FAIL",
+  "lm_head": "PASS",
   "mtp_draft_head_and_seq": "FAIL",
   "mtp_draft_body": "NOT_RUN_HERE (stage-die per-layer runs, parent lane)"
  },
@@ -110,7 +110,7 @@
  },
  "legs": {
   "xfin": {
-   "ok": false,
+   "ok": true,
    "kind": "MEASURED",
    "what": "head hc_pre + RMSNorm exchange: ot_hbm_norm_grp G64 (80 beat partials) + 16 x ot_s81dv_xfin (collector, snake ring LS 9 / LE 29, replicated finish) -> rstd at all 16 slices; all 80 y vectors vs HEAD head.norm.scale",
    "cycles": {
@@ -137,9 +137,21 @@
      }
     },
     "mutleaf": {
-     "verdict": "NO_RESULT",
-     "line": null,
-     "kv": {}
+     "verdict": "FAIL",
+     "line": "DVXFIN16 slices=16 y_vecs=80 y_err=1852 rstd=16 rstd_distinct=0 rstd=3c2f4bcc fault=0000000000000000 gf=0 last_partial_to_first_rstd=234 rstd_spread=13 LS=9 LE=29",
+     "kv": {
+      "slices": "16",
+      "y_vecs": "80",
+      "y_err": "1852",
+      "rstd": "3c2f4bcc",
+      "rstd_distinct": "0",
+      "fault": "0000000000000000",
+      "gf": "0",
+      "last_partial_to_first_rstd": "234",
+      "rstd_spread": "13",
+      "LS": "9",
+      "LE": "29"
+     }
     }
    },
    "rtl": [
@@ -1351,8 +1363,7 @@
  },
  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
  "meta": {
-  "source_hash_provenance": "Original run_1021_0906 pinned receipt; collection adds only completed beat run logs",
-  "beat_log_root": "results/token_pass/tokfunc_s81_1021/head_mtp_run/beat",
-  "pending": "xfin mutant build; repaired wave production run"
+  "source_hash_provenance": "Original exactrun_1021_0906 source receipt; collection adds completed beat/xfin logs only",
+  "status": "all80headbeats+normXfinPositiveAndMutantComplete; originalWaveFAILpreserved; repairedwave separate receipt"
  }
 }
