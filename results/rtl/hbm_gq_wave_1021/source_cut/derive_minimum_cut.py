@@ -17,7 +17,7 @@ def ends(n,seen=None):
    z |= ends(other,seen) if other in pads else {other}
  return z
 for kind,producer_qs in [('topk3',('SW','SE','NW')),('coll4',('SW','SE','NW','NE'))]:
- core={'su_prog','col_su','col_idx','hb_idx__ctl'}
+ core={'hb_ckgen','su_prog','col_su','col_idx','hb_idx__ctl'}
  for q in ['SW','SE','NW','NE']:
   core|={p+q for p in ['hcollgi_','hcollgl_','hcollrs_','hcollks_','hcollb_','hb_coll_','hb_vms_','calendar_','hleaf_']}
   core|={f'vmb_{q}{b}' for b in range(8)}
