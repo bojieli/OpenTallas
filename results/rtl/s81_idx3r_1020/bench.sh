@@ -18,6 +18,10 @@ ctrl) bash $K $O ctrl0 0 \
 cm1|cm2|cm3) bash $K $O $1 ${1#cm} "fail_s1|+SEED=1" ;;
 ctrln) VL_DEF=+define+S81CTRL_NATIVE32 bash $K $O ctrln 0 "pass_s1|+SEED=1" "pass_s2|+SEED=2" "pass_slothit|+SEED=1 +SLOTHIT=1" ;;
 cm4) bash $K $O cm4 4 "fail_slothit|+SEED=1 +SLOTHIT=1" ;;
+# DRIVE-S81-IDX4-KITS 10-20: the s81ctrl_rg3 kit configuration (SRAM p192 FIFOs, native32): pass + mutant witnesses
+ctrls) S81CTRL_FIFO_IMPL=sram_p192 bash $K $O ctrls 0 "pass_s1|+SEED=1" "pass_s2|+SEED=2" "pass_lat60|+SEED=4 +LAT=60" "pass_slothit|+SEED=1 +SLOTHIT=1" ;;
+cms1|cms2|cms3) S81CTRL_FIFO_IMPL=sram_p192 bash $K $O $1 ${1#cms} "fail_s1|+SEED=1" ;;
+cms4) S81CTRL_FIFO_IMPL=sram_p192 bash $K $O cms4 4 "fail_slothit|+SEED=1 +SLOTHIT=1" ;;
 b3) bash $C $O b3 "-GMUT=0 -GSRAM_MACRO=1" 16 \
  "pass_small|+N=4096 +B=13 +T0=400 +P=3" \
  "pass_gs|+GATHER=1 +N=256 +T0=1500 +P=3" \

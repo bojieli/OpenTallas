@@ -21,12 +21,16 @@ if which == 'rg3':
     top, mod, inst, defs = 'idxrg3_native_top', 'dsdv_idx_rg3', 'dsdv_idx_rg3 #(.SRAM_MACRO(1))', '-DOT_IDX_HSLICE_HARD -DSYNTHESIS'
     modfile = 'rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv'
 else:
-    m = 'dsfd_ctrl_rg3' if which == 'ctrl3' else 'dsfd_ctrl_rg2'
+    m = 'dsfd_ctrl_rg3' if which in ('ctrl3', 'ctrl3s') else 'dsfd_ctrl_rg2'
     sources = ['rtl/lib/ot_rst_relay.sv', 'rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv', 'rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv',
                'rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv', 'rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv',
                'rtl/dsrom_sys/s81_ph/ctrl/' + m + '.sv']
     top, mod, inst, defs = m + '_native_top', m, m, '-DS81CTRL_NATIVE32 -DSYNTHESIS'
     modfile = 'rtl/dsrom_sys/s81_ph/ctrl/' + m + '.sv'
+    if which == 'ctrl3s':   # DRIVE-S81-IDX4-KITS 10-20: the s81ctrl_rg3 kit configuration (n32s defines, SRAM p192 FIFOs as black boxes)
+        sources = sources[:-1] + ['rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv',
+                                  'physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_bb.v', sources[-1]]
+        defs = '-DS81CTRL_SRAM_FIFO -DS81CTRL_SRAM_P192 -DS81CTRL_NATIVE32 -DSYNTHESIS'
 rows = ['yosys read_liberty -lib ' + f for f in libs + extra]
 rows += ['yosys read_verilog -sv ' + defs + ' /work/' + f for f in sources]
 txt = Path('/work/' + modfile).read_text().split('module ' + mod + ' #(', 1)[1]

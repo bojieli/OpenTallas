@@ -10,6 +10,12 @@ SRC=(rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv rtl/dsrom_sy
      rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv
      rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg2.sv rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv
      rtl/dsrom_sys/s81_ph/ctrl/test/tb_dsfd_ctrl_rg3_mux.sv)
+# DRIVE-S81-IDX4-KITS 10-20: S81CTRL_FIFO_IMPL=sram_p192 builds the s81ctrl_rg3 kit configuration (n32s defines
+# S81CTRL_SRAM_FIFO + S81CTRL_SRAM_P192 + S81CTRL_NATIVE32, behavioural 16x340 dual-clock SRAM model).
+if [ "${S81CTRL_FIFO_IMPL:-flop}" = sram_p192 ]; then
+  SRC+=(rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192.v)
+  VL_DEF="${VL_DEF:-} +define+S81CTRL_SRAM_FIFO +define+S81CTRL_SRAM_P192 +define+S81CTRL_NATIVE32"
+fi
 "$VL" --version > "$D/build.log"; sha256sum "${SRC[@]}" >> "$D/build.log"
 "$VL" --binary --timing -j 8 --top-module tb_dsfd_ctrl_rg3_mux -O2 -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
   -Wno-TIMESCALEMOD -Wno-BLKSEQ -Wno-INITIALDLY ${VL_DEF:-} -GMUT=$M --Mdir "$D/obj" "${SRC[@]}" >> "$D/build.log" 2>&1 \
