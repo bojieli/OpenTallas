@@ -11,6 +11,16 @@ y0 >= 259.2, slice 3 then tops out at 745.2), so the pins move to the children:
 - slice-pin centroids y 374.3 / 474.8 / 575.3 / 675.9 -> bank distances 74.8 / 53.8 / 43.3 / 43.2 um (lint limit 100).
 - die contract: recorded in the spec's slot_change_request (W-face s_i / clk_t / xb_d0 ranges shift; die re-routes).
 
+## HBM-COLLECT10/HCQB 10-21: route crash fix (PRE_GLOBAL_PLACE)
+hbm_hcq_hub_c1p-c1p-9a9e8c85b crashed twice (ot-epyc6) in 3_3_place_gp at the first timing-driven repair:
+ODB-1211 load pin u_ot_pr_core.u_cen.g_hard.g_lvl[6].g_n[0].u_a.genblk1.g_native7.u_native.c904/B1 is dont_touch ->
+RSZ-3006 on net ...u_native.n1957 (OAI311xp33 driving 24 OAI22 loads).  Classification: NOT a blocked region, macro halo
+or fence -- the native LAT-7 adder graph (rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v) carries (* keep, dont_touch *) on
+all 3,500 cells, and the hub kit's PRE_GLOBAL_PLACE hook (hc_hub_band_gpl.tcl) lacked native_untouch.tcl, which the tree16
+child kits already source.  Fix: PRE_GLOBAL_PLACE = physical/hbm_hc_hub/hc_hub_band_native_gpl.tcl (native_untouch, then
+the band).  Logic, ports, latency and geometry unchanged (port-identical; 0 added cycles).
+Fallback twin hbm_hcq_hub_c1q = c1p + GPL_TIMING_DRIVEN=0 (no resizer buffering inside global placement).
+
 SAFE-DESIGN checklist: as hbm_hcq_hub_c1 (below) except item 6 Floorplan: now PASS for bank_distance (pins at their
 banks); item 2 Reach improves (slice s_i wires <= ~100 um).
 
