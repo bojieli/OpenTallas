@@ -30,7 +30,7 @@ def measure(case, tt_source_receipt=None):
             raise ValueError('selected LP/native TT requires its source-bound embedding output-offset receipt; raw-TT edge 1 is not inherited')
         receipt=Path(tt_source_receipt)
         row=json.loads(receipt.read_text())
-        if row.get('schema')!='opentallas.qwen.tt_emb_source.v1' or row.get('master')!=tt_master or row.get('calendar_sample_edges')!=1:
+        if row.get('schema')!='opentallas.qwen.tt_emb_source.v1' or row.get('status')!='QUALIFIED_SOURCE_LOCAL_EDGES' or row.get('master')!=tt_master or row.get('calendar_sample_edges')!=1:
             raise ValueError('TT embedding source receipt identity/sample edge mismatch')
         root=(case.parents[1]/'src').resolve()
         def bound_file(field, sha_field):
