@@ -1,6 +1,0 @@
-{
- "schema": "opentallas.ref_tile.reset_landing.v1",
- "top": "qkd_hr_ingest_eng",
- "enable": false,
- "reason": "eng_rst_n[1:0] are two leaves of the shell ck_ingest reset bank (already landed); the tile lands them once more in the engine region (34 kept leaves qkd_hr_eng_rst_leaf, async assert / release next ck_ingest edge, each <= 32 loads); control/valid-only reset"
-}
