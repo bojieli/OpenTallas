@@ -67,13 +67,38 @@ SAFE_FILES = [SN + "ot_hbm_svc_pc_ctrl_leaf_cfg_safe.sv", SN + "ot_hbm_svc_sram1
 PC_DEFINES = {"h9b": [], "safe": ["TOKSIM_SAFE_PC"], "mc3": ["TOKSIM_SAFE_PC", "TOKSIM_MC3"]}[PC_MODE]
 
 
+DIE_MASTERS = ("ot_hbm_accel_smh_attn", "ot_hbm_svc_sm_group_rel_id", "ot_hbm_svc_sm_xcal_rel_t",
+               "ot_hbm_svc_vm_kshare_splitstrap", "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b")
+DIE_NAMES, DIE_PATHS = set(), set()
+
+
+def die_master_files():
+    """TOK-FUNC-HBM-SM (10-21): when ROOT holds a die bundle's master_files.json (make_bundle: the die's own per-master
+    source lists, uniquified), the SM + svg + xc + vmks + h9b sources come from it (each master's exact die files);
+    otherwise this tree's SM_FILES (GEN2e3 lineage)."""
+    mf = ROOT / "master_files.json"
+    if not mf.exists():
+        return list(SM_FILES)
+    m = json.loads(mf.read_text())
+    out = []
+    for k in DIE_MASTERS:
+        for p in m[k]:
+            if p not in out:
+                out.append(p)
+    DIE_PATHS.update(out)
+    DIE_NAMES.update(Path(p).name for p in out)
+    return out
+
+
 def build(work: Path, bundle, defines):
     defines = list(defines) + [d for d in PC_DEFINES if d not in defines]
     # HBM-SMXL: TOKSIM_DEFINES=XSLOT[,IMUT=4] (the RTL x-slot relocation and its mutant)
     defines += [d for d in os.environ.get("TOKSIM_DEFINES", "").split(",") if d and d not in defines]
     tag = "_".join(d.replace("=", "") for d in defines) or "base"
     files = []
-    for p in SM_FILES + SVC_FILES + (SAFE_FILES if PC_DEFINES else []) + [TB]:
+    for p in die_master_files() + SVC_FILES + (SAFE_FILES if PC_DEFINES else []) + [TB]:
+        if Path(p).name in DIE_NAMES and p not in DIE_PATHS:
+            continue                                     # the bundle's copy of this file wins (uniquified die source)
         if p not in files:
             files.append(p)
     files = [ROOT / p for p in files]
@@ -463,6 +488,8 @@ def main(argv=None):
                                         ids_lag=S.IDS_LAG, bscale=S.BSCALE, xmode=S.XMODE, xrd=S.XRD, defines_env=os.environ.get("TOKSIM_DEFINES", ""),
                                         x_beats_per_word=(S.MV.NBEAT if S.XMODE == "bench13" else S.XNB),
                                         xlat=(None if S.XMODE == "bench13" else S.XLAT), layout="hbm_bank_layout.static_run (rotated)", pc=PC_MODE)
+            die_master_files()
+            d["die_bundle_master_files"] = sorted(DIE_PATHS) if (ROOT / "master_files.json").exists() else None
             d["source_revision"] = (ROOT / "REV").read_text().strip() if (ROOT / "REV").exists() else None
             out.write_text(json.dumps(d, indent=1, default=str) + "\n")
     return rc
