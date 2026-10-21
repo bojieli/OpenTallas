@@ -87,7 +87,16 @@
       "tail": "L+83",
       "result_prediction": "L+583",
       "qualification": "TOK owned original SAFE0 QCHX11 pending; not reusable for SAFE2 QCHX12"
-    }
+    },
+    "root_quarter_SYS_LAT0_legacy": 100,
+    "root_quarter_SYS_LAT0_candidate": 101,
+    "root_quarter_SYS_LAT_legacy": 146,
+    "root_quarter_SYS_LAT_candidate": 147,
+    "ring_RAW0_legacy": 178,
+    "ring_RAW0_candidate": 179,
+    "G22_MIX_POST_quarter_reduction_active": false,
+    "G22_gather_calendar_delta_vs_legacy11": 0,
+    "profile_helper": "tools/hbm_layer_vehicle/hc_safe2_phase40_1021.py"
   },
   "clock_entries": {
     "glue": [
