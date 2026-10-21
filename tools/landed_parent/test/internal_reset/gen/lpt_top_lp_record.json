@@ -1,0 +1,173 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "flat": "lpt_top",
+ "top": "lpt_top_lp",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "preserved_clock_ports": [
+  "xk"
+ ],
+ "regions": {
+  "r0": {
+   "clock_port": "ck_r0",
+   "children": [
+    "u0",
+    "uf",
+    "ur"
+   ]
+  },
+  "r1": {
+   "clock_port": "ck_r1",
+   "children": [
+    "u1"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "y1",
+   "src_region": "r1",
+   "dst_region": "r0",
+   "src_nodes": [
+    "u1"
+   ],
+   "width": 8,
+   "readers": [
+    "u0.b"
+   ],
+   "ring": "u_lpl_0_w (ck_r1)",
+   "read": "u_lpl_0_r (ck_r0)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "y0",
+   "src_region": "r0",
+   "dst_region": "r1",
+   "src_nodes": [
+    "u0"
+   ],
+   "width": 8,
+   "readers": [
+    "u1.a"
+   ],
+   "ring": "u_lpl_1_w (ck_r0)",
+   "read": "u_lpl_1_r (ck_r1)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
+   "net": "x",
+   "src_region": "r0",
+   "dst_region": "r1",
+   "src_nodes": [
+    "port:x"
+   ],
+   "width": 8,
+   "readers": [
+    "u1.b"
+   ],
+   "ring": "u_lpl_2_w (ck_r0)",
+   "read": "u_lpl_2_r (ck_r1)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+  }
+ ],
+ "pads": [],
+ "reset": {
+  "port": "rst_n",
+  "net": "reset_local",
+  "root_region": "r0",
+  "depth": 2,
+  "hops": {
+   "r0": 0,
+   "r1": 1
+  },
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 159,
+  "pads": 0,
+  "reset": 3
+ },
+ "communicating_region_pairs": {
+  "landed": [
+   "r0-r1"
+  ],
+  "reset_hops": [
+   "r0-r1"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "ur": 0,
+   "u0": 0,
+   "u1": 0,
+   "uf": 0
+  },
+  "input_port_offset_edges": {
+   "x": 0
+  },
+  "output_port_offset_edges": {
+   "z": 0,
+   "zf": 0
+  },
+  "reset_release_added_edges": 2,
+  "rescheduled_nets": [
+   {
+    "net": "y1",
+    "src_region": "r1",
+    "dst_region": "r0",
+    "readers": [
+     "u0.b"
+    ],
+    "width": 8,
+    "added_edges": 3
+   },
+   {
+    "net": "y0",
+    "src_region": "r0",
+    "dst_region": "r1",
+    "readers": [
+     "u1.a"
+    ],
+    "width": 8,
+    "added_edges": 3
+   },
+   {
+    "net": "x",
+    "src_region": "r0",
+    "dst_region": "r1",
+    "readers": [
+     "u1.b"
+    ],
+    "width": 8,
+    "added_edges": 3
+   }
+  ],
+  "reschedule_note": "RESCHEDULE mode: cross-region loops; every child keeps its flat calendar (t = 0) and each landed net above arrives +3 edges later than in the flat parent: the compiler / the children's static calendars must absorb these",
+  "max_added_edges": 0
+ },
+ "warnings": [],
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['r0-r1']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 3,
+  "reset_hops": 1,
+  "fails": []
+ }
+}

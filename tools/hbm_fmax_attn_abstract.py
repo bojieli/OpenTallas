@@ -10,7 +10,10 @@ composition; SS remains a sensitivity. Same OpenROAD commands as tools/w18/recov
 import argparse
 import hashlib
 import json
+import os
+import importlib.util
 import subprocess
+import sys
 from pathlib import Path
 
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
@@ -24,6 +27,20 @@ LIBS = {"ss": ["asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz", "asap7sc7p5t_INVBUF_R
 
 def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
+def require_export_pg(odb, receipt_dir):
+    """A fresh native audit, before each emission, with the executed runner pinned."""
+    if os.environ.get("OT_PG_STRICT") != "1":
+        return None
+    runner = Path(os.environ.get("OT_PG_RUNNER", str(Path(__file__).resolve().parent / "closure_loop/pg_receipt.py")))
+    module_spec = importlib.util.spec_from_file_location("ot_export_pg_receipt", runner)
+    module = importlib.util.module_from_spec(module_spec)
+    sys.modules[module_spec.name] = module
+    module_spec.loader.exec_module(module)
+    collector = os.environ.get("OT_PG_COLLECTOR")
+    return module.require_native_pg(odb, collector=Path(collector) if collector else None,
+                                    receipt_dir=receipt_dir)
 
 
 def main():
@@ -42,7 +59,8 @@ def main():
                     help="job-local host scratch to bind at /tmp; sets container TMPDIR=/tmp")
     a = ap.parse_args()
     orfs, out = a.orfs_dir.resolve(), a.out.resolve()
-    out.mkdir(parents=True, exist_ok=True)
+    if os.environ.get("OT_PG_STRICT") != "1":
+        out.mkdir(parents=True, exist_ok=True)
     tmp_args = []
     if a.tmp_dir is not None:
         tmp_dir = a.tmp_dir.resolve()
@@ -50,7 +68,12 @@ def main():
         tmp_args = ["-v", f"{tmp_dir}:/tmp", "-e", "TMPDIR=/tmp"]
     base = next((orfs / "results/asap7").glob("*/base"))
     rel = base.relative_to(orfs)
+    pg_odb_sha = sha(base / "6_final.odb") if os.environ.get("OT_PG_STRICT") == "1" else None
+    pg = require_export_pg(base / "6_final.odb", out / "pg_receipts")
+    out.mkdir(parents=True, exist_ok=True)
     rec = dict(name=a.name, orfs_dir=str(orfs), corners={})
+    if pg is not None:
+        rec["native_pg"] = pg
     if a.interface_sdc is not None:
         interface_sdc = a.interface_sdc.resolve()
         if not interface_sdc.is_file():
@@ -81,6 +104,11 @@ def main():
         rec["vt_flavours_added"] = vts
     vt_lefs = "".join(f"\nread_lef {PLAT}/lef/asap7sc7p5t_28_{_VT_TAG[v]}_1x_220121a.lef" for v in vts)
     for c in corners:
+        if pg_odb_sha is not None and sha(base / "6_final.odb") != pg_odb_sha:
+            raise RuntimeError("PG_HOLD: final ODB changed during abstract export")
+        pg = require_export_pg(base / "6_final.odb", out / "pg_receipts")
+        if pg is not None:
+            rec["native_pg"] = pg
         libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{x}" for x in
                          LIBS[c] + [y.replace("_RVT_", f"_{v}_") for v in vts for y in LIBS[c]]) + "\n" + mv_lib[c] + mv_lef
         lef = f"write_abstract_lef /out/{a.name}.lef\n" if c == "ss" else ""
@@ -108,6 +136,11 @@ exit
     # the element name is the liberty cell; the per-corner library names differ
     rec["files"] = {f.name: sha(f) for f in sorted(out.iterdir()) if f.suffix in (".lef", ".lib")}
     rec["ok"] = all(v["done"] for v in rec["corners"].values()) and len(rec["files"]) == len(corners) + 1
+    if pg_odb_sha is not None and sha(base / "6_final.odb") != pg_odb_sha:
+        raise RuntimeError("PG_HOLD: final ODB changed during abstract export")
+    pg = require_export_pg(base / "6_final.odb", out / "pg_receipts")
+    if pg is not None:
+        rec["native_pg"] = pg
     (out / "abstract.json").write_text(json.dumps(rec, indent=2) + "\n")
     print(json.dumps(rec))
     raise SystemExit(0 if rec["ok"] else 1)
