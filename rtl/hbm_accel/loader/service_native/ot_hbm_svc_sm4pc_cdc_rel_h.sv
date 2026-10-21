@@ -208,9 +208,11 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  end
  generate for(g=0;g<LBANKS;g=g+1)begin:g_rx
   reg [11:0] q;assign rx_left[g]=q;
+  wire capture;
+  ot_hbm_svc_local_and2 u_capture(.a(descriptor_fire),.b(desc_data[T0-1:16]==g),.y(capture));
   always @(posedge hbm_clk or negedge hc[1+g/2])
    if(!hc[1+g/2])q<=0;
-   else q<=((descriptor_fire&&desc_data[T0-1:16]==g)?desc_data[T0+11:T0]:q)-12'(h_take_b[g]);
+   else q<=((capture)?desc_data[T0+11:T0]:q)-12'(h_take_b[g]);
  end endgenerate
  // ---------------- stream side: registered per-bank reserve copies, landing banks, drain
  reg [7:0] rsv_v_k;reg [LB-1:0] rsv_bank_k[0:7];reg [15:0] rsv_epoch_k[0:7];reg [11:0] rsv_total_k[0:7];
@@ -277,14 +279,18 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   if(out_epoch_capture)out_epoch<=bank_epoch[drain_bank];
   if(out_ordinal_capture)out_ordinal<=drain_ordinal;
  end
- // sc[1]: completion masks (32)
- always @(posedge stream_clk or negedge sc[1])begin
-  if(!sc[1])for(sb=0;sb<LBANKS;sb=sb+1)completed_q[sb]<=0;
-  else for(sb=0;sb<LBANKS;sb=sb+1)begin
-   if(!alloc_done[sb])for(si=0;si<8;si=si+1)completed_q[sb][si]<=reserve_total<=si;
-   else if(|complete_event[sb])completed_q[sb]<=completed_q[sb]|complete_event[sb];
+ // Each completion-mask reset branch drives eight state flops.
+ genvar cm;
+ generate for(cm=0;cm<LBANKS;cm=cm+1)begin:g_completion_mask
+  wire reset_n;
+  ot_hbm_svc_local_and2 u_reset(.a(sc[1]),.b(1'b1),.y(reset_n));
+  integer bit_index;
+  always @(posedge stream_clk or negedge reset_n)begin
+   if(!reset_n)completed_q[cm]<=0;
+   else if(!alloc_done[cm])for(bit_index=0;bit_index<8;bit_index=bit_index+1)completed_q[cm][bit_index]<=reserve_total<=bit_index;
+   else if(|complete_event[cm])completed_q[cm]<=completed_q[cm]|complete_event[cm];
   end
- end
+ end endgenerate
  // sc[0]: control (32 flops)
  always @(posedge stream_clk or negedge sc[0])begin
   if(!sc[0])begin
