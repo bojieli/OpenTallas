@@ -3880,6 +3880,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     rounds = 0
     RIP_ROUNDS = int(_os.environ.get('OT_RELAY_RIP_ROUNDS', '40'))   # QW-G5F2: rip-up budget (default the historical 40)
     _fl_done = [not _flt_defer]
+    _flt_late = []
 
     def _fault_land():
         # QW-G5FROOT: every data bus stands; each deferred fault root takes its box if still free, else the nearest free
@@ -3923,8 +3924,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     while work:
         idx = work.pop(0)
         pl = plans[idx]
-        if not _fl_done[0] and str(pl['bid']).startswith('flt_'):
-            _fault_land()
+        if _flt_defer and str(pl['bid']).startswith('flt_'):
+            if idx not in _flt_late:
+                _flt_late.append(idx)    # searched after every data frame, jog and data landing (below)
+            continue
         if not needs_repair(pl):
             continue
         _ok1 = repair(idx, pl)
@@ -3958,8 +3961,6 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for j in redo:
             ripped.discard(j)
         work = redo + work
-    if not _fl_done[0]:
-        _fault_land()       # QW-G5FROOT: no fault edge needed a search: the roots still land before any later step
     if GATE:
         # r9: the chains still open are searched again once everything else stands (their sites may have been held by a
         # chain that has since moved); a chain that stays open keeps its pass-1 frames and is reported
@@ -4189,6 +4190,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                               auto_hard=sorted(_auto), owed_in_face=sorted(_owed), in_face_prefix=_inf)
         print(f'LAND_LIST {len(_ll["links"])} listed: {_added} landing stations added (+{len(_auto)} hard<->hard auto), {len(_framed)} already framed, '
               f'{len(_same)} on one GEN trunk root (regional die clock splits them), {len(_bad)} not on this GEN, {len(_owed)} owed in-face ({_inf})', flush=True)
+    # QW-G5FROOT 10-20: only now -- every data frame, jog and data landing (LAND_CROSS / LAND_LIST) placed exactly as
+    # in the data-only GEN -- the fault roots land on the grid and the fault-tree edges are searched (no rip-up)
+    # (rfs try 5: roots landed before LAND_LIST pushed q3h_col_42_2's landing 705 um off its 43 um pins)
+    if _flt_defer:
+        _fault_land()
+        _late_bad = []
+        for idx in _flt_late:
+            pl = plans[idx]
+            if needs_repair(pl) and not (repair(idx, pl) or repair(idx, pl, True)):
+                _late_bad.append(pl['bid'])
+        m.setdefault('fault_emit', {})['late_unrepaired'] = _late_bad
+        print(f'FAULT_EMIT late: {len(_flt_late)} fault-tree edges searched after the data landings, {len(_late_bad)} open: {_late_bad[:8]}', flush=True)
+        unrepaired[:] = [f'{b_} ({w_})' for b_, w_ in unrep.items()]
     # QW-G5F2 10-20 (OT_SPLIT_FAULT_EMIT): every zero-stage fault-tree edge between two region roots on different clock
     # roots gets the same one-frame landing station (forwarded lanes: landh0), so no fault wire crosses a root unlanded
     from qwen_split import fault_emit as _FE2
