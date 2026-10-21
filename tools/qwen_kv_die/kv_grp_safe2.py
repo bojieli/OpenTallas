@@ -405,6 +405,35 @@ def apply_tiles(tiles, emit):
         raise ValueError(f'kv_grp_safe2: replica counts changed: {counts}')
 
 
+
+def frame_port_widths(master, widths, parent_text=None):
+    """Physical pins describe the actual private parent slices, not the wider
+    transport nets. parent_connections already emits EST[0] / H CTL[193:0].
+    Keep the strict view-width comparison; refuse unexpected frames or unsliced
+    parent connections instead of making a wide abstract alias a narrow view.
+    """
+    if master not in MASTERS.values():
+        return widths
+    out = dict(widths)
+    rules = {'x__est': (1, 13)}
+    if master == MASTERS['grp_h']:
+        rules['i_ctl'] = (194, 271)
+    for port, (actual, transport) in rules.items():
+        if port not in out or max(out[port], 1) not in (actual, transport):
+            raise ValueError(f'kv_grp_safe2: unexpected frame width {master}.{port}: {out.get(port)}')
+        out[port] = actual
+    if parent_text is not None:
+        instances = list(re.finditer(r'\b' + re.escape(master) + r'\s+(\w+)\s*\((.*?)\);', parent_text, re.S))
+        if not instances:
+            raise ValueError(f'kv_grp_safe2: no actual parent instances of {master}')
+        for match in instances:
+            conns = dict(re.findall(r'\.(\w+)\(([^()]*)\)', match[2]))
+            for port, (actual, _) in rules.items():
+                if not re.fullmatch(r'\w+\[' + str(actual - 1) + r':0\]', conns.get(port, '').strip()):
+                    raise ValueError(f'kv_grp_safe2: {match[1]}.{port} is not the source private slice [{actual - 1}:0]')
+    return out
+
+
 def parent_connections(text):
     """die netlist: drop the deleted pins' connections, explicit EST[0:0] / H i_ctl[193:0] slices (producers intact)"""
     counts = {MASTERS['grp']: 0, MASTERS['grp_h']: 0}
