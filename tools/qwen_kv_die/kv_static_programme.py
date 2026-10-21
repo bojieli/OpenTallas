@@ -416,6 +416,19 @@ def die_emb_relays(relay_stages):
             raise ValueError(f'kv_static_programme emb_fill: no die bus {".".join(k[:2])} -> {".".join(k[2:])}')
         return B[k]
     import kvjc3_pc_chain as C3
+    if LINK_ROPE:
+        host=[(k,v) for k,v in B.items() if k[1]=='rec_tx' and k[2:] == ('kvs_emb','i_host_record')]
+        if len(host)!=1:
+            raise ValueError(f'RoPE requires actual unique HOST.rec_tx->emb.i_host_record stage ledger, got {host}')
+        px=g(('kvs_emb','o_rope_px','kvs_ctl','i_rope_px'))
+        ctx_edges=2+int(os.environ.get('OT_KV_EMB_N32','0')=='1')
+        return dict(down=[sum(g(k, st) for k in EMB_FILL_BUSES['down']) for st in C3.STACKS],
+                    ret=[sum(g(k, st) for k in EMB_FILL_BUSES['ret']) for st in C3.STACKS],
+                    svc_root=host[0][1]+ctx_edges+px,svc_join=host[0][1]+ctx_edges,
+                    slot=g(EMB_FILL_BUSES['slot']),source=str(relay_stages),
+                    context_unpriced=True,context_buses={'.'.join(k[:2])+'->'+'.'.join(k[2:]):v for k,v in host},
+                    context_decode_edges=ctx_edges,context_to_fan_edges=px,
+                    reason='actual bus ages known; accepted O61 HOST producer source clock/phase relative CONTEXT slot is unpriced')
     return dict(down=[sum(g(k, s) for k in EMB_FILL_BUSES['down']) for s in C3.STACKS],
                 ret=[sum(g(k, s) for k in EMB_FILL_BUSES['ret']) for s in C3.STACKS],
                 svc_root=g(EMB_FILL_BUSES['svc_root']), svc_join=g(EMB_FILL_BUSES['svc_join']), slot=g(EMB_FILL_BUSES['slot']),
@@ -458,6 +471,8 @@ def emb_fill(layout, deltas, die=None, ctrl_lat=ES_CFG_CTRL_LAT):
     """the fill deadline on the link calendar layout (+ die relays when given; None = the zero-relay model)"""
     import kvjc3_pc_chain as C3
     d = die or dict(down=[0] * 4, ret=[0] * 4, svc_root=0, svc_join=0, slot=0, source='zero-relay model')
+    if LINK_ROPE:
+        raise ValueError('RoPE context_unpriced: actual O61 HOST producer clock/phase and CONTEXT source-edge relation required; old RESULT law cannot price this source. '+str(d))
     hl = deltas['hroot']
     skew = d['svc_root'] - d['svc_join']
     if skew < 0:

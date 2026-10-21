@@ -25,6 +25,7 @@ Fix (static, no credits / backpressure):
 from __future__ import annotations
 
 import argparse
+import gzip,hashlib
 import json
 import sys
 from pathlib import Path
@@ -124,9 +125,34 @@ def seg_images(segs, txd):
     return out
 
 
-def build(stages=STAGES, frame=16, kv_prog=False, starts=None, kv_codec=1):
+def build(stages=STAGES, frame=16, kv_prog=False, starts=None, kv_codec=1, pair_calendar=None, token_path=None):
     S, txd = txd_of(stages, kv_codec=kv_codec)
     segs, law = seg_msgs(S, txd, kv_codec=kv_codec)
+    pair=None
+    pair_price={}
+    if pair_calendar:
+        pair=json.loads(Path(pair_calendar).read_text())
+        if pair['txd']!=txd:raise ScheduleError('pair calendar and OVL seam differ')
+        ms=pair['messages'];cmd=next(m['cyc'] for m in ms if m['seg']==0 and m['src']=='C' and m['kind']==1)
+        clean=lambda m,ref:dict(src=m['src'],cyc=m['cyc']-ref,tx_port=m['tx_port'],rx_port=m['rx_port'],kind=m['kind'],beat=m['beat'])
+        segs=dict(req=[clean(m,cmd) for m in ms if m['seg']==0 and m['src']=='C'],
+                  rsp=[clean(m,cmd) for m in ms if m['seg']==0 and m['src']=='K'],
+                  tok_tx=[clean(m,0) for m in ms if m['seg']==1 and m['src']=='C' and m['kind'] in (14,15)],
+                  tok_rx=[clean(m,0) for m in ms if m['seg']==1 and m['src']=='K' and m['kind'] in (6,7,8,12)])
+        actual=pair['program'];w=actual['windows']['L1_35']
+        raw=Path(token_path).read_bytes();tp=json.loads(gzip.decompress(raw) if str(token_path).endswith('.gz') else raw)
+        byop={n['op']:int(n['cycles']) for n in tp['nodes'] if n['id'].startswith('L1.')}
+        byop.update(w);byop['attention']=w['attn_kv']
+        M.LAYER_WINDOWS=tuple((op,unit,byop.get(op,n),busy) for op,unit,n,busy in M.LAYER_WINDOWS)
+        floor=max(8012,max(int(g['cycles']) for g in actual['layers']))
+        period=actual['token_period']
+        head=period-actual['embed']['cycles']-sum(int(g['cycles']) for g in actual['layers'])-O.EMB_T
+        if head<0:raise ScheduleError('pair period cannot contain actual head/embedding')
+        pair_price=dict(layer_period=floor,l0_extra=0,embed_cycles=actual['embed']['cycles'],head_cycles=head,
+                        kv_service=2003,head_tok_ofs=O.EMB_T)
+        kv_prog=True
+        law.update(source='actual canonical pair calendar',kernel_busy=2003,
+                   r0=segs['rsp'][0]['cyc'],run=law['run'],X=max(0,w['attn_kv']-1816))
     im = seg_images(segs, txd)
     X = max(0, law["X"])
     att = {}
@@ -134,13 +160,15 @@ def build(stages=STAGES, frame=16, kv_prog=False, starts=None, kv_codec=1):
         for c, d in im[sg].items():
             att.setdefault(RES[c], []).append(d["occ"])
     if kv_prog:                                    # optional: the as-built KV attention programme is one resource
-        att["kv.prog"] = [(law["run"], law["run"] + ATT_BUSY + 1)]
+        att["kv.prog"] = [(law["run"], law["run"] + (2003 if pair else ATT_BUSY + 1))]
     o = O.EMB_T                                    # head block: the token-head reference = the EMB edge (head_tok_ofs)
     head = {}
     for sg in ("tok_tx", "tok_rx"):
         for c, d in im[sg].items():
             head.setdefault(RES[c], []).append((o + d["occ"][0], o + d["occ"][1]))
-    p = dict(attn_extra=X, att_windows=att, seg_windows={"head": head})
+    p = dict(attn_extra=X, att_windows=att, seg_windows={"head": head}, **pair_price)
+    if pair:
+        for r,iv in att.items():p["seg_windows"].setdefault("layer",{})[r]=[(a+sum(pair["program"]["windows"]["L1_35"][k] for k in ("rmsnorm1","qkv","qknorm_rope")),b+sum(pair["program"]["windows"]["L1_35"][k] for k in ("rmsnorm1","qkv","qknorm_rope"))) for a,b in iv]
     cal = O.compile_frame(frame, p=p, starts=starts)
     return dict(S=S, txd=txd, segs=segs, law=law, im=im, X=X, p=p, cal=cal, head_ref=o)
 
@@ -244,6 +272,8 @@ def single_playhead_rate(frame=16):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--pair-calendar",type=Path,help="authoritative sole pairedcalendar; no legacy191/1777 guesses")
+    ap.add_argument("--token-path",type=Path,default=Path(__file__).resolve().parents[2]/"results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz")
     ap.add_argument("--out", required=True)
     ap.add_argument("--stages", default=STAGES)
     ap.add_argument("--frame", type=int, default=16)
@@ -251,7 +281,7 @@ def main():
     ap.add_argument("--mut", choices=("collide", "slot", "user"))
     ap.add_argument("--kv-prog", action="store_true", help="also reserve the as-built KV programme busy window")
     a = ap.parse_args()
-    b = build(a.stages, a.frame, kv_prog=a.kv_prog, kv_codec=a.kv_codec)
+    b = build(a.stages, a.frame, kv_prog=a.kv_prog, kv_codec=a.kv_codec, pair_calendar=a.pair_calendar,token_path=a.token_path)
     cal, im, H = b["cal"], b["im"], b["cal"]["H"]
     lists = start_lists(b)
     bad = occupancy_check(lists, im, H)
@@ -289,7 +319,7 @@ def main():
             f.write(f"localparam integer {k} = {v};\n" if not k.startswith("P_TXD") else
                     f"localparam [31:0] {k} = 32'h{v:08x};\n")
     rec = dict(schema="opentallas.qwen.mu_d2d_ovl.v1", stages=a.stages, kv_codec=a.kv_codec, txd=b["txd"], frame_tokens=a.frame, H=H,
-               mutant=a.mut, mutant_index=mi, kv_prog=a.kv_prog, kv_law=b["law"], attn_extra_X=b["X"],
+               mutant=a.mut, mutant_index=mi, kv_prog=a.kv_prog or bool(a.pair_calendar), pair_calendar=str(a.pair_calendar),pair_sha256=hashlib.sha256(a.pair_calendar.read_bytes()).hexdigest() if a.pair_calendar else None, kv_law=b["law"], attn_extra_X=b["X"],
                segments={sg: {c: dict(start=d["start"], occ=d["occ"], events=d["events"], entries=len(d["img"]))
                               for c, d in v.items()} for sg, v in im.items()},
                images={c: dict(entries=len(imgs[c]), seg1_base=bases[c]) for c in CALS}, encode=enc,
