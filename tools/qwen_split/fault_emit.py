@@ -39,6 +39,14 @@ GROUP_UM = float(os.environ.get('OT_SPLIT_FAULT_GROUP_UM', '300'))   # QW-G5FROO
 GROUP_SKIP_UM = float(os.environ.get('OT_SPLIT_FAULT_GROUP_SKIP_UM', '180'))   # no group root only when a same-clock root can capture directly (LOCAL_UM)
 WIDE_BITS = int(os.environ.get('OT_SPLIT_FAULT_WIDE_BITS', '1024'))
 KEEP_UM = float(os.environ.get('OT_SPLIT_FAULT_KEEP_UM', '350'))
+# QW-G5FROOT 10-20 reserved-fault-site cover (OT_SPLIT_FAULT_ROOT_MODE=cover, default): every landing of an owner is
+# within CAP_UM (centre to landing centre) of a region / group root of the owner's clock, so post captures it with ONE
+# direct same-clock wire (pin to pin <= CAP_UM + ~31 < 405) -- no leaf, no hop chain on the crowded slice faces.  Roots go
+# only on boxes the base data GEN left free (plan reserved = every rly_* box of that exact base, mkplan_rfs.py).
+ROOT_MODE = os.environ.get('OT_SPLIT_FAULT_ROOT_MODE', 'cover')
+CAP_UM = float(os.environ.get('OT_SPLIT_FAULT_CAP_UM', '360'))
+CAP_POST_UM = CAP_UM + 10.0     # post: root centre -> actual source pin
+CAP_MAXM = int(os.environ.get('OT_SPLIT_FAULT_CAP_MAXM', '6'))   # captures per group root (+ <= TREE_DEG MST inputs <= 16)
 HARD = 'io_collective:fault_code,transport_cdc_fault,transport_abort,transport_fault_cause;d2d_rom:transport_fault;' \
        'sys_face:fault;mu_ctxrx:mu_fault;mu_dhobs:mu_fault'
 RST_PORTS = ('rst_n', 'rs', 'rs_n', 'rst', 'por_n')
@@ -389,6 +397,9 @@ def pre(v, m, G):
             pts = r.get('pts') or []
             if not pts or o not in roots:
                 continue
+            if ROOT_MODE == 'cover':
+                nz += _cover_roots(v, m, o, pts, roots, by, q, occ, occ_g, occ_0, zn, follow, unplaced, tiers)
+                continue
             # landing groups by proximity (single linkage GROUP_UM): Zones lumps the dv slice row (both of its faces,
             # 2.6 mm apart) into one "gap", so a zone label does not tell reachability; distance does
             grps = []
@@ -477,6 +488,62 @@ def pre(v, m, G):
           f'max edge {max((e["um"] for e in rec["edges"]), default=0):.0f} um; {nz} of the roots are per-zone landing-group roots',
           flush=True)
     return rec
+
+
+def _cover_roots(v, m, o, pts, roots, by, q, occ, occ_g, occ_0, zn, follow, unplaced, tiers):
+    """QW-G5FROOT 10-20 cover: group roots of owner o so that every landing point lies within CAP_UM of a root of o's
+    clock.  Greedy: seed = first uncovered point, members = the <= CAP_MAXM uncovered points within CAP_UM of it; the root
+    site must be within CAP_UM of EVERY member (tiers: 350 um wide-end keep-clear -> GROUP_KEEP_UM -> none -> any box,
+    reserved base relay sites always kept); no site -> half the members -> the seed alone -> recorded unplaced."""
+    cj0 = roots[o]['cj']
+    same = lambda: [rr['xy'] for rr in roots.values() if rr['cj'] == cj0]
+    unc = sorted(tuple(p_) for p_ in pts if not any(_man(p_, c_) <= CAP_UM for c_ in same()))
+    n_new = 0
+    while unc:
+        p0 = unc[0]
+        mem = sorted((q_ for q_ in unc if _man(p0, q_) <= CAP_UM), key=lambda q_: (_man(p0, q_), q_))[:CAP_MAXM]
+        got = None
+        for trial in (mem, mem[:max(1, len(mem) // 2)], [p0]):
+            gx = sorted(q_[0] for q_ in trial)[len(trial) // 2]
+            gy = sorted(q_[1] for q_ in trial)[len(trial) // 2]
+
+            def okc(b, trial=trial, z=True):
+                c_ = ((b[0] + b[2]) / 2, (b[1] + b[3]) / 2)
+                return (not z or zn.of_box(b) is not None) and all(_man(c_, q_) <= CAP_UM for q_ in trial)
+            for tier, oc, z in ((0, occ, True), (1, occ_g, True), (2, occ_0, True), (3, occ_0, False)):
+                s = oc.site(v, gx, gy, rmax=CAP_UM, step=8.64, ok=lambda b, z=z, f=okc: f(b, z=z))
+                if s is not None:
+                    got = (s, tier)
+                    break
+            if got:
+                break
+        if not got:
+            unplaced.append((o, round(p0[0]), round(p0[1]), 1))
+            unc.remove(p0)
+            continue
+        s, tier = got
+        for oc_ in (occ, occ_g, occ_0):
+            oc_.add((s[0], s[1], s[0] + W, s[1] + H))
+        k_ = 0
+        while f'{o}_g{k_}' in roots:
+            k_ += 1
+        key = f'{o}_g{k_}'
+        nm = f'flt_root_{key}'
+        it = v.Inst(nm, q.name, s[0], s[1], W, H, orient='R0', kind='fault', region=by[o].region, domain='stream_1p2')
+        m['insts'].append(it)
+        by[nm] = it
+        _join(m, roots[o]['cj'], (nm, 'ck'))
+        _join(m, roots[o]['rj'], (nm, 'rs'))
+        follow[(nm, 'ck')] = o
+        c_ = _ctr(it)
+        cov = [q_ for q_ in unc if _man(c_, q_) <= CAP_UM][:CAP_MAXM]
+        z = zn.of_box((it.x, it.y, it.x + W, it.y + H))
+        roots[key] = dict(roots[o], inst=nm, xy=c_, children=[], zone=z if z is not None else 'out',
+                          landings_in_group=len(cov), site_tier=tier)
+        tiers[tier] += 1
+        n_new += 1
+        unc = [q_ for q_ in unc if q_ not in cov]
+    return n_new
 
 
 def land_edges(m):
@@ -590,7 +657,8 @@ def post(v, m, G):
             raise ValueError(f'fault emit: {inst}.{port} clock {m["buses"][cj][0]} has no region root (plan stale)')
         # QW-G5FROOT: a region / group root of the same clock within LOCAL_UM captures the source itself (no leaf)
         cand = [l for l in leaves[cj] + [r_.name for r_ in root_ck[cj]]
-                if nodes[l]['n'] < FANIN and _man(_ctr(nodes[l]['it']), xy) <= LOCAL_UM]
+                if nodes[l]['n'] < FANIN and _man(_ctr(nodes[l]['it']), xy) <=
+                (CAP_POST_UM if ROOT_MODE == 'cover' and nodes[l]['root'] else LOCAL_UM)]
         if cand:
             lf = min(cand, key=lambda l: _man(_ctr(nodes[l]['it']), xy))
         else:

@@ -3884,6 +3884,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         bp = _bad_pts(pl)
         vict = [j for j in sorted(rep_at) if j != idx and plans[j]['frames'] and any(
             abs(f[0] + f[2] / 2 - q[0]) + abs(f[1] + f[3] / 2 - q[1]) <= RIP_UM for f in plans[j]['frames'] for q in bp)]
+        if str(pl['bid']).startswith('flt_') and _os.environ.get('OT_SPLIT_FAULT_EMIT', '0') == '1' and \
+                _os.environ.get('OT_RELAY_FAULT_RIP_DATA', '0') != '1':
+            # QW-G5FROOT 10-20: a fault-tree edge (observation only) never rips up a data bus: it may only move other
+            # fault edges (dv2f20g5rf: data nets over 405 after the fault edges' rip-ups near the crowded slice faces)
+            vict = [j for j in vict if str(plans[j]['bid']).startswith('flt_')]
         if not vict:
             continue
         lifted = {j: _lift(j) for j in vict}
