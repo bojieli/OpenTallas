@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021
+ot-run: ot-epyc7       admits   366 GB (avail 357, growth 101, headroom 0, waiters 1/48 GB) load 63/96 running 27 disk 4746 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-hgrp8r-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2155006-1792589638 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+SVC8_MAPPED_BEGIN seed=1 reset=4 release_warm=8 initial_compare_from=12 independent_random_primitive_init=runtime_rand_reset2
+SVC8_MAPPED_PASS seed=1 cycles=400 checks=389 valid=198 first_valid=79 post_reset_valid=122
+SVC8_MAPPED_BEGIN seed=2 reset=4 release_warm=8 initial_compare_from=12 independent_random_primitive_init=runtime_rand_reset2
+SVC8_MAPPED_PASS seed=2 cycles=400 checks=389 valid=191 first_valid=80 post_reset_valid=121
+SVC8_MAPPED_BEGIN seed=3 reset=4 release_warm=8 initial_compare_from=12 independent_random_primitive_init=runtime_rand_reset2
+SVC8_MAPPED_PASS seed=3 cycles=400 checks=389 valid=199 first_valid=79 post_reset_valid=121
+SVC8_MAPPED_BEGIN seed=4 reset=4 release_warm=8 initial_compare_from=12 independent_random_primitive_init=runtime_rand_reset2
+SVC8_MAPPED_PASS seed=4 cycles=400 checks=389 valid=207 first_valid=79 post_reset_valid=119
+SVC8_MAPPED_BEGIN seed=5 reset=4 release_warm=8 initial_compare_from=12 independent_random_primitive_init=runtime_rand_reset2
+SVC8_MAPPED_PASS seed=5 cycles=400 checks=389 valid=198 first_valid=79 post_reset_valid=118
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2155006-1792589638): exit 0

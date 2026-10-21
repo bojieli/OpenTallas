@@ -1,0 +1,6 @@
+SVC8_MAPPED_BEGIN seed=4 reset=4 release_warm=8 initial_compare_from=12 independent_random_primitive_init=runtime_rand_reset2
+SVC8_MAPPED_PASS seed=4 cycles=400 checks=389 valid=207 first_valid=79 post_reset_valid=119
+- /srv/opentallas-scratch/claude/s81-hgrp8r-1021/out_mapped/tb.v:55: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 799ns; walltime 1.151 s; speed 694.516 ns/s
+- Verilator: cpu 1.151 s on 1 threads; allocated 70 MB
