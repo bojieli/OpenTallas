@@ -933,7 +933,8 @@ def post(v, m, G):
                                             nearest=tgt, nearest_um=round(d, 1), stats=st2 or st1))
                         break
                     if route is None:
-                        raise ValueError(f'fault emit: no hop route from {cur} {c0} to any of {len(okp)} attached nodes, nearest {tgt} {t} '
+                        raise ValueError(f'fault emit: no hop route from {cur} {c0} (clock {m["buses"][cj][0]}, sources '
+                                         f'{[b_[3][0] for b_ in new_buses if b_[3][1][0] == lf][:6]}) to any of {len(okp)} attached nodes, nearest {tgt} {t} '
                                          f'(A* {st1} / wide {st2}; free boxes within 340 um of the leaf: '
                                          f'{sum(1 for gx in range(-8, 9) for gy in range(-8, 9) if abs(gx) + abs(gy) <= 8 and occ.free((c0[0] - W / 2 + 40 * gx, c0[1] - H / 2 + 40 * gy, c0[0] + W / 2 + 40 * gx, c0[1] + H / 2 + 40 * gy)))}/145 sampled)')
                     for k_, ll in enumerate(route):
