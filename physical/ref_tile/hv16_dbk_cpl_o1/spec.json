@@ -1,0 +1,415 @@
+{
+ "name": "hv16_dbk_cpl_o1",
+ "top": "ot_hgi_dma_back_static_vp4_banks_cplo",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cplo.sv",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock": "hybrid_entries",
+ "clock_port": "clk",
+ "clock_ports": [
+  "clk",
+  "clk_cp",
+  "clk_rst",
+  "clk_bank[0]",
+  "clk_bank[1]",
+  "clk_bank[2]",
+  "clk_bank[3]",
+  "clk_bank[4]",
+  "clk_bank[5]",
+  "clk_bank[6]",
+  "clk_bank[7]",
+  "clk_land[0]",
+  "clk_land[1]",
+  "clk_land[2]",
+  "clk_land[3]",
+  "clk_land[4]",
+  "clk_land[5]",
+  "clk_land[6]",
+  "clk_land[7]",
+  "clk_rly[0]",
+  "clk_rly[1]",
+  "clk_rly[2]",
+  "clk_out[0]",
+  "clk_out[1]",
+  "clk_out[2]",
+  "clk_out[3]"
+ ],
+ "clock_cts_roots": [
+  "clk_rst",
+  "clk_land[0]",
+  "clk_land[1]",
+  "clk_land[2]",
+  "clk_land[3]",
+  "clk_land[4]",
+  "clk_land[5]",
+  "clk_land[6]",
+  "clk_land[7]",
+  "clk_rly[0]",
+  "clk_rly[1]",
+  "clk_rly[2]",
+  "clk_out[0]",
+  "clk_out[1]",
+  "clk_out[2]",
+  "clk_out[3]"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "rq"
+  ],
+  "N": [
+   "wb_reserve_v",
+   "wb_reserve_bank",
+   "wb_fill_bank",
+   "wb_reserve_epoch",
+   "wb_fill_epoch",
+   "wb_reserve_sectors",
+   "wb_reserve_base",
+   "wb_fill_start",
+   "wb_ready",
+   "wa"
+  ],
+  "E": [
+   "clk",
+   "clk_cp",
+   "clk_rst",
+   "busy",
+   "quiet",
+   "stk",
+   "rst_n",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "cp_configured",
+   "cp_fault",
+   "cp_active",
+   "mv_src",
+   "mv_done",
+   "mv_fault"
+  ],
+  "ANY": [
+   "clk_bank",
+   "clk_land",
+   "clk_rly",
+   "rr",
+   "wd",
+   "clk_out"
+  ]
+ },
+ "outline": {
+  "w": 606.96,
+  "h": 542.16,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "child_lattice_um": 43.2,
+ "children": [
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[0].u_bank",
+   "at": [
+    86.4,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[1].u_bank",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[2].u_bank",
+   "at": [
+    432.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[3].u_bank",
+   "at": [
+    86.4,
+    172.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[4].u_bank",
+   "at": [
+    86.4,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[5].u_bank",
+   "at": [
+    86.4,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[6].u_bank",
+   "at": [
+    259.2,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[7].u_bank",
+   "at": [
+    432.0,
+    432.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller",
+   "count": 1,
+   "inst": "u_dbk.u_control",
+   "at": [
+    259.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar",
+   "count": 1,
+   "inst": "u_cp",
+   "at": [
+    432.0,
+    216.0
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [],
+ "recipe": 3,
+ "hard_define": "OT_DBK_HARD",
+ "defines": [
+  "OT_DBK_HARD"
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "HBM-DBK9 10-21: the parent registers its whole boundary in RTL (ot_hgi_dma_back_static_vp4_banks_cplo): every rr bit lands at its face (l1), and now EVERY output leaves from a kept face register on a regional root (wd S/N on clk_out[0-3], wb_* on clk_out[3], rq on clk_land[3], status/collar on clk_rst); a generic flow pin flop would add a second, unpriced cycle."
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "boundary_tcl": [
+  "physical/common_flow/child_pocket_guard.tcl"
+ ],
+ "params": {},
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "io_tcl": "results/arch/hbm_dbkcpl_land_1020/assigned_pins_o1.tcl",
+ "slot_change_request": "hb_dbk_<q> (d4f slot 560.0 x 400.0) -> 606.96 x 542.16 (1.12:1): 8 banks + controller + collar leaf on the 43.2 lattice cannot fit 560 x 400 (see make_dbk_cpl_parent.py); master ports: clk_tab[1:0] removed, clk_rst added (reset relay root, same die clock); rr/rq W, wd/wb/wa N, F20 host bus/status/straps E, clk_bank on the nearest face (W x3, N x3, S x1, E x1); OWNERS-HBM/STK 10-18: 606.96 x 542.16 (macro_edge 20 um), wd of bank rows 0-1 on the S face, rows 2-3 on N (wire_reach), F20 host bus over the full E face; HBM-DBKCPL 10-18: rr of the col2 banks (rr[514..769] bank 2 -> S face, rr[1799..2054] bank 7 -> N face, beside their wd; rr_valid stays W) for daemon bank_distance (157 um).",
+ "structural_change": "HBM-DBK9 10-21 (H.STA.BLK.12): OUTPUT-LANDED successor after daemon route hv16_dbk_cpl_l1-l1-f5284ed97 EARLY_FAIL_SETUP (post-CTS TT WNS -538.3 / 2,494 endpoints / TNS -689,018 at 833.333, IO paths judged at the IO reference). Classified: every failing endpoint is child macro -> parent OUTPUT port (fanout 1, no logic): controller wb_reserve_base -538.3 (arc 368.6 + 330 ps unbuffered port wire, slew 1,047), bank wd -525..-362 (arc 340-440 + wire 237-408 ps to the S/N faces), collar cp_configured -425.8, rq/mv_*/quiet/busy; inputs (+21..+91), macro->macro (+106..+211) and reset recovery (+454) all met. New master ot_hgi_dma_back_static_vp4_banks_cplo: every output leaves from a kept face register on a regional root beside its face group (4 new die-forwarded entries clk_out[3:0] for the S/N wd + wb groups; rq on clk_land[3]; status + collar on clk_rst). Cycles handed to the die: every output +1 edge vs _cpl, rr lanes padded to RR_RT-2 = 78 (DIE_PRE 2).",
+ "reroute_reason": {
+  "kind": "structural",
+  "failed_job": "hv16_dbk_cpl_l1-l1-f5284ed97",
+  "source": "physical/ref_tile/hv16_dbk_cpl_l1",
+  "failure": "EARLY_FAIL_SETUP post-CTS TT WNS -538.3 ps / 2494 endpoints / TNS -689018 at 833.333: all child-macro -> output-port paths (IO reference)",
+  "why": "output-landed successor _cplo: every output from a kept face register on a regional root (clk_out[3:0] new); +1 edge on every output handed to the die schedule"
+ },
+ "job": {
+  "owner": "Claude:LEAD-HBM/HBM-DBK9",
+  "branch": "claude/hbm-dbk9-1021",
+  "tag": "o1",
+  "record_to": "results/rtl/ref_tile/hv16_dbk_cpl_o1",
+  "purpose": "HBM die d4g hb_dbk_<q> x4 (per quadrant, master unchanged; F20 tgt 104+QID: SW 104 / SE 105 / NW 106 / NE 107; RBH-STK). Measured reasons (hv15_dbk_cp gate 1f18141cb, 10-16): clk_cp 1,844 sinks TT 421.6 / spread 126.5 (collar flops smeared between the 8 banks), rst_n port -> 793 loads unregistered incl. 8 bank macros + controller (in->macro -296.1), in->reg -170.8 u_cp.cmd[26] with the W face 98% pin-full; children off the 43.2 um lattice; 645.84 x 360.72 (1.79:1).  Why not the d4f slot 560 x 400: on the 43.2 um child lattice three 87.48-um bank rows need y = 43.2/172.8/302.4 (top 389.9, no N channel left in 400) and three 140.4-um columns need x up to 529.2, so 560 x 400 holds at most 2 x 3 = 6 banks; 8 banks + controller + collar leaf = 10 objects, and every bank must stay within ~480 um of BOTH the W face (rr) and the N face (wd) (textbook wire_reach 500 um/stage).  A 3-row ring (controller centre) cannot take the leaf within 1.5:1 (width >= 712 at height 432).  Chosen: 4 rows x 3 columns, 604.8 x 540 (1.12:1):   * col0 (x 86.4, 4 banks; 86.4 um W channel carries their 1,156 wd bits N), col1/col2 (x 259.2/432) banks in rows 0     and 3; the controller in col1 between rows 1-2 (bank star <= ~430 um), the collar leaf in col2 between rows 1-2     (W face -> controller E face 104 um; E face 21.6 um from the cluster E face where the F20 host bus enters);   * channels >= 32.4 um (columns) / 42.1 um (rows), every child on the 43.2 lattice;   * W face: rr per bank row (rq + rr_valid beside the controller row), <= 4.6 pins/um; N face: wd per bank column + wb/wa,     <= 4.5 pins/um; each clk_bank entry on the face point nearest its bank clock pin; clk_cp at the leaf clock pin.",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/common_flow/anchor_row_packing.tcl",
+   "physical/common_flow/assigned_pin_exact.tcl",
+   "physical/common_flow/child_pocket_guard.tcl",
+   "physical/common_flow/relay_anchor.tcl",
+   "physical/common_flow/relay_anchor_post.tcl",
+   "physical/common_flow/relay_anchor_release.tcl",
+   "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "physical/ref_tile/hv16_dbk_collar/views/ot_hgi_dma_back_cp_collar",
+   "physical/ref_tile/hv16_dbk_vp4_ctl_rt80/views/ot_hgi_dma_back_static_vp4_controller",
+   "results/arch/hbm_dbkcpl_land_1020",
+   "results/arch/hbm_die_v16_d4f/dbk_cpl_1017",
+   "results/rtl/ref_tile/hv16_dbk_cpl_o1",
+   "rtl/hbm_accel/generic/peers/static",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/host_static_20261015",
+   "rtl/lib/ot_rst_relay.sv",
+   "tools/hbm_v15_harden"
+  ],
+  "benches": [
+   {
+    "name": "landed_fold",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks_cplo.sh {RUN}/bench/fold fold",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CPL_LAND PASS"
+   },
+   {
+    "name": "landed_banklat_rt80",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks_cplo.sh {RUN}/bench/banklat banklat",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "BANKLAT_RL PASS RR_RT_die=80"
+   },
+   {
+    "name": "mut_ctl_valid_unlanded",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks_cplo.sh {RUN}/bench/mut_cvraw mut_cvraw",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CPL_LAND PASS|BANKLAT_RL PASS",
+    "fail_regex": "BANKLAT_RL FAIL mv_fault",
+    "fail_witness": "results/rtl/ref_tile/hv16_dbk_cpl_o1/witness/mut_cvraw.log"
+   },
+   {
+    "name": "mut_write_slot_relayed",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks_cplo.sh {RUN}/bench/mut_wsrelay mut_wsrelay",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CPL_LAND PASS|BANKLAT_RL PASS",
+    "fail_regex": "BANKLAT_RL FAIL landing payload",
+    "fail_witness": "results/rtl/ref_tile/hv16_dbk_cpl_o1/witness/mut_wsrelay.log"
+   },
+   {
+    "name": "mut_fill_unrelayed",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks_cplo.sh {RUN}/bench/mut_fill mut_fill",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CPL_LAND PASS|BANKLAT_RL PASS",
+    "fail_regex": "CP_FOLD control mismatch",
+    "fail_witness": "results/rtl/ref_tile/hv16_dbk_cpl_o1/witness/mut_fill.log"
+   },
+   {
+    "name": "mut_die_not_repadded",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks_cplo.sh {RUN}/bench/mut_nopre mut_nopre",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CPL_LAND PASS|BANKLAT_RL PASS",
+    "fail_regex": "BANKLAT_RL FAIL mv_fault",
+    "fail_witness": "results/rtl/ref_tile/hv16_dbk_cpl_o1/witness/mut_nopre.log"
+   },
+   {
+    "name": "mut_reset_latency",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks_cplo.sh {RUN}/bench/mut_rst mut_rst",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "CPL_LAND PASS|BANKLAT_RL PASS",
+    "fail_regex": "DMA absolute cycle did not advance by one",
+    "fail_witness": "results/rtl/ref_tile/hv16_dbk_cpl_o1/witness/mut_rst.log"
+   }
+  ],
+  "reroute_reason": {
+   "kind": "structural",
+   "failed_job": "hv16_dbk_cpl_l1-l1-f5284ed97",
+   "source": "physical/ref_tile/hv16_dbk_cpl_l1",
+   "failure": "EARLY_FAIL_SETUP post-CTS TT WNS -538.3 ps / 2494 endpoints / TNS -689018 at 833.333: all child-macro -> output-port paths (IO reference)",
+   "why": "output-landed successor _cplo: every output from a kept face register on a regional root (clk_out[3:0] new); +1 edge on every output handed to the die schedule"
+  }
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "clk_rst",
+  "why": "ROOT-RST 2026-10-19: rst_n reaches the async clears of both ot_rst_relay copies (u_rst_bk 2 sync + 9 relay, u_rst_ctl 2 sync + 2 relay = 15 sinks > 2); land it at the E face in 2 clk_rst stages first (reset assert/release +2 clk_rst cycles, a scheduled constant; data latency unchanged)"
+ },
+ "pin_hook_before_flops": [
+  "physical/common_flow/relay_anchor.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/common_flow/relay_anchor_release.tcl"
+ ],
+ "orfs_vars": {
+  "OT_RLY_ANCHOR": "results/arch/hbm_dbkcpl_land_1020/relay_anchor_o1.txt",
+  "OT_RLY_ANCHOR_POST": "results/arch/hbm_dbkcpl_land_1020/relay_anchor_post_l1.txt"
+ },
+ "pin_hook_after_flops": [
+  "physical/common_flow/relay_anchor_post.tcl"
+ ]
+}

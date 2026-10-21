@@ -1,0 +1,14 @@
+Verilator 5.050 2026-07-01 rev v5.050
+BANKLAT_RL die bank0: rq lane 21 + pad 30, bank 8, rr lane 20 -> round trip 80
+BANKLAT_RL die bank1: rq lane 21 + pad 29, bank 8, rr lane 21 -> round trip 80
+BANKLAT_RL die bank2: rq lane 17 + pad 38, bank 8, rr lane 16 -> round trip 80
+BANKLAT_RL die bank3: rq lane 17 + pad 37, bank 8, rr lane 17 -> round trip 80
+BANKLAT_RL die bank4: rq lane 25 + pad 22, bank 8, rr lane 24 -> round trip 80
+BANKLAT_RL die bank5: rq lane 25 + pad 21, bank 8, rr lane 25 -> round trip 80
+BANKLAT_RL die bank6: rq lane 21 + pad 30, bank 8, rr lane 20 -> round trip 80
+BANKLAT_RL die bank7: rq lane 21 + pad 30, bank 8, rr lane 20 -> round trip 80
+BANKLAT_RL FAIL mv_fault at cycle 104 move 0 (landing/response latency or drain lag) lag_ok 1 resp 00000001/00000000
+[1040000] %Fatal: tb_dma_vp4_banklat_rlo.sv:98: Assertion failed in tb_dma_vp4_banklat_rlo
+%Error: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat_rlo.sv:98: Verilog $stop
+Aborting...
+rc=1

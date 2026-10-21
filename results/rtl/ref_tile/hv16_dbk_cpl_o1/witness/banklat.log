@@ -1,0 +1,15 @@
+Verilator 5.050 2026-07-01 rev v5.050
+BANKLAT_RL die bank0: rq lane 21 + pad 29, bank 8, rr lane 20 -> round trip 80
+BANKLAT_RL die bank1: rq lane 21 + pad 28, bank 8, rr lane 21 -> round trip 80
+BANKLAT_RL die bank2: rq lane 17 + pad 37, bank 8, rr lane 16 -> round trip 80
+BANKLAT_RL die bank3: rq lane 17 + pad 36, bank 8, rr lane 17 -> round trip 80
+BANKLAT_RL die bank4: rq lane 25 + pad 21, bank 8, rr lane 24 -> round trip 80
+BANKLAT_RL die bank5: rq lane 25 + pad 20, bank 8, rr lane 25 -> round trip 80
+BANKLAT_RL die bank6: rq lane 21 + pad 29, bank 8, rr lane 20 -> round trip 80
+BANKLAT_RL die bank7: rq lane 21 + pad 29, bank 8, rr lane 20 -> round trip 80
+BANKLAT_RL PASS RR_RT_die=80 die_pre=2 faces_D=8 lanes=1 moves=8 beats=2889 checks=1235 lag=83 (every landing slot through the real landing SRAMs, wd on drain_at+5+chunk)
+- rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banklat_rlo.sv:135: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.028 s; speed 443.252 us/s
+- Verilator: cpu 0.028 s on 1 threads; allocated 7 MB
+rc=0

@@ -1,0 +1,5 @@
+Verilator 5.050 2026-07-01 rev v5.050
+[10220000] %Fatal: tb_dma_vp4_banks_cplo.sv:94: Assertion failed in tb_dma_vp4_banks_cplo: CP_FOLD control mismatch tick1022
+%Error: rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banks_cplo.sv:94: Verilog $stop
+Aborting...
+rc=1

@@ -1,0 +1,11 @@
+Verilator 5.050 2026-07-01 rev v5.050
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.388 MB sources in 13 modules, into 0.921 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.380 s (elab=0.023, cvt=0.297, bld=0.000); cpu 0.380 s on 1 threads; allocated 48.387 MB
+LINT_CPL_HARD_OK
+CPL_LAND PASS commands=7 beats=2769 checks=2179 (output-landed parent == die composition: rr -1 edge, wd/wb_fill +2 edges, every other output +1 edge)
+- rtl/hbm_accel/generic/peers/static/tb_dma_vp4_banks_cplo.sv:154: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 22us; walltime 0.021 s; speed 1.017 ms/s
+- Verilator: cpu 0.021 s on 1 threads; allocated 7 MB
+rc=0
