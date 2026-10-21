@@ -80,7 +80,10 @@ module ot_hbm_idx_topk_static #(
         k_q <= k; order_q <= order; has_r_q <= has_r; am_q <= a_mirror; om_q <= o_mirror; n_q <= n; m_q <= m;
         a_base_q <= a_base; a_str_q <= a_str; o_base_q <= o_base; o_str_q <= o_str; r_base_q <= r_base; r_str_q <= r_str;
     end
-    reg [4:0] st; reg [3:0] cnt; reg flt, f_nan, s_inv;
+    // CW (HBM-BANKLAT-IDX 2026-10-19): the drain / acknowledgement counter holds 8+XRT and ACK-1; 4 bits (the as-built
+    // width, kept for every elaboration that fits) overflow once the d4g die adds relay stages to RT_EXTRA or ACK.
+    localparam integer CW = (8 + PIN_IN + RT_EXTRA < 16 && ACK - 1 < 16) ? 4 : 8;
+    reg [4:0] st; reg [CW-1:0] cnt; reg flt, f_nan, s_inv;
     reg [19:0] c_row; reg [17:0] c_rb, c_le, o_rb, r_rb;
     reg [14:0] i_sec; reg [14:0] i_left; reg i_tgl, i_first;
     // ------------------------------------------------------------ fixed read pipeline (face timing n+1 / n+7 / n+8)
@@ -259,7 +262,7 @@ module ot_hbm_idx_topk_static #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= E_IDLE; busy <= 1'b0; done <= 1'b0; fault <= 1'b0; flt <= 1'b0; f_nan <= 1'b0; s_inv <= 1'b0;
-            cq <= 338'd0; cq_seq <= 2'd0; s1_v <= 8'd0; s1_nan <= 1'b0; wr_now <= 1'b0; wi <= 3'd0; cnt <= 4'd0;
+            cq <= 338'd0; cq_seq <= 2'd0; s1_v <= 8'd0; s1_nan <= 1'b0; wr_now <= 1'b0; wi <= 3'd0; cnt <= CW'(0);
             i_tgl <= 1'b0; s_ph <= 2'd0; s_cnt <= 4'd0;
         end else begin
             done <= 1'b0; fault <= 1'b0; cq[337] <= 1'b0; wr_now <= 1'b0;
@@ -283,10 +286,10 @@ module ot_hbm_idx_topk_static #(
                     i_tgl <= !i_tgl;
                     if (rd_now) begin
                         i_sec <= i_sec + 15'd1; i_left <= i_left - 15'd1; i_first <= 1'b0;
-                        if (rd_last) begin cnt <= 4'(8 + XRT); st <= E_DR; end
+                        if (rd_last) begin cnt <= CW'(8 + XRT); st <= E_DR; end
                     end
                 end
-                E_DR: if (cnt == 4'd0) st <= E_FL1; else cnt <= cnt - 4'd1;
+                E_DR: if (cnt == CW'(0)) st <= E_FL1; else cnt <= cnt - CW'(1);
                 E_FL1: st <= E_FL2;
                 E_FL2: st <= E_FL3;
                 E_FL3: begin s_ph <= 2'd0; s_cnt <= 4'd0; st <= E_SEL; end
@@ -312,16 +315,16 @@ module ot_hbm_idx_topk_static #(
                     if (wi + 3'd1 == nw) st <= E_NEXT;
                 end
                 E_NEXT: begin                                             // W_last+1
-                    if (c_row + 20'd1 == m_q) begin cnt <= 4'(ACK - 1); st <= E_END; end
+                    if (c_row + 20'd1 == m_q) begin cnt <= CW'(ACK - 1); st <= E_END; end
                     else begin
                         c_row <= c_row + 20'd1; c_rb <= c_rb + a_str_q; c_le <= c_le + a_str_q;
                         o_rb <= o_rb + o_str_q; r_rb <= r_rb + r_str_q; st <= E_ROW;
                     end
                 end
-                E_END: if (cnt == 4'd0) begin                             // W_last + ACK + 1
+                E_END: if (cnt == CW'(0)) begin                             // W_last + ACK + 1
                     done <= !(flt || f_nan || s_inv || ack_bad); fault <= flt || f_nan || s_inv || ack_bad;
                     busy <= 1'b0; st <= E_IDLE;
-                end else cnt <= cnt - 4'd1;
+                end else cnt <= cnt - CW'(1);
                 default: st <= E_IDLE;
             endcase
         end
