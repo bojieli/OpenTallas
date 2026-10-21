@@ -1,0 +1,271 @@
+{
+ "schema": "opentallas.s81_xfin_sram.native_census_summary.v1",
+ "source_commit": "2e42dda2a",
+ "netlist": "ot-epyc9:/srv/opentallas-scratch/claude/codex-s81-xfin-sram-1021/native/results/asap7/opentallas_ot_s81dv_xfin_asap7_ref_gate/base/1_2_yosys.v",
+ "netlist_sha256": "cf6ec52de09d479e2fe8a5812631a63c1021bc640eebc578b7ff4b21aef18e90",
+ "census_report": "ot-epyc9:/srv/opentallas-scratch/claude/codex-s81-xfin-sram-1021/native_census_c1/native_census.json",
+ "status": "FAIL",
+ "limit": 32,
+ "max_dynamic_loads": 4965,
+ "violations": 1401,
+ "role_errors": [],
+ "sram_instances": 93,
+ "chip_area_um2": 75023.3,
+ "std_area_um2": 23649.4,
+ "by_area": {
+  "finish_sram (opt-in)": [
+   709,
+   4965
+  ],
+  "comb (mostly bank write-enable/merge decodes, ENG collector, xstop forward select)": [
+   413,
+   265
+  ],
+  "arith (f12 L6 adder k0/k3/k5 cuts, rsqrt mul_lat L5, divc)": [
+   240,
+   135
+  ],
+  "xfin top (md, pend, go_c, ed_q, el/evec/ebad, rs)": [
+   38,
+   514
+  ],
+  "xstop": [
+   1,
+   65
+  ]
+ },
+ "driver_classes": {
+  "u_ot_pr_core.g_cp[*].u_e.go_t$_DFF_PN0_/QN": {
+   "count": 1,
+   "max": 4965
+  },
+  "u_ot_pr_core.g_cp[*].u_e.u_values.ah$_DFF_P_/QN": {
+   "count": 4,
+   "max": 1068
+  },
+  "u_ot_pr_core.g_cp[*].u_e.u_values.bh$_DFF_P_/QN": {
+   "count": 4,
+   "max": 1050
+  },
+  "u_ot_pr_core.u_f.u_values.ah$_DFF_P_/QN": {
+   "count": 1,
+   "max": 988
+  },
+  "u_ot_pr_core.u_f.u_values.bh$_DFF_P_/QN": {
+   "count": 1,
+   "max": 988
+  },
+  "u_ot_pr_core.g_cp[*].u_e.rs[*]$_DFF_PN0_/QN": {
+   "count": 1,
+   "max": 796
+  },
+  "u_ot_pr_core.u_f.iv[*]$_DFF_PN0_/QN": {
+   "count": 3,
+   "max": 653
+  },
+  "u_ot_pr_core.md$_DFFE_PN0P_/QN": {
+   "count": 1,
+   "max": 514
+  },
+  "u_ot_pr_core.pend[*]$_DFFE_PN0P_/QN": {
+   "count": 3,
+   "max": 326
+  },
+  "_N_/Y": {
+   "count": 413,
+   "max": 265
+  },
+  "u_ot_pr_core.g_cp[*].u_e.r_v$_DFF_PN0_/QN": {
+   "count": 4,
+   "max": 197
+  },
+  "u_ot_pr_core.u_f.ib[*]$_DFF_P_/QN": {
+   "count": 23,
+   "max": 177
+  },
+  "u_ot_pr_core.g_cp[*].u_e.u_a.g6.u.u.u_k0.g_r.r[*]$_DFF_P_/QN": {
+   "count": 12,
+   "max": 135
+  },
+  "u_ot_pr_core.u_f.u_a.g6.u.u.u_k0.g_r.r[*]$_DFF_P_/QN": {
+   "count": 3,
+   "max": 135
+  },
+  "u_ot_pr_core.u_f.u_eps.g6.u.u.u_k0.g_r.r[*]$_DFF_P_/QN": {
+   "count": 3,
+   "max": 135
+  },
+  "u_ot_pr_core.g_cp[*].u_e.ib[*]$_DFF_P_/QN": {
+   "count": 15,
+   "max": 120
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_yy.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r[*]$_DFF_P_/QN": {
+   "count": 18,
+   "max": 107
+  },
+  "u_ot_pr_core.rs[*]$_DFF_PN0_/QN": {
+   "count": 1,
+   "max": 105
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r[*]$_DFF_P_/QN": {
+   "count": 18,
+   "max": 101
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r[*]$_DFF_P_/QN": {
+   "count": 18,
+   "max": 101
+  },
+  "u_ot_pr_core.g_cp[*].u_e.it[*]$_DFF_P_/QN": {
+   "count": 1,
+   "max": 92
+  },
+  "u_ot_pr_core.go_c$_DFF_P_/QN": {
+   "count": 1,
+   "max": 82
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].a_s.g6.u.u.u_k0.g_r.r[*]$_DFF_P_/QN": {
+   "count": 6,
+   "max": 79
+  },
+  "u_ot_pr_core.u_f.u_div.s5_sh[*]$_SDFF_PN0_/QN": {
+   "count": 2,
+   "max": 75
+  },
+  "u_ot_pr_core.g_cp[*].u_e.f_q$_DFF_PN0_/QN": {
+   "count": 4,
+   "max": 73
+  },
+  "u_ot_pr_core.u_f.u_div.s5_sh[*]$_SDFF_PN1_/QN": {
+   "count": 4,
+   "max": 72
+  },
+  "u_ot_pr_core.u_f.f_q$_DFF_PN0_/QN": {
+   "count": 1,
+   "max": 71
+  },
+  "u_ot_pr_core.u_x.iv2$_DFF_PN0_/QN": {
+   "count": 1,
+   "max": 65
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].a_s.g6.u.u.u_k5.g_r.r[*]$_DFF_P_/QN": {
+   "count": 3,
+   "max": 63
+  },
+  "u_ot_pr_core.ed_q[*]$_DFF_P_/QN": {
+   "count": 32,
+   "max": 60
+  },
+  "u_ot_pr_core.g_cp[*].u_e.u_a.g6.u.u.u_k3.g_r.r[*]$_DFF_P_/QN": {
+   "count": 20,
+   "max": 60
+  },
+  "u_ot_pr_core.u_f.u_a.g6.u.u.u_k3.g_r.r[*]$_DFF_P_/QN": {
+   "count": 5,
+   "max": 60
+  },
+  "u_ot_pr_core.u_f.u_eps.g6.u.u.u_k3.g_r.r[*]$_DFF_P_/QN": {
+   "count": 5,
+   "max": 60
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].a_s.g6.u.u.u_k3.g_r.r[*]$_DFF_P_/QN": {
+   "count": 15,
+   "max": 60
+  },
+  "u_ot_pr_core.u_f.u_rsq.m_half.genblk1.genblk1.g_l5.u.u.u_k5.g_r.r[*]$_DFF_P_/QN": {
+   "count": 5,
+   "max": 60
+  },
+  "u_ot_pr_core.g_cp[*].u_e.iv[*]$_DFF_PN0_/QN": {
+   "count": 4,
+   "max": 59
+  },
+  "u_ot_pr_core.g_cp[*].u_e.u_values.bsel[*]$_SDFF_PP0_/QN": {
+   "count": 57,
+   "max": 57
+  },
+  "u_ot_pr_core.u_f.u_div.s1_lz[*]$_SDFF_PP0_/QN": {
+   "count": 4,
+   "max": 57
+  },
+  "u_ot_pr_core.g_cp[*].u_e.u_a.g6.u.u.u_k5.g_r.r[*]$_DFF_P_/QN": {
+   "count": 8,
+   "max": 53
+  },
+  "u_ot_pr_core.u_f.u_values.bsel[*]$_SDFF_PP0_/QN": {
+   "count": 13,
+   "max": 53
+  },
+  "u_ot_pr_core.u_f.u_a.g6.u.u.u_k5.g_r.r[*]$_DFF_P_/QN": {
+   "count": 2,
+   "max": 52
+  },
+  "u_ot_pr_core.u_f.u_eps.g6.u.u.u_k5.g_r.r[*]$_DFF_P_/QN": {
+   "count": 2,
+   "max": 52
+  },
+  "u_ot_pr_core.u_f.id[*]$_DFF_P_/QN": {
+   "count": 478,
+   "max": 51
+  },
+  "u_ot_pr_core.g_cp[*].u_e.u_values.asel[*]$_SDFF_PP0_/QN": {
+   "count": 62,
+   "max": 50
+  },
+  "u_ot_pr_core.u_f.u_values.asel[*]$_SDFF_PP0_/QN": {
+   "count": 10,
+   "max": 50
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_yy.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[*]$_DFF_P_/QN": {
+   "count": 56,
+   "max": 46
+  },
+  "u_ot_pr_core.g_cp[*].u_e.u_values.asel[*]$_SDFF_PN0_/QN": {
+   "count": 10,
+   "max": 44
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[*]$_DFF_P_/QN": {
+   "count": 6,
+   "max": 43
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[*]$_DFF_P_/QN": {
+   "count": 7,
+   "max": 42
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_yy.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[*]$_SDFF_PN0_/QN": {
+   "count": 3,
+   "max": 42
+  },
+  "u_ot_pr_core.g_cp[*].u_e.u_values.bsel[*]$_SDFF_PN0_/QN": {
+   "count": 10,
+   "max": 41
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[*]$_SDFF_PN1_/QN": {
+   "count": 3,
+   "max": 41
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[*]$_SDFF_PN1_/QN": {
+   "count": 3,
+   "max": 40
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_hm.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[*]$_SDFF_PN0_/QN": {
+   "count": 3,
+   "max": 39
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_y.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[*]$_SDFF_PN0_/QN": {
+   "count": 3,
+   "max": 39
+  },
+  "u_ot_pr_core.u_f.u_rsq.g_nr[*].m_yy.genblk1.genblk1.g_l5.u.u.u_k1.g_r.r[*]$_SDFF_PP1_/QN": {
+   "count": 3,
+   "max": 37
+  },
+  "u_ot_pr_core.u_f.u_values.bsel[*]$_SDFF_PN0_/QN": {
+   "count": 1,
+   "max": 35
+  },
+  "u_ot_pr_core.u_f.u_values.asel[*]$_SDFF_PN0_/QN": {
+   "count": 1,
+   "max": 33
+  }
+ }
+}
