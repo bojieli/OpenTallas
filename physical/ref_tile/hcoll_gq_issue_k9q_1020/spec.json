@@ -1,0 +1,431 @@
+{
+ "name": "hcoll_gq_issue_k9q_1020",
+ "top": "ot_hgi_coll_gq_issue",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq_scale13r.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_delay_hc.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "util": 0.52,
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "qid",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "tgt_fault",
+   "active",
+   "done",
+   "fault",
+   "isa_ring",
+   "isa_lp_data"
+  ],
+  "W": [
+   "vm_rq_lo",
+   "vm_rr_lo"
+  ],
+  "S": [
+   "vm_rq_hi",
+   "vm_rr_hi"
+  ],
+  "E": [
+   "ra_lp_we",
+   "ra_lp_tag",
+   "ra_lp_data",
+   "ra_state_read_add",
+   "ra_state_read_tx",
+   "ra_state_read_rr",
+   "ra_state_add_tag",
+   "ra_state_tx_tag",
+   "ra_state_rr_tag",
+   "ra_state_add_src",
+   "ra_state_add_rhs_acc",
+   "ra_state_tx_acc",
+   "ra_add_v",
+   "ra_add_tag",
+   "ra_add_src",
+   "ra_add_rhs_acc",
+   "ra_tx_inject",
+   "ra_tx_forward",
+   "ra_tx_tag",
+   "ra_tx_dst",
+   "ra_tx_result",
+   "ra_tx_acc",
+   "ra_tx_gather",
+   "ra_tx_ttl",
+   "ra_rx_slot",
+   "ra_rx_kind",
+   "ra_rx_src",
+   "ra_rx_tag",
+   "ra_rr_local",
+   "ra_rr_local_tag",
+   "rb_lp_we",
+   "rb_lp_tag",
+   "rb_lp_data",
+   "rb_state_read_tx",
+   "rb_state_tx_tag",
+   "rb_tx_inject",
+   "rb_tx_forward",
+   "rb_tx_tag",
+   "rb_tx_ttl",
+   "rb_rx_slot",
+   "rb_rx_kind",
+   "rb_rx_src",
+   "rb_rx_tag",
+   "ld_fire",
+   "ld_desc",
+   "ld_ev_v",
+   "ld_ev_k",
+   "ld_p_v",
+   "ld_p_d"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "period_ps": 833.333333,
+  "pin_balance": {
+   "group_max": 32
+  },
+  "io_hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 2.16,
+  "macro_halo_x_um": 21.6
+ },
+ "job": {
+  "owner": "Claude:DRIVE-HBM/HBM-GQ8",
+  "branch": "claude/hbm-gq8-1020",
+  "tag": "k9q",
+  "purpose": "hcoll_gq_issue_k9_1020: R9 RTL (HBM-GQ8 10-20, on Codex R6 e8956f9d9): registered period-end flags tl_last/lps_gt1 in 12 kept copies replace every tl==per-1 / lps>1 compare cone (R6 wrap roots 33, R7 per/tl roots 33..61); 5 kept registered one-hot base copies (stored_oh) feed the period/fault row reads, b0_oh and cur_oh (R6 p_sb decode roots 42/37/36); same edges, same function. Geometry = literal-lattice model 35f39f06c: macros on the 43.2 lattice (stack pitch 129.6, 49.1 um channels, no abutment), outline 475.2x561.6, centre band 121.2 um, K=8 regional clock roots (main).; k-means CTS K=24 (REFILL-3)",
+  "benches": [
+   {
+    "name": "aq_sram_exact",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram 0",
+    "expect": "pass",
+    "pass_regex": "AQ_TREE13_EXACT_PASS blocks1024 elements32768",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "aq_sram_mut_slot",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut 1",
+    "expect": "fail",
+    "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH",
+    "fail_witness": "results/rtl/gqissue_sram_1019/capture_mut_slot_fail.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "aq_s2top_exact",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top 0",
+    "expect": "pass",
+    "pass_regex": "AQ_S2TOP_EXACT_PASS SCALE13R_EQ PASS checks=2097152 .*AQ_TREE13_EXACT_PASS blocks1024 elements32768",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "aq_s2top_mut_k",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut 1",
+    "expect": "fail",
+    "fail_regex": "SCALE13R_EQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/gqissue_sram_1019/k4_s2top/s2top_mutk_fail.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "collq_ia_ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1 ia1",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pass_regex": "COLLQ_IA_BENCH ia1 PASS"
+   },
+   {
+    "name": "collq_ia_ia2",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2 ia2",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pass_regex": "COLLQ_IA_BENCH ia2 PASS"
+   },
+   {
+    "name": "collq_ia_slot",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_slot slot",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "fail_regex": "COLLQ_IA MUTANT slot REJECTED|COLLQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_vmearly_k4_1020/slot_fail.log"
+   },
+   {
+    "name": "collq_ia_dep",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_dep dep",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "fail_regex": "COLLQ_IA MUTANT dep REJECTED|COLLQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_vmearly_k4_1020/dep_fail.log"
+   },
+   {
+    "name": "collq_ia_iaign",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_iaign iaign",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "fail_regex": "COLLQ_IA MUTANT iaign REJECTED|COLLQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_vmearly_k4_1020/iaign_fail.log"
+   },
+   {
+    "name": "collq_ia_ia1_inv",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS=-DOT_GQ_CHECK_INV bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1_inv ia1",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pass_regex": "COLLQ_IA_BENCH ia1 PASS"
+   },
+   {
+    "name": "collq_ia_ia2_inv",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS=-DOT_GQ_CHECK_INV bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2_inv ia2",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pass_regex": "COLLQ_IA_BENCH ia2 PASS"
+   },
+   {
+    "name": "collq_r9_mut_tllast",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS=-DOT_GQ_MUT_TLLAST bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_tllast ia1",
+    "expect": "fail",
+    "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
+    "fail_witness": "results/rtl/hbm_coll_gq_r9_1020/mut_tllast_fail.log",
+    "threads": 16,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "collq_r9_mut_ohcopy",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS=-DOT_GQ_MUT_OH_COPY bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_oh ia1",
+    "expect": "fail",
+    "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
+    "fail_witness": "results/rtl/hbm_coll_gq_r9_1020/mut_ohcopy_fail.log",
+    "threads": 16,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "aq_s2top_mut_mx4",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS=-DOT_GQ_MUT_MX4 bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut_mx4 0",
+    "expect": "fail",
+    "fail_regex": "MISMATCH|FAIL",
+    "fail_witness": "results/rtl/hbm_coll_gq_r9_1020/mut_mx4_fail.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "tools/hgi_sim/collq_gather_1018.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "physical/hbm_xp_aq_tree13_1014/tb_aq_tree13.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "rtl/hbm_accel/generic/collective/p2p/tb_aq_scale13r_eq.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/gqissue_sram_1019",
+   "rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh",
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq_ia.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "results/rtl/hbm_vmearly_k4_1020",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir"
+  ],
+  "views_to": "physical/ref_tile/hcoll_gq_issue_k9_1020/views",
+  "record_to": "results/arch/hbm_die_d4g/collq/route_hcoll_gq_issue_k9_1020"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every input is captured by a flop at the pin and every output is a flop Q in the RTL (gather master stage table, tools/hgi_sim/collq_gather_1018.py); automatic pin registers would add an unpriced edge"
+ },
+ "params": {
+  "VM_RT": 74,
+  "ISSUE_AHEAD": 1
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    86.4,
+    43.2
+   ],
+   "inst": "*u_aq0.u_x.g_sram?0?.u_mem*",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    86.4,
+    172.8
+   ],
+   "inst": "*u_aq0.u_x.g_sram?1?.u_mem*",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    86.4,
+    302.4
+   ],
+   "inst": "*u_aq0.u_x.g_sram?2?.u_mem*",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    86.4,
+    432.0
+   ],
+   "inst": "*u_aq0.u_x.g_sram?3?.u_mem*",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    302.4,
+    43.2
+   ],
+   "inst": "*u_aq1.u_x.g_sram?0?.u_mem*",
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    302.4,
+    172.8
+   ],
+   "inst": "*u_aq1.u_x.g_sram?1?.u_mem*",
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    302.4,
+    302.4
+   ],
+   "inst": "*u_aq1.u_x.g_sram?2?.u_mem*",
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "at": [
+    302.4,
+    432.0
+   ],
+   "inst": "*u_aq1.u_x.g_sram?3?.u_mem*",
+   "at_exact": true,
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "at": [
+    216.0,
+    43.2
+   ],
+   "inst": "*u_vmring.g_m?0?.u_mem*",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "inst": "*u_vmring.g_m?1?.u_mem*",
+   "at_exact": true,
+   "orient": "MY"
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 4
+  }
+ },
+ "outline": {
+  "w": 475.2,
+  "h": 561.6
+ },
+ "defines": [
+  "OT_COLLQ_SRAM",
+  "OT_GQ_FAN32",
+  "OT_GQ_S2TOP",
+  "OT_GQ_P192",
+  "OT_GQ_N32"
+ ],
+ "structural_change": "REFILL-3 (10-21) parallel fallback of hcoll_gq_issue_k9_1020: k-means regional CTS K=24 (was K=8).\nWhy: k9_r4 / k9b_r4 --cts gates (10-21 04:10 / 06:20) FAILED only clock_rule: 25,590 sinks, pin-flop spread TT 145.2 / FF 133.5 ps (k9) and TT 139.1 / FF 124.3 (k9b) > 80, with census / GRT / timing passing. Same recipe that took dscoll s8n 121.6 -> s8nq 53.9 ps: more, shorter local roots under the balanced top tree. Same RTL, outline, macros, pins, PDN and cycles.\n\n--- k9 base ---\nhcoll_gq_issue_k9_1020: R9 RTL (HBM-GQ8 10-20, on Codex R6 e8956f9d9): registered period-end flags tl_last/lps_gt1 in 12 kept copies replace every tl==per-1 / lps>1 compare cone (R6 wrap roots 33, R7 per/tl roots 33..61); 5 kept registered one-hot base copies (stored_oh) feed the period/fault row reads, b0_oh and cur_oh (R6 p_sb decode roots 42/37/36); same edges, same function. Geometry = literal-lattice model 35f39f06c: macros on the 43.2 lattice (stack pitch 129.6, 49.1 um channels, no abutment), outline 475.2x561.6, centre band 121.2 um, K=8 regional clock roots (main).",
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)u_rst\\.rst_n$|__ot_rlv$|u_target\\.reset_ctrl_copies$"
+ },
+ "fill_reason": {
+  "pin_bound": "SRAM-face/stack bound: 8 x 128x256 p192 arrays (80.472 tall, 5.1 pins/um faces) in two 4-high stacks on the 43.2 lattice (pitch 129.6, 49.128 um N-S channels); 2 VM-ring 64x16 macros at the S edge of the centre band; outline from the lattice model, not from std area"
+ },
+ "orfs_vars": {
+  "OT_CKKM_K": "24",
+  "OT_CKKM_PORT": "clk"
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ]
+}
