@@ -103,6 +103,7 @@ module ot_s81sl_kv_bank #(
             assign gv = 8'd0; assign ge = 80'd0;
         end
         wire [3:0] CB = kb;
+        wire ov, ofu, ofo, oal, ode, ord; wire [13:0] oa; wire [15:0] om; wire [511:0] od; wire [7:0] orj;
         ot_s81_su_kvq #(.N(KV_N), .MLAT(LM)) u_kvq (
             .clk(sk), .rst_in(rst[0]), .cfg_b(CB), .i_v(rv), .i_y(ry), .i_ob(rob), .nx_i_v(kqxv[kb ^ 1]),
             .nx_i_q(kqxq[kb ^ 1]), .nx_o_v(kqxv[kb]), .nx_o_q(kqxq[kb]), .e_o_v(kq_ev[kb]), .e_o_e(kq_ee[10 * kb +: 10]),
@@ -117,7 +118,6 @@ module ot_s81sl_kv_bank #(
             .q({kq_a[14 * kb +: 14], kq_m[16 * kb +: 16], kq_d[512 * kb +: 512]}));
     end endgenerate
 
-    wire tfu,tfo,tal,tde,trd; wire [7:0] trj;
             // four data quarters, identical control; quarter 0 carries the job fields, the status and the faults
             wire tfu, tfo, tal, tde, trd; wire [7:0] trj;
             genvar u;
