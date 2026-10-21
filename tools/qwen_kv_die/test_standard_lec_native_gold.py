@@ -45,6 +45,8 @@ def main():
             gate = gate.replace('.A(a),.B(b)', '.A(b),.B(b)')
         if name == 'wrong_cell_function':
             gate = gate.replace('XOR2xp5_ASAP7_75t_R oq', 'XNOR2xp5_ASAP7_75t_R oq')
+        if name.startswith('wrong_'):
+            assert gate != ENCODED_GATE, 'causal mutation did not change the gate'
         (root / 'gate.v').write_text('module native_gate'+PORTS+'\n'+gate+'endmodule\n')
         expect = 'fail' if name.startswith('wrong_') else 'pass'
         cmd = [sys.executable, str(tool), '--src', str(root), '--top', 'native_gold', '--params', '{}',
@@ -62,6 +64,8 @@ def main():
             assert 'UNMODELED_NATIVE_CELL' in result['error']
         else:
             assert proc.returncode == 0 and result['ok']
+            if expect == 'fail':
+                assert result.get('cex_frame') is not None, 'negative needs actual counterexample'
         records[name] = {'verdict': result['verdict'], 'rc': proc.returncode,
                          'models': result['library_models']}
         print(name, result['verdict'], flush=True)
