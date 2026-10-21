@@ -33,3 +33,9 @@ The immutable GRT replay completed TT and FF with all232 declared clock input bi
 This reset change addresses physical reach only. Receiving-region two-stage synchronous reset release, native clock roles and actual reset timing remain required. The unrelated645-lane startup proof does not waive arbitrary regional reset crossings.
 
 Actual Claude ATTN1 generator requires1036.8×2160 primary or1123.2×2160 fallback to provide macro-face pin channels. The950.4-wide G4split112 model is not a qualified placement for these real tiles. ATTN1 source qualification is separately pinned on codex/s81-svc-nt-1020@21b79b7e5.
+
+## Reset source bind follow-through
+
+The first full source bind caught16 unread reset outputs after endpoint paths were retained. All other port counters were zero. These were endpoint anchors that the final calendar did not choose. The successor removes only reset relay branches with zero actual consumers, cascading through dead ancestors; it removes their wire declarations, placements and depth entries. It introduces no tie, unread-bit waiver, or timing exception. A causal test proves an unused anchor and parent are removed while a real ICG enable remains connected. Nine reset reach/pruning tests pass. qual2 full source bind is live under ep6 codex-s81-reset-1020; no physical route was started.
+
+Production geometry remains held: RETICLE_MARGIN500 caps width32000. A raw32659.7 expansion would fail this guard and is not an approved margin change. Existing rf3 frame heights3369.6/3672 and actual slice outlines exceed the old capacity vehicle reservations. SVCPLAN owns the legal-frame and static-calendar alternatives; the exact112 inventory remains a capacity/model vehicle, not a manufactured die plan.

@@ -895,6 +895,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             nst[rly_master(b, d, T.get('relay_prefix', 'dsfd_dvrly'))] += 1
             prev = wn
     v += rst['verilog']
+    if T.get('calendar_reset_endpoints'):
+        v = prune_unused_reset_branches(v, rst)
     v.append('endmodule')
     (out / 'die.v').write_text('\n'.join(v) + '\n')
     (out / 'cells_used.v').write_text(CELL_MODELS)
@@ -1063,6 +1065,50 @@ def place_lane(rule, e, es, bl):
 
 
 RESET_REACH_UM = 405.0             # measured repeated reach (plan 405 um, memory reach-405-repeaters-1016)
+
+
+def prune_unused_reset_branches(lines, reset):
+    """Keep actual reset consumers after calendar taps select retained sources.
+
+    Endpoint anchors make the graph available before calendars are emitted.
+    Some anchors are not ultimately selected; remove only these unused reset
+    relay outputs and their dead ancestors, never tie them or waive unread bits.
+    """
+    import re
+    candidates = {p['inst'][3:]: p for p in reset['place']}
+    drivers, load = {}, collections.Counter()
+    for index, line in enumerate(lines):
+        uses = set()
+        for port, expr in re.findall(r'\.([A-Za-z_][A-Za-z_0-9]*)\(([^()]*)\)', line):
+            if port != 'o':
+                uses.update(set(re.findall(r'\b[A-Za-z_][A-Za-z_0-9]*\b', expr)) & candidates.keys())
+        load.update(uses)
+        m = re.search(r'\bst_([A-Za-z_][A-Za-z_0-9]*)\s*\(', line)
+        if m and m[1] in candidates:
+            drivers[m[1]] = (index, uses)
+    todo = collections.deque(n for n in drivers if load[n] == 0)
+    removed = set()
+    while todo:
+        node = todo.popleft()
+        if node in removed:
+            continue
+        removed.add(node)
+        for parent in drivers[node][1]:
+            load[parent] -= 1
+            if parent in drivers and load[parent] == 0:
+                todo.append(parent)
+    indices = {drivers[n][0] for n in removed}
+    declarations = {f'wire {n};' for n in removed}
+    result = [line for index, line in enumerate(lines) if index not in indices and line.strip() not in declarations]
+    reset['place'] = [p for n, p in candidates.items() if n not in removed]
+    for node in removed:
+        reset['depth'].pop(node, None)
+    summary = reset['summary']
+    summary['calendar_unused_branches_pruned'] = len(removed)
+    summary['stations'] -= len(removed)
+    summary['street_stations'] = sum(p['kind'] == 'street' for p in reset['place'])
+    summary['lane_reset_bits'] = sum(p['kind'] == 'lane' for p in reset['place'])
+    return result
 
 
 def reset_reach_gate(blocks, nodes, sinks, edges, reach=RESET_REACH_UM, mode=None):
