@@ -1,0 +1,160 @@
+{
+ "name": "standin_ot_s81sl_slice_c1x_k8_cap5r_lp",
+ "top": "ot_s81sl_slice_c1x_k8_cap5r_lp",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv"
+ ],
+ "clock_port": "ck_C",
+ "outline": {
+  "w": 1252.8,
+  "h": 6739.2
+ },
+ "pins": {
+  "N": [
+   "sid",
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "bi",
+   "bo",
+   "xc",
+   "rt",
+   "ck_line",
+   "ck_v",
+   "ck_xc",
+   "ck_rt"
+  ],
+  "E": [
+   "ck_C",
+   "rst_n",
+   "fault",
+   "ri_e",
+   "ro_e"
+  ],
+  "W": [
+   "ck_L0",
+   "ck_L1",
+   "ck_L3",
+   "ck_L4",
+   "ck_CAP_RT",
+   "ck_CAP_CW",
+   "ck_CAP_CE",
+   "ck_CAP_RN",
+   "ck_CAP_RS",
+   "ri_w",
+   "ro_w"
+  ]
+ },
+ "pin_ranges": {
+  "bi": [
+   10.0,
+   213.921
+  ],
+  "bo": [
+   214.921,
+   309.678
+  ],
+  "xc": [
+   310.678,
+   1126.362
+  ],
+  "rt": [
+   1127.362,
+   1230.8
+  ],
+  "ck_line": [
+   1231.8,
+   1235.8
+  ],
+  "ck_v": [
+   1236.8,
+   1237.8
+  ],
+  "ck_xc": [
+   1238.8,
+   1242.8
+  ],
+  "ck_rt": [
+   1243.8,
+   1245.8
+  ],
+  "sid": [
+   100.0,
+   120.0
+  ],
+  "vi": [
+   130.0,
+   590.0
+  ],
+  "vo": [
+   640.0,
+   1100.0
+  ],
+  "ri_e": [
+   2553.8,
+   2742.8
+  ],
+  "ro_e": [
+   2744.8,
+   2933.8
+  ],
+  "fault": [
+   2541.8,
+   2545.8
+  ],
+  "rst_n": [
+   2533.8,
+   2537.8
+  ],
+  "ck_C": [
+   2519.8,
+   2529.8
+  ],
+  "ri_w": [
+   2160.0,
+   2851.2
+  ],
+  "ro_w": [
+   2851.2,
+   3542.4
+  ],
+  "ck_L0": [
+   2084.0,
+   2088.0
+  ],
+  "ck_L1": [
+   2092.0,
+   2096.0
+  ],
+  "ck_L3": [
+   2100.0,
+   2104.0
+  ],
+  "ck_L4": [
+   2108.0,
+   2112.0
+  ],
+  "ck_CAP_RT": [
+   2116.0,
+   2120.0
+  ],
+  "ck_CAP_CW": [
+   2124.0,
+   2128.0
+  ],
+  "ck_CAP_CE": [
+   2132.0,
+   2136.0
+  ],
+  "ck_CAP_RN": [
+   2140.0,
+   2144.0
+  ],
+  "ck_CAP_RS": [
+   2148.0,
+   2152.0
+  ]
+ },
+ "_note": "S81-SLICE/ENDP stand-in (DIAGNOSTIC) of the end slice c1x_k8_cap5r_lp at 1252.8 x 6739.2 (single ck_C timing; the nine other real roots are plain pins here). Pin REQUEST for the real view: line pins on the channel face bit-aligned with the lep line pins, roots/reset on the outer face."
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_s81sl_slice_lepe_mu_lrb_lp",
+ "enable": false,
+ "reason": "the lp.py RTL lands every regional reset port: rst_n_<r> has ONE sink, u_lpr_<r> = ot_pl_land_reset_forest DEPTH 10 on ck_<r> (8 registered prefix hops fenced along the region's street, branch, one leaf per landing chunk); no reset root, no cross-region reset path"
+}

@@ -1,0 +1,151 @@
+{
+ "top": "ot_s81sl_slice_lepw_mu_x",
+ "top_lp": "ot_s81sl_slice_lepw_mu_lrb_lp",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/mu72/lr/ot_s81sl_slice_lepw_mu_x.sv"
+ ],
+ "child_sources": [
+  "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv",
+  "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r.sv",
+  "rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
+  "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5/ot_s81sl_slice_c1x_k8_cap5_lp.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+  "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp_bb.v",
+  "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve_bb.v",
+  "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg/ot_s81sl_xg_bb.v",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+  "rtl/link/ot_link_crc32.sv",
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+  "rtl/lib/ot_sram_oldread_b64.sv",
+  "rtl/lib/ot_sram_showahead_b64.sv",
+  "rtl/common/ot_link_credit_rx_b64.sv",
+  "rtl/common/ot_link_credit_tx_rc.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+  "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+  "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgt_xo.sv"
+ ],
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_S81SL_HARD"
+ ],
+ "out_dir": "rtl/dsrom_sys/s81_dv/slice/mu72/lr",
+ "record_dir": "results/rtl/s81_endp_1021/lp",
+ "clock_ports": [
+  "clk"
+ ],
+ "clock_pins": [
+  "clk",
+  "ck",
+  "ck_C"
+ ],
+ "reset_port": "rst_n",
+ "reset_pins": [
+  "rst_n",
+  "rs"
+ ],
+ "regions": [
+  {
+   "name": "S",
+   "insts": [
+    "u_sl"
+   ],
+   "centre": [
+    2354.4,
+    2894.4
+   ]
+  },
+  {
+   "name": "K",
+   "insts": [
+    "u_lep",
+    "u_ln0",
+    "u_ln1"
+   ],
+   "centre": [
+    1101.6,
+    2851.2
+   ]
+  },
+  {
+   "name": "ML",
+   "insts": [
+    "u_land"
+   ],
+   "centre": [
+    1058.4,
+    3391.2
+   ]
+  },
+  {
+   "name": "P",
+   "insts": [],
+   "centre": [
+    20.0,
+    2883.6
+   ]
+  }
+ ],
+ "synthesis_hard_instances": [
+  "u_sl",
+  "u_lep",
+  "u_land"
+ ],
+ "static": [
+  "sid",
+  "ch_b"
+ ],
+ "tb_static": {
+  "sid": "4'd0",
+  "ch_b": "1'b1"
+ },
+ "D": 4,
+ "E": 3,
+ "reschedule": true,
+ "bench": {
+  "cycles": 14000,
+  "reset_cycles": 16,
+  "sim": "verilator"
+ },
+ "port_regions": {
+  "rx0": "K",
+  "tx0": "K",
+  "rx1": "K",
+  "tx1": "K",
+  "ch_b": "K",
+  "mu_c": "P",
+  "mu_rc": "P",
+  "mu_rt": "K",
+  "fault": "K"
+ },
+ "out_regs": {
+  "mu_rt": 3,
+  "fault": 3
+ },
+ "landing_chunk_bits": 8,
+ "landing_reset_forest": true,
+ "landing_kept_enable": true,
+ "regional_reset_ports": {
+  "stages": 10,
+  "why": "S81-SLICE/ENDP 10-21 landed regions: d1a/d1b/d3a one reset root u_lpr_root across the 2.8x6.8 mm slot (in->reg -19.6/-48.6 ns, undeclared S->K reset crossing); one reset port per region beside its own pin, die releases rst_n_S/K/ML/P on one edge; 10 = 8 registered prefix hops (fenced <= ~405 um along streets that avoid the macros, up to ~2.3 mm) + branch + leaf"
+ },
+ "_note": "S81-SLICE/ENDP 10-21: landed-regions parent of ot_s81sl_slice_lepw_mu_72 (G8 die source, u_sl = c1x_k8_cap5r_lp with its 10 real roots): regions S (u_sl) / K (u_lep + abutting lanes) / ML (u_land) / P (port entry, no child: control/host ports land at the face, ring bank wire carries the face->endpoint run). FALLBACK E 3 (+1 edge on every ring: 3 T bank reach)."
+}

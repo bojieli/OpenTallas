@@ -1,0 +1,165 @@
+{
+ "name": "standin_ot_s81sl_lep_mu_a",
+ "top": "ot_s81sl_lep_mu_a",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 561.6,
+  "h": 518.4
+ },
+ "pins": {
+  "W": [
+   "lo0_v",
+   "lo0_r",
+   "lo0_d",
+   "li0_v",
+   "li0_r",
+   "li0_d",
+   "lo1_v",
+   "lo1_r",
+   "lo1_d",
+   "li1_v",
+   "li1_r",
+   "li1_d",
+   "rxv",
+   "l0_f",
+   "l1_f",
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "ro",
+   "ri",
+   "mu_c",
+   "mu_rt"
+  ],
+  "N": [
+   "ml_wd",
+   "ml_rd",
+   "ml_wv",
+   "ml_rv",
+   "ml_f"
+  ],
+  "S": [
+   "sl_f",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "lo0_d": [
+   4.0,
+   124.0
+  ],
+  "lo0_v": [
+   124.5,
+   125.0
+  ],
+  "lo0_r": [
+   125.5,
+   126.0
+  ],
+  "li0_v": [
+   126.5,
+   127.0
+  ],
+  "li0_r": [
+   127.5,
+   128.0
+  ],
+  "li0_d": [
+   129.0,
+   249.0
+  ],
+  "lo1_d": [
+   262.0,
+   382.0
+  ],
+  "lo1_v": [
+   382.5,
+   383.0
+  ],
+  "lo1_r": [
+   383.5,
+   384.0
+  ],
+  "li1_v": [
+   384.5,
+   385.0
+  ],
+  "li1_r": [
+   385.5,
+   386.0
+  ],
+  "li1_d": [
+   387.0,
+   507.0
+  ],
+  "rxv": [
+   251.0,
+   252.0
+  ],
+  "l0_f": [
+   252.5,
+   254.0
+  ],
+  "l1_f": [
+   254.5,
+   256.0
+  ],
+  "clk": [
+   256.5,
+   258.5
+  ],
+  "rst_n": [
+   259.0,
+   260.5
+  ],
+  "ro": [
+   5.0,
+   195.0
+  ],
+  "ri": [
+   195.0,
+   385.0
+  ],
+  "mu_c": [
+   388.0,
+   450.0
+  ],
+  "mu_rt": [
+   452.0,
+   515.0
+  ],
+  "ml_wd": [
+   4.0,
+   270.0
+  ],
+  "ml_rd": [
+   272.0,
+   538.0
+  ],
+  "ml_wv": [
+   540.0,
+   541.0
+  ],
+  "ml_rv": [
+   542.0,
+   543.0
+  ],
+  "ml_f": [
+   544.0,
+   545.0
+  ],
+  "sl_f": [
+   4.0,
+   8.0
+  ],
+  "fault": [
+   10.0,
+   14.0
+  ]
+ },
+ "_note": "S81-SLICE/ENDP stand-in (DIAGNOSTIC, STANDIN_NOT_A_VIEW) of ot_s81sl_lep_mu_a 561.6 x 518.4: line pins face the slice across the channel, lane pins face the abutting lanes, ml_* face the MU land."
+}

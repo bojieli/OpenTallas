@@ -1,0 +1,519 @@
+{
+ "name": "s81sl_endp_wmabb",
+ "top": "ot_s81sl_slice_lepw_mab_mu_lrb_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/mu72/lr/ot_s81sl_slice_lepw_mab_mu_lrb_lp.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+  "physical/ref_tile/s81sl_endp_wmabb/standin_views/ot_s81sl_slice_c1x_k8_cap5r_lp/ot_s81sl_slice_c1x_k8_cap5r_lp_bb.v",
+  "physical/ref_tile/s81sl_endp_wmabb/standin_views/ot_s81sl_lep_mu_ab/ot_s81sl_lep_mu_ab_bb.v",
+  "physical/ref_tile/s81sl_endp_wmabb/standin_views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf_bb.v"
+ ],
+ "params": {},
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_S81SL_HARD"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_S",
+ "clock_ports": [
+  "ck_S",
+  "ck_K",
+  "ck_ML",
+  "ck_P"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_S"
+   ],
+   "inputs": [
+    "rst_n_S",
+    "sid",
+    "ri_e",
+    "vi",
+    "bi",
+    "rt",
+    "ck_L0",
+    "ck_L1",
+    "ck_L3",
+    "ck_L4",
+    "ck_CAP_RT",
+    "ck_CAP_CW",
+    "ck_CAP_CE",
+    "ck_CAP_RN",
+    "ck_CAP_RS"
+   ],
+   "outputs": [
+    "ro_e",
+    "vo",
+    "bo",
+    "xc",
+    "ck_line",
+    "ck_v",
+    "ck_xc",
+    "ck_rt"
+   ]
+  },
+  "lk": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_K"
+   ],
+   "inputs": [
+    "rst_n_K",
+    "ch_b",
+    "rx0",
+    "rx1",
+    "rx2",
+    "rx3"
+   ],
+   "outputs": [
+    "tx0",
+    "tx1",
+    "tx2",
+    "tx3",
+    "fault",
+    "mu_rt"
+   ]
+  },
+  "ml": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_ML"
+   ],
+   "inputs": [
+    "rst_n_ML"
+   ],
+   "outputs": []
+  },
+  "p": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_P"
+   ],
+   "inputs": [
+    "rst_n_P",
+    "mu_c",
+    "mu_rc"
+   ],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/rtl/s81_endp_1021/lp/ot_s81sl_slice_lepw_mab_mu_lrb_lp_record.json",
+ "reset_ports": [
+  "rst_n_S",
+  "rst_n_K",
+  "rst_n_ML",
+  "rst_n_P"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp.py RTL lands every regional reset port: rst_n_<r> has ONE sink, u_lpr_<r> = ot_pl_land_reset_forest DEPTH 10 on ck_<r> (8 registered prefix hops fenced along the region's street, branch, one leaf per landing chunk); no reset root, no cross-region reset path"
+ },
+ "outline": {
+  "w": 3024.0,
+  "h": 6825.6,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81sl_endp_wmabb/standin_views/ot_s81sl_slice_c1x_k8_cap5r_lp",
+   "count": 1,
+   "inst": "u_sl",
+   "at": [
+    1728.0,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_endp_wmabb/standin_views/ot_s81sl_lep_mu_ab",
+   "count": 1,
+   "inst": "u_lep",
+   "at": [
+    820.8,
+    1728.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/dsdv_mu_land/views/dsdv_mu_land",
+   "count": 1,
+   "inst": "u_land",
+   "at": [
+    820.8,
+    3888.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_endp_wmabb/standin_views/dsfd_coll_lane_w_safe8_ntf",
+   "count": 1,
+   "inst": "u_ln0",
+   "at": [
+    43.2,
+    1490.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_endp_wmabb/standin_views/dsfd_coll_lane_w_safe8_ntf",
+   "count": 1,
+   "inst": "u_ln1",
+   "at": [
+    43.2,
+    2116.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_endp_wmabb/standin_views/dsfd_coll_lane_w_safe8_ntf",
+   "count": 1,
+   "inst": "u_ln2",
+   "at": [
+    43.2,
+    2743.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_endp_wmabb/standin_views/dsfd_coll_lane_w_safe8_ntf",
+   "count": 1,
+   "inst": "u_ln3",
+   "at": [
+    43.2,
+    3369.6
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "rx0",
+   "tx0",
+   "rx1",
+   "tx1",
+   "rx2",
+   "tx2",
+   "rst_n_K",
+   "ck_K",
+   "ch_b",
+   "rst_n_P",
+   "ck_P",
+   "mu_c",
+   "mu_rc",
+   "mu_rt",
+   "fault",
+   "rx3",
+   "tx3",
+   "rst_n_ML",
+   "ck_ML"
+  ],
+  "E": [
+   "ck_L0",
+   "ck_L1",
+   "ck_L3",
+   "ck_L4",
+   "ck_CAP_RT",
+   "ck_CAP_CW",
+   "ck_CAP_CE",
+   "ck_CAP_RN",
+   "ck_CAP_RS",
+   "ri_e",
+   "ro_e"
+  ],
+  "N": [
+   "sid",
+   "vi",
+   "vo"
+  ],
+  "S": [
+   "rst_n_S",
+   "ck_S",
+   "bi",
+   "bo",
+   "xc",
+   "rt",
+   "ck_line",
+   "ck_v",
+   "ck_xc",
+   "ck_rt"
+  ]
+ },
+ "pin_ranges": {
+  "bi": [
+   1738.0,
+   1941.921
+  ],
+  "bo": [
+   1942.921,
+   2037.678
+  ],
+  "xc": [
+   2038.678,
+   2854.362
+  ],
+  "rt": [
+   2855.362,
+   2958.8
+  ],
+  "ck_line": [
+   2959.8,
+   2963.8
+  ],
+  "ck_v": [
+   2964.8,
+   2965.8
+  ],
+  "ck_xc": [
+   2966.8,
+   2970.8
+  ],
+  "ck_rt": [
+   2971.8,
+   2973.8
+  ],
+  "sid": [
+   1828.0,
+   1848.0
+  ],
+  "vi": [
+   1858.0,
+   2318.0
+  ],
+  "vo": [
+   2368.0,
+   2828.0
+  ],
+  "rx0": [
+   1492.56,
+   1778.76
+  ],
+  "tx0": [
+   1780.92,
+   2067.12
+  ],
+  "rx1": [
+   2118.96,
+   2405.16
+  ],
+  "tx1": [
+   2407.32,
+   2693.52
+  ],
+  "rx2": [
+   2745.36,
+   3031.56
+  ],
+  "tx2": [
+   3033.72,
+   3319.92
+  ],
+  "rx3": [
+   3371.76,
+   3657.96
+  ],
+  "tx3": [
+   3660.12,
+   3946.32
+  ],
+  "rst_n_K": [
+   3329.4,
+   3330.159
+  ],
+  "ck_K": [
+   3330.539,
+   3331.678
+  ],
+  "ch_b": [
+   3332.057,
+   3332.437
+  ],
+  "rst_n_P": [
+   3332.816,
+   3333.576
+  ],
+  "ck_P": [
+   3333.955,
+   3335.094
+  ],
+  "mu_c": [
+   3335.473,
+   3348.38
+  ],
+  "mu_rc": [
+   3348.759,
+   3352.935
+  ],
+  "mu_rt": [
+   3353.314,
+   3365.461
+  ],
+  "fault": [
+   3365.841,
+   3366.22
+  ],
+  "rst_n_ML": [
+   4124.0,
+   4128.0
+  ],
+  "ck_ML": [
+   4132.0,
+   4138.0
+  ],
+  "ri_e": [
+   2203.2,
+   2894.4
+  ],
+  "ro_e": [
+   2894.4,
+   3585.6
+  ],
+  "rst_n_S": [
+   1500.0,
+   1504.0
+  ],
+  "ck_S": [
+   1508.0,
+   1516.0
+  ],
+  "ck_L0": [
+   2127.2,
+   2131.2
+  ],
+  "ck_L1": [
+   2135.2,
+   2139.2
+  ],
+  "ck_L3": [
+   2143.2,
+   2147.2
+  ],
+  "ck_L4": [
+   2151.2,
+   2155.2
+  ],
+  "ck_CAP_RT": [
+   2159.2,
+   2163.2
+  ],
+  "ck_CAP_CW": [
+   2167.2,
+   2171.2
+  ],
+  "ck_CAP_CE": [
+   2175.2,
+   2179.2
+  ],
+  "ck_CAP_RN": [
+   2183.2,
+   2187.2
+  ],
+  "ck_CAP_RS": [
+   2191.2,
+   2195.2
+  ]
+ },
+ "route": {
+  "pd": 0.4,
+  "threads": 16,
+  "peak_ram_gb": 128,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "structural_change": "S81-SLICE/ENDP 10-21 s81sl_endp_wmabb: LANDED-REGIONS rebuild of the selected72 MU end parent lepw_mab_mu (G8 die source; DIAGNOSTIC stand-ins, never bindable). d1a/d1b/d3a/lepenhmu d1 FAILED: one ck_S/ck_K tree over the 2.8x5.8 mm slot (CTS pin spread 275-1143 ps) + one reset root u_lpr_root (in->reg -19.6/-48.6 ns). Now 4 regions S/K/ML/P with own roots, regional reset ports (no root), fixed-depth forests with fenced prefix hops, every crossing a D4 chunk-8 ring fenced beside its face, lanes abutting the endpoint, P port group landed at the face, outputs through 3 OREG relay stages; slot 3024.0 x 6825.6, channel 432.0, lp E 3, PD 0.4.",
+ "job": {
+  "owner": "Claude:S81-SLICE/ENDP",
+  "branch": "claude/s81-endp-1021",
+  "tag": "wmabb",
+  "purpose": "early parent integration with stand-ins (owner EFFICIENCY 10-18): gate / GRT / clock pairs; no submit until real child views exist",
+  "submit": false,
+  "hold_merge": "stand-in children: diagnostic only, never route or bind",
+  "benches": [],
+  "no_bench_reason": "diagnostic stand-in gate; behavioural benches run separately (lockstep + slice_lep 2-die on the landed parent)",
+  "views_to": "physical/ref_tile/s81sl_endp_wmabb/views",
+  "record_to": "results/rtl/ref_tile/s81sl_endp_wmabb",
+  "extra_paths": [
+   "results/rtl/s81_endp_1021/lp"
+  ]
+ },
+ "orfs_vars": {
+  "OT_OFLOP_GAP": "4.5",
+  "OT_OFLOP_PORT_RE": "ot_no_port_anchor_x"
+ },
+ "io_flop_at_pins": {
+  "cols": 21,
+  "allow_none": true
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 4,
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_hook_before_flops": [
+  "physical/ref_tile/s81sl_endp_wmabb/lr_fences.tcl"
+ ],
+ "pre_dpl_extra": [
+  "tools/landed_parent/lp_fence_release.tcl"
+ ],
+ "landed": {
+  "record": "results/rtl/s81_endp_1021/lp/ot_s81sl_slice_lepw_mab_mu_lrb_lp_record.json",
+  "lp_spec": "tools/landed_parent/specs/mu72_lepw_mab_mu_lrb.json",
+  "landings": 10,
+  "flops": {
+   "landing": 34148,
+   "pads": 0,
+   "reset": 1199,
+   "out_regs": 99
+  },
+  "reset_depth": 10,
+  "regions": [
+   "S",
+   "K",
+   "ML",
+   "P"
+  ],
+  "E": 3
+ },
+ "slot_change_request": "FALLBACK: lepw_mab_mu end slot 2851.2 -> 3024.0 wide (+172.8 line channel), height 6825.6",
+ "safe_design_checklist": {
+  "1_pins": "children register their pins; every input lands on a ring writer / forest stage / child pin register; outputs leave a child register or 3 OREG relay stages",
+  "2_reach": "line 1104 b x2 bit-aligned across the 432.0 um channel; lanes abut the endpoint (51.84 um); face->endpoint control/host runs = ring bank wires (multicycle E=3 T) for inputs, 3 relay stages (~4 hops <= ~400 um) for outputs; reset prefix hops fenced, mean S 307.1 / K 241.0 / ML 218.0 um (P local at the face)",
+  "3_fanout": "chunk-8 kept-enable rings + forest leaf per chunk (<= 32 loads); in-gate native census decides",
+  "4_depth": "ring read = 4:1 slot mux + chunk decode; no parent logic beyond rings / relays",
+  "5_storage": "WAIVED rings (landing contract D=4)",
+  "6_floorplan": "children on the 43.2 lattice; std-cell bands = channel + lane street + free area; slot 3024.0 x 6825.6; PD 0.4",
+  "7_clock": "4 local roots ck_S / ck_K / ck_ML / ck_P, each tree = own children's clock pins + own fenced ring halves; every crossing landed; u_sl's 9 other real roots pass straight to the slice (single-ck stand-in here)",
+  "8_reset": "regional rst_n_S/K/ML/P, forest DEPTH 10 on its own clock (+10 edges at release, one die edge), reset on control/valid only"
+ }
+}

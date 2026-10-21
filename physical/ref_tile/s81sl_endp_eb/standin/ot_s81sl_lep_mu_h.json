@@ -1,0 +1,200 @@
+{
+ "name": "standin_ot_s81sl_lep_mu_h",
+ "top": "ot_s81sl_lep_mu_h",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv"
+ ],
+ "clock_port": "clk",
+ "outline": {
+  "w": 561.6,
+  "h": 518.4
+ },
+ "pins": {
+  "E": [
+   "lo0_v",
+   "lo0_r",
+   "lo0_d",
+   "li0_v",
+   "li0_r",
+   "li0_d",
+   "lo1_v",
+   "lo1_r",
+   "lo1_d",
+   "li1_v",
+   "li1_r",
+   "li1_d",
+   "rxv",
+   "l0_f",
+   "l1_f",
+   "l0_st",
+   "l1_st",
+   "clk",
+   "rst_n"
+  ],
+  "W": [
+   "ro",
+   "ri",
+   "mu_c",
+   "mu_rt"
+  ],
+  "N": [
+   "ml_wd",
+   "ml_rd",
+   "ml_wv",
+   "ml_rv",
+   "ml_f"
+  ],
+  "S": [
+   "sl_f",
+   "fault",
+   "t_host",
+   "t_kd",
+   "f_host",
+   "f_lf",
+   "f_ks"
+  ]
+ },
+ "pin_ranges": {
+  "lo0_d": [
+   4.0,
+   124.0
+  ],
+  "lo0_v": [
+   124.5,
+   125.0
+  ],
+  "lo0_r": [
+   125.5,
+   126.0
+  ],
+  "li0_v": [
+   126.5,
+   127.0
+  ],
+  "li0_r": [
+   127.5,
+   128.0
+  ],
+  "li0_d": [
+   129.0,
+   249.0
+  ],
+  "lo1_d": [
+   262.0,
+   382.0
+  ],
+  "lo1_v": [
+   382.5,
+   383.0
+  ],
+  "lo1_r": [
+   383.5,
+   384.0
+  ],
+  "li1_v": [
+   384.5,
+   385.0
+  ],
+  "li1_r": [
+   385.5,
+   386.0
+  ],
+  "li1_d": [
+   387.0,
+   507.0
+  ],
+  "rxv": [
+   251.0,
+   252.0
+  ],
+  "l0_f": [
+   252.5,
+   254.0
+  ],
+  "l1_f": [
+   254.5,
+   256.0
+  ],
+  "clk": [
+   256.5,
+   258.5
+  ],
+  "rst_n": [
+   259.0,
+   260.5
+  ],
+  "ro": [
+   5.0,
+   195.0
+  ],
+  "ri": [
+   195.0,
+   385.0
+  ],
+  "mu_c": [
+   388.0,
+   450.0
+  ],
+  "mu_rt": [
+   452.0,
+   515.0
+  ],
+  "ml_wd": [
+   291.6,
+   557.6
+  ],
+  "ml_rd": [
+   23.6,
+   289.6
+  ],
+  "ml_wv": [
+   20.6,
+   21.6
+  ],
+  "ml_rv": [
+   18.6,
+   19.6
+  ],
+  "ml_f": [
+   16.6,
+   17.6
+  ],
+  "sl_f": [
+   553.6,
+   557.6
+  ],
+  "fault": [
+   547.6,
+   551.6
+  ],
+  "l0_st": [
+   260.8,
+   261.4
+  ],
+  "l1_st": [
+   261.6,
+   262.0
+  ],
+  "t_host": [
+   481.6,
+   541.6
+  ],
+  "t_kd": [
+   436.6,
+   479.6
+  ],
+  "f_host": [
+   81.6,
+   434.6
+  ],
+  "f_lf": [
+   75.6,
+   79.6
+  ],
+  "f_ks": [
+   21.6,
+   73.6
+  ]
+ },
+ "_note": "S81-SLICE/ENDP stand-in (DIAGNOSTIC, STANDIN_NOT_A_VIEW) of ot_s81sl_lep_mu_h 561.6 x 518.4 drawn MY (E end): line pins face the slice across the channel, lane pins face the abutting lanes, ml_* face the MU land."
+}
