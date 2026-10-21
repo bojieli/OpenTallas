@@ -1,0 +1,23 @@
+{
+  "source": "8eafe4ec3",
+  "preserve_original_rw8_failures": true,
+  "primary": {
+    "clk_TT_boundary_spread_ps": 31.0,
+    "sinks": 881,
+    "boundary_sinks": 870
+  },
+  "fallback": {
+    "clk_TT_boundary_spread_ps": 38.9,
+    "sinks": 881,
+    "boundary_sinks": 870
+  },
+  "both_next_failure": {
+    "root": "clk_w0",
+    "corner": "tt",
+    "spread_ps": 84.5,
+    "scope": "all_internal_only",
+    "sinks": 1035
+  },
+  "status": "FAIL: intended clk repaired at TT, next existing genericCTS root fails. No FF/later-root or layout/closure qualification inferred.",
+  "source_plan": "Actual full-root geometry model before comprehensive unchanged-root structural distribution; no threshold, clock-domain or edge waiver."
+}
