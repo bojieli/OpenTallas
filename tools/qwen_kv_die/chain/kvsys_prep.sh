@@ -120,6 +120,8 @@ if [ "${OT_KV_DCAL:-0}" = 1 ]; then
   if [ "${OT_KV_DCAL_BC:-0}" = 1 ] && [ "${OT_KV_DCAL_BC4:-0}" = 1 ]; then
     # KV-EMBWIN16 10-20: OT_KV_EMB_WIN=<N> (grown embed window pair image) -> default kit qkd_d2d_cal_seq_pin_bc4_ew<N>
     B4D=qkd_d2d_cal_seq_pin_bc4; [ -n "${OT_KV_EMB_WIN:-}" ] && B4D=qkd_d2d_cal_seq_pin_bc4_ew$OT_KV_EMB_WIN
+    # KV-PROG17 10-20: OT_KV_ATTN_R16=1 -> the r16 pair image tile (kit suffix _r16)
+    [ "${OT_KV_ATTN_R16:-0}" = 1 ] && B4D=${B4D}_r16
     B4K=${OT_KV_DCAL_BC4_KIT:-$B4D}; B4V=physical/ref_tile/$B4K/views/qkd_d2d_cal_seq_pin_bc4; DCV=
     if [ -f $B4V/qkd_d2d_cal_seq_pin_bc4.lef ] && [ -f $B4V/qkd_d2d_cal_seq_pin_bc4_tt.lib ] && [ -f $B4V/qkd_d2d_cal_seq_pin_bc4_ff.lib ]; then
       DCV=$B4V; echo "OT_KV_DCAL_BC4: qkd_dcal -> $B4V (safe K22)"

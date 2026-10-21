@@ -115,6 +115,16 @@ if LINK_EMB_WIN:
     if not (ROOT / LINK_IMAGE).is_file():
         raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN}: no committed pair image {LINK_IMAGE} '
                          f'(D2D_MU={int(LINK_MU)} D2D_EMB_WINDOW={LINK_EMB_WIN} tools/qwen_split/d2d_cal_image_production.sh)')
+# KV-PROG17 10-20: the r16 attention tile (OT_KV_ATTN_R16=1, kv_static_die.ATTN_R16) moves the K RESULT burst +1 (TX_SHIFT)
+# and the K STATUS +213 (STATUS_DELAY) in every layer, so target 11 must load the r16 pair image
+# d2d_cal_image[_mu][_ew<N>]_r16.svh (d2d_cal_image_production.sh D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213); fail closed.
+LINK_R16 = os.environ.get('OT_KV_ATTN_R16', '0') == '1'
+if LINK_R16:
+    LINK_IMAGE = LINK_IMAGE.replace('.svh', '_r16.svh')
+    if not (ROOT / LINK_IMAGE).is_file():
+        raise SystemExit(f'OT_KV_ATTN_R16=1: no committed r16 pair image {LINK_IMAGE} (D2D_MU={int(LINK_MU)} '
+                         f'D2D_EMB_WINDOW={LINK_EMB_WIN or ""} D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 '
+                         'tools/qwen_split/d2d_cal_image_production.sh)')
 
 
 def image_die_stages(img=None, root=None):
@@ -869,6 +879,30 @@ def pacing_of(put):
     return pacing([x - put[0] for x in put]) if put else (511, 0)
 
 
+# ---- KV-PROG17 10-20: the retirement contract of the r16 STATUS (K.STA.RETIRE), built from the DIE health plane ----------
+# OT_KV_RETIRE_SUCCESSOR=<run>/health_successor.json (kv_health_plane install: every source's measured plane edges on the
+# die netlist), OT_KV_RETIRE_RESET (default the committed GEN7 reset candidate), OT_KV_RETIRE_RESET_DEPTH (default the
+# die's rst_regional.json max_total_depth beside the successor: depth for sources the GEN7 candidate does not list).
+RETIRE_RESET_DEFAULT = 'results/arch/kv_fault_reset_1019/gen7_evidence.tar.gz:gen7/reset_branch_candidate.json'
+RETIRE_HOLD_BOUND = 273      # qkd_rst_region_pr_h273b HOLD (kvsys_prep OT_KV_RST_HOLD=273)
+
+
+def die_retirement_contract(rx_cmd, tx_first, tx_end, service_end, token_period):
+    import kv_retirement_contract as RC
+    succ = Path(os.environ['OT_KV_RETIRE_SUCCESSOR'])
+    rst = os.environ.get('OT_KV_RETIRE_RESET', str(ROOT / RETIRE_RESET_DEFAULT))
+    depth = os.environ.get('OT_KV_RETIRE_RESET_DEPTH')
+    if depth is None and (succ.parent / 'rst_regional.json').is_file():
+        depth = json.loads((succ.parent / 'rst_regional.json').read_text())['max_total_depth']
+    prog = dict(compiled_rx_cmd=rx_cmd, compiled_tx_first=tx_first, compiled_end=tx_end, service_end=service_end,
+                token_period=token_period)
+    c = RC.build(succ, rst, prog, 6 + 5, default_depth=None if depth is None else int(depth))   # link = --txl 6 --phy 5
+    need = c['reset']['required_sink_release_depth']
+    c['reset'].update(bound_hold=RETIRE_HOLD_BOUND, fits_bound_hold=need <= RETIRE_HOLD_BOUND,
+                      default_depth=None if depth is None else int(depth))
+    return c
+
+
 # ---- the compile -------------------------------------------------------------------------------------------------------
 def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_words=None, retirement_contract=None, status_delay=None):
     r16 = attn_r16()
@@ -918,12 +952,22 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
 
     retirement = None
     if status_delay:
+        if retirement_contract is None and os.environ.get('OT_KV_RETIRE_SUCCESSOR'):
+            retirement_contract = die_retirement_contract(LR.RX_CMD, tx_first, tx_end, service_end,
+                                                          cal['program']['token_period'])
         if retirement_contract is None:
-            raise ValueError('delayed STATUS requires a complete retirement contract')
+            raise ValueError('delayed STATUS requires a complete retirement contract (OT_KV_RETIRE_SUCCESSOR=<run>/'
+                             'health_successor.json builds it from the die health plane)')
         from kv_retirement import prove
         retirement = prove(retirement_contract, tx_first, tx_end - 1)
+        retirement['reset'] = retirement_contract.get('reset')
+        retirement['inputs'] = {k: v for k, v in (retirement_contract.get('inputs') or {}).items() if k != 'programme'}
         if not retirement['qualified']:
-            raise ValueError('delayed production STATUS requires qualified deadline/path/reset evidence')
+            if os.environ.get('OT_KV_RETIRE_LOGICAL', '0') != '1':
+                raise ValueError('delayed production STATUS requires qualified deadline/path/reset evidence '
+                                 '(OT_KV_RETIRE_LOGICAL=1 compiles on the LOGICAL_ONLY contract, recorded NOT a release)')
+            retirement['release'] = ('NOT_RELEASE: LOGICAL_ONLY retirement (no measured native path / reset / cross-root '
+                                     'skew receipts); the frame and slots are final, the qualification is owed')
 
     # ---- K / V leads and the layer roots ----
     plans, P, lead_k, lead_v = pc_plans(pr)
@@ -1109,7 +1153,9 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
              [dict(target=0, program=prog[:sfi_pw], descriptors=prog[sfi_pw:])]
     mu = None
     if MU:              # MU-KV-BOOT 10-19 (OT_KV_MU=1): target 1 MU form + target 3 MU ownership roots (mu_calendar)
-        mu = mu_images(layer_words, own, lead=own_lead)
+        mu = mu_images(layer_words, own, lead=own_lead, att_end=tx_end - LR.RX_CMD,
+                       phase=None if not pr['phase'] else dict(PH0=pr['phase']['PH0'], lo=pr['phase']['SAFE_LOW_U'],
+                                                               hi=pr['phase']['SAFE_HIGH_U'], groups=pr['groups']))
         layer_words, own = mu['layer'], mu['ownership']
         images[0] = dict(target=1, program=layer_words, descriptors=[])
         images[2] = dict(target=3, program=own, descriptors=[])
@@ -1121,7 +1167,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
     if os.environ.get('OT_KV_EMB_FILL_STRICT', '0') == '1' and fill['status'] != 'PASS':
         raise ValueError(f'embedding fill deadline: margin {fill["margin"]} (last join word {fill["last_word"]} + 1 > row_tx '
                          f'slot {fill["row_tx_slot"]}); embed window {fill["embed_window"]} -> {fill["embed_window_needed"]}')
-    return dict(profile=pr, cal_deltas=cd, emb_fill=fill, writer_die=wdie, link=dict(cmd_event=cmd_ev, run_event=run_ev, start_qk=start_qk, result_first_slot=res[0]['cyc'],
+    return dict(profile=pr, cal_deltas=cd, emb_fill=fill, writer_die=wdie, mu_frame=(mu or {}).get('frame'), link=dict(cmd_event=cmd_ev, run_event=run_ev, start_qk=start_qk, result_first_slot=res[0]['cyc'],
                                       token_cycles=prog_cal['token_cycles_through_L35'], token_period=prog_cal.get('token_period'),
                                       token_period_unpadded=prog_cal.get('token_period_pad', {}).get('unpadded')),
                 leads=dict(k=lead_k, v=lead_v, kgo_event=kgo_ev, vgo_minus_kgo=d_v, e_k=e_k, e_v=e_v, start_lead=lead, law=law),
@@ -1142,19 +1188,47 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None, die_cfg_word
 MU = __import__('os').environ.get('OT_KV_MU', '0') == '1'
 
 
-def mu_images(layer_words, own_words, receipt=False, lead=0):
+def mu_images(layer_words, own_words, receipt=False, lead=0, att_end=None, phase=None):
+    """KV-PROG17 10-20: the frame compiler runs on THIS compile's attention busy end and phase-launch profile (PH0, SAFE
+    window, lprg -> group relay edges); mu_calendar's module defaults are the committed 10-17 die report (groups 67), so a
+    die whose relays moved got every user-0 launch judged on stale phases."""
+    from tools.qwen_static_schedule import mu_calendar as MC
+    keep = MC.KV_ATT_END, dict(MC.KV_PHASE)
+    try:
+        if phase is not None:
+            MC.KV_PHASE.update(phase)
+        return _mu_images(layer_words, own_words, receipt, lead, att_end)
+    finally:
+        MC.KV_ATT_END = keep[0]
+        MC.KV_PHASE.clear()
+        MC.KV_PHASE.update(keep[1])
+
+
+def _mu_images(layer_words, own_words, receipt=False, lead=0, att_end=None):
     """the 4-user forms of targets 1 and 3 from the single-user ones: target 1 = rows + digest + epoch + the GAP[4][36]
     block compiled by mu_calendar (kv_frame_of_record on these rows) + seal at 470 (qkd_static_kv_layer_programme_mu,
     loaded through qkd_static_kv_boot_dispatch_mu); target 3 = enter 3, leave / deadline = the max over users
     (qkd_static_kv_ownership_calendar_mu re-arms on every user's go).  The single-user roots must be the ones the
     rows imply (enter 3, leave = stage-36 quiet + 1, deadline = token cycles)."""
     from tools.qwen_static_schedule import mu_calendar as MC
+    # KV-PROG17 10-20: the attention busy run is run .. run + compiled_end - RX_CMD (qkd_native_attention_programme: a
+    # second user's issue inside it is a sticky fault); 1784 is the priced tile (compiled_end 1786).  The r16 tile's
+    # RETIRE_STATIC STATUS tail (+213) and TX shift (+1) extend it to 1998: the frame compiler must see the real span.
+    if att_end is not None and att_end != MC.KV_ATT_END:
+        if not attn_r16()['on']:
+            raise ValueError(f'attention busy end {att_end} != mu_calendar.KV_ATT_END {MC.KV_ATT_END} without the r16 tile')
+        MC.KV_ATT_END = att_end
     rows = MC.kv_rows_from_image(list(layer_words))
-    if LINK_EMB_WIN:
+    if LINK_EMB_WIN or attn_r16()['on']:
         # KV-EMBWIN16 10-20: the filler first starts KV_FRAME_STARTS were searched on the priced-window (272) frame; on a
         # grown window the stage frame moves, so the same deterministic search (kv_frame_search seed 1) picks them here
-        fs, _ = MC.kv_frame_search(rows, MC.KV_FRAME_F)
-        cal, gaps, starts, chk, per_user = MC.kv_frame_of_record(rows, MC.KV_FRAME_F, tuple(fs))
+        # KV-PROG17 10-20: OT_KV_MU_FRAME_F=3 = the r16 frame (one filler token a frame, fillers never overlap): with the
+        # r16 STATUS tail the KV service window (2,003 edges) no longer fits beside u0 + a second filler (F 2 has no
+        # frame: kv_frame_search fails), priced 9,300.6 vs 11,982.4 tok/s aggregate (u0 unchanged) -- COORD decision.
+        F = int(os.environ.get('OT_KV_MU_FRAME_F', MC.KV_FRAME_F))
+        ft = 1 if F > MC.KV_FRAME_F else None
+        fs, _ = MC.kv_frame_search(rows, F, filler_tokens=ft)
+        cal, gaps, starts, chk, per_user = MC.kv_frame_of_record(rows, F, tuple(fs), filler_tokens=ft)
     else:
         cal, gaps, starts, chk, per_user = MC.kv_frame_of_record(rows)
     own, per = MC.kv_ownership_roots_mu(rows, gaps)
@@ -1166,6 +1240,10 @@ def mu_images(layer_words, own_words, receipt=False, lead=0):
         if not own[0] < own[1] < own[2]:
             raise ValueError(f'MU ownership roots {own} out of order with the c32 leave lead {lead}')
     out = dict(layer=MC.kv_layer_image_mu(list(layer_words), gaps), ownership=own, gaps=gaps, starts=starts, checks=chk)
+    out['frame'] = None if not isinstance(cal, dict) else dict(F=cal['frame_tokens'], H=cal['H'], T=cal['T'], tokens_per_frame=cal['tokens_per_frame'],
+                        aggregate_tok_s=round(cal['aggregate_tok_s'], 1), user_tok_s=[round(u['tok_s'], 1) for u in cal['users']],
+                        first_starts=[u['first_start'] for u in cal['users']], att_end=MC.KV_ATT_END,
+                        phase_groups=MC.KV_PHASE['groups'])
     if receipt:
         out['receipt'] = MC.kv_gap_receipt(list(layer_words))
     return out
@@ -1311,7 +1389,7 @@ def write(r, out, root=ROOT):
         f"localparam [36*9*32-1:0] LP_ROOTS = {36*9*32}'h{vec};\n"
         f"localparam [63:0] LP_DIGEST = 64'h{r['layer']['digest']:016x};\n"
         f"localparam [15:0] LP_EPOCH = 16'd{r['layer']['epoch']};\n")
-    report = dict(schema='opentallas.qwen_kv_static.programme_report.v1', status='COMPILED_NOT_QUALIFIED',
+    report = dict(schema='opentallas.qwen_kv_static.programme_report.v1', status='COMPILED_NOT_QUALIFIED', mu_frame=r.get('mu_frame'),
                   profile=r['profile'], link=r['link'], leads=r['leads'], cal_deltas=r['cal_deltas'], emb_fill=r['emb_fill'],
                   layer_relative_roots=r['layer']['rows'][1]['roots'], stage1_roots=r['layer']['rows'][0]['roots'],
                   writer=dict(slots=r['writer']['slots'], stop=r['writer']['stop']), ownership=r['ownership'],

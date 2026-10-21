@@ -1315,6 +1315,10 @@ DCAL_BC4_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv'   # + 
 _EMB_WIN = __import__('os').environ.get('OT_KV_EMB_WIN', '')
 if _EMB_WIN:
     DCAL_BC4_FILE = f'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4_ew{int(_EMB_WIN)}.sv'
+# KV-PROG17 10-20: OT_KV_ATTN_R16=1 -> the bc4 tile on the r16 pair image (K RESULT +1 / STATUS +213 a layer: START table and
+# token period), qkd_d2d_cal_seq_bc4[_ew<N>]_r16.sv, kit qkd_d2d_cal_seq_pin_bc4[_ew<N>]_r16 (same module / ports / edges)
+if __import__('os').environ.get('OT_KV_ATTN_R16', '0') == '1':
+    DCAL_BC4_FILE = DCAL_BC4_FILE.replace('.sv', '_r16.sv')
 if DCAL_BC4:
     DCAL_FILE = DCAL_BC4_FILE
     DCAL_WH = (21.6, 34.56) if __import__('os').environ.get('OT_KV_DCAL_BC4_KIT', '') == 'qkd_d2d_cal_seq_pin_bc4w' \

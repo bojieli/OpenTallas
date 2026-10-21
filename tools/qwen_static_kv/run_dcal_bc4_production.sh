@@ -18,7 +18,9 @@ IMG=$D/d2d_cal_image_mu.svh; [ "$MUT" = 2 ] && IMG=$D/d2d_cal_image.svh
 # MUT 7 (EW only): target 11 from the BASE window image (stale boot image for the grown window) -> must FAIL.
 INC=(); CAND=$D/qkd_d2d_cal_seq_bc4.sv; TMUT=$MUT
 if [ -n "${EW:-}" ]; then CAND=$D/qkd_d2d_cal_seq_bc4_ew$EW.sv; mkdir -p "$O/inc"; cp $D/d2d_cal_image_mu_ew$EW.svh "$O/inc/d2d_cal_image_mu.svh"
-  INC=(-I"$O/inc"); [ "$MUT" = 2 ] || IMG=$D/d2d_cal_image_mu_ew$EW.svh; [ "$MUT" = 7 ] && { IMG=$D/d2d_cal_image_mu.svh; TMUT=0; }; fi
+  INC=(-I"$O/inc"); [ "$MUT" = 2 ] || IMG=$D/d2d_cal_image_mu_ew$EW.svh; [ "$MUT" = 7 ] && { IMG=$D/d2d_cal_image_mu.svh; TMUT=0; }
+  # KV-PROG17 10-20 (EW=<N>_r16): MUT 8 = target 11 from the same window WITHOUT the r16 shift (stale non-r16 boot image)
+  [ "$MUT" = 8 ] && { case $EW in *_r16) IMG=$D/d2d_cal_image_mu_ew${EW%_r16}.svh; TMUT=0;; *) echo "DCALBC_FAIL MUT 8 needs EW=<N>_r16"; exit 1;; esac; }; fi
 "$VL" --version
 # KV-DCAL 10-19: the tile is generated only on the coherent codec2 K22 image (gen_dcal_bc4.py refuses others)
 grep -q "localparam \[31:0\] D2D_TXDP_K = 32'h03030416;" $D/d2d_cal_image_mu.svh || { echo "DCALBC_FAIL image not codec2 K22"; exit 1; }
