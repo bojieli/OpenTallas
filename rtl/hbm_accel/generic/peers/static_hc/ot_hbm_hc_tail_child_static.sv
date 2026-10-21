@@ -18,14 +18,22 @@
 // MUT (bench): 1 = inner p3 row-max operand off by one group (ot_hgi_hc_tail_os_static MUT 1).
 module ot_hbm_hc_tail_child_static #(
     parameter integer SDIV = 7,
-    parameter integer CAP  = 289,
+    parameter integer CAP  = 41 * SDIV + 2,            // 2 ITERS + 1 = 41 Sinkhorn steps + 2 (289 at SDIV 7)
     parameter integer MUT_PRE = 0,
     parameter integer MUT = 0,
     // HBM-HCROOT8 10-20: SKCE 1 (default) = the Sinkhorn on the core clock with the sclk flop as its step ENABLE (one clock
     // root, no derived clock; kit SDC: declared multicycle SDIV between the Sinkhorn's own registers).  Calendar and
     // result edges unchanged.  0 = the derived /SDIV step clock of 22ea15f97 (k1/k1b: CTS left sclk untreed).
     parameter integer SKCE = 1,
-    parameter integer L = 198 + SDIV + CAP + 2
+    // FAM-HBM-B/HCTAIL 10-21 (k2b STA: Sinkhorn step 7.53 ns > the 5.83 ns MCP 7 budget, ~2,100 single-period tail paths
+    // ~38 levels / -417 ps): TPIPE 1 = the pipelined tail calendar of ot_hgi_hc_tail_os_static (EREADY 197 -> 270, the
+    // sink launch window opens at TR = EREADY + 1); SKP 1 = the Sinkhorn step in registered stages (ot_hdc_sinkhorn_cp,
+    // needs SDIV >= 16, no multicycle path).  Kits: k3 = TPIPE 1 SKP 1 SDIV 16 (L 947, +451 edges over L 496);
+    // k3b = TPIPE 1 SKP 0 SDIV 12 + MCP 12 (L 779, +283 edges).  Defaults = the k2 form (L 496).
+    parameter integer TPIPE = 0,
+    parameter integer SKP = 0,
+    parameter integer TR = TPIPE ? 271 : 198,          // os EREADY + 1 (ot_hgi_hc_tail_os_static calendar)
+    parameter integer L = TR + SDIV + CAP + 2
 )(
     input  wire          clk, rst_n,
     input  wire          launch,
@@ -64,11 +72,11 @@ module ot_hbm_hc_tail_child_static #(
         else begin cnt <= (cnt == SDIV - 1) ? {CW{1'b0}} : cnt + 1'b1; sclk <= (cnt == SDIV - 1); end
     wire wrap = (cnt == SDIV - 1);
     reg active, sl, armed; reg [9:0] age, sage;
-    wire tv, tf;
+    wire tv, tf, e_rdy;
     reg capture_q;
-    ot_hgi_hc_tail_os_static #(.MUT_PRE(MUT_PRE), .MUT(MUT), .SKCE(SKCE)) u_tail (.clk(clk), .sink_clk(sclk), .rst_n(rst_core),
+    ot_hgi_hc_tail_os_static #(.MUT_PRE(MUT_PRE), .MUT(MUT), .SKCE(SKCE), .SKP(SKP), .TPIPE(TPIPE)) u_tail (.clk(clk), .sink_clk(sclk), .rst_n(rst_core),
         .launch(launch_s), .mixes(i_mixes), .bases(i_bases), .scales(i_scales), .sink_launch(sl), .sink_capture(capture_q),
-        .e_ready(), .result_v(tv), .result(result), .fault(tf));
+        .e_ready(e_rdy), .result_v(tv), .result(result), .fault(tf));
     reg own_fault, captured;
     always @(posedge clk or negedge rst_ctl) begin
         if (!rst_ctl) begin active <= 0; sl <= 0; armed <= 0; age <= 0; sage <= 0; capture_q <= 0; result_v <= 0;
@@ -81,7 +89,8 @@ module ot_hbm_hc_tail_child_static #(
                 if (active) own_fault <= 1'b1;
                 active <= 1'b1; age <= 10'd1; armed <= 1'b0; captured <= 1'b0;
             end
-            if (active && !armed && age >= 10'd198 && wrap) begin sl <= 1'b1; armed <= 1'b1; sage <= 10'd1; end
+            if (e_rdy && age != 10'(TR - 1)) own_fault <= 1'b1;     // HCTAIL: TR must equal the os calendar's EREADY + 1
+            if (active && !armed && age >= 10'(TR) && wrap) begin sl <= 1'b1; armed <= 1'b1; sage <= 10'd1; end
             else if (sl && wrap) sl <= 1'b0;
             if (armed && !captured) begin
                 sage <= sage + 1'b1;

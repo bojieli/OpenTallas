@@ -8,6 +8,11 @@
 `ifndef MUT
 `define MUT 0
 `endif
+// FAM-HBM-B/HCTAIL 10-21: -DCHILD_P='.TPIPE(1), .SKP(1), .SDIV(16)' passes child parameters (RTL DUT); -DOFF=<n> is the
+// child's result offset over the unit's (2 + the child's added edges); +GAP=<n> the minimum launch spacing (> child L).
+`ifndef OFF
+`define OFF 2
+`endif
 module tb_hbm_hc_tail_child_eq;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0, launch = 0;
@@ -18,11 +23,15 @@ module tb_hbm_hc_tail_child_eq;
 `ifdef NATIVE_DUT   // gate-level cloned netlist (no parameters; mutants are RTL-only)
     ot_hbm_hc_tail_child_static u_dut (
 `else
+`ifdef CHILD_P
+    ot_hbm_hc_tail_child_static #(.MUT(`MUT), `CHILD_P) u_dut (
+`else
     ot_hbm_hc_tail_child_static #(.MUT(`MUT)) u_dut (
+`endif
 `endif
                                        .clk(clk), .rst_n(rst_n), .launch(launch), .mixes(mixes),
         .bases(bases), .scales(scales), .result_v(rv_c), .result(y_c), .fault(f_c));
-    integer N, seed, cyc = 0, errs = 0, done_r = 0, done_c = 0, nf = 0;
+    integer N, seed, gapb, cyc = 0, errs = 0, done_r = 0, done_c = 0, nf = 0;
     reg [31:0] lf;
     integer t_r [0:4095];
     reg [767:0] yr [0:4095];
@@ -41,6 +50,7 @@ module tb_hbm_hc_tail_child_eq;
     initial begin
         if (!$value$plusargs("N=%d", N)) N = 48;
         if (!$value$plusargs("SEED=%d", seed)) seed = 1;
+        if (!$value$plusargs("GAP=%d", gapb)) gapb = 500;
         lf = 32'h9e3779b9 ^ seed; if (lf == 0) lf = 1;
         repeat (5) @(negedge clk); rst_n = 1; repeat (8) @(negedge clk);
         for (integer c = 0; c < N; c = c + 1) begin
@@ -51,13 +61,13 @@ module tb_hbm_hc_tail_child_eq;
             launch = 1; @(negedge clk); launch = 0;
             // scramble the inputs after the launch edge: both must have captured
             lf = nx(lf); mixes = {24{lf}}; bases = {24{~lf}}; scales = {3{lf ^ 32'h5a5a5a5a}};
-            lf = nx(lf); gap = 500 + lf % 23;
+            lf = nx(lf); gap = gapb + lf % 23;
             repeat (gap) @(negedge clk);
         end
         repeat (40) @(negedge clk);
         if (done_r != N || done_c != N) begin errs = errs + 1; $display("TAILC ERR results ref %0d child %0d of %0d", done_r, done_c, N); end
         if (f_r !== f_c) begin errs = errs + 1; $display("TAILC ERR final fault ref %0d child %0d", f_r, f_c); end
-        if (errs == 0) $display("TAILC PASS cases=%0d seed=%0d child result = unit result + 2 edges, faults agree (fault %0d)", N, seed, f_r);
+        if (errs == 0) $display("TAILC PASS cases=%0d seed=%0d child result = unit result + %0d edges, faults agree (fault %0d)", N, seed, `OFF, f_r);
         else $display("TAILC FAIL %0d errors in %0d cases", errs, N);
         $finish;
     end
@@ -71,7 +81,7 @@ module tb_hbm_hc_tail_child_eq;
         if (rst_n && rv_c) begin
             if (done_c >= done_r) begin errs = errs + 1; $display("TAILC ERR child result %0d before the unit's", done_c); end
             else begin
-                if (cyc - t_r[done_c] != 2) begin errs = errs + 1; $display("TAILC ERR case %0d child result %0d edges after the unit's (want 2)", done_c, cyc - t_r[done_c]); end
+                if (cyc - t_r[done_c] != `OFF) begin errs = errs + 1; $display("TAILC ERR case %0d child result %0d edges after the unit's (want %0d)", done_c, cyc - t_r[done_c], `OFF); end
                 if (y_c !== yr[done_c]) begin
                     errs = errs + 1;
                     if (errs < 8) for (integer j = 0; j < 24; j = j + 1) if (y_c[j*32 +: 32] !== yr[done_c][j*32 +: 32])
@@ -80,6 +90,6 @@ module tb_hbm_hc_tail_child_eq;
             end
             done_c = done_c + 1;
         end
-        if (cyc > 200000) begin $display("TAILC FAIL watchdog"); $finish; end
+        if (cyc > 200000 + N * gapb) begin $display("TAILC FAIL watchdog"); $finish; end
     end
 endmodule

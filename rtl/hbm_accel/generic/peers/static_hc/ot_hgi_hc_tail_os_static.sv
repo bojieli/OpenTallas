@@ -30,7 +30,18 @@ module ot_hgi_hc_tail_os_static #(
     // the core edge one cycle after the matching derived-clock edge of SKCE 0 and samples the same values (the post-wrap
     // values a zero-delay derived clock sees); the Sinkhorn result is ready 1 edge later, still >= 1 edge before the
     // caller's capture (CAP 289 >= 41 x SDIV + 2).  0 = derived step clock (unchanged).
-    parameter integer SKCE=0
+    parameter integer SKCE=0,
+    // FAM-HBM-B/HCTAIL 10-21: SKP 1 (needs SKCE 1) = the Sinkhorn with its step cone cut into registered stages
+    // (ot_hdc_sinkhorn_cp; the caller's step period SDIV must be >= 16; no multicycle path).
+    parameter integer SKP=0,
+    // FAM-HBM-B/HCTAIL 10-21: TPIPE 1 = every tail cone <= ~600 ps a stage (the k2b gate's ~2,100 single-period paths,
+    // ~38 levels): (a) the AND-OR operand selects land in an operand register before every unit (+1 edge per unit);
+    // (b) deeper released units, bit-identical: multiplier ot_hdc_fp32_mul_lat LAT 9, adder ot_hdc_fp32_add_lat LAT 7,
+    // exp ot_hdc_v41x_exp LM 6 / LA 4 (DEPTH 78), divider ot_hdc_fdiv (one quotient bit a stage, DEPTH 31);
+    // (c) the 4-way row max as a registered 2-level tree (+1 edge; earliest maximum wins, = the sequential scan).
+    // The phase calendar is re-derived from the unit latencies (TPIPE 0 reproduces 28/55/56/75/148/159/186/197):
+    // EREADY 197 -> 270 (+73 edges), all static (no ready / backpressure).
+    parameter integer TPIPE=0
 )(
     input wire clk,sink_clk,rst_n,
     input wire launch,
@@ -42,12 +53,17 @@ module ot_hgi_hc_tail_os_static #(
     output wire [767:0] result,
     output reg fault
 );
-    localparam integer P1=1,P2=28,MAX=55,P3=56,P4=75,P5=148,P6=159,P7=186,EREADY=197;
-    localparam integer DM=3,DA=3,DE=49,DD=19;          // unit latencies (the delay lines of ot_hgi_hc_tail_static)
+    localparam integer OPR=TPIPE?1:0;                  // operand register stage
+    localparam integer ML=TPIPE?9:3, AL=TPIPE?7:3, XLM=TPIPE?6:3, XLA=TPIPE?4:3;
+    localparam integer DM=OPR+ML, DA=OPR+AL, DE=OPR+7*XLM+8*XLA+4, DD=OPR+(TPIPE?31:19);   // issue -> write-back
+    localparam integer MXL=TPIPE?1:0;                  // extra row-max edges
+    localparam integer P1=1, P2=P1+24+DM, MAX=P2+24+DA, P3=MAX+1+MXL, P4=P3+16+DA, P5=P4+24+DE, P6=P5+8+DA, P7=P6+8+DD;
+    localparam integer EREADY=((P7+4+DA)>(P7+8+DM))?(P7+4+DA):(P7+8+DM);
     reg active;
     reg [8:0] age;
     reg [31:0] t[0:23],b[0:23],s[0:2],mx[0:3];
     reg [767:0] final_result;
+    reg [31:0] mxa[0:3],mxb[0:3];                       // TPIPE row-max tree level 1
     assign result=final_result;
     assign e_ready=active&&(age==EREADY);
 
@@ -106,6 +122,8 @@ module ot_hgi_hc_tail_os_static #(
         mv <= d_mv; av <= d_av; xv <= d_xv; dv <= d_dv; q_max <= d_max;
         wmv <= d_wmv; wav <= d_wav; wev <= d_wev; wdv <= d_wdv;
     end
+    reg q_max2;                                        // TPIPE row-max tree level 2 enable
+    always @(posedge clk) q_max2 <= q_max;
 
     // ---------------------------------------------------------------- AND-OR operand selects
     reg [31:0] ma, mb, aa, ab, xa, da;
@@ -125,10 +143,23 @@ module ot_hgi_hc_tail_os_static #(
     wire [31:0] ey,dy,my,ay;
     wire mo,ao,eo,do_,ef,df;
     wire [1:0] me,ae;
-    ot_hdc_fp32_mul_fast mul(.clk(clk),.rst_n(rst_n),.valid_in(mv),.a(ma),.b(mb),.y(my),.err(me),.valid_out(mo));
-    ot_hdc_fp32_add_fast add(.clk(clk),.rst_n(rst_n),.valid_in(av),.a(aa),.b(ab),.y(ay),.err(ae),.valid_out(ao));
-    ot_hdc_v41x_exp #(.LM(3),.LA(3)) exp_(.clk(clk),.rst_n(rst_n),.v(xv),.x(xa),.y(ey),.vo(eo),.fault(ef));
-    ot_hdc_v41x_fdiv div_(.clk(clk),.rst_n(rst_n),.v(dv),.a(32'h3f800000),.b(da),.y(dy),.vo(do_),.fault(df));
+    if (TPIPE != 0) begin : g_tp
+        // operand registers (data unreset; valids reset)
+        reg [31:0] ma_q, mb_q, aa_q, ab_q, xa_q, da_q; reg mv_q, av_q, xv_q, dv_q;
+        always @(posedge clk) begin ma_q <= ma; mb_q <= mb; aa_q <= aa; ab_q <= ab; xa_q <= xa; da_q <= da; end
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin mv_q <= 0; av_q <= 0; xv_q <= 0; dv_q <= 0; end
+            else begin mv_q <= mv; av_q <= av; xv_q <= xv; dv_q <= dv; end
+        ot_hdc_fp32_mul_lat #(.LAT(ML)) mul(.clk(clk),.rst_n(rst_n),.valid_in(mv_q),.a(ma_q),.b(mb_q),.y(my),.err(me),.valid_out(mo));
+        ot_hdc_fp32_add_lat #(.LAT(AL)) add(.clk(clk),.rst_n(rst_n),.valid_in(av_q),.a(aa_q),.b(ab_q),.y(ay),.err(ae),.valid_out(ao));
+        ot_hdc_v41x_exp #(.LM(XLM),.LA(XLA)) exp_(.clk(clk),.rst_n(rst_n),.v(xv_q),.x(xa_q),.y(ey),.vo(eo),.fault(ef));
+        ot_hdc_fdiv div_(.clk(clk),.rst_n(rst_n),.v(dv_q),.a(32'h3f800000),.b(da_q),.y(dy),.vo(do_),.fault(df));
+    end else begin : g_t0
+        ot_hdc_fp32_mul_fast mul(.clk(clk),.rst_n(rst_n),.valid_in(mv),.a(ma),.b(mb),.y(my),.err(me),.valid_out(mo));
+        ot_hdc_fp32_add_fast add(.clk(clk),.rst_n(rst_n),.valid_in(av),.a(aa),.b(ab),.y(ay),.err(ae),.valid_out(ao));
+        ot_hdc_v41x_exp #(.LM(3),.LA(3)) exp_(.clk(clk),.rst_n(rst_n),.v(xv),.x(xa),.y(ey),.vo(eo),.fault(ef));
+        ot_hdc_v41x_fdiv div_(.clk(clk),.rst_n(rst_n),.v(dv),.a(32'h3f800000),.b(da),.y(dy),.vo(do_),.fault(df));
+    end
     function automatic greater(input [31:0] a,c);
         if(a[30:0]==0&&c[30:0]==0)greater=0;
         else if(a[31]!=c[31])greater=!a[31];
@@ -138,7 +169,15 @@ module ot_hgi_hc_tail_os_static #(
     for(genvar j=0;j<16;j=j+1)assign se[j*32+:32]=t[j+8];
     wire sr,sv,sf,sbusy;
     reg sink_fault;
-    if (SKCE != 0) begin : g_skce
+    if (SKCE != 0 && SKP != 0) begin : g_skce
+        ot_hdc_sinkhorn_cp #(.ITERS(ITERS),.EPS(HC_EPS),.CUT(1)) sink(
+            .clk(clk),.rst_n(rst_n),.ce(sink_clk),.in_valid(sink_launch),.in_ready(sr),
+            .in_e(se),.out_valid(sv),.y(sy),.fault(sf),.busy(sbusy));
+        always @(posedge clk or negedge rst_n)begin
+            if(!rst_n)sink_fault<=0;
+            else if(sink_clk&&((sink_launch&&!sr)||sf))sink_fault<=1;
+        end
+    end else if (SKCE != 0) begin : g_skce0
         ot_hdc_sinkhorn_ce #(.ITERS(ITERS),.EPS(HC_EPS)) sink(
             .clk(clk),.rst_n(rst_n),.ce(sink_clk),.in_valid(sink_launch),.in_ready(sr),
             .in_e(se),.out_valid(sv),.y(sy),.fault(sf),.busy(sbusy));
@@ -181,11 +220,21 @@ module ot_hgi_hc_tail_os_static #(
             if(wd[j])t[j]<=dy;
         end
         if(launch)for(integer j=0;j<3;j=j+1)s[j]<=scales[j*32+:32];
-        if(q_max)for(integer r=0;r<4;r=r+1)begin:maximum
-            reg [31:0] v;
-            v=t[8+4*r];
-            for(integer c=1;c<4;c=c+1)if(greater(t[8+4*r+c],v))v=t[8+4*r+c];
-            mx[r]<=v;
+        if(MXL==0) begin
+            if(q_max)for(integer r=0;r<4;r=r+1)begin:maximum
+                reg [31:0] v;
+                v=t[8+4*r];
+                for(integer c=1;c<4;c=c+1)if(greater(t[8+4*r+c],v))v=t[8+4*r+c];
+                mx[r]<=v;
+            end
+        end else begin
+            // registered 2-level tree: pair maxima on the q_max edge, the row max one edge later (ties keep the
+            // earlier element at both levels = the sequential scan's strict-greater rule)
+            if(q_max)for(integer r=0;r<4;r=r+1)begin
+                mxa[r]<=greater(t[8+4*r+1],t[8+4*r])?t[8+4*r+1]:t[8+4*r];
+                mxb[r]<=greater(t[8+4*r+3],t[8+4*r+2])?t[8+4*r+3]:t[8+4*r+2];
+            end
+            if(q_max2)for(integer r=0;r<4;r=r+1)mx[r]<=greater(mxb[r],mxa[r])?mxb[r]:mxa[r];
         end
         if(sink_capture)begin
             for(integer j=0;j<8;j=j+1)final_result[j*32+:32]<=t[j];

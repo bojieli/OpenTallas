@@ -1,0 +1,64 @@
+TAILC ERR case 0 word 8 child 3b0d53f5 unit 3b0d53f7
+TAILC ERR case 0 word 12 child 3de26843 unit 3de26846
+TAILC ERR case 0 word 14 child 3d04231f unit 3d04231d
+TAILC ERR case 0 word 16 child 3ebaec0d unit 3ebaec0c
+TAILC ERR case 0 word 17 child 3e9eb79b unit 3e9eb79d
+TAILC ERR case 0 word 18 child 3dd442d7 unit 3dd442d9
+TAILC ERR case 0 word 19 child 3e629729 unit 3e62972b
+TAILC ERR case 0 word 21 child 3ea0e07f unit 3ea0e080
+TAILC ERR case 0 word 22 child 3e1be564 unit 3e1be566
+TAILC ERR case 1 word 8 child 3d5389e9 unit 3d5389ea
+TAILC ERR case 1 word 10 child 3e90175e unit 3e90175d
+TAILC ERR case 1 word 11 child 3ed6a64d unit 3ed6a64c
+TAILC ERR case 1 word 14 child 3e5ffeee unit 3e5ffeed
+TAILC ERR case 1 word 18 child 3e68a6fa unit 3e68a6f9
+TAILC ERR case 1 word 21 child 3e273516 unit 3e273517
+TAILC ERR case 2 word 8 child 3d4a9c86 unit 3d4a9c89
+TAILC ERR case 2 word 9 child 3e3a6567 unit 3e3a6566
+TAILC ERR case 2 word 12 child 3e7c2542 unit 3e7c2543
+TAILC ERR case 2 word 14 child 3e54c000 unit 3e54c001
+TAILC ERR case 2 word 15 child 3b95aa87 unit 3b95aa7f
+TAILC ERR case 2 word 16 child 3f1abc41 unit 3f1abc40
+TAILC ERR case 2 word 17 child 3d9241e4 unit 3d9241e5
+TAILC ERR case 2 word 18 child 3e2b6213 unit 3e2b6211
+TAILC ERR case 2 word 19 child 3e208bba unit 3e208bb8
+TAILC ERR case 2 word 20 child 3dcc84b4 unit 3dcc84b2
+TAILC ERR case 2 word 21 child 3e520c41 unit 3e520c44
+TAILC ERR case 3 word 14 child 3a3f92a2 unit 3a3f92a0
+TAILC ERR case 3 word 15 child 3a3e7973 unit 3a3e797a
+TAILC ERR case 4 word 8 child 3e347103 unit 3e347101
+TAILC ERR case 4 word 12 child 3eac3680 unit 3eac3682
+TAILC ERR case 4 word 13 child 3bb8ee2a unit 3bb8ee29
+TAILC ERR case 4 word 16 child 3eddccf7 unit 3eddccf6
+TAILC ERR case 4 word 17 child 3c9eeb8b unit 3c9eeb8c
+TAILC ERR case 4 word 20 child 3d5e1f2a unit 3d5e1f2c
+TAILC ERR case 4 word 22 child 3a590c81 unit 3a590c84
+TAILC ERR case 4 word 23 child 3d19c0c9 unit 3d19c0c7
+TAILC ERR case 5 word 8 child 3c2ed2ec unit 3c2ed2ee
+TAILC ERR case 5 word 10 child 3f18e288 unit 3f18e289
+TAILC ERR case 5 word 12 child 3ea040f3 unit 3ea040f2
+TAILC ERR case 5 word 13 child 3b697ccd unit 3b697cd2
+TAILC ERR case 5 word 17 child 3de75db2 unit 3de75db3
+TAILC ERR case 5 word 18 child 3e71e36c unit 3e71e368
+TAILC ERR case 5 word 19 child 3ccb9b16 unit 3ccb9b17
+TAILC ERR case 5 word 20 child 3d4e5a62 unit 3d4e5a61
+TAILC ERR case 5 word 22 child 3bb69e2d unit 3bb69e2b
+TAILC ERR case 5 word 23 child 3e57754e unit 3e57754f
+TAILC ERR case 6 word 8 child 3ec1f6fe unit 3ec1f6fd
+TAILC ERR case 6 word 9 child 3e688a8e unit 3e688a8c
+TAILC ERR case 6 word 10 child 3c9d0be7 unit 3c9d0be2
+TAILC ERR case 6 word 11 child 3ebff2de unit 3ebff2df
+TAILC ERR case 6 word 12 child 3ef3143b unit 3ef31439
+TAILC ERR case 6 word 13 child 3b2cee18 unit 3b2cee17
+TAILC ERR case 6 word 14 child 3f05889e unit 3f05889f
+TAILC ERR case 6 word 15 child 3a808af4 unit 3a808aef
+TAILC ERR case 6 word 16 child 3daf32e9 unit 3daf32ec
+TAILC ERR case 6 word 17 child 3e96e93f unit 3e96e940
+TAILC ERR case 6 word 18 child 3e75f30b unit 3e75f30a
+TAILC ERR case 6 word 20 child 3d793f6a unit 3d793f6e
+TAILC ERR case 6 word 22 child 3e6048bf unit 3e6048bd
+TAILC FAIL 44 errors in 48 cases
+- rtl/test/tb_hbm_hc_tail_child_eq.sv:72: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 78us; walltime 2.022 s; speed 38.585 us/s
+- Verilator: cpu 2.022 s on 1 threads; allocated 17 MB
