@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-epyc7       admits  1078 GB (avail 805, growth 39, headroom 0, waiters 0/0 GB) load 28/96 running 14 disk 5268 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4038807-1792537253 after 1 s
+CTRL3_CASE OK cm3/fail_s1: TB_CTRL3 FAIL | TB_CTRL3_STATS mut 3 seed 1 slothit 0 svc_rq 801 rd_rq 600 rd_beats 310 pops 600 e_ab 0 e_ac 11061 e_rd 257
+CTRL3_CAMPAIGN PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4038807-1792537253): exit 0
