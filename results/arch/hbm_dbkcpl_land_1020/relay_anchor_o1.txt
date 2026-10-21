@@ -1,0 +1,15 @@
+# HBM-DBK9 10-21 hv16_dbk_cpl_o1: = relay_anchor_l1.txt without the wb_fill rule (fill = half-way relay + N face output register, both left to placement: io_flop_at_pins puts the face register at its port, each leg <= ~350 um)
+# HBM-HC7-DBK 2026-10-20 relay stations of ot_hgi_dma_back_static_vp4_banks_cpl (physical/common_flow/relay_anchor.tcl).
+# Die coordinates (um) of the s1 floorplan: banks L0-2 (86.4/259.2/432, 43.2), L3-5 (86.4, 172.8/302.4/432), L6-7
+# (259.2/432, 432), controller (259.2, 259.2) 69.12 sq, collar (432, 216) 151.2 x 129.6.  Free channel at x 328-427.
+# Reset: rl0 at the E pin (y 195), rl1 + the u_rst_bk sync pair at the centre station, the collar leaf in the
+# controller|collar channel, the u_rst_ctl chain beside the controller's E-face rst_n pin; every bank leaf half way
+# between the sync pair and its bank's rst_n pin (<= ~305 um each side; rl1 -> any leaf async clear <= ~305 um).
+rst_n__ot_rl1 xy 380 215
+u_rst_bk\.sync_q xy 380 225
+u_rst_bk\.rst_n\[8\] xy 420 262
+u_rst_ctl\. xy 345 250
+u_rst_bk\.rst_n\[[0-7]\] mid 0.5
+# Response landing copies wv_q / cv_q: second pass after io_flop_at_pins (relay_anchor_post_l1.txt).
+# Read relays (re/oe/rs/ra) half way controller face -> bank pins; fill relays half way controller N face -> wb ports.
+u_dbk\.L\[[0-7]\]\.(re_q|oe_q|rs_q|ra_q) mid 0.5
