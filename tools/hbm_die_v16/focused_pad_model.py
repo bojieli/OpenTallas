@@ -28,25 +28,39 @@ def main():
     for name in ('sites','layer','manifest','size_manifest','endpoint','stations','out'):
         ap.add_argument('--'+name.replace('_','-'),required=True)
     ap.add_argument('--slot',default='d4f_relay_sink:pgp_NE.command->su_NE1')
+    ap.add_argument('--bus', required=True, help='exact relay_splice_v2 bus identity; a slot can contain several chains')
     a=ap.parse_args(); packet,spec,man,sizes,end,stations=(load(getattr(a,n)) for n in
         ('sites','layer','manifest','size_manifest','endpoint','stations'))
-    target=[(k,v) for k,v in packet['rows'].items() if v['slot']==a.slot]
-    target.sort(key=lambda p:(int('_pa' in p[0]),int(p[0].rsplit('_',1)[1])))
+    by_inst={i['name']: i for i in spec['instances']}
+    splice=next(r for r in spec['relay_splice_v2'] if r['bus']==a.bus)
+    sink=a.slot.rsplit('->',1)[1];sinkinfo=splice['sinks'][sink]
+    target=[]
+    for names in sinkinfo['chain']:
+        key=ROW.search(by_inst[names[0]]['note'])[1]
+        target.append((key,packet['rows'][key]))
+    if any(v['slot']!=a.slot or v['instances']!=names for (_,v),names in zip(target,sinkinfo['chain'])):
+        raise ValueError('actual ordered splice stage/slot identity mismatch')
     if not target:raise ValueError('focused slot missing')
     exact={}
     for v in sizes['placement'].values():
         k=v['m'];old=exact.get(k,(0,0));exact[k]=(max(old[0],v['w']),max(old[1],v['h']))
+    fallback={}
     def shape(row):
-        if row['master'] not in exact:raise ValueError('no pinned full-master dimensions '+row['master'])
-        w,h=exact[row['master']]
+        master=row['master']
+        if master in exact:w,h=exact[master]
+        else:
+            family=re.match(r'(hbfd_(?:land0|land|lh0|lh|rly)_\d+)_',master)
+            candidates=[v for k,v in exact.items() if family and k.startswith(family[1]+'_')]
+            if not candidates:raise ValueError('no pinned full-master dimensions '+master)
+            w,h=max(q[0] for q in candidates),max(q[1] for q in candidates)
+            fallback[master]=[w,h]
         return (w*row['tiles'],h) if row['direction'] in ('NS','SN') else (w,h*row['tiles'])
     bbox=end['bbox'];goal=np.array([(bbox[0]+bbox[2])/2,(bbox[1]+bbox[3])/2])
-    row=next(r for r in stations['rows'] if r['driver']==a.slot.split(':',1)[1].split('->')[0])
-    towards=[t for t in row['stations'] if t['toward']=='su_NE1']
-    parent=max(towards,key=lambda p:p['depth']);parentpt=np.array([parent['x'],parent['y']])
-    # The actual forwarded row has the same lane count as its sink landing.
-    parentmaster='hbfd_lh_136_'+parent['master'].rsplit('_',1)[1]
-    pw,ph=shape(dict(master=parentmaster,tiles=target[0][1]['tiles'],direction=parent['master'].rsplit('_',1)[1]))
+    feed=sinkinfo['src'][0]
+    parentnode=next(n for n in splice['nodes'] if n['id']==feed)
+    pi=by_inst[parentnode['names'][0]];pm=ROW.search(pi['note'])
+    parentpt=np.array([float(pm[5]),float(pm[6])])
+    pw,ph=shape(dict(master=pi['master'],tiles=int(pm[3]),direction=pm[4]))
     G=4.32; x0=math.floor((goal[0]-1500)/G)*G;y0=math.floor((goal[1]-1500)/G)*G
     nx=math.ceil(1800/G);ny=math.ceil(3000/G)
     blocked=np.zeros((nx,ny),bool)
@@ -100,8 +114,9 @@ def main():
         if not found:failure=dict(row=key,reason='all reachable legal footprints exceed50pct actualfree-cell window budget',placed=len(selected));break
     ratio=float(np.max(np.divide(charged,capacity,out=np.zeros_like(charged),where=capacity>0)))
     verdict='FOCUSED_MODEL_PASS' if failure is None and not missing else 'FOCUSED_MODEL_FAIL'
-    result=dict(verdict=verdict,slot=a.slot,stages=len(target),placed=len(selected),failure=failure,
+    result=dict(verdict=verdict,slot=a.slot,bus=a.bus,stages=len(target),placed=len(selected),failure=failure,
                 selected=selected,missing_master_dimensions=sorted(missing),max_window_ratio=ratio,
+                conservative_family_dimension_fallbacks=fallback,
                 input_sha256={n:hashlib.sha256(Path(getattr(a,n)).read_bytes()).hexdigest() for n in
                               ('sites','layer','manifest','size_manifest','endpoint','stations')},
                 geometry_qualified=False,clock_phase_qualified=False,
