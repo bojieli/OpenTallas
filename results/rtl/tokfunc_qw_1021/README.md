@@ -43,3 +43,28 @@ refuse netlist mode until their carves are wired; head requires head_leaf.v, KV 
 sources.txt for its attention carve, ctx4u requires ctx_sources.f, and ovl4u requires
 xq_stages.txt. TP8 currently consumes netlist lane latencies while its collective stays RTL.
 A complete die-netlist token claim requires those replacements and source provenance.
+
+## Coherent RoPE source generation
+
+`compile_rope_pair.py` recovers the e18e3d597 recurring Ckind12 reservation, then feeds
+that sole calendar to the existing MU frame compiler and four-ROM release generator.
+Run on the fleet, against the selected source assembly:
+
+```sh
+python3 tools/qwen_tokfunc/compile_rope_pair.py --source-dir ASSEMBLY \
+  --ages actual_gen_inputs.json --token-path token_path_compiled.json \
+  --link-handoff actual_decision.json --out NEW_OUTPUT_DIRECTORY
+```
+
+The null-valued `rope_actual_gen_inputs.template.json` lists required source and actual
+GEN facts. Unknown fields refuse before creating outputs. `head_prepare_edges` is the
+source-composed earliest safe SLOT in native edges, including clock conversions for
+TT-to-native and native-to-sysface transport. `kv_descriptor_to_header_edges` includes
+the actual selected KV fork, context-start, HBM traversals and row capture through the
+header deadline. No HOST RESULT or inferred next-token authority is used. One recurring
+Ckind12 RX plus that actual fill path must meet the compiled first header. Old K-to-C
+HOST CONTEXT budget is insufficient for this new source law.
+
+Generated outputs are source programmes only, not playback or functional PASS. The die
+owners must select real descriptor producer/consumer and MU OVL sequencers. At 09:50
+current 595 GEN lacks HEAD_PREP buses; those ages and this generation remain pending.
