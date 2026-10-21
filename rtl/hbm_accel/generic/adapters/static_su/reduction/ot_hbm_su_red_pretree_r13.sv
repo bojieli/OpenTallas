@@ -16,10 +16,16 @@ module ot_hbm_su_red_pt_sel8_r13 #(parameter integer K=0)(input wire mode, va, v
 endmodule
 
 (* keep_hierarchy *)
-module ot_hbm_su_red_pt_kq_r13 #(parameter integer N=1,RST=0)(input wire clk, rst_n, input wire d, (* keep = 1 *) output wire q);
+module ot_hbm_su_red_pt_kq_r13 #(parameter integer N=1)(input wire clk, input wire d, (* keep = 1 *) output wire q);
  reg [N-1:0] p;
- if(RST!=0)begin:g_r always @(posedge clk or negedge rst_n) if(!rst_n) p<={N{1'b0}}; else p<={p[N-2+(N==1):0],d}; end
- else begin:g_n always @(posedge clk) p<={p[N-2+(N==1):0],d}; end
+ always @(posedge clk) p<={p[N-2+(N==1):0],d};
+ assign q=p[N-1];
+endmodule
+// r13: reset valid pipe with one reset bit per stage flop (rst_v = {N{rst_n}}), so the reset-copy splitter weighs it N
+(* keep_hierarchy *)
+module ot_hbm_su_red_pt_kqr_r13 #(parameter integer N=1)(input wire clk, input wire [N-1:0] rst_v, input wire d, (* keep = 1 *) output wire q);
+ reg [N-1:0] p;
+ for(genvar i=0;i<N;i=i+1)begin:g_b always @(posedge clk or negedge rst_v[i]) if(!rst_v[i]) p[i]<=1'b0; else p[i]<=(i==0)?d:p[i-(i>0)]; end
  assign q=p[N-1];
 endmodule
 
@@ -41,8 +47,8 @@ module ot_hbm_su_red_pretree_node_r13 #(parameter integer LAT=6)(
  reg [LAT-2:0] md;
  always @(posedge clk) md<={md[LAT-3:0],mode_in[0]};
  for(genvar k=0;k<4;k=k+1)begin:g_cp
-  ot_hbm_su_red_pt_kq_r13 #(.N(1),.RST(0)) u_m(.clk(clk),.rst_n(rst_n),.d(md[LAT-2]),.q(mode_out[k]));
-  ot_hbm_su_red_pt_kq_r13 #(.N(LAT),.RST(1)) u_v(.clk(clk),.rst_n(rst_n),.d(v),.q(vy[k]));
+  ot_hbm_su_red_pt_kq_r13 #(.N(1)) u_m(.clk(clk),.d(md[LAT-2]),.q(mode_out[k]));
+  ot_hbm_su_red_pt_kqr_r13 #(.N(LAT)) u_v(.clk(clk),.rst_v({LAT{rst_n}}),.d(v),.q(vy[k]));
  end
  assign err=vo&&(e!=2'd0);
 endmodule
@@ -66,9 +72,9 @@ module ot_hbm_su_red_pretree_j_r13 #(parameter integer LAT=6,MUT=0)(
   localparam integer BA=67*(A%4)+33*(A/4)+32, BB=67*(B%4)+33*(B/4)+32;
   wire [3:0] m_c, va_c, vb_c;
   for(genvar k=0;k<4;k=k+1)begin:g_pc        // pin copies of the mode / leaf valid bits (same edge as t_p)
-   ot_hbm_su_red_pt_kq_r13 #(.N(1),.RST(0)) u_m(.clk(clk),.rst_n(rst_n),.d(slice_t[66]),.q(m_c[k]));
-   ot_hbm_su_red_pt_kq_r13 #(.N(1),.RST(0)) u_a(.clk(clk),.rst_n(rst_n),.d(slice_t[BA]),.q(va_c[k]));
-   ot_hbm_su_red_pt_kq_r13 #(.N(1),.RST(0)) u_b(.clk(clk),.rst_n(rst_n),.d(slice_t[BB]),.q(vb_c[k]));
+   ot_hbm_su_red_pt_kq_r13 #(.N(1)) u_m(.clk(clk),.d(slice_t[66]),.q(m_c[k]));
+   ot_hbm_su_red_pt_kq_r13 #(.N(1)) u_a(.clk(clk),.d(slice_t[BA]),.q(va_c[k]));
+   ot_hbm_su_red_pt_kq_r13 #(.N(1)) u_b(.clk(clk),.d(slice_t[BB]),.q(vb_c[k]));
   end
   ot_hbm_su_red_pretree_node_r13 #(.LAT(LAT)) u_n(.clk(clk),.rst_n(rst_n),.mode_in(m_c),.va(va_c),.a(l0_x[A]),
    .vb(vb_c),.b(l0_x[B]),.mode_out(l1_m[i]),.vy(l1_v[i]),.y(l1_x[i]),.err(l1_e[i]));

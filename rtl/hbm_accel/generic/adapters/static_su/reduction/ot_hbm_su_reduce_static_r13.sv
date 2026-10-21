@@ -63,7 +63,7 @@ module ot_hbm_su_reduce_static_r13 #(parameter AW=10)(
  end
  reg [5:0] pv;
  reg [2:0] po[0:5]; reg [AW-1:0] pd[0:5];
- reg [31:0] pt[0:5],px[0:5];
+ reg [31:0] pt[0:5],px[0:5]; wire [31:0] px0_d;
  wire [31:0] add_y; wire [1:0] add_err;wire add_v;
  wire wr=rst_local&&pv[5]&&(po[5]<4||po[5]==5);
  wire [1:0] wsel;                                  // r10: po[5]==1||po[5]==2, kept per 16-bit half
@@ -97,8 +97,7 @@ module ot_hbm_su_reduce_static_r13 #(parameter AW=10)(
  // Reset only valid/control state; tags, addresses and arithmetic data clock freely.
  // This removes the 1,263-load r3 reset/enable cone without changing command latency.
  always @(posedge clk) begin
-   po[0]<=so;pd[0]<=sd;pt[0]<=st;
-   px[0]<=(so==0)?sx:((so==3||so==5)?max_y:av);
+   po[0]<=so;pd[0]<=sd;pt[0]<=st;px[0]<=px0_d;
    for(i=1;i<6;i=i+1) begin po[i]<=po[i-1];pd[i]<=pd[i-1];pt[i]<=pt[i-1];px[i]<=px[i-1];end
  end
  always @(posedge clk) begin
@@ -111,9 +110,28 @@ module ot_hbm_su_reduce_static_r13 #(parameter AW=10)(
    if(pv[5]) begin
     if(po[5]==1 || po[5]==2) begin
      if(!add_v || add_err!=0) fault<=1;
-    end else if(po[5]==4) begin scalar_valid<=1;scalar_tag<=pt[5];scalar_fp32<=ex;scalar_bf16<=ex_bf16;end
+    end else if(po[5]==4) scalar_valid<=1;
    end
   end
+ end
+ // r13: scalar data enables from 5 kept copies of the export decision (r13a census: rst_local&&pv[5]&&po[5]==4 = 129
+ // loads). exq copy == pv[5]&&po[5]==4 exactly (same sync reset as pv, po[5]<=po[4] every edge); data are unreset as before.
+ wire [4:0] exq;
+ for(genvar k=0;k<5;k=k+1)begin:g_exq
+  ot_hbm_su_reduce_r13_exq u_e(.clk(clk),.srst_n(rst_local),.d(pv[4]&&po[4]==3'd4),.q(exq[k]));
+ end
+ always @(posedge clk) begin
+  if(rst_local&&exq[0]) scalar_tag[15:0]<=pt[5][15:0];
+  if(rst_local&&exq[1]) scalar_tag[31:16]<=pt[5][31:16];
+  if(rst_local&&exq[2]) scalar_fp32[15:0]<=ex[15:0];
+  if(rst_local&&exq[3]) scalar_fp32[31:16]<=ex[31:16];
+  if(rst_local&&exq[4]) scalar_bf16<=ex_bf16;
+ end
+ // r13: stage-P0 operand select from 4 kept per-byte one-hot copies registered with so (r13a census: so decode 63 loads)
+ wire [1:0] psel [0:3];
+ for(genvar k=0;k<4;k=k+1)begin:g_psel
+  ot_hbm_su_reduce_r13_k2 u_s(.clk(clk),.d({co==3'd3||co==3'd5,co==3'd0}),.q(psel[k]));
+  assign px0_d[k*8+:8]=psel[k][0]?sx[k*8+:8]:(psel[k][1]?max_y[k*8+:8]:av[k*8+:8]);
  end
 endmodule
 
@@ -127,4 +145,14 @@ module ot_hbm_su_reduce_r13_pd6(input wire clk, input wire [2:0] d, (* keep = 1 
  reg [2:0] p [0:5]; integer i;
  always @(posedge clk) begin p[0]<=d; for(i=1;i<6;i=i+1) p[i]<=p[i-1]; end
  assign q=p[5];
+endmodule
+
+(* keep_hierarchy *)
+module ot_hbm_su_reduce_r13_exq(input wire clk, srst_n, d, (* keep = 1 *) output reg q);
+ always @(posedge clk) if(!srst_n) q<=1'b0; else q<=d;
+endmodule
+
+(* keep_hierarchy *)
+module ot_hbm_su_reduce_r13_k2(input wire clk, input wire [1:0] d, (* keep = 1 *) output reg [1:0] q);
+ always @(posedge clk) q<=d;
 endmodule
