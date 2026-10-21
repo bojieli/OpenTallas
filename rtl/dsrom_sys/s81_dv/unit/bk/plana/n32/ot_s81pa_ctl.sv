@@ -378,10 +378,16 @@ module ot_s81pa_ctl #(
     // [ELEM-BKG] packet selector_next = ts from kept per-3-packet copies of the ts cone (same qs/cq registers, same
     // expression; was one 2-bit net into 22 packets x 8 tsel copies = 177 loads)
     wire[15:0]ts_k;
+    // [ELEM-BKG] the ts cones read kept same-edge copies of qs/cq (D=qs_d/cq_d, same reset value and leaf), one set per two cones
+    wire[31:0]qs_k;wire[7:0]cq_k;
+    generate for(genvar j=0;j<4;j=j+1)begin:g_qsk
+      ot_s81pa_rcopy #(.W(8),.INIT(8'b11100100),.ID(16416+j))u_qs(.clk(ck[0]),.rst_n(rst_local[292]),.d(qs_d),.q(qs_k[8*j+:8]));
+      ot_s81pa_rcopy #(.W(2),.INIT(2'd0),.ID(16424+j))u_cq(.clk(ck[0]),.rst_n(rst_local[296]),.d(cq_d),.q(cq_k[2*j+:2]));
+    end endgenerate
     generate for(genvar c=0;c<22;c=c+1)begin:g_packet
       localparam integer LO=c*24,SW=(512-LO<24)?512-LO:24;
       if(c%3==0)begin:g_tsn
-        ot_s81pa_tsnext #(.ID(c/3))u_tsn(.qs(qs),.cq(cq),.ts(ts_k[2*(c/3)+:2]));
+        ot_s81pa_tsnext #(.ID(c/3))u_tsn(.qs(qs_k[8*(c/6)+:8]),.cq(cq_k[2*(c/6)+:2]),.ts(ts_k[2*(c/3)+:2]));
       end
       ot_s81pa_packet #(.LO(LO),.SW(SW),.ID(c))u(.clk(ck[0]),.rst_n(rst_local[303+5*c+:5]),.state_next(packet_next),.selector_next(ts_k[2*(c/3)+:2]),.heads(heads),.out(o_d[LO+:SW]));
     end endgenerate
