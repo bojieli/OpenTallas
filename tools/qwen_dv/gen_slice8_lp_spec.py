@@ -12,7 +12,7 @@ ROOT=g7.ROOT
 OUT_DIR='rtl/qwen_dv/s5/s8/lp'
 REC_DIR='results/arch/codex_slice2_native_1021/s8'
 CHILD_SOURCES=[x for x in g7.CHILD_SOURCES if x not in ['rtl/qwen_dv/s5/p3/qfd_dv_s5_suvm_su8p3.sv','rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv']]+[
-    'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1','qfd_dv_s8_station_tail1']]
+    'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1','qfd_dv_s8_station_tail1']]+['rtl/common/landed_parent/ot_pl_land_field_copies.sv']
 
 def make_flat():
     import gen_slice8_rp_source
@@ -55,6 +55,22 @@ def base_spec(name,D,E):
     s['why']='Opt-in s8 hard-leaf actual1/1; same stages/regions as s7; compiler ages require measured selected benchmark.'
     return s
 
+def kept_fdn_selectors(path,D,E):
+    """Private selector copies capture exactly the existing landing0 publication edge."""
+    text=path.read_text()
+    assert 'LANDING 0: chu_q r_fe -> r_fw' in text
+    assert 'ot_pl_land_field_copies' not in text
+    code='    // Same landing0 read edge; <=12 data bits (~24 mapped mux loads) per kept selector.\n'
+    code+='    wire fdn_sel_rst; ot_pl_land_rst_copy #(.ID(9001)) u_fdn_sel_rst(.ck(ck_r_fw),.d(lpr_r_fw_p),.q(fdn_sel_rst));\n'
+    for label,bit in [('ar',1094),('dd',547)]:
+        chunk=bit//24
+        code+=f'    wire [45:0] fdn_{label}_copies;\n'
+        code+=f'    ot_pl_land_field_copies #(.COPIES(46),.D({D}),.K((MUT==2)?{E+1}:{E})) u_fdn_{label}_copies (.ck(ck_r_fw),.rsi(fdn_sel_rst),.bank({{'+', '.join(f'lpl_0_bank[{slot}*1095+{bit}]' for slot in reversed(range(D)))+'}),'
+        code+=f'.vld(lpl_0_vld[{chunk}*{D}+:{D}]),.epo(lpl_0_epo),.o(fdn_{label}_copies));\n'
+    key='    qfd_dv_s8_fdn_arf1 u_fdn ('
+    replacement=code+'    qfd_dv_s8_fdn_arf1 #(.USE_SEL_COPIES(1)) u_fdn (.chu_ar_sel((MUT==1)?{46{chu_q[1094]}}:fdn_ar_copies), .chu_dd_sel((MUT==1)?{46{chu_q[547]}}:fdn_dd_copies), '
+    assert key in text;text=text.replace(key,replacement,1);path.write_text(text)
+
 def main():
     make_flat()
     for name,D,E in [('qfd_dv_s8b',8,4),('qfd_dv_s8',4,2)]:
@@ -63,6 +79,7 @@ def main():
         if '--gen' in sys.argv:
             g7.lp.gen(g7.lp.load(str(path)))
             d=ROOT/OUT_DIR
+            kept_fdn_selectors(d/f'{name}_lp.sv',D,E)
             # Generated shell intentionally receives exact-source simulation flag.
             f=d/f'{name}_lp_bench.sh';f.write_text(f.read_text().replace('-DOT_S5_HARD','-DOT_S5_HARD -DOT_S8_SIM'))
             if name!='qfd_dv_s8':

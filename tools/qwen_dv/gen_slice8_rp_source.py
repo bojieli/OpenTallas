@@ -24,7 +24,20 @@ def main():
     (D/'qfd_dv_s8_suvm_rp1.sv').write_text(q)
     # ARF stamps the existing outgoing publication: no extra sequential edge.
     f=extract('rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv','qfd_dv_s6_fdn').replace('module qfd_dv_s6_fdn ','module qfd_dv_s8_fdn_arf1 ',1)
-    f=f.replace('wire [1094:0] ch_m =','wire [1094:0] ch_raw =')
+    f=f.replace('module qfd_dv_s8_fdn_arf1 (', 'module qfd_dv_s8_fdn_arf1 #(parameter integer USE_SEL_COPIES=0) (', 1)
+    f=f.replace('    input  wire [1094:0]  chu_q,', '    input wire [45:0] chu_ar_sel, chu_dd_sel,\n    input  wire [1094:0]  chu_q,', 1)
+    old_mux="wire [1094:0] ch_m = {p_ar ? chu_q[1094:548] : own_ch[1094:548], p_dd ? chu_q[547:0] : own_ch[547:0]};"
+    new_mux="""wire [1094:0] ch_raw;
+    generate for(genvar c=0;c<46;c=c+1) begin:g_ch_select
+      localparam integer ARW=(547-c*12<12)?547-c*12:12;
+      localparam integer DDW=(548-c*12<12)?548-c*12:12;
+      wire sa=USE_SEL_COPIES?chu_ar_sel[c]:p_ar;
+      wire sd=USE_SEL_COPIES?chu_dd_sel[c]:p_dd;
+      assign ch_raw[548+c*12+:ARW]=sa?chu_q[548+c*12+:ARW]:own_ch[548+c*12+:ARW];
+      assign ch_raw[c*12+:DDW]=sd?chu_q[c*12+:DDW]:own_ch[c*12+:DDW];
+    end endgenerate"""
+    assert old_mux in f
+    f=f.replace(old_mux,new_mux)
     anchor='    always @(posedge ck or negedge rst[0])\n        if (!rst[0]) begin ch_dn_o'
     logic='''    reg [3:0] arf_sid; reg arf_sid_ok;
     wire setid=cmd_q[0] && cmd_q[3:1]==3'd7;

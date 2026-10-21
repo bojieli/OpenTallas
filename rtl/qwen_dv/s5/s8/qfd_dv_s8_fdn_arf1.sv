@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 // Existing ARF1 stamps before original fdn output register; split regional timing must be measured.
-module qfd_dv_s8_fdn_arf1 (
+module qfd_dv_s8_fdn_arf1 #(parameter integer USE_SEL_COPIES=0) (
     input  wire           ck,
     input  wire           rst_n,
     input  wire [115:0]   cmd_i,
@@ -15,6 +15,7 @@ module qfd_dv_s8_fdn_arf1 (
     output reg  [47:0]    scu_q,
     output reg  [1037:0]  chd_q,
     output reg  [8:0]     treq_q,
+    input wire [45:0] chu_ar_sel, chu_dd_sel,
     input  wire [1094:0]  chu_q,
     input  wire [1094:0]  own_ch,
     output reg  [1094:0]  ch_dn_o,
@@ -59,7 +60,15 @@ module qfd_dv_s8_fdn_arf1 (
         treq_q[7:0] <= treq_i[7:0];
     end
     wire p_ar = chu_q[1094], p_dd = chu_q[547];
-    wire [1094:0] ch_raw = {p_ar ? chu_q[1094:548] : own_ch[1094:548], p_dd ? chu_q[547:0] : own_ch[547:0]};
+    wire [1094:0] ch_raw;
+    generate for(genvar c=0;c<46;c=c+1) begin:g_ch_select
+      localparam integer ARW=(547-c*12<12)?547-c*12:12;
+      localparam integer DDW=(548-c*12<12)?548-c*12:12;
+      wire sa=USE_SEL_COPIES?chu_ar_sel[c]:p_ar;
+      wire sd=USE_SEL_COPIES?chu_dd_sel[c]:p_dd;
+      assign ch_raw[548+c*12+:ARW]=sa?chu_q[548+c*12+:ARW]:own_ch[548+c*12+:ARW];
+      assign ch_raw[c*12+:DDW]=sd?chu_q[c*12+:DDW]:own_ch[c*12+:DDW];
+    end endgenerate
     reg [3:0] arf_sid; reg arf_sid_ok;
     wire setid=cmd_q[0] && cmd_q[3:1]==3'd7;
     always @(posedge ck or negedge rst[1])
