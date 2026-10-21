@@ -91,6 +91,43 @@ def expand_channel(source, receiver, extra, baseline_w, baseline_h, west=0., max
     return out
 
 
+def reserve_class_corridors(source, baseline_w, baseline_h, target_gap=259.2):
+    """Reserve every slice-column boundary for two independent 104um classes.
+
+    Keep the eastern outline fixed by translating only each boundary's western
+    compute partition. Retain real services in place and expose consumed western
+    clearance. The caller must place the actual core-feed bump using the returned
+    E0-relative coordinate; its placement cannot be metadata-only.
+    """
+    out = copy.deepcopy(source)
+    slices = sorted((i for i in out['insts'] if i['n'].startswith('dvs_')),
+                    key=lambda i: i['x'])
+    receivers = [i['n'] for i in slices[1:]]
+    expansions = []
+    for receiver in reversed(receivers):
+        by = {i['n']: i for i in out['insts'] if i['n'].startswith('dvs_')}
+        boundary = by[receiver]['x']
+        left = max(i['x'] + i['w'] for n,i in by.items()
+                   if n != receiver and i['x'] < boundary)
+        extra = round(max(0., target_gap - (boundary-left)), 3)
+        if not extra:
+            continue
+        out = expand_channel(out, receiver, extra, baseline_w, baseline_h, west=extra)
+        expansions.append(dict(out['receiver_channel_plan']))
+    by = {i['n']: i for i in out['insts'] if i['n'].startswith('dvs_')}
+    out['class_corridor_family_plan'] = dict(
+        target_gap_um=target_gap, class_frames_per_boundary=2,
+        class_frame_um=[104,106], row_endcap_pitch_um=12.96,
+        required_width_um=2*104+3*12.96, expansions=expansions,
+        additional_west_clearance_consumed_um=round(sum(e['array_west_um'] for e in expansions),3),
+        westernmost_slice_x_um=min(i['x'] for i in by.values()),
+        outline_um=[baseline_w,baseline_h], raw_reticle_width_headroom_um=33000.-baseline_w,
+        actual_core_feed_bump_xy_um=[round(by['dvs_E0']['x']-86.4,3),12096.],
+        explicit_pipeline_stages_added=0, token_age_delta=None,
+        scope='all equivalent slice boundaries; actual GEN placement/bind and recompiled calendar remain required')
+    return out
+
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--plan', type=Path, required=True)
