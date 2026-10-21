@@ -73,5 +73,11 @@
   "reason": "Qualified selected TT/native intrinsic ledger and actual Q/K GEN transports/header ages absent; candidate local4/XPF20 does not qualify selected21",
   "kv_intermediate": "c6520b2ee EMB_WIN595; not final73",
   "selected_slice_timing": "UNKNOWN; no old187/248 or projected192/253 substitution"
+ },
+ "calibration_repair": {
+  "verdict": "PASS",
+  "scope": "Separate rel/pos calibration-only replay on identified original c0+a83 binaries; no aggregate replacement",
+  "receipt": "calibration_candidate/probe_portable2/receipt.json",
+  "original_stg3_calibration_failure_preserved": true
  }
 }
