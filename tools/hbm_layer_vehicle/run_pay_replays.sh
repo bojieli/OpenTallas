@@ -3,7 +3,7 @@
 # acceptance exit is preserved; staged shell variables survive systemd quoting.
 set -uo pipefail
 REMOTE=${REMOTE:?}; RDIR=${RDIR:?}; HOST=${HOST:?}; OUT=${OUT:?}; PAR=${PAR:-8}
-mkdir -p "$OUT/log"
+mkdir -p "$OUT/log" "$OUT/runs"
 NAMES=("$@"); if [ ${#NAMES[@]} -eq 0 ]; then
   inventory=$(timeout 120 ssh "$HOST" "ls $REMOTE/$RDIR") || exit 2
   [ -n "$inventory" ] || exit 2
