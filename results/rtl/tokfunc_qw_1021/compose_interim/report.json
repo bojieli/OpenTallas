@@ -38,6 +38,7 @@
   }
  },
  "stages": {
+  "xt1": "PASS",
   "xdie": "PASS",
   "tp8": "PASS",
   "ovl4u": "PASS",
@@ -46,7 +47,6 @@
  },
  "missing_stages": [
   "stg",
-  "xt1",
   "kv"
  ],
  "diagnostic_stages": [
@@ -54,6 +54,11 @@
   "ovl4u"
  ],
  "stage_sources": {
+  "xt1": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
   "xdie": {
    "src_commit": "c0f8097f3",
    "grade": "RTL-functional (source assembly)",
@@ -81,27 +86,27 @@
   }
  },
  "applied": [
+  "tile ops near + far 61 <- xt1",
   "attention c2k 32 kv_service 1779 roundtrip 1842 -> plan 1827 <- xdie",
   "allreduce E 286 LS 378 <- tp8",
   "4u frame 4026800 tokens [16, 15, 8, 7] <- ovl4u",
   "head 3135 <- head",
-  "dv: not re-measured -> DIAG",
-  "tile: not re-measured -> DIAG"
+  "dv: not re-measured -> DIAG"
  ],
  "problems": [],
  "token": {
-  "cycles": 272675,
-  "tok_s": 4402.6,
-  "chained": 7471,
-  "l0_cold": 8005,
-  "pct_measured": 4.9,
-  "pct_rel": 2.0,
-  "vs_price": -8.49,
+  "cycles": 279731,
+  "tok_s": 4291.6,
+  "chained": 7667,
+  "l0_cold": 8201,
+  "pct_measured": 25.3,
+  "pct_rel": 22.5,
+  "vs_price": -10.8,
   "by": {
-   "DIAG": 228865,
+   "DIAG": 178480,
+   "REL": 62956,
    "PLAN_GAP": 1297,
-   "REL": 5513,
-   "PRICED": 29257,
+   "PRICED": 29256,
    "NEWEST": 7742
   },
   "die_edges_per_layer": 934,
@@ -109,11 +114,11 @@
   "u4": 11750.6,
   "variants": {
    "variant_plan": [
-    4527.5,
+    4410.2,
     12066.5
    ],
    "variant_asbuilt": [
-    4585.1,
+    4464.8,
     12210.9
    ]
   }
@@ -127,13 +132,16 @@
   "AR TAG CONTRACT (dv_lower_mat RTL gap): io_collective needs tag == cmd tag on every word and last only on the message last word; slice2 sends tag = row address, last per STN op (fault_code[2])"
  ],
  "u1": {
-  "cycles": 272675,
-  "tok_s": 4402.6,
-  "vs_model_pct": -0.01
+  "cycles": 279731,
+  "tok_s": 4291.6,
+  "vs_model_pct": -2.53
  },
  "u4": {
   "tok_s": 11750.6,
   "vs_model_pct": 0.0
  },
- "verdict": "INCOMPLETE/FAIL (see stages/problems)"
+ "verdict": "INCOMPLETE/FAIL (see stages/problems)",
+ "clock_period_ps": 833.0,
+ "clock_hz": 1200480192.0768306,
+ "rate_convention": "composer uses rounded 833 ps period (1.200480192 GHz)"
 }

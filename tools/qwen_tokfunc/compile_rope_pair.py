@@ -81,24 +81,32 @@ def main():
     run(['-m', 'qwen_static_schedule.mu_d2d_ovl', '--out', str(out / 'ovl'),
          '--pair-calendar', str(pair / 'calendar.json'), '--stages', receipt['die_stages'],
          '--kv-codec', str(receipt['kv_codec']), '--kv-prog',
-         '--token-path', str(a.token_path.resolve()),
-               '--link-handoff', str(a.link_handoff.resolve())], 'ovl.log')
+         '--token-path', str(a.token_path.resolve())], 'ovl.log')
     run(['tools/qwen_split/d2d_ovl_release.py', str(out / 'ovl'), str(image),
-         str(out / 'release')], 'release.log')
-    release = json.loads((out / 'release/source.json').read_text())
+         str(out / 'ovl_release_rope')], 'release.log')
+    release = json.loads((out / 'ovl_release_rope/source.json').read_text())
     admission = calendar['program']['admission']
     params = dict(ROPE_OVL_FIRST_OFS=release['first_ofs'],
                   ROPE_OVL_ADM_OFS=admission['ofs'], ROPE_OVL_ADM_LEN=admission['len'],
                   ROPE_OVL_ADM_BASE=release['admission_base'])
     lines = ['// Generated from the sole pair calendar and four-ROM release.']
     lines += [f'localparam integer {key} = {value};' for key, value in params.items()]
-    lines += [f'localparam ROPE_OVL_ROM_DIR = {json.dumps(str(out / "release"))};']
-    (out / 'release/ovl_wrapper_params.svh').write_text('\n'.join(lines) + '\n')
+    lines += [f'localparam ROPE_OVL_ROM_DIR = {json.dumps(str(out / "ovl_release_rope"))};']
+    (out / 'ovl_release_rope/ovl_wrapper_params.svh').write_text('\n'.join(lines) + '\n')
     hashes = {str(p.relative_to(out)): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in sorted(out.rglob('*')) if p.is_file()}
     (out / 'generated.json').write_text(json.dumps(dict(
         grade='SOURCE GENERATION ONLY; no functional or die-netlist PASS',
-        compiler_recovery='e18e3d597', actual_gen_inputs=receipt, sha256=hashes), indent=2) + '\n')
+        compiler_recovery='e18e3d597', actual_gen_inputs=receipt,
+        owner_callbacks=dict(
+            admission=dict(segment=2, base=release['admission_base'],
+                           phase='before actual sequencer adm_done',
+                           owner='accepted HOST O61; filler owner may be 1..3 while cal_user is 0',
+                           compare_cal_user_to_O61=False),
+            recurrent_head=dict(segment=1, direction='C->K', kind=12,
+                                phase='after actual sequencer adm_done, per-user token playhead',
+                                owner='actual earliest c_emb token/position/user and held O61',
+                                compare_cal_user_to_O61=True)), sha256=hashes), indent=2) + '\n')
 
 
 if __name__ == '__main__':

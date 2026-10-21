@@ -15,11 +15,11 @@ Composition engine: toksim_compose @94cd97b7a; `compose_tokfunc.py --base-only` 
 | ctx4u (MU context real link) | PASS, mutants 1-5 FAIL | RTL-functional (PHY model) | slot->load 19 |
 | ovl4u (4u OVL D2D pair fullframe) | PASS, mutants FAIL | DIAG: assembly has no OVL link-end form (967c24eed end stand-in) | frame 4,026,800, tokens 16/15/8/7, 13,708.2 agg |
 | stg (DV families x36 layers, ARF/RP) | running | | |
-| xt1 (slice->near/far ROM clusters + 11 landings) | running | | |
+| xt1 (slice->near/far ROM clusters + 11 landings) | PASS near+far64/64 at both spacings, 3mutants caught | source carve; clocks functional | firstRS187/248, landings add6/12 |
 | tp8 (TP8 AR256, g5r2b coll lanes) | PASS, 9 mutants caught | current collective RTL; historical lane ages DIAG | E 286, LS 378, AR256 span797, MU window38138 |
 | kv (KV attention u1/u4 = KV-MU7 job4b, source = assembly attention RTL) | job4b compiling | | |
 
-Interim compose (compose_interim/): 1u 272,675 cyc = 4,402.6 tok/s (-0.01% vs model; head +34), 4u 11,750.6; REL share
+Interim compose after XT1 collection (compose_interim/): 1u 279,731 cyc = 4,291.6 tok/s (-2.53% vs model; head +34, tile +7,056), 4u 11,750.6; REL share
 low until stg/xt1/tp8/kv land (record REL terms re-graded DIAG until re-measured on the assembly).
 
 ## Findings
@@ -68,3 +68,17 @@ HOST CONTEXT budget is insufficient for this new source law.
 Generated outputs are source programmes only, not playback or functional PASS. The die
 owners must select real descriptor producer/consumer and MU OVL sequencers. At 09:50
 current 595 GEN lacks HEAD_PREP buses; those ages and this generation remain pending.
+
+XT1 landed near first-RS is187 and far248 (delta61), versus baseline181/delta18.
+Four matvecs per layer add4*(6+43)=196edges, across36layers +7,056edges.
+Current STG/KV are still pending; TP8 historical lane ages and OVL old-end stand-in
+remain DIAG, so neither 1u nor 4u rates qualify a complete current-source token PASS.
+Admission callbacks must preserve phase: SEG2/base16 before actual adm_done allows
+HOST filler O61 owners1..3 while cal_user0; recurrent Ckind12 after admission uses
+the actual scheduled user and held O61. The old diagnostic OVL bench has no admission
+playback, so it does not establish that phase contract.
+
+Rate arithmetic uses the composition engine's rounded833ps period
+(1.200480192GHz):279731cycles =4291.6tok/s. At exact1.2GHz the same count
+is4289.8tok/s. Baseline272641/4403.2 also uses833ps (exact1.2GHz gives4401.4).
+The report records this clock basis explicitly; no new RTL measurement is involved.

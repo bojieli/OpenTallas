@@ -63,7 +63,7 @@ def capture_links():
                 period_mtp=recs['mtp']['period'], stages=cap['stages'], links=cap['links'])
 
 
-def plans(cal, L, hops, mode):
+def plans(cal, L, hops, mode, preserve_idle=False, boundary_only=False):
     if cal.get('checker', {}).get('result') != 'PASS':
         raise ValueError('Calendar checker failed; hop plans cannot qualify it')
     P = cal['period']
@@ -79,11 +79,26 @@ def plans(cal, L, hops, mode):
             ca = sl['copy'].get(a, 'A') if a in copyb else 'A'
             cb = sl['copy'].get(b, 'A') if b in copyb else 'A'
             r = f'link.{a}.{ca}-{b}.{cb}'
-            for m, (s0, what, ln) in enumerate(msgs):
-                for p in range(6 if mode == 'mtp' else 1):
-                    T = (sh + s0 + p * ln) % P
-                    res.setdefault(r, []).append(dict(user=u, T=T, m=m * 6 + p if mode == 'mtp' else m, label=what +
-                                                      (f' pos {p}' if mode == 'mtp' else ''), length=ln))
+            graph = cal.get('position_graph', {}).get('positions', [])
+            if mode == 'mtp' and graph:
+                emissions = [(p['position'], n, message['send_start'], message['label'],
+                              message['send_end'] - message['send_start'])
+                             for p in graph for n, message in enumerate(p['links'])
+                             if message['sender_index'] == i]
+            else:
+                emissions = [(p, m, s0 + (p * ln if mode == 'mtp' else 0), what, ln)
+                             for m, (s0, what, ln) in enumerate(msgs)
+                             for p in range(6 if mode == 'mtp' else 1)]
+            if boundary_only:
+                if mode != 'mtp' or not graph:
+                    raise ValueError('Boundary replay requires an explicit corrected MTP position graph')
+                emissions = [max((x for x in emissions if x[0] == 0), key=lambda x: x[2]),
+                             min((x for x in emissions if x[0] == 1), key=lambda x: x[2])]
+            for position, message, send, label, length in emissions:
+                T = (sh + send) % P
+                res.setdefault(r, []).append(dict(user=u, T=T, position=position,
+                    m=message * 6 + position if mode == 'mtp' else message,
+                    label=label + (f' pos {position}' if mode == 'mtp' else ''), length=length))
         for r, ms in sorted(res.items()):
             ms.sort(key=lambda x: x['T'])
             # Preserve the admitted absolute timeline. A local TX delay would leave
@@ -101,13 +116,21 @@ def plans(cal, L, hops, mode):
                 if k:
                     g = x['T'] - ms[k - 1]['T']
                     assert g >= ms[k - 1]['length'], f'{r}: overlapping messages (checker would fault)'
-                    if g > GAPC:
+                    if not preserve_idle and g > GAPC:
                         g, comp = GAPC, comp + 1
                     t += g
                 x['t'] = int(round(t))
             out[(i, r)] = dict(schema='opentallas.tokfunc_s81.mu_hop_plan.v1', mode=mode, hop=f'{a}->{b}', sender_index=i,
                                why=SAMPLE.get(i, ''), resource=r, period=P, users=sorted({x['user'] for x in ms}),
-                               gap_compress=dict(cap=GAPC, gaps_compressed=comp),
+                               gap_compress=dict(cap=None if preserve_idle else GAPC, gaps_compressed=comp),
+                               replay_scope=('isolated exact position-boundary link mechanism; not whole-stage execution'
+                                             if boundary_only else 'sampled link resource messages'),
+                               compiled_position_graph=bool(cal.get('position_graph')),
+                               modeled_message_receive_age=max(
+                                   (message['receive_complete'] - message['send_start']
+                                    for pos in cal.get('position_graph', {}).get('positions', [])
+                                    for message in pos['links'] if message['sender_index'] == i), default=L['HOP']),
+                               absolute_rebase=ms[0]['T'],
                                same_user_serial_delays=dict(count=len(delays), max=max([d['delay'] for d in delays] or [0]),
                                                             first=delays[:3]), msgs=ms)
     return out
@@ -120,7 +143,12 @@ def main():
     ap.add_argument('--links-out')
     ap.add_argument('--out')
     ap.add_argument('--hops', default=','.join(str(k) for k in SAMPLE))
+    ap.add_argument('--modes', default='ar,mtp', help='Comma-separated ar/mtp modes')
+    ap.add_argument('--preserve-idle', action='store_true', help='Keep exact gaps in compiled calendar replay')
+    ap.add_argument('--boundary-only', action='store_true', help='Minimum pos0 last-TX to pos1 first-TX; requires preserved idle')
     a = ap.parse_args()
+    if a.boundary_only and not a.preserve_idle:
+        ap.error('--boundary-only requires --preserve-idle')
     L = json.loads(Path(a.links).read_text()) if a.links else capture_links()
     if a.links_out:
         Path(a.links_out).write_text(json.dumps(L, indent=0) + '\n')
@@ -130,12 +158,14 @@ def main():
     o = Path(a.out)
     o.mkdir(parents=True, exist_ok=True)
     index = []
-    for mode in ('ar', 'mtp'):
+    for mode in a.modes.split(','):
+        if mode not in ('ar', 'mtp'):
+            ap.error('Invalid --modes')
         cal = json.loads((ROOT / a.cal_dir / f'calendar_rel241_G4_{mode}.json').read_text()
                          if not Path(a.cal_dir).is_absolute() else (Path(a.cal_dir) / f'calendar_rel241_G4_{mode}.json').read_text())
         assert cal['map_sha256'] == L['map_sha256']
         try:
-            mode_plans = plans(cal, L, hops, mode)
+            mode_plans = plans(cal, L, hops, mode, a.preserve_idle, a.boundary_only)
         except ValueError as error:
             (o / 'FAILED.json').write_text(json.dumps(dict(verdict='FAILED', mode=mode, reason=str(error),
                 full_calendar_qualified=False), indent=2) + '\n')

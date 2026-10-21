@@ -109,14 +109,17 @@ def apply(inp, res, tree, results_dir, grade_label):
         else:
             problems.append('stg: PASS but no ages files -> dv stays record')
     if ok('xt1'):
-        c = res['xt1']['cycles']; near = c.get('near', c); far = c.get('far')
+        c = res['xt1']['cycles']
+        c = c.get('landed_nominal_l8_g4', c)
+        near = c.get('near', c); far = c.get('far')
         ops = {}
         for op in ('qkv', 'o', 'gu', 'down'):
             n = near.get(op)
             if n and all(k in n for k in ('first_rs', 'first_final', 'last_final')):
                 ops[op] = {k: int(n[k]) for k in ('first_rs', 'first_final', 'last_final')}
         if len(ops) == 4:
-            inp['tile']['ops'] = ops; inp['tile']['grade'] = sgrade('xt1'); remeasured.add('tile')
+            inp['tile']['ops'] = ops; inp['tile']['grade'] = sgrade('xt1');
+            inp['tile']['source'] = f"TOK-FUNC-QW XT1 landed_nominal_l8_g4 source {res['xt1'].get('src_commit')}; measured near/far edges in stage result.json"; remeasured.add('tile')
             if far and far.get('qkv', {}).get('first_rs') is not None:
                 inp['tile']['far'] = int(far['qkv']['first_rs']) - ops['qkv']['first_rs']
             applied.append(f"tile ops near + far {inp['tile']['far']} <- xt1")
@@ -192,6 +195,8 @@ def main():
     build_tree(a.repo, a.base_rev, tree)
     base = run_compose(tree, f'{REC}/inputs.json', a.out / 'cycles_base.json')
     report = dict(schema='opentallas.tokfunc.qwen_rom.v1', base_rev=a.base_rev, asm=a.asm, grade=a.grade,
+                  clock_period_ps=833.0, clock_hz=CLK_HZ,
+                  rate_convention='composer uses rounded 833 ps period (1.200480192 GHz)',
                   model_of_record=dict(u1_tok_s=4403.2, u4_tok_s=11750.6, cycles=272641), base_reproduced=base)
     if not a.base_only:
         res = load_results(a.results)

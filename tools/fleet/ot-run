@@ -63,6 +63,18 @@ a killed client: `ot-run --spill-sweep [--dry-run]` (started detached by job cli
 outputs back once the client is gone and the unit has ended; failures go to spill_stuck.log.
 OT_SCRATCH (v8): the job's environment carries OT_SCRATCH = the host's /srv/opentallas-scratch* volume with the most
 free space; put NEW lane / job / die-chain directories under $OT_SCRATCH/claude/<lane>.
+SCRATCH2 (v12, SCRATCH2-1021 2026-10-21, owner "definitely the tools should write both scratch disks to leverage space":
+ot-epyc5 /srv/opentallas-scratch hit 100 % while scratch2 had 2.7 TB free -- callers name /srv/opentallas-scratch/claude/...
+paths and OT_SCRATCH was only a hint): before the command, the remote wrapper (SCRATCH_PLACE_PY) places every NEW run
+directory on the host's scratch root with the most free space (> 50 GB more than the named root): the first missing
+component below a lane root (/srv/opentallas-scratch*/claude/<lane>/X) of every literal `mkdir -p` output target in
+the command or in a *.sh it names (NAME=/srv/... assignments substituted) is created on the emptier root at the mirrored
+path (/srv/opentallas-scratch2/claude/<lane>/X) and a symlink is put at the named path, so collectors keep their paths.
+Idempotent: a path that already exists (dir, file or symlink) is used unchanged -- resumes, reruns and running jobs are
+never touched; SPILL copies and hand-made lane symlinks are left alone. Disk admission of a scratch --dir counts the free space of the best
+root on the host (new output dirs land there), unless the named root itself has < SCRATCH_OWN_FLOOR_GB.  SPILL copies the lane's
+twin root (same lane on the other scratch root) when the lane holds symlinks into it. --dir must already exist on the
+chosen host, including its exact nested path or a staged symlink; missing source dirs are never created. OT_RUN_NO_SCRATCH2=1 disables output placement.
 RE-PLACE (v9, FLEET-NEW2 2026-10-19): a client whose hosts are not pinned (--hosts) re-places its unstarted waiter every
 REQUEUE_S (120 s, OT_RUN_REQUEUE_S) and re-reads HOSTS / HOST_ROLE / HOST_MAX_DIE / NO_AVX512 and held_hosts from this
 file each time, so waiters move to hosts that admit now -- including hosts added after the client started (replaces
@@ -98,7 +110,7 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["ot-epyc5", "ot-epyc6", "ot-epyc7", "ot-epyc9", "ot-pve1", "ot-agidock128"]   # ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["ot-epyc5", "ot-epyc6", "ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"]   # ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
@@ -125,14 +137,47 @@ def probe(host, d, spill_ok=False):
     """spill_ok=False: a --dir that is a SPILL copy (marker in its lane root) does not qualify (stale data)"""
     q = shlex.quote(d or "/")
     mark = shlex.quote(spill_root(d) + "/" + SPILL_MARK) if d else "/nonexistent-ot-run-mark"
-    cmd = f"test -d {q} || {{ echo NODIR; exit 0; }}; " + ("" if spill_ok else f"test -e {mark} && {{ echo NODIR; exit 0; }}; ") \
-        + f"/usr/local/bin/ot-heavy-reconcile --free {q}"
+    # --dir carries source/build locality. A lane root or sibling run cannot stand in
+    # for the exact working directory; SCRATCH2 may place NEW mkdir output dirs later.
+    test = f"test -d {q} || {{ echo NODIR; exit 0; }}; t={q}; "
+    cmd = test + ("" if spill_ok else f"test -e {mark} && {{ echo NODIR; exit 0; }}; ") + SCRATCH_FREE_SH \
+        + "/usr/local/bin/ot-heavy-reconcile --free $t"
     try:
         r = subprocess.run(["ssh", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes", host, cmd], capture_output=True,
                            text=True, timeout=40)
-        return host, (None if "NODIR" in r.stdout else json.loads(r.stdout.strip().splitlines()[-1]))
+        if "NODIR" in r.stdout:
+            return host, None
+        row = json.loads(r.stdout.strip().splitlines()[-1])
+        return host, scratch_disk(row, d, r.stdout)
     except Exception as e:
         return host, {"error": str(e)[:80]}
+
+
+# v12 SCRATCH2: free GB of every scratch root on the host (one line each, before the --free JSON line)
+SCRATCH_FREE_SH = ("for r in /srv/opentallas-scratch /srv/opentallas-scratch2; do test -d $r/claude && "
+                   "echo OT_SCRATCH_FREE $r $(df -BG --output=avail $r | tail -1 | tr -dc 0-9); done; ")
+SCRATCH_OWN_FLOOR_GB = int(os.environ.get("OT_RUN_SCRATCH_OWN_FLOOR_GB", "10"))
+
+
+def scratch2_on():
+    return not os.environ.get("OT_RUN_NO_SCRATCH2")
+
+
+def scratch_disk(row, d, out):
+    """v12 SCRATCH2: a scratch --dir's disk_gb = the most free scratch root on the host (new run dirs go there), unless
+    the named root itself is nearly full (< SCRATCH_OWN_FLOOR_GB: files written straight into an existing --dir land
+    there).  The --dir's own figure is kept as disk_own_gb."""
+    if not (scratch2_on() and d and SCRATCH_RE.match(os.path.normpath(d)) and isinstance(row, dict) and "disk_gb" in row):
+        return row
+    roots = {}
+    for ln in out.splitlines():
+        f = ln.split()
+        if len(f) == 3 and f[0] == "OT_SCRATCH_FREE" and f[2].isdigit():
+            roots[f[1]] = int(f[2])
+    own = row["disk_gb"]
+    if roots and own >= SCRATCH_OWN_FLOOR_GB and max(roots.values()) > own:
+        row = dict(row, disk_own_gb=own, disk_gb=max(roots.values()))
+    return row
 
 
 THREADS, SMALL_CORES, SMALL_THREADS = 16, 48, 8
@@ -480,6 +525,103 @@ SCRATCH_ENV = ("export OT_SCRATCH=$(for r in /srv/opentallas-scratch /srv/openta
                "OT_SCRATCH=${OT_SCRATCH:-/srv/opentallas-scratch}; ")
 
 
+# v12 SCRATCH2 (SCRATCH2-1021 2026-10-21): runs on the job host before `cd --dir`; see the header.  Never fails the job.
+SCRATCH_PLACE_PY = r'''
+import base64, json, os, re, sys
+ROOTS = ("/srv/opentallas-scratch", "/srv/opentallas-scratch2")
+MARK, MARGIN = ".ot-run-spill-copy", 50 << 30
+LANE = re.compile(r"^(/srv/opentallas-scratch[^/]*)/claude/([A-Za-z0-9_+-][A-Za-z0-9_.+-]*)(?:/(.*))?$")
+SAFE = re.compile(r"^/srv/opentallas-scratch[^\s$*?{}\[\]`~\\'\"]*$")
+say = lambda m: print("ot-run: SCRATCH2: " + m, file=sys.stderr)
+d, cmd, dry = sys.argv[1], json.loads(base64.b64decode(sys.argv[2])), len(sys.argv) > 3
+free, devs = {}, set()
+for r in ROOTS:
+    try:
+        st = os.stat(r)
+        if os.path.isdir(r + "/claude") and st.st_dev not in devs:
+            devs.add(st.st_dev)
+            v = os.statvfs(r)
+            free[r] = v.f_bavail * v.f_frsize
+    except OSError:
+        pass
+best = max(free, key=free.get) if free else None
+texts = [" ".join(cmd)]
+for t in list(dict.fromkeys(cmd + re.findall(r"/[^\s'\";|&()<>$]+\.sh(?![\w.])", texts[0])))[:20]:
+    p = t if t.startswith("/") else os.path.join(d or "/", t)
+    try:
+        if t.endswith(".sh") and os.path.isfile(p) and os.path.getsize(p) < 2000000:
+            texts.append(open(p, errors="replace").read())
+    except OSError:
+        pass
+cands = []
+ASSIGN = re.compile(r"(?:^|[\s;&|(])(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)=([\"']?)(/srv/opentallas-scratch[^\s\"';&|()<>`$]*)\2(?=$|[\s;&|)])", re.M)
+MKDIR = re.compile(r"\bmkdir((?:\s+-[A-Za-z]+|\s+--[a-z-]+)*)\s+([^;&|\n)<>]+)")
+for text in texts:
+    for _ in range(3):                           # literal NAME=/srv/... assignments, substituted into $NAME / ${NAME}
+        vals = {}
+        for m in ASSIGN.finditer(text):
+            vals.setdefault(m.group(1), set()).add(m.group(3))
+        vals = {k: v.pop() for k, v in vals.items() if len(v) == 1}
+        new = text
+        for k, v in vals.items():
+            new = re.sub(r"\$(?:\{%s\}|%s(?![A-Za-z0-9_]))" % (k, k), lambda _m, v=v: v, new)
+        if new == text:
+            break
+        text = new
+    for m in MKDIR.finditer(text):               # only `mkdir -p` targets: the job creates them itself, so an existing
+        opts = m.group(1).split()                # (symlinked) directory there is what it would have made
+        if not any(o == "--parents" or (o[:1] == "-" and o[1:2] != "-" and "p" in o) for o in opts):
+            continue
+        cands += [a.strip("\"'") for a in m.group(2).split() if SAFE.match(a.strip("\"'"))]
+done, placed = set(), set()
+for p in cands:
+    p = os.path.normpath(p)
+    m = LANE.match(p)
+    if not m or not m.group(3) or p in done:
+        continue
+    done.add(p)
+    req, lane, rest = m.groups()
+    lroot = f"{req}/claude/{lane}"
+    if os.path.islink(lroot) or os.path.exists(lroot + "/" + MARK) or not os.path.isdir(req + "/claude"):
+        continue                                 # a hand-made lane symlink, or a SPILL copy (its outputs are copied back
+    nxt = lroot + "/" + rest.split("/")[0]       # by a find that does not follow symlinks): leave it alone
+    # only a NEW direct child of the lane root (the run-dir unit) moves: an existing one is used unchanged, and nothing
+    # deeper is split off (`..` out of a moved dir resolves on the other root)
+    if not os.path.lexists(nxt) and nxt not in placed:
+        placed.add(nxt)
+        if req in free and best != req and free[best] > free[req] + MARGIN and not os.path.lexists(best + nxt[len(req):]):
+            tgt = best + nxt[len(req):]
+            if dry:
+                say(f"would place {nxt} on {best} ({free[best] >> 30} GB free vs {free[req] >> 30} GB on {req})")
+                continue
+            try:
+                os.makedirs(lroot, exist_ok=True)
+                os.makedirs(tgt)
+                os.symlink(tgt, nxt)
+                say(f"{nxt} -> {tgt} ({free[best] >> 30} GB free vs {free[req] >> 30} GB on {req})")
+            except FileExistsError:
+                try:
+                    os.rmdir(tgt)
+                except OSError:
+                    pass
+            except OSError as e:
+                say(f"{nxt}: not placed ({e})")
+'''
+
+
+def scratch_place_sh(d, cmd, dry=False):
+    """the remote shell snippet that places new run dirs on the emptiest scratch root ('' when disabled)"""
+    if not scratch2_on():
+        return ""
+    import base64
+    code = base64.b64encode(SCRATCH_PLACE_PY.encode()).decode()
+    arg = base64.b64encode(json.dumps(list(cmd)).encode()).decode()
+    if len(arg) > 32000:          # the whole remote command is ONE argv string to the remote shell (<= 128 KiB)
+        arg = base64.b64encode(json.dumps([x for x in cmd if len(x) < 4000]).encode()).decode()
+    return (f'{{ timeout 60 python3 -c "$(echo {code} | base64 -d)" {shlex.quote(d or "")} {arg}'
+            + (" dry" if dry else "") + "; } 2>&1 >/dev/null | head -20 >&2; ")
+
+
 def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False, on_start=None):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
@@ -487,7 +629,11 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun
     env = os.environ.get("OT_RUN_PRIO_ENV", "") + env
     inner = f"{env}/usr/local/bin/ot-heavy --mem {mem} --tag {tag}" + (f" --max-wait {int(max_wait)}" if max_wait else "") \
         + " -- " + " ".join(shlex.quote(x) for x in cmd)
-    remote = SCRATCH_ENV + (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
+    # Recheck before output placement: never recreate an input directory that
+    # disappeared after the probe and then launch in an empty source tree.
+    workdir_guard = (f"test -d {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "")
+    remote = SCRATCH_ENV + workdir_guard + scratch_place_sh(d, cmd) \
+        + (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
         + inner + f'; rc=$?; echo "OT_RUN_EXIT {tag} $rc" >&2; exit $rc'
     p = subprocess.Popen(["ssh", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=6", host, remote], stderr=subprocess.PIPE)
     state = dict(started=False, rc=None, nocd=False, unit="?")
@@ -817,7 +963,7 @@ def spill_scan(src, roots):
                f"-o -name '*.f' -o -name '*.tcl' -o -name '*.json' -o -name '*.yaml' -o -name '*.cfg' \\) -print0 | "
                f"timeout 90 xargs -0r grep -hoIs -E ")
     r = ssh_sh(src, f"for r in {qs}; do test -d $r || echo MISSING $r; done; du -scb {qs} | tail -1 | cut -f1; "
-                    f"find {qs} -type l -lname '/*' {inside} -print -quit; echo ==; {scripts} 'march=native' | head -1; echo ==; "
+                    f"find {qs} -type l -lname '/*' {inside} -printf '%p\\t%l\\n' | head -50; echo ==; {scripts} 'march=native' | head -1; echo ==; "
                     f"{scripts} {shlex.quote(LANE_RE.pattern)} | sort -u | head -50", timeout=300)
     head, tail, ext = (r.stdout.split("==\n") + ["", ""])[:3]
     lines = [x for x in head.split("\n") if x.strip()]
@@ -825,7 +971,16 @@ def spill_scan(src, roots):
     lines = [x for x in lines if not x.startswith("MISSING ")]
     lanes = {SCRATCH_RE.match(x).group(1) for x in ext.split() if SCRATCH_RE.match(x)}
     lanes = {x for x in lanes if x.rsplit("/", 1)[-1] not in SHARED_LANES}
-    return missing, int(lines[0]) / 1e9, (lines[1] if len(lines) > 1 else ""), bool(tail.strip()), lanes
+    sym = ""
+    names = {r.rsplit("/", 1)[-1] for r in roots}
+    for x in lines[1:]:          # v12 SCRATCH2: a symlink into the lane's twin root (same lane, other scratch root) adds it
+        p, _, t = x.partition("\t")
+        m = SCRATCH_RE.match(os.path.normpath(t)) if t else None
+        if m and m.group(1).rsplit("/", 1)[-1] in names:
+            lanes.add(m.group(1))
+        elif not sym:
+            sym = p
+    return missing, int(lines[0]) / 1e9, sym, bool(tail.strip()), lanes
 
 
 def spill_plan(src, d, cmd, mem, threads, die, disk, held, say, max_ratio=None):

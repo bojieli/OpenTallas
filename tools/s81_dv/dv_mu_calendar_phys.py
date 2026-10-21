@@ -309,8 +309,15 @@ def stage_items(st, dsplit=False):
     return tail + ([('D', d, None)] if d is not None else []) + head
 
 
-def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False):
+def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False, causal_integer=False):
     """forward-x single-user schedule: per stage [start, end] hold window, item log, chain end; + legacy-equivalent"""
+    edge = math.ceil if causal_integer else (lambda value: value)
+    # Quantise durations before propagation: rounding final timestamps can move an
+    # arrival ahead of its producer or lose a cycle at each fractional segment.
+    if causal_integer:
+        seg = {layer: {kind: math.ceil(cycles) for kind, cycles in parts.items()}
+               for layer, parts in seg.items()}
+        add, embed_end = math.ceil(add), math.ceil(embed_end)
     last_stage = {}
     for i, st in enumerate(stages):
         for l, a, b in st['experts']:
@@ -346,14 +353,14 @@ def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False):
                 # DENSE2 A half: a_proj rows [0,224) (half the a_proj after the norm prefix); x + partial go to B
                 ready = comb.get(l - 1, embed_end) if l > 0 else embed_end
                 s0 = max(cur or 0.0, ready)
-                e0 = s0 + APROJ[l]['prefix'] + 0.5 * APROJ[l]['cycles']
+                e0 = edge(s0 + edge(APROJ[l]['prefix']) + edge(0.5 * APROJ[l]['cycles']))
                 d2_out[l] = e0
                 log.append(dict(stage=st['stage'], item=f'dense L{l} A half (a_proj rows [0,224))', start=s0, end=e0,
                                 busy=[(s0, e0, 'field')]))
             elif kind == 'D' and st.get('dense_split2') == 'B':
                 # DENSE2 B half: the rest of the dense layer once x + the A partial landed (+ 8 cycles ser)
                 s0 = max(cur or 0.0, d2_arr[l])
-                xl = s0 + seg[l]['A'] + seg[l]['D'] - 0.5 * APROJ[l]['cycles'] + DENSE2_SER
+                xl = edge(s0 + edge(seg[l]['A'] + seg[l]['D'] - 0.5 * APROJ[l]['cycles']) + DENSE2_SER)
                 x_arr[l] = xl
                 e0 = xl
                 busy = [(s0 + a, s0 + b, k) for a, b, k in IVS.get((l, 'A'), [])] + \
@@ -370,11 +377,11 @@ def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False):
                         [(s0 + seg[l]['A'] + a, s0 + seg[l]['A'] + b, k) for a, b, k in IVS.get((l, 'D'), [])])
                 log.append(dict(stage=st['stage'], item=f'dense L{l}', start=s0, end=e0, busy=busy))
             else:
-                R = seg[l]['E'] * min(6, N) / 6.0
+                R = edge(seg[l]['E'] * min(6, N) / 6.0)
                 pin = p_arr.get(l)
                 s0 = max(cur or 0.0, x_arr[l])
                 if alap and pin is not None:          # just-in-time slots: end as the upstream partial lands (same out)
-                    s0 = max(s0, pin - R)
+                    s0 = edge(max(s0, pin - R))
                 e = s0 + R
                 po = (max(e, pin) + add) if pin is not None else e
                 part_out[l] = po
@@ -410,7 +417,7 @@ def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False):
                 msgs.append((d2_out[l], 3, f'x + a_proj partial L{l} (DENSE2 A->B)', H_MSG + DENSE2_SER, d2_arr, l))
             free = -1e18
             for t, _, what, ln, dst, l in (sorted(msgs, key=lambda m: (m[0], m[1])) if REL['links_serial'] else msgs):
-                s0 = max(t, free) if REL['links_serial'] else t     # LINK5: one stage-hop circuit, send order
+                s0 = edge(max(t, free) if REL['links_serial'] else t)     # LINK5: one stage-hop circuit, send order
                 free = s0 + ln
                 links.append((i, s0, what, ln))
                 dst[l] = s0 + HOP
@@ -420,8 +427,68 @@ def timeline(stages, seg, add, embed_end=0.0, alap=False, dsplit=False):
 
 
 # ------------------------------------------------------------------------------------------------ calendar + checker
+def position_barrier_graph(model):
+    """Conservative six-position graph, with an explicit global completion barrier.
+
+    Every position executes the complete AR graph, including its scan. There is
+    no scan-reuse or pipeline credit. This is a scheduler MODEL requiring compiler
+    emission; it does not qualify the existing RTL calendar programmes.
+    """
+    base = windows(model, 0, 0, 'ar', {})
+    receive_end = max(t + HOP for _, t, _, _ in model['links'])
+    actual_end = max([end for _, _, end in base] + [receive_end])
+    span = qup(max(model['T_ar'], actual_end))
+    draft = model['draft_tail']  # rounded from draft nodes themselves, never subtract rounded head totals
+    lead = math.ceil(HOP - x_flat('stage_hop') + RX_JIT) if REL['land'] else 0
+    owners = []
+    for i, q in enumerate(model['stages']):
+        arrivals = [t + HOP - lead for j, t, _, _ in model['links'] if j + 1 == i]
+        tx_ends = [t + length for j, t, _, length in model['links'] if j == i]
+        owners.append((min([q['t']] + arrivals), max([q['t'] + q['occ']] + tx_ends)))
+    positions = []
+    for position in range(6):
+        offset = position * span
+        positions.append(dict(position=position, start=offset, barrier=offset + span,
+            stages=[dict(stage=q['stage'], owner_start=offset + owners[i][0],
+                         owner_end=offset + owners[i][1]) for i, q in enumerate(model['stages'])],
+            links=[dict(sender_index=i, sender=model['stages'][i]['stage'], receiver=model['stages'][i + 1]['stage'],
+                        label=label, send_start=offset + t, send_end=offset + t + length,
+                        receive_first=offset + t + HOP - lead, receive_complete=offset + t + HOP)
+                   for i, t, label, length in model['links']],
+            head=dict(start=offset + model['head_t'], end=offset + model['head_t'] + model['head_ar'])))
+    return dict(schema='opentallas.s81_mtp.position_barriers.v1', positions=positions,
+                position_span=span, actual_ar_resources_end=actual_end,
+                ar_composer_end=model['T_ar'], terminal_guard=span - actual_end,
+                draft_start=6 * span, draft_end=6 * span + draft,
+                host_tail_end=6 * span + draft + HOST_TOK,
+                step_cycles=qup(6 * span + draft + HOST_TOK),
+                qualification='MODEL only; compiler must emit position completion barriers and draft tail',
+                integer_causality='ceil segment durations before stage/compute/send/arrival propagation',
+                scan_reuse=False, pipeline_overlap=False)
+
+
 def windows(model, user, shift, kind, col):
     mt = kind == 'mtp'
+    graph = model.get('mtp_position_graph')
+    if mt and graph:
+        ws = []
+        for position in graph['positions']:
+            for i, owner in enumerate(position['stages']):
+                st = model['stages'][i]
+                cp = col.get(st['stage'], {}).get(user, 'A') if st['copies'] > 1 else 'A'
+                ws.append((f"{st['stage']}.{cp}", shift + owner['owner_start'], shift + owner['owner_end']))
+            for message in position['links']:
+                i = message['sender_index']
+                a, b = model['stages'][i:i + 2]
+                ca = col.get(a['stage'], {}).get(user, 'A') if a['copies'] > 1 else 'A'
+                cb = col.get(b['stage'], {}).get(user, 'A') if b['copies'] > 1 else 'A'
+                ws.append((f"link.{a['stage']}.{ca}-{b['stage']}.{cb}",
+                           shift + message['send_start'], shift + message['send_end']))
+            ws.extend(w for w in windows(model, user, shift + position['start'], 'ar', col)
+                      if w[0].startswith(('eng.', 'head', 'host')))
+        ws.append(('head', shift + graph['draft_start'], shift + graph['draft_end']))
+        ws.append(('host', shift + graph['draft_end'], shift + graph['host_tail_end']))
+        return [w for w in ws if w[2] > w[1]]
     ws = []
     for i, st in enumerate(model['stages']):
         cp = col.get(st['stage'], {}).get(user, 'A') if st['copies'] > 1 else 'A'
@@ -538,7 +605,7 @@ def calendar(model, mode, N=None):
     for n in ([N] if N else range(max(1, P // int(nonrep)), 0, -1)):
         shifts = [(k * (P // PHASE_Q)) // n * PHASE_Q for k in range(n)]
         col, why = colour(model, shifts, P, mode)
-        users = [dict(user=k, shift=shifts[k], kind='latency' if k == 0 else mode) for k in range(n)]
+        users = [dict(user=k, shift=shifts[k], kind=mode if model.get('mtp_position_graph') else ('latency' if k == 0 else mode)) for k in range(n)]
         if col is None:
             tried.append(dict(users=n, result='FAULT', why=f'{why}: no A/B colouring'))
             if N:
@@ -649,7 +716,7 @@ def calendar2(model, mode, N=None):
     for n in ([N] if N else range(int(P // lb), 0, -1)):
         shifts = [(k * (P // PHASE_Q)) // n * PHASE_Q for k in range(n)]
         col = {st['stage']: {k: 'AB'[k % 2] for k in range(n)} for st in model['stages'] if st['copies'] > 1}
-        users = [dict(user=k, shift=shifts[k], kind='latency' if k == 0 else mode) for k in range(n)]
+        users = [dict(user=k, shift=shifts[k], kind=mode if model.get('mtp_position_graph') else ('latency' if k == 0 else mode)) for k in range(n)]
         bad, nres = check2(model, users, P, col, mode)
         tried.append(dict(users=n, result='PASS' if not bad else 'FAULT', collisions=len(bad),
                           first=bad[0] if bad else None))
@@ -771,7 +838,7 @@ def link_bound(model, mode, P):
 
 
 # ------------------------------------------------------------------------------------------------ build
-def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, dsplit=False):
+def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, dsplit=False, mtp_position_barriers=False):
     mp = json.loads(Path(mapp).read_text())
     sha = hashlib.sha256(Path(mapp).read_bytes()).hexdigest()
     stages = mp['stages']
@@ -800,7 +867,8 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
     eadd = [cnode[n['id']] for n in dag['nodes'] if n.get('op') == 'eng.add']
     add = max(eadd) if eadd else 120.0
     embed = sum(cnode[n['id']] for n in dag['nodes'] if n.get('op') == 'embed')
-    win, log, links, chain, legacy = timeline(stages, seg, add, embed, alap, dsplit)
+    win, log, links, chain, legacy = timeline(stages, seg, add, embed, alap, dsplit,
+                                              causal_integer=mtp_position_barriers)
     # token: composer T + cal2 structural + 20 added hops + the forward-x / reservation change of the chain
     s_ar = sum(cal2_delta(n, F2) for n in dag['nodes'] if n.get('critical'))
     dagm, cycm = dags['mtp']
@@ -818,8 +886,9 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
                            step=math.ceil(6 * (b - a) - 5 * sc), scan=round(sc, 1)))
     wave_old = sum(cycm[n['id']] for n in dagm['nodes'] if n.get('op') == 'wave.busy' and n.get('critical'))
     wave_new = 5 * max(s['occ'] - s['scan'] for s in st_rec)
-    head_mtp = 6 * head_ar + sum(cycm[n['id']] for n in dagm['nodes'] if (n.get('op') or '').startswith('draft.')
-                                 and n.get('critical'))
+    draft_tail = sum(cycm[n['id']] for n in dagm['nodes'] if (n.get('op') or '').startswith('draft.')
+                     and n.get('critical'))
+    head_mtp = 6 * head_ar + draft_tail
     T_mtp = wm['T_cycles'] + ovr['mtp']['delta'] + s_mtp + dh + dchain + (wave_new - wave_old)
     eng_layers = {n['layer'] for n in dag['nodes'] if n.get('op') == 'eng.hbm_read'}
     for x in (log if REL['eng_ii'] else []):     # Engram engine window: at the start of its dense (B half) item
@@ -837,7 +906,17 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
             if q.get('eng_off') is not None:
                 q['eng_off'] += lead
     model = dict(stages=st_rec, links=links, head_t=math.ceil(chain + embed + hop_head), head_ar=math.ceil(head_ar),
-                 head_mtp=math.ceil(head_mtp), T_ar=T_ar, T_mtp_step=T_mtp)
+                 head_mtp=math.ceil(head_mtp), draft_tail=math.ceil(draft_tail), T_ar=T_ar, T_mtp_step=T_mtp)
+    if mtp_position_barriers:
+        if contexts != 1:
+            raise ValueError('Position-barrier MODEL currently supports one job context only')
+        graph = position_barrier_graph(model)
+        model['mtp_position_graph'] = graph
+        model['T_mtp_step'] = T_mtp = graph['step_cycles']
+        # Colouring reserves the whole span between first and final position use.
+        # This is conservative; the exact checker still receives every interval.
+        for i, q in enumerate(st_rec):
+            q['step'] = graph['positions'][-1]['stages'][i]['owner_end'] - graph['positions'][0]['stages'][i]['owner_start']
     comp = dict(composer=('tools/toksim_s81_compose.py release-partial (results/token_pass/measured_s81_1019/cycles.json)'
                           if cmode == 'record' else 'tools/toksim_s81_compose.py --scenario calpipe + S81-ROMOPT o3mix '
                           'compiled spans (' + str(ROMOPT.relative_to(ROOT)) + ')'),
@@ -907,10 +986,16 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
                               stage=max((s for s in st_rec if s['copies'] == 1),
                                         key=lambda s: s['step' if mode == 'mtp' else 'occ'])['stage']),
             checker=dict(result='PASS' if n and not cal['bad'] else 'FAULT', collisions=len(cal['bad']),
+                         same_user_checked=True,
+                         source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                         position_graph_sha256=(hashlib.sha256(json.dumps(model['mtp_position_graph'],
+                             sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+                             if model.get('mtp_position_graph') and mode == 'mtp' else None),
                          resources=len(cal['nres']), windows=sum(cal['nres'].values()),
                          negative_n_plus_1=dict(users=n + 1, result='FAULT' if neg and (neg['bad']) else 'PASS?!',
                                                 collisions=len(neg['bad']) if neg else None),
-                         negative_injected_shift=dict(collisions=inj, result='FAULT' if inj else 'MISSED')),
+                         negative_injected_shift=dict(collisions=inj, result=('NOT_APPLICABLE: fewer than two admitted users'
+                                                    if n < 2 else 'FAULT' if inj else 'MISSED'))),
             search=cal['tried'][:12],
             slots=[dict(slot=i, user=u['user'], shift=u['shift'],
                         copy={g: c.get(u['user'], 'A') for g, c in cal['col'].items()})
@@ -921,6 +1006,11 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
             stage_windows=[{k: s[k] for k in ('stage', 'dense_layer', 'copies', 't', 'occ', 'step', 'busy_total', 'eng_off') if k in s}
                            for s in st_rec],
             composition=comp, grade='node cycles: composer grades; stage split / reservation / forward-x / MTP law: MODEL')
+    if mtp_position_barriers:
+        recs['mtp']['position_graph'] = graph
+        recs['mtp']['grade'] = graph['qualification']
+        recs['mtp']['rtl_calendar_qualified'] = False
+        comp['mtp']['schedule_law'] = 'Explicit six complete AR position graphs; global barriers; draft and host tail'
     if not recs['mtp']['rate_qualified']:
         comp['mtp']['unqualified_original_T'] = comp['mtp'].pop('T')
         comp['mtp']['tok_s'] = None
@@ -945,12 +1035,13 @@ def main(argv=None):
     ap.add_argument('--release241', action='store_true', help='S81-CAL241 release terms (REL241: direct cabling, LINK5 '
                     'serial stage circuit + land-0 lead with TX hold, G4 attention, idx +40, Engram RA640 / II 576)')
     ap.add_argument('--attn', choices=sorted(ATTN), help='attention service variant (overrides REL)')
+    ap.add_argument('--mtp-position-barriers', action='store_true', help='Conservative explicit six-position MODEL; compiler implementation pending')
     a = ap.parse_args(argv)
     if a.release241:
         REL.update(REL241)
     if a.attn:
         REL['attn'] = a.attn
-    recs = build(a.map, a.compose, a.alap, a.unqualified, a.contexts)
+    recs = build(a.map, a.compose, a.alap, a.unqualified, a.contexts, mtp_position_barriers=a.mtp_position_barriers)
     rc = 0
     for mode, rec in recs.items():
         f = Path(a.out) / f'calendar_{a.tag}_{mode}.json'

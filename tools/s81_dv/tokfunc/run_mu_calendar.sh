@@ -28,8 +28,10 @@ collect() {
   mkdir -p $OUT/out
   rsync -a --exclude 'obj/' --exclude 'stim.hex' --exclude 'run.log.gz' --exclude 'mu.hex' $HOST:$RD/out/ $OUT/out/
   rsync -a $HOST:$RD/SOURCES.txt $OUT/SOURCES.txt
+  CA=(); [ -z "${CALENDAR_AR:-}" ] || CA+=(--calendar-ar "$CALENDAR_AR")
+  [ -z "${CALENDAR_MTP:-}" ] || CA+=(--calendar-mtp "$CALENDAR_MTP")
   python3 tools/s81_dv/tokfunc/mu_collect.py --out-dir $OUT/out --plans $OUT/plans --sources $OUT/SOURCES.txt \
-    --json results/token_pass/tokfunc_s81_1021/mu.json
+    --json results/token_pass/tokfunc_s81_1021/mu.json "${CA[@]}"
 }
 if [ "${1:-all}" = collect ]; then collect; exit $?; fi
 # ---- stage (local, small): pinned RTL + bench + tools + calendars + hop plans
