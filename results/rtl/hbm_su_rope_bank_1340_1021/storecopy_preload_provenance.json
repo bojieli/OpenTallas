@@ -1,0 +1,16 @@
+{
+  "role": "stimulus_provenance_only_runtime_unqualified",
+  "inplace_alias": "logicalA/O52288..52351 same physicalsectors0x40,1..7",
+  "fixture_A_array": "r0.k16.A",
+  "initial_A_sha256": "b4f3632b7b448a165add159a12e5f73467e7db2a848dccb667ee99863cbdac7d",
+  "actual_M_A_sha256": "b4f3632b7b448a165add159a12e5f73467e7db2a848dccb667ee99863cbdac7d",
+  "actual_M_vs_fixture_A_mismatches": 0,
+  "actual_initial_A_vs_golden_O_changed_words": 64,
+  "golden_O_array": "r0.k16.O",
+  "golden_O_sha256": "0fd04432ea63759895c8bd37237e48714c98c28d016b878dfc3e1fd697882c4c",
+  "golden_O_stimulus": false,
+  "scratch_M": 0,
+  "original_M_sectors": 16,
+  "replay_sha256": "990d8a0d6f922a34ddb5e05753a66b8d1f896f328800d7ec262f7ef63643c0fa",
+  "runtime_check_scope": "24actualVM C:16scratch+8O sectors, full32bit masks +19fault0; arithmetic/VMendstate only; no draininterface timing/liveness/fulltoken claim"
+}

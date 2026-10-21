@@ -18,11 +18,19 @@
     "scratch_sectors": 16,
     "VM_write_bytes": 512,
     "VM_reload_bytes": 512,
-    "RF_scalar_exports": 128,
-    "RF_broadcast_bytes": 2048,
-    "prepass_serial_estimate": 2300,
-    "estimate_only": true,
-    "actual_schedule_required": true
+    "RF_scalar_exports": 64,
+    "estimate_only": false,
+    "actual_schedule_required": true,
+    "RF_broadcast_issues": 64,
+    "RF_classes_per_issue": 4,
+    "prefix_lane_store_writes": 4160,
+    "RF_control_hold_edges_per_issue": 47,
+    "RF_src1_VM_drains": 0,
+    "normal_store_src0_drains": 16,
+    "actual_serial_edges": 4087,
+    "actual_stream_edges": 5450,
+    "old_2088_2784": "KNOWN_SOURCE_PROTOCOL_VIOLATION: RFsrc1drainsonports1..7",
+    "actual_RTL_execution_qualified": false
   },
   "arithmetic": {
     "active_quarter": 0,
@@ -31,5 +39,5 @@
     "store_rows_for_m32": 66,
     "FP_rounding_unchanged": true
   },
-  "model_status": "bounded source model; no physical/RTL qualification yet"
+  "model_status": "actual compiler-emitted commands/prices, selected runtime pending; arithmetic/VM endstate only if43Cchecks pass"
 }
