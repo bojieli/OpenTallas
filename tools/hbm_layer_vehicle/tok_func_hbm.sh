@@ -100,7 +100,7 @@ for st in L0 chain; do
   for r in 0 5; do [ -f "$OUT/qemit/$st/r$r/replay.json" ] && cp "$OUT/qemit/$st/r$r/replay.json" "$RJ/qw_${st,,}_r$r.json"; done
   say "EMIT qw_$st $(grep -o '"counts": {[^}]*}' "$L/emit_qw_$st.log" | head -1)"
 done
-REPLAYS=${REPLAYS:-$(cd "$RJ" && ls *.json | sed 's/\.json$//' | tr '\n' ' ')}
+REPLAYS=${REPLAYS:-"ds_l0 ds_l2 ds_l14 qw_l0_r0 qw_l0_r5 qw_chain_r0 qw_chain_r5"}
 # The isolated SU probe must own the bank on every request/write-return edge.
 # This explicit reservation is component-only; it does not qualify a production layer calendar.
 for n in $REPLAYS; do
@@ -108,6 +108,25 @@ for n in $REPLAYS; do
     || { say "CALENDAR_FAIL $n"; exit 3; }
   mv "$RJ/$n.calendar.json" "$RJ/$n.json"
 done
+# Existing real HC/COLL payloads share the same source contract and static VM
+# ownership epochs. These remain relocated component probes: HC far-end root
+# results and COLL peer inputs retain explicit fixture provenance.
+if [ "${RUN_PAY:-1}" = 1 ]; then
+  PAY_L12_ARGS=(); [ ! -f "${PAY_L12:-$OUT/l12.json}" ] || PAY_L12_ARGS=(--l12 "${PAY_L12:-$OUT/l12.json}")
+  for LL in 00 02 14; do
+    l=$((10#$LL))
+    python3 "$T/merge_layer_replay.py" --shared-calendar \
+      --su "$OUT/emit/ds_l$l/replay.json" --su-manifest "$OUT/emit/ds_l$l/manifest.json" \
+      --fixtures "$FIX_DS/L$LL" --contract "$FC" "${PAY_L12_ARGS[@]}" \
+      --boundary "$B" --nev "${PAY_NEV:-11651}" --out "$OUT/pay" --name "ds_l${l}_pay" \
+      > "$L/pay_ds_l$l.log" 2>&1 || { say "PAY_EMIT_FAIL ds_l$l"; exit 3; }
+    for rp in "$OUT/pay/ds_l${l}_pay_p"[0-9]*.json; do
+      cp "$rp" "$RJ/"
+      REPLAYS="$REPLAYS $(basename "$rp" .json)"
+    done
+    say "PAY ds_l$l $(tail -1 "$L/pay_ds_l$l.log") shared_static_epochs=1 connected_data=0"
+  done
+fi
 NEV=$(python3 -c "import json,sys; print(max(16, 1 + max(sum(e['k']!='M' for e in json.load(open(f))['events']) for f in sys.argv[1:])))" $(for n in $REPLAYS; do echo "$RJ/$n.json"; done))
 python3 "$T/gen_slice_tb.py" --boundary "$B" --out "$OUT/bundle/slice" --nev "$NEV" $(for n in $REPLAYS; do echo --replay "$RJ/$n.json"; done) > "$L/tb.log" 2>&1 || { say TB_FAIL; cat "$L/tb.log"; exit 3; }
 say "$(tail -1 "$L/tb.log")"
@@ -135,16 +154,11 @@ if [ -n "${ATT_PID:-}" ]; then
   wait "$ATT_PID" || ATT_RC=$?
   say "ATT rc=$ATT_RC log=$L/att_driver.log"
 fi
-for n in $REPLAYS; do
-  # --dir = the build's obj dir: it exists only on the build host, so the unpinned run lands where the binary is
-  ( /home/ubuntu/bin/ot-run --mem "${RUN_MEM:-64}" --threads 1 --dir "$REMOTE/out/obj" -- bash -c "cd $REMOTE && mkdir -p out_$n && /usr/bin/time -v -o out_$n/run.time out/obj/Vtb_hbm_slice +verilator+rand+reset+0 +REPLAY=slice/replay/$n > out_$n/run.log 2>&1; echo RUN_RC=\$?; python3 check_slice_run.py --replay slice/replay/$n --run-log out_$n/run.log --out out_$n/acceptance.json >/dev/null 2>&1; grep -E '^SLICE_(SUMMARY|PASS|FAIL)' out_$n/run.log | tail -2" > "$L/rpl_$n.log" 2>&1 || true
-    say "RUN $n $(tr '\n' ' ' < "$L/rpl_$n.log")" ) &
-  sleep 2
-done
-wait
-for n in $REPLAYS; do timeout 300 rsync -a "$H:$REMOTE/out_$n/" "$OUT/runs/$n/" 2>/dev/null; done
+REMOTE="$REMOTE" RDIR=slice/replay HOST="$H" OUT="$OUT" PAR="${RUN_PAR:-8}" \
+  RUN_MEM="${RUN_MEM:-64}" bash "$T/run_pay_replays.sh" $REPLAYS
+SIM_RC=$?
 python3 "$T/tok_func_hbm_report.py" --out "$OUT" --mode "$MODE" --rev "$SRC_REV" --contract "$CONTRACT" $REPLAYS
 RRC=$?
-[ "$ATT_RC" = 0 ] || RRC=1
+[ "$ATT_RC" = 0 ] && [ "$SIM_RC" = 0 ] || RRC=1
 say "DONE replay_rc=$RRC report=$OUT/report.json token=INCOMPLETE"
 exit "$RRC"

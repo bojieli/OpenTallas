@@ -80,8 +80,9 @@ def timing_from_contract(contract, l12=None, q="SW"):
     hp = c[f"hc_{q}"]["params"]
     pads = 0
     detail = {}
-    if l12:
-        P = _j.loads(Path(l12).read_text())["pads"]
+    P = (_j.loads(Path(l12).read_text())["pads"] if l12 else
+         [dict(pad=name, N=int(item.get("params", {}).get("N", 0))) for name,item in c.items() if name.startswith("l12p_")])
+    if P:
         for pre in (f"l12p_hc_{q}0_near_rq_", f"l12p_sfu_{q}0_near_rq_", f"l12p_su_{q}0_lg_rq_vmb_{q}0_"):
             n = max([x["N"] for x in P if x["pad"].startswith(pre)] or [0])
             detail[pre] = n
