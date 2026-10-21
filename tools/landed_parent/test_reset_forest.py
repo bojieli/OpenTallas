@@ -71,6 +71,13 @@ forest_child #(.W(W)) u1(.clk(clk),.rst_n(rst_n),.i(hop),.o(o));endmodule\n''')
             assert old.tb(op,'forest_top_lp',ort)==bp.tb(bplan,'forest_top_lp',brt)
             assert old.record(op,'forest_top_lp',ort)==bp.record(bplan,'forest_top_lp',brt)
             assert old.bench_sh('forest_top_lp',str(rel),op)==bp.bench_sh('forest_top_lp',str(rel),bplan)
+            rb=b.Parent(rnf);rbp=rb.plan();rbr,rbt=rb.emit(rbp,'forest_top_lp')
+            assert yr==rbr
+            assert y.sdc(yp,'forest_top_lp')==rb.sdc(rbp,'forest_top_lp')
+            assert y.tb(yp,'forest_top_lp',yt)==rb.tb(rbp,'forest_top_lp',rbt)
+            assert y.record(yp,'forest_top_lp',yt)==rb.record(rbp,'forest_top_lp',rbt)
+            assert y.bench_sh('forest_top_lp',str(rel),yp)==rb.bench_sh('forest_top_lp',str(rel),rbp)
+            print('RESET_FOREST_REGIONAL_PORTS_ONLY_BYTES PASS')
         if a.emit_dir:
             s['_spec_path']=str(rel/'spec.json');(d/'spec.json').write_text(json.dumps(s,indent=2)+'\n');lp.gen(s)
         print('RESET_FOREST_EXACT_LEAVES_FLOPS_AGE_AND_FAILCLOSED_NEGATIVES PASS')
