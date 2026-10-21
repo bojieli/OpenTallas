@@ -5,70 +5,54 @@
     {
       "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu",
       "source_manifest": "/home/ubuntu/wt/tokfunc-s81-1021/results/rtl/s81_layer_tput_1018/compiler/bench_gu/sources.sha256",
-      "matched": 0,
-      "mismatches": [],
-      "missing": [
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/lib/ot_async_fifo.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/lib/ot_reset_sync.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/lib/ot_rst_relay.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/link/ot_link_afifo.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ingest/ot_rom_host_ingest.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/physical/rom_host_ingest/rtl/dsfd_host.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_fixed_issue.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ot_hdc_delay.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ot_hdc_sfu.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ot_hdc_fastfp.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ot_hdc_fp32_f12.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ot_hdc_fp32_add_lat.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ot_hdc_prefix.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41x/ot_dsrom_su_f12.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41x/ot_dsrom_su_add6.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41x/ot_dsrom_divc.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41/ot_hdc_select_tree.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41x/ot_dsrom_su_bias_select.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41/ot_hdc_fdiv.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41/ot_hdc_sinkhorn.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41/ot_hdc_sk_arith.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/hdc/ot_hdc_cg.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_pass.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_tail.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l2.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l3.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l0r.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l4r.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l5f.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/tools/s81_dv/layer_prog/gu/tb_gu_layer.sv",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/tools/s81_dv/layer_prog/gu/gu_kit.py",
-        "/srv/opentallas-scratch/claude/lb2-s81-cc/gu/src/tools/s81_dv/layer_prog/gu/../lower_gu.py"
+      "matched": 49,
+      "mismatches": [
+        {
+          "path": "rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+          "bench_sha256": "5f09a09f5be20c6a56a7503e108b3be00ccb4bc1ac412fc3100396230a324aa3",
+          "assembly_sha256": "8fb2b3e063449aa6c786969290a0b7e641a1c96517b00a0f10f0e1cb860e1c36"
+        },
+        {
+          "path": "rtl/hdc/ingest/ot_rom_host_ingest.sv",
+          "bench_sha256": "3c7615d077adb51895f52892954ca96d9f7b526535ef9e42d236fda94b87fa2b",
+          "assembly_sha256": "c58533f03f5b40ad63e5dfc8b7adac39fc1c09a98c108bd8c822810ca0aef7ec"
+        },
+        {
+          "path": "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv",
+          "bench_sha256": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+          "assembly_sha256": "c078b238e71223a64131168472d01db428858f87d8c93c66a267eccb253cd295"
+        },
+        {
+          "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv",
+          "bench_sha256": "384bac019f9a315041dd1976757070a0c58a9d7136c6675e10ad08467dc86b0c",
+          "assembly_sha256": "8af2dd4720c27e883180cc5e3262715bc6323899bbc616572a630fe680669bce"
+        },
+        {
+          "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit_l1.sv",
+          "bench_sha256": "50fca72c351054c0449facd805c7b39a6f5aef299d373a5cf3f83a8dba22d441",
+          "assembly_sha256": "ba00c74c9dde8045da61bf5669a5466e76efbfd49931af1dda77643628416417"
+        },
+        {
+          "path": "rtl/dsrom_sys/s81_dv/unit/dsdv_gunit.sv",
+          "bench_sha256": "1d6cc13202a130e0a8b00c71611801e18abf7028e6eb67a20a1090b11c7c692b",
+          "assembly_sha256": "5ff2b9f806b19e142a9a0ec7cb520f75b28a9e73a499f7ede73608cdce3268d4"
+        },
+        {
+          "path": "tools/s81_dv/layer_prog/gu/gu_kit.py",
+          "bench_sha256": "9c8b60db21ee22f855110ee081c62e383bcf4e173e8b4d6d88c38aa96c328d1e",
+          "assembly_sha256": "9667e145c4950b4e5d96a4e80b14e76738f869c32b0269309b7a099566a395f1"
+        },
+        {
+          "path": "tools/s81_dv/layer_prog/lower_gu.py",
+          "bench_sha256": "9b3ba66ca143425529768c3f8325cfa6ac4c965c7358ce9a011e569207b5ff0f",
+          "assembly_sha256": "977cdf798a9068f0022c96a8e51be8de1d44b1e3bdb21215c648af7db1dcf9c3"
+        }
       ],
+      "missing": [],
       "parameters_bound": false,
       "qualified": false,
-      "note": "No qualification recovery from historical PASS metadata without matching actual source and production parameter binding."
+      "note": "No qualification recovery from historical PASS metadata without matching actual source and production parameter binding.",
+      "remapping": "Old /src/ prefix removed and POSIX .. normalized; acceptance still requires exactSHA equality."
     },
     {
       "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc",
