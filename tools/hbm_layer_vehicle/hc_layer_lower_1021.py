@@ -340,6 +340,47 @@ def lower_qdq_fp8(*, words, a_sector, o_sector, selected_engine,
                 cross_quadrant_producer_mapping_qualified=False)
 
 
+
+def hc_pre_global_sum_fragment(*, words, selected_core, first_tree_edge, tag):
+    """Emit runtime-only whole-row PRETREE/reducer commands for HC_PRE squares.
+
+    This fragment requires the real square producer to present global blocks in
+    the returned order on one quarter's 128 lane outputs. It supplies no square
+    values, expected sum, RF join or rsqrt substitute. Padding follows csum8.
+    """
+    from hbm_static import su_pretree_lower as PT
+    if (selected_core.get("master") != "ot_hbm_su_static_qcore_r13" or
+            int(selected_core.get("params",{}).get("PRETREE",0)) != 1):
+        raise ValueError("HC_PRE sum requires the selected native PRETREE core")
+    if words<=0 or words%128 or words>8192 or not 0<=tag<1<<32:
+        raise ValueError("whole-row PRETREE fragment requires complete aligned128 blocks")
+    # This compiler's control is shape-only. Zero values establish its tree
+    # structure; neither its dummy operands nor expected exports leave here.
+    sc=PT.Schedule()
+    sc.lower("sum",[0]*words,tag,first_tree_edge)
+    tree=[]
+    for block,(edge,(_,count,_)) in enumerate(sc.tree.items()):
+        cmd=PT.tree_cmd_word(0,count)
+        tree.append(dict(block=block,first_global_word=128*block,words=count,
+                         serial_edge=edge,tree_cmd_hex=f"{cmd:012x}",
+                         programme_mask_hex=f"{cmd<<2422:0618x}",
+                         required_producer="actual lane ro_x=FP32(mixed_BF16 * mixed_BF16), never fixture squares"))
+    red=[dict(serial_edge=e,red_cmd_hex=f"{PT.red_cmd_word(cmd):019x}",
+              programme_mask_hex=f"{PT.red_cmd_word(cmd):0618x}")
+         for e,cmd in sorted(sc.red.items())]
+    return dict(schema="opentallas.hc_pre_runtime_sum_fragment.v1",status="producer_join_open",
+                execution_qualified=False,qualifies_native_layer=False,
+                words=words,selected_core=selected_core,programme_bits=2470,
+                arithmetic_order="global csum8 and padded aligned binary tree, one whole-row quarter",
+                required_runtime_square_blocks=tree,reducer_commands=red,
+                tree_to_reducer_edges=PT.PT_RED,reducer_dependency_edges=PT.DEP,
+                export_command_edge=sc.exps[0][0],export_tag=tag,
+                remaining=["real all-row square producer/VM allocation at each declared edge",
+                           "scalar export/RF stage and KIND2 rsqrt control",
+                           "gain from released checkpoint HBM input and final BF16 multiply pass",
+                           "current selected coupled RTL execution"])
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     for name in ("fixtures", "contract", "l12", "bundle", "checkpoint", "out"):
