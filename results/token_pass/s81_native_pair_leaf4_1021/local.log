@@ -1,0 +1,6 @@
+RDPAIR_LEAF4 mode=0 mut=0 bad=0 rf=0 xf=0 pf=0 commits=1 CTL=90 XRcmd=95 VPcmd=99 VPlo=104 XRlo=108 CI=112 Vout=-1 Eout=-1 XRsw=115 VPsw=119 SRAMcommit=120
+RDPAIR_LEAF4 PASS
+- /srv/opentallas-scratch/claude/codex-s81-kv-vp-1021/src/tools/s81_dv/rdpair_leaf4_1021/tb_rd_pair_leaf4.sv:78: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 183ns; walltime 0.440 s; speed 416.152 ns/s
+- Verilator: cpu 0.439 s on 1 threads; allocated 18 MB
