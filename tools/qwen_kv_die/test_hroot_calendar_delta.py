@@ -6,7 +6,7 @@ from unittest.mock import patch
 import sys
 import unittest
 import kvjc3_pc_chain as C
-from kv_hroot_calendar import observation_intervals
+from kv_hroot_calendar import observation_intervals, validate_profiles
 
 
 def programme_functions():
@@ -20,6 +20,21 @@ def programme_functions():
 
 
 class HrootDelta(unittest.TestCase):
+    def test_final_pin_profiles_refuse_missing_bit_torn_age_and_identity(self):
+        req = [dict(id='edge', src=['root', 'o'], dst=['ctl', 'i'], expected_width=2)]
+        profile = dict(id='edge', src=['root', 'o'], dst=['ctl', 'i'], width=2, bits={'0': 3, '1': 3})
+        identity = {k: '1'*64 for k in ('candidate_sha256', 'die_v_sha256', 'strict_bind_sha256',
+                                      'root_rtl_sha256', 'relay_table_sha256')}
+        self.assertEqual(validate_profiles(req, [profile], identity), {'edge': 3})
+        for bad in (dict(profile, bits={'0': 3}), dict(profile, bits={'0': 3, '1': 4}),
+                    dict(profile, dst=['wrong', 'i']), dict(profile, width=1, bits={'0': 3})):
+            with self.assertRaises(ValueError):
+                validate_profiles(req, [bad], identity)
+        with self.assertRaises(ValueError):
+            validate_profiles(req, [], identity)
+        with self.assertRaises(ValueError):
+            validate_profiles(req, [profile], {})
+
     def test_production_compile_refuses_unpriced_absolute_root(self):
         ns = programme_functions()
         ns['_face_land'] = lambda: {}
