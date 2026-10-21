@@ -18,6 +18,11 @@ module tb_arf1;
  // A nonzero slice forwards an unarmed passed word byte-for-byte.
  pass[1094:548]={1'b1,32'hbeef5678,1'b1,1'b1,512'd999};tick();
  if(out[1094:548]!==pass[1094:548] || bad)$fatal(1,"ARF passthrough");
- $display("PASS ARF1 tag/data/last before original publication,3beats,no extra edge,nonzero slice unarmed passthrough");$finish;
+ pass=0;own=0;rst=0;repeat(3)tick();rst=1;repeat(5)tick();
+ cmd=0;cmd[0]=1;cmd[3:1]=7;cmd[7:4]=3;tick();cmd=0;tick();tick();
+ cmd[0]=1;cmd[115:112]=15;cmd[22:7]=1;cmd[54:23]=32'h5a5a1234;tick();cmd=0;tick();
+ own[1094:548]={1'b1,32'hdeadbeef,1'b0,1'b0,512'd777};tick();
+ if(out[1094:548]!=={1'b1,32'h5a5a1234,1'b0,1'b1,512'd777} || bad)$fatal(1,"ARF reset/rearm stale payload");
+ $display("PASS ARF1 tag/data/last before original publication,3beats,no extra edge,nonzero slice unarmed passthrough, reset/rearm");$finish;
  end
 endmodule
