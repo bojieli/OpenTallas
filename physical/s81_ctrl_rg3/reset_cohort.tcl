@@ -9,7 +9,7 @@ if {![file exists $rc_source] || [lindex [exec sha256sum $rc_source] 0] ne $rc_s
 set rc_block [ord::get_db_block]
 set rc_units [[ord::get_db_tech] getDbUnitsPerMicron]
 set rc_apply [expr {[info exists ::env(OT_CTRL_RC_APPLY)] && $::env(OT_CTRL_RC_APPLY) eq "1"}]
-proc rc_clk {inst} {
+proc rc_clk {inst apply} {
   set p [$inst findITerm CLK]
   if {$p eq "NULL" || [$p getNet] eq "NULL"} {error "CTRL_RESET_COHORT: no CLK on [$inst getName]"}
   set initial [$p getNet]; set n $initial; set regional "NULL"
@@ -21,7 +21,7 @@ proc rc_clk {inst} {
         if {[$b getName] ne "ckh" || $regional eq "NULL"} {
           error "CTRL_RESET_COHORT: wrong or unregionalized clock source on [$inst getName]"
         }
-        if {$::rc_apply && $initial ne $regional} {
+        if {$apply && $initial ne $regional} {
           error "CTRL_RESET_COHORT: apply requires pre-CTS regional root directly"
         }
         return $regional
@@ -48,7 +48,7 @@ foreach inst [$rc_block getInsts] {
   # those escape characters. Normalize brackets only, never hierarchy/suffixes.
   regsub -all {\\([\[\]])} $name {\1} normalized
   if {![regexp {^u_ot_pr_core\.g_pc\[[01]\]\.u_pc\.u_hrbank\.q\[0\]\$_DFF_PN0_$} $normalized]} continue
-  set old [rc_clk $inst]
+  set old [rc_clk $inst $rc_apply]
   set front {}; set seen {}; set loads {}; set votes [dict create]
   foreach t [$inst getITerms] {
     if {[$t isOutputSignal] && [$t getNet] ne "NULL"} {lappend front [list [$t getNet] 0]}
@@ -63,7 +63,7 @@ foreach inst [$rc_block getInsts] {
       incr nload
       set li [$t getInst]; set pin [[$t getMTerm] getName]
       if {$pin eq "RESETN"} {
-        set root [rc_clk $li]
+        set root [rc_clk $li $rc_apply]
         lassign [$inst getLocation] sx sy; lassign [$li getLocation] lx ly
         set reach [expr {(abs($sx-$lx)+abs($sy-$ly))/double($rc_units)}]
         if {$reach > 405.0} {error "CTRL_RESET_COHORT: reset reach $reach exceeds405 on [$li getName]"}
