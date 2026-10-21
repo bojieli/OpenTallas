@@ -398,8 +398,9 @@ module ot_s81sl_vp #(
     end endgenerate
     // the h half row of POST step s (requested with the y read: the relayed hq arrives aligned with ydv[YD - 1])
     (* keep *) reg [31:0] lrA [0:15][0:3]; (* keep *) reg [31:0] lyA [0:15]; (* keep *) reg [4:0] k_lanevA;
-    always @(posedge clk or negedge rs_p) if (!rs_p) begin k_lanevA <= 5'd0; k_lanev <= 5'd0; end
-        else begin k_lanevA <= {5{ydv[YD-1]}}; k_lanev <= k_lanevA; end
+    // reset leaves (native <= 32): rs_p = 16 lane rst_n + ydv (YD + 1) + k_lanev 5; k_lanevA rides leaf 16 (lv_q 16 + 5)
+    always @(posedge clk or negedge rs_p) if (!rs_p) k_lanev <= 5'd0; else k_lanev <= k_lanevA;
+    always @(posedge clk or negedge rsv[16]) if (!rsv[16]) k_lanevA <= 5'd0; else k_lanevA <= {5{ydv[YD-1]}};
     always @(posedge clk)
         for (k = 0; k < 4; k = k + 1)
             for (i = 0; i < 4; i = i + 1) begin
