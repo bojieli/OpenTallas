@@ -1,0 +1,12 @@
+{
+  "ownership": "ENG AQ source owner /root/s81_lead/lepab_struct; read-only FP consumer classification /root/s81_lead/slice_collect",
+  "actual_verdict": "wholeENG FAIL215/5viol/0roles; notgenericMULleaf32qualification",
+  "root": "u_c.u_xq.u_aq.amax[15]$_SDFF_PP0_/QN",
+  "measured_dynamic_pins": 215,
+  "method": "exact mapped graph + actual Liberty input/output and unaryfunction roles;215terminalpins agreesnativecensus",
+  "mapped_sha256": "6ba230c427f66a9a7852dccc1c04b54f7f6d83035a67185ce9414c83ff230800",
+  "source_qualified_FP": "560abe5d2 importedbyteexact, profileLAT5/resetearly1+internal2",
+  "interpretation": "BF16 capture low16 zero versus FLOOR constants makesmultiplebitpositions coalesce intoone SDFF; nearlyall terminalpins are normalizationconsumer groups",
+  "next_action": "AQ owner preserve independent real nonconstantcapturebit identities onexistingedge; no extraFPvectorports/latency declared; remeasureactualspecializedparent",
+  "no_changes_to_snapshot": true
+}
