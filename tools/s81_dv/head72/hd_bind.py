@@ -167,6 +167,7 @@ def main():
     sl['port_note'] = 'G7 ot_pdie_serdes row, lep SerDes lk_WN0..3: tx 512 / {st, rx} 514 on 2 x 276-b lanes (long lep links)'
     M['ot_pdie_serdes_l276'] = sl
     if facts.get('ctl_peer'):
+        T['prune_unused_reset_leaves'] = True  # seq reset arrives inside its real glue peer bus
         import sys
         sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 's81_head'))
         from split_ctl_peer import PORTS
