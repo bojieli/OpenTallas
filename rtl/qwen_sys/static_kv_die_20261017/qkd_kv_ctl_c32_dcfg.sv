@@ -5,7 +5,7 @@
 // same word map, same fault rules and the same outputs on every edge (lockstep rtl/test/mu_qwen_1018/tb_kv_dcfg_a_c32.sv):
 //   * ECTL / reset-region fields: the S32-B form of qkd_kv_die_cfg_s32 (qkd_kv_ctl_s32_misc.sv): explicit KEPT POR copies
 //     (async clear, D = ps[0], release on the ps[1] edge), KEPT predecode, 4 KEPT copies of the data pin flops, one kept
-//     qkd_kv_die_cfg_s32_fld hierarchy leaf per field;
+//     qkd_kv_die_cfg_c32_fld hierarchy leaf per field;
 //   * AGE words (19: attention 32 b, 2 PV pair 8 b, 16 V port 16 b = 304 bits): one kept field leaf per <= 16 bits, written
 //     by KEPT predecode (ahi = {wr, is_age, g_ix[4:3]}, alo = g_ix[2:0] one-hot) from a KEPT copy of the data pin flop.
 //     The age registers are NOT reset: every age output is ANDed with sealed (POR 0), and sealed rises only after every
@@ -100,13 +100,13 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
         for (f = 0; f < 32; f = f + 1) begin : g_ef
             wire [14:0] dq = (f < 16) ? dqc0 : dqc1;
             wire [14:0] qf;
-            qkd_kv_die_cfg_s32_fld #(.W(15)) u_f (.ck(ck), .rn(rcp[f/2]), .en(fe[f]),
+            qkd_kv_die_cfg_c32_fld #(.W(15)) u_f (.ck(ck), .rn(rcp[f/2]), .en(fe[f]),
                 .d({(MUT == 1) ? dq[9:5] : dq[14:10], (MUT == 1) ? dq[14:10] : dq[9:5], dq[4:0]}), .q(qf));
             always @* begin ectl_a_cfg[5*f +: 5] = qf[4:0]; ectl_b_cfg[5*f +: 5] = qf[9:5]; ectl_c_cfg[5*f +: 5] = qf[14:10]; end
         end
         for (r = 0; r < NRST; r = r + 1) begin : g_rf
             wire [7:0] qr;
-            qkd_kv_die_cfg_s32_fld #(.W(8)) u_r (.ck(ck), .rn(rcp[KE + r/4]), .en(fr[r]), .d((r < 22) ? dqc2[7:0] : dqc3[7:0]), .q(qr));
+            qkd_kv_die_cfg_c32_fld #(.W(8)) u_r (.ck(ck), .rn(rcp[KE + r/4]), .en(fr[r]), .d((r < 22) ? dqc2[7:0] : dqc3[7:0]), .q(qr));
             always @* rst_dly[8*r +: 8] = qr;
         end
     endgenerate

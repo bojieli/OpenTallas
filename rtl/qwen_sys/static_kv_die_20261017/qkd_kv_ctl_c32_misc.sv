@@ -1,4 +1,8 @@
 `timescale 1ns/1ps
+// KV-CTL10 2026-10-20: the KV-CTL3 native-census members of rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_misc.sv
+// (codex/kv-ctl3-native36-1020 b5d750822), byte-for-byte except the module names (_s32 -> _c32, so both files can coexist)
+// and the MU 0 branch of the ownership calendar, which instantiates qkd_static_kv_ownership_calendar_c32 below (the KV-CTL mu2
+// PIPE form of rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv, a NEW module: the shared original stays unchanged).
 // KV-CTL3 10-20: native-census (<= 32 mapped loads a driver) successors of three qkd_kvs_ctl members, as NEW modules so
 // the shared originals (listed by ~40 closed kit specs) stay byte-identical.  Each is the original module with an S32
 // parameter (0 = the original logic, 1 = the census form); the tile binds S32 = 1.
@@ -33,7 +37,7 @@
 // ev_now (the D of every ph1 / use_b copy) -> 3 groups of KEPT copies of ev_p and the 4 es lane valid pin flops.  Same
 // function on every edge (tb_kv_fanr_mu6_lockstep S32 0 vs 1).  Use RCOPIES >= 32 with S32 (reset family ~860 flops).
 // S32 = 0: unchanged (PH1C selects the mu5 / mu6 form).
-module qkd_kv_es_fan_root2_b_s32 #(parameter integer MUT = 0, parameter integer RCOPIES = 1, parameter integer PH1C = 0,
+module qkd_kv_es_fan_root2_b_c32 #(parameter integer MUT = 0, parameter integer RCOPIES = 1, parameter integer PH1C = 0,
                                parameter integer S32 = 0) (
     input  wire            ck,
     input  wire            rst_n,
@@ -208,7 +212,7 @@ endmodule
 // every field resets and releases on the same edges as before.  The control state (we_q, next, sealed, fault, cap_q) stays
 // on pr_n.  Write decode via KEPT predecode wires and write data from 4 KEPT copies of the data pin flops (<= 32 loads
 // each).  S32 = 0: unchanged.
-module qkd_kv_die_cfg_s32 #(parameter integer NRST = 43, parameter integer CAP = 0, parameter integer MUT = 0, parameter integer PCOPIES = 1,
+module qkd_kv_die_cfg_c32 #(parameter integer NRST = 43, parameter integer CAP = 0, parameter integer MUT = 0, parameter integer PCOPIES = 1,
                         parameter integer S32 = 0) (
     input  wire               ck, por_n,
     input  wire               cfg_we, input wire [7:0] cfg_addr, input wire [63:0] cfg_data,
@@ -313,13 +317,13 @@ module qkd_kv_die_cfg_s32 #(parameter integer NRST = 43, parameter integer CAP =
         for (f = 0; f < 32; f = f + 1) begin : g_ef
             wire [14:0] dq = (f < 16) ? dqc0 : dqc1;
             wire [14:0] qf;
-            qkd_kv_die_cfg_s32_fld #(.W(15)) u_f (.ck(ck), .rn(rcp[f/2]), .en(fe[f]),
+            qkd_kv_die_cfg_c32_fld #(.W(15)) u_f (.ck(ck), .rn(rcp[f/2]), .en(fe[f]),
                 .d({(MUT == 1) ? dq[9:5] : dq[14:10], (MUT == 1) ? dq[14:10] : dq[9:5], dq[4:0]}), .q(qf));
             always @* begin ectl_a_cfg[5*f +: 5] = qf[4:0]; ectl_b_cfg[5*f +: 5] = qf[9:5]; ectl_c_cfg[5*f +: 5] = qf[14:10]; end
         end
         for (r = 0; r < NRST; r = r + 1) begin : g_rf
             wire [7:0] qr;
-            qkd_kv_die_cfg_s32_fld #(.W(8)) u_r (.ck(ck), .rn(rcp[KE + r/4]), .en(fr[r]), .d((r < 22) ? dqc2[7:0] : dqc3[7:0]), .q(qr));
+            qkd_kv_die_cfg_c32_fld #(.W(8)) u_r (.ck(ck), .rn(rcp[KE + r/4]), .en(fr[r]), .d((r < 22) ? dqc2[7:0] : dqc3[7:0]), .q(qr));
             always @* rst_dly[8*r +: 8] = qr;
         end
     end endgenerate
@@ -329,7 +333,7 @@ endmodule
 // KV-CTL3 10-20: one configuration field of qkd_kv_die_cfg S32 1 (hold register, async clear from its POR copy).  A kept
 // hierarchy leaf so synthesis cannot fold the field's write decode into every bit's hold mux (en = <= 2 x W loads).
 (* keep_hierarchy *)
-module qkd_kv_die_cfg_s32_fld #(parameter integer W = 15) (
+module qkd_kv_die_cfg_c32_fld #(parameter integer W = 15) (
     input wire ck, rn, en, input wire [W-1:0] d, output reg [W-1:0] q
 );
     always @(posedge ck or negedge rn) if (!rn) q <= {W{1'b0}}; else if (en) q <= d;
@@ -341,7 +345,7 @@ endmodule
 // 16-bit SLICES, each slice's enable ANDed with its own KEPT copy of the reset pin flop (rs_s, identical D = rst_n, not a
 // split family), so no two slices share an enable gate; rs_s == rn on every edge (the banks reset on rn): same function,
 // 0 added edges.  S32 = 0 = unchanged.
-module qkd_static_kv_ownership_calendar_mu_s32 #(parameter integer MUT = 0, parameter integer MU = 0, parameter integer PIPE = 0, parameter integer SAFE = 0,
+module qkd_static_kv_ownership_calendar_mu_c32 #(parameter integer MUT = 0, parameter integer MU = 0, parameter integer PIPE = 0, parameter integer SAFE = 0,
     parameter integer RCOPIES = 1, parameter integer S32 = 0) (
     input wire ck, rst_n,
     input wire cfg_we, input wire [1:0] cfg_addr, input wire [31:0] cfg_data,
@@ -354,7 +358,7 @@ module qkd_static_kv_ownership_calendar_mu_s32 #(parameter integer MUT = 0, para
     output wire fault, output wire [7:0] fault_code
 );
 generate if (MU == 0) begin : g_plain
-    qkd_static_kv_ownership_calendar #(.MUT(MUT), .PIPE(PIPE)) u_plain (.ck(ck), .rst_n(rst_n), .cfg_we(cfg_we), .cfg_addr(cfg_addr),
+    qkd_static_kv_ownership_calendar_c32 #(.MUT(MUT), .PIPE(PIPE)) u_plain (.ck(ck), .rst_n(rst_n), .cfg_we(cfg_we), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .go(go), .host_quiet(host_quiet), .upstream_quiet(upstream_quiet),
         .group_drained(group_drained), .group_fault(group_fault), .native_mode(native_mode),
         .ownership_valid(ownership_valid), .native_reserved(native_reserved), .active(active), .done(done),
@@ -504,4 +508,83 @@ end else begin : g_mu
     assign active = ac; assign done = dn; assign configured = cf; assign cycle = cy;
     assign fault = ft; assign fault_code = fc;
 end endgenerate
+endmodule
+
+// ===== plain ownership calendar with PIPE (KV-CTL mu2 form, renamed) =====
+// KV-CTL mu2 10-19: PIPE=1 (MU release view of qkd_kvs_ctl; PIPE=0 = unchanged): the 32-group drain reduction gets
+// its own register stage (drained_all_q = &drained_q one edge later), so the enter / leave guards observe the
+// group drain one edge EARLIER relative to the compiled roots (compiler: QUIET / drain window +1 ck before enter and
+// leave), and the root - k compare offsets are captured with the root words (enter_m / leave_m / deadline_m; roots are
+// static once sealed: a write while configured / active faults).  Every other edge is unchanged.  Reason: p1-d7af727c1
+// TT reg2reg -487 ps = drained_q -> wire -> 32-AND -> 32-b subtract/compare -> bad -> enable of ~140 root flops.
+module qkd_static_kv_ownership_calendar_c32 #(parameter integer MUT = 0, parameter integer PIPE = 0) (
+    input wire ck, rst_n,
+    input wire cfg_we, input wire [1:0] cfg_addr, input wire [31:0] cfg_data,
+    input wire go,
+    input wire host_quiet, upstream_quiet,
+    input wire [31:0] group_drained, group_fault,
+    output reg native_mode, ownership_valid, native_reserved,
+    output reg active, done, configured,
+    output reg [31:0] cycle,
+    output reg fault, output reg [7:0] fault_code
+);
+    (* keep *) reg rn;
+    always @(posedge ck) rn <= rst_n;
+    reg we_q, go_q, host_q, upstream_q;
+    reg [1:0] addr_q; reg [31:0] data_q, drained_q, fault_q;
+    always @(posedge ck) begin
+        addr_q <= cfg_addr; data_q <= cfg_data;
+        drained_q <= group_drained; fault_q <= group_fault;
+    end
+    always @(posedge ck or negedge rn) begin
+        if (!rn) begin we_q <= 0; go_q <= 0; host_q <= 0; upstream_q <= 0; end
+        else begin we_q <= cfg_we; go_q <= go; host_q <= host_quiet; upstream_q <= upstream_quiet; end
+    end
+    reg [31:0] enter_root, leave_root, deadline_root;
+    reg [31:0] enter_m, leave_m, deadline_m;   // PIPE: root - k, captured with the root word
+    reg drained_all_q;                         // PIPE: &drained_q, one edge later
+    always @(posedge ck) drained_all_q <= &drained_q;
+    wire drained_ok = (PIPE != 0) ? drained_all_q : (&drained_q);
+    reg [2:0] written;
+    wire enter_now = active && cycle == ((PIPE != 0) ? enter_m : enter_root - ((MUT == 1) ? 32'd2 : 32'd1));
+    wire leave_now = active && cycle == ((PIPE != 0) ? leave_m : leave_root - 32'd1);
+    wire deadline_now = cycle == ((PIPE != 0) ? deadline_m : deadline_root - 32'd1);
+    reg [7:0] bad;
+    always @* begin
+        bad = 0;
+        if (we_q && (configured || active || go_q)) bad[0] = 1;
+        if (we_q && addr_q == 3 &&
+            (written != 3'b111 || data_q != 32'h514b564d || enter_root < 3 ||
+             leave_root <= enter_root || deadline_root <= leave_root)) bad[1] = 1;
+        if (go_q && (!configured || active || we_q)) bad[2] = 1;
+        if (enter_now && (!host_q || !upstream_q || !drained_ok)) bad[3] = 1;
+        if (leave_now && MUT != 2 && (!upstream_q || !drained_ok)) bad[4] = 1;
+        if ((|fault_q) && MUT != 3) bad[5] = 1;
+    end
+    always @(posedge ck or negedge rn) begin
+        if (!rn) begin
+            native_mode <= 0; ownership_valid <= 0; native_reserved <= 0; active <= 0;
+            done <= 0; configured <= 0; cycle <= 0; fault <= 0; fault_code <= 0;
+            enter_root <= 0; leave_root <= 0; deadline_root <= 0; written <= 0;
+            enter_m <= 0; leave_m <= 0; deadline_m <= 0;
+        end else if (fault || (|bad)) begin
+            fault <= 1; fault_code <= fault_code | bad;
+            ownership_valid <= 0; native_reserved <= 1; active <= 0; done <= 0;
+        end else begin
+            done <= 0;
+            if (we_q) case (addr_q)
+                0: begin enter_root <= data_q; enter_m <= data_q - ((MUT == 1) ? 32'd2 : 32'd1); written[0] <= 1; end
+                1: begin leave_root <= data_q; leave_m <= data_q - 32'd1; written[1] <= 1; end
+                2: begin deadline_root <= data_q; deadline_m <= data_q - 32'd1; written[2] <= 1; end
+                3: begin configured <= 1; ownership_valid <= 1; end
+            endcase
+            if (go_q) begin cycle <= 0; active <= 1; native_mode <= 0; native_reserved <= 1; end
+            if (active) begin
+                cycle <= cycle + 1;
+                if (enter_now) native_mode <= 1;
+                if (leave_now) native_mode <= 0;
+                if (deadline_now) begin active <= 0; done <= 1; native_reserved <= 0; end
+            end
+        end
+    end
 endmodule

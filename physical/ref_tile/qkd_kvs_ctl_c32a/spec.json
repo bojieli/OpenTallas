@@ -21,7 +21,7 @@
   "rtl/lib/ot_s32_cells.sv",
   "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_layer_programme_s32.sv",
   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_writer.sv",
-  "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_misc.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_misc.sv",
   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_s32_boot.sv",
   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_dcfg.sv",
   "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_c32_obs.sv",
@@ -241,196 +241,100 @@
   "purpose": "STRUCTURAL qkd_kvs_ctl_c32a (KV-CTL10 10-20, K.STA.CTL exact successor): the die binds the boot-ages tile qkd_kvs_ctl (62 ports, kv_static_die OT_KV_MU=1 OT_KV_BOOT_AGES=1); mu2 / s32a/b were refused by kv_tile_views (tile RTL differs: 45 ports, no age outputs, o_attn 77 b). This kit = the die generator with OT_KV_CTL_C32=1 (tools/qwen_kv_die/kv_ctl_c32.py): SAME 62 ports / wiring / assigns, members = the KV-CTL3 native32 successors (b5d750822) + qkd_kv_die_cfg_a_c32 (boot-age words, census form) + qkd_kv_ownership_obs_c32; CTLSRAM 1. Pin registers OFF (die charges 0 tile pin edges; owner 10-20 09:05), reset landing 2 stages.",
   "benches": [
    {
-    "name": "s32_kb",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_kb.sh . {RUN}/bench/kb kb",
+    "name": "c32_dcfg",
+    "cmd": "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench/c32 dcfg",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^C32 dcfg rc=0: PASS KV_DCFG_A_C32 mismatches0",
+    "pass_witness": "results/arch/kv_ctl10_1020/bench1/dcfg.stdout"
+   },
+   {
+    "name": "c32_dcfg_m6",
+    "cmd": "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench/c32 m_dc6",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_DCFG_A_C32 mismatches[1-9]",
+    "fail_witness": "results/arch/kv_ctl10_1020/bench1/m_dc6.stdout"
+   },
+   {
+    "name": "c32_dcfg_m7",
+    "cmd": "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench/c32 m_dc7",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL KV_DCFG_A_C32 mismatches[1-9]",
+    "fail_witness": "results/arch/kv_ctl10_1020/bench1/m_dc7.stdout"
+   },
+   {
+    "name": "c32_tile",
+    "cmd": "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench/c32 tile_a",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^S32KB kb rc=0: PASS MU_KV_BOOT",
-    "pass_witness": "results/arch/kv_ctl3_1020/v3/kb_kb.stdout"
+    "pass_regex": "^C32 tile_a rc=0: PASS KV_CTL_C32_TILE mismatches0",
+    "pass_witness": "results/arch/kv_ctl10_1020/bench1/tile_a.stdout"
    },
    {
-    "name": "s32_kb_first",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_kb.sh . {RUN}/bench/kb kb_first",
+    "name": "c32_tile_first",
+    "cmd": "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench/c32 first_a",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^S32KB kb_first rc=0: PASS MU_KV_BOOT",
-    "pass_witness": "results/arch/kv_ctl3_1020/v3/kb_kb_first.stdout"
+    "pass_regex": "^C32 first_a rc=0: PASS KV_CTL_C32_TILE mismatches0",
+    "pass_witness": "results/arch/kv_ctl10_1020/bench1/first_a.stdout"
    },
    {
-    "name": "s32_kb_m_tl",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_kb.sh . {RUN}/bench/kb m_tl",
+    "name": "c32_tile_m_tl",
+    "cmd": "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench/c32 m_tl",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "FAIL MU_KV_BOOT: user 0 differs from MU 0",
-    "fail_witness": "results/arch/kv_ctl3_1020/v3/kb_m_tl.stdout"
+    "fail_regex": "FAIL KV_CTL_C32_TILE mismatches[1-9]",
+    "fail_witness": "results/arch/kv_ctl10_1020/bench1/m_tl.stdout"
    },
    {
-    "name": "s32_kb_m_cnt",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_kb.sh . {RUN}/bench/kb m_cnt",
-    "expect": "fail",
+    "name": "c32_kb",
+    "cmd": "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench/c32 kb_a",
+    "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "fail_regex": "FAIL MU_KV_BOOT: event kinds differ",
-    "fail_witness": "results/arch/kv_ctl3_1020/v3/kb_m_cnt.stdout"
+    "pass_regex": "^C32 kb_a rc=0: PASS MU_KV_BOOT",
+    "pass_witness": "results/arch/kv_ctl10_1020/bench1/kb_a.stdout"
    },
    {
-    "name": "s32_lprg",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_c.sh . {RUN}/bench/c c1",
+    "name": "c32_kb_first",
+    "cmd": "rtl/test/kv_ctl10_1020/run_kv_ctl_c32.sh . {RUN}/bench/c32 kb_first",
     "expect": "pass",
-    "threads": 4,
-    "peak_ram_gb": 8,
+    "threads": 8,
+    "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^PASS KV_LPRG_MU5_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/v3/c_c1.stdout"
-   },
-   {
-    "name": "s32_lprg_m_land",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_c.sh . {RUN}/bench/c m_land",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "FAIL KV_LPRG_MU5_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/v3/c_m_land.stdout"
-   },
-   {
-    "name": "s32_wr",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_a.sh . {RUN}/bench/a lock",
-    "expect": "pass",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "pass_regex": "PASS KV_S32_A_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/v3/a_lock.stdout"
-   },
-   {
-    "name": "s32_wr_m_sl",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_a.sh . {RUN}/bench/a m_sl",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "FAIL KV_S32_A_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/v3/a_m_sl.stdout"
-   },
-   {
-    "name": "s32_fanr",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_b.sh . {RUN}/bench/b fanr",
-    "expect": "pass",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "pass_regex": "PASS KV_FANR_MU6_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/v3/b_fanr.stdout"
-   },
-   {
-    "name": "s32_fanr_m_ub",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_b.sh . {RUN}/bench/b m_ub",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "FAIL KV_FANR_MU6_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/v3/b_m_ub.stdout"
-   },
-   {
-    "name": "s32_dcfg",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_b.sh . {RUN}/bench/b dcfg",
-    "expect": "pass",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "pass_regex": "PASS KV_DCFG_S32_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/v3/b_dcfg.stdout"
-   },
-   {
-    "name": "s32_dcfg_m_rc",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_b.sh . {RUN}/bench/b m_rc",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "FAIL KV_DCFG_S32_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/v3/b_m_rc.stdout"
-   },
-   {
-    "name": "s32_own",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_d.sh . {RUN}/bench/d own",
-    "expect": "pass",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "pass_regex": "PASS KV_OWN_S32_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/v3/d_own.stdout"
-   },
-   {
-    "name": "s32_own_m_os1",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_d.sh . {RUN}/bench/d m_os1",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "FAIL KV_OWN_S32_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/v3/d_m_os1.stdout"
-   },
-   {
-    "name": "s32_boot",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_d2.sh . {RUN}/bench/d2 d2",
-    "expect": "pass",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "pass_regex": "PASS KV_S32_BOOT_LOCKSTEP mismatches0",
-    "pass_witness": "results/arch/kv_ctl3_1020/v3/d2_d2.stdout"
-   },
-   {
-    "name": "s32_boot_m_cw",
-    "cmd": "rtl/test/mu_qwen_1018/run_kv_ctl_s32_d2.sh . {RUN}/bench/d2 m_cw",
-    "expect": "fail",
-    "threads": 4,
-    "peak_ram_gb": 8,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "FAIL KV_S32_BOOT_LOCKSTEP mismatches[1-9]",
-    "fail_witness": "results/arch/kv_ctl3_1020/v3/d2_m_cw.stdout"
+    "pass_regex": "^C32 kb_first rc=0: PASS MU_KV_BOOT",
+    "pass_witness": "results/arch/kv_ctl10_1020/bench1/kb_first.stdout"
    }
   ],
   "extra_paths": [
