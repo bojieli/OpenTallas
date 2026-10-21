@@ -6,7 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-PORTS = '(input wire clk,rst_n,a,b,output wire q,c);'
+PORTS = '(clk,rst_n,a,b,q,c); input wire clk,rst_n,a,b; output wire q,c;'
 GOOD = """wire qn;
 DFFASRHQNx1_ASAP7_75t_R f(.CLK(clk),.D(a),.QN(qn),.RESETN(rst_n),.SETN(1'b1));
 INVx1_ASAP7_75t_R oq(.A(qn),.Y(q));
