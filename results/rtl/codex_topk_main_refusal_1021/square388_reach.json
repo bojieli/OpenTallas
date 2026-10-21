@@ -1,0 +1,124 @@
+{
+  "status": "SOURCE_FACE_INTERVAL_REACH_MODEL_ONLY",
+  "quarter_LEF_sha256": "bc1025ed49cd446bd00c83437bdfbf806d37958aad91cb3b98934855aed8744a",
+  "glue_LEF_sha256": "6a9eccf8244b07d70725381e41fdd50469d604be3d92e9e993df42b9982c2d9e",
+  "outline_um": [
+    388.8,
+    388.8
+  ],
+  "faces": {
+    "S": {
+      "pins": 1508,
+      "pins_per_um": 3.8786008230452675,
+      "capacity_at4": 1555.2
+    },
+    "N": {
+      "pins": 1509,
+      "pins_per_um": 3.881172839506173,
+      "capacity_at4": 1555.2
+    },
+    "W": {
+      "pins": 1544,
+      "pins_per_um": 3.97119341563786,
+      "capacity_at4": 1555.2
+    },
+    "E": {
+      "pins": 1511,
+      "pins_per_um": 3.8863168724279835,
+      "capacity_at4": 1555.2
+    }
+  },
+  "face_interval_checks": 12348,
+  "hop_limit_um": 405,
+  "max_hop_bound_um": 398.92757142857147,
+  "max_local_pin_um": 21.600000000000136,
+  "worst": {
+    "q": 3,
+    "kind": "lane",
+    "bit": 514,
+    "port": null,
+    "extreme": null,
+    "route_um": 2790.2250000000004,
+    "hop_bound_um": 398.92757142857147,
+    "local_pin_um": 10.841999999999985
+  },
+  "anchor_body_obstructions": 0,
+  "first_obstructions": [],
+  "reach_bound_met": true,
+  "VD_one_priced_relay_max_hop_um": 324.59400000000016,
+  "VD_relay_point_um": [
+    626.4,
+    1749.6
+  ],
+  "parent": {
+    "outline_um": [
+      907.2,
+      3499.2
+    ],
+    "control": [
+      216,
+      1555.2,
+      388.8,
+      388.8
+    ],
+    "glue": [
+      648,
+      1771.2,
+      216,
+      172.8
+    ],
+    "quarter_origins": [
+      [
+        216,
+        43.2
+      ],
+      [
+        216,
+        864
+      ],
+      [
+        216,
+        1987.2
+      ],
+      [
+        216,
+        2764.8
+      ]
+    ],
+    "north_relay_origin": [
+      129.6,
+      3456
+    ],
+    "north_relay_size": [
+      25.92,
+      17.28
+    ],
+    "retained_top_band_um": 86.4,
+    "growth_vs_old_um": 216,
+    "vmtx_band_um": 4190.4,
+    "remaining_after_parent_TX540_one_gap43p2_um": 108
+  },
+  "unchanged_contract": {
+    "landing_segments_each_direction": 7,
+    "landing_edges_each_direction": 14,
+    "XR": 34,
+    "XD": 17,
+    "VD_edges": 1,
+    "external_tail_edges": 796,
+    "clock_route_period_ps": 770,
+    "clock_signoff_period_ps": 833.333,
+    "clock_uncertainty_setup_hold_ps": [
+      60,
+      25
+    ],
+    "new_pipeline_edges": 0
+  },
+  "debts": [
+    "Targets are extrema of proposed face intervals, not published new-control pin coordinates.",
+    "Anchors are snapped reference points, not allocated landing-cell bodies/fences/pin access/PG/CTS.",
+    "Simultaneous routing and actual cut occupancy are unproved; no extra layer grant inferred.",
+    "Individual lane/control/return bodies and clock/reset distribution still require actual source-bound parent placement.",
+    "Existing fixed source cycles do not prove sustained full-131072 throughput.",
+    "TX/VMUX composition and actual complete4190.4 release-band fit remain open."
+  ]
+}
