@@ -1,11 +1,21 @@
 """Replay the recognition against the unchanged real mapped netlist + causal negatives."""
 import importlib.util
 import json
+import hashlib
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 spec = importlib.util.spec_from_file_location('textbook_lint', ROOT / 'tools/textbook_lint.py')
 T = importlib.util.module_from_spec(spec); spec.loader.exec_module(T)
 D = Path(__file__).resolve().parent
+native = json.loads((D / 'native_census.json').read_text())
+gate = json.loads((D / 'original_gate_FAIL.json').read_text())
+source_hashes = {f['path']: f['sha256'] for f in gate['source_binding']['files']}
+assert hashlib.sha256((D / 'mapped.v').read_bytes()).hexdigest() == native['netlist']['sha256']
+for local, source in [('frozen_ot_rst_relay.sv', 'rtl/lib/ot_rst_relay.sv'),
+                      ('frozen_transport_r4.sv', 'rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv')]:
+    assert hashlib.sha256((D / local).read_bytes()).hexdigest() == source_hashes[source]
+assert native['status'] == 'PASS' and native['max_dynamic_loads'] == 27
+assert next(d for d in native['driver_counts'] if d['driver'] == 'rst_n')['loads'] == 6
 text = (D / 'mapped.v').read_text()
 
 def graph():
