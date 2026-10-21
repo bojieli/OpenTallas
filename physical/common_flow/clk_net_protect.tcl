@@ -16,6 +16,31 @@ ot_pg_install_unsupported_birth_guards
 # every CTS buffer dont_touch before each repair_timing_helper call, so resizer moves (rebuffer, buffer removal,
 # cloning) cannot restructure a balanced tree.  Clock-net DRV repair stays with CTS (-repair_clock_nets) and the
 # later repair_clock_nets / repair_design calls (dont_touch only binds resizer timing moves).  Constraints unchanged.
+# Standard mode: connected PG terminal count (cheap: PG nets only).
+proc ot_pg_standard_pg_iterm_count {blk} {
+  set c 0
+  foreach n [$blk getNets] {
+    if {[$n getSigType] in {POWER GROUND}} {incr c [llength [$n getITerms]]}
+  }
+  return $c
+}
+# Standard mode: re-establish the RC model the caller estimated (routed after
+# global_route, placement otherwise); no estimate before any cell is placed.
+proc ot_pg_standard_reestimate {blk where} {
+  if {[info commands grt::have_routes] ne "" && [grt::have_routes]} {
+    estimate_parasitics -global_routing
+    puts "OT_PG_STANDARD_REESTIMATE $where model=global_routing"
+    return
+  }
+  foreach i [$blk getInsts] {
+    if {[$i isPlaced] && ![$i isFixed]} {
+      estimate_parasitics -placement
+      puts "OT_PG_STANDARD_REESTIMATE $where model=placement"
+      return
+    }
+  }
+  puts "OT_PG_STANDARD_REESTIMATE $where skipped=unplaced"
+}
 proc ot_protect_clock_tree {} {
   set blk [ord::get_db_block]
   if {[ot_pg_strict_enabled]} {
@@ -26,7 +51,13 @@ proc ot_protect_clock_tree {} {
     set pg_bound [ot_pg_bind_batch_before_protect $blk [$blk getInsts]]
     ot_pg_assert_all_native $blk [ot_pg_prepare $blk]
   } else {
+    set pg_before [ot_pg_standard_pg_iterm_count $blk]
     set pg_bound [ot_pg_standard_bind protect_clock_tree]
+    # ROOT11 10-20 (PVM9 r6b EST-0104): binding PG on new CTS/repair cells
+    # after the caller's estimate leaves an inconsistent parasitics state for
+    # the repair_timing that follows. Refresh with the caller's own model, only
+    # when global_connect actually changed a PG binding.
+    if {[ot_pg_standard_pg_iterm_count $blk] != $pg_before} {ot_pg_standard_reestimate $blk protect_clock_tree}
   }
   set k 0; set j 0
   foreach n [$blk getNets] {
