@@ -1630,7 +1630,7 @@ def audit(spec: dict, rtl_text: str) -> dict:
                         fails.append(f"UNLANDED {n}: {d} ({reg[d]}) -> {i['inst']}.{pin} ({reg[i['inst']]})")
                         continue
                     di = next(x for x in insts if x["inst"] == d)
-                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_n32_chunk_w", "ot_pl_land_split_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r", "ot_pl_land_split_r") and \
+                    if di["module"] in ("ot_pl_land_w", "ot_pl_land_chunk_w", "ot_pl_land_vector_reset_w", "ot_pl_land_n32_chunk_w", "ot_pl_land_n32_split_w", "ot_pl_land_split_w") and i["module"] in ("ot_pl_land_r", "ot_pl_land_chunk_r", "ot_pl_land_vector_reset_r", "ot_pl_land_split_r") and \
                             (d[:-2] == i["inst"][:-2] or n in {f"lpl_{d[6:-2]}_{x}" for x in ("bank", "epo", "vld")}):
                         landed += pin == "bank"
                     elif n.startswith("lpr_") and d.startswith("u_lpr_"):
