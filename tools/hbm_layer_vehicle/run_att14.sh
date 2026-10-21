@@ -44,8 +44,8 @@ QKV=$OUT/src/results/rtl/hbm_qwen_layer_tput_1018/veh_att3_1019/kv
 VL='VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator'
 A="cd $OUT/src && export $VL HDC_V41_ARITH=chunk8 && python3 tools/hbm_layer_vehicle/att_images.py unit --kv $OUT/kv --bundle $OUT/bundle"
 Q="cd $OUT/src && export $VL HDC_V41_ARITH=chunk8 && python3 tools/hbm_layer_vehicle/qwen_att_unit.py run --kv $QKV --bundle $OUT/bundle"
-# SCRATCH2 permits a missing nested --dir on hosts holding its broad lane root.
-# An exact unique lane-root alias preserves strict locality for existing input data.
+# An exact unique lane-root alias selects only hosts holding this staged input.
+# The fleet runner requires this directory to exist before placement.
 FLEET_LANE=${FLEET_LANE:-/srv/opentallas-scratch/claude/tok-hbm-att-$(basename "$OUT")}
 ssh "$H" "test -d $FLEET_LANE || ln -s $OUT $FLEET_LANE" || exit 2
 RUN="/home/ubuntu/bin/ot-run --mem ${MEM:-64} --threads 16 --dir $FLEET_LANE --"
