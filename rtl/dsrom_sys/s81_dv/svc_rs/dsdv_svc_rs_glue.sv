@@ -10,7 +10,11 @@ module dsdv_svc_rs_rl #(parameter integer ST = 0) (
     output reg  [21:0] role,
     output reg  [7:0]  pvs
 );
+`ifdef OT_SVC_GROUP72
+`include "dsdv_svc_rs_roles_group72.svh"
+`else
 `include "dsdv_svc_rs_roles.svh"
+`endif
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     assign rn = rs[1];
