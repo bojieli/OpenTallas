@@ -51,7 +51,9 @@ def mk(kind, form, name, side=None):
     # per-alias `setattr w:<name>` scans the long pole of synthesis); same aliases, same attributes, same graph verify
     ca = (QC / 'copy_aliases.py').read_text()
     o1 = 'cmd += ["add -wire \\\\"+alias+" "+str(len(bits)),"connect -set \\\\"+alias+" \\\\"+name,"setattr -set keep 1 w:"+alias,"setattr -set ot_rst_split 1 w:"+alias]'
-    n1 = 'cmd += ["add -wire \\\\"+alias+" "+str(len(bits)),"connect -set \\\\"+alias+" \\\\"+name]'
+    # connect -nomap -nounset: the alias is a fresh undriven wire, so neither the per-command SigMap of every module
+    # connection nor the driver-unset scan (both O(module) per alias: 22 min for 3,685 aliases at it6) is needed
+    n1 = 'cmd += ["add -wire \\\\"+alias+" "+str(len(bits)),"connect -nomap -nounset -set \\\\"+alias+" \\\\"+name]'
     o2 = 'cmd.append("cd ..")'
     n2 = 'cmd += (["setattr -set keep 1 w:A_ot_qcore_copy_alias_*","setattr -set ot_rst_split 1 w:A_ot_qcore_copy_alias_*"] if rows else []);cmd.append("cd ..")'
     assert ca.count(o1) == 1 and ca.count(o2) == 1, 'copy_aliases.py drift'
