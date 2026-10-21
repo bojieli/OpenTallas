@@ -1,0 +1,101 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact
+ot-run: ot-epyc9       admits  1032 GB (avail 823, growth 101, headroom 0, waiters 0/0 GB) load 50/128 running 33 disk 158 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3015861-1792497664 after 0 s
+ALLOC ffn.experts_gu fill [208, 208, 192, 224, 272, 256, 240, 240, 208, 224, 240, 208, 0, 0, 0, 0] phases [(1, 4, 10), (2, 4, 10), (3, 1, 5), (4, 4, 10), (5, 4, 10), (6, 1, 5), (7, 4, 10), (8, 4, 10), (9, 1, 5), (10, 4, 10), (11, 4, 10), (12, 1, 5), (13, 4, 10), (14, 4, 10), (15, 1, 5), (16, 4, 10), (17, 4, 10), (18, 1, 5)]
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 1/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 2/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 3/19 mat exp61.w13 rows 1 nseg 5 faults 0 ret_words 3 calendar measured_class T 999 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 4/19 mat exp69.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 5/19 mat exp69.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 6/19 mat exp69.w13 rows 1 nseg 5 faults 0 ret_words 3 calendar measured_class T 1010 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 7/19 mat exp112.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 8/19 mat exp112.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 9/19 mat exp112.w13 rows 1 nseg 5 faults 0 ret_words 4 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 10/19 mat exp170.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 11/19 mat exp170.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 12/19 mat exp170.w13 rows 1 nseg 5 faults 0 ret_words 2 calendar measured_class T 1002 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 13/19 mat exp299.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 14/19 mat exp299.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 15/19 mat exp299.w13 rows 1 nseg 5 faults 0 ret_words 3 calendar measured_class T 999 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 16/19 mat exp357.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 17/19 mat exp357.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.experts_gu phase 18/19 mat exp357.w13 rows 1 nseg 5 faults 0 ret_words 3 calendar measured_class T 1010 mutant None
+FSEQ12 ffn.experts_gu 145 run 0 check 0 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 1 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 2 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 3 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 4 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 5 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 6 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 7 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 8 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 9 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 10 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 11 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 12 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 13 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 14 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 15 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 16 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 17 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 18 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6638 ret_words=138 xo_checked=6636 fault=0
+TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 145 phases 18 rows 54 fixture_rows 54 go0 63 last_ret 2875 span 2812 errors 0 []
+FSEQ12 ffn.experts_gu 144 run 0 check 1 XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 1 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 2 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 3 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 4 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 5 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 6 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 7 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 8 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 9 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 10 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 11 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 12 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 13 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 14 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 15 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 16 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 17 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 18 mutant=None rows=1 fixture_rows=1 errors=0 END edges=6603 ret_words=138 xo_checked=6601 fault=4
+TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 144 phases 18 rows 54 fixture_rows 54 go0 63 last_ret 2858 span 2795 errors 4 ['FAULT edge 1191 status 11 lx 0', 'FAULT edge 1192 status 11 lx 0', 'FAULT edge 1193 status 11 lx 0']
+ALLOC ffn.down fill [160, 160, 144, 160, 184, 176, 160, 160, 136, 152, 152, 136, 0, 0, 0, 0] phases [(1, 4, 10), (2, 4, 10), (3, 2, 5), (4, 4, 10), (5, 4, 10), (6, 2, 5), (7, 4, 10), (8, 4, 10), (9, 2, 5), (10, 4, 10), (11, 4, 10), (12, 2, 5), (13, 4, 10), (14, 4, 10), (15, 2, 5), (16, 4, 10), (17, 4, 10), (18, 2, 5), (19, 4, 10), (20, 4, 10), (21, 2, 5)]
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 1/22 mat shared.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 965 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 2/22 mat shared.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 971 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 3/22 mat shared.w2 rows 2 nseg 5 faults 0 ret_words 6 calendar measured_class T 966 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 4/22 mat exp61.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 958 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 5/22 mat exp61.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 6/22 mat exp61.w2 rows 2 nseg 5 faults 0 ret_words 6 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 7/22 mat exp69.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 8/22 mat exp69.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 9/22 mat exp69.w2 rows 2 nseg 5 faults 0 ret_words 8 calendar measured_class T 959 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 10/22 mat exp112.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 958 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 11/22 mat exp112.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 12/22 mat exp112.w2 rows 2 nseg 5 faults 0 ret_words 4 calendar measured_class T 954 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 13/22 mat exp170.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 14/22 mat exp170.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 15/22 mat exp170.w2 rows 2 nseg 5 faults 0 ret_words 8 calendar measured_class T 955 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 16/22 mat exp299.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 958 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 17/22 mat exp299.w2 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 18/22 mat exp299.w2 rows 2 nseg 5 faults 0 ret_words 6 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 19/22 mat exp357.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 20/22 mat exp357.w2 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 962 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.down phase 21/22 mat exp357.w2 rows 2 nseg 5 faults 0 ret_words 8 calendar measured_class T 959 mutant None
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-stage-admission-1020/compact_fseq.py", line 28, in <module>
+    r=subprocess.run(cmd,capture_output=True,text=True);(V/'sequence_gen.log').write_text(r.stdout+r.stderr);assert r.returncode==0,r.stdout+r.stderr
+                                                                                                                    ^^^^^^^^^^^^^^^
+AssertionError: Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/fseq_src/toksim_fseq_seqops.py", line 49, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/fseq_src/toksim_fseq_seqops.py", line 29, in main
+    assert a.phase_vm or sha(v / f'p{ph["phase"]}' / 'vm.hex') == sha(d0 / 'vm.hex'), ('x differs', ph['phase'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('x differs', 4)
+
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3015861-1792497664): exit 1

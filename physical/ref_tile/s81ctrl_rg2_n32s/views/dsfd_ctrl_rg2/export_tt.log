@@ -1,0 +1,131 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /mv0/ot_sram_1r1w2c_16x340_p192.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
+QDM PINFLOP reference: 1301 input pin flops (0 hard-child clock pins at +insertion), median arrival 441.76123 (range 401.848419 .. 573.973511)
+QDM reference pin u_ot_pr_core.g_pc[1].u_pc.rq_d_q[75]$_DFF_P_/CLK clock arrival max 441.76123 min 429.105499 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+DSFD_CTRL_RG2 hclk reference u_ot_pr_core.g_pc[0].u_pc.krd_q[48]$_DFF_P_/CLK of 618 pin flops: clock arrival max 562.425842 min 382.454468 skew 90 hold 50
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
+OT_WS max 2.0600532391057413e-10 min 2.7742225183757796e-11
+OT_FC_LIB BUFx2_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx2_ASAP7_75t_R output3258 A Y A 0
+OT_FC_CHAIN BUFx2_ASAP7_75t_R output3258
+OT_FC_LIB INVx3_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 !A
+OT_FC_ROLE INVx3_ASAP7_75t_R u_ot_pr_core.u_ck1/_0_ A Y !A 1
+OT_FC_CHAIN INVx3_ASAP7_75t_R u_ot_pr_core.u_ck1/_0_
+OT_FC_LIB INVx3_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 !A
+OT_FC_ROLE INVx3_ASAP7_75t_R u_ot_pr_core.u_ck0/_0_ A Y !A 1
+OT_FC_CHAIN INVx3_ASAP7_75t_R u_ot_pr_core.u_ck0/_0_
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R clkbuf_leaf_1_ot_ckkm_3_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R clkbuf_leaf_1_ot_ckkm_3_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R clkbuf_1_0__f_ot_ckkm_3_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R clkbuf_1_0__f_ot_ckkm_3_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R clkbuf_0_ot_ckkm_3_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R clkbuf_0_ot_ckkm_3_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R ot_ckkm_3 A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R ot_ckkm_3
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R clkbuf_3_4_0_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R clkbuf_3_4_0_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R delaybuf_10_core_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R delaybuf_10_core_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R delaybuf_9_core_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R delaybuf_9_core_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R delaybuf_8_core_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R delaybuf_8_core_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R delaybuf_7_core_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R delaybuf_7_core_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R delaybuf_6_core_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R delaybuf_6_core_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R clkbuf_2_2_0_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R clkbuf_2_2_0_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R clkbuf_1_1_1_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R clkbuf_1_1_1_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R clkbuf_1_1_0_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R clkbuf_1_1_0_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R delaybuf_29_core_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R delaybuf_29_core_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R delaybuf_28_core_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R delaybuf_28_core_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R delaybuf_27_core_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R delaybuf_27_core_clk
+OT_FC_LIB BUFx24_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_TT_nldm_211120 A
+OT_FC_ROLE BUFx24_ASAP7_75t_R clkbuf_0_clk A Y A 0
+OT_FC_CHAIN BUFx24_ASAP7_75t_R clkbuf_0_clk
+OT_FC_SENSE positive_unate
+OT_FC_DRIVER BUFx2_ASAP7_75t_R output3258
+OT_FC_WAVE 0.0 416.66650851770913
+OT_FC_CLOCK core_clk
+OT_FC_OUTPUT_CLOCK ck_o_fwd
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
+OT_FC_INPUT_METRIC arrival_max_rise 0.000000
+OT_FC_ABSOLUTE_METRIC arrival_max_rise 635.579041
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_max_rise 620.868225
+OT_FC_PHASE arrival_max_rise 0 0.0
+OT_FC_METRIC arrival_max_rise 635.579041
+OT_FC_DRIVER_METRIC arrival_max_rise 620.868225
+OT_FC_INPUT_METRIC arrival_min_rise 0.000000
+OT_FC_ABSOLUTE_METRIC arrival_min_rise 620.357849
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_min_rise 605.647034
+OT_FC_PHASE arrival_min_rise 0 0.0
+OT_FC_METRIC arrival_min_rise 620.357849
+OT_FC_DRIVER_METRIC arrival_min_rise 605.647034
+OT_FC_INPUT_METRIC arrival_max_fall 416.666504
+OT_FC_ABSOLUTE_METRIC arrival_max_fall 1071.437622
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_max_fall 1056.781738
+OT_FC_PHASE arrival_max_fall 1 416.66650851770913
+OT_FC_METRIC arrival_max_fall 654.7711134822907
+OT_FC_DRIVER_METRIC arrival_max_fall 640.1152294822907
+OT_FC_INPUT_METRIC arrival_min_fall 416.666504
+OT_FC_ABSOLUTE_METRIC arrival_min_fall 1056.306152
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_min_fall 1041.650269
+OT_FC_PHASE arrival_min_fall 1 416.66650851770913
+OT_FC_METRIC arrival_min_fall 639.6396434822909
+OT_FC_DRIVER_METRIC arrival_min_fall 624.9837604822908
+OT_FC_INPUT_METRIC slew_max_rise 0.000000
+OT_FC_ABSOLUTE_METRIC slew_max_rise 387.023987
+OT_FC_DRIVER_ABSOLUTE_METRIC slew_max_rise 385.350433
+OT_FC_METRIC slew_max_rise 387.023987
+OT_FC_DRIVER_METRIC slew_max_rise 385.350433
+OT_FC_INPUT_METRIC slew_max_fall 0.000000
+OT_FC_ABSOLUTE_METRIC slew_max_fall 308.484344
+OT_FC_DRIVER_ABSOLUTE_METRIC slew_max_fall 306.371643
+OT_FC_METRIC slew_max_fall 308.484344
+OT_FC_DRIVER_METRIC slew_max_fall 306.371643
+OT_FC_ROOT clk
+OT_EXPORT_DONE

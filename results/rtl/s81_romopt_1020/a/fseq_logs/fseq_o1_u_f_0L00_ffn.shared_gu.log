@@ -1,0 +1,9 @@
+XS_PLACE_GEN u_f_0L00 op ffn.shared_gu phase 1/4 mat shared.w13 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 1024 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.shared_gu phase 2/4 mat shared.w13 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 1023 mutant None
+XS_PLACE_GEN u_f_0L00 op ffn.shared_gu phase 3/4 mat shared.w13 rows 3 nseg 5 faults 0 ret_words 8 calendar measured_class T 1023 mutant None
+FSEQA u_f_0L00 ffn.shared_gu golden P 146 nph 3 PASS as_expected ows=3 fixture_rows=3 errors=0 END edges=2293 ret_words=26 xo_checked=2291 fault=0
+TOKSIM_FGU_SEQ PASS op ffn.shared_gu PER 146 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 715 span 652 errors 0 []
+FSEQA u_f_0L00 ffn.shared_gu period_below_floor P 145 nph 3 FAIL as_expected FAIL op ffn.shared_gu PER 145 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 713 span 650 errors 4 ['FAULT edge 469 status 11 lx 0', 'FAULT edge 470 status 11 lx 0', 'FAULT edge 471 status 11 lx 0']
+FSEQA u_f_0L00 ffn.shared_gu shift P 146 nph 3 FAIL as_expected 3 rows 10 fixture_rows 10 go0 63 last_ret 715 span 652 errors 18 ['UNASSIGNED_RET edge 403 07cafa18c1000008b', 'UNASSIGNED_RET edge 407 07715eab01000804b', 'UNASSIGNED_RET edge 413 07b5b8bd01000844b']
+FSEQA u_f_0L00 ffn.shared_gu swap P 146 nph 3 FAIL as_expected w 0 lo 2 k 1 got 3d17ec9e/0 want 3cef3d60/0']", "PHASE_FAIL p3: ['MISMATCH edge 403 row 2 lo 0 k 2 got 3dfdb690/0 want 3e256d84/0', 'MISMATCH edge 414 row 0 lo 2 k 1 got bc6d0396/0 want bc977537/0']"]
+FSEQA_VERDICT u_f_0L00 ffn.shared_gu PASS span 652

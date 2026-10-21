@@ -58,3 +58,18 @@ def test_outside_scope_refuses(change):
 
 def test_ktree_scope_unchanged_for_mc3c7_receipt():
     assert not N.ktree_scoped_admission(actual())
+
+
+# ROOT13 review: the scope binds to the gated tile's spec (name == kit dir, spec top == the waived top),
+# so copying another tile into a kit dir with a waived name does not inherit the waiver.
+@pytest.mark.parametrize('spec,ok', [
+    ({'name': 'hdie_pc_ctrl_mc3c7_cts', 'top': N.MC3C7_TOP}, True),
+    ({'name': 'hdie_pc_ctrl_h9c', 'top': N.MC3C7_TOP}, False),
+    ({'name': 'hdie_pc_ctrl_mc3c7_cts', 'top': 'ot_other_top'}, False),
+    ({'top': N.MC3C7_TOP}, False),
+])
+def test_scope_bound_to_spec(spec, ok):
+    kit = P.native_scope_kit(Path('/k/hdie_pc_ctrl_mc3c7_cts'), spec)
+    r = actual()
+    r['kit'] = 'hdie_pc_ctrl_mc3c7_cts'
+    assert P.check_native_census(P.Gate(), out(r), kit) is ok

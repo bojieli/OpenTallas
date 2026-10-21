@@ -108,6 +108,11 @@ CDC_VIEW_LEF = 'physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf/qkd_cdc_
 # KVPLAN 1815 (Q-KV 10-16, kvs13c2 TT: every top class a 528-b replica hop at the 445 plan limit): planned hop limit per
 # relay WIDTH class -- a wide word's bits spread over the replica row (<= 82 um) and the far frame face, so its plan hop
 # is shorter.  OT_KV_REACH_W = 'maxbits:um,...' (ascending); unset = no width class (legacy plans unchanged)
+# KV-BIND12 10-20 (OT_KV_RLY_FINE=1, default off): a relay chain that finds no spot on the G-lattice offsets retries the same
+# path points with sub-cell y / x offsets (RLY_FINE_STEPS) before refusing (kv_die._relays chain_)
+RLY_FINE = __import__('os').environ.get('OT_KV_RLY_FINE', '0') == '1'
+RLY_FINE_STEPS = (10.8, -10.8, 21.6, -21.6, 32.4, -32.4)
+RLY_D2D_FIRST = __import__('os').environ.get('OT_KV_RLY_D2D_FIRST', '0') == '1'   # KV-BIND12: wide D2D words placed first
 REACH_W = sorted((int(k), float(v)) for k, v in (t.split(':') for t in
                  __import__('os').environ.get('OT_KV_REACH_W', '').split(',') if t))
 
@@ -293,6 +298,30 @@ V143_CENTER = __import__('os').environ.get('OT_KV_V143_CENTER', '0') == '1'   # 
 V143_N_UP = float(__import__('os').environ.get('OT_KV_V143_NUP', '1404.0'))                             # N groups' top may rise this far into the empty top (the rest grows down)
 V143_FT = dict(ftg=(356.4, 191.7), fts=(685.8, 191.7))                                       # near head-local (R0)
 HGS, HSS = (324.0, 21.6), (21.6, 21.6)
+# KV-BIND12 10-20 (OT_KV_QKH_SAFE32=1 only; default byte-identical): the safe32 heads bind ot_qkh_lane8_nc32c (172.8^2) and
+# ot_qkh_ktree_lk_nc32c (172.8 x 129.6); the v1.1 grid's 43.2 / 21.6 gaps vanish (kv_expand: 'overlapping closed leaves
+# g_t[11].u_stk / g_t[11].u_l8').  Both heads take the safe32 plans (head_native_plan_r4.py --safe32 + head_lane_perm.py
+# SAFE32=1, results/arch/qwen_kv_die/head_safe32): the slot outlines, lane / station / ktree / score homes and the near head's
+# feed-through T1 / S2 homes all come from the plan JSON, so the frame, TILE_Y bands and clock pins follow it.
+QKH_SAFE32 = __import__('os').environ.get('OT_KV_QKH_SAFE32', '0') == '1'
+if QKH_SAFE32:
+    # OT_KV_QKH_SAFE32_PLANS: another committed plan pair (e.g. head_safe32/alt_5x4: reach <= 400, die-height cost) for comparison
+    _S32_DIR = __import__('os').environ.get('OT_KV_QKH_SAFE32_PLANS', 'results/arch/qwen_kv_die/head_safe32')
+    HEAD_R4_PLAN, HEAD_FT_PLAN = f'{_S32_DIR}/head_r4_plan.json', f'{_S32_DIR}/head_ft_plan.json'
+    _S32 = [json.loads((ROOT / p_).read_text()) for p_ in (HEAD_R4_PLAN, HEAD_FT_PLAN)]
+    SPLIT_HEAD_V11, SPLIT_HEAD_FT = (tuple(d_['slot_outline_um']) for d_ in _S32)
+    V143_FT = {k_: tuple(v_) for k_, v_ in _S32[1]['feedthrough_channel']['stage_xy_um'].items()}
+
+
+def _head_rst_y(ys, h, old):
+    """the head frame's W-face rst_n pin: v1.1 y (440 / 456) unless safe32, where it sits h - 52.48 (the v1.1 offset from the
+    top), moved down to keep >= 1.2 um from every clock entry pin"""
+    if not QKH_SAFE32:
+        return old
+    y = round(h - 52.48, 3)
+    while any(abs(y - v) < 1.2 for v in ys.values()):
+        y = round(y - 1.2, 3)
+    return y
 # ---- v1.4.4 (Q-KVSYS-PV 2026-10-16, OT_KV_V144=1 on top of OT_KV_V143C=1): the PV16 WIDE PAIRS (owner 10-15: PV 16
 # rows/cycle, KV die +8.3 mm2 approved).  Two wires-only groups ot_qwen_tp8_pv_wide_pair (PAIR 0 = WS+ES, PAIR 1 = WN+EN)
 # whose 289 children (256 x ot_qwen_tp8_pv_slice_t, 32 x ot_qwen_tp8_pv_join_t, 1 x ot_qwen_tp8_pv_wide_ctl) are placed
@@ -874,22 +903,42 @@ SLICE_GAP = 21.6
 # subsystem (kv_static_boot_join.HOST_DIE_JOINS) when kv_die --split instantiates it (item 10); until then they are open.
 HOST_RT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv'
 HOST_RT_MODULE = 'qkd_host_root_admission'
-# Default-off OBS/OBSX integration. With HOST_OBS=0 the existing main root selection is byte-for-byte unchanged.
-# OBS/OBSX use the generated MU root only when explicitly enabled on the MU die.
-HOST_RT_OBS = (os.environ.get('OT_KV_MU', '0') == '1' and os.environ.get('OT_KV_HOST_MU', '1') == '1'
-               and os.environ.get('OT_KV_HOST_OBS', '0') == '1')
-HOST_RT_OBSX = HOST_RT_OBS and os.environ.get('OT_KV_HOST_OBSX', '0') == '1'
+# KV-BIND4-GUARD 10-19 (OT_KV_MU=1, OT_KV_HOST_MU default 1 under MU): the frame binds the MU 1 release HOST root
+# qkd_host_root_admission_mu (tools/qwen_kv_die/mu_peer/gen_host_root_mu.py; same ports + parameters, MU default 1):
+# the RTL of the CLOSED guard core qkd_hr_core_guard-mu1s-d222ef261 (u_rank.u_native = endpoint_cancel_mu, guard
+# marker FIFO on one ot_sram_1r1w_128x64_m1_p192) + the MU 1 peer core (tp8_coordinator_mu POST_UID_SLOT 1,
+# ctrl_token_service_packet_collected_mu).  0 added edges (same 4-edge FIFO prefetch; private POST decode).  The guard
+# VIEW has no die instance until the host cluster parent (qkd_hr_cluster) replaces the qkd_host_rt frame.
+HOST_RT_MU = (os.environ.get('OT_KV_MU', '0') == '1'
+              and os.environ.get('OT_KV_HOST_MU', '1') == '1')
+if HOST_RT_MU:
+    HOST_RT_FILE = 'rtl/qwen_sys/mu_qwen_20261018/qkd_host_root_admission_mu.sv'
+    HOST_RT_MODULE = 'qkd_host_root_admission_mu'
+# KV-BIND5-OBS 10-19 (OT_KV_HOST_OBS=1, needs the MU root): the HOST root with its observation window
+# qkd_host_root_admission_obs (tools/qwen_kv_die/mu_peer/gen_host_root_obs.py from the unchanged MU root): the 43 bind-v2
+# OUTPUT_OPEN observation outputs (hc, marker, issued/landed, participant_*, program_auth_*, admission certificates, host
+# fault / abort levels) are read by qkd_host_obs_csr = the HOST's CSR window 0x1800-0x19FF on the existing AXI4-Lite
+# register path (live snapshot + sticky fault vector, fixed 3-edge reads, off every token path, 0 calendar / STATUS
+# edges).  The frame's pin groups are unchanged (none of the 43 had a frame group); no hard child changes ports.
+HOST_RT_OBS = HOST_RT_MU and os.environ.get('OT_KV_HOST_OBS', '0') == '1'
 if HOST_RT_OBS:
     HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obs.sv'
     HOST_RT_MODULE = 'qkd_host_root_admission_obs'
+# KV-FRAMEPINS 10-20 (OT_KV_HOST_OBSX=1, needs OT_KV_HOST_OBS=1 + OT_KV_DCAL_BC4=1 + the static die; default off): the OBSX
+# root (gen_host_root_obs.py --ext) also reads the five die observations that had NO frame pin group (bind v2 OUTPUT_OPEN):
+# dcal adm_done / cal_ready / running (new dcal group dob, 3 b) + layer (existing group lay, 6 b) and the D2D end's
+# recovery_cycles (new d2ds group rcy, 32 b).  kv_static_die OBSX lays them as kv_oneway relayed buses to the HOST frame's
+# new groups odc / odl / odr, which feed the window snapshot above the 1,335 HOST bits (46 words, 0x1900-0x19B4).
+# Producers unchanged (closed bc4 / sfm2 view pins already exist); no tie, no stub.  Price: observation only -- 0 token /
+# calendar / STATUS edges; the snapshot sees each source (relay_stages + 1 window pin reg) edges late (all bits of a bus
+# equally late, so a multi-bit value is never torn).
+HOST_RT_OBSX = HOST_RT_OBS and os.environ.get('OT_KV_HOST_OBSX', '0') == '1'
 if HOST_RT_OBSX:
-    if not all(os.environ.get(v, '0') == '1' for v in ('OT_KV_STATIC_DIE','OT_KV_DCAL_BC','OT_KV_DCAL_BC4')):
-        raise SystemExit('OBSX diagnostic needs static die and bc4 dcal')
     HOST_RT_FILE = 'rtl/qwen_sys/kv_host_obs_20261019/qkd_host_root_admission_obsx.sv'
     HOST_RT_MODULE = 'qkd_host_root_admission_obsx'
-OBSX_HOST_GROUPS = dict(odc=['obs_dcal_adm_done','obs_dcal_cal_ready','obs_dcal_running'],odl=['obs_dcal_layer'],odr=['obs_d2d_recovery_cycles'])
-OBSX_DCAL_DOB = ['adm_done','cal_ready','running']
-# Physical word coherence is HOLD: current tests assume an ideal common clock edge.
+OBSX_HOST_GROUPS = dict(odc=['obs_dcal_adm_done', 'obs_dcal_cal_ready', 'obs_dcal_running'], odl=['obs_dcal_layer'],
+                        odr=['obs_d2d_recovery_cycles'])       # = gen_host_root_obs.OBSX_HOST_GROUPS
+OBSX_DCAL_DOB = ['adm_done', 'cal_ready', 'running']
 HOST_RT_PT_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv'     # qkd_host_ingest_chain_pt (child of the admission root)
 HOST_RT_RENAMED = dict(host_drained_local='host_interface_idle')          # die port -> admission RTL port
 SLICE_DIE_FILE = 'rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv'
@@ -993,8 +1042,214 @@ def _ks_ntx():
     return _ks.d2d_ntx_k()
 
 
+# KV-BIND4 10-19: the KV-SRAM-D2D successor master qkd_d2d_static_sfm (ot_qwen_d2d_sfm.sv: right-sized 64x137 slot store,
+# registered RX CRC, 5-b recovery counter, first-epoch guard, 0 added cycles vs qkd_d2d_static by lockstep miter) is the
+# d2ds RTL whenever the selected view kit OT_KV_D2DS_KIT (with OT_KV_D2DS_VIEW != 0) was hardened from it (spec.json top):
+# the CLOSED qkd_d2d_static_r7w_sfm2-sfm2-1c6c02ed7 view.  Same 81 ports as qkd_d2d_static + OUTPUT rx_zero17[16:0]
+# (registered OR17 of rx_payload on the q_rx_payload edge, for the private Z17 attention receiver; declared a DUP face by
+# kv_open_tail_roles z17_dup until that receiver is hardened).  The kit's hardened params are bound exactly.
+D2DS_SFM_FILE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv'
+D2DS_SFM_PARAMS = ('SAFE_RC', 'SRAMV', 'FEG')
+# KV-BIND7 10-20 (KV-D2D3): the native-census successor qkd_d2d_static_sfm3 (ot_qwen_d2d_sfm3.sv; same ports / pins /
+# outline as sfm2 incl. rx_zero17, 0 added cycles, TXDP 0x03030416) binds the same way when the selected kit's top is
+# sfm3 (kits qkd_d2d_static_r7w_sfm3 / ovl_sfm3; OT_KV_D2DS_KIT=qkd_d2d_static_r7w_sfm3).  The bound r7w_sfm2 view FAILS
+# the mandatory native census (72 roots > 32, max 152); sfm3 census PASS 32.
+D2DS_SFM_TOPS = {'qkd_d2d_static_sfm': D2DS_SFM_FILE,
+                 'qkd_d2d_static_sfm3': 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv'}
+
+
+def d2ds_kit():
+    """(module, file, extra params) of the d2ds RTL selected by OT_KV_D2DS_KIT; qkd_d2d_static unless the kit's top is sfm"""
+    kit = os.environ.get('OT_KV_D2DS_KIT', '')
+    if os.environ.get('OT_KV_D2DS_VIEW', '0') in ('0', '', 'off') or not kit:
+        return 'qkd_d2d_static', D2DS_FILE, {}
+    sp = ROOT / 'physical/ref_tile' / kit / 'spec.json'
+    if not sp.is_file():
+        return 'qkd_d2d_static', D2DS_FILE, {}
+    spec = json.loads(sp.read_text())
+    if spec.get('top') not in D2DS_SFM_TOPS:
+        return 'qkd_d2d_static', D2DS_FILE, {}
+    pr = spec.get('params', {})
+    miss = [k for k in D2DS_SFM_PARAMS if k not in pr]
+    if miss:
+        raise SystemExit(f'kv_die: d2ds kit {kit} (sfm) lacks hardened params {miss}')
+    return spec['top'], D2DS_SFM_TOPS[spec['top']], {k: int(pr[k]) for k in D2DS_SFM_PARAMS}
+
+
+D2D_FIT = os.environ.get('OT_KV_D2D_FIT', '0') == '1'
+
+
+def d2d_fit_outline():
+    """KV-BIND10: (w, h) on the GX/GY lattice (+SHAVE) of the BOUND d2ds view (OT_KV_D2DS_KIT's views/<top>/<top>.lef)."""
+    kit = os.environ.get('OT_KV_D2DS_KIT', '')
+    top = json.loads((ROOT / 'physical/ref_tile' / kit / 'spec.json').read_text()).get('top') if kit else None
+    lef = ROOT / 'physical/ref_tile' / str(kit) / 'views' / str(top) / f'{top}.lef'
+    if not lef.is_file():
+        raise SystemExit(f'kv_die: OT_KV_D2D_FIT=1 needs the bound d2ds view LEF ({lef} missing)')
+    m = re.search(r'MACRO\s+' + re.escape(top) + r'\b.*?SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', lef.read_text(), re.S)
+    w, h = float(m.group(1)), float(m.group(2))
+    return up(w + SHAVE, GX), up(h + SHAVE, GY)
+
+
+# KV-BIND11 10-20 (OT_KV_D2D_PINS=1, needs OT_KV_D2D_FIT=1; default off = unchanged).  The planner drew the d2d_kv
+# frame's words on its own abstract faces, but kv_expand binds the REAL d2ds view whose pins sit elsewhere (srx on the
+# W + S faces, svc on the E face, rec_tx / rec_rx / rx_payload spread 300-400 um along the S face): every tile -> first
+# relay hop was measured to the abstract pin, realized 643-1115 um (d13r).  With the frame = the view outline (same R0
+# origin) every d2ds word is drawn at its VIEW pin centroid on its dominant face (de-overlapped), and the word's
+# worst-bit SPREAD (Manhattan from that anchor to its farthest view pin) is added to every distance the relay planner,
+# pin_reach and kv_pin_repair measure at the d2d end, so the first / last station sits within reach of EVERY bit.
+D2D_PINS = os.environ.get('OT_KV_D2D_PINS', '0') == '1'
+_D2D_VIEW = {}
+
+
+def d2d_view_ports():
+    """die port -> (face, c, spread_um, layer) of the bound d2ds view (frame-local, R0), cached."""
+    if _D2D_VIEW or not D2D_PINS:
+        return _D2D_VIEW
+    from collections import Counter
+    if not D2D_FIT:
+        raise SystemExit('kv_die: OT_KV_D2D_PINS=1 needs OT_KV_D2D_FIT=1 (frame = the bound view outline)')
+    kit = os.environ.get('OT_KV_D2DS_KIT', '')
+    top = json.loads((ROOT / 'physical/ref_tile' / kit / 'spec.json').read_text()).get('top')
+    txt = (ROOT / 'physical/ref_tile' / kit / 'views' / top / f'{top}.lef').read_text()
+    blk = re.search(r'MACRO\s+' + re.escape(top) + r'\b(.*?)\nEND\s+' + re.escape(top) + r'\b', txt, re.S).group(1)
+    W, H = map(float, re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', blk).groups())
+    pins = {}
+    for pm in re.finditer(r'\n\s*PIN\s+(\S+)(.*?)\n\s*END\s+\1(?=\s)', blk, re.S):
+        base = re.sub(r'\[\d+\]$', '', pm.group(1))
+        lay = None
+        for ln in pm.group(2).split('\n'):
+            t = ln.split()
+            if t[:1] == ['LAYER']:
+                lay = t[1]
+            elif t[:1] == ['RECT'] and len(t) >= 5:
+                x0, y0, x1, y1 = map(float, t[1:5])
+                pins.setdefault(base, []).append(((x0 + x1) / 2, (y0 + y1) / 2, lay))
+                break                          # one shape a bit
+    rows = []
+    for p, rtl in BINDINGS['qkd_d2ds']['ports'].items():
+        pts = [q for r in rtl for q in pins.get(r, [])]
+        if not pts:
+            continue
+        fc = Counter(min((('W', x), ('E', W - x), ('S', y), ('N', H - y)), key=lambda t: t[1])[0] for x, y, _ in pts)
+        face = fc.most_common(1)[0][0]
+        on = [q for q in pts if min((('W', q[0]), ('E', W - q[0]), ('S', q[1]), ('N', H - q[1])), key=lambda t: t[1])[0] == face]
+        c = sum((q[1] if face in 'EW' else q[0]) for q in on) / len(on)
+        lay = Counter(q[2] for q in on).most_common(1)[0][0] or ('M4' if face in 'EW' else 'M5')
+        rows.append((face, c, p, len(pts), pts, lay))
+    occ = {}
+    for face, c, p, n, pts, lay in sorted(rows, key=lambda r: (r[0], r[1], r[2])):
+        L, span = (H if face in 'EW' else W), n * 0.048
+        o_ = occ.setdefault(face, [])
+        best = None
+        for k in range(0, 40000):
+            for cand in ((c + 0.5 * k, c - 0.5 * k) if k else (c,)):
+                lo, hi = cand - span / 2 - 1.0, cand + span / 2 + 1.0
+                if lo >= 1.0 and hi <= L - 1.0 and all(hi <= a or lo >= b for a, b in o_):
+                    best = cand
+                    break
+            if best is not None:
+                break
+        if best is None:
+            raise SystemExit(f'kv_die OT_KV_D2D_PINS: no {face} face slot for d2d word {p}')
+        o_.append((best - span / 2 - 1.0, best + span / 2 + 1.0))
+        ax, ay = dict(W=(0.0, best), E=(W, best), S=(best, 0.0), N=(best, H))[face]
+        spread = max(abs(x - ax) + abs(y - ay) for x, y, _ in pts)
+        _D2D_VIEW[p] = (face, round(best, 3), round(spread, 1), lay, [(x, y) for x, y, _ in pts])
+    return _D2D_VIEW
+
+
+_D2D_INST = {}
+
+
+def ep_far(inst, port, pt):
+    """KV-BIND11: Manhattan distance from pt to the FARTHEST realized view pin of d2d word port (the hop every bit of
+    the word makes), or None for any other end (callers keep their point distance)."""
+    if not D2D_PINS or inst != 'd2d_kv' or 'd2d_kv' not in _D2D_INST:
+        return None
+    v = d2d_view_ports().get(port.lstrip('*').split('[')[0])
+    if v is None:
+        return None
+    it = _D2D_INST['d2d_kv']
+    fx = (lambda x: it.w - x) if it.orient in ('MY', 'R180') else (lambda x: x)
+    fy = (lambda y: it.h - y) if it.orient in ('MX', 'R180') else (lambda y: y)
+    return max(abs(pt[0] - it.x - fx(x)) + abs(pt[1] - it.y - fy(y)) for x, y in v[4])
+
+
+def _d2d_pin(it, port):
+    """KV-BIND11: die xy of a d2ds word's anchor (OT_KV_D2D_PINS), else None."""
+    if not D2D_PINS or it.name != 'd2d_kv':
+        return None
+    _D2D_INST['d2d_kv'] = it            # the planned instance (ep_far measures against its current frame)
+    v = d2d_view_ports().get(port.lstrip('*').split('[')[0])
+    if v is None:
+        return None
+    face, c = v[0], v[1]
+    x, y = dict(W=(0.0, c), E=(it.w, c), S=(c, 0.0), N=(c, it.h))[face]
+    if it.orient in ('MY', 'R180'):
+        x = it.w - x
+    if it.orient in ('MX', 'R180'):
+        y = it.h - y
+    return it.x + x, it.y + y
+
+
+def _d2d_view_pins(m, M):
+    """KV-BIND11: draw the d2ds frame's words at their view anchors, and the HOST stand-in words of every host <-> d2d
+    bus on the HOST face toward the d2d end, level with the d2d word's anchor (de-overlapped; was the even face spread:
+    host rec_tx 662 um from its d2d pins, svc on the far W face 947-1115 um)."""
+    V = d2d_view_ports()
+    dm = M.get('qkd_d2ds')
+    if dm is None or not V:
+        return
+    for p, (face, c, _s, lay, _pts) in V.items():
+        if p in dm.ports and dm.ports[p][0] == 'face':
+            dm.ports[p] = ('face', dm.ports[p][1], face, lay, c, 1)
+    by = {i.name: i for i in m['insts']}
+    h, d = by.get('host'), by.get('d2d_kv')
+    hm = M.get(h.master) if h is not None else None
+    if hm is None or d is None or h.orient != 'R0':
+        return
+    hf = 'N' if d.y >= h.y + h.h - 1.0 else 'S' if d.y + d.h <= h.y + 1.0 else ('E' if d.x > h.x else 'W')
+    L = hm.w if hf in 'NS' else hm.h
+    want = []
+    for bid, cl, bits, eps in m['buses']:
+        if len(eps) != 2 or {e[0] for e in eps} != {'host', 'd2d_kv'}:
+            continue
+        hp = next(e[1] for e in eps if e[0] == 'host').lstrip('*')
+        dp = next(e[1] for e in eps if e[0] == 'd2d_kv').lstrip('*')
+        if hp not in hm.ports or hm.ports[hp][0] != 'face' or dp not in V:
+            continue
+        ax, ay = _d2d_pin(d, dp)
+        c = (ax - h.x) if hf in 'NS' else (ay - h.y)
+        want.append((c, hp))
+    moving = {p for _, p in want}
+    occ = []
+    for p, sp in hm.ports.items():
+        if sp[0] == 'face' and sp[2] == hf and p not in moving:
+            s_ = sp[1] * 0.048 * sp[5]
+            occ.append((sp[4] - s_ / 2 - 1.0, sp[4] + s_ / 2 + 1.0))
+    for c, p in sorted(want):
+        sp = hm.ports[p]
+        s_ = sp[1] * 0.048
+        c = min(max(c, s_ / 2 + 2.0), L - s_ / 2 - 2.0)
+        for k in range(0, 80000):
+            hit = None
+            for cand in ((c + 0.5 * k, c - 0.5 * k) if k else (c,)):
+                lo, hi = cand - s_ / 2 - 1.0, cand + s_ / 2 + 1.0
+                if lo >= 1.0 and hi <= L - 1.0 and all(hi <= a or lo >= b for a, b in occ):
+                    hit = cand
+                    break
+            if hit is not None:
+                break
+        else:
+            raise ValueError(f'kv die OT_KV_D2D_PINS: no host {hf} face slot for {p}')
+        occ.append((hit - s_ / 2 - 1.0, hit + s_ / 2 + 1.0))
+        hm.ports[p] = ('face', sp[1], hf, 'M5' if hf in 'NS' else 'M4', round(hit, 3), 1)
+
+
 def d2ds_binding():
-    return dict(module='qkd_d2d_static', file=D2DS_FILE, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k()),
+    mod, fil, extra = d2ds_kit()
+    return dict(module=mod, file=fil, parameters=dict(NL=2, NTX=_ks_ntx(), TXDP=d2d_txdp_k(), **extra),
                 ports=dict(ck0=['ck'], rst_n=['rst_n'], fdi=['fdi_tx_up', 'fdi_tx_v', 'fdi_tx_flit', 'fdi_rx_v', 'fdi_rx_flit'],
                            phy_rst_n=['phy_rst_n'], svc=list(D2DS_SVC), lup=['link_up'], rec_tx=list(D2DS_REC_TX),
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
@@ -1140,7 +1395,7 @@ for _p in ('token_epoch_valid', 'program_ready', 'program_epoch', 'program_diges
 _hb['auth_lp'] = ['token_epoch_valid', 'program_ready', 'program_epoch', 'program_digest']
 BINDINGS['qkd_d2ds']['ports']['srx'] = list(SEQST_RX)
 RTL.update(qkd_seq_st=SEQST_FILE, qkd_lprg=LPRG_FILE)
-RTL.update(qkd_d2ds=D2DS_FILE)
+RTL.update(qkd_d2ds=d2ds_kit()[1])
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces
 BINDINGS.update(qkd_hslice_dn=slice_die_binding())
@@ -1683,6 +1938,9 @@ def _seq_fan_pin(it, port):
 
 def _leaf_pin(it, port):
     """OT_KV_HOP: realized pin of an expanded frame's closed leaf (kc leaf of the controller strip), else None."""
+    dp_ = _d2d_pin(it, port)
+    if dp_ is not None:
+        return dp_
     sp_ = _seq_fan_pin(it, port)
     if sp_ is not None:
         return sp_
@@ -1886,6 +2144,20 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     # keeps the legal origin residues of its hard macros (kvs1 real case: phy_WN MY had no legal origin at a GY shift)
     LAT = 43.2
     sp = (stack_h + up(max(0.0, gh_ + 4 * CHAN - stack_h), LAT)) if split else stack_h
+    if split and V143['on'] and not V143_CENTER and QKH_SAFE32:
+        # KV-BIND12 10-20 (OT_KV_QKH_SAFE32): the bigger safe32 heads grow every engine column, so the v1.4.3 growth (S groups
+        # up, N groups down: gh - gh_ each) no longer fits the band slack; grow the stack pitch (the die height) until the S|N
+        # seam (sp + GY - gh - (gh - gh_), before OT_KV_SN_LIFT) is the one the v1.1 heads leave (706.3 um at sp = stack_h:
+        # the relay channel the allocator was tuned on is not squeezed)
+        def g_(h4, hf):
+            e2 = 4 * h4 + ECTL[1] + 4 * GY
+            e3 = 2 * h4 + 2 * hf + V143_NF_LO + V143_BAND_LO + ECTL[1] + V143_BAND_HI + V143_NF_HI
+            return 4 * e2 + 3 * GY, 4 * e3 + 3 * GY
+        g2, g3 = g_(492.48, 508.68)
+        seam = stack_h + GY - g3 - (g3 - g2)
+        g2, g3 = g_(HEAD[1], SPLIT_HEAD_FT[1])
+        assert abs(g2 - gh_) < 1e-6 and abs(g3 - (4 * RENG[1] + 3 * GY)) < 1e-6, (g2, gh_, g3)
+        sp = max(sp, stack_h + up(max(0.0, 2 * g3 - g2 - GY + seam - stack_h), LAT))
     if split and V143['on'] and V143_CENTER:
         # v1.4.3b: the grown groups leave the HOST tree / slice chains their N-apron and the S|N channel only with a taller
         # stack pitch (die height + 2 x this, measured by the relay allocator)
@@ -1993,13 +2265,30 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     uy = Hk - MARGIN - UCIE[2]
     add('ucie_rom', UCIE[0], xc - UCIE[1] / 2, uy, UCIE[1] - SHAVE, UCIE[2] - SHAVE, 'MX', 'phy_d2d', 'io')
     dw, dh = FRAMES['qkd_d2d']
-    add('d2d_kv', 'qkd_d2ds' if slice_w else 'qkd_d2d', xc - dw / 2, up(uy - GY - dh, GY), dw - SHAVE, dh - SHAVE, 'R0', 'd2d', 'io')
+    if slice_w and D2D_FIT:
+        # KV-BIND10 10-20 (dense-face hops, OT_KV_D2D_FIT=1): the 777.6 x 518.4 frame held the 475.2 x 280.8 bound d2ds
+        # view at its lower-left corner -> a 239-um gap to the UCIe PHY above and the FDI word 120-460 um off the PHY's
+        # flit pins (ucie rx_flit <-> d2d.fdi 699 um).  Frame = the bound view's outline, centred under the PHY and
+        # abutting it (one GY); the HOST root / sequencer / ctl column below follows (their y derive from this dh).
+        dw, dh = d2d_fit_outline()
+    dx = up(xc - dw / 2, GX) if (slice_w and D2D_FIT) else xc - dw / 2
+    add('d2d_kv', 'qkd_d2ds' if slice_w else 'qkd_d2d', dx, up(uy - GY - dh, GY), dw - SHAVE, dh - SHAVE, 'R0', 'd2d', 'io')
+    # KV-BIND12 10-20 (OT_KV_D2D_APRON_UM, default 0; from the Codex packet codex/kv-d15-floorplan-1257-1020 e8f8f797f): the
+    # HOST root (and the column below it) moves this many um further below the D2D end, so the HOST-top / D2D-bottom channel
+    # (131.8 um = ONE 82-um relay row: the S-face payload / rec words and the E-stack o_emb returns all queue in it, d17n
+    # ks_kvs_hroot_ES__o_emb stage 72 refused) holds two relay rows.  Use with OT_KV_EMB_WEST=1 (Codex's 172.8 trial without
+    # it failed seqst_rx stage 0: kvs_emb in front of the D2D W face).
+    d2d_apron = float(os.environ.get('OT_KV_D2D_APRON_UM', '0'))
+    if d2d_apron < 0 or abs(d2d_apron / 43.2 - round(d2d_apron / 43.2)) > 1e-6:
+        raise ValueError('D2D relay apron must be a nonnegative multiple of 43.2 um')
+    if d2d_apron and not (split and slice_w and D2D_FIT and D2D_PINS):
+        raise ValueError('D2D relay apron needs split real-view-fit and real pin geometry')
     sw, sh = FRAMES['qkd_seq']
     sy = up(uy - 2 * GY - dh - sh, GY)
     if split:
         # qkd_lnk abuts the KV end (its rf / tf faces = the KV end's r / t faces); the sequencer below it
         lw_, lh_ = FRAMES['qkd_lnk']
-        ly = up(uy - GY - dh, GY) - GY - lh_
+        ly = up(uy - GY - dh, GY) - GY - lh_ - d2d_apron
         add('lnk', 'qkd_lnk', xc - lw_ / 2, up(ly - GY, GY), lw_ - SHAVE, lh_ - SHAVE, 'R0', 'd2d', 'io')
         sy = up(ly - 2 * GY - sh - 4 * CHAN, GY)
     hy_north = None
@@ -2007,7 +2296,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         # v1.4.1 HOST-north: the root core one relay channel below the D2D end, the sequencer / gateway one more relay
         # channel pair below it (the root's 32 slice-chain words + SerDes FDI + D2D service words need an apron)
         th_ = FRAMES['qkd_host'][1]
-        hy_north = up(uy - GY - dh, GY) - CHAN - th_
+        hy_north = up(uy - GY - dh, GY) - CHAN - th_ - d2d_apron
         hy_north -= hy_north % GY
         # KV-PLAN3 10-17: OT_KV_CTL_BAND um (multiple of 43.2) widens the sequencer <-> HOST-root gap that holds the static
         # control tile kvs_ctl: with 2 CHAN the tile left ~43-um slots either side and the stack roots' 299-b embedding
@@ -2162,6 +2451,8 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         m['geo']['pv144'] = pv_geo
     if SN_LIFT:
         m['geo']['sn_lift'] = dict(lift_um=SN_LIFT, die_h_um=Hk, die_w_um=Wk)
+    if d2d_apron:
+        m['geo']['d2d_relay_apron_um'] = d2d_apron
     m['keepouts'] = m_keep
     if kv_wq_leaves:
         _write_tiles(m, add)
@@ -2998,6 +3289,14 @@ def _relays(m):
                         j_ = max([i_ + 1 for i_, b_ in enumerate(rest_) if b_[0] in ('lx', 'lr', 'host_fdi')
                                   or b_[0].startswith(pvx_)] or [0])
                         order_ = rest_[:j_] + top_ + rest_[j_:]
+    if RLY_D2D_FIRST:
+        # KV-BIND12 10-20 (OT_KV_RLY_D2D_FIRST=1, default off): the wide (>= 296 b, 82-um tall) words incident on the D2D end
+        # take their relay spots before every other chain: d19b corridor dump -- 1..174-b relays of the HOST / ctl / kvi /
+        # link_cfg / pll words scattered over the HOST-top / D2D channel left no 45 x 82 spot near the S-face pin span for
+        # ks_kvs_attn__attn__tx_payload's terminal stage (remaining 438 um); the small words fit anywhere afterwards
+        d2dw_ = [b_ for b_ in order_ if b_[2] >= 296 and any(e_[0] == 'd2d_kv' for e_ in b_[3])]
+        order_ = d2dw_ + [b_ for b_ in order_ if b_[0] not in {x_[0] for x_ in d2dw_}]
+        m['rly_d2d_first'] = [b_[0] for b_ in d2dw_]
     # Q-KVSYS PVJOIN 2026-10-16 (fork buses): m['forks'] = {bid: [load endpoints]} -- loads that leave a bus's driver as a
     # RELAYED BRANCH of their own (bus f'{bid}__f{i}', class kv_oneway) instead of one long unrelayed fan-out wire.  The
     # trunk keeps the bus's own class / relays; after planning, the branch's first segment joins the trunk's source net
@@ -3192,7 +3491,8 @@ def _relays(m):
         def d_ep(pt, inst, port):
             fp = fixed_pin(inst, port)
             if fp is not None:
-                return abs(pt[0] - fp[0]) + abs(pt[1] - fp[1])
+                far_ = ep_far(inst, port, pt)               # KV-BIND11: a d2d word's farthest view pin
+                return far_ if far_ is not None else abs(pt[0] - fp[0]) + abs(pt[1] - fp[1])
             it_ = by[inst]
             return near_d((pt[0], pt[1], pt[0], pt[1]), rect(it_))
         prev_pt, prev_ep, k, idx0 = None, (a, pa), 0, 0
@@ -3319,6 +3619,36 @@ def _relays(m):
                 return FIRST_REACH.get(bid.rsplit('_', 2)[0], PIN_REACH)
             return PIN_REACH
 
+        def _spot(idxs, offl_, prev_pt_, rch, pad_, at_end):
+            got = None
+            path_ = st_['path']
+            for idx in idxs:
+                px, py = path_[idx]
+                best_ = None
+                for dx_, dy_ in offl_:
+                    if st_.get('offmax') and abs(dx_) + abs(dy_) > st_['offmax']:
+                        continue      # Q-KVSYS-HOP retry: a spot stays near its path point (no stranded off-path hop)
+                    qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
+                    pin_a = (qx, qy + fh / 2)
+                    dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
+                    if dd <= rch and free(qx, qy, fw, fh, *TG):
+                        if pad_ and (d_ep((qx + fw, qy + fh / 2), b, pb) > rch or (qx, qy) == tuple(st_.get('last_xy', ()))):
+                            continue
+                        if not at_end:
+                            got = (qx, qy, idx)
+                            break
+                        # a tree hop: of the free spots at this path point, the one nearest the leader (progress)
+                        r_ = d_ep((qx + fw, qy + fh / 2), b, pb)
+                        if at_end and prev_pt_ is not None and r_ >= remaining_() - 1.0:
+                            continue
+                        if best_ is None or r_ < best_[0]:
+                            best_ = (r_, qx, qy, idx)
+                if best_ is not None:
+                    got = best_[1:]
+                if got:
+                    break
+            return got
+
         def chain_():
             path_ = st_['path']
             while remaining_() > end_reach_() or st_['k'] < st_.get('min_k', 0):
@@ -3337,31 +3667,26 @@ def _relays(m):
                     idxs = [len(path_) - 1]          # at the path end: spots around the leader itself
                 elif not idxs and PV_T and bid.startswith(('pvta_', 'pvtb_', 'pvc_')):
                     idxs = [len(path_) - 1]          # KVPLAN2 2215: a stage that sat off the path end -- spots at the end
-                for idx in idxs:
-                    px, py = path_[idx]
-                    best_ = None
-                    for dx_, dy_ in (offs_wide if st_.get('wide') else offs):
-                        if st_.get('offmax') and abs(dx_) + abs(dy_) > st_['offmax']:
-                            continue      # Q-KVSYS-HOP retry: a spot stays near its path point (no stranded off-path hop)
-                        qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
-                        pin_a = (qx, qy + fh / 2)
-                        dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
-                        if dd <= rch and free(qx, qy, fw, fh, *TG):
-                            if pad_ and (d_ep((qx + fw, qy + fh / 2), b, pb) > rch or (qx, qy) == tuple(st_.get('last_xy', ()))):
-                                continue
-                            if not at_end:
-                                got = (qx, qy, idx)
-                                break
-                            # a tree hop: of the free spots at this path point, the one nearest the leader (progress)
-                            r_ = d_ep((qx + fw, qy + fh / 2), b, pb)
-                            if at_end and prev_pt_ is not None and r_ >= remaining_() - 1.0:
-                                continue
-                            if best_ is None or r_ < best_[0]:
-                                best_ = (r_, qx, qy, idx)
-                    if best_ is not None:
-                        got = best_[1:]
-                    if got:
-                        break
+                offl_ = offs_wide if st_.get('wide') else offs
+                term_ = False
+                if RLY_FINE and not idxs and not at_end:
+                    # KV-BIND12 10-20: the chain sits at its path end (the ring cell at the load's pin centroid) but the
+                    # load's FARTHEST pin is still out of reach (OT_KV_D2D_PINS: a 548-b word spread over 393 um of the
+                    # D2D S face; d18a att tx_payload stage 10 remaining 374 > 340): one more stage at the free spot around
+                    # the path end nearest the load (progress required), as a tree hop does at its leader
+                    idxs, term_ = [len(path_) - 1], True
+                got = _spot(idxs, offl_, prev_pt_, rch, pad_, at_end or term_)
+                if got is None and RLY_FINE:
+                    # KV-BIND12 10-20 (OT_KV_RLY_FINE=1): before refusing, the same path points with sub-cell offsets.  The
+                    # G-lattice offsets from a path row land a relay only at py + k G - fh / 2: an 82.08-um 548-b relay in the
+                    # 131.8-um HOST-top / D2D-bottom channel is legal only for y in [27021.6, 27028.08], which that lattice
+                    # (26969.76, 27012.96, 27056.16) never hits (d16 ks_kvs_attn__attn__tx_payload stage 9 refused although
+                    # a 0-overlap spot 259-321 um from every D2D pin exists).  Only chains that would raise reach here, so
+                    # every plan that built is unchanged.
+                    fine_ = [(dx_, dy_ + f_) for dx_, dy_ in offl_ for f_ in RLY_FINE_STEPS]
+                    got = _spot(idxs, fine_, prev_pt_, rch, pad_, at_end or term_)
+                    if got is not None:
+                        m.setdefault('rly_fine', []).append((bid, st_['k'], round(got[0], 3), round(got[1], 3)))
                 if got is None and phy_b and bid not in tree_meta and remaining_() <= reach_():
                     m.setdefault('phy_short', []).append((bid, round(remaining_(), 1)))   # no free spot nearer the PHY
                     break
@@ -3889,6 +4214,8 @@ def masters(m, k=1, port_bits=None):
             _reach_fix_slide(mst, mm)
     if m['geo'].get('split'):
         _split_pins(M, m)
+    if D2D_PINS:
+        _d2d_view_pins(m, M)      # KV-BIND11: d2ds words at the bound view's pins; HOST words level with them
     if 'qkd_d2ds' in M and 'serdes_up' not in M['qkd_d2ds'].ports:
         M['qkd_d2ds'].area('serdes_up', 1, round(M['qkd_d2ds'].w / 2, 3), round(M['qkd_d2ds'].h / 2 - 9.6, 3), 1)   # v1.4 extra_conns tap
     if 'qkd_dcal' in M and 'ego' not in M['qkd_dcal'].ports:
@@ -3969,7 +4296,7 @@ def _split_pins(M, m=None):
             for p_, y_ in ys_.items():
                 hm.ports[p_] = ('face', 1, 'W', 'M4', round(y_, 3), 1)
             if 'rst_n' in hm.ports:
-                hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 440.0, 1)
+                hm.ports['rst_n'] = ('face', 1, 'W', 'M4', _head_rst_y(ys_, HEAD[1], 440.0), 1)
         if 'qkd_rhead_ft' in M:
             # v1.4.3 near head: the r4 head pins (children from HEAD_FT_PLAN: lane rows >= 1 sit 16.2 um higher) + the
             # far neighbour's feed-through: ft_ti_a / ft_e_a on the S (control) face and ft_ti_b / ft_e_b on the N face
@@ -4002,7 +4329,7 @@ def _split_pins(M, m=None):
             for p_, y_ in ys_.items():
                 hm.ports[p_] = ('face', 1, 'W', 'M4', round(y_, 3), 1)
             if 'rst_n' in hm.ports:
-                hm.ports['rst_n'] = ('face', 1, 'W', 'M4', 456.0, 1)
+                hm.ports['rst_n'] = ('face', 1, 'W', 'M4', _head_rst_y(ys_, SPLIT_HEAD_FT[1], 456.0), 1)
     # v1.4.3 closed stage views: the die abstract takes the real LEF pin centres (gather: ti 13.5 + 0.192 i S -> N on
     # M5, e at 312.8..315.7, clock W M4 y 10.8; sstage: s_a W / s_b E on M4, clock S M5 x 9)
     if 'qkd_hgs' in M:
@@ -4303,6 +4630,14 @@ def _strip_face_pins(mst, mm):
         return
     for p, sp in list(mm.ports.items()):
         mt = re.fullmatch(r'(po|pi)(\d+)', p)
+        if sp[0] == 'face' and mst == SPLIT_PHY and re.fullmatch(r'(fh|rh)(\d+)', p):
+            # KV-BIND9 10-20 (COORD 08:20 dense-face check, d12r): the GEN9 static PC's front / return HBM words fh<k> / rh<k>
+            # (4 b each) had no face rule -> auto pins on the PHY's S face corner, one funnel of all 32 PCs per PHY (rh31 <->
+            # kvpc_*_31 12.8 mm, 496 bits > 405 um per PHY).  They leave the controller face level with PC k, after pi<k>.
+            mt2 = re.fullmatch(r'(fh|rh)(\d+)', p)
+            y = STRIP_PC_PITCH * int(mt2.group(2)) + (272.0 if mt2.group(1) == 'fh' else 284.0)
+            mm.ports[p] = ('face', sp[1], 'W', 'M4', y - PHY_STRIP_DY, 1)
+            continue
         if sp[0] == 'face' and mt:
             y = STRIP_PC_PITCH * int(mt.group(2)) + (200.0 if mt.group(1) == 'po' else 236.0)
             if mst == SPLIT_PHY:
@@ -4557,6 +4892,9 @@ def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
         except (TypeError, KeyError):
             continue
         d = abs(xa - xb) + abs(ya - yb)
+        _ = _d2d_pin(ia, pa), _d2d_pin(ib, pb)                 # KV-BIND11: record the d2d frame for ep_far
+        fa_, fb_ = ep_far(a, pa, (xb, yb)), ep_far(b, pb, (xa, ya))
+        d = max(d, fa_ or 0.0, fb_ or 0.0)                     # a d2d word: its farthest view pin
         if d > reach:
             bad.append(dict(bus=bid, cls=cl, bits=bits, um=round(d, 1), a=f'{a}.{pa}', b=f'{b}.{pb}'))
     bad.sort(key=lambda r: -r['um'])

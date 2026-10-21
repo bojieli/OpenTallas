@@ -1,0 +1,200 @@
+{
+ "eng.wkv:engram.wkv": {
+  "fmt": "fp8",
+  "K": 6144,
+  "rows": 6400,
+  "nseg": 6,
+  "units": 2,
+  "tied": 6400,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "attn.wq_b:wq_b": {
+  "fmt": "fp8",
+  "K": 1280,
+  "rows": 8192,
+  "nseg": 3,
+  "units": 1,
+  "tied": 8192,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "attn.idx.q:indexer.wq_b": {
+  "fmt": "fp8",
+  "K": 1280,
+  "rows": 4096,
+  "nseg": 3,
+  "units": 1,
+  "tied": 0,
+  "bad": 0,
+  "first_bad": [],
+  "note": "the fixture holds q after RoPE + FP4 qdq only: golden tie, no fixture tie"
+ },
+ "attn.wo_b:wo_b": {
+  "fmt": "fp8",
+  "K": 2048,
+  "rows": 5120,
+  "nseg": 2,
+  "units": 2,
+  "tied": 0,
+  "bad": 0,
+  "first_bad": [],
+  "note": "rank partial (wo_b by input columns): the fixture holds the all-reduced sum only"
+ },
+ "ffn.shared_gu:shared.w13": {
+  "fmt": "fp8",
+  "K": 5120,
+  "rows": 1152,
+  "nseg": 5,
+  "units": 2,
+  "tied": 1152,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.experts_gu:exp26.w13": {
+  "fmt": "fp4",
+  "K": 5120,
+  "rows": 1152,
+  "nseg": 5,
+  "units": 2,
+  "tied": 1152,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.experts_gu:exp29.w13": {
+  "fmt": "fp4",
+  "K": 5120,
+  "rows": 1152,
+  "nseg": 5,
+  "units": 2,
+  "tied": 1152,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.experts_gu:exp114.w13": {
+  "fmt": "fp4",
+  "K": 5120,
+  "rows": 1152,
+  "nseg": 5,
+  "units": 2,
+  "tied": 1152,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.experts_gu:exp155.w13": {
+  "fmt": "fp4",
+  "K": 5120,
+  "rows": 1152,
+  "nseg": 5,
+  "units": 2,
+  "tied": 1152,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.experts_gu:exp334.w13": {
+  "fmt": "fp4",
+  "K": 5120,
+  "rows": 1152,
+  "nseg": 5,
+  "units": 2,
+  "tied": 1152,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.experts_gu:exp352.w13": {
+  "fmt": "fp4",
+  "K": 5120,
+  "rows": 1152,
+  "nseg": 5,
+  "units": 2,
+  "tied": 1152,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.down:shared.w2": {
+  "fmt": "fp8",
+  "K": 2304,
+  "rows": 1280,
+  "nseg": 5,
+  "units": 1,
+  "tied": 1280,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.down:exp26.w2": {
+  "fmt": "fp4",
+  "K": 2304,
+  "rows": 1280,
+  "nseg": 5,
+  "units": 1,
+  "tied": 1280,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.down:exp29.w2": {
+  "fmt": "fp4",
+  "K": 2304,
+  "rows": 1280,
+  "nseg": 5,
+  "units": 1,
+  "tied": 1280,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.down:exp114.w2": {
+  "fmt": "fp4",
+  "K": 2304,
+  "rows": 1280,
+  "nseg": 5,
+  "units": 1,
+  "tied": 1280,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.down:exp155.w2": {
+  "fmt": "fp4",
+  "K": 2304,
+  "rows": 1280,
+  "nseg": 5,
+  "units": 1,
+  "tied": 1280,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.down:exp334.w2": {
+  "fmt": "fp4",
+  "K": 2304,
+  "rows": 1280,
+  "nseg": 5,
+  "units": 1,
+  "tied": 1280,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ },
+ "ffn.down:exp352.w2": {
+  "fmt": "fp4",
+  "K": 2304,
+  "rows": 1280,
+  "nseg": 5,
+  "units": 1,
+  "tied": 1280,
+  "bad": 0,
+  "first_bad": [],
+  "note": null
+ }
+}

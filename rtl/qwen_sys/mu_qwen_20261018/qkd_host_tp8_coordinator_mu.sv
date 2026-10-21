@@ -5,6 +5,8 @@
 //   MU 1: the same coordinator with qkd_host_peer_coordinator_codec_mu #(MU 1) and qkd_host_coordinator_services_mu
 //         #(MU 1) (lifecycle_mu: allocator_mu + cohort_mu + terminal/POST queues; post_collector_mu).  The codec's
 //         terminal identity is the lifecycle's accepted terminal (acknowledged_*), not the latest grant.
+//   POST_UID_SLOT (KV-BIND4-GUARD 10-19, default 0 = unchanged): passed to qkd_host_coordinator_services_mu (KV-HOST2
+//         f5cdb27df); 1 = the real-observer POST decode (checked slot UID, raw positions), used by the KV die HOST root.
 module qkd_host_tp8_coordinator_mu #(parameter integer MU=1,parameter integer POST_UID_SLOT=0)(
  input wire ck_codec,ck_lifecycle,ck_post,por_n,
  input wire[7:0]peer_rx_valid,input wire[4095:0]peer_rx_data,output wire[7:0]peer_rx_ready,

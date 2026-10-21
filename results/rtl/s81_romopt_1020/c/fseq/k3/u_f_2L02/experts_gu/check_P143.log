@@ -1,0 +1,39 @@
+XS_PLACE_CHECK PASS u_f_2L02 ffn.experts_gu phase 1 mutant=None rows=10 fixture_rows=10 errors=0 END edges=3136 ret_words=132 xo_checked=3134 fault=4
+XS_PLACE_CHECK PASS u_f_2L02 ffn.experts_gu phase 2 mutant=None rows=10 fixture_rows=10 errors=0 END edges=3136 ret_words=132 xo_checked=3134 fault=4
+MISMATCH edge 384 row 6 lo 0 k 2 got be1782b4/0 want be3eabd0/0
+MISMATCH edge 385 row 7 lo 0 k 2 got 3e70271c/0 want 3e31e928/0
+MISMATCH edge 386 row 2 lo 2 k 1 got 3e128db4/0 want 3d9332d0/0
+MISMATCH edge 387 row 3 lo 2 k 1 got be96582a/0 want be8fde76/0
+MISMATCH edge 388 row 8 lo 0 k 3 got beb62df0/0 want be3f7270/0
+MISMATCH edge 389 row 9 lo 0 k 3 got be8f6f4a/0 want be955d1e/0
+MISMATCH edge 391 row 0 lo 4 k 2 got 3d72d3c0/0 want bd846f00/0
+MISMATCH edge 392 row 1 lo 4 k 2 got bd5504c0/0 want 3d8d8ac0/0
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.experts_gu phase 3 mutant=None rows=10 fixture_rows=10 errors=19 END edges=3136 ret_words=132 xo_checked=3134 fault=4
+MISMATCH edge 384 row 6 lo 0 k 2 got 3d7c2f60/0 want 3e8218a8/0
+MISMATCH edge 385 row 7 lo 0 k 2 got beb2e45c/0 want beb9e93e/0
+MISMATCH edge 386 row 2 lo 2 k 1 got 3e041f0a/0 want bd197308/0
+MISMATCH edge 387 row 3 lo 2 k 1 got be4f5b28/0 want bd965af0/0
+MISMATCH edge 388 row 8 lo 0 k 3 got 3dd96100/0 want bd9b8320/0
+MISMATCH edge 389 row 9 lo 0 k 3 got 3d191fc0/0 want 3d3cd840/0
+MISMATCH edge 391 row 0 lo 4 k 2 got bd846f00/0 want 3db92040/0
+MISMATCH edge 392 row 1 lo 4 k 2 got 3d8d8ac0/0 want 3ddd49e0/0
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.experts_gu phase 4 mutant=None rows=10 fixture_rows=10 errors=19 END edges=3136 ret_words=132 xo_checked=3134 fault=4
+MISMATCH edge 384 row 6 lo 0 k 2 got 3f4c6d21/0 want 3f4bbac5/0
+MISMATCH edge 385 row 7 lo 0 k 2 got 3e9dd226/0 want 3ea3bb14/0
+MISMATCH edge 386 row 2 lo 2 k 1 got be04cf00/0 want 3be18600/0
+MISMATCH edge 387 row 3 lo 2 k 1 got 3deb18c8/0 want 3d8c1948/0
+MISMATCH edge 388 row 8 lo 0 k 3 got bea375c4/0 want bf076350/0
+MISMATCH edge 389 row 9 lo 0 k 3 got bd02b3c0/0 want 3e752d58/0
+MISMATCH edge 391 row 0 lo 4 k 2 got 3db92040/0 want 3d60f7c0/0
+MISMATCH edge 392 row 1 lo 4 k 2 got 3ddd49e0/0 want 3a82e800/0
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.experts_gu phase 5 mutant=None rows=10 fixture_rows=10 errors=19 END edges=3136 ret_words=132 xo_checked=3134 fault=4
+MISMATCH edge 384 row 6 lo 0 k 2 got beadf160/0 want bef6a228/0
+MISMATCH edge 385 row 7 lo 0 k 2 got be650198/0 want be860de6/0
+MISMATCH edge 386 row 2 lo 2 k 1 got bd4ae170/0 want bd31d190/0
+MISMATCH edge 387 row 3 lo 2 k 1 got 3d9f2fd8/0 want 3e1e09dc/0
+MISMATCH edge 388 row 8 lo 0 k 3 got be666554/0 want be5bee1c/0
+MISMATCH edge 389 row 9 lo 0 k 3 got 3e9088f4/0 want 3dfa4a30/0
+MISMATCH edge 391 row 0 lo 4 k 2 got 3d60f7c0/0 want 3c466d00/0
+MISMATCH edge 392 row 1 lo 4 k 2 got 3a82e800/0 want bde958c0/0
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.experts_gu phase 6 mutant=None rows=10 fixture_rows=10 errors=19 END edges=3136 ret_words=132 xo_checked=3134 fault=4
+TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 143 phases 6 rows 60 fixture_rows 60 go0 63 last_ret 1122 span 1059 errors 8 ['FAULT edge 437 status 11 lx 0', 'FAULT edge 438 status 11 lx 0', 'FAULT edge 439 status 11 lx 0']

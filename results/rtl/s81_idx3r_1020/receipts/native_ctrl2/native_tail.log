@@ -1,0 +1,20 @@
+    unmapped dff cell: $_DFFSR_NNP_
+    unmapped dff cell: $_DFFSR_NPN_
+    unmapped dff cell: $_DFFSR_NPP_
+    \DFFASRHQNx1_ASAP7_75t_R _DFFSR_PNN_ (.CLK( C), .D( D), .QN(~Q), .RESETN( R), .SETN( S));
+    unmapped dff cell: $_DFFSR_PNP_
+    unmapped dff cell: $_DFFSR_PPN_
+    unmapped dff cell: $_DFFSR_PPP_
+17.1. Executing DFFLEGALIZE pass (convert FFs to types supported by the target).
+Mapping DFF cells in module `\dsfd_ctrl_rg2_native_top':
+  mapped 1650 $_DFFSR_PNN_ cells to \DFFASRHQNx1_ASAP7_75t_R cells.
+  mapped 12340 $_DFF_P_ cells to \DFFHQNx1_ASAP7_75t_R cells.
+Mapping DFF cells in module `\ot_dvrly_ckinv':
+     1650   DFFASRHQNx1_ASAP7_75t_R
+    12340   DFFHQNx1_ASAP7_75t_R
+     1650   DFFASRHQNx1_ASAP7_75t_R
+    12340   DFFHQNx1_ASAP7_75t_R
+textbook_lint: WARN(refuse-tier) high_fanout: net _89536_/QN (DFFASRHQNx1_ASAP7_75t_R): 362 loads (362 flops, e.g. _87293_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN(refuse-tier) high_fanout: net _88868_/QN (DFFASRHQNx1_ASAP7_75t_R): 362 loads (362 flops, e.g. _88283_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN(refuse-tier) high_fanout: net _90110_/QN (DFFASRHQNx1_ASAP7_75t_R): 256 loads (256 flops, e.g. _87317_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast
+textbook_lint: WARN(refuse-tier) high_fanout: net _89442_/QN (DFFASRHQNx1_ASAP7_75t_R): 256 loads (256 flops, e.g. _88307_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast

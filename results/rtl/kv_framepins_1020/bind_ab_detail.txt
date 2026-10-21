@@ -1,0 +1,8 @@
+ab_a/port_bind_v2.txt:DIE_PORT_BIND FAIL masters=68 instances=44937 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=12 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=617660 output_open_ports=26 top_assigns=0 params_not_in_rtl=0 strap_ports=36 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=12
+ab_b/port_bind_v2.txt:DIE_PORT_BIND FAIL masters=68 instances=44937 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=12 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=617660 output_open_ports=21 top_assigns=0 params_not_in_rtl=0 strap_ports=36 pad_bits=0 spare_out_bits=0 unresolved_children=0 ambiguous_children=0 variant_children=12
+f386d434180758c32ec30aec04bf9f4000af963464aa5a1493231dbdc8f7263f  ab_a/die_bound.v
+0c3fb38bfb76530e9786b473f44be69433fa04a7d43d62dabf88494b29cfb720  ab_b/die_bound.v
+9822db171f89f420a89c52399fbf66b3320174909f47278621927c513e640c2f  ../kv-bind3-1019/bind_try4/die_bound.v
+0
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+make: Entering directory '/srv/opentallas-scratch/claude/kv-framepins-1019/bench/obj_m0'

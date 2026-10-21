@@ -1,0 +1,1 @@
+IDXRD_CASE OK m2/fail_g2048: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 2 sram 1 ckh 900 hdr_to_last 5834 end_to_last 5641 nerr 1024 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215428 wall=2:01.23

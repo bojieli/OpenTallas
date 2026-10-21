@@ -50,11 +50,25 @@ def configure(views, rtl):
         rtl.update({m: t['rtl'] for m, t in TARGETS.items()})
 
 
-def require_profiles(root, profiles):
+DIAG_FLAG = 'OT_KV_QKH_SAFE32_DIAG'
+
+
+def diagnostic_missing_allowed():
+    """KV-BIND10 10-20: explicit DIAGNOSTIC-only opt-in (needs OT_KV_PARAM_DIAG=1 too; the chain stamps
+    NOT_A_DIE_RESULT): a target whose standard-LEC receipt has not landed yet is left to kv_expand's diagnostic
+    autoprofile.  A SUPPLIED profile is still checked exactly; strict runs never take this path."""
+    return os.environ.get(DIAG_FLAG, '0') == '1' and os.environ.get('OT_KV_PARAM_DIAG', '0') == '1'
+
+
+def require_profiles(root, profiles, allow_missing=False):
     """Check both exact selected views and frozen receipts even in diagnostic mode."""
     root = Path(root)
+    missing = []
     for module, target in TARGETS.items():
         profile = profiles.get(module)
+        if profile is None and allow_missing and diagnostic_missing_allowed():
+            missing.append(module)
+            continue
         if not isinstance(profile, dict) or profile.get('parameters') != target['parameters']:
             raise ValueError(f'{module}: missing exact safe32 parameter profile')
         defaults = EP.integer_defaults((root / target['rtl']).read_text(), module)
@@ -63,6 +77,7 @@ def require_profiles(root, profiles):
         _, checked = EP.preserve(root, module, {}, target['rtl'], target['view'], profiles, diagnostic=False)
         if not checked['native_qualified']:
             raise ValueError(f'{module}: safe32 native qualification missing')
+    return missing
 
 
 def produce_profiles(root, audits, out, base=None):

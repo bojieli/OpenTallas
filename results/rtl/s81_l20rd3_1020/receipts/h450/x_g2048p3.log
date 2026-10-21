@@ -1,0 +1,45 @@
+TB_IDXRD MISMATCH cyc 4721 lane 0 word 104 fault 1 got 25a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exp 25a000000000000000000000000000000000000000000000000000000000ffff4792477f47de4635445c463646cb44ba438844af479e4737430843f145af4567
+TB_IDXRD MISMATCH cyc 4724 lane 0 word 105 fault 1 got 25a000000000000000000000000000000000000000000000000000000000ff00459146d4465746a643dc44e04752442000000000000000000000000000000000 exp 25a000000000000000000000000000000000000000000000000000000000ffff459146d4465746a643dc44e04752442048134697453e4515469944b4479e4832
+TB_IDXRD MISMATCH cyc 4727 lane 0 word 106 fault 1 got 25a000000000000000000000000000000000000000000000000000000000ffff46604583472c4829477b470f479046894484462843f148c6488a45f0441c46a3 exp 25a000000000000000000000000000000000000000000000000000000000ffff46604583472c4829477b470f479046894484462843f148c6488a45f0441c46a3
+TB_IDXRD MISMATCH cyc 4730 lane 0 word 107 fault 1 got 25a000000000000000000000000000000000000000000000000000000000ffff476747e045ec4695468947a2463f47dd44ca46644457465d469c468244354392 exp 25a000000000000000000000000000000000000000000000000000000000ffff476747e045ec4695468947a2463f47dd44ca46644457465d469c468244354392
+TB_IDXRD MISMATCH cyc 4733 lane 0 word 108 fault 1 got 25a000000000000000000000000000000000000000000000000000000000ffff45984655422c481e46d2465045dd480d4767473346f8457547c54563459444d1 exp 25a000000000000000000000000000000000000000000000000000000000ffff45984655422c481e46d2465045dd480d4767473346f8457547c54563459444d1
+TB_IDXRD MISMATCH cyc 4736 lane 0 word 109 fault 1 got 25a00000000000000000000000000000000000000000000000000000000000ff0000000000000000000000000000000044e5444d454647b745a143e0462547c2 exp 25a000000000000000000000000000000000000000000000000000000000ffff44df454c465f4707464046e947ba484f44e5444d454647b745a143e0462547c2
+TB_IDXRD MISMATCH cyc 4739 lane 0 word 110 fault 1 got 25a00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000 exp 25a000000000000000000000000000000000000000000000000000000000ffff47ea46f847d8446447f9472e47664783471e4737475546dc46244740481344d1
+TB_IDXRD MISMATCH cyc 4742 lane 0 word 111 fault 1 got 25a00000000000000000000000000000000000000000000000000000000000ff0000000000000000000000000000000045284738469b46b4470b4686454c469e exp 25a000000000000000000000000000000000000000000000000000000000ffff47b7c60b458a464e430e452747de45fb45284738469b46b4470b4686454c469e
+TB_IDXRD reader 0 st 1000010001 (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})
+TB_IDXRD reader 1 st 1000010001 (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})
+TB_IDXRD reader 2 st 1000010001 (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})
+TB_IDXRD reader 3 st 1000010001 (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})
+TB_IDXRD reader 4 st 1000010001 (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})
+TB_IDXRD reader 5 st 1000010001 (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})
+TB_IDXRD reader 6 st 1000010001 (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})
+TB_IDXRD reader 7 st 1000010001 (fault causes {window-end leftovers, bad job, job while active, k_ready, flag, late, rsp, list})
+TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 0 sram 1 ckh 450 hdr_to_last 4790 end_to_last 4597 nerr 921 nopen 0 qerr 0 slice_err 0
+TB_IDXRD FAIL
+- rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg2.sv:363: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 167.679 s; speed 37.669 ns/s
+- Verilator: cpu 167.674 s on 1 threads; allocated 210 MB
+	Command being timed: "/srv/opentallas-scratch/claude/s81-l20rd3-1020/out/h450/obj/Vtb_dsdv_idx_rg2 +GATHER=1 +N=2048 +T0=1500 +P=3"
+	User time (seconds): 167.69
+	System time (seconds): 0.02
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:47.72
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 210744
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 13100
+	Voluntary context switches: 27
+	Involuntary context switches: 220
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

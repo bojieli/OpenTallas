@@ -1,0 +1,8 @@
+read_verilog -formal -sv proof.v adder_any.v
+chparam -set COLD_INIT 1 -set MUT 0 -set RESET_PIN 0 ot_qwen_tp8_pv_join_cold_t
+hierarchy -check -top ot_qwen_tp8_pv_join_cold_t
+proc
+flatten
+async2sync
+opt_clean
+sat -seq 6 -set-at 1 rst_n 0 -set-at 2 rst_n 0 -set-at 3 rst_n 0 -set-at 4 rst_n 0 -set-at 5 rst_n 0 -set-at 6 rst_n 0 -set-def-inputs -prove cold_zero 1 -prove-skip 3 -verify -dump_json cex.json -show-ports

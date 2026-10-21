@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg3
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg3
+ot-run: ot-epyc9       admits   942 GB (avail 805, growth 146, headroom 0, waiters 0/0 GB) load 98/128 running 45 disk 68 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg3
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2080441-1792494895 after 1 s
+Referenced but unset environment variable evaluates to an empty string: m
+SYNTHETIC_PACK 3497 -> 1935 intervals 41
+READER_VECTORS /srv/opentallas-scratch/codex/s81-rom12-1020/reader/synthetic_fee segments 41 events 3530 end 7788
+PASS segmented existing reader mode0 cycles7788 events3512
+- /srv/opentallas-scratch/codex/s81-rom12-1020/reader/tb_reader_segments_fail.sv:30: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 78us; walltime 0.042 s; speed 1.848 ms/s
+- Verilator: cpu 0.042 s on 1 threads; allocated 8 MB
+[5556000] %Fatal: tb_reader_segments_fail.sv:23: Assertion failed in tb_reader_segments: reader fault cycle530
+[5566000] %Fatal: tb_reader_segments_fail.sv:24: Assertion failed in tb_reader_segments: action mismatch cycle531 got0000000000000000000 want00a0080008000000000
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2080441-1792494895): exit 0

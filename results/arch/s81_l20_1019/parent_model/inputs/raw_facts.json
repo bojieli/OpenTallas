@@ -1,0 +1,107 @@
+{
+ "base_p4l_mu": {
+  "worst_cut": 0.5663,
+  "over_reach_bits": 0,
+  "bit_mm": 395325,
+  "relays": 3113,
+  "relay_bit_stages": 843266,
+  "rom_slots": 1130,
+  "rsv": {
+   "um": [
+    1252.0,
+    1337.8
+   ],
+   "mm2": 1.675,
+   "need_mm2": 1.491,
+   "fit": 1.124
+  }
+ },
+ "idxrd2": {
+  "worst_cut": 0.5663,
+  "over_reach_bits": 0,
+  "bit_mm": 396572,
+  "relays": 3126,
+  "relay_bit_stages": 846540,
+  "rom_slots": 1070,
+  "rsv": {
+   "um": [
+    1252.0,
+    1235.0
+   ],
+   "mm2": 1.546,
+   "need_mm2": 1.491,
+   "fit": 1.037
+  },
+  "idxrd": {
+   "n": 16,
+   "master": "dsdv_idx_rg",
+   "um": [
+    518.4,
+    777.6
+   ],
+   "mm2": 6.45,
+   "place": "row abutting the ctrl row (y 1490.0), one reader over its controller",
+   "frames_dropped_row01": [
+    "f_2R01",
+    "f_3L01",
+    "f_3R01",
+    "f_4L01",
+    "f_4R01",
+    "f_5L01"
+   ]
+  }
+ },
+ "idx_links": {
+  "hrq_00": {
+   "bits": 682,
+   "um": 441.5,
+   "stations": 1
+  },
+  "hrq_01": {
+   "bits": 682,
+   "um": 2267.8,
+   "stations": 5
+  },
+  "hrd_01": {
+   "bits": 562,
+   "um": 2327.8,
+   "stations": 5
+  },
+  "hrqc_00": {
+   "bits": 682,
+   "um": 40.0,
+   "stations": 0
+  },
+  "hrdc_00": {
+   "bits": 562,
+   "um": 40.0,
+   "stations": 0
+  },
+  "is_00_01": {
+   "bits": 276,
+   "um": 12.9,
+   "stations": 0
+  },
+  "iq_qf_l0": {
+   "bits": 276,
+   "um": 46.4,
+   "stations": 0
+  },
+  "iq_src_l0": {
+   "bits": 276,
+   "um": 7250.0,
+   "stations": 17
+  },
+  "iq_src_l1": {
+   "bits": 276,
+   "um": 7282.0,
+   "stations": 17
+  },
+  "is_tail": {
+   "bits": 276,
+   "um": 13553.8,
+   "stations": 33
+  }
+ },
+ "cmd": "dv_plan.py (claude/mu-die-s81-idx-1019 7c957fad3 + dv_plan_idxrd2.patch) --layout p4 --p4l --tier-w 276 --lanes 4 --p4h-drop 6 --frame-w 1436.832 --mu 1 --idxrd 2 (raw plan; lk_* rev2 slots NOT applied)"
+}

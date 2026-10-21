@@ -1,7 +1,7 @@
 #!/bin/bash
 # qfd_dv_stream_tile bench (Verilator 5.050, the closure daemon's version).  From the repo root:
 #   bash rtl/test/qwen_dv/static_stream/run_tile.sh <out_dir> <MUT>
-# MUT 0 = positive (exit 0 only on "STREAM_TILE_EQ PASS"); MUT 2/21/22/31/32/33/34 = negative controls: the exit status is
+# MUT 0 = positive (exit 0 only on "STREAM_TILE_EQ PASS"); MUT 2/21/22/31/32/33/34/35/37/38 = negative controls: the exit status is
 # the simulator's ($fatal STREAM_TILE_MISMATCH -> non-zero), so an escaped mutant exits 0 and fails its expect=fail bench.
 set -uo pipefail
 export PATH="$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH"

@@ -46,7 +46,7 @@ VIEWS = dict(
     ot_qkh_lane8=f'{RT}/ot_qkh_lane8_m5/views/ot_qkh_lane8',
     ot_qkh_ktree=f'{RT}/ot_qkh_ktree_m5/views/ot_qkh_ktree',
     # KV-DCAL2 10-19 (OT_KV_KPV_LK=1 heads): the per-lane KPV lockstep K-tree (kit physical/ref_tile/ot_qkh_ktree_lk)
-    ot_qkh_ktree_lk=f'{RT}/ot_qkh_ktree_lk/views/ot_qkh_ktree_lk',
+    ot_qkh_ktree_lk=f'{RT}/ot_qkh_ktree_lkp/views/ot_qkh_ktree_lk',   # KV-BIND12: the CLOSED view lives in kit ot_qkh_ktree_lkp (ot_qkh_ktree_lk has no views/)
     ot_qkh_head_score4_native=f'{RT}/qkh_r4_score4_1014/views/ot_qkh_head_score4_native',
     qkd_ectl_a_tp8_direct=f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_direct',
     # Q-ELEM 2026-10-15 22:34 (G3S2 composition: HXK5 silently wrong 512/512, HXK13 exact 53/53): OT_KV_ECTL_H13=1 binds
@@ -372,8 +372,12 @@ def main(argv=None):
     param_path = case / 'die.v.params.json'
     child_params = json.loads(param_path.read_text()) if param_path.exists() else {}
     profiles = json.loads(a.parameter_profiles.read_text()) if a.parameter_profiles else {}
+    qkh32_missing = []
     if QKH32.enabled():
-        QKH32.require_profiles(ROOT, profiles)
+        qkh32_missing = QKH32.require_profiles(ROOT, profiles, allow_missing=True)
+        if qkh32_missing:
+            print(f'kv_expand: DIAGNOSTIC {QKH32.DIAG_FLAG}: safe32 receipts not landed for {qkh32_missing} '
+                  f'(autoprofiled, never native-qualified)')
     dv = (case / 'die.v').read_text()
     lines = dv.split('\n')
     wires = {}
@@ -427,7 +431,7 @@ def main(argv=None):
                preexpand_die_sha256=EP.sha(case / 'die.v'))
     if QKH32.enabled():
         rep['qkh_safe32'] = dict(flag=QKH32.FLAG, targets=QKH32.TARGETS,
-                                 native_profiles_required=True, token_cycles_added=0,
+                                 native_profiles_required=True, diagnostic_missing_receipts=qkh32_missing, token_cycles_added=0,
                                  placement='actual CLOSED leaf sizes; existing containment/overlap checks remain required')
     occupied = set(re.findall(r'^\s+\w+(?:\s*#\s*\((?:[^()]|\([^()]*\))*\))?\s+(\S+)\s*\(', dv, re.M))
     new_lines, add_wires, add_place, drop_inst, used_leaf = [], [], [], set(), set()

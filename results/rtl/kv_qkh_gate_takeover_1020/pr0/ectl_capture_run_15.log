@@ -1,0 +1,13 @@
+TRACE c3 localstart1 rq0 rs0 captured0 slot0
+TRACE c7 localstart0 rq1 rs0 captured0 slot0
+TRACE c8 localstart0 rq1 rs0 captured0 slot0
+TRACE c9 localstart0 rq1 rs0 captured0 slot0
+TRACE c10 localstart0 rq1 rs0 captured0 slot0
+TRACE c11 localstart0 rq1 rs0 captured0 slot0
+TRACE c12 localstart0 rq1 rs0 captured0 slot0
+TRACE c13 localstart0 rq1 rs0 captured0 slot0
+TRACE c14 localstart0 rq1 rs0 captured0 slot0
+TRACE c15 localstart0 rq1 rs0 captured0 slot0
+[263000] %Fatal: tb_qkd_ectl3_pr0_capture.sv:60: Assertion failed in tb_qkd_ectl3_pr0_capture: SCORE_AGE_MISMATCH score0 at176 expected174
+%Error: /srv/opentallas-scratch/claude/codex/qkh-pr0-proof-1020/tb_qkd_ectl3_pr0_capture.sv:60: Verilog $stop
+Aborting...

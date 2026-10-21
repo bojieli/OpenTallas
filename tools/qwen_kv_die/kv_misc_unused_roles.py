@@ -71,7 +71,9 @@ FACTS = {
                    ('rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv', r'module qkd_rlys_296')],
 }
 RELAY = re.compile(r'^(qkd_rlys_\d+|qkd_astk_rly_\d+_fl|qkd_rlysh0?_\d+|qkd_landsh0?_\d+)$')
-DUP_PRODUCERS = re.compile(r'^(qkd_kvs_attn:acal_(WS|WN|ES|EN)|qkd_pv16_vport_b:(out_epoch|out_t)|qkd_d2d_static:\w+|'
+# KV-BIND9 10-20: + the d2ds successor master qkd_d2d_static_sfm3 (KV-D2D3, same ports as _sfm): d12s left its hsvc fork
+# branch rly_pinfix_hsvc_f0_r4_0 (86 b, the seq svc_h reads a narrower field of the same held word) unread.
+DUP_PRODUCERS = re.compile(r'^(qkd_kvs_attn:acal_(WS|WN|ES|EN)|qkd_pv16_vport_b:(out_epoch|out_t)|qkd_d2d_static(?:_sfm3?)?:\w+|'
                            r'qkd_kvs_ctl:dcfg__age_pv)$')
 
 
@@ -109,6 +111,22 @@ def derive(die_v, record, root, existing, pins=None):
         if p not in cache:
             cache[p] = P.parse_modules(P.strip_comments(p.read_text(errors='replace')), str(p))
         mods[mst] = next(m for m in cache[p] if m.name == mst)
+    # KV-BIND6 10-20: with kvs_attn in OT_KV_FACE_LAND the die binds the face-landed wrapper qkd_kvs_attn_fl (r16 rv3:
+    # rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv). It is the SAME producer for the roles below only when its bound RTL
+    # passes ahs / acal_* straight from the attention core instance to same-width outputs (checked on the bound text).
+    attn_alias = {'qkd_kvs_attn'}
+    if 'qkd_kvs_attn_fl' in rec['masters'] and rec['masters']['qkd_kvs_attn_fl'].get('rtl'):
+        fp = Path(rec['masters']['qkd_kvs_attn_fl']['rtl']); fp = fp if fp.is_absolute() else Path(root) / fp
+        ft = P.strip_comments(fp.read_text(errors='replace'))
+        body = re.search(r'\bmodule\s+qkd_kvs_attn_fl\b(.*?)\bendmodule\b', ft, re.S)
+        core = body and re.search(r'\bqkd_kvs_attn(?:_r1[67])?\s*(?:#\s*\((?:[^()]|\([^()]*\))*\))?\s*u_core\s*\((.*?)\);', body.group(1), re.S)
+        ok = bool(core)
+        for prt, w in (('ahs', 165), ('acal_WS', 48), ('acal_WN', 48), ('acal_ES', 48), ('acal_EN', 48)):
+            ok = ok and re.search(rf'\.{prt}\s*\(\s*{prt}\s*\)', core.group(1)) is not None and \
+                re.search(rf'output\s+wire\s*\[\s*{w - 1}\s*:\s*0\s*\]\s*{prt}\b', body.group(1)) is not None
+        if not ok:
+            raise ValueError('qkd_kvs_attn_fl: bound wrapper does not pass ahs/acal_* straight from the attention core')
+        attn_alias.add('qkd_kvs_attn_fl')
     doc = json.loads(json.dumps(existing or dict(pads={}, instances={})))
     pads = P.load_pads(doc)
     nets, tin, tout, insts = P.parse_die(str(die_v))
@@ -179,12 +197,21 @@ def derive(die_v, record, root, existing, pins=None):
         if sorted(lanes) != list(range(16)):
             raise ValueError('KPV_LOCKSTEP: head without 16 lanes ' + h)
         r0 = rd.get(outbit.get((lanes[0], 'kpv_o', 0)), [])
-        if not r0 or any(not (x[0] == 'ot_qkh_ktree' and x[2] == 'kpv_in') for x in r0):
+        # LEAD10-KV 10-20 (OT_KV_KPV_LK=1 heads _s_lk): u_kt = ot_qkh_ktree_lk reads EVERY lane's kpv (.kpv_in(kpv_k)), so
+        # no kpv_o bit is unused: require lane t's kpv_o[0] read only by this head's own ktree_lk kpv_in[t]; admit nothing.
+        lk = bool(r0) and all(x[0] == 'ot_qkh_ktree_lk' for x in r0)
+        if lk:
+            for t in range(16):
+                rt = rd.get(outbit.get((lanes[t], 'kpv_o', 0)), [])
+                if not rt or any(x[:4] != ('ot_qkh_ktree_lk', h + '__u_kt', 'kpv_in', t) for x in rt):
+                    raise ValueError('KPV_LOCKSTEP: lockstep K-tree does not read lane %d kpv in %s' % (t, h))
+        elif not r0 or any(not (x[0] == 'ot_qkh_ktree' and x[2] == 'kpv_in') for x in r0):
             raise ValueError('KPV_LOCKSTEP: lane 0 kpv not read by the K-tree in ' + h)
         if not all(rd.get(outbit.get((lanes[t], 'kp_o', b))) for t in range(16) for b in range(32)):
             raise ValueError('KPV_LOCKSTEP: a lane partial kp_o is not consumed in ' + h)
-        for t in range(1, 16):
-            admit('KPV_LOCKSTEP', lanes[t], 'kpv_o', [0])
+        if not lk:
+            for t in range(1, 16):
+                admit('KPV_LOCKSTEP', lanes[t], 'kpv_o', [0])
     # ECTL_ER_ADDR
     for inst in insts_of('qkd_ectl3_kiss_st'):
         r0 = rd.get(outbit.get((inst, 'so', 0)), [])
@@ -237,7 +264,7 @@ def derive(die_v, record, root, existing, pins=None):
     while hb is not None and tuple(hb) in drv and RELAY.match(drv[tuple(hb)][0]) and seen < 10000:
         d = drv[tuple(hb)]; a = conn[d[1]].get('a') or []
         hb = a[len(a) - 1 - d[3]] if d[3] < len(a) else None; seen += 1
-    if hb is None or tuple(hb) not in drv or drv[tuple(hb)][:1] != ('qkd_kvs_attn',) or drv[tuple(hb)][2] != 'ahs':
+    if hb is None or tuple(hb) not in drv or drv[tuple(hb)][0] not in attn_alias or drv[tuple(hb)][2] != 'ahs':
         raise ValueError('SEQ_HS: ahub hs_start is not sourced by qkd_kvs_attn.ahs')
     for inst in insts_of('qkd_seq_core_static_s'):
         admit('SEQ_HS', inst, 'hs', [0])
@@ -280,7 +307,8 @@ def derive(die_v, record, root, existing, pins=None):
         if not o or o[0] is None:
             continue
         (pm, pi, pp, ppb), obt = o
-        if RELAY.match(pm) or not DUP_PRODUCERS.match(f'{pm}:{pp}'):
+        pmn = 'qkd_kvs_attn' if pm in attn_alias else pm
+        if RELAY.match(pm) or not DUP_PRODUCERS.match(f'{pmn}:{pp}'):
             continue
         if not terminals(obt):
             raise ValueError(f'BRANCH_DUP: producer {pi}.{pp}[{ppb}] reaches no consumer at all')

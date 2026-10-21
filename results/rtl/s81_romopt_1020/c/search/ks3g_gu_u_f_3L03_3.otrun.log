@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits  1175 GB (avail 909, growth 87, headroom 0, waiters 0/0 GB) load 71/128 running 18 disk 320 GB 
+ot-run: ot-epyc6       admits   563 GB (avail 508, growth 113, headroom 0, waiters 0/0 GB) load 31/128 running 26 disk 3706 GB 
+ot-run: ot-epyc7       admits   879 GB (avail 678, growth 63, headroom 0, waiters 0/0 GB) load 59/96 running 23 disk 5263 GB 
+ot-run: ot-epyc9       admits  1007 GB (avail 756, growth 41, headroom 0, waiters 0/0 GB) load 73/128 running 18 disk 99 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: -> ot-epyc9
+ot-heavy: request 32G is charged 9G (class 'ksearch.sh:u_f_#L#' measured peak 0.1G, n=3+0 proved); the cap stays 32G
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2773029-1792518779 after 1 s
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12 round 0 best faults 5 root words 32 cfg (300021, 100000, 10, 10) time 162
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12 round 1 best faults 5 root words 32 cfg (300021, 100000, 10, 10) time 302
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12 round 2 best faults 5 root words 32 cfg (300021, 100000, 10, 10) time 471
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12 round 3 best faults 5 root words 32 cfg (300021, 100000, 10, 10) time 653
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12 round 4 best faults 5 root words 32 cfg (300021, 100000, 10, 10) time 832
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12 round 5 best faults 5 root words 32 cfg (300021, 100000, 10, 10) time 965
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12 round 6 best faults 5 root words 32 cfg (300021, 100000, 10, 10) time 1085
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12 round 7 best faults 5 root words 32 cfg (300021, 100000, 10, 10) time 1201
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12 round 8 best faults 5 root words 32 cfg (300021, 100000, 10, 10) time 1321
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12 round 9 best faults 5 root words 32 cfg (300021, 100000, 10, 10) time 1436

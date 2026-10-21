@@ -316,6 +316,16 @@ def reach_classes():
                   (part.split(':') for part in os.environ.get('OT_KV_REACH_W', '36:400,296:370,100000:340').split(',')))
 
 
+def dense_scope(lines):
+    """KV-BIND11 10-20 (OT_KV_REACH_DENSE=1; default off = unchanged): the dense-face column tiles (d2d / host / UCIe /
+    SerDes) join the audited scope, so their tile -> first relay and last relay -> tile hops (plain, non-laned chains
+    too) are measured pin to pin like every lane hop and repaired / refused (d13r: srx 643, svc 947-1115 um unaudited)."""
+    if os.environ.get('OT_KV_REACH_DENSE', '0') != '1':
+        return set()
+    have = {m.group(3) for m in map(INST.match, lines) if m}
+    return {n for n in ('d2d_kv', 'host', 'ucie_rom', 'serdes_host') if n in have}
+
+
 def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT_KV_STATIONS_ITER', '6'))):
     """HKV-STATIONS 10-19: form lanes -> adapt -> actual pin reach audit; every overreach becomes a REAL relay stage
     (kv_lane_stations: BEFORE / AFTER, every slice of the bus) and every unslotted wide landing a legal free frame; the
@@ -345,6 +355,7 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
     inserted, moved, records, refused, history = [], [], [], [], []
     F = incident = None
     stale = True                                  # pre / place changed since F was formed
+    dense = dense_scope(lines)
     for it in range(1, max_iter + 1):
         F = form(pre, dirs, slots)
         stale = False
@@ -396,7 +407,7 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
                 continue
         placed, orientation = LO.adapt(place, F['new'], vm)
         incident = LR.audit('\n'.join(lane_lines), elef_all, place, placed, orientation, classes,
-                            extra=set(inserted) | set(moved))
+                            extra=set(inserted) | set(moved) | dense)
         history.append(dict(iteration=it, status=incident['status'], **incident['summary']))
         print(f"kv_lane_stations: iteration {it}: {incident['status']} {json.dumps(incident['summary'])}", flush=True)
         if incident['status'] == 'PASS':
@@ -472,7 +483,7 @@ def iterate(run, case, lines, elef, dirs, slots, max_iter=int(os.environ.get('OT
                   rule='every overreaching transport hop of a forwarded lane gets a REAL relay stage in every slice of '
                        'its bus (closed qkd_rlys_<S> replica re-formed into its lane role) or a legal moved landing frame',
                   summary=summary, history=history, stations=records, refused=refused)
-    return F, pre, dict(inserted=inserted, moved=moved, extra=set(inserted) | set(moved), place_pre=place,
+    return F, pre, dict(inserted=inserted, moved=moved, extra=set(inserted) | set(moved) | dense, place_pre=place,
                         summary=summary, record=record)
 
 
@@ -596,7 +607,7 @@ def main(argv=None):
                                                                     '36:400,296:370,100000:340').split(',')))
         incident = LR.audit((case / 'die.v').read_text(), (case / 'elements.lef').read_text(),
                             (case / 'place.tcl.prefwd').read_text(), pf.read_text(), orientation, classes,
-                            extra=stations['extra'] if stations else ())
+                            extra=stations['extra'] if stations else dense_scope((case / 'die.v').read_text().split('\n')))
         (case / 'lane_incident_reach.json').write_text(json.dumps(incident, indent=1) + '\n')
         rep['reach_gate'] = dict(status=incident['status'], **incident['summary'])
         if stations is not None:

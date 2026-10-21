@@ -1,0 +1,16 @@
+{
+  "all103_imported_source_record_hashes_PASS": true,
+  "exact_runnable_dependencies_present": [
+    "rtl/qwen_dv/s5/qfd_dv_s5_btab_safe.sv",
+    "rtl/qwen_dv/s5/qfd_dv_s5_btab_s4.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "rtl/test/qwen_dv/s5/run_btab_s4.sh",
+    "rtl/test/qwen_dv/s5/tb_btab_s4.sv",
+    "rtl/test/full_sm_service/sram_models.sv"
+  ],
+  "source_compile_paths_unchanged": true,
+  "bash_syntax_PASS": true,
+  "shared_macro_and_SRAM_model_files_main_identical": true,
+  "new_simulation_or_route": false,
+  "reason": "Exact source/bench/model/record bytes previously run by daemon; final independent audit preserved. No implementation or protocol change."
+}

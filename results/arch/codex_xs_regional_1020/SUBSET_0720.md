@@ -1,0 +1,5 @@
+D control-bay refinement is MODEL ONLY. Frozen-reference v2 checks all61,679 origin/capture pairs at every corner of each moved endpoint rectangle; max399.879um and0over405. The new strap/control rectangles are strict subsets, so every pair bound can only decrease. Their fill is40.0463%/41.6667%, their boundaries align to the2.16-origin0.054x1.08site/row grid, and they avoid every original macro plus6.48x2.16halo.
+
+The failed v3 OpenROAD replay produced no geometry result because the original frozen GRT ODB has disappeared from its remote run directory. Its raw iostream failure is preserved. The surviving original v2 receipt, original ODB SHA and subset argument are recorded; this is an inherited conditional bound, not a new placed-proof result.
+
+RTL and physical kits remain unchanged. A source-owned EXCLUSIVE region hook would need exact519/19members and fresh actual row/master validation, followed by a fresh complete-source gate/reach/PG/TTFF audit. Positions of unselected cells were fixed only in this model; they may move in a new gate. E stays held at456.621um. No source or layout gate was launched.

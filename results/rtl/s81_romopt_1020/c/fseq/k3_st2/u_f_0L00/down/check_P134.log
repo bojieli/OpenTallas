@@ -1,0 +1,8 @@
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 1 mutant=None rows=11 fixture_rows=11 errors=0 END edges=3305 ret_words=179 xo_checked=3303 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 2 mutant=None rows=11 fixture_rows=11 errors=0 END edges=3305 ret_words=179 xo_checked=3303 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 3 mutant=None rows=11 fixture_rows=11 errors=0 END edges=3305 ret_words=179 xo_checked=3303 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 4 mutant=None rows=11 fixture_rows=11 errors=0 END edges=3305 ret_words=179 xo_checked=3303 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 5 mutant=None rows=11 fixture_rows=11 errors=0 END edges=3305 ret_words=179 xo_checked=3303 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 6 mutant=None rows=11 fixture_rows=11 errors=0 END edges=3305 ret_words=179 xo_checked=3303 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 7 mutant=None rows=11 fixture_rows=11 errors=0 END edges=3305 ret_words=179 xo_checked=3303 fault=4
+TOKSIM_FGU_SEQ FAIL op ffn.down PER 134 phases 7 rows 77 fixture_rows 77 go0 63 last_ret 1182 span 1119 errors 4 ['FAULT edge 423 status 11 lx 0', 'FAULT edge 424 status 11 lx 0', 'FAULT edge 425 status 11 lx 0']

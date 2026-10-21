@@ -1,0 +1,24 @@
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 1/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 2/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 3/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 4/19 mat exp69.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1003 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 5/19 mat exp69.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1002 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 6/19 mat exp69.w13 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 1005 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 7/19 mat exp112.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 8/19 mat exp112.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 9/19 mat exp112.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 10/19 mat exp170.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1003 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 11/19 mat exp170.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1002 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 12/19 mat exp170.w13 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 1005 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 13/19 mat exp299.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 14/19 mat exp299.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 15/19 mat exp299.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1007 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 16/19 mat exp357.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1003 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 17/19 mat exp357.w13 rows 4 nseg 5 faults 0 ret_words 8 calendar measured_class T 1002 mutant None
+XS_PLACE_GEN u_f_3L02 op ffn.experts_gu phase 18/19 mat exp357.w13 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 1005 mutant None
+FSEQA u_f_3L02 ffn.experts_gu golden P 145 nph 18 PASS as_expected  fixture_rows=4 errors=0 END edges=6638 ret_words=186 xo_checked=6636 fault=0
+TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 145 phases 18 rows 72 fixture_rows 72 go0 63 last_ret 2870 span 2807 errors 0 []
+FSEQA u_f_3L02 ffn.experts_gu period_below_floor P 144 nph 18 FAIL as_expected  op ffn.experts_gu PER 144 phases 18 rows 72 fixture_rows 72 go0 63 last_ret 2853 span 2790 errors 4 ['FAULT edge 443 status 11 lx 0', 'FAULT edge 444 status 11 lx 0', 'FAULT edge 445 status 11 lx 0']
+FSEQA u_f_3L02 ffn.experts_gu shift P 145 nph 18 FAIL as_expected rows 72 fixture_rows 72 go0 63 last_ret 2870 span 2807 errors 93 ['UNASSIGNED_RET edge 383 07c5b41601000004b', 'UNASSIGNED_RET edge 386 07d0923481000044b', 'UNASSIGNED_RET edge 393 179118d801000888b']
+FSEQA u_f_3L02 ffn.experts_gu swap P 145 nph 18 FAIL as_expected w 3 lo 2 k 1 got bdb8b540/0 want bdbc9128/0']", "PHASE_FAIL p3: ['MISMATCH edge 384 row 0 lo 0 k 2 got be0f28a8/0 want 3cfa4b80/0', 'MISMATCH edge 385 row 1 lo 0 k 2 got bd6fc3f0/0 want be268d84/0']"]
+FSEQA_VERDICT u_f_3L02 ffn.experts_gu PASS span 2807

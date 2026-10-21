@@ -1,31 +1,17 @@
 {
-  "reviewer": "codex coordinator delegate KV-PARAMS4 qkh_gates",
-  "time": "2026-10-20T03:58:34.546608-07:00",
-  "geometry_sha256": "d0d3dc7ca0ca85427ec5ef469d3146dbb775a57bc4ae7e39668799a71d0c4338",
-  "verdict": "CHANGES",
-  "checklist": {
-    "lattice": "PASS: no macros; 172.8 x 172.8 um outline = 4 x 43.2 lattice.",
-    "std_cell_band": "PASS: single contiguous standard-cell area, no macro islands; 51% synth utilization; placement diagnostic42.6% guidance only.",
-    "pin_spread": "PASS: full S/W/E face groups, actual335 pins accessible/no missing geometry; <6 pins/um.",
-    "clock_entry": "PASS: W clock near boundary register mass; measured TT/FF pin-flop spread16.1/15.2 ps. 19038 sinks guidance only per owner0dq; parent boundary compensation remains required.",
-    "shape": "PASS: square172.8um, diagonal244.4um <405 planning reach."
-  },
-  "safe_design": {
-    "pins": "PASS: all9 input/4 output data ports generic registered; reset2-stage face landing.",
-    "reach": "PASS planning: outline diagonal244.4um; no single-cycle boundary hop exceeds405um. Routed native reach audit still required after CLOSED.",
-    "fanout": "PASS in-gate native max32, zero>32.",
-    "depth": "PASS 506.8ps <600ps; TT reg-reg slack+153.7ps pathfinding.",
-    "storage": "PASS prior safe32 architecture; no runtime-indexed storage>2kb identified in this arithmetic lane.",
-    "floorplan": "PASS as checklist above.",
-    "clock": "PASS TT/FF pin-flop spread16.1/15.2ps; route command HM0.03 and OT_BH_ROUTE_RELIEF_PS30; signoff relief0.",
-    "schedule": "BLOCKED: actual input+1/output+1 vs old CLOSED e5e8e058b; measured full LK and compiler adoption pending."
-  },
-  "evidence": {
-    "source_commit": "95c10fdb9f55421b6d9416a4238ad0e5bee6882f",
-    "source_snapshot_sha256": "893b399f1e0b496eca65f97c75a16715dad7a6a80b6e1126f103a08cab2b6c2b",
-    "gate_verdict": "WARN 0fail4guidancewarn",
-    "trial_grt_overflow": 0,
-    "scope": "pre-route review only; final SS/FF/DRC/native parameter receipt pending"
-  },
-  "reason": "Actual prior CLOSED lane8 has no generic data wrapper; successor adds2 data edges. Hold route/submit/native receipt/enable until complete measured LK schedule/compiler price and full generic-wrapper proof."
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "ot_qkh_lane8_nc32c",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-20T05:53:00-07:00",
+ "gate_commit": "a005c18a3",
+ "checklist": {
+  "lattice": "no macros",
+  "std_cell_band": "one compact std cluster, even density; small dense pin corner SW",
+  "pin_spread": "pins on faces, census max32",
+  "clock_entry": "spread 16.1/15.2",
+  "shape": "172.8 square slot (die growth adopted), GRT0, TT +153.7; +2 data edges MEASURED (LK lag 2) and priced (HXK 13->15, D_QK +2, OT_KV_QKH_SAFE32)"
+ },
+ "notes": "COORD 10-20 05:50: APPROVED (supersedes Codex CHANGES: the hold reason is now measured and priced)",
+ "geometry_sha256": "d0d3dc7ca0ca85427ec5ef469d3146dbb775a57bc4ae7e39668799a71d0c4338"
 }

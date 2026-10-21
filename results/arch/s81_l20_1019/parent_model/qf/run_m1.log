@@ -1,0 +1,12 @@
+TB_QF qr mismatch cyc 14 got v1 4018 exp v1
+TB_QF qr mismatch cyc 92 got v1 4019 exp v0
+TB_QF qr mismatch cyc 93 got v1 f00d exp v0
+TB_QF qr mismatch cyc 94 got v1 f00d exp v0
+TB_QF qr mismatch cyc 95 got v1 f00d exp v0
+TB_QF no-entry not flagged st 0000
+TB_QF_STATS nerr 67 st 0000 mut 1
+TB_QF FAIL
+- rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_qf.sv:82: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 164ns; walltime 0.000 s; speed 767.647 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
