@@ -44,7 +44,7 @@ module qfd_native59_dv_service #(
  // LAND_EDGES=0 profile is not allowed: production must supply the measured W5..E5 return-chain landing edge count.
  parameter integer NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
  // MU-DQ-D2DUSER: users (1 = single user, the as-built block) and the HOST allocator's initial sequence (INITIAL_EPOCH[15:2])
- parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0
+ parameter integer ROPE=0,parameter integer NU=1,parameter [13:0] MU_SEQ0=14'd0
 )(
  input wire ck,rst_n,
  input wire host_epoch_valid,host_fused_capability,input wire[15:0]host_epoch,
@@ -282,8 +282,12 @@ module qfd_native59_dv_service #(
    if(emb_go&&!emb_act&&!cmd_bad)begin emb_act<=1;emb_k<=0;emb_tok<=p_cmd[375:358];end
    if(emb_act)begin
     if(emb_k<7'd64)begin emb_code_re<=1;emb_code_addr<={emb_tok,emb_k[5:0]^((MUT==3)?6'd1:6'd0)};end
-    else begin emb_scale_re<=1;emb_scale_addr<=emb_tok;end
-    emb_k<=emb_k+7'd1;if(emb_k==7'd64)emb_act<=0;
+    else if(emb_k==7'd64)begin emb_scale_re<=1;emb_scale_addr<=emb_tok;end
+    else begin
+     emb_code_re<=1;
+     emb_code_addr<=24'd9723904+{3'd0,emb_tok,3'd0}+24'(emb_k-7'd65);
+    end
+    emb_k<=emb_k+7'd1;if(emb_k==(ROPE?7'd72:7'd64))emb_act<=0;
    end
    // read edge (e1: the re flop is at the pin), provider answer (e2), answer in the pin register (e3)
    e1<=emb_act;k1<=emb_k;e2<=e1;k2<=k1;e3<=e2;k3<=k2;
@@ -296,7 +300,7 @@ module qfd_native59_dv_service #(
   else begin
    dr_tag<=vm_write_tag;
    dr_o<=g0?{1'b1,1'b0,1'b0,vm_write_beat,vm_write_data}:
-         g1?{1'b1,1'b1,(k3==7'd64)?6'd0:k3[5:0],(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
+         g1?{1'b1,1'b1,(k3==7'd64)?6'd0:((k3>7'd64)?6'(k3-7'd65):k3[5:0]),(k3==7'd64)?{496'd0,p_esq}:p_ecq}:520'd0;
   end
  qfd_native59_dr_landing #(.LAND_EDGES(LAND_EDGES))u_land(
  .ck(ck),.rst_n(rst_n),.request_slot(request_slot),.request_tag59(request_tag),

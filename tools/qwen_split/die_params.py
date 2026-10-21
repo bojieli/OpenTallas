@@ -153,6 +153,13 @@ def gen_params(insts, hr_rows, image=IMAGE):
             out.setdefault('qfd_sys_face', {}).update(MU_HEAD=1)
             out['qfd_sys_face']['_source'] = 'MU-DQ-BOOTCTX: MU_HEAD 1 (filler head contexts not checked by the HOST RX)'
         rec['fctx'] = 1
+    if os.environ.get('OT_QWEN_ROPE', '0') == '1':
+        for master in ('qfd_sys_face', 'qfd_embedding_word_provider', 'qfd_native59_dv_service'):
+            if master in masters:
+                out.setdefault(master, {}).update(ROPE=1)
+        rec['rope'] = dict(words=8, payload_flag=512, expected_args=list(range(65, 73)),
+                           read_bank='embed_code_addr = 9723904 + token*8 + beat',
+                           scope='requires the shared 73-item pair image and matching source-complete views')
     if D2D_MASTER in masters:
         v, r = txdp_from_image(image)
         out[D2D_MASTER] = dict(TXDP=v, _source=f"QXF-LINK/QLB-GEN: D2D_TXDP_C of {r['image']} (die stages {r['die_stages']})")
