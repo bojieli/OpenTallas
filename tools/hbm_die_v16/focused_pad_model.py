@@ -91,17 +91,33 @@ def main():
     charged=np.zeros_like(capacity)
     X,Y=np.meshgrid(x0+(np.arange(nx)+.5)*G,y0+(np.arange(ny)+.5)*G,indexing='ij')
     selected={};failure=None;prev=goal;prevhalf=(bbox[2]-bbox[0]+bbox[3]-bbox[1])/2
-    for reverse,(key,rec) in enumerate(reversed(target)):
+    # Reserve the wide landing first; greedy padding must not consume its only
+    # source-reachable legal footprint. Remaining pads are placed backwards.
+    firstkey,firstrec=target[0];fw,fh=shape(firstrec);firsthalf=(fw+fh)/2
+    fwx=2*math.ceil((fw/2+G)/G)+1;fwy=2*math.ceil((fh/2+G)/G)+1
+    fc=maximum_filter(blocked.astype(np.uint8),size=(fwx,fwy),mode='constant',cval=1)
+    fd=np.abs(X-parentpt[0])+np.abs(Y-parentpt[1])
+    choices=np.argwhere((fc==0)&(fd+firsthalf+(pw+ph)/2<=395))
+    firstpt=None
+    for j in np.argsort(fd[(fc==0)&(fd+firsthalf+(pw+ph)/2<=395)],kind='stable'):
+        ix,iy=choices[j];lo,hi=ix-fwx//2,ix+fwx//2+1;bot,top=iy-fwy//2,iy+fwy//2+1
+        charge=np.bincount(ids[lo:hi,bot:top].ravel(),minlength=len(capacity))*G*G
+        if np.any(charged+charge>capacity+1e-6):continue
+        charged+=charge;used[lo:hi,bot:top]=True
+        firstpt=np.array([round(float(X[ix,iy]),1),round(float(Y[ix,iy]),1)])
+        selected[firstkey]=dict(xy=firstpt.tolist(),footprint=[fw,fh]);break
+    if firstpt is None:raise ValueError('no source-reachable footprint/capacity-legal reserved landing')
+    for reverse,(key,rec) in enumerate(reversed(target[1:])):
         w,h=shape(rec);wx=2*math.ceil((w/2+G)/G)+1;wy=2*math.ceil((h/2+G)/G)+1
         collision=maximum_filter((blocked|used).astype(np.uint8),size=(wx,wy),mode='constant',cval=1)
         half=(w+h)/2
         distance=np.abs(X-prev[0])+np.abs(Y-prev[1])
         ok=(collision==0)&(distance+half+prevhalf<=395)
-        remaining=len(target)-reverse-1
+        remaining=len(target)-reverse-2
         if remaining==0:
-            ok &= np.abs(X-parentpt[0])+np.abs(Y-parentpt[1])+half+(pw+ph)/2<=395
+            ok &= np.abs(X-firstpt[0])+np.abs(Y-firstpt[1])+half+firsthalf<=395
         else:
-            ok &= np.abs(X-parentpt[0])+np.abs(Y-parentpt[1])<remaining*230+200
+            ok &= np.abs(X-firstpt[0])+np.abs(Y-firstpt[1])<remaining*230+200
         indices=np.argwhere(ok)
         if not len(indices):
             legal=collision==0
@@ -109,7 +125,8 @@ def main():
                          free_footprint_centres=int(legal.sum()),
                          nearest_all_pin_bound_um=float(np.min(distance[legal])+half+prevhalf) if legal.any() else None)
             break
-        scores=distance[ok]+.015*(np.abs(X[ok]-goal[0])+np.abs(Y[ok]-goal[1]))
+        local_use=np.divide(charged[ids],capacity[ids],out=np.ones_like(X),where=capacity[ids]>0)
+        scores=.10*distance[ok]+300*local_use[ok]+.005*(np.abs(X[ok]-firstpt[0])+np.abs(Y[ok]-firstpt[1]))
         found=False
         for j in np.argsort(scores,kind='stable'):
             ix,iy=indices[j];lo,hi=ix-wx//2,ix+wx//2+1;bot,top=iy-wy//2,iy+wy//2+1
@@ -120,12 +137,21 @@ def main():
             selected[key]=dict(xy=xy,footprint=[w,h]);prev=np.array(xy);prevhalf=half;found=True;break
         if not found:failure=dict(row=key,reason='all reachable legal footprints exceed50pct actualfree-cell window budget',placed=len(selected));break
     ratio=float(np.max(np.divide(charged,capacity,out=np.zeros_like(charged),where=capacity>0)))
+    envelope=[]
+    if failure is None:
+        previous=parentpt;phalf=(pw+ph)/2
+        for key,_ in target:
+            v=selected[key];xy=np.array(v['xy']);half=sum(v['footprint'])/2
+            envelope.append(float(np.abs(xy-previous).sum()+half+phalf));previous=xy;phalf=half
+        envelope.append(float(np.abs(previous-goal).sum()+phalf+(bbox[2]-bbox[0]+bbox[3]-bbox[1])/2))
+        if max(envelope)>395.2:failure=dict(reason='independent post-allocation endpoint bound failed',maximum=max(envelope))
     verdict='FOCUSED_MODEL_PASS' if failure is None and not missing else 'FOCUSED_MODEL_FAIL'
     if a.macro_only: verdict='JOINT_REPLAN_UPPER_BOUND_'+('FEASIBLE' if failure is None and not missing else 'FAIL')
     result=dict(verdict=verdict,slot=a.slot,bus=a.bus,stages=len(target),placed=len(selected),failure=failure,
                 selected=selected,missing_master_dimensions=sorted(missing),max_window_ratio=ratio,
                 conservative_family_dimension_fallbacks=fallback,
                 other_relay_rows_held_fixed=not a.macro_only,
+                all_pin_envelope_hops_um=envelope,
                 input_sha256={n:hashlib.sha256(Path(getattr(a,n)).read_bytes()).hexdigest() for n in
                               ('sites','layer','manifest','size_manifest','endpoint','stations')},
                 geometry_qualified=False,clock_phase_qualified=False,
