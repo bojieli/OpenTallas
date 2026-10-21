@@ -1,0 +1,242 @@
+{
+ "name": "qkd_ectl3_kiss_st_rt104",
+ "top": "qkd_ectl3_kiss_st",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_ectl_st.sv"
+ ],
+ "defines": [
+  "KVD_ECTLK_HARD"
+ ],
+ "hard_define": "KVD_ECTLK_HARD",
+ "params": {},
+ "clock": "entries",
+ "clock_port": "ck[0]",
+ "clock_ports": [
+  "ck[0]",
+  "ck[1]",
+  "ck[2]"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 725.76,
+  "h": 261.36,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "children": [
+  {
+   "view": "physical/ref_tile/qkd_static_ectla_k4_rt104/views/qkd_static_ectla_kiss",
+   "count": 1,
+   "inst": "u_a",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ectl_b_tp8_direct_rt104/views/qkd_ectl_b_tp8_direct",
+   "count": 1,
+   "inst": "u_b",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/qkd_ectl_c_st_rt104/views/qkd_ectl_c_st",
+   "count": 1,
+   "inst": "u_c",
+   "at": [
+    561.6,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "kgo",
+   "epoch",
+   "layer",
+   "fault",
+   "req_valid",
+   "req_t",
+   "req_v",
+   "req_epoch",
+   "req_layer",
+   "rsp_valid",
+   "rsp_data",
+   "rsp_t",
+   "rsp_v",
+   "rsp_epoch",
+   "rsp_layer"
+  ],
+  "E": [
+   "si",
+   "so"
+  ],
+  "S": [
+   "t0",
+   "e0",
+   "e1",
+   "s0",
+   "s1",
+   "rst_n",
+   "cfg"
+  ],
+  "N": [
+   "t1",
+   "e2",
+   "e3",
+   "s2",
+   "s3",
+   "ck"
+  ]
+ },
+ "io_tcl": "results/arch/qwen_kv_ectl3_kiss_st_1018/qkd_ectl3_kiss_st.tcl",
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Parent is wires only (assign-only t0 / t1 concatenation); the hard children own every registered endpoint and the ECTL static calendar constants count their boundary edges (QK_ISSUE_AGE / ROW_RETURN_LAT / HXK); a parent pin register would shift the fixed-cycle K issue / row return. Parent wires are part of the die hop budget."
+ },
+ "reset_landing": {
+  "enable": false,
+  "max_sinks": 3,
+  "reason": "KV-ECTL6 2026-10-19 (ROOT-RST reset_landing): wires-only multi-clock parent (ck[0] A, ck[1] B, ck[2] C); rst_n reaches exactly 3 sinks, one rst_n pin per hard child, and each child lands its own reset in its own clock domain at its face: A qkd_static_ectla_kiss pin flops rst_q (ECTL A body relay) and rn (k_issuer), both on ck; B qkd_ectl_b_tp8_direct and C qkd_ectl_c_st ot_rst_relay u_rpin (2 sync + 1 tree stage at the rst_n pin, ot_qkd_ectl_parts.sv). A parent landing would sit in ONE of the three clock domains and feed the other two children across domains, and would add parent std cells to a wires-only frame. Judged at max_sinks 3 (the 3 child pins), not waived."
+ },
+ "slot_change_request": "S-KVASTK 2026-10-18: the die ECTL slot (kv_die ECTL 648 x 129.6, A | B | C abutted) no longer holds the frame: A k3 is 172.8 x 194.4 (ECTLA-2 re-aspect). Hardened frame = 725.76 x 261.36 (children on the 43.2 lattice with >= 20 um channels). KV die lead (KV-WIRE2 / KV-PLAN4): re-grant the ectl_<st>_<g> slots at this outline or bind the children directly (kv_expand frame plan).",
+ "structural_change": "KV-SAFE32D 2026-10-20 (COORD 20:02 decision 1, route B = strict die WITH OT_KV_QKH_SAFE32): the SAFE32 stack pitch (3000 um rows) makes the far-column ECTL frames 5/6 K round trip 82..96 > 80 (kv-safe32c plan_b: ES_6 96, WS_6 90, EN_5 86, EN_6 84, WN_5 83, WN_6 82; re-centre measured insufficient, lanes/KV-SAFE32C.md). Route B raises the ONE K round trip to K_RT_BUDGET 104 (OT_KV_K_RT=104; plan_b128 FULL PLAN PASS, natural 13..96): RESPONSE_LAT 104, ROW_RETURN_LAT 111, QK_ISSUE_AGE 115 (= 104 + 11). Same RTL / outline / pin plan as the closed rt80 kit; only shift-line depths and compare constants change. Latency cost accepted (+24 edges D_QK a layer, priced by CALGEN from K_RT_BUDGET). Frame: wires-only cluster of the three rt104 children (same geometry as the closed qkd_ectl3_kiss_st-e5).",
+ "job": {
+  "owner": "Claude:KV-SAFE32D 10-20",
+  "branch": "claude/kv-safe32d-1020",
+  "tag": "rt104",
+  "purpose": "KV-SAFE32D 2026-10-20 (COORD 20:02 decision 1, route B = strict die WITH OT_KV_QKH_SAFE32): the SAFE32 stack pitch (3000 um rows) makes the far-column ECTL frames 5/6 K round trip 82..96 > 80 (kv-safe32c plan_b: ES_6 96, WS_6 90, EN_5 86, EN_6 84, WN_5 83, WN_6 82; re-centre measured insufficient, lanes/KV-SAFE32C.md). Route B raises the ONE K round trip to K_RT_BUDGET 104 (OT_KV_K_RT=104; plan_b128 FULL PLAN PASS, natural 13..96): RESPONSE_LAT 104, ROW_RETURN_LAT 111, QK_ISSUE_AGE 115 (= 104 + 11). Same RTL / outline / pin plan as the closed rt80 kit; only shift-line depths and compare constants change. Latency cost accepted (+24 edges D_QK a layer, priced by CALGEN from K_RT_BUDGET).",
+  "benches": [
+   {
+    "name": "ectl_kiss_st_k_die",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS ectl_kiss_st_k RL 104 QK 115 mut 0: 36 layers",
+    "pass_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/k_pass.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_layer_mutant",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "request identity",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/k_mut5_layer.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_late_landing_mutant",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k8 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "late landing response faulted",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/k_mut8_late.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_qk_minus1_mutant",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k9 9",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "consume slot",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/k_mut9_qkm1.log"
+   },
+   {
+    "name": "ectl3_kiss_st_lockstep_die",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_ectl3_kiss_st lockstep vs qkd_ectl3_kiss_s: RL 104 QK 115",
+    "pass_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/l_pass.log"
+   },
+   {
+    "name": "ectl_c_st_fault_mutant_die",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ectl3_kiss_st",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/l_mut1.log"
+   },
+   {
+    "name": "ectl_c_st_q_mutant_die",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ectl3_kiss_st",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/l_mut2.log"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/qkd_ectl_b_tp8_direct_rt104/views/qkd_ectl_b_tp8_direct",
+   "physical/ref_tile/qkd_ectl_c_st_rt104/views/qkd_ectl_c_st",
+   "physical/ref_tile/qkd_static_ectla_k4_rt104/views/qkd_static_ectla_kiss",
+   "results/arch/qwen_kv_ectl3_kiss_st_1018",
+   "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4",
+   "results/rtl/ref_tile/qkd_ectl_c_st/bench_witness_v1/",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_kv_die/ectl3_kiss_st_pins.py",
+   "tools/qwen_static_kv"
+  ],
+  "views_to": "physical/ref_tile/qkd_ectl3_kiss_st_rt104/views",
+  "record_to": "results/rtl/ref_tile/qkd_ectl3_kiss_st"
+ },
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": false,
+ "purpose": "KV-SAFE32D 2026-10-20 (COORD 20:02 decision 1, route B = strict die WITH OT_KV_QKH_SAFE32): the SAFE32 stack pitch (3000 um rows) makes the far-column ECTL frames 5/6 K round trip 82..96 > 80 (kv-safe32c plan_b: ES_6 96, WS_6 90, EN_5 86, EN_6 84, WN_5 83, WN_6 82; re-centre measured insufficient, lanes/KV-SAFE32C.md). Route B raises the ONE K round trip to K_RT_BUDGET 104 (OT_KV_K_RT=104; plan_b128 FULL PLAN PASS, natural 13..96): RESPONSE_LAT 104, ROW_RETURN_LAT 111, QK_ISSUE_AGE 115 (= 104 + 11). Same RTL / outline / pin plan as the closed rt80 kit; only shift-line depths and compare constants change. Latency cost accepted (+24 edges D_QK a layer, priced by CALGEN from K_RT_BUDGET). Frame: wires-only cluster of the three rt104 children (same geometry as the closed qkd_ectl3_kiss_st-e5).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why_route": "qkd_ectl3_kiss_st (closed at RESPONSE_LAT 80 / QK 91) -> K budget 104: RESPONSE_LAT 104 / ROW_RETURN_LAT 111 / QK_ISSUE_AGE 115 (route B, KV-SAFE32D); same RTL / outline / pins, new shift-line depths and compare constants; nothing to re-use from the old route"
+ }
+}

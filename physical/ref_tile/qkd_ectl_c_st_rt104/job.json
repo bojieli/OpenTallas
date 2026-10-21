@@ -1,0 +1,182 @@
+{
+ "name": "qkd_ectl_c_st_rt104-rt104-COMMIT",
+ "block": "qkd_ectl_c_st",
+ "ref_tile": true,
+ "owner": "Claude:KV-SAFE32D 10-20",
+ "purpose": "KV-SAFE32D 2026-10-20 (COORD 20:02 decision 1, route B = strict die WITH OT_KV_QKH_SAFE32): the SAFE32 stack pitch (3000 um rows) makes the far-column ECTL frames 5/6 K round trip 82..96 > 80 (kv-safe32c plan_b: ES_6 96, WS_6 90, EN_5 86, EN_6 84, WN_5 83, WN_6 82; re-centre measured insufficient, lanes/KV-SAFE32C.md). Route B raises the ONE K round trip to K_RT_BUDGET 104 (OT_KV_K_RT=104; plan_b128 FULL PLAN PASS, natural 13..96): RESPONSE_LAT 104, ROW_RETURN_LAT 111, QK_ISSUE_AGE 115 (= 104 + 11). Same RTL / outline / pin plan as the closed rt80 kit; only shift-line depths and compare constants change. Latency cost accepted (+24 edges D_QK a layer, priced by CALGEN from K_RT_BUDGET).",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/kv-safe32d-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_ectl4",
+   "results/rtl/ref_tile/qkd_ectl_c_st/bench_witness_v1/",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_ectl_c_st #(.QK_ISSUE_AGE(115), .ROW_RETURN_LAT(111), .HXK(13)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_kv_20261014/qkd_ectl_c_st.sv rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv rtl/hdc/ot_hdc_delay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ectl_kiss_st_k_die",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS ectl_kiss_st_k RL 104 QK 115 mut 0: 36 layers",
+    "pass_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/k_pass.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_layer_mutant",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "request identity",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/k_mut5_layer.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_late_landing_mutant",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k8 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "late landing response faulted",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/k_mut8_late.log"
+   },
+   {
+    "name": "ectl_kiss_st_k_qk_minus1_mutant",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_kiss_st_k_bench.sh {RUN}/bench/k9 9",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "consume slot",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/k_mut9_qkm1.log"
+   },
+   {
+    "name": "ectl3_kiss_st_lockstep_die",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qkd_ectl3_kiss_st lockstep vs qkd_ectl3_kiss_s: RL 104 QK 115",
+    "pass_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/l_pass.log"
+   },
+   {
+    "name": "ectl_c_st_fault_mutant_die",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ectl3_kiss_st",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/l_mut1.log"
+   },
+   {
+    "name": "ectl_c_st_q_mutant_die",
+    "cmd": "RL=104 QK=115 bash tools/qwen_static_kv/ectl_st_bench.sh {RUN}/bench/l2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qkd_ectl3_kiss_st",
+    "fail_witness": "results/rtl/ref_tile/qkd_ectl3_kiss_st/bench_witness_rt104/l_mut2.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_ectl_c_st_rt104/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_ectl_c_st_rt104/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_ectl_c_st_rt104 --out {RUN}/record/views/qkd_ectl_c_st  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_ectl_c_st_rt104/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_ectl_c_st_rt104/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_ectl_c_st_rt80/qkd_ectl_c_st_rt104-rt104-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KV-SAFE32D 2026-10-20 (COORD 20:02 decision 1, route B = strict die WITH OT_KV_QKH_SAFE32): the SAFE32 stack pitch (3000 um rows) makes the far-column ECTL frames 5/6 K round trip 82..96 > 80 (kv-safe32c plan_b: ES_6 96, WS_6 90, EN_5 86, EN_6 84, WN_5 83, WN_6 82; re-centre measured insufficient, lanes/KV-SAFE32C.md). Route B raises the ONE K round trip to K_RT_BUDGET 104 (OT_KV_K_RT=104; plan_b128 FULL PLAN PASS, natural 13..96): RESPONSE_LAT 104, ROW_RETURN_LAT 111, QK_ISSUE_AGE 115 (= 104 + 11). Same RTL / outline / pin plan as the closed rt80 kit; only shift-line depths and compare constants change. Latency cost accepted (+24 edges D_QK a layer, priced by CALGEN from K_RT_BUDGET).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why_route": "qkd_ectl_c_st_rt80 (closed at RESPONSE_LAT 80 / QK 91) -> K budget 104: RESPONSE_LAT 104 / ROW_RETURN_LAT 111 / QK_ISSUE_AGE 115 (route B, KV-SAFE32D); same RTL / outline / pins, new shift-line depths and compare constants; nothing to re-use from the old route"
+ }
+}
