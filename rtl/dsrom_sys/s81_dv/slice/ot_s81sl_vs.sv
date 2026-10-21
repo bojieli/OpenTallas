@@ -1011,7 +1011,7 @@ endmodule
 module ot_s81sl_vs_swweight8 #(parameter integer BYTE=0,MUT=0)(input wire clk,input wire[7:0]ka,input wire wr,input wire[7:0]w0,w1,output reg[7:0]q);
   localparam [31:0] MUT_WEIGHT=32'h3f800000;
   wire [7:0] kg=ka-{7'd0,wr};
-  always @(posedge clk) q<=MUT==1?MUT_WEIGHT[8*BYTE+:8]:(kg>=8'd8?w1:w0);
+  always @(posedge clk) q<=MUT==1?MUT_WEIGHT[8*BYTE+:8]:(kg >= 8'd8 ? w1 : w0);
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_s81sl_vs_bankctl8 #(parameter integer PARITY=0,COPY=0)(input wire clk,rs,qv,busy_next,input wire[3:0]op_next,input wire ph_next,input wire[7:0]ka_next,input wire ov,input wire[1:0]oc,output wire[7:0]fill,add);
