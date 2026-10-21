@@ -5,6 +5,10 @@ r=pathlib.Path.cwd();w=r/'native';s=r/'src';p=w/'config.mk'
 macro='physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1'
 c=p.read_text()
 if 'ADDITIONAL_LEFS' not in c: p.write_text(c+'export ADDITIONAL_LEFS = /src/'+macro+'.lef\n')
+c=p.read_text()
+if 'ot_s81dv_fp_n32.sv' not in c:
+    c=c.replace('/src/rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv','/src/rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv /src/rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv',1)
+    p.write_text(c)
 files=re.search(r'export VERILOG_FILES = (.*)',p.read_text())[1].split()
 man={'sources':{x:hashlib.sha256((s/x.removeprefix('/src/')).read_bytes()).hexdigest() for x in files},'config_sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
 (r/'source_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
