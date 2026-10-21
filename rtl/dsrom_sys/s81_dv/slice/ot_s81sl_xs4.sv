@@ -130,11 +130,11 @@ module ot_s81sl_xs4_cal (
 );
     localparam integer AB = 75, EB = 72;
     // ---- pin capture (PINREG): prime / stage_start kept copies, payload one flop
-    (* keep = "true" *) reg [3:0] pq;
+    (* keep = "true" *) reg [5:0] pq;   // XG5c: 6 copies (pok[2] base_q / pok[4] nrows / pok[5] consume_index; was 36 mapped loads)
     (* keep = "true" *) reg [6:0] sq;
     always @(posedge ck or negedge rg[0])
-        if (!rg[0]) begin pq <= 4'd0; sq <= 7'd0; end
-        else begin pq <= {4{prime}}; sq <= {7{stage_start}}; end
+        if (!rg[0]) begin pq <= 6'd0; sq <= 7'd0; end
+        else begin pq <= {6{prime}}; sq <= {7{stage_start}}; end
     reg [11:0] base_p; reg [12:0] len_p; reg [71:0] ra_p, rt_p;
     always @(posedge ck) begin base_p <= base; len_p <= length; ra_p <= rom_action; rt_p <= rom_time; end
     wire [143:0] rin = {rt_p, ra_p};
@@ -159,7 +159,7 @@ module ot_s81sl_xs4_cal (
     wire cnz = count != 3'd0;
     wire bad = active || priming || fetch_valid != 3'd0 || len_p == 13'd0 || len_p > 13'd4096 ||
                {1'b0, base_p} + len_p > 13'd4096;
-    wire [3:0] pok = pq & {4{!bad}};
+    wire [5:0] pok = pq & {6{!bad}};
     wire [74:0] act_nx;
     generate for (gk = 0; gk < 6; gk = gk + 1) begin : g_due
         (* keep = "true" *) reg [3:0] rpt;
@@ -213,6 +213,11 @@ module ot_s81sl_xs4_cal (
     wire due5;
     ot_s81sl_xs4_due u_due5 (.act(actw[5]), .cnz(cnz), .t(tsm[5]), .age(agew[5]), .due(due5));
     // XG5: fetch from two kept term instances (ROM address side / index + valid side; one term mapped to 46 loads)
+    // XG5c: consume_index and last_ts (2 x 12 b) take their own kept due instances (due5 mapped 37, due[4] 57 loads)
+    wire due5c, due4l0, due4l1;
+    ot_s81sl_xs4_due u_due5c (.act(actw[5]), .cnz(cnz), .t(tsm[5]), .age(agew[5]), .due(due5c));
+    ot_s81sl_xs4_due u_due4l0 (.act(actw[4]), .cnz(cnz), .t(tsm[4]), .age(agew[4]), .due(due4l0));
+    ot_s81sl_xs4_due u_due4l1 (.act(actw[4]), .cnz(cnz), .t(tsm[4]), .age(agew[4]), .due(due4l1));
     wire fetch, fetch_r;
     ot_s81sl_xs4_fetch u_fetch   (.priming(priming), .due5(due5), .fi(fetch_index), .nrows(nrows), .fetch(fetch));
     ot_s81sl_xs4_fetch u_fetch_r (.priming(priming), .due5(due5), .fi(fetch_index), .nrows(nrows), .fetch(fetch_r));
@@ -231,7 +236,7 @@ module ot_s81sl_xs4_cal (
     always @(posedge ck or negedge rg[2]) begin
         if (!rg[2]) begin nrows <= 13'd0; fetch_index <= 13'd0; end
         else begin
-            if (pok[2]) nrows <= len_p;
+            if (pok[4]) nrows <= len_p;
             if (pok[3]) fetch_index <= 13'd0;
             if (fetch) fetch_index <= fetch_index + 13'd1;
         end
@@ -239,13 +244,16 @@ module ot_s81sl_xs4_cal (
     always @(posedge ck or negedge rg[3]) begin
         if (!rg[3]) consume_index <= 13'd0;
         else begin
-            if (pok[3]) consume_index <= 13'd0;
-            if (due5) consume_index <= consume_index + 13'd1;
+            if (pok[5]) consume_index <= 13'd0;
+            if (due5c) consume_index <= consume_index + 13'd1;
         end
     end
     always @(posedge ck or negedge rg[4]) begin
         if (!rg[4]) last_ts <= 24'd0;
-        else last_ts <= due[4] ? tsm[4] : (sq[6] ? 24'd0 : last_ts);
+        else begin
+            last_ts[11:0]  <= due4l0 ? tsm[4][11:0]  : (sq[6] ? 12'd0 : last_ts[11:0]);
+            last_ts[23:12] <= due4l1 ? tsm[4][23:12] : (sq[6] ? 12'd0 : last_ts[23:12]);
+        end
     end
     always @(posedge ck or negedge rg[0]) begin
         if (!rg[0]) begin

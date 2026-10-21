@@ -14,10 +14,15 @@ predecode (ot_s81sl_xs4_pdec: 12 x 16 one-hots); calendar due / fetch terms from
 (ot_s81sl_xs4_due / _fetch; all three listed in synth_keep_modules, non-parameterised). xs4_equiv on the fixed source:
 base PASS, 6 mutants FAIL as expected (witnesses results/rtl/s81_slice_1019/xg5/xs4_equiv_*.log).
 
+## XG5c census fixes (DRIVE-S81-XG 10-20; xg5b gate census: 3 roots > 32, max 57, all in ot_s81sl_xs4_cal)
+pok[2] base_q + nrows enables (36) -> pq 4 -> 6 kept copies (pok[4] nrows, pok[5] consume_index); due[4] last_ts mux (57)
+-> kept u_due4l0 / u_due4l1 (12 b each); due5 consume_index (37) -> kept u_due5c. Same function per copy (value-preserving).
+Fallback kit s81sl_xg5k = same RTL / outline / macros, clock k-means K=24.
+
 ## SAFE-DESIGN checklist (owner 10-19) + pre-gate native census
 1 Pins: PASS -- source-registered (rs pin flops / relay outputs; issuer relay + xs4 capture; xs4 output flops); reset_landing 2.
 2 Reach: gather port now internal (rs relay flop -> xs4 capture flop, one registered hop each side); outline 648 x 561.6.
-3 Fanout: rs4 mapped census PASS max 32 (S81-XG4); xs4 87 roots fixed structurally (above); the gate runs the mapped census
+3 Fanout: rs4 mapped census PASS max 32 (S81-XG4); xs4 87 roots fixed structurally (above); merged census xg5b 3 > 32 fixed (XG5c); the gate runs the mapped census
   on the merged netlist before floorplan.
 4 Depth: rs / xs4 cones unchanged (kept copies only).
 5 Storage: 24 x 128x256 x-buffer SRAMs, 7 ROMs, 6 exponent SRAMs (xs4).
