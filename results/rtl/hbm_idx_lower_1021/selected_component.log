@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits   786 GB (avail 664, growth 113, headroom 0, waiters 0/0 GB) load 41/128 running 30 disk 2130 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-idx-lower-1021/src3
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-idx-lower-1021/src3
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-idx-lower-1021/src3
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-idx-lower-1021/src3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-idx-lower-1021/src3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-idx-lower-1021/src3
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1063747-1792607862 after 0 s
+SELECTED_Q_NORM_B_SCALAR_PASS checks=1
+selected_scalar_tb.sv:19: $finish called at 100000 (1ps)
+IDX_LOWER_COMPONENT_PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1063747-1792607862): exit 0

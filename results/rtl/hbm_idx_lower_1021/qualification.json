@@ -1,0 +1,84 @@
+{
+  "scope": "selected_i10_scalar_bridge_component_only",
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "i10": {
+    "status": "candidate_requires_binding",
+    "issues": [
+      37,
+      38,
+      42
+    ],
+    "commands": [
+      {
+        "kind": "vm_scalar_to_rf",
+        "source_word": 49984,
+        "rf_address": 8,
+        "rr_wa": 1,
+        "select_word": 0,
+        "quarter": 0,
+        "capture_serial_edge": 24,
+        "producer": "runtime VM read; no injected scalar"
+      }
+    ],
+    "reservations": [
+      {
+        "resource": "SU_control",
+        "first": 29,
+        "last": 92
+      },
+      {
+        "resource": "RF_sector",
+        "address": 1,
+        "first": 24,
+        "last": 92
+      }
+    ]
+  },
+  "i42": {
+    "status": "candidate_requires_binding",
+    "commands": [
+      {
+        "kind": "runtime_indexed_scalar",
+        "index_word": 88704,
+        "source_base": 87552,
+        "index_multiplier": 1,
+        "destination_word": 88768,
+        "index_source": "live IDX.TOPK VM write",
+        "output_source": "live runtime VM read"
+      }
+    ],
+    "events": [],
+    "reservations": [
+      {
+        "resource": "VM_runtime_scalar",
+        "exclusive": true
+      }
+    ],
+    "address_expression": "source_base + U32(VM[index_word]) * index_multiplier",
+    "reasons": [],
+    "binding_obligations": [
+      "runtime VM scalar engine instantiated on selected VM calendar ports",
+      "IDX.TOPK commit -> index read dependency",
+      "masked output write with actual fixed return ages"
+    ],
+    "qualifies_native_layer": false,
+    "qualifies_native_chain": false
+  },
+  "fixture_O_used_as_stimulus": false,
+  "remaining": [
+    "selected_contract_binding",
+    "actual_VM_return_age",
+    "IDX_produced_index",
+    "native_SU_numerical_connected_run"
+  ],
+  "source_sha256": {
+    "tools/hbm_layer_vehicle/idx_layer_lower_1021.py": "238591afb43746fbf40e481b218c68b20419245aa0c0bdb14aa8c7387c17ae19",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_vm_scalar_runtime_1021.sv": "f8a448841ad5df916304c92870532c8cd826b1c3f601bafde4f477610fb4828b",
+    "tools/hbm_layer_vehicle/qualify_idx_layer_lower_1021.py": "49b18ef57ce228eb6241a7f16db1a4315c7e64a578e58587ce2d999bd6375d94"
+  },
+  "fixture_programme_sha256": "48797c64a8aef182695fb9f36e41b3e34a780873bd3dcbb9f53c746c6f861a3f",
+  "run": "/srv/opentallas-scratch/claude/codex-hbm-idx-lower-1021/src3",
+  "vm_bus_test_R": 4,
+  "test_R_note": "component interface test age4 only; selected die actual VMreturn age not established"
+}
