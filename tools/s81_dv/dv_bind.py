@@ -31,6 +31,7 @@ dv_<inst> stand-ins of the diagnostic case, then runs the STRICT tools/die_port_
 """
 from __future__ import annotations
 
+import re
 import collections
 import json
 import math
