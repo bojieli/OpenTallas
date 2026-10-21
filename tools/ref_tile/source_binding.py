@@ -901,3 +901,157 @@ def staged_remeasurement_matches_log(binding, log_bytes):
             and bool(r.get('artifacts_sha256')) and bool(r.get('measurement_script_sha256'))
             and r.get('new_measurement_only') is True and r.get('physical_thresholds') == 'unchanged'
             and not binding.get('remote_archive_verified'))
+
+
+METADATA_CLASSIFICATION_SCHEMA = 'opentallas.ref_tile.metadata_classification.v1'
+METADATA_CLASSIFICATION_KITS = frozenset(('hcoll_issuer_r256v8_grid', 'hcoll_issuer_r256v8_gridb'))
+METADATA_CLASSIFIER_MODULES = frozenset((
+    'tools/check_macro_track_alignment.py', 'tools/closure_loop/helper_overlay.py',
+    'tools/hier_contract/child_lint.py', 'tools/pin_fit.py', 'tools/textbook_lint.py',
+    *('tools/ref_tile/' + x + '.py' for x in (
+        'async_fifo_hierarchy_audit', 'async_gray_fifo_constraints', 'cdc_fsm_guard',
+        'cdc_sync_constraints', 'clock_entry_constraints', 'direct_macro_clock_entries',
+        'gray_fifo_cdc_constraints', 'keep_module_audit', 'kit_orfs_vars', 'layout_png',
+        'measured_band_fill', 'native_census', 'pre_route_gate', 'raw_macro_clocks',
+        'ref_tile', 'single_clock_contract', 'source_binding'))))
+
+
+def metadata_classification_issues(binding, root, kit, gate, commit=None):
+    """ROOT-authorized issuer-only alternative provenance, never remote verification.
+
+    Ordinary source validation remains mandatory before this check. Parent inputs
+    must be committed members of the NEW classification snapshot; its manifest is
+    not a substitute for the original physical archive or its verified raw log.
+    The output execution proof is committed at the route source (not an input to
+    its own earlier classification snapshot).
+    """
+    problems = []
+    def require(condition, message):
+        if not condition:
+            raise ValueError(message)
+    def git_bytes(rev, path):
+        require(isinstance(path, str) and not path.startswith('/') and
+                '..' not in Path(path).parts, 'unsafe classification evidence path')
+        return subprocess.check_output(['git', '-C', str(root), 'show', f'{rev}:{path}'],
+                                       stderr=subprocess.DEVNULL)
+    try:
+        require(kit in METADATA_CLASSIFICATION_KITS and gate.get('kit') == kit,
+                'metadata classification unsupported kit')
+        require(binding.get('execution_kind') == 'metadata-classification' and
+                gate.get('execution_kind') == 'metadata-classification' and
+                binding.get('remote_archive_verified') is False and not binding.get('staged_remeasurement'),
+                'metadata classification must not claim physical remote verification')
+        receipt = binding.get('metadata_classification')
+        require(isinstance(receipt, dict) and receipt.get('schema') == METADATA_CLASSIFICATION_SCHEMA,
+                'typed metadata classification receipt missing')
+        frozen = binding.get('commit')
+        require(frozen and frozen == binding.get('start_commit'),
+                'classification inputs must be committed exact source')
+        current = commit or git_head(root)
+        archive_ref = receipt['archive']
+        archive = git_bytes(current, archive_ref['path'])
+        require(hashlib.sha256(archive).hexdigest() == archive_ref['sha256'] == binding['archive_sha256'],
+                'actual classification archive hash mismatch')
+        staged = snapshot(archive, root, frozen, root, frozen, [])
+        require(staged['files'] == binding['files'] and
+                staged['manifest_sha256'] == binding['manifest_sha256'] and
+                staged['commit'] == frozen,
+                'actual classification archive/snapshot input mismatch')
+        entries = {e['path']: e for e in binding['files']}
+        require(binding['manifest_sha256'] == canonical_digest(binding['files']),
+                'classification manifest hash mismatch')
+        consumed = binding['consumed']
+        require(set(consumed['paths']) <= set(entries) and
+                all(consumed['sha256'][p] == entries[p]['sha256'] for p in consumed['paths']),
+                'classification consumed hashes mismatch')
+        def input_record(name):
+            ref = receipt['parent'][name]
+            path = ref['path']; payload = git_bytes(frozen, path)
+            digest = hashlib.sha256(payload).hexdigest()
+            require(path in consumed['paths'] and path in entries and
+                    digest == ref['sha256'] == entries[path]['sha256'],
+                    f'parent {name} input/hash missing or mismatched')
+            return payload
+        parent_bytes = input_record('binding')
+        parent = json.loads(parent_bytes)
+        original = json.loads(input_record('gate'))
+        log = input_record('log')
+        old_spec_bytes = input_record('spec'); old_spec = json.loads(old_spec_bytes)
+        require(parent.get('schema') == SCHEMA and parent.get('remote_archive_verified') is True and
+                original.get('source_binding') == parent and original.get('verdict') == 'FAIL' and
+                original.get('kit') == kit and original.get('cts') is True,
+                'original physical binding/FAIL/CTS identity mismatch')
+        failures = [x for x in original['items'] if x.get('severity') == 'FAIL']
+        require(failures and all(x.get('check') == 'fill' for x in failures),
+                'original physical failure is not solely fill')
+        require(parent['manifest_sha256'] == canonical_digest(parent['files']),
+                'original physical manifest hash mismatch')
+        markers = re.findall(rb'^GATE_SOURCE_ARCHIVE_SHA256=(\S+)\s*$', log, re.M)
+        require(markers and set(markers) == {parent['archive_sha256'].encode()},
+                'original physical archive/log linkage mismatch')
+        link = binding.get('physical_parent', {})
+        require(link.get('binding_sha256') == hashlib.sha256(parent_bytes).hexdigest() and
+                link.get('archive_sha256') == parent['archive_sha256'] and
+                link.get('manifest_sha256') == parent['manifest_sha256'] and
+                link.get('start_commit') == parent['start_commit'] and
+                link.get('original_verdict') == 'FAIL' and gate.get('physical_parent') == link and
+                gate.get('cts') is True, 'physical parent link mismatch')
+        old_entries = {e['path']: e for e in parent['files']}
+        physical = [p for p in parent['consumed']['paths'] if not p.startswith('tools/')]
+        require(len(physical) == 328, 'issuer original physical input census mismatch')
+        spec_path = f'physical/ref_tile/{kit}/spec.json'
+        require(spec_path in physical and hashlib.sha256(old_spec_bytes).hexdigest() ==
+                old_entries[spec_path]['sha256'], 'original spec not bound to physical archive')
+        new_spec = json.loads(git_bytes(frozen, spec_path))
+        reason = new_spec.get('fill_reason')
+        require(isinstance(reason, dict) and set(reason) == {'pin_bound'} and
+                isinstance(reason['pin_bound'], str) and reason['pin_bound'].strip(),
+                'only explicit existing fill_reason.pin_bound is supported')
+        reduced = dict(new_spec); reduced.pop('fill_reason')
+        require('fill_reason' not in old_spec and reduced == old_spec,
+                'non-fill metadata/physical spec change refused')
+        for path in physical:
+            require(path in consumed['paths'] and path in entries,
+                    f'original physical input missing: {path}')
+            value = git_bytes(frozen, path)
+            require(hashlib.sha256(value).hexdigest() == entries[path]['sha256'],
+                    f'new physical input hash mismatch: {path}')
+            if path != spec_path:
+                require(entries[path]['sha256'] == old_entries[path]['sha256'],
+                        f'physical input changed: {path}')
+        for key in ('clock', 'trial_route', 'reset_landing', 'port_latency', 'measured_band_fill'):
+            require(gate.get(key) == original.get(key), f'original measured {key} changed')
+        require(all(x in gate['items'] for x in original['items'] if x.get('check') != 'fill'),
+                'original measured native/reach/clock items changed')
+        require(gate.get('verdict') in ('PASS', 'WARN') and
+                not any(x.get('severity') == 'FAIL' for x in gate['items']) and
+                any(x.get('check') == 'fill' and x.get('severity') == 'WARN' for x in gate['items']),
+                'metadata replay is not qualified WARN/PASS with pin-bound fill')
+        classifier = receipt['classifier']; published = classifier['published_commit']
+        require(isinstance(published, str) and re.fullmatch('[0-9a-f]{40}', published),
+                'published classifier commit malformed')
+        reachable = subprocess.run(['git', '-C', str(root), 'merge-base', '--is-ancestor',
+                                   published, 'refs/remotes/origin/main'], capture_output=True)
+        require(reachable.returncode == 0, 'classifier reference is not published main history')
+        modules = classifier['executed_modules']
+        require(set(modules) == METADATA_CLASSIFIER_MODULES, 'executed classifier module census mismatch')
+        for path, digest in modules.items():
+            require(path in consumed['paths'] and entries[path]['sha256'] == digest and
+                    hashlib.sha256(git_bytes(published, path)).hexdigest() == digest and
+                    hashlib.sha256(git_bytes(current, path)).hexdigest() == digest,
+                    f'published/executed classifier helper mismatch: {path}')
+        proof_ref = classifier['proof']; proof_bytes = git_bytes(current, proof_ref['path'])
+        require(hashlib.sha256(proof_bytes).hexdigest() == proof_ref['sha256'],
+                'committed classifier execution proof hash mismatch')
+        proof = json.loads(proof_bytes)
+        require(proof.get('execution_kind') == 'metadata-classification' and
+                proof.get('classification_source_commit') == frozen and
+                proof.get('classification_manifest_sha256') == binding['manifest_sha256'] and
+                proof.get('classification_archive_sha256') == binding['archive_sha256'] and
+                proof.get('executed_modules') == modules and
+                proof.get('published_commit') == published,
+                'actual classifier execution proof/input archive mismatch')
+    except (ValueError, KeyError, TypeError, AttributeError, OSError, tarfile.TarError,
+            subprocess.CalledProcessError) as ex:
+        problems.append(f'metadata classification: {ex}')
+    return problems
