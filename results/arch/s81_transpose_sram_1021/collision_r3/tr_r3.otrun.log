@@ -1,0 +1,31 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr_r3
+ot-run: ot-epyc7       admits   516 GB (avail 462, growth 101, headroom 0, waiters 0/0 GB) load 46/96 running 20 disk 4704 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr_r3
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr_r3
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr_r3
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr_r3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr_r3
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3235067-1792609249 after 1 s
+TR_COLLISION_EDGES 2025
+TR_RESULT checks=4730 vectors=18920 errors=0
+- tools/s81_dv/svc_rs/merge_sram/tb_tr.sv:36: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48us; walltime 1.031 s; speed 46.701 us/s
+- Verilator: cpu 1.031 s on 1 threads; allocated 9 MB
+TR_MISMATCH check=1 xoff=16
+TR_MISMATCH check=1 xoff=24
+TR_MISMATCH check=2 xoff=16
+TR_MISMATCH check=2 xoff=24
+TR_MISMATCH check=3 xoff=8
+TR_MISMATCH check=4 xoff=8
+TR_COLLISION_EDGES 2025
+TR_CAUSAL MUT=0 checks=4730 errors=0
+TR_CAUSAL MUT=1 checks=4730 errors=4052
+TR_CAUSAL MUT=2 checks=4730 errors=4730
+TR_CAUSAL MUT=3 checks=4730 errors=4730
+- tools/s81_dv/svc_rs/merge_sram/tb_tr_neg.sv:40: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48us; walltime 0.925 s; speed 52.070 us/s
+- Verilator: cpu 0.925 s on 1 threads; allocated 9 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3235067-1792609249): exit 0

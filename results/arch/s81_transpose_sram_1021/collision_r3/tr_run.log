@@ -1,0 +1,6 @@
+TR_COLLISION_EDGES 2025
+TR_RESULT checks=4730 vectors=18920 errors=0
+- tools/s81_dv/svc_rs/merge_sram/tb_tr.sv:36: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48us; walltime 1.031 s; speed 46.701 us/s
+- Verilator: cpu 1.031 s on 1 threads; allocated 9 MB

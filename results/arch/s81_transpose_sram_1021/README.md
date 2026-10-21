@@ -1,0 +1,9 @@
+# Opt-in actual masked SRAM transpose
+
+Source4918af131 plus causal-only MUT0 default e0bec45ae, OT_SVC_TR_SRAM absent by default. Preimplementation port/age/capacity model is MODEL.md. Actual288 existing32x128 macros retain36,864 useful transpose bits with1,179,648 physical allocated bits,0.307806mm² raw macro footprint before channels. The constant-address masked word stores both halves; registered write forwarding preserves original same-edge col visibility and original eib capture age.
+
+Actual tr_x compares with its exact original flop module at TD32/DPT8/NL4/all XOFF0/8/16/24, including nonzero FP4/FP8 fields, scales, pads, both halves/all rows/dimensions, four simultaneous row writes, consecutive writes, bubbles, q.k bypass and three reset/refill epochs. Corrected fixture PASS4730 cycles/18920 combined col+eib vectors/0mismatch with2025 explicitly counted same-half write collision edges. Current helper MUT0 remains identical in behavior; read-old/no-forward, wrong-dimension and wrong-half causal controls each fail. Exact current source SHA manifests and raw output retained.
+
+The original read-half pattern happened to phase-avoid most collisions. Its limited initial positive and negative receipts remain preserved, without claiming dense collision coverage. Follow-up r2 measured1350 collision edges and correctly failed the predeclared1500 coverage requirement; r3 alternates the prior write half/opposite directly and exceeds the unchanged threshold. No design relaxation was used to obtain the corrected proof.
+
+This is a minimum actual source mechanism proof. Existing actual ATT T1/33/46 fixtures with both merge+transpose repairs are running separately. Native runtime scale/pad/control fanout, real landed LP/PINREG/reset clocks, physical macro geometry, static calendar and SSFF remain open. The original bare native failure is not erased, no default adoption or full-service numerical/physical claim follows.

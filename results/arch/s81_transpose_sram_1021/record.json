@@ -15,7 +15,7 @@
   "allocated_bits": 1179648,
   "useful_bits": 36864,
   "default_enabled": false,
-  "causal_controls": "LIVE separate source-currentMUT0/readold/wrongdim/wronghalf",
+  "causal_controls": "PASS default0/readold/wrongdim/wronghalf with2025collisionedges",
   "unqualified": [
     "actualwholeATTengine/service",
     "native_data_scale_pad_control_fanout",
@@ -23,5 +23,41 @@
     "physical_macro_placement",
     "calendar",
     "SSFF"
-  ]
+  ],
+  "collision_correction": {
+    "status": "PASS",
+    "source": "e0bec45ae helper with corrected collision fixture",
+    "unit": "oth-ubuntu-3235067-1792609249",
+    "host": "ot-epyc7",
+    "collisions_per_case": 2025,
+    "required_collisions": 1500,
+    "positive_four_offsets": {
+      "checks": 4730,
+      "vector_checks": 18920,
+      "errors": 0
+    },
+    "causals": [
+      {
+        "mutation": 0,
+        "checks": 4730,
+        "errors": 0
+      },
+      {
+        "mutation": 1,
+        "checks": 4730,
+        "errors": 4052
+      },
+      {
+        "mutation": 2,
+        "checks": 4730,
+        "errors": 4730
+      },
+      {
+        "mutation": 3,
+        "checks": 4730,
+        "errors": 4730
+      }
+    ],
+    "history": "initial independent-looking pattern phase-avoided collisions; r2 measured1350 and correctly failed1500coverageassertion. r3 directly alternates prior-write half/opposite with thresholdunchanged; originalfailuresretained."
+  }
 }

@@ -19,7 +19,7 @@ module tb_tr;
    @(negedge clk);qualified=0;prev_en=0;prev_half=0;rst_n=0;w_en_i=0;repeat(4)@(negedge clk);rst_n=1;
    for(integer c=0;c<1600;c=c+1)begin
     w_en_i=(c<20)||(c%7!=2);w_half_i=(c<20)?((c/8)%2):((c/3)%2);w_cnt_i=8'(c%8);
-    r_half_i=c%2;r_c_i=8'((c/2)%8);sel_i=c%4!=1;w_pad_i=4'(c%16);
+    r_half_i=(c%2==0)?prev_half:~prev_half;r_c_i=8'((c/2)%8);sel_i=c%4!=1;w_pad_i=4'(c%16);
     for(integer lane=0;lane<4;lane=lane+1)begin
      for(integer b=0;b<9;b=b+1)w_g[lane*265+:265]=(w_g[lane*265+:265]<<32)^32'(epoch*123451+c*9871+lane*113+b*73);
      w_g[lane*265+264]=(lane+c)%2;
