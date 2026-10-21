@@ -21,12 +21,18 @@ module ot_hbm_su_red_pt_kq_r13 #(parameter integer N=1)(input wire clk, input wi
  always @(posedge clk) p<={p[N-2+(N==1):0],d};
  assign q=p[N-1];
 endmodule
-// r13: reset valid pipe with one reset bit per stage flop (rst_v = {N{rst_n}}), so the reset-copy splitter weighs it N
+// r13b: 6-stage reset valid pipe, one 1-bit reset port per stage flop (all = rst_n), so the reset-copy splitter moves
+// and weighs each flop (r13 single port = weight 1 for 6 flops; a same-net bus port does not move)
 (* keep_hierarchy *)
-module ot_hbm_su_red_pt_kqr_r13 #(parameter integer N=1)(input wire clk, input wire [N-1:0] rst_v, input wire d, (* keep = 1 *) output wire q);
- reg [N-1:0] p;
- for(genvar i=0;i<N;i=i+1)begin:g_b always @(posedge clk or negedge rst_v[i]) if(!rst_v[i]) p[i]<=1'b0; else p[i]<=(i==0)?d:p[i-(i>0)]; end
- assign q=p[N-1];
+module ot_hbm_su_red_pt_kqr_r13(input wire clk, r0, r1, r2, r3, r4, r5, d, (* keep = 1 *) output wire q);
+ reg [5:0] p;
+ always @(posedge clk or negedge r0) if(!r0) p[0]<=1'b0; else p[0]<=d;
+ always @(posedge clk or negedge r1) if(!r1) p[1]<=1'b0; else p[1]<=p[0];
+ always @(posedge clk or negedge r2) if(!r2) p[2]<=1'b0; else p[2]<=p[1];
+ always @(posedge clk or negedge r3) if(!r3) p[3]<=1'b0; else p[3]<=p[2];
+ always @(posedge clk or negedge r4) if(!r4) p[4]<=1'b0; else p[4]<=p[3];
+ always @(posedge clk or negedge r5) if(!r5) p[5]<=1'b0; else p[5]<=p[4];
+ assign q=p[5];
 endmodule
 
 module ot_hbm_su_red_pretree_node_r13 #(parameter integer LAT=6)(
@@ -44,11 +50,12 @@ module ot_hbm_su_red_pretree_node_r13 #(parameter integer LAT=6)(
  wire [1:0] e; wire vo;
  ot_hdc_fp32_add_n32 #(.LAT(LAT),.DRST(0)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(v),.a(ia),.b(ib),.y(y),.err(e),.valid_out(vo));
  // mode: shared LAT-1 stages, last stage in 4 kept copies; valid: 4 kept LAT-stage reset pipes (== the adder's valid_out)
+ generate if(LAT!=6) begin:g_bad_lat ot_hbm_su_red_pretree_node_r13_requires_LAT6 u_trap(); end endgenerate
  reg [LAT-2:0] md;
  always @(posedge clk) md<={md[LAT-3:0],mode_in[0]};
  for(genvar k=0;k<4;k=k+1)begin:g_cp
   ot_hbm_su_red_pt_kq_r13 #(.N(1)) u_m(.clk(clk),.d(md[LAT-2]),.q(mode_out[k]));
-  ot_hbm_su_red_pt_kqr_r13 #(.N(LAT)) u_v(.clk(clk),.rst_v({LAT{rst_n}}),.d(v),.q(vy[k]));
+  ot_hbm_su_red_pt_kqr_r13 u_v(.clk(clk),.r0(rst_n),.r1(rst_n),.r2(rst_n),.r3(rst_n),.r4(rst_n),.r5(rst_n),.d(v),.q(vy[k]));
  end
  assign err=vo&&(e!=2'd0);
 endmodule

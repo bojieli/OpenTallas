@@ -82,13 +82,19 @@ module ot_hbm_su_reduce_static_r13 #(parameter AW=10)(
  .w_ce_in(wr),.w_addr_in(pd[5][9:3]),.wd_in(wdata),.w_mask_in(wm_a),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  ot_sram_1r1w_128x256_m1_r2c2 mb(.clk(clk),.r_ce_in(iv),.r_addr_in(ib[9:3]),.rd_out(qb),
  .w_ce_in(wr),.w_addr_in(pd[5][9:3]),.wd_in(wdata),.w_mask_in(wm_b),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
- ot_hdc_fp32_add_n32 #(.LAT(6),.DRST(0)) u_add(.clk(clk),.rst_n(rst_local),
+ // r13b: the adder's reset is its own kept copy of rst_local (same D, same edge)
+ wire rst_add;
+ ot_hbm_su_reduce_r13_rcp u_rcp(.clk(clk),.d(rst_n),.q(rst_add));
+ ot_hdc_fp32_add_n32 #(.LAT(6),.DRST(0)) u_add(.clk(clk),.rst_n(rst_add),
  .valid_in(sv && (so==1 || so==2)),.a(av),.b(bv),
  .y(add_y),.err(add_err),.valid_out(add_v));
  // finite FP32 ordered compare, canonical positive zero for equal signed zeros.
- wire agt=(av[31]!=bv[31])?!av[31]:(av[31]?(av[30:0]<bv[30:0]):(av[30:0]>bv[30:0]));
- wire [31:0] raw_max=agt?av:bv;
- wire [31:0] max_y=(raw_max[30:0]==0)?32'b0:raw_max;
+ // r13b: max select in 2 kept 16-bit halves, each with its own compare and the zero test as agt?az:bz (r13b census:
+ // the shared compare = the adder's u_cmp carry after ABC, 39 loads)
+ wire [31:0] max_y;
+ for(genvar h=0;h<2;h=h+1)begin:g_max
+  ot_hbm_su_reduce_r13_max16 #(.H(h)) u_m(.a(av),.b(bv),.y(max_y[h*16+:16]));
+ end
  wire [31:0] ex=px[5];
  wire [31:0] rounded=ex+32'h00007fff+{31'b0,ex[16]};
  wire [15:0] ex_bf16=(&ex[30:23])?ex[31:16]:rounded[31:16];
@@ -115,17 +121,18 @@ module ot_hbm_su_reduce_static_r13 #(parameter AW=10)(
   end
  end
  // r13: scalar data enables from 5 kept copies of the export decision (r13a census: rst_local&&pv[5]&&po[5]==4 = 129
- // loads). exq copy == pv[5]&&po[5]==4 exactly (same sync reset as pv, po[5]<=po[4] every edge); data are unreset as before.
+ // loads). exq copy == rst_local&&pv[5]&&po[5]==4 exactly: rst_local(t)=rst_n(t-1), pv[5](t)=rst_local(t-1)&&pv[4](t-1),
+ // po[5](t)=po[4](t-1); data are unreset as before.
  wire [4:0] exq;
  for(genvar k=0;k<5;k=k+1)begin:g_exq
-  ot_hbm_su_reduce_r13_exq u_e(.clk(clk),.srst_n(rst_local),.d(pv[4]&&po[4]==3'd4),.q(exq[k]));
+  ot_hbm_su_reduce_r13_exq u_e(.clk(clk),.d(rst_n&&rst_local&&pv[4]&&po[4]==3'd4),.q(exq[k]));
  end
  always @(posedge clk) begin
-  if(rst_local&&exq[0]) scalar_tag[15:0]<=pt[5][15:0];
-  if(rst_local&&exq[1]) scalar_tag[31:16]<=pt[5][31:16];
-  if(rst_local&&exq[2]) scalar_fp32[15:0]<=ex[15:0];
-  if(rst_local&&exq[3]) scalar_fp32[31:16]<=ex[31:16];
-  if(rst_local&&exq[4]) scalar_bf16<=ex_bf16;
+  if(exq[0]) scalar_tag[15:0]<=pt[5][15:0];
+  if(exq[1]) scalar_tag[31:16]<=pt[5][31:16];
+  if(exq[2]) scalar_fp32[15:0]<=ex[15:0];
+  if(exq[3]) scalar_fp32[31:16]<=ex[31:16];
+  if(exq[4]) scalar_bf16<=ex_bf16;
  end
  // r13: stage-P0 operand select from 4 kept per-byte one-hot copies registered with so (r13a census: so decode 63 loads)
  wire [1:0] psel [0:3];
@@ -148,8 +155,22 @@ module ot_hbm_su_reduce_r13_pd6(input wire clk, input wire [2:0] d, (* keep = 1 
 endmodule
 
 (* keep_hierarchy *)
-module ot_hbm_su_reduce_r13_exq(input wire clk, srst_n, d, (* keep = 1 *) output reg q);
- always @(posedge clk) if(!srst_n) q<=1'b0; else q<=d;
+module ot_hbm_su_reduce_r13_exq(input wire clk, d, (* keep = 1 *) output reg q);
+ always @(posedge clk) q<=d;
+endmodule
+
+(* keep_hierarchy *)
+module ot_hbm_su_reduce_r13_rcp(input wire clk, d, (* keep = 1 *) output reg q);
+ always @(posedge clk) q<=d;
+endmodule
+
+// finite FP32 ordered compare, canonical positive zero for equal signed zeros; half H of the selected word
+(* keep_hierarchy *)
+module ot_hbm_su_reduce_r13_max16 #(parameter integer H=0)(input wire [31:0] a, b, output wire [15:0] y);
+ wire agt=(a[31]!=b[31])?!a[31]:(a[31]?(a[30:0]<b[30:0]):(a[30:0]>b[30:0]));
+ wire az=(a[30:0]==0), bz=(b[30:0]==0);
+ wire [15:0] raw=agt?a[H*16+:16]:b[H*16+:16];
+ assign y=(agt?az:bz)?16'b0:raw;
 endmodule
 
 (* keep_hierarchy *)
