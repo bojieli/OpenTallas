@@ -1,9 +1,9 @@
 {
  "name": "s81dv_slice_lp_k8a",
- "top": "ot_s81sl_slice_c1x_k8_lp",
+ "top": "ot_s81sl_slice_c1k8",
  "kind": "cluster",
  "sources": [
-  "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8/ot_s81sl_slice_c1x_k8_lp.sv",
+  "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8/ot_s81sl_slice_c1k8.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
@@ -13,23 +13,14 @@
   "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
   "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp_bb.v",
   "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve_bb.v",
-  "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg/ot_s81sl_xg_bb.v"
+  "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg5/ot_s81sl_xg5_bb.v"
  ],
- "params": {
-  "DLK0": 1,
-  "DLK1": 1,
-  "DLK2": 4,
-  "DLK3": 1,
-  "DLK4": 1,
-  "DLF0": 0,
-  "DLF1": 0,
-  "DLF2": 0,
-  "DLF3": 0,
-  "DLF4": 0
- },
+ "params": {},
  "defines": [
-  "DSFD_PQ_STATIC_X2"
+  "DSFD_PQ_STATIC_X2",
+  "OT_S81SL_HARD"
  ],
+ "hard_define": "OT_S81SL_HARD",
  "cluster_level": 2,
  "clock": "multiple_cts_roots",
  "clock_port": "ck_C",
@@ -125,7 +116,7 @@
    "outputs": []
   }
  },
- "landed_record": "results/rtl/drive_s81_slicep_1020/c1x_k8/ot_s81sl_slice_c1x_k8_lp_record.json",
+ "landed_record": "results/rtl/drive_s81_slicep_1020/c1x_k8/ot_s81sl_slice_c1k8_record.json",
  "reset_ports": [
   "rst_n"
  ],
@@ -356,7 +347,7 @@
    ]
   },
   {
-   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg",
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg5",
    "count": 1,
    "inst": "u_xg",
    "at": [
@@ -684,14 +675,14 @@
  "io_flop_at_pins": {
   "cols": 21
  },
- "structural_change": "DRIVE-S81-SLICEP 10-20 s81dv_slice_lp_k8a: first gate of the landed slice parent ot_s81sl_slice (PL-SLICE c1x regions, census-safe chunk-8 landings), 41 closed child views + 11 stand-ins (vp x5, ve x5, xg); outline 1252.8 x 6739.2 (8.44 mm2, hard children 5.84 mm2) vs die slot 950 x 4600 (4.37 mm2). a: compact 43.2 channels.",
+ "structural_change": "DRIVE-S81-SLICEP 10-20 s81dv_slice_lp_k8a: first gate of the landed slice parent ot_s81sl_slice (PL-SLICE c1x regions, census-safe chunk-8 landings), 41 closed child views + 11 stand-ins (vp x5, ve x5, xg5); S81-SLICERTL regate: xg5 RTL, parameter-free top ot_s81sl_slice_c1k8, OT_S81SL_HARD (no #() on hard children), stand-in M5 pockets closed; outline 1252.8 x 6739.2 (8.44 mm2, hard children 5.84 mm2) vs die slot 950 x 4600 (4.37 mm2). a: compact 43.2 channels.",
  "job": {
-  "owner": "Claude:DRIVE-S81-SLICEP",
-  "branch": "claude/drive-s81-slicep-1020",
+  "owner": "Claude:S81-SLICERTL",
+  "branch": "claude/s81-slicertl-1020",
   "tag": "k8a",
   "purpose": "early slice-parent integration with current child views + stand-ins: region clocks, landings, GRT, reach; DIAGNOSTIC",
   "submit": false,
-  "hold_merge": "stand-in children (vp/ve/xg): diagnostic only, never route or bind",
+  "hold_merge": "stand-in children (vp/ve/xg5): diagnostic only, never route or bind",
   "benches": [],
   "no_bench_reason": "diagnostic stand-in gate; landed lockstep/ENG benches: tools/s81_slice/pl_slice/pl_slice_bench.sh",
   "views_to": "physical/ref_tile/s81dv_slice_lp_k8a/views",

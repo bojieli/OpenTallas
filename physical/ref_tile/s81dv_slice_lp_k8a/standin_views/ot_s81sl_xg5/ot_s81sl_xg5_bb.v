@@ -1,5 +1,5 @@
 // DIAGNOSTIC stand-in blackbox (tools/qwen_dv/slice_standin.py); never bind
-(* blackbox *) module ot_s81sl_xg (
+(* blackbox *) module ot_s81sl_xg5 (
     input wire clk,
     input wire rst_n,
     input wire [3:0] sid,

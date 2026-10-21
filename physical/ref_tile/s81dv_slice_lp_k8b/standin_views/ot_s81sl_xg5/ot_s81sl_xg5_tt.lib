@@ -1,4 +1,4 @@
-library (ot_s81sl_xg_tt) {
+library (ot_s81sl_xg5_tt) {
   delay_model : table_lookup;
   capacitive_load_unit (1,fF);
   time_unit : "1ps";
@@ -38,7 +38,7 @@ library (ot_s81sl_xg_tt) {
   type ("vi") { base_type : array; data_type : bit; bit_width : 276; bit_from : 275; bit_to : 0; }
   type ("vo") { base_type : array; data_type : bit; bit_width : 276; bit_from : 275; bit_to : 0; }
   type ("xw_d") { base_type : array; data_type : bit; bit_width : 1101; bit_from : 1100; bit_to : 0; }
-  cell ("ot_s81sl_xg") {
+  cell ("ot_s81sl_xg5") {
     area : 363916.8;
     is_macro_cell : true;
     pin("dl_ev") {

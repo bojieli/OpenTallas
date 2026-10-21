@@ -7,8 +7,8 @@
 //                         -> s_0N, s_0S, s_7S
 //   copy-A/B endpoint     ot_s81sl_lep_mu_ab (MU_EN 1, AB_EN 1, HOST_EN 0; kit s81sl_lepmu)   -> s_0S of the AB die only
 //   host-plane endpoint   ot_s81sl_lep_mu_h_n32 (= ot_s81sl_lep_mu_h RX_SRAM/IN_PIPE/NATIVE32 1; kit s81sl_lepmuh_n32) -> s_7N
-// S81-SLICERTL (10-20): the A / H endpoints are the PARAMETER-FREE native32 tops (ot_s81sl_lep_mu_n32.sv), so the die
-// binds exactly the elaboration the n32 kits close (was: default params RX_SRAM 0 / IN_PIPE 0 / NATIVE32 0, and the
+// S81-SLICERTL (10-20): the A / H endpoints are the PARAMETER-FREE native32 adapters (ot_s81sl_lep_mu_n32.sv, HARD-NOPARAM), so
+// the die binds exactly the elaboration the n32 kits close (was: default params RX_SRAM 0 / IN_PIPE 0 / NATIVE32 0, and the
 // generic ot_s81sl_lep_mu #(.HOST_EN(1)) on s_7N).  IN_PIPE: +1 edge on ro / t_host / t_kd / mu_c (MU.S81.CAL).
 // beside the CLOSED landing leaf dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)) (view dsdv_mu_land-263e13fc3).
 // Cluster = slice + 2 (AB: 4) link lane tiles + endpoint + landing, exactly the MU_EN branch of ot_s81sl_slice_lep with
@@ -96,7 +96,7 @@ module ot_s81sl_slice_lep_mux #(
         assign f2 = 3'd0; assign f3 = 3'd0;
     end endgenerate
     wire mwv, mrv, mf; wire [1103:0] mwd, mrd;
-    generate if (HOST_EN != 0) begin : g_h        // s_7N: host-plane endpoint, parameter-free native32 top (kit s81sl_lepmuh_n32)
+    generate if (HOST_EN != 0) begin : g_h        // s_7N: host-plane endpoint, parameter-free native32 adapter (HARD-NOPARAM, kit s81sl_lepmuh_n32 / _r6*)
     ot_s81sl_lep_mu_h_n32 u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
         .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d),
         .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv),
@@ -113,7 +113,7 @@ module ot_s81sl_slice_lep_mux #(
         .li2_v(i2v), .li2_r(i2r), .li2_d(i2d), .li3_v(i3v), .li3_r(i3r), .li3_d(i3d), .rxvb(rxvb),
         .l2_f(f2), .l3_f(f3), .fault(fault));
     assign f_host = 515'd0; assign f_lf = 4'd0; assign f_ks = 53'd0;
-    end else begin : g_a                         // copy-A-only endpoint, parameter-free native32 top (kit s81sl_lepmua_n32)
+    end else begin : g_a                         // copy-A-only endpoint, parameter-free native32 adapter (HARD-NOPARAM, kit s81sl_lepmua_n32 / _r6*)
     ot_s81sl_lep_mu_a_n32 u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
         .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d),
         .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv),
@@ -121,8 +121,14 @@ module ot_s81sl_slice_lep_mux #(
         .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf), .fault(fault));
     assign f_host = 515'd0; assign f_lf = 4'd0; assign f_ks = 53'd0;
     end endgenerate
+`ifndef OT_S81SL_HARD
     dsdv_mu_land #(.W(1104), .NB(80), .NS(1), .SRAM(1)) u_land (.clk(clk), .rst_n(rst_n), .wv(mwv), .wd(mwd), .rc(mu_rc),
         .rv(mrv), .rd(mrd), .fault(mf));
+`else
+    // HARD-NOPARAM: the closed view dsdv_mu_land (kit params W 1104 / NB 80 / NS 1 / SRAM 1), no #()
+    dsdv_mu_land u_land (.clk(clk), .rst_n(rst_n), .wv(mwv), .wd(mwd), .rc(mu_rc),
+        .rv(mrv), .rd(mrd), .fault(mf));
+`endif
 endmodule
 
 module ot_s81sl_slice_lepw_mu (

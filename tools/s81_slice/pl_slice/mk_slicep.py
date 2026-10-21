@@ -9,8 +9,12 @@ REVIEW.json / submit.  Early die-level integration with the CURRENT child views 
            STAND-INS (STANDIN_NOT_A_VIEW, tools/qwen_dv/slice_standin.py, real kit outline + pins):
              ot_s81sl_vp x 5 (no closed view; spec s81sl_vp 734.4 x 864, 10-18 gate WARN never submitted -> regate live)
              ot_s81sl_ve x 5 (s81sl_ve_r5 345.6^2, regate + auto-submit live, DRIVE-S81-VE)
-             ot_s81sl_xg     (= s81sl_xg5 outline 648 x 561.6 / pins; slice still instantiates ot_s81sl_xg -- same ports;
-                              the RTL swap to ot_s81sl_xg5 is owed with its +2 / +1 edges to MU.S81.CAL)
+             ot_s81sl_xg5    (kit s81sl_xg5 outline 648 x 561.6 / pins; S81-SLICERTL: the slice instantiates ot_s81sl_xg5,
+                              +2 / +1 edges handed to MU.S81.CAL)
+           Stand-in LEFs pass through tools/hier_contract/abstract_pin_stub.py (own-layer M5 pockets closed, OT_OBS_CLOSED).
+  top      S81-SLICERTL 10-20 (HARD-NOPARAM): ot_s81sl_slice_c1k8, the PARAMETER-FREE top of the lp parent (kit params in the
+           localparams, tools/landed_parent/lp_paramfree.py; spec params {}), so the die binds it without #(); define OT_S81SL_HARD = hard_define: hard children are
+           instantiated by module name with no #() (ot_s81sl_slice.sv leaf vs / vq; the RTL-sim path keeps the overrides).
   layout   N -> S: L0, L1, C (centre band + leaf 2), L3, L4.  All parent ports are region C (lp record: port offsets 0) ->
            every port sits on the W / E faces of the C rows (no C-clock wire across a leaf band); ck_L<k> enter at their
            own band; rst_n / ck_C / fault on the E face of C.
@@ -37,10 +41,10 @@ CLOSED = {
     "ot_s81sl_capc2": "physical/ref_tile/s81sl_capc2/views/ot_s81sl_capc2",
 }
 # assumed stand-in insertion TT,FF,SS (ps): vp = its 10-18 gate (TT 1219 / FF 994); ve r5 / xg5 ~ closed siblings
-INS = {"ot_s81sl_vp": "1219,994,1500", "ot_s81sl_ve": "400,330,520", "ot_s81sl_xg": "450,370,580"}
+INS = {"ot_s81sl_vp": "1219,994,1500", "ot_s81sl_ve": "400,330,520", "ot_s81sl_xg5": "450,370,580"}
 SIZE = {"ot_s81sl_vq": (172.8, 129.6), "ot_s81sl_vs": (172.8, 172.8), "dsfd_su_t_rxsf": (140.4, 140.4),
         "dsfd_su_t_rxsb": (140.4, 140.4), "ot_s81sl_vsw": (224.64, 224.64), "ot_s81sl_vn": (356.4, 356.4),
-        "ot_s81sl_vp": (734.4, 864.0), "ot_s81sl_ve": (345.6, 345.6), "ot_s81sl_xg": (648.0, 561.6),
+        "ot_s81sl_vp": (734.4, 864.0), "ot_s81sl_ve": (345.6, 345.6), "ot_s81sl_xg5": (648.0, 561.6),
         "ot_s81sl_xr1": (311.04, 395.28), "ot_s81dv_xfin": (181.44, 181.44), "ot_s81sl_eg": (259.2, 259.2),
         "ot_s81sl_capc2": (336.96, 414.72)}
 
@@ -61,9 +65,9 @@ def standin_specs():
     out["ot_s81sl_ve"] = s
     xg = json.load(open(SC / "xg5.json"))
     s = {k: xg[k] for k in ("clock_port", "outline", "pins", "pin_ranges") if k in xg}
-    s["top"] = "ot_s81sl_xg"
-    s["sources"] = ["rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg.sv"]
-    out["ot_s81sl_xg"] = s
+    s["top"] = "ot_s81sl_xg5"
+    s["sources"] = ["rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xg5.sv"]
+    out["ot_s81sl_xg5"] = s
     for m, s in out.items():
         s["name"] = f"standin_{m}"
         s["_note"] = f"DRIVE-S81-SLICEP 10-20 stand-in (DIAGNOSTIC, STANDIN_NOT_A_VIEW) at the real kit outline/pins of {m}"
@@ -95,11 +99,11 @@ def layout(variant):
         return up(max(top_a, top_b) + g) - y0, xb + SIZE["ot_s81sl_vn"][0]
 
     def centre(y0):
-        blocks.append(("u_xg", "ot_s81sl_xg", x0, y0))
-        xc = up(x0 + SIZE["ot_s81sl_xg"][0] + g)
+        blocks.append(("u_xg", "ot_s81sl_xg5", x0, y0))
+        xc = up(x0 + SIZE["ot_s81sl_xg5"][0] + g)
         blocks.append(("u_cap", "ot_s81sl_capc2", xc, y0))
         blocks.append(("u_xf", "ot_s81dv_xfin", xc, up(y0 + SIZE["ot_s81sl_capc2"][1] + g)))
-        y2 = up(y0 + SIZE["ot_s81sl_xg"][0 + 1] + g)
+        y2 = up(y0 + SIZE["ot_s81sl_xg5"][1] + g)
         blocks.append(("u_xr", "ot_s81sl_xr1", x0, y2))
         blocks.append(("u_eg", "ot_s81sl_eg", up(x0 + SIZE["ot_s81sl_xr1"][0] + g), y2))
         top = max(y2 + SIZE["ot_s81sl_xr1"][1], up(y0 + SIZE["ot_s81sl_capc2"][1] + g) + SIZE["ot_s81dv_xfin"][1])
@@ -126,6 +130,8 @@ def build(name, variant):
         json.dump(s, open(kd / "standin" / f"{m}.json", "w"), indent=1)
         subprocess.run([sys.executable, str(ROOT / "tools/qwen_dv/slice_standin.py"), "--ins", INS[m], "--master", m,
                         str(kd / "standin" / f"{m}.json"), str(kd / "standin_views")], check=True, cwd=ROOT)
+        lef = kd / "standin_views" / m / f"{m}.lef"
+        subprocess.run([sys.executable, str(ROOT / "tools/hier_contract/abstract_pin_stub.py"), str(lef), str(lef)], check=True, cwd=ROOT)
         views[m] = f"physical/ref_tile/{name}/standin_views/{m}"
     blocks, bands, W, H = layout(variant)
     c_lo, c_hi = bands["C2"][0], bands["CC"][1]
@@ -153,7 +159,9 @@ def build(name, variant):
     pins = {"W": W_list, "E": ["ck_L4", "ck_L3"] + E_list + ["ck_L1", "ck_L0"], "N": [], "S": []}
     lp = json.load(open(ROOT / "tools/s81_slice/pl_slice/c1x_k8.json"))
     lp_dir = lp["out_dir"]
-    top = lp["top_lp"]
+    top = "ot_s81sl_slice_c1k8"           # parameter-free top of lp["top_lp"] (S81-SLICERTL HARD-NOPARAM)
+    subprocess.run([sys.executable, str(ROOT / "tools/landed_parent/lp_paramfree.py"), "tools/s81_slice/pl_slice/c1x_k8.json", top],
+                   check=True, cwd=ROOT)
     children = [{"view": views[m], "count": 1, "inst": inst, "at": [round(x, 3), round(y, 3)]} for inst, m, x, y in blocks]
     fill_hard = sum(SIZE[m][0] * SIZE[m][1] for _, m, _, _ in blocks)
     spec = {
@@ -162,9 +170,10 @@ def build(name, variant):
                     "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv", "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
                     "rtl/common/landed_parent/ot_pl_land.sv", "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
                     "rtl/common/landed_parent/ot_pl_land_reset_forest.sv", "rtl/common/landed_parent/ot_pl_land_kept_enable.sv"]
-                   + [f"{views[m]}/{m}_bb.v" for m in ("ot_s81sl_vp", "ot_s81sl_ve", "ot_s81sl_xg")],
-        "params": {k: v for k, v in lp["params"].items()},
-        "defines": list(lp.get("defines", [])),
+                   + [f"{views[m]}/{m}_bb.v" for m in ("ot_s81sl_vp", "ot_s81sl_ve", "ot_s81sl_xg5")],
+        "params": {},           # the kit params live in ot_s81sl_slice_c1k8 (== lp["params"], checked below)
+        "defines": list(lp.get("defines", [])) + ["OT_S81SL_HARD"],
+        "hard_define": "OT_S81SL_HARD",
         "cluster_level": 2,     # capc2 (and the real vp) are clusters with PG top M7 -> slice PG M8 stripes, signals M2-M7
         "clock": "multiple_cts_roots", "clock_port": "ck_C",
         "clock_ports": ["ck_C", "ck_L0", "ck_L1", "ck_L3", "ck_L4"],
@@ -185,16 +194,19 @@ def build(name, variant):
         "orfs_vars": {"OT_OFLOP_GAP": "4.5"},
         "io_flop_at_pins": {"cols": 21},
         "structural_change": (f"DRIVE-S81-SLICEP 10-20 {name}: first gate of the landed slice parent ot_s81sl_slice (PL-SLICE c1x "
-                              "regions, census-safe chunk-8 landings), 41 closed child views + 11 stand-ins (vp x5, ve x5, xg); "
+                              "regions, census-safe chunk-8 landings), 41 closed child views + 11 stand-ins (vp x5, ve x5, xg5); S81-SLICERTL regate: xg5 RTL, parameter-free top "
+                              "ot_s81sl_slice_c1k8, OT_S81SL_HARD (no #() on hard children), stand-in M5 pockets closed; "
                               f"outline {W} x {H} ({W*H/1e6:.2f} mm2, hard children {fill_hard/1e6:.2f} mm2) vs die slot 950 x 4600 "
                               "(4.37 mm2). " + ("a: compact 43.2 channels." if variant == "a" else "b: 86.4 channels (fallback).")),
-        "job": {"owner": "Claude:DRIVE-S81-SLICEP", "branch": "claude/drive-s81-slicep-1020", "tag": name.split("_")[-1],
+        "job": {"owner": "Claude:S81-SLICERTL", "branch": "claude/s81-slicertl-1020", "tag": name.split("_")[-1],
                 "purpose": "early slice-parent integration with current child views + stand-ins: region clocks, landings, GRT, reach; DIAGNOSTIC",
-                "submit": False, "hold_merge": "stand-in children (vp/ve/xg): diagnostic only, never route or bind",
+                "submit": False, "hold_merge": "stand-in children (vp/ve/xg5): diagnostic only, never route or bind",
                 "benches": [], "no_bench_reason": "diagnostic stand-in gate; landed lockstep/ENG benches: tools/s81_slice/pl_slice/pl_slice_bench.sh",
                 "views_to": f"physical/ref_tile/{name}/views", "record_to": f"results/rtl/ref_tile/{name}",
                 "extra_paths": [lp["record_dir"], lp_dir]},
     }
+    pf = json.load(open(ROOT / lp["record_dir"] / f"{top}_record.json"))["param_free_of"]
+    assert pf["params"] == {k: int(v) for k, v in lp["params"].items()}, f"{top} params {pf['params']} != lp spec {lp['params']}"
     sp = kd / "spec.json"
     json.dump(spec, open(sp, "w"), indent=1)
     print(f"{name}: outline {W} x {H} = {W*H/1e6:.2f} mm2, hard {fill_hard/1e6:.2f} mm2 ({fill_hard/(W*H):.0%}), bands "

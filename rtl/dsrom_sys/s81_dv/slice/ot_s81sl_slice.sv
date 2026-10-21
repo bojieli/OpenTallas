@@ -92,6 +92,7 @@ module ot_s81sl_leaf #(
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d),
         .p_v(p_v), .p_d(p_d), .y_v(y_v), .y_i(y_i), .y(y), .fault(f_vn));
+`ifndef OT_S81SL_HARD
     ot_s81sl_vs #(.MUT(VS_MUT)) u_vs (.clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
         .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
         .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
@@ -102,6 +103,18 @@ module ot_s81sl_leaf #(
         .ve_av(va_v), .ve_ac(va_c), .ve_ah(va_h), .ve_aval(va_val), .ve_ag(va_g),
         .ve_ov(vo_v), .ve_oc(vo_c), .ve_oy(vo_y), .ve_fi(vef),
         .e_v(e_v), .e_c(e_c), .e_d(e_d), .g_v(g_v), .g_c(g_c), .g_d(g_d), .fault(f_vs));
+`else
+    ot_s81sl_vs u_vs (.clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
+        .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
+        .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
+        .sw_v(swv), .sw_d(swd), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
+        .ra_v(rav), .ra_x(rax), .ra_vi(ravi), .ra_ri(rari), .ra_fi(rafi),
+        .ve_rv(vr_v), .ve_rc(vr_c), .ve_rh(vr_h), .ve_rk(vr_k), .ve_rw(vr_w),
+        .ve_pv(vp_v), .ve_pc(vp_c), .ve_phh(vp_hh), .ve_pkk(vp_kk), .ve_pdd(vp_dd),
+        .ve_av(va_v), .ve_ac(va_c), .ve_ah(va_h), .ve_aval(va_val), .ve_ag(va_g),
+        .ve_ov(vo_v), .ve_oc(vo_c), .ve_oy(vo_y), .ve_fi(vef),
+        .e_v(e_v), .e_c(e_c), .e_d(e_d), .g_v(g_v), .g_c(g_c), .g_d(g_d), .fault(f_vs));
+`endif
     ot_s81sl_ve u_ve (.clk(clk), .rst_n(rst_n), .r_v(vr_v), .r_c(vr_c), .r_h(vr_h), .r_k(vr_k), .r_w(vr_w),
         .p_v(vp_v), .p_c(vp_c), .p_hh(vp_hh), .p_kk(vp_kk), .p_dd(vp_dd),
         .a_v(va_v), .a_c(va_c), .a_h(va_h), .a_val(va_val), .a_g(va_g),
@@ -112,9 +125,23 @@ module ot_s81sl_leaf #(
         .o_f(rff));
     dsfd_su_t_rxsb u_rxsb (.ck(clk), .rst(rst_n), .i_v(rfv), .i_u(rfu), .i_u2(rfu2), .i_mx(rfmx), .i_f(rff),
         .o_v(ravi), .o_r(rari), .o_f(rafi));
+`ifndef OT_S81SL_HARD
     ot_s81sl_vq #(.AQ_XMEM(AQ_XMEM)) u_vq (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y),
         .u_v(u_v), .u_i(u_i), .u(u), .sid(sid), .k(k), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
         .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(f_vq));
+`else
+    ot_s81sl_vq u_vq (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y),
+        .u_v(u_v), .u_i(u_i), .u(u), .sid(sid), .k(k), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
+        .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(f_vq));
+`endif
+    // HARD-NOPARAM (S81-SLICERTL 10-20): under OT_S81SL_HARD (every hardened slice / cluster kit) vs and vq are their CLOSED
+    // views, bound by module name with NO #(): s81sl_vs = MUT 0 (default), s81sl_vq = AQ_XMEM 2 (kit param).  The RTL-sim
+    // path keeps the overrides; a hard build with any other value has no matching view and stops elaboration here.
+`ifdef OT_S81SL_HARD
+    generate if (VS_MUT != 0 || AQ_XMEM != 2) begin : g_hard_cfg_mismatch
+        ot_s81sl_HARD_VIEW_CONFIG_MISMATCH u_stop ();
+    end endgenerate
+`endif
     // vsw / RA lane / ve faults are sticky in their leaves and reach vs (sw_fi / ra_fi / ve_fi -> vs fault)
     assign fault = f_vp | f_vn | f_vq | f_vs;
 endmodule

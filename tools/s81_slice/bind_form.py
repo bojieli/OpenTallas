@@ -123,6 +123,10 @@ for l in L:
 def rep(l):
     for k, v in sub.items():
         l = re.sub(r"\(%s\)" % re.escape(k), "(" + v + ")", l)
+        # S81-SLICERTL 10-20: an alias of a plain net is also read through part-selects (lp.py landed reads:
+        # .c_d(dn_l0__l_L0[592:433]) with assign dn_l0__l_L0 = lpl_0_o): select the aliased net itself
+        if re.fullmatch(r"\w+", v):
+            l = re.sub(r"\(%s\[" % re.escape(k), "(" + v + "[", l)
     return l
 L = [rep(l) for l in L if l not in drop and not re.match(r"\s*wire\s*(?:\[[^\]]*\])?\s*(%s);" % "|".join(map(re.escape, drop - set(L)) or ["$^"]), l)]
 L.append("endmodule")

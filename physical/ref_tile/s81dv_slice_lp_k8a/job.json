@@ -1,13 +1,13 @@
 {
  "name": "s81dv_slice_lp_k8a-k8a-COMMIT",
- "block": "ot_s81sl_slice_c1x_k8_lp",
+ "block": "ot_s81sl_slice_c1k8",
  "ref_tile": true,
- "owner": "Claude:DRIVE-S81-SLICEP",
+ "owner": "Claude:S81-SLICERTL",
  "purpose": "early slice-parent integration with current child views + stand-ins: region clocks, landings, GRT, reach; DIAGNOSTIC",
  "threads": 16,
  "peak_ram_gb": 128,
  "source": {
-  "branch": "claude/drive-s81-slicep-1020",
+  "branch": "claude/s81-slicertl-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "results/rtl/drive_s81_slicep_1020/c1x_k8",
@@ -18,7 +18,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_slice_c1x_k8_lp #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DDSFD_PQ_STATIC_X2 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8/ot_s81sl_slice_c1x_k8_lp.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_kept_enable.sv physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp_bb.v physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve_bb.v physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg/ot_s81sl_xg_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_slice_c1k8 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DDSFD_PQ_STATIC_X2 -DOT_S81SL_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8/ot_s81sl_slice_c1k8.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_kept_enable.sv physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp_bb.v physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve_bb.v physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg5/ot_s81sl_xg5_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -41,7 +41,7 @@
    "peak_ram_gb": 128
   },
   "collect": {
-   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81dv_slice_lp_k8a --out {RUN}/record/views/ot_s81sl_slice_c1x_k8_lp --macro-view physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve --macro-view physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp --macro-view physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg --macro-view physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin --macro-view physical/ref_tile/s81sl_capc2/views/ot_s81sl_capc2 --macro-view physical/ref_tile/s81sl_eg/views/ot_s81sl_eg --macro-view physical/ref_tile/s81sl_vn/views/ot_s81sl_vn --macro-view physical/ref_tile/s81sl_vq/views/ot_s81sl_vq --macro-view physical/ref_tile/s81sl_vs/views/ot_s81sl_vs --macro-view physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw --macro-view physical/ref_tile/s81sl_xr1f/views/ot_s81sl_xr1 --macro-view physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb --macro-view physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf > {RUN}/record/route/export.log 2>&1"
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81dv_slice_lp_k8a --out {RUN}/record/views/ot_s81sl_slice_c1k8 --macro-view physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve --macro-view physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp --macro-view physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg5 --macro-view physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin --macro-view physical/ref_tile/s81sl_capc2/views/ot_s81sl_capc2 --macro-view physical/ref_tile/s81sl_eg/views/ot_s81sl_eg --macro-view physical/ref_tile/s81sl_vn/views/ot_s81sl_vn --macro-view physical/ref_tile/s81sl_vq/views/ot_s81sl_vq --macro-view physical/ref_tile/s81sl_vs/views/ot_s81sl_vs --macro-view physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw --macro-view physical/ref_tile/s81sl_xr1f/views/ot_s81sl_xr1 --macro-view physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb --macro-view physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf > {RUN}/record/route/export.log 2>&1"
   }
  },
  "verdict": {
@@ -60,7 +60,7 @@
   "macros": [
    "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
    "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
-   "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg",
+   "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg5",
    "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin",
    "physical/ref_tile/s81sl_capc2/views/ot_s81sl_capc2",
    "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg",
@@ -99,6 +99,6 @@
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
  "no_bench_reason": "diagnostic stand-in gate; landed lockstep/ENG benches: tools/s81_slice/pl_slice/pl_slice_bench.sh",
- "hold_merge": "stand-in children (vp/ve/xg): diagnostic only, never route or bind",
- "structural_change": "DRIVE-S81-SLICEP 10-20 s81dv_slice_lp_k8a: first gate of the landed slice parent ot_s81sl_slice (PL-SLICE c1x regions, census-safe chunk-8 landings), 41 closed child views + 11 stand-ins (vp x5, ve x5, xg); outline 1252.8 x 6739.2 (8.44 mm2, hard children 5.84 mm2) vs die slot 950 x 4600 (4.37 mm2). a: compact 43.2 channels."
+ "hold_merge": "stand-in children (vp/ve/xg5): diagnostic only, never route or bind",
+ "structural_change": "DRIVE-S81-SLICEP 10-20 s81dv_slice_lp_k8a: first gate of the landed slice parent ot_s81sl_slice (PL-SLICE c1x regions, census-safe chunk-8 landings), 41 closed child views + 11 stand-ins (vp x5, ve x5, xg5); S81-SLICERTL regate: xg5 RTL, parameter-free top ot_s81sl_slice_c1k8, OT_S81SL_HARD (no #() on hard children), stand-in M5 pockets closed; outline 1252.8 x 6739.2 (8.44 mm2, hard children 5.84 mm2) vs die slot 950 x 4600 (4.37 mm2). a: compact 43.2 channels."
 }
