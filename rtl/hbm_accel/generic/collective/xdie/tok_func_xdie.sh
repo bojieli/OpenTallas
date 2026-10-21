@@ -39,7 +39,7 @@ BENCH_REV=${BENCH_REV:-$($G rev-parse HEAD)}; BENCH_REV=$($G rev-parse "$BENCH_R
 DIE_REV=${DIE_REV:-1fe61477b}
 DIE_CONTRACT=${DIE_CONTRACT:-/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/net/pre_relay_r14.json}
 SUCC_BASE=${SUCC_BASE:-fed23480d}; SUCC_RL=${SUCC_RL:-d755fcd4c}; SUCC_LINK=${SUCC_LINK:-34f85027d}; SUCC_ISS=${SUCC_ISS:-8827e4001}
-MAIN256_REV=${MAIN256_REV:-origin/main}
+MAIN256_REV=${MAIN256_REV:-origin/main}; MAIN256_REV=$($G rev-parse "$MAIN256_REV")
 RUN=${RUN:-fleet}; FLEET_STAGE=${FLEET_STAGE:-"ot-gold1 ot-gold2"}
 FLEET_ROOT=${FLEET_ROOT:-/srv/opentallas-scratch/claude/tok-func-hbm-xdie-1021}; OT_MEM=${OT_MEM:-48}
 VARIANTS=("$@")
@@ -194,7 +194,10 @@ for v in "${VARIANTS[@]}"; do
   launch "$v" & pids+=($!)
   echo "LAUNCHED $v pid $!"
 done
-for p in "${pids[@]}"; do wait "$p"; done
+rc=0
+for p in "${pids[@]}"; do wait "$p" || rc=1; done
 $G show "$BENCH_REV:results/rtl/xdie_hbm_1019/record.json" > "$OUTROOT/ref_record.json"
 $G show "$BENCH_REV:tools/tok_func_hbm_xdie_report.py" > "$OUTROOT/tok_func_hbm_xdie_report.py"
 python3 "$OUTROOT/tok_func_hbm_xdie_report.py" "$OUTROOT" --record "$OUTROOT/ref_record.json"
+
+exit "$rc"
