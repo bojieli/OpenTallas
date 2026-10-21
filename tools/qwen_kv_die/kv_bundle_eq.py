@@ -305,8 +305,9 @@ def _place_pad_bank(K, m, staged, prev_pt, sink_pt, n, w, h, cap):
                   for col in (range(cols) if row % 2 == 0 else range(cols - 1, -1, -1))][:n]
         fx, fy, fo = layout[0]
         lx, ly, lo = layout[-1]
-        entry = (fx + (w if fo == 'MY' else 0), fy + h / 2)
-        exit_ = (lx + (0 if lo == 'MY' else w), ly + h / 2)
+        body_w, body_h = w - K.SHAVE, h - K.SHAVE
+        entry = (fx + (body_w if fo == 'MY' else 0), fy + body_h / 2)
+        exit_ = (lx + (0 if lo == 'MY' else body_w), ly + body_h / 2)
         # Intersect endpoint reach boxes before enumerating row-grid origins.
         xlo = max(4.32, prev_pt[0] - cap - entry[0], sink_pt[0] - cap - exit_[0])
         xhi = min(m['die']['w'] - bw - 4.32, prev_pt[0] + cap - entry[0], sink_pt[0] + cap - exit_[0])
@@ -321,13 +322,15 @@ def _place_pad_bank(K, m, staged, prev_pt, sink_pt, n, w, h, cap):
                 dout = abs(x + exit_[0] - sink_pt[0]) + abs(y + exit_[1] - sink_pt[1])
                 if max(din, dout) <= cap:
                     candidates.append((din + dout, x, y))
+        local = [i for i in near if i.x < xhi + bw + 21.6 and i.x + i.w > xlo - 21.6
+                 and i.y < yhi + bh + 21.6 and i.y + i.h > ylo - 21.6]
         for _, x, y in sorted(candidates):
-            if not _free(m, near, x, y, bw, bh):
+            if not _free(m, local, x, y, bw, bh):
                 continue
             out, pt = [], prev_pt
             for dx, dy, orient in layout:
-                a = (x + dx + (w if orient == 'MY' else 0), y + dy + h / 2)
-                b = (x + dx + (0 if orient == 'MY' else w), y + dy + h / 2)
+                a = (x + dx + (body_w if orient == 'MY' else 0), y + dy + body_h / 2)
+                b = (x + dx + (0 if orient == 'MY' else body_w), y + dy + body_h / 2)
                 if abs(a[0] - pt[0]) + abs(a[1] - pt[1]) > cap:
                     break
                 out.append(K.F.Inst('', '', x + dx, y + dy, w - K.SHAVE, h - K.SHAVE,

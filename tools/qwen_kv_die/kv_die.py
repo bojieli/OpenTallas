@@ -3349,6 +3349,16 @@ def _relays(m):
                 order_.insert(j_ + 1, br_)
             else:
                 order_.append(br_)
+    if os.environ.get('OT_KV_D2D_ENDPOINT_FIRST', '0') == '1':
+        # The bound D2D view spreads five record words across its S face.
+        # Their first/last relays need the narrow intersection of every bit's
+        # reach diamond. Give those endpoint approaches cell rows before
+        # unconstrained boot/control chains consume them. Geometry and hop
+        # limits remain unchanged; the exact image-stage check still applies.
+        endpoint = [b for b in order_ if b[2] >= 548 and b[1] not in ABUT
+                    and len(b[3]) == 2 and any(e[0] == 'd2d_kv' for e in b[3])]
+        ids = {b[0] for b in endpoint}
+        order_ = endpoint + [b for b in order_ if b[0] not in ids]
     for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
