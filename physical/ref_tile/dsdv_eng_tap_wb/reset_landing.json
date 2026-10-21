@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.reset_landing.v1",
  "top": "dsdv_eng_tap_w",
  "enable": false,
- "reason": "the RTL lands rst_n: ot_rst_relay_bounded32 (2 root flops = the port's only sinks, then 30 kept leaves <= 25 sinks, 3-edge release as before)"
+ "reason": "RTL pin landing:2 shared literal1 root flops,2 middle(data/reset)groups,62finalcontrolleaves, eachreleaseedge1/2/3 unchanged. Directrst_n sinkcount2; groupD/RESETpinloads<=32."
 }
