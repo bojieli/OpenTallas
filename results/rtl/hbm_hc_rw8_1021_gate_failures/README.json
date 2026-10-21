@@ -1,0 +1,38 @@
+{
+  "preserve_failures": true,
+  "new_gate_relations": "E2 rw9sp/spb separately launched with same roots and actual references; no CB retry authorized/started",
+  "failures": [
+    {
+      "name": "cb_rw8",
+      "verdict": "FAIL",
+      "summary_sha256": "67b1646bedd5e2459d2ff7349797c9477b3d4431ac30875e91eb158965f362d0",
+      "source": "a840a3298",
+      "immutable_original_kit": "physical/ref_tile/hbm_hcq_bank_cb_rw8",
+      "cause": "TT glue clk_w0 140.5ps all1035 sinks"
+    },
+    {
+      "name": "cb_rw8b",
+      "verdict": "FAIL",
+      "summary_sha256": "16cd5aecf36440d6e5c447aa257243fb83e6eac5692feff7c3fcfb116b60637f",
+      "source": "a840a3298",
+      "immutable_original_kit": "physical/ref_tile/hbm_hcq_bank_cb_rw8b",
+      "cause": "TT glue clk_h0 111.2ps all1025 sinks"
+    },
+    {
+      "name": "e2_rw8",
+      "verdict": "FAIL",
+      "summary_sha256": "5e1e70327b7152a9a3db685ad8de15ffed20be742cf7959dd9a5f7056747e2a3",
+      "source": "a840a3298",
+      "immutable_original_kit": "physical/ref_tile/hbm_hcq_bank_e2_rw8",
+      "cause": "TT glue clk110.7ps870boundary of881 sinks"
+    },
+    {
+      "name": "e2_rw8b",
+      "verdict": "FAIL",
+      "summary_sha256": "78226a3845a790adbe342f214822360119db94d9bc83c62bfa96b6f195583147",
+      "source": "a840a3298",
+      "immutable_original_kit": "physical/ref_tile/hbm_hcq_bank_e2_rw8b",
+      "cause": "TT glue clk92.9ps870boundary of881 sinks"
+    }
+  ]
+}
