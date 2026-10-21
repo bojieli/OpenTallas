@@ -103,11 +103,49 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  wire [15:0] h_epoch=hq[271:256];
  // stage B on registers only
  wire [5:0] row=h_ordinal[8:3];
- wire [15:0] b_epoch=epoch_q[h_bank*16+:16];wire [6:0] b_count=count_q[h_bank*7+:7],b_rcv=received_q[h_bank*7+:7];
- wire identity_ok=valid_q[h_bank]&&b_epoch==h_epoch&&h_ordinal[2:0]==BANK&&
-                 {1'b0,row}<b_count&&!seen_q[{h_bank,row}];
+ // Static one-hot bank/row reads keep binary packet identity out of wide
+ // 256-way read/write mux selects. Real local gates serve <=16 data bits.
+ wire [LBANKS-1:0] ep_sel,ctl_sel;
+ wire [LBANKS*4-1:0] seen_sel,seen_clear,seen_write;
+ wire [63:0]row_sel;
+ wire [LBANKS*64-1:0]seen_set;
+ for(genvar bs=0;bs<LBANKS;bs=bs+1)begin:g_bank_select
+  wire hit=h_bank==bs;
+  ot_hbm_svc_local_and2 u_e(.a(hit),.b(1'b1),.y(ep_sel[bs]));
+  ot_hbm_svc_local_and2 u_c(.a(hit),.b(1'b1),.y(ctl_sel[bs]));
+  for(genvar sg=0;sg<4;sg=sg+1)begin:g_seen_group
+   ot_hbm_svc_local_and2 u_s(.a(hit),.b(1'b1),.y(seen_sel[bs*4+sg]));
+   ot_hbm_svc_local_and2 u_clr(.a(ren_k[bs*4+1+sg/2]),.b(1'b1),.y(seen_clear[bs*4+sg]));
+  end
+ end
+ for(genvar rr=0;rr<64;rr=rr+1)begin:g_row_select
+  assign row_sel[rr]=(row==rr);
+ end
+ reg [15:0]b_epoch;reg [6:0]b_count,b_rcv;reg b_valid,b_seen;
+ integer br,cr;
+ always @*begin
+  b_epoch=0;b_count=0;b_rcv=0;b_valid=0;b_seen=0;
+  for(br=0;br<LBANKS;br=br+1)begin
+   b_epoch=b_epoch|(epoch_q[br*16+:16]&{16{ep_sel[br]}});
+   b_count=b_count|(count_q[br*7+:7]&{7{ctl_sel[br]}});
+   b_rcv=b_rcv|(received_q[br*7+:7]&{7{ctl_sel[br]}});
+   b_valid=b_valid|(valid_q[br]&ctl_sel[br]);
+   for(cr=0;cr<64;cr=cr+1)
+    b_seen=b_seen|(seen_q[br*64+cr]&seen_sel[br*4+cr/16]&row_sel[cr]);
+  end
+ end
+ wire identity_ok=b_valid&&b_epoch==h_epoch&&h_ordinal[2:0]==BANK&&
+                 {1'b0,row}<b_count&&!b_seen;
  wire take_b=h_v&&!sticky;
  wire landing_write=take_b&&identity_ok;
+ for(genvar wb=0;wb<LBANKS;wb=wb+1)begin:g_seen_write
+  for(genvar wg=0;wg<4;wg=wg+1)begin:g_group
+   ot_hbm_svc_local_and2 u_w(.a(landing_write),.b(seen_sel[wb*4+wg]),.y(seen_write[wb*4+wg]));
+   for(genvar wr=0;wr<16;wr=wr+1)begin:g_bit
+    ot_hbm_svc_local_and2 u_s(.a(seen_write[wb*4+wg]),.b(row_sel[wg*16+wr]),.y(seen_set[wb*64+wg*16+wr]));
+   end
+  end
+ end
  assign packet_take=packet_v&&!stop&&!sticky;
  wire complete_now=landing_write&&b_rcv+1'b1==b_count;
  reg w_ce_q,cmp_q;reg [LB-1:0] w_bank_q;reg [5:0] w_row_q;reg [255:0] w_data_q;
@@ -137,10 +175,10 @@ module ot_hbm_svc_sm8_landing_bank_h #(
   if(take_b)begin w_bank_q<=h_bank;w_row_q<=(HM==6)?(row^6'd1):row;end
   for(b=0;b<LBANKS;b=b+1)begin
    if(ren_k[b*4])begin epoch_q[b*16+:16]<=r_epoch;count_q[b*7+:7]<=r_count;end
-   if(ren_k[b*4+1])seen_q[b*64+:32]<=0;
-   else if(landing_write&&h_bank==b&&!row[5])seen_q[b*64+row[4:0]]<=1'b1;
-   if(ren_k[b*4+2])seen_q[b*64+32+:32]<=0;
-   else if(landing_write&&h_bank==b&&row[5])seen_q[b*64+32+row[4:0]]<=1'b1;
+   for(c=0;c<64;c=c+1)begin
+    if(seen_clear[b*4+c/16])seen_q[b*64+c]<=0;
+    else if(seen_set[b*64+c])seen_q[b*64+c]<=1'b1;
+   end
    if(ren_k[b*4+3])received_q[b*7+:7]<=0;
    else if(landing_write&&h_bank==b)received_q[b*7+:7]<=b_rcv+1'b1;
   end
