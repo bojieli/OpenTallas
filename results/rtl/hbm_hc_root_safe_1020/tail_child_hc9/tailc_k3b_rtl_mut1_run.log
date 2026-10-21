@@ -60,5 +60,5 @@ TAILC ERR case 6 word 22 child 3e6048bf unit 3e6048bd
 TAILC FAIL 44 errors in 48 cases
 - rtl/test/tb_hbm_hc_tail_child_eq.sv:72: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 78us; walltime 2.022 s; speed 38.585 us/s
-- Verilator: cpu 2.022 s on 1 threads; allocated 17 MB
+- Verilator: $finish at 78us; walltime 1.895 s; speed 41.178 us/s
+- Verilator: cpu 1.893 s on 1 threads; allocated 17 MB
