@@ -85,6 +85,9 @@ tasks as soon as possible"):
       RATE_HORIZON_S (600 s))
     stable or old:  0, plus one host floor min(sum of their (ceiling - now), SETTLED_FLOOR_FRAC (0.02) x RAM)
   The v6/v8 age/class/GROWTH_FACTOR rules above no longer set the charge (GROWTH_FACTOR is read but unused).
+  Active Verilator frontend phases (verified executable in the scope's current cgroup) retain full declared
+  remaining growth until the frontend exits. Flat RSS or a lowered class reservation cannot predict its next AST phase.
+  Other sampled phases keep the v13 rate policy; this does not restore full reservations for long-running yosys jobs.
   Safety stays with the per-job caps (scope MemoryMax, docker --memory via ot-heavy-docker), swap and earlyoom.
   DIE-FIRST unchanged: a waiting die trial's request is held free against non-die requests.
 
@@ -177,6 +180,13 @@ def procs(cgdir):
         out.append(dict(pid=int(pid), comm=comm, exe=exe, argv=rd(f"/proc/{pid}/cmdline").split("\0")[:-1],
                         rss=status(pid, "VmRSS"), hwm=status(pid, "VmHWM")))
     return out
+
+
+def active_verilator_frontends(cgdir):
+    """Read this scope's actual executables, not script names or an old cron phase sample."""
+    names = {"verilator_bin", "verilator_bin_dbg"}
+    return [p["pid"] for p in procs(cgdir)
+            if os.path.basename(p["exe"].removesuffix(" (deleted)")) in names]
 
 
 def is_sim(p):
@@ -626,7 +636,9 @@ def read_units():
                          obs=max(cur, num(cg + "/memory.peak") / GB),
                          cls=s.get("cls") or (meta[1] if len(meta) > 1 else None),
                          sampled=bool(s.get("rss_hist") or s.get("samples") or s.get("first")),
-                         rate=float(s.get("rate_gbs") or 0.0)))
+                         rate=float(s.get("rate_gbs") or 0.0),
+                         declared=max(req, int(meta[0]) if meta[:1] and meta[0].isdigit() else req),
+                         frontend_pids=active_verilator_frontends(cg)))
     return rows
 
 
@@ -682,7 +694,11 @@ def books(rows, total, avail, table, gf=None):
             continue
         now = r["now"]
         margin = max(0.0, r["ceil"] - now)
-        if r["age"] < win or not r.get("sampled", True):
+        if r.get("frontend_pids"):
+            # A real Verilator frontend can grow again after a long AST/DFG plateau. Its declared budget
+            # stays pending until that executable exits, even when class reconciliation lowered res.
+            r["grow"], r["pending"] = max(0.0, r.get("declared", r["req"]) - now), True
+        elif r["age"] < win or not r.get("sampled", True):
             # v12/v13: admitted in the last GROW_WINDOW_S, or reconcile has no RSS sample of it yet (still building):
             # its whole remaining reservation
             r["grow"], r["pending"] = gfull * margin, True
