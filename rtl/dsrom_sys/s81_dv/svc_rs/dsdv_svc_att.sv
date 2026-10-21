@@ -94,6 +94,7 @@ module dsdv_svc_att_core #(
     parameter integer PMEM = 1,                   // 1: the p store (4 x ot_sram_1r1w_256x256), 0: dropped (non-owner)
     parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
+    parameter integer PV_IDENTITY = 0,
     parameter bit SRAM_MACRO = 0,
     parameter bit QMEM_SRAM = 0,               // opt-in: native 8x32x64, same capture edge
     parameter integer TEXT = 0,                   // SVC4: 1 = engine tiles outside (landed parent dsdv_svc_attw_f_lp), see
@@ -185,17 +186,23 @@ module dsdv_svc_att_core #(
     // ------------------------------------------------------------------ CFG / job state
     reg [29:0] wb, sb;
     reg [1:0] st_r; // Current service ABI: dynamic CFG [32]/[31:30], default parameter ST.
-    reg [7:0] wcount; reg [9:0] nsel; reg [20:0] wfirst; reg [9:0] wuser;
+    reg [7:0] wcount; reg [9:0] nsel; reg [20:0] wfirst,wposition; reg [9:0] wuser;
+    wire [439:0] pv_provenance; wire pv_identity_bad;
+    dsdv_pv_source_identity #(.ENABLE(PV_IDENTITY)) u_pv_identity (
+        .clk(clk),.rst_n(rst_n),.cfg_v(hdr_mine && h_type==4'd12),.cfg_owner(q_d[52:33]),.cfg_valid(q_d[53]),
+        .launch(go),.launch_ok(job_open && !job_active && !run && !dr_arm && !dr_on),
+        .user_id(wuser),.tag_id(tagj),.quarter(st_r),.tile(tile),.position(wposition),
+        .provenance(pv_provenance),.bad(pv_identity_bad));
     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
     wire start = hdr_mine && h_type == 4'd2;
     wire [9:0] tjob = 10'(wcount) + nsel;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
+        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wposition <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
         else begin
             if (hdr_mine && h_type == 4'd12) begin wb <= q_d[29:0]; if (q_d[32]) st_r <= q_d[31:30]; end
             if (start && !job_open) begin
                 sb <= q_d[29:0]; wcount <= q_d[88:81]; nsel <= q_d[98:89]; wfirst <= q_d[119:99];
-                wuser <= q_d[458:449]; tagj <= q_d[502:495];
+                wuser <= q_d[458:449]; tagj <= q_d[502:495]; wposition <= q_d[479:459];
             end
         end
     always @(posedge clk) tjob_o <= tjob;
@@ -615,7 +622,7 @@ module dsdv_svc_att_core #(
     wire [PVB-1:0] pb = pvq[pvr[PA-1:0]];
 `endif
     always @(posedge clk) if (dr_on)
-        pv_od <= (p_i == 0) ? {1'b1, 440'd0, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
+        pv_od <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
 
     // ------------------------------------------------------------------ sequential
     // SVC2 (10-19): block-local loop variables (one shared 'integer k' in the clk and the clk/rst_n blocks was two
@@ -764,6 +771,7 @@ module dsdv_svc_att_core #(
                 run <= 1'b1; rc <= 10'd1; ej_v <= 1'b1; job_active <= 1'b1; pv_n <= 0;
                 if (dr_arm || dr_on) fc[22] <= 1'b1;                          // a start while P.V of the last job drains
                 dr_arm <= pvown;
+                if (pv_identity_bad) fc[23] <= 1'b1;
                 p_left <= (16'(tjob) + 16'(R) - 1) / 16'(R);
                 if (q_have != 5'd16) fc[9] <= 1'b1;                           // q not loaded at the compiled start
             end else if (run) begin
@@ -861,6 +869,7 @@ endmodule
 module dsdv_svc_att #(
     parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0, parameter integer PFIFO = 512,
     parameter integer PMEM = 1, parameter integer PVQ = 8, parameter integer DQ = 8,
+    parameter integer PV_IDENTITY = 0,
     parameter bit SRAM_MACRO = 0, parameter bit QMEM_SRAM = 0,
     parameter integer TEXT = 0, parameter integer TLX = 0, parameter integer TXD = 0,
     parameter integer NTP = 0, parameter integer NTX = (NTP > 0) ? NTP : 4
@@ -894,7 +903,7 @@ module dsdv_svc_att #(
     assign fault = fault_c;
 `endif
     dsdv_svc_att_core #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .PFIFO(PFIFO), .PMEM(PMEM), .PVQ(PVQ), .DQ(DQ),
-                        .SRAM_MACRO(SRAM_MACRO), .QMEM_SRAM(QMEM_SRAM), .TEXT(TEXT), .TLX(TLX), .TXD(TXD),
+                        .PV_IDENTITY(PV_IDENTITY), .SRAM_MACRO(SRAM_MACRO), .QMEM_SRAM(QMEM_SRAM), .TEXT(TEXT), .TLX(TLX), .TXD(TXD),
                         .NTP(NTP)) u_core (
         .clk(clk), .rst_n(rst_n), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(root),
         .q_v(pq_v), .q_d(pq_d), .hw_v(phw_v), .hw_d(phw_d),
@@ -903,4 +912,26 @@ module dsdv_svc_att #(
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
         .go_o(go_o), .tjob_o(tjob_o), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(fault_c),
         .fault_code(fault_code), .pio_o(pio_o), .pvo_o(pvo_o), .jc_o(jc_o), .st_o(st_o), .tx_i(tx_i), .tx_o(tx_o));
+endmodule
+
+// Exact source-owned identity used by the real ATT header above. Keeping launch
+// context separate from CFG prevents later configuration from relabelling an old
+// P.V drain. No numerical payload enters this block.
+module dsdv_pv_source_identity #(parameter integer ENABLE=0)(
+ input wire clk,rst_n,cfg_v,input wire[19:0]cfg_owner,input wire cfg_valid,
+ input wire launch,launch_ok,input wire[9:0]user_id,input wire[7:0]tag_id,
+ input wire[1:0]quarter,input wire[3:0]tile,input wire[20:0]position,
+ output wire[439:0]provenance,output wire bad
+);
+ generate if(ENABLE==0)begin:g_disabled assign provenance=440'd0;assign bad=1'b0;end
+ else begin:g_enabled
+  reg[19:0]pending,owner;reg valid,live;reg[1:0]q;reg[3:0]t;reg[20:0]pos;
+  always @(posedge clk or negedge rst_n)if(!rst_n)begin pending<=0;owner<=0;valid<=0;live<=0;q<=0;t<=0;pos<=0;end
+  else begin
+   if(cfg_v)begin pending<=cfg_owner;valid<=cfg_valid;end
+   if(launch)begin owner<=pending;live<=launch_ok && valid && pending[17:0]=={user_id,tag_id};q<=quarter;t<=tile;pos<=position;end
+  end
+  assign provenance={392'd0,pos,live,t,q,owner};
+  assign bad=launch && (!launch_ok || !valid || pending[17:0]!={user_id,tag_id});
+ end endgenerate
 endmodule

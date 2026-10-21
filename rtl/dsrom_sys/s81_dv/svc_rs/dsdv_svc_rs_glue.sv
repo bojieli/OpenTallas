@@ -145,7 +145,7 @@ endmodule
 
 // ATTN1 (10-20): dsdv_svc_rs_attw with ONE engine tile bundle (NTP 1; the narrowed attw parent dsdv_svc_attw_n1_f)
 module dsdv_svc_rs_attw1 #(parameter integer MUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                          parameter integer SRAM_MACRO = 0, parameter integer ROOT = 0, parameter integer PMEM = 1,
+                          parameter integer SRAM_MACRO = 0, parameter integer ROOT = 0, parameter integer PMEM = 1, parameter integer PV_IDENTITY = 0,
                           parameter integer TEXT = 0, parameter integer TLX = 0, parameter integer TXD = 0,
                           parameter integer NTP = 1, parameter integer ROLE_EXT = 0) (   // ATTN1: one physical engine tile (only tx_i0 / tx_o0)
     input  wire             ck,
@@ -200,7 +200,7 @@ module dsdv_svc_rs_attw1 #(parameter integer MUT = 0, parameter integer DIE_ID =
     generate if (NTX != 1) begin : g_bad
         initial $error("dsdv_svc_rs_attw1: NTP must be 1");
     end endgenerate
-    dsdv_svc_att_nt1 #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO != 0), .PMEM(PMEM), .TEXT(TEXT), .TLX(TLX),
+    dsdv_svc_att #(.MUT(MUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO != 0), .PMEM(PMEM), .PV_IDENTITY(PV_IDENTITY), .TEXT(TEXT), .TLX(TLX),
                    .TXD(TXD), .NTP(NTP)) u_att (
         .clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ROOT != 0),
         .q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[804:514]),

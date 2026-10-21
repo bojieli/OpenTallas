@@ -16,9 +16,11 @@ OUT.mkdir(parents=True, exist_ok=True)
 # Compose current controller, retaining PPATH, SO target/GW/GX, dynamic ST and real pv_x.
 t=(D/'dsdv_svc_rs.sv').read_text();t=t[t.index('module dsdv_svc_rs_c #('):];t=t[:t.index('endmodule')+len('endmodule')]
 t=t.replace('module dsdv_svc_rs_c #(','module dsdv_svc_rs_c_group72 #(').replace('parameter bit SMT = 1','parameter bit SMT = 1, parameter bit PMEM = 1').replace('input  wire              ck,','input wire ck, ck_sm, ck_att,')
+t=t.replace(', parameter integer NTP = 0','') # fixed G4 LP exposes one physical tile
 t=t.replace('`include "dsdv_svc_rs_roles.svh"','`include "dsdv_svc_rs_roles_group72.svh"')
 a=t.index('    dsdv_svc_att #'); b=t.index(';',a)+1
 old=t[a:b]; new=old.replace('dsdv_svc_att #','dsdv_svc_attw_n1_f_lp #').replace('.MUT(MUT)', '.AMUT(MUT)').replace('.SRAM_MACRO(SRAM_MACRO)', '.SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM), .ROOT(ENTRY), .TLX(6), .ROLE_EXT(1)')
+new=new.replace('.NTP(NTP), ', '')
 new=new.replace('.clk(ck), .rst_n(rn), .sid(sid), .tile(tile), .gd(gd), .pvs(pvs), .root(ENTRY),','.ck_c(ck), .ck_t0(ck_att), .rst(rst), .sid(sid), .role_i(role), .pvs_i(pvs),').replace('.q_v(cs[0]), .q_d(cs[512:1]), .hw_v(cs[513]), .hw_d(cs[DW-1:514]),','.cs(cs),')
 t=t[:a]+new+t[b:]
 a=t.index('    ot_s81_su_sms u_sms');b=t.index('    // ------------------------------------------------------------------ P path',a)
@@ -55,7 +57,7 @@ for dr, w, name in [('output',682,'rq'),('input',2,'rk'),('input',2,'wd'),('inpu
     ports.append((dr,16*w,name))
 L = ['`timescale 1ns/1ps', '`default_nettype none',
      '// Generated hierarchy; 16 x (C,SM,ATT) roots, never one group CTS root.',
-     'module dsdv_svc_group72 #(parameter integer DIE_ID=0, ST=0, SRAM_MACRO=1,',
+     'module dsdv_svc_group72 #(parameter integer DIE_ID=0, ST=0, SRAM_MACRO=1, PV_IDENTITY=0,',
      "    parameter [15:0] PMEM_MASK=16'hffff) ("]
 L += [f'    {dr} wire [{w-1}:0] {name}' + (',' if k<len(ports)-1 else '')
       for k,(dr,w,name) in enumerate(ports)]
@@ -93,7 +95,7 @@ for i in range(16):
             conns.append(f'.{p}({p}[{int(e)*w}+:{w}])')
     else:
         conns += [".j(33'd0)", ".q(515'd0)", ".hw(292'd0)"] # ENTRY=0: existing semantic absent host endpoint
-    L += [f'    {stem} #(.ENTRY({int(entry)}), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[{i}])) u_s{i} (',
+    L += [f'    {stem} #(.ENTRY({int(entry)}), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .PMEM(PMEM_MASK[{i}]), .PV_IDENTITY(PV_IDENTITY)) u_s{i} (',
           '        ' + ', '.join(conns) + ');']
 
 links, inactive = [], []
@@ -116,8 +118,8 @@ for i in range(16):
             inactive.append(dict(sid=i,face=face,contract='p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules'))
 L += ['endmodule', '`default_nettype wire']
 (OUT / 'dsdv_svc_group72.sv').write_text('\n'.join(L)+'\n')
-record = dict(source='current PPATH/SMWIRE controller + isolated edd3f4a9e NT1 engine', placement='329d6c07a', grid=[2,8], roots=48,
-              service_outline=[1728,3758.4], neighbor_gap_um=86.4,
+record = dict(source='current PPATH/SMWIRE controller + currentABI SRAM-restored NT1 engine', pv_identity=dict(default=0,producer_parents=16,all_parents_forwarded=True,source='6c9113349+8a85496ae adapted, no format adoption'), physical_tile_count=1, placement='329d6c07a', grid=[2,8], roots=48,
+              service_outline=[1728,3758.4], service_slot_reservation=[1728,3801.6], neighbor_gap_um=86.4,
               wide_faces=dict(gather_bits=2133,scatter_bits=1077),
               face_order=[dict(name=n,width=w) for n,w in fields], links=links, inactive_faces=inactive,
               sm_landing=dict(command_bits=534,return_bits=555,edges_each=3,roundtrip_edges=6), pv_x='actual dsdv_sm_gx from current SOT configuration and return-word producer', scope='source construction only; physical child binding/reset closure and calendar pricing of NT1 plus six SM landing edges remain obligations')

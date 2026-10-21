@@ -5,7 +5,7 @@
 //   u_t0  ot_hdc_v41x_attn_tile_s at the S81 engine parameters (with -DOT_ATTN_HGRP_HARD = 4 hard head groups).
 // Two regions (c, t0), the tile bundle LANDED both ways (TLX 6 as dsdv_svc_attw_f).  Bit maps as dsdv_svc_attw_f.
 module dsdv_svc_attw_n1_f #(parameter integer AMUT = 0, parameter integer DIE_ID = 0, parameter integer ST = 0,
-                         parameter integer SRAM_MACRO = 0, parameter integer ROOT = 0, parameter integer PMEM = 1,
+                         parameter integer SRAM_MACRO = 0, parameter integer ROOT = 0, parameter integer PMEM = 1, parameter integer PV_IDENTITY = 0,
                          parameter integer TLX = 0, parameter integer TXD = 0, parameter integer ROLE_EXT = 0) (
     input  wire             ck,
     input  wire             rst,
@@ -42,7 +42,7 @@ module dsdv_svc_attw_n1_f #(parameter integer AMUT = 0, parameter integer DIE_ID
 );
     wire [1617:0] txi0;
     wire [528:0]  txo0;
-    dsdv_svc_rs_attw1 #(.MUT(AMUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .ROOT(ROOT), .PMEM(PMEM), .TEXT(1), .NTP(1), .ROLE_EXT(ROLE_EXT),
+    dsdv_svc_rs_attw1 #(.MUT(AMUT), .DIE_ID(DIE_ID), .ST(ST), .SRAM_MACRO(SRAM_MACRO), .ROOT(ROOT), .PMEM(PMEM), .PV_IDENTITY(PV_IDENTITY), .TEXT(1), .NTP(1), .ROLE_EXT(ROLE_EXT),
                        .TLX(TLX), .TXD(TXD)) u_c (
         .ck(ck), .rst(rst), .sid(sid), .cs(cs), .qrq(qrq), .qrk(qrk), .qwd(qwd), .qrv(qrv), .qr_data(qr_data),
         .qr_tag(qr_tag), .qr_beat(qr_beat), .l_v(l_v), .l_d(l_d), .pv_ov(pv_ov), .pv_od(pv_od), .sm_st(sm_st),
