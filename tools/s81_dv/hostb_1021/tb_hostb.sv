@@ -40,7 +40,8 @@ module tb_hostb;
  `include "reverse_instance.svh"
 `else
  wire [1103:0] to_head=ret;
-`endifwire [3:0] rf,hf;wire htv;wire [552:0] htd;
+`endif
+ wire [3:0] rf,hf;wire htv;wire [552:0] htd;
  reg returnslot=0;
  reg [76:0] sampled_th;reg [53:0] sampled_tk;
 `ifdef HBE_REAL_CONSUMER

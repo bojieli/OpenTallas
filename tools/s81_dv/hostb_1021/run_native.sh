@@ -12,7 +12,8 @@ docker run --rm -v "$LIB:/techlib" "$IMAGE" bash -lc '
  done'
 sha256sum "$LIB"/*.lib >"$O/lib_sha256.txt"
 H=rtl/dsrom_sys/s81_dv/hostb
-for top in dsdv_hostb_stage dsdv_hostb_return dsdv_hostb_head dsdv_hostb_head_egress;do
+for top in ${HBE_NATIVE_TOPS:-dsdv_hostb_stage dsdv_hostb_return dsdv_hostb_head dsdv_hostb_head_egress};do
+ case "$top" in dsdv_hostb_stage|dsdv_hostb_return|dsdv_hostb_head|dsdv_hostb_head_egress);;*)exit 2;;esac
  D=$O/$top;mkdir -p "$D";PARAM='';case "$top" in dsdv_hostb_stage|dsdv_hostb_head_egress) PARAM="chparam -set ENABLE 1 $top";;esac
  cat >"$D/map.ys" <<YS
 read_verilog -sv -DSYNTHESIS /src/rtl/lib/ot_reset_sync.sv /src/$H/dsdv_hostb_hold.sv /src/$H/dsdv_hostb_crc512.sv /src/$H/dsdv_hostb_rx.sv /src/$H/dsdv_hostb_tx.sv /src/$H/dsdv_hostb_stage.sv /src/$H/dsdv_hostb_return.sv /src/$H/dsdv_hostb_head.sv /src/$H/dsdv_hostb_head_egress.sv
