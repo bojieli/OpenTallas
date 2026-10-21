@@ -1,0 +1,11 @@
+# n34b terminal FAIL; source-bound failure packet only
+
+Actual terminal16:13PT2026-10-21; full canonical gate_result.json schema opentallas.ref_tile.gate_result.v2 is retained separately from scratch_verdict_summary.json. Frozen shipping identity exact_content_snapshot: archive2143453d9681247fe251315597dcb16cf8d6019aeb3c1825bd9cbff26ee8a3df, manifest86c19fae7bcf4ae08953066a87dbb51515eba0ba267521bae436f3ee7822051b; start_commit bd75d3bce1bfc926f94bd573bad9a4bfc75deeb6 is provenance, not a claim that the entire staged tree equals that commit. Full consumed-file SHA/blob table is in canonical receipt and binding.json.
+
+Clock rule FAIL: TT pin-flop spread102.3ps/FF100.3ps exceed80; maxroot16423sinks, TT maxinsertion745.1/FF624.7ps. TrialGRT completed12462s, overflow0, M2usage22.33%. Routing overflow PASS does not override clock failure. No retry/new variant/submit.
+
+Existing TT placement-RC signoff diagnostic uses real833.333ps: macro->reg worst-399.4ps, macro->macro-301.2ps, reg->reg-233.1ps, hold-75.0ps. Full detailed4_cts_final.rpt uses tightened770ps and reports worst-462.72: start u57603_c0/u_cell (macro) -> u49677_c0/u_cell/D, launch/capture core_clk, arrival1686.15/required1223.43. Reports label Mode:ss/Corner:WC, but runtime_config.mk explicitly aliases WC standardlib to TC/TT and uses TT macros. These labels are preserved; this packet does not assert slow-corner qualification.
+
+Images inspected: density.png is the actual POST-PLACE DENSITY (GATE), not final routed image. Seven macros occupy large north/south blocks; four small macros touch vertically in NE stack; middle east/west corridors contain higher density, no red density bins visible. Existing five narrow-channel warnings retained. floorplan.png and density.png frozen here for ROOT; no fabricated REVIEW PASS or accepted geometry. Failure classification is clock-spread first, with concrete remaining data setup/hold failures independently recorded.
+
+Remote immutable run: ot-gold2:/srv/opentallas-scratch/claude/ref_gate/qkd_hr_core_prompt_n34b-20261021-075826. Detailed report under routes/gate/work/orfs/reports/asap7/opentallas_qkd_hr_core_prompt_mu4p3_n32_asap7_ref_gate/base/4_cts_final.rpt; runtime config routes/gate/work/orfs/config.mk. Existing e4a and peer/prompt admitted routes remain untouched.
