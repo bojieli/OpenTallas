@@ -1,0 +1,27 @@
+{
+  "source_helper_commit": "2d923c4c5",
+  "helper_sha256": "64dc1eb2a44494290f04ee7213ae65c2667a16ad4b05e2047a3d4fd54f06fd1d",
+  "driver_commit": "f59c6a2ca",
+  "runtime_owner": "ROOT integration",
+  "actual_host": "ot-epyc7",
+  "runtime_unit": "oth-ubuntu-970793-1792616363",
+  "checkpoint": "/srv/opentallas-scratch/claude/codex-root-fclk-replay-1021/replay_actual/repaired.odb",
+  "scope": "TOPOLOGY_AND_UNCHANGED_COMPLETE_PAIRING_AUDIT_ONLY",
+  "before": 19,
+  "after": 0,
+  "hops_judged": 2584,
+  "pairing_errors": 0,
+  "vacuous": 0,
+  "clock_buffers_added": 25,
+  "data_buffers_added": 3438,
+  "instances_before": 1564823,
+  "instances_after": 1568286,
+  "unfixable": 0,
+  "unplaced": 0,
+  "physical_qualification_owed": "on_obstacle164 placement reports require actual legalization/reach plus unchanged fclk postplacement/postGRT audit and STA. Not a placement or route PASS. Await reviewed helper publication before continuation.",
+  "raw": {
+    "replay.log": "36886ec0a529fbdddf7070b73eea38bc84206e1eb08a65a71bd0d8fbc1f12198",
+    "before.json": "76095092c0be1daf7363c82af8a713c12c079b64148fde4702115d7e53fd8cdf",
+    "after.json": "032e43d3b94953352aab0c538622bc0881a130a03a52cbd16f43f40f134b1416"
+  }
+}
