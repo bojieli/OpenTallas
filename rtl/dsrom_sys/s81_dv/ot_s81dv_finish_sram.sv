@@ -544,7 +544,7 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
  end
  reg[1:0] owner[0:TREES*NV-1];
  (* keep *) reg[1:0] owner_read[0:3*TREES*NV-1];
- // Each bounded seven-bank owner region owns a same-edge copy of the selected flit
+ // Each three-descriptor owner region owns a same-edge copy of the selected flit
  // owner, so retaining bank-local decode cannot move load onto owner flops.
  for(genvar t=0;t<TREES;t=t+1)begin:g_ot
   for(genvar ix=0;ix<NV;ix=ix+1)begin:g_ox
