@@ -29,6 +29,13 @@ def test_full_gen_facts_have_all_four_checks():
     assert 'native/clock/route/IR signoff remain required' in report['qualification']
 
 
+def test_landed_pair_adapter_truthfully_covers_crossings_but_not_wires_channels():
+    summary=gen_check.from_landed_pairs(dict(summary=dict(pairs=dict(LANDED=20))))
+    report=gen_check.check_facts(dict(summaries=[summary]))
+    assert report['check_coverage']==dict(C1='CHECKED',C2='CHECKED',W1='NOT_EXPORTED',W2='NOT_EXPORTED')
+    assert report['verdict']=='PASS' and not report['physical_qualification_eligible']
+
+
 def test_missing_channel_export_never_claims_w2_or_full_qualification():
     f=full_facts();del f['channels']
     report=gen_check.check_facts(f)

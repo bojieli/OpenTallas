@@ -153,8 +153,10 @@ def check_facts(f, reach=None, max_list=40):
         fails.append(f"W2 {cnt['wires_no_site']} die wires with a >{reach:g} um stretch over no relay/repeater site")
     if not (cnt['crossings'] or cnt['wires']):
         fails.append('EMPTY: no crossing and no wire in the facts (the GEN export is missing; never a pass)')
-    coverage = dict(C1='CHECKED' if 'crossings' in f else 'NOT_EXPORTED',
-                    C2='CHECKED' if 'crossings' in f and 'regions' in f else 'NOT_EXPORTED',
+    landed_census = any(s.get('source') == 'qwen_landed_pairs' and 'crossings' in s
+                        for s in f.get('summaries') or [])
+    coverage = dict(C1='CHECKED' if 'crossings' in f or landed_census else 'NOT_EXPORTED',
+                    C2='CHECKED' if ('crossings' in f and 'regions' in f) or landed_census else 'NOT_EXPORTED',
                     W1='CHECKED' if cnt['wires'] else 'NOT_EXPORTED',
                     W2='CHECKED' if idx is not None and f.get('wires') else 'NOT_EXPORTED')
     complete = all(v == 'CHECKED' for v in coverage.values())
