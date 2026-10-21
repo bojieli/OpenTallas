@@ -1,7 +1,7 @@
 {
   "status": "PREPARED_REVIEW_REQUIRED_NOT_LAUNCHED",
   "source": "00c9d068e",
-  "runtime_readset_files": 67,
+  "runtime_readset_files": 70,
   "actual_gate_snapshot_matched_src_files": 63,
   "runtime_readset": "source_manifest.json",
   "actual_hook_hashes": {
@@ -70,5 +70,7 @@
     "--",
     "python3",
     "run_prefix_checked.py"
-  ]
+  ],
+  "guarded_readset_files": 73,
+  "readset_note": "70 source/control identities including runner+provenance/config, plus3 exactactual hook/clockSDC/spec evidence identities; all63 copiedruntime source files match actual00c9 snapshot."
 }
