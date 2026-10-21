@@ -271,11 +271,11 @@
    "ot_s81sl_lep_pair_ready",
    "ot_s81sl_lep_return8",
    "ot_sram_showahead_readptr",
-   "ot_s81sl_lep_face8",
-   "ot_lep_en2"
-  ]
+   "ot_s81sl_lep_face8"
+  ],
+  "hold_delay": true
  },
- "structural_change": "ELEM-LEP/A r7 MAIN (r6v NEEDS_RTL TT -131.02 reg->out mwd 699.8 um S->N / FF -34.22 removal local_r->frame 51 ps leaf skew): r6v floorplan/outline/pins/spine unchanged; RTL opt-in NFACE (per-byte ml_rd/ml_wd owners) + io_flop_at_pins (every port owner FIRM at its pin, incl. ml_wd at the N face) + SYNCRST (reset gates only control/valid D, no async RESETN -> no removal check across leaves; release edges unchanged) + RPRLY (+2 priced edges on replay ml_rd -> ri/mu_rt: 1,063 um corner path in 3 hops <= 355 um). Write path RX show-ahead -> N owners: <= 670 um in two registered hops via the show-ahead flop (no added edge).",
+ "structural_change": "ELEM-LEP/A r7 MAIN (r6v NEEDS_RTL TT -131.02 reg->out mwd 699.8 um S->N / FF -34.22 removal local_r->frame 51 ps leaf skew): r6v floorplan/outline/pins/spine unchanged; RTL opt-in NFACE (per-byte ml_rd/ml_wd owners) + io_flop_at_pins (every port owner FIRM at its pin, incl. ml_wd at the N face) + RSTHD (reset tree root/group/local drive their async RESETN loads through kept 3 x HB4xp67 ~114 ps FF, dont_touch: removal slack independent of clock-leaf skew <=80; release edges unchanged; SYNCRST tried first: native census 33-45 loads from reset-folded counters, abandoned) + RPRLY (+2 priced edges on replay ml_rd -> ri/mu_rt: 1,063 um corner path in 3 hops <= 355 um). Write path RX show-ahead -> N owners: <= 670 um in two registered hops via the show-ahead flop (no added edge).",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered as s81sl_lep / s81sl_lepnh (ro / li / ml_rd land in pin flops, ri / lo / ml_wd / mu_rt / fault leave flops); recipe pin_regs would add an unpriced stage."
@@ -309,7 +309,7 @@
   "benches": [
    {
     "name": "lepmua_exact_s1",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_SYNCRST +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_exact_s1 lepmu none 1",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_exact_s1 lepmu none 1",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 12,
@@ -318,7 +318,7 @@
    },
    {
     "name": "lepmua_exact_s5",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_SYNCRST +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_exact_s5 lepmu none 5",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_exact_s5 lepmu none 5",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 12,
@@ -326,7 +326,7 @@
    },
    {
     "name": "lepmua_mut_tagdrop",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_SYNCRST +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_mut_tagdrop lepmu TAGDROP 1",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_mut_tagdrop lepmu TAGDROP 1",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 12,
@@ -335,7 +335,7 @@
    },
    {
     "name": "lepmua_mut_landcut",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_SYNCRST +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_mut_landcut lepmu LANDCUT 1",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_mut_landcut lepmu LANDCUT 1",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 12,
@@ -344,7 +344,7 @@
    },
    {
     "name": "lepmua_mut_stalehd",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_SYNCRST +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_mut_stalehd lepmu STALEHD 1",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_mut_stalehd lepmu STALEHD 1",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 12,
@@ -353,7 +353,7 @@
    },
    {
     "name": "lepmua_mut_vskew",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_SYNCRST +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_mut_vskew lepmu VSKEW 1",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/mu_kit_bench.sh {RUN}/lepmua_mut_vskew lepmu VSKEW 1",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 12,
@@ -419,7 +419,7 @@
  "std_area_um2": 7693.76394,
  "defines": [
   "OT_S81SL_LEP_NFACE",
-  "OT_S81SL_LEP_SYNCRST",
+  "OT_S81SL_LEP_RSTHD",
   "OT_S81SL_LEP_RPRLY"
  ]
 }

@@ -370,6 +370,7 @@
   "physical/common_flow/macro_edge_via_guard.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/qwen_die_masters/hdly_dont_touch.tcl",
   "physical/common_flow/clock_spine.tcl",
   "physical/common_flow/clock_spine_cohorts.tcl",
   "physical/ref_tile/s81sl_lepmua_r7m/spine_ins.tcl",
