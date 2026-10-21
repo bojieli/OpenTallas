@@ -45,6 +45,12 @@ ok=r.returncode==0 and 'KV_LEAF PASS' in r.stdout
 n=subprocess.run([str(obj/'Vtb_s81sl_kv_leaf'),'+MUT_DROP_EXP'],cwd=a.out,capture_output=True,text=True);(a.out/'negative_exp_write.log').write_text(n.stdout+n.stderr)
 negative_ok=n.returncode!=0 and 'KV_LEAF FAIL' in (n.stdout+n.stderr)
 ok=ok and negative_ok
+address_ok=True
+for flag in ('BAD_ALIGN','BAD_BOUND'):
+ z=subprocess.run([str(obj/'Vtb_s81sl_kv_leaf'),'+'+flag],cwd=a.out,capture_output=True,text=True)
+ (a.out/(flag.lower()+'.log')).write_text(z.stdout+z.stderr)
+ address_ok=address_ok and z.returncode==0 and 'KV_BAD_ADDRESS REJECTED' in z.stdout
+ok=ok and address_ok
 assert pins=={s:H.sha(ROOT/s) for s in src+[tb]},'source changed'
-(a.out/'result.json').write_text(json.dumps(dict(status='PASS' if ok else 'FAIL',production_dim=512,fp='RTL',negative_exp_write_rejected=negative_ok,source_sha256=pins,argv=cmd),indent=2)+'\n')
+(a.out/'result.json').write_text(json.dumps(dict(status='PASS' if ok else 'FAIL',production_dim=512,fp='RTL',negative_exp_write_rejected=negative_ok,address_guards_rejected=address_ok,source_sha256=pins,argv=cmd),indent=2)+'\n')
 print(r.stdout,flush=True);sys.exit(int(not ok))
