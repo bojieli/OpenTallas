@@ -656,6 +656,46 @@
    "qc0": 513,
    "qc1": 513,
    "st": 4
+  },
+  "ot_s81sl_slice_iq": {
+   "clk": 1,
+   "rst_n": 1,
+   "sid": 4,
+   "ri_w": 1104,
+   "ri_e": 1104,
+   "ro_e": 1104,
+   "ro_w": 1104,
+   "vi": 276,
+   "vo": 276,
+   "bi": 1104,
+   "bo": 513,
+   "xc": 4416,
+   "rt": 560,
+   "ck_line": 16,
+   "ck_v": 2,
+   "ck_xc": 16,
+   "ck_rt": 8,
+   "fault": 1,
+   "iq": 513
+  },
+  "dsdv_bk_sel_vm": {
+   "clk": 1,
+   "rst_n": 1,
+   "tap_k": 8,
+   "sink_k": 8,
+   "ik": 3,
+   "ek": 3,
+   "uid": 8,
+   "eg_n": 1,
+   "vi_s": 276,
+   "vo_n": 276,
+   "vi_n": 276,
+   "vo_s": 276,
+   "fault": 1,
+   "vi_idx": 276,
+   "ca": 276,
+   "cb": 276,
+   "vm_fault": 1
   }
  },
  "masters": {
@@ -4456,6 +4496,237 @@
     }
    ],
    "port_note": "qs = local frame source from s_3S (slice iq port OWED); ql / qc0 / qc1 = the rank-tree parent / child links of the die (off-die, die ports: lower_bk shard_tree); uid strap = the die tree uid (as bk_sel uid)"
+  },
+  "dsdv_slice_iq": {
+   "module": "ot_s81sl_slice_iq",
+   "ref": "DRIVE-S81-IDX4 rtl/dsrom_sys/s81_dv/idx/dsdv_idx_bsplit.sv (ot_s81sl_slice unchanged inside)",
+   "view": null,
+   "view_note": "cluster not hardened (S81-SLICE); leaf views vq/vp/hcpl in flight",
+   "clk": "clk",
+   "rst": [
+    "rst_n",
+    "low"
+   ],
+   "hb_param": "HB",
+   "straps": [
+    "sid"
+   ],
+   "strap_values": {
+    "sid": "auto_slice"
+   },
+   "ports": {
+    "xrE.o": {
+     "port": "ro_e",
+     "lane": 276,
+     "ck": "ck_line",
+     "ck_base": 4
+    },
+    "xrE.i": {
+     "port": "ri_w",
+     "lane": 276,
+     "land": true
+    },
+    "xrW.o": {
+     "port": "ro_w",
+     "lane": 276,
+     "ck": "ck_line",
+     "ck_base": 12
+    },
+    "xrW.i": {
+     "port": "ri_e",
+     "lane": 276,
+     "land": true
+    },
+    "vN.o": {
+     "port": "vo",
+     "lane": 276,
+     "ck": "ck_v",
+     "ck_base": 1
+    },
+    "vS.o": {
+     "port": "vo",
+     "lane": 276,
+     "ck": "ck_v",
+     "ck_base": 1
+    },
+    "vN.i": {
+     "port": "vi",
+     "lane": 276,
+     "land": true
+    },
+    "vS.i": {
+     "port": "vi",
+     "lane": 276,
+     "land": true
+    },
+    "xf.o": {
+     "port": "xc",
+     "lane": 276,
+     "kind": "xc",
+     "ck": "ck_xc"
+    },
+    "ret.i": {
+     "port": "rt",
+     "lane": 70,
+     "order": "ret",
+     "land": true
+    },
+    "q.o": {
+     "hb": 1,
+     "lanes": [
+      {
+       "split": [
+        [
+         "bo",
+         0,
+         0,
+         276
+        ]
+       ]
+      },
+      {
+       "split": [
+        [
+         "bo",
+         276,
+         0,
+         237
+        ]
+       ]
+      }
+     ]
+    },
+    "pv.i": {
+     "port": "bi",
+     "hb": 1,
+     "lane": 1104,
+     "adapter": "dsfd_dvland_pvrd",
+     "out_w": 1104,
+     "adapter_straps": {
+      "nw": "8'd160",
+      "rb": "10'd0"
+     }
+    },
+    "iq.o": {
+     "hb": 1,
+     "lanes": [
+      {
+       "split": [
+        [
+         "iq",
+         0,
+         0,
+         276
+        ]
+       ]
+      },
+      {
+       "split": [
+        [
+         "iq",
+         276,
+         0,
+         237
+        ]
+       ]
+      }
+     ]
+    }
+   },
+   "mode_unused": [
+    {
+     "port": "bi",
+     "when": "hb0",
+     "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+    },
+    {
+     "port": "ri_w",
+     "when": "col0",
+     "reason": "tier line W end (column 0): no west neighbour; the snake end carries xfin on V"
+    },
+    {
+     "port": "ri_e",
+     "when": "col7",
+     "reason": "tier line E end (column 7): no east neighbour; the snake end carries xfin on V"
+    },
+    {
+     "port": "rt",
+     "when": "lanes_without_producer",
+     "lane": 70,
+     "reason": "0cj (b) PROVABLY UNUSED: the plan has no ret link for these trailing rt lanes -- the p4h/p4j row-0 S frames of columns 2..5 (f_2R00, f_3L00/f_3R00, f_4L00/f_4R00, f_5L00) gave way to the regional service slices, so s_2S/s_5S carry 7 frame returns and s_3S/s_4S 6; dv_bind packs ret lanes in L00..R03 order, so the missing ones are always the top lanes; the static return calendar (frame_return_plan) never schedules a beat on a lane with no frame. Tied 0, declared as pads (no new slice variant)."
+    }
+   ],
+   "port_note": "--idxrd 4 s_3S: iq = the index frames (types 4 / 8 / 10) of the band-port-B stream, split by dsdv_idx_bsplit (bo keeps every other frame for the svc entry; +1 edge on both)"
+  },
+  "dsfd_bk_selector_vm": {
+   "view": null,
+   "clk": "clk",
+   "rst": [
+    "rst_n",
+    "low"
+   ],
+   "ref": "DRIVE-S81-IDX4 rtl/dsrom_sys/s81_dv/idx/dsdv_bk_sel_vm.sv (dsdv_idx_vmux + dsdv_bk_sel unchanged)",
+   "straps": [
+    "tap_k",
+    "sink_k",
+    "ik",
+    "ek",
+    "uid",
+    "eg_n"
+   ],
+   "strap_values": {
+    "tap_k": "8'h11",
+    "sink_k": "8'h10",
+    "ik": "3'd4",
+    "ek": "3'd5",
+    "uid": "8'h5B",
+    "eg_n": "1'b0"
+   },
+   "ports": {
+    "vN.i": {
+     "port": "vi_n",
+     "lane": 276,
+     "land": true
+    },
+    "vN.o": {
+     "port": "vo_n",
+     "lane": 276
+    },
+    "vS.i": {
+     "port": "vi_s",
+     "lane": 276,
+     "land": true
+    },
+    "vS.o": {
+     "port": "vo_s",
+     "lane": 276
+    },
+    "vi_idx.i": {
+     "port": "vi_idx",
+     "lane": 276,
+     "land": true
+    }
+   },
+   "module": "dsdv_bk_sel_vm",
+   "view_note": "S81U-BK3 vertical cut (claude/s81u2-bk-1017 5707371a0); selc2 control FAIL clock (owed)",
+   "top_ports": [
+    {
+     "port": "ca",
+     "dir": "input",
+     "bits": 276
+    },
+    {
+     "port": "cb",
+     "dir": "input",
+     "bits": 276
+    },
+    {
+     "port": "vm_fault",
+     "dir": "output",
+     "bits": 1
+    }
+   ],
+   "port_note": "--idxrd 4 bk_sel: vi_s (column-4 rung) + vi_idx (score-chain tail is_tail) + ca / cb (rank-tree child lanes, die ports: lower_bk shard_tree) merged by dsdv_idx_vmux into dsdv_bk_sel vi_s (+2 edges); vm_fault = die status port"
   }
  },
  "plan": "S81-DV p4l multi-user (results/arch/s81_dv_1016/p4l_lkcol_mu/plan.json)",
@@ -6977,7 +7248,9 @@
   "dsfd_bk_collector",
   "dsfd_bk_selector",
   "dsdv_gunit",
-  "dsdv_svc_rs"
+  "dsdv_svc_rs",
+  "dsdv_slice_iq",
+  "dsfd_bk_selector_vm"
  ],
  "spare_out_rules": true,
  "land_plan_note_mu": "MU lanes (mu_*, rt_0N) are not in landing/p4l3/land_plan.json: landing K 1 default until the die lead re-runs dv_land_pilot on the MU plan",

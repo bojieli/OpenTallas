@@ -97,6 +97,11 @@ IDX4_Y0 = 200.0                   # --idxrd 4 (S81-IDX3M 10-20): reader strip bo
 IDX4_RQ, IDX4_RD = 92, 544        # --idxrd 4 RTL payload per controller (2 PCs): rqo 2 x 46 b, rri 2 x 272 b
 IDX4_RQ_LANE, IDX4_RD_LANE = 276, 562   # ... carried on the closed relay masters (dsfd_dvrlyh_276 / _562): lane quantisation
 IDX4_TRACKS_UM = 27.9             # M2/M4/M6 tracks a um at the GRT adjustment, before M8 (S81-IDX3R channel-load rule)
+IDX4_TRACKS_M8_UM = 10.0          # DRIVE-S81-IDX4: + M8 horizontal (80-nm pitch x 0.8 at the M6-M8 0.20 GRT adjustment;
+                                  # M2 0.78 + M4 14.58 + M6 12.50 = 27.86 / um before M8 -> 37.86 / um M2-M8)
+IDX4_CH = 444.0                   # DRIVE-S81-IDX4 (COORD 18:37 taller channel): CTRL-top channel height (was RSV_CH 200).
+                                  # Worst vertical cut (x 11,950, 10,020 b) / 444 / 37.86 = 0.596 <= 0.60 (M2-M8; 200 um: 1.32);
+                                  # rsv slices 1,344 -> 1,222 um tall: 1.484 mm2 vs the 1.491 svc + SM estimate (no RTL; fit 0.995)
 STREET_PITCH = 34.0               # PATHFIX: 276 street lanes 34 um apart (relay 32.4 across + 1.6 um); 11 slots -170..+170
 COL_EXW, COL_EXE = {}, {}         # p4k: extra slice-column width W / E of the slice, per column (um)
 SVC_CH = 512                      # p4i: svc_rs chain lane per direction (S81U-1 sp_w / sp_e partial-score lane, 512 b)
@@ -268,7 +273,7 @@ def place_rsv(P, facts):
     x0 = min(b['x'] for b in rows1); x1 = max(b['x'] + b['w'] for b in rows1)
     ytop = min(b['y'] for b in rows1) - 30.0
     ctop = 1200.0 + CTRL_H
-    y0 = ctop + RSV_CH
+    y0 = ctop + (IDX4_CH if IDXRD == 4 else RSV_CH)
     if IDXRD == 3:
         # the band spans the column voids W / E of the dropped frames (below s_2S / s_5S, y < the slice bottoms),
         # keeping a 300-um strip beside the column-2 L / column-5 R frames: their x / r lanes (144 um) rise there to
@@ -674,6 +679,8 @@ def mu_lanes(P, facts, colx, streets):
         yb = rtop + (fbot1 - rtop) * (1 + k) / 3.0     # inside the rsv-top / frame-bottom band
         xg = gx0 + (gx1 - gx0) * (1 + k) / 3.0         # inside the rsv_09 | rsv_11 gap
         yl = rbot - 60.0 + 30.0 * k                    # between the rsv bottoms and the controller tops
+        if IDXRD == 4:   # DRIVE-S81-IDX4: taller CTRL-top channel; keep the under-frame strip level (frames start ~1.79 mm)
+            yl = 1200.0 + CTRL_H + RSV_CH - 60.0 + 30.0 * k
         xs = S['x'] + S['w'] / 2.0 + (120.0 if sn == 's_0S' else -120.0)
         pts = [(qw, yq), (xm, yq), (xm, yb), (xg, yb), (xg, yl), (xs, yl), (xs, S['y'])]
         if IDXRD == 3:     # reader row under the band: the strip above the band is free (row-1 frames gone) only over the
@@ -1221,6 +1228,11 @@ def idx_readers4(P, facts):
           if all(abs(y - b) >= 6.0 for b in busy)]
     need = 2 * (CTRL_N // 2) + 3
     assert len(lv) >= need, ('idxrd 4: CTRL-top channel levels', len(lv), need, busy)
+    lv = [y for y in lv if ctop + 24.0 <= y <= rbot - 24.0]      # DRIVE-S81-IDX4: hop bands (<= 30 um) clear of both rows
+    assert len(lv) >= need, ('idxrd 4: CTRL-top channel levels after the band clearance', len(lv), need)
+    lv = [lv[round(i * (len(lv) - 1) / (need - 1))] for i in range(need)]   # ... spread over the full channel height
+    P.blocks[P.idx['s_3S']]['master'] = 'dsdv_slice_iq'          # DRIVE-S81-IDX4: + iq (index frames split off bo)
+    P.blocks[P.idx['bk_sel']]['master'] = 'dsfd_bk_selector_vm'   # DRIVE-S81-IDX4: + dsdv_idx_vmux (vi_idx, ca / cb)
     for k in range(CTRL_N):
         p, r = k // 2, k % 2
         I = P.blocks[P.idx[f'irg_{p:02d}']]; C = P.blocks[P.idx[f'ctrl_{k:02d}']]
@@ -1308,9 +1320,13 @@ def idx_readers4(P, facts):
                           payload=dict(hrrq=IDX4_RQ, hrrd=IDX4_RD, lane_quantisation='92 -> 276 / 544 -> 562 (closed relay widths)'),
                           stations_per_pair={p: max(L['hrrq_%02d' % k]['s'] for k in (2 * p, 2 * p + 1)) for p in range(NR)},
                           phy_edge_cut=edge, channel_bits_worst=dict(at=wk, bits=ch[wk], height_um=round(rbot - ctop, 1),
-                                                                    cut=round(ch[wk] / (rbot - ctop) / IDX4_TRACKS_UM, 3)),
+                                                                    cut=round(ch[wk] / (rbot - ctop) / IDX4_TRACKS_UM, 3),
+                                                                    cut_m8=round(ch[wk] / (rbot - ctop) / (IDX4_TRACKS_UM + IDX4_TRACKS_M8_UM), 3),
+                                                                    tracks_um=dict(m2_m7=IDX4_TRACKS_UM, m2_m8=IDX4_TRACKS_UM + IDX4_TRACKS_M8_UM)),
+                          channel_bits=ch,
                           channel_levels=dict(n=len(lv), used=need, busy=busy),
-                          owed=['slice s_3S iq source port', 'bk_sel + dsdv_idx_vmux wrapper (vi_idx)', 'land plan E/K of the new lanes (K 1 default)'])
+                          hooks=dict(s_3S='dsdv_slice_iq (ot_s81sl_slice_iq: iq = index frames 4/8/10 split off bo, +1 edge)', bk_sel='dsfd_bk_selector_vm (dsdv_bk_sel_vm: vmux vi_s/vi_idx/ca/cb, +2 edges)'),
+                          owed=['land plan E/K of the new lanes (K 1 default)'])
 
 
 def geometry_facts(P, facts):
