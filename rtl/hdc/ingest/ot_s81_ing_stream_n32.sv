@@ -207,7 +207,11 @@ module ot_s81_ing_stream_n32 #(
 
     // ---- clone domains: every leaf is a kept clone of a master (D = the master's next state)
     //   act pad raw rows ikey ph3 ran9 rem16 sec5 pitch5 mine apok fqn3 pwv rlo4 llo4 left1 left0
+`ifdef OT_N32_LEFT_SPLIT
+    localparam integer ND = 11; // extra same-edge clone only for upper8 st_left bits
+`else
     localparam integer ND = 10;
+`endif
     localparam integer LV = 1+1+3+3+9+16+5+5+1+1+3+1+4+4+1+1;   // 59
     (* keep *) reg [ND*LV-1:0] dl;
     wire [ND-1:0]     d_go, d_wv, d_step, d_pad_set, d_raw, d_rows, d_ikey, d_go_ikey_ph2, d_rlo_f, d_llo_0;
@@ -309,7 +313,16 @@ module ot_s81_ing_stream_n32 #(
     assign st_left_nx[3:0]   = sd_left_lo ? left_ld[3:0]   : d_step[8] ? st_left[3:0] - 4'd1 : st_left[3:0];
     assign st_left_nx[9:4]   = sd_left_lo ? left_ld[9:4]   : d_step[3] ? left_dec_lo[9:4]   : st_left[9:4];
     assign st_left_nx[15:10] = sd_left_lo ? left_ld[15:10] : d_step[9] ? left_dec_lo[15:10] : st_left[15:10];
+`ifdef OT_N32_LEFT_SPLIT
+    assign st_left_nx[23:16] = sd_left_hi ? left_ld[23:16] : d_step[4] ? left_dec_hi[7:0] : st_left[23:16];
+    assign st_left_nx[31:24] = sd_left_hi ? left_ld[31:24] : d_step[10] ? left_dec_hi[15:8] : st_left[31:24];
+`ifndef SYNTHESIS
+    always @(posedge clk) if (rst_n && d_step[10] !== d_step[4])
+        $fatal(1,"ot_s81_ing_stream_n32: left high step clone diverged");
+`endif
+`else
     assign st_left_nx[31:16] = sd_left_hi ? left_ld[31:16] : d_step[4] ? left_dec_hi : st_left[31:16];
+`endif
     wire sdisp_nx = (dq_n_nx != 3'd0) && !st_act_nx;
 
     // ---- master registers

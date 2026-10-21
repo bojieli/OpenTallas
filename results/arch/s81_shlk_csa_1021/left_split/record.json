@@ -1,0 +1,60 @@
+{
+  "status": "SOURCE_MECHANISM_PASS_NATIVE_PENDING",
+  "flag": "OT_N32_LEFT_SPLIT",
+  "source_sha256": "49b9039bc7d92cabf5ef412f4f850e27710ad8db7ece7fe1f39b28180b0a2ad1",
+  "baseline_native_refusal": "c7f009153 gt/ht: sole OAI21 root_68516_/Y ->34actual contacts in g_dom4 step/st_left high16 update,0roles. Oldgs/hsgates source06 pass32; this is source-context mapping fanout, no arithmetic failure.",
+  "implementation": "ND10->11 kept same-edge full59bit stateclone. d_step4 now updates bits23:16; new d_step10 updates31:24. Existing same-D DL_RST/dl_nx clone loop +new everyedge d_step10===d_step4 assertion preserve values/reset/age.",
+  "extra_state_bits": 59,
+  "data_edges_added": 0,
+  "reset_edges_added": 0,
+  "ABI_change": false,
+  "unit": "oth-ubuntu-1351786-1792619438",
+  "host": "ot-epyc7",
+  "exit": 0,
+  "actual_stream_lockstep": {
+    "seeds": [
+      1,
+      2
+    ],
+    "segments_each": 300,
+    "cycles": [
+      121529,
+      122026
+    ],
+    "writes": [
+      71387,
+      71622
+    ],
+    "dones": [
+      151,
+      144
+    ],
+    "mismatches": 0,
+    "WIN_negative_mismatches": 100989
+  },
+  "actual_legal_HOST": {
+    "seeds": [
+      1,
+      2
+    ],
+    "jobs_each": 6,
+    "cmds_N_S_G_J_each": [
+      72,
+      72,
+      72,
+      72
+    ],
+    "mismatch_classes_each": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "faults_each": 0
+  },
+  "prior_fixture": "Unit1342700 initially allocated clone11 but did not select it due text replacement mismatch; preserved source/run, not candidate evidence. Correct1351786 selectsactualupper8 and assertscloneequality.",
+  "physical_capacity": "~59controlFF +decode explicitly retained; same outline candidate. Actual full native/map/geometry still required. No waiver/alias/newview."
+}
