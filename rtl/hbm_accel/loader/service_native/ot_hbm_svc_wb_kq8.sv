@@ -57,10 +57,10 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  localparam integer DEFF=NPP<<FAW;                   // crossing entries per PC slice
  localparam integer CW=FAW+2;                        // credit counter width (0..DEFF)
  localparam integer NDS=18, NSL=20;                  // 18 data slices (4 x 15 b + 14 x 14 b) + ordinal [14:0] + [28:15]
- // <= 15 b per ring slice (FIFO halves <=8 b): a reviewed FIFO entry enable / ring enable / toggle mux then drives <= 31 loads
+ // <= 15 b per ring slice (FIFO fragments <=5 b): a reviewed FIFO entry enable / ring enable / toggle mux then drives <= 31 loads
  function automatic integer sw_f(input integer g); sw_f=(g<4)?15:(g<NDS)?14:(g==NDS)?15:14; endfunction
  function automatic integer so_f(input integer g); so_f=(g<4)?15*g:(g<NDS)?60+14*(g-4):(g==NDS)?0:15; endfunction
- localparam integer NPART=2, NC=NSL*NPART;
+ localparam integer NPART=3, NC=NSL*NPART;
  localparam integer NFP=NSL*NPP*NPART;                     // crossing FIFOs per PC
  localparam [32:0] SPACE_END=33'h020000000;
  // reset leaf maps
@@ -290,7 +290,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
  (* keep="true",dont_touch="true" *) reg xv1c [0:16*NSL-1];
  (* keep="true",dont_touch="true" *) reg xv2c [0:16*NSL-1];
  (* keep="true",dont_touch="true" *) reg wtog [0:16*NSL-1];
- wire [7:0] fifo_rd [0:16*NFP-1];wire [16*NFP-1:0] fifo_empty;
+ wire [4:0] fifo_rd [0:16*NFP-1];wire [16*NFP-1:0] fifo_empty;
  wire [FAW:0] fifo_wf [0:16*NFP-1];wire [FAW:0] fifo_rc [0:16*NFP-1];
  (* keep="true",dont_touch="true" *) reg popc [0:16*NSL-1];        // registered lockstep pop, one copy per slice
  (* keep="true",dont_touch="true" *) reg rtc [0:16*NSL-1];         // read toggle (which ping-pong FIFO is next)
@@ -311,7 +311,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
   // Atomic-word credits: independently synchronized fragments can return freed
   // entries on different edges. Release only their common accumulated minimum.
   wire [CW-1:0] credit_tree [1:127];
-  wire [CW-1:0] released [0:3];
+  wire [CW-1:0] released [0:5];
   for(gq=0;gq<64;gq=gq+1)begin:g_credit
    if(gq<NC)begin:g_live
     (* keep="true",dont_touch="true" *) reg [CW-1:0] pending;
@@ -328,7 +328,7 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
   for(gq=1;gq<64;gq=gq+1)begin:g_cmin
    assign credit_tree[gq]=(credit_tree[2*gq]<credit_tree[2*gq+1])?credit_tree[2*gq]:credit_tree[2*gq+1];
   end
-  for(gq=0;gq<4;gq=gq+1)begin:g_cdist
+  for(gq=0;gq<6;gq=gq+1)begin:g_cdist
    for(gb=0;gb<CW;gb=gb+1)begin:g_bit
     ot_wbk8_native_and u_buf(.a(credit_tree[1][gb]),.b(1'b1),.y(released[gq][gb]));
    end
@@ -354,17 +354,17 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
     if(!rl[K][XL])begin xv1c[IX]<=1'b0;xv2c[IX]<=1'b0;wtog[IX]<=1'b0;end
     else begin xv1c[IX]<=gany_w;xv2c[IX]<=xv1c[IX];if(xv2c[IX]&&NPP==2)wtog[IX]<=!wtog[IX];end
    for(gb=0;gb<NPART;gb=gb+1)begin:g_part
-    localparam integer BW=(gb==0)?8:SW-8;
+    localparam integer BW=(gb==2)?SW-10:5;
     for(gq=0;gq<NPP;gq=gq+1)begin:g_f
      localparam integer FX=gp*NFP+(gf*NPART+gb)*NPP+gq;
      wire [CW-1:0] wf;wire [BW-1:0] rdat;wire fe;
      wire wr=xv2c[IX]&&((NPP==1)||(wtog[IX]==gq[0]));
      wire rd=popc[IX]&&((NPP==1)||(((MUT==9&&gf==5)?1'b0:rtc[IX])==gq[0]));
      ot_link_afifo #(.W(BW),.AW(FAW),.SYNC(2),.RCOPY(3)) u_fifo(
-      .wclk(fclk),.wrst_n(rl[K][WL+gb*NPP+gq]),.wr(wr),.wdata(wdat[8*gb+:BW]),.wfull(),.wfreed(wf[FAW:0]),.ovf(ovf[FX]),
+      .wclk(fclk),.wrst_n(rl[K][WL+gb*NPP+gq]),.wr(wr),.wdata(wdat[5*gb+:BW]),.wfull(),.wfreed(wf[FAW:0]),.ovf(ovf[FX]),
       .rclk(hbm_clk),.rrst_n(hl[FX]),.rd(rd),.rempty(fe),.rdata(rdat),.rcount(fifo_rc[FX]));
      assign wf[CW-1:FAW+1]=0;
-     assign fifo_empty[FX]=fe;assign fifo_rd[FX]=8'(rdat);assign fifo_wf[FX]=wf[FAW:0];
+     assign fifo_empty[FX]=fe;assign fifo_rd[FX]=5'(rdat);assign fifo_wf[FX]=wf[FAW:0];
     end
    end
   end
@@ -451,15 +451,15 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
    // Payload capture uses each fragment's own empty signal; the atomic pop
    // decision above requires every fragment and cannot consume a partial word.
    for(gb=0;gb<NPART;gb=gb+1)begin:g_capture
-    localparam integer BW=(gb==0)?8:SW-8;
-    wire [7:0] r0=fifo_rd[F0+gb*NPP],r1=fifo_rd[F0+gb*NPP+NPP-1];
+    localparam integer BW=(gb==2)?SW-10:5;
+    wire [4:0] r0=fifo_rd[F0+gb*NPP],r1=fifo_rd[F0+gb*NPP+NPP-1];
     assign e0p[gb]=fifo_empty[F0+gb*NPP];
     assign e1p[gb]=(NPP==2)?fifo_empty[F0+gb*NPP+NPP-1]:1'b1;
     wire [BW-1:0] din=(NPP==2&&rtd[IX])?r1[BW-1:0]:r0[BW-1:0];
     wire rv=(NPP==2&&rtc[IX])?!e1p[gb]:!e0p[gb];
     integer e;
     always @(posedge hbm_clk)for(e=0;e<3;e=e+1)
-     if(push&&rv&&wpo[IX][e])ent[e][8*gb+:BW]<=din;
+     if(push&&rv&&wpo[IX][e])ent[e][5*gb+:BW]<=din;
    end
    always @(posedge hbm_clk or negedge hl[RL])
     if(!hl[RL])begin popc[IX]<=1'b0;rtc[IX]<=1'b0;rtd[IX]<=1'b0;vqc[IX]<=1'b0;wpo[IX]<=3'b001;rpo[IX]<=3'b001;end
