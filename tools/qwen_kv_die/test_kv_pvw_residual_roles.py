@@ -111,5 +111,24 @@ class PVWResidualTests(unittest.TestCase):
                 self.run_(root, pins)
 
 
+@unittest.skipUnless(V.FLOOR, 'OT_KV_PVFIN_FLOOR=1 only (the module-level tests above pin the FLOOR=0 ctl_tb text)')
+class PVWResidualFloorR2Tests(unittest.TestCase):
+    """KV-FLOOR2 10-20: the r2 safe-rebuild ctl_tbf text satisfies the FLOOR contract facts; a reserved-bit write fails."""
+    REAL = Path(__file__).resolve().parents[2] / 'rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv'
+
+    def test_r2_source_facts(self):
+        V.ctl_facts(self.REAL.read_text())
+
+    def test_r2_command_write_above_31_refused(self):
+        t = self.REAL.read_text().replace('cmd_n[31]=', 'cmd_n[40]=1;cmd_n[31]=')
+        with self.assertRaisesRegex(ValueError, 'above 31'):
+            V.ctl_facts(t)
+
+    def test_r2_reserved_zero_fact(self):
+        t = self.REAL.read_text().replace("always @*cmd={28'd0,cmd_q1,cmd_q0};", "always @*cmd={28'd1,cmd_q1,cmd_q0};")
+        with self.assertRaisesRegex(ValueError, 'pinned PV control fact absent'):
+            V.ctl_facts(t)
+
+
 if __name__ == '__main__':
     unittest.main()
