@@ -5287,12 +5287,17 @@ def _reset_tree(v, m):
         _ok = _RS.rtl_check(_repo)
         _rep_ok = _RS.rep_check(_repo) if (_repo / _RS.REP_SYNC['qfd_rst_rep']).exists() else (False, 'RTL missing')
         _meso = _RS.mesochronous(m)    # SerDes FDI roots mesochronous with the core (clock_contract.py); ucie 6:5 is not
-        rsync = _RS.plan(cells, wires, ck_of_bus, ckof, {i.name: i.master for i in m['insts']}, _ok, _meso)
+        # QW-G5NOROOT 10-20: a forwarded package clock (ckb_rom pll_ck -> the d2d link hop-0 stations) is its own domain:
+        # the rst_d2d leaf into those stations' en is re-clocked onto it (2-flop synchroniser), not a timed release
+        _fwdc = _RS.fwd_clocks(m)
+        rsync = _RS.plan(cells, wires, ck_of_bus, ckof, {i.name: i.master for i in m['insts']}, _ok, _meso, fwd=_fwdc)
         if rsync['reclock'] and not _rep_ok[0]:
             rsync['errors'].append(dict(error=f'qfd_rst_rep is not a 2-flop synchroniser: {_rep_ok[1]}'))
         _rclk = {c[0]: rsync['reclock'].get(c[0], ck_of_bus[c[4]]) for c in cells}
-        rsync['untreated'] = _RS.audit(wires, _rclk, ckof, {i.name: i.master for i in m['insts']}, rsync['endpoints'], _meso)
+        rsync['untreated'] = _RS.audit(wires, _rclk, ckof, {i.name: i.master for i in m['insts']}, rsync['endpoints'], _meso,
+                                       fwd=_fwdc)
         rsync['mesochronous'] = sorted(_meso)
+        rsync['forwarded_clocks'] = sorted(_fwdc)
         if rsync['untreated']:
             rsync['errors'].append(dict(error='untreated reset release hops', hops=rsync['untreated'][:8]))
         rsync['rtl_check'] = {k: list(r) for k, r in _ok.items()}
