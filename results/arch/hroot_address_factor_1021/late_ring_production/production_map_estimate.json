@@ -1,0 +1,1527 @@
+{
+  "scope": "exact actual production mapped graph, unchanged textbook scalar weights; no native copy/placement/wire/load/slew or STA qualification",
+  "parser_sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+  "script_sha256": "75b24dc377b15d168f76c736ed8e491f82d887fc238c4168a39dc4c1072ba4a9",
+  "depth_scale": 1.667,
+  "current_qualified_prefix": {
+    "netlist": "/srv/opentallas-scratch/claude/codex-hroot-latering-estimate-1021/old.v",
+    "sha256": "4c4b1fa2eca4e65190a0203eea33fb2ff871928c9b5e26cbbef3e4952694fbb6",
+    "top": "qkd_host_native_engine",
+    "cells": 94213,
+    "flops": 16330,
+    "macros": 32,
+    "address_outputs": [
+      {
+        "endpoint": "w_addr[31]",
+        "estimate_ps": 1238.6,
+        "levels": 37,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[30]",
+        "estimate_ps": 1236.9,
+        "levels": 37,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[29]",
+        "estimate_ps": 1236.9,
+        "levels": 37,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[28]",
+        "estimate_ps": 1226.9,
+        "levels": 37,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[27]",
+        "estimate_ps": 1190.2,
+        "levels": 36,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[25]",
+        "estimate_ps": 1171.9,
+        "levels": 35,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[23]",
+        "estimate_ps": 1166.9,
+        "levels": 35,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[26]",
+        "estimate_ps": 1160.2,
+        "levels": 35,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[20]",
+        "estimate_ps": 1146.9,
+        "levels": 34,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[19]",
+        "estimate_ps": 1136.9,
+        "levels": 34,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[24]",
+        "estimate_ps": 1131.9,
+        "levels": 33,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[21]",
+        "estimate_ps": 1116.9,
+        "levels": 34,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[22]",
+        "estimate_ps": 1115.2,
+        "levels": 33,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[18]",
+        "estimate_ps": 1088.6,
+        "levels": 32,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[16]",
+        "estimate_ps": 1045.2,
+        "levels": 31,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[17]",
+        "estimate_ps": 1038.5,
+        "levels": 31,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[13]",
+        "estimate_ps": 1018.5,
+        "levels": 30,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[14]",
+        "estimate_ps": 1016.9,
+        "levels": 30,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[15]",
+        "estimate_ps": 1006.9,
+        "levels": 30,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[12]",
+        "estimate_ps": 930.2,
+        "levels": 27,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[11]",
+        "estimate_ps": 910.2,
+        "levels": 27,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[10]",
+        "estimate_ps": 881.8,
+        "levels": 26,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[8]",
+        "estimate_ps": 866.8,
+        "levels": 25,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[9]",
+        "estimate_ps": 846.8,
+        "levels": 25,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[7]",
+        "estimate_ps": 785.2,
+        "levels": 24,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[6]",
+        "estimate_ps": 740.1,
+        "levels": 22,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[5]",
+        "estimate_ps": 713.5,
+        "levels": 21,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[4]",
+        "estimate_ps": 700.1,
+        "levels": 20,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[3]",
+        "estimate_ps": 655.1,
+        "levels": 19,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[2]",
+        "estimate_ps": 618.5,
+        "levels": 18,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[1]",
+        "estimate_ps": 578.4,
+        "levels": 17,
+        "start": "_167052_"
+      },
+      {
+        "endpoint": "w_addr[0]",
+        "estimate_ps": 508.4,
+        "levels": 15,
+        "start": "_167052_"
+      }
+    ],
+    "worst_address_traces": [
+      {
+        "endpoint": "w_addr[31]",
+        "estimate_ps": 1238.6,
+        "logic_levels": 37,
+        "start": "_167052_",
+        "cone": [
+          {
+            "instance": "_105643_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105646_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105649_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105652_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105655_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105658_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105662_",
+            "master": "NAND5xp2_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105786_",
+            "master": "NOR5xp2_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105788_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105797_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105799_",
+            "master": "OA211x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105801_",
+            "master": "OAI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105803_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105805_",
+            "master": "OAI211xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105807_",
+            "master": "AO31x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105810_",
+            "master": "AO21x1_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_106052_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106066_",
+            "master": "MAJIxp5_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_106067_",
+            "master": "AOI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_106152_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106154_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106182_",
+            "master": "OAI211xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_106183_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_106331_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106335_",
+            "master": "OR3x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106349_",
+            "master": "NOR3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_106352_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106353_",
+            "master": "NOR3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_106365_",
+            "master": "NAND5xp2_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106373_",
+            "master": "AOI211xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_106382_",
+            "master": "AND4x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106480_",
+            "master": "AO211x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_106483_",
+            "master": "NAND4xp25_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_108634_",
+            "master": "MAJIxp5_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_108635_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_108637_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_108668_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          }
+        ]
+      },
+      {
+        "endpoint": "w_addr[30]",
+        "estimate_ps": 1236.9,
+        "logic_levels": 37,
+        "start": "_167052_",
+        "cone": [
+          {
+            "instance": "_105643_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105646_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105649_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105652_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105655_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105658_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105662_",
+            "master": "NAND5xp2_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105786_",
+            "master": "NOR5xp2_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105788_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105797_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105799_",
+            "master": "OA211x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105801_",
+            "master": "OAI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105803_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105805_",
+            "master": "OAI211xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105807_",
+            "master": "AO31x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105810_",
+            "master": "AO21x1_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_106052_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106065_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106159_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106160_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106312_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106316_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106447_",
+            "master": "AOI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_106448_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106449_",
+            "master": "AND4x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106454_",
+            "master": "AND3x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106524_",
+            "master": "MAJIxp5_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_106525_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106527_",
+            "master": "NAND3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_106533_",
+            "master": "NOR5xp2_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106545_",
+            "master": "NAND3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_106546_",
+            "master": "NOR3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_106547_",
+            "master": "NAND4xp25_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_106549_",
+            "master": "OAI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_107615_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_107616_",
+            "master": "AOI211xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_107617_",
+            "master": "NOR2xp33_ASAP7_75t_R",
+            "weight_ps": 20.004
+          }
+        ]
+      },
+      {
+        "endpoint": "w_addr[29]",
+        "estimate_ps": 1236.9,
+        "logic_levels": 37,
+        "start": "_167052_",
+        "cone": [
+          {
+            "instance": "_105643_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105646_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105649_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105652_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105655_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105658_",
+            "master": "AND5x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105662_",
+            "master": "NAND5xp2_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105786_",
+            "master": "NOR5xp2_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105788_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_105797_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105799_",
+            "master": "OA211x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105801_",
+            "master": "OAI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105803_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105805_",
+            "master": "OAI211xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105807_",
+            "master": "AO31x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_105810_",
+            "master": "AO21x1_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_106052_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106065_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106159_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106160_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106312_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106316_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106447_",
+            "master": "AOI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_106448_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106449_",
+            "master": "AND4x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106454_",
+            "master": "AND3x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106524_",
+            "master": "MAJIxp5_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_106525_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106527_",
+            "master": "NAND3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_106533_",
+            "master": "NOR5xp2_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_106545_",
+            "master": "NAND3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_106546_",
+            "master": "NOR3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_106547_",
+            "master": "NAND4xp25_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_106548_",
+            "master": "NOR2xp33_ASAP7_75t_R",
+            "weight_ps": 20.004
+          },
+          {
+            "instance": "_107640_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_107641_",
+            "master": "AOI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_107642_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          }
+        ]
+      }
+    ],
+    "reg_to_reg_worst": {
+      "estimate_ps": 1148.6,
+      "start": "_170164_",
+      "end": "_169754_/D"
+    }
+  },
+  "selected_late_ring_production": {
+    "netlist": "/srv/opentallas-scratch/claude/codex-hroot-latering-estimate-1021/new.v",
+    "sha256": "ee93785ec0c5ebeb588d6a66116635d0e45e492cc2172c22a17fe2bbb54dc8cd",
+    "top": "qkd_host_native_engine",
+    "cells": 96763,
+    "flops": 16330,
+    "macros": 32,
+    "address_outputs": [
+      {
+        "endpoint": "w_addr[31]",
+        "estimate_ps": 1085.2,
+        "levels": 34,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[30]",
+        "estimate_ps": 1061.9,
+        "levels": 34,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[29]",
+        "estimate_ps": 1021.9,
+        "levels": 33,
+        "start": "_179150_"
+      },
+      {
+        "endpoint": "w_addr[28]",
+        "estimate_ps": 1003.5,
+        "levels": 33,
+        "start": "_179150_"
+      },
+      {
+        "endpoint": "w_addr[26]",
+        "estimate_ps": 983.5,
+        "levels": 32,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[27]",
+        "estimate_ps": 975.2,
+        "levels": 32,
+        "start": "_177971_"
+      },
+      {
+        "endpoint": "w_addr[23]",
+        "estimate_ps": 958.5,
+        "levels": 30,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[24]",
+        "estimate_ps": 926.9,
+        "levels": 31,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[25]",
+        "estimate_ps": 925.2,
+        "levels": 31,
+        "start": "_177973_"
+      },
+      {
+        "endpoint": "w_addr[22]",
+        "estimate_ps": 921.9,
+        "levels": 30,
+        "start": "_177973_"
+      },
+      {
+        "endpoint": "w_addr[19]",
+        "estimate_ps": 883.5,
+        "levels": 28,
+        "start": "_179150_"
+      },
+      {
+        "endpoint": "w_addr[21]",
+        "estimate_ps": 881.8,
+        "levels": 29,
+        "start": "_177973_"
+      },
+      {
+        "endpoint": "w_addr[20]",
+        "estimate_ps": 875.2,
+        "levels": 29,
+        "start": "_177973_"
+      },
+      {
+        "endpoint": "w_addr[16]",
+        "estimate_ps": 840.2,
+        "levels": 28,
+        "start": "_177973_"
+      },
+      {
+        "endpoint": "w_addr[18]",
+        "estimate_ps": 825.2,
+        "levels": 27,
+        "start": "_177973_"
+      },
+      {
+        "endpoint": "w_addr[15]",
+        "estimate_ps": 806.8,
+        "levels": 26,
+        "start": "_179150_"
+      },
+      {
+        "endpoint": "w_addr[17]",
+        "estimate_ps": 796.8,
+        "levels": 26,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[13]",
+        "estimate_ps": 721.8,
+        "levels": 23,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[14]",
+        "estimate_ps": 708.5,
+        "levels": 23,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[10]",
+        "estimate_ps": 685.1,
+        "levels": 21,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[9]",
+        "estimate_ps": 683.5,
+        "levels": 21,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[12]",
+        "estimate_ps": 666.8,
+        "levels": 22,
+        "start": "_177973_"
+      },
+      {
+        "endpoint": "w_addr[11]",
+        "estimate_ps": 665.1,
+        "levels": 20,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[7]",
+        "estimate_ps": 635.1,
+        "levels": 19,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[8]",
+        "estimate_ps": 633.5,
+        "levels": 20,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[6]",
+        "estimate_ps": 628.5,
+        "levels": 19,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[5]",
+        "estimate_ps": 626.8,
+        "levels": 19,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[0]",
+        "estimate_ps": 581.8,
+        "levels": 19,
+        "start": "_178041_"
+      },
+      {
+        "endpoint": "w_addr[4]",
+        "estimate_ps": 551.8,
+        "levels": 17,
+        "start": "_178088_"
+      },
+      {
+        "endpoint": "w_addr[1]",
+        "estimate_ps": 530.1,
+        "levels": 17,
+        "start": "_178041_"
+      },
+      {
+        "endpoint": "w_addr[3]",
+        "estimate_ps": 521.8,
+        "levels": 17,
+        "start": "_183470_"
+      },
+      {
+        "endpoint": "w_addr[2]",
+        "estimate_ps": 501.8,
+        "levels": 16,
+        "start": "_183470_"
+      }
+    ],
+    "worst_address_traces": [
+      {
+        "endpoint": "w_addr[31]",
+        "estimate_ps": 1085.2,
+        "logic_levels": 34,
+        "start": "_178088_",
+        "cone": [
+          {
+            "instance": "_097924_",
+            "master": "OR2x2_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_107927_",
+            "master": "OA22x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109102_",
+            "master": "AOI211xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109147_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109148_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109167_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109168_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109170_",
+            "master": "OR3x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109174_",
+            "master": "OAI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109231_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109232_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109237_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109275_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109338_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109341_",
+            "master": "OAI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109344_",
+            "master": "AOI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109347_",
+            "master": "OAI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109350_",
+            "master": "AOI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109353_",
+            "master": "OAI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109354_",
+            "master": "AOI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109355_",
+            "master": "MAJIxp5_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_109357_",
+            "master": "MAJx2_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_109359_",
+            "master": "MAJIxp5_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_109362_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109366_",
+            "master": "AOI221xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109369_",
+            "master": "OA21x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109370_",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_111920_",
+            "master": "OR2x2_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_112813_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_112842_",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_112843_",
+            "master": "AOI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_112865_",
+            "master": "NOR3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_112912_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_112913_",
+            "master": "AOI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          }
+        ]
+      },
+      {
+        "endpoint": "w_addr[30]",
+        "estimate_ps": 1061.9,
+        "logic_levels": 34,
+        "start": "_178088_",
+        "cone": [
+          {
+            "instance": "_097924_",
+            "master": "OR2x2_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_107927_",
+            "master": "OA22x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109102_",
+            "master": "AOI211xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109147_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109148_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109167_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109168_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109170_",
+            "master": "OR3x1_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109174_",
+            "master": "OAI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109231_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109232_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109237_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109275_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_109338_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109341_",
+            "master": "OAI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109344_",
+            "master": "AOI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109347_",
+            "master": "OAI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109350_",
+            "master": "AOI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109353_",
+            "master": "OAI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109354_",
+            "master": "AOI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109355_",
+            "master": "MAJIxp5_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_109357_",
+            "master": "MAJx2_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_109359_",
+            "master": "MAJIxp5_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_109362_",
+            "master": "A2O1A1Ixp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109366_",
+            "master": "AOI221xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109369_",
+            "master": "OA21x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109370_",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109371_",
+            "master": "NOR3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_109373_",
+            "master": "NOR3xp33_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_109374_",
+            "master": "AOI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_109375_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_110223_",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_111917_",
+            "master": "AOI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          }
+        ]
+      },
+      {
+        "endpoint": "w_addr[29]",
+        "estimate_ps": 1021.9,
+        "logic_levels": 33,
+        "start": "_179150_",
+        "cone": [
+          {
+            "instance": "_108284_",
+            "master": "NAND2xp33_ASAP7_75t_R",
+            "weight_ps": 20.004
+          },
+          {
+            "instance": "_108285_",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_108405_",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_108407_",
+            "master": "AOI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_108497_",
+            "master": "AO21x1_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110648_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_110649_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_110681_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_110682_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_110718_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_110720_",
+            "master": "XOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_110721_",
+            "master": "AOI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110755_",
+            "master": "AO22x1_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110781_",
+            "master": "XNOR2xp5_ASAP7_75t_R",
+            "weight_ps": 36.674
+          },
+          {
+            "instance": "_110783_",
+            "master": "AOI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110952_",
+            "master": "A2O1A1O1Ixp25_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110953_",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110956_",
+            "master": "OAI211xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110961_",
+            "master": "AOI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110966_",
+            "master": "OA211x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110972_",
+            "master": "OAI221xp5_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110974_",
+            "master": "AOI31xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110981_",
+            "master": "OA211x2_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110983_",
+            "master": "AO21x1_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110986_",
+            "master": "AO21x1_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110987_",
+            "master": "MAJIxp5_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_110988_",
+            "master": "MAJIxp5_ASAP7_75t_R",
+            "weight_ps": 33.34
+          },
+          {
+            "instance": "_110989_",
+            "master": "OAI21xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_110990_",
+            "master": "OR2x2_ASAP7_75t_R",
+            "weight_ps": 28.339000000000002
+          },
+          {
+            "instance": "_111970_",
+            "master": "AOI32xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_111971_",
+            "master": "NOR2xp33_ASAP7_75t_R",
+            "weight_ps": 20.004
+          },
+          {
+            "instance": "_111986_",
+            "master": "AOI311xp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          },
+          {
+            "instance": "_111987_",
+            "master": "O2A1O1Ixp33_ASAP7_75t_R",
+            "weight_ps": 30.006
+          }
+        ]
+      }
+    ],
+    "reg_to_reg_worst": {
+      "estimate_ps": 1076.9,
+      "start": "_178362_",
+      "end": "_178375_/D"
+    }
+  }
+}
