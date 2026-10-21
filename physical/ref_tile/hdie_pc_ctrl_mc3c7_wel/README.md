@@ -21,3 +21,11 @@ Safe-design checklist: 1 pins PASS (RTL pin flops, 2-stage face reset landing, u
 3 fanout: kept copies, census in gate (max<=32 required); 4 depth: we cone now 1 compare per region group, accepted ends at flops;
 5 storage PASS (23 SRAM macros unchanged); 6 floorplan = t242 (lattice WARN waived by LEAD rule-freeze 10-20);
 7 clock: TritonCTS centre tree, spread <=80 TT/FF from gate, io_hold_margin 0.03; 8 schedule PASS: 0 added edges.
+
+UPDATE (gate r1 19:35, PRE_GATE_NATIVE_CENSUS_REFUSED on BOTH kits, incl. the unchanged MC3c logic): accepted 34/52 loads
+(22 K-region count_q next-count muxes + META copies), length[0] 35, AQ wr_ok_h 43 (head capture muxes). Fix (no added edge):
+WE_LOCAL>=1 -> each K region count_q selects queue_count_acc/idle with its OWN pop_regions[r] (== accepted, asserted);
+metadata_wp / unposted_aq take regional pops; AQ WROK_COPIES=2 adds a second wr_ok_h cone (head_bank_h2) for head regions 2,3.
+WE_LOCAL=1 (mc3c7_wel) additionally: 4 per-bank kept wp copies -> jlt/wa from flops; per-region acc_r(pop) & jlt_q = mf_valid.
+WE_LOCAL=2 (mc3c7_cts) keeps the original META forward path. Benches r2 (Verilator 5.050): WE_LOCAL=0/1/2 positives PASS
+edges_safe=100230 (bit/cycle-exact vs MC3c), no copy-mismatch assertion; mutants idtag/noacthead (1,2) + noacc (1) FAIL.

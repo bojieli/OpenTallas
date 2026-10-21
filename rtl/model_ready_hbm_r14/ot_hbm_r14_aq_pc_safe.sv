@@ -93,6 +93,7 @@ module ot_hbm_r14_aq_pc_safe #(
   // The two overlapped heads sustain one pop per edge, including ring wrap.
   (* keep="true",dont_touch="true" *) reg[WQW-1:0]q_rp_plus1,q_rp_plus2;
   wire wr_ok_q, wr_ok_h, wr_ok_s, wr_ok_p;
+  wire wr_ok_h2;   // WROK_COPIES=2 (HBM-MC3D): second head-capture cone for head regions 2,3 (== wr_ok_h)
   wire [WQW-1:0] qread=wr_ok_q ? q_rp_plus2 : q_rp_plus1;
   reg qfresh; reg [WQW-1:0] qfresh_addr; reg [29:0] qfresh_data;
   reg [29:0] qhead;
@@ -116,8 +117,9 @@ module ot_hbm_r14_aq_pc_safe #(
       successor_local[g]<=wr_ok_s?q_rp_plus1+1'b1:q_rp_plus1;
       fresh_local[g]<=qpush;
     end
-    assign head_push_regions[g]=qpush&&((q_n_local[g]==0)||(wr_ok_h&&q_n_local[g]==1));
-    assign head_capture_regions[g]=head_push_regions[g]||(wr_ok_h&&q_n_local[g]>1);
+    wire wr_ok_hg=(g>=2)?wr_ok_h2:wr_ok_h;
+    assign head_push_regions[g]=qpush&&((q_n_local[g]==0)||(wr_ok_hg&&q_n_local[g]==1));
+    assign head_capture_regions[g]=head_push_regions[g]||(wr_ok_hg&&q_n_local[g]>1);
   end
   for(genvar g=0;g<4;g=g+1)begin:HEAD_WORD_LOCAL
     localparam LO=(g==3)?20:g*8;
@@ -563,7 +565,17 @@ module ot_hbm_r14_aq_pc_safe #(
     (* keep="true" *) wire rdy_h=q_ne&&|(hb_oh_h&open&head_timer_ready&~blk&~pre_fl&head_row_match);
     assign wr_ok_q=rdy_q&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
     assign wr_ok_h=rdy_h&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
+    if(WROK_COPIES>=2)begin:g_wrok_h2
+      (* keep="true",dont_touch="true" *) reg [4:0] head_bank_h2;
+      always @(posedge clk)head_bank_h2<=head_bank_d_regions[3];
+      wire [31:0] hb_oh_h2=32'b1<<head_bank_h2;
+      (* keep="true" *) wire rdy_h2=q_ne&&|(hb_oh_h2&open&head_timer_ready&~blk&~pre_fl&head_row_match);
+      assign wr_ok_h2=rdy_h2&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
+    end else begin:g_wrok_h1
+      assign wr_ok_h2=wr_ok_h;
+    end
   end else begin:g_wrok_one
+    assign wr_ok_h2=wr_ok;
     assign wr_ok_q=wr_ok; assign wr_ok_h=wr_ok; assign wr_ok_s=wr_ok; assign wr_ok_p=wr_ok;
   end endgenerate
   assign col_v_regions[1]=cfg_bank_ready&&ccdl_z[hb[1:0]]&&(hr?(wtr_c==0):(rtw_c==0));
@@ -571,7 +583,7 @@ module ot_hbm_r14_aq_pc_safe #(
   always @(negedge clk)if(rst_n)begin
     if(open_column!==open)$fatal(1,"BW_AQ_OPEN_REGION_MISMATCH");
     if(col_v_regions[1]!==col_v)$fatal(1,"BW_AQ_COLUMN_REGION_MISMATCH");
-    if(wr_ok_q!==wr_ok||wr_ok_h!==wr_ok||wr_ok_s!==wr_ok||wr_ok_p!==wr_ok)$fatal(1,"BW_AQ_WROK_COPY_MISMATCH");
+    if(wr_ok_q!==wr_ok||wr_ok_h!==wr_ok||wr_ok_h2!==wr_ok||wr_ok_s!==wr_ok||wr_ok_p!==wr_ok)$fatal(1,"BW_AQ_WROK_COPY_MISMATCH");
   end
 `endif
 

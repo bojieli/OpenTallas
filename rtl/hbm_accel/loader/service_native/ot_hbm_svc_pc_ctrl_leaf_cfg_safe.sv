@@ -65,9 +65,12 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     parameter integer POST_REG=0,
     // WE_LOCAL=1 (HBM-MC3D 10-20): the MC3c t242 route failed TT -160.9 ps on metadata_wp -> j -> we -> 20 regional
     //   mf_valid D pins (734 ps clk->D: one INVx4 + 4 wire buffers spreading one we/wa net over the 20 META_SELECT
-    //   regions).  Now four region groups x four banks own KEPT copies of metadata_wp (same D, same reset), compute
-    //   j / (j<length) / wa locally, and every region captures accepted and (j<length) in two kept flops whose AND
-    //   is mf_valid.  Same values on the same edges (no added cycle); SRAM write ports keep the original cone.
+    //   regions).  WE_LOCAL>=1: accepted no longer broadcasts: each K region's count_q selects between two shared
+    //   precomputed next counts with its OWN regional pop (pop_regions[r] == accepted, same edge); the metadata write
+    //   pointers and unposted_aq take regional pops too; the AQ head capture uses two wr_ok_h cones (WROK_COPIES=2).
+    //   WE_LOCAL=1 also: four per-bank kept write-pointer copies compute j<length / wa from flops, every META_SELECT
+    //   region captures its regional pop (acc_r) and the bank's j<length (jlt_q); mf_valid = acc_r & jlt_q.
+    //   Same values on the same edges (no added cycle); ports unchanged.  0 = MC3c v6 unchanged.
     parameter integer WE_LOCAL=0
 )(
     input wire clk,rst_n,
@@ -168,9 +171,12 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // wr2 never binds (a mutant ignoring it cannot overflow, measured); kept as a local structural guarantee.
     wire wr_post=(POST_REG!=0&&post_hold)?wr2:wr;
     wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr_post;
+    wire[21:0]accepted_regions;   // WE_LOCAL: same-edge regional copies of accepted (K-ring regional pops)
     wire[QW:0]unposted_next=unposted+(accepted?6'(length):6'd0)-(posted?6'd1:6'd0);
+    wire[QW:0]unposted_aq_next=(WE_LOCAL!=0)?
+      (accepted_regions[19]?unposted+6'(length)-(posted?6'd1:6'd0):unposted-(posted?6'd1:6'd0)):unposted_next;
     always @(posedge clk or negedge lrst_n)
-      if(!lrst_n)unposted_aq<=0;else unposted_aq<=unposted_next;
+      if(!lrst_n)unposted_aq<=0;else unposted_aq<=unposted_aq_next;
 `ifndef SYNTHESIS
     always @(negedge clk)if(lrst_n&&unposted_aq!==unposted)
       $fatal(1,"BW_CFG_UNPOSTED_REGION_MISMATCH");
@@ -178,6 +184,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     // One arithmetic cone feeds kept same-edge count captures. At22 regions
     // the shared next-count bus drives23 D pins per bit, including count.
     wire[QW:0]queue_count_next=count+(accepted?6'(length):6'd0)-(cv_cfg?6'd1:6'd0);
+    // WE_LOCAL: the two candidates; each regional count_q selects with its own pop.
+    wire[QW:0]queue_count_acc=count+6'(length)-(cv_cfg?6'd1:6'd0),queue_count_idle=count-(cv_cfg?6'd1:6'd0);
     wire posted_read=posted&&push_read;
     wire column_read=cv_cfg&&!cwe;
     wire j_v,j_rdy;
@@ -224,7 +232,11 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
           assign pop_regions[r]=valid_regions[r]&&ready_local;
           always @(posedge clk or negedge region_rst_n[72+r])
             if(!region_rst_n[72+r])count_q<=0;
-            else count_q<=queue_count_next;
+            else count_q<=(WE_LOCAL!=0)?(pop_regions[r]?queue_count_acc:queue_count_idle):queue_count_next;
+`ifndef SYNTHESIS
+          always @(negedge clk)if(WE_LOCAL!=0&&region_rst_n[72+r]&&lrst_n&&pop_regions[r]!==accepted)
+            $fatal(1,"BW_CFG_POP_REGION_MISMATCH");
+`endif
           if(PURE_FACE!=0)begin:g_pure_kv
             // pure pin capture: k_v reaches only D pins; ready_seen (reset) masks the push during/after reset
             always @(posedge clk)kv_regions[r]<=k_v;
@@ -248,7 +260,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
             else begin k_rdy_q<=k_rdy_q?(nn<3'd2):(nn<=3'd2);end
         end
         assign k_rdy=k_rdy_q;
+        assign accepted_regions=pop_regions;
     end else begin:g_raw_k
+        assign accepted_regions={22{accepted}};
         assign i_v=k_v;assign i_we=k_we;assign i_addr=k_addr;assign i_len=k_len;assign i_tag=k_tag;
         assign i_wdata=k_wdata;assign i_wstrb=k_wstrb;assign k_rdy=i_rdy;
         assign length_prefix={length==1,length<=2,length<=3};assign legal=raw_legal;assign kfront_fault=0;
@@ -357,11 +371,11 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         else begin rp_sel<=next_rp[1:0];ep_sel<=next_ep[1:0];
           rp_hi<=next_rp[QW-1:2];ep_hi<=next_ep[QW-1:2];end
       wire[BITS-1:0]hbank[0:3],ebank[0:3];
-      wire acc_q;   // WE_LOCAL: regional accepted capture
-      if(WE_LOCAL!=0)begin:g_acc
+      wire acc_q;   // WE_LOCAL=1: regional accepted capture
+      if(WE_LOCAL==1)begin:g_acc
         (* keep="true",dont_touch="true" *) reg acc_r;
         always @(posedge clk or negedge meta_rst_n)
-          if(!meta_rst_n)acc_r<=0;else acc_r<=accepted;
+          if(!meta_rst_n)acc_r<=0;else acc_r<=accepted_regions[s];
         assign acc_q=acc_r;
       end else begin:g_noacc
         assign acc_q=1'b0;
@@ -369,16 +383,16 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       for(genvar b=0;b<4;b=b+1)begin:FORWARD
         wire mf_valid;
         (* keep="true",dont_touch="true" *) reg[QW-3:0]mf_address;
-        if(WE_LOCAL!=0)begin:g_local
+        if(WE_LOCAL==1)begin:g_local
           (* keep="true",dont_touch="true" *) reg jlt_q;
           always @(posedge clk or negedge meta_rst_n)
-            if(!meta_rst_n)jlt_q<=0;else jlt_q<=META_WE_GROUP[s/5].BANK[b].jlt;
+            if(!meta_rst_n)jlt_q<=0;else jlt_q<=META_WE_BANK[b].jlt;
 `ifdef BW_MUT_WE_NOACC
           assign mf_valid=jlt_q;
 `else
           assign mf_valid=acc_q&&jlt_q;
 `endif
-          always @(posedge clk)mf_address<=META_WE_GROUP[s/5].BANK[b].wa_hi;
+          always @(posedge clk)mf_address<=META_WE_BANK[b].wa_hi;
         end else begin:g_shared
           (* keep="true",dont_touch="true" *) reg mf_valid_q;
           always @(posedge clk or negedge meta_rst_n)
@@ -443,25 +457,23 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     for(genvar g=0;g<2;g=g+1)begin:META_WRITE_PTR
       always @(posedge clk or negedge region_rst_n[4+g])
         if(!region_rst_n[4+g])metadata_wp[g]<=0;
-        else metadata_wp[g]<=metadata_wp_next;
+        else metadata_wp[g]<=(WE_LOCAL!=0)?(accepted_regions[20+g]?wp+QW'(length):wp):metadata_wp_next;
     end
-    // WE_LOCAL: per (region group, bank) kept write-pointer copies; same D/reset as metadata_wp[b/2].
-    for(genvar G=0;G<4;G=G+1)begin:META_WE_GROUP
-      for(genvar b=0;b<4;b=b+1)begin:BANK
-        wire[QW-1:0]wpl;
-        if(WE_LOCAL!=0)begin:g_wpl
-          (* keep="true",dont_touch="true" *) reg[QW-1:0]wpl_q;
-          always @(posedge clk or negedge region_rst_n[4+b/2])
-            if(!region_rst_n[4+b/2])wpl_q<=0;else wpl_q<=metadata_wp_next;
-          assign wpl=wpl_q;
-        end else begin:g_nowpl
-          assign wpl=metadata_wp[b/2];
-        end
-        wire[1:0]j=2'(b)-wpl[1:0];
-        wire jlt={1'b0,j}<length;
-        wire[QW-1:0]wa=wpl+QW'(j);
-        wire[QW-3:0]wa_hi=wa[QW-1:2];
+    // WE_LOCAL=1: per-bank kept write-pointer copies (regional pop select, same value as metadata_wp[b/2]).
+    for(genvar b=0;b<4;b=b+1)begin:META_WE_BANK
+      wire[QW-1:0]wpl;
+      if(WE_LOCAL==1)begin:g_wpl
+        (* keep="true",dont_touch="true" *) reg[QW-1:0]wpl_q;
+        always @(posedge clk or negedge region_rst_n[4+b/2])
+          if(!region_rst_n[4+b/2])wpl_q<=0;else wpl_q<=accepted_regions[16+b]?wp+QW'(length):wp;
+        assign wpl=wpl_q;
+      end else begin:g_nowpl
+        assign wpl=metadata_wp[b/2];
       end
+      wire[1:0]j=2'(b)-wpl[1:0];
+      wire jlt={1'b0,j}<length;
+      wire[QW-1:0]wa=wpl+QW'(j);
+      wire[QW-3:0]wa_hi=wa[QW-1:2];
     end
     for(genvar b=0;b<4;b=b+1)begin:METADATA
       wire[1:0]j=2'(b)-metadata_wp[b/2][1:0];wire we=accepted&&{1'b0,j}<length;
@@ -514,7 +526,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       assign aq_v=enqueue_aq;assign aq_v_regions={9{enqueue_aq}};assign aq_bank=push[318:314];assign aq_col=push[313:309];
       assign aq_row=qrow_post;assign aq_rd=push_read;assign aq_bank_regions=qbank_post_regions;assign aq_row_regions=qrow_post_regions;
     end endgenerate
-    ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.BANK_REGIONS(8),.WQ(QD),.MRKEY(MRKEY),.SRAM_P192(SRAM_P192),.WROK_COPIES(WROK_COPIES),.WV_REGIONS(POST_REG),.ACT_HEAD(POST_REG)) controller(
+    ot_hbm_r14_aq_pc_safe #(.ROW_REGIONS(8),.BANK_REGIONS(8),.WQ(QD),.MRKEY(MRKEY),.SRAM_P192(SRAM_P192),.WROK_COPIES((WE_LOCAL!=0&&WROK_COPIES!=0)?2:WROK_COPIES),.WV_REGIONS(POST_REG),.ACT_HEAD(POST_REG)) controller(
         .clk(clk),.rst_n(region_rst_n[7]),.reset_regions(region_rst_n[71:8]),.slot_parity(pc_id_sp),.refresh_reload(refresh_reload_q),
         .row_v(r_v),.row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         .col_v(),.col_v_regions(cv_regions),.col_bank(cb),.col_col(cc),.ref_fault(pc_fault),.ref_fault_regions(pc_fault_regions),
