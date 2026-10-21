@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_eng_tap_w",
+ "enable": false,
+ "reason": "Source-registered inline tap on the irg->ctrl reader link: every output (rqo / rro / pco / fault) is a flop, every input lands in its first flop after <= 3 gates (rqi->rqo, rri->rro 1:1 + demux; rci decode); the die lands every input (G8IQ die.v w_*_lnd) and a flow pin register would add 2 unpriced cycles on every reader request / response of PC 0/1."
+}

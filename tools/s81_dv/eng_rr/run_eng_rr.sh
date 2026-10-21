@@ -1,13 +1,17 @@
 #!/bin/bash
 # S81-RTLGAP/RG-ENG (10-21): fleet runner of tb_dsdv_eng_rr (Engram row-read path + join, dsdv_eng_rr.sv).
 #   run_eng_rr.sh <git ref> <work dir>   (on a fleet host with the git mirror; Verilator 5.050 = the closure daemon's)
+#   run_eng_rr.sh tree <work dir>        TOK-FUNC2 10-21: take the files from the current source tree (closure-loop job
+#                                        snapshot, cwd = tree root) instead of the git mirror.  ONLY="<variant>" builds and
+#                                        runs that one variant (base xq1 xq2 tap1 tap2 rpar onesc; base adds the 2 seeds).
+#                                        EXTRA_F (space list) / EXTRA_V (verilator args) add successor sources / defines.
 # Builds base + 4 mutants (XQ_MUT 1/2, TAP_MUT 1/2), runs each, python bit-exact check (hdc_golden_v41), writes
 # <work>/check.json {pass, mutants[{name, failed, log}]} and keeps every run log.
 set -u
 REF=${1:?ref}; W=$(realpath -m ${2:?work}); mkdir -p $W/src
 G=${OT_GIT_DIR:-/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git}
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-git --git-dir=$G cat-file -e "$REF^{commit}" 2>/dev/null || git --git-dir=$G fetch -q origin ${BR:-claude/s81-eng640-1021}
+[ "$REF" = tree ] || { git --git-dir=$G cat-file -e "$REF^{commit}" 2>/dev/null || git --git-dir=$G fetch -q origin ${BR:-claude/s81-eng640-1021}; }
 F=(rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv
    rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv
    rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_static.sv
@@ -29,16 +33,22 @@ F=(rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_has
    rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_prefix.sv
    rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fastfp.sv
    rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv
-   rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv rtl/dsrom_sys/s81_dv/eng/test/tb_dsdv_eng_rr.sv)
-git --git-dir=$G archive "$REF" "${F[@]}" tools/hdc_golden.py tools/hdc_golden_v41.py tools/s81_dv/eng_rr | tar -xf - -C $W/src
-cd $W/src; git --git-dir=$G rev-parse "$REF" > $W/ref.txt; sha256sum "${F[@]}" > $W/sources.sha256
+   rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv ${EXTRA_F:-} rtl/dsrom_sys/s81_dv/eng/test/tb_dsdv_eng_rr.sv)
+if [ "$REF" = tree ]; then
+  tar -cf - "${F[@]}" tools/hdc_golden.py tools/hdc_golden_v41.py tools/s81_dv/eng_rr | tar -xf - -C $W/src
+  cd $W/src; echo tree > $W/ref.txt
+else
+  git --git-dir=$G archive "$REF" "${F[@]}" tools/hdc_golden.py tools/hdc_golden_v41.py tools/s81_dv/eng_rr | tar -xf - -C $W/src
+  cd $W/src; git --git-dir=$G rev-parse "$REF" > $W/ref.txt
+fi
+sha256sum "${F[@]}" > $W/sources.sha256
 $VL --version > $W/verilator.version
 python3 tools/s81_dv/eng_rr/prep_rom.py $W/rom
 build() {  # name, -G params
   local n=$1; shift
   /usr/bin/time -v -o $W/$n.build.time $VL --binary --timing -j ${J:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH \
     -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 +define+OT_ENGRAM_CRCMAT \
-    --top-module tb_dsdv_eng_rr "$@" "${F[@]}" --Mdir $W/obj_$n -o sim > $W/$n.build.log 2>&1
+    --top-module tb_dsdv_eng_rr ${EXTRA_V:-} "$@" "${F[@]}" --Mdir $W/obj_$n -o sim > $W/$n.build.log 2>&1
   echo "$n build rc $?" >> $W/status
 }
 run() {   # name
@@ -49,6 +59,13 @@ run() {   # name
   else echo "NO BUILD" > $W/$n.log; fi
   echo "$n: $(grep -h 'TB_ENG_RR PASS\|TB_ENG_RR FAIL' $W/$n.log | tail -1) $(grep -h 'ENG_RR_PY PASS\|ENG_RR_PY FAIL' $W/$n.log | tail -1)" >> $W/status
 }
+if [ -n "${ONLY:-}" ]; then
+  case $ONLY in base) a=;; xq1) a=-GXQ_MUT=1;; xq2) a=-GXQ_MUT=2;; tap1) a=-GTAP_MUT=1;; tap2) a=-GTAP_MUT=2;;
+    rpar) a=+define+OT_ENGRAM_MUT_RA512_PAR;; onesc) a=+define+OT_ENGRAM_MUT_ONESCALE;; *) echo "ONLY? $ONLY"; exit 2;; esac
+  build $ONLY $a; run $ONLY
+  if [ $ONLY = base ]; then for a in "+SEED=2 +LAT=160" "+SEED=3 +LAT=60"; do v=var_${a//[ +=]/_}; $W/obj_base/sim +OT_ROM_DIR=$W/rom $a > $W/$v.log 2>&1; python3 tools/s81_dv/eng_rr/check_eng_rr.py $W/$v.log $W/src >> $W/$v.log 2>&1; echo "base $a: $(grep -h 'TB_ENG_RR PASS\|TB_ENG_RR FAIL' $W/$v.log | tail -1) $(grep -h 'ENG_RR_PY PASS\|ENG_RR_PY FAIL' $W/$v.log | tail -1)" >> $W/status; done; fi
+  grep -v ' build rc ' $W/status; grep -h 'TB_ENG_RR_STATS' $W/$ONLY.log | tail -1; exit 0
+fi
 if [ "${BASE_ONLY:-0}" = 1 ]; then build base; run base; cat $W/status; grep -m20 '%Error' $W/base.build.log; tail -30 $W/base.log; exit 0; fi
 build base &
 build xq1 -GXQ_MUT=1 &

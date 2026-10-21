@@ -1,0 +1,66 @@
+{
+ "name": "dsdv_eng_tap_w",
+ "top": "dsdv_eng_tap_w",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": ["rst_n"],
+ "outline": {"w": 216.0, "h": 648.0, "exact": true},
+ "macros": [],
+ "pins": {
+  "W": ["rqi", "rro"],
+  "E": ["rqo", "rri"],
+  "N": ["rci", "pco"],
+  "S": ["ck", "rst_n", "sid", "fault"]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "io_flop_at_pins": {"cols": 4, "allow_none": true},
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered inline tap on the irg->ctrl reader link: every output (rqo / rro / pco / fault) is a flop, every input lands in its first flop after <= 3 gates (rqi->rqo, rri->rro 1:1 + demux; rci decode); the die lands every input (G8IQ die.v w_*_lnd) and a flow pin register would add 2 unpriced cycles on every reader request / response of PC 0/1."
+ },
+ "fill_reason": {"pin_bound": "TOK-FUNC2-ENG_TAP_W 10-21: drop-in for the G8IQ plan slot etap_00 (216 x 648, plan_routed_g8): W 636 / E 636 / N 311 pins; ~4.4k flops -> low util by construction (slot = pin faces of the reader link)."},
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_h": "M4",
+  "pin_v": "M3 M5"
+ },
+ "structural_change": "TOK-FUNC2-ENG_TAP_W 10-21: NEW leaf kit for the G8IQ stand-in master dsdv_eng_tap_w (u_etap_00, west end of the Engram request / response chains; dsdv_eng_tap_c WEST=1 of rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv). Faces from plan_routed_g8 links: reader irg_00 W (rqi / rro), controller ctrl_00 E (rqo / rri), chains etap_01 N (rci / pco). Outline = slot.",
+ "job": {
+  "owner": "Claude:TOK-FUNC2-ENG_TAP_W",
+  "branch": "claude/tokf2-etapw-1021",
+  "tag": "etapw",
+  "purpose": "TOK-FUNC2 G8IQ stand-in close: Engram west-end tap dsdv_eng_tap_w to closure (TT setup / FF hold / DRC 0 + native audit) -> S81-DIE9 G9 bind.",
+  "extra_paths": [
+   "rtl/lib", "rtl/dsrom_sys/s81_dv/eng", "tools/s81_dv/eng_rr", "tools/hdc_golden.py", "tools/hdc_golden_v41.py",
+   "rtl/hdc", "rtl/proto/ot_fp32_add_rne_pipe.sv", "rtl/dsrom_sys/engram", "rtl/dsrom_sys/s81_ph", "rtl/dsrom_sys/s81_glue",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192", "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2", "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8", "results/rtl/tokf2_etapw_1021"
+  ],
+  "benches": [
+   {"name": "eng_rr_exact", "cmd": "J=8 ONLY=base bash tools/s81_dv/eng_rr/run_eng_rr.sh tree {RUN}/eng_base", "expect": "pass",
+    "pass_regex": "^base \\+SEED=3 \\+LAT=60: TB_ENG_RR PASS ENG_RR_PY PASS$", "min_count_regex": "row_beats (\\d+)", "threads": 8, "peak_ram_gb": 6},
+   {"name": "eng_rr_tap1_mutant", "cmd": "J=8 ONLY=tap1 bash tools/s81_dv/eng_rr/run_eng_rr.sh tree {RUN}/eng_tap1", "expect": "fail",
+    "fail_regex": "^tap1: TB_ENG_RR FAIL", "fail_witness": "results/rtl/tokf2_etapw_1021/witness/tap1.log", "threads": 8, "peak_ram_gb": 6},
+   {"name": "eng_rr_tap2_mutant", "cmd": "J=8 ONLY=tap2 bash tools/s81_dv/eng_rr/run_eng_rr.sh tree {RUN}/eng_tap2", "expect": "fail",
+    "fail_regex": "^tap2: TB_ENG_RR FAIL", "fail_witness": "results/rtl/tokf2_etapw_1021/witness/tap2.log", "threads": 8, "peak_ram_gb": 6}
+  ]
+ }
+}
