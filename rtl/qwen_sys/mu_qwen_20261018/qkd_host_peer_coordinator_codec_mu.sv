@@ -84,25 +84,58 @@ generate if(MU==0)begin:g_plain
  qkd_host_peer_coordinator_codec  u_plain(.ck(ck),.por_n(por_n),.rx_valid(rx_valid),.rx_data(rx_data),.rx_ready(rx_ready),.tx_valid(tx_valid),.tx_data(w_tx_data),.tx_ready(tx_ready),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_tag(allocated_tag),.allocated_gen(allocated_gen),.allocated_position(allocated_position),.participant_valid(w_participant_valid),.participant_tag(w_participant_tag),.participant_gen(w_participant_gen),.participant_trace(w_participant_trace),.participant_token(w_participant_token),.participant_pos(w_participant_pos),.participant_accepted(participant_accepted),.cancel_valid(w_cancel_valid),.cancel_done(w_cancel_done),.cancel_fault(w_cancel_fault),.cancel_tag(w_cancel_tag),.cancel_gen(w_cancel_gen),.cancel_accepted(cancel_accepted),.service_ready(w_service_ready),.native_ready(w_native_ready),.kv_drained(w_kv_drained),.vm_drained(w_vm_drained),.collective_drained(w_collective_drained),.host_drained(w_host_drained),.context_owned(w_context_owned),.links_drained(w_links_drained),.link_reset_seen(w_link_reset_seen),.retrained(w_retrained),.service_epoch(w_service_epoch),.certificate_epoch(w_certificate_epoch),.program_ready(w_program_ready),.program_epoch(w_program_epoch),.program_digest(w_program_digest),.result_v(result_v),.result_tag(result_tag),.result_gen(result_gen),.result_done(result_done),.result_fault(result_fault),.result_cause(result_cause),.result_token(result_token),.result_value(result_value),.result_cycles(result_cycles),.result_cr(w_result_cr),.terminal_accepted(terminal_accepted),.terminal_tag(terminal_tag),.terminal_gen(terminal_gen),.post_retired(post_retired),.terminal_released(w_terminal_released),.result_transport_idle(result_transport_idle),.link_reset_request(link_reset_request),.retraining_request(retraining_request),.step_issue_v(w_step_issue_v),.step_client_tag(w_step_client_tag),.step_slot(w_step_slot),.step_pos(w_step_pos),.step_retire_v(w_step_retire_v),.step_retire_cq(w_step_retire_cq),.step_retire_client_tag(w_step_retire_client_tag),.step_retire_slot(w_step_retire_slot),.step_retire_pos(w_step_retire_pos),.step_retire_token(w_step_retire_token),.cq_commit_v(w_cq_commit_v),.cq_client_tag(w_cq_client_tag),.cq_slot(w_cq_slot),.cq_pos(w_cq_pos),.cq_token(w_cq_token),.certificate_valid(w_certificate_valid),.certificate(w_certificate),.certificate_prefix(w_certificate_prefix),.fault(w_fault));
  always @*begin tx_data=w_tx_data;participant_valid=w_participant_valid;participant_tag=w_participant_tag;participant_gen=w_participant_gen;participant_trace=w_participant_trace;participant_token=w_participant_token;participant_pos=w_participant_pos;cancel_valid=w_cancel_valid;cancel_done=w_cancel_done;cancel_fault=w_cancel_fault;cancel_tag=w_cancel_tag;cancel_gen=w_cancel_gen;service_ready=w_service_ready;native_ready=w_native_ready;kv_drained=w_kv_drained;vm_drained=w_vm_drained;collective_drained=w_collective_drained;host_drained=w_host_drained;context_owned=w_context_owned;links_drained=w_links_drained;link_reset_seen=w_link_reset_seen;retrained=w_retrained;service_epoch=w_service_epoch;certificate_epoch=w_certificate_epoch;program_ready=w_program_ready;program_epoch=w_program_epoch;program_digest=w_program_digest;result_cr=w_result_cr;terminal_released=w_terminal_released;step_issue_v=w_step_issue_v;step_client_tag=w_step_client_tag;step_slot=w_step_slot;step_pos=w_step_pos;step_retire_v=w_step_retire_v;step_retire_cq=w_step_retire_cq;step_retire_client_tag=w_step_retire_client_tag;step_retire_slot=w_step_retire_slot;step_retire_pos=w_step_retire_pos;step_retire_token=w_step_retire_token;cq_commit_v=w_cq_commit_v;cq_client_tag=w_cq_client_tag;cq_slot=w_cq_slot;cq_pos=w_cq_pos;cq_token=w_cq_token;certificate_valid=w_certificate_valid;certificate=w_certificate;certificate_prefix=w_certificate_prefix;fault=w_fault;end
 end else begin:g_mu
- reg[58:0]tq_tag[0:3];reg[1:0]tq_gen[0:3];reg[1:0]tq_w,tq_r;reg[2:0]tq_n;
- reg[3:0]al_v,term_v;reg[58:0]al_tag[0:3],term_tag[0:3];reg[1:0]al_gen[0:3],term_gen[0:3];reg[58:0]al_last;reg al_last_v;
- wire tq_push=terminal_accepted&&!(tq_n==3'd4||term_v[terminal_tag[44:43]]);
+ // KV-PEER13: g_mu declarations hoisted before first use (Yosys declare-before-use; tools/qwen_kv_die/mu_peer/hoist_gmu_decls.py)
+ reg[58:0] tq_tag[0:3];
+ reg[1:0] tq_gen[0:3];
+ reg[1:0] tq_w,tq_r;
+ reg[2:0] tq_n;
+ reg[3:0] al_v,term_v;
+ reg[58:0] al_tag[0:3],term_tag[0:3];
+ reg[1:0] al_gen[0:3],term_gen[0:3];
+ reg[58:0] al_last;
+ reg al_last_v;
+ wire tq_push;
+ wire head_done;
+ wire tq_pop;
+ wire[2:0] tq_next;
+ reg[15:0] rx_seq[0:7],tx_seq[0:7];
+ reg[7:0] request_queued;
+ reg[7:0] request_ack,cancel_ack,request_abort,terminal_send,result_send,result_return;
+ reg[471:0] request_ack_tag,cancel_ack_tag;
+ reg[15:0] request_ack_gen,cancel_ack_gen;
+ reg result_busy;
+ wire terminal_active;
+ wire[58:0] accepted_tag;
+ wire[1:0] accepted_gen;
+ reg[511:0] result_word;
+ reg[1:0] last_recovery[0:7];
+ reg[7:0] recovery_sent;
+ reg[3:0] choice[0:7];
+ wire[80:0] allocation;
+ reg[80:0] last_allocation[0:7];
+ reg[7:0] allocation_sent;
+ wire[1:0] recovery;
+ integer i;
+
+ 
+ 
+ assign tq_push=terminal_accepted&&!(tq_n==3'd4||term_v[terminal_tag[44:43]]);
  // POST retires the head terminal once its barrier finished (class5 sent, 8 class8 releases); the transport may
  // already carry another user's result (the global result_transport_idle stays the recovery / POST-collector input)
- wire head_done=terminal_active&&terminal_send==0&&(&terminal_released);
- wire tq_pop=post_retired&&head_done;
- wire[2:0]tq_next=tq_n+3'(tq_push)-3'(tq_pop);
+ assign head_done=terminal_active&&terminal_send==0&&(&terminal_released);
+ assign tq_pop=post_retired&&head_done;
+ assign tq_next=tq_n+3'(tq_push)-3'(tq_pop);
 
- reg[15:0]rx_seq[0:7],tx_seq[0:7];
- reg[7:0]request_queued;
- reg[7:0]request_ack,cancel_ack,request_abort,terminal_send,result_send,result_return;
- reg[471:0]request_ack_tag,cancel_ack_tag;reg[15:0]request_ack_gen,cancel_ack_gen;
- reg result_busy;wire terminal_active=tq_n!=0;wire[58:0]accepted_tag=tq_tag[tq_r];wire[1:0]accepted_gen=tq_gen[tq_r];
- reg[511:0]result_word;reg[1:0]last_recovery[0:7];reg[7:0]recovery_sent;
- reg[3:0]choice[0:7];
- wire[80:0]allocation={allocated_position,allocated_gen,allocated_tag,allocated_delivered,allocated_valid};
- reg[80:0]last_allocation[0:7];reg[7:0]allocation_sent;
- wire[1:0]recovery={retraining_request,link_reset_request};
+ 
+ 
+ 
+ 
+ assign terminal_active=tq_n!=0;assign accepted_tag=tq_tag[tq_r];assign accepted_gen=tq_gen[tq_r];
+ 
+ 
+ assign allocation={allocated_position,allocated_gen,allocated_tag,allocated_delivered,allocated_valid};
+ 
+ assign recovery={retraining_request,link_reset_request};
  assign rx_ready={8{!fault}};
  assign result_transport_idle=!result_busy&&request_queued==0&&request_ack==0&&cancel_ack==0&&terminal_send==0&&(!terminal_active||(&terminal_released))&&!result_v;
   for(genvar g=0;g<8;g=g+1)begin:g_tx
@@ -121,7 +154,7 @@ end else begin:g_mu
    tx_data[k*512+:8]=8'h80|8'(choice[k]);tx_data[k*512+8+:3]=0;tx_data[k*512+11+:3]=3'(k);tx_data[k*512+14+:16]=tx_seq[k];
   end
  end
- integer i;
+ 
  always @(posedge ck or negedge por_n)begin
   if(!por_n)begin
    request_queued<=0;participant_valid<=0;participant_tag<=0;participant_gen<=0;participant_trace<=0;participant_token<=0;participant_pos<=0;
