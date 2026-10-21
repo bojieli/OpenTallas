@@ -198,6 +198,14 @@ def bind(case, libs, master, vdir):
         # absent from the original frame pin list. Widths are checked against
         # the real scalar pin and the net declaration before admitting them.
         die_text = (case / 'die.v').read_text()
+        if KV.KSD.GRP_SAFE2:
+            import kv_grp_safe2
+            actual_frame = kv_grp_safe2.frame_port_widths(master, frame_w, die_text)
+            if actual_frame != frame_w:
+                rec['private_abi_frame_correction'] = {
+                    p: dict(frame=frame_w[p], actual=actual_frame[p])
+                    for p in actual_frame if actual_frame[p] != frame_w[p]}
+            frame_w = actual_frame
         die_widths = {n: int(hi) + 1 for hi, n in re.findall(r'wire\s+\[(\d+):0\]\s+(\S+);', die_text)}
         extra = set()
         for body in re.findall(r'^\s+' + re.escape(master) + r'\s+\S+\s+\((.*?)\);', die_text, re.M):

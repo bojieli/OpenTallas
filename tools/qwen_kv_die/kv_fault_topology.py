@@ -34,13 +34,14 @@ class Sites:
         r=[x-1.08,y-1.08,x+CELL+1.08,y+CELL+1.08]
         return not any(r[0]<q[2] and q[0]<r[2] and r[1]<q[3] and q[1]<r[3]
                        for key in self.keys(r) for q in self.bins[key])
-    def find(self,target,inputs):
+    def find(self,target,inputs,pin_offsets=None):
         gx,gy=[round(v/CELL) for v in target]
         candidates=[]
         for dx in range(-20,21):
             for dy in range(-20,21):
                 x,y=(gx+dx)*CELL,(gy+dy)*CELL
-                pins=[[x+.042,y+10.812],[x+.042,y+10.956]]
+                offsets=pin_offsets or [[.042,10.812],[.042,10.956]]
+                pins=[[x+dx,y+dy] for dx,dy in offsets]
                 if any(distance(p,pins[k])>REACH for k,p in enumerate(inputs)):continue
                 if self.free(x,y):candidates.append((distance([x+CELL/2,y+CELL/2],target),x,y))
         if not candidates:return None
@@ -50,30 +51,40 @@ class Sites:
 def propose(inv):
     sites=Sites(inv['physical_obstacles']);nodes=[];transports=[];points={};lat={};clock={};reset={};source_ids=[]
     physical_requirements=list(inv['requirements'])
+    # A standalone topology proposal retains its original abstract join geometry.
+    # Physical installation supplies the actual emitted kind's CLOSED LEF pins.
+    base=dict(master='qkd_astk_fault_join',size=[CELL,CELL],
+              inputs=[[.042,10.812],[.042,10.956]],output=[21.558,10.812])
+    geometry={kind:dict(base) for kind in ('join','pipe','sticky')}
+    geometry.update(inv.get('cell_geometry',{}))
+    if any(max(g['size']) > CELL for g in geometry.values()):
+        raise ValueError('health cell exceeds conservatively reserved site frame')
+    pipe_geometry=geometry['pipe']
     def add(a,b,kind,xy,ck,rst):
         name='fault_'+str(len(nodes));x,y=xy
-        pins=[[x+.042,y+10.812],[x+.042,y+10.956]]
+        geom=geometry[kind]
+        pins=[[x+dx,y+dy] for dx,dy in geom['inputs']]
         distances=[distance(points[a],pins[0])]
         if b!=name:distances.append(distance(points[b],pins[1]))
         if max(distances)>REACH+1e-6:raise ValueError('unbounded same-root edge')
         if clock[a]!=ck or (b!=name and clock[b]!=ck):raise ValueError('untransported clock crossing')
-        nodes.append(dict(id=name,a=a,b=b,kind=kind,latency=1,master='qkd_astk_fault_join',
+        nodes.append(dict(id=name,a=a,b=b,kind=kind,latency=1,master=geom['master'],
                           placement=dict(x=x,y=y,orient='R0'),clock=ck,reset=rst,
                           edge_manhattan_um=[round(d,4) for d in distances]))
-        sites.add([x,y,x+CELL,y+CELL]);points[name]=[x+21.558,y+10.812]
+        sites.add([x,y,x+CELL,y+CELL]);points[name]=[x+geom['output'][0],y+geom['output'][1]]
         clock[name]=ck;reset[name]=rst;lat[name]=max(lat[a],lat.get(b,0))+1
         return name
     def sticky(a):
-        xy=sites.find(points[a],[points[a]])
+        xy=sites.find(points[a],[points[a]],geometry['sticky']['inputs'])
         if xy is None:raise ValueError('no legal sticky site near '+a)
         name='fault_'+str(len(nodes));return add(a,name,'sticky',xy,clock[a],reset[a])
     def route(a,target,depth=0):
         if distance(points[a],target)<=REACH:return a
         entry=a
-        first=sites.find(points[a],[points[a],points[a]])
+        first=sites.find(points[a],[points[a],points[a]],pipe_geometry['inputs'])
         if first is None:raise ValueError('no source escape site '+a)
         start=tuple(round(v/CELL) for v in first);queue=[];parent={start:None};cost={start:0}
-        def output(g):return [g[0]*CELL+21.558,g[1]*CELL+10.812]
+        def output(g):return [g[0]*CELL+pipe_geometry['output'][0],g[1]*CELL+pipe_geometry['output'][1]]
         heapq.heappush(queue,(distance(output(start),target),start));goal=None;visited=set()
         steps=[(d,0) for d in (-16,-12,-8,-4,-1,1,4,8,12,16)]+[(0,d) for d in (-16,-12,-8,-4,-1,1,4,8,12,16)]+[(x,y) for x in (-8,-4,4,8) for y in (-8,-4,4,8)]
         while queue and len(visited)<200000:
@@ -95,7 +106,7 @@ def propose(inv):
         while distance(points[a],target)>REACH:
             # Compress the search corridor to the farthest legal single registered hop.
             options=[j for j in range(cursor,len(path))
-                     if distance(points[a],[path[j][0]*CELL+.042,path[j][1]*CELL+10.956])<=REACH
+                     if max(distance(points[a],[path[j][0]*CELL+dx,path[j][1]*CELL+dy]) for dx,dy in pipe_geometry['inputs'])<=REACH
                      and sites.free(path[j][0]*CELL,path[j][1]*CELL)]
             if not options and a!=entry and depth<16:
                 # The pipe just placed blocks the corridor's next detour cells (adjacent-cell halo):
@@ -113,7 +124,7 @@ def propose(inv):
             for d,a,b in pairs:
                 if d>2*REACH:break
                 target=[(points[a][k]+points[b][k])/2 for k in (0,1)]
-                xy=sites.find(target,[points[a],points[b]])
+                xy=sites.find(target,[points[a],points[b]],geometry['join']['inputs'])
                 if xy is not None:selected=(a,b,xy);break
             if selected is None:
                 if not allow_pipes:break
@@ -150,17 +161,18 @@ def propose(inv):
     root=fold(core_roots,True)[0];target=inv['consumer']['pin_xy']
     root=route(root,target)
     # Place the final sticky cell close enough to its consumer as well as its input.
-    xy=sites.find(target,[points[root]])
+    xy=sites.find(target,[points[root]],geometry['sticky']['inputs'])
     if xy is None:raise ValueError('no final sticky site')
     x,y=xy
-    if distance([x+21.558,y+10.812],target)>REACH:raise ValueError('final consumer edge too long')
+    if distance([x+geometry['sticky']['output'][0],y+geometry['sticky']['output'][1]],target)>REACH:raise ValueError('final consumer edge too long')
     name='fault_'+str(len(nodes));sink=add(root,name,'sticky',xy,core,inv['consumer']['reset'])
     return dict(schema='opentallas.kv_fault_plane_candidate.v1',status='CANDIDATE_NOT_PHYSICALLY_ADMITTED',
                 sources=sources,nodes=nodes,transports=transports,sink=sink,
                 retirement_quiet_cycles=lat[sink]+2,max_leaf_latency_bound=lat[sink],
                 source_count=len(sources),binary_join_count=sum(n['kind']=='join' for n in nodes),
                 sticky_cell_count=sum(n['kind']=='sticky' for n in nodes),pipe_cell_count=sum(n['kind']=='pipe' for n in nodes),
-                added_cell_count=len(nodes),added_cell_area_um2=round(len(nodes)*CELL*CELL,4),
+                added_cell_count=len(nodes),added_cell_area_um2=round(sum(geometry[n['kind']]['size'][0]*geometry[n['kind']]['size'][1] for n in nodes),4),
+                cell_geometry=geometry,
                 consumed_existing_payload_bits=len(transports),
                 physical_blockers=inv['physical_blockers'],
                 requirements=physical_requirements+[

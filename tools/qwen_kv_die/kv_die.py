@@ -4123,6 +4123,10 @@ def masters(m, k=1, port_bits=None):
     for bid, cl, bits, eps in m['buses']:
         for inst, port in eps:
             used.setdefault(by[inst].master, {})[port.lstrip('*')] = max(bits, used.get(by[inst].master, {}).get(port.lstrip('*'), 0))
+    if KSD.GRP_SAFE2:
+        import kv_grp_safe2
+        used = {master: kv_grp_safe2.frame_port_widths(master, ports)
+                for master, ports in used.items()}
     if m['geo'].get('kv_wq_binary') and not m['geo'].get('split'):
         # Physical eight-bit lane port survives; only its low3 pins enter the bus.
         for g in range(4):
