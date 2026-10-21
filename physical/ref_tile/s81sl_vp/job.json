@@ -2,12 +2,12 @@
  "name": "s81sl_vp-s81sl_vp-COMMIT",
  "block": "ot_s81sl_vp",
  "ref_tile": true,
- "owner": "Claude:S81-SLICE",
+ "owner": "Claude:DRIVE-S81-SLICEP",
  "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit). 10-18 S81-SLICE vp NORMR (op 7: hc_pre from the G-unit's leaf row R) + POST row order = the G-unit's (post R+1, comb R+2..R+5).",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/s81-vpnorm-1018",
+  "branch": "claude/drive-s81-slicep-1020",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
