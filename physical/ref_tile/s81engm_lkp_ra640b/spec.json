@@ -338,5 +338,25 @@
  },
  "reset_relay_split": {
   "max_loads": 32
+ },
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_128x256_m1_r2c2"
+ ],
+ "soft_root_macro_bindings": {
+  "u_e.u_row_e": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_rd"
+  },
+  "u_e.u_row_o": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_rd"
+  },
+  "u_e.u_row_a": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "ck_rd"
+  }
  }
 }
