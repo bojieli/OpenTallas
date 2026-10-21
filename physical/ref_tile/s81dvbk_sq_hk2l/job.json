@@ -193,5 +193,12 @@
  "reroute_reason": {
   "kind": "rtl_change",
   "reason": "Hard-child hierarchical quarter on the literal 43.2 lattice (S81-TOPK9): hk1/hk1l manual FAIL (off-lattice SRAMs, spine-suppressed regional CTS)."
+ },
+ "clock_rule_waiver": {
+  "pair": "port:ck",
+  "tt_ps": 80.4,
+  "limit_ps": 80,
+  "by": "COORD 10-20 16:11 DECISION (rule freeze, lanes/COORD-REVIEW-QUEUE.md): hk2l TT pin-flop spread 80.4 ps (FF 74.6) accepted, 0.4 ps over guidance; route timing decides",
+  "scope": "s81dvbk_sq_hk2l"
  }
 }
