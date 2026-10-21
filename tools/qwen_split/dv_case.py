@@ -75,6 +75,8 @@ if FAULT_FACE and not HEAD_PREP:
 if STATUS_OBS and not HEAD_PREP:
     raise ValueError('STATUS observer v1 requires the coherent head-prepare source')
 if HEAD_PREP:
+    from qwen_split import headprep_source as HP13
+    WCOL_RTL['tt_ctlm'] = HP13.select(WCOL_RTL['tt_ctlm'], Path(__file__).resolve().parents[2])
     if os.environ.get('OT_QWEN_ROPE', '0') != '1':
         raise ValueError('OT_QWEN_HEAD_PREP requires the sole 73-item RoPE programme')
     WCOL_RTL['native59'] = ('qfd_native59_dv_headprep', 'rtl/qwen_split/qfd_native59_dv_headprep.sv')
@@ -868,12 +870,13 @@ def apply_dv(v, m):
                 if any(M[by[i_].master].ports[p_][1] != 2 for i_ in ('d2d_rom', 'native59')):
                     raise ValueError(f'head user requires two-bit source ABI: {p_}')
                 out.append((f'lnk_{p_}', 'spine_local', 2, [('d2d_rom', p_), ('native59', p_)]))
-            for sp_, dp_ in [('emb_start','head_prepare_v'), ('emb_token','head_prepare_token'),
-                              ('emb_position','head_prepare_position'), ('emb_user','head_prepare_user')]:
-                if not (has('tt_ctlm',sp_) and has('native59',dp_)):
-                    raise ValueError(f'head prepare requires actual tt_ctlm.{sp_}->native59.{dp_}')
-                out.append((f'hp_tt_{sp_}', 'spine_local', M[by['tt_ctlm'].master].ports[sp_][1],
-                            [('tt_ctlm',sp_),('native59',dp_)]))
+            hp_tt_ports = rtl_ports(root / WCOL_RTL['tt_ctlm'][1], by['tt_ctlm'].master)
+            hp_native_ports = rtl_ports(root / WCOL_RTL['native59'][1], by['native59'].master)
+            hp_joins = HP13.prepare_joins(by['tt_ctlm'].master, hp_tt_ports, hp_native_ports)
+            for bid_, kind_, width_, eps_ in hp_joins:
+                if not all(has(i_,p_) and M[by[i_].master].ports[p_][1]==width_ for i_,p_ in eps_):
+                    raise ValueError('actual installed head-prepare master/port differs: '+bid_)
+                out.append((bid_,kind_,width_,eps_))
             # Native is still the historical master during the earlier compute-spine bind.
             # Join these ports only after the exact DV-native source ABI is installed above.
             for p_ in ('head_descriptor_v','head_descriptor_tag','head_descriptor_generation'):
