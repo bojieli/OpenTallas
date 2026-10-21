@@ -190,7 +190,6 @@ module ot_s81dv_divc_n32 #(
     reg [23:0] s1_m;
     reg [7:0]  s1_e;
     reg [4:0]  s1_lz;
-    (* keep *) reg [4:0] lzc0, lzc1;          // N32: kept copies of the normalise shift (sliced shifter)
     reg [4:0]  lz;
     wire [23:0] m0 = {(x[30:23] != 8'd0), x[22:0]};
     integer i;
@@ -206,16 +205,16 @@ module ot_s81dv_divc_n32 #(
         s1_m <= m0;
         s1_e <= x[30:23];
         s1_lz <= lz;
-        lzc0 <= lz; lzc1 <= lz;
     end
     // -- S2: normalise ------------------------------------------------------------------------
-    wire [23:0] sl0 = s1_m << lzc0, sl1 = s1_m << lzc1;
+    wire[23:0] sl_norm;
+    ot_s81dv_xfin_fp_shift_chain #(.IW(24),.CW(5),.LEFT(1),.CUT(1)) u_norm_shift(.clk(clk),.x(s1_m),.raw_count(lz),.y(sl_norm));
     reg               s2_s, s2_z, s2_nf;
     reg [23:0]        s2_m;
     reg signed [10:0] s2_eu;                 // unbiased exponent of the normalised significand
     always @(posedge clk) begin
         s2_s <= s1_s; s2_z <= s1_z; s2_nf <= s1_nf;
-        s2_m <= {sl1[23:12], sl0[11:0]};
+        s2_m <= sl_norm;
         s2_eu <= (s1_sub ? -11'sd126 : ($signed({3'b000, s1_e}) - 11'sd127)) - $signed({6'd0, s1_lz});
     end
     // -- S3, S4: floor(m / 5), m mod 5: radix-16 digits, three a stage --------------------------
@@ -273,8 +272,6 @@ module ot_s81dv_divc_n32 #(
     endfunction
     reg               s5_s, s5_z, s5_nf, s5_st0, s5_sub;
     reg [49:0]        s5_q;
-    reg [5:0]         s5_sh;
-    (* keep *) reg [5:0] shc0, shc1, shc2, shc3;   // N32: kept copies (guard/sticky shifter halves, mask halves)
     reg signed [10:0] s5_er;
     reg [5:0]         lead;
     reg signed [10:0] er;
@@ -290,26 +287,26 @@ module ot_s81dv_divc_n32 #(
         s5_st0 <= (s4_r0 != 3'd0);
         s5_er <= er;
         s5_sub <= (er < -11'sd126);
-        s5_sh <= (sh > 12'sd51) ? 6'd51 : sh[5:0];         // 51: every bit of Q below the guard (sticky only)
-        shc0 <= (sh > 12'sd51) ? 6'd51 : sh[5:0]; shc1 <= (sh > 12'sd51) ? 6'd51 : sh[5:0];
-        shc2 <= (sh > 12'sd51) ? 6'd51 : sh[5:0]; shc3 <= (sh > 12'sd51) ? 6'd51 : sh[5:0];
     end
     // -- S6: shift, guard, sticky ---------------------------------------------------------------------
     reg               s6_s, s6_z, s6_nf, s6_g, s6_st, s6_sub;
     reg [24:0]        s6_m;
     reg signed [10:0] s6_er;
-    reg [50:0]        w;
-    wire [50:0] w0 = {s5_q, 1'b0} >> shc0, w1 = {s5_q, 1'b0} >> shc1;
-    always @(*) w = {w1[50:13], w0[12:0]};    // w[0]: guard; the bits shifted out below it: sticky
-    reg [49:0] lowmask, lm0, lm1;
+    wire[5:0] raw_shift=(sh>12'sd51)?6'd51:sh[5:0];
+    wire[25:0] w;
+    ot_s81dv_div_shift26_n32 u_denorm_shift(.clk(clk),.x({s5_q,1'b0}),.raw_shift(raw_shift),.y(w));
+    wire[6:0] sticky_bits;
+    for(genvar sg=0;sg<7;sg=sg+1)begin:g_sticky
+      localparam integer SW=(50-sg*8>=8)?8:50-sg*8;
+      (* keep *) reg[5:0] sc;
+      always @(posedge clk)sc<=raw_shift;
+      ot_s81dv_div_sticky8_n32 #(.LO(sg*8),.W(SW)) u_s(.x(s5_q[sg*8+:SW]),.sh(sc),.st(sticky_bits[sg]));
+    end
     always @(posedge clk) begin
         s6_s <= s5_s; s6_z <= s5_z; s6_nf <= s5_nf; s6_er <= s5_er; s6_sub <= s5_sub;
         s6_m <= w[25:1];
         s6_g <= w[0];
-        lm0 = (shc2 == 6'd0) ? 50'd0 : ((50'd1 << (shc2 - 6'd1)) - 50'd1);
-        lm1 = (shc3 == 6'd0) ? 50'd0 : ((50'd1 << (shc3 - 6'd1)) - 50'd1);
-        lowmask = {lm1[49:25], lm0[24:0]};
-        s6_st <= s5_st0 | ((s5_q & lowmask) != 50'd0);
+        s6_st <= s5_st0 | (|sticky_bits);
     end
     // -- S7: round ------------------------------------------------------------------------------------
     reg               s7_s, s7_z, s7_nf, s7_sub;
@@ -976,4 +973,28 @@ endmodule
 (* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_lead2(input wire[1:0] x,output wire z,output wire[1:0] oh);
  assign z=~(|x);
  assign oh={x[1],x[0] && !x[1]};
+endmodule
+
+// DIVC's S5 count and payload capture on the original edge. Only the26
+// guard/mantissa outputs are retained at the final shift level.
+module ot_s81dv_div_shift26_n32(input wire clk,input wire[50:0] x,input wire[5:0] raw_shift,output wire[25:0] y);
+ wire[50:0] level[0:6];assign level[0]=x;
+ for(genvar k=0;k<6;k=k+1)begin:g_level
+   localparam integer ACTIVE=(k==5)?26:51;
+   for(genvar g=0;g<(ACTIVE+3)/4;g=g+1)begin:g_group
+     localparam integer W=(ACTIVE-g*4>=4)?4:ACTIVE-g*4;
+     (* keep *) reg count;
+     always @(posedge clk)count<=raw_shift[k];
+     ot_s81dv_xfin_fp_shift_step #(.IW(51),.OW(W),.LO(g*4),.DIST(1<<k)) u_s(.x(level[k]),.sh(count),.y(level[k+1][g*4+:W]));
+   end
+   if(ACTIVE<51)assign level[k+1][50:ACTIVE]=0;
+ end
+ assign y=level[6][25:0];
+endmodule
+(* keep_hierarchy=1 *) module ot_s81dv_div_sticky8_n32 #(parameter integer LO=0,W=8)(input wire[W-1:0] x,input wire[5:0] sh,output wire st);
+ wire[W-1:0] hit;
+ for(genvar b=0;b<W;b=b+1)begin:g_bit
+   assign hit[b]=x[b] && (sh>LO+b+1);
+ end
+ assign st=|hit;
 endmodule
