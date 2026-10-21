@@ -1,0 +1,129 @@
+{
+  "source": "1bf1d11bc",
+  "unchanged_rtl": true,
+  "records": [
+    {
+      "name": "unit_mut1",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut1/run_mut1.log"
+    },
+    {
+      "name": "unit_mut2",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut2/run_mut2.log"
+    },
+    {
+      "name": "unit_mut3",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut3/run_mut3.log"
+    },
+    {
+      "name": "unit_mut4",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut4/run_mut4.log"
+    },
+    {
+      "name": "unit_mut5",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut5/run_mut5.log"
+    },
+    {
+      "name": "unit_mut6",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut6/run_mut6.log"
+    },
+    {
+      "name": "unit_mut7",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut7/run_mut7.log"
+    },
+    {
+      "name": "unit_mut9",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut9/run_mut9.log"
+    },
+    {
+      "name": "unit_mut10",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut10/run_mut10.log"
+    },
+    {
+      "name": "unit_mut14",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut14/run_mut14.log"
+    },
+    {
+      "name": "unit_mut16",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut16/run_mut16.log"
+    },
+    {
+      "name": "unit_mut19",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut19/run_mut19.log"
+    },
+    {
+      "name": "unit_mut23",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/unit_mut23/run_mut23.log"
+    },
+    {
+      "name": "n32_base",
+      "rc": 0,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/n32_base.log"
+    },
+    {
+      "name": "n32_BYP",
+      "rc": 1,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/n32_BYP.log"
+    },
+    {
+      "name": "n32_GOD",
+      "rc": 1,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/n32_GOD.log"
+    },
+    {
+      "name": "n32_WIN",
+      "rc": 1,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/n32_WIN.log"
+    },
+    {
+      "name": "n32_KIND",
+      "rc": 1,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/n32_KIND.log"
+    },
+    {
+      "name": "n32_FQS",
+      "rc": 1,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/n32_FQS.log"
+    },
+    {
+      "name": "n32_CQR",
+      "rc": 1,
+      "caught": true,
+      "log": "/srv/opentallas-scratch/claude/codex-s81-shlk-benchfix-1021/all_negatives/n32_CQR.log"
+    }
+  ],
+  "pass_all": true,
+  "fleet_unit": "oth-ubuntu-2443684-1792604373",
+  "fix": "MUT7 full runlog emitted, existing exact hx_pop replica diverged regex unchanged. All13 actual unit+6N32 negatives caught; N32 base3seedsPASS. RTL, clock, constraints, and geometry unchanged."
+}
