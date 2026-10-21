@@ -8,7 +8,8 @@ import numpy as np
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('plan');ap.add_argument('out');a=ap.parse_args();p=json.load(open(a.plan));bs=p['blocks'];W,H=p['facts']['die_um'];pad=43.2;stub=43.2
- rect=[(b['x']-pad,b['y']-pad,b['x']+b['w']+pad,b['y']+b['h']+pad)for b in bs]
+ # blocks plus geometry-only blockages (S81-LINKS gap reserves: no pins, never bound) are obstacles alike
+ rect=[(b['x']-pad,b['y']-pad,b['x']+b['w']+pad,b['y']+b['h']+pad)for b in bs+p.get('blockages',[])]
  def outer(e,f):
   x,y=e[2:4];return(round(x+(-stub if f=='W'else stub if f=='E'else 0),4),round(y+(-stub if f=='S'else stub if f=='N'else 0),4))
  terms={l['i']:[outer(e,f)for e,f in zip(l['e'],l['endpoint_faces'])]for l in p['links']}

@@ -1110,16 +1110,18 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
     rr = {d: master for d in RST_RLY} if master else RST_RLY
     W, H = plan['facts']['die_um']
     blocks = plan['blocks']
+    # S81-LINKS gap reserves (geometry-only blockages, no pins): no reset street station inside them; they take no sink
+    geo = blocks + plan.get('blockages', [])
     nx, ny = int(math.ceil(W / GRID)), int(math.ceil(H / GRID))
 
     def inside(x, y):
-        for b in blocks:
+        for b in geo:
             if b['x'] - 5 <= x <= b['x'] + b['w'] + 5 and b['y'] - 5 <= y <= b['y'] + b['h'] + 5:
                 return True
         return False
     free = {}
     cellb = collections.defaultdict(list)          # blocks (inflated 5 um) touching each grid cell
-    for b in blocks:
+    for b in geo:
         for i in range(max(0, int((b['x'] - 5) // GRID)), min(nx, int((b['x'] + b['w'] + 5) // GRID) + 1)):
             for j in range(max(0, int((b['y'] - 5) // GRID)), min(ny, int((b['y'] + b['h'] + 5) // GRID) + 1)):
                 cellb[(i, j)].append(b)
@@ -1233,7 +1235,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
 
     def buried(x, y, own):
         return any(b['name'] != own and b['x'] + 0.5 < x < b['x'] + b['w'] - 0.5 and b['y'] + 0.5 < y < b['y'] + b['h'] - 0.5
-                   for b in blocks)
+                   for b in geo)
     block_srv, block_pin = {}, {}
     for b in blocks:
         cands = [(b['x'] + b['w'] / 2, b['y'])]          # default: S face centre
@@ -1261,7 +1263,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
     for s in list(station_srv.values()) + list(block_srv.values()):
         while s is not None and s not in tree:
             tree.add(s); s = par[s]
-    gate = reset_reach_gate(blocks, {n: pos[n] for n in par}, sinks, [(c, par[c]) for c in tree], reach=reach)
+    gate = reset_reach_gate(geo, {n: pos[n] for n in par}, sinks, [(c, par[c]) for c in tree], reach=reach)
     # nearest block region for each tree node (station clock = that region's root)
     cen = [(b['x'] + b['w'] / 2, b['y'] + b['h'] / 2, reg[b['name']]) for b in blocks]
 

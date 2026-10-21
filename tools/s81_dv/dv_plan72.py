@@ -61,7 +61,9 @@ def build(base,inventory,packing):
   e0,f0=move(l['e'][0],src);e1,f1=move(l['e'][1],dst);l['e']=[e0,e1];l['endpoint_faces']=[f0,f1]
   for k in ('sp','h','s','L'):l.pop(k,None)
   links.append(l)
- p['blocks']=new;p['links']=links;p['facts'].update(die_um=[32000,25000],die_mm2=800,n_frames=72,rom_slots=660,reticle_margin_um=[500,500],hop_um=405)
+ p['blocks']=new;p['links']=links
+ # S81-LINKS gap reserves: geometry-only blockages (no master, no pins, never bound); router + die case obstacles
+ p['blockages']=[dict(name=r['name'],kind='reserve',x=r['x'],y=r['y'],w=r['w'],h=r['h'],scope=r.get('scope',''))for r in packing.get('reserves',[])];p['facts'].update(die_um=[32000,25000],die_mm2=800,n_frames=72,rom_slots=660,reticle_margin_um=[500,500],hop_um=405)
  p['facts']['physical72']=dict(owner_adopted=True,inventory_sha=inventory.get('inventory_sha256'),geometry_ref='5678a1aa8',block_mapping=mapping,frame_chain_bypass=bypass,endpoint_geometry='plan face seeds; existing rvcase kit/view pin reprojection required',routing='PENDING',calendar='PENDING currentGU/DENSE2 exact map; no inherited old release ages',end_parent_source='real6739.2slice reassembly required',service_source='current target envelope; parent source/views open')
  return p
 

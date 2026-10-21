@@ -47,12 +47,21 @@ def construct(template):
   if b['name'].startswith('link_'):continue
   put(b['name'],b['x'],b['y'])
  assert len(bs)==len(allb),(len(bs),len(allb))
+ # S81-LINKS 10-21 gap reserve (owner answer pending; die edge pinout NOT frozen): four empty SerDes-column
+ # rectangles beside link_{side}_0/1, room for 12 SerDes (10 for stage dies with the 5th lane pair + copy-A/B
+ # pair B).  No master, no pins: placement/routing blockages only (dv_plan72 -> plan['blockages']).
+ rx={0:xextra+259.2+gap,1:32000-xextra-259.2-gap-259.2}
+ for side in range(2):
+  for j,yy in ((4,linkstart),(5,linkstart+lpitch)):
+   bs.append(dict(name=f'link_{side}_{j}',w=259.2,h=3596.4,x=round(rx[side],6),y=round(yy,6),kind='reserve',
+                  scope='S81-LINKS gap reserve: future SerDes column; placement + routing blockage only, no master/pins'))
  assert len({b['name']for b in bs})==len(bs)
  for i,b in enumerate(bs):
   assert min(b['x'],b['y'])>=0 and b['x']+b['w']<=32000 and b['y']+b['h']<=25000,b
   for c in bs[i+1:]:
    assert min(b['x']+b['w'],c['x']+c['w'])<=max(b['x'],c['x']) or min(b['y']+b['h'],c['y']+c['h'])<=max(b['y'],c['y']),(b['name'],c['name'])
- return dict(scope='OWNER72 SELECTED IMPLEMENTATION CONSTRUCTION, not routed closure',die=[32000,25000],clearance=gap,best=dict(blocks=bs,unplaced=[],trial=dict(strategy='graph-aware selected construction',placed=len(bs),unplaced=0)),service_group=dict(at=[gx,gy],outline=[gw,2*sh+gap],order='even lower/odd upper; original sgN/S/E/W faces'),mu_parent_assembly=dict(outline=[2505.6,6825.6],hardened=False,hard_children=[dict(role='slice',at=[43.2,43.2],outline=[1252.8,6739.2]),dict(role='lane0',at=[1468.8,43.2],outline=[725.76,583.2]),dict(role='lane1',at=[1468.8,799.2],outline=[725.76,583.2]),dict(role='endpoint',at=[1468.8,1555.2],outline=[561.6,561.6],note='covers current r6 e/k/t endpoints without shrinking'),dict(role='mu_land',at=[1468.8,2289.6],outline=[475.2,216])],central_cell_corridor_um=172.8,right_cell_band_um=311.04,source='new actual multi-clock normal/CAP12 + existing LP endpoint/lanes; binding source assembly required'),obligations=['MU parents actual child/source reassembly','service parent source and clocks/reset integration','actual pin projection and existing relay station legalization/cycle pricing','currentGU72 capacity/map pending'])
+ bs_res=[b for b in bs if b.get('kind')=='reserve'];bs=[b for b in bs if b.get('kind')!='reserve']
+ return dict(reserves=bs_res,scope='OWNER72 SELECTED IMPLEMENTATION CONSTRUCTION, not routed closure',die=[32000,25000],clearance=gap,best=dict(blocks=bs,unplaced=[],trial=dict(strategy='graph-aware selected construction',placed=len(bs),unplaced=0)),service_group=dict(at=[gx,gy],outline=[gw,2*sh+gap],order='even lower/odd upper; original sgN/S/E/W faces'),mu_parent_assembly=dict(outline=[2505.6,6825.6],hardened=False,hard_children=[dict(role='slice',at=[43.2,43.2],outline=[1252.8,6739.2]),dict(role='lane0',at=[1468.8,43.2],outline=[725.76,583.2]),dict(role='lane1',at=[1468.8,799.2],outline=[725.76,583.2]),dict(role='endpoint',at=[1468.8,1555.2],outline=[561.6,561.6],note='covers current r6 e/k/t endpoints without shrinking'),dict(role='mu_land',at=[1468.8,2289.6],outline=[475.2,216])],central_cell_corridor_um=172.8,right_cell_band_um=311.04,source='new actual multi-clock normal/CAP12 + existing LP endpoint/lanes; binding source assembly required'),obligations=['MU parents actual child/source reassembly','service parent source and clocks/reset integration','actual pin projection and existing relay station legalization/cycle pricing','currentGU72 capacity/map pending'])
 def main():
  a=argparse.ArgumentParser();a.add_argument('template');a.add_argument('out');v=a.parse_args();d=construct(json.load(open(v.template)));Path(v.out).write_text(json.dumps(d,indent=1));print('SELECTED72_CONSTRUCTED',len(d['best']['blocks']))
 if __name__=='__main__':main()
