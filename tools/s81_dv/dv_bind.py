@@ -415,6 +415,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # source releases earlier than the source's own leaf, so the RECEIVER's frame reset is delayed by calendar stations
     # (dsfd_rly_1 on the frame root, beside its reset pin): rst_n(frame) = max over its x lanes of G + h - FRAME_RSYNC.
     FRAME_RSYNC = 2
+    tree_nodes = [(pl['inst'][3:], pl['xy']) for pl in rst['place'] if pl['inst'][3:] in rst['depth']]
+
+    def local_min(xy, dflt):     # S81-DIESTA: earliest reset release among the tree nodes within reach of xy
+        ds = [rst['depth'][n_] for n_, q in tree_nodes if abs(q[0] - xy[0]) + abs(q[1] - xy[1]) <= RESET_REACH_UM]
+        return min(ds) if ds else dflt
     frame_rst, frame_cal_lines, frame_cal_place, frame_delay = {}, [], [], {}
     lsrc0 = {l['i'].replace('-', '_'): l for l in plan['links']}
     bname = {b['name']: b for b in blocks}
@@ -422,6 +427,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                       else rst['block_leaf'][n]) for n in bname}
     base_epoch = {n: rst['depth'][leaf] for n, leaf in base_leaf.items()}
     dependencies = collections.defaultdict(list)
+    relay_floor = {}
     for n_, cps in sorted(ckin.items()):
         for lanes in cps.values():
             for nm in lanes.values():
@@ -429,7 +435,12 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 if chains_pts[nm] and l_['c'] == 'x_frame':
                     src_ = blocks[l_['e'][0][0]]['name']
                     dependencies[n_].append((src_, len(chains_pts[nm]) % 2))
-    epochs = frame_release_epochs(base_epoch, dependencies, FRAME_RSYNC)
+                    # S81-DIESTA static relay release: the lane gate G = R0 - h must open after every relay rs of the lane
+                    # (G >= max relay leaf depth + 1), and the receiving frame's R0 = epoch + FRAME_RSYNC is the only knob
+                    rmx_ = max(rst['depth'][rst['station_leaf'][(nm, k)]] for k in range(len(chains_pts[nm])))
+                    gmin_ = max(rmx_ + 1, local_min(l_['e'][0][2:4], 0))
+                    relay_floor[n_] = max(relay_floor.get(n_, 0), gmin_ + len(chains_pts[nm]) % 2 - FRAME_RSYNC)
+    epochs = frame_release_epochs({n: max(e, relay_floor.get(n, e)) for n, e in base_epoch.items()}, dependencies, FRAME_RSYNC)
     for n_ in sorted(dependencies):
         rl0 = base_leaf[n_]
         need = epochs[n_] - base_epoch[n_]
@@ -688,18 +699,36 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     lsrc = {l['i'].replace('-', '_'): l for l in plan['links']}
     rdep = rst['depth']
     gcal, gate_en, land_rs, cal_place = {}, {}, {}, []
+    static_rel = {}
     rmst = T.get('reset_master') or RST_RLY['EW']
 
+    # S81-DIESTA (10-20, mu7v2 die STA TT setup -6.3 ns on reset stations / -6.1 ns on gate ENA / -5.2 ns on landing rs):
+    # a calendar chain hung off the BLOCK leaf (at the block reset pin) and sat at the first lane's plan end point, so its
+    # first hop and every later lane's tap were mm-long single-cycle reset wires (the 405-um reach rule).  A tap now
+    # starts from the reset-tree node NEAREST the tap point (within the reset reach) whose release depth is <= the
+    # target depth, and its chain sits at that point (one chain per (node, root, 400-um cell)): release depth exactly
+    # rdep[leaf] + nd as before, every hop <= reach.
     def cal_tap(leaf, ckr, nd, xy, why):
-        ch = gcal.setdefault((leaf, ckr), [])
-        while len(ch) < nd:
-            up = ch[-1] if ch else leaf
-            wn = f'rsg_{leaf}_{ckr}_{len(ch)}'
+        tgt = rdep[leaf] + nd
+        cands = [(abs(q[0] - xy[0]) + abs(q[1] - xy[1]), -rdep[n_], n_) for n_, q in tree_nodes if rdep[n_] <= tgt]
+        near = [c for c in cands if c[0] <= RESET_REACH_UM]
+        base = (min(near)[2] if near else leaf)
+        if not near:
+            print(f'DV_BIND WARN calendar tap {why}: no reset node with depth <= {tgt} within {RESET_REACH_UM} um of {xy}; chained from {leaf}')
+        k_ = tgt - rdep[base]
+        if k_ == 0:
+            return base
+        cell_ = (int(xy[0] // GRID), int(xy[1] // GRID))
+        ch = gcal.setdefault((base, ckr, cell_), [])
+        while len(ch) < k_:
+            up = ch[-1] if ch else base
+            wn = f'rsg_{base}_{ckr}_{cell_[0]}_{cell_[1]}_{len(ch)}'
             v.append(f'  wire {wn};')
             v.append(f'  {rmst} st_{wn} (.ck(ck_{ckr}), .rs({up}), .i({up}), .o({wn}));   // gate calendar ({why})')
             cal_place.append(dict(inst=f'st_{wn}', master=rmst, orient='R0', xy=[round(xy[0], 3), round(xy[1], 3)], kind='gate_calendar'))
+            rdep[wn] = rdep[up] + 1
             ch.append(wn)
-        return ch[nd - 1]
+        return ch[k_ - 1]
     land_rows = []
     for j, (n, nm, b, *ad) in enumerate(landings):
         l_ = lsrc[nm]
@@ -711,14 +740,21 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         rl_ = int(land_rl_tab.get(lm_, 0))
         ds_, dr_ = rdep[sleaf], rdep[rleaf] + rl_
         h_ = len(chains_pts[nm]) % 2            # R0 - G = N mod 2: an odd half-cycle chain lands on the inverted phase
-        if dr_ - ds_ > h_:
-            gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4], f'gate opens {h_} edges before the {n} landing rs')
-            land_rs[nm] = rleaf
-        elif dr_ - ds_ < h_:
-            gate_en[nm] = sleaf
-            land_rs[nm] = cal_tap(rleaf, reg[n], ds_ + h_ - dr_, l_['e'][1][2:4], f'landing rs {h_} edges after the {a_} gate')
-        else:
-            gate_en[nm], land_rs[nm] = sleaf, rleaf
+        # S81-DIESTA (10-20, mu7v2 die STA hold on relay rs -27 ns): STATIC RELAY RELEASE.  Every relay of the lane
+        # (ot_s81_rly RSREG: rs -> rq on the LANE clock ck) must release while the lane clock is still stopped by the
+        # hop-0 gate, i.e. G >= max_k depth(station_leaf k) + 1.  Otherwise rq samples a moving rs on a running
+        # forwarded clock (insertion up to ~27 ns = 32 T vs the region root) and words launched from G are zeroed in
+        # flight at the late relays.  G is raised to that bound and R0 = G + (N mod 2) keeps K = E (the landing rs is
+        # delayed by the same edges): a reset-release-only shift, no data latency change.
+        rmax_ = max(rdep[rst['station_leaf'][(nm, k)]] for k in range(len(chains_pts[nm])))
+        # a LOCAL tap needs a reset node within reach that releases no later than the tap: G >= the earliest release
+        # near hop 0, R0 = G + h >= the earliest release near the landing
+        g_ = max(ds_, rmax_ + 1, dr_ - h_, local_min(l_['e'][0][2:4], ds_), local_min(l_['e'][1][2:4], dr_ - rl_) + rl_ - h_)
+        # taps are ALWAYS local (nearest reset node within reach, exact release depth): the gate ENA beside hop 0 and the
+        # landing rs beside the landing, never a block leaf at the far block reset pin (mu7v2 landing rs -5.2 / -2.6 ns)
+        gate_en[nm] = cal_tap(sleaf, reg[a_], g_ - ds_, l_['e'][0][2:4], f'gate opens {h_} edges before the {n} landing rs, after every lane relay rs')
+        land_rs[nm] = cal_tap(rleaf, reg[n], g_ + h_ - dr_, l_['e'][1][2:4], f'landing rs {h_} edges after the {a_} gate')
+        static_rel[nm] = dict(G=g_, relay_release_max=rmax_, gate_raised_by=g_ - max(ds_, dr_ - h_))
         st = len(chains_pts[nm])
         e_ = land_e.get(nm)
         # LANDFIX-SQ (10-18): the land plan names the tile per link (D 4 dsfd_dvland_<W>, 3-bit K <= 7; or the long tile
@@ -748,8 +784,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                               K_source=(pr.get('K_source') or 'land_plan E (gate calendar R0 = G + N mod 2)') if e_ else 'NO die STA E: K 1 placeholder (re-derive)',
                               calendar_G_minus_R0=-h_, fault_bit=j, src=a_, hop0_gate=f'fwd_{nm}', gate_en=gate_en[nm],
                               land_rs=land_rs[nm], release_src=ds_, release_dst=dr_, land_reset_stages=rl_,
-                              calendar_stations=dict(side='source' if dr_ - ds_ > h_ else ('receiver' if dr_ - ds_ < h_ else None),
-                                                     n=abs(dr_ - ds_ - h_))))
+                              calendar_stations=dict(source=g_ - ds_, receiver=g_ + h_ - dr_),
+                              static_release=static_rel[nm]))
     # TOK-S81-GAPS/G8R (10-18): frame x lanes land INSIDE the receiving frame (dsfd_cfifo_crs4: one ot_s81_land ring per
     # lane on xk[k], read on cr from rsync = the frame rst_n + 2 cr edges).  dsfd_cfifo_crs4's contract L3 needs the
     # hop-0 ICG at the source opened at or after the frame's release -- G1 gated only the die-top dsfd_dvland lanes.
@@ -774,12 +810,20 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 if dr_ - ds_ < h_:
                     raise SystemExit(f'dv_bind: frame lane {nm}: R0 {dr_} - G {ds_} < N mod 2 = {h_}: the hop-0 gate '
                                      f'would open before {a_} releases (frame reset cannot be delayed per lane)')
-                gate_en[nm] = (cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4],
-                                       f'frame gate opens {h_} edges before the {n_} crs4 rsync')
-                               if dr_ - ds_ > h_ else sleaf)
+                gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4],
+                                      f'frame gate opens {h_} edges before the {n_} crs4 rsync')
+                # S81-DIESTA static relay release (see the landing calendar): G = dr_ - h_ is fixed by the frame reset,
+                # so a relay whose cell leaf releases at or after G reads an earlier tap (depth <= G - 1) of the same
+                # gate calendar chain (beside the source pin, as hop 0); no such tap -> hard error.
+                g_ = dr_ - h_
+                rmx_ = max(rdep[rst['station_leaf'][(nm, k)]] for k in range(len(chains_pts[nm])))
+                if rmx_ + 1 > g_:     # the frame epoch floor (relay_floor) guarantees this; a miss is a calendar bug
+                    raise SystemExit(f'dv_bind: frame lane {nm}: relay release {rmx_} not before the gate edge {g_}')
+                static_rel[nm] = dict(G=g_, relay_release_max=rmx_)
                 frame_gate_rows.append(dict(link=nm, inst=n_, port=f'{cport}[{lane_}]', src=a_, stages=len(chains_pts[nm]),
                                             frame_rst=rl_, release_src=ds_, read_epoch=dr_, calendar_G_minus_R0=-h_,
-                                            calendar_stations=dr_ - ds_ - h_, gate_en=gate_en[nm], hop0_gate=f'fwd_{nm}'))
+                                            calendar_stations=dr_ - ds_ - h_, gate_en=gate_en[nm], hop0_gate=f'fwd_{nm}',
+                                            static_release=static_rel[nm]))
     for lm in sorted({r['master'] for r in land_rows}):
         straps.append([lm, 'k'])
     if land_rows:
@@ -898,7 +942,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                              by_master=dict(collections.Counter(r['master'] for r in land_rows)),
                              by_inst_kind=dict(collections.Counter(r['inst'].split('_')[0] for r in land_rows)),
                              no_E=[r['link'] for r in land_rows if r['E'] is None],
-                             calendar_needs=[r for r in land_rows if r['calendar_stations']['n']],
+                             calendar_needs=[r for r in land_rows if r['calendar_stations']['source'] or r['calendar_stations']['receiver']],
+                             static_release_raised=sum(1 for r in land_rows if r['static_release']['gate_raised_by']),
                              bundle_age_unequal=bundle_age_unequal(land_rows), rows=land_rows),
                frame_hop0_gates=dict(count=len(frame_gate_rows), rule='TOK-S81-GAPS/G8R: R0 = frame rst_n depth + 2 '
                                      '(crs4 rsync), G = R0 - N mod 2', rows=frame_gate_rows,

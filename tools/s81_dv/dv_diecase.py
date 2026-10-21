@@ -99,7 +99,7 @@ def face_of(b, x, y):
     return min(d, key=d.get)
 
 
-def die_repair_tcl(out, dieflow_ref, skip=('n*_lck\\[*\\]',), *, rc_layer='M4'):
+def die_repair_tcl(out, dieflow_ref, skip=('n*_lck\\[*\\]',), *, rc_layer='M4', fclk=True):
     """DIE-FLOW shared repeater step (claude/dieflow-1017 -> main): files materialised from dieflow_ref, the step tcl
     written to out/die_repeaters_step.tcl; returns the run.tcl fragment that sources it"""
     a = argparse.Namespace(dieflow_ref=dieflow_ref)
@@ -119,7 +119,10 @@ def die_repair_tcl(out, dieflow_ref, skip=('n*_lck\\[*\\]',), *, rc_layer='M4'):
     libs = [f'{PLAT}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', f'{PLAT}/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib']
     t = subprocess.run([sys.executable, str(tmp / 'tools/die_repeaters/step.py'), 'tcl', '--design', 's81', '--report',
                         '/work/die_repeaters.json', '--legalize', 'snap',
-                        '--repeat-nets', 'n*_fck*', '--fclk-globs', 'n*_fck*', '--fclk-policy', 'fail', '--fclk-equalize', '--rc-layer', rc_layer, *[x for g in skip for x in ('--skip', g)], '--libs', *libs], capture_output=True, text=True, check=True).stdout
+                        # S81-DIESTA (10-20, s116v1/s122v1 OT_DIE_REP FAIL violations=1 'repeat_nets n*_fck* matched no
+                        # clock-skipped net'): the STAND-IN case has one clk and no forwarded lane clocks, so the fclk
+                        # repeat / equalize / audit (real-view lanes only) is not requested there
+                        *(('--repeat-nets', 'n*_fck*', '--fclk-globs', 'n*_fck*', '--fclk-policy', 'fail', '--fclk-equalize') if fclk else ()), '--rc-layer', rc_layer, *[x for g in skip for x in ('--skip', g)], '--libs', *libs], capture_output=True, text=True, check=True).stdout
     (out / 'die_repeaters_step.tcl').write_text(t)
     return f'# DIE-FLOW repeater step ({dieflow_ref})\nsource /work/die_repeaters_step.tcl\n'
 
@@ -346,7 +349,7 @@ def main():
     (out / 'place.tcl').write_text('\n'.join(pl) + '\n')
     repair = '# no die repair (pure GRT diagnostic)\n'
     if a.die_repair:
-        repair = die_repair_tcl(out, a.dieflow_ref, rc_layer='M8' if a.signal_top_layer == 'M8' else 'M4')
+        repair = die_repair_tcl(out, a.dieflow_ref, rc_layer='M8' if a.signal_top_layer == 'M8' else 'M4', fclk=False)
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
             if a.die_repair else 'estimate_parasitics -global_routing\n')
