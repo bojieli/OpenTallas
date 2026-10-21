@@ -41,7 +41,10 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
     output wire [103:0] cfg_bank_addr,
     output wire [12:0] start_bank_v
 `ifdef OT_GQ_N32
-    ,output wire [31:0] start_base_bank
+    ,output wire [15:0] start_base_bank
+    // R9 (HBM-GQ8 10-20): five kept registered ONE-HOT base copies (1 << base) for the period lo/hi, fault, b0 and cur
+    // one-hot consumers, so no 4-bit base fans into a 16:1 row decode (R6 native roots p_sb decode 42/37/36 loads).
+    ,output wire [79:0] start_oh_bank
 `endif
 );
     localparam integer ROWS=16;
@@ -70,6 +73,9 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
     wire [11:0] capacity_address=address;
 `endif
     reg [PCW-1:0] stored_base;
+`ifdef OT_GQ_N32
+    reg [15:0] stored_oh;   // == 1 << stored_base[3:0] at every edge (written with stored_base)
+`endif
     reg [255:0] data_q;
     reg [12:0] limit;
     reg [PCW:0] stored_limit;
@@ -112,14 +118,14 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
 `ifdef OT_GQ_N32
     // N32 (HBM-GQ7 10-20): the launch commit gate reached 34-38 loads (13 start-bank copies + the 29 start-field enables);
     // four kept copies: [0] start-bank copies, [1] start base, [2] start limit, [3] start loops. Same edge, same function.
-    wire[11:0]launch_c;
-    generate for(genvar g=0;g<12;g=g+1)begin:g_launch_gate
+    wire[12:0]launch_c;
+    generate for(genvar g=0;g<13;g=g+1)begin:g_launch_gate
         (* keep="true" *)ot_gq_t16_launch u_gate(.lv(lv),.armed(armed),.validated(validated),.scanning(scanning),
             .commit(commit),.active(program_active),.fault(fault),.cv(cv),.dv(dv),.q(launch_c[g]));
     end endgenerate
     wire launch_emit=launch_c[0];
-    // Existing launch edge, independent kept4-bit base copies per calendar/period/fault/b0 consumer.
-    generate for(genvar g=0;g<8;g=g+1)begin:g_base_copy
+    // Existing launch edge, independent kept4-bit base copies per calendar read consumer.
+    generate for(genvar g=0;g<4;g=g+1)begin:g_base_copy
       (* keep="true" *)ot_gq_t16_base_copy u_copy(.clk(clk),.en(launch_c[4+g]),
 `ifdef OT_GQ_MUT_BASE_SHADOW
         .d(stored_base[3:0]^((g==0)?4'd1:4'd0)),
@@ -127,6 +133,15 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
         .d(stored_base[3:0]),
 `endif
         .q(start_base_bank[4*g+:4]));
+    end endgenerate
+    generate for(genvar g=0;g<5;g=g+1)begin:g_oh_copy
+      (* keep="true" *)ot_gq_t16_oh_copy u_copy(.clk(clk),.en(launch_c[8+g]),
+`ifdef OT_GQ_MUT_OH_COPY
+        .d((g==0)?{stored_oh[14:0],stored_oh[15]}:stored_oh),
+`else
+        .d(stored_oh),
+`endif
+        .q(start_oh_bank[16*g+:16]));
     end endgenerate
 
     always @(posedge clk)if(launch_c[1])program_start_base<=stored_base;
@@ -181,6 +196,9 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
                 if(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>MAX_DESC)fault<=1;
                 else begin
                     stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;
+`ifdef OT_GQ_N32
+                    stored_oh<=16'd1<<base[3:0];
+`endif
                     armed<=1;missing<=0;
                     if(validated && base==stored_base && limit==stored_limit)begin
                         // Same range in the unchanged resident generation: reuse
@@ -276,6 +294,11 @@ module ot_gq_t16_reset_bank #(parameter integer N=8)(input wire clk,rst_n,output
 endmodule
 
 (* keep_hierarchy="yes" *)
+module ot_gq_t16_oh_copy(input wire clk,en,input wire[15:0]d,output wire[15:0]q);
+ (* keep="true",dont_touch="true" *)reg[15:0]r;
+ always @(posedge clk)if(en)r<=d;
+ assign q=r;
+endmodule
 module ot_gq_t16_base_copy(input wire clk,en,input wire[3:0]d,output wire[3:0]q);
  (* keep="true",dont_touch="true" *)reg[3:0]r;
  always @(posedge clk)if(en)r<=d;

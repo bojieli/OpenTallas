@@ -27,6 +27,8 @@ DEFS=(-DOT_COLLQ_SRAM)
 if [[ ${OT_GQ_P192:-0} == 1 ]]; then DEFS+=(-DOT_GQ_P192); MEM=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v; LIB=("${LIB[@]:0:${#LIB[@]}-1}" "$MEM"); fi
 # HBM-GQ7 10-20: OT_GQ_N32=1 (with OT_GQ_FAN32=1) = the native32 fanout pass (kept copies / registered one-hot selects, same edges)
 [[ ${OT_GQ_N32:-0} == 1 ]] && DEFS+=(-DOT_GQ_N32)
+# HBM-GQ8 10-20: OT_GQ_XDEFS = extra space-separated -D defines (R9 invariant check OT_GQ_CHECK_INV, R9 mutants)
+if [[ -n ${OT_GQ_XDEFS:-} ]]; then read -r -a _xd <<< "$OT_GQ_XDEFS"; DEFS+=("${_xd[@]}"); fi
 FL=("${DEFS[@]}" --binary --timing -O2 -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-MULTITOP -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN)
 build(){ "$V" "${FL[@]}" -GMUT=$2 -GKQMUT=$3 -GVEC="\"$OUT/vec\"" --top-module tb_hgi_coll_gq --Mdir "$OUT/$1" "$P/tb_hgi_coll_gq.sv" "${LIB[@]}" > "$OUT/$1.build.log" 2>&1 || { tail -40 "$OUT/$1.build.log"; exit 2; }; }
 mut(){ case $1 in m[1-7]) echo "${1#m} 0";; kq1) echo "0 1";; *) echo "unknown mutant $1" >&2; exit 2;; esac; }

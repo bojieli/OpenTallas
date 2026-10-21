@@ -200,7 +200,8 @@ module ot_hgi_coll_gq_issue #(
     endfunction
     // ------------------------------------------------------------------ F20 target + descriptor rows
 `ifdef OT_GQ_N32
-    wire[31:0]p_base_bank;
+    wire[15:0]p_base_bank;
+    wire[79:0]p_oh_bank;   // R9: [0] period lo, [1] period hi, [2] fault, [3] b0_oh, [4] cur_oh (each == 1 << p_sb[3:0])
 `endif
     wire p_we, p_sv; wire [7:0] p_wa, p_sb; wire [255:0] p_wd; wire [8:0] p_sl; wire [15:0] p_lp;
 `ifdef OT_GQ_FAN32
@@ -208,7 +209,7 @@ module ot_hgi_coll_gq_issue #(
     ot_hgi_coll_gq_target16 #(.TARGET(8'hff), .PCW(8), .TGT_PIN(1), .CAP_CLK(0)) u_target(
         .cfg_bank_we(p_bank_we), .cfg_bank_addr(p_bank_addr), .start_bank_v(p_start_bank)
 `ifdef OT_GQ_N32
-        ,.start_base_bank(p_base_bank)
+        ,.start_base_bank(p_base_bank),.start_oh_bank(p_oh_bank)
 `endif
 ,
 `else
@@ -313,7 +314,38 @@ module ot_hgi_coll_gq_issue #(
     wire ev_in_v = iss && iph != 2'd2;
 `ifdef OT_GQ_FAN32
     wire[9:0]run_copy;
+`ifdef OT_GQ_N32
+    // R9 (HBM-GQ8 10-20): the period-end compare tl == per-1 and lps > 1 are REGISTERED flags (tl_last / lps_gt1) kept
+    // in 12 copies, one per consumer group: [0..7] cur_ohc calendar halves, [8] tl counter, [9] lps counter,
+    // [10] run_next, [11] FSM. Invariants at every edge: tl_last == (tl == per-1), lps_gt1 == (lps > 1); the next
+    // state is computed from the same updates as tl / per / lps (tl+2 == per while counting, per == 1 after a launch or
+    // a wrap). Removes the 8 replicated wrap subtract/compare cones (R7 per/tl roots 33..61) and R6's wrap roots.
+    wire[11:0]tl_last_c,lps_gt1_c;
+    wire[15:0]per_rd;
+    wire tl_last_d=p_start_bank[4]?(per_rd==16'd1):
+`ifdef OT_GQ_MUT_TLLAST
+                   run_copy[8]?(tl_last_c[11]?1'b0:(tl+16'd2==per)):tl_last_c[11];
+`else
+                   run_copy[8]?(tl_last_c[11]?(lps_gt1_c[11]?(per==16'd1):1'b1):(tl+16'd2==per)):tl_last_c[11];
+`endif
+    wire lps_gt1_d=p_start_bank[5]?(p_lp>16'd1):
+                   (run_copy[9]&&tl_last_c[11]&&lps_gt1_c[11])?(lps>16'd2):lps_gt1_c[11];
+    generate for(genvar g=0;g<12;g=g+1)begin:g_wrap_flag
+        ot_hgi_coll_gq_control_ff u_last(.clk(clk),.rst_n(rn),.d(tl_last_d),.q(tl_last_c[g]));
+        ot_hgi_coll_gq_control_ff u_gt1(.clk(clk),.rst_n(rn),.d(lps_gt1_d),.q(lps_gt1_c[g]));
+    end endgenerate
+`ifdef OT_GQ_CHECK_INV
+    always @(posedge clk) if(rn) begin
+        for(integer g=0;g<12;g=g+1)begin
+            if(tl_last_c[g]!==(tl==per-16'd1))$fatal(1,"GQ_R9_INV_FAIL tl_last copy%0d=%0d tl=%0d per=%0d",g,tl_last_c[g],tl,per);
+            if(lps_gt1_c[g]!==(lps>16'd1))$fatal(1,"GQ_R9_INV_FAIL lps_gt1 copy%0d=%0d lps=%0d",g,lps_gt1_c[g],lps);
+        end
+    end
+`endif
+    wire run_next=p_sv?1'b1:(run&&!(tl_last_c[10]&&!lps_gt1_c[10]));
+`else
     wire run_next=p_sv?1'b1:(run&&!(tl==per-16'd1&&lps<=16'd1));
+`endif
     generate for(genvar g=0;g<10;g=g+1)begin:g_run_copy
         ot_hgi_coll_gq_control_ff u_ff(.clk(clk),.rst_n(rn),
 `ifdef OT_GQ_MUT_RUN_CTL
@@ -332,11 +364,15 @@ module ot_hgi_coll_gq_issue #(
 `endif
         wire[15:0]rot={cur_ohc[c][14:0],cur_ohc[c][15]};
         for(genvar h=0;h<2;h=h+1)begin:g_half
-            localparam integer L=(h==0)?c:9+c;
+            localparam integer WL=2*c+h;
 `ifdef OT_GQ_N32
-            wire wrap_local;
-            (* keep="true" *)ot_hgi_coll_gq_wrap_local u_wrap(.tl(tl),.per(per),.lps(lps),.q(wrap_local));
+`ifdef OT_GQ_MUT_WRAP_HIGH
+            wire wrap_local=tl_last_c[WL]&&lps_gt1_c[WL]&&(lps!=16'd2);
+`else
+            wire wrap_local=tl_last_c[WL]&&lps_gt1_c[WL];
 `endif
+`endif
+            localparam integer L=(h==0)?c:9+c;
             always @(posedge clk or negedge rn)
                 if(!rn)cur_ohc[c][8*h+:8]<=(h==0)?8'd1:8'd0;
                 else if(p_start_bank[L])cur_ohc[c][8*h+:8]<=(16'd1<<start_base)>>(8*h);
@@ -373,36 +409,54 @@ module ot_hgi_coll_gq_issue #(
         if(!rn)tl<=0;
         else if(p_start_bank[4])tl<=0;
         else if(run_copy[8])begin
+`ifdef OT_GQ_N32
+            if(tl_last_c[8])begin if(lps_gt1_c[8])tl<=0;end
+`else
             if(tl==per-16'd1)begin if(lps>16'd1)tl<=0;end
+`endif
             else tl<=tl+16'd1;
         end
     always @(posedge clk or negedge rn)
         if(!rn)lps<=0;
         else if(p_start_bank[5])lps<=p_lp;
-        else if(run_copy[9] && tl==per-16'd1 && lps>16'd1)lps<=lps-16'd1;
-    generate for(genvar g=0;g<2;g=g+1)begin:g_period_start
 `ifdef OT_GQ_N32
-        wire[3:0]period_base=p_base_bank[4*(4+g)+:4];
+        else if(run_copy[9] && tl_last_c[9] && lps_gt1_c[9])lps<=lps-16'd1;
 `else
-        wire[3:0]period_base=p_sb[3:0];
+        else if(run_copy[9] && tl==per-16'd1 && lps>16'd1)lps<=lps-16'd1;
 `endif
+`ifdef OT_GQ_N32
+    // R9: the period field and the fault check read the row through one-hot AND-ORs on registered one-hot base copies.
+    reg[15:0]per_rd_t,flt_rd_t;
+    always @* begin : nb_per_rd
+        per_rd_t='0;flt_rd_t='0;
+        for(integer j=0;j<16;j=j+1)begin
+            for(integer x=0;x<8;x=x+1)begin
+                per_rd_t[x]=per_rd_t[x]|(rf[j][85+x]&p_oh_bank[j]);
+                per_rd_t[8+x]=per_rd_t[8+x]|(rf[j][93+x]&p_oh_bank[16+j]);
+            end
+            for(integer x=0;x<16;x=x+1)flt_rd_t[x]=flt_rd_t[x]|(rf[j][85+x]&p_oh_bank[32+j]);
+        end
+    end
+    assign per_rd=per_rd_t;
+    wire per_rd_zero=(flt_rd_t==16'd0);
+    generate for(genvar g=0;g<2;g=g+1)begin:g_period_start
         always @(posedge clk or negedge rn)
             if(!rn)per[8*g+:8]<=0;
-            else if(p_start_bank[6+g])per[8*g+:8]<=rf[period_base][85+8*g+:8];
+            else if(p_start_bank[6+g])per[8*g+:8]<=per_rd[8*g+:8];
     end endgenerate
     always @(posedge clk or negedge rn)
         if(!rn)b0_oh<=16'd1;
-        else if(p_start_bank[8])b0_oh<=16'd1<<
-`ifdef OT_GQ_N32
-          p_base_bank[28+:4];
+        else if(p_start_bank[8])b0_oh<=p_oh_bank[48+:16];
 `else
-          p_sb[3:0];
+    generate for(genvar g=0;g<2;g=g+1)begin:g_period_start
+        always @(posedge clk or negedge rn)
+            if(!rn)per[8*g+:8]<=0;
+            else if(p_start_bank[6+g])per[8*g+:8]<=rf[p_sb[3:0]][85+8*g+:8];
+    end endgenerate
+    always @(posedge clk or negedge rn)
+        if(!rn)b0_oh<=16'd1;
+        else if(p_start_bank[8])b0_oh<=16'd1<<p_sb[3:0];
 `endif
-`endif
-`ifdef OT_GQ_N32
-    wire[3:0]fault_base=p_base_bank[24+:4];
-`else
-    wire[3:0]fault_base=p_sb[3:0];
 `endif
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
@@ -427,8 +481,13 @@ module ot_hgi_coll_gq_issue #(
             active <= run || busy_any || p_sv;
             if (active && !(run || busy_any || p_sv)) done <= 1'b1;
             if (p_sv) begin
-                if (run || busy_any || p_sl > 9'd16 || rf[fault_base][100:85] == 16'd0) fault <= 1'b1;
+`ifdef OT_GQ_N32
+                if (run || busy_any || p_sl > 9'd16 || per_rd_zero) fault <= 1'b1;
+                run <= 1'b1; cur <= p_sb[3:0]; b0 <= p_sb[3:0]; cur_oh <= p_oh_bank[64+:16];
+`else
+                if (run || busy_any || p_sl > 9'd16 || rf[p_sb[3:0]][100:85] == 16'd0) fault <= 1'b1;
                 run <= 1'b1; cur <= p_sb[3:0]; b0 <= p_sb[3:0]; cur_oh <= 16'd1 << p_sb[3:0];
+`endif
 `ifndef OT_GQ_FAN32
                 b0_oh <= 16'd1 << p_sb[3:0];
 `endif
@@ -446,8 +505,13 @@ module ot_hgi_coll_gq_issue #(
 `endif
                 end
 
+`ifdef OT_GQ_N32
+                if (tl_last_c[11]) begin
+                    if (!lps_gt1_c[11]) run <= 1'b0;
+`else
                 if (tl == per - 16'd1) begin
                     if (lps <= 16'd1) run <= 1'b0;
+`endif
                     else begin
 `ifndef OT_GQ_FAN32
                         lps <= lps - 16'd1; tl <= 16'd0;

@@ -40,6 +40,8 @@ DEFS=(-DOT_COLLQ_SRAM -DOT_GQ_FAN32 -DOT_GQ_S2TOP)
 if [[ ${OT_GQ_P192:-0} == 1 ]]; then DEFS+=(-DOT_GQ_P192); LIB=("${LIB[@]/ot_sram_1r1w_128x256_m1_r2c2\/ot_sram_1r1w_128x256_m1_r2c2.v/ot_sram_1r1w_128x256_m1_r2c2_p192_mir\/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v}"); fi
 # HBM-GQ7 10-20: OT_GQ_N32=1 = the native32 fanout pass (kept copies / registered one-hot selects, same edges)
 if [[ ${OT_GQ_N32:-0} == 1 ]]; then DEFS+=(-DOT_GQ_N32); fi
+# HBM-GQ8 10-20: OT_GQ_XDEFS = extra space-separated -D defines (R9 invariant check OT_GQ_CHECK_INV, R9 mutants)
+if [[ -n ${OT_GQ_XDEFS:-} ]]; then read -r -a _xd <<< "$OT_GQ_XDEFS"; DEFS+=("${_xd[@]}"); fi
 sha256sum "$P/tb_hgi_coll_gq_ia.sv" "${LIB[@]}" tools/hgi_sim/collq_gather_1018.py > "$OUT/sources.sha256"
 "$V" --binary --timing -O2 -j "${JOBS:-16}" -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-MULTITOP -Wno-TIMESCALEMOD \
   -Wno-MULTIDRIVEN "${DEFS[@]}" -GLANES=1 -GVM_RT=74 -GBANK_RT=72 -GIA=$IA ${GQIA:+-GGQIA=$GQIA} -GMUT=$MUT -GROWS="\"$OUT/sched/rows.txt\"" \

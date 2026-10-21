@@ -7,7 +7,7 @@ reg[7:0]tgt=48,cfg_target=48;reg[11:0]cfg_addr=0,desc_base=0;
 reg[255:0]cfg_data=0;reg[12:0]desc_limit=0;reg[15:0]desc_loops=1;
 wire we0,we1,sv0,sv1,ready0,ready1,fault0,fault1;
 wire[7:0]wa0,wa1,sb0,sb1;wire[8:0]sl0,sl1;wire[15:0]lp0,lp1;
-wire[31:0]base_copies;
+wire[15:0]base_copies;
 wire[255:0]wd0,wd1;wire[12:0]bw;wire[103:0]ba;wire[12:0]bs;
 integer mode=0,checks=0,writes=0,starts=0;reg compare=1;
 ot_static_program_target #(.PCW(8),.TGT_PIN(1)) u0(.clk(clk),.rst_n(rst_n),.clk_cap(clk_cap),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),.program_active(program_active),.program_cfg_we(we0),.program_cfg_addr(wa0),.program_cfg_data(wd0),.program_start_v(sv0),.program_start_base(sb0),.program_start_limit(sl0),.program_start_loops(lp0),.configured(ready0),.fault(fault0));
@@ -29,7 +29,7 @@ always @(posedge clk) begin
   end
   if(sv1)begin
    starts=starts+1;
-   for(integer j=0;j<8;j=j+1)if(base_copies[4*j+:4]!==sb0[3:0])$fatal(1,"R6_BASE_COPY_FAIL copy%0d want%0d got%0d",j,sb0[3:0],base_copies[4*j+:4]);
+   for(integer j=0;j<4;j=j+1)if(base_copies[4*j+:4]!==sb0[3:0])$fatal(1,"R6_BASE_COPY_FAIL copy%0d want%0d got%0d",j,sb0[3:0],base_copies[4*j+:4]);
   end
  end
 end
