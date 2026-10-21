@@ -524,7 +524,13 @@ class Cx:
                             consumer_port_mismatch_note=("gq landing run dst+s*stride+j vs SU port rule lsec%8 with "
                                                          "F%8!=0: those sectors need a re-placement copy (open); the "
                                                          "consumer images them") if c["port_mismatch"] else None,
-                            launch=g["launch_cyc"], check=g["check_cyc"], far_end_flits=g["far_end_flits"]))
+                            launch=g["launch_cyc"], check=g["check_cyc"], far_end_flits=g["far_end_flits"],
+                            **({} if c['op']!='COLL.GROUP_REDUCE_MCAST' else dict(
+                                global_reduction_qualified=False, on_die_transport_only=True,
+                                tkm_endpoint_programme_qualified=False,
+                                tkm_endpoint_obligation='source-only tkm_endpoint_1021.endpoint_plan@ca8bc89afd537729fc1f722306efa9cf8142c05b; '
+                                    'real issuer-to-endpoint age/own+peer producers/qslots/writer/160-clock schedule unbound; '
+                                    'PRE1 SETTLE136 candidate not adopted; current SETTLE104 source retained'))))
 
     def _idx_params(s, contract, l12):
         """hb_idx__ctl selected engine timing (contract) + l12 request pads: the TOPK engine runs with

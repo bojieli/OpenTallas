@@ -17,7 +17,7 @@ import re
 
 FAULT_OUTPUT_PORTS = {
     'fault', 'pc_fault', 'owner_fault_split', 'lg_fault', 's_fault',
-    'schedule_fault', 'tgt_fault', 'share_fault', 'fault_cause', 'program_fault',
+    'schedule_fault', 'tgt_fault', 'share_fault', 'ring_fault', 'fault_cause', 'program_fault',
 }
 
 
