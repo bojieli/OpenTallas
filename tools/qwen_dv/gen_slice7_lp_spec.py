@@ -62,7 +62,7 @@ CHILD_SOURCES = [
     "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv",
 ]
 
-CHILD_SOURCES += ['rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv']
+CHILD_SOURCES += ['rtl/lib/ot_rst_relay.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_sc2_k79_helpers.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_red2_k79.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_red2_k79_helpers.sv', 'rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv']
 
 
 def make_flat():
