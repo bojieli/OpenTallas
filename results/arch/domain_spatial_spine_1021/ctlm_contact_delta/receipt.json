@@ -1,0 +1,23 @@
+{
+  "actual_unit": "3931308",
+  "actual_production_admission": "PASS core11940/hr5188; fixture assertion then FAIL expected HR5187",
+  "source_contacts": 17127,
+  "matched_contacts": 17127,
+  "missing": [],
+  "additional": [
+    [
+      [
+        "ot_prs_00000_ff",
+        "CLK",
+        "ck_hr",
+        "DFFASRHQNx1_ASAP7_75t_R"
+      ],
+      1
+    ]
+  ],
+  "classification": "One physical pin-flop clone added by existing pin_reg_split hook. Every source-native contact matches actual placed scene instance/pin/master/root.",
+  "normalization": "Remove deterministic native .D_DFF... suffix versus Yosys /Q$_DFF... suffix; remove Verilog bracket escapes only.",
+  "source_binding": "safe13 native source clock ownership cf82d273; zero FF change from safe12c role split; exact actual fixture ODB a57462fc148fcf455bf024ed63bcff30c2291b2145ab2d514efb8d8d0daca2ed",
+  "production_guard_changes": false,
+  "expectation_changed": false
+}
