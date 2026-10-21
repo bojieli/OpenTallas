@@ -90,7 +90,8 @@
  "defines": [
   "DSFD_PQ_STATIC_X2"
  ],
- "explicit_priority_files": [
+ "selection_rule": "Use originalPBrecordedroots+finalaugmentedorderedrtl_files, matchingexecutedrtl_index later-prefer-wins. Rawargv22 --rtl-file inputs differfromfinalaugmented242files; mem151 occursfinalindex217,notrawargv22. Actualroots excludephysical/ref_tile/**/rtl duplicatesunlessexplicit; kit indexingallphysicalincorrectlypickedoldcxea b3aad031. No reindex/compileclaim.",
+ "final_augmented_priority_files": [
   {
    "path": "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/cells_used.v",
    "sha256": "c92aeb4693cc7ab436594da572e68a78f7da185934ea17152837c56b68514f11",
@@ -1302,5 +1303,31 @@
    "declares_ot_s81ph_mem1r1w": false
   }
  ],
- "selection_rule": "Actual die_port_bind main passes ref-tile specs + prefer-lists + explicitprefer + explicitrtl_files; later path rank wins. Sole explicitmem151 wins over oldcxea b3aad031; no reindex/compile claim."
+ "raw_argv_rtl_files": [
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/cells_used.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/rtl_extra/62b8c2cca981b951fd487d31c3966babf5a6fb32/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/rtl_extra/99991b0512e59a54cced41729a2d7392ab4a0631/rtl/dsrom_sys/s81_dv/frame/dsfd_rly_frame_exact.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/lib/ot_reset_sync.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/bind/bind/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h10_l4_lp_rf3r.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_dv/land/dsfd_dvland_pvrd.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros_v2/ot_rom_8192x274_m8/ot_rom_8192x274_m8.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/rom_host_ingest/rtl/dsfd_host.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v"
+ ],
+ "raw_argv_rtl_file_count": 22,
+ "final_augmented_rtl_file_count": 242,
+ "correction": "Priorfieldlabel explicit_priority_files incorrectlydescribedfinalPBfilesasraw22. Rawargvunchanged; finalselectedmem151/APIcorrect. Correctedbeforeaggregate retry."
 }
