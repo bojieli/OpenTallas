@@ -44,6 +44,8 @@ def main():
         c = dict(done=done, bench_pass=bool(re.search(r'^BENCH_PASS', txt, re.M)),
                  lines=[ln for ln in txt.splitlines() if ln.startswith(('XDIE', 'PASS', 'FAIL', 'BENCH', 'LATE', 'MISMATCH',
                                                                        'STATS', 'GEN_FAILED', 'EXIT'))][:12])
+        golden = rd(o / n / 'golden.json') or {}
+        c['traffic_calendar_sha256'] = golden.get('mu', {}).get('cal_sha256')
         if st:
             pu = st['per_user']
             c.update(beats=st['beats'], users=st['users'], late=sum(d['late'] for d in pu.values()),
@@ -102,6 +104,10 @@ def main():
             per_user_tok_s=record.get('per_user_tok_s') if good else None,
             aggregate_tok_s=record.get('aggregate_tok_s') if good else None)
     schedule_pass = all(c['verdict'] == 'PASS_MODEL' for c in calendars.values())
+    traffic_calendar_bound = all(
+        cases.get(case, {}).get('traffic_calendar_sha256') == calendars[mode]['sha256']
+        and calendars[mode]['sha256'] is not None
+        for mode, case in [('ar', 'ar50r'), ('mtp', 'mtp10r')])
     rate1 = dict(tool='tools/s81_dv/dv_mu_calendar_phys.py (same-user checker required)',
                  result='PASS_MODEL' if schedule_pass else 'UNQUALIFIED', grade='MODEL',
                  calendars=calendars,
@@ -117,10 +123,11 @@ def main():
         head = None
     rec = dict(
         schema='opentallas.tokfunc_s81.mu.v1', lane='TOK-FUNC-S81/MURATE (tree TOK.DS.RATE.1, MU.TOK, MU.TOK.DS3, TOK.DS.LAYER.MU)',
-        grade=(GRADE_OK if not pend and not fail and not hop_fail and all_cases and schedule_pass
+        grade=(GRADE_OK if not pend and not fail and not hop_fail and all_cases and schedule_pass and traffic_calendar_bound
                and all(u['verdict'] == 'PASS' for u in users.values()) else
                'OPEN: ' + ('; '.join(([f'FAIL {fail + hop_fail}'] if fail or hop_fail else []) + ([f'{len(pend)} pending'] if pend else [])))),
         calendar=dict(attn='G4', selected=calendars, schedule_model_pass=schedule_pass,
+                      traffic_calendar_bound=traffic_calendar_bound,
                       superseded_mtp='6f8bbf5c4: invalid same-user overlap424 on200/240 hops; rates withdrawn'),
         full_token_pass=False,
         component_runs_only=True,
