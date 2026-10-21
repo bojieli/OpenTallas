@@ -38,3 +38,16 @@ array west129.6 again and places the actual corefeed at17150.4,12096. E1/E2 stay
 259.2, outline stays32983.176x24288.824, total western clearance consumed259.2.
 The recorded ROOT contract is33x26mm; raw widthheadroom16.824um is disclosed.
 No500um exterior-margin requirement or unrecorded reserved outside area is assumed.
+
+Directional source repair: relay_frame() classified every side-by-side DV bus
+as H (65x106 at600bits), although its corners later emit HV/VH (104x106).
+OT_SPLIT_FWD_CLASS_BEND_RESERVE=1 now reserves max(H,HV,VH) for these paths
+before native site allocation. Both544bit parts retain independent vertical
+slots. Non-EW vertical paths keep their directional reservation, avoiding the
+old globally conservative maximum-frame failure. This is a source placement
+change and remains unqualified until the single next GEN uses it.
+
+The blanket259.2-all-boundary candidate is HOLD: it would reduce the western
+service span to640.776um while existing collective hardware is1563.816um wide.
+Its generated W5x561.6 reservation cannot establish legal service placement.
+The directional reservation is intended to avoid that physical collision.

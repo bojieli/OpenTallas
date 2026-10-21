@@ -20,7 +20,13 @@ def slices(bits):
 def reservation(bits, group=None):
     parts = slices(bits)
     wc = C.wclass(max(hi - lo for lo, hi in parts))
-    frames = [C.frame(wc, group)] if group else [C.frame(wc, g) for g in C.REP]
+    groups = [group] if group else list(C.REP)
+    # Side-by-side paths can turn into EN/ES/WS/WN at a hop. Reserve
+    # the native bend width before site allocation, instead of widening only
+    # after emission. Keep non-EW vertical reservations directional.
+    if group == 'H' and os.environ.get('OT_SPLIT_FWD_CLASS_BEND_RESERVE') == '1':
+        groups += ['HV', 'VH']
+    frames = [C.frame(wc, g) for g in groups]
     w, h = max(f[0] for f in frames), max(f[1] for f in frames)
     return w, round((h + C.SHAVE) * len(parts) - C.SHAVE, 3)
 
