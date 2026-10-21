@@ -1,0 +1,21 @@
+{
+ "reviewer": "coordinator (COORD 10-20 18:53 rule-freeze decision; recorded by lane KV-PVFIN16; not a critical tile)",
+ "time": "2026-10-20T18:58:00-07:00",
+ "gate_commit": "b287d2ceb40fb7ff77002976a6aa2eaa59b1e902",
+ "geometry_sha256": "03439f436a6418ac465011c5d05cf36a669ab329328057305a62af817d1fd1ad",
+ "verdict": "APPROVED",
+ "accepted_clock": {
+  "sinks_one_root": 38020,
+  "tt_insertion_ps": 397.4, "tt_pin_spread_ps": 88.4,
+  "ff_insertion_ps": 332.6, "ff_pin_spread_ps": 84.6,
+  "reason": "COORD 10-20 18:53 (owner rule freeze 09:35: tile rules are guidance, die results decide): R15c pin-flop spread 88.4 TT / 84.6 FF ps over 80 is ACCEPTED for route; route timing decides. If route timing fails, split the root regionally (landed region crossings)."
+ },
+ "checklist": {
+  "lattice": "4 SRAM macros at (43.2,43.2) (129.6,43.2) (43.2,172.8) (129.6,172.8): all on the 43.2 lattice, 2x2 with wide channels",
+  "std_cell_band": "one std-cell region around and between macros; density.png uniform green (0.5), no islands; one small red hot-spot at E face near y~45 (pin landing)",
+  "pin_spread": "1815 signal pins: S 534/241.8 um, N 534/241.8 um, W 583/245.5 um, E 260/194.3 um (<= 2.4/um); pin geometry PASS 0 inaccessible",
+  "clock_entry": "ck on E face mid-height; register mass is tile-wide (38k flops); measured TT insertion 297.6..397.4 ps",
+  "shape": "259.2 x 259.2 square; util 61% std / fill 57%; trial GRT overflow 0, worst M2 45.5%",
+  "timing": "gate TT placement RC reg->reg -76.9 ps (product_land), reg->macro +23.9 ps, hold +47.3 ps; census PASS max32"
+ }
+}
