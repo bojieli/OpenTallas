@@ -144,6 +144,10 @@ def main():
     ap.add_argument("--mu-copy-a-only", action="store_true")
     ap.add_argument("--xl5", action="store_true", help="S81-LINK5: stage hop on s_0N pair A -> next stage s_0N pair B")
     ap.add_argument("--mu-users-of", default="", help="real mode: keep only the calendar users of this copy (A / B)")
+    ap.add_argument("--mu-hop-plan", default="", help="TOK-FUNC-S81/MURATE: stage-hop messages of one calendar link "
+                    "resource (tools/s81_dv/tokfunc/mu_hop_plan.py: msgs [{user, t, m, label}]); --xl5 only; no TP collectives")
+    ap.add_argument("--mu-user-range", default="", help="TOK-FUNC-S81/MURATE: real mode, users a:b only (calendar shifts "
+                    "rebased to user a; tags keep the calendar user ids); default all")
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     lat = parse_cls(a.lat, {}); per = parse_cls(a.per, {})
@@ -192,11 +196,25 @@ def main():
     if U and a.mu_users_of and shifts is not None:
         cop = {sl["user"]: sl["copy"]["S002"] for sl in cal["slots"]}
         users = [u for u in range(U) if cop[u] == a.mu_users_of]
+    base = 0
+    if U and a.mu_user_range:
+        ua, ub = (int(x) for x in a.mu_user_range.split(":"))
+        users = [u for u in users if ua <= u < ub]
+        if shifts is not None:
+            base = shifts[users[0]]
     plan = [(0, None, None)] if not U else [(u, u, None) for u in users]
+    hop = None
+    if a.mu_hop_plan:            # MURATE: replaces the per-user loop (no TP collectives, only the link resource's messages)
+        assert a.xl5, "--mu-hop-plan needs --xl5 (the stage-hop circuit)"
+        hop = json.loads(Path(a.mu_hop_plan).read_text())
+        plan = []
+        MU_SPARE = True
+        users = sorted({m["user"] for m in hop["msgs"]})
+        U = len(users)
     for rep_or_user, user, _ in plan:
       if user is not None:
         if shifts is not None:
-            t_u = WARM + shifts[user]
+            t_u = WARM + shifts[user] - base
             assert t_u >= t, f"user {user}: calendar start {t_u} before the previous user's end {t}"
             t = t_u
       for rep in (range(a.reps) if user is None else [0]):
@@ -298,6 +316,38 @@ def main():
         if a.xl5:
             rec.update(windows=nwin, port="WN_A", beats_per_peer=nwin * a.nb)
         t = tend + (a.dense_gap if a.mu_mode == "dense" else a.gap)
+    if hop is not None:
+        # each message = one h of the stage-hop circuit (s_0N, port 2, class H): per die 4 tag windows of NB beats (the 4
+        # end slices' shares, 40,960 B = one H_MSG x vector), window j at t + j (NB + 16), its mu_c 4 cycles before
+        last_end = -10**9
+        for mi, msg in enumerate(hop["msgs"]):
+            user, th = int(msg["user"]), WARM + int(msg["t"])
+            assert th - 4 > last_end, f"message {mi}: starts {th} before the previous message's last window {last_end}"
+            pos = 4096 + 17 * user + 320 * int(msg["m"])
+            rec = dict(inst=inst, name="mu_hop", kind="MUH", payload_B=4 * a.nb * BEAT_B * ND, rep=0, start=th, src_sha={},
+                       user=user, copy="A", pos=pos, beats_per_peer=4 * a.nb, windows=4, port="WN_A", label=msg.get("label"),
+                       msg=int(msg["m"]))
+            rng = np.random.default_rng(1000 * inst + 17)
+            for d in range(ND):
+                dp = d * NP + 2
+                data = rng.integers(0, 256, 4 * a.nb * BEAT_B, dtype=np.uint8).tobytes()
+                rec["src_sha"][dp] = hashlib.sha256(data).hexdigest()
+                for j in range(4):
+                    tj = th + j * (a.nb + 16); posj = pos + j * a.nb
+                    mucmds.append((tj - 4, dp, (posj << 13) | (user << 3) | 1))
+                    last_end = max(last_end, tj + a.nb)
+                    for k in range(a.nb):
+                        kk = j * a.nb + k
+                        w = 1 | (2 << 1) | (3 << 4) | ((dp & 0xF) << 9)
+                        w |= (1 << 13) | (user << 14) | (posj << 24)
+                        pl = int.from_bytes(data[kk * BEAT_B:(kk + 1) * BEAT_B], "little") & ((1 << 981) - 1)
+                        w |= pl << 64
+                        w |= (inst & 0xFF) << 1088
+                        w |= (kk & 0xFF) << 1096
+                        lines.append((tj + k, dp, w, deadline(tj, k, "H", dp, 0, issue=tj + k)))
+            insts.append(rec)
+            inst += 1
+        shifts = None
     lines.sort(key=lambda x: (x[0], x[1]))
     seen = set()
     for iss, dp, _, _ in lines:
@@ -328,6 +378,9 @@ def main():
     if a.xl5:
         g["xl5"] = dict(stage_hop="s_0N pair A -> next stage rank d s_0N pair B (tb chain closed on the group)",
                         tp_d2="s_7N <-> (d+2).s_7N", mu_h_windows=NP if U else 0)
+    if hop is not None:
+        g["mu_hop_plan"] = dict(plan=a.mu_hop_plan, sha256=hashlib.sha256(Path(a.mu_hop_plan).read_bytes()).hexdigest(),
+                                resource=hop.get("resource"), messages=len(hop["msgs"]))
     if a.reserve_mu_tag:
         g["payload_contract"] = {"mu_tag_spare_bits": [1077, 1045], "reserved": True}
     (out / "golden.json").write_text(json.dumps(g, indent=1))

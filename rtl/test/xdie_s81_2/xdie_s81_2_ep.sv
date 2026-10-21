@@ -60,7 +60,10 @@ module xdie_s81_2_ep #(
     parameter integer AB = 0,          // 1 = ot_s81sl_lep_mu_ab + pair B at this endpoint (S81-LINK5 WN)
     parameter integer LEG = 1,         // 1 = the die's lane leg (relays + landing) between lane tile and PHY
     parameter integer PLAT_S = 4,
-    parameter integer DMUT = 0
+    parameter integer DMUT = 0,
+    parameter integer LRXS = 0,        // TOK-FUNC-S81/MURATE 10-21: lep_mu_ab RX_SRAM / IN_PIPE / NATIVE32 (G7 s_0N binds 1/1/1;
+    parameter integer LINP = 0,        // defaults 0 = the bench as before)
+    parameter integer LN32 = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -130,7 +133,7 @@ module xdie_s81_2_ep #(
     // ---- link-port leaf
     wire lepf;
     generate if (MU == 1 || AB != 0) begin : g_mu
-        ot_s81sl_lep_mu_ab u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
+        ot_s81sl_lep_mu_ab #(.RX_SRAM(LRXS), .IN_PIPE(LINP), .NATIVE32(LN32)) u_lep (.clk(clk), .rst_n(rst_n), .ro(lro), .ri(lri),
             .lo0_v(lov[0]), .lo0_r(lor[0]), .lo0_d(lod[0 +: 553]), .lo1_v(lov[1]), .lo1_r(lor[1]), .lo1_d(lod[553 +: 553]),
             .li0_v(liv[0]), .li0_r(lir[0]), .li0_d(lid[0 +: 553]), .li1_v(liv[1]), .li1_r(lir[1]), .li1_d(lid[553 +: 553]),
             .rxv(rxv4[1:0]), .sl_f(sf), .l0_f(lf[2:0]), .l1_f(lf[5:3]),
