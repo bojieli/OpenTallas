@@ -2337,6 +2337,8 @@ def place(m, K, geo, F):
         else:
             x_g = lx + 60.0 + kx_
             gw = round(min(x_hs - gap - x_g, 309.0 - kx_), 4)
+        if os.environ.get('OT_KV_CTL_CENTRAL', '0') == '1':
+            x_g += 172.8 if west else -172.8
         GH = 1188.0                 # group tile height: 324-um gaps between groups (relay spots + the stack fan slot)
         for g in range(8):
             idx = ORDER.index(g)
@@ -2455,9 +2457,35 @@ def place(m, K, geo, F):
         anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - ew_ / 2), ey_)
         emb_keep = [('emb_west_pocket', host.x - 21.6, host.y + host.h, d2d.x - (host.x - 21.6), d2d.y + d2d.h - host.y - host.h)]
         m['geo']['emb_west'] = dict(pocket=list(emb_keep[0][1:]), anchor=list(anchors['kvs_emb']))
+    central_keep = []
+    if os.environ.get('OT_KV_CTL_CENTRAL', '0') == '1':
+        if not NATIVE_SLOTS or not HROOT or 'ahub' not in by:
+            raise ValueError('CTL_CENTRAL requires native slots, HROOT and actual AHUB')
+        ah = by['ahub']; pn = by['pvw_1']
+        lo = up(ah.y + ah.h + SH + 21.6, GY)
+        hi = pn.y - 21.6
+        if hi - lo < 216.0 - 1e-6:
+            raise ValueError('CTL_CENTRAL needs >=216um clear horizontal channel; use OT_KV_PVT_HUB_CLEAR=259.2 or larger')
+        ws, es = by['hsl_WN_0'], by['hsl_EN_0']
+        xl, xr = ws.x + ws.w + 21.6, es.x - 21.6
+        central_keep = [('ctl_central_tile_reservation', xl, lo, xr-xl, hi-lo)]
+        blocked = [i.name for i in m['insts'] if
+                   xl < i.x+i.w-1e-6 and i.x < xr-1e-6 and
+                   lo < i.y+i.h-1e-6 and i.y < hi-1e-6]
+        if blocked:
+            raise ValueError(f'CTL_CENTRAL crossing band intersects {blocked}; lift actual N macro rows with OT_KV_SN_LIFT')
+        # Keep a full216um approach beside the PVFIN island. Do not displace
+        # PVFIN into the through channel or squeeze the151.2um standard row.
+        anchors['kvs_ctl'] = (ah.x - 30.0 - PVFIN_FRAME[0] - 216.0 - FRAME['ctl'][0]/2,
+                              ah.y + ah.h/2)
+        m['geo']['ctl_central'] = dict(flag='OT_KV_CTL_CENTRAL=1',
+            tile_only_channel=list(central_keep[0][1:]), waypoint_y=(lo+hi)/2,
+            control_corridor_growth_per_side_um=172.8,
+            ctl_anchor=list(anchors['kvs_ctl']), geometry_only=True, qualified=False,
+            obligation='Actual GEN must rederive per-bit reach, relay/calendar ages; reticle orientation needs coherent frame/pin/grid/package transform.')
     for nm, kind in order + hro:
         w, h = FRAME[kind]
-        x, y = free_spot(m, w, h, anchors[nm], GX, GY, extra=emb_keep)
+        x, y = free_spot(m, w, h, anchors[nm], GX, GY, extra=emb_keep + central_keep)
         m['insts'].append(F.Inst(nm, KIND_MASTER[kind], round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
                                  region='io', domain='core'))
     if NATIVE_SLOTS:
@@ -2472,7 +2500,7 @@ def place(m, K, geo, F):
     if PVFIN and ah is not None and 'pvw_0' in by and pv is not None:
         w, h = PVFIN_FRAME
         ys = (by['pvw_0'].y + by['pvw_0'].h + pv.y) / 2
-        x, y = free_spot(m, w, h, (ah.x - w / 2 - 30.0, ys), GX, GY)
+        x, y = free_spot(m, w, h, (ah.x - w / 2 - 30.0, ys), GX, GY, extra=central_keep)
         m['insts'].append(F.Inst('pvfin', 'qkd_pvfin', round(x, 4), round(y, 4), w - SH, h - SH, 'R0', kind='static',
                                  region='io', domain='core'))
 
@@ -2721,6 +2749,14 @@ def _hroot_waypoints(m, a, pa, b, pb):
     by = {i.name: i for i in m['insts']}
     h = by[hr]
     top = by['kvs_ctl'] if 'kvs_ctl' in ends else by['kvs_emb']
+    if top.name == 'kvs_ctl' and os.environ.get('OT_KV_CTL_CENTRAL', '0') == '1':
+        plan = m['geo']['ctl_central']; yy = plan['waypoint_y']
+        # S roots are served through the real central horizontal band, not
+        # by a trip to the N-stack top and back down its control corridor.
+        xx = top.x - 108.0 if hr.endswith('WS') else top.x + top.w + 108.0
+        pts = [(xx, top.y + top.h/2), (xx, yy),
+               (h.x + h.w/2, yy), (h.x + h.w/2, h.y + h.h + 60.0)]
+        return pts if a != hr else list(reversed(pts))
     nst = hr[-2] + 'N'
     if os.environ.get('OT_KV_HROOT_WP', 'cc') == 'side':
         pv, pv144 = by.get('pvw_1'), m['geo'].get('pv144') or {}

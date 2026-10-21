@@ -2229,6 +2229,10 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     x_grp = up(x_land + leaf_shift + LAND_W + CHAN, GX)
     slice_w = SLICE_W + SLICE_GAP if (split and HOST_V14['on']) else 0.0     # v1.4: the HOST slice column (CDC column | landing channel)
     x_grp += slice_w
+    if split and os.environ.get('OT_KV_CTL_CENTRAL', '0') == '1':
+        # Widen the real HS -> native-group control corridors on both sides.
+        # The 2524b standard relay row is 151.2um wide; the old100um gap cannot hold it.
+        x_grp += 172.8
     grp_w = 2 * RENG[0] + ASTK_W + 2 * GX
     centre_w = max(UCIE[1], FRAMES["qkd_ahub"][0]) + 4 * CHAN   # re-cut H engines are 1,953 um: the centre relay channel needs 2 x 259 (was 2 x 130)
     if split:
