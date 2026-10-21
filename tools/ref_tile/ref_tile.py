@@ -1947,6 +1947,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     except (ValueError, OSError) as error:
         raise SpecError(str(error)) from error
     fwd = bool(s.get("forwarded_clock"))
+    entry_sdc = ce_generate(s) if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else None
     spine = s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
                + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else "")
@@ -1962,6 +1963,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
                 pre_cts.extend(clock_entry_constraints.landed_pre_cts_tcl(s, ROOT))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
+        pre_cts.extend(clock_entry_constraints.forwarded_pre_cts_tcl(s, entry_sdc))
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
         # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
@@ -1990,7 +1992,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
             if not (s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
-        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + ce_generate(s)
+        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + entry_sdc
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
@@ -2636,6 +2638,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
           "blocks": [{k: b[k] for k in ("kind", "view", "master", "inst", "idx", "x", "y", "w", "h", "orient", "offtrack")}
                      for b in blocks],
           "findings": [list(f) for f in findings], "referenced": referenced_paths(s, kd)}
+    # Canonical clock lint stores its keyed receipt while gen_sdc runs.
+    # Fresh write-mode kits need their directory before that lint executes.
+    if write:
+        (out_root / kd).mkdir(parents=True, exist_ok=True)
     files = {"kit.env": gen_env(s, kd, W, H, lc, blocks), "pdn.tcl": gen_pdn(s, lc),
              "clock.sdc": gen_sdc(s, float(s["route"].get("period_ps", 770))),
              "signoff.sdc": gen_signoff(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*"),
