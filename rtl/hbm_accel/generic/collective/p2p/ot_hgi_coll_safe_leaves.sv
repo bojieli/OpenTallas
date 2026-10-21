@@ -131,6 +131,13 @@ endmodule
 // One reduce lane: the 16 x 32-b tagged state (ot_hgi_coll_reduce_static_state_lane) and its LAT-8 FP32 add lane
 // (ot_hgi_coll_pring_static_add_lane).  in_data = in_flit[l*32+:32] (the state lane's load_data AND external_data:
 // one pin).  wb / wb_tag come from the control's 8-edge pipe (aligned with the add lane LAT 8, as in reduce_static).
+// HBM-COLLQ6 10-20 (native32, 0 added edges): the lane state/read registers load UNCONDITIONALLY (raw) and the original
+// enables add_read / pub_read are applied one edge later as a hold select on kept 2-copy registers (rv_c / pv_c, <= 32
+// loads each): out = sel_q ? raw : held, held <= out.  Exact: raw captured at edge t equals what the enabled register
+// captured at t (same inputs), sel_q after t = enable at t, and held is the last selected value = the enabled register.
+// The 16 x 32 b state is two (* keep_hierarchy *) 16-bit halves, each with its own tag decode (per-entry select <= 17
+// loads). The LAT-8 add lane = pin regs + ot_hdc_fp32_add_n32 #(LAT 7, DRST 0) (Codex FP6 native32 adder, the same
+// binary32 adder bit for bit as ot_hdc_fp32_add_lat; copy families split by the kit's synth_canonicalize.tcl).
 module ot_hgi_coll_reduce_lane(
  input wire clk,rst_n,
  input wire load_v,input wire [3:0] load_tag,input wire [31:0] in_data,
@@ -140,21 +147,54 @@ module ot_hgi_coll_reduce_lane(
  output wire [31:0] pub_a,pub_b,
  output wire add_valid
 );
- wire [31:0] acc,operand,sum;
+ wire [31:0] sum,acc_raw,pa_raw,pb_raw;
  wire [31:0] ext_data;
 `ifdef OT_COLL_RLANE_MUT_EXT
  assign ext_data={in_data[30:0],in_data[31]};   // bench mutant: the external operand rotated (must FAIL every EQ)
 `else
  assign ext_data=in_data;
 `endif
- ot_hgi_coll_reduce_static_state_lane u_state(
-  .clk(clk),.load_v(load_v),.load_tag(load_tag),.load_data(in_data),
-  .wb(wb),.wb_tag(wb_tag),.wb_data(sum),
-  .add_read(add_read),.read_tag(read_tag),.external_data(ext_data),
-  .pub_read(pub_read),.pub_tag_a(pub_tag_a),.pub_tag_b(pub_tag_b),
-  .acc(acc),.operand(operand),.pub_a(pub_a),.pub_b(pub_b));
- ot_hgi_coll_pring_static_add_lane #(.LAT(8)) u_add(
-  .clk(clk),.rst_n(rst_n),.valid_in(add_issue),.a(acc),.b(operand),.y(sum),.valid_out(add_valid));
+ for(genvar h=0;h<2;h=h+1)begin:g_half
+  ot_hgi_coll_reduce_state_half u_st(.clk(clk),.load_v(load_v),.load_tag(load_tag),.load_data(in_data[16*h+:16]),
+   .wb(wb),.wb_tag(wb_tag),.wb_data(sum[16*h+:16]),.read_tag(read_tag),.pub_tag_a(pub_tag_a),.pub_tag_b(pub_tag_b),
+   .acc_raw(acc_raw[16*h+:16]),.pa_raw(pa_raw[16*h+:16]),.pb_raw(pb_raw[16*h+:16]));
+ end
+ reg [31:0] op_raw,acc_h,op_h,pa_h,pb_h;
+ (* keep = 1 *) reg [1:0] rv_c;
+ (* keep = 1 *) reg [1:0] pv_c;
+ always @(posedge clk or negedge rst_n)if(!rst_n)begin rv_c<=0;pv_c<=0;end else begin rv_c<={2{add_read}};pv_c<={2{pub_read}};end
+ wire [31:0] acc=rv_c[0]?acc_raw:acc_h;
+ wire [31:0] operand=rv_c[1]?op_raw:op_h;
+ assign pub_a=pv_c[0]?pa_raw:pa_h;
+ assign pub_b=pv_c[1]?pb_raw:pb_h;
+ always @(posedge clk)begin op_raw<=ext_data;acc_h<=acc;op_h<=operand;pa_h<=pub_a;pb_h<=pub_b;end
+ ot_hgi_coll_reduce_add_n32 u_add(.clk(clk),.rst_n(rst_n),.valid_in(add_issue),.a(acc),.b(operand),.y(sum),.valid_out(add_valid));
+endmodule
+
+(* keep_hierarchy *)
+module ot_hgi_coll_reduce_state_half(
+ input wire clk,load_v,input wire [3:0] load_tag,input wire [15:0] load_data,
+ input wire wb,input wire [3:0] wb_tag,input wire [15:0] wb_data,
+ input wire [3:0] read_tag,pub_tag_a,pub_tag_b,
+ output reg [15:0] acc_raw,pa_raw,pb_raw
+);
+ reg [15:0] state[0:15];
+ always @(posedge clk)begin
+  for(integer t=0;t<16;t=t+1)
+   if((load_v&&load_tag==t)||(wb&&wb_tag==t))
+    state[t]<=({16{load_v&&load_tag==t}}&load_data)|({16{wb&&wb_tag==t}}&wb_data);
+  acc_raw<=state[read_tag];pa_raw<=state[pub_tag_a];pb_raw<=state[pub_tag_b];
+ end
+endmodule
+
+// = ot_hgi_coll_pring_static_add_lane #(LAT 8) (pin regs ap/bp/vp + LAT-7 DRST-0 adder) with the native32 adder.
+module ot_hgi_coll_reduce_add_n32(
+ input wire clk,rst_n,valid_in,input wire [31:0] a,b,output wire [31:0] y,output wire valid_out
+);
+ reg [31:0] ap,bp;reg vp;
+ always @(posedge clk)begin ap<=a;bp<=b;end
+ always @(posedge clk or negedge rst_n)if(!rst_n)vp<=0;else vp<=valid_in;
+ ot_hdc_fp32_add_n32 #(.LAT(7),.DRST(0)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(vp),.a(ap),.b(bp),.y(y),.err(),.valid_out(valid_out));
 endmodule
 
 // The control of ot_hgi_coll_reduce_static, verbatim, with the 16 lanes outside (wb / wb_tag out, add_valid /
