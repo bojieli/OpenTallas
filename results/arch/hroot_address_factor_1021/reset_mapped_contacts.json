@@ -1,0 +1,200 @@
+{
+  "source_packet": "/home/ubuntu/wt/codex-qko-hroot3-leaf-results-1021/results/arch/qko_hroot3_1021/shell_clock_design_plan/s3a_mapped.v.gz",
+  "mapped_sha256": "7791242b49b596d8b9c84fdae36c46215622c7c170616b4d443c8542ce44cea0",
+  "compressed_sha256": "139651edff3565c124cac58de8554b49ce0b2c99212eae6e10de9ba14ec468aa",
+  "count": 31,
+  "by_clock": {
+    "ck_core": 5,
+    "ck_host": 5,
+    "ck_ingest": 21
+  },
+  "contacts": [
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsc_last__c1$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_core"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsc_last__c2$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_core"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsc_last__c3$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_core"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsh_last__c1$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_host"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsh_last__c2$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_host"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsh_last__c3$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_host"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c1$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c10$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c11$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c12$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c13$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c14$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c15$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c16$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c17$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c18$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c19$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c2$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c3$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c4$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c5$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c6$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c7$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c8$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\ot_rrs__u_ot_pr_core_u_rank__u_qm_u_rsi_last__c9$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_rank__u_qm.rn_c$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_core"
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_rank__u_qm.rn_h$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_host"
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_rank__u_qm.rn_i$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_rank__u_qm.u_rsc.first$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_core"
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_rank__u_qm.u_rsh.first$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_host"
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_rank__u_qm.u_rsi.first$_DFF_PN0_",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "pin": "RESETN",
+      "clock": "ck_ingest"
+    }
+  ],
+  "scope": "read-only frozen PRECTS mapped netlist contact extraction; not new qualification"
+}
