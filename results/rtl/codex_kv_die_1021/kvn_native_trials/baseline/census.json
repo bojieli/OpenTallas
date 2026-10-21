@@ -1,0 +1,730 @@
+{
+  "source_sha256": "1ad2dd720ee91a9a8344996ae6ef7bc39de0272d52f47bf26f21ede4c2831f46",
+  "source_commit": "19e0e1d63",
+  "scope": "generic scalar technology-map before ABC/buffers; diagnostic native-driver lower bound only",
+  "layout": false,
+  "limits": {
+    "max_driver_pins": 32
+  },
+  "over32": [
+    {
+      "bit": 1408,
+      "names": [
+        "$procmux$557_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2912",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 1392,
+      "names": [
+        "$procmux$558_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2922",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 1423,
+      "names": [
+        "$procmux$559_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2932",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 679,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1241"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1483",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 830,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1207"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1595",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 906,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1182"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1700",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 968,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1175"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1771",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 1817,
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$2938"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:198:logic_reduce$2939",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 1415,
+      "names": [
+        "$procmux$195_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$3624",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 1412,
+      "names": [
+        "$procmux$196_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$3634",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 1407,
+      "names": [
+        "$procmux$197_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$3650",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 1784,
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$2160"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:198:logic_reduce$2836",
+          "Y"
+        ]
+      ],
+      "loads": 55
+    },
+    {
+      "bit": 677,
+      "names": [
+        "reset_last"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$4229",
+          "Q"
+        ]
+      ],
+      "loads": 33
+    }
+  ],
+  "top": [
+    {
+      "bit": 1408,
+      "names": [
+        "$procmux$557_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2912",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 1392,
+      "names": [
+        "$procmux$558_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2922",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 1423,
+      "names": [
+        "$procmux$559_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2932",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 679,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1241"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1483",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 830,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1207"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1595",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 906,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1182"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1700",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 968,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1175"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1771",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 1817,
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$2938"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:198:logic_reduce$2939",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 1415,
+      "names": [
+        "$procmux$195_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$3624",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 1412,
+      "names": [
+        "$procmux$196_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$3634",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 1407,
+      "names": [
+        "$procmux$197_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$3650",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 1784,
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$2160"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:198:logic_reduce$2836",
+          "Y"
+        ]
+      ],
+      "loads": 55
+    },
+    {
+      "bit": 677,
+      "names": [
+        "reset_last"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$4229",
+          "Q"
+        ]
+      ],
+      "loads": 33
+    },
+    {
+      "bit": 565,
+      "names": [
+        "reseed"
+      ],
+      "drivers": [
+        [
+          "@PORT",
+          "reseed"
+        ]
+      ],
+      "loads": 21
+    },
+    {
+      "bit": 1071,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$1281.Y",
+        "uq"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$4223",
+          "Q"
+        ]
+      ],
+      "loads": 9
+    },
+    {
+      "bit": 769,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3720",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 771,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3721",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 773,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3722",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 775,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3723",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 777,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3724",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 779,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3725",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 781,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3726",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 783,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3727",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 785,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3728",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 787,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3729",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 789,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3730",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 791,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3731",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 793,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3732",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 795,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3733",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 1075,
+      "names": [
+        "cseg_q"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$4227",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 735,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3703",
+          "Q"
+        ]
+      ],
+      "loads": 7
+    },
+    {
+      "bit": 737,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3704",
+          "Q"
+        ]
+      ],
+      "loads": 7
+    },
+    {
+      "bit": 739,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3705",
+          "Q"
+        ]
+      ],
+      "loads": 7
+    },
+    {
+      "bit": 741,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$1253.P",
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3706",
+          "Q"
+        ]
+      ],
+      "loads": 7
+    },
+    {
+      "bit": 743,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3707",
+          "Q"
+        ]
+      ],
+      "loads": 7
+    },
+    {
+      "bit": 745,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$1253.P",
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3708",
+          "Q"
+        ]
+      ],
+      "loads": 7
+    },
+    {
+      "bit": 747,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3709",
+          "Q"
+        ]
+      ],
+      "loads": 7
+    },
+    {
+      "bit": 749,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3710",
+          "Q"
+        ]
+      ],
+      "loads": 7
+    },
+    {
+      "bit": 765,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3718",
+          "Q"
+        ]
+      ],
+      "loads": 7
+    },
+    {
+      "bit": 767,
+      "names": [
+        "hq",
+        "owner"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3719",
+          "Q"
+        ]
+      ],
+      "loads": 7
+    }
+  ],
+  "cells": 1596
+}

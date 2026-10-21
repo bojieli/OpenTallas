@@ -1,0 +1,751 @@
+{
+  "source_sha256": "ff54502b49ea64544623562a1920942ed26a8e15a6dd4293b802a99b0e4d0b90",
+  "source_commit": null,
+  "scope": "generic scalar technology-map before ABC/buffers; diagnostic native-driver lower bound only",
+  "layout": false,
+  "limits": {
+    "max_driver_pins": 32
+  },
+  "over32": [
+    {
+      "bit": 1843,
+      "names": [
+        "$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-n32/qkd_kvn_ctx_ovl_rope.sv:58$186_Y"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2150",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 1841,
+      "names": [
+        "$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-n32/qkd_kvn_ctx_ovl_rope.sv:58$202_Y"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2160",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 1840,
+      "names": [
+        "$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-n32/qkd_kvn_ctx_ovl_rope.sv:58$218_Y"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$3011",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 844,
+      "names": [
+        "load_owner[0]",
+        "load_owner[1]",
+        "load_owner[2]",
+        "load_owner[3]"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3785",
+          "Q"
+        ]
+      ],
+      "loads": 62
+    },
+    {
+      "bit": 800,
+      "names": [
+        "load_owner[0]",
+        "load_owner[1]",
+        "load_owner[2]",
+        "load_owner[3]"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3786",
+          "Q"
+        ]
+      ],
+      "loads": 62
+    },
+    {
+      "bit": 677,
+      "names": [
+        "load_owner[0]",
+        "load_owner[1]",
+        "load_owner[2]",
+        "load_owner[3]"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3787",
+          "Q"
+        ]
+      ],
+      "loads": 62
+    },
+    {
+      "bit": 709,
+      "names": [
+        "load_owner[0]",
+        "load_owner[1]",
+        "load_owner[2]",
+        "load_owner[3]"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3788",
+          "Q"
+        ]
+      ],
+      "loads": 62
+    },
+    {
+      "bit": 1844,
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$3014"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:198:logic_reduce$3015",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 2213,
+      "names": [
+        "$shiftx$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-n32/qkd_kvn_ctx_ovl_rope.sv:47$294.Y"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:298:simplemap_mux$4422",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 1462,
+      "names": [
+        "$procmux$459_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2303",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 1468,
+      "names": [
+        "$procmux$460_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2988",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 1465,
+      "names": [
+        "$procmux$1007_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2998",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 2151,
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$2306"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:198:logic_reduce$3694",
+          "Y"
+        ]
+      ],
+      "loads": 55
+    }
+  ],
+  "top": [
+    {
+      "bit": 1843,
+      "names": [
+        "$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-n32/qkd_kvn_ctx_ovl_rope.sv:58$186_Y"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2150",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 1841,
+      "names": [
+        "$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-n32/qkd_kvn_ctx_ovl_rope.sv:58$202_Y"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2160",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 1840,
+      "names": [
+        "$eq$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-n32/qkd_kvn_ctx_ovl_rope.sv:58$218_Y"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$3011",
+          "Y"
+        ]
+      ],
+      "loads": 63
+    },
+    {
+      "bit": 844,
+      "names": [
+        "load_owner[0]",
+        "load_owner[1]",
+        "load_owner[2]",
+        "load_owner[3]"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3785",
+          "Q"
+        ]
+      ],
+      "loads": 62
+    },
+    {
+      "bit": 800,
+      "names": [
+        "load_owner[0]",
+        "load_owner[1]",
+        "load_owner[2]",
+        "load_owner[3]"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3786",
+          "Q"
+        ]
+      ],
+      "loads": 62
+    },
+    {
+      "bit": 677,
+      "names": [
+        "load_owner[0]",
+        "load_owner[1]",
+        "load_owner[2]",
+        "load_owner[3]"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3787",
+          "Q"
+        ]
+      ],
+      "loads": 62
+    },
+    {
+      "bit": 709,
+      "names": [
+        "load_owner[0]",
+        "load_owner[1]",
+        "load_owner[2]",
+        "load_owner[3]"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3788",
+          "Q"
+        ]
+      ],
+      "loads": 62
+    },
+    {
+      "bit": 1844,
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$3014"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:198:logic_reduce$3015",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 2213,
+      "names": [
+        "$shiftx$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-n32/qkd_kvn_ctx_ovl_rope.sv:47$294.Y"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:298:simplemap_mux$4422",
+          "Y"
+        ]
+      ],
+      "loads": 61
+    },
+    {
+      "bit": 1462,
+      "names": [
+        "$procmux$459_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2303",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 1468,
+      "names": [
+        "$procmux$460_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2988",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 1465,
+      "names": [
+        "$procmux$1007_CMP"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:227:simplemap_lognot$2998",
+          "Y"
+        ]
+      ],
+      "loads": 57
+    },
+    {
+      "bit": 2151,
+      "names": [
+        "$auto$simplemap.cc:189:logic_reduce$2306"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:198:logic_reduce$3694",
+          "Y"
+        ]
+      ],
+      "loads": 55
+    },
+    {
+      "bit": 817,
+      "names": [
+        "reset_last"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$4412",
+          "Q"
+        ]
+      ],
+      "loads": 30
+    },
+    {
+      "bit": 565,
+      "names": [
+        "reseed"
+      ],
+      "drivers": [
+        [
+          "@PORT",
+          "reseed"
+        ]
+      ],
+      "loads": 24
+    },
+    {
+      "bit": 1030,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$1360.Y",
+        "check_user[0]",
+        "check_user[1]",
+        "check_user[2]",
+        "check_user[3]",
+        "uq"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3783",
+          "Q"
+        ]
+      ],
+      "loads": 11
+    },
+    {
+      "bit": 1142,
+      "names": [
+        "cseg_q"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$4410",
+          "Q"
+        ]
+      ],
+      "loads": 8
+    },
+    {
+      "bit": 1031,
+      "names": [
+        "check_user[0]",
+        "check_user[1]",
+        "check_user[2]",
+        "check_user[3]",
+        "uq"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3784",
+          "Q"
+        ]
+      ],
+      "loads": 6
+    },
+    {
+      "bit": 815,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1315"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1647",
+          "Y"
+        ]
+      ],
+      "loads": 6
+    },
+    {
+      "bit": 890,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1302"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1720",
+          "Y"
+        ]
+      ],
+      "loads": 6
+    },
+    {
+      "bit": 898,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1292"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1733",
+          "Y"
+        ]
+      ],
+      "loads": 6
+    },
+    {
+      "bit": 953,
+      "names": [
+        "$auto$opt_dff.cc:336:make_patterns_logic$1281"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:157:simplemap_reduce$1789",
+          "Y"
+        ]
+      ],
+      "loads": 6
+    },
+    {
+      "bit": 670,
+      "names": [
+        "$logic_and$/srv/opentallas-scratch2/claude/ot-scratch-home/claude/codex-k-die-1021/kvn-n32/qkd_kvn_ctx_ovl_rope.sv:94$148_Y"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:256:simplemap_logbin$2069",
+          "Y"
+        ]
+      ],
+      "loads": 6
+    },
+    {
+      "bit": 672,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$1337.A",
+        "$auto$alumacc.cc:548:replace_alu$1337.CO",
+        "$auto$alumacc.cc:548:replace_alu$1337.P",
+        "$auto$alumacc.cc:548:replace_alu$1357.B",
+        "$auto$alumacc.cc:548:replace_alu$1357.P",
+        "$auto$alumacc.cc:564:replace_alu$1338"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:474:simplemap_pmux$3727",
+          "Y"
+        ]
+      ],
+      "loads": 6
+    },
+    {
+      "bit": 673,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$1337.A",
+        "$auto$alumacc.cc:548:replace_alu$1357.B",
+        "$auto$alumacc.cc:548:replace_alu$1357.P"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:474:simplemap_pmux$3738",
+          "Y"
+        ]
+      ],
+      "loads": 6
+    },
+    {
+      "bit": 674,
+      "names": [
+        "$auto$alumacc.cc:548:replace_alu$1337.A",
+        "$auto$alumacc.cc:548:replace_alu$1357.B",
+        "$auto$alumacc.cc:548:replace_alu$1357.P"
+      ],
+      "drivers": [
+        [
+          "$auto$simplemap.cc:474:simplemap_pmux$3749",
+          "Y"
+        ]
+      ],
+      "loads": 6
+    },
+    {
+      "bit": 1038,
+      "names": [
+        "cuser_q",
+        "read_user[0]",
+        "read_user[1]",
+        "read_user[2]",
+        "read_user[3]"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3790",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 752,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3794",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 754,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3795",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 756,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3796",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 758,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3797",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 760,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3798",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 762,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3799",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 764,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3800",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 766,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3801",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 768,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3802",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 770,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3803",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 772,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3804",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 774,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3805",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    },
+    {
+      "bit": 776,
+      "names": [
+        "owner_pending"
+      ],
+      "drivers": [
+        [
+          "$auto$ff.cc:337:slice$3806",
+          "Q"
+        ]
+      ],
+      "loads": 5
+    }
+  ],
+  "cells": 1725,
+  "source_base": "19e0e1d63",
+  "source_trial": "rejected_shards/source.sv"
+}
