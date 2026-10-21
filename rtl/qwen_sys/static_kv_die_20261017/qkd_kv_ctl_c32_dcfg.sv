@@ -46,6 +46,12 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
     // accept term wr is not one net into every ECTL, reset, age and seal decode (gate 2 census: 44 loads)
     (* keep *) reg we_q2;
     always @(posedge ck or negedge pr_n) if (!pr_n) we_q2 <= 1'b0; else we_q2 <= cfg_we;
+    // Separate accepted-write cone for the 19 seal copies. Gate3 mapped wr2
+    // drove 34 loads across age decode and seal updates; this kept pin flop
+    // preserves the sampled write edge while preventing synthesis from sharing
+    // the seal acceptance cone with the age acceptance cone. No new cycles.
+    (* keep *) reg we_qseal;
+    always @(posedge ck or negedge pr_n) if (!pr_n) we_qseal <= 1'b0; else we_qseal <= cfg_we;
     always @(posedge ck) begin a_q <= cfg_addr; d_q <= cfg_data; end
     (* keep *) reg [14:0] dqc0, dqc1, dqc2, dqc3;
     (* keep *) reg [31:0] dqa;
@@ -84,7 +90,7 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
     // (D = ps[0], release on the ps[1] edge) so pr_n keeps <= 32 loads
     (* keep *) reg [1:0] rcs;
     always @(posedge ck or negedge por_n) if (!por_n) rcs <= 2'b00; else rcs <= {2{ps[0]}};
-    (* keep *) wire sl_set = wr2 && is_seal;
+    (* keep *) wire sl_set = we_qseal && !(bad || fault) && is_seal;
     (* keep *) reg [KS-1:0] sl_c;
     genvar gs;
     generate for (gs = 0; gs < KS; gs = gs + 1) begin : g_sl

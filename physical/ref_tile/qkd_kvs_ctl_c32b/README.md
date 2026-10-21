@@ -28,3 +28,11 @@ boot__setup_ready +2 boot edges.  Every token-path port edge unchanged.  Die slo
 7 Clock: spine (centre ck on S, 16 leaves); spread <= 80 TT/FF measured by the --cts gate; io_hold_margin 0.03.
 8 Schedule: static; deltas above handed to the die schedule.
 Census / gate results: (pending: gate run)
+
+CODEX 22:25 native32 correction: exact gate3 source9213e27af, mapped sha
+6e454ac52663f681d6657402fdecbbdbb4545d9e58fa6b6b05764e0ca4b138dd (c32a),
+failed only wr2 AND3 _34798_/Y -> _17743_ at 34 loads; no role errors.
+Kept same-edge cfg_we pin copy we_qseal now owns only seal accept; we_q2
+owns age accept. Ports, storage, floorplan, arithmetic and all schedule edges
+unchanged. Native census must PASS before layout/adoption. Checklist items
+1/2/4/5/6/7/8 unchanged; item3 fixed structurally, measurement pending.
