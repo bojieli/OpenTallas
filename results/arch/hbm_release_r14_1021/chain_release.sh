@@ -50,18 +50,20 @@
 #  -> S6 synth b -> S7 GEN case_b (lane-reach fail, density outlines, chain look-ahead, repair 3) -> S8 forest/l12/S8c/bind
 #  -> S9 synth c -> S10 GEN (reset gate fail) -> S11 GRT (global_connect PG step) + STA TT/FF + neighbour clock + hold.
 set -o pipefail
-VAR=${1:?plan A|B}; PL=${VAR:0:1}; PLAN_UM=300; HOST=ot-epyc6
-W=/home/ubuntu/wt/codex-hbm-r14-closed-bind-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021; A=$AR/plan$VAR
+VAR=${1:?plan A|B}; PL=${VAR:0:1}; PLAN_UM=300; HOST=ot-epyc5
+W=/home/ubuntu/wt/codex-hbm-r14-continuation-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021; A=$AR/plan$VAR
 R11A=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r11/plan$PL; R11B=/srv/opentallas-scratch/claude/hbm-die11-1020/plan$PL
 A7=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r7portage; B7=/srv/opentallas-scratch/claude/hbm-die7-gen2e4r6-1020
 OLDA=/srv/opentallas-scratch/claude/hd4g/gen2e4
 AE=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e; AE4=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4; AE3=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e3; AE2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2
 A0=/home/ubuntu/artifacts/hdie-d4/d4g_gen0; A1=/home/ubuntu/artifacts/hdie-d4/d4g_gen1; A2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2
 AC=/home/ubuntu/artifacts/hdie-d4/d4g_gen2c; AD=/home/ubuntu/artifacts/hdie-d4/d4g_gen2d
-B=/srv/opentallas-scratch/claude/codex-hbm-r14-release-1021/chain$VAR; OTRUN=/home/ubuntu/bin/ot-run
-D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r14_1021/planB_margin; BR=codex/hbm-r14-closed-bind-1021
+B=/srv/opentallas-scratch/claude/codex-hbm-r14-recovered-1021/chain$VAR; OTRUN=/home/ubuntu/bin/ot-run
+D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r14_1021/planB_margin; BR=codex/hbm-r14-continuation-1021
 GX="${OT_D9_GEN_EXTRA:---relay-outline density --lane-reach-repair 3 --lane-reach-lookahead chain --grt-layer-plan owner1020 --signal-top-layer M8 --carve-reserved all}"
 CM="--coord-map $PD/coord_map.json"
+ssh() { command ssh -C -o ControlPath=none "$@"; }
+scp() { command scp -C -o ControlPath=none "$@"; }
 step() { echo "STEP $* $(date -Is)"; }
 mkdir -p $A; echo $$ > $A/chain.pid; echo "RUN14_HBM-DIE14 VAR $VAR PLAN $PL PLAN_UM $PLAN_UM GX=$GX"
 [ "$(git -C $W rev-parse --show-toplevel)" = "$W" ] || { echo BAD_WT; exit 9; }
@@ -136,9 +138,9 @@ PY
   ssh $HOST "rm -rf $B/src_$H" || return 15
   git -C $W archive HEAD $(cat $A/src_paths_$3.txt) | ssh $HOST "mkdir -p $B/src_$H && tar -x -C $B/src_$H && ln -sfn $B/src_$H $B/src" || return 15
   tar -C $2/wrap -cf - . | ssh $HOST "mkdir -p $B/src_$H/v16w && tar -x -C $B/src_$H/v16w" || return 15
-  for h in ot-epyc5 ot-epyc7 ot-epyc9 ot-pve1; do ssh $HOST "tar -C $B -cf - src_$H" | ssh $h "mkdir -p $B && rm -rf $B/src_$H && tar -x -C $B && ln -sfn $B/src_$H $B/src && echo $h ok"; done
+  for h in ot-epyc7 ot-epyc9 ot-pve1 ot-gold1 ot-gold2; do ssh $HOST "tar -C $B -cf - src_$H" | ssh $h "mkdir -p $B && rm -rf $B/src_$H && tar -x -C $B && ln -sfn $B/src_$H $B/src && echo $h ok"; done
   N0=$(ssh -o ControlPath=none $HOST "find $B/src_$H | wc -l")
-  for h in ot-epyc5 ot-epyc7 ot-epyc9 ot-pve1; do n=$(ssh -o ControlPath=none $h "find $B/src_$H 2>/dev/null | wc -l"); echo "SRC $h $n/$N0"
+  for h in ot-epyc7 ot-epyc9 ot-pve1 ot-gold1 ot-gold2; do n=$(ssh -o ControlPath=none $h "find $B/src_$H 2>/dev/null | wc -l"); echo "SRC $h $n/$N0"
     [ "$n" != "$N0" ] && ssh -o ControlPath=none $h "rm -rf $B/src_$H" && echo "REMOVED_PARTIAL $h"; done
   echo "SYNTH_$3 $CELLS"
   if [ -n "${CELLS// /}" ]; then
@@ -153,7 +155,7 @@ import json,collections; v=json.load(open('$2/views.json')); print('VIEW_KINDS_$
 }
 views_to() {      # $1 remote views dir  $2 vplan dir  $3 contract  (all earlier synth overlays, own last)
   ssh $HOST "rm -rf $1 && mkdir -p $1/synth" || return 17
-  for P in $METAS $A/vplan_b/synth $2/synth; do [ -d $P ] && rsync -a $P/ $HOST:$1/synth/; done
+  for P in $METAS $A/vplan_b/synth $2/synth; do [ -d $P ] && rsync -azW --partial --timeout=120 -e 'ssh -S none -o ConnectTimeout=20' $P/ $HOST:$1/synth/; done
   scp -q $2/views.json $HOST:$1/ && scp -q $3 $HOST:$1/contract.json || return 17
 }
 views_up() { views_to $B/views "$@"; }
@@ -176,7 +178,7 @@ gen() {
   for k in "--grants $PD/grants_d4g.json" "--plan $PD/compact.P.json" "--lanes $PD/lanes.json" "--clock-region-map $PD/d4g_region_map.json"; do
     grep -q -- "$k" $A/gen_d4g2e9_$2.sh || { echo "GEN_SCRIPT_NOT_SET $k"; return 1; }; done
   scp -q $A/gen_d4g2e9_$2.sh $HOST:$1/gen_d4g2e9.sh || return 17
-  $OTRUN --mem 64 --threads 2 --disk 10 --priority die --dir $1/views -- env OT_ABS_PIN_WINDOW_UM=3 OT_GEN2_CASE=$2 OT_RESET_GATE=$3 \
+  $OTRUN --mem 64 --threads 2 --disk 10 --priority die --dir $1 -- env OT_ABS_PIN_WINDOW_UM=3 OT_GEN2_CASE=$2 OT_RESET_GATE=$3 \
     OT_DIE_CASE_EXTRA="$4" bash $1/gen_d4g2e9.sh > $A/gen_$2.otrun 2>&1; echo "GEN_$2 ot-run rc=$? $(date -Is)"; tail -12 $A/gen_$2.otrun
   scp -q $1/$2/layout.png $A/$2_layout.png 2>/dev/null; scp -q $HOST:$1/$2/layout.png $A/$2_layout.png 2>/dev/null
   scp -q $HOST:$1/$2/out/reach_fail.json $A/$2_reach_fail.json 2>/dev/null
@@ -197,7 +199,7 @@ dense() {   # $1 remote case dir  $2 remote contract  $3 tag
   scp -q $HOST:$1/dense_face.json $A/dense_face_$3.json 2>/dev/null; true
 }
 # ---------------- R13 INIT: r11 a/p views + q views (r11 vplan_b + contract_pre), fresh source; S3a/S3b/S3q GENs on the ft-grid plan ----------------
-if [ -z "${RESUME_S5L:-}" ] && [ -z "${R14_SKIP_S3:-}" ]; then
+if [ -z "${RESUME_S5L:-}" ] && [ -z "${R14_SKIP_S3:-}" ] && [ -z "${R14_RESUME_GEN:-}" ]; then
 step R14_INIT layers_synth_a_views_src
 # r14 pre_relay = l23q(l23(GEN2e4 pre_relay 9d1a3f20)): SU pre-tree (16 su PRETREE=1 + hard-child leaf, 4 pslice SB 2470,
 # +32 edges / 1264 b) + qcore r13c on sucore_<q> (PRETREE=1, clk_ctl only).  New edges -> they need S4 stations, so the
