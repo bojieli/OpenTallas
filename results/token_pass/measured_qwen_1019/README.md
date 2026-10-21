@@ -15,6 +15,53 @@ This answers the owner's request at 18:18 to measure the real decode rate with c
   - DIAG = measured on RTL that differs from the release source. It does NOT count as measured.
   - PRICED = plan price.
 
+## 10-20 QW-TOKSCHED: priced-edge ledger absorbed by the compiler -> release 1u 261,667 cycles = 4,587.8 tok/s; 4u 12,223.7 (NEWEST)
+
+This is now the composition of record (`cycles.json`). The fleet re-ran it on ot-epyc9 (unit oth-ubuntu-1064335-1792558275, log `sched/fleet_run.log`). The main baseline before this change was 253,369 cycles = 4,738.1 tok/s (4u 12,601.2). It differs from the 10-20 02:25 figure of 4,724.0 only because main's attention-return record changed.
+
+**One ledger:** `sched/ledger.json` is referenced from `inputs.sched` and replaces `die_edges.edges` at compose time.
+- Scope `die`: the item is in the dv2f20g5r2b netlist.
+- Scope `successor`: a release successor that is closed or approved but not yet in a GEN netlist.
+- Variant `asbuilt` drops every successor item.
+
+**What the compiler now absorbs:**
+- **Lane ages from the current die.** The ctlm plan was still fed the dv2f14bi ages. It now uses `sched/lane_ages_dv2f20g5r2b.json`, exported by `tools/qwen_layerbench/lane_ages_export.py` as E + 1 of the g5r2b `fwd_lanes.json`: R_CMD 20, R_HR 20, R_SS 17, R_AG 18, R_ST 13 (dv2f14bi: 19/19/17/17). Cost: +4 per layer. The R_ST E is still the GEN "estimate" basis.
+- **SU8 + VM8 split in the slice2 VM landed group (vm8l/vm8lh).** These come in as PRICED per-SU-command age deltas inside the DV lowerings, so every family span and the spliced calendar move with them:
+  - SU8 programme word: +4.
+  - p_q answer ring: +6.
+  - vm8b read: +2.
+  - vm8l answer ring: +6.
+  - Total +18 per command, plus +3 on VM-written results. Cost: +201 per layer.
+- **COLL regional split:** AR E 286 -> 288 and LS 378 -> 391. Cost: +4 per layer, because the LS slack absorbs the LS change.
+- **Die-edge rows** (625 per layer, was 604):
+  - ctlm8 hr +6 (was +4) on each matvec go: +8.
+  - ctlm8 tl +3 (was +2): +1.
+  - ctlm8 native_ret input +6 before o_proj, priced as serial: +6.
+  - VM8 table write: tw +2, plus the ring +3: +5.
+  - g5r2b attention return lane dvw_dr_wi E 19 -> 20 against the dh2 pair: +1.
+  - Unchanged: landings 45 (all 446 n1/E2 landings are now built on g5r2b), n59 +5, slice2 536.
+  - Zero: stream t3 (taps +1, own xw -1), forwarded-lane class views, N59 svc relocation, ctlm8 cf (fault-only), TTC8. CALR is a GAP with no price.
+
+**Results:**
+
+| variant | 1u cyc/token | 1u tok/s | 4u agg tok/s | chained | added/layer |
+|---|---|---|---|---|---|
+| release (die + successors) | 261,667 | **4,587.8** | **12,223.7** | 7,160 | 834 |
+| asbuilt g5r2b netlist | 253,549 | 4,734.7 | 12,592.8 | 6,935 | 609 |
+| slice2 plan bound (327) | 254,143 | 4,723.6 | 12,565.8 | 6,951 | 625 |
+| previous record (main, 604 edges, dv2f14bi ages) | 253,369 | 4,738.1 | 12,601.2 | 6,930 | 604 |
+
+- **Release against the previous record:** -2.9% at 1u against the tree's 4,724 (-3.2% against the main baseline), and -3.0% at 4u against 12,601.
+- **Grades:** REL 61.2%, DIAG 25.9%, PRICED 12.5% (the successor deltas are re-graded PRICED: 205 per chained layer).
+- **4u rule:** the frame scales by (6,842 + sched_added_per_layer) / 6,842, where sched_added is the chained layer minus the no-edge composition. With the old inputs this reproduces exactly the old 604 rule.
+
+**Owed:**
+- Re-measure the DV families on the slice2 parent with vm8l(h) + su8 bound, so REL ages replace the +18 delta.
+- A ctlm8 native_ret path check (it may be off the critical path: -6 per layer).
+- An R_ST value from die STA.
+- CALR price.
+- KV GEN9 attention.
+
 ## 10-20 TOKSIM-QW2: die edges folded into the schedule -> 1u 254,125 cycles/token = 4,724 tok/s; 4u 12,601 tok/s (NEWEST)
 
 This is now the composition of record (`cycles.json`, `inputs.json`). It is built on main (360c64320) plus the STG and TOKSIM-QW branches, so it uses main's `dv_lower_mat.STN_KC` per-op kc. With no die edges this tree gives 234,253 cycles = 5,124.7 tok/s; the 10-19 branch number was 233,497 with kc=1.

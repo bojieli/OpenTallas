@@ -50,14 +50,72 @@ def stage_grade(name, g, row=None):
     return g['dv']
 
 
+_LOAD = {'slice': L.D.load_ages, 'vec': L.V.load_ages}
+_DELTA = {}
+
+
+def _shift(v, d):
+    if isinstance(v, list):
+        return [_shift(x, d) for x in v]
+    if isinstance(v, dict):
+        return {k: _shift(x, d) for k, x in v.items()}
+    return v + d if isinstance(v, (int, float)) and not isinstance(v, bool) else v
+
+
+def _loader(kind):
+    def load(path=None):
+        a = _LOAD[kind]() if path is None else _LOAD[kind](path)
+        for k, d in _DELTA.get(kind, {}).items():
+            a[k] = _shift(a[k], d)
+        return a
+    return load
+
+
+L.D.load_ages = _loader('slice')
+L.V.load_ages = _loader('vec')
+
+
 def set_dv_ages(ages):
     """inputs dv.ages = {slice, vec, stn} repo-relative paths of the DV family ages MEASURED on the release slice RTL
     (TOKSIM-QW/STG gen3 calibrations); they replace the committed qlb_c4/qlb_c4b ages for every lowering."""
     if not ages:
         return
-    L.D.load_ages.__defaults__ = (ages['slice'],)
-    L.V.load_ages.__defaults__ = (ages['vec'],)
+    _LOAD['slice'].__defaults__ = (ages['slice'],)
+    _LOAD['vec'].__defaults__ = (ages['vec'],)
     L.M.STN_AGES = ages['stn']
+
+
+def set_age_deltas(dd):
+    """QW-TOKSCHED: PRICED per-SU-command age shifts (ledger dv_age_deltas) applied on top of the measured ages, so
+    every lowering / the spliced calendar absorbs them (None = measured ages unchanged)"""
+    _DELTA.clear()
+    if not dd:
+        return
+    for kind, keys in dd['keys'].items():
+        _DELTA[kind] = {k: dd['per_su_command'] + (dd.get('vm_write_extra', 0) if k == 'red_vm' else 0) for k in keys}
+
+
+def apply_ledger(inp, variant=None):
+    """QW-TOKSCHED 10-20: inputs.sched.ledger = the ONE priced-edge ledger (die + release-successor edges). Returns
+    (die_edges section, lane_ages path, dv_age_deltas | None, qtp8 overrides). variant 'asbuilt' drops every
+    'successor' item (cycles_asbuilt when given, else 0); other variants pick cycles_<variant> as before."""
+    sc = inp.get('sched')
+    if not sc:
+        return inp['die_edges'], L.LANE_AGES, None, inp['allreduce'].get('qtp8')
+    lg = json.loads((L.ROOT / sc['ledger']).read_text())
+    asb = variant == 'asbuilt'
+    edges = []
+    for e in lg['die_edges']:
+        e = dict(e)
+        if asb and e.get('scope') == 'successor':
+            e['cycles'] = e.get('cycles_asbuilt', 0)
+        edges.append(e)
+    de = dict(inp['die_edges'], edges=edges, source=f"{sc['ledger']} ({lg['lane']})")
+    q8 = dict(inp['allreduce'].get('qtp8') or {})
+    if not asb and lg.get('allreduce', {}).get('qtp8'):
+        q8.update(lg['allreduce']['qtp8'])
+    dd = None if asb else lg.get('dv_age_deltas')
+    return de, lg['lane_ages']['path'], dd, q8
 
 
 def die_edge_map(de, variant=None):
@@ -98,21 +156,33 @@ def split_attention(stages, att):
 
 def compose(inp, variant=None):
     tm = {k: dict(v, far=inp['tile']['far']) for k, v in inp['tile']['ops'].items()}
-    q8 = inp['allreduce'].get('qtp8')
+    q8_meas = inp['allreduce'].get('qtp8')
     att = inp['attention']['round_trip_plan_cycles']
-    de = die_edge_map(inp['die_edges'], variant)
+    die_sec, lane_ages, age_dd, q8 = apply_ledger(inp, variant)
+    inp = dict(inp, die_edges=die_sec)
+    de = die_edge_map(die_sec, None if variant == 'asbuilt' else variant)
     out = {}
     runs = {}
     base_ages = inp['dv'].get('base_ages')
+    set_age_deltas(None)
     if base_ages:                                 # the committed (pre-gen3) ages -> per-stage REL vs DIAG rows
         set_dv_ages(base_ages)
-        runs['dv_base'] = L.compose(1, 40, 'row', L.LANE_AGES, tile_mode='measured', attn_cycles=att, tile_meas=tm,
+        runs['dv_base'] = L.compose(1, 40, 'row', lane_ages, tile_mode='measured', attn_cycles=att, tile_meas=tm,
                                     qtp8=q8, die_edges=de)
     set_dv_ages(inp['dv'].get('ages'))
+    # no-edge reference: measured ages, dv2f14bi lane ages, measured AR, no die edges (the 4u frame's own timing basis)
+    runs['noedge'] = L.compose(1, 40, 'row', L.LANE_AGES, tile_mode='measured', attn_cycles=att, tile_meas=tm,
+                               qtp8=q8_meas)
+    if age_dd or q8 != q8_meas:
+        # same edges / lane ages, measured ages + measured AR: the cycles the PRICED successor terms add are re-graded
+        runs['no_successor_terms'] = L.compose(1, 40, 'row', lane_ages, tile_mode='measured', attn_cycles=att,
+                                               tile_meas=tm, qtp8=q8_meas, die_edges=de)
+    set_age_deltas(age_dd)
     for name, kw in (('measured', dict(tile_mode='measured', attn_cycles=att, tile_meas=tm, qtp8=q8, die_edges=de)),
                      ('dv_layer_priced', dict(tile_mode='priced'))):
-        r = L.compose(1, 40, 'row', L.LANE_AGES, **kw)
+        r = L.compose(1, 40, 'row', lane_ages if name == 'measured' else L.LANE_AGES, **kw)
         runs[name] = r
+    set_age_deltas(None)
     c = runs['measured']['composition']
     cp = runs['dv_layer_priced']['composition']
     g = {k: v['grade'] for k, v in inp.items() if isinstance(v, dict) and 'grade' in v}
@@ -156,6 +226,13 @@ def compose(inp, variant=None):
     layer_cyc = cold + 35 * chained
     span = sum(by.values())
     tg = {k: layer_cyc * v / span for k, v in by.items()}
+    succ = 0
+    if 'no_successor_terms' in runs:      # PRICED SU8/VM8l age deltas + COLL-split AR inside REL/DIAG-graded rows
+        ns = runs['no_successor_terms']['composition']
+        succ = layer_cyc - (ns['l0_cold'] + 35 * ns['chained_period'])
+        donor = max(tg, key=tg.get)
+        tg[donor] -= succ
+        tg['PRICED'] = tg.get('PRICED', 0) + succ
     for t in terms[2:]:
         tg[t['grade']] = tg.get(t['grade'], 0) + t['n'] * t['cycles']
     measured = sum(v for k, v in tg.items() if k in ('REL', 'NEWEST'))
@@ -167,6 +244,11 @@ def compose(inp, variant=None):
                    calendar=runs['measured']['calendar']['model'], calendar_clashes=runs['measured']['calendar']['clashes'],
                    stages=stages, critical_path_cycles_by_grade=by, tile=c['tile'],
                    die_edges_per_layer=sum(s['cycles'] for s in c['stages'] if s.get('die_edge')),
+                   noedge_chained=runs['noedge']['composition']['chained_period'],
+                   sched_added_per_layer=chained - runs['noedge']['composition']['chained_period'],
+                   lane_ages=lane_ages, dv_age_deltas=age_dd, qtp8=q8,
+                   successor_priced_chained=(chained - runs['no_successor_terms']['composition']['chained_period']
+                                             if 'no_successor_terms' in runs else 0),
                    dv_rel_rows=dv_rows,
                    dv_base_chained=runs['dv_base']['composition']['chained_period'] if 'dv_base' in runs else None),
         terms=terms,
@@ -181,7 +263,7 @@ def compose(inp, variant=None):
     sc = mu.get('schedule_scale')
     if sc:      # the 4u link-schedule frame re-timed by the same per-layer die edges (every user's layer moves)
         ref = sc['ref_layer_period']
-        f = (ref + one['layer']['die_edges_per_layer']) / ref
+        f = (ref + one['layer']['sched_added_per_layer']) / ref
         cpt = [round(c_ * f) for c_ in mu['cycles_per_token_by_user']]
         agg = 1 / sum(1 / x for x in cpt)
         out['4u_scheduled'] = dict(
@@ -204,6 +286,7 @@ def main():
         r[f'variant_{v}'] = {k: rv['1u'][k] for k in ('cycles_per_token', 'tok_s', 'token_cycles_by_grade', 'pct_rel',
                                                     'vs_price_pct')}
         r[f'variant_{v}']['chained'] = rv['1u']['layer']['chained']
+        r[f'variant_{v}']['sched_added_per_layer'] = rv['1u']['layer']['sched_added_per_layer']
         if '4u_scheduled' in rv:
             r[f'variant_{v}']['4u_aggregate_tok_s'] = rv['4u_scheduled']['aggregate_tok_s']
     rec = dict(schema='opentallas.toksim.qwen_rom.v1', lane='TOKSIM-QW', tool='tools/qwen_layerbench/toksim_compose.py',
@@ -214,6 +297,7 @@ def main():
                           l0_cold=o['layer']['l0_cold'], pct_measured=o['pct_measured'], pct_rel=o['pct_rel'],
                           vs_price=o['vs_price_pct'], by=o['token_cycles_by_grade'],
                           die_edges_per_layer=o['layer']['die_edges_per_layer'],
+                          sched_added_per_layer=o['layer']['sched_added_per_layer'],
                           u4=r.get('4u_scheduled', {}).get('aggregate_tok_s', r['4u'].get('aggregate_tok_s')),
                           variants={k: (v['tok_s'], v.get('4u_aggregate_tok_s')) for k, v in r.items()
                                     if k.startswith('variant_')})))
