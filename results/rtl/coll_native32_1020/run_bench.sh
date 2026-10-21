@@ -11,7 +11,7 @@ if [ "$WHAT" = gold ]; then
   OT_BENCH_J=8 $B --out "$O/prod" --production > "$O/prod.log" 2>&1; echo "prod rc=$?" | tee -a "$O/summary.txt"
 else
   for m in OT_COLL_SPLIT_MUT_LEAD OT_COLL_SPLIT_MUT_EX OT_COLL_SPLIT_MUT_SBANK OT_COLL_SPLIT_MUT_RERR OT_TP8S_MUT_OWNER OT_TP8S_MUT_GATHER; do
-    OT_BENCH_J=8 $B --out "$O/$m" --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24' --mutant-define $m > "$O/$m.log" 2>&1; r=$?
+    OT_BENCH_J=8 $B --out "$O/$m" --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define $m > "$O/$m.log" 2>&1; r=$?
     echo "$m rc=$r (expect !=0) $(grep -c "COLL_TP8S FAIL mutant=$m" "$O/$m.log")" | tee -a "$O/summary.txt"
   done
 fi

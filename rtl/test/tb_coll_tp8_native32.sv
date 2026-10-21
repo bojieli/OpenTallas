@@ -77,6 +77,7 @@ module tb_coll_tp8_native32 #(
     always @(posedge clk) if (cmd_v) cm <= cm + 1;
 
     integer bad = 0, words_out = 0, errs = 0, done_n = 0, extra = 0, total_out = 0, endc = 0, mi;
+    reg [ND-1:0] errseen = 0;   // per-die: some compiled output word of this die carried out_err (R-meta causal coverage)
     genvar g, j;
     generate
         for (g = 0; g < ND; g = g + 1) begin : g_die
@@ -176,7 +177,7 @@ module tb_coll_tp8_native32 #(
                 end else begin
                     per = `C_MODE(rm) ? ND * `C_W(rm) : `C_W(rm);
                     rk = cyc - `C_OUT(rm);
-                    if (oe[g]) errs = errs + 1;
+                    if (oe[g]) begin errs = errs + 1; errseen[g] = 1'b1; end
                     if (`C_MODE(rm)) begin
                         rg = rk % ND;                                    // TP8 rank = 4 * die + package
                         exp = part[`C_PB(rm) + (2 * (rg % 4) + rg / 4)*`C_W(rm) + rk / ND];
@@ -231,7 +232,10 @@ module tb_coll_tp8_native32 #(
                      `C_CMD(0) + 1, endc - 65);
             if (INJECT >= 0) begin                       // every die: arithmetic fault + flagged words
                 need = 0; for (t = 0; t < ND; t = t + 1) need[t] = fc[t*5 + 0];
-                if ((need == 8'hff && errs >= ND)) $display("PASS"); else $display("FAIL");
+                // every die flags the injected word on its OWN output, including the fold owner whose err comes
+                // back through the C R-meta ring (OT_COLL_SPLIT_MUT_RERR must fail here)
+                if ((need == 8'hff && errs >= ND && errseen == {ND{1'b1}})) $display("PASS");
+                else begin $display("ERRSEEN %b", errseen); $display("FAIL"); end
             end else if (TAGBAD >= 0) begin              // die 2 producer fault, its peer die 3 metadata fault
                 if ((fc[2*5 + 2] && fc[3*5 + 1])) $display("PASS"); else $display("FAIL");
             end else if (DROP >= 0 || LATE >= 0) begin   // die 5 producer fault, its peer die 4 link fault
