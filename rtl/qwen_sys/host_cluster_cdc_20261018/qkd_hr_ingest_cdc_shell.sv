@@ -164,14 +164,21 @@ module qkd_hr_ingest_cdc_shell #(
     // (rtl/physical/ot_host_die_cdc_sram.sv ot_host_reset_bank: 1 landing flop -> RB_* KEPT identical leaves, same
     // 2-edge release as ot_reset_sync). The RTL uses leaf 0; synthesis (kit reset_relay_split, ot_rst_copies) spreads the
     // reset loads over the leaves at <= 32 each (the native census limit). Release edges unchanged.
-    localparam integer RB_H = 4, RB_I = 20, RB_C = 4;   // u_rsi leaves 18 / 19 = engine reset (e_rst_n); the async host_rst_n landing drives 1+4+1+20+1+4 = 31 pins
+    localparam integer RB_H = 4, RB_I = 20, RB_C = 4;   // u_rsi leaves 18 / 19 = engine reset (e_rst_n); local root outputs drive 5/21/5 ASR contacts; raw host_rst_n drives 2 ASR contacts per domain root (6 total)
     wire rn_h, rn_i, rn_c;
     wire [RB_H-1:0] rb_h;
     wire [RB_I-1:0] rb_i;
     wire [RB_C-1:0] rb_c;
-    ot_host_reset_bank #(.N(RB_H)) u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rb_h));
-    ot_host_reset_bank #(.N(RB_I)) u_rsi (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rb_i));
-    ot_host_reset_bank #(.N(RB_C)) u_rsc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rb_c));
+    // NEW QUIESCENT_SYSTEM_RESET contract: raw async assertion, four local
+    // release edges. Peers must flush old traffic AND credit returns before
+    // rearm; this is not equivalent to the old core2 + local2 schedule.
+    wire rst_root_h, rst_root_i, rst_root_c;
+    ot_host_reset_bank #(.N(1)) u_rrh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rst_root_h));
+    ot_host_reset_bank #(.N(1)) u_rri (.clk(clk_i), .async_rst_n(rst_n), .sync_rst_n(rst_root_i));
+    ot_host_reset_bank #(.N(1)) u_rrc (.clk(ck),    .async_rst_n(rst_n), .sync_rst_n(rst_root_c));
+    ot_host_reset_bank #(.N(RB_H)) u_rsh (.clk(clk_h), .async_rst_n(rst_root_h), .sync_rst_n(rb_h));
+    ot_host_reset_bank #(.N(RB_I)) u_rsi (.clk(clk_i), .async_rst_n(rst_root_i), .sync_rst_n(rb_i));
+    ot_host_reset_bank #(.N(RB_C)) u_rsc (.clk(ck),    .async_rst_n(rst_root_c), .sync_rst_n(rb_c));
     assign rn_h = rb_h[0];
     assign rn_i = rb_i[0];
     assign rn_c = rb_c[0];
