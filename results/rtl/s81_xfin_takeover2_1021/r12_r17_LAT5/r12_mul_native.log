@@ -1,0 +1,27 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r12fp-1021
+ot-run: ot-epyc7       admits   296 GB (avail 578, growth 371, headroom 0, waiters 0/0 GB) load 47/96 running 21 disk 4498 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r12fp-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r12fp-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r12fp-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-xfin-r12fp-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-xfin-r12fp-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1286881-1792619043 after 1 s
+/src/rtl/hdc/ot_hdc_sfu.sv:23: Warning: Range [1:0] select out of bounds on signal `\line': Setting 1 LSB bits to undef.
+Warning: Replacing memory \emsk with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:719
+Warning: Replacing memory \edd with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:828
+Warning: Replacing memory \ekk with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:828
+Warning: Replacing memory \ehh with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:828
+Warning: Replacing memory \ecol with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:737
+Warning: Replacing memory \yh with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv:330
+Warning: Replacing memory \owner with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv:489
+CENSUS mul_native FAIL max 44 over32 4 seq_over32 0 rst_n_loads 1 errors 0
+   44 input_port a[22] a[22]
+   44 input_port b[22] b[22]
+   34 input_port a[12] a[12]
+   34 input_port b[12] b[12]
+        9    0.744 cells
+   Chip area for module '$paramod$2a66d68b53c7342fc4ef3345dd9fadcbad9da995\ot_s81dv_xfin_fp_shift_step': 0.743580
+        9    0.744 cells
+DONE mul_native rc=0 secs=146
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1286881-1792619043): exit 0

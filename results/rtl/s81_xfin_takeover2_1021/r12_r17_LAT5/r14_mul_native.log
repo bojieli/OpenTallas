@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r14fp-1021
+ot-run: ot-epyc7       admits   315 GB (avail 539, growth 318, headroom 0, waiters 0/0 GB) load 52/96 running 23 disk 4481 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r14fp-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r14fp-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r14fp-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-xfin-r14fp-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-xfin-r14fp-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1328114-1792619259 after 1 s
+/src/rtl/hdc/ot_hdc_sfu.sv:23: Warning: Range [1:0] select out of bounds on signal `\line': Setting 1 LSB bits to undef.
+Warning: Replacing memory \emsk with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:719
+Warning: Replacing memory \edd with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:828
+Warning: Replacing memory \ekk with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:828
+Warning: Replacing memory \ehh with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:828
+Warning: Replacing memory \ecol with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:737
+Warning: Replacing memory \yh with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv:330
+Warning: Replacing memory \owner with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv:489
+CENSUS mul_native FAIL max 45 over32 2 seq_over32 0 rst_n_loads 1 errors 0
+   45 combinational_or_macro u.g_l5.u.u_partition.g_norm_comb.g_byte[2].u_a.g_nibble[5].u_l._10_/Y u.g_l5.u.u_partition.g_norm_comb.g_byte[2].u_a.g_nibble[5].u_l._02_
+   45 combinational_or_macro u.g_l5.u.u_partition.g_norm_comb.g_byte[2].u_b.g_nibble[5].u_l._10_/Y u.g_l5.u.u_partition.g_norm_comb.g_byte[2].u_b.g_nibble[5].u_l._02_
+       19    1.881 cells
+   Chip area for module '\ot_s81dv_xfin_fp_sub_pick': 1.880820
+        9    0.744 cells
+DONE mul_native rc=0 secs=135
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1328114-1792619259): exit 0
