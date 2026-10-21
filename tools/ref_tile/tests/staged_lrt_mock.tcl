@@ -99,6 +99,7 @@ proc run {} {
   ot_srt::admit {ck_core C ck_hr H} $::contacts
   ot_srt::admit {ck_core C ck_hr H} $::contacts
   if {$::mode eq "plan-change"} {dict set ::ot_sp_record_taps_v1 model changed}
+  if {$::mode eq "legacy-target-change"} {dict set ::ot_lrt_targets hard/raw0 tt 999}
   if {$::mode eq "knob-change"} {set ::env(OT_LRT_MAX) 3}
   if {$::mode eq "protected"} {H setDoNotTouch 1}
   if {$::mode eq "foreign-net"} {R0 connect FOREIGN}

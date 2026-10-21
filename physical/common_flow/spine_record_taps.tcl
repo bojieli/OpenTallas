@@ -17,6 +17,7 @@ proc ot_srt::plan {} {
 }
 proc ot_srt::unchanged {} {
   if {![info exists ::ot_srt::frozen] || [ot_srt::plan] ne $::ot_srt::frozen} {ot_srt::fail "unadmitted or changed plan"}
+  if {![info exists ::ot_lrt_targets] || $::ot_lrt_targets ne $::ot_srt::legacy_targets} {ot_srt::fail "changed existing record targets"}
   if {[dict create buf [ot_sp_env OT_LRT_BUF BUFx4_ASAP7_75t_R] limit [ot_sp_env OT_LRT_MAX 64] batch [ot_sp_env OT_LRT_BATCH 0]] ne $::ot_srt::knobs} {
     ot_srt::fail "changed existing tap configuration"
   }
@@ -92,6 +93,7 @@ proc ot_srt::admit {rootnets contacts} {
   set ::ot_srt::rootnets $rootnets
   set ::ot_srt::frozen $p
   set ::ot_srt::knobs $knobs
+  set ::ot_srt::legacy_targets $::ot_lrt_targets
   set ::ot_srt::done {}
   puts "OT_SPINE_RECORD_TAP ADMITTED [dict size [dict get $p records]] source targets"
 }

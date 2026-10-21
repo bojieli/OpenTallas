@@ -63,7 +63,7 @@ class StagedLrt(unittest.TestCase):
     def test_source_ownership_and_finalization_refusals(self):
         for mode in ('wrong-owner', 'unowned', 'wrong-master', 'target', 'hash',
                      'missing-source', 'unknown-field', 'extra-target', 'buffer',
-                     'plan-change', 'knob-change', 'protected', 'foreign-net',
+                     'plan-change', 'legacy-target-change', 'knob-change', 'protected', 'foreign-net',
                      'foreign-ref', 'root-unprotect', 'premature', 'unprotected', 'endpoint-change', 'tap-unprotect', 'readmit-after-build', 'duplicate'):
             for batch in (0, 1):
                 with self.subTest(mode=mode, batch=batch):
