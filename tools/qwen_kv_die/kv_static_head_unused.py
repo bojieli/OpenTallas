@@ -17,8 +17,14 @@ ROOT=O.ROOT
 SOURCES={
  'rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s.sv':'a095738e457696598f1aaf50d507bc3c50314f760b35765a224433d2ebde628f',
  'tools/qwen_kv_die/head_st_rtl.py':'3decd3d53a28d51a293e18382fc7e65316adaa86357d25da1347006acb033b50',
+ # LEAD10-KV 10-20: the KPV-lockstep heads (kv_die OT_KV_KPV_LK=1; same head_st_rtl.py run, text identical to _s except
+ # u_kt = ot_qkh_ktree_lk reading every lane's kpv) are the same static-QK role: no nb_d face, no u_nb relay children.
+ 'rtl/qwen_sys/split_20261014/ot_qkh_head_native_r4_s_lk.sv':'57fc47a71e8410565bb22b84ec67cbdc1fe6eb5588dc821470f5e37cbc36e624',
 }
 PARENTS={'qkd_rhead':'ot_qkh_head_native_r4_s','qkd_rhead_ft':'ot_qkh_head_native_r4_ft_s'}
+# Admitted pinned variants of the static role (module = PARENTS[master] + suffix); one suffix for the whole die.
+# '_lk_nc32c' (OT_KV_QKH_SAFE32) is NOT admitted: its lanes are ot_qkh_lane8_nc32c, whose default-only row is unproved here.
+ROLE_SUFFIXES=('','_lk')
 # KV-GEN9 10-19: the expanded parameter ledger (main 00170ccbe) records EVERY expanded leaf's evaluated parameters, so a
 # lane8 child carries a row {ADD_LAT, LTW}.  The role stays exact only when that row is the module's own defaults (no
 # override): any other value, an unknown name or an unparsable literal still refuses.
@@ -49,11 +55,15 @@ def derive(run,die,root=ROOT,existing=None):
     frames=json.loads((run/'expand.json').read_text())['frames']
     _,_,_,pre=P.parse_die(str(run/'case_kv/die.v.preexp'))
     params_path=run/'case_kv/die.v.params.json';params=json.loads(params_path.read_text()) if params_path.exists() else {}
-    parents={}
+    parents={};suffixes=set()
     for master,inst,prm,cm in pre:
         if master not in PARENTS:continue
         if inst in parents or prm or params.get(inst):raise ValueError('ambiguous/parameterized static head '+inst)
-        if frames.get(master,{}).get('module')!=PARENTS[master]:raise ValueError('head frame is not the pinned static-QK role')
+        module=frames.get(master,{}).get('module')
+        role=[s for s in ROLE_SUFFIXES if module==PARENTS[master]+s]
+        if not role:raise ValueError('head frame is not the pinned static-QK role: %s=%s'%(master,module))
+        suffixes.add(role[0])
+        if len(suffixes)!=1:raise ValueError('mixed static-QK head roles on one die: '+repr(sorted(suffixes)))
         if any(p in cm for p in ('nb','nb_d','ck_nb1','ck_nb2')):raise ValueError('parent still exposes node-beat face')
         parents[inst]=master
     counts=Counter(parents.values())
@@ -99,7 +109,7 @@ def derive(run,die,root=ROOT,existing=None):
         ent['reason']='Pinned static-QK parent intentionally removes V/node-beat output and its relay children; exact child nb slice has no other driver or consumer'
     doc['static_head_unused_contract']=dict(source_sha256=SOURCES,preexpand_sha256=hashlib.sha256((run/'case_kv/die.v.preexp').read_bytes()).hexdigest(),
         expand_sha256=hashlib.sha256((run/'expand.json').read_bytes()).hexdigest(),die_sha256=current_die_sha,
-        parents=parents,child_outputs=len(targets),bits=64*len(targets))
+        parents=parents,role_suffix=next(iter(suffixes),''),child_outputs=len(targets),bits=64*len(targets))
     return doc
 
 
