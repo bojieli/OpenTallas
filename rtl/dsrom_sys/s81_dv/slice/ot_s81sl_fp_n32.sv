@@ -141,7 +141,13 @@ module ot_s81sl_fp_add_n32 #(
     wire [27:0] sum_w, dif_w;
     wire sum_c, dif_c;
     ot_hdc_ksadd_k #(.W(28)) u_sum (.a(big28), .b(s1_small), .cin(1'b0), .s(sum_w), .cout(sum_c));
-    ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28), .b(~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
+    // the difference adder reads its own kept copy of the stage-1 operands (same edge as u_k1), stored inverted so it is
+    // never merged back into u_k1: the sum adder / add picks and the difference adder no longer share one 34-36 load
+    // register per operand bit
+    wire [51:0] k1n;
+    ot_s81sl_fp_copy #(.W(52),.N(1),.CUT(K1)) u_k1d(.clk(clk),.d(~{pick_big,pick_small}),.q(k1n));
+    wire [27:0] big28d = {1'b0, ~k1n[51:28], 3'b000};
+    ot_hdc_ksadd_k #(.W(28)) u_dif (.a(big28d), .b(k1n[27:0]), .cin(1'b1), .s(dif_w), .cout(dif_c));
     localparam integer W2 = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 28 + 28;
     wire [W2-1:0] q2;
     ot_s81sl_fp_cut #(.W(W2), .CUT(K2)) u_k2 (.clk(clk), .rst_n(rst_n[0]),
