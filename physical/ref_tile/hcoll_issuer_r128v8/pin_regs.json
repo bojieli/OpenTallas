@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_issuer_m_r128",
+ "enable": false,
+ "reason": "COLLPIN 10-18 (coordinator 0gd), v8 10-20: the issuer's input pins cfg/start/start_pc are registered IN RTL (ot_hgi_coll_issuer_m128v8 cfg_q/cfgv_q/start_q/start_pc_q + the mode predecode / mask copies registered beside them, +1 issue edge as v6/v7); a synthesis pin stage would add a second edge. Outputs: done/fault/uop_v/uop_pc/tap_iteration are flop Q; busy = busy_r | start_q (two flops, one OR, as v7); uop_d1/busy_d2/start_d2/busy_d3/done_d3/start_d3 are the leaf's own delay flops; tap_steps = masked bank data flop Q. rst_n loads the 32 kept release copies rcp (one edge = v7 rst_l), each clearing <= 32 flops."
+}

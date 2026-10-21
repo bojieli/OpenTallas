@@ -7,7 +7,7 @@
 // root (multiple_cts_roots admits only hard-child clock pins), and ck_sw carried 76.4k soft flops (issuer 21.5k,
 // reduce 21.2k, links 13.3k, fj 4.6k).  Each soft mass becomes ONE hard child with ONE scalar clock pin and NO
 // parameters on its instance (exact view names; yosys renames parameterised modules, memory yosys-keep-paramod):
-//   ot_hgi_coll_issuer_m_r128   = ot_hgi_coll_issuer_m128v7 (v7 core; 10 SRAMs, was issuer_m #(ROWS 128) v6)
+//   ot_hgi_coll_issuer_m_r128   = ot_hgi_coll_issuer_m128v8 (v7 storage, census-safe v8 body; 10 SRAMs; v7 / v6 kept as references)
 //   ot_hgi_coll_fj_n2s1_r128    = ot_hgi_coll_fj_n2s1 #(ROWS 128) edge-identical (q3 programme target / fault join); HBM-COLLFJ2
 //                                 10-19: body ot_hgi_coll_fj_core_s128 (below: 12 kept reset copies, flow
 //                                 store in a 128x64 SRAM, registered frame decode)
@@ -34,7 +34,9 @@ module ot_hgi_coll_issuer_m_r128(
  // metadata in 4 x 128x64 SRAM copies with a registered C/CT/CN lookahead, loop counters by id, programme words in
  // 6 x 128x256 SRAM), port- and edge-identical to ot_hgi_coll_issuer_m #(ROWS 128) (v6, 16 kb runtime-indexed flop tables =
  // SAFE item 5 FAIL; kept only as the miter / lockstep reference). Instance name u unchanged.
- ot_hgi_coll_issuer_m128v7 u(.clk_control(clk_control),.rst_n(rst_n),.cfg(cfg),.start(start),.start_pc(start_pc),
+ // HBM-COLLQ6-ISS (10-20): body = ot_hgi_coll_issuer_m128v8 (v7 storage, mapped native census <= 32 loads per driver:
+ // kept predicate / reset copies, see ot_hgi_coll_static_issuer_v7r128.sv); same ports, same edges, instance name u.
+ ot_hgi_coll_issuer_m128v8 u(.clk_control(clk_control),.rst_n(rst_n),.cfg(cfg),.start(start),.start_pc(start_pc),
   .busy(busy),.done(done),.fault(fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(uop_d1),.busy_d3(busy_d3),.done_d3(done_d3),
   .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));
 endmodule
