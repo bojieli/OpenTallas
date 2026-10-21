@@ -1,0 +1,100 @@
+{
+  "unit": "oth-ubuntu-1519212-1792620737",
+  "exit": 0,
+  "source_recipe": "3f69d25fb",
+  "original_and_staged_before_after_sha": "PASS",
+  "grid_summary": {
+    "M1": {
+      "cells": 8970,
+      "saturated": 0,
+      "zero_capacity": 8970
+    },
+    "M2": {
+      "cells": 8970,
+      "saturated": 4714,
+      "zero_capacity": 0
+    },
+    "M3": {
+      "cells": 8970,
+      "saturated": 4621,
+      "zero_capacity": 0
+    },
+    "M4": {
+      "cells": 8970,
+      "saturated": 4753,
+      "zero_capacity": 0
+    },
+    "M5": {
+      "cells": 8970,
+      "saturated": 466,
+      "zero_capacity": 0
+    },
+    "M6": {
+      "cells": 8970,
+      "saturated": 8970,
+      "zero_capacity": 0
+    },
+    "M7": {
+      "cells": 8970,
+      "saturated": 0,
+      "zero_capacity": 8970
+    },
+    "M8": {
+      "cells": 8970,
+      "saturated": 0,
+      "zero_capacity": 8970
+    },
+    "M9": {
+      "cells": 8970,
+      "saturated": 0,
+      "zero_capacity": 8970
+    }
+  },
+  "endpoint_grid": {
+    "driver": {
+      "M2": [
+        14.0,
+        14.0
+      ],
+      "M3": [
+        16.0,
+        14.0
+      ],
+      "M4": [
+        12.0,
+        12.0
+      ],
+      "M5": [
+        12.0,
+        9.0
+      ],
+      "M6": [
+        9.0,
+        9.0
+      ]
+    },
+    "sink": {
+      "M2": [
+        15.0,
+        7.0
+      ],
+      "M3": [
+        16.0,
+        9.0
+      ],
+      "M4": [
+        12.0,
+        4.0
+      ],
+      "M5": [
+        12.0,
+        6.0
+      ],
+      "M6": [
+        9.0,
+        9.0
+      ]
+    }
+  },
+  "classification": "Actual hold buffer on west side and inverter sink east side of same SRAM; macro M1..M4 OBS span direct corridor; source GCell M2/M4 saturated, sink GCells retain capacity. North exterior detour geometrically possible; saved state does not preserve transient hook shapes or exact last mazeheap, so no precise sole-cause or legal-route claim."
+}
