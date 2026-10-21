@@ -143,6 +143,26 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
  reg[4:1] cge;
  integer kj;
  always @*begin cge=0; for(kj=0;kj<=DEPTH;kj=kj+1) if(csel[kj]) cge=cge|pth[4*kj+:4]; end
+ // H16X=3: hold the exact row seal predicates alongside the row/descriptor
+ // state. Compute from next-state values, so programming, reset and seal all
+ // retain their original edge. In particular META/GDESC may precede rows.
+ wire meta_we=rst_n&&pw_v&&!active&&pw_addr==1017;
+ wire gd_we=rst_n&&pw_v&&!active&&pw_addr==GDESC;
+ wire[5:0] count_n=!rst_n?6'd0:(meta_we?pw_data[5:0]:count);
+ wire[63:0] gd_n=!rst_n?64'd0:(gd_we?pw_data:gdesc_q);
+ wire gp_n=gd_n[63:32]==32'h43414c42;
+ wire[3:0] gc_n=gd_n[27:24];
+ reg[DEPTH-1:0] row_bad_q,grow_bad_q;
+ for(gj=0;gj<DEPTH;gj=gj+1)begin:g_seal_cache
+  wire row_we=pw_v&&!active&&own_oh_r[gj];
+  wire grow_we=pw_v&&!active&&g_oh_r[gj];
+  wire[46:0] rn=row_we?pw_data[46:0]:rows[gj];
+  wire[46:0] gn=grow_we?pw_data[46:0]:grows[gj];
+  always @(posedge clk)begin
+   row_bad_q[gj]<=(gj<count_n)?(rn[46]!=(gj==count_n-1)):(rn!=0);
+   grow_bad_q[gj]<=gp_n?((gj<gc_n)?(gn[45]||gn[46]!=(gj==gc_n-1)):(gn!=0)):(gn!=0);
+  end
+ end
  // seal_bad as a flat vector of independent terms OR-reduced as a balanced tree (the as-built procedural
  // "seal_bad=1" if-chain mapped to a 28-level NAND/AND chain).  Same terms, same function.
  (* keep *) wire[15:0] sb_misc;
@@ -154,10 +174,10 @@ module ot_qwen_fixed_issue_seg_pw_ld #(
                  pw_data[11:6]!=meta_q[17:12],pw_data[5:2]==0,pw_data[5:2]>4,cge[4]};
  for(gj=0;gj<DEPTH;gj=gj+1)begin:g_sbk
   assign sb_v[gj]=!valid[gj];
-  assign sb_r[gj]=(gj<count)?(rows[gj][46]!=(gj==count-1)):(rows[gj]!=0);
+  assign sb_r[gj]=(H16X>=3)?row_bad_q[gj]:((gj<count)?(rows[gj][46]!=(gj==count-1)):(rows[gj]!=0));
   assign sb_gv[gj]=!gvalid[gj];
-  assign sb_gr[gj]=g_present?((gj<g_count)?(grows[gj][45]||grows[gj][46]!=(gj==g_count-1)):(grows[gj]!=0))
-                            :(grows[gj]!=0);
+  assign sb_gr[gj]=(H16X>=3)?grow_bad_q[gj]:(g_present?((gj<g_count)?(grows[gj][45]||grows[gj][46]!=(gj==g_count-1)):(grows[gj]!=0))
+                            :(grows[gj]!=0));
  end
  for(gj=0;gj<3;gj=gj+1)begin:g_sbc
   assign sb_cv[gj]=!cp_valid[gj];
