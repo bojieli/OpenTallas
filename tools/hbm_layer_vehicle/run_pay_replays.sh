@@ -14,7 +14,7 @@ printf '%s\n' '#!/usr/bin/env bash' 'set -uo pipefail' \
  'H=(); [ -d "$2/$n/hbm" ] && H=("+HBM_IMG_DIR=$2/$n/hbm")' \
  'out/obj/Vtb_hbm_slice +verilator+rand+reset+0 "+REPLAY=$2/$n" "${H[@]}" > "out_pay/$n/run.log" 2>&1' \
  'simrc=$?' \
- 'python3 check_slice_run.py --replay "$2/$n" --run-log "out_pay/$n/run.log" --out "out_pay/$n/acceptance.json"' \
+ 'python3 check_slice_run.py --replay "$2/$n" --run-log "out_pay/$n/run.log" --boundary slice/boundary.json --tb-source slice/tb_slice.sv --out "out_pay/$n/acceptance.json"' \
  'checkrc=$?' 'echo "RUN_RC=$simrc CHECK_RC=$checkrc"' \
  'test "$simrc" = 0 && test "$checkrc" = 0' \
  | timeout 120 ssh "$HOST" "cat > $REMOTE/run_one_pay_safe.sh" || exit 2

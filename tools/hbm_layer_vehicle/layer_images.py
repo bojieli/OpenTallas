@@ -649,7 +649,9 @@ PAYLOAD_COMPILER = {
           "writer table, calendar_SW VM calendar, packed136 HBM image)",
     "COLL": "ALL_GATHER on-die quadrant phase: hbm_layer_vehicle/coll_images.py (hcollgi_SW gq row + calendar_SW + far-end "
             "ring replay, VEH-FMT-COLL); cross-die / GROUP_REDUCE_MCAST / TOPK_MERGE / ROW_GATHER: hb_coll_SW 1536-b ISA "
-            "rows (ot_hgi_coll_issuer_m) have no production compiler",
+            "rows (ot_hgi_coll_issuer_m) have no bound common production compiler; source-only "
+            "tkm_endpoint_1021.endpoint_plan@ca8bc89afd537729fc1f722306efa9cf8142c05b is unqualified until "
+            "issuer-to-endpoint age, real own/peer producers, qslots, writer and160-clock schedule are bound",
     "DMA": "sm_images.py (hb_dbk_SW command table) + calendar_SW",
     "HC": "hc_SW (ot_hbm_hc_qhub_static) row ABI",
     "FUSED": "hc_SW rows + col_sfu_SW collar (2 striped spaces, tools/hbm_static/su_arith_sfu_compile.py lanes)",
@@ -1411,6 +1413,11 @@ def main():
                 bins.append(dict(events=list(evs), progs=list(g)))
         too_big = [b for b in bins if cap is not None and nonm(b["events"]) > cap]
         if too_big:
+            if a.rope_candidate and any(r.get('candidate_rope') for r in manifest):
+                need = max(nonm(b['events'])+1 for b in too_big)
+                raise ValueError(f'new RoPE programme requires at least NEV{need} before protocol/calendar checks; '
+                                 f'compiled capacity{a.nev} is insufficient; preserve existing build and '
+                                 'derive the necessary incremental top from the full emitted replay')
             # defer the latest record of the oversize VM-linked group (no later record of the group consumes it)
             # and recompile the layer; never an expected-value carry between parts
             last = max(((r_["i"], P["base"] + o_) for k_ in too_big[0]["progs"] for r_, _, _, o_ in progs[k_]["recs"]),
@@ -1438,6 +1445,31 @@ def main():
         for P_k, P in enumerate(progs):
             for r_, ent_, su_, o_ in P["recs"]:
                 ent_["replay_part"] = part_of.get(P_k, 0)
+    candidate_fault_checks = None
+    if a.rope_candidate and any(r.get('candidate_rope') and 'programme' in r for r in manifest):
+        # SLICE_OUT reports activity spans, not values, and SLICE_PASS alone
+        # does not reject a sticky protocol fault. Assert every actual boundary
+        # fault face explicitly after the final commit of each independent part.
+        fault_outputs = [p for p in bnd['outputs'] if 'fault' in p['name'].lower()]
+        if not fault_outputs:
+            raise ValueError('RoPE candidate cut has no observable protocol fault outputs')
+        counts = []
+        for evs in [events] + [es for es, _ in extra_parts]:
+            last_serial = max((e['cyc'] if e['dom']=='serial' else (3*e['cyc']+3)//4
+                               for e in evs if e['k']!='M'), default=0)
+            for port in fault_outputs:
+                evs.append(dict(k='C', dom='serial', cyc=last_serial+16, port=port['name'],
+                                val='0', mask=f"{(1<<port['width'])-1:x}",
+                                src='source:required_sticky_protocol_fault_zero'))
+            evs.sort(key=lambda e:(e['dom'],e['cyc'],e['k']))
+            count = sum(e['k']!='M' for e in evs)+1
+            if a.nev and count>a.nev:
+                raise ValueError(f'RoPE protocol checks require source-bound NEV{count}, compiled capacity{a.nev}; '
+                                 'preserve old build and regenerate the necessary top')
+            counts.append(count)
+        candidate_fault_checks = dict(outputs=[dict(name=p['name'],width=p['width']) for p in fault_outputs],
+                                      per_part_checks=len(fault_outputs), required_NEV_by_part=counts,
+                                      sticky_check_guard_serial_edges=16)
     for p in {e["port"] for e in events if e["k"] == "D"}:
         assert p in inports, f"replay drives {p}, not a slice input port"
     rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design=a.design,
@@ -1448,6 +1480,8 @@ def main():
                             "VM operands as M preload events (no slice VM input port)",
                             f"start advance {START_ADVANCE}, config lead {CFG_LEAD} (pgcol.sv header)"],
                events=events)
+    if candidate_fault_checks is not None:
+        rep['candidate_protocol_fault_checks'] = candidate_fault_checks
     if cx is not None:
         rep.update(cx_scope="connected_layer_parts", lane="TOK-FUNC2-HBM-CX", connected_components=True,
                    cx_epochs=cx_epochs, cx_components=cx_comp_place, cx_parts=cx_parts,
