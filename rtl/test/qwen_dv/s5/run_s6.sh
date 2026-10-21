@@ -27,7 +27,7 @@ COMMON="rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv
  physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1.v"
 # the child modules (gen_slice6_lp_spec.CHILD_SOURCES) + the flat parent
 CHILD=$(python3 -c 'import sys; sys.path.insert(0,"tools/qwen_dv"); import gen_slice6_lp_spec as g; print(" ".join(g.CHILD_SOURCES))')
-VF="--binary --timing -O2 -j ${VJOBS:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --x-assign 0 --x-initial 0 +define+OT_STATION_REGIONAL +define+OT_S5_HARD"
+VF="--binary --timing -O2 -j ${VJOBS:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT --x-assign 0 --x-initial 0 +define+OT_STATION_REGIONAL +define+OT_S5_HARD +define+OT_S6_SIM"
 case $KIND in
   lp)
     "$V" $VF -GMUT=$M --top-module tb_${SP}_lp $COMMON $CHILD rtl/qwen_dv/s5/s6/qfd_dv_s6_flat.sv \
@@ -39,7 +39,7 @@ case $KIND in
     echo "LP $SP M=$M: ${r:-NO_RESULT}";;
   lint)
     for T in qfd_dv_s6_flat ${SP}_lp; do
-      "$V" --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT +define+OT_STATION_REGIONAL +define+OT_S5_HARD \
+      "$V" --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT +define+OT_STATION_REGIONAL +define+OT_S5_HARD +define+OT_S6_SIM \
         --top-module $T $COMMON $CHILD rtl/qwen_dv/s5/s6/qfd_dv_s6_flat.sv $LPD/${SP}_lp.sv > "$OUT/lint_$T.log" 2>&1
       e=$(grep -c '%Error' "$OUT/lint_$T.log"); echo "LINT $T: errors=$e"; grep -m20 '%Error' "$OUT/lint_$T.log"
     done;;

@@ -6,5 +6,5 @@ LP_MISMATCH port=ch_dn_o cycle=42 flat=00000000000000000000000000000000000000000
 LP_LOCKSTEP FAIL MUT=1 mismatches=5597 of 125202
 - rtl/qwen_dv/s5/s6/lp/tb_qfd_dv_s6_lp.sv:151: Verilog $finish
 - S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
-- Verilator: $finish at 6us; walltime 35.342 s; speed 169.769 ns/s
-- Verilator: cpu 35.342 s on 1 threads; allocated 70 MB
+- Verilator: $finish at 6us; walltime 56.225 s; speed 106.714 ns/s
+- Verilator: cpu 56.215 s on 1 threads; allocated 70 MB

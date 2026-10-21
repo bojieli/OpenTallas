@@ -6,7 +6,7 @@ the census-safe landing library options.
    a2e2190cf) with these children re-bound (same instance names, same port maps, wires only):
      u_suvm  qfd_dv_s5_suvm       -> qfd_dv_s5_suvm_su8p3  (CLOSED su8_rst3 422d006e2 + VM8 group P3 vm8q; Codex su8p2 5949f90af
                                                            with vm8p -> vm8q)
-     u_stm   qfd_dv_s5_stm        -> qfd_dv_s5_stm_closed  (Codex 5949f90af: CLOSED stream c3r 16f2703df + tload ns4)
+     u_stm   qfd_dv_s5_stm        -> qfd_dv_s6_stm         (= Codex 5949f90af stm_closed: CLOSED stream c3r 16f2703df + tload ns4)
      u_ctl   qfd_dv_s5_ctl        -> qfd_dv_s5_ctl_repair4_leaf (CLOSED ctl5 view)
      u_btab  qfd_dv_s5_btab       -> qfd_dv_s6_btab        (CLOSED btab_s4 view, port adapter)
      u_fdn / u_fup / u_tap        -> qfd_dv_s6_fdn / _fup / _tap (valid-only reset, kept 2nd reset stage, kept tap valid copies)
@@ -33,7 +33,7 @@ FLAT5 = ROOT / "rtl/qwen_dv/s5/qfd_dv_s5_flat.sv"
 FLAT6 = ROOT / "rtl/qwen_dv/s5/s6/qfd_dv_s6_flat.sv"
 OUT_DIR = "rtl/qwen_dv/s5/s6/lp"
 REC_DIR = "results/arch/qw_s5_lp_1021/lp"
-REBIND = {"u_suvm": ("qfd_dv_s5_suvm", "qfd_dv_s5_suvm_su8p3"), "u_stm": ("qfd_dv_s5_stm", "qfd_dv_s5_stm_closed"),
+REBIND = {"u_suvm": ("qfd_dv_s5_suvm", "qfd_dv_s5_suvm_su8p3"), "u_stm": ("qfd_dv_s5_stm", "qfd_dv_s6_stm"),
           "u_ctl": ("qfd_dv_s5_ctl", "qfd_dv_s5_ctl_repair4_leaf"), "u_btab": ("qfd_dv_s5_btab", "qfd_dv_s6_btab"),
           "u_fdn": ("qfd_dv_s5_fdn", "qfd_dv_s6_fdn"), "u_fup": ("qfd_dv_s5_fup", "qfd_dv_s6_fup"),
           "u_tap": ("qfd_dv_s5_tap", "qfd_dv_s6_tap")}
