@@ -3,7 +3,7 @@
 // blocks; that module stays byte-identical).  Same identity checks (epoch, ordinal%8 bank, row < count, duplicate),
 // same faults.  Changes:
 //   * response FIFO = the reviewed, fingerprinted ot_hbm_svc_async_fifo, unchanged (the only primitive the HBM CDC
-//     admission accepts for a crossing); rel8e: 19 bit-sliced 15-bit instances in lockstep (see below);
+//     admission accepts for a crossing); rel8e: 57 bit-sliced 5-bit instances in lockstep (see below);
 //   * SRAM write port from STREAM flops (as the fg2 WREG=1 master): the accepted word lands one stream edge later and
 //     complete_v is registered with it (landing -> resident +1 stream edge, before the elastic block_ready); a macro pin
 //     then reads only stream-family flops.  The capture registers load while the FIFO head is valid (storage read only
@@ -31,15 +31,15 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  ot_rst_fanout #(.N(2)) u_sr(.clk(stream_clk),.rst_n_in(stream_rst_n),.rst_n(sr));
  // HBM-COLLECT11 2026-10-21 (rel8e, COORDINATOR DECISION 2: no census waiver for the FIFO's 571-load read/write
  // select decode): the response FIFO is RSN BIT-SLICED instances of the reviewed ot_hbm_svc_async_fifo, byte-identical
- // module (hash pin intact), only WIDTH differs (RSW = 15 bits: each slot-select decode drives <= 2*15+1 = 31 loads;
- // 285 = 19 x 15).  Every instance has its own Gray pointers, synchronisers and reset syncs (the reviewed CDC proof holds
+ // module (hash pin intact), only WIDTH differs (RSW = 5 bits: mapped DEPTH16 census max 32 loads;
+ // 285 = 57 x 5).  Every instance has its own Gray pointers, synchronisers and reset syncs (the reviewed CDC proof holds
  // per instance).  LOCKSTEP: an instance's pointer resolution can lag another's by one edge (independent synchronisers),
  // so ready/valid are AND-REDUCED, never taken from instance 0: a push is offered to every instance only when ALL are
  // ready (in_ready = &wr_ready), a pop only when ALL are valid (packet_v = &rd_valid).  Each instance therefore fires
  // on exactly the same edges, its binary pointers stay equal to every other's, and the heads of all instances are the
  // same entry whenever packet_v.  wr_overflow / rd_underflow (OR-reduced) stay 0 by construction.  Per-instance push /
- // pop enables carry their own KEPT qualifier flop (wq_k / cq_k), so no shared fire node fans out to 19 pointer sets.
- localparam integer RSW=15,RSN=(IW+RSW-1)/RSW;
+ // pop enables carry their own KEPT qualifier flop (wq_k / cq_k), so no shared fire node fans out to 57 pointer sets.
+ localparam integer RSW=5,RSN=(IW+RSW-1)/RSW;
  initial if(RSN*RSW!=IW)$fatal(1,"landing_bank_h: IW must be RSN x RSW");
  wire packet_v,packet_take,underflow;wire [IW-1:0] packet;
  wire [RSN-1:0] rs_wr_ready,rs_rd_valid,rs_ov,rs_un;

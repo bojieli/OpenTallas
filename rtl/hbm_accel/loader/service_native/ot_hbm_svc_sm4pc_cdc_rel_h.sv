@@ -77,12 +77,12 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  assign reserve_ready=sc[0]&&!allocated[reserve_bank]&&desc_wr_ready&&!fault;
  wire reserve_fire=reserve_v&&reserve_ready&&descriptor_ok;
  // HBM-COLLECT11 2026-10-21 (rel8e, COORDINATOR DECISION 2): the descriptor FIFO is DSN BIT-SLICED instances of the
- // reviewed ot_hbm_svc_async_fifo (byte-identical module, only WIDTH differs; each <= DSW = 14 bits so a slot-select
- // decode drives <= ~2*14+2 loads; DW 97 = 6 x 14 + 13).  Own pointers / synchronisers / reset syncs per instance.
+ // reviewed ot_hbm_svc_async_fifo (byte-identical module, only WIDTH differs; each <= DSW = 5 bits so a slot-select
+ // decode stays bounded (WIDTH5 DEPTH4 mapped max16); DW97 = 19 x 5 + 2).  Own pointers / synchronisers / reset syncs per instance.
  // LOCKSTEP as the landing banks: desc_wr_ready = &wr_ready (in reserve_ready, so reserve_fire offers to all only when
  // all are ready), desc_rd_valid = &rd_valid (pop only when all are valid), so every instance fires on the same edges
  // and all heads are the same descriptor while desc_rd_valid; per-instance push/pop enables carry KEPT qualifier flops.
- localparam integer DSW=14,DSN=(DW+DSW-1)/DSW;
+ localparam integer DSW=5,DSN=(DW+DSW-1)/DSW;
  wire [DW-1:0] desc_wd={reserve_pcs,reserve_row_base,reserve_base,reserve_total,reserve_bank,reserve_epoch};
  wire [DSN-1:0] ds_wr_ready,ds_rd_valid,ds_ov,ds_un;
  (* keep="true",dont_touch="true" *) reg [DSN-1:0] dwq_k;   // stream-side per-slice push qualifiers
