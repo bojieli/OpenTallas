@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81hc_ctfxcap_pinpipe_ref-ncap-slaunch-caps-COMMIT-16fc576b0/record/views/ot_s81_hc_ctfx_cap_pinpipe/ot_s81_hc_ctfx_cap_pinpipe.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "ot_s81_hc_ctfx_cap_pinpipe 576.72 x 51.84: PG M5 VDD 106 stripes (98% spread, 100% cov) / VSS 106 stripes (98% spread, 100% cov); strap M6; face pins 3407 blocked-above 0 blocked-same 0; clock clk insertion 298 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_s81_hc_ctfx_cap_pinpipe",
+  "W": 576.72,
+  "H": 51.84,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 106,
+     "dir": "V",
+     "spread": 0.983,
+     "coverage": 1.0,
+     "shapes_on_top": 106
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 106,
+     "dir": "V",
+     "spread": 0.983,
+     "coverage": 1.0,
+     "shapes_on_top": 106
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 3407,
+   "blocked_above": 0,
+   "covered_below": 294,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 298.33,
+    "min_ps": 237.81
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 1194
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

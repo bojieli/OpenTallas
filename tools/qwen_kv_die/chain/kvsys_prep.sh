@@ -195,6 +195,14 @@ if [ "${OT_KV_TILE_VIEWS:-1}" = 1 ] && [ "${OT_KV_STATIC_DIE:-0}" = 1 ] && [ "${
     cat $O/tile_views.log; echo "KV_TILE_VIEWS FAIL (tile_views.json)"; exit 10; }
   BV="$BV $TVB"; echo "KV_TILE_VIEWS: bind [$TVB] assumed $(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['assumed'])" $O/tile_views.json)"
 fi
+# QKC-GRP 10-21 (OT_KV_GRP_S6C=1 with OT_KV_GRP_SAFE2=1 OT_KV_DOMSPLIT=1 OT_KV_NATIVE_SLOTS=1): the 32 groups bind the CLOSED
+# s6c views through kv_tile_views (OT_KV_GRP_VIEW / OT_KV_GRP_H_VIEW = auto (default) | 0 | physical/ref_tile/<kit>/views/<vm>):
+# grp <- qkd_kvs_grp_s7d-grp_s7d-71f891b9b (388.8 x 432), grp_h <- qkd_kvs_grp_h_s7c-grp_h_s7c-71f891b9b (388.8 sq).
+# With the flag a group master left ASSUMED fails the prep (exit 10): the die would schedule a tile no netlist backs.
+if [ "${OT_KV_GRP_S6C:-0}" = 1 ] && [ -f $O/tile_views.json ]; then
+  python3 -c "import json,sys; a=json.load(open(sys.argv[1]))['assumed']; m=[x for x in ('qkd_kvs_grp_s6c','qkd_kvs_grp_h_s6c') if x in a]; print('OT_KV_GRP_S6C: bound' if not m else 'OT_KV_GRP_S6C: ASSUMED %s' % m); sys.exit(1 if m else 0)" $O/tile_views.json \
+    || { echo "OT_KV_GRP_S6C: group view not bound (tile_views.json)"; exit 10; }
+fi
 python3 tools/qwen_kv_die/kv_die.py case --kv-wq-mirror --split $H14 --out $O/case_kv > $O/case.log
 git rev-parse --short=9 HEAD > $O/case_kv/SOURCE_COMMIT
 python3 tools/die_top_lint.py lint --die qwen_kv --variant kv_wq_mirror,split$V14 --out $O/lint > $O/lint.log 2>&1

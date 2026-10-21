@@ -31,7 +31,7 @@ rtl/physical/ot_qwen_tile_operand.sv rtl/physical/ot_qwen_tile_lsl.sv rtl/hdc/ot
 rtl/physical/ot_qwen_tile_rqr_half.sv rtl/physical/ot_qwen_tile_rpair.sv rtl/physical/ot_qwen_tile_romleaf.sv
 rtl/physical/ot_qwen_tile_node.sv rtl/lib/ot_rst_relay.sv rtl/hdc/ot_qwen_me_array_w12.sv
 rtl/physical/qfd_tile_nk_rp2_romleaf_rr.sv rtl/physical/qfd_tile_nk_rp2_45.sv rtl/physical/qcluster/qfd_c_b16_dv_fabric.sv
-rtl/physical/qcluster/qfd_q3h_stn.sv rtl/physical/qcluster/qfd_c_stn.sv rtl/test/qwen_dv/xhead/$TB"
+rtl/physical/qcluster/qfd_q3h_stn.sv rtl/physical/qcluster/qfd_c_stn.sv rtl/physical/qcluster/qfd_c_land.sv rtl/qwen_dv/mu/qfd_dv_amax_mu.sv rtl/test/qwen_dv/xhead/$TB"
 INC="+incdir+physical/asap7_memory_macros/ot_rom_2048x266_m8 +incdir+physical/asap7_memory_macros/ot_rom_4096x266_m8
 +incdir+physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 +incdir+physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2
 +incdir+rtl +incdir+rtl/dsrom_sys/s81_window_la/recovered_ctl_m2 +incdir+rtl/hbm_accel/generic/collective/inverse

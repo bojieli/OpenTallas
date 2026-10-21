@@ -1,0 +1,2322 @@
+{
+ "lane": "HBM-VMEARLY",
+ "tool": "tools/hgi_sim/d4g_vmearly_1019.py",
+ "basis": "LH-REPRICE3 d4g_reprice3b_1019 --bw 45.03 (current controller), row info_banklat_all",
+ "note": "exposed = edges of the VM-bank round trip a record still waits for after early issue; base = the fully exposed budget (LH-REPRICE3). DS per layer segment.",
+ "n0": {
+  "issue_ahead": {
+   "xl": 0,
+   "coll": 0,
+   "dma": 0,
+   "idx": 0
+  },
+  "rows": {
+   "all": {
+    "ds_ar_tok_s": 1338.1,
+    "qwen_tok_s": 410.1,
+    "ds_ar_cycles": 896789.3,
+    "qwen_cycles": 2926140.0,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1206.3,
+    "qwen_tok_s": 407.0,
+    "ds_ar_cycles": 994749.7,
+    "qwen_cycles": 2948059.6,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 52499.0,
+       "exposed": 52499.0,
+       "records": 1175.0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 30449.2,
+       "exposed": 30449.2,
+       "records": 562.0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 1112.4,
+       "exposed": 1112.4,
+       "records": 40.0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 8763.0,
+       "exposed": 8763.0,
+       "records": 49.0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 12912.5,
+       "exposed": 12912.5,
+       "records": 289.0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 3955.1,
+       "exposed": 3955.1,
+       "records": 73.0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 2002.3,
+       "exposed": 2002.3,
+       "records": 72.0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_gen2c_xload": {
+    "ds_ar_tok_s": 1783.0,
+    "qwen_tok_s": 936.7,
+    "ds_ar_cycles": 673028.4,
+    "qwen_cycles": 1281134.3,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 52499.0,
+       "exposed": 52499.0,
+       "records": 1175.0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 12912.5,
+       "exposed": 12912.5,
+       "records": 289.0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_bl_coll": {
+    "ds_ar_tok_s": 1781.5,
+    "qwen_tok_s": 941.8,
+    "ds_ar_cycles": 673582.0,
+    "qwen_cycles": 1274154.5,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 30449.2,
+       "exposed": 30449.2,
+       "records": 562.0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 3955.1,
+       "exposed": 3955.1,
+       "records": 73.0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_bl_dma": {
+    "ds_ar_tok_s": 1875.8,
+    "qwen_tok_s": 943.9,
+    "ds_ar_cycles": 639724.8,
+    "qwen_cycles": 1271280.9,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 1112.4,
+       "exposed": 1112.4,
+       "records": 40.0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 2002.3,
+       "exposed": 2002.3,
+       "records": 72.0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_bl_idx": {
+    "ds_ar_tok_s": 1879.5,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 638463.1,
+    "qwen_cycles": 1268221.8,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 8763.0,
+       "exposed": 8763.0,
+       "records": 49.0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   }
+  },
+  "ds_per_layer": {
+   "0": {
+    "xl_base": 1340.4,
+    "xl_exposed": 1340.4,
+    "coll_base": 758.5,
+    "coll_exposed": 758.5,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 256.0,
+    "idx_exposed": 256.0
+   },
+   "1": {
+    "coll_base": 812.7,
+    "coll_exposed": 812.7,
+    "xl_base": 1340.4,
+    "xl_exposed": 1340.4,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "2": {
+    "coll_base": 975.2,
+    "coll_exposed": 975.2,
+    "xl_base": 1385.1,
+    "xl_exposed": 1385.1,
+    "idx_base": 362.0,
+    "idx_exposed": 362.0,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8
+   },
+   "3": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "4": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "5": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "6": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "7": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "8": {
+    "coll_base": 975.2,
+    "coll_exposed": 975.2,
+    "xl_base": 1385.1,
+    "xl_exposed": 1385.1,
+    "idx_base": 362.0,
+    "idx_exposed": 362.0,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8
+   },
+   "9": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "10": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "11": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "12": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "13": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "14": {
+    "coll_base": 1083.6,
+    "coll_exposed": 1083.6,
+    "xl_base": 1429.8,
+    "xl_exposed": 1429.8,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 362.0,
+    "idx_exposed": 362.0
+   },
+   "15": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "16": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "17": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "18": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "19": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "20": {
+    "coll_base": 1029.4,
+    "coll_exposed": 1029.4,
+    "xl_base": 1385.1,
+    "xl_exposed": 1385.1,
+    "idx_base": 362.0,
+    "idx_exposed": 362.0,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8
+   },
+   "21": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "22": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "23": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "24": {
+    "coll_base": 921.1,
+    "coll_exposed": 921.1,
+    "xl_base": 1340.4,
+    "xl_exposed": 1340.4,
+    "idx_base": 362.0,
+    "idx_exposed": 362.0,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8
+   },
+   "25": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "26": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "27": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "28": {
+    "coll_base": 921.1,
+    "coll_exposed": 921.1,
+    "xl_base": 1340.4,
+    "xl_exposed": 1340.4,
+    "idx_base": 362.0,
+    "idx_exposed": 362.0,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8
+   },
+   "29": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "30": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "31": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "32": {
+    "coll_base": 921.1,
+    "coll_exposed": 921.1,
+    "xl_base": 1340.4,
+    "xl_exposed": 1340.4,
+    "idx_base": 362.0,
+    "idx_exposed": 362.0,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8
+   },
+   "33": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "34": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "35": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "36": {
+    "coll_base": 921.1,
+    "coll_exposed": 921.1,
+    "xl_base": 1340.4,
+    "xl_exposed": 1340.4,
+    "idx_base": 362.0,
+    "idx_exposed": 362.0,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8
+   },
+   "37": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "38": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   },
+   "39": {
+    "xl_base": 1295.7,
+    "xl_exposed": 1295.7,
+    "coll_base": 704.3,
+    "coll_exposed": 704.3,
+    "dma_base": 27.8,
+    "dma_exposed": 27.8,
+    "idx_base": 181.0,
+    "idx_exposed": 181.0
+   }
+  }
+ },
+ "n1": {
+  "issue_ahead": {
+   "xl": 1,
+   "coll": 1,
+   "dma": 1,
+   "idx": 1
+  },
+  "rows": {
+   "all": {
+    "ds_ar_tok_s": 1338.1,
+    "qwen_tok_s": 410.1,
+    "ds_ar_cycles": 896789.3,
+    "qwen_cycles": 2926140.0,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1264.3,
+    "qwen_tok_s": 408.3,
+    "ds_ar_cycles": 949153.5,
+    "qwen_cycles": 2938761.4,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 52499.0,
+       "exposed": 11954.6,
+       "records": 1175.0,
+       "raw_bound": 373.0
+      },
+      "coll": {
+       "base": 30449.2,
+       "exposed": 13513.9,
+       "records": 562.0,
+       "raw_bound": 270.0
+      },
+      "dma": {
+       "base": 1112.4,
+       "exposed": 632.4,
+       "records": 40.0,
+       "raw_bound": 40.0
+      },
+      "idx": {
+       "base": 8763.0,
+       "exposed": 7872.0,
+       "records": 49.0,
+       "raw_bound": 48.0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 12912.5,
+       "exposed": 5915.1,
+       "records": 289.0,
+       "raw_bound": 181.0
+      },
+      "coll": {
+       "base": 3955.1,
+       "exposed": 3663.1,
+       "records": 73.0,
+       "raw_bound": 73.0
+      },
+      "dma": {
+       "base": 2002.3,
+       "exposed": 0.0,
+       "records": 72.0,
+       "raw_bound": 0.0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_gen2c_xload": {
+    "ds_ar_tok_s": 1853.4,
+    "qwen_tok_s": 941.8,
+    "ds_ar_cycles": 647449.0,
+    "qwen_cycles": 1274136.9,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 52499.0,
+       "exposed": 19351.3,
+       "records": 1175.0,
+       "raw_bound": 447.0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 12912.5,
+       "exposed": 5915.1,
+       "records": 289.0,
+       "raw_bound": 181.0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_bl_coll": {
+    "ds_ar_tok_s": 1820.9,
+    "qwen_tok_s": 942.0,
+    "ds_ar_cycles": 659005.9,
+    "qwen_cycles": 1273862.5,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 30449.2,
+       "exposed": 13423.0,
+       "records": 562.0,
+       "raw_bound": 267.0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 3955.1,
+       "exposed": 3663.1,
+       "records": 73.0,
+       "raw_bound": 73.0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_bl_dma": {
+    "ds_ar_tok_s": 1875.8,
+    "qwen_tok_s": 945.4,
+    "ds_ar_cycles": 639724.8,
+    "qwen_cycles": 1269278.6,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 1112.4,
+       "exposed": 632.4,
+       "records": 40.0,
+       "raw_bound": 40.0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 2002.3,
+       "exposed": 0.0,
+       "records": 72.0,
+       "raw_bound": 0.0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_bl_idx": {
+    "ds_ar_tok_s": 1881.9,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 637647.1,
+    "qwen_cycles": 1268221.8,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 8763.0,
+       "exposed": 7872.0,
+       "records": 49.0,
+       "raw_bound": 48.0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   }
+  },
+  "ds_per_layer": {
+   "0": {
+    "xl_base": 1340.4,
+    "xl_exposed": 326.8,
+    "coll_base": 758.5,
+    "coll_exposed": 351.3,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 256.0,
+    "idx_exposed": 164.0
+   },
+   "1": {
+    "coll_base": 812.7,
+    "coll_exposed": 401.4,
+    "xl_base": 1340.4,
+    "xl_exposed": 326.8,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "2": {
+    "coll_base": 975.2,
+    "coll_exposed": 431.5,
+    "xl_base": 1385.1,
+    "xl_exposed": 329.5,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "3": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "4": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "5": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "6": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "7": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "8": {
+    "coll_base": 975.2,
+    "coll_exposed": 431.5,
+    "xl_base": 1385.1,
+    "xl_exposed": 329.5,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "9": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "10": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "11": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "12": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "13": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "14": {
+    "coll_base": 1083.6,
+    "coll_exposed": 606.2,
+    "xl_base": 1429.8,
+    "xl_exposed": 330.5,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0
+   },
+   "15": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "16": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "17": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "18": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "19": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "20": {
+    "coll_base": 1029.4,
+    "coll_exposed": 437.2,
+    "xl_base": 1385.1,
+    "xl_exposed": 296.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "21": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "22": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "23": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "24": {
+    "coll_base": 921.1,
+    "coll_exposed": 455.6,
+    "xl_base": 1340.4,
+    "xl_exposed": 297.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "25": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "26": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "27": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "28": {
+    "coll_base": 921.1,
+    "coll_exposed": 455.6,
+    "xl_base": 1340.4,
+    "xl_exposed": 297.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "29": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "30": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "31": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "32": {
+    "coll_base": 921.1,
+    "coll_exposed": 455.6,
+    "xl_base": 1340.4,
+    "xl_exposed": 297.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "33": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "34": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "35": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "36": {
+    "coll_base": 921.1,
+    "coll_exposed": 455.6,
+    "xl_base": 1340.4,
+    "xl_exposed": 297.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "37": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "38": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "39": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   }
+  }
+ },
+ "n2": {
+  "issue_ahead": {
+   "xl": 2,
+   "coll": 2,
+   "dma": 2,
+   "idx": 2
+  },
+  "rows": {
+   "all": {
+    "ds_ar_tok_s": 1338.1,
+    "qwen_tok_s": 410.1,
+    "ds_ar_cycles": 896789.3,
+    "qwen_cycles": 2926140.0,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1264.3,
+    "qwen_tok_s": 408.3,
+    "ds_ar_cycles": 949153.5,
+    "qwen_cycles": 2938761.4,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 52499.0,
+       "exposed": 11954.6,
+       "records": 1175.0,
+       "raw_bound": 373.0
+      },
+      "coll": {
+       "base": 30449.2,
+       "exposed": 13513.9,
+       "records": 562.0,
+       "raw_bound": 270.0
+      },
+      "dma": {
+       "base": 1112.4,
+       "exposed": 632.4,
+       "records": 40.0,
+       "raw_bound": 40.0
+      },
+      "idx": {
+       "base": 8763.0,
+       "exposed": 7872.0,
+       "records": 49.0,
+       "raw_bound": 48.0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 12912.5,
+       "exposed": 5915.1,
+       "records": 289.0,
+       "raw_bound": 181.0
+      },
+      "coll": {
+       "base": 3955.1,
+       "exposed": 3663.1,
+       "records": 73.0,
+       "raw_bound": 73.0
+      },
+      "dma": {
+       "base": 2002.3,
+       "exposed": 0.0,
+       "records": 72.0,
+       "raw_bound": 0.0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_gen2c_xload": {
+    "ds_ar_tok_s": 1864.9,
+    "qwen_tok_s": 941.8,
+    "ds_ar_cycles": 643468.2,
+    "qwen_cycles": 1274136.9,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 52499.0,
+       "exposed": 14280.7,
+       "records": 1175.0,
+       "raw_bound": 450.0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 12912.5,
+       "exposed": 5915.1,
+       "records": 289.0,
+       "raw_bound": 181.0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_bl_coll": {
+    "ds_ar_tok_s": 1820.9,
+    "qwen_tok_s": 942.0,
+    "ds_ar_cycles": 659005.9,
+    "qwen_cycles": 1273862.5,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 30449.2,
+       "exposed": 13423.0,
+       "records": 562.0,
+       "raw_bound": 267.0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 3955.1,
+       "exposed": 3663.1,
+       "records": 73.0,
+       "raw_bound": 73.0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_bl_dma": {
+    "ds_ar_tok_s": 1875.8,
+    "qwen_tok_s": 945.4,
+    "ds_ar_cycles": 639724.8,
+    "qwen_cycles": 1269278.6,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 1112.4,
+       "exposed": 632.4,
+       "records": 40.0,
+       "raw_bound": 40.0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 2002.3,
+       "exposed": 0.0,
+       "records": 72.0,
+       "raw_bound": 0.0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   },
+   "info_bl_idx": {
+    "ds_ar_tok_s": 1881.9,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 637647.1,
+    "qwen_cycles": 1268221.8,
+    "clients": {
+     "ds": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 8763.0,
+       "exposed": 7872.0,
+       "records": 49.0,
+       "raw_bound": 48.0
+      }
+     },
+     "qwen": {
+      "xl": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "coll": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "dma": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      },
+      "idx": {
+       "base": 0.0,
+       "exposed": 0.0,
+       "records": 0,
+       "raw_bound": 0
+      }
+     }
+    }
+   }
+  },
+  "ds_per_layer": {
+   "0": {
+    "xl_base": 1340.4,
+    "xl_exposed": 326.8,
+    "coll_base": 758.5,
+    "coll_exposed": 351.3,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 256.0,
+    "idx_exposed": 164.0
+   },
+   "1": {
+    "coll_base": 812.7,
+    "coll_exposed": 401.4,
+    "xl_base": 1340.4,
+    "xl_exposed": 326.8,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "2": {
+    "coll_base": 975.2,
+    "coll_exposed": 431.5,
+    "xl_base": 1385.1,
+    "xl_exposed": 329.5,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "3": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "4": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "5": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "6": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "7": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "8": {
+    "coll_base": 975.2,
+    "coll_exposed": 431.5,
+    "xl_base": 1385.1,
+    "xl_exposed": 329.5,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "9": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "10": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "11": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "12": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "13": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "14": {
+    "coll_base": 1083.6,
+    "coll_exposed": 606.2,
+    "xl_base": 1429.8,
+    "xl_exposed": 330.5,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0
+   },
+   "15": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "16": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "17": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "18": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "19": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "20": {
+    "coll_base": 1029.4,
+    "coll_exposed": 437.2,
+    "xl_base": 1385.1,
+    "xl_exposed": 296.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "21": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "22": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "23": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "24": {
+    "coll_base": 921.1,
+    "coll_exposed": 455.6,
+    "xl_base": 1340.4,
+    "xl_exposed": 297.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "25": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "26": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "27": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "28": {
+    "coll_base": 921.1,
+    "coll_exposed": 455.6,
+    "xl_base": 1340.4,
+    "xl_exposed": 297.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "29": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "30": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "31": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "32": {
+    "coll_base": 921.1,
+    "coll_exposed": 455.6,
+    "xl_base": 1340.4,
+    "xl_exposed": 297.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "33": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "34": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "35": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "36": {
+    "coll_base": 921.1,
+    "coll_exposed": 455.6,
+    "xl_base": 1340.4,
+    "xl_exposed": 297.8,
+    "idx_base": 362.0,
+    "idx_exposed": 328.0,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8
+   },
+   "37": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "38": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   },
+   "39": {
+    "xl_base": 1295.7,
+    "xl_exposed": 294.1,
+    "coll_base": 704.3,
+    "coll_exposed": 301.1,
+    "dma_base": 27.8,
+    "dma_exposed": 15.8,
+    "idx_base": 181.0,
+    "idx_exposed": 164.0
+   }
+  }
+ }
+}

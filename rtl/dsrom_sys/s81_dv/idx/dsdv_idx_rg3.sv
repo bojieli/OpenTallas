@@ -57,8 +57,12 @@ module dsdv_idx_rg3 #(
     wire [1:0]  r0;
     ot_rst_relay #(.REGIONS(2), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r0 (.clk(ck), .rst_n_in(rs[1]), .rst_n(r0));
     wire [39:0] rl;
-    ot_rst_relay #(.REGIONS(20), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r1 (.clk(ck), .rst_n_in(r0[0]), .rst_n(rl[19:0]));
-    ot_rst_relay #(.REGIONS(20), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r2 (.clk(ck), .rst_n_in(r0[1]), .rst_n(rl[39:20]));
+    // S81-IDXRD-1021 (native19 fix): 6 appended sibling leaves at the SAME depth (identical release edge), rl[39:0]
+    // indices preserved: rlx[3:0] = issuer read pointers jra/jrb of PC 0..3 (off rl5..8), rlx[5:4] = closed words scl
+    // of region 0 / 1 (off rl20 / rl21).  u_r0 outputs then see 24 + 2 / 22 + 2 async loads.
+    wire [5:0]  rlx;
+    ot_rst_relay #(.REGIONS(24), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r1 (.clk(ck), .rst_n_in(r0[0]), .rst_n({rlx[3:0], rl[19:0]}));
+    ot_rst_relay #(.REGIONS(22), .SYNC_STAGES(2), .TREE_STAGES(1)) u_r2 (.clk(ck), .rst_n_in(r0[1]), .rst_n({rlx[5:4], rl[39:20]}));
     reg  [7:0] fc;                                  // sticky fault causes
     wire       fault = |fc;
     reg  [3:0] me;                                  // region A id (strap)
@@ -82,10 +86,10 @@ module dsdv_idx_rg3 #(
     end
     // pin copies: pop (budget counter + copies), query valid (payload counters)
     (* keep = "true" *) reg [3:0]  rkc;
-    (* keep = "true" *) reg [1:0]  qvk;
+    (* keep = "true" *) reg [2:0]  qvk;             // [2]: leftk replica (S81-IDXRD-1021)
     always @(posedge ck) begin
         rkc <= {rri[817], rri[545], rri[273], rri[1]};
-        qvk <= {2{qi[0]}};
+        qvk <= {3{qi[0]}};
     end
     wire [3:0] rk_in = {rrr[3][1], rrr[2][1], rrr[1][1], rrr[0][1]};   // a request left the controller's landing FIFO
     wire [3:0] rv_in = {rrr[3][0], rrr[2][0], rrr[1][0], rrr[0][0]};
@@ -107,6 +111,10 @@ module dsdv_idx_rg3 #(
     // ================================================================== frame parser (query chain)
     reg        infr, isj, act;
     reg [11:0] left, pw;
+    // S81-IDXRD-1021: same-edge kept replicas of infr (identical next state; [0] left, [1] pw, [2] leftk) and of left
+    // (leftk: the window clock replica tch's job-end clear), so no infr / end-of-job node drives > 32 loads
+    (* keep = "true" *) reg [3:0] infk;            // [3]: end_wk
+    (* keep = "true" *) reg [11:0] leftk;
     wire       q_v = qr[0];
     wire [511:0] q_d = qr[512:1];
     wire       is_h = q_v && !infr;
@@ -119,19 +127,24 @@ module dsdv_idx_rg3 #(
     (* keep = "true" *) reg [14:0] hen;
     (* keep = "true" *) reg [5:0]  hj1;
     (* keep = "true" *) reg [11:0] hj2;
-    (* keep = "true" *) reg [7:0]  hj3;
+    (* keep = "true" *) reg [8:0]  hj3;             // [8]: nw high byte (own copy, native <= 32)
     (* keep = "true" *) reg [4:0]  hj4;
     reg        hbad1;
     always @(posedge ck) begin
-        if (qvk[0] && !infr) left <= q_d[491:480]; else if (qvk[0]) left <= left - 12'd1;
-        if (qvk[1] && !infr) pw <= 12'd0; else if (qvk[1]) pw <= pw + 12'd1;
+        if (qvk[0] && !infk[0]) left <= q_d[491:480]; else if (qvk[0]) left <= left - 12'd1;
+        if (qvk[1] && !infk[1]) pw <= 12'd0; else if (qvk[1]) pw <= pw + 12'd1;
+        if (qvk[2] && !infk[2]) leftk <= q_d[491:480]; else if (qvk[2]) leftk <= leftk - 12'd1;
     end
     // the copies carry no reset: during reset qr[0] is held 0, so they settle to 0 within 3 edges of the reset
-    always @(posedge ck) begin hen <= {15{hdr_job && !act}}; hj1 <= {6{hdr_job && !act}}; hj2 <= {12{hj1[0]}}; hj3 <= {8{hj2[0]}}; hj4 <= {5{hj3[0]}}; end
+    always @(posedge ck) begin hen <= {15{hdr_job && !act}}; hj1 <= {6{hdr_job && !act}}; hj2 <= {12{hj1[0]}}; hj3 <= {9{hj2[0]}}; hj4 <= {5{hj3[0]}}; end
     always @(posedge ck or negedge rl[2])
-        if (!rl[2]) begin infr <= 1'b0; isj <= 1'b0; act <= 1'b0; hbad1 <= 1'b0; end
-        else begin
+        if (!rl[2]) begin infr <= 1'b0; infk <= 4'd0; isj <= 1'b0; act <= 1'b0; hbad1 <= 1'b0; end
+        else begin : g_fp
+            integer i_;
             hbad1 <= hdr_job && act;
+            for (i_ = 0; i_ < 4; i_ = i_ + 1)
+                if (q_v && !infk[i_]) infk[i_] <= q_d[491:480] != 12'd0;
+                else if (q_v && infk[i_] && (i_ >= 2 ? leftk : left) == 12'd1) infk[i_] <= 1'b0;
             if (is_h) begin
                 infr <= q_d[491:480] != 12'd0; isj <= hdr_job;
                 if (hdr_job && !act) act <= 1'b1;
@@ -159,8 +172,8 @@ module dsdv_idx_rg3 #(
         if (hen[13]) begin jbe[19:16] <= qo[20:17]; jne[11:0] <= qo[32:21]; end
         if (hen[14]) jne[20:12] <= qo[41:33];
     end
-    (* keep = "true" *) reg [7:0] gatk;              // gather-mode select copies (data muxes)
-    always @(posedge ck) gatk <= {8{gat}};
+    (* keep = "true" *) reg [10:0] gatk;             // gather-mode select copies (data muxes; [8] xq, [9]/[10] uvn/uve)
+    always @(posedge ck) gatk <= {11{gat}};
     // derived (from the second copy of the fields)
     reg [15:0] j0, j1, nw, nlw;
     reg [20:0] je;                                  // scan: last position B + N - 1
@@ -184,8 +197,8 @@ module dsdv_idx_rg3 #(
         if (hj3[3]) nlw <= gatd[1] ? 16'(ds_n15 >> 4) : 16'd0;
         if (hj3[4]) begin j1[7:0]  <= gatd[2] ? 8'((ds_n1 >> 1) - 21'd1) : 8'(ds_e2 >> 4);
                           j1[15:8] <= gatd[4] ? 8'(((ds_n1 >> 1) - 21'd1) >> 8) : 8'(ds_e2 >> 12); end
-        if (hj3[5]) begin nw[7:0]  <= gatd[3] ? 8'(ds_n1 >> 1) : 8'((ds_e2 >> 4) - 21'(jbe >> 4) + 21'd1);
-                          nw[15:8] <= gatd[5] ? 8'(ds_n1 >> 9) : 8'(((ds_e2 >> 4) - 21'(jbe >> 4) + 21'd1) >> 8); end
+        if (hj3[5]) nw[7:0]  <= gatd[3] ? 8'(ds_n1 >> 1) : 8'((ds_e2 >> 4) - 21'(jbe >> 4) + 21'd1);
+        if (hj3[8]) nw[15:8] <= gatd[5] ? 8'(ds_n1 >> 9) : 8'(((ds_e2 >> 4) - 21'(jbe >> 4) + 21'd1) >> 8);
     end
 
     // ================================================================== query load: the chain registers ARE the load data
@@ -227,7 +240,10 @@ module dsdv_idx_rg3 #(
     // ================================================================== window clock
     reg        ended, wdone;
     reg [19:0] tc;
+    (* keep = "true" *) reg [19:0] tch;            // S81-IDXRD-1021: same-edge replica of tc for the header beat path
     always @(posedge ck) if (end_w && act) tc <= 20'd0; else if (ended && !wdone) tc <= tc + 20'd1;
+    wire        end_wk = q_v && infk[3] && isj && leftk == 12'd1 && act;   // == end_w && act (replica cone)
+    always @(posedge ck) if (end_wk) tch <= 20'd0; else if (ended && !wdone) tch <= tch + 20'd1;
     always @(posedge ck or negedge rl[3])
         if (!rl[3]) ended <= 1'b0;
         else if (hj1[1]) ended <= 1'b0;
@@ -310,8 +326,7 @@ module dsdv_idx_rg3 #(
         end
     generate for (gu = 0; gu < 4; gu = gu + 1) begin : g_iss
         always @(posedge ck or negedge rl[5 + gu])
-            if (!rl[5 + gu]) begin jkk[gu] <= 4'd0; jz[gu] <= 1'b1; kos[gu] <= 6'd0; kcl[gu] <= 4'd0; jr_n[gu] <= 4'd0;
-                                   jra[gu] <= RQD'(1); jrb[gu] <= RQD'(1); end
+            if (!rl[5 + gu]) begin jkk[gu] <= 4'd0; jz[gu] <= 1'b1; kos[gu] <= 6'd0; kcl[gu] <= 4'd0; jr_n[gu] <= 4'd0; end
             else begin
                 if (is3[gu]) begin
                     if (jkk[gu] == (jh[gu][JW-1] ? 4'd1 : 4'd8)) begin
@@ -321,9 +336,12 @@ module dsdv_idx_rg3 #(
                         kos[gu] <= jz[gu] ? 6'd0 : kos[gu] + 6'd4; kcl[gu] <= jz[gu] ? 4'd0 : kcl[gu] + 4'd2;
                     end
                 end
-                if (is4[gu] && jkk[gu] == (jh[gu][JW-1] ? 4'd1 : 4'd8)) begin
-                    jra[gu] <= {jra[gu][RQD-2:0], jra[gu][RQD-1]}; jrb[gu] <= {jrb[gu][RQD-2:0], jrb[gu][RQD-1]};
-                end
+            end
+        // head read pointers on their own appended reset leaf (rlx[gu]; same release edge as rl[5 + gu])
+        always @(posedge ck or negedge rlx[gu])
+            if (!rlx[gu]) begin jra[gu] <= RQD'(1); jrb[gu] <= RQD'(1); end
+            else if (is4[gu] && jkk[gu] == (jh[gu][JW-1] ? 4'd1 : 4'd8)) begin
+                jra[gu] <= {jra[gu][RQD-2:0], jra[gu][RQD-1]}; jrb[gu] <= {jrb[gu][RQD-2:0], jrb[gu][RQD-1]};
             end
         // budget: own_n = issued - popped (the pop returns on the response lane, after the fixed round trip, so own_n
         // >= the controller landing FIFO's occupancy for this lane: the FIFO can never overflow)
@@ -352,7 +370,11 @@ module dsdv_idx_rg3 #(
     end
 
     // ================================================================== slot table (per parity q, shared by A and B)
-    reg [1:0][LG-1:0]      sb, scl, srdy;          // busy, closed, ready (closed + both regions' beats landed)
+    // Each region owns an independent resettable word. Packed outer arrays
+    // with dynamic bit writes make Yosys preserve the other region through an
+    // asynchronous data-load, which ASAP7 cannot implement.
+    reg [LG-1:0]          sb [0:1], scl [0:1];   // busy / closed, local reset
+    reg [1:0][LG-1:0]     srdy;                 // both regions' beats landed
     reg [1:0][LG-1:0][4:0] sni, snc;               // items a region allocated / consumed (B items counted)
     reg [1:0][LG-1:0][5:0] sne;                    // beats expected a region
     reg [1:0][LG-1:0][5:0] snr0, snr1;             // beats received, region A / B
@@ -373,7 +395,12 @@ module dsdv_idx_rg3 #(
     reg  [3:0]  wsl;
     reg  [3:0]  wc;
     reg  [LFW:0] gw;                                // gather list word
-    reg  [15:0] gm;                                 // owned entries of the list word not yet taken
+    reg  [15:0] gm;                                 // owned entries of the list word not yet taken (g_m1 / hold)
+    // S81-IDXRD-1021: same-edge kept replicas of gm (identical next state gm_n): gmp / gmr feed the lowest-owned-entry
+    // data select g_b low / high, gmq the high half's "no lower entry" term, gmz every gm == 0 test; gm keeps g_e / g_m1.  No added cycle.
+    (* keep = "true" *) reg [15:0] gmp, gmr, gmz;
+    (* keep = "true" *) reg [7:0]  gmq;           // low-half replica for the high half's "no lower entry" term
+    wire        gm_z = gmz == 16'd0;
     reg         gsv, gph;                           // a selected block waits; phase (0 decide / item A, 1 item B)
     (* keep = "true" *) reg [2:0] gsvk, gphk;       // copies for the selection enables (block low / mask / block high)
     reg  [3:0]  gse;
@@ -390,6 +417,18 @@ module dsdv_idx_rg3 #(
     reg         u_need, u_q, u_full, u_cl;
     (* keep = "true" *) reg [4:0] uqk;              // decision parity copies (same groups as u_al / u_gt)
     reg  [4:0]  u_cnt;
+    // S81-IDXRD-1021 (native19): extra decision copies registered at the SAME decision edge as u_al / u_gt / uqk /
+    // u_need (no reset: the pulse inputs are 0 while the walker is held in reset, and sb / scl / sopen are async-held).
+    // [0] slot busy sb writes, [1] / [2] closed scl writes of region 0 / 1, [3] sni / sne of slots 8..15 (u_*[1] keeps
+    // slots 0..7), [4..6] snc of slot quarters 1..3 (u_*[3] keeps quarter 0)
+    (* keep = "true" *) reg [6:0] xal, xgt, xq, xnd;
+    // sni / sne allocation values per slot half (scan alloc: u_cnt / 34; gather take: 1 / 3 -- gat fixes the kind)
+    (* keep = "true" *) reg [1:0][4:0] uvn;
+    (* keep = "true" *) reg [1:0][5:0] uve;
+    // one-hot slot pointers registered from sa / sop every edge (sa / sop change only at update edges, >= 2 edges
+    // apart, so at every update edge the decode equals the binary pointer): [0] sb / scl, [1] sni / sne, [2] snr, [3] snc
+    (* keep = "true" *) reg [3:0][1:0][LG-1:0] saoh;
+    (* keep = "true" *) reg [1:0][1:0][LG-1:0] sopoh;
     // landing responses (registered one edge after the pin)
     reg  [3:0]  lw_v, lw_h1;
     reg  [3:0][9:0] lw_a;
@@ -410,14 +449,26 @@ module dsdv_idx_rg3 #(
         wire [3:0]  x = me ^ jj[3:0] ^ jj[7:4] ^ jj[11:8] ^ jj[15:12];
         assign l_own[ge] = (x[3] == bb[0]) && ((16'(gw) != nlw - 16'd1) || (5'(ge) < lcnt));
     end endgenerate
-    wire [15:0] g_oh = gm & (~gm + 16'd1);          // lowest owned entry
+    // lowest owned entry (priority replicas): low half from gmp[7:0], high half from gmp[15:8] gated by gmq == 0
+    // three replicas, one per consumer: gmp -> g_b[8:0], gmr -> g_b[16:9], gm (g_oh) -> g_e / g_m1 / gnx
+    function automatic [15:0] pri16(input [15:0] m, input lz);   // lz: low half of the list word empty (gmq == 0)
+        pri16 = {lz ? (m[15:8] & (~m[15:8] + 8'd1)) : 8'd0, m[7:0] & (~m[7:0] + 8'd1)};
+    endfunction
+    wire        gq_z = gmq == 8'd0;
+    wire [15:0] g_oh = pri16(gm, gq_z), g_ohp = pri16(gmp, gq_z), g_ohr = pri16(gmr, gq_z);
     reg  [16:0] g_b; reg [3:0] g_e;
     integer e2;
     always @* begin
         g_b = 17'd0; g_e = 4'd0;
-        for (e2 = 0; e2 < 16; e2 = e2 + 1) begin g_b = g_b | ({17{g_oh[e2]}} & lf_q[32 * e2 +: 17]); g_e = g_e | ({4{g_oh[e2]}} & 4'(e2)); end
+        for (e2 = 0; e2 < 16; e2 = e2 + 1) begin
+            g_b[8:0]  = g_b[8:0]  | ({9{g_ohp[e2]}} & lf_q[32 * e2 +: 9]);
+            g_b[16:9] = g_b[16:9] | ({8{g_ohr[e2]}} & lf_q[32 * e2 + 9 +: 8]);
+            g_e = g_e | ({4{g_oh[e2]}} & 4'(e2));
+        end
     end
     wire [15:0] g_m1 = gm & ~g_oh;
+    wire [15:0] gm_n = hj4[4] ? 16'd0 : (ws == 3'd4 && lfd2) ? l_own :
+                       (ws == 3'd5 && ((!gsvk[1] && !gm_z) || (gsvk[1] && gphk[1]))) ? g_m1 : gm;
     wire [15:0] gs_j = gsb[16:1];
     wire        gs_q = gs_j[4];
     wire [3:0]  gs_x = me ^ gs_j[3:0] ^ gs_j[7:4] ^ gs_j[11:8] ^ gs_j[15:12];
@@ -450,13 +501,13 @@ module dsdv_idx_rg3 #(
                 end
                 3'd5: begin
                     if (!gsv) begin                                    // select the first block of the word
-                        if (gm == 16'd0) ws <= 3'd4; else gsv <= 1'b1;
+                        if (gm_z) ws <= 3'd4; else gsv <= 1'b1;
                     end else if (!gph) begin                           // decide: take (item A) or stall (close open slots)
                         if (g_take) begin u_gt <= 5'h1F; ipush <= 1'b1; gph <= 1'b1; end
                         else u_cl <= 1'b1;
                     end else begin                                     // item B + select the next block
                         ipush <= 1'b1; gph <= 1'b0;
-                        if (gm == 16'd0) begin gsv <= 1'b0; ws <= 3'd4; end
+                        if (gm_z) begin gsv <= 1'b0; ws <= 3'd4; end
                     end
                 end
                 default: ;
@@ -470,9 +521,9 @@ module dsdv_idx_rg3 #(
             nsv = gsv; nph = gph;
             if (hj4[0]) begin nsv = 1'b0; nph = 1'b0; end
             else if (ws == 3'd5) begin
-                if (!gsv) begin if (gm != 16'd0) nsv = 1'b1; end
+                if (!gsv) begin if (!gm_z) nsv = 1'b1; end
                 else if (!gph) begin if (g_take) nph = 1'b1; end
-                else begin nph = 1'b0; if (gm == 16'd0) nsv = 1'b0; end
+                else begin nph = 1'b0; if (gm_z) nsv = 1'b0; end
             end
             gsvk <= {3{nsv}}; gphk <= {3{nph}};
         end
@@ -482,21 +533,27 @@ module dsdv_idx_rg3 #(
         if (hj4[2]) lf_rn <= '0; else if (l_rd) lf_rn <= lf_rn + 1'b1;
         lfr_a <= lf_rn[LFW-1:0];
         if (hj4[3]) gw <= '0;
-        else if (ws == 3'd5 && ((!gsv && gm == 16'd0) || (gsv && gph && gm == 16'd0))) gw <= gw + 1'b1;
-        if (hj4[4]) gm <= 16'd0;
-        else if (ws == 3'd4 && lfd2) gm <= l_own;
-        else if (ws == 3'd5 && ((!gsvk[1] && gm != 16'd0) || (gsvk[1] && gphk[1]))) gm <= g_m1;
+        else if (ws == 3'd5 && ((!gsv && gm_z) || (gsv && gph && gm_z))) gw <= gw + 1'b1;
+        gm <= gm_n; gmp <= gm_n; gmr <= gm_n; gmz <= gm_n; gmq <= gm_n[7:0];
         if (ws == 3'd2) begin wq <= gg[0]; wsl <= sa[gg[0]]; wc <= gk_cs; wr <= 1'b0; end
         // decision details for the update stage (unconditional: the update stage reads them one edge after the decision)
         u_q <= gatk[6] ? gs_q : gg[0]; uqk <= {5{gatk[7] ? gs_q : gg[0]}}; u_cnt <= gk_cnt;
         u_need <= g_need; u_full <= socnt[gs_q] == 5'd15 && !g_need; gsl <= g_sl; gcl <= g_cl;
+        xal <= {7{!hj4[0] && s_alloc}}; xgt <= {7{!hj4[0] && g_take}};
+        xq <= {7{gatk[8] ? gs_q : gg[0]}}; xnd <= {7{g_need}};
+        uvn[0] <= gatk[9] ? 5'd1 : gk_cnt;  uve[0] <= gatk[9] ? 6'd3 : 6'd34;
+        uvn[1] <= gatk[10] ? 5'd1 : gk_cnt; uve[1] <= gatk[10] ? 6'd3 : 6'd34;
+        for (q = 0; q < 2; q = q + 1) begin
+            for (s = 0; s < 4; s = s + 1) saoh[s][q] <= LG'(1) << sa[q];
+            for (s = 0; s < 2; s = s + 1) sopoh[s][q] <= LG'(1) << sop[q];
+        end
         if (ws == 3'd3) begin
             wr <= !wr;
             if (wr) begin wc <= wc + 4'd1; if (wc == gk_ce && !gk_lg) gg <= gg + 12'd1; end
         end
         // gather selection (first block of a word, or the next one during item B)
-        if (ws == 3'd5 && ((!gsvk[0] && gm != 16'd0) || (gsvk[0] && gphk[0]))) gsb[10:0] <= g_b[10:0];
-        if (ws == 3'd5 && ((!gsvk[2] && gm != 16'd0) || (gsvk[2] && gphk[2]))) begin
+        if (ws == 3'd5 && ((!gsvk[0] && !gm_z) || (gsvk[0] && gphk[0]))) gsb[10:0] <= g_b[10:0];
+        if (ws == 3'd5 && ((!gsvk[2] && !gm_z) || (gsvk[2] && gphk[2]))) begin
             gsb[16:11] <= g_b[16:11]; gse <= g_e; gnx <= (g_e != 4'd15) && g_m1[g_e + 4'd1];
         end
         // job queue entry (written two edges later by the registered enables)
@@ -553,42 +610,70 @@ module dsdv_idx_rg3 #(
             iq_room2 <= iq_n <= 11'(IQD - 8);
         end
     // slot table: update stage (one edge after the decision) + release
+    // S81-IDXRD-1021: every per-slot write enable = (own decision copy) && (registered one-hot pointer bit); no binary
+    // sa / sop decoders and no shared allocation node over > 16 slots x one consumer group.
     generate for (gu = 0; gu < 2; gu = gu + 1) begin : g_st
-        wire al0 = (u_al[0] || (u_gt[0] && u_need)) && uqk[0] == gu[0];   // (re)allocation of slot sa
+        wire al0 = (u_al[0] || (u_gt[0] && u_need)) && uqk[0] == gu[0];   // (re)allocation of slot sa: sa / sop / sopen
+        wire alb = (xal[0] || (xgt[0] && xnd[0])) && xq[0] == gu[0];      // same decision, sb writes
+        wire alc = (xal[1 + gu] || (xgt[1 + gu] && xnd[1 + gu])) && xq[1 + gu] == gu[0];   // same decision, scl writes
+        wire fuc = xgt[1 + gu] && xq[1 + gu] == gu[0] && u_full;          // open gather slot full: close it
         always @(posedge ck or negedge rl[20 + gu])
-            if (!rl[20 + gu]) begin sb[gu] <= '0; scl[gu] <= '0; sopen[gu] <= 1'b0; end
+            if (!rl[20 + gu]) begin sb[gu] <= '0; sopen[gu] <= 1'b0; end
             else begin : g_up
                 integer s2;
-                if (al0) begin
-                    if (u_gt[0] && sopen[gu]) scl[gu][sop[gu]] <= 1'b1;
-                    sb[gu][sa[gu]] <= 1'b1; scl[gu][sa[gu]] <= u_al[0]; if (u_gt[0]) sopen[gu] <= 1'b1;
-                end else if (u_gt[0] && uqk[0] == gu[0] && u_full) begin scl[gu][sop[gu]] <= 1'b1; sopen[gu] <= 1'b0; end
-                if (u_cl && sopen[gu]) begin scl[gu][sop[gu]] <= 1'b1; sopen[gu] <= 1'b0; end
-                for (s2 = 0; s2 < LG; s2 = s2 + 1)
+                if (al0) begin if (u_gt[0]) sopen[gu] <= 1'b1; end
+                else if (u_gt[0] && uqk[0] == gu[0] && u_full) sopen[gu] <= 1'b0;
+                if (u_cl && sopen[gu]) sopen[gu] <= 1'b0;
+                for (s2 = 0; s2 < LG; s2 = s2 + 1) begin
+                    if (alb && saoh[0][gu][s2]) sb[gu][s2] <= 1'b1;
                     if (sb[gu][s2] && srdy[gu][s2] && snc[gu][s2] == sni[gu][s2] && !(cons_v[gu] && cons_s[gu] == 4'(s2)))
                         sb[gu][s2] <= 1'b0;
+                end
                 if (hj4[0]) sopen[gu] <= 1'b0;
+            end
+        // closed words on their own appended reset leaf (rlx[4 + gu]; same release edge as rl[20 + gu]); unpacked
+        // regional word, static bit indices only
+        always @(posedge ck or negedge rlx[4 + gu])
+            if (!rlx[4 + gu]) scl[gu] <= '0;
+            else begin : g_cl
+                integer s4;
+                for (s4 = 0; s4 < LG; s4 = s4 + 1) begin
+                    if (alc) begin
+                        if (xgt[1 + gu] && sopen[gu] && sopoh[0][gu][s4]) scl[gu][s4] <= 1'b1;
+                        if (saoh[0][gu][s4]) scl[gu][s4] <= xal[1 + gu];
+                    end else if (fuc && sopoh[0][gu][s4]) scl[gu][s4] <= 1'b1;
+                    if (u_cl && sopen[gu] && sopoh[0][gu][s4]) scl[gu][s4] <= 1'b1;
+                end
             end
         always @(posedge ck) begin
             if (al0) begin sa[gu] <= sa[gu] + 4'd1; sop[gu] <= sa[gu]; end
             if (u_gt[0] && uqk[0] == gu[0]) socnt[gu] <= u_need ? 5'd1 : socnt[gu] + 5'd1;
         end
-        // counts (one-hot enables from the decision copies: 1 sni / sne, 2 snr, 3 snc)
-        wire al1 = (u_al[1] || (u_gt[1] && u_need)) && uqk[1] == gu[0];
-        wire ad1 = u_gt[1] && !u_need && uqk[1] == gu[0];
+        // counts (decision copies: 1 / x2 sni / sne slots 0..7 / 8..15, 2 snr, 3 snc)
+        wire al1l = (u_al[1] || (u_gt[1] && u_need)) && uqk[1] == gu[0];
+        wire ad1l = u_gt[1] && !u_need && uqk[1] == gu[0];
+        wire al1h = (xal[3] || (xgt[3] && xnd[3])) && xq[3] == gu[0];
+        wire ad1h = xgt[3] && !xnd[3] && xq[3] == gu[0];
         wire al2 = (u_al[2] || (u_gt[2] && u_need)) && uqk[2] == gu[0];
-        wire al3 = (u_al[3] || (u_gt[3] && u_need)) && uqk[3] == gu[0];
+        wire [3:0] al3;                                                    // snc slot quarters
+        assign al3[0] = (u_al[3] || (u_gt[3] && u_need)) && uqk[3] == gu[0];
+        assign al3[1] = (xal[4] || (xgt[4] && xnd[4])) && xq[4] == gu[0];
+        assign al3[2] = (xal[5] || (xgt[5] && xnd[5])) && xq[5] == gu[0];
+        assign al3[3] = (xal[6] || (xgt[6] && xnd[6])) && xq[6] == gu[0];
         always @(posedge ck) begin : g_cnt
             integer s3;
             for (s3 = 0; s3 < LG; s3 = s3 + 1) begin
-                if (al1 && sa[gu] == 4'(s3)) begin sni[gu][s3] <= u_gt[1] ? 5'd1 : u_cnt; sne[gu][s3] <= u_gt[1] ? 6'd3 : 6'd34; end
-                else if (ad1 && sop[gu] == 4'(s3)) begin sni[gu][s3] <= sni[gu][s3] + 5'd1; sne[gu][s3] <= sne[gu][s3] + 6'd3; end
-                if (al2 && sa[gu] == 4'(s3)) begin snr0[gu][s3] <= 6'd0; snr1[gu][s3] <= 6'd0; end
+                if ((s3 < LG / 2 ? al1l : al1h) && saoh[1][gu][s3]) begin
+                    sni[gu][s3] <= uvn[s3 / (LG / 2)]; sne[gu][s3] <= uve[s3 / (LG / 2)];
+                end else if ((s3 < LG / 2 ? ad1l : ad1h) && sopoh[1][gu][s3]) begin
+                    sni[gu][s3] <= sni[gu][s3] + 5'd1; sne[gu][s3] <= sne[gu][s3] + 6'd3;
+                end
+                if (al2 && saoh[2][gu][s3]) begin snr0[gu][s3] <= 6'd0; snr1[gu][s3] <= 6'd0; end
                 else begin
                     if (lw_v[gu] && lw_sl[gu] == 4'(s3)) snr0[gu][s3] <= snr0[gu][s3] + 6'd1;
                     if (lw_v[2 + gu] && lw_sl[2 + gu] == 4'(s3)) snr1[gu][s3] <= snr1[gu][s3] + 6'd1;
                 end
-                if (al3 && sa[gu] == 4'(s3)) snc[gu][s3] <= 5'd0;
+                if (al3[s3 / 4] && saoh[3][gu][s3]) snc[gu][s3] <= 5'd0;
                 else if (cons_v[gu] && cons_s[gu] == 4'(s3)) snc[gu][s3] <= snc[gu][s3] + 5'd1;
                 srdy[gu][s3] <= sb[gu][s3] && scl[gu][s3] && snr0[gu][s3] == sne[gu][s3] && snr1[gu][s3] == sne[gu][s3];
             end
@@ -658,11 +743,16 @@ module dsdv_idx_rg3 #(
     dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_iq (
         .ck(ck), .re(ir_e), .ra(iq_r), .rd(iq_q), .we(ipush), .wa(iq_w), .wd({{(256-IW){1'b0}}, ipd}));
     integer e3;
+    // S81-IDXRD-1021: landing write tokens = kept copies of ir_f captured from ir_e on ir_f's own edge, one per head
+    // entry x field (each feeds <= 12 data bits); ir_f keeps the pointer / count control.  No reset: ir_e is 0 while the
+    // queue is held in reset (im_n = 0) and hq is data-only (hn = 0).
+    (* keep = "true" *) reg [3:0][2:0] irw;
+    always @(posedge ck) irw <= {12{ir_e}};
     always @(posedge ck)
         for (e3 = 0; e3 < 4; e3 = e3 + 1) begin
-            if (ir_f && hwa[e3]) hq[e3][11:0]  <= iq_q[11:0];
-            if (ir_f && hwb[e3]) hq[e3][23:12] <= iq_q[23:12];
-            if (ir_f && hwc[e3]) hq[e3][34:24] <= iq_q[34:24];
+            if (irw[e3][0] && hwa[e3]) hq[e3][11:0]  <= iq_q[11:0];
+            if (irw[e3][1] && hwb[e3]) hq[e3][23:12] <= iq_q[23:12];
+            if (irw[e3][2] && hwc[e3]) hq[e3][34:24] <= iq_q[34:24];
         end
     reg [IW-1:0] ih;
     always @* begin
@@ -778,16 +868,19 @@ module dsdv_idx_rg3 #(
     (* keep = "true" *) reg [3:0] swa, swb, swc;
     (* keep = "true" *) reg [3:0] sra, srb, src_;
     reg  [2:0]  shn;
-    (* keep = "true" *) reg [3:0] she;
+    (* keep = "true" *) reg [4:0] she;             // [4]: gfr (S81-IDXRD-1021)
     wire [255:0] sq_q;
     wire        s_re = (sm_n != 0) && ({1'b0, shn} + {3'b0, sr_f} <= 4'd2);
     dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_sq (
         .ck(ck), .re(s_re), .ra(sq_r), .rd(sq_q), .we(o_v1), .wa(sq_w), .wd({{(256-SW){1'b0}}, o_m1, o_f1, o_s1}));
+    // S81-IDXRD-1021: score landing write tokens (as irw): kept copies of sr_f from s_re on sr_f's edge
+    (* keep = "true" *) reg [3:0][2:0] srw;
+    always @(posedge ck) srw <= {12{s_re}};
     always @(posedge ck)
         for (e3 = 0; e3 < 4; e3 = e3 + 1) begin
-            if (sr_f && swa[e3]) sh[e3][12:0]  <= sq_q[12:0];
-            if (sr_f && swb[e3]) sh[e3][25:13] <= sq_q[25:13];
-            if (sr_f && swc[e3]) sh[e3][38:26] <= sq_q[38:26];
+            if (srw[e3][0] && swa[e3]) sh[e3][12:0]  <= sq_q[12:0];
+            if (srw[e3][1] && swb[e3]) sh[e3][25:13] <= sq_q[25:13];
+            if (srw[e3][2] && swc[e3]) sh[e3][38:26] <= sq_q[38:26];
         end
     reg [SW-1:0] th;
     always @* begin
@@ -805,22 +898,23 @@ module dsdv_idx_rg3 #(
     reg         ap;
     (* keep = "true" *) reg [3:0] apk;             // assembling buffer copies
     (* keep = "true" *) reg [8:0] epk;             // emission buffer copies
-    (* keep = "true" *) reg [3:0] afr;             // !bcmp[ap] (next-state register copies)
+    (* keep = "true" *) reg [4:0] afr;             // !bcmp[ap] (next-state register copies; [4] gfr)
     wire        sq_pop_a = she[0] && afr[0];                // head pointers, shn
     wire        sq_pop_b = she[1] && afr[1];                // write stage, infl
     wire        sq_pop_c = she[2] && afr[2];                // assembler state
     wire        sq_pop_d = she[3] && afr[3];                // word index / fault flag
+    wire        sq_pop_e = she[4] && afr[4];                // gather frontier gfr
     always @(posedge ck or negedge rl[31])
         if (!rl[31]) begin sq_w <= 10'd0; sq_r <= 10'd0; end
         else begin if (o_v1) sq_w <= sq_w + 10'd1; if (s_re) sq_r <= sq_r + 10'd1; end
     always @(posedge ck or negedge rl[32])
-        if (!rl[32]) begin sm_n <= 11'd0; sr_f <= 1'b0; shn <= 3'd0; she <= 4'd0; end
+        if (!rl[32]) begin sm_n <= 11'd0; sr_f <= 1'b0; shn <= 3'd0; she <= 5'd0; end
         else begin : g_sqc
             reg [2:0] n1;
             sr_f <= s_re;
             sm_n <= sm_n + (o_v1 ? 11'd1 : 11'd0) - (s_re ? 11'd1 : 11'd0);
             n1 = shn + (sr_f ? 3'd1 : 3'd0) - (sq_pop_a ? 3'd1 : 3'd0);
-            shn <= n1; she <= {4{n1 != 3'd0}};
+            shn <= n1; she <= {5{n1 != 3'd0}};
         end
     always @(posedge ck or negedge rl[33])
         if (!rl[33]) begin swa <= 4'd1; swb <= 4'd1; swc <= 4'd1; sra <= 4'd1; srb <= 4'd1; src_ <= 4'd1; end
@@ -850,7 +944,7 @@ module dsdv_idx_rg3 #(
     reg  [1:0][255:0] bs;
     wire        take_n;
     always @(posedge ck or negedge rl[35])
-        if (!rl[35]) begin bact <= 2'b00; bcmp <= 2'b00; ap <= 1'b0; apk <= 4'd0; epk <= 9'd0; afr <= 4'hF; pwv0 <= 2'b00; pwv1 <= 2'b00; pwb <= 2'b00; end
+        if (!rl[35]) begin bact <= 2'b00; bcmp <= 2'b00; ap <= 1'b0; apk <= 4'd0; epk <= 9'd0; afr <= 5'h1F; pwv0 <= 2'b00; pwv1 <= 2'b00; pwb <= 2'b00; end
         else begin : g_asm
             reg [1:0] nact, ncmp; reg nap;
             nact = bact; ncmp = bcmp; nap = ap;
@@ -862,7 +956,7 @@ module dsdv_idx_rg3 #(
             end
             if (take_n) begin nact[epk[4]] = 1'b0; ncmp[epk[4]] = 1'b0; epk <= ~epk; end
             if (hj1[3]) begin nact = 2'b00; ncmp = 2'b00; nap = 1'b0; epk <= 9'd0; end
-            bact <= nact; bcmp <= ncmp; ap <= nap; apk <= {4{nap}}; afr <= {4{!ncmp[nap]}};
+            bact <= nact; bcmp <= ncmp; ap <= nap; apk <= {4{nap}}; afr <= {5{!ncmp[nap]}};
         end
     always @(posedge ck) begin
         if (sq_pop_d && !bact[apk[3]]) bw[apk[3]] <= t_w;
@@ -889,7 +983,7 @@ module dsdv_idx_rg3 #(
     wire        endn = ended || (end_w && act);
     wire [19:0] tcn = (end_w && act) ? 20'd0 : (ended && !wdone) ? tc + 20'd1 : tc;
     // header: one-hot of the beat due two edges ahead (tc + 2), then the beat register (one edge ahead)
-    wire [19:0] tc2 = (ended && !wdone) ? tc + 20'd2 : tc;
+    wire [19:0] tc2 = (ended && !wdone) ? tch + 20'd2 : tch;
     wire [19:0] e2x = tc2 - th0;
     (* keep = "true" *) reg [9:0] hk0, hk1;        // header beat one-hot copies
     always @(posedge ck or negedge rl[36])
@@ -938,13 +1032,17 @@ module dsdv_idx_rg3 #(
     reg         gd1, gdr, gc_r;
     always @(posedge ck) begin                      // data registers (no reset): gfr cleared at every job header
             if (hj1[3]) gfr <= 16'd0;
-            else if (sq_pop_d) gfr <= t_lw ? t_w + 16'd1 : t_w;
+            else if (sq_pop_e) gfr <= t_lw ? t_w + 16'd1 : t_w;
             gd1 <= ws == 3'd6 && iq_n == 11'd0 && infl == 11'd0 && !ipush && (bact & ~bcmp) == 2'b00 && !hj1[3];
             gdr <= gd1 && ws == 3'd6 && !hj1[3];
             gc_r <= MUT == 7 || gdr || gfr > ewn;
     end
     wire        late_n = slot_n && (gat ? ((bcmp[epk[5]] && bwe < ewn) || (!take_n && !gc_r)) : !take_n);
-    (* keep = "true" *) reg [1:0] tk0, tk1;        // part-0 data enables (2 x 8 lanes) per buffer
+    // S81-IDXRD-1021: part-0 data enables, one kept copy a lane a buffer (16 data bits + lane valid each), captured from
+    // take_n on the same edge as before (was 2 x 8 lanes: 98..128 loads).  No reset: take_n is 0 while the window
+    // state is held in reset, and so[275:1] carries no reset.
+    (* keep = "true" *) reg [15:0] tk0, tk1;
+    wire        tka = take_n && !epk[1], tkb = take_n && epk[1];
     reg         tk_r, late_r, p1_r, p1_d, p1_last, p1_f;
     reg  [15:0] p1_lv;
     always @(posedge ck) begin
@@ -955,18 +1053,18 @@ module dsdv_idx_rg3 #(
                           p1_last <= ew == nw - 16'd1; p1_f <= (tk_r && bf[!epk[7]]) || late_r || fault; end
     end
     always @(posedge ck or negedge rl[37])
-        if (!rl[37]) begin slot_r <= 1'b0; srk <= 4'd0; tk_r <= 1'b0; late_r <= 1'b0; p1_r <= 1'b0; p1_d <= 1'b0; tk0 <= 2'd0; tk1 <= 2'd0; end
+        if (!rl[37]) begin slot_r <= 1'b0; srk <= 4'd0; tk_r <= 1'b0; late_r <= 1'b0; p1_r <= 1'b0; p1_d <= 1'b0; end
         else begin
             slot_r <= slot_n; srk <= {4{slot_n}}; tk_r <= take_n; late_r <= late_n;
-            tk0 <= {2{take_n && !epk[1]}}; tk1 <= {2{take_n && epk[1]}};
             p1_r <= slot_r; p1_d <= p1_r;
         end
+    always @(posedge ck) begin tk0 <= {16{tka}}; tk1 <= {16{tkb}}; end
     // part 0: lanes of the taken buffer, masked by lane valid
     wire [255:0] d0;
     genvar gl;
     generate for (gl = 0; gl < 16; gl = gl + 1) begin : g_d0
-        assign d0[16 * gl +: 16] = ({16{tk0[gl / 8] && blv[0][gl]}} & bs[0][16 * gl +: 16]) |
-                                   ({16{tk1[gl / 8] && blv[1][gl]}} & bs[1][16 * gl +: 16]);
+        assign d0[16 * gl +: 16] = ({16{tk0[gl] && blv[0][gl]}} & bs[0][16 * gl +: 16]) |
+                                   ({16{tk1[gl] && blv[1][gl]}} & bs[1][16 * gl +: 16]);
     end endgenerate
     wire [275:0] ins0 = (srk[3] ? bk(ik, 2'd0, 1'b0, 1'b0, {4'd2, tg}, 256'd0) : 276'd0) | {d0, 20'd0};
     wire         p1_due = (MUT == 4 && me == 4'd0) ? p1_d : p1_r;

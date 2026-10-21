@@ -1,0 +1,20 @@
+{
+  "reviewer": "coordinator claude (KV-COLLECT19 for ended KV-EMB4, sub-lane of DRIVE-KV; PNGs personally viewed)",
+  "verdict": "APPROVED",
+  "gate_commit": "9a2d62605",
+  "scope": "die-identity kvs_emb (PD .45): die mu_ba module text with OT_KV_EMB_N32=1 + OT_KV_EMB_PJ=1 (_k_mu_ba_n32_pj), pin regs off (0 die edges), reset landing 2 st/64 copies, OT_SPINE_SYM; same outline 388.8x302.4 and CLOSED hard child u_rowtx as e1. Replaces the 2 failed qkd_kvs_emb e1 routes (die RTL identity + pin-reg edges).",
+  "checklist": {
+    "lattice": "WARN u_rowtx origin (129.624,86.4) 0.024 um off 43.2 lattice, site-snapped (as closed e1); accepted",
+    "std_cell_band": "PASS cells hug S/W pin faces and child W edge, no islands, peak density <1.0, fill 29% (pin-bound)",
+    "pin_spread": "PASS W/S/E faces, 34 px_tok/px_tep E feedthrough (same-region rule)",
+    "clock_entry": "PASS one root at S face beside the register mass; TT/FF pin-flop spread 38.7/38.0 ps",
+    "shape": "PASS 1.29:1"
+  },
+  "timing": "placement setup/hold WNS >= 0; trial GRT overflow 0 (M3 5.88%)",
+  "fanout_evidence": "pre-gate native census PASS max 32, 9107 roots, 0 role errors",
+  "behavior_evidence": [
+    "results/rtl/qwen_kv_emb4_z3_1020 (m0 PASS, m1-3 FAIL)"
+  ],
+  "open": "+1 PIPE_JOIN word edge: die calendar confirms (COORD-REVIEW-QUEUE 22:15); does not block tile closure",
+  "time": "2026-10-21T00:05:00-07:00"
+}

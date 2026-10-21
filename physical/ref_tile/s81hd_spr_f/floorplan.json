@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81hd_spr_f",
+ "top": "ot_s81hd_spr",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  259.2,
+  691.2
+ ],
+ "core": [
+  2.16,
+  2.16,
+  257.03999999999996,
+  689.0400000000001
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "i"
+  ],
+  "S": [
+   "o",
+   "ck",
+   "rst_n"
+  ],
+  "W": [
+   "iw"
+  ],
+  "E": [
+   "ie"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "clock_span",
+   "259.2 x 691.2 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ]
+ ],
+ "referenced": [
+  "rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv",
+  "physical/ref_tile/s81hd_spr_f/kit.env",
+  "physical/ref_tile/s81hd_spr_f/clock.sdc",
+  "physical/ref_tile/s81hd_spr_f/signoff.sdc",
+  "physical/ref_tile/s81hd_spr_f/signoff_ffrepair.sdc",
+  "physical/ref_tile/s81hd_spr_f/pdn.tcl",
+  "physical/ref_tile/s81hd_spr_f/pre_cts.tcl",
+  "physical/ref_tile/s81hd_spr_f/post_cts.tcl",
+  "physical/ref_tile/s81hd_spr_f/post_grt.tcl",
+  "physical/ref_tile/s81hd_spr_f/pre_drt.tcl",
+  "physical/ref_tile/s81hd_spr_f/pre_fill.tcl",
+  "physical/ref_tile/s81hd_spr_f/post_fill.tcl",
+  "physical/ref_tile/s81hd_spr_f/pre_grt.tcl",
+  "physical/ref_tile/s81hd_spr_f/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
+ ]
+}

@@ -89,7 +89,13 @@ module ot_s81sl_leaf #(
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d),
         .p_v(p_v), .p_d(p_d), .y_v(y_v), .y_i(y_i), .y(y), .fault(f_vn));
-    ot_s81sl_vs #(.MUT(VS_MUT)) u_vs (.clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
+`ifndef OT_S81SL_HARD
+    ot_s81sl_vs #(.MUT(VS_MUT)) u_vs (
+`else
+    // Frozen hard child: its Liberty/blackbox has no parameters.
+    ot_s81sl_vs u_vs (
+`endif
+        .clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
         .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
         .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .sw_v(swv), .sw_d(swd), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
@@ -109,7 +115,13 @@ module ot_s81sl_leaf #(
         .o_f(rff));
     dsfd_su_t_rxsb u_rxsb (.ck(clk), .rst(rst_n), .i_v(rfv), .i_u(rfu), .i_u2(rfu2), .i_mx(rfmx), .i_f(rff),
         .o_v(ravi), .o_r(rari), .o_f(rafi));
-    ot_s81sl_vq #(.AQ_XMEM(AQ_XMEM)) u_vq (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y),
+`ifndef OT_S81SL_HARD
+    ot_s81sl_vq #(.AQ_XMEM(AQ_XMEM)) u_vq (
+`else
+    // Frozen hard child: its Liberty/blackbox has no parameters.
+    ot_s81sl_vq u_vq (
+`endif
+        .clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y),
         .u_v(u_v), .u_i(u_i), .u(u), .sid(sid), .k(k), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
         .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(f_vq));
     // vsw / RA lane / ve faults are sticky in their leaves and reach vs (sw_fi / ra_fi / ve_fi -> vs fault)

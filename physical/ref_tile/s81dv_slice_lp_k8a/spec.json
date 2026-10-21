@@ -1,0 +1,812 @@
+{
+ "name": "s81dv_slice_lp_k8a",
+ "top": "ot_s81sl_slice_c1x_k8_cap5_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5/ot_s81sl_slice_c1x_k8_cap5_lp.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_c1x.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_glue.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+  "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp/ot_s81sl_vp_bb.v",
+  "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve/ot_s81sl_ve_bb.v",
+  "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg/ot_s81sl_xg_bb.v",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv"
+ ],
+ "params": {
+  "DLK0": 1,
+  "DLK1": 1,
+  "DLK2": 4,
+  "DLK3": 1,
+  "DLK4": 1,
+  "DLF0": 0,
+  "DLF1": 0,
+  "DLF2": 0,
+  "DLF3": 0,
+  "DLF4": 0
+ },
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "OT_S81SL_HARD"
+ ],
+ "cluster_level": 2,
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_C",
+ "clock_ports": [
+  "ck_C",
+  "ck_L0",
+  "ck_L1",
+  "ck_L3",
+  "ck_L4",
+  "ck_CAP_RT",
+  "ck_CAP_CW",
+  "ck_CAP_CE",
+  "ck_CAP_RN",
+  "ck_CAP_RS"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_C"
+   ],
+   "inputs": [
+    "rst_n",
+    "sid",
+    "ri_w",
+    "ri_e",
+    "vi",
+    "bi",
+    "rt"
+   ],
+   "outputs": [
+    "ro_e",
+    "ro_w",
+    "vo",
+    "bo",
+    "xc",
+    "ck_line",
+    "ck_v",
+    "ck_xc",
+    "ck_rt",
+    "fault"
+   ]
+  },
+  "l0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_L0"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "l1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_L1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "l3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_L3"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "l4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_L4"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ck_cap_rt": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_CAP_RT"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ck_cap_cw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_CAP_CW"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ck_cap_ce": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_CAP_CE"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ck_cap_rn": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_CAP_RN"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ck_cap_rs": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_CAP_RS"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/rtl/drive_s81_slicep_1020/c1x_k8/ot_s81sl_slice_c1x_k8_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "lp.py RTL lands it: rst_n -> u_lpr_root (ck_C) -> per-region runs + per-chunk reset forest; the port net has ONE sink"
+ },
+ "outline": {
+  "w": 1252.8,
+  "h": 6739.2,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+   "count": 1,
+   "inst": "u_lf4.u_vp",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+   "count": 1,
+   "inst": "u_lf4.u_vn",
+   "at": [
+    820.8,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+   "count": 1,
+   "inst": "u_lf4.u_ve",
+   "at": [
+    820.8,
+    475.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+   "count": 1,
+   "inst": "u_lf4.u_vsw",
+   "at": [
+    820.8,
+    864.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+   "count": 1,
+   "inst": "u_lf4.u_vq",
+   "at": [
+    43.2,
+    950.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "count": 1,
+   "inst": "u_lf4.u_vs",
+   "at": [
+    259.2,
+    950.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+   "count": 1,
+   "inst": "u_lf4.u_rxsf",
+   "at": [
+    475.2,
+    950.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+   "count": 1,
+   "inst": "u_lf4.u_rxsb",
+   "at": [
+    648.0,
+    950.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+   "count": 1,
+   "inst": "u_lf3.u_vp",
+   "at": [
+    43.2,
+    1166.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+   "count": 1,
+   "inst": "u_lf3.u_vn",
+   "at": [
+    820.8,
+    1166.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+   "count": 1,
+   "inst": "u_lf3.u_ve",
+   "at": [
+    820.8,
+    1598.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+   "count": 1,
+   "inst": "u_lf3.u_vsw",
+   "at": [
+    820.8,
+    1987.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+   "count": 1,
+   "inst": "u_lf3.u_vq",
+   "at": [
+    43.2,
+    2073.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "count": 1,
+   "inst": "u_lf3.u_vs",
+   "at": [
+    259.2,
+    2073.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+   "count": 1,
+   "inst": "u_lf3.u_rxsf",
+   "at": [
+    475.2,
+    2073.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+   "count": 1,
+   "inst": "u_lf3.u_rxsb",
+   "at": [
+    648.0,
+    2073.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+   "count": 1,
+   "inst": "u_lf2.u_vp",
+   "at": [
+    43.2,
+    2289.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+   "count": 1,
+   "inst": "u_lf2.u_vn",
+   "at": [
+    820.8,
+    2289.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+   "count": 1,
+   "inst": "u_lf2.u_ve",
+   "at": [
+    820.8,
+    2721.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+   "count": 1,
+   "inst": "u_lf2.u_vsw",
+   "at": [
+    820.8,
+    3110.4
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+   "count": 1,
+   "inst": "u_lf2.u_vq",
+   "at": [
+    43.2,
+    3196.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "count": 1,
+   "inst": "u_lf2.u_vs",
+   "at": [
+    259.2,
+    3196.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+   "count": 1,
+   "inst": "u_lf2.u_rxsf",
+   "at": [
+    475.2,
+    3196.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+   "count": 1,
+   "inst": "u_lf2.u_rxsb",
+   "at": [
+    648.0,
+    3196.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_xg",
+   "count": 1,
+   "inst": "u_xg",
+   "at": [
+    43.2,
+    3412.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_capc5k/views/ot_s81sl_capc5c",
+   "count": 1,
+   "inst": "u_cap",
+   "at": [
+    734.4,
+    3412.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_xfin/views/ot_s81dv_xfin",
+   "count": 1,
+   "inst": "u_xf",
+   "at": [
+    734.4,
+    3888.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_xr1f/views/ot_s81sl_xr1",
+   "count": 1,
+   "inst": "u_xr",
+   "at": [
+    43.2,
+    4017.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_eg/views/ot_s81sl_eg",
+   "count": 1,
+   "inst": "u_eg",
+   "at": [
+    432.0,
+    4017.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+   "count": 1,
+   "inst": "u_lf1.u_vp",
+   "at": [
+    43.2,
+    4492.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+   "count": 1,
+   "inst": "u_lf1.u_vn",
+   "at": [
+    820.8,
+    4492.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+   "count": 1,
+   "inst": "u_lf1.u_ve",
+   "at": [
+    820.8,
+    4924.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+   "count": 1,
+   "inst": "u_lf1.u_vsw",
+   "at": [
+    820.8,
+    5313.6
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+   "count": 1,
+   "inst": "u_lf1.u_vq",
+   "at": [
+    43.2,
+    5400.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "count": 1,
+   "inst": "u_lf1.u_vs",
+   "at": [
+    259.2,
+    5400.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+   "count": 1,
+   "inst": "u_lf1.u_rxsf",
+   "at": [
+    475.2,
+    5400.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+   "count": 1,
+   "inst": "u_lf1.u_rxsb",
+   "at": [
+    648.0,
+    5400.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_vp",
+   "count": 1,
+   "inst": "u_lf0.u_vp",
+   "at": [
+    43.2,
+    5616.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vn/views/ot_s81sl_vn",
+   "count": 1,
+   "inst": "u_lf0.u_vn",
+   "at": [
+    820.8,
+    5616.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81dv_slice_lp_k8a/standin_views/ot_s81sl_ve",
+   "count": 1,
+   "inst": "u_lf0.u_ve",
+   "at": [
+    820.8,
+    6048.0
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw",
+   "count": 1,
+   "inst": "u_lf0.u_vsw",
+   "at": [
+    820.8,
+    6436.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vq/views/ot_s81sl_vq",
+   "count": 1,
+   "inst": "u_lf0.u_vq",
+   "at": [
+    43.2,
+    6523.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81sl_vs/views/ot_s81sl_vs",
+   "count": 1,
+   "inst": "u_lf0.u_vs",
+   "at": [
+    259.2,
+    6523.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_rxsf_ref/views/dsfd_su_t_rxsf",
+   "count": 1,
+   "inst": "u_lf0.u_rxsf",
+   "at": [
+    475.2,
+    6523.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb",
+   "count": 1,
+   "inst": "u_lf0.u_rxsb",
+   "at": [
+    648.0,
+    6523.2
+   ]
+  }
+ ],
+ "pins": {
+  "W": [
+   "ri_w",
+   "ro_w",
+   "xc"
+  ],
+  "E": [
+   "ck_L4",
+   "ck_L3",
+   "ri_e",
+   "ro_e",
+   "vi",
+   "ck_CAP_RT",
+   "ck_CAP_CW",
+   "ck_CAP_CE",
+   "ck_CAP_RN",
+   "ck_CAP_RS",
+   "vo",
+   "bi",
+   "bo",
+   "rt",
+   "ck_line",
+   "ck_v",
+   "ck_xc",
+   "ck_rt",
+   "sid",
+   "rst_n",
+   "ck_C",
+   "fault",
+   "ck_L1",
+   "ck_L0"
+  ],
+  "N": [],
+  "S": []
+ },
+ "pin_ranges": {
+  "ri_w": [
+   2309.6,
+   2670.133
+  ],
+  "ro_w": [
+   2670.133,
+   3030.667
+  ],
+  "xc": [
+   3030.667,
+   4472.8
+  ],
+  "ri_e": [
+   2309.6,
+   2788.576
+  ],
+  "ro_e": [
+   2788.576,
+   3267.551
+  ],
+  "vi": [
+   3267.551,
+   3387.295
+  ],
+  "vo": [
+   3459.295,
+   3579.039
+  ],
+  "bi": [
+   3579.039,
+   4058.015
+  ],
+  "bo": [
+   4058.015,
+   4280.582
+  ],
+  "rt": [
+   4280.582,
+   4523.541
+  ],
+  "ck_line": [
+   4523.541,
+   4530.483
+  ],
+  "ck_v": [
+   4530.483,
+   4534.483
+  ],
+  "ck_xc": [
+   4534.483,
+   4541.424
+  ],
+  "ck_rt": [
+   4541.424,
+   4545.424
+  ],
+  "sid": [
+   4545.424,
+   4549.424
+  ],
+  "rst_n": [
+   4549.424,
+   4553.424
+  ],
+  "ck_C": [
+   4553.424,
+   4557.424
+  ],
+  "fault": [
+   4557.424,
+   4561.424
+  ],
+  "ck_L0": [
+   6171.6,
+   6183.6
+  ],
+  "ck_L1": [
+   5048.4,
+   5060.4
+  ],
+  "ck_L3": [
+   1722.0,
+   1734.0
+  ],
+  "ck_L4": [
+   577.2,
+   589.2
+  ],
+  "ck_CAP_RT": [
+   3387.295,
+   3399.295
+  ],
+  "ck_CAP_CW": [
+   3399.295,
+   3411.295
+  ],
+  "ck_CAP_CE": [
+   3411.295,
+   3423.295
+  ],
+  "ck_CAP_RN": [
+   3423.295,
+   3435.295
+  ],
+  "ck_CAP_RS": [
+   3435.295,
+   3447.295
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 128,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "orfs_vars": {
+  "OT_OFLOP_GAP": "4.5"
+ },
+ "io_flop_at_pins": {
+  "cols": 21
+ },
+ "structural_change": "Selected normal parent now binds exact CLOSED CAPC5k (503dcae1b/e450c42b2), full five-clock child. Existing C->CAP and CAP->C D4/K2 landings add6 edges around child+6: compiler OT_S81_CAP5_C=1 charges12 vs capc2. Existing normal-parent geometry and reviewer HARD declarations retained. CAP internal plain regional reset remains held; no parent closure claim.",
+ "job": {
+  "owner": "Claude:DRIVE-S81-SLICEP",
+  "branch": "codex/s81-slicep-repair-1021",
+  "tag": "k8a",
+  "purpose": "early slice-parent integration with current child views + stand-ins: region clocks, landings, GRT, reach; DIAGNOSTIC",
+  "submit": false,
+  "hold_merge": "stand-in children (vp/ve/xg): diagnostic only, never route or bind",
+  "benches": [],
+  "no_bench_reason": "diagnostic stand-in gate; landed lockstep/ENG benches: tools/s81_slice/pl_slice/pl_slice_bench.sh",
+  "views_to": "physical/ref_tile/s81dv_slice_lp_k8a/views",
+  "record_to": "results/rtl/ref_tile/s81dv_slice_lp_k8a",
+  "extra_paths": [
+   "results/rtl/drive_s81_slicep_1020/c1x_k8",
+   "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8"
+  ]
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 4,
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "hard_define": "OT_S81SL_HARD",
+ "source_binding": {
+  "closed_cap_record": "503dcae1b",
+  "closed_cap_source": "e450c42b2",
+  "compiler_env": {
+   "OT_S81_CAP5_C": "1"
+  },
+  "capture_extra_edges": 12,
+  "cap_reset_status": "internal plain regional reset source fix owed; no waiver"
+ }
+}

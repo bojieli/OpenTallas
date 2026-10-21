@@ -95,7 +95,7 @@ def build(tree, nodepos):
     paths = [route(pos[ch], pos[par], xf) for (ch, par, _), xf in zip(edges, best)]
     return rootk, pos, edges, paths
 
-def roles(tree, nodepos, nr, fx):
+def roles(tree, nodepos, nr, fx, link_extra=0):
     rootk, pos, edges, paths = build(tree, nodepos)
     T_IN = 1 + nr                                  # in pin flop + relays -> centre
     T_OUT = 1 + nr + 1                             # centre xbar register + relays + out pin flop
@@ -143,7 +143,7 @@ def roles(tree, nodepos, nr, fx):
         sizes(a); sizes(b)
     sizes(tree)
     # timing: centre times with leaves injected at offset 0, then per-slice offsets that align every node
-    hop = T_OUT + T_IN
+    hop = T_OUT + T_IN + link_extra
     def plen(ch, par):
         for (c2, p2, _), path in zip(edges, paths):
             if c2 == ch and p2 == par: return len(path)
@@ -186,14 +186,16 @@ def svh(res, name):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--nr', type=int, default=1); ap.add_argument('--fx', type=int, default=5)
     ap.add_argument('--root', default=os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+    ap.add_argument('--link-extra', type=int, default=0)
     a = ap.parse_args()
-    base = roles(balanced(0, 15), NODE, a.nr, a.fx)
+    base = roles(balanced(0, 15), NODE, a.nr, a.fx, a.link_extra)
     mnode = dict(NODE); mnode[(0, 2)] = mnode.pop((2, 3))
-    mut = roles(mut_order(), mnode, a.nr, a.fx)
+    mut = roles(mut_order(), mnode, a.nr, a.fx, a.link_extra)
     rd = os.path.join(a.root, 'rtl/dsrom_sys/s81_dv/svc_rs'); od = os.path.join(a.root, 'results/arch/s81_dv_1016/svc_rs')
     os.makedirs(rd, exist_ok=True); os.makedirs(od, exist_ok=True)
-    open(os.path.join(rd, 'dsdv_svc_sx_roles.svh'), 'w').write(svh(base, 'sx_role'))
-    open(os.path.join(rd, 'dsdv_svc_sx_roles_mut_order.svh'), 'w').write(svh(mut, 'sx_role'))
+    suffix = '_group72' if a.link_extra else ''
+    open(os.path.join(rd, f'dsdv_svc_sx_roles{suffix}.svh'), 'w').write(svh(base, 'sx_role'))
+    open(os.path.join(rd, f'dsdv_svc_sx_roles_mut_order{suffix}.svh'), 'w').write(svh(mut, 'sx_role'))
     loads = {}
     for p in base['paths']:
         for s, f in p['hops']: loads[f'{s}{f}'] = loads.get(f'{s}{f}', 0) + 1
@@ -202,7 +204,8 @@ def main():
                t_root_cycles=base['t_root'], hop_cycles=base['hop'], max_directed_link_load=max(loads.values()),
                link_hops=sum(loads.values()), max_leaf_offset=max(r.get('off', 0) for r in base['roles'].values()),
                paths=base['paths'], roles={s: {k: v for k, v in r.items()} for s, r in base['roles'].items()})
-    json.dump(rec, open(os.path.join(od, 'embed.json'), 'w'), indent=1, default=str)
+    rec['link_extra_edges'] = a.link_extra
+    json.dump(rec, open(os.path.join(od, f'embed{suffix}.json'), 'w'), indent=1, default=str)
     print(json.dumps({k: rec[k] for k in ('root_slice', 'spare_slices', 't_root_cycles', 'hop_cycles',
                                          'max_directed_link_load', 'link_hops', 'max_leaf_offset')}))
 

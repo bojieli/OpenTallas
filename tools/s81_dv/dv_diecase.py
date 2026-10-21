@@ -192,7 +192,7 @@ def main():
         chains.append(dict(link=l['i'], cls=l['c'], bits=b, stages=st, src=f'{n0}.{po}', dst=f'{n1}.{pi}', hop_um=round(max(abs(h[2] - h[0]) + abs(h[3] - h[1]) for h in hops), 1)))
         for k, (px, py) in enumerate(pts):
             flops.append((nm, k, b, px, py))
-            sdir[(nm, k)] = station_dir(hops, px + ox, py + oy)
+            sdir[(nm, k)] = l['station_dirs'][k] if 'station_dirs' in l else station_dir(hops, px + ox, py + oy)
         nets.append((nm, n0, po, n1, pi, b, st))
         fsrc[nm] = (x0_ - ox, y0_ - oy)
         nbits += b

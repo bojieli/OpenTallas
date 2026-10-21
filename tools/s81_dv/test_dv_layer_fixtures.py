@@ -78,11 +78,8 @@ def t_pack_fp8_signed_zero():
     rows[2, 7] = F(0.0)
     c, e = X.pack_fp8_exact(V, LC, rows)
     assert c[1, 5] == 0x80 and c[2, 7] == 0x00
-    try:
-        LC.pack_fp8_ue8m0(rows)
-        print("  (campaign packer accepted -0 on this draw)")
-    except AssertionError:
-        pass
+    c2, e2 = LC.pack_fp8_ue8m0(rows)          # fixed 10-18: the campaign packer keeps -0 (code 0x80) too
+    assert np.array_equal(c2, c) and np.array_equal(e2, e)
 
 
 def t_writer_verify():

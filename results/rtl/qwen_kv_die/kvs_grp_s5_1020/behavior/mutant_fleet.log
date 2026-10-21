@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020/repro_src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020/repro_src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020/repro_src
+ot-run: ot-epyc9       admits    44 GB (avail 185, growth 155, headroom 0, waiters 0/0 GB) load 44/128 running 31 disk 150 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020/repro_src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020/repro_src
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-541706-1792486115 after 0 s
+[16680000] %Fatal: tb.sv:250: Assertion failed in tb: PROD_STATUS_FAIL
+%Error: /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020/repro_full20_mut/bench_m1/tb.sv:250: Verilog $stop
+Aborting...
+
+MUT 1 EXPECTED True RC 1
+[16680000] %Fatal: tb.sv:252: Assertion failed in tb: PROD_RESPONSE_FAIL
+%Error: /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020/repro_full20_mut/bench_m2/tb.sv:252: Verilog $stop
+Aborting...
+
+MUT 2 EXPECTED True RC 1
+[{"mut": 1, "rc": 1, "pass_expected": true, "line": "[16680000] %Fatal: tb.sv:250: Assertion failed in tb: PROD_STATUS_FAIL"}, {"mut": 2, "rc": 1, "pass_expected": true, "line": "[16680000] %Fatal: tb.sv:252: Assertion failed in tb: PROD_RESPONSE_FAIL"}]
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-541706-1792486115): exit 0

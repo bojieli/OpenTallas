@@ -499,7 +499,9 @@ def emit_exact(exact):
 
 def cmd_emit(a):
     idx = rtl_index()
-    params_q = F._receipt_params(F.BOUND_VIEW_RECEIPTS['ot_v41_rom_elem_q_qxpq_w10'])
+    q_receipt = ('results/rtl/dsrom_qelem_pq_20261006/qxpq_cpr_1019/closed/receipt.json'
+                 if a.cpr else F.BOUND_VIEW_RECEIPTS['ot_v41_rom_elem_q_qxpq_w10'])
+    params_q = F._receipt_params(q_receipt)
     out = Path(a.out_rtl) if Path(a.out_rtl).is_absolute() else ROOT / a.out_rtl
     out.mkdir(parents=True, exist_ok=True)
     recd = ROOT / a.record
@@ -534,7 +536,8 @@ def cmd_emit(a):
                              xf=f'xk[{XF_LANE}]', xf2=f'xk[{XF2_LANE}]', xo=f'{XO_MASTER} per lane, ck = xk[k], ck_o = xok[k]'),
                exact_relays={k: dict(width=v[0], rsreg=v[1], from_master=v[2]) for k, v in exact_all.items()},
                exact_relay_rtl=dict(path=EXACT_RLY, sha256=sha(ROOT / EXACT_RLY)),
-               masters=recs, rstp=bool(a.rstp), bf_front=a.bf_front)
+               masters=recs, rstp=bool(a.rstp or a.cpr), cpr=bool(a.cpr),
+               q_receipt=q_receipt, q_go_command_lead_edges=int(a.cpr), bf_front=a.bf_front)
     (recd / 'frame_wrap.json').write_text(json.dumps(doc, indent=1) + '\n')
     print('record', recd / 'frame_wrap.json')
 
@@ -546,6 +549,8 @@ def main(argv=None):
     e.add_argument('--out-rtl', default='rtl/dsrom_sys/s81_dv/frame')
     e.add_argument('--record', default='results/arch/s81_dv_1016/frame')
     e.add_argument('--rstp', action='store_true', help='qxpq_w10 RSTP 1 (claude/qxpq-rst-1017; not on main yet)')
+    e.add_argument('--cpr', action='store_true',
+                   help='bind CLOSED Q RSTP=1 CPR=1; compile matching XS with OT_XS_Q_CPR=1 (Q launch one edge early)')
     e.add_argument('--bf-front', choices=('roots', 'static'), default='roots',
                    help='BF front master: roots = dsfd_bf_front_roots (closed view h03, native PASS; default), static = '
                         'dsfd_bf_front_static (the c26l source binding, no view)')

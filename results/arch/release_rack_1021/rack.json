@@ -1,0 +1,3635 @@
+{
+ "schema": "opentallas.release_rack.v1",
+ "lane": "RACK-1021",
+ "tool": "tools/release_rack_design.py",
+ "grades": "published = vendor / standard figure; spec = this repo's committed record; MODEL = allocator / analytical model or engineering estimate, unqualified; derived = arithmetic on the others",
+ "constants": {
+  "lane_bits": {
+   "value": 512,
+   "grade": "spec",
+   "source": "reports/s81_links_1021.md s1: a lane carries 512 b/cycle at 1.2 GHz [RTL width x bench clock]"
+  },
+  "lane_usable": {
+   "value": 0.764,
+   "grade": "spec",
+   "source": "reports/s81_links_1021.md s1: compiler caps the off-die rate at 0.764 beats/cycle [RTL comment]"
+  },
+  "macro_elec_lanes": {
+   "value": 6,
+   "grade": "MODEL",
+   "source": "reports/s81_links_1021.md s1: the SerDes macro carries a 544-b KP4 word a cycle, ~6 x 112G-class lanes; macro abstract is a placeholder"
+  },
+  "cable_lanes": {
+   "value": 8,
+   "grade": "published",
+   "source": "IEEE 802.3df 800GBASE-CR8: 8 lanes of 100G PAM4 over passive twinax (OSFP/QSFP-DD 800G DAC), <= 2 m class; a stage link of 14 lanes rides two such cables per package per ring neighbour"
+  },
+  "pcb_db_per_mm": {
+   "value": 0.0354,
+   "grade": "MODEL",
+   "source": "ultra-low-loss stripline ~0.9 dB/in at 26.56 GHz (Megtron-7 / Tachyon-100G class laminate); engineering estimate, band 0.7-1.2 dB/in"
+  },
+  "pkg_db": {
+   "value": 3.0,
+   "grade": "MODEL",
+   "source": "package + BGA + via loss per end at 26.56 GHz; engineering estimate"
+  },
+  "kr_budget_db": {
+   "value": 28.0,
+   "grade": "published",
+   "source": "IEEE P802.3ck objectives: twinax (CR) lengths up to at least 2 m; backplane (KR) insertion loss <= 28 dB at 26.56 GHz; RS(544,514) FEC mandatory for CR1/KR1"
+  },
+  "escape_mm": {
+   "value": 30.0,
+   "grade": "MODEL",
+   "source": "package escape / via fan-out added to every board trace; estimate"
+  },
+  "pkg_pitch_mm": {
+   "value": 70.0,
+   "grade": "MODEL",
+   "source": "single-die package (25 x 32 mm die + 1 HBM3E 11 x 11 mm on a ~32 x 38 mm interposer, ~55 x 55 mm substrate) on a 70 mm pitch with VR and cold-plate keep-outs; estimate"
+  },
+  "flyover_mm": {
+   "value": 0.45,
+   "grade": "MODEL",
+   "source": "near-package flyover twinax from the package to the rear OSFP cage of a 1 OU tray (~800 mm deep): mean length per end, estimate"
+  },
+  "cable_slack_m": {
+   "value": 0.35,
+   "grade": "MODEL",
+   "source": "rear cable management: bend radius + service loop per external cable, estimate"
+  },
+  "rack_pitch_m": {
+   "value": 0.6,
+   "grade": "published",
+   "source": "Open Rack 24 in (610 mm) outside width; Open Rack equipment bay 21 in = 533 mm (24 in = 610 mm outside)"
+  },
+  "switch_lanes": {
+   "value": 512,
+   "grade": "derived",
+   "source": "Tomahawk Ultra 51.2 Tb/s / 100 Gb/s lanes = 512 lanes (Tomahawk Ultra)"
+  },
+  "switch_phy_fec_ns": {
+   "value": 100.0,
+   "grade": "spec",
+   "source": "tools/s81_dv/dv_mu_chain.py: switched crossing budget 377.6 ns = PHY/FEC 100 + switch 250 + cable 27.6 (lanes/TOKEN-XDIE-S81.md s2)"
+  },
+  "switched_budget_ns": {
+   "value": 377.6,
+   "grade": "spec",
+   "source": "same: the off-chip leg modelled at 453 cycles = 377.6 ns in the xdie co-sims (results/rtl/xdie_s81_1018/1019)"
+  },
+  "aec_w": {
+   "value": 10.0,
+   "grade": "published",
+   "source": "Credo 800G AEC (8 x 100G PAM4): 4.0-7.0 m, typ. 10 W per cable"
+  },
+  "optic_w": {
+   "value": 16.0,
+   "grade": "published",
+   "source": "800G OSFP DR8 / 2xFR4 transceiver ~14-17 W (vendor datasheets, e.g. Broadcom / Coherent 800G OSFP); one module per cable end"
+  },
+  "tray_misc_w": {
+   "value": 60.0,
+   "grade": "MODEL",
+   "source": "BMC, management NIC, pump / fan share and misc per 1 OU tray; estimate"
+  },
+  "switch_asic_ou": {
+   "value": 1,
+   "grade": "MODEL",
+   "source": "one 51.2T ASIC per 1 OU switch tray (NVL72 NVLink switch trays are 1 RU with 2 ASICs; estimate)"
+  },
+  "mgmt_ou": {
+   "value": 1,
+   "grade": "MODEL",
+   "source": "1 OU management switch per rack; estimate"
+  },
+  "shelves_per_side": {
+   "value": 3,
+   "grade": "MODEL",
+   "source": "2N power: side A carries the load on 3 shelves (N+1 inside each), side B mirrors (as tools/v41_rack_design.py)"
+  },
+  "shelf_usable_kw": {
+   "value": 27.5,
+   "grade": "published",
+   "source": "ORv3 HPR power shelf: six 5.5 kW PSUs, 50 V 660 A (33 kW; 27.5 kW N+1). Standard ORv3 shelf: 18 kW (15 kW N+1)"
+  },
+  "liquid_tray_kw_max": {
+   "value": 5.5,
+   "grade": "published",
+   "source": "GB200 NVL72 compute tray: 4 B200 + 2 Grace ~5.4-5.7 kW in 1 RU, liquid cold plates (NVIDIA GB200 NVL72 / DGX guide)"
+  },
+  "tray_swap_min": {
+   "value": 30,
+   "grade": "MODEL",
+   "source": "tray swap with blind-mate liquid quick disconnects and rear re-plug of its cables; estimate"
+  },
+  "repoint_s": {
+   "value": 1,
+   "grade": "MODEL",
+   "source": "rewrite of a switch's static circuit table (cross-connect map) and link retrain; estimate"
+  },
+  "cable_hop_s": {
+   "value": 2.09e-07,
+   "grade": "published",
+   "source": "ring/stage cable hop: full-strength RS(544,514) KP4, un-interleaved -- UALink 1.0's in-rack mode (640-B flit = one RS(544,514) codeword, cables < 4 m); IEEE 802.3ck mandates RS(544,514) for CR1; an RS(272)-class light FEC is not qualified on CR copper (ETC LL-FEC spec 1.0 Annex A Table 1: pre-FEC BER <= 9.9e-5 random, 8.9e-9 under DFE bursts). Cable flight added on top. -- sync/power validation (research agent adae6788, branch worktree-agent-adae6788cbf2f3f86, technology.json quotes). Was 130 ns."
+  },
+  "hop_flight_included_m": {
+   "value": 0.3,
+   "grade": "spec",
+   "source": "technology.json latency_components_s: the 200/121 ns channel includes ~0.3 m of board flight"
+  },
+  "twinax_ns_per_m": {
+   "value": 4.6,
+   "grade": "published",
+   "source": "Broadcom SUE spec RM104 (2025-09-26) App. A Fig. 22: twinax 4.6 ns per m (Samtec 30 AWG 4.79; Belden 4.3-5.1) -- sync/power validation (research agent adae6788, branch worktree-agent-adae6788cbf2f3f86, technology.json quotes)"
+  },
+  "pcb_ns_per_m": {
+   "value": 6.7,
+   "grade": "published",
+   "source": "stripline ~170 ps/in = 6.7 ns/m (FR-4 class; low-loss laminates Dk 3.3-3.7 are slightly faster)"
+  },
+  "dac_112g_reach_m": {
+   "value": 2.0,
+   "grade": "published",
+   "source": "IEEE P802.3ck objectives: twinax (CR) lengths up to at least 2 m; backplane (KR) insertion loss <= 28 dB at 26.56 GHz; RS(544,514) FEC mandatory for CR1/KR1"
+  },
+  "aec_112g_reach_m": {
+   "value": 7.0,
+   "grade": "published",
+   "source": "Credo 800G AEC (8 x 100G PAM4): 4.0-7.0 m, typ. 10 W per cable"
+  },
+  "switch_latency_s": {
+   "value": 2.5e-07,
+   "grade": "published",
+   "source": "Broadcom Tomahawk Ultra (shipping July 2025): 250 ns switch latency at full 51.2 Tb/s; sub-400 ns XPU-to-XPU with SUE including switch transit; headers down to 10 B"
+  },
+  "switch_capacity_tbps": {
+   "value": 51.2,
+   "grade": "published",
+   "source": "Tomahawk Ultra"
+  },
+  "serdes_pj_per_bit": {
+   "value": 6.5,
+   "grade": "published",
+   "source": "5.6 pJ/b per lane incl. analog and DSP at 112 Gb/s (5 nm, VLSI 2022); 7 nm LR 602 mW per channel excluding DSP (JSSC 2021); conservative production value 6.5 -- sync/power validation (research agent adae6788, branch worktree-agent-adae6788cbf2f3f86, technology.json quotes). Was 5 (assumed)."
+  },
+  "lane_gbps": {
+   "value": 112.0,
+   "grade": "published",
+   "source": "112G PAM4 SerDes class (OIF CEI-112G; IEEE 802.3ck 100 Gb/s per lane)"
+  },
+  "switch_tray_w": {
+   "value": 1500.0,
+   "grade": "MODEL",
+   "source": "no primary source (validation, adae6788): a 51.2 Tb/s switch ASIC ~500-550 W, a 1-2 RU DAC-port system ~1-1.5 kW assumed"
+  },
+  "vr_efficiency": {
+   "value": 0.87,
+   "grade": "published",
+   "source": "48 V -> core: Vicor NBM 95.6% at full load x ~0.91 core stage; arXiv:2309.10141 reports >30% delivery loss in AI accelerators -- sync/power validation (research agent adae6788, branch worktree-agent-adae6788cbf2f3f86, technology.json quotes). Was 0.90."
+  },
+  "psu_efficiency": {
+   "value": 0.96,
+   "grade": "published",
+   "source": "80 PLUS Titanium: 96% at 50% load, 91% at 100% -- sync/power validation (research agent adae6788, branch worktree-agent-adae6788cbf2f3f86, technology.json quotes). Was 0.975."
+  },
+  "hbm3e_stack_static_w": {
+   "value": 2.8,
+   "grade": "spec",
+   "source": "results/arch/v41_utilization.json energy_with_static.stack_w"
+  },
+  "orv3_usable_ou": {
+   "value": 44,
+   "grade": "published",
+   "source": "ORv3 racks are built at 44 OU (e.g. ATEN RC8000); NVL72's MGX rack is 2,236 mm tall"
+  },
+  "orv3_ou_mm": {
+   "value": 48.0,
+   "grade": "published",
+   "source": "Open Rack: OpenU = 48 mm; 21-inch (533 mm) equipment bay; 48 V DC busbar"
+  }
+ },
+ "systems": [
+  {
+   "name": "S81",
+   "title": "S81 DeepSeek-V4.1 ROM array",
+   "counts": {
+    "stages": 241,
+    "layer_dies": 964,
+    "copy_b_dies": 192,
+    "copy_b_groups": 8,
+    "copy_b_dies_per_group": 24,
+    "head_dies": 12,
+    "total_dies": 1168,
+    "hbm_stacks": 1204,
+    "stage_source": "MODEL allocator (input file)",
+    "grade": "MODEL"
+   },
+   "die_links": {
+    "rank": {
+     "value": 10,
+     "grade": "spec",
+     "source": "OWNER-approved 5th link (10-21): 5 lane pairs = TP4 full mesh 3 + prev/next stage 2 (reports/s81_links_1021.md s2 option A)"
+    },
+    "copy_ab": {
+     "value": 12,
+     "grade": "spec",
+     "source": "pre-/post-group rank dies carry a 6th pair (chain_plan extra_circuits_on_existing_dies; lep_mu_ab)"
+    },
+    "copy_b": {
+     "value": 10,
+     "grade": "MODEL",
+     "source": "copy-B dies use the rank die master (chain_plan: same masks fabricated twice)"
+    },
+    "head": {
+     "value": 12,
+     "grade": "MODEL",
+     "source": "head die as a rank-die master + 1 host SerDes pair (S81.HOST); its +5 draft fan-out SerDes are placeholders and not wired here"
+    }
+   },
+   "die_power": {
+    "rank": {
+     "value": 84.1,
+     "grade": "spec",
+     "source": "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json scan_die_power.total_saturated_w (old 10-04 S81 die report, busiest layer die; no 72-frame die power report yet) via results/arch/dsrom_s81_rack_20261006/rack.json die_w"
+    },
+    "head": {
+     "value": 92.34,
+     "grade": "MODEL",
+     "source": "results/arch/dsrom_s81_rack_20261006/rack.json die_w.head_table (C1 ledger)"
+    },
+    "stack": {
+     "value": 2.8,
+     "grade": "spec",
+     "source": "results/arch/v41_utilization.json energy_with_static.stack_w"
+    }
+   },
+   "circuits": {
+    "total": 2964,
+    "by_class": {
+     "tp_mesh": 1752,
+     "head_hop": 12,
+     "token_return": 4,
+     "stage_hop": 960,
+     "copyb_in": 32,
+     "copyb_hop": 160,
+     "copyb_out": 32,
+     "host": 12
+    },
+    "by_medium_D": {
+     "board trace": {
+      "circuits": 2332,
+      "cables": 0,
+      "max_len_m": 0.513,
+      "max_loss_db": 24.2,
+      "all_reach_ok": true
+     },
+     "passive DAC": {
+      "circuits": 612,
+      "cables": 1224,
+      "max_len_m": 1.5,
+      "max_loss_db": 0.0,
+      "all_reach_ok": true
+     },
+     "AEC": {
+      "circuits": 20,
+      "cables": 40,
+      "max_len_m": 2.2,
+      "max_loss_db": 0.0,
+      "all_reach_ok": true
+     }
+    },
+    "lanes_per_dir": 12,
+    "gbps_per_dir_raw": 1228.8,
+    "gbps_per_dir_usable": 938.8
+   },
+   "trays": {
+    "count": 73,
+    "rows": [
+     {
+      "tray": 0,
+      "quads": {
+       "0": "H0",
+       "1": "H1",
+       "3": "S239",
+       "2": "S240"
+      },
+      "dies": 16,
+      "hbm_stacks": 40,
+      "serdes_macros": 176,
+      "die_w": 1411.5,
+      "hbm_w": 112.0,
+      "serdes_w": 768.8,
+      "misc_w": 60.0,
+      "it_w": 2352.3,
+      "dc_input_w": 2703.8
+     },
+     {
+      "tray": 1,
+      "quads": {
+       "0": "H2",
+       "1": "S000",
+       "3": "S237",
+       "2": "S238"
+      },
+      "dies": 16,
+      "hbm_stacks": 28,
+      "serdes_macros": 168,
+      "die_w": 1378.6,
+      "hbm_w": 78.4,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2250.8,
+      "dc_input_w": 2587.1
+     },
+     {
+      "tray": 2,
+      "quads": {
+       "0": "S001",
+       "1": "S002",
+       "3": "S235",
+       "2": "S236"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 3,
+      "quads": {
+       "0": "S003",
+       "1": "S004",
+       "3": "S233",
+       "2": "S234"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 4,
+      "quads": {
+       "0": "S005",
+       "1": "S006",
+       "3": "S231",
+       "2": "S232"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 5,
+      "quads": {
+       "0": "S007",
+       "1": "S008",
+       "3": "S229",
+       "2": "S230"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 6,
+      "quads": {
+       "0": "S009",
+       "1": "S010",
+       "3": "S227",
+       "2": "S228"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 7,
+      "quads": {
+       "0": "S011",
+       "1": "B2.0",
+       "3": "S225",
+       "2": "S226"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 8,
+      "quads": {
+       "0": "B2.1",
+       "1": "B2.2",
+       "3": "S223",
+       "2": "S224"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 9,
+      "quads": {
+       "0": "B2.3",
+       "1": "B2.4",
+       "3": "S221",
+       "2": "S222"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 10,
+      "quads": {
+       "0": "B2.5",
+       "1": "S012",
+       "3": "S219",
+       "2": "S220"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 11,
+      "quads": {
+       "0": "S013",
+       "1": "S014",
+       "3": "S217",
+       "2": "S218"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 12,
+      "quads": {
+       "0": "S015",
+       "1": "S016",
+       "3": "S215",
+       "2": "S216"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 13,
+      "quads": {
+       "0": "S017",
+       "1": "S018",
+       "3": "S213",
+       "2": "S214"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 14,
+      "quads": {
+       "0": "S019",
+       "1": "S020",
+       "3": "S211",
+       "2": "S212"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 15,
+      "quads": {
+       "0": "S021",
+       "1": "S022",
+       "3": "S209",
+       "2": "S210"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 16,
+      "quads": {
+       "0": "S023",
+       "1": "S024",
+       "3": "S207",
+       "2": "S208"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 17,
+      "quads": {
+       "0": "S025",
+       "1": "S026",
+       "3": "S205",
+       "2": "S206"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 18,
+      "quads": {
+       "0": "S027",
+       "1": "S028",
+       "3": "S203",
+       "2": "S204"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 19,
+      "quads": {
+       "0": "S029",
+       "1": "S030",
+       "3": "S201",
+       "2": "S202"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 20,
+      "quads": {
+       "0": "S031",
+       "1": "S032",
+       "3": "S199",
+       "2": "S200"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 21,
+      "quads": {
+       "0": "S033",
+       "1": "S034",
+       "3": "S197",
+       "2": "S198"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 22,
+      "quads": {
+       "0": "S035",
+       "1": "S036",
+       "3": "S195",
+       "2": "S196"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 23,
+      "quads": {
+       "0": "S037",
+       "1": "S038",
+       "3": "S193",
+       "2": "S194"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 24,
+      "quads": {
+       "0": "B8.0",
+       "1": "B8.1",
+       "3": "S191",
+       "2": "S192"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 25,
+      "quads": {
+       "0": "B8.2",
+       "1": "B8.3",
+       "3": "S189",
+       "2": "S190"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 26,
+      "quads": {
+       "0": "B8.4",
+       "1": "B8.5",
+       "3": "S187",
+       "2": "S188"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 27,
+      "quads": {
+       "0": "S039",
+       "1": "S040",
+       "3": "S185",
+       "2": "S186"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 28,
+      "quads": {
+       "0": "S041",
+       "1": "S042",
+       "3": "S183",
+       "2": "S184"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 29,
+      "quads": {
+       "0": "S043",
+       "1": "S044",
+       "3": "S181",
+       "2": "S182"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 30,
+      "quads": {
+       "0": "S045",
+       "1": "S046",
+       "3": "S179",
+       "2": "S180"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 31,
+      "quads": {
+       "0": "S047",
+       "1": "S048",
+       "3": "S177",
+       "2": "S178"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 32,
+      "quads": {
+       "0": "S049",
+       "1": "S050",
+       "3": "S175",
+       "2": "S176"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 33,
+      "quads": {
+       "0": "S051",
+       "1": "S052",
+       "3": "S173",
+       "2": "S174"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 34,
+      "quads": {
+       "0": "S053",
+       "1": "S054",
+       "3": "S171",
+       "2": "S172"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 35,
+      "quads": {
+       "0": "S055",
+       "1": "S056",
+       "3": "S169",
+       "2": "S170"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 36,
+      "quads": {
+       "0": "S057",
+       "1": "S058",
+       "3": "S167",
+       "2": "S168"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 37,
+      "quads": {
+       "0": "S059",
+       "1": "S060",
+       "3": "S165",
+       "2": "S166"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 38,
+      "quads": {
+       "0": "S061",
+       "1": "S062",
+       "3": "S163",
+       "2": "S164"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 39,
+      "quads": {
+       "0": "S063",
+       "1": "S064",
+       "3": "S161",
+       "2": "S162"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 40,
+      "quads": {
+       "0": "S065",
+       "1": "B14.0",
+       "3": "B36.4",
+       "2": "B36.5"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 41,
+      "quads": {
+       "0": "B14.1",
+       "1": "B14.2",
+       "3": "B36.2",
+       "2": "B36.3"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 42,
+      "quads": {
+       "0": "B14.3",
+       "1": "B14.4",
+       "3": "B36.0",
+       "2": "B36.1"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 43,
+      "quads": {
+       "0": "B14.5",
+       "1": "S066",
+       "3": "S159",
+       "2": "S160"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 44,
+      "quads": {
+       "0": "S067",
+       "1": "S068",
+       "3": "S157",
+       "2": "S158"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 45,
+      "quads": {
+       "0": "S069",
+       "1": "S070",
+       "3": "S155",
+       "2": "S156"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 46,
+      "quads": {
+       "0": "S071",
+       "1": "S072",
+       "3": "S153",
+       "2": "S154"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 47,
+      "quads": {
+       "0": "S073",
+       "1": "S074",
+       "3": "S151",
+       "2": "S152"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 48,
+      "quads": {
+       "0": "S075",
+       "1": "S076",
+       "3": "S149",
+       "2": "S150"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 49,
+      "quads": {
+       "0": "S077",
+       "1": "S078",
+       "3": "S147",
+       "2": "S148"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 50,
+      "quads": {
+       "0": "S079",
+       "1": "S080",
+       "3": "S145",
+       "2": "S146"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 51,
+      "quads": {
+       "0": "S081",
+       "1": "S082",
+       "3": "S143",
+       "2": "S144"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 52,
+      "quads": {
+       "0": "S083",
+       "1": "S084",
+       "3": "B32.4",
+       "2": "B32.5"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 53,
+      "quads": {
+       "0": "S085",
+       "1": "S086",
+       "3": "B32.2",
+       "2": "B32.3"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 54,
+      "quads": {
+       "0": "S087",
+       "1": "S088",
+       "3": "B32.0",
+       "2": "B32.1"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 55,
+      "quads": {
+       "0": "S089",
+       "1": "S090",
+       "3": "S141",
+       "2": "S142"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 56,
+      "quads": {
+       "0": "S091",
+       "1": "B20.0",
+       "3": "S139",
+       "2": "S140"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 57,
+      "quads": {
+       "0": "B20.1",
+       "1": "B20.2",
+       "3": "S137",
+       "2": "S138"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 58,
+      "quads": {
+       "0": "B20.3",
+       "1": "B20.4",
+       "3": "S135",
+       "2": "S136"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 59,
+      "quads": {
+       "0": "B20.5",
+       "1": "S092",
+       "3": "S133",
+       "2": "S134"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 168,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 733.8,
+      "misc_w": 60.0,
+      "it_w": 2184.2,
+      "dc_input_w": 2510.6
+     },
+     {
+      "tray": 60,
+      "quads": {
+       "0": "S093",
+       "1": "S094",
+       "3": "S131",
+       "2": "S132"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 61,
+      "quads": {
+       "0": "S095",
+       "1": "S096",
+       "3": "S129",
+       "2": "S130"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 62,
+      "quads": {
+       "0": "S097",
+       "1": "S098",
+       "3": "S127",
+       "2": "S128"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 63,
+      "quads": {
+       "0": "S099",
+       "1": "S100",
+       "3": "S125",
+       "2": "S126"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 176,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 768.8,
+      "misc_w": 60.0,
+      "it_w": 2219.2,
+      "dc_input_w": 2550.8
+     },
+     {
+      "tray": 64,
+      "quads": {
+       "0": "S101",
+       "1": "S102",
+       "3": "B28.4",
+       "2": "B28.5"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 65,
+      "quads": {
+       "0": "S103",
+       "1": "S104",
+       "3": "B28.2",
+       "2": "B28.3"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 66,
+      "quads": {
+       "0": "S105",
+       "1": "S106",
+       "3": "B28.0",
+       "2": "B28.1"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 67,
+      "quads": {
+       "0": "B24.0",
+       "1": "B24.1",
+       "3": "S123",
+       "2": "S124"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 68,
+      "quads": {
+       "0": "B24.2",
+       "1": "B24.3",
+       "3": "S121",
+       "2": "S122"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 69,
+      "quads": {
+       "0": "B24.4",
+       "1": "B24.5",
+       "3": "S119",
+       "2": "S120"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 70,
+      "quads": {
+       "0": "S107",
+       "1": "S108",
+       "3": "S117",
+       "2": "S118"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 176,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 768.8,
+      "misc_w": 60.0,
+      "it_w": 2219.2,
+      "dc_input_w": 2550.8
+     },
+     {
+      "tray": 71,
+      "quads": {
+       "0": "S109",
+       "1": "S110",
+       "3": "S115",
+       "2": "S116"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     },
+     {
+      "tray": 72,
+      "quads": {
+       "0": "S111",
+       "1": "S112",
+       "3": "S113",
+       "2": "S114"
+      },
+      "dies": 16,
+      "hbm_stacks": 16,
+      "serdes_macros": 160,
+      "die_w": 1345.6,
+      "hbm_w": 44.8,
+      "serdes_w": 698.9,
+      "misc_w": 60.0,
+      "it_w": 2149.3,
+      "dc_input_w": 2470.4
+     }
+    ],
+    "worst_dc_w": 2703.8,
+    "liquid_limit_w": 5500.0,
+    "board": "1 OU ORv3 tray, 4 quads of 2 x 2 single-die packages (16 dies); each TP group is one quad, its 6 mesh circuits are board traces; stage hops inside a tray are traces, between trays flyover twinax to rear OSFP cages and 8-lane cables"
+   },
+   "racks": {
+    "count": 3,
+    "trays_per_rack": 25,
+    "rows": [
+     {
+      "rack": "R1",
+      "trays": 25,
+      "spare_trays": 1,
+      "it_kw": 54.1,
+      "dc_kw": 62.2,
+      "wall_kw": 64.8,
+      "shelves": "3 + 3 (2N), 82.5 kW usable a side",
+      "cooling": "direct liquid cold plates on every package (dies + HBM), rear manifold, in-row CDU; air only for PSUs / misc"
+     },
+     {
+      "rack": "R2",
+      "trays": 25,
+      "spare_trays": 1,
+      "it_kw": 53.9,
+      "dc_kw": 62.0,
+      "wall_kw": 64.5,
+      "shelves": "3 + 3 (2N), 82.5 kW usable a side",
+      "cooling": "direct liquid cold plates on every package (dies + HBM), rear manifold, in-row CDU; air only for PSUs / misc"
+     },
+     {
+      "rack": "R3",
+      "trays": 23,
+      "spare_trays": 1,
+      "it_kw": 49.7,
+      "dc_kw": 57.1,
+      "wall_kw": 59.5,
+      "shelves": "3 + 3 (2N), 82.5 kW usable a side",
+      "cooling": "direct liquid cold plates on every package (dies + HBM), rear manifold, in-row CDU; air only for PSUs / misc"
+     }
+    ],
+    "slots": [
+     [
+      0,
+      6
+     ],
+     [
+      0,
+      7
+     ],
+     [
+      0,
+      8
+     ],
+     [
+      0,
+      9
+     ],
+     [
+      0,
+      10
+     ],
+     [
+      0,
+      11
+     ],
+     [
+      0,
+      12
+     ],
+     [
+      0,
+      13
+     ],
+     [
+      0,
+      14
+     ],
+     [
+      0,
+      15
+     ],
+     [
+      0,
+      16
+     ],
+     [
+      0,
+      17
+     ],
+     [
+      0,
+      18
+     ],
+     [
+      0,
+      19
+     ],
+     [
+      0,
+      20
+     ],
+     [
+      0,
+      21
+     ],
+     [
+      0,
+      22
+     ],
+     [
+      0,
+      23
+     ],
+     [
+      0,
+      24
+     ],
+     [
+      0,
+      25
+     ],
+     [
+      0,
+      26
+     ],
+     [
+      0,
+      27
+     ],
+     [
+      0,
+      28
+     ],
+     [
+      0,
+      29
+     ],
+     [
+      0,
+      30
+     ],
+     [
+      1,
+      30
+     ],
+     [
+      1,
+      29
+     ],
+     [
+      1,
+      28
+     ],
+     [
+      1,
+      27
+     ],
+     [
+      1,
+      26
+     ],
+     [
+      1,
+      25
+     ],
+     [
+      1,
+      24
+     ],
+     [
+      1,
+      23
+     ],
+     [
+      1,
+      22
+     ],
+     [
+      1,
+      21
+     ],
+     [
+      1,
+      20
+     ],
+     [
+      1,
+      19
+     ],
+     [
+      1,
+      18
+     ],
+     [
+      1,
+      17
+     ],
+     [
+      1,
+      16
+     ],
+     [
+      1,
+      15
+     ],
+     [
+      1,
+      14
+     ],
+     [
+      1,
+      13
+     ],
+     [
+      1,
+      12
+     ],
+     [
+      1,
+      11
+     ],
+     [
+      1,
+      10
+     ],
+     [
+      1,
+      9
+     ],
+     [
+      1,
+      8
+     ],
+     [
+      1,
+      7
+     ],
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      6
+     ],
+     [
+      2,
+      7
+     ],
+     [
+      2,
+      8
+     ],
+     [
+      2,
+      9
+     ],
+     [
+      2,
+      10
+     ],
+     [
+      2,
+      11
+     ],
+     [
+      2,
+      12
+     ],
+     [
+      2,
+      13
+     ],
+     [
+      2,
+      14
+     ],
+     [
+      2,
+      15
+     ],
+     [
+      2,
+      16
+     ],
+     [
+      2,
+      17
+     ],
+     [
+      2,
+      18
+     ],
+     [
+      2,
+      19
+     ],
+     [
+      2,
+      20
+     ],
+     [
+      2,
+      21
+     ],
+     [
+      2,
+      22
+     ],
+     [
+      2,
+      23
+     ],
+     [
+      2,
+      24
+     ],
+     [
+      2,
+      25
+     ],
+     [
+      2,
+      26
+     ],
+     [
+      2,
+      27
+     ],
+     [
+      2,
+      28
+     ]
+    ]
+   },
+   "power": {
+    "it_kw": 157.8,
+    "dc_kw": 181.3,
+    "wall_kw_D": 189.2,
+    "wall_kw_S": 520.4,
+    "D_link_w": 300,
+    "S_switch_w": 229500.0,
+    "S_aec_w": 88740.0,
+    "grade": "derived on die power (spec where a die report exists, else MODEL)"
+   },
+   "option_s": {
+    "chips": 153.0,
+    "chips_per_rack_of_replicas": null,
+    "chips_bandwidth_bound": 139,
+    "switch_trays": 153,
+    "switch_racks": 5,
+    "cables": 8874,
+    "aec_cables": 8874,
+    "mean_leg_m": 2.56,
+    "near_leg_m": 1.83,
+    "crossing": {
+     "medium": "switch port (AEC / AEC)",
+     "legs": [
+      "AEC",
+      "AEC"
+     ],
+     "length_m": 5.13,
+     "reach_ok": true,
+     "latency_ns": 379.6,
+     "cycles": 456,
+     "within_budget": false
+    },
+    "crossing_best": {
+     "medium": "switch port (passive DAC / passive DAC)",
+     "legs": [
+      "passive DAC",
+      "passive DAC"
+     ],
+     "length_m": 3.66,
+     "reach_ok": true,
+     "latency_ns": 366.9,
+     "cycles": 441,
+     "within_budget": true
+    },
+    "switch_w": 229500.0,
+    "aec_w": 88740.0,
+    "grade": "MODEL (chip domains +10% boundary overhead; switch racks interleaved with compute racks)"
+   },
+   "compare": {
+    "D": {
+     "cables": 948,
+     "aec": 30,
+     "optics": 0,
+     "board_trace_circuits": 2332,
+     "cable_circuits": 632,
+     "switch_chips": 0,
+     "latency_ns_range": [
+      209.0,
+      220.7
+     ],
+     "link_power_w": 300,
+     "racks": 3,
+     "sparing": "tray is the FRU; a failed die/tray is swapped (~30 min, MODEL); circuits are fixed copper, so a spare tray must take the failed tray's slot and cables",
+     "repointing": "none: a new copy count or stage map means re-cabling the affected tray boundaries"
+    },
+    "S": {
+     "cables": 8874,
+     "aec": 8874,
+     "optics": 0,
+     "board_trace_circuits": 0,
+     "cable_circuits": 2964,
+     "cable_circuits_offpkg": 2964,
+     "switch_chips": 153.0,
+     "switch_racks": 5,
+     "latency_ns": 379.6,
+     "latency_ns_best": 366.9,
+     "budget_ns": 377.6,
+     "link_power_w": 318240,
+     "racks": 8,
+     "sparing": "hot re-point of static circuits (~1 s, MODEL) to any die on the same chip domain that already holds the same ROM content (copy-B groups, or a hot-standby duplicate group)",
+     "repointing": "any circuit inside a chip domain, by table rewrite; copy count / user calendar changes need no cabling"
+    },
+    "grade": "derived from the connection list; switch-domain overhead and leg lengths MODEL"
+   },
+   "hop_latency": {
+    "tp_mesh": {
+     "circuits": 1752,
+     "D_media": [
+      "board trace"
+     ],
+     "D_ns_max": 209.0,
+     "D_cycles_max": 251,
+     "D_ns_min": 209.0,
+     "D_cycles_min": 251,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 203
+    },
+    "head_hop": {
+     "circuits": 12,
+     "D_media": [
+      "board trace",
+      "passive DAC"
+     ],
+     "D_ns_max": 213.6,
+     "D_cycles_max": 257,
+     "D_ns_min": 209.0,
+     "D_cycles_min": 251,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 197
+    },
+    "token_return": {
+     "circuits": 4,
+     "D_media": [
+      "board trace"
+     ],
+     "D_ns_max": 209.0,
+     "D_cycles_max": 251,
+     "D_ns_min": 209.0,
+     "D_cycles_min": 251,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 203
+    },
+    "stage_hop": {
+     "circuits": 960,
+     "D_media": [
+      "AEC",
+      "board trace",
+      "passive DAC"
+     ],
+     "D_ns_max": 220.7,
+     "D_cycles_max": 265,
+     "D_ns_min": 209.0,
+     "D_cycles_min": 251,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 189
+    },
+    "copyb_in": {
+     "circuits": 32,
+     "D_media": [
+      "passive DAC"
+     ],
+     "D_ns_max": 214.3,
+     "D_cycles_max": 258,
+     "D_ns_min": 214.0,
+     "D_cycles_min": 257,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 196
+    },
+    "copyb_hop": {
+     "circuits": 160,
+     "D_media": [
+      "AEC",
+      "board trace",
+      "passive DAC"
+     ],
+     "D_ns_max": 220.5,
+     "D_cycles_max": 265,
+     "D_ns_min": 209.0,
+     "D_cycles_min": 251,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 189
+    },
+    "copyb_out": {
+     "circuits": 32,
+     "D_media": [
+      "board trace",
+      "passive DAC"
+     ],
+     "D_ns_max": 213.6,
+     "D_cycles_max": 257,
+     "D_ns_min": 209.0,
+     "D_cycles_min": 251,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 197
+    },
+    "host": {
+     "circuits": 12,
+     "D_media": [
+      "passive DAC"
+     ],
+     "D_ns_max": 214.5,
+     "D_cycles_max": 258,
+     "D_ns_min": 214.5,
+     "D_cycles_min": 258,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 196
+    }
+   },
+   "token_effect": {
+    "crossings_per_token": 534,
+    "collective_phases": 290,
+    "stage_crossings": 244,
+    "token_cycles": 980428,
+    "D_saved_cycles": 105474,
+    "D_rate_gain_pct": 12.1,
+    "grade": "derived (token cycles and phase count from the 81-stage calendar / links report; the 241-stage calendar is not priced)"
+   },
+   "sparing": {
+    "principle": "every ROM die is unique (its weights are in its masks), so a spare must be the same die type: spares are held per tray type, shared across all deployed replicas of the system (fleet stock), not per rack",
+    "D": [
+     "1 spare slot per rack (3 slots, power and liquid pre-plumbed, blind-mate quick disconnects) to swap a failed tray in place; MTTR ~30 min (MODEL)",
+     "fleet stock: 1 tray of each of the 73 tray types per K deployed replicas (K chosen from die FIT; MODEL)",
+     "lane sparing: a 12-lane circuit rides 8-lane cables, leaving 4 spare lanes a circuit for PHY lane remap (requirement on the SerDes macro: lane remap, MODEL)",
+     "board-trace TP mesh has no spare: a die or trace fault is a tray swap"
+    ],
+    "S": [
+     "same fleet stock (ROM content is fixed per die)",
+     "hot re-point in ~1 s (MODEL) where an identical die is already cabled to the same chip domain: copy-B groups back up their copy-A groups (MU users drop from the duplicated group instead of the array stopping)",
+     "switch / cable faults: re-point onto spare switch ports (+10% port domain overhead already counted)"
+    ],
+    "grade": "MODEL"
+   },
+   "host_plan": {
+    "decision": "S81.HOST (coordinator, 10-21, direct cabling): the host attaches only to the head dies (extra SerDes on head-die trays). Host traffic to stage dies (config, KV ingest, token in/out) rides in-band on the existing pipeline/stage circuits in calendar slots (20-30x bandwidth headroom). Stage dies have no host link: the s_7N host-plane port maps to the in-band route. Every tray carries a low-rate management sideband (boot/config: I2C/SMBus + 1GbE BMC class) to the rack management switch; it is not a SerDes.",
+    "mgmt_medium": "mgmt sideband (I2C/SMBus + 1GbE BMC)",
+    "host_cable_m": 1.5,
+    "grade": "spec (coordinator decision); host NIC position and sideband lengths MODEL",
+    "head_host_circuits": 12,
+    "stage_die_host_circuits": 0,
+    "mgmt_rows": 73
+   }
+  },
+  {
+   "name": "Qwen-ROM",
+   "title": "Qwen3-8B ROM (8 compute + 8 KV dies)",
+   "counts": {
+    "total_dies": 16,
+    "compute_dies": 8,
+    "kv_dies": 8,
+    "hbm_stacks": 32,
+    "packages": 4,
+    "grade": "spec",
+    "source": "results/arch/qwen_tp8_1012/SPEC.md track A (2 ROM + 2 KV dies + 8 stacks a package, K4 board); results/arch/s81_balance_1018/compute.py Q"
+   },
+   "die_links": {
+    "compute": {
+     "value": 5,
+     "grade": "spec",
+     "source": "dv2f15r die plan: io_serdes x3 (112G x12, one per remote package) + io_ucie x1 (ROM pair) + ucie_kv x1 (lanes/DIE-QWEN-LEAD.md:7, dieplan2_1016)"
+    },
+    "kv": {
+     "value": 2,
+     "grade": "spec",
+     "source": "UCIe to its compute die + host SerDes port qkd_host (tools/qwen_kv_die/contract.py:111)"
+    }
+   },
+   "die_power": {
+    "compute": {
+     "value": 527.0,
+     "grade": "MODEL",
+     "source": "results/arch/s81_balance_1018/compute.py Qwen ROM power row (no die report)"
+    },
+    "kv": {
+     "value": 236.6,
+     "grade": "MODEL",
+     "source": "same row, area-scaled 527 x 377.6 / 841"
+    },
+    "stack": {
+     "value": 2.8,
+     "grade": "spec",
+     "source": "results/arch/v41_utilization.json energy_with_static.stack_w"
+    }
+   },
+   "circuits": {
+    "total": 25,
+    "by_class": {
+     "ucie_rom_pair": 4,
+     "ucie_rom_kv": 8,
+     "tp8_allreduce": 12,
+     "host": 1
+    },
+    "by_medium_D": {
+     "UCIe (in package)": {
+      "circuits": 12,
+      "cables": 0,
+      "max_len_m": 0.002,
+      "max_loss_db": 0.0,
+      "all_reach_ok": true
+     },
+     "board trace": {
+      "circuits": 12,
+      "cables": 0,
+      "max_len_m": 0.52,
+      "max_loss_db": 24.4,
+      "all_reach_ok": true
+     },
+     "passive DAC": {
+      "circuits": 1,
+      "cables": 2,
+      "max_len_m": 1.5,
+      "max_loss_db": 0.0,
+      "all_reach_ok": true
+     }
+    },
+    "lanes_per_dir": 12,
+    "gbps_per_dir_raw": 1228.8,
+    "gbps_per_dir_usable": 938.8
+   },
+   "trays": {
+    "count": 1,
+    "rows": [
+     {
+      "tray": 0,
+      "quads": {
+       "0": "P0",
+       "1": "P1",
+       "2": "P2",
+       "3": "P3"
+      },
+      "dies": 16,
+      "hbm_stacks": 32,
+      "serdes_macros": 50,
+      "tray_ou": 2,
+      "die_w": 6108.8,
+      "hbm_w": 89.6,
+      "serdes_w": 218.4,
+      "misc_w": 60.0,
+      "it_w": 6476.8,
+      "dc_input_w": 7444.6
+     }
+    ],
+    "worst_dc_w": 7444.6,
+    "liquid_limit_w": 11000.0,
+    "board": "2 OU ORv3 tray holding one whole system: 4 CoWoS packages (2 ROM + 2 KV dies + 8 HBM3E each, ~110 x 110 mm, MODEL) on a 200 mm 2 x 2 pitch; the K4 package mesh (12 SerDes circuits) is board trace, ROM pair and ROM-KV are UCIe inside the package",
+    "tray_ou": 2
+   },
+   "racks": {
+    "count": 1,
+    "trays_per_rack": 10,
+    "systems_per_rack": 10,
+    "slots": [
+     [
+      0,
+      6
+     ],
+     [
+      0,
+      8
+     ],
+     [
+      0,
+      10
+     ],
+     [
+      0,
+      12
+     ],
+     [
+      0,
+      14
+     ],
+     [
+      0,
+      16
+     ],
+     [
+      0,
+      18
+     ],
+     [
+      0,
+      20
+     ],
+     [
+      0,
+      22
+     ],
+     [
+      0,
+      24
+     ]
+    ],
+    "rows": [
+     {
+      "rack": "R1",
+      "trays": 10,
+      "spare_trays": 1,
+      "it_kw": 64.8,
+      "dc_kw": 74.4,
+      "wall_kw": 77.5,
+      "shelves": "3 + 3 (2N)",
+      "cooling": "direct liquid on every package"
+     }
+    ]
+   },
+   "power": {
+    "it_kw": 6.5,
+    "dc_kw": 7.4,
+    "wall_kw_D": 7.8,
+    "wall_kw_S": 9.2,
+    "D_link_w": 0,
+    "S_switch_w": 1050.0,
+    "S_aec_w": 380.0,
+    "grade": "derived on die power (spec where a die report exists, else MODEL)"
+   },
+   "option_s": {
+    "chips": 0.7,
+    "chips_per_rack_of_replicas": 7,
+    "chips_bandwidth_bound": 6,
+    "switch_trays": 7,
+    "switch_racks": 1,
+    "cables": 38,
+    "aec_cables": 38,
+    "mean_leg_m": 2.56,
+    "near_leg_m": 1.83,
+    "crossing": {
+     "medium": "switch port (AEC / AEC)",
+     "legs": [
+      "AEC",
+      "AEC"
+     ],
+     "length_m": 5.13,
+     "reach_ok": true,
+     "latency_ns": 379.6,
+     "cycles": 456,
+     "within_budget": false
+    },
+    "crossing_best": {
+     "medium": "switch port (passive DAC / passive DAC)",
+     "legs": [
+      "passive DAC",
+      "passive DAC"
+     ],
+     "length_m": 3.66,
+     "reach_ok": true,
+     "latency_ns": 366.9,
+     "cycles": 441,
+     "within_budget": true
+    },
+    "switch_w": 1050.0,
+    "aec_w": 380.0,
+    "grade": "MODEL (chip domains +10% boundary overhead; switch racks interleaved with compute racks)"
+   },
+   "compare": {
+    "D": {
+     "cables": 2,
+     "aec": 0,
+     "optics": 0,
+     "board_trace_circuits": 12,
+     "cable_circuits": 1,
+     "switch_chips": 0,
+     "latency_ns_range": [
+      209.1,
+      214.5
+     ],
+     "link_power_w": 0,
+     "racks": 1,
+     "sparing": "tray is the FRU; a failed die/tray is swapped (~30 min, MODEL); circuits are fixed copper, so a spare tray must take the failed tray's slot and cables",
+     "repointing": "none: a new copy count or stage map means re-cabling the affected tray boundaries"
+    },
+    "S": {
+     "cables": 38,
+     "aec": 38,
+     "optics": 0,
+     "board_trace_circuits": 0,
+     "cable_circuits": 25,
+     "cable_circuits_offpkg": 13,
+     "switch_chips": 0.7,
+     "switch_racks": 1,
+     "latency_ns": 379.6,
+     "latency_ns_best": 366.9,
+     "budget_ns": 377.6,
+     "link_power_w": 1430,
+     "racks": 2,
+     "sparing": "hot re-point of static circuits (~1 s, MODEL) to any die on the same chip domain that already holds the same ROM content (copy-B groups, or a hot-standby duplicate group)",
+     "repointing": "any circuit inside a chip domain, by table rewrite; copy count / user calendar changes need no cabling"
+    },
+    "grade": "derived from the connection list; switch-domain overhead and leg lengths MODEL"
+   },
+   "hop_latency": {
+    "ucie_rom_pair": {
+     "circuits": 4,
+     "D_media": [
+      "UCIe (in package)"
+     ],
+     "D_ns_max": 3.5,
+     "D_cycles_max": 5,
+     "D_ns_min": 3.5,
+     "D_cycles_min": 5,
+     "S_ns": 3.5,
+     "S_cycles": 5,
+     "S_budget_ns": null,
+     "S_budget_cycles": null,
+     "saved_cycles_D_vs_S_budget": 0
+    },
+    "ucie_rom_kv": {
+     "circuits": 8,
+     "D_media": [
+      "UCIe (in package)"
+     ],
+     "D_ns_max": 4.2,
+     "D_cycles_max": 6,
+     "D_ns_min": 4.2,
+     "D_cycles_min": 6,
+     "S_ns": 4.2,
+     "S_cycles": 6,
+     "S_budget_ns": null,
+     "S_budget_cycles": null,
+     "saved_cycles_D_vs_S_budget": 0
+    },
+    "tp8_allreduce": {
+     "circuits": 12,
+     "D_media": [
+      "board trace"
+     ],
+     "D_ns_max": 210.5,
+     "D_cycles_max": 253,
+     "D_ns_min": 209.1,
+     "D_cycles_min": 251,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 201
+    },
+    "host": {
+     "circuits": 1,
+     "D_media": [
+      "passive DAC"
+     ],
+     "D_ns_max": 214.5,
+     "D_cycles_max": 258,
+     "D_ns_min": 214.5,
+     "D_cycles_min": 258,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 196
+    }
+   },
+   "token_effect": {
+    "crossings_per_token": 72,
+    "collective_phases": null,
+    "stage_crossings": 0,
+    "token_cycles": 251615,
+    "D_saved_cycles": 14444,
+    "D_rate_gain_pct": 6.1,
+    "grade": "derived: 36 layers x 2 TP8 all-reduces = 72 board crossings a token on the critical path; token = 251,615 cycles (compute.py Q.T). Qwen ROM is ALREADY option D (K4 board, SPEC.md s4); the gain is what option S would lose. The Qwen PHY model prices a crossing at 223 ns (198 KP4 + 25 PHY, tools/qwen_missing/link_phy_gen.py), this tool at 209 ns + flight"
+   },
+   "sparing": {
+    "principle": "every ROM die is unique (its weights are in its masks), so a spare must be the same die type: spares are held per tray type, shared across all deployed replicas of the system (fleet stock), not per rack",
+    "D": [
+     "1 spare slot per rack (1 slots, power and liquid pre-plumbed, blind-mate quick disconnects) to swap a failed tray in place; MTTR ~30 min (MODEL)",
+     "fleet stock: 1 tray of each of the 1 tray types per K deployed replicas (K chosen from die FIT; MODEL)",
+     "lane sparing: a 12-lane circuit rides 8-lane cables, leaving 4 spare lanes a circuit for PHY lane remap (requirement on the SerDes macro: lane remap, MODEL)",
+     "board-trace TP mesh has no spare: a die or trace fault is a tray swap"
+    ],
+    "S": [
+     "same fleet stock (ROM content is fixed per die)",
+     "hot re-point in ~1 s (MODEL) where an identical die is already cabled to the same chip domain: copy-B groups back up their copy-A groups (MU users drop from the duplicated group instead of the array stopping)",
+     "switch / cable faults: re-point onto spare switch ports (+10% port domain overhead already counted)"
+    ],
+    "grade": "MODEL"
+   },
+   "replica_note": "one system = one 2 OU tray; a rack holds 10 systems (40 users) plus a spare slot"
+  },
+  {
+   "name": "HBM-DS",
+   "title": "HBM accelerator, DeepSeek (192 dies)",
+   "counts": {
+    "total_dies": 192,
+    "hbm_stacks": 384,
+    "die_mm2": 767.4,
+    "grade": "spec",
+    "source": "lanes/HBM-NEXT-P3.md, HBM-NEXT-VEH.md (f4c_t9p3 767.41 mm2, OWNER 10-19 P=3); results/arch/s81_balance_1018/compute.py HBM rows (192 dies, 384 stacks)"
+   },
+   "die_links": {
+    "hbm": {
+     "value": 5,
+     "grade": "spec",
+     "source": "lanes/TOKEN-XDIE-HBM.md:8: 5 ot_pdie_serdes links a d4g die (SW 2, SE/NW/NE 1); P=3 die assumed to inherit them (not confirmed)"
+    }
+   },
+   "die_power": {
+    "hbm": {
+     "value": 383.7,
+     "grade": "MODEL",
+     "source": "results/arch/s81_balance_1018/compute.py HBM Qwen row rule 0.5 W/mm2 x 767.4 mm2 (no die power report; the DS row's 12,544 W / 192 = 65 W a die is inconsistent with it and is not used)"
+    },
+    "stack": {
+     "value": 2.8,
+     "grade": "spec",
+     "source": "results/arch/v41_utilization.json energy_with_static.stack_w"
+    }
+   },
+   "circuits": {
+    "total": 480,
+    "by_class": {
+     "quad_mesh": 288,
+     "quad_ring": 192
+    },
+    "by_medium_D": {
+     "board trace": {
+      "circuits": 296,
+      "cables": 0,
+      "max_len_m": 0.283,
+      "max_loss_db": 16.0,
+      "all_reach_ok": true
+     },
+     "passive DAC": {
+      "circuits": 176,
+      "cables": 176,
+      "max_len_m": 1.3,
+      "max_loss_db": 0.0,
+      "all_reach_ok": true
+     },
+     "AEC": {
+      "circuits": 8,
+      "cables": 8,
+      "max_len_m": 2.15,
+      "max_loss_db": 0.0,
+      "all_reach_ok": true
+     }
+    },
+    "lanes_per_dir": 6,
+    "gbps_per_dir_raw": 1228.8,
+    "gbps_per_dir_usable": 938.8
+   },
+   "trays": {
+    "count": 24,
+    "rows": [
+     {
+      "tray": 0,
+      "quads": {
+       "0": "D00",
+       "3": "D47"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 1,
+      "quads": {
+       "0": "D01",
+       "3": "D46"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 2,
+      "quads": {
+       "0": "D02",
+       "3": "D45"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 3,
+      "quads": {
+       "0": "D03",
+       "3": "D44"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 4,
+      "quads": {
+       "0": "D04",
+       "3": "D43"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 5,
+      "quads": {
+       "0": "D05",
+       "3": "D42"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 6,
+      "quads": {
+       "0": "D06",
+       "3": "D41"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 7,
+      "quads": {
+       "0": "D07",
+       "3": "D40"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 8,
+      "quads": {
+       "0": "D08",
+       "3": "D39"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 9,
+      "quads": {
+       "0": "D09",
+       "3": "D38"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 10,
+      "quads": {
+       "0": "D10",
+       "3": "D37"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 11,
+      "quads": {
+       "0": "D11",
+       "3": "D36"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 12,
+      "quads": {
+       "0": "D12",
+       "3": "D35"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 13,
+      "quads": {
+       "0": "D13",
+       "3": "D34"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 14,
+      "quads": {
+       "0": "D14",
+       "3": "D33"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 15,
+      "quads": {
+       "0": "D15",
+       "3": "D32"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 16,
+      "quads": {
+       "0": "D16",
+       "3": "D31"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 17,
+      "quads": {
+       "0": "D17",
+       "3": "D30"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 18,
+      "quads": {
+       "0": "D18",
+       "3": "D29"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 19,
+      "quads": {
+       "0": "D19",
+       "3": "D28"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 20,
+      "quads": {
+       "0": "D20",
+       "3": "D27"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 21,
+      "quads": {
+       "0": "D21",
+       "3": "D26"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 22,
+      "quads": {
+       "0": "D22",
+       "3": "D25"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     },
+     {
+      "tray": 23,
+      "quads": {
+       "0": "D23",
+       "3": "D24"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 40,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     }
+    ],
+    "worst_dc_w": 3849.6,
+    "liquid_limit_w": 5500.0,
+    "board": "1 OU tray, 2 quads of 2 x 2 single-die packages (die + 2 HBM3E stacks): one quad of the outgoing ring half and one of the returning half; quad mesh as board traces"
+   },
+   "racks": {
+    "count": 2,
+    "trays_per_rack": 12,
+    "rows": [
+     {
+      "rack": "R1",
+      "trays": 12,
+      "spare_trays": 1,
+      "it_kw": 40.2,
+      "dc_kw": 46.2,
+      "wall_kw": 48.1,
+      "shelves": "3 + 3 (2N), 82.5 kW usable a side",
+      "cooling": "direct liquid cold plates on every package (dies + HBM), rear manifold, in-row CDU; air only for PSUs / misc"
+     },
+     {
+      "rack": "R2",
+      "trays": 12,
+      "spare_trays": 1,
+      "it_kw": 40.2,
+      "dc_kw": 46.2,
+      "wall_kw": 48.1,
+      "shelves": "3 + 3 (2N), 82.5 kW usable a side",
+      "cooling": "direct liquid cold plates on every package (dies + HBM), rear manifold, in-row CDU; air only for PSUs / misc"
+     }
+    ],
+    "slots": [
+     [
+      0,
+      6
+     ],
+     [
+      0,
+      7
+     ],
+     [
+      0,
+      8
+     ],
+     [
+      0,
+      9
+     ],
+     [
+      0,
+      10
+     ],
+     [
+      0,
+      11
+     ],
+     [
+      0,
+      12
+     ],
+     [
+      0,
+      13
+     ],
+     [
+      0,
+      14
+     ],
+     [
+      0,
+      15
+     ],
+     [
+      0,
+      16
+     ],
+     [
+      0,
+      17
+     ],
+     [
+      1,
+      17
+     ],
+     [
+      1,
+      16
+     ],
+     [
+      1,
+      15
+     ],
+     [
+      1,
+      14
+     ],
+     [
+      1,
+      13
+     ],
+     [
+      1,
+      12
+     ],
+     [
+      1,
+      11
+     ],
+     [
+      1,
+      10
+     ],
+     [
+      1,
+      9
+     ],
+     [
+      1,
+      8
+     ],
+     [
+      1,
+      7
+     ],
+     [
+      1,
+      6
+     ]
+    ]
+   },
+   "power": {
+    "it_kw": 80.4,
+    "dc_kw": 92.4,
+    "wall_kw_D": 96.3,
+    "wall_kw_S": 125.6,
+    "D_link_w": 60,
+    "S_switch_w": 21000.0,
+    "S_aec_w": 7200.0,
+    "grade": "derived on die power (spec where a die report exists, else MODEL)"
+   },
+   "option_s": {
+    "chips": 14.0,
+    "chips_per_rack_of_replicas": null,
+    "chips_bandwidth_bound": 12,
+    "switch_trays": 14,
+    "switch_racks": 1,
+    "cables": 720,
+    "aec_cables": 720,
+    "mean_leg_m": 2.56,
+    "near_leg_m": 1.83,
+    "crossing": {
+     "medium": "switch port (AEC / AEC)",
+     "legs": [
+      "AEC",
+      "AEC"
+     ],
+     "length_m": 5.13,
+     "reach_ok": true,
+     "latency_ns": 379.6,
+     "cycles": 456,
+     "within_budget": false
+    },
+    "crossing_best": {
+     "medium": "switch port (passive DAC / passive DAC)",
+     "legs": [
+      "passive DAC",
+      "passive DAC"
+     ],
+     "length_m": 3.66,
+     "reach_ok": true,
+     "latency_ns": 366.9,
+     "cycles": 441,
+     "within_budget": true
+    },
+    "switch_w": 21000.0,
+    "aec_w": 7200.0,
+    "grade": "MODEL (chip domains +10% boundary overhead; switch racks interleaved with compute racks)"
+   },
+   "compare": {
+    "D": {
+     "cables": 138,
+     "aec": 6,
+     "optics": 0,
+     "board_trace_circuits": 296,
+     "cable_circuits": 184,
+     "switch_chips": 0,
+     "latency_ns_range": [
+      209.0,
+      220.5
+     ],
+     "link_power_w": 60,
+     "racks": 2,
+     "sparing": "tray is the FRU; a failed die/tray is swapped (~30 min, MODEL); circuits are fixed copper, so a spare tray must take the failed tray's slot and cables",
+     "repointing": "none: a new copy count or stage map means re-cabling the affected tray boundaries"
+    },
+    "S": {
+     "cables": 720,
+     "aec": 720,
+     "optics": 0,
+     "board_trace_circuits": 0,
+     "cable_circuits": 480,
+     "cable_circuits_offpkg": 480,
+     "switch_chips": 14.0,
+     "switch_racks": 1,
+     "latency_ns": 379.6,
+     "latency_ns_best": 366.9,
+     "budget_ns": 377.6,
+     "link_power_w": 28200,
+     "racks": 3,
+     "sparing": "hot re-point of static circuits (~1 s, MODEL) to any die on the same chip domain that already holds the same ROM content (copy-B groups, or a hot-standby duplicate group)",
+     "repointing": "any circuit inside a chip domain, by table rewrite; copy count / user calendar changes need no cabling"
+    },
+    "grade": "derived from the connection list; switch-domain overhead and leg lengths MODEL"
+   },
+   "hop_latency": {
+    "quad_mesh": {
+     "circuits": 288,
+     "D_media": [
+      "board trace"
+     ],
+     "D_ns_max": 209.0,
+     "D_cycles_max": 251,
+     "D_ns_min": 209.0,
+     "D_cycles_min": 251,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 203
+    },
+    "quad_ring": {
+     "circuits": 192,
+     "D_media": [
+      "AEC",
+      "board trace",
+      "passive DAC"
+     ],
+     "D_ns_max": 220.5,
+     "D_cycles_max": 265,
+     "D_ns_min": 209.0,
+     "D_cycles_min": 251,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 189
+    }
+   },
+   "token_effect": {
+    "crossings_per_token": 0,
+    "collective_phases": null,
+    "stage_crossings": 0,
+    "token_cycles": null,
+    "D_saved_cycles": null,
+    "D_rate_gain_pct": null,
+    "grade": "not priced"
+   },
+   "sparing": {
+    "principle": "every ROM die is unique (its weights are in its masks), so a spare must be the same die type: spares are held per tray type, shared across all deployed replicas of the system (fleet stock), not per rack",
+    "D": [
+     "1 spare slot per rack (2 slots, power and liquid pre-plumbed, blind-mate quick disconnects) to swap a failed tray in place; MTTR ~30 min (MODEL)",
+     "fleet stock: 1 tray of each of the 24 tray types per K deployed replicas (K chosen from die FIT; MODEL)",
+     "lane sparing: a 6-lane circuit rides 8-lane cables, leaving 2 spare lanes a circuit for PHY lane remap (requirement on the SerDes macro: lane remap, MODEL)",
+     "board-trace TP mesh has no spare: a die or trace fault is a tray swap"
+    ],
+    "S": [
+     "same fleet stock (ROM content is fixed per die)",
+     "hot re-point in ~1 s (MODEL) where an identical die is already cabled to the same chip domain: copy-B groups back up their copy-A groups (MU users drop from the duplicated group instead of the array stopping)",
+     "switch / cable faults: re-point onto spare switch ports (+10% port domain overhead already counted)"
+    ],
+    "grade": "MODEL"
+   },
+   "collective_effect": {
+    "note": "OPTION S is today's topology: one switch plane, every die reaches any die in one crossing (o-group reduce = 2 crossings, measured 1,569 cycles / instance, lanes/TOKEN-XDIE-HBM.md). OPTION D with 5 links can only be a quad mesh + a ring of 48 quads: an array-wide reduce + broadcast takes 48 ring hops.",
+    "array_reduce_cycles_D": 12720,
+    "array_reduce_cycles_S": 908,
+    "verdict": "keep OPTION S for HBM-DS: its array collectives need any-to-any in one crossing; D is 14x slower per array-wide collective",
+    "grade": "derived"
+   }
+  },
+  {
+   "name": "HBM-Qwen",
+   "title": "HBM accelerator, Qwen (8 dies, one package)",
+   "counts": {
+    "total_dies": 8,
+    "hbm_stacks": 16,
+    "packages": 1,
+    "grade": "spec",
+    "source": "results/arch/s81_balance_1018/compute.py HBM Qwen row (8 dies, 16 stacks); lanes/TOKEN-XDIE-HBM.md s3 (one package)"
+   },
+   "die_links": {
+    "hbm": {
+     "value": 5,
+     "grade": "spec",
+     "source": "5 ot_pdie_serdes a die; hypercube uses 3 (lanes/TOKEN-XDIE-HBM.md s3: package topology is an open coordinator decision)"
+    }
+   },
+   "die_power": {
+    "hbm": {
+     "value": 383.7,
+     "grade": "MODEL",
+     "source": "0.5 W/mm2 x 767.4 mm2 (compute.py HBM Qwen rule)"
+    },
+    "stack": {
+     "value": 2.8,
+     "grade": "spec",
+     "source": "results/arch/v41_utilization.json energy_with_static.stack_w"
+    }
+   },
+   "circuits": {
+    "total": 13,
+    "by_class": {
+     "hypercube": 12,
+     "host": 1
+    },
+    "by_medium_D": {
+     "in-package trace": {
+      "circuits": 12,
+      "cables": 0,
+      "max_len_m": 0.03,
+      "max_loss_db": 0.0,
+      "all_reach_ok": true
+     },
+     "passive DAC": {
+      "circuits": 1,
+      "cables": 1,
+      "max_len_m": 1.5,
+      "max_loss_db": 0.0,
+      "all_reach_ok": true
+     }
+    },
+    "lanes_per_dir": 6,
+    "gbps_per_dir_raw": 1228.8,
+    "gbps_per_dir_usable": 938.8
+   },
+   "trays": {
+    "count": 1,
+    "rows": [
+     {
+      "tray": 0,
+      "quads": {
+       "0": "pkg"
+      },
+      "dies": 8,
+      "hbm_stacks": 16,
+      "serdes_macros": 1,
+      "die_w": 3069.6,
+      "hbm_w": 44.8,
+      "serdes_w": 174.7,
+      "misc_w": 60.0,
+      "it_w": 3349.1,
+      "dc_input_w": 3849.6
+     }
+    ],
+    "worst_dc_w": 3849.6,
+    "liquid_limit_w": 5500.0,
+    "board": "1 OU tray with one 8-die package (16 HBM3E); the 3-link hypercube is in-package trace (3.3 ns, MODEL); only the host link leaves the package"
+   },
+   "racks": {
+    "count": 1,
+    "trays_per_rack": 20,
+    "systems_per_rack": 20,
+    "slots": [
+     [
+      0,
+      6
+     ],
+     [
+      0,
+      7
+     ],
+     [
+      0,
+      8
+     ],
+     [
+      0,
+      9
+     ],
+     [
+      0,
+      10
+     ],
+     [
+      0,
+      11
+     ],
+     [
+      0,
+      12
+     ],
+     [
+      0,
+      13
+     ],
+     [
+      0,
+      14
+     ],
+     [
+      0,
+      15
+     ],
+     [
+      0,
+      16
+     ],
+     [
+      0,
+      17
+     ],
+     [
+      0,
+      18
+     ],
+     [
+      0,
+      19
+     ],
+     [
+      0,
+      20
+     ],
+     [
+      0,
+      21
+     ],
+     [
+      0,
+      22
+     ],
+     [
+      0,
+      23
+     ],
+     [
+      0,
+      24
+     ],
+     [
+      0,
+      25
+     ]
+    ],
+    "rows": [
+     {
+      "rack": "R1",
+      "trays": 20,
+      "spare_trays": 1,
+      "it_kw": 67.0,
+      "dc_kw": 77.0,
+      "wall_kw": 80.2,
+      "shelves": "3 + 3 (2N)",
+      "cooling": "direct liquid"
+     }
+    ]
+   },
+   "power": {
+    "it_kw": 3.3,
+    "dc_kw": 3.8,
+    "wall_kw_D": 4.0,
+    "wall_kw_S": 4.2,
+    "D_link_w": 0,
+    "S_switch_w": 150.0,
+    "S_aec_w": 10.0,
+    "grade": "derived on die power (spec where a die report exists, else MODEL)"
+   },
+   "option_s": {
+    "chips": 0.1,
+    "chips_per_rack_of_replicas": 2,
+    "chips_bandwidth_bound": 1,
+    "switch_trays": 2,
+    "switch_racks": 1,
+    "cables": 1,
+    "aec_cables": 1,
+    "mean_leg_m": 2.56,
+    "near_leg_m": 1.83,
+    "crossing": {
+     "medium": "switch port (AEC / AEC)",
+     "legs": [
+      "AEC",
+      "AEC"
+     ],
+     "length_m": 5.13,
+     "reach_ok": true,
+     "latency_ns": 379.6,
+     "cycles": 456,
+     "within_budget": false
+    },
+    "crossing_best": {
+     "medium": "switch port (passive DAC / passive DAC)",
+     "legs": [
+      "passive DAC",
+      "passive DAC"
+     ],
+     "length_m": 3.66,
+     "reach_ok": true,
+     "latency_ns": 366.9,
+     "cycles": 441,
+     "within_budget": true
+    },
+    "switch_w": 150.0,
+    "aec_w": 10.0,
+    "grade": "MODEL (chip domains +10% boundary overhead; switch racks interleaved with compute racks)"
+   },
+   "compare": {
+    "D": {
+     "cables": 1,
+     "aec": 0,
+     "optics": 0,
+     "board_trace_circuits": 0,
+     "cable_circuits": 1,
+     "switch_chips": 0,
+     "latency_ns_range": [
+      214.5,
+      214.5
+     ],
+     "link_power_w": 0,
+     "racks": 1,
+     "sparing": "tray is the FRU; a failed die/tray is swapped (~30 min, MODEL); circuits are fixed copper, so a spare tray must take the failed tray's slot and cables",
+     "repointing": "none: a new copy count or stage map means re-cabling the affected tray boundaries"
+    },
+    "S": {
+     "cables": 1,
+     "aec": 1,
+     "optics": 0,
+     "board_trace_circuits": 0,
+     "cable_circuits": 13,
+     "cable_circuits_offpkg": 1,
+     "switch_chips": 0.1,
+     "switch_racks": 1,
+     "latency_ns": 379.6,
+     "latency_ns_best": 366.9,
+     "budget_ns": 377.6,
+     "link_power_w": 160,
+     "racks": 2,
+     "sparing": "hot re-point of static circuits (~1 s, MODEL) to any die on the same chip domain that already holds the same ROM content (copy-B groups, or a hot-standby duplicate group)",
+     "repointing": "any circuit inside a chip domain, by table rewrite; copy count / user calendar changes need no cabling"
+    },
+    "grade": "derived from the connection list; switch-domain overhead and leg lengths MODEL"
+   },
+   "hop_latency": {
+    "hypercube": {
+     "circuits": 12,
+     "D_media": [
+      "in-package trace"
+     ],
+     "D_ns_max": 3.3,
+     "D_cycles_max": 4,
+     "D_ns_min": 3.3,
+     "D_cycles_min": 4,
+     "S_ns": 3.3,
+     "S_cycles": 4,
+     "S_budget_ns": null,
+     "S_budget_cycles": null,
+     "saved_cycles_D_vs_S_budget": 0
+    },
+    "host": {
+     "circuits": 1,
+     "D_media": [
+      "passive DAC"
+     ],
+     "D_ns_max": 214.5,
+     "D_cycles_max": 258,
+     "D_ns_min": 214.5,
+     "D_cycles_min": 258,
+     "S_ns": 379.6,
+     "S_cycles": 456,
+     "S_budget_ns": 377.6,
+     "S_budget_cycles": 454,
+     "saved_cycles_D_vs_S_budget": 196
+    }
+   },
+   "token_effect": {
+    "crossings_per_token": 0,
+    "collective_phases": null,
+    "stage_crossings": 0,
+    "token_cycles": null,
+    "D_saved_cycles": null,
+    "D_rate_gain_pct": null,
+    "grade": "not priced"
+   },
+   "sparing": {
+    "principle": "every ROM die is unique (its weights are in its masks), so a spare must be the same die type: spares are held per tray type, shared across all deployed replicas of the system (fleet stock), not per rack",
+    "D": [
+     "1 spare slot per rack (1 slots, power and liquid pre-plumbed, blind-mate quick disconnects) to swap a failed tray in place; MTTR ~30 min (MODEL)",
+     "fleet stock: 1 tray of each of the 1 tray types per K deployed replicas (K chosen from die FIT; MODEL)",
+     "lane sparing: a 6-lane circuit rides 8-lane cables, leaving 2 spare lanes a circuit for PHY lane remap (requirement on the SerDes macro: lane remap, MODEL)",
+     "board-trace TP mesh has no spare: a die or trace fault is a tray swap"
+    ],
+    "S": [
+     "same fleet stock (ROM content is fixed per die)",
+     "hot re-point in ~1 s (MODEL) where an identical die is already cabled to the same chip domain: copy-B groups back up their copy-A groups (MU users drop from the duplicated group instead of the array stopping)",
+     "switch / cable faults: re-point onto spare switch ports (+10% port domain overhead already counted)"
+    ],
+    "grade": "MODEL"
+   },
+   "replica_note": "one system = one 1 OU tray; a rack holds 20 systems. OPTION S does not apply inside the package; the open topology choice (hypercube vs in-package switch) is the coordinator's"
+  }
+ ],
+ "compare_published": [
+  {
+   "name": "NVIDIA GB200 NVL72",
+   "accelerators": 72,
+   "accel_unit": "B200 GPUs (1,000 W class) + 36 Grace CPUs",
+   "racks": 1,
+   "compute_trays": "18 x 1RU (4 GPU + 2 CPU each)",
+   "switch_trays": "9 x 1RU NVLink switch",
+   "rack_kw": 132.0,
+   "rack_kw_basis": "provisioned 132 kW (Supermicro 'Operating Power 125kW to 135kW'); NVIDIA DGX guide ~120 kW; B200 1,200 W TDP in NVL72; MLPerf v5.1 8xB200 10,401 W at the wall (1.30 kW per GPU)",
+   "power_shelves": "8 x 33 kW (6 x 5.5 kW PSU), N+N, 50-51 V busbar",
+   "cooling": "liquid cold plates on CPUs/GPUs; rest air",
+   "weight_kg": 1360,
+   "cables": "over 5,000 active copper cables in 4 rear NVLink cartridges (>3.2 km)",
+   "fabric": "NVLink 5 all-to-all through 9 switch trays; 1.8 TB/s bidirectional per GPU; 130 TB/s aggregate",
+   "built_for": "all-to-all tensor/expert parallelism for any model; training and batched serving",
+   "per_accel_scaleup_TBps_per_dir": 0.9,
+   "sources": [
+    "https://www.nvidia.com/en-us/data-center/gb200-nvl72/",
+    "https://docs.nvidia.com/dgx/dgxgb200-user-guide/hardware.html",
+    "https://developer.nvidia.com/blog/nvidia-contributes-nvidia-gb200-nvl72-designs-to-open-compute-project/",
+    "https://www.theregister.com/2024/03/21/nvidia_dgx_gb200_nvk72/"
+   ]
+  },
+  {
+   "name": "Huawei CloudMatrix384",
+   "accelerators": 384,
+   "accel_unit": "Ascend 910C NPUs + 192 Kunpeng CPUs",
+   "racks": 16,
+   "compute_trays": "12 compute racks (48 nodes x 8 NPU)",
+   "switch_trays": "4 communication racks (L2 UB switches)",
+   "rack_kw": 559.0,
+   "rack_kw_grade": "SemiAnalysis, via search summary (the same source states 4.1x the power of a GB200 NVL72)",
+   "power_shelves": "not published",
+   "cooling": "not published in the paper",
+   "weight_kg": null,
+   "cables": "optical scale-up links; transceiver count and rate are not stated in the cited research paper",
+   "fabric": "Unified Bus, all-to-all over a 2-tier switch (7 sub-planes x 16 L2 switch chips); 392 GB/s per NPU per direction",
+   "built_for": "large-scale MoE expert parallelism and distributed KV-cache access; disaggregated serving",
+   "per_accel_scaleup_TBps_per_dir": 0.392,
+   "sources": [
+    "https://arxiv.org/abs/2506.12708",
+    "https://arxiv.org/html/2506.12708v1",
+    "https://newsletter.semianalysis.com/p/huawei-ai-cloudmatrix-384-chinas-answer-to-nvidia-gb200-nvl72"
+   ]
+  }
+ ]
+}

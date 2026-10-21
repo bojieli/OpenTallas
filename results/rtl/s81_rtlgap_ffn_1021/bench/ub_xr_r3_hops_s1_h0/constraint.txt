@@ -1,0 +1,2 @@
+170:                        if (i_vb[n][3:1] == 3'd4) i_vb[n][3:1] = 3'd5;   // RG-FFN: V RD = transport word (ub_rdp)
+126:                        body[44] = 1'b0; if (body[3:0] == 4'b0100 && body[6:4] == 3'd4) body[6:4] = 3'd0;
