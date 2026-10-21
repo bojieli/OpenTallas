@@ -194,11 +194,22 @@ module ot_s81sl_vs #(
         end
     // SW weights: from the immediate, or (wr) from word wsel of the row pair a1 = the op's first arrival
     wire w_arr;
+`ifdef OT_S81SL_VS_SRAM
+    genvar wb0;
+    generate for(wb0=0;wb0<8;wb0=wb0+1) begin:g_weight_byte
+      wire [7:0] wi;
+      if(wb0<4) assign w0[8*wb0+:8]=wi;
+      else assign w1[8*(wb0-4)+:8]=wi;
+      ot_s81sl_vs_weight8 #(.BYTE(wb0%4),.SECOND(wb0>=4),.MUT(MUT)) u_byte(.clk(clk),.sv(sv_c),.busy(busy),.bad(c_bad),.sel(c_imm[28:26]),.imm(wb0<4?c_imm[64+8*(wb0%4)+:8]:c_imm[96+8*(wb0%4)+:8]),.arr(w_arr),.row(xq_c),.w(wi));
+    end endgenerate
+`else
     always @(posedge clk)
         if (acc_cmd) begin w0 <= c_imm[95:64]; w1 <= c_imm[127:96]; end
         else if (w_arr) begin
             w0 <= xq_c[32 * wsel +: 32]; w1 <= (MUT == 9) ? xq_c[32 * (wsel ^ 3'd1) +: 32] : xq_c[32 * wsel +: 32];
         end
+
+`endif
 
     // ---------------------------------------------------------------- read issue (fixed cadence per op)
     //   QB / RB: one pair a cycle;  QR: every 2 cycles;  SW: every 4 cycles (the lane takes a group in 4);
@@ -417,7 +428,19 @@ module ot_s81sl_vs #(
         if (!rs_kra) k_ra <= 8'd0;
         else if (acc_cmd) k_ra <= 8'd0;
         else if (rav_c) k_ra <= k_ra + 8'd1;
+`ifdef OT_S81SL_VS_SRAM
+    (* keep="true" *) reg [11:0] ra_result_capture;
+    wire [7:0] kra_n=(!rs_kra || acc_cmd)?8'd0:k_ra+{7'd0,rav_c};
+    genvar rrb;
+    generate for(rrb=0;rrb<12;rrb=rrb+1) begin:g_ra_result_byte
+      always @(posedge clk) begin
+        ra_result_capture[rrb] <= rs_c && ra_vi && kra_n[1:0]==rrb/4;
+        if(ra_result_capture[rrb]) rad[8*rrb+:8] <= rar_c[8*(rrb%4)+:8];
+      end
+    end endgenerate
+`else
     always @(posedge clk) if (rav_c) for (i = 0; i < 3; i = i + 1) if (k_ra[1:0] == i) rad[32 * i +: 32] <= rar_c;
+`endif
     wire ra_row = rav_c && op == OP_RA && (k_ra[1:0] == 2'd3 || k_ra + 8'd1 == n);
 
     // ================================================================ ENG: h stash, ve feeder, gate latch, write-back
@@ -757,5 +780,14 @@ module ot_s81sl_vs_output8(input wire clk,input wire[3:0]op,input wire[7:0]sw,us
       4'd14:wd<=eng;
       default:wd<=moe;
     endcase
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_vs_weight8 #(parameter integer BYTE=0,SECOND=0,MUT=0)(input wire clk,sv,busy,bad,input wire[2:0]sel,input wire[7:0]imm,input wire arr,input wire[255:0]row,output reg[7:0]w);
+  (* keep="true" *) reg [2:0] ws;
+  wire accept=sv && !busy && !bad;
+  always @(posedge clk) begin
+    if(accept) begin ws<=sel;w<=imm;end
+    else if(arr) w<=row[32*(ws ^ ((MUT==9 && SECOND)?3'd1:3'd0))+8*BYTE+:8];
+  end
 endmodule
 `endif
