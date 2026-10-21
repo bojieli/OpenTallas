@@ -93,8 +93,6 @@ module ot_s81pa_sel_ctl #(
     wire [15:0] tc = {cres_b, 8'h00};
 `endif
     wire [15:0]   tf = {c_Bt, fres_b};
-    wire          use_c = (st == C_ING) && kseen && (hold_c == 0) && cres_ok;
-    wire          use_f = (st == C_ING) && kseen && (hold_c == 0) && (hold_f == 0) && fres_ok;
     wire [QC-1:0] kin_c = ({1'b0, k_in} > KQ) ? KQ : {1'b0, k_in};
     wire [XW-1:0] cab = cres_above;
 
@@ -139,6 +137,15 @@ module ot_s81pa_sel_ctl #(
         end
     end endgenerate
 
+    // [ELEM-BKG] 20 same-edge next-state copies, one per register chunk group; copy0 = original st + 1-bit flags
+    localparam integer NXK=20, NXW=237;
+    wire[NXK*NXW-1:0]nx_bus;
+    wire[3*NXK-1:0]st_k;
+    assign st_k[2:0]=st;
+    generate for(genvar k=0;k<NXK;k=k+1)begin:g_nx
+    wire[2:0]stc=st_k[3*k+:3];
+    wire          use_c = (stc == C_ING) && kseen && (hold_c == 0) && cres_ok;
+    wire          use_f = (stc == C_ING) && kseen && (hold_c == 0) && (hold_f == 0) && fres_ok;
     reg[2:0]st_d;
     reg[7:0]wcnt_d;
     reg[7:0]hold_c_d;
@@ -167,7 +174,7 @@ module ot_s81pa_sel_ctl #(
     reg[10:0]kq_d;
     reg[20:0]qf_d;
     always @* begin
-      st_d=st;
+      st_d=stc;
       wcnt_d=wcnt;
       hold_c_d=hold_c;
       hold_f_d=hold_f;
@@ -198,7 +205,7 @@ module ot_s81pa_sel_ctl #(
             if (hold_c != 0) hold_c_d = hold_c - 1'b1;
             if (hold_f != 0) hold_f_d = hold_f - 1'b1;
             if (wcnt != 0) wcnt_d = wcnt - 1'b1;
-            case (st)
+            case (stc)
                 C_ING: begin
                     if (k_ld && !kseen) begin
                         kseen_d = 1'b1; kq_d = kin_c; hold_c_d = HC0[TW-1:0]; hold_f_d = HF0[TW-1:0];
@@ -252,194 +259,210 @@ module ot_s81pa_sel_ctl #(
                 end
             endcase
     end
+    assign nx_bus[NXW*k+:NXW]={qf_d,kq_d,ovf_d,rep_req_d,c_hclr_d,c_rem_d,c_st_d,c_rep_d,c_p3_d,c_p2_d,c_stop_d,c_ing_d,c_fclr_d,c_Bt_d,c_T_d,eq_d,t_d,m_d,ls_d,bs_d,bs_done_d,hf_seen_d,kseen_d,hold_f_d,hold_c_d,wcnt_d,st_d};
+    end endgenerate
     localparam[2:0]N32_INIT_st=C_CLR;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_st
       localparam integer LO=c*16,SW=(3-LO<16)?3-LO:16;
       always @(posedge clk or negedge rst_n_profile[1+c])
         if(!rst_n_profile[1+c])st[LO+:SW]<=N32_INIT_st[LO+:SW];
-        else st[LO+:SW]<=st_d[LO+:SW];
+        else st[LO+:SW]<=nx_bus[NXW*(0+c*0)+0+LO+:SW];
     end endgenerate
     localparam[7:0]N32_INIT_wcnt=CLRW[TW-1:0];
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_wcnt
       localparam integer LO=c*16,SW=(8-LO<16)?8-LO:16;
       always @(posedge clk or negedge rst_n_profile[2+c])
         if(!rst_n_profile[2+c])wcnt[LO+:SW]<=N32_INIT_wcnt[LO+:SW];
-        else wcnt[LO+:SW]<=wcnt_d[LO+:SW];
+        else wcnt[LO+:SW]<=nx_bus[NXW*(1+c*1)+3+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(1+c))u_stk(.clk(clk),.rst_n(rst_n_profile[2+c]),.d(nx_bus[0+:3]),.q(st_k[3*(1+c)+:3]));
     end endgenerate
     localparam[7:0]N32_INIT_hold_c=0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_hold_c
       localparam integer LO=c*16,SW=(8-LO<16)?8-LO:16;
       always @(posedge clk or negedge rst_n_profile[3+c])
         if(!rst_n_profile[3+c])hold_c[LO+:SW]<=N32_INIT_hold_c[LO+:SW];
-        else hold_c[LO+:SW]<=hold_c_d[LO+:SW];
+        else hold_c[LO+:SW]<=nx_bus[NXW*(2+c*1)+11+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(2+c))u_stk(.clk(clk),.rst_n(rst_n_profile[3+c]),.d(nx_bus[0+:3]),.q(st_k[3*(2+c)+:3]));
     end endgenerate
     localparam[7:0]N32_INIT_hold_f=0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_hold_f
       localparam integer LO=c*16,SW=(8-LO<16)?8-LO:16;
       always @(posedge clk or negedge rst_n_profile[4+c])
         if(!rst_n_profile[4+c])hold_f[LO+:SW]<=N32_INIT_hold_f[LO+:SW];
-        else hold_f[LO+:SW]<=hold_f_d[LO+:SW];
+        else hold_f[LO+:SW]<=nx_bus[NXW*(3+c*1)+19+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(3+c))u_stk(.clk(clk),.rst_n(rst_n_profile[4+c]),.d(nx_bus[0+:3]),.q(st_k[3*(3+c)+:3]));
     end endgenerate
     localparam[0:0]N32_INIT_kseen=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_kseen
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[5+c])
         if(!rst_n_profile[5+c])kseen<=N32_INIT_kseen;
-        else kseen<=kseen_d;
+        else kseen<=nx_bus[NXW*(0+c*0)+27];
     end endgenerate
     localparam[0:0]N32_INIT_hf_seen=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_hf_seen
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[6+c])
         if(!rst_n_profile[6+c])hf_seen<=N32_INIT_hf_seen;
-        else hf_seen<=hf_seen_d;
+        else hf_seen<=nx_bus[NXW*(0+c*0)+28];
     end endgenerate
     localparam[0:0]N32_INIT_bs_done=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_bs_done
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[7+c])
         if(!rst_n_profile[7+c])bs_done<=N32_INIT_bs_done;
-        else bs_done<=bs_done_d;
+        else bs_done<=nx_bus[NXW*(0+c*0)+29];
     end endgenerate
     localparam[7:0]N32_INIT_bs=0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_bs
       localparam integer LO=c*16,SW=(8-LO<16)?8-LO:16;
       always @(posedge clk or negedge rst_n_profile[8+c])
         if(!rst_n_profile[8+c])bs[LO+:SW]<=N32_INIT_bs[LO+:SW];
-        else bs[LO+:SW]<=bs_d[LO+:SW];
+        else bs[LO+:SW]<=nx_bus[NXW*(4+c*1)+30+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(4+c))u_stk(.clk(clk),.rst_n(rst_n_profile[8+c]),.d(nx_bus[0+:3]),.q(st_k[3*(4+c)+:3]));
     end endgenerate
     localparam[7:0]N32_INIT_ls=0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_ls
       localparam integer LO=c*16,SW=(8-LO<16)?8-LO:16;
       always @(posedge clk or negedge rst_n_profile[9+c])
         if(!rst_n_profile[9+c])ls[LO+:SW]<=N32_INIT_ls[LO+:SW];
-        else ls[LO+:SW]<=ls_d[LO+:SW];
+        else ls[LO+:SW]<=nx_bus[NXW*(5+c*1)+38+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(5+c))u_stk(.clk(clk),.rst_n(rst_n_profile[9+c]),.d(nx_bus[0+:3]),.q(st_k[3*(5+c)+:3]));
     end endgenerate
     localparam[10:0]N32_INIT_m=0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_m
       localparam integer LO=c*16,SW=(11-LO<16)?11-LO:16;
       always @(posedge clk or negedge rst_n_profile[10+c])
         if(!rst_n_profile[10+c])m[LO+:SW]<=N32_INIT_m[LO+:SW];
-        else m[LO+:SW]<=m_d[LO+:SW];
+        else m[LO+:SW]<=nx_bus[NXW*(6+c*1)+46+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(6+c))u_stk(.clk(clk),.rst_n(rst_n_profile[10+c]),.d(nx_bus[0+:3]),.q(st_k[3*(6+c)+:3]));
     end endgenerate
     localparam[10:0]N32_INIT_t=0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_t
       localparam integer LO=c*16,SW=(11-LO<16)?11-LO:16;
       always @(posedge clk or negedge rst_n_profile[11+c])
         if(!rst_n_profile[11+c])t[LO+:SW]<=N32_INIT_t[LO+:SW];
-        else t[LO+:SW]<=t_d[LO+:SW];
+        else t[LO+:SW]<=nx_bus[NXW*(7+c*1)+57+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(7+c))u_stk(.clk(clk),.rst_n(rst_n_profile[11+c]),.d(nx_bus[0+:3]),.q(st_k[3*(7+c)+:3]));
     end endgenerate
     localparam[43:0]N32_INIT_eq=0;
     generate for(genvar c=0;c<3;c=c+1)begin:g_n32_eq
       localparam integer LO=c*16,SW=(44-LO<16)?44-LO:16;
       always @(posedge clk or negedge rst_n_profile[12+c])
         if(!rst_n_profile[12+c])eq[LO+:SW]<=N32_INIT_eq[LO+:SW];
-        else eq[LO+:SW]<=eq_d[LO+:SW];
+        else eq[LO+:SW]<=nx_bus[NXW*(8+c*1)+68+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(8+c))u_stk(.clk(clk),.rst_n(rst_n_profile[12+c]),.d(nx_bus[0+:3]),.q(st_k[3*(8+c)+:3]));
     end endgenerate
     localparam[15:0]N32_INIT_c_T=0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_c_T
       localparam integer LO=c*16,SW=(16-LO<16)?16-LO:16;
       always @(posedge clk or negedge rst_n_profile[15+c])
         if(!rst_n_profile[15+c])c_T[LO+:SW]<=N32_INIT_c_T[LO+:SW];
-        else c_T[LO+:SW]<=c_T_d[LO+:SW];
+        else c_T[LO+:SW]<=nx_bus[NXW*(11+c*1)+112+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(11+c))u_stk(.clk(clk),.rst_n(rst_n_profile[15+c]),.d(nx_bus[0+:3]),.q(st_k[3*(11+c)+:3]));
     end endgenerate
     localparam[7:0]N32_INIT_c_Bt=0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_c_Bt
       localparam integer LO=c*16,SW=(8-LO<16)?8-LO:16;
       always @(posedge clk or negedge rst_n_profile[16+c])
         if(!rst_n_profile[16+c])c_Bt[LO+:SW]<=N32_INIT_c_Bt[LO+:SW];
-        else c_Bt[LO+:SW]<=c_Bt_d[LO+:SW];
+        else c_Bt[LO+:SW]<=nx_bus[NXW*(12+c*1)+128+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(12+c))u_stk(.clk(clk),.rst_n(rst_n_profile[16+c]),.d(nx_bus[0+:3]),.q(st_k[3*(12+c)+:3]));
     end endgenerate
     localparam[0:0]N32_INIT_c_fclr=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_c_fclr
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[17+c])
         if(!rst_n_profile[17+c])c_fclr<=N32_INIT_c_fclr;
-        else c_fclr<=c_fclr_d;
+        else c_fclr<=nx_bus[NXW*(0+c*0)+136];
     end endgenerate
     localparam[0:0]N32_INIT_c_ing=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_c_ing
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[18+c])
         if(!rst_n_profile[18+c])c_ing<=N32_INIT_c_ing;
-        else c_ing<=c_ing_d;
+        else c_ing<=nx_bus[NXW*(0+c*0)+137];
     end endgenerate
     localparam[0:0]N32_INIT_c_stop=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_c_stop
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[19+c])
         if(!rst_n_profile[19+c])c_stop<=N32_INIT_c_stop;
-        else c_stop<=c_stop_d;
+        else c_stop<=nx_bus[NXW*(0+c*0)+138];
     end endgenerate
     localparam[0:0]N32_INIT_c_p2=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_c_p2
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[20+c])
         if(!rst_n_profile[20+c])c_p2<=N32_INIT_c_p2;
-        else c_p2<=c_p2_d;
+        else c_p2<=nx_bus[NXW*(0+c*0)+139];
     end endgenerate
     localparam[0:0]N32_INIT_c_p3=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_c_p3
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[21+c])
         if(!rst_n_profile[21+c])c_p3<=N32_INIT_c_p3;
-        else c_p3<=c_p3_d;
+        else c_p3<=nx_bus[NXW*(0+c*0)+140];
     end endgenerate
     localparam[0:0]N32_INIT_c_rep=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_c_rep
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[22+c])
         if(!rst_n_profile[22+c])c_rep<=N32_INIT_c_rep;
-        else c_rep<=c_rep_d;
+        else c_rep<=nx_bus[NXW*(0+c*0)+141];
     end endgenerate
     localparam[15:0]N32_INIT_c_st=0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_c_st
       localparam integer LO=c*16,SW=(16-LO<16)?16-LO:16;
       always @(posedge clk or negedge rst_n_profile[23+c])
         if(!rst_n_profile[23+c])c_st[LO+:SW]<=N32_INIT_c_st[LO+:SW];
-        else c_st[LO+:SW]<=c_st_d[LO+:SW];
+        else c_st[LO+:SW]<=nx_bus[NXW*(13+c*1)+142+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(13+c))u_stk(.clk(clk),.rst_n(rst_n_profile[23+c]),.d(nx_bus[0+:3]),.q(st_k[3*(13+c)+:3]));
     end endgenerate
     localparam[43:0]N32_INIT_c_rem=0;
     generate for(genvar c=0;c<3;c=c+1)begin:g_n32_c_rem
       localparam integer LO=c*16,SW=(44-LO<16)?44-LO:16;
       always @(posedge clk or negedge rst_n_profile[24+c])
         if(!rst_n_profile[24+c])c_rem[LO+:SW]<=N32_INIT_c_rem[LO+:SW];
-        else c_rem[LO+:SW]<=c_rem_d[LO+:SW];
+        else c_rem[LO+:SW]<=nx_bus[NXW*(14+c*1)+158+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(14+c))u_stk(.clk(clk),.rst_n(rst_n_profile[24+c]),.d(nx_bus[0+:3]),.q(st_k[3*(14+c)+:3]));
     end endgenerate
     localparam[0:0]N32_INIT_c_hclr=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_c_hclr
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[27+c])
         if(!rst_n_profile[27+c])c_hclr<=N32_INIT_c_hclr;
-        else c_hclr<=c_hclr_d;
+        else c_hclr<=nx_bus[NXW*(0+c*0)+202];
     end endgenerate
     localparam[0:0]N32_INIT_rep_req=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_rep_req
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[28+c])
         if(!rst_n_profile[28+c])rep_req<=N32_INIT_rep_req;
-        else rep_req<=rep_req_d;
+        else rep_req<=nx_bus[NXW*(0+c*0)+203];
     end endgenerate
     localparam[0:0]N32_INIT_ovf=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_ovf
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
       always @(posedge clk or negedge rst_n_profile[29+c])
         if(!rst_n_profile[29+c])ovf<=N32_INIT_ovf;
-        else ovf<=ovf_d;
+        else ovf<=nx_bus[NXW*(0+c*0)+204];
     end endgenerate
     localparam[10:0]N32_INIT_kq=0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_kq
       localparam integer LO=c*16,SW=(11-LO<16)?11-LO:16;
       always @(posedge clk or negedge rst_n_profile[30+c])
         if(!rst_n_profile[30+c])kq[LO+:SW]<=N32_INIT_kq[LO+:SW];
-        else kq[LO+:SW]<=kq_d[LO+:SW];
+        else kq[LO+:SW]<=nx_bus[NXW*(17+c*1)+205+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(17+c))u_stk(.clk(clk),.rst_n(rst_n_profile[30+c]),.d(nx_bus[0+:3]),.q(st_k[3*(17+c)+:3]));
     end endgenerate
     localparam[20:0]N32_INIT_qf=QINV;
     generate for(genvar c=0;c<2;c=c+1)begin:g_n32_qf
       localparam integer LO=c*16,SW=(21-LO<16)?21-LO:16;
       always @(posedge clk or negedge rst_n_profile[31+c])
         if(!rst_n_profile[31+c])qf[LO+:SW]<=N32_INIT_qf[LO+:SW];
-        else qf[LO+:SW]<=qf_d[LO+:SW];
+        else qf[LO+:SW]<=nx_bus[NXW*(18+c*1)+216+LO+:SW];
+      ot_s81pa_rcopy #(.W(3),.INIT(C_CLR),.ID(18+c))u_stk(.clk(clk),.rst_n(rst_n_profile[31+c]),.d(nx_bus[0+:3]),.q(st_k[3*(18+c)+:3]));
     end endgenerate
     initial if(Q!=4||K!=512||KW!=10||CB!=11||XD!=17||PERM!=1||RQPIPE!=1||SLAT!=4)$fatal(1,"fixed selected n32 control shape");
     assign busy = (st != C_ING) || kseen;

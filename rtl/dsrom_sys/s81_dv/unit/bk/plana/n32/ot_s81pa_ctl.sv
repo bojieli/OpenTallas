@@ -228,6 +228,19 @@ module ot_s81pa_ctl #(
                 end
             end
     end
+    // [ELEM-BKG] seg_tag header chain from kept same-edge copies of h_v (pin-flop bit x[840]: same D, same reset leaf)
+    // and seg_open (same D seg_open_d, same leaf), halving the header-select fanout; identical first-valid rule.
+    wire[Q-1:0]h_v_t;wire seg_open_t;
+    generate for(genvar g2=0;g2<Q;g2=g2+1)begin:g_hvt
+      localparam integer HB=SB*g2+840;
+      ot_s81pa_rcopy #(.W(1),.INIT(1'b0),.ID(16384+g2))u_h(.clk(ck[0]),.rst_n(rst_local[1+HB/24]),.d(f_s[HB]),.q(h_v_t[g2]));
+    end endgenerate
+    ot_s81pa_rcopy #(.W(1),.INIT(1'b0),.ID(16400))u_so(.clk(ck[0]),.rst_n(rst_local[284]),.d(seg_open_d),.q(seg_open_t));
+    reg[7:0]seg_tag_t;
+    always @* begin : hdr_t
+      integer t2; reg op2; op2=seg_open_t; seg_tag_t=seg_tag;
+      for(t2=0;t2<Q;t2=t2+1) if(h_v_t[t2]&&!op2) begin op2=1'b1; seg_tag_t=h_tag[8*t2+:8]; end
+    end
     localparam[0:0]N32_INIT_seg_open=1'b0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_seg_open
       localparam integer LO=c*16,SW=(1-LO<16)?1-LO:16;
@@ -247,7 +260,7 @@ module ot_s81pa_ctl #(
       localparam integer LO=c*16,SW=(8-LO<16)?8-LO:16;
       always @(posedge ck[0] or negedge rst_local[286+c])
         if(!rst_local[286+c])seg_tag[LO+:SW]<=N32_INIT_seg_tag[LO+:SW];
-        else seg_tag[LO+:SW]<=seg_tag_d[LO+:SW];
+        else seg_tag[LO+:SW]<=seg_tag_t[LO+:SW];
     end endgenerate
     localparam[4:0]N32_INIT_flt=5'd0;
     generate for(genvar c=0;c<1;c=c+1)begin:g_n32_flt

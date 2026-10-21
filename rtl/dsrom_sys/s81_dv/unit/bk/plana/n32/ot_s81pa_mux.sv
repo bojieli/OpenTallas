@@ -8,6 +8,16 @@ module ot_s81pa_copy #(parameter integer W=21,ID=0)(input wire clk,input wire[W-
  assign q=r;
 endmodule
 
+// [ELEM-BKG] kept same-edge copy of a RESET register: same D, same reset value, reset by the consumer's leaf
+// (all profile leaves release on the same edge).
+(* keep_hierarchy="yes" *)
+module ot_s81pa_rcopy #(parameter integer W=3,parameter[W-1:0]INIT=0,parameter integer ID=0)(
+ input wire clk,rst_n,input wire[W-1:0]d,output wire[W-1:0]q);
+ (* keep *) reg[W-1:0]r;
+ always @(posedge clk or negedge rst_n) if(!rst_n)r<=INIT;else r<=d;
+ assign q=r;
+endmodule
+
 (* keep_hierarchy="yes" *)
 module ot_s81pa_prio16 #(parameter integer W=2,ID=0)(
  input wire clk,input wire[15:0]compare_next,input wire[16*W-1:0]data,

@@ -8,8 +8,11 @@ module ot_s81pa_packet #(parameter integer LO=0,SW=24,ID=0)(
  output reg[SW-1:0]out);
  localparam[52:0]INIT=53'd65536; // original done_pend=1; other packet-control fields0
  (* keep *)reg[52:0]state;
- (* keep *)reg[1:0]tsel;
- always @(posedge clk)tsel<=selector_next;
+ // [ELEM-BKG] eight kept same-edge copies of tsel (was one register, 100/51 loads); bit b uses copy b%8
+ wire[15:0]tsel_k;
+ generate for(genvar k=0;k<8;k=k+1)begin:g_tsel
+  ot_s81pa_copy #(.W(2),.ID(4096+8*ID+k))u_t(.clk(clk),.d(selector_next),.q(tsel_k[2*k+:2]));
+ end endgenerate
  generate for(genvar c=0;c<4;c=c+1)begin:g_state
   localparam integer B=c*16,W=(53-B<16)?53-B:16;
   always @(posedge clk or negedge rst_n[c])
@@ -22,8 +25,9 @@ module ot_s81pa_packet #(parameter integer LO=0,SW=24,ID=0)(
  reg[357:0]hd;reg[2:0]count;
  always @*begin
   hd=0;count=0;
-  for(integer q=0;q<4;q=q+1)if(tsel==2'(q))begin
-   hd=heads[358*q+:358];count=counts[3*q+:3];
+  for(integer q=0;q<4;q=q+1)begin
+   for(integer b=0;b<358;b=b+1)if(tsel_k[2*(b%8)+:2]==2'(q))hd[b]=heads[358*q+b];
+   for(integer b=0;b<3;b=b+1)if(tsel_k[2*((b+5)%8)+:2]==2'(q))count[b]=counts[3*q+b];
   end
  end
  wire[4:0]fresh=flt&~fltr;

@@ -116,6 +116,7 @@ module ot_s81pa_sel_su #(
     reg [16*SW-1:0] bp0, bp1;
     reg [16*XW-1:0] bq0, bq1, bt, bu;
     reg [XW+QW+4-1:0] bm0, bm1, bm2, bm3;
+    wire [4*XW-1:0] acc_k;
     generate for (n=0; n<16; n=n+1) begin : g_b
         wire [SW-1:0] p0, p1;
         wire [XW-1:0] z0, z1, zt, zu;
@@ -131,7 +132,11 @@ module ot_s81pa_sel_su #(
         ot_hdc_ksadd_k #(.W(XW)) q_sum (.a(bq0[XW*n+:XW]), .b(bq1[XW*n+:XW]), .cin(1'b0), .s(u2_d[XW*n+:XW]), .cout());
         ot_hdc_ksadd_k #(.W(XW)) t_sum (.a(u2_r[XW*n+:XW]), .b((n+4<16) ? u2_r[XW*((n+4)%16)+:XW] : {XW{1'b0}}), .cin(1'b0), .s(zt), .cout());
         ot_hdc_ksadd_k #(.W(XW)) u_sum (.a(bt[XW*n+:XW]), .b((n+8<16) ? bt[XW*((n+8)%16)+:XW] : {XW{1'b0}}), .cin(1'b0), .s(zu), .cout());
-        wire [XW-1:0] aligned_acc=bm3[XW+QW+4-1:QW+4];
+        // [ELEM-BKG] lane-local kept copy of bm3's acc field (same edge: captures bm2), one per four lanes
+        if (n%4==0) begin : g_acc
+            ot_s81pa_copy #(.W(XW),.ID(8192+n))u_a(.clk(clk),.d(bm2[XW+QW+4-1:QW+4]),.q(acc_k[XW*(n/4)+:XW]));
+        end
+        wire [XW-1:0] aligned_acc=acc_k[XW*(n/4)+:XW];
         ot_hdc_ksadd_k #(.W(XW)) final_sum (.a(bu[XW*n+:XW]), .b(aligned_acc), .cin(1'b0), .s(u3_d[XW*n+:XW]), .cout());
         always @(posedge clk) begin bp0[SW*n+:SW]<=p0; bp1[SW*n+:SW]<=p1; bq0[XW*n+:XW]<=z0; bq1[XW*n+:XW]<=z1; bt[XW*n+:XW]<=zt; bu[XW*n+:XW]<=zu; end
     end endgenerate
