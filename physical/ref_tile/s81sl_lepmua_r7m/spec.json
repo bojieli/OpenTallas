@@ -271,7 +271,8 @@
    "ot_s81sl_lep_pair_ready",
    "ot_s81sl_lep_return8",
    "ot_sram_showahead_readptr",
-   "ot_s81sl_lep_face8"
+   "ot_s81sl_lep_face8",
+   "ot_lep_en2"
   ]
  },
  "structural_change": "ELEM-LEP/A r7 MAIN (r6v NEEDS_RTL TT -131.02 reg->out mwd 699.8 um S->N / FF -34.22 removal local_r->frame 51 ps leaf skew): r6v floorplan/outline/pins/spine unchanged; RTL opt-in NFACE (per-byte ml_rd/ml_wd owners) + io_flop_at_pins (every port owner FIRM at its pin, incl. ml_wd at the N face) + SYNCRST (reset gates only control/valid D, no async RESETN -> no removal check across leaves; release edges unchanged) + RPRLY (+2 priced edges on replay ml_rd -> ri/mu_rt: 1,063 um corner path in 3 hops <= 355 um). Write path RX show-ahead -> N owners: <= 670 um in two registered hops via the show-ahead flop (no added edge).",

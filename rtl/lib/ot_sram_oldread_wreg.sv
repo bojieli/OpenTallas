@@ -45,9 +45,10 @@ module ot_sram_oldread_wreg #(parameter integer W=553, AW=9, SB=16, GA=16, NS=(W
    reg [SW-1:0] forwarded;
    wire hit=(MUT==1)?1'b0:(valid_r && ra[AW*(s/GA)+:AW]==addr_r);
 `ifdef OT_S81SL_LEP_SYNCRST
-   // r7 SYNCRST: one kept forward enable per slice, so ABC cannot spread the group read enable into every payload bit
-   // (r7m pre-gate native census: rd_group 39-45 loads through per-bit AND3 once the reset became a D input).
-   (* keep="true" *) wire fwd_en=r_en[s/GA] && hit;
+   // r7 SYNCRST: one forward enable per slice in a kept-hierarchy cell, so ABC cannot spread the group read enable into
+   // every payload bit (r7m/r7f pre-gate native census: rd_group 39-45 loads through per-bit AND3).
+   wire fwd_en;
+   ot_lep_en2 u_fwd_en(.a(r_en[s/GA]),.b(hit),.y(fwd_en));
 `else
    wire fwd_en=r_en[s/GA] && hit;
 `endif
@@ -61,3 +62,13 @@ module ot_sram_oldread_wreg #(parameter integer W=553, AW=9, SB=16, GA=16, NS=(W
  initial if(AW>9 || W<1 || (SB!=8 && SB!=16) || GA<1 || ((128%(GA*SB))!=0 && ((GA*SB)%128)!=0)) $fatal(1,"oldread memory requires1..512rows");
 `endif
 endmodule
+`ifdef OT_S81SL_LEP_SYNCRST
+`ifndef OT_LEP_EN2_DEFINED
+`define OT_LEP_EN2_DEFINED
+// r7 SYNCRST helper: a kept 2-input enable (kit SYNTH_KEEP_MODULES), one driver per slice for the forwarded payload.
+(* keep_hierarchy="yes" *)
+module ot_lep_en2(input wire a, input wire b, output wire y);
+ assign y=a&b;
+endmodule
+`endif
+`endif
