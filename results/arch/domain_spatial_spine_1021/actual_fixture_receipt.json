@@ -1,0 +1,25 @@
+{
+  "status": "PREPARED_NOT_RUN",
+  "cases": [
+    "shell3",
+    "ctlm2"
+  ],
+  "syntax_checks": [
+    "bash -n run_fixture.sh",
+    "python3 -m py_compile prepare_fixture.py"
+  ],
+  "pure_preparation": "bothcases archive/hash/current-control-optin SDCidentity PASS; noOpenROADexecution",
+  "files": {
+    "prepare_fixture.py": "c6993c6540045f9fd3309e3f56cd1d9145e1c85d7454601ea3005eee58722325",
+    "fixture_modes.tcl": "96157eec21c5773bc396199357b315092041d23922c39e847226cf18c25b7465",
+    "run_fixture.sh": "1b6ba2d8ae52665b0763813fe3ed4050e1a21e061d43704151432714f21ac172",
+    "fixtures/ctlm2.odb.gz": "8b9e2ab8da1b4dc038455ccbfde3ed8b40e87b7ec040bed58715c47f148bb3ab",
+    "fixtures/shell3.odb.gz": "5e8612c9fa1a8e593280b0af25aa0f757a12d30464dcde692ee6f12cdd82c84e",
+    "fixtures/shell3_scene.tgz": "17ac0a0fa1cb065aaebe58c75d930897a17f2acfbd30d96498ab1cb9c5c909f3",
+    "fixtures/manifest.json": "259cb6a6eecd5a7844704b99ceb1ab337dc608af36040f02195559ef78cfa125",
+    "fixtures/standard_libs.json": "2b6d3d6bdf0804dffbbe049e5a522705cb889b9e58c7c13e093b67045e02e548",
+    "fixtures/stdlibs.tgz": "20ba815dd849e442431f1e2d5def7a872dfbf9a3445a54b38f7b1664a03ace89",
+    "fixtures/ctlm2_scene.tgz": "597ea90b5a3f3821e9b013f21f72e21a32a09f46ec6f7e07c27e60300228fd0f"
+  },
+  "root_only_next": "Actualfleet collector/causals/canonicalengine andpairedcache qualification beforepublication"
+}
