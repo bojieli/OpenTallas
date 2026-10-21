@@ -52,7 +52,7 @@ module ot_s81dv_norm_finish_sram #(
     ot_s81dv_finish_reset2 #(.LEAVES(NRS)) u_meta_reset(.clk(clk),.rst_n(rst_n),.q(rsr));
     // NATIVE32 (ELEM-XFV/XFIN 10-21): go_t and the leaf-match inputs are KEPT same-edge copies (census r1: go_t 4965,
     // iv 653, ib 177 loads); every copy is a function-identical register of the original, so no edge moves.
-    localparam integer NGO = 12, NLC = 24;
+    localparam integer NGO = 12, NLC = 1, NBK = P * K;
     (* keep *) reg [NGO-1:0] go_t;
     always @(posedge clk or negedge rstn) if (!rstn) go_t <= {NGO{1'b0}}; else go_t <= {NGO{go}};
     reg [P-1:0] iv; reg [P*8-1:0] ib; reg [P*K*32-1:0] id; reg [31:0] eps_c;
@@ -64,6 +64,19 @@ module ot_s81dv_norm_finish_sram #(
         always @(posedge clk or negedge rsr[cl % NRS]) if (!rsr[cl % NRS]) ivl[cl*P +: P] <= {P{1'b0}};
             else ivl[cl*P +: P] <= go_t[cl % NGO] ? {P{1'b0}} : f_v;
         always @(posedge clk) ibl[cl*P*8 +: P*8] <= f_base;
+    end endgenerate
+    // r2: one KEPT copy of the flit control per leaf bank (its write decode reads only its own copy)
+    (* keep *) reg [NBK*P-1:0] ivb; (* keep *) reg [NBK*P*8-1:0] ibb;
+    generate for (cl = 0; cl < NBK; cl = cl + 1) begin : g_bc
+        always @(posedge clk or negedge rsr[(cl + 40) % NRS]) if (!rsr[(cl + 40) % NRS]) ivb[cl*P +: P] <= {P{1'b0}};
+            else ivb[cl*P +: P] <= go_t[(cl + 3) % NGO] ? {P{1'b0}} : f_v;
+        always @(posedge clk) ibb[cl*P*8 +: P*8] <= f_base;
+    end endgenerate
+    // r2: leaf match from a predecoded one-hot per port (nibble decode, <=16 loads per net)
+    wire [NV-1:0] dec [0:P-1];
+    wire [NV*P-1:0] ph;
+    generate for (p = 0; p < P; p = p + 1) begin : g_dec
+        ot_s81dv_fin_dec #(.N(NV)) u_d (.v(ivl[p]), .b(ibl[p*8 +: 8]), .oh(dec[p]));
     end endgenerate
     // ---------------------------------------------------------------- node values: leaves (beats) and add nodes
     wire        VD [1:2*NVP-1];
@@ -90,7 +103,7 @@ module ot_s81dv_norm_finish_sram #(
                         localparam integer IXM = IX;
 `endif
                         if (IXM - k >= 0) begin : g_m
-                            assign m[p * K + k] = ivl[(IX * NLC / NV) * P + p] && (ibl[(IX * NLC / NV) * P * 8 + p * 8 +: 8] == IXM - k);
+                            assign m[p * K + k] = dec[p][IXM - k];
                         end else begin : g_n
                             assign m[p * K + k] = 1'b0;
                         end
@@ -98,6 +111,9 @@ module ot_s81dv_norm_finish_sram #(
                     end
                 end
                 wire hit = |m;
+                for (p = 0; p < P; p = p + 1) begin : g_ph
+                    assign ph[IX * P + p] = |m[p * K +: K];
+                end
                 reg vld;
                 always @(posedge clk or negedge rsr[IX % NRS])
                     if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t[IX % NGO]) vld <= 1'b0; else if (hit) vld <= 1'b1;
@@ -105,6 +121,9 @@ module ot_s81dv_norm_finish_sram #(
                 assign dup[IX] = hit && (vld || ((m & (m - 1)) != 0));
                  assign VD[n] = vld;
             end else begin : g_pad
+                if (IX < NV) begin : g_np
+                    assign ph[IX * P +: P] = {P{1'b0}};
+                end
                 assign dup[IX] = 1'b0;
                  assign VD[n] = 1'b0;
             end
@@ -180,7 +199,7 @@ module ot_s81dv_norm_finish_sram #(
     always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= fire;
     always @(posedge clk) t_q <= ot[NVP];
     ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(1)) u_values(
-      .clk(clk),.iv(iv),.it({(P*2){1'b0}}),.ib(ib),.id(id),.fire(fire),.issue_tag({1'b0,ot[NVP]}),
+      .clk(clk),.ivb(ivb),.itb({(NBK*P*2){1'b0}}),.ibb(ibb),.ph(ph),.id(id),.fire(fire),.issue_tag({1'b0,ot[NVP]}),
       .rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag({1'b0,wr_n}),.wr_d(wr_d));
     wire [LAV:0] av;
     wire f_add;
@@ -268,7 +287,7 @@ module ot_s81dv_eng_finish_sram #(
     ot_s81dv_finish_reset2 #(.LEAVES(NRS)) u_meta_reset(.clk(clk),.rst_n(rst_n),.q(rsr));
     // NATIVE32 (ELEM-XFV/XFIN 10-21): kept same-edge copies of go_t (census r1 4965 loads) and of the leaf-match
     // inputs iv/it/ib (59/92/120); function-identical registers, no edge moves.
-    localparam integer NGO = 32, NLC = 6;
+    localparam integer NGO = 32, NLC = 3, NBK = P * K;   // NLC: one leaf-match copy per tree
     (* keep *) reg [NGO-1:0] go_t;
     always @(posedge clk or negedge rstn) if (!rstn) go_t <= {NGO{1'b0}}; else go_t <= {NGO{go}};
     reg [P-1:0] iv; reg [P*2-1:0] it; reg [P*8-1:0] ib; reg [P*K*32-1:0] id;
@@ -281,6 +300,15 @@ module ot_s81dv_eng_finish_sram #(
             else ivl[cl*P +: P] <= go_t[cl % NGO] ? {P{1'b0}} : f_v;
         always @(posedge clk) begin itl[cl*P*2 +: P*2] <= f_t; ibl[cl*P*8 +: P*8] <= f_base; end
     end endgenerate
+    (* keep *) reg [NBK*P-1:0] ivb; (* keep *) reg [NBK*P*2-1:0] itb; (* keep *) reg [NBK*P*8-1:0] ibb;
+    generate for (cl = 0; cl < NBK; cl = cl + 1) begin : g_bc
+        always @(posedge clk or negedge rsr[(cl + 40) % NRS]) if (!rsr[(cl + 40) % NRS]) ivb[cl*P +: P] <= {P{1'b0}};
+            else ivb[cl*P +: P] <= go_t[(cl + 7) % NGO] ? {P{1'b0}} : f_v;
+        always @(posedge clk) begin itb[cl*P*2 +: P*2] <= f_t; ibb[cl*P*8 +: P*8] <= f_base; end
+    end endgenerate
+    // leaf match: per (tree, port) predecoded one-hot of the flit base, valid = iv && it == tree (copy = tree)
+    wire [NV-1:0] dec [0:T*P-1];
+    wire [T*NV*P-1:0] ph;
     wire        wr_v;
     wire [CW-1:0] wr_n;
     wire [31:0] wr_d;
@@ -289,6 +317,10 @@ module ot_s81dv_eng_finish_sram #(
     wire        VD [0:T-1][1:2*NVP-1];
     genvar t, n, p, k;
     generate for (t = 0; t < T; t = t + 1) begin : g_t
+        for (p = 0; p < P; p = p + 1) begin : g_dec
+            ot_s81dv_fin_dec #(.N(NV)) u_d (.v(ivl[t * P + p] && itl[t * P * 2 + p * 2 +: 2] == t),
+                .b(ibl[t * P * 8 + p * 8 +: 8]), .oh(dec[t * P + p]));
+        end
         for (n = NVP; n < 2 * NVP; n = n + 1) begin : g_leaf
             localparam integer IX = n - NVP;
             if (IX < NV) begin : g_live
@@ -300,9 +332,7 @@ module ot_s81dv_eng_finish_sram #(
                         // ENG flit bases are sid * K by construction (xfin fb), so leaf IX is only ever slot IX % K:
                         // the other slots are not wired (3:1 leaf mux instead of 15:1)
                         if (k == IX % K) begin : g_m
-                            localparam integer CL = (t * NV + IX) * NLC / (T * NV);
-                            assign m[p * K + k] = ivl[CL * P + p] && itl[CL * P * 2 + p * 2 +: 2] == t
-                                                  && (ibl[CL * P * 8 + p * 8 +: 8] == IX - k);
+                            assign m[p * K + k] = dec[t * P + p][IX - k];
                         end else begin : g_n
                             assign m[p * K + k] = 1'b0;
                         end
@@ -310,6 +340,9 @@ module ot_s81dv_eng_finish_sram #(
                     end
                 end
                 wire hit = |m;
+                for (p = 0; p < P; p = p + 1) begin : g_ph
+                    assign ph[(t * NV + IX) * P + p] = |m[p * K +: K];
+                end
                 reg vld;
                 always @(posedge clk or negedge rsr[IX % NRS])
                     if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t[(t * NVP + IX) % NGO]) vld <= 1'b0; else if (hit) vld <= 1'b1;
@@ -317,6 +350,9 @@ module ot_s81dv_eng_finish_sram #(
                 assign dup[t * NVP + IX] = hit && (vld || ((m & (m - 1)) != 0));
                  assign VD[t][n] = vld;
             end else begin : g_pad
+                if (IX < NV) begin : g_np
+                    assign ph[(t * NV + IX) * P +: P] = {P{1'b0}};
+                end
                 assign dup[t * NVP + IX] = 1'b0;
                  assign VD[t][n] = 1'b0;
             end
@@ -382,7 +418,7 @@ module ot_s81dv_eng_finish_sram #(
     always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= fire;
     always @(posedge clk) t_q <= ot[NC];
     ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(3)) u_values(
-      .clk(clk),.iv(iv),.it(it),.ib(ib),.id(id),.fire(fire),.issue_tag(ot[NC]),
+      .clk(clk),.ivb(ivb),.itb(itb),.ibb(ibb),.ph(ph),.id(id),.fire(fire),.issue_tag(ot[NC]),
       .rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag(wr_n),.wr_d(wr_d));
     wire [LAV:0] av; wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rstn), .v(f_q), .vd(av));
@@ -413,7 +449,10 @@ module ot_s81dv_eng_finish_sram #(
     assign fault = flt;
 endmodule
 module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
- input wire clk,input wire[P-1:0] iv,input wire[P*2-1:0] it,input wire[P*8-1:0] ib,input wire[P*K*32-1:0] id,
+ // r2 (NATIVE32): per-leaf-bank KEPT copies of the flit control (ivb/itb/ibb, copy c = bank c) and the finish's
+ // per-port leaf hits ph (owner update) replace the shared iv/it/ib decode (census r1: 235-265-load enables)
+ input wire clk,input wire[P*K*P-1:0] ivb,input wire[P*K*P*2-1:0] itb,input wire[P*K*P*8-1:0] ibb,
+ input wire[TREES*NV*P-1:0] ph,input wire[P*K*32-1:0] id,
  input wire fire,input wire[8:0] issue_tag,input wire rd_active,output reg[31:0] a_q,b_q,
  input wire wr_v,input wire[8:0] wr_tag,input wire[31:0] wr_d
 );
@@ -423,20 +462,12 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
   ot_s81dv_finish_SRAM_requires_NV80_K5_P3_T1or3 u_bad();
  end
  reg[1:0] owner[0:TREES*NV-1];
- function automatic integer eligible(input integer pp,input integer tt,input integer ix);
-  integer kk;
-  begin
-   eligible=0;
-   if(TREES==1)begin
-    for(kk=0;kk<K;kk=kk+1)if(iv[pp] && $unsigned(ib[pp*8+:8])+kk==ix)eligible=1;
-   end else eligible=iv[pp] && it[pp*2+:2]==tt && ib[pp*8+:8]==ix-(ix%K);
-  end
- endfunction
+ // owner = lowest eligible port (the original P-1..0 loop's last write); ph[(t*NV+ix)*P+pp] == eligible(pp,t,ix)
  for(genvar t=0;t<TREES;t=t+1)begin:g_ot
   for(genvar ix=0;ix<NV;ix=ix+1)begin:g_ox
-   integer pp;
+   wire[P-1:0] e=ph[(t*NV+ix)*P+:P];
    always @(posedge clk)begin
-    for(pp=P-1;pp>=0;pp=pp-1)if(eligible(pp,t,ix))owner[t*NV+ix]<=2'(pp);
+    if(e[0])owner[t*NV+ix]<=2'd0; else if(e[1])owner[t*NV+ix]<=2'd1; else if(e[2])owner[t*NV+ix]<=2'd2;
    end
   end
  end
@@ -1148,39 +1179,14 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
   bsel<=fire?({{(NB-1){1'b0}},1'b1}<<db[10:6]):{NB{1'b0}};
   ahc<={NB{da[0]}};bhc<={NB{db[0]}};
  end
- function automatic [31:0] merged(input integer target_tree,input integer target_ix);
-  integer pp,kk;
-  begin
-   merged=0;
-   for(pp=0;pp<P;pp=pp+1)begin
-    for(kk=0;kk<K;kk=kk+1)begin
-     if(eligible(pp,target_tree,target_ix) && $unsigned(ib[pp*8+:8])+kk==target_ix)
-       merged=merged|id[(pp*K+kk)*32+:32];
-    end
-   end
-  end
- endfunction
- function automatic [38:0] leaf_write(input integer pp,input integer residue);
-  integer kk,ix,tree,slot;reg en;reg[31:0] data;reg[4:0] addr;reg half;
-  begin
-   en=0;data=0;addr=0;half=0;
-   tree=(TREES==1)?0:it[pp*2+:2];
-   for(kk=0;kk<K;kk=kk+1)begin
-    ix=$unsigned(ib[pp*8+:8])+kk;
-    if(ix<NV && ix%K==residue && tree<TREES && eligible(pp,tree,ix))begin
-     en=1;data=merged(tree,ix);slot=tree*16+ix/5;addr=5'(slot>>1);half=1'(slot%2);
-    end
-   end
-   leaf_write={en,addr,half,data};
-  end
- endfunction
  wire[63:0] rd[0:NB-1];
  for(genvar bank=0;bank<NB;bank=bank+1)begin:g_bank
   wire ren=fire && (da[10:6]==bank || db[10:6]==bank);
   wire[4:0] ra=(da[10:6]==bank)?da[5:1]:db[5:1];
   wire[38:0] wp;
   if(bank<P*K)begin:g_leaf
-   assign wp=leaf_write(bank/K,bank%K);
+   ot_s81dv_finish_leafw #(.NV(NV),.K(K),.P(P),.TREES(TREES),.PB(bank/K),.R(bank%K)) u_w(
+     .iv(ivb[bank*P+:P]),.it(itb[bank*P*2+:P*2]),.ib(ibb[bank*P*8+:P*8]),.id(id),.wp(wp));
   end else begin:g_internal
    assign wp={wr_v && wr_tag[6:0]!=1 && dw[10:6]==bank,dw[5:1],dw[0],wr_d};
   end
@@ -1198,6 +1204,49 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1)(
    if(asel[b])a_q=a_q|(ahc[b]?rd[b][63:32]:rd[b][31:0]);
    if(bsel[b])b_q=b_q|(bhc[b]?rd[b][63:32]:rd[b][31:0]);
   end
+ end
+endmodule
+// r2: one leaf bank's write port from its own control copy, structurally (no shared decode):
+//  NORM (any 8-bit base): k = (R - ib[PB] % K) mod K, ix = ib[PB] + k; data = OR over ports q, slots k2 with
+//  iv[q] && ix - ib[q] == k2 of id[q][k2] (== the original merged() over eligible slots); slot = ix / 5.
+//  ENG (aligned bases, tree it): ix = ib[PB] + R, en needs ib[PB] % K == 0; data = OR over ports q with the same
+//  (it, ib) of id[q][R]; slot = it * 16 + ib / 5.  Equal to the original leaf_write() for every input.
+module ot_s81dv_finish_leafw #(parameter integer NV=80,K=5,P=3,TREES=1,PB=0,R=0)(
+ input wire[P-1:0] iv,input wire[P*2-1:0] it,input wire[P*8-1:0] ib,input wire[P*K*32-1:0] id,output reg[38:0] wp);
+ wire[7:0] bp=ib[PB*8+:8];
+ integer q,k2;
+ reg[8:0] ix;reg[9:0] d;reg[5:0] slot;reg en;reg[31:0] data;reg[2:0] kk;
+ always @*begin
+  data=0;
+  if(TREES==1)begin
+   kk=3'((R+K-(bp%K))%K);
+   ix={1'b0,bp}+{6'd0,kk};
+   en=iv[PB] && ix<NV;
+   slot=6'(ix/5);
+   for(q=0;q<P;q=q+1)begin
+    d={1'b0,ix}-{2'b0,ib[q*8+:8]};
+    for(k2=0;k2<K;k2=k2+1)if(iv[q] && d==k2)data=data|id[(q*K+k2)*32+:32];
+   end
+  end else begin
+   kk=3'(R);
+   ix={1'b0,bp}+R;
+   en=iv[PB] && it[PB*2+:2]<TREES && (bp%K)==0 && ix<NV;
+   slot=6'(it[PB*2+:2]*16+bp/5);
+   for(q=0;q<P;q=q+1)if(iv[q] && it[q*2+:2]==it[PB*2+:2] && ib[q*8+:8]==bp)data=data|id[(q*K+R)*32+:32];
+   d=0;
+  end
+  wp=en?{1'b1,5'(slot>>1),slot[0],data}:39'd0;
+ end
+endmodule
+// Leaf-match predecode: oh[x] = v && b == x from 16 + 16 nibble one-hots (each net <= 16 loads).
+(* keep_hierarchy=1 *) module ot_s81dv_fin_dec #(parameter integer N=80)(input wire v,input wire[7:0] b,output wire[N-1:0] oh);
+ wire[15:0] hi,lo;
+ for(genvar i=0;i<16;i=i+1)begin:g_n
+  assign hi[i]=v && b[7:4]==i;
+  assign lo[i]=b[3:0]==i;
+ end
+ for(genvar x=0;x<N;x=x+1)begin:g_x
+  assign oh[x]=hi[x>>4] && lo[x&15];
  end
 endmodule
 (* keep_hierarchy=1 *) module ot_s81dv_finish_mask8 #(parameter integer UPPER=0)(input wire en,half,output wire[7:0] m);
