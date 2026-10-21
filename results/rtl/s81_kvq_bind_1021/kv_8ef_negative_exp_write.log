@@ -1,0 +1,12 @@
+KV_LEAF mismatch row=8 word=0 got=bea00000 want=03f903f9
+KV_LEAF mismatch row=8 word=1 got=3ed50000 want=03f903f9
+KV_LEAF mismatch row=8 word=2 got=3eee0000 want=03f903f9
+KV_LEAF mismatch row=8 word=3 got=bf600000 want=03f903f9
+KV_LEAF mismatch row=8 word=4 got=bf830000 want=03f903f9
+KV_LEAF mismatch row=8 word=5 got=bf5c0000 want=03f903f9
+KV_LEAF mismatch row=8 word=6 got=404a0000 want=03f903fa
+KV_LEAF mismatch row=8 word=7 got=3e760000 want=03f903f9
+KV_LEAF D512 events=26 vm_pair_writes=52 first_event=1421 last_input_read=1232 bad=8 fault=0 cycles=2291
+[2355000] %Fatal: tb_s81sl_kv_leaf.sv:53: Assertion failed in tb_s81sl_kv_leaf: KV_LEAF FAIL
+%Error: /srv/opentallas-scratch/claude/codex-s81-kvq-bind-1021/run_8efb2ce9b/src/rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_kv_leaf.sv:53: Verilog $stop
+Aborting...

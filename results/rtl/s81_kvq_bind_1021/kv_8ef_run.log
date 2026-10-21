@@ -1,0 +1,6 @@
+KV_LEAF D512 events=26 vm_pair_writes=52 first_event=1421 last_input_read=1232 bad=0 fault=0 cycles=2291
+KV_LEAF PASS actual production KV512 normalization/RoPE/QDQ through native VM pairs
+- /srv/opentallas-scratch/claude/codex-s81-kvq-bind-1021/run_8efb2ce9b/src/rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_kv_leaf.sv:54: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 27.136 s; speed 86.784 ns/s
+- Verilator: cpu 27.133 s on 1 threads; allocated 36 MB

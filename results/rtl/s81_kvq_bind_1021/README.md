@@ -38,3 +38,19 @@ bench is live on gold2 at run_8efb2ce9b (source8efb2ce9b); it also exercises a V
 consumer dropping exponent writes as an expected failure. That source is before
 the normal-slice selector and added alignment/bounds guards; those later changes
 are not yet claimed as end-to-end validated. No physical gate was launched.
+
+## First measured functional result
+
+Source8efb2ce9b actual D512 bank+bridge PASS (gold2unit2269851-1792602287):26events,
+52VM pair writes, zero mismatches/faults; first result1421 versus last input read1232,
+a189-edge lifetime separation. FixedDRAIN_AGE1024 plus104 drain edges worked. The
+negative VM consumer dropping exponent writes failed with8 mismatched32-bit words;
+this is an observation-path negative, not a claimed arithmetic RTL mutant.
+Exact source hashes/argv and original logs are committed in kv_8ef_*.
+
+Current-source follow-up286841a83 is live at
+`ot-gold2:/srv/opentallas-scratch/claude/codex-s81-kvq-current-1021/run_286841a83`,
+unit2331998-1792603162/session4772. It preserves/reuses the completed object cache
+and adds current address guards plus fixed job/result age reporting. No live
+older source or result was edited. The native row-invalid controls are additional
+checks for the new guards; this remains one minimal KV bank vehicle.
