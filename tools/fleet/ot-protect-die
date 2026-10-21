@@ -3,7 +3,7 @@
 Root service inventories native process trees and matching Docker process trees.
 -1000 is a hard exclusion in earlyoom 1.9.0 kill.c (including --prefer).
 """
-import argparse, glob, json, os, re, subprocess, time
+import argparse, glob, json, os, re, subprocess, sys, time
 from pathlib import Path
 DIE = re.compile(r'(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b|/(die-evidence[^/ ]*|kv-die)/)')
 CONTAINER = re.compile(r'^/?(qfd_dietop_|qfd_die_|qfd_gw_|dieev_|de2_|die_|dsrom_s81|s81_l1|s81_grt_|r25gp|hbm_r25gp|qwen_r22k)')
@@ -15,6 +15,12 @@ def rd(path):
 def cmd(*args):
     try: return subprocess.run(args, capture_output=True, text=True, timeout=25).stdout
     except (OSError, subprocess.TimeoutExpired): return ''
+
+def approved(text):
+    """Root-owned explicit historical die lane roots; never infer from tool names."""
+    try: roots=json.loads(rd('/etc/ot-die-roots.json'))
+    except ValueError: roots=[]
+    return any(isinstance(root,str) and root.startswith('/') and re.search(re.escape(root.rstrip('/'))+r'(?=/|\s|$|[\"\'])',text) for root in roots)
 
 def inventory():
     rows = {}
@@ -39,14 +45,14 @@ def select(rows, containers):
         # Do not classify our own monitoring/installation command's embedded source text.
         if any('ot-protect-die' in a for a in r['argv'][:2]): continue
         if r['explicit']: selected[pid] = 'OT_HEAVY_PRIO=die'
-        elif DIE.search(' '.join(r['argv'][:3])+' '+r['cwd']): selected[pid] = 'die launch command/workdir'
+        elif approved(' '.join(r['argv'][:3])+' '+r['cwd']) or DIE.search(' '.join(r['argv'][:3])+' '+r['cwd']): selected[pid] = 'die launch command/workdir'
     # A selected docker CLI and exact image + container command + bind mapping establish ownership.
     for c in containers:
         conf = c.get('Config', {}); binds = c.get('HostConfig', {}).get('Binds') or []
         args = (conf.get('Entrypoint') or []) + (conf.get('Cmd') or [])
         reason = None
         if 'opentallas.priority=die' in [k+'='+v for k,v in (conf.get('Labels') or {}).items()] or CONTAINER.search(c.get('Name','')): reason = 'die container name'
-        elif any(DIE.search(m.get('Source','')+'/') for m in c.get('Mounts', [])): reason = 'die mount'
+        elif any(approved(m.get('Source','')+'/') or DIE.search(m.get('Source','')+'/') for m in c.get('Mounts', [])): reason = 'die mount'
         else:
             for pid in list(selected):
                 a = rows[pid]['argv']
@@ -87,6 +93,8 @@ def sweep(apply=False):
                 non_die_count=len(rows)-len(selected))
 
 def main():
+    if sys.argv[1:2]==['--is-die']:
+        return 0 if approved(' '.join(sys.argv[3:])+' '+os.getcwd()) else 1
     p=argparse.ArgumentParser(); p.add_argument('--apply',action='store_true'); p.add_argument('--watch',action='store_true'); p.add_argument('--pid',type=int)
     a=p.parse_args()
     if a.pid:

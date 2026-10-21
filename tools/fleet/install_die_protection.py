@@ -6,10 +6,12 @@ import hashlib, json, os, shutil, subprocess, sys, time
 from pathlib import Path
 MARK='DIE_WATCHDOG_1021'
 def patch_heavy(s):
-    if MARK in s: return s
+    if MARK in s:
+        return s.replace('if /usr/local/bin/ot-heavy-reconcile --is-die -- "$@"; then',
+                         'if /usr/local/bin/ot-heavy-reconcile --is-die -- "$@" || /usr/local/bin/ot-protect-die --is-die -- "$@"; then')
     anchor='LASTRES=""\n'
     if s.count(anchor)!=1: raise ValueError('unknown ot-heavy launch layout')
-    s=s.replace(anchor, anchor+'# '+MARK+': use the admission classifier for both priority and hard protection.\nif /usr/local/bin/ot-heavy-reconcile --is-die -- "$@"; then export OT_HEAVY_PRIO=die; fi\n')
+    s=s.replace(anchor, anchor+'# '+MARK+': use the admission classifier for both priority and hard protection.\nif /usr/local/bin/ot-heavy-reconcile --is-die -- "$@" || /usr/local/bin/ot-protect-die --is-die -- "$@"; then export OT_HEAVY_PRIO=die; fi\n')
     anchor='    exec systemd-run --user --scope'
     if s.count(anchor)!=1: raise ValueError('unknown scope launch')
     s=s.replace(anchor,'    # User scopes cannot set OOMScoreAdjust; set the launching PID as root, then inherit.\n    if [ "${OT_HEAVY_PRIO:-}" = die ]; then\n      sudo -n /usr/local/bin/ot-protect-die --pid "$$" || { echo "ot-heavy: NOT RUN: die protection failed" >&2; exit 70; }\n    fi\n'+anchor)
