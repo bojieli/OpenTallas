@@ -2577,8 +2577,6 @@ place_pin -pin_name slg__cfg_stack[0] -layer M4 -location {0.042 198.732}
 place_pin -pin_name slg__cfg_stack[1] -layer M4 -location {0.042 198.924}
 place_pin -pin_name x__est -layer M4 -location {0.042 200.124}
 place_pin -pin_name y__est__0_1[0] -layer M4 -location {0.042 201.324}
-place_pin -pin_name VSS -layer M5 -location {385.86 388.758}
-place_pin -pin_name VDD -layer M5 -location {386.052 388.758}
 place_pin -pin_name krsp[1] -layer M4 -location {388.758 2.604}
 place_pin -pin_name rsp[32] -layer M4 -location {388.758 2.748}
 place_pin -pin_name krsp[2] -layer M4 -location {388.758 2.94}

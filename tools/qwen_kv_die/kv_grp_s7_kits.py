@@ -34,6 +34,8 @@ def io_tcl(tile, H):
     pins = []
     for l in base:
         m = re.search(r"-pin_name (\S+) -layer (\S+) -location \{(\S+) (\S+)\}", l)
+        if m.group(1) in ("VDD", "VSS"):
+            continue  # PG pins: made by the kit PDN (PPL-0061 at floorplan if placed here)
         pins.append([m.group(1), m.group(2), float(m.group(3)), float(m.group(4))])
     s = (H - 4.32) / (388.8 - 4.32)
     ys = lambda y: snap(2.16 + (y - 2.16) * s, 0.012) if H != 388.8 else y
