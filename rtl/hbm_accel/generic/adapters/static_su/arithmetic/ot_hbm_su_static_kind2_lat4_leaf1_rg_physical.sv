@@ -81,7 +81,7 @@ module ot_hbm_su_static_kind2_lat4_leaf1_rg_physical(
  wire l_side_v, l_fault; wire [31:0] l_side_x, l_side_y; wire side_fault;
  reg side_rst_q;  // rst_n registered at its pin for the SIDE pipe (as the lane's PIN_RST)
  always @(posedge ck) side_rst_q <= rst_n;
- ot_hbm_su_static_lane_pinreg #(.LN(7),.LEAF(1),.KIND(2),.FETCH_EXTRA_EDGES(2),.MLAT(4),.ALAT(3),.PIN_RST(1),.PIN_ROOT(0)) u_native(
+ ot_hbm_su_static_lane_pinreg_k8 #(.LN(7),.LEAF(1),.KIND(2),.FETCH_EXTRA_EDGES(2),.MLAT(4),.ALAT(3),.PIN_RST(1),.PIN_ROOT(0)) u_native(
  .clk_pin(1'b0),
  .clk_stage({8{ck}}),
  .clk_insert({4{ck}}),

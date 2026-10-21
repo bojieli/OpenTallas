@@ -83,7 +83,7 @@ module ot_hbm_su_static_kind1_lat4_leaf1_rg_physical(
  output wire fault,
  output wire coll
 );
- ot_hbm_su_static_lane_pinreg #(.LN(7),.LEAF(1),.KIND(1),.FETCH_EXTRA_EDGES(2),.MLAT(4),.ALAT(3),.PIN_RST(1),.PIN_ROOT(0)) u_native(
+ ot_hbm_su_static_lane_pinreg_k8 #(.LN(7),.LEAF(1),.KIND(1),.FETCH_EXTRA_EDGES(2),.MLAT(4),.ALAT(3),.PIN_RST(1),.PIN_ROOT(0)) u_native(
  .clk_pin(1'b0),
  .clk_stage({8{ck}}),
  .clk_insert({4{ck}}),

@@ -1,0 +1,372 @@
+// GENERATED-BY-HAND copy for HBM-KIND8 (10-20): native-32 LAT-4 input-cut multiplier of the KIND1/KIND2 lane leaves.
+// = ot_hdc_fp32_mul_lat #(.LAT(4), .CUTS(1), .KCP(4)) (ot_hdc_fp32_mul_lat4i, rtl/hdc/ot_hdc_fp32_mul_lat.sv), bit for bit and
+// cycle for cycle, with: (1) DRST 0 (owner 10-20 09:05: only valid bits reset; payload ignored until valid);
+// (2) the subnormal shift amount captured ONE-HOT (s2_oh, 48 b from a 3+3-bit predecode) instead of the 6-bit s2_sh, and
+//     the round / sticky masks derived from it, so no shift-amount bit drives a 48-bit barrel shifter (s2_sh was 139-142
+//     loads); (3) s2_prod held twice (s2_prod: normal path / round, s2_prs: the one-hot shift), (4) the KCP copies are
+//     keep_hierarchy modules (equal-D copies were merged back: exp m_t KCP copy 358 loads).  0 added cycles.
+// OT_SU_SYNC_RST: local reset relays drive synchronous arithmetic consumers.
+`ifndef OT_SU_ARST
+`ifdef OT_SU_SYNC_RST
+`define OT_SU_ARST(r)
+`else
+`define OT_SU_ARST(r) or negedge r
+`endif
+`endif
+`timescale 1ns/1ps
+// ---------------------------------------------------------------------------
+// ot_hdc_fp32_mul_lat #(LAT): the binary32 multiplier of ot_hdc_fp32_mul_fast (rtl/hdc/ot_hdc_fastfp.sv), bit for
+// bit, with LAT = 3..9 register stages (W11 measurement vehicle for 1.2 GHz @ SS; see ot_hdc_fp32_add_lat).
+//   S1  decode, subnormal LZC                             | C5 (LAT >= 8; margin rule 2026-10-06)
+//       normalise shift                                   | C1 (LAT >= 6)
+//       partial products + three carry-save levels, the exponent sum
+//   S2  four carry-save levels                            | C2 (LAT >= 5)
+//       the 48-bit prefix add; the subnormal masks
+//   S3  select, subnormal shift, sticky/round bits        | C3 (LAT >= 4)
+//       round increment (prefix add)                      | C4 (LAT >= 7)
+//       encode                                            | C6 (LAT >= 9; margin rule 2026-10-06)
+//   C7 (LAT >= 10; margin m3 2026-10-06) sits in front of S1: field / zero / non-finite decode | LZC, power
+//       refusals -> y
+// Every prefix adder is ot_hdc_ksadd_k (rtl/hdc/ot_hdc_prefix.sv, (* keep *) levels).
+// Uses ot_hdc_w11_cut (rtl/hdc/ot_hdc_fp32_add_lat.sv).
+// ---------------------------------------------------------------------------
+module ot_hdc_fp32_mul_lat_k8 #(
+    parameter integer LAT = 3,
+    // CUTS >= 0 picks the extra cuts explicitly, bit k-1 = C<k> (LAT must be 3 + their count); -1: by LAT as above.
+    // W11 serial domain: CUTS = 4'b0101 (C1 + C3, LAT 5) cuts the INPUT side, so an operand multiplexer in front
+    // of the unit shares stage 1 with the decode / normalise instead of the partial-product rows
+    parameter integer CUTS = -1,
+    // KCP > 1 (margin m3, 2026-10-06): the C1 operand register is KCP kept copies (ot_hdc_mul_kcp48), each driving
+    // 24/KCP partial products, so the 24-load operand broadcast to the partial-product rows is a local net.  Values
+    // identical (every copy captures the same a_n / b_n); no added cycle.  Needs CUT1.
+    parameter integer KCP = 1,
+    // Opt-in: reset only valid bits at extra cuts; payload is ignored until valid.
+    parameter integer DRST = 0
+) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        valid_in,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output reg  [31:0] y,
+    output reg  [1:0]  err,
+    output reg         valid_out
+);
+    localparam integer CUT1 = (CUTS >= 0) ? CUTS % 2       : (LAT >= 6) ? 1 : 0;
+    localparam integer CUT2 = (CUTS >= 0) ? (CUTS / 2) % 2 : (LAT >= 5) ? 1 : 0;
+    localparam integer CUT3 = (CUTS >= 0) ? (CUTS / 4) % 2 : (LAT >= 4) ? 1 : 0;
+    localparam integer CUT4 = (CUTS >= 0) ? (CUTS / 8) % 2 : (LAT >= 7) ? 1 : 0;
+    localparam integer CUT5 = (CUTS >= 0) ? (CUTS / 16) % 2 : (LAT >= 8) ? 1 : 0;
+    localparam integer CUT6 = (CUTS >= 0) ? (CUTS / 32) % 2 : (LAT >= 9) ? 1 : 0;
+    localparam integer CUT7 = (CUTS >= 0) ? (CUTS / 64) % 2 : (LAT >= 10) ? 1 : 0;
+    generate if (CUTS >= 0 && CUT1 + CUT2 + CUT3 + CUT4 + CUT5 + CUT6 + CUT7 + 3 != LAT) begin : g_bad_cuts
+        ot_hdc_fp32_mul_lat_k8_CUTS_must_match_LAT u_trap ();
+    end endgenerate
+    localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
+    function automatic [95:0] csa;
+        input [47:0] r0, r1, r2;
+        begin
+            csa[47:0] = r0 ^ r1 ^ r2;
+            csa[95:48] = ((r0 & r1) | (r0 & r2) | (r1 & r2)) << 1;
+        end
+    endfunction
+
+    // ---- S1a: decode, normalise --------------------------------------------------------------------
+    // C7: field / zero / non-finite decode | LZC, power
+    wire [68:0] c7;
+    ot_hdc_w11_cut #(.W(69), .CUT(CUT7), .VB(DRST ? -1 : 69-1)) u_c7 (.clk(clk), .rst_n(rst_n),
+        .d({valid_in, a, b, (a[30:23] == 8'd0), (b[30:23] == 8'd0),
+            (a[30:23] == 8'hff) || (b[30:23] == 8'hff), (a[30:0] == 31'd0) || (b[30:0] == 31'd0)}), .q(c7));
+    wire        x_v, x_afz, x_bfz, nonfinite, zero;
+    wire [31:0] x_a, x_b;
+    assign {x_v, x_a, x_b, x_afz, x_bfz, nonfinite, zero} = c7;
+    wire [7:0]  a_field = x_a[30:23];
+    wire [7:0]  b_field = x_b[30:23];
+    wire [23:0] a_raw = {!x_afz, x_a[22:0]};
+    wire [23:0] b_raw = {!x_bfz, x_b[22:0]};
+    wire [5:0] a_lz, b_lz;
+    ot_hdc_lzc32 u_la (.x({a_raw, 8'hff}), .n(a_lz));
+    ot_hdc_lzc32 u_lb (.x({b_raw, 8'hff}), .n(b_lz));
+    wire signed [11:0] a_power = x_afz ? (-12'sd149 - {7'd0, a_lz[4:0]})
+                                                   : ($signed({4'd0, a_field}) - 12'sd150);
+    wire signed [11:0] b_power = x_bfz ? (-12'sd149 - {7'd0, b_lz[4:0]})
+                                                   : ($signed({4'd0, b_field}) - 12'sd150);
+    // C5: decode / LZC | normalise shift
+    localparam integer W5 = 1 + 1 + 2 + 1 + 24 + 24 + 5 + 5 + 12 + 12;
+    wire [W5-1:0] c5;
+    ot_hdc_w11_cut #(.W(W5), .CUT(CUT5), .VB(DRST ? -1 : W5-1)) u_c5 (.clk(clk), .rst_n(rst_n),
+        .d({x_v, nonfinite || zero, (nonfinite ? E_NONFINITE : E_NONE), x_a[31] ^ x_b[31], a_raw, b_raw, a_lz[4:0],
+            b_lz[4:0], a_power, b_power}), .q(c5));
+    wire        n_v, n_bz, n_sign;
+    wire [1:0]  n_err;
+    wire [23:0] n_ar, n_br;
+    wire [4:0]  n_al, n_bl;
+    wire [11:0] n_ap, n_bp;
+    assign {n_v, n_bz, n_err, n_sign, n_ar, n_br, n_al, n_bl, n_ap, n_bp} = c5;
+    wire [23:0] a_n = n_ar << n_al;
+    wire [23:0] b_n = n_br << n_bl;
+    localparam integer W1 = 1 + 1 + 2 + 1 + 24 + 24 + 12 + 12;
+    wire [W1-1:0] c1;
+    ot_hdc_w11_cut #(.W(W1), .CUT(CUT1), .VB(DRST ? -1 : W1-1)) u_c1 (.clk(clk), .rst_n(rst_n),
+        .d({n_v, n_bz, n_err, n_sign, a_n, b_n, n_ap, n_bp}),
+        .q(c1));
+    wire        p_v, p_byp, p_sign;
+    wire [1:0]  p_err;
+    wire [23:0] p_a, p_b;
+    wire [11:0] p_ap, p_bp;
+    assign {p_v, p_byp, p_err, p_sign, p_a, p_b, p_ap, p_bp} = c1;
+    // ---- S1b: rows, exponent sum ------------------------------------------------------------------
+    wire [11:0] power;
+    wire power_c;
+    ot_hdc_ksadd_k #(.W(12)) u_pw (.a(p_ap), .b(p_bp), .cin(1'b0), .s(power), .cout(power_c));
+    wire [48*8-1:0] rows;
+    generate if (KCP > 1 && CUT1 != 0) begin : g_kcp
+        wire [KCP*24-1:0] ka, kb;
+        genvar k;
+        for (k = 0; k < KCP; k = k + 1) begin : g_c
+            ot_hdc_mul_kcp48_k8 u_k (.clk(clk), .rst_n(rst_n),
+`ifdef NEGK
+                .d({a_n ^ ((k == 1) ? 24'd1 : 24'd0), b_n}),   // bench negative control only
+`else
+                .d({a_n, b_n}),
+`endif .q({ka[24*k +: 24], kb[24*k +: 24]}));
+        end
+        ot_hdc_mul24_rows_k_k8 #(.K(KCP)) u_rows (.a(ka), .b(kb), .rows(rows));
+    end else begin : g_nokcp
+        ot_hdc_mul24_rows u_rows (.a(p_a), .b(p_b), .rows(rows));
+    end endgenerate
+
+    reg        s1_v, s1_byp, s1_sign;
+    reg [1:0]  s1_err;
+    reg [48*8-1:0] s1_rows;
+    reg signed [11:0] s1_power;
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
+        if (!rst_n) s1_v <= 1'b0;
+        else s1_v <= p_v;
+    end
+    always @(posedge clk) begin
+        s1_byp <= p_byp; s1_err <= p_err; s1_sign <= p_sign; s1_rows <= rows; s1_power <= power;
+    end
+
+    // ---- S2a: compress to two rows; masks ----------------------------------------------------------
+    wire [48*6-1:0] l4;
+    wire [48*4-1:0] l5;
+    wire [48*3-1:0] l6;
+    wire [48*2-1:0] l7;
+    genvar i;
+    generate
+        for (i = 0; i < 2; i = i + 1) begin : g_l4
+            assign l4[96*i +: 96] = csa(s1_rows[144*i +: 48], s1_rows[144*i + 48 +: 48], s1_rows[144*i + 96 +: 48]);
+        end
+        assign l4[192 +: 96] = s1_rows[288 +: 96];
+        for (i = 0; i < 2; i = i + 1) begin : g_l5
+            assign l5[96*i +: 96] = csa(l4[144*i +: 48], l4[144*i + 48 +: 48], l4[144*i + 96 +: 48]);
+        end
+    endgenerate
+    assign l6[0 +: 96] = csa(l5[0 +: 48], l5[48 +: 48], l5[96 +: 48]);
+    assign l6[96 +: 48] = l5[144 +: 48];
+    assign l7 = csa(l6[0 +: 48], l6[48 +: 48], l6[96 +: 48]);
+    wire signed [11:0] fl47 = s1_power + 12'sd47;
+    wire signed [11:0] fl46 = s1_power + 12'sd46;
+    wire signed [11:0] sh_sub = -(s1_power + 12'sd149);
+    wire [5:0] shc = (sh_sub > 12'sd63) ? 6'd63 : sh_sub[5:0];
+    // one-hot shift amount from a 3+3-bit predecode (each shc bit drives 8 predecode gates); oh[k] = (shc == k), k < 48.
+    // round mask = bit shc-1 (oh shifted down one), sticky mask = bits below shc-1 (suffix OR of oh above k+1).
+    wire [7:0] sh_hi = 8'd1 << shc[5:3], sh_lo = 8'd1 << shc[2:0];
+    wire [47:0] sh_oh;
+    genvar ko;
+    for (ko = 0; ko < 48; ko = ko + 1) begin : g_oh
+        assign sh_oh[ko] = sh_hi[ko / 8] & sh_lo[ko % 8];
+    end
+    wire [47:0] m_round = {1'b0, sh_oh[47:1]};
+    reg  [47:0] m_sticky;
+    integer k;
+    always @* begin
+        m_sticky[47] = 1'b0;
+        m_sticky[46] = 1'b0;
+        for (k = 45; k >= 0; k = k - 1) m_sticky[k] = m_sticky[k + 1] | sh_oh[k + 2];
+        // shc >= 48: every bit below shc-1 (all 48) is sticky; shc == 48 -> round bit 47
+        if (shc[5:4] == 2'b11) begin m_sticky = (shc == 6'd48) ? {1'b0, {47{1'b1}}} : {48{1'b1}}; end
+        if (shc == 6'd0) m_sticky = {48{1'b1}};   // k < 0 - 1 in the 12-bit original compare: every bit
+    end
+    wire [47:0] m_rnd48 = (shc == 6'd48) ? 48'h800000000000 : m_round;
+    localparam integer W2 = 1 + 1 + 2 + 1 + 96 + 1 + 1 + 12 + 12 + 48 + 48 + 48;
+    wire [W2-1:0] c2;
+    ot_hdc_w11_cut #(.W(W2), .CUT(CUT2), .VB(DRST ? -1 : W2-1)) u_c2 (.clk(clk), .rst_n(rst_n),
+        .d({s1_v, s1_byp, s1_err, s1_sign, l7, fl47 < -12'sd126, fl46 < -12'sd126, fl47, fl46, sh_oh, m_rnd48, m_sticky}),
+        .q(c2));
+    wire        q_v, q_byp, q_sign, q_s47, q_s46;
+    wire [1:0]  q_err;
+    wire [95:0] q_l7;
+    wire [11:0] q_fl47, q_fl46;
+    wire [47:0] q_oh;
+    wire [47:0] q_mr, q_ms;
+    assign {q_v, q_byp, q_err, q_sign, q_l7, q_s47, q_s46, q_fl47, q_fl46, q_oh, q_mr, q_ms} = c2;
+    // ---- S2b: the prefix add -----------------------------------------------------------------------
+    wire [47:0] prod;
+    wire unused_cout;
+    ot_hdc_ksadd_k #(.W(48)) u_cpa (.a(q_l7[47:0]), .b(q_l7[95:48]), .cin(1'b0), .s(prod), .cout(unused_cout));
+
+    reg        s2_v, s2_byp, s2_sign, s2_sub47, s2_sub46;
+    reg [1:0]  s2_err;
+    reg [47:0] s2_prod, s2_mr, s2_ms;
+    wire [47:0] s2_prs;                 // kept copy of s2_prod for the one-hot shift
+    reg [47:0] s2_oh;
+    reg signed [11:0] s2_fl47, s2_fl46;
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
+        if (!rst_n) s2_v <= 1'b0;
+        else s2_v <= q_v;
+    end
+    ot_hdc_kff48_k8 u_prs (.clk(clk), .d(prod), .q(s2_prs));
+    always @(posedge clk) begin
+        s2_byp <= q_byp; s2_err <= q_err; s2_sign <= q_sign;
+        s2_prod <= prod;
+        s2_sub47 <= q_s47; s2_sub46 <= q_s46;
+        s2_fl47 <= q_fl47; s2_fl46 <= q_fl46;
+        s2_oh <= q_oh; s2_mr <= q_mr; s2_ms <= q_ms;
+    end
+
+    // ---- S3a: select, subnormal shift, round/sticky bits ------------------------------------------
+    // three kept same-edge copies of the S3a select top = prod[47] (was 63 loads): is_sub / fl, n_main high, n_main low + rb/st
+    wire [2:0] top_c;
+    ot_hdc_kff1_k8 u_top0 (.clk(clk), .d(prod[47]), .q(top_c[0]));
+    ot_hdc_kff1_k8 u_top1 (.clk(clk), .d(prod[47]), .q(top_c[1]));
+    ot_hdc_kff1_k8 u_top2 (.clk(clk), .d(prod[47]), .q(top_c[2]));
+    wire is_sub = top_c[0] ? s2_sub47 : s2_sub46;
+    wire signed [11:0] fl = top_c[0] ? s2_fl47 : s2_fl46;
+    wire [23:0] n_main = {top_c[1] ? s2_prod[47:36] : s2_prod[46:35], top_c[2] ? s2_prod[35:24] : s2_prod[34:23]};
+    wire n_rb = top_c[2] ? s2_prod[23] : s2_prod[22];
+    wire n_st = top_c[2] ? (|s2_prod[22:0]) : (|s2_prod[21:0]);
+    // s_main = (s2_prod >> sh)[23:0] as an AND-OR over the one-hot amount (shift >= 48 gives 0: oh all zero)
+    reg [23:0] s_main;
+    integer si, sk;
+    always @* begin
+        for (si = 0; si < 24; si = si + 1) begin
+            s_main[si] = 1'b0;
+            for (sk = 0; sk < 48 - si; sk = sk + 1) s_main[si] = s_main[si] | (s2_prs[si + sk] & s2_oh[sk]);
+        end
+    end
+    wire s_rb = |(s2_prod & s2_mr);
+    wire s_st = |(s2_prod & s2_ms);
+    wire [23:0] main = is_sub ? s_main : n_main;
+    wire rb = is_sub ? s_rb : n_rb;
+    wire st = is_sub ? s_st : n_st;
+    localparam integer W3 = 1 + 1 + 2 + 1 + 1 + 12 + 24 + 1;
+    wire [W3-1:0] c3;
+    ot_hdc_w11_cut #(.W(W3), .CUT(CUT3), .VB(DRST ? -1 : W3-1)) u_c3 (.clk(clk), .rst_n(rst_n),
+        .d({s2_v, s2_byp, s2_err, s2_sign, is_sub, fl, main, rb && (st || main[0])}), .q(c3));
+    wire        r_v, r_byp, r_sign, r_sub, r_inc;
+    wire [1:0]  r_err;
+    wire [11:0] r_fl;
+    wire [23:0] r_main;
+    assign {r_v, r_byp, r_err, r_sign, r_sub, r_fl, r_main, r_inc} = c3;
+    // ---- S3b: round ---------------------------------------------------------------------------------
+    wire [23:0] rnd_w;
+    wire rnd_cw;
+    ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(r_main), .b(24'd0), .cin(r_inc), .s(rnd_w), .cout(rnd_cw));
+    localparam integer W4 = 1 + 1 + 2 + 1 + 1 + 12 + 24 + 1;
+    wire [W4-1:0] c4;
+    ot_hdc_w11_cut #(.W(W4), .CUT(CUT4), .VB(DRST ? -1 : W4-1)) u_c4 (.clk(clk), .rst_n(rst_n),
+        .d({r_v, r_byp, r_err, r_sign, r_sub, r_fl, rnd_w, rnd_cw}), .q(c4));
+    wire        o_v, o_byp, o_sign, o_sub, rnd_c;
+    wire [1:0]  o_err;
+    wire signed [11:0] o_fl;
+    wire [23:0] rnd;
+    assign {o_v, o_byp, o_err, o_sign, o_sub, o_fl, rnd, rnd_c} = c4;
+    // ---- S3c: encode --------------------------------------------------------------------------------
+    wire carry = !o_sub && rnd_c;
+    wire [23:0] man = carry ? {1'b1, rnd[23:1]} : rnd;
+    wire signed [11:0] floor_ = o_fl + {11'd0, carry};
+    wire over = !o_sub && (floor_ > 12'sd127);
+    wire [7:0] field = floor_[7:0] + 8'd127;
+    wire sub_carry = o_sub && rnd[23];
+    wire [31:0] code = o_sub ? (sub_carry ? {o_sign, 8'h01, 23'd0} : {o_sign, 8'h00, rnd[22:0]})
+                             : {o_sign, field, man[22:0]};
+    // C6: encode | refusals -> y
+    localparam integer W6 = 1 + 1 + 2 + 1 + 32;
+    wire [W6-1:0] c6;
+    ot_hdc_w11_cut #(.W(W6), .CUT(CUT6), .VB(DRST ? -1 : W6-1)) u_c6 (.clk(clk), .rst_n(rst_n), .d({o_v, o_byp, o_err, over, code}), .q(c6));
+    wire        e_v, e_byp, e_over;
+    wire [1:0]  e_err;
+    wire [31:0] e_code;
+    assign {e_v, e_byp, e_err, e_over, e_code} = c6;
+    generate if (DRST != 0) begin : g_output_reset
+    always @(posedge clk `OT_SU_ARST(rst_n)) begin
+        if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+        else begin
+            valid_out <= e_v;
+            if (e_byp) begin y <= 32'd0; err <= e_err; end
+            else if (e_over) begin y <= 32'd0; err <= E_OVERFLOW; end
+            else begin y <= (e_code[30:0] == 31'd0) ? 32'd0 : e_code; err <= E_NONE; end
+        end
+    end
+    end else begin : g_output_valid_reset
+        always @(posedge clk `OT_SU_ARST(rst_n)) begin
+            if (!rst_n) valid_out <= 1'b0;
+            else valid_out <= e_v;
+        end
+        always @(posedge clk) begin
+            if (e_byp) begin y <= 32'd0; err <= e_err; end
+            else if (e_over) begin y <= 32'd0; err <= E_OVERFLOW; end
+            else begin y <= (e_code[30:0] == 31'd0) ? 32'd0 : e_code; err <= E_NONE; end
+        end
+    end endgenerate
+endmodule
+
+// KCP copy of the C1 operand register: kept (SYNTH_KEEP_MODULES) so equal-D copies are never merged into one driver
+(* keep_hierarchy = "yes" *)
+module ot_hdc_mul_kcp48_k8 (input wire clk, input wire rst_n, input wire [47:0] d, output reg [47:0] q);
+    always @(posedge clk) q <= d;   // payload copy: no reset (DRST 0)
+endmodule
+
+// ot_hdc_mul24_rows with the operands supplied as K copies: partial product i reads copy i*K/24 (identical values)
+module ot_hdc_mul24_rows_k_k8 #(parameter integer K = 2) (
+    input  wire [K*24-1:0] a,
+    input  wire [K*24-1:0] b,
+    output wire [48*8-1:0] rows
+);
+    function automatic [95:0] csa;
+        input [47:0] r0, r1, r2;
+        begin
+            csa[47:0] = r0 ^ r1 ^ r2;
+            csa[95:48] = ((r0 & r1) | (r0 & r2) | (r1 & r2)) << 1;
+        end
+    endfunction
+    wire [48*24-1:0] l0;
+    wire [48*16-1:0] l1;
+    wire [48*11-1:0] l2;
+    genvar i;
+    generate
+        for (i = 0; i < 24; i = i + 1) begin : g_pp
+            assign l0[48*i +: 48] = {24'd0, a[24*(i*K/24) +: 24] & {24{b[24*(i*K/24) + i]}}} << i;
+        end
+        for (i = 0; i < 8; i = i + 1) begin : g_l1
+            assign l1[96*i +: 96] = csa(l0[144*i +: 48], l0[144*i + 48 +: 48], l0[144*i + 96 +: 48]);
+        end
+        for (i = 0; i < 5; i = i + 1) begin : g_l2
+            assign l2[96*i +: 96] = csa(l1[144*i +: 48], l1[144*i + 48 +: 48], l1[144*i + 96 +: 48]);
+        end
+        assign l2[480 +: 48] = l1[720 +: 48];
+        for (i = 0; i < 3; i = i + 1) begin : g_l3
+            assign rows[96*i +: 96] = csa(l2[144*i +: 48], l2[144*i + 48 +: 48], l2[144*i + 96 +: 48]);
+        end
+        assign rows[288 +: 96] = l2[432 +: 96];
+    endgenerate
+endmodule
+
+(* keep_hierarchy = "yes" *)
+module ot_hdc_kff1_k8 (input wire clk, input wire d, output reg q);
+    always @(posedge clk) q <= d;
+endmodule
+
+// kept 48-bit payload copy (keep_hierarchy: never merged with the equal-D s2_prod register)
+(* keep_hierarchy = "yes" *)
+module ot_hdc_kff48_k8 (input wire clk, input wire [47:0] d, output reg [47:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+
+// the LAT-4 input-cut top (C1 only, 4 kept operand copies), as ot_hdc_fp32_mul_lat4i
+module ot_hdc_fp32_mul_lat4i_k8 (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
+                                 output wire [1:0] err, output wire valid_out);
+    ot_hdc_fp32_mul_lat_k8 #(.LAT(4), .CUTS(1), .KCP(4)) u (.*);
+endmodule

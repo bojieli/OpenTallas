@@ -8,10 +8,11 @@ mkdir -p "$out"
 [ -f "$out/vec/control.mem" ] || python3 tools/hbm_static/su_arith_compile.py "$out/vec" > "$out/vec.log"
 S=rtl/hbm_accel/generic/adapters/static_su
 vl=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-obj="$out/obj_${top}_sync${SU_LANE_SYNC_RST:-0}_q${SU_LANE_QMUL4_INCUT:-0}"
+obj="$out/obj_${top}_sync${SU_LANE_SYNC_RST:-0}_q${SU_LANE_QMUL4_INCUT:-0}_n${SU_LANE_NORST:-0}"
 defs=()
 [ "${SU_LANE_SYNC_RST:-0}" = 0 ] || defs+=(+define+OT_SU_SYNC_RST)
 [ "${SU_LANE_QMUL4_INCUT:-0}" = 0 ] || defs+=(+define+OT_QMUL4_INCUT)
+[ "${SU_LANE_NORST:-0}" = 0 ] || defs+=(+define+OT_FP_DATA_NORST)   # HBM-KIND8: adders reset only valid bits
 if [ ! -x "$obj/Vtb_su_static_lane_leaf" ]; then
 "$vl" --binary --timing -O1 -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_su_static_lane_leaf \
  "${defs[@]}" +define+LEAF_TOP="$top" -GMLAT="$mlat" -GALAT="$alat" -GLEAF="$leaf" -GLANE="$lane" -GPINREG="${SU_PINREG:-0}" --Mdir "$obj" \
@@ -21,6 +22,6 @@ if [ ! -x "$obj/Vtb_su_static_lane_leaf" ]; then
  rtl/lib/ot_rst_relay.sv rtl/lib/ot_sync_rst_relay.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv \
  rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv \
  rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv \
- physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v > "$out/build_$top.log" 2>&1
+ physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v ${SU_LANE_EXTRA:-} > "$out/build_$top.log" 2>&1
 fi
 "$obj/Vtb_su_static_lane_leaf" +DIR="$out/vec" ${mut:++MUT_$mut}
