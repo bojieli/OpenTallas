@@ -208,8 +208,29 @@ def die_sources(bundle: Path):
     return [bundle / p for p in mf["ot_hbm_accel_smh_attn"]]
 
 
+# TOK-FUNC-HBM-ATT (10-21): the bundle's views.json (die views plan) carries the master's exact params + env DEFINES
+# (r14: ENABLE_INT8 1); the tb selects its instance params by define.  Bundles without views.json keep DIE_DEFINES.
+TB_PARAM_DEFINE = {("ENABLE_INT8", 1): "OT_SMH_ATTN_INT8"}
+
+
+def bundle_defines(bundle: Path, master: str = "ot_hbm_accel_smh_attn"):
+    vf = bundle / "views.json"
+    v = json.loads(vf.read_text()).get(master) if vf.exists() else None
+    if not v:
+        return list(DIE_DEFINES), {}
+    env = dict(kv.split("=", 1) for kv in (v.get("env") or "").split() if "=" in kv)
+    defs = [d for d in env.get("DEFINES", "").split(",") if d] or list(DIE_DEFINES)
+    params = v.get("params") or {}
+    for k, val in params.items():
+        if (k, val) not in TB_PARAM_DEFINE:
+            raise SystemExit(f"{master} param {k}={val} in {vf} has no tb_hbm_smh_attn define")
+        defs.append(TB_PARAM_DEFINE[(k, val)])
+    return defs, params
+
+
 def build_unit(work: Path, bundle: Path, tb: Path, dmut: int, probe: bool):
     obj = work / f"obj_d{dmut}_p{int(probe)}"
+    defs, _params = bundle_defines(bundle)
     exe = obj / "Vtb_hbm_smh_attn"
     if exe.exists():
         return exe
@@ -217,7 +238,7 @@ def build_unit(work: Path, bundle: Path, tb: Path, dmut: int, probe: bool):
     cmd = [vl, "--binary", "-j", os.environ.get("VL_JOBS", "16"), "-O1", "-CFLAGS", "-O1", "--x-assign", "fast",
            "-Wno-fatal", "-Wno-lint", "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "256",
            "--top-module", "tb_hbm_smh_attn", f"-GDMUT={dmut}", "--Mdir", str(obj)] + \
-          [f"-D{d}" for d in DIE_DEFINES] + (["-DPROBE"] if probe else []) + \
+          [f"-D{d}" for d in defs] + (["-DPROBE"] if probe else []) + \
           [f"-I{bundle / p}" for p in sorted({str(Path(s).parent.relative_to(bundle)) for s in die_sources(bundle)})] + \
           [str(s) for s in die_sources(bundle)] + [str(tb)]
     t0 = time.time()
@@ -282,6 +303,9 @@ def cmd_unit(a):
             res["span_first_line_to_last_result"] = res["last_result"] - exp["first_line"]
             res["span_first_word_to_last_result"] = res["last_result"] - min(
                 [c for c, f in enumerate(cal.cyc) if f] + list(cal.kvd) + list(cal.pkt))
+            # TOKSIM-HBM-att (10-19): whole record at the SM face = first command / x-load / descriptor / packet -> last result
+            res["span_first_any_to_last_result"] = res["last_result"] - min(
+                [c for c, f in enumerate(cal.cyc) if f] + list(cal.kvd) + list(cal.pkt) + list(cal.xw))
         if op[1] == "pv" and res["pass"]:
             words = [(int(x[1]), int(x[2], 16), int(x[3], 16)) for x in (ln.split() for ln in out.splitlines()
                                                                         if ln.startswith("R "))]
@@ -313,8 +337,8 @@ def cmd_unit(a):
                 cross_sm_merge_scope="pairwise over the SM (sub-run) nodes padded to the golden pad, composed in Python "
                                      "here; the on-die merge (SU lane-store tree + COLL ring all-gather) is benched by "
                                      "att_merge_su.py on these RTL nodes (<out>.nodes.npz)",
-                rtl="ot_hbm_accel_smh_attn die master (GEN2b bundle master_files.json + views.json defines "
-                    + ",".join(DIE_DEFINES) + ") in tb_hbm_smh_attn", wall_s=round(time.time() - t0, 1),
+                rtl="ot_hbm_accel_smh_attn die master (bundle master_files.json + views.json defines/params "
+                    + json.dumps(bundle_defines(Path(a.bundle))) + ") in tb_hbm_smh_attn", bundle=str(a.bundle), wall_s=round(time.time() - t0, 1),
                 verdict="PASS" if results and all(r.get("pass") for r in results) else "FAIL")
     Path(a.out).write_text(json.dumps(dict(summary=summ, ops=results), indent=1, default=int))
     print(("PASS" if summ["verdict"] == "PASS" else "FAIL") + " HBM_VEH_ATT_UNIT " +

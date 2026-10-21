@@ -428,8 +428,9 @@ def cmd_run(a):
                 per_sm_span_sum=per_sm,
                 cross_sm_merge_scope="pairwise over the 64 block nodes (golden order), composed in Python: the cross-SM "
                                      "PV merge has no on-die owner (VEH-ATT finding 3)",
-                rtl="ot_hbm_accel_smh_attn die master (GEN2b bundle master_files.json + defines "
-                    + ",".join(AI.DIE_DEFINES) + ") in tb_hbm_smh_attn (PROBE build: extra G/S probe prints only)",
+                rtl="ot_hbm_accel_smh_attn die master (bundle master_files.json + views.json defines/params "
+                    + json.dumps(AI.bundle_defines(Path(a.bundle))) + ") in tb_hbm_smh_attn (PROBE build: extra G/S "
+                    "probe prints only)", bundle=str(a.bundle),
                 wall_s=round(time.time() - t0, 1),
                 verdict="PASS" if results and all(r["pass"] for r in results) and
                 (merged is None or merged["equals_fixture_pv"]) else "FAIL")
