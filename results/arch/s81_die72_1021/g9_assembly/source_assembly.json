@@ -85,7 +85,29 @@
       "master": "dsdv_seq_host_mux_h",
       "qualification": "No implemented qualified mux_h yet",
       "calendar": "APIPE8->10 host +2; ACKP host_ack_n only +1; do not add3 to allpaths",
-      "slot": "~1080x994 model only, no qualified geometry"
+      "slot": "~1080x994 model only, no qualified geometry",
+      "HWIN_candidate": {
+        "source": "adf49d4f8",
+        "params": {
+          "NSLOT": 47,
+          "NEV": 16,
+          "NEP": 4,
+          "NRT": 2,
+          "HEAD_STAGE": 1,
+          "COMPACT_PTR": 1,
+          "CHECK_STAGE": 1,
+          "LIVE_COUNT": 1,
+          "RAW_SELECT": 1,
+          "LOCAL_BOOT": 1,
+          "EARLY_HEAD_CAPTURE": 1,
+          "CFG_RELAY": 1,
+          "DUE_COPIES": 2,
+          "SAFE_NATIVE": 1,
+          "LOCAL_RECORD": 1
+        },
+        "scope": "Unqualified HWINsuccessor child; notG8NEV8 ages/configcodec",
+        "calendar": "CFG_RELAY config+1 only; LOCAL_RECORD no additional edge vs failedc21r reference; no oldG8latency alias"
+      }
     },
     "kv": {
       "commit": "286841a838132f393f3b387f2ecce0e20111c73b",
@@ -93,6 +115,23 @@
       "qualification": "functional real VP/SRAM component PASS; not bound/physical",
       "required_binding": "s3N leaf0 opcode15 KV_ENABLE1; producer/TP4 transport still open",
       "binding_prepared": "apply_kv_g9.py supplies exacts3N KV_ENABLE1; remaining qualification/producer holds persist"
+    },
+    "eng_taps": {
+      "source": "f6e939df7",
+      "gate_candidate": "92080c424",
+      "masters": [
+        "dsdv_eng_tap",
+        "dsdv_eng_tap_w"
+      ],
+      "defines": [
+        "SYNTHESIS",
+        "OT_S81ENG_TAP_N32R2"
+      ],
+      "native": "all4actualPASSmax32/0violations/0roles",
+      "functional": "existingbase+seed2/3+6mutantsPASS perowner",
+      "scope": "Native/functional source candidate only; four physicalgates live, no CLOSED/wholeRRalias",
+      "boot": "staticSID settles2clocks while reset; original3 resetreleaseedges; no protocolagechange",
+      "handover": "owner /root/s81_lead/lepab_struct14:05; exactsource receipt supplied by owner before selection"
     }
   },
   "selection": "Only actual CLOSED exactmaster/source/params/defines views may be added; source repair and available-view progression continue independently; no old-master aliases",
