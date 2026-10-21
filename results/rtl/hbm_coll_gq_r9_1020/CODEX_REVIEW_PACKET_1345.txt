@@ -1,0 +1,48 @@
+GQ k9q/k9r exact critical/repeated-failure review packet
+Source/evidence claude/hbm-gq8-spine-1021@b9bba4246; unchanged gate source98ae16cf3048676c07effb93c0618b34bedd6e02. Canonical GQ RTLsha366bb5231ab1c42209b318daf89635eeb5f954f302d3ff19e020242654fcf4c6. Fresh collector fork, original live worktrees untouched. All4actualPNGs personally viewed13:45. No REVIEW or submission by collector withoutROOTapproval.
+SAFE1 pins originalRTLregistered, full4faces max5.1pins/um per frozenkit/previouspacket; actualPNG4210total. SAFE2 plannedmaxhop135.6um. SAFE3 native32 max32 per existinggate receipt/owner packet, no newcensus. SAFE4 estimated658ps/17levels WARN; placementdiagnostic setup-212.7(k9q)/-171(k9r) onqa/fault, and quantSRAMhalfcycle~-105 risk disclosed; finalroute timing stillowed. SAFE5 8quantSRAM+2VMringSRAM, allorigins43.2lattice (quantx86.4/302.4 y43.2/172.8/302.4/432; ringx216/259.2 y43.2). SAFE6 outline475.2x561.6 aspect1.18,31%fill pinbound, wide continuouscentrechannel and horizontalstdcellbands; actualdensity blue/green no red hotspots. SAFE7 Nclockcontact enters clearcentregap, regionalKmeans24/32; actualboundaryspread TT59.8/70.2 FF62.9/55.8 PASS; insertion729.2/762.8 TT and584.9/608.8 FF,25590sinks guidance disclosed. Macro rawclockpins retained (not relabelled). SAFE8 static ISSUE_AHEAD1, VM_RT74 exact, zeroaddedactiveedges; reset max2/2stageexistinglanding.
+Existing benchmarks +INV and slot/dep/iaign failurewitnesses committed results/rtl/hbm_coll_gq_r9_1020; escaped mx4 mutant excluded bypreviousowner, not represented ascausalPASS. BothgatesWARN/GRT0. Exactsource/params are prerequisites: no alias tofunctionalmodifiedGQlocal orR10, no VM_RT76 alias. Currentdie needs source+clock/calendar/slot rebind; original237.6sqslot cannotfit475.2x561.6. R10 alternative298a57bfd currentlylive withregisteredfire/faulttree; do notcancel admittedalternates until actualchosenCLOSED compatible.
+[
+  {
+    "kit": "hcoll_gq_issue_k9q_1020",
+    "geometry_sha256": "c769592cfab04675f101fd9d2214c6af8a78ff74a4f1cab9a9c13671e32656e7",
+    "source_manifest": "62e7b1d9db0958ecfc13d5f9543082b714626cc2e7c5f92240cc70d1bbe3ffb4",
+    "pngs": [
+      "/home/ubuntu/wt/codex-hbm-gq-collect-1343/physical/ref_tile/hcoll_gq_issue_k9q_1020/gate_layout/floorplan.png",
+      "/home/ubuntu/wt/codex-hbm-gq-collect-1343/physical/ref_tile/hcoll_gq_issue_k9q_1020/gate_layout/density.png"
+    ],
+    "clock": {
+      "tt_pin_spread_ps": 59.8,
+      "ff_pin_spread_ps": 62.9,
+      "tt_insertion_ps": 729.2,
+      "ff_insertion_ps": 584.9,
+      "max_root_sinks": 25590
+    },
+    "params": {
+      "VM_RT": 74,
+      "ISSUE_AHEAD": 1
+    },
+    "GRT_overflow": 0
+  },
+  {
+    "kit": "hcoll_gq_issue_k9r_1020",
+    "geometry_sha256": "c769592cfab04675f101fd9d2214c6af8a78ff74a4f1cab9a9c13671e32656e7",
+    "source_manifest": "b89ab0e8955d0d8f029dc42828460e7f8af4ccf752389a02c18a0b8640371a3c",
+    "pngs": [
+      "/home/ubuntu/wt/codex-hbm-gq-collect-1343/physical/ref_tile/hcoll_gq_issue_k9r_1020/gate_layout/floorplan.png",
+      "/home/ubuntu/wt/codex-hbm-gq-collect-1343/physical/ref_tile/hcoll_gq_issue_k9r_1020/gate_layout/density.png"
+    ],
+    "clock": {
+      "tt_pin_spread_ps": 70.2,
+      "ff_pin_spread_ps": 55.8,
+      "tt_insertion_ps": 762.8,
+      "ff_insertion_ps": 608.8,
+      "max_root_sinks": 25590
+    },
+    "params": {
+      "VM_RT": 74,
+      "ISSUE_AHEAD": 1
+    },
+    "GRT_overflow": 0
+  }
+]
