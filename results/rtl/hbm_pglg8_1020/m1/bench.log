@@ -1,0 +1,16 @@
+PGSLICE_RG bench HREG=1 MUT=1 LK=1 RT=10 IR=1 SWQ=16 EDGES=300
+LOCKSTEP MISMATCH serial(sx/iq/to) P0 t=88201 ks=73 kp=98
+LOCKSTEP MISMATCH serial(sx/iq/to) P1 t=88201 ks=73 kp=98
+LOCKSTEP MISMATCH serial(sx/iq/to) P0 t=89401 ks=74 kp=99
+LOCKSTEP MISMATCH serial(sx/iq/to) P1 t=89401 ks=74 kp=99
+LOCKSTEP MISMATCH serial(sx/iq/to) P0 t=90601 ks=75 kp=100
+LOCKSTEP MISMATCH serial(sx/iq/to) P1 t=90601 ks=75 kp=100
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=95101 ks=79 kp=105
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P1 t=95101 ks=79 kp=105
+LOCKSTEP MISMATCH serial(sx/iq/to) P0 t=184201 ks=153 kp=204
+PGSLICE_RG errors serial=962 fault=0 stream=0 vm_write=404 lg_fault=0
+PGSLICE_RG FAIL errors=1366 class_ok=1 checks=8352 data_edges=536 vm_writes=452
+- rtl/test/hbm_accel/generic/tb_hbm_su_pgslice_rg.sv:199: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 1.484 s; speed 700.406 ns/s
+- Verilator: cpu 1.478 s on 1 threads; allocated 64 MB
