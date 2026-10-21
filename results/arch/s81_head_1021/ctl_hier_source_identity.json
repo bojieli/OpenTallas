@@ -1,0 +1,33 @@
+{
+  "schema": "opentallas.head.hier-source-identity.v1",
+  "closed_job": "mtp-mtp_seq-c-c67a71fe5-tc",
+  "closed_source": "c67a71fe5",
+  "modules": {
+    "dsfd_mtp_seq": {
+      "sha256": "fb029e7485999d3439bf136d60f033122e175ca2c34bb3145400adcad7e4cb92",
+      "identical": true
+    },
+    "ot_dsrom_mtp_seq": {
+      "sha256": "372edfd03d493532b61e4cde93aa61760398ee2b48096152964323d298dcd5f4",
+      "identical": true
+    },
+    "ot_dsrom_mtp_lrx": {
+      "sha256": "ca2519beac1e156a2a51c7dd795428dacd2645d5aeba7f28acb4ecb3e33c734f",
+      "identical": true
+    },
+    "ot_dsrom_mtp_ltx": {
+      "sha256": "79faa0b7421f70fbc3fd5de45f06bf376ed5c67dc227045bc27829bab3336bfb",
+      "identical": true
+    },
+    "ot_dsrom_mtp_rstsync": {
+      "sha256": "d0ab5d354acfb39b91008a87954746284783ba6bf97d7d27dc953dbd8fa85aa0",
+      "identical": true
+    }
+  },
+  "view_files": {
+    "dsfd_mtp_seq.lef": "57e61e72b805dc4a21ca022549e021595b73ca3c4128d8d8b532ee4e2576c4a4",
+    "dsfd_mtp_seq_ff.lib": "51fcd458a992fe5c6756cc7c181a02bf04c5d4ba9da4c32629c6b57f2f16966a",
+    "dsfd_mtp_seq_tt.lib": "2271a9380d0ba1d968e3dc925b869b72f2766f9f2d2087c34c10a79c2f1224ac",
+    "dsfd_mtp_seq_ss.lib": "33ef0f5a1910366665ebbce2812aef1b5f903c996e1bd9bde0c210a621b319ca"
+  }
+}
