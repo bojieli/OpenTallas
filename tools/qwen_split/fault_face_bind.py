@@ -20,6 +20,15 @@ def install(v, model, fault):
     source=Path(__file__).resolve().parents[2]/SOURCE
     if rtl_ports(source,MASTER).get('obs_fault')!=(1,'input'):
         raise ValueError('fault1 actual source input is missing or differs')
+    # The current instance-owner clock follower cannot select a particular
+    # clock port of a multi-clock TT. cf is produced by the hr/go domain, not
+    # by an arbitrary first clock. Refuse that case until an explicit actual
+    # per-port owner/landing contract is installed in the generator.
+    tt_clocks = {bid for bid,kind,width,endpoints in model['buses']
+                 if kind == 'clock_trunk'
+                 and any(inst == 'tt_ctlm' for inst,pin in endpoints)}
+    if len(tt_clocks) != 1:
+        raise ValueError('fault1 TT.cf requires exact hr-clock owner and real crossing; ambiguous multi-clock TT is not admitted')
     root=fault['roots']['sys_face']['inst']
     if root not in by or not by[root].master.startswith('qfd_fault_or_n'):
         raise ValueError('fault1 source is not the actual registered fault root')
