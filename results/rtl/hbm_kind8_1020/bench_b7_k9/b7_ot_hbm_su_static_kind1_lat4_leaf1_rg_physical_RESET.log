@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits   175 GB (avail 236, growth 113, headroom 0, waiters 0/0 GB) load 241/128 running 43 disk 120 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-kind9/src9
+ot-run: ot-epyc7       admits   866 GB (avail 707, growth 101, headroom 0, waiters 0/0 GB) load 210/96 running 39 disk 4908 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/hbm-kind9/src9
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-kind9/src9
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-kind9/src9
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc5 at 1.91 x cores
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2898305-1792564532 after 0 s
+[46000] %Fatal: tb_su_static_lane_leaf.sv:83: Assertion failed in tb_su_static_lane_leaf.unnamedblk1: SU_LANE FAIL reset release edge=1 (expected exactly 3)
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/tb_su_static_lane_leaf.sv:83: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2898305-1792564532): exit 1

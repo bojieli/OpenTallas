@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       admits   197 GB (avail 251, growth 113, headroom 0, waiters 0/0 GB) load 230/128 running 43 disk 122 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/hbm-kind9/src9
+ot-run: ot-epyc7       admits   936 GB (avail 756, growth 101, headroom 0, waiters 0/0 GB) load 139/96 running 36 disk 4996 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/hbm-kind9/src9
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-kind9/src9
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-kind9/src9
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc5 at 1.83 x cores
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2872674-1792564353 after 0 s
+K8 fge 00000000 00000000 ref 1 k9 1
+K8 fge 8c0d9d77 0c4113f3 ref 0 k9 0
+K8 fge 3dd91957 862bb33d ref 1 k9 1
+K8 fge 114d6e15 005d2ece ref 1 k9 1
+K8 fge 033546d3 5d125294 ref 0 k9 0
+K8 fge 090a4398 bedfd199 ref 1 k9 1
+K8 fge 002cb368 bf82f6ff ref 1 k9 1
+K8_UNITS FAIL mul_checks=350062 exp_checks=350062 add_checks=350062 div_checks=350062 fge_checks=400080 sub_results=55895 errors=400080
+[800166000] %Fatal: tb_k8_units.sv:55: Assertion failed in tb_k8_units: K8_UNITS FAIL
+%Error: rtl/hbm_accel/generic/adapters/static_su/arithmetic/k8/tb_k8_units.sv:55: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2872674-1792564353): exit 1
