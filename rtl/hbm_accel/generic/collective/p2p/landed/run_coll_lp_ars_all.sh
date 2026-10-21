@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # HBM-ELEMOWN3/COLLQ3 10-19: SAFE successor of the q2/q3 COLL quadrant landed parents (ot_hfd_coll_<v>_lp_ars: hard issuer /
 # fj / link_e1 / 16 reduce lanes, rc bundle pin registers).  FLEET ONLY (Verilator 5.050):
-#   LP_ROOT=<tree> bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3|q2 OUT [eq|lp|rs|all|ptmut|fjmut]
+#   LP_ROOT=<tree> bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3|q2 OUT [eq|lp|rs|all|ptmut|fjmut|rsmut]
 # (1) EQ: the hard parent #(AR_ITER 1, ROWS 128) == ot_hfd_coll_<v>_lpf_ars under the _ar scripted programme
 #     (stim_<v>_lp_ar.vh), every output every cycle (+ LP_ACTIVITY ariter_step_cycles > 0).  EQ mutants (each MUST FAIL):
 #     m_refnostep (OT_COLL_ARITER_MUT_NOSTEP, reference), m_leafedge (OT_ARITER_TAG_MUT_EDGE, u_ariter leaf),
@@ -68,6 +68,17 @@ if [ "$WHICH" = all ] || [ "$WHICH" = rs ]; then
     set -- $m; rs $1 $2
     if grep -q '^RSPLIT_EQ FAIL' "$OUT/$1.log" 2>/dev/null; then echo "RS_MUTANT $1 REJECTED"; else echo "RS_MUTANT $1 SURVIVED"; rc=1; fi
   done
+fi
+if [ "$WHICH" = rsmut ]; then
+  # HBM-COLLQ6 10-20: reduce-lane leaf mutant (job bench, expect fail): OT_COLL_RLANE_MUT_EXT rotates the hardened lane's
+  # external operand -> tb_hgi_coll_reduce_split_eq MUST FAIL.  Exit 1 when REJECTED, 0 when the mutant SURVIVED.
+  RSRC="$p/ot_hgi_coll_reduce_static.sv $p/ot_hgi_coll_safe_leaves.sv $p/ot_hgi_coll_pring_static.sv $p/ot_hfd_coll_q_hard_v5.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv"
+  "$V" --binary -j ${VL_JOBS:-16} -O1 -I. -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT +define+OT_COLL_RLANE_MUT_EXT \
+    --top-module tb_hgi_coll_reduce_split_eq $SRC $p/tb_hgi_coll_reduce_split_eq.sv -Mdir "$OUT/obj_rs_mext" > "$OUT/rs_mext.build.log" 2>&1 \
+    && "$OUT/obj_rs_mext/Vtb_hgi_coll_reduce_split_eq" > "$OUT/rs_mext.log" 2>&1
+  rm -rf "$OUT/obj_rs_mext"; grep -E '^RSPLIT' "$OUT/rs_mext.log" 2>/dev/null | tail -3 | sed "s/^/rs_mext /"
+  if grep -q '^RSPLIT_EQ FAIL' "$OUT/rs_mext.log" 2>/dev/null; then echo "RS_MUTANT rs_mext REJECTED"; rc=1; else echo "RS_MUTANT rs_mext SURVIVED"; rc=0; fi
+  echo "COLL_LP_ARS_RSMUT_EXIT $rc"; exit $rc
 fi
 if [ "$WHICH" = all ] || [ "$WHICH" = lp ]; then
   SIM=verilator VL_JOBS=${VL_JOBS:-16} bash $p/landed/ot_hfd_coll_${VAR}_lp_ars_bench.sh "$OUT/lp" > "$OUT/lp_bench.log" 2>&1; brc=$?
