@@ -285,6 +285,29 @@ def lower_xc(chain, ages, word0_at_w5, words, tag, mode=0, mutant=None):
     return dict(entry=entry, cc_edge=x, cmd=f'{c:029x}', cc_word=(1 << 49) | (mode << 48) | (words << 32) | tag, dst=dst)
 
 
+def ar_framed(expected_ar, xc):
+    """QW-LAYERGAP 10-20: the AR words of one message as the qfd_dv_slice2 ARF 1 framer stamps them at dvs_W5 (the
+    io_collective in-pin contract): tag = the XC tag on every word, last only on the message's last word.  Fails closed
+    unless the XC (cc edge) precedes word 0 by XC_TO_WORD0 and the message has exactly `words` words."""
+    words = (xc['cc_word'] >> 32) & 0xFFFF
+    tag = xc['cc_word'] & 0xFFFFFFFF
+    ex = sorted(expected_ar, key=lambda e: e['edge'])
+    if len(ex) != words:
+        raise LowerError(f'XC tag {tag:#x}: {len(ex)} AR words, XC says {words}')
+    if ex and ex[0]['edge'] - xc['cc_edge'] < XC_TO_WORD0:
+        raise LowerError(f'XC tag {tag:#x}: cc edge {xc["cc_edge"]} not {XC_TO_WORD0} edges before word 0 ({ex[0]["edge"]})')
+    return [dict(e, tag=tag, last=int(i == len(ex) - 1)) for i, e in enumerate(ex)]
+
+
+def ar_framer_order(messages):
+    """messages [(xc, expected_ar)]: the single-message framer needs XC n + 1 at / after the last word of message n"""
+    m = sorted(messages, key=lambda t: t[0]['cc_edge'])
+    for (xa, ea), (xb, _) in zip(m, m[1:]):
+        if xb['cc_edge'] < max(e['edge'] for e in ea):
+            raise LowerError(f'XC {xb["cc_word"] & 0xFFFFFFFF:#x} arms before the last word of the previous message')
+    return True
+
+
 # ------------------------------------------------------------------------------------------------ LM head (DV side)
 def lower_lm(t0, ages, chain, row0=0, period=LM_PERIOD, die_rank=0, mutant=None):
     """the LM-head DV schedule: clear / ROOT / ARX before the rounds, the amax STN rounds from t0 (first far word),

@@ -265,6 +265,44 @@ def crom_table(own, cr, consts):
     return out
 
 
+def rope_words(pos):
+    """QW-LAYERGAP 10-20: the token's RoPE row as the 8 group-1 D2D return words the RP 1 slice lands in CROM ROPE:
+    word k = {v 1, em 1, beat k, data 512}, data lane l (64 b) = {hi sin, lo cos} of pair 8 k + l (= crom_table's
+    kind-1 payload split per bank, bit-exact hdc_golden.rope_tables)."""
+    import numpy as np
+    sys.path.insert(0, str(ROOT / 'tools'))
+    import hdc_golden as G
+    cos, sin, half = G.rope_tables(pos, HD, ROPE_THETA)
+    if half != HD // 2:
+        raise LowerError('RoPE half != 64')
+    lb, hb = np.asarray(cos, np.float32).view(np.uint32), np.asarray(sin, np.float32).view(np.uint32)
+    out = []
+    for k in range(HD // 16):
+        pay = 0
+        for l in range(8):
+            pay |= (int(lb[8 * k + l]) | (int(hb[8 * k + l]) << 32)) << (64 * l)
+        out.append((1 << 519) | (1 << 518) | (k << 512) | pay)
+    return out
+
+
+ROPE_ARM_LEAD = N        # ROPE ARM (broadcast) enters the cmd chain this many edges before word 0 at the W5 return pin:
+                         # = the per-slice em arm rule t_b - s - 1 at s = N - 1 (cmd 2 edges a hop, return 1 edge a hop)
+ROPE_RX_EDGES = HD // 16 + N + 4   # word 7 has been written into slice N - 1's CROM (pin reg + hops + SRAM write)
+
+
+def rope_rx(S, t, cr, pos, mutant=None):
+    """schedule the per-token RoPE row over the D2D return chain (RP 1 slices): one broadcast ROPE ARM entering at t,
+    words 0..7 at the dvs_W5 return pin on t + ROPE_ARM_LEAD + k.  Mutant 'rope_late': the ARM one edge late (slice
+    N - 1 misses word 0 -> beat fault + wrong CROM).  Returns (return calendar, next free edge)."""
+    base = cr['ROPE']['base']
+    if base % 16:
+        raise LowerError('CROM ROPE base not 16-pair aligned')
+    S.cmd(t + (1 if mutant == 'rope_late' else 0), D.cmd_rope_arm(15, base // 16), f'ROPE ARM (all) CROM word {base // 16}')
+    w0 = t + ROPE_ARM_LEAD
+    cal = [dict(edge=w0 + k, beat=k, word=f'{w:0130x}') for k, w in enumerate(rope_words(pos))]
+    return cal, w0 + ROPE_RX_EDGES
+
+
 # ------------------------------------------------------------------------------------------------ schedule
 class Sched:
     """one command an edge at dvs_W5.cmd_wi; occupancy of the downward scalar chain, the x stream (one x word per slice
@@ -382,7 +420,7 @@ def attn_owners(smap, ages):
     return list(best[2])
 
 
-def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='slice'):
+def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='slice', rope='stream'):
     """mode resid (families 1 + 2), qk (3), silu (4).  Mutants (bench witnesses): resid 'arwin' (PORTS on windows one
     edge early: slice k > 0 also lands the last t word of slice k - 1), 'xslot' (x stream entries without the stream occupancy check); qk 'ropesign' (lo / hi signs swapped);
     silu 'nor' (the gate/up * r op dropped); attn 'ddwin' (every dd PORTS window, on and off, one edge early: the owner
@@ -391,7 +429,10 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
     ar_order (QW-CLAYER 10-18): 'slice' = the slice-major AR return calendar (QLB-C4b/3a assumption); 'row' = the
     io_collective message order (word w = 8 b + j, global row order: what qfd_io_collective_static returns and what
     dv_lower_mat's o / down AR messages send): per owned block one PORTS arm (ar_base = T + 128 i) entering t_b - s - 1
-    and one disarm entering t_b + 7 - s (t_b = return word 8 b at the dvs_W5 return pin), the stage-0 embedding rule."""
+    and one disarm entering t_b + 7 - s (t_b = return word 8 b at the dvs_W5 return pin), the stage-0 embedding rule.
+    rope (QW-LAYERGAP 10-20): 'stream' = the RoPE row as kind-1 stream table words (no die producer: the old gap);
+    'rx' = the row as 8 D2D return words after one broadcast ROPE ARM (qfd_dv_slice2 RP 1; the producer is the
+    native59 group-1 path, see rope_rx)."""
     if mode not in ('resid', 'qk', 'silu', 'attn'):
         raise LowerError(f'mode {mode}')
     smap, own = D.slice_map(), D.ownership()
@@ -412,9 +453,14 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
         Wd[s] = words(s, own, vm, cr, isa, mutant, att)
         img[s] = image(s, Wd[s], ssq)
     S = Sched(smap)
-    tables = crom_table(own, cr, consts)
+    if rope not in ('stream', 'rx'):
+        raise LowerError(f'rope {rope}')
+    tables = crom_table(own, cr, consts if rope == 'stream' else {k: v for k, v in consts.items() if k != 'pos'})
     tw = [dict(edge=i, dst=d, eaddr=a, payload=f'{p:0256x}') for i, (d, a, p) in enumerate(tables)]
     t = len(tw) + 2 * N + 8                    # every table word has passed slice 11 before the first op lands
+    rope_cal = []
+    if rope == 'rx' and 'pos' in consts:
+        rope_cal, t = rope_rx(S, t, cr, consts['pos'], mutant)
     ar_cal, dd_cal, dd_r0, expect = [], [], None, dict(psum={}, x=[], d2d=[])
     if mode == 'resid':
         for s in range(N):                     # ROOT cfg: root dvs_W5, fused r (as dv_lower)
@@ -522,7 +568,8 @@ def lower_vec(mode, mutant=None, ages=None, consts=None, prog=PROG, ar_order='sl
         ages=ages, pidx=PIDX,
         prog={s: [f'{w:0115x}' for w in ws] for s, ws in img.items()},
         prog_stream={s: [dict(eaddr=a_, payload=f'{p:0256x}') for a_, p in D.prog_words(ws)] for s, ws in img.items()},
-        crom_table=tw, ar_return=ar_cal, dd_return=dd_cal, commands=S.commands(), expected=expect,
+        crom_table=tw, rope=rope, rope_return=rope_cal, ar_return=ar_cal, dd_return=dd_cal, commands=S.commands(),
+        expected=expect,
         collisions=[[list(k_), v] for k_, v in coll],
         assumptions=['AR return calendar slice-major (slice 0 owned blocks ascending, then slice 1, ...): the io_collective '
                      'all-reduce must return the reduced t words in this order (the return word has no address)',
