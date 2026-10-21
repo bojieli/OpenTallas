@@ -11,12 +11,14 @@
 `define TB_LEP_M ot_s81sl_lep_nh
 `define TB_LEP_HOST
 `define TB_LEP_ST(a, b)
+`define TB_LEP_RXOP , .RXOP(RXOP)
 `else
 `define TB_LEP_M ot_s81sl_lep
 `define TB_LEP_HOST .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),
 `define TB_LEP_ST(a, b) .l0_st(a), .l1_st(b),
+`define TB_LEP_RXOP
 `endif
-module tb_s81sl_lep #(parameter integer N = 1000, parameter integer SEED = 1, parameter integer WAIT = 8000);
+module tb_s81sl_lep #(parameter integer N = 1000, parameter integer SEED = 1, parameter integer WAIT = 8000, parameter integer STD_NATIVE32 = 0, parameter integer RXOP = 0);
     reg clk = 0; always #0.4167 clk = ~clk;
     reg rst_n = 0;
     reg [1103:0] a_ro = 0, b_ro = 0; wire [1103:0] a_ri, b_ri; wire a_f, b_f;
@@ -25,7 +27,7 @@ module tb_s81sl_lep #(parameter integer N = 1000, parameter integer SEED = 1, pa
     wire b0v, b0r, b1v, b1r, bi0v, bi0r, bi1v, bi1r; wire [552:0] b0d, b1d, bi0d, bi1d; wire [2:0] bf0, bf1; wire [1:0] brxv;
     wire [511:0] atx0, atx1, btx0, btx1, arx0, arx1, brx0, brx1; wire [1:0] ast0, ast1, bst0, bst1;
     wire [512:0] pa0, pa1, pb0, pb1; wire ta0, ta1, tb0, tb1;
-    `TB_LEP_M la (.clk(clk), .rst_n(rst_n), .ro(a_ro), .ri(a_ri),
+    `TB_LEP_M #(.NATIVE32_STD(STD_NATIVE32) `TB_LEP_RXOP) la (.clk(clk), .rst_n(rst_n), .ro(a_ro), .ri(a_ri),
         .lo0_v(a0v), .lo0_r(a0r), .lo0_d(a0d), .lo1_v(a1v), .lo1_r(a1r), .lo1_d(a1d),
         .li0_v(ai0v), .li0_r(ai0r), .li0_d(ai0d), .li1_v(ai1v), .li1_r(ai1r), .li1_d(ai1d), .rxv(arxv),
         .sl_f(1'b0), .l0_f(af0), .l1_f(af1), `TB_LEP_ST(ast0, ast1)
@@ -34,7 +36,7 @@ module tb_s81sl_lep #(parameter integer N = 1000, parameter integer SEED = 1, pa
         .lo_v(a0v), .lo_r(a0r), .lo_d(a0d), .li_v(ai0v), .li_r(ai0r), .li_d(ai0d), .flt(af0));
     dsfd_coll_lane_w #(.LCR(1)) a_l1 (.ck(clk), .rs(rst_n), .chb(1'b0), .rx({ast1[0], ast1[1], arx1, arxv[1]}), .tx(atx1), .tf(),
         .lo_v(a1v), .lo_r(a1r), .lo_d(a1d), .li_v(ai1v), .li_r(ai1r), .li_d(ai1d), .flt(af1));
-    `TB_LEP_M lb (.clk(clk), .rst_n(rst_n), .ro(b_ro), .ri(b_ri),
+    `TB_LEP_M #(.NATIVE32_STD(STD_NATIVE32) `TB_LEP_RXOP) lb (.clk(clk), .rst_n(rst_n), .ro(b_ro), .ri(b_ri),
         .lo0_v(b0v), .lo0_r(b0r), .lo0_d(b0d), .lo1_v(b1v), .lo1_r(b1r), .lo1_d(b1d),
         .li0_v(bi0v), .li0_r(bi0r), .li0_d(bi0d), .li1_v(bi1v), .li1_r(bi1r), .li1_d(bi1d), .rxv(brxv),
         .sl_f(1'b0), .l0_f(bf0), .l1_f(bf1), `TB_LEP_ST(bst0, bst1)

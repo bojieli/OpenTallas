@@ -114,8 +114,13 @@ module ot_s81sl_lep_core #(
     parameter integer TXRP = 1,        // 1: TX read pipeline register beside the SRAM column (S81-FIX3; +1 lo edge)
     parameter integer NATIVE32_STD = 0, // separate opt-in standard bounded SRAM/control path
     parameter integer NATIVE32 = 0,    // opt-in MU same-age bounded control replicas
-    parameter integer IN_PIPE = 0      // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
+    parameter integer IN_PIPE = 0,     // 1 (LEPCAP 10-19): one registered face stage on ro / t_host / t_kd / mu_c (+1 edge on
                                        // each, same relative timing); ro[0] / t_kd[53] re-fanned by 6 KEPT copies <= 28 loads
+    parameter integer RXOP = 0         // 1 (DRIVE-S81-LEPNH 10-20, MU_EN 0 only): RX output stage -- ri leaves a second flop
+                                       // rank (ri pin flops at the E face) after rid / riv, which the placer keeps beside the
+                                       // RX SRAM rows: the SRAM read word no longer crosses the tile to the pin in its own
+                                       // cycle (gate r4m: RX macro -> rid 297 paths -94.9 ps TT).  +1 lane -> ri edge (elastic
+                                       // off-die receive path; ri / riv shift together, beat order and content unchanged).
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -748,7 +753,18 @@ module ot_s81sl_lep_core #(
     wire hacc = (HOST_EN != 0) && !rpb && !active_ring_flags[1] && (h0[3:1] == 3'd1 || h0[3:1] == 3'd2);
 `endif
     reg [1103:1] rid; reg riv;
-    assign ri = {rid, riv};
+    generate if (RXOP != 0 && MU_EN == 0) begin : g_rxop
+        reg [1103:1] rido; reg rivo;                    // ri pin flops (E face); data unreset, valid on rnx as riv
+        always @(posedge clk) rido <= rid;
+        always @(posedge clk or negedge rnx) if (!rnx) rivo <= 1'b0; else rivo <= riv;
+`ifdef OT_S81SL_LEP_MUT_RXOPSKEW
+        assign ri = {rido, riv};                        // MUTANT: valid leaves one edge before its data
+`else
+        assign ri = {rido, rivo};
+`endif
+    end else begin : g_ri_direct
+        assign ri = {rid, riv};
+    end endgenerate
     wire mcol_w;                                       // MU: replay collided with a cut-through beat
     wire [1103:0] rb = {h1[H-1:0], h0[H-1:0]};          // the released frame (ring beat when bit 0)
     generate if (MU_EN == 0) begin : g_rxr
@@ -1046,7 +1062,8 @@ endmodule
 
 // HOST_EN = 0 leaf top (hardened master of the three host-less endpoints s_0S / s_0N / s_7S): no host ports
 module ot_s81sl_lep_nh #(
-    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1, parameter integer NATIVE32_STD = 0
+    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1, parameter integer NATIVE32_STD = 0,
+    parameter integer RXOP = 0                         // 1: RX output stage (core RXOP; +1 lane -> ri edge)
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -1065,7 +1082,7 @@ module ot_s81sl_lep_nh #(
     // no l0_st / l1_st: the PHY lane status feeds only f_lf (host plane) at HOST_EN 1 (the lane tiles still take it in
     // their rx word, and lane faults reach the fault collector through l0_f / l1_f).  The core reads none of t_host / t_kd /
     // l*_st at HOST_EN 0 (generate), so these constants are not logic: synthesis of this top keeps no host pin or flop.
-    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(0), .AB_EN(0), .NATIVE32_STD(NATIVE32_STD), .RX_SRAM(NATIVE32_STD), .IN_PIPE(NATIVE32_STD)) u (
+    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(0), .AB_EN(0), .NATIVE32_STD(NATIVE32_STD), .RX_SRAM(NATIVE32_STD), .IN_PIPE(NATIVE32_STD), .RXOP(RXOP)) u (
         .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),
         .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),
         .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),

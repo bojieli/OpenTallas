@@ -1,0 +1,173 @@
+{
+ "name": "s81sl_lepnhwd_r5b-s81sl_lepnhwd_r5b-COMMIT",
+ "block": "ot_s81sl_lep_nh",
+ "ref_tile": true,
+ "owner": "Claude:DRIVE-S81-LEPNH",
+ "purpose": "S81.STA.OWN.3: standard LEP_NH LOCAL_WD band kit to closure (TT setup / FF hold / DRC 0 + native audit)",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/s81-lepnh-r5-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/dsrom_sys/s81_dv/slice",
+   "tools/s81_dv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/mu_s81b_1019",
+   "results/rtl/mu_s81_kit_1019",
+   "results/rtl/mu_s81_2_rx_1019",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "results/rtl/s81_lepcap_1019",
+   "rtl/common/ot_link_credit.sv",
+   "rtl/dsrom_sys/s81_dv/slice/test",
+   "tools/s81_slice/lep_bench.sh",
+   "tools/s81_slice/lep_std_phase_bench.sh",
+   "results/rtl/s81_standard_lep_native32_1020",
+   "physical/dscoll_cx/native_cell_fence.tcl",
+   "results/rtl/drive_s81_lepnh_1020"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81sl_lep_nh #(.NATIVE32_STD(1), .RXOP(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_sram_showahead_1r1w.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lep_nh_none_5",
+    "cmd": "STD_NATIVE32=1 RXOP=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_nh_none_5 none 5 lep_nh",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lep_nh:"
+   },
+   {
+    "name": "lep_nhr_none_7",
+    "cmd": "STD_NATIVE32=1 RXOP=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_nhr_none_7 none 7 lep_nhr",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS lep:"
+   },
+   {
+    "name": "lep_nh_nhacc_5",
+    "cmd": "STD_NATIVE32=1 RXOP=1 bash tools/s81_slice/lep_bench.sh {RUN}/bench/lep_nh_nhacc_5 nhacc 5 lep_nh",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL lep_nh:",
+    "fail_witness": "results/rtl/drive_s81_lepnh_1020/bench1/run_lep_nh_nhacc_5.log"
+   },
+   {
+    "name": "phase_h0_rxop_none",
+    "cmd": "RXOP=1 bash tools/s81_slice/lep_std_phase_bench.sh {RUN}/phase/h0_rxop_none 0 none",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "LEP_STD_PHASE_PASS"
+   },
+   {
+    "name": "phase_h0_rxop_rxopskew",
+    "cmd": "RXOP=1 bash tools/s81_slice/lep_std_phase_bench.sh {RUN}/phase/h0_rxop_rxopskew 0 rxopskew",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "LEP_STD_PHASE_FAIL",
+    "fail_witness": "results/rtl/drive_s81_lepnh_1020/bench1/run_phase_h0_rxop_rxopskew.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.045 OT_MM_FF_SDC='physical/ref_tile/s81sl_lepnhwd_r5b/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81sl_lepnhwd_r5b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81sl_lepnhwd_r5b --out {RUN}/record/views/ot_s81sl_lep_nh --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81sl_lepnhwd_r5b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81sl_lepnhwd_r5b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81sl_lepnhwd_r5b/s81sl_lepnhwd_r5b-s81sl_lepnhwd_r5b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.045,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "DRIVE-S81-LEPNH r5b (10-20), successor of r4m (full core rows, no region; GRT overflow 0, native32 PASS). CLOCK (r4m gate 18:28 FAIL TT/FF pin-flop spread 114.6/106.8): clock_split_km K=8 made 8 local BUFx24 roots over clusters of 658..2,879 sinks spanning up to 325 um; TritonCTS builds each cluster net alone (path depth 4..6) and the 8-sink top H-tree (570 um avg sink wire) does not see the subtree latency, so cluster roots arrive unequal. The pre-native kit s81sl_lepnh (one TritonCTS tree, no KM) measured 40.2/36.8. r5 drops the KM split: ONE balanced TritonCTS tree over the whole tile. r5b: explicit sink clustering 24 sinks / 30 um, 15-um buffer spacing, -balance_levels (the dsfd_vm_direct_scatter cb3 recipe: spread 63 -> 28 ps). RX (r4m path_classes: 297 macro->reg paths, worst -94.9 ps TT at placement: RX SRAM q (32x128 rows across the full width) -> rid -> E-face ri pin over up to ~430 um in one cycle, the RX twin of the S81-FIX3 TXRP route failure): RTL RXOP=1 adds an RX output stage -- rid/riv stay beside the RX SRAM rows, ri leaves a second flop rank at the E face (+1104 flops, +1 lane->ri edge on the elastic off-die receive path; beat order/content unchanged; phase miter vs slice3 reference with ri delayed 1 PASS; mutant RXOPSKEW FAIL). Same outline 475.2x561.6, macros, pins, SDC as r4m.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "note": "RXOP RX output stage (RTL) + single balanced clock tree; successor of the closed-view s81sl_lepnh (native census 526/502 > 32 there) via r4m."
+ }
+}
