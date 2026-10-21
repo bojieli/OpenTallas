@@ -3250,6 +3250,17 @@ def _relays(m):
                 _PIN_HINT.setdefault((it_.name, p_), dict(
                     N=(it_.x + it_.w / 2, it_.y + it_.h), S=(it_.x + it_.w / 2, it_.y),
                     W=(it_.x, it_.y + it_.h / 2), E=(it_.x + it_.w, it_.y + it_.h / 2))[f_])
+    if os.environ.get('OT_KV_PVRS_ACTUAL_FIRST', '0') == '1':
+        # The group response can leave a far row of its long frame. Planning
+        # from the nearest frame edge left pvrs_WN_0_1 as a 1413.7-um wire
+        # when later pin-hinted replans failed. Use the same pin assignment
+        # that pin_reach/physical emission checks, on the first allocation.
+        pm_ = masters(m, 1)
+        for rb_, rc_, rw_, re_ in m['buses']:
+            if rb_.startswith('pvrs_'):
+                for ri_, rp_ in re_:
+                    _PIN_HINT.setdefault((ri_, rp_.lstrip('*')),
+                                         pin_xy(by[ri_], pm_[by[ri_].master], rp_.lstrip('*')))
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
@@ -3391,6 +3402,12 @@ def _relays(m):
                     and len(b[3]) == 2 and any(e[0] == 'd2d_kv' for e in b[3])]
         ids = {b[0] for b in endpoint}
         order_ = endpoint + [b for b in order_ if b[0] not in ids]
+    if os.environ.get('OT_KV_PVRS_ACTUAL_FIRST', '0') == '1':
+        # Reserve the wide return's real relay cells before unconstrained
+        # strip-control traffic. Keep the five constrained D2D payloads first.
+        order_.sort(key=lambda b_: (0 if b_[2] >= 548 and b_[1] not in ABUT
+                                   and any(e_[0] == 'd2d_kv' for e_ in b_[3]) else
+                                   1 if b_[0].startswith('pvrs_') else 2))
     for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
@@ -3649,6 +3666,8 @@ def _relays(m):
             return min(PHY_REACH, reach_()) if phy_b else reach_()
 
         def reach_():
+            if os.environ.get('OT_KV_PVRS_ACTUAL_FIRST', '0') == '1' and bid.startswith('pvrs_'):
+                return min(reach0_(), width_reach(bits))
             # the PV pair words keep the plain reach (their in-array distribution is the PV pair successor's; the width
             # class moved pvin's planned end off the r6 W-equalised face pins: kvt13k-a 3 unrepaired 1.2-4.2 mm hops)
             tgt_ = st_['exact_k'] if st_.get('exact_k') is not None else st_.get('soft_k')
