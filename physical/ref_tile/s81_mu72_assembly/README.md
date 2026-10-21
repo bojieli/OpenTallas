@@ -108,3 +108,7 @@ was launched; ongoing die integration can exercise this next source generation.
 - Four 583.2 lanes cannot abut a 691.2 lep face, so the lep reservation is tall: 561.6 x 1987.2 (kit outline
   475.2 x 1900.8 + halo, pair A and pair B lane pins all on the W face, ~2.3 pins/um). The s81sl_lepmu kit
   (475.2 x 691.2, pair B on S) must be re-floorplanned to this shape before its gate. Lane and lep views: UNBOUND.
+- L5-CAL: s_0N carries the whole stage h message on one endpoint, so u_lep and u_land take NB 320 (instance params;
+  was 80 = a quarter per end slice). No view exists at NB 320 (dsdv_mu_land CLOSED view is NB 80 SRAM 1): UNBOUND.
+  u_land keeps the lepw_mu_72 SRAM 0 default; 353 kb of flops breaks the storage rule and SRAM 1 stops at depth 256,
+  so a depth-320 SRAM option of dsdv_mu_land is OWED before its kit.
