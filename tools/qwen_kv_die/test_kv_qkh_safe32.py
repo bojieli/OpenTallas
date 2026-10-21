@@ -75,5 +75,16 @@ class Safe32Selection(unittest.TestCase):
                 Q.require_profiles(root, profiles)
 
 
+    def test_diag_missing_opt_in_needs_both_flags_and_checks_supplied(self):
+        with patch.dict(os.environ, {'OT_KV_PARAM_DIAG': '0', Q.DIAG_FLAG: '1'}):
+            with self.assertRaisesRegex(ValueError, 'missing exact safe32'):
+                Q.require_profiles(H.ROOT, {}, allow_missing=True)
+        with patch.dict(os.environ, {'OT_KV_PARAM_DIAG': '1', Q.DIAG_FLAG: '1'}):
+            self.assertEqual(Q.require_profiles(H.ROOT, {}, allow_missing=True), list(Q.TARGETS))
+            bad = {'ot_qkh_lane8_nc32c': {'parameters': {'ADD_LAT': 7, 'LTW': 11}}}
+            with self.assertRaisesRegex(ValueError, 'missing exact safe32'):
+                Q.require_profiles(H.ROOT, bad, allow_missing=True)
+
+
 if __name__ == '__main__':
     unittest.main()

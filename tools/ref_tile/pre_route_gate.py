@@ -1653,7 +1653,7 @@ def check_textbook_execution(g: Gate, out: str):
     return True
 
 
-def check_native_census(g: Gate, out: str):
+def check_native_census(g: Gate, out: str, kit: str | None = None):
     """Missing native admission is an execution failure, never a WARN."""
     rows = re.findall(r'^GATE_NATIVE_CENSUS_RESULT (\{.*\})$', out, re.M)
     try:
@@ -1665,6 +1665,11 @@ def check_native_census(g: Gate, out: str):
             g.add('WARN', 'native_census',
                   'raw native census FAIL max34; exact coordinator waiver for 15 library-adder nodes',
                   NC.KTREE_SCOPE + '; all other drivers retain limit32; timing and physical checks required')
+            return True
+        if kit is not None and NC.mc3c7_scoped_admission(report, kit):
+            g.add('WARN', 'native_census',
+                  f"raw native census FAIL max{report['max_dynamic_loads']}; scoped coordinator waiver <={NC.MC3C7_MAX} for kit {kit}",
+                  NC.MC3C7_SCOPE + '; guidance under rule freeze; route timing decides')
             return True
         if (report.get('schema') != 'opentallas.pre_gate_native_census.v1'
                 or report.get('status') != 'PASS' or report.get('limit') != 32
@@ -1681,13 +1686,23 @@ def check_native_census(g: Gate, out: str):
     return True
 
 
+def native_scope_kit(kd: Path, spec: dict) -> str | None:
+    """Kit identity for kit-scoped census waivers: bound to the gated tile's spec (its name is the kit dir and,
+    for the MC3c7 scope, its top is the waived top); otherwise no scoped waiver can apply."""
+    if not isinstance(spec, dict) or spec.get("name") != kd.name:
+        return None
+    if kd.name in NC.MC3C7_KITS and spec.get("top") != NC.MC3C7_TOP:
+        return None
+    return kd.name
+
+
 def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
                    cap: int, host: str, secs: int = 0, local_snapshot: Path | None = None):
     """One parser for live runs and fully verified frozen-run recovery."""
     fp = json.loads((kd / "floorplan.json").read_text())
     kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
     check_textbook_execution(g,out)
-    check_native_census(g,out)
+    check_native_census(g,out,native_scope_kit(kd, spec))
     errs = re.findall(r"^GATE_FLOWERR (.*)$", out, re.M)
     if binding.get("staged_remeasurement"):
         if not SB.staged_remeasurement_matches_log(binding, out.encode()):
@@ -2054,8 +2069,11 @@ def linked_child_pairs(spec: dict | None) -> list | None:
     for mod, inst, conns in inst_re.findall(body):
         if mod in VLOG_KEYWORDS:
             continue
+        # FRH10 10-20: a child bound inside a wires-only wrapper (spec inst "u_e1e.u_view": Yosys-flattened name of
+        # ot_v41_bf_col u_view inside dsfd_bf_col u_e1e) is the parent RTL's top-level instance u_e1e
         kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
-                    or fnmatch.fnmatchcase(inst, ch["inst"])), None)
+                    or fnmatch.fnmatchcase(inst, ch["inst"])
+                    or ("." in ch["inst"] and fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*").split(".", 1)[0]))), None)
         if kid is None:
             continue
         seen.add(kid["inst"])
@@ -2183,7 +2201,8 @@ def parent_link_graph(spec: dict | None) -> dict | None:
         if e is None or st[e:].strip():
             continue
         # top-level names: the pattern without its hierarchy '*' (else "*u0" would claim reset run u_lprc_u0)
-        kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))), None)
+        kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
+                    or ("." in ch["inst"] and fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*").split(".", 1)[0]))), None)
         if kid:
             seen.add(kid)
         conns, exprs, j = st[k + 1:e - 1], [], 0
@@ -2783,7 +2802,8 @@ def apply_clock_rule_waiver(g: Gate, spec: dict) -> None:
     items = [i for i in g.items if i["check"] == "clock_rule" and i["severity"] == "FAIL"]
     if not isinstance(w, dict) or not items:
         return
-    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w)
+    applied, note, why = TL.clock_waiver_eval((getattr(g, "clock", None) or {}).get("evidence") or {}, w,
+                                          tile=spec.get("block"))
     if not applied:
         for i in items:
             i["message"] += f" (clock_rule_waiver NOT applied: {'; '.join(why)})"

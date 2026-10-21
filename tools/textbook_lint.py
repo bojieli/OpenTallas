@@ -240,9 +240,16 @@ def clock_rule_eval(max_sinks, evidence=None):
 
 
 CLOCK_WAIVER_MAX_PS = 2.0     # HANDOFF 0ga 2026-10-18: largest recorded per-pair excess over CLK_SPREAD_MAX_PS
+# COORD 10-20 19:25 (rule freeze; spread accepted for route, route timing decides, fail -> regional root split):
+# SCOPED caps above limit + CLOCK_WAIVER_MAX_PS, one tile each.  A waiver uses one only when it names the tile in
+# "scope" and its recorded tt_ps/ff_ps stay within the cap.  Never a general relaxation.
+SCOPED_CLOCK_WAIVER_CAPS = {
+    "qkd_pv_fin_s32": {"tt": 88.4, "ff": 84.6},     # KV PVFIN R15c, 38k-sink single root, COORD 10-20 19:25
+    "qfd_native59_svc": {"tt": 84.6},               # Qwen N59 svc4 (TT 84.6 / FF 77.5), 21,950-sink root, COORD 10-20 17:33
+}
 
 
-def clock_waiver_eval(evidence, waiver):
+def clock_waiver_eval(evidence, waiver, tile=None):
     """HANDOFF 0ga 2026-10-18 (s81lk_kp4_dec syn-dly 80.5 FF vs 80): a coordinator-recorded per-pair excess, the job
     spec's "clock_rule_waiver" {"pair": "a-b", "ff_ps"|"tt_ps": measured, "limit_ps", "by"}.  Applies only when every
     over-limit corner spread of the evidence is <= limit + CLOCK_WAIVER_MAX_PS, <= the recorded value, and (child-pair
@@ -271,7 +278,14 @@ def clock_waiver_eval(evidence, waiver):
         rec_ps = waiver.get(f"{c}_ps")
         if not _num(rec_ps) or v > float(rec_ps) + 1e-6:
             why.append(f"{c.upper()} {v:.1f} ps not recorded in the waiver ({c}_ps={rec_ps})")
-        if v > lim + CLOCK_WAIVER_MAX_PS:
+        scope = str(waiver.get("scope", ""))
+        cap = SCOPED_CLOCK_WAIVER_CAPS.get(scope, {}).get(c)
+        if cap is not None and tile is not None and str(tile) != scope:
+            why.append(f"scoped waiver {scope} does not apply to tile {tile}")
+        if cap is not None:
+            if v > cap + 1e-6:
+                why.append(f"{c.upper()} {v:.1f} ps exceeds the scoped cap {cap} of {waiver.get('scope')}")
+        elif v > lim + CLOCK_WAIVER_MAX_PS:
             why.append(f"{c.upper()} {v:.1f} ps exceeds limit + {CLOCK_WAIVER_MAX_PS:.0f}")
         if basis == "pin-flop" and ev.get(f"{c}_pin_spread_basis") == "child_pair":
             bad = [p for p in ev.get("child_pairs") or () if p.get("corner") == c and float(p.get("ps", 0)) > lim

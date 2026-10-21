@@ -383,6 +383,11 @@ def check(model, rs, fs, unresolved, actual, die_v=None):
     return fails, info
 
 
+def KP_floor():
+    """KV-FLOOR1: the compiler's pair END FLOOR law flag (kv_static_programme.PV_FLOOR, OT_KV_PVFIN_FLOOR)"""
+    return os.environ.get('OT_KV_PVFIN_FLOOR', '0') == '1'
+
+
 def attn_calendar_check(actual, rs, Ts=range(1, 8193)):
     """HKV-DIE3 10-19 (coordinator (b)): the compiled attention calendar of EVERY context against the bound hub / pvfin
     refusals, with the table's actual FR_OFS and pvw -> pvfin pair ages (kv_static_programme.attention_checks)"""
@@ -528,9 +533,13 @@ def bound_ages(die_v=None, sidecar=None, model=None):
         for inst, pr in (gb.get(kind) or {}).items():
             out[kind].setdefault(inst, {k: int(v) for k, v in pr.items() if k in keys})
         out['source'][kind] = 'die_bound.v' if txt else ('sidecar' if sc else 'generator binding')
-    m = re.search(r'ot_qwen_tp8_pv_wide_ctl_tb?\s*#\s*\(([^;]*?)\)\s*pvw_\d__u_ctl\s*\(', txt)   # KV-BOOTAGE: _tb
-    if m and re.search(r'\.FIRST_INPUT_AGE\((\d+)\)', m.group(1)):
-        out['pv_ctl_age'] = int(re.search(r'\.FIRST_INPUT_AGE\((\d+)\)', m.group(1)).group(1))
+    m = re.search(r'(ot_qwen_tp8_pv_wide_ctl_t(?:bf?)?)\s*#\s*\(([^;]*?)\)\s*pvw_\d__u_ctl\s*\(', txt)   # KV-BOOTAGE: _tb
+    if m:   # KV-FLOOR1: the bound pair control master (ctl_tbf = pair END FLOOR, compiler law P1 = P0)
+        out['pv_ctl_master'] = m.group(1)
+        out['pv_ctl_floor'] = m.group(1) == 'ot_qwen_tp8_pv_wide_ctl_tbf' and '.END_FLOOR(0)' not in m.group(2).replace(' ', '')
+    prm = m.group(2) if m else ''
+    if re.search(r'\.FIRST_INPUT_AGE\((\d+)\)', prm):
+        out['pv_ctl_age'] = int(re.search(r'\.FIRST_INPUT_AGE\((\d+)\)', prm).group(1))
         out['source']['pv_ctl_age'] = 'die_bound.v'
     return out
 
@@ -751,6 +760,13 @@ def run(model, doc, fwd=None, die_v=None, attn=False, case_die_v=None, sidecar=N
     if attn:
         ac = attn_calendar_check(actual, rs)
         actual['attention_checks'] = ac
+        fl, bd = KP_floor(), (actual.get('static_schedule') or {}).get('bound') or {}
+        ac['pv_floor'] = dict(compiler=fl, die_master=bd.get('pv_ctl_master'), die_floor=bd.get('pv_ctl_floor'))
+        if bd.get('pv_ctl_master') is not None and bd.get('pv_ctl_floor') != fl:
+            fails.append(dict(id='PVFIN_FLOOR_MISMATCH', what=f'compiler pair law {"P1 = P0 (OT_KV_PVFIN_FLOOR=1)" if fl else "P0 / P1 per pair"} '
+                              f'but the die binds {bd["pv_ctl_master"]} (floor={bd.get("pv_ctl_floor")})',
+                              fix='GEN the die with the same OT_KV_PVFIN_FLOOR as the compiler (kv_bootage pvw_variant_floor -> '
+                                  'qkd_pvw_die_tbf / ot_qwen_tp8_pv_wide_ctl_tbf)'))
         for f in ac['fails']:
             fails.append(dict(id=f'ATTN_CALENDAR {f["id"]}', what=f'{f["contexts"]} of {ac["contexts"]} contexts: '
                               + json.dumps(f['examples'][:3]),

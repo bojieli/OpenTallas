@@ -81,9 +81,10 @@
   "grade": "PRICED",
   "cycles": 52,
   "unfolded_cycles": 0,
-  "source": "TOK.QW.SCHED (TOKSIM-QW2 10-20): every priced die edge below is inserted into the dv_layer critical-path schedule at its stage boundary (dv_layer.compose die_edges); the old flat 52/layer term (landings 45 + n59 1 + ctlm 4 + 2) is retired",
+  "source": "superseded at compose time by sched.ledger (die_edges.edges below = TOKSIM-QW2 10-20 02:25 list, kept for reference)",
   "variants": [
-   "plan"
+   "plan",
+   "asbuilt"
   ],
   "edges": [
    {
@@ -203,7 +204,11 @@
   "note": "release die uses the serial MU calendar; no paired 4u TB exists for it (owed). Frame user 0 at 16 tok/frame = 4,768 tok/s vs 1u composed below.",
   "schedule_scale": {
    "ref_layer_period": 6842,
-   "rule": "4u frame is compute-layer bound on the OVL link schedule built at the 1u dh2 pair period 6,842/layer (link/record.json); every user-layer moves by the same folded die edges -> frame x (6842 + die_edges_per_layer) / 6842 (no die edge is in the link-schedule frame)"
+   "rule": "4u frame is compute-layer bound on the OVL link schedule built at the 1u dh2 pair period 6,842/layer (link/record.json); every user-layer moves by the cycles the schedule ledger adds per chained layer -> frame x (6842 + sched_added_per_layer) / 6842, sched_added = chained - chained(no die edges, dv2f14bi lane ages, measured AR, measured ages) (no die edge is in the link-schedule frame)"
   }
+ },
+ "sched": {
+  "ledger": "results/token_pass/measured_qwen_1019/sched/ledger.json",
+  "source": "QW-TOKSCHED 10-20 (TOK.QW.SCHED): one priced-edge ledger (die g5r2b + release successors) replaces die_edges.edges; lane ages from dv2f20g5r2b; SU8/VM8l age deltas and the COLL split AR price are absorbed by the lowering / compiler (variant asbuilt = g5r2b netlist only)"
  }
 }

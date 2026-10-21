@@ -63,6 +63,13 @@ class ChildPair(unittest.TestCase):
         # x: a->b, y: b->d, z: c->d; p / q / s / clk / rst_n are parent ports, not links
         self.assertEqual(G.linked_child_pairs(self.spec), [("*u_a", "*u_b"), ("*u_b", "*u_d"), ("*u_c", "*u_d")])
 
+    def test_wrapper_child_pairs_retain_hierarchical_identity(self):
+        self.spec["children"][0]["inst"] = "*u_a.u_view"
+        self.assertEqual(G.linked_child_pairs(self.spec),
+                         [("*u_a.u_view", "*u_b"), ("*u_b", "*u_d"), ("*u_c", "*u_d")])
+        self.spec["children"][0]["inst"] = "*missing.u_view"
+        self.assertIsNone(G.linked_child_pairs(self.spec))
+
     def test_worst_linked_pair_is_judged(self):
         r = self.rec()
         # FF child flops: a 650..700, b 590..640, c 635..685, d 630..670; all-children 590..700 = 110
