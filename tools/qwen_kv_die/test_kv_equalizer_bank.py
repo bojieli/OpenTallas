@@ -10,6 +10,7 @@ import kv_bundle_eq as E
 
 
 def inst(name, master, x, y, w, h, orient, **kw):
+    kw.setdefault('kind', 'static')
     return NS(name=name, master=master, x=x, y=y, w=w, h=h, orient=orient, **kw)
 
 
