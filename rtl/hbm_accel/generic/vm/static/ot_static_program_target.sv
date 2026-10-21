@@ -57,15 +57,24 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin reset_meta<=0;reset_live<=0;end
         else begin reset_meta<=1;reset_live<=reset_meta;end
-    wire rl;
-    generate if(RLC>1)begin:g_rlc
+    wire rl, rlb;
+    generate if(FAN32!=0)begin:g_rlf
+        // two reset families (<= 31 copies each: the sync flop drives every copy), rows 0..511 of the bitmap on rlb
+        (* async_reg = "true", keep = "true", dont_touch = "true" *) reg rma, rmb;   // one kept synchroniser per family
+        always @(posedge clk or negedge rst_n) if(!rst_n)begin rma<=0;rmb<=0;end else begin rma<=1;rmb<=1;end
+        (* keep = "true", dont_touch = "true" *) reg [23:0] rla__ot_rlv, rlb__ot_rlv;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin rla__ot_rlv<=0;rlb__ot_rlv<=0;end
+            else begin rla__ot_rlv<={24{rma}};rlb__ot_rlv<={24{rmb}};end
+        assign rl=rla__ot_rlv[0]; assign rlb=rlb__ot_rlv[0];
+    end else if(RLC>1)begin:g_rlc
         (* keep = "true", dont_touch = "true" *) reg [RLC-1:0] rl__ot_rlv;
         always @(posedge clk or negedge rst_n)
             if(!rst_n)rl__ot_rlv<={RLC{1'b0}};
             else rl__ot_rlv<={RLC{reset_meta}};
-        assign rl=rl__ot_rlv[0];
+        assign rl=rl__ot_rlv[0]; assign rlb=rl;
     end else begin:g_rl1
-        assign rl=reset_live;
+        assign rl=reset_live; assign rlb=rl;
     end endgenerate
     reg cv,dv,lv;
     reg [7:0] target;
@@ -98,7 +107,8 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
             program_cfg_we<=0;program_start_v<=0;configured<=0;fault<=0;
             if(FAN32==0)installed<=0;
             install_open<=0;armed<=0;scanning<=0;validated<=0;missing<=0;
-            scan_row<=0;scan_limit<=0;commit<=0;
+            if(FAN32==0)begin scan_row<=0;scan_limit<=0;end
+            commit<=0;
         end else begin
             program_cfg_we<=0;program_start_v<=0;
             configured<=launch_ready&&!lv&&!((cv||dv)&&target==tid);
@@ -116,20 +126,20 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                 armed<=0;validated<=0;configured<=0;
                 if(program_active || scanning || lv || {1'b0,address}>=(13'd1<<PCW) ||
                    data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address})fault<=1;
-                else begin program_cfg_we<=1;program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end
+                else begin program_cfg_we<=1;if(FAN32==0)begin program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end end
             end
             if(dv && target==tid)begin
                 armed<=0;validated<=0;configured<=0;install_open<=0;
                 if(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW))fault<=1;
                 else begin
-                    stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;
+                    if(FAN32==0)begin stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;end
                     armed<=1;missing<=0;
                     if(validated && base==stored_base && limit==stored_limit)begin
                         // Same range in the unchanged resident generation: reuse
                         // the completed row proof, not a stale descriptor arm.
                         validated<=1;scanning<=0;
                     end else begin
-                        scanning<=1;scan_row<=base[PCW-1:0];scan_limit<=limit[PCW:0];
+                        scanning<=1;if(FAN32==0)begin scan_row<=base[PCW-1:0];scan_limit<=limit[PCW:0];end
                     end
                 end
             end
@@ -139,14 +149,14 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                     scanning<=0;
                     if(missing || !row_installed)fault<=1;
                     else validated<=1;
-                end else scan_row<=scan_row+1'b1;
+                end else if(FAN32==0)scan_row<=scan_row+1'b1;
             end
             if(lv && armed)begin
                 armed<=0;configured<=0;
                 if(!launch_ready || cv || dv)fault<=1;
                 else begin
-                    program_start_v<=1;program_start_base<=stored_base;
-                    program_start_limit<=stored_limit;program_start_loops<=stored_loops;
+                    program_start_v<=1;
+                    if(FAN32==0)begin program_start_base<=stored_base;program_start_limit<=stored_limit;program_start_loops<=stored_loops;end
                 end
             end
         end
@@ -186,26 +196,104 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
             for(integer k=0;k<32;k=k+1)lo_s[k]<=addr_a[k/16][4:0];
         end
         reg [ROWS-1:0] inst;
-        always @(posedge clk or negedge rl)
-            if(!rl)inst<=0;
-            else for(integer k=0;k<32;k=k+1)
-                for(integer r=0;r<32;r=r+1)
+        for(genvar k=0;k<32;k=k+1)begin:g_ir
+            wire rk=(k<16)?rlb:rl;
+            always @(posedge clk or negedge rk)
+                if(!rk)inst[k*32+:32]<=0;
+                else for(integer r=0;r<32;r=r+1)
                     inst[k*32+r]<=(inst[k*32+r]&&!clr_s[k])||(set_s[k]&&lo_s[k]==5'(r));
-        // scan-row read copies: 16 x 6-bit low copies (64-row read slices) + the 4-bit slice select
-        (* keep = "true", dont_touch = "true" *) reg [5:0] sl_c [0:15];
-        reg [3:0] sh_c;
-        wire scan_load=dv && target==tid && !(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} ||
-                       limit>(13'd1<<PCW)) && !(validated && base==stored_base && limit==stored_limit);
-        wire scan_step=scanning && !({1'b0,scan_row}+1'b1==scan_limit);
-        wire [PCW-1:0] scan_nxt=scan_load?base[PCW-1:0]:scan_step?scan_row+1'b1:scan_row;
-        always @(posedge clk or negedge rl)
-            if(!rl)begin for(integer k=0;k<16;k=k+1)sl_c[k]<=0;sh_c<=0;end
-            else begin for(integer k=0;k<16;k=k+1)sl_c[k]<=scan_nxt[5:0];sh_c<=scan_nxt[9:6];end
-        wire [15:0] slice_rd;
-        for(genvar k=0;k<16;k=k+1)begin:g_rd
-            assign slice_rd[k]=inst[k*64+sl_c[k]];
         end
-        wire inst_rd=slice_rd[sh_c];
+        // ---- copies of the F20 capture-rung valids / target id (same D: their pins) -> per-group accept selects.  Every select
+        // that fans out to a register group is a KEPT wire (an ABC boundary), so the shared terms cannot be pushed into each bit.
+        (* keep = "true", dont_touch = "true" *) reg [16:0] cv_c;
+        (* keep = "true", dont_touch = "true" *) reg cv_l;
+        (* keep = "true", dont_touch = "true" *) reg [6:0] dv_c;
+        (* keep = "true", dont_touch = "true" *) reg [2:0] lv_c;
+        (* keep = "true", dont_touch = "true" *) reg [5:0] sc_c;        // copies of scanning (same D)
+        (* keep = "true", dont_touch = "true" *) reg [7:0] tg_c [0:3];  // copies of the captured target id
+        (* keep = "true", dont_touch = "true" *) reg [11:0] base_a, base_b;   // copies of the captured descriptor base
+        always @(posedge clk_in or negedge rl)
+            if(!rl)begin cv_c<=0;cv_l<=0;dv_c<=0;lv_c<=0;end
+            else begin cv_c<={17{cfg_v}};cv_l<=cfg_v;dv_c<={7{desc_v}};lv_c<={3{launch_v}};end
+        always @(posedge clk_in)begin
+            for(integer k=0;k<4;k=k+1)tg_c[k]<=cfg_target;
+            base_a<=desc_base;base_b<=desc_base;
+        end
+        wire [3:0] tm;
+        for(genvar k=0;k<4;k=k+1)begin:g_tm
+            assign tm[k]=tg_c[k]==tid;
+        end
+        wire wbad=program_active || scanning || lv || {1'b0,address}>=(13'd1<<PCW) || data_q[255:240]!=16'hc7a1 ||
+                  data_q[239:224]!={4'b0,address};
+        wire dbad=program_active || scanning || lv || cv_l || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW);
+        wire reuse=validated && base==stored_base && limit==stored_limit;
+        // programme write data / address: 17 groups of 16 bits (a hold select is 2 loads a bit)
+        for(genvar k=0;k<17;k=k+1)begin:g_wd
+            (* keep = "true" *) wire acc=cv_c[k] && tm[k/9] && !wbad;
+            always @(posedge clk)
+                if(acc)begin
+                    if(k<16)program_cfg_data[k*16+:16]<=data_q[k*16+:16];
+                    else program_cfg_addr<=address[PCW-1:0];
+                end
+        end
+        // descriptor store: stored_base / stored_limit / stored_loops on 3 accept copies
+        (* keep = "true" *) wire da0=dv_c[0] && tm[2] && !dbad;
+        (* keep = "true" *) wire da1=dv_c[1] && tm[2] && !dbad;
+        (* keep = "true" *) wire da2=dv_c[2] && tm[2] && !dbad;
+        always @(posedge clk) if(da0)stored_base<=base[PCW-1:0];
+        always @(posedge clk) if(da1)stored_limit<=limit[PCW:0];
+        always @(posedge clk) if(da2)stored_loops<=loops;
+        // launch: start base / limit / loops on 3 accept copies
+        wire lgo=armed && launch_ready && !cv_l && !dv;
+        (* keep = "true" *) wire la0=lv_c[0] && lgo;
+        (* keep = "true" *) wire la1=lv_c[1] && lgo;
+        (* keep = "true" *) wire la2=lv_c[2] && lgo;
+        always @(posedge clk) if(la0)program_start_base<=stored_base;
+        always @(posedge clk) if(la1)program_start_limit<=stored_limit;
+        always @(posedge clk) if(la2)program_start_loops<=stored_loops;
+        // scan row / limit (master counter) and the 2D one-hot read pointers (lo: 32 rows of a slice, hi: 32 slices)
+        wire slast={1'b0,scan_row}+1'b1==scan_limit;
+        (* keep = "true" *) wire sload=dv && target==tid && !dbad && !reuse;    // scan_row
+        (* keep = "true" *) wire sloadl=dv && target==tid && !dbad && !reuse;   // scan_limit
+        wire sc_n=(sc_c[0] && slast)?1'b0:(dv && target==tid && !dbad)?!reuse:sc_c[0];
+        always @(posedge clk or negedge rl)
+            if(!rl)sc_c<=0;
+            else sc_c<={6{sc_n}};
+        (* keep = "true" *) wire sstep=sc_c[1] && !slast;
+        always @(posedge clk or negedge rl)
+            if(!rl)begin scan_row<=0;scan_limit<=0;end
+            else begin
+                if(sload)scan_row<=base[PCW-1:0]; else if(sstep)scan_row<=scan_row+1'b1;
+                if(sloadl)scan_limit<=limit[PCW:0];
+            end
+        reg [31:0] lo1h, hi1h;                                      // state
+        (* keep = "true", dont_touch = "true" *) reg [31:0] lo_a, lo_b;   // copies: slices 0..15 / 16..31
+        // per-half selects (16 bits each), kept wires
+        wire [3:0] ld_h, st_h;
+        for(genvar h=0;h<4;h=h+1)begin:g_h
+            (* keep = "true" *) wire ldw=dv_c[3+h] && tm[3] && !dbad && !reuse;
+            (* keep = "true" *) wire stw=sc_c[2+h] && !slast && ((h<2)?1'b1:lo1h[31]);
+            assign ld_h[h]=ldw; assign st_h[h]=stw;
+        end
+        wire [31:0] lo_dec=32'd1<<base_a[4:0], hi_dec=32'd1<<base_b[9:5];
+        wire [31:0] lo_rot={lo1h[30:0],lo1h[31]}, hi_rot={hi1h[30:0],hi1h[31]};
+        wire [31:0] lo_n, hi_n;
+        assign lo_n[15:0]=ld_h[0]?lo_dec[15:0]:st_h[0]?lo_rot[15:0]:lo1h[15:0];
+        assign lo_n[31:16]=ld_h[1]?lo_dec[31:16]:st_h[1]?lo_rot[31:16]:lo1h[31:16];
+        assign hi_n[15:0]=ld_h[2]?hi_dec[15:0]:st_h[2]?hi_rot[15:0]:hi1h[15:0];
+        assign hi_n[31:16]=ld_h[3]?hi_dec[31:16]:st_h[3]?hi_rot[31:16]:hi1h[31:16];
+        always @(posedge clk or negedge rl)
+            if(!rl)begin lo1h<=1;hi1h<=1;lo_a<=1;lo_b<=1;end
+            else begin lo1h<=lo_n;hi1h<=hi_n;lo_a<=lo_n;lo_b<=lo_n;end
+        reg inst_rd;
+        always @*begin
+            inst_rd=1'b0;
+            for(integer h=0;h<32;h=h+1)begin
+                reg sv; sv=1'b0;
+                for(integer l=0;l<32;l=l+1)sv=sv|(((h<16)?lo_a[l]:lo_b[l])&inst[h*32+l]);
+                inst_rd=inst_rd|(hi1h[h]&sv);
+            end
+        end
         // the FAN32 0 bitmap on this edge = inst updated with the pending write
         wire pend_hit=pend_addr==scan_row;
         assign row_installed=(MUT==1)?inst_rd:pend_we?(pend_open?(inst_rd||pend_hit):pend_hit):inst_rd;

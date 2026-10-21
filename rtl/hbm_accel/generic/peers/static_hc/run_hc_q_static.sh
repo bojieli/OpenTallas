@@ -11,7 +11,8 @@ SRC="rtl/test/tb_hbm_hc_q_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm
  rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv
  rtl/hdc/ot_hdc_delay.sv rtl/test/full_sm_service/sram_models.sv rtl/lib/ot_rst_relay.sv
  rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_xw_rx_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcal_static.sv
- rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_f32_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_f32_static.sv"
+ rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_f32_static.sv rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_f32_static.sv
+ rtl/hbm_accel/generic/peers/static_hc/ot_hc_rst_relay_k.sv"
 for m in ${MUTS:-0 1 2 3 4}; do  # MUTS=<n> runs one case (closure-loop mutant benches)
   # HBM-HCBANK6 10-20: HCQ_SAFE=2 benches the native32 form (kit hbm_hcq_hub_c1)
   # QHUB-S1 10-19: HCQ_SAFE=1 benches ot_hbm_hc_q_static SAFE 1 (kit hbm_hcq_hub_s1); MUT 7 is its SAFE-only mutant

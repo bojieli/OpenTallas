@@ -17,7 +17,10 @@ src=(rtl/test/tb_hbm_hc_eng4_static.sv $H/ot_hbm_hc_root_static.sv $H/ot_hbm_hc_
  rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv
  rtl/hdc/v41/ot_hdc_sinkhorn.sv rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/lib/ot_rst_relay.sv
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
- physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
+ physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
+ $H/ot_hbm_hc_qtree16_static.sv $H/ot_hc_rst_relay_k.sv rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v)
+# HBM-HCBANK6 10-20: the hub SAFE 2 tree slices use the native-fanout adder graph -> its PDK cell models (exact identity)
+python3 tools/prepare_fp32_fan32_models.py --out "$out/cells.v" > "$out/fan32_models.log"; src+=("$out/cells.v")
 # HC-RINGPLAN 10-19: HC_XDEF = extra verilator defines (e.g. the GEN2d closed ring "+define+HC_DRLY=2 +define+HC_XRLY=0":
 # bank 0 DRLY 2, no b7->b0 relay, hub/root DRLY 2); unset = byte-identical build.
 # HH-9 10-19: HC_CPR (default 1 = the adopted ring: bank chain pin registers, chain +11 edges -> RAW0 165 + 11)
