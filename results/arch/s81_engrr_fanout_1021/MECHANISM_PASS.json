@@ -6,16 +6,25 @@
   "mutants_caught": 6,
   "trace_comparison_to_previous_2358": {
     "base.log": {
-      "records": 289,
-      "identical": true
+      "records": 578,
+      "identical": true,
+      "latency_lines": [
+        "TB_ENG_RR_LAT (edges from the f_ks start, last window) win_v 4 first_request 26 max_response_age 410 / RETURN_AGE 640 first_fragment 684 last_fragment 779"
+      ]
     },
     "var__SEED_2__LAT_160.log": {
-      "records": 289,
-      "identical": true
+      "records": 578,
+      "identical": true,
+      "latency_lines": [
+        "TB_ENG_RR_LAT (edges from the f_ks start, last window) win_v 4 first_request 26 max_response_age 435 / RETURN_AGE 640 first_fragment 684 last_fragment 779"
+      ]
     },
     "var__SEED_3__LAT_60.log": {
-      "records": 289,
-      "identical": true
+      "records": 578,
+      "identical": true,
+      "latency_lines": [
+        "TB_ENG_RR_LAT (edges from the f_ks start, last window) win_v 4 first_request 26 max_response_age 346 / RETURN_AGE 640 first_fragment 684 last_fragment 779"
+      ]
     }
   },
   "total_wait_age": 12,
