@@ -37,6 +37,7 @@ def main():
     ap.add_argument('--std-um2', type=float, default=None); ap.add_argument('--prog-words', type=int, default=25)
     ap.add_argument('--slots', default='rom:475.2,388.8;rom:475.2,475.2;wtn:648.0,388.8')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--require-producer', action='store_true', help='QW-TLPROD: the decode descriptor must hold one TABLE_REL entry')
     a = ap.parse_args(); img = Path(a.image); fails = []
     m0, m1 = viamap(img / 'calendar_m0.viamap.hex'), viamap(img / 'calendar_m1.viamap.hex')
     dw = [int(l, 16) for l in (img / 'dw.hex').read_text().split()]
@@ -56,7 +57,13 @@ def main():
         if n and (f % 4 or f + n > nent): fails.append(f'descriptor {i} ({f},{n}) misaligned / outside nent')
     t0min = 5 + (NU - 1)
     t0 = {i: ents[f] >> 116 for i, (f, n) in enumerate(desc) if n}
-    loc4 = [(k, (e >> 4) & 63) for k, e in enumerate(ents) if ((e & ((1 << 116) - 1)) >> 112) == 14 and (e >> 1) & 7 == 4]
+    is4 = lambda e: ((e & ((1 << 116) - 1)) >> 112) == 14 and (e >> 1) & 7 == 4
+    loc4 = [(k, (e >> 4) & 63) for k, e in enumerate(ents) if is4(e) and not (e >> 10) & 1]
+    # QW-TLPROD TABLE_REL: one stage-relative LOCAL4 (bit 10) inside the decode descriptor = the 36 per-layer loads of
+    # every user (the producer); the 36 one-entry preload ranges stay as explicit-caller ranges
+    df, dn = desc[1]
+    rel = [k for k in range(df, df + dn) if is4(ents[k]) and (ents[k] >> 10) & 1]
+    if a.require_producer and len(rel) != 1: fails.append(f'decode descriptor holds {len(rel)} TABLE_REL producer entries (need 1)')
     stages = sorted(s for _, s in loc4)
     if stages != list(range(1, 37)): fails.append(f'LOCAL4 table loads cover stages {stages[:3]}..{stages[-3:]} (need 1..36 once)')
     late = [k for k, _ in loc4 if ents[k] >> 116 < t0min] + [i for i, v in t0.items() if v < t0min]
@@ -83,7 +90,7 @@ def main():
     out = dict(
         verdict='PASS' if not fails else 'FAIL', fails=fails,
         logical=dict(nent=nent, nent_max=NENT_MAX, fill_pct=round(100 * nent / NENT_MAX, 2), rom_rows_used=(nent + 3) // 4,
-                     rom_rows=ROWS, descriptors=desc, first_entry_T0=t0, t0_min=t0min, table_loads=len(loc4)),
+                     rom_rows=ROWS, descriptors=desc, first_entry_T0=t0, t0_min=t0min, table_loads=len(loc4), table_rel_producer=rel),
         cald_without_calr=dict(programme_words=a.prog_words, base_pw=base, max_entries=cald_cap, nine_bit_nent_max=511,
                                fits=nent <= min(cald_cap, 511), decode_entries=desc[1][1],
                                decode_fits=desc[1][1] <= cald_cap),
