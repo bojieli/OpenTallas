@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.lepa.floorplan.successor-plan.v1",
+  "baseline_source": "54d61e7dc7b8682206402e6463a4ee2e355a3a85",
+  "evidence": "gp_terminal.log",
+  "status": "SOURCE_PLAN_ONLY_NOT_GENERATED_OR_GATED",
+  "trigger": "main actual GPL0305 after routability overflow plateau0.144 and +183.8percent artificial inflation; fallback preserved pending",
+  "outline_um": {
+    "old": [
+      561.6,
+      518.4
+    ],
+    "proposed": [
+      648,
+      604.8
+    ]
+  },
+  "macro_columns_x_um": {
+    "old": [
+      43.2,
+      259.2,
+      475.2
+    ],
+    "proposed": [
+      43.2,
+      302.4,
+      561.6
+    ]
+  },
+  "tx_column_channel_um": {
+    "old": 41.88,
+    "proposed": 85.08
+  },
+  "macro_y_um": "unchanged, all placement shifts integer43.2um; actual track checker still required",
+  "outline_area_um2": {
+    "old": 291133.44,
+    "proposed": 391910.39999999997
+  },
+  "state_and_cycles": "No RTL or register edge changes proposed; no reach/latency/physical qualification claim before actual mapped evidence",
+  "native_clock_reset": "Preserve exact RSTHD/NFACE/RPRLY source; preserve WRLY only A fallback (not H)",
+  "model_cost": "outline +100776.96um2 (~34.6percent); additional station/relay stages if actual <=405um registered reach requires them must be priced explicitly",
+  "no_alias": "new named kit/master geometry contract, old main/fallback failure evidence retained",
+  "launch": "do not duplicate current live fallback; adopt only after terminal classification"
+}
