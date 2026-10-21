@@ -2636,6 +2636,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
           "blocks": [{k: b[k] for k in ("kind", "view", "master", "inst", "idx", "x", "y", "w", "h", "orient", "offtrack")}
                      for b in blocks],
           "findings": [list(f) for f in findings], "referenced": referenced_paths(s, kd)}
+    # Canonical clock lint stores its keyed receipt while gen_sdc runs.
+    # Fresh write-mode kits need their directory before that lint executes.
+    if write:
+        (out_root / kd).mkdir(parents=True, exist_ok=True)
     files = {"kit.env": gen_env(s, kd, W, H, lc, blocks), "pdn.tcl": gen_pdn(s, lc),
              "clock.sdc": gen_sdc(s, float(s["route"].get("period_ps", 770))),
              "signoff.sdc": gen_signoff(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*"),
