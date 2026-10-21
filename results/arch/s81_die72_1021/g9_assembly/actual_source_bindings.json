@@ -1,0 +1,862 @@
+{
+  "scope": "Read-only actualG9selectedsource binding packet; noGENmutation/no futureHBE/hostenable/runtime/clockqualification",
+  "die_sha256": "00715e1a11cc9681bf5f1d6a70cf5d4a2c9c3a8094730cf26291f9d3e3a4c8ea",
+  "root": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix",
+  "table_sha256": "0feb9b8c74476fbfaf0ce7a99dac3b71290a24c9635e6047d1501e6478a677d7",
+  "source_inputs_manifest_sha256": "6f0cec8cae29909a0ee320ffa992d3231677e45955a1209dc56b5b5f563455e3",
+  "defines": [
+    "DSFD_PQ_STATIC_X2",
+    "S81CTRL_SRAM_FIFO",
+    "S81CTRL_SRAM_P192",
+    "S81CTRL_NATIVE32",
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF",
+    "OT_S81ENG_TAP_N32R2"
+  ],
+  "instances": {
+    "s_0N": {
+      "block": {
+        "name": "s_0N",
+        "master": "dsdv_slice_lepw_mu",
+        "kind": "slice",
+        "group": "cl0N",
+        "x": 17879.392,
+        "y": 17432.6,
+        "w": 2851.2,
+        "h": 6825.6,
+        "reg": false
+      },
+      "module": "ot_s81sl_slice_lepw_mab_mu_72",
+      "param_sets": {
+        "{}": 1
+      },
+      "selected_source": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_mu_72.sv",
+      "source_sha256": "60881bd5c39e32cf5e7b38049a6fdc0d8d72f7394eb62870f47a393d705dae9f",
+      "module_body_sha256": "93ea681bd5d1e0022c9120a7677cc921e9a380827a41058542ef6762ae1f46ce",
+      "module_header": "module ot_s81sl_slice_lepw_mab_mu_72 #(\n    parameter integer MUT = 0\n) (\n    input wire rst_n,\n    input wire [3:0] sid,\n    input wire [1103:0] ri_e,\n    output wire [1103:0] ro_e,\n    input wire [275:0] vi,\n    output wire [275:0] vo,\n    input wire [1103:0] bi,\n    output wire [512:0] bo,\n    output wire [4*1104-1:0] xc,\n    input wire [8*70-1:0] rt,\n    output wire [15:0] ck_line,\n    output wire [1:0] ck_v,\n    output wire [15:0] ck_xc,\n    output wire [7:0] ck_rt,\n    input wire ch_b,\n    output wire [511:0] tx0,\n    output wire [511:0] tx1,\n    input wire [513:0] rx0,\n    input wire [513:0] rx1,\n    output wire [511:0] tx2,\n    output wire [511:0] tx3,\n    input wire [513:0] rx2,\n    input wire [513:0] rx3,\n    input wire [33:0] mu_c,\n    input wire [10:0] mu_rc,\n    output wire [31:0] mu_rt,\n    output wire fault,\n    input wire ck_S,\n    input wire ck_K, ck_ML,\n    input wire ck_L0, ck_L1, ck_L3, ck_L4,\n    input wire ck_CAP_RT, ck_CAP_CW, ck_CAP_CE, ck_CAP_RN, ck_CAP_RS\n);",
+      "table_contract": {
+        "module": "ot_s81sl_slice_lepw_mab_mu_72",
+        "view": null,
+        "view_note": "S81-LINK5 (owner 10-21 06:00, 5th lane pair): unhardened MU72 assembly ot_s81sl_slice_lepw_mab_mu_72 (s_0N copy-A/B end, 2851.2 x 6825.6); spec physical/ref_tile/s81_mu72_assembly/lepw_mab_mu.json (CAP5 normal u_sl at the E side + 4 dsfd_coll_lane_w_safe8_ntf lanes W column + ot_s81sl_lep_mu_ab (AB_EN 1, kit s81sl_lepmu, UNBOUND) + ot_s81_mu72_land on ck_ML); pair A tx0/tx1/rx0/rx1 = stage NEXT (lk_WN0/lk_WN1), pair B tx2/tx3/rx2/rx3 = stage PREV (link_0_4/link_0_5, ot_pdie_serdes); no parent view, no CLOSED alias; all 12 clock ports read the slice region root",
+        "clk": "ck_S",
+        "rst": [
+          "rst_n",
+          "low"
+        ],
+        "straps": [
+          "sid",
+          "ch_b"
+        ],
+        "strap_values": {
+          "sid": "auto_slice",
+          "ch_b": "1'b1"
+        },
+        "ports": {
+          "xrE.o": {
+            "port": "ro_e",
+            "lane": 276,
+            "ck": "ck_line",
+            "ck_base": 4
+          },
+          "xrE.i": {
+            "port": "ri_w",
+            "lane": 276,
+            "land": true
+          },
+          "xrW.o": {
+            "port": "ro_w",
+            "lane": 276,
+            "ck": "ck_line",
+            "ck_base": 12
+          },
+          "xrW.i": {
+            "port": "ri_e",
+            "lane": 276,
+            "land": true
+          },
+          "vN.o": {
+            "port": "vo",
+            "lane": 276,
+            "ck": "ck_v",
+            "ck_base": 1
+          },
+          "vS.o": {
+            "port": "vo",
+            "lane": 276,
+            "ck": "ck_v",
+            "ck_base": 1
+          },
+          "vN.i": {
+            "port": "vi",
+            "lane": 276,
+            "land": true
+          },
+          "vS.i": {
+            "port": "vi",
+            "lane": 276,
+            "land": true
+          },
+          "xf.o": {
+            "port": "xc",
+            "lane": 276,
+            "kind": "xc",
+            "ck": "ck_xc"
+          },
+          "ret.i": {
+            "port": "rt",
+            "lane": 70,
+            "order": "ret",
+            "land": true
+          },
+          "q.o": {
+            "hb": 1,
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "bo",
+                    0,
+                    0,
+                    276
+                  ]
+                ]
+              },
+              {
+                "split": [
+                  [
+                    "bo",
+                    276,
+                    0,
+                    237
+                  ]
+                ]
+              }
+            ]
+          },
+          "pv.i": {
+            "port": "bi",
+            "hb": 1,
+            "lane": 1104,
+            "adapter": "dsfd_dvland_pvrd",
+            "out_w": 1104,
+            "adapter_straps": {
+              "nw": "8'd160",
+              "rb": "10'd0"
+            }
+          },
+          "tx0.o": {
+            "port": "tx0",
+            "lane": 512
+          },
+          "rx0.i": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "rx0",
+                    0,
+                    0,
+                    514
+                  ]
+                ]
+              }
+            ],
+            "land": true
+          },
+          "tx1.o": {
+            "port": "tx1",
+            "lane": 512
+          },
+          "rx1.i": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "rx1",
+                    0,
+                    0,
+                    514
+                  ]
+                ]
+              }
+            ],
+            "land": true
+          },
+          "mu.i": {
+            "land": true,
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "mu_c",
+                    0,
+                    0,
+                    34
+                  ],
+                  [
+                    "mu_rc",
+                    0,
+                    34,
+                    11
+                  ]
+                ]
+              }
+            ]
+          },
+          "rt.o": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "mu_rt",
+                    0,
+                    0,
+                    32
+                  ]
+                ]
+              }
+            ]
+          },
+          "tx2.o": {
+            "port": "tx2",
+            "lane": 512
+          },
+          "rx2.i": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "rx2",
+                    0,
+                    0,
+                    514
+                  ]
+                ]
+              }
+            ],
+            "land": true
+          },
+          "tx3.o": {
+            "port": "tx3",
+            "lane": 512
+          },
+          "rx3.i": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "rx3",
+                    0,
+                    0,
+                    514
+                  ]
+                ]
+              }
+            ],
+            "land": true
+          }
+        },
+        "mode_unused": [
+          {
+            "port": "bi",
+            "when": "hb0",
+            "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+          },
+          {
+            "port": "rt",
+            "when": "lanes_without_producer",
+            "lane": 70,
+            "reason": "0cj (b) PROVABLY UNUSED: the plan has no ret link for these trailing rt lanes -- the p4h/p4j row-0 S frames of columns 2..5 (f_2R00, f_3L00/f_3R00, f_4L00/f_4R00, f_5L00) gave way to the regional service slices, so s_2S/s_5S carry 7 frame returns and s_3S/s_4S 6; dv_bind packs ret lanes in L00..R03 order, so the missing ones are always the top lanes; the static return calendar (frame_return_plan) never schedules a beat on a lane with no frame. Tied 0, declared as pads (no new slice variant)."
+          }
+        ],
+        "port_note": "p4l: tx 512 -> PHY tx; rx 514 = {PHY st 2, rx 512} on a 562 lane (landed); NO host plane (HOST_EN 0: the master has no t_host / t_kd / f_host / f_lf / f_ks ports); ch_b strap 1 (SerDes basis: every end-slice port crosses the switch, S81-LINKTO corrected S-tier map); S81-LBGAP/G3: inbound line / rung / return lanes landed (dsfd_dvland_276 / 276l / 70); parameter-free (no HB)",
+        "clk_extra": [
+          "ck_K",
+          "ck_ML",
+          "ck_L0",
+          "ck_L1",
+          "ck_L3",
+          "ck_L4",
+          "ck_CAP_RT",
+          "ck_CAP_CW",
+          "ck_CAP_CE",
+          "ck_CAP_RN",
+          "ck_CAP_RS"
+        ],
+        "assembly_spec": "physical/ref_tile/s81_mu72_assembly/lepw_mab_mu.json",
+        "link_slots": {
+          "tx0": "lk_WN0",
+          "rx0": "lk_WN0",
+          "tx1": "lk_WN1",
+          "rx1": "lk_WN1",
+          "tx2": "link_0_4",
+          "rx2": "link_0_4",
+          "tx3": "link_0_5",
+          "rx3": "link_0_5"
+        }
+      },
+      "die_instance": "  ot_s81sl_slice_lepw_mab_mu_72 u_s_0N (.ck_S(ck_ep_s_0N_S), .ck_K(ck_ep_s_0N_K), .ck_ML(ck_ep_s_0N_ML), .ck_L0(ck_ep_s_0N_L0), .ck_L1(ck_ep_s_0N_L1), .ck_L3(ck_ep_s_0N_L3), .ck_L4(ck_ep_s_0N_L4), .ck_CAP_RT(ck_ep_s_0N_CAP_RT), .ck_CAP_CW(ck_ep_s_0N_CAP_CW), .ck_CAP_CE(ck_ep_s_0N_CAP_CE), .ck_CAP_RN(ck_ep_s_0N_CAP_RN), .ck_CAP_RS(ck_ep_s_0N_CAP_RS), .rst_n(rs_48_43_1), .sid(4'd1), .ch_b(1'b1), .bi(1104'd0), .ro_e({w_xrE_0N_l3_src[275:0], w_xrE_0N_l2_src[275:0], w_xrE_0N_l1_src[275:0], w_xrE_0N_l0_src[275:0]}), .ck_line(u_s_0N_ck_line), .ri_e({w_xrW_0N_l3_lnd[275:0], w_xrW_0N_l2_lnd[275:0], w_xrW_0N_l1_lnd[275:0], w_xrW_0N_l0_lnd[275:0]}), .vi({w_tvN_s_0S_src[275:0]}), .vo({w_tvS_s_0N_src[275:0]}), .ck_v(u_s_0N_ck_v), .xc({w_x_f_0R12_l3_src[275:0], w_x_f_0R12_l2_src[275:0], w_x_f_0R12_l1_src[275:0], w_x_f_0R12_l0_src[275:0], w_x_f_0L12_l3_src[275:0], w_x_f_0L12_l2_src[275:0], w_x_f_0L12_l1_src[275:0], w_x_f_0L12_l0_src[275:0], w_x_f_0R10_l3_src[275:0], w_x_f_0R10_l2_src[275:0], w_x_f_0R10_l1_src[275:0], w_x_f_0R10_l0_src[275:0], w_x_f_0L10_l3_src[275:0], w_x_f_0L10_l2_src[275:0], w_x_f_0L10_l1_src[275:0], w_x_f_0L10_l0_src[275:0]}), .ck_xc(u_s_0N_ck_xc), .rt({140'd0, w_r_f_0R13_lnd[69:0], w_r_f_0R12_lnd[69:0], w_r_f_0R10_lnd[69:0], w_r_f_0L13_lnd[69:0], w_r_f_0L12_lnd[69:0], w_r_f_0L10_lnd[69:0]}), .tx0({w_lt_lk_WN0_src[511:0]}), .rx0({w_lr_lk_WN0_lnd[513:0]}), .tx1({w_lt_lk_WN1_src[511:0]}), .rx1({w_lr_lk_WN1_lnd[513:0]}), .mu_c({w_mu_0N_lnd[33:0]}), .mu_rc({w_mu_0N_lnd[44:34]}), .mu_rt({w_rt_0N_src[31:0]}), .tx2({w_lt_lk_WN2_src[511:0]}), .rx2({w_lr_lk_WN2_lnd[513:0]}), .tx3({w_lt_lk_WN3_src[511:0]}), .rx3({w_lr_lk_WN3_lnd[513:0]}), .fault(endpoint_fault[1]));",
+      "selected_child_instances": [
+        "    wire lpr_c_u_sl;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_sl (.ck(ck_S), .d(lpr_S), .q(lpr_c_u_sl));   // t(u_sl) = 0",
+        "    wire lpr_c_u_ln0;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ln0 (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_ln0));   // t(u_ln0) = 0",
+        "    wire lpr_c_u_ln1;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ln1 (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_ln1));   // t(u_ln1) = 0",
+        "    wire lpr_c_u_ln2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ln2 (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_ln2));   // t(u_ln2) = 0",
+        "    wire lpr_c_u_ln3;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_ln3 (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_ln3));   // t(u_ln3) = 0",
+        "    wire lpr_c_u_lep;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_lep (.ck(ck_K), .d(lpr_K), .q(lpr_c_u_lep));   // t(u_lep) = 0",
+        "    ot_s81sl_slice_c1x_k8_cap5r_lp #(.DLK0(1), .DLK1(1), .DLK2(4), .DLK3(1), .DLK4(1), .DLF0(0), .DLF1(0), .DLF2(0), .DLF3(0), .DLF4(0)) u_sl (.ck_C(ck_S), .ck_L0(ck_L0), .ck_L1(ck_L1), .ck_L3(ck_L3), .ck_L4(ck_L4),",
+        "    dsfd_coll_lane_w_safe8_ntf u_ln0 (.ck(ck_K), .rs(lpr_c_u_ln0), .chb(ch_b), .rx(lrx0), .tx(tx0), .lo_v(l0v), .lo_r(l0r), .lo_d(l0d), .li_v(i0v), .li_r(i0r), .li_d(i0d), .flt(f0));   // region K, t = 0",
+        "    dsfd_coll_lane_w_safe8_ntf u_ln1 (.ck(ck_K), .rs(lpr_c_u_ln1), .chb(ch_b), .rx(lrx1), .tx(tx1), .lo_v(l1v), .lo_r(l1r), .lo_d(l1d), .li_v(i1v), .li_r(i1r), .li_d(i1d), .flt(f1));   // region K, t = 0",
+        "    dsfd_coll_lane_w_safe8_ntf u_ln2 (.ck(ck_K), .rs(lpr_c_u_ln2), .chb(ch_b), .rx(lrx2), .tx(tx2), .lo_v(l2v), .lo_r(l2r), .lo_d(l2d), .li_v(i2v), .li_r(i2r), .li_d(i2d), .flt(f2));   // region K, t = 0 (pair B)",
+        "    dsfd_coll_lane_w_safe8_ntf u_ln3 (.ck(ck_K), .rs(lpr_c_u_ln3), .chb(ch_b), .rx(lrx3), .tx(tx3), .lo_v(l3v), .lo_r(l3r), .lo_d(l3d), .li_v(i3v), .li_r(i3r), .li_d(i3d), .flt(f3));   // region K, t = 0 (pair B)",
+        "    ot_s81sl_lep_mu_ab #(.RX_SRAM(1), .IN_PIPE(1), .NATIVE32(1)) u_lep (.clk(ck_K), .rst_n(lpr_c_u_lep), .ro(lro__l_K), .ri(lri), .lo0_v(l0v), .lo0_r(l0r), .lo0_d(l0d), .lo1_v(l1v), .lo1_r(l1r), .lo1_d(l1d), .li0_v(i0v), .li0_r(i0r), .li0_d(i0d), .li1_v(i1v), .li1_r(i1r), .li1_d(i1d), .rxv(rxv), .sl_f(sf__l_K), .l0_f(f0), .l1_f(f1), .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(mwv), .ml_wd(mwd), .ml_rv(mrv), .ml_rd(mrd), .ml_f(mf),"
+      ],
+      "landings_source": "    // ---- LANDING 0: lri K -> S, 1104 b (u_sl.ri_w)\n    wire [4*((1103) - (0) + 1)-1:0] lpl_0_bank;  wire [11:0] lpl_0_epo;  wire [4*(((((1103) - (0) + 1))+8-1)/8)-1:0] lpl_0_vld;  wire [1103:0] lri__l_S, lpl_0_o;\n    ot_pl_land_vector_reset_kw_w #(.W(((1103) - (0) + 1)), .D(4), .CHUNK_BITS(8)) u_lpl_0_w (.ck(ck_K), .rsi(lpr_K_leaves[(1) +: (((((1103) - (0) + 1))+8-1)/8)]), .i(lri), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld));\n    ot_pl_land_vector_reset_r #(.W(((1103) - (0) + 1)), .D(4), .K((MUT == 2) ? 3 : 2), .CHUNK_BITS(8)) u_lpl_0_r (.ck(ck_S), .rsi(lpr_S_leaves[(1) +: (((((1103) - (0) + 1))+8-1)/8)]), .bank(lpl_0_bank), .epo(lpl_0_epo), .vld(lpl_0_vld), .o(lpl_0_o));\n    assign lri__l_S = (MUT == 1) ? lri : lpl_0_o;\n    // ---- LANDING 1: lro S -> K, 1104 b (u_lep.ro)\n    wire [4*((1103) - (0) + 1)-1:0] lpl_1_bank;  wire [11:0] lpl_1_epo;  wire [4*(((((1103) - (0) + 1))+8-1)/8)-1:0] lpl_1_vld;  wire [1103:0] lro__l_K, lpl_1_o;\n    ot_pl_land_vector_reset_kw_w #(.W(((1103) - (0) + 1)), .D(4), .CHUNK_BITS(8)) u_lpl_1_w (.ck(ck_S), .rsi(lpr_S_leaves[(1+(((((1103) - (0) + 1))+8-1)/8)) +: (((((1103) - (0) + 1))+8-1)/8)]), .i(lro), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld));\n    ot_pl_land_vector_reset_r #(.W(((1103) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(8)) u_lpl_1_r (.ck(ck_K), .rsi(lpr_K_leaves[(1+(((((1103) - (0) + 1))+8-1)/8)) +: (((((1103) - (0) + 1))+8-1)/8)]), .bank(lpl_1_bank), .epo(lpl_1_epo), .vld(lpl_1_vld), .o(lpl_1_o));\n    assign lro__l_K = lpl_1_o;\n    // ---- LANDING 2: sf S -> K, 1 b (u_lep.sl_f)\n    wire [4*1-1:0] lpl_2_bank;  wire [11:0] lpl_2_epo;  wire [4*(((1)+8-1)/8)-1:0] lpl_2_vld;  wire  sf__l_K, lpl_2_o;\n    ot_pl_land_vector_reset_kw_w #(.W(1), .D(4), .CHUNK_BITS(8)) u_lpl_2_w (.ck(ck_S), .rsi(lpr_S_leaves[(1+(((((1103) - (0) + 1))+8-1)/8)+(((((1103) - (0) + 1))+8-1)/8)) +: (((1)+8-1)/8)]), .i(sf), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld));\n    ot_pl_land_vector_reset_r #(.W(1), .D(4), .K(2), .CHUNK_BITS(8)) u_lpl_2_r (.ck(ck_K), .rsi(lpr_K_leaves[(1+(((((1103) - (0) + 1))+8-1)/8)+(((((1103) - (0) + 1))+8-1)/8)) +: (((1)+8-1)/8)]), .bank(lpl_2_bank), .epo(lpl_2_epo), .vld(lpl_2_vld), .o(lpl_2_o));\n    assign sf__l_K = lpl_2_o;\n    wire lpr_c_u_sl;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 1 : 0)) u_lprc_u_sl (.ck(ck_S), .d(lpr_S), .q(lpr_c_u_sl));   // t(u_sl) = 0"
+    },
+    "s_3N": {
+      "block": {
+        "name": "s_3N",
+        "master": "dsdv_slice_kv512",
+        "kind": "slice",
+        "group": "cl3N",
+        "x": 12176.992,
+        "y": 10520.6,
+        "w": 1252.8,
+        "h": 6739.2,
+        "reg": false
+      },
+      "module": "ot_s81sl_slice_kv512",
+      "param_sets": {
+        "{}": 1
+      },
+      "selected_source": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/bind/bind/rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_kv512.sv",
+      "source_sha256": "e7e7d43950382920837e2fd553e384690338ed6f4343a7cfb83f2ea796137319",
+      "module_body_sha256": "4a2004329fc7f5e577c9693eefc634236b8974f0449c2593a81e6b11ac347a67",
+      "module_header": "module ot_s81sl_slice_kv512 (\n    input  wire            clk,\n    input  wire            rst_n,\n    input  wire [3:0]      sid,\n    // tier line (4 x 276-b lanes each) and V rung\n    input  wire [1103:0]   ri_w, input wire [1103:0] ri_e, output wire [1103:0] ro_e, output wire [1103:0] ro_w,\n    input  wire [275:0]    vi,   output wire [275:0] vo,\n    // band port (C3)\n    input  wire [1103:0]   bi,   output wire [512:0] bo,\n    // x chains: 0 / 1 = down (W / E frame of row 1), 2 / 3 = up (row 2)\n    output wire [4*1104-1:0] xc,\n    // frame return lanes (cfifo rd)\n    input  wire [8*70-1:0] rt,\n    // forwarded clocks: line E in/out, W in/out (4 lanes each), V in/out, x chains (4 x 4), returns (8)\n    output wire [15:0]     ck_line,\n    output wire [1:0]      ck_v,\n    output wire [15:0]     ck_xc,\n    output wire [7:0]      ck_rt,\n    output wire            fault\n);",
+      "table_contract": {
+        "module": "ot_s81sl_slice_kv512",
+        "ref": "8a495768f02316a7a8ad2e2bafef2f4d3741b741",
+        "view": null,
+        "view_note": "UNBOUND G9 KV_ENABLE1 source variant; leaf0 op15 uses production D512 bank/adapter. Default-off VS/slice/native views do not qualify this hardware.",
+        "clk": "clk",
+        "rst": [
+          "rst_n",
+          "low"
+        ],
+        "straps": [
+          "sid"
+        ],
+        "strap_values": {
+          "sid": "auto_slice"
+        },
+        "ports": {
+          "xrE.o": {
+            "port": "ro_e",
+            "lane": 276,
+            "ck": "ck_line",
+            "ck_base": 4
+          },
+          "xrE.i": {
+            "port": "ri_w",
+            "lane": 276,
+            "land": true
+          },
+          "xrW.o": {
+            "port": "ro_w",
+            "lane": 276,
+            "ck": "ck_line",
+            "ck_base": 12
+          },
+          "xrW.i": {
+            "port": "ri_e",
+            "lane": 276,
+            "land": true
+          },
+          "vN.o": {
+            "port": "vo",
+            "lane": 276,
+            "ck": "ck_v",
+            "ck_base": 1
+          },
+          "vS.o": {
+            "port": "vo",
+            "lane": 276,
+            "ck": "ck_v",
+            "ck_base": 1
+          },
+          "vN.i": {
+            "port": "vi",
+            "lane": 276,
+            "land": true
+          },
+          "vS.i": {
+            "port": "vi",
+            "lane": 276,
+            "land": true
+          },
+          "xf.o": {
+            "port": "xc",
+            "lane": 276,
+            "kind": "xc",
+            "ck": "ck_xc"
+          },
+          "ret.i": {
+            "port": "rt",
+            "lane": 70,
+            "order": "ret",
+            "land": true
+          },
+          "q.o": {
+            "hb": 1,
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "bo",
+                    0,
+                    0,
+                    276
+                  ]
+                ]
+              },
+              {
+                "split": [
+                  [
+                    "bo",
+                    276,
+                    0,
+                    237
+                  ]
+                ]
+              }
+            ]
+          },
+          "pv.i": {
+            "port": "bi",
+            "hb": 1,
+            "lane": 1104,
+            "adapter": "dsfd_dvland_pvrd",
+            "out_w": 1104,
+            "adapter_straps": {
+              "nw": "8'd160",
+              "rb": "10'd0"
+            }
+          }
+        },
+        "mode_unused": [
+          {
+            "port": "bi",
+            "when": "hb0",
+            "reason": "C1 slice (HB=0): band port B is not a C1 port (ot_s81sl_slice g_c1 ignores bi)"
+          },
+          {
+            "port": "ri_w",
+            "when": "col0",
+            "reason": "tier line W end (column 0): no west neighbour; the snake end carries xfin on V"
+          },
+          {
+            "port": "ri_e",
+            "when": "col7",
+            "reason": "tier line E end (column 7): no east neighbour; the snake end carries xfin on V"
+          },
+          {
+            "port": "rt",
+            "when": "lanes_without_producer",
+            "lane": 70,
+            "reason": "0cj (b) PROVABLY UNUSED: the plan has no ret link for these trailing rt lanes -- the p4h/p4j row-0 S frames of columns 2..5 (f_2R00, f_3L00/f_3R00, f_4L00/f_4R00, f_5L00) gave way to the regional service slices, so s_2S/s_5S carry 7 frame returns and s_3S/s_4S 6; dv_bind packs ret lanes in L00..R03 order, so the missing ones are always the top lanes; the static return calendar (frame_return_plan) never schedules a beat on a lane with no frame. Tied 0, declared as pads (no new slice variant)."
+          },
+          {
+            "when": "unlinked_out_bits",
+            "port": "xc",
+            "reason": "slice xc g_xc: four identical registered xw4 copies; only built fanout faces consumed"
+          }
+        ],
+        "params": {}
+      },
+      "die_instance": "  ot_s81sl_slice_kv512 u_s_3N (.clk(ck_cl3N), .rst_n(rs_32_26_3), .sid(4'd7), .bi(1104'd0), .ri_w({w_xrE_2N_l3_src[275:0], w_xrE_2N_l2_src[275:0], w_xrE_2N_l1_src[275:0], w_xrE_2N_l0_src[275:0]}), .ro_w({w_xrW_2N_l3_src[275:0], w_xrW_2N_l2_src[275:0], w_xrW_2N_l1_src[275:0], w_xrW_2N_l0_src[275:0]}), .ck_line(u_s_3N_ck_line), .ro_e({w_xrE_3N_l3_src[275:0], w_xrE_3N_l2_src[275:0], w_xrE_3N_l1_src[275:0], w_xrE_3N_l0_src[275:0]}), .ri_e({w_xrW_3N_l3_src[275:0], w_xrW_3N_l2_src[275:0], w_xrW_3N_l1_src[275:0], w_xrW_3N_l0_src[275:0]}), .vi({w_tvN_gunit_lnd[275:0]}), .vo({w_tvS_s_3N_src[275:0]}), .ck_v(u_s_3N_ck_v), .xc({u_s_3N_xc_nc3312[1103:0], w_x_f_3L12_l3_src[275:0], w_x_f_3L12_l2_src[275:0], w_x_f_3L12_l1_src[275:0], w_x_f_3L12_l0_src[275:0], u_s_3N_xc_nc1104[1103:0], w_x_f_3L10_l3_src[275:0], w_x_f_3L10_l2_src[275:0], w_x_f_3L10_l1_src[275:0], w_x_f_3L10_l0_src[275:0]}), .ck_xc(u_s_3N_ck_xc), .rt({350'd0, w_r_f_3L13_lnd[69:0], w_r_f_3L12_lnd[69:0], w_r_f_3L10_lnd[69:0]}), .fault(block_fault[5]));"
+    },
+    "seqhost": {
+      "block": {
+        "name": "seqhost",
+        "master": "dsdv_seq_host_mux",
+        "kind": "unit",
+        "group": "void",
+        "x": 19866.192,
+        "y": 24431.0,
+        "w": 475.2,
+        "h": 993.6,
+        "reg": false
+      },
+      "module": "dsdv_seq_host_mux",
+      "param_sets": {
+        "{}": 1
+      },
+      "selected_source": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv",
+      "source_sha256": "50a9c9f695b7933df8d21c16f42531b1a7c8839c1da8a97d8052effa14364710",
+      "module_body_sha256": "33312511b4f91e73e31bab9b78c4042585a305d0a71b5a99bdeb7161aa5b3ffe",
+      "module_header": "module dsdv_seq_host_mux (\n    input  wire          ck,\n    input  wire          rst_n,\n    input  wire [7:0]    tap_k, sink_k,\n    input  wire [275:0]  vi_s, output wire [275:0] vo_s,\n    input  wire [275:0]  vi_n, output wire [275:0] vo_n,\n    input  wire [514:0]  f_host, output wire [76:0] t_host, input wire [3:0] f_lf,\n    input  wire [52:0]   f_ks,   output wire [53:0] t_kd,\n    output wire [3:0]    t_mf,\n    output wire [32:0]   s_j,    input  wire [1:0]  s_jd_w, s_jd_e,\n    output wire [291:0]  s_hw_w, s_hw_e, input wire [8:0] s_hc_w, s_hc_e,\n    input  wire [1:0]    st_rg_w, st_rg_e,\n    output wire          cw_v, output wire [9:0] cw_a, output wire [255:0] cw_d,\n    output wire [33:0]   mu_c_7n, mu_c_7s, mu_c_0n, mu_c_0s,\n    output wire [10:0]   mu_rc_7n, mu_rc_7s, mu_rc_0n, mu_rc_0s,\n    input  wire [31:0]   mu_rt_7n, mu_rt_0n\n);",
+      "table_contract": {
+        "module": "dsdv_seq_host_mux",
+        "view": null,
+        "view_note": "cluster not hardened; sh_vc CLOSED, dsdv_mu_hslot CLOSED (NSLOT 47, child_views); MU-S81-2/DIE: dsdv_seq_host_mu NSLOT 47 + dsdv_mu_hwin (NEV 8, NEP 4, NRT 2; kit owed)",
+        "clk": "ck",
+        "rst": [
+          "rst_n",
+          "low"
+        ],
+        "straps": [
+          "tap_k",
+          "sink_k"
+        ],
+        "strap_values": {
+          "tap_k": "8'h00",
+          "sink_k": "8'h00"
+        },
+        "ports": {
+          "vN.i": {
+            "port": "vi_n",
+            "lane": 276,
+            "land": true
+          },
+          "vN.o": {
+            "port": "vo_n",
+            "lane": 276
+          },
+          "vS.i": {
+            "port": "vi_s",
+            "lane": 276,
+            "land": true
+          },
+          "vS.o": {
+            "port": "vo_s",
+            "lane": 276
+          },
+          "cw.o": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "cw_v",
+                    0,
+                    0,
+                    1
+                  ],
+                  [
+                    "cw_a",
+                    0,
+                    1,
+                    10
+                  ],
+                  [
+                    "cw_d",
+                    0,
+                    11,
+                    256
+                  ]
+                ]
+              }
+            ]
+          },
+          "jw.o": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "s_j",
+                    0,
+                    0,
+                    33
+                  ],
+                  [
+                    "s_hw_e",
+                    0,
+                    33,
+                    243
+                  ]
+                ]
+              },
+              {
+                "split": [
+                  [
+                    "s_hw_e",
+                    243,
+                    0,
+                    49
+                  ]
+                ]
+              },
+              {
+                "split": [
+                  [
+                    "=s_j",
+                    0,
+                    0,
+                    33
+                  ],
+                  [
+                    "s_hw_w",
+                    0,
+                    33,
+                    243
+                  ]
+                ]
+              },
+              {
+                "split": [
+                  [
+                    "s_hw_w",
+                    243,
+                    0,
+                    49
+                  ]
+                ]
+              }
+            ]
+          },
+          "jd.i": {
+            "land": true,
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "s_jd_e",
+                    0,
+                    0,
+                    2
+                  ],
+                  [
+                    "s_hc_e",
+                    0,
+                    2,
+                    9
+                  ],
+                  [
+                    "st_rg_e",
+                    0,
+                    11,
+                    2
+                  ]
+                ]
+              },
+              {
+                "split": [
+                  [
+                    "s_jd_w",
+                    0,
+                    0,
+                    2
+                  ],
+                  [
+                    "s_hc_w",
+                    0,
+                    2,
+                    9
+                  ],
+                  [
+                    "st_rg_w",
+                    0,
+                    11,
+                    2
+                  ]
+                ]
+              }
+            ]
+          },
+          "hf.i": {
+            "land": true,
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "f_host",
+                    0,
+                    0,
+                    276
+                  ]
+                ]
+              },
+              {
+                "split": [
+                  [
+                    "f_host",
+                    276,
+                    0,
+                    239
+                  ],
+                  [
+                    "f_lf",
+                    0,
+                    239,
+                    4
+                  ],
+                  [
+                    "f_ks",
+                    0,
+                    243,
+                    33
+                  ]
+                ]
+              },
+              {
+                "split": [
+                  [
+                    "f_ks",
+                    33,
+                    0,
+                    20
+                  ],
+                  [
+                    "mu_rt_7n",
+                    0,
+                    20,
+                    32
+                  ]
+                ]
+              }
+            ]
+          },
+          "ht.o": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "t_host",
+                    0,
+                    0,
+                    77
+                  ],
+                  [
+                    "t_kd",
+                    0,
+                    77,
+                    54
+                  ],
+                  [
+                    "mu_c_7n",
+                    0,
+                    131,
+                    34
+                  ],
+                  [
+                    "mu_rc_7n",
+                    0,
+                    165,
+                    11
+                  ]
+                ]
+              }
+            ]
+          },
+          "mu0N.o": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "mu_c_0n",
+                    0,
+                    0,
+                    34
+                  ],
+                  [
+                    "mu_rc_0n",
+                    0,
+                    34,
+                    11
+                  ]
+                ]
+              }
+            ]
+          },
+          "mu0S.o": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "mu_c_0s",
+                    0,
+                    0,
+                    34
+                  ],
+                  [
+                    "mu_rc_0s",
+                    0,
+                    34,
+                    11
+                  ]
+                ]
+              }
+            ]
+          },
+          "mu7S.o": {
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "mu_c_7s",
+                    0,
+                    0,
+                    34
+                  ],
+                  [
+                    "mu_rc_7s",
+                    0,
+                    34,
+                    11
+                  ]
+                ]
+              }
+            ]
+          },
+          "rt0N.i": {
+            "land": true,
+            "lanes": [
+              {
+                "split": [
+                  [
+                    "mu_rt_0n",
+                    0,
+                    0,
+                    32
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        "port_note": "p4l: cw; per-half job jw_E (s_j + s_hw_e) / jw_W (s_j copied + s_hw_w); jd_E / jd_W {jd, hc, st_rg} per half (landed); host plane hf / ht to end slice s_7N (landed); MU: mu_c/mu_rc to s_7N in ht spare bits, s_0N/0S/7S on mu_* lanes; mu_rt from s_7N in hf_l2 spare bits, s_0N on rt_0N",
+        "top_ports": [
+          {
+            "port": "t_mf",
+            "dir": "output",
+            "bits": 4
+          }
+        ]
+      },
+      "die_instance": "  dsdv_seq_host_mux u_seqhost (.ck(ck_void5), .rst_n(rs_50_61_1), .tap_k(8'h00), .sink_k(8'h00), .vi_s({w_tvN_bk_sel_lnd[275:0]}), .vo_s({w_tvS_seqhost_src[275:0]}), .vo_n({w_tvN_seqhost_src[275:0]}), .vi_n({w_tvS_s_4N_lnd[275:0]}), .cw_v({w_cw_seqhost_src[0:0]}), .cw_a({w_cw_seqhost_src[10:1]}), .cw_d({w_cw_seqhost_src[266:11]}), .s_j({w_jw_E_l0_src[32:0]}), .s_hw_e({w_jw_E_l1_src[48:0], w_jw_E_l0_src[275:33]}), .s_hw_w({w_jw_W_l1_src[48:0], w_jw_W_l0_src[275:33]}), .s_jd_e({w_jd_E_lnd[1:0]}), .s_hc_e({w_jd_E_lnd[10:2]}), .st_rg_e({w_jd_E_lnd[12:11]}), .s_jd_w({w_jd_W_lnd[1:0]}), .s_hc_w({w_jd_W_lnd[10:2]}), .st_rg_w({w_jd_W_lnd[12:11]}), .f_host({w_hf_7N_l1_lnd[238:0], w_hf_7N_l0_lnd[275:0]}), .f_lf({w_hf_7N_l1_lnd[242:239]}), .f_ks({w_hf_7N_l2_lnd[19:0], w_hf_7N_l1_lnd[275:243]}), .mu_rt_7n({w_hf_7N_l2_lnd[51:20]}), .t_host({w_ht_7N_src[76:0]}), .t_kd({w_ht_7N_src[130:77]}), .mu_c_7n({w_ht_7N_src[164:131]}), .mu_rc_7n({w_ht_7N_src[175:165]}), .mu_c_0n({w_mu_0N_src[33:0]}), .mu_rc_0n({w_mu_0N_src[44:34]}), .mu_rt_0n({w_rt_0N_lnd[31:0]}), .mu_c_0s({w_mu_0S_src[33:0]}), .mu_rc_0s({w_mu_0S_src[44:34]}), .mu_c_7s({w_mu_7S_src[33:0]}), .mu_rc_7s({w_mu_7S_src[44:34]}), .t_mf(seqhost_t_mf));",
+      "body": "module dsdv_seq_host_mux (\n    input  wire          ck,\n    input  wire          rst_n,\n    input  wire [7:0]    tap_k, sink_k,\n    input  wire [275:0]  vi_s, output wire [275:0] vo_s,\n    input  wire [275:0]  vi_n, output wire [275:0] vo_n,\n    input  wire [514:0]  f_host, output wire [76:0] t_host, input wire [3:0] f_lf,\n    input  wire [52:0]   f_ks,   output wire [53:0] t_kd,\n    output wire [3:0]    t_mf,\n    output wire [32:0]   s_j,    input  wire [1:0]  s_jd_w, s_jd_e,\n    output wire [291:0]  s_hw_w, s_hw_e, input wire [8:0] s_hc_w, s_hc_e,\n    input  wire [1:0]    st_rg_w, st_rg_e,\n    output wire          cw_v, output wire [9:0] cw_a, output wire [255:0] cw_d,\n    output wire [33:0]   mu_c_7n, mu_c_7s, mu_c_0n, mu_c_0s,\n    output wire [10:0]   mu_rc_7n, mu_rc_7s, mu_rc_0n, mu_rc_0s,\n    input  wire [31:0]   mu_rt_7n, mu_rt_0n\n);\n    // CSR decode (the f_host word {h_cls 2, h_d 512, h_v}; h_d[7:0] index, h_d[57:32] value) into one flop each\n    wire csr = f_host[0] && f_host[514:513] == 2'd0;\n    reg [25:0] mc, mw;\n    always @(posedge ck) begin\n        mc <= (csr && f_host[8:1] == 8'h15) ? f_host[58:33] : 26'd0;\n        mw <= (csr && f_host[8:1] == 8'h16) ? f_host[58:33] : 26'd0;\n    end\n    wire [3:0] hmf; wire [1:0] wf;\n    dsdv_seq_host_mu #(.NSLOT(47)) u (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k),\n        .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks),\n        .t_kd(t_kd), .f_mc(mc), .t_mf(hmf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w),\n        .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v),\n        .cw_a(cw_a), .cw_d(cw_d));\n    dsdv_mu_hwin #(.NSLOT(47), .NEV(8), .NEP(4), .NRT(2)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),\n        .mu_c({mu_c_0s, mu_c_0n, mu_c_7s, mu_c_7n}), .mu_rc({mu_rc_0s, mu_rc_0n, mu_rc_7s, mu_rc_7n}),\n        .mu_rt({mu_rt_0n, mu_rt_7n}), .t_wf(wf));\n    assign t_mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};\nendmodule"
+    }
+  },
+  "LEP_AB": {
+    "path": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
+    "file_sha256": "3106d0e1d6402b3212b05526e0ebbe5e636883caaf025820b0471e605aff82f2",
+    "body": "module ot_s81sl_lep_mu_ab #(\n    parameter integer DT = 512, parameter integer DR = 8, parameter integer CRED = 8, parameter integer SRAM = 1,\n    parameter integer NB = 80, parameter integer RX_SRAM = 0, parameter integer IN_PIPE = 0, parameter integer NATIVE32 = 0\n) (\n    input  wire            clk,\n    input  wire            rst_n,\n    input  wire [1103:0]   ro,\n    output wire [1103:0]   ri,\n    output wire            lo0_v, input wire lo0_r, output wire [552:0] lo0_d,\n    output wire            lo1_v, input wire lo1_r, output wire [552:0] lo1_d,\n    input  wire            li0_v, output wire li0_r, input wire [552:0] li0_d,\n    input  wire            li1_v, output wire li1_r, input wire [552:0] li1_d,\n    output wire [1:0]      rxv,\n    input  wire            sl_f,\n    input  wire [2:0]      l0_f,\n    input  wire [2:0]      l1_f,\n    input  wire [33:0]     mu_c,\n    output wire [31:0]     mu_rt,\n    output wire            ml_wv,\n    output wire [1103:0]   ml_wd,\n    input  wire            ml_rv,\n    input  wire [1103:0]   ml_rd,\n    input  wire            ml_f,\n    output wire            lo2_v, input wire lo2_r, output wire [552:0] lo2_d,\n    output wire            lo3_v, input wire lo3_r, output wire [552:0] lo3_d,\n    input  wire            li2_v, output wire li2_r, input wire [552:0] li2_d,\n    input  wire            li3_v, output wire li3_r, input wire [552:0] li3_d,\n    output wire [1:0]      rxvb,\n    input  wire [2:0]      l2_f,\n    input  wire [2:0]      l3_f,\n    output wire            fault\n);\n    ot_s81sl_lep_core #(.DT(DT), .DR(DR), .CRED(CRED), .SRAM(SRAM), .HOST_EN(0), .MU_EN(1), .RX_SRAM(RX_SRAM), .AB_EN(1), .NB(NB),\n        .IN_PIPE(IN_PIPE), .NATIVE32(NATIVE32)) u (   // L5B-LEPMU 10-21: native32 / face-stage opt-ins exposed (defaults 0 = unchanged)\n        .clk(clk), .rst_n(rst_n), .ro(ro), .ri(ri),\n        .lo0_v(lo0_v), .lo0_r(lo0_r), .lo0_d(lo0_d), .lo1_v(lo1_v), .lo1_r(lo1_r), .lo1_d(lo1_d),\n        .li0_v(li0_v), .li0_r(li0_r), .li0_d(li0_d), .li1_v(li1_v), .li1_r(li1_r), .li1_d(li1_d), .rxv(rxv),\n        .sl_f(sl_f), .l0_f(l0_f), .l1_f(l1_f), .l0_st(2'b00), .l1_st(2'b00),\n        .t_host(77'd0), .t_kd(54'd0), .f_host(), .f_lf(), .f_ks(),\n        .mu_c(mu_c), .mu_rt(mu_rt), .ml_wv(ml_wv), .ml_wd(ml_wd), .ml_rv(ml_rv), .ml_rd(ml_rd), .ml_f(ml_f),\n        .lo2_v(lo2_v), .lo2_r(lo2_r), .lo2_d(lo2_d), .lo3_v(lo3_v), .lo3_r(lo3_r), .lo3_d(lo3_d),\n        .li2_v(li2_v), .li2_r(li2_r), .li2_d(li2_d), .li3_v(li3_v), .li3_r(li3_r), .li3_d(li3_d), .rxvb(rxvb),\n        .l2_f(l2_f), .l3_f(l3_f), .fault(fault));\nendmodule",
+    "actual_overrides": {
+      "RX_SRAM": 1,
+      "IN_PIPE": 1,
+      "NATIVE32": 1
+    },
+    "resolved_core": {
+      "DT": 512,
+      "DR": 8,
+      "CRED": 8,
+      "SRAM": 1,
+      "NB": 80,
+      "HOST_EN": 0,
+      "MU_EN": 1,
+      "AB_EN": 1
+    },
+    "ring": "u_sl.ro_w(lro) -> D4/K2 S-to-K landing -> u_lep.ro(lro__l_K); u_lep.ri(lri) -> D4/K2 K-to-S landing -> u_sl.ri_w(lri__l_S)",
+    "NEXT": "tx0/rx0 lk_WN0 +tx1/rx1 lk_WN1, corelo/li0/1",
+    "PREV": "tx2/rx2 lk_WN2(slotlink_0_4) +tx3/rx3 lk_WN3(slotlink_0_5), corelo/li2/3",
+    "host_hold": "ActualselectedHOST_EN0 wrapperties t_host/t_kd=0 andleaves f_host/f_lf/f_ks unexposed; futureHBE needs explicitopt-in source/wiring, no inheritedadoption"
+  }
+}
