@@ -65,8 +65,12 @@ Gate 1 (below) failed the native census on the r1 = tb1 structure. r2 rebuilds `
    OT_KV_PVFIN_FLOOR=1); 0 added token cycles; boot-only reset release +3 edges recorded above.
 
 Native census (pre-gate rule 10-19 23:45): r2 gate 2 PASS, limit 32, max 32 (gate_result.json).
-Benches: pv_floor (FLOOR=1 skew 0 bit-exact both pairs; FLOOR=0 shows the shipping skew), mutants pv_floor_m1 (k_qc
-slot) and pv_floor_m3 (pa_n replica divergence) with committed fail witnesses in results/arch/kv_floor2_1020/.
+Benches (fleet, Verilator 5.050): pv_floor r2 FLOOR=1 28/28 PV_PAIR_T PASS at T = 1 .. 8192 (bit-exact, 32 columns,
+P0 == P1), every record line (words, errors, out_age, col0_age, rows) IDENTICAL to the r1 log
+results/arch/kv_floor1_1020/pv_floor_bench_full_307565e07.log (same edges); FLOOR=0 control + full log:
+results/arch/kv_floor2_1020/pv_floor_bench_full_r2.log. Mutants (committed fail witnesses, results/arch/kv_floor2_1020/):
+pv_floor_m1 (k_qc slot one edge late) -> fault=1, PV_FLOOR FAIL; pv_floor_m3 (kept pa_n copy one edge early) -> 512
+word errors + 32 column-age errors, PV_FLOOR FAIL.
 
 ## Gate 1 (10-20 13:32, pre_route_gate --remote auto --cts, ot-pve1): FAIL — native census refused at floorplan
 
