@@ -116,8 +116,9 @@ def apply(model):
     for need in ('d2d_rom', 'seq_su', 'tt_ctlm', 'native59', 'embed_prov', 'io_collective', 'res_train_issue', 'bump_fwd_epoch'):
         if need not in by:
             raise ValueError(f'sys face bind: die instance {need} missing')
-    if by['d2d_rom'].master != 'qfd_d2d_static':
-        raise ValueError('sys face bind needs the static D2D end (static_link_bind)')
+    expected_link = 'qfd_d2d_static_ovl_sf7' if HEAD_PREP else 'qfd_d2d_static'
+    if by['d2d_rom'].master != expected_link:
+        raise ValueError(f'sys face bind needs the selected static D2D end {expected_link} (static_link_bind)')
     sf = rtl_ports(ROOT / SOURCE, MASTER)
     prov = rtl_ports(ROOT / PROV_SOURCE, PROV_MASTER)
     by['embed_prov'].master = PROV_MASTER
