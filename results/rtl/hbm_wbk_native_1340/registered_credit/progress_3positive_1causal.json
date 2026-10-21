@@ -1,0 +1,164 @@
+{
+  "time_utc": "2026-10-21T22:31:39.297544+00:00",
+  "source": "e0bfd10e5",
+  "unit": "ot-gold1:oth-ubuntu-3190535-1792620529",
+  "scope": "Incremental actual receipt; remaining eight causal cases live. No final native/CDC or layout qualification. Source hashes checked against owned source files. +1 stream credit feedback edge, payload zero edge delta; fences are overlapping stress-component latency, not additive production time.",
+  "cases": {
+    "wbq_e": {
+      "outcome": "PASS",
+      "fences": [
+        {
+          "block": 0,
+          "sectors": 640,
+          "fence_stream_edges": 701
+        },
+        {
+          "block": 1,
+          "sectors": 1,
+          "fence_stream_edges": 2060
+        },
+        {
+          "block": 2,
+          "sectors": 13,
+          "fence_stream_edges": 1896
+        },
+        {
+          "block": 3,
+          "sectors": 1984,
+          "fence_stream_edges": 4068
+        },
+        {
+          "block": 4,
+          "sectors": 1984,
+          "fence_stream_edges": 5810
+        },
+        {
+          "block": 5,
+          "sectors": 640,
+          "fence_stream_edges": 5718
+        },
+        {
+          "block": 6,
+          "sectors": 300,
+          "fence_stream_edges": 6697
+        },
+        {
+          "block": 7,
+          "sectors": 1,
+          "fence_stream_edges": 3189
+        }
+      ],
+      "files": {
+        "source.sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+        "wbq_e.log": "87fa22b42c8b971d8f30ba2140f9b4ea200afd3b72218601acfcf6b6fcb53164",
+        "price_comparison.json": "c10333625d1a5cba7cc680d38f2cd26deb7ffc6fceff5a4bdb4e26f3ca8d6218"
+      }
+    },
+    "wbq_w": {
+      "outcome": "PASS",
+      "fences": [
+        {
+          "block": 0,
+          "sectors": 640,
+          "fence_stream_edges": 631
+        },
+        {
+          "block": 1,
+          "sectors": 1,
+          "fence_stream_edges": 2045
+        },
+        {
+          "block": 2,
+          "sectors": 13,
+          "fence_stream_edges": 1971
+        },
+        {
+          "block": 3,
+          "sectors": 1984,
+          "fence_stream_edges": 3879
+        },
+        {
+          "block": 4,
+          "sectors": 1984,
+          "fence_stream_edges": 5995
+        },
+        {
+          "block": 5,
+          "sectors": 640,
+          "fence_stream_edges": 5658
+        },
+        {
+          "block": 6,
+          "sectors": 300,
+          "fence_stream_edges": 6115
+        },
+        {
+          "block": 7,
+          "sectors": 1,
+          "fence_stream_edges": 3064
+        }
+      ],
+      "files": {
+        "source.sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+        "wbq_w.log": "022f7283213587556a9384d0c3b213c21095870de4ba2e4f88e6d6eea98b0dc9"
+      }
+    },
+    "wbq_e_wopen": {
+      "outcome": "PASS",
+      "fences": [
+        {
+          "block": 0,
+          "sectors": 640,
+          "fence_stream_edges": 920
+        },
+        {
+          "block": 1,
+          "sectors": 1,
+          "fence_stream_edges": 3361
+        },
+        {
+          "block": 2,
+          "sectors": 13,
+          "fence_stream_edges": 4676
+        },
+        {
+          "block": 3,
+          "sectors": 1984,
+          "fence_stream_edges": 4920
+        },
+        {
+          "block": 4,
+          "sectors": 1984,
+          "fence_stream_edges": 4941
+        },
+        {
+          "block": 5,
+          "sectors": 640,
+          "fence_stream_edges": 4553
+        },
+        {
+          "block": 6,
+          "sectors": 300,
+          "fence_stream_edges": 3028
+        },
+        {
+          "block": 7,
+          "sectors": 1,
+          "fence_stream_edges": 1294
+        }
+      ],
+      "files": {
+        "source.sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+        "wbq_e_wopen.log": "7bd6af1fabf00924b31e17a88f9ba1d3c03c984392e8496d8d3f3e11cb4337f1"
+      }
+    },
+    "wbq_mut_quad": {
+      "outcome": "intended WB_INTEGRITY rejection",
+      "fences": [],
+      "files": {
+        "wbq_mut_quad.log": "7ae8048cf9953428c48392097481b926e8b6dad397552fa50b52cbf68ac4cd7b",
+        "source.sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6"
+      }
+    }
+  }
+}
