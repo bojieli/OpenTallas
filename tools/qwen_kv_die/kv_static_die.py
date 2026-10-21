@@ -2382,6 +2382,23 @@ def place(m, K, geo, F):
         ky = cy - kh - 10.8 if st[1] == 'S' else cy + PC_PITCH * NPC + 10.8
         m['insts'].append(F.Inst(f'kc_{st}', 'qkd_ctrl_kc', round(up(x_pc + pcw / 2 - kw / 2, GX), 4), round(up(ky, GY), 4),
                                  kw - SH, kh - SH, 'R0', kind='static', region='strip', domain='hbm'))
+    if os.environ.get('OT_KV_KRT_ES6_HOME', '0') == '1':
+        # The ES6 round trip exceeded the hardened 80-edge budget by one.
+        # Move the actual issuer beside its group, reserving its full frame and
+        # halo before allocating any relay. Keep the fixed response budget.
+        es6 = next(i for i in m['insts'] if i.name == f'ectl_ES_{ectl_frame(6)}')
+        grp6 = next(i for i in m['insts'] if i.name == 'slg_ES_6')
+        old = [es6.x, es6.y]
+        m['insts'].remove(es6)
+        try:
+            es6.x, es6.y = free_spot(m, es6.w + SH, es6.h + SH,
+                                    (grp6.x + grp6.w / 2, grp6.y + grp6.h / 2),
+                                    GX, GY, rmax=2000.0)
+        finally:
+            m['insts'].append(es6)
+        m.setdefault('geo', {})['krt_es6_home'] = dict(
+            instance=es6.name, old=old, new=[es6.x, es6.y],
+            group='slg_ES_6', response_budget=80)
     # centre tiles: free spots nearest their anchors
     d2d = by['d2d_kv']
     host = by['host']
