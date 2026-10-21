@@ -87,3 +87,35 @@ gates, or audits were launched. The live original `a556` chain is untouched.
 Use this implementation as the opt-in source for a fresh actual closure chain;
 do not treat the historical coordinates or protocol receipt as current geometry
 or cold-boot qualification.
+
+## K.RST 10-21 (ELEM-KRST, S81-ELEM): root cause and structural fix -- the PLL path needs NO reset transport
+
+The 28,959.8 um `rrs_n_rst_die_t1__m_0__g1_s188/b -> rly_pinfix_pll_lock_0__s0/en` pair is not a reset-distribution
+gap. `rly_pinfix_pll_lock_0__s0` is the pin relay of the PLL lock output, placed 107 um from `rly_pll_lock_0__s0`, at the
+PLL in region **c** (every neighbour within 700 um is on `n_clk_core_c`). `kv_pin_repair.relay_trunk` matched a trunk
+when the instance was ANY endpoint, and the PLL is the driver of every `clk_core_*` trunk, so the relay took the first
+one in bus order, `clk_core_WS`. `kv_fwd_lanes` then laned a c -> c hop as WS -> c (`qkd_landsh0_1`), with
+`en = fallback_rst(WS)` (the most common reset net on tree WS: a die-reset leaf 29 mm away) and a die-reset `rs`.
+Besides the wire, that gated the PLL lock with a released die reset while the HOST releases every die reset only
+after `pll_locked` (`por_n && pll_locked` in qkd_host_*): a boot deadlock.
+
+Fix (structural, generator source):
+- `kv_pin_repair.relay_trunk`: trunk membership = the trunk's loads (`b[3][1:]`), never its driver (kv_die's main
+  planner already skips `eps[0]`). The PLL lock pin relay joins the sink's trunk (host, `clk_core_c`): a plain
+  `qkd_rlys_1` c -> c hop, no lane, no `en` / `rs`, no added reset edge, no boot dependency. Only PLL-launched relays change.
+- `kv_fwd_lanes.form`: fail closed if a lane launches from a clock generator (an instance driving >1 core trunk).
+- `kv_final_reset_stations`: no default endpoint (the PLL en no longer exists); the stale constant 325 is removed.
+- `kv_static_programme.die_retirement_contract`: opt-in stations add `max_added_reset_edges` to THIS die plane's own
+  computed need, never `max(.., 325 + extra)`.
+
+HOLD 414 vs 273, resolved from existing evidence (the existing `kv_retirement_contract.build`, no new campaign):
+325 was the PROG17 d22hl2 plane (leaf DMAX 179) and +89 was the mis-clocked PLL wire. On the five current selected
+`0ae42aa9c` sqk2 generations (ep5 `kvs14r-0ae42aa9c-sqk2{c432,c216,nl,c108,c324}`), using each run's own
+`health_successor.json` + GEN7 candidate + `rst_regional.json` max_total_depth 88 for the uncovered sources (+ the
+diagnostic 64-edge cross-root skew), the whole-plane need is 262 / 267 / 264 / 267 / 269 <= HOLD273 (margin 4-11).
+With the fix the PLL path adds 0, so the h273b cell stands; no HOLD growth or re-closure is required.
+
+Still open (not claimed): the 64-edge cross-root skew is unmeasured (die STA), and the general lane `en`/`rs`
+selection (`fallback_rst` = most common net of the tree, not nearest) leaves ~282 en / ~172 rs pins > 405 um on
+sqk2c432 (Manhattan driver->pin; ~150 have a same-tree net within 405 um). Those need a post-lane regional landing
+(lane en/rs loads re-planned by the regional tree, depth priced into K and the HOLD need), not this PLL transport.

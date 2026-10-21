@@ -123,7 +123,7 @@ def restrap(case, lanes_path, changes):
 def main():
     ap = argparse.ArgumentParser(__doc__)
     ap.add_argument('--run',type=Path,required=True)
-    ap.add_argument('--endpoints',default=os.environ.get('OT_KV_FINAL_RESET_PORTS','rly_pinfix_pll_lock_0__s0/en'))
+    ap.add_argument('--endpoints',default=os.environ.get('OT_KV_FINAL_RESET_PORTS',''))   # K.RST 10-21: no default (the PLL en no longer exists)
     a = ap.parse_args()
     case = a.run/'case_kv'
     root = a.run/'final_reset_stations'
@@ -160,9 +160,10 @@ def main():
     ledger = dict(schema='opentallas.kv_final_reset_stations.v1',enabled=True,
         source_sha256=before,endpoints=changes,lanes=pricing,
         max_added_reset_edges=extra,
-        minimum_existing_required_hold=325,known_h273b_hold=273,
-        requested_hold_env=int(os.environ.get('OT_KV_RST_HOLD','273')),
-        conservative_required_hold=325+extra,hold_shortfall_vs_h273b=325+extra-273,
+        known_h273b_hold=273,requested_hold_env=int(os.environ.get('OT_KV_RST_HOLD','273')),
+        # K.RST 10-21: no constant whole-plane requirement here (the old 325 was the PROG17 d22hl2 plane, DMAX 179);
+        # kv_static_programme.die_retirement_contract adds max_added_reset_edges to the CURRENT die plane's own need.
+        hold_requirement_basis='die_retirement_contract(current health_successor + rst_regional) + max_added_reset_edges',
         boot_first_use_requirement='each affected first-use margin must cover its added reset release edges; absolute production source dates not supplied',
         first_use_profiles='PENDING actual source/clock/reset-basis profiles',
         qualification='STRUCTURAL_SOURCE_ONLY_NOT_COLD_BOOT_OR_RELEASE_QUALIFIED')
@@ -180,7 +181,7 @@ def main():
     shutil.copy2(a.run/'fwd_lanes.json',root/'fwd_lanes.original.json')
     shutil.copy2(lanes,a.run/'fwd_lanes.json')
     print(json.dumps(dict(endpoints=len(changes),max_added_reset_edges=extra,
-                         conservative_required_hold=325+extra,calendar=str(root/'calendar.json'))))
+                         calendar=str(root/'calendar.json'))))
 
 
 if __name__ == '__main__': main()

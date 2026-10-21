@@ -65,9 +65,14 @@ def relay_trunk(buses, by, src, dst):
     word, never a core trunk for an HBM word; mixed bundles take the core trunk (recorded by the callers)."""
     dom = launch_domain(by, src, dst)
     pre = 'clk_hbm_' if dom == 'hbm' else 'clk_core_'
+    # K.RST 10-21: membership = the trunk's LOADS (b[3][1:]), never its driver.  The PLL drives every clk_core_* trunk,
+    # so 'any endpoint' put the PLL lock pin relay (rly_pinfix_pll_lock_0__s0, at the PLL in region c) on the first core
+    # trunk in bus order (clk_core_WS): kv_fwd_lanes then laned a c -> c hop as WS -> c and gated the PLL lock with a
+    # die-reset en 28,959.8 um away (boot deadlock: the HOST releases die_rst_n only after pll_locked) and the opt-in
+    # reset transport priced that wire at +89 release edges (HOLD 414 > h273b).  kv_die's main planner already skips eps[0].
     for inst in (src[0], dst[0] if dst else None):
         j = next((j for j, b in enumerate(buses) if b is not None and b[1] == 'clock_trunk' and b[0].startswith(pre)
-                  and any(i == inst for i, _ in b[3])), None)
+                  and any(i == inst for i, _ in b[3][1:])), None)
         if j is not None:
             return j, dom
     if dom == 'hbm':
