@@ -202,11 +202,14 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
     end else begin : g_spl
         localparam integer LS = 5, LK = (MUT == 3) ? 3 : 2;  // slot = edge LS+1, read = LS+1+LK = OT (8)
         // chain landing: W region clk_c ring (beside stage LS) -> E region clk_o read (the o_* out registers)
-        wire [4*DW-1:0] lc_bank; wire [4*3-1:0] lc_epo; wire [3:0] lc_vld; wire [DW-1:0] lc_o;
-        ot_pl_land_w #(.W(DW), .D(4)) u_lcw (.ck(clk_c), .rsi(rn_st), .i({cv[LS], cd[LS]}), .bank(lc_bank), .epo(lc_epo),
-            .vld(lc_vld));
-        ot_pl_land_r #(.W(DW), .D(4), .K(LK)) u_lcr (.ck(clk_o), .rsi(rn_st), .bank(lc_bank), .epo(lc_epo), .vld(lc_vld),
-            .o(lc_o));
+        // chunked rings (8-bit kept local selectors / reset leaves): the gate's native census refused one 29-bit ring
+        // (counter / rq drivers 64..124 loads) -> ot_pl_land_chunk_w/_r, same D / K / reset ages, each chunk <= ~10 loads
+        localparam integer LCB = 8, LNC = (DW + LCB - 1) / LCB;
+        wire [4*DW-1:0] lc_bank; wire [4*3-1:0] lc_epo; wire [4*LNC-1:0] lc_vld; wire [DW-1:0] lc_o;
+        ot_pl_land_chunk_w #(.W(DW), .D(4), .CHUNK_BITS(LCB)) u_lcw (.ck(clk_c), .rsi(rn_st), .i({cv[LS], cd[LS]}),
+            .bank(lc_bank), .epo(lc_epo), .vld(lc_vld));
+        ot_pl_land_chunk_r #(.W(DW), .D(4), .K(LK), .CHUNK_BITS(LCB)) u_lcr (.ck(clk_o), .rsi(rn_st), .bank(lc_bank),
+            .epo(lc_epo), .vld(lc_vld), .o(lc_o));
         assign q_v = lc_o[DW-1]; assign {q_ss, q_nv, q_wa, q_xa} = lc_o[DW-2:0];
         // fault flag landing: slots written by the f_in pin on clk_rw[3] (W row 3), read K 1 on clk_rx[3] (E row 3)
         wire [3:0] lf_bank; wire [4*3-1:0] lf_epo; wire [3:0] lf_vld;

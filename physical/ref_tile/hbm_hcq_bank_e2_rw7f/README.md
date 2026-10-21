@@ -7,8 +7,8 @@ cd[8]/cv[8] at the E o_* pins, fin_q NW corner, f_o NE corner; sink dump: cd cha
 into clk): clk 461.7. One root over a ~730 um register chain; pin moves cannot fix it.
 
 ## Structure (10-20 CLOCK RULE: regions <= ~400 um, landed crossings)
-- W chain region clk_c: cv/cd stages 0..5 (taps 0/1/3 feed the STG-1 per-row copies) + ring slots (ot_pl_land_w, D 4).
-- E chain region clk_ce (new port, core clk_o; CPO 0): ring read ot_pl_land_r K 2 = the o_* out registers. Slot = edge 6, read = edge 8:
+- W chain region clk_c: cv/cd stages 0..5 (taps 0/1/3 feed the STG-1 per-row copies) + chunked ring slots (ot_pl_land_chunk_w, D 4, 8-bit kept selectors).
+- E chain region clk_ce (new port, core clk_o; CPO 0): chunked ring read ot_pl_land_chunk_r K 2 = the o_* out registers. Slot = edge 6, read = edge 8:
   the ring replaces chain stages 6..8 exactly -> o_* age unchanged.
 - f flag (f_in W face y 730 -> f_out E face y 730, sampled by the centre with leaf_v): D 4 / K 1 ring, slots written by the f_in pin on
   clk_w3 (= old fin_q edge), read on clk_x3 OR lf_any (= old f_o edge).
