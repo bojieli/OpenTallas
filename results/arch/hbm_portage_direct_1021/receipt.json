@@ -1,0 +1,55 @@
+{
+ "status": "EXISTING_L7_FAILURE_REPLAY_PASS",
+ "source_commit": "eaccb9ab1",
+ "inputs_sha256": {
+  "/srv/opentallas-scratch/claude/codex-hbm-portage-fix-eaccb9ab1-1021/relay_layer_d4f.py": "fff2adc845afb4ae746cdbc7f76860f3ec4d7bb9bb05d96c6cdd917b3915a64b",
+  "/srv/opentallas-scratch/claude/codex-hbm-portage-fix-eaccb9ab1-1021/run_existing_failure.sh": "1bc62e73d349f4260bf01b4bf9f835e381f88b65c6c58435fb8c8dd74a038340",
+  "/srv/opentallas-scratch/claude/codex-hbm-r14-recovered-1021/chainB/artifacts/stations_lanes.json": "0cb3fd5b1f9a54119cef9378c99356527f7c7e76ee4fd17fcc5590eb005a072d",
+  "/srv/opentallas-scratch/claude/codex-hbm-r14-recovered-1021/chainB/artifacts/net/pre_relay.json": "e1320424d81a2c80a659729b42f4f71c7f106714e1dd63faa85f7b6052ff9545",
+  "/srv/opentallas-scratch/claude/codex-hbm-r14-recovered-1021/chainB/a/case_a/manifest.json": "da1cfa0c0ddb935e124cb06295404d03431dd58780c1ab4eb55757355fc43a8f",
+  "/srv/opentallas-scratch/claude/codex-hbm-r14-recovered-1021/chainB/artifacts/root_sites.json": "f5fe586619c867532f92fd19e536ac16107343c5c46972c2ea2e2d782bec38d7",
+  "/srv/opentallas-scratch/claude/codex-hbm-r14-recovered-1021/chainB/src_d9d30fa7a/results/arch/hbm_release_r14_1021/planB_margin/d4g_region_map.json": "f83242caf6e8f870329a3345e03570ab2439b324740c262836b7e4bce37e9287",
+  "/srv/opentallas-scratch/claude/codex-hbm-r14-recovered-1021/chainB/src_d9d30fa7a/results/arch/hbm_die_d4g/landing/land_plan_d4g.json": "c946756aaccfa543e5344e41dd2eec1c97cc8c3a72f09b428ed47f9f4b29cb0e"
+ },
+ "l7": {
+  "schema": "opentallas.hbm.d4g.gen2_l7_wire.v1",
+  "region": "d4g_gen2_l7_wire",
+  "inp": "/srv/opentallas-scratch/claude/codex-hbm-portage-fix-eaccb9ab1-1021/contract.json",
+  "fixed": [],
+  "closed_gaps": [],
+  "functional_fail": 0,
+  "open_gaps": [],
+  "paths": 1152,
+  "slot_rules": 8
+ },
+ "original_failure": {
+  "schema": "opentallas.hbm.d4g.gen2_l7_wire.v1",
+  "region": "d4g_gen2_l7_wire",
+  "inp": "/srv/opentallas-scratch/claude/codex-hbm-r14-recovered-1021/chainB/artifacts/net/precheck_contract.json",
+  "fixed": [],
+  "closed_gaps": [],
+  "functional_fail": 1,
+  "open_gaps": [
+   "G-CIL-RC"
+  ],
+  "paths": 1152,
+  "slot_rules": 8
+ },
+ "port_age_pads": [
+  {
+   "row": "sucore_SW.red_tag",
+   "sink": "cxrc_SW_q",
+   "pads": 1
+  }
+ ],
+ "new_notes": [
+  "PORT-AGE-DIRECT: sucore_SW.red_tag 24 formerly unlisted direct bits now participate in exact word alignment"
+ ],
+ "tile_delta": {
+  "hbfd_rly_48_WE": 1
+ },
+ "buses_delta": 1,
+ "hops_over_reach": 22,
+ "problems": [],
+ "qualification": "Data-field stage consistency only. OriginalS4capacityFAIL and22hops overreach remainBLOCKING; noGEN/route/STA/native/power waiver."
+}

@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       admits   776 GB (avail 657, growth 113, headroom 0, waiters 0/0 GB) load 62/128 running 27 disk 2100 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-portage-fix-eaccb9ab1-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-portage-fix-eaccb9ab1-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-portage-fix-eaccb9ab1-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-portage-fix-eaccb9ab1-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-portage-fix-eaccb9ab1-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-portage-fix-eaccb9ab1-1021
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2433633-1792608720 after 0 s
+{"buses": 2528, "tile_categories": {"land0136": 23, "land048": 1, "land136": 790, "land48": 371, "land624": 445, "lh0136": 236, "lh0136_f2": 5, "lh0136_f3": 18, "lh048": 371, "lh0624": 445, "lh136": 9656, "lh136_f2": 356, "lh136_f3": 67, "lh48": 13923, "lh624": 13598, "old136": 13802, "old48": 16084, "old624": 14245}, "kinds": {"old": 1723, "fc": 745, "fc136lane": 60}, "fork_buses": 182, "inter_region_buses": 805, "equal_age_max_depth_by_domain": {"stream": 44, "hbm": 54, "serial": 48}} 22 hops over reach, 0 problems []
+RELAY_SPLICE PASS tiles 84436 buses 2528 edges 12962 -> 231560
+L7 {"fixed": 0, "closed": [], "functional_fail": 0}
+PORTAGE_EXISTING_FAILURE_REPLAY_DONE_NO_ROUTE
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2433633-1792608720): exit 0
