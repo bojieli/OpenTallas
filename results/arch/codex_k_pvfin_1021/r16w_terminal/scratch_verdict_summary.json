@@ -1,0 +1,149 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Input pin registers are part of the same static calendar. No extra stage is permitted; bounded reset farm releases after 3 edges (+2 boot-only edges). Outputs are registers.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc9 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qkd_pv_fin_s32_r16w_20261021-110114.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qkd_pv_fin_s32_r16w_20261021-110114.log; host dir ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/qkd_pv_fin_s32_r16w-20261021-110114",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc9 in 866 s (gate total 20165 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 1815, 'pin_rectangles': 1815, 'pin_track_checked': 1815, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 3eaa7982b17d48cf5be9de13eefbc7a0242d7616b0c003551037ac325c6f6311",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 32152 um2 + macros 8217 in core 64964: util 61% (std-cell density 61.4% of placeable 52333 um2; total fill 62.1%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN qkd_pv_fin_s32 cells 245,850 flops 38,016 depth 483.4 ps util 0.59 reach 0.0 um (9.9 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck: 38,016 flops > 15,000 on one root (+0 ICGs, 4 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:ck: 38,020 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 38,020 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 528.1..583.1 ps (spread 55.0), boundary mean 552.1; tt insertion all 398.5..428.4 ps (spread 29.9), boundary mean 411.9; ff insertion all 315.1..343.9 ps (spread 28.8), boundary mean 328.9; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 2 (fine) leaves 2444 sinks 38417 cells 8220 leaf arrival 388.9..428.4 ps (spread 39.5) pad 65.6 / 15.5 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 3 (fine) leaves 2444 sinks 38417 cells 8602 leaf arrival 400.4..428.4 ps (spread 28.0) pad 65.6 / 16.4 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/qkd_pv_fin_s32_r16w/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      594 paths, worst slack 31.3 ps (e.g. ot_prs_00000_ff/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro      6 paths, worst slack 68.5 ps (e.g. u_ot_pr_core.g_sram[2].u_mem/w_ce_in)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 3.1291969015967425e-11 hold WNS 4.350039772837988e-11",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ck: 38,020 sinks on the largest root; measured TT insertion 428.4 ps, FF insertion 343.9 ps, TT pin-flop spread 27.7 ps, FF pin-flop spread 25.7 ps; WARN: 38,020 sinks on one clock root > 15,000 (guidance); insertion 428.4 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-k-pvfin-close-1021/physical/ref_tile/qkd_pv_fin_s32_r16w/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-k-pvfin-close-1021/physical/ref_tile/qkd_pv_fin_s32_r16w/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "fill",
+   "message": "fill 57% = (hard macros 8217.1 + synthesized std cells 30113.5) / outline 67184.6 um2; pin demand per face: S 534 pins over 241.8/259.2 um (93%), N 534 pins over 241.8/259.2 um (93%), W 583 pins over 245.5/259.2 um (95%), E 260 pins over 194.3/259.2 um (75%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 45.93% used; GRT 3274 s",
+   "fix": ""
+  }
+ ]
+}
