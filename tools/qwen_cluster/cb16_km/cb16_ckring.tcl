@@ -262,8 +262,9 @@ proc ot_ckr_pad {g count master hop} {
   set inst [$blk findInst $g]; set ait [$inst findITerm A]; set net [$ait getNet]
   lassign [$inst getLocation] lx ly; set lx [expr {$lx / double($u)}]; set ly [expr {$ly / double($u)}]
   set side [lindex [dict get $::ot_ckr_grp $g] 1]
-  # pads are chained root-ward: the new pads go between the existing driver and the root (the hop pattern alternates)
-  $ait disconnect
+  # pads are chained root-ward: the new pads go between the existing driver and the root + its CTS clones
+  set aits [lmap i [ot_ckr_gdrv $g] {$i findITerm A}]
+  foreach x $aits { $x disconnect }
   for {set i 0} {$i < $count} {incr i} {
     set p [incr ::ot_ckr_npad]
     dict incr ::ot_ckr_padk $g; set k [dict get $::ot_ckr_padk $g]
@@ -273,30 +274,52 @@ proc ot_ckr_pad {g count master hop} {
     lassign [ot_ckr_mkbuf ot_ckr_pad_$p $master $x $y] c nn
     [$c findITerm A] connect $net; set net $nn
   }
-  $ait connect $net
+  foreach x $aits { $x connect $net }
+}
+# a group's drivers = its local root + every CTS clone of it (clonenet_*_<root>_clk: TritonCTS / repair_clock_nets clone
+# the root onto the same input net; the clone's sinks must be measured and padded with the root)
+proc ot_ckr_gdrv {g} {
+  set blk [ord::get_db_block]; set root [$blk findInst $g]; set out [list $root]
+  foreach it [[[$root findITerm A] getNet] getITerms] {
+    set i [$it getInst]; if {$i eq $root || ![$it isInputSignal]} continue
+    foreach o [$i getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL" && [string match "*_${g}_clk" [[$o getNet] getName]]} { lappend out $i } }
+  }
+  return $out
 }
 proc ot_ckr_med {l d} { if {![llength $l]} { return $d }; set l [lsort -real $l]; return [lindex $l [expr {[llength $l] / 2}]] }
 proc ot_ckr_balance {} {
+  # cb16_ckkm's proven coarse/fine pad loop (HB4xp67 then BUFx2 at the local root, per-pad delay learned each round, 0.8
+  # damping), on the corner-matched trunk/ring groups; FF-est (min arrival over scenes + 0.8 x child insertion) is logged.
   set ::ot_ckr_npad 0; set ::ot_ckr_padk [dict create]; set ::ot_ckr_leaf [dict create]
   set blk [ord::get_db_block]
-  dict for {g pl} $::ot_ckr_grp { dict set ::ot_ckr_leaf $g [ot_ckr_leafpins [[[$blk findInst $g] findITerm Y] getNet]] }
+  set ncl 0
+  dict for {g pl} $::ot_ckr_grp {
+    set lp {}; set dr [ot_ckr_gdrv $g]; incr ncl [expr {[llength $dr] - 1}]
+    foreach i $dr { foreach o [$i getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend lp {*}[ot_ckr_leafpins [$o getNet]] } } }
+    dict set ::ot_ckr_leaf $g $lp
+  }
+  puts "OT_CKR balance: $ncl CTS clones of local roots folded into their groups"
   set_propagated_clock [all_clocks]
   set rcc 0
   if {[llength [info commands ot_rc_cal_apply]]} { set rcc [ot_rc_cal_apply ckr] }
   set iters [ot_ckr_env OT_CKR_ITERS 14]; set tol [ot_ckr_env OT_CKR_TOL_PS 15]
-  set mb [[ord::get_db] findMaster [ot_ckr_env OT_CKR_BUF BUFx4_ASAP7_75t_R]]
-  set hA [ot_ckr_env OT_CKR_PAD_HOP_UM 40.0]; set hB [ot_ckr_env OT_CKR_PADB_HOP_UM 160.0]
-  # per-pad (TT, FF) delay, learned each round from groups padded with one type only
-  set tA 20.0; set fA 9.0; set tB 45.0; set fB 27.0
-  set prev ""; set padA [dict create]; set padB [dict create]
+  set hop [ot_ckr_env OT_CKR_PAD_HOP_UM 0.0]
+  set mc [[ord::get_db] findMaster HB4xp67_ASAP7_75t_R]; set mf [[ord::get_db] findMaster BUFx2_ASAP7_75t_R]
+  set stage 45.0; set fstage 12.0; set mode coarse; set prev ""; set padded [dict create]
+  # OT_CKR_FFMIX m: pad need = (1-m) x TT error + m x FF error / rho (rho = pad FF/TT delay ratio, learned): m 0 aligns TT
+  # only; m 0.5 splits the residual composition error between the TT (setup) and FF (hold) corners.
+  set mix [ot_ckr_env OT_CKR_FFMIX 0.0]; set rho 0.5
   for {set it 0} {$it <= $iters} {incr it} {
     set a [ot_ckr_arrivals]
-    if {$prev ne ""} {
-      set lA {}; set lAf {}; set lB {}; set lBf {}
-      dict for {g c} $padA { if {![dict exists $padB $g]} { lappend lA [expr {([lindex [dict get $a $g] 0] - [lindex [dict get $prev $g] 0]) / $c}]; lappend lAf [expr {([lindex [dict get $a $g] 1] - [lindex [dict get $prev $g] 1]) / $c}] } }
-      dict for {g c} $padB { if {![dict exists $padA $g]} { lappend lB [expr {([lindex [dict get $a $g] 0] - [lindex [dict get $prev $g] 0]) / $c}]; lappend lBf [expr {([lindex [dict get $a $g] 1] - [lindex [dict get $prev $g] 1]) / $c}] } }
-      set tA [expr {max(3.0, [ot_ckr_med $lA $tA])}]; set fA [expr {max(1.0, [ot_ckr_med $lAf $fA])}]
-      set tB [expr {max(3.0, [ot_ckr_med $lB $tB])}]; set fB [expr {max(1.0, [ot_ckr_med $lBf $fB])}]
+    if {$prev ne "" && [dict size $padded]} {
+      set gl {}
+      dict for {g c} $padded { lappend gl [expr {([lindex [dict get $a $g] 0] - [lindex [dict get $prev $g] 0]) / double($c)}] }
+      set m [expr {max(3.0, [ot_ckr_med $gl 0])}]
+      if {$mode eq "coarse"} { set stage $m } else { set fstage $m }
+      set rl {}
+      dict for {g c} $padded { set dt [expr {[lindex [dict get $a $g] 0] - [lindex [dict get $prev $g] 0]}]
+        if {$dt > 1.0} { lappend rl [expr {([lindex [dict get $a $g] 1] - [lindex [dict get $prev $g] 1]) / $dt}] } }
+      set rho [expr {min(1.0, max(0.2, [ot_ckr_med $rl $rho]))}]
     }
     set pt [dict create]; set at {}; set af {}
     dict for {g v} $a { lassign $v t f; dict lappend pt [lindex [dict get $::ot_ckr_grp $g] 0] [list $t $f]; lappend at $t; lappend af $f }
@@ -308,22 +331,23 @@ proc ot_ckr_balance {} {
       puts [format "OT_CKR balance iter %d %s TT %.1f..%.1f (spread %.1f) FF-est %.1f..%.1f (spread %.1f) groups %d" \
         $it $p [lindex $ts 0] [lindex $ts end] $sp [lindex $fs 0] [lindex $fs end] $spf [llength $l]]
     }
-    set at [lsort -real $at]; set af [lsort -real $af]
-    set T [lindex $at end]; set F [lindex $af end]
-    set allsp [expr {$T - [lindex $at 0]}]; set allf [expr {$F - [lindex $af 0]}]
-    puts [format "OT_CKR balance iter %d groups %d all-port TT %.1f..%.1f (spread %.1f) FF-est %.1f..%.1f (spread %.1f) worst in-port TT %.1f FF %.1f padA %.1f/%.1f padB %.1f/%.1f ps pads %d" \
-      $it [dict size $a] [lindex $at 0] $T $allsp [lindex $af 0] $F $allf $worst $worstf $tA $fA $tB $fB $::ot_ckr_npad]
-    if {$it == $iters || ($allsp <= $tol && $allf <= $tol)} break
-    set prev $a; set padA [dict create]; set padB [dict create]
-    # TT target; FF follows when every path is the same stage (logged as FF-est).  OT_CKR_FFMIX>0 mixes the FF error in.
-    set mix [ot_ckr_env OT_CKR_FFMIX 0.0]
+    set at [lsort -real $at]; set af [lsort -real $af]; set T [lindex $at end]
+    set allsp [expr {$T - [lindex $at 0]}]; set allf [expr {[lindex $af end] - [lindex $af 0]}]
+    puts [format "OT_CKR balance iter %d (%s) groups %d all-port TT %.1f..%.1f (spread %.1f) FF-est spread %.1f worst in-port TT %.1f FF-est %.1f pad %.1f / %.1f ps pads %d" \
+      $it $mode [dict size $a] [lindex $at 0] $T $allsp $allf $worst $worstf $stage $fstage $::ot_ckr_npad]
+    set F [lindex $af end]
+    set crit [expr {$mix > 0 ? max($allsp, $allf) : $allsp}]
+    puts [format "OT_CKR balance iter %d crit %.1f rho %.2f mix %.2f" $it $crit $rho $mix]
+    if {$it == $iters || $crit <= $tol} break
+    if {$mode eq "coarse" && $crit < 1.6 * $stage} { set mode fine }
+    set st [expr {$mode eq "coarse" ? $stage : $fstage}]
+    set prev $a; set padded [dict create]
     dict for {g v} $a {
-      lassign $v t f
-      set need [expr {(1.0 - $mix) * ($T - $t) + $mix * ($F - $f) * $tA / $fA - 0.5 * $tol}]
-      set cA [expr {int(floor($need / $tA))}]
-      if {$cA > 0} { ot_ckr_pad $g $cA $mb $hA; dict set padA $g $cA }
+      set need [expr {(1.0 - $mix) * ($T - [lindex $v 0]) + $mix * ($F - [lindex $v 1]) / $rho}]
+      set c [expr {int(floor(0.8 * ($need - 0.5 * $tol) / $st))}]
+      if {$c > 0} { ot_ckr_pad $g $c [expr {$mode eq "coarse" ? $mc : $mf}] $hop; dict set padded $g $c }
     }
-    if {![dict size $padA] && ![dict size $padB]} break
+    if {![dict size $padded]} break
   }
   if {$rcc} { ot_rc_cal_restore; estimate_parasitics -placement }
   detailed_placement
