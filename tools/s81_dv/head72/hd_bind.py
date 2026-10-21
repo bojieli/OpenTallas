@@ -183,6 +183,7 @@ def main():
         rw['ot_s81hd_ctl_glue']=dict(pw['ot_s81hd_ctl'],**{f'seq_{n}':w for dr,w,n,net in PORTS})
         rw['dsfd_mtp_seq']=dict(ck=1,**{n:w for dr,w,n,net in PORTS})
         T.setdefault('rtl_files',[]).append('rtl/dsrom_sys/s81_head/ot_s81hd_ctl_peer.sv')
+        T['rtl_files'].append('rtl/dsrom_sys/s81_head/physical/fan32_cells.v')
     T['masters'] = M
     T['instance_orientations'] = dict(facts['instance_orientations'])
     T['unbound'] = {k: v['view_note'] for k, v in M.items()}
