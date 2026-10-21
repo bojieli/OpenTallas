@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       admits  -340 GB (avail 738, growth 976, headroom 0, waiters 1/64 GB) load 75/128 running 20 disk 1867 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/src
+ot-run: ot-gold1       admits   538 GB (avail 448, growth 72, headroom 0, waiters 0/0 GB) load 93/112 running 28 disk 2191 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-pv-producer-1340/src
+ot-run: -> ot-gold1
+ot-heavy: request 96G is charged 38G (class 'run_xload_xql_quad_lock.sh' measured peak 25.2G, n=22+0 proved); the cap stays 96G
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-2877001-1792616181 after 0 s
+quadrant vs today's xql (pairs W0,1 = ref 0,1; E0,1 = ref 2,3): 10809 cycles compared, 8032 W beats, 5472 E beats, 0 differ; W/E distinct beats 1670
+XQL_QUAD_LOCK PASS
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-2877001-1792616181): exit 0
