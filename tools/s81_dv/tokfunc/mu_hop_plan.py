@@ -81,7 +81,9 @@ def plans(cal, L, hops, mode):
             r = f'link.{a}.{ca}-{b}.{cb}'
             for m, (s0, what, ln) in enumerate(msgs):
                 for p in range(6 if mode == 'mtp' else 1):
-                    T = (sh + s0 + p * ln) % P
+                    position = cal.get('position_graph', {}).get('positions', [])
+                    position_offset = position[p]['start'] if position else p * ln
+                    T = (sh + s0 + (position_offset if mode == 'mtp' else 0)) % P
                     res.setdefault(r, []).append(dict(user=u, T=T, m=m * 6 + p if mode == 'mtp' else m, label=what +
                                                       (f' pos {p}' if mode == 'mtp' else ''), length=ln))
         for r, ms in sorted(res.items()):
