@@ -1,0 +1,397 @@
+{
+ "top": "ot_hbm_svc_sm_group_rel_h",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/lib/ot_rst_fanout.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_r32.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_owner_rel_h.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_h.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_h.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_h.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_calendar_static_xh.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_rel_h.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel_h.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_h.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "LBANKS": 4,
+  "NID": 6,
+  "IDW": 9,
+  "PAW": 11,
+  "PREL": 1,
+  "DD": 256,
+  "ID_COHORT": 1
+ },
+ "clock": "multiple_cts_roots",
+ "clock_port": "stream_clk",
+ "clock_ports": [
+  "stream_clk",
+  "hbm_clk"
+ ],
+ "reset_ports": [
+  "stream_rst_n",
+  "hbm_rst_n"
+ ],
+ "clock_data_paths": "reviewed_gray_fifos",
+ "clock_relationship": {
+  "kind": "independent_clock_families",
+  "periods_ps": {
+   "core": 833.333,
+   "hbm": 1024.0
+  }
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "stream_clk"
+   ],
+   "inputs": [
+    "stream_rst_n",
+    "id_stack",
+    "id_sm",
+    "program_cfg_we",
+    "program_cfg_addr",
+    "program_cfg_data",
+    "desc_we",
+    "desc_addr",
+    "desc_data",
+    "run_v",
+    "run_base",
+    "run_count",
+    "run_layer",
+    "ids_v",
+    "ids_layer",
+    "ids",
+    "ids_cohort"
+   ],
+   "outputs": [
+    "running",
+    "run_done",
+    "program_active",
+    "fault",
+    "sm_packet",
+    "sm_command"
+   ]
+  },
+  "hbm": {
+   "ratio": [
+    1024000,
+    833333
+   ],
+   "ports": [
+    "hbm_clk"
+   ],
+   "inputs": [
+    "hbm_rst_n",
+    "k_rdy",
+    "kr_v",
+    "kr_tag",
+    "kr_beat",
+    "kr_data"
+   ],
+   "outputs": [
+    "k_v",
+    "k_addr",
+    "k_len",
+    "k_tag",
+    "kr_rdy"
+   ]
+  }
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "feed.rows.g_cache[0].u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "feed.rows.g_cache[1].u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "feed.rows.g_cache[2].u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "feed.rows.g_cache[3].u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "feed.rows.g_cache[4].u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "issuer.g_t2.u_desc_lo"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "issuer.g_t2.u_desc_hi"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[0].u_bank.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[1].u_bank.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[2].u_bank.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[3].u_bank.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[4].u_bank.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[5].u_bank.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[6].u_bank.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.producer.ordinal_bank[7].u_bank.u_payload"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.programme_leaf.g_m2.u_program_lo"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "feed.programme_leaf.g_m2.u_program_hi"
+  }
+ ],
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w_1024x256_m2_r2c2",
+  "ot_sram_1r1w_128x256_m1_r2c2",
+  "ot_sram_1r1w_256x256_m2_r2c2"
+ ],
+ "soft_root_macro_bindings": {
+  "feed.rows.g_cache[0].u_payload": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.rows.g_cache[1].u_payload": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.rows.g_cache[2].u_payload": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.rows.g_cache[3].u_payload": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.rows.g_cache[4].u_payload": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "issuer.g_t2.u_desc_lo": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "issuer.g_t2.u_desc_hi": {
+   "master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.producer.ordinal_bank[0].u_bank.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.producer.ordinal_bank[1].u_bank.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.producer.ordinal_bank[2].u_bank.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.producer.ordinal_bank[3].u_bank.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.producer.ordinal_bank[4].u_bank.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.producer.ordinal_bank[5].u_bank.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.producer.ordinal_bank[6].u_bank.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.producer.ordinal_bank[7].u_bank.u_payload": {
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.programme_leaf.g_m2.u_program_lo": {
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  },
+  "feed.programme_leaf.g_m2.u_program_hi": {
+   "master": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "clock_pin": "clk",
+   "root": "stream_clk"
+  }
+ },
+ "reviewed_gray_fifo_extensions": {
+  "die_constant_inputs": [
+   "id_stack",
+   "id_sm"
+  ],
+  "why": "id_stack / id_sm are the die strap identity (2'd/3'd constants per svg instance), registered in each using family (stack_s/sm_s stream, stack_h and pc_q hbm)",
+  "tech_cell_liberties": [
+   {
+    "path": "physical/asap7_stdcell_native_models/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+    "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+    "cells": [
+     "AND2x2_ASAP7_75t_R"
+    ]
+   }
+  ]
+ },
+ "name": "hdie_svg_rel8f",
+ "outline": {
+  "w": 604.8,
+  "h": 561.6
+ },
+ "pins": {
+  "W": [
+   "stream_clk",
+   "stream_rst_n",
+   "hbm_clk",
+   "hbm_rst_n",
+   "id_stack",
+   "id_sm",
+   "program_cfg_we",
+   "program_cfg_addr",
+   "program_cfg_data",
+   "desc_we",
+   "desc_addr",
+   "desc_data",
+   "run_v",
+   "run_base",
+   "run_count",
+   "run_layer",
+   "ids_v",
+   "ids_layer",
+   "ids",
+   "ids_cohort",
+   "running",
+   "run_done",
+   "program_active",
+   "fault"
+  ],
+  "N": [
+   "sm_packet",
+   "sm_command"
+  ],
+  "E": [
+   "k_v",
+   "k_rdy",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data"
+  ],
+  "S": []
+ },
+ "layer_cap": "M5",
+ "recipe": 4,
+ "hold_budget": "tile",
+ "hold_budget_reason": "CDC leaf (stream/hbm reviewed_gray_fifos: 8 landing response FIFOs + descriptor FIFO + 2 fault CDCs, all the fingerprinted ot_hbm_svc_async_fifo)",
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "HBM-SVGREL8: K request/response pins are RTL 2-entry registered skids (ot_hbm_svc_pin_skid2_r32, hbm family); SM / host faces land in the die relays (09:05 rule: pin registers only at region crossings / >405 um); a kit pin stage cannot span the two families"
+ },
+ "job": {
+  "owner": "Codex:CODEX-HBM-PU-1021",
+  "branch": "codex/hbm-pu-svg-1021",
+  "tag": "hdie_svg_rel8f",
+  "purpose": "Current SVG structural successor: pinned bit-sliced Gray FIFOs, native all-pin census clean, authentic ASAP7 AND2 local distribution; qualification pending source-bound functional/CDC/CTS receipts.",
+  "record_to": "results/rtl/ref_tile/hdie_svg_rel8f",
+  "benches": []
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: stream_rst_n -> ot_rst_relay (2 sync + KEPT relay leaves); the either-port producer reset -> ONE reviewed ot_reset_sync per family -> KEPT ot_rst_fanout leaves (<= 32 reset pins each); a kit landing has one clock and would cross the hbm reset into the stream family"
+ }
+}
