@@ -164,7 +164,8 @@
  "structural_change": "E2 all-write source-specific successor after actual rw11is w2 TT142.2 FAIL; retain w0 and qualified w1 exactly, repair BOTH w2 ALL1035 and w3 ALL1052 incl17 actual flag landing cells. Platform TT30.088/32.552 FF26.952/29.447 model adfc6cb16;20hard entries, normal RC restoration/guards/ports/edges unchanged, zero cycles.",
  "reroute_reason": {
   "kind": "structural",
-  "failed_job": "ref_gate hbm_hcq_bank_e2_rw9sp 8eafe4ec3 (clk repaired TT31.0; next root clk_w0 TT84.5ps/1035 sinks strict80 FAIL; evidence 223093a43)",
-  "why": "generic/single-root CTS distribution replaced by all-root symmetric centre-bbox bisection; no port/edge/RTL change"
+  "failed_job": "ref_gate hbm_hcq_bank_e2_rw11is e5364cf91 ep5 root151725: clk_w2 ALL1035 TT142.2 FAIL; w3/FF/GRT NOTRUN; raw0ed69e8b9",
+  "why": "preserve qualified clk_w1 and unchanged clk_w0; replace BOTH remaining write-root trees with exact adfc6cb16 source-model-qualified peripheral topology, retaining all1035/1052 real sinks and20 hard entries; zero port/edge/RTL/data/RC/constraint changes",
+  "prior_failures": "rw9sp and rw10sp/spb records retained; not overwritten"
  }
 }

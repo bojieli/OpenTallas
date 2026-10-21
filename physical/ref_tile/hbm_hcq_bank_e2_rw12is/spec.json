@@ -935,8 +935,9 @@
  "slot_change_request": "HC edge bank e2 rw7 734.4x734.4: roots clk, clk_c (W chain region), clk_ce (E chain region, NEW port), clk_w0..3, clk_x0..3, clk_d0..3, clk_e0..3, raw ck_l[7:0]/ck_w[7:0]/ck_x[3:0]; chain/f ages unchanged (0 added edges) | COL-HC rw8: NEW clock entry ports clk_h0..3 (row assembler output stage); register ages unchanged (0 added edges)",
  "reroute_reason": {
   "kind": "structural",
-  "failed_job": "ref_gate hbm_hcq_bank_e2_rw9sp 8eafe4ec3 (clk repaired TT31.0; next root clk_w0 TT84.5ps/1035 sinks strict80 FAIL; evidence 223093a43)",
-  "why": "generic/single-root CTS distribution replaced by all-root symmetric centre-bbox bisection; no port/edge/RTL change"
+  "failed_job": "ref_gate hbm_hcq_bank_e2_rw11is e5364cf91 ep5 root151725: clk_w2 ALL1035 TT142.2 FAIL; w3/FF/GRT NOTRUN; raw0ed69e8b9",
+  "why": "preserve qualified clk_w1 and unchanged clk_w0; replace BOTH remaining write-root trees with exact adfc6cb16 source-model-qualified peripheral topology, retaining all1035/1052 real sinks and20 hard entries; zero port/edge/RTL/data/RC/constraint changes",
+  "prior_failures": "rw9sp and rw10sp/spb records retained; not overwritten"
  },
  "orfs_vars": {
   "OT_SPINE_CTS_REST": "0",
