@@ -12,7 +12,7 @@ SRC=(rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv rtl/dsrom_sy
      rtl/dsrom_sys/s81_ph/ctrl/test/tb_dsfd_ctrl_rg3_mux.sv)
 "$VL" --version > "$D/build.log"; sha256sum "${SRC[@]}" >> "$D/build.log"
 "$VL" --binary --timing -j 8 --top-module tb_dsfd_ctrl_rg3_mux -O2 -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
-  -Wno-TIMESCALEMOD -Wno-BLKSEQ -Wno-INITIALDLY -GMUT=$M --Mdir "$D/obj" "${SRC[@]}" >> "$D/build.log" 2>&1 \
+  -Wno-TIMESCALEMOD -Wno-BLKSEQ -Wno-INITIALDLY ${VL_DEF:-} -GMUT=$M --Mdir "$D/obj" "${SRC[@]}" >> "$D/build.log" 2>&1 \
   || { echo "$BN BUILD_FAILED"; grep -m8 -E '%Error' "$D/build.log"; echo "CTRL3_CAMPAIGN FAIL"; exit 2; }
 bad=0
 for spec in "$@"; do

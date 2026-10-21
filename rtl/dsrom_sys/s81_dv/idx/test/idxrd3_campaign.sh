@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # S81-IDX3R (10-20, from idxrd2_campaign.sh): build tb_dsdv_idx_rg3 (non-inline reader + dsfd_ctrl_rg3) once per build config, then run a set of plusarg cases in parallel.
 # Run from the repo root on a fleet host (Verilator 5.050, the closure daemon's version).
+# S81-IDX3R: the 16 x dsfd_ctrl_rg3 (pcr) composition verilates to ~1,800 C++ files of up to 5.5 MB: -O2 single TUs ran > 1 h
+# each, so the C++ is split (--output-split 20000 / cfuncs 2000) and compiled -O1 (slow paths -O0); the controllers build
+# with S81CTRL_NATIVE32 (the n32s CTRL view's define, as the native census).  VL_J / VL_DEF override.
 #   idxrd_campaign.sh OUT BUILD "<-G build flags>" JOBS "name|+plusargs" ...
 #   build flags: -GMUT=<0..7> -GCMUT=<0..4> -GDQR=<n> -GXD=<n> -GSDX=<n> -GSRAM_MACRO=<0|1> -GCKH_PS=<ps> -GSQD=<n> -GIQD=<n>;  plusargs: +N= +GATHER= +B= +PMAX= +KB= +T0= +P= +K= +SEED= +SLICE=
 # Case names: pass_* must print TB_IDXRD PASS, fail_* must print TB_IDXRD FAIL, closed_* must FAIL with nopen 0 (every
@@ -22,9 +25,9 @@ if [ ! -x "$D/obj/Vtb_dsdv_idx_rg3" ]; then
   "$VL" --version > "$D/build.log"
   sha256sum "${SRC[@]}" >> "$D/build.log"
   # shellcheck disable=SC2086
-  "$VL" --binary --timing -j ${VL_J:-8} --top-module tb_dsdv_idx_rg3 -O2 -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
+  "$VL" --binary --timing -j ${VL_J:-24} --top-module tb_dsdv_idx_rg3 -O2 ${VL_DEF:-+define+S81CTRL_NATIVE32} --output-split 20000 --output-split-cfuncs 2000 -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O1" -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
     -Wno-TIMESCALEMOD -Wno-BLKSEQ -Wno-INITIALDLY $G --Mdir "$D/obj" "${SRC[@]}" >> "$D/build.log" 2>&1 \
-    || { "$VL" --binary --timing -j ${VL_J:-8} --top-module tb_dsdv_idx_rg3 -O2 -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
+    || { "$VL" --binary --timing -j ${VL_J:-24} --top-module tb_dsdv_idx_rg3 -O2 ${VL_DEF:-+define+S81CTRL_NATIVE32} --output-split 20000 --output-split-cfuncs 2000 -MAKEFLAGS "OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O1" -Wno-fatal -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT \
          -Wno-TIMESCALEMOD -Wno-BLKSEQ -Wno-INITIALDLY $G --Mdir "$D/obj" "${SRC[@]}" >> "$D/build.log" 2>&1; } \
     || { echo "$BN BUILD_FAILED"; grep -m5 -E '%Error' "$D/build.log"; echo "IDXRD_CAMPAIGN FAIL"; exit 2; }
 fi

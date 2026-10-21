@@ -16,6 +16,7 @@ lint) VL=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
 ctrl) bash $K $O ctrl0 0 \
   "pass_s1|+SEED=1" "pass_s2|+SEED=2" "pass_s3|+SEED=3" "pass_lat60|+SEED=4 +LAT=60" "pass_slothit|+SEED=1 +SLOTHIT=1" ;;
 cm1|cm2|cm3) bash $K $O $1 ${1#cm} "fail_s1|+SEED=1" ;;
+ctrln) VL_DEF=+define+S81CTRL_NATIVE32 bash $K $O ctrln 0 "pass_s1|+SEED=1" "pass_s2|+SEED=2" "pass_slothit|+SEED=1 +SLOTHIT=1" ;;
 cm4) bash $K $O cm4 4 "fail_slothit|+SEED=1 +SLOTHIT=1" ;;
 b3) bash $C $O b3 "-GMUT=0 -GSRAM_MACRO=1" 16 \
  "pass_small|+N=4096 +B=13 +T0=400 +P=3" \
