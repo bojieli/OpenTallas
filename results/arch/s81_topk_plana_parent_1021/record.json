@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.topk.plana.source-candidate.v1",
-  "status": "SOURCE_PRODUCTION_PASS_PHYSICAL_OPEN",
+  "status": "SOURCE_PRODUCTION_PASS_NATIVE_REFUSED_PHYSICAL_OPEN",
   "base": "ccf68cf584d0aaef60454936a5cd7d06998baf70",
   "branch": "codex/s81-topk-plana-parent-1021",
   "source_files": [
@@ -33,10 +33,14 @@
   "generated_build_unit": "oth-ubuntu-2283067-1792605520",
   "prototype_failure_unit": "oth-ubuntu-1802430-1792604521",
   "dependency_failure_unit": "oth-ubuntu-2704375-1792605288",
-  "native": "PENDING",
+  "native": "FAIL_237_VIOLATIONS_MAX4280",
   "physical": "NOT_QUALIFIED",
   "source_remote": "/srv/opentallas-scratch/claude/codex-s81-topk-plana-parent-1021/src_gen_r2",
   "production_remote": "/srv/opentallas-scratch/claude/codex-s81-topk-plana-parent-1021/booking_r2/bench_booked",
   "default_adoption": false,
-  "main_merge": false
+  "main_merge": false,
+  "native_summary": "native/summary.json",
+  "output_landing_mutant_unit": "oth-ubuntu-1014402-1792607467",
+  "output_landing_mutant": "EXPECTED_FAIL_76_MISMATCHES",
+  "west_paths": "west_paths.json"
 }

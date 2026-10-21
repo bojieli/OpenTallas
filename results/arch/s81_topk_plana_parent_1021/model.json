@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.s81.topk.plana.v1",
-  "status": "SOURCE_CANDIDATE_NOT_PHYSICAL_CLOSED",
+  "status": "HISTORICAL_MIRROR_LAYOUT_REFUSED_SOURCE_SUCCESSOR_NATIVE_REFUSED",
   "envelope_um": [
     907.2,
     3283.2
@@ -63,7 +63,7 @@
     "hops_each_way": 7,
     "one_way_added_edges": 14,
     "round_trip_added_edges": 28,
-    "chunk_bits": 24
+    "chunk_bits": 12
   },
   "control": {
     "closed_XD": 3,
@@ -108,5 +108,6 @@
   },
   "geometry_scope": "Literal hard-rectangle fit and pin/station centerline reach only. Actual cell fences, routed detours, clock trees, PG phase and congestion remain unqualified.",
   "geometry_status": "PASS",
-  "geometry_max_um": 388.8
+  "geometry_max_um": 388.8,
+  "current_west_model": "west_paths.json"
 }
