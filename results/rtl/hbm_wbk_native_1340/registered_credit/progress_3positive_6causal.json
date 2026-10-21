@@ -1,0 +1,24 @@
+{
+  "time_utc": "2026-10-21T22:54:23.150686+00:00",
+  "source": "e0bfd10e5",
+  "actual_positives": [
+    "wbq_e",
+    "wbq_w",
+    "wbq_e_wopen"
+  ],
+  "actual_causal_rejections": [
+    "wbq_mut_quad",
+    "wbq_mut_span",
+    "wbq_mut_premature",
+    "wbq_mut_ksaddr",
+    "wbq_mut_slice",
+    "wbq_mut_commit"
+  ],
+  "remaining": "Three causal witnesses live; final native not launched while diagnostic native remains active. No final CDC/native/physical qualification.",
+  "new_raw_files": {
+    "wbq_mut_slice/source.sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+    "wbq_mut_slice/wbq_mut_slice.log": "ed2210743ff37b65a4b4c1acab32f71b206644e36b1414b0fcacd98434fab119",
+    "wbq_mut_commit/source.sha256": "357a249cccedff3c6dc5a0e8b34f65f66117d8db7d2df700af60c77e1ec2f8b6",
+    "wbq_mut_commit/wbq_mut_commit.log": "08822f9e5362696093ce2141f912b96e7e5b3d525eb7131c197f3c6071c49305"
+  }
+}
