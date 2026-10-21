@@ -137,3 +137,16 @@ def test_post_ages_walk_torn_and_missing_fail():
     lines = [ln.replace('ahub (.ap_WS(n_ap_WS__r3))', 'ahub (.ap_WS({n_ap_WS__r2[1], n_ap_WS__r3[0]}))') for ln in lines]  # bit 1 skips the pad
     ages, _e, probs = FL.ahub_post_ages(lines, F, dirs, sinks={'ap_WS': ('ahub', 'ap_WS'), 'ks_ahs': ('ahub', 'hs')})
     assert any('torn' in p for p in probs) and any('no sink pin ahub.hs' in p for p in probs) and ages == {}
+
+
+def test_post_ages_walk_inout_lef_sink_listed_first():
+    """KV-AHUB11 10-21 (a10b): the real elements.lef declares every hub / tile pin INOUT per bit ('PIN ap_WS[0]');
+    with the hub instance before its relays the hub's own sink pin was taken as the driver -> every age 0."""
+    import kv_fwd_lanes as FL
+    lines, _d, F = _walk_net()
+    hub = [ln for ln in lines if ln.strip().startswith('qkd_ahub ')]
+    lines = [ln for ln in lines if ln not in hub]
+    lines.insert(next(i for i, ln in enumerate(lines) if 'qkd_astk' in ln), hub[0])
+    dirs = {'qkd_astk': {'ap[0]': 'INOUT', 'ap[1]': 'INOUT'}, 'qkd_ahub': {'ap_WS[0]': 'INOUT', 'ap_WS[1]': 'INOUT'}}
+    ages, ends, probs = FL.ahub_post_ages(lines, F, dirs, sinks={'ap_WS': ('ahub', 'ap_WS')})
+    assert probs == [] and ages == {'ap_WS': 4} and ends == {'ap_WS': ['rly_ap_WS_2__s0_y7']}
