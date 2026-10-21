@@ -58,6 +58,16 @@ module dsdv_tx_copy #(parameter integer W=1,RESET=0,ID=0)(
  assign q=r;
 endmodule
 
+// One existing score bit per field keeps its own predicate from the
+// 15 score bits + lane-valid consumer. No new data or control edge.
+(* keep_hierarchy="yes" *)
+module dsdv_tx_score_tail #(parameter integer ID=0)(
+ input wire ck,accept,onehot,d,output wire q);
+ (* keep *)reg value;
+ always @(posedge ck)if(accept&&onehot)value<=d;
+ assign q=value;
+endmodule
+
 module dsdv_idx_txm_n32 #(
     parameter integer D = 8192,
     parameter bit SRAM_MACRO = 0
@@ -269,6 +279,19 @@ module dsdv_idx_tx_n32 #(
     assign      ib_re = !iw_v && fw == 2'b00 && ib_r != ib_w && armed;
     reg  [319:0] iw;                          // 16 x 20-b selected positions (bits [335:320] = lv go to lvl)
     reg  [15:0] lvl;
+    reg [15:0] lvl_next;
+    wire [15:0] lvl_index,lvl_memory;
+    dsdv_tx_copy #(.W(16),.ID(6000))u_lidx(.ck(ck),.rn(1'b1),.d(lvl_next),.q(lvl_index));
+    dsdv_tx_copy #(.W(16),.ID(6001))u_lmem(.ck(ck),.rn(1'b1),.d(lvl_next),.q(lvl_memory));
+    reg [3:0] ne_x,ne_m;
+    always @* begin : g_priority_consumers
+        integer i;
+        ne_x=0;ne_m=0;
+        for(i=15;i>=0;i=i-1)begin
+            if(lvl_index[i])ne_x=4'(i);
+            if(lvl_memory[i])ne_m=4'(i);
+        end
+    end
     reg  [3:0]  rq_n;
     wire        rq_room = rq_n < 4'd5;
     reg  [3:0]  ne; reg ne_v;
@@ -280,11 +303,21 @@ module dsdv_idx_tx_n32 #(
     reg  [19:0] ne_idx;
     always @* begin
         ne_idx = 20'd0;
-        for (bi_ = 0; bi_ < 16; bi_ = bi_ + 1) ne_idx = ne_idx | (iw[20 * bi_ +: 20] & {20{ne == 4'(bi_)}});
+        for (bi_ = 0; bi_ < 16; bi_ = bi_ + 1) ne_idx = ne_idx | (iw[20 * bi_ +: 20] & {20{ne_x == 4'(bi_)}});
     end
     wire        lk_go = iw_v && ne_v && rq_room;
+    reg [19:0] ne_mem_idx;
+    always @* begin : g_memory_priority
+        integer i;
+        ne_mem_idx=0;
+        for(i=0;i<16;i=i+1)ne_mem_idx=ne_mem_idx|(iw[20*i+:20]&{20{ne_m==4'(i)}});
+    end
+    always @* begin
+        lvl_next=fw_lvl?ib_q[335:320]:lvl;
+        if(lk_go)lvl_next[ne]=1'b0;
+    end
     wire [255:0] m_rd;
-    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_idx[19:4])), .rd(m_rd),
+    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
         .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]));
     reg  [1:0]  lp_v; reg [19:0] lp_i [0:1];
     reg  [35:0] rf [0:7];
@@ -315,8 +348,7 @@ module dsdv_idx_tx_n32 #(
         integer c_;
         fwk <= {20{fw[0]}};
         for(c_=0;c_<20;c_=c_+1)if(fwk[c_])iw[16*c_+:16]<=ib_q[16*c_+:16];
-        if (fw_lvl) lvl <= ib_q[335:320];
-        if (lk_go) lvl[ne] <= 1'b0;
+        lvl<=lvl_next;
         lp_i[0] <= ne_idx; lp_i[1] <= lp_i[0];
 
     end
@@ -326,7 +358,8 @@ module dsdv_idx_tx_n32 #(
     reg         wv;                          // a window is open (in buffer act)
     reg         act;                         // buffer of the open window
     reg  [19:0] w0c;                         // the open window's base
-    reg  [19:0] w0b [0:1]; reg [15:0] wlvb [0:1]; reg [255:0] wscb [0:1];
+    reg  [19:0] w0b [0:1]; reg [15:0] wlvb [0:1]; wire [255:0] wscb [0:1];
+    reg [14:0] wsc_lo[0:1][0:15];
     reg  [19:0] lcur;                        // the parent lane's cursor
     reg  [2:0]  bq_n;                        // beats left in the descriptor
     reg  [1:0]  bix;                         // next beat index of the descriptor
@@ -361,6 +394,16 @@ module dsdv_idx_tx_n32 #(
     wire        o_ctl_c = okk[7];            // control copy
     wire        o_ctl_t = okk[10];            // tc / rc / sn copy
     wire        o_ctl_j = okk[13];            // next-state job-field copy
+    wire ct_tick_pred,ct_delay_hi,hdr_lcur;
+    dsdv_tx_copy #(.W(1),.RESET(1),.ID(6010))u_ctp(.ck(ck),.rn(rl[6]),.d(n_octl),.q(ct_tick_pred));
+    dsdv_tx_copy #(.W(1),.RESET(1),.ID(6011))u_cdh(.ck(ck),.rn(rl[6]),.d(n_octl),.q(ct_delay_hi));
+    dsdv_tx_copy #(.W(1),.RESET(1),.ID(6012))u_hlc(.ck(ck),.rn(rl[6]),.d(nx_hdr_q),.q(hdr_lcur));
+    wire [15:0] nx_tc_pred = ct_tick_pred ? 16'd0 :
+        ((armed&&tc!=16'hffff)?tc+16'd1:tc);
+    wire fl_lcur = armed&&hdr_lcur&&!fin&&flush_ok&&
+        ((rf_pop&&wv&&!r_in)||(in_done&&rf_n==4'd0));
+    wire [19:0] nx_lcur_private = (armed&&!hdr_lcur&&!okk[8]) ? j_hb :
+        ((fl_lcur&&wv)?w0c+20'd16:lcur);
     wire        g_on = armed && tc >= j_dly + ((MUT == 3) ? 16'(j_r) : 16'd0);
     wire        lastf = in_done && rf_n == 4'd0 && (MUT != 2);
     wire        nb_t = wv ? ~act : act;      // buffer a new window opens in
@@ -396,8 +439,8 @@ module dsdv_idx_tx_n32 #(
         if (rf_pop && !r_in) begin nx_wv = 1'b1; nx_w0c = {r_i[19:4], 4'd0}; nx_act = nb_t; end
         if (fin && bq_n == 3'd0 && armed && !done) begin nx_done = 1'b1; nx_busy = 1'b0; end
         // the next cycle's grid slot
-        nx_dly = okk[13] ? cp[84:69] : j_dly; nx_sm = okk[14] ? cp[99:88] : j_sm; nx_r = okk[15] ? cp[87:85] : j_r;
-        nx_slot = nx_armed && nx_tc >= nx_dly + ((MUT == 3) ? 16'(nx_r) : 16'd0) && nx_rc == 3'd0 && nx_sn < nx_sm && !nx_done;
+        nx_dly = {ct_delay_hi?cp[84:77]:j_dly[15:8],okk[13]?cp[76:69]:j_dly[7:0]}; nx_sm = okk[14] ? cp[99:88] : j_sm; nx_r = okk[15] ? cp[87:85] : j_r;
+        nx_slot = nx_armed && nx_tc_pred >= nx_dly + ((MUT == 3) ? 16'(nx_r) : 16'd0) && nx_rc == 3'd0 && nx_sn < nx_sm && !nx_done;
     end
     always @(posedge ck or negedge rl[1])
         if (!rl[1]) begin
@@ -411,19 +454,23 @@ module dsdv_idx_tx_n32 #(
             if (ib_push) ib_w <= ib_w + 1'b1;
         end
     always @(posedge ck) begin
-        act <= nx_act; w0c <= nx_w0c; tc <= nx_tc; rc <= nx_rc; sn <= nx_sn; bix <= nx_bix; lcur <= nx_lcur;
+        act <= nx_act; w0c <= nx_w0c; tc <= nx_tc; rc <= nx_rc; sn <= nx_sn; bix <= nx_bix; lcur <= nx_lcur_private;
         d_h <= nx_d_h; d_buf <= nx_d_buf; d_rb <= nx_d_rb; d_em <= nx_d_em; d_last <= nx_d_last;
     end
     // window buffers: field f of buffer b written with the result score when the result lands in b
     wire        t_acc0  = rf_pop && r_in && !act,  t_acc1  = rf_pop && r_in && act;
     wire        t_open0 = rf_pop && !r_in && !nb_t, t_open1 = rf_pop && !r_in && nb_t;
     wire [15:0] r_oh = 16'd1 << r_i[3:0];
-    always @(posedge ck) begin : g_win
-        integer f_;
-        for (f_ = 0; f_ < 16; f_ = f_ + 1) begin
-            if ((t_acc0 || t_open0) && r_oh[f_]) wscb[0][16 * f_ +: 16] <= rh[15:0];
-            if ((t_acc1 || t_open1) && r_oh[f_]) wscb[1][16 * f_ +: 16] <= rh[15:0];
+    generate for(genvar b=0;b<2;b=b+1)begin:g_window_score
+        wire accept=(b==0)?(t_acc0||t_open0):(t_acc1||t_open1);
+        for(genvar f=0;f<16;f=f+1)begin:g_field
+            wire tail;
+            dsdv_tx_score_tail #(.ID(16*b+f))u_tail(.ck(ck),.accept(accept),.onehot(r_oh[f]),.d(rh[15]),.q(tail));
+            always @(posedge ck)if(accept&&r_oh[f])wsc_lo[b][f]<=rh[14:0];
+            assign wscb[b][16*f+:16]={tail,wsc_lo[b][f]};
         end
+    end endgenerate
+    always @(posedge ck) begin : g_win
         if (t_open0) begin wlvb[0] <= r_oh; w0b[0] <= {r_i[19:4], 4'd0}; end else if (t_acc0) wlvb[0] <= wlvb[0] | r_oh;
         if (t_open1) begin wlvb[1] <= r_oh; w0b[1] <= {r_i[19:4], 4'd0}; end else if (t_acc1) wlvb[1] <= wlvb[1] | r_oh;
     end
