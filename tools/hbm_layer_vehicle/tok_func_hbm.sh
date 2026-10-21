@@ -93,11 +93,11 @@ B=$OUT/bundle/slice/boundary.json; RJ=$OUT/rj; mkdir -p "$RJ"
 for LL in 00 02 14; do l=$((10#$LL))
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/layer_images.py --design ds --layer $l --programme "$FIX_DS/L$LL/images/ds_v41_1M_L${LL}_per_die.json" \
      --fixtures "$FIX_DS/L$LL" --boundary "$B" --native-read-return $RR --native-write-return $WR --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
-    && cp "$OUT/emit/ds_l$l/replay.json" "$RJ/ds_l$l.json"; say "EMIT ds_l$l $(tail -c 260 "$L/emit_ds_l$l.log" | tr -d '\n')"
+    || { say "EMIT_FAIL ds_l$l"; exit 3; }; cp "$OUT/emit/ds_l$l/replay.json" "$RJ/ds_l$l.json"; say "EMIT ds_l$l $(tail -c 260 "$L/emit_ds_l$l.log" | tr -d '\n')"
 done
 for st in L0 chain; do
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/qwen_layer_images.py emit --stage $st --ranks 0,5 --boundary "$B" --operands "$QOP/operands_$st.npz" \
-     --native-read-return $RR --native-write-return $WR --out "$OUT/qemit") > "$L/emit_qw_$st.log" 2>&1
+     --native-read-return $RR --native-write-return $WR --out "$OUT/qemit") > "$L/emit_qw_$st.log" 2>&1 || { say "EMIT_FAIL qw_$st"; exit 3; }
   for r in 0 5; do [ -f "$OUT/qemit/$st/r$r/replay.json" ] && cp "$OUT/qemit/$st/r$r/replay.json" "$RJ/qw_${st,,}_r$r.json"; done
   say "EMIT qw_$st $(grep -o '"counts": {[^}]*}' "$L/emit_qw_$st.log" | head -1)"
 done
