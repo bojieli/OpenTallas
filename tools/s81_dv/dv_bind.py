@@ -606,6 +606,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 # the reason (die_port_bind counts them as spare_out_bits); every other open / unread output fails
                 if mu['port'] not in widths:
                     continue
+                # An empty connection list marks a used forwarded-clock output,
+                # emitted as one full vector below. Its unused taps are classified
+                # individually by dv_spare_out; never exempt the active taps here.
+                if mu['port'] in conn[n] and not conn[n][mu['port']]:
+                    continue
                 wd_ = widths[mu['port']]
                 got = sorted((lo, hi) for lo, hi, _w, _b in conn[n].get(mu['port'], []))
                 gaps, pos_ = [], 0
