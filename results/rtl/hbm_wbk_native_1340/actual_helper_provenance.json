@@ -1,0 +1,21 @@
+{
+  "source_commit": "e0bfd10e5",
+  "helper_commit": "99eff96d0ee86f973604b0190e0cebd01388cc2f",
+  "actual_runtime_files": {
+    "tools/ref_tile/ref_tile.py": "9b9de8f66532e83a71e2086b916c9cd41f63e5448076805bc554552e184c753b",
+    "tools/ref_tile/gray_fifo_cdc_constraints.py": "3ea4f8296b915c75cf555cc6d98189203be21ce89ec9cd23986e3ae69ae11289",
+    "tools/ref_tile/cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
+    "tools/ref_tile/clock_entry_constraints.py": "1066f1522cf11ea98ecd627399b54c5032cc5dc20586fc88e3f967e92426683a",
+    "tools/ref_tile/single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52",
+    "tools/ref_tile/lint_receipt.py": "dcc4d897172ffc00e4922603a23d385978f2eba9a9ecc2b467ee01cd9de8fa09",
+    "tools/ref_tile/source_binding.py": "bea005be33a2be11a846f23fc8da05dd487d6da2744c878cc9a8b4b7ece541ef",
+    "tools/ref_tile/native_census.py": "b8be220bb5d08b82d1574a9b416fb1c788dcd4df99e92adca70183d7dad8c393",
+    "tools/ref_tile/ref_route.sh": "471a153c17fdf26f2f2c6c8f39ab20c0907d5a6cc0bf3d05af905a1876d82bfe",
+    "physical/common_flow/clock_family.tcl": "84a3ade555f2499aaf327f3f9146cab4f493693fa74a6b3f1361e3dbeca6da78",
+    "physical/common_flow/clock_entries.tcl": "38031bf732132b5460c36a17f0273e9d577e0c76a8fe53ecc8df518643af9f9b",
+    "physical/common_flow/ot_keep_regs.tcl": "8a19ec58c67bb276f7fd8ab2d472aa54e27712b26eb81246850ad73f3a8c88f7"
+  },
+  "verified_against_published_git_objects": true,
+  "historical_import": "5d8a2da0e imported4publishedhelperfilesbefore99eff. Localref_tile.py remainsolderpublishedbyte; actualstageusesFULL99effarchive, notlocalhelperoverlay. 5dhelperimportmissedGate-Rule trailer; historypreserved, notretroactivelyfixed.",
+  "publication": "BoundedRTL/spec/evidence projection ontocurrentpublishedhelperbaseline; normalactualGEN/keycapture beforegates, no branchhelperoverlay."
+}
