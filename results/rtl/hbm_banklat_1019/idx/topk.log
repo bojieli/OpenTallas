@@ -1,0 +1,6 @@
+ot-run: ot-epyc6       admits  1035 GB (avail 861, growth 137, headroom 0, waiters 0/0 GB) load 10/128 running 8 disk 6722 GB 
+ot-run: ot-epyc7       admits  1036 GB (avail 889, growth 164, headroom 0, waiters 0/0 GB) load 110/96 running 30 disk 6799 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-45791-1792402097 after 1 s
+CASE topk TOPK_LAT VM_RT_M=65 CR_RT_M=36 VM_RT_P=65 CR_RT_P=36 AMMUT=0 requests 5103 writes 1136 events 240 (done 186 fault 27 illegal 27) max_row 3 share_fault 0/0 errors 0 IDX_AM_TOPK_LAT PASS 
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-45791-1792402097): exit 0
