@@ -906,8 +906,11 @@ endmodule
  wire[26:0] cv={sum[27:2],sum[1]|sum[0]};
  assign y=local_sum[27]?cv[LO+:W]:sum[LO+:W];
 endmodule
-(* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_mask8 #(parameter integer LO=0)(input wire signed[11:0] power,output wire[7:0] mr,ms);
- wire signed[11:0] sub=-(power+12'sd149);
+// Keep the physical module boundary unsigned: OpenSTA's mapped-Verilog
+// reader rejects signed port declarations. Interpret the unchanged 12 bits
+// explicitly at the arithmetic use, preserving the original signed sum.
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_mask8 #(parameter integer LO=0)(input wire[11:0] power,output wire[7:0] mr,ms);
+ wire signed[11:0] sub=-($signed(power)+12'sd149);
  wire[5:0] sh=(sub>12'sd63)?6'd63:sub[5:0];
  for(genvar g=0;g<8;g=g+1)begin:g_b
   assign mr[g]=({6'd0,6'(LO+g)}=={6'd0,sh}-12'd1);
