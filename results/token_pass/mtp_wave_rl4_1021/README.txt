@@ -46,3 +46,27 @@ instruction and was stopped immediately: local client3200056, exact own
 remote subtree1770879/1770915/1770918/1770921. Partial run3 and stopped client
 log are retained; it supplies no qualification. Original run2 was untouched.
 No physical actions, main actions or throughput qualification occurred.
+
+Final disposition (2026-10-21T17:43:23Z):
+INTENTIONALLY_STOPPED_AFTER_CONTRACT_DEADLINE_FAIL. Parent explicitly
+approved stopping only owned negative simulator1764409 after confirming
+matched controls. Actual build metadata commands have IDENTICAL SMOKE
+parameters T_BUSY300,T_BUSY0=300,T_LM400,T_BLK200,T_HX60,T_SC300,
+NSTEPMAX13. Their normalized commands differ only in case --Mdir and the
+single OT_P2L_MUT_SEG define. All six case-local hex input files have equal
+SHA256. matched_case_receipt.json and both actual_build_metadata.dat files
+preserve this evidence. The200000deadline is compared ONLY against the
+matched smoke191763, never against production-busy wave2558056.
+
+Immediately before stopping, the raw original mutant log was snapshotted
+as before_intentional_stop.log; original log and all build objects remain
+on the remote host. Exact cmdline and parent1546441 were checked, then only
+simulator1764409 received SIGTERM. No other jobs were stopped.
+run2.final_summary.json and final_client.log preserve the unmodified runner
+outcome: smokePASS,wavePASS,mutant runtime_error, overallFAIL/exit1 because
+of this intentional SIGTERM. That wrapper outcome is not presented as a
+terminal functional failure. There is NEVER a simulator terminal WAVE FAIL
+claim. The independent bounded FAIL witness remains the negative proof.
+Original watchdog is no longer pending; no owned simulation remains live.
+Earlier LIVE/PENDING paragraphs above describe the preserved8800e5d20
+snapshot. This final disposition supersedes their run-state descriptions.
