@@ -14,6 +14,17 @@ INVx1_ASAP7_75t_R oc(.A(a),.Y(c));
 """
 
 
+ENCODED_GATE = """wire x,n0,n1,s0,s1;
+XOR2xp5_ASAP7_75t_R xi(.A(a),.B(b),.Y(x));
+DFFASRHQNx1_ASAP7_75t_R f0(.CLK(clk),.D(x),.QN(n0),.RESETN(rst_n),.SETN(1'b1));
+DFFASRHQNx1_ASAP7_75t_R f1(.CLK(clk),.D(b),.QN(n1),.RESETN(rst_n),.SETN(1'b1));
+INVx1_ASAP7_75t_R i0(.A(n0),.Y(s0));
+INVx1_ASAP7_75t_R i1(.A(n1),.Y(s1));
+XOR2xp5_ASAP7_75t_R oq(.A(s0),.B(s1),.Y(q));
+INVx1_ASAP7_75t_R oc(.A(a),.Y(c));
+"""
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--work', required=True)
@@ -29,11 +40,11 @@ def main():
         if name == 'rtl_equal':
             gold = "reg v; always @(posedge clk or negedge rst_n) if(!rst_n) v<=0; else v<=a; assign q=v; assign c=~a;\n"
         (root / 'gold.sv').write_text('module native_gold'+PORTS+'\n'+gold+'endmodule\n')
-        gate = GOOD
+        gate = ENCODED_GATE
         if name == 'wrong_input_port':
-            gate = gate.replace('.D(a)', '.D(b)')
+            gate = gate.replace('.A(a),.B(b)', '.A(b),.B(b)')
         if name == 'wrong_cell_function':
-            gate = gate.replace('INVx1_ASAP7_75t_R oq', 'BUFx2_ASAP7_75t_R oq')
+            gate = gate.replace('XOR2xp5_ASAP7_75t_R oq', 'XNOR2xp5_ASAP7_75t_R oq')
         (root / 'gate.v').write_text('module native_gate'+PORTS+'\n'+gate+'endmodule\n')
         expect = 'fail' if name.startswith('wrong_') else 'pass'
         cmd = [sys.executable, str(tool), '--src', str(root), '--top', 'native_gold', '--params', '{}',
