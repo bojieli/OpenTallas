@@ -55,8 +55,10 @@ CAL_ROWS = 4096
 LAYER_CAL_ROWS = {'L0': 1868, 'L2': 2006}          # measured (CAL_SEGMENT, ROM12 b82da5c37); L2 class = idx layers
 KV_SRC, IDX_SRC, ENGRAM = (2, 8, 14, 20), (2, 8, 14, 20, 24, 28, 32, 36), (1, 14)
 RELEASE_ENV = dict(OT_XS_QPAIRS='12', OT_XS_GU_MERGE='1', OT_XS_TOPO='1', OT_XS_PROP='1', OT_XS_CAL_SEGMENT='1',
-                   OT_XS_APROJ_TOPO='1')
-MAP_DEFAULT = ROOT / 'results/arch/s81_romopt_1020/b/stage_map.json'
+                   OT_XS_APROJ_TOPO='1', OT_XS_KSLOT='1', OT_XS_GU_PROP='1', OT_XS_COMPACT_TAILS='0',
+                   OT_XS_PAIR_ROTATE='0', OT_XS_Q_CPR='1')
+# TOK-FUNC-S81 (10-21): release map = L5B-MAP72 483869b91 exact-qualified 241-stage DENSE2 map on the 72-frame die.
+MAP_DEFAULT = ROOT / 'results/arch/s81_map72_1021/r2_241/stage_map_f72r224gpq_241.json'
 
 
 class CompileFault(RuntimeError):
