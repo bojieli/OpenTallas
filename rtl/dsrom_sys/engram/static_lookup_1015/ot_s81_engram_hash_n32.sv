@@ -1,11 +1,12 @@
 // ot_s81_engram_hash_n32 (S81-FIX2/ENG 10-21): ot_s81_engram_hash_static with every high-fanout register replaced by
 // KEPT copies (native census <= 32 loads; ra512 gate census: 308 hash drivers over 32, max 361).  Same arithmetic, same
 // stages, same edges, bit-identical out_res, 0 cycles:
-//   * w (the window ids, ck_seed posedge from in_w): one kept copy per (product, 8-bit slice of the 64-bit digit-table
-//     output) -> 16 copies per id bit (was one register feeding 2 products x 3 x 64-entry tables, 254 loads);
-//   * roll_h (the column-root posedge capture of roll_n): one kept copy per (column, 8-bit third of the 24-bit residue
-//     digit select) -> 3 copies per column, 24 per (layer, order) (was one register feeding 8 columns, 361 loads);
-//     roll_n now drives 24 kept copies.
+//   * w (the window ids, ck_seed posedge from in_w): one kept copy per (product, 4-bit slice of the 64-bit digit-table
+//     output) -> 32 copies per id bit (was one register feeding 2 products x 3 x 64-entry tables, 254 loads);
+//   * roll_h (the column-root posedge capture of roll_n): one kept copy per (column, 4-bit sixth of the 24-bit residue
+//     digit select) -> 6 copies per column, 48 per (layer, order) (was one register feeding 8 columns, 361 loads);
+//     two same-edge roll_n copies each drive4 heads x6 copies =24 D pins;
+//     roll_s drives only the two kept negedge copies. No added edge or root.
 // Copies are instances of keep_hierarchy modules (ot_s81eng_kq) so yosys cannot merge them back.
 // Original header follows.
 // ot_s81_engram_hash_static (S-ENGRAM+NORM, 2026-10-16): the S81 static-lookup copy of
@@ -110,38 +111,38 @@ module ot_s81_engram_hash_n32 (
             localparam [64*ND-1:0] TP = NIB[64*ND*p +: 64*ND];   // this product's 2^DIG_W entries
             wire [63:0] pp0, pp1, pp2;
             reg  [63:0] pa, pb;
-            for (j = 0; j < 8; j = j + 1) begin : g_sl          // n32: 8-bit output slice j, own kept window copy
+            for (j = 0; j < 16; j = j + 1) begin : g_sl          // 4-bit output slice j, own kept window copy
                 wire [ENG_ID_W-1:0] wq;
                 (* keep = 1 *) ot_s81eng_kq #(.W(ENG_ID_W)) u_w (.clk(clk), .d(in_w[ENG_ID_W*(p % ENG_N) +: ENG_ID_W]), .q(wq));
                 wire [3*ENG_DIG_W-1:0] t = {{(3*ENG_DIG_W-ENG_ID_W){1'b0}}, wq};
                 // slice j of TP[d], TP[d] << DIG_W, TP[d] << 2 DIG_W as explicit one-hot AND-OR selects (no runtime
                 // part-select): same value for every digit d
-                wire [7:0] t0 [0:ND-1];
-                wire [7:0] t1 [0:ND-1];
-                wire [7:0] t2 [0:ND-1];
+                wire [3:0] t0 [0:ND-1];
+                wire [3:0] t1 [0:ND-1];
+                wire [3:0] t2 [0:ND-1];
                 for (kq = 0; kq < ND; kq = kq + 1) begin : g_e
                     localparam [63:0] E0 = TP[64*kq +: 64];
                     localparam [63:0] E1 = E0 << ENG_DIG_W;
                     localparam [63:0] E2 = E0 << (2*ENG_DIG_W);
-                    assign t0[kq] = {8{t[ENG_DIG_W-1:0] == kq}} & E0[8*j +: 8];
-                    assign t1[kq] = {8{t[2*ENG_DIG_W-1:ENG_DIG_W] == kq}} & E1[8*j +: 8];
-                    assign t2[kq] = {8{t[3*ENG_DIG_W-1:2*ENG_DIG_W] == kq}} & E2[8*j +: 8];
+                    assign t0[kq] = {4{t[ENG_DIG_W-1:0] == kq}} & E0[4*j +: 4];
+                    assign t1[kq] = {4{t[2*ENG_DIG_W-1:ENG_DIG_W] == kq}} & E1[4*j +: 4];
+                    assign t2[kq] = {4{t[3*ENG_DIG_W-1:2*ENG_DIG_W] == kq}} & E2[4*j +: 4];
                 end
-                reg [7:0] e0, e1, e2;
+                reg [3:0] e0, e1, e2;
                 integer ie;
                 always @(*) begin
-                    e0 = 8'd0; e1 = 8'd0; e2 = 8'd0;
+                    e0 = 4'd0; e1 = 4'd0; e2 = 4'd0;
                     for (ie = 0; ie < ND; ie = ie + 1) begin e0 = e0 | t0[ie]; e1 = e1 | t1[ie]; e2 = e2 | t2[ie]; end
                 end
-                reg [7:0] q0, q1, q2;
+                reg [3:0] q0, q1, q2;
                 always @(posedge clk) begin
                     q0 <= e0;
                     q1 <= e1;
                     q2 <= e2;
                 end
-                assign pp0[8*j +: 8] = q0;
-                assign pp1[8*j +: 8] = q1;
-                assign pp2[8*j +: 8] = q2;
+                assign pp0[4*j +: 4] = q0;
+                assign pp1[4*j +: 4] = q1;
+                assign pp2[4*j +: 4] = q2;
             end
             always @(posedge clk) begin
                 pa   <= add64cs(pp0, pp1);
@@ -154,25 +155,31 @@ module ot_s81_engram_hash_n32 (
     // ---- 4-5: rolling XOR, one value per (layer, s >= 1): roll_s (seed posedge) -> roll_n (seed NEGEDGE)
     //      -> roll_h (posedge of that order's column clock; the cross-root hop is flop to flop, half a cycle) ------
     //: roll_all[64*(l*N + s) +: 64] for s >= 1 (s = 0 slots are unused zeros)
-    wire [64*NP-1:0] roll_all;
-    genvar rl, rs, rx;
+    wire [2*64*NP-1:0] roll_all;
+    genvar rl, rs, rx, rncopy;
     generate
         if (ENG_COLS != (ENG_N - 1) * 8 || ENG_HEADS != 8 || ENG_RES_W != 24) begin : g_bad_geometry
             initial $fatal(1, "ot_s81_engram_hash_n32: one column clock per (layer, order) needs 8 heads");
         end
         for (rl = 0; rl < ENG_LAYERS; rl = rl + 1) begin : g_roll_l
             assign roll_all[64*(rl*ENG_N) +: 64] = 64'd0;
+            assign roll_all[64*(NP+rl*ENG_N) +: 64] = 64'd0;
             for (rs = 1; rs < ENG_N; rs = rs + 1) begin : g_roll_s
                 wire [63:0] xr [0:rs];
                 assign xr[0] = prod_all[64*(rl*ENG_N) +: 64];
                 for (rx = 1; rx <= rs; rx = rx + 1) begin : g_x
                     assign xr[rx] = xr[rx-1] ^ prod_all[64*(rl*ENG_N + rx) +: 64];
                 end
-                reg [63:0] roll_s, roll_n;
+                reg [63:0] roll_s;
                 always @(posedge clk) roll_s <= xr[rs];
-                always @(negedge clk) roll_n <= roll_s;
-                // n32: roll_h moved into g_col (3 kept copies per column on the same column clock)
-                assign roll_all[64*(rl*ENG_N + rs) +: 64] = roll_n;
+                // Six residue slices across eight heads need48 captures per
+                // rolling bit. Two kept copies on the ORIGINAL seed negedge
+                // feed four heads each:24 D contacts and no extra stage.
+                for(rncopy=0;rncopy<2;rncopy=rncopy+1) begin:g_roll_n
+                    (* keep = 1 *) ot_s81eng_kq_neg #(.W(64)) u_n (
+                        .clk(clk), .d(roll_s),
+                        .q(roll_all[64*(rncopy*NP+rl*ENG_N+rs)+:64]));
+                end
             end
         end
     endgenerate
@@ -183,10 +190,10 @@ module ot_s81_engram_hash_n32 (
             localparam integer L_ = c / ENG_COLS;
             localparam integer S_ = (c % ENG_COLS) / ENG_HEADS + 1;
             localparam [RW-1:0] Q = ENG_PRIME[RW*c +: RW];
-            // n32: roll_h = 3 kept copies (one per 8-bit third of the residue select), column clock posedge from roll_n
-            wire [63:0] xh [0:2];
-            for (kq = 0; kq < 3; kq = kq + 1) begin : g_xh
-                (* keep = 1 *) ot_s81eng_kq #(.W(64)) u_x (.clk(clk_columns[c / 8]), .d(roll_all[64*(L_*ENG_N + S_) +: 64]), .q(xh[kq]));
+            // roll_h = 6 kept copies (one per 4-bit sixth of the residue select), column clock posedge from roll_n
+            wire [63:0] xh [0:5];
+            for (kq = 0; kq < 6; kq = kq + 1) begin : g_xh
+                (* keep = 1 *) ot_s81eng_kq #(.W(64)) u_x (.clk(clk_columns[c / 8]), .d(roll_all[64*(((c % ENG_HEADS)/4)*NP + L_*ENG_N + S_) +: 64]), .q(xh[kq]));
             end
             wire [RW-1:0] r [0:15];
             // st7: the 16-entry residue select is an explicit one-hot AND-OR, NOT TD[RW*x +: RW].  The indexed form is a
@@ -196,12 +203,15 @@ module ot_s81_engram_hash_n32 (
             // (st6 route TT -57.9 ps on 2,355 roll_n -> g_col.r endpoints).  Same value for every x (bit-identical).
             for (j = 0; j < 16; j = j + 1) begin : g_dig
                 localparam [RW*16-1:0] TD = RES[RW*16*(c*16 + j) +: RW*16];   // this digit's 16 residues
-                // n32: residue bits [8t +: 8] select from copy t (RW = 24 = 3 x 8)
+                // Residue bits [4t +: 4] select from copy t (RW = 24 = 6 x 4)
                 wire [RW-1:0] term [0:15];
                 for (kq = 0; kq < 16; kq = kq + 1) begin : g_k
-                    assign term[kq] = {({8{xh[2][4*j +: 4] == kq}} & TD[RW*kq + 16 +: 8]),
-                                       ({8{xh[1][4*j +: 4] == kq}} & TD[RW*kq + 8 +: 8]),
-                                       ({8{xh[0][4*j +: 4] == kq}} & TD[RW*kq +: 8])};
+                    assign term[kq] = {({4{xh[5][4*j +: 4] == kq}} & TD[RW*kq + 20 +: 4]),
+                                       ({4{xh[4][4*j +: 4] == kq}} & TD[RW*kq + 16 +: 4]),
+                                       ({4{xh[3][4*j +: 4] == kq}} & TD[RW*kq + 12 +: 4]),
+                                       ({4{xh[2][4*j +: 4] == kq}} & TD[RW*kq + 8 +: 4]),
+                                       ({4{xh[1][4*j +: 4] == kq}} & TD[RW*kq + 4 +: 4]),
+                                       ({4{xh[0][4*j +: 4] == kq}} & TD[RW*kq +: 4])};
                 end
                 assign r[j] = term[0] | term[1] | term[2] | term[3] | term[4] | term[5] | term[6] | term[7]
                             | term[8] | term[9] | term[10] | term[11] | term[12] | term[13] | term[14] | term[15];
@@ -249,4 +259,9 @@ endmodule
     always @(posedge clk or negedge rst_n)
         if (!rst_n) q <= {W{1'b0}};
         else        q <= d;
+endmodule
+
+// Same existing half-cycle launch edge, kept as two independent physical copies.
+(* keep_hierarchy = "yes" *) module ot_s81eng_kq_neg #(parameter integer W = 1) (input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+    always @(negedge clk) q <= d;
 endmodule
