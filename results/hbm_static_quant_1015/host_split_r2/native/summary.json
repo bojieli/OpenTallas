@@ -1,0 +1,162 @@
+{
+ "by": "OWN-QDQ 2026-10-18",
+ "tool": "tools/hier_contract/native_pin_audit.py --view (own R; launch<=220 capture<=190 spread<=80 TT/FF)",
+ "rows": {
+  "native_ot_hgi_qdq_lg_port_group.json": {
+   "cell": "ot_hgi_qdq_lg_port_group",
+   "view": "physical/ref_tile/hgi_qdq_lg_v6_ref/views/ot_hgi_qdq_lg_port_group",
+   "pass": false,
+   "fail_why": "launch 270.69866 > 220 (227 pins)",
+   "launch_ps": 270.7,
+   "capture_ps": 153.8,
+   "comb_pins": 0,
+   "spread_ps": 26.3,
+   "ff_spread_ps": 26.7,
+   "R_ps": 116.9
+  },
+  "native_ot_hgi_qdq_lg_port_group_r2.json": {
+   "cell": "ot_hgi_qdq_lg_port_group_r2",
+   "view": "physical/ref_tile/hgi_qdq_lg_r2/views/ot_hgi_qdq_lg_port_group_r2",
+   "pass": true,
+   "fail_why": "",
+   "launch_ps": 183.2,
+   "capture_ps": 143.4,
+   "comb_pins": 0,
+   "spread_ps": 17.4,
+   "ff_spread_ps": 17.5,
+   "R_ps": 131.3
+  },
+  "native_ot_hgi_qdq_transport_ctl.json": {
+   "cell": "ot_hgi_qdq_transport_ctl",
+   "view": "physical/ref_tile/hgi_qdq_tsplit_ctl/views/ot_hgi_qdq_transport_ctl",
+   "pass": false,
+   "fail_why": "capture 303.99041 > 190 (33 pins)",
+   "launch_ps": 181.5,
+   "capture_ps": 304.0,
+   "comb_pins": 0,
+   "spread_ps": 17.5,
+   "ff_spread_ps": 16.0,
+   "R_ps": 131.7
+  },
+  "native_ot_hgi_qdq_transport_ctl_r2.json": {
+   "cell": "ot_hgi_qdq_transport_ctl_r2",
+   "view": "physical/ref_tile/hgi_qdq_tsplit_ctl_r2/views/ot_hgi_qdq_transport_ctl_r2",
+   "pass": true,
+   "fail_why": "",
+   "launch_ps": 181.2,
+   "capture_ps": 138.1,
+   "comb_pins": 0,
+   "spread_ps": 21.1,
+   "ff_spread_ps": 18.4,
+   "R_ps": 131.5
+  },
+  "native_ot_hgi_qdq_transport_rslice.json": {
+   "cell": "ot_hgi_qdq_transport_rslice",
+   "view": "physical/ref_tile/hgi_qdq_tsplit_rslice_r2/views/ot_hgi_qdq_transport_rslice",
+   "pass": true,
+   "fail_why": "",
+   "launch_ps": 210.8,
+   "capture_ps": 160.4,
+   "comb_pins": 0,
+   "spread_ps": 70.2,
+   "ff_spread_ps": 67.6,
+   "R_ps": 143.7
+  },
+  "native_ot_hgi_qdq_transport_wslice.json": {
+   "cell": "ot_hgi_qdq_transport_wslice",
+   "view": "physical/ref_tile/hgi_qdq_tsplit_wslice/views/ot_hgi_qdq_transport_wslice",
+   "pass": true,
+   "fail_why": "",
+   "launch_ps": 206.5,
+   "capture_ps": 136.4,
+   "comb_pins": 0,
+   "spread_ps": 37.4,
+   "ff_spread_ps": 37.1,
+   "R_ps": 115.0
+  },
+  "native_ot_hgi_qw_daq.json": {
+   "cell": "ot_hgi_qw_daq",
+   "view": "physical/ref_tile/qw_daq_ref/views/ot_hgi_qw_daq",
+   "pass": true,
+   "fail_why": "",
+   "launch_ps": 157.8,
+   "capture_ps": 140.2,
+   "comb_pins": 0,
+   "spread_ps": 25.1,
+   "ff_spread_ps": 25.0,
+   "R_ps": 179.9
+  },
+  "native_ot_hgi_qw_dbq.json": {
+   "cell": "ot_hgi_qw_dbq",
+   "view": "physical/ref_tile/qw_dbq_ref/views/ot_hgi_qw_dbq",
+   "pass": false,
+   "fail_why": "launch 255.08915 > 220 (78 pins)",
+   "launch_ps": 255.1,
+   "capture_ps": 108.1,
+   "comb_pins": 0,
+   "spread_ps": 23.2,
+   "ff_spread_ps": 22.3,
+   "R_ps": 168.7
+  },
+  "native_ot_hgi_qw_dxl.json": {
+   "cell": "ot_hgi_qw_dxl",
+   "view": "physical/ref_tile/qw_dxl_ref/views/ot_hgi_qw_dxl",
+   "pass": false,
+   "fail_why": "launch 241.5994 > 220 (25 pins); capture 220.24142 > 190 (41 pins)",
+   "launch_ps": 241.6,
+   "capture_ps": 220.2,
+   "comb_pins": 0,
+   "spread_ps": 25.6,
+   "ff_spread_ps": 23.7,
+   "R_ps": 184.0
+  },
+  "ot_hgi_qdq_sw_program_leaf.json": {
+   "cell": "ot_hgi_qdq_sw_program_leaf",
+   "view": "physical/ref_tile/hgi_qdq_program_sw125_r6/views/ot_hgi_qdq_sw_program_leaf",
+   "pass": true,
+   "fail_why": "",
+   "launch_ps": 199.0,
+   "capture_ps": 123.1,
+   "comb_pins": 0,
+   "spread_ps": 69.0,
+   "ff_spread_ps": 60.9,
+   "R_ps": 230.9
+  },
+  "ot_hgi_qw_dec_s260_2b1df5142.json": {
+   "cell": "ot_hgi_qw_dec",
+   "view": "physical/hgi_quant_wide_views/2b1df5142_dec_s260/ot_hgi_qw_dec",
+   "pass": true,
+   "fail_why": "",
+   "launch_ps": 206.5,
+   "capture_ps": 188.8,
+   "comb_pins": 0,
+   "spread_ps": 42.7,
+   "ff_spread_ps": 38.5,
+   "R_ps": 299.8
+  },
+  "native_ot_hgi_qdq_transport_ctl_r3.json": {
+   "cell": "ot_hgi_qdq_transport_ctl_r3",
+   "view": "physical/ref_tile/hgi_qdq_tsplit_ctl_r3/views/ot_hgi_qdq_transport_ctl_r3",
+   "pass": true,
+   "fail_why": "",
+   "launch_ps": 177.5,
+   "capture_ps": 147.3,
+   "comb_pins": 0,
+   "spread_ps": 31.2,
+   "ff_spread_ps": 30.2,
+   "R_ps": 172.7
+  },
+  "native_ot_hgi_qdq_nw_program_leaf.json": {
+   "cell": "ot_hgi_qdq_nw_program_leaf",
+   "view": "physical/ref_tile/hgi_qdq_program_nw48_r1/views/ot_hgi_qdq_nw_program_leaf",
+   "pass": true,
+   "fail_why": "",
+   "launch_ps": 147.3,
+   "capture_ps": 123.8,
+   "comb_pins": 0,
+   "spread_ps": 42.3,
+   "ff_spread_ps": 26.6,
+   "R_ps": 314.5
+  }
+ }
+}
