@@ -236,6 +236,8 @@ ssh $HOST "for d in $B7/src_0ae60e322/physical/ref_tile/hbfd*; do [ -d \$d/views
 views_to $B/q/views $R11A/vplan_b $R11A/net/contract_pre.json || { echo R14_INIT_QVIEWS_FAIL; exit 9; }
 mkdir -p $A; rm -rf $A/banklat; cp -a $R11A/banklat $A/banklat
 echo "R14_INIT_OK src_$H plan $PD plan_um=$PLAN_UM"
+fi
+if [ -z "${RESUME_S5L:-}" ] && [ -z "${R14_SKIP_S3:-}" ]; then
 step S3a gen_case_a_ftgrid
 gen $B/a case_a diag "--lane-reach diag $CM --coord-map-re . --carve-reserved all" || { echo S3A_GEN_FAIL; exit 13; }
 ft_usage $A/case_a_manifest.json case_a
