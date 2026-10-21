@@ -1,0 +1,25 @@
+{
+  "reviewer": "codex coordinator approval",
+  "time": "2026-10-21T21:56:07.610514+00:00",
+  "gate_commit": "2026-10-21T14:51:44-0700",
+  "geometry_sha256": "b98abfe829fd91e2b9ee6779c3df77595ad461b13f3e13eb13496deacf3420b0",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "b98abfe829fd91e2b9ee6779c3df77595ad461b13f3e13eb13496deacf3420b0",
+    "components": {
+      "outline": "b34cf4fae110e38ea9f448dcc2b85a9e99bec870575eaa67d66cabfd2071dd2d",
+      "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "pins": "42bdc891c3ad3719419245fc4999be40c311c983baafeaea9d124bab4a6da666",
+      "clock_entry": "ee4d667e029d69e2a7b068ebecb001bedb0eb80bc5d9842b2119649f7693e135"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Exact consumed geometry hashes checked against shipping manifest, pin geometryPASS",
+    "std_cell_band": "Coordinator accepted18.5%/18.5%/9.1% pin-bound fill; actualN/E/Sredbins retained risk",
+    "pin_spread": "Current face widths legal; same-region10/8level input plus parent531um landing/STA remain owed",
+    "clock_entry": "Actual native32/reset2/GRT0, TT/FFboundary<=36.6/34.9ps",
+    "shape": "Newbbox/abstractgrant needed, no old-view alias or addededge"
+  },
+  "approval_source": "Explicit root coordinator approval after personally viewing6PNGs/all3ROOT_REVIEW/rawgate/geometry at0ca2e838e. Exact shipping archives MAIN6af6fff6/WMAIN90b9050f/WFB207d6980. No helper selfapproval."
+}
