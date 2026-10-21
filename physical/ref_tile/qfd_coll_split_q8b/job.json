@@ -1,0 +1,199 @@
+{
+ "name": "qfd_coll_split_q8b-q8b-COMMIT",
+ "block": "ot_coll_split_q_native32",
+ "ref_tile": true,
+ "owner": "QKO-COLL",
+ "purpose": "QKO-COLL Q leaf q8b: q8b FALLBACK: outline 241.92x285.12 (fill 35%); same mirrored-W-stack + two-cut topology as q8a but wider pin strips (W 45 um, E 34 um) for pin flops + hold buffers and 23-um cuts; buses pinned 4 pins/um centred on the cuts.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/qko-coll-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/rtl/coll_native32_1020",
+   "rtl/test/tb_coll_tp8_native32.sv",
+   "tools/qwen_coll_tp8_native32_bench.py",
+   "tools/qwen_coll_tp8_bench.py",
+   "tools/hdc_golden.py",
+   "tools/prepare_fp32_fan32_models.py",
+   "results/rtl/fp32_add_native_clone_1020/final_packet",
+   "rtl/rom/ot_coll_tp8_static.sv",
+   "rtl/physical/ot_qfd_io_collective_static.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_coll_split_q_native32 #(.LU(66), .LS(391), .FAN32(1), .ADD_FAN32(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/rom/ot_coll_tp8_split_native32.sv rtl/rom/ot_coll_fold_slice_safe3_native32.sv rtl/rom/ot_coll_fold_slice_native32.sv rtl/rom/ot_coll_sram_bank64_native32.sv rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v rtl/rom/ot_coll_rst_leaf.sv rtl/rom/ot_coll_fold_slice.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_gold_unit",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/unit",
+    "expect": "pass",
+    "pass_regex": "COLL_TP8S PASS cases=13",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "8-die split Q (FAN32/ADD_FAN32 native adder) unit set incl INJECT cases (every die flags out_err; errseen) on V5.050; witness results/rtl/coll_native32_1020/bench_r5/gold_tail.log"
+   },
+   {
+    "name": "coll_gold_prod",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/prod --production",
+    "expect": "pass",
+    "pass_regex": "COLL_TP8S PASS cases=4",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "production-shape Qwen layer 2x256w + argmax"
+   },
+   {
+    "name": "mut_ot_coll_split_mut_lead",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_COLL_SPLIT_MUT_LEAD --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_COLL_SPLIT_MUT_LEAD",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_LEAD",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_COLL_SPLIT_MUT_LEAD.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mut_ot_coll_split_mut_ex",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_COLL_SPLIT_MUT_EX --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_COLL_SPLIT_MUT_EX",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_EX",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_COLL_SPLIT_MUT_EX.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mut_ot_coll_split_mut_sbank",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_COLL_SPLIT_MUT_SBANK --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_COLL_SPLIT_MUT_SBANK",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_SBANK",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_COLL_SPLIT_MUT_SBANK.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mut_ot_coll_split_mut_rerr",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_COLL_SPLIT_MUT_RERR --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_COLL_SPLIT_MUT_RERR",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_COLL_SPLIT_MUT_RERR",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_COLL_SPLIT_MUT_RERR.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mut_ot_tp8s_mut_owner",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_TP8S_MUT_OWNER --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_TP8S_MUT_OWNER",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_TP8S_MUT_OWNER",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_TP8S_MUT_OWNER.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "mut_ot_tp8s_mut_gather",
+    "cmd": "OT_BENCH_J=8 python3 tools/qwen_coll_tp8_native32_bench.py --split --safe-fan32 --native-adder32 --latu 66 --lats 391 --out {RUN}/bench/OT_TP8S_MUT_GATHER --only 'reduce_8w_x16|gather_4w_x4|mixed_8w_x24|fault_nan' --mutant-define OT_TP8S_MUT_GATHER",
+    "expect": "fail",
+    "fail_regex": "COLL_TP8S FAIL mutant=OT_TP8S_MUT_GATHER",
+    "fail_witness": "results/rtl/coll_native32_1020/bench_r5/OT_TP8S_MUT_GATHER.log",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_coll_split_q8b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_coll_split_q8b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_coll_split_q8b --out {RUN}/record/views/ot_coll_split_q_native32 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_coll_split_q8b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_coll_split_q8b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_coll_split_q8b/qfd_coll_split_q8b-q8b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "q7 closure EARLY_FAIL_CONGESTION GRT-0232 (M4 59 after CTS hold buffers; q7w 259.2 square gate GRT ovf 60): every overflow gcell is a capacity-0 horizontal gcell over the two abutted N-S macro stacks (x 40-80 / 160-200): macros block M1-M4, M6 is shadowed, so the 193-um walls have no horizontal crossing; W/E pin flops (pinned at the face) cluster on 80-100 um of face and the R0 W stack faced its ~1060 SRAM pins into the W strip. q8b FALLBACK: outline 241.92x285.12 (fill 35%); same mirrored-W-stack + two-cut topology as q8a but wider pin strips (W 45 um, E 34 um) for pin flops + hold buffers and 23-um cuts; buses pinned 4 pins/um centred on the cuts."
+}

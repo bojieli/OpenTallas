@@ -147,6 +147,38 @@ def forwarded_clock_ports(spec):
     return list(ports)
 
 
+def forwarded_soft_clocks(spec):
+    """Exact mapped soft-register ownership on a forwarded input, without adding a CTS root.
+
+    Each entry names one actual port bit and its exact mapped sequential cells.
+    Clock ancestry and complete sink membership are checked in the loaded design.
+    """
+    entries = spec.get('forwarded_soft_clocks', [])
+    if not isinstance(entries, list):
+        raise ValueError('forwarded_soft_clocks: expected a list')
+    allowed = forwarded_clock_ports(spec)
+    seen_ports, seen_cells = set(), set()
+    out = []
+    for i, e in enumerate(entries):
+        if not isinstance(e, dict) or set(e) != {'port', 'domain', 'cells'}:
+            raise ValueError('forwarded_soft_clocks: requires exact port/domain/cells')
+        port, domain, cells = e['port'], e['domain'], e['cells']
+        if not isinstance(port, str) or not re.fullmatch(r'[A-Za-z_]\w*(?:\[[0-9]+\])?', port):
+            raise ValueError('forwarded_soft_clocks: requires an exact port bit')
+        base = port.split('[')[0]
+        ds = domains(spec)
+        owners = [n for n, d in ds.items() if base in d['inputs']]
+        if base not in allowed or owners != [domain] or port in seen_ports:
+            raise ValueError('forwarded_soft_clocks: missing, duplicate or wrong source domain')
+        if (not isinstance(cells, list) or not cells or
+                any(not isinstance(c, str) or not c or any(x in c for x in '{}\\;*?\n\r') for c in cells) or
+                len(set(cells)) != len(cells) or set(cells) & seen_cells):
+            raise ValueError('forwarded_soft_clocks: requires unique exact mapped cell names')
+        seen_ports.add(port); seen_cells.update(cells)
+        out.append(dict(e, clock=f'ot_forwarded_{i}'))
+    return out
+
+
 def landed_record(spec, root):
     """The lp.py record (<top>_lp_record.json) of a landed cluster, validated against the spec (fail closed)."""
     if not landed_cluster(spec):
@@ -786,6 +818,15 @@ def clocks(spec, period):
         ratio = ds[owners[port]]['ratio']
         value = period * ratio[0] / ratio[1]
         lines.append(f"create_clock -name ot_entry_{i} -period {value:.9f} [get_ports {{{port}}}]")
+    soft = forwarded_soft_clocks(spec)
+    if soft:
+        lines.append('set ::ot_ce_fwd_soft [dict create ' + ' '.join(
+            '{' + e['port'] + '} {clock ' + e['clock'] + ' domain ' + e['domain'] + ' cells {' +
+            ' '.join('{' + c + '}' for c in e['cells']) + '}}' for e in soft) + ']')
+    for e in soft:
+        d = ds[e['domain']]
+        value = period * d['ratio'][0] / d['ratio'][1]
+        lines.append(f"create_clock -name {e['clock']} -period {value:.9f} [get_ports {{{e['port']}}}]")
     return '\n'.join(lines) + '\n'
 
 
@@ -925,6 +966,9 @@ def _generate(spec, root):
     fwd = forwarded_clock_ports(spec)
     if fwd:
         body = forwarded_body(body)
+    soft = forwarded_soft_clocks(spec)
+    if soft:
+        body = forwarded_soft_body(body)
     if spec.get('clock_data_paths') == 'async_gray_fifo':
         body = async_gray_fifo_constraints.extend(body, spec, root)
     if spec.get('cdc_synchronizers') is not None and spec.get('clock_data_paths') != gray_fifo_cdc_constraints.POLICY:
@@ -938,6 +982,9 @@ def _generate(spec, root):
             + (('set ::ot_ce_leaf_roots 1\nset ::ot_ce_related_data ' + str(int(related_data(spec))) + '\n') if native_leaf(spec) else '')
             + (f'set ::ot_ce_landed_cluster 1\nset ::ot_ce_landed_child_pins {expected}\n' if landed else '')
             + ('set ::ot_ce_fwd_ports {' + ' '.join('{' + p + '}' for p in fwd) + '}\n' if fwd else '')
+            + ('set ::ot_ce_fwd_soft [dict create ' + ' '.join(
+                '{' + e['port'] + '} {clock ' + e['clock'] + ' domain ' + e['domain'] + ' cells {' +
+                ' '.join('{' + c + '}' for c in e['cells']) + '}}' for e in soft) + ']\n' if soft else '')
             + ('set ::ot_ce_landed_raw [dict create ' + ' '.join(
                 f'{{{k}}} {{ref {v["ref"]} tol {v["tol"]:g} record {v["record"]}}}' for k, v in sorted(raw.items())) + ']\n'
                if raw else '')
@@ -1987,3 +2034,56 @@ def forwarded_body(body):
             raise ValueError("landed body changed; revalidate the forwarded-clock extension")
         body = body.replace(old, new)
     return FORWARDED_PROCS + body
+
+
+FORWARDED_SOFT_PROCS = r"""
+proc ot_ce_forwarded_soft_visit {corner groups_name} {
+  upvar 1 $groups_name groups
+  set seen [dict create]
+  foreach pin [all_registers -clock_pins] {
+    set cell [get_full_name [get_cells -of_objects $pin]]
+    if {[dict exists $::ot_ce_counts [get_property [get_cells -of_objects $pin] ref_name]]} continue
+    set port [ot_ce_net_root_port $pin]
+    if {![dict exists $::ot_ce_fwd_soft $port]} continue
+    set info [dict get $::ot_ce_fwd_soft $port]
+    if {[lsearch -exact [dict get $info cells] $cell] < 0} {
+      error "OT_FORWARDED_SOFT: undeclared register $cell on $port"
+    }
+    if {[dict exists $seen $cell]} {error "OT_FORWARDED_SOFT: duplicate clock pin $cell"}
+    dict set seen $cell 1
+    set clock [get_clocks [dict get $info clock]]
+    if {[llength $clock] != 1} {error "OT_FORWARDED_SOFT: missing clock $port"}
+    set actual {}
+    foreach p [all_registers -clock [get_full_name $clock] -clock_pins] {lappend actual [get_full_name $p]}
+    if {[get_full_name $pin] ni $actual} {error "OT_FORWARDED_SOFT: actual clock mismatch $cell $port"}
+    set a [ot_ce_clock_wire $pin $clock]
+    dict lappend groups $port [list [get_full_name $pin] $a $a]
+    dict set ::ot_ce_fwd_cells $cell $port
+    puts "OT_LANDED FORWARDED_SOFT_SINK $corner $port [get_full_name $pin] wire=$a"
+  }
+  dict for {port info} $::ot_ce_fwd_soft {
+    foreach cell [dict get $info cells] {
+      if {![dict exists $seen $cell]} {error "OT_FORWARDED_SOFT: missing or wrong-source register $cell ($port)"}
+    }
+  }
+}
+"""
+
+
+def forwarded_soft_body(body):
+    substitutions = [
+        ('  set_propagated_clock [get_clocks ot_entry_*]',
+         '  set_propagated_clock [get_clocks ot_entry_*]\n  set_propagated_clock [get_clocks ot_forwarded_*]'),
+        ('  foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}',
+         '  dict for {port info} $::ot_ce_fwd_soft {lappend expected [dict get $info clock]}\n'
+         '  foreach c [all_clocks] {if {![$c is_generated]} {lappend actual [get_full_name $c]}}'),
+        ('  dict for {port rows} $groups {',
+         '  ot_ce_forwarded_soft_visit $corner groups\n  dict for {port rows} $groups {'),
+        ('        if {$n in $::ot_ce_ports} continue',
+         '        if {$n in $::ot_ce_ports || [dict exists $::ot_ce_fwd_soft $n]} continue'),
+    ]
+    for old, new in substitutions:
+        if body.count(old) != 1:
+            raise ValueError('forwarded soft clock body changed; revalidate extension')
+        body = body.replace(old, new)
+    return FORWARDED_SOFT_PROCS + body

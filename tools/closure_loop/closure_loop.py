@@ -314,6 +314,12 @@ def run_base(name):
         return bases[0]
     cached = FLEET_REF.probe_cache.get(name)
     info = cached[1] if isinstance(cached, tuple) and len(cached) > 1 else None
+    # SCRATCH2-1021 (2026-10-21): every placement calls fleet.launched(h) -- which drops probe_cache[h] -- right before
+    # run_base(h), so the cache was always empty here and every new run dir went to the base (ot-epyc5 scratch hit 100 %
+    # with 2.4 TB free on scratch2).  Fall back to the last good probe.
+    if not (info or {}).get("bases_gb"):
+        good = FLEET_REF.last_good.get(name)
+        info = good[1] if isinstance(good, tuple) and len(good) > 1 else info
     free = (info or {}).get("bases_gb") or {}
     return max(bases, key=lambda b: (free.get(b, -1), b == bases[0]))
 
@@ -1600,17 +1606,17 @@ def report_stopped_waiters(host, rows):
 # (global) OOM killer as the largest process -- EPYC3 18:54:23 PDT openroad 122.5 GB, EPYC1 21:49:01 PDT openroad
 # 123.5 GB (dmesg 'Out of memory: Killed process'), not by stuckscan (its KILL_STAGE / EARLY_FAIL at those minutes hit
 # other hosts' or other jobs' own run dirs).  Memory-only admission does not reserve for a die run's growth, so every
-# host probe marks die-level containers (names / run mounts below) oom_score_adj -900: the kernel then picks a block
+# host probe marks die-level containers (names / run mounts below) oom_score_adj -1000: the kernel then picks a block
 # route instead.  Die containers are also never stopped by a loop kill (DIE_CONTAINER_SKIP in every kill loop).
 DIE_CONTAINER_RE = r"^/?(qfd_dietop_|qfd_die_|qfd_gw_|dieev_|de2_|die_|dsrom_s81|s81_l1|s81_grt_|r25gp|hbm_r25gp|qwen_r22k)"
 DIE_MOUNT_RE = r"/(die-evidence[^/ ]*|kv-die)/"
 DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect --format '{{.Name}} {{range .Mounts}}{{.Source}} {{end}}' $c 2>/dev/null); "
                  f"echo \"$i\" | grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' || continue; "
-                 "for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
-                 "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done; done; "
+                 "for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -1000 ] || "
+                 "echo -1000 | sudo -n tee /proc/$p/oom_score_adj; done; done; "
                  # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
-                 f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -900 ] || "
-                 "echo -900 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
+                 f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -1000 ] || "
+                 "echo -1000 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
 # HOST-EMERGENCY (drive-1010 2026-10-10): EPYC2 (6 GB), EPYC4 (7 GB) and EPYC3 (2 GB, 13:26) hung -- the biggest
 # consumers were agent benches OUTSIDE the loop (verilator 75-120 GB at oom_score_adj 0) that MEM-GUARD cannot stop, and
 # the kernel OOM killer acted too late (sshd stalls first).  Every host probe now runs this early-OOM step: below
@@ -5793,7 +5799,9 @@ def bench_track(j, fleet, stl):
             recovery = (j.get("bench_rebind") or {}).get(k)
             location = (dict(host=j["host"], run=j["run"], attempt=j.get("route_attempt", j["attempt"]))
                         if recovery else bench_location(j, stl))
-            if location["run"] != j.get("run") and vanished_bench_location(j, location):
+            # Retry may migrate a job without changing its host-independent run path.
+            if ((location["host"], location["run"]) != (j.get("host"), j.get("run"))
+                    and vanished_bench_location(j, location)):
                 location = bench_location(j, stl)
             caps = next((x.get("caps", []) for x in hosts_table() if x["name"] == location["host"]), None)
             if not j.get("bench_location") and caps is not None and not bench_needs(j["spec"]) <= set(caps):
@@ -10098,7 +10106,8 @@ def cmd_retry(a):
     # 2026-10-08: a bench track pinned to an artifact run on another host (bench_location) outlives that run when a
     # purge or move deletes it -- every bench launch then failed 'No such file' until 10 loop errors.  A retry restarts
     # the unfinished benches on the job's own run.
-    if j.get("bench_location") and j["bench_location"].get("run") != j.get("run"):
+    if j.get("bench_location") and ((j["bench_location"].get("host"), j["bench_location"].get("run"))
+                                     != (j.get("host"), j.get("run")) or retry_status == "QUEUED"):
         j.pop("bench_location", None)
         j["btrack"] = {k: v for k, v in (j.get("btrack") or {}).items() if v.get("state") == "done"}
     event(j, "human retry: re-queued from stage " + str(j.get("stage_key")))
