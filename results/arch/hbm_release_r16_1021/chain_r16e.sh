@@ -57,8 +57,8 @@
 #  -> S6 synth b -> S7 GEN case_b (lane-reach fail, density outlines, chain look-ahead, repair 3) -> S8 forest/l12/S8c/bind
 #  -> S9 synth c -> S10 GEN (reset gate fail) -> S11 GRT (global_connect PG step) + STA TT/FF + neighbour clock + hold.
 set -o pipefail
-VAR=${1:?plan eM|gM|hM}; PL=B; PLAN_UM=300; HOST=ot-epyc5
-case "$VAR" in eM|gM|hM) FAMILY=${VAR%M};; *) echo UNMODELLED_GEOMETRY; exit 9;; esac
+VAR=${1:?plan eM|gM|hM|iM}; PL=B; PLAN_UM=300; HOST=ot-epyc5
+case "$VAR" in eM|gM|hM|iM) FAMILY=${VAR%M};; *) echo UNMODELLED_GEOMETRY; exit 9;; esac
 # A quick run is an admission prerequisite, never a substitute for this run's
 # own source-bound GEN/S4, strict bind, clock/reset, STA or mandatory IR.
 python3 - /home/ubuntu/artifacts/hdie-d4/codex_hbm_r16${FAMILY}_s4q_1021/plan$VAR /home/ubuntu/wt/codex-hbm-die-resume-1340-1021/results/arch/hbm_release_r16_1021/plan$VAR <<'PY_GEOMETRY'
