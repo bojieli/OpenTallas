@@ -20,13 +20,16 @@ import argparse
 import datetime
 import json
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from hgi_sim.smb_head_price_1021 import head_schedule_price
 
 CLK_PS = 1e12 / 1.2e9                     # 833.3 ps edge (the price model CLK = 1.2 GHz)
 DESIGNS = {"ds_ar": "info_banklat_all__AR", "qwen": "info_banklat_all__qwen"}
 PRICE = {"ds_ar": dict(tok_s=1233.4, banklat_tok_s=1206.3, record=1905.4),       # LH-REPRICE3 compose / banklat / old
          "qwen": dict(tok_s=403.2, banklat_tok_s=407.0, record=946.2)}
 # post-hoc model terms outside the record schedule (d4g_reprice3/_1019 post_hoc): cycles a token, UNMEASURED
-POST_HOC = {"ds_ar": dict(sm_svc=43 * 388 + 4, pg_reset=4, land_pct=-1.13), "qwen": dict(pg_reset=4, land_pct=-0.07)}
+POST_HOC = {"ds_ar": dict(sm_svc=43 * 388 + 4 + head_schedule_price()["delta_stream_edges"], pg_reset=4, land_pct=-1.13), "qwen": dict(pg_reset=4, land_pct=-0.07)}
 
 
 def merge(units: Path, out: Path):
@@ -60,6 +63,8 @@ def _tok(cyc):
 def report(model: Path, meas: Path, units: Path, out: Path):
     merged = json.loads((units.parent / "measured.json").read_text()) if (units.parent / "measured.json").exists() else {}
     res = dict(schema="opentallas.toksim_hbm_measured.v1", lane="TOKSIM-HBM",
+               sm_head_schedule_price=head_schedule_price(),
+               rate_scope="model composition; SM component functional PASS, old stage budget FAIL, no full-token throughput PASS",
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                clock_ps=CLK_PS, die="HBM d4g GEN2e3 (pb0/die.v) masters; per-unit labels say bound / newest-bench-passing",
                method=__doc__.split("\n\n")[1], designs={})

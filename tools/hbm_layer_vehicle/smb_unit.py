@@ -64,9 +64,9 @@ X_GAP, OP_GAP, DRAIN = 16, 256, 1200
 FIRST_GO = int(os.environ.get('SMB_FIRST_GO', 520))             # first block of a run: HBM first access + copy (elastic boundary, calibrated by the bench)
 PACE_NUM, PACE_DEN, PACE_ADD = (int(os.environ.get(k, d)) for k, d in (('SMB_PACE_NUM', 200), ('SMB_PACE_DEN', 64), ('SMB_PACE_ADD', 4)))
 # The sustained BF16 head exposes native controller/refresh stalls that the short
-# records hide. Keep the historical default, but allow a separately priced fixed
-# head cadence (no runtime readiness wait). The repaired schedule uses 320/64.
-HEAD_PACE_NUM = int(os.environ.get("SMB_HEAD_PACE_NUM", PACE_NUM))
+# records hide. Preserve the historical failed value via an explicit override; use the measured fixed
+# head cadence 320/64 by default (no runtime readiness wait).
+HEAD_PACE_NUM = int(os.environ.get("SMB_HEAD_PACE_NUM", 320))
 # >= 1.375 edges / 136-B line (immutable HBM price) + 8; env overrides for calibration probes
 FETCH = int(os.environ.get('SMB_FETCH', 200))       # measured HBM boundary: one 64-line block per ~160-170 edges (distinct rows) + refresh slack
 EXP_FIRST = int(os.environ.get('SMB_EXP_FIRST', 260))  # ids -> first routed block resident + copied
@@ -95,9 +95,9 @@ XLAT = {1: (84, 2), 2: (88, 3), 0: (81, 1)}               # fmt -> (first beat a
 # drained), fetch latency FLAT (measured V -> block_ready median 183 edges, successor PC, distinct rows) and the HBM
 # stream rate (1.375 edges / 136-B line at 98.9 B/edge), 2 cache banks (block n opens after block n-2 retired and after
 # block n-1's copy drained: OPEN_IL), copy = 5/16 edge a sector; the go needs the copy done + RMARGIN.
-FLAT = int(os.environ.get("SMB_FLAT", 200))
+FLAT = int(os.environ.get("SMB_FLAT", 202))
 RMARGIN = int(os.environ.get("SMB_RMARGIN", 8))
-RESMODEL = os.environ.get("SMB_RESMODEL", "0" if XMODE == "bench13" else "1") == "1"
+RESMODEL = os.environ.get("SMB_RESMODEL", "1") == "1"
 
 
 def _drain_edges(lines):
