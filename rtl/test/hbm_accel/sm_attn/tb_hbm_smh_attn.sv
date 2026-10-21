@@ -11,6 +11,8 @@
 module tb_hbm_smh_attn;
     parameter integer MAXC = 4096;
     parameter integer DMUT = 0;
+    parameter integer HOPD = 5;             // OT_SMH_ATTN_RP4A only: BE control delay per column hop (rp4 define set)
+    parameter integer BED = 28;             // OT_SMH_ATTN_RP4A only: BE_DELAY (8 + 2 x rp4a gout lane delta)
     reg clk = 0, rst_n = 0;
     always #0.5 clk = ~clk;
     reg [191:0]  cmd_m [0:MAXC-1];
@@ -20,7 +22,10 @@ module tb_hbm_smh_attn;
     reg [191:0] command = 0; reg [1098:0] packet = 0; reg [63:0] kv_desc = 0;
     reg xw_en = 0; reg [6:0] xw_addr = 0, xw_grp = 0; reg [2047:0] xw_data = 0;
     wire [42:0] request; wire rv, fault, sfault; wire [11:0] rrow; wire [255:0] rdata;
-`ifdef OT_SMH_ATTN_I8W
+`ifdef OT_SMH_ATTN_RP4A
+    // HBM-DIEGAP/SMHPARENT 10-21: the wires-only flat parent with the rp4a hardened halves (smh_attn_rp4a_flat_gen.py)
+    ot_hbm_accel_smh_attn_rp4a #(.KVMUT(DMUT), .HOPD(HOPD), .BE_DELAY(BED)) u_dut (
+`elsif OT_SMH_ATTN_I8W
     // HBM-QINT8B (10-20): the die's ENABLE_INT8 SM + the opt-in WIDE INT8 front (command mode 3, ot_hbm_sm_i8w_front)
     ot_hbm_accel_smh_attn #(.KVMUT(DMUT), .ENABLE_INT8(1), .INT8W(1)) u_dut (
 `elsif OT_SMH_ATTN_INT8
@@ -57,7 +62,11 @@ module tb_hbm_smh_attn;
         if (n > MAXC) $fatal(1, "calendar longer than MAXC");
         $readmemh(fc, cmd_m, 0, n - 1); $readmemh(fp, pkt_m, 0, n - 1); $readmemh(fx, xw_m, 0, n - 1); $readmemh(fk, kvd_m, 0, n - 1);
         repeat (4) @(posedge clk); rst_n <= 1;
+`ifdef OT_SMH_ATTN_RP4A
+        repeat (48) @(posedge clk);         // rp4a halves: regional reset trees + s-half pads settle before the calendar
+`else
         repeat (4) @(posedge clk);
+`endif
         for (cyc = 0; cyc < n; cyc = cyc + 1) begin
             command <= cmd_m[cyc]; packet <= pkt_m[cyc]; kv_desc <= kvd_m[cyc];
             {xw_en, xw_addr, xw_grp, xw_data} <= xw_m[cyc];

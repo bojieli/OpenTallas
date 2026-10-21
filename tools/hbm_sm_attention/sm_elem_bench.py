@@ -392,7 +392,29 @@ def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
 
 
 # ---------------------------------------------------------------- build / run / check -----------------------------------
+RP4A = None                       # --rp4a (HBM-DIEGAP/SMHPARENT 10-21): bench ot_hbm_accel_smh_attn_rp4a (rp4a halves parent)
+RP4A_DEF = ["OT_SMH_CG_ENREG", "OT_SMH_XLK", "OT_FP_DATA_NORST", "OT_SMH_DRST0", "OT_SMH_RSTRELAY", "OT_SMH_RSTPIN", "OT_SMH_HIER",
+            "OT_SMH_PTW_OHDLY", "OT_SMH_PINREG", "OT_SMH_XREL", "OT_SMH_PRODUCTION_SHAPE", "OT_SMH_COMPACT_PT", "OT_SMH_GROUP_TRANSPORT",
+            "OT_SMH_WEST_SPLIT", "OT_SMH_TRANSPORT_KEEP", "OT_SMH_RP4_SRST"]
+RP4A_SRC = ["rtl/v41rom/ot_v41_bterm2.sv", "rtl/gpu/ot_gpu_issue.sv", "rtl/gpu/ot_gpu_tc_col.sv", "rtl/gpu/ot_gpu_bd_col.sv",
+            "rtl/hdc/v41/ot_hdc_blockdot.sv", "rtl/gpu/ot_gpu_bulk_copy.sv", "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+            "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+            "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv", "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+            "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv", "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+            "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+            "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.v",
+            "rtl/hdc/ot_hdc_cg.sv", "rtl/hbm_accel/cg/ot_cg_tile.sv", "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+            "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv", "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+            "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv", "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
+            "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv", "rtl/common/landed_parent/ot_pl_land.sv",
+            "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv", "rtl/hbm_accel/sm/repack/h2/ot_hbm_smh_rp4h.sv",
+            "rtl/hbm_accel/sm/repack/h2a/ot_hbm_smh_rp4ah.sv", "rtl/hbm_accel/sm/attn/flat/ot_hbm_sm_attn_front_split.sv",
+            "rtl/hbm_accel/sm/attn/flat/ot_hbm_accel_smh_attn_rp4a.sv"]
+
+
 def build(work, probe, dmut):
+    if RP4A is not None:
+        return build_rp4a(work, dmut)
     obj = work / f"obj_p{int(probe)}_d{dmut}"
     exe = obj / "Vtb_hbm_smh_attn"
     if exe.exists():
@@ -405,6 +427,25 @@ def build(work, probe, dmut):
     (work / f"build_p{int(probe)}_d{dmut}.log").write_text(r.stdout + r.stderr)
     if r.returncode != 0:
         raise SystemExit(f"build failed (see {work}/build_p{int(probe)}_d{dmut}.log)")
+    return exe
+
+
+def build_rp4a(work, dmut):
+    hopd, bed = RP4A
+    obj = work / f"obj_rp4a_d{dmut}_h{hopd}_b{bed}"
+    exe = obj / "Vtb_hbm_smh_attn"
+    if exe.exists():
+        return exe
+    vl = os.environ.get("VERILATOR") or os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin/verilator")
+    src = [s for s in SRC if s not in RP4A_SRC]
+    cmd = [vl, "--binary", "-j", os.environ.get("VJOBS", "16"), "-O1", "-CFLAGS", "-O1", "--x-assign", "fast", "-Wno-fatal", "-Wno-lint",
+           "-Wno-style", "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--unroll-count", "256", "--top-module", "tb_hbm_smh_attn",
+           "-DOT_SMH_ATTN_RP4A", f"-GDMUT={dmut}", f"-GHOPD={hopd}", f"-GBED={bed}", "--Mdir", str(obj)] + \
+        [f"-D{d}" for d in RP4A_DEF] + [str(ROOT / s) for s in src[:-1] + RP4A_SRC + src[-1:]]
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    (work / f"build_rp4a_d{dmut}_h{hopd}_b{bed}.log").write_text(r.stdout + r.stderr)
+    if r.returncode != 0:
+        raise SystemExit(f"build failed (see {work}/build_rp4a_d{dmut}_h{hopd}_b{bed}.log)")
     return exe
 
 
@@ -493,6 +534,7 @@ def main(argv=None):
     p.add_argument("--probe", action="store_true")
     p.add_argument("--dmut", type=int, default=0, help="converter mutant (ot_hbm_sm_kv_line MUT), negative control")
     p.add_argument("--smut", default="", choices=["", "r7clear", "early"], help="calendar negative control")
+    p.add_argument("--rp4a", default="", help="HOPD,BE_DELAY: bench the rp4a-halves flat parent ot_hbm_accel_smh_attn_rp4a")
     p.add_argument("--work", required=True)
     p.add_argument("--out", required=True)
     c = sub.add_parser("calibrate", help="measured QK landing window from a --probe run directory")
@@ -512,6 +554,11 @@ def main(argv=None):
         Path(a.out).write_text(json.dumps(r, indent=1))
         print(json.dumps(r))
         return 0
+    global RP4A
+    if getattr(a, "rp4a", ""):
+        RP4A = tuple(int(x) for x in a.rp4a.split(","))
+        if a.probe:
+            raise SystemExit("--rp4a has no PROBE hierarchy")
     work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     lat = dict(DEFAULT_LAT)
@@ -543,7 +590,7 @@ def main(argv=None):
             res["span_first_line_to_last_result"] = res["last_result"] - exp["first_line"]
         results.append(res)
         print(("PASS " if res["pass"] else "FAIL ") + json.dumps({k: v for k, v in res.items() if k != "calendar"}), flush=True)
-    summ = dict(shape=a.shape, ops=len(results), passed=sum(r["pass"] for r in results), probe=a.probe, dmut=a.dmut, smut=a.smut,
+    summ = dict(shape=a.shape, rp4a=RP4A, ops=len(results), passed=sum(r["pass"] for r in results), probe=a.probe, dmut=a.dmut, smut=a.smut,
                 lat=lat, wall_s=round(time.time() - t0, 1),
                 verdict="PASS" if all(r["pass"] for r in results) else "FAIL")
     Path(a.out).write_text(json.dumps(dict(summary=summ, ops=results), indent=1))
