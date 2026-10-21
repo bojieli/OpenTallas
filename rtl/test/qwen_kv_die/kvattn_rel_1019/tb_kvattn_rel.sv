@@ -105,7 +105,7 @@ module tb_kvattn_rel;
   end
   #0.5;
   for(i=0;i<32;i=i+1)if(k_req_valid[i])begin
-   n=K_EXT;if(mode=="k_late"&&i==9&&klate==50)n=K_EXT+1;if(i==9)klate=klate+1;
+   n=K_EXT;if(mode=="k_late"&&i==9&&klate==10)n=K_EXT+1;if(i==9)klate=klate+1;  // KV-MU6 10-20: was klate==50, never reached at T1024 (32 rows/lane)
    kq_due[i][kq_w[i]%QN]=cyc+n;kq_t[i][kq_w[i]%QN]=k_req_t[13*i+:13];kq_w[i]=kq_w[i]+1;
   end
   for(i=0;i<16;i=i+1)if(v_req_valid[i])begin
@@ -132,7 +132,10 @@ module tb_kvattn_rel;
    if(txp[532:517]!==c_ep||txp[538:533]!==c_ly)m_errs[u]=m_errs[u]+1;
    m_words[u]=m_words[u]+16;
   end
-  if(txv&&txp[542:539]==4'd4)begin m_st[u]=cyc;m_stw[u]=txp[4:0];end
+  // STATUS leaves on the cycle the controller has dropped busy; by then the request loop has already advanced u (the
+  // next user's go pulse does not raise busy before its run): attribute it to the request that just retired
+  // (KV-MU6 10-20: job3 tagged user k's STATUS to user k+1, so every 1-user run and every mutant FAILed on STATUS).
+  if(txv&&txp[542:539]==4'd4)begin m_st[(busy||r_run)?u:u-1]=cyc;m_stw[(busy||r_run)?u:u-1]=txp[4:0];end
  end
  task automatic pulse(input integer bit_i);
   begin ictl[bit_i]=1'b1;@(negedge ck);ictl[bit_i]=1'b0;end
