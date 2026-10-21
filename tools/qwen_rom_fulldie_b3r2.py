@@ -4884,6 +4884,11 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if any(i_.name == _LG.COLL_INST and i_.master == _LG.COLL_MASTER for i_ in m['insts']):
             m.setdefault('die_master_params', {})[_LG.COLL_MASTER] = dict(
                 cll['params'], _source='Q-COLLCAL: GEN lane cycles (case/coll_lane_latency.json), LX_j = TX(peer) + RX(j); Q-COLLCAL3: LS = compiled calendar lane_groups.collective_calendar')
+            # QW-GENPREP 10-21 (QW-COLLIO NOTICE): the hardened COLL faces (qfd_coll_face_*_safe kits) are the TOK_REG=1
+            # (latency-neutral token register) + SAFE=1 (kept reset copies, landed core/link rings) form; the die
+            # elaborates io_collective in that form so the face views bind (OT_SPLIT_COLL_FACE_SAFE=1, opt-in)
+            if _os.environ.get('OT_SPLIT_COLL_FACE_SAFE', '0') == '1':
+                m['die_master_params'][_LG.COLL_MASTER].update(TOK_REG=1, SAFE=1)
     # achieved hop lengths (pin-centre Manhattan, relay pins at the frame faces)
     m['r21_relays'] = dict(pitch_um=pitch, max_um=RMAX, relays=len(insts), masters=len(masters_needed),
                           classes=stats, clock_nets_missing=missing, repaired=len(repaired),
