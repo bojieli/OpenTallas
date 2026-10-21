@@ -266,6 +266,18 @@
    "qualification": "Exact CLOSED guarded CRED8 child views now materialized+bound to2S+4N existingR0slots. No CRED12/E alias. Parent unchanged/unhardened.",
    "grid_hold": "Actual originalglobalplacement allWpins8nmofftrack. ALLavailable46S/48N descendants admitcommondelta(-64nm,-8nm),actualfullpincheck0 atcandidatephase/bodyviolations0. Tenstandins+3missingXGT/XRT/LEP perparent preventparentphysicalqualification; phase notadopted.",
    "publication_main": "8da2cab50"
+  },
+  "coll_e": {
+   "record": "7db6d6351a9830bf1c6d8b8b33733ab04c38734a",
+   "source": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+   "master": "dsfd_coll_lane_e_safe8_ntf",
+   "child_count": 4,
+   "assemblies": [
+    "physical/ref_tile/s81_mu72_assembly/lepe_mu.json",
+    "physical/ref_tile/s81_mu72_assembly/lepe_nh_mu.json"
+   ],
+   "qualification": "ExactCLOSEDguardedCRED8childview/source/params/defines; fourlocalR0full2143pinchecksPASS; bodyexactreserved725.76x583.2. Parentunchanged/unhardened/globalphasehold, noCRED12/wholeparentphysicalclaim",
+   "packet": "coll_e_first_closed/binding.json"
   }
  },
  "initial_transport_preparation_commit": "c779add25d63590fc1ad67ee564a1deb39575be5",
