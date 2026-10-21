@@ -5793,7 +5793,9 @@ def bench_track(j, fleet, stl):
             recovery = (j.get("bench_rebind") or {}).get(k)
             location = (dict(host=j["host"], run=j["run"], attempt=j.get("route_attempt", j["attempt"]))
                         if recovery else bench_location(j, stl))
-            if location["run"] != j.get("run") and vanished_bench_location(j, location):
+            # Retry may migrate a job without changing its host-independent run path.
+            if ((location["host"], location["run"]) != (j.get("host"), j.get("run"))
+                    and vanished_bench_location(j, location)):
                 location = bench_location(j, stl)
             caps = next((x.get("caps", []) for x in hosts_table() if x["name"] == location["host"]), None)
             if not j.get("bench_location") and caps is not None and not bench_needs(j["spec"]) <= set(caps):
@@ -10098,7 +10100,8 @@ def cmd_retry(a):
     # 2026-10-08: a bench track pinned to an artifact run on another host (bench_location) outlives that run when a
     # purge or move deletes it -- every bench launch then failed 'No such file' until 10 loop errors.  A retry restarts
     # the unfinished benches on the job's own run.
-    if j.get("bench_location") and j["bench_location"].get("run") != j.get("run"):
+    if j.get("bench_location") and ((j["bench_location"].get("host"), j["bench_location"].get("run"))
+                                     != (j.get("host"), j.get("run")) or retry_status == "QUEUED"):
         j.pop("bench_location", None)
         j["btrack"] = {k: v for k, v in (j.get("btrack") or {}).items() if v.get("state") == "done"}
     event(j, "human retry: re-queued from stage " + str(j.get("stage_key")))
