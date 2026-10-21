@@ -1,0 +1,18 @@
+{
+  "source_commit": "b0841730b",
+  "immutable_gate": "ot-gold2:/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_bank_b0_rw9spb-20261021-122653",
+  "native": {
+    "status": "PASS",
+    "max": 32,
+    "role_errors": 0
+  },
+  "actual_clock_failure": {
+    "root": "clk_w0",
+    "tt_spread_ps": 92.6,
+    "scope": "all_internal_only",
+    "sinks": 1035,
+    "strict_existing_limit_ps": 80
+  },
+  "local_gate_summary": "InitialprecheckFAIL json stale whilecollectorfinishes; rawactualCTSfailure authoritative, not layoutqualification",
+  "next": "Bounded root-specific topology/source repair from actualclockmodel. No unchangedgate, no submit."
+}
