@@ -747,7 +747,8 @@
    "results/rtl/s81_lepab_regional_1021",
    "rtl/dsrom_sys/s81_ph/test/tb_coll_reach7.sv",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
-   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v"
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
+   "tools/orfs_allcorner_spef.py"
   ]
  },
  "recipe": 1,
@@ -818,7 +819,7 @@
   "clock": "ck",
   "reason": "rs lands on the core face in two ck flops, then ot_rst_relay_tree3 (3 balanced edges, every leaf <= ~32 reset pins); same release depth as safe3"
  },
- "std_area_um2": 9489.0,
+ "std_area_um2": 9780.1182,
  "slot_change_request": {
   "reason": "S81-COLL5 v8 725.76x583.2 (s4b 706.32x540 FAIL placement): the die parent re-slots the 16 lane tiles per die to this outline (same ports; ck/rs/chb at y 276..316)"
  },
