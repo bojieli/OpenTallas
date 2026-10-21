@@ -1,0 +1,15 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-21T10:20:32.672267-07:00",
+  "gate_commit": "61e127f40eb85e3a096d7811a793992935b4c890",
+  "geometry_sha256": "64645a5c69db60a3a1a3fe1ffdb09ba82ba6d5eaf9edc8bfde714a92e4bfedad",
+  "verdict": "APPROVED",
+  "approval_provenance": "Coordinator /root personally viewed this fresh WT floorplan+density and actual WARN gate; approval relayed by /root/qk_lead. No clock or behavioral waiver.",
+  "checklist": {
+    "lattice": "Six ctl_sram64x128 macros in two columns/three rows on43.2um lattice; x86.4/216, y129.6/259.2/388.8.",
+    "std_cell_band": "Broad inter-column/row channels, continuous std-cell field. Pin-bound fill11% accepted; density strips at faces, no blocked corridor/hotspot.",
+    "pin_spread": "Full faces on legal tracks, native pin geometry0 inaccessible. W/E2652/2650 pins over561.6um; usable67-68%, about5.9pins/um usable band. N1647pins84%.",
+    "clock_entry": "Regional spine root ck TT42.1/FF38.0ps spread, insertion590.2/484.6ps guidance. GRT0/M2max21.25%; placement setup-136.6ps/hold+34.6ps diagnostic, route decides.",
+    "shape": "345.6x561.6um aspect1.625, port-compatible taller fallback with +86.4um die slot."
+  }
+}

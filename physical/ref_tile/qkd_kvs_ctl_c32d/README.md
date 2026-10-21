@@ -18,3 +18,7 @@ Structural fixes (no squeeze, no retry):
 6 Floorplan: macros on the 43.2 lattice (shifted +43.2 um in Y); W/E 2652 pins over ~449 um usable = 5.9/um (was 7.0/um).
 7 Clock: spine as c32b (TT/FF pin-flop spread 49/50 ps measured there); io_hold_margin 0.03.
 8 Schedule: static; +1 in / +1 out pin edges handed to the die calendar (LEAD-KV / KV-CAL).
+
+## CODEX terminal gate / coordinator review
+
+10-21 c32d WARN0fail, native census max32 PASS; trial GRT0, M2max21.25%. TT diagnostic setup-136.6ps/hold+34.6ps; clock TT42.1/FF38.0ps pin-flop spread. Six macros on43.2um lattice, broad channels/continuous rows, full-face legal pins; fill11% is pin-bound. Inputs+outputs retain +1/+1 edges already handed KV-CAL; taller slot+86.4um to die. Coordinator personally reviewed exact PNGs and APPROVED64645a5c...; no clock/behavior waiver. Current committed7PASS/3mutant fail witnesses kv_ctl12_1021 now named in job; prior source witnesses preserved. Route timing decides.
