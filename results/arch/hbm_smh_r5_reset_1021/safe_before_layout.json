@@ -1,0 +1,122 @@
+{
+  "state": "SOURCE_PREPARATION_ONLY_NO_LAYOUT_ADMISSION",
+  "source_hardware_commit": "0f1f5dff8",
+  "scope": "SMHr5 D4 K2 chunk24 same-edge local writer reset copies plus north scalar forest leaf partition. Old native120, later45/39 failures retained. No common primitive/policy modifications.",
+  "checklist": {
+    "1_pins": "Existing LP/pin flops/actual clock/reset contracts unchanged; fresh native/gate still mandatory",
+    "2_reach": "Existing reset region depth3 and<=405 staged geometry retained; added same-age local leaves require actual placed reach/SAFE check",
+    "3_fanout": "South actual32PASS; North fresh actualnative pending for scalar repair; no waiver",
+    "4_logic_depth": "Reset write guard identical2input logicalcondition; data paths unchanged",
+    "5_storage": "Same D4/E2 local ring, W24 chunks; unchanged epoch/valid/unwritten-slot semantics",
+    "6_geometry": "No outline/childplacement changes; actual new reset FFs must be evaluated by placement and viewed PNGs",
+    "7_clock": "Same actual existing3/2 roots andhardchildrefs; no regional relabel; strictactual80TT/FF and parent/dieSTA still required",
+    "8_schedule": "Zero new data/reset edges; existing r518MAIN/15FB hop calendar retained. Full R5/LP qualification stillpending; oldMUT4miss notwaived."
+  },
+  "forms": {
+    "n_m": {
+      "baseline_reset_depth": 3,
+      "baseline_root_D_loads": 17,
+      "repaired_root_D_loads": 17,
+      "regions": {
+        "c": {
+          "baseline_leaves": 144,
+          "repaired_leaves": 144,
+          "parallel_scalar_leaf_copies_added": 0
+        },
+        "x": {
+          "baseline_leaves": 201,
+          "repaired_leaves": 201,
+          "parallel_scalar_leaf_copies_added": 0
+        },
+        "m": {
+          "baseline_leaves": 132,
+          "repaired_leaves": 140,
+          "parallel_scalar_leaf_copies_added": 8
+        }
+      },
+      "landings": 23,
+      "output_offsets_unchanged": {
+        "rout_n": 0,
+        "bout": 0,
+        "xo_b": 0,
+        "xo_g0": 0,
+        "xo_gp": 0
+      }
+    },
+    "n_f": {
+      "baseline_reset_depth": 3,
+      "baseline_root_D_loads": 14,
+      "repaired_root_D_loads": 14,
+      "regions": {
+        "c": {
+          "baseline_leaves": 200,
+          "repaired_leaves": 212,
+          "parallel_scalar_leaf_copies_added": 12
+        },
+        "x": {
+          "baseline_leaves": 200,
+          "repaired_leaves": 200,
+          "parallel_scalar_leaf_copies_added": 0
+        }
+      },
+      "landings": 8,
+      "output_offsets_unchanged": {
+        "rout_n": 0,
+        "bout": 0,
+        "xo_b": 0,
+        "xo_g0": 0,
+        "xo_gp": 0
+      }
+    },
+    "s_m": {
+      "baseline_reset_depth": 3,
+      "baseline_root_D_loads": 11,
+      "repaired_root_D_loads": 11,
+      "regions": {
+        "c": {
+          "baseline_leaves": 148,
+          "repaired_leaves": 148,
+          "parallel_scalar_leaf_copies_added": 0
+        },
+        "x": {
+          "baseline_leaves": 118,
+          "repaired_leaves": 118,
+          "parallel_scalar_leaf_copies_added": 0
+        },
+        "m": {
+          "baseline_leaves": 51,
+          "repaired_leaves": 51,
+          "parallel_scalar_leaf_copies_added": 0
+        }
+      },
+      "landings": 25,
+      "output_offsets_unchanged": {
+        "rout_s": 0,
+        "gout": 0
+      }
+    },
+    "s_f": {
+      "baseline_reset_depth": 3,
+      "baseline_root_D_loads": 8,
+      "repaired_root_D_loads": 8,
+      "regions": {
+        "c": {
+          "baseline_leaves": 118,
+          "repaired_leaves": 118,
+          "parallel_scalar_leaf_copies_added": 0
+        },
+        "x": {
+          "baseline_leaves": 118,
+          "repaired_leaves": 118,
+          "parallel_scalar_leaf_copies_added": 0
+        }
+      },
+      "landings": 9,
+      "output_offsets_unchanged": {
+        "rout_s": 0,
+        "gout": 0
+      }
+    }
+  },
+  "next": "Collect raw canonical native; existingR5 and4LP positive+causal mutants. Only then bounded necessarylayout with exactsource SAFE/gatepacket; root criticalgeometry approval before REVIEW/submission."
+}
