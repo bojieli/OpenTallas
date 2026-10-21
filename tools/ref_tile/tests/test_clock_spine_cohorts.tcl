@@ -11,7 +11,7 @@ proc dispatch {obj method args} {
 }
 proc fixture {} {
  set ::objects [dict create]
- object master [dict create isBlock 0]
+ object master [dict create isBlock 0 getName DFFASRHQNx1_ASAP7_75t_R]
  object clkpin [dict create getName CLK]
  object qpin [dict create getName QN]
  object resetpin [dict create getName RESETN]
@@ -52,4 +52,17 @@ expect overlap "overlapping member" {lappend ::ot_sp_cohorts [dict create name o
 expect duplicate_receiver "overlapping receiver" {set ::ot_sp_cohorts [list [dict create name local source src receivers {dst dst}]];ot_sp_cohort_bins blk clknet 1 16}
 expect undeclared_receiver "undeclared immediate" {object extra [dict create getName extra];object er [dict create getIoType INPUT getMTerm resetpin getInst extra];dict set ::objects reset getITerms {sq dr er};ot_sp_cohort_bins blk clknet 1 16}
 expect source_fanout "32 dynamic loads" {object data [dict create getIoType INPUT getMTerm datap getInst dst];dict set ::objects reset getITerms [concat {sq dr} [lrepeat 32 data]];ot_sp_cohort_bins blk clknet 1 16}
-puts "PASS cohort guard cases=17; physical/clock paired signoff remains integration-owned"
+expect unknown_master "unsupported sequential" {dict set ::objects master getName UNKNOWN;ot_sp_cohort_bins blk clknet 1 16}
+expect data_as_clock "data clock input" {dict set ::objects sc getMTerm datap;ot_sp_cohort_bins blk clknet 1 16}
+expect wrong_source_output "supported source QN" {dict set ::objects sq getMTerm datap;ot_sp_cohort_bins blk clknet 1 16}
+expect grouping PASS {
+ set original [dict create b0 {{sc 0 0} {other 10 10}} b1 {{dc 100 100}} b2 {{untouched 200 200}}]
+ if {[ot_sp_cohort_merge_bins $original {}] ne $original} {error "default bin bytes changed"}
+ set c [ot_sp_cohort_bins blk clknet 1 16]
+ set b [ot_sp_cohort_merge_bins $original $c]
+ if {[dict get $b b0] ne {{other 10 10}} || [dict get $b b2] ne [dict get $original b2]} {error "undeclared bins changed"}
+ if {[dict exists $b b1] || [dict get $b C:local] ne [dict get $c C:local]} {error "not atomic/exactly once"}
+}
+expect duplicate_spatial_sink "appears 2 times" {ot_sp_cohort_merge_bins [dict create b {{sc 0 0} {sc 0 0} {dc 100 100}}] [ot_sp_cohort_bins blk clknet 1 16]}
+expect missing_spatial_sink "appears 0 times" {ot_sp_cohort_merge_bins [dict create b {{sc 0 0}}] [ot_sp_cohort_bins blk clknet 1 16]}
+puts "PASS cohort cases=23; physical/clock paired signoff remains integration-owned"
