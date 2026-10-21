@@ -169,8 +169,8 @@
    "physical_change": "Cohort candidate reassigns exact PC0 hrbank.q0 CLK within existing positiveckh source; no D/reset/port/FF/root count change; nominal runtime edge delta0 vs original configured kit, timing pending",
    "native": "Both new candidate gates actualPASSmax32/zero viol/roles at14:17; physical not CLOSED",
    "original_MAIN": "NEEDS_RTL3RESETNremovals FF\u221213.28",
-   "original_FB": "postrouteECO live; preECO FF\u221234.49 I2R/SRAMdata class, noRESETNviolations",
-   "physical_status": "OriginalFBformalCLOSED+exportbbc9; rootintegrationpublishingrecord only; MAIN29fcohortactualCTS auditoneCLK3\u21927PASS andtimingmeasurementslive. FailedzerochangeFB successor preserved/inapplicable.",
+   "original_FB": "FormalCLOSED14:59:05 source22595/recordbbc9, TT+67.84/FF+7.64/DRC0; exactconfiguredview sourcebound for16, no wholeG9claim",
+   "physical_status": "OriginalFBfirstCLOSED selected. MAIN29f cohort actualCTS oneCLK3->7 auditPASS, GRT live15:28 holdrepair1300iter/1106buffers/slack-47.345; no terminal. FailedzerochangeFB successor preserved/inapplicable.",
    "first_closed_record": "bbc9c9b13",
    "first_closed_source": "22595e8993ac83c9293f59ffb5fe6b4d7914589c",
    "first_closed_view": "physical/ref_tile/s81ctrl_rg3s/views/dsfd_ctrl_rg3",
@@ -196,9 +196,10 @@
    ],
    "added_mm2_each": 1.2690432,
    "added_mm2_12": 15.2285184,
-   "scope": "NEW_UNBOUND_FIT_OPEN source/model only; not launched, not selected",
-   "physical_hold": "Requires actual33x26 packing preserving72frames; no cumulative8column assumption. FRAME95+aa helper pair must publish before gate perowner",
-   "packing_observed": "Actual fixed-coordinate substitution creates14overlap pairs and rightseal overrun345.6um; area+15.2285184mm2 alone does not establish fit. Required constructive independentpacking search live; no source/view adoption."
+   "scope": "SOURCE_MODEL_BODY_PACKED; new physical master remains UNBOUND/not selected",
+   "physical_hold": "Legal33x26 body-model candidate preserves72frames and all163 bodies; actual whole-view pins/relay-body legalization/clocks/GEN/physical qualification remain OPEN; source master itself not launched",
+   "packing_observed": "Original fixed-coordinate substitution14overlaps/rightseal345.6um. Independent constructive candidate PASS163 bodies/72frames/12wide/100seal/86.4minsep. R3 same-outline assignments route819/819nominal links,28977stationcenters,max349.985um; not physical relay-body packing or calendar qualification.",
+   "packing_receipt": "results/arch/s81_h10wide_pack_1340_1021/r3/geometry_certificate.json"
   },
   "qf": {
    "master": "dsdv_idx_qf",
@@ -218,7 +219,7 @@
     "RH": 2
    },
    "delta": "One same-edge controlFF, no extra edge; ordinaryrg3 unchanged",
-   "qualification": "Existing8reader7case proof live before native; prior52b97 failed1root/max33; no CLOSED"
+   "qualification": "Owner15:19 actual MAIN+FB nativePASS81005roots/max32/zero violations/roles, receiptcf046a655; existing8reader7case proofdb28b4264. Physicalgateslive ep5, no CLOSED."
   },
   "vmtx": {
    "source_candidate": "519b78855",
@@ -268,5 +269,6 @@
   "source_hashes": "coll_config/MODEL.json exact10CLOSEDWsource+actualmem151 API",
   "actual_G8_original_argv": "coll_config/original_g8_argv.json DSFD_PQ_STATIC_X2only; no equivalenceclaim",
   "runtime": "NOTRUN; originalaggregatecompilefailurepreserved, no retryuntilsource/configclosure review"
- }
+ },
+ "combined_source_overlay_smoke": "combined_source_overlay_smoke.json source48f8 exactCLI PASS copiedactualG8 inputs; no RTL/aggregate/GEN/runtime"
 }
