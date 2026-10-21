@@ -16,6 +16,7 @@ def main():
     p.add_argument('--local-cone',type=Path,required=True)
     p.add_argument('--inventory',type=Path,required=True)
     p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--configured-receipt',type=Path,help='Pin selected191source6define profile without compiling')
     a=p.parse_args();a.out.mkdir(parents=True,exist_ok=False)
     P=json.loads((a.local_cone/'cut/slice_ports.json').read_text())['ports']
     inv=json.loads(a.inventory.read_text());frames=[n for n in inv['selected_instances'] if n.startswith('u_f_')]
@@ -116,11 +117,20 @@ def main():
         v += [f'always@(posedge {cap}.{clk})if(rst_n)begin',
               f'for(integer p=0;p<{n};p=p+1)if({cap}.cw_{face}_v[p])begin ncap++;',
               f'$display("AGG_CAP t=%0.3f face={face.upper()} port=%0d address=%0d data=%08h",$realtime,p,{cap}.cw_{face}_a[12*p+:12],{cap}.cw_{face}_d[32*p+:32]);end end']
+    # Capture real leaf interfaces separately from CAP output. These are
+    # observable pins; they confer no SRAM commit/lifetime proof by themselves.
+    for leaf in range(5):
+        vp=s+f'.u_lf{leaf}.u_vp'
+        v += [f'always@(posedge {vp}.clk)if(rst_n)begin',
+          f'for(integer p=0;p<2;p=p+1)if({vp}.cw_v[p])$display("AGG_VP_CAP_PIN t=%0.3f leaf={leaf} port=%0d address=%0d data=%08h",$realtime,p,{vp}.cw_a[12*p+:12],{vp}.cw_d[32*p+:32]);',
+          f'for(integer b=0;b<2;b=b+1)if({vp}.wv[b])$display("AGG_VP_MACRO_WRITE_PIN t=%0.3f leaf={leaf} bank=%0d bankrow=%0d mask=%032h data=%032h",$realtime,b,{vp}.wa[b],{vp}.wm[b],{vp}.wd[b]);end']
     v+=['endmodule']
     path=a.out/'tb_s0N_aggregate.sv';path.write_text('\n'.join(v)+'\n')
     (a.out/'bench.json').write_text(json.dumps(dict(schema='opentallas.s81.aggregate_bench_source.v1',
         bench_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),frames=frames,
         named_root_clocks={source:dict(signal=signal,period_ns=1,phase_ns=0) for source,signal in roots.items()},
+        configured_receipt_sha256=hashlib.sha256(a.configured_receipt.read_bytes()).hexdigest() if a.configured_receipt else None,
+        SRAM_commit_or_residency_qualified=False,actual_G9_clock_cone_bound=False,
         physical_phase_qualified=False,global_epoch_bound=False,local_pin='u_s_0N.ri_e',
         required_checks=['80 raw XQ acceptance','6 CTL','80 distinct gather/data matches','80 actual table writes/no drops',
             'actual macro write trace','one window, five is_v, one cfg_v','each six actual frame cfg/go/12returns',
