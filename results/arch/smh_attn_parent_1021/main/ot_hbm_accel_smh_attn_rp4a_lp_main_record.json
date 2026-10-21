@@ -4107,14 +4107,14 @@
  "reset": {
   "port": "rst_n",
   "root_region": "f",
-  "depth": 15,
+  "depth": 16,
   "hops": {
    "f": 0,
    "fr": 8,
    "t00n": 14,
    "t00s": 11,
    "t01n": 10,
-   "t01s": 14,
+   "t01s": 15,
    "t10n": 12,
    "t10s": 9,
    "t11n": 8,
@@ -4123,7 +4123,7 @@
    "t20s": 7,
    "t21n": 6,
    "t21s": 11,
-   "t30n": 8,
+   "t30n": 9,
    "t30s": 5,
    "t31n": 4,
    "t31s": 9,
@@ -4142,7 +4142,7 @@
    "t70n": 14,
    "t70s": 11,
    "t71n": 10,
-   "t71s": 14
+   "t71s": 15
   },
   "regional_reset_copies": {
    "f": {
@@ -5606,7 +5606,7 @@
  "flops": {
   "landing": 572672,
   "pads": 73896,
-  "reset": 1517
+  "reset": 1551
  },
  "communicating_region_pairs": {
   "landed": [
@@ -5783,7 +5783,7 @@
    "fault": 33,
    "schedule_fault": 0
   },
-  "reset_release_added_edges": 15,
+  "reset_release_added_edges": 16,
   "status_flag_lag_edges": {},
   "schedule": "offsets",
   "ref_params": null,

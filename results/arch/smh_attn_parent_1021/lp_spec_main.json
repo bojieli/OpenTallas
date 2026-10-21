@@ -1,7 +1,7 @@
 {
  "top": "ot_hbm_accel_smh_attn_rp4a",
  "top_lp": "ot_hbm_accel_smh_attn_rp4a_lp_main",
- "why": "HBM-DIEGAP/SMHPARENT 10-21 (H.STA.BLK.14): smh_attn x16 parent with the rp4a hardened halves, form MAIN (per-half regions, n->s crossing LANDED). Halves r3a (691.2 wide); SM outline estimate 7257.6 x 6004.8 um.",
+ "why": "HBM-DIEGAP/SMHPARENT 10-21 (H.STA.BLK.14): smh_attn x16 parent with the rp4a hardened halves, form MAIN (per-half regions, n->s crossing LANDED). Halves r3a (691.2 wide); SM outline estimate 7257.6 x 6177.6 um.",
  "sources": [
   "rtl/hbm_accel/sm/attn/flat/ot_hbm_accel_smh_attn_rp4a.sv"
  ],
@@ -150,7 +150,7 @@
    ],
    "centre": [
     3628.8,
-    3002.4
+    3088.8
    ],
    "why": "front launch (rows / beat for both row pairs of columns 3 / 4, request) + be_cmd glue: front column mid-height"
   },
@@ -172,7 +172,7 @@
    ],
    "centre": [
     388.8,
-    5248.8
+    5421.6
    ],
    "why": "rp4a n half column 0 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -183,7 +183,7 @@
    ],
    "centre": [
     388.8,
-    3866.4
+    3952.8
    ],
    "why": "rp4a s half column 0 row pair 0 (691.2 x 1252.8)"
   },
@@ -194,7 +194,7 @@
    ],
    "centre": [
     388.8,
-    2397.6
+    2484.0
    ],
    "why": "rp4a n half column 0 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -218,7 +218,7 @@
    ],
    "centre": [
     1166.4,
-    5248.8
+    5421.6
    ],
    "why": "rp4a n half column 1 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -229,7 +229,7 @@
    ],
    "centre": [
     1166.4,
-    3866.4
+    3952.8
    ],
    "why": "rp4a s half column 1 row pair 0 (691.2 x 1252.8)"
   },
@@ -240,7 +240,7 @@
    ],
    "centre": [
     1166.4,
-    2397.6
+    2484.0
    ],
    "why": "rp4a n half column 1 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -264,7 +264,7 @@
    ],
    "centre": [
     1944.0,
-    5248.8
+    5421.6
    ],
    "why": "rp4a n half column 2 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -275,7 +275,7 @@
    ],
    "centre": [
     1944.0,
-    3866.4
+    3952.8
    ],
    "why": "rp4a s half column 2 row pair 0 (691.2 x 1252.8)"
   },
@@ -286,7 +286,7 @@
    ],
    "centre": [
     1944.0,
-    2397.6
+    2484.0
    ],
    "why": "rp4a n half column 2 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -310,7 +310,7 @@
    ],
    "centre": [
     2721.6,
-    5248.8
+    5421.6
    ],
    "why": "rp4a n half column 3 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -321,7 +321,7 @@
    ],
    "centre": [
     2721.6,
-    3866.4
+    3952.8
    ],
    "why": "rp4a s half column 3 row pair 0 (691.2 x 1252.8)"
   },
@@ -332,7 +332,7 @@
    ],
    "centre": [
     2721.6,
-    2397.6
+    2484.0
    ],
    "why": "rp4a n half column 3 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -356,7 +356,7 @@
    ],
    "centre": [
     4536.0,
-    5248.8
+    5421.6
    ],
    "why": "rp4a n half column 4 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -367,7 +367,7 @@
    ],
    "centre": [
     4536.0,
-    3866.4
+    3952.8
    ],
    "why": "rp4a s half column 4 row pair 0 (691.2 x 1252.8)"
   },
@@ -378,7 +378,7 @@
    ],
    "centre": [
     4536.0,
-    2397.6
+    2484.0
    ],
    "why": "rp4a n half column 4 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -402,7 +402,7 @@
    ],
    "centre": [
     5313.6,
-    5248.8
+    5421.6
    ],
    "why": "rp4a n half column 5 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -413,7 +413,7 @@
    ],
    "centre": [
     5313.6,
-    3866.4
+    3952.8
    ],
    "why": "rp4a s half column 5 row pair 0 (691.2 x 1252.8)"
   },
@@ -424,7 +424,7 @@
    ],
    "centre": [
     5313.6,
-    2397.6
+    2484.0
    ],
    "why": "rp4a n half column 5 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -448,7 +448,7 @@
    ],
    "centre": [
     6091.2,
-    5248.8
+    5421.6
    ],
    "why": "rp4a n half column 6 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -459,7 +459,7 @@
    ],
    "centre": [
     6091.2,
-    3866.4
+    3952.8
    ],
    "why": "rp4a s half column 6 row pair 0 (691.2 x 1252.8)"
   },
@@ -470,7 +470,7 @@
    ],
    "centre": [
     6091.2,
-    2397.6
+    2484.0
    ],
    "why": "rp4a n half column 6 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -494,7 +494,7 @@
    ],
    "centre": [
     6868.8,
-    5248.8
+    5421.6
    ],
    "why": "rp4a n half column 7 row pair 0 (691.2 x 1512.0); its S-face crossing is landed"
   },
@@ -505,7 +505,7 @@
    ],
    "centre": [
     6868.8,
-    3866.4
+    3952.8
    ],
    "why": "rp4a s half column 7 row pair 0 (691.2 x 1252.8)"
   },
@@ -516,7 +516,7 @@
    ],
    "centre": [
     6868.8,
-    2397.6
+    2484.0
    ],
    "why": "rp4a n half column 7 row pair 1 (691.2 x 1512.0); its S-face crossing is landed"
   },

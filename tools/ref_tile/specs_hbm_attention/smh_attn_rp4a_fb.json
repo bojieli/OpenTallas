@@ -1,0 +1,996 @@
+{
+ "name": "smh_attn_rp4a_fb",
+ "top": "ot_hbm_accel_smh_attn_rp4a_lp_fb",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/sm/attn/flat/lp_rp4a_fb/ot_hbm_accel_smh_attn_rp4a_lp_fb.sv",
+  "rtl/hbm_accel/sm/attn/flat/ot_hbm_accel_smh_attn_rp4a.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv",
+  "rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_static_front.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_line.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_native_col.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_pstore.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_kv_desc_static.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_leafh.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_tile.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv",
+  "rtl/lib/ot_hdly.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.v",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
+  "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv",
+  "rtl/hbm_accel/sm/repack/h2/ot_hbm_smh_rp4h.sv",
+  "rtl/hbm_accel/sm/repack/h2a/ot_hbm_smh_rp4ah.sv",
+  "rtl/hbm_accel/sm/attn/flat/ot_hbm_sm_attn_front_split.sv"
+ ],
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_f",
+ "clock_ports": [
+  "ck_f",
+  "ck_fr",
+  "ck_t00",
+  "ck_t01",
+  "ck_t10",
+  "ck_t11",
+  "ck_t20",
+  "ck_t21",
+  "ck_t30",
+  "ck_t31",
+  "ck_t40",
+  "ck_t41",
+  "ck_t50",
+  "ck_t51",
+  "ck_t60",
+  "ck_t61",
+  "ck_t70",
+  "ck_t71"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_f"
+   ],
+   "inputs": [
+    "command",
+    "kv_desc",
+    "packet",
+    "xw_en",
+    "xw_addr",
+    "xw_grp",
+    "xw_data",
+    "rst_n"
+   ],
+   "outputs": [
+    "request",
+    "schedule_fault"
+   ]
+  },
+  "fr": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_fr"
+   ],
+   "inputs": [],
+   "outputs": [
+    "rv",
+    "rrow",
+    "rdata",
+    "fault"
+   ]
+  },
+  "t00": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t00"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t01": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t01"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t10": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t10"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t11": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t11"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t20": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t20"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t21": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t21"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t30": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t30"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t31": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t31"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t40": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t40"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t41": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t41"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t50": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t50"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t51": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t51"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t60": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t60"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t61": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t61"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t70": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t70"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "t71": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t71"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/arch/smh_attn_parent_1021/fb/ot_hbm_accel_smh_attn_rp4a_lp_fb_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 7603.2,
+  "h": 6004.8,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t00_n",
+   "at": [
+    43.2,
+    4492.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t00_s",
+   "at": [
+    43.2,
+    3240.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t01_n",
+   "at": [
+    43.2,
+    1641.6
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t01_s",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t10_n",
+   "at": [
+    864.0,
+    4492.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t10_s",
+   "at": [
+    864.0,
+    3240.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t11_n",
+   "at": [
+    864.0,
+    1641.6
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t11_s",
+   "at": [
+    864.0,
+    388.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t20_n",
+   "at": [
+    1684.8,
+    4492.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t20_s",
+   "at": [
+    1684.8,
+    3240.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t21_n",
+   "at": [
+    1684.8,
+    1641.6
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t21_s",
+   "at": [
+    1684.8,
+    388.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t30_n",
+   "at": [
+    2505.6,
+    4492.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t30_s",
+   "at": [
+    2505.6,
+    3240.0
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t31_n",
+   "at": [
+    2505.6,
+    1641.6
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t31_s",
+   "at": [
+    2505.6,
+    388.8
+   ],
+   "orient": "MY"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t40_n",
+   "at": [
+    4363.2,
+    4492.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t40_s",
+   "at": [
+    4363.2,
+    3240.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t41_n",
+   "at": [
+    4363.2,
+    1641.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t41_s",
+   "at": [
+    4363.2,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t50_n",
+   "at": [
+    5184.0,
+    4492.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t50_s",
+   "at": [
+    5184.0,
+    3240.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t51_n",
+   "at": [
+    5184.0,
+    1641.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t51_s",
+   "at": [
+    5184.0,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t60_n",
+   "at": [
+    6004.8,
+    4492.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t60_s",
+   "at": [
+    6004.8,
+    3240.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t61_n",
+   "at": [
+    6004.8,
+    1641.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t61_s",
+   "at": [
+    6004.8,
+    388.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t70_n",
+   "at": [
+    6825.6,
+    4492.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t70_s",
+   "at": [
+    6825.6,
+    3240.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n",
+   "count": 1,
+   "inst": "u_t71_n",
+   "at": [
+    6825.6,
+    1641.6
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s",
+   "count": 1,
+   "inst": "u_t71_s",
+   "at": [
+    6825.6,
+    388.8
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [],
+ "inter": [],
+ "pins": {
+  "N": [
+   "command",
+   "kv_desc",
+   "packet",
+   "xw_en",
+   "xw_addr",
+   "xw_grp",
+   "xw_data",
+   "request",
+   "schedule_fault",
+   "rst_n",
+   "ck_f",
+   "ck_t00",
+   "ck_t10",
+   "ck_t20",
+   "ck_t30",
+   "ck_t40",
+   "ck_t50",
+   "ck_t60",
+   "ck_t70"
+  ],
+  "S": [
+   "rv",
+   "rrow",
+   "rdata",
+   "fault",
+   "ck_fr",
+   "ck_t01",
+   "ck_t11",
+   "ck_t21",
+   "ck_t31",
+   "ck_t41",
+   "ck_t51",
+   "ck_t61",
+   "ck_t71"
+  ]
+ },
+ "pin_ranges": {
+  "command": [
+   2419.2,
+   5184.0
+  ],
+  "kv_desc": [
+   2419.2,
+   5184.0
+  ],
+  "packet": [
+   2419.2,
+   5184.0
+  ],
+  "xw_en": [
+   2419.2,
+   5184.0
+  ],
+  "xw_addr": [
+   2419.2,
+   5184.0
+  ],
+  "xw_grp": [
+   2419.2,
+   5184.0
+  ],
+  "xw_data": [
+   2419.2,
+   5184.0
+  ],
+  "request": [
+   2419.2,
+   5184.0
+  ],
+  "schedule_fault": [
+   2419.2,
+   5184.0
+  ],
+  "rst_n": [
+   2419.2,
+   5184.0
+  ],
+  "rv": [
+   2419.2,
+   5184.0
+  ],
+  "rrow": [
+   2419.2,
+   5184.0
+  ],
+  "rdata": [
+   2419.2,
+   5184.0
+  ],
+  "fault": [
+   2419.2,
+   5184.0
+  ],
+  "ck_f": [
+   3799.44,
+   3803.76
+  ],
+  "ck_fr": [
+   3799.44,
+   3803.76
+  ],
+  "ck_t00": [
+   408.24,
+   412.56
+  ],
+  "ck_t01": [
+   408.24,
+   412.56
+  ],
+  "ck_t10": [
+   1229.04,
+   1233.36
+  ],
+  "ck_t11": [
+   1229.04,
+   1233.36
+  ],
+  "ck_t20": [
+   2049.84,
+   2054.16
+  ],
+  "ck_t21": [
+   2049.84,
+   2054.16
+  ],
+  "ck_t30": [
+   2870.64,
+   2874.96
+  ],
+  "ck_t31": [
+   2870.64,
+   2874.96
+  ],
+  "ck_t40": [
+   4728.24,
+   4732.56
+  ],
+  "ck_t41": [
+   4728.24,
+   4732.56
+  ],
+  "ck_t50": [
+   5549.04,
+   5553.36
+  ],
+  "ck_t51": [
+   5549.04,
+   5553.36
+  ],
+  "ck_t60": [
+   6369.84,
+   6374.16
+  ],
+  "ck_t61": [
+   6369.84,
+   6374.16
+  ],
+  "ck_t70": [
+   7190.64,
+   7194.96
+  ],
+  "ck_t71": [
+   7190.64,
+   7194.96
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 32,
+  "peak_ram_gb": 512,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "every parent input lands in the front's own pin stages (feed / fc_* pin registers) and every output leaves u_fr registers; region crossings are lp landings; a kit flop stage would add an unpriced edge to the landed record"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp RTL lands rst_n in the reset region f (u_lpr root + per-region kept copies, depth 14, regional_reset_copies <= 32 loads), priced in the landed record"
+ },
+ "child_clock_ref": "boundary",
+ "keep_pin_regs": true,
+ "safe_design_checklist": {
+  "1_pins": "PASS: every half pin is registered in the halves' RTL (pinrow / pinbeat / straps / u_lands / u_xgi / u_xpi in, row_e / beat_e / u_xbo / u_xgo / u_xpo / u_gs out); every cross-region parent net is an lp landing (ring beside the source root, read beside the reader); parent inputs land in the front's own pin stages; parent pins over the front column (2765 um of N face for ~3,480 input bits: ~1.3 pins/um).",
+  "2_reach": "PASS by construction: landed ring -> read hops are E=2 multicycle (<= one column pitch 820.8 um or one n/s channel); intra-region soft paths sit beside one half face; reset runs hop <= 405 um (lp reach_um default, depth 14).  Front column -> column 3/4 rows ~0.6 mm = landed.",
+  "3_fanout": "lp landing_writer n32 + landing_chunk_bits 24 (kept per-chunk selectors) + regional_reset_copies (<= 32 loads per kept reset copy); wide buses sliced <= 720 b per landed net; pre-gate native census decides (front / BE soft logic census = the die smh_attn SYNTH census, unchanged RTL).",
+  "4_depth": "PASS: landing read = registered slot mux; halves and BE unchanged; no combinational in -> out.",
+  "5_storage": "PASS: ring banks are D=4 fixed-latency slots; SRAMs inside the halves (x store, PV merge) and the front (pstore / kv_line, as the die smh_attn).",
+  "6_floorplan": "outline 7603.2 x 6004.8 (ENLARGED vs the die slot 1939.68 x 6955.2: 16 rp4a tiles cannot fit it), 32 halves on the 43.2 lattice, 86.4 channels between columns, macro fill 71% (+ soft front / BE / landings); aspect 1.27.",
+  "7_clock": "18 regional roots (one per tile + front launch + front result); every region crossing landed (lp audit PASS); hard-child clock references from views/<half>/insertion.json; FALLBACK: the n->s crossing stays a direct reg->reg inside one region; the region root balances both halves' clk pins.",
+  "8_schedule": "static; rp4a vs soft tile: BE lanes +20 (p1 own lanes padded +10), BE_DELAY 8 -> 28, HOPD 5; landed results +27 edges on top (record compiler block), reset release +14; inputs offset 0.  PRICED -> NOTICE HBM-DIE15."
+ },
+ "slot_change_request": "HBM-DIE15 sm_SW0-7 / sm_NW0-7 (ot_hbm_accel_smh_attn x16): OUTLINE 7603.2 x 6004.8 um (was 1939.68 x 6955.2); PORT CHANGE: clk -> 18 region clocks ck_f, ck_fr, ck_t00, ... (die drops one clock per region, neighbour-relative; landings need no phase alignment); ports otherwise identical (command 192, kv_desc 64, packet 1099, xw_*, request 43, rv/rrow/rdata/fault/schedule_fault); results +47 edges vs the soft smh_attn, reset release +14; ENABLE_INT8 g_int8 glue NOT yet in this parent (die binds ENABLE_INT8 1: add the hard smh_int8_t1 tile before u_fl in the next generator rev).",
+ "landed": {
+  "record": "results/arch/smh_attn_parent_1021/fb/ot_hbm_accel_smh_attn_rp4a_lp_fb_record.json",
+  "landings": 136,
+  "landing_flops": 363232,
+  "reset_depth": 14,
+  "lp_spec": "results/arch/smh_attn_parent_1021/lp_spec_fb.json"
+ },
+ "synthesis_hard_instances": [
+  "u_t00_n",
+  "u_t00_s",
+  "u_t01_n",
+  "u_t01_s",
+  "u_t10_n",
+  "u_t10_s",
+  "u_t11_n",
+  "u_t11_s",
+  "u_t20_n",
+  "u_t20_s",
+  "u_t21_n",
+  "u_t21_s",
+  "u_t30_n",
+  "u_t30_s",
+  "u_t31_n",
+  "u_t31_s",
+  "u_t40_n",
+  "u_t40_s",
+  "u_t41_n",
+  "u_t41_s",
+  "u_t50_n",
+  "u_t50_s",
+  "u_t51_n",
+  "u_t51_s",
+  "u_t60_n",
+  "u_t60_s",
+  "u_t61_n",
+  "u_t61_s",
+  "u_t70_n",
+  "u_t70_s",
+  "u_t71_n",
+  "u_t71_s"
+ ],
+ "views_status": "PENDING: halves views physical/ref_tile/smh_rp4ahn_r3b/views/ot_hbm_smh_rp4ah_n / physical/ref_tile/smh_rp4ahs_r3b/views/ot_hbm_smh_rp4ah_s (r3 gates by SAFE-HBM); front / BE soft",
+ "job": {
+  "owner": "Claude:HBM-DIEGAP/SMHPARENT",
+  "branch": "claude/hbm-smhparent-1021",
+  "tag": "smhp_fb",
+  "purpose": "H.STA.BLK.14 smh_attn x16 parent from the rp4a halves, landed cluster form FB",
+  "views_to": "physical/ref_tile/smh_attn_rp4a_fb/views",
+  "record_to": "results/rtl/ref_tile/smh_attn_rp4a_fb",
+  "extra_paths": [
+   "tools/landed_parent",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel",
+   "rtl/lib",
+   "rtl/gpu",
+   "rtl/hdc",
+   "rtl/proto",
+   "rtl/v41rom",
+   "results/arch/smh_attn_parent_1021",
+   "physical/asap7_memory_macros",
+   "physical/hbm_accel_macros"
+  ],
+  "benches": [
+   {
+    "name": "lp_lockstep_mut0",
+    "cmd": "MUTS=0 SIM=verilator bash rtl/hbm_accel/sm/attn/flat/lp_rp4a_fb/ot_hbm_accel_smh_attn_rp4a_lp_fb_bench.sh {RUN}/bench/lp0",
+    "expect": "pass",
+    "pass_regex": "MUT 0: LP_LOCKSTEP PASS",
+    "threads": 16,
+    "peak_ram_gb": 160,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lp_lockstep_mut1",
+    "cmd": "MUTS=1 SIM=verilator bash rtl/hbm_accel/sm/attn/flat/lp_rp4a_fb/ot_hbm_accel_smh_attn_rp4a_lp_fb_bench.sh {RUN}/bench/lp1",
+    "expect": "fail",
+    "fail_regex": "MUT 1: LP_LOCKSTEP FAIL",
+    "threads": 16,
+    "peak_ram_gb": 160,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lp_lockstep_mut2",
+    "cmd": "MUTS=2 SIM=verilator bash rtl/hbm_accel/sm/attn/flat/lp_rp4a_fb/ot_hbm_accel_smh_attn_rp4a_lp_fb_bench.sh {RUN}/bench/lp2",
+    "expect": "fail",
+    "fail_regex": "MUT 2: LP_LOCKSTEP FAIL",
+    "threads": 16,
+    "peak_ram_gb": 160,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lp_lockstep_mut3",
+    "cmd": "MUTS=3 SIM=verilator bash rtl/hbm_accel/sm/attn/flat/lp_rp4a_fb/ot_hbm_accel_smh_attn_rp4a_lp_fb_bench.sh {RUN}/bench/lp3",
+    "expect": "fail",
+    "fail_regex": "MUT 3: LP_LOCKSTEP FAIL",
+    "threads": 16,
+    "peak_ram_gb": 160,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "golden_rp4a_ds640_qkpv",
+    "cmd": "python3 tools/hbm_sm_attention/sm_elem_bench.py run --shape ds640 --ops qk_sm0,pv_sm0 --rp4a 5,28 --lat '{\"out\": 80}' --work {RUN}/bench/golden --out {RUN}/bench/golden.json",
+    "expect": "pass",
+    "pass_regex": "PASS HBM_SM_ELEMENT_ATTENTION",
+    "threads": 16,
+    "peak_ram_gb": 128,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ }
+}

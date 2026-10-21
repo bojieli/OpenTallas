@@ -52,15 +52,15 @@ def defines():
     return re.findall(r'"([^"]+)"', re.search(r"^RP4A_DEF = \[(.*?)\]", t, re.S | re.M).group(1))
 
 
-def geometry(w):
-    """column centre x, row centres y (um)."""
+def geometry(w, gap=CH):
+    """column centre x, row centres y (um); gap = n/s channel (MAIN: 86.4 for the crossing landing, FB: 0 = abutted)."""
     pitch = w + CH
-    tile_h = HN + HS
+    tile_h = HN + gap + HS
     ybe = BEH / 2
     y1s = BEH + CH + HS / 2
-    y1n = BEH + CH + HS + HN / 2
+    y1n = BEH + CH + HS + gap + HN / 2
     y0s = BEH + CH + tile_h + CH + HS / 2
-    y0n = BEH + CH + tile_h + CH + HS + HN / 2
+    y0n = BEH + CH + tile_h + CH + HS + gap + HN / 2
     xs = {}
     for c in range(NC):
         k = (NL - 1 - c) if c < NL else (c - NL)             # hops from the front
@@ -69,11 +69,16 @@ def geometry(w):
         xs[c] = (x0 - CH / 2 - w / 2 - k * pitch) if left else (x0 + CH / 2 + w / 2 + k * pitch)
     xf = NL * pitch + FW / 2
     top = BEH + CH + 2 * tile_h + CH
-    return dict(x=xs, xf=xf, y={"0n": y0n, "0s": y0s, "1n": y1n, "1s": y1s, "be": ybe}, w=2 * NL * pitch + FW, h=top)
+    return dict(x=xs, xf=xf, y={"0n": y0n, "0s": y0s, "1n": y1n, "1s": y1s, "be": ybe}, w=2 * NL * pitch + FW, h=top,
+                pitch=pitch, gap=gap)
+
+
+def form_geometry(form):
+    return geometry(691.2, CH) if form == "main" else geometry(734.4, 0.0)
 
 
 def regions(form, w):
-    g = geometry(w)
+    g = form_geometry(form)
     rr = [dict(name="f", insts=["u_fl", "u_bc"], centre=[round(g["xf"], 1), round(g["h"] / 2, 1)],
                why="front launch (rows / beat for both row pairs of columns 3 / 4, request) + be_cmd glue: front column mid-height"),
           dict(name="fr", insts=["u_fr"], centre=[round(g["xf"], 1), round(g["y"]["be"], 1)],
@@ -147,7 +152,7 @@ def main():
         s = spec(form)
         p = OUT / f"lp_spec_{form}.json"
         p.write_text(json.dumps(s, indent=1) + "\n")
-        g = geometry(691.2 if form == "main" else 734.4)
+        g = form_geometry(form)
         print(f"wrote {p.relative_to(ROOT)}: {len(s['regions'])} regions, SM outline ~{g['w']:.1f} x {g['h']:.1f} um")
 
 
