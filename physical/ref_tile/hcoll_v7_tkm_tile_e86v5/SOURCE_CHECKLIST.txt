@@ -1,0 +1,36 @@
+E86 V5 source candidate; no measured physical PASS or parent adoption.
+
+Causal model: results/rtl/hbm_e86_v5_1021/model.json (30e3ffd40,
+qc reset/initialization clarification ffc8e6f69). Old same-root routed TT
+setup -30.32ps/17-stage SX compare -> GN -> gc remains a real failure.
+New implementation6c9b2dbf3 uses exact bitwise operators in live5-bit
+chunks and moves the original qc?flags:gn ternary inside kept GN hierarchy.
+No new state/edge. Default LT_GROUP0/GCFOLD0 retains old implementation.
+
+Pins: same registered tile input/output ABI; no tied functional interface.
+Reset: this leaf has functional CLR data, no asynchronous reset or initial
+qc assignment. Folded qc copies have identical pclear_w[SRC][V] D,
+ckr[rg(SRC/GP)] clock, and no reset/initial driver. Four-edge functional
+CLR boot is the existing startup contract; X/Z four-state outputs checked.
+Fanout: kept per-variant GN/p-stage/control copies retained. New kept live
+chunkLT/EQ/suffix nodes have bounded structural fanout; actual mapped native
+32 census is REQUIRED and PENDING before physical placement admission.
+Reach: unchanged302.4square five-region source; actual extracted reach
+must be measured by canonical gate, no geometric or timing waiver.
+Depth: structurally replaces kept85-bit bit-prefix compare cone and late
+feedback mux; actual timing decides, no estimated timingPASS.
+Storage: no added storage; unchanged fixed compile-index tile registers,
+no runtime heap/array translation or SRAM substitution.
+Floorplan: unchanged302.4square, continuous standard cell area, no macros;
+outline not squeezed. Actual fill/PNG/reach/clock checks still required.
+Clock: all5 real ports clk/clk_r0..3 retained samePLL/frequency/fixedphase;
+all real clock references and pairwise checks required. No root relabel.
+Schedule: PRE1/CREP1/FAN322/SEAM1 same edges; cycles_added0. Existing
+PRE1 endpoint SETTLE136 remains separate fullengine160-clock/ISA join,
+which stays OPEN and cannot be claimed by leaf source qualification.
+
+Necessary source proof: actual fleet Icarus four-state compare widths1/6/85
+and exact GN ternary; existing4000-cycle every-output lockstep plus control,
+GN and seam causals1/3/4, new comparator/fold causals5/6. Witnesses pending.
+No physical gate/submit before necessary source/native qualification;
+critical ROOT geometry review required before eventual normal submit.
