@@ -17,6 +17,8 @@ respectively the measured boundary minimum/mean/maximum for this child master.
 They are not three individual entry values. All four copies bind the complete
 envelope; parent entry-wire delay and glue CTS insertion remain to be measured.
 The raw child insertion snapshot and exact origin/main commit are retained.
+The tree top-file SHA256 matches frozen e91f9005e; this comparison does not
+qualify the full transitive source set of the new parent candidate.
 The old failed C6 parent kit supplies an ABI/reset reference, not a qualified
 phase-40 parent view or physical pin location.
 
