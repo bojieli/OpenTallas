@@ -1,0 +1,103 @@
+{
+ "schema": "opentallas.tkm_f32s1_endpoint_plan.v1",
+ "source_master": "ot_hgi_coll_tkm_m_tp192_f32s1",
+ "time_origin": "posedge actually sampling tkm_start; not CP or issuer row age",
+ "zero_del_slot_and_valid_at_other_busy_edges": true,
+ "phases_tick": {
+  "ingress_end": 24584,
+  "first": 24720,
+  "clear2": 25237,
+  "read2": 25242,
+  "second": 25896,
+  "finish": 26416
+ },
+ "phases_sample_edge": {
+  "first": 24721,
+  "clear2": 25238,
+  "read2": 25243,
+  "second": 25897,
+  "finish": 26417
+ },
+ "capture_pipeline_tap": 2,
+ "legacy_delta": {
+  "first": 32,
+  "clear2": 32,
+  "read2": 32,
+  "second": 64,
+  "finish": 64,
+  "capture_tap": 1
+ },
+ "output_write_requirement": {
+  "port": "real tkm_SW.w_v/w_addr/w_mask/w_data",
+  "ids_base": 65536,
+  "values_base": 131072,
+  "values_enabled": true,
+  "owner_window_start": 0,
+  "owner_window_end": 26417,
+  "writer_commit_delay": "required actual parent writer pipeline; not guessed"
+ },
+ "programme_qualified": false,
+ "physical_view_qualified": false,
+ "remaining_binding": [
+  "actual peer/own producer and delivery/qslots programme",
+  "map endpoint sample edges to actual issuer rows using selected source ages",
+  "real writer grants/commit delay and VM footprints",
+  "160 distinct tile entry clockrefs and actual parent delivery"
+ ],
+ "example_config": {
+  "sample_edge": 0,
+  "fields": {
+   "tkm_start": 1,
+   "tkm_cfg_n": 512,
+   "tkm_cfg_k": 2048,
+   "tkm_cfg_nout": 2048,
+   "tkm_cfg_g": 192,
+   "tkm_cfg_gbase": 0,
+   "tkm_cfg_pf": 64,
+   "tkm_cfg_obase": 65536,
+   "tkm_cfg_rbase": 131072,
+   "tkm_cfg_has_r": 1
+  },
+  "uop_payload_hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000400000000020000008001808004001000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+ },
+ "first_delivery": {
+  "sample_edge": 9,
+  "fields": {
+   "tkm_del_slot": 15
+  },
+  "uop_payload_hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "required_actual_delivery_lanes": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "producer_flit_indices": [
+   0,
+   1,
+   2,
+   3
+  ]
+ },
+ "last_delivery": {
+  "sample_edge": 24577,
+  "fields": {
+   "tkm_del_slot": 15
+  },
+  "uop_payload_hex": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "required_actual_delivery_lanes": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "producer_flit_indices": [
+   12284,
+   12285,
+   12286,
+   12287
+  ]
+ },
+ "command_count": 3073,
+ "scope": "compiler/source contract check only, no RTL execution"
+}
