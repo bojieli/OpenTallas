@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.xdie_s81_link5.record.v1",
+ "lane": "S81-LINK5 task 4 (L5-XDIE / L5B-XDIE), 2026-10-21",
+ "what": "tb_xdie_s81_2 XL5=1: stage hop on its own circuit (s_0N pair A -> next-stage s_0N pair B, ot_s81sl_lep_mu_ab AB_EN 1, 5 lane pairs / 40 lanes), TP4 calendar + stage hop, current origin/main lep (S81-FIX3 TXRP, fixed crossing 564)",
+ "branch_sha_tools": "claude/s81-link5-xdie-1021@b8f51b53a (gate_xl5.sh R jobs)",
+ "rtl_sources": "switched/SOURCES.txt, direct/SOURCES.txt (staged-root file -> git rev + sha prefix)",
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "host": "ot-epyc9:/srv/opentallas-scratch/claude/s81-link5-xdie/{stage,stage_dc}",
+ "builds": {
+  "switched_bS (MU 0 + WN mu_ab, -GXL5=1)": "671ae26eb094a0328371392dadebf66039f10693bbe77b8f36d92b55cef9721a",
+  "switched_bM (MU 2 + WN mu_ab, -GMU=2 -GXL5=1)": "03a752c2a417eb78eaeffa6e66a4b1f6437105836d9a584703012019bfd477e5",
+  "direct_bS (-GXL5=1 -GD_CH=243 -GD_ST=257)": "78d389142513841455675b2ffcbb3893faf8eb750439585240cb6dee7801adc1",
+  "direct_bM (-GMU=2 -GXL5=1 -GD_CH=243 -GD_ST=257)": "6c1943673d58e7cf2128fa6b3b83a15b6359f2effa3fd14090d6472a3043df6d"
+ },
+ "goldens": {
+  "switched goldens_r/r_x (r_xmr, r_xmd 3 users)": {"lat": {"S": 565, "N": 565, "H": 565}, "per": 1.345, "sha256_r_x": "9b7da5e68a3587cf170631702b5cce036fd665b259df5f35a43701a0835ea365", "lfix": 564},
+  "direct goldens_r/r_dc_x (r_dc_xmr, r_dc_xmd)": {"lat": {"S": 363, "N": 363, "H": 377}, "per": 1.345, "sha256_r_dc_x": "a138e581645da49d77d38d873d846b9d44e079ac4c0a4ff038c16c166e41c495", "sha256_r_dc_xmr": "7982355176c194237d8313d9794ba697d09e5f0084aa43bf8801b60b294ef6d2", "lfix": 362, "legs": "TP 251 cyc (D_CH 243), stage hop 265 cyc (D_ST 257), owner direct cabling claude/rack-1021@5a1c6dcea hop_latency.json"}
+ },
+ "verdicts": {
+  "switched/rs": {"x_min": "BENCH_PASS LFIX_PASS 564", "x_min_err": "BENCH_PASS LFIX_PASS 564"},
+  "switched/rm": {"x_su": "BENCH_PASS LFIX_PASS 564", "x_mu_real": "BENCH_PASS LFIX_PASS 564 (3840/3840 MU tags)", "x_mu_dense": "BENCH_PASS LFIX_PASS 564 (3840/3840)", "x_mu_dense_err": "BENCH_PASS LFIX_PASS 564 (3840/3840)"},
+  "direct/rds": {"x_min": "BENCH_PASS LFIX_PASS 362", "x_min_err": "BENCH_PASS LFIX_PASS 362"},
+  "direct/rdm": {"x_su": "BENCH_PASS LFIX_PASS 362", "x_mu_real": "BENCH_PASS LFIX_PASS 362 (3840/3840)", "x_mu_dense": "BENCH_PASS LFIX_PASS 362 (3840/3840)", "x_mu_dense_err": "BENCH_PASS LFIX_PASS 362 (3840/3840)"}
+ },
+ "all_runs": "12/12 PASS: mismatches 0, late 0, faults 0, link timeouts 0, live 40/40",
+ "stage_hop_E_cycles": {"switched x_min": "992..993 (321 beats/peer, L_first 564)", "direct x_min": "804 (321 beats/peer, L_first 376)"},
+ "hopE": "switched/hopE_rs_x_min.txt, direct/hopE_rds_x_min.txt (python3 hopE.py goldens_r/<g>/golden.json out_r*/x_min/run.log); 'law' column uses the pre-XL5 563-crossing constant, informational only",
+ "superseded": "first runs out_s/m/ds/dm used LAT 564/362 (G8R2 lep crossing 563): late +1, not verdicts"
+}
