@@ -1,0 +1,159 @@
+{
+  "verdict": "FAIL_CTS_CLK_W2_TT_142_2",
+  "source_commit": "e5364cf91",
+  "host": "ot-epyc5",
+  "unit": "oth-ubuntu-2977881-1792621095",
+  "remote_root": "/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_bank_e2_rw11is-20261021-151725/",
+  "keep_marker_verified": true,
+  "native": {
+    "status": "PASS",
+    "max_loads": 32,
+    "violations": 0,
+    "role_errors": 0
+  },
+  "actual_roots": {
+    "clk": {
+      "tt": {
+        "verdict": "WARN",
+        "spread_ps": 31.0,
+        "scope": "boundary",
+        "sinks": 881
+      },
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_c": {
+      "tt": {
+        "verdict": "WARN",
+        "spread_ps": 24.8,
+        "scope": "boundary",
+        "sinks": 342
+      },
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_ce": {
+      "tt": {
+        "verdict": "PASS",
+        "spread_ps": 0.6,
+        "scope": "boundary",
+        "sinks": 65
+      },
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_w0": {
+      "tt": {
+        "verdict": "PASS",
+        "spread_ps": 37.4,
+        "scope": "all_internal_only",
+        "sinks": 1035
+      },
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_w1": {
+      "tt": {
+        "verdict": "WARN",
+        "spread_ps": 17.7,
+        "scope": "all_internal_only",
+        "sinks": 1035
+      },
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_w2": {
+      "tt": {
+        "verdict": "FAIL",
+        "spread_ps": 142.2,
+        "scope": "all_internal_only",
+        "sinks": 1035
+      },
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_w3": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_x0": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_x1": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_x2": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_x3": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_d0": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_d1": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_d2": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_d3": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_h0": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_h1": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_h2": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_h3": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_e0": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_e1": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_e2": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    },
+    "clk_e3": {
+      "tt": "NOTRUN_AFTER_FIRST_TT_FAILURE",
+      "ff": "NOTRUN_AFTER_TT_FAILURE"
+    }
+  },
+  "geometry": {
+    "outline_um": [
+      734.4,
+      734.4
+    ],
+    "hard_macros": 20,
+    "fill_percent": 50.9,
+    "std_density_percent": 2.0,
+    "textbook_reach_um": 119.5,
+    "depth_ps": 166.7,
+    "pins": 5705,
+    "png_personally_viewed": true,
+    "png_scope": "floorplan_only_density_PNG_not_emitted_due_CTSfailure",
+    "old_macro_channel_warning": "7 zero-width inter-SRAM gaps retained; no new approval or waiver"
+  },
+  "hard_entry_lines": [
+    "OT_HYBRID post-CTS scoped net repair on selected roots; 20 hard entries unchanged",
+    "OT_ENTRIES done: 20 independent hard entries, 23 glue CTS roots, 20 entry wires over 60.0 um"
+  ],
+  "scope": "w1ALL1035actualTT17.7 confirms model17.686; newlyexposedw2ALL1035TT142.2fails. No FF,GRT,wholeclock qualification,REVIEW or submission. Need sourceboundremainingwriterootmodel inclALL1052w3realpins.",
+  "raw_gate_result_sha256": "d4066fdead590c5dc0974bf0a75092627009213cd5ed84024d49eceb729b3f69"
+}
