@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.smb_static_schedule_repair.v1",
+  "grade": "diagnostic fixed-schedule mechanism proof on original immutable binary",
+  "verdict": "PASS",
+  "qualifies_full_token": false,
+  "actual_params": {
+    "SMH_ENABLE_INT8": 0,
+    "SVG_ID_COHORT": 0,
+    "XSLOT": 0,
+    "OPEN_IL": 0
+  },
+  "binary_sha256": "7353a5f4160d39a8b4ac415ec0009ef9eeca27b681a90671b0663ea732946c45",
+  "unit": "ot-gold2:oth-ubuntu-2351964-1792603444",
+  "flags": {
+    "SMB_PACE_NUM": 200,
+    "SMB_HEAD_PACE_NUM": 320,
+    "SMB_PACE_DEN": 64,
+    "SMB_PACE_ADD": 4,
+    "SMB_RESMODEL": 1,
+    "SMB_FLAT": 202
+  },
+  "mechanism": "only head fixed descriptor go cadence204->324stream edges/64lines; no runtime wait/backpressure, all go slots exact",
+  "evidence": {
+    "ops": 66,
+    "ops_pass": 66,
+    "results": 301,
+    "gos": 154,
+    "go_slots_exact": true,
+    "runs": 4,
+    "fault": null,
+    "done_stream_edges": 59460,
+    "ingress": 624,
+    "x_beats": 25688,
+    "ids": 3,
+    "dram_reads": 35372
+  },
+  "price": {
+    "old_compiled_total_stream_edges": 53100,
+    "old_total_status": "failed at46800; baseline price not successful measurement",
+    "new_measured_total_stream_edges": 59460,
+    "added_stream_edges": 6360,
+    "added_us_at1p2GHz": 5.3,
+    "delta_vs_old_compiled_percent": 11.977401129943503,
+    "old_head_run_edges": 11950,
+    "new_head_run_edges": 18310,
+    "other_three_kinds": "rc_end and all operation schedules unchanged"
+  },
+  "payload_identity": {
+    "xw_sha256": "a2c37ec3c25f8c0f7f18492b2513e2aab61e8da70638696f723154b4cacc6c4d",
+    "ids_sha256": "8a93bc409807ddfc18a3b5750ca102b762bdb0fff885be7f3102337676b6efab",
+    "mem_sha256": "ebf1bc286d5396876604039a8f5284db411f8bb88fb8df19b4791049b5501b0b",
+    "policy": "all three byte-identical to original failed programme; only ingress descriptor timing changes"
+  },
+  "derivation": "observed V->block_ready1139stream +copy85+margin8=1232; fourlandingbanks*324=1296. FLAT202 includesceil1HBM1024ps/stream833ps=2 for successor field landing. Actual observed PASS is oldbinary, not successor validation.",
+  "preserved_failure": "smb_staticready.json: residency model alone/FLAT202 left P200head slots unchanged and repeated46800failure; original smb_pos.json/rawtail retained",
+  "required_followup": {
+    "state": "RUNNING same66cases on existing h9b/cohort1/SMHINT81 binary; no newbuild",
+    "binary_sha256": "16a75f353d18ad58d085b37075901ee0ef6553599a1c48e25fae1eead6d68dbe",
+    "source_scope": "oldr14 bound-path binary; identify unchanged source mechanism vsr15. SAFE_PC/SVG_H eb2816 successor remains separate."
+  }
+}

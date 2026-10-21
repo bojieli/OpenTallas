@@ -38,6 +38,9 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
+if os.environ.get("SMB_SOURCE_ROOT"):
+    ROOT = Path(os.environ["SMB_SOURCE_ROOT"]).resolve()
+    HERE = ROOT / "tools/hbm_layer_vehicle"
 sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT / "tools"))
 os.environ.setdefault("HDC_V41_ARITH", "chunk8")
@@ -60,6 +63,10 @@ LAT_GO, OFF = 7, 3
 X_GAP, OP_GAP, DRAIN = 16, 256, 1200
 FIRST_GO = int(os.environ.get('SMB_FIRST_GO', 520))             # first block of a run: HBM first access + copy (elastic boundary, calibrated by the bench)
 PACE_NUM, PACE_DEN, PACE_ADD = (int(os.environ.get(k, d)) for k, d in (('SMB_PACE_NUM', 200), ('SMB_PACE_DEN', 64), ('SMB_PACE_ADD', 4)))
+# The sustained BF16 head exposes native controller/refresh stalls that the short
+# records hide. Keep the historical default, but allow a separately priced fixed
+# head cadence (no runtime readiness wait). The repaired schedule uses 320/64.
+HEAD_PACE_NUM = int(os.environ.get("SMB_HEAD_PACE_NUM", PACE_NUM))
 # >= 1.375 edges / 136-B line (immutable HBM price) + 8; env overrides for calibration probes
 FETCH = int(os.environ.get('SMB_FETCH', 200))       # measured HBM boundary: one 64-line block per ~160-170 edges (distinct rows) + refresh slack
 EXP_FIRST = int(os.environ.get('SMB_EXP_FIRST', 260))  # ids -> first routed block resident + copied
@@ -451,7 +458,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                 b["xb"] = r["xb"]
                 lo = rc
                 if prev_go is not None:
-                    lo = max(lo, prev_go + prev_len + BUSY, prev_go + (PACE_NUM * prev_lines + PACE_DEN - 1) // PACE_DEN + PACE_ADD)
+                    lo = max(lo, prev_go + prev_len + BUSY, prev_go + ((HEAD_PACE_NUM if kd["name"] == "head" else PACE_NUM) * prev_lines + PACE_DEN - 1) // PACE_DEN + PACE_ADD)
                     if XMODE != "bench13" and os.environ.get("SMB_DRAINRULE") == "1":   # superseded by RTL OPEN_IL
                         # HBM-SMXL drain rule: the issuer opens block n+1 when block n-1 retires (its cache bank frees),
                         # and an open while the previous block's copy still drains is a cdc fault (measured xr_dsA r1,
@@ -528,7 +535,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
     assert len({e[0] for e in ing}) == len(ing), "two ingress words on one edge"
     assert len({e[0] for e in xw_ev}) == len(xw_ev), "two x beats on one edge"
     n_end = last_cmd_abs + DRAIN
-    budget = dict(descriptors=len(descs), table_rows=TBL, programme_words_matvec=store.top - ATT_RESERVED,
+    budget = dict(static_schedule=dict(pace_num=PACE_NUM, head_pace_num=HEAD_PACE_NUM, pace_den=PACE_DEN, pace_add=PACE_ADD, first_go=FIRST_GO, residency_model=RESMODEL, fetch_bound=FLAT), descriptors=len(descs), table_rows=TBL, programme_words_matvec=store.top - ATT_RESERVED,
                   attention_reserved=ATT_RESERVED, store_top=store.top, store_words=PSTORE,
                   distinct_programmes=len(store.progs),
                   per_kind=[dict(name=k["name"], layer=k["layer"], descriptors=k["d1"] - k["d0"], nonexpert_blocks=k["nonexp_blocks"],
@@ -572,6 +579,14 @@ SVG_SRC = ["rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
 
 
 def build(work: Path, bundle: Path, defines):
+    # Explicit immutable binary reuse for a schedule-only repair. Actual binary
+    # parameters remain a receipt obligation; never infer them from current RTL.
+    if os.environ.get("SMB_REUSE_EXE"):
+        exe = Path(os.environ["SMB_REUSE_EXE"]).resolve()
+        expected = os.environ.get("SMB_REUSE_EXE_SHA256", "")
+        if len(expected) != 64 or not exe.is_file() or sha(exe) != expected:
+            raise SystemExit("SMB_REUSE_EXE requires the exact immutable binary SHA256")
+        return exe
     tag = "_".join(d.replace("=", "") for d in defines) or "base"
     rev = (ROOT / "REV").read_text().strip()[:9] if (ROOT / "REV").exists() else "wt"
     obj = work / f"obj_{tag}_{rev}"
