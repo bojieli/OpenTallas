@@ -1,0 +1,161 @@
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv:274:23: Instance has missing pin: 'aq_p'
+  274 |     ot_s81_pq_qb_sram u_qb (.clk(ck_qb),
+      |                       ^~~~
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv:11:22: ... Location of port declaration
+   11 |     input wire [9:0] aq_p,  
+      |                      ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19057:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19058:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19059:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19060:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19064:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19065:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19066:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19070:275: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19071:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19072:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19073:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19077:276: Instance has missing pin: 'walking'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv:64:25: ... Location of port declaration
+   64 |     output wire         walking,
+      |                         ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:19141:25: Instance has missing pin: 'cc'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_static_net/ot_s81_sstn_base566.sv:12:24: ... Location of port declaration
+   12 |     output wire [14:0] cc,
+      |                        ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xo'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv:11053:41: Instance has missing pin: 'xok'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xo'
+11055 |   col_h9_l4_lp #(.INSTANCE("u_f_0L13")) u_f_0L13 (.ck_r0(ck_frame_f_0L13_r0), .ck_r1(ck_frame_f_0L13_r1), .ck_r2(ck_frame_f_0L13_r2), .xk({nx_f_0L13_l3_fck[2], nx_f_0L13_l2_fck[2], nx_f_0L13_l1_fck[2], nx_f_0L13_l0_fck[2]}), .rst_n(rs_2_44_2), .lk(12'h492), .x({w_x_f_0L13_l3_dst[275:0], w_x_f_0L13_l2_dst[275:0], w_x_f_0L13_l1_dst[275:0], w_x_f_0L13_l0_dst[275:0]}), .ret({w_r_f_0L13_src[69:0]}));
+      |                                         ^~~~~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv:11055:41: Instance has missing pin: 'xok'
+11055 |   col_h9_l4_lp #(.INSTANCE("u_f_0L13")) u_f_0L13 (.ck_r0(ck_frame_f_0L13_r0), .ck_r1(ck_frame_f_0L13_r1), .ck_r2(ck_frame_f_0L13_r2), .xk({nx_f_0L13_l3_fck[2], nx_f_0L13_l2_fck[2], nx_f_0L13_l1_fck[2], nx_f_0L13_l0_fck[2]}), .rst_n(rs_2_44_2), .lk(12'h492), .x({w_x_f_0L13_l3_dst[275:0], w_x_f_0L13_l2_dst[275:0], w_x_f_0L13_l1_dst[275:0], w_x_f_0L13_l0_dst[275:0]}), .ret({w_r_f_0L13_src[69:0]}));
+      |                                         ^~~~~~~~
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xo'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv:11056:41: Instance has missing pin: 'xok'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xo'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:16:26: ... Location of port declaration
+   16 |     output wire [1103:0] xo,
+      |                          ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv:11058:41: Instance has missing pin: 'xok'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl_extra/21b97190eba0b3b306026f23a2408867cd099726/rtl/dsrom_sys/s81_dv/frame_lp/col_h9_l4_lp_rf3r.sv:17:23: ... Location of port declaration
+   17 |     output wire [3:0] xok,
+      |                       ^~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv:11059:33: Instance has missing pin: 'bo'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_mu_72.sv:25:25: ... Location of port declaration
+   25 |     output wire [512:0] bo,
+      |                         ^~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/local_cone_r1/cut/s0N_aggregate.sv:11059:33: Instance has missing pin: 'ck_rt'
+                     /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_mu_72.sv:31:23: ... Location of port declaration
+   31 |     output wire [7:0] ck_rt,
+      |                       ^~~~~
+%Warning-IMPLICIT: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:401:39: Signal definition not found, creating implicitly: 'nxt_rw2'
+                                                                                                                                                      : ... Suggested alternative: 'nxt_rw'
+  401 |     ot_s81ph_rewind4 u_rw_ready (.nxt(nxt_rw2), .una(una_rw2), .ack_ok(ok_ready), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_ready));
+      |                                       ^~~~~~~
+                   ... For warning description see https://verilator.org/warn/IMPLICIT?v=5.050
+                   ... Use "/* verilator lint_off IMPLICIT */" and lint_on around source to disable this message.
+%Warning-IMPLICIT: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:401:54: Signal definition not found, creating implicitly: 'una_rw2'
+                                                                                                                                                      : ... Suggested alternative: 'una_rw'
+  401 |     ot_s81ph_rewind4 u_rw_ready (.nxt(nxt_rw2), .una(una_rw2), .ack_ok(ok_ready), .nak(rr_nak), .d_ack(d_ack), .at_lim(rewind_at_limit), .y(rewind_ready));
+      |                                                      ^~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:464:90: Pin not found: 'rst_n'
+  464 |     ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(RP), .SRAM(SRAM), .WREG(MWR)) u_rb (.clk(clk), .rst_n(rst_n),
+      |                                                                                          ^~~~~
+                                                                                                                                                       : ... Location of instance's module declaration
+    6 | module ot_s81ph_mem1r1w #(
+      |        ^~~~~~~~~~~~~~~~
+                    ... For error description see https://verilator.org/warn/PINNOTFOUND?v=5.050
+%Error-PINNOTFOUND: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:464:61: Parameter not found: 'WREG'
+  464 |     ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(RP), .SRAM(SRAM), .WREG(MWR)) u_rb (.clk(clk), .rst_n(rst_n),
+      |                                                             ^~~~
+                                                                                                                                                       : ... Location of instance's module declaration
+    6 | module ot_s81ph_mem1r1w #(
+      |        ^~~~~~~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:702:97: Pin not found: 'rst_n'
+  702 |     ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(CREDITS), .SRAM(SRAM), .WREG(MWR)) u_fifo (.clk(clk), .rst_n(rst_n),
+      |                                                                                                 ^~~~~
+                                                                                                                                                       : ... Location of instance's module declaration
+    6 | module ot_s81ph_mem1r1w #(
+      |        ^~~~~~~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:702:66: Parameter not found: 'WREG'
+  702 |     ot_s81ph_mem1r1w #(.W(W + 1), .DEPTH(CREDITS), .SRAM(SRAM), .WREG(MWR)) u_fifo (.clk(clk), .rst_n(rst_n),
+      |                                                                  ^~~~
+                                                                                                                                                       : ... Location of instance's module declaration
+    6 | module ot_s81ph_mem1r1w #(
+      |        ^~~~~~~~~~~~~~~~
+%Error: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:760:43: Can't find definition of variable: 'ok_f2'
+                                                                                                                                           : ... Suggested alternative: 'ok_f'
+  760 |     wire [CW-1:0]   cred_r  = credits + ((ok_f2 && !fr_bad) ? d_fr : {CW{1'b0}});
+      |                                           ^~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:869:17: Can't find definition of variable: 'ok_f3'
+                                                                                                                                           : ... Suggested alternative: 'ok_f'
+  869 |             if (ok_f3) fr_seen <= rr_fr;
+      |                 ^~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:516:91: Pin not found: 'rst_n'
+  516 |         ot_s81ph_mem1r1w #(.W(H + 1), .DEPTH(DT), .SRAM(SRAM), .WREG(1)) u_m (.clk(clk), .rst_n(rt), .we(wr), .wa(wp),
+      |                                                                                           ^~~~~
+                                                                                                                                                         : ... Location of instance's module declaration
+    6 | module ot_s81ph_mem1r1w #(
+      |        ^~~~~~~~~~~~~~~~
+%Error-PINNOTFOUND: /srv/opentallas-scratch/claude/codex-s81-aggregate-1021/functional_kit_r2/src/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:516:65: Parameter not found: 'WREG'
+  516 |         ot_s81ph_mem1r1w #(.W(H + 1), .DEPTH(DT), .SRAM(SRAM), .WREG(1)) u_m (.clk(clk), .rst_n(rt), .we(wr), .wa(wp),
+      |                                                                 ^~~~
+                                                                                                                                                         : ... Location of instance's module declaration
+    6 | module ot_s81ph_mem1r1w #(
+      |        ^~~~~~~~~~~~~~~~
+%Error: Exiting due to 8 error(s)

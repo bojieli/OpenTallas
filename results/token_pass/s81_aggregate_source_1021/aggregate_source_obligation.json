@@ -1,0 +1,57 @@
+{
+ "schema": "opentallas.s81.aggregate_build_source_obligation.v1",
+ "status": "BUILD_FAIL_SOURCE_CONFIGURATION_NOT_QUALIFIED",
+ "unit": "ot-epyc5/oth-ubuntu-2700830-1792620865",
+ "exit_code": 1,
+ "simulator_launched": false,
+ "master_bodies_changed": false,
+ "functional_kit_sha256": "68f8b9c46827d76af3a5597d0a6aea7c9403a6ecf911fd93f4b1f7140b40c81d",
+ "defines": [
+  "DSFD_PQ_STATIC_X2"
+ ],
+ "raw_build_sha256": "baf8f36c616a5cc04382c74d803334abe8556e315e26fc9a36d5ef62dd917732",
+ "receipt_sha256": "027b219654064effd864a95773040c97addcaadab6892096605828b0820a6967",
+ "active_path": [
+  "dut.u_s_0N.u_ln0/1/2/3: dsfd_coll_lane_w_safe8_ntf",
+  "u: ot_s81ph_coll_lane_safe4(REACH=2,TF_CLEANUP=1,CH_BOARD=700)",
+  "u_ep: ot_s81ph_link_ep_safe4(PIPE=2,RXPIPE=1,MWR=1,OLDREAD=1,FCOPY=1,WRL=2)"
+ ],
+ "active_obligation": {
+  "file": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+  "sha256": "f7fe6c1c242eb7d96cf856bc2492fa5a090e825672ddffb73fb8ed9d73ca6536",
+  "consumer_lines": [
+   760,
+   869
+  ],
+  "required_names": [
+   "ok_f2",
+   "ok_f3"
+  ],
+  "declarations": "lines325..350 only inside OT_COLL_NATIVE32; actual selected kit defines do not include it",
+  "repair_owner": "S81 lead/master source/config owner",
+  "action": "Supply exact selected shipping compile macro/config provenance or coherent source repair; no guessed macro/body replacement"
+ },
+ "other_parse_obligation": {
+  "module": "ot_s81ph_mem1r1w",
+  "selected_path": "physical/ref_tile/dscoll_lane_w_rt/src/rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+  "sha256": "b3aad03106bbd37ce5a7e670862db615b4283a13dd9318d919b0e01f12ca909c",
+  "selection": "kit variant_choices: by physical/ref_tile/dscoll_lane_w_cxea/spec.json over canonical RTL",
+  "missing": [
+   "rst_n pin",
+   "WREG parameter"
+  ],
+  "consumer_lines": {
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv": [
+    464,
+    702
+   ],
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv": [
+    516
+   ]
+  },
+  "scope": "LEP NATIVE32=1/RX_SRAM=1 selects actual grouped SRAM path; line516 is inactive legacy generate branch. Safe4 OLDREAD=1 uses actual b64 path; legacy mem branches still parsed before pruning.",
+  "action": "Resolve GEN-selected module precedence or exact active-body projection with full original body provenance; no master/API substitution"
+ },
+ "unaffected": "sealed 80 legitimate entry H/pre/gain norm producer component remains PASS; later L0B normalized-SO producer remains a separate gap",
+ "qualification": "No aggregate numeric/acceptance/FIN/CAP/negative verdict. No global HOST/KS/END, physical, price or whole-token promotion."
+}
