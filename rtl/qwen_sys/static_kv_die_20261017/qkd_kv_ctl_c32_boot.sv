@@ -47,9 +47,16 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
  // the target is decoded ONCE into KEPT one-hot wires (an ABC boundary) and every former target compare / case / index /
  // word_count(target) reads them (same function: tdec is one-hot over the 14 targets, target 14/15 = all zero = the original
  // default / out-of-range terms).  The port then feeds the 14 decoders, the expected_target compare and the MU wrapper only.
+ // two-level predecode behind kept-hierarchy leaves (ABC boundary): the port bits feed only the leaf's 2-bit one-hots
+ wire[3:0]t_hi,t_lo,e_hi,e_lo;
+ qkd_kv_ctl_c32_tpre u_tpre(.t(boot_image_target),.hi(t_hi),.lo(t_lo));
+ qkd_kv_ctl_c32_tpre u_epre(.t(expected_target),.hi(e_hi),.lo(e_lo));
  (* keep *) wire[13:0]tdec;
+ (* keep *) wire[13:0]edec;
  genvar gi_;
- generate for(gi_=0;gi_<14;gi_=gi_+1)begin:g_td assign tdec[gi_]=boot_image_target==gi_; end endgenerate
+ generate for(gi_=0;gi_<14;gi_=gi_+1)begin:g_td assign tdec[gi_]=t_hi[gi_/4]&&t_lo[gi_%4]; assign edec[gi_]=e_hi[gi_/4]&&e_lo[gi_%4]; end endgenerate
+ // target == expected_target (expected_target <= 13; target 14 / 15 never equals it): one-hot match
+ wire t_eq_e=|(tdec&edec);
  wire[10:0]wc_t=({11{tdec[1]}}&11'd327)|({11{tdec[2]}}&11'd181)|({11{tdec[3]}}&11'd4)|({11{tdec[4]|tdec[5]}}&11'd192)|
   ({11{tdec[6]|tdec[7]|tdec[8]|tdec[9]}}&11'd1024)|({11{tdec[10]}}&word_count(4'd10))|({11{tdec[11]}}&word_count(4'd11))|
   ({11{tdec[12]}}&word_count(4'd12))|({11{tdec[13]}}&word_count(4'd13));
@@ -79,7 +86,7 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
  wire t12=(ESCFG!=0)&&tdec[12];
  wire t13=(ESCFG!=0)&&tdec[13];
  wire[3:0]after9=(LINKCFG!=0)?4'd11:(ESCFG!=0)?4'd12:4'd0;
- wire t_ok=t10?t10_ok:((MUT==1||boot_image_target==expected_target)&&((|tdec[9:0])||t11||t12||t13));
+ wire t_ok=t10?t10_ok:((MUT==1||t_eq_e)&&((|tdec[9:0])||t11||t12||t13));
  // ---- accept term (the original's else-branch of the word checks) and per-target accepts ----
  wire tv=boot_pr[74]&&!tdec[0]&&!fault&&!execution_active;
  wire wbad=!t_ok||{1'b0,addr}!=next_word||next_word>=wc_t;
@@ -258,7 +265,7 @@ module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integ
    end else if(t10)begin
     if(!t10_ok||next_word!=word_count(10))begin fault<=1;fault_code[7]<=1;end
     else begin diecfg_done<=1;next_word<=0;end
-   end else if(boot_image_target!=expected_target||next_word!=wc_t)begin fault<=1;fault_code[7]<=1;end
+   end else if(!t_eq_e||next_word!=wc_t)begin fault<=1;fault_code[7]<=1;end
    else if(t11)begin linkcfg_done<=1;expected_target<=(ESCFG!=0)?4'd12:4'd0;next_word<=0;end
    else if(t12)begin es12_done<=1;expected_target<=4'd13;next_word<=0;end
    else if(t13)begin es13_done<=1;expected_target<=4'd0;next_word<=0;end
@@ -394,4 +401,12 @@ module qkd_kv_ctl_c32_div6(input wire[9:0]a, output wire[4:0]q);
  generate for(j=0;j<5;j=j+1)begin:g_s
   qkd_kv_ctl_c32_div6_step u_s(.r(r[j+1]),.b(a[j]),.s(r[j]),.q(q[j]));
  end endgenerate
+endmodule
+
+// KV-CTL10 10-20: 2-bit one-hot predecode of a 4-bit target (kept hierarchy: the ABC boundary that keeps the boot target
+// port net at <= 8 mapped loads).  hi = one-hot t[3:2], lo = one-hot t[1:0]; t == k  <=>  hi[k/4] && lo[k%4].
+(* keep_hierarchy *)
+module qkd_kv_ctl_c32_tpre(input wire[3:0]t, output wire[3:0]hi, output wire[3:0]lo);
+ assign hi={t[3:2]==2'd3,t[3:2]==2'd2,t[3:2]==2'd1,t[3:2]==2'd0};
+ assign lo={t[1:0]==2'd3,t[1:0]==2'd2,t[1:0]==2'd1,t[1:0]==2'd0};
 endmodule

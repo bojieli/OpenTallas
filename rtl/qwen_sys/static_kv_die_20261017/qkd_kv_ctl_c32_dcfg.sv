@@ -42,6 +42,10 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
     // write port pin registers
     reg we_q; reg [7:0] a_q; reg [63:0] d_q;
     always @(posedge ck or negedge pr_n) if (!pr_n) we_q <= 1'b0; else we_q <= cfg_we;
+    // KEPT second copy of the write-enable pin flop (same D / clock / clear): the age / seal write terms read it, so the
+    // accept term wr is not one net into every ECTL, reset, age and seal decode (gate 2 census: 44 loads)
+    (* keep *) reg we_q2;
+    always @(posedge ck or negedge pr_n) if (!pr_n) we_q2 <= 1'b0; else we_q2 <= cfg_we;
     always @(posedge ck) begin a_q <= cfg_addr; d_q <= cfg_data; end
     (* keep *) reg [14:0] dqc0, dqc1, dqc2, dqc3;
     (* keep *) reg [31:0] dqa;
@@ -63,6 +67,7 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
                (MUT != 2 && ((is_ectl && d_q[63:15] != 0) || (is_rst && d_q[63:8] != 0) || (is_cap && d_q[63:1] != 0) || (is_age && age_pad))) ||
                (is_seal && (d_q != SEAL || next != NW[8:0])) || (!is_ectl && !is_rst && !is_cap && !is_age && !is_seal);
     wire wr = we_q && !(bad || fault);
+    wire wr2 = we_q2 && !(bad || fault);
     always @(posedge ck or negedge pr_n) begin
         if (!pr_n) begin
             cap_q <= 1'b0; sealed <= 1'b0; fault <= 1'b0; next <= 9'd0;
@@ -79,7 +84,7 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
     // (D = ps[0], release on the ps[1] edge) so pr_n keeps <= 32 loads
     (* keep *) reg [1:0] rcs;
     always @(posedge ck or negedge por_n) if (!por_n) rcs <= 2'b00; else rcs <= {2{ps[0]}};
-    (* keep *) wire sl_set = wr && is_seal;
+    (* keep *) wire sl_set = wr2 && is_seal;
     (* keep *) reg [KS-1:0] sl_c;
     genvar gs;
     generate for (gs = 0; gs < KS; gs = gs + 1) begin : g_sl
@@ -123,12 +128,12 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
     (* keep *) wire [2:0] ahi; (* keep *) wire [7:0] alo; (* keep *) wire [18:0] fa;
     // the attention word's high half gets its own (structurally different, same function) enable: 2 x 16 bits on one
     // enable = 64 mapped loads
-    (* keep *) wire fa0h = wr && is_age && a_q == 8'(A0 - ((MUT == 6) ? 1 : 0));
+    (* keep *) wire fa0h = wr2 && is_age && a_q == 8'(A0 - ((MUT == 6) ? 1 : 0));
     wire [31:0] ag_attn; wire [15:0] ag_pv; wire [255:0] ag_vp;
     genvar ga;
     generate
         for (ga = 0; ga < 3; ga = ga + 1) begin : g_ahi
-            assign ahi[ga] = wr && is_age && g_ix[4:3] == ga && g_ix[7:5] == 3'd0;
+            assign ahi[ga] = wr2 && is_age && g_ix[4:3] == ga && g_ix[7:5] == 3'd0;
         end
         for (ga = 0; ga < 8; ga = ga + 1) begin : g_alo
             assign alo[ga] = g_ix[2:0] == ga;
