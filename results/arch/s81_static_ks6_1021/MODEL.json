@@ -14,7 +14,7 @@
     6297040
   ],
   "step_model": 7598864,
-  "actual_programme_anchor": "NOT derived from owner_start reservation. Observe actual boot PW row0 issueage and seal phase; ARM must give actual first command = firstKS+4+issueage. Full configured stage programme wiring remains open.",
+  "actual_programme_anchor": "NOT derived from owner_start reservation. Observe actual boot PW row0 issueage and seal phase; ARM must give actual first command = firstKS+4+issueage. Full configured stage programme wiring remains open. PW row0 issueage is page1 pd[25:2]. Issuer accepts KS at +3 only when phase_q+1 equals sealed phase, hence ARM phase+delta+4 modulo4.",
   "connected_host_source": "f_ks53 from HOST_EN1 endpoint, valid52/user51:42/token41:21/position20:0; f_host515 {class2,data512,valid}. No descriptor token/position manufacture.",
   "authority": "Explicit SYNC0x19 with graph-tagged actual capture-edge globaltimestamp; free-running48b counter thereafter. ARM0x17 epoch must match live counter. Real HOST producer must account for measured transport to this capture edge; no default globalzero.",
   "fixed_schedule": "Six actual full53b descriptors after ARM; queue order preserved, launch dates immutableSPAN; missing/late/wrongowner/epoch/phase/config races stickyfault, no completionwait/reschedule. Beforeselect and defaultparameter0 working HOST source unchanged.",
@@ -35,5 +35,6 @@
     "crossings": "Inside existing seqhost region, source registered. No new die wires or clock ports."
   },
   "latency": "No extra original seqhost pipeline edges: registered timedKS sampled at declared original f_ks pin edge; original source +3 issuer sample/+4+issueage command stays. Boot seal guardNOPS+16 only.",
-  "physical_status": "No gate/adoption. New parent source params cannot alias old closed source. Whole barrier/token claim requires actual host timestamp producer and correct current stage programme anchors."
+  "physical_status": "No gate/adoption. New parent source params cannot alias old closed source. Whole barrier/token claim requires actual host timestamp producer and correct current stage programme anchors.",
+  "qualification": "UNQUALIFIED source candidate; actual S10E HOST/walker mechanism with six opaque descriptors and explicit CSR epoch/phase under fleet test; default-off mux hierarchy lint/native cell budget still owed. No actual production programme anchors or host transport authority fabricated."
 }

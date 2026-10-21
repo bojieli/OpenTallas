@@ -175,7 +175,11 @@ endmodule
 // (0x10/0x11/0x13/0x14); the ingest ignores class-0 indices other than 0/1/2, so seq_host behaviour is unchanged.
 // t_mf = hslot faults with hwin's folded in ([2] |= RX tag / late event, [3] |= window config); it leaves like the
 // other block fault outputs (die status fold owed with them).
-module dsdv_seq_host_mux (
+module dsdv_seq_host_mux #(
+    parameter integer STATIC_KS6 = 0,
+    parameter integer STATIC_KS_SPAN = 1259408,
+    parameter [31:0] STATIC_KS_GRAPH_TAG = 32'h218d375d
+) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [7:0]    tap_k, sink_k,
@@ -200,13 +204,34 @@ module dsdv_seq_host_mux (
         mw <= (csr && f_host[8:1] == 8'h16) ? f_host[58:33] : 26'd0;
     end
     wire [3:0] hmf; wire [1:0] wf;
+    wire [52:0] issue_ks;
+    wire [514:0] issue_host;
+    wire [3:0] ks_fault;
+    generate if (STATIC_KS6 != 0) begin : g_static_ks6
+        wire [52:0] timed_ks;
+        wire selected, armed, done;
+        wire control_csr = csr && (f_host[8:1] == 8'h17 ||
+                                  f_host[8:1] == 8'h18 || f_host[8:1] == 8'h19);
+        dsdv_static_ks6 #(.SPAN(STATIC_KS_SPAN), .GRAPH_TAG(STATIC_KS_GRAPH_TAG)) u_static (
+            .ck(ck), .rst_n(rst_n), .f_host(f_host), .f_ks(f_ks),
+            .upstream_fault(|hmf), .timed_ks(timed_ks), .selected(selected),
+            .armed(armed), .done(done), .fault(ks_fault));
+        // ARM consumes no descriptor. Real descriptors subsequently enter
+        // u_static, and only its immutable-date output reaches BOTH issuers.
+        assign issue_ks = (selected || (csr && f_host[8:1] == 8'h17)) ? timed_ks : f_ks;
+        assign issue_host = control_csr ? 515'd0 : f_host;
+    end else begin : g_external_ks
+        assign issue_ks = f_ks;
+        assign issue_host = f_host;
+        assign ks_fault = 4'd0;
+    end endgenerate
     dsdv_seq_host_mu #(.NSLOT(47)) u (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k),
-        .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks),
+        .vi_s(vi_s), .vo_s(vo_s), .vi_n(vi_n), .vo_n(vo_n), .f_host(issue_host), .t_host(t_host), .f_lf(f_lf), .f_ks(issue_ks),
         .t_kd(t_kd), .f_mc(mc), .t_mf(hmf), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w),
         .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v),
         .cw_a(cw_a), .cw_d(cw_d));
-    dsdv_mu_hwin #(.NSLOT(47), .NEV(8), .NEP(4), .NRT(2)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(f_ks), .f_mc(mc), .f_mw(mw),
+    dsdv_mu_hwin #(.NSLOT(47), .NEV(8), .NEP(4), .NRT(2)) u_win (.ck(ck), .rst_n(rst_n), .f_ks(issue_ks), .f_mc(mc), .f_mw(mw),
         .mu_c({mu_c_0s, mu_c_0n, mu_c_7s, mu_c_7n}), .mu_rc({mu_rc_0s, mu_rc_0n, mu_rc_7s, mu_rc_7n}),
         .mu_rt({mu_rt_0n, mu_rt_7n}), .t_wf(wf));
-    assign t_mf = {hmf[3] | wf[1], hmf[2] | wf[0], hmf[1:0]};
+    assign t_mf = {hmf[3] | wf[1] | (|ks_fault), hmf[2] | wf[0], hmf[1:0]};
 endmodule
