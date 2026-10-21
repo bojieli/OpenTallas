@@ -133,7 +133,8 @@
   ]
  },
  "pin_regs": {
-  "opt_out": "Original kept per-head query/key/hid input registers and region query pins; output cs_o/cf_o/onl are literal flops. Critical owner packet required; no waiver."
+  "enable": false,
+  "reason": "Original kept per-head query/key/hid input registers and region query pins; output cs_o/cf_o/onl are literal flops. Critical owner packet required; no waiver."
  },
  "outline": {
   "w": 216,
@@ -142,5 +143,9 @@
  },
  "pin_hook_before_flops": [
   "physical/hbm_idx_score/native_touchable.tcl"
- ]
+ ],
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1"
+ }
 }
