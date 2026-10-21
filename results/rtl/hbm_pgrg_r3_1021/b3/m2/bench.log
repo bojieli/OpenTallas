@@ -1,0 +1,16 @@
+PGSLICE_RG bench HREG=1 MUT=2 LK=1 RT=10 IR=1 SWQ=16 EDGES=300
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=141001 ks=118 kp=156
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P1 t=141001 ks=118 kp=156
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=142801 ks=119 kp=158
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P1 t=142801 ks=119 kp=158
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=143701 ks=120 kp=159
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P1 t=143701 ks=120 kp=159
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=144601 ks=121 kp=160
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P1 t=144601 ks=121 kp=160
+LOCKSTEP MISMATCH e(s_wq/lg_wq/far_w_done) P0 t=146401 ks=122 kp=162
+PGSLICE_RG errors serial=0 fault=0 stream=0 vm_write=838 lg_fault=0
+PGSLICE_RG FAIL errors=838 class_ok=1 checks=8352 data_edges=542 vm_writes=452
+- rtl/test/hbm_accel/generic/tb_hbm_su_pgslice_rg.sv:206: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 1.690 s; speed 614.759 ns/s
+- Verilator: cpu 1.690 s on 1 threads; allocated 58 MB
