@@ -147,6 +147,12 @@ def main():
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     lat = parse_cls(a.lat, {}); per = parse_cls(a.per, {})
+    if a.xl5:                    # the stage-hop circuit (s_0N, port 2) is its own class H (default: the N values)
+        CLASS[2] = "H"
+        if lat:
+            lat.setdefault("H", lat["N"])
+        if per:
+            per.setdefault("H", per["N"])
     gate = (bool(lat) and bool(per)) or a.dl_model == "fluid"
     only = set(a.only.split(",")) if a.only else None
 
@@ -245,7 +251,7 @@ def main():
                 inst += 1
                 end = t2 + rec["beats_per_peer"]
             else:  # P2P stage hop: die d -> d+1 over its ES port (--xl5: s_0N pair A -> next stage rank d s_0N pair B)
-                hp, hc = (2, "N") if a.xl5 else (1, "S")
+                hp, hc = (2, "H") if a.xl5 else (1, "S")
                 rec.update(beats=len(chunks(bytes(pb))), port="WN_A" if a.xl5 else "ES")
                 for d in range(ND):
                     data = rng.integers(0, 256, pb, dtype=np.uint8).tobytes()

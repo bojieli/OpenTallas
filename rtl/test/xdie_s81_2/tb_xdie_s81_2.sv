@@ -27,6 +27,8 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module tb_xdie_s81_2 #(
     parameter integer D_CH = 445,
+    parameter integer D_ST = D_CH,          // XL5 stage-hop circuit leg (owner 10-21 direct cabling: TP 251 -> D_CH 243,
+                                            // stage 265 -> D_ST 257; 2 x PMA model 8 + D = the per-class leg)
     parameter integer MU = 0,
     parameter integer LEG = 1,
     parameter integer DMUT = 0,
@@ -103,7 +105,7 @@ module tb_xdie_s81_2 #(
             localparam integer SRCX = (AB != 0) ? ge : SRC;
             if (gl < NLE) begin : g_on
                 // receive channel: from the circuit peer's pads (lane k -> lane k); LATE on die 1 ES lane 1 (as gate_g5)
-                xdie2_chan #(.W(544), .D(D_CH)) u_ch (.clk(clk), .errp(errp), .extra((SRCX == 1 * NP + 1 && gl == 1) ? latec : 0),
+                xdie2_chan #(.W(544), .D((AB != 0) ? D_ST : D_CH)) u_ch (.clk(clk), .errp(errp), .extra((SRCX == 1 * NP + 1 && gl == 1) ? latec : 0),
                     .d(ptx[SRCX][544*SL +: 544]), .q(prx[ge][544*gl +: 544]));
                 // link-layer statistics (hierarchical reads of ot_s81ph_link_ep's counters; no logic added to the DUT)
                 if (P % 2 == 0) begin : g_sw
@@ -141,7 +143,7 @@ module tb_xdie_s81_2 #(
         if (!$value$plusargs("CHB=%d", chb)) chb = 1;
         $readmemh("stim.hex", stim);
         if (nm > 0) $readmemh("mu.hex", mcmd);
-        $display("XDIE2_CFG XL5 %0d MU %0d LEG %0d DMUT %0d NS %0d NM %0d ERRP %0d LATE %0d CHB %0d", XL5, MU, LEG, DMUT, ns, nm, errp, latec, chb);
+        $display("XDIE2_CFG D_CH %0d D_ST %0d XL5 %0d MU %0d LEG %0d DMUT %0d NS %0d NM %0d ERRP %0d LATE %0d CHB %0d", D_CH, D_ST, XL5, MU, LEG, DMUT, ns, nm, errp, latec, chb);
         repeat (8) @(posedge clk); rst_n = 1;
         go = 1;
     end
