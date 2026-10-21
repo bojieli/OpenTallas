@@ -1,0 +1,279 @@
+{
+ "status": "GEOMETRY_MODEL_ONLY",
+ "base": "debd840d3/plangM",
+ "outline_um": [
+  25988.8,
+  32983.12
+ ],
+ "reason": "Measured E xload/SU capacity1.477NW and1.239SW; relocate whole groups into actual free SU-column corridor",
+ "placement_checks": [
+  {
+   "name": "xl_NW_ctl",
+   "before": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 7191.072,
+    "y": 23461.488,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "grant slot xl_NW_ctl"
+   },
+   "after": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 4815.072,
+    "y": 23461.488,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "grant slot xl_NW_ctl"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_NW_aqhi",
+   "before": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 7601.472,
+    "y": 23666.688,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_NW_aqhi"
+   },
+   "after": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 5225.472,
+    "y": 23666.688,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_NW_aqhi"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_NW_aqlo",
+   "before": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 7601.472,
+    "y": 23537.088,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_NW_aqlo"
+   },
+   "after": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 5225.472,
+    "y": 23537.088,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_NW_aqlo"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_SW_ctl",
+   "before": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 7191.072,
+    "y": 9132.912,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "grant slot xl_SW_ctl"
+   },
+   "after": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 4815.072,
+    "y": 9132.912,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "grant slot xl_SW_ctl"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_SW_aqhi",
+   "before": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 7601.472,
+    "y": 9337.896,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_SW_aqhi"
+   },
+   "after": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 5225.472,
+    "y": 9337.896,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_SW_aqhi"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_SW_aqlo",
+   "before": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 7601.472,
+    "y": 9208.512,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_SW_aqlo"
+   },
+   "after": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 5225.472,
+    "y": 9208.512,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_SW_aqlo"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_NE_ctl",
+   "before": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 18516.816,
+    "y": 23461.488,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "grant slot xl_NE_ctl"
+   },
+   "after": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 21022.416,
+    "y": 23461.488,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "grant slot xl_NE_ctl"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_NE_aqhi",
+   "before": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 18927.216,
+    "y": 23666.688,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_NE_aqhi"
+   },
+   "after": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 21432.816,
+    "y": 23666.688,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_NE_aqhi"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_NE_aqlo",
+   "before": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 18927.216,
+    "y": 23537.088,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_NE_aqlo"
+   },
+   "after": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 21432.816,
+    "y": 23537.088,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_NE_aqlo"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_SE_ctl",
+   "before": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 18516.816,
+    "y": 9132.912,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "grant slot xl_SE_ctl"
+   },
+   "after": {
+    "m": "ot_hgi_sm_xload_cl2_ctlx",
+    "x": 21022.416,
+    "y": 9132.912,
+    "o": "R0",
+    "w": 388.8,
+    "h": 388.8,
+    "rule": "grant slot xl_SE_ctl"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_SE_aqhi",
+   "before": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 18927.216,
+    "y": 9337.896,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_SE_aqhi"
+   },
+   "after": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 21432.816,
+    "y": 9337.896,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_SE_aqhi"
+   },
+   "overlaps": []
+  },
+  {
+   "name": "xl_SE_aqlo",
+   "before": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 18927.216,
+    "y": 9208.512,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_SE_aqlo"
+   },
+   "after": {
+    "m": "ot_hbm_xp_aq_tree13_fmt",
+    "x": 21432.816,
+    "y": 9208.512,
+    "o": "R0",
+    "w": 183.6,
+    "h": 108.0,
+    "rule": "grant slot xl_SE_aqlo"
+   },
+   "overlaps": []
+  }
+ ],
+ "all_other_blocks": "unchanged",
+ "rtl_source": "unchanged",
+ "cycle_credit": 0,
+ "remaining": "Actual GEN/pins/S4 required; no failed capacity route"
+}
