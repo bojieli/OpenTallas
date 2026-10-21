@@ -97,7 +97,7 @@
   "benches": [
    {
     "name": "etapw_exact",
-    "cmd": "bash tools/s81_dv/eng_rr/bench_tap_snapshot.sh {RUN}/etapw_exact base",
+    "cmd": "TAP_N32R2=1 bash tools/s81_dv/eng_rr/bench_tap_snapshot.sh {RUN}/etapw_exact base",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 24,
@@ -109,7 +109,7 @@
    },
    {
     "name": "etapw_mut_demux",
-    "cmd": "bash tools/s81_dv/eng_rr/bench_tap_snapshot.sh {RUN}/etapw_mut_demux tap1",
+    "cmd": "TAP_N32R2=1 bash tools/s81_dv/eng_rr/bench_tap_snapshot.sh {RUN}/etapw_mut_demux tap1",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 24,
@@ -120,7 +120,7 @@
    },
    {
     "name": "etapw_mut_pops",
-    "cmd": "bash tools/s81_dv/eng_rr/bench_tap_snapshot.sh {RUN}/etapw_mut_pops tap2",
+    "cmd": "TAP_N32R2=1 bash tools/s81_dv/eng_rr/bench_tap_snapshot.sh {RUN}/etapw_mut_pops tap2",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 24,
