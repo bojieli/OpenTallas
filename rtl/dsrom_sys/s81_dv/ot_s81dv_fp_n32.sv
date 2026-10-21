@@ -961,14 +961,19 @@ endmodule
 endmodule
 
 (* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_lead4(input wire[3:0] x,output wire z,output wire[3:0] oh);
- assign z=~(|x);
- assign oh[3]=x[3];
- assign oh[2]=x[2] && !x[3];
- assign oh[1]=x[1] && !(|x[3:2]);
- assign oh[0]=x[0] && !(|x[3:1]);
+ wire zh,zl;wire[1:0] h,l;
+ ot_s81dv_xfin_fp_lead2 u_h(.x(x[3:2]),.z(zh),.oh(h));
+ ot_s81dv_xfin_fp_lead2 u_l(.x(x[1:0]),.z(zl),.oh(l));
+ assign oh={h,l & {2{zh}}};
+ assign z=zh && zl;
 endmodule
 
 (* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_lead_enable #(parameter integer G=0)(input wire[5:0] zero4,input wire[3:0] local_oh,output wire[3:0] oh);
  wire higher_zero=(zero4 >> (G+1)) == (6'b111111 >> (G+1));
  assign oh=local_oh & {4{higher_zero}};
+endmodule
+
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_lead2(input wire[1:0] x,output wire z,output wire[1:0] oh);
+ assign z=~(|x);
+ assign oh={x[1],x[0] && !x[1]};
 endmodule
