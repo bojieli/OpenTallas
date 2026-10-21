@@ -143,7 +143,13 @@ def lower_mix_post(A, expected_O, parameters, timing, *, a_sector, o_sector,
     checks = g["chk"]
     if boundary is not None:
         outputs = {x["name"] for x in boundary["outputs"]}
-        internal = {x if isinstance(x, str) else x["name"] for x in boundary.get("internal_nets", [])}
+        raw_internal = boundary.get("internal_nets", [])
+        internal = ({x if isinstance(x, str) else x["name"] for x in raw_internal}
+                    if isinstance(raw_internal, list) else set())
+        # The boundary schema may retain only an internal-net count.  These
+        # producer ports become internal by the required real root connections.
+        internal.update(f"hc_SW__gathered_mix_{s}" for s in ("v", "row", "pos", "data"))
+        internal.add("hc_SW__eng_fault")
         kept = []
         for e in checks:
             port = e["port"]
