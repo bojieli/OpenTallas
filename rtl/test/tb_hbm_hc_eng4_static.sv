@@ -66,6 +66,16 @@ module tb_hbm_hc_eng4_static;
 `ifndef HC_PTFS
 `define HC_PTFS 0
 `endif
+// HBM-COLLECT10/HCROOT 10-21: tail child parameters of root TAILC 1 (k3: 16/1/1 + --tail-x 451; k3b: 12/1/0 + 283)
+`ifndef HC_TSDIV
+`define HC_TSDIV 7
+`endif
+`ifndef HC_TTPIPE
+`define HC_TTPIPE 0
+`endif
+`ifndef HC_TSKP
+`define HC_TSKP 0
+`endif
 `ifndef HC_SAFE
 `define HC_SAFE 0
 `endif
@@ -98,7 +108,7 @@ module tb_hbm_hc_eng4_static;
     // quarter-side copies after the die links
     wire [3:0] ld_v, ld_ss, li_v, li_kind, lps_v, lps_f, l_fault; wire [27:0] ld_nv; wire [39:0] ld_wa, ld_xa, li_word;
     wire [7:0] li_slot; wire [19:0] li_lo, li_w; wire [47:0] li_cnt; wire [127:0] lps;
-    ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .XRD(`HC_XRD), .XRU(`HC_XRU), .XRDQ(`HC_XRDQ), .XRUQ(`HC_XRUQ), .QCHX(11 * `HC_CPR), .SAFE(`HC_SAFE), .TAILC(`HC_TAILC), .PTFS(`HC_PTFS)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
+    ot_hbm_hc_root_static #(.MUT(MUTP), .QDRLY(`HC_QDRLY), .XRD(`HC_XRD), .XRU(`HC_XRU), .XRDQ(`HC_XRDQ), .XRUQ(`HC_XRUQ), .QCHX(11 * `HC_CPR), .SAFE(`HC_SAFE), .TAILC(`HC_TAILC), .PTFS(`HC_PTFS), .TSDIV(`HC_TSDIV), .TTPIPE(`HC_TTPIPE), .TSKP(`HC_TSKP)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured),
         .qd_v(qd_v), .qd_ss(qd_ss), .qd_nv(qd_nv), .qd_wa(qd_wa), .qd_xa(qd_xa), .qi_v(qi_v), .qi_kind(qi_kind),

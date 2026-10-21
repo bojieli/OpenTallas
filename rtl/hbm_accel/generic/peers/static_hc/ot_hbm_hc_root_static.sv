@@ -55,6 +55,14 @@ module ot_hbm_hc_root_static #(
     parameter integer SAFE = 0,                  // HBM-HC5 10-20: 1 = SRAM mix store + tail domain TD = 2 edges later (below)
     parameter integer TAILC = 0,                 // HBM-HCROOT6 10-20: 1 = hardened tail child tiles (+2 edges, emit TE = 2 later)
     parameter integer PTFS = 0,                  // HBM-HC7-ROOT 10-20: 1 = fanout-safe pass (targets _fs + reset tree, below)
+    // HBM-COLLECT10/HCROOT 10-21 (xr4): tail child parameters passed through (TAILC 1 only).  The child's latency grows by
+    // TX = child L - 496 edges (k3: TSDIV 16 TTPIPE 1 TSKP 1 -> L 947, TX 451; k3b: TSDIV 12 TTPIPE 1 TSKP 0 -> L 779, TX 283).
+    // TX is NOT a hardware delay line here: the compiler places each emit TX edges later (tools/rtl_hbm_hc_eng_static_gate.py
+    // --tail-x) and the per-unit tail launch spacing >= child L follows (next launch on a unit only after its emit).
+    // TE stays 2 (child pin flop + fanout stage).  Defaults = the k2 child (TX 0), byte-identical to the previous root.
+    parameter integer TSDIV = 7,
+    parameter integer TTPIPE = 0,
+    parameter integer TSKP = 0,
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -425,7 +433,7 @@ module ot_hbm_hc_root_static #(
                 .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
                 .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
         end else begin : g_c
-            ot_hbm_hc_tail_child_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0)) u_t (.clk(clk), .rst_n(rst_tail),
+            ot_hbm_hc_tail_child_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0), .SDIV(TSDIV), .TPIPE(TTPIPE), .SKP(TSKP)) u_t (.clk(clk), .rst_n(rst_tail),
                 .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
                 .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
         end
