@@ -33,8 +33,8 @@ set ot_k 0
 foreach ot_li [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} $ot_lpair] {
   set ot_ob [$ot_li getBBox]
   set ot_x [expr {$ot_tx + $ot_k*round(2.16*$ot_ld)}]
-  $ot_li setLocation $ot_x $ot_ty
   $ot_li setPlacementStatus PLACED
+  $ot_li setLocation $ot_x $ot_ty
   puts [format "UCIE7_RCK_LAND %s (%.2f, %.2f) -> (%.2f, %.2f) PLACED; rck median of %d sinks, rst_rck pin y %.2f (hop %.1f um)" \
     [$ot_li getName] [expr {double([$ot_ob xMin])/$ot_ld}] [expr {double([$ot_ob yMin])/$ot_ld}] [expr {double($ot_x)/$ot_ld}] \
     [expr {double($ot_ty)/$ot_ld}] [llength $ot_lxs] [expr {double($ot_lpy)/$ot_ld}] [expr {double($ot_lpy-$ot_ty)/$ot_ld}]]

@@ -29,6 +29,7 @@ foreach ot_ri [$ot_rb getInsts] {
 if {[llength $ot_rl] != 2} { error "UCIE7_RCK_RST expected 2 u_lpr_rck synchroniser flops, found [llength $ot_rl]" }
 set ot_rk 0
 foreach ot_ri [lsort -command {apply {{a b} {string compare [$a getName] [$b getName]}}} $ot_rl] {
+  $ot_ri setPlacementStatus PLACED
   $ot_ri setLocation [expr {$ot_rx + $ot_rk*round(2.16*$ot_rd)}] $ot_ry
   $ot_ri setPlacementStatus FIRM
   puts [format "UCIE7_RCK_RST seed %s at (%.2f, %.2f) FIRM (rst_rck pin y %.2f)" [$ot_ri getName] [expr {double($ot_rx + $ot_rk*round(2.16*$ot_rd))/$ot_rd}] [expr {double($ot_ry)/$ot_rd}] [expr {double($ot_rpy)/$ot_rd}]]
