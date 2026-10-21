@@ -790,7 +790,34 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None):
     core = {"str_C", "sucore_SW", "stl_SW"}
     tree_ok = core <= set(bnd["instances"])
     res = None
-    if unit == 2 and SL.reduce_profile(sut, desc) and not (in_layout and SL.sfu_profile(sut, desc, layout=True)):
+    if a.rope_candidate and unit == 2 and sut.get('c_pair') and sut.get('b_half'):
+        from hbm_layer_vehicle import su_rope_bank_1340 as RP
+        import copy
+        if not tree_ok or not {'sucore_SE','sucore_NW','sucore_NE'} <= set(bnd['instances']):
+            return dict(status='unsupported_lowering', reasons=['candidate RoPE requires real four-core RF tree'],
+                        lowering=dict(supported=False), sut=sut)
+        def candidate_rope():
+            saved = copy.deepcopy(place.__dict__)
+            try:
+                # Reserve one aligned 16-sector live run. Return any alignment
+                # padding to the ledger; scratch is written only by runtime RF drains.
+                allocation = place.alloc_run(32, 0)
+                scratch = ((allocation + 15)//16)*16
+                if scratch > allocation:
+                    place.free_run(allocation, scratch-allocation)
+                if scratch+16 < allocation+32:
+                    place.free_run(scratch+16, allocation+32-(scratch+16))
+                result = RP.lower(raw, q=a.quarter, data=vm_data, place=place, tag=tag, timing=timing,
+                                  scratch_base=8*scratch, pair_c_reads=1,
+                                  pair_source_path=a.rope_source, pair_die_path=a.rope_die)
+            except Exception:
+                place.__dict__.clear(); place.__dict__.update(saved)
+                raise
+            if result.get('status') != 'emitted':
+                place.__dict__.clear(); place.__dict__.update(saved)
+            return result
+        res = attempt('candidate_runtime_RoPE', candidate_rope)
+    elif unit == 2 and SL.reduce_profile(sut, desc) and not (in_layout and SL.sfu_profile(sut, desc, layout=True)):
         if not tree_ok:
             res = dict(status="unsupported_lowering", reasons=["reduction requires the real stree cut (no RF injection)"],
                        lowering=dict(supported=False), sut=sut)
@@ -878,6 +905,9 @@ def main():
                     "record profile on every layer (pretree reductions, scalar rsqrt, RF-broadcast B, single-row "
                     "identity lane terms); failed attempts leave the VM placement / written state untouched")
     ap.add_argument("--rf-local", type=int, default=1, help="selected su_<q><g> RF_LOCAL parameter (contract)")
+    ap.add_argument('--rope-candidate', action='store_true', help='explicit unqualified candidate source: local C bank exchange and runtime coefficient staging')
+    ap.add_argument('--rope-source', type=Path, help='actual candidate scoped pgslice source')
+    ap.add_argument('--rope-die', type=Path, help='actual candidate die with all four SW PAIR_C_READS=1 bindings')
     ap.add_argument("--nev", type=int, default=0, help="(--su-lower2) built TB event depth: split into independent replays")
     ap.add_argument("--defer-records", default="", help="(--su-lower2, internal) records left unlowered because their "
                     "VM-linked programme group exceeds the TB event depth")
@@ -899,6 +929,8 @@ def main():
     ap.add_argument("--sm-count", type=int, default=4, help="with --sm-lowering: SW SM service groups driven (sm_SW0..)")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
+    if a.rope_candidate and (not a.su_lower2 or a.rope_source is None or a.rope_die is None):
+        ap.error('--rope-candidate requires --su-lower2 and actual --rope-source/--rope-die bindings')
     if a.sm_lowering and (a.smw is None or a.fixtures is None):
         ap.error("--sm-lowering needs --fixtures and --smw")
     if (a.native_read_return is None) != (a.native_write_return is None):
@@ -960,6 +992,9 @@ def main():
     events, manifest, t_su_free = [], [], 0
     rng = np.random.default_rng(1018)
     place, vm_data = Placement(a.quarter), {}
+    if a.rope_candidate and not a.cx:
+        from hbm_layer_vehicle import cx_layer_1021 as CX
+        place = CX.make_placement(Placement, a.quarter)
     cx = None
     if a.cx:
         from hbm_layer_vehicle import cx_layer_1021 as CX
@@ -1038,6 +1073,13 @@ def main():
                        inputs_placeholder=su.get("inputs_placeholder"))
             if su.get("su_lower2_attempts") is not None:
                 ent["su_lower2_attempts"] = su["su_lower2_attempts"]
+            if su.get('runtime_coefficient_moves'):
+                ent['candidate_rope'] = dict(execution_qualified=False,
+                    runtime_coefficient_moves=su['runtime_coefficient_moves'],
+                    scratch_write_footprint=su['scratch_write_footprint'],
+                    scratch_read_footprint=su['scratch_read_footprint'],
+                    scratch_reuse_after_serial=su['scratch_reuse_after_serial'],
+                    preload_provenance=su['preload_provenance'])
             if su.get('timing_obligations'):
                 ent.update(timing_obligations=su['timing_obligations'], source_contract=su['source_contract'],
                            execution_qualified=False, quarter_ownership=su.get('quarter_ownership'),
