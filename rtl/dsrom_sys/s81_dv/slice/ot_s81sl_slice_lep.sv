@@ -748,7 +748,15 @@ module ot_s81sl_lep_core #(
         begin tagd = b[0] && (b[3:1] == K_XB || b[3:1] == K_XQ) && b[TG]; end
     endfunction
     reg mrv, mcol, mwv; reg [1103:0] mrd, mwd; reg [31:0] rtq;
+`ifdef OT_S81SL_LEP_NFACE
+    // Reuse the original input capture edge. Separate physical byte owners let the
+    // kit place each landing at its N-face pin and audit both adjacent wire hops.
+    for(genvar ib=0;ib<138;ib=ib+1) begin:g_ml_nface_in
+      (* keep=1 *) ot_s81sl_lep_face8 u_capture(.clk(clk),.d(ml_rd[ib*8+:8]),.q(mrd[ib*8+:8]));
+    end
+`else
     always @(posedge clk) mrd <= ml_rd;
+`endif
     // MU-S81-2/RX: selects straight from the show-ahead flops.  Per pair X: gX = X releases a ring beat (pair A wins a
     // collision, as rpb), lX = its pre-decoded land bit (lane 0 XB / XQ ring beat && lane 1 tag && land); sX = deliver
     // X's beat on ri, sM = deliver the replayed beat (cut-through wins a collision, mcol fault as before).
@@ -852,9 +860,16 @@ module ot_s81sl_lep_core #(
     end
     always @(posedge clk) begin
         rid <= nrid;
+`ifndef OT_S81SL_LEP_NFACE
         mwd <= rb;
-
+`endif
     end
+`ifdef OT_S81SL_LEP_NFACE
+    // SAME existing mwd edge; no new register, latency or reset dependency.
+    for(genvar ob=0;ob<138;ob=ob+1) begin:g_ml_nface_out
+      (* keep=1 *) ot_s81sl_lep_face8 u_capture(.clk(clk),.d(rb[ob*8+:8]),.q(mwd[ob*8+:8]));
+    end
+`endif
     if(NATIVE32!=0 && RX_SRAM!=0) begin:g_native_return
       wire [31:0] ring_tag={1'b1,rb[TG+2+:10],rb[TG+12+:21]};
       wire [31:0] replay_tag={1'b1,mrd[TG+2+:10],mrd[TG+12+:21]};
@@ -1487,4 +1502,10 @@ endmodule
  wire [4:0] code=cut?ring_code:replay_code;
  wire has_tag=code[0] && (code[3:1]==3'd1 || code[3:1]==3'd2) && code[4];
  assign q=has_tag?(cut?ring_data:replay_data):8'd0;
+endmodule
+
+// Opt-in LEPA physical byte owner. Datapath intentionally unreset, as before.
+(* keep_hierarchy="yes" *)
+module ot_s81sl_lep_face8(input wire clk,input wire [7:0] d,output reg[7:0] q);
+ always @(posedge clk) q<=d;
 endmodule
