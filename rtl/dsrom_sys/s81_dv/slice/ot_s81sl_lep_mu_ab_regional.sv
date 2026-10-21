@@ -222,7 +222,12 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_s81sl_lepab_replay_slice #(parameter integer W=12,STRIP=1)(
  input wire [4:0] code,input wire [W-1:0] i,output wire [W-1:0] o);
- wire tagged_beat=code[4] && code[0] && (code[3:1]==1 || code[3:1]==2);
+ wire tagged_beat;
+ (* keep=1 *) ot_s81sl_lepab_replay_decode u_decode(.code(code),.tagged_beat(tagged_beat));
  assign o=(STRIP!=0)?(tagged_beat?{W{1'b0}}:i):(tagged_beat?i:{W{1'b0}});
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_lepab_replay_decode(input wire [4:0] code,output wire tagged_beat);
+ assign tagged_beat=code[4] && code[0] && (code[3:1]==1 || code[3:1]==2);
 endmodule
 `default_nettype wire
