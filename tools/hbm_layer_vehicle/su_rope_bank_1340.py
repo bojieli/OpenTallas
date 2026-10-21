@@ -6,11 +6,12 @@ Only original pre-operation A/B/D enter the DUT; references feed comparisons.
 from pathlib import Path
 import hashlib
 import math
+import re
 import numpy as np
 
 
 def lower(raw, q=0, data=None, place=None, tag="", timing=None, scratch_base=None,
-          pair_c_reads=0, pair_source_path=None, **unused):
+          pair_c_reads=0, pair_source_path=None, pair_die_path=None, **unused):
     from hbm_layer_vehicle import layer_images as LI
     from hbm_layer_vehicle.su_layer_lower_1021 import TreeLines, move_words_to_rf
     from hbm_layer_vehicle.native_profile import NativeTiming
@@ -34,6 +35,16 @@ def lower(raw, q=0, data=None, place=None, tag="", timing=None, scratch_base=Non
         return refuse("actual_pair_source_unreadable")
     if any(s not in source for s in ("PAIR_C_READS=0", "g_pair_request", "pair_c_age[2]")):
         return refuse("actual_C_request_and_return_exchange_missing")
+    if pair_die_path is None:
+        return refuse("actual_selected_die_PAIR_C_READS_binding_required")
+    try:
+        selected_die = Path(pair_die_path).read_text()
+    except OSError:
+        return refuse("actual_selected_die_source_unreadable")
+    for group in range(4):
+        match = re.search(r"ot_hbm_su_static_pgslice_lg #\(([^\n]*)\)\) su_SW" + str(group) + r" \(", selected_die)
+        if match is None or ".PAIR_C_READS(1)" not in match[1]:
+            return refuse("actual_selected_SW_instance_PAIR_C_READS1_missing:" + str(group))
     if type(scratch_base) is not int or scratch_base < 0 or scratch_base % 128:
         return refuse("allocated128word_aligned_physical_VM_WORD_scratch_base_required")
     if (scratch_base//8)>>13 != q or ((scratch_base+127)//8)>>13 != q:
@@ -146,7 +157,8 @@ def lower(raw, q=0, data=None, place=None, tag="", timing=None, scratch_base=Non
             mode="local_C_pair_exchange_and_runtime_BD_VM_RF_duplication"),
         native_timing=timing.as_dict(),command_width=2470,
         source_contract=dict(PAIR_C_READS=1,extra_C_serial_edges=0,
-            source_sha256=hashlib.sha256(source.encode()).hexdigest(),scratch_base_unit="physical_VM_WORD",
+            source_sha256=hashlib.sha256(source.encode()).hexdigest(),
+            selected_die_sha256=hashlib.sha256(selected_die.encode()).hexdigest(),scratch_base_unit="physical_VM_WORD",
             scratch_base=scratch_base,scratch_words=128,external_neighbour_operands=False,RF_external_drive=False),
         runtime_coefficient_moves=moves,scratch_write_footprint=scratch_events,
         scratch_read_footprint=scratch_reads,scratch_reuse_after_serial=last_commit+1,

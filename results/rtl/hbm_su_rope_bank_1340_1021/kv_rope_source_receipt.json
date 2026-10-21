@@ -734,6 +734,7 @@
     "PAIR_C_READS": 1,
     "extra_C_serial_edges": 0,
     "source_sha256": "25cfd87622eed3722e2fb28f8cf3a0cb824100502dfc002e1489049bbd97ff38",
+    "selected_die_sha256": "005539fd5f005fadb16a949afec13be6b9ef376988a11afdbe32e50da72be366",
     "scratch_base_unit": "physical_VM_WORD",
     "scratch_base": 65024,
     "scratch_words": 128,
@@ -1656,5 +1657,5 @@
     "old_price_preserved": false,
     "connected_selected_RTL_required": true
   },
-  "qualification": "source/fixture compiler only; actual selected RTL pending"
+  "qualification": "source/fixture only; candidateactualbinding verified; RTLproof pending"
 }
