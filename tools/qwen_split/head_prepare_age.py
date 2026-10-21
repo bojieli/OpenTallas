@@ -53,7 +53,7 @@ def measure(case, tt_source_receipt=None):
             raise ValueError('TT embedding LP output offsets are missing/unequal/unqualified')
         source_to_output=values[0]-producer_offset
         tt_local=1+source_to_output
-        tt_source=dict(master=tt_master,calendar_sample_edges=1,output_offset_edges=values[0],
+        tt_source=dict(status=row['status'],master=tt_master,calendar_sample_edges=1,output_offset_edges=values[0],
                        producer_instance=producer,producer_offset_edges=producer_offset,
                        source_to_output_edges=source_to_output,
                        receipt_sha256=hashlib.sha256(receipt.read_bytes()).hexdigest(),
