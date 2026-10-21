@@ -3,7 +3,7 @@
  "top": "ot_hidx_s3_flat_lp",
  "kind": "cluster",
  "sources": [
-  "rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp.sv",
+  "rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp_hard.sv",
   "rtl/common/landed_parent/ot_pl_land.sv",
   "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv",
   "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv",
@@ -123,56 +123,57 @@
   "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (1 stage, ck_ctl) -> regional runs u_lpr_<r> -> per-child u_lprc_* pads -> each child's ot_rst_relay (2 sync + region stage); the port net has ONE sink"
  },
  "outline": {
-  "w": 600.0,
-  "h": 450.0,
+  "w": 691.2,
+  "h": 648.0,
   "exact": true
  },
  "macros": [],
  "children": [
   {
-   "view": "physical/ref_tile/hidx_sel_s3q_a/views/ot_hidx_s3_q",
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
    "count": 1,
    "inst": "u_q0",
    "at": [
-    10.8,
-    229.68
+    43.2,
+    388.8
    ]
   },
   {
-   "view": "physical/ref_tile/hidx_sel_s3q_a/views/ot_hidx_s3_q",
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
    "count": 1,
    "inst": "u_q1",
    "at": [
-    330.0,
-    229.68
+    388.8,
+    388.8
    ]
   },
   {
-   "view": "physical/ref_tile/hidx_sel_s3q_a/views/ot_hidx_s3_q",
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
    "count": 1,
    "inst": "u_q2",
    "at": [
-    10.8,
-    4.32
+    43.2,
+    43.2
    ]
   },
   {
-   "view": "physical/ref_tile/hidx_sel_s3q_a/views/ot_hidx_s3_q",
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
    "count": 1,
    "inst": "u_q3",
    "at": [
-    330.0,
-    4.32
+    388.8,
+    43.2
    ]
   },
   {
-   "view": "physical/ref_tile/hidx_sel_s3c_a/views/ot_hidx_s3_ctl",
+   "view": "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl",
    "count": 1,
    "inst": "u_ctl",
    "at": [
-    278.4,
-    198.0
-   ]
+    302.4,
+    302.4
+   ],
+   "at_exact": true
   }
  ],
  "pins": {
@@ -208,52 +209,52 @@
  },
  "pin_ranges": {
   "in_line_0": [
-   232.0,
-   338.0
+   391.2,
+   497.2
   ],
   "in_line_1": [
-   339.0,
-   445.0
+   498.2,
+   604.2
   ],
   "in_line_2": [
-   6.0,
-   112.0
+   44.0,
+   150.0
   ],
   "in_line_3": [
-   113.0,
-   219.0
+   151.0,
+   257.0
   ],
   "selected_v_0": [
-   232.0,
-   232.2
+   391.2,
+   391.4
   ],
   "selected_line_0": [
-   233.0,
-   338.0
+   392.2,
+   497.2
   ],
   "selected_v_1": [
-   339.0,
-   339.2
+   498.2,
+   498.4
   ],
   "selected_line_1": [
-   340.0,
-   445.0
+   499.2,
+   604.2
   ],
   "selected_v_2": [
-   6.0,
-   6.2
+   44.0,
+   44.2
   ],
   "selected_line_2": [
-   7.0,
-   112.0
+   45.0,
+   150.0
   ],
   "selected_v_3": [
-   113.0,
-   113.2
+   151.0,
+   151.2
   ],
   "selected_line_3": [
-   114.0,
-   219.0
+   152.0,
+   257.0
   ],
   "ck_ctl": [
    299.0,
@@ -307,15 +308,20 @@
   "period_ps": 833.333333,
   "macro_halo_um": 5.4,
   "hold_margin_ns": 0.03,
-  "io_hold_margin_ns": 0.03
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M6",
+   "v": "M7"
+  }
  },
- "structural_change": "L2H-IDXSEL s3 (LEAD3-HBM route B 10-19/20): the HBM IDX selector as a LANDED-REGION cluster (lp.py, reschedule mode): ONE hardened quadrant tile ot_hidx_s3_q x4 (2 x 2, 259.2 x 216 each) + the ctl tile in the centre column; 5 local clock regions (ck_ctl, ck_q0..3), 20 landed control crossings (1,252 flops), 1-bit reset runs only; the line faces are per-quadrant ports on their quadrant clock (W in_line, E selected). Die master ot_hbm_idx_selector_s3 = zero-logic port rename of this top (port list == ot_hbm_idx_selector_static_sel).",
- "slot_change_request": "d4g idx_sel slot 600 x 450 kept; faces: W in_line (as granted), E selected (as granted), S = control / clocks / reset / fault (the granted S face, freed by the removed out_line emit face); the line ports are split per quadrant (die master wrapper restores the die port list).",
+ "structural_change": "L2H-IDXSEL s3 (LEAD3-HBM route B 10-19/20): the HBM IDX selector as a LANDED-REGION cluster (lp.py, reschedule mode): ONE hardened quadrant tile ot_hidx_s3_q x4 (2 x 2, 259.2 x 216 each) + the ctl tile in the centre column; parent691.2x648.0 grows relay channels from invalid snapped600x450; 5 local clock regions (ck_ctl, ck_q0..3), 20 landed control crossings (1,252 flops), 1-bit reset runs only; the line faces are per-quadrant ports on their quadrant clock (W in_line, E selected). Die master ot_hbm_idx_selector_s3 = zero-logic port rename of this top (port list == ot_hbm_idx_selector_static_sel).",
+ "slot_change_request": "d4g idx_sel slot grows 600 x 450 -> 691.2 x 648.0; 86.4um vertical /129.6um horizontal centre bands and43.2um outer channels; faces: W in_line (as granted), E selected (as granted), S = control / clocks / reset / fault (the granted S face, freed by the removed out_line emit face); the line ports are split per quadrant (die master wrapper restores the die port list).",
  "job": {
-  "owner": "Claude LEAD3-HBM/L2H-IDXSEL-S3",
-  "branch": "claude/l2h-idxsel-s3-1019",
-  "tag": "s3paa",
-  "purpose": "L2H-IDXSEL s3 landed IDX selector parent (children hidx_sel_s3q_a x4 + hidx_sel_s3c_a).",
+  "owner": "Codex CODEX-HBM-IDX-1021",
+  "branch": "codex/hbm-idx-s3p-1021",
+  "tag": "s3pba",
+  "purpose": "CLOSED s3u_b + s3d_a: L2H-IDXSEL s3 landed IDX selector parent (children hidx_sel_s3u_b x4 + hidx_sel_s3d_a).",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
    "rtl/lib",
