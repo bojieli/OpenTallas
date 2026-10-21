@@ -14,6 +14,7 @@ from layer_prog import kv_bank_contract as K
 BINDINGS_SHA256 = '5e2de380659740383ab311382803d92b34b8cf49359a3167d6f9aa3c56e6d7ee'
 G9_DIE_SHA256 = '00715e1a11cc9681bf5f1d6a70cf5d4a2c9c3a8094730cf26291f9d3e3a4c8ea'
 G9_TABLE_SHA256 = '0feb9b8c74476fbfaf0ce7a99dac3b71290a24c9635e6047d1501e6478a677d7'
+G9_PORT_BIND_SHA256 = '309c101e3be0f1062ad35fd964db4aa6b7f348dd0704691e2a2d1f82e9700398'
 BASE = 'rtl/dsrom_sys/s81_dv/slice/'
 ADDRESS_SOURCES = {
     BASE+'ot_s81sl_cap_rt.sv': 'b4add20455f231ff8597ecf19bb9254ca608efbf0457ac6edeaf96c69e5a9a83',
@@ -27,6 +28,54 @@ SCHEMAS = {'opentallas.s81.aproj_native_programme.v1',
 
 def canonical_sha(obj):
     return hashlib.sha256(json.dumps(obj, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def source_profile_files(readset, bindings):
+    """Require the actual full snapshot and final ordered289 selection.
+
+    The selected file digests are a source owner's read-only byte census, not
+    a three-file ABI proxy or a claim that any programme ran.
+    """
+    raw=readset.get('source_inputs_manifest_text','').encode()
+    pbraw=readset.get('port_bind_text','').encode()
+    if hashlib.sha256(raw).hexdigest()!=bindings['source_inputs_manifest_sha256']:
+        raise ValueError('full actual materialized_inputs.sha256 bytes missing or changed')
+    if hashlib.sha256(pbraw).hexdigest()!=G9_PORT_BIND_SHA256:
+        raise ValueError('actual final289 port_bind bytes missing or changed')
+    manifest={}
+    for line in raw.decode().splitlines():
+        match=re.fullmatch(r'([0-9a-f]{64})\s+\./(.+)',line)
+        if not match:raise ValueError('malformed actual source-input manifest entry')
+        if match[2] in manifest:raise ValueError('duplicate actual source-input manifest entry')
+        manifest[match[2]]=match[1]
+    if len(manifest)!=26627:raise ValueError('incomplete actual materialized source manifest')
+    pb=json.loads(pbraw)
+    selected=readset.get('selected_rtl_sha256',[])
+    if pb['die_sha256']!=G9_DIE_SHA256 or len(pb['rtl_files'])!=289 or (
+        sorted(pb['defines'])!=sorted(bindings['defines'])):
+        raise ValueError('port-bind die/ordered source/actual seven defines differ')
+    if [r.get('path') for r in selected]!=pb['rtl_files'] or any(
+        not re.fullmatch(r'[0-9a-f]{64}',r.get('sha256','')) for r in selected):
+        raise ValueError('complete ordered actual289 file digests missing or changed')
+    files={}
+    origins={}
+    for row in selected:
+        path=row['path']
+        if '/rtl_extra/' in path:
+            rel=path.split('/rtl_extra/',1)[1].split('/',1)[1]
+        elif '/src/' in path:
+            rel=path.split('/src/',1)[1]
+        else:
+            continue
+        if rel in files and files[rel]!=row['sha256']:
+            raise ValueError('ambiguous selected source identity: '+rel+'; first '+origins[rel]['path']+' SHA256='+origins[rel]['sha256']+'; next '+path+' SHA256='+row['sha256']+'; executed module-selection witness required')
+        files[rel]=row['sha256']
+        origins.setdefault(rel,row)
+        if '/src/' in path and manifest.get(rel)!=row['sha256']:
+            raise ValueError('selected source differs from materialized manifest: '+rel)
+    for name,digest in ADDRESS_SOURCES.items():
+        if files.get(name)!=digest:raise ValueError('selected CAP_RT/VP/XRT address source changed: '+name)
+    return files
 
 
 def capture_readset(programme, rank):
@@ -111,7 +160,12 @@ def _horizontal(die, source, target):
                        and any(d['instance']==names[b] and d['port']==in_pin and d['lane']==lane
                                for d in p['destination'])]
                 if len(paths)!=1:
-                    raise ValueError('actual source station/landing chain missing or ambiguous')
+                    candidates=[p for p in traced if p['source']['instance']==names[a]
+                        and p['source']['port']==out_pin and p['source']['lane']==lane]
+                    detail=[dict(unbound=p.get('unbound'),last_actual_output=(p.get('chain') or [{}])[-1].get('output'))
+                            for p in candidates]
+                    raise ValueError(f'{names[a]}.{out_pin}[lane{lane}] -> {names[b]}.{in_pin}[lane{lane}]: '
+                                     f'missing/ambiguous exact station chain {detail}')
                 lanes.append(paths[0])
             steps.append(dict(source_sid=a,destination_sid=b,actual_lane_chains=lanes,
                               clock_phase_qualified=False,age_edges=None))
@@ -122,7 +176,8 @@ def _horizontal(die, source, target):
             return clean.split(',')
         outgoing=wires(src.get(out_pin,''));incoming=wires(dst.get(in_pin,''))
         if len(outgoing)!=4 or outgoing!=incoming:
-            raise ValueError('four actual direct lane wires not identical; explicit station/landing chain required')
+            raise ValueError(f'{names[a]}.{out_pin} -> {names[b]}.{in_pin}: '
+                             'four actual direct lane wires not identical; explicit station/landing chain required')
         steps.append(dict(source_sid=a,destination_sid=b,
             source_instance=names[a],source_pin=out_pin,
             destination_instance=names[b],destination_pin=in_pin,actual_lane_wires=outgoing,
@@ -157,12 +212,10 @@ def assemble(die, programmes, bindings_raw, source_readset):
         raise ValueError('duplicate KV output ownership across source descriptors')
     missing = set(range(512)) - {r['kv_index'] for r in readset}
     holds=[]
-    files=source_readset.get('files_sha256',{})
-    if any(files.get(n) != d for n,d in ADDRESS_SOURCES.items()):
-        holds.append('actual CAP_RT/VP/XRT source readset missing or changed')
-    if sorted(source_readset.get('defines',[])) != sorted(bindings['defines']) or (
-        source_readset.get('source_inputs_manifest_sha256') != bindings['source_inputs_manifest_sha256']):
-        holds.append('actual seven-define G9 source-input manifest is not bound; historical six-define profile is insufficient')
+    try:
+        files=source_profile_files(source_readset,bindings)
+    except (ValueError,KeyError,TypeError) as error:
+        files={};holds.append('actual full seven-define source readset held: '+str(error))
     if die is None or die.die_sha != G9_DIE_SHA256:
         holds.append('actual G9 compiler Die/link graph not bound')
     if any(e['programme']['capture']['die_sha'] != G9_DIE_SHA256 for e in programmes):
