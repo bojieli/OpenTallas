@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: ot-epyc6       admits   845 GB (avail 699, growth 108, headroom 0, waiters 0/0 GB) load 27/128 running 10 disk 5997 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2491242-1792433568 after 0 s
+HEAD_CONTROL_EQ_PASS cycles=6000 checked=5794 alloutputs classes=5 dirtyreset=1
+- rtl/test/qwen_dv/tb_head_control_trim_equiv.sv:154: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 60us; walltime 0.038 s; speed 1.576 ms/s
+- Verilator: cpu 0.038 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2491242-1792433568): exit 0

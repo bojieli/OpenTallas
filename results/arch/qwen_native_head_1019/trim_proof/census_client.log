@@ -1,0 +1,547 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: ot-epyc6       admits   837 GB (avail 699, growth 113, headroom 0, waiters 0/0 GB) load 26/128 running 11 disk 5997 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-head-controls-trim-1019
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2491633-1792433575 after 0 s
+{
+  "input_overloads": [],
+  "cells": 43510,
+  "FF": 6719,
+  "macros": {
+    "ot_sram_1r1w2c_128x64_m1": 2,
+    "ot_sram_1r1w_32x64_m1": 13
+  },
+  "clock_nets": {
+    "[2]": 6719
+  },
+  "note": "Generic noabc source census; holding candidates require semantic audit, functional math stage flags may be useful. Reset and clock ancestry not physical qualified."
+}
+bad_drivers 83 holding_candidates 201
+[
+  {
+    "driver": [
+      "$auto$ff.cc:337:slice$65649",
+      "Q",
+      0
+    ],
+    "type": "$_DFF_PN0_",
+    "bit": 1166,
+    "names": [
+      "u_h.rt",
+      "u_h.u_lane.g_new_ve1.u_v.rst_n",
+      "u_h.u_lane.g_packed_d38.u_d38.rst_n",
+      "u_h.u_lane.g_packed_d914.u_d914.rst_n",
+      "u_h.u_lane.g_packed_dmc.u_dmc.rst_n",
+      "u_h.u_lane.g_packed_dmd.u_dmd.rst_n",
+      "u_h.u_lane.g_packed_ml_tag.u_ml_tag.rst_n",
+      "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.rst_n",
+      "u_h.u_lane.rst_n",
+      "u_h.u_lane.u_ad.g_l.u.rst_n",
+      "u_h.u_lane.u_ad.g_l.u.u_ca.rst_n",
+      "u_h.u_lane.u_ad.g_l.u.u_cb.rst_n",
+      "u_h.u_lane.u_ad.g_l.u.u_cc.rst_n",
+      "u_h.u_lane.u_ad.g_l.u.u_cd.rst_n",
+      "u_h.u_lane.u_ad.rst_n",
+      "u_h.u_lane.u_e1.g_l.u.rst_n",
+      "u_h.u_lane.u_e1.g_l.u.u_ca.rst_n",
+      "u_h.u_lane.u_e1.g_l.u.u_cb.rst_n",
+      "u_h.u_lane.u_e1.g_l.u.u_cc.rst_n",
+      "u_h.u_lane.u_e1.g_l.u.u_cd.rst_n",
+      "u_h.u_lane.u_e1.rst_n",
+      "u_h.u_lane.u_ma.g_l.u.rst_n",
+      "u_h.u_lane.u_ma.g_l.u.u_c1.rst_n",
+      "u_h.u_lane.u_ma.g_l.u.u_c2.rst_n",
+      "u_h.u_lane.u_ma.g_l.u.u_c3.rst_n",
+      "u_h.u_lane.u_ma.g_l.u.u_c4.rst_n",
+      "u_h.u_lane.u_ma.g_l.u.u_c5.rst_n",
+      "u_h.u_lane.u_ma.g_l.u.u_c6.rst_n",
+      "u_h.u_lane.u_ma.g_l.u.u_c7.rst_n",
+      "u_h.u_lane.u_ma.rst_n",
+      "u_h.u_lane.u_mb.g_l.u.rst_n",
+      "u_h.u_lane.u_mb.g_l.u.u_c1.rst_n",
+      "u_h.u_lane.u_mb.g_l.u.u_c2.rst_n",
+      "u_h.u_lane.u_mb.g_l.u.u_c3.rst_n",
+      "u_h.u_lane.u_mb.g_l.u.u_c4.rst_n",
+      "u_h.u_lane.u_mb.g_l.u.u_c5.rst_n",
+      "u_h.u_lane.u_mb.g_l.u.u_c6.rst_n",
+      "u_h.u_lane.u_mb.g_l.u.u_c7.rst_n",
+      "u_h.u_lane.u_mb.rst_n",
+      "u_h.u_lane.u_mc.g_l.u.rst_n",
+      "u_h.u_lane.u_mc.g_l.u.u_c1.rst_n",
+      "u_h.u_lane.u_mc.g_l.u.u_c2.rst_n",
+      "u_h.u_lane.u_mc.g_l.u.u_c3.rst_n",
+      "u_h.u_lane.u_mc.g_l.u.u_c4.rst_n",
+      "u_h.u_lane.u_mc.g_l.u.u_c5.rst_n",
+      "u_h.u_lane.u_mc.g_l.u.u_c6.rst_n",
+      "u_h.u_lane.u_mc.g_l.u.u_c7.rst_n",
+      "u_h.u_lane.u_mc.rst_n",
+      "u_h.u_lane.u_md.g_l.u.rst_n",
+      "u_h.u_lane.u_md.g_l.u.u_c1.rst_n",
+      "u_h.u_lane.u_md.g_l.u.u_c2.rst_n",
+      "u_h.u_lane.u_md.g_l.u.u_c3.rst_n",
+      "u_h.u_lane.u_md.g_l.u.u_c4.rst_n",
+      "u_h.u_lane.u_md.g_l.u.u_c5.rst_n",
+      "u_h.u_lane.u_md.g_l.u.u_c6.rst_n",
+      "u_h.u_lane.u_md.g_l.u.u_c7.rst_n",
+      "u_h.u_lane.u_md.rst_n",
+      "u_h.u_lane.u_valid_guards.rst_n",
+      "u_h.u_lane.g_packed_d38.u_d38.g_bank[0].u_bank/rst_n",
+      "u_h.u_lane.g_packed_d38.u_d38.g_bank[1].u_bank/rst_n",
+      "u_h.u_lane.g_packed_d38.u_d38.g_bank[2].u_bank/rst_n",
+      "u_h.u_lane.g_packed_d914.u_d914.g_bank[0].u_bank/rst_n",
+      "u_h.u_lane.g_packed_dmc.u_dmc.g_bank[0].u_bank/rst_n",
+      "u_h.u_lane.g_packed_dmc.u_dmc.g_bank[1].u_bank/rst_n",
+      "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[0].u_bank/rst_n",
+      "u_h.u_lane.g_packed_dmd.u_dmd.g_bank[1].u_bank/rst_n",
+      "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[0].u_bank/rst_n",
+      "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[1].u_bank/rst_n",
+      "u_h.u_lane.g_packed_ml_tag.u_ml_tag.g_bank[2].u_bank/rst_n",
+      "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[0].u_bank/rst_n",
+      "u_h.u_lane.g_tls.g_packed_tap0_ring.u_tap0_ring.g_bank[1].u_bank/rst_n"
+    ],
+    "ultimate": 1603,
+    "direct": 1603
+  },
+  {
+    "driver": [
+      "$auto$simplemap.cc:256:simplemap_logbin$46326",
+      "Y",
+      0
+    ],
+    "type": "$_OR_",
+    "bit": 39139,
+    "names": [
+      "u_h.u_lane.g_tls.ring_on"
+    ],
+    "ultimate": 130,
+    "direct": 130
+  },
+  {
+    "driver": [
+      "$auto$ff.cc:337:slice$48629",
+      "Q",
+      0
+    ],
+    "type": "$_DFF_P_",
+    "bit": 7774,
+    "names": [
+      "u_h.u_lane.s1_tag",
+      "u_h.u_lane.t_lane"
+    ],
+    "ultimate": 128,
+    "direct": 128
+  },
+  {
+    "driver": [
+      "$auto$simplemap.cc:106:simplemap_bitop$78867",
+      "Y",
+      0
+    ],
+    "type": "$_OR_",
+    "bit": 10920,
+    "names": [
+      "$auto$alumacc.cc:548:replace_alu$13401.BB",
+      "$auto$alumacc.cc:548:replace_alu$13401.BB",
+      "$auto$alumacc.cc:548:replace_alu$13401.BB",
+      "$auto$alumacc.cc:548:replace_alu$13401.BB",
+      "$auto$alumacc.cc:548:replace_alu$13401.BB",
+      "$auto$alumacc.cc:548:replace_alu$13401.BB",
+      "$auto$alumacc.cc:548:replace_alu$14944.CO",
+      "$auto$alumacc.cc:548:replace_alu$14944.CO",
+      "$auto$simplemap.cc:148:simplemap_reduce$43435",
+      "$auto$simplemap.cc:148:simplemap_reduce$43435",
+      "$auto$simplemap.cc:148:simplemap_reduce$43435",
+      "$auto$simplemap.cc:148:simplemap_reduce$43442",
+      "$auto$simplemap.cc:148:simplemap_reduce$43451",
+      "$auto$simplemap.cc:148:simplemap_reduce$43451",
+      "$auto$simplemap.cc:148:simplemap_reduce$43451",
+      "$auto$simplemap.cc:148:simplemap_reduce$43458",
+      "$auto$simplemap.cc:148:simplemap_reduce$43467",
+      "$auto$simplemap.cc:148:simplemap_reduce$43467",
+      "$auto$simplemap.cc:148:simplemap_reduce$43490",
+      "$auto$simplemap.cc:148:simplemap_reduce$43499",
+      "$auto$simplemap.cc:148:simplemap_reduce$43499",
+      "$auto$simplemap.cc:148:simplemap_reduce$43499",
+      "$auto$simplemap.cc:148:simplemap_reduce$43506",
+      "$auto$simplemap.cc:148:simplemap_reduce$43522",
+      "$auto$simplemap.cc:148:simplemap_reduce$43554",
+      "$auto$simplemap.cc:148:simplemap_reduce$43563",
+      "$auto$simplemap.cc:148:simplemap_reduce$43563",
+      "$auto$simplemap.cc:148:simplemap_reduce$43570",
+      "$auto$simplemap.cc:148:simplemap_reduce$43579",
+      "$auto$simplemap.cc:148:simplemap_reduce$43579",
+      "$auto$simplemap.cc:148:simplemap_reduce$43579",
+      "$auto$simplemap.cc:148:simplemap_reduce$43586",
+      "$auto$simplemap.cc:148:simplemap_reduce$43618",
+      "$auto$simplemap.cc:148:simplemap_reduce$43634",
+      "$auto$simplemap.cc:148:simplemap_reduce$43650",
+      "$auto$simplemap.cc:148:simplemap_reduce$43691",
+      "$auto$simplemap.cc:148:simplemap_reduce$43691",
+      "$auto$simplemap.cc:148:simplemap_reduce$43691",
+      "$auto$simplemap.cc:148:simplemap_reduce$43698",
+      "$auto$simplemap.cc:148:simplemap_reduce$43723",
+      "$auto$simplemap.cc:148:simplemap_reduce$43723",
+      "$auto$simplemap.cc:148:simplemap_reduce$43762",
+      "$auto$simplemap.cc:148:simplemap_reduce$43819",
+      "$auto$simplemap.cc:148:simplemap_reduce$43819",
+      "$auto$simplemap.cc:148:simplemap_reduce$43826",
+      "$auto$simplemap.cc:148:simplemap_reduce$43890",
+      "$auto$simplemap.cc:148:simplemap_reduce$43954",
+      "$auto$simplemap.cc:148:simplemap_reduce$44018",
+      "$auto$simplemap.cc:148:simplemap_reduce$44082",
+      "$auto$simplemap.cc:148:simplemap_reduce$44139",
+      "$auto$simplemap.cc:148:simplemap_reduce$44139",
+      "$auto$simplemap.cc:148:simplemap_reduce$44171",
+      "$auto$simplemap.cc:148:simplemap_reduce$44171",
+      "$auto$simplemap.cc:148:simplemap_reduce$44171",
+      "$auto$simplemap.cc:148:simplemap_reduce$44178"
+    ],
+    "ultimate": 119,
+    "direct": 118
+  },
+  {
+    "driver": [
+      "$auto$simplemap.cc:106:simplemap_bitop$85012",
+      "Y",
+      0
+    ],
+    "type": "$_OR_",
+    "bit": 10922,
+    "names": [
+      "$auto$alumacc.cc:548:replace_alu$13831.BB",
+      "$auto$alumacc.cc:548:replace_alu$13831.BB",
+      "$auto$alumacc.cc:548:replace_alu$13831.BB",
+      "$auto$alumacc.cc:548:replace_alu$13831.BB",
+      "$auto$alumacc.cc:548:replace_alu$13831.BB",
+      "$auto$alumacc.cc:548:replace_alu$13831.BB",
+      "$auto$alumacc.cc:548:replace_alu$14908.CO",
+      "$auto$alumacc.cc:548:replace_alu$14908.CO",
+      "$auto$simplemap.cc:148:simplemap_reduce$42513",
+      "$auto$simplemap.cc:148:simplemap_reduce$42513",
+      "$auto$simplemap.cc:148:simplemap_reduce$42513",
+      "$auto$simplemap.cc:148:simplemap_reduce$42520",
+      "$auto$simplemap.cc:148:simplemap_reduce$42529",
+      "$auto$simplemap.cc:148:simplemap_reduce$42529",
+      "$auto$simplemap.cc:148:simplemap_reduce$42529",
+      "$auto$simplemap.cc:148:simplemap_reduce$42536",
+      "$auto$simplemap.cc:148:simplemap_reduce$42545",
+      "$auto$simplemap.cc:148:simplemap_reduce$42545",
+      "$auto$simplemap.cc:148:simplemap_reduce$42568",
+      "$auto$simplemap.cc:148:simplemap_reduce$42577",
+      "$auto$simplemap.cc:148:simplemap_reduce$42577",
+      "$auto$simplemap.cc:148:simplemap_reduce$42577",
+      "$auto$simplemap.cc:148:simplemap_reduce$42584",
+      "$auto$simplemap.cc:148:simplemap_reduce$42600",
+      "$auto$simplemap.cc:148:simplemap_reduce$42632",
+      "$auto$simplemap.cc:148:simplemap_reduce$42641",
+      "$auto$simplemap.cc:148:simplemap_reduce$42641",
+      "$auto$simplemap.cc:148:simplemap_reduce$42648",
+      "$auto$simplemap.cc:148:simplemap_reduce$42657",
+      "$auto$simplemap.cc:148:simplemap_reduce$42657",
+      "$auto$simplemap.cc:148:simplemap_reduce$42657",
+      "$auto$simplemap.cc:148:simplemap_reduce$42664",
+      "$auto$simplemap.cc:148:simplemap_reduce$42696",
+      "$auto$simplemap.cc:148:simplemap_reduce$42712",
+      "$auto$simplemap.cc:148:simplemap_reduce$42728",
+      "$auto$simplemap.cc:148:simplemap_reduce$42769",
+      "$auto$simplemap.cc:148:simplemap_reduce$42769",
+      "$auto$simplemap.cc:148:simplemap_reduce$42769",
+      "$auto$simplemap.cc:148:simplemap_reduce$42776",
+      "$auto$simplemap.cc:148:simplemap_reduce$42801",
+      "$auto$simplemap.cc:148:simplemap_reduce$42801",
+      "$auto$simplemap.cc:148:simplemap_reduce$42840",
+      "$auto$simplemap.cc:148:simplemap_reduce$42897",
+      "$auto$simplemap.cc:148:simplemap_reduce$42897",
+      "$auto$simplemap.cc:148:simplemap_reduce$42904",
+      "$auto$simplemap.cc:148:simplemap_reduce$42968",
+      "$auto$simplemap.cc:148:simplemap_reduce$43032",
+      "$auto$simplemap.cc:148:simplemap_reduce$43096",
+      "$auto$simplemap.cc:148:simplemap_reduce$43160",
+      "$auto$simplemap.cc:148:simplemap_reduce$43217",
+      "$auto$simplemap.cc:148:simplemap_reduce$43217",
+      "$auto$simplemap.cc:148:simplemap_reduce$43249",
+      "$auto$simplemap.cc:148:simplemap_reduce$43249",
+      "$auto$simplemap.cc:148:simplemap_reduce$43249",
+      "$auto$simplemap.cc:148:simplemap_reduce$43256"
+    ],
+    "ultimate": 119,
+    "direct": 118
+  },
+  {
+    "driver": [
+      "$auto$simplemap.cc:106:simplemap_bitop$98831",
+      "Y",
+      0
+    ],
+    "type": "$_OR_",
+    "bit": 10916,
+    "names": [
+      "$auto$alumacc.cc:548:replace_alu$14385.BB",
+      "$auto$alumacc.cc:548:replace_alu$14385.BB",
+      "$auto$alumacc.cc:548:replace_alu$14385.BB",
+      "$auto$alumacc.cc:548:replace_alu$14385.BB",
+      "$auto$alumacc.cc:548:replace_alu$14385.BB",
+      "$auto$alumacc.cc:548:replace_alu$14385.BB",
+      "$auto$alumacc.cc:548:replace_alu$14833.CO",
+      "$auto$alumacc.cc:548:replace_alu$14833.CO",
+      "$auto$simplemap.cc:148:simplemap_reduce$41299",
+      "$auto$simplemap.cc:148:simplemap_reduce$41299",
+      "$auto$simplemap.cc:148:simplemap_reduce$41299",
+      "$auto$simplemap.cc:148:simplemap_reduce$41306",
+      "$auto$simplemap.cc:148:simplemap_reduce$41318",
+      "$auto$simplemap.cc:148:simplemap_reduce$41318",
+      "$auto$simplemap.cc:148:simplemap_reduce$41318",
+      "$auto$simplemap.cc:148:simplemap_reduce$41325",
+      "$auto$simplemap.cc:148:simplemap_reduce$41357",
+      "$auto$simplemap.cc:148:simplemap_reduce$41357",
+      "$auto$simplemap.cc:148:simplemap_reduce$41402",
+      "$auto$simplemap.cc:148:simplemap_reduce$41432",
+      "$auto$simplemap.cc:148:simplemap_reduce$41432",
+      "$auto$simplemap.cc:148:simplemap_reduce$41432",
+      "$auto$simplemap.cc:148:simplemap_reduce$41439",
+      "$auto$simplemap.cc:148:simplemap_reduce$41458",
+      "$auto$simplemap.cc:148:simplemap_reduce$41490",
+      "$auto$simplemap.cc:148:simplemap_reduce$41499",
+      "$auto$simplemap.cc:148:simplemap_reduce$41499",
+      "$auto$simplemap.cc:148:simplemap_reduce$41506",
+      "$auto$simplemap.cc:148:simplemap_reduce$41518",
+      "$auto$simplemap.cc:148:simplemap_reduce$41518",
+      "$auto$simplemap.cc:148:simplemap_reduce$41518",
+      "$auto$simplemap.cc:148:simplemap_reduce$41525",
+      "$auto$simplemap.cc:148:simplemap_reduce$41557",
+      "$auto$simplemap.cc:148:simplemap_reduce$41573",
+      "$auto$simplemap.cc:148:simplemap_reduce$41589",
+      "$auto$simplemap.cc:148:simplemap_reduce$41630",
+      "$auto$simplemap.cc:148:simplemap_reduce$41630",
+      "$auto$simplemap.cc:148:simplemap_reduce$41630",
+      "$auto$simplemap.cc:148:simplemap_reduce$41637",
+      "$auto$simplemap.cc:148:simplemap_reduce$41665",
+      "$auto$simplemap.cc:148:simplemap_reduce$41665",
+      "$auto$simplemap.cc:148:simplemap_reduce$41704",
+      "$auto$simplemap.cc:148:simplemap_reduce$41764",
+      "$auto$simplemap.cc:148:simplemap_reduce$41764",
+      "$auto$simplemap.cc:148:simplemap_reduce$41771",
+      "$auto$simplemap.cc:148:simplemap_reduce$41838",
+      "$auto$simplemap.cc:148:simplemap_reduce$41902",
+      "$auto$simplemap.cc:148:simplemap_reduce$41975",
+      "$auto$simplemap.cc:148:simplemap_reduce$42042",
+      "$auto$simplemap.cc:148:simplemap_reduce$42102",
+      "$auto$simplemap.cc:148:simplemap_reduce$42102",
+      "$auto$simplemap.cc:148:simplemap_reduce$42134",
+      "$auto$simplemap.cc:148:simplemap_reduce$42134",
+      "$auto$simplemap.cc:148:simplemap_reduce$42134",
+      "$auto$simplemap.cc:148:simplemap_reduce$42141"
+    ],
+    "ultimate": 119,
+    "direct": 118
+  },
+  {
+    "driver": [
+      "$auto$simplemap.cc:106:simplemap_bitop$97070",
+      "Y",
+      0
+    ],
+    "type": "$_OR_",
+    "bit": 10918,
+    "names": [
+      "$auto$alumacc.cc:548:replace_alu$13066.BB",
+      "$auto$alumacc.cc:548:replace_alu$13066.BB",
+      "$auto$alumacc.cc:548:replace_alu$13066.BB",
+      "$auto$alumacc.cc:548:replace_alu$13066.BB",
+      "$auto$alumacc.cc:548:replace_alu$13066.BB",
+      "$auto$alumacc.cc:548:replace_alu$13066.BB",
+      "$auto$alumacc.cc:548:replace_alu$13273.BB",
+      "$auto$alumacc.cc:548:replace_alu$13273.BB",
+      "$auto$alumacc.cc:548:replace_alu$13273.BB",
+      "$auto$alumacc.cc:548:replace_alu$13273.BB",
+      "$auto$alumacc.cc:548:replace_alu$13273.BB",
+      "$auto$alumacc.cc:548:replace_alu$13273.BB",
+      "$auto$alumacc.cc:548:replace_alu$14845.CO",
+      "$auto$alumacc.cc:548:replace_alu$14845.CO",
+      "$auto$simplemap.cc:148:simplemap_reduce$41143",
+      "$auto$simplemap.cc:148:simplemap_reduce$41143",
+      "$auto$simplemap.cc:148:simplemap_reduce$41143",
+      "$auto$simplemap.cc:148:simplemap_reduce$41150",
+      "$auto$simplemap.cc:148:simplemap_reduce$41162",
+      "$auto$simplemap.cc:148:simplemap_reduce$41162",
+      "$auto$simplemap.cc:148:simplemap_reduce$41162",
+      "$auto$simplemap.cc:148:simplemap_reduce$41169",
+      "$auto$simplemap.cc:148:simplemap_reduce$41181",
+      "$auto$simplemap.cc:148:simplemap_reduce$41181",
+      "$auto$simplemap.cc:148:simplemap_reduce$41200",
+      "$auto$simplemap.cc:148:simplemap_reduce$41200",
+      "$auto$simplemap.cc:148:simplemap_reduce$41200",
+      "$auto$simplemap.cc:148:simplemap_reduce$41207",
+      "$auto$simplemap.cc:148:simplemap_reduce$41283",
+      "$auto$simplemap.cc:148:simplemap_reduce$41338",
+      "$auto$simplemap.cc:148:simplemap_reduce$41338",
+      "$auto$simplemap.cc:148:simplemap_reduce$41376",
+      "$auto$simplemap.cc:148:simplemap_reduce$41376",
+      "$auto$simplemap.cc:148:simplemap_reduce$41376",
+      "$auto$simplemap.cc:148:simplemap_reduce$41383",
+      "$auto$simplemap.cc:148:simplemap_reduce$42176",
+      "$auto$simplemap.cc:148:simplemap_reduce$42302",
+      "$auto$simplemap.cc:148:simplemap_reduce$42302",
+      "$auto$simplemap.cc:148:simplemap_reduce$42318",
+      "$auto$simplemap.cc:148:simplemap_reduce$42318",
+      "$auto$simplemap.cc:148:simplemap_reduce$42318",
+      "$auto$simplemap.cc:148:simplemap_reduce$42325",
+      "$auto$simplemap.cc:148:simplemap_reduce$42334",
+      "$auto$simplemap.cc:148:simplemap_reduce$42334",
+      "$auto$simplemap.cc:148:simplemap_reduce$42341",
+      "$auto$simplemap.cc:148:simplemap_reduce$42350",
+      "$auto$simplemap.cc:148:simplemap_reduce$42350",
+      "$auto$simplemap.cc:148:simplemap_reduce$42350",
+      "$auto$simplemap.cc:148:simplemap_reduce$42357",
+      "$auto$simplemap.cc:148:simplemap_reduce$42413",
+      "$auto$simplemap.cc:148:simplemap_reduce$42413",
+      "$auto$simplemap.cc:148:simplemap_reduce$42449",
+      "$auto$simplemap.cc:148:simplemap_reduce$42465",
+      "$auto$simplemap.cc:148:simplemap_reduce$42481",
+      "$auto$simplemap.cc:148:simplemap_reduce$43323",
+      "$auto$simplemap.cc:148:simplemap_reduce$43396",
+      "$auto$simplemap.cc:148:simplemap_reduce$43396",
+      "$auto$simplemap.cc:148:simplemap_reduce$43396",
+      "$auto$simplemap.cc:148:simplemap_reduce$43403",
+      "$auto$simplemap.cc:148:simplemap_reduce$44206",
+      "$auto$simplemap.cc:148:simplemap_reduce$44206",
+      "$auto$simplemap.cc:148:simplemap_reduce$44206",
+      "$auto$simplemap.cc:148:simplemap_reduce$44213",
+      "$auto$simplemap.cc:148:simplemap_reduce$44223",
+      "$auto$simplemap.cc:148:simplemap_reduce$44223",
+      "$auto$simplemap.cc:148:simplemap_reduce$44262",
+      "$auto$simplemap.cc:148:simplemap_reduce$44326",
+      "$auto$simplemap.cc:148:simplemap_reduce$44390",
+      "$auto$simplemap.cc:148:simplemap_reduce$44492",
+      "$auto$simplemap.cc:148:simplemap_reduce$45190"
+    ],
+    "ultimate": 117,
+    "direct": 116
+  },
+  {
+    "driver": [
+      "$auto$simplemap.cc:106:simplemap_bitop$56920",
+      "Y",
+      0
+    ],
+    "type": "$_OR_",
+    "bit": 30386,
+    "names": [
+      "u_h.u_lane.u_ad.g_l.u.cmp_c",
+      "u_h.u_lane.u_ad.g_l.u.u_cmp.cout",
+      "u_h.u_lane.u_ad.g_l.u.u_cmp.g[5]"
+    ],
+    "ultimate": 89,
+    "direct": 89
+  },
+  {
+    "driver": [
+      "$auto$simplemap.cc:106:simplemap_bitop$59176",
+      "Y",
+      0
+    ],
+    "type": "$_OR_",
+    "bit": 5459,
+    "names": [
+      "u_h.u_lane.u_e1.g_l.u.cmp_c",
+      "u_h.u_lane.u_e1.g_l.u.u_cmp.cout",
+      "u_h.u_lane.u_e1.g_l.u.u_cmp.g[5]"
+    ],
+    "ultimate": 88,
+    "direct": 88
+  },
+  {
+    "driver": [
+      "$auto$ff.cc:337:slice$48712",
+      "Q",
+      0
+    ],
+    "type": "$_DFF_P_",
+    "bit": 5595,
+    "names": [
+      "u_h.u_lane.s1_tag",
+      "u_h.u_lane.t_bsrc"
+    ],
+    "ultimate": 65,
+    "direct": 65
+  },
+  {
+    "driver": [
+      "$auto$ff.cc:337:slice$48630",
+      "Q",
+      0
+    ],
+    "type": "$_DFF_P_",
+    "bit": 7776,
+    "names": [
+      "u_h.u_lane.s1_tag",
+      "u_h.u_lane.t_lane"
+    ],
+    "ultimate": 64,
+    "direct": 64
+  },
+  {
+    "driver": [
+      "$auto$simplemap.cc:106:simplemap_bitop$74923",
+      "Y",
+      0
+    ],
+    "type": "$_XOR_",
+    "bit": 10584,
+    "names": [
+      "$auto$alumacc.cc:548:replace_alu$13180.A",
+      "$auto$alumacc.cc:548:replace_alu$13180.P"
+    ],
+    "ultimate": 52,
+    "direct": 51
+  },
+  {
+    "driver": [
+      "$auto$simplemap.cc:298:simplemap_mux$40352",
+      "Y",
+      0
+    ],
+    "type": "$_MUX_",
+    "bit": 26500,
+    "names": [
+      "$auto$share.cc:663:make_supercell$14999.B",
+      "$flatten\\u_h.\\u_lane.\\u_ad.\\g_l.u.$not$rtl/hdc/ot_hdc_fp32_add_lat.sv:86$11081_Y"
+    ],
+    "ultimate": 52,
+    "direct": 52
+  },
+  {
+    "driver": [
+      "$auto$simplemap.cc:298:simplemap_mux$40347",
+      "Y",
+      0
+    ],
+    "type": "$_MUX_",
+    "bit": 26311,
+    "names": [
+      "$auto$share.cc:663:make_supercell$15019.B",
+      "$auto$wreduce.cc:514:run$12485"
+    ],
+    "ultimate": 51,
+    "direct": 51
+  },
+  {
+    "driver": [
+      "$auto$ff.cc:337:slice$51051",
+      "Q",
+      0
+    ],
+    "type": "$_DFF_P_",
+    "bit": 8504,
+    "names": [
+      "u_h.u_lane.u_ma.g_l.u.s2_sh"
+    ],
+    "ultimate": 48,
+    "direct": 48
+  }
+]
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2491633-1792433575): exit 0
