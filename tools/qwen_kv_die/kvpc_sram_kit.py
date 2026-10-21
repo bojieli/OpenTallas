@@ -43,8 +43,23 @@ WIT_SR3 = 'results/rtl/qwen_kv_die/kvpc_sram_sr3_1019'   # KV-PC2 sr3+ receipts 
 UNITS = [('front', (1, 4, 5)), ('return', (1, 2)), ('cdc', (1, 2)), ('tq', (1,)), ('sched', (1,)), ('ctrl', (1, 2)),
          ('path', (2,))]
 FI_UNITS = ('sched', 'ctrl', 'path')     # KV-PC3 sr6+: mutant 5 = fault-chain input landing bypassed (OT_KVPC_FI_MUT)
-SR6 = ('sr6', 'sr6b', 'sr7', 'sr7b', 'sr8', 'sr8b', 'sr9', 'sr9b')
-SR9 = ('sr9', 'sr9b')
+SR6 = ('sr6', 'sr6b', 'sr7', 'sr7b', 'sr8', 'sr8b', 'sr9', 'sr9b', 'sr10')
+SR9 = ('sr9', 'sr9b', 'sr10')
+# KV-PC10 sr10 (10-20): route qkd_kvs_pc_h_sr9-sr9-596963735 NEEDS_RTL FF hold -57.0 ps / DRC 5.  Classified on its 6_final
+# ODB: every worst hold path (hclk removal ot_rrs_*port_hr_q -> u_port_v1 RESETN -57.0, front_co -> u_return.hd -55.8,
+# core_clk es_merged -> es_d_q -32.2) is a 1-gate flop -> flop path whose CAPTURE leaf (clkbuf_leaf_914 / 895 at x 80-84)
+# hangs off H-tree tap clkbuf_7_14__f at (39.4, 69.7) in the W strip: the tap feeds leaves on both sides of column A,
+# and with M5 the top layer no horizontal clock wire crosses a bank (M2 / M4 blocked), so the routed tap->leaf net
+# detours to the nearest stack gap / end: 102 ps on that leaf vs 25 ps on its neighbours = 70 ps local skew between
+# abutting flops (CTS estimated a straight wire; GRT revealed it, hold repair was then skipped: OT_HOLD_STOP).  The 5 DRC
+# are M4 shorts on ONE net (net22951 = return-ring w_addr_in[1], a 110 um wire buffer -> 5 stacked banks' pins).
+# Fix (structural, floorplan): column A keeps only front + return (10 banks) in four groups of 3 / 2 / 3 / 2 banks with
+# three >= 21.5 um routing channels (gen channel rule >= 20 um); the 2-bank tag queue moves to column B, abutted on top
+# of the CDC up stack (R0, read face W toward the centre like the CDC banks).  Every horizontal wire (H-tree taps, read
+# words, shared bank addresses) now crosses column A within ~26 um of a channel instead of detouring up to 45 um around
+# a 5-bank stack.
+SR10 = ('sr10',)
+SR10_BASE = (23.76, 99.36, 155.52, 228.96)     # column A groups f0-2 | f3-4 | r0-2 | r3-4 (2.16 um aligned)
 # KV-PC7 sr9 (10-20): N-face pin order so every N <-> S feed-through is a straight vertical run.  Gate pc_sr8 054430
 # PRE-CTS full stage graph (Codex 29ec0814c, results/arch/kvpc_normal_copy_0720): 493 stage pairs > 405 um (max 488.3),
 # all boundary-to-boundary: i_prev -> u_embr.up_q (S, x 3-73) -> o_next (N, x 135-187) 277, i_next (N, x 95-134) ->
@@ -95,7 +110,7 @@ V_MOVE = {'c': {'front': (43.2, 'MY'), 'return': (43.2, 'MY'), 'tq': (43.2, 'MY'
           'd': {'front': (86.4, 'MY'), 'return': (86.4, 'MY'), 'tq': (86.4, 'MY')}}
 
 
-def macros(variant='a'):
+def macros(variant='a', pairs=False):
     out = []
     for name, glob, n, x, y in STACKS:
         if variant == 'b' and x > 100:
@@ -103,8 +118,16 @@ def macros(variant='a'):
         x, orient = V_MOVE.get(variant, {}).get(name, (x, 'R0'))
         for k in range(n):
             inst = glob.format(k=k, eo='eo'[k % 2])
-            out.append(dict(view=VIEW, count=1, inst=inst, at=[x, round(y + k * PITCH, 3)], orient=orient,
-                            at_exact=k > 0, stack=name))
+            yk, ex = y + k * PITCH, k > 0
+            if pairs and name == 'tq':           # sr10: tag queue abuts the top of the CDC up stack (R0: read face W)
+                x, orient, yk, ex = 172.8, 'R0', 151.2 + (5 + k) * PITCH, True
+            elif pairs and name in ('front', 'return'):
+                i = (0 if name == 'front' else 5) + k
+                g = (0, 0, 0, 1, 1, 2, 2, 2, 3, 3)[i]
+                yk = SR10_BASE[g] + (i - (0, 3, 5, 8)[g]) * PITCH
+                ex = i not in (0, 3, 5, 8)
+            out.append(dict(view=VIEW, count=1, inst=inst, at=[x, round(yk, 3)], orient=orient,
+                            at_exact=ex, stack=name))
     return out
 
 
@@ -160,7 +183,7 @@ def derive(tile, tag, variant):
     kit = f'qkd_kvs_{tile}_{tag}'
     s['name'] = kit
     s['sources'] = [SR_TILE if f == RL_TILE else f for f in s['sources']] + NEW_RTL
-    s['macros'] = macros(variant)
+    s['macros'] = macros(variant, pairs=tag in SR10)
     if tag in ('sr1', 'sr2', 'sr2b'):
         s['sdc_extra'] = list(s.get('sdc_extra', [])) + [f'physical/qkd_kvs_kits/qkd_kvs_pc_{tag}_store.sdc']
     else:
@@ -244,7 +267,18 @@ def derive(tile, tag, variant):
             '(3) N-face order o_next | o_grp_h | pc__fo | i_next | ... so N <-> S feed-throughs run straight.  ' + s['purpose'])
         j['owner'] = 'Claude:KV-PC7'
         j['branch'] = 'claude/kv-pc7-1020'
+    if tag in SR10:
+        s['structural_change'] = s['purpose'] = j['purpose'] = (
+            'KV-PC10 sr10 (route qkd_kvs_pc_h_sr9-sr9-596963735 NEEDS_RTL FF hold -57 / DRC 5): column A (front + return) in '
+            '3/2/3/2-bank groups with >= 21.5 um routing channels, tag queue abutted on the CDC up stack in column B: the sr9 5-bank stacks forced every horizontal wire '
+            '(M5 cap: M2/M4 blocked over banks) to detour up to 45 um; the H-tree tap at x 39.4 fed capture leaves at x 80 '
+            'over a 102 ps detoured net (70 ps skew between abutting flops -> FF hold -57 ps), and the shared return '
+            'w_addr net shorted on M4 at the stacked bank pins (DRC 5).  RTL = r8 528d8460a.  ' + s['purpose'])
+        j['owner'] = 'Claude:KV-PC10'
+        j['branch'] = 'claude/kv-pc10-1020'
     j['extra_paths'] = sorted(set(j.get('extra_paths', [])) | {VIEW, WIT, WIT_SR3, 'rtl', 'tools/qwen_kv_die'} | ({wit} if wit else set()))
+    if tag in SR10:      # ROOT11 9a59143db: kvpc_sram_1019 was never committed (job ff8919865 went NEEDS_HUMAN on it)
+        j['extra_paths'] = [p for p in j['extra_paths'] if p != WIT]
     j['views_to'] = f'physical/ref_tile/{kit}/views'
     j['record_to'] = f'results/rtl/ref_tile/{kit}'
     kb = s.get('kits_b', {})
