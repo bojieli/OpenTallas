@@ -1,0 +1,14 @@
+LATTICE-WIDTH abstract of the CLOSED bfh_compact199_col_pinreg_prepabs_1019 view (ot_v41_bf_col compact199 pinreg, TT +63.59 / FF +6.24 ps,
+DRC 0, source 24cf7e2e3; base view physical/s81_die_views/bf_compact199_prepabs/ot_v41_bf_col from main 5afb847c7). DRIVE-S81-BFCOL 10-20.
+Same placement / route / netlist / Liberty (TT/FF/SS libs, insertion.json, native_receipt.json, abstract.json copied unchanged). LEF only:
+ 1. tools/hier_contract/abstract_pin_stub.py: clk M5 own stub OBS -> PORT (child_lint (f) FAIL 1 -> 0); M7 pocket closing (2652 OBS, OT_OBS_CLOSED).
+ 2. Outline 450.144 -> 450.168 x 198.72 (+0.024 um on the E face only).  Cause of the frame off-lattice WARN: the 65 M5 pins
+    (S-face PQ outputs + N clk) sit at x == 12 mod 48 nm; an MY copy keeps them on the M5 tracks only if W == 2*12 == 24 mod 48 nm.
+    450.144 == 0 mod 48, so ref_tile moved every MY copy +0.024 um off the 43.2 um child lattice (on_track fallback).
+    450.168 == 24 mod 48: R0 and MY copies are both on track at lattice origins (track_check.json: 65 -> 0 off-track at MY@691.2).
+    (tools/check_macro_track_alignment.py dimension_parity M5 fix 'grow_dimension_free' = +24 nm.)
+ 3. The 777 E-face M4 pin rects are extended by the same 0.024 um to the new edge (x 450.06..450.168) so they stay face pins
+    (child_lint face pins 842, (f) PASS). Abstract-only: the routed pin metal ends at 450.144; the parent access point (pin centre
+    x 450.114) lies inside real metal. No OBS added in the 0.024 strip.
+Pins: same 844 names / positions as frame_restub_1019 (drop-in for the frame kits). child_lint.json PASS 0 fails 0 warns.
+A clean alternative (real pins at the edge) is a re-route at die width 450.168 (or any W == 24 mod 48 nm); not needed for the frames.
