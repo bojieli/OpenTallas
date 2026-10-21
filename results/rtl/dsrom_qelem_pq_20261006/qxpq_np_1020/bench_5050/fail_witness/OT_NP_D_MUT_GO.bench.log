@@ -1,0 +1,4 @@
+OT_NP_D_MUT_GO seed 1 expect fail -> QXPQ_NP FAIL OK
+QXPQ_NP cycles=1650271 windows=55 rel_ref=2 rel_dut=2 rel_bad=0 mism=117 first_mism=1499 ctl_mism=0 ctl_first=-1 busy_dut=1646270 phases=300 resets=54 early=27 go=300 cfg=7509 xs=126859 pv_cycles=2522 busy=1646270 fault=34485 bank_free=1635487 walking=1632291
+MUTANT_DETECTED OT_NP_D_MUT_GO
+BENCH_JOB_RC 1

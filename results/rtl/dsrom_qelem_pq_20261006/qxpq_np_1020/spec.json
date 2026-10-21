@@ -1,0 +1,214 @@
+{
+ "name": "dsrom-qelem-qs5f-np-tc-hm25-cl",
+ "block": "ot_v41_rom_elem_q_qxpq_w10",
+ "owner": "Claude:DRIVE-S81-QXPQ",
+ "purpose": "S81.STA.LEAF.3 (DRIVE-S81-QXPQ 10-20, SAFE item 3 / pre-gate native census): NP=1 successor of the CLOSED CPR view dsrom-qelem-qs5f-cpr-tc-hm25-cl-ffacf68cd, whose mapped netlist fails the strict native census (1,093 nets > 32 loads). NP = native partition (kept copies, regional reset leaves, segment-tree held operands in a 1R1W SRAM macro, zero added cycles; ports, outline 510.84 x 221.4, macros, pins, clocking = the closed CPR recipe). ",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "route_hold_margin_ns": 0.025,
+ "source": {
+  "branch": "claude/s81-qxpq5-1020",
+  "commit": "HEAD",
+  "extra_paths": [
+   "results/rtl/dsrom_qelem_pq_20261006/qx10qs5_recovery_gate.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "tb_qxpq_np_pass",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_np_bench.sh . {RUN}/bench_np_pass pass",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "expect": "pass",
+    "pass_regex": "^BENCH_RC 0$",
+    "min_count_regex": "^QXPQ_NP cycles=.*\\bwindows=(\\d+)"
+   },
+   {
+    "name": "tb_qxpq_np_qpcheck",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_np_bench.sh . {RUN}/bench_np_chk chk:QP_CHECK",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "expect": "pass",
+    "pass_regex": "^BENCH_RC 0$",
+    "min_count_regex": "^QXPQ_NP cycles=.*\\bwindows=(\\d+)"
+   },
+   {
+    "name": "tb_qxpq_np_ot_np_d_mut_hp",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_np_bench.sh . {RUN}/bench_ot_np_d_mut_hp mut:OT_NP_D_MUT_HP",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "expect": "fail",
+    "fail_regex": "^MUTANT_DETECTED OT_NP_D_MUT_HP$",
+    "fail_witness": "results/rtl/dsrom_qelem_pq_20261006/qxpq_np_1020/bench_5050/fail_witness/OT_NP_D_MUT_HP.bench.log",
+    "mutant": "hp_c2 match copy stuck 0 (n_cgt / n_ca_r ignore the match)"
+   },
+   {
+    "name": "tb_qxpq_np_ot_np_d_mut_cf",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_np_bench.sh . {RUN}/bench_ot_np_d_mut_cf mut:OT_NP_D_MUT_CF",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "expect": "fail",
+    "fail_regex": "^MUTANT_DETECTED OT_NP_D_MUT_CF$",
+    "fail_witness": "results/rtl/dsrom_qelem_pq_20261006/qxpq_np_1020/bench_5050/fail_witness/OT_NP_D_MUT_CF.bench.log",
+    "mutant": "c_first3 copy = wrong class (hit copies' d_c_s)"
+   },
+   {
+    "name": "tb_qxpq_np_ot_np_d_mut_cw",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_np_bench.sh . {RUN}/bench_ot_np_d_mut_cw mut:OT_NP_D_MUT_CW",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "expect": "fail",
+    "fail_regex": "^MUTANT_DETECTED OT_NP_D_MUT_CW$",
+    "fail_witness": "results/rtl/dsrom_qelem_pq_20261006/qxpq_np_1020/bench_5050/fail_witness/OT_NP_D_MUT_CW.bench.log",
+    "mutant": "config write-enable copy decodes the wrong address"
+   },
+   {
+    "name": "tb_qxpq_np_ot_np_d_mut_go",
+    "cmd": "bash tools/dsrom_qelem_cl/qxpq_np_bench.sh . {RUN}/bench_ot_np_d_mut_go mut:OT_NP_D_MUT_GO",
+    "threads": 16,
+    "peak_ram_gb": 16,
+    "expect": "fail",
+    "fail_regex": "^MUTANT_DETECTED OT_NP_D_MUT_GO$",
+    "fail_witness": "results/rtl/dsrom_qelem_pq_20261006/qxpq_np_1020/bench_5050/fail_witness/OT_NP_D_MUT_GO.bench.log",
+    "mutant": "one go copy stuck 0"
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_NATIVE_Q_H1_INPUT=1; export OT_NATIVE_Q_H1_RST=1; export OT_Q_EF_SOUTH=1; export RSTP=1; export OT_Q_CK_NORTH=1; export CPR=1; export NP=1; export OT_Q_PDH=physical/abi3/dsrom_q_pinflop_band_cpr.tcl; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl tools/dsrom_qelem_cl/native_q_h1r_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.025 QS=5 FH=221.4 RLA=0.12 bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes $CL_STOP_AFTER",
+   "base": "{RUN}/routes/jobs/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "bash tools/dsrom_qelem_cl/cl_signoff_sdc.sh",
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "route": {
+   "cmd": "export OT_HOLD_STOP='cts:10204 grt:0'; export OT_NATIVE_Q_H1_INPUT=1; export OT_NATIVE_Q_H1_RST=1; export OT_Q_EF_SOUTH=1; export RSTP=1; export OT_Q_CK_NORTH=1; export CPR=1; export NP=1; export OT_Q_PDH=physical/abi3/dsrom_q_pinflop_band_cpr.tcl; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl tools/dsrom_qelem_cl/native_q_h1r_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.025 QS=5 FH=221.4 RLA=0.12 bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL} {RUN}/routes",
+   "ok": "grep -q '^rc=0' {RUN}/routes/jobs/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/jobs/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/jobs/{LABEL}/launch.log"
+   ],
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/record/view; cp {RUN}/routes/jobs/{LABEL}/corner_sta.json {RUN}/routes/jobs/{LABEL}/exit {RUN}/routes/jobs/{LABEL}/receipt.json physical/abi3/gen/dsrom_q_cl_signoff.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json && cp $(ls {RUN}/routes/jobs/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json) {RUN}/record/ && rm -f {RUN}/record/view/pa/pa.v"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/jobs/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/jobs/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "pin_access",
+    "cmd": "bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/routes/jobs/{LABEL}/view"
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/abi3/gen/dsrom_q_cl_signoff.sdc",
+   "tools/dsrom_qelem_cl/native_q_h1r_input.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192"
+  ]
+ },
+ "hold_eco": {
+  "reexport": "bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/routes/jobs/{LABEL}/view"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/dsrom_qelem_pq_20261006/qxpq_np_1020/closed"
+  }
+ ],
+ "cycles_added": "0 vs the CLOSED CPR view (NP=1 vs NP=0 lock-step bench tb_qxpq_np: every output cycle-identical incl. X); the CPR costs stay (+1 go-command edge, +1 busy / fault visibility, already in the LEAD2-S81 INBOX).",
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "sheet ot_v41_rom_elem_q_qx_w10 names the die abstract's ports (cfg, go, r0 ...), not the element RTL's (cfg_v, xs_q0 ...): make_block_sdc.py would leave the RTL ports unconstrained; IO = the q-element's agreed derivation (launcher delays, physical/abi3/dsrom_qy_elem_io.sdc, outputs at the calibrated insertion via cl_signoff_sdc.sh); successor preserves all existing max windows and corrects only data-input minimum reference to actual measured H1 sender+50; reset excluded"
+ },
+ "route_hold_corners": "mm",
+ "route_corner": "TC",
+ "notes": "DRIVE-S81-QXPQ 10-20: not a critical prefix. Bench tb_qxpq_np (Verilator 5.050) PASS x3 seeds + QP_CHECK, 5 mutants DETECTED (witnesses results/rtl/dsrom_qelem_pq_20261006/qxpq_np_1020/bench_5050). Census: results/rtl/dsrom_qelem_pq_20261006/qxpq_np_1020/census_d7.json. Frames bind .RSTP(1) .CPR(1) .NP(1) as a drop-in for the CPR view.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "closed_job": "dsrom-qelem-qs5f-cpr-tc-hm25-cl-ffacf68cd",
+  "source": "results/rtl/dsrom_qelem_pq_20261006/qxpq_np_1020/census_cpr_baseline.json",
+  "cell": "ot_v41_rom_elem_q_qxpq_w10",
+  "failing_nets": 1093,
+  "max_loads": 5410,
+  "fix": "NP=1: kept copies / reset leaves / SRAM held operands so no mapped driver exceeds 32 loads (pre-gate native census 1,093 -> 2 nets > 32 (residual ABC-shared OR3 36 and c_s0b copy 33; RULE FREEZE guidance), results/rtl/dsrom_qelem_pq_20261006/qxpq_np_1020/census_d7.json); zero added cycles"
+ },
+ "structural_change": "NP=1 native partition: kept copies for every driver > 32 loads, regional reset leaves (2-stage landing kept), segment-tree held operands in ot_sram_1r1w_128x64_m1_p192 (SAFE item 5), walker always-block split; ports / outline / pins unchanged",
+ "rtl_boundary": {
+  "top": "ot_v41_rom_elem_q_qxpq_w10",
+  "sources": [
+   "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+   "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
+   "rtl/v41rom/ot_v41_elem_pq_tags.sv",
+   "rtl/v41rom/ot_v41_kreg.sv",
+   "rtl/v41rom/ot_v41_chain3.sv",
+   "rtl/v41rom/ot_v41_chain4.sv",
+   "rtl/v41rom/ot_v41_fadd2.sv",
+   "rtl/v41rom/ot_v41_rom_elem_w10.sv",
+   "rtl/v41rom/ot_v41_bterm.sv",
+   "rtl/v41rom/ot_v41_chain.sv",
+   "rtl/v41rom/ot_v41_segtree.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_cg.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "physical/asap7_memory_macros/ot_rom_8192x274_m8/ot_rom_8192x274_m8_bb.v",
+   "rtl/v41rom/ot_v41_fadd.sv",
+   "rtl/common/ot_prefix.sv",
+   "rtl/v41rom/ot_v41_bterm2_w10.sv",
+   "rtl/v41rom/ot_v41_chain2.sv",
+   "rtl/v41rom/ot_v41_segtree2.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes2.sv",
+   "rtl/v41rom/ot_v41_bterm3_w10.sv",
+   "rtl/v41rom/ot_v41_bterm4_w10.sv",
+   "rtl/v41rom/ot_v41_bterm5_w10.sv",
+   "rtl/v41rom/ot_v41_segtree3.sv",
+   "rtl/v41rom/ot_v41_segtree4.sv",
+   "rtl/v41rom/ot_v41_segtree5.sv",
+   "rtl/v41rom/ot_v41_segtree6.sv",
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+   "rtl/v41rom/ot_v41_kand.sv",
+   "rtl/v41rom/ot_v41_fadd_np.sv",
+   "rtl/v41rom/ot_v41_segtree7.sv",
+   "rtl/v41rom/ot_v41_chain5.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v"
+  ],
+  "params": {
+   "MTP": 1,
+   "EARLY": 1,
+   "NB": 2,
+   "FAST": 1,
+   "PP": 1,
+   "QTIMING_FIX": 1,
+   "QPIPE": 1,
+   "QP_XS": 1,
+   "QP_CAP": 0,
+   "QP_P1": 1,
+   "QP_CSAM": 10,
+   "QZ": 1,
+   "QZ_NS": 8,
+   "QZ_NE": 4,
+   "QY": 1,
+   "QX": 5,
+   "PQ": 1,
+   "QW": 0,
+   "QM": 1,
+   "QS": 5,
+   "RSTP": 1,
+   "CPR": 1,
+   "NP": 1
+  }
+ }
+}
