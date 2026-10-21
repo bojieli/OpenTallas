@@ -143,7 +143,11 @@ module dsdv_svc_att_core #(
     output reg                  sm_rv,
     output reg                  sm_rp,
     output reg  [2:0]           sm_rj,
+`ifdef OT_SVC_SMJ_N32
+    output wire [511:0]         sm_rd,
+`else
     output reg  [511:0]         sm_rd,
+`endif
     // job
     output reg                  go_o,
     output reg  [9:0]           tjob_o,
@@ -187,6 +191,10 @@ module dsdv_svc_att_core #(
     always @(posedge clk) if (is_hdr) f_hdr <= q_d;
     wire hdr_mine = is_hdr && h_mask[0];
     wire pay_mine = is_pay && f_mine;
+
+`ifdef OT_SVC_SMJ_N32
+    dsdv_svc_smj_payload_n32 u_smj_payload (.clk(clk),.d(q_d),.q(sm_rd));
+`endif
 
     // ------------------------------------------------------------------ CFG / job state
     reg [29:0] wb, sb;
@@ -740,7 +748,10 @@ module dsdv_svc_att_core #(
             ej_v <= 0; eq_v <= 0; ekv_v <= 0; pw <= 0; pw_q <= 0; pr <= 0; p_left <= 0;
             pvw <= 0; pvr <= 0; p_i <= 0; pv_n <= 0; pv_ov <= 0; done <= 0; go_o <= 0;
             hcr <= 0; hack <= 0; iss_host <= 0; fc <= 0;
-            sm_st <= 0; sm_rv <= 0; sm_rp <= 0; sm_rj <= 0; sm_kind <= 0; sm_jid <= 0; sm_rd <= 0;
+            sm_st <= 0; sm_rv <= 0; sm_rp <= 0; sm_rj <= 0; sm_kind <= 0; sm_jid <= 0;
+`ifndef OT_SVC_SMJ_N32
+            sm_rd <= 0;
+`endif
         end else begin
             // ---- write FIFO pointers
             for (int k = 0; k < 3; k = k + 1) if (wpush[k]) begin
@@ -873,7 +884,10 @@ module dsdv_svc_att_core #(
             end
             if (pay_mine && f_type == 4'd9) begin
                 sm_rv <= !f_hdr[13] || f_hdr[14 + tile];
-                sm_rp <= !f_hdr[13]; sm_rj <= 3'(f_idx); sm_rd <= q_d;
+                sm_rp <= !f_hdr[13]; sm_rj <= 3'(f_idx);
+`ifndef OT_SVC_SMJ_N32
+                sm_rd <= q_d;
+`endif
             end
             // ---- other frame checks
             if (hdr_mine && !FT_KNOWN[h_type]) fc[16] <= 1'b1;   // frame types 1 2 3 5 6 7 9 12 13 14 (yosys: no 'inside')
