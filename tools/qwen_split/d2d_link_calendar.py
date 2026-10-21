@@ -151,7 +151,7 @@ def context_slot(txl, phy, host_stages, host_req):
 
 
 def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None, mu=False,
-                    host_req=None, emb_fill=None, status_delay=0, attn_tx_shift=0, rope=False, layer_period_min=0):
+                    host_req=None, emb_fill=None, status_delay=0, attn_tx_shift=0, rope=False, layer_period_min=0, head_prepare_edges=None):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
     run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles).
@@ -225,6 +225,19 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
         # one edge later restores user 0's context; qfd_mu_ctx_rx loads users 1..3 into the ctlm boot-context loader.
         # Field spec: results/rtl/mu_qwen_1018/kvctx/README.md section 2.  (= mu-die-qw2 05a8c8fe3; KV-LINKCFG-MU 10-19)
         m1.append(dict(seg=1, src="K", cyc=ctx_k - 1, tx_port=1, rx_port=1, kind=12, beat=1))
+    head_descriptor=None
+    if head_prepare_edges is not None:
+        if not rope or type(head_prepare_edges) is not int or head_prepare_edges<5:
+            raise ValueError('head_prepare_edges requires RoPE and actual composed earliest safe SLOT >=5 (native prepare+held descriptor+actual transport)')
+        # This is a source-provided safe slot bound, never a guessed zero-hop age.
+        hs=head_prepare_edges
+        while hs in (2,ctx_k+txl+phy+12) or hs+3 in (3,ctx_k+txl+phy+15):hs+=1
+        if hs>=l0_start:
+            raise ValueError('actual head descriptor is not available before L0; grow embedding/image from source law')
+        m1.append(dict(seg=1,src='C',cyc=hs,tx_port=1,rx_port=1,kind=12,beat=0,role='recurring_filler_O61'))
+        head_descriptor=dict(source='actual CTLM c_emb token/position/user plus HEAD_PREP native epoch/gen and held per-user descriptor',
+                             earliest_safe_slot=head_prepare_edges,send=hs,kind=12,port=1,
+                             user0='unobserved: retains actual HOST authority',qualification='SOURCE_BOUND_SLOT; consumer bus/clock/phase deadline still required')
     prec_w = ctx_k + txl + phy + 12
     m1.append(dict(seg=1, src="C", cyc=prec_w, tx_port=1, rx_port=1, kind=14, beat=0))
     # ADMISSION run (segment 2; once per epoch, before the first token; Q-NETLIST 2026-10-16): S->C kind 13 beat 1
@@ -238,7 +251,7 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
                   embed=dict(start=0, cycles=emb, priced=emb_priced, grown_by=d_emb, rope=rope, records=65+rope_n, rope_fetch_restart_edges=1024 if rope else 0), windows=dict(L0=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[0]])])),
                   L1_35=dict(zip(ops, [int(n) + (tail if i == 3 else 0) for i, n in enumerate(win[lay[1]])]))), layer=l1, token_run_L0=l0,
                   emb_send=[e_last - 63 - rope_n, e_last-rope_n], rope_send=([e_last-7,e_last] if rope else []), emb_header_send=e_last - 64 - rope_n,
-                  program_records=dict(k_send=[ctx_k, ctx_k], kinds="token run: 12 CONTEXT S->C, 14/0 WITNESS C->S",
+                  program_records=dict(head_descriptor=head_descriptor,k_send=[ctx_k, ctx_k], kinds="token run: 12 CONTEXT S->C, 14/0 WITNESS C->S",
                                        witness_send=prec_w,
                                        context_after_result=(None if host_req is None else dict(
                                            result_at_kv_host=r_host, host_req=host_req, context_send=ctx_k,
@@ -410,6 +423,7 @@ def main():
     ap.add_argument("--emb-window", type=int, default=None,
                     help="KV-EMBWIN16 10-20: token-run embedding window in edges (>= the priced embed node); L0, every later "
                          "layer and the token period move by the growth; default = the priced window (images unchanged)")
+    ap.add_argument("--head-prepare-edges",type=int,help="actual composed earliest safe C->K head O61 slot; includes source prepare/hold+measured local transport, never infer zero hops")
     ap.add_argument("--layer-period-min",type=int,default=0,help="RoPE shared2003-edge kernel frame; grow every layer to at least this many edges")
     ap.add_argument("--rope", action="store_true", help="actual RoPE HBM second sweep and73 row records; requires EW>=1627")
     ap.add_argument("--attn-tx-shift", type=int, default=0, help="KV-BIND4: edges the KV attention tile adds before RESULT (r16 TX_SHIFT); K RESULT/STATUS and attn_kv +N per layer")
@@ -443,7 +457,7 @@ def main():
                                         st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu,
                                         host_req=a.ctx_host_req, emb_fill=a.emb_fill_edges, emb_window=a.emb_window,
                                         status_delay=a.status_delay,
-                                        attn_tx_shift=a.attn_tx_shift, rope=a.rope, layer_period_min=a.layer_period_min)   # STATUS capture after the (+2) KVN captures
+                                        attn_tx_shift=a.attn_tx_shift, rope=a.rope, layer_period_min=a.layer_period_min,head_prepare_edges=a.head_prepare_edges)   # STATUS capture after the (+2) KVN captures
         if a.host_stages:
             txd["K"][1] += a.host_stages   # HOST record words reach the end's capture edge host_stages later
     elif a.profile == "dies_token":

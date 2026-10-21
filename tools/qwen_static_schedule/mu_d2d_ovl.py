@@ -137,7 +137,7 @@ def build(stages=STAGES, frame=16, kv_prog=False, starts=None, kv_codec=1, pair_
         clean=lambda m,ref:dict(src=m['src'],cyc=m['cyc']-ref,tx_port=m['tx_port'],rx_port=m['rx_port'],kind=m['kind'],beat=m['beat'])
         segs=dict(req=[clean(m,cmd) for m in ms if m['seg']==0 and m['src']=='C'],
                   rsp=[clean(m,cmd) for m in ms if m['seg']==0 and m['src']=='K'],
-                  tok_tx=[clean(m,0) for m in ms if m['seg']==1 and m['src']=='C' and m['kind'] in (14,15) and m['cyc']<pair['program']['token_run_L0']['q_send']],
+                  tok_tx=[clean(m,0) for m in ms if m['seg']==1 and m['src']=='C' and m['kind'] in (12,14,15) and m['cyc']<pair['program']['token_run_L0']['q_send']],
                   tok_rx=[clean(m,0) for m in ms if m['seg']==1 and m['src']=='K' and m['kind'] in (6,7,8,12)])
         actual=pair['program'];w=actual['windows']['L1_35']
         raw=Path(token_path).read_bytes();tp=json.loads(gzip.decompress(raw) if str(token_path).endswith('.gz') else raw)
