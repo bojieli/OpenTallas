@@ -281,6 +281,19 @@ module ot_hdc_fp32_add_fast (
     wire subnormal = (e == 9'd1) && !man[23];
     wire [31:0] code = {s2_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
     wire over = (s2_exp == 8'hff) || (e >= 9'd255);
+`ifdef OT_FP_DATA_NORST
+    // ELEM-SVC/G4 (10-21, opt-in): only valid_out reset; y / err plain flops qualified by valid_out
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) valid_out <= 1'b0;
+        else valid_out <= s2_v;
+    end
+    always @(posedge clk) begin
+        if (s2_byp) begin y <= s2_code; err <= s2_err; end
+        else if (s2_zero) begin y <= 32'd0; err <= E_NONE; end
+        else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
+        else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+    end
+`else
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
@@ -291,6 +304,7 @@ module ot_hdc_fp32_add_fast (
             else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
         end
     end
+`endif
 endmodule
 
 // ---------------------------------------------------------------------------
@@ -419,6 +433,18 @@ module ot_hdc_fp32_mul_fast (
     wire sub_carry = is_sub && rnd[23];
     wire [31:0] code = is_sub ? (sub_carry ? {s2_sign, 8'h01, 23'd0} : {s2_sign, 8'h00, rnd[22:0]})
                               : {s2_sign, field, man[22:0]};
+`ifdef OT_FP_DATA_NORST
+    // ELEM-SVC/G4 (10-21, opt-in): only valid_out reset; y / err plain flops qualified by valid_out
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) valid_out <= 1'b0;
+        else valid_out <= s2_v;
+    end
+    always @(posedge clk) begin
+        if (s2_byp) begin y <= 32'd0; err <= s2_err; end
+        else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
+        else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+    end
+`else
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
@@ -428,6 +454,7 @@ module ot_hdc_fp32_mul_fast (
             else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
         end
     end
+`endif
 endmodule
 
 // Fault-reporting wrappers, as ot_hdc_fadd / ot_hdc_fmul but LATENCY 3.

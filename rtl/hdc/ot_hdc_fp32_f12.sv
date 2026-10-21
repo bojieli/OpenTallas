@@ -231,6 +231,20 @@ module ot_hdc_fp32_add_f12 #(
     wire subnormal = (e == 9'd1) && !man[23];
     wire [31:0] code = {u_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
     wire over = (u_exp == 8'hff) || (e >= 9'd255);
+`ifdef OT_FP_DATA_NORST
+    // ELEM-SVC/G4 (10-21, safe-design 8, opt-in as ot_hdc_fp32_add_lat DRST 0): only valid_out is reset; y / err are plain
+    // flops (every consumer qualifies them with valid_out), so a wide adder array costs no reset fan-out.
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) valid_out <= 1'b0;
+        else valid_out <= u_v;
+    end
+    always @(posedge clk) begin
+        if (u_byp) begin y <= u_code; err <= u_err; end
+        else if (u_zero) begin y <= 32'd0; err <= E_NONE; end
+        else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
+        else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+    end
+`else
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
@@ -241,6 +255,7 @@ module ot_hdc_fp32_add_f12 #(
             else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
         end
     end
+`endif
 endmodule
 
 module ot_hdc_fp32_mul_f12 #(
@@ -434,6 +449,18 @@ module ot_hdc_fp32_mul_f12 #(
     wire sub_carry = o_sub && rnd[23];
     wire [31:0] code = o_sub ? (sub_carry ? {o_sign, 8'h01, 23'd0} : {o_sign, 8'h00, rnd[22:0]})
                              : {o_sign, field, man[22:0]};
+`ifdef OT_FP_DATA_NORST
+    // ELEM-SVC/G4 (10-21, opt-in): only valid_out reset; y / err plain flops qualified by valid_out
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) valid_out <= 1'b0;
+        else valid_out <= o_v;
+    end
+    always @(posedge clk) begin
+        if (o_byp) begin y <= 32'd0; err <= o_err; end
+        else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
+        else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+    end
+`else
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
         else begin
@@ -443,6 +470,7 @@ module ot_hdc_fp32_mul_f12 #(
             else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
         end
     end
+`endif
 endmodule
 
 // fixed tops (plain module names: ORFS SYNTH_KEEP_MODULES, standalone routes)
