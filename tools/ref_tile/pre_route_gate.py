@@ -2069,8 +2069,11 @@ def linked_child_pairs(spec: dict | None) -> list | None:
     for mod, inst, conns in inst_re.findall(body):
         if mod in VLOG_KEYWORDS:
             continue
+        # FRH10 10-20: a child bound inside a wires-only wrapper (spec inst "u_e1e.u_view": Yosys-flattened name of
+        # ot_v41_bf_col u_view inside dsfd_bf_col u_e1e) is the parent RTL's top-level instance u_e1e
         kid = next((ch for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
-                    or fnmatch.fnmatchcase(inst, ch["inst"])), None)
+                    or fnmatch.fnmatchcase(inst, ch["inst"])
+                    or ("." in ch["inst"] and fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*").split(".", 1)[0]))), None)
         if kid is None:
             continue
         seen.add(kid["inst"])
@@ -2198,7 +2201,8 @@ def parent_link_graph(spec: dict | None) -> dict | None:
         if e is None or st[e:].strip():
             continue
         # top-level names: the pattern without its hierarchy '*' (else "*u0" would claim reset run u_lprc_u0)
-        kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))), None)
+        kid = next((ch["inst"] for ch in kids if fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*"))
+                    or ("." in ch["inst"] and fnmatch.fnmatchcase(inst, ch["inst"].lstrip("*").split(".", 1)[0]))), None)
         if kid:
             seen.add(kid)
         conns, exprs, j = st[k + 1:e - 1], [], 0
