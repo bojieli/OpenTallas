@@ -757,8 +757,14 @@ module ot_hgi_coll_link_e2_seq(
  reg [611:0] rf;
  wire [CW-1:0] tx_crc,rx_crc;
  ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_tx_crc(.d(body),.q(tx_crc));
- ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_rx_crc(.d(rf[FW+18:0]),.q(rx_crc));
- wire crc_bad=rv && ev && (rx_crc!==rf[PW-1-:CW]);
+ // FAM-HBM-A/COLLQ10 10-21 (e2s/e2t routes TT -139.7/-109.5: rf -> 580-b CRC XOR tree -> 32-b compare -> OR reduce ->
+ // fault/valid in ONE cycle, ~22 levels): the RX CRC is computed one edge EARLIER from the pin stage (p_rx_flit =
+ // rx_pin_flit_pin, the value rf captures this edge) and its 32 per-bit mismatches are registered BESIDE rf.
+ // crc_bad = |rx_crc_mm is bit- and edge-identical to (crc(rf) != rf[611:580]); 0 added cycles.
+ ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_rx_crc(.d(p_rx_flit[FW+18:0]),.q(rx_crc));
+ reg [CW-1:0] rx_crc_mm;
+ always @(posedge clk) rx_crc_mm<=rx_crc ^ p_rx_flit[PW-1-:CW];
+ wire crc_bad=rv && ev && (|rx_crc_mm);
  wire slot_bad=rv && ev && (rf[FW+7:FW]!=={2'b00,es} || rf[FW+17-:8]!==re ||
                       rf[FW+8]!==1'b1 || rf[FW+9]!==1'b0 || rf[FW+18]!==1'b0);
  wire tx_seq_bad=v3 && (q_pin[560:545]!==ts3);

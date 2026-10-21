@@ -1,0 +1,206 @@
+{
+ "kind": "tile",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "children": [],
+ "params": {},
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 16
+  }
+ },
+ "name": "hcoll_link_e2u",
+ "top": "ot_hgi_coll_link_e1",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_safe_leaves.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 172.8
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u.g_bank[0].u_store.u_native.u_sram",
+   "at": [
+    43.2,
+    64.8
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "u.g_bank[1].u_store.u_native.u_sram",
+   "at": [
+    259.2,
+    64.8
+   ],
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "S": [
+   "phy_up",
+   "tx_pin_v",
+   "tx_pin_flit",
+   "clk",
+   "rst_n",
+   "rx_pin_v",
+   "rx_pin_flit",
+   "retry_requested"
+  ],
+  "W": [
+   "epoch_begin",
+   "epoch_new",
+   "held_epoch",
+   "wr_v",
+   "wr_observed_v",
+   "wr_seq",
+   "wr_flit",
+   "rd_v",
+   "rd_seq",
+   "rx_expect_v",
+   "rx_expect_seq"
+  ],
+  "E": [
+   "rx_v",
+   "rx_flit",
+   "epoch_abort",
+   "fault_cause"
+  ],
+  "N": []
+ },
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "hold_margin_ns": 0.05,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32
+  },
+  "peak_ram_gb": 32
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hgi_coll_link_e2 (the leaf body) captures every input at a pin flop before any check (eb copies, *_pin) and every output is a flop Q (seq p_tx_v/p_tx_flit, rx_v/rx_flit, epoch_abort/fault_cause; retry_requested = epoch_abort Q); a synthesis pin stage would add an unbenched edge to the static link calendar"
+ },
+ "structural_change": "FAM-HBM-A/COLLQ10 10-21 (MAIN): hcoll_link_e2s route (2d5040f13) NEEDS_RTL TT -139.72; worst TT setup = rf -> 580-b RX CRC XOR tree (~10 XNOR levels) -> 32-b compare -> OR4/OR4 -> fault/valid gating -> rx_v / epoch_abort copies, ~22 levels / ~890 ps data in ONE cycle (gate path_classes already showed reg->reg -110). CLASS logic depth (clock spine fine: spread 33.6/32.1, insertion equal at both ends; wire buffering secondary). FIX RTL: RX CRC computed one edge earlier from the pin stage (rx_pin_flit_pin) and its 32 per-bit mismatches registered beside rf; crc_bad = |rx_crc_mm (bit/edge-identical, 0 added cycles). Geometry/spine = hcoll_link_e2s unchanged. Internal route hold margin 0.03 -> 0.05 ns (predecessor FF residuals: e2s -3.37 flop->SRAM wd_in, e2t -22.92 store dout->q_pin across spine leaves).",
+ "job": {
+  "owner": "Claude:HBM-COLLECT10/LINK",
+  "branch": "claude/collq8-link-1021",
+  "tag": "safe-band-crcpre",
+  "purpose": "MAIN successor of hcoll_link_e2s (route NEEDS_RTL TT -139.72: RX CRC check depth): e2s geometry 475.2x172.8 + clock spine, RTL with RX CRC precomputed from the pin stage (0 added cycles)",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "results/arch/landed_parent_1018/collq",
+   "rtl/hbm_accel/generic/collective",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys/split_20261014"
+  ],
+  "benches": [
+   {
+    "name": "link_e2_eq",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_link_e2_eq.sh {RUN}/bench/link_eq eq",
+    "expect": "pass",
+    "pass_regex": "LINK_E2_EQ PASS",
+    "min_count_regex": "LINK_EQ PASS compared=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "note": "link-level lockstep miter ot_hgi_coll_link_e1 (body link_e2) == original ot_hgi_coll_link_e, every output every cycle, 60k cycles: legal calendar epochs + per-epoch fault injection; needs >1000 TX and RX frames and >10 aborted epochs (measured 16,873 TX / 16,637 RX / 54 aborted)"
+   },
+   {
+    "name": "link_e2_mut_data",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_coll_link_e2_eq.sh {RUN}/bench/link_mut mut",
+    "expect": "fail",
+    "fail_regex": "LINK_E2_MUTANT m_data REJECTED",
+    "fail_witness": "results/rtl/hbm_coll_link_1020/witness/link_e2_m_data.log",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "note": "OT_COLL_LINK2_MUT_DATA: retry bank 1 stores bit 140 of its slice inverted -> the link miter must fail"
+   },
+   {
+    "name": "q3_lpf_ars_eq",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q3 {RUN}/bench/q3_eq eq",
+    "expect": "pass",
+    "pass_regex": "EQ PASS",
+    "min_count_regex": "LPF_EQ PASS compared=(\\d+)",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "SAFE q3 COLL parent ot_hfd_coll_q3_lpf_ars (2 x ot_hgi_coll_link_e1 = this leaf, body link_e2) == ot_hfd_coll_q3_hard_v8x (original 4-bank ot_hgi_coll_link_e) every output every cycle + 3 EQ mutants rejected"
+   },
+   {
+    "name": "q2_lpf_ars_eq",
+    "cmd": "LP_ROOT=. bash rtl/hbm_accel/generic/collective/p2p/landed/run_coll_lp_ars_all.sh q2 {RUN}/bench/q2_eq eq",
+    "expect": "pass",
+    "pass_regex": "EQ PASS",
+    "min_count_regex": "LPF_EQ PASS compared=(\\d+)",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "note": "same for the q2 parent"
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_link_e2u/views",
+  "record_to": "results/rtl/ref_tile/hcoll_link_e2u"
+ },
+ "pin_ranges": {
+  "clk": [
+   236.4,
+   237.6
+  ],
+  "rst_n": [
+   237.6,
+   238.79999999999998
+  ]
+ },
+ "reset_relay_split": {
+  "max_loads": 24
+ },
+ "fill_reason": "Pin-face-bound band outline: 2 x 171.3 um SRAMs side by side, each pin face (W) on a >=43 um channel, set width 475.2; height 172.8 = 64.8 um full-width S band + SRAM row + 30.2 um N gap (aspect 2.75:1 waived: side-by-side macro row; e2 is the square MAIN). Synthesis std ~4.1k um2 -> global fill ~37%",
+ "clock": "spine"
+}
