@@ -112,7 +112,9 @@ module ot_qwen_static_slot_link_pl #(
     wire [4*BW-1:0] rd;
     wire c_abort;
     wire issue_write=wr_v && !c_abort && !epoch_begin;
-    // QW2-COLL 10-21 BWREG: the bank write port is captured by bank-entry registers (ck[b+1]) before the SRAM.  The
+    // QW2-COLL 10-21 BWREG: the bank write port + read address are captured by codec-core registers (ck[0], codec band,
+    // abutting both bank columns) before the SRAM; the bank clock pins stay pure hard entries (one port -> one macro
+    // clock pin; a glue root over the bank entries is refused by clock_entry_constraints).  The
     // r_plg gate failed cross_clock SETUP (210 ps inter-entry uncertainty) on direct crossings with logic into the bank
     // macro pins: epoch_begin (cal_lck) / c_abort (codec0) -> we, u_tx o_data (tx_rck macro) -> din.  Now every
     // crossing ends at a flop in the bank's own entry and the flop -> SRAM path is single-entry.  Write lands 1 edge
@@ -129,7 +131,7 @@ module ot_qwen_static_slot_link_pl #(
             // next value, rd_v = its enable), so ra_q == rd_slot in every cycle and the read timing is unchanged.  p_plg
             // failed cross_clock SETUP -259.6 ps on u_txcal.u_cr.c[4] (cal_lck, W cal channel) -> bank ra.
             reg [5:0] ra_q;
-            always @(posedge ck[b+1]) begin we_q <= issue_write; wa_q <= wr_slot; din_q <= wd[b*BW+:BW]; ra_q <= rd_slot + {5'd0, rd_v}; end
+            always @(posedge ck[0]) begin we_q <= issue_write; wa_q <= wr_slot; din_q <= wd[b*BW+:BW]; ra_q <= rd_slot + {5'd0, rd_v}; end
             assign bwe = we_q; assign bwa = wa_q; assign bdin = din_q; assign bra = ra_q;
         end else begin : g_wdir
             assign bwe = issue_write; assign bwa = wr_slot; assign bdin = wd[b*BW+:BW]; assign bra = rd_slot;
