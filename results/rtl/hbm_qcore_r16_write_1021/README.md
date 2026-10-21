@@ -9,3 +9,5 @@ First native FAIL16/max34 on COL data select. A byte-wrapper alone let ABC absor
 The source1 existing qcore lockstep passed9104checks/312scalars/5918validreads, fault_lags0. Exact finalsource3 functional run passed9104/scalars312/5918validreads/fault_lags0, and actual COL word-source MUT128 was rejected. PRETREE-enabled parent native/reset/placement/finalroute remain unqualified. No layout gate, submit, main adoption, or source alias.
 
 Fullparent1 source3 native failed only two reset landing roots36/39 loads; actual functional/control/data roots were <=32. Source4 exposes each of16 row-hit reset flops persector as a distinct internal reset port, retaining topinterface, edge and existing strict32 splitter. Exact source4 existinglockstep PASS9104/scalars312/validreads5918/fault_lags0; actual MUT128 rejected27938errors. Fullparent2 census/layout remains pending.
+
+Actual source4 dd9a11282 fullparent2 PRETREE1 native PASS119694roots/max32/0violations, sourcearchive a4cb39ec0f41c64594e123cc5fae39545f4f497dd73b6af8b1c23dcd54ba8064. Exactresetfix qualified in fullparent, no source3 alias. Firstfloorplancompleted; canonical CTS/GRT/clock/route still pending.
