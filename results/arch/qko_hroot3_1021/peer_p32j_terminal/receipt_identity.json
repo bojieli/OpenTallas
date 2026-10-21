@@ -1,0 +1,146 @@
+{
+  "source": "7cfe5b8a91edb525cd9d2621294bf8bf2a067938",
+  "job_status": "EARLY_FAIL_SETUP",
+  "early_fail": {
+    "verdict": "EARLY_FAIL_SETUP",
+    "why": "post-cts TT setup WNS -424.2 ps at 833.333 (route-period -487.5 at 770), 6507 failing endpoints, TNS -1077800.0; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (path register clock arrival)",
+    "at": "2026-10-21T15:37:12-07:00",
+    "detail": {
+      "name": "qkd_hr_core_peer_p32j-ref-7cfe5b8a9",
+      "verdict": "EARLY_FAIL_SETUP",
+      "why": [
+        "post-cts TT setup WNS -424.2 ps at 833.333 (route-period -487.5 at 770), 6507 failing endpoints, TNS -1077800.0; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (path register clock arrival)"
+      ],
+      "orfs": "/srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_peer_p32j-ref-7cfe5b8a9/routes/qkd_hr_core_peer_p32j_ref_7cfe5b8a9/work/orfs",
+      "corner": "TT",
+      "step": "5_1_grt",
+      "setup": {
+        "stage": "cts",
+        "ws": -424.173,
+        "raw_ws": -487.506,
+        "period": 770.0,
+        "count": 6507,
+        "tns": -1077800.0
+      },
+      "hold": {
+        "found": [],
+        "guard": false,
+        "hm_auto": [],
+        "hm_proj": [],
+        "sync": [],
+        "stall": false,
+        "hold_stop": false,
+        "chunks": []
+      },
+      "congestion": [
+        [
+          5,
+          10000,
+          1792621753.4597206
+        ],
+        [
+          10,
+          10001,
+          1792621872.2525082
+        ]
+      ],
+      "drt": [],
+      "paths": [
+        {
+          "cls": "macro->reg",
+          "slack_ps": -487.51,
+          "group": "core_clk",
+          "dominated": "logic",
+          "wire_ps": 132.0,
+          "cell_ps": 1020.7,
+          "max_fanout": 11,
+          "start": "u_ot_pr_core.u98806_c0/u_cell",
+          "end": "u_ot_pr_core.u83072_c0/u_cell",
+          "check": "rising edge-triggered flip-flop clocked by core_clk"
+        },
+        {
+          "cls": "reg->out",
+          "slack_ps": 61.15,
+          "group": "ot_lb_v_core_clk",
+          "dominated": "logic",
+          "wire_ps": 10.2,
+          "cell_ps": 140.2,
+          "max_fanout": 1,
+          "start": "u_ot_pr_core.u104092_c0/u_cell",
+          "end": "u_rank__u_control__tk8[506]",
+          "check": "output port clocked by ot_lb_v_core_clk"
+        },
+        {
+          "cls": "reg->reg",
+          "slack_ps": 166.02,
+          "group": "asynchronous",
+          "dominated": "logic",
+          "wire_ps": 163.9,
+          "cell_ps": 369.5,
+          "max_fanout": 12,
+          "start": "u_ot_pr_core.u96936_c5/u_cell",
+          "end": "u_ot_pr_core.u86490_c0/u_cell",
+          "check": "recovery check against rising-edge clock core_clk"
+        }
+      ],
+      "block": "qkd_hr_core_peer_mu_n32",
+      "owner": "Claude:ref-flow",
+      "gates": {
+        "setup_cts_ws_ps": -400.0,
+        "setup_cts_count": 500,
+        "setup_tns_ps": -1000000.0,
+        "setup_place_ws_ps": -900.0,
+        "setup_place_count": 2000,
+        "hold_buf_cap": 100000,
+        "hold_buf_frac": 0.3,
+        "hold_buf_min": 20000,
+        "hold_buf_improve_dwns": 5.0,
+        "hold_buf_improve_frac": 0.6,
+        "hold_buf_improve_min": 60000,
+        "hold_stall_it": 2000,
+        "hold_stall_dwns": 1.0,
+        "hold_stall_tns_pct": 2.0,
+        "hold_pad_s": 3600,
+        "hold_pad_proj_x": 1.5,
+        "hold_pad_max_s": 10800,
+        "hold_call_min_it": 500,
+        "hold_real_ws_ps": -150.0,
+        "hold_real_after_s": 3600,
+        "hold_deep_it": 2000,
+        "hold_deep_dwns": 5.0,
+        "hold_nearmiss_ps": -15.0,
+        "grt_min_iter": 20,
+        "grt_markers": 1000,
+        "grt_flat": 0.95,
+        "drt_min_iter": 20,
+        "drt_k": 8,
+        "drt_min_viol": 100,
+        "stall_after_s": 10800
+      }
+    }
+  },
+  "canonical_gate_schema": "opentallas.ref_tile.gate_result.v2",
+  "canonical_gate_source_binding": {
+    "start_commit": "2c85cdbe338c4d3fe8b4b36530b3eca8a1461778",
+    "commit": null,
+    "identity": "exact_content_snapshot",
+    "manifest_sha256": "2f55646d0adabf93a612dd05aea2988d4f18c1c52bf25d8f3f51bed5915b987b",
+    "archive_sha256": "6625d6ffcdfdccc0d561bd8a1db3238e7554d90b366698f48a1315f3c3ba575b"
+  },
+  "files": {
+    "helper_overlay_plan.json": "e2c618c7fd4a6c8195bde7c689e852ae609ba9987b7b020a9b37b51a1fe78ee1",
+    "spec.json": "15fbcde40735e919bec90065abf5a3b4775f73be1d1401d339718a30439f4252",
+    "clock.sdc": "d8a24cd16c3deff4bdcf001d20e80cfc5b0a0d98eecc07bc3b060ebf44b81320",
+    "density.png": "e44cf338940ebe9bee4f2aabfddc3639d101c26d603c238f9cb65b53c6063b5a",
+    "early_fail.json": "78fc599268f42ffcf3fd9cfed281337852cfbbbf6029cf51d85f331164e771b7",
+    "4_cts_final.rpt": "f2d47ac8341a30031b3b0f4c2e3cb96125d13586422226a94986f50c4ffc3582",
+    "floorplan.png": "a0363cd680271ab4977936cd1781c5cb7b2d963e539e7f0ed800a9722bfd6eea",
+    "daemon_job.json": "e0a87ee9aadcb680dfd0b84fe5157e72728888bed9a94cc3efc3d975655aee8f",
+    "ttb_corner.txt": "142f3493d5a2bd8be7e170a61457e3218d1551f08895a2568d4a85ff84ba879e",
+    "gate_result.json": "438d19117ae6d539e5d28dd1fe0ac630aad824494e9877f1c799879c59ddc782",
+    "route.a2.log": "20ad21e4c88ca0c1a8f7b30d07963e39d9292cd775fbf9e5c106cb730e44e92f",
+    "runtime_config.mk": "92baf9e70d430ce688430ae80573eab60af757f8e8ab7357feec45302b7b7ba0",
+    "TERMINAL.md": "0f32f2e39a3f7c8e826b29cbb68c54512cb4a87778a7e4fe7b2e9880fa1d1649",
+    "signoff.sdc": "5cc24825db95ec79e1aa1e307dc3f785c5aad71820fc2e01128377d2e7b0f3a2"
+  }
+}

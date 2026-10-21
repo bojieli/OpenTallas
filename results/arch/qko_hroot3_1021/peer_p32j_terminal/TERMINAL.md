@@ -1,0 +1,9 @@
+# Peer p32j admitted-route terminal failure
+
+Job qkd_hr_core_peer_p32j-ref-7cfe5b8a9, source7cfe5b8a91edb525cd9d2621294bf8bf2a067938, ot-epyc5:/srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_peer_p32j-ref-7cfe5b8a9. Actual terminal EARLY_FAIL_SETUP at15:37:12 PT, daemon updated15:38:07. This is route.a2, after normal daemon CTS hold-stop continuation at418buffers; the earlier scheduler READY was not terminal success. No retry/submit launched by this packet.
+
+Post-CTS actual TT real-period WNS−424.173ps at833.333ps, raw route-period−487.506ps at770ps,6507 failing endpoints,TNS−1,077,800ps. Existing report worst macro→reg path u_ot_pr_core.u98806_c0/u_cell→u_ot_pr_core.u83072_c0/u_cell; launch/capture core_clk, actual root ck_core. Path classifier records1020.7ps cell /132ps wire, maximumfanout11. Concrete logic-dominated failure; clock-spread PASS from the admitted gate is not setup closure. Reg→OUT61.15ps and reset-recovery reg→reg166.02ps path summaries are distinct classes, not the failing macro-data path.
+
+The original detailed report labels Mode:ss/CornerWC. Actual runtime_config.mk lines57/61 override WC standard libs toTC and macroTT; ttb_corner.txt confirmsTC overlay. Therefore this is TT-overlay evidence, not an SS-qualified result. The real-period WNS above comes from the unchanged daemon rejudging the tightened770ps report at833.333ps; preserve both numbers.
+
+FULL canonical original pre-route gate_result.v2 is gate_result.json (copied from immutable admitted run source kit), containing schema/clock/source_binding/trial_route. It is separate from actual route early_fail.json and full daemon_job.json. No scratch summary is mislabeled as canonical gate result. All receipts/source identity retained; route never reached final closed views. Images are frozen admitted pre-route gate geometry from src/physical/ref_tile/.../gate_layout, not newly generated route-final images.

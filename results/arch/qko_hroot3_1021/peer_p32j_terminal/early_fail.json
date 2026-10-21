@@ -1,0 +1,113 @@
+{
+ "name": "qkd_hr_core_peer_p32j-ref-7cfe5b8a9",
+ "verdict": "EARLY_FAIL_SETUP",
+ "why": [
+  "post-cts TT setup WNS -424.2 ps at 833.333 (route-period -487.5 at 770), 6507 failing endpoints, TNS -1077800.0; gate WNS < -400 with > 500 endpoints; IO paths re-judged at the IO-reference insertion (path register clock arrival)"
+ ],
+ "orfs": "/srv/opentallas-scratch2/claude/closure-loop/qkd_hr_core_peer_p32j-ref-7cfe5b8a9/routes/qkd_hr_core_peer_p32j_ref_7cfe5b8a9/work/orfs",
+ "corner": "TT",
+ "step": "5_1_grt",
+ "setup": {
+  "stage": "cts",
+  "ws": -424.173,
+  "raw_ws": -487.506,
+  "period": 770.0,
+  "count": 6507,
+  "tns": -1077800.0
+ },
+ "hold": {
+  "found": [],
+  "guard": false,
+  "hm_auto": [],
+  "hm_proj": [],
+  "sync": [],
+  "stall": false,
+  "hold_stop": false,
+  "chunks": []
+ },
+ "congestion": [
+  [
+   5,
+   10000,
+   1792621753.4597206
+  ],
+  [
+   10,
+   10001,
+   1792621872.2525082
+  ]
+ ],
+ "drt": [],
+ "paths": [
+  {
+   "cls": "macro->reg",
+   "slack_ps": -487.51,
+   "group": "core_clk",
+   "dominated": "logic",
+   "wire_ps": 132.0,
+   "cell_ps": 1020.7,
+   "max_fanout": 11,
+   "start": "u_ot_pr_core.u98806_c0/u_cell",
+   "end": "u_ot_pr_core.u83072_c0/u_cell",
+   "check": "rising edge-triggered flip-flop clocked by core_clk"
+  },
+  {
+   "cls": "reg->out",
+   "slack_ps": 61.15,
+   "group": "ot_lb_v_core_clk",
+   "dominated": "logic",
+   "wire_ps": 10.2,
+   "cell_ps": 140.2,
+   "max_fanout": 1,
+   "start": "u_ot_pr_core.u104092_c0/u_cell",
+   "end": "u_rank__u_control__tk8[506]",
+   "check": "output port clocked by ot_lb_v_core_clk"
+  },
+  {
+   "cls": "reg->reg",
+   "slack_ps": 166.02,
+   "group": "asynchronous",
+   "dominated": "logic",
+   "wire_ps": 163.9,
+   "cell_ps": 369.5,
+   "max_fanout": 12,
+   "start": "u_ot_pr_core.u96936_c5/u_cell",
+   "end": "u_ot_pr_core.u86490_c0/u_cell",
+   "check": "recovery check against rising-edge clock core_clk"
+  }
+ ],
+ "block": "qkd_hr_core_peer_mu_n32",
+ "owner": "Claude:ref-flow",
+ "gates": {
+  "setup_cts_ws_ps": -400.0,
+  "setup_cts_count": 500,
+  "setup_tns_ps": -1000000.0,
+  "setup_place_ws_ps": -900.0,
+  "setup_place_count": 2000,
+  "hold_buf_cap": 100000,
+  "hold_buf_frac": 0.3,
+  "hold_buf_min": 20000,
+  "hold_buf_improve_dwns": 5.0,
+  "hold_buf_improve_frac": 0.6,
+  "hold_buf_improve_min": 60000,
+  "hold_stall_it": 2000,
+  "hold_stall_dwns": 1.0,
+  "hold_stall_tns_pct": 2.0,
+  "hold_pad_s": 3600,
+  "hold_pad_proj_x": 1.5,
+  "hold_pad_max_s": 10800,
+  "hold_call_min_it": 500,
+  "hold_real_ws_ps": -150.0,
+  "hold_real_after_s": 3600,
+  "hold_deep_it": 2000,
+  "hold_deep_dwns": 5.0,
+  "hold_nearmiss_ps": -15.0,
+  "grt_min_iter": 20,
+  "grt_markers": 1000,
+  "grt_flat": 0.95,
+  "drt_min_iter": 20,
+  "drt_k": 8,
+  "drt_min_viol": 100,
+  "stall_after_s": 10800
+ }
+}
