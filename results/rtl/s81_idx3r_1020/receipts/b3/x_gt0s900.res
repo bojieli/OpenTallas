@@ -1,0 +1,1 @@
+IDXRD_CASE OK b3/x_gt0s900: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 900 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5234 end_to_last 5041 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215204 wall=2:30.67

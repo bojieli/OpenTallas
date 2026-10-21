@@ -1,0 +1,26 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-epyc7       admits  1089 GB (avail 813, growth 35, headroom 0, waiters 0/0 GB) load 25/96 running 13 disk 5240 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-433458-1792541235 after 0 s
+IDXRD_CASE OK b3/pass_small: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1282 end_to_last 1217 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215396 wall=0:56.24
+IDXRD_CASE OK b3/pass_gs: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 256 keys 2048 words 128 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 2011 end_to_last 1930 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215060 wall=1:18.72
+IDXRD_CASE OK b3/pass_g2048: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5834 end_to_last 5641 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215500 wall=1:50.52
+IDXRD_CASE OK b3/pass_g2048s2: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5834 end_to_last 5641 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=214916 wall=2:41.82
+IDXRD_CASE OK b3/pass_g2048s3: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5834 end_to_last 5641 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215048 wall=1:49.65
+IDXRD_CASE OK b3/closed_g2048p3: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 4811 end_to_last 4618 nerr 921 nopen 0 qerr 0 slice_err 0 | maxrss_kb=214060 wall=2:08.46
+IDXRD_CASE OK b3/closed_g2048p3s2: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 3 mut 0 sram 1 ckh 900 hdr_to_last 4811 end_to_last 4618 nerr 1015 nopen 0 qerr 0 slice_err 0 | maxrss_kb=214252 wall=1:57.00
+IDXRD_CASE OK b3/pass_open6: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1282 end_to_last 1217 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215272 wall=1:07.58
+IDXRD_CASE OK b3/pass_l2: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 43691 keys 43691 words 2732 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 8707 end_to_last 8642 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215596 wall=3:00.84
+IDXRD_CASE OK b3/pass_l20: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 87382 keys 87382 words 5463 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 16900 end_to_last 16835 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=214604 wall=4:55.82
+IDXRD_CASE OK b3/pass_l20s2: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 87382 keys 87382 words 5463 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 16900 end_to_last 16835 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=214920 wall=6:44.27
+IDXRD_CASE OK b3/closed_late: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 60 P 3 mut 0 sram 1 ckh 900 hdr_to_last 942 end_to_last 877 nerr 257 nopen 0 qerr 0 slice_err 0 | maxrss_kb=213464 wall=1:10.59
+IDXRD_CASE OK b3/closed_glate: TB_IDXRD FAIL | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 60 P 4 mut 0 sram 1 ckh 900 hdr_to_last 4394 end_to_last 4201 nerr 1024 nopen 0 qerr 0 slice_err 0 | maxrss_kb=214760 wall=2:16.44
+IDXRD_CASE OK b3/fail_slothit: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1282 end_to_last 1217 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=214084 wall=1:12.56
+IDXRD_CASE OK b3/x_t0s200: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 200 P 3 mut 0 sram 1 ckh 900 hdr_to_last 1082 end_to_last 1017 nerr 257 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215756 wall=0:50.63
+IDXRD_CASE OK b3/x_gt0s900: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 900 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5234 end_to_last 5041 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=215204 wall=2:30.67
+IDXRD_CAMPAIGN PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-433458-1792541235): exit 0

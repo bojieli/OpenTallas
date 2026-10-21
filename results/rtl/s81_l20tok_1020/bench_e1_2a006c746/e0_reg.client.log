@@ -1,0 +1,7 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3760433-1792489945 after 1 s
+IDXRD_CASE OK e0_reg/pass_small: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 2 mut 0 sram 1 ckh 900 hdr_to_last 1021 end_to_last 956 nerr 0 qerr 0 slice_err 0 | maxrss_kb=262288 wall=1:51.43
+IDXRD_CASE OK e0_reg/pass_l20: TB_IDXRD PASS | TB_IDXRD_STATS gather 0 N 87382 keys 87382 words 5463 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last 16895 end_to_last 16830 nerr 0 qerr 0 slice_err 0 | maxrss_kb=262264 wall=10:24.95
+IDXRD_CASE OK e0_reg/fail_late: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 60 P 2 mut 0 sram 1 ckh 900 hdr_to_last 681 end_to_last 616 nerr 257 qerr 0 slice_err 0 | maxrss_kb=260644 wall=1:43.05
+IDXRD_CAMPAIGN PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3760433-1792489945): exit 0
