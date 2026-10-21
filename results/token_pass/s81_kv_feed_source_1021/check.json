@@ -10,7 +10,8 @@
     "wrong_frame_MAT_ownership": true,
     "wrong_packed16_row_map": true,
     "wrong_rank_identity": true,
-    "missing_actual_source_readset_blocks_native_fragment": true
+    "missing_actual_source_readset_blocks_native_fragment": true,
+    "unbound_station_chain_fails_closed": true
   },
   "historical_actual_programmes": {
     "A": {
@@ -2267,8 +2268,8 @@
   "explicit_descriptor_fixture_actual_resident": 0,
   "source_binding_sha256": "5e2de380659740383ab311382803d92b34b8cf49359a3167d6f9aa3c56e6d7ee",
   "code_sha256": {
-    "check_kv_operand_feed.py": "9cfa3040fbb3b3800b4a6a1dfe7338ac91ac4eef901f78157ec29272f70206c4",
-    "kv_operand_feed.py": "ae2f6681c35c2d16ad5c4cb7eb1143de27bf41aad0c46a2385598babcca14897"
+    "check_kv_operand_feed.py": "23d24e92e4ff02ce68e57614a1ef41beee07a50a3cd410f0b7bb8b711a3170b7",
+    "kv_operand_feed.py": "ef4aa24a51590487168fdaf45f9b6ca9935de3ab62c9fa96c65089c0ac0ff1d6"
   },
   "simulation": false,
   "runtime_launch": false,

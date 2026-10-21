@@ -70,6 +70,14 @@ def main():
     empty=F.assemble(None,[dict(rank=0,programme=fixture)],bindings_raw,{})
     assert not empty['native_pair_fragments'] and any('seven-define' in h for h in empty['holds'])
     cases['missing_actual_source_readset_blocks_native_fragment']=True
+    # Source-route API can explicitly report an unresolved path. It must be a
+    # held obligation, never a guessed route or an iteration over missing data.
+    unbound=SimpleNamespace(slices=lambda:{'u_s_0N':{'sid':1},'u_s_1N':{'sid':3}},
+        native_lane_routes=lambda:[dict(source=dict(instance='u_s_0N',port='ro_e',lane=0),
+            destination=None,unbound='NO_UNIQUE_EXACT_I_O_CHAIN',chain=[])])
+    try:F._horizontal(unbound,1,3)
+    except ValueError:cases['unbound_station_chain_fails_closed']=True
+    else:raise AssertionError('unbound station chain')
     result=dict(status='PASS_PURE_FEED_API_CHECK',cases=cases,historical_actual_programmes=records,
                 owner_constructor_sha256=hashlib.sha256(owner_source).hexdigest(),
                 explicit_descriptor_fixture_scope='PURE IDENTITY/ADDRESS API ONLY; no generated MAT/producer or residency',

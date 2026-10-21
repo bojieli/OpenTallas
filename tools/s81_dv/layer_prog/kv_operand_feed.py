@@ -107,8 +107,9 @@ def _horizontal(die, source, target):
             for lane in range(4):
                 paths=[p for p in traced if p['source']['instance']==names[a]
                        and p['source']['port']==out_pin and p['source']['lane']==lane
+                       and p.get('unbound') is None and isinstance(p.get('destination'),list)
                        and any(d['instance']==names[b] and d['port']==in_pin and d['lane']==lane
-                               for d in p['destination']) and p.get('unbound') is None]
+                               for d in p['destination'])]
                 if len(paths)!=1:
                     raise ValueError('actual source station/landing chain missing or ambiguous')
                 lanes.append(paths[0])
