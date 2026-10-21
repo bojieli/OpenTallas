@@ -66,6 +66,13 @@ WCOL = ('io_collective', 'native59', 'tt_ctlm', 'embed_prov', 'sys_face')
 WCOL_RTL = {'native59': ('qfd_native59_dv_service', 'rtl/qwen_split/qfd_native59_dv_service.sv'),
             'tt_ctlm': ('qfd_tt_ctlm_dv', 'rtl/qwen_dv/qfd_tt_ctlm_dv.sv'),
             'sys_face': ('qfd_sys_face', 'rtl/qwen_split/qfd_sys_face.sv')}
+# Source-complete recurring RoPE authority integration. Historical 595 masters remain default.
+HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
+if HEAD_PREP:
+    if os.environ.get('OT_QWEN_ROPE', '0') != '1':
+        raise ValueError('OT_QWEN_HEAD_PREP requires the sole 73-item RoPE programme')
+    WCOL_RTL['native59'] = ('qfd_native59_dv_headprep', 'rtl/qwen_split/qfd_native59_dv_headprep.sv')
+    WCOL_RTL['sys_face'] = ('qfd_sys_face_ovl', 'rtl/qwen_split/qfd_sys_face_ovl.sv')
 # the embedding provider is CLOSED (rr1, native audit PASS): its die master is drawn as the closed view (outline + pins)
 WCOL_VIEW = {'embed_prov': ('qfd_embedding_word_provider', 'rtl/qwen_split/qfd_embedding_word_provider.sv')}
 # QW-GRT4 10-20 (Q.GRT, rN die_repeaters over_reach 544 > 425 um, 391 of them on sys_face nets): the die binds the CLOSED
@@ -74,6 +81,8 @@ WCOL_VIEW = {'embed_prov': ('qfd_embedding_word_provider', 'rtl/qwen_split/qfd_e
 # plan must be made on the pins the die binds: OT_SPLIT_DV_WCOL_VIEW=sys_face[,...] draws those W-column masters from their
 # closed view (closed_view.install_master; RTL / view mismatch fails closed) instead of assign_pins.
 for _i in [x.strip() for x in os.environ.get('OT_SPLIT_DV_WCOL_VIEW', '').split(',') if x.strip()]:
+    if HEAD_PREP and _i in ('native59', 'sys_face', 'tt_ctlm'):
+        continue  # changed source ABI has no compatible historical CLOSED view
     if _i not in WCOL_RTL:
         raise ValueError(f'OT_SPLIT_DV_WCOL_VIEW: {_i} is not a re-ported W-column instance ({sorted(WCOL_RTL)})')
     WCOL_VIEW[_i] = WCOL_RTL.pop(_i)
@@ -830,6 +839,13 @@ def apply_dv(v, m):
                 out.append((f'dvw_{si}_{sp_}', 'spine_local', M[by[si].master].ports[sp_][1], [(si, sp_), (di, dp_)]))
             else:
                 miss.append(f'{si}.{sp_}->{di}.{dp_}')
+        if HEAD_PREP:
+            for sp_, dp_ in [('emb_start','head_prepare_v'), ('emb_token','head_prepare_token'),
+                              ('emb_position','head_prepare_position'), ('emb_user','head_prepare_user')]:
+                if not (has('tt_ctlm',sp_) and has('native59',dp_)):
+                    raise ValueError(f'head prepare requires actual tt_ctlm.{sp_}->native59.{dp_}')
+                out.append((f'hp_tt_{sp_}', 'spine_local', M[by['tt_ctlm'].master].ports[sp_][1],
+                            [('tt_ctlm',sp_),('native59',dp_)]))
         if dhobs is not None:
             _dhobs_buses(m, out, dh_crt, has)
         if ctxrx is not None:

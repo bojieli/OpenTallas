@@ -1,0 +1,11 @@
+# Source-complete recurring compute head authority
+
+Opt-in `OT_QWEN_HEAD_PREP=1 OT_QWEN_ROPE=1` selects the actual DV-native producer `qfd_native59_dv_headprep`, `qfd_sys_face_ovl`, and `qfd_d2d_static_ovl_sf7`. It preserves the default 595-item integration masters and in-flight immutable jobs.
+
+The CTLM source samples `tok_b`, `pos_b`, and the command user on the actual `c_emb` edge. Native prepare uses the recovered two-edge input pipeline and one-edge descriptor producer; it advances the filler epoch at prepare, so stage 1 reuses that epoch. User 0 publishes only after the actual HOST O61 matches the stored prepare token/position. No retiring RESULT token or next-token alias supplies this identity.
+
+O61 = `{generation2, epoch16, stage6=0, token18, position13, segment6=0}`. Filler epoch = `{sequence14[user], user2}`; HOST epoch has low two bits 0. Owner = O61[44:43]. The system face holds one descriptor per user and sends it only in the paired kind-12 slot for that user. Incoming programme context user is compared against the actual O61 owner. No credits or handshake are added.
+
+GEN bundles require equal arrival ages for all four CTLM prepare fields, all three native descriptor fields, and the slot/user pair. `head_prepare_age.py CASE --out receipt.json` requires the actual selected masters, exact die.v and fwd_lanes.json, and a passing bundle audit. It exports `1 + actual TT/native age + 3 + actual native/face age + 1`; it refuses missing paths, mismatched fields, or an inferred K-only age. User-0 HOST availability remains a separate compiler prerequisite.
+
+Source integration is unqualified until the source-complete GEN reports actual ages, the token owner compiles the one paired 73-item calendar and four MU lists, then the coherent successor passes actual source binding and physical qualification. Historical LPF/closed native and face views do not qualify these changed ABIs. Use the explicit selected raw CTLM producer in the first source-complete GEN; a new hardened recut must preserve its actual position/user exports.

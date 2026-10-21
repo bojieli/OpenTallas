@@ -23,6 +23,10 @@ from qwen_split.closed_view import enabled as view_enabled, install_master as vi
 ROOT = Path(__file__).resolve().parents[2]
 MASTER = 'qfd_sys_face'
 SOURCE = 'rtl/qwen_split/qfd_sys_face.sv'
+HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
+if HEAD_PREP:
+    MASTER = 'qfd_sys_face_ovl'
+    SOURCE = 'rtl/qwen_split/qfd_sys_face_ovl.sv'
 INST = 'sys_face'
 WH_HIST = (302.4, 216.0)
 
@@ -80,6 +84,11 @@ EDGES = [
     # run anchor: the forwarded epoch strobe bump (static_link_bind's bump_fwd_epoch, net lnk_fwd_epoch)
     ('fwd_epoch', 'bump_fwd_epoch', 'o'),
 ]
+
+if HEAD_PREP:
+    EDGES += [(p, 'd2d_rom', p) for p in ('cal_start_rx','cal_seg_rx','cal_user_tx','cal_user_rx','prog_head_context_slot')]
+    EDGES += [('prog_head_context_user','d2d_rom','tx_user'), ('prog_rx_user','d2d_rom','rx_user')]
+    EDGES += [(p,'native59',p) for p in ('head_descriptor_v','head_descriptor_tag','head_descriptor_generation')]
 
 
 # Q-CTLM G8 (claude/qctlm-1017 d8f159727): the DV sys_face drops these inputs (their producers, the qfd_crom_g groups and

@@ -8,6 +8,7 @@ link reset) are qfd_sigbump hard-macro models.  Inputs with no compute-die produ
 record, the STATUS/RESULT record) are enumerated, never tied.
 """
 import hashlib
+import os
 from pathlib import Path
 
 from qwen_split.closed_view import enabled as view_enabled, install_master as view_install, view_frame
@@ -16,6 +17,9 @@ from qwen_split.source_pin_plan import rtl_ports
 ROOT = Path(__file__).resolve().parents[2]
 MASTER = 'qfd_d2d_static'
 SOURCE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv'
+if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
+    MASTER = 'qfd_d2d_static_ovl_sf7'
+    SOURCE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl_sf7.sv'
 BUMP = 'qfd_sigbump'
 BUMP_WH = 43.176
 
