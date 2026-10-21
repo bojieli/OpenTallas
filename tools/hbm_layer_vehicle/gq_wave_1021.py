@@ -63,7 +63,7 @@ def wave_plan(*, F, senders, source_sectors, destination_sectors, vm_rt,
     V = vm_rt[0]
     # Last event fully drains ND=40+V before next fire. No timing inferred from
     # data and no shortening from idle stops; preserve existing busy semantics.
-    wave_span = _issue((F+1)//2-1) + 40 + V + 4
+    wave_span = 100 + V  # bounded four-stop bench programme spacing, including drain
     starts = [first_fire + j*wave_span for j in range(len(senders))]
     period = starts[-1] + wave_span
     if first_fire < 0 or period >= 65536:
