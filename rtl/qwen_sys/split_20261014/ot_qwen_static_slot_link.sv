@@ -54,9 +54,12 @@ module ot_qwen_static_slot_ctl #(
     // Ownership checks use pin-captured metadata. The written map follows the
     // same captured commands, one edge behind physical bank issue; faults are
     // still known before the earliest TX3 frame can leave. No calendar gating.
+    // written_at_cmd / written_at_s1: written[cmd_ws] / written[s1]. SAFE builds them per bank from kept
+    // local slot copies (QW-COLLIO 10-20 native census: one cmd_ws/s1 register drove up to 76 loads).
+    wire written_at_cmd, written_at_s1;
     wire write_collision=cmd_wv && ((v2 && cmd_ws==s2)||(v3 && cmd_ws==s3)||(v4 && cmd_ws==s4)||
-        (written[cmd_ws] && !(v1 && s1==cmd_ws)));
-    wire unread_slot=v1 && !written[s1] && !(cmd_wv && cmd_ws==s1);
+        (written_at_cmd && !(v1 && s1==cmd_ws)));
+    wire unread_slot=v1 && !written_at_s1 && !(cmd_wv && cmd_ws==s1);
     wire phy_fault;
     if(SAFE)begin:g_phy_pin
         reg up_q;
@@ -88,6 +91,8 @@ module ot_qwen_static_slot_ctl #(
     if(!SAFE)begin:g_original_control
     reg[63:0]written_q;
     assign written=written_q;
+    assign written_at_cmd=written[cmd_ws];
+    assign written_at_s1=written[s1];
     always @(posedge clk or negedge rst_n)begin
         if(!rst_n)begin
             written_q<=0;cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;s1<=0;s2<=0;s3<=0;s4<=0;e1<=0;e2<=0;e3<=0;
@@ -127,18 +132,29 @@ module ot_qwen_static_slot_ctl #(
             s1<=rd_slot;s2<=s1;s3<=s2;s4<=s3;e1<=epoch;e2<=e1;e3<=e2;
             es<=rx_expect_slot;re<=epoch;
         end
+        wire [7:0] hit_cmd_b, hit_s1_b;
         for(genvar b=0;b<8;b=b+1)begin:g_written
             reg[7:0]written_q;
             assign written[b*8+:8]=written_q;
+            // Kept per-bank copies: slot registers (same D, same edge as cmd_ws / s1) and a one-edge-late
+            // epoch clear. The late clear is unobservable: at epoch_begin+1 cmd_wv and v1 are 0 (cleared by
+            // epoch_begin), so no set/clear/collision/unread term reads or writes the map on that edge.
+            (* keep="true", dont_touch="true" *) reg [5:0] cmd_ws_b, s1_b;
+            (* keep="true", dont_touch="true" *) reg eb_b;
+            always @(posedge clk)begin cmd_ws_b<=wr_slot;s1_b<=rd_slot;eb_b<=epoch_begin;end
+            assign hit_cmd_b[b]=written_q[cmd_ws_b[2:0]];
+            assign hit_s1_b[b]=written_q[s1_b[2:0]];
             always @(posedge clk or negedge rs[b])begin
                 if(!rs[b])written_q<=0;
-                else if(epoch_begin)written_q<=0;
+                else if(eb_b)written_q<=0;
                 else begin
-                    if(cmd_wv && !epoch_abort && cmd_ws[5:3]==b)written_q[cmd_ws[2:0]]<=1'b1;
-                    if(v1 && !epoch_abort && s1[5:3]==b)written_q[s1[2:0]]<=1'b0;
+                    if(cmd_wv && !epoch_abort && cmd_ws_b[5:3]==b)written_q[cmd_ws_b[2:0]]<=1'b1;
+                    if(v1 && !epoch_abort && s1_b[5:3]==b)written_q[s1_b[2:0]]<=1'b0;
                 end
             end
         end
+        assign written_at_cmd=hit_cmd_b[cmd_ws[5:3]];
+        assign written_at_s1=hit_s1_b[s1[5:3]];
         always @(posedge clk or negedge rs[8])begin
             if(!rs[8])begin
                 cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;
@@ -219,10 +235,15 @@ endmodule
 module ot_qwen_slot_reset_copies #(parameter integer COPIES=1)(
     input wire clk,rst_n,output wire[COPIES-1:0]released
 );
+    // QW-COLLIO 10-20: one shared first synchroniser stage, kept per-copy second stages (same two-edge
+    // release). The boundary reset net then sees 1+COPIES async pins instead of 2*COPIES (census 35 > 32).
+    (* async_reg="true", keep="true", dont_touch="true" *)reg first_q;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)first_q<=1'b0;else first_q<=1'b1;
     for(genvar k=0;k<COPIES;k=k+1)begin:g_copy
-        (* async_reg="true", keep="true", dont_touch="true" *)reg[1:0]reset_q;
+        (* async_reg="true", keep="true", dont_touch="true" *)reg reset_q;
         always @(posedge clk or negedge rst_n)
-            if(!rst_n)reset_q<=0;else reset_q<={reset_q[0],1'b1};
-        assign released[k]=reset_q[1];
+            if(!rst_n)reset_q<=1'b0;else reset_q<=first_q;
+        assign released[k]=reset_q;
     end
 endmodule

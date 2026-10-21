@@ -50,14 +50,18 @@ module ot_coll_dly1 #(parameter integer N = 1, SAFE_RING = 0) (input wire clk, i
             localparam integer W = D-16*b<16 ? D-16*b : 16;
             reg [W-1:0] bits_q;
             (* keep="true", dont_touch="true" *) reg data_q;
+            // QW-COLLIO 10-20: separate kept write-decode and read-select copies of the bank position
+            // (native census: one shared copy drove 34 loads > 32). Same value, same edge.
             (* keep="true", dont_touch="true" *) reg [3:0] local_pos_q;
+            (* keep="true", dont_touch="true" *) reg [3:0] local_rpos_q;
             always @(posedge clk) begin
                 data_q<=d;
                 local_pos_q<=pos_q;
+                local_rpos_q<=pos_q;
                 if(wr_bank_q==b && local_pos_q<W)
                     bits_q[local_pos_q]<=data_q;
             end
-            assign bank_out[b]=local_pos_q<W ? bits_q[local_pos_q] : 1'b0;
+            assign bank_out[b]=local_rpos_q<W ? bits_q[local_rpos_q] : 1'b0;
         end
         always @* begin
             selected=1'b0;
@@ -119,6 +123,7 @@ endmodule
 
 module ot_coll_lcal_tx #(parameter integer KC = 4, parameter integer KW = 2, SAFE_RING = 0, LAND_CORE = 0) (
     input  wire clk, lck, rs_c, rs_l,
+    input  wire rs_l2,                                      // second same-depth link reset copy (codec-side counters); = rs_l when not split
     input  wire slot,                                       // core: compiled send slot
     output wire w_slot, output wire [5:0] w_addr, output wire w_version,
     output wire r_slot, output wire [5:0] r_addr, output wire r_version,
@@ -138,14 +143,15 @@ module ot_coll_lcal_tx #(parameter integer KC = 4, parameter integer KW = 2, SAF
     ot_coll_slotcnt u_rc (.clk(lck), .rs_n(rs_l), .en(r_slot), .addr(r_addr), .version(r_version));
     ot_coll_dly1 #(.N(4),.SAFE_RING(SAFE_RING)) u_w (.clk(lck), .rs_n(rs_l), .d(r_slot), .q(wr_v));
     wire unused_v1, unused_v2;
-    ot_coll_slotcnt u_cw (.clk(lck), .rs_n(rs_l), .en(wr_v), .addr(wr_slot), .version(unused_v1));
-    ot_coll_dly1 #(.N(KW),.SAFE_RING(SAFE_RING)) u_r (.clk(lck), .rs_n(rs_l), .d(wr_v), .q(rd_v));
-    ot_coll_slotcnt u_cr (.clk(lck), .rs_n(rs_l), .en(rd_v), .addr(rd_slot), .version(unused_v2));
+    ot_coll_slotcnt u_cw (.clk(lck), .rs_n(rs_l2), .en(wr_v), .addr(wr_slot), .version(unused_v1));
+    ot_coll_dly1 #(.N(KW),.SAFE_RING(SAFE_RING)) u_r (.clk(lck), .rs_n(rs_l2), .d(wr_v), .q(rd_v));
+    ot_coll_slotcnt u_cr (.clk(lck), .rs_n(rs_l2), .en(rd_v), .addr(rd_slot), .version(unused_v2));
 endmodule
 
 module ot_coll_lcal_rx #(parameter integer KC = 4, parameter integer KW = 2, parameter integer PHY = 14,
                          parameter integer L = 40, parameter integer R = 0, parameter integer PEER_R = R, SAFE_RING = 0, LAND_CORE = 0) (
     input  wire clk, lck, rs_c, rs_l,
+    input  wire rs_c2, rs_l2,                               // second same-depth reset copies (counters / CDC-write side); = rs_c/rs_l when not split
     input  wire exp,                                        // core: the peer's compiled send slot
     output wire rx_expect_v, output wire [5:0] rx_expect_slot,
     output wire w_slot, output wire [5:0] w_addr, output wire w_version,
@@ -174,15 +180,15 @@ module ot_coll_lcal_rx #(parameter integer KC = 4, parameter integer KW = 2, par
     ot_coll_dly1 #(.N(KC + 4 + KW + 4 + PHY + PEER_R - R),.SAFE_RING(SAFE_RING)) u_e
 `endif (.clk(lck), .rs_n(rs_l), .d(exp), .q(rx_expect_v));
     end
-    ot_coll_slotcnt u_ec (.clk(lck), .rs_n(rs_l), .en(rx_expect_v), .addr(rx_expect_slot), .version(unused_v));
-    ot_coll_dly1 #(.N(2),.SAFE_RING(SAFE_RING)) u_w (.clk(lck), .rs_n(rs_l), .d(rx_expect_v), .q(w_slot));   // codec: pin capture 1 + RX 1
-    ot_coll_slotcnt u_wc (.clk(lck), .rs_n(rs_l), .en(w_slot), .addr(w_addr), .version(w_version));
+    ot_coll_slotcnt u_ec (.clk(lck), .rs_n(rs_l2), .en(rx_expect_v), .addr(rx_expect_slot), .version(unused_v));
+    ot_coll_dly1 #(.N(2),.SAFE_RING(SAFE_RING)) u_w (.clk(lck), .rs_n(rs_l2), .d(rx_expect_v), .q(w_slot));   // codec: pin capture 1 + RX 1
+    ot_coll_slotcnt u_wc (.clk(lck), .rs_n(rs_l2), .en(w_slot), .addr(w_addr), .version(w_version));
 `ifdef OT_LCAL_MUT_RX_EARLY
     ot_coll_dly1 #(.N(L - 5 - 2 * R),.SAFE_RING(SAFE_RING)) u_r (.clk(clk), .rs_n(rs_c), .d(exp), .q(r_slot));    // negative control: read 1 early
 `else
     ot_coll_dly1 #(.N(L - 4 - 2 * R),.SAFE_RING(SAFE_RING)) u_r (.clk(clk), .rs_n(rs_c), .d(exp), .q(r_slot));
 `endif
-    ot_coll_slotcnt u_rc (.clk(clk), .rs_n(rs_c), .en(r_slot), .addr(r_addr), .version(r_version));
+    ot_coll_slotcnt u_rc (.clk(clk), .rs_n(rs_c2), .en(r_slot), .addr(r_addr), .version(r_version));
 endmodule
 
 module ot_coll_static_linkcal #(
@@ -225,13 +231,13 @@ module ot_coll_static_linkcal #(
     wire [4:0] rxe = {sx_peer_slot, ur_peer_slot, up_slot};       // P: the package peer sends exactly when I do
     genvar i;
     generate for (i = 0; i < 5; i = i + 1) begin : g_ch
-        ot_coll_lcal_tx #(.KC(KC), .KW(KW)) u_tx (.clk(clk), .lck(lck), .rs_c(rs_c), .rs_l(rs_l), .slot(txs[i]),
+        ot_coll_lcal_tx #(.KC(KC), .KW(KW)) u_tx (.clk(clk), .lck(lck), .rs_c(rs_c), .rs_l(rs_l), .rs_l2(rs_l), .slot(txs[i]),
             .w_slot(tx_w_slot[i]), .w_addr(tx_w_addr[6*i +: 6]), .w_version(tx_w_version[i]),
             .r_slot(tx_r_slot[i]), .r_addr(tx_r_addr[6*i +: 6]), .r_version(tx_r_version[i]),
             .wr_v(tx_wr_v[i]), .wr_slot(tx_wr_slot[6*i +: 6]), .rd_v(tx_rd_v[i]), .rd_slot(tx_rd_slot[6*i +: 6]));
         ot_coll_lcal_rx #(.KC(KC), .KW(KW), .PHY(i < 2 ? PU : PS), .L(i < 2 ? LU : LS),
             .R(i < 2 ? RU : i == 2 ? RS0 : i == 3 ? RS1 : RS2)) u_rx (.clk(clk), .lck(lck),
-            .rs_c(rs_c), .rs_l(rs_l), .exp(rxe[i]),
+            .rs_c(rs_c), .rs_l(rs_l), .rs_c2(rs_c), .rs_l2(rs_l), .exp(rxe[i]),
             .rx_expect_v(rx_expect_v[i]), .rx_expect_slot(rx_expect_slot[6*i +: 6]),
             .w_slot(rx_w_slot[i]), .w_addr(rx_w_addr[6*i +: 6]), .w_version(rx_w_version[i]),
             .r_slot(rx_r_slot[i]), .r_addr(rx_r_addr[6*i +: 6]), .r_version(rx_r_version[i]));

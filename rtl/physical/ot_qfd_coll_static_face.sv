@@ -34,16 +34,17 @@ module qfd_coll_static_face #(
  end
  initial if(TOK_REG && KC<2)$error("qfd_coll_static_face TOK_REG needs KC>=2");
  wire rs_c,rs_l;
- wire[2:0]rs_core;wire[3:0]rs_link;
+ wire[2:0]rs_core;wire[5:0]rs_link;
  if(SAFE)begin:g_safe_reset
   // Kept local copies release at the original two-edge depth, not one
   // common 400-load reset output followed by extra startup cycles.
+  // QW-COLLIO 10-20: rs_core[2] now feeds the RX core counters, +2 link copies so no copy drives >32 reset pins (native census 33/40).
   ot_qwen_slot_reset_copies #(.COPIES(3))u_core(.clk(cal_ck),.rst_n(rst_n),.released(rs_core));
-  ot_qwen_slot_reset_copies #(.COPIES(4))u_link(.clk(cal_lck),.rst_n(rst_n),.released(rs_link));
+  ot_qwen_slot_reset_copies #(.COPIES(6))u_link(.clk(cal_lck),.rst_n(rst_n),.released(rs_link));
  end else begin:g_original_reset
   ot_reset_sync u_rc(.clk(cal_ck),.async_rst_n(rst_n),.sync_rst_n(rs_c));
   ot_reset_sync u_rl(.clk(cal_lck),.async_rst_n(rst_n),.sync_rst_n(rs_l));
-  assign rs_core={3{rs_c}};assign rs_link={4{rs_l}};
+  assign rs_core={3{rs_c}};assign rs_link={6{rs_l}};
  end
  reg[1:0] ec;reg epoch_begin;
  always @(posedge cal_lck or negedge rs_link[2])
@@ -52,11 +53,11 @@ module qfd_coll_static_face #(
  wire tws,twsver,trs,trsver,wr_v,rd_v,rxe,rws,rwv,rrs,rrv;
  wire[5:0]twa,tra,wr_slot,rd_slot,rx_slot,rwa,rra;
  ot_coll_lcal_tx #(.KC(KC-TOK_REG),.KW(KW),.SAFE_RING(SAFE),.LAND_CORE(SAFE)) u_txcal(
- .clk(cal_ck),.lck(cal_lck),.rs_c(rs_core[0]),.rs_l(rs_link[0]),.slot(tx_slot_i),
+ .clk(cal_ck),.lck(cal_lck),.rs_c(rs_core[0]),.rs_l(rs_link[0]),.rs_l2(rs_link[4]),.slot(tx_slot_i),
  .w_slot(tws),.w_addr(twa),.w_version(twsver),.r_slot(trs),.r_addr(tra),.r_version(trsver),
  .wr_v(wr_v),.wr_slot(wr_slot),.rd_v(rd_v),.rd_slot(rd_slot));
  ot_coll_lcal_rx #(.KC(KC-TOK_REG),.KW(KW),.PHY(PHY),.L(L-TOK_REG),.R(R),.PEER_R(PEER_R),.SAFE_RING(SAFE),.LAND_CORE(SAFE))u_rxcal(
- .clk(cal_ck),.lck(cal_lck),.rs_c(rs_core[1]),.rs_l(rs_link[1]),.exp(peer_slot_i),
+ .clk(cal_ck),.lck(cal_lck),.rs_c(rs_core[1]),.rs_l(rs_link[1]),.rs_c2(rs_core[2]),.rs_l2(rs_link[5]),.exp(peer_slot_i),
  .rx_expect_v(rxe),.rx_expect_slot(rx_slot),.w_slot(rws),.w_addr(rwa),.w_version(rwv),
  .r_slot(rrs),.r_addr(rra),.r_version(rrv));
  // Expected PHY ownership comes only from compiled calendar reads, never
