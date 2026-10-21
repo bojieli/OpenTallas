@@ -289,8 +289,8 @@
   "why": "RETURN_AGE 640 re-close (S81-FIX2 10-21): G7 die Engram response age ~435 + 2x70 chain stations = ~575 > 512; NATIVE32 engine (ra512 gate native census FAIL 345 drivers >32, max 1173 -> kept copies); same pins as ra512 (no ck_rows); outline 345.6 x 216 (2+1 L macro group, W column + SE macro; std mass NE); die pin plan re-grant needed (same as ra512)"
  },
  "job": {
-  "owner": "Claude:S81-FIX2/ENG",
-  "branch": "claude/s81-eng640-1021",
+  "owner": "Codex:S81-ENG-RELEASE",
+  "branch": "codex/s81-eng-lookup33-1021",
   "tag": "s81engm_lkp_ra640b",
   "purpose": "S81 L14 Engram lookup element re-kit for the G7 die return bound RETURN_AGE 640 (dsfd_engram_lkp_ra640: static14 st10 cycles; row payload in 3 x ot_sram_1r1w_128x256 on ck_rd; 11 phase-0 roots; NATIVE32 kept copies)",
   "structural_change": "ra640: RETURN_AGE 640 (II 704, one window in flight, in-flight storage = one window of rows, 3 SRAM macros unchanged) + NATIVE32: every ra512 census driver >32 split into kept keep_hierarchy copies (hash w x16, roll_h x3/column, csel/hdone per column, issue strobes/one-hot, r_k0 x64, e1_off x44, e1_k x4, e1_v x24, crc enables x4) or freed of an unobservable enable (address pipeline, E0q, E1, ga/a_*/e3_*). 0 cycles. Bench: tb_dsdv_eng_rr at RETURN_AGE 640 (tools/s81_dv/eng_rr/run_eng_rr.sh).",

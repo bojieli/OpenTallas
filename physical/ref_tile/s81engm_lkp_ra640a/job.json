@@ -2,12 +2,12 @@
  "name": "s81engm_lkp_ra640a-s81engm_lkp_ra640a-COMMIT",
  "block": "dsfd_engram_lkp_ra640",
  "ref_tile": true,
- "owner": "Claude:S81-FIX2/ENG",
+ "owner": "Codex:S81-ENG-RELEASE",
  "purpose": "S81 L14 Engram lookup element re-kit for the G7 die return bound RETURN_AGE 640 (dsfd_engram_lkp_ra640: static14 st10 cycles; row payload in 3 x ot_sram_1r1w_128x256 on ck_rd; 11 phase-0 roots; NATIVE32 kept copies)",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/s81-eng640f-1021",
+  "branch": "codex/s81-eng-lookup33-1021",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/engram",
