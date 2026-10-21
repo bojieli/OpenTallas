@@ -1,0 +1,22 @@
+/* ATTN1 (10-20): ROLE-ONLY stub Liberty of the hard head group (pin directions + clock) for tools/ref_tile/native_census.py
+   before the s81svc_attn_hgrp8 view exists; no timing, never a sign-off library. */
+library (attn1_hgrp8_stub) {
+  cell (ot_s81svc8_hgrp_s81_bounded) {
+    pin (clk) { direction : input; clock : true; }
+    pin (rst_n) { direction : input; }
+    bus (gid) { direction : input; }
+    pin (ld_v) { direction : input; }
+    pin (ld_mode) { direction : input; }
+    bus (ld_bank) { direction : input; }
+    bus (ld_grp) { direction : input; }
+    bus (ld_w) { direction : input; }
+    bus (ld_wp) { direction : input; }
+    pin (ld_w2v) { direction : input; }
+    pin (iv) { direction : input; }
+    bus (ibank) { direction : input; }
+    bus (ib) { direction : input; }
+    pin (ov) { direction : output; }
+    bus (oy) { direction : output; }
+    bus (oflt) { direction : output; }
+  }
+}

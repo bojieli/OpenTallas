@@ -1,0 +1,42 @@
+{
+  "top": "dsdv_svc_att",
+  "sources": [
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_kreg.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_lat.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_hdc_fp32_f12.sv",
+    "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv"
+  ],
+  "defines": [
+    "OT_ATTN_HGRP_HARD",
+    "OT_ATTN_HGRP8",
+    "OT_HGRP8_MOD=ot_s81svc8_hgrp_s81_bounded",
+    "OT_SVC_LAND_SRAM",
+    "OT_SVC_ATT_SRAM",
+    "SVCQ_ENG_FG3"
+  ],
+  "params": {
+    "MUT": 0,
+    "DIE_ID": 0,
+    "ST": 0,
+    "SRAM_MACRO": 1,
+    "NTP": 1,
+    "PMEM": 1,
+    "QMEM_SRAM": 0
+  },
+  "orfs_vars": {
+    "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_dv/svc_rs"
+  },
+  "scope": "Current-ABI standalone ATT parent mapped load census/area; four hard-group BB ports with role-only library. Does not qualify children or a layout, nor imply functional adoption."
+}
