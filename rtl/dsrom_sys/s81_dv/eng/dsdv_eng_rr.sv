@@ -640,19 +640,19 @@ module dsdv_eng_rr_c #(
     input  wire [275:0]  vi_n, output wire [275:0] vo_n,
     output reg  [3:0]    st
 );
-    wire[15:0] rl;
+    wire[31:0] rl;
 `ifdef OT_S81ENG_RR_N32
-    ot_s81eng_reset3n32 #(.LEAVES(16)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl),.early_n());
+    ot_s81eng_reset3n32 #(.LEAVES(32)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl),.early_n());
 `else
     ot_rst_relay #(.REGIONS(2),.SYNC_STAGES(2),.TREE_STAGES(1)) u_r(.clk(ck),.rst_n_in(rst_n),.rst_n(rl[1:0]));
-    assign rl[15:2]=0;
+    assign rl[31:2]=0;
 `endif
     reg [52:0] ks; reg en_q, ly_q; reg [1:0] rk_q;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) ks[52] <= 1'b0; else ks[52] <= f_ks[52];
     always @(posedge ck) begin ks[51:0] <= f_ks[51:0]; en_q <= cfg_en; ly_q <= cfg_layer; rk_q <= cfg_rank; end
     wire win_v, wf; wire [2:0] win_slot; wire [67:0] win_ids;
 `ifdef OT_S81ENG_RR_N32
-    ot_s81eng_win_n32 u_win (.ck(ck),.rst_n(rl[2]),
+    ot_s81eng_win_n32 u_win (.ck(ck),.rst_n(rl[2]),.rst_copy_n(rl[6:5]),
 `else
     ot_s81eng_win u_win (.ck(ck), .rst_n(rl[0]),
 `endif
@@ -671,7 +671,15 @@ module dsdv_eng_rr_c #(
 `else
     dsfd_engram_lkp_ra640 #(.RETURN_AGE(RETURN_AGE)) u_lkp (.ck(ck), .ck_seed(ck), .ck_hash({6{ck}}),
 `endif
-        .ck_n(ck), .ck_s(ck), .ck_rd(ck), .rst_n(rl[1]), .cfg_layer(ly_q), .cfg_rank(rk_q),
+        .ck_n(ck), .ck_s(ck), .ck_rd(ck), .rst_n(rl[1]),
+`ifdef OT_S81ENG_RR_N32
+`ifndef OT_ENG_LKP_STATIC14
+`ifndef OT_ENG_LKP_RA512
+        .rst_regions(rl[31:16]),
+`endif
+`endif
+`endif
+        .cfg_layer(ly_q), .cfg_rank(rk_q),
         .win_v(win_v), .win_slot(win_slot), .win_ids(win_ids),
         .hq_v(hq_v), .hq_atom(hq_atom), .hq_tag(hq_tag),
         .hr_v(hr_v), .hr_slot(hr_slot), .hr_tag(hr_tag), .hr_idx(hr_idx), .hr_d(hr_d),

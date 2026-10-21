@@ -18,39 +18,50 @@ module ot_s81eng_xq_n32 #(
     wire mul_reset_early_n;
     ot_s81eng_reset3n32 #(.LEAVES(128)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl),.early_n(mul_reset_early_n));
     // ---------------------------------------------------------------- input flops + decode
-    reg         iv; reg [4:0] ic; reg [2:0] ib; reg [263:0] id;
+    reg         iv; reg [4:0] ic; reg [2:0] ib; wire [263:0] id;
+    reg[255:0] id_code; wire[255:0] id_scale_c,wl_scale_c;
+    assign id={id_scale_c[7:0],id_code};
     always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
-    always @(posedge ck) begin ic <= o_col; ib <= o_beat; id <= o_d; end
+    always @(posedge ck) begin ic <= o_col; ib <= o_beat; id_code <= o_d[255:0]; end
+    for(genvar sc=0;sc<32;sc=sc+1)begin:g_scale_capture
+        ot_s81eng_rr_kq8 u_i(.ck(ck),.d(o_d[263:256]),.q(id_scale_c[8*sc+:8]));
+        ot_s81eng_rr_kq8 u_w(.ck(ck),.d(wl_rd[263:256]),.q(wl_scale_c[8*sc+:8]));
+    end
     wire [511:0] bf_x, bf_d;
     wire [263:0] wl;                       // wait line read: the beat 12 edges ago
-    wire[134:0] ex,ed;
-    for(genvar eg=0;eg<15;eg=eg+1)begin:g_et
-        ot_s81eng_rr_scale9 #(.DELTA(eg-136)) u_x(.scale(id[263:256]),.q(ex[9*eg+:9]));
-        ot_s81eng_rr_scale9 #(.DELTA(eg-136)) u_d(.scale(wl[263:256]),.q(ed[9*eg+:9]));
-    end
     genvar g;
-    generate for (g = 0; g < 32; g = g + 1) begin : g_dec
-        ot_s81eng_rr_bf16 u_x (.code(id[8 * g +: 8]), .et(ex), .bf16(bf_x[16 * g +: 16]));
-        ot_s81eng_rr_bf16 u_d (.code(wl[8 * g +: 8]), .et(ed), .bf16(bf_d[16 * g +: 16]));
+    generate for(g=0;g<32;g=g+1)begin:g_dec
+        for(genvar by=0;by<2;by=by+1)begin:g_byte
+            ot_s81eng_rr_bfraw_byte #(.LO(8*by)) u_x(.code(id[8*g+:8]),.scale(id_scale_c[8*g+:8]),.q(bf_x[16*g+8*by+:8]));
+            ot_s81eng_rr_bfraw_byte #(.LO(8*by)) u_d(.code(wl[8*g+:8]),.scale(wl_scale_c[8*g+:8]),.q(bf_d[16*g+8*by+:8]));
+        end
     end endgenerate
     wire [1023:0] x, xd;
     generate for (g = 0; g < 32; g = g + 1) begin : g_x
         assign x[32 * g +: 32]  = {bf_x[16 * g +: 16], 16'h0};
         assign xd[32 * g +: 32] = {bf_d[16 * g +: 16], 16'h0};
     end endgenerate
-    // wait line: write every edge at wp, read wp - 11 (registered macro output -> the beat written 12 edges before)
+    // Wait line: read wp-10 one edge earlier; owned raw landing below restores the original total12-edge age.
     reg [5:0] wp;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
     wire [511:0] wl_rd;
-    ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(wp - 6'd11), .rd_out(wl_rd),
+    ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(wp - 6'd10), .rd_out(wl_rd),
         .w_ce_in(1'b1), .w_addr_in(wp), .wd_in({248'd0, id}), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
-    assign wl = wl_rd[263:0];
+    reg[255:0] wl_code;
+    always @(posedge ck)wl_code<=wl_rd[255:0];
+    assign wl={wl_scale_c[7:0],wl_code};
     // ---------------------------------------------------------------- act-quant (closed vq quantiser)
-    wire        qv, af; wire [255:0] qq; wire signed [9:0] qe; wire [511:0] qy_unused;
-    ot_s81sl_aq12x_eng_n32 u_aq (.clk(ck), .rst_n(rl[1]), .rst_mul_early_n(mul_reset_early_n), .v(iv), .x(x), .vo(qv), .q(qq), .e(qe), .y(qy_unused), .fault(af), .xd(xd));
+    wire        qv, af; wire[24:0] qv_pair,qodd_pair,rst_pair_n;
+    for(genvar qp=0;qp<25;qp=qp+1)begin:g_prst assign rst_pair_n[qp]=rl[12+qp/5];end wire [255:0] qq; wire signed [9:0] qe; wire [511:0] qy_unused;
+    ot_s81sl_aq12x_eng_n32 u_aq (.clk(ck), .rst_n(rl[1]), .rst_mul_early_n(mul_reset_early_n), .rst_pair_n(rst_pair_n),.vo_pair(qv_pair), .v(iv), .x(x), .vo(qv), .q(qq), .e(qe), .y(qy_unused), .fault(af), .xd(xd));
     wire [7:0] qtag;                       // {col 5, beat 3} through the quantiser latency
-    ot_hdc_delay #(.W(8), .D(18)) u_tg (.clk(ck), .rst_n(rl[1]), .d({ic, ib}), .q(qtag));
+    wire[7:0] qtag_pre;
+    ot_hdc_delay #(.W(8), .D(17)) u_tg (.clk(ck), .rst_n(rl[1]), .d({ic, ib}), .q(qtag_pre));
+    ot_s81eng_rr_kq8 u_taglast(.ck(ck),.d(qtag_pre),.q(qtag));
+    for(genvar qp=0;qp<25;qp=qp+1)begin:g_qodd
+        ot_s81eng_rr_bitcap u_b(.ck(ck),.d(qtag_pre[0]),.q(qodd_pair[qp]));
+    end
     // ---------------------------------------------------------------- XQ beat assembly -> beat ring
     reg [255:0] q0; reg [9:0] e0;
     reg         bw;                        // beat write this edge
@@ -62,7 +73,7 @@ module ot_s81eng_xq_n32 #(
     for(genvar qg=0;qg<25;qg=qg+1)begin:g_pair_hold
         localparam integer W=(qg==24)?2:11;
         wire[265:0] qdata={qe,qq};
-        ot_s81eng_rr_paircap #(.W(W)) u_c(.ck(ck),.v(qv),.odd(qtag[0]),.d(qdata[11*qg+:W]),.q(pair_hold[11*qg+:W]));
+        ot_s81eng_rr_paircap #(.W(W)) u_c(.ck(ck),.v(qv_pair[qg]),.odd(qodd_pair[qg]),.d(qdata[11*qg+:W]),.q(pair_hold[11*qg+:W]));
     end
     always @*begin q0=pair_hold[255:0];e0=pair_hold[265:256];end
     always @(posedge ck) bwd <= (MUT == 2) ? {bidx, e0, qq, qe, q0} : {bidx, qe, qq, e0, q0};
@@ -70,6 +81,11 @@ module ot_s81eng_xq_n32 #(
     reg  [7:0]  tc;                        // edges since the first block
     reg         tx;                        // train window
     reg  [6:0]  fc;                        // fragment counter 0..95
+    reg[6:0] fc_probe; reg tx_probe;
+    wire probe_start=first&&!tx_probe&&tc==8'(TXD-1);
+    always @(posedge ck or negedge rl[17])if(!rl[17])begin fc_probe<=0;tx_probe<=0;end
+    else if(probe_start)begin fc_probe<=0;tx_probe<=1;end
+    else if(tx_probe)begin fc_probe<=fc_probe+1'b1;if(fc_probe==7'd95)tx_probe<=0;end
     reg  [63:0] rv;                        // beat ring row written (window)
     wire [1023:0] br_rd;
     wire [5:0]  rda = {1'b0, fc[6:2]} + ((fc[1:0] >= 2'd2) ? 6'd1 : 6'd0);   // beat b + 1 read from fragment 2 of b
@@ -113,7 +129,7 @@ module ot_s81eng_xq_n32 #(
             pb <= (ib_[0] && (ib_[3:1] == 3'd1 || ib_[3:1] == 3'd2) && pb == 2'd0) ? 2'd3 : (pb != 2'd0) ? pb - 2'd1 : 2'd0;
             vo_b[0] <= txk[0] ? full[276*fck[1:0]] : ia[0];
             vo_a[0] <= txk[48] ? full[276*fck[97:96]] : ib_[0];
-            if ((qv && af) || (tx && fc[1:0] == 2'd0 && !rv[fc[6:2]]) || (tx && (pva || pvb)) ||
+            if ((qv && af) || (tx && fc[1:0] == 2'd0 && !rv[fc_probe[6:2]]) || (tx && (pva || pvb)) ||
                 (qv && qtag[0] && bc == 6'd24))
                 fault <= 1'b1;
         end
@@ -123,10 +139,7 @@ module ot_s81eng_xq_n32 #(
         vo_a[vbit]<=txk[48+vbit/6]?full[276*fck[2*(48+vbit/6)+:2]+vbit]:ib_[vbit];
     end
     for(genvar rb=0;rb<8;rb=rb+1)begin:g_rv
-        wire[5:0] row=bc-6'd1;
-        always @(posedge ck or negedge rl[4+rb])if(!rl[4+rb])rv[8*rb+:8]<=0;
-        else if(tx && fc==7'd95)rv[8*rb+:8]<=0;
-        else if(bw && row[5:3]==rb)rv[8*rb+:8]<=rv[8*rb+:8]|(8'd1<<row[2:0]);
+        ot_s81eng_rr_rvbyte #(.BANK(rb)) u_b(.ck(ck),.rn(rl[4+rb]),.tx(txk[rb]),.fc(fc),.bw(bw),.bc(bc),.q(rv[8*rb+:8]));
     end
     for(genvar cb=0;cb<49;cb=cb+1)begin:g_cur
         ot_s81eng_rr_curcap u_c(.ck(ck),.tx(txk[cb]),.fc(fck[2*cb+:2]),.d(br_rd[11*cb+:11]),.q(cur[11*cb+:11]));
@@ -145,9 +158,10 @@ endmodule
 (* keep_hierarchy = 1 *)module ot_s81eng_rr_ctl16 #(parameter integer TXD=8)(
  input wire ck,input wire[15:0] rn,input wire first,tx,input wire[7:0] tc,input wire[6:0] fc,
  output wire[15:0] txk,output wire[31:0] fck);
- wire start=first&&!tx&&tc==8'(TXD-1);
- wire txn=start?1'b1:(tx&&fc==7'd95)?1'b0:tx;
- wire[1:0] fcn=start?2'd0:tx?fc[1:0]+2'd1:fc[1:0];
+ wire local_tx=txk[0];
+ wire start=first&&!local_tx&&tc==8'(TXD-1);
+ wire txn=start?1'b1:(local_tx&&fc==7'd95)?1'b0:local_tx;
+ wire[1:0] fcn=start?2'd0:local_tx?fc[1:0]+2'd1:fc[1:0];
  for(genvar g=0;g<16;g=g+1)begin:g_c
   (* keep=1 *) reg t;(* keep=1 *)reg[1:0] f;
   always @(posedge ck or negedge rn[g])if(!rn[g])begin t<=0;f<=0;end else begin t<=txn;f<=fcn;end
@@ -205,6 +219,7 @@ module ot_s81eng_token_map_n32 (
     input wire clk, rst_n, in_v,
     input wire [20:0] in_tok,
     output reg out_v,
+    input wire rst_copy_n, output wire[6:0] out_v_copy,
     output reg [16:0] out_cid,
     output reg fault
 );
@@ -216,6 +231,10 @@ module ot_s81eng_token_map_n32 (
     for(genvar b=0;b<8;b=b+1)begin:g_q assign qb[72*b+:72]=q[b];end
     for(genvar b=0;b<17;b=b+1)begin:g_sel
         ot_s81eng_token_bit #(.BIT(b)) u_b(.clk(clk),.rst_n(rst_n),.v(in_v),.legal(legal),.tag({in_tok[16:14],in_tok[1:0]}),.qb(qb),.sel(selected[b]),.cid(out_cid[b]));
+    end
+    wire valid_next=pending && selected<17'd99092;
+    for(genvar vg=0;vg<7;vg=vg+1)begin:g_outcopy
+        ot_s81eng_rr_validcap u_v(.ck(clk),.rn(rst_copy_n),.d(valid_next),.q(out_v_copy[vg]));
     end
     genvar g;
     generate for(g=0;g<8;g=g+1) begin: m
@@ -259,6 +278,7 @@ module ot_s81eng_win_n32 #(
 ) (
     input  wire        ck,
     input  wire        rst_n,       // landed regional leaf
+    input wire[1:0] rst_copy_n,
     input  wire        en,          // strap: Engram home die
     input  wire        ks_v,
     input  wire [9:0]  ks_user,
@@ -270,8 +290,8 @@ module ot_s81eng_win_n32 #(
     output reg         fault
 );
     wire        t_v = ks_v && en;
-    wire        m_v; wire [16:0] m_cid; wire m_f;
-    ot_s81eng_token_map_n32 u_map (.clk(ck), .rst_n(rst_n), .in_v(t_v), .in_tok(ks_tok), .out_v(m_v), .out_cid(m_cid),
+    wire        m_v; wire [6:0] m_v_copy,v2_copy; wire [16:0] m_cid; wire m_f;
+    ot_s81eng_token_map_n32 u_map (.clk(ck), .rst_n(rst_n), .in_v(t_v), .in_tok(ks_tok), .out_v(m_v),.rst_copy_n(rst_copy_n[0]),.out_v_copy(m_v_copy), .out_cid(m_cid),
                                      .fault(m_f));
     // user / pos ride the map latency (2 edges); the user row is read on the start edge, captured one edge later
     reg  [9:0]  u1, u2; reg [20:0] p1, p2; reg v1, v2;
@@ -280,6 +300,9 @@ module ot_s81eng_win_n32 #(
     always @(posedge ck) begin u1 <= ks_user; u2 <= u1; p1 <= ks_pos; p2 <= p1; h2 <= rd[50:0]; end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin v1 <= 1'b0; v2 <= 1'b0; end else begin v1 <= t_v; v2 <= v1; end
+    for(genvar vg=0;vg<7;vg=vg+1)begin:g_v2copy
+        ot_s81eng_rr_validcap u_v(.ck(ck),.rn(rst_copy_n[1]),.d(v1),.q(v2_copy[vg]));
+    end
     wire         b1 = (p2 < 21'd1), b2 = b1 | (p2 < 21'd2), b3 = b2 | (p2 < 21'd3);
     wire         wr = m_v && v2;
     ot_sram_1r1w_512x128_m4_r2c2 u_h (.clk(ck), .r_ce_in(t_v), .r_addr_in({3'd0, ks_user[5:0]}), .rd_out(rd),
@@ -288,7 +311,7 @@ module ot_s81eng_win_n32 #(
     wire[67:0] ids_next={b3 ? PAD : h2[50:34], b2 ? PAD : h2[33:17], b1 ? PAD : h2[16:0], m_cid};
     for(genvar wg=0;wg<7;wg=wg+1)begin:g_wi
         localparam integer W=(wg==6)?2:11;
-        ot_s81eng_rr_wincap #(.W(W)) u_c(.ck(ck),.a(m_v),.b(v2),.d(ids_next[11*wg+:W]),.q(win_ids[11*wg+:W]));
+        ot_s81eng_rr_wincap #(.W(W)) u_c(.ck(ck),.a(m_v_copy[wg]),.b(v2_copy[wg]),.d(ids_next[11*wg+:W]),.q(win_ids[11*wg+:W]));
     end
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin win_v <= 1'b0; win_slot <= 3'd7; fault <= 1'b0; end
@@ -329,10 +352,13 @@ module ot_s81eng_head_n32 #(
     reg [3:0]  ai;                    // atom of that row
     reg        run;
     reg [2:0]  slot;
-    for(genvar hg=0;hg<4;hg=hg+1)begin:g_hw
-        localparam integer W=(hg==3)?1:11;
+    for(genvar hg=0;hg<3;hg=hg+1)begin:g_hw
+        localparam integer W=(hg==2)?10:12;
         wire[33:0] req={hq_tag,hq_atom};
-        ot_s81eng_rr_headword #(.W(W)) u_w(.ck(ck),.v(hq_v),.nw(nw),.rr(rr),.d(req[11*hg+:W]),.q(rq_word[11*hg+:W]));
+        wire[5:0] wsel,rsel;
+        ot_s81eng_rr_headsel u_ws(.ix(nw),.v(hq_v),.q(wsel));
+        ot_s81eng_rr_headsel u_rs(.ix(rr),.v(1'b1),.q(rsel));
+        ot_s81eng_rr_headword #(.W(W)) u_w(.ck(ck),.wsel(wsel),.rsel(rsel),.d(req[12*hg+:W]),.q(rq_word[12*hg+:W]));
     end
     always @(posedge ck) if (win_v) slot <= win_slot;
     // row j arrives at t0 + j and is expanded from t0 + 1 + 9 j: always present, no wait, no check needed
@@ -364,11 +390,58 @@ module ot_s81eng_head_n32 #(
     always @(posedge ck) begin hr_slot <= slot; hr_tag <= pci[11:9]; hr_idx <= pci[8:5]; hr_d <= pci[267:12]; end
 endmodule
 (* keep_hierarchy = 1 *)module ot_s81eng_rr_headword #(parameter integer W=11)(
- input wire ck,v,input wire[2:0] nw,rr,input wire[W-1:0] d,output reg[W-1:0] q);
+ input wire ck,input wire[5:0] wsel,rsel,input wire[W-1:0] d,output reg[W-1:0] q);
  reg[W-1:0] row[0:5];
  for(genvar h=0;h<6;h=h+1)begin:g_row
-  always @(posedge ck)if(v&&nw==3'(h))row[h]<=d;
+  always @(posedge ck)if(wsel[h])row[h]<=d;
  end
  integer i;
- always @*begin q=0;for(i=0;i<6;i=i+1)q=q|({W{rr==3'(i)}}&row[i]);end
+ always @*begin q=0;for(i=0;i<6;i=i+1)q=q|({W{rsel[i]}}&row[i]);end
+endmodule
+
+(* keep_hierarchy = 1 *)module ot_s81eng_rr_bfraw_byte #(parameter integer LO=0)(input wire[7:0] code,scale,output wire[7:0] q);
+    reg[15:0] bf16;
+    wire       s = code[7];
+    wire [3:0] e = code[6:3];
+    wire [2:0] m = code[2:0];
+    wire [3:0] sig = (e != 0) ? {1'b1, m} : {1'b0, m};
+    // E: exponent of the significand's unit bit; value = sig * 2^E
+    wire signed[8:0] e9=$signed({1'b0,scale})+$signed({5'd0,(e==0?4'd1:e)})-9'sd137;
+    wire signed[10:0] E={{2{e9[8]}},e9};
+    wire [1:0] p = sig[3] ? 2'd3 : sig[2] ? 2'd2 : sig[1] ? 2'd1 : 2'd0;
+    wire signed [10:0] X = E + $signed({9'd0, p});
+    wire [3:0] nrm = sig << (2'd3 - p);               // 1.fff
+    wire [7:0] xb = X[7:0] + 8'd127;
+    wire signed [10:0] k = E + 11'sd133;              // >= -3 on every code and scale
+    wire [1:0] r = (k < 0) ? (~k[1:0] + 2'd1) : 2'd0; // -k for k in -3..-1
+    wire [3:0] q = sig >> r;
+    wire [3:0] rem = sig & ((4'd1 << r) - 4'd1);
+    wire [3:0] half = (r == 0) ? 4'd0 : (4'd1 << (r - 2'd1));
+    wire       up = (r != 0) && ((rem > half) || (rem == half && q[0]));
+    wire [7:0] sub = (k >= 0) ? ({4'd0, sig} << k[2:0]) : ({4'd0, q} + {7'd0, up});
+    always @(*) begin
+        if (e == 4'hF && m == 3'h7)        bf16 = {s, 15'h7FC0};
+        else if (sig == 0)                 bf16 = {s, 15'd0};
+        else if (X > 11'sd127)             bf16 = {s, 8'hFF, 7'd0};
+        else if (X >= -11'sd126)           bf16 = {s, xb, nrm[2:0], 4'd0};
+        else                               bf16 = {s, 7'd0, sub};
+    end
+    assign q=bf16[LO+:8];
+endmodule
+
+(* keep_hierarchy=1 *)module ot_s81eng_rr_validcap(input wire ck,rn,d,output reg q);
+ always @(posedge ck or negedge rn)if(!rn)q<=0;else q<=d;
+endmodule
+(* keep_hierarchy=1 *)module ot_s81eng_rr_bitcap(input wire ck,d,output reg q);
+ always @(posedge ck)q<=d;
+endmodule
+(* keep_hierarchy=1 *)module ot_s81eng_rr_rvbyte #(parameter integer BANK=0)(input wire ck,rn,tx,input wire[6:0]fc,input wire bw,input wire[5:0]bc,output reg[7:0]q);
+ wire[5:0]row=bc-6'd1;
+ always @(posedge ck or negedge rn)if(!rn)q<=0;
+ else if(tx&&fc==7'd95)q<=0;
+ else if(bw&&row[5:3]==BANK)q<=q|(8'd1<<row[2:0]);
+endmodule
+
+(* keep_hierarchy=1 *)module ot_s81eng_rr_headsel(input wire[2:0]ix,input wire v,output wire[5:0]q);
+ for(genvar h=0;h<6;h=h+1)begin:g_s assign q[h]=v&&(ix==3'(h));end
 endmodule

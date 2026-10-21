@@ -1,0 +1,32 @@
+{
+  "exponent_cases": 4096,
+  "exponent_equivalence": true,
+  "ring_address_phases": 64,
+  "read_landing_address_identity": true,
+  "registered_total_wait_age_proposed": 12,
+  "parent_reset_release_edges": 3,
+  "lookup_engine_reset_loads_planned": [
+    26,
+    12,
+    12,
+    17,
+    24,
+    14,
+    3,
+    24,
+    2,
+    16,
+    16,
+    7,
+    6,
+    0,
+    0,
+    0
+  ],
+  "wrapper_scalar_reset_loads_planned": 14,
+  "input_scale_copy_D_loads": 32,
+  "read_scale_copy_D_loads": 32,
+  "full_mechanism_status": "PENDING",
+  "native_status": "PENDING",
+  "physical_status": "NOT_LAUNCHED"
+}

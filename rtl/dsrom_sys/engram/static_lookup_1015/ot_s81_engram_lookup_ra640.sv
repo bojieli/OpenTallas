@@ -98,6 +98,9 @@ module ot_s81_engram_lookup_ra640 #(
     input  wire                     clk_seed,
     input  wire [5:0]               clk_hash,
     input  wire                     rst_n,
+`ifdef OT_S81ENG_RR_N32
+    input wire[15:0] rst_regions,
+`endif
     // static straps (die-level ties): one hardened element serves all 8 home dies
     input  wire                     cfg_layer,       // Engram layer index (0: layer 1, 1: layer 14)
     input  wire [1:0]               cfg_rank,        // TP rank of this die
@@ -138,6 +141,13 @@ module ot_s81_engram_lookup_ra640 #(
     output reg                      st_bad,          // CRC mismatch on that row
     output reg                      fault
 );
+    wire[15:0] rrst;
+`ifdef OT_S81ENG_RR_N32
+    assign rrst=rst_regions;
+`else
+    assign rrst={16{rst_n}};
+`endif
+
     localparam integer RW = ENG_ROW_W, QW = ENG_RES_W;
     localparam integer ATOMS = 9;
     localparam [31:0] POLY = 32'h04C11DB7;
@@ -180,11 +190,11 @@ module ot_s81_engram_lookup_ra640 #(
     wire active_nx = win_acc ? 1'b1 : (active && age==RETURN_AGE+63) ? 1'b0 : active;
     genvar acc;
     generate for (acc=0; acc<8; acc=acc+1) begin : g_active_c
-        (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_a (.clk(clk_ctl), .rst_n(rst_n), .d(active_nx), .q(active_c[acc]));
+        (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_a (.clk(clk_ctl), .rst_n(rrst[0]), .d(active_nx), .q(active_c[acc]));
     end endgenerate
     integer sr;
-    always @(posedge clk_ctl or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk_ctl or negedge rrst[0]) begin
+        if (!rrst[0]) begin
             active<=0; age<=0; protocol_bad<=0;
         end else begin
             if(active) age<=age+1'b1;
@@ -227,8 +237,8 @@ module ot_s81_engram_lookup_ra640 #(
     wire [QW*ENG_LAYERS*ENG_COLS-1:0] hres;
     ot_s81_engram_hash_n32 u_hash (.clk(clk_seed), .clk_columns(clk_hash), .in_w(win_n), .out_res(hres));
     reg [12:1] lastl;                        // marks the 4th feed through the hash latency
-    always @(posedge clk_ctl or negedge rst_n) begin
-        if (!rst_n) lastl <= 12'd0;
+    always @(posedge clk_ctl or negedge rrst[1]) begin
+        if (!rrst[1]) lastl <= 12'd0;
         else lastl <= {lastl[11:1], hfeed && fcnt == 2'd3};
     end
     wire hdone = lastl[12];
@@ -270,8 +280,8 @@ module ot_s81_engram_lookup_ra640 #(
             wire [1:0] hd;
             (* keep = 1 *) ot_s81eng_kq  #(.W(8)) u_csr (.clk(clk), .d(csel), .q(csel_r));
             (* keep = 1 *) ot_s81eng_kq  #(.W(8)) u_csb (.clk(clk), .d(csel), .q(csel_b));
-            (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_hd0 (.clk(clk_ctl), .rst_n(rst_n), .d(lastl[11]), .q(hd[0]));
-            (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_hd1 (.clk(clk_ctl), .rst_n(rst_n), .d(lastl[11]), .q(hd[1]));
+            (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_hd0 (.clk(clk_ctl), .rst_n(rrst[2]), .d(lastl[11]), .q(hd[0]));
+            (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_hd1 (.clk(clk_ctl), .rst_n(rrst[2]), .d(lastl[11]), .q(hd[1]));
             integer m;
             always @(*) begin
                 res_m = {QW{1'b0}}; cb_m = {ABW{1'b0}};
@@ -306,16 +316,16 @@ module ot_s81_engram_lookup_ra640 #(
     reg [2:0]   wbank_q;
     reg [3:0]   watom_q;
     always @(posedge clk_ctl) wdata_q <= hr_data;
-    always @(posedge clk_ctl or negedge rst_n)
-        if (!rst_n) wen_q <= 1'b0;
+    always @(posedge clk_ctl or negedge rrst[3])
+        if (!rrst[3]) wen_q <= 1'b0;
         else        wen_q <= response_ok;
     always @(posedge clk_ctl) begin wbank_q <= hr_tag_w; watom_q <= hr_idx; end
     reg         wx_e, wx_o, wx_a;
     reg [5:0]   wx_ea, wx_oa;
     reg [2:0]   wx_aa;
     reg [255:0] wx_de, wx_do, wx_da;          // one kept data copy per macro (256 loads each -> 1 macro pin + local)
-    always @(posedge clk_ctl or negedge rst_n)
-        if (!rst_n) begin wx_e <= 1'b0; wx_o <= 1'b0; wx_a <= 1'b0; end
+    always @(posedge clk_ctl or negedge rrst[3])
+        if (!rrst[3]) begin wx_e <= 1'b0; wx_o <= 1'b0; wx_a <= 1'b0; end
         else begin
             wx_e <= wen_q && !watom_q[0];
             wx_o <= wen_q &&  watom_q[0];
@@ -342,13 +352,17 @@ module ot_s81_engram_lookup_ra640 #(
 
     // ---- issue ------------------------------------------------------------------------
     reg [2:0] icnt;
-    always @(posedge clk_ctl or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk_ctl or negedge rrst[5]) begin
+        if (!rrst[5]) begin
             st <= S_IDLE; fcnt <= 2'd0; acnt <= 2'd0; icnt <= 3'd0; hq_valid <= 1'b0;
             slot <= {SLW{1'b0}};
+`ifndef OT_S81ENG_RR_N32
             for (j = 0; j < CPR; j = j + 1) rcnt[j] <= 4'd0;
+`endif
         end else begin
+`ifndef OT_S81ENG_RR_N32
             for (j = 0; j < CPR; j = j + 1) if (response_ok && hr_tag == j[2:0]) rcnt[j] <= rcnt[j] + 1'b1;
+`endif
             case (st)
                 S_IDLE: if (win_acc) begin
                     st <= S_FEED; fcnt <= 2'd0; slot <= win_slot;
@@ -376,12 +390,24 @@ module ot_s81_engram_lookup_ra640 #(
                 S_EMIT: if (emit_done) begin
                     st <= S_IDLE;
 
+`ifndef OT_S81ENG_RR_N32
                     for (j = 0; j < CPR; j = j + 1) rcnt[j] <= 4'd0;
+`endif
                 end
                 default: st <= S_IDLE;
             endcase
         end
     end
+`ifdef OT_S81ENG_RR_N32
+    integer rcj;
+    always @(posedge clk_ctl or negedge rrst[4])begin
+        if(!rrst[4])for(rcj=0;rcj<CPR;rcj=rcj+1)rcnt[rcj]<=0;
+        else for(rcj=0;rcj<CPR;rcj=rcj+1)begin
+            if(st==S_EMIT&&emit_done)rcnt[rcj]<=0;
+            else if(response_ok&&hr_tag==rcj[2:0])rcnt[rcj]<=rcnt[rcj]+1'b1;
+        end
+    end
+`endif
     // st10b: the unreset request payload lives in a plain clocked block (it sat in the async-reset block, so yosys put
     // rst_n on its enable: OT_MULTI_ROOT 'rst_n wrong domain' once clk_ctl became ck_s).  Same enable, same cycle:
     // while rst_n is low st is S_IDLE, so the payload holds exactly as before.
@@ -398,7 +424,7 @@ module ot_s81_engram_lookup_ra640 #(
     generate
         for (gi = 0; gi < 3; gi = gi + 1) begin : g_iss
             localparam integer LO = 11 * gi, HI = (gi == 2) ? AW - 1 : 11 * gi + 10;
-            (* keep = 1 *) ot_s81eng_kqr #(.W(1))   u_e (.clk(clk_ctl), .rst_n(rst_n), .d(ns_iss), .q(iss[gi]));
+            (* keep = 1 *) ot_s81eng_kqr #(.W(1))   u_e (.clk(clk_ctl), .rst_n(rrst[6]), .d(ns_iss), .q(iss[gi]));
             (* keep = 1 *) ot_s81eng_kq  #(.W(CPR)) u_s (.clk(clk_ctl), .d(ns_sel), .q(isel[gi]));
             reg [HI-LO:0] am;
             integer ia;
@@ -428,8 +454,8 @@ module ot_s81_engram_lookup_ra640 #(
     reg [1:0]   e1_off;
     reg [2:0]   e1_j, e1_k;
     reg [SLW-1:0] e1_s, e2_s, e3_s;
-    always @(posedge clk_ctl or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk_ctl or negedge rrst[3]) begin
+        if (!rrst[3]) begin
             ej <= 3'd0; ek <= 4'd0; emit_done_r <= 1'b0; e1_v <= 1'b0; e0q_v <= 1'b0; e0r_v <= 1'b0;
         end else begin
             e0q_v <= (PIPE != 0) && e0_go;
@@ -469,8 +495,8 @@ module ot_s81_engram_lookup_ra640 #(
             (* keep = 1 *) ot_s81eng_kq #(.W(2)) u_r (.clk(clk_rd), .d(q_off), .q(r_offc[gi]));
         end
     endgenerate
-    always @(posedge clk_ctl or negedge rst_n)
-        if (!rst_n) rq_v <= 1'b0;
+    always @(posedge clk_ctl or negedge rrst[3])
+        if (!rrst[3]) rq_v <= 1'b0;
         else        rq_v <= e0_go;
     always @(posedge clk_rd) begin
         r_off <= q_off; r_j <= q_j; r_k <= q_k; r_s <= q_s;
@@ -511,8 +537,8 @@ module ot_s81_engram_lookup_ra640 #(
     reg [31:0]  e2_crc;
     reg [2:0]   e2_j, e2_k;
     wire [511:0] e1_cat = {e1_hi, e1_lo};
-    always @(posedge clk_em or negedge rst_n) begin
-        if (!rst_n) e2_v <= 1'b0;
+    always @(posedge clk_em or negedge rrst[3]) begin
+        if (!rrst[3]) e2_v <= 1'b0;
         else e2_v <= e1_v;
     end
     // n32: the byte shifts as explicit 4:1 selects per 8-bit slice, each slice on its own kept e1_off copy; the E2
@@ -537,7 +563,7 @@ module ot_s81_engram_lookup_ra640 #(
                                    | ({8{o == 2'd3}} & ((gi < 8) ? a8w[(192 + 8*gi) % 256 +: 8] : 8'd0));   // >> 192: bytes >= 64 are 0
         end
         for (gi = 0; gi < 24; gi = gi + 1) begin : g_ev
-            (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_v (.clk(clk_ctl), .rst_n(rst_n), .d(e0r_v), .q(ev[gi]));
+            (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_v (.clk(clk_ctl), .rst_n(rrst[7]), .d(e0r_v), .q(ev[gi]));
         end
         for (gi = 0; gi < 16; gi = gi + 1) begin : g_e2d
             always @(posedge clk_em) if (ev[gi]) e2_d[16*gi +: 16] <= sh_d[16*gi +: 16];
@@ -567,8 +593,8 @@ module ot_s81_engram_lookup_ra640 #(
     reg transport_v, ov;
     reg [FW-1:0] transport_d, od;
     wire [4:0] e2_col = crank * CPR + e2_j;
-    always @(posedge clk_em or negedge rst_n) begin
-        if(!rst_n) begin transport_v<=0;ov<=0;end
+    always @(posedge clk_em or negedge rrst[8]) begin
+        if(!rrst[8]) begin transport_v<=0;ov<=0;end
         else begin transport_v<=e2_v;ov<=transport_v;end
     end
     always @(posedge clk_em) begin
@@ -660,8 +686,8 @@ module ot_s81_engram_lookup_ra640 #(
     reg [31:0] e3_exp;
     generate
         if (PIPE == 0) begin : g_crc0
-            always @(posedge clk_em or negedge rst_n) begin
-                if (!rst_n) begin
+            always @(posedge clk_em or negedge rrst[14]) begin
+                if (!rrst[14]) begin
                     crc <= 32'hFFFFFFFF; e3_last <= 1'b0;
                 end else begin
                     e3_last <= e2_v && e2_k == 3'd7;
@@ -681,14 +707,14 @@ module ot_s81_engram_lookup_ra640 #(
             // every cycle (consumed only on the a_v / a_last / e3_last edge that follows their e2_v / a_last capture).
             wire [3:0] avc, afc;
             for (gi = 0; gi < 4; gi = gi + 1) begin : g_cc
-                (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_v (.clk(clk_em), .rst_n(rst_n), .d(e2_v), .q(avc[gi]));
+                (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_v (.clk(clk_em), .rst_n(rrst[11]), .d(e2_v), .q(avc[gi]));
                 (* keep = 1 *) ot_s81eng_kq  #(.W(1)) u_f (.clk(clk_em), .d(e2_k == 3'd0), .q(afc[gi]));
             end
             wire [31:0] c_first = (CRCMAT != 0) ? crc_beat(32'hFFFFFFFF, 256'd0) : 32'd0;
             wire [31:0] c_nxt_f = (CRCMAT != 0) ? (c_first ^ ga) : (crc_beat(32'hFFFFFFFF, 256'd0) ^ ga);
             wire [31:0] c_nxt_s = (CRCMAT != 0) ? (beat_s ^ ga)  : (crc_beat(crc, 256'd0) ^ ga);
-            always @(posedge clk_em or negedge rst_n) begin
-                if (!rst_n) begin a_v <= 1'b0; a_last <= 1'b0; e3_last <= 1'b0; end
+            always @(posedge clk_em or negedge rrst[11]) begin
+                if (!rrst[11]) begin a_v <= 1'b0; a_last <= 1'b0; e3_last <= 1'b0; end
                 else begin
                     a_v <= e2_v;
                     a_last <= e2_v && e2_k == 3'd7;
@@ -696,8 +722,8 @@ module ot_s81_engram_lookup_ra640 #(
                 end
             end
             for (gi = 0; gi < 4; gi = gi + 1) begin : g_crc
-                always @(posedge clk_em or negedge rst_n)
-                    if (!rst_n) crc[8*gi +: 8] <= 8'hFF;
+                always @(posedge clk_em or negedge rrst[9+gi/2])
+                    if (!rrst[9+gi/2]) crc[8*gi +: 8] <= 8'hFF;
                     else if (avc[gi]) crc[8*gi +: 8] <= afc[gi] ? c_nxt_f[8*gi +: 8] : c_nxt_s[8*gi +: 8];
             end
             always @(posedge clk_em) begin
@@ -708,8 +734,8 @@ module ot_s81_engram_lookup_ra640 #(
         end
     endgenerate
     // final: fold the 8 exponent bytes and compare
-    always @(posedge clk_em or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk_em or negedge rrst[12]) begin
+        if (!rrst[12]) begin
             st_valid <= 1'b0; st_slot <= {SLW{1'b0}}; st_bad <= 1'b0; fault <= 1'b0;
         end else begin
             if (protocol_bad) fault <= 1;

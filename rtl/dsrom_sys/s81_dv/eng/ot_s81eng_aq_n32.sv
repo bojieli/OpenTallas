@@ -26,9 +26,11 @@ module ot_s81sl_aq12x_eng_n32 (
     input  wire          clk,
     input  wire          rst_n,
     input  wire          rst_mul_early_n, // same reset origin, TWO release edges before rst_n
+    input  wire [24:0]   rst_pair_n,
     input  wire          v,
     input  wire [1023:0] x,
     output reg           vo,
+    output wire [24:0]   vo_pair,
     output reg  [255:0]  q,
     output reg  signed [9:0] e,
     output reg  [511:0]  y,
@@ -45,6 +47,9 @@ module ot_s81sl_aq12x_eng_n32 (
 
     wire [LATENCY:0] vl;
     ot_hdc_vline #(.D(LATENCY)) u_v (.clk(clk), .rst_n(rst_n), .v(v), .vd(vl));
+    for(genvar vg=0;vg<25;vg=vg+1)begin:g_vpair
+        ot_s81eng_rr_validcap u_v(.ck(clk),.rn(rst_pair_n[vg]),.d(vl[LATENCY-1]),.q(vo_pair[vg]));
+    end
     // elements wait from S0 to the grid stage (S0 + 5 + 5 + 1 = 11 registers)
     reg  [1023:0] s0_x;
     always @(posedge clk) s0_x <= x;
@@ -90,10 +95,12 @@ module ot_s81sl_aq12x_eng_n32 (
     reg signed [9:0]  s11_e;
     wire signed[10:0] s11_ep_c[0:7],s11_dm_c[0:7];
     for(genvar eg=0;eg<8;eg=eg+1)begin:g_ec
-        ot_s81eng_aq_exp u_e(.clk(clk),.ce(ce),.ep(s11_ep_c[eg]),.dm(s11_dm_c[eg]));
+        ot_s81eng_aq_exp u_e(.clk(clk),.ep_next(ep_next),.dm_next(dm_next),.ep(s11_ep_c[eg]),.dm(s11_dm_c[eg]));
     end
     reg               s11_nf;
     wire [8:0] ce = {1'b0, prod[30:23]} + {8'd0, (prod[22:0] != 23'd0)};     // ceil_log2 + 127
+    wire [10:0] ep_next = {2'b00,ce};
+    wire [10:0] dm_next = $signed({2'b00,ce}) - 11'sd6;
     always @(posedge clk) begin
         s11_e <= $signed({1'b0, ce}) - 10'sd127;
         s11_nf <= nf10 | pfault;
@@ -214,6 +221,6 @@ module ot_s81sl_aq12x_eng_n32 (
     end
 endmodule
 
-(* keep_hierarchy = 1 *)module ot_s81eng_aq_exp(input wire clk,input wire[8:0] ce,output reg signed[10:0] ep,dm);
- always @(posedge clk)begin ep<=$signed({2'b00,ce});dm<=$signed({2'b00,ce})-11'sd6;end
+(* keep_hierarchy = 1 *)module ot_s81eng_aq_exp(input wire clk,input wire[10:0] ep_next,dm_next,output reg[10:0] ep,dm);
+ always @(posedge clk)begin ep<=ep_next;dm<=dm_next;end
 endmodule

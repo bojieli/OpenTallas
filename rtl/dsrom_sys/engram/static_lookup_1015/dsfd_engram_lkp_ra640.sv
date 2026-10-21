@@ -50,6 +50,9 @@ module dsfd_engram_lkp_ra640 #(
     input  wire                  ck_s,      // st9: S-face pin flops (HBM request out, HBM response in); st10: + engine control
     input  wire                  ck_rd,     // st10: read-select region (c* bank captures, E1)
     input  wire                  rst_n,
+`ifdef OT_S81ENG_RR_N32
+    input wire[15:0] rst_regions, // same external release phase, actual per-control owners
+`endif
     input  wire                  cfg_layer,
     input  wire [1:0]            cfg_rank,
     // window (compiler slot)
@@ -122,7 +125,11 @@ module dsfd_engram_lkp_ra640 #(
     wire [263:0] e_od;
     ot_s81_engram_lookup_ra640 #(.RETURN_AGE(RETURN_AGE), .ROWSTRIPE(ROWSTRIPE), .NR(4), .CPR(6), .NSLOT(NSLOT), .ABW(36),
                                   .PIPE(1)) u_e (
-        .clk(ck), .clk_ctl(ck_s), .clk_rd(ck_rd), .clk_em(ck_n), .clk_seed(ck_seed), .clk_hash(ck_hash), .rst_n(rst_n), .cfg_layer(cl_q), .cfg_rank(cr_q),
+        .clk(ck), .clk_ctl(ck_s), .clk_rd(ck_rd), .clk_em(ck_n), .clk_seed(ck_seed), .clk_hash(ck_hash), .rst_n(rst_n),
+`ifdef OT_S81ENG_RR_N32
+        .rst_regions(rst_regions),
+`endif
+        .cfg_layer(cl_q), .cfg_rank(cr_q),
         .win_valid(wv_q), .win_slot(ws_q), .win_ids(wid_q),
         .hq_valid(e_hqv), .hq_atom(e_hqa), .hq_len(), .hq_tag(e_hqt),
         .hr_valid(hrv_q), .hr_slot(hrs_q), .hr_tag(hrt_q), .hr_tag_w(hrt_w), .hr_idx(hri_q), .win_valid_c(wv_c), .hr_idx_w(hri_w), .hr_data(hrd_q),
