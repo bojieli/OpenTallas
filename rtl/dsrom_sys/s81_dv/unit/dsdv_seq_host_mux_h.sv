@@ -1,13 +1,22 @@
 `timescale 1ns/1ps
 // SOURCE CANDIDATE, no available-view alias. See s81_seqmux_source_1340_1021/MODEL.md.
-module dsdv_seq_host_cr2 #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0, parameter integer RL = 1) (
+module dsdv_seq_host_cr2 #(parameter integer V = 276, parameter integer STAGE = 0, parameter integer MUT = 0, parameter integer RL = 1, parameter integer RUNG_MUT = 0) (
     input  wire          ck,
     input  wire          rst_n,
-    input  wire [7:0]    tap_k, sink_k,   // vstop straps (captured pins);
+    input  wire [7:0]    tap_k, sink_k,   // vstop straps (captured pins); seqhost: 0 / 0
+    input  wire [V-1:0]  vi_s, output wire [V-1:0] vo_s,      // rung S face (bk_sel)
+    input  wire [V-1:0]  vi_n, output wire [V-1:0] vo_n,      // rung N face = vc N face (die lane to s_4N on closed dvrlyh relays)
+    input  wire [514:0]  f_host, output wire [76:0] t_host, input wire [3:0] f_lf,
+    input  wire [52:0]   f_ks,   output wire [53:0] t_kd,
+    output wire [32:0]   s_j,    input  wire [1:0]  s_jd_w, s_jd_e,     // job broadcast to both halves / per-half done
+    output wire [291:0]  s_hw_w, s_hw_e, input wire [8:0] s_hc_w, s_hc_e, // per-half host writes / credits + acks
+    input  wire [1:0]    st_rg_w, st_rg_e,                               // per-half region status (svc entry st_rg)
+    output wire          cw_v, output wire [9:0] cw_a, output wire [255:0] cw_d   // gunit cw port
+);
     wire [V-1:0] n23,s32,n34,s43;
     dsdv_seq_host_c #(.V(V),.STAGE(STAGE),.MUT(MUT),.RL(RL)) u_core (.ck(ck), .rst_n(rst_n), .tap_k(tap_k), .sink_k(sink_k), .vi_s(vi_s), .vo_s(vo_s), .f_host(f_host), .t_host(t_host), .f_lf(f_lf), .f_ks(f_ks), .t_kd(t_kd), .s_j(s_j), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e), .s_hw_w(s_hw_w), .s_hw_e(s_hw_e), .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d), .vi_n(s32),.vo_n(n23));
     dsdv_sh_ft #(.V(V)) u_l3 (.ck(ck),.ni(n23),.no(n34),.si(s43),.so(s32));
-    generate if(MUT==3)begin:g_mut3
+    generate if(MUT==3 || RUNG_MUT==1)begin:g_mut3
         assign vo_n=n34;assign s43=vi_n;
     end else begin:g_l4
         dsdv_sh_ft #(.V(V)) u_l4 (.ck(ck),.ni(n34),.no(vo_n),.si(vi_n),.so(s43));
