@@ -161,7 +161,7 @@ module dsdv_svc_att #(
     wire [439:0] pv_provenance;wire pv_identity_bad;
     dsdv_pv_source_identity #(.ENABLE(PV_IDENTITY)) u_pv_identity (
       .clk(clk),.rst_n(rst_n),.cfg_v(hdr_mine && h_type==4'd12),.cfg_owner(q_d[52:33]),.cfg_valid(q_d[53]),
-      .launch(go),.user_id(wuser),.tag_id(tagj),.quarter(st_r),.tile(tile),.position(wposition),
+      .launch(go),.launch_ok(job_open && !job_active && !run && !dr_arm && !dr_on),.user_id(wuser),.tag_id(tagj),.quarter(st_r),.tile(tile),.position(wposition),
       .provenance(pv_provenance),.bad(pv_identity_bad));
     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
     wire start = hdr_mine && h_type == 4'd2;
@@ -579,7 +579,7 @@ endmodule
 // P.V drain. No numerical payload enters this block.
 module dsdv_pv_source_identity #(parameter integer ENABLE=0)(
  input wire clk,rst_n,cfg_v,input wire[19:0]cfg_owner,input wire cfg_valid,
- input wire launch,input wire[9:0]user_id,input wire[7:0]tag_id,
+ input wire launch,launch_ok,input wire[9:0]user_id,input wire[7:0]tag_id,
  input wire[1:0]quarter,input wire[3:0]tile,input wire[20:0]position,
  output wire[439:0]provenance,output wire bad
 );
@@ -589,9 +589,9 @@ module dsdv_pv_source_identity #(parameter integer ENABLE=0)(
   always @(posedge clk or negedge rst_n)if(!rst_n)begin pending<=0;owner<=0;valid<=0;live<=0;q<=0;t<=0;pos<=0;end
   else begin
    if(cfg_v)begin pending<=cfg_owner;valid<=cfg_valid;end
-   if(launch)begin owner<=pending;live<=valid && pending[17:0]=={user_id,tag_id};q<=quarter;t<=tile;pos<=position;end
+   if(launch)begin owner<=pending;live<=launch_ok && valid && pending[17:0]=={user_id,tag_id};q<=quarter;t<=tile;pos<=position;end
   end
   assign provenance={392'd0,pos,live,t,q,owner};
-  assign bad=launch && (!valid || pending[17:0]!={user_id,tag_id});
+  assign bad=launch && (!launch_ok || !valid || pending[17:0]!={user_id,tag_id});
  end endgenerate
 endmodule

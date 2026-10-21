@@ -1,0 +1,11 @@
+{
+  "previous": "6c9113349",
+  "unit": "ot-epyc7 oth-ubuntu-1169437-1792603243",
+  "exit": 0,
+  "change": "Stamp valid only for actual legal GO: open job, no active job/run or previous drain. No external ABI or numerical change.",
+  "checks": "all prior source identity controls plus invalid overlapping/unarmed GO rejected",
+  "sha256": {
+    "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv": "33e3c153e465f58161e1314cb0bb4d07f89e12f339fb2aa110ced340f44dcc1c",
+    "tools/s81_dv/pv_so_assembly_1021/tb_pv_identity.sv": "ea252a7b02d7cbfa40963c77dafe7a0663dda125a09abe689fc9eee2a2223f9b"
+  }
+}
