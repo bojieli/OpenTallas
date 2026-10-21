@@ -1,0 +1,2077 @@
+{
+ "schema": "opentallas.s81_dv.mu_calendar_phys.v1",
+ "lane": "S81-MUCAL140",
+ "mode": "mtp",
+ "map": "results/token_pass/cal2_s81_1020/stage_pick_122/stage_map_f122_140.json",
+ "compose": "romopt",
+ "map_sha256": "f5608b1e5f2a122cb3b22b115d300df4809b75bf24fa65bf9d2ab1315ae96a8e",
+ "alap": true,
+ "job_contexts": 2,
+ "map_capacity_verdict": "PASS",
+ "stages": 140,
+ "copy_b_stages": [
+  "R007",
+  "R028",
+  "R049",
+  "R070",
+  "R084",
+  "R098",
+  "R112",
+  "R126"
+ ],
+ "period": 1649008,
+ "users": 9,
+ "per_user_tok_s": 3026.5,
+ "aggregate_tok_s": 27239,
+ "bound_window": {
+  "cycles": 0,
+  "stage": "R003"
+ },
+ "checker": {
+  "result": "PASS",
+  "collisions": 0,
+  "resources": 661,
+  "windows": 78903,
+  "negative_n_plus_1": {
+   "users": 10,
+   "result": "FAULT",
+   "collisions": 1
+  },
+  "negative_injected_shift": {
+   "collisions": 8085,
+   "result": "FAULT"
+  }
+ },
+ "search": [
+  {
+   "users": 9,
+   "result": "PASS",
+   "collisions": 0,
+   "first": null,
+   "search": "greedy first-fit shifts"
+  }
+ ],
+ "slots": [
+  {
+   "slot": 0,
+   "user": 0,
+   "shift": 0,
+   "copy": {
+    "R007": "A",
+    "R028": "A",
+    "R049": "A",
+    "R070": "A",
+    "R084": "A",
+    "R098": "A",
+    "R112": "A",
+    "R126": "A"
+   }
+  },
+  {
+   "slot": 1,
+   "user": 1,
+   "shift": 168024,
+   "copy": {
+    "R007": "B",
+    "R028": "B",
+    "R049": "B",
+    "R070": "B",
+    "R084": "B",
+    "R098": "B",
+    "R112": "B",
+    "R126": "B"
+   }
+  },
+  {
+   "slot": 2,
+   "user": 2,
+   "shift": 336048,
+   "copy": {
+    "R007": "A",
+    "R028": "A",
+    "R049": "A",
+    "R070": "A",
+    "R084": "A",
+    "R098": "A",
+    "R112": "A",
+    "R126": "A"
+   }
+  },
+  {
+   "slot": 3,
+   "user": 3,
+   "shift": 504072,
+   "copy": {
+    "R007": "B",
+    "R028": "B",
+    "R049": "B",
+    "R070": "B",
+    "R084": "B",
+    "R098": "B",
+    "R112": "B",
+    "R126": "B"
+   }
+  },
+  {
+   "slot": 4,
+   "user": 4,
+   "shift": 672096,
+   "copy": {
+    "R007": "A",
+    "R028": "A",
+    "R049": "A",
+    "R070": "A",
+    "R084": "A",
+    "R098": "A",
+    "R112": "A",
+    "R126": "A"
+   }
+  },
+  {
+   "slot": 5,
+   "user": 5,
+   "shift": 840120,
+   "copy": {
+    "R007": "B",
+    "R028": "B",
+    "R049": "B",
+    "R070": "B",
+    "R084": "B",
+    "R098": "B",
+    "R112": "B",
+    "R126": "B"
+   }
+  },
+  {
+   "slot": 6,
+   "user": 6,
+   "shift": 1008144,
+   "copy": {
+    "R007": "A",
+    "R028": "A",
+    "R049": "A",
+    "R070": "A",
+    "R084": "A",
+    "R098": "A",
+    "R112": "A",
+    "R126": "A"
+   }
+  },
+  {
+   "slot": 7,
+   "user": 7,
+   "shift": 1176168,
+   "copy": {
+    "R007": "B",
+    "R028": "B",
+    "R049": "B",
+    "R070": "B",
+    "R084": "B",
+    "R098": "B",
+    "R112": "B",
+    "R126": "B"
+   }
+  },
+  {
+   "slot": 8,
+   "user": 8,
+   "shift": 1344192,
+   "copy": {
+    "R007": "A",
+    "R028": "A",
+    "R049": "A",
+    "R070": "A",
+    "R084": "A",
+    "R098": "A",
+    "R112": "A",
+    "R126": "A"
+   }
+  }
+ ],
+ "stage_windows": [
+  {
+   "stage": "R000",
+   "dense_layer": 0,
+   "copies": 1,
+   "t": 1074,
+   "occ": 18946,
+   "step": 113675,
+   "busy_total": {
+    "su": 7535,
+    "field": 13112,
+    "coll": 3506,
+    "hbm": 2599,
+    "select": 588,
+    "embed": 532
+   }
+  },
+  {
+   "stage": "R001",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 17540,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R002",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 18630,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R003",
+   "dense_layer": 1,
+   "copies": 1,
+   "t": 19720,
+   "occ": 28004,
+   "step": 168021,
+   "busy_total": {
+    "field": 18561,
+    "su": 14412,
+    "coll": 5208,
+    "embed": 1085,
+    "hbm": 2652,
+    "select": 641
+   }
+  },
+  {
+   "stage": "R004",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 45243,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R005",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 46333,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R006",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 47423,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R007",
+   "dense_layer": 2,
+   "copies": 2,
+   "t": 48513,
+   "occ": 50669,
+   "step": 303701,
+   "busy_total": {
+    "field": 20529,
+    "su": 15934,
+    "coll": 8680,
+    "hbm": 7071,
+    "select": 23851,
+    "embed": 2433
+   }
+  },
+  {
+   "stage": "R008",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 96701,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R009",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 97791,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R010",
+   "dense_layer": 3,
+   "copies": 1,
+   "t": 98881,
+   "occ": 24299,
+   "step": 145791,
+   "busy_total": {
+    "field": 16679,
+    "su": 12903,
+    "coll": 5228,
+    "hbm": 2678,
+    "select": 667,
+    "embed": 611
+   }
+  },
+  {
+   "stage": "R011",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 120700,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R012",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 121790,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R013",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 122880,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R014",
+   "dense_layer": 4,
+   "copies": 1,
+   "t": 125714,
+   "occ": 22622,
+   "step": 135729,
+   "busy_total": {
+    "field": 15002,
+    "su": 11226,
+    "coll": 5295,
+    "hbm": 2745,
+    "select": 734,
+    "embed": 678
+   }
+  },
+  {
+   "stage": "R015",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 145855,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R016",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 146945,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R017",
+   "dense_layer": 5,
+   "copies": 1,
+   "t": 148035,
+   "occ": 24299,
+   "step": 145791,
+   "busy_total": {
+    "field": 16679,
+    "su": 12903,
+    "coll": 5228,
+    "hbm": 2678,
+    "select": 667,
+    "embed": 611
+   }
+  },
+  {
+   "stage": "R018",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 169854,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R019",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 170944,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R020",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 172034,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R021",
+   "dense_layer": 6,
+   "copies": 1,
+   "t": 178255,
+   "occ": 19153,
+   "step": 114915,
+   "busy_total": {
+    "coll": 3652,
+    "su": 7757,
+    "field": 13258,
+    "hbm": 2745,
+    "select": 734,
+    "embed": 678
+   }
+  },
+  {
+   "stage": "R022",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 194927,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R023",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 196017,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R024",
+   "dense_layer": 7,
+   "copies": 1,
+   "t": 197107,
+   "occ": 24299,
+   "step": 145791,
+   "busy_total": {
+    "field": 16679,
+    "su": 12903,
+    "coll": 5228,
+    "hbm": 2678,
+    "select": 667,
+    "embed": 611
+   }
+  },
+  {
+   "stage": "R025",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 218926,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R026",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 220016,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R027",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 221106,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R028",
+   "dense_layer": 8,
+   "copies": 2,
+   "t": 227327,
+   "occ": 46869,
+   "step": 280903,
+   "busy_total": {
+    "su": 10720,
+    "field": 18454,
+    "coll": 7037,
+    "hbm": 7071,
+    "select": 23851,
+    "embed": 2433
+   }
+  },
+  {
+   "stage": "R029",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 271716,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R030",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 272806,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R031",
+   "dense_layer": 9,
+   "copies": 1,
+   "t": 273896,
+   "occ": 24299,
+   "step": 145791,
+   "busy_total": {
+    "field": 16679,
+    "su": 12903,
+    "coll": 5228,
+    "hbm": 2678,
+    "select": 667,
+    "embed": 611
+   }
+  },
+  {
+   "stage": "R032",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 295714,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R033",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 296804,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R034",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 297894,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R035",
+   "dense_layer": 10,
+   "copies": 1,
+   "t": 304115,
+   "occ": 19086,
+   "step": 114513,
+   "busy_total": {
+    "coll": 3585,
+    "su": 7690,
+    "field": 13191,
+    "hbm": 2678,
+    "select": 667,
+    "embed": 611
+   }
+  },
+  {
+   "stage": "R036",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 320721,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R037",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 321811,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R038",
+   "dense_layer": 11,
+   "copies": 1,
+   "t": 322901,
+   "occ": 24366,
+   "step": 146193,
+   "busy_total": {
+    "field": 16746,
+    "su": 12970,
+    "coll": 5295,
+    "hbm": 2745,
+    "select": 734,
+    "embed": 678
+   }
+  },
+  {
+   "stage": "R039",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 344786,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R040",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 345876,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R041",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 346966,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R042",
+   "dense_layer": 12,
+   "copies": 1,
+   "t": 353187,
+   "occ": 19086,
+   "step": 114513,
+   "busy_total": {
+    "coll": 3585,
+    "su": 7690,
+    "field": 13191,
+    "hbm": 2678,
+    "select": 667,
+    "embed": 611
+   }
+  },
+  {
+   "stage": "R043",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 369793,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R044",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 370883,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R045",
+   "dense_layer": 13,
+   "copies": 1,
+   "t": 371973,
+   "occ": 24366,
+   "step": 146193,
+   "busy_total": {
+    "field": 16746,
+    "su": 12970,
+    "coll": 5295,
+    "hbm": 2745,
+    "select": 734,
+    "embed": 678
+   }
+  },
+  {
+   "stage": "R046",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 393858,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R047",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 394948,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R048",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 396038,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R049",
+   "dense_layer": 14,
+   "copies": 2,
+   "t": 402259,
+   "occ": 49377,
+   "step": 295951,
+   "busy_total": {
+    "embed": 2994,
+    "su": 12396,
+    "coll": 7104,
+    "field": 19078,
+    "hbm": 7132,
+    "select": 23910
+   }
+  },
+  {
+   "stage": "R050",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 449156,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R051",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 450246,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R052",
+   "dense_layer": 15,
+   "copies": 1,
+   "t": 451336,
+   "occ": 24366,
+   "step": 146193,
+   "busy_total": {
+    "field": 16746,
+    "su": 12970,
+    "coll": 5295,
+    "hbm": 2745,
+    "select": 734,
+    "embed": 678
+   }
+  },
+  {
+   "stage": "R053",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 473221,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R054",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 474311,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R055",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 475401,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R056",
+   "dense_layer": 16,
+   "copies": 1,
+   "t": 476491,
+   "occ": 24299,
+   "step": 145791,
+   "busy_total": {
+    "field": 16679,
+    "su": 12903,
+    "coll": 5228,
+    "hbm": 2678,
+    "select": 667,
+    "embed": 611
+   }
+  },
+  {
+   "stage": "R057",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 498310,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R058",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 499400,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R059",
+   "dense_layer": 17,
+   "copies": 1,
+   "t": 500490,
+   "occ": 24366,
+   "step": 146194,
+   "busy_total": {
+    "field": 16746,
+    "su": 12970,
+    "coll": 5295,
+    "hbm": 2745,
+    "select": 734,
+    "embed": 678
+   }
+  },
+  {
+   "stage": "R060",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 522375,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R061",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 523465,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R062",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 524555,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R063",
+   "dense_layer": 18,
+   "copies": 1,
+   "t": 527389,
+   "occ": 22555,
+   "step": 135327,
+   "busy_total": {
+    "field": 14935,
+    "su": 11159,
+    "coll": 5228,
+    "hbm": 2678,
+    "select": 667,
+    "embed": 611
+   }
+  },
+  {
+   "stage": "R064",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 547464,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R065",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 548554,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R066",
+   "dense_layer": 19,
+   "copies": 1,
+   "t": 549644,
+   "occ": 24366,
+   "step": 146193,
+   "busy_total": {
+    "field": 16746,
+    "su": 12970,
+    "coll": 5295,
+    "hbm": 2745,
+    "select": 734,
+    "embed": 678
+   }
+  },
+  {
+   "stage": "R067",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 571529,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R068",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 572619,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R069",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 573709,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R070",
+   "dense_layer": 20,
+   "copies": 2,
+   "t": 579930,
+   "occ": 48939,
+   "step": 263639,
+   "busy_total": {
+    "su": 18220,
+    "field": 24459,
+    "coll": 14468,
+    "hbm": 20058,
+    "select": 22212,
+    "embed": 9858
+   }
+  },
+  {
+   "stage": "R071",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 626389,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R072",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 627479,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R073",
+   "dense_layer": 21,
+   "copies": 1,
+   "t": 628569,
+   "occ": 24144,
+   "step": 144861,
+   "busy_total": {
+    "field": 16524,
+    "su": 12748,
+    "coll": 5073,
+    "hbm": 2523,
+    "select": 512,
+    "embed": 456
+   }
+  },
+  {
+   "stage": "R074",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 650233,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R075",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 651323,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R076",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 652413,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R077",
+   "dense_layer": 22,
+   "copies": 1,
+   "t": 658634,
+   "occ": 18998,
+   "step": 113985,
+   "busy_total": {
+    "coll": 3497,
+    "su": 7602,
+    "field": 13103,
+    "hbm": 2590,
+    "select": 579,
+    "embed": 523
+   }
+  },
+  {
+   "stage": "R078",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 675151,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R079",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 676241,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R080",
+   "dense_layer": 23,
+   "copies": 1,
+   "t": 677331,
+   "occ": 24144,
+   "step": 144861,
+   "busy_total": {
+    "field": 16524,
+    "su": 12748,
+    "coll": 5073,
+    "hbm": 2523,
+    "select": 512,
+    "embed": 456
+   }
+  },
+  {
+   "stage": "R081",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 698994,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R082",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 700084,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R083",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 701174,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R084",
+   "dense_layer": 24,
+   "copies": 2,
+   "t": 707395,
+   "occ": 29938,
+   "step": 150172,
+   "busy_total": {
+    "su": 8556,
+    "field": 16078,
+    "coll": 6082,
+    "hbm": 9915,
+    "select": 2568,
+    "embed": 1478
+   }
+  },
+  {
+   "stage": "R085",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 734853,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R086",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 735943,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R087",
+   "dense_layer": 25,
+   "copies": 1,
+   "t": 737033,
+   "occ": 24144,
+   "step": 144861,
+   "busy_total": {
+    "field": 16524,
+    "su": 12748,
+    "coll": 5073,
+    "hbm": 2523,
+    "select": 512,
+    "embed": 456
+   }
+  },
+  {
+   "stage": "R088",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 758697,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R089",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 759787,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R090",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 760877,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R091",
+   "dense_layer": 26,
+   "copies": 1,
+   "t": 767098,
+   "occ": 18998,
+   "step": 113985,
+   "busy_total": {
+    "coll": 3497,
+    "su": 7602,
+    "field": 13103,
+    "hbm": 2590,
+    "select": 579,
+    "embed": 523
+   }
+  },
+  {
+   "stage": "R092",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 783615,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R093",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 784705,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R094",
+   "dense_layer": 27,
+   "copies": 1,
+   "t": 785795,
+   "occ": 24144,
+   "step": 144861,
+   "busy_total": {
+    "field": 16524,
+    "su": 12748,
+    "coll": 5073,
+    "hbm": 2523,
+    "select": 512,
+    "embed": 456
+   }
+  },
+  {
+   "stage": "R095",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 807458,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R096",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 808548,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R097",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 809638,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R098",
+   "dense_layer": 28,
+   "copies": 2,
+   "t": 815859,
+   "occ": 30157,
+   "step": 151487,
+   "busy_total": {
+    "su": 8556,
+    "field": 16267,
+    "coll": 6082,
+    "hbm": 9915,
+    "select": 2598,
+    "embed": 1478
+   }
+  },
+  {
+   "stage": "R099",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 843536,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R100",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 844626,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R101",
+   "dense_layer": 29,
+   "copies": 1,
+   "t": 845716,
+   "occ": 24144,
+   "step": 144861,
+   "busy_total": {
+    "field": 16524,
+    "su": 12748,
+    "coll": 5073,
+    "hbm": 2523,
+    "select": 512,
+    "embed": 456
+   }
+  },
+  {
+   "stage": "R102",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 867380,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R103",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 868470,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R104",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 869560,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R105",
+   "dense_layer": 30,
+   "copies": 1,
+   "t": 875781,
+   "occ": 18931,
+   "step": 113583,
+   "busy_total": {
+    "coll": 3430,
+    "su": 7535,
+    "field": 13036,
+    "hbm": 2523,
+    "select": 512,
+    "embed": 456
+   }
+  },
+  {
+   "stage": "R106",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 892231,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R107",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 893321,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R108",
+   "dense_layer": 31,
+   "copies": 1,
+   "t": 894411,
+   "occ": 24211,
+   "step": 145263,
+   "busy_total": {
+    "field": 16591,
+    "su": 12815,
+    "coll": 5140,
+    "hbm": 2590,
+    "select": 579,
+    "embed": 523
+   }
+  },
+  {
+   "stage": "R109",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 916142,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R110",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 917232,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R111",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 918322,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R112",
+   "dense_layer": 32,
+   "copies": 2,
+   "t": 924543,
+   "occ": 30070,
+   "step": 150965,
+   "busy_total": {
+    "su": 8489,
+    "field": 16200,
+    "coll": 6014,
+    "hbm": 9848,
+    "select": 2512,
+    "embed": 1410
+   }
+  },
+  {
+   "stage": "R113",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 952132,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R114",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 953222,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R115",
+   "dense_layer": 33,
+   "copies": 1,
+   "t": 954312,
+   "occ": 24211,
+   "step": 145263,
+   "busy_total": {
+    "field": 16591,
+    "su": 12815,
+    "coll": 5140,
+    "hbm": 2590,
+    "select": 579,
+    "embed": 523
+   }
+  },
+  {
+   "stage": "R116",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 976043,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R117",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 977133,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R118",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 978223,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R119",
+   "dense_layer": 34,
+   "copies": 1,
+   "t": 984444,
+   "occ": 18931,
+   "step": 113583,
+   "busy_total": {
+    "coll": 3430,
+    "su": 7535,
+    "field": 13036,
+    "hbm": 2523,
+    "select": 512,
+    "embed": 456
+   }
+  },
+  {
+   "stage": "R120",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1000894,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R121",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1001984,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R122",
+   "dense_layer": 35,
+   "copies": 1,
+   "t": 1003074,
+   "occ": 24211,
+   "step": 145263,
+   "busy_total": {
+    "field": 16591,
+    "su": 12815,
+    "coll": 5140,
+    "hbm": 2590,
+    "select": 579,
+    "embed": 523
+   }
+  },
+  {
+   "stage": "R123",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1024805,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R124",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1025895,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R125",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1026985,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R126",
+   "dense_layer": 36,
+   "copies": 2,
+   "t": 1033206,
+   "occ": 30114,
+   "step": 151229,
+   "busy_total": {
+    "su": 8489,
+    "field": 16200,
+    "coll": 6014,
+    "hbm": 9848,
+    "select": 2556,
+    "embed": 1410
+   }
+  },
+  {
+   "stage": "R127",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1060840,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R128",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1061930,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R129",
+   "dense_layer": 37,
+   "copies": 1,
+   "t": 1063020,
+   "occ": 24211,
+   "step": 145263,
+   "busy_total": {
+    "field": 16591,
+    "su": 12815,
+    "coll": 5140,
+    "hbm": 2590,
+    "select": 579,
+    "embed": 523
+   }
+  },
+  {
+   "stage": "R130",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1084750,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R131",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1085840,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R132",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1086930,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  },
+  {
+   "stage": "R133",
+   "dense_layer": 38,
+   "copies": 1,
+   "t": 1093151,
+   "occ": 18931,
+   "step": 113583,
+   "busy_total": {
+    "coll": 3430,
+    "su": 7535,
+    "field": 13036,
+    "hbm": 2523,
+    "select": 512,
+    "embed": 456
+   }
+  },
+  {
+   "stage": "R134",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1109601,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R135",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1110691,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R136",
+   "dense_layer": 39,
+   "copies": 1,
+   "t": 1111781,
+   "occ": 24144,
+   "step": 144861,
+   "busy_total": {
+    "field": 16524,
+    "su": 12748,
+    "coll": 5073,
+    "hbm": 2523,
+    "select": 512,
+    "embed": 456
+   }
+  },
+  {
+   "stage": "R137",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1133445,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R138",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1134535,
+   "occ": 3570,
+   "step": 21420,
+   "busy_total": {
+    "field": 3488,
+    "su": 3570
+   }
+  },
+  {
+   "stage": "R139",
+   "dense_layer": null,
+   "copies": 1,
+   "t": 1135625,
+   "occ": 5213,
+   "step": 31278,
+   "busy_total": {
+    "field": 3488,
+    "su": 5213,
+    "coll": 1643
+   }
+  }
+ ],
+ "composition": {
+  "composer": "tools/toksim_s81_compose.py --scenario calpipe + S81-ROMOPT o3mix compiled spans (results/rtl/s81_romopt_1020/c/compose/o3mix_prop_compiled.json.gz)",
+  "ar": {
+   "T_composer": 1153402.6,
+   "tok_s_composer": 1040.4,
+   "pct_measured": 69.74,
+   "cal2_structural": 2418,
+   "added_hops": 20160,
+   "forward_x_chain_delta": 10168.0,
+   "T": 1186148.6,
+   "tok_s": 1011.7
+  },
+  "mtp": {
+   "T_composer": 1562863.8,
+   "tok_s_composer": 3193.4,
+   "pct_measured": 61.15,
+   "cal2_structural": 2556,
+   "added_hops": 20160,
+   "forward_x_chain_delta": 10168.0,
+   "wave_composer": 199775.0,
+   "wave_physical": 253035.0,
+   "T": 1649007.8,
+   "tok_s": 3026.5
+  },
+  "partial_add_cycles": 82.0,
+  "partial_add_grade": "priced (= measured eng.add SU add instance)"
+ },
+ "grade": "node cycles: composer grades; stage split / reservation / forward-x / MTP law: MODEL"
+}

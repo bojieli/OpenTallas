@@ -1,0 +1,29 @@
+ar: 42 users x 1011.7 = 42490 agg; period 1186152; bound {'cycles': 28004, 'stage': 'R003'}; checker PASS (17010 windows, 0 coll); N+1 FAULT; inject FAULT
+mtp: 8 users x 3026.5 = 24212 agg; period 1649008; bound {'cycles': 168021, 'stage': 'R003'}; checker PASS (3240 windows, 0 coll); N+1 FAULT; inject FAULT
+{
+ "composer": "tools/toksim_s81_compose.py --scenario calpipe + S81-ROMOPT o3mix compiled spans (results/rtl/s81_romopt_1020/c/compose/o3mix_prop_compiled.json.gz)",
+ "ar": {
+  "T_composer": 1153402.6,
+  "tok_s_composer": 1040.4,
+  "pct_measured": 69.74,
+  "cal2_structural": 2418,
+  "added_hops": 20160,
+  "forward_x_chain_delta": 10168.0,
+  "T": 1186148.6,
+  "tok_s": 1011.7
+ },
+ "mtp": {
+  "T_composer": 1562863.8,
+  "tok_s_composer": 3193.4,
+  "pct_measured": 61.15,
+  "cal2_structural": 2556,
+  "added_hops": 20160,
+  "forward_x_chain_delta": 10168.0,
+  "wave_composer": 199775.0,
+  "wave_physical": 253035.0,
+  "T": 1649007.8,
+  "tok_s": 3026.5
+ },
+ "partial_add_cycles": 82.0,
+ "partial_add_grade": "priced (= measured eng.add SU add instance)"
+}

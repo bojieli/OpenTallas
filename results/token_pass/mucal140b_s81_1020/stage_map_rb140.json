@@ -1,0 +1,5482 @@
+{
+ "schema": "opentallas.s81_dv.stage_map.v1",
+ "plan": "S81-MUCAL140B rebalance of stage_map_f122_140.json (sha f5608b1e5f2a): same 140 stages / dense order / copy-B; experts re-dealt for MU dense window bound 26041 cyc/copy (model), linear capacity law q0 + 72 N",
+ "stages_count": 140,
+ "requested_stages": 140,
+ "rank_dies_per_stage": 4,
+ "layer_dies": 560,
+ "experts": 15360,
+ "costs": {
+  "slope": 72.0,
+  "phases_per_expert": 6.0,
+  "dense": {
+   "L0": {
+    "q": 624,
+    "bf": 1344,
+    "phases": 50
+   },
+   "L1": {
+    "q": 1424,
+    "bf": 1344,
+    "phases": 75
+   },
+   "L2": {
+    "q": 752,
+    "bf": 1408,
+    "phases": 59
+   },
+   "L14": {
+    "q": 1552,
+    "bf": 1408,
+    "phases": 84
+   },
+   "L20": {
+    "q": 752,
+    "bf": 1408,
+    "phases": 59
+   },
+   "L24": {
+    "q": 752,
+    "bf": 1344,
+    "phases": 58
+   }
+  },
+  "source": "actual116inventory four representative frames N1/N2/N3 and denseN0; all-frame exact qualification owed"
+ },
+ "content_not_on_layer_dies": {
+  "head_dies": [
+   "embed.weight",
+   "head.weight",
+   "norm.weight",
+   "mtp.* (DSpark draft)"
+  ],
+  "hbm": [
+   "layers.{1,14}.engram.embed (Engram tables)"
+  ],
+  "su_svc_registers": [
+   "hc_*",
+   "*_norm.weight",
+   "attn.attn_sink",
+   "ffn.gate.bias*",
+   "attn.indexer.{wk,k_norm,weights_proj}",
+   "engram.{q,k}_weight"
+  ]
+ },
+ "copy_b_note": "MU cal1 copy B (80 dies) duplicates the dies of the stage(s) holding the attention of layers 2/8/14/20/24/28/32/36: same ROM content, so their capacity verdict is the copy-A one",
+ "header_sha256": {
+  "model-00001-of-00048.safetensors.header.json": "2a181b0038d7f870193f4cd1df5fc33626afcc45bfb82b41af6fd43aca447b4f",
+  "model-00002-of-00048.safetensors.header.json": "d12e3fdffd1199b504f628efad3ffe194a04365beed1234be196c42952af5101",
+  "model-00003-of-00048.safetensors.header.json": "71213f444f9c15a4af6dbcbddc36f7611542884ebb3aadef54de650071357449",
+  "model-00004-of-00048.safetensors.header.json": "a18996c1e8f291117f9a2b638ffbd24c0b60babafd44db75bedfab1bec3a3f4a",
+  "model-00005-of-00048.safetensors.header.json": "c50a8acf025e565be36bf005ae712ad7518a8bcc1d2ed561e413970bbabc86e6",
+  "model-00006-of-00048.safetensors.header.json": "b6fd1a38fb53430098d46487db546c012d38ac14ac91b22e9af6983ea4290189",
+  "model-00007-of-00048.safetensors.header.json": "3dcfa5cba8e7e80fb684a3166f34164bb1b8ec95a802763b1e2eebb19b2a6ba5",
+  "model-00008-of-00048.safetensors.header.json": "fde260ef12e8bc6737afaf29d58799d1f2dcf206a126746a22f61ebff9cb9a87",
+  "model-00009-of-00048.safetensors.header.json": "139eeea4664aba161a4b4cb82a60a86a2429467601ee6584a887825f8137adfd",
+  "model-00010-of-00048.safetensors.header.json": "f60d4a2f55d70b668be2c7a61883ed9e2ba7d2cace06f40c3429da073dca64f2",
+  "model-00011-of-00048.safetensors.header.json": "a2d003170329274ba0d10091b1339e834b603129a4b345009651a5dd6ff1387c",
+  "model-00012-of-00048.safetensors.header.json": "ec5434239be33e6d35218d2ed1d4ee522bb02357669280ef6dfe86ce44873e0c",
+  "model-00013-of-00048.safetensors.header.json": "e9246f9e946c8b771d95640635c0cc01d295a312fc374fd87f7d0d67e9c7f0fc",
+  "model-00014-of-00048.safetensors.header.json": "e2871f3474228510b968b237f9836898a5c9707add5cb1cad51401318dfb5311",
+  "model-00015-of-00048.safetensors.header.json": "4184d16248ac775f7ab002039b2e9a43b98d51f24913cc9b19ceb85c3726ed59",
+  "model-00016-of-00048.safetensors.header.json": "fcdcfd73f87aa514e2c8e3a742104def5a051acd47cd54b0b2bee2033d495edb",
+  "model-00017-of-00048.safetensors.header.json": "d0869abfd06ac08cc5a376eebf9d7de632227e141e6dcb7109bf0d2bffd3fc79",
+  "model-00018-of-00048.safetensors.header.json": "0ad32850738558e9df1239b284abc748e42e01745eec180cd30815e21a67af55",
+  "model-00019-of-00048.safetensors.header.json": "efaa20b2c111c875904e0f83623206f3414652353413e9051ba02e60ab7a085f",
+  "model-00020-of-00048.safetensors.header.json": "6cc297397ef39dc77747d5fbba93a8a299caf4dfb4952886ca9c2d478d517f0c",
+  "model-00021-of-00048.safetensors.header.json": "ef8537770773e4006d36e1b5de0082407afe1abeb2309d4efac0e8ffcdc39040",
+  "model-00022-of-00048.safetensors.header.json": "6f1df707004fd8f06f44e4a1e79677102037a414862d1550a7ac6a175961fa72",
+  "model-00023-of-00048.safetensors.header.json": "fef3b0be45a79923f05c0a7e9a8713397d9c9d24dab8e13efc953d609f64efe9",
+  "model-00024-of-00048.safetensors.header.json": "190ff387c34f3b0a55277993b798b26adf528de28125361495fa30a050ed106c",
+  "model-00025-of-00048.safetensors.header.json": "ee80ffddf8ddeca1b934f2e32c14b7f4856b2e747088fbdc9fc80dcc27377891",
+  "model-00026-of-00048.safetensors.header.json": "ed25fdc55bb96b2101ac8cff12a235a7ea54412050c792b4e72377ae417a9a66",
+  "model-00027-of-00048.safetensors.header.json": "babf9e26761c97df06490e96368e40e3cc916770abe2afffa9b3a45a5734742b",
+  "model-00028-of-00048.safetensors.header.json": "6dffc2e311e17c5538f2dd92dd3fc8ba7685e3ea67af066603b815e1b722c668",
+  "model-00029-of-00048.safetensors.header.json": "611e9ea2b143014df6037e285a3e1a865676e0954091dcbf95b3f57ec825336b",
+  "model-00030-of-00048.safetensors.header.json": "5a5bf5cbd36e27c13c6dcbd6969db9796e9219e928e69b86fd5704131be598ea",
+  "model-00031-of-00048.safetensors.header.json": "50ac0885851fd0c5f9c2436858fbcecec347dd4efd39557ec68723b224d2985d",
+  "model-00032-of-00048.safetensors.header.json": "105e2bffb58a83dd3ca1502ecfbcf14759b1a16f705ca0eac52284053684007f",
+  "model-00033-of-00048.safetensors.header.json": "2b3caec06921b098107c3757f81e6b5bd0c401809b19fa65e24ef27ca9eb505e",
+  "model-00034-of-00048.safetensors.header.json": "08a8b7c04834ea2ca2b3efcebe2bd5b934e165154a7c3d11004242e2a1b438c4",
+  "model-00035-of-00048.safetensors.header.json": "18a61fbf3d94a454137e1d6fc8f19b7ddfe12954f32c47337c8921069d5de193",
+  "model-00036-of-00048.safetensors.header.json": "32ef9284ffa83282248f59443f2c3b4daaf57e305d02a07dad3b493a05d68752",
+  "model-00037-of-00048.safetensors.header.json": "7b3daaa3d09fc52c64153c5a81fcd3c4984e6c3dcc6981c95ae840c8928ad1d5",
+  "model-00038-of-00048.safetensors.header.json": "33f706f0d8727ac9aa2154eb56b76f76d5396ea5c9bd94248c7378f086fddc2b",
+  "model-00039-of-00048.safetensors.header.json": "e5e55c1f73de87075da7717c9319f30d32078ba2f1be641e8cd6127d4c273987",
+  "model-00040-of-00048.safetensors.header.json": "e8a1a6448644f70d3aa897fba81c2cf2245125851aacdf377c97ef3ce959981e",
+  "model-00041-of-00048.safetensors.header.json": "3fde0cd4e3167cc5a1117e055b052d20f4a3d8ea013bfc54764abb07d09351c1",
+  "model-00042-of-00048.safetensors.header.json": "5ca433405c1b16b8776486a174583e7ff2641889b292d70952da7a339687a70c",
+  "model-00043-of-00048.safetensors.header.json": "9c6d4d664cfd377322e7c1cb1ed248ff1aea586d6f83373f6b5b36d9f7cc1d54",
+  "model-00044-of-00048.safetensors.header.json": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e",
+  "model-00045-of-00048.safetensors.header.json": "c8f2cad66c6387793b335cbc10231661b61f2ec7a8c814bccb8d6ae418200675",
+  "model-00046-of-00048.safetensors.header.json": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
+  "model-00047-of-00048.safetensors.header.json": "e5c5c7fc900caec400644bef07aa5d7e28fc6ca941c8c47592b393963b218242",
+  "model-00048-of-00048.safetensors.header.json": "5d8fa4697d7a071c31baeee6947d493c08ea3243261c5d0f79c355ad191b8222"
+ },
+ "rebalance": {
+  "base_sha256": "f5608b1e5f2a122cb3b22b115d300df4809b75bf24fa65bf9d2ab1315ae96a8e",
+  "bound_model": 26040.9,
+  "expert_stages_min": 100,
+  "per_layer": [
+   {
+    "layer": 0,
+    "head": 106,
+    "tail_on_next_dense": 52,
+    "dense_window": 18945.7,
+    "copies": 1
+   },
+   {
+    "layer": 1,
+    "head": 2,
+    "tail_on_next_dense": 43,
+    "dense_window": 25678.2,
+    "copies": 1
+   },
+   {
+    "layer": 2,
+    "head": 62,
+    "tail_on_next_dense": 96,
+    "dense_window": 50668.4,
+    "copies": 2
+   },
+   {
+    "layer": 3,
+    "head": 10,
+    "tail_on_next_dense": 35,
+    "dense_window": 24298.5,
+    "copies": 1
+   },
+   {
+    "layer": 4,
+    "head": 71,
+    "tail_on_next_dense": 87,
+    "dense_window": 24365.5,
+    "copies": 1
+   },
+   {
+    "layer": 5,
+    "head": 19,
+    "tail_on_next_dense": 26,
+    "dense_window": 24298.5,
+    "copies": 1
+   },
+   {
+    "layer": 6,
+    "head": 80,
+    "tail_on_next_dense": 78,
+    "dense_window": 24365.5,
+    "copies": 1
+   },
+   {
+    "layer": 7,
+    "head": 28,
+    "tail_on_next_dense": 17,
+    "dense_window": 24298.5,
+    "copies": 1
+   },
+   {
+    "layer": 8,
+    "head": 88,
+    "tail_on_next_dense": 70,
+    "dense_window": 52081.7,
+    "copies": 2
+   },
+   {
+    "layer": 9,
+    "head": 36,
+    "tail_on_next_dense": 9,
+    "dense_window": 24298.5,
+    "copies": 1
+   },
+   {
+    "layer": 10,
+    "head": 97,
+    "tail_on_next_dense": 61,
+    "dense_window": 24298.5,
+    "copies": 1
+   },
+   {
+    "layer": 11,
+    "head": 45,
+    "tail_on_next_dense": 0,
+    "dense_window": 24365.5,
+    "copies": 1
+   },
+   {
+    "layer": 12,
+    "head": 106,
+    "tail_on_next_dense": 52,
+    "dense_window": 19085.5,
+    "copies": 1
+   },
+   {
+    "layer": 13,
+    "head": 45,
+    "tail_on_next_dense": 0,
+    "dense_window": 24365.5,
+    "copies": 1
+   },
+   {
+    "layer": 14,
+    "head": 97,
+    "tail_on_next_dense": 61,
+    "dense_window": 49376.7,
+    "copies": 2
+   },
+   {
+    "layer": 15,
+    "head": 45,
+    "tail_on_next_dense": 0,
+    "dense_window": 24365.5,
+    "copies": 1
+   },
+   {
+    "layer": 16,
+    "head": 106,
+    "tail_on_next_dense": 52,
+    "dense_window": 19085.5,
+    "copies": 1
+   },
+   {
+    "layer": 17,
+    "head": 54,
+    "tail_on_next_dense": 104,
+    "dense_window": 24365.5,
+    "copies": 1
+   },
+   {
+    "layer": 18,
+    "head": 2,
+    "tail_on_next_dense": 43,
+    "dense_window": 21973.2,
+    "copies": 1
+   },
+   {
+    "layer": 19,
+    "head": 63,
+    "tail_on_next_dense": 95,
+    "dense_window": 24365.5,
+    "copies": 1
+   },
+   {
+    "layer": 20,
+    "head": 2,
+    "tail_on_next_dense": 43,
+    "dense_window": 51826.6,
+    "copies": 2
+   },
+   {
+    "layer": 21,
+    "head": 63,
+    "tail_on_next_dense": 95,
+    "dense_window": 24143.4,
+    "copies": 1
+   },
+   {
+    "layer": 22,
+    "head": 11,
+    "tail_on_next_dense": 34,
+    "dense_window": 24210.4,
+    "copies": 1
+   },
+   {
+    "layer": 23,
+    "head": 72,
+    "tail_on_next_dense": 86,
+    "dense_window": 24143.4,
+    "copies": 1
+   },
+   {
+    "layer": 24,
+    "head": 19,
+    "tail_on_next_dense": 26,
+    "dense_window": 35150.8,
+    "copies": 2
+   },
+   {
+    "layer": 25,
+    "head": 80,
+    "tail_on_next_dense": 78,
+    "dense_window": 24143.4,
+    "copies": 1
+   },
+   {
+    "layer": 26,
+    "head": 28,
+    "tail_on_next_dense": 17,
+    "dense_window": 24210.4,
+    "copies": 1
+   },
+   {
+    "layer": 27,
+    "head": 89,
+    "tail_on_next_dense": 69,
+    "dense_window": 24143.4,
+    "copies": 1
+   },
+   {
+    "layer": 28,
+    "head": 36,
+    "tail_on_next_dense": 9,
+    "dense_window": 35369.9,
+    "copies": 2
+   },
+   {
+    "layer": 29,
+    "head": 97,
+    "tail_on_next_dense": 61,
+    "dense_window": 24143.4,
+    "copies": 1
+   },
+   {
+    "layer": 30,
+    "head": 45,
+    "tail_on_next_dense": 0,
+    "dense_window": 24143.4,
+    "copies": 1
+   },
+   {
+    "layer": 31,
+    "head": 106,
+    "tail_on_next_dense": 52,
+    "dense_window": 18997.4,
+    "copies": 1
+   },
+   {
+    "layer": 32,
+    "head": 53,
+    "tail_on_next_dense": 105,
+    "dense_window": 35282.9,
+    "copies": 2
+   },
+   {
+    "layer": 33,
+    "head": 1,
+    "tail_on_next_dense": 44,
+    "dense_window": 21303.7,
+    "copies": 1
+   },
+   {
+    "layer": 34,
+    "head": 62,
+    "tail_on_next_dense": 96,
+    "dense_window": 24143.4,
+    "copies": 1
+   },
+   {
+    "layer": 35,
+    "head": 10,
+    "tail_on_next_dense": 35,
+    "dense_window": 24210.4,
+    "copies": 1
+   },
+   {
+    "layer": 36,
+    "head": 70,
+    "tail_on_next_dense": 88,
+    "dense_window": 35326.9,
+    "copies": 2
+   },
+   {
+    "layer": 37,
+    "head": 18,
+    "tail_on_next_dense": 27,
+    "dense_window": 24210.4,
+    "copies": 1
+   },
+   {
+    "layer": 38,
+    "head": 45,
+    "tail_on_next_dense": 0,
+    "dense_window": 24143.4,
+    "copies": 1
+   },
+   {
+    "layer": 39,
+    "head": 45,
+    "tail_on_next_dense": 0,
+    "dense_window": 18930.4,
+    "copies": 1
+   }
+  ],
+  "copyb_div": 2.0,
+  "qmax": 8136,
+  "caps": {
+   "dense": [
+    106,
+    98,
+    105,
+    106,
+    106,
+    106,
+    106,
+    106,
+    105,
+    106,
+    106,
+    106,
+    106,
+    106,
+    97,
+    106,
+    106,
+    106,
+    106,
+    106,
+    105,
+    106,
+    106,
+    106,
+    105,
+    106,
+    106,
+    106,
+    105,
+    106,
+    106,
+    106,
+    105,
+    106,
+    106,
+    106,
+    105,
+    106,
+    106,
+    106
+   ],
+   "expert_only": 113,
+   "q0": {
+    "L0": 480,
+    "L1": 1024,
+    "L2": 576,
+    "L14": 1120,
+    "L20": 576,
+    "L24": 576
+   },
+   "slope": 72,
+   "idx_src": [
+    24,
+    28,
+    32,
+    36
+   ]
+  }
+ },
+ "stages": [
+  {
+   "stage": "R000",
+   "dies": [
+    "R000.r0",
+    "R000.r1",
+    "R000.r2",
+    "R000.r3"
+   ],
+   "layers": [
+    0
+   ],
+   "dense_layer": 0,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     0,
+     0,
+     105
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "L0_n106"
+  },
+  {
+   "stage": "R001",
+   "dies": [
+    "R001.r0",
+    "R001.r1",
+    "R001.r2",
+    "R001.r3"
+   ],
+   "layers": [
+    0
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     0,
+     106,
+     218
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R002",
+   "dies": [
+    "R002.r0",
+    "R002.r1",
+    "R002.r2",
+    "R002.r3"
+   ],
+   "layers": [
+    0
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     0,
+     219,
+     331
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R003",
+   "dies": [
+    "R003.r0",
+    "R003.r1",
+    "R003.r2",
+    "R003.r3"
+   ],
+   "layers": [
+    0,
+    1
+   ],
+   "dense_layer": 1,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "engram.wkv.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "eng.wkv",
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     0,
+     332,
+     383
+    ],
+    [
+     1,
+     0,
+     1
+    ]
+   ],
+   "n_experts": 54,
+   "model_load": 4912.0,
+   "model_fill_pct": 59.96,
+   "calendar_rows": 3874,
+   "copy_b": false,
+   "spec": "L1_n54"
+  },
+  {
+   "stage": "R004",
+   "dies": [
+    "R004.r0",
+    "R004.r1",
+    "R004.r2",
+    "R004.r3"
+   ],
+   "layers": [
+    1
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     1,
+     2,
+     114
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R005",
+   "dies": [
+    "R005.r0",
+    "R005.r1",
+    "R005.r2",
+    "R005.r3"
+   ],
+   "layers": [
+    1
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     1,
+     115,
+     227
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R006",
+   "dies": [
+    "R006.r0",
+    "R006.r1",
+    "R006.r2",
+    "R006.r3"
+   ],
+   "layers": [
+    1
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     1,
+     228,
+     340
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R007",
+   "dies": [
+    "R007.r0",
+    "R007.r1",
+    "R007.r2",
+    "R007.r3"
+   ],
+   "layers": [
+    1,
+    2
+   ],
+   "dense_layer": 2,
+   "dense": {
+    "q_pairs": [
+     "attn.indexer.wq_b.weight",
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.compressor.wgate.weight",
+     "attn.compressor.wkv.weight",
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.idx.q",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.cmp.wk",
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     1,
+     341,
+     383
+    ],
+    [
+     2,
+     0,
+     61
+    ]
+   ],
+   "n_experts": 105,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 4012,
+   "copy_b": true,
+   "spec": "L2_n105"
+  },
+  {
+   "stage": "R008",
+   "dies": [
+    "R008.r0",
+    "R008.r1",
+    "R008.r2",
+    "R008.r3"
+   ],
+   "layers": [
+    2
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     2,
+     62,
+     174
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R009",
+   "dies": [
+    "R009.r0",
+    "R009.r1",
+    "R009.r2",
+    "R009.r3"
+   ],
+   "layers": [
+    2
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     2,
+     175,
+     287
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R010",
+   "dies": [
+    "R010.r0",
+    "R010.r1",
+    "R010.r2",
+    "R010.r3"
+   ],
+   "layers": [
+    2,
+    3
+   ],
+   "dense_layer": 3,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     2,
+     288,
+     383
+    ],
+    [
+     3,
+     0,
+     9
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3874,
+   "copy_b": false,
+   "spec": "L3_n106"
+  },
+  {
+   "stage": "R011",
+   "dies": [
+    "R011.r0",
+    "R011.r1",
+    "R011.r2",
+    "R011.r3"
+   ],
+   "layers": [
+    3
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     3,
+     10,
+     122
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R012",
+   "dies": [
+    "R012.r0",
+    "R012.r1",
+    "R012.r2",
+    "R012.r3"
+   ],
+   "layers": [
+    3
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     3,
+     123,
+     235
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R013",
+   "dies": [
+    "R013.r0",
+    "R013.r1",
+    "R013.r2",
+    "R013.r3"
+   ],
+   "layers": [
+    3
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     3,
+     236,
+     348
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R014",
+   "dies": [
+    "R014.r0",
+    "R014.r1",
+    "R014.r2",
+    "R014.r3"
+   ],
+   "layers": [
+    3,
+    4
+   ],
+   "dense_layer": 4,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     3,
+     349,
+     383
+    ],
+    [
+     4,
+     0,
+     70
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L4_n106"
+  },
+  {
+   "stage": "R015",
+   "dies": [
+    "R015.r0",
+    "R015.r1",
+    "R015.r2",
+    "R015.r3"
+   ],
+   "layers": [
+    4
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     4,
+     71,
+     183
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R016",
+   "dies": [
+    "R016.r0",
+    "R016.r1",
+    "R016.r2",
+    "R016.r3"
+   ],
+   "layers": [
+    4
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     4,
+     184,
+     296
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R017",
+   "dies": [
+    "R017.r0",
+    "R017.r1",
+    "R017.r2",
+    "R017.r3"
+   ],
+   "layers": [
+    4,
+    5
+   ],
+   "dense_layer": 5,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     4,
+     297,
+     383
+    ],
+    [
+     5,
+     0,
+     18
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L5_n106"
+  },
+  {
+   "stage": "R018",
+   "dies": [
+    "R018.r0",
+    "R018.r1",
+    "R018.r2",
+    "R018.r3"
+   ],
+   "layers": [
+    5
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     5,
+     19,
+     131
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R019",
+   "dies": [
+    "R019.r0",
+    "R019.r1",
+    "R019.r2",
+    "R019.r3"
+   ],
+   "layers": [
+    5
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     5,
+     132,
+     244
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R020",
+   "dies": [
+    "R020.r0",
+    "R020.r1",
+    "R020.r2",
+    "R020.r3"
+   ],
+   "layers": [
+    5
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     5,
+     245,
+     357
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R021",
+   "dies": [
+    "R021.r0",
+    "R021.r1",
+    "R021.r2",
+    "R021.r3"
+   ],
+   "layers": [
+    5,
+    6
+   ],
+   "dense_layer": 6,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     5,
+     358,
+     383
+    ],
+    [
+     6,
+     0,
+     79
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L6_n106"
+  },
+  {
+   "stage": "R022",
+   "dies": [
+    "R022.r0",
+    "R022.r1",
+    "R022.r2",
+    "R022.r3"
+   ],
+   "layers": [
+    6
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     6,
+     80,
+     192
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R023",
+   "dies": [
+    "R023.r0",
+    "R023.r1",
+    "R023.r2",
+    "R023.r3"
+   ],
+   "layers": [
+    6
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     6,
+     193,
+     305
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R024",
+   "dies": [
+    "R024.r0",
+    "R024.r1",
+    "R024.r2",
+    "R024.r3"
+   ],
+   "layers": [
+    6,
+    7
+   ],
+   "dense_layer": 7,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     6,
+     306,
+     383
+    ],
+    [
+     7,
+     0,
+     27
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L7_n106"
+  },
+  {
+   "stage": "R025",
+   "dies": [
+    "R025.r0",
+    "R025.r1",
+    "R025.r2",
+    "R025.r3"
+   ],
+   "layers": [
+    7
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     7,
+     28,
+     140
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R026",
+   "dies": [
+    "R026.r0",
+    "R026.r1",
+    "R026.r2",
+    "R026.r3"
+   ],
+   "layers": [
+    7
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     7,
+     141,
+     253
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R027",
+   "dies": [
+    "R027.r0",
+    "R027.r1",
+    "R027.r2",
+    "R027.r3"
+   ],
+   "layers": [
+    7
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     7,
+     254,
+     366
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R028",
+   "dies": [
+    "R028.r0",
+    "R028.r1",
+    "R028.r2",
+    "R028.r3"
+   ],
+   "layers": [
+    7,
+    8
+   ],
+   "dense_layer": 8,
+   "dense": {
+    "q_pairs": [
+     "attn.indexer.wq_b.weight",
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.compressor.wgate.weight",
+     "attn.compressor.wkv.weight",
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.idx.q",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.cmp.wk",
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     7,
+     367,
+     383
+    ],
+    [
+     8,
+     0,
+     87
+    ]
+   ],
+   "n_experts": 105,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 3874,
+   "copy_b": true,
+   "spec": "L8_n105"
+  },
+  {
+   "stage": "R029",
+   "dies": [
+    "R029.r0",
+    "R029.r1",
+    "R029.r2",
+    "R029.r3"
+   ],
+   "layers": [
+    8
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     8,
+     88,
+     200
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R030",
+   "dies": [
+    "R030.r0",
+    "R030.r1",
+    "R030.r2",
+    "R030.r3"
+   ],
+   "layers": [
+    8
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     8,
+     201,
+     313
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R031",
+   "dies": [
+    "R031.r0",
+    "R031.r1",
+    "R031.r2",
+    "R031.r3"
+   ],
+   "layers": [
+    8,
+    9
+   ],
+   "dense_layer": 9,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     8,
+     314,
+     383
+    ],
+    [
+     9,
+     0,
+     35
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3874,
+   "copy_b": false,
+   "spec": "L9_n106"
+  },
+  {
+   "stage": "R032",
+   "dies": [
+    "R032.r0",
+    "R032.r1",
+    "R032.r2",
+    "R032.r3"
+   ],
+   "layers": [
+    9
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     9,
+     36,
+     148
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R033",
+   "dies": [
+    "R033.r0",
+    "R033.r1",
+    "R033.r2",
+    "R033.r3"
+   ],
+   "layers": [
+    9
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     9,
+     149,
+     261
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R034",
+   "dies": [
+    "R034.r0",
+    "R034.r1",
+    "R034.r2",
+    "R034.r3"
+   ],
+   "layers": [
+    9
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     9,
+     262,
+     374
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R035",
+   "dies": [
+    "R035.r0",
+    "R035.r1",
+    "R035.r2",
+    "R035.r3"
+   ],
+   "layers": [
+    9,
+    10
+   ],
+   "dense_layer": 10,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     9,
+     375,
+     383
+    ],
+    [
+     10,
+     0,
+     96
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L10_n106"
+  },
+  {
+   "stage": "R036",
+   "dies": [
+    "R036.r0",
+    "R036.r1",
+    "R036.r2",
+    "R036.r3"
+   ],
+   "layers": [
+    10
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     10,
+     97,
+     209
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R037",
+   "dies": [
+    "R037.r0",
+    "R037.r1",
+    "R037.r2",
+    "R037.r3"
+   ],
+   "layers": [
+    10
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     10,
+     210,
+     322
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R038",
+   "dies": [
+    "R038.r0",
+    "R038.r1",
+    "R038.r2",
+    "R038.r3"
+   ],
+   "layers": [
+    10,
+    11
+   ],
+   "dense_layer": 11,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     10,
+     323,
+     383
+    ],
+    [
+     11,
+     0,
+     44
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L11_n106"
+  },
+  {
+   "stage": "R039",
+   "dies": [
+    "R039.r0",
+    "R039.r1",
+    "R039.r2",
+    "R039.r3"
+   ],
+   "layers": [
+    11
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     11,
+     45,
+     157
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R040",
+   "dies": [
+    "R040.r0",
+    "R040.r1",
+    "R040.r2",
+    "R040.r3"
+   ],
+   "layers": [
+    11
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     11,
+     158,
+     270
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R041",
+   "dies": [
+    "R041.r0",
+    "R041.r1",
+    "R041.r2",
+    "R041.r3"
+   ],
+   "layers": [
+    11
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     11,
+     271,
+     383
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R042",
+   "dies": [
+    "R042.r0",
+    "R042.r1",
+    "R042.r2",
+    "R042.r3"
+   ],
+   "layers": [
+    12
+   ],
+   "dense_layer": 12,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     12,
+     0,
+     105
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "L12_n106"
+  },
+  {
+   "stage": "R043",
+   "dies": [
+    "R043.r0",
+    "R043.r1",
+    "R043.r2",
+    "R043.r3"
+   ],
+   "layers": [
+    12
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     12,
+     106,
+     218
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R044",
+   "dies": [
+    "R044.r0",
+    "R044.r1",
+    "R044.r2",
+    "R044.r3"
+   ],
+   "layers": [
+    12
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     12,
+     219,
+     331
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R045",
+   "dies": [
+    "R045.r0",
+    "R045.r1",
+    "R045.r2",
+    "R045.r3"
+   ],
+   "layers": [
+    12,
+    13
+   ],
+   "dense_layer": 13,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     12,
+     332,
+     383
+    ],
+    [
+     13,
+     0,
+     44
+    ]
+   ],
+   "n_experts": 97,
+   "model_load": 7464.0,
+   "model_fill_pct": 91.11,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L13_n97"
+  },
+  {
+   "stage": "R046",
+   "dies": [
+    "R046.r0",
+    "R046.r1",
+    "R046.r2",
+    "R046.r3"
+   ],
+   "layers": [
+    13
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     13,
+     45,
+     157
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R047",
+   "dies": [
+    "R047.r0",
+    "R047.r1",
+    "R047.r2",
+    "R047.r3"
+   ],
+   "layers": [
+    13
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     13,
+     158,
+     270
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R048",
+   "dies": [
+    "R048.r0",
+    "R048.r1",
+    "R048.r2",
+    "R048.r3"
+   ],
+   "layers": [
+    13
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     13,
+     271,
+     383
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R049",
+   "dies": [
+    "R049.r0",
+    "R049.r1",
+    "R049.r2",
+    "R049.r3"
+   ],
+   "layers": [
+    14
+   ],
+   "dense_layer": 14,
+   "dense": {
+    "q_pairs": [
+     "attn.indexer.wq_b.weight",
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "engram.wkv.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.compressor.wgate.weight",
+     "attn.compressor.wkv.weight",
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "eng.wkv",
+     "attn.wq_b",
+     "attn.idx.q",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.cmp.wk",
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     14,
+     0,
+     96
+    ]
+   ],
+   "n_experts": 97,
+   "model_load": 8104.0,
+   "model_fill_pct": 98.93,
+   "calendar_rows": 2006,
+   "copy_b": true,
+   "spec": "L14_n97"
+  },
+  {
+   "stage": "R050",
+   "dies": [
+    "R050.r0",
+    "R050.r1",
+    "R050.r2",
+    "R050.r3"
+   ],
+   "layers": [
+    14
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     14,
+     97,
+     209
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R051",
+   "dies": [
+    "R051.r0",
+    "R051.r1",
+    "R051.r2",
+    "R051.r3"
+   ],
+   "layers": [
+    14
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     14,
+     210,
+     322
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R052",
+   "dies": [
+    "R052.r0",
+    "R052.r1",
+    "R052.r2",
+    "R052.r3"
+   ],
+   "layers": [
+    14,
+    15
+   ],
+   "dense_layer": 15,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     14,
+     323,
+     383
+    ],
+    [
+     15,
+     0,
+     44
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3874,
+   "copy_b": false,
+   "spec": "L15_n106"
+  },
+  {
+   "stage": "R053",
+   "dies": [
+    "R053.r0",
+    "R053.r1",
+    "R053.r2",
+    "R053.r3"
+   ],
+   "layers": [
+    15
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     15,
+     45,
+     157
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R054",
+   "dies": [
+    "R054.r0",
+    "R054.r1",
+    "R054.r2",
+    "R054.r3"
+   ],
+   "layers": [
+    15
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     15,
+     158,
+     270
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R055",
+   "dies": [
+    "R055.r0",
+    "R055.r1",
+    "R055.r2",
+    "R055.r3"
+   ],
+   "layers": [
+    15
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     15,
+     271,
+     383
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R056",
+   "dies": [
+    "R056.r0",
+    "R056.r1",
+    "R056.r2",
+    "R056.r3"
+   ],
+   "layers": [
+    16
+   ],
+   "dense_layer": 16,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     16,
+     0,
+     105
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "L16_n106"
+  },
+  {
+   "stage": "R057",
+   "dies": [
+    "R057.r0",
+    "R057.r1",
+    "R057.r2",
+    "R057.r3"
+   ],
+   "layers": [
+    16
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     16,
+     106,
+     218
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R058",
+   "dies": [
+    "R058.r0",
+    "R058.r1",
+    "R058.r2",
+    "R058.r3"
+   ],
+   "layers": [
+    16
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     16,
+     219,
+     331
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R059",
+   "dies": [
+    "R059.r0",
+    "R059.r1",
+    "R059.r2",
+    "R059.r3"
+   ],
+   "layers": [
+    16,
+    17
+   ],
+   "dense_layer": 17,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     16,
+     332,
+     383
+    ],
+    [
+     17,
+     0,
+     53
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L17_n106"
+  },
+  {
+   "stage": "R060",
+   "dies": [
+    "R060.r0",
+    "R060.r1",
+    "R060.r2",
+    "R060.r3"
+   ],
+   "layers": [
+    17
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     17,
+     54,
+     166
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R061",
+   "dies": [
+    "R061.r0",
+    "R061.r1",
+    "R061.r2",
+    "R061.r3"
+   ],
+   "layers": [
+    17
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     17,
+     167,
+     279
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R062",
+   "dies": [
+    "R062.r0",
+    "R062.r1",
+    "R062.r2",
+    "R062.r3"
+   ],
+   "layers": [
+    17,
+    18
+   ],
+   "dense_layer": 18,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     17,
+     280,
+     383
+    ],
+    [
+     18,
+     0,
+     1
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L18_n106"
+  },
+  {
+   "stage": "R063",
+   "dies": [
+    "R063.r0",
+    "R063.r1",
+    "R063.r2",
+    "R063.r3"
+   ],
+   "layers": [
+    18
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     18,
+     2,
+     114
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R064",
+   "dies": [
+    "R064.r0",
+    "R064.r1",
+    "R064.r2",
+    "R064.r3"
+   ],
+   "layers": [
+    18
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     18,
+     115,
+     227
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R065",
+   "dies": [
+    "R065.r0",
+    "R065.r1",
+    "R065.r2",
+    "R065.r3"
+   ],
+   "layers": [
+    18
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     18,
+     228,
+     340
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R066",
+   "dies": [
+    "R066.r0",
+    "R066.r1",
+    "R066.r2",
+    "R066.r3"
+   ],
+   "layers": [
+    18,
+    19
+   ],
+   "dense_layer": 19,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     18,
+     341,
+     383
+    ],
+    [
+     19,
+     0,
+     62
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L19_n106"
+  },
+  {
+   "stage": "R067",
+   "dies": [
+    "R067.r0",
+    "R067.r1",
+    "R067.r2",
+    "R067.r3"
+   ],
+   "layers": [
+    19
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     19,
+     63,
+     175
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R068",
+   "dies": [
+    "R068.r0",
+    "R068.r1",
+    "R068.r2",
+    "R068.r3"
+   ],
+   "layers": [
+    19
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     19,
+     176,
+     288
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R069",
+   "dies": [
+    "R069.r0",
+    "R069.r1",
+    "R069.r2",
+    "R069.r3"
+   ],
+   "layers": [
+    19,
+    20
+   ],
+   "dense_layer": 20,
+   "dense": {
+    "q_pairs": [
+     "attn.indexer.wq_b.weight",
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.compressor.wkv.weight",
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.idx.q",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.cmp.wk",
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     19,
+     289,
+     383
+    ],
+    [
+     20,
+     0,
+     1
+    ]
+   ],
+   "n_experts": 97,
+   "model_load": 7560.0,
+   "model_fill_pct": 92.29,
+   "calendar_rows": 3874,
+   "copy_b": true,
+   "spec": "L20_n97"
+  },
+  {
+   "stage": "R070",
+   "dies": [
+    "R070.r0",
+    "R070.r1",
+    "R070.r2",
+    "R070.r3"
+   ],
+   "layers": [
+    20
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     20,
+     2,
+     114
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R071",
+   "dies": [
+    "R071.r0",
+    "R071.r1",
+    "R071.r2",
+    "R071.r3"
+   ],
+   "layers": [
+    20
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     20,
+     115,
+     227
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R072",
+   "dies": [
+    "R072.r0",
+    "R072.r1",
+    "R072.r2",
+    "R072.r3"
+   ],
+   "layers": [
+    20
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     20,
+     228,
+     340
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R073",
+   "dies": [
+    "R073.r0",
+    "R073.r1",
+    "R073.r2",
+    "R073.r3"
+   ],
+   "layers": [
+    20,
+    21
+   ],
+   "dense_layer": 21,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     20,
+     341,
+     383
+    ],
+    [
+     21,
+     0,
+     62
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3874,
+   "copy_b": false,
+   "spec": "L21_n106"
+  },
+  {
+   "stage": "R074",
+   "dies": [
+    "R074.r0",
+    "R074.r1",
+    "R074.r2",
+    "R074.r3"
+   ],
+   "layers": [
+    21
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     21,
+     63,
+     175
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R075",
+   "dies": [
+    "R075.r0",
+    "R075.r1",
+    "R075.r2",
+    "R075.r3"
+   ],
+   "layers": [
+    21
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     21,
+     176,
+     288
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R076",
+   "dies": [
+    "R076.r0",
+    "R076.r1",
+    "R076.r2",
+    "R076.r3"
+   ],
+   "layers": [
+    21,
+    22
+   ],
+   "dense_layer": 22,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     21,
+     289,
+     383
+    ],
+    [
+     22,
+     0,
+     10
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L22_n106"
+  },
+  {
+   "stage": "R077",
+   "dies": [
+    "R077.r0",
+    "R077.r1",
+    "R077.r2",
+    "R077.r3"
+   ],
+   "layers": [
+    22
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     22,
+     11,
+     123
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R078",
+   "dies": [
+    "R078.r0",
+    "R078.r1",
+    "R078.r2",
+    "R078.r3"
+   ],
+   "layers": [
+    22
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     22,
+     124,
+     236
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R079",
+   "dies": [
+    "R079.r0",
+    "R079.r1",
+    "R079.r2",
+    "R079.r3"
+   ],
+   "layers": [
+    22
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     22,
+     237,
+     349
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R080",
+   "dies": [
+    "R080.r0",
+    "R080.r1",
+    "R080.r2",
+    "R080.r3"
+   ],
+   "layers": [
+    22,
+    23
+   ],
+   "dense_layer": 23,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     22,
+     350,
+     383
+    ],
+    [
+     23,
+     0,
+     71
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L23_n106"
+  },
+  {
+   "stage": "R081",
+   "dies": [
+    "R081.r0",
+    "R081.r1",
+    "R081.r2",
+    "R081.r3"
+   ],
+   "layers": [
+    23
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     23,
+     72,
+     184
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R082",
+   "dies": [
+    "R082.r0",
+    "R082.r1",
+    "R082.r2",
+    "R082.r3"
+   ],
+   "layers": [
+    23
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     23,
+     185,
+     297
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R083",
+   "dies": [
+    "R083.r0",
+    "R083.r1",
+    "R083.r2",
+    "R083.r3"
+   ],
+   "layers": [
+    23,
+    24
+   ],
+   "dense_layer": 24,
+   "dense": {
+    "q_pairs": [
+     "attn.indexer.wq_b.weight",
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.idx.q",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     23,
+     298,
+     383
+    ],
+    [
+     24,
+     0,
+     18
+    ]
+   ],
+   "n_experts": 105,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 3874,
+   "copy_b": true,
+   "spec": "L24_n105"
+  },
+  {
+   "stage": "R084",
+   "dies": [
+    "R084.r0",
+    "R084.r1",
+    "R084.r2",
+    "R084.r3"
+   ],
+   "layers": [
+    24
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     24,
+     19,
+     131
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R085",
+   "dies": [
+    "R085.r0",
+    "R085.r1",
+    "R085.r2",
+    "R085.r3"
+   ],
+   "layers": [
+    24
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     24,
+     132,
+     244
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R086",
+   "dies": [
+    "R086.r0",
+    "R086.r1",
+    "R086.r2",
+    "R086.r3"
+   ],
+   "layers": [
+    24
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     24,
+     245,
+     357
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R087",
+   "dies": [
+    "R087.r0",
+    "R087.r1",
+    "R087.r2",
+    "R087.r3"
+   ],
+   "layers": [
+    24,
+    25
+   ],
+   "dense_layer": 25,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     24,
+     358,
+     383
+    ],
+    [
+     25,
+     0,
+     79
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3874,
+   "copy_b": false,
+   "spec": "L25_n106"
+  },
+  {
+   "stage": "R088",
+   "dies": [
+    "R088.r0",
+    "R088.r1",
+    "R088.r2",
+    "R088.r3"
+   ],
+   "layers": [
+    25
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     25,
+     80,
+     192
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R089",
+   "dies": [
+    "R089.r0",
+    "R089.r1",
+    "R089.r2",
+    "R089.r3"
+   ],
+   "layers": [
+    25
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     25,
+     193,
+     305
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R090",
+   "dies": [
+    "R090.r0",
+    "R090.r1",
+    "R090.r2",
+    "R090.r3"
+   ],
+   "layers": [
+    25,
+    26
+   ],
+   "dense_layer": 26,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     25,
+     306,
+     383
+    ],
+    [
+     26,
+     0,
+     27
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L26_n106"
+  },
+  {
+   "stage": "R091",
+   "dies": [
+    "R091.r0",
+    "R091.r1",
+    "R091.r2",
+    "R091.r3"
+   ],
+   "layers": [
+    26
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     26,
+     28,
+     140
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R092",
+   "dies": [
+    "R092.r0",
+    "R092.r1",
+    "R092.r2",
+    "R092.r3"
+   ],
+   "layers": [
+    26
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     26,
+     141,
+     253
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R093",
+   "dies": [
+    "R093.r0",
+    "R093.r1",
+    "R093.r2",
+    "R093.r3"
+   ],
+   "layers": [
+    26
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     26,
+     254,
+     366
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R094",
+   "dies": [
+    "R094.r0",
+    "R094.r1",
+    "R094.r2",
+    "R094.r3"
+   ],
+   "layers": [
+    26,
+    27
+   ],
+   "dense_layer": 27,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     26,
+     367,
+     383
+    ],
+    [
+     27,
+     0,
+     88
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L27_n106"
+  },
+  {
+   "stage": "R095",
+   "dies": [
+    "R095.r0",
+    "R095.r1",
+    "R095.r2",
+    "R095.r3"
+   ],
+   "layers": [
+    27
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     27,
+     89,
+     201
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R096",
+   "dies": [
+    "R096.r0",
+    "R096.r1",
+    "R096.r2",
+    "R096.r3"
+   ],
+   "layers": [
+    27
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     27,
+     202,
+     314
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R097",
+   "dies": [
+    "R097.r0",
+    "R097.r1",
+    "R097.r2",
+    "R097.r3"
+   ],
+   "layers": [
+    27,
+    28
+   ],
+   "dense_layer": 28,
+   "dense": {
+    "q_pairs": [
+     "attn.indexer.wq_b.weight",
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.idx.q",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     27,
+     315,
+     383
+    ],
+    [
+     28,
+     0,
+     35
+    ]
+   ],
+   "n_experts": 105,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 3874,
+   "copy_b": true,
+   "spec": "L28_n105"
+  },
+  {
+   "stage": "R098",
+   "dies": [
+    "R098.r0",
+    "R098.r1",
+    "R098.r2",
+    "R098.r3"
+   ],
+   "layers": [
+    28
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     28,
+     36,
+     148
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R099",
+   "dies": [
+    "R099.r0",
+    "R099.r1",
+    "R099.r2",
+    "R099.r3"
+   ],
+   "layers": [
+    28
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     28,
+     149,
+     261
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R100",
+   "dies": [
+    "R100.r0",
+    "R100.r1",
+    "R100.r2",
+    "R100.r3"
+   ],
+   "layers": [
+    28
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     28,
+     262,
+     374
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R101",
+   "dies": [
+    "R101.r0",
+    "R101.r1",
+    "R101.r2",
+    "R101.r3"
+   ],
+   "layers": [
+    28,
+    29
+   ],
+   "dense_layer": 29,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     28,
+     375,
+     383
+    ],
+    [
+     29,
+     0,
+     96
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3874,
+   "copy_b": false,
+   "spec": "L29_n106"
+  },
+  {
+   "stage": "R102",
+   "dies": [
+    "R102.r0",
+    "R102.r1",
+    "R102.r2",
+    "R102.r3"
+   ],
+   "layers": [
+    29
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     29,
+     97,
+     209
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R103",
+   "dies": [
+    "R103.r0",
+    "R103.r1",
+    "R103.r2",
+    "R103.r3"
+   ],
+   "layers": [
+    29
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     29,
+     210,
+     322
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R104",
+   "dies": [
+    "R104.r0",
+    "R104.r1",
+    "R104.r2",
+    "R104.r3"
+   ],
+   "layers": [
+    29,
+    30
+   ],
+   "dense_layer": 30,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     29,
+     323,
+     383
+    ],
+    [
+     30,
+     0,
+     44
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L30_n106"
+  },
+  {
+   "stage": "R105",
+   "dies": [
+    "R105.r0",
+    "R105.r1",
+    "R105.r2",
+    "R105.r3"
+   ],
+   "layers": [
+    30
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     30,
+     45,
+     157
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R106",
+   "dies": [
+    "R106.r0",
+    "R106.r1",
+    "R106.r2",
+    "R106.r3"
+   ],
+   "layers": [
+    30
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     30,
+     158,
+     270
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R107",
+   "dies": [
+    "R107.r0",
+    "R107.r1",
+    "R107.r2",
+    "R107.r3"
+   ],
+   "layers": [
+    30
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     30,
+     271,
+     383
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R108",
+   "dies": [
+    "R108.r0",
+    "R108.r1",
+    "R108.r2",
+    "R108.r3"
+   ],
+   "layers": [
+    31
+   ],
+   "dense_layer": 31,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     31,
+     0,
+     105
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "L31_n106"
+  },
+  {
+   "stage": "R109",
+   "dies": [
+    "R109.r0",
+    "R109.r1",
+    "R109.r2",
+    "R109.r3"
+   ],
+   "layers": [
+    31
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     31,
+     106,
+     218
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R110",
+   "dies": [
+    "R110.r0",
+    "R110.r1",
+    "R110.r2",
+    "R110.r3"
+   ],
+   "layers": [
+    31
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     31,
+     219,
+     331
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R111",
+   "dies": [
+    "R111.r0",
+    "R111.r1",
+    "R111.r2",
+    "R111.r3"
+   ],
+   "layers": [
+    31,
+    32
+   ],
+   "dense_layer": 32,
+   "dense": {
+    "q_pairs": [
+     "attn.indexer.wq_b.weight",
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.idx.q",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     31,
+     332,
+     383
+    ],
+    [
+     32,
+     0,
+     52
+    ]
+   ],
+   "n_experts": 105,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 3874,
+   "copy_b": true,
+   "spec": "L32_n105"
+  },
+  {
+   "stage": "R112",
+   "dies": [
+    "R112.r0",
+    "R112.r1",
+    "R112.r2",
+    "R112.r3"
+   ],
+   "layers": [
+    32
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     32,
+     53,
+     165
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R113",
+   "dies": [
+    "R113.r0",
+    "R113.r1",
+    "R113.r2",
+    "R113.r3"
+   ],
+   "layers": [
+    32
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     32,
+     166,
+     278
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R114",
+   "dies": [
+    "R114.r0",
+    "R114.r1",
+    "R114.r2",
+    "R114.r3"
+   ],
+   "layers": [
+    32,
+    33
+   ],
+   "dense_layer": 33,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     32,
+     279,
+     383
+    ],
+    [
+     33,
+     0,
+     0
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3874,
+   "copy_b": false,
+   "spec": "L33_n106"
+  },
+  {
+   "stage": "R115",
+   "dies": [
+    "R115.r0",
+    "R115.r1",
+    "R115.r2",
+    "R115.r3"
+   ],
+   "layers": [
+    33
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     33,
+     1,
+     113
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R116",
+   "dies": [
+    "R116.r0",
+    "R116.r1",
+    "R116.r2",
+    "R116.r3"
+   ],
+   "layers": [
+    33
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     33,
+     114,
+     226
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R117",
+   "dies": [
+    "R117.r0",
+    "R117.r1",
+    "R117.r2",
+    "R117.r3"
+   ],
+   "layers": [
+    33
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     33,
+     227,
+     339
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R118",
+   "dies": [
+    "R118.r0",
+    "R118.r1",
+    "R118.r2",
+    "R118.r3"
+   ],
+   "layers": [
+    33,
+    34
+   ],
+   "dense_layer": 34,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     33,
+     340,
+     383
+    ],
+    [
+     34,
+     0,
+     61
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L34_n106"
+  },
+  {
+   "stage": "R119",
+   "dies": [
+    "R119.r0",
+    "R119.r1",
+    "R119.r2",
+    "R119.r3"
+   ],
+   "layers": [
+    34
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     34,
+     62,
+     174
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R120",
+   "dies": [
+    "R120.r0",
+    "R120.r1",
+    "R120.r2",
+    "R120.r3"
+   ],
+   "layers": [
+    34
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     34,
+     175,
+     287
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R121",
+   "dies": [
+    "R121.r0",
+    "R121.r1",
+    "R121.r2",
+    "R121.r3"
+   ],
+   "layers": [
+    34,
+    35
+   ],
+   "dense_layer": 35,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     34,
+     288,
+     383
+    ],
+    [
+     35,
+     0,
+     9
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L35_n106"
+  },
+  {
+   "stage": "R122",
+   "dies": [
+    "R122.r0",
+    "R122.r1",
+    "R122.r2",
+    "R122.r3"
+   ],
+   "layers": [
+    35
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     35,
+     10,
+     122
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R123",
+   "dies": [
+    "R123.r0",
+    "R123.r1",
+    "R123.r2",
+    "R123.r3"
+   ],
+   "layers": [
+    35
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     35,
+     123,
+     235
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R124",
+   "dies": [
+    "R124.r0",
+    "R124.r1",
+    "R124.r2",
+    "R124.r3"
+   ],
+   "layers": [
+    35
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     35,
+     236,
+     348
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R125",
+   "dies": [
+    "R125.r0",
+    "R125.r1",
+    "R125.r2",
+    "R125.r3"
+   ],
+   "layers": [
+    35,
+    36
+   ],
+   "dense_layer": 36,
+   "dense": {
+    "q_pairs": [
+     "attn.indexer.wq_b.weight",
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.idx.q",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     35,
+     349,
+     383
+    ],
+    [
+     36,
+     0,
+     69
+    ]
+   ],
+   "n_experts": 105,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 3874,
+   "copy_b": true,
+   "spec": "L36_n105"
+  },
+  {
+   "stage": "R126",
+   "dies": [
+    "R126.r0",
+    "R126.r1",
+    "R126.r2",
+    "R126.r3"
+   ],
+   "layers": [
+    36
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     36,
+     70,
+     182
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R127",
+   "dies": [
+    "R127.r0",
+    "R127.r1",
+    "R127.r2",
+    "R127.r3"
+   ],
+   "layers": [
+    36
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     36,
+     183,
+     295
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 2006,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R128",
+   "dies": [
+    "R128.r0",
+    "R128.r1",
+    "R128.r2",
+    "R128.r3"
+   ],
+   "layers": [
+    36,
+    37
+   ],
+   "dense_layer": 37,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     36,
+     296,
+     383
+    ],
+    [
+     37,
+     0,
+     17
+    ]
+   ],
+   "n_experts": 106,
+   "model_load": 8112.0,
+   "model_fill_pct": 99.02,
+   "calendar_rows": 3874,
+   "copy_b": false,
+   "spec": "L37_n106"
+  },
+  {
+   "stage": "R129",
+   "dies": [
+    "R129.r0",
+    "R129.r1",
+    "R129.r2",
+    "R129.r3"
+   ],
+   "layers": [
+    37
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     37,
+     18,
+     130
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R130",
+   "dies": [
+    "R130.r0",
+    "R130.r1",
+    "R130.r2",
+    "R130.r3"
+   ],
+   "layers": [
+    37
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     37,
+     131,
+     243
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R131",
+   "dies": [
+    "R131.r0",
+    "R131.r1",
+    "R131.r2",
+    "R131.r3"
+   ],
+   "layers": [
+    37
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     37,
+     244,
+     356
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R132",
+   "dies": [
+    "R132.r0",
+    "R132.r1",
+    "R132.r2",
+    "R132.r3"
+   ],
+   "layers": [
+    37,
+    38
+   ],
+   "dense_layer": 38,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     37,
+     357,
+     383
+    ],
+    [
+     38,
+     0,
+     44
+    ]
+   ],
+   "n_experts": 72,
+   "model_load": 5664.0,
+   "model_fill_pct": 69.14,
+   "calendar_rows": 3736,
+   "copy_b": false,
+   "spec": "L38_n72"
+  },
+  {
+   "stage": "R133",
+   "dies": [
+    "R133.r0",
+    "R133.r1",
+    "R133.r2",
+    "R133.r3"
+   ],
+   "layers": [
+    38
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     38,
+     45,
+     157
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R134",
+   "dies": [
+    "R134.r0",
+    "R134.r1",
+    "R134.r2",
+    "R134.r3"
+   ],
+   "layers": [
+    38
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     38,
+     158,
+     270
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R135",
+   "dies": [
+    "R135.r0",
+    "R135.r1",
+    "R135.r2",
+    "R135.r3"
+   ],
+   "layers": [
+    38
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     38,
+     271,
+     383
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R136",
+   "dies": [
+    "R136.r0",
+    "R136.r1",
+    "R136.r2",
+    "R136.r3"
+   ],
+   "layers": [
+    39
+   ],
+   "dense_layer": 39,
+   "dense": {
+    "q_pairs": [
+     "attn.wkv.weight",
+     "attn.wo_b.weight",
+     "attn.wq_a.weight",
+     "attn.wq_b.weight",
+     "ffn.shared_experts.w1.weight",
+     "ffn.shared_experts.w2.weight",
+     "ffn.shared_experts.w3.weight"
+    ],
+    "bf_pairs": [
+     "attn.wo_a.weight",
+     "ffn.gate.weight"
+    ],
+    "xs_ops": [
+     "attn.wq_b",
+     "attn.wo_b",
+     "ffn.shared_gu",
+     "ffn.experts_gu",
+     "ffn.down"
+    ],
+    "bf_ops": [
+     "attn.wo_a",
+     "ffn.router"
+    ]
+   },
+   "experts": [
+    [
+     39,
+     0,
+     44
+    ]
+   ],
+   "n_experts": 45,
+   "model_load": 3720.0,
+   "model_fill_pct": 45.41,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "L39_n45"
+  },
+  {
+   "stage": "R137",
+   "dies": [
+    "R137.r0",
+    "R137.r1",
+    "R137.r2",
+    "R137.r3"
+   ],
+   "layers": [
+    39
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     39,
+     45,
+     157
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R138",
+   "dies": [
+    "R138.r0",
+    "R138.r1",
+    "R138.r2",
+    "R138.r3"
+   ],
+   "layers": [
+    39
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     39,
+     158,
+     270
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  },
+  {
+   "stage": "R139",
+   "dies": [
+    "R139.r0",
+    "R139.r1",
+    "R139.r2",
+    "R139.r3"
+   ],
+   "layers": [
+    39
+   ],
+   "dense_layer": null,
+   "dense": null,
+   "experts": [
+    [
+     39,
+     271,
+     383
+    ]
+   ],
+   "n_experts": 113,
+   "model_load": 8136.0,
+   "model_fill_pct": 99.32,
+   "calendar_rows": 1868,
+   "copy_b": false,
+   "spec": "exp_n113"
+  }
+ ]
+}

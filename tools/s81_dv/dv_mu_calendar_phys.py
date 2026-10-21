@@ -85,19 +85,48 @@ def load(path, name):
 
 
 # ------------------------------------------------------------------------------------------------ composed node cycles
-def composed():
-    """run the composer of record, capture its per-node cycles (the dict it passes to solve) for both workloads"""
+ROMOPT = ROOT / 'results/rtl/s81_romopt_1020/c/compose/o3mix_prop_compiled.json.gz'
+# S81-ROMOPT-C compose_c.py: the six field ops are substituted where the CALPIPE scenario still carries these values
+ROMOPT_OLD = {'attn.wo_b': 901, 'attn.wo_a': 3531, 'ffn.router': 1419, 'ffn.experts_gu': 3680, 'ffn.down': 3084,
+              'attn.wq_b': 1987}
+
+
+def composed(mode='record'):
+    """run the composer, capture its per-node cycles (the dict it passes to solve) for both workloads.
+    record: release-partial composition of record (cycles.json, 834.0 / 2,649.1)
+    romopt: CALPIPE scenario + S81-ROMOPT O1+O2+O3 (gu k2 + down k3 stretch 2) compiled op spans, exactly as
+            results/rtl/s81_romopt_1020/c/compose_c.py case o3mix_prop_compiled (1,040.4 / 3,193.4); asserted equal"""
+    import gzip
     C = load(ROOT / 'tools/toksim_s81_compose.py', 'toksim_s81_compose')
     cap = {}
-    orig = C.solve
+    orig, orig_nc = C.solve, C.node_cycles
 
     def spy(dag, cyc):
         cap[dag['nodes'][0]['id'] + str(len(dag['nodes']))] = (dag, dict(cyc))
         return orig(dag, cyc)
     C.solve = spy
-    r = C.build(C.OUT / 'elements')
-    C.solve = orig
-    committed = json.loads((C.OUT / 'cycles.json').read_text())
+    hits = collections.Counter()
+    if mode == 'romopt':
+        ref = json.loads(gzip.decompress(ROMOPT.read_bytes()))
+        v = ref['rate3']['op_values']
+
+        def nc(n, ov):
+            cyc, how = orig_nc(n, ov)
+            op = n.get('op')
+            if cyc is not None and op in v and abs(cyc - ROMOPT_OLD[op]) < 0.01:
+                hits[op] += 1
+                return float(v[op]), how
+            return cyc, how
+        C.node_cycles = nc
+    try:
+        r = C.build(C.OUT / 'elements', 'calpipe' if mode == 'romopt' else None)
+    finally:
+        C.solve, C.node_cycles = orig, orig_nc
+    if mode == 'romopt':
+        assert dict(hits) == ref['rate3']['substitutions'], (dict(hits), ref['rate3']['substitutions'])
+        committed = ref
+    else:
+        committed = json.loads((C.OUT / 'cycles.json').read_text())
     for wl in ('ar', 'mtp'):
         assert r['workloads'][wl]['T_cycles'] == committed['workloads'][wl]['T_cycles'], wl
     dags = {}
@@ -131,8 +160,12 @@ def seg_of(n):
     return None
 
 
+IVS = {}                     # (layer, segment) -> [(start offset, end offset, engine class)] of the segment's nodes
+
+
 def layer_segments(dag, cyc, F2, extra):
     """per layer: A / D / E / C spans (longest path of each segment's sub-DAG) + the idx.score scan cycles"""
+    IVS.clear()
     nodes = {n['id']: n for n in dag['nodes']}
     c = {i: cyc[i] + cal2_delta(nodes[i], F2) for i in nodes}
     seg = collections.defaultdict(list)
@@ -157,6 +190,7 @@ def layer_segments(dag, cyc, F2, extra):
             return end[i]
         span = max(fin(i) for i in ids)
         out.setdefault(L, {})[s] = span
+        IVS[(L, s)] = sorted((end[i] - c[i], end[i], nodes[i].get('cls') or 'su') for i in ids if c[i] > 0)
     scan = collections.Counter()
     for n in dag['nodes']:
         if isinstance(n.get('layer'), int) and n['id'].endswith('attn.idx.score') and not n['id'].startswith('V.'):
@@ -165,7 +199,10 @@ def layer_segments(dag, cyc, F2, extra):
         if t['kind'] == 'layer' and t['slot'].startswith('L'):
             L = int(t['slot'][1:].split('.')[0])
             if L in out:
+                a0 = out[L]['A']
                 out[L]['A'] += t['cycles']
+                if t['cycles'] > 0:                   # unknown engine: blocks every engine class (conservative)
+                    IVS[(L, 'A')].append((a0, out[L]['A'], 'ALL'))
     head = sum(c[i] for i, n in nodes.items() if (n.get('op') or '').startswith('head.') and n.get('critical'))
     return out, dict(scan), head, c
 
@@ -178,7 +215,7 @@ def stage_items(st):
     return tail + ([('D', d, None)] if d is not None else []) + head
 
 
-def timeline(stages, seg, add, embed_end=0.0):
+def timeline(stages, seg, add, embed_end=0.0, alap=False):
     """forward-x single-user schedule: per stage [start, end] hold window, item log, chain end; + legacy-equivalent"""
     last_stage = {}
     for i, st in enumerate(stages):
@@ -198,19 +235,28 @@ def timeline(stages, seg, add, embed_end=0.0):
                 xl = s0 + seg[l]['A'] + seg[l]['D']
                 x_arr[l] = xl                               # x leaves now (forwarded to the next stage below)
                 e0 = xl
-                log.append(dict(stage=st['stage'], item=f'dense L{l}', start=s0, end=e0))
+                busy = [(s0 + a, s0 + b, k) for a, b, k in IVS.get((l, 'A'), [])] + \
+                       [(s0 + seg[l]['A'] + a, s0 + seg[l]['A'] + b, k) for a, b, k in IVS.get((l, 'D'), [])]
+                log.append(dict(stage=st['stage'], item=f'dense L{l}', start=s0, end=e0, busy=busy))
             else:
                 R = seg[l]['E'] * min(6, N) / 6.0
-                s0 = max(cur or 0.0, x_arr[l])
-                e = s0 + R
                 pin = p_arr.get(l)
+                s0 = max(cur or 0.0, x_arr[l])
+                if alap and pin is not None:          # just-in-time slots: end as the upstream partial lands (same out)
+                    s0 = max(s0, pin - R)
+                e = s0 + R
                 po = (max(e, pin) + add) if pin is not None else e
                 part_out[l] = po
                 e0 = po
+                # engine classes: the expert slots hold field + su for the whole reservation; the add is an SU op;
+                # the combine holds coll + su (conservative unions)
+                busy = [(s0, e, 'field'), (s0, e, 'su')] + ([(po - add, po, 'su')] if pin is not None else [])
                 if last_stage.get(l) == i:
                     comb[l] = po + seg[l]['C']
+                    busy += [(po, comb[l], 'coll'), (po, comb[l], 'su')]
                     e0 = comb[l]
-                log.append(dict(stage=st['stage'], item=f'experts L{l} x{N} (slots {min(6, N)})', start=s0, end=e0))
+                log.append(dict(stage=st['stage'], item=f'experts L{l} x{N} (slots {min(6, N)})', start=s0, end=e0,
+                                busy=busy))
             first = s0 if first is None else first
             cur = e0
         win.append((first, cur))
@@ -313,14 +359,230 @@ def calendar(model, mode, N=None):
     return dict(P=P, users=[], col={}, tried=tried, bad=[], nres={}, nonrep=nonrep)
 
 
+# ------------------------------------------------------------------------------------------------ two job contexts
+# ot_dsdv_fixed_issue (rtl/dsrom_sys/s81_dv/unit) already holds TWO job contexts (active[1:0], next_slot) that execute
+# the same immutable calendar; a command on an engine the other context holds is a run fault (code 9: duplicate issue /
+# engine_available low).  So two users may overlap on one stage copy iff (a) at most 2 users hold the stage copy at any
+# edge and (b) their engine busy intervals never overlap.  Engine classes = the DAG node classes (field, su, coll, hbm,
+# select, embed), each treated as ONE engine (the issuer has 13; a class may hold several: conservative); priced per-layer
+# terms with no engine (dv_p4l / scan legs) block every class; expert slots hold field + su for the whole reservation;
+# the combine holds coll + su.  MTP: the stage pattern repeated 6 times back to back (window 6 W >= 6 W - 5 scan).
+CLASSES = ('field', 'su', 'coll', 'hbm', 'select', 'embed')
+
+
+def merge_iv(iv):
+    out = []
+    for a, b in sorted(iv):
+        if out and a <= out[-1][1]:
+            out[-1][1] = max(out[-1][1], b)
+        else:
+            out.append([a, b])
+    return out
+
+
+def stage_busy(log, st_rec):
+    by = collections.defaultdict(list)
+    for x in log:
+        by[x['stage']].extend(x.get('busy', []))
+    for st in st_rec:
+        t = st['t']
+        cls = collections.defaultdict(list)
+        for a, b, k in by[st['stage']]:
+            for kk in (CLASSES if k == 'ALL' else (k,)):
+                cls[kk].append((a - t, b - t))
+        st['busy'] = {k: merge_iv(v) for k, v in cls.items()}
+        st['busy_total'] = {k: round(sum(b - a for a, b in v)) for k, v in st['busy'].items()}
+
+
+def windows2(model, user, shift, mode, col):
+    mt = mode == 'mtp'
+    ex, ctx = [], []
+    for st in model['stages']:
+        cp = col.get(st['stage'], {}).get(user, 'A') if st['copies'] > 1 else 'A'
+        r = f"{st['stage']}.{cp}"
+        W = st['occ']
+        reps = 6 if mt else 1
+        ctx.append((r, shift + st['t'], shift + st['t'] + W * reps))
+        for k in range(reps):
+            o = shift + st['t'] + k * W
+            for c, iv in st['busy'].items():
+                ex.extend((f'{r}.{c}', o + a, o + b) for a, b in iv)
+    for r, a, b in windows(model, user, shift, mode, col):
+        if r.startswith(('link.', 'head', 'host')):
+            ex.append((r, a, b))
+    return ex, ctx
+
+
+def check2(model, users, P, col, mode, cap=2):
+    by = collections.defaultdict(list)
+    cx = collections.defaultdict(list)
+    for u in users:
+        ex, ctx = windows2(model, u['user'], u['shift'], mode, col)
+        for r, s, e in ex:
+            by[r].append((s % P, e - s, u['user']))
+        for r, s, e in ctx:
+            cx[r].append((s % P, e - s, u['user']))
+    bad = []
+    for r, lst in by.items():
+        lst.sort()
+        n = len(lst)
+        for i in range(n):
+            s, L, u = lst[i]
+            if L > P:
+                bad.append(dict(resource=r, users=[u, u], overlap=L - P))
+            for j in range(1, n):
+                s2, L2, u2 = lst[(i + j) % n]
+                gap = (s2 - s) % P
+                if gap >= L:
+                    break
+                if u2 != u:
+                    bad.append(dict(resource=r, users=[u, u2], overlap=round(L - gap, 1)))
+    for r, lst in cx.items():                       # at most two users hold a stage copy at any edge
+        ev = []
+        for s, L, u in lst:
+            if L > P:
+                bad.append(dict(resource=r + '.ctx', users=[u], overlap=L - P))
+                continue
+            e = s + L
+            ev += [(s, 1), (e, -1)] if e <= P else [(s, 1), (P, -1), (0, 1), (e - P, -1)]
+        ev.sort(key=lambda x: (x[0], x[1]))
+        k = 0
+        for t, d in ev:
+            k += d
+            if k > cap:
+                bad.append(dict(resource=r + '.ctx', time=t, holders=k))
+                break
+    return bad, {r: len(v) for r, v in by.items()}
+
+
+def calendar2(model, mode, N=None):
+    P = qup(model['T_ar'] if mode == 'ar' else model['T_mtp_step'])
+    reps = 6 if mode == 'mtp' else 1
+    lb = 1
+    for st in model['stages']:
+        need = max([v for v in st['busy_total'].values()] + [st['occ'] / 2.0]) * reps / st['copies']
+        lb = max(lb, need)
+    lb = max(lb, model['head_mtp'] if mode == 'mtp' else model['head_ar'])
+    tried = []
+    for n in ([N] if N else range(int(P // lb), 0, -1)):
+        shifts = [(k * (P // PHASE_Q)) // n * PHASE_Q for k in range(n)]
+        col = {st['stage']: {k: 'AB'[k % 2] for k in range(n)} for st in model['stages'] if st['copies'] > 1}
+        users = [dict(user=k, shift=shifts[k], kind='latency' if k == 0 else mode) for k in range(n)]
+        bad, nres = check2(model, users, P, col, mode)
+        tried.append(dict(users=n, result='PASS' if not bad else 'FAULT', collisions=len(bad),
+                          first=bad[0] if bad else None))
+        if not bad or N:
+            return dict(P=P, users=users, col=col, tried=tried, bad=bad, nres=nres, nonrep=lb)
+    return dict(P=P, users=[], col={}, tried=tried, bad=[], nres={}, nonrep=lb)
+
+
+def _forbid(G, lo, hi, P):
+    """mark grid cells (PHASE_Q cycles) whose offset lies in any open range (lo, hi) mod P (conservative rounding)"""
+    import numpy as np
+    n = len(G)
+    a = np.floor(np.asarray(lo, dtype=float) / PHASE_Q).astype(np.int64)
+    b = np.ceil(np.asarray(hi, dtype=float) / PHASE_Q).astype(np.int64)
+    keep = b - a > 1
+    a, b = a[keep] + 1, b[keep]              # cells strictly inside: offset k*Q with lo < kQ < hi
+    full = (b - a) >= n
+    if full.any():
+        G[:] = True
+        return
+    d = np.zeros(2 * n + 2, dtype=np.int64)
+    a0 = np.mod(a, n)
+    b0 = a0 + (b - a)
+    np.add.at(d, a0, 1)
+    np.add.at(d, b0, -1)
+    c = np.cumsum(d)[:2 * n]
+    G |= (c[:n] + c[n:2 * n]) > 0
+
+
+def shift_search(model, mode, P, cap=2):
+    """greedy first-fit user shifts on the PHASE_Q grid: pairwise engine / link / head / host exclusivity through two
+    forbidden-difference sets (same copy colour, other colour), the <= 2 holders a stage copy through a coverage map"""
+    import numpy as np
+    n = P // PHASE_Q
+    reps = 6 if mode == 'mtp' else 1
+    FD_same = np.zeros(n, dtype=bool)
+    FD_diff = np.zeros(n, dtype=bool)
+    # per resource interval lists of ONE user at shift 0 (copy A everywhere for the same-colour set, copy-B stages are
+    # dropped from the other-colour set); links / head / host: one resource each (conservative across colours)
+    ex, ctx = windows2(model, 0, 0, mode, {})
+    byr = collections.defaultdict(list)
+    for r, a, b in ex + (ctx if cap == 1 else []):     # one context: the hold window itself is exclusive
+        byr[r].append((a, b))
+    copyb = {st['stage'] for st in model['stages'] if st['copies'] > 1}
+    for r, iv in byr.items():
+        A = np.array([x[0] for x in iv]); B = np.array([x[1] for x in iv])
+        lo = np.subtract.outer(A, B).ravel()          # other - mine: overlap iff a2 - b1 < D < b2 - a1
+        hi = np.subtract.outer(B, A).ravel()
+        _forbid(FD_same, lo, hi, P)
+        stg = r.split('.')[0]
+        if not (stg in copyb and not r.startswith(('link', 'head', 'host'))):
+            _forbid(FD_diff, lo, hi, P)
+    FD_same[0] = FD_diff[0] = True
+    sts = [(st['stage'], st['copies'] > 1, st['t'], st['occ'] * reps) for st in model['stages']]
+    cov = {}
+    users, F = [], {0: np.zeros(n, dtype=bool), 1: np.zeros(n, dtype=bool)}
+    k = 0
+    while True:
+        col = k % 2
+        free = ~F[col]
+        # context: x is invalid where a stage copy already has 2 holders during x's window
+        bad = np.zeros(n, dtype=bool)
+        for (name, cb, t, W) in (sts if cap == 2 else []):
+            key = (name, col if cb else 0)
+            if key in cov:
+                full = cov[key] >= 2
+                if full.any():
+                    idx = np.nonzero(full)[0]
+                    # x window [x + t, x + t + W] hits cell j  ->  x in (j*Q - t - W, j*Q + Q - t)
+                    _forbid(bad, idx * PHASE_Q - t - W - PHASE_Q, idx * PHASE_Q + PHASE_Q - t + PHASE_Q, P)
+        cand = np.nonzero(free & ~bad)[0]
+        if not len(cand):
+            break
+        x = int(cand[0]) * PHASE_Q
+        users.append(dict(user=k, shift=x, kind='latency' if k == 0 else mode, colour='AB'[col]))
+        for c2 in (0, 1):
+            F[c2] |= np.roll(FD_same if c2 == col else FD_diff, x // PHASE_Q)
+        for (name, cb, t, W) in sts:
+            key = (name, col if cb else 0)
+            cv = cov.setdefault(key, np.zeros(n, dtype=np.int8))
+            a = (x + t) // PHASE_Q
+            b = -(-(x + t + W) // PHASE_Q)
+            idx = np.arange(a, b + 1) % n
+            cv[idx] += 1
+        k += 1
+        if k > 400:
+            break
+    return users
+
+
+def calendar3(model, mode, N=None, users=None, cap=2):
+    """two job contexts with searched shifts; N + 1 control = every grid shift for one more user FAULTS (greedy-maximal)"""
+    P = qup(model['T_ar'] if mode == 'ar' else model['T_mtp_step'])
+    if users is None:
+        users = shift_search(model, mode, P, cap)
+    if N is not None:
+        users = users[:N]
+    col = {st['stage']: {u['user']: u.get('colour', 'AB'[u['user'] % 2]) for u in users}
+           for st in model['stages'] if st['copies'] > 1}
+    bad, nres = check2(model, users, P, col, mode, cap)
+    return dict(P=P, users=users, col=col, tried=[dict(users=len(users), result='PASS' if not bad else 'FAULT',
+                                                      collisions=len(bad), first=bad[0] if bad else None,
+                                                      search='greedy first-fit shifts')],
+                bad=bad, nres=nres, nonrep=0)
+
+
 # ------------------------------------------------------------------------------------------------ build
-def build():
-    mp = json.loads(MAP.read_text())
-    sha = hashlib.sha256(MAP.read_bytes()).hexdigest()
+def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1):
+    mp = json.loads(Path(mapp).read_text())
+    sha = hashlib.sha256(Path(mapp).read_bytes()).hexdigest()
     stages = mp['stages']
-    assert mp['verdict']['all_pass'] and len(stages) == mp['stages_count']
+    qualified = bool(mp.get('verdict', {}).get('all_pass'))
+    assert (qualified or unqualified) and len(stages) == mp['stages_count'], 'map has no exact capacity PASS verdict'
     F2 = load(ROOT / 'results/token_pass/cal2_s81_1020/fold_cal2.py', 'fold_cal2')
-    r, dags = composed()
+    r, dags = composed(cmode)
     wa = r['workloads']['ar']
     wm = r['workloads']['mtp']
     dag, cyc = dags['ar']
@@ -329,7 +591,7 @@ def build():
     eadd = [cnode[n['id']] for n in dag['nodes'] if n.get('op') == 'eng.add']
     add = max(eadd) if eadd else 120.0
     embed = sum(cnode[n['id']] for n in dag['nodes'] if n.get('op') == 'embed')
-    win, log, links, chain, legacy = timeline(stages, seg, add, embed)
+    win, log, links, chain, legacy = timeline(stages, seg, add, embed, alap)
     # token: composer T + cal2 structural + 20 added hops + the forward-x / reservation change of the chain
     s_ar = sum(cal2_delta(n, F2) for n in dag['nodes'] if n.get('critical'))
     dagm, cycm = dags['mtp']
@@ -352,7 +614,9 @@ def build():
     T_mtp = wm['T_cycles'] + s_mtp + dh + dchain + (wave_new - wave_old)
     model = dict(stages=st_rec, links=links, head_t=math.ceil(chain + embed + HOP), head_ar=math.ceil(head_ar),
                  head_mtp=math.ceil(head_mtp), T_ar=T_ar, T_mtp_step=T_mtp)
-    comp = dict(composer='tools/toksim_s81_compose.py release-partial (results/token_pass/measured_s81_1019/cycles.json)',
+    comp = dict(composer=('tools/toksim_s81_compose.py release-partial (results/token_pass/measured_s81_1019/cycles.json)'
+                          if cmode == 'record' else 'tools/toksim_s81_compose.py --scenario calpipe + S81-ROMOPT o3mix '
+                          'compiled spans (' + str(ROMOPT.relative_to(ROOT)) + ')'),
                 ar=dict(T_composer=wa['T_cycles'], tok_s_composer=wa['tok_s'], pct_measured=wa['pct_measured'],
                         cal2_structural=s_ar, added_hops=dh, forward_x_chain_delta=round(dchain, 1),
                         T=round(T_ar, 1), tok_s=round(F / T_ar, 1)),
@@ -361,20 +625,44 @@ def build():
                          wave_composer=round(wave_old, 1), wave_physical=round(wave_new, 1),
                          T=round(T_mtp, 1), tok_s=round(TAU * F / T_mtp, 1)),
                 partial_add_cycles=round(add, 1), partial_add_grade='priced (= measured eng.add SU add instance)')
+    if contexts != 1:
+        stage_busy(log, st_rec)
     recs = {}
     for mode in ('ar', 'mtp'):
-        cal = calendar(model, mode)
-        n = len(cal['users'])
-        neg = calendar(model, mode, n + 1) if n else None
+        cap = 1 if contexts in (1, -1) else 2
+        if contexts == 1:
+            cal = calendar(model, mode)
+            n = len(cal['users'])
+            neg = calendar(model, mode, n + 1) if n else None
+        else:
+            cal = calendar3(model, mode, cap=cap)
+            n = len(cal['users'])
+            # N + 1: one more user at EVERY grid shift (both colours) must collide -> the exhaustive control
+            neg = dict(bad=[], tried=0)
+            P = cal['P']
+            fails = 0
+            last = dict(user=n, kind=mode)
+            step = max(PHASE_Q, (P // 64) // PHASE_Q * PHASE_Q)   # 64 sampled shifts x 2 colours, exact check2
+            for xs in range(0, P, step):
+                for colour in 'AB':
+                    uu = cal['users'] + [dict(last, shift=xs, colour=colour)]
+                    cc = {g: {**c, n: colour} for g, c in cal["col"].items()}
+                    b2, _ = check2(model, uu, P, cc, mode, cap)
+                    neg['tried'] += 1
+                    fails += 1 if b2 else 0
+            neg['bad'] = [1] if fails == neg['tried'] else []
+            neg['sampled_shifts'] = neg['tried']
+            neg['sampled_fault'] = fails
         inj = None
         if n >= 2:
             u = [dict(x) for x in cal['users']]
             u[1]['shift'] = u[0]['shift'] + PHASE_Q          # injected collision: user 1 on top of user 0
-            inj = len(check(model, u, cal['P'], cal['col'])[0])
+            inj = len((check(model, u, cal['P'], cal['col']) if contexts == 1 else
+                       check2(model, u, cal['P'], cal['col'], mode, cap))[0])
         T = model['T_ar'] if mode == 'ar' else model['T_mtp_step']
         per = (F / max(T, cal['P'])) * (TAU if mode == 'mtp' else 1.0)
         recs[mode] = dict(
-            schema=SCHEMA, lane='S81-MUCAL140', mode=mode, map=str(MAP.relative_to(ROOT)), map_sha256=sha,
+            schema=SCHEMA, lane='S81-MUCAL140', mode=mode, map=str(Path(mapp).resolve().relative_to(ROOT)), compose=cmode, map_sha256=sha, alap=alap, job_contexts=contexts, map_capacity_verdict='PASS' if qualified else 'UNQUALIFIED (model only)',
             stages=len(stages), copy_b_stages=[s['stage'] for s in st_rec if s['copies'] > 1],
             period=cal['P'], users=n, per_user_tok_s=round(per, 1), aggregate_tok_s=round(n * per),
             bound_window=dict(cycles=int(cal.get('nonrep') or 0),
@@ -389,10 +677,12 @@ def build():
             slots=[dict(slot=i, user=u['user'], shift=u['shift'],
                         copy={g: c.get(u['user'], 'A') for g, c in cal['col'].items()})
                    for i, u in enumerate(cal['users'])],
-            stage_windows=[{k: s[k] for k in ('stage', 'dense_layer', 'copies', 't', 'occ', 'step')} for s in st_rec],
+            stage_windows=[{k: s[k] for k in ('stage', 'dense_layer', 'copies', 't', 'occ', 'step', 'busy_total') if k in s}
+                           for s in st_rec],
             composition=comp, grade='node cycles: composer grades; stage split / reservation / forward-x / MTP law: MODEL')
     recs['ar']['layer_segments'] = {f'L{l}': {k: round(v, 1) for k, v in seg[l].items()} for l in range(40)}
-    recs['ar']['timeline_log'] = [dict(x, start=round(x['start'], 1), end=round(x['end'], 1)) for x in log]
+    recs['ar']['timeline_log'] = [dict({k: v for k, v in x.items() if k != 'busy'}, start=round(x['start'], 1),
+                                       end=round(x['end'], 1)) for x in log]
     return recs
 
 
@@ -400,11 +690,18 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--out', default=str(OUT))
     ap.add_argument('--check', action='store_true')
+    ap.add_argument('--map', default=str(MAP))
+    ap.add_argument('--compose', choices=['record', 'romopt'], default='record')
+    ap.add_argument('--unqualified', action='store_true', help='allow a map without the exact capacity verdict (model)')
+    ap.add_argument('--contexts', type=int, choices=[1, 2, -1], default=1,
+                    help='job contexts a stage: 1 uniform shifts (record), -1 = 1 context + searched shifts, 2 = RTL two contexts + searched shifts')
+    ap.add_argument('--alap', action='store_true', help='just-in-time expert slots on the partial chain (compiler)')
+    ap.add_argument('--tag', default='phys140', help='output name calendar_<tag>_{ar,mtp}.json')
     a = ap.parse_args(argv)
-    recs = build()
+    recs = build(a.map, a.compose, a.alap, a.unqualified, a.contexts)
     rc = 0
     for mode, rec in recs.items():
-        f = Path(a.out) / f'calendar_phys140_{mode}.json'
+        f = Path(a.out) / f'calendar_{a.tag}_{mode}.json'
         txt = json.dumps(rec, indent=1) + '\n'
         if a.check:
             same = f.exists() and f.read_text() == txt
