@@ -17,13 +17,13 @@ module tb_hostb;
  dsdv_hostb_stage #(.ENABLE(1)) a(.ck(ck),.rst_n(rst_n),.configured(1'b1),.local_stage(8'd0),.local_rank(2'd0),
  .epoch_id(32'h1021),.programme_id(64'hf1c617d9224a57bf),.receiver_edge(48'(cyc)),.transit_body_edge(te0),
  .expected_tid(16'd37),.expected_header_stage(expect0),.expected_user(10'd0),.expected_position(21'd1048575),.expected_token(21'd16754),
- .header_slot(hs0),.job_active(1'b0),.starter_armed(1'b1),.from_prev(ri),.local_ro(local0),.return_ro(1104'd0),
+ .header_slot(hs0),.job_active(mode==14),.starter_armed(1'b1),.from_prev(ri),.local_ro(local0),.return_ro(1104'd0),
  .forward_slot(fw0),.return_slot(1'b0),.to_local(tolocal0),.next_ro(next0),.f_host(host0),.ks_descriptor(ks0),
  .ks_slot(sl0),.arm_mask(am0),.arm_commit(ac0),.fault(fault0));
  dsdv_hostb_stage #(.ENABLE(1)) b(.ck(ck),.rst_n(rst_n),.configured(1'b1),.local_stage(8'd1),.local_rank(2'd0),
  .epoch_id(32'h1021),.programme_id(64'hf1c617d9224a57bf),.receiver_edge(48'(cyc)),.transit_body_edge(te1),
  .expected_tid(16'd37),.expected_header_stage(expect1),.expected_user(10'd0),.expected_position(21'd1048575),.expected_token(21'd16754),
- .header_slot(hs1),.job_active(1'b0),.starter_armed(1'b1),.from_prev(next0),.local_ro(local1),.return_ro(1104'd0),
+ .header_slot(hs1),.job_active(mode==14),.starter_armed(1'b1),.from_prev(next0),.local_ro(local1),.return_ro(1104'd0),
  .forward_slot(fw1),.return_slot(1'b0),.to_local(tolocal1),.next_ro(next1),.f_host(host1),.ks_descriptor(ks1),
  .ks_slot(sl1),.arm_mask(am1),.arm_commit(ac1),.fault(fault1));
  // Actual distinct head collector and actual source-return interface component.
@@ -62,14 +62,14 @@ module tb_hostb;
    if(ks1[52]||expectedks[cyc][52])begin if(ks1!==expectedks[cyc])begin bad++;$display("BAD KS cycle%0d",cyc);end end
    if(host0[0])got0++;if(host1[0])got1++;if(ks1[52])ksgot++;
    // Ordinary output is same-cycle payload: new component adds no register.
-   if(ordinary[cyc][0] && next0!==ordinary[cyc])begin bad++;$display("BAD ordinary bypass cycle%0d",cyc);end
+   if(mode!=13 && ordinary[cyc][0] && next0!==ordinary[cyc])begin bad++;$display("BAD ordinary bypass cycle%0d",cyc);end
    if(htv)begin
      retgot++;
      if(htd[3:0]!=10||htd[7:6]!=2||htd[366:290]!==th||htd[420:367]!==tk||toctl[0])begin bad++;$display("BAD RETURN HSF0");end
    end
    if(cyc==stopat)begin
-     if(mode==0 && (fault0||fault1||rf||hf||retgot!=1))begin bad++;$display("BAD faults %h %h %h %h ret%0d",fault0,fault1,rf,hf,retgot);end
-     if(mode!=0 && !(fault0||fault1))begin bad++;$display("BAD causal nofault");end
+     if((mode==0||mode==5||mode==6) && (fault0||fault1||rf||hf||retgot!=1))begin bad++;$display("BAD faults %h %h %h %h ret%0d",fault0,fault1,rf,hf,retgot);end
+     if(mode!=0&&mode!=5&&mode!=6 && !(fault0||fault1))begin bad++;$display("BAD causal nofault");end
      if(bad)$fatal(1,"FAIL HBE1 mode%0d bad%0d host%0d/%0d KS%0d",mode,bad,got0,got1,ksgot);
      $display("PASS HBE1 mode%0d host%0d/%0d KS%0d return%0d faults%h/%h",mode,got0,got1,ksgot,retgot,fault0,fault1);$finish;
    end

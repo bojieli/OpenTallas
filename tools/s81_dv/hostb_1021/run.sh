@@ -8,7 +8,7 @@ H=rtl/dsrom_sys/s81_dv/hostb
  -Mdir "$O/obj" rtl/lib/ot_reset_sync.sv "$H/dsdv_hostb_crc512.sv" "$H/dsdv_hostb_rx.sv" "$H/dsdv_hostb_tx.sv" \
  "$H/dsdv_hostb_stage.sv" "$H/dsdv_hostb_return.sv" "$H/dsdv_hostb_head.sv" tools/s81_dv/hostb_1021/tb_hostb.sv \
  --build-jobs 4 -MAKEFLAGS 'OPT_FAST=-O1 OPT_SLOW=-O0 OPT_GLOBAL=-O0' >"$O/build.log" 2>&1
-for mode in 0 1 2 3 4;do
+for mode in 0 1 2 3 4 5 6 7 8 9 10 13 14;do
  n=$(python3 tools/s81_dv/hostb_1021/prepare_bench.py --vectors "$B" --out "$O/v$mode" --mode "$mode")
  "$O/obj/Vtb_hostb" +VECTORS="$O/v$mode" +STOP="$n" +MODE="$mode" >"$O/bench$mode.log" 2>&1
  cat "$O/bench$mode.log"

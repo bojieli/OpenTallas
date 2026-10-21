@@ -79,7 +79,7 @@ module dsdv_hostb_rx (
          // Raw body may equal a header: NEVER inspect magic in this phase.
          if(receiver_edge!=body_edge) begin fault[2]<=1;pending<=0;end
          if(!target) forward_ring[0]<=1;
-       end else if(!configured || !header_slot || p[47:40]!=expected_header_stage) fault[7]<=1;
+       end else if(!configured || !header_slot || p[47:40]!=expected_header_stage || p[49:48]!=local_rank) fault[7]<=1;
        else if(!shape) fault[3]<=1;
        else if(op==3) begin
          // RETURN stage field names its source; it travels to the actual head.

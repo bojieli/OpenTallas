@@ -27,8 +27,8 @@ module dsdv_hostb_landing #(parameter integer ENABLE=0)(
      if(!rn)begin hv<=0;kv_s<=0;kv_e<=0;fault<=0;end
      else begin
        hv<=fh[0]&&fault==0;kv_s<=fk[52]&&fault==0;kv_e<=fk[52]&&fault==0;
-       if(select_hbe && legacy_f_host[0] && hbe_f_host[0])begin fault[0]<=1;hv<=0;end
-       if(select_hbe && legacy_f_ks[52] && starter_f_ks[52])begin fault[1]<=1;kv_s<=0;kv_e<=0;end
+       if(select_hbe && legacy_f_host[0])begin fault[0]<=1;hv<=0;end
+       if(select_hbe && legacy_f_ks[52])begin fault[1]<=1;kv_s<=0;kv_e<=0;end
        if(!select_hbe && (hbe_f_host[0]||starter_f_ks[52]))fault[2]<=1;
      end
    end

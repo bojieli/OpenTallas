@@ -1,0 +1,51 @@
+{
+  "status": "PASS_COMPONENT_ONLY",
+  "source_ref": "5aaa247f9",
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-1627510-1792621607",
+  "request_gib": 16,
+  "threads": 4,
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_crc512.sv": "24a41becc4b4de26f957b6d58f92c8415d78d0f86676f44131c180596f31b921",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_head.sv": "43c4ea83d3a02b18de1a30cf14b1b176743ff58601cbd59a8adea39b87ce8440",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv": "d3bc43a6e8905f99ed21e124a15feae3b4577594f05e6ada836c286a18a1cc08",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_return.sv": "3ed3650819f4468049d5217612d62e8053de7216c446eac16a2746b8ddab127a",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_rx.sv": "5f7f68a566fba1c624c0b05134b4eb89cae3732961e25c4bc8db2aaeff2fee5a",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_seqhost.sv": "e6bed5460bca19be3a2a9990f4d3fefc207f7422b85511a5404ca8c630ccb017",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage.sv": "4e660e2c58dea4648bed0564c2b4b1fbdd39cabf97899204abcab153eeaa3acb",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_tx.sv": "56200cf4fdef13662b35a8b03fc53b42291ccdebd03cb8e178494030b5813bed",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "tools/s81_dv/hostb_1021/gen_crc.py": "5aa4d2edb468963c505f18a7c817ea31c1daf98266957ba325596c2f7838b7f2",
+    "tools/s81_dv/hostb_1021/prepare_bench.py": "84a9863db5464e98fbaf91d7f4ab6a50d2373bd0ffb4342dec0ab670f6e64e84",
+    "tools/s81_dv/hostb_1021/run.sh": "64fa4d4e0880dfda3f5eb1f33d49f9fe41cbc1f3d1b88d8aa86ac08afe37d4b3",
+    "tools/s81_dv/hostb_1021/tb_hostb.sv": "a8f2a6859fbbe766e69bcce020296983232ac1b1a0d61f025db02123b106d77c"
+  },
+  "actual_fixture": "TOKEN f14ca52e7 actual417legacyboot sourcef1c617d9, TESTcontext explicit",
+  "results": {
+    "legacy_words_stage0": 0,
+    "legacy_words_stage1": 417,
+    "correct_KS": 1,
+    "return_records": 1,
+    "bad": 0,
+    "ordinary_samecycle_bypass_beats": 3,
+    "causals": [
+      "bodyCRCbitflip",
+      "wrongepoch",
+      "missingbody",
+      "wrongcaptureedge"
+    ],
+    "each_causal_legacy_writes": 0
+  },
+  "cycles": {
+    "nonlocal_RX_TX_to_next_consumer": 3,
+    "destination_body_capture_to_legacy_output": 2,
+    "ordinary_added_payload_register_edges": 0
+  },
+  "actual_build": {
+    "wall_s": 4.923,
+    "verilator_alloc_mb": 70.441,
+    "positive_runtime_s": 1.671,
+    "simulation_alloc_mb": 11
+  },
+  "scope": "Two addressed actual adapter modules chained at source pins; real515port byte/cycle proof and source-interface131return\u2192new HSF0type10. Return producer inputs are legitimate explicit interface TEST fixture values, NOT actual stage completion. The separatelynamed actual dsdv_seq_host consumer composition is not elaborated/executed in this componentproof. Physicaldelivery/productionepochs/anchors/realstarter/native/CTS/GRT/STA/fullstage/fulltokenOPEN."
+}
