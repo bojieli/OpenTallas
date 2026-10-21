@@ -111,7 +111,11 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  always @(posedge stream_clk)begin
   r_epoch<=reserve_epoch;r_count<=reserve_total>BANK?7'((reserve_total+7-BANK)/8):7'd0;
   for(c=0;c<RSN;c=c+1)if(cap_en[c])hq[c*RSW+:RSW]<=packet[c*RSW+:RSW];
-  if(take_b)begin w_bank_q<=h_bank;w_row_q<=(HM==6)?(row^6'd1):row;w_data_q<=h_data;end
+  // Datapath is sampled every edge; w_ce_q is the sole SRAM transaction qualifier.
+  // A hold mux on 256 payload bits made one take_b driver feed >500 mapped pins.
+  // Metadata stays qualified, so valid writes and completion identity are unchanged.
+  w_data_q<=h_data;
+  if(take_b)begin w_bank_q<=h_bank;w_row_q<=(HM==6)?(row^6'd1):row;end
   for(b=0;b<LBANKS;b=b+1)begin
    if(ren_k[b*4])begin epoch_q[b*16+:16]<=r_epoch;count_q[b*7+:7]<=r_count;end
    if(ren_k[b*4+1])seen_q[b*64+:32]<=0;
