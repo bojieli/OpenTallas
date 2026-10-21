@@ -99,13 +99,15 @@ def qup(x):
 #   attn      attention service variant (S81-SVCFIT: attw time-multiplexed groups): attn.scores / attn.pv node cycles
 #             G16 289 / 596 (composer), G8 449 / 756, G4 769 / 1,076 (release die72 = co-located G4 svc_full slot).
 #   idx       TOK.DS.BENCH.4.4 / L5B-G7: index readers placed by the HBM PHY -> + IDX_LAT cycles a idx.score job.
-#   eng       Engram lookup at RETURN_AGE 640 (dsfd_engram_lkp, one window in flight, II 576): eng.hbm_read = 640 and a
+#   eng       Source d5e45464e (functional only; ra640a/b physical FAIL): lookup RETURN_AGE640 / II704;
+#             eng.hbm_read = 640 and a
 #             per-stage Engram resource window of ENG_II a position (x 6 a MTP step) in the brute force.
 #   host      S81.HOST option (b) (owner 07:10 10-21): stage dies start jobs from their local calendar (no per-job
-#             host / KS frame on the stage circuits); the host plane is the head die's (HOST_TOK a token a user).
+#             host / KS frame on the stage circuits); this remains MODEL until the actual HOST descriptor programme
+#             is connected. The host plane is the head die's (HOST_TOK a token a user).
 REL = dict(offchip='switched', links_serial=False, land=False, attn='G16', idx_lat=0, eng_age=0, eng_ii=0)
 REL0 = dict(REL)
-REL241 = dict(offchip='direct', links_serial=True, land=True, attn='G4', idx_lat=40, eng_age=640, eng_ii=576)
+REL241 = dict(offchip='direct', links_serial=True, land=True, attn='G4', idx_lat=40, eng_age=640, eng_ii=704)
 HOPLAT = ROOT / 'results/arch/release_rack_1021/hop_latency.json'
 SWITCHED = 453
 X_FLAT = 563                   # tb_xdie_s81_2 LEG 1 crossing incl. the die lane legs and the 453 switched leg
@@ -935,7 +937,7 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
                                 node_override=ovr, dense2=bool(mp.get('dense_split2')),
                                 dense2_ser=DENSE2_SER if mp.get('dense_split2') else 0,
                                 eng_stages=[q['stage'] for q in st_rec if q.get('eng_off') is not None],
-                                host='S81.HOST option (b): local calendar job start on every stage die; host plane = '
+                                host='MODEL S81.HOST option (b), not connected production programme: local calendar job start; host plane = '
                                      'head die only (HOST_TOK a token a user), no host / KS frame on stage circuits')
     if contexts != 1:
         stage_busy(log, st_rec)
@@ -1033,7 +1035,7 @@ def main(argv=None):
     ap.add_argument('--alap', action='store_true', help='just-in-time expert slots on the partial chain (compiler)')
     ap.add_argument('--tag', default='phys140', help='output name calendar_<tag>_{ar,mtp}.json')
     ap.add_argument('--release241', action='store_true', help='S81-CAL241 release terms (REL241: direct cabling, LINK5 '
-                    'serial stage circuit + land-0 lead with TX hold, G4 attention, idx +40, Engram RA640 / II 576)')
+                    'serial stage circuit + land-0 lead with TX hold, G4 attention, idx +40, Engram RA640 / II 704)')
     ap.add_argument('--attn', choices=sorted(ATTN), help='attention service variant (overrides REL)')
     ap.add_argument('--mtp-position-barriers', action='store_true', help='Conservative explicit six-position MODEL; compiler implementation pending')
     a = ap.parse_args(argv)
