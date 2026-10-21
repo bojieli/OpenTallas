@@ -285,44 +285,34 @@ module ot_hgi_sfu_static_operand_store #(
    end
    // s10: kept per-(bank, sector) hit nodes and per-bank collision nodes keep every decode term bank-local.
    (* keep=1 *) wire [127:0] hg;                     // [8*b+s]
-   (* keep=1 *) wire [15:0] coll_b;
-   reg [15:0] we_d; reg [127:0] win_d,wr_d;
+   wire [15:0] coll_b,we_q;
+   wire [127:0] sd0_q,sd1_q,sa0_q,sa1_q;
    for(genvar b=0;b<16;b=b+1)begin:g_hb
-    for(genvar s=0;s<8;s=s+1)begin:g_hs
-     assign hg[8*b+s]=gv[s] && ps_hit[16*s+b];
+    wire [7:0] wrap;
+    for(genvar sector=0;sector<8;sector=sector+1)begin:g_hs
+     assign hg[8*b+sector]=gv[sector] && ps_hit[16*sector+b];
+     assign wrap[sector]=ps_wrap[16*sector+b];
     end
-    reg c_;
-    always @*begin
-     c_=0;
-     for(integer s=0;s<7;s=s+1)if(hg[8*b+s] && |(hg[8*b+:8]>>(s+1)))c_=1;   // a higher sector also writes it
-    end
-    assign coll_b[b]=c_;
+    ot_hgi_sfu_presel_bank12 u_select(.clk(clk),.hit(hg[8*b+:8]),.wrap(wrap),
+     .we(we_q[b]),.sd0(sd0_q[8*b+:8]),.sd1(sd1_q[8*b+:8]),
+     .sa0(sa0_q[8*b+:8]),.sa1(sa1_q[8*b+:8]),.collision(coll_b[b]));
    end
-   wire coll_d=|coll_b;
-   always @*begin
-    we_d=0;win_d=0;wr_d=0;
-    for(integer b=0;b<16;b=b+1)
-     for(integer s=7;s>=0;s=s-1)
-      if(hg[8*b+s])begin
-       if(!we_d[b])begin win_d[8*b+s]=1;wr_d[8*b+s]=ps_wrap[16*s+b];end
-       we_d[b]=1;
-      end
-   end
-   (* keep=1,dont_touch=1 *) reg [15:0] we_q;
    (* keep=1,dont_touch=1 *) reg coll_q;
-   (* keep=1,dont_touch=1 *) reg [127:0] sd0_q,sd1_q,sa0_q,sa1_q;
-   (* keep=1,dont_touch=1 *) reg [8*RBS-1:0] hi_q;       // this group's copy of the sector rows
+   // Two same-edge row copies, one per eight destination banks; no new transaction age.
+   (* keep=1,dont_touch=1 *) reg [2*8*RBS-1:0] hi_q;
    always @(posedge clk)begin
-    we_q<=we_d;coll_q<=coll_d;sd0_q<=win_d;sd1_q<=win_d;sa0_q<=win_d&~wr_d;sa1_q<=win_d&wr_d;
-    for(integer s=0;s<8;s=s+1)hi_q[RBS*s+:RBS]<=stage_addr[LWB*s+4+:RBS];
+    coll_q<=|coll_b;
+    for(integer copy=0;copy<2;copy=copy+1)
+     for(integer sector=0;sector<8;sector=sector+1)
+      hi_q[RBS*(8*copy+sector)+:RBS]<=stage_addr[LWB*sector+4+:RBS];
    end
    assign pw_we=we_q;assign pw_coll=coll_q;
    assign pw_sd0=sd0_q;assign pw_sd1=sd1_q;assign pw_sa0=sa0_q;assign pw_sa1=sa1_q;
    for(genvar b=0;b<16;b=b+1)begin:g_pb
     for(genvar s=0;s<8;s=s+1)begin:g_ps
      assign pw_d[32*(8*b+s)+:32]=swr_d[32*(16*s+b)+:32];
-     assign pw_r0[RBS*(8*b+s)+:RBS]=hi_q[RBS*s+:RBS];
-     assign pw_r1[RBS*(8*b+s)+:RBS]=hi_q[RBS*s+:RBS]+1'b1;
+     assign pw_r0[RBS*(8*b+s)+:RBS]=hi_q[RBS*(8*(b/8)+s)+:RBS];
+     assign pw_r1[RBS*(8*b+s)+:RBS]=hi_q[RBS*(8*(b/8)+s)+:RBS]+1'b1;
     end
    end
   end else begin:g_presel_off
@@ -396,5 +386,28 @@ endmodule
 // Kept combinational boundary prevents re/en folding into all eight byte muxes.
 (* keep_hierarchy=1 *) module ot_hgi_sfu_scalar_byte_enable(input wire re,en,output wire e);
  assign e=re && en;
+endmodule
+// Bank-local stage-write priority. The capture remains the existing WPIPE edge.
+(* keep_hierarchy=1 *) module ot_hgi_sfu_presel_bank12(
+ input wire clk,input wire[7:0]hit,wrap,
+ output wire we,output wire[7:0]sd0,sd1,sa0,sa1,output wire collision);
+ reg we_d;reg[7:0]win_d,wr_d;reg coll_d;
+ always @*begin
+  we_d=0;win_d=0;wr_d=0;coll_d=0;
+  for(integer sector=7;sector>=0;sector=sector-1)begin
+   if(hit[sector])begin
+    if(!we_d)begin win_d[sector]=1;wr_d[sector]=wrap[sector];end
+    else coll_d=1;
+    we_d=1;
+   end
+  end
+ end
+ (* keep=1,dont_touch=1 *) reg we_q;
+ (* keep=1,dont_touch=1 *) reg[7:0]sd0_q,sd1_q,sa0_q,sa1_q;
+ always @(posedge clk)begin
+  we_q<=we_d;sd0_q<=win_d;sd1_q<=win_d;sa0_q<=win_d&~wr_d;sa1_q<=win_d&wr_d;
+ end
+ assign we=we_q;assign sd0=sd0_q;assign sd1=sd1_q;assign sa0=sa0_q;assign sa1=sa1_q;
+ assign collision=coll_d;
 endmodule
 `default_nettype wire
