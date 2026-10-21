@@ -1,0 +1,25 @@
+{
+  "status": "READ_ONLY_GEOMETRY_NOT_CLOCK_QUALIFICATION",
+  "unit": "oth-ubuntu-3152029-1792622339",
+  "host": "ot-epyc5",
+  "actual_3_place_SHA256": "13ea841cd8175c8ae01e4b3dd3be3ddefc90a1e83fbc623e04bc6081d165db30",
+  "source": "actual B0 MAIN rw9sp root122703",
+  "all_clock_roots": 29,
+  "hard_entries": 20,
+  "write_roots_ALL_pins": 1035,
+  "write_pin_partition": {
+    "west": 795,
+    "east": 240
+  },
+  "SRAMcolumn_x_um": [
+    172.8,
+    347.544
+  ],
+  "raw_leaves_w0_w1_w2_w3": [
+    131,
+    131,
+    130,
+    131
+  ],
+  "candidate_status": "source model preparation only, no new physical gate"
+}
