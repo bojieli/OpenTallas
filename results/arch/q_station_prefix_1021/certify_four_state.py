@@ -41,6 +41,15 @@ a=original_leaves(old);b,helpers=candidate_leaves(new);padding=b.count("1'b1");r
 assert collections.Counter(a)==collections.Counter(real)
 assert len(a)==33 and len(set(a))==33
 assert seq(old)==seq(new)
+# Exact delta: remove only the new prefix declarations/instances/replacement
+# and appended AND4 helper. Everything else must be byte-for-byte original.
+restored,n=re.subn(r'wire mul_pfx_0_0,[^;]+;\n(?:[^\n]+\n)*?assign n_4761 = mul_pfx_2_0;',
+                  'assign n_4761 = (n_169) & (n_4759);',new,count=1)
+assert n==1
+helper='\n(* keep_hierarchy="yes" *) module qfd_dv_s8s_mul_prefix_and4 #(parameter integer ID=0)(input wire[3:0] i,output wire y);\nassign y=&i;\nendmodule\n'
+assert restored.endswith(helper)
+restored=restored[:-len(helper)]
+assert restored==old, 'unrelated generated-source delta'
 assert 'assign y=&i;' in new
-receipt=dict(base=BASE,old_sha256=hashlib.sha256(old.encode()).hexdigest(),candidate_sha256=hashlib.sha256(new.encode()).hexdigest(),sequential_lines_sha256=hashlib.sha256('\n'.join(seq(new)).encode()).hexdigest(),sequential_lines_equal=len(seq(new)),leaf_multiset_equal=dict(sorted(collections.Counter(real).items())),padding_ones=padding,helpers=helpers,associativity_64_triples=assoc,commutativity_16_pairs='PASS',padding_identity_for_nontrivial_product_16_pairs='PASS',proof='Every AND tree with >=2 operands is 0 if any operand is 0, 1 if all operands are 1, otherwise X. Associativity and commutativity preserve the exact 33-leaf multiset; padding ones preserves this classification. This includes X/Z startup without a reset or validity assumption.',scope='Combinational n_4761 four-state equality plus unchanged sequential instance lines; actual whole-module fixtures/native owned by cb16.')
+receipt=dict(exact_delta_restoration_byte_identical=True,executed_registered_module_simulation=False,base=BASE,old_sha256=hashlib.sha256(old.encode()).hexdigest(),candidate_sha256=hashlib.sha256(new.encode()).hexdigest(),sequential_lines_sha256=hashlib.sha256('\n'.join(seq(new)).encode()).hexdigest(),sequential_lines_equal=len(seq(new)),leaf_multiset_equal=dict(sorted(collections.Counter(real).items())),padding_ones=padding,helpers=helpers,associativity_64_triples=assoc,commutativity_16_pairs='PASS',padding_identity_for_nontrivial_product_16_pairs='PASS',proof='Every AND tree with >=2 operands is 0 if any operand is 0, 1 if all operands are 1, otherwise X. Associativity and commutativity preserve the exact 33-leaf multiset; padding ones preserves this classification. This includes X/Z startup without a reset or validity assumption.',scope='Combinational n_4761 four-state equality plus unchanged sequential instance lines; actual whole-module fixtures/native owned by cb16.')
 out=Path(__file__).with_name('FOUR_STATE_CERTIFICATE.json');out.write_text(json.dumps(receipt,indent=2)+'\n');print(out);print('PASS 64 associative triples;16 commuting pairs;16 nontrivial-product padding cases;33 exact leaves;1356 identical sequential lines')
