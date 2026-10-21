@@ -1038,7 +1038,9 @@ def post(v, m, G):
     counts = collections.Counter()
     for nm, d in nodes.items():
         if d['n'] < 1:
-            raise ValueError(f'fault emit: {nm} has no input')
+            c_ = _ctr(d['it'])
+            near_ = sorted((round(_man(c_, s_[6])), s_[0], s_[1], s_[4]) for s_ in src)[:6]
+            raise ValueError(f'fault emit: {nm} has no input (key {d["ck"]}, at {c_}, nearest sources {near_})')
         d['it'].master = mname(d['n'])
         counts[d['n']] += 1
     for n in counts:
