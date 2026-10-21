@@ -374,10 +374,16 @@ module ot_s81pa_ctl #(
         if(!rst_local[302+c])o_v<=N32_INIT_o_v;
         else o_v<=o_v_d;
     end endgenerate
-    wire[52:0]packet_next={{f_s[3*SB+838],f_s[2*SB+838],f_s[SB+838],f_s[838]},lc_next,seg_tag_d,flt_d,flt_rep_d,rep_pend_d,done_pend_d,pc_d,rep_n_d,cq_d,cnt_d,ovf_seen_d};
+    wire[52:0]packet_next={{f_s[3*SB+838],f_s[2*SB+838],f_s[SB+838],f_s[838]},lc_next,seg_tag_t,flt_d,flt_rep_d,rep_pend_d,done_pend_d,pc_d,rep_n_d,cq_d,cnt_d,ovf_seen_d};
+    // [ELEM-BKG] packet selector_next = ts from kept per-3-packet copies of the ts cone (same qs/cq registers, same
+    // expression; was one 2-bit net into 22 packets x 8 tsel copies = 177 loads)
+    wire[15:0]ts_k;
     generate for(genvar c=0;c<22;c=c+1)begin:g_packet
       localparam integer LO=c*24,SW=(512-LO<24)?512-LO:24;
-      ot_s81pa_packet #(.LO(LO),.SW(SW),.ID(c))u(.clk(ck[0]),.rst_n(rst_local[303+5*c+:5]),.state_next(packet_next),.selector_next(ts),.heads(heads),.out(o_d[LO+:SW]));
+      if(c%3==0)begin:g_tsn
+        ot_s81pa_tsnext #(.ID(c/3))u_tsn(.qs(qs),.cq(cq),.ts(ts_k[2*(c/3)+:2]));
+      end
+      ot_s81pa_packet #(.LO(LO),.SW(SW),.ID(c))u(.clk(ck[0]),.rst_n(rst_local[303+5*c+:5]),.state_next(packet_next),.selector_next(ts_k[2*(c/3)+:2]),.heads(heads),.out(o_d[LO+:SW]));
     end endgenerate
     initial if(SEARCH_PIPE!=1||DM!=4||PACE!=2||MRG_PIPE!=1||RQPIPE!=1||SLAT!=4||XDX!=15)$fatal(1,"fixed selected n32 outer shape");
 `ifndef SYNTHESIS
@@ -387,4 +393,16 @@ module ot_s81pa_ctl #(
     always @(posedge ck[0]) vd_q <= {o_d, o_v & rst_n, rst_n};
     assign vd = vd_q;
     ot_fwd_clk_inv u_vf (.a(ck[0]), .y(vf[0]));
+endmodule
+
+// [ELEM-BKG] kept copy of the serving-quarter cone (identical to ot_s81pa_ctl ts); one per three packets
+(* keep_hierarchy="yes" *)
+module ot_s81pa_tsnext #(parameter integer ID=0)(input wire[7:0]qs,input wire[1:0]cq,output reg[1:0]ts);
+ integer s;
+ always @(*) begin
+  ts=cq;
+`ifndef OT_S81PH_MUT2
+  for(s=0;s<4;s=s+1) if(qs[2*s+:2]==cq) ts=s[1:0];
+`endif
+ end
 endmodule
