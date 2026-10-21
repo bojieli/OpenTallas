@@ -48,6 +48,8 @@ initial begin
  epoch=a.global_edge;delta=40+((4-(dut.u_l1.u_iss.phase_q&3))&3);d[87:40]=epoch;d[135:88]=epoch+delta;d[183:136]=epoch+delta+4+8;d[193:184]=37;
  d[195:194]=dut.u_l1.u_iss.phase_q;
  if(mode==4)d[87:40]=epoch+1;
+ if(mode==5)d[195:194]=d[195:194]^2'd1;
+ if(mode==6)d[39:8]=32'hdeadbeef;
  host={2'd0,d,1'b1};firstedge=edge_n+1+delta;
  @(negedge ck);host=0;
  for(i=0;i<6;i=i+1)begin
@@ -56,8 +58,9 @@ initial begin
   if(mode==2&&i==0)incoming[51:42]=38;
   @(negedge ck);incoming=0;
  end
+ if(mode==7)begin d=0;d[7:0]=8'h11;d[39:32]=3;word(d);end
  if(mode==3)begin repeat(40)@(negedge ck);incoming=desc(0);@(negedge ck);incoming=0;end
- if(mode!=0)begin repeat(100)@(negedge ck);if(fault==0)$fatal(1,"negative not caught mode%0d",mode);$display("KS6 NEGATIVE CAUGHT mode=%0d fault=%h",mode,fault);$finish;end else begin
+ if(mode!=0)begin repeat(100)@(negedge ck);if(fault==0 || (mode>=4 && !fault[1]))$fatal(1,"negative not caught mode%0d fault%h",mode,fault);$display("KS6 NEGATIVE CAUGHT mode=%0d fault=%h",mode,fault);$finish;end else begin
  fork begin wait(done);end begin wait(fault!=0);$fatal(1,"positive adapterfault %h issue=%0d phase=%0d",fault,a.first_issue,a.expected_phase);end join_any disable fork;repeat(40)@(negedge ck);
  if(fault!=0||seen!=6||retired!=6||commands!=6||dut.u_l1.u_iss.fault)$fatal(1,"positive fault%h seen%0d retired%0d issuer%0d code%0d",fault,seen,retired,dut.u_l1.u_iss.fault,dut.u_l1.u_iss.fault_code);
  $display("KS6 HOST_WALKER PASS six real descriptors, exact q4 span, opaque token retirement");$finish;

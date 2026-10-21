@@ -29,7 +29,7 @@ build() { l=$1; shift
 }
 VL_EXTRA="-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8"
 build base || exit 2
-for mode in 0 1 2 3 4; do
+for mode in 0 1 2 3 4 5 6 7; do
  "$O/base/tb" +mode=$mode > "$O/mode_$mode.log" 2>&1 || { cat "$O/mode_$mode.log"; exit 1; }
  cat "$O/mode_$mode.log"
 done
