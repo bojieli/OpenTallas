@@ -1,0 +1,7 @@
+# ENG LAT5 scale integration model
+
+Default-off OT_S81ENG_RR_MUL_N32 affects only isolated selected ot_s81sl_aq12x_eng_n32 scale multiply. Shared original arithmetic/defaultconsumers unchanged; wholeRRoriginal63native job preserved. Exact unmodified leaf source ot_s81dv_fp_n32.sv from560abe5d2 is actualLAT5 native32/0/roles0 with2Mseed12345MUL/RSQ equivalencePASS (sealed282ef8821 byslice_collect). It is not inferred fullENGqualification. Unmodified dependency finish_sram.sv importedfromsame560 solelyfor finish_reset2; source assembly mustdedupe this existingXFINfile/module, not fork it. No source edits to eitherimportedfile.
+
+Reset binding: XQreset3 root_d/early_n releases atedge1, middleedge2, rl[1]edge3. Old AQscale consumesrl[1]edge3. Newoperator getsrst_mul_early_n=edge1 andinternalfinish_reset2 prefixedge2/leavesedge3. Allvalid/output/operatorresetconsumers therefore retain originaledge3. AQvline/vo/fault continueoriginalrl[1]. Asynchronous assertion shares sameorigin. Explicit separateinput prevents scalarrst_ndrop-in error. No new payloadedges; LM5/quant18/lookup640/II704 unchanged, onlyclaimafterexactmechanismdates pass.
+
+ExistingfullRR base+seeds2/3 and6causalmutants required atbothdefines; actualfullnative withexactselectedsource/reset thereafter. No LAT6substitution or productionclockfitclaim. If originalfullnative has no multiplier violations this profile remains boundedalternative untilownerchooses; not silentlydefaultselected. No physicalgate beforeactualnative qualification.

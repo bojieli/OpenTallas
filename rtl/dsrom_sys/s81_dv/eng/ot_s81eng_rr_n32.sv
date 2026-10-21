@@ -15,7 +15,8 @@ module ot_s81eng_xq_n32 #(
     output reg          fault
 );
     wire [127:0] rl;
-    ot_s81eng_reset3n32 #(.LEAVES(128)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl),.early_n());
+    wire mul_reset_early_n;
+    ot_s81eng_reset3n32 #(.LEAVES(128)) u_r (.clk(ck), .rst_n_in(rst_n), .rst_n(rl),.early_n(mul_reset_early_n));
     // ---------------------------------------------------------------- input flops + decode
     reg         iv; reg [4:0] ic; reg [2:0] ib; reg [263:0] id;
     always @(posedge ck or negedge rl[0]) if (!rl[0]) iv <= 1'b0; else iv <= o_v;
@@ -47,7 +48,7 @@ module ot_s81eng_xq_n32 #(
     assign wl = wl_rd[263:0];
     // ---------------------------------------------------------------- act-quant (closed vq quantiser)
     wire        qv, af; wire [255:0] qq; wire signed [9:0] qe; wire [511:0] qy_unused;
-    ot_s81sl_aq12x_eng_n32 u_aq (.clk(ck), .rst_n(rl[1]), .v(iv), .x(x), .vo(qv), .q(qq), .e(qe), .y(qy_unused), .fault(af), .xd(xd));
+    ot_s81sl_aq12x_eng_n32 u_aq (.clk(ck), .rst_n(rl[1]), .rst_mul_early_n(mul_reset_early_n), .v(iv), .x(x), .vo(qv), .q(qq), .e(qe), .y(qy_unused), .fault(af), .xd(xd));
     wire [7:0] qtag;                       // {col 5, beat 3} through the quantiser latency
     ot_hdc_delay #(.W(8), .D(18)) u_tg (.clk(ck), .rst_n(rl[1]), .d({ic, ib}), .q(qtag));
     // ---------------------------------------------------------------- XQ beat assembly -> beat ring

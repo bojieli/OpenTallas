@@ -25,6 +25,7 @@
 module ot_s81sl_aq12x_eng_n32 (
     input  wire          clk,
     input  wire          rst_n,
+    input  wire          rst_mul_early_n, // same reset origin, TWO release edges before rst_n
     input  wire          v,
     input  wire [1023:0] x,
     output reg           vo,
@@ -75,7 +76,12 @@ module ot_s81sl_aq12x_eng_n32 (
     // -- S6..S10: amax * (1/448) ----------------------------------------------------------------
     wire [31:0] prod;
     wire        pfault;
+`ifdef OT_S81ENG_RR_MUL_N32
+    // Internal two-edge reset forest reconstitutes exactly the original consumer release edge.
+    ot_s81dv_qmul_n32 #(.LAT(5)) u_scale (clk, rst_mul_early_n, vl[6], {1'b0, amax}, INV_448, prod, pfault);
+`else
     ot_hdc_qmul_lat #(5) u_scale (clk, rst_n, vl[6], {1'b0, amax}, INV_448, prod, pfault);
+`endif
     wire nf10;
     ot_hdc_delay #(.W(1), .D(5)) u_nf (.clk(clk), .rst_n(rst_n), .d(nf5), .q(nf10));
 

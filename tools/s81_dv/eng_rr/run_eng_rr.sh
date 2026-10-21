@@ -8,7 +8,8 @@ REF=${1:?ref}; W=$(realpath -m ${2:?work}); mkdir -p $W/src
 G=${OT_GIT_DIR:-/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git}
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 git --git-dir=$G cat-file -e "$REF^{commit}" 2>/dev/null || git --git-dir=$G fetch -q origin ${BR:-claude/s81-eng640-1021}
-F=(rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv
+F=(rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv
+   rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv
    rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv
    rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_static.sv
    rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv
@@ -37,7 +38,7 @@ python3 tools/s81_dv/eng_rr/prep_rom.py $W/rom
 build() {  # name, -G params
   local n=$1; shift
   /usr/bin/time -v -o $W/$n.build.time $VL --binary --timing -j ${J:-16} -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH \
-    -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 ${TAP_N32R2:+ +define+OT_S81ENG_TAP_N32R2} ${RR_N32:+ +define+OT_S81ENG_RR_N32} +define+OT_ENGRAM_CRCMAT \
+    -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE -CFLAGS -O1 ${TAP_N32R2:+ +define+OT_S81ENG_TAP_N32R2} ${RR_N32:+ +define+OT_S81ENG_RR_N32} ${RR_MUL_N32:+ +define+OT_S81ENG_RR_MUL_N32} +define+OT_ENGRAM_CRCMAT \
     --top-module tb_dsdv_eng_rr "$@" "${F[@]}" --Mdir $W/obj_$n -o sim > $W/$n.build.log 2>&1
   echo "$n build rc $?" >> $W/status
 }
