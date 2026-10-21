@@ -329,6 +329,11 @@ def pre(v, m, G):
         raise ValueError(f'fault emit: plan owners not on this GEN: {missing[:10]}')
     ckx, rsx = _bus_index(m, 'clock_trunk'), _reset_index(m)
     occ = Occ(m)
+    # QW-G5FROOT 10-20: each reserved base relay / landing box carries a RES_HALO_UM halo: _relays books a frame as
+    # w + SHAVE by h + SHAVE and its spot search snaps within a tolerance, so a root touching the bare box still moved the
+    # base frame (dv2f20g5rf rfs try 1: 12 q3h_col 516-b nets over 405 next to the cluster row-gap group roots)
+    RH = float(os.environ.get('OT_SPLIT_FAULT_RES_HALO_UM', '10.8'))
+    plan['reserved'] = [[r_[0] - RH, r_[1] - RH, r_[2] + RH, r_[3] + RH] for r_ in plan.get('reserved', ())]
     for r_ in plan.get('reserved', ()):
         occ.add(tuple(r_))      # the relay / landing sites the same GEN used without the tree: roots keep off them
     # g5f try 6/7: dvw_st_wi (1,088 b) lost its END frames beside dvs_W5 to three roots + their landings: the ends of

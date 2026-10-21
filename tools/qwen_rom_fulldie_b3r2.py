@@ -3364,8 +3364,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                           'c', [round(q) if isinstance(q, float) else q for q in got[0]], 'at', (round(x0), round(y0)))
             return frames
 
-        frames = _chain(path)
-        if FIELD_ALLOC and cl != 'corridor' and not cl.startswith('kvn') and (in_field(*P0) or in_field(*P1)):
+        # QW-G5FROOT 10-20: a fault-tree edge (flt_*, observation only) takes NO pass-1 site: it is searched after every
+        # data bus in pass 2 (dv2f20g5rc: pass-1 'no free spot for flt_t_dvs_W2_g5' aborted the GEN)
+        _flt_skip = str(bid).startswith('flt_') and _os.environ.get('OT_SPLIT_FAULT_EMIT', '0') == '1' and \
+            _os.environ.get('OT_RELAY_FAULT_LAST', '1') == '1'
+        frames = [] if _flt_skip else _chain(path)
+        if FIELD_ALLOC and not _flt_skip and cl != 'corridor' and not cl.startswith('kvn') and (in_field(*P0) or in_field(*P1)):
             # it24: feedback from placement to the allocator.  A chain whose relays could not keep <= RMAX hops (or that
             # doubles back) would go to the pass-2 search, which wanders off the booked route (tree_26_1_4b: booked
             # corridor 19220, placed down the KVc|E gap and back over t_24_8: 0.92).  Instead the stretch where the
