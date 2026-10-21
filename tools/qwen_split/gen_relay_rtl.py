@@ -31,7 +31,7 @@ import json, re, sys
 from pathlib import Path
 from ring_contract import contract as ring_contract
 
-INST = re.compile(r'^\s*(qfd_rly[pf]?_\w+|qfd_rlyh0?_\w+|qfd_rlyr[0l]?_\w+|qfd_landh0?_\w+|qfd_rst_rep\w*|qfd_clkrx)\s+(\w+)\s*\((.*)\);\s*$')
+INST = re.compile(r'^\s*(qfd_rly[pf]?_\w+|qfd_rlyh0?_\w+|qfd_rlyr[0l]?_\w+|qfd_landh0?_\w+|qfd_rst_rep\w*|qfd_clkrx|qfd_fault_or_n\d+)\s+(\w+)\s*\((.*)\);\s*$')
 # Q-DIE11-RLY: the full port set of each forwarded-lane family (an open output, e.g. fault, is still a real port)
 FWD = {'qfd_rlyh0_': ('ck', 'en', 'a', 'b', 'eb', 'ck_o'), 'qfd_rlyh_': ('ckf', 'ea', 'a', 'b', 'eb', 'ck_o'),
        'qfd_landh_': ('ckf', 'ea', 'a', 'ck', 'rs', 'k0', 'k1', 'k2', 'tie_hi', 'tie_lo', 'b', 'fault'),
@@ -91,8 +91,8 @@ def main(die_v, out_sv):
             # reset-tree repeater (ot_qwen_rst_rep): an instance may leave its second output q1 open, so the
             # master's port set is the union over its instances
             ports = {**masters.get(mn, {}), **ports}
-        elif fwd_family(mn):
-            # an instance may leave an output open (fault): the master's port set is the union over its instances
+        elif fwd_family(mn) or mn.startswith('qfd_fault_or_n'):
+            # an instance may leave an output open (fault; the fault-tree root o): the master's port set is the union
             ports = {**masters.get(mn, {}), **ports}
         elif mn in masters and masters[mn] != ports:
             raise SystemExit(f'{mn}: instances disagree on ports {masters[mn]} vs {ports}')
@@ -171,6 +171,19 @@ def main(die_v, out_sv):
                   f'    always @(posedge ck or negedge {i_}) if (!{i_}) {o_} <= 1\'b0; else {o_} <= 1\'b1;',
                   'endmodule']
             kinds['reset_repeater'] = kinds.get('reset_repeater', 0) + 1
+        elif mn.startswith('qfd_fault_or_n'):
+            # QW-G5F2 10-20 (Q.BIND.1): die fault-OR tree node = the real sticky OR rtl/qwen_split/qfd_fault_or.sv at N
+            # inputs, scalar die ports f0..f<N-1> (tools/qwen_split/fault_emit.py); the tree root's o may stay open
+            n = int(mn[len('qfd_fault_or_n'):])
+            allp = ['ck', 'rs'] + [f'f{j}' for j in range(n)] + ['o']
+            if set(ports) - set(allp) or any(w != 1 for w in ports.values()) or not set(allp[:-1]) <= set(ports):
+                raise SystemExit(f'{mn}: unexpected fault-OR node ports {ports}')
+            L += [f'module {mn} (input wire ck, input wire rs, ' + ', '.join(f'input wire f{j}' for j in range(n)) +
+                  ', output wire o);',
+                  f'    qfd_fault_or #(.N({n})) u_or (.ck(ck), .rs(rs), .f({{' +
+                  ', '.join(f'f{j}' for j in reversed(range(n))) + '}), .o(o));',
+                  'endmodule']
+            kinds['fault_or_node'] = kinds.get('fault_or_node', 0) + 1
         elif mn == 'qfd_clkrx':
             # the die clock receiver: the forwarded clock (qfd_ckbump pll_ck -> pll_fwd) drives one root per clock region
             # of this build (pll_root, pll_d2d, pll_r<k>); each root is a clock-tree root that CTS builds from here
