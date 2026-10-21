@@ -370,6 +370,8 @@ def main():
              commands=len(mucmds), users_run=users, copy_a_only=a.mu_copy_a_only),
              dl_model=dict(model=a.dl_model, R="4096/3069", flat=a.fluid_lat, guard=a.fluid_guard, window=2)
              if a.dl_model == "fluid" else dict(model="linear"))
+    if a.mu_cal and (a.xl5 or a.reserve_mu_tag):
+        g['mu']['cal_sha256'] = hashlib.sha256(Path(a.mu_cal).read_bytes()).hexdigest()
     if a.dl_model == "linear" and not (a.mu_copy_a_only or a.mu_users_of or a.reserve_mu_tag):
         # Preserve the exact main output format for all callers without new opt-ins.
         g.pop('dl_model', None)

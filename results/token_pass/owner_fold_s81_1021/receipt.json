@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.s81.owner_fold.receipt.v1",
+  "grade": "RTL-functional component (source assembly)",
+  "verdict": "PASS",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "source_ref": "c772d32fe",
+  "encoder_ref": "7b5806444",
+  "cycles_per_RB": [
+    20,
+    20,
+    20
+  ],
+  "canonical_tree": "((p0+p1)+(p2+p3))",
+  "mutant": {
+    "name": "VS MUT2 suppresses each pair second operand",
+    "verdict": "REJECTED",
+    "mismatches": 4
+  },
+  "scope": "Four finite FP32 lanes in real VP+VS. Synthetic rank partials exercise cancellation and rounding; checkpoint producer, production gather/RS/AG, row lifetimes and full token remain unqualified.",
+  "hashes": {
+    "verilator_version.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "m0/run.log": "fadfc609eab9a495d1a6993deadd37bebce892de6dd76cd60e1298db9904afae",
+    "inputs/inputs.json": "470321887269f39d296ead0812be33e4a1f4075085a3e8df11527fa0925bf900",
+    "inputs/sources.f": "86f20e463ce3cedd5e7ae5dc0b22cd9f2812e89f18ae6629d18417dbbdb781c1",
+    "inputs/tb_owner_fold.sv": "cdb678963f50c613eb45098c15b81410e20e954675230723a49bbb8297a32baa",
+    "m2/run.log": "c10a1e1b09c18eb9d9b8abea90aeda92ec968a80e099d12ac7174db1f8ad6061"
+  }
+}

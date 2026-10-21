@@ -27,6 +27,8 @@ def main():
     ap.add_argument('--sources', required=True)
     ap.add_argument('--json', required=True)
     ap.add_argument('--cal-check-log', default='results/token_pass/tokfunc_s81_1021/mu/cal241_check.log')
+    ap.add_argument('--calendar-ar', help='Exact AR calendar JSON checked with same-user collisions enabled')
+    ap.add_argument('--calendar-mtp', help='Exact corrected MTP calendar JSON; the superseded x6 schedule is invalid')
     a = ap.parse_args()
     o = Path(a.out_dir)
     cal = rd(o / 'cal.json')
@@ -42,6 +44,8 @@ def main():
         c = dict(done=done, bench_pass=bool(re.search(r'^BENCH_PASS', txt, re.M)),
                  lines=[ln for ln in txt.splitlines() if ln.startswith(('XDIE', 'PASS', 'FAIL', 'BENCH', 'LATE', 'MISMATCH',
                                                                        'STATS', 'GEN_FAILED', 'EXIT'))][:12])
+        golden = rd(o / n / 'golden.json') or {}
+        c['traffic_calendar_sha256'] = golden.get('mu', {}).get('cal_sha256')
         if st:
             pu = st['per_user']
             c.update(beats=st['beats'], users=st['users'], late=sum(d['late'] for d in pu.values()),
@@ -82,14 +86,33 @@ def main():
                          same_user_serial_delays=pl['same_user_serial_delays'] if pl else None))
     chk = Path(a.cal_check_log)
     chk_txt = chk.read_text() if chk.exists() else ''
-    rate1 = dict(tool='tools/s81_dv/dv_mu_calendar_phys.py --map <241 map> --compose romopt --alap --release241 --attn G4 '
-                 '--check (the existing brute-force checker: every window of every user mod period on 510 resources = 241 '
-                 'stage copies + 8 copy-B + 240 stage-hop link copies + Engram engines + head + host; producer/consumer = the '
-                 'forward-x chain (x / partial / combined / DENSE2 arrivals gate each stage), ROM admission = the static '
-                 'min(6, N) expert-slot reservation on the capacity-qualified map (merge --cover all_pass 241/241))',
-                 log=str(chk), result=('PASS (records reproduce SAME, checker PASS, N+1 and injected shift FAULT)'
-                                       if chk_txt.count('SAME') == 2 and chk_txt.count('checker PASS') == 2 else
-                                       'PENDING' if not chk_txt else 'SEE LOG'), grade='MODEL', lines=chk_txt.splitlines()[:4])
+    calendars = {}
+    for mode in ('ar', 'mtp'):
+        name = getattr(a, 'calendar_' + mode)
+        path = Path(name) if name else None
+        record = rd(path) if path else None
+        # A legacy PASS string cannot establish that the corrected checker ran.
+        proof = record.get('checker', {}) if record else {}
+        corrected = proof.get('same_user_checked') is True
+        good = corrected and proof.get('result') == 'PASS' and record.get('users', 0) > 0
+        calendars[mode] = dict(path=name,
+            sha256=hashlib.sha256(path.read_bytes()).hexdigest() if path and path.exists() else None,
+            checker=proof, corrected_checker=corrected,
+            verdict='PASS_MODEL' if good else 'FAIL' if record and proof.get('result') == 'FAULT' else 'PENDING',
+            users=record.get('users') if record else None,
+            period=record.get('period') if record else None,
+            per_user_tok_s=record.get('per_user_tok_s') if good else None,
+            aggregate_tok_s=record.get('aggregate_tok_s') if good else None)
+    schedule_pass = all(c['verdict'] == 'PASS_MODEL' for c in calendars.values())
+    traffic_calendar_bound = all(
+        cases.get(case, {}).get('traffic_calendar_sha256') == calendars[mode]['sha256']
+        and calendars[mode]['sha256'] is not None
+        for mode, case in [('ar', 'ar50r'), ('mtp', 'mtp10r')])
+    rate1 = dict(tool='tools/s81_dv/dv_mu_calendar_phys.py (same-user checker required)',
+                 result='PASS_MODEL' if schedule_pass else 'UNQUALIFIED', grade='MODEL',
+                 calendars=calendars,
+                 legacy_log=dict(path=str(chk), lines=chk_txt.splitlines()[:4],
+                     qualification='Historical only: the original checker missed 200 MTP same-user collisions'))
     all_cases = [n for n in cases if n not in ('cal_su', 'cal_mu1')]
     pend = [n for n in all_cases if not cases[n]['done']]
     fail = [n for n in all_cases if cases[n]['done'] and not ok(n)]
@@ -100,11 +123,14 @@ def main():
         head = None
     rec = dict(
         schema='opentallas.tokfunc_s81.mu.v1', lane='TOK-FUNC-S81/MURATE (tree TOK.DS.RATE.1, MU.TOK, MU.TOK.DS3, TOK.DS.LAYER.MU)',
-        grade=(GRADE_OK if not pend and not fail and not hop_fail and all_cases else
+        grade=(GRADE_OK if not pend and not fail and not hop_fail and all_cases and schedule_pass and traffic_calendar_bound
+               and all(u['verdict'] == 'PASS' for u in users.values()) else
                'OPEN: ' + ('; '.join(([f'FAIL {fail + hop_fail}'] if fail or hop_fail else []) + ([f'{len(pend)} pending'] if pend else [])))),
-        calendar=dict(ref='claude/s81-cal241-1021@6f8bbf5c4', dir='results/token_pass/mucal241_s81_1021', attn='G4',
-                      ar='50 users x 952.8 tok/s (period 1,259,400)', mtp='10 users x 2,963.4 (step 1,684,168)',
-                      map='results/arch/s81_map72_1021/r2_241/stage_map_f72r224gpq_241.json @483869b91 (sha 3b9962aa7afd)'),
+        calendar=dict(attn='G4', selected=calendars, schedule_model_pass=schedule_pass,
+                      traffic_calendar_bound=traffic_calendar_bound,
+                      superseded_mtp='6f8bbf5c4: invalid same-user overlap424 on200/240 hops; rates withdrawn'),
+        full_token_pass=False,
+        component_runs_only=True,
         rtl=dict(bench='tb_xdie_s81_2 XL5 (claude/s81-link5-xdie-1021 @edc851400 rdm config: MU 2 release-die endpoints)',
                  wn_leaf='ot_s81sl_lep_mu_ab #(RX_SRAM 1, IN_PIPE 1, NATIVE32 1) as G7 binds s_0N (claude/s81-die72-g7-1021 '
                          '99750c015; lep file blob a6775e6f9f7d)', sources=a.sources,
@@ -126,10 +152,9 @@ def main():
             runs=hops),
         rate1_full_stage_admission=rate1,
         findings=[
-            'MTP: the calendar link window is the AR send cycle x 6 positions; on the LINK5 serial stage circuit a user\'s '
-            'x (6 x 652) still occupies the circuit when its partial is ready on 200 of 240 hops (up to 424 cycles; '
-            'dv_mu_calendar_phys.check skips same-user overlaps although its comment says they are checked). The hop '
-            'plans serialise them (serial_delay recorded); the calendar owner (S81-CAL241) should price it',
+            'Historical 6f8bbf5c4 MTP x6 schedule is invalid: 200/240 same-user circuit collisions, max424 cycles. '
+            'The corrected checker includes same-user windows; current hop-plan generation refuses hidden serialization. '
+            'Explicit corrected calendar inputs and their checker provenance are required; missing inputs cannot inherit rates.',
             'DENSE2 A->B message is 652 + 8 cycles (x + a_proj partial); the bench h carries the 40,960 B x vector '
             '(lep NB 80 x 4 windows), the 8-cycle a_proj partial tail is not carried'],
         pending=pend, failed=fail + hop_fail)
