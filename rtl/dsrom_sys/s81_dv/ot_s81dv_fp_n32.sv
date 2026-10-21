@@ -937,15 +937,18 @@ endmodule
 
 // LAT5 has no K0 register: decode the leading-one locally for eight real
 // normalized payload consumers rather than broadcast a five-bit shift count.
-(* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_norm8 #(parameter integer LO=0)(input wire[22:0] frac,output reg[7:0] y);
- integer k; reg[23:0] shifted;
- always @* begin
-   y=8'd0; shifted=24'd0;
-   for(k=0;k<23;k=k+1)begin
-     if(frac[k])begin
-       shifted={frac,1'b0} << (22-k);
-       y=shifted[LO+:8];
-     end
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_fp_norm8 #(parameter integer LO=0)(input wire[22:0] frac,output wire[7:0] y);
+ wire[22:0] lead;
+ for(genvar k=0;k<23;k=k+1)begin:g_lead
+   assign lead[k]=frac[k] && ((frac >> (k+1))==0);
+ end
+ for(genvar b=0;b<8;b=b+1)begin:g_out
+   wire[22:0] term;
+   for(genvar k=0;k<23;k=k+1)begin:g_term
+     if(LO+b+k>=23 && LO+b+k<=45)
+       assign term[k]=lead[k] && frac[LO+b+k-23];
+     else assign term[k]=1'b0;
    end
+   assign y[b]=|term;
  end
 endmodule
