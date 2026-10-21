@@ -130,6 +130,25 @@ if [ "${OT_DIE_CLOCK_PHYS:-0}" = 1 ]; then
   rm -f $G/floorplan_pdn.odb; cp $R/dieclk/${OT_DIE_CLOCK_VARIANT:-spine}/tt/clock.odb $G/floorplan_pdn.odb || { say "DIE CLOCK PHYS: clock.odb copy FAIL"; exit 1; }
   say "DIE CLOCK PHYS: $(grep -h -E 'CHECK TT\+FF|QCLK_SPINE_NEIGHBOUR|QCLK_SPINE_MANIFEST|QCLK_REGIONAL|DIECLK_STA_LAT' $R/dieclk/STATUS.log | tr '\n' ' ' | cut -c1-900)"
 fi
+# ROOT14 10-20 (owner: reduce die closure risk): GEN hard checks before any GRT (tools/die_safety/gen_check.py):
+# every region crossing landed (ring) with a clock root on both sides, every die wire hop <= 405 um (relay site within
+# reach).  Facts: case_<die>/gen_safety_facts.json (GEN export), the die clock landed_pairs.json, the relay-stage spans.
+# Counts go into RUN/gen_packet.json.  FAIL stops the chain; OT_GEN_SAFETY=diag / OT_BIND_DIAGNOSTIC=1 run it as a
+# labelled diagnostic (NOT_A_DIE_RESULT).
+GSA=(--design "$DIE" --packet "$R/gen_packet.json" --out "$R/gen_safety.json")
+[ -s "$C/gen_safety_facts.json" ] && GSA+=(--facts "$C/gen_safety_facts.json")
+for f in "${OT_GEN_LANDED_PAIRS:-}" "$R/dieclk/landed_pairs.json" "$R"/dieclk/*/landed_pairs.json; do
+  [ -n "$f" ] && [ -s "$f" ] && { GSA+=(--landed-pairs "$f"); break; }; done
+for f in "$C/relay_stages.json" "$R/relay_stages_netlist.json"; do [ -s "$f" ] && { GSA+=(--relay-stages "$f"); break; }; done
+GSL=$(python3 "$SRC/tools/die_safety/gen_check.py" "${GSA[@]}" 2>&1) && GSR=0 || GSR=$?
+say "$(echo "$GSL" | tail -1 | cut -c1-900)"
+if [ "$GSR" != 0 ]; then
+  if [ "${OT_GEN_SAFETY:-fail}" = diag ] || [ "${OT_BIND_DIAGNOSTIC:-0}" = 1 ]; then
+    say "GEN SAFETY FAIL ($R/gen_safety.json): DIAGNOSTIC ONLY -- NOT A DIE RESULT"; echo "GEN_SAFETY_FAIL_DIAGNOSTIC_ONLY" >> "$R/NOT_A_DIE_RESULT"
+  else
+    say "GEN SAFETY FAIL ($R/gen_safety.json): no die GRT launched (OT_GEN_SAFETY=diag = labelled diagnostic)"; exit 1
+  fi
+fi
 # DIE-FLOW 10-17 (owner 0cl): OT_DIE_REPAIR=1 = shared die-net repeater step before GRT (tools/die_repeaters); the
 # element / ETM / PHY TT libs of this run are what the resizer sees (a master with signal pins and no liberty FAILS it)
 if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
@@ -144,7 +163,7 @@ if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
   RS=(--skip 'n_rst_*'); [ "${OT_ROUTE_RESET:-0}" = 1 ] && RS=()   # routed registered reset hops are ordinary die nets: repeated
   python3 $SRC/tools/die_repeaters/step.py copy $G > /dev/null && \
   python3 $SRC/tools/die_repeaters/step.py tcl --design $RD --report /work/die_repeaters.json --libs-file /work/libs_tt.txt \
-    --std-corner TT --legalize snap "${RS[@]}" > $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: step generation"; exit 1; }
+    --std-corner TT --legalize snap --signal-top-layer ${OT_DIE_SIGNAL_TOP_LAYER:-M9} "${RS[@]}" > $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: step generation"; exit 1; }
   # Q-RLYFCLK 10-19: forwarded-lane capture payload contract (a[] + ea; landing K straps from own ties are not payload)
   if [ "${RD%_fwd}" != "$RD" ] && [ -f $SRC/tools/qwen_split/fclk_data_ports.py ]; then
     { python3 $SRC/tools/qwen_split/fclk_data_ports.py $C/die.v && cat $G/die_rep_call.tcl; } > $G/die_rep_call.tcl.new && \
@@ -158,7 +177,19 @@ if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
 fi
 OV=$(awk '/Final congestion report/{f=1} f && /^Total/{print $NF; exit}' $G/grt.log)
 say "full-die GRT exit=$(cat $G/run.exit) overflow=${OV:-none} ($(grep -m1 'Total wirelength' $G/grt.log))"
-[ "${OT_STOP:-}" = grt ] && { say "stop after GRT (OT_STOP=grt)"; exit 0; }
+# ROOT14 10-20 (COORD 21:29 risk reduction (a)): die STA TT setup + FF hold runs on EVERY die build, diagnostic ones
+# included -- OT_STOP=grt no longer skips it (the GRT map is still written first).
+[ "${OT_STOP:-}" = grt ] && say "OT_STOP=grt: die STA TT+FF still runs (every die build is timed)"
+# ROOT14 10-20: die IR-drop check with the M8 signal routes present (tools/die_safety/ir_step.sh on the GRT odb + GRT M8
+# usage).  FAIL / NOT_RUN = chain FAIL at the end (STA still runs) and an OWNER_REPORT line (coordinator tells the owner).
+ir_failed=0
+if [ "${OT_DIE_IR:-run}" != skip ]; then
+  OT_IR_DESIGN=$DIE bash "$SRC/tools/die_safety/ir_step.sh" "$G/ckpt_grt.odb" "$R/ir_drop" "$G/grt.log" > "$R/ir_drop.log" 2>&1 || ir_failed=1
+  say "$(grep -E '^DIE_IR_DROP ' $R/ir_drop.log | tail -1 | cut -c1-600)"
+  [ "$ir_failed" = 0 ] || say "$(grep -E '^OWNER_REPORT ' $R/ir_drop.log | tail -1 | cut -c1-600)"
+else
+  say "DIE IR DROP SKIPPED (OT_DIE_IR=skip): NOT A DIE RESULT"; echo "IR_DROP_SKIPPED" >> "$R/NOT_A_DIE_RESULT"
+fi
 # qwen-1010/a: a die top without ports gets an empty *PORTS section from write_spef; OpenSTA rejects it (STA-1670)
 if [ -s $G/die_grt.spef ] && head -n 30 $G/die_grt.spef | awk '/^\*PORTS$/{p=1;next} p&&NF{print;exit}' | grep -q '^\*D_NET\|^\*NAME_MAP'; then
   awk 'NR<=30 && /^\*PORTS$/ {next} {print}' $G/die_grt.spef > $G/die_grt.spef.np && mv $G/die_grt.spef.np $G/die_grt.spef
@@ -166,6 +197,8 @@ if [ -s $G/die_grt.spef ] && head -n 30 $G/die_grt.spef | awk '/^\*PORTS$/{p=1;n
 fi
 sta_failed=0
 corners=${OT_CORNERS-tt ff}
+# ROOT14 10-20: TT setup + FF hold always (tools/die_safety/corners.py completes the list, never trims it)
+corners=$(python3 "$SRC/tools/die_safety/corners.py" $corners 2>>$R/STATUS.log) || { say "STA FAIL: bad corner list ${OT_CORNERS:-}"; exit 1; }
 [ -n "${corners//[[:space:]]/}" ] || { say "STA FAIL: empty corner list"; exit 1; }
 for c in $corners; do
   case "$c" in tt|ff|ss) ;; *) say "STA FAIL: unsupported corner $c"; exit 1;; esac
@@ -229,6 +262,7 @@ if [ -n "${OT_RST_WINDOW_HOPS:-}" ] && [ -s "$OT_RST_WINDOW_HOPS" ]; then
     --out $R/rst_window.json 2>&1 | tail -1)"
 fi
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
+[ "$ir_failed" = 0 ] || { say "chain FAIL: die IR-drop check FAIL/NOT_RUN ($R/ir_drop/ir_drop.json) -- OWNER REPORT"; exit 1; }
 if [ -s $C/fwd_lanes.json ] && [ "${OT_FWD_LAND_DUMP:-1}" = 1 ]; then
   LG=(); for c in tt ff; do [ -s $R/sta_${DIE}_$c/grt_$c.log ] && LG+=($R/sta_${DIE}_$c/grt_$c.log); done
   [ ${#LG[@]} -gt 0 ] && say "LAND PLAN: $(python3 $SRC/tools/qwen_split/fwd_land_plan.py plan --lanes $C/fwd_lanes.json --logs "${LG[@]}" --out $R/land_plan.json 2>&1 | tail -1)"
