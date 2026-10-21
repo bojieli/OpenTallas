@@ -116,16 +116,16 @@ module qfd_native59_static_service_obs1 #(
  // NativePC11 guard proves argmax and weight-ROM accesses inactive. Status
  // reports actual single-operation availability even after completion, when
  // the head still selects this face before the next ordinary-ROM command.
+ wire complete_ok=requested&&done_seen&&(&q_seen)&&(&result_seen)&&(&committed);
  // Observe the exact accepted-completion predicate, at the existing edge.
- assign completing=complete_slot && active && (complete_ok || MUT_EARLY_COMPLETE!=0) && !fault && !source_fault;
+ assign completing=rst_n && complete_slot && active && (complete_ok || MUT_EARLY_COMPLETE!=0) && !fault && !source_fault;
  for(genvar oc=0;oc<4;oc=oc+1) begin:g_obs_tag
   localparam integer LO=15*oc,W=(oc==3)?14:15;
-  qfd_status_obs_hold_chunk #(.W(W)) u_tag (.ck(ck),.a(complete_slot),
+  qfd_status_obs_hold_chunk #(.W(W)) u_tag (.ck(ck),.a(rst_n && complete_slot),
    .b(active && (complete_ok || MUT_EARLY_COMPLETE!=0)),.c(!fault && !source_fault),
    .d(tag[LO+:W]),.q(completed_tag[LO+:W]));
  end
  assign native_ret={fault,{10'd0,commit_count},76'd0,(!active&&!fault),(!active&&!fault)};
- wire complete_ok=requested&&done_seen&&(&q_seen)&&(&result_seen)&&(&committed);
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)begin
    tag<=0;base<=0;context_valid<=0;commit_count<=0;requested<=0;done_seen<=0;q_seen<=0;result_seen<=0;committed<=0;q_count<=0;result_count<=0;

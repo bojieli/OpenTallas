@@ -20,23 +20,25 @@
   },
   "extra_observer_edges": 0,
   "payload_reset": "unreset held identity payload; event/control reset; codec must canonicalize payload to zero until seen (codec e25f473e7 does so)",
-  "native_enable_structure": "kept capture helper per <=22 bits, independent local predicate; native last-slot copies per <=15 tag mux bits, no weak aliases",
+  "native_enable_structure": "kept capture helper per <=15 bits, independent local predicate; native last-slot copies per <=15 tag mux bits, no weak aliases",
   "source_sha256": {
-    "rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv": "9404510c99bdc200ecfbc18dd5bc7f81135a6f9eb1e1606f135df427a4b2b2ad",
-    "rtl/qwen_split/mu/qfd_mu_ctx_rx_obs1.sv": "75066cdbfd303f63fe99f84d02cb0679fcd6802de335631fd352d25178edce25",
-    "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_obs1.sv": "38520bff6fdfa15e588634c46a3077aa2d720945763a36b59ec0ebd3fe1d670e",
+    "rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv": "2decb61fd0f67cb1d58828e41fa090fb9822bf5db8d30dbf5ff9bbd6bc9844cf",
+    "rtl/qwen_split/mu/qfd_mu_ctx_rx_obs1.sv": "75ab708433caa2509763359e15bc8171fa3a45468844cec130ddd2039d92974c",
+    "rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_obs1.sv": "1b6f689d3b07d409880782a44d292cb1f08e5ef0ff305ab2fba5519458308f79",
     "rtl/qwen_split/mu/qfd_sys_face_mu_dhobs_obs1.sv": "c979ad871fd6f953bd9af063417243f688206ca355a48b8c0811a65a601e81a2",
-    "rtl/qwen_split/qfd_native59_static_service_obs1.sv": "ffd421912b91e8652310f8502c5bf875df7ee7f17e1331933385186803218efe",
-    "rtl/qwen_split/qfd_native59_svc_obs1.sv": "ce6a9ec04c25c26d4a26e6fbb290fd37ed6f0c39f7f1c997c921f4676ca507a1",
+    "rtl/qwen_split/qfd_native59_static_service_obs1.sv": "a7c00bf61b3840fbde07d7c93a9d14be7fe2a3c39af5ae6f3b774f245453fb82",
+    "rtl/qwen_split/qfd_native59_svc_obs1.sv": "c1b1ae3794a480c6a7e7b5f98909b0eb2d3d4ee346300350673d686b68ef332a",
     "rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv": "b8f883e7b0ec00b591eb68c1b57f75b76802c666030528c7f9e8483d790e1c44"
   },
   "verification": {
     "modern_yosys_frontend": "PASS seven files",
     "helper_AST": "PASS3",
     "setup_bash_n": "PASS",
-    "functional_callbacks": "PENDING",
+    "functional_callbacks": "PASS215ticks/2actualnativeops/3ctxloads/1RESULT event; original outputs differential; wrong native TAG source causal mutant rejected",
     "GEN": "NOTRUN",
-    "closure": "NOTRUN"
+    "closure": "NOTRUN",
+    "functional_unit": "gold1 oth-ubuntu-1986631-1792606590",
+    "full_native_two_slot_parent": "source reviewed/frontend parsed; assembled parent function/native physical checks remain owed"
   },
   "legacy": "Original functional source modules unchanged; explicit unique obs1 ABI and source pins, no old view alias"
 }

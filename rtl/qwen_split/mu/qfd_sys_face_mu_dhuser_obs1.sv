@@ -239,9 +239,10 @@ module qfd_sys_face_mu_dhuser_obs1 #(
         reg        fault_q;
         reg res_event;
         wire [43:0] res_dh;
-        for(genvar oc=0;oc<2;oc=oc+1) begin:g_obs_dh
-            qfd_status_obs_hold_chunk #(.W(22)) u_dh (.ck(ck),.a(hs),.b(RES_SEQ[k]),.c(1'b1),
-                .d(dh_run[22*oc+:22]),.q(res_dh[22*oc+:22]));
+        for(genvar oc=0;oc<3;oc=oc+1) begin:g_obs_dh
+            localparam integer LO=15*oc,W=(oc==2)?14:15;
+            qfd_status_obs_hold_chunk #(.W(W)) u_dh (.ck(ck),.a(rst_n && hs),.b(RES_SEQ[k]),.c(1'b1),
+                .d(dh_run[LO+:W]),.q(res_dh[LO+:W]));
         end
         always @(posedge ck or negedge rst_n)
             if(!rst_n) res_event<=0; else res_event<=hs && RES_SEQ[k];

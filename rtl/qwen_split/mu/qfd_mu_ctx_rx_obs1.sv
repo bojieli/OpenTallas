@@ -47,7 +47,7 @@ module qfd_mu_ctx_rx_obs1 #(
     // The raw validated TAG59 is held on the same actual filler-load edge.
     for (genvar oc=0; oc<4; oc=oc+1) begin:g_obs_tag
         localparam integer LO=15*oc, W=(oc==3)?14:15;
-        qfd_status_obs_hold_chunk #(.W(W)) u_tag (.ck(ck), .a(context_slot), .b(rx_v),
+        qfd_status_obs_hold_chunk #(.W(W)) u_tag (.ck(ck), .a(rst_n && context_slot), .b(rx_v),
             .c(good && {1'b0,u}<3'(NU) && u!=0), .d(rx_tag[LO+:W]), .q(ctx_tag[LO+:W]));
     end
     reg  [127:0] r;
