@@ -1,4 +1,5 @@
 import json
+import hashlib
 from pathlib import Path
 import tempfile
 import unittest
@@ -94,6 +95,30 @@ endmodule
             f = export(root, libs=root)
             self.assertNotIn('None', f['regions'])
             self.assertEqual(len(f['crossings']), 1)
+
+    def test_geometric_inout_needs_actual_source_direction(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.fixture(root)
+            lef = root/'elements.lef'
+            lef.write_text(lef.read_text().replace('DIRECTION OUTPUT', 'DIRECTION INOUT'))
+            with self.assertRaisesRegex(ValueError, 'missing LEF direction on connected net'):
+                export(root)
+            source = root/'source_ports.json'
+            source.write_text(json.dumps(dict(die_sha256=hashlib.sha256((root/'die.v').read_bytes()).hexdigest(),
+                masters={'src': dict(ports={'b': ['OUTPUT']*2}), 'dst': dict(ports={'a': ['INPUT']*2})})))
+            f = export(root, source_ports=source)
+            self.assertEqual(f['coverage']['driver_load_bit_pairs'], 2)
+
+    def test_actual_source_and_definite_lef_conflict_refuses(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.fixture(root)
+            source = root/'source_ports.json'
+            source.write_text(json.dumps(dict(die_sha256=hashlib.sha256((root/'die.v').read_bytes()).hexdigest(),
+                masters={'src': dict(ports={'b': ['INPUT']*2}), 'dst': dict(ports={'a': ['INPUT']*2})})))
+            with self.assertRaisesRegex(ValueError, 'LEF/source direction conflict'):
+                export(root, source_ports=source)
 
 
 if __name__ == '__main__':
