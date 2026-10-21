@@ -11,6 +11,7 @@ module ot_s81dv_norm_finish_sram #(
     input  wire              clk,
     input  wire              rst_n,
     input  wire              go,
+    input  wire              go_mem,
     input  wire [P-1:0]      f_v,
     input  wire [P*8-1:0]    f_base,      // global index of the flit's first partial
     input  wire [P*K*32-1:0] f_d,
@@ -206,6 +207,11 @@ module ot_s81dv_norm_finish_sram #(
     wire[7:0] read_fire;wire[71:0] read_tags;
     wire[8*NG8-1:0] mem_reset;
     ot_s81dv_finish_reset2 #(.LEAVES(8*NG8)) u_mem_reset(.clk(clk),.rst_n(rst_n),.q(mem_reset));
+    (* keep *) reg[15:0] mem_go;
+    for(genvar mg=0;mg<16;mg=mg+1)begin:g_mem_go
+      always @(posedge clk or negedge mem_reset[mg])
+        if(!mem_reset[mg])mem_go[mg]<=0;else mem_go[mg]<=go_mem;
+    end
     for(genvar mc=0;mc<8;mc=mc+1)begin:g_mem_command
       wire[NVP-1:0] mo;wire[NG8-1:0] mg;
       for(genvar mq=0;mq<NG8;mq=mq+1)begin:g_group
@@ -213,9 +219,9 @@ module ot_s81dv_norm_finish_sram #(
         (* keep *) reg[7:0] o;(* keep *) reg g;
         always @(posedge clk or negedge mem_reset[mc*NG8+mq])
           if(!mem_reset[mc*NG8+mq])begin o<=0;g<=0;end
-          else begin o<=mr & ~(mr-8'd1);g<=(|mr) && !go_t[(mq+2)%NGO];end
+          else begin o<=mr & ~(mr-8'd1);g<=(|mr) && !mem_go[(mc*NG8+mq)%16];end
         assign mo[mq*8+:8]=o;
-        assign mg[mq]=g && !go_t[(mq+7)%NGO];
+        assign mg[mq]=g && !mem_go[(mc*NG8+mq)%16];
       end
       wire[NG8-1:0] ms=mg & ~(mg-1'b1);
       wire[NVP-1:0] mw;
@@ -269,6 +275,7 @@ module ot_s81dv_eng_finish_sram #(
     input  wire              clk,
     input  wire              rst_n,
     input  wire              go,
+    input  wire              go_mem,
     input  wire [P-1:0]      f_v,
     input  wire [P*2-1:0]    f_t,         // tree (0 hh, 1 kk, 2 dd)
     input  wire [P*8-1:0]    f_base,      // global index of the flit's first partial
@@ -455,6 +462,11 @@ module ot_s81dv_eng_finish_sram #(
     wire[7:0] read_fire;wire[71:0] read_tags;
     wire[8*NG8-1:0] mem_reset;
     ot_s81dv_finish_reset2 #(.LEAVES(8*NG8)) u_mem_reset(.clk(clk),.rst_n(rst_n),.q(mem_reset));
+    (* keep *) reg[15:0] mem_go;
+    for(genvar mg=0;mg<16;mg=mg+1)begin:g_mem_go
+      always @(posedge clk or negedge mem_reset[mg])
+        if(!mem_reset[mg])mem_go[mg]<=0;else mem_go[mg]<=go_mem;
+    end
     for(genvar mc=0;mc<8;mc=mc+1)begin:g_mem_command
       wire[NC-1:0] mo;wire[NG8-1:0] mg;
       for(genvar mq=0;mq<NG8;mq=mq+1)begin:g_group
@@ -462,9 +474,9 @@ module ot_s81dv_eng_finish_sram #(
         (* keep *) reg[7:0] o;(* keep *) reg g;
         always @(posedge clk or negedge mem_reset[mc*NG8+mq])
           if(!mem_reset[mc*NG8+mq])begin o<=0;g<=0;end
-          else begin o<=mr & ~(mr-8'd1);g<=(|mr) && !go_t[(mq+3)%NGO];end
+          else begin o<=mr & ~(mr-8'd1);g<=(|mr) && !mem_go[(mc*NG8+mq)%16];end
         assign mo[mq*8+:8]=o;
-        assign mg[mq]=g && !go_t[(mq+17)%NGO];
+        assign mg[mq]=g && !mem_go[(mc*NG8+mq)%16];
       end
       wire[NG8-1:0] ms=mg & ~(mg-1'b1);
       wire[NC-1:0] mw;

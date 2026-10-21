@@ -614,13 +614,13 @@ module ot_s81dv_xfin #(
     always @(posedge clk or negedge rt[0]) if (!rt[0]) sv_c <= 1'b0; else sv_c <= s_v;
     // finish go: one KEPT same-edge copy of go_c per finish instance under the SRAM build (NATIVE32, ELEM-XFV/XFIN
     // 10-21: each SRAM finish fans its go into <=32 go_t copies; go_c itself drove 82 loads); default build = go_c
-    wire [4:0] go_f;
+    wire [9:0] go_f;
 `ifdef OT_S81DV_XFIN_SRAM
-    (* keep *) reg [4:0] go_fr;
-    always @(posedge clk) go_fr <= {5{go}};
+    (* keep *) reg [9:0] go_fr;
+    always @(posedge clk) go_fr <= {10{go}};
     assign go_f = go_fr;
 `else
-    assign go_f = {5{go_c}};
+    assign go_f = {10{go_c}};
 `endif
     reg md;                                        // mode of the current go
     always @(posedge clk or negedge rt[0]) if (!rt[0]) md <= 1'b0; else if (go_c) md <= mode_c;
@@ -751,7 +751,13 @@ module ot_s81dv_xfin #(
     ot_s81dv_norm_finish #(.NV(NS * NVL)
 `endif
       , .K(NVL), .P(3), .D(64 * NVL * NS), .LM(LM), .LA(LA)) u_f (.clk(clk),
-        .rst_n(rt[14]), .go(go_f[4]), .f_v(dlv_f[4*3 +: 3] & {3{!mdc[NENG+2]}}), .f_base(dlb_f[4*24 +: 24]), .f_d(dl_d), .eps(eps_c), .r_v(fr_v), .r(fr), .fault(rf));
+        .rst_n(rt[14]),
+`ifdef OT_S81DV_XFIN_SRAM
+        .go(go_f[8]), .go_mem(go_f[9]),
+`else
+        .go(go_f[4]),
+`endif
+        .f_v(dlv_f[4*3 +: 3] & {3{!mdc[NENG+2]}}), .f_base(dlb_f[4*24 +: 24]), .f_d(dl_d), .eps(eps_c), .r_v(fr_v), .r(fr), .fault(rf));
     always @(posedge clk or negedge rt[0]) if (!rt[0]) rb_v <= 1'b0; else rb_v <= fr_v;
     always @(posedge clk) rb_d <= fr;
     // ---------------------------------------------------------------- ENG finish: one per copy
@@ -775,7 +781,12 @@ module ot_s81dv_xfin #(
 `else
             ot_s81dv_eng_finish #(.NV(NS * NVL)
 `endif
-      , .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rt[10 + cc]), .go(go_f[cc]),
+      , .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rt[10 + cc]),
+`ifdef OT_S81DV_XFIN_SRAM
+                .go(go_f[cc*2]), .go_mem(go_f[cc*2+1]),
+`else
+                .go(go_f[cc]),
+`endif
                 .f_v(fv), .f_t(ft), .f_base(fb), .f_d(dl_d), .r_v(cr_v[cc]), .r_hh(chh[cc]), .r_kk(ckk[cc]), .r_dd(cdd[cc]),
 `ifdef OT_S81DV_XFIN_SRAM
                 .r_vk(crk[cc * 25 +: 25]),
@@ -790,8 +801,8 @@ module ot_s81dv_xfin #(
     // Byte-owned capture and selection: every finish pulse owns only eight
     // payload bits. Pending copies use the same release and update edges.
     (* keep *) reg [3:0] epf [0:12];
-    (* keep *) reg [12:0] ep_go;
-    always @(posedge clk) ep_go <= {13{go}};
+    (* keep *) reg [6:0] ep_go;
+    always @(posedge clk) ep_go <= {7{go}};
     wire [3:0] eallf [0:12], eohf [0:12];
     genvar ef, eb;
     for (ef = 0; ef < 13; ef = ef + 1) begin : g_ef
@@ -799,7 +810,7 @@ module ot_s81dv_xfin #(
         assign eohf[ef] = eallf[ef] & ~(eallf[ef] - 4'd1);
         always @(posedge clk or negedge rt[24 + ef/2])
             if (!rt[24 + ef/2]) epf[ef] <= 4'd0;
-            else if (ep_go[ef]) epf[ef] <= 4'd0;
+            else if (ep_go[ef/2]) epf[ef] <= 4'd0;
             else epf[ef] <= eallf[ef] & ~eohf[ef];
     end
     wire [3:0] eall = eallf[0], eoh = eohf[0];
