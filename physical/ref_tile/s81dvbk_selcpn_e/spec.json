@@ -332,5 +332,8 @@
   "cols": 4,
   "allow_none": true
  },
- "keep_pin_regs": true
+ "keep_pin_regs": true,
+ "fill_reason": {
+  "pin_bound": "Measured failed MAIN has6072 functional+clock pins, excluding144 supplies. At4 pins/um this needs1518um perimeter; minimum square side379.5um, next43.2um lattice side388.8um. Proposed faces S1508/N1509/W1544/E1511 each fit1555.2 gross face capacity; actual pin landing and post-route fill remain to be measured. Projected placed occupancy43042.3/151165.44=28.47%, not a waiver or approval."
+ }
 }

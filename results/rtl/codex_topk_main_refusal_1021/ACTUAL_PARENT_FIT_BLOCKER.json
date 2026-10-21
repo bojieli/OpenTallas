@@ -1,0 +1,66 @@
+{
+  "status": "ACTUAL_COMBINED_FIT_NOT_PROVEN_NO_GATE",
+  "time_utc": "2026-10-21 23:59:28 UTC",
+  "control_source": "cb73b3e99a77afc0ea65e847fb5509b3da664b87",
+  "square_model": "fca983db5",
+  "g9_slot": {
+    "master": "dsfd_bk_selector_vm",
+    "origin": [
+      7716.16,
+      20676.0
+    ],
+    "size": [
+      907.2,
+      4190.4
+    ],
+    "plan": "/home/ubuntu/scratch/codex-s81-g9-assembly-1021/g9_selected_prepare/plan.json",
+    "plan_sha256": "9b5daf86cdf350e656c46e9810e41839c3f524d1874e946cda31bfc1677978ab",
+    "internal_placements": false
+  },
+  "band_cost_um": {
+    "square_parent": 3499.2,
+    "TX_MAIN_candidate": 540,
+    "one_gap": 43.2,
+    "remaining": 108,
+    "total": 4190.4
+  },
+  "vmux": {
+    "module": "dsdv_idx_vmux",
+    "parameter_V": 276,
+    "source_tree_sha256": "4fdbaf13ac73d998ae3f5566ef3cb46628559a19b6a69f5c6dc6a3aecdd66032",
+    "RTL_FF": {
+      "input_staging": 1104,
+      "output_staging": 276,
+      "valid_copies": 48,
+      "sticky_fault": 1,
+      "reset_state": 5,
+      "total": 1434
+    },
+    "signal_clock_pins": 1383,
+    "pin_to_pin_edges": 2,
+    "reset_release_edges": 2,
+    "native_qualified_standalone": false,
+    "mapped_area_receipt": null,
+    "published_LEF": null
+  },
+  "source_integration": {
+    "existing_vmtx_selector": "baseline dsdv_bk_sel",
+    "required_selector": "dsdv_bk_sel_pa_n32_lp",
+    "regional_clock_reset_pairs": 39,
+    "new_composed_wrapper_proven": false
+  },
+  "required_before_parent_admission": [
+    "Actual VMUX mapped body and legal pin-face profile, not an assumed108um-high macro.",
+    "Actual TX native PASS and physical body; R4 production baseline PASS, three causal units live, no R4 native yet.",
+    "Explicit PlanA+VMUX+TX source forwarding39 related clock/reset pairs and real local VMUX/TX regions.",
+    "Pin/body/PG/fence/CTS landing fit for the connected composition; current slot has no such placements.",
+    "Price all source crossings, fixed issue/read/drain dates and actual existing production/causal proof; no assumed zero-edge relocation."
+  ],
+  "control_gate_preflight": [
+    "Source cb73 and native32 receipt preserved; no RTL/clock/reset/calendar change in square kit.",
+    "6072 functional/clock pins vs6216 with supplies; four-face capacity and measured398.928um maximum model reach remain model-only.",
+    "Clock constraints unchanged; supported balance_levels CTS flag is proposed, not a clock PASS.",
+    "12 actual SRAM macros remain; projected fill28.47% now has factual pin-bound reason, not selfapproval.",
+    "MAIN clock/GRT failure and independent FB clock/fill failure preserved. No gate or qualified submit admitted."
+  ]
+}
