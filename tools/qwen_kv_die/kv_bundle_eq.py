@@ -347,6 +347,10 @@ def _place_pads(K, m, staged, prev_pt, sink_pt, n, w, h, cap, grid=10.8, rmax=60
         bank = _place_pad_bank(K, m, staged, prev_pt, sink_pt, n, w, h, cap)
         if bank is not None:
             return bank
+    if n >= 8 and os.environ.get('OT_KV_EQ_PAD_RMAX'):
+        # KV-D2D3 10-20 (default off): a long pad chain (PV.start 39 at the pvw_1 sink inside the PV array) may wander
+        # further from its sink to find legal spots; every wire still within cap, the last pad within reach of the sink
+        rmax = max(rmax, int(os.environ['OT_KV_EQ_PAD_RMAX']))
     out, pt = [], prev_pt
     span = rmax * grid + 2 * cap + 400.0
     lo_x, hi_x = min(prev_pt[0], sink_pt[0]) - span, max(prev_pt[0], sink_pt[0]) + span
