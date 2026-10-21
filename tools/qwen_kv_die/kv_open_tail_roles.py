@@ -73,7 +73,9 @@ SOURCES = {
 # KV-BIND9 10-20: re-pinned (was 05d79ab2...).  Change: main 6f5ecb234 (opt-in OT_KV_QKH_SAFE32 calendar D_QK via
 # kv_qkh_safe32; default byte-identical) + default-off OT_KV_CTL_PORTRAIT (ctl frame only, placement); no PC / GRP
 # chain-end text changed (GEN_ASSERT).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '1fdd9870b47dcc68337c787cf282f7cebd8f26df2daf92787c9d26929568f10f')
+# LEAD10-KV 10-20: re-pinned after KV-BIND12 2ccd74749/969e007ec (OT_KV_EMB_WEST, default off): placement-only change
+# (kvs_emb anchor + a per-placement keep-out in free_spot); no instance, port or chain-end text changed.
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '5fbd507cd680725927c9db087443a28d07c5c372bc8167d809eb862fca8a393c')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
