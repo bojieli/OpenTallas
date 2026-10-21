@@ -42,8 +42,8 @@ def wave_plan(*, F, senders, source_sectors, destination_sectors, vm_rt,
     """
     if F not in (12, 16) or rings != 2:
         raise ValueError('bounded selected F12/F16 two-ring transport only')
-    if tuple(senders) not in ((0, 1, 2, 3), (0, 1, 2)):
-        raise ValueError('only actual 4-quarter COLL or 3-quarter TOPK input')
+    if tuple(senders) not in ((0, 1, 2, 3), (0, 1, 2), (0,)) or (tuple(senders) == (0,) and F != 16):
+        raise ValueError('only actual 4-quarter COLL, 3-quarter TOPK or SW F16 P-page source')
     if len(vm_rt) != 4 or len(set(vm_rt)) != 1 or min(vm_rt) < 0:
         raise ValueError('equal explicit VM_RT on four coherent GQ sources required')
     if len(source_sectors) != 4 or len(destination_sectors) != 4:
@@ -122,6 +122,9 @@ def wave_plan(*, F, senders, source_sectors, destination_sectors, vm_rt,
                 read_calendar_obligation=('bind 4x8 actual request-lane delays OR reserve all banks exclusively '
                     'to COLL read-group3/write-code2 over common full epoch, including existing run-out; '
                     'VM_RT alone does not resolve physical bank read edges'),
+                sequence_completion_qualified=(tuple(senders) != (0,)),
+                single_wave_proof_scope=('data transactions equal qualified F16 first wave; one-row programme completion not executed'
+                                         if tuple(senders) == (0,) else None),
                 source_quarters=list(senders), inactive_source_quarters=sorted(set(range(4))-set(senders)),
                 required_cut='four real GQ/land/ring A+B/VM calendar paths; real producer writes before wave',
                 qualifies_native_layer=False, qualifies_native_chain=False)

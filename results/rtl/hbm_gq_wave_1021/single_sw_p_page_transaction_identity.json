@@ -1,0 +1,2322 @@
+{
+ "status": "STATIC_TRANSACTION_IDENTITY_TO_QUALIFIED_FIRSTWAVE",
+ "reads": 16,
+ "writes": 64,
+ "ring_events": 64,
+ "period": 174,
+ "last_commit": 125,
+ "rtl_changed": false,
+ "sequence_completion_qualified": false,
+ "scope": "SW realcontiguous16-sector producer page, noM/repackoracle. Fullstreamdata/ring/VMtransactions byte-identical to qualifiedF16firstwave; descriptorperiod +one-rowprogrammetermination unexecuted, no newbuild.",
+ "plan": {
+  "status": "source_candidate_unqualified",
+  "define": "OT_COLL_GQ_SINGLE_SENDER",
+  "rows": [
+   [
+    90294719245499331163354418775466850751363564549835238163222039346163486818310
+   ],
+   [
+    90294719245499331163354418775466850751363564549835238163295827439562138845190
+   ],
+   [
+    90294719245499331163354418775466850751363564549835238163369615541756883894278
+   ],
+   [
+    90294719245499331163354418775466850751363564549835238163443403643951628943366
+   ]
+  ],
+  "descriptors": [
+   {
+    "sender": 0,
+    "F": 16,
+    "stride": 16,
+    "fire": 0,
+    "Bs": 129,
+    "self_land": 1,
+    "rings": 2,
+    "period": 174
+   }
+  ],
+  "vm_reads": [
+   {
+    "quarter": 0,
+    "edge": 17,
+    "sector": 64,
+    "bank": 0,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 17,
+    "sector": 65,
+    "bank": 1,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 18,
+    "sector": 66,
+    "bank": 2,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 18,
+    "sector": 67,
+    "bank": 3,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 20,
+    "sector": 68,
+    "bank": 4,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 20,
+    "sector": 69,
+    "bank": 5,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 21,
+    "sector": 70,
+    "bank": 6,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 21,
+    "sector": 71,
+    "bank": 7,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 23,
+    "sector": 72,
+    "bank": 0,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 23,
+    "sector": 73,
+    "bank": 1,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 24,
+    "sector": 74,
+    "bank": 2,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 24,
+    "sector": 75,
+    "bank": 3,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 26,
+    "sector": 76,
+    "bank": 4,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 26,
+    "sector": 77,
+    "bank": 5,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 27,
+    "sector": 78,
+    "bank": 6,
+    "read_group": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 27,
+    "sector": 79,
+    "bank": 7,
+    "read_group": 3
+   }
+  ],
+  "vm_writes": [
+   {
+    "quarter": 1,
+    "edge": 111,
+    "sector": 1000,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 0
+   },
+   {
+    "quarter": 3,
+    "edge": 113,
+    "sector": 1000,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 0
+   },
+   {
+    "quarter": 2,
+    "edge": 115,
+    "sector": 1000,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 0
+   },
+   {
+    "quarter": 0,
+    "edge": 104,
+    "sector": 1000,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 0
+   },
+   {
+    "quarter": 1,
+    "edge": 111,
+    "sector": 1001,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 1
+   },
+   {
+    "quarter": 3,
+    "edge": 113,
+    "sector": 1001,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 1
+   },
+   {
+    "quarter": 2,
+    "edge": 115,
+    "sector": 1001,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 1
+   },
+   {
+    "quarter": 0,
+    "edge": 104,
+    "sector": 1001,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 1
+   },
+   {
+    "quarter": 2,
+    "edge": 112,
+    "sector": 1002,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 2
+   },
+   {
+    "quarter": 3,
+    "edge": 114,
+    "sector": 1002,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 2
+   },
+   {
+    "quarter": 1,
+    "edge": 116,
+    "sector": 1002,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 2
+   },
+   {
+    "quarter": 0,
+    "edge": 105,
+    "sector": 1002,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 2
+   },
+   {
+    "quarter": 2,
+    "edge": 112,
+    "sector": 1003,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 3
+   },
+   {
+    "quarter": 3,
+    "edge": 114,
+    "sector": 1003,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 3
+   },
+   {
+    "quarter": 1,
+    "edge": 116,
+    "sector": 1003,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 3
+   },
+   {
+    "quarter": 0,
+    "edge": 105,
+    "sector": 1003,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 3
+   },
+   {
+    "quarter": 1,
+    "edge": 114,
+    "sector": 1004,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 4
+   },
+   {
+    "quarter": 3,
+    "edge": 116,
+    "sector": 1004,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 4
+   },
+   {
+    "quarter": 2,
+    "edge": 118,
+    "sector": 1004,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 4
+   },
+   {
+    "quarter": 0,
+    "edge": 107,
+    "sector": 1004,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 4
+   },
+   {
+    "quarter": 1,
+    "edge": 114,
+    "sector": 1005,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 5
+   },
+   {
+    "quarter": 3,
+    "edge": 116,
+    "sector": 1005,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 5
+   },
+   {
+    "quarter": 2,
+    "edge": 118,
+    "sector": 1005,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 5
+   },
+   {
+    "quarter": 0,
+    "edge": 107,
+    "sector": 1005,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 5
+   },
+   {
+    "quarter": 2,
+    "edge": 115,
+    "sector": 1006,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 6
+   },
+   {
+    "quarter": 3,
+    "edge": 117,
+    "sector": 1006,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 6
+   },
+   {
+    "quarter": 1,
+    "edge": 119,
+    "sector": 1006,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 6
+   },
+   {
+    "quarter": 0,
+    "edge": 108,
+    "sector": 1006,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 6
+   },
+   {
+    "quarter": 2,
+    "edge": 115,
+    "sector": 1007,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 7
+   },
+   {
+    "quarter": 3,
+    "edge": 117,
+    "sector": 1007,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 7
+   },
+   {
+    "quarter": 1,
+    "edge": 119,
+    "sector": 1007,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 7
+   },
+   {
+    "quarter": 0,
+    "edge": 108,
+    "sector": 1007,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 7
+   },
+   {
+    "quarter": 1,
+    "edge": 117,
+    "sector": 1008,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 8
+   },
+   {
+    "quarter": 3,
+    "edge": 119,
+    "sector": 1008,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 8
+   },
+   {
+    "quarter": 2,
+    "edge": 121,
+    "sector": 1008,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 8
+   },
+   {
+    "quarter": 0,
+    "edge": 110,
+    "sector": 1008,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 8
+   },
+   {
+    "quarter": 1,
+    "edge": 117,
+    "sector": 1009,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 9
+   },
+   {
+    "quarter": 3,
+    "edge": 119,
+    "sector": 1009,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 9
+   },
+   {
+    "quarter": 2,
+    "edge": 121,
+    "sector": 1009,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 9
+   },
+   {
+    "quarter": 0,
+    "edge": 110,
+    "sector": 1009,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 9
+   },
+   {
+    "quarter": 2,
+    "edge": 118,
+    "sector": 1010,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 10
+   },
+   {
+    "quarter": 3,
+    "edge": 120,
+    "sector": 1010,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 10
+   },
+   {
+    "quarter": 1,
+    "edge": 122,
+    "sector": 1010,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 10
+   },
+   {
+    "quarter": 0,
+    "edge": 111,
+    "sector": 1010,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 10
+   },
+   {
+    "quarter": 2,
+    "edge": 118,
+    "sector": 1011,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 11
+   },
+   {
+    "quarter": 3,
+    "edge": 120,
+    "sector": 1011,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 11
+   },
+   {
+    "quarter": 1,
+    "edge": 122,
+    "sector": 1011,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 11
+   },
+   {
+    "quarter": 0,
+    "edge": 111,
+    "sector": 1011,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 11
+   },
+   {
+    "quarter": 1,
+    "edge": 120,
+    "sector": 1012,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 12
+   },
+   {
+    "quarter": 3,
+    "edge": 122,
+    "sector": 1012,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 12
+   },
+   {
+    "quarter": 2,
+    "edge": 124,
+    "sector": 1012,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 12
+   },
+   {
+    "quarter": 0,
+    "edge": 113,
+    "sector": 1012,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 12
+   },
+   {
+    "quarter": 1,
+    "edge": 120,
+    "sector": 1013,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 13
+   },
+   {
+    "quarter": 3,
+    "edge": 122,
+    "sector": 1013,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 13
+   },
+   {
+    "quarter": 2,
+    "edge": 124,
+    "sector": 1013,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 13
+   },
+   {
+    "quarter": 0,
+    "edge": 113,
+    "sector": 1013,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 13
+   },
+   {
+    "quarter": 2,
+    "edge": 121,
+    "sector": 1014,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 14
+   },
+   {
+    "quarter": 3,
+    "edge": 123,
+    "sector": 1014,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 14
+   },
+   {
+    "quarter": 1,
+    "edge": 125,
+    "sector": 1014,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 14
+   },
+   {
+    "quarter": 0,
+    "edge": 114,
+    "sector": 1014,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 14
+   },
+   {
+    "quarter": 2,
+    "edge": 121,
+    "sector": 1015,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 15
+   },
+   {
+    "quarter": 3,
+    "edge": 123,
+    "sector": 1015,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 15
+   },
+   {
+    "quarter": 1,
+    "edge": 125,
+    "sector": 1015,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 15
+   },
+   {
+    "quarter": 0,
+    "edge": 114,
+    "sector": 1015,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 15
+   }
+  ],
+  "ring_events": [
+   {
+    "ring": 0,
+    "quarter": 0,
+    "direction": 0,
+    "edge": 104,
+    "kind": "inject",
+    "source": 0,
+    "tag": 0,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 1,
+    "direction": 0,
+    "edge": 106,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 0,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 3,
+    "direction": 0,
+    "edge": 108,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 0,
+    "ttl": 2
+   },
+   {
+    "ring": 0,
+    "quarter": 2,
+    "direction": 0,
+    "edge": 110,
+    "kind": "receive",
+    "source": 0,
+    "tag": 0,
+    "ttl": 1
+   },
+   {
+    "ring": 1,
+    "quarter": 0,
+    "direction": 0,
+    "edge": 104,
+    "kind": "inject",
+    "source": 0,
+    "tag": 0,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 1,
+    "direction": 0,
+    "edge": 106,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 0,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 3,
+    "direction": 0,
+    "edge": 108,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 0,
+    "ttl": 2
+   },
+   {
+    "ring": 1,
+    "quarter": 2,
+    "direction": 0,
+    "edge": 110,
+    "kind": "receive",
+    "source": 0,
+    "tag": 0,
+    "ttl": 1
+   },
+   {
+    "ring": 0,
+    "quarter": 0,
+    "direction": 1,
+    "edge": 105,
+    "kind": "inject",
+    "source": 0,
+    "tag": 1,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 2,
+    "direction": 1,
+    "edge": 107,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 1,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 3,
+    "direction": 1,
+    "edge": 109,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 1,
+    "ttl": 2
+   },
+   {
+    "ring": 0,
+    "quarter": 1,
+    "direction": 1,
+    "edge": 111,
+    "kind": "receive",
+    "source": 0,
+    "tag": 1,
+    "ttl": 1
+   },
+   {
+    "ring": 1,
+    "quarter": 0,
+    "direction": 1,
+    "edge": 105,
+    "kind": "inject",
+    "source": 0,
+    "tag": 1,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 2,
+    "direction": 1,
+    "edge": 107,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 1,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 3,
+    "direction": 1,
+    "edge": 109,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 1,
+    "ttl": 2
+   },
+   {
+    "ring": 1,
+    "quarter": 1,
+    "direction": 1,
+    "edge": 111,
+    "kind": "receive",
+    "source": 0,
+    "tag": 1,
+    "ttl": 1
+   },
+   {
+    "ring": 0,
+    "quarter": 0,
+    "direction": 0,
+    "edge": 107,
+    "kind": "inject",
+    "source": 0,
+    "tag": 2,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 1,
+    "direction": 0,
+    "edge": 109,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 2,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 3,
+    "direction": 0,
+    "edge": 111,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 2,
+    "ttl": 2
+   },
+   {
+    "ring": 0,
+    "quarter": 2,
+    "direction": 0,
+    "edge": 113,
+    "kind": "receive",
+    "source": 0,
+    "tag": 2,
+    "ttl": 1
+   },
+   {
+    "ring": 1,
+    "quarter": 0,
+    "direction": 0,
+    "edge": 107,
+    "kind": "inject",
+    "source": 0,
+    "tag": 2,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 1,
+    "direction": 0,
+    "edge": 109,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 2,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 3,
+    "direction": 0,
+    "edge": 111,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 2,
+    "ttl": 2
+   },
+   {
+    "ring": 1,
+    "quarter": 2,
+    "direction": 0,
+    "edge": 113,
+    "kind": "receive",
+    "source": 0,
+    "tag": 2,
+    "ttl": 1
+   },
+   {
+    "ring": 0,
+    "quarter": 0,
+    "direction": 1,
+    "edge": 108,
+    "kind": "inject",
+    "source": 0,
+    "tag": 3,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 2,
+    "direction": 1,
+    "edge": 110,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 3,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 3,
+    "direction": 1,
+    "edge": 112,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 3,
+    "ttl": 2
+   },
+   {
+    "ring": 0,
+    "quarter": 1,
+    "direction": 1,
+    "edge": 114,
+    "kind": "receive",
+    "source": 0,
+    "tag": 3,
+    "ttl": 1
+   },
+   {
+    "ring": 1,
+    "quarter": 0,
+    "direction": 1,
+    "edge": 108,
+    "kind": "inject",
+    "source": 0,
+    "tag": 3,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 2,
+    "direction": 1,
+    "edge": 110,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 3,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 3,
+    "direction": 1,
+    "edge": 112,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 3,
+    "ttl": 2
+   },
+   {
+    "ring": 1,
+    "quarter": 1,
+    "direction": 1,
+    "edge": 114,
+    "kind": "receive",
+    "source": 0,
+    "tag": 3,
+    "ttl": 1
+   },
+   {
+    "ring": 0,
+    "quarter": 0,
+    "direction": 0,
+    "edge": 110,
+    "kind": "inject",
+    "source": 0,
+    "tag": 4,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 1,
+    "direction": 0,
+    "edge": 112,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 4,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 3,
+    "direction": 0,
+    "edge": 114,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 4,
+    "ttl": 2
+   },
+   {
+    "ring": 0,
+    "quarter": 2,
+    "direction": 0,
+    "edge": 116,
+    "kind": "receive",
+    "source": 0,
+    "tag": 4,
+    "ttl": 1
+   },
+   {
+    "ring": 1,
+    "quarter": 0,
+    "direction": 0,
+    "edge": 110,
+    "kind": "inject",
+    "source": 0,
+    "tag": 4,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 1,
+    "direction": 0,
+    "edge": 112,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 4,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 3,
+    "direction": 0,
+    "edge": 114,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 4,
+    "ttl": 2
+   },
+   {
+    "ring": 1,
+    "quarter": 2,
+    "direction": 0,
+    "edge": 116,
+    "kind": "receive",
+    "source": 0,
+    "tag": 4,
+    "ttl": 1
+   },
+   {
+    "ring": 0,
+    "quarter": 0,
+    "direction": 1,
+    "edge": 111,
+    "kind": "inject",
+    "source": 0,
+    "tag": 5,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 2,
+    "direction": 1,
+    "edge": 113,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 5,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 3,
+    "direction": 1,
+    "edge": 115,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 5,
+    "ttl": 2
+   },
+   {
+    "ring": 0,
+    "quarter": 1,
+    "direction": 1,
+    "edge": 117,
+    "kind": "receive",
+    "source": 0,
+    "tag": 5,
+    "ttl": 1
+   },
+   {
+    "ring": 1,
+    "quarter": 0,
+    "direction": 1,
+    "edge": 111,
+    "kind": "inject",
+    "source": 0,
+    "tag": 5,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 2,
+    "direction": 1,
+    "edge": 113,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 5,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 3,
+    "direction": 1,
+    "edge": 115,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 5,
+    "ttl": 2
+   },
+   {
+    "ring": 1,
+    "quarter": 1,
+    "direction": 1,
+    "edge": 117,
+    "kind": "receive",
+    "source": 0,
+    "tag": 5,
+    "ttl": 1
+   },
+   {
+    "ring": 0,
+    "quarter": 0,
+    "direction": 0,
+    "edge": 113,
+    "kind": "inject",
+    "source": 0,
+    "tag": 6,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 1,
+    "direction": 0,
+    "edge": 115,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 6,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 3,
+    "direction": 0,
+    "edge": 117,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 6,
+    "ttl": 2
+   },
+   {
+    "ring": 0,
+    "quarter": 2,
+    "direction": 0,
+    "edge": 119,
+    "kind": "receive",
+    "source": 0,
+    "tag": 6,
+    "ttl": 1
+   },
+   {
+    "ring": 1,
+    "quarter": 0,
+    "direction": 0,
+    "edge": 113,
+    "kind": "inject",
+    "source": 0,
+    "tag": 6,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 1,
+    "direction": 0,
+    "edge": 115,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 6,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 3,
+    "direction": 0,
+    "edge": 117,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 6,
+    "ttl": 2
+   },
+   {
+    "ring": 1,
+    "quarter": 2,
+    "direction": 0,
+    "edge": 119,
+    "kind": "receive",
+    "source": 0,
+    "tag": 6,
+    "ttl": 1
+   },
+   {
+    "ring": 0,
+    "quarter": 0,
+    "direction": 1,
+    "edge": 114,
+    "kind": "inject",
+    "source": 0,
+    "tag": 7,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 2,
+    "direction": 1,
+    "edge": 116,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 7,
+    "ttl": 3
+   },
+   {
+    "ring": 0,
+    "quarter": 3,
+    "direction": 1,
+    "edge": 118,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 7,
+    "ttl": 2
+   },
+   {
+    "ring": 0,
+    "quarter": 1,
+    "direction": 1,
+    "edge": 120,
+    "kind": "receive",
+    "source": 0,
+    "tag": 7,
+    "ttl": 1
+   },
+   {
+    "ring": 1,
+    "quarter": 0,
+    "direction": 1,
+    "edge": 114,
+    "kind": "inject",
+    "source": 0,
+    "tag": 7,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 2,
+    "direction": 1,
+    "edge": 116,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 7,
+    "ttl": 3
+   },
+   {
+    "ring": 1,
+    "quarter": 3,
+    "direction": 1,
+    "edge": 118,
+    "kind": "receive_forward",
+    "source": 0,
+    "tag": 7,
+    "ttl": 2
+   },
+   {
+    "ring": 1,
+    "quarter": 1,
+    "direction": 1,
+    "edge": 120,
+    "kind": "receive",
+    "source": 0,
+    "tag": 7,
+    "ttl": 1
+   }
+  ],
+  "reservations": [
+   {
+    "quarter": 0,
+    "edge": 17,
+    "sector": 64,
+    "bank": 0,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 17,
+    "sector": 65,
+    "bank": 1,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 18,
+    "sector": 66,
+    "bank": 2,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 18,
+    "sector": 67,
+    "bank": 3,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 20,
+    "sector": 68,
+    "bank": 4,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 20,
+    "sector": 69,
+    "bank": 5,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 21,
+    "sector": 70,
+    "bank": 6,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 21,
+    "sector": 71,
+    "bank": 7,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 23,
+    "sector": 72,
+    "bank": 0,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 23,
+    "sector": 73,
+    "bank": 1,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 24,
+    "sector": 74,
+    "bank": 2,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 24,
+    "sector": 75,
+    "bank": 3,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 26,
+    "sector": 76,
+    "bank": 4,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 26,
+    "sector": 77,
+    "bank": 5,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 27,
+    "sector": 78,
+    "bank": 6,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 0,
+    "edge": 27,
+    "sector": 79,
+    "bank": 7,
+    "read_group": 3,
+    "kind": "read",
+    "edge_domain": "GQ_client_request",
+    "calendar_index": null
+   },
+   {
+    "quarter": 1,
+    "edge": 111,
+    "sector": 1000,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 0,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 112
+   },
+   {
+    "quarter": 3,
+    "edge": 113,
+    "sector": 1000,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 0,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 114
+   },
+   {
+    "quarter": 2,
+    "edge": 115,
+    "sector": 1000,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 0,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 116
+   },
+   {
+    "quarter": 0,
+    "edge": 104,
+    "sector": 1000,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 0,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 105
+   },
+   {
+    "quarter": 1,
+    "edge": 111,
+    "sector": 1001,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 1,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 112
+   },
+   {
+    "quarter": 3,
+    "edge": 113,
+    "sector": 1001,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 1,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 114
+   },
+   {
+    "quarter": 2,
+    "edge": 115,
+    "sector": 1001,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 1,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 116
+   },
+   {
+    "quarter": 0,
+    "edge": 104,
+    "sector": 1001,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 1,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 105
+   },
+   {
+    "quarter": 2,
+    "edge": 112,
+    "sector": 1002,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 2,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 113
+   },
+   {
+    "quarter": 3,
+    "edge": 114,
+    "sector": 1002,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 2,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 115
+   },
+   {
+    "quarter": 1,
+    "edge": 116,
+    "sector": 1002,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 2,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 117
+   },
+   {
+    "quarter": 0,
+    "edge": 105,
+    "sector": 1002,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 2,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 106
+   },
+   {
+    "quarter": 2,
+    "edge": 112,
+    "sector": 1003,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 3,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 113
+   },
+   {
+    "quarter": 3,
+    "edge": 114,
+    "sector": 1003,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 3,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 115
+   },
+   {
+    "quarter": 1,
+    "edge": 116,
+    "sector": 1003,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 3,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 117
+   },
+   {
+    "quarter": 0,
+    "edge": 105,
+    "sector": 1003,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 3,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 106
+   },
+   {
+    "quarter": 1,
+    "edge": 114,
+    "sector": 1004,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 4,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 115
+   },
+   {
+    "quarter": 3,
+    "edge": 116,
+    "sector": 1004,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 4,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 117
+   },
+   {
+    "quarter": 2,
+    "edge": 118,
+    "sector": 1004,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 4,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 119
+   },
+   {
+    "quarter": 0,
+    "edge": 107,
+    "sector": 1004,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 4,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 108
+   },
+   {
+    "quarter": 1,
+    "edge": 114,
+    "sector": 1005,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 5,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 115
+   },
+   {
+    "quarter": 3,
+    "edge": 116,
+    "sector": 1005,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 5,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 117
+   },
+   {
+    "quarter": 2,
+    "edge": 118,
+    "sector": 1005,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 5,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 119
+   },
+   {
+    "quarter": 0,
+    "edge": 107,
+    "sector": 1005,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 5,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 108
+   },
+   {
+    "quarter": 2,
+    "edge": 115,
+    "sector": 1006,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 6,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 116
+   },
+   {
+    "quarter": 3,
+    "edge": 117,
+    "sector": 1006,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 6,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 118
+   },
+   {
+    "quarter": 1,
+    "edge": 119,
+    "sector": 1006,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 6,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 120
+   },
+   {
+    "quarter": 0,
+    "edge": 108,
+    "sector": 1006,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 6,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 109
+   },
+   {
+    "quarter": 2,
+    "edge": 115,
+    "sector": 1007,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 7,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 116
+   },
+   {
+    "quarter": 3,
+    "edge": 117,
+    "sector": 1007,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 7,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 118
+   },
+   {
+    "quarter": 1,
+    "edge": 119,
+    "sector": 1007,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 7,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 120
+   },
+   {
+    "quarter": 0,
+    "edge": 108,
+    "sector": 1007,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 7,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 109
+   },
+   {
+    "quarter": 1,
+    "edge": 117,
+    "sector": 1008,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 8,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 118
+   },
+   {
+    "quarter": 3,
+    "edge": 119,
+    "sector": 1008,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 8,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 120
+   },
+   {
+    "quarter": 2,
+    "edge": 121,
+    "sector": 1008,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 8,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 122
+   },
+   {
+    "quarter": 0,
+    "edge": 110,
+    "sector": 1008,
+    "bank": 0,
+    "write_code": 2,
+    "source": 0,
+    "flit": 8,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 111
+   },
+   {
+    "quarter": 1,
+    "edge": 117,
+    "sector": 1009,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 9,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 118
+   },
+   {
+    "quarter": 3,
+    "edge": 119,
+    "sector": 1009,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 9,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 120
+   },
+   {
+    "quarter": 2,
+    "edge": 121,
+    "sector": 1009,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 9,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 122
+   },
+   {
+    "quarter": 0,
+    "edge": 110,
+    "sector": 1009,
+    "bank": 1,
+    "write_code": 2,
+    "source": 0,
+    "flit": 9,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 111
+   },
+   {
+    "quarter": 2,
+    "edge": 118,
+    "sector": 1010,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 10,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 119
+   },
+   {
+    "quarter": 3,
+    "edge": 120,
+    "sector": 1010,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 10,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 121
+   },
+   {
+    "quarter": 1,
+    "edge": 122,
+    "sector": 1010,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 10,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 123
+   },
+   {
+    "quarter": 0,
+    "edge": 111,
+    "sector": 1010,
+    "bank": 2,
+    "write_code": 2,
+    "source": 0,
+    "flit": 10,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 112
+   },
+   {
+    "quarter": 2,
+    "edge": 118,
+    "sector": 1011,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 11,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 119
+   },
+   {
+    "quarter": 3,
+    "edge": 120,
+    "sector": 1011,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 11,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 121
+   },
+   {
+    "quarter": 1,
+    "edge": 122,
+    "sector": 1011,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 11,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 123
+   },
+   {
+    "quarter": 0,
+    "edge": 111,
+    "sector": 1011,
+    "bank": 3,
+    "write_code": 2,
+    "source": 0,
+    "flit": 11,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 112
+   },
+   {
+    "quarter": 1,
+    "edge": 120,
+    "sector": 1012,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 12,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 121
+   },
+   {
+    "quarter": 3,
+    "edge": 122,
+    "sector": 1012,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 12,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 123
+   },
+   {
+    "quarter": 2,
+    "edge": 124,
+    "sector": 1012,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 12,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 125
+   },
+   {
+    "quarter": 0,
+    "edge": 113,
+    "sector": 1012,
+    "bank": 4,
+    "write_code": 2,
+    "source": 0,
+    "flit": 12,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 114
+   },
+   {
+    "quarter": 1,
+    "edge": 120,
+    "sector": 1013,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 13,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 121
+   },
+   {
+    "quarter": 3,
+    "edge": 122,
+    "sector": 1013,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 13,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 123
+   },
+   {
+    "quarter": 2,
+    "edge": 124,
+    "sector": 1013,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 13,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 125
+   },
+   {
+    "quarter": 0,
+    "edge": 113,
+    "sector": 1013,
+    "bank": 5,
+    "write_code": 2,
+    "source": 0,
+    "flit": 13,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 114
+   },
+   {
+    "quarter": 2,
+    "edge": 121,
+    "sector": 1014,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 14,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 122
+   },
+   {
+    "quarter": 3,
+    "edge": 123,
+    "sector": 1014,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 14,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 124
+   },
+   {
+    "quarter": 1,
+    "edge": 125,
+    "sector": 1014,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 14,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 126
+   },
+   {
+    "quarter": 0,
+    "edge": 114,
+    "sector": 1014,
+    "bank": 6,
+    "write_code": 2,
+    "source": 0,
+    "flit": 14,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 115
+   },
+   {
+    "quarter": 2,
+    "edge": 121,
+    "sector": 1015,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 15,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 122
+   },
+   {
+    "quarter": 3,
+    "edge": 123,
+    "sector": 1015,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 15,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 124
+   },
+   {
+    "quarter": 1,
+    "edge": 125,
+    "sector": 1015,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 15,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 126
+   },
+   {
+    "quarter": 0,
+    "edge": 114,
+    "sector": 1015,
+    "bank": 7,
+    "write_code": 2,
+    "source": 0,
+    "flit": 15,
+    "kind": "write",
+    "edge_domain": "VM_bank_sample",
+    "calendar_index": 115
+   }
+  ],
+  "last_commit": 125,
+  "period": 174,
+  "read_calendar_resolved": false,
+  "read_calendar_obligation": "bind 4x8 actual request-lane delays OR reserve all banks exclusively to COLL read-group3/write-code2 over common full epoch, including existing run-out; VM_RT alone does not resolve physical bank read edges",
+  "sequence_completion_qualified": false,
+  "single_wave_proof_scope": "data transactions equal qualified F16 first wave; one-row programme completion not executed",
+  "source_quarters": [
+   0
+  ],
+  "inactive_source_quarters": [
+   1,
+   2,
+   3
+  ],
+  "required_cut": "four real GQ/land/ring A+B/VM calendar paths; real producer writes before wave",
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false
+ }
+}
