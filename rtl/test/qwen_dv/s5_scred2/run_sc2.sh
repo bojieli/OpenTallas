@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# QW-SLICE7-LEAVES sc2 benches (fleet, Verilator 5.050). Usage: run_sc2.sh OUT
+# QW-SLICE7-LEAVES / QW-S5-SCRED sc2 benches (fleet, Verilator 5.050). Usage: run_sc2.sh OUT
 # eq44: sc2 LA4/LM4 vs original qfd_dv_s5_sc (MU_NU 4): OFF0 2 (face regs), merge +1, total DT 5, rsqrt DR 19.
 # eq66: DT 15 DR 57; eq76 (station ADD7/MUL6): DT 20, DR 66 = 5*4 + 3 + 4 + 3*(9+4).
 # mut44: OT_S5_SC2_MUT (broadcast tap reads VM window 10) must FAIL.
@@ -25,20 +25,16 @@ endmodule
 W
   [[ $mut == 0 ]] || defs+=(+define+OT_S5_SC2_MUT)
   "$V" --binary --timing -O2 -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-assign unique --x-initial unique \
-    "${defs[@]}" +define+DUTMOD=sc2_w +define+REFMOD=ref_s5_sc +define+OFF0=2 +define+DT=$dt +define+DR=$dr --top-module tb_sc2 \
+    "${defs[@]}" +define+DUTMOD=sc2_w +define+REFMOD=ref_s5_sc +define+OFF0=2 +define+AMO=2 +define+DT=$dt +define+DR=$dr --top-module tb_sc2 \
     "$O/ref.sv" "$O/$n/wrap.sv" $RTL $HDC rtl/test/qwen_dv/s5_scred2/tb_sc2.sv -Mdir "$O/$n/obj" > "$O/$n/build.log" 2>&1
   set +e; "$O/$n/obj/Vtb_sc2" +seed=$seed +rounds=40 +verilator+seed+$seed +verilator+rand+reset+2 > "$O/$n/run.log" 2>&1; local rc=$?; set -e
   tail -4 "$O/$n/run.log"
   if [[ $mut == 0 ]]; then [[ $rc == 0 ]] && grep -q 'SC2_EQ PASS' "$O/$n/run.log"; else [[ $rc != 0 ]] && grep -q 'SC2_EQ FAIL' "$O/$n/run.log"; fi
 }
 st=0
-run eq44 4 4 5 19 0 7 || st=1
-run eq44s2 4 4 5 19 0 11 || st=1
-run mut44 4 4 5 19 1 7 || st=1
-run eq66 6 6 15 57 0 7 || st=1
-run eq76 7 6 20 66 0 7 || st=1
-run eq76s2 7 6 20 66 0 11 || st=1
-run mut76 7 6 20 66 1 7 || st=1
+# QW-S5-SCRED 10-21 (argmax edge landing: merge +2 = AMO 2; LA7/LM9 kit config)
 run eq79 7 9 20 96 0 7 || st=1
+run eq79s2 7 9 20 96 0 11 || st=1
+run mut79 7 9 20 96 1 7 || st=1
 echo "SC2_BENCH_DONE status=$st"
 exit $st

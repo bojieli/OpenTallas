@@ -25,7 +25,7 @@ if [[ $K == red ]]; then
   TB=rtl/test/qwen_dv/s5_scred2/tb_red2.sv; T=tb_red2; DM=(+define+DUTMOD=qfd_dv_s5_red2_leaf +define+REFMOD=ref_s5_red +define+OFF=$ROFF +define+RDOFF=2)
   ARGS=(+seed=7 +segs=3000); PASS='RED2_EQ PASS'; FAIL='RED2_EQ FAIL'; LEAF=rtl/qwen_dv/s5/qfd_dv_s5_red2_leaf.sv; RTLX=""
 else
-  TB=rtl/test/qwen_dv/s5_scred2/tb_sc2.sv; T=tb_sc2; DM=(+define+DUTMOD=qfd_dv_s5_sc2_leaf +define+REFMOD=ref_s5_sc +define+OFF0=2 +define+DT=$SDT +define+DR=$SDR)
+  TB=rtl/test/qwen_dv/s5_scred2/tb_sc2.sv; T=tb_sc2; DM=(+define+DUTMOD=qfd_dv_s5_sc2_leaf +define+REFMOD=ref_s5_sc +define+OFF0=2 +define+AMO=2 +define+DT=$SDT +define+DR=$SDR)
   ARGS=(+seed=7 +rounds=40); PASS='SC2_EQ PASS'; FAIL='SC2_EQ FAIL'; LEAF=rtl/qwen_dv/s5/qfd_dv_s5_sc2_leaf.sv; RTLX=rtl/qwen_dv/qfd_dv_scalar2.sv
 fi
 "$V" --binary --timing -O1 -j 16 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --x-assign unique --x-initial unique \

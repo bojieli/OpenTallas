@@ -4,7 +4,10 @@
 // latch) and root phases (nb PSUMs from dn / up / own -> total or fused rsqrt -> RB broadcast + w1; four per-user argmax
 // merges with simultaneous dn / up / own candidates and value ties -> TOK).  Each output stream (dn_o, up_o words, w1
 // writes, tok events) must match in order and value; every event's edge offset must be the priced one for its kind:
-// `OFF0 (face regs), `OFF0+1 (root argmax merge), `OFF0+`DT (root total), `OFF0+`DR (fused rsqrt).  fault 0 on both.
+// `OFF0 (face regs), `OFF0+`AMO (root argmax merge; default 1), `OFF0+`DT (root total), `OFF0+`DR (fused rsqrt).  fault 0 on both.
+`ifndef AMO
+`define AMO 1
+`endif
 module tb_sc2;
     reg ck = 0; always #5 ck = ~ck;
     reg rst_n = 0;
@@ -65,10 +68,10 @@ module tb_sc2;
         if (!$value$plusargs("seed=%d", s)) s = 1;
         void'($urandom(s));
         if (!$value$plusargs("rounds=%d", rounds)) rounds = 40;
-        ok_off[0][0] = `OFF0; ok_off[0][1] = `OFF0 + 1; ok_off[0][2] = `OFF0 + `DR; ok_off[0][3] = `OFF0;
+        ok_off[0][0] = `OFF0; ok_off[0][1] = `OFF0 + `AMO; ok_off[0][2] = `OFF0 + `DR; ok_off[0][3] = `OFF0;
         for (i = 0; i < 4; i = i + 1) ok_off[1][i] = ok_off[0][i];
         ok_off[2][0] = `OFF0; ok_off[2][1] = `OFF0 + `DT; ok_off[2][2] = `OFF0 + `DR; ok_off[2][3] = `OFF0;
-        ok_off[3][0] = `OFF0; ok_off[3][1] = `OFF0 + 1; ok_off[3][2] = `OFF0; ok_off[3][3] = `OFF0;
+        ok_off[3][0] = `OFF0; ok_off[3][1] = `OFF0 + `AMO; ok_off[3][2] = `OFF0; ok_off[3][3] = `OFF0;
         repeat (6) @(negedge ck); rst_n = 1;
         repeat (12) @(negedge ck);
         for (r = 0; r < rounds; r = r + 1) begin

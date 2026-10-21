@@ -12,11 +12,12 @@
 //     same in+1 / out+1 as the old kit).  Fanout <= 32 by tools/qwen_dv/bound_math_netlist.py on this source.
 // PRICE vs the old kit qfd_dv_s5_sc (edges, steady state):
 //   chain pass words, own PSUM / AMI / AMV / own RB words, RB taps, non-root TOK latch: +0
-//   root argmax merge -> tok_* and the TOK broadcast word: +1 (candidate stage)
+//   root argmax merge -> tok_* and the TOK broadcast word: +2 (edge-candidate landing stage + candidate stage)
 //   root total -> w1 (fuse 0): +5 (LA - 3)                       (LA 4)
 //   root fused r -> RB broadcast word + w1: +5(LA-3) + (LM-3) + (LA-3) + 3 (3(LM-3) + (LA-3))   (LA 4, LM 4: 19)
 //   config (sc_cfg -> cfg registers): +1 (two face landing stages, QW-S5-SCRED 10-21)
 //   boot only: reset release +4 (relay stages rc, rd, re, rf) and ring phase reset release +2.
+// Schedule constraint: cfg_v (landed +1) is not issued within 3 edges of root argmax / PSUM traffic.
 // OT_S5_SC2_MUT (bench witness, must FAIL): the broadcast scalar tap reads window 10.
 // =====================================================================================================================
 
@@ -239,14 +240,25 @@ module qfd_dv_scalar3 #(
     wire        d_amv = dv && dk == K_AMV && root, u_amv = uv && uk == K_AMV && root, o_am = am_v && root;
     wire [56:0] cd = {1'b1, di, dn_i[31:0]}, cu = {1'b1, ui, up_i[31:0]}, co = {1'b1, am_idx, am_val};
     reg [5:0] amc;
-    wire [56:0] cdi = d_amv ? cd : 57'd0, cui = u_amv ? cu : 57'd0, coi = o_am ? co : 57'd0;
+    // QW-S5-SCRED 10-21: the gated edge candidates land in a register stage before the three parallel compares
+    // (mapped TT 643.5 ps / 22 lv was face reg -> AMV decode -> gate -> okey -> 57-b compare -> select -> candidate).
+    // Every argmax-derived signal moves +1 edge together (merge -> tok / TOK broadcast +2 vs the old kit).
+    wire [56:0] cdi_c = d_amv ? cd : 57'd0, cui_c = u_amv ? cu : 57'd0, coi_c = o_am ? co : 57'd0;
+    reg  [56:0] cdi, cui, coi;
+    reg         d_amv_r, u_amv_r, o_am_r;
+    reg  [1:0]  du_r, uu_r, au_r;
+    always @(posedge ck or negedge rst_n)
+        if (!rst_n) begin d_amv_r <= 1'b0; u_amv_r <= 1'b0; o_am_r <= 1'b0; end
+        else if (cfg_v) begin d_amv_r <= 1'b0; u_amv_r <= 1'b0; o_am_r <= 1'b0; end
+        else begin d_amv_r <= d_amv; u_amv_r <= u_amv; o_am_r <= o_am; end
+    always @(posedge ck) begin cdi <= cdi_c; cui <= cui_c; coi <= coi_c; du_r <= dn_i[33:32]; uu_r <= up_i[33:32]; au_r <= am_u; end
     // three compares in parallel; select == scb's better(coi, better(cdi,cui) ? cdi : cui) chain exactly
     wire b_du = better(cdi, cui), b_od = better(coi, cdi), b_ou = better(coi, cui);
     wire o_win = b_du ? b_od : b_ou;
     wire [56:0] edge_best = o_win ? coi : (b_du ? cdi : cui);
-    wire [1:0] edge_user = d_amv ? dn_i[33:32] : u_amv ? up_i[33:32] : am_u;
-    wire edge_mix = (d_amv && dn_i[33:32] != edge_user) ||
-                    (u_amv && up_i[33:32] != edge_user) || (o_am && am_u != edge_user);
+    wire [1:0] edge_user = d_amv_r ? du_r : u_amv_r ? uu_r : au_r;
+    wire edge_mix = (d_amv_r && du_r != edge_user) ||
+                    (u_amv_r && uu_r != edge_user) || (o_am_r && au_r != edge_user);
     reg [56:0] candidate;
     reg [1:0] candidate_user;
     reg [1:0] candidate_count;
@@ -254,8 +266,8 @@ module qfd_dv_scalar3 #(
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin candidate_v <= 0; candidate_count <= 0; candidate_mix <= 0; end
         else if (cfg_v) begin candidate_v <= 0; candidate_count <= 0; candidate_mix <= 0; end
-        else begin candidate_v <= d_amv || u_amv || o_am;
-            candidate_count <= {1'b0, d_amv} + {1'b0, u_amv} + {1'b0, o_am};
+        else begin candidate_v <= d_amv_r || u_amv_r || o_am_r;
+            candidate_count <= {1'b0, d_amv_r} + {1'b0, u_amv_r} + {1'b0, o_am_r};
             candidate_mix <= edge_mix; end
     always @(posedge ck) begin candidate <= edge_best; candidate_user <= edge_user; end
     wire [56:0] m3 = better(candidate, am_best) ? candidate : am_best;
