@@ -1,0 +1,12 @@
+{
+  "source": "02dd3f941",
+  "archive_sha256": "c42450fe17015dcae21c58e5e2a5f83585f470177edd869092e172cab51954c3",
+  "host": "ot-epyc9",
+  "unit": "oth-ubuntu-673847-1792607312",
+  "session": 18365,
+  "rc": 0,
+  "positive": "3beats tag/data/last, nonzero-sid unarmed passthrough, reset/rearm with new1word frame",
+  "mutant": "early last EXPECTED_FAIL beat1",
+  "source_change": "ARF valid/SID control on existing kept rst[1] copy, tag/count/wm1 payload unreset; no new sequential stages",
+  "scope": "Focused source proof only; parent RP/ARF mux fanout census and wholeprogramme ages still owed"
+}
