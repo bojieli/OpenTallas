@@ -482,6 +482,9 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
                 res["inputs_placeholder"] = True
     if pad:
         res["pad_words_zero"] = pad
+    # Freeze the actual pre-operation inputs before an in-place O can mutate
+    # the shared logical state. Hex strings own their bits; no NumPy view aliases.
+    input_data = {str(a): f"{int(np.float32(data[a]).view(np.uint32)):08x}" for a in logical}
     if not sut["red"] and "O" in desc and not res["reasons"]:
         # elementwise: lane l of group g computes O[addr_O] from A..D at the same lane
         outv = {}
@@ -497,7 +500,8 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     if res["reasons"]:
         res["status"] = "v1_unsupported"
     res.update(status=res.get("status", "emitted"), ql=QL, fills=fills, drains=drains, lines=QL.lines(), preload=preload, expect=expect,
-               data={str(a): f"{int(np.float32(data[a]).view(np.uint32)):08x}" for a in logical},
+               data=input_data, preload_data=input_data,
+               preload_provenance="pre-operation VM input snapshot; expected outputs never seed M",
                setup_edge=setup, issue_edges=issue_at, last_commit=max(commits) if commits else None,
                fill_sectors=len(preload), drain_sectors=len(expect))
     return res
