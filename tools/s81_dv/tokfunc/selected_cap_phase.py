@@ -96,3 +96,54 @@ def produced_fixture(directory,producer_path):
    v=int(y['data256'],16);words.extend((v>>(32*i))&0xffffffff for i in range(8))
  assert len(words)==5120
  return dict(meta=meta,x=np.asarray(words,dtype=np.uint32).view(np.float32),w=weights,files=files),dict(receipt_sha256=sha(producer_path),actual_Y_words=5120,actual_VQ_fragments=320,ops_checkpoint_opened=False,qualification='Same legitimate measured component producer; no global16slice epoch qualification')
+
+class ComponentDie:
+ """Actual die/plan frame membership only; constructs no route-age model."""
+ def __init__(self,die_v,plan,D):
+  raw=Path(die_v).read_bytes();self.raw_die=raw.decode();self.die_sha=hashlib.sha256(raw).hexdigest();self.plan_sha256=sha(plan);self.inst={}
+  for line in raw.decode().splitlines():
+   m=D.INST_RE.match(line)
+   if not m or m[1] in ['module','wire','input','output','assign','reg']:continue
+   master,params,name,body=m.groups();assert name not in self.inst
+   self.inst[name]=dict(master=master,params=params or '',conns={c[1]:c[2].strip() for c in D.CONN_RE.finditer(body)})
+  self.blocks={b['name']:b for b in json.loads(Path(plan).read_text())['blocks']}
+ def strap(self,name,port):
+  text=self.inst[name]['conns'].get(port,'');m=re.fullmatch(r"\d+'([dh])([0-9a-fA-F]+)",text);assert m,(name,port,text)
+  return int(m[2],16 if m[1]=='h' else 10)
+ def slices(self):return {n:dict(sid=self.strap(n,'sid')) for n,x in self.inst.items() if n.startswith('u_s_') and x['master'].startswith('ot_s81sl_slice')}
+ def frames_of(self,name):
+  group=self.blocks[name[2:]]['group']
+  return sorted('u_'+n for n,b in self.blocks.items() if b['kind']=='frame' and b.get('group')==group and 'u_'+n in self.inst)
+
+ def native_lane_routes(self):
+  """Exact i/o instance/alias chains only; no station-count latency inference."""
+  def wire_node(expr):
+   m=re.fullmatch(r'(\w+)(?:\[275:0\])?',expr.strip());return m[1] if m else None
+  def lanes(expr):
+   words=[wire_node(x) for x in expr.split(',')]
+   return list(reversed(words)) if len(words)==4 and all(words) else []
+  steps={}
+  for n,x in self.inst.items():
+   if not (x['master'].startswith('dsfd_dvrlyh_276') or x['master']=='dsfd_dvland_276'):continue
+   c=x['conns']
+   ni,no=wire_node(c.get('i','')),wire_node(c.get('o',''))
+   if ni and no:
+    steps.setdefault(ni,[]).append(dict(instance=n,module=x['master'],params=x['params'],input=ni,output=no,input_expression=c['i'],output_expression=c['o'],clocks={k:v for k,v in c.items() if k.startswith('ck') or k in ['rs','rst_n']}))
+  for m in re.finditer(r'\bassign\s+(\w+)\s*=\s*(\w+)\s*;',self.raw_die):
+   steps.setdefault(m[2],[]).append(dict(instance=None,module='EXACT_NET_ALIAS',input=m[2],output=m[1],clocks={}))
+  sinks={}
+  for n in self.slices():
+   for port in ['ri_w','ri_e']:
+    for i,net in enumerate(lanes(self.inst[n]['conns'].get(port,''))):sinks.setdefault(net,[]).append(dict(instance=n,port=port,lane=i))
+  routes=[]
+  for n in self.slices():
+   for port in ['ro_w','ro_e']:
+    for i,net in enumerate(lanes(self.inst[n]['conns'].get(port,''))):
+     start=net;chain=[];visited=set();reason=None
+     while net not in sinks:
+      if net in visited:reason='CYCLE';break
+      visited.add(net);nexts=steps.get(net,[])
+      if len(nexts)!=1:reason='NO_UNIQUE_EXACT_I_O_CHAIN';break
+      chain.append(nexts[0]);net=nexts[0]['output']
+     routes.append(dict(source=dict(instance=n,port=port,lane=i,net=start),destination=sinks.get(net) if not reason else None,chain=chain,unbound=reason,age_edges=None,clock_phase_qualified=False))
+  return routes

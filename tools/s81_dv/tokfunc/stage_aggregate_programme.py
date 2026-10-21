@@ -23,7 +23,9 @@ def digest(path):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--inventory', type=Path, required=True)
-    p.add_argument('--tree', type=Path, required=True)
+    p.add_argument('--tree', type=Path)
+    p.add_argument('--die-v', type=Path, help='Actual current materializeddie; explicit componentphase only')
+    p.add_argument('--plan', type=Path, help='Exact actualcurrentplan for frame membership; no route model')
     p.add_argument('--fixtures', type=Path, required=True)
     p.add_argument('--frame-schedule', type=Path, required=True)
     p.add_argument('--functional-kit', type=Path)
@@ -34,11 +36,13 @@ def main():
     p.add_argument('--configured-receipt', type=Path)
     p.add_argument('--configured-source-root', type=Path)
     p.add_argument('--actual-source-audit', type=Path, help='Immutable actualG9 die/table/source audit for explicitphase')
+    p.add_argument('--actual-port-bind',type=Path)
+    p.add_argument('--actual-tap-consumer',type=Path)
     a = p.parse_args()
     import dv_layer_compile as C
     import lower_xs as L
     from layer_prog.aproj_native import phase_material, programme
-    from selected_cap_phase import configured_profile, explicit_capture, local_programme, produced_fixture
+    from selected_cap_phase import configured_profile, explicit_capture, local_programme, produced_fixture, ComponentDie
     profile = None
     if a.configured_receipt:
         assert a.configured_source_root
@@ -73,7 +77,12 @@ def main():
     os.environ.update(OT_XS_APROJ_TOPO='1', OT_XS_APROJ_RANK_TAGS='1', OT_XS_APROJ_ALIGN4='1',
                       OT_XS_DENSE_SPLIT2_ROWS=inventory['placement_environment']['OT_XS_DENSE_SPLIT2_ROWS'],
                       OT_XS_APROJ_CAP_PLAN='1', OT_XS_FRAME_SCHEDULE_DIR=str(a.frame_schedule.resolve()))
-    die = C.Die(a.tree)
+    if a.die_v:
+        assert a.rank_rows and a.plan, 'directdie parser onlyfor explicitselectedphase withactualplan'
+        die=ComponentDie(a.die_v,a.plan,C)
+    else:
+        assert a.tree
+        die = C.Die(a.tree)
     sl = inventory['selected_slice']
     actual_audit=None
     if a.rank_rows:
@@ -86,7 +95,13 @@ def main():
         assert profile['files_sha256'][rel]==top_binding['source_sha256']
         assert top_binding['param_sets']=={'{}':1}
         profile['actual_G9_audit_reference']=dict(sha256=digest(a.actual_source_audit),die_sha256=actual_audit['die_sha256'],table_sha256=actual_audit['table_sha256'],defines=actual_audit['defines'])
-        profile['configuration_gap']='191file6define componentprofile differs actualG9 seventhTAPdefine; actualconfiguredsource/clock cone preflight required before build'
+        assert a.actual_port_bind and a.actual_tap_consumer, 'prospectiveactualsevenprofile needs exactreadset/TAPconsumer'
+        assert digest(a.actual_port_bind)=='309c101e3be0f1062ad35fd964db4aa6b7f348dd0704691e2a2d1f82e9700398'
+        assert digest(a.actual_tap_consumer)=='d5c8c903a66a636a5ce9d1cc6ddd3b9c3fd9c93927b4d2d625326466e5d4e5d8'
+        pb=json.loads(a.actual_port_bind.read_text());assert len(pb['rtl_files'])==289
+        assert set(pb['defines'])==set(actual_audit['defines'])
+        profile['prospective_target']=dict(source_audit_sha256=digest(a.actual_source_audit),port_bind_sha256=digest(a.actual_port_bind),defines=actual_audit['defines'],final_ordered_rtl_files=pb['rtl_files'],rtl_roots=pb['rtl_roots'],tap_consumer_sha256=digest(a.actual_tap_consumer),TAP_macro='OT_S81ENG_TAP_N32R2',executed=False)
+        profile['configuration_gap']='ProspectiveactualG9sevenprofile selected; historical191sixdefine is independent. Fullactualselectedmodule/clockcone readset preflight required before build; no alias or sevenprofile execution claimed.'
     else:
         assert die.die_sha == inventory['die_sha256']
     if profile:
@@ -160,7 +175,7 @@ def main():
     files = {str(f.relative_to(a.out)):digest(f) for f in sorted(a.out.rglob('*')) if f.is_file()}
     receipt = dict(schema='opentallas.s81.aggregate_source_assets.v1', status='STAGED_HELD_FOR_REAL_PRODUCER',
         selected_source=selected, producer_binding=producer_binding, configured_profile=profile, explicit_component_rank_rows=selected_rows if a.rank_rows else None, selected_slice=sl, die_sha256=die.die_sha,
-        actual_die_sha256=die.die_sha, actual_source_audit_sha256=digest(a.actual_source_audit) if actual_audit else None,
+        actual_die_sha256=die.die_sha, actual_plan_sha256=getattr(die,'plan_sha256',None), actual_source_audit_sha256=digest(a.actual_source_audit) if actual_audit else None,
         inventory_sha256=digest(a.inventory), fixture_meta_sha256=digest(a.fixtures/'meta.json'),
         compiler_sha256={str(f.relative_to(ROOT)):digest(f) for f in [Path(__file__), Path(L.__file__)]},
         files=files, actual_gather_data_emitted=False, synthetic_frame_returns_emitted=False,
