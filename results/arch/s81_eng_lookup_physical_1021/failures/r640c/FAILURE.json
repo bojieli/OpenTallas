@@ -1,0 +1,28 @@
+{
+  "source": "b2cf8519d",
+  "source_archive_sha256": "24633759ae4d054d4eed928989109b17c39cb5cf068fbb472f7df6395ece88e8",
+  "actual_verdict": "FAIL",
+  "native": "PASS max32 /0violations/0roles",
+  "clock_failure": {
+    "corner": "TT",
+    "root": "ck_hash[5]",
+    "scope": "all_internal_only",
+    "sinks": 5312,
+    "spread_ps": 106.7,
+    "limit_ps": 80
+  },
+  "mean_insertion_ps": 383.9,
+  "insertion_disposition": "guidance warning only",
+  "old_raw_macro_clock_binding_error": "cleared by exact three-SRAM binding",
+  "other_measured_hash_TT_spreads_ps": [
+    13.9,
+    31.0,
+    58.6,
+    19.5,
+    30.5
+  ],
+  "unmeasured": "subsequent roots/FF coverage absent due immediate hard error; no inferred pass",
+  "view_review": "Personally viewed only generated floorplan.png. No placement/density PNG generated on this early failed CTS gate. Macro plan visually has3Lgroup and broad freeNE/S space; no hotspot assertion.",
+  "successor_plan": "Actual source column ownership scopes + compact bounded clock/placement regions; no untargeted CTS retry. No new successor submitted.",
+  "wholeRR": "Separate33ec nativeR5 live; no leaf alias or qualifiedlookupview."
+}
