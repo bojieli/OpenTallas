@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020
+ot-run: ot-epyc9       admits   815 GB (avail 689, growth 118, headroom 0, waiters 0/0 GB) load 66/128 running 40 disk 185 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/ref_gate/codex_s5_1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-4099929-1792482891 after 1 s
+MUT 1 EXPECTED True RC 1
+MUT 0 EXPECTED False RC 1
+MUT 2 EXPECTED True RC 1
+[{"mut": 0, "rc": 1, "pass_expected": false, "line": "S2_FAIL tile=g output=o_pc0 edge=32 side=0 mut=0 dut=0003fffff ref=000000000"}, {"mut": 1, "rc": 1, "pass_expected": true, "line": "S2_FAIL tile=g output=o_pc0 edge=32 side=0 mut=1 dut=0003fffff ref=000000000"}, {"mut": 2, "rc": 1, "pass_expected": true, "line": "S2_FAIL tile=g output=krsp edge=32 side=0 mut=2 dut=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001 ref=00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"}]
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-4099929-1792482891): exit 1
