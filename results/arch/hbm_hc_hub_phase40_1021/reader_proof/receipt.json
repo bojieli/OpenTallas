@@ -1,0 +1,26 @@
+{
+  "status": "SCOPED_READER_WITNESS_PASS_NOT_FULL_CANDIDATE",
+  "host": "ot-epyc5",
+  "unit": "oth-ubuntu-3262705-1792623718",
+  "source_commit": "2138daccb",
+  "positive_period_response": [
+    [
+      24,
+      23
+    ],
+    [
+      40,
+      39
+    ]
+  ],
+  "negative_mutant": 1,
+  "f32_GL": 16,
+  "q_static_SAFE2_GLC": 16,
+  "default_GL_matches_candidate": true,
+  "limits": [
+    "compares changed legacy and f32 readers, not independent end-to-end calendar",
+    "randomized launches/strides/bounds/returns, valid/fault behavior checked every edge",
+    "SAFE2 QCHX12 root/calendar/native/model/physical qualification NOTRUN",
+    "legacy11 k31 coupled proof separate and untouched"
+  ]
+}

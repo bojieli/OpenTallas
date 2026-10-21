@@ -120,7 +120,7 @@
     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_f32_static.sv": "c4d12d0f19a77fe836d4c7e8959ef3eb3cff4938e6ab650cc1ee10f9395e1031"
   },
   "qualification": {
-    "source_witness": "PENDING",
+    "source_witness": "SCOPED_READERS_PASS24/23_AND40/39_MUTANT1_FAIL; GL16 matches SAFE2 GLC16",
     "native_census": "NOTRUN",
     "clock_model": "NOTRUN",
     "physical_gate": "NOTRUN",
