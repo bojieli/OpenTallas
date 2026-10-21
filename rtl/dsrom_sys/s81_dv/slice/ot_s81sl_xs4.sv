@@ -346,7 +346,7 @@ module ot_s81sl_xs4_ctl (
     output wire [169:0]  hq_o,
     output wire [4:0]    qc_o,
     output wire [42:0]   hb_o,
-    output wire [42:7]   hb1_o,    // ELEM-XFV: kept same-edge copy of hb_q[42:7] for BF lookup copy 1 (native fanout <= 32)
+    output wire [42:7]   hbk_o,    // ELEM-XFV: kept same-edge copy of hb_q[42:7] for BF lookup copy 1 (native fanout <= 32)
     output wire          bc_o,
     output wire [609:0]  bc_hr_o,
     output wire [68:0]   bv_o,     // XG5: 69 copies (16 lane bits each; was 36 x 32 -> 64 mapped loads)
@@ -446,7 +446,7 @@ module ot_s81sl_xs4_ctl (
     end
     (* keep = "true" *) reg bc_c;
     always @(posedge clk or negedge rc[3]) if (!rc[3]) bc_c <= 1'b0; else bc_c <= bc_d;
-    assign hb_o = hb_q; assign hb1_o = hb_q1; assign bc_o = bc_c;
+    assign hb_o = hb_q; assign hbk_o = hb_q1; assign bc_o = bc_c;
     reg qc_q, bc_q;
     always @(posedge clk or negedge rc[3])
         if (!rc[3]) begin qc_q <= 1'b0; bc_q <= 1'b0; end
@@ -767,10 +767,10 @@ module ot_s81sl_xs4 (
     end
 
     // ================================================================== production stream path (native ctl copy)
-    wire ctl_fault; wire [169:0] hq; wire [4:0] qc; wire [42:0] hb; wire [42:7] hb1; wire bcs; wire [609:0] bc_hr; wire [68:0] bvc;
+    wire ctl_fault; wire [169:0] hq; wire [4:0] qc; wire [42:0] hb; wire [42:7] hbk; wire bcs; wire [609:0] bc_hr; wire [68:0] bvc;
     ot_s81sl_xs4_ctl u_ctl (.clk(clk), .rc(rst_k[3:0]), .rh(rst_k[35:4]), .rb(rst_k[38:36]), .rx(rst_x), .calendar_v(cal_v),
         .calendar_action(cal_action), .go(o_go), .i_ph(o_ph), .i_np(o_np), .rom_gobf(ph_rd[0]), .rom_sq(st_sq),
-        .hq_o(hq), .qc_o(qc), .hb_o(hb), .hb1_o(hb1), .bc_o(bcs), .bc_hr_o(bc_hr), .bv_o(bvc), .fault(ctl_fault));
+        .hq_o(hq), .qc_o(qc), .hb_o(hb), .hbk_o(hbk), .bc_o(bcs), .bc_hr_o(bc_hr), .bv_o(bvc), .fault(ctl_fault));
 
     // ================================================================== x buffer write side (level B -> macro pins)
     // gather source s, beat g, family f: level-B decodes from capture copy c of source s:
@@ -984,7 +984,7 @@ module ot_s81sl_xs4 (
                 (qc[4] && hg[4][0] && hg[4][1] && p0r != p1r);
     end
     // BF groups k: lookup copies c (hi: parity x bu[5:3], lo: bu[2:0]), mac one-hots (sel c0 / c1, read port)
-    wire [35:0] hhi = hb[42:7]; wire [35:0] hhi1 = hb1[42:7]; wire [3:0] hwb = hb[6:3]; wire [2:0] hwm = hb[2:0];
+    wire [35:0] hhi = hb[42:7]; wire [35:0] hhi1 = hbk[42:7]; wire [3:0] hwb = hb[6:3]; wire [2:0] hwm = hb[2:0];
     wire [79:0] bln1 [0:3][0:1]; wire [7:0] bms [0:3][0:1]; wire [7:0] bmr [0:3];
     wire [6:0] brw [0:3]; wire [3:0] bbad_k, bgf;
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_bl
