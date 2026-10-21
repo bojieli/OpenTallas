@@ -31,7 +31,7 @@ from hbm_layer_vehicle import layer_images as LI  # noqa: E402
 
 def t_layout(die):
     pos, lo = {}, 0
-    for k in ("red", "rf", "vmw", "vmr", "control"):
+    for k in ("red", "rf", "vmw", "vmr", "control", "tree"):
         pos[k] = (lo, lo + LI.Q_W[k] - 1)
         lo += LI.Q_W[k]
     assert lo == LI.SB_W
@@ -42,6 +42,10 @@ def t_layout(die):
             assert re.search(rf"\.{port}\(pgp_SW__command\[{hi}:{l}\]\)", t), port
         assert re.search(r"\.vmr_cmd\(pgp_SW__command\[499:440\]\)", t) and pos["vmr"] == (440, 679)
         assert re.search(r"\.vmw_cmd\(pgp_SW__command\[205:128\]\)", t) and pos["vmw"] == (128, 439)
+        assert pos["tree"] == (2422, 2469)
+        for group in range(4):
+            lo = 2422 + group * 12
+            assert f".tree_cmd(pgp_SW__command[{lo+11}:{lo}])" in t
     import su_top_compile as STC
     P = STC.Prog(2)
     P.vmr_cmd(0, 0, 3, 0x1234, 11, 77)

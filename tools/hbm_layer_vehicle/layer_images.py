@@ -59,7 +59,8 @@ ROOT = TOOLS.parent
 for p in (TOOLS, TOOLS / "hbm_static", TOOLS / "hgi_adapters"):
     sys.path.insert(0, str(p))
 
-SB_W, Q_W = 2422, dict(control=1742, vmr=240, vmw=312, rf=54, red=74)
+BASE_SB_W = 2422
+SB_W, Q_W = 2470, dict(control=1742, vmr=240, vmw=312, rf=54, red=74, tree=48)
 START_ADVANCE, CFG_LEAD, EDGES_MAX = 9, 2, 7111
 FILL_COMMIT, LANE_FETCH, DRAIN_DONE = 13, 3, 11       # pgslice.sv:14-22
 SETUP_TO_EMIT = 8                                       # su_arith_compile.py: ld at cycle 0, emits from cycle 8
@@ -206,7 +207,7 @@ class QLine:
         n = 1 + max([max(d) for d in s.f.values() if d] or [0])
         out = []
         for e in range(n):
-            v = s.f["control"].get(e, 0)
+            v = (s.f["tree"].get(e, 0) << Q_W["control"]) | s.f["control"].get(e, 0)
             for k in ("vmr", "vmw", "rf", "red"):
                 v = (v << Q_W[k]) | s.f[k].get(e, 0)
             out.append(v)
@@ -270,7 +271,8 @@ def calendar_collision(target, candidate, offset, *, exclusive_controls=False):
                for field in Q_W for edge, value in candidate.f[field].items())
 
 
-def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False, timing=None, safe_calendar=False):
+def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False, timing=None, safe_calendar=False,
+              identity_inactive_terms=False, absent_readers_identity=False, drain_guard=0):
     """lower one SU dispatch for quarter q: control (su_arith_lower), fill/drain calendars, expected VM words.
     Returns dict(status, lines, preload, expect, ...) with explicit reasons when v1 cannot emit a runnable image."""
     from hbm_layer_vehicle.native_profile import NativeTiming
@@ -349,6 +351,35 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
                     terms |= (terms & ((1 << 240) - 1)) << (240 * index)
                     vb |= (vb & 0xffffff) << (24 * index)
             words[q] = put(put(w, "ld_c", terms), "vb", vb)
+    if absent_readers_identity and not safe_calendar:
+        # opt-in (TOK-FUNC2-HBM-SU): every lane reads all four operand ports; pgslice.sv:303 faults a live lane whose
+        # read address is not its own bank, so an absent role reads the live A stream's own-bank address (as the safe
+        # calendar profile does) instead of address 0
+        sched = [list(words) for words in sched]
+        for words in sched:
+            w = words[q]
+            t_, vb_ = get(w, "ld_c"), get(w, "vb")
+            for index, role in enumerate("ABCD"):
+                if role not in desc:
+                    t_ = (t_ & ~(((1 << 240) - 1) << (240 * index))) | ((t_ & ((1 << 240) - 1)) << (240 * index))
+                    vb_ = (vb_ & ~(0xffffff << (24 * index))) | ((vb_ & 0xffffff) << (24 * index))
+            words[q] = put(put(w, "ld_c", t_), "vb", vb_)
+    if identity_inactive_terms and not safe_calendar and desc["A"].m == 1:
+        # TOK-FUNC2-HBM-SU (opt-in): a single-row record (no == 1) leaves lanes >= 2**ls inactive; their lane-bit terms
+        # (outer stride 0) alias every lane onto lanes 0..2**ls-1, so a group's 8 lane addresses are not one sector.
+        # Give those bits the lane identity (+2**k): active lanes' addresses are unchanged, inactive lanes point into
+        # their own bank (pinned-bank rule), and every active group is one aligned sector.
+        sched = [list(words) for words in sched]
+        for words in sched:
+            w = words[q]
+            ls0, terms0 = get(w, "ls"), get(w, "ld_c")
+            for s_, role in enumerate("ABCDO"):
+                if role not in desc or desc[role].ibcast:
+                    continue
+                for k in range(ls0, 7):
+                    sh = 24 * (s_ * 10 + k)
+                    terms0 = (terms0 & ~(0xffffff << sh)) | ((1 << k) << sh)
+            words[q] = put(w, "ld_c", terms0)
     # per issue group: the quarter's 128 lanes' logical VM word address of every role (vb + lane terms)
     ls = get(sched[0][q], "ls")
     terms = get(sched[0][q], "ld_c")
@@ -406,7 +437,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
     def with_vb(w, G):
         vb = 0
         for s, r in enumerate("ABCDO"):
-            if r in desc or (safe_calendar and r in "ABCD"):
+            if r in desc or ((safe_calendar or absent_readers_identity) and r in "ABCD"):
                 rr = G["srow"].get(r, G["srow"].get("A", 0)) if r != "O" else G["orow"]
                 vb |= physical_word(q, rr) << (24 * s)
         return (w & ~vbmask) | (vb << off["vb"])
@@ -429,7 +460,7 @@ def su_record(raw, q=0, rng=None, data=None, place=None, tag="", pad_zero=False,
         for g, G in enumerate(groups):
             # Pin-captured write and read coincide under the old calendar.
             # OLD-read SRAM requires the DRAIN to sample one serial edge later.
-            ready = setup + FIRST_OUT + (issue_at[g] - setup - SETUP_TO_EMIT) + int(safe_calendar)
+            ready = setup + FIRST_OUT + (issue_at[g] - setup - SETUP_TO_EMIT) + int(safe_calendar) + drain_guard
             for k in range(16):
                 ln = slice(8 * k, 8 * k + 8)
                 m = G["act"][ln]
@@ -698,6 +729,130 @@ def cp_frames(target, rows, t, base=0, loops=1, launch=True):
     return b.ev, lt, b.t
 
 
+def place_snapshot(p):
+    return dict(p.map), list(p.nxt), set(p.written), len(p.conflicts)
+
+
+def place_restore(p, snap):
+    p.map, p.nxt, p.written = dict(snap[0]), list(snap[1]), set(snap[2])
+    del p.conflicts[snap[3]:]
+
+
+def downstream_reference(fx, i, word):
+    """bits of VM word `word` as the first LATER fixture record reads it (comparison only, never a DUT input)"""
+    for j in sorted(k for k in fx if k > i):
+        v = fx[j]["vm_in"].get(word)
+        if v is not None:
+            return int(np.float32(v).view(np.uint32)), j
+    return None, None
+
+
+def vector_sectors(desc):
+    """logical VM sectors of a record's vector operands / output (broadcast B and R excluded)"""
+    out = set()
+    for role, md in desc.items():
+        if role == "R" or (role == "B" and md.ibcast) or md.space != "VM" or md.indexed:
+            continue
+        for i in range(max(1, md.m)):
+            lo = md.base + i * (md.stride or 0)
+            out.update(range(lo // 8, (lo + max(1, md.n) * (md.istride or 1) - 1) // 8 + 1))
+    return out
+
+
+def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None):
+    """TOK-FUNC2-HBM-SU dispatch: the first production lowering whose profile matches the record; every attempt that
+    does not emit restores the layer placement (a refused record never marks its O sectors as written)."""
+    import su_program_inventory as I
+    from hbm_layer_vehicle import su_layer_lower_1021 as SL
+    _, unit, sut, desc = I.decode(raw)
+    rng = np.random.default_rng(1018)
+    tag = r["tag"]
+    tried = []
+
+    def attempt(name, fn):
+        snap = place_snapshot(place)
+        dsnap = dict(vm_data)
+        try:
+            res = fn()
+        except (AssertionError, ValueError) as ex:    # e.g. quarter VM slice full: refuse, restore, continue
+            res = dict(status="adapter_refused", reasons=[f"{name}: {ex}"], lowering=dict(supported=False), sut=sut)
+        if res.get("status") == "emitted" and len(place.conflicts) > snap[3]:
+            res = dict(res, status="v1_unsupported", reasons=list(res.get("reasons", [])) + [
+                f"VM placement conflict: {place.conflicts[snap[3]]}"])
+        if res.get("status") != "emitted":
+            place_restore(place, snap)
+            vm_data.clear()
+            vm_data.update(dsnap)
+        tried.append(dict(lowering=name, status=res.get("status"), reasons=res.get("reasons", [])[:4]))
+        return res
+
+    in_layout = bool(sfu_layout and vector_sectors(desc) & sfu_layout)
+    core = {"str_C", "sucore_SW", "stl_SW"}
+    tree_ok = core <= set(bnd["instances"])
+    res = None
+    if unit == 2 and SL.reduce_profile(sut, desc) and not (in_layout and SL.sfu_profile(sut, desc, layout=True)):
+        if not tree_ok:
+            res = dict(status="unsupported_lowering", reasons=["reduction requires the real stree cut (no RF injection)"],
+                       lowering=dict(supported=False), sut=sut)
+        else:
+            R = desc["R"]
+            refs = [downstream_reference(fx, r["i"], R.base + k) if fx else (None, None) for k in range(R.m)]
+            vals = [x for x, _ in refs]
+            res = attempt("pretree_reduce", lambda: SL.lower_reduce(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                                    timing=timing, expected_reduction_word=vals))
+            if any(x is not None for x in vals):
+                res["fixture_reduction_reference"] = dict(
+                    value=[None if x is None else f"{x:08x}" for x in vals] if R.m > 1 else f"{vals[0]:08x}",
+                    source=f"fixture record(s) {sorted({j for _, j in refs if j is not None})} input (later consumer), "
+                           "comparison only", matched=res["status"] == "emitted")
+    elif unit == 2 and tree_ok and SL.rows_bcast_profile(sut, desc):
+        res = attempt("rows_bcast", lambda: SL.lower_rows_bcast(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                                timing=timing, rf_local=a.rf_local))
+    elif unit == 2 and tree_ok and SL.scalar_rf_profile(sut, desc) and not (
+            SL.rsqrt_profile(sut, desc) and desc["A"].n == 1 and desc["A"].base % 8 == 0
+            and desc["O"].base % 8 == 0):
+        res = attempt("scalar_rf", lambda: SL.lower_scalar_rf(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                              timing=timing, rf_local=a.rf_local))
+    elif unit == 2 and SL.rsqrt_profile(sut, desc):
+        res = attempt("scalar_rsqrt", lambda: SL.lower_rsqrt(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                             timing=timing, side_profile=(4, 3),
+                                                             side_source_path=a.side_source))
+    elif unit == 2 and (SL.sfu_profile(sut, desc) or (in_layout and SL.sfu_profile(sut, desc, layout=True))) and (
+            tree_ok or not ((desc.get("B") and desc["B"].ibcast) or sut["red"])):
+        ref = None
+        if sut["red"] and fx:
+            ref, _ = downstream_reference(fx, r["i"], desc["R"].base)
+        res = attempt("sfu_lanes", lambda: SL.lower_sfu_lanes(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                              timing=timing, rf_local=a.rf_local, layout=in_layout,
+                                                              expected_reduction_word=ref))
+    else:
+        # every live lane reads all four operand ports (absent roles = A's own-bank address) and the drain samples
+        # one edge after the lane write (OLD-read SRAM), as the safe-calendar profile
+        res = attempt("su_record", lambda: su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=tag,
+                                                     pad_zero=fr is not None, timing=timing,
+                                                     absent_readers_identity=True, drain_guard=1))
+        if res.get("status") == "v1_unsupported":
+            b = desc.get("B")
+            if b is not None and b.ibcast and tree_ok:
+                res2 = attempt("rf_broadcast", lambda: SL.lower_bcast(raw, a.quarter, data=vm_data, place=place, tag=tag,
+                                                                      timing=timing, rf_local=a.rf_local))
+            elif desc["A"].m == 1:
+                res2 = attempt("identity_inactive_terms", lambda: su_record(
+                    raw, a.quarter, rng, data=vm_data, place=place, tag=tag, pad_zero=fr is not None, timing=timing,
+                    identity_inactive_terms=True, absent_readers_identity=True, drain_guard=1))
+            else:
+                res2 = None
+            if res2 is not None and res2.get("status") == "emitted":
+                res = res2
+    if res.get("status") == "emitted":
+        for addr, bits in res.get("expected_post_state", {}).items():
+            vm_data[int(addr)] = np.uint32(int(bits, 16)).view(np.float32)
+    res.setdefault("reasons", [])
+    res.setdefault("lowering", {})
+    res["su_lower2_attempts"] = tried
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--design", choices=["ds", "qwen"], default="ds")
@@ -717,9 +872,35 @@ def main():
     ap.add_argument("--rank", default="0", help="fixture rank")
     ap.add_argument("--native-read-return", type=int, help="explicit native stream read-return edges")
     ap.add_argument("--native-write-return", type=int, help="explicit native stream write-return edges")
+    ap.add_argument("--connected-lowering", action="store_true", help="selected source-bound L0 reduction/scalar implementation; execution remains unqualified")
+    ap.add_argument("--side-source", type=Path, help="actual repaired scoped SIDE source in compiled bundle")
+    ap.add_argument("--su-lower2", action="store_true", help="TOK-FUNC2-HBM-SU opt-in production SU lowerings by "
+                    "record profile on every layer (pretree reductions, scalar rsqrt, RF-broadcast B, single-row "
+                    "identity lane terms); failed attempts leave the VM placement / written state untouched")
+    ap.add_argument("--rf-local", type=int, default=1, help="selected su_<q><g> RF_LOCAL parameter (contract)")
+    ap.add_argument("--nev", type=int, default=0, help="(--su-lower2) built TB event depth: split into independent replays")
+    ap.add_argument("--defer-records", default="", help="(--su-lower2, internal) records left unlowered because their "
+                    "VM-linked programme group exceeds the TB event depth")
+    ap.add_argument("--cx", action="store_true", help="TOK-FUNC2-HBM-CX: COLL/HC component records CONNECTED in the layer "
+                    "(shared placement, interleaved SU/component epochs, producer-cone parts; cx_layer_1021)")
+    ap.add_argument("--cx-ops", default="COLL,HC")
+    ap.add_argument("--cx-contract", type=Path)
+    ap.add_argument("--cx-l12", type=Path)
+    ap.add_argument("--cx-checkpoint", type=Path)
+    ap.add_argument("--cx-chapters", default="", help="priced records starting a new VM chapter (quarter VM reset; "
+                    "parts never span chapters; values crossing it are imaged, listed)")
+    ap.add_argument("--cx-skip", default="", help="priced component records left as fixture-imaged probes (VM capacity)")
     ap.add_argument("--safe-calendar", action="store_true", help="opt-in tested 128-word A-to-O BF16 profile, exclusive controls and OLD-read drain gap")
+    ap.add_argument("--sm-lowering", action="store_true",
+                    help="opt-in (TOK-FUNC2-HBM-SM 10-21): lower every SM.MATVEC record onto the slice's real SM chain "
+                         "(sm_slice_lower.py: cp_svg/svg/xc + xl_SW_ctl x load + smw_SW writer + HBM image); writes "
+                         "OUT/sm/replay.json (separate component replay) and marks those records emitted")
+    ap.add_argument("--smw", type=Path, help="with --sm-lowering: SM weight root (ds_sm_weights.py OUT, holds L<LL>/)")
+    ap.add_argument("--sm-count", type=int, default=4, help="with --sm-lowering: SW SM service groups driven (sm_SW0..)")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
+    if a.sm_lowering and (a.smw is None or a.fixtures is None):
+        ap.error("--sm-lowering needs --fixtures and --smw")
     if (a.native_read_return is None) != (a.native_write_return is None):
         ap.error("native read/write return contracts must be specified together")
     if a.safe_calendar and a.native_read_return is None:
@@ -758,10 +939,36 @@ def main():
         aligned = len(prog) == len([r for r in recs if r["unit"] != "CTL"]) or len(prog) == len(recs)
         pk_of = {r["i"]: r["i"] for r in recs if aligned and r["i"] < len(prog)}
     want = set(int(x) for x in a.records.split(",")) if a.records else None
+    sfu_layout = set()
+    if a.su_lower2:
+        # tensors touched by a record that needs the KIND-1 lanes live in the 32-lane SFU layout (sector 4s+j on VM
+        # port j); every SU record touching them is lowered in that layout (layer-global compiler placement)
+        import su_bench as SB
+        import su_program_inventory as I
+        from hbm_layer_vehicle import su_layer_lower_1021 as SL
+        for r in recs:
+            pk = pk_of.get(r["i"])
+            if r["unit"] != "SU" or pk is None or prog[pk][1] is None:
+                continue
+            try:
+                _, u_, sut_, desc_ = I.decode(SB.pack_rec(prog[pk][1]))
+            except AssertionError:
+                continue
+            if u_ == 2 and SL.sfu_profile(sut_, desc_):
+                sfu_layout |= vector_sectors(desc_)
     a.out.mkdir(parents=True, exist_ok=True)
     events, manifest, t_su_free = [], [], 0
     rng = np.random.default_rng(1018)
     place, vm_data = Placement(a.quarter), {}
+    cx = None
+    if a.cx:
+        from hbm_layer_vehicle import cx_layer_1021 as CX
+        if not fx:
+            ap.error("--cx requires --fixtures")
+        place = CX.make_placement(Placement, a.quarter)
+        cx = CX.Cx(a.fixtures, a.rank, recs, place, contract=a.cx_contract, l12=a.cx_l12, checkpoint=a.cx_checkpoint,
+                   boundary=bnd, ops=set(a.cx_ops.split(",")), skip={int(x) for x in a.cx_skip.split(",") if x},
+                   chapters={int(x) for x in a.cx_chapters.split(",") if x})
     # layer t0 (serial): reset relay 3 edges + the first record's whole configuration load + slack
     pending = []
     for r in recs:
@@ -778,6 +985,17 @@ def main():
             ent["programme_tag_mismatch"] = prog[pk][2]["tag"]
         unit = r["orig_op"].split(".")[0]
         ent["target_ports"] = [p for p in UNIT_PORTS.get(unit, []) if p in inports]
+        if cx is not None:
+            cx.before_record(r["i"], fx.get(r["i"]), placed=(unit == "SU"))
+            if r["i"] in cx.comps:
+                e2, comp = cx.lower(r["i"], cap=(a.nev or 11651) - 1)
+                ent.update(e2)
+                if comp is not None:
+                    pending.append((r, ent, dict(cx_comp=comp)))
+                if ent["blocked_by"]:
+                    ent["status"] = "blocked:" + ent["status"]
+                manifest.append(ent)
+                continue
         if unit == "SU" and pk is not None and prog[pk][1] is not None:
             import su_bench as SB
             raw = SB.pack_rec(prog[pk][1])
@@ -785,17 +1003,56 @@ def main():
             if fr is not None:
                 vm_data.update(fr["vm_in"])           # the record's operands = ds_native VM state before it
             try:
-                su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"], pad_zero=fr is not None, timing=native_timing, safe_calendar=a.safe_calendar)
+                if a.su_lower2 and str(r["i"]) in a.defer_records.split(","):
+                    su = dict(status="deferred_nev", reasons=[f"VM-linked programme group exceeds the built TB event "
+                                                               f"depth NEV {a.nev}; record left for a larger TB"],
+                              lowering=dict(supported=True, deferred=True))
+                elif a.su_lower2:
+                    su = su_lower2(raw, a, r, fx, vm_data, place, native_timing, bnd, fr, sfu_layout=sfu_layout)
+                elif a.connected_lowering and lay == 0 and r['i'] in (4, 8):
+                    from hbm_layer_vehicle import su_layer_lower_1021 as SL
+                    required = {'str_C', 'sucore_SW', 'sucore_SE', 'sucore_NW', 'sucore_NE'}
+                    if not required <= set(bnd['instances']):
+                        raise ValueError('selected reduction requires real four-core/stree cut; no RF return injection')
+                    if r['i'] == 4:
+                        expected = int(np.float32(fx[8]['vm_in'][49920]).view(np.uint32))
+                        su = SL.lower(raw, a.quarter, rng, data=vm_data, place=place, tag=r['tag'],
+                                      pad_zero=fr is not None, timing=native_timing, expected_reduction_word=expected)
+                        su['fixture_reduction_reference'] = dict(value=f'{expected:08x}', source='actual downstream fixture k10 A, not prior R input')
+                    else:
+                        su = SL.lower_norm_rs(raw, a.quarter, data=vm_data, place=place, tag=r['tag'],
+                                              timing=native_timing, side_profile=(4,3), side_source_path=a.side_source)
+                    for addr,bits in su.get('expected_post_state', {}).items():
+                        vm_data[int(addr)] = np.uint32(int(bits,16)).view(np.float32)
+                else:
+                    su = su_record(raw, a.quarter, rng, data=vm_data, place=place, tag=r["tag"], pad_zero=fr is not None, timing=native_timing, safe_calendar=a.safe_calendar)
             except AssertionError as ex:                # su_program_inventory.decode: adapter contract refusal
                 ent.update(status="adapter_refused", reasons=[f"su_record: {ex}"])
                 manifest.append(ent)
                 continue
             if fr is not None:
                 fixture_check(su, fr)
+            if cx is not None:
+                cx.after_su(r["i"], su, fr)
             ent.update(status=su["status"], reasons=su["reasons"], lowering=su["lowering"],
                        inputs_placeholder=su.get("inputs_placeholder"))
+            if su.get("su_lower2_attempts") is not None:
+                ent["su_lower2_attempts"] = su["su_lower2_attempts"]
+            if su.get('timing_obligations'):
+                ent.update(timing_obligations=su['timing_obligations'], source_contract=su['source_contract'],
+                           execution_qualified=False, quarter_ownership=su.get('quarter_ownership'),
+                           expected_reference=su.get('expected_reference'),
+                           fixture_reduction_reference=su.get('fixture_reduction_reference'),
+                           compiled_record_stream_edges=su['timing_obligations']['stream_edges'],
+                           prior_record_price=r['end']-r['start'],
+                           prior_record_price_qualified=False,
+                           record_price_delta_stream_edges=su['timing_obligations']['stream_edges']-(r['end']-r['start']),
+                           price_scope='actual emitted bounded programme, no inherited layer/token throughput claim')
             if fx:
                 ent["fixture"] = dict(su.get("fixture", dict(matched=False)), pad_words_zero=su.get("pad_words_zero", 0))
+                if su.get('fixture_reduction_reference'):
+                    ent['fixture']['post_record_output_available'] = False
+                    ent['fixture']['comparison_reference'] = 'downstream input plus independent csum8; comparison only'
             if su.get("reducer_bound"):
                 rb = dict(su["reducer_bound"], priced_serial_edges=serial(r["end"]) - serial(r["start"]))
                 rb["bound_over_price"] = round(rb["min_serial_edges"] / max(1, rb["priced_serial_edges"]), 2)
@@ -829,13 +1086,24 @@ def main():
     # SU programmes: adjacent SU records share ONE pgp programme (one start) when they fit EDGES 7111 and the gap to
     # the next is too short to reload; each programme is loaded while the producer is idle, >= CFG_LEAD before start.
     progs = []
+    cx_before, force_new = {}, False
     for r, ent, su in pending:
+        if "cx_comp" in su:                         # component barrier: SU programmes split around it
+            cx_before.setdefault(len(progs), []).append(su["cx_comp"])
+            force_new = True
+            continue
         want0 = serial(r["start"]) - su["setup_edge"]               # desired line-0 edge, relative to t0
         P = progs[-1] if progs else None
-        if P is None or want0 - P["end"] >= a.reload_gap or want0 - P["base"] + len(su["lines"]) > EDGES_MAX:
+        if (P is None or force_new or want0 - P["end"] >= a.reload_gap
+                or want0 - P["base"] + len(su["lines"]) > EDGES_MAX):
             P = dict(base=want0, end=want0, ql=QLine(), recs=[])
             progs.append(P)
+            force_new = False
         o = max(0, want0 - P["base"])
+        if a.su_lower2:
+            # opt-in: records of one programme run strictly after the previous record's last commit (store rows are
+            # reused from 0 by every record; RAW through VM is then satisfied by construction, and checked below)
+            o = max(o, P.get("tail", 0))
         while True:                                                     # first offset without a slot collision
             clash = calendar_collision(P["ql"], su["ql"], o,
                                        exclusive_controls=bool(su.get("control_reservation") or P.get("exclusive_control")))
@@ -847,6 +1115,7 @@ def main():
                 P["ql"].f[fld][o + e] = P["ql"].f[fld].get(o + e, 0) | v
         P["exclusive_control"] = P.get("exclusive_control", False) or bool(su.get("control_reservation"))
         P["end"] = max(P["end"], P["base"] + o + len(su["lines"]))
+        P["tail"] = o + max(len(su["lines"]), 1 + (su.get("last_commit") or 0)) + 1
         P["recs"].append((r, ent, su, o))
     cfgs = []
     for k, P in enumerate(progs):
@@ -855,7 +1124,44 @@ def main():
         P.update(lines=lines, cfg=cfg, man=man)
     t0 = 3 + (len(progs[0]["cfg"]) if progs else 0) + CFG_LEAD + START_ADVANCE + a.load_gap
     busy_until, shift, written_at = 3, 0, {}
+    cx_ev, cx_comp_place, cx_epochs = [], [], []
+    cx_state = dict(t=3, ep=None)
+
+    def cx_close_epoch():
+        ep = cx_state["ep"]
+        if ep is None:
+            return
+        last = max([CX.stream_of(e["cyc"]) if e["dom"] == "serial" else e["cyc"] for e in events[ep["start"]:]
+                    if e["k"] != "M"] or [ep["launch"]])
+        ev_, launch_, end_ = CX.epoch_calendar(ep["t_install"], last)
+        cx_ev.extend(ev_)
+        cx_epochs.append(dict(t_install=ep["t_install"], launch=launch_, end=end_, last_su_stream=last,
+                              programmes=ep["progs"]))
+        cx_state.update(t=end_ + CX.CP_GUARD, ep=None)
+
+    def cx_place_comps(lst):
+        for comp in lst:
+            nm = [e["cyc"] for e in comp["events"] if e["k"] != "M"]
+            sh = cx_state["t"] + CX.CP_GUARD - min(nm)
+            for e in comp["events"]:
+                e2 = dict(e, cx=comp["i"])
+                if e2["k"] != "M":
+                    e2["cyc"] = e2["cyc"] + sh
+                cx_ev.append(e2)
+            cx_comp_place.append(dict(i=comp["i"], op=comp["op"], start=min(nm) + sh, end=max(nm) + sh,
+                                      events=len(nm)))
+            cx_state["t"] = max(nm) + sh + CX.COMP_GAP
     for k, P in enumerate(progs):
+        if cx is not None and (k == 0 or k in cx_before):
+            cx_close_epoch()
+            cx_place_comps(cx_before.get(k, []))
+            launch_ = CX.epoch_launch(cx_state["t"])
+            cx_state["ep"] = dict(t_install=cx_state["t"], launch=launch_, start=len(events), progs=[])
+            min_s = -(-3 * (launch_ + CX.SU_START_GUARD) // 4) + 1
+            if t0 + P["base"] + shift - START_ADVANCE < min_s:
+                shift += min_s - (t0 + P["base"] + shift - START_ADVANCE)
+        if cx is not None:
+            cx_state["ep"]["progs"].append(k)
         line0 = t0 + P["base"] + shift
         s_edge = line0 - START_ADVANCE
         load0 = s_edge - CFG_LEAD - len(P["cfg"])
@@ -908,7 +1214,171 @@ def main():
             ent["commit_slack_edges"] = ent["priced_end_serial"] - ent["compiled_commit_serial"]
             if note:
                 ent.setdefault("reasons", []).append(note)
+    if cx is not None:
+        cx_close_epoch()
+        cx_place_comps(cx_before.get(len(progs), []))
+        cx_img = {e["sector"] for e in cx_ev if e["k"] == "M"}
+        cx_dropped = [dict(rec=e.get("rec"), sector=e["sector"]) for e in events if e["k"] == "M" and e["sector"] in cx_img]
+        events = [e for e in events if not (e["k"] == "M" and e["sector"] in cx_img)]   # component image wins
+        for e in events:                       # SU programme of every SU event (parts)
+            if "prog" not in e:
+                e["prog"] = next((c["programme"] for c in cfgs if e.get("rec") in c["records"]), None)
     events.sort(key=lambda x: (x["dom"], x["cyc"], x["k"]))
+
+    def drop_holds(evs):
+        # a slice input holds its last D value (gen_slice_tb replay model); a D repeating the port's current value is
+        # a no-op on the DUT inputs -- drop it so the layer fits the built testbench's event array (NEV)
+        last, kept, n = {}, [], 0
+        for e in evs:
+            if e["k"] == "D":
+                key = (e["dom"], e["port"])
+                if key in last and last[key] == e["val"]:
+                    n += 1
+                    continue
+                last[key] = e["val"]
+            kept.append(e)
+        return kept, n
+
+    dropped_holds, extra_parts = 0, []
+    cx_parts = None
+    if cx is not None:
+        # producer-cone parts: every part replays the real producer chain (drives + images) of everything it checks
+        nodes = []
+        prog_rw = {k_: (set(), set()) for k_ in range(len(progs))}
+        for k_, P in enumerate(progs):
+            for r_, ent_, su_, o_ in P["recs"]:
+                prog_rw[k_][0].update(ls_ for ls_, _ in su_["fills"])
+                prog_rw[k_][1].update(ls_ for ls_, _ in su_["drains"])
+        by_prog, by_cx = {}, {}
+        for e in events:
+            by_prog.setdefault(e.get("prog"), []).append(e)
+        for e in cx_ev:
+            if e.get("cx_epoch"):
+                by_cx.setdefault("epoch", []).append(e)
+            else:
+                by_cx.setdefault(e["cx"], []).append(e)
+        comps_by_i = {i_: c for i_, c in cx.comps.items() if c.get("lowered")}
+
+        def chap(i_):
+            return sum(1 for b_ in cx.chapters if i_ >= b_)
+
+        def mk(nid, evs, reads, writes):
+            i_ = nid[1] if nid[0] == "c" else progs[nid[1]]["recs"][0][0]["i"]
+            reads = {(chap(i_), x) for x in reads}
+            writes = {(chap(i_), x) for x in writes}
+            return dict(id=nid, chapter=chap(i_), drives=[e for e in evs if e["k"] == "D"], checks=[e for e in evs if e["k"] == "C"],
+                        images=[e for e in evs if e["k"] == "M"], reads=reads, writes=writes)
+        for k_ in range(len(progs) + 1):
+            for c in cx_before.get(k_, []):
+                nodes.append(mk(("c", c["i"]), by_cx.get(c["i"], []), c["reads"], c["writes"]))
+            if k_ < len(progs):
+                nodes.append(mk(("p", k_), by_prog.get(k_, []), *prog_rw[k_]))
+        stray = by_prog.get(None, [])
+        common = by_cx.get("epoch", []) + [e for e in stray if e["k"] == "D"]
+        cap = (a.nev or 11651) - 1 - len(common)
+        parts_, cone_ = CX.cones_parts(nodes, cap)
+        byid = {n["id"]: n for n in nodes}
+        parts_out = []
+        for p_ in parts_:
+            evs = list(common)
+            for nid in sorted(p_["members"], key=lambda x: [n["id"] for n in nodes].index(x)):
+                evs += byid[nid]["drives"] + byid[nid]["images"]
+                if nid in p_["targets"]:
+                    evs += byid[nid]["checks"]
+            ev_, n_ = drop_holds(sorted(evs, key=lambda x: (x["dom"], x["cyc"], x["k"])))
+            dropped_holds += n_
+            parts_out.append((ev_, sorted(k_ for t_, k_ in p_["members"] if t_ == "p")))
+            p_["events_after_hold_drop"] = sum(1 for e in ev_ if e["k"] != "M")
+        for P_ in cx.iso_parts:                # standalone components (no in-slice neighbour)
+            ev_, pl_ = CX.iso_part_events(P_)
+            cx_comp_place.extend(pl_)
+            parts_.append(dict(members={("c", x["i"]) for x in P_["comps"]}, targets=[("c", x["i"]) for x in P_["comps"]],
+                               drive_events=sum(e["k"] == "D" for e in ev_), check_events=sum(e["k"] == "C" for e in ev_)))
+            ev_, n_ = drop_holds(sorted(ev_, key=lambda x: (x["dom"], x["cyc"], x["k"])))
+            parts_[-1]["events_after_hold_drop"] = sum(1 for e in ev_ if e["k"] != "M")
+            parts_out.append((ev_, []))
+        events = parts_out[0][0] if parts_out else events
+        extra_parts = parts_out[1:]
+        cx_parts = [dict(part=n_, targets=[f"{t}{k}" for t, k in p_["targets"]],
+                         members=[f"{t}{k}" for t, k in sorted(p_["members"], key=lambda x: (x[1], x[0]))],
+                         drive_events=p_["drive_events"], check_events=p_["check_events"],
+                         events=p_["events_after_hold_drop"], fits_nev=p_["events_after_hold_drop"] <= (a.nev or 11651) - 1)
+                    for n_, p_ in enumerate(parts_)]
+        for P_k, P in enumerate(progs):
+            for r_, ent_, su_, o_ in P["recs"]:
+                ent_["replay_part"] = [n_ for n_, p_ in enumerate(parts_) if ("p", P_k) in p_["targets"]]
+        for m_ in manifest:
+            if m_["i"] in comps_by_i:
+                m_["replay_part"] = [n_ for n_, p_ in enumerate(parts_) if ("c", m_["i"]) in p_["targets"]]
+                m_["cx"]["timeline"] = next((x for x in cx_comp_place if x["i"] == m_["i"]), None)
+    elif a.su_lower2:
+        # opt-in: when the layer does not fit NEV, split it into INDEPENDENT replays: programmes linked by a VM
+        # producer -> consumer sector stay together (no expected-value carry, no intermediate injection)
+        prog_of = {r_: c["programme"] for c in cfgs for r_ in c["records"]}
+        pev = {}
+        for e in events:
+            k_ = e.get("prog", prog_of.get(e.get("rec")))
+            pev.setdefault(k_, []).append(e)
+        parent = {k_: k_ for k_ in range(len(progs))}
+
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+        writer = {}
+        for k_, P in enumerate(progs):
+            for r_, ent_, su_, o_ in P["recs"]:
+                for ls_, _ in su_["fills"]:
+                    if ls_ in writer:
+                        parent[find(k_)] = find(writer[ls_])
+                for ls_, _ in su_["drains"]:
+                    writer[ls_] = k_
+        groups = {}
+        for k_ in range(len(progs)):
+            groups.setdefault(find(k_), []).append(k_)
+        cap = a.nev - 1 if a.nev else None
+        nonm = lambda evs: sum(1 for e in drop_holds(sorted(evs, key=lambda x: (x["dom"], x["cyc"], x["k"])))[0]
+                               if e["k"] != "M")
+        bins = []
+        for g in sorted(groups.values(), key=lambda g: g[0]):
+            evs = [e for k_ in g for e in pev.get(k_, [])]
+            for b in bins:
+                if cap is None or nonm(b["events"] + evs) <= cap:
+                    b["events"] += evs
+                    b["progs"] += g
+                    break
+            else:
+                bins.append(dict(events=list(evs), progs=list(g)))
+        too_big = [b for b in bins if cap is not None and nonm(b["events"]) > cap]
+        if too_big:
+            # defer the latest record of the oversize VM-linked group (no later record of the group consumes it)
+            # and recompile the layer; never an expected-value carry between parts
+            last = max(((r_["i"], P["base"] + o_) for k_ in too_big[0]["progs"] for r_, _, _, o_ in progs[k_]["recs"]),
+                       key=lambda x: x[1])[0]
+            import os
+            args = [x for x in sys.argv]
+            if "--defer-records" in args:
+                j_ = args.index("--defer-records")
+                args[j_ + 1] = f"{args[j_ + 1]},{last}".strip(",")
+            else:
+                args += ["--defer-records", str(last)]
+            print(f"SU_LOWER2 NEV: deferring record {last}", file=sys.stderr)
+            os.execv(sys.executable, [sys.executable] + args)
+        stray = pev.get(None, [])
+        if bins:
+            bins[0]["events"] += stray
+        parts_out = []
+        for b in bins:
+            ev_, n_ = drop_holds(sorted(b["events"], key=lambda x: (x["dom"], x["cyc"], x["k"])))
+            dropped_holds += n_
+            parts_out.append((ev_, sorted(b["progs"])))
+        events = parts_out[0][0] if parts_out else events
+        extra_parts = parts_out[1:]
+        part_of = {k_: n for n, (_, ps) in enumerate(parts_out) for k_ in ps}
+        for P_k, P in enumerate(progs):
+            for r_, ent_, su_, o_ in P["recs"]:
+                ent_["replay_part"] = part_of.get(P_k, 0)
     for p in {e["port"] for e in events if e["k"] == "D"}:
         assert p in inports, f"replay drives {p}, not a slice input port"
     rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design=a.design,
@@ -919,7 +1389,43 @@ def main():
                             "VM operands as M preload events (no slice VM input port)",
                             f"start advance {START_ADVANCE}, config lead {CFG_LEAD} (pgcol.sv header)"],
                events=events)
+    if cx is not None:
+        rep.update(cx_scope="connected_layer_parts", lane="TOK-FUNC2-HBM-CX", connected_components=True,
+                   cx_epochs=cx_epochs, cx_components=cx_comp_place, cx_parts=cx_parts,
+                   data_connection="producer -> component -> consumer through the layer VM placement; non-slice "
+                                   "words imaged with provenance (manifest cx)")
+        rep["assumptions"] = rep["assumptions"] + [
+            "SU programmes split at every component; SU epochs (finite owner-0 calendar) and component CP epochs "
+            "alternate on compiled edges (no ready/credit)",
+            "part = union of producer cones of its checked nodes; cone members replay drives+images, not checks"]
+    if a.su_lower2 or cx is not None:
+        rep["dropped_same_value_holds"] = dropped_holds
+        rep["independent_parts"] = 1 + len(extra_parts)
     (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
+    sm_summary = None
+    if a.sm_lowering:
+        from hbm_layer_vehicle import sm_slice_lower as SML
+        by_tag = {}
+        for r_ in recs:
+            by_tag.setdefault(r_["tag"], []).append(r_["i"])
+        rep_sm, per_sm, sm_summary = SML.lower(a.fixtures, a.smw / a.fixtures.name, lay, bnd, nsm=a.sm_count,
+                                               priced_by_tag=by_tag)
+        (a.out / "sm").mkdir(parents=True, exist_ok=True)
+        (a.out / "sm" / "replay.json").write_text(json.dumps(rep_sm) + "\n")
+        by_i = {m["i"]: m for m in manifest}
+        for pr_ in per_sm:
+            for i in pr_["priced"]:
+                m = by_i.get(i)
+                if m is None or m["op"] != "SM.MATVEC":
+                    continue
+                m.update(status="emitted", reasons=[], lowering="sm_slice_v1", replay="sm/replay.json",
+                         sm_record=dict(pr_), coverage_gaps_superseded=m.get("blocked_by") or [],
+                         coverage_note="10-18 coverage gaps (static x-load issuer / host loader calendar) are bound "
+                                       "in the r15 die: xl_SW_ctl MODE1 table, calendar_SW target 96")
+                m["blocked_by"] = []
+    for n_, (ev_, ps) in enumerate(extra_parts, 1):
+        (a.out / f"replay_x{n_}.json").write_text(json.dumps(dict(rep, events=ev_, independent_part=n_,
+                                                                  programmes=ps)) + "\n")
     man = dict(schema="opentallas.hbm_layer_images.v1", design=a.design, layer=a.layer,
                scope=rep["scope"], qualifies_native_layer=False, qualifies_native_chain=False,
                state_seed_provenance=rep["state_seed_provenance"],
@@ -927,6 +1433,13 @@ def main():
                fixtures=str(a.fixtures) if a.fixtures else None,
                boundary=str(a.boundary), records=manifest, placement_conflicts=place.conflicts,
                placed_sectors=len(place.map), su_programmes=cfgs, t0_serial=t0,
+               **({"sm_lowering": sm_summary} if sm_summary is not None else {}),
+               **({} if cx is None else dict(cx=dict(versions=place.versions, epochs=cx_epochs,
+                                                     components=cx_comp_place, parts=cx_parts,
+                                                     su_images_superseded_by_component_image=cx_dropped,
+                                                     chapters=cx.chapters, chapter_resets=cx.chapter_carried,
+                                                     skipped_components=cx.skipped,
+                                                     component_runs_top_sector=place.top))),
                counts={k: sum(1 for m in manifest if m["status"] == k) for k in sorted({m["status"] for m in manifest})})
     (a.out / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
     print(json.dumps(dict(records=len(manifest), events=len(events), counts=man["counts"], t0_serial=t0)))

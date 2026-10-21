@@ -59,6 +59,10 @@ def check_run(replay, run_log, scope="component_probe"):
             loaded = re.findall(r"^SLICE_VM_PRELOAD words=(\d+)$", log, re.M)
             if loaded != [str(index["vm_preload_words"])]:
                 errors.append(f"VM preload words: executed {loaded}, expected {index['vm_preload_words']}")
+        for inst, n in index.get("hbm_preload_sectors", {}).items():   # HBM image replays (sm_slice_lower)
+            got = re.findall(rf"^HBM_MODEL_PRELOAD {re.escape(inst)} sectors=(\d+) ", log, re.M)
+            if got != [str(n)]:
+                errors.append(f"HBM preload {inst}: loaded {got}, expected {n}")
     return {"schema": "opentallas.hbm_slice_run_check.v1", "scope": "component_probe", "requested_scope": scope,
             "qualifies_native_layer": False, "qualifies_native_chain": False,
             "state_seed_provenance": index.get("state_seed_provenance", ["unspecified"]),

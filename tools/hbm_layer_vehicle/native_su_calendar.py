@@ -27,7 +27,7 @@ def compile_calendar(commands, *, first_serial, bridge_serial, bridge_stream,
     fields=[{} for _ in range(rows)];events=[]
     first_calendar=host_launch+host_publication
     for e,word in enumerate(commands):
-        if not 0<=word<1<<2422: raise ValueError('quarter word overflow')
+        if not 0<=word<1<<2470: raise ValueError('quarter word overflow')
         for b in range(8):
             for kind,base,width,vbit,lag,sel,owner in (
                 ('read',440,30,29,0,'lg_local_read','rslot_v'),
@@ -52,7 +52,7 @@ def compile_calendar(commands, *, first_serial, bridge_serial, bridge_stream,
                                    lg_sample=lg,vm_pin_sample=lg+2+lane_edges))
     words=[prog_row(i,cal_word(**f),187) for i,f in enumerate(fields)]
     return words,dict(schema='opentallas.native_su_calendar.v1',qualified=False,
-        first_serial=first_serial,bridge_serial=bridge_serial,bridge_stream=bridge_stream,
+        quarter_command_bits=2470,first_serial=first_serial,bridge_serial=bridge_serial,bridge_stream=bridge_stream,
         host_launch=host_launch,host_publication=host_publication,rows=rows,
         calendar_row0_consumer=first_calendar,owner=0,lg_to_vm_pin_edges=2+request_lane_edges if request_lane_edges_by_bank is None else [2+x for x in request_lane_edges_by_bank],request_lane_edges=request_lane_edges,
         **({} if request_lane_edges_by_bank is None else dict(request_lane_edges_by_bank=request_lane_edges_by_bank)),

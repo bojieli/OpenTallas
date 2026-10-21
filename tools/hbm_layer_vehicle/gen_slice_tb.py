@@ -37,6 +37,9 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--replay", action="append", default=[])
     ap.add_argument("--nev", type=int, default=0, help="event array depth (default: max replay events + 1, >= 16)")
+    ap.add_argument("--trace-bit", action="append", default=[], metavar="NET:BIT",
+                    help="opt-in (TOK-FUNC2-HBM-SM 10-21): print 'SLICE_TRACE NET cyc' on every stream edge where slice net "
+                         "dut.NET[BIT] is 1 (measured commit cycles of internal writers); default none = TB unchanged")
     a = ap.parse_args()
     b = json.loads(Path(a.boundary).read_text())
     out = Path(a.out)
@@ -54,12 +57,17 @@ def main():
         r = json.loads(Path(rp).read_text())
         name = Path(rp).stem if Path(rp).name != "replay.json" else Path(rp).parent.name
         ev = r["events"]
-        vm = [e for e in ev if e["k"] == "M"]
+        vm = [e for e in ev if e["k"] == "M" and e.get("mem") != "hbm"]
+        hbm = [e for e in ev if e["k"] == "M" and e.get("mem") == "hbm"]
         ev = [e for e in ev if e["k"] != "M"]
         if a.nev and len(ev) + 1 > a.nev:
             sys.exit(f"gen_slice_tb: replay {name} needs {len(ev) + 1} event slots, --nev={a.nev}; split the replay")
         if any(e.get("cyc", 0) != 0 or e.get("mem") != "vm" for e in vm):
             sys.exit("gen_slice_tb: only cyc-0 VM preload (M) events are supported")
+        # HBM image M events (TOK-FUNC2-HBM-SM 10-21): {"k":"M","mem":"hbm","inst":<PHY instance>,"sector":int,"val":hex}
+        # -> replay/<name>/hbm/<inst>.hex, read by the off-chip PHY+DRAM model (+HBM_IMG_DIR=<replay>/hbm, cyc 0 only).
+        if any(e.get("cyc", 0) != 0 or e.get("inst") not in b["instances"] for e in hbm):
+            sys.exit("gen_slice_tb: HBM preload events need cyc 0 and a PHY instance of the slice")
         bad = [e for e in ev if not (e["port"] in (iidx if e["k"] == "D" else oidx) or
                                      (e["k"] == "C" and e["port"].startswith("vm:")))]
         if bad:
@@ -96,9 +104,23 @@ def main():
             assert (s & 7) == e["bank"] and ((s >> 3) & 0x3FF) == e["row"], e
             vlines.append(f"{(s >> 15) & 1:x} {s & 7:x} {(s >> 3) & 0x3FF:03x} {int(e['val'], 16):064x}")
         (d / "vm_pre.txt").write_text("\n".join(vlines) + ("\n" if vlines else ""))
+        hbm_n = {}
+        if hbm:
+            (d / "hbm").mkdir(exist_ok=True)
+            for inst in sorted({e["inst"] for e in hbm}):
+                sec = {}
+                for e in hbm:
+                    if e["inst"] == inst:
+                        s_ = int(e["sector"])
+                        if s_ in sec and sec[s_] != int(e["val"], 16):
+                            sys.exit(f"gen_slice_tb: HBM sector {s_:x} of {inst} preloaded twice with different data")
+                        sec[s_] = int(e["val"], 16)
+                (d / "hbm" / f"{inst}.hex").write_text("".join(f"{k_:08x} {v_:064x}\n" for k_, v_ in sorted(sec.items())))
+                hbm_n[inst] = len(sec)
         last = max([e["cyc"] for e in ev if e["dom"] == "stream"] + [0])
         (d / "index.json").write_text(json.dumps({"events": len(ev), "drives": sum(e["k"] == "D" for e in ev),
                                                   "checks": sum(e["k"] == "C" for e in ev), "vm_preload_words": len(vm), "last_stream_cyc": last,
+                                                  **({"hbm_preload_sectors": hbm_n} if hbm_n else {}),
                                                   "scope": r.get("scope", "unspecified"),
                                                   "qualifies_native_layer": False, "qualifies_native_chain": False,
                                                   "state_seed_provenance": r.get("state_seed_provenance", ["unspecified"]),
@@ -254,6 +276,9 @@ def main():
         L.append(f"    reg [{e['width'] - 1}:0] po{k} = '0; integer f{k} = -1, l{k} = -1, n{k} = 0;")
     L += ["    always @(posedge ck0) if (rs0) begin",
           "        step(0);"]
+    for tb_ in a.trace_bit:            # sampled value of the edge cnt[0] (opt-in; absent = TB unchanged)
+        net, bit = tb_.rsplit(":", 1)
+        L.append(f"        if (dut.{net}[{int(bit)}]) $display(\"SLICE_TRACE {net} %0d\", cnt[0]);")
     for k, e in enumerate(outs):
         L.append(f"        if ({e['name']} != po{k}) begin if (f{k} < 0) f{k} = cnt[0]; l{k} = cnt[0]; n{k} = n{k} + 1; po{k} = {e['name']}; end")
     L += ["        if (cnt[0] >= cycles) begin"]
