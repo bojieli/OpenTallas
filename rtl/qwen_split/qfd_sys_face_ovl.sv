@@ -115,6 +115,8 @@ module qfd_sys_face_ovl #(
     input  wire          prog_context_slot,
     output wire          prog_tx_observed_v,
     output wire [547:0]  prog_tx_record,
+    input wire prog_head_context_slot,input wire[1:0]prog_head_context_user,
+    input wire head_descriptor_v,input wire[58:0]head_descriptor_tag,input wire[1:0]head_descriptor_generation,
     input  wire          emb_rx_v,
     input  wire          emb_rx_slot,
     input  wire          d2d_fault,
@@ -342,6 +344,12 @@ module qfd_sys_face_ovl #(
     wire hc_v_u0 = tt_layer_context_v && hc_user0;
     // ================================================================ program record port (existing RTL)
     wire        rp_program_ready, rp_fault;
+    wire rp_tx_observed_v;wire[547:0]rp_tx_record;
+    wire head_tx_v,head_tx_fault;wire[547:0]head_tx_record;
+    reg head_mux_fault;
+    always @(posedge ck or negedge rst_rec[0])
+      if(!rst_rec[0])head_mux_fault<=0;
+      else if(head_tx_v&&rp_tx_observed_v)head_mux_fault<=1;
     wire        rp_commit_v, rp_cap;
     wire [15:0] rp_begin_epoch, rp_auth_epoch, rp_program_epoch;
     wire [10:0] rp_expected_pw; wire [3:0] rp_expected_dw; wire [63:0] rp_auth_digest, rp_program_digest;
@@ -358,7 +366,14 @@ module qfd_sys_face_ovl #(
         .program_ready(rp_program_ready), .installed_fusedcap(rp_cap), .commit_v(rp_commit_v),
         .program_epoch(rp_program_epoch), .program_digest(rp_program_digest),
         .host_epoch_valid(host_epoch_valid), .host_epoch(host_epoch), .host_tag(host_tag), .host_gen(host_generation),
-        .tx_v(rp_tx_v), .tx_observed_v(prog_tx_observed_v), .tx_record(prog_tx_record), .fault(rp_fault));
+        .tx_v(rp_tx_v), .tx_observed_v(rp_tx_observed_v), .tx_record(rp_tx_record), .fault(rp_fault));
+    qfd_mu_head_context_tx u_head_tx(
+      .ck(ck),.rst_n(rst_rec[0]),.descriptor_v(head_descriptor_v),.descriptor_tag(head_descriptor_tag),
+      .descriptor_generation(head_descriptor_generation),.send_slot(prog_head_context_slot),.send_user(prog_head_context_user),
+      .program_ready(rp_program_ready),.installed_fusedcap(rp_cap),.program_epoch(rp_program_epoch),.program_digest(rp_program_digest),
+      .tx_v(head_tx_v),.tx_record(head_tx_record),.fault(head_tx_fault));
+    assign prog_tx_observed_v=rp_tx_observed_v|head_tx_v;
+    assign prog_tx_record=head_tx_v?head_tx_record:rp_tx_record;
     assign host_fused_capability = rp_cap;
     // MU filler head-context check (see "MU head contexts" above)
     wire mu_hc_fault;
@@ -579,6 +594,6 @@ module qfd_sys_face_ovl #(
     always @(posedge ck or negedge rst_emb)
         if (!rst_emb) prov_fault_q <= 1'b0;
         else if (emb_prov_fault) prov_fault_q <= 1'b1;
-    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | armed_fault | go_fault | mu_hc_fault;
+    assign face_fault = boot_fault | prog_fault | cal_fault | emb_fault | prov_fault_q | rp_fault | head_tx_fault | head_mux_fault | armed_fault | go_fault | mu_hc_fault;
     assign fault = face_fault;
 endmodule

@@ -401,6 +401,18 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[1:0]c_user_f=MU?pu_pub[4]:2'd0;   // R3i: == c_user (fstart read)
  wire[13:0]c_seq=(HEAD_PREP==0&&fstart[c_user_f]&&c_l0&&MUT!=6)?fseq_rd+14'd1:fseq_rd;
  wire hp_fill=HEAD_PREP!=0&&MU!=0&&hp_v[1]&&hp_u1!=2'd0;
+ wire hp_host=HEAD_PREP!=0&&hp_v[1]&&hp_u1==2'd0;
+ reg hp_host_pending,hp_host_fault;reg[17:0]hp_host_token,hp_host_position;
+ wire hp_host_match=hp_host_pending&&p_hev&&p_hfc&&p_ht[58:43]==p_he&&
+    p_ht[36:19]==hp_host_token&&p_ht[18:6]==hp_host_position[12:0]&&p_ht[42:37]==0&&p_ht[5:0]==0;
+ always @(posedge ck or negedge rst_top)
+  if(!rst_top)begin hp_host_pending<=0;hp_host_fault<=0;hp_host_token<=0;hp_host_position<=0;end
+  else begin
+   if(hp_host)begin
+    if(hp_host_pending||hp_t1>=151936||hp_p1>=8192)hp_host_fault<=1;
+    hp_host_pending<=1;hp_host_token<=hp_t1;hp_host_position<=hp_p1;
+   end else if(hp_host_match&&!hp_fill)hp_host_pending<=0;
+  end
  wire[13:0]hp_seq=fstart[hp_u1]?fseq[hp_u1]+14'd1:fseq[hp_u1];
  wire[1:0]c_tag=(MUT==5&&c_user==2'd3)?2'd0:c_user;
  wire[1:0]c_user_e=MU?pu_pub[3]:2'd0,c_user_e2=MU?pu_pub[5]:2'd0;   // R3h/j: == c_user (begin_tag epoch select low / high)
@@ -441,9 +453,12 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  always @(posedge ck or negedge rst_top)
   if(!rst_top)begin head_descriptor_v<=0;head_descriptor_tag<=0;head_descriptor_generation<=0;end
   else begin
-   head_descriptor_v<=HEAD_PREP!=0?hp_fill:(begin_slot&&(begin_tag[42:37]==6'd1));
+   head_descriptor_v<=HEAD_PREP!=0?(hp_fill||hp_host_match):(begin_slot&&(begin_tag[42:37]==6'd1));
    if(hp_fill)begin
     head_descriptor_tag<={hp_seq,hp_u1,6'd0,hp_t1,hp_p1[12:0],6'd0};
+    head_descriptor_generation<=p_hg;
+   end else if(HEAD_PREP!=0&&hp_host_match)begin
+    head_descriptor_tag<={p_ht[58:43],6'd0,p_ht[36:0]};
     head_descriptor_generation<=p_hg;
    end else if(HEAD_PREP==0&&begin_slot&&(begin_tag[42:37]==6'd1))begin
     head_descriptor_tag<={begin_tag[58:43],6'd0,begin_tag[36:0]};
@@ -657,7 +672,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  // svc3 (QW-N59-4): the sticky DV fault as four sticky flops, each beside its own cone (v2 placed STA: one flop for all
  // terms, -149 ps); dv_fault = their OR on the same edge (exact).
  reg[3:0]dvf;wire dv_fault=|dvf;
- wire src_fault=context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault;
+ wire src_fault=context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault|hp_host_fault;
  reg dr_s;                            // slot whose VM write is in dr_o (the landing fence of that slot checks it)
  genvar gs;
  generate for(gs=0;gs<NS;gs=gs+1)begin:g_slot
@@ -831,7 +846,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
   end
  always @(posedge ck or negedge rst_top)
   if(!rst_top)fault<=0;
-  else fault<=svc_fault|context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault;
+  else fault<=svc_fault|context_fault|qtag_fault|export_control_fault|dv_fault|formatter_fault|x3_fault|record_fault|land_fault|visibility_fault|vm_address_fault|mu_fault|hp_host_fault;
  initial begin
   if(NATIVE_PROFILE!=0&&LAND_QUALIFIED!=1)$fatal(1,"native service requires the measured dr landing edge contract");
   if(LAND_EDGES<2)$fatal(1,"LAND_EDGES must include the slice pin register and VM write");
