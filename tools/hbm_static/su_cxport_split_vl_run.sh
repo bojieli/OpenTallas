@@ -5,11 +5,13 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 out=$(realpath -m "$1"); q=${2:-2}; b=${3:-0}; mut=${4:-0}; one=${5:-0}; obr=${6:-0}; mkdir -p "$out"
+# -GOBR only when set: kits whose tb/split predate OBR (ij_q 1019t branch) reject an unknown -G (Verilator 5.050 %Error)
+obrg=(); [ "$obr" != 0 ] && obrg=(-GOBR=$obr)
 C=rtl/hbm_accel/generic/adapters/static_su/collport
 T=tb_hbm_su_cxport_split
 verilator --version
 verilator --binary --timing -j "${OT_THREADS:-4}" -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH --top-module $T \
- -GQID=$q -GB39=$b -GMUT=$mut -GMUTONE=$one -GOBR=$obr --Mdir "$out/obj" -o cx \
+ -GQID=$q -GB39=$b -GMUT=$mut -GMUTONE=$one "${obrg[@]}" --Mdir "$out/obj" -o cx \
  $C/ot_hbm_su_static_cxport.sv $C/ot_hbm_su_static_cxport_split.sv $C/tb_hbm_su_cxport_split.sv > "$out/build.log" 2>&1 \
  || { tail -30 "$out/build.log"; exit 1; }
 "$out/obj/cx" | tee "$out/bench.log" | tail -8
