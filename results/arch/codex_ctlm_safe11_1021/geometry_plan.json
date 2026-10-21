@@ -1,0 +1,316 @@
+[
+ {
+  "kit": "safe11a",
+  "stage": "planned actual-view dimensions; not gate qualification",
+  "outline": {
+   "w": 864.0,
+   "h": 820.8,
+   "exact": true
+  },
+  "rectangles": [
+   {
+    "inst": "u_hr",
+    "rect": [
+     475.2,
+     129.6,
+     820.8,
+     432.0
+    ],
+    "source": "4d8fedfd8:physical/ref_tile/qfd_tt_head_static_h16yb/spec.json",
+    "sha256": "be1fe80502dfc226a6ff624075f08ad4d36e63de91100bcff4c89fa0c8bd80bf"
+   },
+   {
+    "inst": "u_gi.g_wtn.u_wtn",
+    "rect": [
+     648.0,
+     561.6,
+     734.4,
+     639.36
+    ],
+    "source": "HEAD:physical/ref_tile/qfd_tt_ctlm_dv_wtn/views/qfd_tt_ctlm_dv_wtn/qfd_tt_ctlm_dv_wtn.lef",
+    "sha256": "6c2a30a4eb5b8b6aceadab30e209095b66e499b55effa2a6da09124b658e3cea"
+   },
+   {
+    "inst": "u_gi.u_cal.g_m[0].u_pm.u_p192",
+    "rect": [
+     43.2,
+     129.6,
+     214.488,
+     283.512
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.u_cal.g_m[1].u_pm.u_p192",
+    "rect": [
+     43.2,
+     324.0,
+     214.488,
+     477.912
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.g_op.u_leaf.g_op.u_rom",
+    "rect": [
+     475.2,
+     475.2,
+     513.216,
+     538.11
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+    "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c"
+   },
+   {
+    "inst": "u_gi.u_cal.g_fifo[0].u_fifo.u_p192",
+    "rect": [
+     259.2,
+     129.6,
+     430.488,
+     283.512
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.u_cal.g_fifo[1].u_fifo.u_p192",
+    "rect": [
+     259.2,
+     324.0,
+     430.488,
+     477.912
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.u_cal.g_fifo[2].u_fifo.u_p192",
+    "rect": [
+     43.2,
+     518.4,
+     214.488,
+     672.312
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.u_cal.g_fifo[3].u_fifo.u_p192",
+    "rect": [
+     259.2,
+     518.4,
+     430.488,
+     672.312
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom1",
+    "rect": [
+     561.6,
+     475.2,
+     599.616,
+     538.11
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+    "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c"
+   },
+   {
+    "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
+    "rect": [
+     648.0,
+     475.2,
+     686.016,
+     538.11
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+    "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c"
+   },
+   {
+    "inst": "u_gi.u_cal.g_calrom.u_rom.m0",
+    "rect": [
+     475.2,
+     561.6,
+     597.024,
+     624.51
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+    "sha256": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611"
+   },
+   {
+    "inst": "u_gi.u_cal.g_calrom.u_rom.m1",
+    "rect": [
+     475.2,
+     648.0,
+     597.024,
+     710.91
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+    "sha256": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611"
+   }
+  ],
+  "violations": [],
+  "zero_new_transport_RTL_edges": true,
+  "head_compiled_edges": 3135
+ },
+ {
+  "kit": "safe11b",
+  "stage": "planned actual-view dimensions; not gate qualification",
+  "outline": {
+   "w": 864.0,
+   "h": 864.0,
+   "exact": true
+  },
+  "rectangles": [
+   {
+    "inst": "u_hr",
+    "rect": [
+     475.2,
+     172.8,
+     820.8,
+     475.2
+    ],
+    "source": "4d8fedfd8:physical/ref_tile/qfd_tt_head_static_h16yb/spec.json",
+    "sha256": "be1fe80502dfc226a6ff624075f08ad4d36e63de91100bcff4c89fa0c8bd80bf"
+   },
+   {
+    "inst": "u_gi.g_wtn.u_wtn",
+    "rect": [
+     648.0,
+     604.8,
+     734.4,
+     682.56
+    ],
+    "source": "HEAD:physical/ref_tile/qfd_tt_ctlm_dv_wtn/views/qfd_tt_ctlm_dv_wtn/qfd_tt_ctlm_dv_wtn.lef",
+    "sha256": "6c2a30a4eb5b8b6aceadab30e209095b66e499b55effa2a6da09124b658e3cea"
+   },
+   {
+    "inst": "u_gi.u_cal.g_m[0].u_pm.u_p192",
+    "rect": [
+     43.2,
+     172.8,
+     214.488,
+     326.712
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.u_cal.g_m[1].u_pm.u_p192",
+    "rect": [
+     43.2,
+     367.2,
+     214.488,
+     521.112
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.g_op.u_leaf.g_op.u_rom",
+    "rect": [
+     475.2,
+     518.4,
+     513.216,
+     581.31
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+    "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c"
+   },
+   {
+    "inst": "u_gi.u_cal.g_fifo[0].u_fifo.u_p192",
+    "rect": [
+     259.2,
+     172.8,
+     430.488,
+     326.712
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.u_cal.g_fifo[1].u_fifo.u_p192",
+    "rect": [
+     259.2,
+     367.2,
+     430.488,
+     521.112
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.u_cal.g_fifo[2].u_fifo.u_p192",
+    "rect": [
+     43.2,
+     561.6,
+     214.488,
+     715.512
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.u_cal.g_fifo[3].u_fifo.u_p192",
+    "rect": [
+     259.2,
+     561.6,
+     430.488,
+     715.512
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.lef",
+    "sha256": "6ea99dd16d64678ffcca454a1b72772c906f4589ed86618495a910e6e9807bf9"
+   },
+   {
+    "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom1",
+    "rect": [
+     561.6,
+     518.4,
+     599.616,
+     581.31
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+    "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c"
+   },
+   {
+    "inst": "u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
+    "rect": [
+     648.0,
+     518.4,
+     686.016,
+     581.31
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.lef",
+    "sha256": "1d1b07d3420e8daf92b9d44f1f2663bf57abee3558d5b9d0874b0bc01c15082c"
+   },
+   {
+    "inst": "u_gi.u_cal.g_calrom.u_rom.m0",
+    "rect": [
+     475.2,
+     604.8,
+     597.024,
+     667.71
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+    "sha256": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611"
+   },
+   {
+    "inst": "u_gi.u_cal.g_calrom.u_rom.m1",
+    "rect": [
+     475.2,
+     691.2,
+     597.024,
+     754.11
+    ],
+    "source": "HEAD:physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+    "sha256": "f35311e2ad164c3a112aa918b73b510b84b2fdf1414a7d8da591fe71cb662611"
+   }
+  ],
+  "violations": [],
+  "zero_new_transport_RTL_edges": true,
+  "head_compiled_edges": 3135
+ }
+]
