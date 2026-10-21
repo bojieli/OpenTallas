@@ -16,7 +16,7 @@ v=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 E=rtl/qwen_sys/static_embedding_20261014;S=rtl/qwen_sys/static_kv_20261014;T=rtl/test/qwen_static_kv
 src=(rtl/lib/ot_rst_relay.sv $S/qkd_kv_es_fan_root.sv $E/qkd_kv_pc_chain_station.sv $E/qkd_embedding_static_map.sv
      $E/qkd_static_kv_pc_es_merge.sv $E/qkd_embedding_static_return_head.sv $E/qkd_embedding_static_return_hop.sv
-     $E/qkd_embedding_static_join.sv $E/qkd_embedding_static_join4.sv $E/qkd_embedding_static_join4_cal.sv $T/tb_kvcal15_emb_die.sv)
+     $E/qkd_embedding_static_join.sv $E/qkd_embedding_static_join_fan32.sv $E/qkd_embedding_static_join4.sv $E/qkd_embedding_static_join4_cal.sv $T/tb_kvcal15_emb_die.sv)
 DIE_DN=83,25,72,16; DIE_RT=67,21,77,32          # WS WN ES EN: i13a relay_stages + HROOT_LAND (see README)
 run(){ # name mut down ret skew pj
  local n=$1 m=$2 d=$3 r=$4 k=$5 p=$6 md="$out/$1"
