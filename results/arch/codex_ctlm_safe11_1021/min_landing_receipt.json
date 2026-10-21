@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.ctlm.safe11.min_landing_receipt.v1",
+ "status": "PASS",
+ "source_commit": "6fb8611e2bbd54b0c88e26c68f46f078db4688a2",
+ "head_commit": "4d8fedfd8ea0ab1dd3254796ab6d66e51feac63f",
+ "source_manifest_matched_local": true,
+ "fleet": {
+  "host": "ot-gold2",
+  "unit": "oth-ubuntu-1918508-1792601432",
+  "exit": 0,
+  "verilator": "5.050"
+ },
+ "cases": {
+  "random_pass.log": [
+   "LP_LOCKSTEP PASS MUT=0 compared=186922 cycles=10000"
+  ],
+  "mutant_fail.log": [
+   "LP_LOCKSTEP FAIL MUT=1 mismatches=9838 of 186922"
+  ],
+  "producer_pass.log": [
+   "TLOAD_CHECK side=     flat loads=36 bad=0 latency=11",
+   "TLOAD_CHECK side=landed_np loads=36 bad=0 latency=11",
+   "TLOAD_PRODUCER PASS",
+   "LP_LOCKSTEP PASS MUT=0 compared=4507674 cycles=237300"
+  ]
+ },
+ "scope": "Identical pinned native head on both flat and lp9e sides; landing/producer composition only. Head3135 functional proof remains separate TOK-FUNC-QW. No placement/route/full token qualification.",
+ "warnings": {
+  "random_pass_and_mutant": "Unconditional legacy TB read of calr/dw.hex missing in CALRDIR=0 random mode; directed producer loads exact calr10/dw.hex successfully. No error suppressed."
+ },
+ "hashes": {
+  "source_manifest.json": "a6cf749748678203a5fd3d74c33f8e5472682eebc2431403277620d03799ffc3",
+  "otrun.log": "df30d617cdff7cf1d20efa3bc2a006db29bce5a505ebc80d6ae6bb4026035ffd",
+  "build.log": "dbd95f977396d83f57b50a27b6d36ac20485ec7834b3ac31cf690af5cc32abd5",
+  "random_pass.log": "8bb4b809407a325f9996627f118c5c5d03a8bb34def9ec2005a6eba00864bc34",
+  "mutant_fail.log": "cabe465f9ae7d07459e17f259217ffa95766eac1c8fb2f1420d59ef4d87ba736",
+  "producer_pass.log": "e494f01d01ed233662896a298b4a1e8ca73ad8300699292bf27a3f2175a6fb88"
+ }
+}

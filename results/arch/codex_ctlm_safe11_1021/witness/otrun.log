@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   708 GB (avail 609, growth 113, headroom 0, waiters 0/0 GB) load 85/128 running 38 disk 2261 GB 
+ot-run: ot-epyc7       admits   716 GB (avail 590, growth 88, headroom 0, waiters 0/0 GB) load 162/96 running 24 disk 4680 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-q-safe11-min-1021
+ot-run: ot-gold2       admits   577 GB (avail 586, growth 182, headroom 0, waiters 0/0 GB) load 66/112 running 20 disk 3090 GB 
+ot-run: ot-gold1       admits   308 GB (avail 428, growth 212, headroom 0, waiters 0/0 GB) load 178/112 running 35 disk 2834 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-q-safe11-min-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-q-safe11-min-1021
+ot-run: -> ot-gold2
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-1918508-1792601432 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+SAFE11_MIN_LOCKSTEP PASS random producer mutant_caught
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-1918508-1792601432): exit 0
