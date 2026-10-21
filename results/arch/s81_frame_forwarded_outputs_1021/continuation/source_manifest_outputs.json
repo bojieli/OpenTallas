@@ -1,0 +1,91 @@
+{
+  "parent_run": "/srv/opentallas-scratch2/claude/codex-s81-h9cts-1021/run_cachefix",
+  "parent_failed_guard": "OT_FORWARDED_SOFT undeclared xk[0] -> xok[0]",
+  "helper_publication": "1a872af33",
+  "runtime_verified": "INPROCESS-SYNC 2026-10-21T15:43:09-07:00, sixfocusedPASS/pairedNEW0",
+  "placement_sha256": "7d677c7eb92511fcd3d2b6257b3c2591219730fd1a79189d31336c6352f1bc40",
+  "changes": [
+    {
+      "path": "tools/ref_tile/ref_tile.py",
+      "before": "9b9de8f66532e83a71e2086b916c9cd41f63e5448076805bc554552e184c753b",
+      "after": "9b9de8f66532e83a71e2086b916c9cd41f63e5448076805bc554552e184c753b"
+    },
+    {
+      "path": "tools/ref_tile/clock_entry_constraints.py",
+      "before": "1066f1522cf11ea98ecd627399b54c5032cc5dc20586fc88e3f967e92426683a",
+      "after": "07d5d74df16c3cbd9a1696cbf06749f7e357a16a90b7eabbb84a3656eb54e92c"
+    },
+    {
+      "path": "tools/ref_tile/forwarded_clock_outputs.py",
+      "before": null,
+      "after": "6bbfe96b926f83e34624e6b4910af8b6d272a86d0bfab4988154ff2ca3d3546e"
+    },
+    {
+      "path": "physical/common_flow/clock_entries.tcl",
+      "before": "38031bf732132b5460c36a17f0273e9d577e0c76a8fe53ecc8df518643af9f9b",
+      "after": "44be6a68ed1dcfdfafdbe845181ea7076b72b032e699a2dc1726e4f04434e620"
+    },
+    {
+      "path": "physical/ref_tile/s81frame_col_h9_rf3rlfs1/spec.json",
+      "before": "12058df3a7be5002ef67933384788be5032db7d4f03f24ae821dbc35f8ccc1fd",
+      "after": "99f6aef68eb93f670a431faf8c9f7722890b52acc171ad0de67fc4f8bb8a55c7"
+    },
+    {
+      "path": "src/physical/ref_tile/s81frame_col_h9_rf3rlfs1/pre_cts.tcl",
+      "before": "a36725046e851b46e79f60d5a89c218a96ba5c86b66592ef9578793c2bea5ed5",
+      "after": "a2c5575e361abfc61cb9dbae782d3a9c3a274ce3c94c4276ea86b56d0d52da06"
+    },
+    {
+      "path": "routes/gate/work/orfs/hooks/pre_cts_pre_cts.tcl",
+      "before": "a36725046e851b46e79f60d5a89c218a96ba5c86b66592ef9578793c2bea5ed5",
+      "after": "a2c5575e361abfc61cb9dbae782d3a9c3a274ce3c94c4276ea86b56d0d52da06"
+    },
+    {
+      "path": "physical/ref_tile/s81frame_col_h9_rf3rlfs1/clock_entry.sdc",
+      "before": "eab5b498619d8da3d24a7feb8f0ce493b41890a14ce7ce2e79700061b02f8512",
+      "after": "c834477d8e8ea8b4e5f1da4b4644756cf72133c10c27da932e7ac757627239ed"
+    }
+  ],
+  "exact_contract": [
+    {
+      "input": "xk[0]",
+      "output": "xok[0]",
+      "inst": "u_xo0",
+      "master": "dsfd_dvrly_276_NS",
+      "input_pin": "ck",
+      "output_pin": "ck_o"
+    },
+    {
+      "input": "xk[1]",
+      "output": "xok[1]",
+      "inst": "u_xo1",
+      "master": "dsfd_dvrly_276_NS",
+      "input_pin": "ck",
+      "output_pin": "ck_o"
+    },
+    {
+      "input": "xk[2]",
+      "output": "xok[2]",
+      "inst": "u_xo2",
+      "master": "dsfd_dvrly_276_NS",
+      "input_pin": "ck",
+      "output_pin": "ck_o"
+    },
+    {
+      "input": "xk[3]",
+      "output": "xok[3]",
+      "inst": "u_xo3",
+      "master": "dsfd_dvrly_276_NS",
+      "input_pin": "ck",
+      "output_pin": "ck_o"
+    }
+  ],
+  "resolved_pre_cts": "/work/hooks/pre_cts_ot_cts_fix.tcl -> /work/hooks/pre_cts_pre_cts.tcl",
+  "wrapper_sha256": "3ee70e60543072114654403a4ba28160c9637f700ca9569f59b769a1d47a7825",
+  "source_hook_sha256": "a2c5575e361abfc61cb9dbae782d3a9c3a274ce3c94c4276ea86b56d0d52da06",
+  "cached_hook_sha256": "a2c5575e361abfc61cb9dbae782d3a9c3a274ce3c94c4276ea86b56d0d52da06",
+  "clock_entries_sha256": "44be6a68ed1dcfdfafdbe845181ea7076b72b032e699a2dc1726e4f04434e620",
+  "runner_sha256": "d3e1791ba4c42a182f42b08f8e2f76af8caf5b53b19e818660381435c770e05e",
+  "scope": "ONE saved-placement normal CTS/clock/path/GRT continuation. Four exact source-proven positive hard clock-through outputs. No source RTL/Lib/ODB/layout/timing changes. No original mutation or GPL repeat.",
+  "immutable_tool_image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"
+}

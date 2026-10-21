@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch2/claude/codex-s81-h9cts-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/codex-s81-h9cts-1021
+ot-run: ot-epyc9       admits   432 GB (avail 416, growth 113, headroom 0, waiters 0/0 GB) load 100/128 running 29 disk 2179 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch2/claude/codex-s81-h9cts-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch2/claude/codex-s81-h9cts-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/codex-s81-h9cts-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/codex-s81-h9cts-1021
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-250973-1792622817 after 0 s
+GATE_CONTINUATION_PARENT=ep9:s81frame_col_h9_rf3rlfs1-20261021-020340
+GATE_PLACEMENT_PARENT_SHA256=7d677c7eb92511fcd3d2b6257b3c2591219730fd1a79189d31336c6352f1bc40
+GATE_HELPER_MAIN=1a872af33
