@@ -145,6 +145,20 @@ def hdr(typ, ln, tag, spec=0, pos=777, user=USER, end=False, mask=1):
     return w | (pos & ((1 << 21) - 1)) << 459 | (user & 1023) << 449 | (spec & ((1 << 449) - 1))
 
 
+def cfg_spec(wb=WB, stack=ST, owner=None, tag=0, user=USER):
+    """Optional source launch identity, disjoint from legacy CFG bits [32:0]."""
+    if not 0 <= wb < 2**30 or stack not in range(4):
+        raise ValueError('CFG window base or stack outside source field')
+    spec = wb | (1 << 32) | (stack << 30)
+    if owner is not None:
+        if type(owner) is not int or not 0 <= owner < 2**20:
+            raise ValueError('SO source owner must be epoch2/user10/tag8')
+        if owner & 255 != tag or (owner >> 8) & 1023 != user:
+            raise ValueError('Source owner differs from the actual job tag/user')
+        spec |= (owner << 33) | (1 << 53)
+    return spec
+
+
 def job_word(nframes, tag):
     """s_j / entry j = {v, arg 24, tag 8}: arg[4:0] = 1 (END source 0), arg[14:7] = q frames (ot_s81_svc_job.sv:91-93)"""
     assert 0 < nframes < 256
@@ -159,7 +173,7 @@ def f32bits(x):
 class Job:
     """the layer's svc attention job, built once per (layer, fixtures, tag, mutant)"""
 
-    def __init__(self, fx, tag=0, mutant=None):
+    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None):
         import rtl_hdc_v41x_attn_campaign as C
         self.C, V = C, C.V
         fx = Path(fx)
@@ -206,13 +220,16 @@ class Job:
         assert files['weights/attn_sink.bin']['rows'] == [h0, h1]
         self.sinkw = sw
         self.tag, self.mutant = tag, mutant
+        if owner_epoch is not None and owner_epoch not in range(4):
+            raise ValueError('Static allocation epoch outside two bits')
+        self.owner = None if owner_epoch is None else (owner_epoch << 18) | (USER << 8) | tag
         self.frames = self._frames()
 
     # ------------------------------------------------------------------ q frames
     def _frames(self):
         C, T, tag, mut = self.C, self.T, self.tag, self.mutant
         fr = []
-        fr.append(('CFG', [hdr(12, 0, tag, spec=WB | (1 << 32) | ((ST & 3) << 30))]))
+        fr.append(('CFG', [hdr(12, 0, tag, spec=cfg_spec(owner=self.owner, tag=tag))]))
         ow = []
         pos = self.pos - 1 if mut == 'slot' else self.pos             # MUTANT 'slot': wrong OWN_ROW pos field
         ow.append(hdr(3, 16, tag, pos=pos))
@@ -361,9 +378,9 @@ def _op_t(sched, name, key):
     return None
 
 
-def build(fx, sched=None, die=None, tag=0, mutant=None):
+def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None):
     """the job + its static schedule at the layer's cycles (layer entry = 0)"""
-    job = Job(fx, tag=tag, mutant=mutant)
+    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch)
     ag = _ages(die)
     t_own = int(np.ceil(_op_t(sched, 'attn.own_row_write', 'start') or 1805))
     t_q = int(np.ceil(_op_t(sched, 'attn.q_rope', 'end') or 3001))
@@ -419,10 +436,11 @@ def lower(die, op, ctx):
     if fx is None:
         return dict(base, status='GAP', gap=dict(module='lower_svc', port='fixtures',
                                                  missing='no fixture dir (--fixtures): q / P / own row are runtime data'))
-    key = (str(fx), ctx.get('layer'), ctx.get('svc_tag', 0))
+    key = (str(fx), ctx.get('layer'), ctx.get('svc_tag', 0), ctx.get('svc_owner_epoch'))
     if key not in _CACHE:
         try:
-            _CACHE[key] = build(fx, ctx.get('sched'), die, tag=ctx.get('svc_tag', 0))
+            _CACHE[key] = build(fx, ctx.get('sched'), die, tag=ctx.get('svc_tag', 0),
+                                owner_epoch=ctx.get('svc_owner_epoch'))
         except AssertionError as e:
             _CACHE[key] = (None, str(e))
     job, s = _CACHE[key]
@@ -435,7 +453,9 @@ def lower(die, op, ctx):
         r['rows'] = [dict(eng=ENG['SVC'], issue=s['issue'], done=s['issue'] + SEQ['done_v'] + s['ls'], arg=arg,
                           raw_arg=True, what=f'svc attention job ({s["nframes"]} q frames, T {job.T}, tag {job.tag:#04x})')]
         r['svc_jobs'] = [dict(layer=ctx.get('layer'), tag=job.tag, arg=arg, j_word=f'{jw:09x}', s_j=s['s_j'],
-                              j_pin=dict(u_rsv_05=s['j_w'], u_rsv_11=s['j_e']), frames=s['at'], go=s['go'],
+                              j_pin=dict(u_rsv_05=s['j_w'], u_rsv_11=s['j_e']),
+                              source_owner=job.owner, source_owner_field='CFG[52:33], valid[53]; latch before GO',
+                              source_owner_qualification='SOURCE ABI ONLY; stamp/transpose consumer binding pending', frames=s['at'], go=s['go'],
                               pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pv_first=s['pv_first'], pv_last=s['pv_last'],
                               done_pin=dict(u_rsv_05=s['done_w'], u_rsv_11=s['done_e']), ls=s['ls'], hbm_sectors=len(job.hbm_image()),
                               q_words=len(s['words']), q_image=f'prog/svc/{ctx.get("layer")}/qwd.hex',

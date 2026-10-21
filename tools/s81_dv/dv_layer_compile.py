@@ -973,7 +973,9 @@ def finish(prog, stage=0, kit_lead=20):
 
 
 def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtures=None, svc_tag=0, mu_ctx=False,
-                  line_delay=None, mu_win=None):
+                  line_delay=None, mu_win=None, svc_owner_epoch=None):
+    if svc_owner_epoch is not None and (mu_ctx or mu_win):
+        raise ValueError('SO source-owner CFG fields require explicit MU user/tag remapping before admission')
     out = Path(out)
     (out / 'prog' / 'frame_cfg7').mkdir(parents=True, exist_ok=True)
     die = Die(tree)
@@ -987,7 +989,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
     line_delay = dict(line_delay or {})
     prog.op_names = [o['op'] for o in sched['ops']]
     ctx = dict(layer=layer, slice=sl, sched=sched, fixtures=Path(fixtures) if fixtures else None, svc_tag=svc_tag,
-               line_delay=line_delay)
+               line_delay=line_delay, svc_owner_epoch=svc_owner_epoch)
     for o in sched['ops']:
         unit, st, gap = op_unit(o['op'])
         rec = dict(id=o['id'], op=o['op'], start=o['start'], end=o['end'], unit=unit, status=st,
@@ -1040,7 +1042,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         print(f'LINE_SLOTS {layer}: {len(cols)} collisions {[(c["where"], c["slot"]) for c in cols][:6]} -> '
               f'line_delay {line_delay}', file=sys.stderr)
         return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures, svc_tag=svc_tag,
-                             mu_ctx=mu_ctx, line_delay=line_delay, mu_win=mu_win)
+                             mu_ctx=mu_ctx, line_delay=line_delay, mu_win=mu_win, svc_owner_epoch=svc_owner_epoch)
     line_rec = dict(model='dv_cut_replay landed_words (derive_line_events + derive_vctl_line_events) on the die build; '
                           'slot = (slice, line face, landed edge); xr = (slice, landed edge) of the CTL beats a slice takes',
                     line_delay=line_delay, collisions=0, line_slots=len(line), xr_slots=len(xr),
@@ -1076,7 +1078,7 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         assert len(need) <= 1, f'more than one svc job row ({sorted(need)}): one tag per layer is modelled'
         if need and need != {svc_tag} and prog.svc:
             return compile_layer(layer, out, tree, sl, smoke=smoke, workload=workload, fixtures=fixtures,
-                                 svc_tag=need.pop(), mu_ctx=mu_ctx, line_delay=line_delay, mu_win=mu_win)
+                                 svc_tag=need.pop(), mu_ctx=mu_ctx, line_delay=line_delay, mu_win=mu_win, svc_owner_epoch=svc_owner_epoch)
         cal = []
         for k, (t0, jp, (rows, hs, endage)) in enumerate(jobs):
             jd = '' if len(jobs) == 1 else f'job{k}/'
@@ -1200,9 +1202,13 @@ def main(argv=None):
     ap.add_argument('--mu-cal', default=None, help='MU-S81: a dv_mu_calendar record -> DIR/prog/mu_slots.json')
     ap.add_argument('--mu-ctx', action='store_true', help='MU-S81/TOK: HLOAD carries the user context (context 1)')
     ap.add_argument('--fixtures', default=None, help='the layer fixture dir (dv_layer_fixtures.py output)')
+    ap.add_argument('--svc-owner-epoch', type=int, choices=range(4), default=None,
+                    help='Opt-in static SO launch owner CFG[52:33]/valid[53]; source consumer binding required')
     ap.add_argument('--mu-win', default=None, choices=('A', 'B'), help='MU-DIE-S81/MUWIN: emit prog/mu_win.json + '
                     'mu_cfg.cfg (hwin / hslot window + replay rows, CSR 0x15 / 0x16 boot words) for this die copy')
     a = ap.parse_args(argv)
+    if a.svc_owner_epoch is not None and a.mu_cal:
+        ap.error('--svc-owner-epoch requires per-user CFG owner remapping before --mu-cal is supported')
     if a.mu_cal:
         t = mu_slot_tables(json.loads(Path(a.mu_cal).read_text()), a.layer)
         Path(a.out, 'prog').mkdir(parents=True, exist_ok=True)
@@ -1215,7 +1221,7 @@ def main(argv=None):
     if a.mu_win and not a.mu_cal:
         ap.error('--mu-win needs --mu-cal (the per-slot rows)')
     r = compile_layer(a.layer, a.out, tree, a.slice, workload=a.workload, fixtures=a.fixtures, mu_ctx=a.mu_ctx,
-                      mu_win=a.mu_win)
+                      mu_win=a.mu_win, svc_owner_epoch=a.svc_owner_epoch)
     print(json.dumps(dict((k, v) for k, v in r.items() if k != 'smoke'), indent=None))
     if r['smoke']:
         s = r['smoke']
