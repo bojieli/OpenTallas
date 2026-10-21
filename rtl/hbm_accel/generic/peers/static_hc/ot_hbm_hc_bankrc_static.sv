@@ -28,7 +28,7 @@
 (* keep_hierarchy = 1 *) module ot_hcb_row_write_asm #(
     parameter integer ROW = 0, MUT = 0
 )(input wire clk, input wire [15:0] vq, input wire [31:0] bq,
-  input wire [255:0] d, output reg [511:0] a);
+  input wire [255:0] d, output reg [511:0] a, output reg bad);
     if ((ROW % 2) == 0) begin : g_lo
         reg [511:0] h;
         always @(posedge clk) begin
@@ -46,6 +46,11 @@
                     h[16*k+:16] <= d[16*k+:16];
             a <= {d,h};
         end
+    end
+    // Same edge as the old global lb_q. OR of low/high row flags equals its32word test.
+    always @(posedge clk) begin
+        bad <= 1'b0;
+        for (integer m=0;m<16;m=m+1) if (|a[m*32+:16]) bad <= 1'b1;
     end
 endmodule
 
@@ -93,13 +98,15 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
         asm_q <= {d_q, hold};
     end
     reg lb_q, xv_c;
+    wire [3:0] row_bad;
+    wire selected_bad = (WROW >= 2) ? (|row_bad) : lb_q;
     always @(posedge clk_a) begin
         lb_q <= 1'b0;
         for (integer m = 0; m < 32; m = m + 1) if (|asm_q[m*32 +: 16]) lb_q <= 1'b1;
     end
     always @(posedge clk or negedge rc[0])
         if (!rc[0]) begin xv_c <= 1'b0; wfault <= 1'b0; end
-        else begin xv_c <= xv; if (xv_c && lb_q) wfault <= 1'b1; end
+        else begin xv_c <= xv; if (xv_c && selected_bad) wfault <= 1'b1; end
     // ---------------- chain pin registers: CPI on clk (in face), CPO on clk_o (out face)
     wire c_v, c_ss, c_f; wire [6:0] c_nv; wire [9:0] c_wa, c_xa; wire [2047:0] c_s;
     wire q_v, q_ss, q_f; wire [6:0] q_nv; wire [9:0] q_wa, q_xa; wire [2047:0] q_s;
@@ -142,7 +149,7 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
     generate for (genvar ar=0; ar<4; ar=ar+1) begin : g_row_asm
         if (WROW >= 2) begin : g_local
             ot_hcb_row_write_asm #(.ROW(ar),.MUT(MUT)) u_a(
-                .clk(clk_d[ar]),.vq(vq_c),.bq(bq_c),.d(d_q),.a(row_asm[ar*512+:512]));
+                .clk(clk_d[ar]),.vq(vq_c),.bq(bq_c),.d(d_q),.a(row_asm[ar*512+:512]),.bad(row_bad[ar]));
         end
     end endgenerate
     wire [1023:0] wsrc = (WROW != 0) ? asm_q : wd_q;     // WROW 1: per-SRAM copies load asm_q (wd_q then unused)
@@ -592,13 +599,13 @@ endmodule
         .clk_re({clk_e3, clk_e2, clk_e1, clk_e0}), .clk_q({4{clk}}), `OT_HCB_RW_V, .first(1'b0), \
         `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
 module ot_hbm_hc_bankq_ft_rw4_static #(parameter integer MUT = 0)(
-    input wire clk, clk_a, clk_c, clk_w0, clk_w1, clk_w2, clk_w3, clk_x0, clk_x1, clk_x2, clk_x3, clk_e0, clk_e1, clk_e2, clk_e3,
+    input wire clk, clk_c, clk_w0, clk_w1, clk_w2, clk_w3, clk_x0, clk_x1, clk_x2, clk_x3, clk_e0, clk_e1, clk_e2, clk_e3,
     `OT_HCB_RW_CK input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x, input wire rst_n,
     `OT_HCB_RC_CHAIN,
     input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out,
     `OT_HCB_RCFT_PORTS
 );
-    `OT_HCB_FTRW4_BODY(clk_a)
+    `OT_HCB_FTRW4_BODY(clk)
 endmodule
 `undef OT_HCB_FTRW4_BODY
 `undef OT_HCB_FTRW_BODY
