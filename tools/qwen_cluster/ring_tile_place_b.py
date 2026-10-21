@@ -20,6 +20,10 @@ out_p = pathlib.Path(sys.argv[1]); REACH = float(sys.argv[2]) if len(sys.argv) >
 U = 43200; R = round(REACH * 1000); TW, TH = 108000, 43200
 MOVE = round(float(os.environ.get('OT_RTPB_MOVE_UM', 432)) * 1000)
 EXCESS = round(float(os.environ.get('OT_RTPB_EXCESS_UM', 0)) * 1000)
+# SQK-CB16C 10-21 (rgxc): port -> pin-register station legs are unregistered IO legs inside the 0.2 T IO budget (rgxb gate:
+# 212-394 um legs, TT setup -583 ps at u_ft_0/d); OT_RTPB_IO_REACH_UM caps every FIX(port) <-> station hop separately.
+R_IO = round(float(os.environ.get('OT_RTPB_IO_REACH_UM', REACH)) * 1000)
+IO_CAP = {k: round(float(v) * 1000) for k, v in (e.split(':') for e in os.environ.get('OT_RTPB_IO_CAPS', '').split(',') if e)}   # per-station override
 W, H = [round(x * 1000) for x in d['outline']]
 nm = lambda v: round(v * 1000)
 J = json.loads((G / 'qfd_c_b16_fullm_joint_solution.json').read_text())   # fulln child origins (= joint solution), not the bank-input ones
@@ -39,8 +43,9 @@ P = {}                                     # node -> (Xexpr, Yexpr) in nm (int v
 for n, h in hard.items():
     if n in free:
         gx, gy = round(h['X'] / U), round(h['Y'] / U); k = MOVE // U
-        x = m.NewIntVar(max(min(1, gx), gx - k), min(max(gx, (W - h['Wd']) // U - 1), gx + k), 'sx' + n)   # fullm origin always legal
-        y = m.NewIntVar(max(min(1, gy), gy - k), min(max(gy, (H - h['Ht']) // U - 1), gy + k), 'sy' + n)
+        top = 0 if (R_IO < R or IO_CAP) else 1         # rgxc: the face lattice row (>= 34.6 um margin) is legal for every station
+        x = m.NewIntVar(max(min(1, gx), gx - k), min(max(gx, (W - h['Wd']) // U - top), gx + k), 'sx' + n)   # fullm origin always legal
+        y = m.NewIntVar(max(min(1, gy), gy - k), min(max(gy, (H - h['Ht']) // U - top), gy + k), 'sy' + n)
         m.AddHint(x, gx); m.AddHint(y, gy); P[n] = (U * x, U * y, x, y)
     else:
         P[n] = (h['X'], h['Y'], None, None)
@@ -81,7 +86,7 @@ hop_cons = 0
 for key, (na, nb, mx) in agg.items():
     xa, ya = (0, 0) if na == 'FIX' else P[na][:2]; xb, yb = (0, 0) if nb == 'FIX' else P[nb][:2]
     for (sx, sy), c in mx.items():
-        m.Add(sx * (xa - xb) + sy * (ya - yb) + c <= R); hop_cons += 1
+        m.Add(sx * (xa - xb) + sy * (ya - yb) + c <= (IO_CAP.get(na if nb == 'FIX' else nb, R_IO) if 'FIX' in (na, nb) else R)); hop_cons += 1
 # ring tiles
 v = {}; ex = {}; xi = []; yi = []
 def proj(half):                            # per sign: expression min over anchors of sx*px + sy*py (nm)
@@ -137,7 +142,7 @@ m.Minimize(sum(obj) + 1000 * sum(ex.values()))
 sol = cp_model.CpSolver(); sol.parameters.num_search_workers = int(os.environ.get('OT_RTPB_WORKERS', 8))
 sol.parameters.max_time_in_seconds = float(os.environ.get('OT_RTPB_TIME_S', 1200)); sol.parameters.random_seed = 17
 stt = sol.Solve(m)
-res = {'status': sol.StatusName(stt), 'reach_um': REACH, 'move_um': MOVE / 1000, 'tile_um': [TW / 1000, TH / 1000],
+res = {'status': sol.StatusName(stt), 'reach_um': REACH, 'io_reach_um': R_IO / 1000, 'move_um': MOVE / 1000, 'tile_um': [TW / 1000, TH / 1000],
        'lattice_um': U / 1000, 'mode': 'r0+free stations', 'hop_constraints': hop_cons, 'free_stations': len(free),
        'scope': 'ring tiles (r0: own output register) + free stn514/516 on 43.2; all hard hops, writer anchors -> tile in face, '
                 'tile out face -> reader anchors, soft ring->ring edges <= reach; 21.6 hard/ring-hard, 10.8 ring-ring, 4.32 sites',
