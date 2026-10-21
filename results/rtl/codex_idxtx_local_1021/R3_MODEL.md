@@ -1,6 +1,6 @@
 # IDXTX R3 source-bound admission model
 
-Actual changed-source R2d05 native refused6cones/max256/0roles (originalR1100->36cones/max41, R2six). Full reports retainedr2_refusal; production baseline and all3causalsPASS/caughtd05 immutable. No unchanged retry.
+Actual changed-source R2d05 native refused6cones/max256/0roles (original100cones/max290 -> R1 36cones/max41, R2six). Full reports retainedr2_refusal; production baseline and all3causalsPASS/caughtd05 immutable. No unchanged retry.
 
 Mapped 60/61load cones _18607/_18622 are shared priority selectors from lvl_index into the20bit index mux. New independent lvl_memory created duplicated upstreampriority optimization but did not bound downstream mux bits. Replace two16bit copies with four16bit same-edge copies inside kept consumer-local mux masters: two10bit payload halves, two8bit memory-address halves. Each module captures actual lvl_next at the existing edge and computes identical lowest-set-bit priority and its own <=10bit data mux; originaliw register and control ne/ne_v remain. Net+32FF overR2, no edge/arrival restriction.
 

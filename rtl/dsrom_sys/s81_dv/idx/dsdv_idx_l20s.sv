@@ -58,14 +58,39 @@ module dsdv_tx_copy #(parameter integer W=1,RESET=0,ID=0)(
  assign q=r;
 endmodule
 
-// One existing score bit per field keeps its own predicate from the
-// 15 score bits + lane-valid consumer. No new data or control edge.
+// Existing state partitioned at same-edge consumer boundaries.
 (* keep_hierarchy="yes" *)
-module dsdv_tx_score_tail #(parameter integer ID=0)(
- input wire ck,accept,onehot,d,output wire q);
- (* keep *)reg value;
+module dsdv_tx_score_field #(parameter integer ID=0)(
+ input wire ck,accept,onehot,input wire[15:0]d,output wire[15:0]q);
+ (* keep *)reg[15:0]value;
  always @(posedge ck)if(accept&&onehot)value<=d;
  assign q=value;
+endmodule
+(* keep_hierarchy="yes" *)
+module dsdv_tx_window_valid #(parameter integer ID=0)(
+ input wire ck,open,acc,input wire[3:0]mask,output wire[3:0]q);
+ (* keep *)reg[3:0]value;
+ always @(posedge ck)if(open)value<=mask;else if(acc)value<=value|mask;
+ assign q=value;
+endmodule
+(* keep_hierarchy="yes" *)
+module dsdv_tx_window_addr #(parameter integer ID=0)(
+ input wire ck,open,input wire[9:0]d,output wire[9:0]q);
+ (* keep *)reg[9:0]value;
+ always @(posedge ck)if(open)value<=d;
+ assign q=value;
+endmodule
+(* keep_hierarchy="yes" *)
+module dsdv_tx_priority_mux #(parameter integer W=10,OFF=0,ID=0)(
+ input wire ck,input wire[15:0]lvl_next,input wire[319:0]iw,output reg[W-1:0]q);
+ (* keep *)reg[15:0]lv;
+ always @(posedge ck)lv<=lvl_next;
+ reg[3:0]n;
+ integer i;
+ always @*begin
+  n=0;for(i=15;i>=0;i=i-1)if(lv[i])n=4'(i);
+  q=0;for(i=0;i<16;i=i+1)q=q|(iw[20*i+OFF+:W]&{W{n==4'(i)}});
+ end
 endmodule
 
 module dsdv_idx_txm_n32 #(
@@ -280,18 +305,6 @@ module dsdv_idx_tx_n32 #(
     reg  [319:0] iw;                          // 16 x 20-b selected positions (bits [335:320] = lv go to lvl)
     reg  [15:0] lvl;
     reg [15:0] lvl_next;
-    wire [15:0] lvl_index,lvl_memory;
-    dsdv_tx_copy #(.W(16),.ID(6000))u_lidx(.ck(ck),.rn(1'b1),.d(lvl_next),.q(lvl_index));
-    dsdv_tx_copy #(.W(16),.ID(6001))u_lmem(.ck(ck),.rn(1'b1),.d(lvl_next),.q(lvl_memory));
-    reg [3:0] ne_x,ne_m;
-    always @* begin : g_priority_consumers
-        integer i;
-        ne_x=0;ne_m=0;
-        for(i=15;i>=0;i=i-1)begin
-            if(lvl_index[i])ne_x=4'(i);
-            if(lvl_memory[i])ne_m=4'(i);
-        end
-    end
     reg  [3:0]  rq_n;
     wire        rq_room = rq_n < 4'd5;
     reg  [3:0]  ne; reg ne_v;
@@ -300,18 +313,13 @@ module dsdv_idx_tx_n32 #(
         ne = 4'd0; ne_v = 1'b0;
         for (bi_ = 15; bi_ >= 0; bi_ = bi_ - 1) if (lvl[bi_]) begin ne = 4'(bi_); ne_v = 1'b1; end
     end
-    reg  [19:0] ne_idx;
-    always @* begin
-        ne_idx = 20'd0;
-        for (bi_ = 0; bi_ < 16; bi_ = bi_ + 1) ne_idx = ne_idx | (iw[20 * bi_ +: 20] & {20{ne_x == 4'(bi_)}});
-    end
-    wire        lk_go = iw_v && ne_v && rq_room;
-    reg [19:0] ne_mem_idx;
-    always @* begin : g_memory_priority
-        integer i;
-        ne_mem_idx=0;
-        for(i=0;i<16;i=i+1)ne_mem_idx=ne_mem_idx|(iw[20*i+:20]&{20{ne_m==4'(i)}});
-    end
+    wire[19:0]ne_idx,ne_mem_idx;
+    dsdv_tx_priority_mux #(.W(10),.OFF(0),.ID(6100))u_pix0(.ck(ck),.lvl_next(lvl_next),.iw(iw),.q(ne_idx[9:0]));
+    dsdv_tx_priority_mux #(.W(10),.OFF(10),.ID(6101))u_pix1(.ck(ck),.lvl_next(lvl_next),.iw(iw),.q(ne_idx[19:10]));
+    dsdv_tx_priority_mux #(.W(8),.OFF(4),.ID(6102))u_pim0(.ck(ck),.lvl_next(lvl_next),.iw(iw),.q(ne_mem_idx[11:4]));
+    dsdv_tx_priority_mux #(.W(8),.OFF(12),.ID(6103))u_pim1(.ck(ck),.lvl_next(lvl_next),.iw(iw),.q(ne_mem_idx[19:12]));
+    assign ne_mem_idx[3:0]=4'd0; // not consumed by score-memory address
+    wire lk_go=iw_v&&ne_v&&rq_room;
     always @* begin
         lvl_next=fw_lvl?ib_q[335:320]:lvl;
         if(lk_go)lvl_next[ne]=1'b0;
@@ -358,8 +366,7 @@ module dsdv_idx_tx_n32 #(
     reg         wv;                          // a window is open (in buffer act)
     reg         act;                         // buffer of the open window
     reg  [19:0] w0c;                         // the open window's base
-    reg  [19:0] w0b [0:1]; reg [15:0] wlvb [0:1]; wire [255:0] wscb [0:1];
-    reg [14:0] wsc_lo[0:1][0:15];
+    wire [19:0] w0b [0:1]; wire [15:0] wlvb [0:1]; wire [255:0] wscb [0:1];
     reg  [19:0] lcur;                        // the parent lane's cursor
     reg  [2:0]  bq_n;                        // beats left in the descriptor
     reg  [1:0]  bix;                         // next beat index of the descriptor
@@ -464,16 +471,18 @@ module dsdv_idx_tx_n32 #(
     generate for(genvar b=0;b<2;b=b+1)begin:g_window_score
         wire accept=(b==0)?(t_acc0||t_open0):(t_acc1||t_open1);
         for(genvar f=0;f<16;f=f+1)begin:g_field
-            wire tail;
-            dsdv_tx_score_tail #(.ID(16*b+f))u_tail(.ck(ck),.accept(accept),.onehot(r_oh[f]),.d(rh[15]),.q(tail));
-            always @(posedge ck)if(accept&&r_oh[f])wsc_lo[b][f]<=rh[14:0];
-            assign wscb[b][16*f+:16]={tail,wsc_lo[b][f]};
+            dsdv_tx_score_field #(.ID(16*b+f))u_field(.ck(ck),.accept(accept),.onehot(r_oh[f]),.d(rh[15:0]),.q(wscb[b][16*f+:16]));
+        end
+        wire open=(b==0)?t_open0:t_open1;
+        wire acc=(b==0)?t_acc0:t_acc1;
+        for(genvar f=0;f<4;f=f+1)begin:g_valid
+            dsdv_tx_window_valid #(.ID(4*b+f))u(.ck(ck),.open(open),.acc(acc),.mask(r_oh[4*f+:4]),.q(wlvb[b][4*f+:4]));
+        end
+        wire[19:0]base={r_i[19:4],4'd0};
+        for(genvar f=0;f<2;f=f+1)begin:g_addr
+            dsdv_tx_window_addr #(.ID(2*b+f))u(.ck(ck),.open(open),.d(base[10*f+:10]),.q(w0b[b][10*f+:10]));
         end
     end endgenerate
-    always @(posedge ck) begin : g_win
-        if (t_open0) begin wlvb[0] <= r_oh; w0b[0] <= {r_i[19:4], 4'd0}; end else if (t_acc0) wlvb[0] <= wlvb[0] | r_oh;
-        if (t_open1) begin wlvb[1] <= r_oh; w0b[1] <= {r_i[19:4], 4'd0}; end else if (t_acc1) wlvb[1] <= wlvb[1] | r_oh;
-    end
 
     // ------------------------------------------------------------------ output: registered kept selects -> lo
     // beat type of descriptor (h, rb, ix): HDR | REBASE (rb, 0) | BEAT part 0 (rb ? 1 : 0) | BEAT part 1 (rb ? 2 : 1)
