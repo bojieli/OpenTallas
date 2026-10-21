@@ -9,7 +9,7 @@
 //          the first possible host word (u_hx Gray synchroniser + head), so behaviour is unchanged
 //          (cycle-exact miter rtl/test/qwen_host/qm_split_1021 runs this same bank);
 //   in_v / in_v__c1 <- eng_inv_a / eng_inv_b (the shell's two kept copies); done_v / __c1 / __c2 -> eng_done / _a / _b, eng_done_c = kept BUF of __c1;
-//   w_v -> 1 kept BUF stem -> KW kept BUFs -> eng_wv_c[KW-1:0] (the shell's ox_w chunk selects).
+//   w_v -> 1 kept BUF stem -> KW kept BUFs (keep only, NOT dont_touch: e1a GPL RSZ-3006 could not buffer the dont_touch stem load) -> eng_wv_c[KW-1:0] (the shell's ox_w chunk selects).
 // QKD_HR_ENG_RTL (benches only): the behavioural qkd_host_native_engine with the same configuration instead of the netlist.
 `timescale 1ns/1ps
 module qkd_hr_ingest_eng #(parameter integer KW = 20) (
@@ -34,7 +34,8 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
   output wire [31:0]  eng_nsec
 );
   wire [31:0] nbeat_unused;
-  // 2-stage face landing: eng_rst_n[j] -> landing flop u_l0[j] -> 17 kept leaves (both stages async-assert with the pin)
+  // 2-stage face landing: eng_rst_n[j] -> landing flop u_l0[j] (the ONLY sink of the pin) -> 17 kept leaves async-reset by
+  // rst_l0[j] (assert = pin assert through u_l0 clear-to-Q, release 1 edge after u_l0 = 2 edges after the pin: same cycles)
   wire [1:0] rst_l0;
   wire [33:0] rst_c;
   genvar r;
@@ -42,7 +43,7 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
     qkd_hr_eng_rst_leaf #(.ID(100 + r)) u_l0 (.ck(ck_rl), .rn(eng_rst_n[r]), .d(1'b1), .q(rst_l0[r]));
   end
   for (r = 0; r < 34; r = r + 1) begin : g_rst
-    qkd_hr_eng_rst_leaf #(.ID(r)) u_leaf (.ck(ck_rl), .rn(eng_rst_n[r / 17]), .d(rst_l0[r / 17]), .q(rst_c[r]));
+    qkd_hr_eng_rst_leaf #(.ID(r)) u_leaf (.ck(ck_rl), .rn(rst_l0[r / 17]), .d(1'b1), .q(rst_c[r]));
   end
 `ifdef QKD_HR_ENG_RTL
   qkd_host_native_engine #(.AW(32), .HDMAX(128), .KVHMAX(2), .QKV(1), .APIPE(0), .QPIPE(2), .NATIVE_ROWS(1), .QMUT(0)) u_eng (
@@ -57,11 +58,11 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
   assign eng_wv_c = {KW{eng_wv}};
 `else
   genvar k;
-  (* keep, dont_touch = "true" *) BUFx2_ASAP7_75t_R u_done_c (.A(eng_done_a), .Y(eng_done_c));
+  (* keep *) BUFx2_ASAP7_75t_R u_done_c (.A(eng_done_a), .Y(eng_done_c));
   wire wv_stem;
-  (* keep, dont_touch = "true" *) BUFx4_ASAP7_75t_R u_wv_stem (.A(eng_wv), .Y(wv_stem));
+  (* keep *) BUFx4_ASAP7_75t_R u_wv_stem (.A(eng_wv), .Y(wv_stem));
   for (k = 0; k < KW; k = k + 1) begin : g_wv
-    (* keep, dont_touch = "true" *) BUFx2_ASAP7_75t_R u_buf (.A(wv_stem), .Y(eng_wv_c[k]));
+    (* keep *) BUFx2_ASAP7_75t_R u_buf (.A(wv_stem), .Y(eng_wv_c[k]));
   end
   qkd_host_native_engine_n32 u_eng (
     .clk(ck_ingest), .clk_bank({ck_ingest, ck_ingest}), .clk_out(ck_ingest), .rst_n(rst_c[0]),
