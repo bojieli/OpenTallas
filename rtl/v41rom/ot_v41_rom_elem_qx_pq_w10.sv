@@ -378,18 +378,18 @@ module ot_v41_rom_elem_qx_pq_w10 #(
     // NP (S81-QXPQ3, SAFE item 3 / reset landing): the top-level reset leaves, kept registers (d = 1) cleared by the
     // pin-relay copy rst_n_pk[2] -- rst_q's assert / release edges -- one per register group (rst_t0 .. rst_t9), each
     // <= 32 reset / hold-enable loads; NP = 0: every group is rst_n
-    wire [17:0] rst_tk;                 // DRIVE-S81-QXPQ q4_d4: + rst_t16 (bn_*, cw copy c), rst_t17 (FIFO counters, ffault)                 // TILES-D q4_d1: + rst_t10..13 for the synchronous rst_n uses (rst_q had 56 loads)
+    wire [18:0] rst_tk;                 // DRIVE-S81-QXPQ q4_d4: + rst_t16 (bn_*, cw copy c), rst_t17 (FIFO counters, ffault)                 // TILES-D q4_d1: + rst_t10..13 for the synchronous rst_n uses (rst_q had 56 loads)
     if (NP != 0 && QPIPE != 0) begin : g_rtk
-        for (genvar k = 0; k < 18; k = k + 1) begin : g_k
+        for (genvar k = 0; k < 19; k = k + 1) begin : g_k
             ot_v41_kreg #(.W(1), .AR(1), .RV(1'b0)) u_r (.clk(clk), .arst_n(rst_n_pk[2]), .d(1'b1), .q(rst_tk[k]));
         end
     end else begin : g_nrtk
-        assign rst_tk = {18{rst_n}};
+        assign rst_tk = {19{rst_n}};
     end
     wire rst_t0 = rst_tk[0], rst_t1 = rst_tk[1], rst_t2 = rst_tk[2], rst_t3 = rst_tk[3], rst_t4 = rst_tk[4];
     wire rst_t5 = rst_tk[5], rst_t6 = rst_tk[6], rst_t7 = rst_tk[7], rst_t8 = rst_tk[8], rst_t9 = rst_tk[9];
     wire rst_t10 = rst_tk[10], rst_t11 = rst_tk[11], rst_t12 = rst_tk[12], rst_t13 = rst_tk[13], rst_t14 = rst_tk[14], rst_t15 = rst_tk[15];
-    wire rst_t16 = rst_tk[16], rst_t17 = rst_tk[17];
+    wire rst_t16 = rst_tk[16], rst_t17 = rst_tk[17], rst_t18 = rst_tk[18];   // q4_d7: rst_t18 = the n_* walker (rst_t8 had 43)
 
     localparam integer SW = $clog2(NSEG);
     localparam integer TRW = SW + (MTP != 0 ? 1 : 0);   // tree id = {position parity, segment}
@@ -888,7 +888,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             ot_v41_kreg #(.W(SW)) u_b (.clk(clk), .arst_n(1'b1), .d(cw_c[NSEG + c] ? cfg_d_e[16 +: SW] : c_s0b[c]), .q(c_s0b[c]));
             ot_v41_kreg #(.W(SW)) u_c (.clk(clk), .arst_n(1'b1), .d(cw_c[NSEG + c] ? cfg_d_e[16 +: SW] : c_s0c[c]), .q(c_s0c[c]));
             ot_v41_kreg #(.W(SW)) u_d (.clk(clk), .arst_n(1'b1), .d(cw_b[NSEG + c] ? cfg_d_e[16 +: SW] : c_s0d[c]), .q(c_s0d[c]));
-            ot_v41_kreg #(.W(SW)) u_e (.clk(clk), .arst_n(1'b1), .d(cw_a[NSEG + c] ? cfg_d_e[16 +: SW] : c_s0e[c]), .q(c_s0e[c]));
+            ot_v41_kreg #(.W(SW)) u_e (.clk(clk), .arst_n(1'b1), .d(cw_c[NSEG + c] ? cfg_d_e[16 +: SW] : c_s0e[c]), .q(c_s0e[c]));
         end
         assign {qx_swr_b, qx_sab} = cw_sa[(SW+1) +: SW+1];
         assign {qx_swr_c, qx_sac} = cw_sa[2*(SW+1) +: SW+1];
@@ -1861,8 +1861,8 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             end
         end
     end
-    always @(posedge wclk or negedge rst_t8) begin     // q4_d4: the n_* walker on its own go copy
-        if (!rst_t8) n_run_s <= 1'b0;
+    always @(posedge wclk or negedge rst_t18) begin    // q4_d4: the n_* walker on its own go copy (q4_d7: own reset leaf)
+        if (!rst_t18) n_run_s <= 1'b0;
         else if (wen) begin
             if (go_c[18]) begin
 `ifdef W10_MUTANT_EMPTY_GO
