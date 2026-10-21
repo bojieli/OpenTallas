@@ -53,6 +53,14 @@ module ot_s81dv_norm_finish_sram #(
     ot_s81dv_finish_reset2 #(.LEAVES(8)) u_ctl_reset(.clk(clk),.rst_n(rst_n),.q(rc));
     wire [NRS-1:0] rsr;
     ot_s81dv_finish_reset2 #(.LEAVES(NRS)) u_meta_reset(.clk(clk),.rst_n(rst_n),.q(rsr));
+    // Leaf-valid clears have distinct same-edge owners from the internal
+    // issue/control go forest (actual r7 go_t33..38). go_mem also supplies
+    // the read-command owners; its combined capture load remains<=32.
+    (* keep *) reg[15:0] leaf_go;
+    for(genvar lg=0;lg<16;lg=lg+1)begin:g_leaf_go
+      always @(posedge clk or negedge rsr[(lg+16)%NRS])
+        if(!rsr[(lg+16)%NRS])leaf_go[lg]<=0;else leaf_go[lg]<=go_mem;
+    end
     // NATIVE32 (ELEM-XFV/XFIN 10-21): go_t and the leaf-match inputs are KEPT same-edge copies (census r1: go_t 4965,
     // iv 653, ib 177 loads); every copy is a function-identical register of the original, so no edge moves.
     localparam integer NGO = 12, NLC = 1, NBK = P * K;
@@ -122,7 +130,7 @@ module ot_s81dv_norm_finish_sram #(
                 end
                 reg vld;
                 always @(posedge clk or negedge rsr[IX % NRS])
-                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t[IX % NGO]) vld <= 1'b0; else if (hit) vld <= 1'b1;
+                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (leaf_go[IX % 16]) vld <= 1'b0; else if (hit) vld <= 1'b1;
 
                 assign dup[IX] = hit && (vld || ((m & (m - 1)) != 0));
                  assign VD[n] = vld;
@@ -351,6 +359,14 @@ module ot_s81dv_eng_finish_sram #(
     ot_s81dv_finish_reset2 #(.LEAVES(8)) u_ctl_reset(.clk(clk),.rst_n(rst_n),.q(rc));
     wire [NRS-1:0] rsr;
     ot_s81dv_finish_reset2 #(.LEAVES(NRS)) u_meta_reset(.clk(clk),.rst_n(rst_n),.q(rsr));
+    // Leaf-valid clears have distinct same-edge owners from the internal
+    // issue/control go forest (actual r7 go_t33..38). go_mem also supplies
+    // the read-command owners; its combined capture load remains<=32.
+    (* keep *) reg[15:0] leaf_go;
+    for(genvar lg=0;lg<16;lg=lg+1)begin:g_leaf_go
+      always @(posedge clk or negedge rsr[(lg+16)%NRS])
+        if(!rsr[(lg+16)%NRS])leaf_go[lg]<=0;else leaf_go[lg]<=go_mem;
+    end
     // NATIVE32 (ELEM-XFV/XFIN 10-21): kept same-edge copies of go_t (census r1 4965 loads) and of the leaf-match
     // inputs iv/it/ib (59/92/120); function-identical registers, no edge moves.
     localparam integer NGO = 32, NLC = 3, NBK = P * K;   // NLC: one leaf-match copy per tree
@@ -414,7 +430,7 @@ module ot_s81dv_eng_finish_sram #(
                 end
                 reg vld;
                 always @(posedge clk or negedge rsr[IX % NRS])
-                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t[(t * NVP + IX) % NGO]) vld <= 1'b0; else if (hit) vld <= 1'b1;
+                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (leaf_go[(t * NV + IX) % 16]) vld <= 1'b0; else if (hit) vld <= 1'b1;
 
                 assign dup[t * NVP + IX] = hit && (vld || ((m & (m - 1)) != 0));
                  assign VD[t][n] = vld;
