@@ -21,7 +21,7 @@ def exact_edge(v, name):
 
 
 def page_calendar(*, page, record, consumer_ops, latencies, input_anchor,
-                  copy_ready_edge, pstore_source_path, clear_edge=0):
+                  copy_ready_edge, pstore_source_path, result_tail_edges=None, downstream_acceptance_edge=None, clear_edge=0):
     """One page: clear -> real runtime writes -> actual KV/PV reads -> retire.
 
     consumer_ops contains unchanged existing complete SM ops, not sliced partial
@@ -32,6 +32,11 @@ def page_calendar(*, page, record, consumer_ops, latencies, input_anchor,
     """
     if hashlib.sha256(Path(pstore_source_path).read_bytes()).hexdigest()!=PSTORE_SHA256:
         raise ValueError('matching selected pstore source required')
+    if result_tail_edges is None:
+        raise ValueError('explicit result-tail source profile required; exp.end alone is not retirement')
+    tail=exact_edge(result_tail_edges,'result_tail_edges')
+    if tail<2:
+        raise ValueError('historical actual last result is exp.end+2; shorter retirement is unsupported')
     anchor=exact_edge(input_anchor,'input_anchor')
     ready=exact_edge(copy_ready_edge,'copy_ready_edge')
     clear=exact_edge(clear_edge,'clear_edge')
@@ -67,17 +72,25 @@ def page_calendar(*, page, record, consumer_ops, latencies, input_anchor,
         if any(r['edge']<=byrow[r['row']] for r in reads):
             raise ValueError('consumer reads before real runtime write commit')
         consumers.append(dict(sm=sm,op=op,command_words=[E.cmd_word(**f) for f in cal.cyc],
-            command_counter_zero_edge=offset,kv_descriptors=cal.kvd,kv_packets=cal.pkt,preads=reads,retire_edge=offset+exp['end'],
+            command_counter_zero_edge=offset,kv_descriptors=cal.kvd,kv_packets=cal.pkt,preads=reads,model_end_edge=offset+exp['end'],result_tail_edges=tail,retire_edge=offset+exp['end']+tail,
             first_line=offset+exp['first_line'],last_consume=offset+exp['last_consume']))
-        next_edge=offset+exp['end']+1
+        next_edge=offset+exp['end']+tail+1
     if not consumers:raise ValueError('actual complete KV/PV consumer ops required')
-    reuse=next_edge+1
+    last_read=max(r['edge'] for c in consumers for r in c['preads'])
+    arithmetic_bound=max(c['retire_edge'] for c in consumers)
+    acceptance=None if downstream_acceptance_edge is None else exact_edge(downstream_acceptance_edge,'downstream_acceptance_edge')
+    if acceptance is not None and acceptance<arithmetic_bound:
+        raise ValueError('downstream acceptance bound precedes arithmetic output bound')
+    reuse=None if acceptance is None else max(last_read+3,arithmetic_bound,acceptance)+2
     return dict(status='SOURCE_FIXED_LIFETIME_CP_BANK_AND_CONNECTED_PROOF_OPEN',hardware_executed=False,
         source_sha256=PSTORE_SHA256,page=page['page'],clear_edge=clear,
         clear_command=dict(mode=6,pclear=1),writes=writes,consumers=consumers,
-        next_page_clear_not_before=reuse,fixed_source_epoch_edges=reuse-clear,
+        last_probability_read_edge=last_read,arithmetic_output_candidate_bound=arithmetic_bound,
+        downstream_output_acceptance_bound=acceptance,next_page_clear_not_before=reuse,
+        page_reuse_qualified=False,fixed_component_observation_not_before=arithmetic_bound+16,
+        fixed_source_epoch_edges=arithmetic_bound+16-clear,
         probability_preloads=0,producer_join_qualified=False,
         binding_obligations=['exact CP input/SM counter anchors','real covering-copy completion at copy_ready_edge',
             'source-qualified selected SM/XQL group mapping','actual fixed bank owner calendar and real KV service',
-            'consumer result drain/retirement and next page install/clear bound at emitted edges',
+            'downstream result acceptance/VM-write source bound is separate; no next-page clear emitted until supplied',
             'execute producer/copy/loader/consumer with values and all actual fault faces checked'])

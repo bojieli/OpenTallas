@@ -1,0 +1,4420 @@
+{
+ "status": "PARTIAL_PSTORE_INPUT_PLAN_CONSUMER_CALENDAR_OPEN",
+ "full_ATT_PV_lowered": false,
+ "hardware_executed": false,
+ "runtime_SU_producer_join_qualified": false,
+ "physical_views_qualified": false,
+ "source_contract": {
+  "sources": {
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv": "ac8e1c63b455c745de62e6cab65e3dfdbe014bda163d3bec7800c66bd11e36af",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv": "8eb7bd27d513f130ed4010d98f4b2d6318b0dbc79e9106d8809724039a70df76"
+  },
+  "parameters": {
+   "PMAX": 8,
+   "RD_LAT": [
+    37,
+    40,
+    27,
+    29,
+    53,
+    55,
+    43,
+    45
+   ],
+   "NR": 32,
+   "LEAD": 8
+  },
+  "pair_control_T": 0,
+  "source_qualification": "existing VM-boundary component proof only; physical and SU join open"
+ },
+ "producer_programme": 0,
+ "producer_commit_serial": 3721,
+ "producer_ready_stream": 4962,
+ "probability_rows": 128,
+ "pages_required": 1,
+ "real_table_capacity": 128,
+ "pages": [
+  {
+   "page": 0,
+   "first_global_probability": 0,
+   "rows": 128,
+   "table_target": 100,
+   "table_window": 2048,
+   "table_rows": [
+    [
+     0,
+     1361129467693657378890147957544690122816
+    ],
+    [
+     1,
+     12250165209163688209718135395365567856960
+    ],
+    [
+     2,
+     23139200950633719040546122833186445591104
+    ],
+    [
+     3,
+     34028236692103749871374110271007323325248
+    ],
+    [
+     4,
+     44917272433573780702202097708828201059392
+    ],
+    [
+     5,
+     55806308175043811533030085146649078793536
+    ],
+    [
+     6,
+     66695343916513842363858072584469956527680
+    ],
+    [
+     7,
+     77584379657983873194686060022290834261824
+    ],
+    [
+     8,
+     88473415399453904025514047459561956182080
+    ],
+    [
+     9,
+     99362451140923934856342034897382833916224
+    ],
+    [
+     10,
+     110251486882393965687170022335203711650368
+    ],
+    [
+     11,
+     121140522623863996517998009773024589384512
+    ],
+    [
+     12,
+     132029558365334027348825997210845467118656
+    ],
+    [
+     13,
+     142918594106804058179653984648666344852800
+    ],
+    [
+     14,
+     153807629848274089010481972086487222586944
+    ],
+    [
+     15,
+     164696665589744119841309959524308100321088
+    ],
+    [
+     16,
+     175585701331214150672137946962128978055232
+    ],
+    [
+     17,
+     186474737072684181502965934399949855789376
+    ],
+    [
+     18,
+     197363772814154212333793921837770733523520
+    ],
+    [
+     19,
+     208252808555624243164621909275591611257664
+    ],
+    [
+     20,
+     219141844297094273995449896713412488991808
+    ],
+    [
+     21,
+     230030880038564304826277884151233366725952
+    ],
+    [
+     22,
+     240919915780034335657105871589054244460096
+    ],
+    [
+     23,
+     251808951521504366487933859026875122194240
+    ],
+    [
+     24,
+     262697987262974397318761846464695999928384
+    ],
+    [
+     25,
+     273587023004444428149589833902516877662528
+    ],
+    [
+     26,
+     284476058745914458980417821340337755396672
+    ],
+    [
+     27,
+     295365094487384489811245808778158633130816
+    ],
+    [
+     28,
+     306254130228854520642073796215979510864960
+    ],
+    [
+     29,
+     317143165970324551472901783653800388599104
+    ],
+    [
+     30,
+     328032201711794582303729771091621266333248
+    ],
+    [
+     31,
+     338921237453264613134557758529442144067392
+    ],
+    [
+     32,
+     349810273194734643965385745967950216568896
+    ],
+    [
+     33,
+     360699308936204674796213733405771094303040
+    ],
+    [
+     34,
+     371588344677674705627041720843591972037184
+    ],
+    [
+     35,
+     382477380419144736457869708281412849771328
+    ],
+    [
+     36,
+     393366416160614767288697695719233727505472
+    ],
+    [
+     37,
+     404255451902084798119525683157054605239616
+    ],
+    [
+     38,
+     415144487643554828950353670594875482973760
+    ],
+    [
+     39,
+     426033523385024859781181658032696360707904
+    ],
+    [
+     40,
+     436922559126494890612009645469967482628160
+    ],
+    [
+     41,
+     447811594867964921442837632907788360362304
+    ],
+    [
+     42,
+     458700630609434952273665620345609238096448
+    ],
+    [
+     43,
+     469589666350904983104493607783430115830592
+    ],
+    [
+     44,
+     480478702092375013935321595221250993564736
+    ],
+    [
+     45,
+     491367737833845044766149582659071871298880
+    ],
+    [
+     46,
+     502256773575315075596977570096892749033024
+    ],
+    [
+     47,
+     513145809316785106427805557534713626767168
+    ],
+    [
+     48,
+     524034845058255137258633544972534504501312
+    ],
+    [
+     49,
+     534923880799725168089461532410355382235456
+    ],
+    [
+     50,
+     545812916541195198920289519848176259969600
+    ],
+    [
+     51,
+     556701952282665229751117507285997137703744
+    ],
+    [
+     52,
+     567590988024135260581945494723818015437888
+    ],
+    [
+     53,
+     578480023765605291412773482161638893172032
+    ],
+    [
+     54,
+     589369059507075322243601469599459770906176
+    ],
+    [
+     55,
+     600258095248545353074429457037280648640320
+    ],
+    [
+     56,
+     611147130990015383905257444475101526374464
+    ],
+    [
+     57,
+     622036166731485414736085431912922404108608
+    ],
+    [
+     58,
+     632925202472955445566913419350743281842752
+    ],
+    [
+     59,
+     643814238214425476397741406788564159576896
+    ],
+    [
+     60,
+     654703273955895507228569394226385037311040
+    ],
+    [
+     61,
+     665592309697365538059397381664205915045184
+    ],
+    [
+     62,
+     676481345438835568890225369102026792779328
+    ],
+    [
+     63,
+     687370381180305599721053356539847670513472
+    ],
+    [
+     64,
+     698259416921775630551881343978355743014976
+    ],
+    [
+     65,
+     709148452663245661382709331416176620749120
+    ],
+    [
+     66,
+     720037488404715692213537318853997498483264
+    ],
+    [
+     67,
+     730926524146185723044365306291818376217408
+    ],
+    [
+     68,
+     741815559887655753875193293729639253951552
+    ],
+    [
+     69,
+     752704595629125784706021281167460131685696
+    ],
+    [
+     70,
+     763593631370595815536849268605281009419840
+    ],
+    [
+     71,
+     774482667112065846367677256043101887153984
+    ],
+    [
+     72,
+     785371702853535877198505243480373009074240
+    ],
+    [
+     73,
+     796260738595005908029333230918193886808384
+    ],
+    [
+     74,
+     807149774336475938860161218356014764542528
+    ],
+    [
+     75,
+     818038810077945969690989205793835642276672
+    ],
+    [
+     76,
+     828927845819416000521817193231656520010816
+    ],
+    [
+     77,
+     839816881560886031352645180669477397744960
+    ],
+    [
+     78,
+     850705917302356062183473168107298275479104
+    ],
+    [
+     79,
+     861594953043826093014301155545119153213248
+    ],
+    [
+     80,
+     872483988785296123845129142982940030947392
+    ],
+    [
+     81,
+     883373024526766154675957130420760908681536
+    ],
+    [
+     82,
+     894262060268236185506785117858581786415680
+    ],
+    [
+     83,
+     905151096009706216337613105296402664149824
+    ],
+    [
+     84,
+     916040131751176247168441092734223541883968
+    ],
+    [
+     85,
+     926929167492646277999269080172044419618112
+    ],
+    [
+     86,
+     937818203234116308830097067609865297352256
+    ],
+    [
+     87,
+     948707238975586339660925055047686175086400
+    ],
+    [
+     88,
+     959596274717056370491753042485507052820544
+    ],
+    [
+     89,
+     970485310458526401322581029923327930554688
+    ],
+    [
+     90,
+     981374346199996432153409017361148808288832
+    ],
+    [
+     91,
+     992263381941466462984237004798969686022976
+    ],
+    [
+     92,
+     1003152417682936493815064992236790563757120
+    ],
+    [
+     93,
+     1014041453424406524645892979674611441491264
+    ],
+    [
+     94,
+     1024930489165876555476720967112432319225408
+    ],
+    [
+     95,
+     1035819524907346586307548954550253196959552
+    ],
+    [
+     96,
+     1046708560648816617138376941988761269461056
+    ],
+    [
+     97,
+     1057597596390286647969204929426582147195200
+    ],
+    [
+     98,
+     1068486632131756678800032916864403024929344
+    ],
+    [
+     99,
+     1079375667873226709630860904302223902663488
+    ],
+    [
+     100,
+     1090264703614696740461688891740044780397632
+    ],
+    [
+     101,
+     1101153739356166771292516879177865658131776
+    ],
+    [
+     102,
+     1112042775097636802123344866615686535865920
+    ],
+    [
+     103,
+     1122931810839106832954172854053507413600064
+    ],
+    [
+     104,
+     1133820846580576863785000841490778535520320
+    ],
+    [
+     105,
+     1144709882322046894615828828928599413254464
+    ],
+    [
+     106,
+     1155598918063516925446656816366420290988608
+    ],
+    [
+     107,
+     1166487953804986956277484803804241168722752
+    ],
+    [
+     108,
+     1177376989546456987108312791242062046456896
+    ],
+    [
+     109,
+     1188266025287927017939140778679882924191040
+    ],
+    [
+     110,
+     1199155061029397048769968766117703801925184
+    ],
+    [
+     111,
+     1210044096770867079600796753555524679659328
+    ],
+    [
+     112,
+     1220933132512337110431624740993345557393472
+    ],
+    [
+     113,
+     1231822168253807141262452728431166435127616
+    ],
+    [
+     114,
+     1242711203995277172093280715868987312861760
+    ],
+    [
+     115,
+     1253600239736747202924108703306808190595904
+    ],
+    [
+     116,
+     1264489275478217233754936690744629068330048
+    ],
+    [
+     117,
+     1275378311219687264585764678182449946064192
+    ],
+    [
+     118,
+     1286267346961157295416592665620270823798336
+    ],
+    [
+     119,
+     1297156382702627326247420653058091701532480
+    ],
+    [
+     120,
+     1308045418444097357078248640495912579266624
+    ],
+    [
+     121,
+     1318934454185567387909076627933733457000768
+    ],
+    [
+     122,
+     1329823489927037418739904615371554334734912
+    ],
+    [
+     123,
+     1340712525668507449570732602809375212469056
+    ],
+    [
+     124,
+     1351601561409977480401560590247196090203200
+    ],
+    [
+     125,
+     1362490597151447511232388577685016967937344
+    ],
+    [
+     126,
+     1373379632892917542063216565122837845671488
+    ],
+    [
+     127,
+     1384268668634387572894044552560658723405632
+    ]
+   ],
+   "descriptor": {
+    "base": 0,
+    "limit": 128,
+    "loops": 1
+   },
+   "first_command_slot": 64,
+   "last_write_slot": 32657,
+   "fixed_input_kernel_stream_edges": 32768,
+   "command_to_write_latency": 81,
+   "tested_command_interval": 256,
+   "VM_read_bytes": 32768,
+   "xw_transport_bytes": 32768,
+   "pstore_write_bytes": 4096,
+   "footprints": [
+    {
+     "row": 0,
+     "logical_word": 55360,
+     "physical_word": 640,
+     "command_slot": 64,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 1,
+     "logical_word": 55361,
+     "physical_word": 641,
+     "command_slot": 320,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 2,
+     "logical_word": 55362,
+     "physical_word": 642,
+     "command_slot": 576,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 3,
+     "logical_word": 55363,
+     "physical_word": 643,
+     "command_slot": 832,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 4,
+     "logical_word": 55364,
+     "physical_word": 644,
+     "command_slot": 1088,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 5,
+     "logical_word": 55365,
+     "physical_word": 645,
+     "command_slot": 1344,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 6,
+     "logical_word": 55366,
+     "physical_word": 646,
+     "command_slot": 1600,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 7,
+     "logical_word": 55367,
+     "physical_word": 647,
+     "command_slot": 1856,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 8,
+     "logical_word": 55368,
+     "physical_word": 520,
+     "command_slot": 2112,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 9,
+     "logical_word": 55369,
+     "physical_word": 521,
+     "command_slot": 2368,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 10,
+     "logical_word": 55370,
+     "physical_word": 522,
+     "command_slot": 2624,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 11,
+     "logical_word": 55371,
+     "physical_word": 523,
+     "command_slot": 2880,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 12,
+     "logical_word": 55372,
+     "physical_word": 524,
+     "command_slot": 3136,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 13,
+     "logical_word": 55373,
+     "physical_word": 525,
+     "command_slot": 3392,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 14,
+     "logical_word": 55374,
+     "physical_word": 526,
+     "command_slot": 3648,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 15,
+     "logical_word": 55375,
+     "physical_word": 527,
+     "command_slot": 3904,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      65,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 16,
+     "logical_word": 55376,
+     "physical_word": 528,
+     "command_slot": 4160,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 17,
+     "logical_word": 55377,
+     "physical_word": 529,
+     "command_slot": 4416,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 18,
+     "logical_word": 55378,
+     "physical_word": 530,
+     "command_slot": 4672,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 19,
+     "logical_word": 55379,
+     "physical_word": 531,
+     "command_slot": 4928,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 20,
+     "logical_word": 55380,
+     "physical_word": 532,
+     "command_slot": 5184,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 21,
+     "logical_word": 55381,
+     "physical_word": 533,
+     "command_slot": 5440,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 22,
+     "logical_word": 55382,
+     "physical_word": 534,
+     "command_slot": 5696,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 23,
+     "logical_word": 55383,
+     "physical_word": 535,
+     "command_slot": 5952,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      66,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 24,
+     "logical_word": 55384,
+     "physical_word": 536,
+     "command_slot": 6208,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      74,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 25,
+     "logical_word": 55385,
+     "physical_word": 537,
+     "command_slot": 6464,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      74,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 26,
+     "logical_word": 55386,
+     "physical_word": 538,
+     "command_slot": 6720,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      74,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 27,
+     "logical_word": 55387,
+     "physical_word": 539,
+     "command_slot": 6976,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      74,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 28,
+     "logical_word": 55388,
+     "physical_word": 540,
+     "command_slot": 7232,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      74,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 29,
+     "logical_word": 55389,
+     "physical_word": 541,
+     "command_slot": 7488,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      74,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 30,
+     "logical_word": 55390,
+     "physical_word": 542,
+     "command_slot": 7744,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      74,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 31,
+     "logical_word": 55391,
+     "physical_word": 543,
+     "command_slot": 8000,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      72,
+      73,
+      74,
+      67,
+      68,
+      69,
+      70,
+      71
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 32,
+     "logical_word": 55392,
+     "physical_word": 704,
+     "command_slot": 8256,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 33,
+     "logical_word": 55393,
+     "physical_word": 705,
+     "command_slot": 8512,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 34,
+     "logical_word": 55394,
+     "physical_word": 706,
+     "command_slot": 8768,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 35,
+     "logical_word": 55395,
+     "physical_word": 707,
+     "command_slot": 9024,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 36,
+     "logical_word": 55396,
+     "physical_word": 708,
+     "command_slot": 9280,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 37,
+     "logical_word": 55397,
+     "physical_word": 709,
+     "command_slot": 9536,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 38,
+     "logical_word": 55398,
+     "physical_word": 710,
+     "command_slot": 9792,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 39,
+     "logical_word": 55399,
+     "physical_word": 711,
+     "command_slot": 10048,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 40,
+     "logical_word": 55400,
+     "physical_word": 584,
+     "command_slot": 10304,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 41,
+     "logical_word": 55401,
+     "physical_word": 585,
+     "command_slot": 10560,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 42,
+     "logical_word": 55402,
+     "physical_word": 586,
+     "command_slot": 10816,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 43,
+     "logical_word": 55403,
+     "physical_word": 587,
+     "command_slot": 11072,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 44,
+     "logical_word": 55404,
+     "physical_word": 588,
+     "command_slot": 11328,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 45,
+     "logical_word": 55405,
+     "physical_word": 589,
+     "command_slot": 11584,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 46,
+     "logical_word": 55406,
+     "physical_word": 590,
+     "command_slot": 11840,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 47,
+     "logical_word": 55407,
+     "physical_word": 591,
+     "command_slot": 12096,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 48,
+     "logical_word": 55408,
+     "physical_word": 592,
+     "command_slot": 12352,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 49,
+     "logical_word": 55409,
+     "physical_word": 593,
+     "command_slot": 12608,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 50,
+     "logical_word": 55410,
+     "physical_word": 594,
+     "command_slot": 12864,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 51,
+     "logical_word": 55411,
+     "physical_word": 595,
+     "command_slot": 13120,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 52,
+     "logical_word": 55412,
+     "physical_word": 596,
+     "command_slot": 13376,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 53,
+     "logical_word": 55413,
+     "physical_word": 597,
+     "command_slot": 13632,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 54,
+     "logical_word": 55414,
+     "physical_word": 598,
+     "command_slot": 13888,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 55,
+     "logical_word": 55415,
+     "physical_word": 599,
+     "command_slot": 14144,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 56,
+     "logical_word": 55416,
+     "physical_word": 600,
+     "command_slot": 14400,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 57,
+     "logical_word": 55417,
+     "physical_word": 601,
+     "command_slot": 14656,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 58,
+     "logical_word": 55418,
+     "physical_word": 602,
+     "command_slot": 14912,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 59,
+     "logical_word": 55419,
+     "physical_word": 603,
+     "command_slot": 15168,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 60,
+     "logical_word": 55420,
+     "physical_word": 604,
+     "command_slot": 15424,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 61,
+     "logical_word": 55421,
+     "physical_word": 605,
+     "command_slot": 15680,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 62,
+     "logical_word": 55422,
+     "physical_word": 606,
+     "command_slot": 15936,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 63,
+     "logical_word": 55423,
+     "physical_word": 607,
+     "command_slot": 16192,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      80,
+      81,
+      82,
+      75,
+      76,
+      77,
+      78,
+      79
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 64,
+     "logical_word": 55424,
+     "physical_word": 768,
+     "command_slot": 16448,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 65,
+     "logical_word": 55425,
+     "physical_word": 769,
+     "command_slot": 16704,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 66,
+     "logical_word": 55426,
+     "physical_word": 770,
+     "command_slot": 16960,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 67,
+     "logical_word": 55427,
+     "physical_word": 771,
+     "command_slot": 17216,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 68,
+     "logical_word": 55428,
+     "physical_word": 772,
+     "command_slot": 17472,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 69,
+     "logical_word": 55429,
+     "physical_word": 773,
+     "command_slot": 17728,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 70,
+     "logical_word": 55430,
+     "physical_word": 774,
+     "command_slot": 17984,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 71,
+     "logical_word": 55431,
+     "physical_word": 775,
+     "command_slot": 18240,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      99,
+      100,
+      101,
+      102,
+      103
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 72,
+     "logical_word": 55432,
+     "physical_word": 648,
+     "command_slot": 18496,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 73,
+     "logical_word": 55433,
+     "physical_word": 649,
+     "command_slot": 18752,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 74,
+     "logical_word": 55434,
+     "physical_word": 650,
+     "command_slot": 19008,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 75,
+     "logical_word": 55435,
+     "physical_word": 651,
+     "command_slot": 19264,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 76,
+     "logical_word": 55436,
+     "physical_word": 652,
+     "command_slot": 19520,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 77,
+     "logical_word": 55437,
+     "physical_word": 653,
+     "command_slot": 19776,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 78,
+     "logical_word": 55438,
+     "physical_word": 654,
+     "command_slot": 20032,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 79,
+     "logical_word": 55439,
+     "physical_word": 655,
+     "command_slot": 20288,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      81,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 80,
+     "logical_word": 55440,
+     "physical_word": 656,
+     "command_slot": 20544,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 81,
+     "logical_word": 55441,
+     "physical_word": 657,
+     "command_slot": 20800,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 82,
+     "logical_word": 55442,
+     "physical_word": 658,
+     "command_slot": 21056,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 83,
+     "logical_word": 55443,
+     "physical_word": 659,
+     "command_slot": 21312,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 84,
+     "logical_word": 55444,
+     "physical_word": 660,
+     "command_slot": 21568,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 85,
+     "logical_word": 55445,
+     "physical_word": 661,
+     "command_slot": 21824,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 86,
+     "logical_word": 55446,
+     "physical_word": 662,
+     "command_slot": 22080,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 87,
+     "logical_word": 55447,
+     "physical_word": 663,
+     "command_slot": 22336,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      82,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 88,
+     "logical_word": 55448,
+     "physical_word": 664,
+     "command_slot": 22592,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 89,
+     "logical_word": 55449,
+     "physical_word": 665,
+     "command_slot": 22848,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 90,
+     "logical_word": 55450,
+     "physical_word": 666,
+     "command_slot": 23104,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 91,
+     "logical_word": 55451,
+     "physical_word": 667,
+     "command_slot": 23360,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 92,
+     "logical_word": 55452,
+     "physical_word": 668,
+     "command_slot": 23616,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 93,
+     "logical_word": 55453,
+     "physical_word": 669,
+     "command_slot": 23872,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 94,
+     "logical_word": 55454,
+     "physical_word": 670,
+     "command_slot": 24128,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 95,
+     "logical_word": 55455,
+     "physical_word": 671,
+     "command_slot": 24384,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      88,
+      89,
+      90,
+      83,
+      84,
+      85,
+      86,
+      87
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 96,
+     "logical_word": 55456,
+     "physical_word": 832,
+     "command_slot": 24640,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 97,
+     "logical_word": 55457,
+     "physical_word": 833,
+     "command_slot": 24896,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 98,
+     "logical_word": 55458,
+     "physical_word": 834,
+     "command_slot": 25152,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 99,
+     "logical_word": 55459,
+     "physical_word": 835,
+     "command_slot": 25408,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 100,
+     "logical_word": 55460,
+     "physical_word": 836,
+     "command_slot": 25664,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 101,
+     "logical_word": 55461,
+     "physical_word": 837,
+     "command_slot": 25920,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 102,
+     "logical_word": 55462,
+     "physical_word": 838,
+     "command_slot": 26176,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 103,
+     "logical_word": 55463,
+     "physical_word": 839,
+     "command_slot": 26432,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      104,
+      105,
+      106,
+      107,
+      108,
+      109,
+      110,
+      111
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 104,
+     "logical_word": 55464,
+     "physical_word": 712,
+     "command_slot": 26688,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 105,
+     "logical_word": 55465,
+     "physical_word": 713,
+     "command_slot": 26944,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 106,
+     "logical_word": 55466,
+     "physical_word": 714,
+     "command_slot": 27200,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 107,
+     "logical_word": 55467,
+     "physical_word": 715,
+     "command_slot": 27456,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 108,
+     "logical_word": 55468,
+     "physical_word": 716,
+     "command_slot": 27712,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 109,
+     "logical_word": 55469,
+     "physical_word": 717,
+     "command_slot": 27968,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 110,
+     "logical_word": 55470,
+     "physical_word": 718,
+     "command_slot": 28224,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 111,
+     "logical_word": 55471,
+     "physical_word": 719,
+     "command_slot": 28480,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      89,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 112,
+     "logical_word": 55472,
+     "physical_word": 720,
+     "command_slot": 28736,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 113,
+     "logical_word": 55473,
+     "physical_word": 721,
+     "command_slot": 28992,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 114,
+     "logical_word": 55474,
+     "physical_word": 722,
+     "command_slot": 29248,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 115,
+     "logical_word": 55475,
+     "physical_word": 723,
+     "command_slot": 29504,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 116,
+     "logical_word": 55476,
+     "physical_word": 724,
+     "command_slot": 29760,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 117,
+     "logical_word": 55477,
+     "physical_word": 725,
+     "command_slot": 30016,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 118,
+     "logical_word": 55478,
+     "physical_word": 726,
+     "command_slot": 30272,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 119,
+     "logical_word": 55479,
+     "physical_word": 727,
+     "command_slot": 30528,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      90,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 120,
+     "logical_word": 55480,
+     "physical_word": 728,
+     "command_slot": 30784,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 121,
+     "logical_word": 55481,
+     "physical_word": 729,
+     "command_slot": 31040,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 122,
+     "logical_word": 55482,
+     "physical_word": 730,
+     "command_slot": 31296,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 123,
+     "logical_word": 55483,
+     "physical_word": 731,
+     "command_slot": 31552,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 124,
+     "logical_word": 55484,
+     "physical_word": 732,
+     "command_slot": 31808,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 125,
+     "logical_word": 55485,
+     "physical_word": 733,
+     "command_slot": 32064,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 126,
+     "logical_word": 55486,
+     "physical_word": 734,
+     "command_slot": 32320,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    },
+    {
+     "row": 127,
+     "logical_word": 55487,
+     "physical_word": 735,
+     "command_slot": 32576,
+     "source_client": 2,
+     "vm_sectors_by_bank": [
+      96,
+      97,
+      98,
+      91,
+      92,
+      93,
+      94,
+      95
+     ],
+     "client_request_after_command": [
+      21,
+      18,
+      31,
+      29,
+      5,
+      3,
+      15,
+      13
+     ],
+     "physical_bank_calendar": "OPEN exact request-pad ages; require full input-stage exclusive owner2 epoch",
+     "xw_after_command": 80,
+     "pstore_write_after_command": 81
+    }
+   ],
+   "clear_read_reuse_calendar": "OPEN real PV consumer and static retirement required"
+  }
+ ],
+ "probability_M_events": 0,
+ "probability_values_accepted": false,
+ "fixed_input_kernel_stream_edges": 32768,
+ "price_scope": "actual tested256-edge row slots only; CP install, consumer, clear/reuse cost still OPEN; no layer/token rate",
+ "refusal": "ATT.PV consumer programme, paddr page offsets, clear/read retirement, CP command anchor and actual SU join remain OPEN"
+}
