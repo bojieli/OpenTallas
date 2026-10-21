@@ -1,12 +1,17 @@
 #!/bin/bash
 set -euo pipefail
-mkdir -p kvn-evidence
+SOURCE_ROOT=$(cd "$(dirname "$0")/../../.." && pwd)
+OUT=${1:-${OT_SCRATCH:-/srv/opentallas-scratch}/claude/codex-k-rope-1021/kvn-ctx}
+mkdir -p "$OUT/kvn-evidence"
+cd "$OUT"
+RTL="$SOURCE_ROOT/rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv"
+BENCH="$SOURCE_ROOT/tools/qwen_kv_die/rope_ovl/tb_kvn_ctx_ovl.sv"
 V=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator
 for variant in good wrong_user stale; do
   args=()
   if [ "$variant" = wrong_user ]; then args+=(-GMUT_USER=1); fi
   if [ "$variant" = stale ]; then args+=(-GMUT_STALE=1); fi
-  "$V" --binary --timing -Wno-fatal --top-module tb_kvn_ctx_ovl --Mdir "obj_$variant" -j 1 "${args[@]}" qkd_kvn_ctx_ovl_rope.sv tb_kvn_ctx_ovl.sv > "kvn-evidence/build_$variant.log" 2>&1
+  "$V" --binary --timing -Wno-fatal --top-module tb_kvn_ctx_ovl --Mdir "obj_$variant" -j 1 "${args[@]}" "$RTL" "$BENCH" > "kvn-evidence/build_$variant.log" 2>&1
   set +e
   "obj_$variant/Vtb_kvn_ctx_ovl" > "kvn-evidence/$variant.log" 2>&1
   rc=$?
