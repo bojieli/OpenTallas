@@ -2,12 +2,12 @@
  "name": "hbm_pdie_ucie_colk-ucie7k-cd664c969",
  "block": "ot_pdie_ucie_col",
  "ref_tile": true,
- "owner": "Claude:HBM-OWN/PHY2",
+ "owner": "Codex:HBM lead (ROOT geometry approval)",
  "purpose": "HBM host UCIe column hbm_pdie_ucie_colk: ot_pdie_ucie_col (PMA abstracts + SRAM rate matcher pf + regional clocks/resets) for HBM die host_N, gate --cts",
  "threads": 16,
  "peak_ram_gb": 32,
  "source": {
-  "branch": "claude/hbm-phy-ucie6-1021",
+  "branch": "codex/hbm-ucie-resume-1340-1021",
   "commit": "cd664c969",
   "extra_paths": [
    "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col_record.json",
