@@ -1,0 +1,1186 @@
+%Warning-PINMISSING: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv:242:711: Instance has missing pin: 'rst_hfc_n'
+                     rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:327:26: ... Location of port declaration
+  327 |     input  wire [3:0]    rst_hfc_n     
+      |                          ^~~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dv'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:323:30: ... Location of port declaration
+  323 |     output reg               x_dv,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dc'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:324:30: ... Location of port declaration
+  324 |     output reg  [AW-1:0]     x_dc,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dcs'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:325:30: ... Location of port declaration
+  325 |     output reg  [AW-1:0]     x_dcs,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:137:51: Instance has missing pin: 'x_dsp'
+  137 |         .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
+      |                                                   ^~~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:326:30: ... Location of port declaration
+  326 |     output wire [3:0]        x_dsp,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:190:61: Instance has missing pin: 'ck_mul'
+  190 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:1441:23: ... Location of port declaration
+ 1441 |     input wire [15:0] ck_mul,
+      |                       ^~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_spine_h_w12.sv:190:61: Instance has missing pin: 'o_ov'
+  190 |                 .TREE_LAT(TREE_LAT), .SCALE_LAT(SCALE_LAT)) u_pt (
+      |                                                             ^~~~
+                     rtl/hdc/ot_qwen_me_spine_h_w12.sv:1453:30: ... Location of port declaration
+ 1453 |     output reg               o_ov,           
+      |                              ^~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_w12_matvec.sv:152:129: Instance has missing pin: 'ck_lsl'
+  152 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     rtl/hdc/ot_qwen_w12_matvec.sv:243:22: ... Location of port declaration
+  243 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_w12_matvec.sv:152:129: Instance has missing pin: 'ck_tx'
+  152 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     rtl/hdc/ot_qwen_w12_matvec.sv:244:22: ... Location of port declaration
+  244 |     input wire [7:0] ck_tx,
+      |                      ^~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_w12_matvec.sv:152:129: Instance has missing pin: 'ck_reg'
+  152 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     rtl/hdc/ot_qwen_w12_matvec.sv:245:22: ... Location of port declaration
+  245 |     input wire [3:0] ck_reg,
+      |                      ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'm_fin_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:50:18: ... Location of port declaration
+   50 |     output wire  m_fin_o,
+      |                  ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'm_fidx_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:51:26: ... Location of port declaration
+   51 |     output wire [18-1:0] m_fidx_o,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'm_fval_o'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:52:24: ... Location of port declaration
+   52 |     output wire [31:0] m_fval_o,
+      |                        ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'c_fault'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:54:18: ... Location of port declaration
+   54 |     output wire  c_fault,
+      |                  ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_v'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:55:18: ... Location of port declaration
+   55 |     output wire  kvd_v,
+      |                  ^~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_wbase'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:56:26: ... Location of port declaration
+   56 |     output wire [24-1:0] kvd_wbase,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_ts'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:57:26: ... Location of port declaration
+   57 |     output wire [24-1:0] kvd_ts,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_ks'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:58:26: ... Location of port declaration
+   58 |     output wire [24-1:0] kvd_ks,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_js'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:59:26: ... Location of port declaration
+   59 |     output wire [24-1:0] kvd_js,
+      |                          ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_wcs'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:60:26: ... Location of port declaration
+   60 |     output wire [24-1:0] kvd_wcs,
+      |                          ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_split'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:61:23: ... Location of port declaration
+   61 |     output wire [3:0] kvd_split,
+      |                       ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_jsh'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:62:23: ... Location of port declaration
+   62 |     output wire [2:0] kvd_jsh,
+      |                       ^~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_tiles'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:63:26: ... Location of port declaration
+   63 |     output wire [18-1:0] kvd_tiles,
+      |                          ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_k'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:64:26: ... Location of port declaration
+   64 |     output wire [18-1:0] kvd_k,
+      |                          ^~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_nout'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:65:26: ... Location of port declaration
+   65 |     output wire [18-1:0] kvd_nout,
+      |                          ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_kindk'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:66:18: ... Location of port declaration
+   66 |     output wire  kvd_kindk,
+      |                  ^~~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qfd_tt_ctlm_split.sv:501:192: Instance has missing pin: 'kvd_pos'
+  501 |     qfd_tt_ctlm_head #(.DCU_M(DCU_M), .DUC_M(DUC_M), .XW(XW), .IS(IS), .OS(OS), .PSRAM(PSRAM), .PMUT(PMUT), .HQ2(HQ2), .MEREG(MEREG), .RRG(RRG), .PCUT(PCUT), .G(G), .TPMUT(TPMUT), .AUD(AUD)) u_shadow (
+      |                                                                                                                                                                                                ^~~~~~~~
+                     rtl/physical/ot_qfd_tt_ctlm_split.sv:67:26: ... Location of port declaration
+   67 |     output wire [18-1:0] kvd_pos,
+      |                          ^~~~~~~
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:109:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  109 |         localparam integer CW = EXPANDED ? 23 : 22;
+      |                                          ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:110:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  110 |         localparam integer AW = EXPANDED ? 14 : 12;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:123:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'EXPANDED' generates 32 bits.
+                                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  123 |         if (EXPANDED) begin : g_banked
+      |         ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:149:60: Operator COND expects 23 bits on the Conditional True, but Conditional True's CONST '22'h1' generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  149 |         localparam [CW-1:0] A0 = (PINREG != 0 && MUT != 7) ? 22'd1 : 22'd0;    
+      |                                                            ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:149:60: Operator COND expects 23 bits on the Conditional False, but Conditional False's CONST '22'h0' generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  149 |         localparam [CW-1:0] A0 = (PINREG != 0 && MUT != 7) ? 22'd1 : 22'd0;    
+      |                                                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:32:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_COMPARE' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   32 |  localparam integer NC=SAFE_COMPARE?6:1;
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:47:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SAFE_SELECT' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   47 |  generate if(SAFE_SELECT)begin:gs
+      |           ^~
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:386:80: Operator VAR 'RST' expects 32 bits on the Initial value, but Initial value's CONST '1'h0' generates 1 bits.
+  386 | (* keep_hierarchy=1 *) module qfd_wtn_kept_select #(parameter integer W=1,ID=0,RST=1)(
+      |                                                                                ^~~
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:388:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'RST' generates 32 bits.
+                                                                       : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl.gs.sel[0].ff'
+  388 |  generate if(RST)begin:ar
+      |           ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:51:44: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_fixed_issue.g_dense.u_store.u_issue'
+   51 |     assign issue_v=scheduled && head[45:44]==OWN;
+      |                                            ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv:139:45: Operator NEQ expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_fixed_issue.g_dense.u_store.u_issue'
+  139 |             if(head[45:44]!=0 && head[45:44]!=OWN && !(OWN==1&&head[45:44]==3)) fault<=1;
+      |                                             ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:26:34: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_log2' generates 4 bits.
+                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me.g_dtab.g_ds[15].u_t'
+   26 |     wire [4:0] shift_amount=WT+GT-split_log2;
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_dyn_ttiles.sv:26:28: Operator ASSIGNW expects 5 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me.g_dtab.g_ds[15].u_t'
+   26 |     wire [4:0] shift_amount=WT+GT-split_log2;
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:28:54: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'split_log2' generates 4 bits.
+                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me.g_dtab.g_ds[15].u_t'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:28:71: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'split_log2' generates 4 bits.
+                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me.g_dtab.g_ds[15].u_t'
+   28 |     assign invalid_split=(W != (1<<WT)) || split_log2>GT || split_log2>WT+GT;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:29:33: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 18 bits.
+                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me.g_dtab.g_ds[15].u_t'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_dyn_ttiles.sv:29:56: Operator DIV expects 32 bits on the LHS, but LHS's VARREF 'shifted' generates 18 bits.
+                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me.g_dtab.g_ds[15].u_t'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_dyn_ttiles.sv:29:18: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                       : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me.g_dtab.g_ds[15].u_t'
+   29 |     assign rounds=invalid_split ? {NW{1'b0}} : (shifted/ODD)+1'b1;
+      |                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:29:22: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_fixed_issue.g_dense.u_store'
+   29 |  wire own_row=pw_addr>=BASE&&pw_addr<BASE+DEPTH;
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:29:37: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_fixed_issue.g_dense.u_store'
+   29 |  wire own_row=pw_addr>=BASE&&pw_addr<BASE+DEPTH;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:35:64: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'count' generates 6 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_fixed_issue.g_dense.u_store'
+   35 |            meta_q[27:18]==0||meta_q[27:18]>=61||count==0||count>DEPTH||
+      |                                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:43:30: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'count' generates 6 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_fixed_issue.g_dense.u_store'
+   43 |     if(rows[k][46]!=(k==count-1))seal_bad=1;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:58:17: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'read_addr' generates 3 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_fixed_issue.g_dense.u_store'
+   58 |     if(read_addr<DEPTH&&valid[read_addr])q<=rows[read_addr];else begin q<=0;read_fault<=1;end
+      |                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:66:32: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_fixed_issue.g_dense.u_store'
+   66 |      if(!loading||valid[pw_addr-BASE]||pw_data[63:47]!=0)cfg_fault<=1;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67:18: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_fixed_issue.g_dense.u_store'
+   67 |      rows[pw_addr-BASE]<=pw_data[46:0];valid[pw_addr-BASE]<=1;
+      |                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv:67:53: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'pw_addr' generates 10 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_fixed_issue.g_dense.u_store'
+   67 |      rows[pw_addr-BASE]<=pw_data[46:0];valid[pw_addr-BASE]<=1;
+      |                                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:586:37: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  586 |                       (su_ready && (!KV_VEC_WRITE_BRIDGE || (su_idle && kv_write_drained)));
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:594:43: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  594 |     wire drained = me_idle && su_idle && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:612:48: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  612 |     wire x_drained = own_idle && o_drained && (!KV_VEC_WRITE_BRIDGE || kv_write_drained);
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:858:56: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  858 |                  (bar ? (own_idle_n && o_drained_n && (!KV_VEC_WRITE_BRIDGE || kd_n)) :
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:861:66: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'KV_VEC_WRITE_BRIDGE' generates 32 bits.
+                                                                                                 : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  861 |                     ((OWN == 1) ? own_ready_n : (own_ready_n && (!KV_VEC_WRITE_BRIDGE || (own_idle_n && kd_n))));
+      |                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:908:38: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 4 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  908 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:908:56: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'hc' generates 2 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  908 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:908:78: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 2 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  908 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:908:78: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '2'h0' generates 2 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  908 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:908:132: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'pend2' generates 1 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  908 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                                                                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:908:132: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+  908 |                     if ({1'b0, fq_n} + ((FQ_HEAD >= 2) ? hc : (FQ_HEAD != 0) ? {1'b0, hq_v} : 2'd0) + prog_re + pend1 + ((PRL > 1) ? pend2 : 1'b0) < NFQ) begin
+      |                                                                                                                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1005:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1005 |         dyn[1] <= tok_r * HID;
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1006:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1006 |         dyn[2] <= pos_r * HALF;
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1007:26: Operator SHIFTR expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1007 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                          ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1007:53: Operator AND expects 32 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1007 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1007:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1007 |         dyn[3] <= (pos_r >> LW) * (HD * W) + (pos_r & (W - 1));
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1008:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1008 |         dyn[4] <= pos_r * HD;
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1009:25: Operator ADD expects 32 or 24 bits on the LHS, but LHS's VARREF 'pos_r' generates 18 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1009 |         dyn[5] <= pos_r + 1;
+      |                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1010:16: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's VARREF 'dyn_tiles_zero' generates 18 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1010 |         dyn[6] <= dyn_tiles_zero;                  
+      |                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1022:43: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1022 |     wire [$bits(me_nout)-1:0] pa0_me_nout = hq[O_ME_NOUT +: W_ME_NOUT], pb0_me_nout = (DSEL != 0) ? dq0[AW*0 +: $bits(me_nout)] : dyn[hq[O_ME_D_NOUT +: W_ME_D_NOUT]], pre0_me_nout;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1022:99: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1022 |     wire [$bits(me_nout)-1:0] pa0_me_nout = hq[O_ME_NOUT +: W_ME_NOUT], pb0_me_nout = (DSEL != 0) ? dq0[AW*0 +: $bits(me_nout)] : dyn[hq[O_ME_D_NOUT +: W_ME_D_NOUT]], pre0_me_nout;
+      |                                                                                                   ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1022:85: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1022 |     wire [$bits(me_nout)-1:0] pa0_me_nout = hq[O_ME_NOUT +: W_ME_NOUT], pb0_me_nout = (DSEL != 0) ? dq0[AW*0 +: $bits(me_nout)] : dyn[hq[O_ME_D_NOUT +: W_ME_D_NOUT]], pre0_me_nout;
+      |                                                                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1023:43: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1023 |     wire [$bits(me_nout)-1:0] pa1_me_nout = hq1[O_ME_NOUT +: W_ME_NOUT], pb1_me_nout = (DSEL != 0) ? dq1[AW*0 +: $bits(me_nout)] : dyn[hq1[O_ME_D_NOUT +: W_ME_D_NOUT]], pre1_me_nout;
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1023:100: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                    : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1023 |     wire [$bits(me_nout)-1:0] pa1_me_nout = hq1[O_ME_NOUT +: W_ME_NOUT], pb1_me_nout = (DSEL != 0) ? dq1[AW*0 +: $bits(me_nout)] : dyn[hq1[O_ME_D_NOUT +: W_ME_D_NOUT]], pre1_me_nout;
+      |                                                                                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1023:86: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1023 |     wire [$bits(me_nout)-1:0] pa1_me_nout = hq1[O_ME_NOUT +: W_ME_NOUT], pb1_me_nout = (DSEL != 0) ? dq1[AW*0 +: $bits(me_nout)] : dyn[hq1[O_ME_D_NOUT +: W_ME_D_NOUT]], pre1_me_nout;
+      |                                                                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1024:131: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'pre1_me_nout' generates 18 bits.
+                                                                                                    : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1024 |     wire [$bits(me_nout)-1:0] dec_me_nout = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[1%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_nout : pre0_me_nout)
+      |                                                                                                                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1024:131: Operator COND expects 24 bits on the Conditional False, but Conditional False's VARREF 'pre0_me_nout' generates 18 bits.
+                                                                                                    : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1024 |     wire [$bits(me_nout)-1:0] dec_me_nout = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[1%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_nout : pre0_me_nout)
+      |                                                                                                                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1025:79: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1025 |                                                  : ir[O_ME_NOUT +: W_ME_NOUT] + dyn[ir[O_ME_D_NOUT +: W_ME_D_NOUT]];
+      |                                                                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1024:43: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1024 |     wire [$bits(me_nout)-1:0] dec_me_nout = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[1%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_nout : pre0_me_nout)
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1026:37: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1026 |     wire [$bits(me_k)-1:0] pa0_me_k = hq[O_ME_K +: W_ME_K], pb0_me_k = (DSEL != 0) ? dq0[AW*1 +: $bits(me_k)] : dyn[hq[O_ME_D_K +: W_ME_D_K]], pre0_me_k;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1026:84: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1026 |     wire [$bits(me_k)-1:0] pa0_me_k = hq[O_ME_K +: W_ME_K], pb0_me_k = (DSEL != 0) ? dq0[AW*1 +: $bits(me_k)] : dyn[hq[O_ME_D_K +: W_ME_D_K]], pre0_me_k;
+      |                                                                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1026:70: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1026 |     wire [$bits(me_k)-1:0] pa0_me_k = hq[O_ME_K +: W_ME_K], pb0_me_k = (DSEL != 0) ? dq0[AW*1 +: $bits(me_k)] : dyn[hq[O_ME_D_K +: W_ME_D_K]], pre0_me_k;
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1027:37: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1027 |     wire [$bits(me_k)-1:0] pa1_me_k = hq1[O_ME_K +: W_ME_K], pb1_me_k = (DSEL != 0) ? dq1[AW*1 +: $bits(me_k)] : dyn[hq1[O_ME_D_K +: W_ME_D_K]], pre1_me_k;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1027:85: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1027 |     wire [$bits(me_k)-1:0] pa1_me_k = hq1[O_ME_K +: W_ME_K], pb1_me_k = (DSEL != 0) ? dq1[AW*1 +: $bits(me_k)] : dyn[hq1[O_ME_D_K +: W_ME_D_K]], pre1_me_k;
+      |                                                                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1027:71: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1027 |     wire [$bits(me_k)-1:0] pa1_me_k = hq1[O_ME_K +: W_ME_K], pb1_me_k = (DSEL != 0) ? dq1[AW*1 +: $bits(me_k)] : dyn[hq1[O_ME_D_K +: W_ME_D_K]], pre1_me_k;
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1028:125: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'pre1_me_k' generates 18 bits.
+                                                                                                    : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1028 |     wire [$bits(me_k)-1:0] dec_me_k = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[4%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_k : pre0_me_k)
+      |                                                                                                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1028:125: Operator COND expects 24 bits on the Conditional False, but Conditional False's VARREF 'pre0_me_k' generates 18 bits.
+                                                                                                    : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1028 |     wire [$bits(me_k)-1:0] dec_me_k = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[4%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_k : pre0_me_k)
+      |                                                                                                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1029:73: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1029 |                                                  : ir[O_ME_K +: W_ME_K] + dyn[ir[O_ME_D_K +: W_ME_D_K]];
+      |                                                                         ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1028:37: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1028 |     wire [$bits(me_k)-1:0] dec_me_k = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[4%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_me_k : pre0_me_k)
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1042:41: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1042 |     wire [$bits(su_nin)-1:0] pa0_su_nin = hq[O_SU_NIN +: W_SU_NIN], pb0_su_nin = (DSEL != 0) ? dq0[AW*5 +: $bits(su_nin)] : dyn[hq[O_SU_D_NIN +: W_SU_D_NIN]], pre0_su_nin;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1042:94: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1042 |     wire [$bits(su_nin)-1:0] pa0_su_nin = hq[O_SU_NIN +: W_SU_NIN], pb0_su_nin = (DSEL != 0) ? dq0[AW*5 +: $bits(su_nin)] : dyn[hq[O_SU_D_NIN +: W_SU_D_NIN]], pre0_su_nin;
+      |                                                                                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1042:80: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1042 |     wire [$bits(su_nin)-1:0] pa0_su_nin = hq[O_SU_NIN +: W_SU_NIN], pb0_su_nin = (DSEL != 0) ? dq0[AW*5 +: $bits(su_nin)] : dyn[hq[O_SU_D_NIN +: W_SU_D_NIN]], pre0_su_nin;
+      |                                                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1043:41: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1043 |     wire [$bits(su_nin)-1:0] pa1_su_nin = hq1[O_SU_NIN +: W_SU_NIN], pb1_su_nin = (DSEL != 0) ? dq1[AW*5 +: $bits(su_nin)] : dyn[hq1[O_SU_D_NIN +: W_SU_D_NIN]], pre1_su_nin;
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1043:95: Operator COND expects 24 bits on the Conditional True, but Conditional True's SEL generates 18 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1043 |     wire [$bits(su_nin)-1:0] pa1_su_nin = hq1[O_SU_NIN +: W_SU_NIN], pb1_su_nin = (DSEL != 0) ? dq1[AW*5 +: $bits(su_nin)] : dyn[hq1[O_SU_D_NIN +: W_SU_D_NIN]], pre1_su_nin;
+      |                                                                                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1043:81: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1043 |     wire [$bits(su_nin)-1:0] pa1_su_nin = hq1[O_SU_NIN +: W_SU_NIN], pb1_su_nin = (DSEL != 0) ? dq1[AW*5 +: $bits(su_nin)] : dyn[hq1[O_SU_D_NIN +: W_SU_D_NIN]], pre1_su_nin;
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1044:130: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'pre1_su_nin' generates 18 bits.
+                                                                                                    : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1044 |     wire [$bits(su_nin)-1:0] dec_su_nin = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[16%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_su_nin : pre0_su_nin)
+      |                                                                                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1044:130: Operator COND expects 24 bits on the Conditional False, but Conditional False's VARREF 'pre0_su_nin' generates 18 bits.
+                                                                                                    : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1044 |     wire [$bits(su_nin)-1:0] dec_su_nin = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[16%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_su_nin : pre0_su_nin)
+      |                                                                                                                                  ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1045:77: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1045 |                                                  : ir[O_SU_NIN +: W_SU_NIN] + dyn[ir[O_SU_D_NIN +: W_SU_D_NIN]];
+      |                                                                             ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1044:41: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1044 |     wire [$bits(su_nin)-1:0] dec_su_nin = (DPRE != 0 && FQ_HEAD >= 2) ? (((((HRC > 1) ? h_rd_c[16%HRN] : h_rd)) ^ (DPRE_X != 0)) ? pre1_su_nin : pre0_su_nin)
+      |                                         ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1064:32: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1064 |     wire [NW-1:0] pa0_me_tiles = hq[O_ME_TILES +: W_ME_TILES], pa1_me_tiles = hq1[O_ME_TILES +: W_ME_TILES], pre0_me_tiles, pre1_me_tiles;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1064:77: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1064 |     wire [NW-1:0] pa0_me_tiles = hq[O_ME_TILES +: W_ME_TILES], pa1_me_tiles = hq1[O_ME_TILES +: W_ME_TILES], pre0_me_tiles, pre1_me_tiles;
+      |                                                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1071:67: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1071 |         wire [NW-1:0] me_tiles_ref = ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split : dyn[ir[O_ME_D_TILES +: W_ME_D_TILES]]);
+      |                                                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1071:113: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'dyn_tiles_split' generates 18 bits.
+                                                                                                    : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1071 |         wire [NW-1:0] me_tiles_ref = ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split : dyn[ir[O_ME_D_TILES +: W_ME_D_TILES]]);
+      |                                                                                                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1071:36: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1071 |         wire [NW-1:0] me_tiles_ref = ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split : dyn[ir[O_ME_D_TILES +: W_ME_D_TILES]]);
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1127:33: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'dec_me_tiles' generates 18 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1127 |         me_tiles <= (DTIL != 0) ? dec_me_tiles : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1127:79: Operator ADD expects 24 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1127 |         me_tiles <= (DTIL != 0) ? dec_me_tiles : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1127:125: Operator COND expects 24 bits on the Conditional True, but Conditional True's VARREF 'dyn_tiles_split' generates 18 bits.
+                                                                                                    : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1127 |         me_tiles <= (DTIL != 0) ? dec_me_tiles : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                                                                                                                             ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1127:18: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's COND generates 24 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1127 |         me_tiles <= (DTIL != 0) ? dec_me_tiles : ir[O_ME_TILES +: W_ME_TILES] + ((ir[O_ME_D_TILES +: W_ME_D_TILES] == 3'd6) ? dyn_tiles_split
+      |                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1133:47: Operator OR expects 18 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1133 |         me_row0 <= ir[O_ME_ROW0 +: W_ME_ROW0] |
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1146:17: Operator ASSIGNDLY expects 18 bits on the Assign RHS, but Assign RHS's SEL generates 16 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1146 |         su_nout <= ir[O_SU_NOUT +: W_SU_NOUT];
+      |                 ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1178:33: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1178 |          (((su_va_addr[0 +: AW] - EMB_ADDR_BASE) & (HID - 1)) /
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1180:31: Operator SUB expects 32 bits on the LHS, but LHS's SEL generates 24 bits.
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1180 |         ((su_va_addr[0 +: AW] - EMB_ADDR_BASE) >> $clog2(EMB_CODE_LANES));
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1176:28: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1176 |     assign embed_code_addr = (QWEN_FULLSHAPE != 0) ?
+      |                            ^
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1275:22: Replication of more that --replication-limit 8192 is suspect: 49152
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1275 |     assign vx_addr = '0;    
+      |                      ^~
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1278:19: Replication of more that --replication-limit 8192 is suspect: 65536
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1278 |     assign xl_d = '0;    
+      |                   ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv:1283:25: Replication of more that --replication-limit 8192 is suspect: 12288
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_ctrl_me'
+ 1283 |     assign vw_me_data = '0;    
+      |                         ^~
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_dv_calendar_rom.sv:33:24: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 11 bits.
+                                                              : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_calrom.u_rom'
+   33 |              ({1'b0,pf}+pn>NENT) || ps>37;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_dv_calendar_rom.sv:33:24: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'pn' generates 3 bits.
+                                                              : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_calrom.u_rom'
+   33 |              ({1'b0,pf}+pn>NENT) || ps>37;
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:24:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SAFE_SELECT' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   24 |  initial if(SAFE_SELECT&&!SAFE_COMPARE) $error("SAFE_SELECT requires SAFE_COMPARE");
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:24:26: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'SAFE_COMPARE' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   24 |  initial if(SAFE_SELECT&&!SAFE_COMPARE) $error("SAFE_SELECT requires SAFE_COMPARE");
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:25:22: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SAFE_PHYS' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   25 |  initial if(SAFE_PHYS&&!SAFE_SELECT) $error("SAFE_PHYS requires SAFE_SELECT");
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:25:24: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'SAFE_SELECT' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   25 |  initial if(SAFE_PHYS&&!SAFE_SELECT) $error("SAFE_PHYS requires SAFE_SELECT");
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:51:30: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   51 |     assign decoded[tt]=ENABLE&&pick&&next_group[pick_user]==tt;
+      |                              ^~
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:79:135: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                       : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   79 |     (* keep=1, keep_hierarchy=1 *) qfd_wtn_kept_select #(.W(1),.ID(15+bb*14+ee),.RST(SAFE_PHYS==0)) ff(.ck(ck),.rst_n(rst_n),.d(ENABLE&&pick&&pick_user==bb/2&&pick_slot==bb%2),.q(publish_enable[bb][ee]));
+      |                                                                                                                                       ^~
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:79:169: Operator EQ expects 32 or 2 bits on the LHS, but LHS's VARREF 'pick_slot' generates 1 bits.
+                                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   79 |     (* keep=1, keep_hierarchy=1 *) qfd_wtn_kept_select #(.W(1),.ID(15+bb*14+ee),.RST(SAFE_PHYS==0)) ff(.ck(ck),.rst_n(rst_n),.d(ENABLE&&pick&&pick_user==bb/2&&pick_slot==bb%2),.q(publish_enable[bb][ee]));
+      |                                                                                                                                                                         ^~
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:81:34: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   81 |      always@(posedge ck)if(ENABLE&&publish_enable[bb][ee])cache_due[bb][ee]<=selected_base[ee]+{5'd0,selected_delta[ee]};
+      |                                  ^~
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:83:34: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   83 |      always@(posedge ck)if(ENABLE&&publish_enable[bb][ee])cache_meta[bb][12:0]<=selected_meta[12:0];
+      |                                  ^~
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:85:34: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   85 |      always@(posedge ck)if(ENABLE&&publish_enable[bb][ee])cache_meta[bb][24:13]<=selected_meta[24:13];
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:79:152: Operator EQ expects 32 or 3 bits on the LHS, but LHS's VARREF 'pick_user' generates 2 bits.
+                                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   79 |     (* keep=1, keep_hierarchy=1 *) qfd_wtn_kept_select #(.W(1),.ID(15+bb*14+ee),.RST(SAFE_PHYS==0)) ff(.ck(ck),.rst_n(rst_n),.d(ENABLE&&pick&&pick_user==bb/2&&pick_slot==bb%2),.q(publish_enable[bb][ee]));
+      |                                                                                                                                                        ^~
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:79:169: Operator EQ expects 32 or 3 bits on the LHS, but LHS's VARREF 'pick_slot' generates 1 bits.
+                                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   79 |     (* keep=1, keep_hierarchy=1 *) qfd_wtn_kept_select #(.W(1),.ID(15+bb*14+ee),.RST(SAFE_PHYS==0)) ff(.ck(ck),.rst_n(rst_n),.d(ENABLE&&pick&&pick_user==bb/2&&pick_slot==bb%2),.q(publish_enable[bb][ee]));
+      |                                                                                                                                                                         ^~
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:91:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_COMPARE' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   91 |   assign cache_mask[m]=SAFE_COMPARE?cache_meta[m][20:9]:cache[m][33:22];
+      |                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:92:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_COMPARE' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   92 |   assign cache_pc[m]=SAFE_COMPARE?cache_meta[m][6:0]:cache[m][19:13];
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:93:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_COMPARE' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   93 |   assign cache_group[m]=SAFE_COMPARE?cache_meta[m][24:21]:cache[m][133:130];
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:99:44: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_PHYS' generates 32 bits.
+                                                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+   99 |  assign tr_c=ENABLE!=0&&sealed&&!(SAFE_PHYS?s_fault:fault);
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:101:41: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_PHYS' generates 32 bits.
+                                                                       : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+  101 |  assign all_witnesses_complete=SAFE_PHYS?awc_q:awc;
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:102:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_PHYS' generates 32 bits.
+                                                                       : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+  102 |  assign template_ready=SAFE_PHYS?tr_q:tr_c;
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:103:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_PHYS' generates 32 bits.
+                                                                       : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+  103 |  assign context_active=SAFE_PHYS?ca_q:(ENABLE!=0?active:4'd0);
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:108:19: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'SAFE_PHYS' generates 32 bits.
+                                                                       : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+  108 |    scan=(SAFE_PHYS?rr_k[k]:rr)+2'(k);
+      |                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_dv_typed_witness_control.sv:280:44: Operator NEQ expects 64 bits on the LHS, but LHS's SEL generates 58 bits.
+                                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_wtn.u_wtn.u_ctl'
+  280 |        if((record_index==0&&f_pw_data[63:6]!=(64'h57544e3101640340>>6))||
+      |                                            ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv:38:20: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 2 bits.
+                                                                                        : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head.u_rs'
+   38 |             else r <= {r, 1'b1};
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule_p.sv:59:59: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cfg_index' generates 2 bits.
+                                                                                     : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_go.u_xpf_schedule'
+   59 |  wire wr_ok=cfg_v&&!cfg_clear&&!active&&!sealed&&cfg_index<N&&cfg_data[0]&&cfg_data[85:84]!=0;
+      |                                                           ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule_p.sv:65:54: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cfg_index' generates 2 bits.
+                                                                                     : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_go.u_xpf_schedule'
+   65 |   for(i=0;i<N;i=i+1)rec_n[i]=(rst_n&&wr_ok&&cfg_index==i)?cfg_data:records[i];
+      |                                                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule_p.sv:77:31: Operator LTE expects 32 bits on the LHS, but LHS's VARREF 'cfg_count' generates 3 bits.
+                                                                                     : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_go.u_xpf_schedule'
+   77 |   good=cfg_count!=0&&cfg_count<=N&&((inn&~(loaded&rec_ok&~rbad))==0);
+      |                               ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule_p.sv:79:69: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'cfg_index' generates 2 bits.
+                                                                                     : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_go.u_xpf_schedule'
+   79 |  wire f_cfg=cfg_any&&(active||(!cfg_clear&&(cfg_v?(sealed||cfg_index>=N||!cfg_data[0]||cfg_data[85:84]==0):(!good||sealed))));
+      |                                                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule_p.sv:88:46: Operator ASSIGN expects 2 bits on the Assign RHS, but Assign RHS's VARREF 'i' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_go.u_xpf_schedule'
+   88 |   for(i=N-1;i>=0;i=i-1)if(arm_hit[i])arm_pick=i;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv:112:24: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 2 bits.
+                                                                                                  : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head'
+  112 |                 else r <= {r, 1'b1};
+      |                        ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv:329:17: Replication of more that --replication-limit 8192 is suspect: 786432
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head'
+  329 |         .wrom_q('0),
+      |                 ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv:398:15: Replication of more that --replication-limit 8192 is suspect: 65536
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head'
+  398 |         .vx_q('0),
+      |               ^~
+%Warning-WIDTHCONCAT: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv:402:16: Replication of more that --replication-limit 8192 is suspect: 12288
+                                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_head'
+  402 |         .t_lvl('0),
+      |                ^~
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:178:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  178 |     wire [9:0]  nent = CALENDAR_ROM ? d0[9:0] : {1'b0, d0[8:0]};
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:195:39: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  195 |     wire [9:0]  nent_n = CALENDAR_ROM ? d0_n[9:0] : {1'b0, d0_n[8:0]};
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:198:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  198 |         sb_n = (CALENDAR_ROM ? (d0_n[63:32] != 32'h43414c52 || d0_n[31:10] != 22'd0) :
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:207:81: Operator AND expects 20 bits on the RHS, but RHS's CONST '19'h7ffff' generates 19 bits.
+                                                             : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  207 |                       ({3'd0, dwr_n[s][15:0]} & {1'b0, 8'hff, ~nent_n})), 1'b0} & 19'h7ffff;
+      |                                                                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:206:19: Operator ASSIGN expects 19 bits on the Assign RHS, but Assign RHS's AND generates 20 bits.
+                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  206 |             csa_c = {(({3'd0, dwr_n[s][31:16]} & {3'd0, dwr_n[s][15:0]}) | ({3'd0, dwr_n[s][31:16]} & {1'b0, 8'hff, ~nent_n}) |
+      |                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:221:66: Operator AND expects 20 bits on the RHS, but RHS's CONST '19'h7ffff' generates 19 bits.
+                                                             : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  221 |                    ({3'd0, d[15:0]} & {1'b0, 8'hff, ~n})), 1'b0} & 19'h7ffff;
+      |                                                                  ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:220:16: Operator ASSIGN expects 19 bits on the Assign RHS, but Assign RHS's AND generates 20 bits.
+                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  220 |             cc = {(({3'd0, d[31:16]} & {3'd0, d[15:0]}) | ({3'd0, d[31:16]} & {1'b0, 8'hff, ~n}) |
+      |                ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:227:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  227 |         nent8 = CALENDAR_ROM ? d[9:0] : {1'b0, d[8:0]};
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:233:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  233 |             hdr8 = (CALENDAR_ROM ? (d[63:32] != 32'h43414c52 || d[31:10] != 22'd0) :
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:243:42: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  243 |     wire        t0_o8 = hdr8(dwr[0]) || (!CALENDAR_ROM && lt_o8), t0_w8 = hdr8(dw_data) || (!CALENDAR_ROM && lt_w8);
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:243:93: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'CALENDAR_ROM' generates 32 bits.
+                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  243 |     wire        t0_o8 = hdr8(dwr[0]) || (!CALENDAR_ROM && lt_o8), t0_w8 = hdr8(dw_data) || (!CALENDAR_ROM && lt_w8);
+      |                                                                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:250:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'dw_addr' generates 3 bits.
+                                                             : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  250 |             if ((dw_v && dw_addr == s8) ? sgb8(dw_data, no_8) : k0_8 ? sgb8(dwr[s8], nw_8) : sgb8(dwr[s8], no_8)) sb8 = 1'b1;
+      |                                  ^~
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:678:20: Operator ASSIGN expects 2 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal'
+  678 |             ruu[v] = (MUT == 11 && NU > 1) ? (v + 1) % NU : v;
+      |                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:114:31: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  114 |         wire ce0 = rom_ce && (!EXPANDED || (rom_a >> 12) == 0);
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:165:29: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PR' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  165 |         wire        hs = PR ? dh_q7[6] : dh_run[42];
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:166:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PR' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  166 |         wire [5:0]  stg = PR ? dh_q7[5:0] : dh_run[41:36];
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:172:29: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PR' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  172 |         wire [71:0] rw = PR ? rq : rom_q;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:173:44: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'PR' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  173 |         wire        hdec = bst == 2'd1 && (!PR || hw);                     
+      |                                            ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:174:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PR' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  174 |         wire        rd_c = PR ? rd_p2 : rd_p;                              
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:175:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PR' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  175 |         wire        rd_cnf = PR ? rd_nf2 : rd_nf;
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:176:31: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PR' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  176 |         wire [21:0] gapm = PR ? 22'd3 : 22'd2;                             
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:177:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  177 |         wire h_magic_good = EXPANDED ? rw[71:59] == 13'h13A9 : rw[71:56] == 16'h4F50;
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:178:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  178 |         wire [CW-1:0] h_H = EXPANDED ? rw[58:36] : rw[55:34];
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:178:38: Operator COND expects 23 bits on the Conditional False, but Conditional False's SEL generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  178 |         wire [CW-1:0] h_H = EXPANDED ? rw[58:36] : rw[55:34];
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:179:27: Operator ASSIGNW expects 23 bits on the Assign RHS, but Assign RHS's SEL generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  179 |         wire [CW-1:0] h_T = rw[21:0];
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:180:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  180 |         wire [AW-1:0] h_n = EXPANDED ? rw[35:22] : rw[33:22];
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:180:38: Operator COND expects 14 bits on the Conditional False, but Conditional False's SEL generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  180 |         wire [AW-1:0] h_n = EXPANDED ? rw[35:22] : rw[33:22];
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:182:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  182 |                         (EXPANDED ? h_n < 14'd12288 : h_n != 12'hFFF);
+      |                                   ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:182:59: Operator NEQ expects 14 bits on the RHS, but RHS's CONST '12'hfff' generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  182 |                         (EXPANDED ? h_n < 14'd12288 : h_n != 12'hFFF);
+      |                                                           ^~
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:185:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  185 |         wire [CW-1:0] r_H = EXPANDED ? rom_q[58:36] : rom_q[55:34];
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:185:38: Operator COND expects 23 bits on the Conditional False, but Conditional False's SEL generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  185 |         wire [CW-1:0] r_H = EXPANDED ? rom_q[58:36] : rom_q[55:34];
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:186:27: Operator ASSIGNW expects 23 bits on the Assign RHS, but Assign RHS's SEL generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  186 |         wire [CW-1:0] r_T = rom_q[21:0];
+      |                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:187:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  187 |         wire [AW-1:0] r_n = EXPANDED ? rom_q[35:22] : rom_q[33:22];
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:187:38: Operator COND expects 14 bits on the Conditional False, but Conditional False's SEL generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  187 |         wire [AW-1:0] r_n = EXPANDED ? rom_q[35:22] : rom_q[33:22];
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:188:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  188 |         wire h_good_r = (EXPANDED ? rom_q[71:59] == 13'h13A9 : rom_q[71:56] == 16'h4F50) && r_H != 0 && r_T != 0 &&
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:189:61: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  189 |                         r_T <= r_H && r_n != 0 && (EXPANDED ? r_n < 14'd12288 : r_n != 12'hFFF);
+      |                                                             ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:189:85: Operator NEQ expects 14 bits on the RHS, but RHS's CONST '12'hfff' generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  189 |                         r_T <= r_H && r_n != 0 && (EXPANDED ? r_n < 14'd12288 : r_n != 12'hFFF);
+      |                                                                                     ^~
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:191:26: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PR' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  191 |         wire h_good = PR ? h_good_q : h_good_c;
+      |                          ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:194:38: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  194 |         wire [CW-1:0] e_t = EXPANDED ? {rw[69],rw[40:19]} : rw[40:19];
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:194:38: Operator COND expects 23 bits on the Conditional False, but Conditional False's SEL generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  194 |         wire [CW-1:0] e_t = EXPANDED ? {rw[69],rw[40:19]} : rw[40:19];
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:201:44: Operator COND expects 14 bits on the Conditional True, but Conditional True's CONST '12'h1' generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  201 |         wire [AW-1:0] nptr = (ptr == nent) ? 12'd1 : ptr + 12'd1;
+      |                                            ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:201:58: Operator ADD expects 14 bits on the RHS, but RHS's CONST '12'h1' generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  201 |         wire [AW-1:0] nptr = (ptr == nent) ? 12'd1 : ptr + 12'd1;
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:214:65: Operator ASSIGN expects 14 bits on the Assign RHS, but Assign RHS's CONST '12'h1' generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  214 |             else if (hdec && h_good) begin rom_ce = 1'b1; rom_a = 12'd1; end           
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:219:34: Operator ASSIGNDLY expects 23 bits on the Assign RHS, but Assign RHS's CONST '22'h0' generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  219 |                 bst <= 2'd0; hm1 <= 22'd0; tm1 <= 22'd0; nent <= 12'd0; ptr <= 12'd0; rd_p <= 1'b0; rd_nf <= 1'b0;
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:219:48: Operator ASSIGNDLY expects 23 bits on the Assign RHS, but Assign RHS's CONST '22'h0' generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  219 |                 bst <= 2'd0; hm1 <= 22'd0; tm1 <= 22'd0; nent <= 12'd0; ptr <= 12'd0; rd_p <= 1'b0; rd_nf <= 1'b0;
+      |                                                ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:219:63: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's CONST '12'h0' generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  219 |                 bst <= 2'd0; hm1 <= 22'd0; tm1 <= 22'd0; nent <= 12'd0; ptr <= 12'd0; rd_p <= 1'b0; rd_nf <= 1'b0;
+      |                                                               ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:219:77: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's CONST '12'h0' generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  219 |                 bst <= 2'd0; hm1 <= 22'd0; tm1 <= 22'd0; nent <= 12'd0; ptr <= 12'd0; rd_p <= 1'b0; rd_nf <= 1'b0;
+      |                                                                             ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:220:65: Operator ASSIGNDLY expects 23 bits on the Assign RHS, but Assign RHS's CONST '22'h0' generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  220 |                 nx_v <= 1'b0; nx_nf <= 1'b0; nx_f <= 1'b0; nx_t <= 22'd0; prev_t <= 22'd0; nx_u <= 2'd0; nx_s <= 6'd0;
+      |                                                                 ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:220:82: Operator ASSIGNDLY expects 23 bits on the Assign RHS, but Assign RHS's CONST '22'h0' generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  220 |                 nx_v <= 1'b0; nx_nf <= 1'b0; nx_f <= 1'b0; nx_t <= 22'd0; prev_t <= 22'd0; nx_u <= 2'd0; nx_s <= 6'd0;
+      |                                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:221:70: Operator ASSIGNDLY expects 23 bits on the Assign RHS, but Assign RHS's CONST '22'h0' generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  221 |                 nx_first <= 10'd0; nx_cnt <= 10'd0; anch <= 1'b0; fc <= 22'd0; tc <= 22'd0; seen <= 4'd0;
+      |                                                                      ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:221:83: Operator ASSIGNDLY expects 23 bits on the Assign RHS, but Assign RHS's CONST '22'h0' generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  221 |                 nx_first <= 10'd0; nx_cnt <= 10'd0; anch <= 1'b0; fc <= 22'd0; tc <= 22'd0; seen <= 4'd0;
+      |                                                                                   ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:230:95: Operator ASSIGNDLY expects 14 bits on the Assign RHS, but Assign RHS's CONST '12'h1' generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  230 |                         bst <= 2'd2; hm1 <= h_H - 22'd1; tm1 <= h_T - 22'd1; nent <= h_n; ptr <= 12'd1;
+      |                                                                                               ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:237:32: Operator COND expects 23 bits on the Conditional True, but Conditional True's CONST '22'h0' generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  237 |                     fc <= wrap ? 22'd0 : fc_now + 22'd1;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:238:43: Operator COND expects 23 bits on the Conditional True, but Conditional True's CONST '22'h0' generates 22 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  238 |                     tc <= (tc_now == tm1) ? 22'd0 : tc_now + 22'd1;
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:251:59: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'EXPANDED' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  251 |                         e_first[1:0] != 2'd0 || (EXPANDED && rw[70]) || e_t > hm1 || (ptr != 12'd1 && e_t < prev_t + gapm))
+      |                                                           ^~
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:251:91: Operator NEQ expects 14 bits on the RHS, but RHS's CONST '12'h1' generates 12 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  251 |                         e_first[1:0] != 2'd0 || (EXPANDED && rw[70]) || e_t > hm1 || (ptr != 12'd1 && e_t < prev_t + gapm))
+      |                                                                                           ^~
+%Warning-WIDTHTRUNC: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:274:30: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PR' generates 32 bits.
+                                                                         : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  274 |         assign mu_fault = PR ? mu_q : |op_fcode;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/qwen_split/mu/qfd_sys_face_mu_dhuser_p.sv:315:46: Operator GTE expects 32 bits on the LHS, but LHS's SEL generates 2 bits.
+                                                                          : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.g_op.u_leaf'
+  315 |             if (NU > 1 && USER_SEQ[2*q +: 2] >= NU) $fatal(1, "qfd_sys_face_mu_dhuser: entry %0d user >= NU", q);
+      |                                              ^~
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_mu_context_guard.sv:23:65: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'result_user' generates 2 bits.
+                                                               : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_ctx_guard'
+   23 |             if (result_write && result_user != 0 && result_user < NU && pending[result_user] && MUT != 1)
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/qwen_dv/qfd_mu_context_guard.sv:27:41: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'consume_user' generates 2 bits.
+                                                               : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_ctx_guard'
+   27 |             if (consume && consume_user < NU) pending[consume_user] <= 1'b0;
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/qwen_dv/qfd_mu_context_guard.sv:22:14: Logical operator IF expects 1 bit on the If, but If's VARREF 'ENABLE' generates 32 bits.
+                                                              : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_ctx_guard'
+   22 |         else if (ENABLE) begin
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv:25:32: Operator ADD expects 32 or 10 bits on the RHS, but RHS's VARREF 'beats' generates 5 bits.
+                                                                                   : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_go.u_xpf_loader'
+   25 |      if(!loading||pw_addr!=1004+beats||beats>=12)fault<=1;
+      |                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv:18:47: Operator SUB expects 24 bits on the LHS, but LHS's VARREF 'in_stage' generates 6 bits.
+                                                                                             : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_resident_relocation'
+   18 |  wire[23:0] code_base=head?24'd18432:(in_stage-6'd1)*24'd512;
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv:18:47: Operator SUB expects 24 bits on the RHS, but RHS's CONST '6'h1' generates 6 bits.
+                                                                                             : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_resident_relocation'
+   18 |  wire[23:0] code_base=head?24'd18432:(in_stage-6'd1)*24'd512;
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv:19:48: Operator SUB expects 24 bits on the LHS, but LHS's VARREF 'in_stage' generates 6 bits.
+                                                                                             : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_resident_relocation'
+   19 |  wire[23:0] scale_base=head?24'd29376:(in_stage-6'd1)*24'd816;
+      |                                                ^
+%Warning-WIDTHEXPAND: rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv:19:48: Operator SUB expects 24 bits on the RHS, but RHS's CONST '6'h1' generates 6 bits.
+                                                                                             : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.u_resident_relocation'
+   19 |  wire[23:0] scale_base=head?24'd29376:(in_stage-6'd1)*24'd816;
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:91:90: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 2 bits.
+                                                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr'
+   91 |       always @(posedge ck_head or negedge rst_n) if (!rst_n) r0 <= {RSTN{1'b0}}; else r0 <= {r0, 1'b1};
+      |                                                                                          ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:92:90: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 2 bits.
+                                                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr'
+   92 |       always @(posedge ck_head or negedge rst_n) if (!rst_n) r1 <= {RSTN{1'b0}}; else r1 <= {r1, 1'b1};
+      |                                                                                          ^~
+%Warning-WIDTHTRUNC: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:93:90: Operator ASSIGNDLY expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 2 bits.
+                                                                                            : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr'
+   93 |       always @(posedge ck_head or negedge rst_n) if (!rst_n) r2 <= {RSTN{1'b0}}; else r2 <= {r2, 1'b1};
+      |                                                                                          ^~
+%Warning-WIDTHTRUNC: tb_np10.sv:132:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'calrdir' generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  132 |         ncyc = calrdir ? 60000 : 10000; nst = 0; ntreq = 0; nf16 = 0; ncmd = 0; nk = 0;
+      |                        ^
+%Warning-WIDTHTRUNC: tb_np10.sv:139:15: Operator ASSIGN expects 75 bits on the Assign RHS, but Assign RHS's REPLICATE generates 96 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  139 |         fi_pw = {$urandom,$urandom,$urandom};
+      |               ^
+%Warning-WIDTHTRUNC: tb_np10.sv:140:15: Operator ASSIGN expects 187 bits on the Assign RHS, but Assign RHS's REPLICATE generates 192 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  140 |         fi_dh = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+      |               ^
+%Warning-WIDTHTRUNC: tb_np10.sv:141:20: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  141 |         fi_init_u0 = {$urandom};
+      |                    ^
+%Warning-WIDTHTRUNC: tb_np10.sv:142:18: Operator ASSIGN expects 129 bits on the Assign RHS, but Assign RHS's REPLICATE generates 160 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  142 |         fi_ctx_x = {$urandom,$urandom,$urandom,$urandom,$urandom};
+      |                  ^
+%Warning-WIDTHTRUNC: tb_np10.sv:143:21: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  143 |         fi_mu_fault = {$urandom};
+      |                     ^
+%Warning-WIDTHTRUNC: tb_np10.sv:144:20: Operator ASSIGN expects 2 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  144 |         fi_dh_user = {$urandom};
+      |                    ^
+%Warning-WIDTHTRUNC: tb_np10.sv:145:16: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  145 |         fi_kok = {$urandom};
+      |                ^
+%Warning-WIDTHTRUNC: tb_np10.sv:146:16: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  146 |         fi_kwd = {$urandom};
+      |                ^
+%Warning-WIDTHTRUNC: tb_np10.sv:147:16: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  147 |         fi_fab = {$urandom};
+      |                ^
+%Warning-WIDTHTRUNC: tb_np10.sv:148:23: Operator ASSIGN expects 95 bits on the Assign RHS, but Assign RHS's REPLICATE generates 96 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  148 |         fi_native_ret = {$urandom,$urandom,$urandom};
+      |                       ^
+%Warning-WIDTHTRUNC: tb_np10.sv:149:16: Operator ASSIGN expects 107 bits on the Assign RHS, but Assign RHS's REPLICATE generates 128 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  149 |         fi_ss5 = {$urandom,$urandom,$urandom,$urandom};
+      |                ^
+%Warning-WIDTHTRUNC: tb_np10.sv:150:16: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  150 |         fi_ag5 = {$urandom};
+      |                ^
+%Warning-WIDTHTRUNC: tb_np10.sv:151:21: Operator ASSIGN expects 83 bits on the Assign RHS, but Assign RHS's REPLICATE generates 96 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  151 |         fi_f16_auth = {$urandom,$urandom,$urandom};
+      |                     ^
+%Warning-WIDTHTRUNC: tb_np10.sv:152:20: Operator ASSIGN expects 38 bits on the Assign RHS, but Assign RHS's REPLICATE generates 64 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  152 |         fi_f16_obs = {$urandom,$urandom};
+      |                    ^
+%Warning-WIDTHTRUNC: tb_np10.sv:155:17: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'calrdir' generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  155 |             if (!calrdir && (cyc == 2000 || cyc == 6000)) rst = 0;
+      |                 ^
+%Warning-WIDTHTRUNC: tb_np10.sv:158:19: Operator ASSIGN expects 75 bits on the Assign RHS, but Assign RHS's REPLICATE generates 96 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  158 |             fi_pw = {$urandom,$urandom,$urandom};
+      |                   ^
+%Warning-WIDTHTRUNC: tb_np10.sv:159:19: Operator ASSIGN expects 187 bits on the Assign RHS, but Assign RHS's REPLICATE generates 192 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  159 |             fi_dh = {$urandom,$urandom,$urandom,$urandom,$urandom,$urandom};
+      |                   ^
+%Warning-WIDTHTRUNC: tb_np10.sv:160:24: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  160 |             fi_init_u0 = {$urandom};
+      |                        ^
+%Warning-WIDTHTRUNC: tb_np10.sv:161:22: Operator ASSIGN expects 129 bits on the Assign RHS, but Assign RHS's REPLICATE generates 160 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  161 |             fi_ctx_x = {$urandom,$urandom,$urandom,$urandom,$urandom};
+      |                      ^
+%Warning-WIDTHTRUNC: tb_np10.sv:162:25: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  162 |             fi_mu_fault = {$urandom};
+      |                         ^
+%Warning-WIDTHTRUNC: tb_np10.sv:163:24: Operator ASSIGN expects 2 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  163 |             fi_dh_user = {$urandom};
+      |                        ^
+%Warning-WIDTHTRUNC: tb_np10.sv:164:20: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  164 |             fi_kok = {$urandom};
+      |                    ^
+%Warning-WIDTHTRUNC: tb_np10.sv:165:20: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  165 |             fi_kwd = {$urandom};
+      |                    ^
+%Warning-WIDTHTRUNC: tb_np10.sv:166:20: Operator ASSIGN expects 1 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  166 |             fi_fab = {$urandom};
+      |                    ^
+%Warning-WIDTHTRUNC: tb_np10.sv:167:27: Operator ASSIGN expects 95 bits on the Assign RHS, but Assign RHS's REPLICATE generates 96 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  167 |             fi_native_ret = {$urandom,$urandom,$urandom};
+      |                           ^
+%Warning-WIDTHTRUNC: tb_np10.sv:168:20: Operator ASSIGN expects 107 bits on the Assign RHS, but Assign RHS's REPLICATE generates 128 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  168 |             fi_ss5 = {$urandom,$urandom,$urandom,$urandom};
+      |                    ^
+%Warning-WIDTHTRUNC: tb_np10.sv:169:20: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's REPLICATE generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  169 |             fi_ag5 = {$urandom};
+      |                    ^
+%Warning-WIDTHTRUNC: tb_np10.sv:170:25: Operator ASSIGN expects 83 bits on the Assign RHS, but Assign RHS's REPLICATE generates 96 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  170 |             fi_f16_auth = {$urandom,$urandom,$urandom};
+      |                         ^
+%Warning-WIDTHTRUNC: tb_np10.sv:171:24: Operator ASSIGN expects 38 bits on the Assign RHS, but Assign RHS's REPLICATE generates 64 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  171 |             fi_f16_obs = {$urandom,$urandom};
+      |                        ^
+%Warning-WIDTHTRUNC: tb_np10.sv:180:75: Operator ASSIGN expects 36 bits on the Assign RHS, but Assign RHS's REPLICATE generates 64 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  180 |                         fi_dh[42] = 1'b1; fi_dh[41:36] = stg; fi_dh[35:0] = {$urandom, $urandom}; fi_dh_user = 2'd0; nst = nst + 1;
+      |                                                                           ^
+%Warning-WIDTHTRUNC: tb_np10.sv:185:71: Operator ASSIGN expects 36 bits on the Assign RHS, but Assign RHS's REPLICATE generates 64 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  185 |                     fi_dh[42] = 1'b1; fi_dh[41:36] = stg; fi_dh[35:0] = {$urandom, $urandom}; fi_dh_user = 2'(nk % 4); nst = nst + 1;
+      |                                                                       ^
+%Warning-WIDTHTRUNC: tb_np10.sv:172:13: Logical operator IF expects 1 bit on the If, but If's VARREF 'calrdir' generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  172 |             if (calrdir) begin
+      |             ^~
+%Warning-WIDTHTRUNC: tb_np10.sv:221:107: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'i' generates 32 bits.
+                                       : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  221 |             for (i = 0; i < 2; i = i + 1) $display("TLOAD_CHECK side=%s loads=%0d bad=%0d latency=%0d", i ? "landed_np" : "flat", tk_n[i], tk_bad[i], tk_lat[i]);
+      |                                                                                                           ^
+%Warning-WIDTHTRUNC: tb_np10.sv:226:9: Logical operator IF expects 1 bit on the If, but If's VARREF 'calrdir' generates 32 bits.
+                                     : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  226 |         if (calrdir) $display("CALRDIR_SUMMARY starts=%0d flat_cmd_edges=%0d table_req=%0d f16_st_nonzero=%0d image_ready=%0d", nst, ncmd, ntreq, nf16, fo_cal_image_ready);
+      |         ^~
+%Warning-WIDTHTRUNC: tb_np10.sv:227:36: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'calrdir' generates 32 bits.
+                                      : ... note: In instance 'tb_qfd_tt_ctlm_dv_lpf_lp'
+  227 |         if (bad == 0 && nc > 0 && (!calrdir || ncmd > 100)) $display("LP_LOCKSTEP PASS MUT=%0d compared=%0d cycles=%0d calrdir=%0d warm=38", MUT, nc, ncyc, calrdir);
+      |                                    ^
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:119:19: Signal has multiple driving blocks with different clocking: 'tb_qfd_tt_ctlm_dv_lpf_lp.u_lp.u_hr.g_cmdreg.rom_cmd_q'
+                      rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:121:55: ... Location of first driving block
+  121 |         if (!rsl_c0) rom_cmd_q[189:0] <= 190'd0; else rom_cmd_q[189:0] <= rom_cmd_c[189:0];
+      |                                                       ^~~~~~~~~
+                      rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:123:57: ... Location of other driving block
+  123 |         if (!rsl_c1) rom_cmd_q[379:190] <= 190'd0; else rom_cmd_q[379:190] <= rom_cmd_c[379:190];
+      |                                                         ^~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:119:19: Signal has multiple driving blocks with different clocking: 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_hr.g_cmdreg.rom_cmd_q'
+                      rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:121:55: ... Location of first driving block
+  121 |         if (!rsl_c0) rom_cmd_q[189:0] <= 190'd0; else rom_cmd_q[189:0] <= rom_cmd_c[189:0];
+      |                                                       ^~~~~~~~~
+                      rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_hr.sv:123:57: ... Location of other driving block
+  123 |         if (!rsl_c1) rom_cmd_q[379:190] <= 190'd0; else rom_cmd_q[379:190] <= rom_cmd_c[379:190];
+      |                                                         ^~~~~~~~~
+%Warning-UNOPTFLAT: rtl/lib/ot_ks_add.sv:11:30: Signal unoptimizable: Circular combinational logic: 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_dqks[0].u_dqks.p0'
+   11 |     wire [W-1:0] g0 = a & b, p0 = a ^ b;
+      |                              ^~
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    rtl/lib/ot_ks_add.sv:11:30:      Example path: tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_dqks[0].u_dqks.p0
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:567:89:      Example path: ASSIGNW
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:527:66:      Example path: tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.dq_ks
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:577:5:      Example path: ALWAYS
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:527:20:      Example path: tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.dq_sa
+                    rtl/lib/ot_ks_add.sv:11:21:      Example path: ASSIGNW
+                    rtl/lib/ot_ks_add.sv:11:18:      Example path: tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_dqks[3].u_dqks.g0
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:567:89:      Example path: ASSIGNW
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:527:66:      Example path: tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.dq_ks
+%Warning-UNOPTFLAT: rtl/lib/ot_ks_add.sv:11:18: Signal unoptimizable: Circular combinational logic: 'tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_dqks[0].u_dqks.g0'
+   11 |     wire [W-1:0] g0 = a & b, p0 = a ^ b;
+      |                  ^~
+                    rtl/lib/ot_ks_add.sv:11:18:      Example path: tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_dqks[0].u_dqks.g0
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:567:89:      Example path: ASSIGNW
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:527:66:      Example path: tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.dq_ks
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:577:5:      Example path: ALWAYS
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:527:20:      Example path: tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.dq_sa
+                    rtl/lib/ot_ks_add.sv:11:21:      Example path: ASSIGNW
+                    rtl/lib/ot_ks_add.sv:11:18:      Example path: tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.g_dqks[3].u_dqks.g0
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:567:89:      Example path: ASSIGNW
+                    rtl/qwen_dv/qfd_dv_cmd_cal_mu.sv:527:66:      Example path: tb_qfd_tt_ctlm_dv_lpf_lp.u_flat.u_gi.u_cal.dq_ks
+make: Entering directory '/srv/opentallas-scratch/claude/codex-q-safe10-min-1021/obj_drop17'
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h -o Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h -o Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow.gch
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp__ConstPool__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__0__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__1__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__2__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__3__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__4__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__5__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__6__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__7__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__8__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__9__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__10__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__11__Slow.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.slow -c Vtb_qfd_tt_ctlm_dv_lpf_lp__Syms__Slow.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__0.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__1.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__2.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__3.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__4.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__5.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__6.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__7.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__8.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__9.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__10.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__11.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__12.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__13.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__14.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__15.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__16.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__17.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__18.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__19.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__20.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__21.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__22.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__23.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__24.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__25.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__26.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp___024root__27.cpp
+g++ -Os  -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qfd_tt_ctlm_dv_lpf_lp__pch.h.fast -c Vtb_qfd_tt_ctlm_dv_lpf_lp__main.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_qfd_tt_ctlm_dv_lpf_lp__ALL.a    -pthread -lpthread -latomic   -o Vtb_qfd_tt_ctlm_dv_lpf_lp
+rm Vtb_qfd_tt_ctlm_dv_lpf_lp__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/claude/codex-q-safe10-min-1021/obj_drop17'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 43.443 MB sources in 129 modules, into 46.075 MB in 45 C++ files needing 0.041 MB
+- Verilator: Walltime 82.165 s (elab=3.231, cvt=24.303, bld=51.369); cpu 31.909 s on 8 threads; allocated 1338.938 MB

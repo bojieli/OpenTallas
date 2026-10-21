@@ -1,0 +1,42 @@
+[
+ {
+  "kit": "safe10c",
+  "gate_snapshot_path": "/tmp/ref_gate_qfd_tt_ctlm_dv_safe10c_20261021-094151.source_snapshot.json",
+  "gate_start_commit": "a4723fd521f4db64b853abf7446a52a10d83b985",
+  "gate_manifest_sha256": "2089efde383ba0549a3f823b3872a7c651ab2816bf811c31e250db0b981c343f",
+  "gate_archive_sha256": "234e2cae8e5c0beecac102ae665f07ef4cda6b8cbe6574dfd2079cc2765979c5",
+  "bench_source_commit": "885909865076fbda266edc22c07e397c20eea7ca",
+  "identical_native_RTL": [
+   {
+    "path": "rtl/qwen_dv/lp9d_npl/qfd_tt_ctlm_dv_np_lp.sv",
+    "sha256": "aa8696447db4f693c0f42b38a6fa1ba8b5d9af965d9e905a568b57ddfa697d29",
+    "provenance_commit_match": true
+   },
+   {
+    "path": "rtl/qwen_dv/lp9d_npl/qfd_tt_ctlm_dv_np_helpers.sv",
+    "sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+    "provenance_commit_match": true
+   }
+  ]
+ },
+ {
+  "kit": "safe10d",
+  "gate_snapshot_path": "/tmp/ref_gate_qfd_tt_ctlm_dv_safe10d_20261021-094151.source_snapshot.json",
+  "gate_start_commit": "a4723fd521f4db64b853abf7446a52a10d83b985",
+  "gate_manifest_sha256": "55d30e2604d420bf7f48dbb6d86e15d922448eafa128bad73fae1bc7ee1e1153",
+  "gate_archive_sha256": "1ebc675a1f1341fbb807862dcb9051f07f66fffc07beff3a5c51cd5f04ae97ce",
+  "bench_source_commit": "885909865076fbda266edc22c07e397c20eea7ca",
+  "identical_native_RTL": [
+   {
+    "path": "rtl/qwen_dv/lp9d_npl/qfd_tt_ctlm_dv_np_lp.sv",
+    "sha256": "aa8696447db4f693c0f42b38a6fa1ba8b5d9af965d9e905a568b57ddfa697d29",
+    "provenance_commit_match": true
+   },
+   {
+    "path": "rtl/qwen_dv/lp9d_npl/qfd_tt_ctlm_dv_np_helpers.sv",
+    "sha256": "8a1c0d01a5761533e6617eb293adb044cf8c0881e899ec3e5091babc3e5fe58f",
+    "provenance_commit_match": true
+   }
+  ]
+ }
+]

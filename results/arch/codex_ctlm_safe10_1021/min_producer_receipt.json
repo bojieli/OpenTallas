@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.ctlm.safe10.min_producer_receipt.v1",
+ "status": "PASS",
+ "source_commit": "885909865076fbda266edc22c07e397c20eea7ca",
+ "gate_source_commit": "a4723fd521f4db64b853abf7446a52a10d83b985",
+ "source_manifest_matched_local": true,
+ "fleet": {
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-627207-1792602273",
+  "exit": 0,
+  "verilator": "5.050"
+ },
+ "exact_rtl": "lp9d_npl parent and helper hashes equal both immutable safe10c/d gate snapshots; see gate_bench_source_binding.json",
+ "cases": {
+  "tok_rel": [
+   "TLOAD_CHECK side=     flat loads=36 bad=0 latency=11",
+   "TLOAD_CHECK side=landed_np loads=36 bad=0 latency=11",
+   "TLOAD_STAGE_STARTS 38 image_not_ready_edges=0",
+   "TLOAD_PRODUCER PASS",
+   "LP_LOCKSTEP PASS MUT=0 compared=4507674 cycles=237300 calrdir=2 warm=38"
+  ],
+  "tok_norel": [
+   "TLOAD_CHECK side=     flat loads=0 bad=0 latency=-1",
+   "TLOAD_CHECK side=landed_np loads=0 bad=0 latency=-1",
+   "TLOAD_STAGE_STARTS 38 image_not_ready_edges=0",
+   "TLOAD_PRODUCER FAIL",
+   "LP_LOCKSTEP FAIL MUT=0 mismatches=1 of 4507674"
+  ],
+  "tok_abs1": [
+   "TLOAD_CHECK side=     flat loads=36 bad=35 latency=11",
+   "TLOAD_CHECK side=landed_np loads=36 bad=35 latency=11",
+   "TLOAD_STAGE_STARTS 38 image_not_ready_edges=0",
+   "TLOAD_PRODUCER FAIL",
+   "LP_LOCKSTEP FAIL MUT=0 mismatches=1 of 4507674"
+  ],
+  "tok_drop17": [
+   "TLOAD_CHECK side=     flat loads=35 bad=19 latency=11",
+   "TLOAD_CHECK side=landed_np loads=36 bad=0 latency=11",
+   "TLOAD_STAGE_STARTS 38 image_not_ready_edges=0",
+   "TLOAD_PRODUCER FAIL",
+   "LP_LOCKSTEP FAIL MUT=0 mismatches=2 of 4507674"
+  ]
+ },
+ "scope": "Minimum old-head safe10 producer and landing control proof; no safe11 source reused; not a physical closure or token/logits claim.",
+ "hashes": {
+  "source_manifest.json": "13473a8317a298c2b30d30e720c809324976ce24153aad54ce60bb6f3c24ba5a",
+  "otrun.log": "88bfa01c765466f43b2678b34b2f0b6d94f629f9a2dc5928369a758e8bb5055e",
+  "tok_drop17.log": "ac8bfe59ea5bd4eda1eed8be97791af0119d161bd151ba82421003cfd2aa52d8",
+  "tok_abs1.log": "e1997be01fc237d0c29e2d22ddaf74b3abb1b10542aa6247dc4f93774e993d02",
+  "build.log": "c595942cd9a0aab59bb8aca1995c92c40c822af412d95c8f8e42fe613d081597",
+  "tok_norel.log": "65b9289aa9d3b2494de960979764ac7a6ce050a52ad47067e66b43e64474a1be",
+  "build_drop17.log": "f43fb96e41ebfe309c8dbac71978b895c491f630b46c0694ea91da1954cfac14",
+  "tok_rel.log": "1fb086bef837b9745b9be713a9d8dbc7ef811dd0244d7ae63099d63f90d07248"
+ }
+}

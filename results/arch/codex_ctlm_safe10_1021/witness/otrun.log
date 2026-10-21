@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits   628 GB (avail 553, growth 113, headroom 0, waiters 0/0 GB) load 85/128 running 41 disk 2254 GB 
+ot-run: ot-epyc7       admits   596 GB (avail 518, growth 101, headroom 0, waiters 0/0 GB) load 53/96 running 20 disk 4694 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-q-safe10-min-1021
+ot-run: ot-gold2       admits   351 GB (avail 536, growth 290, headroom 0, waiters 0/0 GB) load 48/112 running 30 disk 3076 GB 
+ot-run: ot-gold1       admits   450 GB (avail 513, growth 199, headroom 0, waiters 0/0 GB) load 164/112 running 29 disk 2770 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-q-safe10-min-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-q-safe10-min-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-627207-1792602273 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+SAFE10_MIN_PRODUCER PASS tok_rel norel_caught abs1_caught drop17_caught
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-627207-1792602273): exit 0
