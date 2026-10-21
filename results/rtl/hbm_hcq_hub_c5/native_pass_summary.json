@@ -1,0 +1,28 @@
+{
+  "c5r": {
+    "source_commit": "40ea3449e",
+    "original_census": "/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_hub_c5r-20261021-102224/routes/gate/work/orfs/native_census.json",
+    "original_sha256": "511ae4f39a04ea6670a2aabed77948c76448cfc08fb6be8b6e76031901ff844f",
+    "status": "PASS",
+    "max_dynamic_loads": 32,
+    "roots_examined": 45598,
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hbm_hc_qhub_static_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "8314aa9290e42e4f0a27e46c8cac6e2ab987fe121625b1a3e9fd9b1cab2e9c24"
+    },
+    "violation_count": 0
+  },
+  "c5s": {
+    "source_commit": "40ea3449e",
+    "original_census": "/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_hub_c5s-20261021-102225/routes/gate/work/orfs/native_census.json",
+    "original_sha256": "3712a4ff0e6bdb979a978ab278c0a9f3e601d7648c0cc6f655109492af72cfed",
+    "status": "PASS",
+    "max_dynamic_loads": 32,
+    "roots_examined": 45598,
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_hbm_hc_qhub_static_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "8314aa9290e42e4f0a27e46c8cac6e2ab987fe121625b1a3e9fd9b1cab2e9c24"
+    },
+    "violation_count": 0
+  }
+}
