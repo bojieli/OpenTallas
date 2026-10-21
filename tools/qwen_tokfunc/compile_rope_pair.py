@@ -49,6 +49,8 @@ def main():
     tt = receipt.get('tt_source')
     if not isinstance(tt, dict) or tt.get('producer_instance') != 'u_gi':
         raise SystemExit('actual selected TT source/GI qualification receipt required')
+    if tt.get('status') != 'QUALIFIED_SOURCE_LOCAL_EDGES':
+        raise SystemExit('selected TT source-local edges are missing or unqualified')
     for key in ('master', 'receipt_sha256', 'rtl_sha256', 'lp_record_sha256'):
         value = tt.get(key)
         if not isinstance(value, str) or not value.strip():

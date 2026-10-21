@@ -1,0 +1,21 @@
+{
+ "verdict": "PASS",
+ "scope": "pure malformed-input refusals; no GEN/image/simulation",
+ "cases": [
+  {
+   "status": null,
+   "refused": true,
+   "output_created": false
+  },
+  {
+   "status": "SOURCE_ONLY_NOT_SELECTED",
+   "refused": true,
+   "output_created": false
+  },
+  {
+   "status": "UNKNOWN",
+   "refused": true,
+   "output_created": false
+  }
+ ]
+}
