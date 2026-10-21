@@ -35,7 +35,7 @@ def main():
     windows=r['capacity']['windows']['worst'][:8]
     segments=[]; sites=[]; badpins=[]
     for row in s['rows']:
-        bits=row['bits']; tilewidth=48 if bits<=48 else624
+        bits=row['bits']; tilewidth=48 if bits<=48 else 624
         side=min(max(10.8,(2*tilewidth+8)/24),max(21.6,(2*tilewidth+8)*.048*1.5/.9/4))
         area=math.ceil(bits/tilewidth)*side**2*1.2
         pins=row.get('pins') or {};root=pins.get('driver');stations=row['stations']
