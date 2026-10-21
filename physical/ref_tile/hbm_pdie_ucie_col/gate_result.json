@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbm_pdie_ucie_col",
  "verdict": "FAIL",
- "generated": "2026-10-20T22:45:28-0700",
+ "generated": "2026-10-21T03:50:29-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "e580a8772071323d28def539224b0be300a028c0",
+  "start_commit": "f773580ee8676b53f0ff3be20ac1996a2044d896",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -25,8 +25,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "54e9f6b1809d471bfa9e800cf593583340c8b5775ffeaeabc4e226585174c17d",
-  "manifest_sha256": "a316217abc290bb719e2939599baac39df0582d299c5d91f1458afb033314512",
+  "archive_sha256": "488f7fe919ec8c7d3ad9eca4e31ca083a10788e032c2a5a4603ff66f4b36693a",
+  "manifest_sha256": "7988fffc3faa9cc80d60cd9592e7d1ec5037d579c8a959a71ca03a75626e3769",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.json",
@@ -17991,48 +17991,48 @@
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_col/README.md",
     "kind": "file",
-    "sha256": "09f1c2e12cedd6f91569ffe8a7d5caf80a9d46907d78b907a11e6952684c9b8c",
-    "git_blob": "c6d6541f0459ce6279c161eda7a4560c774fdf78",
+    "sha256": "3541e94232feb6ff609c17c47573b99b40d9c49a079eb21e1e09fdb3860f390d",
+    "git_blob": "baec185fbfceafd13252ecd53a0746b4cc23e26e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_col/clock.sdc",
     "kind": "file",
-    "sha256": "e75770bdc1efc570bb504c4898fe1596b11726864288fb172e909d76377e91a3",
-    "git_blob": "58be0c6b9203862d0a10bc7b70320998cd581e62",
+    "sha256": "45724559df6b9db8cde6f68dc9fecdba9bb3767bb3e3985d9c8d04d2689be3b5",
+    "git_blob": "b5ea9a7f15ee213ba791c86e448f8d398a01b15d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_col/clock_entry.sdc",
     "kind": "file",
-    "sha256": "a993a9a1c9f91081c5f213000065c0fd825a23f5c88d6dcf1d0ccd73ba7b1f01",
-    "git_blob": "2b53707b2e99be6a1148b35c327a52357092ff34",
+    "sha256": "d6d5d9686dc40b7600b538e63308fa38c633f197d6dcbc90cf436c957232e8ee",
+    "git_blob": "5e00ef6ae86b031a77bebc246c59790ec9b2674e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_col/floorplan.json",
     "kind": "file",
-    "sha256": "e516c7cd77daba0e7f2fa78c7953aa8831701046134e7af1c7f2669d6262f106",
-    "git_blob": "7dfb0a0afa3d5089a3df72267cb2eb2cbb8c60d3",
+    "sha256": "1912d4828136d8344b71763a442921d92803970c662884d37b65e8224ec5c8ec",
+    "git_blob": "024ff9e1ac5e2ad5addfd4eb3627ee20eaafc45c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_col/job.json",
     "kind": "file",
-    "sha256": "a6a5bd1a8d0bf170cd3ed6cc9543884fc1808c574ffd2aca01eb301171b5a557",
-    "git_blob": "3099c6aea98dcc4224fcef897064e837199618d9",
+    "sha256": "6f5448d2baae0d07208bf8a1b227da5a903f176360281ace48964120dd75972a",
+    "git_blob": "e9f604285bc4f8a0a27833fc57b7d7e0a926f134",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_col/kit.env",
     "kind": "file",
-    "sha256": "80417ec8ea12ef142e2e8ea92b21acfb1eb6002580eb7eb59246dcfcbba3307e",
-    "git_blob": "6ec604838ef7b2169f02c46e89dfdc4f08e4cb35",
+    "sha256": "9ce6be2d0dd69425fb1b1ab589393def38dd7a26f2106723a0adb0055f1b2f45",
+    "git_blob": "daa5ae0454095d52108d91823277ae4d6bdcb03c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18047,8 +18047,8 @@
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_col/pin_regs.json",
     "kind": "file",
-    "sha256": "cd59714c600c1e0d57913e499ceb3104a6f2bd65ea1f4f4214359e9dd74797fd",
-    "git_blob": "04d086b840ae7ff29a309b50926e6e79a63d6e16",
+    "sha256": "9b32ed539a3d58b9fd298ce9d04cbc8911d17aeef280b740b1ed8f9daa294296",
+    "git_blob": "513caa06e3695074f7f52e3a26df6367c441f770",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18095,8 +18095,8 @@
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_col/pre_cts.tcl",
     "kind": "file",
-    "sha256": "5a9411e295d8077ac931d73aa32a7e0cde35e5c8fbd79b28cdab4516199d3293",
-    "git_blob": "029ad4bfe04ec43b903e142d886b00209bb05ce4",
+    "sha256": "872612e6a4aed9d33f5d723caf1206ac2f238763ba4e5eccc1ad33ed4f6bdedb",
+    "git_blob": "a32c9dcec1d8aa3ccfe765126a3728ca35b5fdfa",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18135,16 +18135,16 @@
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_col/signoff.sdc",
     "kind": "file",
-    "sha256": "65d49863f9de00a097a7f6254cfe8c03d2ef746da5a777e1490b2e193e93195a",
-    "git_blob": "eeb758b032d90ae8b0dc1bb2f428662c60683713",
+    "sha256": "225db196d4f4b0a74f45fbeb919f77264073793e980e510991465ddb01f85828",
+    "git_blob": "fb7787e24fcbcab54329ab84dc365a6d6f0520e8",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/hbm_pdie_ucie_col/spec.json",
     "kind": "file",
-    "sha256": "e5a3792378fef5467405632ec9e49e196eea4ce215ae7797f24b0bc8b218d30c",
-    "git_blob": "9cd236b3d3383cf9fdc0af31e28ff4d5bc124b23",
+    "sha256": "eb9eb7811065df6e0914ba02cff8827477798beefbfbe6b585906f7a351bc45c",
+    "git_blob": "6af9fe8f43f376bbef88399f26cd9e193171e791",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18743,16 +18743,16 @@
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sdc",
     "kind": "file",
-    "sha256": "05455b5f2d3b1f1d0b6e396006bdc46e7a660c9f0981af19d3e46a58ffc98a68",
-    "git_blob": "56da752a62302e19bd6ba6d6b0a4276b3c3b2855",
+    "sha256": "d69d11bf1c964e684a6dd5a0703a646954368185381f011d028a7a7282e6e6bf",
+    "git_blob": "c2e4c1a47d3a014f4925f4086545a38c3e8dbf0c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv",
     "kind": "file",
-    "sha256": "ce12f180bb9ac6f41c7f68e2957d7d21bb12e596b68e7bfef06c9e902de332d7",
-    "git_blob": "8c1a23324149d18c965b72ef0f26c22e4a457e52",
+    "sha256": "669a3a5896bdab98e6f2422b73874e60b63be8838f11c0bc64e1030d89e55620",
+    "git_blob": "4002ddff0c164cfde139b83bd8f359255406191b",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18767,32 +18767,32 @@
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col_record.json",
     "kind": "file",
-    "sha256": "1c6e45dbd39bcca1be198740f722a529c8ee5f95c9b4a067e0279d5c0d5253af",
-    "git_blob": "1d949f25686530971a581512d474a0c537ac3e8e",
+    "sha256": "82d8dff6d81d96cddb1db8576b511bb3ff1def50a2893d89ccfcccc2051b5092",
+    "git_blob": "779e996c6ec0b5fb21a6e18f264d160ff164a62f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/lp/tb_ot_pdie_ucie_col.sv",
     "kind": "file",
-    "sha256": "0aeb836b2f862a357c7041a80e23a6bfefe2724506819a6414d6ba2b3ce65d88",
-    "git_blob": "084ad88bf138075ff7c0cd04fd8e70c3874f18ab",
+    "sha256": "7f9586bf135f55b816cfb1eda9958345bb8e39a2a14a0acce80746764ed29605",
+    "git_blob": "d3a4cf3d8f102d8633425247d202187281afb469",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_flat.sv",
     "kind": "file",
-    "sha256": "e85a444e655165dfd8023575e2fd15c31a19285675aaeceb0c1c158cb40f15b6",
-    "git_blob": "ff42cd8ab87a57799a6eca1ccd6ab14eb0fe7052",
+    "sha256": "9a9eb315ccab16623b025d026def11a8c3979b6f44ee438e360159289452fb1e",
+    "git_blob": "50adec4740641571b1fc54c956d54f0d70fc233c",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_w.sv",
     "kind": "file",
-    "sha256": "0105ca4688fbf475f9b8be828f6516fef4150ff6f4e6634c93b40e92d82f1c2d",
-    "git_blob": "d40ed072dabf5a63bbc7c0bcda4f8944a6f9f2f4",
+    "sha256": "73c885ef4baf7892b14cc3d60a7d60f1ef7fbc63ee91878604b63d7ddbc3dc27",
+    "git_blob": "ad7bb95ed69d7a48c0b4ae2a7c9b9dac971f5210",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18831,64 +18831,64 @@
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/witness/link_m0.log",
     "kind": "file",
-    "sha256": "c0145afab5ad5d969f83feb716884dd7265b4dca6cf147d440dd815ed30d1fa2",
-    "git_blob": "3d6a639c39df84e797faee12b246f08f79918d77",
+    "sha256": "79095f44153257b4746432b24ce05a51f60feccb64c9b0c28a1f26caf953bece",
+    "git_blob": "b9f28ad46e5632c7400e10a8ec938d58f29a0558",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/witness/link_m1.log",
     "kind": "file",
-    "sha256": "f8f045faa4ac0eb81674b7bddf8baba1782a8ffb1e3f1cfdd1220dd678ffa7fa",
-    "git_blob": "948ef8af2dd15caddc0eceb6d9282c31710a159a",
+    "sha256": "0595d7cbcdcf5144822d41450ce477789fe279c333928af12a56e52ad6845437",
+    "git_blob": "6cb5abdaeff47730cae9b2d8d250d033b2063df1",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/witness/link_m2.log",
     "kind": "file",
-    "sha256": "5e6495555d422209d65cb39ca730f5c786571060393e84e89c9ced808aedc7af",
-    "git_blob": "0fab8f3a152ec74e8367c2f278001fb89a5ec45b",
+    "sha256": "2d86d13b15884e7a779d6892c57a0b30c08e01719f086a41b3198a26962da7d8",
+    "git_blob": "1c7864378513ef0b47de679a6189eafe78128afb",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_1.log",
     "kind": "file",
-    "sha256": "e66e744d5af7a782da058403c00591c4889f8f94c6b1943ce5ce17e1d495b0a5",
-    "git_blob": "fcf02086964bc1fac46c57edbb023161e24419d6",
+    "sha256": "45261aa8ccd7ae98bf83000cff80af56d6026305a01e9f11dc62ec3269813890",
+    "git_blob": "05b5e7b39b42a8e1c9373718dc4ffe3ad8b6c7d9",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_2.log",
     "kind": "file",
-    "sha256": "a1efd6d79cf44d91cb31b7e66bb047ec4ef2bdeba6cf7cc115d88f41365d2e08",
-    "git_blob": "f162163af8882a67dbab95e6187fb703c5e0de91",
+    "sha256": "304e9e71053206ada6332174a4bade11c658cbad15982b6383181fee170d6c3e",
+    "git_blob": "00646e7b45ca005d9f7f312f7bc543e1a0c729c4",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_3.log",
     "kind": "file",
-    "sha256": "d84608f6539fd3d1cc6c5381281d768d3b1d30ca3a74c52908cacc6262a68240",
-    "git_blob": "9c41a7e6818b8740aab5570a1e52f5f1105e2a84",
+    "sha256": "945bf2698f7e43535bc284432187244c3299f2d958190bef69279ea85aae040c",
+    "git_blob": "cd073b564466242e2549c8539f8a2aa059c1fd94",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/witness/lp_m0.log",
     "kind": "file",
-    "sha256": "316d6c09fcc2b2863dac0a13dfe03228ae0876a7030103bab05d445db781f85b",
-    "git_blob": "c0ee477a3cf7151afcaae2706cf853ea13943b94",
+    "sha256": "577757aa1aeb93930cf72f0de4b9907c7c891f14579a77f8d930ad7d1f032557",
+    "git_blob": "d69da25e36416bd221d096727af20c0c44511f14",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "rtl/dsrom_sys/s81_link/ucie/witness/lp_m4.log",
     "kind": "file",
-    "sha256": "69487a83974aa18aeb1753aac7556bc2f853112425920d1b54d254c403bcfca1",
-    "git_blob": "d499bdb4b67d6de139ca515f0c0ab4d421e2d04d",
+    "sha256": "af60b7b05102d3a245607f27fc5b508ee92bfa7a25afe8434249e77886d5b6ba",
+    "git_blob": "6fd132ee75c79dca7a1e609241cf0033e4566ef9",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -38463,8 +38463,8 @@
    {
     "path": "tools/landed_parent/specs/ot_pdie_ucie_col.json",
     "kind": "file",
-    "sha256": "3341fbe2041dae5dec5748cffe88940db1d1e2c04094e61041c4486536b9bafa",
-    "git_blob": "6ebc246307b188ccf41668f0ccbcf50498d2df6a",
+    "sha256": "54bbe23bbe82c0f254c22beffd90dad52935fa22395b75ba1ec2c4d0d67e5534",
+    "git_blob": "ae483fcd391ccceb6bf075574bfb9305a252ec7e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -44999,16 +44999,16 @@
    {
     "path": "tools/ref_tile/specs/hbm_pdie_ucie_col.json",
     "kind": "file",
-    "sha256": "13bacb0c42f7e6ac67ca7eead9b3589c1cb9235bc7fdf84b78c727fe10a23fe9",
-    "git_blob": "1c9a19402fa01f1497e773426fb05174672f868a",
+    "sha256": "635a9653a60e727e260b050139406521673819c61ef3cce92f1ec63adefa6f0f",
+    "git_blob": "cb2d1405a4ab6c204abc2f8ddc537c9051370e6a",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "tools/ref_tile/specs/hbm_pdie_ucie_colb.json",
     "kind": "file",
-    "sha256": "f3903eeab4d962eecab7da3f6da9d96fbeee1c75caa29ae7a3ab524cd2ff1ca1",
-    "git_blob": "7adf2882eb4a0ffe236a39da4d849ac04dfd95e3",
+    "sha256": "1e3997d31f8fc4fbf29fff4f1814bdf876daaef50eb451699bb5d6785ac92ca0",
+    "git_blob": "027439287b6dd98e45ee7e25b99d84edfbd1ba5e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -70703,14 +70703,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 87690385,
-   "unpacked_bytes": 618233856,
+   "archive_bytes": 87692514,
+   "unpacked_bytes": 618242048,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "f4c1582ab66b5468debe9a871f09b405f6e9b4cb",
+   "origin_main": "545f816cc1ffecdad11ed5eeaf77ca5de0fb58df",
    "content_sha256": "01377d22bb4c1fab998bf16096f48d5d00e258d9f2bc500a637265378f7e8765",
    "files": [
     {
@@ -71271,51 +71271,51 @@
     "physical/qwen_die_masters/pre_ref_skew.tcl": "bf072d5f81136a555216d51947e242ef665f1e25fd5d8eb862de22eedc18d1dc",
     "physical/qwen_die_masters/repair_budget.tcl": "e4337df071032ad4326542391a7745a487b9f97975e65f1ff8cd51a5306c2692",
     "physical/qwen_die_masters/sram_edge_guard.tcl": "99c528dfa06f28b7bdde5b807832a3614949c527fa38b0fcc58071d9e5fa14a2",
-    "physical/ref_tile/hbm_pdie_ucie_col/README.md": "09f1c2e12cedd6f91569ffe8a7d5caf80a9d46907d78b907a11e6952684c9b8c",
-    "physical/ref_tile/hbm_pdie_ucie_col/clock.sdc": "e75770bdc1efc570bb504c4898fe1596b11726864288fb172e909d76377e91a3",
-    "physical/ref_tile/hbm_pdie_ucie_col/clock_entry.sdc": "a993a9a1c9f91081c5f213000065c0fd825a23f5c88d6dcf1d0ccd73ba7b1f01",
-    "physical/ref_tile/hbm_pdie_ucie_col/floorplan.json": "e516c7cd77daba0e7f2fa78c7953aa8831701046134e7af1c7f2669d6262f106",
-    "physical/ref_tile/hbm_pdie_ucie_col/kit.env": "80417ec8ea12ef142e2e8ea92b21acfb1eb6002580eb7eb59246dcfcbba3307e",
+    "physical/ref_tile/hbm_pdie_ucie_col/README.md": "3541e94232feb6ff609c17c47573b99b40d9c49a079eb21e1e09fdb3860f390d",
+    "physical/ref_tile/hbm_pdie_ucie_col/clock.sdc": "45724559df6b9db8cde6f68dc9fecdba9bb3767bb3e3985d9c8d04d2689be3b5",
+    "physical/ref_tile/hbm_pdie_ucie_col/clock_entry.sdc": "d6d5d9686dc40b7600b538e63308fa38c633f197d6dcbc90cf436c957232e8ee",
+    "physical/ref_tile/hbm_pdie_ucie_col/floorplan.json": "1912d4828136d8344b71763a442921d92803970c662884d37b65e8224ec5c8ec",
+    "physical/ref_tile/hbm_pdie_ucie_col/kit.env": "9ce6be2d0dd69425fb1b1ab589393def38dd7a26f2106723a0adb0055f1b2f45",
     "physical/ref_tile/hbm_pdie_ucie_col/pdn.tcl": "cc1481e60b5f93c63a58843e77c5305bd10927974390e15559a9756e8c3e5129",
-    "physical/ref_tile/hbm_pdie_ucie_col/pin_regs.json": "cd59714c600c1e0d57913e499ceb3104a6f2bd65ea1f4f4214359e9dd74797fd",
+    "physical/ref_tile/hbm_pdie_ucie_col/pin_regs.json": "9b32ed539a3d58b9fd298ce9d04cbc8911d17aeef280b740b1ed8f9daa294296",
     "physical/ref_tile/hbm_pdie_ucie_col/place.tcl": "29305640aa6b276b0bd3a0d9cd0fc60016eae6c3a69abe5a16268b6a17ac96a2",
     "physical/ref_tile/hbm_pdie_ucie_col/post_cts.tcl": "e9fc64c056edf91ee6d3fe2abf647c345f49e1766dfd705b63661e31b5877d39",
     "physical/ref_tile/hbm_pdie_ucie_col/post_drt.tcl": "188df976f8d5eff05cb7e3d8683884724342eca2ca6ba389c3b176fdc46c6746",
     "physical/ref_tile/hbm_pdie_ucie_col/post_fill.tcl": "e9fc64c056edf91ee6d3fe2abf647c345f49e1766dfd705b63661e31b5877d39",
     "physical/ref_tile/hbm_pdie_ucie_col/post_grt.tcl": "e9fc64c056edf91ee6d3fe2abf647c345f49e1766dfd705b63661e31b5877d39",
-    "physical/ref_tile/hbm_pdie_ucie_col/pre_cts.tcl": "5a9411e295d8077ac931d73aa32a7e0cde35e5c8fbd79b28cdab4516199d3293",
+    "physical/ref_tile/hbm_pdie_ucie_col/pre_cts.tcl": "872612e6a4aed9d33f5d723caf1206ac2f238763ba4e5eccc1ad33ed4f6bdedb",
     "physical/ref_tile/hbm_pdie_ucie_col/pre_drt.tcl": "3701ffed72d9af0be84aa02a8f2a53dcca21ba66af6269d2e17645434e937f47",
     "physical/ref_tile/hbm_pdie_ucie_col/pre_fill.tcl": "3701ffed72d9af0be84aa02a8f2a53dcca21ba66af6269d2e17645434e937f47",
     "physical/ref_tile/hbm_pdie_ucie_col/pre_grt.tcl": "47b4c87ad0a68e21c431cc9c49a99254ba5d044bc8fcb23b8ee6bbe33a8f3f2e",
     "physical/ref_tile/hbm_pdie_ucie_col/reset_landing.json": "70f468a13f58251aba95b895d7cdebd34e2e573b8cd8e356464b50e0b3b589b7",
-    "physical/ref_tile/hbm_pdie_ucie_col/signoff.sdc": "65d49863f9de00a097a7f6254cfe8c03d2ef746da5a777e1490b2e193e93195a",
-    "physical/ref_tile/hbm_pdie_ucie_col/spec.json": "e5a3792378fef5467405632ec9e49e196eea4ce215ae7797f24b0bc8b218d30c",
+    "physical/ref_tile/hbm_pdie_ucie_col/signoff.sdc": "225db196d4f4b0a74f45fbeb919f77264073793e980e510991465ddb01f85828",
+    "physical/ref_tile/hbm_pdie_ucie_col/spec.json": "eb9eb7811065df6e0914ba02cff8827477798beefbfbe6b585906f7a351bc45c",
     "rtl/common/landed_parent/ot_pl_land.sv": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
     "rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv": "b363663bcdd97d0f5b1ae3ecc6b4d7e7bfc7c19f2c087001706c8c462f3d869b",
     "rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv": "edca77413fec79a914abc3cdda80773b62d39200c45a6dd6dd2d5cee687bd0b8",
     "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv": "467abe1090a24cffad29443edd4dce5ab33eeebff98bf2bc98de7d9d19556c41",
-    "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv": "ce12f180bb9ac6f41c7f68e2957d7d21bb12e596b68e7bfef06c9e902de332d7",
-    "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col_record.json": "1c6e45dbd39bcca1be198740f722a529c8ee5f95c9b4a067e0279d5c0d5253af",
-    "rtl/dsrom_sys/s81_link/ucie/lp/tb_ot_pdie_ucie_col.sv": "0aeb836b2f862a357c7041a80e23a6bfefe2724506819a6414d6ba2b3ce65d88",
-    "rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_flat.sv": "e85a444e655165dfd8023575e2fd15c31a19285675aaeceb0c1c158cb40f15b6",
-    "rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_w.sv": "0105ca4688fbf475f9b8be828f6516fef4150ff6f4e6634c93b40e92d82f1c2d",
+    "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv": "669a3a5896bdab98e6f2422b73874e60b63be8838f11c0bc64e1030d89e55620",
+    "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col_record.json": "82d8dff6d81d96cddb1db8576b511bb3ff1def50a2893d89ccfcccc2051b5092",
+    "rtl/dsrom_sys/s81_link/ucie/lp/tb_ot_pdie_ucie_col.sv": "7f9586bf135f55b816cfb1eda9958345bb8e39a2a14a0acce80746764ed29605",
+    "rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_flat.sv": "9a9eb315ccab16623b025d026def11a8c3979b6f44ee438e360159289452fb1e",
+    "rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_w.sv": "73c885ef4baf7892b14cc3d60a7d60f1ef7fbc63ee91878604b63d7ddbc3dc27",
     "rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv": "00eb22807d706dc05f623f1092d13f219290062b0e42d98d7254c56b9bf7abc0",
     "rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv": "45bf1a3189113254ae762dd69151dafc7a7e3679a7107e18b7da936a3616569a",
     "rtl/dsrom_sys/s81_link/ucie/run_ucie_col_all.sh": "fa8537217e23df85ebad28c612e65907b16d248e0fa103b26542ca6d0273a95f",
     "rtl/dsrom_sys/s81_link/ucie/tb_pdie_ucie_col.sv": "5bc33da000153de0bcd1732a21200ef7d5ac3e87e3d886520df7340800edcfd4",
-    "rtl/dsrom_sys/s81_link/ucie/witness/link_m0.log": "c0145afab5ad5d969f83feb716884dd7265b4dca6cf147d440dd815ed30d1fa2",
-    "rtl/dsrom_sys/s81_link/ucie/witness/link_m1.log": "f8f045faa4ac0eb81674b7bddf8baba1782a8ffb1e3f1cfdd1220dd678ffa7fa",
-    "rtl/dsrom_sys/s81_link/ucie/witness/link_m2.log": "5e6495555d422209d65cb39ca730f5c786571060393e84e89c9ced808aedc7af",
-    "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_1.log": "e66e744d5af7a782da058403c00591c4889f8f94c6b1943ce5ce17e1d495b0a5",
-    "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_2.log": "a1efd6d79cf44d91cb31b7e66bb047ec4ef2bdeba6cf7cc115d88f41365d2e08",
-    "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_3.log": "d84608f6539fd3d1cc6c5381281d768d3b1d30ca3a74c52908cacc6262a68240",
-    "rtl/dsrom_sys/s81_link/ucie/witness/lp_m0.log": "316d6c09fcc2b2863dac0a13dfe03228ae0876a7030103bab05d445db781f85b",
-    "rtl/dsrom_sys/s81_link/ucie/witness/lp_m4.log": "69487a83974aa18aeb1753aac7556bc2f853112425920d1b54d254c403bcfca1",
+    "rtl/dsrom_sys/s81_link/ucie/witness/link_m0.log": "79095f44153257b4746432b24ce05a51f60feccb64c9b0c28a1f26caf953bece",
+    "rtl/dsrom_sys/s81_link/ucie/witness/link_m1.log": "0595d7cbcdcf5144822d41450ce477789fe279c333928af12a56e52ad6845437",
+    "rtl/dsrom_sys/s81_link/ucie/witness/link_m2.log": "2d86d13b15884e7a779d6892c57a0b30c08e01719f086a41b3198a26962da7d8",
+    "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_1.log": "45261aa8ccd7ae98bf83000cff80af56d6026305a01e9f11dc62ec3269813890",
+    "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_2.log": "304e9e71053206ada6332174a4bade11c658cbad15982b6383181fee170d6c3e",
+    "rtl/dsrom_sys/s81_link/ucie/witness/linkmut_3.log": "945bf2698f7e43535bc284432187244c3299f2d958190bef69279ea85aae040c",
+    "rtl/dsrom_sys/s81_link/ucie/witness/lp_m0.log": "577757aa1aeb93930cf72f0de4b9907c7c891f14579a77f8d930ad7d1f032557",
+    "rtl/dsrom_sys/s81_link/ucie/witness/lp_m4.log": "af60b7b05102d3a245607f27fc5b508ee92bfa7a25afe8434249e77886d5b6ba",
     "tools/closure_loop/ck_insertion.py": "0671fc9136f9cdb25d66b8397832a5ac1d5de76678ae10bf35d5797a3e73d53c",
     "tools/fp_margin_lint.py": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8",
     "tools/fp_margin_lint.tcl": "43e9e7f2633bd55619f7f6b5b9fd71862a310e30ff68eab2ad123e5064635cf5",
     "tools/landed_parent/lp.py": "b53cb825f02e0887c4760101e63dc9a978227fa6525e6ec63cd05c4b9b25a476",
-    "tools/landed_parent/specs/ot_pdie_ucie_col.json": "3341fbe2041dae5dec5748cffe88940db1d1e2c04094e61041c4486536b9bafa",
+    "tools/landed_parent/specs/ot_pdie_ucie_col.json": "54bbe23bbe82c0f254c22beffd90dad52935fa22395b75ba1ec2c4d0d67e5534",
     "tools/mem_compiler/asap7.py": "5d655e0acdaaf386a1c8602b9ca01dfed64250f094355547703e95a40509afe6",
     "tools/mem_compiler/s81_pma_gen.py": "fe15c8b7ae033c803846b1cf571285d3876307d9ec4fb45f0ad6c38ae0e9024e",
     "tools/mem_compiler/ucie_pma_gen.py": "c1f19bcdced7337725408812ea96a0784d63cb26b2625f3f559f09bec8646897",
@@ -71341,16 +71341,16 @@
    },
    "digest": "9c153f30ded0050546d11770518862f4e5595dd32bb6ee165e1981c1aee65bc8"
   },
-  "captured": "2026-10-20T22:32:59-0700",
+  "captured": "2026-10-21T03:37:23-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hbm_pdie_ucie_col/signoff.sdc"
   },
-  "remote_script_sha256": "f7d437765e7d268784f7f2fe740bb603991fb36fec8acd708c4b067b32b622c3",
+  "remote_script_sha256": "87ddadb1120a6c919b7a43d75b04c45d63df1596a35aa20615788c5bf3838f9a",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_pdie_ucie_col-20261020-223234",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_pdie_ucie_col-20261021-033659",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -71358,15 +71358,15 @@
   ]
  },
  "clock": {
-  "max_root_sinks": 1583,
-  "root": "port:ck_core",
+  "max_root_sinks": 1069,
+  "root": "port:ck_rx",
   "cts": true,
-  "tt_insertion_ps": 419.3,
-  "tt_spread_ps": 134.2,
-  "tt_pin_spread_ps": 73.9,
-  "ff_insertion_ps": 352.6,
-  "ff_spread_ps": 105.5,
-  "ff_pin_spread_ps": 69.0,
+  "tt_insertion_ps": 351.0,
+  "tt_spread_ps": 80.9,
+  "tt_pin_spread_ps": 56.6,
+  "ff_insertion_ps": 295.3,
+  "ff_spread_ps": 76.1,
+  "ff_pin_spread_ps": 52.5,
   "declared_clock": "multiple_cts_roots",
   "limits": {
    "sinks": 15000,
@@ -71375,69 +71375,57 @@
   },
   "clock_measurements": [
    {
-    "source": "ck_core",
+    "source": "ck_tx",
     "clock": "ot_entry_0",
     "tt": {
      "clock_family": {
-      "ot_entry_0": 1584
+      "ot_entry_0": 516
      },
      "boundary": {
-      "n": 1028,
-      "mean": 375.6,
-      "min": 344.4,
-      "max": 418.3
+      "n": 514,
+      "mean": 280.8,
+      "min": 267.7,
+      "max": 346.4
      },
      "all": {
-      "n": 1584,
-      "mean": 373.4,
-      "min": 285.1,
-      "max": 419.3
+      "n": 516,
+      "mean": 281.0,
+      "min": 267.7,
+      "max": 346.4
      },
      "errors": [],
      "macros": {
-      "n": 2,
-      "nets": 2,
+      "n": 1,
+      "nets": 1,
       "max_per_net": 1,
-      "reg_mean": 373.4,
-      "max_slew": 435.9,
-      "max_late": -0.1,
+      "reg_mean": 281.0,
+      "max_slew": 39.9,
+      "max_late": 8.9,
       "pins": [
        {
         "pin": "u_ptx/ck",
-        "arr": 373.3,
-        "slew": 435.9,
-        "late": -0.1,
-        "net": "clknet_1_0_0_ck_core"
-       },
-       {
-        "pin": "u_rmm/rclk",
-        "arr": 285.1,
-        "slew": 145.3,
-        "late": -88.3,
-        "net": "clknet_1_1_0_ck_core"
+        "arr": 289.9,
+        "slew": 39.9,
+        "late": 8.9,
+        "net": "clknet_1_0__leaf_ck_tx"
        }
       ]
      },
      "macro_libs": 3,
      "child_flop": {
       "boundary": {
-       "n": 1028,
-       "mean": 375.6,
-       "min": 344.4,
-       "max": 418.3
+       "n": 514,
+       "mean": 280.8,
+       "min": 267.7,
+       "max": 346.4
       },
       "all": {
-       "n": 1584,
-       "mean": 373.4,
-       "min": 285.1,
-       "max": 419.3
+       "n": 516,
+       "mean": 281.0,
+       "min": 267.7,
+       "max": 346.4
       },
       "refs": {
-       "ot_sram_1r1w2c_16x546_m1": {
-        "basis": "no reference: raw pin arrival",
-        "ref_ps": 0.0,
-        "pins": 1
-       },
        "ot_ucie_pma_txm": {
         "basis": "no reference: raw pin arrival",
         "ref_ps": 0.0,
@@ -71446,52 +71434,47 @@
       },
       "soft": {
        "boundary": {
-        "n": 1027,
-        "mean": 375.6,
-        "min": 344.4,
-        "max": 418.3
+        "n": 513,
+        "mean": 280.8,
+        "min": 267.7,
+        "max": 346.4
        },
        "all": {
-        "n": 1582,
-        "mean": 373.4,
-        "min": 333.1,
-        "max": 419.3
+        "n": 515,
+        "mean": 281.0,
+        "min": 267.7,
+        "max": 346.4
        }
       }
      }
     },
     "ff": {
      "boundary": {
-      "n": 1028,
-      "mean": 311.2,
-      "min": 282.2,
-      "max": 351.2
+      "n": 514,
+      "mean": 233.3,
+      "min": 220.9,
+      "max": 292.4
      },
      "all": {
-      "n": 1584,
-      "mean": 308.7,
-      "min": 247.1,
-      "max": 352.6
+      "n": 516,
+      "mean": 233.4,
+      "min": 220.9,
+      "max": 292.4
      },
      "child_flop": {
       "boundary": {
-       "n": 1028,
-       "mean": 311.2,
-       "min": 282.2,
-       "max": 351.2
+       "n": 514,
+       "mean": 233.3,
+       "min": 220.9,
+       "max": 292.4
       },
       "all": {
-       "n": 1584,
-       "mean": 308.7,
-       "min": 247.1,
-       "max": 352.6
+       "n": 516,
+       "mean": 233.4,
+       "min": 220.9,
+       "max": 292.4
       },
       "refs": {
-       "ot_sram_1r1w2c_16x546_m1": {
-        "basis": "no reference: raw pin arrival",
-        "ref_ps": 0.0,
-        "pins": 1
-       },
        "ot_ucie_pma_txm": {
         "basis": "no reference: raw pin arrival",
         "ref_ps": 0.0,
@@ -71500,40 +71483,174 @@
       },
       "soft": {
        "boundary": {
-        "n": 1027,
-        "mean": 311.2,
-        "min": 282.2,
-        "max": 351.2
+        "n": 513,
+        "mean": 233.2,
+        "min": 220.9,
+        "max": 292.4
        },
        "all": {
-        "n": 1582,
-        "mean": 308.7,
-        "min": 269.6,
-        "max": 352.6
+        "n": 515,
+        "mean": 233.4,
+        "min": 220.9,
+        "max": 292.4
        }
       }
      },
      "macros": {
-      "n": 2,
-      "nets": 2,
+      "n": 1,
+      "nets": 1,
       "max_per_net": 1,
-      "reg_mean": 308.7,
-      "max_slew": 431.2,
-      "max_late": 23.9,
+      "reg_mean": 233.4,
+      "max_slew": 33.0,
+      "max_late": 9.0,
       "pins": [
        {
         "pin": "u_ptx/ck",
-        "arr": 332.6,
-        "slew": 431.2,
-        "late": 23.9,
-        "net": "clknet_1_0_0_ck_core"
-       },
+        "arr": 242.4,
+        "slew": 33.0,
+        "late": 9.0,
+        "net": "clknet_1_0__leaf_ck_tx"
+       }
+      ]
+     }
+    }
+   },
+   {
+    "source": "ck_rx",
+    "clock": "ot_entry_1",
+    "tt": {
+     "clock_family": {
+      "ot_entry_1": 1070
+     },
+     "boundary": {
+      "n": 515,
+      "mean": 312.0,
+      "min": 290.8,
+      "max": 347.4
+     },
+     "all": {
+      "n": 1070,
+      "mean": 304.8,
+      "min": 270.1,
+      "max": 351.0
+     },
+     "errors": [],
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 304.8,
+      "max_slew": 13.4,
+      "max_late": -8.2,
+      "pins": [
        {
         "pin": "u_rmm/rclk",
-        "arr": 247.1,
-        "slew": 150.4,
-        "late": -61.6,
-        "net": "clknet_1_1_0_ck_core"
+        "arr": 296.6,
+        "slew": 13.4,
+        "late": -8.2,
+        "net": "clknet_1_0__leaf_ck_rx"
+       }
+      ]
+     },
+     "macro_libs": 3,
+     "child_flop": {
+      "boundary": {
+       "n": 515,
+       "mean": 312.0,
+       "min": 290.8,
+       "max": 347.4
+      },
+      "all": {
+       "n": 1070,
+       "mean": 304.8,
+       "min": 270.1,
+       "max": 351.0
+      },
+      "refs": {
+       "ot_sram_1r1w2c_16x546_m1": {
+        "basis": "no reference: raw pin arrival",
+        "ref_ps": 0.0,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": {
+        "n": 515,
+        "mean": 312.0,
+        "min": 290.8,
+        "max": 347.4
+       },
+       "all": {
+        "n": 1069,
+        "mean": 304.8,
+        "min": 270.1,
+        "max": 351.0
+       }
+      }
+     }
+    },
+    "ff": {
+     "boundary": {
+      "n": 515,
+      "mean": 259.0,
+      "min": 239.3,
+      "max": 291.8
+     },
+     "all": {
+      "n": 1070,
+      "mean": 252.1,
+      "min": 219.2,
+      "max": 295.3
+     },
+     "child_flop": {
+      "boundary": {
+       "n": 515,
+       "mean": 259.0,
+       "min": 239.3,
+       "max": 291.8
+      },
+      "all": {
+       "n": 1070,
+       "mean": 252.1,
+       "min": 219.2,
+       "max": 295.3
+      },
+      "refs": {
+       "ot_sram_1r1w2c_16x546_m1": {
+        "basis": "no reference: raw pin arrival",
+        "ref_ps": 0.0,
+        "pins": 1
+       }
+      },
+      "soft": {
+       "boundary": {
+        "n": 515,
+        "mean": 259.0,
+        "min": 239.3,
+        "max": 291.8
+       },
+       "all": {
+        "n": 1069,
+        "mean": 252.1,
+        "min": 219.2,
+        "max": 295.3
+       }
+      }
+     },
+     "macros": {
+      "n": 1,
+      "nets": 1,
+      "max_per_net": 1,
+      "reg_mean": 252.1,
+      "max_slew": 11.3,
+      "max_late": -10.9,
+      "pins": [
+       {
+        "pin": "u_rmm/rclk",
+        "arr": 241.2,
+        "slew": 11.3,
+        "late": -10.9,
+        "net": "clknet_1_0__leaf_ck_rx"
        }
       ]
      }
@@ -71541,44 +71658,44 @@
    },
    {
     "source": "ck_rck",
-    "clock": "ot_entry_1",
+    "clock": "ot_entry_2",
     "tt": {
      "clock_family": {
-      "ot_entry_1": 48
+      "ot_entry_2": 561
      },
      "boundary": {
       "n": 2,
-      "mean": 239.7,
-      "min": 205.2,
-      "max": 274.2
+      "mean": 417.1,
+      "min": 380.2,
+      "max": 453.9
      },
      "all": {
-      "n": 48,
-      "mean": 218.4,
-      "min": 200.2,
-      "max": 274.2
+      "n": 561,
+      "mean": 372.1,
+      "min": 349.3,
+      "max": 453.9
      },
      "errors": [],
      "macros": {
       "n": 2,
       "nets": 2,
       "max_per_net": 1,
-      "reg_mean": 218.4,
+      "reg_mean": 372.1,
       "max_slew": 339.3,
-      "max_late": 55.8,
+      "max_late": 8.1,
       "pins": [
        {
         "pin": "u_prx/pma_rck",
-        "arr": 274.2,
+        "arr": 380.2,
         "slew": 339.3,
-        "late": 55.8,
+        "late": 8.1,
         "net": "clknet_1_0_0_ck_rck"
        },
        {
         "pin": "u_rmm/wclk",
-        "arr": 194.0,
+        "arr": 300.0,
         "slew": 79.0,
-        "late": -24.4,
+        "late": -72.1,
         "net": "clknet_1_1_0_ck_rck"
        }
       ]
@@ -71587,15 +71704,15 @@
      "child_flop": {
       "boundary": {
        "n": 2,
-       "mean": 239.7,
-       "min": 205.2,
-       "max": 274.2
+       "mean": 417.1,
+       "min": 380.2,
+       "max": 453.9
       },
       "all": {
-       "n": 48,
-       "mean": 218.4,
-       "min": 200.2,
-       "max": 274.2
+       "n": 561,
+       "mean": 372.1,
+       "min": 349.3,
+       "max": 453.9
       },
       "refs": {
        "ot_ucie_pma_rxm": {
@@ -71607,15 +71724,15 @@
       "soft": {
        "boundary": {
         "n": 1,
-        "mean": 205.2,
-        "min": 205.2,
-        "max": 205.2
+        "mean": 453.9,
+        "min": 453.9,
+        "max": 453.9
        },
        "all": {
-        "n": 47,
-        "mean": 217.2,
-        "min": 200.2,
-        "max": 250.0
+        "n": 560,
+        "mean": 372.0,
+        "min": 349.3,
+        "max": 453.9
        }
       }
      }
@@ -71623,28 +71740,28 @@
     "ff": {
      "boundary": {
       "n": 2,
-      "mean": 206.4,
-      "min": 167.8,
-      "max": 244.9
+      "mean": 353.8,
+      "min": 328.2,
+      "max": 379.4
      },
      "all": {
-      "n": 48,
-      "mean": 181.6,
-      "min": 164.0,
-      "max": 244.9
+      "n": 561,
+      "mean": 308.8,
+      "min": 288.2,
+      "max": 379.4
      },
      "child_flop": {
       "boundary": {
        "n": 2,
-       "mean": 206.4,
-       "min": 167.8,
-       "max": 244.9
+       "mean": 353.8,
+       "min": 328.2,
+       "max": 379.4
       },
       "all": {
-       "n": 48,
-       "mean": 181.6,
-       "min": 164.0,
-       "max": 244.9
+       "n": 561,
+       "mean": 308.8,
+       "min": 288.2,
+       "max": 379.4
       },
       "refs": {
        "ot_ucie_pma_rxm": {
@@ -71656,15 +71773,15 @@
       "soft": {
        "boundary": {
         "n": 1,
-        "mean": 167.8,
-        "min": 167.8,
-        "max": 167.8
+        "mean": 379.4,
+        "min": 379.4,
+        "max": 379.4
        },
        "all": {
-        "n": 47,
-        "mean": 180.3,
-        "min": 164.0,
-        "max": 213.0
+        "n": 560,
+        "mean": 308.8,
+        "min": 288.2,
+        "max": 379.4
        }
       }
      },
@@ -71672,22 +71789,22 @@
       "n": 2,
       "nets": 2,
       "max_per_net": 1,
-      "reg_mean": 181.6,
+      "reg_mean": 308.8,
       "max_slew": 334.7,
-      "max_late": 63.3,
+      "max_late": 19.4,
       "pins": [
        {
         "pin": "u_prx/pma_rck",
-        "arr": 244.9,
+        "arr": 328.2,
         "slew": 334.7,
-        "late": 63.3,
+        "late": 19.4,
         "net": "clknet_1_0_0_ck_rck"
        },
        {
         "pin": "u_rmm/wclk",
-        "arr": 166.6,
+        "arr": 249.8,
         "slew": 81.1,
-        "late": -15.0,
+        "late": -59.0,
         "net": "clknet_1_1_0_ck_rck"
        }
       ]
@@ -71700,11 +71817,6 @@
     "basis": "no reference: raw pin arrival",
     "ref_ps": 0.0,
     "pins": 1
-   },
-   "ot_ucie_pma_txm": {
-    "basis": "no reference: raw pin arrival",
-    "ref_ps": 0.0,
-    "pins": 1
    }
   },
   "ff_child_flop_refs": {
@@ -71712,56 +71824,67 @@
     "basis": "no reference: raw pin arrival",
     "ref_ps": 0.0,
     "pins": 1
-   },
-   "ot_ucie_pma_txm": {
-    "basis": "no reference: raw pin arrival",
-    "ref_ps": 0.0,
-    "pins": 1
    }
   },
-  "measured_clock": "ot_entry_0",
+  "measured_clock": "ot_entry_1",
   "verdict": "WARN",
-  "text": "1,583 sinks on the largest root; measured TT insertion 419.3 ps, FF insertion 352.6 ps, TT pin-flop spread 73.9 ps, FF pin-flop spread 69.0 ps; WARN: insertion 419.3 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+  "text": "1,069 sinks on the largest root; measured TT insertion 351.0 ps, FF insertion 295.3 ps, TT pin-flop spread 56.6 ps, FF pin-flop spread 52.5 ps; WARN: insertion 351.0 ps > 300 (guidance; boundary matched by parent compensation / landing)",
   "per_root": [
    {
-    "source": "ck_core",
-    "sinks": 1584,
+    "source": "ck_tx",
+    "sinks": 516,
+    "tt_child_flop_refs": {
+     "ot_ucie_pma_txm": {
+      "basis": "no reference: raw pin arrival",
+      "ref_ps": 0.0,
+      "pins": 1
+     }
+    },
+    "tt_insertion_ps": 346.4,
+    "tt_spread_ps": 78.7,
+    "tt_pin_spread_ps": 78.7,
+    "ff_child_flop_refs": {
+     "ot_ucie_pma_txm": {
+      "basis": "no reference: raw pin arrival",
+      "ref_ps": 0.0,
+      "pins": 1
+     }
+    },
+    "ff_insertion_ps": 292.4,
+    "ff_spread_ps": 71.5,
+    "ff_pin_spread_ps": 71.5,
+    "verdict": "WARN",
+    "text": "516 sinks on the largest root; measured TT insertion 346.4 ps, FF insertion 292.4 ps, TT pin-flop spread 78.7 ps, FF pin-flop spread 71.5 ps; WARN: insertion 346.4 ps > 300 (guidance; boundary matched by parent compensation / landing)"
+   },
+   {
+    "source": "ck_rx",
+    "sinks": 1070,
     "tt_child_flop_refs": {
      "ot_sram_1r1w2c_16x546_m1": {
       "basis": "no reference: raw pin arrival",
       "ref_ps": 0.0,
       "pins": 1
-     },
-     "ot_ucie_pma_txm": {
-      "basis": "no reference: raw pin arrival",
-      "ref_ps": 0.0,
-      "pins": 1
      }
     },
-    "tt_insertion_ps": 419.3,
-    "tt_spread_ps": 134.2,
-    "tt_pin_spread_ps": 73.9,
+    "tt_insertion_ps": 351.0,
+    "tt_spread_ps": 80.9,
+    "tt_pin_spread_ps": 56.6,
     "ff_child_flop_refs": {
      "ot_sram_1r1w2c_16x546_m1": {
       "basis": "no reference: raw pin arrival",
       "ref_ps": 0.0,
       "pins": 1
-     },
-     "ot_ucie_pma_txm": {
-      "basis": "no reference: raw pin arrival",
-      "ref_ps": 0.0,
-      "pins": 1
      }
     },
-    "ff_insertion_ps": 352.6,
-    "ff_spread_ps": 105.5,
-    "ff_pin_spread_ps": 69.0,
+    "ff_insertion_ps": 295.3,
+    "ff_spread_ps": 76.1,
+    "ff_pin_spread_ps": 52.5,
     "verdict": "WARN",
-    "text": "1,584 sinks on the largest root; measured TT insertion 419.3 ps, FF insertion 352.6 ps, TT pin-flop spread 73.9 ps, FF pin-flop spread 69.0 ps; WARN: insertion 419.3 ps > 300 (guidance; boundary matched by parent compensation / landing)"
+    "text": "1,070 sinks on the largest root; measured TT insertion 351.0 ps, FF insertion 295.3 ps, TT pin-flop spread 56.6 ps, FF pin-flop spread 52.5 ps; WARN: insertion 351.0 ps > 300 (guidance; boundary matched by parent compensation / landing)"
    },
    {
     "source": "ck_rck",
-    "sinks": 48,
+    "sinks": 561,
     "tt_child_flop_refs": {
      "ot_ucie_pma_rxm": {
       "basis": "no reference: raw pin arrival",
@@ -71769,9 +71892,9 @@
       "pins": 1
      }
     },
-    "tt_insertion_ps": 274.2,
-    "tt_spread_ps": 74.0,
-    "tt_pin_spread_ps": 69.0,
+    "tt_insertion_ps": 453.9,
+    "tt_spread_ps": 104.6,
+    "tt_pin_spread_ps": 73.7,
     "ff_child_flop_refs": {
      "ot_ucie_pma_rxm": {
       "basis": "no reference: raw pin arrival",
@@ -71779,11 +71902,11 @@
       "pins": 1
      }
     },
-    "ff_insertion_ps": 244.9,
-    "ff_spread_ps": 80.9,
-    "ff_pin_spread_ps": 77.1,
-    "verdict": "PASS",
-    "text": "48 sinks on the largest root; measured TT insertion 274.2 ps, FF insertion 244.9 ps, TT pin-flop spread 69.0 ps, FF pin-flop spread 77.1 ps (spread <= 80 ps)"
+    "ff_insertion_ps": 379.4,
+    "ff_spread_ps": 91.2,
+    "ff_pin_spread_ps": 51.2,
+    "verdict": "WARN",
+    "text": "561 sinks on the largest root; measured TT insertion 453.9 ps, FF insertion 379.4 ps, TT pin-flop spread 73.7 ps, FF pin-flop spread 51.2 ps; WARN: insertion 453.9 ps > 300 (guidance; boundary matched by parent compensation / landing)"
    }
   ]
  },
@@ -71795,21 +71918,15 @@
    "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
   },
   {
-   "severity": "FAIL",
-   "check": "cross_clock",
-   "message": "1 undeclared ot_entry_1->ot_entry_0 reg->reg endpoint(s) fail SETUP at TT under signoff.sdc (inter-clock uncertainty 60.0 ps): worst -306.7 ps u_prx/q[1] -> u_rmm/w_ce_in",
-   "fix": "a direct cross-clock crossing with logic does not close in one leaf (3:4 VCO-tick window minus the distinct-entry reserve): split into one-root halves with a banked seam (S81 x34 / HBM cxdl 1018), move the crossing to an epoch bank (related_pll_dividers), or declare and price a multicycle/landing rule"
-  },
-  {
    "severity": "WARN",
    "check": "clock_rule",
-   "message": "root port:ck_core: 1,583 sinks on the largest root; measured TT insertion 419.3 ps, FF insertion 352.6 ps, TT pin-flop spread 73.9 ps, FF pin-flop spread 69.0 ps; WARN: insertion 419.3 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+   "message": "root port:ck_rx: 1,069 sinks on the largest root; measured TT insertion 351.0 ps, FF insertion 295.3 ps, TT pin-flop spread 56.6 ps, FF pin-flop spread 52.5 ps; WARN: insertion 351.0 ps > 300 (guidance; boundary matched by parent compensation / landing)",
    "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
   },
   {
    "severity": "FAIL",
    "check": "trial_route",
-   "message": "trial global route failed (GATE_GRT_RC=2); trial GRT: total overflow 0; worst layer M2 3.29% used; GRT 150 s",
+   "message": "trial global route failed (GATE_GRT_RC=2); trial GRT: total overflow 0; worst layer M2 3.34% used; GRT 168 s",
    "fix": "read the remote grt.log; preserve this failed run"
   }
  ],
@@ -71819,7 +71936,7 @@
   "kind": "tile",
   "skip_incremental_repair": true,
   "rc": "2",
-  "grt_s": 150,
+  "grt_s": 168,
   "layers": [
    {
     "layer": "M1",
@@ -71830,37 +71947,37 @@
    },
    {
     "layer": "M2",
-    "capacity": 8263043,
-    "usage": 271855,
-    "pct": 3.29,
+    "capacity": 8262516,
+    "usage": 275738,
+    "pct": 3.34,
     "overflow": 0
    },
    {
     "layer": "M3",
     "capacity": 9824966,
-    "usage": 307084,
-    "pct": 3.13,
+    "usage": 315807,
+    "pct": 3.21,
     "overflow": 0
    },
    {
     "layer": "M4",
     "capacity": 7544173,
-    "usage": 122673,
-    "pct": 1.63,
+    "usage": 140357,
+    "pct": 1.86,
     "overflow": 0
    },
    {
     "layer": "M5",
     "capacity": 7414231,
-    "usage": 151476,
-    "pct": 2.04,
+    "usage": 145004,
+    "pct": 1.96,
     "overflow": 0
    },
    {
     "layer": "M6",
     "capacity": 7523771,
-    "usage": 54186,
-    "pct": 0.72,
+    "usage": 47636,
+    "pct": 0.63,
     "overflow": 0
    },
    {
@@ -71873,7 +71990,7 @@
   ],
   "worst_layer_usage": [
    "M2",
-   3.29
+   3.34
   ],
   "hotspot": null,
   "congestion_png": null
@@ -71882,13 +71999,19 @@
   "max_sinks": 2,
   "ports": [
    {
-    "port": "rst_core",
+    "port": "rst_rck",
     "sinks": 1,
     "flops": 1,
     "macros": 0
    },
    {
-    "port": "rst_rck",
+    "port": "rst_rx",
+    "sinks": 1,
+    "flops": 1,
+    "macros": 0
+   },
+   {
+    "port": "rst_tx",
     "sinks": 1,
     "flops": 1,
     "macros": 0
