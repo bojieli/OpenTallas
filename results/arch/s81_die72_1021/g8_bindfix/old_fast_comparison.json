@@ -1,0 +1,26 @@
+{
+  "state": "ACTUAL_OUTPUT_COMPARE_PASS_BOTH_BIND_FAIL_SAME_UNREAD",
+  "original_ref": "d74894719a4b31b03ed67855728087380f063209",
+  "fast_ref": "0aab02169f816db4fcbb1e62cc77458bde3b8625",
+  "source_algorithm_only": true,
+  "byte_identical": {
+    "die.v": "8ef3b748e5b14da4446d29576702d2828a056943481c650a65b5f5b18bf84838",
+    "pads.json": "7b8f0f9a5d410c22ff684b0b1171ba5c23be4b83afd4617b13de9a3cd53152a7",
+    "straps.json": "3375c235363bc92be0d4d8302a6c58c33376f3424130d160d547a28a416c2018"
+  },
+  "strict_summaries_equal": true,
+  "sole_failure": {
+    "unread_net_bits": 2208,
+    "u_s_3S_xc_nc3312": 1104,
+    "u_s_3S_xc_nc1104": 1104
+  },
+  "R4_terminal_edge": "2026-10-21 10:52:50 PDT",
+  "fast_terminal_edge": "2026-10-21 10:38:55 PDT",
+  "approved_successor": {
+    "ref": "553741303923ab6bab36d67d17f914b1f11896c5",
+    "unit": "oth-ubuntu-2769577-1792605815",
+    "run": "/srv/opentallas-scratch/claude/codex-s81-g8-iqready-1021/die72-g8iq",
+    "state": "LIVE_STRICT_BIND",
+    "scope": "reviewed IQwrapper spare-face guard only; no physical prune/RTL/order/clock/cycle change"
+  }
+}
