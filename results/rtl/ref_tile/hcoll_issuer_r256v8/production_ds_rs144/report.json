@@ -1,0 +1,66 @@
+{
+ "schema": "opentallas.tok_func_hbm_xdie.report.v1",
+ "outroot": "/home/ubuntu/scratch/codex-hbm-issuer256-prod-1021/production_src1",
+ "reference_record": "/home/ubuntu/scratch/codex-hbm-issuer256-prod-1021/production_src1/ref_record.json",
+ "variants": {
+  "main_rows256": {
+   "grade": "RTL-functional (source assembly)",
+   "rtl_rev": "7754785b7698b0bacaf7ba0d46ecd7b5520467a3",
+   "bench_rev": "f480d998c5dd54ed2637e55f939667c8e488f902",
+   "dut_module": "ot_hfd_coll_q2_hard_v8g",
+   "defines": [
+    "+define+XDIE_AR_ITER=1",
+    "+define+XDIE_ROWS=256",
+    "+define+OT_COLL_ISSUER256_NATIVE32"
+   ],
+   "die_contract": {
+    "path": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/net/pre_relay_r14.json",
+    "sha256": "e1320424d81a2c80a659729b42f4f71c7f106714e1dd63faa85f7b6052ff9545",
+    "coll_instances": {
+     "hb_coll_SW": {
+      "master": "ot_hfd_coll_q3_hard_v8x",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+      "params": {
+       "NLINK": 2,
+       "TP": 192
+      }
+     },
+     "hb_coll_SE": {
+      "master": "ot_hfd_coll_q2_hard_v8g",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+      "params": {
+       "NLINK": 1,
+       "TP": 192
+      }
+     },
+     "hb_coll_NW": {
+      "master": "ot_hfd_coll_q2_hard_v8g",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+      "params": {
+       "NLINK": 1,
+       "TP": 192
+      }
+     },
+     "hb_coll_NE": {
+      "master": "ot_hfd_coll_q2_hard_v8g",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+      "params": {
+       "NLINK": 1,
+       "TP": 192
+      }
+     }
+    }
+   },
+   "files_by_role": {
+    "bench": 7,
+    "die": 70,
+    "include": 8
+   },
+   "host": "ot-gold2",
+   "cases": {},
+   "composites": {},
+   "successor_files": [],
+   "status": "RUNNING"
+  }
+ }
+}
