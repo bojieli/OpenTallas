@@ -16,3 +16,7 @@ SAFE review, carried forward from ELEM-XFV/VS before the live gate, with current
 8. Schedule: no new protocol or arithmetic edge; existing VS/ENG cyclewise goldens pass, including ENG159/73.
 
 Physical status at receipt creation: RUNNING, not adopted and not CLOSED. Inspect the actual terminal gate result and PNGs before submission.
+
+Terminal r5 gate: WARN with no FAIL, actual native32/0/0, trial GRT overflow0 (worst M2 usage41.79%), depth538.4ps/reach167.7um; measured pin-flop TT/FF spreads56.4/55.9ps. Placement-RC diagnostics: setup+21.7ps/hold+34.7ps, not routed signoff. Actual geometry2859pins, all track-accessible/no outside or missing rectangles. Synthesized std14475um2+macros8550um2; effective placeable utilization43%.
+
+Both actual floorplan/density PNGs viewed: eight macros in2columns x4rows, no overlap, full standard-cell bands between/around macros; clock pin on SW face, geometry and density consistent with the captured gate. Existing clock-count/insertion and boundary-depth guidance remain explicit WARNs; no new waiver or constraint edit. Noncritical list check and prior failed-route count0 permit direct submission; no REVIEW.json is created.
