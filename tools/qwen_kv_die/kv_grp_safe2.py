@@ -32,6 +32,7 @@ landing stage (the per-leaf copies are cleared by it; same release edges).
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -374,6 +375,9 @@ DS_MODULE_SHA256 = {
     'qkd_kvs_grp_h': 'cef8f6ad6ad6d1b4ae94ee8dad1404a5fce9f6a00a2f272993b16b16b45249d4',
 }
 MASTERS = dict(grp='qkd_kvs_grp_s2', grp_h='qkd_kvs_grp_h_s2')
+# QKC-GRP 10-21 OT_KV_GRP_S6C=1: the same private ABI / parent connections bind the CLOSED s6c successors (same ports)
+if os.environ.get('OT_KV_GRP_S6C', '0') == '1':
+    MASTERS = dict(grp='qkd_kvs_grp_s6c', grp_h='qkd_kvs_grp_h_s6c')
 
 
 def apply_tiles(tiles, emit):
@@ -426,7 +430,7 @@ def parent_connections(text):
         counts[master] += 1
         return f'  {master} {instance} (' + ', '.join(f'.{p}({e})' for p, e in conns.items()) + ');'
 
-    result = re.sub(r'^  (qkd_kvs_grp(?:_h)?_s2) (slg_\w+) \((.*)\);$', change, text, flags=re.M)
+    result = re.sub(r'^  (' + '|'.join(MASTERS.values()) + r') (slg_\w+) \((.*)\);$', change, text, flags=re.M)
     if counts != {MASTERS['grp']: 28, MASTERS['grp_h']: 4}:
         raise ValueError(f'kv_grp_safe2: parent replica counts changed: {counts}')
     return result
