@@ -5403,7 +5403,7 @@ def _pin_pos(v, m, strict=False):
         if (inst, port) in extra:
             return extra[(inst, port)]
         i = by[inst]
-        base = re.sub(r'\[.*\]$', '', port.lstrip('*'))
+        base = re.sub(r'\[.*\]$', '', port.lstrip('*')) if strict else port.lstrip('*')
         c = cen.get(i.master, {}).get(base)
         if c is None:
             if strict:
