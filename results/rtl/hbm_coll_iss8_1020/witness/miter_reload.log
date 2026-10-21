@@ -1,14 +1,14 @@
-ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/collect10-iss/src
-ot-run: ot-epyc6       skipped: Command '['ssh', '-o', 'ConnectTimeout=8', '-o', 'BatchMode=yes', 'ot-epyc6', 't
-ot-run: ot-epyc7       admits   293 GB (avail 306, growth 101, headroom 0, waiters 0/0 GB) load 63/96 running 32 disk 4727 GB 
-ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/collect10-iss/src
-ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/collect10-iss/src
-ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/collect10-iss/src
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/collect10-iss/src2
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/collect10-iss/src2
+ot-run: ot-epyc7       admits   326 GB (avail 329, growth 101, headroom 0, waiters 0/0 GB) load 43/96 running 25 disk 4721 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/collect10-iss/src2
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/collect10-iss/src2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/collect10-iss/src2
 ot-run: -> ot-epyc7
-ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2205244-1792590010 after 0 s
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2369738-1792592647 after 1 s
 LEAF_MISMATCH t=150350000 busy 1/1 fault 0/0 uop_v 1/1 pc 54/116 d1_eq 1
 LEAF_MISMATCH t=150360000 busy 1/1 fault 0/0 uop_v 1/1 pc 47/47 d1_eq 0
 LEAF_MISMATCH t=150370000 busy 1/1 fault 0/0 uop_v 1/1 pc 54/54 d1_eq 1
 ISSUER_V8R128_MITER FAIL mismatches140840 leaf140840 checks751087
 ISSUER_V8R128_MUTANT_REJECTED reload
-ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2205244-1792590010): exit 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2369738-1792592647): exit 1
