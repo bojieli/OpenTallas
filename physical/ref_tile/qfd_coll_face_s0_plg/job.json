@@ -45,7 +45,7 @@
      "verilator"
     ],
     "pass_regex": "^COLL_STATIC_FACE_BENCH PASS MUT=0$",
-    "pass_witness": "results/rtl/qw_collio_1020/bench5/s0_m0.log",
+    "pass_witness": "results/rtl/qw_collio_1020/bench8/bench8_s0_m0.log",
     "min_count_regex": "^MUT=0 PHI=1 COLL_FACE_BENCH .* got (\\d+) "
    },
    {
@@ -58,7 +58,7 @@
      "verilator"
     ],
     "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=1$",
-    "fail_witness": "results/rtl/qw_collio_1020/bench5/s0_m1.log"
+    "fail_witness": "results/rtl/qw_collio_1020/bench8/bench8_s0_m1.log"
    },
    {
     "name": "coll_face_mut_cdc_latency",
@@ -70,7 +70,7 @@
      "verilator"
     ],
     "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=2$",
-    "fail_witness": "results/rtl/qw_collio_1020/bench5/s0_m2.log"
+    "fail_witness": "results/rtl/qw_collio_1020/bench8/bench8_s0_m2.log"
    },
    {
     "name": "coll_face_mut_phy_long",
@@ -82,7 +82,7 @@
      "verilator"
     ],
     "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=3$",
-    "fail_witness": "results/rtl/qw_collio_1020/bench5/s0_m3.log"
+    "fail_witness": "results/rtl/qw_collio_1020/bench8/bench8_s0_m3.log"
    },
    {
     "name": "coll_face_mut_bank_hit",
@@ -94,7 +94,7 @@
      "verilator"
     ],
     "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=4$",
-    "fail_witness": "results/rtl/qw_collio_1020/bench5/s0_m4.log"
+    "fail_witness": "results/rtl/qw_collio_1020/bench8/bench8_s0_m4.log"
    },
    {
     "name": "coll_face_mut_ring_early",
@@ -106,7 +106,7 @@
      "verilator"
     ],
     "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=5$",
-    "fail_witness": "results/rtl/qw_collio_1020/bench5/s0_m5.log"
+    "fail_witness": "results/rtl/qw_collio_1020/bench8/bench8_s0_m5.log"
    },
    {
     "name": "coll_face_mut_land_unlanded",
@@ -118,7 +118,7 @@
      "verilator"
     ],
     "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=6$",
-    "fail_witness": "results/rtl/qw_collio_1020/bench5/s0_m6.log"
+    "fail_witness": "results/rtl/qw_collio_1020/bench8/bench8_s0_m6.log"
    },
    {
     "name": "coll_face_mut_phyland_short",
@@ -130,7 +130,7 @@
      "verilator"
     ],
     "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=7$",
-    "fail_witness": "results/rtl/qw_collio_1020/bench5/s0_m7.log"
+    "fail_witness": "results/rtl/qw_collio_1020/bench8/bench8_s0_m7.log"
    }
   ],
   "calibrate": {
