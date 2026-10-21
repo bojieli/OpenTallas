@@ -1,0 +1,1124 @@
+{
+  "job": "dscoll_lane_e_s8nq-s8nq-67cd98218",
+  "source": "67cd98218befb566e4b0d9d5d107b044410880dc",
+  "verdict": "NEEDS_RTL",
+  "tt_ps": 40.71,
+  "ff_ps": 4.82,
+  "drc_count": 55,
+  "report_sha256": "edfe7e05128fca8ed9562c653f3a4ef8c75d02f86defd5a0347c33feac365833",
+  "by_type": {
+    "Short": 40,
+    "Metal Spacing": 15
+  },
+  "by_layer": {
+    "M4": 55
+  },
+  "markers": [
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[4\\].g_depth\\[0\\].g_256.u_m net:net31265",
+      "bbox_um": [
+        77.701,
+        246.048,
+        77.712,
+        246.072
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[4\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 43.2,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[2\\].g_depth\\[1\\].g_256.u_m net:net31920",
+      "bbox_um": [
+        164.005,
+        244.752,
+        164.112,
+        244.776
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[2\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 129.6,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1255
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[6\\].g_depth\\[0\\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.raw\\[0\\]\\[415\\]",
+      "bbox_um": [
+        164.005,
+        373.584,
+        164.112,
+        373.608
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[6\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 129.6,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1255
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[2\\].g_depth\\[1\\].g_256.u_m net:net26626",
+      "bbox_um": [
+        164.053,
+        241.056,
+        164.112,
+        241.08
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[2\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 129.6,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1015
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[6\\].g_depth\\[0\\].g_256.u_m net:clknet_4_5_0_ck",
+      "bbox_um": [
+        164.053,
+        378.672,
+        164.112,
+        378.696
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[6\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 129.6,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1015
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[2\\].g_depth\\[1\\].g_256.u_m net:clknet_5_9_0_ck",
+      "bbox_um": [
+        164.101,
+        244.8,
+        164.112,
+        244.824
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[2\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 129.6,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[6\\].g_depth\\[0\\].g_256.u_m net:clknet_4_4_0_ck",
+      "bbox_um": [
+        164.101,
+        358.944,
+        164.112,
+        358.968
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[6\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 129.6,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[6\\].g_depth\\[0\\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.raw\\[0\\]\\[414\\]",
+      "bbox_um": [
+        164.101,
+        371.904,
+        164.112,
+        371.928
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[6\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 129.6,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m net:net29707",
+      "bbox_um": [
+        216.072,
+        73.344,
+        216.083,
+        73.368
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 43.2,
+        "orient": "S"
+      },
+      "macro_edge": "W",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m net:net62449",
+      "bbox_um": [
+        216.072,
+        149.76,
+        216.083,
+        149.784
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "W",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[4\\].g_depth\\[1\\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.wdata\\[276\\]",
+      "bbox_um": [
+        250.453,
+        356.352,
+        250.512,
+        356.376
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[4\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1015
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.raw\\[0\\]\\[373\\]",
+      "bbox_um": [
+        250.453,
+        465.84,
+        250.512,
+        465.864
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 432.0,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1015
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m net:net26461",
+      "bbox_um": [
+        250.501,
+        73.296,
+        250.512,
+        73.32
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 43.2,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[4\\].g_depth\\[1\\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.wdata\\[269\\]",
+      "bbox_um": [
+        250.501,
+        355.68,
+        250.512,
+        355.704
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[4\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m net:net33677",
+      "bbox_um": [
+        250.501,
+        461.952,
+        250.512,
+        461.976
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 432.0,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m net:net28146",
+      "bbox_um": [
+        388.872,
+        164.448,
+        388.931,
+        164.472
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "W",
+      "marker_centre_distance_to_edge_um": 0.1015
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[7\\].g_depth\\[1\\].g_256.u_m net:u_ot_pr_core.u.u_ep.a_in\\[462\\]",
+      "bbox_um": [
+        423.157,
+        365.04,
+        423.312,
+        365.064
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[7\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1495
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m net:net28155",
+      "bbox_um": [
+        423.205,
+        140.544,
+        423.312,
+        140.568
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1255
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[4\\].g_depth\\[0\\].g_256.u_m net:net47548",
+      "bbox_um": [
+        423.205,
+        245.664,
+        423.312,
+        245.688
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[4\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1255
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[7\\].g_depth\\[1\\].g_256.u_m net:u_ot_pr_core.u.u_ep.a_in\\[461\\]",
+      "bbox_um": [
+        423.205,
+        356.784,
+        423.312,
+        356.808
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[7\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1255
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m net:net28317",
+      "bbox_um": [
+        423.253,
+        155.616,
+        423.312,
+        155.64
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1015
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m net:net28268",
+      "bbox_um": [
+        423.253,
+        159.456,
+        423.312,
+        159.48
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1015
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[0\\].g_256.u_m net:net28278",
+      "bbox_um": [
+        423.301,
+        74.928,
+        423.312,
+        74.952
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 43.2,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m net:net28278",
+      "bbox_um": [
+        423.301,
+        160.608,
+        423.312,
+        160.632
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m net:net28232",
+      "bbox_um": [
+        423.301,
+        161.664,
+        423.312,
+        161.688
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[4\\].g_depth\\[0\\].g_256.u_m net:net45618",
+      "bbox_um": [
+        423.301,
+        245.712,
+        423.312,
+        245.736
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[4\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[7\\].g_depth\\[1\\].g_256.u_m net:u_ot_pr_core.u.u_ep.a_in\\[459\\]",
+      "bbox_um": [
+        423.301,
+        357.12,
+        423.312,
+        357.144
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[7\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[8\\].g_depth\\[1\\].g_256.u_m net:net27626",
+      "bbox_um": [
+        423.301,
+        530.16,
+        423.312,
+        530.184
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[8\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 518.4,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.raw\\[1\\]\\[8\\]",
+      "bbox_um": [
+        595.957,
+        157.488,
+        596.112,
+        157.512
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1495
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m net:net28080",
+      "bbox_um": [
+        595.957,
+        444.288,
+        596.112,
+        444.312
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 432.0,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1495
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m net:net31005",
+      "bbox_um": [
+        596.005,
+        147.696,
+        596.112,
+        147.72
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1255
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m net:net31009",
+      "bbox_um": [
+        596.053,
+        74.976,
+        596.112,
+        75.0
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 43.2,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1015
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m net:net31009",
+      "bbox_um": [
+        596.053,
+        146.592,
+        596.112,
+        146.616
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1015
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m net:net28064",
+      "bbox_um": [
+        596.053,
+        449.712,
+        596.112,
+        449.736
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 432.0,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.1015
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m net:net31005",
+      "bbox_um": [
+        596.101,
+        74.016,
+        596.112,
+        74.04
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 43.2,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m net:net31011",
+      "bbox_um": [
+        596.101,
+        145.2,
+        596.112,
+        145.224
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[1\\].g_depth\\[0\\].g_256.u_m net:net61622",
+      "bbox_um": [
+        596.101,
+        220.368,
+        596.112,
+        220.392
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[1\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[1\\].g_depth\\[0\\].g_256.u_m net:net61710",
+      "bbox_um": [
+        596.101,
+        244.512,
+        596.112,
+        244.536
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[1\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m net:net28052",
+      "bbox_um": [
+        596.101,
+        442.752,
+        596.112,
+        442.776
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 432.0,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Short",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[1\\].g_256.u_m net:net28066",
+      "bbox_um": [
+        596.101,
+        529.104,
+        596.112,
+        529.128
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 518.4,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0775
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[4\\].g_depth\\[0\\].g_256.u_m net:net26844",
+      "bbox_um": [
+        77.712,
+        246.192,
+        77.749,
+        246.216
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[4\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 43.2,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m net:net26450",
+      "bbox_um": [
+        250.512,
+        73.44,
+        250.549,
+        73.464
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 43.2,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m net:net26461",
+      "bbox_um": [
+        250.512,
+        159.696,
+        250.549,
+        159.72
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[4\\].g_depth\\[1\\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.wdata\\[268\\]",
+      "bbox_um": [
+        250.512,
+        356.688,
+        250.549,
+        356.712
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[4\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m net:net31264",
+      "bbox_um": [
+        250.512,
+        461.568,
+        250.549,
+        461.592
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 216.0,
+        "y_um": 432.0,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m net:net28199",
+      "bbox_um": [
+        423.312,
+        154.224,
+        423.349,
+        154.248
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m net:net28198",
+      "bbox_um": [
+        423.312,
+        159.984,
+        423.349,
+        160.008
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[3\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[4\\].g_depth\\[0\\].g_256.u_m net:net34052",
+      "bbox_um": [
+        423.312,
+        248.16,
+        423.349,
+        248.184
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[4\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[7\\].g_depth\\[1\\].g_256.u_m net:u_ot_pr_core.u.u_ep.a_in\\[458\\]",
+      "bbox_um": [
+        423.312,
+        381.312,
+        423.349,
+        381.336
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[7\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 388.8,
+        "y_um": 345.6,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m net:net31002",
+      "bbox_um": [
+        596.112,
+        72.528,
+        596.149,
+        72.552
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 43.2,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m net:net31002",
+      "bbox_um": [
+        596.112,
+        150.432,
+        596.149,
+        150.456
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m net:net31002",
+      "bbox_um": [
+        596.112,
+        157.344,
+        596.149,
+        157.368
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 129.6,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[1\\].g_depth\\[0\\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.raw\\[0\\]\\[126\\]",
+      "bbox_um": [
+        596.112,
+        241.296,
+        596.149,
+        241.32
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[1\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 216.0,
+        "orient": "S"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m net:net28020",
+      "bbox_um": [
+        596.112,
+        451.632,
+        596.149,
+        451.656
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[0\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 432.0,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    },
+    {
+      "type": "Metal Spacing",
+      "source": "inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[1\\].g_256.u_m net:net28080",
+      "bbox_um": [
+        596.112,
+        529.008,
+        596.149,
+        529.032
+      ],
+      "layer": "M4",
+      "macro_placement": {
+        "instance": "u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\\[5\\].g_depth\\[1\\].g_256.u_m",
+        "master": "ot_sram_1r1w2c_256x64_m1",
+        "x_um": 561.6,
+        "y_um": 518.4,
+        "orient": "FN"
+      },
+      "macro_edge": "E",
+      "marker_centre_distance_to_edge_um": 0.0535
+    }
+  ],
+  "all_marker_centres_within_um_of_macro_vertical_edge": 0.1495,
+  "by_macro_edge": {
+    "E": 52,
+    "W": 3
+  },
+  "macro_def_sha256": "6e0e2f014ca30fd9d2afc1fcec90a0400cecb800d65398d807c8d0db91d542e7"
+}

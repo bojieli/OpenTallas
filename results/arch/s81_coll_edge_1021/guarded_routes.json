@@ -1,0 +1,46 @@
+{
+  "collected": "2026-10-21 12:00 PDT",
+  "selected_available_view": "UNCHANGED",
+  "routes": [
+    {
+      "job": "dscoll_lane_e_s8ng-s8ng-ba18b20b1",
+      "status_at_collection": "RUNNING",
+      "stage_idx": 10,
+      "source": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "host": "ot-epyc9",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_e_s8ng-s8ng-ba18b20b1",
+      "guarded_kit": "physical/ref_tile/dscoll_lane_e_s8ng/kit.env",
+      "state_sha256": "5f44c2869929d2853f487cf89475afc5d6a00196ccf707376cb6c9c1cb625e19"
+    },
+    {
+      "job": "dscoll_lane_e_s8nh-s8nh-0995aeac6",
+      "status_at_collection": "RUNNING",
+      "stage_idx": 10,
+      "source": "0995aeac6dac63055df01c84aa6983e219cacc49",
+      "host": "ot-epyc5",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_e_s8nh-s8nh-0995aeac6",
+      "guarded_kit": "physical/ref_tile/dscoll_lane_e_s8nh/kit.env",
+      "state_sha256": "f83f20ba9562456287aca479976b8115c4f7550b3518733b5089d4620d3dc8d7"
+    },
+    {
+      "job": "dscoll_lane_w_s8ng-s8ng-8151c3923",
+      "status_at_collection": "RUNNING",
+      "stage_idx": 10,
+      "source": "8151c3923411e4164b55eafb4ceefde005066a63",
+      "host": "ot-epyc5",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_w_s8ng-s8ng-8151c3923",
+      "guarded_kit": "physical/ref_tile/dscoll_lane_w_s8ng/kit.env",
+      "state_sha256": "68ceb593973b64b191d27814e2e57836d2c38418fe4c14109b813641ba4d328e"
+    },
+    {
+      "job": "dscoll_lane_w_s8nh-s8nh-4c61deea3",
+      "status_at_collection": "RUNNING",
+      "stage_idx": 10,
+      "source": "4c61deea385221b5abde33452b5f422def9a1c20",
+      "host": "ot-epyc5",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_w_s8nh-s8nh-4c61deea3",
+      "guarded_kit": "physical/ref_tile/dscoll_lane_w_s8nh/kit.env",
+      "state_sha256": "0adb87c6490b6355dd1c87ea6b13f669fe054743161d955e1f077ea0fbe5d507"
+    }
+  ]
+}

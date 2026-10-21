@@ -1,0 +1,165 @@
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[4\].g_depth\[0\].g_256.u_m net:net31265
+	bbox = (77.7010, 246.0480) - (77.7120, 246.0720) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[2\].g_depth\[1\].g_256.u_m net:net31920
+	bbox = (164.0050, 244.7520) - (164.1120, 244.7760) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[6\].g_depth\[0\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.raw\[0\]\[415\]
+	bbox = (164.0050, 373.5840) - (164.1120, 373.6080) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[2\].g_depth\[1\].g_256.u_m net:net26626
+	bbox = (164.0530, 241.0560) - (164.1120, 241.0800) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[6\].g_depth\[0\].g_256.u_m net:clknet_4_5_0_ck
+	bbox = (164.0530, 378.6720) - (164.1120, 378.6960) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[2\].g_depth\[1\].g_256.u_m net:clknet_5_9_0_ck
+	bbox = (164.1010, 244.8000) - (164.1120, 244.8240) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[6\].g_depth\[0\].g_256.u_m net:clknet_4_4_0_ck
+	bbox = (164.1010, 358.9440) - (164.1120, 358.9680) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[6\].g_depth\[0\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.raw\[0\]\[414\]
+	bbox = (164.1010, 371.9040) - (164.1120, 371.9280) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[0\].g_depth\[0\].g_256.u_m net:net29707
+	bbox = (216.0720, 73.3440) - (216.0830, 73.3680) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[0\].g_depth\[1\].g_256.u_m net:net62449
+	bbox = (216.0720, 149.7600) - (216.0830, 149.7840) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[4\].g_depth\[1\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.wdata\[276\]
+	bbox = (250.4530, 356.3520) - (250.5120, 356.3760) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[5\].g_depth\[0\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.raw\[0\]\[373\]
+	bbox = (250.4530, 465.8400) - (250.5120, 465.8640) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[0\].g_depth\[0\].g_256.u_m net:net26461
+	bbox = (250.5010, 73.2960) - (250.5120, 73.3200) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[4\].g_depth\[1\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.wdata\[269\]
+	bbox = (250.5010, 355.6800) - (250.5120, 355.7040) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[5\].g_depth\[0\].g_256.u_m net:net33677
+	bbox = (250.5010, 461.9520) - (250.5120, 461.9760) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[3\].g_depth\[1\].g_256.u_m net:net28146
+	bbox = (388.8720, 164.4480) - (388.9310, 164.4720) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[7\].g_depth\[1\].g_256.u_m net:u_ot_pr_core.u.u_ep.a_in\[462\]
+	bbox = (423.1570, 365.0400) - (423.3120, 365.0640) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[3\].g_depth\[1\].g_256.u_m net:net28155
+	bbox = (423.2050, 140.5440) - (423.3120, 140.5680) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[4\].g_depth\[0\].g_256.u_m net:net47548
+	bbox = (423.2050, 245.6640) - (423.3120, 245.6880) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[7\].g_depth\[1\].g_256.u_m net:u_ot_pr_core.u.u_ep.a_in\[461\]
+	bbox = (423.2050, 356.7840) - (423.3120, 356.8080) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[3\].g_depth\[1\].g_256.u_m net:net28317
+	bbox = (423.2530, 155.6160) - (423.3120, 155.6400) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[3\].g_depth\[1\].g_256.u_m net:net28268
+	bbox = (423.2530, 159.4560) - (423.3120, 159.4800) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[3\].g_depth\[0\].g_256.u_m net:net28278
+	bbox = (423.3010, 74.9280) - (423.3120, 74.9520) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[3\].g_depth\[1\].g_256.u_m net:net28278
+	bbox = (423.3010, 160.6080) - (423.3120, 160.6320) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[3\].g_depth\[1\].g_256.u_m net:net28232
+	bbox = (423.3010, 161.6640) - (423.3120, 161.6880) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[4\].g_depth\[0\].g_256.u_m net:net45618
+	bbox = (423.3010, 245.7120) - (423.3120, 245.7360) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[7\].g_depth\[1\].g_256.u_m net:u_ot_pr_core.u.u_ep.a_in\[459\]
+	bbox = (423.3010, 357.1200) - (423.3120, 357.1440) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[8\].g_depth\[1\].g_256.u_m net:net27626
+	bbox = (423.3010, 530.1600) - (423.3120, 530.1840) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[0\].g_depth\[1\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.raw\[1\]\[8\]
+	bbox = (595.9570, 157.4880) - (596.1120, 157.5120) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[5\].g_depth\[0\].g_256.u_m net:net28080
+	bbox = (595.9570, 444.2880) - (596.1120, 444.3120) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[0\].g_depth\[1\].g_256.u_m net:net31005
+	bbox = (596.0050, 147.6960) - (596.1120, 147.7200) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[0\].g_depth\[0\].g_256.u_m net:net31009
+	bbox = (596.0530, 74.9760) - (596.1120, 75.0000) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[0\].g_depth\[1\].g_256.u_m net:net31009
+	bbox = (596.0530, 146.5920) - (596.1120, 146.6160) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[5\].g_depth\[0\].g_256.u_m net:net28064
+	bbox = (596.0530, 449.7120) - (596.1120, 449.7360) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[0\].g_depth\[0\].g_256.u_m net:net31005
+	bbox = (596.1010, 74.0160) - (596.1120, 74.0400) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[0\].g_depth\[1\].g_256.u_m net:net31011
+	bbox = (596.1010, 145.2000) - (596.1120, 145.2240) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[1\].g_depth\[0\].g_256.u_m net:net61622
+	bbox = (596.1010, 220.3680) - (596.1120, 220.3920) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[1\].g_depth\[0\].g_256.u_m net:net61710
+	bbox = (596.1010, 244.5120) - (596.1120, 244.5360) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[5\].g_depth\[0\].g_256.u_m net:net28052
+	bbox = (596.1010, 442.7520) - (596.1120, 442.7760) on Layer M4
+violation type: Short
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[5\].g_depth\[1\].g_256.u_m net:net28066
+	bbox = (596.1010, 529.1040) - (596.1120, 529.1280) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[4\].g_depth\[0\].g_256.u_m net:net26844
+	bbox = (77.7120, 246.1920) - (77.7490, 246.2160) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[0\].g_depth\[0\].g_256.u_m net:net26450
+	bbox = (250.5120, 73.4400) - (250.5490, 73.4640) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[0\].g_depth\[1\].g_256.u_m net:net26461
+	bbox = (250.5120, 159.6960) - (250.5490, 159.7200) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[4\].g_depth\[1\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.wdata\[268\]
+	bbox = (250.5120, 356.6880) - (250.5490, 356.7120) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_fifo_safe.u_m.g_bank\[5\].g_depth\[0\].g_256.u_m net:net31264
+	bbox = (250.5120, 461.5680) - (250.5490, 461.5920) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[3\].g_depth\[1\].g_256.u_m net:net28199
+	bbox = (423.3120, 154.2240) - (423.3490, 154.2480) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[3\].g_depth\[1\].g_256.u_m net:net28198
+	bbox = (423.3120, 159.9840) - (423.3490, 160.0080) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[4\].g_depth\[0\].g_256.u_m net:net34052
+	bbox = (423.3120, 248.1600) - (423.3490, 248.1840) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[7\].g_depth\[1\].g_256.u_m net:u_ot_pr_core.u.u_ep.a_in\[458\]
+	bbox = (423.3120, 381.3120) - (423.3490, 381.3360) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[0\].g_depth\[0\].g_256.u_m net:net31002
+	bbox = (596.1120, 72.5280) - (596.1490, 72.5520) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[0\].g_depth\[1\].g_256.u_m net:net31002
+	bbox = (596.1120, 150.4320) - (596.1490, 150.4560) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[0\].g_depth\[1\].g_256.u_m net:net31002
+	bbox = (596.1120, 157.3440) - (596.1490, 157.3680) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[1\].g_depth\[0\].g_256.u_m net:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.raw\[0\]\[126\]
+	bbox = (596.1120, 241.2960) - (596.1490, 241.3200) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[5\].g_depth\[0\].g_256.u_m net:net28020
+	bbox = (596.1120, 451.6320) - (596.1490, 451.6560) on Layer M4
+violation type: Metal Spacing
+	srcs: inst:u_ot_pr_core.u.u_ep.g_rb_safe.u_m.g_bank\[5\].g_depth\[1\].g_256.u_m net:net28080
+	bbox = (596.1120, 529.0080) - (596.1490, 529.0320) on Layer M4
