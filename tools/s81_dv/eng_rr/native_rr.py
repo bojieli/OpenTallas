@@ -17,7 +17,7 @@ c=(w/'config.mk').read_text();nickname='opentallas_dsdv_eng_rr_asap7_native'
 # Retain the actual lookup's ORFS synthesis settings and exact standard-cell TT/FF library selection.
 overrides={'DESIGN_NICKNAME':nickname,'DESIGN_NAME':'dsdv_eng_rr','VERILOG_FILES':' '.join('/src/'+x for x in f),
  'VERILOG_DEFINES':'-DSYNTHESIS -DOT_ENGRAM_CRCMAT -DOT_S81ENG_RR_N32','VERILOG_TOP_PARAMS':'',
- 'DIE_AREA':'0 0 1296 1209.6','CORE_AREA':'2.16 2.16 1293.84 1207.44','NUM_CORES':'8',
+ 'SDC_FILE':'/work/constraint.sdc','DIE_AREA':'0 0 1296 1209.6','CORE_AREA':'2.16 2.16 1293.84 1207.44','NUM_CORES':'8',
  'WC_LIB_FILES':'$(WC_NLDM_LIB_FILES) '+' '.join('/src/'+m+'_tt.lib' for m in macros),
  'BC_LIB_FILES':'$(BC_NLDM_LIB_FILES) '+' '.join('/src/'+m+'_ff.lib' for m in macros),
  'ADDITIONAL_LIBS':' '.join('/src/'+m+'_tt.lib' for m in macros),
