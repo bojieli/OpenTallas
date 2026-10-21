@@ -3726,20 +3726,31 @@ def _relays(m):
                     if st_.get('offmax') and abs(dx_) + abs(dy_) > st_['offmax']:
                         continue      # Q-KVSYS-HOP retry: a spot stays near its path point (no stranded off-path hop)
                     qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
-                    pin_a = (qx, qy + fh / 2)
+                    # Exact S6C output launches may travel west. A real MY
+                    # standard row captures on E and launches on W; forcing
+                    # R0 spends the row width before the first capture and
+                    # misses legal occupied-channel slots (dsg5 ES6).
+                    orient_ = 'R0'
+                    if KSD.GRP_S6C and prev_pt_ is None and by[a].master in (
+                            KSD.KIND_MASTER['grp'], KSD.KIND_MASTER['grp_h']):
+                        fp_ = fixed_pin(a, pa)
+                        if fp_ is not None and fp_[0] > qx + fw / 2:
+                            orient_ = 'MY'
+                    pin_a = (qx + fw - SHAVE if orient_ == 'MY' else qx, qy + fh / 2)
                     dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
                     if dd <= rch and free(qx, qy, fw, fh, *TG):
-                        if pad_ and (d_ep((qx + fw, qy + fh / 2), b, pb) > rch or (qx, qy) == tuple(st_.get('last_xy', ()))):
+                        pin_b = (qx if orient_ == 'MY' else qx + fw, qy + fh / 2)
+                        if pad_ and (d_ep(pin_b, b, pb) > rch or (qx, qy) == tuple(st_.get('last_xy', ()))):
                             continue
                         if not at_end:
-                            got = (qx, qy, idx)
+                            got = (qx, qy, idx, orient_)
                             break
                         # a tree hop: of the free spots at this path point, the one nearest the leader (progress)
-                        r_ = d_ep((qx + fw, qy + fh / 2), b, pb)
+                        r_ = d_ep(pin_b, b, pb)
                         if at_end and prev_pt_ is not None and r_ >= remaining_() - 1.0:
                             continue
                         if best_ is None or r_ < best_[0]:
-                            best_ = (r_, qx, qy, idx)
+                            best_ = (r_, qx, qy, idx, orient_)
                 if best_ is not None:
                     got = best_[1:]
                 if got:
@@ -3805,7 +3816,11 @@ def _relays(m):
                                      f' at {path_[idx0_] if idx0_ < len(path_) else None} (ends {a}.{pa} -> {b}.{pb};'
                                      f' path {len(path_)} cells, remaining {remaining_():.0f} um, wide {st_.get("wide")}, src {ctr_dbg(a, pa)} dst {ctr_dbg(b, pb)})')
                 nm = f'rly_{bid}_{st_["k"]}'
-                it = F.Inst(nm, mst, got[0], got[1], fw - SHAVE, fh - SHAVE, 'R0', kind='relay', region='relay')
+                it = F.Inst(nm, mst, got[0], got[1], fw - SHAVE, fh - SHAVE, got[3], kind='relay', region='relay')
+                if got[3] != 'R0':
+                    m.setdefault('group_launch_orientations', []).append(dict(
+                        bus=bid, relay=nm, orient=got[3], launch=(a, pa),
+                        reason='actual selected group face; native row input toward source'))
                 m['insts'].append(it)
                 by[nm] = it                       # v1.4.2: a tree's next-level chain starts at this relay
                 rly_ends[nm] = (tree_meta[bid]['rdrv'] if bid in tree_meta else a, b)   # tree: the HOST's trunk
@@ -3820,7 +3835,8 @@ def _relays(m):
                         rocc.setdefault((gx, gy), []).append(r_)
                         cells_added.append(((gx, gy), r_))
                 nb.append((f'{bid}__r{st_["k"]}' if st_['k'] else bid, cl, bits, [st_['prev_ep'], (nm, 'a')]))
-                st_.update(prev_ep=(nm, 'b'), prev_pt=(it.x + it.w, it.y + it.h / 2), idx0=got[2], k=st_['k'] + 1)
+                st_.update(prev_ep=(nm, 'b'), prev_pt=(it.x if it.orient == 'MY' else it.x + it.w,
+                           it.y + it.h / 2), idx0=got[2], k=st_['k'] + 1)
 
         def rollback_():
             for it_ in m['insts'][mark[1]:]:

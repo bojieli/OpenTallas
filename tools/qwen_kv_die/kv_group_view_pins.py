@@ -14,6 +14,11 @@ KITS = {'qkd_kvs_grp_s6c': 'qkd_kvs_grp_s6a',
         'qkd_kvs_grp_h_s6c': 'qkd_kvs_grp_h_s6a'}
 _CACHE = {}
 INSTANCES = {}
+_WORLD = {}
+
+
+def _key(it, port):
+    return (it.master, it.name, it.x, it.y, it.w, it.h, it.orient, port.lstrip('*').split('[')[0])
 
 
 def load(master):
@@ -60,17 +65,29 @@ def points(it, port):
     if name not in rec['ports']:
         raise ValueError(f'S6C geometry: port absent from actual view {it.master}.{name}')
     INSTANCES[it.name] = it
-    return [(it.x + (rec['w']-x if it.orient in ('MY', 'R180') else x),
+    key = _key(it, port)
+    if key in _WORLD:
+        return _WORLD[key]['points']
+    pts = [(it.x + (rec['w']-x if it.orient in ('MY', 'R180') else x),
              it.y + (rec['h']-y if it.orient in ('MX', 'R180') else y))
             for x, y in rec['ports'][name]]
+    _WORLD[key] = dict(points=pts, anchor=(sum(x for x, _ in pts)/len(pts), sum(y for _, y in pts)/len(pts)),
+                      min_sum=min(x+y for x,y in pts), max_sum=max(x+y for x,y in pts),
+                      min_diff=min(x-y for x,y in pts), max_diff=max(x-y for x,y in pts))
+    return pts
 
 
 def xy(it, port):
     pts = points(it, port)
-    return None if pts is None else (sum(x for x, _ in pts)/len(pts), sum(y for _, y in pts)/len(pts))
+    return None if pts is None else _WORLD[_key(it, port)]['anchor']
 
 
 def far(inst, port, point):
     if inst not in INSTANCES:
         return None
-    return max(abs(point[0]-x)+abs(point[1]-y) for x, y in points(INSTANCES[inst], port))
+    it = INSTANCES[inst]
+    points(it, port)
+    v = _WORLD[_key(it, port)]
+    px, py = point
+    return max(px+py-v['min_sum'], px-py-v['min_diff'],
+               -px+py+v['max_diff'], -px-py+v['max_sum'])
