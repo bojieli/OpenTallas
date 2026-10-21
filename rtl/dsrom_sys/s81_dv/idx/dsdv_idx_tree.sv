@@ -504,7 +504,9 @@ module dsdv_idx_qf #(
     reg  [3:0]  nsl;                    // spec words left
     reg  [3:0]  fl;
     wire        is_tree = d[511:508] == 4'd10;
-    wire inf_f,inf_c;
+    wire inf_f,inf_c,inf_left,v_left;
+    dsdv_qf_copy #(.W(1),.ID(652))u_inf_left(.ck(ck),.rn(rnk[4]),.d(inf_next),.q(inf_left));
+    dsdv_qf_copy #(.W(1),.ID(653))u_v_left(.ck(ck),.rn(rnk[4]),.d(qs_vctrl|ql_vctrl),.q(v_left));
     dsdv_qf_copy #(.W(1),.ID(650))u_inf_f(.ck(ck),.rn(rnk[3]),.d(inf_next),.q(inf_f));
     dsdv_qf_copy #(.W(1),.ID(651))u_inf_c(.ck(ck),.rn(rnk[3]),.d(inf_next),.q(inf_c));
     always @(posedge ck or negedge rnk[3])
@@ -533,10 +535,15 @@ module dsdv_idx_qf #(
             st <= {fl[3], fl[2], fl[1], fl[1] | fl[2]};
         end
     always @(posedge ck or negedge rnk[3])
-        if (!rnk[3]) begin left <= 12'd0; nsl <= 4'd0; end
-        else if (vc) begin
-            if (!inf_c) begin left <= d[491:480]; if (is_tree) nsl <= d[3:0]; end
-            else begin left <= left - 12'd1; if (tree && nsl != 4'd0) nsl <= nsl - 4'd1; end
+        if (!rnk[3]) left <= 12'd0;
+        else if(v_left) begin
+            if(!inf_left) left<=d[491:480]; else left<=left-12'd1;
+        end
+    always @(posedge ck or negedge rnk[3])
+        if (!rnk[3]) nsl <= 4'd0;
+        else if(vc) begin
+            if(!inf_c) begin if(is_tree)nsl<=d[3:0];end
+            else if(tree&&nsl!=4'd0)nsl<=nsl-4'd1;
         end
     // Consumer-local parser copies capture actual next state at the original edge.
     // Four rewrite groups and three spec groups; no added parser or output edge.
