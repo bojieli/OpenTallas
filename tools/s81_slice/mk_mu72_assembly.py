@@ -80,6 +80,11 @@ def assemble(normal, flavor, bindings):
         source=f"rtl/dsrom_sys/s81_dv/slice/mu72/{top}.sv",
         sources=[f"rtl/dsrom_sys/s81_dv/slice/mu72/{top}.sv"]+G3_SOURCES+normal["sources"]+[
             "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+            # S81-LINK5: the safe8_ntf lane's own sources (dscoll_lane_*_s8n* kit list @445e6c74c; six were missing here)
+            "rtl/link/ot_link_crc32.sv", "rtl/lib/ot_rst_relay_tree3.sv", "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+            "rtl/lib/ot_sram_oldread_b64.sv", "rtl/lib/ot_sram_showahead_b64.sv", "rtl/common/ot_link_credit_rx_b64.sv",
+            "rtl/common/ot_link_credit_tx_rc.sv", "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+            "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
             "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
             "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv",
             "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv",
