@@ -840,6 +840,12 @@ def apply_dv(v, m):
             else:
                 miss.append(f'{si}.{sp_}->{di}.{dp_}')
         if HEAD_PREP:
+            for p_ in ('tx_user', 'rx_user'):
+                if not (has('d2d_rom', p_) and has('native59', p_)):
+                    raise ValueError(f'head user requires actual d2d_rom.{p_}->native59.{p_}')
+                if any(M[by[i_].master].ports[p_][1] != 2 for i_ in ('d2d_rom', 'native59')):
+                    raise ValueError(f'head user requires two-bit source ABI: {p_}')
+                out.append((f'lnk_{p_}', 'spine_local', 2, [('d2d_rom', p_), ('native59', p_)]))
             for sp_, dp_ in [('emb_start','head_prepare_v'), ('emb_token','head_prepare_token'),
                               ('emb_position','head_prepare_position'), ('emb_user','head_prepare_user')]:
                 if not (has('tt_ctlm',sp_) and has('native59',dp_)):
