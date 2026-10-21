@@ -27,3 +27,9 @@ Variant: MAIN 456.84 x 410.4: bank MX (43.2,43.2), KIND0 R0 (129.6,216.0), lane<
 7 Clock: single region <= 457 um, centre-fed from the lane<->bank channel; KIND0 unloaded clk pins (insert_0..3, stage_4)
   open in synthesis; io_hold_margin 0.03.
 8 Schedule: static; 0 data cycles added (see notice).
+## r2 gate fix (HBM-COLLECT10/SU 10-21 06:45)
+- --cts gate 10-21 06:12/06:17 FAIL clock_rule only: child-flop spread TT 141.9 / FF 94.7 (main), TT 154.9 / FF 114.5 (fb);
+  GRT ovf 0, census max 26 PASS. Cause: spine child targets from the lib max_clock_tree_path (bank6 195.0, KIND0 215.7) vs
+  the routed boundary-register insertion the gate judges (bank6 60.8, KIND0 184.9): bank clock pins tapped ~134 ps early.
+- Fix: spec child_clock_ref "boundary" (the s81 parent standard) -> spine targets 60.8 / 184.9. No RTL / latency change.
+- Checklist 7 (clock): fixed as above. Lockstep b2 witnesses: results/rtl/hbm_pglg8_1020/b2 (m0 PASS, 9 mutants FAIL).

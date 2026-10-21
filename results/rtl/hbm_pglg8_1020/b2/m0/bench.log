@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits   953 GB (avail 780, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 32 disk 636 GB 
+ot-run: ot-epyc6       admits   483 GB (avail 451, growth 113, headroom 0, waiters 0/0 GB) load 73/128 running 40 disk 1054 GB 
+ot-run: ot-epyc7       admits    58 GB (avail 141, growth 101, headroom 0, waiters 0/0 GB) load 45/96 running 21 disk 4801 GB 
+ot-run: ot-epyc9       admits   379 GB (avail 400, growth 135, headroom 0, waiters 0/0 GB) load 58/128 running 40 disk 124 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/hbm-pglg8/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/hbm-pglg8/src
+ot-run: -> ot-epyc9
+ot-heavy: request 56G is charged 21G (class 'su_pgslice_rg_vl_run.sh' measured peak 13.0G, n=34+0 proved); the cap stays 56G
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-243448-1792587123 after 2 s
+Verilator 5.050 2026-07-01 rev v5.050
+PGSLICE_RG bench HREG=1 MUT=0 LK=1 RT=10 IR=1 SWQ=16 EDGES=1200
+PGSLICE_RG errors serial=0 fault=0 stream=0 vm_write=0 lg_fault=0
+PGSLICE_RG PASS checks=29952 resets=2 data_edges=2319 vm_writes=1786 ref_fault_edges=2496
+- rtl/test/hbm_accel/generic/tb_hbm_su_pgslice_rg.sv:199: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 5.819 s; speed 549.823 ns/s
+- Verilator: cpu 5.813 s on 1 threads; allocated 58 MB
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-243448-1792587123): exit 0
