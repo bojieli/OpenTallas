@@ -71,12 +71,18 @@ proc ot_ce_check_forwarded_output {port source} {
   set name [get_full_name $port]
   if {![info exists ::ot_ce_fwd_outputs] || ![dict exists $::ot_ce_fwd_outputs $name]} {return 0}
   set row [dict get $::ot_ce_fwd_outputs $name]
-  if {[get_property $port direction] ne "output" || [dict get $row input] ne $source} {
+  set block [ord::get_db_block]
+  set bt [$block findBTerm $name]
+  if {$bt eq "NULL" || [$bt getIoType] ne "OUTPUT" || [dict get $row input] ne $source} {
     error "OT_FORWARDED_OUTPUT: wrong direction or source $name"
   }
   set net [get_nets -quiet -of_objects $port]; set through 0; set inversions 0
   for {set step 0} {$step < 256 && [llength $net] == 1} {incr step} {
-    set inputs [get_ports -quiet -of_objects $net -filter "direction == input"]
+    set inputs {}
+    foreach p [get_ports -quiet -of_objects $net] {
+      set b [$block findBTerm [get_full_name $p]]
+      if {$b ne "NULL" && [$b getIoType] eq "INPUT"} {lappend inputs $p}
+    }
     set drivers [get_pins -quiet -of_objects $net -filter "direction == output"]
     if {[llength $inputs]} {
       if {[llength $inputs] != 1 || [get_full_name $inputs] ne $source || [llength $drivers]
