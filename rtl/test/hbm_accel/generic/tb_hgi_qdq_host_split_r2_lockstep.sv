@@ -13,7 +13,7 @@
 // relay stage not priced in the controller straps).
 // REV (HBM-QDQ8 10-20): 2 = split r2 (ctl_r3), 3 = split r3 (ctl_r4, deep strap ring); L = VM latency at the pins of
 // BOTH DUTs (the die needs 54 at hb_quant_NW); MUT 3 = split r3 with the ctl_r4 ring read one entry late.
-module tb_hgi_qdq_host_split_r2_lockstep #(parameter integer MUT=0,XRS=0,RQ_OFF=3+XRS,WQ_OFF=9+3*XRS,L=7,REV=2);
+module tb_hgi_qdq_host_split_r2_lockstep #(parameter integer MUT=0,XRS=0,RQ_OFF=3+XRS,WQ_OFF=9+3*XRS,L=7,REV=2,RING_RAND=0);
     reg clk=0; always #5 clk=~clk;
     reg rst_n=0;
     reg s_awvalid=0,s_wvalid=0,s_arvalid=0;
@@ -73,6 +73,14 @@ module tb_hgi_qdq_host_split_r2_lockstep #(parameter integer MUT=0,XRS=0,RQ_OFF=
         .desc_v(ext_desc_v),.desc_base(ext_base),.desc_limit(ext_limit),.desc_loops(ext_loops),.launch_v(ext_launch_v),
         .program_active(actB),.program_done(pdB),.configured(cfgB),
         .rq(rqB),.rr(rrB),.wq(wqB),.beat_done(bdB),.record_done(rdB),.fault(fB));
+    if(RING_RAND!=0) begin: ring_rand   // power-up: random ring contents and pointer (after the macro model's own init)
+        initial begin
+            #1;
+            for(integer i=0;i<128;i=i+1) split.quant_NW_xp.ctl.u_ctl.ring.arr[i]={$random,$random};
+            for(integer i=0;i<64;i=i+1) split.quant_NW_xp.ctl.u_ctl.commit.arr[i]=16'($random);
+            split.quant_NW_xp.ctl.u_ctl.wp=7'($random);
+        end
+    end
     end else begin: r2
     ot_hgi_qdq_host_split_r2 #(.RL(L),.WC(4),.XR(MUT==2?XRS-1:XRS),.XR_SIM(XRS),.COMPACT(1),.LGMUT(MUT==1?1:0)) split(
         .clk_program(clk),.clk_transport(clk),.clk_dec(clk),.clk_lg({4{clk}}),.rst_n(rst_n),

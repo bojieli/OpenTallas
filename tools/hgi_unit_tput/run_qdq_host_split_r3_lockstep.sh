@@ -22,6 +22,7 @@ src=(rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.
  rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r2.sv
  rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r3.sv
  rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv
+ physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1.v
  physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192.v
  rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_lg_port_group.sv
  rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv
@@ -42,10 +43,13 @@ for c in $cases; do
  rev=3; l=54; xrs=0; mut=0
  case $c in a) l=7;; b) ;; c) xrs=12;; m2) xrs=12; mut=2;; m3) mut=3;; d) rev=2;; *) echo "unknown case $c"; exit 2;; esac
  G=(-GMUT=$mut -GXRS=$xrs -GL=$l -GREV=$rev)
+ # power-up content: the ctl_r4 ring SRAMs and ring pointer start RANDOM (tb RING_RAND), not zero: proves ctl_r4 never
+ # qualifies power-up ring content (the other leaves keep their committed init, as in the r2 bench)
+ G+=(-GRING_RAND=${RR:-1} ${EXTRA_G:-})
  bld() { "$V" --binary --timing -O2 -j 8 -Wno-fatal -Wno-lint -Wno-style "${G[@]}" \
   --top-module tb_hgi_qdq_host_split_r2_lockstep -Mdir "$out/m$c.obj" -o sim "${src[@]}" > "$out/m$c.build" 2>&1; }
  bld || { sleep 5; bld; } || { tail -30 "$out/m$c.build"; exit 1; }
- set +e; "$out/m$c.obj/sim" +DIR=tools/hgi_unit_tput/vectors/qdqvec +PROGRAM=results/hbm_static_quant_1015/compact_fixture.hex > "$out/m$c.log" 2>&1; rc=$?; set -e
+ set +e; "$out/m$c.obj/sim" +verilator+seed+${SEED:-7} +DIR=tools/hgi_unit_tput/vectors/qdqvec +PROGRAM=results/hbm_static_quant_1015/compact_fixture.hex > "$out/m$c.log" 2>&1; rc=$?; set -e
  echo "$rc" > "$out/m$c.rc"
  case $c in
   a|b|c) grep -q '^PASS HGI_QDQ_HOST_SPLIT_R2_LOCKSTEP' "$out/m$c.log" || { tail -20 "$out/m$c.log"; exit 1; };;

@@ -4,10 +4,11 @@
  "kind": "tile",
  "sources": [
   "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv",
-  "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v"
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192/ot_sram_1r1w_128x64_m1_p192_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v"
  ],
  "params": {
-  "WCMAX": 64,
   "DL": 25,
   "MUT": 0
  },
@@ -17,7 +18,7 @@
  ],
  "outline": {
   "w": 108.0,
-  "h": 108.0,
+  "h": 129.6,
   "exact": false
  },
  "layer_cap": "M5",
@@ -26,10 +27,19 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
    "count": 1,
    "at": [
-    43.2,
-    43.2
+    37.8,
+    25.92
    ],
    "inst": "u_ctl.ring"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "count": 1,
+   "at": [
+    45.36,
+    75.6
+   ],
+   "inst": "u_ctl.commit"
   }
  ],
  "pins": {
@@ -81,7 +91,7 @@
   },
   "io_hold_margin_ns": 0.025
  },
- "slot_change_request": "quant_NW_xp_ctl: master ot_hgi_qdq_transport_ctl_r3 -> ot_hgi_qdq_transport_ctl_r4 (rl_cfg 6 -> 7 bits, RLI 2..126 / WCI 2..63; ties RLI = RL+4+2*XR, WCI = WC+2+XR from the soft parent ot_hgi_qdq_host_split_r3); same 108 um outline -> HBM-DIE12 (NOTICE).",
+ "slot_change_request": "quant_NW_xp_ctl: master ot_hgi_qdq_transport_ctl_r3 -> ot_hgi_qdq_transport_ctl_r4 (rl_cfg 6 -> 7 bits, RLI 2..126 / WCI 2..63; ties RLI = RL+4+2*XR, WCI = WC+2+XR from the soft parent ot_hgi_qdq_host_split_r3); outline 108 x 108 -> 108 x 129.6 um (two ring SRAMs, 20 um macro channels on all-pin faces) -> HBM-DIE12 (NOTICE).",
  "job": {
   "owner": "Claude:HBM-QDQ8",
   "branch": "claude/hbm-qdq8-1020",
@@ -128,16 +138,17 @@
    }
   ],
   "extra_paths": [
-   "rtl/hdc",
-   "rtl/lib",
-   "rtl/hbm_accel/generic",
-   "rtl/test/hbm_accel/generic",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
    "physical/hbm_accel_die_views/common",
    "physical/hbm_accel_die_views/quant",
-   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
-   "tools/hgi_unit_tput",
    "results/hbm_static_quant_1015/compact_fixture.hex",
-   "physical/asap7_memory_macros/ot_sram_1r1w_128x64_m1_p192",
+   "rtl/hbm_accel/generic",
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/test/hbm_accel/generic",
+   "tools/hgi_unit_tput",
    "tools/hgi_unit_tput/vectors/qdqvec"
   ],
   "views_to": "physical/ref_tile/hgi_qdq_tsplit_ctl_r4s/views",
@@ -156,7 +167,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "ctl r4: ctl_r3 (strap latency, pin capture registers, reset relay, closed TT +127.80 / FF +14.92) with the 46-bit command metadata pipeline sp/dp/hp moved from a 48-deep flop shift register into a 128-entry ring in one ot_sram_1r1w_128x64_m1_p192 (write every edge at wp, read at wp+1-RLI; rd = tap NP-3, two flop stages = tap NP-1); vp/lp stay reset flops. RLI 2..126 covers the GEN2e4 die need RL 54 (RLI 58 + 2*XR); flop pipeline at NP 128 would be ~5.9 kb (> 2 kb storage rule).",
+ "structural_change": "ctl r4: ctl_r3 (strap latency, pin capture registers, reset relay, closed TT +127.80 / FF +14.92) with the 46-bit command metadata pipeline sp/dp/hp moved from a 48-deep flop shift register into a 128-entry ring in one ot_sram_1r1w_128x64_m1_p192 (write every edge at wp, read at wp+1-RLI; rd = tap NP-3, two flop stages = tap NP-1); vp/lp stay reset flops. Gate 1 native census FAIL (strap tap muxes 167-220 loads per strap flop, reset 475, bank bases 33-70) -> r4b: NO taps: vp/lp also in ring A, commit pipeline donep/lastp in ring B (ot_sram_1r1w_64x16_m1), reset-edge counter masks pre-release entries, kept per-bank 3-bit base copies, 4 ot_rst_relay leaves. RLI 2..126 covers the GEN2e4 need RL 54 (RLI 58 + 2*XR).",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every pin already (ctl_r4 captures (as ctl_r3) every cmd_* and strap bit at its pin, rr_v/vo/qfault/decode_fault enter flops, every output is a register, rst_n drives only the 3-flop relay): ctl_r2 with the same boundary is native PASS (launch 181.2, capture 138.1, 0 comb). Extra tool pin registers would add edges the split r2 lockstep does not price."
