@@ -1,0 +1,31 @@
+{
+ "registered_soft": [
+  "hb_idx__nwsh",
+  "hcollrs_SW",
+  "hcollrs_SE",
+  "hcollrs_NW",
+  "hcollrs_NE"
+ ],
+ "closed_kq_leaves": [
+  "hcollks_SW_p0",
+  "hcollks_SW_p1",
+  "hcollks_SW_p2",
+  "hcollks_SW_p3",
+  "hcollks_SE_p0",
+  "hcollks_SE_p1",
+  "hcollks_SE_p2",
+  "hcollks_SE_p3",
+  "hcollks_NW_p0",
+  "hcollks_NW_p1",
+  "hcollks_NW_p2",
+  "hcollks_NW_p3",
+  "hcollks_NE_p0",
+  "hcollks_NE_p1",
+  "hcollks_NE_p2",
+  "hcollks_NE_p3"
+ ],
+ "kq_latency_delta": 0,
+ "consumer_share_extra_edges": 2,
+ "closed_leaf_body_sha256": "b4a5ebff413be610156b06fbed80f25c4dffa025d037a729393c6626d9ced93c",
+ "qualification": "SOURCE_SELECTION; current S4/L12 repricing + GEN geometry + required S11 timing/IR remain"
+}

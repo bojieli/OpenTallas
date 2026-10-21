@@ -1,0 +1,148 @@
+{
+ "schema": "opentallas.hbm.d4g.l12_budget_overlay.v1",
+ "lane": "CODEX-HBM-DIE H15.8",
+ "applies_to": "selected registered share2 successor; current S4 geometry must still PASS exact L12",
+ "why": "Preserve r11 geometry budgets and price exactly +2 consumer edges from REG1 SHARE_EXTRA; new geometry can require further explicit repricing, never an undersized bind.",
+ "master": {
+  "ot_hgi_sfu_lg_pair_tap_leaf_term": {
+   "READ_RETURN": 34,
+   "WRITE_RETURN": 31
+  },
+  "ot_hbm_hc_qhub_static": {
+   "RD_CAPTURE": 39,
+   "GATHER_PHASE": 39,
+   "DONE_LAT": 35
+  },
+  "ot_hgi_sm_xload_cl2_ctlx": {
+   "RD_LAT": [
+    37,
+    40,
+    27,
+    29,
+    53,
+    55,
+    43,
+    45
+   ]
+  },
+  "ot_hfd_coll_q2_hard_v8g": {
+   "VM_RT": 76
+  },
+  "ot_hfd_coll_q3_hard_v8x": {
+   "VM_RT": 76
+  },
+  "ot_hgi_coll_gq_issue": {
+   "VM_RT": 76
+  }
+ },
+ "inst": {
+  "hb_argmax": {
+   "VMX": 78
+  },
+  "hb_quant_NW": {
+   "RL": 59
+  },
+  "hcollrs_SW": {
+   "BANK_RT": 73
+  },
+  "hb_idx__op_NW": {
+   "VM_RT_EXTRA": 173
+  }
+ },
+ "deltas": [
+  {
+   "what": "HC LG tap term READ_RETURN / WRITE_RETURN",
+   "from": [
+    32,
+    29
+   ],
+   "to": [
+    34,
+    31
+   ],
+   "delta": 2,
+   "need": "A NE/SE 34/31, B NE/SE 33/30"
+  },
+  {
+   "what": "HC qhub RD_CAPTURE / GATHER_PHASE / DONE_LAT (tracks the HC tap: tap + 5 / + 5 / + 4; functional coupling, the LAT class does not check it)",
+   "from": [
+    37,
+    37,
+    33
+   ],
+   "to": [
+    39,
+    39,
+    35
+   ],
+   "delta": 2
+  },
+  {
+   "what": "hb_quant_NW RL (client<->share lanes 16 vs budget 4)",
+   "from": 45,
+   "to": 57,
+   "delta": 12,
+   "need": "A 55, B 57"
+  },
+  {
+   "what": "hb_argmax VMX",
+   "from": 77,
+   "to": 78,
+   "delta": 1,
+   "need": "A 78"
+  },
+  {
+   "what": "hcollrs_SW BANK_RT (other quadrants stay 72)",
+   "from": 72,
+   "to": 73,
+   "delta": 1,
+   "need": "B 73"
+  },
+  {
+   "what": "xload ctlx RD_LAT bank 1",
+   "from": 39,
+   "to": 40,
+   "delta": 1,
+   "need": "B xl_NW_ctl vmb_NW1 40",
+   "price_note": "0: x-load priced at max RD_LAT 55, unchanged"
+  },
+  {
+   "what": "registered share2 consumers only",
+   "from_parameters": {
+    "COLL_VM_RT": 74,
+    "GQ_VM_RT": 74,
+    "INDEX_NW_VM_RT_EXTRA": 171,
+    "QDQ_NW_RL": 57
+   },
+   "to_parameters": {
+    "COLL_VM_RT": 76,
+    "GQ_VM_RT": 76,
+    "INDEX_NW_VM_RT_EXTRA": 173,
+    "QDQ_NW_RL": 59
+   },
+   "delta": 2,
+   "proof": "d4g_bank_latency.SHARE_EXTRA[ot_hbm_idx_vm_share2_static_r]=2; every request and return face registered"
+  }
+ ],
+ "price": {
+  "status": "STATIC_EDGE_LEDGER_PENDING_PRODUCTION_REPRICE",
+  "request_edge_delta": 1,
+  "return_edge_delta": 1,
+  "per_affected_transaction_edges": 2,
+  "affected": [
+   "hb_coll_SW",
+   "hb_coll_SE",
+   "hb_coll_NW",
+   "hb_coll_NE",
+   "hcollgi_SW",
+   "hcollgi_SE",
+   "hcollgi_NW",
+   "hcollgi_NE",
+   "hb_idx__op_NW",
+   "hb_quant_NW"
+  ],
+  "kq_share_extra_delta": 0,
+  "required": "compile production schedules with selected budgets/current S4 lanes; no old DS/Qwen throughput claim"
+ },
+ "safe_design_note": "hb_quant_NW RL 57 -> transport ctl NP 59 x 48 b pipeline (~2.8 kb flop delay line, was ~2.3 kb at RL 45): item 5 guidance (rule freeze 10-20); structural alternative = place hb_quant_NW beside hb_idx__nwsh (saves 12 edges) in the next floorplan."
+}

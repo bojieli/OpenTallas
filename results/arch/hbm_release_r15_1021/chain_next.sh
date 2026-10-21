@@ -56,15 +56,15 @@
 #  -> S9 synth c -> S10 GEN (reset gate fail) -> S11 GRT (global_connect PG step) + STA TT/FF + neighbour clock + hold.
 set -o pipefail
 VAR=${1:?plan A|B}; PL=${VAR:0:1}; PLAN_UM=300; HOST=ot-epyc5
-W=/home/ubuntu/wt/codex-hbm-r15-gen-overlay-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_native32_bays_1021; RST_FORM=${RST_FORM:-rfc}; A=$AR/plan$VAR
+W=/home/ubuntu/wt/codex-hbm-h158-1021; AR=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_h158_1021; RST_FORM=${RST_FORM:-rfc}; A=$AR/plan$VAR
 R11A=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r11/plan$PL; R11B=/srv/opentallas-scratch/claude/hbm-die11-1020/plan$PL
 A7=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4_r7portage; B7=/srv/opentallas-scratch/claude/hbm-die7-gen2e4r6-1020
 OLDA=/srv/opentallas-scratch/claude/hd4g/gen2e4
 AE=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e; AE4=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e4; AE3=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e3; AE2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2e2
 A0=/home/ubuntu/artifacts/hdie-d4/d4g_gen0; A1=/home/ubuntu/artifacts/hdie-d4/d4g_gen1; A2=/home/ubuntu/artifacts/hdie-d4/d4g_gen2
 AC=/home/ubuntu/artifacts/hdie-d4/d4g_gen2c; AD=/home/ubuntu/artifacts/hdie-d4/d4g_gen2d
-B=/srv/opentallas-scratch/claude/codex-hbm-r15-native32-bays-1021/chain$VAR; OTRUN=/home/ubuntu/bin/ot-run
-D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r15_1021/planB_cxdl_bays; BR=codex/hbm-r15-gen-overlay-1021
+B=/srv/opentallas-scratch/claude/codex-hbm-r15-h158-1021/chain$VAR; OTRUN=/home/ubuntu/bin/ot-run
+D=results/arch/hbm_die_d4g; PD=results/arch/hbm_release_r15_1021/planB_h158; BR=codex/hbm-h158-1021
 GX="${OT_D9_GEN_EXTRA:---relay-outline density --lane-reach-repair 3 --lane-reach-lookahead chain --grt-layer-plan owner1020 --signal-top-layer M8 --carve-reserved all}"
 CM="--coord-map $PD/coord_map.json"
 # Local transport override only in this successor process: ep6 public route loses packets.
@@ -78,7 +78,7 @@ cd $W
 [ -z "$(git -C $W status --porcelain -- tools rtl results/arch/hbm_release_r14_1021)" ] || { echo DIRTY_TOOLS_REFUSED; exit 9; }
 H=$(git -C $W rev-parse --short=9 HEAD); echo "CHAIN chain_d4g2e4_r14.sh var $VAR plan $PL HEAD $H $(date -Is)"
 FOREST_SRC_PATHS="rtl/hbm_accel/die_glue/hbfd_rrl.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/die_glue/ot_hbm_rly_rr.sv rtl/hbm_accel/die_glue/hbfd_rly_rr_masters.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv rtl/hbm_accel/die_glue/hbfd_pad.sv rtl/hdc/ot_hdc_delay.sv rtl/hbm_accel/die_glue/hbfd_rly_rfc_masters.sv rtl/hbm_accel/die_glue/ot_hbm_rly_rfc.sv"
-METAS="$A0/vplan/synth $A1/vplan/synth $A2/vplan_fast/synth $A2/vplan_a0/synth $A2/vplan_a1/synth $A2/vplan_a/synth $A2/vplan/synth $A2/vplan_b1/synth $AC/vplan_pre/synth $AC/vplan/synth $AD/vplan/synth $AE/vplan_a/synth $AE2/vplan_a/synth $AE3/vplan_a/synth $AE4/vplan_a_run3/synth $AE4/vplan_a_run4/synth $A7/vplan_b/synth $R11A/vplan_b_s6a/synth $R11A/vplan_b/synth /home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/vplan_a/synth /home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/vplan_b/synth /home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/vplan/synth /home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_release_1021/plan$VAR/vplan_a/synth $A/vplan_changed/synth $A/vplan_a/synth"   # REFILL-1730: S6 round-1 views of THIS run (kept across resume)
+METAS="$A0/vplan/synth $A1/vplan/synth $A2/vplan_fast/synth $A2/vplan_a0/synth $A2/vplan_a1/synth $A2/vplan_a/synth $A2/vplan/synth $A2/vplan_b1/synth $AC/vplan_pre/synth $AC/vplan/synth $AD/vplan/synth $AE/vplan_a/synth $AE2/vplan_a/synth $AE3/vplan_a/synth $AE4/vplan_a_run3/synth $AE4/vplan_a_run4/synth $A7/vplan_b/synth $R11A/vplan_b_s6a/synth $R11A/vplan_b/synth /home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/vplan_a/synth /home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/vplan_b/synth /home/ubuntu/artifacts/hdie-d4/codex_hbm_r14_release_1021/planB/vplan/synth /home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_release_1021/plan$VAR/vplan_a/synth /home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_native32_bays_1021/plan$VAR/vplan_changed/synth $A/vplan_changed/synth $A/vplan_a/synth"   # REFILL-1730: S6 round-1 views of THIS run (kept across resume)
 bind2() {   # $1 contract  $2 out dir  $3 tag -> strict port bind + functional bind (LAT strict when l12 is in)
   mkdir -p $2; bash tools/hbm_die_v16/d4g_layers/l1_bind_check.sh $1 $2 > /dev/null; tail -1 $2/port_bind.log
   if ! grep -q "^DIE_PORT_BIND PASS" $2/port_bind.log; then
@@ -148,7 +148,7 @@ p|={'results/arch/hbm_release_r14_1021/planB_margin','results/arch/die_reach_101
  'results/arch/hbm_die_v16','results/arch/hier_contract_1015','results/arch/die_clock_method_1016',
  'results/arch/hbm_unread_gen2e3_1019','results/arch/hbm_native_1013/sm_own_logic/retention_cell_models.sv',
  'physical/hbm_pll_views','physical/ref_tile/hdie_pc_ctrl/floorplan.json',
- 'results/arch/hbm_release_r15_1021/planB_cxdl_bays'}
+ 'results/arch/hbm_release_r15_1021/planB_cxdl_bays','results/arch/hbm_release_r15_1021/planB_h158'}
 p|={v['view_dir'] for v in V.values() if v.get('view_dir')}
 p|=set(Path('results/arch/hbm_release_r15_1021/relay_view_dirs.txt').read_text().splitlines())
 print('\n'.join(sorted(p)))
@@ -229,6 +229,8 @@ mkdir -p $A/net
 python3 tools/hbm_die_v16/d4g_layers/compose_release_r14.py $AE4/net/pre_relay.json $A/net/release_source_closed_$H || { echo R14_RELEASE_COMPOSE_FAIL; exit 9; }
 python3 tools/hbm_die_v16/d4g_layers/l28_collective_program_capacity.py $A/net/release_source_closed_$H/pre_relay_release.json $A/net/pre_relay_r14.json --report $A/net/l28_collective_params.json || { echo R15_COLLECTIVE_PARAMS_FAIL; exit 9; }
 python3 tools/hbm_die_v16/d4g_layers/l29_rootctl_closed.py $A/net/pre_relay_r14.json $A/net/pre_relay_r14.json --report $A/net/l29_rootctl_source.json || exit 9
+python3 tools/hbm_die_v16/d4g_layers/l30_share2_registered.py $A/net/pre_relay_r14.json results/arch/hbm_release_r15_1021/planB_cxdl_bays/grants_d4g.json $A/net/pre_relay_r14.json $A/net/l30_grants.json --report $A/net/l30_h158.json || exit 9
+cmp $A/net/l30_grants.json $PD/grants_d4g.json || { echo H158_GRANT_SNAPSHOT_MISMATCH; exit 9; }
 python3 tools/hbm_die_v15/check_contract_modules.py --contract $A/net/pre_relay_r14.json --rev HEAD --json $A/net/cmc_pre_relay_r14.json > $A/net/cmc_pre_relay_r14.log 2>&1; tail -1 $A/net/cmc_pre_relay_r14.log
 python3 tools/hbm_die_v16/d4g_functional_bind.py $A/net/pre_relay_r14.json --report $A/net/functional_bind_pre_relay_r14.json --lat warn > $A/net/functional_bind_pre_relay_r14.log 2>&1; tail -1 $A/net/functional_bind_pre_relay_r14.log
 echo "R14_PRE_RELAY $(sha256sum $A/net/pre_relay_r14.json | cut -c1-16)"
@@ -236,7 +238,7 @@ step S2a synth_a_r14_masters
 # ROWS256 changes the source and parameters; old r14 S2 receipts cannot be reused wholesale.
 [ -z "${R14_REUSE_PRIMARY:-}" ] || { echo R15_REFUSES_R14_PRIMARY_REUSE; exit 12; }
 if [ -z "${R15_REUSE_COMPLETED_S2:-}" ]; then
-synth_round $A/net/pre_relay_r14.json $A/vplan_a a $A/vplan_changed || { echo S2A_SYNTH_FAIL; exit 12; }
+synth_round $A/net/pre_relay_r14.json $A/vplan_a a /home/ubuntu/artifacts/hdie-d4/codex_hbm_r15_native32_bays_1021/plan$VAR/vplan_changed || { echo S2A_SYNTH_FAIL; exit 12; }
 else
   python3 - "$A/net/pre_relay_r14.json" "$A/vplan_a" <<'PYS2'
 import hashlib,json,sys
@@ -363,7 +365,7 @@ if [ "$RST_FORM" = rfc ]; then
   mv $A/net/contract_forest_rfc.json $A/net/contract_forest.json
 fi
 step S8b l12_banklat
-python3 tools/hbm_die_v16/d4g_layers/l12_banklat.py $A/net/contract_forest.json $A/net/contract.json --report $A/net/l12_banklat.json $(cat $A/banklat/L12_ARGS 2>/dev/null) \
+python3 tools/hbm_die_v16/d4g_layers/l12_banklat.py $A/net/contract_forest.json $A/net/contract.json --report $A/net/l12_banklat.json --budget-overlay results/arch/hbm_release_r15_1021/l12_budget_h158.json \
   > $A/net/l12.log 2>&1 || { echo S8B_L12_FAIL; tail -8 $A/net/l12.log; exit 18; }
 tail -2 $A/net/l12.log
 python3 tools/hbm_die_v16/d4g_layers/l29_rootctl_closed.py $A/net/contract.json $A/net/contract.json --latency-report $A/net/l12_banklat.json --report $A/net/l29_rootctl_binding.json || exit 18
