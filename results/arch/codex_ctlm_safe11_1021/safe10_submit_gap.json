@@ -1,0 +1,81 @@
+{
+ "schema": "opentallas.ctlm.safe10.submit_gap.v1",
+ "checked_source_commit": "786fb4a40ff25c751a49dd9c912fa0092f7a5d0c",
+ "active_gate_source_commit": "a4723fd521f4db64b853abf7446a52a10d83b985",
+ "no_gate_worktree_mutation": true,
+ "inherited_benches": [
+  {
+   "name": "lint",
+   "expect": "pass"
+  }
+ ],
+ "qualification": "NOT READY TO SUBMIT: lint-only job; existing historical witnesses listed as recipe evidence, not claimed source-bound to lp9d_npl.",
+ "recipe": {
+  "required_bench_source": "rtl/qwen_dv/lp9d_npl/qfd_tt_ctlm_dv_np_lp.sv + helpers",
+  "template_f": "results/rtl/qw_tlprod_1020/bench10.f",
+  "required_f_replacement": "rtl/qwen_dv/lp9d_np -> rtl/qwen_dv/lp9d_npl",
+  "positive": {
+   "case": "tok_rel",
+   "args": "+MUT=0 +SEED=5 +CALRDIR=2 +CALR_ROM_DIR=calr10",
+   "pass_regex": "LP_LOCKSTEP PASS.*calrdir=2",
+   "required_secondary": "TLOAD_PRODUCER PASS"
+  },
+  "mutants": [
+   {
+    "case": "tok_norel",
+    "args": "+MUT=0 +SEED=5 +CALRDIR=2 +CALR_ROM_DIR=calr10n",
+    "fail_regex": "TLOAD_PRODUCER FAIL"
+   },
+   {
+    "case": "tok_abs1",
+    "args": "+MUT=0 +SEED=5 +CALRDIR=2 +CALR_ROM_DIR=calr10a",
+    "fail_regex": "TLOAD_PRODUCER FAIL"
+   },
+   {
+    "case": "tok_drop17",
+    "compile": "-GCALMUT=35",
+    "args": "+MUT=0 +SEED=5 +CALRDIR=2 +CALR_ROM_DIR=calr10",
+    "fail_regex": "TLOAD_PRODUCER FAIL"
+   }
+  ],
+  "required_version": "Verilator5.050",
+  "metadata_fix": "source.branch/job.branch -> codex/q-close-1021 on eventual chosen gate collection branch; keep immutable physical source archive",
+  "submission": "submit_exact only after exact behavioral/mutant logs committed; preserve critical review if prefix applies"
+ },
+ "historical_witnesses": [
+  {
+   "path": "results/rtl/qw_tlprod_1020/witness/bench10_tok_rel.out",
+   "sha256": "e64237142b08198037b8c82ad7c8a5cbc2d539fd3a29139c3fc99eec269ce4e8",
+   "last_summary": [
+    "TLOAD_PRODUCER PASS",
+    "LP_LOCKSTEP PASS MUT=0 compared=4507674 cycles=237300 calrdir=2 warm=38"
+   ]
+  },
+  {
+   "path": "results/rtl/qw_tlprod_1020/witness/bench10_tok_norel.out",
+   "sha256": "93bc37729763762ad42deeb78e64c9debd5b0961215c30c2a40367f8dd55d381",
+   "last_summary": [
+    "TLOAD_PRODUCER FAIL",
+    "LP_LOCKSTEP FAIL MUT=0 mismatches=1 of 4507674"
+   ]
+  },
+  {
+   "path": "results/rtl/qw_tlprod_1020/witness/bench10_tok_abs1.out",
+   "sha256": "afc527b47e8de8f2ee2e061de86fff2ce617fd03cb3d349dda745e70ec9e841c",
+   "last_summary": [
+    "TLOAD_PRODUCER FAIL",
+    "LP_LOCKSTEP FAIL MUT=0 mismatches=1 of 4507674"
+   ]
+  },
+  {
+   "path": "results/rtl/qw_tlprod_1020/witness/bench10_tok_drop17.out",
+   "sha256": "39aa76ff481c43fd9de76268a424f5564d1bee6915317b3633a768b343d168ba",
+   "last_summary": [
+    "TLOAD_PRODUCER FAIL",
+    "LP_LOCKSTEP FAIL MUT=0 mismatches=2 of 4507674"
+   ]
+  }
+ ],
+ "no_new_bench_run": true,
+ "safe11_scope": "New786fb4a40 qualifies lp9e_h16y + native head4d8fedfd8; never substitute this for safe10 old-head proof."
+}
