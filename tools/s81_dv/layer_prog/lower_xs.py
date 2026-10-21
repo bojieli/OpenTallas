@@ -314,13 +314,13 @@ def source_frame_schedule(master):
 
 
 # ------------------------------------------------------------------------------------------------ one frame programme
-def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, rank_rows=None, cap_cfg=None):
+def frame_programme(master, lk, mats, x, seed=SEED, iters=ITERS, pairs=None, rank_rows=None, cap_cfg=None, frame_source=None):
     """legalise + place one a_proj phase on one frame (field phase 0); returns (field, ph, plan, pairs)"""
     import frame_bench as B
     import frame_return_plan as P
     import v41_die_images_w17w10 as I
     import v41_rom_ksplit_bankmap as S
-    q, _bf = B.frame_pairs(base_master(master))
+    q, _bf = B.frame_pairs(base_master(master), source=frame_source)
     # plan_phase verifies every source hash in this extracted compiler schedule.
     frame_schedule = source_frame_schedule(master)
     assert len(mats) == 1, 'a frame phase mixing wq_a and wkv rows: plan_phase takes one matrix (not needed at 28 / slice)'

@@ -38,6 +38,7 @@ def main():
     p.add_argument('--actual-source-audit', type=Path, help='Immutable actualG9 die/table/source audit for explicitphase')
     p.add_argument('--actual-port-bind',type=Path)
     p.add_argument('--actual-tap-consumer',type=Path)
+    p.add_argument('--actual-address-readset',type=Path)
     a = p.parse_args()
     import dv_layer_compile as C
     import lower_xs as L
@@ -140,8 +141,12 @@ def main():
         for member in placement:
             assert member['rows'], ('unexpected idle selected member', member)
             mats, indices = L.frame_mats(fx, member['rows'])
+            frame_source=None
+            if a.rank_rows:
+                selected_frame=profile['bindings']['col_h9_l4_lp']
+                frame_source=dict(path=str(a.configured_source_root/selected_frame['source']),sha256=selected_frame['sha256'])
             field, phase, plan, qa, q, bf = L.frame_programme(member['master'], member['lk'], mats,
-                fx['x'], rank_rows=member['rows'], cap_cfg=capture['cfg'])
+                fx['x'], rank_rows=member['rows'], cap_cfg=capture['cfg'],frame_source=frame_source)
             assert plan['faults'] == 0
             material = phase_material(field)
             assert shared is None or shared == material, 'one real XS requires identical shared P/S words'
@@ -156,6 +161,14 @@ def main():
         # or fabricated HOST/KS descriptor. Parent must bind immutable dates.
         if a.rank_rows:
             native=local_programme(die.slices()[sl]['sid'],sl,shared,capture,profile)
+            assert a.actual_address_readset, 'realaddressABI source readset needed for unsealedfeedassembly'
+            address=json.loads(a.actual_address_readset.read_text())
+            assert address['source_audit_sha256']==digest(a.actual_source_audit)
+            assert address['port_bind_sha256']==digest(a.actual_port_bind)
+            assert address['die_sha256']==die.die_sha
+            from layer_prog.kv_operand_feed import assemble
+            feed=assemble(die,[dict(rank=fx['meta']['rank'],programme=native['manifest'])],a.actual_source_audit.read_bytes(),address)
+            (out/'kv_operand_feed.json').write_text(json.dumps(feed,indent=1)+'\n')
         else:
             native = programme(die, dict(id='L0_'+half+'_aproj_'+sl, end=0),
                                dict(slice=sl, t_issue=0), shared, frames, capture)

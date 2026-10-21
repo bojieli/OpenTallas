@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.s81.actual_G9_address_readset.v1",
+ "scope": "ACTUAL_THREE_ADDRESS_ABI_FILES_ONLY_FULL_0N_CONFIGURED_PREFLIGHT_PENDING",
+ "die_sha256": "00715e1a11cc9681bf5f1d6a70cf5d4a2c9c3a8094730cf26291f9d3e3a4c8ea",
+ "actual_root": "/srv/opentallas-scratch/claude/codex-s81-g9-bindfix-1021/die72-g9-bindfix",
+ "files_sha256": {
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_rt.sv": "b4add20455f231ff8597ecf19bb9254ca608efbf0457ac6edeaf96c69e5a9a83",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv": "d7073948db44727894d838f37b47056749e07890a2ada02ee6fb0f2bd9dc9b15",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64"
+ },
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF",
+  "OT_S81ENG_TAP_N32R2"
+ ],
+ "source_inputs_manifest_sha256": "6f0cec8cae29909a0ee320ffa992d3231677e45955a1209dc56b5b5f563455e3",
+ "port_bind_sha256": "309c101e3be0f1062ad35fd964db4aa6b7f348dd0704691e2a2d1f82e9700398",
+ "source_audit_sha256": "5e2de380659740383ab311382803d92b34b8cf49359a3167d6f9aa3c56e6d7ee",
+ "evidence": "Read-only sha256sum of literal actualG9src canonicalpaths after 7373 actualPB selected-source audit; filebytes match scopedABI, not inferred from historical191sixprofile.",
+ "whole0N_source_qualified": false,
+ "runtime_performed": false
+}

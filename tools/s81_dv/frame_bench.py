@@ -27,6 +27,7 @@ xo must equal x one edge later on every edge; the frame status must show no faul
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import re
@@ -63,9 +64,14 @@ class SynMat(I.Mat):
         self.w = G.Q8(G.E4M3[self.codes].astype(np.float64), self.exp.astype(np.int64) - 127)
 
 
-def frame_pairs(master):
+def frame_pairs(master, source=None):
     """frame-local pair index -> kind, from the emitted wrapper (q = ot_v41_rom_elem_q_qxpq_w10 u_e<k>)"""
-    txt = (ROOT / f'rtl/dsrom_sys/s81_dv/frame/{master}.sv').read_text()
+    if source is None:
+        txt = (ROOT / f'rtl/dsrom_sys/s81_dv/frame/{master}.sv').read_text()
+    else:
+        payload=Path(source['path']).read_bytes()
+        assert hashlib.sha256(payload).hexdigest()==source['sha256'], 'selectedframe pairsource drift'
+        txt=payload.decode()
     q = sorted(int(m.group(1)) for m in re.finditer(r'^\s*ot_v41_rom_elem_q_qxpq_w10 #\(.*?\) u_e(\d+) ', txt, re.M))
     bf = sorted(int(m.group(1)) for m in re.finditer(r'^\s*dsfd_bf_front_(?:static|roots) #\(.*?\) u_e(\d+) ', txt, re.M))
     assert q and bf and not set(q) & set(bf) and sorted(q + bf) == list(range(len(q) + len(bf))), (q, bf)
