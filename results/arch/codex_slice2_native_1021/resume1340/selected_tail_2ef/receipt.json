@@ -1,0 +1,121 @@
+{
+  "verdict": "PASS",
+  "observed_at": "2026-10-21T14:13:03.274513-07:00",
+  "scope": "ONE required exact selected station sender/receiver LM tail mechanism; no global26 TOK/ARGMAX/ARX/XC, no upstream MAC, no parent programme/throughput/physical timing claim",
+  "DUT_source": "5de01e82f",
+  "harness_source": "2ef6f6e66",
+  "input_source": "91cec0e8fa87158ce2c90e128cd8e421fe05054f",
+  "old_counter_causal_failure": "c50ae63c8a499da9ea4d81d568c44c4036b5194c: all26globalnumericchecks match, sole stn_busy512 at3973, actualKC8/J3; immutable existingwitness, not rerun",
+  "fleet": {
+    "session": 71784,
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-3525317-1792616416",
+    "run": "/srv/opentallas-scratch/claude/codex-s8-selected-tail-1021-2ef6/run",
+    "returncode": 0,
+    "threads": 8,
+    "admission_gb": 64
+  },
+  "shape": {
+    "sender_slice": 9,
+    "receiver_slice": 8,
+    "regions_per_station": 8,
+    "regional_instances": 16,
+    "rows": [
+      18944,
+      18992
+    ],
+    "KC": 8,
+    "J": 3,
+    "valid_halfwords": 192,
+    "halfwords_per_input": 24,
+    "PIN_IN": 1,
+    "BT_LAT": 1,
+    "ADD_LAT": 7,
+    "SKEW": 14,
+    "SCALE_LAT": 6,
+    "JB": 8,
+    "MUT": 0
+  },
+  "checks": {
+    "sender_words": 3,
+    "receiver_words": 3,
+    "receiver_FP32": 48,
+    "bit_exact": true,
+    "receiver_indices": [
+      0,
+      1,
+      2
+    ],
+    "receiver_last": [
+      0,
+      0,
+      1
+    ],
+    "faults": 0,
+    "parent_busy_final": [
+      0,
+      0
+    ],
+    "busy_sample_edge": 3450
+  },
+  "measured_edges": {
+    "original_W_commands": [
+      3280,
+      3282
+    ],
+    "original_local_commands": [
+      3298,
+      3298
+    ],
+    "explicit_CFG_advance": 32,
+    "isolated_CMD_INPUT": 3266,
+    "parent_CFG": 3267,
+    "leaf_CFG_READY": 3270,
+    "first_RAW_near": 3290,
+    "first_parent_near": 3291,
+    "sender_NB": [
+      3376,
+      3377,
+      3378
+    ],
+    "receiver_retire": [
+      3396,
+      3397,
+      3398
+    ]
+  },
+  "contracts": {
+    "BTAB": "Actual4bank128x256 mutableSRAM at realprelude50packetdates/payloads; rd_out->btcap and bank t1/t2 preserved; no hash/constant scale stub",
+    "parent": "Actual pin registers forCMD/RSS/RSN/NB; SID enumeration/go kind2decode; cfg_kcm1[66:59]; actual stn_left completion law, no forced busyclear",
+    "CFG": "Protected (cfg_v||cfg_mid||cfg_final[0]) requires internal rawRSlo/hi/NBvalid0. Measured READY C+4 from rawCMD; source-derived earliest rawnear C+3 not measured at threshold. Adjacent-nextCFG minimum not measured; do not price from isolated quietlead24.",
+    "retiming": "Only CFG advanced32 against original local3298, originalrealdata/K8spacing/high+14 unchanged. OldprogrammeCFG arrives afterfirstnear and remains an invalid protected-source calendar witness."
+  },
+  "fixture_sha256": "78240c7b0bb87672bd4274907b2c8a04af2b78d87e4b79143cd730b6214299af",
+  "events_sha256": "9336a2557522bd1a69b5387e01cc1db69132035d5a808924537197d1ac343df2",
+  "source_sha256": {
+    "rtl/test/qwen_dv/s8/tb_selected_tail_pair.sv": "43e5a5fc4b25950083fc6c15b05eeb2e3e273629cc697b4c7fa719a1a0826a50",
+    "rtl/test/qwen_dv/s8/selected_tail_station.sv": "2c56a74692bd0d321a427d7388866f6da40e868357864a9ca26829e33117ce42",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_tail1.sv": "ed6a647b87a4e97c69ed3687d6f4d5b1b2bcca45b0085ba535158d0bff049d69",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_safe.sv": "6f9fc2569768cc770e229a0a154bce77e60d5555c65766403d5cbc1bf87615e2",
+    "rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv": "84e9d3a9d5e8499d7b1e7295c51945d769c889eefe0b825d3d7a8af2b4fbb0fc",
+    "rtl/qwen_dv/qfd_dv_redstn2_gsafe.sv": "7fa9e5e842474b463942a0bcf682dc11f3cc11e7e589b6acb37807a06a2f740b",
+    "rtl/qwen_dv/qfd_dv_station_math_g.sv": "928642ef41993aa18a9c291954063e53c9df6878f2ad2b23eab7b00348a773a7",
+    "rtl/qwen_dv/qfd_dv_ring_delay.sv": "aa300be59a0ec1950150fce1085eb3726941614991bc90fc1d54b795ebcc7822",
+    "rtl/qwen_dv/qfd_dv_reset_tree.sv": "efbf78991e690ff313fa1ead2c30395b4b59b8427d0c68d21ca25f7a2feb824a",
+    "rtl/common/landed_parent/ot_pl_land.sv": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
+    "rtl/common/landed_parent/ot_pl_land_physical.sv": "c90b74b5928d3a10bbe9fde674c6ee071c38a6cf513512bdaf03582e68bebe18",
+    "rtl/common/landed_parent/ot_pl_land_n32.sv": "f6f4b7170e88b08cd56d04fa0d51411ceb261373c101de9342ce9f58e17d84a5",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v": "9286563862a9cac862351ef03094fab7f53edd82c38784349d588e0958e0bde2",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "tools/qwen_dv/run_s8_selected_tail_pair.sh": "94a26de93d94aac7da77f61ea81523b5f6952ac4543916c9ecbb61ad9c44d6cd"
+  },
+  "artifacts": {
+    "build.log.gz": "25bae644c1cc9655189143b680e614e71d81aae28a0fded36c738b2aa2d42e48",
+    "primary.log": "1c63b1472de99860df5b5f6acdc09275983d6bd08959ea83e805b445b13ea487",
+    "version.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+  }
+}

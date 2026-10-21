@@ -1,0 +1,22 @@
+CFG_INPUT cycle3266 original_local3298 advance32
+CFG_PARENT side1 cycle3267 mode3 nwords3 kc8
+CFG_PARENT side0 cycle3267 mode2 nwords3 kc8
+CFG_READY side1 cycle3270 nwords3 word_last2
+CFG_READY side0 cycle3270 nwords3 word_last2
+FIRST_NEAR_PARENT side1 cycle3291
+FIRST_NEAR_PARENT side0 cycle3291
+FIRST_NEAR_PARENT side1 cycle3292
+FIRST_NEAR_PARENT side0 cycle3292
+FIRST_NEAR_PARENT side1 cycle3293
+FIRST_NEAR_PARENT side0 cycle3293
+SENDER_NB word0 cycle3376 datac59781b8c5aabddf45bc5bb8456ff870c5ba45fd447883f84506363b4582797ac53802f2c39aa862463cdd2344b44b54458080b3c617b8f44649d7b0c41d5a60
+SENDER_NB word1 cycle3377 data4650f589c61c0478c62759f645df5f604467b28645bfd079c63a26f24530e6b1449e42ac450afa22c519970646055ac8c61e690645f7f1b845bcae0ec37a1670
+SENDER_NB word2 cycle3378 data44ed2fc9462c9b4244b44a96c506e93fc63ec9e6c430b098c63c10f4c6072a024562927144d068b846636fa5c523341444813c4e44ed9f76468f2154c5bd0ff5
+RECEIVER word0 cycle3396 idx0 last0 datac27c90c1c2b0b786426e6e38438a4668c312382ac29d695141f492f1432cf24cc1fc1e36c28b552241a247ef41cda05dc1a9c4d8c100058a433030efc29988cc
+RECEIVER word1 cycle3397 idx1 last0 data439987eec265fe48c359590742318c2342ac8021c0909863c35dc22a432058e7c247ae7ac1fa8b4ec0ca74aa425f4e82c295950b42a15854436e72ab41947b0f
+RECEIVER word2 cycle3398 idx2 last1 data41fd163040ea5c8b40f0ff2442c40f33c2baa76bc0d2f893c36d4200c34eaaec4287d1b5c0eee4c3431764c9c1e22fcb414639dc427659a24219bb5cc2b1e211
+SELECTED_TAIL_PASS48_FP32 receiver3 sender3 halves192 KC8 J3 busy0/0 PIN_IN1 BT_LAT1 cfg_advance32 no_programme_age_claim
+- rtl/test/qwen_dv/s8/tb_selected_tail_pair.sv:82: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 35us; walltime 1.758 s; speed 19.633 us/s
+- Verilator: cpu 1.758 s on 1 threads; allocated 26 MB
