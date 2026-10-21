@@ -1,0 +1,125 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "clock_span",
+   "message": "388.8 x 648.0 um: one clock root over > 600 um",
+   "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers on every data input and output (+1 cycle each; kit pin_regs.json)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qkd_hr_ingest_shell_s3a_20261021-132655.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qkd_hr_ingest_shell_s3a_20261021-132655.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/qkd_hr_ingest_shell_s3a-20261021-132655",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 119 s (gate total 1213 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2048, 'pin_rectangles': 2048, 'pin_track_checked': 2048, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 fe2ada9430782363e2fecbe2704be128bce0c2fa0f4f9c82fe75045fa4b46842",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 764 um2 + macros 85538 in core 247482: util 1% (std-cell density 0.5% of placeable 150638 um2; total fill 34.9%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "port_latency",
+   "message": "elaborated pin registers: 1 input / 6 output ports +1 edge; 35 ports pass through (clock/reset/excluded/inout)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN qkd_hr_ingest_shell cells 5,628 flops 1,471 depth 366.7 ps util 0.3492 reach 320.8 um (0.3 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "321 input->register endpoint(s) > 3 levels (worst eng_wv->u_ot_pr_core.u_rank__u_qm.u_hxm/r_addr_in 8 lv, eng_wv->u_ot_pr_core.u_rank__u_qm.u_hxm/r_addr_in 8 lv, eng_wv->u_ot_pr_core.u_rank__u_qm.u_hxm/r_addr_in 8 lv): allowed as a same-region direct connection when the die / parent path meets timing (owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.boundary",
+   "message": "3 register->output bit(s) > 3 levels (worst u_ot_pr_core.u_rank__u_qm.u_hxm->eng_dv 9 lv, u_ot_pr_core.u_rank__u_qm.u_hx.rgray[1]$_DFFE_PN0P_->eng_inv_b 4 lv, u_ot_pr_core.u_rank__u_qm.u_hx.rgray[1]$_DFFE_PN0P_->eng_inv_a 4 lv): allowed as a same-region direct connection when the die / parent path meets timing (owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um",
+   "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: ",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.500 vs spec PD 0.50",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "cross_clock",
+   "message": "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)",
+   "fix": "fix the signoff SDC read and re-gate with --cts"
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/qko-hroot2-1021/physical/ref_tile/qkd_hr_ingest_shell_s3a/gate_layout/floorplan.png",
+   "fix": ""
+  }
+ ]
+}

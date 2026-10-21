@@ -1,0 +1,3 @@
+3278:OT_HYBRID CLOCK_RULE tt ck_core PASS pin_spread=55.1 scope=boundary sinks=654
+3280:OT_HYBRID CLOCK_RULE tt ck_host FAIL pin_spread=123.6 scope=boundary sinks=727 WARN: insertion all_mean 539.2 / pin_mean 540.5 ps > 300 (guidance)
+3281:Error: cts.tcl, 36 OT_HYBRID: glue root ck_host pin-flop spread 123.6 ps > 80 at tt (boundary, 587 of 727 sinks)
