@@ -39,6 +39,7 @@
  },
  "stages": {
   "xdie": "PASS",
+  "tp8": "PASS",
   "ovl4u": "PASS",
   "ctx4u": "PASS",
   "head": "PASS"
@@ -46,14 +47,19 @@
  "missing_stages": [
   "stg",
   "xt1",
-  "tp8",
   "kv"
  ],
  "diagnostic_stages": [
+  "tp8",
   "ovl4u"
  ],
  "stage_sources": {
   "xdie": {
+   "src_commit": "c0f8097f3",
+   "grade": "RTL-functional (source assembly)",
+   "source_note": null
+  },
+  "tp8": {
    "src_commit": "c0f8097f3",
    "grade": "RTL-functional (source assembly)",
    "source_note": null
@@ -76,11 +82,11 @@
  },
  "applied": [
   "attention c2k 32 kv_service 1779 roundtrip 1842 -> plan 1827 <- xdie",
+  "allreduce E 286 LS 378 <- tp8",
   "4u frame 4026800 tokens [16, 15, 8, 7] <- ovl4u",
   "head 3135 <- head",
   "dv: not re-measured -> DIAG",
-  "tile: not re-measured -> DIAG",
-  "allreduce: not re-measured -> DIAG"
+  "tile: not re-measured -> DIAG"
  ],
  "problems": [],
  "token": {

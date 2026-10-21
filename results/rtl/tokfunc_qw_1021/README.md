@@ -16,7 +16,7 @@ Composition engine: toksim_compose @94cd97b7a; `compose_tokfunc.py --base-only` 
 | ovl4u (4u OVL D2D pair fullframe) | PASS, mutants FAIL | DIAG: assembly has no OVL link-end form (967c24eed end stand-in) | frame 4,026,800, tokens 16/15/8/7, 13,708.2 agg |
 | stg (DV families x36 layers, ARF/RP) | running | | |
 | xt1 (slice->near/far ROM clusters + 11 landings) | running | | |
-| tp8 (TP8 AR256, g5r2b coll lanes) | running (baseline LS 378 bit-exact) | | |
+| tp8 (TP8 AR256, g5r2b coll lanes) | PASS, 9 mutants caught | current collective RTL; historical lane ages DIAG | E 286, LS 378, AR256 span797, MU window38138 |
 | kv (KV attention u1/u4 = KV-MU7 job4b, source = assembly attention RTL) | job4b compiling | | |
 
 Interim compose (compose_interim/): 1u 272,675 cyc = 4,402.6 tok/s (-0.01% vs model; head +34), 4u 11,750.6; REL share
