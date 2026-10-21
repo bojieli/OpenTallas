@@ -1,0 +1,15 @@
+# Exact native427-root source successor model before RTL edits
+
+Original63c0f629e actualORFS mapped completed40minutes; loaded-TT/FF-Liberty native FAIL505/427/0roles,15macros. Exactfullcensushash andall427witnesses sealednative_r4. OpenROADODB separately cannotparse signed kepthelperoutputports; no physicalproof. Keep originalsource/job/evidence immutable.
+
+Source successors, defaultoff/wholeRR selectedprofile only:
+
+- Replace15globalconstant-scaleadderbank by32real rawscale captureowners atoriginalIDedge and per-element rawscale+ecode decoder;2kept8b outputconsumerlogic partitions. Inputscale exactly32D loads, copy0 also owns original wait-line writefield. No extra stage. DirectEformula is scale+(ecode==0?1:ecode)-137, equalold15tablevalues overall256scale/16ecodes. Codebyte fields remainowncaptures, eachdecoder haslocalexpression.
+- WL readmacro136roots need true owned landing; advance readcommand wp-11 towp-10, capture rawcodes and32scale copies atnextedge. Identity across counterphases: (wp(C-1)-10)%64=(wp(C)-11)%64. Writes are10/11addressesaway, no read-write conflict; valueunchangedbetweenadjacentreadedges. TOTALoriginalinput-to-gridage12 retained as PROPOSAL0 addedage until exactgoldens. Prevalidinitialheap bits remainoutside validity. No fabricated memorylatency or storage waiver.
+- Paircaptureqv299/oddtag295:25truefinalstagevalid/oddtagcopies atsame originaledges. AQvalidsourcepre-finalbitdrives26D max; tag17thstagebitdrives26D max.25same3edge resetleaves/cohorts kept separatefromcurrentAQreset. Each11bconsumer selectload<=22. No valid/dataage change.
+- HEADrawrr/nw controls:3cohorts<=12payloadbits, eachowns6onehotread/write decode. Rawrr/nw source <=18decoderinputs, eachonehotoutput<=24muxpins. Same ringstate/captureedge.
+- Window7same-edgevalidcopies serve<=11bconsumers; mapoutcopies applyexactexistinglegal/selected<99092 predicate, preservingpoison/duplicate behavior. AQep/dm nextcomputedonce then8existingFFcaptures; unsignedpackedhelperports avoidOpenROADparserunsupported signedport, bit arithmetic retainscasts.
+- Flatlookupreset170: explicit16reset-region opt-in onlywholeRR sourceprofile, allfromparentreset3sameedge leaves16..31. Existingwrapperboundaryreset14loads remainsoriginalrl1. Engineactive26, last12, hd12, write/read/emit<24, issueFSM14, rcnt24, ev24, crc16perleaf, tail<16; no leaf>32. Standalonequalifiedleafdefaultscalarinterface unchanged. ActualwholeRRnative required; no oldleafviewalias forvectorprofile.
+- LocalRVbytecontrol andfaultfc copy remove remainingrawtx44/fc3=43 loads without extra stage; existingtx copies keepstate locally. Realstate/consumerlogic only; nofanoutwaiver.
+
+Use qualifiedLAT5source2358/560 resetearly1+internal2=originaledge3, alreadyfullmechanismPASS7c0f9. ExistingfullRRbase+seeds2/3+6causalbench remainsrequired atactualsuccessor, thenexactnative. No new campaign/helper. No wholeRRphysical beforeactualnative andconcreteplacement/clockproof. Newgeometrylookupgateb2cf separate, no interfacechanges towholeRRclocks.
