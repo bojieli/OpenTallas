@@ -120,7 +120,7 @@ module ot_s81sl_vp #(
     end
 
     // ---------------------------------------------------------------- sequencer (one op at a time; fixed timelines)
-    reg [3:0] sop; reg [7:0] si, sn; reg [9:0] sa0, sa1; reg [1:0] sqb; reg srun;
+    reg [3:0] sop; (* keep *) reg [7:0] si; reg [7:0] sn; reg [9:0] sa0, sa1; reg [1:0] sqb; reg srun;
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin srun <= 1'b0; si <= 8'd0; sop <= 4'd0; end
         else if (cv_c && op != OP_NORM && !op[3]) begin
@@ -143,6 +143,11 @@ module ot_s81sl_vp #(
       if(payload_v[2]) begin sa1[9:6] <= a1[9:6]; sn[3:0] <= sn_cmd[3:0]; end
       if(payload_v[3]) begin sn[7:4] <= sn_cmd[7:4]; sqb <= cn[1:0]; end
     end
+    (* keep *) reg si_address_lsb;
+    always @(posedge clk or negedge rs_s)
+      if(!rs_s) si_address_lsb<=0;
+      else if(cv_c && op != OP_NORM && !op[3]) si_address_lsb<=0;
+      else if(srun) si_address_lsb<=~si_address_lsb;
     wire busy_hit = cv_c && op != OP_NORM && !op[3] && srun;     // an op issued over a running op: schedule violation
 
     // per-cycle leaf-store reads (bank 0 / bank 1 row) and their purpose, by op and step
@@ -157,12 +162,12 @@ module ot_s81sl_vp #(
     reg [9:0] rr0, rr1;
     always @(*) begin
         re_e = 1'b0; re_o = 1'b0; ra_e = 10'd0; ra_o = 10'd0;
-        rr0 = sa0 + {si[6:0], 1'b0}; rr1 = rr0 + 10'd1;
+        rr0 = sa0 + {si[6:1], si_address_lsb, 1'b0}; rr1 = rr0 + 10'd1;
         if (xrv_c) begin re_e = 1'b1; re_o = 1'b1; ra_e = xra_c[0] ? xra_c + 10'd1 : xra_c; ra_o = xra_c[0] ? xra_c : xra_c + 10'd1; end
         if (srun) case (sop)
             OP_GAIN, OP_HLOAD, OP_RDOUT: begin re_e = 1'b1; re_o = 1'b1; ra_e = rr0[0] ? rr1 : rr0; ra_o = rr0[0] ? rr0 : rr1; end
             OP_POST, OP_NORMR: begin
-                if (si < 8'd5) begin rr0 = sa0 + si[2:0]; if (rr0[0]) begin re_o = 1'b1; ra_o = rr0; end
+                if (si < 8'd5) begin rr0 = sa0 + {si[2:1],si_address_lsb}; if (rr0[0]) begin re_o = 1'b1; ra_o = rr0; end
                                                        else begin re_e = 1'b1; ra_e = rr0; end end
                 else begin rr0 = sa1 + (si - 8'd5); if (rr0[0]) begin re_o = 1'b1; ra_o = rr0; end
                                                     else begin re_e = 1'b1; ra_e = rr0; end end
@@ -180,11 +185,13 @@ module ot_s81sl_vp #(
     // decomposed per 32-bit word group g = 4 b + w, each group on its own kept select copies (S81-SLICE/VP SAFE 10-21).
     wire [255:0] wd_f, wm_f; wire [17:0] wa_f; wire [1:0] wv, wcb; wire wcol = |wcb;
     reg hs_v; reg [9:0] hs_a; reg [255:0] hs_d;    // HSTORE write-back (registered from hq)
-    (* keep *) reg [NG-1:0] k_hsv, k_hsa0;           // kept copies of hs_v / hs_a[0] (= hs_base[0]: the step adds 2 i)
+    (* keep *) reg [NG-1:0] k_hsv; (* keep *) reg [NG-1:1] k_hsa0;           // kept copies of hs_v / hs_a[0] (= hs_base[0]: the step adds 2 i)
     genvar gb, gw;
     generate for (gb = 0; gb < 2; gb = gb + 1) begin : g_wb
         for (gw = 0; gw < 16; gw = gw + 1) begin : g_ww
             localparam integer G = 16 * gb + gw;
+            wire hs_parity;
+            if(G==0) assign hs_parity=hs_a[0]; else assign hs_parity=k_hsa0[G];
             reg [7:0] wdw; reg wmw;
             always @(*) begin
                 wdw = 8'd0; wmw = 1'b0;
@@ -202,7 +209,7 @@ module ot_s81sl_vp #(
                         if (|k_xwm[8 * G +: 4]) begin wdw = xwd_c[8 * gw +: 8]; wmw = k_xwm[8 * G + (gw/4)]; end
                     end else if (|k_xwm[8 * G + 4 +: 4]) begin wdw = xwd_c[128 + 8 * gw +: 8]; wmw = k_xwm[8 * G + 4 + (gw/4)]; end
                 end
-                if (k_hsv[G]) begin wdw = ((G == 0 ? hs_a[0] : k_hsa0[G]) == (gb == 1)) ? hs_d[8 * gw +: 8] : hs_d[128 + 8 * gw +: 8]; wmw = 1'b1; end
+                if (k_hsv[G]) begin wdw = (hs_parity == (gb == 1)) ? hs_d[8 * gw +: 8] : hs_d[128 + 8 * gw +: 8]; wmw = 1'b1; end
             end
             assign wd_f[128 * gb + 8 * gw +: 8] = wdw; assign wm_f[128 * gb + 8 * gw +: 8] = {8{wmw}};
         end
@@ -431,7 +438,7 @@ module ot_s81sl_vp #(
         if (!rs_o) hs_v <= 1'b0; else hs_v <= hsv_q[4] && hqv_c;
     always @(posedge clk or negedge rsv[10])
         if(!rsv[10]) k_hsv <= 0; else k_hsv <= {NG{hsv_q[4] && hqv_c}};
-    always @(posedge clk) begin hs_a <= hs_base + {hs_cnt, 1'b0}; k_hsa0 <= {NG{hs_base[0]}}; hs_d <= hqd_c; end
+    always @(posedge clk) begin hs_a <= hs_base + {hs_cnt, 1'b0}; k_hsa0 <= {(NG-1){hs_base[0]}}; hs_d <= hqd_c; end
 
     // NORM / NORMR load of n_pre / m_*: decoded per 32-bit word from kept command copies (k_cv / k_op, landed at the
     // pin) and a registered NORMR-done flag with kept copies (was cv_c && op == NORM / dv && dop == NORMR -> 140 loads).
