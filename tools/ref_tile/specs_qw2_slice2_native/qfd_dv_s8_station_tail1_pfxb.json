@@ -242,7 +242,11 @@
    "rtl/common/landed_parent",
    "rtl/hdc",
    "rtl/qwen_dv",
-   "rtl/test/qwen_dv"
+   "rtl/test/qwen_dv",
+   "physical/qwen_die_masters/io_ref_skew.sdc",
+   "physical/qwen_die_masters/io_flop_at_pins.tcl",
+   "physical/qwen_die_masters/out_flop_release.tcl",
+   "physical/common_flow"
   ],
   "benches": [],
   "views_to": "physical/ref_tile/qfd_dv_s8_station_tail1_pfxb/views",

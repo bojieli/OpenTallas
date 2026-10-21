@@ -15,6 +15,7 @@ def main():
   s['job'].update(owner='CODEX-Q-CB16-SLICE',branch='codex/q-s8-resume-1021',tag=label,
    purpose='Exact4state associative AND prefix repair; same1356state lines/ports/cycles, real48/reset proofs; original5de TT failure preserved',
    benches=[],views_to=f'physical/ref_tile/{name}/views',record_to=f'results/rtl/ref_tile/{name}')
+  s['job']['extra_paths']+=['physical/qwen_die_masters/io_ref_skew.sdc','physical/qwen_die_masters/io_flop_at_pins.tcl','physical/qwen_die_masters/out_flop_release.tcl','physical/common_flow']
   # No duplicated broad bench: exact actual executed evidence is pinned below.
   s['source_proof']={'math_sha256':hashlib.sha256((R/'rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv').read_bytes()).hexdigest(),
    'full_registered_four_state':'results/arch/codex_slice2_native_1021/resume1340/prefix_reset_4d9/receipt.json',
