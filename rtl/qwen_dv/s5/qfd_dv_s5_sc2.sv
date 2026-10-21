@@ -16,7 +16,7 @@
 //   root total -> w1 (fuse 0): +5 (LA - 3)                       (LA 4)
 //   root fused r -> RB broadcast word + w1: +5(LA-3) + (LM-3) + (LA-3) + 3 (3(LM-3) + (LA-3))   (LA 4, LM 4: 19)
 //   config (sc_cfg -> cfg registers): +1 (two face landing stages, QW-S5-SCRED 10-21)
-//   boot only: reset release +2 (reset stages rc, rd) and ring phase reset release +2.
+//   boot only: reset release +4 (relay stages rc, rd, re, rf) and ring phase reset release +2.
 // OT_S5_SC2_MUT (bench witness, must FAIL): the broadcast scalar tap reads window 10.
 // =====================================================================================================================
 
@@ -354,12 +354,15 @@ module qfd_dv_s5_sc2 #(parameter integer MU_NU = 4, parameter integer LA = 4, pa
     // replicates into <= 32-load relays (assertion async, release +1 edge, boot only)
     reg rc;
     always @(posedge ck or negedge rst_f) if (!rst_f) rc <= 1'b0; else rc <= 1'b1;
-    // fourth reset stage rd (QW-S5-SCRED 10-21): with the cfg_v landing the leaf has > 1.8k reset sinks, so one relay
+    // reset relay stages rd.. (QW-S5-SCRED 10-21): with the cfg_v landing the leaf has > 1.8k reset sinks, so one relay
     // level (rc copies <= 8 loads, rs2 copies <= 8 rc copies) still puts > 32 rs2 copies on the raw rst_n pin; the extra
     // async-chained level keeps rst_n <= ~N/512 loads.  Boot only: reset release +1.
-    reg rd;
+    // (cap-8 construction measured > 16k weighted reset loads: rd, re, rf = three async-chained relay levels after rc)
+    reg rd, re, rf;
     always @(posedge ck or negedge rc) if (!rc) rd <= 1'b0; else rd <= 1'b1;
-    wire rst = rd;
+    always @(posedge ck or negedge rd) if (!rd) re <= 1'b0; else re <= 1'b1;
+    always @(posedge ck or negedge re) if (!re) rf <= 1'b0; else rf <= 1'b1;
+    wire rst = rf;
     // face input registers: valid / strobe bits reset, data plain
     // sc_cfg lands in TWO face stages (QW-S5-SCRED 10-21): cfg_v enables the clear/load of ~1.2k root-slot and cfg bits,
     // so its landed register needs >32 kept copies; a single face register would put all of them on the raw input pin

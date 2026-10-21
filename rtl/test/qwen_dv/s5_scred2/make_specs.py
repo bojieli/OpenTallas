@@ -13,7 +13,7 @@ HDC=["rtl/hdc/ot_hdc_vreduce.sv","rtl/hdc/ot_hdc_fastfp.sv","rtl/hdc/ot_hdc_fp32
      "rtl/hdc/ot_hdc_prefix.sv","rtl/hdc/ot_hdc_delay.sv","rtl/hdc/ot_hdc_sfu.sv","rtl/hdc/ot_hdc_sfu_q.sv"]
 LA,LM=int(cfg[0]),int(cfg[1])
 PRICE={'red':f"red_we/red_addr/red_data/fault +{(LM-3)+11*(LA-3)} edges per reduction result vs the old kit qfd_dv_s5_red (OFF {(LM-3)+11*(LA-3)+2} vs the bare module); rd_v +0; reset release +1 boot (ring phases +2)",
-       'sc':f"chain pass / own words / taps +0; root argmax->tok/TOK +1; root total->w1 +{5*(LA-3)}; fused rsqrt->RB/w1 +{5*(LA-3)+(LM-3)+(LA-3)+3*(3*(LM-3)+(LA-3))}; sc_cfg apply +1 (two face stages); reset release +2 boot (rc, rd) and ring phases +2"}
+       'sc':f"chain pass / own words / taps +0; root argmax->tok/TOK +1; root total->w1 +{5*(LA-3)}; fused rsqrt->RB/w1 +{5*(LA-3)+(LM-3)+(LA-3)+3*(3*(LM-3)+(LA-3))}; sc_cfg apply +1 (two face stages); reset release +4 boot (rc..rf) and ring phases +2"}
 def spec(kind,name,w,h,cfgname):
     top=f"qfd_dv_s5_{kind}2_leaf"
     srcs=[f"rtl/qwen_dv/s5/{top}.sv",f"rtl/qwen_dv/s5/{cfgname}.sv",f"rtl/qwen_dv/s5/{cfgname}_helpers.sv"]
