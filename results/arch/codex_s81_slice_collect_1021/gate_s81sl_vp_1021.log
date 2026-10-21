@@ -1,0 +1,5 @@
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_dsrom_su_hcpost_lane_pr': 'M5'}
+GATE WARN sources: 5 referenced file(s) do not exist: ['physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v', 'physical/dsrom_window_source/leaf_inhold.tcl', 'physical/dsrom_window_source/leaf_inhold_release.tcl', 'physical/dsrom_window_source/leaf_iohold.tcl', 'physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl']  -> FIX: commit them / fix the path
+GATE FAIL sources: 4 committed input(s) absent from the working-tree archive: ['physical/dsrom_window_source/leaf_inhold.tcl', 'physical/dsrom_window_source/leaf_inhold_release.tcl', 'physical/dsrom_window_source/leaf_iohold.tcl', 'physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl']  -> FIX: materialize the referenced files in the sparse checkout before rerunning the gate
+PRE_ROUTE_GATE: FAIL (1 fail, 2 warn)

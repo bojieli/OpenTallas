@@ -1,0 +1,36 @@
+{
+  "xg_provenance": [
+    {
+      "start_commit": "5feb5dc07156d0b344df13b74acdd6571e35f78e",
+      "manifest_sha256": "ee50274cdda9a5ee05af178c907580de3abb8005fbc57f2b51474b5b78f7a272",
+      "archive_sha256": "4fb4b0a6b9a793495bb4d857d5cad89f080f663543010774cf6e1d2211852ffe",
+      "path": "/tmp/ref_gate_s81sl_xgtxo_20261021-090210.source_snapshot.json"
+    },
+    {
+      "start_commit": "5feb5dc07156d0b344df13b74acdd6571e35f78e",
+      "manifest_sha256": "ee50274cdda9a5ee05af178c907580de3abb8005fbc57f2b51474b5b78f7a272",
+      "archive_sha256": "c720951ee6e6e21084b7edf517d4bda1cbe9234a95ccd158eb5983e6ea01d536",
+      "path": "/tmp/ref_gate_s81sl_xgtxo_20261021-090218.source_snapshot.json"
+    },
+    {
+      "start_commit": "5feb5dc07156d0b344df13b74acdd6571e35f78e",
+      "manifest_sha256": "1cf527914dd23c059caba7e39455b014851592dd091849a008bde8cab4405ee7",
+      "archive_sha256": "01a7e485efaf63ba1c27f565a75d047b5f5f9c3409a7ca54af03fee0dc81f8cc",
+      "path": "/tmp/ref_gate_s81sl_xgtxo_b_20261021-090211.source_snapshot.json"
+    },
+    {
+      "start_commit": "5feb5dc07156d0b344df13b74acdd6571e35f78e",
+      "manifest_sha256": "1cf527914dd23c059caba7e39455b014851592dd091849a008bde8cab4405ee7",
+      "archive_sha256": "df3f6d614bd100a37e5b907023c9d4181377569d8719e452dfdbedbf24ee76fe",
+      "path": "/tmp/ref_gate_s81sl_xgtxo_b_20261021-090218.source_snapshot.json"
+    }
+  ],
+  "vs_native": {
+    "status": "FAIL",
+    "max_dynamic_loads": 1038,
+    "netlist_sha256": "73e2c6f2063c71cabe4c71b2aaf6d8e405151f8fbb7d8a42cd6e8d95764d79b3",
+    "source": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81sl_vs_w2-20261021-091203/routes/gate/work/orfs/native_census.json"
+  },
+  "vp": "09:27 source archive missing 4 sparse helper files, no route attempted; materialized in fresh collector WT",
+  "xfin": "live replacement PIDs290375/290376; stale 09:11 FAIL json retained"
+}
