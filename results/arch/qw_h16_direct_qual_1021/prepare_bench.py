@@ -65,5 +65,11 @@ for signal in ['fixed_issue','fixed_end','fixed_pc','fixed_unit']:
 Path('rtl/test/qwen_dv/tb_qfd_tt_ctlm_h16z_qualification.sv').write_text(tb)
 bench = Path('rtl/test/qwen_dv/tt_ctlm_prog_bench.py').read_text()
 bench = bench.replace('tt_ctlm_dv_sources.f','tt_ctlm_dv_h16z_qualification_sources.f').replace("HERE / 'tb_qfd_tt_ctlm_prog.sv'", "HERE / 'tb_qfd_tt_ctlm_h16z_qualification.sv'")
+sim_call = "    subprocess.run([str(obj / 'Vtb'),"
+assert bench.count(sim_call)==1
+bench=bench.replace(sim_call, "    sim = subprocess.run([str(obj / 'Vtb'),")
+end_call = '                   capture_output=True)'
+assert bench.count(end_call)==1
+bench=bench.replace(end_call,end_call+"\n    (work / f'stdout_{tag}.log').write_bytes(sim.stdout)\n    (work / f'stderr_{tag}.log').write_bytes(sim.stderr)")
 Path('rtl/test/qwen_dv/tt_ctlm_prog_h16z_qualification.py').write_text(bench)
 print('H16_QUAL_PREPARED ports='+str(len(decl))+' outputs='+str(len(outputs)))
