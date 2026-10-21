@@ -40,7 +40,19 @@ def reservation(bits, group=None):
         groups += ['HV', 'VH']
     frames = [C.frame(wc, g) for g in groups]
     w, h = max(f[0] for f in frames), max(f[1] for f in frames)
-    return w, round((h + C.SHAVE) * len(parts) - C.SHAVE, 3)
+    cols = grid_cols(len(parts), group)
+    rows = math.ceil(len(parts) / cols)
+    return round((w + C.SHAVE) * cols - C.SHAVE, 3), round((h + C.SHAVE) * rows - C.SHAVE, 3)
+
+
+def grid_cols(n, group=None):
+    """Narrow split (MAXW < 600) only: parts sit in a grid of columns. An E/W side-by-side lane ('H',
+    the slice-gap landing columns) keeps one 64.8-um column; any other station (seam / corridor, vertical
+    flow) takes up to OT_SPLIT_FWD_CLASS_COLS (default 2) columns, so its height stays near the 600-b
+    frame's (dv2f21g5r3f/g: a 520-b seam station 5 x 30.24 = 151 um tall found no seam site)."""
+    if slice_max() >= 600 or group == 'H':
+        return 1
+    return max(1, min(n, int(os.environ.get('OT_SPLIT_FWD_CLASS_COLS', '2'))))
 
 
 def slice_name(name, part):
@@ -78,9 +90,13 @@ def install(v, m):
                 ni.name = name if len(parts) == 1 else slice_name(name,part)
                 ni.master, ni.orient = row['cls'], row['orient']
                 ni.w, ni.h = row['class_frame']
-                slot_h=(reserve_h+C.SHAVE)/len(parts)-C.SHAVE
-                ni.x = round(it.x + math.floor((reserve_w-ni.w)/2/C.GX+1e-9)*C.GX,3)
-                ni.y = round(it.y + part*(slot_h+C.SHAVE) + math.floor((slot_h-ni.h)/2/C.GY+1e-9)*C.GY,3)
+                # narrow split: as many columns as the reserved frame holds (1 in a 64.8-um landing column)
+                cols = 1 if slice_max() >= 600 else max(1, min(len(parts), int((reserve_w + C.SHAVE + 1e-6) // (ni.w + C.SHAVE))))
+                rows = math.ceil(len(parts) / cols)
+                slot_w=(reserve_w+C.SHAVE)/cols-C.SHAVE
+                slot_h=(reserve_h+C.SHAVE)/rows-C.SHAVE
+                ni.x = round(it.x + (part % cols)*(slot_w+C.SHAVE) + math.floor((slot_w-ni.w)/2/C.GX+1e-9)*C.GX,3)
+                ni.y = round(it.y + (part // cols)*(slot_h+C.SHAVE) + math.floor((slot_h-ni.h)/2/C.GY+1e-9)*C.GY,3)
                 classes[ni.master] = row
                 made.append((ni, lo, hi, row))
                 receipts.append(dict(instance=ni.name, source_instance=name, source_master=it.master,
