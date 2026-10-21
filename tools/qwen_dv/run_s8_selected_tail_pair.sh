@@ -48,5 +48,15 @@ if [[ "$mode" == oldcounter ]]; then
  grep -q 'SELECTED_TAIL_NOT_DRAINED receiver0 sender0 halves192 left3/3' "$out/primary.log"
  echo "FIXEDJB8_CAUSAL_NEGATIVE_PASS rc=$rc"
 else
- exit "$rc"
+ [[ $rc -eq 0 ]]
+ if [[ "${CHECK_LATE_CFG:-0}" == 1 ]]; then
+  set +e
+  "$out/obj/Vtb_selected_tail_pair" +FIX="$out/fixture" +CFGSHIFT=0 > "$out/late_cfg.log" 2>&1
+  late_rc=$?
+  set -e
+  cat "$out/late_cfg.log"
+  [[ $late_rc -ne 0 ]]
+  grep -q 'SELECTED_TAIL_FAULT' "$out/late_cfg.log"
+  echo "LATE_CFG_CAUSAL_NEGATIVE_PASS rc=$late_rc"
+ fi
 fi

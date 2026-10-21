@@ -9,6 +9,7 @@ reg tw_we=0;reg[8:0]tw_addr=0;reg[1023:0]tw_data=0;
 wire[513:0]nb[0:1];wire rv[0:1],rl[0:1],fault[0:1];wire[7:0]ri[0:1];wire[511:0]rd[0:1];
 wire[8:0]left[0:1];integer nr=0,ns=0,halves=0;integer cfgshift=32;string path;
 initial begin
+ if($value$plusargs("CFGSHIFT=%d",cfgshift))begin end
  if(!$value$plusargs("FIX=%s",path))$fatal(1,"FIX required");
  $readmemh({path,"/cfg.hex"},cfg_cmd);$readmemh({path,"/receiver.hex"},exp_recv);$readmemh({path,"/sender.hex"},exp_send);$readmemh({path,"/scale.hex"},exp_scale);
  fd=$fopen({path,"/pair.ev"},"r");bd=$fopen({path,"/btab.ev"},"r");
