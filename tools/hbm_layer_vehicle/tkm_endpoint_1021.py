@@ -16,10 +16,10 @@ def endpoint_plan(*, n, k, nout, g, gbase, pf, obase, rbase, has_r, start_edge):
     for name,value in values.items():
         if type(value) is not int:
             raise ValueError(f'{name}: exact integer required')
-    if not (1<=g<=192 and 0<=gbase and gbase+g<=256 and
+    if not (1<=g<=192 and 0<=gbase and gbase+g<256 and
             1<=n<4096 and pf==(n+7)//8 and 1<=nout<=k<=2048 and
             has_r in (0,1) and start_edge>=0):
-        raise ValueError('invalid fixed TP192 configuration')
+        raise ValueError('invalid fixed TP192 configuration; 8-bit source rank bound must not wrap at256')
     for name,value in [('obase',obase),('rbase',rbase)]:
         if not 0<=value<1<<40 or value%16:
             raise ValueError(f'{name}: aligned40bit VM word address required')
