@@ -1,0 +1,150 @@
+{
+  "collected": "2026-10-21T00:33:31.395736-07:00",
+  "verified_original_files": 42,
+  "jobs": [
+    {
+      "name": "qkd_kvs_emb_z3a-z3a-82a5dba1f",
+      "original_status": "NEEDS_HUMAN",
+      "original_source": {
+        "branch": "claude/kv-emb4-z1-1020",
+        "commit": "82a5dba1f",
+        "extra_paths": [
+          "rtl",
+          "tools",
+          "results/arch/qwen_kv_static_programme_1017",
+          "results/arch/qwen_kv_die",
+          "results/arch/qwen_kv_pvfin_1017",
+          "results/rtl/qwen_kv_die/kvs_kits_ns_1018",
+          "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+        ]
+      },
+      "original_commit_full": "82a5dba1f00e44dc7735c58b27b9ef427136483d",
+      "original_attempt": 2,
+      "original_source_synced": true,
+      "original_reason": "route crashed twice (rc=1 ok-check failed;; first error: qkd_kvs_emb_z3a_z3a_82a5dba1f/flow.log: partial record written to /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_emb_z3a-z3a-82a5dba1f/routes/qkd_kvs_emb_z3a_z3a_82a5dba1f/physical.json [step do-3_5_place_dp]; resource=False)",
+      "attribution_policy": "original oom_unattributed evidence preserved; explicit exact metrics pathname/time supports authorized human retry only; no automatic attribution relaxation",
+      "earlyoom_matches": [
+        {
+          "timestamp_us": "1792566686983632",
+          "boot_id": "86885164b77242c1bf15630f094d4e70",
+          "message": "sending SIGTERM to process 162929 uid 0 \"openroad\": oom_score 1000, oom_score_adj 500, VmRSS 864 MiB, cmdline \"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_place.tcl -metrics /work/logs/asap7/opentallas_qkd_kvs_emb_asap7_ref_qkd_kvs_emb_z3a_z3a_82a5dba1f/base/3_5_place_d\""
+        }
+      ],
+      "recovery": "supported retry --replay-frozen-helpers; no keep-resume, fresh source sync",
+      "retry_time": "2026-10-21T00:32:28-07:00"
+    },
+    {
+      "name": "qkd_kvs_emb_z3b-z3b-82a5dba1f",
+      "original_status": "NEEDS_HUMAN",
+      "original_source": {
+        "branch": "claude/kv-emb4-z1-1020",
+        "commit": "82a5dba1f",
+        "extra_paths": [
+          "rtl",
+          "tools",
+          "results/arch/qwen_kv_static_programme_1017",
+          "results/arch/qwen_kv_die",
+          "results/arch/qwen_kv_pvfin_1017",
+          "results/rtl/qwen_kv_die/kvs_kits_ns_1018",
+          "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+        ]
+      },
+      "original_commit_full": "82a5dba1f00e44dc7735c58b27b9ef427136483d",
+      "original_attempt": 2,
+      "original_source_synced": true,
+      "original_reason": "route crashed twice (rc=1 ok-check failed;; first error: qkd_kvs_emb_z3b_z3b_82a5dba1f/flow.log: partial record written to /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_emb_z3b-z3b-82a5dba1f/routes/qkd_kvs_emb_z3b_z3b_82a5dba1f/physical.json [step do-3_5_place_dp]; resource=False)",
+      "attribution_policy": "original oom_unattributed evidence preserved; explicit exact metrics pathname/time supports authorized human retry only; no automatic attribution relaxation",
+      "earlyoom_matches": [
+        {
+          "timestamp_us": "1792566687386590",
+          "boot_id": "86885164b77242c1bf15630f094d4e70",
+          "message": "sending SIGTERM to process 165141 uid 0 \"openroad\": oom_score 1000, oom_score_adj 500, VmRSS 786 MiB, cmdline \"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_place.tcl -metrics /work/logs/asap7/opentallas_qkd_kvs_emb_asap7_ref_qkd_kvs_emb_z3b_z3b_82a5dba1f/base/3_5_place_d\""
+        }
+      ],
+      "recovery": "supported retry --replay-frozen-helpers; no keep-resume, fresh source sync",
+      "retry_time": "2026-10-21T00:32:28-07:00"
+    },
+    {
+      "name": "s81sl_capc5l-s81sl_capc5l-e450c42b2",
+      "original_status": "NEEDS_HUMAN",
+      "original_source": {
+        "branch": "claude/s81-capc5c-1020",
+        "commit": "e450c42b2",
+        "extra_paths": [
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+          "physical/ref_tile/s81sl_cap_ed/views",
+          "physical/ref_tile/s81sl_cap_ld/views",
+          "physical/ref_tile/s81sl_cap_rt/views",
+          "physical/ref_tile/s81sl_cap_tr/views",
+          "results/arch/landed_parent_1018/s81sl_capc5c",
+          "rtl/common/landed_parent",
+          "rtl/dsrom_sys/s81_die_bind",
+          "rtl/dsrom_sys/s81_dv/slice",
+          "rtl/dsrom_sys/s81_static_net",
+          "rtl/hdc",
+          "rtl/lib",
+          "rtl/proto",
+          "tools/s81",
+          "tools/s81_slice",
+          "tools/landed_parent"
+        ]
+      },
+      "original_commit_full": "e450c42b252f55492f89a0a871a73bee2fcb2afa",
+      "original_attempt": 2,
+      "original_source_synced": false,
+      "original_reason": "route crashed twice (rc=1 ok-check failed;; first error: s81sl_capc5l_s81sl_capc5l_e450c42b2/flow.log: partial record written to /srv/opentallas-scratch/claude/closure-loop/s81sl_capc5l-s81sl_capc5l-e450c42b2/routes/s81sl_capc5l_s81sl_capc5l_e450c42b2/physical.json [step do-5_2_route]; resource=False)",
+      "attribution_policy": "original oom_unattributed evidence preserved; explicit exact metrics pathname/time supports authorized human retry only; no automatic attribution relaxation",
+      "earlyoom_matches": [
+        {
+          "timestamp_us": "1792566317943926",
+          "boot_id": "86885164b77242c1bf15630f094d4e70",
+          "message": "sending SIGTERM to process 3950788 uid 0 \"openroad\": oom_score 1004, oom_score_adj 500, VmRSS 9202 MiB, cmdline \"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/detail_route.tcl -metrics /work/logs/asap7/opentallas_ot_s81sl_capc5c_asap7_ref_s81sl_capc5l_s81sl_capc5l_e450c42b2/base/5\""
+        }
+      ],
+      "recovery": "PARKED prefer CLOSED capc5k pending actual qualification",
+      "retry_time": null
+    },
+    {
+      "name": "s81sl_vp-s81sl_vp-c318a2024",
+      "original_status": "NEEDS_HUMAN",
+      "original_source": {
+        "branch": "claude/drive-s81-slicep-vp-1020",
+        "commit": "c318a2024",
+        "extra_paths": [
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+          "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+          "physical/hbm_norm_split_20261008",
+          "results/rtl/hbm_norm_engine_view_20261006",
+          "results/rtl/s81_slice_1017/beat",
+          "rtl/dsrom_sys/s81_dv/slice",
+          "rtl/hdc/v41x",
+          "tools/dsrom_su_hcpost.py",
+          "tools/hdc_golden.py",
+          "tools/hdc_golden_v41.py",
+          "tools/rtl_hdc_v41_blockdot_campaign.py",
+          "tools/s81_slice",
+          "tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl",
+          "tools/s81_suhc/hc_gate.py"
+        ]
+      },
+      "original_commit_full": "c318a2024af397e79e24c1a5de2b0074ad298709",
+      "original_attempt": 2,
+      "original_source_synced": false,
+      "original_reason": "route crashed twice (rc=1 ok-check failed;; first error: s81sl_vp_s81sl_vp_c318a2024/flow.log: partial record written to /srv/opentallas-scratch/claude/closure-loop/s81sl_vp-s81sl_vp-c318a2024/routes/s81sl_vp_s81sl_vp_c318a2024/physical.json [step do-3_3_place_gp]; resource=False)",
+      "attribution_policy": "original oom_unattributed evidence preserved; explicit exact metrics pathname/time supports authorized human retry only; no automatic attribution relaxation",
+      "earlyoom_matches": [
+        {
+          "timestamp_us": "1792566686568970",
+          "boot_id": "86885164b77242c1bf15630f094d4e70",
+          "message": "sending SIGTERM to process 4145025 uid 0 \"openroad\": oom_score 1000, oom_score_adj 500, VmRSS 1653 MiB, cmdline \"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 8 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_s81sl_vp_asap7_ref_s81sl_vp_s81sl_vp_c318a2024/base/3_3_place_gp.\""
+        }
+      ],
+      "recovery": "supported retry --replay-frozen-helpers; no keep-resume, fresh source sync",
+      "retry_time": "2026-10-21T00:32:28-07:00"
+    }
+  ],
+  "no_helper_or_design_code_changed": true,
+  "no_tests_required": "evidence collection and supported CLI operation only"
+}
