@@ -35,12 +35,19 @@ b3) bash $C $O b3 "-GMUT=0 -GSRAM_MACRO=1" 16 \
  "fail_slothit|+N=4096 +B=13 +T0=400 +P=3 +SLOTHIT=1" \
  "x_t0s200|+N=4096 +B=13 +T0=200 +P=3" \
  "x_gt0s900|+GATHER=1 +N=2048 +T0=900 +P=4" ;;
+t0) bash $C $O b3 "-GMUT=0 -GSRAM_MACRO=1" 12 \
+ "x_t0s220|+N=4096 +B=13 +T0=220 +P=3" "x_t0s240|+N=4096 +B=13 +T0=240 +P=3" "x_t0s260|+N=4096 +B=13 +T0=260 +P=3" \
+ "x_t0s280|+N=4096 +B=13 +T0=280 +P=3" "x_t0s300|+N=4096 +B=13 +T0=300 +P=3" "x_t0s340|+N=4096 +B=13 +T0=340 +P=3" \
+ "x_gt0s500|+GATHER=1 +N=2048 +T0=500 +P=4" "x_gt0s600|+GATHER=1 +N=2048 +T0=600 +P=4" "x_gt0s700|+GATHER=1 +N=2048 +T0=700 +P=4" \
+ "x_gt0s800|+GATHER=1 +N=2048 +T0=800 +P=4" ;;
 sdx) bash $C $O sdx20 "-GMUT=0 -GSRAM_MACRO=1 -GSDX=20" 8 \
  "x_small|+N=4096 +B=13 +T0=400 +P=3" "x_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4" "x_l20|+N=87382 +B=13 +T0=400 +P=3" ;;
 sd0) bash $C $O sd0 "-GMUT=0 -GSRAM_MACRO=1 -GXD=0" 8 \
  "x_small|+N=4096 +B=13 +T0=400 +P=3" "x_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4" "x_l20|+N=87382 +B=13 +T0=400 +P=3" ;;
 m1|m3|m4) bash $C $O $1 "-GMUT=${1#m} -GSRAM_MACRO=1" 4 "fail_small|+N=4096 +B=13 +T0=400 +P=3" "fail_g|+GATHER=1 +N=256 +T0=1500 +P=3" ;;
-m2|m5) bash $C $O $1 "-GMUT=${1#m} -GSRAM_MACRO=1" 4 "fail_small|+N=4096 +B=13 +T0=400 +P=3" "fail_g|+GATHER=1 +N=256 +T0=1500 +P=3" ;;
+# m2 (budget ignored) / m5 (odd-cell responses lost) act on gather only: a scan job never has 24 requests outstanding on
+# a PC lane, and scan reads 2-cell sectors at even cells only.
+m2|m5) bash $C $O $1 "-GMUT=${1#m} -GSRAM_MACRO=1" 4 "fail_g|+GATHER=1 +N=256 +T0=1500 +P=3" "fail_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4" ;;
 m6) bash $C $O m6 "-GMUT=6 -GSRAM_MACRO=1" 4 "fail_open6|+N=4096 +B=13 +T0=400 +P=3 +OPEN=6" ;;
 m7) bash $C $O m7 "-GMUT=7 -GSRAM_MACRO=1" 4 "closed_g2048p3|+GATHER=1 +N=2048 +T0=1500 +P=3" "pass_g2048|+GATHER=1 +N=2048 +T0=1500 +P=4" ;;
 esac
