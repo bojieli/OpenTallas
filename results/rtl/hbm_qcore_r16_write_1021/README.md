@@ -6,4 +6,4 @@ Real COL sector/row decode moves before the existing writer capture, registering
 
 First native FAIL16/max34 on COL data select. A byte-wrapper alone let ABC absorb the OR into mux bits: native2 FAIL16/max84 on rowhit registers. Final separate kept OR4 children in data bytes and control path yielded actual sector7 native PASS10939 roots/max32/0violations. All raw reports retained, no threshold exemption.
 
-The source1 existing qcore lockstep passed9104checks/312scalars/5918validreads, fault_lags0. Exact finalsource3 functional run remains pending (lead said no newsource jobs); PRETREE-enabled parent native/reset/placement/finalroute likewise unqualified. No layout gate, submit, main adoption, or source alias.
+The source1 existing qcore lockstep passed9104checks/312scalars/5918validreads, fault_lags0. Exact finalsource3 functional run passed9104/scalars312/5918validreads/fault_lags0, and actual COL word-source MUT128 was rejected. PRETREE-enabled parent native/reset/placement/finalroute remain unqualified. No layout gate, submit, main adoption, or source alias.
