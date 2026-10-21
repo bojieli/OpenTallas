@@ -56,12 +56,25 @@ def main():
             w,h=max(q[0] for q in candidates),max(q[1] for q in candidates)
             fallback[master]=[w,h]
         return (w*row['tiles'],h) if row['direction'] in ('NS','SN') else (w,h*row['tiles'])
+    def paired_bound(x,y,rec,otherxy,other):
+        if rec['tiles']!=other['tiles']:raise ValueError('lane count changes across actual ordered stage')
+        rw,rh=shape(rec);ow,oh=shape(other);n=rec['tiles']
+        rx,ry=(rw/n,rh) if rec['direction'] in ('NS','SN') else (rw,rh/n)
+        ox,oy=(ow/n,oh) if other['direction'] in ('NS','SN') else (ow,oh/n)
+        result=np.zeros_like(x,dtype=float)
+        for t in range(n):
+            scale=t-(n-1)/2
+            rdx,rdy=(scale*rx,0) if rec['direction'] in ('NS','SN') else (0,scale*ry)
+            odx,ody=(scale*ox,0) if other['direction'] in ('NS','SN') else (0,scale*oy)
+            bound=np.abs(x+rdx-otherxy[0]-odx)+np.abs(y+rdy-otherxy[1]-ody)+(rx+ry+ox+oy)/2
+            result=np.maximum(result,bound)
+        return result
     bbox=end['bbox'];goal=np.array([(bbox[0]+bbox[2])/2,(bbox[1]+bbox[3])/2])
     feed=sinkinfo['src'][0]
     parentnode=next(n for n in splice['nodes'] if n['id']==feed)
     pi=by_inst[parentnode['names'][0]];pm=ROW.search(pi['note'])
     parentpt=np.array([float(pm[5]),float(pm[6])])
-    pw,ph=shape(dict(master=pi['master'],tiles=int(pm[3]),direction=pm[4]))
+    parentrec=dict(master=pi['master'],tiles=int(pm[3]),direction=pm[4]);pw,ph=shape(parentrec)
     G=4.32; x0=math.floor((goal[0]-1500)/G)*G;y0=math.floor((goal[1]-1500)/G)*G
     nx=math.ceil(1800/G);ny=math.ceil(3000/G)
     blocked=np.zeros((nx,ny),bool)
@@ -97,9 +110,10 @@ def main():
     fwx=2*math.ceil((fw/2+G)/G)+1;fwy=2*math.ceil((fh/2+G)/G)+1
     fc=maximum_filter(blocked.astype(np.uint8),size=(fwx,fwy),mode='constant',cval=1)
     fd=np.abs(X-parentpt[0])+np.abs(Y-parentpt[1])
-    choices=np.argwhere((fc==0)&(fd+firsthalf+(pw+ph)/2<=395))
+    first_ok=(fc==0)&(paired_bound(X,Y,firstrec,parentpt,parentrec)<=395)
+    choices=np.argwhere(first_ok)
     firstpt=None
-    for j in np.argsort(fd[(fc==0)&(fd+firsthalf+(pw+ph)/2<=395)],kind='stable'):
+    for j in np.argsort(fd[first_ok],kind='stable'):
         ix,iy=choices[j];lo,hi=ix-fwx//2,ix+fwx//2+1;bot,top=iy-fwy//2,iy+fwy//2+1
         charge=np.bincount(ids[lo:hi,bot:top].ravel(),minlength=len(capacity))*G*G
         if np.any(charged+charge>capacity+1e-6):continue
@@ -107,15 +121,17 @@ def main():
         firstpt=np.array([round(float(X[ix,iy]),1),round(float(Y[ix,iy]),1)])
         selected[firstkey]=dict(xy=firstpt.tolist(),footprint=[fw,fh]);break
     if firstpt is None:raise ValueError('no source-reachable footprint/capacity-legal reserved landing')
+    prevrec=None
     for reverse,(key,rec) in enumerate(reversed(target[1:])):
         w,h=shape(rec);wx=2*math.ceil((w/2+G)/G)+1;wy=2*math.ceil((h/2+G)/G)+1
         collision=maximum_filter((blocked|used).astype(np.uint8),size=(wx,wy),mode='constant',cval=1)
         half=(w+h)/2
         distance=np.abs(X-prev[0])+np.abs(Y-prev[1])
-        ok=(collision==0)&(distance+half+prevhalf<=395)
+        hop_bound=(distance+half+prevhalf) if prevrec is None else paired_bound(X,Y,rec,prev,prevrec)
+        ok=(collision==0)&(hop_bound<=395)
         remaining=len(target)-reverse-2
         if remaining==0:
-            ok &= np.abs(X-firstpt[0])+np.abs(Y-firstpt[1])+half+firsthalf<=395
+            ok &= paired_bound(X,Y,rec,firstpt,firstrec)<=395
         else:
             ok &= np.abs(X-firstpt[0])+np.abs(Y-firstpt[1])<remaining*230+200
         indices=np.argwhere(ok)
@@ -134,15 +150,16 @@ def main():
             if np.any(charged+charge>capacity+1e-6):continue
             charged+=charge;used[lo:hi,bot:top]=True
             xy=[round(float(X[ix,iy]),1),round(float(Y[ix,iy]),1)]
-            selected[key]=dict(xy=xy,footprint=[w,h]);prev=np.array(xy);prevhalf=half;found=True;break
+            selected[key]=dict(xy=xy,footprint=[w,h]);prev=np.array(xy);prevhalf=half;prevrec=rec;found=True;break
         if not found:failure=dict(row=key,reason='all reachable legal footprints exceed50pct actualfree-cell window budget',placed=len(selected));break
     ratio=float(np.max(np.divide(charged,capacity,out=np.zeros_like(charged),where=capacity>0)))
     envelope=[]
     if failure is None:
-        previous=parentpt;phalf=(pw+ph)/2
-        for key,_ in target:
+        previous=parentpt;previousrec=parentrec;phalf=(pw+ph)/2
+        for key,rec in target:
             v=selected[key];xy=np.array(v['xy']);half=sum(v['footprint'])/2
-            envelope.append(float(np.abs(xy-previous).sum()+half+phalf));previous=xy;phalf=half
+            envelope.append(float(paired_bound(xy[0],xy[1],rec,previous,previousrec)))
+            previous=xy;previousrec=rec;phalf=half
         envelope.append(float(np.abs(previous-goal).sum()+phalf+(bbox[2]-bbox[0]+bbox[3]-bbox[1])/2))
         if max(envelope)>395.2:failure=dict(reason='independent post-allocation endpoint bound failed',maximum=max(envelope))
     verdict='FOCUSED_MODEL_PASS' if failure is None and not missing else 'FOCUSED_MODEL_FAIL'
