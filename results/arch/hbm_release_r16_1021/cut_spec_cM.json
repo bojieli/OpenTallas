@@ -1,0 +1,22 @@
+{
+ "plan": "R16_cM",
+ "why": "HBM-OWN/DIE2 10-21 r16b: X cuts [[7300.0, 172.8], [17900.0, 172.8]] in every band; Y unchanged (reticle 500 um margin)",
+ "bands": [
+  {
+   "name": "all",
+   "y0": -1000000000.0,
+   "y1": 1000000000.0,
+   "cuts": [
+    [
+     7300.0,
+     172.8
+    ],
+    [
+     17900.0,
+     172.8
+    ]
+   ]
+  }
+ ],
+ "ycuts": []
+}

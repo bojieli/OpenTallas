@@ -30,10 +30,15 @@ from d4g_channel_cuts import overlaps, wh  # noqa: E402
 var, out = sys.argv[1], Path(sys.argv[2])
 BASE = ROOT / 'results/arch/hbm_release_r15_1021/planB_h158'
 CFG = {
+    # c*: + xl_<q>_ctl (+ its two aq trees) moved to the MIDPOINT of its two xq stacks in the 459 um gap band between the SM row
+    #     and the middle band: xl_ctl broadcasts c_d 1024 b (+ aq q 2x256 b) to BOTH stacks; at the outer stack the near
+    #     sink took 15-20 equal-age pad stages x 2 tiles (xl_*_ctl pads 1.15 mm2 = the outer-stack windows 1.9-2.06).
     'bM': dict(ft=64.8, halo=21.6, cuts=[[7300.0, 172.8], [17900.0, 172.8]], hot_extra=''),
     'bF': dict(ft=86.4, halo=32.4, cuts=[[3950.0, 86.4], [4800.0, 86.4], [20300.0, 86.4], [21170.0, 86.4]],
                hot_extra='|ot_hbm_accel_smh'),
-}[var]
+}
+CFG['cM'] = dict(CFG['bM'], xlmid=True); CFG['cF'] = dict(CFG['bF'], xlmid=True)
+CFG = CFG[var]
 FT_W, HALO = CFG['ft'], CFG['halo']
 HOT = r'^(ot_hbm_su_static_pgslice_lg|ot_hbm_su_programme_pslice_c5|ot_hbm_idx_score_quarter_static|ot_hgi_sfu_core_split3|' \
       r'ot_hgi_sfu_programme_store_r10|ot_hbm_hc_bankq|ot_hbm_svc_wb_kport_q' + CFG['hot_extra'] + ')'
@@ -115,6 +120,25 @@ for n, grow_w in (('vmh_SW', False), ('vmh_NW', False), ('vmh_SE', True), ('vmh_
         move(n, x=x0 - 388.8, w=w0 + 388.8)
     else:
         move(n, w=w0 + 388.8)
+# 5 (c*) xl_ctl + aq trees at the stack midpoint in the SM-row / middle-band gap band
+if CFG.get('xlmid'):
+    for q in ('SW', 'SE', 'NW', 'NE'):
+        cx = [box(f'xq_{q}_p{k}_bfq0')[0] + box(f'xq_{q}_p{k}_bfq0')[2] / 2 for k in (0, 1)]
+        sm = [box(n) for n in S if re.fullmatch(rf'sm_{q[0]}W\d', n)]
+        mid_b = [box(n) for n in ('su_' + q + '1', 'sfucore_' + q) if n in S]
+        if q[0] == 'S':
+            g0 = max(b[1] + b[3] for b in sm); g1 = min(b[1] for b in mid_b)
+        else:
+            g0 = max(b[1] + b[3] for b in mid_b); g1 = min(b[1] for b in sm)
+        xc = (cx[0] + cx[1]) / 2; w, h = box(f'xl_{q}_ctl')[2:]
+        assert g1 - g0 >= h + 43.2, (q, g0, g1)
+        x0 = round((xc - w / 2) / 0.216) * 0.216; y0 = round(((g0 + g1) / 2 - h / 2) / 0.216) * 0.216
+        move(f'xl_{q}_ctl', x=x0, y=y0)
+        ax = x0 + w + 21.6
+        for k, n in enumerate((f'xl_{q}_aqlo', f'xl_{q}_aqhi')):
+            aw, ah = box(n)[2:]
+            move(n, x=round(ax / 0.216) * 0.216, y=round(((g0 + g1) / 2 + (-ah - 10.8 if k == 0 else 10.8)) / 0.216) * 0.216)
+    fp['xl_mid_r16c'] = dict(by='HBM-OWN/DIE2', why='xl_ctl c_d/aq broadcast to both xq stacks: midpoint removes the near-stack pads')
 # overlap / die checks (only NEW pairs vs the cut plan count)
 ov1 = set(map(frozenset, overlaps(srs(G) + prs(P))))
 new = sorted(map(sorted, ov1 - ov0))
