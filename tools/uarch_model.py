@@ -17413,3 +17413,40 @@ def qwen_release_programme_store_candidate_model():
     """Finite SU/MU programme storage; physical/native gates remain mandatory."""
     from uarch_model_qwen_programme_store import model
     return model()
+
+
+def hbm_tkm_e86_v5_cone_model():
+    """Causal zero-edge structural correction of archived E86 SX->GN->gc.
+
+    Original source is39d901240, not a changed historical measurement. No
+    numerical, register-edge, clock-frequency or calendar change is proposed.
+    """
+    w=85;group=5;ng=(w+group-1)//group;levels=(ng-1).bit_length()
+    old_live=sum((w+(1<<l)-1)//(1<<l) for l in range((w-1).bit_length()+1))
+    prefix_live=sum(max(0,ng-(1<<l)) for l in range(levels))
+    return dict(schema='opentallas.e86_v5_causal_model.v1',status='UNQUALIFIED_SOURCE_MODEL',
+        source_base='39d901240ce0c6eb9c928e3fccaf6c0ff892bc2a',
+        causal_path='SX[14][11] -> 85bit compare -> GN kept hierarchy -> gc feedback mux',
+        archived_TT_setup_ps=-30.32,archived_FF_hold_ps=6.42,
+        compare_width=w,unsigned_key_order='MSB first, same actual [EW-1:1] key; no FP32 arithmetic change',
+        original_equations=['tl_i=(~a_i)&b_i','te_i=~(a_i^b_i)',
+            'combine_lt=tl_hi|(te_hi&tl_lo)','combine_eq=te_hi&te_lo'],
+        proposed_equation='OR(chunk_lt[g] & AND(chunk_eq[h] for h>g)); chunk_lt uses original bitwise recurrence',
+        chunks=ng,chunk_width=group,top_chunk_width=w-(ng-1)*group,
+        original_kept_lt_eq_live_nodes_per_compare=2*old_live,
+        proposed_kept_group_lt_eq_prefix_terms_per_compare=2*ng+prefix_live+ng,
+        prefix_live_nodes=prefix_live,prefix_max_fanout=3,
+        padding='partial high chunk uses actual remaining bits; no kept padded/pass-through aliases',
+        comparator_count=68*4+9*16+12*4,
+        GN_feedback='move EXACT qc?flags:gn ternary inside kept GN leaf; gc consumes selected output directly',
+        qc_copy_invariant='existing copies all startX, share sameD and same source regionalclock; caseequal every edge',
+        four_state_reasoning='AND/OR strong-Kleene distributivity/associativity preserves old bitwise formula; Z is treated identically by same initial bitwise operators. No relational< or logical== shortcut; GN ternary unchanged.',
+        state_bits_added=0,cycles_added=0,tile_hop_edges=4,SETTLE_for_NT32=136,
+        prior_legacy_to_PRE1_cost='separate existing +32first/+64finish; unchanged by v5',
+        clock_roots=['clk','clk_r0','clk_r1','clk_r2','clk_r3'],clock_period_ps=833.333,
+        requested_outline_um=[302.4,302.4],outline_area_um2=302.4**2,
+        bytes_per_edge_per_payload_port=43,MACs_per_cycle=0,
+        timing_gain='must be measured; remove long kept carry stages and late hierarchy-boundary mux, no claimed PASS',
+        qualification=['bounded4state comparator+fold sourceprobe',
+            'existing4000cycle all-output lockstep and causal mutants',
+            'actual native32 census before physical gate','ROOTcritical geometry review before any eventual submit'])

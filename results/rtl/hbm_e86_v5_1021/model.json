@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.e86_v5_causal_model.v1",
+ "status": "UNQUALIFIED_SOURCE_MODEL",
+ "source_base": "39d901240ce0c6eb9c928e3fccaf6c0ff892bc2a",
+ "causal_path": "SX[14][11] -> 85bit compare -> GN kept hierarchy -> gc feedback mux",
+ "archived_TT_setup_ps": -30.32,
+ "archived_FF_hold_ps": 6.42,
+ "compare_width": 85,
+ "unsigned_key_order": "MSB first, same actual [EW-1:1] key; no FP32 arithmetic change",
+ "original_equations": [
+  "tl_i=(~a_i)&b_i",
+  "te_i=~(a_i^b_i)",
+  "combine_lt=tl_hi|(te_hi&tl_lo)",
+  "combine_eq=te_hi&te_lo"
+ ],
+ "proposed_equation": "OR(chunk_lt[g] & AND(chunk_eq[h] for h>g)); chunk_lt uses original bitwise recurrence",
+ "chunks": 17,
+ "chunk_width": 5,
+ "top_chunk_width": 5,
+ "original_kept_lt_eq_live_nodes_per_compare": 346,
+ "proposed_kept_group_lt_eq_prefix_terms_per_compare": 105,
+ "prefix_live_nodes": 54,
+ "prefix_max_fanout": 3,
+ "padding": "partial high chunk uses actual remaining bits; no kept padded/pass-through aliases",
+ "comparator_count": 464,
+ "GN_feedback": "move EXACT qc?flags:gn ternary inside kept GN leaf; gc consumes selected output directly",
+ "qc_copy_invariant": "existing copies all startX, share sameD and same source regionalclock; caseequal every edge",
+ "four_state_reasoning": "AND/OR strong-Kleene distributivity/associativity preserves old bitwise formula; Z is treated identically by same initial bitwise operators. No relational< or logical== shortcut; GN ternary unchanged.",
+ "state_bits_added": 0,
+ "cycles_added": 0,
+ "tile_hop_edges": 4,
+ "SETTLE_for_NT32": 136,
+ "prior_legacy_to_PRE1_cost": "separate existing +32first/+64finish; unchanged by v5",
+ "clock_roots": [
+  "clk",
+  "clk_r0",
+  "clk_r1",
+  "clk_r2",
+  "clk_r3"
+ ],
+ "clock_period_ps": 833.333,
+ "requested_outline_um": [
+  302.4,
+  302.4
+ ],
+ "outline_area_um2": 91445.75999999998,
+ "bytes_per_edge_per_payload_port": 43,
+ "MACs_per_cycle": 0,
+ "timing_gain": "must be measured; remove long kept carry stages and late hierarchy-boundary mux, no claimed PASS",
+ "qualification": [
+  "bounded4state comparator+fold sourceprobe",
+  "existing4000cycle all-output lockstep and causal mutants",
+  "actual native32 census before physical gate",
+  "ROOTcritical geometry review before any eventual submit"
+ ]
+}
