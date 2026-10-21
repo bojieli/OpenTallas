@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.e86_exact_leaf_continuation_packet.v1",
- "status": "BLOCKED_SOURCE_AND_NORMAL_CONTINUATION_VERIFICATION_NO_LAUNCH",
+ "status": "BOUNDED_SOURCE_RECOVERY_COMPLETE_ORIGINAL_LOGIC_TT_FAIL_STRUCTURAL_SUCCESSOR_REQUIRED_NO_REJUDGE",
  "authorization": "ROOT via HBM lead: exact archived39d leaf may continue independently of global engine/ISA join once source/archive/params/geometry/admission prerequisites verified; original CANCELLED immutable; no physical reroute/fullbench duplicate/fakeeligibleflip",
  "original_job": "hcoll_v7_tkm_tile_e86v4b-v4b-39d901240",
  "original_source_commit": "39d901240ce0c6eb9c928e3fccaf6c0ff892bc2a",
@@ -115,14 +115,33 @@
  },
  "unfinished_benches": {
   "bench_tkm_tp192_static_gate": {
-   "state": "running",
+   "state": "CANCELLED_INFRA_UNFINISHED_NO_COMPILE_OR_LINK_SUCCESS",
    "tag": "bench_tkm_tp192_static_gate.a1b1",
    "host": "ot-epyc6",
    "run": "/srv/opentallas-scratch/claude/closure-loop/hcoll_v7_tkm_tile_e86v4b-v4b-39d901240",
    "n": 1,
    "started": "2026-10-21T08:42:47-07:00",
    "stage_source": "/srv/opentallas-scratch/claude/closure-loop/hcoll_v7_tkm_tile_e86v4b-v4b-39d901240/bench_src_a1",
-   "wd_checked": 1792616597.1645546
+   "wd_checked": 1792616597.1645546,
+   "archived_files": {
+    "tp192_subtree_count": 22,
+    "tp192_subtree_bytes": 21592409,
+    "additional_CL_provenance_files": 10,
+    "verified": "14:47 archive and15:36 three-input readback by disk",
+    "sources_sha256": {
+     "bytes": 1076,
+     "sha256": "915e76814c0f04b6546646fe9d3f59e7287fc0295ba35cd5056a55ec5222bf7b"
+    },
+    "cl_bench_script": {
+     "bytes": 3844,
+     "sha256": "ad09dd0107be9ddbc2f55e5fdddba3d823c5f8d1c31fff6da8eebb597e5fe32d"
+    },
+    "identities": {
+     "bytes": 4385150,
+     "sha256": "44ec90058ea7962860dfcc14b0181e7def8e06ff46fb25a66c0ece4a6557e8ec"
+    },
+    "objects": "obj0/bench_src_a1 NOT retained/UNVERIFIED; no incremental compile claim"
+   }
   }
  },
  "archive_source_gap": {
@@ -161,7 +180,9 @@
    "missing": 0,
    "receipt": "archived_frozen_helper_availability.json",
    "scope": "all50 archivedCL basenamepayloads exact frozenplanSHA; no inference finalSRCpath identity"
-  }
+  },
+  "known_missing_consumed_physical_source_bytes": [],
+  "historical_provenance": "HISTORICAL_PROVENANCE_UNVERIFIED: final post-transform fullSRC manifest, historical image and loadedLib identities were unrecorded; never invent original archive identity. Enumerated gate425 + immutable39d525blob closure + actual50helpers recovered; bounded join only."
  },
  "normal_continuation_API_review": {
   "retry": "cmd_retry rejects CANCELLED; unsafe to relabel old job",
@@ -191,5 +212,6 @@
   "report_slack_ps": -93.66,
   "classification": "same-root internal compare->GN->gc",
   "canonical_corner_correlation": "833.333-770=63.333ps; -93.66+63.333=-30.327ps aligns actual cornerTT-30.32; endpoint association is inference from existing report, no freshSTA"
- }
+ },
+ "authorization_current": "ROOT/lead supersede unchanged continuation: preserve same-root TT-30.32 actual FAIL; no unchanged ECO/rejudge launch. New zero-edge V5 source6c9b2dbf3 candidate separately qualifying; no old-source/view alias."
 }
