@@ -13,7 +13,8 @@
 // This leaf: on a context slot whose record is a good kind 12 with user u, 1 <= u < NU, it emits the mu_opcal.ctx_words
 // record the ctlm boot-context loader already decodes (qfd_tt_ctlm_dv OPSEG, 811e75a88):
 //     ctx_x[127:112] = 16'h4D43, ctx_x[111] = 0, ctx_x[110:108] = mask = 1 << (u - 1),
-//     ctx_x[36(u-1) +: 36] = {tok18 = TAG[36:19], pos18 = {5'd0, TAG[18:6]}}, other fields 0;   ctx_x[128] = load (1 edge)
+//     ctx_x[36(u-1) +: 36] = {tok18 = TAG[36:19], pos18 = {5'd0, TAG[18:6]}} (QW-MU 10-20: copied into all 3 slots;
+//     the unmasked ones are don't-care), ctx_x[111] = 0;   ctx_x[128] = load (1 edge)
 // i.e. the ctlm takes c_ctx = ctx_x[127:0], c_ctxld = ctx_x[128] (one new 129-b cluster input, parameter-selected; the
 // image DW5 / DW6 record stays the boot default).  User 0 records load nothing (the latency user is unchanged).
 // One register edge after the slot (the face's context RX latency).  Sticky mu_fault (fail closed, never a stall):
@@ -42,21 +43,34 @@ module qfd_mu_ctx_rx #(
                        rx_tag[36:19] < 18'd151936;
     wire [1:0]  ul = (MUT == 1) ? ((u == 2'(NU - 1)) ? 2'd1 : u + 2'd1) : u;
     reg  [127:0] r;
+    // QW-MU 10-20 (pre-gate native census: the user-indexed field placement fanned rx_tag[44:43] out to 100 pins): the
+    // {tok18, pos18} field is written into ALL three filler slots; only the mask bit is user-selected.  The ctlm reads the
+    // field of the masked user(s) only (qfd_tt_ctlm_dv: ctx_mask[ub-1] -> c_ctx[36(ub-1) +: 36]; ctx_ok checks header +
+    // mask), so the unmasked slots are don't-care: they carry a copy instead of 0 (the boot image's DW5/DW6 keep 0).
+    wire [35:0] fld = {rx_tag[36:19], 5'd0, rx_tag[18:6]};
     always @(*) begin
         r = 128'd0;
         r[127:112] = 16'h4D43;
-        r[108 + ul - 1] = 1'b1;
-        r[36 * (ul - 1) + 18 +: 18] = rx_tag[36:19];
-        r[36 * (ul - 1) +: 18] = {5'd0, rx_tag[18:6]};
+        r[110:108] = 3'b001 << (ul - 2'd1);
+        r[107:0] = {fld, fld, fld};
     end
+    // QW-MU 10-20 (owner 10-20 09:05: reset only control / valid bits; SAFE-DESIGN item 3 fan-out): the load bit, ctx_user and
+    // mu_fault are reset control flops; the 128-b record is an UNRESET, UN-ENABLED datapath register that samples r on every
+    // edge.  On the load edge (ctx_x[128] = 1) the record is exactly the previous form's; between loads the record bits
+    // are don't-care (the ctlm reads ctx_q[127:0] only when ctx_q[128], qfd_tt_ctlm_dv x_ld).  No 128-load enable net and
+    // no 132-load reset net; edges unchanged (one register edge after the slot).
+    reg          ld_q;
+    reg  [127:0] rec_q;
+    always @(posedge ck) rec_q <= r;
+    always @(*) ctx_x = {ld_q, rec_q};
     always @(posedge ck or negedge rst_n) begin
-        if (!rst_n) begin ctx_x <= 129'd0; ctx_user <= 2'd0; mu_fault <= 1'b0; end
+        if (!rst_n) begin ld_q <= 1'b0; ctx_user <= 2'd0; mu_fault <= 1'b0; end
         else begin
-            ctx_x[128] <= 1'b0;
+            ld_q <= 1'b0;
             if (rx_v !== context_slot && context_slot) mu_fault <= 1'b1;
             if (context_slot && rx_v) begin
                 if (!good || {1'b0, u} >= 3'(NU)) mu_fault <= 1'b1;
-                else if (u != 2'd0) begin ctx_x <= {1'b1, r}; ctx_user <= ul; end
+                else if (u != 2'd0) begin ld_q <= 1'b1; ctx_user <= ul; end
             end
         end
     end
