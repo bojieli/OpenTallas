@@ -1,0 +1,26 @@
+{
+  "rtl_source": "33ec02b7197a2b143169db6babb22b306d40e00b",
+  "native_runner_source": "9cb500103",
+  "positive_cases": 3,
+  "golden_rows_per_case": 288,
+  "mutants_caught": 6,
+  "trace_comparison_to_previous_2358": {
+    "base.log": {
+      "records": 289,
+      "identical": true
+    },
+    "var__SEED_2__LAT_160.log": {
+      "records": 289,
+      "identical": true
+    },
+    "var__SEED_3__LAT_60.log": {
+      "records": 289,
+      "identical": true
+    }
+  },
+  "total_wait_age": 12,
+  "added_protocol_ages": 0,
+  "reset_release_edges": 3,
+  "native_status": "PENDING",
+  "physical_status": "NOT_LAUNCHED"
+}
