@@ -40,7 +40,7 @@ module dsdv_l1f_wdec #(
     parameter integer H = 0
 ) (
     input  wire [13:0]  wq,
-    input  wire [5:0]   ar, input wire [5:0] br,
+    input  wire [3:0]   am, input wire [3:0] bm,
     input  wire [223:0] ad,  input wire [223:0] bd,
     output reg          wh,
     output reg  [15:0]  wd
@@ -49,10 +49,10 @@ module dsdv_l1f_wdec #(
     always @(*) begin
         wh = 1'b0; wd = 16'd0;
         for (k = 0; k < 4; k = k + 1) begin
-            if (wq[(64 * (I / 16) + 16 * k + (I % 16)) % 7] && (ar == 6'((64 * (I / 16) + 16 * k + (I % 16)) / 7))) begin
+            if (wq[(64 * (I / 16) + 16 * k + (I % 16)) % 7] && am[k]) begin
                 wh = 1'b1; wd = wd | ad[32 * ((64 * (I / 16) + 16 * k + (I % 16)) % 7) + 16 * H +: 16];
             end
-            if (wq[7 + (64 * (I / 16) + 16 * k + (I % 16)) % 7] && (br == 6'((64 * (I / 16) + 16 * k + (I % 16)) / 7))) begin
+            if (wq[7 + (64 * (I / 16) + 16 * k + (I % 16)) % 7] && bm[k]) begin
                 wh = 1'b1; wd = wd | bd[32 * ((64 * (I / 16) + 16 * k + (I % 16)) % 7) + 16 * H +: 16];
             end
         end
@@ -76,7 +76,7 @@ module dsdv_gunit_l1f #(
     output reg           o_flt
 );
     localparam integer EW = 41, LW = 8 * EW, NL = 16, LA = 5, NS = 7 * NL;
-    localparam integer NW = 9, NROW = 32, ND = 4, NB = 19, NG = 4, NQ = 9, NR = 13;
+    localparam integer NW = 9, ND = 4, NB = 19, NG = 4, NQ = 9, NR = 13;
     integer i, j, k, c;
     genvar g, l, h;
     // ---------------------------------------------------------------- reset relay: NR kept regions (valid bits only)
@@ -85,8 +85,6 @@ module dsdv_gunit_l1f #(
     ot_rst_relay #(.REGIONS(NR)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rq));
     // ---------------------------------------------------------------- input flops (kept copies at the pins)
     (* keep *) reg [13:0]  wqc [0:NW-1];
-    (* keep *) reg [5:0]   arc [0:NROW-1];
-    (* keep *) reg [5:0]   brc [0:NROW-1];
     (* keep *) reg [223:0] adc [0:ND-1];
     (* keep *) reg [223:0] bdc [0:ND-1];
     (* keep *) reg [2:0]   cbc [0:NB-1];
@@ -98,11 +96,6 @@ module dsdv_gunit_l1f #(
         for (g = 0; g < NW; g = g + 1) begin : g_wq
             always @(posedge clk or negedge rq[g / 2])
                 if (!rq[g / 2]) wqc[g] <= 14'd0; else wqc[g] <= we;
-        end
-        // Eight half-entry decoders per kept row copy: <=32 equality
-        // input loads/bit; each final decode stays inside its kept consumer.
-        for (g = 0; g < NROW; g = g + 1) begin : g_row
-            always @(posedge clk) begin arc[g] <= sa_r; brc[g] <= sb_r; end
         end
         for (g = 0; g < ND; g = g + 1) begin : g_dq
             always @(posedge clk) begin adc[g] <= sa_d; bdc[g] <= sb_d; end
@@ -121,7 +114,23 @@ module dsdv_gunit_l1f #(
         cfwc <= {2{c_fw}}; cl <= c_l; clv <= c_lvn; rad <= ra; bwa <= bw_a; bwd <= bw_d;
     end
     // ---------------------------------------------------------------- SC store: entry (b, k) = index 64 b + 16 q' + k
-    // write decode: entry i in group i / 14 (wq / row copies), data copy i / 28; forward (i < 16): copy 8 / data 3
+    // Decode once before the original input edge, then keep independent final
+    // row-match flops per half-entry consumer. No binary row fanout remains
+    // after the flop; each final row-match output serves at most 16 data gates
+    // plus the write-enable reduction. A predecode output serves at most 28
+    // flops (7 global words x 2 halves, doubled for beat-zero forwarding).
+    (* keep *) wire [7:0] ahi, alo, bhi, blo;
+    (* keep *) wire [63:0] adec, bdec;
+    generate for (g = 0; g < 8; g = g + 1) begin : g_pre
+        assign ahi[g] = sa_r[5:3] == 3'(g);
+        assign alo[g] = sa_r[2:0] == 3'(g);
+        assign bhi[g] = sb_r[5:3] == 3'(g);
+        assign blo[g] = sb_r[2:0] == 3'(g);
+    end
+    for (g = 0; g < 64; g = g + 1) begin : g_row_decode
+        assign adec[g] = ahi[g / 8] && alo[g % 8];
+        assign bdec[g] = bhi[g / 8] && blo[g % 8];
+    end endgenerate
     reg  [NS*32-1:0] sc;
     wire [2*NS-1:0]  wh;                       // [2 i + h]
     wire [NS*32-1:0] wdv;
@@ -130,11 +139,21 @@ module dsdv_gunit_l1f #(
     generate
         for (g = 0; g < NS; g = g + 1) begin : g_e
             for (h = 0; h < 2; h = h + 1) begin : g_h
-                dsdv_l1f_wdec #(.I(g), .H(h)) u_w (.wq(wqc[g / 14]), .ar(arc[(2 * g + h) / 8]), .br(brc[(2 * g + h) / 8]),
+                (* keep *) reg [3:0] am, bm;
+                for (genvar t = 0; t < 4; t = t + 1) begin : g_match
+                    localparam integer ROW = (64 * (g / 16) + 16 * t + g % 16) / 7;
+                    always @(posedge clk) begin am[t] <= adec[ROW]; bm[t] <= bdec[ROW]; end
+                end
+                dsdv_l1f_wdec #(.I(g), .H(h)) u_w (.wq(wqc[g / 14]), .am(am), .bm(bm),
                     .ad(adc[g / 28]), .bd(bdc[g / 28]), .wh(wh[2 * g + h]), .wd(wdv[32 * g + 16 * h +: 16]));
                 always @(posedge clk) if (wh[2 * g + h]) sc[32 * g + 16 * h +: 16] <= wdv[32 * g + 16 * h +: 16];
                 if (g < NL) begin : g_f
-                    dsdv_l1f_wdec #(.I(g), .H(h)) u_f (.wq(wqc[NW - 1]), .ar(arc[28 + (2 * g + h) / 8]), .br(brc[28 + (2 * g + h) / 8]),
+                    (* keep *) reg [3:0] amf, bmf;
+                    for (genvar t = 0; t < 4; t = t + 1) begin : g_match
+                        localparam integer ROW = (64 * (g / 16) + 16 * t + g % 16) / 7;
+                        always @(posedge clk) begin amf[t] <= adec[ROW]; bmf[t] <= bdec[ROW]; end
+                    end
+                    dsdv_l1f_wdec #(.I(g), .H(h)) u_f (.wq(wqc[NW - 1]), .am(amf), .bm(bmf),
                         .ad(adc[ND - 1]), .bd(bdc[ND - 1]), .wh(whf[2 * g + h]), .wd(wdf[32 * g + 16 * h +: 16]));
                 end
             end
