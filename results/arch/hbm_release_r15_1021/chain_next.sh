@@ -258,6 +258,21 @@ git -C $W archive HEAD $(cat $A/src_paths_init.txt) results/arch/hbm_unread_gen2
 # physical/ref_tile relay/landing views GEN reads that the git archive path list does not carry
 git -C $W archive HEAD $(cat results/arch/hbm_release_r15_1021/relay_view_dirs.txt) | ssh $HOST "tar -x --skip-old-files -C $B/src_$H" || { echo R15_RELAY_VIEW_STAGE_FAIL; exit 9; }
 views_to $B/q/views $R11A/vplan_b $R11A/net/contract_pre.json || { echo R14_INIT_QVIEWS_FAIL; exit 9; }
+# Q uses the completed P parameterisation; global S2 overlays include a different SB2470 A view.
+ssh $HOST "python3 - '$B' <<'PY_QVIEW'
+import json,shutil,sys
+from pathlib import Path
+b=Path(sys.argv[1]);cell='ot_hbm_su_programme_pslice_c5'
+p=json.load(open(b/'p/views/contract.json'));q=json.load(open(b/'q/views/contract.json'))
+def signature(c):
+ return sorted((n,i['ports'],i.get('params',{})) for n,i in c['instances'].items() if i['master']==cell)
+assert signature(p)==signature(q), 'P/Q pslice contract differs; refuse view copy'
+src=b/'p/views/synth'/cell;dst=b/'q/views/synth'/cell
+assert (src/'meta.json').is_file(), 'exact P pslice source receipt missing'
+if dst.exists():shutil.rmtree(dst)
+shutil.copytree(src,dst);print('Q_PSLICE_EXACT_P_VIEW',cell)
+PY_QVIEW" || { echo Q_PARAMETER_VIEW_REPAIR_FAIL; exit 9; }
+
 mkdir -p $A; rm -rf $A/banklat; cp -a $R11A/banklat $A/banklat
 echo "R14_INIT_OK src_$H plan $PD plan_um=$PLAN_UM"
 step S3a gen_case_a_ftgrid
