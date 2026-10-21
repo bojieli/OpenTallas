@@ -10,6 +10,17 @@
     "branch": "source"
    },
    "stages": {
+    "bench": [
+     {
+      "name": "positive",
+      "cmd": "positive",
+      "expect": "pass"
+     }
+    ],
+    "route": {
+     "cmd": "MUST NEVER RUN",
+     "peak_ram_gb": 32
+    },
     "collect": {
      "cmd": "collect {RUN}/routes/old_parent"
     }
@@ -28,17 +39,22 @@
   },
   "origin": "linked-infrastructure-continuation",
   "status": "READY",
-  "stage_idx": 0,
   "stage_key": "verdict",
   "attempt": 4,
   "retries_used": 0,
-  "benches": {},
+  "benches": {
+   "bench:positive": {
+    "ok": true,
+    "rc": 0,
+    "inherited_from": "old-parent"
+   }
+  },
   "bench_par": false,
   "hosts_tried": [
    "live"
   ],
   "host": "live",
-  "run": "/tmp/tmp3fkcumvs/new-linked",
+  "run": "/tmp/tmpgmgl2zup/new-linked",
   "commit_full": "ffffffffffffffffffffffffffffffffffffffff",
   "source_synced": true,
   "freeze_helper_overlay": true,
@@ -59,13 +75,13 @@
   "events": [],
   "errors": [],
   "eco_overlay_recovery": {
-   "guard": "/tmp/tmp3fkcumvs/new-linked/cl/linked_infra_eco/inputs.json",
-   "out": "/tmp/tmp3fkcumvs/new-linked/cl/linked_infra_eco/candidate"
+   "guard": "/tmp/tmpgmgl2zup/new-linked/cl/linked_infra_eco/inputs.json",
+   "out": "/tmp/tmpgmgl2zup/new-linked/cl/linked_infra_eco/candidate"
   },
   "linked_infra_eco": {
    "parent": {
     "name": "old-parent",
-    "state_sha256": "b1b349c1cc85e107b4e2551f5d962d54230aa234af44692cc00826ba1828dbf6",
+    "state_sha256": "8951e81177768ad94934bf2972768f2fd18aaf9ef7c8799347c37296f1a92664",
     "source_commit": "ffffffffffffffffffffffffffffffffffffffff"
    },
    "manifest": {
@@ -74,7 +90,7 @@
     "infrastructure_cause": "scheduled_retirement",
     "parent": {
      "name": "old-parent",
-     "state_sha256": "b1b349c1cc85e107b4e2551f5d962d54230aa234af44692cc00826ba1828dbf6",
+     "state_sha256": "8951e81177768ad94934bf2972768f2fd18aaf9ef7c8799347c37296f1a92664",
      "source_commit": "ffffffffffffffffffffffffffffffffffffffff"
     },
     "physical_disposition": {
@@ -90,7 +106,7 @@
     },
     "runtime": {
      "host": "live",
-     "run": "/tmp/tmp3fkcumvs/new-linked",
+     "run": "/tmp/tmpgmgl2zup/new-linked",
      "image": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
      "ram_gb": 64,
      "library_hashes": {
@@ -113,13 +129,13 @@
      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.spef": "2b8ee72bf53746b6c76a43af86c7b6f21d7c323aa01ed6ddd64dfa93b0aeca82",
      "routes/old_parent/work/orfs/results/asap7/design/base/6_final.sdc": "ef304a4272171a383c7eb5260ee0f7d7ac3a5ef3d0fd6b529903d3c6b5c755a7",
      "routes/old_parent/work/orfs/config.mk": "987c5cebae2983cec257e4bd210c8a580ca4b53644666e8d708879070f9991a1",
-     "routes/old_parent/corner_sta.json": "566e74eba541fee59cb33ed167b01948a88b1d972bd955f9d977b76b47a02aca",
+     "routes/old_parent/corner_sta.json": "72d1c2fe7f963b2adf14fbd113f1c7f9876a854a4aae62b7238067c94a11c15a",
      "src/physical/signoff.sdc": "794b26946f13307e1d486099a9c121b64de70ba25609e2f06600d2b055eb0539",
      "src/rtl/actual.sv": "2dbe9f150e21fb48f5cef4106915089b410dd23e4657965a5a678e0d8e8d7c48",
      "cl/helper.py": "f6c61e5655d8649d25f1e791c60edf5ace1463ed835dbb2703ef367f4ad4130f"
     }
    },
-   "manifest_sha256": "c1ee335207185b0580c261ba1a0e4f4ca19d5bdebfdbe0d1950e558c5f938c4c",
+   "manifest_sha256": "c9cc19caca7fa4b3c2bcb83f8c7a23e2899fed4f6a7b5cc32a8f3ef99cf359e6",
    "inherited_benches": {
     "bench:positive": {
      "ok": true,
@@ -127,14 +143,15 @@
     }
    },
    "historical_provenance": {}
-  }
+  },
+  "stage_idx": 2
  }
 }
-2026-10-21T15:47:28-07:00 [new-linked] new linked infrastructure ECO-only continuation of immutable old-parent
+2026-10-21T15:51:36-07:00 [new-linked] new linked infrastructure ECO-only continuation of immutable old-parent
 ..new-linked
-2026-10-21T15:47:28-07:00 [new-linked] hold-only miss (UNKNOWN +82.85 / FF -15.07, DRC 0): post-route hold ECO launched on /new/route/5_2_route.odb
+2026-10-21T15:51:36-07:00 [new-linked] hold-only miss (UNKNOWN +82.85 / FF -15.07, DRC 0): post-route hold ECO launched on /new/route/5_2_route.odb
 .....
 ----------------------------------------------------------------------
-Ran 8 tests in 0.016s
+Ran 8 tests in 0.048s
 
 OK

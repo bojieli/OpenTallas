@@ -52,11 +52,12 @@ class LinkedECOTests(unittest.TestCase):
     def test_new_record_has_only_postroute_stages_and_parent_unchanged(self):
         before=copy.deepcopy(self.parent);j=ie.build(self.parent,self.manifest,'new-linked')
         self.assertEqual(self.parent,before)
-        self.assertEqual([x['kind'] for x in cl.stage_list(j['spec'])],['verdict','collect','commit'])
-        self.assertEqual(j['stage_idx'],0);self.assertEqual(j['attempt'],4)
+        self.assertEqual([x['kind'] for x in cl.stage_list(j['spec'])],['bench','route','verdict','collect','commit'])
+        self.assertEqual(j['attempt'],4)
         self.assertEqual(j['spec']['source'],before['spec']['source'])
         self.assertIn('/routes/old_parent',j['spec']['stages']['collect']['cmd'])
-        self.assertEqual(j['benches'],{});self.assertEqual(j['linked_infra_eco']['inherited_benches'],before['benches'])
+        self.assertEqual(j['benches']['bench:positive']['inherited_from'],'old-parent')
+        self.assertEqual(j['linked_infra_eco']['inherited_benches'],before['benches'])
         self.assertFalse(j['spec']['hold_eco']['allow_fresh_grt'])
         self.assertFalse(j['spec']['hold_eco']['vtswap']);self.assertFalse(j['spec']['auto_react'])
 
@@ -117,7 +118,7 @@ class LinkedECOTests(unittest.TestCase):
         self.assertIn(self.manifest['runtime']['image'],ssh.call_args.args[1])
 
     def test_existing_eco_launcher_and_installer_keep_new_guarded_output(self):
-        j=ie.build(self.parent,self.manifest,'new-linked');fleet=Mock();fleet.fits.return_value=(True,'fits')
+        j=ie.build(self.parent,self.manifest,'new-linked');j['stage_idx']=2;fleet=Mock();fleet.fits.return_value=(True,'fits')
         with patch.object(cl,'eco_paths',return_value=('/new/route','/new/route')), \
                 patch.object(cl,'ship_helpers'),patch.object(cl,'launch_stage') as launch,patch.object(cl,'experiment'):
             cl.start_hold_eco(j,fleet,j['metrics'])
@@ -146,6 +147,8 @@ class LinkedECOTests(unittest.TestCase):
                 cl.cmd_link_infra_eco(args)
                 self.assertEqual(cl.jpath('old-parent').read_bytes(),old)
                 self.assertEqual(cl.load_job('new-linked')['status'],'READY')
+                child=cl.load_job('new-linked')
+                self.assertEqual(cl.stage_list(child['spec'])[child['stage_idx']]['kind'],'verdict')
                 # Large source manifests travel on stdin, never through argv/shell quoting.
                 self.assertEqual(ssh.call_args.args[1],'python3 -')
                 with self.assertRaisesRegex(ValueError,'already exists'):cl.cmd_link_infra_eco(args)

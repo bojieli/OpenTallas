@@ -106,15 +106,19 @@ def build(parent, manifest, new_name):
         if isinstance(x,list): return [fixed_label(v) for v in x]
         return x.replace('{LABEL}', old_label) if isinstance(x,str) else x
     spec = fixed_label(spec); spec['name'] = new_name
-    # No execution path for route, calibrate, benchmark or signoff reconstruction.
-    spec['stages'] = {k:v for k,v in spec['stages'].items() if k in ('collect','export')}
+    # Keep frozen route/bench templates for normal kit/reset/native/clock policy discovery.
+    # Execution starts at verdict, with the production launch allowlist preventing rollback.
+    cal=spec['stages'].get('calibrate') or {}
+    if cal.get('cmd') and cal.get('enabled',True):
+        raise ValueError('parallel calibration is not part of a lost hold ECO')
     spec['hold_eco'] = dict(spec.get('hold_eco') or {}, enabled=True, allow_fresh_grt=False, vtswap=False, combo=False)
     spec['auto_react'] = False
     spec['peak_ram_gb'] = max(spec.get('peak_ram_gb',0), runtime['ram_gb'])
     guard = str(run/'cl/linked_infra_eco/inputs.json')
     j = dict(name=new_name, spec=spec, origin='linked-infrastructure-continuation',
-             status='READY', stage_idx=0, stage_key='verdict', attempt=parent['attempt']+1,
-             retries_used=0, benches={}, bench_par=False, hosts_tried=[runtime['host']],
+             status='READY', stage_key='verdict', attempt=parent['attempt']+1,
+             retries_used=0, benches={k:dict(copy.deepcopy(v),inherited_from=parent['name']) for k,v in parent['benches'].items()},
+             bench_par=False, hosts_tried=[runtime['host']],
              host=runtime['host'], run=str(run), commit_full=parent['commit_full'],
              source_synced=True, freeze_helper_overlay=True,
              route_overlay_plan=copy.deepcopy(parent['route_overlay_plan']),
@@ -124,6 +128,8 @@ def build(parent, manifest, new_name):
              linked_infra_eco=dict(parent=link,manifest=m,manifest_sha256=canonical_sha(m),
                  inherited_benches=copy.deepcopy(parent['benches']),
                  historical_provenance=m.get('historical_provenance',{})))
+    for key in ('clock_rule','kit_reset_ports','submit_checks'):
+        if key in parent:j[key]=copy.deepcopy(parent[key])
     return j
 
 

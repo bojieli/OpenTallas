@@ -7314,6 +7314,8 @@ def hold_eco_resources(j):
     peak = measured_peak_gb(j["spec"])
     measured = math.ceil(max(1.25 * peak, peak + 4)) if peak else 0
     ram = math.ceil(max(8, route_ram, measured))
+    if j.get("linked_infra_eco"):
+        ram = max(ram, j["linked_infra_eco"]["manifest"]["runtime"]["ram_gb"])
     return 8, max(32, ram) if ram > LIGHT_STAGE_RAM_GB else ram
 
 
@@ -10435,6 +10437,7 @@ def cmd_link_infra_eco(a):
     parent = load_job(a.name)
     manifest = json.loads(Path(a.manifest).read_text())
     child = IEC.build(parent, manifest, a.new_name)
+    child["stage_idx"] = next(i for i, st in enumerate(stage_list(child["spec"])) if st["kind"] == "verdict")
     if child["host"] not in {h["name"] for h in hosts_table()}:
         raise ValueError("restored runtime host is not in the current fleet")
     if not a.apply:
