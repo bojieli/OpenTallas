@@ -1,0 +1,153 @@
+{
+ "name": "dsdv_eng_tap",
+ "top": "dsdv_eng_tap",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay_bounded32.sv",
+  "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "rqi",
+   "rro",
+   "sid",
+   "fault"
+  ],
+  "S": [
+   "rqo",
+   "rri"
+  ],
+  "E": [
+   "ck",
+   "rst_n",
+   "rci",
+   "pco"
+  ],
+  "W": [
+   "rco",
+   "pci"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "tile",
+ "hold_budget_reason": "0-cycle inline tap on the reader link (one register a direction, compiler-priced): inputs land in their first flop after <=7 decode levels (hit / Engram / slot decode), not in a pin flop, so the die hold credit does not apply; boundary hold padded in the tile (inhold / outhold)",
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER 10-20 09:05: pin registers only at region crossings / wires > 405 um. The tap abuts its controller (same region, beside ctrl_k N face); every output is a flop (rco, pco, rqo, rro, fault); the reader link and the 531-um chain hops get the die's landing / relay stations. A kit pin stage would add an unpriced edge on every reader-link and chain hop"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands rst_n: ot_rst_relay_bounded32 (2 root flops = the port's only sinks, then 30 kept leaves <= 25 sinks, 3-edge release as before)"
+ },
+ "clock": "cts",
+ "layer_cap": "M5",
+ "outline": {
+  "w": 138.24,
+  "h": 86.4
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "TOK-FUNC2-ENG_TAP 10-21 SAFE successor (checklist 3/8) of dsdv_eng_tap_c @553741303: hold rings in 12 x 22-b kept slices with own pointer/occupancy/decode/take copies, request data 2 x 22 b a lane, owner FIFO 4 x 8 banks with own write pointers, kept request/response control, bounded32 reset (30 leaves). Same ports, same edges, same faults.",
+ "job": {
+  "owner": "Claude:TOK-FUNC2-ENG_TAP",
+  "branch": "claude/tokf2-engtap-1021",
+  "tag": "dsdv_eng_tap",
+  "purpose": "S81 G8IQ stand-in master dsdv_eng_tap (15 inst, Engram row-read tap on the reader links) to closure: TT setup / FF hold / DRC 0 + native census 32",
+  "extra_paths": [
+   "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+   "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+   "rtl/dsrom_sys/engram/static_lookup_1015",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "rtl/dsrom_sys/s81_ph/ctrl",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2",
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv",
+   "rtl/hdc/v41/ot_hdc_engram_gather.sv",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/dsrom_sys/s81_dv/eng",
+   "rtl/lib/ot_rst_relay.sv",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "tools/s81_dv/eng_rr"
+  ],
+  "benches": [
+   {
+    "name": "engtap_exact",
+    "cmd": "bash tools/s81_dv/eng_rr/bench_tap_snapshot.sh {RUN}/engtap_exact base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ENG_TAP_BENCH PASS base$",
+    "min_count_regex": "^TB_ENG_RR_STATS .* row_beats (\\d+) "
+   },
+   {
+    "name": "engtap_mut_demux",
+    "cmd": "bash tools/s81_dv/eng_rr/bench_tap_snapshot.sh {RUN}/engtap_mut_demux tap1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^ENG_TAP_BENCH FAIL tap1$"
+   },
+   {
+    "name": "engtap_mut_pops",
+    "cmd": "bash tools/s81_dv/eng_rr/bench_tap_snapshot.sh {RUN}/engtap_mut_pops tap2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^ENG_TAP_BENCH FAIL tap2$"
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_eng_tap/views",
+  "record_to": "results/rtl/ref_tile/dsdv_eng_tap"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

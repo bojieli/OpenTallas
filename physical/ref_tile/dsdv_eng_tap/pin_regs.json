@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_eng_tap",
+ "enable": false,
+ "reason": "OWNER 10-20 09:05: pin registers only at region crossings / wires > 405 um. The tap abuts its controller (same region, beside ctrl_k N face); every output is a flop (rco, pco, rqo, rro, fault); the reader link and the 531-um chain hops get the die's landing / relay stations. A kit pin stage would add an unpriced edge on every reader-link and chain hop"
+}
