@@ -62,11 +62,11 @@ module tb_ot_hbm_smh_rp4ah2;
     // activity census (the bench must exercise the attention datapath, not only the transport)
     integer c_bov = 0, c_fov = 0, c_ev = 0, c_pub = 0, c_pvin = 0;
     always @(posedge clk) begin
-        c_bov = c_bov + u_flat.u_lf0.bov + u_flat.u_lf1.bov;
-        c_fov = c_fov + u_flat.u_lf0.fov + u_flat.u_lf1.fov;
-        c_ev  = c_ev  + u_flat.u_lf0.event_v + u_flat.u_lf1.event_v;
-        c_pub = c_pub + u_flat.u_lf0.ps_v + u_flat.u_lf1.ps_v;
-        c_pvin = c_pvin + u_flat.u_lf0.input_pv + u_flat.u_lf1.input_pv;
+        c_bov = c_bov + u_flat.u_lf0.g_nolr.u_c.bov + u_flat.u_lf1.g_nolr.u_c.bov;
+        c_fov = c_fov + u_flat.u_lf0.g_nolr.u_c.fov + u_flat.u_lf1.g_nolr.u_c.fov;
+        c_ev  = c_ev  + u_flat.u_lf0.g_nolr.u_c.event_v + u_flat.u_lf1.g_nolr.u_c.event_v;
+        c_pub = c_pub + u_flat.u_lf0.g_nolr.u_c.ps_v + u_flat.u_lf1.g_nolr.u_c.ps_v;
+        c_pvin = c_pvin + u_flat.u_lf0.g_nolr.u_c.input_pv + u_flat.u_lf1.g_nolr.u_c.input_pv;
     end
     function [31:0] rnd; input integer k; rnd = $urandom; endfunction
     integer cyc, nc, bad;
