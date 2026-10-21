@@ -238,6 +238,7 @@ mkdir -p $A; rm -rf $A/banklat; cp -a $R11A/banklat $A/banklat
 echo "R14_INIT_OK src_$H plan $PD plan_um=$PLAN_UM"
 fi
 if [ -z "${RESUME_S5L:-}" ] && [ -z "${R14_SKIP_S3:-}" ]; then
+if [ -z "${R14_RESUME_S3Q:-}" ]; then
 step S3a gen_case_a_ftgrid
 gen $B/a case_a diag "--lane-reach diag $CM --coord-map-re . --carve-reserved all" || { echo S3A_GEN_FAIL; exit 13; }
 ft_usage $A/case_a_manifest.json case_a
@@ -248,6 +249,11 @@ gen $B/q x12_q diag "--prior-place $B/a/case_a/run.tcl --lane-reach diag $GX $CM
 S3Q=$!
 wait $S3B; R3B=$?; wait $S3Q; R3Q=$?; cat $A/s3b.log $A/s3q.log
 [ $R3B = 0 ] || { echo S3B_GEN_FAIL; exit 13; }; [ $R3Q = 0 ] || { echo S3Q_GEN_FAIL; exit 13; }
+else
+step S3q resume_exact_q_views
+gen $B/q x12_q diag "--prior-place $B/a/case_a/run.tcl --lane-reach diag $GX $CM --coord-map-re ^(std|stu)_" > $A/s3q.log 2>&1 || { cat $A/s3q.log; echo S3Q_GEN_FAIL; exit 13; }
+cat $A/s3q.log
+fi
 ft_usage $A/x12_q_manifest.json x12_q
 dense $B/q/x12_q $B/q/views/contract.json x12_q
 fi
@@ -361,6 +367,12 @@ echo 'R14_S10_COMPLETE; proceeding scoped diagnostic physical run with declared 
 dense $B/case $B/views/contract.json case_final
 ft_usage $A/case_manifest.json case
 echo "DIAGNOSTIC_PHYSICAL_SCOPE: available views; final child/native/GEN qualification outstanding"
+python3 - "$A/case_manifest.json" <<'PY_GEOMETRY' || { echo 'PLACEMENT_HOLD: actual overlaps require next GEN structural correction before GRT'; exit 22; }
+import json, sys
+m=json.load(open(sys.argv[1])); problems=m.get('placement_problems',[])
+print('PRE_GRT_PLACEMENT_PROBLEMS',len(problems))
+sys.exit(bool(problems))
+PY_GEOMETRY
 step S11 grt_sta_clk
 $OTRUN --mem 160 --threads 16 --disk 60 --priority die --dir $B/case -- env OT_ABS_PIN_WINDOW_UM=3 CPUS=16 MEMG=160 bash $B/case/run.sh > $A/grt.otrun 2>&1; echo "GRT ot-run rc=$? $(date -Is)"
 ssh $HOST "cat $B/case/out/run.exit; grep -E 'OT_PG_|OT_DIE_REP|overflow|Total wire|tns|wns' $B/case/out/run.log | tail -15; cat $B/case/out/neighbour_skew_gate.log; tail -5 $B/case/out/hold_budget.log" > $A/grt_summary.txt 2>&1
