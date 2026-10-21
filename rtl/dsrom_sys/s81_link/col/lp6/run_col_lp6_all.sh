@@ -15,7 +15,7 @@ I=rtl/dsrom_sys/s81_link
 LS="$I/col/tb_s81_pdie_col.sv $I/col/ot_pdie_serdes_col_lpw6.sv $I/col/lp6/ot_pdie_serdes_col_lp6.sv $I/col/ot_s81_col_leaf.sv \
  $I/col/ot_s81_pma_models.sv $I/ot_s81_kp4_common.sv $I/ot_s81_kp4_bm.sv $I/ot_s81_kp4_dsyn.sv $I/ot_s81_kp4_ddly.sv \
  $I/ot_s81_kp4_dchn.sv $I/ot_s81_kp4_dout.sv $I/ot_s81_kp4_enc.sv $I/ot_s81_kp4_dec.sv $I/ot_pdie_serdes.sv $I/col/ot_s81_rate_match_sr.sv \
- rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_regwe.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v \
+ rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_regwe.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v \
  "
 for m in 0 1 2; do
   ( d="$OUT/link_m$m"; mkdir -p "$d"
