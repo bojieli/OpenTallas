@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-1340-retry-1021
+ot-run: ot-epyc7       admits   257 GB (avail 467, growth 287, headroom 0, waiters 0/0 GB) load 51/96 running 20 disk 4576 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-1340-retry-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-1340-retry-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-1340-retry-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-1340-retry-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-smh-r5-reset-1340-retry-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1015476-1792616933 after 0 s
+EXISTING_NATIVE_IMAGE sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29
+EXISTING_MAPPED_SHA256 n_m 3ee917fd55bc14cde0ae0b412eb8bcc9941009a4241c993c9eff0d714581ae5d
+PRE_GATE_NATIVE_CENSUS FAIL report=/work/native_census_existing.json
+EXISTING_NATIVE_EXIT n_m 1
+EXISTING_NATIVE_RESULT n_m FAIL 45 1 0
+EXISTING_MAPPED_SHA256 n_f dfdcb68f44346bf3db6b455166db5393d4c7d6bd9ce9692ff17a399409d5c481
+PRE_GATE_NATIVE_CENSUS FAIL report=/work/native_census_existing.json
+EXISTING_NATIVE_EXIT n_f 1
+EXISTING_NATIVE_RESULT n_f FAIL 39 1 0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1015476-1792616933): exit 1

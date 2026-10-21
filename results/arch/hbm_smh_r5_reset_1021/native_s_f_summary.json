@@ -1,0 +1,122 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "smh_rp5s_f",
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc/ot_hbm_accel_smh_bdc_ff.lib",
+      "sha256": "829b3ce2fdc56c6fdba8214fcef519193b88fb4d347a894bf799a1b7fd7d6fd0"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc/ot_hbm_accel_smh_bdc_tt.lib",
+      "sha256": "31d6bc96f83b8a122021b3b6dc393db854fdbe6fa5a63180a12c75073ab2bf9c"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_pvm_ref_s4a/views/ot_hbm_sm_pv_merge_s3/ot_hbm_sm_pv_merge_s3_ff.lib",
+      "sha256": "0fe35edaed4dc5bc9aa4d29acaa018651921b7315f853b50ce2f62d237bc58c7"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_pvm_ref_s4a/views/ot_hbm_sm_pv_merge_s3/ot_hbm_sm_pv_merge_s3_tt.lib",
+      "sha256": "6f8dad1e6eb493586bbaa1e9ca86495c5dc7b0442c1bc12c16c694da2404a339"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu/ot_hbm_accel_smh_tcl_gu_ff.lib",
+      "sha256": "6db8a245d7df4b387646f4617fb1efa7c245fdf4fbb89d0a19838c69689787dc"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu/ot_hbm_accel_smh_tcl_gu_tt.lib",
+      "sha256": "9d5521c36b88f1c2d56591c25e76e8ef99b3bb945628130e6ade0ee19e37ba99"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct/ot_hbm_accel_smh_tct_ff.lib",
+      "sha256": "d2ba8c9929089a7617c023189a362e7f4cc73d4c349ca3b71c7262a229fac39b"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct/ot_hbm_accel_smh_tct_tt.lib",
+      "sha256": "1dff8e584f64e558b05a50cfda751d30706eb41e7ab5eac524d6bfcf8e447701"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e/ot_smh_tr_group_row_e_ff.lib",
+      "sha256": "8b25ae1c39e38bf3da1a601888ed50decf6fb8f6d51b439d5296d608df7b1466"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e/ot_smh_tr_group_row_e_tt.lib",
+      "sha256": "cb1d57332fe81d605f01c4768b9c652fd33ba481b32abd6e43be224c9c8ee5fa"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w/ot_smh_tr_group_row_w_ff.lib",
+      "sha256": "6f9e6054fbadd441dd8e8a48e3878a697a7ad6eb2ce8709672c95e3bbb3cbe9e"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w/ot_smh_tr_group_row_w_tt.lib",
+      "sha256": "6b7da00f2a78025bfef90e03fb7dfe2afbee074f68fd1f2761d06d6debd40ca9"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_xs_p192d_bay/views/ot_hbm_accel_smh_xs/ot_hbm_accel_smh_xs_ff.lib",
+      "sha256": "76f6dc947663ec304894c589a7930d15a2a74437ef6f04cab6f0989651b35615"
+    },
+    {
+      "path": "/src/physical/ref_tile/smh_xs_p192d_bay/views/ot_hbm_accel_smh_xs/ot_hbm_accel_smh_xs_tt.lib",
+      "sha256": "de3f720d1dccde9f32f574cc1090999067c89ec13f25ac29cb9a577a2ea8cda2"
+    }
+  ],
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_ot_hbm_smh_rp5s_f_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "b489cbad724543e0955efe00cd992897e2c7ee571814cb4b2e5446cd4be68b2b"
+  },
+  "top": "ot_hbm_smh_rp5s_f",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 80773,
+  "max_dynamic_loads": 32,
+  "constant_output_bits": [],
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true,
+  "role_errors": [],
+  "violations": [],
+  "full_canonical_report": {
+    "path": "native_s_f.json.gz",
+    "uncompressed_sha256": "c428fe58936709dedf6a29b238881348291d51acaa9f99928faaff1f7890315c"
+  }
+}

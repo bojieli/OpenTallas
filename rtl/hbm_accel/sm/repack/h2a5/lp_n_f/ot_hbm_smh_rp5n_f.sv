@@ -61,7 +61,7 @@ module ot_hbm_smh_rp5n_f #(
     wire [1:0] r_x7;
     // ---- regional reset runs (1-bit plain hops: they define the landing epochs; region c holds the root)
     wire lpr_root;  ot_pl_pad #(.W(1), .N(1)) u_lpr_root (.ck(ck_c), .d(rst_n), .q(lpr_root));
-    localparam integer LPR_LEAVES_c = 1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)+(((((2068) - (0) + 1))+24-1)/24);
+    localparam integer LPR_LEAVES_c = 1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)+(((((2068) - (0) + 1))+24-1)/24)+12; // SMH_SCALAR_RESET_PARTITION same existing leaf edge
     localparam integer LPR_LEAVES_x = 1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)+(((((2068) - (0) + 1))+24-1)/24);
     wire [LPR_LEAVES_c-1:0] lpr_c_leaves; wire lpr_c = lpr_c_leaves[0];
     ot_pl_land_reset_forest #(.DEPTH(2), .LEAVES(LPR_LEAVES_c), .ROOT_LOADS(((LPR_LEAVES_c+31)/32)+((LPR_LEAVES_x+31)/32))) u_lpr_c (.ck(ck_c), .d(lpr_root), .q(lpr_c_leaves)); // same reset age; physical reach unproved
@@ -107,28 +107,28 @@ module ot_hbm_smh_rp5n_f #(
     ot_pl_land_vector_reset_w #(.W(((2068) - (0) + 1)), .D(4), .CHUNK_BITS(24)) u_lpl_7_w (.ck(ck_x), .rsi(lpr_x_leaves[(1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)) +: (((((2068) - (0) + 1))+24-1)/24)]), .i(xb2), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld));
     ot_pl_land_vector_reset_r #(.W(((2068) - (0) + 1)), .D(4), .K(2), .CHUNK_BITS(24)) u_lpl_7_r (.ck(ck_c), .rsi(lpr_c_leaves[(1+(((((817) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((6) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)) +: (((((2068) - (0) + 1))+24-1)/24)]), .bank(lpl_7_bank), .epo(lpl_7_epo), .vld(lpl_7_vld), .o(lpl_7_o));
     assign xb2__l_c = lpl_7_o;
-    wire lpr_c_u_rst_c7;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rst_c7 (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_rst_c7));   // t(u_rst_c7) = 0
-    wire lpr_c_u_rst_c9;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 64 : 0)) u_lprc_u_rst_c9 (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_rst_c9));   // t(u_rst_c9) = 0
-    wire lpr_c_u_rst_c10;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rst_c10 (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_rst_c10));   // t(u_rst_c10) = 0
+    wire lpr_c_u_rst_c7;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rst_c7 (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+0]), .q(lpr_c_u_rst_c7));   // t(u_rst_c7) = 0
+    wire lpr_c_u_rst_c9;  ot_pl_pad #(.W(1), .N((MUT == 4) ? 64 : 0)) u_lprc_u_rst_c9 (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+1]), .q(lpr_c_u_rst_c9));   // t(u_rst_c9) = 0
+    wire lpr_c_u_rst_c10;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rst_c10 (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+2]), .q(lpr_c_u_rst_c10));   // t(u_rst_c10) = 0
     wire lpr_c_u_rst_x7;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rst_x7 (.ck(ck_x), .d(lpr_x), .q(lpr_c_u_rst_x7));   // t(u_rst_x7) = 0
-    wire lpr_c_u_pr_n;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_pr_n (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_pr_n));   // t(u_pr_n) = 0
+    wire lpr_c_u_pr_n;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_pr_n (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+3]), .q(lpr_c_u_pr_n));   // t(u_pr_n) = 0
     wire lpr_c_u_pb;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_pb (.ck(ck_x), .d(lpr_x), .q(lpr_c_u_pb));   // t(u_pb) = 0
-    wire lpr_c_u_row0;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_row0 (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_row0));   // t(u_row0) = 0
+    wire lpr_c_u_row0;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_row0 (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+4]), .q(lpr_c_u_row0));   // t(u_row0) = 0
     wire lpr_c_u_bt1;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_bt1 (.ck(ck_x), .d(lpr_x), .q(lpr_c_u_bt1));   // t(u_bt1) = 0
     wire lpr_c_u_bt2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_bt2 (.ck(ck_x), .d(lpr_x), .q(lpr_c_u_bt2));   // t(u_bt2) = 0
     wire lpr_c_u_be1;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_be1 (.ck(ck_x), .d(lpr_x), .q(lpr_c_u_be1));   // t(u_be1) = 0
     wire lpr_c_u_be2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_be2 (.ck(ck_x), .d(lpr_x), .q(lpr_c_u_be2));   // t(u_be2) = 0
     wire lpr_c_u_landn;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_landn (.ck(ck_x), .d(lpr_x), .q(lpr_c_u_landn));   // t(u_landn) = 0
     wire lpr_c_u_xb1;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xb1 (.ck(ck_x), .d(lpr_x), .q(lpr_c_u_xb1));   // t(u_xb1) = 0
-    wire lpr_c_u_rowe0;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rowe0 (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_rowe0));   // t(u_rowe0) = 0
+    wire lpr_c_u_rowe0;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_rowe0 (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+5]), .q(lpr_c_u_rowe0));   // t(u_rowe0) = 0
     wire lpr_c_u_gi1;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_gi1 (.ck(ck_x), .d(lpr_x), .q(lpr_c_u_gi1));   // t(u_gi1) = 0
-    wire lpr_c_u_gi2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_gi2 (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_gi2));   // t(u_gi2) = 0
+    wire lpr_c_u_gi2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_gi2 (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+6]), .q(lpr_c_u_gi2));   // t(u_gi2) = 0
     wire lpr_c_u_xb2;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xb2 (.ck(ck_x), .d(lpr_x), .q(lpr_c_u_xb2));   // t(u_xb2) = 0
-    wire lpr_c_u_xbo;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xbo (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_xbo));   // t(u_xbo) = 0
-    wire lpr_c_u_xgr;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xgr (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_xgr));   // t(u_xgr) = 0
-    wire lpr_c_u_xpr;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xpr (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_xpr));   // t(u_xpr) = 0
-    wire lpr_c_u_xgo;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xgo (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_xgo));   // t(u_xgo) = 0
-    wire lpr_c_u_xpo;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xpo (.ck(ck_c), .d(lpr_c), .q(lpr_c_u_xpo));   // t(u_xpo) = 0
+    wire lpr_c_u_xbo;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xbo (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+7]), .q(lpr_c_u_xbo));   // t(u_xbo) = 0
+    wire lpr_c_u_xgr;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xgr (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+8]), .q(lpr_c_u_xgr));   // t(u_xgr) = 0
+    wire lpr_c_u_xpr;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xpr (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+9]), .q(lpr_c_u_xpr));   // t(u_xpr) = 0
+    wire lpr_c_u_xgo;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xgo (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+10]), .q(lpr_c_u_xgo));   // t(u_xgo) = 0
+    wire lpr_c_u_xpo;  ot_pl_pad #(.W(1), .N(0)) u_lprc_u_xpo (.ck(ck_c), .d(lpr_c_leaves[LPR_LEAVES_c-12+11]), .q(lpr_c_u_xpo));   // t(u_xpo) = 0
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
     ot_rp5_rst #(.N(3), .NC(1)) u_rst_c7 (.clk(ck_c), .rst_n(lpr_c_u_rst_c7), .r(r_c7));   // region c, t = 0
     ot_rp5_rst #(.N(5), .NC(1)) u_rst_c9 (.clk(ck_c), .rst_n(lpr_c_u_rst_c9), .r(r_c9));   // region c, t = 0

@@ -50,6 +50,19 @@ def main():
             s,n=re.subn(r"(\.N\(\(MUT == 4\) \? )\d+( : 0\)\))",r"\g<1>64\2",s)
             if n != 1: raise RuntimeError(f"Expected one reset mutant in {p}, found {n}")
             s=s.replace("one stage long", "64 stage(s) long")
+            # Native-mapped north scalar child reset leaves measured45/39.
+            # Append parallel leaf FFs inside the existing two-edge forest,
+            # one per existing scalar child pad; landing leaf indices unchanged.
+            region = "m" if (h,v)==("n","m") else "c" if (h,v)==("n","f") else None
+            if region and "SMH_SCALAR_RESET_PARTITION" not in s:
+                pattern=rf"\.d\(lpr_{region}\)"
+                count=len(re.findall(pattern,s))
+                if count<2: raise RuntimeError(f"Expected scalar reset children in {p}")
+                idx=iter(range(count))
+                s=re.sub(pattern,lambda m:f".d(lpr_{region}_leaves[LPR_LEAVES_{region}-{count}+{next(idx)}])",s)
+                pattern=rf"(localparam integer LPR_LEAVES_{region} = [^;]+)(;)"
+                s,n=re.subn(pattern,rf"\1+{count}\2 // SMH_SCALAR_RESET_PARTITION same existing leaf edge",s)
+                if n!=1: raise RuntimeError("Missing forest leaves declaration")
             p.write_text(s)
             spec=ROOT/f"results/arch/hbm_smh_r5_1021/lp_spec_{h}_{v}.json"
             d=json.loads(spec.read_text());d["mut4_stages"]=64

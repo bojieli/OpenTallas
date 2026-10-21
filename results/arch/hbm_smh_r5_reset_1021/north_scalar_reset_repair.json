@@ -1,0 +1,9 @@
+{
+  "previous_source": "4eb830bc0",
+  "actual_failures": {
+    "n_m": "u_lpr_m.g_leaf[0].u_ff.QN 45 dynamic loads",
+    "n_f": "u_lpr_c.g_leaf[0].u_ff.QN 39 dynamic loads"
+  },
+  "repair": "Append8 MAIN m /12 fallback c independent leaf flops in already-priced DEPTH2 forest; each existing scalar child reset-pad receives one same-age parallel leaf; existing landing leaves unchanged. Original forest branch32/root32 bounds retained; no edge/data/clock/domain changes.",
+  "required": "Fresh north canonical native and existing R5/LP witnesses before layout. Prior native source and failures retained. South positive source remains unchanged except MUT4-only causality repair."
+}
