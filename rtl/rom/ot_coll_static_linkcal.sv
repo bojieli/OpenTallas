@@ -37,6 +37,9 @@ module ot_coll_dly1 #(parameter integer N = 1, SAFE_RING = 0) (input wire clk, i
         localparam integer B = (D+15)/16;
         localparam integer H = A>4 ? A-4 : 1;
         reg [A-1:0] pos_q;
+        // QW-COLLIO 10-20: kept second position counter (same reset, same increment) feeds only the read
+        // copies, so each counter fans out to one register per bank (native census: 53 loads > 32).
+        (* keep="true", dont_touch="true" *) reg [A-1:0] rpos_q;
         reg [$clog2(N):0] filled_q;
         (* keep="true", dont_touch="true" *) reg [H-1:0] wr_bank_q,rd_bank_q;
         wire [B-1:0] bank_out;
@@ -44,7 +47,7 @@ module ot_coll_dly1 #(parameter integer N = 1, SAFE_RING = 0) (input wire clk, i
         reg out_q;
         always @(posedge clk) begin
             wr_bank_q <= pos_q>>4;
-            rd_bank_q <= pos_q>>4;
+            rd_bank_q <= rpos_q>>4;
         end
         for(genvar b=0;b<B;b=b+1)begin:g_bank
             localparam integer W = D-16*b<16 ? D-16*b : 16;
@@ -57,7 +60,7 @@ module ot_coll_dly1 #(parameter integer N = 1, SAFE_RING = 0) (input wire clk, i
             always @(posedge clk) begin
                 data_q<=d;
                 local_pos_q<=pos_q;
-                local_rpos_q<=pos_q;
+                local_rpos_q<=rpos_q;
                 if(wr_bank_q==b && local_pos_q<W)
                     bits_q[local_pos_q]<=data_q;
             end
@@ -69,9 +72,10 @@ module ot_coll_dly1 #(parameter integer N = 1, SAFE_RING = 0) (input wire clk, i
                 selected=selected | (bank_out[k] & (rd_bank_q==k));
         end
         always @(posedge clk or negedge rs_n) begin
-            if(!rs_n) begin pos_q<=0;filled_q<=0;out_q<=0;end
+            if(!rs_n) begin pos_q<=0;rpos_q<=0;filled_q<=0;out_q<=0;end
             else begin
                 pos_q <= pos_q==D-1 ? 0 : pos_q+1'b1;
+                rpos_q <= rpos_q==D-1 ? 0 : rpos_q+1'b1;
                 if(filled_q<N-1)filled_q<=filled_q+1'b1;
 `ifdef OT_COLL_MUT_RING_EARLY
                 out_q <= filled_q<N-2 ? 1'b0 : d;
@@ -166,7 +170,7 @@ module ot_coll_lcal_rx #(parameter integer KC = 4, parameter integer KW = 2, par
     // must adjust the expected PHY slot rather than invent a same-R path.
     if(LAND_CORE)begin:g_land_rx
         wire landed;
-        ot_coll_token_landing u_land(.ck_w(clk),.ck_r(lck),.rs_w(rs_c),.rs_r(rs_l),.d(exp),.q(landed));
+        ot_coll_token_landing u_land(.ck_w(clk),.ck_r(lck),.rs_w(rs_c),.rs_r(rs_l2),.d(exp),.q(landed));
 `ifdef OT_LCAL_MUT_PEER_AGE
         ot_coll_dly1 #(.N(KC+4+KW+4+PHY-3),.SAFE_RING(SAFE_RING))u_tail(
 `else
