@@ -21,7 +21,10 @@
  },
  "reset_landing": {
   "enable": true,
-  "stages": 2
+  "stages": 2,
+  "copies": {
+   "rst_n": 16
+  }
  },
  "name": "hcoll_link_e2",
  "top": "ot_hgi_coll_link_e1",
@@ -196,6 +199,6 @@
   ]
  },
  "reset_relay_split": {
-  "max_loads": 16
+  "max_loads": 24
  }
 }

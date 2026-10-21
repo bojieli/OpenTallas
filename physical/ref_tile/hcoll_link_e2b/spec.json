@@ -21,7 +21,10 @@
  },
  "reset_landing": {
   "enable": true,
-  "stages": 2
+  "stages": 2,
+  "copies": {
+   "rst_n": 16
+  }
  },
  "name": "hcoll_link_e2b",
  "top": "ot_hgi_coll_link_e1",
@@ -199,7 +202,7 @@
   ]
  },
  "reset_relay_split": {
-  "max_loads": 16
+  "max_loads": 24
  },
  "fill_reason": "Pin-face-bound band outline: 2 x 171.3 um SRAMs side by side, each pin face (W) on a >=43 um channel, set width 475.2; height 172.8 = 64.8 um full-width S band + SRAM row + 30.2 um N gap (aspect 2.75:1 waived: side-by-side macro row; e2 is the square MAIN). Synthesis std ~4.1k um2 -> global fill ~37%"
 }
