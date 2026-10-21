@@ -48,16 +48,6 @@ def lower(raw, q=0, data=None, place=None, tag="", timing=None, scratch_base=Non
     def refuse(reason):
         return dict(status="unsupported_lowering", reasons=[reason], sut=sut,
                     lowering=dict(supported=False, owner="CODEX-SU-ROPE-1340"))
-    # Source inspection found that the old coefficient preparation drains RF
-    # src1 through ports k%8. Actual pgslice permits src1 only on G0/h0 (port0).
-    # Preserve the code below as diagnostic history until the owner supplies a
-    # real RF->SU store->VM replacement and its newly measured/priced schedule.
-    result = refuse("KNOWN_PROTOCOL_VIOLATION: RF_src1_VM_drain_requires_port0_G0_h0; "
-                    "runtime_RF_to_SU_store_to_all_bank_drain_repair_required")
-    result.update(execution_qualified=False, known_protocol_violation=True,
-                  diagnostic_prior_serial_edges=2088, diagnostic_prior_stream_edges=2784,
-                  diagnostic_prior_price_qualified=False)
-    return result
     profile = dict.fromkeys(sut, 0)
     profile.update(c_pair=1, b_half=1, m1=1, qm=sut["qm"], ad=1, dst=1, rnd=sut["rnd"])
     if unit != 2 or sut != profile or sut["qm"] not in (3, 4) or set(desc) != {"A", "B", "D", "O"}:
@@ -116,26 +106,61 @@ def lower(raw, q=0, data=None, place=None, tag="", timing=None, scratch_base=Non
     ql=TreeLines()
     fills,drains,preload,expect,moves=[],[],{},[],[]
     duplicate_sources=[r.base+j//2 for r in (b,d) for j in range(n)]
+    # Only64 unique original coefficients cross the real scalar tree into RF.
+    unique_sources=[r.base+j for r in (b,d) for j in range(n//2)]
     edge0=0
-    for k in range(0,128,8):
-        mv=move_words_to_rf(ql,words=duplicate_sources[k:k+8],rf_addrs=list(range(k,k+8)),
+    for k in range(0,64,8):
+        mv=move_words_to_rf(ql,words=unique_sources[k:k+8],rf_addrs=list(range(k,k+8)),
             q=q,data=before,place=place,tag=tag+":coefficient_move",timing=timing,
             row0=0,edge0=edge0,red_d0=k)
         fills.extend(mv["fills"]);preload.update(mv["preload"])
-        moves.append(dict(source_words=duplicate_sources[k:k+8],RF_words=list(range(k,k+8)),
+        moves.append(dict(source_words=unique_sources[k:k+8],RF_words=list(range(k,k+8)),
                           exports=mv["exports"],RF_write_pins=mv["rf_ready"]))
         edge0=mv["rf_ready"]+4
+    # RFsrc1 -> VM is legal ONLY on port0. Instead use actual RF lane operands:
+    # descend over64 coefficients, each writing liveprefix [0,2*c+2). Subsequent
+    # smaller prefixes overwrite lower banks, leaving each final adjacent pair
+    # with its own original coefficient. The real lane store then drains normally.
+    stage_row=m+2
+    copy_terms=sum((1<<bit)<<(24*(40+bit)) for bit in range(7))
+    copy_ctl=dict(no=1,ni=128,ls=7,lvw=7,srcs=0x55,dst=1,co_dst=1,
+                  ld_c=copy_terms,cp_m1=0,cm_m1=0,ca_ad=0,co_rnd=0)
+    def copy_vb(c):
+        return sum(c<<(24*role) for role in range(4)) | (physical_word(q,stage_row)<<(24*4))
+    ql.f["control"][edge0]=pack(dict(copy_ctl,ld=1,vb=copy_vb(63)))
+    rf_local=1
+    interval=LI.FIRST_OUT+2+rf_local+LI.SETUP_TO_EMIT
+    broadcast_events=[]
+    first_copy=edge0+LI.SETUP_TO_EMIT
+    for ordinal,c in enumerate(range(63,-1,-1)):
+        issue=first_copy+ordinal*interval
+        ctl=dict(copy_ctl,ni=2*c+2,vb=copy_vb(c))
+        ql.f["control"][issue]=pack(dict(ctl,emit=1))
+        for e in range(issue-LI.SETUP_TO_EMIT-1-rf_local,issue+LI.FIRST_OUT+1):
+            for rf_class in range(4):ql.put("rf",e,9*rf_class,9,0x100|c)
+        until=issue+interval if c else issue+1
+        for e in range(issue,until):ql.f["control"].setdefault(e,pack(ctl))
+        broadcast_events.append(dict(RF_word=c,source_logical_word=unique_sources[c],
+            issue_edge=issue,live_lanes=2*c+2,final_pair=[2*c,2*c+1],
+            store_row=stage_row,operation="real_RF_ABCD_BYP_store_descending_prefix"))
+    for e in range(edge0,first_copy):
+        ql.f["control"].setdefault(e,pack(dict(copy_ctl,vb=copy_vb(63))))
+    last_copy=broadcast_events[-1]["issue_edge"]
+    # Match the selected safe lane calendar and guard OLD-read on the local bank.
+    store_ready=last_copy+LI.FIRST_OUT-LI.SETUP_TO_EMIT+2
     scratch_last=0;scratch_events=[]
     for k in range(16):
-        read=edge0+k;drain=read+2;commit=drain+timing.drain_done;ps=scratch_base//8+k
-        ql.put("rf",read,5*9,9,0x100|(8*k))
-        ql.vmw(drain,k%8,1,0,0,ps,255)
+        drain=store_ready+k//8;commit=drain+timing.drain_done;ps=scratch_base//8+k
+        ql.vmw(drain,k%8,0,k,stage_row,ps,255)
         refs=[int(before[w].view(np.uint32)) for w in duplicate_sources[8*k:8*k+8]]
         expect.append(dict(sector=ps,mask=255,edge=commit,words=[],value=refs,
                            role="runtime_scratch_comparison_only"))
-        scratch_events.append(dict(physical_sector=ps,RF_row=8*k,read_edge=read,
-            drain_edge=drain,commit_edge=commit,mask=255,source_words=duplicate_sources[8*k:8*k+8]))
+        scratch_events.append(dict(physical_sector=ps,source="real_SU_store_src0",
+            store_group=k,store_row=stage_row,drain_edge=drain,commit_edge=commit,
+            mask=255,source_words=duplicate_sources[8*k:8*k+8]))
         scratch_last=max(scratch_last,commit)
+    for e in range(last_copy+1,scratch_last+1):
+        ql.f["control"].setdefault(e,pack(dict(copy_ctl,ni=2,vb=copy_vb(0))))
     start_fill=scratch_last+1;last_fill=start_fill
     for i in range(m):
         for j in range(8):
@@ -191,13 +216,15 @@ def lower(raw, q=0, data=None, place=None, tag="", timing=None, scratch_base=Non
         setup_edge=setup,issue_edges=issues,last_commit=last_commit,fill_sectors=len(preload),
         drain_sectors=len(drains)+16,expected_post_state=post,expected_post_state_only=True,
         lowering=dict(supported=True,execution_qualified=False,owner="CODEX-SU-ROPE-1340",
-            mode="local_C_pair_exchange_and_runtime_BD_VM_RF_duplication"),
+            mode="local_C_pair_exchange_and_runtime_BD_VM_RF_SU_store_duplication"),
         native_timing=timing.as_dict(),command_width=2470,
         source_contract=dict(PAIR_C_READS=1,extra_C_serial_edges=0,
             source_sha256=hashlib.sha256(source.encode()).hexdigest(),
             selected_die_sha256=hashlib.sha256(selected_die.encode()).hexdigest(),scratch_base_unit="physical_VM_WORD",
-            scratch_base=scratch_base,scratch_words=128,external_neighbour_operands=False,RF_external_drive=False),
-        runtime_coefficient_moves=moves,scratch_write_footprint=scratch_events,
+            scratch_base=scratch_base,scratch_words=128,external_neighbour_operands=False,RF_external_drive=False,
+            RF_src1_drains=0,coefficient_unique_RF_words=64,coefficient_prefix_store_issues=64),
+        runtime_coefficient_moves=moves,runtime_store_duplication=broadcast_events,
+        scratch_write_footprint=scratch_events,
         scratch_read_footprint=scratch_reads,scratch_reuse_after_serial=last_commit+1,
         control_reservation=dict(first=0,last=last_commit,policy="exclusive_record"),
         timing_obligations=dict(serial_edges=last_commit+1,stream_edges=math.ceil(4*(last_commit+1)/3),
