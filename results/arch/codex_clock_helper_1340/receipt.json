@@ -25,6 +25,7 @@
     "data_buffers": 3438,
     "checkpoint": "/srv/opentallas-scratch/claude/codex-root-fclk-replay-1021/replay_actual/repaired.odb",
     "scope": "repair-only topology/audit; physical placement/reach/STA not qualified",
-    "data_spread_on_obstacle": 164
+    "ideal_bins_on_obstacle": 164,
+    "placement_note": "164 counts obstructed IDEAL bins before spreading, not final overlaps. Spread placed all3438 with0unplaced; mean7.20/max32.48um displacement. Final placement/reach/STA remain unaudited."
   }
 }
