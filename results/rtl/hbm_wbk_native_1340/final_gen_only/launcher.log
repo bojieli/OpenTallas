@@ -1,0 +1,9 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-finalgen-1620-1021/run
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-finalgen-1620-1021/run
+ot-run: ot-epyc9       admits   570 GB (avail 467, growth 68, headroom 0, waiters 0/0 GB) load 69/128 running 26 disk 2151 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-finalgen-1620-1021/run
+ot-run: ot-gold1       admits   461 GB (avail 520, growth 197, headroom 0, waiters 0/0 GB) load 43/112 running 9 disk 2104 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-finalgen-1620-1021/run
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-wbk-finalgen-1620-1021/run
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3366495-1792624890 after 0 s

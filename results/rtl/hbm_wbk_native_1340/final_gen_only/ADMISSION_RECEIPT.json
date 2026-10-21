@@ -1,0 +1,23 @@
+{
+  "time_utc": "2026-10-21T23:22:26.015812+00:00",
+  "status": "ADMITTED_GEN_ONLY_NO_VERDICT",
+  "unit": "ot-epyc9:oth-ubuntu-3366495-1792624890",
+  "client_pid": 4193482,
+  "session": 81319,
+  "root": "/srv/opentallas-scratch/claude/codex-hbm-wbk-finalgen-1620-1021/run",
+  "source_commit_file": "0441f9958",
+  "source_commit_resolved": "0441f995889a589cca99d836e3f3df7d748f9d2a",
+  "production_rtl_equivalent_source": "e0bfd10e5",
+  "production_wbk_sha256": "8c416020aaaca60604ac97e0fa42b831cf6716729ed26b166da2fa69611ffb2d",
+  "helper_commit": "b5f983efec3f397e21d998efd23bfa55e40d0c3d",
+  "projection": "Full published tools/physical common_flow/qwen_die_masters, then candidate RTL and source-private assets only. Seven primary runtime helper files independently matched published git objects. No local partial helper overlay.",
+  "manifest_sha256": "30e5760945772b5867519442d5643ffd51b0990424b95f10869d993c7c459d5d",
+  "manifest_files": 14942,
+  "driver_sha256": "e56aec00d31d15badc6fdd69cdd48f571c28b51e77e27b9fb4568dcaeb98e6e9",
+  "resources": {
+    "mem_cap_gib": 96,
+    "threads": 8,
+    "disk_gb": 80
+  },
+  "scope": "Only canonical GEN/CDC actual keyed receipt. No native/SYNTH/layout/no SYNTH_NETLIST_FILES override. Corrected published census helper required in fresh later native stage. Any actual receipt reuse must naturally validate all canonical keys/inputs without editing receipts."
+}
