@@ -438,7 +438,7 @@ def position_barrier_graph(model):
     receive_end = max(t + HOP for _, t, _, _ in model['links'])
     actual_end = max([end for _, _, end in base] + [receive_end])
     span = qup(max(model['T_ar'], actual_end))
-    draft = math.ceil(max(0, model['head_mtp'] - 6 * model['head_ar']))
+    draft = model['draft_tail']  # rounded from draft nodes themselves, never subtract rounded head totals
     lead = math.ceil(HOP - x_flat('stage_hop') + RX_JIT) if REL['land'] else 0
     owners = []
     for i, q in enumerate(model['stages']):
@@ -886,8 +886,9 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
                            step=math.ceil(6 * (b - a) - 5 * sc), scan=round(sc, 1)))
     wave_old = sum(cycm[n['id']] for n in dagm['nodes'] if n.get('op') == 'wave.busy' and n.get('critical'))
     wave_new = 5 * max(s['occ'] - s['scan'] for s in st_rec)
-    head_mtp = 6 * head_ar + sum(cycm[n['id']] for n in dagm['nodes'] if (n.get('op') or '').startswith('draft.')
-                                 and n.get('critical'))
+    draft_tail = sum(cycm[n['id']] for n in dagm['nodes'] if (n.get('op') or '').startswith('draft.')
+                     and n.get('critical'))
+    head_mtp = 6 * head_ar + draft_tail
     T_mtp = wm['T_cycles'] + ovr['mtp']['delta'] + s_mtp + dh + dchain + (wave_new - wave_old)
     eng_layers = {n['layer'] for n in dag['nodes'] if n.get('op') == 'eng.hbm_read'}
     for x in (log if REL['eng_ii'] else []):     # Engram engine window: at the start of its dense (B half) item
@@ -905,7 +906,7 @@ def build(mapp=MAP, cmode='record', alap=False, unqualified=False, contexts=1, d
             if q.get('eng_off') is not None:
                 q['eng_off'] += lead
     model = dict(stages=st_rec, links=links, head_t=math.ceil(chain + embed + hop_head), head_ar=math.ceil(head_ar),
-                 head_mtp=math.ceil(head_mtp), T_ar=T_ar, T_mtp_step=T_mtp)
+                 head_mtp=math.ceil(head_mtp), draft_tail=math.ceil(draft_tail), T_ar=T_ar, T_mtp_step=T_mtp)
     if mtp_position_barriers:
         if contexts != 1:
             raise ValueError('Position-barrier MODEL currently supports one job context only')
