@@ -11,10 +11,12 @@ MASTER='qfd_sys_face_ovl_fault1'
 SOURCE='rtl/qwen_split/qfd_sys_face_ovl_fault1.sv'
 
 def install(v, model, fault):
-    for flag in ('OT_QWEN_HEAD_PREP','OT_QWEN_ROPE','OT_SPLIT_FAULT_SOURCE_BITS','OT_SPLIT_FAULT_EMIT'):
+    for flag in ('OT_QWEN_HEAD_PREP','OT_QWEN_ROPE','OT_QWEN_STATUS_OBS','OT_SPLIT_FAULT_SOURCE_BITS','OT_SPLIT_FAULT_EMIT'):
         if os.environ.get(flag)!='1':
             raise ValueError('fault1 requires actual coherent source and fault tree: '+flag)
     by={i.name:i for i in model['insts']}
+    if by['d2d_rom'].master != 'qfd_d2d_static_ovl_sf7_obs1':
+        raise ValueError('fault1 coherent vehicle requires actual STATUS208 obs1 D2D source, never an old view alias')
     if by['sys_face'].master!=MASTER:
         raise ValueError('die fault root requires the actual new fault1 master, never an old view alias')
     source=Path(__file__).resolve().parents[2]/SOURCE
