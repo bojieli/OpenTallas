@@ -6,6 +6,7 @@ are special; reset and macro data pins count like other dynamic endpoints.
 """
 import argparse
 from collections import Counter
+from functools import lru_cache
 import gzip
 import hashlib
 import json
@@ -282,11 +283,104 @@ def liberty_roles(paths):
     return cells, receipts
 
 
+@lru_cache(maxsize=4096)
+def boolean_function(function):
+    """Parse a Liberty Boolean function without evaluating arbitrary code.
+
+    Unsupported syntax stays unclassified: it never grants transparency or a
+    constant exemption. Pin names must subsequently resolve to real contacts.
+    """
+    if function is None:
+        return None
+    tokens, at = [], 0
+    pattern = re.compile(r"\s*(1'b[01]|[01]|[A-Za-z_][A-Za-z_0-9]*(?:\[-?\d+\])?|[!~'&*+|^()])")
+    while at < len(function):
+        if not function[at:].strip():
+            break
+        m = pattern.match(function, at)
+        if not m:
+            return None
+        tokens.append(m.group(1)); at = m.end()
+    at = 0
+
+    def unary():
+        nonlocal at
+        if at >= len(tokens):
+            raise ValueError('missing operand')
+        token = tokens[at]; at += 1
+        if token in ('!', '~'):
+            node = ('not', unary())
+        elif token == '(':
+            node = expression()
+            if at >= len(tokens) or tokens[at] != ')':
+                raise ValueError('unbalanced function')
+            at += 1
+        elif re.fullmatch(r"1'b[01]|[01]", token):
+            node = ('const', int(token[-1]))
+        elif re.fullmatch(r'[A-Za-z_][A-Za-z_0-9]*(?:\[-?\d+\])?', token):
+            node = ('pin', token)
+        else:
+            raise ValueError('unsupported operand')
+        while at < len(tokens) and tokens[at] == "'":
+            node = ('not', node); at += 1
+        return node
+
+    def conjunction():
+        nonlocal at
+        node = unary()
+        while at < len(tokens) and tokens[at] not in (')', '+', '|', '^'):
+            if tokens[at] in ('&', '*'):
+                at += 1
+            # Liberty also permits adjacency as conjunction.
+            node = ('and', node, unary())
+        return node
+
+    def exclusive():
+        nonlocal at
+        node = conjunction()
+        while at < len(tokens) and tokens[at] == '^':
+            at += 1; node = ('xor', node, conjunction())
+        return node
+
+    def expression():
+        nonlocal at
+        node = exclusive()
+        while at < len(tokens) and tokens[at] in ('+', '|'):
+            at += 1; node = ('or', node, exclusive())
+        return node
+
+    try:
+        tree = expression()
+        return tree if at == len(tokens) else None
+    except (ValueError, RecursionError):
+        return None
+
+
+def function_value(tree, pins):
+    op = tree[0]
+    if op == 'const':
+        return tree[1]
+    if op == 'pin':
+        return pins[tree[1]]
+    if op == 'not':
+        return 1 ^ function_value(tree[1], pins)
+    a, b = function_value(tree[1], pins), function_value(tree[2], pins)
+    return {'and': lambda: a & b, 'or': lambda: a | b, 'xor': lambda: a ^ b}[op]()
+
+
 def census(g, roles):
     drivers, loads, ports, transparent = {}, {}, {}, {}
     output_sources, constant_sources = {}, {}
-    constants = {g.find(i) for name, i in g.net_id.items() if name in ("1'0", "1'1")}
-    errors = []
+    values, value_sources, errors = {}, {}, []
+    for name, i in g.net_id.items():
+        if name in ("1'0", "1'1"):
+            net, value = g.find(i), int(name[-1])
+            if net in values and values[net] != value:
+                errors.append(f'conflicting constant literals net {g.net_name[net]}')
+            values[net] = value
+            value_sources[net] = {'kind': 'literal', 'net': name}
+    constants = set(values)
+    combinational, reductions = [], []
     for name, (direction, net) in g.ports.items():
         if direction == 'input':
             drivers[net] = ('port', name)
@@ -299,7 +393,7 @@ def census(g, roles):
         if role is None:
             errors.append(f'missing Liberty cell {master} instance {name}')
             continue
-        ins, outs = [], []
+        ins, outs, clocked = [], [], False
         for pn, nets in pins.items():
             order = role.get('bus_order', {}).get(pn)
             if order is not None and len(order) != len(nets):
@@ -333,22 +427,70 @@ def census(g, roles):
                                            'pin': f'{pn}[{idx}]' if len(nets) > 1 or order is not None else pn,
                                            'function': p['function']}
                 else:
-                    ins.append((pn, net))
+                    ins.append((f'{pn}[{idx}]' if len(nets) > 1 or order is not None else pn, net))
+                    clocked |= p['clock']
                     if not p['clock']:
                         loads.setdefault(net, set()).add((ci, pn, bit))
         # Truth-functional unary buffers/inverters only; no name-based exemption.
-        if not role['sequential'] and len(ins) == len(outs) == 1:
+        if not role['sequential'] and not clocked and len(ins) == len(outs) == 1:
             pn, src = ins[0]
             dst, function = outs[0]
-            if function is not None:
-                f = re.sub(r'[\s()]', '', function)
-                if f in (pn, '!' + pn, '~' + pn, pn + "'"):
+            tree = boolean_function(function)
+            if tree is not None:
+                try:
+                    truth = [function_value(tree, {pn: b}) for b in (0, 1)]
+                except (KeyError, RecursionError):
+                    truth = []
+                if truth in ([0, 1], [1, 0]):
                     transparent[ci] = (src, dst)
-        if not role['sequential']:
+        if not role['sequential'] and not clocked:
+            combinational.append((ci, ins, outs))
             for dst, function in outs:
                 if function is not None and re.sub(r'[\s()]', '', function) in ('0', '1', "1'b0", "1'b1"):
                     constants.add(dst)
+                    values[dst] = int(re.sub(r'[\s()]', '', function)[-1])
                     constant_sources[dst] = output_sources[dst]
+                    value_sources[dst] = output_sources[dst]
+    # Partial evaluation is based on actual function text and connected pin
+    # values, never a cell-name family. Iterate to cover upstream tie logic and
+    # transparent paths irrespective of instance order.
+    changed = True
+    parsed = {ci: [(dst, boolean_function(f)) for dst, f in outs]
+              for ci, _, outs in combinational}
+    while changed:
+        changed = False
+        for ci, ins, outs in combinational:
+            bindings = dict(ins)
+            if len(bindings) != len(ins):
+                continue
+            dynamic = [(p, n) for p, n in ins if n not in values]
+            if len(dynamic) > 1:
+                continue
+            fixed = {p: values[n] for p, n in ins if n in values}
+            for dst, tree in parsed[ci]:
+                if tree is None:
+                    continue
+                try:
+                    truth = [function_value(tree, dict(fixed, **({dynamic[0][0]: b} if dynamic else {})))
+                             for b in (0, 1)]
+                except (KeyError, RecursionError):
+                    continue
+                if truth[0] == truth[1]:
+                    if dst not in values:
+                        values[dst] = truth[0]; changed = True
+                        value_sources[dst] = dict(output_sources[dst], constant_inputs=[
+                            {'pin': p, 'net': g.net_name[n], 'value': values[n], 'source': value_sources[n]}
+                            for p, n in ins if n in values and n != dst])
+                        if ci not in transparent:
+                            constants.add(dst)
+                            constant_sources[dst] = value_sources[dst]
+                elif len(outs) == 1 and dynamic and ci not in transparent:
+                    transparent[ci] = (dynamic[0][1], dst)
+                    reductions.append(dict(output_sources[dst], dynamic_pin=dynamic[0][0],
+                                           inverted=truth == [1, 0], constant_inputs=[
+                        {'pin': p, 'net': g.net_name[n], 'value': values[n],
+                         'source': value_sources[n]}
+                        for p, n in ins if n in values]))
     for net in loads:
         if net not in drivers and net not in constants:
             errors.append(f'undriven dynamic net {g.net_name[net]}')
@@ -365,7 +507,7 @@ def census(g, roles):
         for _, name, _ in ports.get(x, ()):
             output_bits.append({'port_bit': name, 'source': provenance, 'transparent_path': path})
         for ci, _, _ in loads.get(x, ()):
-            if ci in transparent:
+            if ci in transparent and transparent[ci][0] == x:
                 todo.append((transparent[ci][1], source, path + [g.cells[ci][1]]))
     violations, counts, max_loads, examined = [], [], 0, 0
     for net, driver in drivers.items():
@@ -379,7 +521,7 @@ def census(g, roles):
             seen.add(x)
             endpoints.update(ports.get(x, ()))
             for end in loads.get(x, ()):
-                if end[0] in transparent:
+                if end[0] in transparent and transparent[end[0]][0] == x:
                     stack.append(transparent[end[0]][1])
                 else:
                     endpoints.add(end)
@@ -393,9 +535,16 @@ def census(g, roles):
         if n > 32:
             violations.append({'driver': who, 'driver_role': driver_role, 'net': g.net_name[net], 'loads': n,
                                'endpoints': [list(e) for e in sorted(endpoints, key=str)[:40]]})
+    physical_counts = []
+    for net, driver in drivers.items():
+        who = driver[1] if driver[0] == 'port' else g.cells[driver[0]][1] + '/' + driver[1]
+        physical_counts.append({'driver': who, 'net': g.net_name[net],
+                                'loads': len(loads.get(net, ())) + len(ports.get(net, ()))})
     return {'status': 'FAIL' if errors or violations else 'PASS', 'limit': 32,
             'roots_examined': examined, 'max_dynamic_loads': max_loads,
             'driver_counts': counts, 'constant_output_bits': output_bits,
+            'physical_nonclock_driver_counts': physical_counts,
+            'constant_input_transparent_cells': reductions,
             'functional_pin_contract': 'NOT_EVALUATED',
             'pin_registration_contract': 'NOT_EVALUATED', 'storage_contract': 'NOT_EVALUATED',
             'independent_source_contract_audit_required': True,
