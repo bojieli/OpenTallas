@@ -1,0 +1,43 @@
+{
+ "layer": "l23q_qcore_r13",
+ "master": "ot_hbm_su_static_qcore_r13",
+ "instances": {
+  "sucore_NW": {
+   "old": "ot_hbm_su_static_qcore",
+   "params": {
+    "MUT": 0,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   }
+  },
+  "sucore_NE": {
+   "old": "ot_hbm_su_static_qcore",
+   "params": {
+    "MUT": 0,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   }
+  },
+  "sucore_SW": {
+   "old": "ot_hbm_su_static_qcore",
+   "params": {
+    "MUT": 0,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   }
+  },
+  "sucore_SE": {
+   "old": "ot_hbm_su_static_qcore",
+   "params": {
+    "MUT": 0,
+    "COLLPORT": 1,
+    "RF_LOCAL": 1,
+    "PRETREE": 1
+   }
+  }
+ },
+ "dropped_clock_rows": 8
+}
