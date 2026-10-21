@@ -45,6 +45,13 @@ def stop(v,m,*a,**kw):
  raise PreComplete()
 G._relays_fanout=stop;G._relays=stop
 D.QWEN_RECIPE='tp8b';D._QW.clear();D.QSRC=None
-try:D.load_qwen()
+source=D.qwen_src()
+assert Path(source['root']).resolve()==Path.cwd().resolve(),source
+assert Path(G.__file__).resolve().parent==Path.cwd().resolve()/'tools'
+assert sys.modules['qwen_rom_fulldie_b3r2'] is G
+assert G._relays is stop and G._relays_fanout is stop
+recipe=dict(D.QWEN_RECIPES['tp8b']);cdc=recipe.pop('cdc')
+print('PRE_DRIVER_DIRECT_SELECTED',str(Path(G.__file__).resolve()),'relay hooks verified',flush=True)
+try:G.selected(True,cdc=G._cdc_arg(cdc),**recipe)
 except PreComplete:sys.exit(0)
 raise SystemExit('PRE interception was not reached')
