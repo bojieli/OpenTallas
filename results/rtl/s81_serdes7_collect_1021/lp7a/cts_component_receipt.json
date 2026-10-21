@@ -1,0 +1,47 @@
+{
+  "scope": "ACTUAL_ARCHIVED_CTS_COMPONENT_ONLY; full gate interrupted by EP6retirement, not verified terminal DUT verdict",
+  "source": "53efe618a",
+  "roots": [
+    {
+      "root": "ck_tx",
+      "tt_spread_ps": 313.1,
+      "ff_spread_ps": 308.2
+    },
+    {
+      "root": "ck_r0",
+      "tt_spread_ps": 0.0,
+      "ff_spread_ps": 0.0
+    },
+    {
+      "root": "ck_r1",
+      "tt_spread_ps": 0.0,
+      "ff_spread_ps": 0.0
+    },
+    {
+      "root": "ck_ptx",
+      "tt_spread_ps": 49.3,
+      "ff_spread_ps": 70.8
+    },
+    {
+      "root": "ck_rxo",
+      "tt_spread_ps": 81.0,
+      "ff_spread_ps": 70.5
+    },
+    {
+      "root": "ck_dly",
+      "tt_spread_ps": 0.0,
+      "ff_spread_ps": 0.0
+    },
+    {
+      "root": "ck_dec",
+      "tt_spread_ps": 0.0,
+      "ff_spread_ps": 0.0
+    },
+    {
+      "root": "ck_prx",
+      "tt_spread_ps": 21.1,
+      "ff_spread_ps": 99.1
+    }
+  ],
+  "conclusion": "TX child-compensated clock spread already exceeds80ps before interruption; physicalsource redesign required; no blind unchanged GRTrestart. Old300pspairwaiver notadopted."
+}
