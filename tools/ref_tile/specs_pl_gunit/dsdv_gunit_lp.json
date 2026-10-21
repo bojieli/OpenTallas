@@ -22,7 +22,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 950.4,
+  "w": 1036.8,
   "h": 1468.8,
   "exact": true
  },
@@ -96,7 +96,7 @@
    "inst": "*u_l1f1",
    "at": [
     432.0,
-    302.4
+    388.8
    ]
   },
   {
@@ -104,8 +104,8 @@
    "count": 1,
    "inst": "*u_l1f2",
    "at": [
-    432.0,
-    561.6
+    734.4,
+    388.8
    ]
   },
   {
@@ -113,7 +113,7 @@
    "count": 1,
    "inst": "*u_l1f3",
    "at": [
-    691.2,
+    734.4,
     43.2
    ]
   },
@@ -123,7 +123,7 @@
    "inst": "*u_l1c",
    "at": [
     691.2,
-    302.4
+    734.4
    ]
   },
   {
@@ -131,7 +131,7 @@
    "count": 1,
    "inst": "*u_l0r",
    "at": [
-    432.0,
+    475.2,
     820.8
    ]
   },
@@ -140,7 +140,7 @@
    "count": 1,
    "inst": "*u_l4r",
    "at": [
-    432.0,
+    475.2,
     1036.8
    ]
   },
@@ -149,7 +149,7 @@
    "count": 1,
    "inst": "*u_l5f",
    "at": [
-    432.0,
+    475.2,
     1209.6
    ]
   }
@@ -179,12 +179,12 @@
  },
  "pin_ranges": {
   "vi_n": [
-   43.2,
-   216.0
+   194.4,
+   345.6
   ],
   "vo_n": [
-   216.0,
-   388.8
+   43.2,
+   194.4
   ],
   "vi_s": [
    43.2,
@@ -243,12 +243,12 @@
   "enable": false,
   "reason": "every gunit leaf is flop-first / flop-last at its pins and every parent port goes straight to one leaf's pin flop (vi_n/vo_n L5, vi_s/vo_s L3, cw/sid/fault L2); the landing halves are flops on both sides: a recipe pin register would add an unpriced rung stage"
  },
- "structural_change": "PL-GUNIT (PARENTS-LANDED 10-18, landed-regions-standard-1018): dsdv_gunit as a LANDED parent from tools/landed_parent/lp.py (reschedule mode): two clock regions, hc = L0/L0r/L4/L4r/L5/L5f (HC subsystem above the stop) and rt = L2/L1/L1f x4/L1c/L3 (stop + router), each its own clock port and local tree; the ONLY crossing is the stop boundary L0|L2: 13 landings (1,655 b, 8,444 flops, +3 edges each), 1-bit reset runs depth 4. Every stacked leaf pair talks both ways, so any split is a cross-region loop: no offset schedule keeps the flat calendar; the compiler takes the re-schedule (N-side rung +3 each way, HC +6, router 0; results/arch/landed_parent_1018/gunit/dsdv_gunit_lp_record.json). Floorplan (43.2 lattice, 950.4 x 1468.8): col A stack L3/L1/L2 | 86.4 landing channel | L0/L4/L5; col B fronts f0..f2 beside L3/L1/L2 and L0r/L4r/L5f beside L0/L4/L5; col C f3 + L1c (collector E of the fronts). DIAGNOSTIC: L5 and L1f are stand-ins from their --cts gate odbs (no closed view: L5 regate died in synth, L1f pin-flop spread 114 TT).",
+ "structural_change": "PL-GUNIT (PARENTS-LANDED 10-18, landed-regions-standard-1018): dsdv_gunit as a LANDED parent from tools/landed_parent/lp.py (reschedule mode): two clock regions, hc = L0/L0r/L4/L4r/L5/L5f (HC subsystem above the stop) and rt = L2/L1/L1f x4/L1c/L3 (stop + router), each its own clock port and local tree; the ONLY crossing is the stop boundary L0|L2: 13 landings (1,655 b, 8,444 flops, +3 edges each), 1-bit reset runs depth 4. Every stacked leaf pair talks both ways, so any split is a cross-region loop: no offset schedule keeps the flat calendar; the compiler takes the re-schedule (N-side rung +3 each way, HC +6, router 0; results/arch/landed_parent_1018/gunit/dsdv_gunit_lp_record.json). Floorplan (43.2 lattice, 950.4 x 1468.8): col A stack L3/L1/L2 | 86.4 landing channel | L0/L4/L5; col B fronts f0..f2 beside L3/L1/L2 and L0r/L4r/L5f beside L0/L4/L5; col C f3 + L1c (collector E of the fronts). DIAGNOSTIC: L5 and L1f are stand-ins from their --cts gate odbs (no closed view: L5 regate died in synth, L1f pin-flop spread 114 TT). | GUNIT3 10-20: re-kit for L5 n32 (388.8 wide) and L1f 259.2x302.4 (2x2 fronts, L1c hub under the B|C gap, hc L0r/L4r/L5f at x 475.2); outline 1036.8 x 1468.8",
  "job": {
   "owner": "Claude:PL-GUNIT",
   "branch": "claude/pl-gunit-1018",
-  "tag": "lp1",
-  "purpose": "S81 dsdv_gunit landed-region parent (diagnostic gate: L5 / L1f stand-ins)",
+  "tag": "lp3",
+  "purpose": "S81 dsdv_gunit landed-region parent, GUNIT3 re-kit: L5 n32 388.8x302.4 stand-in, L1f 259.2x302.4 stand-in 2x2, outline 1036.8x1468.8 (diagnostic)",
   "submit": false,
   "hold_merge": "diagnostic: L5 + L1f stand-in abstracts; real gate after their closed views",
   "extra_paths": [

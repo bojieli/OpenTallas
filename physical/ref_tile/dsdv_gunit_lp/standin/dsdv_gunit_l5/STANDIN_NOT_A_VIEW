@@ -1,2 +1,2 @@
-diagnostic stand-in from the --cts gate odb /srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l5-20261017-204608 (placement-estimated parasitics, NOT routed, NOT closed); never bind
-LEF: exact write_abstract_lef of the CTS odb with the RVTN/RVTP implant OBS (300k rects) merged into one outline rect each; metal OBS exact
+diagnostic stand-in from the --cts gate odb ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/dsdv_gunit_l5_n32-20261020-151819 (kit dsdv_gunit_l5_n32 @bbfdd7a9a, 388.8x302.4; placement-estimated parasitics, NOT routed, NOT closed); never bind
+LEF: exact write_abstract_lef of the CTS odb, RVTN/RVTP implant OBS -> one outline rect, M1/M2 OBS -> one bbox rect (physical/ref_tile/dsdv_gunit_lp/standin/merge_obs.py); M3+ OBS exact
