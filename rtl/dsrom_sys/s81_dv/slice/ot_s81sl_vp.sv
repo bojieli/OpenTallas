@@ -274,7 +274,16 @@ module ot_s81sl_vp #(
     // SAFE 10-21: lr / ly are KEPT per lane (Yosys merged the 4 identical column copies with hs_d into one flop that
     // drove 4 lanes ~520 um apart + the bank write mux); lane_v is a kept copy per lane row (4) + one for the
     // write-back valid ring.
+    // FALLBACK (define OT_S81SL_VP_RELAY, kit s81sl_vp_fb): one registered relay stage on the lane feed (lr / ly / v)
+    // and one on the lane outputs (o / vo / fault), so no single-cycle wire spans the band -> lane grid (~700 um);
+    // priced: POST write-back (hw_v / hw_d) +2 edges, nothing else moves.
+`ifdef OT_S81SL_VP_RELAY
+    localparam integer LRELAY = 1;
+`else
+    localparam integer LRELAY = 0;
+`endif
     wire [15:0] lv, lf; wire [31:0] lo [0:15];
+    wire [15:0] lv_s, lf_s; wire [31:0] lo_s [0:15];     // lane outputs as seen by the band (relayed in the fallback)
     (* keep *) reg [4:0] k_lanev;
     (* keep *) reg [31:0] lr [0:15][0:3]; (* keep *) reg [31:0] ly [0:15];
     genvar gl;
@@ -291,8 +300,25 @@ module ot_s81sl_vp #(
             .vo(lv[gl]), .o(lo[gl]), .fault(lf[gl]));
     end endgenerate
     // the h half row of POST step s (requested with the y read: hq arrives aligned with ydv[2])
+`ifdef OT_S81SL_VP_RELAY
+    (* keep *) reg [31:0] lrA [0:15][0:3]; (* keep *) reg [31:0] lyA [0:15]; (* keep *) reg [4:0] k_lanevA;
+    always @(posedge clk or negedge rs_p) if (!rs_p) begin k_lanevA <= 5'd0; k_lanev <= 5'd0; end
+        else begin k_lanevA <= {5{ydv[2]}}; k_lanev <= k_lanevA; end
+    always @(posedge clk)
+        for (k = 0; k < 4; k = k + 1)
+            for (i = 0; i < 4; i = i + 1) begin
+                lrA[4 * k + i][0] <= {hqd_c[(4 * 0 + i) * 16 +: 16], 16'd0};
+                lrA[4 * k + i][1] <= {hqd_c[(4 * 1 + i) * 16 +: 16], 16'd0};
+                lrA[4 * k + i][2] <= {hqd_c[(4 * 2 + i) * 16 +: 16], 16'd0};
+                lrA[4 * k + i][3] <= {hqd_c[(4 * 3 + i) * 16 +: 16], 16'd0};
+                lyA[4 * k + i] <= yrow_d[2][32 * i +: 32];
+                lr[4 * k + i][0] <= lrA[4 * k + i][0]; lr[4 * k + i][1] <= lrA[4 * k + i][1];
+                lr[4 * k + i][2] <= lrA[4 * k + i][2]; lr[4 * k + i][3] <= lrA[4 * k + i][3];
+                ly[4 * k + i] <= lyA[4 * k + i];
+            end
+`else
     always @(posedge clk or negedge rs_p) if (!rs_p) k_lanev <= 5'd0; else k_lanev <= {5{ydv[2]}};
-    always @(posedge clk) begin
+    always @(posedge clk)
         for (k = 0; k < 4; k = k + 1)
             for (i = 0; i < 4; i = i + 1) begin
                 lr[4 * k + i][0] <= {hqd_c[(4 * 0 + i) * 16 +: 16], 16'd0};
@@ -301,12 +327,23 @@ module ot_s81sl_vp #(
                 lr[4 * k + i][3] <= {hqd_c[(4 * 3 + i) * 16 +: 16], 16'd0};
                 ly[4 * k + i] <= yrow_d[2][32 * i +: 32];
             end
-    end
+`endif
+    genvar go;
+    generate if (LRELAY != 0) begin : g_orl
+        (* keep *) reg [15:0] lv_r, lf_r; (* keep *) reg [31:0] lo_r [0:15];
+        always @(posedge clk or negedge rs_p) if (!rs_p) begin lv_r <= 16'd0; lf_r <= 16'd0; end else begin lv_r <= lv; lf_r <= lf; end
+        always @(posedge clk) for (k = 0; k < 16; k = k + 1) lo_r[k] <= lo[k];
+        assign lv_s = lv_r; assign lf_s = lf_r;
+        for (go = 0; go < 16; go = go + 1) begin : g_o assign lo_s[go] = lo_r[go]; end
+    end else begin : g_onr
+        assign lv_s = lv; assign lf_s = lf;
+        for (go = 0; go < 16; go = go + 1) begin : g_o assign lo_s[go] = lo[go]; end
+    end endgenerate
     // write-back valid: lane_v delayed by the lane latency HPL, as a RING (HPL - 1 entries, rotating pointer) + an
     // output register with kept copies (SAFE 10-21: was a 33-deep flop->flop shift line; same latency).  The write-back
     // half-row index is the position inside the contiguous 16-issue POST burst (bursts are >= 5 idle cycles apart:
     // POST steps 0..4 issue no lane op), so it is a counter over wvl instead of a 33-deep tag line (same value).
-    localparam integer RD = HPL - 1;
+    localparam integer RD = HPL - 1 + LRELAY;          // + the output relay (fallback)
     localparam integer PW = (RD <= 2) ? 1 : $clog2(RD);
     reg [RD-1:0] wv_ring; reg [PW-1:0] wv_p;
     always @(posedge clk or negedge rs_p)
@@ -362,7 +399,7 @@ module ot_s81sl_vp #(
     always @(posedge clk) begin
         // hw_d word k (lanes 2k, 2k + 1) on its own kept wvl copy: lane write-back, else the HLOAD row pair
         for (k = 0; k < 8; k = k + 1)
-            if (k_wvl[k]) begin hw_d[32 * k +: 16] <= lo[2 * k][31:16]; hw_d[32 * k + 16 +: 16] <= lo[2 * k + 1][31:16]; end
+            if (k_wvl[k]) begin hw_d[32 * k +: 16] <= lo_s[2 * k][31:16]; hw_d[32 * k + 16 +: 16] <= lo_s[2 * k + 1][31:16]; end
             else hw_d[32 * k +: 32] <= qoe[32 * k +: 32];
         if (k_wvl[8]) begin hw_j <= widx[3:1]; hw_hf <= widx[0]; end
         else begin hw_j <= dsi[3:1]; hw_hf <= dsi[0]; end
@@ -398,7 +435,7 @@ module ot_s81sl_vp #(
             fault <= 1'b0; lf_q <= 16'd0; lv_q <= 16'd0; wvl_d <= 1'b0; wvl_dd <= 1'b0; lv0_d <= 1'b0; src1 <= 1'b0; src2 <= 1'b0;
             lvbad <= 1'b0; lfa <= 1'b0; lfr <= 4'd0; lvor <= 4'd0; lvand <= 4'd0;
         end else begin
-            lf_q <= lf; lv_q <= lv; wvl_d <= wvl;
+            lf_q <= lf_s; lv_q <= lv_s; wvl_d <= wvl;
             for (k = 0; k < 4; k = k + 1) begin lfr[k] <= |lf_q[4 * k +: 4]; lvor[k] <= |lv_q[4 * k +: 4]; lvand[k] <= &lv_q[4 * k +: 4]; end
             lv0_d <= lv_q[0]; wvl_dd <= wvl_d;
             lfa <= |lfr;
