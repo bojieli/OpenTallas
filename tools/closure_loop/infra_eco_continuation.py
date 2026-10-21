@@ -10,7 +10,7 @@ import subprocess
 SCHEMA = 'opentallas.closure_loop.infra-eco-continuation.v1'
 SHA = re.compile(r'[0-9a-f]{64}')
 NAME = re.compile(r'[A-Za-z0-9_][A-Za-z0-9_.-]*')
-ALLOWED = {'verdict', 'hold_eco', 'eco_install', 'collect', 'export', 'commit'}
+ALLOWED = {'verdict', 'hold_eco', 'eco_install', 'collect', 'export', 'commit', 'summary'}
 
 
 def canonical_sha(value):
