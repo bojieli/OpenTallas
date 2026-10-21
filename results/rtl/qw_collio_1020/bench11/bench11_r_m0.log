@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       admits   419 GB (avail 406, growth 113, headroom 0, waiters 0/0 GB) load 103/128 running 32 disk 2404 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-epyc9       admits   244 GB (avail 247, growth 76, headroom 0, waiters 0/0 GB) load 57/128 running 36 disk 35 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-746616-1792596346 after 2 s
+MUT=0 PHI=0 COLL_FACE_BENCH PLAND=1 PLD=2 PLK=1 PPH=0 TOK_REG=1 FW=514 PHY=20 L=56 R=5 PEER_R=5 XS=0 PHI=0 words 240 240 got 240 240 latency 56 errors 0 faults 0 unexpected 0
+MUT=0 PHI=0 COLL_STATIC_FACE PASS
+MUT=0 PHI=1 COLL_FACE_BENCH PLAND=1 PLD=2 PLK=1 PPH=0 TOK_REG=1 FW=514 PHY=20 L=56 R=5 PEER_R=5 XS=0 PHI=1 words 240 240 got 240 240 latency 56 errors 0 faults 0 unexpected 0
+MUT=0 PHI=1 COLL_STATIC_FACE PASS
+COLL_STATIC_FACE_BENCH PASS MUT=0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-746616-1792596346): exit 0

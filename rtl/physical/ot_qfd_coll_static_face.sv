@@ -17,7 +17,7 @@ module qfd_coll_static_face #(
  // second entry of the codec0 die clock) landed to the codec core region by mesochronous rings (ot_coll_phy_land.sv,
  // depth PLD, offset PLK). TX +1+PLK edges, RX +PLK edges: the calendar below consumes them exactly; the caller's L
  // must be the original L + 1 + 2*PLK (S1: 378 -> 381 at PLD2/PLK1). Needs SAFE=1.
- PLAND=0, PLD=2, PLK=1, UP_SYNC=0
+ PLAND=0, PLD=2, PLK=1
 )(
  input wire cal_ck,cal_lck,tx_wck,tx_rck,rx_wck,rx_rck,
  input wire [4:0] codec_ck,input wire codec_phy_ck,input wire rst_n,
@@ -92,13 +92,13 @@ module qfd_coll_static_face #(
  .r_slot(rrs),.r_addr(rra),.r_version(rrv),.o_valid(rx_valid),.o_data(rx_full),.w_fault(cdc_fault_i[2]),.r_fault(cdc_fault_i[3]));
  initial if(FW!=546 && FW!=514)$error("collectiveface546/514only");
  if(PLAND)begin:g_codec_pl
- ot_qwen_static_slot_link_pl #(.FW(FW),.CW(32),.SAFE(SAFE),.LD(PLD),.LK(PLK),.UP_SYNC(UP_SYNC))u_codec(.ck(codec_ck),.phy_ck(codec_phy_ck),.rst_n(rst_n),
+ ot_qwen_static_slot_link_pl #(.FW(FW),.CW(32),.SAFE(SAFE),.LD(PLD),.LK(PLK))u_codec(.ck(codec_ck),.phy_ck(codec_phy_ck),.rst_n(rst_n),
  .epoch_begin(epoch_begin),.epoch(8'h01),.wr_v(wr_v),.wr_observed_v(tx_observed),.wr_slot(wr_slot),.wr_flit(tx_word),
  .rd_v(rd_v),.rd_slot(rd_slot),.rx_expect_v(rxe),.rx_expect_slot(rx_slot),
  .p_tx_up(phy_up),.p_tx_v(phy_tx_valid),.p_tx_flit(phy_tx),.p_rx_v(phy_rx_valid),.p_rx_flit(phy_rx),
  .rx_v(codec_valid),.rx_flit(codec_data),.epoch_abort(epoch_abort),.fault_cause(fault_cause));
  end else begin:g_codec
- ot_qwen_static_slot_link #(.FW(FW),.CW(32),.SAFE(SAFE),.UP_SYNC(UP_SYNC))u_codec(.ck(codec_ck),.rst_n(rst_n),
+ ot_qwen_static_slot_link #(.FW(FW),.CW(32),.SAFE(SAFE))u_codec(.ck(codec_ck),.rst_n(rst_n),
  .epoch_begin(epoch_begin),.epoch(8'h01),.wr_v(wr_v),.wr_observed_v(tx_observed),.wr_slot(wr_slot),.wr_flit(tx_word),
  .rd_v(rd_v),.rd_slot(rd_slot),.rx_expect_v(rxe),.rx_expect_slot(rx_slot),
  .p_tx_up(phy_up),.p_tx_v(phy_tx_valid),.p_tx_flit(phy_tx),.p_rx_v(phy_rx_valid),.p_rx_flit(phy_rx),

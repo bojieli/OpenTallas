@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits   418 GB (avail 406, growth 113, headroom 0, waiters 0/0 GB) load 103/128 running 32 disk 2404 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-epyc9       admits   243 GB (avail 246, growth 76, headroom 0, waiters 11/352 GB) load 57/128 running 36 disk 35 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-collio-1020/src11
+ot-run: -> ot-epyc9
+ot-heavy: waiting for memory on ot-epyc9: need 0.7 x 32 = 22 GB, admissible 3 GB: available 237 GB, growth charged 234 GB (x0.5), young 286 GB, floor 50 GB
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-752864-1792596347 after 78 s
+MUT=6 PHI=0 ERR fault at 93 cdc 0010/0000 abort 00 cause 00000000/00000000
+MUT=6 PHI=0 ERR fault at 94 cdc 0010/0000 abort 00 cause 00000000/00000000
+MUT=6 PHI=0 ERR fault at 95 cdc 0010/0000 abort 00 cause 00000000/00000000
+MUT=6 PHI=0 ERR fault at 96 cdc 0010/0000 abort 00 cause 00000000/00000000
+MUT=6 PHI=0 COLL_FACE_BENCH PLAND=1 PLD=4 PLK=2 PPH=0 TOK_REG=1 FW=546 PHY=339 L=383 R=0 PEER_R=0 XS=0 PHI=0 words 240 240 got 240 240 latency 383 errors 0 faults 952 unexpected 0
+MUT=6 PHI=0 COLL_STATIC_FACE FAIL
+COLL_STATIC_FACE_BENCH FAIL MUT=6
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-752864-1792596347): exit 1

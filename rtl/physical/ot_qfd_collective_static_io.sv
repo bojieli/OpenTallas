@@ -11,7 +11,10 @@ module qfd_collective_static_io #(
  // the rx calendar must absorb (forwarded lanes + landing between io_collective and io_serdes_j: E_tx(peer port) +
  // E_rx(own port) from the die GEN fwd_lanes.json); the face then expects the peer frame at PHY = PS + LXj.
  parameter integer TOK_REG=0,LX0=0,LX1=0,LX2=0,
- parameter integer SAFE=0,PLAND=0,PLD=2,PLK=1,UP_SYNC=0
+ // QW-COLLIO2 10-21 (opt-in, defaults 0 = unchanged): SAFE = SAFE faces + relay rows with unreset data and per-stage
+ // ot_rst_relay reset leaves (2-stage landing) on the control bits only; PLAND = face PHY landing region (codec_phy_ck =
+ // a second entry of the face's codec0 root; LU/LS must include +1+2*PLK).
+ parameter integer SAFE=0,PLAND=0,PLD=2,PLK=1
 )(
  input wire  clk,
  input wire  clk_pfold0,
@@ -201,8 +204,8 @@ module qfd_collective_static_io #(
  if(R==0)begin:g_direct
  assign {ftd,ftv,fts,fps}={td,tv,ts,ps};assign {rd,rv}={frd,frv};
  end else begin:g_relay
- qfd_coll_static_relay #(.W(W+3),.N(R))u_txrelay(.ck(relay_ck[BASE+:R]),.rst_n(rst_n),.d({td,tv,ts,ps}),.q({ftd,ftv,fts,fps}));
- qfd_coll_static_relay #(.W(W+1),.N(R))u_rxrelay(.ck(relay_ck[BASE+R+:R]),.rst_n(rst_n),.d({frd,frv}),.q({rd,rv}));
+ qfd_coll_static_relay #(.W(W+3),.N(R),.C(SAFE?3:W+3),.SAFE(SAFE))u_txrelay(.ck(relay_ck[BASE+:R]),.rst_n(rst_n),.d({td,tv,ts,ps}),.q({ftd,ftv,fts,fps}));
+ qfd_coll_static_relay #(.W(W+1),.N(R),.C(SAFE?1:W+1),.SAFE(SAFE))u_rxrelay(.ck(relay_ck[BASE+R+:R]),.rst_n(rst_n),.d({frd,frv}),.q({rd,rv}));
  end
  wire[PW-1:0]pt;
  wire pv=(SHARED_UCIE && f<2)?shared_rv[f]:phy_rx_valid[f];
@@ -212,7 +215,7 @@ module qfd_collective_static_io #(
  end else assign pr=phy_rx[f*597+:PW];
  assign phy_tx[f*597+:PW]=pt;
  if(PW<597)assign phy_tx[f*597+PW+:(597-PW)]=0; // declared frame padding only
- qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS+(f==2?LX0:f==3?LX1:LX2)),.L(f<2?LU:LS),.R(R),.PEER_R(PR),.TOK_REG(TOK_REG),.SAFE(SAFE),.PLAND(PLAND),.PLD(PLD),.PLK(PLK),.UP_SYNC(UP_SYNC))u_face(
+ qfd_coll_static_face #(.FW(W),.PHY(f<2?PU:PS+(f==2?LX0:f==3?LX1:LX2)),.L(f<2?LU:LS),.R(R),.PEER_R(PR),.TOK_REG(TOK_REG),.SAFE(SAFE),.PLAND(PLAND),.PLD(PLD),.PLK(PLK))u_face(
  .cal_ck(face_ck[f*11]),.cal_lck(face_ck[f*11+1]),
  .tx_wck(face_ck[f*11+2]),.tx_rck(face_ck[f*11+3]),.rx_wck(face_ck[f*11+4]),.rx_rck(face_ck[f*11+5]),
  .codec_ck(face_ck[f*11+6+:5]),.codec_phy_ck(face_ck[f*11+6]),.rst_n(rst_n),.tx_slot(fts),.peer_slot(fps),.tx_valid(ftv),.tx_data(ftd),
@@ -227,12 +230,25 @@ module qfd_collective_static_io #(
 endmodule
 
 // Source-visible paid relay stages. Every row advances unconditionally.
-module qfd_coll_static_relay #(parameter integer W=549,N=1)(
+// QW-COLLIO2 10-21: SAFE=1 resets only the C low control bits (valid/slot tokens) of each row, from a per-stage
+// ot_rst_relay leaf on that row's own clock (2-stage landing + 1 kept tree stage); the data bits are unreset (validity
+// owns observation), so no reset net reaches the 500+ data flops of a row (native census). SAFE=0 = original rows.
+module qfd_coll_static_relay #(parameter integer W=549,N=1,C=W,SAFE=0)(
  input wire[N-1:0]ck,input wire rst_n,input wire[W-1:0]d,output wire[W-1:0]q);
  wire[W-1:0]stage[0:N];assign stage[0]=d;assign q=stage[N];
  for(genvar k=0;k<N;k=k+1)begin:g_stage
+ if(SAFE)begin:g_safe
+ wire rs;
+ ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1))u_rs(.clk(ck[k]),.rst_n_in(rst_n),.rst_n(rs));
+ (* keep *)reg[C-1:0]rc;
+ (* keep *)reg[W-1:C]rd;
+ always @(posedge ck[k] or negedge rs)if(!rs)rc<=0;else rc<=stage[k][C-1:0];
+ always @(posedge ck[k])rd<=stage[k][W-1:C];
+ assign stage[k+1]={rd,rc};
+ end else begin:g_orig
  (* keep *)reg[W-1:0]r;
  always @(posedge ck[k] or negedge rst_n)if(!rst_n)r<=0;else r<=stage[k];
  assign stage[k+1]=r;
+ end
  end
 endmodule

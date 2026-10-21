@@ -14,12 +14,13 @@
 // Reset: one 2-edge synchroniser per clock (wrapper), then kept per-ring sync copies (each <= 12 pointer groups),
 // identical depth on both sides -> write and read release on the same nominal edge.  Only pointers, warm-up and the
 // control bits (valid / fault) reset; slot data and output data are unreset (validity owns observation).
-// Fanout: pointers are replicated per G-bit group (kept copies), so no pointer drives more than ~2G loads.
+// Fanout: pointers are replicated per G-bit group (kept copies); each pointer bit drives ~4 loads per data bit
+// (slot enables + read mux), so G=6 keeps it <= ~25 (QW-COLLIO3: G=12 gave 49-50 loads, native census FAIL).
 // The calendar consumes the added edges exactly (qfd_coll_static_face PLAND): phy_tx_slot +1+K, expected PHY pin
 // cycle +1+K (peer TX), RX CDC write +K, face latency L + 1 + 2K.  Priced in the die schedule (NOTICE QW-TOKSCHED).
 // MUT: +define+OT_COLL_MUT_PHYLAND_SHORT reads one slot early (offset K-1): exact-latency bench must FAIL.
 module ot_coll_meso_ring #(
-    parameter integer W = 8, D = 2, K = 1, C = 1, G = 12, REG_OUT = 0
+    parameter integer W = 8, D = 2, K = 1, C = 1, G = 6, REG_OUT = 0
 )(
     input  wire         ck_w, rs_w,          // write region root + its released reset (sync, active low)
     input  wire         ck_r, rs_r,          // read region root + its released reset
@@ -83,7 +84,7 @@ endmodule
 
 // Codec with a separate PHY pin-register region (phy_ck): same ports as ot_qwen_static_slot_link plus phy_ck.
 module ot_qwen_static_slot_link_pl #(
-    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, LD=2, LK=1, UP_SYNC=0
+    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, LD=2, LK=1, BWREG=1
 )(
     input wire [4:0] ck,
     input wire phy_ck,
@@ -111,38 +112,49 @@ module ot_qwen_static_slot_link_pl #(
     wire [4*BW-1:0] rd;
     wire c_abort;
     wire issue_write=wr_v && !c_abort && !epoch_begin;
+    // QW2-COLL 10-21 BWREG: the bank write port + read address are captured by codec-core registers (ck[0], codec band,
+    // abutting both bank columns) before the SRAM; the bank clock pins stay pure hard entries (one port -> one macro
+    // clock pin; a glue root over the bank entries is refused by clock_entry_constraints).  The
+    // r_plg gate failed cross_clock SETUP (210 ps inter-entry uncertainty) on direct crossings with logic into the bank
+    // macro pins: epoch_begin (cal_lck) / c_abort (codec0) -> we, u_tx o_data (tx_rck macro) -> din.  Now every
+    // crossing ends at a flop in the bank's own entry and the flop -> SRAM path is single-entry.  Write lands 1 edge
+    // later (static calendar: the replay read of a slot is far behind its write).
     for(genvar b=0;b<4;b=b+1)begin:g_bank
+        wire bwe;
+        wire [5:0] bwa, bra;
+        wire [BW-1:0] bdin;
+        if (BWREG) begin : g_wreg
+            reg we_q;
+            reg [5:0] wa_q;
+            reg [BW-1:0] din_q;
+            // read address: bank-entry copy of the calendar read counter, one edge AHEAD (rd_slot + rd_v is the counter's
+            // next value, rd_v = its enable), so ra_q == rd_slot in every cycle and the read timing is unchanged.  p_plg
+            // failed cross_clock SETUP -259.6 ps on u_txcal.u_cr.c[4] (cal_lck, W cal channel) -> bank ra.
+            reg [5:0] ra_q;
+            always @(posedge ck[0]) begin we_q <= issue_write; wa_q <= wr_slot; din_q <= wd[b*BW+:BW]; ra_q <= rd_slot + {5'd0, rd_v}; end
+            assign bwe = we_q; assign bwa = wa_q; assign bdin = din_q; assign bra = ra_q;
+        end else begin : g_wdir
+            assign bwe = issue_write; assign bwa = wr_slot; assign bdin = wd[b*BW+:BW]; assign bra = rd_slot;
+        end
 `ifdef OT_QFD_FACE_HARD
         ot_qkvd_llr_replay_sram_leaf u_store(
 `else
         ot_qkvd_llr_replay_sram_leaf #(.W(BW),.MUT(MUT==3 && b==0)) u_store(
 `endif
-            .ck(ck[b+1]),.we(issue_write),.wa(wr_slot),.ra(rd_slot),
-            .din(wd[b*BW+:BW]),.dout(rd[b*BW+:BW]));
+            .ck(ck[b+1]),.we(bwe),.wa(bwa),.ra(bra),
+            .din(bdin),.dout(rd[b*BW+:BW]));
     end
     // region resets: one 2-edge synchroniser per clock, kept copies per ring side
     wire [2:0] rs_c;
     wire [1:0] rs_p;
     ot_qwen_slot_reset_copies #(.COPIES(3)) u_rs_c(.clk(ck[0]),.rst_n(rst_n),.released(rs_c));
     ot_qwen_slot_reset_copies #(.COPIES(2)) u_rs_p(.clk(phy_ck),.rst_n(rst_n),.released(rs_p));
-    // PHY-up crosses from its producing PHY clock as a level. Capture it
-    // twice on THIS face's codec0p root before carrying it through the existing
-    // mesochronous ring to codec0. No shared global-clock status register.
-    wire up_phy_local;
-    if(UP_SYNC)begin:g_up_sync
-        (* ASYNC_REG="TRUE", keep="true", dont_touch="true" *) reg up_meta;
-        (* ASYNC_REG="TRUE", keep="true", dont_touch="true" *) reg up_sync;
-        always @(posedge phy_ck)begin up_meta<=p_tx_up;up_sync<=up_meta;end
-        assign up_phy_local=up_sync;
-    end else begin:g_up_direct
-        assign up_phy_local=p_tx_up;
-    end
     // RX: pins -> ring (phy_ck) -> controller pin registers (ck[0]); +LK edges
     wire [PW-1:0] rx_flit_l;
     wire rx_v_l, up_l;
     ot_coll_meso_ring #(.W(PW+2),.D(LD),.K(LK),.C(2),.REG_OUT(0)) u_rx_land(
         .ck_w(phy_ck),.rs_w(rs_p[0]),.ck_r(ck[0]),.rs_r(rs_c[0]),
-        .d({p_rx_flit,up_phy_local,p_rx_v}),.q({rx_flit_l,up_l,rx_v_l}));
+        .d({p_rx_flit,p_tx_up,p_rx_v}),.q({rx_flit_l,up_l,rx_v_l}));
     // the expected-frame tokens follow the landed frame by the same LK edges (control bit reset)
     reg [LK-1:0] ev_q;
     reg [6*LK-1:0] es_q;

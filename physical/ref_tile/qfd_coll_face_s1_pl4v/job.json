@@ -1,0 +1,197 @@
+{
+ "name": "qfd_coll_face_s1_pl4v-pl4-COMMIT",
+ "block": "qfd_coll_face_s1_pl",
+ "ref_tile": true,
+ "owner": "Claude:QW-COLLIO2",
+ "purpose": "S1 face PHY-region landing split D4K2 (QW-COLLIO2); non-critical; submit on PASS",
+ "threads": 8,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/qw-collio-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile/qfd_coll_bank137/views",
+   "physical/ref_tile/qfd_static_ch546/views",
+   "results/rtl/qwen_coll_face_1018",
+   "rtl/test/run_coll_static_face.sh",
+   "rtl/test/tb_coll_static_face.sv",
+   "rtl/physical/qwen_coll_safe_1019",
+   "results/rtl/qwen_coll_safe_1019",
+   "tools/orfs_allcorner_spef.py",
+   "results/rtl/qw_collio_1020"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_coll_face_s1_pl #(.PLD(4), .PLK(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_QFD_FACE_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s1_pl.sv rtl/physical/qwen_coll_safe_1019/ot_coll_phy_land.sv rtl/physical/ot_qfd_coll_static_face.sv rtl/physical/ot_qfd_static_transport.sv rtl/rom/ot_coll_static_linkcal.sv rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_face_pass",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_STATIC_FACE_BENCH PASS MUT=0$",
+    "pass_witness": "results/rtl/qw_collio_1020/bench11/bench11_s1k2_m0.log",
+    "min_count_regex": "^MUT=0 PHI=1 COLL_FACE_BENCH .* got (\\d+) "
+   },
+   {
+    "name": "coll_face_mut_rx_early",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=1$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench11/bench11_s1k2_m1.log"
+   },
+   {
+    "name": "coll_face_mut_cdc_latency",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=2$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench11/bench11_s1k2_m2.log"
+   },
+   {
+    "name": "coll_face_mut_phy_long",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=3$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench11/bench11_s1k2_m3.log"
+   },
+   {
+    "name": "coll_face_mut_bank_hit",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m4 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=4$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench11/bench11_s1k2_m4.log"
+   },
+   {
+    "name": "coll_face_mut_ring_early",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=5$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench11/bench11_s1k2_m5.log"
+   },
+   {
+    "name": "coll_face_mut_land_unlanded",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m6 6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=6$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench11/bench11_s1k2_m6.log"
+   },
+   {
+    "name": "coll_face_mut_phyland_short",
+    "cmd": "PLAND=1 PLD=4 PLK=2 PPH=0 FACE_L=383 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m7 7",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=7$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench11/bench11_s1k2_m7.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_coll_face_s1_pl4v/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_coll_face_s1_pl4v/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_coll_face_s1_pl4v --out {RUN}/record/views/qfd_coll_face_s1_pl --macro-view physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf --macro-view physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_coll_face_s1_pl4v/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf",
+   "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_coll_face_s1_pl4v/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_coll_face_s1_pl4v/qfd_coll_face_s1_pl4f-pl4-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "QW-COLLIO2 10-21 PHY-region split (owner CLOCK RULE 10-20 08:55) of qfd_coll_face_s1_band4 (codec0 pin-flop spread 450.8 -> 150.3 -> 108.9 / band5 138.5 ps FAIL: one codec0 tree served both the E PHY pin registers and the codec core in the band; pin compaction exhausted). Now the PHY pin registers are their own clock region on a second entry codec0p (E, centred on the PHY pin group) and land to/from the codec core region (codec0, entry moved to S under the band, no boundary pins left) through fixed-latency mesochronous rings ot_coll_meso_ring D=4 K=2 (offset set at reset, no flow control; RX slots = pin capture flops, TX read regs = output pin regs). Ring depth: measured codec0 phase spread <=232 ps << T 833 ps; D4/K2 window setup 2T / hold 2T. Cost: TX +3 / RX +2 edges, face L 378 -> 383 (calendar compensated in RTL; priced via NOTICE QW-TOKSCHED). Same floorplan as band4 otherwise."
+}
