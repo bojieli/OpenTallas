@@ -1,0 +1,210 @@
+{
+ "name": "qfd_n59_qbank11b-qb11b-COMMIT",
+ "block": "qfd_native59_qbank",
+ "ref_tile": true,
+ "owner": "Claude:QW-CB16A0-3",
+ "purpose": "QW-N59SVC qbank11 (10-20 21:40): structural successor of qbank10/_c (gate GRT FAIL: total overflow 25,188 / 24,575 at 21% usage, ~95% of the overflow cells in the central column channel x 400-500 um, full height: every macro's 1,653 pins are on its E face, so the col-1 macros' faces AND the centred N/S pin bands all funnel into the one 38.2-um central channel). Fix: central channel 124.6 um (columns 2-3 shifted +86.4 um on the 43.2 lattice), outline 993.6 x 475.2, pin bands shifted +43.2 um to stay centred on the central channel. RTL/params/benches identical to qbank10 (census PASS max 32 stands). CTS: default (as qbank10) -- parallel fallback.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/qw-n59-qb10-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "results/rtl/mu_qwen_1018/n59_split4v2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "results/arch/qw_n59_qbank10_1020"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_native59_qbank #(.QB_ALIGN(1), .QB_LOCAL32(1), .QB_STAGE(1), .QB_M546(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_native59_qbank.sv physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "qb10_rnd",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh rnd {RUN}/bench/rnd",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS rnd$"
+   },
+   {
+    "name": "qb10_rnd_s2",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh rnd_s2 {RUN}/bench/rnd_s2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS rnd_s2$"
+   },
+   {
+    "name": "qb10_reset8",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh reset8 {RUN}/bench/reset8",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS reset8$"
+   },
+   {
+    "name": "qb10_dv",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh dv {RUN}/bench/dv",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS dv$"
+   },
+   {
+    "name": "qb10_mu",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mu {RUN}/bench/mu",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS mu$"
+   },
+   {
+    "name": "qb10_q9_rnd",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh q9_rnd {RUN}/bench/q9_rnd",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS q9_rnd$"
+   },
+   {
+    "name": "qb10_mut_old_offsets",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_old_offsets {RUN}/bench/mut_old_offsets",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_old_offsets$",
+    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_old_offsets.log"
+   },
+   {
+    "name": "qb10_mut_qb1",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_qb1 {RUN}/bench/mut_qb1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_qb1$",
+    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_qb1.log"
+   },
+   {
+    "name": "qb10_mut_mask",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_mask {RUN}/bench/mut_mask",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_mask$",
+    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_mask.log"
+   },
+   {
+    "name": "qb10_mut_select",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_select {RUN}/bench/mut_select",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_select$",
+    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_select.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_n59_qbank11b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_n59_qbank11b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_n59_qbank11b --out {RUN}/record/views/qfd_native59_qbank --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_n59_qbank11b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_n59_qbank11b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_n59_qbank11b/qfd_n59_qbank11b-qb11b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "QW-N59SVC qbank11 (10-20 21:40): structural successor of qbank10/_c (gate GRT FAIL: total overflow 25,188 / 24,575 at 21% usage, ~95% of the overflow cells in the central column channel x 400-500 um, full height: every macro's 1,653 pins are on its E face, so the col-1 macros' faces AND the centred N/S pin bands all funnel into the one 38.2-um central channel). Fix: central channel 124.6 um (columns 2-3 shifted +86.4 um on the 43.2 lattice), outline 993.6 x 475.2, pin bands shifted +43.2 um to stay centred on the central channel. RTL/params/benches identical to qbank10 (census PASS max 32 stands). CTS: default (as qbank10) -- parallel fallback."
+}

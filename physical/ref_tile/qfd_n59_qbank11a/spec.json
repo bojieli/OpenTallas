@@ -1,0 +1,391 @@
+{
+ "kind": "tile",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "recipe": 4,
+ "layer_cap": "M5",
+ "hold_budget": "die",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is flop-first at every pin (QW-N59-4 split children: every input lands in a p_* pin register, every output is a flop or a 2-slot AND-OR of slot flops as in the r1 block; the split edge contract is benched with these edges); OT_PIN_REGS would add a second edge and break it"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 32
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\\.rst_n$|__ot_rlv$|__ot_rl0v$|(^|\\.)rst_cp_[a-z0-9]+$"
+ },
+ "name": "qfd_n59_qbank11a",
+ "top": "qfd_native59_qbank",
+ "sources": [
+  "rtl/qwen_split/qfd_native59_qbank.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v"
+ ],
+ "params": {
+  "QB_ALIGN": 1,
+  "QB_LOCAL32": 1,
+  "QB_STAGE": 1,
+  "QB_M546": 1
+ },
+ "outline": {
+  "w": 950.4,
+  "h": 475.2,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "qb_row",
+   "qb_v",
+   "qb_beat",
+   "qb_full",
+   "qb_committed",
+   "qb_bad",
+   "lcv_o",
+   "stage_o",
+   "dd_o"
+  ],
+  "S": [
+   "dd_i",
+   "layer_context_v",
+   "command_stage",
+   "ck",
+   "rst_n",
+   "q_slot",
+   "q_slot_beat"
+  ],
+  "E": [],
+  "W": []
+ },
+ "pin_ranges": {
+  "ck": [
+   473.7,
+   476.7
+  ],
+  "qb_row": [
+   347.2,
+   469.105
+  ],
+  "qb_v": [
+   469.205,
+   470.205
+  ],
+  "qb_beat": [
+   470.305,
+   471.495
+  ],
+  "qb_full": [
+   471.595,
+   472.595
+  ],
+  "qb_committed": [
+   472.695,
+   473.695
+  ],
+  "qb_bad": [
+   473.795,
+   474.795
+  ],
+  "lcv_o": [
+   474.895,
+   475.895
+  ],
+  "stage_o": [
+   475.995,
+   477.424
+  ],
+  "dd_o": [
+   477.524,
+   608.0
+  ],
+  "dd_i": [
+   347.2,
+   473.6
+  ],
+  "layer_context_v": [
+   477.75,
+   479.75
+  ],
+  "command_stage": [
+   479.85,
+   482.85
+  ],
+  "rst_n": [
+   482.95,
+   490.95
+  ],
+  "q_slot": [
+   491.05,
+   493.05
+  ],
+  "q_slot_beat": [
+   493.15,
+   495.65
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?0?*u_mem",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?1?*u_mem",
+   "at": [
+    43.2,
+    259.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?2?*u_mem",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?3?*u_mem",
+   "at": [
+    259.2,
+    259.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?4?*u_mem",
+   "at": [
+    518.4,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?5?*u_mem",
+   "at": [
+    518.4,
+    259.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?6?*u_mem",
+   "at": [
+    734.4,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_qseat*g_writer?7?*u_mem",
+   "at": [
+    734.4,
+    259.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 30,
+   "diameter_um": 40,
+   "extra": "-sink_clustering_levels 2"
+  }
+ },
+ "slot_change_request": {
+  "reason": "QW-N59-4 hardened split: Q-seat bank child of native59 (8 x 167.4 x 76.14 SRAMs, two N-S stacks of 4 abutted at the 76.176 um track-legal pitch (0.036 um gap, no pins on the touching faces); column 0 mirrored MY so both columns' rd_out faces the 91.8 um middle gather channel, write faces outward); sits in the S part of the 518.4 x 648 native59 slot under the service child | QW-N59-6 v8: N-face pins 131.2-392.0 and S-face pins 131.2-~277 um (same outline, same faces, same order); parent lp.py regen adopts the child pins (top-down pin assignment)",
+  "requested_outline_um": [
+   518.4,
+   388.8
+  ]
+ },
+ "job": {
+  "owner": "Claude:QW-CB16A0-3",
+  "branch": "claude/qw-n59-qb10-1020",
+  "tag": "qb11a",
+  "purpose": "QW-N59SVC qbank11 (10-20 21:40): structural successor of qbank10/_c (gate GRT FAIL: total overflow 25,188 / 24,575 at 21% usage, ~95% of the overflow cells in the central column channel x 400-500 um, full height: every macro's 1,653 pins are on its E face, so the col-1 macros' faces AND the centred N/S pin bands all funnel into the one 38.2-um central channel). Fix: central channel 81.4 um (columns 2-3 shifted +43.2 um on the 43.2 lattice), outline 950.4 x 475.2, pin bands shifted +21.6 um to stay centred on the central channel. RTL/params/benches identical to qbank10 (census PASS max 32 stands). Smaller widening (+43.2 um) parallel fallback; CTS 2-level clustering.",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/qwen_sys/vm_nox_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "results/rtl/mu_qwen_1018/n59_split4v2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1",
+   "results/arch/qw_n59_qbank10_1020"
+  ],
+  "benches": [
+   {
+    "name": "qb10_rnd",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh rnd {RUN}/bench/rnd",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS rnd$"
+   },
+   {
+    "name": "qb10_rnd_s2",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh rnd_s2 {RUN}/bench/rnd_s2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS rnd_s2$"
+   },
+   {
+    "name": "qb10_reset8",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh reset8 {RUN}/bench/reset8",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS reset8$"
+   },
+   {
+    "name": "qb10_dv",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh dv {RUN}/bench/dv",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS dv$"
+   },
+   {
+    "name": "qb10_mu",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mu {RUN}/bench/mu",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS mu$"
+   },
+   {
+    "name": "qb10_q9_rnd",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh q9_rnd {RUN}/bench/q9_rnd",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_PASS q9_rnd$"
+   },
+   {
+    "name": "qb10_mut_old_offsets",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_old_offsets {RUN}/bench/mut_old_offsets",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_old_offsets$",
+    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_old_offsets.log"
+   },
+   {
+    "name": "qb10_mut_qb1",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_qb1 {RUN}/bench/mut_qb1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_qb1$",
+    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_qb1.log"
+   },
+   {
+    "name": "qb10_mut_mask",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_mask {RUN}/bench/mut_mask",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_mask$",
+    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_mask.log"
+   },
+   {
+    "name": "qb10_mut_select",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_select {RUN}/bench/mut_select",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_select$",
+    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_select.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_n59_qbank11a/views",
+  "record_to": "results/rtl/ref_tile/qfd_n59_qbank11a"
+ },
+ "structural_change": "QW-N59SVC qbank11 (10-20 21:40): structural successor of qbank10/_c (gate GRT FAIL: total overflow 25,188 / 24,575 at 21% usage, ~95% of the overflow cells in the central column channel x 400-500 um, full height: every macro's 1,653 pins are on its E face, so the col-1 macros' faces AND the centred N/S pin bands all funnel into the one 38.2-um central channel). Fix: central channel 81.4 um (columns 2-3 shifted +43.2 um on the 43.2 lattice), outline 950.4 x 475.2, pin bands shifted +21.6 um to stay centred on the central channel. RTL/params/benches identical to qbank10 (census PASS max 32 stands). Smaller widening (+43.2 um) parallel fallback; CTS 2-level clustering."
+}
