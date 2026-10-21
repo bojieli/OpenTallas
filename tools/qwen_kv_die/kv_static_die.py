@@ -160,7 +160,8 @@ PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroo
             ('_pj' if os.environ.get('OT_KV_EMB_PJ', '0') == '1' else '') +   # KV-EMB4 10-20: kvs_emb u_join PIPE_JOIN=1 (+1 word-stream edge)
             ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + ('_sr' if PC_SRAM else '') +
             '.sv')   # KV-DOMSPLIT; KV-PC
-RTL_FILE = PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + '.sv'
+ROPE = os.environ.get('OT_KV_ROPE', '0') == '1'
+RTL_FILE = PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + ('_rope' if ROPE else '') + '.sv'
 GRP_PRIVATE0_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_private0.sv'
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
@@ -205,6 +206,8 @@ KIND_MASTER = dict(fan='qkd_kvs_fan', grp='qkd_kvs_grp', grp_h='qkd_kvs_grp_h', 
                    emb='qkd_kvs_emb', hroot='qkd_kvs_hroot')
 if GRP_PRIVATE0:
     KIND_MASTER.update(grp='qkd_kvs_grp_private0', grp_h='qkd_kvs_grp_h_private0')
+if ROPE:
+    KIND_MASTER['emb'] = 'qkd_kvs_emb_rope'
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
                  boot_obs='bobs', diecfg='dcfg')
@@ -1647,10 +1650,55 @@ def kit_clocks(tiles):
     return tiles
 
 
+def rope_context_tiles(tiles):
+    """Use actual accepted HOST CONTEXT records for both embedding HBM sweeps.
+
+    HOST rec_tx is {record_tx[547:0], record_tx_observed_v}. The exported
+    observed pulse already qualifies send_slot with the real context owner;
+    use that accepted pulse for both ctx_start qualifiers, never a RESULT.
+    """
+    if not (HROOT and KITS and os.environ.get('OT_KV_MU', '0') == '1'):
+        raise ValueError('KV RoPE context needs MU1, HROOT and tile kits')
+    emb, ctl = tiles['kvs_emb'], tiles['kvs_ctl']
+    emb['ports']['i_host_record'] = dict(dir='input', width=549, cls='special', src=None)
+    emb['wires'] += ['    wire w_rope_start, w_rope_fault;',
+                     '    wire [17:0] w_rope_token;', '    wire [15:0] w_rope_epoch;']
+    native = int(os.environ.get('OT_KV_EMB_N32', '0'))
+    pipe = int(os.environ.get('OT_KV_EMB_PJ', '0'))
+    delay = int(os.environ.get('OT_KV_ROPE_DELAY', '1024'))
+    emb['body'] = [
+        f'    qkd_kvs_emb_ctx #(.NATIVE32({native}), .PIPE_JOIN({pipe}), .ROPE(1), .ROPE_DELAY({delay})) u_context ('
+        '.ck(ck), .rst_n(rst_n), '
+        '.i_ctx({i_host_record[0],i_host_record[0],i_host_record[548:513],i_host_record[61:1]}), '
+        '.d2d__emb_tx_slot(d2d__emb_tx_slot), .i_ctl(i_ctl), '
+        + ', '.join(f'.i_hroot_{st}(i_hroot_{st})' for st in STACKS)
+        + ', .rowtx__emb_tx_v(w_rowtx__emb_tx_v), .rowtx__emb_tx_payload(w_rowtx__emb_tx_payload), '
+        '.px_st(w_rope_start), .px_tok(w_rope_token), .px_tep(w_rope_epoch), .emb_fault(w_rope_fault));'
+    ]
+    for pn, expr in [('px_tok', 'w_rope_token'), ('px_tep', 'w_rope_epoch')]:
+        if pn not in emb['ports']:
+            raise ValueError(f'KV RoPE: missing existing PC owner face {pn}')
+        emb['ports'][pn]['expr'] = expr
+    emb['ports']['o_rope_px'] = dict(dir='output', width=35, cls='bundle', peer='kvs_ctl',
+        peer_port='i_rope_px', consumers=[], expr='{w_rope_epoch,w_rope_token,w_rope_start}')
+    emb['ports']['emb_fault'] = dict(dir='output', width=1, cls='export', consumers=[], die=True, expr='w_rope_fault')
+    ctl['ports']['i_rope_px'] = dict(dir='input', width=35, cls='bundle', peer='kvs_emb')
+    replacements = {'.emb_start(d2d__svc[24:24])': '.emb_start(i_rope_px[0])',
+                    '.emb_token(d2d__svc[109:92])': '.emb_token(i_rope_px[18:1])',
+                    '.emb_epoch(d2d__svc[89:74])': '.emb_epoch(i_rope_px[34:19])'}
+    for old, new in replacements.items():
+        if sum(x.count(old) for x in ctl['body']) != 1:
+            raise ValueError(f'KV RoPE: actual fan root input not found once: {old}')
+        ctl['body'] = [x.replace(old, new) for x in ctl['body']]
+    return tiles
+
+
 def all_tiles():
     if 'tiles' not in _G:
         t_ = add_fans(pack({d: tile(d) for d in members()}))
         t_ = kit_clocks(t_) if KITS else t_
+        if ROPE:
+            t_ = rope_context_tiles(t_)
         if GRP_PRIVATE0:
             import kv_grp_private0
             kv_grp_private0.apply_tiles(t_, module_text)
@@ -1688,6 +1736,10 @@ def sources():
     if BOOT:
         s.update(BOOT_PC_DEPS)
     s.update(K.EMB_SOURCES)
+    if ROPE:
+        s.update(_E + f for f in ('qkd_kvs_emb_ctx.sv', 'qkd_embedding_ctx_start.sv',
+                                  'qkd_embedding_row_tx_ctx.sv', 'qkd_embedding_row_tx_ctx_native32.sv',
+                                  'qkd_embedding_row_tx_rope.sv'))
     if K.MU:
         s.update(K.MU_DEPS)
     if DOMSPLIT:
@@ -1922,6 +1974,10 @@ def inject(m, K):
             add((f'krq_{st}_{g}', 'kv_oneway', 38, [(f'ectl_{st}_{ectl_frame(g)}', 'rq'), (gd, 'kreq')]))
     seen_buses = {b_[0] for b_ in B}
     fk = m.setdefault('forks', {})
+    if ROPE:
+        fk.setdefault('hrec_tx', []).append(('kvs_emb', 'i_host_record'))
+        rec['rope_context'] = dict(source='HOST rec_tx observed accepted CONTEXT', width=549,
+            owner='record[60:0]', position='owner[18:6]', start='kvs_emb -> kvs_ctl fanr', bundle=35)
     for (dinst, dport), loads in nets.items():
         if dport == 'rsp':
             for (cd, cp) in loads:
