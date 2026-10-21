@@ -1,0 +1,41 @@
+{
+  "state": "SOURCE_FAILURE_CLASSIFICATION_MODEL_PREPARATION_ONLY",
+  "source_commit": "b0841730b",
+  "actual_gate": "ot-gold2:/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_bank_e2_rw10sp-20261021-122710",
+  "actual_raw_cts_sha256": "c19ba771c663a3e4d0c82b0849230479f60e7d98142f9f61077b652907e6d75d",
+  "root": "clk_w1",
+  "unchanged_export_rule": "ALL measured sinks of this glue-only root, strict80TT/FF, no subset or domain relabel",
+  "observations": {
+    "same_root_sinks": 1035,
+    "spine_leaf_count": 132,
+    "spine_buffer_count": 1454,
+    "last_calibrated_leaf_max_spread_ps": 28.7,
+    "actual_hybrid_all_sink_tt_spread_ps": 133.6,
+    "calibrated_clock_RC": {
+      "R": 0.014,
+      "C": 0.105
+    },
+    "sequence": [
+      "same-source symmetric-spine geometry+pad balance under calibratedRC",
+      "restore platformsetRC; estimateplacementparas",
+      "protectspine; checkplacement",
+      "later hybrid selectedrootnet repair",
+      "hybrid measuredALLsink strictfailure"
+    ],
+    "other_root_control": "w0 lastcal30.6 vsactual37.4; sharedflow mismatch is root/topologydependent"
+  },
+  "causal_limits": [
+    "max-perleaf objective does not measure minmaxALLsinks",
+    "RCrestore and laterhybridrepair contributions are not yet separated",
+    "FailedCTS writes no4_1_cts.odb. Old3_place.odb exists; cannot claim nonexistentpostCTSODBmodel.",
+    "No correctedclocksource/gate has been generated from this diagnosis. No knob-only retry."
+  ],
+  "bounded_next_model": {
+    "input": "actual3_place.odb/libs/SDC/config and exactsource snapshot read-only",
+    "scope": "replay exactoriginal prefix roots clk,clk_c,clk_ce,clk_w0,clk_w1 preserving precedingoccupancy in newoutput; emitw1ALLsink min/max perleaf+positions under platform/calibratedRC before/afterselected-rootrepair; no place, route or holdrepair",
+    "purpose": "derive actualgeometric/cellpath structuralbalance that survives existing finalmodel and TT/FF check",
+    "qualification": "prefixreplay is diagnostic model only; exact fullactualgate+PNGs+SAFE criticalreview and parent/dieSTA stillrequired",
+    "status": "NOT_LAUNCHED own8clientbudget full"
+  },
+  "preserved": "20 independenthardentries, existingglueroots/ports, qualifiedWR3 exactwitnesssource, unchangeddata/resetcalendar. CB/E2/B0failures retained."
+}
