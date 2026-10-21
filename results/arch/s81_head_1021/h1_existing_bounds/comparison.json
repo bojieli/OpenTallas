@@ -1,0 +1,53 @@
+{
+  "scope": "EXISTING_READONLY_BOUNDS_COMPARISON_ONLY_NO_GLOBAL_ROW_OVERLAP_CERTIFICATION",
+  "baseline_failedODB": "f8d05cb71 original H1 fclk.fail.odb",
+  "repair_source": "main99eff96d0/fclk2d923c4c5",
+  "same_fields": {
+    "instances_outside_die": true,
+    "instances_unplaced": true,
+    "ports": true,
+    "ports_unplaced": true,
+    "port_pins_outside_die": true,
+    "port_pins_off_outline": true,
+    "violations": true,
+    "first": true
+  },
+  "baseline": {
+    "instances_outside_die": 1,
+    "instances_unplaced": 0,
+    "ports": 18755,
+    "ports_unplaced": 18755,
+    "port_pins_outside_die": 0,
+    "port_pins_off_outline": 0,
+    "violations": 18756,
+    "first": [
+      "ld_sp_u_N",
+      "unplaced:ck_clN00E",
+      "unplaced:ck_clN00W",
+      "unplaced:ck_clN01E",
+      "unplaced:ck_clN01W",
+      "unplaced:ck_clN02E",
+      "unplaced:ck_clN02W",
+      "unplaced:ck_clN03E",
+      "unplaced:ck_clN03W",
+      "unplaced:ck_clN04E",
+      "unplaced:ck_clN04W",
+      "unplaced:ck_clN05E",
+      "unplaced:ck_clN05W",
+      "unplaced:ck_clN06E",
+      "unplaced:ck_clN06W",
+      "unplaced:ck_clS00E",
+      "unplaced:ck_clS00W",
+      "unplaced:ck_clS01E",
+      "unplaced:ck_clS01W",
+      "unplaced:ck_clS02E",
+      "unplaced:ck_clS02W"
+    ]
+  },
+  "new_out_of_bounds_or_unplaced": 0,
+  "topology": "originalfclk19\u2192repaired0/all2584judged; pairing/vacuous0",
+  "outside_source": "ld_sp_u_N41.04x114.48 at8345.064,22552.4 ends22666.88>die22636.8 by30.08; already original failed source",
+  "ports": "all18755 missingBPins unchanged; original run marks topnets special/ideal. Scope/physical boundary debt retained, no waiver",
+  "latestH4": "ld_sp_u_N at9641.055,22336.4 ends22450.88 fits22636.8; H4width17172 vsold15876. Preserve live H4; prefer its source-correct checkpoint for actual continued physical work",
+  "qualification": "H1 topology repaired, inherited physical bounds fail remains explicit. No GRT/STA/closure claim."
+}
