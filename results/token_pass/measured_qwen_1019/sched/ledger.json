@@ -53,7 +53,8 @@
    "source": "lanes/QW-STREAM3 (qfd_dv_stream_t3c CLOSED via c3r; DP=2 / DX=2)"},
   {"label": "forwarded-lane class views (D4 e1, 56 classes): same n/E as the GEN lane", "cycles": 0, "scope": "die", "at": ["pre_qkv"],
    "source": "lanes/QW-FWDLANE (class bind keeps each lane's landed E; the D8 mod-16 composition is NOT adopted)"},
-  {"label": "CALR (no price yet: QW-CALR producer open)", "cycles": 0, "scope": "die", "at": ["pre_qkv"], "source": "GAP"}
+  {"label": "CALR per-layer table load (LOCAL4 -> table_req -> slice tload ROM, 88 slots) serial bound; CALR fetch +1 = 0", "cycles": 124, "cycles_asbuilt": 0, "scope": "successor", "grade": "PRICED", "at": ["pre_qkv"],
+   "source": "QW-CALR 10-20: TLOAD is refused under CALR and dv_layer composes with tload=False (no table stream in the base), so the per-layer slice-table load is new: cal LOCAL4 issue +1 (treq_q) + die lane 20 (R_CMD proxy: table_req rides beside cmd; GEN assigns it) + 11 slice row hops (worst slice) + tload face 1 + loader sample 1 + last VM table write 90 (tools/qwen_static_schedule/f16_calr_edges.py; f16_tload bench 88 slots) = 124, priced SERIAL at the layer start (the 88 per-user slots are reused; layer l's last CROM read precedes layer l+1's first). 0 if the compiler issues it inside the previous layer into double-buffered slots (not compiled: no producer issues user-0 LOCAL4 ranges, the OPSEG leaf refuses user 0). CALR fetch +1 edge (T_0 >= 5 + NU - 1 = 8) = 0 cycles: every descriptor / range first entry of the 1009-entry CALR10 image has T_0 >= 8 (stage0 8, decode 26, head 236, preload 8)."}
  ],
  "not_on_token_path": [
   "QW-TTC8 safe8u/8bu: lcr dissolve after GPL, netlist unchanged -> 0",
