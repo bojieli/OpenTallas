@@ -512,12 +512,15 @@ def lower_reduce(raw, q=0, data=None, place=None, tag="", timing=None, expected_
         return refusal("whole_reduction_A_to_R_profile_only")
     kind, lane_m1, imm1 = prof
     a, r = desc["A"], desc["R"]
-    contiguous = a.m == 1 or a.stride == a.n
+    per_row = r.m > 1
+    contiguous = a.m == 1 or a.stride == a.n or per_row
     if (a.space != "VM" or a.fmt != "FP32" or not contiguous or (a.istride or 1) != 1 or a.base % 8
+            or (per_row and a.stride % 8)
             or any(getattr(a, x) for x in ("lstride", "dyn_sel", "dyn_mul", "n_sel", "l1stride", "ibcast", "indexed"))):
         return refusal("contiguous_aligned_FP32_operand_required")
-    if (r.space != "VM" or r.fmt != "FP32" or r.n != 1 or r.m != 1 or r.indexed or r.ibcast):
-        return refusal("single_VM_R_destination_required")
+    if (r.space != "VM" or r.fmt != "FP32" or r.n != 1 or r.indexed or r.ibcast
+            or (per_row and (r.m != a.m or r.stride != 1 or (r.base & 7) + r.m > 8))):
+        return refusal("single_VM_R_destination_or_one_RF_sector_of_row_results_required")
     if q != 0:
         return refusal("complete_reduction_owned_by_quarter0_stree")
     if not isinstance(timing, NativeTiming) or timing != NativeTiming(18, 15):
@@ -526,16 +529,39 @@ def lower_reduce(raw, q=0, data=None, place=None, tag="", timing=None, expected_
     place = place if place is not None else LI.Placement(q)
     ql = TreeLines()
     rf_addr = r.base & 255
-    core = reduce_to_rf(ql, a_base=a.base, nwords=nwords, kind=kind, lane_m1=lane_m1, imm1=imm1, rf_addr=rf_addr,
-                        q=q, data=data, place=place, tag=tag, timing=timing)
-    if "refusal" in core:
-        return refusal(core["refusal"])
-    want = core["value"]
+    rows = ([(a.base + k * a.stride, a.n) for k in range(a.m)] if per_row else [(a.base, nwords)])
+    if expected_reduction_word is not None and not isinstance(expected_reduction_word, (list, tuple)):
+        expected_reduction_word = [expected_reduction_word]
+    cores, edge0, wants = [], 0, []
+    for k, (row_base, row_words) in enumerate(rows):
+        c = reduce_to_rf(ql, a_base=row_base, nwords=row_words, kind=kind, lane_m1=lane_m1, imm1=imm1,
+                         rf_addr=rf_addr + k, q=q, data=data, place=place, tag=f"{tag}:row{k}", timing=timing,
+                         edge0=edge0)
+        if "refusal" in c:
+            return refusal(c["refusal"])
+        cores.append(c)
+        wants.append(c["value"])
+        # rows run strictly one after another (reducer scratch addresses and store rows are reused per row)
+        edge0 = c["export_edge"] + 1
+    for k, c in enumerate(cores[1:]):
+        for e in range(cores[k]["setup"], c["setup"]):
+            ql.f["control"].setdefault(e, cores[k]["hold"])
+    core = dict(cores[-1], fills=[f for c in cores for f in c["fills"]],
+                preload={s_: w for c in cores for s_, w in c["preload"].items()},
+                reads=[x for c in cores for x in c["reads"]], issue_edges=[e for c in cores for e in c["issue_edges"]],
+                operand_events=[x for c in cores for x in c["operand_events"]],
+                reducer_commands=[x for c in cores for x in c["reducer_commands"]],
+                input_bits=np.concatenate([c["input_bits"] for c in cores]), setup=cores[0]["setup"],
+                hold=cores[0]["hold"])
+    want = wants[0]
     if expected_reduction_word is not None:
-        supplied = int(expected_reduction_word, 16) if isinstance(expected_reduction_word, str) else int(expected_reduction_word)
-        if supplied != want:
-            return refusal(f"golden_mismatch: independent reduction {want:08x} != downstream fixture R {supplied:08x}",
-                           "golden_mismatch")
+        for k, sup in enumerate(expected_reduction_word):
+            if sup is None:
+                continue
+            supplied = int(sup, 16) if isinstance(sup, str) else int(sup)
+            if supplied != wants[k]:
+                return refusal(f"golden_mismatch: independent reduction row {k} {wants[k]:08x} != downstream fixture "
+                               f"R {supplied:08x}", "golden_mismatch")
     rf_commit = core["rf_commit"]
     rf_read = rf_commit + 2
     drain_edge = rf_read + 2
@@ -544,7 +570,8 @@ def lower_reduce(raw, q=0, data=None, place=None, tag="", timing=None, expected_
     physical_r = place.get(logical_r, 0, tag + ":R")
     if physical_r % 8:
         return refusal("RF_sector_drain_requires_VM_port0_placement")
-    ql.vmw(drain_edge, 0, 1, 0, 0, physical_r, 1 << (rf_addr & 7))
+    rmask = ((1 << len(rows)) - 1) << (rf_addr & 7)
+    ql.vmw(drain_edge, 0, 1, 0, 0, physical_r, rmask)
     commit = drain_edge + timing.drain_done
     for edge in range(commit + 1):
         ql.f["control"].setdefault(edge, core["hold"])
@@ -555,15 +582,16 @@ def lower_reduce(raw, q=0, data=None, place=None, tag="", timing=None, expected_
     pre_words = {str(w): f"{int(np.float32((data[w] if w in data else 0)).view(np.uint32)):08x}"
                  for ws in core["preload"].values() for w in ws}
     expected = [None] * 8
-    expected[rf_addr & 7] = want
+    for k, w in enumerate(wants):
+        expected[(rf_addr & 7) + k] = w
     r0 = r.base - (r.base & 7)
     return dict(status="emitted", reasons=[], ql=ql, lines=lines, fills=core["fills"],
         drains=[(logical_r, commit)], preload=core["preload"], data=pre_words, inputs_placeholder=False,
-        expect=[dict(sector=physical_r, mask=1 << (rf_addr & 7), edge=commit, words=list(range(r0, r0 + 8)),
+        expect=[dict(sector=physical_r, mask=rmask, edge=commit, words=list(range(r0, r0 + 8)),
                      value=expected)],
         setup_edge=core["setup"], issue_edges=core["issue_edges"], last_commit=commit,
         fill_sectors=len(core["preload"]), drain_sectors=1, sut=sut, native_timing=timing.as_dict(),
-        lowering=dict(supported=True, words=nwords, issue_groups=len(core["issue_edges"]), kind=kind,
+        lowering=dict(supported=True, words=nwords, rows=len(rows), issue_groups=len(core["issue_edges"]), kind=kind,
                       lane_m1=lane_m1, execution_qualified=False, owner="TOK-FUNC2-HBM-SU",
                       mode="single_quarter_serialized",
                       source="su_pretree_lower + actual lane arithmetic + selected stree RF calendar"),
@@ -574,14 +602,14 @@ def lower_reduce(raw, q=0, data=None, place=None, tag="", timing=None, expected_
             RF_route="stl_SW.up -> stu_SW_00..13 -> str_C -> std_SW_00..13a/b -> stl_SW.rf_w* -> sucore_SW.rf_w*",
             RF_external_drive=False, collective_rr_external_drive=False),
         operand_events=core["operand_events"], reducer_commands=core["reducer_commands"],
-        rf_events=[core["rf_event"], dict(kind="class5_read", edge=rf_read, addr=rf_addr & ~7),
+        rf_events=[c["rf_event"] for c in cores] + [dict(kind="class5_read", edge=rf_read, addr=rf_addr & ~7),
                    dict(kind="RF_to_VM_drain", edge=drain_edge, vm_commit=commit)],
         read_footprint=core["reads"],
         write_footprint=[dict(logical_word=r.base, logical_sector=logical_r, physical_sector=physical_r,
-                              mask=1 << (rf_addr & 7), edge=commit)],
-        expected_post_state={str(r.base): f"{want:08x}"}, expected_post_state_only=True,
+                              mask=rmask, edge=commit)],
+        expected_post_state={str(r.base + k): f"{w:08x}" for k, w in enumerate(wants)}, expected_post_state_only=True,
         input_sha256=hashlib.sha256(core["input_bits"].tobytes()).hexdigest(),
-        expected_reference=dict(value=f"{want:08x}", role="comparison_only",
+        expected_reference=dict(value=[f"{w:08x}" for w in wants] if per_row else f"{want:08x}", role="comparison_only",
                                 source=f"independent {'csum8' if kind == 'sum' else 'ordered max'} of lane values"),
         control_reservation=dict(first=0, last=commit, policy="exclusive_record"),
         timing_obligations=dict(issue_to_tree=core["issue_to_tree"], tree_to_red=PT.PT_RED, reducer_RAW=PT.DEP,

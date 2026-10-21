@@ -138,8 +138,28 @@ def main():
     # ---- absolute timeline (sequential CP placement, priced order); sector-independent
     phase0 = su.get("su_owner_calendar", {}).get("end_reservation_stream", 0) + GAP if a.shared_calendar else 0
     t = phase0
+
+    def free_base(nsec, taken=()):
+        """lowest 64-aligned window of nsec sectors clear of every SU sector (fallback only: used when the default
+        above-the-SU base leaves no room, e.g. a large SU_LOWER2 layer)"""
+        busy = set(used_su) | set(taken)
+        for b in range(0, NSEC - nsec + 1, 64):
+            if not any(x in busy for x in range(b, b + nsec)):
+                return b
+        raise ValueError(f"no free {nsec}-sector VM window beside the SU replay")
+
+    def build_ok(c, b):
+        g = c["build"](b)
+        if "events" not in g or (sectors(comp_events(g, c["kind"])) & used_su):
+            return None
+        return g
     for c in comps:
-        g = c["build"](base0)
+        g = build_ok(c, base0) if base0 + c["nsec"] <= NSEC else None
+        if g is None:
+            try:
+                g = c["build"](free_base(c["nsec"]))
+            except ValueError:
+                g = c["build"](0)              # timing only: it will run in a standalone part (no SU events)
         evs = comp_events(g, c["kind"])
         nm = [e["cyc"] for e in evs if e["k"] != "M"]
         c["shift"] = t - 0
@@ -161,12 +181,21 @@ def main():
             parts.append(cur)
             if not fits(cur):
                 cur.update(events=[], n=0, standalone=True)
+                if cur["cur"] + c["nsec"] > NSEC:
+                    cur["cur"] = 0                 # no SU events in a standalone part: the whole quadrant VM is free
         if cur["n"] + c["n_events"] > cap:
             raise ValueError(f"component r{c['i']} alone exceeds NEV {a.nev}: {c['n_events']}")
         b = cur["cur"]
-        g = c["build"](b)
+        if cur["standalone"]:
+            g = c["build"](b)
+        else:
+            g = build_ok(c, b) if b + c["nsec"] <= NSEC else None
+            if g is None:
+                b = free_base(c["nsec"], taken=cur.setdefault("taken", set()))
+                g = c["build"](b)
+        cur.setdefault("taken", set()).update(range(b, b + c["nsec"]))
         evs = comp_events(g, c["kind"])
-        assert not (sectors(evs) & used_su), ("component sector clash with SU", c["i"])
+        assert cur["standalone"] or not (sectors(evs) & used_su), ("component sector clash with SU", c["i"])
         for e in evs:
             e = dict(e)
             if e["k"] != "M":

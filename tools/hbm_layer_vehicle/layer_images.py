@@ -763,12 +763,16 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr):
             res = dict(status="unsupported_lowering", reasons=["reduction requires the real stree cut (no RF injection)"],
                        lowering=dict(supported=False), sut=sut)
         else:
-            ref, j = downstream_reference(fx, r["i"], desc["R"].base) if fx else (None, None)
+            R = desc["R"]
+            refs = [downstream_reference(fx, r["i"], R.base + k) if fx else (None, None) for k in range(R.m)]
+            vals = [x for x, _ in refs]
             res = attempt("pretree_reduce", lambda: SL.lower_reduce(raw, a.quarter, data=vm_data, place=place, tag=tag,
-                                                                    timing=timing, expected_reduction_word=ref))
-            if ref is not None:
-                res["fixture_reduction_reference"] = dict(value=f"{ref:08x}", source=f"fixture record {j} input (later "
-                                                          "consumer), comparison only", matched=res["status"] == "emitted")
+                                                                    timing=timing, expected_reduction_word=vals))
+            if any(x is not None for x in vals):
+                res["fixture_reduction_reference"] = dict(
+                    value=[None if x is None else f"{x:08x}" for x in vals] if R.m > 1 else f"{vals[0]:08x}",
+                    source=f"fixture record(s) {sorted({j for _, j in refs if j is not None})} input (later consumer), "
+                           "comparison only", matched=res["status"] == "emitted")
     elif unit == 2 and SL.rsqrt_profile(sut, desc):
         res = attempt("scalar_rsqrt", lambda: SL.lower_rsqrt(raw, a.quarter, data=vm_data, place=place, tag=tag,
                                                              timing=timing, side_profile=(4, 3),
@@ -823,6 +827,7 @@ def main():
                     "record profile on every layer (pretree reductions, scalar rsqrt, RF-broadcast B, single-row "
                     "identity lane terms); failed attempts leave the VM placement / written state untouched")
     ap.add_argument("--rf-local", type=int, default=1, help="selected su_<q><g> RF_LOCAL parameter (contract)")
+    ap.add_argument("--nev", type=int, default=0, help="(--su-lower2) built TB event depth: split into independent replays")
     ap.add_argument("--safe-calendar", action="store_true", help="opt-in tested 128-word A-to-O BF16 profile, exclusive controls and OLD-read drain gap")
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
@@ -1053,20 +1058,75 @@ def main():
             if note:
                 ent.setdefault("reasons", []).append(note)
     events.sort(key=lambda x: (x["dom"], x["cyc"], x["k"]))
-    dropped_holds = 0
-    if a.su_lower2:
+
+    def drop_holds(evs):
         # a slice input holds its last D value (gen_slice_tb replay model); a D repeating the port's current value is
         # a no-op on the DUT inputs -- drop it so the layer fits the built testbench's event array (NEV)
-        last, kept = {}, []
-        for e in events:
+        last, kept, n = {}, [], 0
+        for e in evs:
             if e["k"] == "D":
                 key = (e["dom"], e["port"])
-                if last.get(key, "0") == e["val"] and key in last:
-                    dropped_holds += 1
+                if key in last and last[key] == e["val"]:
+                    n += 1
                     continue
                 last[key] = e["val"]
             kept.append(e)
-        events = kept
+        return kept, n
+
+    dropped_holds, extra_parts = 0, []
+    if a.su_lower2:
+        # opt-in: when the layer does not fit NEV, split it into INDEPENDENT replays: programmes linked by a VM
+        # producer -> consumer sector stay together (no expected-value carry, no intermediate injection)
+        prog_of = {r_: c["programme"] for c in cfgs for r_ in c["records"]}
+        pev = {}
+        for e in events:
+            k_ = e.get("prog", prog_of.get(e.get("rec")))
+            pev.setdefault(k_, []).append(e)
+        parent = {k_: k_ for k_ in range(len(progs))}
+
+        def find(x):
+            while parent[x] != x:
+                parent[x] = parent[parent[x]]
+                x = parent[x]
+            return x
+        writer = {}
+        for k_, P in enumerate(progs):
+            for r_, ent_, su_, o_ in P["recs"]:
+                for ls_, _ in su_["fills"]:
+                    if ls_ in writer:
+                        parent[find(k_)] = find(writer[ls_])
+                for ls_, _ in su_["drains"]:
+                    writer[ls_] = k_
+        groups = {}
+        for k_ in range(len(progs)):
+            groups.setdefault(find(k_), []).append(k_)
+        cap = a.nev - 1 if a.nev else None
+        nonm = lambda evs: sum(1 for e in drop_holds(sorted(evs, key=lambda x: (x["dom"], x["cyc"], x["k"])))[0]
+                               if e["k"] != "M")
+        bins = []
+        for g in sorted(groups.values(), key=lambda g: g[0]):
+            evs = [e for k_ in g for e in pev.get(k_, [])]
+            for b in bins:
+                if cap is None or nonm(b["events"] + evs) <= cap:
+                    b["events"] += evs
+                    b["progs"] += g
+                    break
+            else:
+                bins.append(dict(events=list(evs), progs=list(g)))
+        stray = pev.get(None, [])
+        if bins:
+            bins[0]["events"] += stray
+        parts_out = []
+        for b in bins:
+            ev_, n_ = drop_holds(sorted(b["events"], key=lambda x: (x["dom"], x["cyc"], x["k"])))
+            dropped_holds += n_
+            parts_out.append((ev_, sorted(b["progs"])))
+        events = parts_out[0][0] if parts_out else events
+        extra_parts = parts_out[1:]
+        part_of = {k_: n for n, (_, ps) in enumerate(parts_out) for k_ in ps}
+        for P_k, P in enumerate(progs):
+            for r_, ent_, su_, o_ in P["recs"]:
+                ent_["replay_part"] = part_of.get(P_k, 0)
     for p in {e["port"] for e in events if e["k"] == "D"}:
         assert p in inports, f"replay drives {p}, not a slice input port"
     rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=bnd.get("slice_top", "sw"), design=a.design,
@@ -1079,7 +1139,11 @@ def main():
                events=events)
     if a.su_lower2:
         rep["dropped_same_value_holds"] = dropped_holds
+        rep["independent_parts"] = 1 + len(extra_parts)
     (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
+    for n_, (ev_, ps) in enumerate(extra_parts, 1):
+        (a.out / f"replay_x{n_}.json").write_text(json.dumps(dict(rep, events=ev_, independent_part=n_,
+                                                                  programmes=ps)) + "\n")
     man = dict(schema="opentallas.hbm_layer_images.v1", design=a.design, layer=a.layer,
                scope=rep["scope"], qualifies_native_layer=False, qualifies_native_chain=False,
                state_seed_provenance=rep["state_seed_provenance"],
