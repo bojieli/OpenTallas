@@ -67,9 +67,16 @@ def cut_ports(text):
     return out
 
 
+def _pval(v):
+    """chparam value: a sized Verilog literal (64'hffddffdeffdcffdc, > 32 bits) verbatim, else an integer"""
+    return v if isinstance(v, str) and re.fullmatch(r"\d+'s?[hdbo][0-9a-fA-F_]+", v) else int(v)
+
+
 def cut_model(cell, bb_text):
     """Cut point of a hard macro: (* keep *) cut_in_<pin> = input; every output = undriven cut_out_<pin>."""
-    ports = cut_ports(bb_text)
+    # KV-AHUB8 10-20: THIS cell's header of a multi-module blackbox; NA.cut_ports reads multi-pin declarations
+    mm = re.search(r'\bmodule\s+' + re.escape(cell) + r'\b.*?\bendmodule\b', bb_text, re.S)
+    ports = NA.cut_ports(mm.group(0) if mm else bb_text)
     L = [f'// kv_leaf_lec cut model of {cell}', f'module {cell} (',
          ',\n'.join(f'    {d_} wire ' + (f'[{w_ - 1}:0] ' if w_ > 1 else '') + p_ for d_, p_, w_ in ports), ');']
     names = {p_ for _d, p_, _w in ports}
@@ -157,7 +164,9 @@ def lec(a):
     rd = [str(src / s_) for s_ in srcs if s_ not in cut_bb] + [str(f) for f, _b in cutf.values()]
     # 1. gold
     G = [f'read_verilog -sv -DSYNTHESIS {" ".join(rd)}']
-    G += [f'chparam -set {k} {int(v)} {a.top}' for k, v in sorted(params.items())]
+    # KV-AHUB8 10-20: a sized Verilog literal (64'hffddffdeffdcffdc: the hub's 4 x 16-bit AP_OFS, > 32 bits) goes to chparam
+    # verbatim; every other value as an integer
+    G += [f'chparam -set {k} {_pval(v)} {a.top}' for k, v in sorted(params.items())]
     if a.wrapper:
         wt = Path(a.wrapper).read_text()
         core = f'{a.gate_top}__ot_pr_core'

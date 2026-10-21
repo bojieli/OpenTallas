@@ -1308,6 +1308,16 @@ if DCAL_BC:
 # die group (flt) so the parent fault lane (kv_static_die OT_KV_DCAL_FLT) can load it; never left open.
 DCAL_BC4 = DCAL_BC and __import__('os').environ.get('OT_KV_DCAL_BC4', '0') == '1'
 DCAL_BC4_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4.sv'   # + ot_qwen_d2d_cal_seq_bc4.sv (core)
+# KV-EMBWIN16 10-20: OT_KV_EMB_WIN=<N> -> the same bc4 tile on the grown-window pair image (only the `include differs:
+# d2d_cal_image_mu_ew<N>.svh = START table / token period / images; tools/qwen_static_kv/gen_dcal_bc4_ew.py), kit
+# qkd_d2d_cal_seq_pin_bc4_ew<N> (module qkd_d2d_cal_seq_pin_bc4, same ports / edges)
+_EMB_WIN = __import__('os').environ.get('OT_KV_EMB_WIN', '')
+if _EMB_WIN:
+    DCAL_BC4_FILE = f'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_bc4_ew{int(_EMB_WIN)}.sv'
+# KV-PROG17 10-20: OT_KV_ATTN_R16=1 -> the bc4 tile on the r16 pair image (K RESULT +1 / STATUS +213 a layer: START table and
+# token period), qkd_d2d_cal_seq_bc4[_ew<N>]_r16.sv, kit qkd_d2d_cal_seq_pin_bc4[_ew<N>]_r16 (same module / ports / edges)
+if __import__('os').environ.get('OT_KV_ATTN_R16', '0') == '1':
+    DCAL_BC4_FILE = DCAL_BC4_FILE.replace('.sv', '_r16.sv')
 if DCAL_BC4:
     DCAL_FILE = DCAL_BC4_FILE
     DCAL_WH = (21.6, 34.56) if __import__('os').environ.get('OT_KV_DCAL_BC4_KIT', '') == 'qkd_d2d_cal_seq_pin_bc4w' \
@@ -1993,12 +2003,31 @@ def build(*args, **kwargs):
     # at their sink end, after the pin repair (the last pass that adds stages) and before the landing slots
     import kv_bundle_eq
     if KSD.ON and kv_bundle_eq.on() and kwargs.get('split', len(args) > 7 and args[7]):
-        m = kv_bundle_eq.equalize(sys.modules[__name__], m)
+        if kv_bundle_eq.seam_pin_on():
+            _tg = kv_bundle_eq.seam_targets()
+            _pf, _over = kv_bundle_eq.seam_pin_plan(_tg)
+            m = kv_bundle_eq.equalize(sys.modules[__name__], m, plan_fn=_pf)
+            m['bundle_eq']['seam_pin'] = dict(targets=_tg, over=_over)
+            print(f'kv die SEAM_PIN: image targets {_tg}; over {_over or "none"}', file=sys.stderr)
+            if _over:
+                raise ValueError(f'kv die SEAM_PIN FAIL: {_over} (OT_KV_SEAM_PIN: the K seam exceeds the bound pair image; '
+                                 'move kvs_attn (OT_KV_ATTN_DXY) / the d2d pins, or recompile the pair image + views)')
+        else:
+            m = kv_bundle_eq.equalize(sys.modules[__name__], m)
         # HKV-DIE 10-19: the seq KVN-arrival check, aligned after the record bundles (it composes K.rx_record)
         if os.environ.get('OT_KV_SEQ_KVN_ALIGN', '1') == '1':
             _sb = kv_bundle_eq.seq_kvn_bundle(m, {i.name: i for i in m['insts']}, KSD.ATTN_LAND)
             if _sb:
                 m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_sb)
+        # KV-AHUB8 10-20 (COORD 19:23): a FIXED-offset hub view (closed a7) -> pad the die to its AP_OFS / FR_OFS
+        if kv_bundle_eq.ahub_pad_on():
+            _ho = KSD.ahub_ofs_bound()
+            if not _ho:
+                raise ValueError('kv_die: OT_KV_AHUB_PAD=1 needs OT_KV_AHUB_OFS (the hub view hardened offsets)')
+            for _f in (kv_bundle_eq.ahub_ap_bundle, kv_bundle_eq.ahub_fr_bundle):
+                _ab = _f(m, {i.name: i for i in m['insts']}, _ho)
+                if _ab:
+                    m = kv_bundle_eq.equalize(sys.modules[__name__], m, bundles=_ab)
         print('kv die BUNDLE_EQ: ' + ', '.join(f"{n_} {r_.get('stages', r_.get('skipped'))}"
                                                for n_, r_ in m['bundle_eq']['bundles'].items())
               + f" ({len(m['bundle_eq']['added'])} pad relays)", file=sys.stderr)
@@ -3330,6 +3359,16 @@ def _relays(m):
                 order_.insert(j_ + 1, br_)
             else:
                 order_.append(br_)
+    if os.environ.get('OT_KV_D2D_ENDPOINT_FIRST', '0') == '1':
+        # The bound D2D view spreads five record words across its S face.
+        # Their first/last relays need the narrow intersection of every bit's
+        # reach diamond. Give those endpoint approaches cell rows before
+        # unconstrained boot/control chains consume them. Geometry and hop
+        # limits remain unchanged; the exact image-stage check still applies.
+        endpoint = [b for b in order_ if b[2] >= 548 and b[1] not in ABUT
+                    and len(b[3]) == 2 and any(e[0] == 'd2d_kv' for e in b[3])]
+        ids = {b[0] for b in endpoint}
+        order_ = endpoint + [b for b in order_ if b[0] not in ids]
     for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))

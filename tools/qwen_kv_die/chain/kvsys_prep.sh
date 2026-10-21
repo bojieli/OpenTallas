@@ -118,7 +118,11 @@ if [ "${OT_KV_DCAL:-0}" = 1 ]; then
   # KV-DCAL 10-19 (OT_KV_DCAL_BC4=1 with OT_KV_DCAL_BC=1, kv_die.DCAL_BC4): the safe K22 successor qkd_d2d_cal_seq_pin_bc4
   # (kit OT_KV_DCAL_BC4_KIT, default qkd_d2d_cal_seq_pin_bc4; PARALLEL fallback qkd_d2d_cal_seq_pin_bc4w); own view only
   if [ "${OT_KV_DCAL_BC:-0}" = 1 ] && [ "${OT_KV_DCAL_BC4:-0}" = 1 ]; then
-    B4K=${OT_KV_DCAL_BC4_KIT:-qkd_d2d_cal_seq_pin_bc4}; B4V=physical/ref_tile/$B4K/views/qkd_d2d_cal_seq_pin_bc4; DCV=
+    # KV-EMBWIN16 10-20: OT_KV_EMB_WIN=<N> (grown embed window pair image) -> default kit qkd_d2d_cal_seq_pin_bc4_ew<N>
+    B4D=qkd_d2d_cal_seq_pin_bc4; [ -n "${OT_KV_EMB_WIN:-}" ] && B4D=qkd_d2d_cal_seq_pin_bc4_ew$OT_KV_EMB_WIN
+    # KV-PROG17 10-20: OT_KV_ATTN_R16=1 -> the r16 pair image tile (kit suffix _r16)
+    [ "${OT_KV_ATTN_R16:-0}" = 1 ] && B4D=${B4D}_r16
+    B4K=${OT_KV_DCAL_BC4_KIT:-$B4D}; B4V=physical/ref_tile/$B4K/views/qkd_d2d_cal_seq_pin_bc4; DCV=
     if [ -f $B4V/qkd_d2d_cal_seq_pin_bc4.lef ] && [ -f $B4V/qkd_d2d_cal_seq_pin_bc4_tt.lib ] && [ -f $B4V/qkd_d2d_cal_seq_pin_bc4_ff.lib ]; then
       DCV=$B4V; echo "OT_KV_DCAL_BC4: qkd_dcal -> $B4V (safe K22)"
     else echo "OT_KV_DCAL_BC4 FRAME: no view at $B4V yet; qkd_dcal stays an ASSUMED frame (kit $B4K not closed)"; fi
@@ -293,4 +297,6 @@ fi
 # Q-KV 10-16: over-block capacity from each block's real top layer (post-expand elements.lef) -- the old die-layer-only
 # capacity over-counted crossings over M5 tiles (kvs13i fine max 2.26 -> 1.48)
 python3 tools/qwen_kv_die/kvsys_window.py --split $H14 --lef $O/case_kv/elements.lef $( [ -f $O/expand.json ] && echo --expand $O/expand.json ) --out $O/window.json > $O/window.log
+python3 tools/qwen_kv_die/kv_gen_safety.py --case "$O/case_kv" --libs "$O/libs" > "$O/gen_safety_export.log" 2>&1 \
+  || { tail -6 "$O/gen_safety_export.log"; echo 'KV GEN safety facts export REFUSED'; exit 12; }
 echo "prep done: $(cat $O/case_kv/SOURCE_COMMIT) $(tail -1 $O/bind.log | head -c 300)"
