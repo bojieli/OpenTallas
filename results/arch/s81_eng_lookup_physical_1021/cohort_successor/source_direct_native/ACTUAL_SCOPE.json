@@ -1,0 +1,229 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "status": "FAIL",
+  "limit": 32,
+  "max_dynamic_loads": 170,
+  "role_errors": [],
+  "violations": [
+    {
+      "driver": "rst_n",
+      "driver_role": "input_port",
+      "net": "rst_n",
+      "loads": 170,
+      "endpoints": [
+        [
+          13846,
+          "RESETN",
+          0
+        ],
+        [
+          13897,
+          "RESETN",
+          0
+        ],
+        [
+          13900,
+          "RESETN",
+          0
+        ],
+        [
+          13903,
+          "RESETN",
+          0
+        ],
+        [
+          13906,
+          "RESETN",
+          0
+        ],
+        [
+          13909,
+          "RESETN",
+          0
+        ],
+        [
+          13912,
+          "RESETN",
+          0
+        ],
+        [
+          13915,
+          "RESETN",
+          0
+        ],
+        [
+          13918,
+          "RESETN",
+          0
+        ],
+        [
+          13952,
+          "RESETN",
+          0
+        ],
+        [
+          14219,
+          "RESETN",
+          0
+        ],
+        [
+          14495,
+          "RESETN",
+          0
+        ],
+        [
+          14500,
+          "RESETN",
+          0
+        ],
+        [
+          14501,
+          "RESETN",
+          0
+        ],
+        [
+          14502,
+          "RESETN",
+          0
+        ],
+        [
+          14503,
+          "RESETN",
+          0
+        ],
+        [
+          14504,
+          "RESETN",
+          0
+        ],
+        [
+          14505,
+          "RESETN",
+          0
+        ],
+        [
+          14506,
+          "RESETN",
+          0
+        ],
+        [
+          14507,
+          "RESETN",
+          0
+        ],
+        [
+          14508,
+          "RESETN",
+          0
+        ],
+        [
+          14509,
+          "RESETN",
+          0
+        ],
+        [
+          14510,
+          "RESETN",
+          0
+        ],
+        [
+          14511,
+          "RESETN",
+          0
+        ],
+        [
+          14512,
+          "RESETN",
+          0
+        ],
+        [
+          14513,
+          "RESETN",
+          0
+        ],
+        [
+          14514,
+          "RESETN",
+          0
+        ],
+        [
+          14515,
+          "RESETN",
+          0
+        ],
+        [
+          14516,
+          "RESETN",
+          0
+        ],
+        [
+          14517,
+          "RESETN",
+          0
+        ],
+        [
+          14518,
+          "RESETN",
+          0
+        ],
+        [
+          14519,
+          "RESETN",
+          0
+        ],
+        [
+          14703,
+          "SETN",
+          0
+        ],
+        [
+          14704,
+          "SETN",
+          0
+        ],
+        [
+          14705,
+          "SETN",
+          0
+        ],
+        [
+          14706,
+          "SETN",
+          0
+        ],
+        [
+          14707,
+          "SETN",
+          0
+        ],
+        [
+          14708,
+          "SETN",
+          0
+        ],
+        [
+          14709,
+          "SETN",
+          0
+        ],
+        [
+          14710,
+          "SETN",
+          0
+        ]
+      ]
+    }
+  ],
+  "scope": "SOURCE_DIRECT_DIAGNOSTIC_ONLY_NO_KIT_RESET_WRAPPER",
+  "source_ref": "9725ff954",
+  "rtl_ref": "97fd22a11",
+  "census_sha256": "e94e8832a1a8e03067bceeb0e2142bb0cf6a68b514bfb54afee7eda6fe5105d1",
+  "non_reset_max_dynamic_loads": 32,
+  "mapped_areas_um2": {},
+  "macro_count": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 3
+  },
+  "synthesis_repeated": false,
+  "prior_census_infrastructure_failure": "ModuleNotFoundError textbook_lint, originalnative_r1census.logpreserved; resumedexactmappednetlistwithadditionalexacttool innewsrc",
+  "physical_qualification": "NOT_QUALIFIED: futurekitmustretainandmeasureexisting2edge16copyresetlanding+actualrow/halfcycle/clockproof"
+}

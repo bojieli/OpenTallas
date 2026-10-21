@@ -1,0 +1,47 @@
+{
+  "snapshot_commit": "9725ff954224f027151f1dc52b6209b361980442",
+  "top": "dsfd_engram_lkp_ra640",
+  "params": {
+    "RETURN_AGE": 640
+  },
+  "defines": [
+    "SYNTHESIS",
+    "OT_ENGRAM_CRCMAT",
+    "OT_S81ENG_HASH_COHORTS"
+  ],
+  "clocks": [
+    "ck",
+    "ck_hash[0]",
+    "ck_hash[1]",
+    "ck_hash[2]",
+    "ck_hash[3]",
+    "ck_hash[4]",
+    "ck_hash[5]",
+    "ck_seed",
+    "ck_n",
+    "ck_s",
+    "ck_rd"
+  ],
+  "mode": "ACTUAL_ORFS_SYNTH_NATIVE_ONLY_NO_PHYSICAL",
+  "source_sha256": {
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+    "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv": "d41695da461effac31e4a9af42801a8b9c1f7cba53eb3e680a04465fb4ecb039",
+    "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_cohort_n32.sv": "f6ef655cf10e4600bac8e87651c659ea70d3603a86168291620214d6b661e441",
+    "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra640.sv": "c97ef5fb237118e7fbcce3102b2d069c60b95ee00f9ffd7a3d8b63081c3ca3df",
+    "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640.sv": "3e5c609eeb5ce541fbbb04b7a204231cc0400754754f6b85647030ed7b174df2",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+  },
+  "config_sha256": "812f9521db3a8b1078d47d92897fa2c680c13d3b9cb0a04deae479442ed1305c",
+  "resume": {
+    "synthesis_rerun": false,
+    "prior_failure": "native_r1/native/census.log ModuleNotFoundError textbook_lint; preserved",
+    "mapped_netlist_sha256": "73547feef7381c1d58d793989719e720cc9b64acb2f53d387d4d4b806a98aa1a",
+    "additional_tool_ref": "9725ff954",
+    "additional_tool_sha256": "eb9a92d6a29332d4c9774c89a08a405385c8530613399e8987e771532ea44c8b",
+    "scope": "SOURCE_DIRECT_DIAGNOSTIC, existingphysicalreset2wrapper notpresent"
+  }
+}

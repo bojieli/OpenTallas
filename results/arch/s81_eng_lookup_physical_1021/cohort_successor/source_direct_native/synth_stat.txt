@@ -1,0 +1,1569 @@
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+Found gzip magic in file `/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz', decompressing using zlib.
+
+17. Printing statistics.
+
+=== $paramod\ot_s81eng_accept_ids\W=s32'00000000000000000000000000000100 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       19        -       19        - wires
+       25        -       25        - wire bits
+        5        -        5        - public wires
+       11        -       11        - public wire bits
+        5        -        5        - ports
+       11        -       11        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       18     2.26       18     2.26 cells
+        4     0.35        4     0.35   AND3x1_ASAP7_75t_R
+        4    0.408        4    0.408   AO21x2_ASAP7_75t_R
+        4    1.166        4    1.166   DFFHQNx1_ASAP7_75t_R
+        4    0.175        4    0.175   INVx1_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        1    0.087        1    0.087   NAND2x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_accept_ids\W=s32'00000000000000000000000000000100': 2.259900
+     of which used for sequential elements: 1.166400 (51.61%)
+
+=== $paramod\ot_s81eng_accept_ids\W=s32'00000000000000000000000000010000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       59        -       59        - wires
+       89        -       89        - wire bits
+        5        -        5        - public wires
+       35        -       35        - public wire bits
+        5        -        5        - ports
+       35        -       35        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       70    9.054       70    9.054 cells
+       16      1.4       16      1.4   AND3x1_ASAP7_75t_R
+        5    0.437        5    0.437   AO21x1_ASAP7_75t_R
+       11    1.123       11    1.123   AO21x2_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+        1    0.117        1    0.117   BUFx4f_ASAP7_75t_R
+        2    0.292        2    0.292   BUFx6f_ASAP7_75t_R
+       16    4.666       16    4.666   DFFHQNx1_ASAP7_75t_R
+       16      0.7       16      0.7   INVx1_ASAP7_75t_R
+        1    0.087        1    0.087   INVx4_ASAP7_75t_R
+        1    0.146        1    0.146   NAND2x2_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_accept_ids\W=s32'00000000000000000000000000010000': 9.054180
+     of which used for sequential elements: 4.665600 (51.53%)
+
+=== $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       67        -       67        - wires
+       80        -       80        - wire bits
+        8        -        8        - public wires
+       21        -       21        - public wire bits
+        8        -        8        - ports
+       21        -       21        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       69    7.815       69    7.815 cells
+        1    0.087        1    0.087   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AND3x1_ASAP7_75t_R
+        2    0.204        2    0.204   AND4x1_ASAP7_75t_R
+        2    0.175        2    0.175   AO21x1_ASAP7_75t_R
+        1    0.117        1    0.117   AO32x1_ASAP7_75t_R
+        1    0.175        1    0.175   AOI211x1_ASAP7_75t_R
+        7    0.816        7    0.816   AOI21x1_ASAP7_75t_R
+        3     0.35        3     0.35   BUFx4f_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+        9    2.624        9    2.624   DFFHQNx1_ASAP7_75t_R
+       16      0.7       16      0.7   INVx1_ASAP7_75t_R
+        1    0.087        1    0.087   NAND2x1_ASAP7_75t_R
+        5    0.437        5    0.437   NOR2x1_ASAP7_75t_R
+        3    0.306        3    0.306   OA21x2_ASAP7_75t_R
+        2    0.175        2    0.175   OR2x2_ASAP7_75t_R
+        9    0.787        9    0.787   OR3x1_ASAP7_75t_R
+        3    0.306        3    0.306   OR4x1_ASAP7_75t_R
+        1    0.117        1    0.117   OR4x2_ASAP7_75t_R
+        1    0.117        1    0.117   OR5x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000000': 7.814880
+     of which used for sequential elements: 2.624400 (33.58%)
+
+=== $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000001 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       65        -       65        - wires
+       78        -       78        - wire bits
+        8        -        8        - public wires
+       21        -       21        - public wire bits
+        8        -        8        - ports
+       21        -       21        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       67     7.64       67     7.64 cells
+        1    0.087        1    0.087   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AND3x1_ASAP7_75t_R
+        2    0.204        2    0.204   AND4x1_ASAP7_75t_R
+        2    0.175        2    0.175   AO21x1_ASAP7_75t_R
+        1    0.117        1    0.117   AO32x1_ASAP7_75t_R
+        1    0.175        1    0.175   AOI211x1_ASAP7_75t_R
+        7    0.816        7    0.816   AOI21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        2    0.175        2    0.175   BUFx3_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+        9    2.624        9    2.624   DFFHQNx1_ASAP7_75t_R
+       13    0.569       13    0.569   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        2    0.175        2    0.175   NAND2x1_ASAP7_75t_R
+        5    0.437        5    0.437   NOR2x1_ASAP7_75t_R
+        3    0.306        3    0.306   OA21x2_ASAP7_75t_R
+        8      0.7        8      0.7   OR3x1_ASAP7_75t_R
+        4    0.408        4    0.408   OR4x1_ASAP7_75t_R
+        2    0.233        2    0.233   OR5x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000001': 7.639920
+     of which used for sequential elements: 2.624400 (34.35%)
+
+=== $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000010 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       65        -       65        - wires
+       78        -       78        - wire bits
+        8        -        8        - public wires
+       21        -       21        - public wire bits
+        8        -        8        - ports
+       21        -       21        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       67     7.64       67     7.64 cells
+        1    0.087        1    0.087   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AND3x1_ASAP7_75t_R
+        2    0.204        2    0.204   AND4x1_ASAP7_75t_R
+        2    0.175        2    0.175   AO21x1_ASAP7_75t_R
+        1    0.117        1    0.117   AO32x1_ASAP7_75t_R
+        1    0.175        1    0.175   AOI211x1_ASAP7_75t_R
+        7    0.816        7    0.816   AOI21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        2    0.175        2    0.175   BUFx3_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+        9    2.624        9    2.624   DFFHQNx1_ASAP7_75t_R
+       13    0.569       13    0.569   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        2    0.175        2    0.175   NAND2x1_ASAP7_75t_R
+        5    0.437        5    0.437   NOR2x1_ASAP7_75t_R
+        3    0.306        3    0.306   OA21x2_ASAP7_75t_R
+        8      0.7        8      0.7   OR3x1_ASAP7_75t_R
+        4    0.408        4    0.408   OR4x1_ASAP7_75t_R
+        2    0.233        2    0.233   OR5x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000010': 7.639920
+     of which used for sequential elements: 2.624400 (34.35%)
+
+=== $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000011 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       66        -       66        - wires
+       79        -       79        - wire bits
+        8        -        8        - public wires
+       21        -       21        - public wire bits
+        8        -        8        - ports
+       21        -       21        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       68    7.684       68    7.684 cells
+        1    0.087        1    0.087   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AND3x1_ASAP7_75t_R
+        2    0.204        2    0.204   AND4x1_ASAP7_75t_R
+        2    0.175        2    0.175   AO21x1_ASAP7_75t_R
+        1    0.117        1    0.117   AO32x1_ASAP7_75t_R
+        1    0.175        1    0.175   AOI211x1_ASAP7_75t_R
+        7    0.816        7    0.816   AOI21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        2    0.175        2    0.175   BUFx3_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+        9    2.624        9    2.624   DFFHQNx1_ASAP7_75t_R
+       14    0.612       14    0.612   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        2    0.175        2    0.175   NAND2x1_ASAP7_75t_R
+        5    0.437        5    0.437   NOR2x1_ASAP7_75t_R
+        3    0.306        3    0.306   OA21x2_ASAP7_75t_R
+        8      0.7        8      0.7   OR3x1_ASAP7_75t_R
+        4    0.408        4    0.408   OR4x1_ASAP7_75t_R
+        2    0.233        2    0.233   OR5x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000011': 7.683660
+     of which used for sequential elements: 2.624400 (34.16%)
+
+=== $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000100 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       65        -       65        - wires
+       78        -       78        - wire bits
+        8        -        8        - public wires
+       21        -       21        - public wire bits
+        8        -        8        - ports
+       21        -       21        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       67     7.64       67     7.64 cells
+        1    0.087        1    0.087   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AND3x1_ASAP7_75t_R
+        2    0.204        2    0.204   AND4x1_ASAP7_75t_R
+        2    0.175        2    0.175   AO21x1_ASAP7_75t_R
+        1    0.117        1    0.117   AO32x1_ASAP7_75t_R
+        1    0.175        1    0.175   AOI211x1_ASAP7_75t_R
+        7    0.816        7    0.816   AOI21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        2    0.175        2    0.175   BUFx3_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+        9    2.624        9    2.624   DFFHQNx1_ASAP7_75t_R
+       13    0.569       13    0.569   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        2    0.175        2    0.175   NAND2x1_ASAP7_75t_R
+        5    0.437        5    0.437   NOR2x1_ASAP7_75t_R
+        3    0.306        3    0.306   OA21x2_ASAP7_75t_R
+        8      0.7        8      0.7   OR3x1_ASAP7_75t_R
+        4    0.408        4    0.408   OR4x1_ASAP7_75t_R
+        2    0.233        2    0.233   OR5x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000100': 7.639920
+     of which used for sequential elements: 2.624400 (34.35%)
+
+=== $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000101 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       66        -       66        - wires
+       79        -       79        - wire bits
+        8        -        8        - public wires
+       21        -       21        - public wire bits
+        8        -        8        - ports
+       21        -       21        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       68    7.684       68    7.684 cells
+        1    0.087        1    0.087   AND2x2_ASAP7_75t_R
+        1    0.087        1    0.087   AND3x1_ASAP7_75t_R
+        2    0.204        2    0.204   AND4x1_ASAP7_75t_R
+        2    0.175        2    0.175   AO21x1_ASAP7_75t_R
+        1    0.117        1    0.117   AO32x1_ASAP7_75t_R
+        1    0.175        1    0.175   AOI211x1_ASAP7_75t_R
+        7    0.816        7    0.816   AOI21x1_ASAP7_75t_R
+        1    0.073        1    0.073   BUFx2_ASAP7_75t_R
+        2    0.175        2    0.175   BUFx3_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+        9    2.624        9    2.624   DFFHQNx1_ASAP7_75t_R
+       14    0.612       14    0.612   INVx1_ASAP7_75t_R
+        1    0.058        1    0.058   INVx2_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        2    0.175        2    0.175   NAND2x1_ASAP7_75t_R
+        5    0.437        5    0.437   NOR2x1_ASAP7_75t_R
+        3    0.306        3    0.306   OA21x2_ASAP7_75t_R
+        8      0.7        8      0.7   OR3x1_ASAP7_75t_R
+        4    0.408        4    0.408   OR4x1_ASAP7_75t_R
+        2    0.233        2    0.233   OR5x1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000101': 7.683660
+     of which used for sequential elements: 2.624400 (34.16%)
+
+=== $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000001 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        4        -        4        - wires
+        4        -        4        - wire bits
+        3        -        3        - public wires
+        3        -        3        - public wire bits
+        3        -        3        - ports
+        3        -        3        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        2    0.365        2    0.365 cells
+        1    0.292        1    0.292   DFFHQNx1_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000001': 0.364500
+     of which used for sequential elements: 0.291600 (80.00%)
+
+=== $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000010 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        5        -        5        - wires
+        7        -        7        - wire bits
+        3        -        3        - public wires
+        5        -        5        - public wire bits
+        3        -        3        - ports
+        5        -        5        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        4    0.729        4    0.729 cells
+        2    0.583        2    0.583   DFFHQNx1_ASAP7_75t_R
+        2    0.146        2    0.146   INVx3_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000010': 0.729000
+     of which used for sequential elements: 0.583200 (80.00%)
+
+=== $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000011 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        6        -        6        - wires
+       10        -       10        - wire bits
+        3        -        3        - public wires
+        7        -        7        - public wire bits
+        3        -        3        - ports
+        7        -        7        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        6    1.094        6    1.094 cells
+        3    0.875        3    0.875   DFFHQNx1_ASAP7_75t_R
+        3    0.219        3    0.219   INVx3_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000011': 1.093500
+     of which used for sequential elements: 0.874800 (80.00%)
+
+=== $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000100 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        7        -        7        - wires
+       13        -       13        - wire bits
+        3        -        3        - public wires
+        9        -        9        - public wire bits
+        3        -        3        - ports
+        9        -        9        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        8    1.458        8    1.458 cells
+        4    1.166        4    1.166   DFFHQNx1_ASAP7_75t_R
+        4    0.292        4    0.292   INVx3_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000100': 1.458000
+     of which used for sequential elements: 1.166400 (80.00%)
+
+=== $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000110 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        9        -        9        - wires
+       19        -       19        - wire bits
+        3        -        3        - public wires
+       13        -       13        - public wire bits
+        3        -        3        - ports
+       13        -       13        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       12    2.187       12    2.187 cells
+        6     1.75        6     1.75   DFFHQNx1_ASAP7_75t_R
+        6    0.437        6    0.437   INVx3_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000110': 2.187000
+     of which used for sequential elements: 1.749600 (80.00%)
+
+=== $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000001000 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       11        -       11        - wires
+       25        -       25        - wire bits
+        3        -        3        - public wires
+       17        -       17        - public wire bits
+        3        -        3        - ports
+       17        -       17        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       16    2.916       16    2.916 cells
+        8    2.333        8    2.333   DFFHQNx1_ASAP7_75t_R
+        8    0.583        8    0.583   INVx3_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_kq\W=s32'00000000000000000000000000001000': 2.916000
+     of which used for sequential elements: 2.332800 (80.00%)
+
+=== $paramod\ot_s81eng_kqr\W=s32'00000000000000000000000000000001 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        6        -        6        - wires
+        6        -        6        - wire bits
+        4        -        4        - public wires
+        4        -        4        - public wire bits
+        4        -        4        - ports
+        4        -        4        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+        3    0.496        3    0.496 cells
+        1    0.379        1    0.379   DFFASRHQNx1_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        1    0.044        1    0.044   TIEHIx1_ASAP7_75t_R
+
+   Chip area for module '$paramod\ot_s81eng_kqr\W=s32'00000000000000000000000000000001': 0.495720
+     of which used for sequential elements: 0.379080 (76.47%)
+
+=== dsfd_engram_lkp_ra640 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+   361282        -    21851        - wires
+   517772        -    22493        - wire bits
+   145102        -     5577        - public wires
+   301592        -     6219        - public wire bits
+    13349        -       29        - ports
+   169839        -      671        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+   347485 5.88E+04    18950 1.45E+04 cells
+    26460 2.31E+03      770    67.36   AND2x2_ASAP7_75t_R
+        1    0.146        -        -   AND2x4_ASAP7_75t_R
+     3687  322.539       76    6.648   AND3x1_ASAP7_75t_R
+    33793 3.45E+03        -        -   AND3x2_ASAP7_75t_R
+        1    0.204        -        -   AND3x4_ASAP7_75t_R
+      610   62.257       31    3.164   AND4x1_ASAP7_75t_R
+    41473 4.84E+03        -        -   AND4x2_ASAP7_75t_R
+      124   14.463       11    1.283   AND5x1_ASAP7_75t_R
+      163   38.025        3      0.7   AO211x2_ASAP7_75t_R
+     6212  543.426      795   69.547   AO21x1_ASAP7_75t_R
+       53    5.409        -        -   AO21x2_ASAP7_75t_R
+      840  122.472       21    3.062   AO221x1_ASAP7_75t_R
+        5    0.802        -        -   AO221x2_ASAP7_75t_R
+      181   31.668        3    0.525   AO222x2_ASAP7_75t_R
+     1189  156.021      672    88.18   AO22x1_ASAP7_75t_R
+        2    0.292        -        -   AO22x2_ASAP7_75t_R
+      279   65.085       12    2.799   AO31x2_ASAP7_75t_R
+      482    56.22        9     1.05   AO32x1_ASAP7_75t_R
+        9    1.312        -        -   AO33x2_ASAP7_75t_R
+      252    44.09        8      1.4   AOI211x1_ASAP7_75t_R
+     1149  134.019      189   22.045   AOI21x1_ASAP7_75t_R
+      123   25.107        4    0.816   AOI221x1_ASAP7_75t_R
+      159   23.182        7    1.021   AOI22x1_ASAP7_75t_R
+     5120 1.34E+03        -        -   BUFx12f_ASAP7_75t_R
+     1865  135.959      573   41.772   BUFx2_ASAP7_75t_R
+       51    4.461       31    2.712   BUFx3_ASAP7_75t_R
+       15     1.75        7    0.816   BUFx4f_ASAP7_75t_R
+    13851 2.02E+03        8    1.166   BUFx6f_ASAP7_75t_R
+      170   64.444      111   42.078   DFFASRHQNx1_ASAP7_75t_R
+    46514 1.36E+04     4925  1436.13   DFFHQNx1_ASAP7_75t_R
+     1988  579.701       68   19.829   DFFLQNx1_ASAP7_75t_R
+    13302  581.829     4572  199.979   INVx1_ASAP7_75t_R
+     2693  157.056        -        -   INVx2_ASAP7_75t_R
+    26494 1.93E+03        -        -   INVx3_ASAP7_75t_R
+     9220  806.566        -        -   INVx4_ASAP7_75t_R
+     4608  470.292        -        -   INVx5_ASAP7_75t_R
+    10493 1.38E+03      155   20.339   MAJx2_ASAP7_75t_R
+        1    0.146        -        -   MAJx3_ASAP7_75t_R
+     2796  244.594      625   54.675   NAND2x1_ASAP7_75t_R
+        4    0.583        -        -   NAND2x2_ASAP7_75t_R
+      199   31.916       10    1.604   NAND3x1_ASAP7_75t_R
+     2861   250.28       66    5.774   NOR2x1_ASAP7_75t_R
+     9345 1.36E+03        -        -   NOR2x2_ASAP7_75t_R
+      247   39.614        5    0.802   NOR3x1_ASAP7_75t_R
+     2458  286.701      700   81.648   OA211x2_ASAP7_75t_R
+     4566  466.006      497   50.724   OA21x2_ASAP7_75t_R
+      103   24.028        5    1.166   OA221x2_ASAP7_75t_R
+      145   25.369        5    0.875   OA222x2_ASAP7_75t_R
+      767  111.829       13    1.895   OA22x2_ASAP7_75t_R
+      768  167.962       21    4.593   OA31x2_ASAP7_75t_R
+       66    9.623        3    0.437   OA33x2_ASAP7_75t_R
+     1315  153.382       25    2.916   OAI21x1_ASAP7_75t_R
+      271   39.512        9    1.312   OAI22x1_ASAP7_75t_R
+     5626  492.162      148   12.947   OR2x2_ASAP7_75t_R
+        3     0.35        -        -   OR2x4_ASAP7_75t_R
+     9119   797.73      286   25.019   OR3x1_ASAP7_75t_R
+        1    0.131        -        -   OR3x4_ASAP7_75t_R
+    15432  1574.99       70    7.144   OR4x1_ASAP7_75t_R
+       13    1.516        -        -   OR4x2_ASAP7_75t_R
+     6988   815.08      166   19.362   OR5x1_ASAP7_75t_R
+        6    0.787        -        -   OR5x2_ASAP7_75t_R
+       60    2.624        1    0.044   TIEHIx1_ASAP7_75t_R
+        2    0.087        1    0.044   TIELOx1_ASAP7_75t_R
+      106   18.546       85   14.872   XNOR2x1_ASAP7_75t_R
+    19473  3123.08     2616  419.554   XNOR2x2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+    11109 1.78E+03      529   84.841   XOR2x2_ASAP7_75t_R
+        3 1.17E+04        3 1.17E+04   ot_sram_1r1w_128x256_m1_r2c2
+      221 4.43E+04      221        - submodules
+        1     2.26        1        -   $paramod\ot_s81eng_accept_ids\W=s32'00000000000000000000000000000100
+        4   36.217        4        -   $paramod\ot_s81eng_accept_ids\W=s32'00000000000000000000000000010000
+        1    7.815        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000000
+        1     7.64        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000001
+        1     7.64        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000010
+        1    7.684        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000011
+        1     7.64        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000100
+        1    7.684        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000101
+       72   26.244       72        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000001
+       46   33.534       46        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000010
+        5    5.468        5        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000011
+        6    8.748        6        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000100
+        3    6.561        3        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000110
+       12   34.992       12        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000001000
+       59   29.247       59        -   $paramod\ot_s81eng_kqr\W=s32'00000000000000000000000000000001
+        1 6.32E+03        1        -   ot_s81eng_hash_group0_n32
+        1 6.39E+03        1        -   ot_s81eng_hash_group1_n32
+        1 6.33E+03        1        -   ot_s81eng_hash_group2_n32
+        1 6.35E+03        1        -   ot_s81eng_hash_group3_n32
+        1 6.38E+03        1        -   ot_s81eng_hash_group4_n32
+        1 6.34E+03        1        -   ot_s81eng_hash_group5_n32
+        1 5.95E+03        1        -   ot_s81eng_hash_seed_n32
+
+   Chip area for module '\dsfd_engram_lkp_ra640': 58789.319400
+     of which used for sequential elements: 14207.626800 (24.17%)
+
+=== ot_s81eng_hash_group0_n32 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    47119        -    34687        - wires
+    67308        -    35004        - wire bits
+    17736        -    16056        - public wires
+    37925        -    16373        - public wire bits
+     1684        -        4        - ports
+    21873        -      321        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    45627 6.32E+03    19515 2.82E+03 cells
+     1322  115.649      554   48.464   AND2x2_ASAP7_75t_R
+      322   28.169      322   28.169   AND3x1_ASAP7_75t_R
+     4608  470.292        -        -   AND3x2_ASAP7_75t_R
+       82    8.369       82    8.369   AND4x1_ASAP7_75t_R
+     6912  806.216        -        -   AND4x2_ASAP7_75t_R
+       17    1.983       17    1.983   AND5x1_ASAP7_75t_R
+       17    3.966       17    3.966   AO211x2_ASAP7_75t_R
+      786   68.759      786   68.759   AO21x1_ASAP7_75t_R
+      114   16.621      114   16.621   AO221x1_ASAP7_75t_R
+       38    6.648       38    6.648   AO222x2_ASAP7_75t_R
+       66    8.661       66    8.661   AO22x1_ASAP7_75t_R
+       26    6.065       26    6.065   AO31x2_ASAP7_75t_R
+       66    7.698       66    7.698   AO32x1_ASAP7_75t_R
+        2    0.292        2    0.292   AO33x2_ASAP7_75t_R
+       27    4.724       27    4.724   AOI211x1_ASAP7_75t_R
+      121   14.113      121   14.113   AOI21x1_ASAP7_75t_R
+       19    3.878       19    3.878   AOI221x1_ASAP7_75t_R
+       16    2.333       16    2.333   AOI22x1_ASAP7_75t_R
+      768  201.554        -        -   BUFx12f_ASAP7_75t_R
+      158   11.518      158   11.518   BUFx2_ASAP7_75t_R
+     2304  335.923        -        -   BUFx6f_ASAP7_75t_R
+     6080 1.77E+03     3008  877.133   DFFHQNx1_ASAP7_75t_R
+      192   55.987      192   55.987   DFFLQNx1_ASAP7_75t_R
+     1200   52.488     1200   52.488   INVx1_ASAP7_75t_R
+     3840  279.936        -        -   INVx3_ASAP7_75t_R
+     1536  134.369        -        -   INVx4_ASAP7_75t_R
+      768   78.382        -        -   INVx5_ASAP7_75t_R
+     1628  213.626     1628  213.626   MAJx2_ASAP7_75t_R
+      293   25.632      293   25.632   NAND2x1_ASAP7_75t_R
+       24    3.849       24    3.849   NAND3x1_ASAP7_75t_R
+      426   37.266      426   37.266   NOR2x1_ASAP7_75t_R
+     1536  223.949        -        -   NOR2x2_ASAP7_75t_R
+       37    5.934       37    5.934   NOR3x1_ASAP7_75t_R
+      260   30.326      260   30.326   OA211x2_ASAP7_75t_R
+      618   63.073      618   63.073   OA21x2_ASAP7_75t_R
+       12    2.799       12    2.799   OA221x2_ASAP7_75t_R
+       13    2.274       13    2.274   OA222x2_ASAP7_75t_R
+      120   17.496      120   17.496   OA22x2_ASAP7_75t_R
+      109   23.838      109   23.838   OA31x2_ASAP7_75t_R
+       11    1.604       11    1.604   OA33x2_ASAP7_75t_R
+      190   22.162      190   22.162   OAI21x1_ASAP7_75t_R
+       39    5.686       39    5.686   OAI22x1_ASAP7_75t_R
+      825   72.171      825   72.171   OR2x2_ASAP7_75t_R
+     1045   91.417     1045   91.417   OR3x1_ASAP7_75t_R
+     1890  192.893     1890  192.893   OR4x1_ASAP7_75t_R
+      938  109.408      938  109.408   OR5x1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+     2588  415.063     2588  415.063   XNOR2x2_ASAP7_75t_R
+     1617  259.334     1617  259.334   XOR2x2_ASAP7_75t_R
+      816 3.49E+03      816        - submodules
+      768 2.37E+03      768        -   ot_s81engf_dec4
+       48 1.12E+03       48        -   ot_s81engf_kq64
+
+   Chip area for module '\ot_s81eng_hash_group0_n32': 6317.499420
+     of which used for sequential elements: 1828.915200 (28.95%)
+
+=== ot_s81eng_hash_group1_n32 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    47832        -    35400        - wires
+    68021        -    35717        - wire bits
+    17736        -    16056        - public wires
+    37925        -    16373        - public wire bits
+     1684        -        4        - ports
+    21873        -      321        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    46340 6.39E+03    20228  2.9E+03 cells
+     1344  117.573      576   50.388   AND2x2_ASAP7_75t_R
+      319   27.906      319   27.906   AND3x1_ASAP7_75t_R
+     4608  470.292        -        -   AND3x2_ASAP7_75t_R
+       70    7.144       70    7.144   AND4x1_ASAP7_75t_R
+     6912  806.216        -        -   AND4x2_ASAP7_75t_R
+       21    2.449       21    2.449   AND5x1_ASAP7_75t_R
+       22    5.132       22    5.132   AO211x2_ASAP7_75t_R
+      898   78.557      898   78.557   AO21x1_ASAP7_75t_R
+      113   16.475      113   16.475   AO221x1_ASAP7_75t_R
+       22    3.849       22    3.849   AO222x2_ASAP7_75t_R
+      100   13.122      100   13.122   AO22x1_ASAP7_75t_R
+        1    0.146        1    0.146   AO22x2_ASAP7_75t_R
+       39    9.098       39    9.098   AO31x2_ASAP7_75t_R
+       84    9.798       84    9.798   AO32x1_ASAP7_75t_R
+        3    0.437        3    0.437   AO33x2_ASAP7_75t_R
+       26    4.549       26    4.549   AOI211x1_ASAP7_75t_R
+      141   16.446      141   16.446   AOI21x1_ASAP7_75t_R
+       22    4.491       22    4.491   AOI221x1_ASAP7_75t_R
+       28    4.082       28    4.082   AOI22x1_ASAP7_75t_R
+      768  201.554        -        -   BUFx12f_ASAP7_75t_R
+      180   13.122      180   13.122   BUFx2_ASAP7_75t_R
+     2304  335.923        -        -   BUFx6f_ASAP7_75t_R
+     6079 1.77E+03     3007  876.841   DFFHQNx1_ASAP7_75t_R
+      192   55.987      192   55.987   DFFLQNx1_ASAP7_75t_R
+     1254    54.85     1254    54.85   INVx1_ASAP7_75t_R
+     3840  279.936        -        -   INVx3_ASAP7_75t_R
+     1536  134.369        -        -   INVx4_ASAP7_75t_R
+      768   78.382        -        -   INVx5_ASAP7_75t_R
+     1653  216.907     1653  216.907   MAJx2_ASAP7_75t_R
+      381    33.33      381    33.33   NAND2x1_ASAP7_75t_R
+       25     4.01       25     4.01   NAND3x1_ASAP7_75t_R
+      468   40.941      468   40.941   NOR2x1_ASAP7_75t_R
+     1536  223.949        -        -   NOR2x2_ASAP7_75t_R
+       46    7.377       46    7.377   NOR3x1_ASAP7_75t_R
+      324   37.791      324   37.791   OA211x2_ASAP7_75t_R
+      636    64.91      636    64.91   OA21x2_ASAP7_75t_R
+       11    2.566       11    2.566   OA221x2_ASAP7_75t_R
+       41    7.173       41    7.173   OA222x2_ASAP7_75t_R
+      113   16.475      113   16.475   OA22x2_ASAP7_75t_R
+      112   24.494      112   24.494   OA31x2_ASAP7_75t_R
+        8    1.166        8    1.166   OA33x2_ASAP7_75t_R
+      222   25.894      222   25.894   OAI21x1_ASAP7_75t_R
+       45    6.561       45    6.561   OAI22x1_ASAP7_75t_R
+      832   72.783      832   72.783   OR2x2_ASAP7_75t_R
+     1179  103.139     1179  103.139   OR3x1_ASAP7_75t_R
+     1828  186.566     1828  186.566   OR4x1_ASAP7_75t_R
+      949  110.691      949  110.691   OR5x1_ASAP7_75t_R
+        1    0.175        1    0.175   XNOR2x1_ASAP7_75t_R
+     2501   401.11     2501   401.11   XNOR2x2_ASAP7_75t_R
+     1735  278.259     1735  278.259   XOR2x2_ASAP7_75t_R
+      816 3.49E+03      816        - submodules
+      768 2.37E+03      768        -   ot_s81engf_dec4
+       48 1.12E+03       48        -   ot_s81engf_kq64
+
+   Chip area for module '\ot_s81eng_hash_group1_n32': 6390.793080
+     of which used for sequential elements: 1828.623600 (28.61%)
+
+=== ot_s81eng_hash_group2_n32 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    47203        -    34771        - wires
+    67392        -    35088        - wire bits
+    17735        -    16055        - public wires
+    37924        -    16372        - public wire bits
+     1684        -        4        - ports
+    21873        -      321        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    45711 6.33E+03    19599   2832.5 cells
+     1311  114.686      543   47.502   AND2x2_ASAP7_75t_R
+      312   27.294      312   27.294   AND3x1_ASAP7_75t_R
+     4608  470.292        -        -   AND3x2_ASAP7_75t_R
+       65    6.634       65    6.634   AND4x1_ASAP7_75t_R
+     6912  806.216        -        -   AND4x2_ASAP7_75t_R
+       13    1.516       13    1.516   AND5x1_ASAP7_75t_R
+       22    5.132       22    5.132   AO211x2_ASAP7_75t_R
+      852   74.533      852   74.533   AO21x1_ASAP7_75t_R
+        1    0.102        1    0.102   AO21x2_ASAP7_75t_R
+      112    16.33      112    16.33   AO221x1_ASAP7_75t_R
+        1     0.16        1     0.16   AO221x2_ASAP7_75t_R
+       43    7.523       43    7.523   AO222x2_ASAP7_75t_R
+       80   10.498       80   10.498   AO22x1_ASAP7_75t_R
+       36    8.398       36    8.398   AO31x2_ASAP7_75t_R
+       71    8.281       71    8.281   AO32x1_ASAP7_75t_R
+        1    0.146        1    0.146   AO33x2_ASAP7_75t_R
+       31    5.424       31    5.424   AOI211x1_ASAP7_75t_R
+      143    16.68      143    16.68   AOI21x1_ASAP7_75t_R
+       18    3.674       18    3.674   AOI221x1_ASAP7_75t_R
+       20    2.916       20    2.916   AOI22x1_ASAP7_75t_R
+      768  201.554        -        -   BUFx12f_ASAP7_75t_R
+      172   12.539      172   12.539   BUFx2_ASAP7_75t_R
+        2    0.175        2    0.175   BUFx3_ASAP7_75t_R
+     2305  336.069        1    0.146   BUFx6f_ASAP7_75t_R
+     6079 1.77E+03     3007  876.841   DFFHQNx1_ASAP7_75t_R
+      192   55.987      192   55.987   DFFLQNx1_ASAP7_75t_R
+     1193   52.182     1193   52.182   INVx1_ASAP7_75t_R
+     3840  279.936        -        -   INVx3_ASAP7_75t_R
+     1536  134.369        -        -   INVx4_ASAP7_75t_R
+      768   78.382        -        -   INVx5_ASAP7_75t_R
+     1593  209.033     1593  209.033   MAJx2_ASAP7_75t_R
+        1    0.146        1    0.146   MAJx3_ASAP7_75t_R
+      283   24.757      283   24.757   NAND2x1_ASAP7_75t_R
+       18    2.887       18    2.887   NAND3x1_ASAP7_75t_R
+      425   37.179      425   37.179   NOR2x1_ASAP7_75t_R
+     1536  223.949        -        -   NOR2x2_ASAP7_75t_R
+       21    3.368       21    3.368   NOR3x1_ASAP7_75t_R
+      233   27.177      233   27.177   OA211x2_ASAP7_75t_R
+      682   69.605      682   69.605   OA21x2_ASAP7_75t_R
+       10    2.333       10    2.333   OA221x2_ASAP7_75t_R
+       10     1.75       10     1.75   OA222x2_ASAP7_75t_R
+      159   23.182      159   23.182   OA22x2_ASAP7_75t_R
+      109   23.838      109   23.838   OA31x2_ASAP7_75t_R
+        6    0.875        6    0.875   OA33x2_ASAP7_75t_R
+      186   21.695      186   21.695   OAI21x1_ASAP7_75t_R
+       32    4.666       32    4.666   OAI22x1_ASAP7_75t_R
+      823   71.996      823   71.996   OR2x2_ASAP7_75t_R
+     1124   98.328     1124   98.328   OR3x1_ASAP7_75t_R
+     1801   183.81     1801   183.81   OR4x1_ASAP7_75t_R
+        5    0.583        5    0.583   OR4x2_ASAP7_75t_R
+      932  108.708      932  108.708   OR5x1_ASAP7_75t_R
+        2    0.262        2    0.262   OR5x2_ASAP7_75t_R
+        2     0.35        2     0.35   XNOR2x1_ASAP7_75t_R
+     2539  407.205     2539  407.205   XNOR2x2_ASAP7_75t_R
+     1672  268.155     1672  268.155   XOR2x2_ASAP7_75t_R
+      816 3.49E+03      816        - submodules
+      768 2.37E+03      768        -   ot_s81engf_dec4
+       48 1.12E+03       48        -   ot_s81engf_kq64
+
+   Chip area for module '\ot_s81eng_hash_group2_n32': 6326.101620
+     of which used for sequential elements: 1828.623600 (28.91%)
+
+=== ot_s81eng_hash_group3_n32 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    47531        -    35099        - wires
+    67720        -    35416        - wire bits
+    17737        -    16057        - public wires
+    37926        -    16374        - public wire bits
+     1684        -        4        - ports
+    21873        -      321        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    46039 6.35E+03    19927 2.85E+03 cells
+     1348  117.923      580   50.738   AND2x2_ASAP7_75t_R
+        1    0.146        1    0.146   AND2x4_ASAP7_75t_R
+      395   34.555      395   34.555   AND3x1_ASAP7_75t_R
+     4608  470.292        -        -   AND3x2_ASAP7_75t_R
+       87    8.879       87    8.879   AND4x1_ASAP7_75t_R
+     6912  806.216        -        -   AND4x2_ASAP7_75t_R
+       13    1.516       13    1.516   AND5x1_ASAP7_75t_R
+       17    3.966       17    3.966   AO211x2_ASAP7_75t_R
+      837   73.221      837   73.221   AO21x1_ASAP7_75t_R
+        1    0.102        1    0.102   AO21x2_ASAP7_75t_R
+      117   17.059      117   17.059   AO221x1_ASAP7_75t_R
+       23    4.024       23    4.024   AO222x2_ASAP7_75t_R
+       83   10.891       83   10.891   AO22x1_ASAP7_75t_R
+        1    0.146        1    0.146   AO22x2_ASAP7_75t_R
+       44   10.264       44   10.264   AO31x2_ASAP7_75t_R
+       56    6.532       56    6.532   AO32x1_ASAP7_75t_R
+        1    0.146        1    0.146   AO33x2_ASAP7_75t_R
+       53    9.273       53    9.273   AOI211x1_ASAP7_75t_R
+      174   20.295      174   20.295   AOI21x1_ASAP7_75t_R
+       15    3.062       15    3.062   AOI221x1_ASAP7_75t_R
+       19     2.77       19     2.77   AOI22x1_ASAP7_75t_R
+      768  201.554        -        -   BUFx12f_ASAP7_75t_R
+      251   18.298      251   18.298   BUFx2_ASAP7_75t_R
+     2304  335.923        -        -   BUFx6f_ASAP7_75t_R
+     6080 1.77E+03     3008  877.133   DFFHQNx1_ASAP7_75t_R
+      192   55.987      192   55.987   DFFLQNx1_ASAP7_75t_R
+     1261   55.156     1261   55.156   INVx1_ASAP7_75t_R
+     3840  279.936        -        -   INVx3_ASAP7_75t_R
+     1536  134.369        -        -   INVx4_ASAP7_75t_R
+      768   78.382        -        -   INVx5_ASAP7_75t_R
+     1489  195.387     1489  195.387   MAJx2_ASAP7_75t_R
+      305   26.681      305   26.681   NAND2x1_ASAP7_75t_R
+       21    3.368       21    3.368   NAND3x1_ASAP7_75t_R
+      412   36.042      412   36.042   NOR2x1_ASAP7_75t_R
+     1536  223.949        -        -   NOR2x2_ASAP7_75t_R
+       29    4.651       29    4.651   NOR3x1_ASAP7_75t_R
+      265    30.91      265    30.91   OA211x2_ASAP7_75t_R
+      602    61.44      602    61.44   OA21x2_ASAP7_75t_R
+       14    3.266       14    3.266   OA221x2_ASAP7_75t_R
+       18    3.149       18    3.149   OA222x2_ASAP7_75t_R
+      115   16.767      115   16.767   OA22x2_ASAP7_75t_R
+       89   19.464       89   19.464   OA31x2_ASAP7_75t_R
+       17    2.479       17    2.479   OA33x2_ASAP7_75t_R
+      233   27.177      233   27.177   OAI21x1_ASAP7_75t_R
+       55    8.019       55    8.019   OAI22x1_ASAP7_75t_R
+      886   77.507      886   77.507   OR2x2_ASAP7_75t_R
+     1230    107.6     1230    107.6   OR3x1_ASAP7_75t_R
+     1814  185.137     1814  185.137   OR4x1_ASAP7_75t_R
+      920  107.309      920  107.309   OR5x1_ASAP7_75t_R
+        2     0.35        2     0.35   XNOR2x1_ASAP7_75t_R
+     2586  414.743     2586  414.743   XNOR2x2_ASAP7_75t_R
+     1596  255.966     1596  255.966   XOR2x2_ASAP7_75t_R
+      816 3.49E+03      816        - submodules
+      768 2.37E+03      768        -   ot_s81engf_dec4
+       48 1.12E+03       48        -   ot_s81engf_kq64
+
+   Chip area for module '\ot_s81eng_hash_group3_n32': 6345.172260
+     of which used for sequential elements: 1828.915200 (28.82%)
+
+=== ot_s81eng_hash_group4_n32 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    47750        -    35318        - wires
+    67939        -    35635        - wire bits
+    17738        -    16058        - public wires
+    37927        -    16375        - public wire bits
+     1684        -        4        - ports
+    21873        -      321        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    46258 6.38E+03    20146 2.89E+03 cells
+     1365   119.41      597   52.226   AND2x2_ASAP7_75t_R
+      311   27.206      311   27.206   AND3x1_ASAP7_75t_R
+     4609  470.395        1    0.102   AND3x2_ASAP7_75t_R
+      101   10.308      101   10.308   AND4x1_ASAP7_75t_R
+     6912  806.216        -        -   AND4x2_ASAP7_75t_R
+       12      1.4       12      1.4   AND5x1_ASAP7_75t_R
+       25    5.832       25    5.832   AO211x2_ASAP7_75t_R
+      873    76.37      873    76.37   AO21x1_ASAP7_75t_R
+        3    0.306        3    0.306   AO21x2_ASAP7_75t_R
+      179   26.098      179   26.098   AO221x1_ASAP7_75t_R
+        2    0.321        2    0.321   AO221x2_ASAP7_75t_R
+       27    4.724       27    4.724   AO222x2_ASAP7_75t_R
+       83   10.891       83   10.891   AO22x1_ASAP7_75t_R
+       50   11.664       50   11.664   AO31x2_ASAP7_75t_R
+       92   10.731       92   10.731   AO32x1_ASAP7_75t_R
+        2    0.292        2    0.292   AO33x2_ASAP7_75t_R
+       31    5.424       31    5.424   AOI211x1_ASAP7_75t_R
+      115   13.414      115   13.414   AOI21x1_ASAP7_75t_R
+       25    5.103       25    5.103   AOI221x1_ASAP7_75t_R
+       30    4.374       30    4.374   AOI22x1_ASAP7_75t_R
+      768  201.554        -        -   BUFx12f_ASAP7_75t_R
+      195   14.216      195   14.216   BUFx2_ASAP7_75t_R
+     2304  335.923        -        -   BUFx6f_ASAP7_75t_R
+     6079 1.77E+03     3007  876.841   DFFHQNx1_ASAP7_75t_R
+      192   55.987      192   55.987   DFFLQNx1_ASAP7_75t_R
+     1259   55.069     1259   55.069   INVx1_ASAP7_75t_R
+     3840  279.936        -        -   INVx3_ASAP7_75t_R
+     1536  134.369        -        -   INVx4_ASAP7_75t_R
+      768   78.382        -        -   INVx5_ASAP7_75t_R
+     1553  203.785     1553  203.785   MAJx2_ASAP7_75t_R
+      349   30.531      349   30.531   NAND2x1_ASAP7_75t_R
+       41    6.576       41    6.576   NAND3x1_ASAP7_75t_R
+      483   42.253      483   42.253   NOR2x1_ASAP7_75t_R
+     1536  223.949        -        -   NOR2x2_ASAP7_75t_R
+       40    6.415       40    6.415   NOR3x1_ASAP7_75t_R
+      273   31.843      273   31.843   OA211x2_ASAP7_75t_R
+      631     64.4      631     64.4   OA21x2_ASAP7_75t_R
+       22    5.132       22    5.132   OA221x2_ASAP7_75t_R
+       22    3.849       22    3.849   OA222x2_ASAP7_75t_R
+      117   17.059      117   17.059   OA22x2_ASAP7_75t_R
+      129   28.212      129   28.212   OA31x2_ASAP7_75t_R
+       12     1.75       12     1.75   OA33x2_ASAP7_75t_R
+      198   23.095      198   23.095   OAI21x1_ASAP7_75t_R
+       49    7.144       49    7.144   OAI22x1_ASAP7_75t_R
+      870   76.108      870   76.108   OR2x2_ASAP7_75t_R
+        1    0.117        1    0.117   OR2x4_ASAP7_75t_R
+     1146  100.252     1146  100.252   OR3x1_ASAP7_75t_R
+     1897  193.608     1897  193.608   OR4x1_ASAP7_75t_R
+        5    0.583        5    0.583   OR4x2_ASAP7_75t_R
+      880  102.643      880  102.643   OR5x1_ASAP7_75t_R
+        4    0.525        4    0.525   OR5x2_ASAP7_75t_R
+        2     0.35        2     0.35   XNOR2x1_ASAP7_75t_R
+     2568  411.856     2568  411.856   XNOR2x2_ASAP7_75t_R
+     1642  263.344     1642  263.344   XOR2x2_ASAP7_75t_R
+      816 3.49E+03      816        - submodules
+      768 2.37E+03      768        -   ot_s81engf_dec4
+       48 1.12E+03       48        -   ot_s81engf_kq64
+
+   Chip area for module '\ot_s81eng_hash_group4_n32': 6383.925900
+     of which used for sequential elements: 1828.623600 (28.64%)
+
+=== ot_s81eng_hash_group5_n32 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    47328        -    34640        - wires
+    67591        -    34957        - wire bits
+    17789        -    16105        - public wires
+    38052        -    16422        - public wire bits
+     1688        -        4        - ports
+    21951        -      321        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    45832 6.34E+03    19444 2.82E+03 cells
+     1277  111.712      495   43.303   AND2x2_ASAP7_75t_R
+      298   26.069      281   24.582   AND3x1_ASAP7_75t_R
+     4608  470.292        -        -   AND3x2_ASAP7_75t_R
+        1    0.204        -        -   AND3x4_ASAP7_75t_R
+      100   10.206       85    8.675   AND4x1_ASAP7_75t_R
+     6913  806.332        -        -   AND4x2_ASAP7_75t_R
+       20    2.333       14    1.633   AND5x1_ASAP7_75t_R
+       21    4.899       21    4.899   AO211x2_ASAP7_75t_R
+      832   72.783      803   70.246   AO21x1_ASAP7_75t_R
+      140   20.412      135   19.683   AO221x1_ASAP7_75t_R
+        2    0.321        -        -   AO221x2_ASAP7_75t_R
+       20    3.499       20    3.499   AO222x2_ASAP7_75t_R
+       73    9.579       72    9.448   AO22x1_ASAP7_75t_R
+       55    12.83       54   12.597   AO31x2_ASAP7_75t_R
+       83    9.681       81    9.448   AO32x1_ASAP7_75t_R
+       42    7.348       41    7.173   AOI211x1_ASAP7_75t_R
+      138   16.096      133   15.513   AOI21x1_ASAP7_75t_R
+        9    1.837        9    1.837   AOI221x1_ASAP7_75t_R
+       24    3.499       24    3.499   AOI22x1_ASAP7_75t_R
+      768  201.554        -        -   BUFx12f_ASAP7_75t_R
+      175   12.758      168   12.247   BUFx2_ASAP7_75t_R
+        1    0.087        -        -   BUFx3_ASAP7_75t_R
+        1    0.117        -        -   BUFx4f_ASAP7_75t_R
+     2308  336.506        -        -   BUFx6f_ASAP7_75t_R
+     6080 1.77E+03     3008  877.133   DFFHQNx1_ASAP7_75t_R
+      192   55.987      192   55.987   DFFLQNx1_ASAP7_75t_R
+     1257   54.981     1235   54.019   INVx1_ASAP7_75t_R
+     3840  279.936        -        -   INVx3_ASAP7_75t_R
+     1536  134.369        -        -   INVx4_ASAP7_75t_R
+      768   78.382        -        -   INVx5_ASAP7_75t_R
+     1703  223.468     1703  223.468   MAJx2_ASAP7_75t_R
+      318   27.819      308   26.944   NAND2x1_ASAP7_75t_R
+       25     4.01       25     4.01   NAND3x1_ASAP7_75t_R
+      402   35.167      388   33.942   NOR2x1_ASAP7_75t_R
+     1537  224.095        -        -   NOR2x2_ASAP7_75t_R
+       33    5.293       30    4.811   NOR3x1_ASAP7_75t_R
+      262    30.56      249   29.043   OA211x2_ASAP7_75t_R
+      587   59.909      560   57.154   OA21x2_ASAP7_75t_R
+       19    4.432       18    4.199   OA221x2_ASAP7_75t_R
+       26    4.549       25    4.374   OA222x2_ASAP7_75t_R
+       93   13.559       91   13.268   OA22x2_ASAP7_75t_R
+       79   17.277       79   17.277   OA31x2_ASAP7_75t_R
+        5    0.729        5    0.729   OA33x2_ASAP7_75t_R
+      166   19.362      159   18.546   OAI21x1_ASAP7_75t_R
+       32    4.666       29    4.228   OAI22x1_ASAP7_75t_R
+      810   70.859      799   69.897   OR2x2_ASAP7_75t_R
+        2    0.233        -        -   OR2x4_ASAP7_75t_R
+     1153  100.864     1138   99.552   OR3x1_ASAP7_75t_R
+        1    0.131        -        -   OR3x4_ASAP7_75t_R
+     1844  188.199     1841  187.892   OR4x1_ASAP7_75t_R
+        2    0.233        -        -   OR4x2_ASAP7_75t_R
+      931  108.592      929  108.359   OR5x1_ASAP7_75t_R
+        6     1.05        -        -   XNOR2x1_ASAP7_75t_R
+     2556  409.931     2546  408.327   XNOR2x2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+     1657   265.75     1651  264.787   XOR2x2_ASAP7_75t_R
+      818 3.52E+03      818        - submodules
+      768 2.37E+03      768        -   ot_s81engf_dec4
+       48 1.12E+03       48        -   ot_s81engf_kq64
+        1   14.682        1        -   ot_s81engf_red45_hi
+        1   13.938        1        -   ot_s81engf_red45_lo
+
+   Chip area for module '\ot_s81eng_hash_group5_n32': 6338.450880
+     of which used for sequential elements: 1828.915200 (28.85%)
+
+=== ot_s81eng_hash_seed_n32 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+    52916        -    38928        - wires
+    87006        -    39762        - wire bits
+    32313        -    24725        - public wires
+    66403        -    25559        - public wire bits
+     2471        -        3        - ports
+    36561        -      837        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+    51213 5.95E+03    16269 2.23E+03 cells
+    17717 1.55E+03      309   27.031   AND2x2_ASAP7_75t_R
+     1580  138.218      172   15.047   AND3x1_ASAP7_75t_R
+     6144  627.057        -        -   AND3x2_ASAP7_75t_R
+       62    6.328       62    6.328   AND4x1_ASAP7_75t_R
+       17    1.983       17    1.983   AND5x1_ASAP7_75t_R
+       36    8.398       36    8.398   AO211x2_ASAP7_75t_R
+      307   26.856      307   26.856   AO21x1_ASAP7_75t_R
+       44    6.415       44    6.415   AO221x1_ASAP7_75t_R
+        5    0.875        5    0.875   AO222x2_ASAP7_75t_R
+       32    4.199       32    4.199   AO22x1_ASAP7_75t_R
+       17    3.966       17    3.966   AO31x2_ASAP7_75t_R
+       15     1.75       15     1.75   AO32x1_ASAP7_75t_R
+       28    4.899       28    4.899   AOI211x1_ASAP7_75t_R
+       86   10.031       86   10.031   AOI21x1_ASAP7_75t_R
+       11    2.245       11    2.245   AOI221x1_ASAP7_75t_R
+       15    2.187       15    2.187   AOI22x1_ASAP7_75t_R
+      512  134.369        -        -   BUFx12f_ASAP7_75t_R
+      156   11.372      156   11.372   BUFx2_ASAP7_75t_R
+        3    0.262        3    0.262   BUFx3_ASAP7_75t_R
+     4673 1.36E+03     2497  728.125   DFFHQNx1_ASAP7_75t_R
+      768  223.949        -        -   DFFLQNx1_ASAP7_75t_R
+     1155    50.52     1155    50.52   INVx1_ASAP7_75t_R
+     2688  156.764        -        -   INVx2_ASAP7_75t_R
+     3072  223.949        -        -   INVx3_ASAP7_75t_R
+      719   94.347      719   94.347   MAJx2_ASAP7_75t_R
+      230    20.12      230    20.12   NAND2x1_ASAP7_75t_R
+       35    5.613       35    5.613   NAND3x1_ASAP7_75t_R
+      149   13.035      149   13.035   NOR2x1_ASAP7_75t_R
+      128   18.662        -        -   NOR2x2_ASAP7_75t_R
+       36    5.774       36    5.774   NOR3x1_ASAP7_75t_R
+      141   16.446      141   16.446   OA211x2_ASAP7_75t_R
+      295   30.108      295   30.108   OA21x2_ASAP7_75t_R
+       10    2.333       10    2.333   OA221x2_ASAP7_75t_R
+       10     1.75       10     1.75   OA222x2_ASAP7_75t_R
+       37    5.395       37    5.395   OA22x2_ASAP7_75t_R
+      120   26.244      120   26.244   OA31x2_ASAP7_75t_R
+        4    0.583        4    0.583   OA33x2_ASAP7_75t_R
+       95   11.081       95   11.081   OAI21x1_ASAP7_75t_R
+       10    1.458       10    1.458   OAI22x1_ASAP7_75t_R
+      430   37.616      430   37.616   OR2x2_ASAP7_75t_R
+     1907  166.824     1267  110.837   OR3x1_ASAP7_75t_R
+     4265  435.286     4265  435.286   OR4x1_ASAP7_75t_R
+     1261  147.083     1261  147.083   OR5x1_ASAP7_75t_R
+        1    0.044        1    0.044   TIELOx1_ASAP7_75t_R
+        7    1.225        7    1.225   XNOR2x1_ASAP7_75t_R
+     1519  243.617     1519  243.617   XNOR2x2_ASAP7_75t_R
+      661  106.011      661  106.011   XOR2x2_ASAP7_75t_R
+      524 3.72E+03      524        - submodules
+      128  692.375      128        -   ot_s81engf_dec5
+      256  1955.82      256        -   ot_s81engf_dec6
+      128  793.152      128        -   ot_s81engf_kq17
+       12  279.936       12        -   ot_s81engf_kqn64
+
+   Chip area for module '\ot_s81eng_hash_seed_n32': 5949.777240
+     of which used for sequential elements: 1586.595600 (26.67%)
+
+=== ot_s81engf_dec3 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+        6        -        6        - wires
+       15        -       15        - wire bits
+        2        -        2        - public wires
+       11        -       11        - public wire bits
+        2        -        2        - ports
+       11        -       11        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       12    1.021       12    1.021 cells
+        1    0.087        1    0.087   AND3x1_ASAP7_75t_R
+        6    0.612        6    0.612   AND3x2_ASAP7_75t_R
+        4    0.233        4    0.233   INVx2_ASAP7_75t_R
+        1    0.087        1    0.087   OR3x1_ASAP7_75t_R
+
+   Chip area for module '\ot_s81engf_dec3': 1.020600
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_s81engf_dec4 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       12        -       12        - wires
+       30        -       30        - wire bits
+        2        -        2        - public wires
+       20        -       20        - public wire bits
+        2        -        2        - ports
+       20        -       20        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       26    3.091       26    3.091 cells
+        1    0.087        1    0.087   AND2x2_ASAP7_75t_R
+        6    0.612        6    0.612   AND3x2_ASAP7_75t_R
+        9     1.05        9     1.05   AND4x2_ASAP7_75t_R
+        1    0.262        1    0.262   BUFx12f_ASAP7_75t_R
+        3    0.437        3    0.437   BUFx6f_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        2    0.175        2    0.175   INVx4_ASAP7_75t_R
+        1    0.102        1    0.102   INVx5_ASAP7_75t_R
+        2    0.292        2    0.292   NOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_s81engf_dec4': 3.090960
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_s81engf_dec5 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       23        -       17        - wires
+       67        -       52        - wire bits
+       12        -       10        - public wires
+       56        -       45        - public wire bits
+        4        -        2        - ports
+       48        -       37        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       51    5.409       39    4.389 cells
+        8      0.7        8      0.7   AND2x2_ASAP7_75t_R
+        7    0.612        6    0.525   AND3x1_ASAP7_75t_R
+       24    2.449       18    1.837   AND3x2_ASAP7_75t_R
+        4     1.05        4     1.05   BUFx12f_ASAP7_75t_R
+        5    0.292        1    0.058   INVx2_ASAP7_75t_R
+        1    0.073        1    0.073   INVx3_ASAP7_75t_R
+        1    0.146        1    0.146   NOR2x2_ASAP7_75t_R
+        1    0.087        -        -   OR3x1_ASAP7_75t_R
+        1    1.021        1        - submodules
+        1    1.021        1        -   ot_s81engf_dec3
+
+   Chip area for module '\ot_s81engf_dec5': 5.409180
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_s81engf_dec6 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       30        -       18        - wires
+      116        -       86        - wire bits
+       22        -       18        - public wires
+      108        -       86        - public wire bits
+        6        -        2        - ports
+       92        -       70        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       88     7.64       64    5.599 cells
+       64    5.599       64    5.599   AND2x2_ASAP7_75t_R
+        2    0.175        -        -   AND3x1_ASAP7_75t_R
+       12    1.225        -        -   AND3x2_ASAP7_75t_R
+        8    0.467        -        -   INVx2_ASAP7_75t_R
+        2    0.175        -        -   OR3x1_ASAP7_75t_R
+        2    2.041        2        - submodules
+        2    2.041        2        -   ot_s81engf_dec3
+
+   Chip area for module '\ot_s81engf_dec6': 7.639920
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_s81engf_kq17 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       20        -       20        - wires
+       52        -       52        - wire bits
+        3        -        3        - public wires
+       35        -       35        - public wire bits
+        3        -        3        - ports
+       35        -       35        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+       34    6.196       34    6.196 cells
+       17    4.957       17    4.957   DFFHQNx1_ASAP7_75t_R
+       17    1.239       17    1.239   INVx3_ASAP7_75t_R
+
+   Chip area for module '\ot_s81engf_kq17': 6.196500
+     of which used for sequential elements: 4.957200 (80.00%)
+
+=== ot_s81engf_kq64 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       67        -       67        - wires
+      193        -      193        - wire bits
+        3        -        3        - public wires
+      129        -      129        - public wire bits
+        3        -        3        - ports
+      129        -      129        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+      128   23.328      128   23.328 cells
+       64   18.662       64   18.662   DFFHQNx1_ASAP7_75t_R
+       64    4.666       64    4.666   INVx3_ASAP7_75t_R
+
+   Chip area for module '\ot_s81engf_kq64': 23.328000
+     of which used for sequential elements: 18.662400 (80.00%)
+
+=== ot_s81engf_kqn64 ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+       67        -       67        - wires
+      193        -      193        - wire bits
+        3        -        3        - public wires
+      129        -      129        - public wire bits
+        3        -        3        - ports
+      129        -      129        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+      128   23.328      128   23.328 cells
+       64   18.662       64   18.662   DFFLQNx1_ASAP7_75t_R
+       64    4.666       64    4.666   INVx3_ASAP7_75t_R
+
+   Chip area for module '\ot_s81engf_kqn64': 23.328000
+     of which used for sequential elements: 18.662400 (80.00%)
+
+=== ot_s81engf_red45_hi ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+      130        -      130        - wires
+      167        -      167        - wire bits
+        2        -        2        - public wires
+       39        -       39        - public wire bits
+        2        -        2        - ports
+       39        -       39        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+      140   14.682      140   14.682 cells
+        4     0.35        4     0.35   AND2x2_ASAP7_75t_R
+       10    0.875       10    0.875   AND3x1_ASAP7_75t_R
+        8    0.816        8    0.816   AND4x1_ASAP7_75t_R
+        3     0.35        3     0.35   AND5x1_ASAP7_75t_R
+       14    1.225       14    1.225   AO21x1_ASAP7_75t_R
+        2    0.292        2    0.292   AO221x1_ASAP7_75t_R
+        1    0.233        1    0.233   AO31x2_ASAP7_75t_R
+        2    0.233        2    0.233   AOI21x1_ASAP7_75t_R
+        7     0.51        7     0.51   BUFx2_ASAP7_75t_R
+        1    0.146        1    0.146   BUFx6f_ASAP7_75t_R
+        7    0.306        7    0.306   INVx1_ASAP7_75t_R
+        4     0.35        4     0.35   NAND2x1_ASAP7_75t_R
+        7    0.612        7    0.612   NOR2x1_ASAP7_75t_R
+        2    0.321        2    0.321   NOR3x1_ASAP7_75t_R
+       11    1.283       11    1.283   OA211x2_ASAP7_75t_R
+       15    1.531       15    1.531   OA21x2_ASAP7_75t_R
+        1    0.233        1    0.233   OA221x2_ASAP7_75t_R
+        2    0.292        2    0.292   OA22x2_ASAP7_75t_R
+        4    0.467        4    0.467   OAI21x1_ASAP7_75t_R
+        2    0.292        2    0.292   OAI22x1_ASAP7_75t_R
+        8      0.7        8      0.7   OR2x2_ASAP7_75t_R
+        2    0.233        2    0.233   OR2x4_ASAP7_75t_R
+        7    0.612        7    0.612   OR3x1_ASAP7_75t_R
+        1    0.102        1    0.102   OR4x1_ASAP7_75t_R
+        2    0.233        2    0.233   OR4x2_ASAP7_75t_R
+        1    0.117        1    0.117   OR5x1_ASAP7_75t_R
+        2     0.35        2     0.35   XNOR2x1_ASAP7_75t_R
+        5    0.802        5    0.802   XNOR2x2_ASAP7_75t_R
+        1    0.175        1    0.175   XOR2x1_ASAP7_75t_R
+        4    0.642        4    0.642   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_s81engf_red45_hi': 14.682060
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== ot_s81engf_red45_lo ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+      126        -      126        - wires
+      163        -      163        - wire bits
+        2        -        2        - public wires
+       39        -       39        - public wire bits
+        2        -        2        - ports
+       39        -       39        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+      136   13.938      136   13.938 cells
+       10    0.875       10    0.875   AND2x2_ASAP7_75t_R
+        7    0.612        7    0.612   AND3x1_ASAP7_75t_R
+        1    0.204        1    0.204   AND3x4_ASAP7_75t_R
+        7    0.714        7    0.714   AND4x1_ASAP7_75t_R
+        1    0.117        1    0.117   AND4x2_ASAP7_75t_R
+        3     0.35        3     0.35   AND5x1_ASAP7_75t_R
+       15    1.312       15    1.312   AO21x1_ASAP7_75t_R
+        3    0.437        3    0.437   AO221x1_ASAP7_75t_R
+        2    0.321        2    0.321   AO221x2_ASAP7_75t_R
+        1    0.131        1    0.131   AO22x1_ASAP7_75t_R
+        2    0.233        2    0.233   AO32x1_ASAP7_75t_R
+        1    0.175        1    0.175   AOI211x1_ASAP7_75t_R
+        3     0.35        3     0.35   AOI21x1_ASAP7_75t_R
+        1    0.087        1    0.087   BUFx3_ASAP7_75t_R
+        1    0.117        1    0.117   BUFx4f_ASAP7_75t_R
+        3    0.437        3    0.437   BUFx6f_ASAP7_75t_R
+       15    0.656       15    0.656   INVx1_ASAP7_75t_R
+        6    0.525        6    0.525   NAND2x1_ASAP7_75t_R
+        7    0.612        7    0.612   NOR2x1_ASAP7_75t_R
+        1    0.146        1    0.146   NOR2x2_ASAP7_75t_R
+        1     0.16        1     0.16   NOR3x1_ASAP7_75t_R
+        2    0.233        2    0.233   OA211x2_ASAP7_75t_R
+       12    1.225       12    1.225   OA21x2_ASAP7_75t_R
+        1    0.175        1    0.175   OA222x2_ASAP7_75t_R
+        3     0.35        3     0.35   OAI21x1_ASAP7_75t_R
+        1    0.146        1    0.146   OAI22x1_ASAP7_75t_R
+        3    0.262        3    0.262   OR2x2_ASAP7_75t_R
+        8      0.7        8      0.7   OR3x1_ASAP7_75t_R
+        1    0.131        1    0.131   OR3x4_ASAP7_75t_R
+        2    0.204        2    0.204   OR4x1_ASAP7_75t_R
+        1    0.117        1    0.117   OR5x1_ASAP7_75t_R
+        4      0.7        4      0.7   XNOR2x1_ASAP7_75t_R
+        5    0.802        5    0.802   XNOR2x2_ASAP7_75t_R
+        2    0.321        2    0.321   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_s81engf_red45_lo': 13.938480
+     of which used for sequential elements: 0.000000 (0.00%)
+
+=== design hierarchy ===
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+   347485 5.88E+04    18950 1.45E+04 dsfd_engram_lkp_ra640
+       18     2.26       18     2.26 $paramod\ot_s81eng_accept_ids\W=s32'00000000000000000000000000000100
+       70    9.054       70    9.054 $paramod\ot_s81eng_accept_ids\W=s32'00000000000000000000000000010000
+       69    7.815       69    7.815 $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000000
+       67     7.64       67     7.64 $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000001
+       67     7.64       67     7.64 $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000010
+       68    7.684       68    7.684 $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000011
+       67     7.64       67     7.64 $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000100
+       68    7.684       68    7.684 $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000101
+        2    0.365        2    0.365 $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000001
+        4    0.729        4    0.729 $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000010
+        6    1.094        6    1.094 $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000011
+        8    1.458        8    1.458 $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000100
+       12    2.187       12    2.187 $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000110
+       16    2.916       16    2.916 $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000001000
+        3    0.496        3    0.496 $paramod\ot_s81eng_kqr\W=s32'00000000000000000000000000000001
+    45627 6.32E+03    19515 2.82E+03 ot_s81eng_hash_group0_n32
+       26    3.091       26    3.091   ot_s81engf_dec4
+      128   23.328      128   23.328   ot_s81engf_kq64
+    46340 6.39E+03    20228  2.9E+03 ot_s81eng_hash_group1_n32
+       26    3.091       26    3.091   ot_s81engf_dec4
+      128   23.328      128   23.328   ot_s81engf_kq64
+    45711 6.33E+03    19599   2832.5 ot_s81eng_hash_group2_n32
+       26    3.091       26    3.091   ot_s81engf_dec4
+      128   23.328      128   23.328   ot_s81engf_kq64
+    46039 6.35E+03    19927 2.85E+03 ot_s81eng_hash_group3_n32
+       26    3.091       26    3.091   ot_s81engf_dec4
+      128   23.328      128   23.328   ot_s81engf_kq64
+    46258 6.38E+03    20146 2.89E+03 ot_s81eng_hash_group4_n32
+       26    3.091       26    3.091   ot_s81engf_dec4
+      128   23.328      128   23.328   ot_s81engf_kq64
+    45832 6.34E+03    19444 2.82E+03 ot_s81eng_hash_group5_n32
+       26    3.091       26    3.091   ot_s81engf_dec4
+      128   23.328      128   23.328   ot_s81engf_kq64
+      140   14.682      140   14.682   ot_s81engf_red45_hi
+      136   13.938      136   13.938   ot_s81engf_red45_lo
+    51213 5.95E+03    16269 2.23E+03 ot_s81eng_hash_seed_n32
+       51    5.409       39    4.389   ot_s81engf_dec5
+       12    1.021       12    1.021     ot_s81engf_dec3
+       88     7.64       64    5.599   ot_s81engf_dec6
+       12    1.021       12    1.021     ot_s81engf_dec3
+       34    6.196       34    6.196   ot_s81engf_kq17
+      128   23.328      128   23.328   ot_s81engf_kqn64
+
+        +----------------------------Count including submodules.
+        |        +-------------------Area including submodules.
+        |        |        +----------Local count, excluding submodules.
+        |        |        |        +-Local area, excluding submodules.
+        |        |        |        | 
+   361282        -    21851        - wires
+   517772        -    22493        - wire bits
+   145102        -     5577        - public wires
+   301592        -     6219        - public wire bits
+    13349        -       29        - ports
+   169839        -      671        - port bits
+        -        -        -        - memories
+        -        -        -        - memory bits
+        -        -        -        - processes
+   347485 5.88E+04    18950 1.45E+04 cells
+    26460 2.31E+03      770    67.36   AND2x2_ASAP7_75t_R
+        1    0.146        -        -   AND2x4_ASAP7_75t_R
+     3687  322.539       76    6.648   AND3x1_ASAP7_75t_R
+    33793 3.45E+03        -        -   AND3x2_ASAP7_75t_R
+        1    0.204        -        -   AND3x4_ASAP7_75t_R
+      610   62.257       31    3.164   AND4x1_ASAP7_75t_R
+    41473 4.84E+03        -        -   AND4x2_ASAP7_75t_R
+      124   14.463       11    1.283   AND5x1_ASAP7_75t_R
+      163   38.025        3      0.7   AO211x2_ASAP7_75t_R
+     6212  543.426      795   69.547   AO21x1_ASAP7_75t_R
+       53    5.409        -        -   AO21x2_ASAP7_75t_R
+      840  122.472       21    3.062   AO221x1_ASAP7_75t_R
+        5    0.802        -        -   AO221x2_ASAP7_75t_R
+      181   31.668        3    0.525   AO222x2_ASAP7_75t_R
+     1189  156.021      672    88.18   AO22x1_ASAP7_75t_R
+        2    0.292        -        -   AO22x2_ASAP7_75t_R
+      279   65.085       12    2.799   AO31x2_ASAP7_75t_R
+      482    56.22        9     1.05   AO32x1_ASAP7_75t_R
+        9    1.312        -        -   AO33x2_ASAP7_75t_R
+      252    44.09        8      1.4   AOI211x1_ASAP7_75t_R
+     1149  134.019      189   22.045   AOI21x1_ASAP7_75t_R
+      123   25.107        4    0.816   AOI221x1_ASAP7_75t_R
+      159   23.182        7    1.021   AOI22x1_ASAP7_75t_R
+     5120 1.34E+03        -        -   BUFx12f_ASAP7_75t_R
+     1865  135.959      573   41.772   BUFx2_ASAP7_75t_R
+       51    4.461       31    2.712   BUFx3_ASAP7_75t_R
+       15     1.75        7    0.816   BUFx4f_ASAP7_75t_R
+    13851 2.02E+03        8    1.166   BUFx6f_ASAP7_75t_R
+      170   64.444      111   42.078   DFFASRHQNx1_ASAP7_75t_R
+    46514 1.36E+04     4925  1436.13   DFFHQNx1_ASAP7_75t_R
+     1988  579.701       68   19.829   DFFLQNx1_ASAP7_75t_R
+    13302  581.829     4572  199.979   INVx1_ASAP7_75t_R
+     2693  157.056        -        -   INVx2_ASAP7_75t_R
+    26494 1.93E+03        -        -   INVx3_ASAP7_75t_R
+     9220  806.566        -        -   INVx4_ASAP7_75t_R
+     4608  470.292        -        -   INVx5_ASAP7_75t_R
+    10493 1.38E+03      155   20.339   MAJx2_ASAP7_75t_R
+        1    0.146        -        -   MAJx3_ASAP7_75t_R
+     2796  244.594      625   54.675   NAND2x1_ASAP7_75t_R
+        4    0.583        -        -   NAND2x2_ASAP7_75t_R
+      199   31.916       10    1.604   NAND3x1_ASAP7_75t_R
+     2861   250.28       66    5.774   NOR2x1_ASAP7_75t_R
+     9345 1.36E+03        -        -   NOR2x2_ASAP7_75t_R
+      247   39.614        5    0.802   NOR3x1_ASAP7_75t_R
+     2458  286.701      700   81.648   OA211x2_ASAP7_75t_R
+     4566  466.006      497   50.724   OA21x2_ASAP7_75t_R
+      103   24.028        5    1.166   OA221x2_ASAP7_75t_R
+      145   25.369        5    0.875   OA222x2_ASAP7_75t_R
+      767  111.829       13    1.895   OA22x2_ASAP7_75t_R
+      768  167.962       21    4.593   OA31x2_ASAP7_75t_R
+       66    9.623        3    0.437   OA33x2_ASAP7_75t_R
+     1315  153.382       25    2.916   OAI21x1_ASAP7_75t_R
+      271   39.512        9    1.312   OAI22x1_ASAP7_75t_R
+     5626  492.162      148   12.947   OR2x2_ASAP7_75t_R
+        3     0.35        -        -   OR2x4_ASAP7_75t_R
+     9119   797.73      286   25.019   OR3x1_ASAP7_75t_R
+        1    0.131        -        -   OR3x4_ASAP7_75t_R
+    15432  1574.99       70    7.144   OR4x1_ASAP7_75t_R
+       13    1.516        -        -   OR4x2_ASAP7_75t_R
+     6988   815.08      166   19.362   OR5x1_ASAP7_75t_R
+        6    0.787        -        -   OR5x2_ASAP7_75t_R
+       60    2.624        1    0.044   TIEHIx1_ASAP7_75t_R
+        2    0.087        1    0.044   TIELOx1_ASAP7_75t_R
+      106   18.546       85   14.872   XNOR2x1_ASAP7_75t_R
+    19473  3123.08     2616  419.554   XNOR2x2_ASAP7_75t_R
+        1    0.175        -        -   XOR2x1_ASAP7_75t_R
+    11109 1.78E+03      529   84.841   XOR2x2_ASAP7_75t_R
+        3 1.17E+04        3 1.17E+04   ot_sram_1r1w_128x256_m1_r2c2
+      221 4.43E+04      221        - submodules
+        1     2.26        1        -   $paramod\ot_s81eng_accept_ids\W=s32'00000000000000000000000000000100
+        4   36.217        4        -   $paramod\ot_s81eng_accept_ids\W=s32'00000000000000000000000000010000
+        1    7.815        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000000
+        1     7.64        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000001
+        1     7.64        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000010
+        1    7.684        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000011
+        1     7.64        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000100
+        1    7.684        1        -   $paramod\ot_s81eng_accept_seen\BANK=s32'00000000000000000000000000000101
+       72   26.244       72        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000001
+       46   33.534       46        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000010
+        5    5.468        5        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000011
+        6    8.748        6        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000100
+        3    6.561        3        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000000110
+       12   34.992       12        -   $paramod\ot_s81eng_kq\W=s32'00000000000000000000000000001000
+       59   29.247       59        -   $paramod\ot_s81eng_kqr\W=s32'00000000000000000000000000000001
+        1 6.32E+03        1        -   ot_s81eng_hash_group0_n32
+        1 6.39E+03        1        -   ot_s81eng_hash_group1_n32
+        1 6.33E+03        1        -   ot_s81eng_hash_group2_n32
+        1 6.35E+03        1        -   ot_s81eng_hash_group3_n32
+        1 6.38E+03        1        -   ot_s81eng_hash_group4_n32
+        1 6.34E+03        1        -   ot_s81eng_hash_group5_n32
+        1 5.95E+03        1        -   ot_s81eng_hash_seed_n32
+
+   Chip area for top module '\dsfd_engram_lkp_ra640': 58789.319400
+     of which used for sequential elements: 14207.626800 (24.17%)
+
