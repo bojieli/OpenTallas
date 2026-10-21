@@ -1,5 +1,5 @@
 {
- "name": "hbm_pdie_ucie_col-ucie2-COMMIT",
+ "name": "hbm_pdie_ucie_col-ucie2-3cada0d98",
  "block": "ot_pdie_ucie_col",
  "ref_tile": true,
  "owner": "Claude:HBM-UCIE8",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/hbm-ucie8-1020",
-  "commit": "COMMIT",
+  "commit": "3cada0d98ded56a5be505fb44803418a4fd4b956",
   "extra_paths": [
    "rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col_record.json",
    "rtl/dsrom_sys/s81_link/ucie/lp/tb_ot_pdie_ucie_col.sv",
@@ -176,7 +176,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_pdie_ucie_col/hbm_pdie_ucie_col-ucie2-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_pdie_ucie_col/hbm_pdie_ucie_col-ucie2-3cada0d98"
   }
  ],
  "cycles_added": 0,
