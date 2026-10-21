@@ -180,6 +180,32 @@ def ahub_check(stages, target, pv_lead=0):
     return out + ([f'FR_OFS {fr} != {target["FR_OFS"]}'] if fr != int(target['FR_OFS']) else [])
 
 
+def ahub_post_solve(ages, target, pv_lead=0):
+    """KV-AHUB10 10-20: the pads that close a FIXED-offset hub on the POST-STATION die (i13b: the generator pads are relay
+    STAGES, but the ap words ride forwarded half-cycle lanes (age E + 1, E = ceil((n - 1) / 2) + 1: a pad stage adds
+    ~1/2 edge) and kv_lane_stations / PVFIN_ALIGN add stages after the generator pass -> AP_OFS -39.. / FR -6 vs the a7
+    hub's -36.. / -7).  ages = core-edge ages {ks_ahs, ks_ahfr, ks_pvfst, ap_<st>} of the actual netlist; every pad is
+    one plain registered relay at the SINK end (receiving root, after any landing) = exactly one edge.  Returns
+    {bid: pads >= 0} such that ahub_check(ages + pads) == [].  FAILS CLOSED (ValueError) when FR could only close by
+    padding ks_pvfst (that would tear the PVFIN start alignment with the PV streams)."""
+    dh = int(ages['ks_ahs'])
+    h = max([0] + [int(ages[f'ap_{s}']) - int(t) + 2 - dh for s, t in zip(AHUB_STACKS, target['AP_OFS'])])
+    pads = dict(ks_ahs=h)
+    for s, t in zip(AHUB_STACKS, target['AP_OFS']):
+        pads[f'ap_{s}'] = int(t) - 2 + dh + h - int(ages[f'ap_{s}'])
+    fr = int(ages['ks_pvfst']) - pv_lead - int(ages['ks_ahfr']) - (dh + h) - 1
+    f = fr - int(target['FR_OFS'])
+    if f < 0:
+        raise ValueError(f'kv_bundle_eq: AHUB_PAD_POST: FR_OFS {fr} < hub {target["FR_OFS"]} after ap pads (ks_ahs +{h}): only '
+                         f'a ks_pvfst pad of {-f} closes it, which tears PVFIN_ALIGN -> re-plan (shorter ks_ahs / ks_ahfr)')
+    pads['ks_ahfr'] = f
+    after = {k: int(v) + pads.get(k, 0) for k, v in ages.items()}
+    miss = ahub_check(after, target, pv_lead)
+    if miss or any(v < 0 for v in pads.values()):
+        raise ValueError(f'kv_bundle_eq: AHUB_PAD_POST solver inconsistent: {miss} pads {pads}')
+    return pads
+
+
 # ----------------------------------------------------------------------------------------------- table form
 def _chain_buses(T, si, port, di):
     return [b for p in CHAIN_PORTS.get((si, port), (port,)) for b in T.match(src_inst=si, src_port=p, dst_inst=di)]
