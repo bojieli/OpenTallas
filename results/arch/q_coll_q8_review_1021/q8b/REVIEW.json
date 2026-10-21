@@ -1,0 +1,72 @@
+{
+  "verdict": "FAIL",
+  "start_commit": "a153761f95cee63943c1c363ec80ccc9c4344b8a",
+  "source_snapshot_manifest_sha256": "672004208006cb6f2a81e461e6a9b5dad1ec9ad05074ed6839e6121c677cab71",
+  "source_snapshot_archive_sha256": "eae17fce3e9ce5f0e54fb59e8e0ef445776482db8fed88e676bb0d209166f667",
+  "geometry_kit_files": {
+    "physical/ref_tile/qfd_coll_split_q8b/README.md": "ec5bcd5abf4c8d8afe66bc5d538c982c22aa7a9a9b3904b6a2c98e2db56a3f05",
+    "physical/ref_tile/qfd_coll_split_q8b/clock.sdc": "a9798641940f0e854692e09f5f769451d3945185db9085681ba67b8423fed660",
+    "physical/ref_tile/qfd_coll_split_q8b/floorplan.json": "05a82cf309e2faea93f61456c5fe8b46103aab838244de12d77c6fefe1d44cc8",
+    "physical/ref_tile/qfd_coll_split_q8b/job.json": "299a0452b9ce933806e475976b5a851c1906824863e0500eb743ed300c20fd0f",
+    "physical/ref_tile/qfd_coll_split_q8b/kit.env": "32c7e8303f6109e881d9705c6aeff6e5cf10f232d0d927a3fd969f52b6895b9a",
+    "physical/ref_tile/qfd_coll_split_q8b/native_release_tie.tcl": "3cf770d33a324cfadf96066c879993b10b235f24636622f92a61de2df3f7b669",
+    "physical/ref_tile/qfd_coll_split_q8b/pdn.tcl": "b8bcf148ebc9a2fc859134e33787b33a906bcef1d0834820ee0570ce03fb3afa",
+    "physical/ref_tile/qfd_coll_split_q8b/pin_regs.json": "92610250ca40a893a16acbbbebe599a28f7fa72c6addb9bc9f27af413437e56b",
+    "physical/ref_tile/qfd_coll_split_q8b/place.tcl": "a160e5282ea2265d017cc7fd69b4adaf9012b4b1ea2c477fa035a0562d7e5186",
+    "physical/ref_tile/qfd_coll_split_q8b/post_cts.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/qfd_coll_split_q8b/post_drt.tcl": "d641c00636794807858c84bf3efe129e33ce4001757e653618397e6c461b8238",
+    "physical/ref_tile/qfd_coll_split_q8b/post_fill.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/qfd_coll_split_q8b/post_grt.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
+    "physical/ref_tile/qfd_coll_split_q8b/pre_cts.tcl": "4721e28c15de31068bc9b552e7be2254487093362d3f40c2b0493fd91be43bff",
+    "physical/ref_tile/qfd_coll_split_q8b/pre_dpl.tcl": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+    "physical/ref_tile/qfd_coll_split_q8b/pre_drt.tcl": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+    "physical/ref_tile/qfd_coll_split_q8b/pre_fill.tcl": "121e31c5bfdbe81c5490bc3614957163714fce04f56c62d942b174cd321eacae",
+    "physical/ref_tile/qfd_coll_split_q8b/pre_gpl.tcl": "dd3826a9cef1b7e6ae40218786f1fd0bf3860e02837763ec2f8559cb2b1f76f1",
+    "physical/ref_tile/qfd_coll_split_q8b/pre_grt.tcl": "96bd1f80dfc8803a9d6e392004ae8a911f97bc7c1639ec5dac57ef1ee0c3c469",
+    "physical/ref_tile/qfd_coll_split_q8b/reset_landing.json": "9711441446cbf6cc50144d0937ca0ea4ebb1bb3492849f09ebbc6cc4b2ec6edb",
+    "physical/ref_tile/qfd_coll_split_q8b/signoff.sdc": "20f4cc21619721fc4c856c6818cdd0fcc66499ee573b6137abeb85e30132fa4b",
+    "physical/ref_tile/qfd_coll_split_q8b/spec.json": "cd970cb9beb206af8cbf914e7ad03d95f9c7047d46f7bf59480ba983d6ad47d6",
+    "physical/ref_tile/qfd_coll_split_q8b/spine_ins.tcl": "7f09dba08032c22035f152c98322a9bcf437fae547db0e380e8d807d08355bed"
+  },
+  "geometry_sha256": "2406589cf21d8034c0529b343d7e12291241175a9cff40cbc0461a714005a9a5",
+  "geometry_hash_rule": "SHA256 canonical sorted compact JSON of relative path\u2192SHA256, same q8a rule",
+  "all_kit_geometry_hashes_match_original_snapshot": true,
+  "gate_result_sha256": "425675c8ac8d0ca98945b84e7eddc827cb02eb7d3c2884d9d4c8351215de520b",
+  "images": {
+    "floorplan.png": "6fb6a0ac37ebe0d7e63ffeac5f394ca36baf65bb16bfc433b46f06e05d756dc3",
+    "density.png": "edd33147518fbdaa022204718123684581ad110be79a63829869aeafbb0645e6"
+  },
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_coll_split_q8b-20261021-133920",
+  "failure": "GRT-0183 net10846 boxed in during hold repair; final GATE_GRT_RC=2",
+  "saved_stage": {
+    "remote_relative": "routes/gate/work/orfs/results/asap7/opentallas_ot_coll_split_q_native32_asap7_ref_gate/base/5_1_grt.grt183_resume.odb",
+    "sha256": "563b0e3772fd3f175f3edc0b0786ccc54000530b650909f3e39d003edd5b371f",
+    "bytes": 140046993,
+    "local_readonly_copy": "/home/ubuntu/scratch/q8b-net10846-1021/checkpoint.odb",
+    "hook_shapes_dropped": 30
+  },
+  "original_mapped_source_sha256": "68b2d033b4603e1ce949fe697ea27bbd34b341981884c40f623839033814b1f5",
+  "original_mapped_source_equals_q8a": true,
+  "failed_net_in_original_mapped_source": false,
+  "source_classification": "Unavailable from existing source/log alone: net10846 is absent from the exact original mapped Verilog; actual saved-ODB driver/sink mapping is needed before assigning a functional role. No probe run.",
+  "clock": {
+    "verdict": "REFUSE",
+    "tt_insertion_ps": 591.5,
+    "tt_spread_ps": 115.8,
+    "tt_pin_spread_ps": 90.9,
+    "ff_insertion_ps": 488.7,
+    "ff_spread_ps": 114.3,
+    "ff_pin_spread_ps": 82.5
+  },
+  "failure_timing_ps": {
+    "SS_setup": -74.03,
+    "FF_hold": -130.16
+  },
+  "review": "Personally viewed floorplan+density. Intended alternating macro-group gaps visible; several within-group macros remain abutted. Density has central orange/red hotspots and separate outer-strip hotspots, sparse blue margins. Images do not identify net10846 endpoints/maze frontier and establish no legal path or accepted geometry. Clock REFUSE retained in addition to routing FAIL.",
+  "structural_model_missing": {
+    "q8a": "Actual legal/priced bypass site/route corridor for known cross-SRAM low-fanout SerDes path, including complete transient hook-shape and current occupation obligations; existing snapshot lost30 transient shapes. No guessed channel width or write-copy remedy justified.",
+    "q8b": "Minimum next data: net10846 actual driver/sink ITerms, exact pin shapes/coords, intersecting SRAM/routing OBS/place blocks and stored grid capacities/usage from this immutable saved ODB; map those concrete endpoints back to original mapped source. Existing same read-only recipe can supply once authorized; no new probe launched.",
+    "both": "A structural successor needs the complete affected local segment/end-site graph and actual clock-root/endpoint arrival geometry; q8b complete clock TT115.8/FF114.3ps and pin90.9/82.5ps already exceed80, so routing-only repair would not qualify clock. Saved grid is not final failed maze heap."
+  },
+  "limits": "No reroute, retry, route-presumption, native/source ABI change, extra EDA probe or physical qualification."
+}
