@@ -1,0 +1,11420 @@
+{
+ "schema": "opentallas.gq_wave_source_cut_plan.v1",
+ "kind": "coll4",
+ "contract_sha256": "ac05e98f3e9e37d78c68d7917f55b8e91fd627d8316e795b2763797cb9cad269",
+ "existing_count": 0,
+ "core_seeds": [
+  "calendar_NE",
+  "calendar_NW",
+  "calendar_SE",
+  "calendar_SW",
+  "col_idx",
+  "col_su",
+  "hb_coll_NE",
+  "hb_coll_NW",
+  "hb_coll_SE",
+  "hb_coll_SW",
+  "hb_idx__ctl",
+  "hb_vms_NE",
+  "hb_vms_NW",
+  "hb_vms_SE",
+  "hb_vms_SW",
+  "hcollb_NE",
+  "hcollb_NW",
+  "hcollb_SE",
+  "hcollb_SW",
+  "hcollgi_NE",
+  "hcollgi_NW",
+  "hcollgi_SE",
+  "hcollgi_SW",
+  "hcollgl_NE",
+  "hcollgl_NW",
+  "hcollgl_SE",
+  "hcollgl_SW",
+  "hcollks_NE",
+  "hcollks_NW",
+  "hcollks_SE",
+  "hcollks_SW",
+  "hcollrs_NE",
+  "hcollrs_NW",
+  "hcollrs_SE",
+  "hcollrs_SW",
+  "hleaf_NE",
+  "hleaf_NW",
+  "hleaf_SE",
+  "hleaf_SW",
+  "pgp_NE",
+  "pgp_NW",
+  "pgp_SE",
+  "pgp_SW",
+  "stl_NE",
+  "stl_NW",
+  "stl_SE",
+  "stl_SW",
+  "su_NE0",
+  "su_NE1",
+  "su_NE2",
+  "su_NE3",
+  "su_NW0",
+  "su_NW1",
+  "su_NW2",
+  "su_NW3",
+  "su_SE0",
+  "su_SE1",
+  "su_SE2",
+  "su_SE3",
+  "su_SW0",
+  "su_SW1",
+  "su_SW2",
+  "su_SW3",
+  "su_prog",
+  "subr_NE",
+  "subr_NW",
+  "subr_SE",
+  "subr_SW",
+  "sucore_NE",
+  "sucore_NW",
+  "sucore_SE",
+  "sucore_SW",
+  "vmb_NE0",
+  "vmb_NE1",
+  "vmb_NE2",
+  "vmb_NE3",
+  "vmb_NE4",
+  "vmb_NE5",
+  "vmb_NE6",
+  "vmb_NE7",
+  "vmb_NW0",
+  "vmb_NW1",
+  "vmb_NW2",
+  "vmb_NW3",
+  "vmb_NW4",
+  "vmb_NW5",
+  "vmb_NW6",
+  "vmb_NW7",
+  "vmb_SE0",
+  "vmb_SE1",
+  "vmb_SE2",
+  "vmb_SE3",
+  "vmb_SE4",
+  "vmb_SE5",
+  "vmb_SE6",
+  "vmb_SE7",
+  "vmb_SW0",
+  "vmb_SW1",
+  "vmb_SW2",
+  "vmb_SW3",
+  "vmb_SW4",
+  "vmb_SW5",
+  "vmb_SW6",
+  "vmb_SW7"
+ ],
+ "additive_instances": [
+  "calendar_NE",
+  "calendar_NW",
+  "calendar_SE",
+  "calendar_SW",
+  "col_idx",
+  "col_su",
+  "hb_coll_NE",
+  "hb_coll_NW",
+  "hb_coll_SE",
+  "hb_coll_SW",
+  "hb_idx__ctl",
+  "hb_vms_NE",
+  "hb_vms_NW",
+  "hb_vms_SE",
+  "hb_vms_SW",
+  "hcollb_NE",
+  "hcollb_NW",
+  "hcollb_SE",
+  "hcollb_SW",
+  "hcollgi_NE",
+  "hcollgi_NW",
+  "hcollgi_SE",
+  "hcollgi_SW",
+  "hcollgl_NE",
+  "hcollgl_NW",
+  "hcollgl_SE",
+  "hcollgl_SW",
+  "hcollks_NE",
+  "hcollks_NW",
+  "hcollks_SE",
+  "hcollks_SW",
+  "hcollrs_NE",
+  "hcollrs_NW",
+  "hcollrs_SE",
+  "hcollrs_SW",
+  "hleaf_NE",
+  "hleaf_NW",
+  "hleaf_SE",
+  "hleaf_SW",
+  "l12p_ctl_cq_cr_hb_idx__ctl_cr_0",
+  "l12p_hb_coll_NE_hcollrs_NE_a_rq_0",
+  "l12p_hb_coll_NE_hcollrs_NE_a_rq_102",
+  "l12p_hb_coll_NE_hcollrs_NE_a_rq_34",
+  "l12p_hb_coll_NE_hcollrs_NE_a_rq_68",
+  "l12p_hb_coll_NW_hcollrs_NW_a_rq_0",
+  "l12p_hb_coll_NW_hcollrs_NW_a_rq_102",
+  "l12p_hb_coll_NW_hcollrs_NW_a_rq_34",
+  "l12p_hb_coll_NW_hcollrs_NW_a_rq_68",
+  "l12p_hb_coll_SE_hcollrs_SE_a_rq_0",
+  "l12p_hb_coll_SE_hcollrs_SE_a_rq_102",
+  "l12p_hb_coll_SE_hcollrs_SE_a_rq_34",
+  "l12p_hb_coll_SE_hcollrs_SE_a_rq_68",
+  "l12p_hb_coll_SW_hcollrs_SW_a_rq_0",
+  "l12p_hb_coll_SW_hcollrs_SW_a_rq_102",
+  "l12p_hb_coll_SW_hcollrs_SW_a_rq_34",
+  "l12p_hb_coll_SW_hcollrs_SW_a_rq_68",
+  "l12p_hb_idx__ctl_vm_rq_vmb_SW0_rq4_0",
+  "l12p_hb_idx__ctl_vm_rq_vmb_SW1_rq4_0",
+  "l12p_hb_idx__ctl_vm_rq_vmb_SW2_rq4_0",
+  "l12p_hb_idx__ctl_vm_rq_vmb_SW3_rq4_0",
+  "l12p_hb_idx__ctl_vm_rq_vmb_SW4_rq4_0",
+  "l12p_hb_idx__ctl_vm_rq_vmb_SW5_rq4_0",
+  "l12p_hb_idx__ctl_vm_rq_vmb_SW6_rq4_0",
+  "l12p_hb_idx__ctl_vm_rq_vmb_SW7_rq4_0",
+  "l12p_hcollgi_NE_hcollrs_NE_b_rq_0",
+  "l12p_hcollgi_NE_hcollrs_NE_b_rq_102",
+  "l12p_hcollgi_NE_hcollrs_NE_b_rq_34",
+  "l12p_hcollgi_NE_hcollrs_NE_b_rq_68",
+  "l12p_hcollgi_NW_hcollrs_NW_b_rq_0",
+  "l12p_hcollgi_NW_hcollrs_NW_b_rq_102",
+  "l12p_hcollgi_NW_hcollrs_NW_b_rq_34",
+  "l12p_hcollgi_NW_hcollrs_NW_b_rq_68",
+  "l12p_hcollgi_SE_hcollrs_SE_b_rq_0",
+  "l12p_hcollgi_SE_hcollrs_SE_b_rq_102",
+  "l12p_hcollgi_SE_hcollrs_SE_b_rq_34",
+  "l12p_hcollgi_SE_hcollrs_SE_b_rq_68",
+  "l12p_hcollgi_SW_hcollrs_SW_b_rq_0",
+  "l12p_hcollgi_SW_hcollrs_SW_b_rq_102",
+  "l12p_hcollgi_SW_hcollrs_SW_b_rq_34",
+  "l12p_hcollgi_SW_hcollrs_SW_b_rq_68",
+  "l12p_hcollrs_NE_vm_rq_vmb_NE0_rq3_0",
+  "l12p_hcollrs_NE_vm_rq_vmb_NE1_rq3_0",
+  "l12p_hcollrs_NE_vm_rq_vmb_NE2_rq3_0",
+  "l12p_hcollrs_NE_vm_rq_vmb_NE3_rq3_0",
+  "l12p_hcollrs_NE_vm_rq_vmb_NE4_rq3_0",
+  "l12p_hcollrs_NE_vm_rq_vmb_NE5_rq3_0",
+  "l12p_hcollrs_NE_vm_rq_vmb_NE6_rq3_0",
+  "l12p_hcollrs_NE_vm_rq_vmb_NE7_rq3_0",
+  "l12p_hcollrs_NW_vm_rq_vmb_NW0_rq4_0",
+  "l12p_hcollrs_NW_vm_rq_vmb_NW1_rq4_0",
+  "l12p_hcollrs_NW_vm_rq_vmb_NW2_rq4_0",
+  "l12p_hcollrs_NW_vm_rq_vmb_NW3_rq4_0",
+  "l12p_hcollrs_NW_vm_rq_vmb_NW4_rq4_0",
+  "l12p_hcollrs_NW_vm_rq_vmb_NW5_rq4_0",
+  "l12p_hcollrs_NW_vm_rq_vmb_NW6_rq4_0",
+  "l12p_hcollrs_NW_vm_rq_vmb_NW7_rq4_0",
+  "l12p_hcollrs_SE_vm_rq_vmb_SE0_rq3_0",
+  "l12p_hcollrs_SE_vm_rq_vmb_SE1_rq3_0",
+  "l12p_hcollrs_SE_vm_rq_vmb_SE2_rq3_0",
+  "l12p_hcollrs_SE_vm_rq_vmb_SE3_rq3_0",
+  "l12p_hcollrs_SE_vm_rq_vmb_SE4_rq3_0",
+  "l12p_hcollrs_SE_vm_rq_vmb_SE5_rq3_0",
+  "l12p_hcollrs_SE_vm_rq_vmb_SE6_rq3_0",
+  "l12p_hcollrs_SE_vm_rq_vmb_SE7_rq3_0",
+  "l12p_hcollrs_SW_vm_rq_vmb_SW0_rq3_0",
+  "l12p_hcollrs_SW_vm_rq_vmb_SW1_rq3_0",
+  "l12p_hcollrs_SW_vm_rq_vmb_SW2_rq3_0",
+  "l12p_hcollrs_SW_vm_rq_vmb_SW3_rq3_0",
+  "l12p_hcollrs_SW_vm_rq_vmb_SW4_rq3_0",
+  "l12p_hcollrs_SW_vm_rq_vmb_SW5_rq3_0",
+  "l12p_hcollrs_SW_vm_rq_vmb_SW6_rq3_0",
+  "l12p_hcollrs_SW_vm_rq_vmb_SW7_rq3_0",
+  "l12p_su_NE0_lg_rq_vmb_NE0_rq0_0",
+  "l12p_su_NE0_lg_rq_vmb_NE1_rq0_0",
+  "l12p_su_NE0_lg_w_done_vmb_NE0_wq_done0_0",
+  "l12p_su_NE0_lg_w_done_vmb_NE1_wq_done0_0",
+  "l12p_su_NE1_lg_rq_vmb_NE2_rq0_0",
+  "l12p_su_NE1_lg_rq_vmb_NE3_rq0_0",
+  "l12p_su_NE1_lg_w_done_vmb_NE2_wq_done0_0",
+  "l12p_su_NE1_lg_w_done_vmb_NE3_wq_done0_0",
+  "l12p_su_NE2_lg_rq_vmb_NE4_rq0_0",
+  "l12p_su_NE2_lg_rq_vmb_NE5_rq0_0",
+  "l12p_su_NE2_lg_w_done_vmb_NE4_wq_done0_0",
+  "l12p_su_NE2_lg_w_done_vmb_NE5_wq_done0_0",
+  "l12p_su_NE3_lg_rq_vmb_NE6_rq0_0",
+  "l12p_su_NE3_lg_rq_vmb_NE7_rq0_0",
+  "l12p_su_NE3_lg_w_done_vmb_NE6_wq_done0_0",
+  "l12p_su_NE3_lg_w_done_vmb_NE7_wq_done0_0",
+  "l12p_su_NW0_lg_rq_vmb_NW0_rq0_0",
+  "l12p_su_NW0_lg_rq_vmb_NW1_rq0_0",
+  "l12p_su_NW0_lg_w_done_vmb_NW0_wq_done0_0",
+  "l12p_su_NW0_lg_w_done_vmb_NW1_wq_done0_0",
+  "l12p_su_NW1_lg_rq_vmb_NW2_rq0_0",
+  "l12p_su_NW1_lg_rq_vmb_NW3_rq0_0",
+  "l12p_su_NW1_lg_w_done_vmb_NW2_wq_done0_0",
+  "l12p_su_NW1_lg_w_done_vmb_NW3_wq_done0_0",
+  "l12p_su_NW2_lg_rq_vmb_NW4_rq0_0",
+  "l12p_su_NW2_lg_rq_vmb_NW5_rq0_0",
+  "l12p_su_NW2_lg_w_done_vmb_NW4_wq_done0_0",
+  "l12p_su_NW2_lg_w_done_vmb_NW5_wq_done0_0",
+  "l12p_su_NW3_lg_rq_vmb_NW6_rq0_0",
+  "l12p_su_NW3_lg_rq_vmb_NW7_rq0_0",
+  "l12p_su_NW3_lg_w_done_vmb_NW6_wq_done0_0",
+  "l12p_su_NW3_lg_w_done_vmb_NW7_wq_done0_0",
+  "l12p_su_SE0_lg_rq_vmb_SE0_rq0_0",
+  "l12p_su_SE0_lg_rq_vmb_SE1_rq0_0",
+  "l12p_su_SE0_lg_w_done_vmb_SE0_wq_done0_0",
+  "l12p_su_SE0_lg_w_done_vmb_SE1_wq_done0_0",
+  "l12p_su_SE1_lg_rq_vmb_SE2_rq0_0",
+  "l12p_su_SE1_lg_rq_vmb_SE3_rq0_0",
+  "l12p_su_SE1_lg_w_done_vmb_SE2_wq_done0_0",
+  "l12p_su_SE1_lg_w_done_vmb_SE3_wq_done0_0",
+  "l12p_su_SE2_lg_rq_vmb_SE4_rq0_0",
+  "l12p_su_SE2_lg_rq_vmb_SE5_rq0_0",
+  "l12p_su_SE2_lg_w_done_vmb_SE4_wq_done0_0",
+  "l12p_su_SE2_lg_w_done_vmb_SE5_wq_done0_0",
+  "l12p_su_SE3_lg_rq_vmb_SE6_rq0_0",
+  "l12p_su_SE3_lg_rq_vmb_SE7_rq0_0",
+  "l12p_su_SE3_lg_w_done_vmb_SE6_wq_done0_0",
+  "l12p_su_SE3_lg_w_done_vmb_SE7_wq_done0_0",
+  "l12p_su_SW0_lg_rq_vmb_SW0_rq0_0",
+  "l12p_su_SW0_lg_rq_vmb_SW1_rq0_0",
+  "l12p_su_SW0_lg_w_done_vmb_SW0_wq_done0_0",
+  "l12p_su_SW0_lg_w_done_vmb_SW1_wq_done0_0",
+  "l12p_su_SW1_lg_rq_vmb_SW2_rq0_0",
+  "l12p_su_SW1_lg_rq_vmb_SW3_rq0_0",
+  "l12p_su_SW1_lg_w_done_vmb_SW2_wq_done0_0",
+  "l12p_su_SW1_lg_w_done_vmb_SW3_wq_done0_0",
+  "l12p_su_SW2_lg_rq_vmb_SW4_rq0_0",
+  "l12p_su_SW2_lg_rq_vmb_SW5_rq0_0",
+  "l12p_su_SW2_lg_w_done_vmb_SW4_wq_done0_0",
+  "l12p_su_SW2_lg_w_done_vmb_SW5_wq_done0_0",
+  "l12p_su_SW3_lg_rq_vmb_SW6_rq0_0",
+  "l12p_su_SW3_lg_rq_vmb_SW7_rq0_0",
+  "l12p_su_SW3_lg_w_done_vmb_SW6_wq_done0_0",
+  "l12p_su_SW3_lg_w_done_vmb_SW7_wq_done0_0",
+  "pgp_NE",
+  "pgp_NW",
+  "pgp_SE",
+  "pgp_SW",
+  "stl_NE",
+  "stl_NW",
+  "stl_SE",
+  "stl_SW",
+  "su_NE0",
+  "su_NE1",
+  "su_NE2",
+  "su_NE3",
+  "su_NW0",
+  "su_NW1",
+  "su_NW2",
+  "su_NW3",
+  "su_SE0",
+  "su_SE1",
+  "su_SE2",
+  "su_SE3",
+  "su_SW0",
+  "su_SW1",
+  "su_SW2",
+  "su_SW3",
+  "su_prog",
+  "subr_NE",
+  "subr_NW",
+  "subr_SE",
+  "subr_SW",
+  "sucore_NE",
+  "sucore_NW",
+  "sucore_SE",
+  "sucore_SW",
+  "vmb_NE0",
+  "vmb_NE1",
+  "vmb_NE2",
+  "vmb_NE3",
+  "vmb_NE4",
+  "vmb_NE5",
+  "vmb_NE6",
+  "vmb_NE7",
+  "vmb_NW0",
+  "vmb_NW1",
+  "vmb_NW2",
+  "vmb_NW3",
+  "vmb_NW4",
+  "vmb_NW5",
+  "vmb_NW6",
+  "vmb_NW7",
+  "vmb_SE0",
+  "vmb_SE1",
+  "vmb_SE2",
+  "vmb_SE3",
+  "vmb_SE4",
+  "vmb_SE5",
+  "vmb_SE6",
+  "vmb_SE7",
+  "vmb_SW0",
+  "vmb_SW1",
+  "vmb_SW2",
+  "vmb_SW3",
+  "vmb_SW4",
+  "vmb_SW5",
+  "vmb_SW6",
+  "vmb_SW7"
+ ],
+ "additive_regex": "^(?:calendar_NE|calendar_NW|calendar_SE|calendar_SW|col_idx|col_su|hb_coll_NE|hb_coll_NW|hb_coll_SE|hb_coll_SW|hb_idx__ctl|hb_vms_NE|hb_vms_NW|hb_vms_SE|hb_vms_SW|hcollb_NE|hcollb_NW|hcollb_SE|hcollb_SW|hcollgi_NE|hcollgi_NW|hcollgi_SE|hcollgi_SW|hcollgl_NE|hcollgl_NW|hcollgl_SE|hcollgl_SW|hcollks_NE|hcollks_NW|hcollks_SE|hcollks_SW|hcollrs_NE|hcollrs_NW|hcollrs_SE|hcollrs_SW|hleaf_NE|hleaf_NW|hleaf_SE|hleaf_SW|l12p_ctl_cq_cr_hb_idx__ctl_cr_0|l12p_hb_coll_NE_hcollrs_NE_a_rq_0|l12p_hb_coll_NE_hcollrs_NE_a_rq_102|l12p_hb_coll_NE_hcollrs_NE_a_rq_34|l12p_hb_coll_NE_hcollrs_NE_a_rq_68|l12p_hb_coll_NW_hcollrs_NW_a_rq_0|l12p_hb_coll_NW_hcollrs_NW_a_rq_102|l12p_hb_coll_NW_hcollrs_NW_a_rq_34|l12p_hb_coll_NW_hcollrs_NW_a_rq_68|l12p_hb_coll_SE_hcollrs_SE_a_rq_0|l12p_hb_coll_SE_hcollrs_SE_a_rq_102|l12p_hb_coll_SE_hcollrs_SE_a_rq_34|l12p_hb_coll_SE_hcollrs_SE_a_rq_68|l12p_hb_coll_SW_hcollrs_SW_a_rq_0|l12p_hb_coll_SW_hcollrs_SW_a_rq_102|l12p_hb_coll_SW_hcollrs_SW_a_rq_34|l12p_hb_coll_SW_hcollrs_SW_a_rq_68|l12p_hb_idx__ctl_vm_rq_vmb_SW0_rq4_0|l12p_hb_idx__ctl_vm_rq_vmb_SW1_rq4_0|l12p_hb_idx__ctl_vm_rq_vmb_SW2_rq4_0|l12p_hb_idx__ctl_vm_rq_vmb_SW3_rq4_0|l12p_hb_idx__ctl_vm_rq_vmb_SW4_rq4_0|l12p_hb_idx__ctl_vm_rq_vmb_SW5_rq4_0|l12p_hb_idx__ctl_vm_rq_vmb_SW6_rq4_0|l12p_hb_idx__ctl_vm_rq_vmb_SW7_rq4_0|l12p_hcollgi_NE_hcollrs_NE_b_rq_0|l12p_hcollgi_NE_hcollrs_NE_b_rq_102|l12p_hcollgi_NE_hcollrs_NE_b_rq_34|l12p_hcollgi_NE_hcollrs_NE_b_rq_68|l12p_hcollgi_NW_hcollrs_NW_b_rq_0|l12p_hcollgi_NW_hcollrs_NW_b_rq_102|l12p_hcollgi_NW_hcollrs_NW_b_rq_34|l12p_hcollgi_NW_hcollrs_NW_b_rq_68|l12p_hcollgi_SE_hcollrs_SE_b_rq_0|l12p_hcollgi_SE_hcollrs_SE_b_rq_102|l12p_hcollgi_SE_hcollrs_SE_b_rq_34|l12p_hcollgi_SE_hcollrs_SE_b_rq_68|l12p_hcollgi_SW_hcollrs_SW_b_rq_0|l12p_hcollgi_SW_hcollrs_SW_b_rq_102|l12p_hcollgi_SW_hcollrs_SW_b_rq_34|l12p_hcollgi_SW_hcollrs_SW_b_rq_68|l12p_hcollrs_NE_vm_rq_vmb_NE0_rq3_0|l12p_hcollrs_NE_vm_rq_vmb_NE1_rq3_0|l12p_hcollrs_NE_vm_rq_vmb_NE2_rq3_0|l12p_hcollrs_NE_vm_rq_vmb_NE3_rq3_0|l12p_hcollrs_NE_vm_rq_vmb_NE4_rq3_0|l12p_hcollrs_NE_vm_rq_vmb_NE5_rq3_0|l12p_hcollrs_NE_vm_rq_vmb_NE6_rq3_0|l12p_hcollrs_NE_vm_rq_vmb_NE7_rq3_0|l12p_hcollrs_NW_vm_rq_vmb_NW0_rq4_0|l12p_hcollrs_NW_vm_rq_vmb_NW1_rq4_0|l12p_hcollrs_NW_vm_rq_vmb_NW2_rq4_0|l12p_hcollrs_NW_vm_rq_vmb_NW3_rq4_0|l12p_hcollrs_NW_vm_rq_vmb_NW4_rq4_0|l12p_hcollrs_NW_vm_rq_vmb_NW5_rq4_0|l12p_hcollrs_NW_vm_rq_vmb_NW6_rq4_0|l12p_hcollrs_NW_vm_rq_vmb_NW7_rq4_0|l12p_hcollrs_SE_vm_rq_vmb_SE0_rq3_0|l12p_hcollrs_SE_vm_rq_vmb_SE1_rq3_0|l12p_hcollrs_SE_vm_rq_vmb_SE2_rq3_0|l12p_hcollrs_SE_vm_rq_vmb_SE3_rq3_0|l12p_hcollrs_SE_vm_rq_vmb_SE4_rq3_0|l12p_hcollrs_SE_vm_rq_vmb_SE5_rq3_0|l12p_hcollrs_SE_vm_rq_vmb_SE6_rq3_0|l12p_hcollrs_SE_vm_rq_vmb_SE7_rq3_0|l12p_hcollrs_SW_vm_rq_vmb_SW0_rq3_0|l12p_hcollrs_SW_vm_rq_vmb_SW1_rq3_0|l12p_hcollrs_SW_vm_rq_vmb_SW2_rq3_0|l12p_hcollrs_SW_vm_rq_vmb_SW3_rq3_0|l12p_hcollrs_SW_vm_rq_vmb_SW4_rq3_0|l12p_hcollrs_SW_vm_rq_vmb_SW5_rq3_0|l12p_hcollrs_SW_vm_rq_vmb_SW6_rq3_0|l12p_hcollrs_SW_vm_rq_vmb_SW7_rq3_0|l12p_su_NE0_lg_rq_vmb_NE0_rq0_0|l12p_su_NE0_lg_rq_vmb_NE1_rq0_0|l12p_su_NE0_lg_w_done_vmb_NE0_wq_done0_0|l12p_su_NE0_lg_w_done_vmb_NE1_wq_done0_0|l12p_su_NE1_lg_rq_vmb_NE2_rq0_0|l12p_su_NE1_lg_rq_vmb_NE3_rq0_0|l12p_su_NE1_lg_w_done_vmb_NE2_wq_done0_0|l12p_su_NE1_lg_w_done_vmb_NE3_wq_done0_0|l12p_su_NE2_lg_rq_vmb_NE4_rq0_0|l12p_su_NE2_lg_rq_vmb_NE5_rq0_0|l12p_su_NE2_lg_w_done_vmb_NE4_wq_done0_0|l12p_su_NE2_lg_w_done_vmb_NE5_wq_done0_0|l12p_su_NE3_lg_rq_vmb_NE6_rq0_0|l12p_su_NE3_lg_rq_vmb_NE7_rq0_0|l12p_su_NE3_lg_w_done_vmb_NE6_wq_done0_0|l12p_su_NE3_lg_w_done_vmb_NE7_wq_done0_0|l12p_su_NW0_lg_rq_vmb_NW0_rq0_0|l12p_su_NW0_lg_rq_vmb_NW1_rq0_0|l12p_su_NW0_lg_w_done_vmb_NW0_wq_done0_0|l12p_su_NW0_lg_w_done_vmb_NW1_wq_done0_0|l12p_su_NW1_lg_rq_vmb_NW2_rq0_0|l12p_su_NW1_lg_rq_vmb_NW3_rq0_0|l12p_su_NW1_lg_w_done_vmb_NW2_wq_done0_0|l12p_su_NW1_lg_w_done_vmb_NW3_wq_done0_0|l12p_su_NW2_lg_rq_vmb_NW4_rq0_0|l12p_su_NW2_lg_rq_vmb_NW5_rq0_0|l12p_su_NW2_lg_w_done_vmb_NW4_wq_done0_0|l12p_su_NW2_lg_w_done_vmb_NW5_wq_done0_0|l12p_su_NW3_lg_rq_vmb_NW6_rq0_0|l12p_su_NW3_lg_rq_vmb_NW7_rq0_0|l12p_su_NW3_lg_w_done_vmb_NW6_wq_done0_0|l12p_su_NW3_lg_w_done_vmb_NW7_wq_done0_0|l12p_su_SE0_lg_rq_vmb_SE0_rq0_0|l12p_su_SE0_lg_rq_vmb_SE1_rq0_0|l12p_su_SE0_lg_w_done_vmb_SE0_wq_done0_0|l12p_su_SE0_lg_w_done_vmb_SE1_wq_done0_0|l12p_su_SE1_lg_rq_vmb_SE2_rq0_0|l12p_su_SE1_lg_rq_vmb_SE3_rq0_0|l12p_su_SE1_lg_w_done_vmb_SE2_wq_done0_0|l12p_su_SE1_lg_w_done_vmb_SE3_wq_done0_0|l12p_su_SE2_lg_rq_vmb_SE4_rq0_0|l12p_su_SE2_lg_rq_vmb_SE5_rq0_0|l12p_su_SE2_lg_w_done_vmb_SE4_wq_done0_0|l12p_su_SE2_lg_w_done_vmb_SE5_wq_done0_0|l12p_su_SE3_lg_rq_vmb_SE6_rq0_0|l12p_su_SE3_lg_rq_vmb_SE7_rq0_0|l12p_su_SE3_lg_w_done_vmb_SE6_wq_done0_0|l12p_su_SE3_lg_w_done_vmb_SE7_wq_done0_0|l12p_su_SW0_lg_rq_vmb_SW0_rq0_0|l12p_su_SW0_lg_rq_vmb_SW1_rq0_0|l12p_su_SW0_lg_w_done_vmb_SW0_wq_done0_0|l12p_su_SW0_lg_w_done_vmb_SW1_wq_done0_0|l12p_su_SW1_lg_rq_vmb_SW2_rq0_0|l12p_su_SW1_lg_rq_vmb_SW3_rq0_0|l12p_su_SW1_lg_w_done_vmb_SW2_wq_done0_0|l12p_su_SW1_lg_w_done_vmb_SW3_wq_done0_0|l12p_su_SW2_lg_rq_vmb_SW4_rq0_0|l12p_su_SW2_lg_rq_vmb_SW5_rq0_0|l12p_su_SW2_lg_w_done_vmb_SW4_wq_done0_0|l12p_su_SW2_lg_w_done_vmb_SW5_wq_done0_0|l12p_su_SW3_lg_rq_vmb_SW6_rq0_0|l12p_su_SW3_lg_rq_vmb_SW7_rq0_0|l12p_su_SW3_lg_w_done_vmb_SW6_wq_done0_0|l12p_su_SW3_lg_w_done_vmb_SW7_wq_done0_0|pgp_NE|pgp_NW|pgp_SE|pgp_SW|stl_NE|stl_NW|stl_SE|stl_SW|su_NE0|su_NE1|su_NE2|su_NE3|su_NW0|su_NW1|su_NW2|su_NW3|su_SE0|su_SE1|su_SE2|su_SE3|su_SW0|su_SW1|su_SW2|su_SW3|su_prog|subr_NE|subr_NW|subr_SE|subr_SW|sucore_NE|sucore_NW|sucore_SE|sucore_SW|vmb_NE0|vmb_NE1|vmb_NE2|vmb_NE3|vmb_NE4|vmb_NE5|vmb_NE6|vmb_NE7|vmb_NW0|vmb_NW1|vmb_NW2|vmb_NW3|vmb_NW4|vmb_NW5|vmb_NW6|vmb_NW7|vmb_SE0|vmb_SE1|vmb_SE2|vmb_SE3|vmb_SE4|vmb_SE5|vmb_SE6|vmb_SE7|vmb_SW0|vmb_SW1|vmb_SW2|vmb_SW3|vmb_SW4|vmb_SW5|vmb_SW6|vmb_SW7)$",
+ "added_count": 241,
+ "selected_count": 241,
+ "producer_quarters": [
+  "SW",
+  "SE",
+  "NW",
+  "NE"
+ ],
+ "transport_quarters": [
+  "SW",
+  "SE",
+  "NW",
+  "NE"
+ ],
+ "quiet_source_quarters": [],
+ "boundary_inputs_to_core": [
+  {
+   "name": "lg_SW_1_rq__b0__b0__su_SW0_far_rq__sfu_SW0_near_rq",
+   "source": [
+    "l12p_sfu_SW0_near_rq_su_SW0_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SW0",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SW_1_rq__b1__b1__su_SW0_far_rq_17__sfu_SW0_near_rq_17",
+   "source": [
+    "l12p_sfu_SW0_near_rq_su_SW0_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SW0",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SW_1_rq__b2__b2__su_SW1_far_rq__sfu_SW1_near_rq",
+   "source": [
+    "l12p_sfu_SW1_near_rq_su_SW1_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SW1",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SW_1_rq__b3__b3__su_SW1_far_rq_17__sfu_SW1_near_rq_17",
+   "source": [
+    "l12p_sfu_SW1_near_rq_su_SW1_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SW1",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SW_1_rq__b4__b4__su_SW2_far_rq__sfu_SW2_near_rq",
+   "source": [
+    "l12p_sfu_SW2_near_rq_su_SW2_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SW2",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SW_1_rq__b5__b5__su_SW2_far_rq_17__sfu_SW2_near_rq_17",
+   "source": [
+    "l12p_sfu_SW2_near_rq_su_SW2_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SW2",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SW_1_rq__b6__b6__su_SW3_far_rq__sfu_SW3_near_rq",
+   "source": [
+    "l12p_sfu_SW3_near_rq_su_SW3_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SW3",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SW_1_rq__b7__b7__su_SW3_far_rq_17__sfu_SW3_near_rq_17",
+   "source": [
+    "l12p_sfu_SW3_near_rq_su_SW3_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SW3",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SW_1_wq__b0__b0__su_SW0_far_wq__sfu_SW0_near_wq",
+   "source": [
+    "sfu_SW0",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_SW0",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SW_1_wq__b1__b1__su_SW0_far_wq_281__sfu_SW0_near_wq_281",
+   "source": [
+    "sfu_SW0",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_SW0",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SW_1_wq__b2__b2__su_SW1_far_wq__sfu_SW1_near_wq",
+   "source": [
+    "sfu_SW1",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_SW1",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SW_1_wq__b3__b3__su_SW1_far_wq_281__sfu_SW1_near_wq_281",
+   "source": [
+    "sfu_SW1",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_SW1",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SW_1_wq__b4__b4__su_SW2_far_wq__sfu_SW2_near_wq",
+   "source": [
+    "sfu_SW2",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_SW2",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SW_1_wq__b5__b5__su_SW2_far_wq_281__sfu_SW2_near_wq_281",
+   "source": [
+    "sfu_SW2",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_SW2",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SW_1_wq__b6__b6__su_SW3_far_wq__sfu_SW3_near_wq",
+   "source": [
+    "sfu_SW3",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_SW3",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SW_1_wq__b7__b7__su_SW3_far_wq_281__sfu_SW3_near_wq_281",
+   "source": [
+    "sfu_SW3",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_SW3",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SE_1_rq__b0__b0__su_SE0_far_rq__sfu_SE0_near_rq",
+   "source": [
+    "l12p_sfu_SE0_near_rq_su_SE0_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SE0",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SE_1_rq__b1__b1__su_SE0_far_rq_17__sfu_SE0_near_rq_17",
+   "source": [
+    "l12p_sfu_SE0_near_rq_su_SE0_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SE0",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SE_1_rq__b2__b2__su_SE1_far_rq__sfu_SE1_near_rq",
+   "source": [
+    "l12p_sfu_SE1_near_rq_su_SE1_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SE1",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SE_1_rq__b3__b3__su_SE1_far_rq_17__sfu_SE1_near_rq_17",
+   "source": [
+    "l12p_sfu_SE1_near_rq_su_SE1_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SE1",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SE_1_rq__b4__b4__su_SE2_far_rq__sfu_SE2_near_rq",
+   "source": [
+    "l12p_sfu_SE2_near_rq_su_SE2_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SE2",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SE_1_rq__b5__b5__su_SE2_far_rq_17__sfu_SE2_near_rq_17",
+   "source": [
+    "l12p_sfu_SE2_near_rq_su_SE2_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SE2",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SE_1_rq__b6__b6__su_SE3_far_rq__sfu_SE3_near_rq",
+   "source": [
+    "l12p_sfu_SE3_near_rq_su_SE3_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SE3",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SE_1_rq__b7__b7__su_SE3_far_rq_17__sfu_SE3_near_rq_17",
+   "source": [
+    "l12p_sfu_SE3_near_rq_su_SE3_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_SE3",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_SE_1_wq__b0__b0__su_SE0_far_wq__sfu_SE0_near_wq",
+   "source": [
+    "sfu_SE0",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_SE0",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SE_1_wq__b1__b1__su_SE0_far_wq_281__sfu_SE0_near_wq_281",
+   "source": [
+    "sfu_SE0",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_SE0",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SE_1_wq__b2__b2__su_SE1_far_wq__sfu_SE1_near_wq",
+   "source": [
+    "sfu_SE1",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_SE1",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SE_1_wq__b3__b3__su_SE1_far_wq_281__sfu_SE1_near_wq_281",
+   "source": [
+    "sfu_SE1",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_SE1",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SE_1_wq__b4__b4__su_SE2_far_wq__sfu_SE2_near_wq",
+   "source": [
+    "sfu_SE2",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_SE2",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SE_1_wq__b5__b5__su_SE2_far_wq_281__sfu_SE2_near_wq_281",
+   "source": [
+    "sfu_SE2",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_SE2",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SE_1_wq__b6__b6__su_SE3_far_wq__sfu_SE3_near_wq",
+   "source": [
+    "sfu_SE3",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_SE3",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_SE_1_wq__b7__b7__su_SE3_far_wq_281__sfu_SE3_near_wq_281",
+   "source": [
+    "sfu_SE3",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_SE3",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NW_1_rq__b0__b0__su_NW0_far_rq__sfu_NW0_near_rq",
+   "source": [
+    "l12p_sfu_NW0_near_rq_su_NW0_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NW0",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NW_1_rq__b1__b1__su_NW0_far_rq_17__sfu_NW0_near_rq_17",
+   "source": [
+    "l12p_sfu_NW0_near_rq_su_NW0_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NW0",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NW_1_rq__b2__b2__su_NW1_far_rq__sfu_NW1_near_rq",
+   "source": [
+    "l12p_sfu_NW1_near_rq_su_NW1_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NW1",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NW_1_rq__b3__b3__su_NW1_far_rq_17__sfu_NW1_near_rq_17",
+   "source": [
+    "l12p_sfu_NW1_near_rq_su_NW1_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NW1",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NW_1_rq__b4__b4__su_NW2_far_rq__sfu_NW2_near_rq",
+   "source": [
+    "l12p_sfu_NW2_near_rq_su_NW2_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NW2",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NW_1_rq__b5__b5__su_NW2_far_rq_17__sfu_NW2_near_rq_17",
+   "source": [
+    "l12p_sfu_NW2_near_rq_su_NW2_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NW2",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NW_1_rq__b6__b6__su_NW3_far_rq__sfu_NW3_near_rq",
+   "source": [
+    "l12p_sfu_NW3_near_rq_su_NW3_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NW3",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NW_1_rq__b7__b7__su_NW3_far_rq_17__sfu_NW3_near_rq_17",
+   "source": [
+    "l12p_sfu_NW3_near_rq_su_NW3_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NW3",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NW_1_wq__b0__b0__su_NW0_far_wq__sfu_NW0_near_wq",
+   "source": [
+    "sfu_NW0",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_NW0",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NW_1_wq__b1__b1__su_NW0_far_wq_281__sfu_NW0_near_wq_281",
+   "source": [
+    "sfu_NW0",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_NW0",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NW_1_wq__b2__b2__su_NW1_far_wq__sfu_NW1_near_wq",
+   "source": [
+    "sfu_NW1",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_NW1",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NW_1_wq__b3__b3__su_NW1_far_wq_281__sfu_NW1_near_wq_281",
+   "source": [
+    "sfu_NW1",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_NW1",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NW_1_wq__b4__b4__su_NW2_far_wq__sfu_NW2_near_wq",
+   "source": [
+    "sfu_NW2",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_NW2",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NW_1_wq__b5__b5__su_NW2_far_wq_281__sfu_NW2_near_wq_281",
+   "source": [
+    "sfu_NW2",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_NW2",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NW_1_wq__b6__b6__su_NW3_far_wq__sfu_NW3_near_wq",
+   "source": [
+    "sfu_NW3",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_NW3",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NW_1_wq__b7__b7__su_NW3_far_wq_281__sfu_NW3_near_wq_281",
+   "source": [
+    "sfu_NW3",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_NW3",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NE_1_rq__b0__b0__su_NE0_far_rq__sfu_NE0_near_rq",
+   "source": [
+    "l12p_sfu_NE0_near_rq_su_NE0_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NE0",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NE_1_rq__b1__b1__su_NE0_far_rq_17__sfu_NE0_near_rq_17",
+   "source": [
+    "l12p_sfu_NE0_near_rq_su_NE0_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NE0",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NE_1_rq__b2__b2__su_NE1_far_rq__sfu_NE1_near_rq",
+   "source": [
+    "l12p_sfu_NE1_near_rq_su_NE1_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NE1",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NE_1_rq__b3__b3__su_NE1_far_rq_17__sfu_NE1_near_rq_17",
+   "source": [
+    "l12p_sfu_NE1_near_rq_su_NE1_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NE1",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NE_1_rq__b4__b4__su_NE2_far_rq__sfu_NE2_near_rq",
+   "source": [
+    "l12p_sfu_NE2_near_rq_su_NE2_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NE2",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NE_1_rq__b5__b5__su_NE2_far_rq_17__sfu_NE2_near_rq_17",
+   "source": [
+    "l12p_sfu_NE2_near_rq_su_NE2_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NE2",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NE_1_rq__b6__b6__su_NE3_far_rq__sfu_NE3_near_rq",
+   "source": [
+    "l12p_sfu_NE3_near_rq_su_NE3_far_rq_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NE3",
+    "far_rq",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NE_1_rq__b7__b7__su_NE3_far_rq_17__sfu_NE3_near_rq_17",
+   "source": [
+    "l12p_sfu_NE3_near_rq_su_NE3_far_rq_17",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "su_NE3",
+    "far_rq",
+    17,
+    34
+   ],
+   "bits": 17
+  },
+  {
+   "name": "lg_NE_1_wq__b0__b0__su_NE0_far_wq__sfu_NE0_near_wq",
+   "source": [
+    "sfu_NE0",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_NE0",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NE_1_wq__b1__b1__su_NE0_far_wq_281__sfu_NE0_near_wq_281",
+   "source": [
+    "sfu_NE0",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_NE0",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NE_1_wq__b2__b2__su_NE1_far_wq__sfu_NE1_near_wq",
+   "source": [
+    "sfu_NE1",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_NE1",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NE_1_wq__b3__b3__su_NE1_far_wq_281__sfu_NE1_near_wq_281",
+   "source": [
+    "sfu_NE1",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_NE1",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NE_1_wq__b4__b4__su_NE2_far_wq__sfu_NE2_near_wq",
+   "source": [
+    "sfu_NE2",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_NE2",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NE_1_wq__b5__b5__su_NE2_far_wq_281__sfu_NE2_near_wq_281",
+   "source": [
+    "sfu_NE2",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_NE2",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NE_1_wq__b6__b6__su_NE3_far_wq__sfu_NE3_near_wq",
+   "source": [
+    "sfu_NE3",
+    "near_wq",
+    0,
+    281
+   ],
+   "sink": [
+    "su_NE3",
+    "far_wq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "lg_NE_1_wq__b7__b7__su_NE3_far_wq_281__sfu_NE3_near_wq_281",
+   "source": [
+    "sfu_NE3",
+    "near_wq",
+    281,
+    562
+   ],
+   "sink": [
+    "su_NE3",
+    "far_wq",
+    281,
+    562
+   ],
+   "bits": 281
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW0_rq1",
+   "source": [
+    "l12p_hb_dbk_SW_rq_vmb_SW0_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW0",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW1_rq1",
+   "source": [
+    "l12p_hb_dbk_SW_rq_vmb_SW1_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW1",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW2_rq1",
+   "source": [
+    "l12p_hb_dbk_SW_rq_vmb_SW2_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW2",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW3_rq1",
+   "source": [
+    "l12p_hb_dbk_SW_rq_vmb_SW3_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW3",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW4_rq1",
+   "source": [
+    "l12p_hb_dbk_SW_rq_vmb_SW4_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW4",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW5_rq1",
+   "source": [
+    "l12p_hb_dbk_SW_rq_vmb_SW5_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW5",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW6_rq1",
+   "source": [
+    "l12p_hb_dbk_SW_rq_vmb_SW6_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW6",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW7_rq1",
+   "source": [
+    "l12p_hb_dbk_SW_rq_vmb_SW7_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW7",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW0_rq1",
+   "source": [
+    "l12p_hb_dbk_NW_rq_vmb_NW0_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW0",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW1_rq1",
+   "source": [
+    "l12p_hb_dbk_NW_rq_vmb_NW1_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW1",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW2_rq1",
+   "source": [
+    "l12p_hb_dbk_NW_rq_vmb_NW2_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW2",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW3_rq1",
+   "source": [
+    "l12p_hb_dbk_NW_rq_vmb_NW3_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW3",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW4_rq1",
+   "source": [
+    "l12p_hb_dbk_NW_rq_vmb_NW4_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW4",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW5_rq1",
+   "source": [
+    "l12p_hb_dbk_NW_rq_vmb_NW5_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW5",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW6_rq1",
+   "source": [
+    "l12p_hb_dbk_NW_rq_vmb_NW6_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW6",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW7_rq1",
+   "source": [
+    "l12p_hb_dbk_NW_rq_vmb_NW7_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW7",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "argmax_cq",
+   "source": [
+    "hb_argmax",
+    "cq",
+    0,
+    338
+   ],
+   "sink": [
+    "hb_vms_SW",
+    "cq",
+    0,
+    338
+   ],
+   "bits": 338
+  },
+  {
+   "name": "coll_0030_3__cij_SW_inj_d_r0",
+   "source": [
+    "cij_SW",
+    "inj_d_r0",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "inj_d",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "coll_0030_3__cij_SW_inj_d_r1",
+   "source": [
+    "cij_SW",
+    "inj_d_r1",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "inj_d",
+    256,
+    512
+   ],
+   "bits": 256
+  },
+  {
+   "name": "coll_0030_3__cij_SW_inj_d_r0_256",
+   "source": [
+    "cij_SW",
+    "inj_d_r0",
+    256,
+    512
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "inj_d",
+    512,
+    768
+   ],
+   "bits": 256
+  },
+  {
+   "name": "coll_0030_3__cij_SW_inj_d_r1_256",
+   "source": [
+    "cij_SW",
+    "inj_d_r1",
+    256,
+    512
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "inj_d",
+    768,
+    1024
+   ],
+   "bits": 256
+  },
+  {
+   "name": "cp2_158",
+   "source": [
+    "hb_argmax",
+    "busy",
+    0,
+    1
+   ],
+   "sink": [
+    "col_idx",
+    "c_busy",
+    1,
+    2
+   ],
+   "bits": 1
+  },
+  {
+   "name": "cp2_163",
+   "source": [
+    "hb_argmax",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "col_idx",
+    "c_fault",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "idxcoll_50",
+   "source": [
+    "ep_S0",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "idxcoll_51",
+   "source": [
+    "ep_S0",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "bits": 612
+  },
+  {
+   "name": "idxcoll_52",
+   "source": [
+    "ep_S0",
+    "phy_up",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "phy_up",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "idxcoll_58",
+   "source": [
+    "ep_S1",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "rx_pin_v",
+    1,
+    2
+   ],
+   "bits": 1
+  },
+  {
+   "name": "idxcoll_59",
+   "source": [
+    "ep_S1",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "rx_pin_flit",
+    612,
+    1224
+   ],
+   "bits": 612
+  },
+  {
+   "name": "idxcoll_60",
+   "source": [
+    "ep_S1",
+    "phy_up",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "phy_up",
+    1,
+    2
+   ],
+   "bits": 1
+  },
+  {
+   "name": "idxcoll_66__a2pd0",
+   "source": [
+    "ep_S3",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SE",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "idxcoll_67__a2pd0",
+   "source": [
+    "ep_S3",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "sink": [
+    "hb_coll_SE",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "bits": 612
+  },
+  {
+   "name": "idxcoll_68__a2pd0",
+   "source": [
+    "ep_S3",
+    "phy_up",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SE",
+    "phy_up",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "idxcoll_74__a2pd0",
+   "source": [
+    "ep_N0",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_NW",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "idxcoll_75__a2pd0",
+   "source": [
+    "ep_N0",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "sink": [
+    "hb_coll_NW",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "bits": 612
+  },
+  {
+   "name": "idxcoll_76__a2pd0",
+   "source": [
+    "ep_N0",
+    "phy_up",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_NW",
+    "phy_up",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "idxcoll_82__a2pd0",
+   "source": [
+    "ep_N2",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_NE",
+    "rx_pin_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "idxcoll_83__a2pd0",
+   "source": [
+    "ep_N2",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "sink": [
+    "hb_coll_NE",
+    "rx_pin_flit",
+    0,
+    612
+   ],
+   "bits": 612
+  },
+  {
+   "name": "idxcoll_84__a2pd0",
+   "source": [
+    "ep_N2",
+    "phy_up",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_NE",
+    "phy_up",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "su_collport_0253_8",
+   "source": [
+    "cxrc_SW_s",
+    "rc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "rc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "su_collport_0253_9",
+   "source": [
+    "cxrc_SW_s",
+    "rc_tag",
+    0,
+    3
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "rc_tag",
+    0,
+    3
+   ],
+   "bits": 3
+  },
+  {
+   "name": "su_collport_0253_10",
+   "source": [
+    "cxrc_SW_s",
+    "rc_d",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "rc_d",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "su_collport_0253_14",
+   "source": [
+    "cxrc_SW_q",
+    "rr_wv",
+    0,
+    1
+   ],
+   "sink": [
+    "sucore_SW",
+    "rr_wv",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "su_collport_0253_15",
+   "source": [
+    "cxrc_SW_q",
+    "rr_wa",
+    0,
+    5
+   ],
+   "sink": [
+    "sucore_SW",
+    "rr_wa",
+    0,
+    5
+   ],
+   "bits": 5
+  },
+  {
+   "name": "su_collport_0253_16",
+   "source": [
+    "cxrc_SW_q",
+    "rr_wd",
+    0,
+    256
+   ],
+   "sink": [
+    "sucore_SW",
+    "rr_wd",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "su_collport_0253_17",
+   "source": [
+    "cxrc_SW_q",
+    "sfu_x",
+    0,
+    32
+   ],
+   "sink": [
+    "sucore_SW",
+    "sfu_x",
+    0,
+    32
+   ],
+   "bits": 32
+  },
+  {
+   "name": "su_collport_0253_23",
+   "source": [
+    "cxdl_SW0_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SW0",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_24",
+   "source": [
+    "cxdl_SW0_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_SW0",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_25",
+   "source": [
+    "cxdl_SW0_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_SW0",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_27",
+   "source": [
+    "cxdl_SW1_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SW1",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_28",
+   "source": [
+    "cxdl_SW1_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_SW1",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_29",
+   "source": [
+    "cxdl_SW1_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_SW1",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_31",
+   "source": [
+    "cxdl_SW2_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SW2",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_32",
+   "source": [
+    "cxdl_SW2_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_SW2",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_33",
+   "source": [
+    "cxdl_SW2_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_SW2",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_35",
+   "source": [
+    "cxdl_SW3_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SW3",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_36",
+   "source": [
+    "cxdl_SW3_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_SW3",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_37",
+   "source": [
+    "cxdl_SW3_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_SW3",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_54",
+   "source": [
+    "cxrc_SE_s",
+    "rc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SE",
+    "rc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "su_collport_0253_55",
+   "source": [
+    "cxrc_SE_s",
+    "rc_tag",
+    0,
+    3
+   ],
+   "sink": [
+    "hb_coll_SE",
+    "rc_tag",
+    0,
+    3
+   ],
+   "bits": 3
+  },
+  {
+   "name": "su_collport_0253_56",
+   "source": [
+    "cxrc_SE_s",
+    "rc_d",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_SE",
+    "rc_d",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "su_collport_0253_60",
+   "source": [
+    "cxrc_SE_q",
+    "rr_wv",
+    0,
+    1
+   ],
+   "sink": [
+    "sucore_SE",
+    "rr_wv",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "su_collport_0253_61",
+   "source": [
+    "cxrc_SE_q",
+    "rr_wa",
+    0,
+    5
+   ],
+   "sink": [
+    "sucore_SE",
+    "rr_wa",
+    0,
+    5
+   ],
+   "bits": 5
+  },
+  {
+   "name": "su_collport_0253_62",
+   "source": [
+    "cxrc_SE_q",
+    "rr_wd",
+    0,
+    256
+   ],
+   "sink": [
+    "sucore_SE",
+    "rr_wd",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "su_collport_0253_63",
+   "source": [
+    "cxrc_SE_q",
+    "sfu_x",
+    0,
+    32
+   ],
+   "sink": [
+    "sucore_SE",
+    "sfu_x",
+    0,
+    32
+   ],
+   "bits": 32
+  },
+  {
+   "name": "su_collport_0253_69",
+   "source": [
+    "cxdl_SE0_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SE0",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_70",
+   "source": [
+    "cxdl_SE0_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_SE0",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_71",
+   "source": [
+    "cxdl_SE0_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_SE0",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_73",
+   "source": [
+    "cxdl_SE1_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SE1",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_74",
+   "source": [
+    "cxdl_SE1_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_SE1",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_75",
+   "source": [
+    "cxdl_SE1_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_SE1",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_77",
+   "source": [
+    "cxdl_SE2_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SE2",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_78",
+   "source": [
+    "cxdl_SE2_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_SE2",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_79",
+   "source": [
+    "cxdl_SE2_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_SE2",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_81",
+   "source": [
+    "cxdl_SE3_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SE3",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_82",
+   "source": [
+    "cxdl_SE3_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_SE3",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_83",
+   "source": [
+    "cxdl_SE3_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_SE3",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_100",
+   "source": [
+    "cxrc_NW_s",
+    "rc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_NW",
+    "rc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "su_collport_0253_101",
+   "source": [
+    "cxrc_NW_s",
+    "rc_tag",
+    0,
+    3
+   ],
+   "sink": [
+    "hb_coll_NW",
+    "rc_tag",
+    0,
+    3
+   ],
+   "bits": 3
+  },
+  {
+   "name": "su_collport_0253_102",
+   "source": [
+    "cxrc_NW_s",
+    "rc_d",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_NW",
+    "rc_d",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "su_collport_0253_106",
+   "source": [
+    "cxrc_NW_q",
+    "rr_wv",
+    0,
+    1
+   ],
+   "sink": [
+    "sucore_NW",
+    "rr_wv",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "su_collport_0253_107",
+   "source": [
+    "cxrc_NW_q",
+    "rr_wa",
+    0,
+    5
+   ],
+   "sink": [
+    "sucore_NW",
+    "rr_wa",
+    0,
+    5
+   ],
+   "bits": 5
+  },
+  {
+   "name": "su_collport_0253_108",
+   "source": [
+    "cxrc_NW_q",
+    "rr_wd",
+    0,
+    256
+   ],
+   "sink": [
+    "sucore_NW",
+    "rr_wd",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "su_collport_0253_109",
+   "source": [
+    "cxrc_NW_q",
+    "sfu_x",
+    0,
+    32
+   ],
+   "sink": [
+    "sucore_NW",
+    "sfu_x",
+    0,
+    32
+   ],
+   "bits": 32
+  },
+  {
+   "name": "su_collport_0253_115",
+   "source": [
+    "cxdl_NW0_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NW0",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_116",
+   "source": [
+    "cxdl_NW0_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_NW0",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_117",
+   "source": [
+    "cxdl_NW0_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_NW0",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_119",
+   "source": [
+    "cxdl_NW1_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NW1",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_120",
+   "source": [
+    "cxdl_NW1_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_NW1",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_121",
+   "source": [
+    "cxdl_NW1_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_NW1",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_123",
+   "source": [
+    "cxdl_NW2_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NW2",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_124",
+   "source": [
+    "cxdl_NW2_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_NW2",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_125",
+   "source": [
+    "cxdl_NW2_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_NW2",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_127",
+   "source": [
+    "cxdl_NW3_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NW3",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_128",
+   "source": [
+    "cxdl_NW3_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_NW3",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_129",
+   "source": [
+    "cxdl_NW3_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_NW3",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_146",
+   "source": [
+    "cxrc_NE_s",
+    "rc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_NE",
+    "rc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "su_collport_0253_147",
+   "source": [
+    "cxrc_NE_s",
+    "rc_tag",
+    0,
+    3
+   ],
+   "sink": [
+    "hb_coll_NE",
+    "rc_tag",
+    0,
+    3
+   ],
+   "bits": 3
+  },
+  {
+   "name": "su_collport_0253_148",
+   "source": [
+    "cxrc_NE_s",
+    "rc_d",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_NE",
+    "rc_d",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "su_collport_0253_152",
+   "source": [
+    "cxrc_NE_q",
+    "rr_wv",
+    0,
+    1
+   ],
+   "sink": [
+    "sucore_NE",
+    "rr_wv",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "su_collport_0253_153",
+   "source": [
+    "cxrc_NE_q",
+    "rr_wa",
+    0,
+    5
+   ],
+   "sink": [
+    "sucore_NE",
+    "rr_wa",
+    0,
+    5
+   ],
+   "bits": 5
+  },
+  {
+   "name": "su_collport_0253_154",
+   "source": [
+    "cxrc_NE_q",
+    "rr_wd",
+    0,
+    256
+   ],
+   "sink": [
+    "sucore_NE",
+    "rr_wd",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "su_collport_0253_155",
+   "source": [
+    "cxrc_NE_q",
+    "sfu_x",
+    0,
+    32
+   ],
+   "sink": [
+    "sucore_NE",
+    "sfu_x",
+    0,
+    32
+   ],
+   "bits": 32
+  },
+  {
+   "name": "su_collport_0253_161",
+   "source": [
+    "cxdl_NE0_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NE0",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_162",
+   "source": [
+    "cxdl_NE0_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_NE0",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_163",
+   "source": [
+    "cxdl_NE0_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_NE0",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_165",
+   "source": [
+    "cxdl_NE1_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NE1",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_166",
+   "source": [
+    "cxdl_NE1_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_NE1",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_167",
+   "source": [
+    "cxdl_NE1_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_NE1",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_169",
+   "source": [
+    "cxdl_NE2_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NE2",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_170",
+   "source": [
+    "cxdl_NE2_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_NE2",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_171",
+   "source": [
+    "cxdl_NE2_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_NE2",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "su_collport_0253_173",
+   "source": [
+    "cxdl_NE3_q",
+    "dw_v",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NE3",
+    "dw_v",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "su_collport_0253_174",
+   "source": [
+    "cxdl_NE3_q",
+    "dw_row",
+    0,
+    18
+   ],
+   "sink": [
+    "su_NE3",
+    "dw_row",
+    0,
+    18
+   ],
+   "bits": 18
+  },
+  {
+   "name": "su_collport_0253_175",
+   "source": [
+    "cxdl_NE3_q",
+    "dw_d",
+    0,
+    1024
+   ],
+   "sink": [
+    "su_NE3",
+    "dw_d",
+    0,
+    1024
+   ],
+   "bits": 1024
+  },
+  {
+   "name": "vm_hoist_d4f_72",
+   "source": [
+    "vmm_NW0",
+    "wq_m",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW0",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "vm_hoist_d4f_74",
+   "source": [
+    "vmm_NW0",
+    "flt",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "b0_flt",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "vm_hoist_d4f_83",
+   "source": [
+    "vmm_NW1",
+    "wq_m",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW1",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "vm_hoist_d4f_85",
+   "source": [
+    "vmm_NW1",
+    "flt",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "b1_flt",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "vm_hoist_d4f_94",
+   "source": [
+    "vmm_NW2",
+    "wq_m",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW2",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "vm_hoist_d4f_96",
+   "source": [
+    "vmm_NW2",
+    "flt",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "b2_flt",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "vm_hoist_d4f_105",
+   "source": [
+    "vmm_NW3",
+    "wq_m",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW3",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "vm_hoist_d4f_107",
+   "source": [
+    "vmm_NW3",
+    "flt",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "b3_flt",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "vm_hoist_d4f_116",
+   "source": [
+    "vmm_NW4",
+    "wq_m",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW4",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "vm_hoist_d4f_118",
+   "source": [
+    "vmm_NW4",
+    "flt",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "b4_flt",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "vm_hoist_d4f_127",
+   "source": [
+    "vmm_NW5",
+    "wq_m",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW5",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "vm_hoist_d4f_129",
+   "source": [
+    "vmm_NW5",
+    "flt",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "b5_flt",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "vm_hoist_d4f_138",
+   "source": [
+    "vmm_NW6",
+    "wq_m",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW6",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "vm_hoist_d4f_140",
+   "source": [
+    "vmm_NW6",
+    "flt",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "b6_flt",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "vm_hoist_d4f_149",
+   "source": [
+    "vmm_NW7",
+    "wq_m",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW7",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "vm_hoist_d4f_151",
+   "source": [
+    "vmm_NW7",
+    "flt",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_vms_NW",
+    "b7_flt",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "coll_hardv7_d4f_6",
+   "source": [
+    "cic_SW",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_SW0",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_7",
+   "source": [
+    "cic_SW",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SW0",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_8",
+   "source": [
+    "cic_SW",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_SW1",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_9",
+   "source": [
+    "cic_SW",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SW1",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_10",
+   "source": [
+    "cic_SW",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_SW2",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_11",
+   "source": [
+    "cic_SW",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SW2",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_12",
+   "source": [
+    "cic_SW",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_SW3",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_13",
+   "source": [
+    "cic_SW",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SW3",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_18",
+   "source": [
+    "cic_SE",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_SE0",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_19",
+   "source": [
+    "cic_SE",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SE0",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_20",
+   "source": [
+    "cic_SE",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_SE1",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_21",
+   "source": [
+    "cic_SE",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SE1",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_22",
+   "source": [
+    "cic_SE",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_SE2",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_23",
+   "source": [
+    "cic_SE",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SE2",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_24",
+   "source": [
+    "cic_SE",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_SE3",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_25",
+   "source": [
+    "cic_SE",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_SE3",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_30",
+   "source": [
+    "cic_NW",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_NW0",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_31",
+   "source": [
+    "cic_NW",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NW0",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_32",
+   "source": [
+    "cic_NW",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_NW1",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_33",
+   "source": [
+    "cic_NW",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NW1",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_34",
+   "source": [
+    "cic_NW",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_NW2",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_35",
+   "source": [
+    "cic_NW",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NW2",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_36",
+   "source": [
+    "cic_NW",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_NW3",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_37",
+   "source": [
+    "cic_NW",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NW3",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_42",
+   "source": [
+    "cic_NE",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_NE0",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_43",
+   "source": [
+    "cic_NE",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NE0",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_44",
+   "source": [
+    "cic_NE",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_NE1",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_45",
+   "source": [
+    "cic_NE",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NE1",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_46",
+   "source": [
+    "cic_NE",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_NE2",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_47",
+   "source": [
+    "cic_NE",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NE2",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_48",
+   "source": [
+    "cic_NE",
+    "inj_addr_o",
+    0,
+    160
+   ],
+   "sink": [
+    "su_NE3",
+    "inj_addr",
+    0,
+    160
+   ],
+   "bits": 160
+  },
+  {
+   "name": "coll_hardv7_d4f_49",
+   "source": [
+    "cic_NE",
+    "inj_rd_o",
+    0,
+    2
+   ],
+   "sink": [
+    "su_NE3",
+    "inj_rd",
+    0,
+    2
+   ],
+   "bits": 2
+  },
+  {
+   "name": "coll_hardv7_d4f_64",
+   "source": [
+    "tkm_SW",
+    "w_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "tkx_w_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "coll_hardv7_d4f_65",
+   "source": [
+    "tkm_SW",
+    "w_addr",
+    0,
+    40
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "tkx_w_addr",
+    0,
+    40
+   ],
+   "bits": 40
+  },
+  {
+   "name": "coll_hardv7_d4f_66",
+   "source": [
+    "tkm_SW",
+    "w_mask",
+    0,
+    16
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "tkx_w_mask",
+    0,
+    16
+   ],
+   "bits": 16
+  },
+  {
+   "name": "coll_hardv7_d4f_67",
+   "source": [
+    "tkm_SW",
+    "w_data",
+    0,
+    512
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "tkx_w_data",
+    0,
+    512
+   ],
+   "bits": 512
+  },
+  {
+   "name": "coll_hardv7_d4f_68",
+   "source": [
+    "tkm_SW",
+    "busy",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "tkx_busy",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "coll_hardv7_d4f_69",
+   "source": [
+    "tkm_SW",
+    "done",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "tkx_done",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "coll_hardv7_d4f_70",
+   "source": [
+    "tkm_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_coll_SW",
+    "tkx_fault",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l3_00778",
+   "source": [
+    "smw_SW",
+    "wq_s0",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW0",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00779",
+   "source": [
+    "smw_SW",
+    "wq_t0",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW4",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00785",
+   "source": [
+    "smw_SW",
+    "wq_s1",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW1",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00786",
+   "source": [
+    "smw_SW",
+    "wq_t1",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW5",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00792",
+   "source": [
+    "smw_SW",
+    "wq_s2",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW2",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00793",
+   "source": [
+    "smw_SW",
+    "wq_t2",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW6",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00799",
+   "source": [
+    "smw_SW",
+    "wq_s3",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW3",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00800",
+   "source": [
+    "smw_SW",
+    "wq_t3",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW7",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00815",
+   "source": [
+    "smw_SE",
+    "wq_s0",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE4",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00816",
+   "source": [
+    "smw_SE",
+    "wq_t0",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE0",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00822",
+   "source": [
+    "smw_SE",
+    "wq_s1",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE5",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00823",
+   "source": [
+    "smw_SE",
+    "wq_t1",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE1",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00829",
+   "source": [
+    "smw_SE",
+    "wq_s2",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE6",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00830",
+   "source": [
+    "smw_SE",
+    "wq_t2",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE2",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00836",
+   "source": [
+    "smw_SE",
+    "wq_s3",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE7",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00837",
+   "source": [
+    "smw_SE",
+    "wq_t3",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE3",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00892",
+   "source": [
+    "smw_NE",
+    "wq_s0",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE4",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00893",
+   "source": [
+    "smw_NE",
+    "wq_t0",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE0",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00899",
+   "source": [
+    "smw_NE",
+    "wq_s1",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE5",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00900",
+   "source": [
+    "smw_NE",
+    "wq_t1",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE1",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00906",
+   "source": [
+    "smw_NE",
+    "wq_s2",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE6",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00907",
+   "source": [
+    "smw_NE",
+    "wq_t2",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE2",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00913",
+   "source": [
+    "smw_NE",
+    "wq_s3",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE7",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00914",
+   "source": [
+    "smw_NE",
+    "wq_t3",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE3",
+    "wq1",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00955",
+   "source": [
+    "vmdel_SW0",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW0",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_00991",
+   "source": [
+    "vmdel_SW1",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW1",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01027",
+   "source": [
+    "vmdel_SW2",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW2",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01063",
+   "source": [
+    "vmdel_SW3",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW3",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01099",
+   "source": [
+    "vmdel_SW4",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW4",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01135",
+   "source": [
+    "vmdel_SW5",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW5",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01171",
+   "source": [
+    "vmdel_SW6",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW6",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01207",
+   "source": [
+    "vmdel_SW7",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SW7",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01243",
+   "source": [
+    "vmdel_SE0",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE0",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01278",
+   "source": [
+    "vmdel_SE1",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE1",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01313",
+   "source": [
+    "vmdel_SE2",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE2",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01348",
+   "source": [
+    "vmdel_SE3",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE3",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01383",
+   "source": [
+    "vmdel_SE4",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE4",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01418",
+   "source": [
+    "vmdel_SE5",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE5",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01453",
+   "source": [
+    "vmdel_SE6",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE6",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01488",
+   "source": [
+    "vmdel_SE7",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_SE7",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01523",
+   "source": [
+    "vmdel_NW0",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW0",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01559",
+   "source": [
+    "vmdel_NW1",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW1",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01595",
+   "source": [
+    "vmdel_NW2",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW2",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01631",
+   "source": [
+    "vmdel_NW3",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW3",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01667",
+   "source": [
+    "vmdel_NW4",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW4",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01703",
+   "source": [
+    "vmdel_NW5",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW5",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01739",
+   "source": [
+    "vmdel_NW6",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW6",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01775",
+   "source": [
+    "vmdel_NW7",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NW7",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01811",
+   "source": [
+    "vmdel_NE0",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE0",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01846",
+   "source": [
+    "vmdel_NE1",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE1",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01881",
+   "source": [
+    "vmdel_NE2",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE2",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01916",
+   "source": [
+    "vmdel_NE3",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE3",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01951",
+   "source": [
+    "vmdel_NE4",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE4",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_01986",
+   "source": [
+    "vmdel_NE5",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE5",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_02021",
+   "source": [
+    "vmdel_NE6",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE6",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "l3_02056",
+   "source": [
+    "vmdel_NE7",
+    "dq",
+    0,
+    281
+   ],
+   "sink": [
+    "vmb_NE7",
+    "dq",
+    0,
+    281
+   ],
+   "bits": 281
+  },
+  {
+   "name": "sm_vm_10__vmb_SW0_rq2__SW",
+   "source": [
+    "l12p_xl_SW_ctl_rq_vmb_SW0_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW0",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW0_rq2__SE",
+   "source": [
+    "l12p_xl_SE_ctl_rq_vmb_SE0_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE0",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW1_rq2__SW",
+   "source": [
+    "l12p_xl_SW_ctl_rq_vmb_SW1_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW1",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW1_rq2__SE",
+   "source": [
+    "l12p_xl_SE_ctl_rq_vmb_SE1_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE1",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW2_rq2__SW",
+   "source": [
+    "l12p_xl_SW_ctl_rq_vmb_SW2_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW2",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW2_rq2__SE",
+   "source": [
+    "l12p_xl_SE_ctl_rq_vmb_SE2_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE2",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW3_rq2__SW",
+   "source": [
+    "l12p_xl_SW_ctl_rq_vmb_SW3_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW3",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW3_rq2__SE",
+   "source": [
+    "l12p_xl_SE_ctl_rq_vmb_SE3_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE3",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW4_rq2__SW",
+   "source": [
+    "l12p_xl_SW_ctl_rq_vmb_SW4_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW4",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW4_rq2__SE",
+   "source": [
+    "l12p_xl_SE_ctl_rq_vmb_SE4_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE4",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW5_rq2__SW",
+   "source": [
+    "l12p_xl_SW_ctl_rq_vmb_SW5_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW5",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW5_rq2__SE",
+   "source": [
+    "l12p_xl_SE_ctl_rq_vmb_SE5_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE5",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW6_rq2__SW",
+   "source": [
+    "l12p_xl_SW_ctl_rq_vmb_SW6_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW6",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW6_rq2__SE",
+   "source": [
+    "l12p_xl_SE_ctl_rq_vmb_SE6_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE6",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW7_rq2__SW",
+   "source": [
+    "l12p_xl_SW_ctl_rq_vmb_SW7_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SW7",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_10__vmb_SW7_rq2__SE",
+   "source": [
+    "l12p_xl_SE_ctl_rq_vmb_SE7_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE7",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW0_rq2__NW",
+   "source": [
+    "l12p_xl_NW_ctl_rq_vmb_NW0_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW0",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW0_rq2__NE",
+   "source": [
+    "l12p_xl_NE_ctl_rq_vmb_NE0_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE0",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW1_rq2__NW",
+   "source": [
+    "l12p_xl_NW_ctl_rq_vmb_NW1_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW1",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW1_rq2__NE",
+   "source": [
+    "l12p_xl_NE_ctl_rq_vmb_NE1_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE1",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW2_rq2__NW",
+   "source": [
+    "l12p_xl_NW_ctl_rq_vmb_NW2_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW2",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW2_rq2__NE",
+   "source": [
+    "l12p_xl_NE_ctl_rq_vmb_NE2_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE2",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW3_rq2__NW",
+   "source": [
+    "l12p_xl_NW_ctl_rq_vmb_NW3_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW3",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW3_rq2__NE",
+   "source": [
+    "l12p_xl_NE_ctl_rq_vmb_NE3_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE3",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW4_rq2__NW",
+   "source": [
+    "l12p_xl_NW_ctl_rq_vmb_NW4_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW4",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW4_rq2__NE",
+   "source": [
+    "l12p_xl_NE_ctl_rq_vmb_NE4_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE4",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW5_rq2__NW",
+   "source": [
+    "l12p_xl_NW_ctl_rq_vmb_NW5_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW5",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW5_rq2__NE",
+   "source": [
+    "l12p_xl_NE_ctl_rq_vmb_NE5_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE5",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW6_rq2__NW",
+   "source": [
+    "l12p_xl_NW_ctl_rq_vmb_NW6_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW6",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW6_rq2__NE",
+   "source": [
+    "l12p_xl_NE_ctl_rq_vmb_NE6_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE6",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW7_rq2__NW",
+   "source": [
+    "l12p_xl_NW_ctl_rq_vmb_NW7_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW7",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "sm_vm_22__vmb_NW7_rq2__NE",
+   "source": [
+    "l12p_xl_NE_ctl_rq_vmb_NE7_rq2_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE7",
+    "rq2",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW0_rq1__SE",
+   "source": [
+    "l12p_hb_dbk_SE_rq_vmb_SE0_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE0",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW1_rq1__SE",
+   "source": [
+    "l12p_hb_dbk_SE_rq_vmb_SE1_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE1",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW2_rq1__SE",
+   "source": [
+    "l12p_hb_dbk_SE_rq_vmb_SE2_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE2",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW3_rq1__SE",
+   "source": [
+    "l12p_hb_dbk_SE_rq_vmb_SE3_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE3",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW4_rq1__SE",
+   "source": [
+    "l12p_hb_dbk_SE_rq_vmb_SE4_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE4",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW5_rq1__SE",
+   "source": [
+    "l12p_hb_dbk_SE_rq_vmb_SE5_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE5",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW6_rq1__SE",
+   "source": [
+    "l12p_hb_dbk_SE_rq_vmb_SE6_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE6",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_SW_rq__vmb_SW7_rq1__SE",
+   "source": [
+    "l12p_hb_dbk_SE_rq_vmb_SE7_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE7",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW0_rq1__NE",
+   "source": [
+    "l12p_hb_dbk_NE_rq_vmb_NE0_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE0",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW1_rq1__NE",
+   "source": [
+    "l12p_hb_dbk_NE_rq_vmb_NE1_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE1",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW2_rq1__NE",
+   "source": [
+    "l12p_hb_dbk_NE_rq_vmb_NE2_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE2",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW3_rq1__NE",
+   "source": [
+    "l12p_hb_dbk_NE_rq_vmb_NE3_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE3",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW4_rq1__NE",
+   "source": [
+    "l12p_hb_dbk_NE_rq_vmb_NE4_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE4",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW5_rq1__NE",
+   "source": [
+    "l12p_hb_dbk_NE_rq_vmb_NE5_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE5",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW6_rq1__NE",
+   "source": [
+    "l12p_hb_dbk_NE_rq_vmb_NE6_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE6",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "hb_dbk_NW_rq__vmb_NW7_rq1__NE",
+   "source": [
+    "l12p_hb_dbk_NE_rq_vmb_NE7_rq1_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE7",
+    "rq1",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l1_hleaf_SW_cfg_v",
+   "source": [
+    "host_cp_ingress",
+    "cfg_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "cfg_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_cfg_target",
+   "source": [
+    "host_cp_ingress",
+    "cfg_target",
+    0,
+    8
+   ],
+   "sink": [
+    "hleaf_SW",
+    "cfg_target",
+    0,
+    8
+   ],
+   "bits": 8
+  },
+  {
+   "name": "l1_hleaf_SW_cfg_addr",
+   "source": [
+    "host_cp_ingress",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "sink": [
+    "hleaf_SW",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "l1_hleaf_SW_cfg_data",
+   "source": [
+    "host_cp_ingress",
+    "cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hleaf_SW",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l1_hleaf_SW_desc_v",
+   "source": [
+    "host_cp_ingress",
+    "desc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "desc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_desc_base",
+   "source": [
+    "host_cp_ingress",
+    "desc_base",
+    0,
+    12
+   ],
+   "sink": [
+    "hleaf_SW",
+    "desc_base",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "l1_hleaf_SW_desc_limit",
+   "source": [
+    "host_cp_ingress",
+    "desc_limit",
+    0,
+    13
+   ],
+   "sink": [
+    "hleaf_SW",
+    "desc_limit",
+    0,
+    13
+   ],
+   "bits": 13
+  },
+  {
+   "name": "l1_hleaf_SW_desc_loops",
+   "source": [
+    "host_cp_ingress",
+    "desc_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hleaf_SW",
+    "desc_loops",
+    0,
+    16
+   ],
+   "bits": 16
+  },
+  {
+   "name": "l1_hleaf_SW_launch_v",
+   "source": [
+    "host_cp_ingress",
+    "launch_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "launch_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_1",
+   "source": [
+    "col_sfu_SW",
+    "ready",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    1,
+    2
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_2",
+   "source": [
+    "vmfc_SW",
+    "tgt_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    2,
+    3
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_3",
+   "source": [
+    "cp_svg_SW0",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_4",
+   "source": [
+    "cp_svg_SW1",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_5",
+   "source": [
+    "cp_svg_SW2",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_6",
+   "source": [
+    "cp_svg_SW3",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_8",
+   "source": [
+    "xl_SW_ctl",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    8,
+    9
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_9",
+   "source": [
+    "hb_dbk_SW",
+    "cp_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    9,
+    10
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_10",
+   "source": [
+    "hc_SW",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    10,
+    11
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_11",
+   "source": [
+    "epcal_SW",
+    "tgt_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    11,
+    12
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_12",
+   "source": [
+    "smw_SW",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    12,
+    13
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_13",
+   "source": [
+    "xc_SW0",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_14",
+   "source": [
+    "xc_SW1",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_15",
+   "source": [
+    "xc_SW2",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_16",
+   "source": [
+    "xc_SW3",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_ready_17",
+   "source": [
+    "refcfg_SW",
+    "ready",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_ready",
+    17,
+    18
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_1",
+   "source": [
+    "col_sfu_SW",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    1,
+    2
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_2",
+   "source": [
+    "vmfc_SW",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    2,
+    3
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_3",
+   "source": [
+    "cp_svg_SW0",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_4",
+   "source": [
+    "cp_svg_SW1",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_5",
+   "source": [
+    "cp_svg_SW2",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_6",
+   "source": [
+    "cp_svg_SW3",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_8",
+   "source": [
+    "xl_SW_ctl",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    8,
+    9
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_9",
+   "source": [
+    "hb_dbk_SW",
+    "cp_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    9,
+    10
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_10",
+   "source": [
+    "hc_SW",
+    "program_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    10,
+    11
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_11",
+   "source": [
+    "epcal_SW",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    11,
+    12
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_12",
+   "source": [
+    "smw_SW",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    12,
+    13
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_13",
+   "source": [
+    "xc_SW0",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_14",
+   "source": [
+    "xc_SW1",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_15",
+   "source": [
+    "xc_SW2",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_16",
+   "source": [
+    "xc_SW3",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_active_17",
+   "source": [
+    "refcfg_SW",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_active",
+    17,
+    18
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_3",
+   "source": [
+    "col_sfu_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_4",
+   "source": [
+    "vmfc_SW",
+    "tgt_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_5",
+   "source": [
+    "vmfc_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_6",
+   "source": [
+    "cp_svg_SW0",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_7",
+   "source": [
+    "cp_svg_SW1",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    7,
+    8
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_8",
+   "source": [
+    "cp_svg_SW2",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    8,
+    9
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_9",
+   "source": [
+    "cp_svg_SW3",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    9,
+    10
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_12",
+   "source": [
+    "xl_SW_ctl",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    12,
+    13
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_13",
+   "source": [
+    "hb_dbk_SW",
+    "cp_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_14",
+   "source": [
+    "hc_SW",
+    "hcq_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_15",
+   "source": [
+    "epcal_SW",
+    "tgt_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_16",
+   "source": [
+    "epcal_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_17",
+   "source": [
+    "ep_S0",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    17,
+    18
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_18",
+   "source": [
+    "ep_S1",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    18,
+    19
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_19",
+   "source": [
+    "smw_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    19,
+    20
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_20",
+   "source": [
+    "xc_SW0",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    20,
+    21
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_21",
+   "source": [
+    "xc_SW1",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    21,
+    22
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_22",
+   "source": [
+    "xc_SW2",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    22,
+    23
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_23",
+   "source": [
+    "xc_SW3",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    23,
+    24
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_24",
+   "source": [
+    "wbk_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    24,
+    25
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_25",
+   "source": [
+    "fcx_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    25,
+    26
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_26",
+   "source": [
+    "sfus_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    26,
+    27
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_27",
+   "source": [
+    "sfup_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    27,
+    28
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SW_t_fault_28",
+   "source": [
+    "refcfg_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SW",
+    "t_fault",
+    28,
+    29
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_cfg_v",
+   "source": [
+    "host_cp_ingress",
+    "cfg_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "cfg_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_cfg_target",
+   "source": [
+    "host_cp_ingress",
+    "cfg_target",
+    0,
+    8
+   ],
+   "sink": [
+    "hleaf_SE",
+    "cfg_target",
+    0,
+    8
+   ],
+   "bits": 8
+  },
+  {
+   "name": "l1_hleaf_SE_cfg_addr",
+   "source": [
+    "host_cp_ingress",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "sink": [
+    "hleaf_SE",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "l1_hleaf_SE_cfg_data",
+   "source": [
+    "host_cp_ingress",
+    "cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hleaf_SE",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l1_hleaf_SE_desc_v",
+   "source": [
+    "host_cp_ingress",
+    "desc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "desc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_desc_base",
+   "source": [
+    "host_cp_ingress",
+    "desc_base",
+    0,
+    12
+   ],
+   "sink": [
+    "hleaf_SE",
+    "desc_base",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "l1_hleaf_SE_desc_limit",
+   "source": [
+    "host_cp_ingress",
+    "desc_limit",
+    0,
+    13
+   ],
+   "sink": [
+    "hleaf_SE",
+    "desc_limit",
+    0,
+    13
+   ],
+   "bits": 13
+  },
+  {
+   "name": "l1_hleaf_SE_desc_loops",
+   "source": [
+    "host_cp_ingress",
+    "desc_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hleaf_SE",
+    "desc_loops",
+    0,
+    16
+   ],
+   "bits": 16
+  },
+  {
+   "name": "l1_hleaf_SE_launch_v",
+   "source": [
+    "host_cp_ingress",
+    "launch_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "launch_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_2",
+   "source": [
+    "col_sfu_SE",
+    "ready",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    2,
+    3
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_4",
+   "source": [
+    "vmfc_SE",
+    "tgt_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_5",
+   "source": [
+    "cp_svg_SW4",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_6",
+   "source": [
+    "cp_svg_SW5",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_7",
+   "source": [
+    "cp_svg_SW6",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    7,
+    8
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_8",
+   "source": [
+    "cp_svg_SW7",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    8,
+    9
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_10",
+   "source": [
+    "hc_SE",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    10,
+    11
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_11",
+   "source": [
+    "epcal_SE",
+    "tgt_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    11,
+    12
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_12",
+   "source": [
+    "hc_eng",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    12,
+    13
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_13",
+   "source": [
+    "hc_eng",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_14",
+   "source": [
+    "xc_SW4",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_15",
+   "source": [
+    "xc_SW5",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_16",
+   "source": [
+    "xc_SW6",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_17",
+   "source": [
+    "xc_SW7",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    17,
+    18
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_18",
+   "source": [
+    "xl_SE_ctl",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    18,
+    19
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_19",
+   "source": [
+    "hb_dbk_SE",
+    "cp_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    19,
+    20
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_ready_20",
+   "source": [
+    "refcfg_SE",
+    "ready",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_ready",
+    20,
+    21
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_2",
+   "source": [
+    "col_sfu_SE",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    2,
+    3
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_4",
+   "source": [
+    "vmfc_SE",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_5",
+   "source": [
+    "cp_svg_SW4",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_6",
+   "source": [
+    "cp_svg_SW5",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_7",
+   "source": [
+    "cp_svg_SW6",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    7,
+    8
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_8",
+   "source": [
+    "cp_svg_SW7",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    8,
+    9
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_10",
+   "source": [
+    "hc_SE",
+    "program_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    10,
+    11
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_11",
+   "source": [
+    "epcal_SE",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    11,
+    12
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_12",
+   "source": [
+    "hc_eng",
+    "program_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    12,
+    13
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_13",
+   "source": [
+    "hc_eng",
+    "program_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_14",
+   "source": [
+    "xc_SW4",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_15",
+   "source": [
+    "xc_SW5",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_16",
+   "source": [
+    "xc_SW6",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_17",
+   "source": [
+    "xc_SW7",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    17,
+    18
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_18",
+   "source": [
+    "xl_SE_ctl",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    18,
+    19
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_19",
+   "source": [
+    "hb_dbk_SE",
+    "cp_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    19,
+    20
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_active_20",
+   "source": [
+    "refcfg_SE",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_active",
+    20,
+    21
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_4",
+   "source": [
+    "col_sfu_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_6",
+   "source": [
+    "vmfc_SE",
+    "tgt_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_7",
+   "source": [
+    "vmfc_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    7,
+    8
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_8",
+   "source": [
+    "cp_svg_SW4",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    8,
+    9
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_9",
+   "source": [
+    "cp_svg_SW5",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    9,
+    10
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_10",
+   "source": [
+    "cp_svg_SW6",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    10,
+    11
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_11",
+   "source": [
+    "cp_svg_SW7",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    11,
+    12
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_14",
+   "source": [
+    "hc_SE",
+    "hcq_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_15",
+   "source": [
+    "epcal_SE",
+    "tgt_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_16",
+   "source": [
+    "epcal_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_17",
+   "source": [
+    "ep_S3",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    17,
+    18
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_18",
+   "source": [
+    "hc_eng",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    18,
+    19
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_19",
+   "source": [
+    "xc_SW4",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    19,
+    20
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_20",
+   "source": [
+    "xc_SW5",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    20,
+    21
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_21",
+   "source": [
+    "xc_SW6",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    21,
+    22
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_22",
+   "source": [
+    "xc_SW7",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    22,
+    23
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_23",
+   "source": [
+    "fcx_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    23,
+    24
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_24",
+   "source": [
+    "sfus_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    24,
+    25
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_25",
+   "source": [
+    "sfup_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    25,
+    26
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_26",
+   "source": [
+    "xl_SE_ctl",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    26,
+    27
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_27",
+   "source": [
+    "hb_dbk_SE",
+    "cp_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    27,
+    28
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_28",
+   "source": [
+    "refcfg_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    28,
+    29
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_SE_t_fault_29",
+   "source": [
+    "wbk_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_SE",
+    "t_fault",
+    29,
+    30
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_cfg_v",
+   "source": [
+    "host_cp_ingress",
+    "cfg_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "cfg_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_cfg_target",
+   "source": [
+    "host_cp_ingress",
+    "cfg_target",
+    0,
+    8
+   ],
+   "sink": [
+    "hleaf_NW",
+    "cfg_target",
+    0,
+    8
+   ],
+   "bits": 8
+  },
+  {
+   "name": "l1_hleaf_NW_cfg_addr",
+   "source": [
+    "host_cp_ingress",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "sink": [
+    "hleaf_NW",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "l1_hleaf_NW_cfg_data",
+   "source": [
+    "host_cp_ingress",
+    "cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hleaf_NW",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l1_hleaf_NW_desc_v",
+   "source": [
+    "host_cp_ingress",
+    "desc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "desc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_desc_base",
+   "source": [
+    "host_cp_ingress",
+    "desc_base",
+    0,
+    12
+   ],
+   "sink": [
+    "hleaf_NW",
+    "desc_base",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "l1_hleaf_NW_desc_limit",
+   "source": [
+    "host_cp_ingress",
+    "desc_limit",
+    0,
+    13
+   ],
+   "sink": [
+    "hleaf_NW",
+    "desc_limit",
+    0,
+    13
+   ],
+   "bits": 13
+  },
+  {
+   "name": "l1_hleaf_NW_desc_loops",
+   "source": [
+    "host_cp_ingress",
+    "desc_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hleaf_NW",
+    "desc_loops",
+    0,
+    16
+   ],
+   "bits": 16
+  },
+  {
+   "name": "l1_hleaf_NW_launch_v",
+   "source": [
+    "host_cp_ingress",
+    "launch_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "launch_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_0",
+   "source": [
+    "hb_quant_NW",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_2",
+   "source": [
+    "col_sfu_NW",
+    "ready",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    2,
+    3
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_3",
+   "source": [
+    "vmfc_NW",
+    "tgt_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_4",
+   "source": [
+    "cp_svg_NW0",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_5",
+   "source": [
+    "cp_svg_NW1",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_6",
+   "source": [
+    "cp_svg_NW2",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_7",
+   "source": [
+    "cp_svg_NW3",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    7,
+    8
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_9",
+   "source": [
+    "xl_NW_ctl",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    9,
+    10
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_10",
+   "source": [
+    "hb_dbk_NW",
+    "cp_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    10,
+    11
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_11",
+   "source": [
+    "hc_NW",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    11,
+    12
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_12",
+   "source": [
+    "epcal_NW",
+    "tgt_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    12,
+    13
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_13",
+   "source": [
+    "smw_NW",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_14",
+   "source": [
+    "xc_NW0",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_15",
+   "source": [
+    "xc_NW1",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_16",
+   "source": [
+    "xc_NW2",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_17",
+   "source": [
+    "xc_NW3",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    17,
+    18
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_ready_18",
+   "source": [
+    "refcfg_NW",
+    "ready",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_ready",
+    18,
+    19
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_0",
+   "source": [
+    "hb_quant_NW",
+    "program_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_2",
+   "source": [
+    "col_sfu_NW",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    2,
+    3
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_3",
+   "source": [
+    "vmfc_NW",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_4",
+   "source": [
+    "cp_svg_NW0",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_5",
+   "source": [
+    "cp_svg_NW1",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_6",
+   "source": [
+    "cp_svg_NW2",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_7",
+   "source": [
+    "cp_svg_NW3",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    7,
+    8
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_9",
+   "source": [
+    "xl_NW_ctl",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    9,
+    10
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_10",
+   "source": [
+    "hb_dbk_NW",
+    "cp_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    10,
+    11
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_11",
+   "source": [
+    "hc_NW",
+    "program_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    11,
+    12
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_12",
+   "source": [
+    "epcal_NW",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    12,
+    13
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_13",
+   "source": [
+    "smw_NW",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_14",
+   "source": [
+    "xc_NW0",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_15",
+   "source": [
+    "xc_NW1",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_16",
+   "source": [
+    "xc_NW2",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_17",
+   "source": [
+    "xc_NW3",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    17,
+    18
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_active_18",
+   "source": [
+    "refcfg_NW",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_active",
+    18,
+    19
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_0",
+   "source": [
+    "hb_quant_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_4",
+   "source": [
+    "col_sfu_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_5",
+   "source": [
+    "vmfc_NW",
+    "tgt_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_6",
+   "source": [
+    "vmfc_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_7",
+   "source": [
+    "cp_svg_NW0",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    7,
+    8
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_8",
+   "source": [
+    "cp_svg_NW1",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    8,
+    9
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_9",
+   "source": [
+    "cp_svg_NW2",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    9,
+    10
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_10",
+   "source": [
+    "cp_svg_NW3",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    10,
+    11
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_13",
+   "source": [
+    "xl_NW_ctl",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_14",
+   "source": [
+    "hb_dbk_NW",
+    "cp_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_15",
+   "source": [
+    "hc_NW",
+    "hcq_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_16",
+   "source": [
+    "epcal_NW",
+    "tgt_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_17",
+   "source": [
+    "epcal_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    17,
+    18
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_18",
+   "source": [
+    "ep_N0",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    18,
+    19
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_19",
+   "source": [
+    "smw_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    19,
+    20
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_20",
+   "source": [
+    "xc_NW0",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    20,
+    21
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_21",
+   "source": [
+    "xc_NW1",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    21,
+    22
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_22",
+   "source": [
+    "xc_NW2",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    22,
+    23
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_23",
+   "source": [
+    "xc_NW3",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    23,
+    24
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_24",
+   "source": [
+    "wbk_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    24,
+    25
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_25",
+   "source": [
+    "fcx_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    25,
+    26
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_26",
+   "source": [
+    "sfus_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    26,
+    27
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_27",
+   "source": [
+    "sfup_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    27,
+    28
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NW_t_fault_28",
+   "source": [
+    "refcfg_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NW",
+    "t_fault",
+    28,
+    29
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_cfg_v",
+   "source": [
+    "host_cp_ingress",
+    "cfg_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "cfg_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_cfg_target",
+   "source": [
+    "host_cp_ingress",
+    "cfg_target",
+    0,
+    8
+   ],
+   "sink": [
+    "hleaf_NE",
+    "cfg_target",
+    0,
+    8
+   ],
+   "bits": 8
+  },
+  {
+   "name": "l1_hleaf_NE_cfg_addr",
+   "source": [
+    "host_cp_ingress",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "sink": [
+    "hleaf_NE",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "l1_hleaf_NE_cfg_data",
+   "source": [
+    "host_cp_ingress",
+    "cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hleaf_NE",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l1_hleaf_NE_desc_v",
+   "source": [
+    "host_cp_ingress",
+    "desc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "desc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_desc_base",
+   "source": [
+    "host_cp_ingress",
+    "desc_base",
+    0,
+    12
+   ],
+   "sink": [
+    "hleaf_NE",
+    "desc_base",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "l1_hleaf_NE_desc_limit",
+   "source": [
+    "host_cp_ingress",
+    "desc_limit",
+    0,
+    13
+   ],
+   "sink": [
+    "hleaf_NE",
+    "desc_limit",
+    0,
+    13
+   ],
+   "bits": 13
+  },
+  {
+   "name": "l1_hleaf_NE_desc_loops",
+   "source": [
+    "host_cp_ingress",
+    "desc_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hleaf_NE",
+    "desc_loops",
+    0,
+    16
+   ],
+   "bits": 16
+  },
+  {
+   "name": "l1_hleaf_NE_launch_v",
+   "source": [
+    "host_cp_ingress",
+    "launch_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "launch_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_1",
+   "source": [
+    "col_sfu_NE",
+    "ready",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    1,
+    2
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_2",
+   "source": [
+    "vmfc_NE",
+    "tgt_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    2,
+    3
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_3",
+   "source": [
+    "cp_svg_NW4",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_4",
+   "source": [
+    "cp_svg_NW5",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_5",
+   "source": [
+    "cp_svg_NW6",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_6",
+   "source": [
+    "cp_svg_NW7",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_8",
+   "source": [
+    "hc_NE",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    8,
+    9
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_9",
+   "source": [
+    "epcal_NE",
+    "tgt_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    9,
+    10
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_10",
+   "source": [
+    "xc_NW4",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    10,
+    11
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_11",
+   "source": [
+    "xc_NW5",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    11,
+    12
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_12",
+   "source": [
+    "xc_NW6",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    12,
+    13
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_13",
+   "source": [
+    "xc_NW7",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_14",
+   "source": [
+    "xl_NE_ctl",
+    "configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_15",
+   "source": [
+    "hb_dbk_NE",
+    "cp_configured",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_ready_16",
+   "source": [
+    "refcfg_NE",
+    "ready",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_ready",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_1",
+   "source": [
+    "col_sfu_NE",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    1,
+    2
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_2",
+   "source": [
+    "vmfc_NE",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    2,
+    3
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_3",
+   "source": [
+    "cp_svg_NW4",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_4",
+   "source": [
+    "cp_svg_NW5",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_5",
+   "source": [
+    "cp_svg_NW6",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_6",
+   "source": [
+    "cp_svg_NW7",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_8",
+   "source": [
+    "hc_NE",
+    "program_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    8,
+    9
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_9",
+   "source": [
+    "epcal_NE",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    9,
+    10
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_10",
+   "source": [
+    "xc_NW4",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    10,
+    11
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_11",
+   "source": [
+    "xc_NW5",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    11,
+    12
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_12",
+   "source": [
+    "xc_NW6",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    12,
+    13
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_13",
+   "source": [
+    "xc_NW7",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_14",
+   "source": [
+    "xl_NE_ctl",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_15",
+   "source": [
+    "hb_dbk_NE",
+    "cp_active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_active_16",
+   "source": [
+    "refcfg_NE",
+    "active",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_active",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_3",
+   "source": [
+    "col_sfu_NE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_4",
+   "source": [
+    "vmfc_NE",
+    "tgt_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_5",
+   "source": [
+    "vmfc_NE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    5,
+    6
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_6",
+   "source": [
+    "cp_svg_NW4",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    6,
+    7
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_7",
+   "source": [
+    "cp_svg_NW5",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    7,
+    8
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_8",
+   "source": [
+    "cp_svg_NW6",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    8,
+    9
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_9",
+   "source": [
+    "cp_svg_NW7",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    9,
+    10
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_12",
+   "source": [
+    "hc_NE",
+    "hcq_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    12,
+    13
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_13",
+   "source": [
+    "epcal_NE",
+    "tgt_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    13,
+    14
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_14",
+   "source": [
+    "epcal_NE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    14,
+    15
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_15",
+   "source": [
+    "ep_N2",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    15,
+    16
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_16",
+   "source": [
+    "xc_NW4",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    16,
+    17
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_17",
+   "source": [
+    "xc_NW5",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    17,
+    18
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_18",
+   "source": [
+    "xc_NW6",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    18,
+    19
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_19",
+   "source": [
+    "xc_NW7",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    19,
+    20
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_20",
+   "source": [
+    "fcx_NE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    20,
+    21
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_21",
+   "source": [
+    "sfus_NE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    21,
+    22
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_22",
+   "source": [
+    "sfup_NE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    22,
+    23
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_23",
+   "source": [
+    "xl_NE_ctl",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    23,
+    24
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_24",
+   "source": [
+    "hb_dbk_NE",
+    "cp_fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    24,
+    25
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_25",
+   "source": [
+    "refcfg_NE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    25,
+    26
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l1_hleaf_NE_t_fault_26",
+   "source": [
+    "wbk_NE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hleaf_NE",
+    "t_fault",
+    26,
+    27
+   ],
+   "bits": 1
+  },
+  {
+   "name": "stree_SW_dn_leafa",
+   "source": [
+    "std_SW_13a",
+    "o",
+    0,
+    136
+   ],
+   "sink": [
+    "stl_SW",
+    "dn_i",
+    0,
+    136
+   ],
+   "bits": 136
+  },
+  {
+   "name": "stree_SW_dn_leafb",
+   "source": [
+    "std_SW_13b",
+    "o",
+    0,
+    28
+   ],
+   "sink": [
+    "stl_SW",
+    "dn_i",
+    136,
+    164
+   ],
+   "bits": 28
+  },
+  {
+   "name": "stree_SE_dn_leafa",
+   "source": [
+    "std_SE_13a",
+    "o",
+    0,
+    136
+   ],
+   "sink": [
+    "stl_SE",
+    "dn_i",
+    0,
+    136
+   ],
+   "bits": 136
+  },
+  {
+   "name": "stree_SE_dn_leafb",
+   "source": [
+    "std_SE_13b",
+    "o",
+    0,
+    28
+   ],
+   "sink": [
+    "stl_SE",
+    "dn_i",
+    136,
+    164
+   ],
+   "bits": 28
+  },
+  {
+   "name": "stree_NW_dn_leafa",
+   "source": [
+    "std_NW_13a",
+    "o",
+    0,
+    136
+   ],
+   "sink": [
+    "stl_NW",
+    "dn_i",
+    0,
+    136
+   ],
+   "bits": 136
+  },
+  {
+   "name": "stree_NW_dn_leafb",
+   "source": [
+    "std_NW_13b",
+    "o",
+    0,
+    28
+   ],
+   "sink": [
+    "stl_NW",
+    "dn_i",
+    136,
+    164
+   ],
+   "bits": 28
+  },
+  {
+   "name": "stree_NE_dn_leafa",
+   "source": [
+    "std_NE_13a",
+    "o",
+    0,
+    136
+   ],
+   "sink": [
+    "stl_NE",
+    "dn_i",
+    0,
+    136
+   ],
+   "bits": 136
+  },
+  {
+   "name": "stree_NE_dn_leafb",
+   "source": [
+    "std_NE_13b",
+    "o",
+    0,
+    28
+   ],
+   "sink": [
+    "stl_NE",
+    "dn_i",
+    136,
+    164
+   ],
+   "bits": 28
+  },
+  {
+   "name": "hb_idx_soft_link_fault__ctl_lf_19",
+   "source": [
+    "hb_idx__link",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "lf",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "hb_idx_soft_selector_fault__ctl_sf_137",
+   "source": [
+    "hb_idx__selector",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "sf",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l4_00217",
+   "source": [
+    "hb_idx__qctl_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "qfault",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l4_00435",
+   "source": [
+    "hb_idx__qctl_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "qfault",
+    1,
+    2
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l4_00436",
+   "source": [
+    "hidxr_SE_rq",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_SE0",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00438",
+   "source": [
+    "hidxr_SE_rq",
+    "o",
+    17,
+    34
+   ],
+   "sink": [
+    "vmb_SE1",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00440",
+   "source": [
+    "hidxr_SE_rq",
+    "o",
+    34,
+    51
+   ],
+   "sink": [
+    "vmb_SE2",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00442",
+   "source": [
+    "hidxr_SE_rq",
+    "o",
+    51,
+    68
+   ],
+   "sink": [
+    "vmb_SE3",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00444",
+   "source": [
+    "hidxr_SE_rq",
+    "o",
+    68,
+    85
+   ],
+   "sink": [
+    "vmb_SE4",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00446",
+   "source": [
+    "hidxr_SE_rq",
+    "o",
+    85,
+    102
+   ],
+   "sink": [
+    "vmb_SE5",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00448",
+   "source": [
+    "hidxr_SE_rq",
+    "o",
+    102,
+    119
+   ],
+   "sink": [
+    "vmb_SE6",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00450",
+   "source": [
+    "hidxr_SE_rq",
+    "o",
+    119,
+    136
+   ],
+   "sink": [
+    "vmb_SE7",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00667",
+   "source": [
+    "hb_idx__qctl_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "qfault",
+    2,
+    3
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l4_00668",
+   "source": [
+    "l12p_hb_idx__nwsh_vm_rq_vmb_NW0_rq3_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW0",
+    "rq3",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00670",
+   "source": [
+    "l12p_hb_idx__nwsh_vm_rq_vmb_NW1_rq3_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW1",
+    "rq3",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00672",
+   "source": [
+    "l12p_hb_idx__nwsh_vm_rq_vmb_NW2_rq3_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW2",
+    "rq3",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00674",
+   "source": [
+    "l12p_hb_idx__nwsh_vm_rq_vmb_NW3_rq3_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW3",
+    "rq3",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00676",
+   "source": [
+    "l12p_hb_idx__nwsh_vm_rq_vmb_NW4_rq3_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW4",
+    "rq3",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00678",
+   "source": [
+    "l12p_hb_idx__nwsh_vm_rq_vmb_NW5_rq3_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW5",
+    "rq3",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00680",
+   "source": [
+    "l12p_hb_idx__nwsh_vm_rq_vmb_NW6_rq3_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW6",
+    "rq3",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00682",
+   "source": [
+    "l12p_hb_idx__nwsh_vm_rq_vmb_NW7_rq3_0",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NW7",
+    "rq3",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00686",
+   "source": [
+    "hb_idx__nwsh",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "col_idx",
+    "c_fault",
+    4,
+    5
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l4_00902",
+   "source": [
+    "hb_idx__qctl_NE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "qfault",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l4_00903",
+   "source": [
+    "hidxr_NE_rq",
+    "o",
+    0,
+    17
+   ],
+   "sink": [
+    "vmb_NE0",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00905",
+   "source": [
+    "hidxr_NE_rq",
+    "o",
+    17,
+    34
+   ],
+   "sink": [
+    "vmb_NE1",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00907",
+   "source": [
+    "hidxr_NE_rq",
+    "o",
+    34,
+    51
+   ],
+   "sink": [
+    "vmb_NE2",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00909",
+   "source": [
+    "hidxr_NE_rq",
+    "o",
+    51,
+    68
+   ],
+   "sink": [
+    "vmb_NE3",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00911",
+   "source": [
+    "hidxr_NE_rq",
+    "o",
+    68,
+    85
+   ],
+   "sink": [
+    "vmb_NE4",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00913",
+   "source": [
+    "hidxr_NE_rq",
+    "o",
+    85,
+    102
+   ],
+   "sink": [
+    "vmb_NE5",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00915",
+   "source": [
+    "hidxr_NE_rq",
+    "o",
+    102,
+    119
+   ],
+   "sink": [
+    "vmb_NE6",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_00917",
+   "source": [
+    "hidxr_NE_rq",
+    "o",
+    119,
+    136
+   ],
+   "sink": [
+    "vmb_NE7",
+    "rq4",
+    0,
+    17
+   ],
+   "bits": 17
+  },
+  {
+   "name": "l4_01023",
+   "source": [
+    "hb_idx__xqr",
+    "y",
+    296,
+    297
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "tree_ev",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l4_01024",
+   "source": [
+    "hb_idx__xqr",
+    "y",
+    593,
+    594
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "tree_ev",
+    1,
+    2
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l4_01027",
+   "source": [
+    "hb_idx__xqr",
+    "y",
+    890,
+    891
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "tree_ev",
+    2,
+    3
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l4_01028",
+   "source": [
+    "hb_idx__xqr",
+    "y",
+    1187,
+    1188
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "tree_ev",
+    3,
+    4
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l5b_00021",
+   "source": [
+    "cij_SE",
+    "inj_d_r0",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_SE",
+    "inj_d",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00022",
+   "source": [
+    "cij_SE",
+    "inj_d_r1",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_SE",
+    "inj_d",
+    256,
+    512
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00023",
+   "source": [
+    "cij_SE",
+    "inj_d_r0",
+    256,
+    512
+   ],
+   "sink": [
+    "hb_coll_SE",
+    "inj_d",
+    512,
+    768
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00024",
+   "source": [
+    "cij_SE",
+    "inj_d_r1",
+    256,
+    512
+   ],
+   "sink": [
+    "hb_coll_SE",
+    "inj_d",
+    768,
+    1024
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00054",
+   "source": [
+    "cij_NW",
+    "inj_d_r0",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_NW",
+    "inj_d",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00055",
+   "source": [
+    "cij_NW",
+    "inj_d_r1",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_NW",
+    "inj_d",
+    256,
+    512
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00056",
+   "source": [
+    "cij_NW",
+    "inj_d_r0",
+    256,
+    512
+   ],
+   "sink": [
+    "hb_coll_NW",
+    "inj_d",
+    512,
+    768
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00057",
+   "source": [
+    "cij_NW",
+    "inj_d_r1",
+    256,
+    512
+   ],
+   "sink": [
+    "hb_coll_NW",
+    "inj_d",
+    768,
+    1024
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00087",
+   "source": [
+    "cij_NE",
+    "inj_d_r0",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_NE",
+    "inj_d",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00088",
+   "source": [
+    "cij_NE",
+    "inj_d_r1",
+    0,
+    256
+   ],
+   "sink": [
+    "hb_coll_NE",
+    "inj_d",
+    256,
+    512
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00089",
+   "source": [
+    "cij_NE",
+    "inj_d_r0",
+    256,
+    512
+   ],
+   "sink": [
+    "hb_coll_NE",
+    "inj_d",
+    512,
+    768
+   ],
+   "bits": 256
+  },
+  {
+   "name": "l5b_00090",
+   "source": [
+    "cij_NE",
+    "inj_d_r1",
+    256,
+    512
+   ],
+   "sink": [
+    "hb_coll_NE",
+    "inj_d",
+    768,
+    1024
+   ],
+   "bits": 256
+  },
+  {
+   "name": "collq_host_cfg_v_SW",
+   "source": [
+    "host_cp_ingress",
+    "cfg_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_SW",
+    "cfg_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_cfg_target_SW",
+   "source": [
+    "host_cp_ingress",
+    "cfg_target",
+    0,
+    8
+   ],
+   "sink": [
+    "hcollgi_SW",
+    "cfg_target",
+    0,
+    8
+   ],
+   "bits": 8
+  },
+  {
+   "name": "collq_host_cfg_addr_SW",
+   "source": [
+    "host_cp_ingress",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "sink": [
+    "hcollgi_SW",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "collq_host_cfg_data_SW",
+   "source": [
+    "host_cp_ingress",
+    "cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hcollgi_SW",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "collq_host_desc_v_SW",
+   "source": [
+    "host_cp_ingress",
+    "desc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_SW",
+    "desc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_desc_base_SW",
+   "source": [
+    "host_cp_ingress",
+    "desc_base",
+    0,
+    12
+   ],
+   "sink": [
+    "hcollgi_SW",
+    "desc_base",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "collq_host_desc_limit_SW",
+   "source": [
+    "host_cp_ingress",
+    "desc_limit",
+    0,
+    13
+   ],
+   "sink": [
+    "hcollgi_SW",
+    "desc_limit",
+    0,
+    13
+   ],
+   "bits": 13
+  },
+  {
+   "name": "collq_host_desc_loops_SW",
+   "source": [
+    "host_cp_ingress",
+    "desc_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hcollgi_SW",
+    "desc_loops",
+    0,
+    16
+   ],
+   "bits": 16
+  },
+  {
+   "name": "collq_host_launch_v_SW",
+   "source": [
+    "host_cp_ingress",
+    "launch_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_SW",
+    "launch_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_cfg_v_SE",
+   "source": [
+    "host_cp_ingress",
+    "cfg_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_SE",
+    "cfg_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_cfg_target_SE",
+   "source": [
+    "host_cp_ingress",
+    "cfg_target",
+    0,
+    8
+   ],
+   "sink": [
+    "hcollgi_SE",
+    "cfg_target",
+    0,
+    8
+   ],
+   "bits": 8
+  },
+  {
+   "name": "collq_host_cfg_addr_SE",
+   "source": [
+    "host_cp_ingress",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "sink": [
+    "hcollgi_SE",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "collq_host_cfg_data_SE",
+   "source": [
+    "host_cp_ingress",
+    "cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hcollgi_SE",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "collq_host_desc_v_SE",
+   "source": [
+    "host_cp_ingress",
+    "desc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_SE",
+    "desc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_desc_base_SE",
+   "source": [
+    "host_cp_ingress",
+    "desc_base",
+    0,
+    12
+   ],
+   "sink": [
+    "hcollgi_SE",
+    "desc_base",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "collq_host_desc_limit_SE",
+   "source": [
+    "host_cp_ingress",
+    "desc_limit",
+    0,
+    13
+   ],
+   "sink": [
+    "hcollgi_SE",
+    "desc_limit",
+    0,
+    13
+   ],
+   "bits": 13
+  },
+  {
+   "name": "collq_host_desc_loops_SE",
+   "source": [
+    "host_cp_ingress",
+    "desc_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hcollgi_SE",
+    "desc_loops",
+    0,
+    16
+   ],
+   "bits": 16
+  },
+  {
+   "name": "collq_host_launch_v_SE",
+   "source": [
+    "host_cp_ingress",
+    "launch_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_SE",
+    "launch_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_cfg_v_NW",
+   "source": [
+    "host_cp_ingress",
+    "cfg_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_NW",
+    "cfg_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_cfg_target_NW",
+   "source": [
+    "host_cp_ingress",
+    "cfg_target",
+    0,
+    8
+   ],
+   "sink": [
+    "hcollgi_NW",
+    "cfg_target",
+    0,
+    8
+   ],
+   "bits": 8
+  },
+  {
+   "name": "collq_host_cfg_addr_NW",
+   "source": [
+    "host_cp_ingress",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "sink": [
+    "hcollgi_NW",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "collq_host_cfg_data_NW",
+   "source": [
+    "host_cp_ingress",
+    "cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hcollgi_NW",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "collq_host_desc_v_NW",
+   "source": [
+    "host_cp_ingress",
+    "desc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_NW",
+    "desc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_desc_base_NW",
+   "source": [
+    "host_cp_ingress",
+    "desc_base",
+    0,
+    12
+   ],
+   "sink": [
+    "hcollgi_NW",
+    "desc_base",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "collq_host_desc_limit_NW",
+   "source": [
+    "host_cp_ingress",
+    "desc_limit",
+    0,
+    13
+   ],
+   "sink": [
+    "hcollgi_NW",
+    "desc_limit",
+    0,
+    13
+   ],
+   "bits": 13
+  },
+  {
+   "name": "collq_host_desc_loops_NW",
+   "source": [
+    "host_cp_ingress",
+    "desc_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hcollgi_NW",
+    "desc_loops",
+    0,
+    16
+   ],
+   "bits": 16
+  },
+  {
+   "name": "collq_host_launch_v_NW",
+   "source": [
+    "host_cp_ingress",
+    "launch_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_NW",
+    "launch_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_cfg_v_NE",
+   "source": [
+    "host_cp_ingress",
+    "cfg_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_NE",
+    "cfg_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_cfg_target_NE",
+   "source": [
+    "host_cp_ingress",
+    "cfg_target",
+    0,
+    8
+   ],
+   "sink": [
+    "hcollgi_NE",
+    "cfg_target",
+    0,
+    8
+   ],
+   "bits": 8
+  },
+  {
+   "name": "collq_host_cfg_addr_NE",
+   "source": [
+    "host_cp_ingress",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "sink": [
+    "hcollgi_NE",
+    "cfg_addr",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "collq_host_cfg_data_NE",
+   "source": [
+    "host_cp_ingress",
+    "cfg_data",
+    0,
+    256
+   ],
+   "sink": [
+    "hcollgi_NE",
+    "cfg_data",
+    0,
+    256
+   ],
+   "bits": 256
+  },
+  {
+   "name": "collq_host_desc_v_NE",
+   "source": [
+    "host_cp_ingress",
+    "desc_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_NE",
+    "desc_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "collq_host_desc_base_NE",
+   "source": [
+    "host_cp_ingress",
+    "desc_base",
+    0,
+    12
+   ],
+   "sink": [
+    "hcollgi_NE",
+    "desc_base",
+    0,
+    12
+   ],
+   "bits": 12
+  },
+  {
+   "name": "collq_host_desc_limit_NE",
+   "source": [
+    "host_cp_ingress",
+    "desc_limit",
+    0,
+    13
+   ],
+   "sink": [
+    "hcollgi_NE",
+    "desc_limit",
+    0,
+    13
+   ],
+   "bits": 13
+  },
+  {
+   "name": "collq_host_desc_loops_NE",
+   "source": [
+    "host_cp_ingress",
+    "desc_loops",
+    0,
+    16
+   ],
+   "sink": [
+    "hcollgi_NE",
+    "desc_loops",
+    0,
+    16
+   ],
+   "bits": 16
+  },
+  {
+   "name": "collq_host_launch_v_NE",
+   "source": [
+    "host_cp_ingress",
+    "launch_v",
+    0,
+    1
+   ],
+   "sink": [
+    "hcollgi_NE",
+    "launch_v",
+    0,
+    1
+   ],
+   "bits": 1
+  },
+  {
+   "name": "l12_00195",
+   "source": [
+    "l12p_ctl_sel_hb_idx__ctl_selected_v_0",
+    "o",
+    0,
+    4
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "selected_v",
+    0,
+    4
+   ],
+   "bits": 4
+  },
+  {
+   "name": "l12_00260",
+   "source": [
+    "l12p_hb_idx__op_SW_hb_idx__ctl_index_rq_0",
+    "o",
+    0,
+    136
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "index_rq",
+    0,
+    136
+   ],
+   "bits": 136
+  },
+  {
+   "name": "l12_00261",
+   "source": [
+    "l12p_hb_argmax_hb_idx__ctl_argmax_rq_0",
+    "o",
+    0,
+    136
+   ],
+   "sink": [
+    "hb_idx__ctl",
+    "argmax_rq",
+    0,
+    136
+   ],
+   "bits": 136
+  }
+ ],
+ "status": "SOURCE_PLAN_NO_BUILD_NO_FULL_CHAIN_QUALIFIER",
+ "obligations": [
+  "No core_VM/SU/GQ/ring read/write expected outputs may enter as boundary replay",
+  "Unused SFU/HC/DMA/SM/cx auxiliary inputs remain explicit boundary assumptions and quiet ifunarmed",
+  "All GQ and ringB faults must be checked or actualhost_status included; no landfault-onlyaggregate",
+  "Actual producerprogramme+placement+finiteSU->COLL epochs commonowner, no boundaryfixture substitution"
+ ]
+}
