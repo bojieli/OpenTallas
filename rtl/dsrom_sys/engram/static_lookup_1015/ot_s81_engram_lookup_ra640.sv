@@ -225,7 +225,11 @@ module ot_s81_engram_lookup_ra640 #(
     reg [4*ENG_ID_W-1:0] win_n;
     always @(negedge clk) win_n <= ids;
     wire [QW*ENG_LAYERS*ENG_COLS-1:0] hres;
+`ifdef OT_S81ENG_HASH_COHORTS
+    ot_s81_engram_hash_cohort_n32 u_hash (.clk(clk_seed), .clk_columns(clk_hash), .in_w(win_n), .out_res(hres));
+`else
     ot_s81_engram_hash_n32 u_hash (.clk(clk_seed), .clk_columns(clk_hash), .in_w(win_n), .out_res(hres));
+`endif
     reg [12:1] lastl;                        // marks the 4th feed through the hash latency
     always @(posedge clk_ctl or negedge rst_n) begin
         if (!rst_n) lastl <= 12'd0;
