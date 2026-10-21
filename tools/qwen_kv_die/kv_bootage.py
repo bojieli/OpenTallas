@@ -22,6 +22,13 @@ OT_KV_BOOT_AGES=1 (default 0: every existing GEN / tile text unchanged):
     programmable): V port sides (VPORT_SIDES), equal pair starts (PV_LEAD_PAIR_EQ), pvfin start alignment
     (PVFIN_START_ALIGN), W equal on the 16 ports (folded into DQ per port).
 No handshake, credit or ready anywhere: configuration nets, sealed before the first token, POR-held.
+
+OT_KV_PVFIN_FLOOR=1 (KV-FLOOR1 10-20; needs OT_KV_BOOT_AGES=1, default 0: every text above unchanged): the pair END FLOOR.
+  The boot-age pair control ot_qwen_tp8_pv_wide_ctl_tb becomes ot_qwen_tp8_pv_wide_ctl_tbf (END_FLOOR=1, same ports: both pairs
+  end FEED and publish out_age on PAIR 0's issue count), in the generated frame qkd_pvw_die_tbf (*_bf.sv, pvw_variant floor).
+  The compiler law is P1 = P0 (kv_static_programme.attention_calendar, profile pv_floor): pvfin |P0 - P1| = 0 at every context
+  (was 0 / 16 / 32: KV_STATIC_PARAMS ATTN_CALENDAR PVFIN_PAIR_SKEW).  0 token cost (pvfin joins on max(P0, P1) = P0), no stall.
+  Bench: tools/qwen_kv_die/pv_floor_bench.sh (results/arch/kv_floor1_1020/pv_floor_bench_full_307565e07.log).
 """
 import hashlib
 import json
@@ -32,6 +39,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 ON = os.environ.get('OT_KV_BOOT_AGES', '0') == '1'
+FLOOR = os.environ.get('OT_KV_PVFIN_FLOOR', '0') == '1'     # KV-FLOOR1: pair END FLOOR control (see module doc)
 D = 'rtl/qwen_sys/kv_bootage_20261019/'
 SUCC = dict(
     diecfg=(D + 'qkd_kv_die_cfg_a.sv', 'qkd_kv_die_cfg_a'),
@@ -39,7 +47,8 @@ SUCC = dict(
     attn_face=(D + 'qkd_attn_result_face_sb.sv', 'qkd_attn_result_face_sb'),
     attn_cal=(D + 'qkd_attn_cal_gen_b.sv', 'qkd_attn_cal_gen_b'),
     vport=(D + 'qkd_pv16_vport_b.sv', 'qkd_pv16_vport_b'),
-    pv_ctl=('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv', 'ot_qwen_tp8_pv_wide_ctl_tb'))
+    pv_ctl=('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv', 'ot_qwen_tp8_pv_wide_ctl_tb'),
+    pv_ctl_floor=('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv', 'ot_qwen_tp8_pv_wide_ctl_tbf'))
 # hardware bounds (RTL parameters of the successors: delay-line depth / register range)
 BOUNDS = dict(PV_LEAD=63, F_DLY=127, D_QK=255, D_RL=255, VPORT_RT=31, VPORT_DQ=15, PV_FIRST_INPUT_AGE=127)
 MIN = dict(PV_LEAD=0, F_DLY=1, D_QK=0, D_RL=0, VPORT_RT=1, VPORT_DQ=0, PV_FIRST_INPUT_AGE=1)
@@ -118,9 +127,30 @@ def boot_ages_join(graph, root=ROOT, cfg='diecfg'):
     return bound
 
 
-def pvw_file(src):
-    """the boot-age variant of a generated PV pair cluster file (qkd_pvw_die_t*.sv -> *_ba.sv, module qkd_pvw_die_tb)"""
-    return str(src)[:-3] + '_ba.sv'
+def pvw_file(src, floor=None):
+    """the boot-age variant of a generated PV pair cluster file (qkd_pvw_die_t*.sv -> *_ba.sv, module qkd_pvw_die_tb;
+    KV-FLOOR1 floor: *_bf.sv, module qkd_pvw_die_tbf)"""
+    return str(src)[:-3] + ('_bf.sv' if (FLOOR if floor is None else floor) else '_ba.sv')
+
+
+def pvw_module(floor=None):
+    return 'qkd_pvw_die_tbf' if (FLOOR if floor is None else floor) else 'qkd_pvw_die_tb'
+
+
+def pvw_variant_floor(text, src='qkd_pvw_die_t'):
+    """KV-FLOOR1 10-20: pvw_variant + the pair END FLOOR control: module qkd_pvw_die_tbf, ctl_tb -> ctl_tbf (END_FLOOR=1,
+    same ports; both pairs end FEED / publish out_age on pair 0's issue count).  Everything else = pvw_variant byte for byte."""
+    t = pvw_variant(text, src)
+    reps = [('module qkd_pvw_die_tb #(', 'module qkd_pvw_die_tbf #('),
+            (' ot_qwen_tp8_pv_wide_ctl_tb #(.FIRST_INPUT_AGE(FIRST_INPUT_AGE),',
+             ' ot_qwen_tp8_pv_wide_ctl_tbf #(.FIRST_INPUT_AGE(FIRST_INPUT_AGE),.END_FLOOR(1),'),
+            ('(boot-programmable pair FIRST_INPUT_AGE); do not edit.\n',
+             '(boot-programmable pair FIRST_INPUT_AGE) + KV-FLOOR1 pair END FLOOR (--floor); do not edit.\n')]
+    for a, b in reps:
+        if t.count(a) != 1:
+            raise ValueError(f'kv_bootage.pvw_variant_floor: anchor {a!r} found {t.count(a)} times')
+        t = t.replace(a, b)
+    return t
 
 
 def pvw_variant(text, src='qkd_pvw_die_t'):
@@ -228,11 +258,12 @@ def main(argv=None):
     ap.add_argument('--schedule', type=Path, help='static_model.json / kv_static_params record')
     ap.add_argument('--out', type=Path)
     ap.add_argument('--pvw', nargs='+', type=Path, help='write the boot-age variant of these pv_trunk_gen files (*_ba.sv)')
+    ap.add_argument('--floor', action='store_true', help='KV-FLOOR1: write the END FLOOR variant (*_bf.sv) instead')
     a = ap.parse_args(argv)
     if a.pvw:
         for p in a.pvw:
-            q = Path(pvw_file(p))
-            q.write_text(pvw_variant(p.read_text()))
+            q = Path(pvw_file(p, a.floor))
+            q.write_text((pvw_variant_floor if a.floor else pvw_variant)(p.read_text()))
             print(f'wrote {q}')
         if not a.schedule:
             return 0

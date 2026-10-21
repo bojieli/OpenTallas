@@ -149,7 +149,7 @@ def test_ahub_ofs_binding_literal_and_json(tmp_path):
 def test_attention_checks_hub_margin_and_pair_skew():
     sys.path.insert(0, str(HERE.parents[1]))
     from tools.qwen_kv_die import kv_static_programme as KP
-    pr = KP.profile('die', json.loads((KP.ROOT / KP.AGES).read_text()))
+    pr = dict(KP.profile('die', json.loads((KP.ROOT / KP.AGES).read_text())), pv_floor=False)   # KV-FLOOR1: default law
     assert KP.rz_margin(dict(fr_ofs=-7)) == 10 and KP.rz_margin(dict(fr_ofs=None)) == KP.AC.RZ_MARGIN
     c = KP.attention_calendar(8192, dict(pr, fr_ofs=-7))                       # minimal R: hub export exactly after pub
     assert c['PV_START'] + c['R'] - 7 >= c['HUB_PUB'] + KP.HUB_EXPORT_AFTER_PUB
@@ -159,3 +159,32 @@ def test_attention_checks_hub_margin_and_pair_skew():
     assert ids['PVFIN_PAIR_SKEW']['contexts'] == 2 and r['worst']['pvfin_skew'] == 32   # T 1 (32), T 300 (16)
     r = KP.attention_checks(dict(pr, d_rl=pr['d_rl']), None, -7, pvfin_skew=32, Ts=(1, 300))
     assert not r['fails']
+
+
+def test_pair_end_floor_law_removes_the_pvfin_skew():
+    """KV-FLOOR1 10-20: the pair END FLOOR (ctl_tbf, OT_KV_PVFIN_FLOOR=1) -> compiler law P1 = P0: no PVFIN_PAIR_SKEW at
+    any context, P0 / PV_START / R unchanged (0 token cost); the default profile keeps the skew FAIL."""
+    sys.path.insert(0, str(HERE.parents[1]))
+    from tools.qwen_kv_die import kv_static_programme as KP
+    pr = KP.profile('die', json.loads((KP.ROOT / KP.AGES).read_text()))
+    assert pr['pv_floor'] is KP.PV_FLOOR
+    base, fl = dict(pr, pv_floor=False), dict(pr, pv_floor=True)
+    for T in (1, 128, 129, 300, 385, 4097, 8192):
+        a, b = KP.attention_calendar(T, dict(base, fr_ofs=-7)), KP.attention_calendar(T, dict(fl, fr_ofs=-7))
+        assert b['P1'] == b['P0'] == a['P0'] >= a['P1']
+        assert (b['PV_START'], b['R']) == (a['PV_START'], a['R'])
+    r = KP.attention_checks(fl, None, -7, Ts=(1, 300, 1000, 4097, 8192))
+    assert not any(f['id'] == 'PVFIN_PAIR_SKEW' for f in r['fails']) and r['worst']['pvfin_skew'] == 0
+    r = KP.attention_checks(base, None, -7, Ts=(1, 300))
+    assert any(f['id'] == 'PVFIN_PAIR_SKEW' for f in r['fails'])
+
+
+def test_bound_pair_ctl_master_and_floor(tmp_path):
+    """KV-FLOOR1: bound_ages records the die's pair control master (ctl_tbf END_FLOOR(1) = floor)"""
+    v = tmp_path / 'die_bound.v'
+    v.write_text('module d;\n ot_qwen_tp8_pv_wide_ctl_tbf #(.FIRST_INPUT_AGE(127),.END_FLOOR(1)) pvw_0__u_ctl (.clk(c));\nendmodule\n')
+    b = KSP.bound_ages(v)
+    assert b['pv_ctl_master'] == 'ot_qwen_tp8_pv_wide_ctl_tbf' and b['pv_ctl_floor'] is True and b['pv_ctl_age'] == 127
+    v.write_text('module d;\n ot_qwen_tp8_pv_wide_ctl_tb #(.FIRST_INPUT_AGE(127)) pvw_0__u_ctl (.clk(c));\nendmodule\n')
+    b = KSP.bound_ages(v)
+    assert b['pv_ctl_master'] == 'ot_qwen_tp8_pv_wide_ctl_tb' and b['pv_ctl_floor'] is False and b['pv_ctl_age'] == 127

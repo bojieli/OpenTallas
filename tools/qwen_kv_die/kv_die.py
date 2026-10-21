@@ -1480,6 +1480,8 @@ if KSD.ON:
             for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
                 SPLIT_BINDINGS[_mn]['parameters'] = dict(SPLIT_BINDINGS[_mn]['parameters'],
                                                          FIRST_INPUT_AGE=KSD.tile_ages()['PV_FIRST_INPUT_AGE'])
+    if KSD.KB.FLOOR and not (KSD.KB.ON and PV_T):
+        raise ValueError('OT_KV_PVFIN_FLOOR=1 (KV-FLOOR1 pair END FLOOR) needs OT_KV_BOOT_AGES=1 and OT_KV_PV_T=1')
     if KSD.KB.ON:
         # KV-BOOTAGE 10-19: the V ports and the pair control take their static ages from the sealed die cfg (boot image),
         # not from RTL parameters: bind the boot-age successors at their hardware BOUNDS (kv_bootage.BOUNDS) + cfg pins
@@ -1490,7 +1492,8 @@ if KSD.ON:
         if PV_T:
             for _mn in ('qkd_pvw_s', 'qkd_pvw_n'):
                 _pb = SPLIT_BINDINGS[_mn]
-                SPLIT_BINDINGS[_mn] = dict(_pb, module='qkd_pvw_die_tb', file=KSD.KB.pvw_file(_pb['file']),
+                # KV-FLOOR1 10-20 (OT_KV_PVFIN_FLOOR=1): the END FLOOR frame qkd_pvw_die_tbf (*_bf.sv, ctl_tbf)
+                SPLIT_BINDINGS[_mn] = dict(_pb, module=KSD.KB.pvw_module(), file=KSD.KB.pvw_file(_pb['file']),
                     parameters=dict(_pb['parameters'], FIRST_INPUT_AGE=KSD.KB.BOUNDS['PV_FIRST_INPUT_AGE']),
                     ports=dict(_pb['ports'], cfa=['cfg_age']))
     for _p in ('att_tx_v', 'att_tx_payload', 'emb_tx_v', 'emb_tx_payload', 'kv_drained_local', 'kv_flush_local',

@@ -86,6 +86,8 @@ VIEWS = dict(
     qkd_pv_rs_hd_f=f'{RT}/qkd_pv_rs_hd_f/views/qkd_pv_rs_hd_f',
     # MU-DIE-KV2 10-19 (OT_KV_BOOT_AGES=1: qkd_pvw_die_tb holds the boot-age pair control): CLOSED qkd_pv_ctl_tb1-b1-cebb296c4
     ot_qwen_tp8_pv_wide_ctl_tb=f"{RT}/{__import__('os').environ.get('OT_KV_PV_TB_CTL_KIT', 'qkd_pv_ctl_tb1')}/views/ot_qwen_tp8_pv_wide_ctl_tb",
+    # KV-FLOOR1 10-20 (OT_KV_PVFIN_FLOOR=1: qkd_pvw_die_tbf holds the pair END FLOOR control): kit qkd_pv_ctl_tbf1
+    ot_qwen_tp8_pv_wide_ctl_tbf=f"{RT}/{__import__('os').environ.get('OT_KV_PV_TBF_CTL_KIT', 'qkd_pv_ctl_tbf1')}/views/ot_qwen_tp8_pv_wide_ctl_tbf",
 )
 SR = 'rtl/qwen_sys/split_20261014'
 RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_head_score4_native=f'{SR}/ot_qkh_head_native_r4.sv',
@@ -101,6 +103,7 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
               ('ot_qwen_tp8_pv_slice_t', 'ot_qwen_tp8_pv_join_t', 'ot_qwen_tp8_pv_wide_ctl')},
            ot_qwen_tp8_pv_wide_ctl_t='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_t.sv',
            ot_qwen_tp8_pv_wide_ctl_tb='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tb.sv',
+           ot_qwen_tp8_pv_wide_ctl_tbf='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_ctl_tbf.sv',
            **{f'qkd_rlys_{w_}': 'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv' for w_ in (1, 36, 296)},
            **{m_: 'rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv' for m_ in ('qkd_rlyi_258', 'qkd_pv_rs_hd', 'qkd_rlyi_258s', 'qkd_pv_rs_hd_r',
                                                                      'qkd_pv_rs_hd_f')},
@@ -418,6 +421,24 @@ def main(argv=None):
         VIEWS['ot_qwen_tp8_pv_wide_ctl_t'] = str(dst)
         standin = dict(module='ot_qwen_tp8_pv_wide_ctl_t', view=str(dst), from_view=str(src.relative_to(ROOT)),
                        status='DIAGNOSTIC_STANDIN: ctl_t kit qkd_pv_ctl_t_d54f58 not closed yet')
+    if __import__('os').environ.get('OT_KV_PVFIN_FLOOR', '0') == '1' and \
+            __import__('os').environ.get('OT_KV_PVFIN_FLOOR_STANDIN', '0') == '1' and \
+            not (ROOT / VIEWS['ot_qwen_tp8_pv_wide_ctl_tbf'] / 'ot_qwen_tp8_pv_wide_ctl_tbf.lef').exists():
+        # KV-FLOOR1 10-20, DIAGNOSTIC ONLY until the qkd_pv_ctl_tbf1 kit closes: the END FLOOR control bound to the CLOSED
+        # ctl_tb view (identical ports / outline / pins; tbf adds one 16-b nq_end register and moves the FEED end compare),
+        # macro / cell renamed -- recorded in expand.json 'standin_floor', never a release view
+        src = ROOT / VIEWS['ot_qwen_tp8_pv_wide_ctl_tb']
+        dst = (a.run / 'standin' / 'ot_qwen_tp8_pv_wide_ctl_tbf').resolve()
+        dst.mkdir(parents=True, exist_ok=True)
+        for f_ in src.iterdir():
+            if f_.is_file() and f_.suffix in ('.lef', '.lib', '.json'):
+                t_ = re.sub(r'\bot_qwen_tp8_pv_wide_ctl_tb\b', 'ot_qwen_tp8_pv_wide_ctl_tbf', f_.read_text())
+                (dst / f_.name.replace('ot_qwen_tp8_pv_wide_ctl_tb', 'ot_qwen_tp8_pv_wide_ctl_tbf')).write_text(t_)
+        VIEWS['ot_qwen_tp8_pv_wide_ctl_tbf'] = str(dst)
+        standin_floor = dict(module='ot_qwen_tp8_pv_wide_ctl_tbf', view=str(dst), from_view=str(src.relative_to(ROOT)),
+                             status='DIAGNOSTIC_STANDIN: END FLOOR ctl kit qkd_pv_ctl_tbf1 not closed yet')
+    else:
+        standin_floor = None
     leaf = {}
     for mod, vd in VIEWS.items():
         lef = ROOT / vd / f'{mod}.lef'
@@ -635,6 +656,8 @@ def main(argv=None):
         rep['profile'] = dict(RL=3, Z_STRIDE=4, measured_Z_start_age=1016, fault_join_edges=1)
     if standin:
         rep['standin'] = standin
+    if standin_floor:
+        rep['standin_floor'] = standin_floor
     rep['instances_removed'] = len(drop_inst)
     rep['instances_added'] = len(add_place)
     (a.run / 'expand.json').write_text(json.dumps(rep, indent=1) + '\n')
