@@ -47,7 +47,7 @@ c=state_machine(c,'    always @(posedge clk or negedge rst_n) begin\n        if 
 c=c.replace('input  wire                    rst_n,',f'input wire[{ctlused-1}:0]rst_n_profile,')
 c=c.replace('    // status inputs, registered','    wire rst_n=rst_n_profile[0]; // status group only,24 FF\n    // status inputs, registered')
 c=c.replace('    assign busy =','    initial if(Q!=4||K!=512||KW!=10||CB!=11||XD!=17||PERM!=1||RQPIPE!=1||SLAT!=4)$fatal(1,"fixed selected n32 control shape");\n    assign busy =')
-(D/'ot_s81pa_sel_ctl.sv').write_text('// Opt-in; generated from exact selected pipeline state transitions.\n'+c)
+(D/'ot_s81pa_sel_ctl.sv').write_text('// Opt-in; generated from exact selected pipeline state transitions.\n'+'\n'.join(x.rstrip()for x in c.splitlines()).rstrip()+'\n')
 # Outer control. Existing registered pipeline ages and all arithmetic unchanged.
 s=tile[tile.index('module dsfd_selt_c #('):tile.index('// composition reference')]
 s=s.replace('module dsfd_selt_c #(','module ot_s81pa_ctl #(')
@@ -121,7 +121,7 @@ insert=f'''    wire[52:0]packet_next={{{{f_s[3*SB+838],f_s[2*SB+838],f_s[SB+838]
     initial if(SEARCH_PIPE!=1||DM!=4||PACE!=2||MRG_PIPE!=1||RQPIPE!=1||SLAT!=4||XDX!=15)$fatal(1,"fixed selected n32 outer shape");
 '''
 s=s.replace('`ifndef SYNTHESIS',insert+'`ifndef SYNTHESIS',1)
-nr=used;s=s.replace('__NR__',str(nr));(D/'ot_s81pa_ctl.sv').write_text('// Opt-in; exact state transitions, SRAM queues, same-edge local output consumers.\n'+s)
+nr=used;s=s.replace('__NR__',str(nr));(D/'ot_s81pa_ctl.sv').write_text('// Opt-in; exact state transitions, SRAM queues, same-edge local output consumers.\n'+'\n'.join(x.rstrip()for x in s.splitlines()).rstrip()+'\n')
 # New wrapper; no old module or CLOSED view is overwritten.
 w=(R/'rtl/dsrom_sys/s81_dv/unit/bk/plana/dsdv_bksel_q_pa.sv').read_text().split('module dsdv_bksel_c_pa',1)[1]
 w='module dsdv_bksel_c_pa_n32'+w

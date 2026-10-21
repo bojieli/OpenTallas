@@ -189,4 +189,3 @@ module ot_s81pa_sel_su #(
     end
     initial if (Q != 4) $fatal(1, "S81 search pipeline requires Q=4");
 endmodule
-

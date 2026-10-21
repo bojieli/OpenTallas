@@ -207,15 +207,15 @@ module ot_s81pa_ctl #(
             if (rep_req) rep_pend_d = rep_pend + 1'b1;
             if (slot) begin
                 if (|flt_new) begin
-                    o_v_d = 1'b1; 
+                    o_v_d = 1'b1;
                     flt_rep_d = flt;
                 end else if (rep_pend != 0 && &s_ready) begin
-                    o_v_d = 1'b1; 
+                    o_v_d = 1'b1;
                     rep_n_d = ~rep_n;
                     rep_pend_d = rep_pend - 1'b1 + (rep_req ? 1'b1 : 1'b0);
                 end else if (take) begin
                     o_v_d = 1'b1;
-                    
+
                     if (MRG_PIPE != 0) cnt_add_d = queue_head[tsel][DW+:5];
                     else cnt_d = cnt + pop16(hd_lv);
                     if (hd_last) begin
@@ -223,7 +223,7 @@ module ot_s81pa_ctl #(
                         if (cq == 2'd3) done_pend_d = 1'b1;
                     end
                 end else if (done_pend && &s_ready) begin
-                    o_v_d = 1'b1; 
+                    o_v_d = 1'b1;
                     done_pend_d = 1'b0; cnt_d = 10'd0; ovf_seen_d = 1'b0; seg_open_d = 1'b0; rep_n_d = 1'b0;
                 end
             end
@@ -375,4 +375,3 @@ module ot_s81pa_ctl #(
     assign vd = vd_q;
     ot_fwd_clk_inv u_vf (.a(ck[0]), .y(vf[0]));
 endmodule
-

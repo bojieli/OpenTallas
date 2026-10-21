@@ -53,4 +53,4 @@ s=s[:a]+'''    wire[3:0]bb;wire okb;wire[XW-1:0]aboveb;
 ''' +s[b:]
 rep('        for (s = 0; s < Q; s = s + 1)                // one edge after res_b (static counts only)\n            res_eq[CB*s +: CB] <= bs_r[CB*(16*s + res_b[3:0]) +: CB];','        res_eq <= eq_selected; // same res_b/bs_r ages; consumer-local fixed-bin mux')
 out=r/'rtl/dsrom_sys/s81_dv/unit/bk/plana/n32/ot_s81pa_search.sv'
-out.write_text('// Opt-in same-stage search consumer localization. Baseline SHA256 '+hashlib.sha256(src.read_bytes()).hexdigest()+'\n'+s)
+out.write_text('// Opt-in same-stage search consumer localization. Baseline SHA256 '+hashlib.sha256(src.read_bytes()).hexdigest()+'\n'+'\n'.join(x.rstrip()for x in s.splitlines()).rstrip()+'\n')
