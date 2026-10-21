@@ -1,0 +1,48 @@
+{
+  "source_commit": "a98049f90",
+  "current_collector_commit": "e203e67ea (generator-only fix; RTL identical)",
+  "actual_source_manifest_sha256": "646980e081dc4c1cb8b53b97f807d5f8cb4ce91f44365b0fa6169a5dfcd685b6",
+  "config_sha256": "e46ef2ce5da1cb0b3bcd735dee955e3aa80fe0bc87711c455c1e2923f4d35737",
+  "all_source_files_match_a98049f90": {
+    "rtl/hdc/ot_hdc_delay.sv": true,
+    "rtl/hdc/ot_hdc_sfu.sv": true,
+    "rtl/hdc/ot_hdc_fpu.sv": true,
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": true,
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": true,
+    "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": true,
+    "rtl/hdc/v41x/ot_dsrom_divc.sv": true,
+    "rtl/hdc/ot_hdc_fastfp.sv": true,
+    "rtl/hdc/ot_hdc_fp32_f12.sv": true,
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": true,
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": true,
+    "rtl/hdc/ot_hdc_prefix.sv": true,
+    "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": true,
+    "rtl/hdc/v41x/ot_dsrom_su_norm.sv": true,
+    "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv": true,
+    "rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv": true,
+    "rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv": true,
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1_bb.v": true
+  },
+  "source_count": 18,
+  "native_status": "PENDING",
+  "mechanism_status": "PENDING_FULL_R7_BENCHES",
+  "native_stage": "ot-epyc7:/srv/opentallas-scratch/claude/elem-xfin-sram-n32r7",
+  "native_unit": "oth-ubuntu-827870-1792615036",
+  "native_pid": 3288344,
+  "bench_pids": [
+    3288345,
+    3288346,
+    3288347,
+    3288348,
+    3288349,
+    3288350,
+    3288351
+  ],
+  "previous_native_r5": {
+    "status": "FAIL",
+    "max_dynamic_loads": 920,
+    "violations": 879,
+    "role_errors": 0
+  },
+  "observed_at": "2026-10-21T13:53:31.693582"
+}
