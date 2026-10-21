@@ -209,7 +209,9 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
         // Independent kept accept copies prevent sharing the mux before lane multipliers.
         wire [4*AW-1:0] lane_offsets, xs_nx;
         for (genvar sx = 0; sx < 8; sx = sx + 1) begin : g_stride_select
-            assign xs_nx[12*sx +: 12] = acc_k[NFA + NCH + 10 + 8*gc + sx] ? xs_in[12*sx +: 12] : xs_cur[12*sx +: 12];
+            qfd_dv_su8_stride_mux #(.ID(8*gc+sx)) u_mux (
+                .sel(acc_k[NFA + NCH + 10 + 8*gc + sx]),
+                .a(xs_in[12*sx +: 12]), .b(xs_cur[12*sx +: 12]), .y(xs_nx[12*sx +: 12]));
         end
         for (genvar field = 0; field < 4; field = field + 1) begin : g_offset
             qfd_dv_su8_stride #(.K(gc)) u_off (.x(xs_nx[24*field +: 24]), .y(lane_offsets[24*field +: 24]));
@@ -298,4 +300,10 @@ qfd_dv_su8_kff #(.W(1),.ID(9002)) u_start2 (.ck(ck),.d(start_d1),.q(start_d2));
 
 
 qfd_dv_su8_kff #(.W(1058),.ID(9010)) u_output_pins (.ck(ck),.d({c_gb,c_gv,c_lv1,c_pd1,c_su_nr,c_su_idle,c_su_fault,c_su_prog,c_su_rows}),.q({gb,gv,lv1,pd1,su_nr,su_idle,su_fault,su_prog,su_rows}));
+endmodule
+
+// A lane-local mapping boundary keeps accept mux selection out of multiplier cones.
+(* keep_hierarchy = "yes" *) module qfd_dv_su8_stride_mux #(parameter integer ID=0)(
+    input wire sel, input wire [11:0] a,b, output wire [11:0] y);
+    assign y = sel ? a : b;
 endmodule

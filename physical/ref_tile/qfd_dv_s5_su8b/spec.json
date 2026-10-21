@@ -69,22 +69,22 @@
  "safe_design_checklist": {
   "1_pins": "PASS: RTL registers all 487 inputs and 1058 outputs at the pin (priced c_su 2 -> 6); rst_n lands rs0 -> rs1 (2 raw reset contacts) then kept local leaves; resets only control/valid state (datapath payload unreset, OWNER 09:05); no combinational pin arc (textbook in->reg/reg->out/in->out 0)",
   "2_reach": "PASS (by floorplan): outline 216.0 x 108.0, no wire can exceed 324 um; gate wire_reach checks 405",
-  "3_fanout": "PASS: pre-gate mapped native census results/arch/qw_su8_1020/native: 0 drivers > 32, max 32, 20,460 roots, rst_n 2 loads (kept qfd_dv_su8_kff/kffr copies held: keep_hierarchy, census on flat map)",
-  "4_depth": "PASS: mapped depth 470.1 ps / 15 lv (<= 600); stride multiples precomputed at accept, 24-bit Kogge-Stone prefix add",
-  "5_storage": "PASS: no dynamic table (VM/BTAB/PROG live in the VM8 group SRAMs); 4,655 FF all pipeline/control",
-  "6_floorplan": "PASS (pin-bound): no macros; aspect 2.00; full std-cell area; faces N 768/216.0 = 3.56/um, E 247/108.0 = 2.29/um, W 487/108.0 = 4.51/um, S 45/216.0 = 0.21/um; util 12.4% (fill_reason pin_bound)",
+  "3_fanout": "PASS: actual ORFS pre-gate mapped native census results/arch/qw_su8_1020/native_repair2252/r2: 0 drivers > 32, max 32, 22,399 roots, rst_n 2 loads (kept qfd_dv_su8_kff/kffr copies held: keep_hierarchy, census on flat map)",
+  "4_depth": "PASS: mapped depth 443.4 ps (<= 600); stride multiples precomputed at accept, 24-bit Kogge-Stone prefix add",
+  "5_storage": "PASS: no dynamic table (VM/BTAB/PROG live in the VM8 group SRAMs); 4,712 FF all pipeline/control",
+  "6_floorplan": "PASS (pin-bound): no macros; aspect 2.00; full std-cell area; faces N 768/216.0 = 3.56/um, E 247/108.0 = 2.29/um, W 487/108.0 = 4.51/um, S 45/216.0 = 0.21/um; util 14.6% (fill_reason pin_bound)",
   "7_clock": "ONE CTS root (S-face ck) = one region (the slice2 SU/VM8 group region, P2); pin-flop spread <= 80 TT+FF judged in the gate; crossings to other regions land in parent rings; io_hold_margin 0.03",
   "8_schedule": "static: command/record visible c_su 2 -> 6 (+4 edges: start +1 pin +2 align, out pin +1), reset release +1 boot edge; BTAB answer bypasses SU (parent relay, gb 500 -> 244); NOTICE TOK.QW.SCHED (lanes/QW-TOKSCHED.md)"
  },
  "fill_reason": {
-  "pin_bound": "pin-bound control leaf: 1,545 registered boundary bits (N 768/216.0 = 3.56/um, E 247/108.0 = 2.29/um, W 487/108.0 = 4.51/um, S 45/216.0 = 0.21/um); the 768-bit lane address bus pd1 needs one >= 172.8 um face at <= ~4.5 pins/um; std-cell area 2895.37 um2 gives util 12.4%"
+  "pin_bound": "pin-bound control leaf: 1,545 registered boundary bits (N 768/216.0 = 3.56/um, E 247/108.0 = 2.29/um, W 487/108.0 = 4.51/um, S 45/216.0 = 0.21/um); the 768-bit lane address bus pd1 needs one >= 172.8 um face at <= ~4.5 pins/um; std-cell area 3416.12 um2 gives util 14.6%"
  },
- "structural_change": "QW-SU8: SU control split from SUVM7 into its own hard leaf (VM -> VM8 group; BTAB bypass), stride precompute, 2-stage reset landing; this kit = parallel fallback, flatter (216 x 108): lower N/E density, S band longer",
+ "structural_change": "QW-SU8: SU control split from SUVM7 into its own hard leaf (VM -> VM8 group; BTAB bypass), stride precompute with lane-local kept mux boundaries (same latency), 2-stage reset landing; this kit = parallel fallback, flatter (216 x 108): lower N/E density, S band longer",
  "children": [],
  "inter": [],
  "job": {
-  "owner": "Claude:QW-SU8",
-  "branch": "claude/qw-su8-1020",
+  "owner": "Codex:QW-SU8",
+  "branch": "codex/qw-su8-native-repair-2252",
   "tag": "xsu8b",
   "purpose": "QW-SU8 slice2 SU control leaf (parallel fallback, flatter (216 x 108): lower N/E density, S band longer)",
   "extra_paths": [
@@ -120,7 +120,7 @@
     "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/su8/bench.sh {RUN}/m1 1 0",
     "expect": "fail",
     "fail_regex": "SU8_EQ FAIL",
-    "fail_witness": "results/arch/qw_su8_1020/bench/run_1_0.log",
+    "fail_witness": "results/arch/qw_su8_1020/native_repair2252/r2/bench/run_1_0.log",
     "threads": 8,
     "peak_ram_gb": 8,
     "needs": [
@@ -132,7 +132,7 @@
     "cmd": "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && bash rtl/test/qwen_dv/s5/su8/bench.sh {RUN}/m2 2 0",
     "expect": "fail",
     "fail_regex": "SU8_EQ FAIL",
-    "fail_witness": "results/arch/qw_su8_1020/bench/run_2_0.log",
+    "fail_witness": "results/arch/qw_su8_1020/native_repair2252/r2/bench/run_2_0.log",
     "threads": 8,
     "peak_ram_gb": 8,
     "needs": [

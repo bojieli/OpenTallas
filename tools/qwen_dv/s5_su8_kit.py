@@ -15,9 +15,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ["rtl/qwen_dv/s5/qfd_dv_s5_su8.sv", "rtl/qwen_dv/s5/qfd_dv_s5_su8_rst3.sv"]
-WDIR = "results/arch/qw_su8_1020/bench"
+WDIR = "results/arch/qw_su8_1020/native_repair2252/r2/bench"
 VL = "export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH && "
-STD_AREA = 2895.37   # mapped ASAP7 RVT TT, results/arch/qw_su8_1020/native/mapped_stat.txt
+STD_AREA = 3416.12   # mapped ASAP7 RVT TT, results/arch/qw_su8_1020/native/mapped_stat.txt
 PINS = {"W": ["start", "si", "l_retire", "l_last", "l_fault", "kv_we", "rd_v", "red_busy", "red_fault", "lvm_we"],
         "N": ["pd1"], "E": ["gb", "gv"],
         "S": ["rst_n", "lv1", "su_nr", "su_idle", "su_fault", "su_prog", "su_rows", "ck"]}
@@ -41,11 +41,11 @@ def spec(leaf):
                   "rs0 -> rs1 (2 raw reset contacts) then kept local leaves; resets only control/valid state (datapath "
                   "payload unreset, OWNER 09:05); no combinational pin arc (textbook in->reg/reg->out/in->out 0)",
         "2_reach": f"PASS (by floorplan): outline {w} x {h}, no wire can exceed {w + h:.0f} um; gate wire_reach checks 405",
-        "3_fanout": "PASS: pre-gate mapped native census results/arch/qw_su8_1020/native: 0 drivers > 32, max 32, "
-                    "20,460 roots, rst_n 2 loads (kept qfd_dv_su8_kff/kffr copies held: keep_hierarchy, census on flat map)",
-        "4_depth": "PASS: mapped depth 470.1 ps / 15 lv (<= 600); stride multiples precomputed at accept, 24-bit "
+        "3_fanout": "PASS: actual ORFS pre-gate mapped native census results/arch/qw_su8_1020/native_repair2252/r2: 0 drivers > 32, max 32, "
+                    "22,399 roots, rst_n 2 loads (kept qfd_dv_su8_kff/kffr copies held: keep_hierarchy, census on flat map)",
+        "4_depth": "PASS: mapped depth 443.4 ps (<= 600); stride multiples precomputed at accept, 24-bit "
                    "Kogge-Stone prefix add",
-        "5_storage": "PASS: no dynamic table (VM/BTAB/PROG live in the VM8 group SRAMs); 4,655 FF all pipeline/control",
+        "5_storage": "PASS: no dynamic table (VM/BTAB/PROG live in the VM8 group SRAMs); 4,712 FF all pipeline/control",
         "6_floorplan": f"PASS (pin-bound): no macros; aspect {max(w, h) / min(w, h):.2f}; full std-cell area; "
                        f"faces {faces}; util {util:.1%} (fill_reason pin_bound)",
         "7_clock": "ONE CTS root (S-face ck) = one region (the slice2 SU/VM8 group region, P2); pin-flop spread <= 80 "
@@ -68,10 +68,10 @@ def spec(leaf):
                         f"lane address bus pd1 needs one >= 172.8 um face at <= ~4.5 pins/um; std-cell area "
                         f"{STD_AREA} um2 gives util {util:.1%}"},
         "structural_change": "QW-SU8: SU control split from SUVM7 into its own hard leaf (VM -> VM8 group; BTAB "
-                             f"bypass), stride precompute, 2-stage reset landing; this kit = {L['what']}",
+                             f"bypass), stride precompute with lane-local kept mux boundaries (same latency), 2-stage reset landing; this kit = {L['what']}",
         "children": [], "inter": [],
         "job": {
-            "owner": "Claude:QW-SU8", "branch": "claude/qw-su8-1020", "tag": "x" + leaf,
+            "owner": "Codex:QW-SU8", "branch": "codex/qw-su8-native-repair-2252", "tag": "x" + leaf,
             "purpose": f"QW-SU8 slice2 SU control leaf ({L['what']})",
             "extra_paths": ["rtl/qwen_dv/s5", "rtl/test/qwen_dv/s5/su8", "results/arch/qw_su8_1020"],
             "benches": [
