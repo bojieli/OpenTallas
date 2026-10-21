@@ -20,6 +20,7 @@ Usage: smh_attn_rp4a_flat_gen.py [--out rtl/hbm_accel/sm/attn/flat/ot_hbm_accel_
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from pathlib import Path
 
@@ -33,6 +34,14 @@ RBW, BBW, GLW, QLW, TRW, TGI = F.RBW, F.BBW, F.GLW, F.QLW, F.TRW, F.TGI
 GN, GS, XB, LR, OS = 2, 2, 2, 2, 1
 G = 2 + GN + GS + LR + 2 * OS          # 10: gout lane delta of one rp4a tile vs the soft tile
 TOP = "ot_hbm_accel_smh_attn_rp4a"
+# HBM-OWN/SMH2 10-21: OT_SMH_HALF=r5m / r5f builds the SAME parent from the r5 REGIONAL halves (ot_hbm_smh_rp5{n,s}_{m,f},
+# rtl/hbm_accel/sm/repack/h2a5, tools/hbm_sm_repack_1015/rp5_gen.py): region clocks ck_c / ck_x [/ ck_m] on the parent
+# clk, gout lane G += 8 (MAIN) / 5 (FB) (rp5_gen.py latency bookkeeping), every other half port unchanged.
+HALF_RTL = os.environ.get("OT_SMH_HALF", "r4")
+assert HALF_RTL in ("r4", "r5m", "r5f"), HALF_RTL
+if HALF_RTL != "r4":
+    G += 8 if HALF_RTL == "r5m" else 5
+    TOP = f"ot_hbm_accel_smh_attn_rp5{HALF_RTL[2]}"
 SLICE = 720                            # lp.py regional_reset_copies: <= 30 chunks of 24 b per landed net -> slice wide buses
 
 
@@ -134,11 +143,17 @@ def gen() -> str:
             v = lambda s: int(s.split("'h")[1], 16)  # noqa: E731
             a1v, g1v, a2v, g2v = v(a1), v(g1), v(a2), v(g2)
             attn = (p * RPT) << 3 | c
-            w(f"    ot_hbm_smh_rp4ah_n {hp} u_{t}_n (.clk(clk), .rst_n(rst_n), .xs_a1(9'h{a1v & 0x1ff:x}), "
+            if HALF_RTL == "r4":
+                nmod, smod, ck = f"ot_hbm_smh_rp4ah_n {hp}", f"ot_hbm_smh_rp4ah_s {sp}", ".clk(clk)"
+            else:
+                v5 = HALF_RTL[2]
+                nmod, smod = f"ot_hbm_smh_rp5n_{v5}", f"ot_hbm_smh_rp5s_{v5}"
+                ck = ".ck_c(clk), .ck_x(clk)" + (", .ck_m(clk)" if v5 == "m" else "")
+            w(f"    {nmod} u_{t}_n ({ck}, .rst_n(rst_n), .xs_a1(9'h{a1v & 0x1ff:x}), "
               f".xs_g1(5'h{g1v & 0x1f:x}), .xs_a2(7'h{a2v & 0x7f:x}), .xs_g2(5'h{g2v & 0x1f:x}), .attn(5'h{attn:x}), "
               f".rin_n({rn}), .bin({bi}), .gin({gi}), .rout_n({ron}), .bout({bo}), .xo_b({xb}), .xo_g0({t}_xg0), "
               f".xo_gp({t}_xgp));")
-            w(f"    ot_hbm_smh_rp4ah_s {sp} u_{t}_s (.clk(clk), .rst_n(rst_n), .xss_a1(9'h{a1v >> 9:x}), "
+            w(f"    {smod} u_{t}_s ({ck}, .rst_n(rst_n), .xss_a1(9'h{a1v >> 9:x}), "
               f".xss_g1(5'h{g1v >> 5:x}), .xss_a2(7'h{a2v >> 7:x}), .xss_g2(5'h{g2v >> 5:x}), .attn(5'h{attn:x}), "
               f".rin_s({rs}), .rout_s({ros}), .xi_b({xb}), .xi_g0({t}_xg0), .xi_gp({t}_xgp), .gout({t}_go));")
         w(f"    ot_rp4a_relay #(.W(100), .N(GPAD), .VMASK({{2'b11, 48'b0, 2'b11, 48'b0}})) u_gp{c} (.clk(clk), .rst_n(rst_n), "
@@ -158,7 +173,7 @@ def gen() -> str:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="rtl/hbm_accel/sm/attn/flat/ot_hbm_accel_smh_attn_rp4a.sv")
+    ap.add_argument("--out", default=f"rtl/hbm_accel/sm/attn/flat/{TOP}.sv")
     a = ap.parse_args()
     (ROOT / a.out).write_text(gen())
     print("wrote", a.out, "G", G)

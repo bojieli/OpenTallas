@@ -102,6 +102,15 @@ def regions(form, w):
     return rr, g
 
 
+# HBM-OWN/SMH2 10-21: OT_SMH_HALF=r5m / r5f (smh_attn_rp4a_flat_gen.py) -> the r5 REGIONAL halves; artifacts get suffix SUF
+SUF = "" if R.HALF_RTL == "r4" else f"_{R.HALF_RTL}"
+R5_SRC = [] if R.HALF_RTL == "r4" else [
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv", "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+    "rtl/hbm_accel/sm/repack/h2a5/ot_hbm_smh_rp5_soft.sv"] + [
+    f"rtl/hbm_accel/sm/repack/h2a5/lp_{h}_{R.HALF_RTL[2]}/ot_hbm_smh_rp5{h}_{R.HALF_RTL[2]}.sv" for h in "ns"]
+R5_CK = [] if R.HALF_RTL == "r4" else ["ck_c", "ck_x"] + (["ck_m"] if R.HALF_RTL == "r5m" else [])
+
+
 def spec(form):
     w = 691.2 if form == "main" else 734.4
     rr, g = regions(form, w)
@@ -112,16 +121,16 @@ def spec(form):
         "why": (f"HBM-DIEGAP/SMHPARENT 10-21 (H.STA.BLK.14): smh_attn x16 parent with the rp4a hardened halves, form {form.upper()} "
                 f"({'per-half regions, n->s crossing LANDED' if form == 'main' else 'per-tile regions, both halves on one parent root'}). "
                 f"Halves r3{'a (691.2 wide)' if form == 'main' else 'b (734.4 wide)'}; SM outline estimate {g['w']:.1f} x {g['h']:.1f} um."),
-        "sources": ["rtl/hbm_accel/sm/attn/flat/ot_hbm_accel_smh_attn_rp4a.sv"],
-        "child_sources": child_sources(),
+        "sources": [f"rtl/hbm_accel/sm/attn/flat/{R.TOP}.sv"],
+        "child_sources": child_sources() + [x for x in R5_SRC if x not in child_sources()],
         "defines": defines(),
         "defines_note": "the rp4 kit define set of the halves kits (smh_rp4ah{n,s}_r3*/spec.json minus OT_RP4A_HARD) = sm_elem_bench --rp4a",
         "params": {"KVMUT": 0, "BE_DELAY": 8 + 2 * R.G, "HOPD": 5, "GPAD": R.G},
         "synthesis_hard_instances": hard,
-        "out_dir": f"rtl/hbm_accel/sm/attn/flat/lp_rp4a_{form}",
-        "record_dir": f"results/arch/smh_attn_parent_1021/{form}",
+        "out_dir": f"rtl/hbm_accel/sm/attn/flat/lp_rp4a_{form}{SUF}",
+        "record_dir": f"results/arch/smh_attn_parent_1021/{form}{SUF}",
         "clock_ports": ["clk"],
-        "clock_pins": ["clk"],
+        "clock_pins": ["clk"] + R5_CK,
         "reset_port": "rst_n",
         "reset_pins": ["rst_n", "rst_a"],
         "regions": rr,
@@ -150,7 +159,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     for form in ("main", "fb"):
         s = spec(form)
-        p = OUT / f"lp_spec_{form}.json"
+        p = OUT / f"lp_spec_{form}{SUF}.json"
         p.write_text(json.dumps(s, indent=1) + "\n")
         g = form_geometry(form)
         print(f"wrote {p.relative_to(ROOT)}: {len(s['regions'])} regions, SM outline ~{g['w']:.1f} x {g['h']:.1f} um")

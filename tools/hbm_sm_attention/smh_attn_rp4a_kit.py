@@ -35,7 +35,11 @@ SPECS = ROOT / "tools/ref_tile/specs_hbm_attention"
 # halves are the same-RTL / same-outline (691.2) r4sp (MAIN spine) / r4spb (FB spine) kits.  Override with --half form=variant
 # to bind whichever half pair CLOSES first (all four variants share RTL, ports and the 691.2 outline).
 HALF = {"main": "r4sp", "fb": "r4spb"}
-HALF_W = {"r3a": 691.2, "r3b": 734.4, "r4sp": 691.2, "r4spb": 691.2}
+HALF_W = {"r3a": 691.2, "r3b": 734.4, "r4sp": 691.2, "r4spb": 691.2, "r5m": 691.2, "r5f": 691.2}
+# HBM-OWN/SMH2 10-21: r5m / r5f = the REGIONAL halves (rp5_gen.py, MAIN x/c/m or FB x/c roots, landed seams, gout G +8 / +5).
+# They change the half RTL (module, clocks ck_c/ck_x[/ck_m]) and the parent G, so the parent flat / lp / kit are separate
+# artifacts (suffix _r5m / _r5f): run with OT_SMH_HALF=<variant> for flat_gen, lp_specs, lp gen AND this script, e.g.
+#   OT_SMH_HALF=r5m python3 tools/hbm_sm_attention/smh_attn_rp4a_kit.py --half main=r5m --half fb=r5m
 HN, HS = LS.HN, LS.HS
 NC, NP, NL = R.NC, R.NP, R.NL
 LAT = 43.2
@@ -47,14 +51,26 @@ def snap(v):
 
 def views(form):
     v = HALF[form]
+    if v.startswith("r5"):
+        return {h: f"physical/ref_tile/smh_rp5{h}_{v[2]}/views/ot_hbm_smh_rp5{h}_{v[2]}" for h in "ns"}
     return {"n": f"physical/ref_tile/smh_rp4ahn_{v}/views/ot_hbm_smh_rp4ah_n",
             "s": f"physical/ref_tile/smh_rp4ahs_{v}/views/ot_hbm_smh_rp4ah_s"}
 
 
+def suf(form):
+    v = HALF[form]
+    if v.startswith("r5"):
+        if R.HALF_RTL != v:
+            raise SystemExit(f"--half {form}={v} needs OT_SMH_HALF={v} (flat / lp / kit artifacts of the r5 parent)")
+        return f"_{v}"
+    return ""
+
+
 def kit(form):
-    rec_path = f"results/arch/smh_attn_parent_1021/{form}/ot_hbm_accel_smh_attn_rp4a_lp_{form}_record.json"
+    S = suf(form)
+    rec_path = f"results/arch/smh_attn_parent_1021/{form}{S}/{R.TOP}_lp_{form}_record.json"
     rec = json.loads((ROOT / rec_path).read_text())
-    lps = json.loads((ROOT / f"results/arch/smh_attn_parent_1021/lp_spec_{form}.json").read_text())
+    lps = json.loads((ROOT / f"results/arch/smh_attn_parent_1021/lp_spec_{form}{S}.json").read_text())
     g = LS.form_geometry(form)
     gw = 691.2 if form == "main" else 734.4  # lp geometry column frame (FB keeps its 734.4 pitch: no squeeze)
     w = HALF_W[HALF[form]]  # actual half width: centred in the frame
@@ -95,8 +111,8 @@ def kit(form):
             dom[r] = dict(ratio=[1, 1], ports=[regions[r]["clock_port"]], inputs=[], outputs=[])
     macro_area = 2 * NC * NP * w * (HN + HS) / 2
     fill = macro_area / (W * H)
-    LDIR = f"rtl/hbm_accel/sm/attn/flat/lp_rp4a_{form}"
-    bench = f"{LDIR}/ot_hbm_accel_smh_attn_rp4a_lp_{form}_bench.sh"
+    LDIR = f"rtl/hbm_accel/sm/attn/flat/lp_rp4a_{form}{S}"
+    bench = f"{LDIR}/{R.TOP}_lp_{form}_bench.sh"
     benches = [dict(name=f"lp_lockstep_mut{m}", cmd=f"MUTS={m} SIM=verilator bash {bench} {{RUN}}/bench/lp{m}",
                     expect="pass" if m == 0 else "fail",
                     **({"pass_regex": "MUT 0: LP_LOCKSTEP PASS"} if m == 0 else {"fail_regex": f"MUT {m}: LP_LOCKSTEP FAIL"}),
@@ -132,8 +148,8 @@ def kit(form):
                       f"+{rec['compiler']['reset_release_added_edges']}; inputs offset 0.  PRICED -> NOTICE HBM-DIE15.",
     }
     spec = dict(
-        name=f"smh_attn_rp4a_{form}", top=f"ot_hbm_accel_smh_attn_rp4a_lp_{form}", kind="cluster",
-        sources=[f"{LDIR}/ot_hbm_accel_smh_attn_rp4a_lp_{form}.sv", "rtl/hbm_accel/sm/attn/flat/ot_hbm_accel_smh_attn_rp4a.sv",
+        name=f"smh_attn_rp4a_{form}{S}", top=f"{R.TOP}_lp_{form}", kind="cluster",
+        sources=[f"{LDIR}/{R.TOP}_lp_{form}.sv", f"rtl/hbm_accel/sm/attn/flat/{R.TOP}.sv",
                  "rtl/common/landed_parent/ot_pl_land.sv", "rtl/common/landed_parent/ot_pl_land_n32.sv",
                  "rtl/common/landed_parent/ot_pl_land_rst_copy.sv"] + [s for s in lps["child_sources"]],
         defines=lps["defines"], params={},
@@ -164,9 +180,9 @@ def kit(form):
                     reset_depth=rec["reset"]["depth"], lp_spec=f"results/arch/smh_attn_parent_1021/lp_spec_{form}.json"),
         synthesis_hard_instances=hard,
         views_status=f"PENDING: halves views {V['n']} / {V['s']} ({HALF[form]} gates, Codex HBM lead / HBM-OWN/SMH); front / BE soft",
-        job=dict(owner="Claude:HBM-DIEGAP/SMHPARENT", branch="claude/hbm-smhparent-1021", tag=f"smhp_{form}",
+        job=dict(owner="Claude:HBM-DIEGAP/SMHPARENT", branch="claude/hbm-smhparent-1021", tag=f"smhp_{form}{S}",
                  purpose=f"H.STA.BLK.14 smh_attn x16 parent from the rp4a halves, landed cluster form {form.upper()}",
-                 views_to=f"physical/ref_tile/smh_attn_rp4a_{form}/views", record_to=f"results/rtl/ref_tile/smh_attn_rp4a_{form}",
+                 views_to=f"physical/ref_tile/smh_attn_rp4a_{form}{S}/views", record_to=f"results/rtl/ref_tile/smh_attn_rp4a_{form}{S}",
                  extra_paths=["tools/landed_parent", "rtl/common/landed_parent", "rtl/hbm_accel", "rtl/lib", "rtl/gpu", "rtl/hdc",
                               "rtl/proto", "rtl/v41rom", "results/arch/smh_attn_parent_1021", "physical/asap7_memory_macros",
                               "physical/hbm_accel_macros"],
