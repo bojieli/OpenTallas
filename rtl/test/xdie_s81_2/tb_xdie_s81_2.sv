@@ -36,7 +36,10 @@ module tb_xdie_s81_2 #(
     parameter integer NSMAX = 32768,
     parameter integer NMMAX = 1024,
     parameter integer QD = 4096,
-    parameter integer MAXCYC = 400000
+    parameter integer MAXCYC = 400000,
+    parameter integer LRXS = 0,             // TOK-FUNC-S81/MURATE: WN (AB) lep_mu_ab params as G7 binds s_0N (1/1/1); 0 = unchanged
+    parameter integer LINP = 0,
+    parameter integer LN32 = 0
 );
     localparam integer ND = 4, NP = 4, NE = ND * NP, NL = (MU == 1) ? 4 : 2;     // MU 2 = MU die (pair A only)
     localparam integer NLT = (MU == 1) ? 4 * NE : 2 * NE + ((XL5 != 0) ? 2 * ND : 0);   // live lanes (XL5: WN has 4)
@@ -94,7 +97,8 @@ module tb_xdie_s81_2 #(
         localparam integer DB = (P == 0) ? (((ge / NP) + 1) % ND) * NP + 1 :
                                 (P == 1) ? (((ge / NP) + ND - 1) % ND) * NP + 0 :
                                 (P == 2) ? (((ge / NP) + 1) % ND) * NP + 3 : (((ge / NP) + ND - 1) % ND) * NP + 2;
-        xdie_s81_2_ep #(.SIDE(P % 2), .HOST((P == 3 && MU != 1) ? 1 : 0), .MU(MU), .AB(AB), .LEG(LEG), .DMUT(DMUT)) u_ep (
+        xdie_s81_2_ep #(.SIDE(P % 2), .HOST((P == 3 && MU != 1) ? 1 : 0), .MU(MU), .AB(AB), .LEG(LEG), .DMUT(DMUT),
+            .LRXS(AB != 0 ? LRXS : 0), .LINP(AB != 0 ? LINP : 0), .LN32(AB != 0 ? LN32 : 0)) u_ep (
             .clk(clk), .rst_n(rst_n), .sid(4'((P % 2 ? 14 : 0) + (P >= 2 ? 1 : 0))), .ch_b(chb[0]),
             .ri_n(ri[ge]), .ro_n(ro[ge]), .pma_tx(ptx[ge]), .pma_rx(prx[ge]), .mu_c(muc[ge]), .mu_rt(mrt[ge]),
             .lep_ri(lri[ge]), .fault(flt[ge]), .live(lv[4*ge +: 4]));
