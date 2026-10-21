@@ -1,0 +1,2051 @@
+{
+  "scope": "existing emitted N/O only, window [10450,30800] 550x550; G10/util0.5",
+  "runs": {
+    "N": {
+      "report_window": [
+        1.23,
+        [
+          10450,
+          30800
+        ],
+        120037,
+        97600
+      ],
+      "exact_free_grid_cells": 1952,
+      "exact_capacity": 97600,
+      "intersecting_actual_bodies": [
+        {
+          "instance": "svg_NW1",
+          "placement": {
+            "m": "ot_hbm_svc_sm_group_rel_id",
+            "x": 9829.08,
+            "y": 30937.04,
+            "o": "MX",
+            "w": 646.704,
+            "h": 646.92,
+            "rule": "PC band box (d2)"
+          },
+          "grid_blocked_cells": 126
+        },
+        {
+          "instance": "svg_NW2",
+          "placement": {
+            "m": "ot_hbm_svc_sm_group_rel_id",
+            "x": 10965.888,
+            "y": 30937.04,
+            "o": "MX",
+            "w": 646.704,
+            "h": 646.92,
+            "rule": "PC band box (d2)"
+          },
+          "grid_blocked_cells": 168
+        },
+        {
+          "instance": "vmks_NW1",
+          "placement": {
+            "m": "ot_hbm_svc_vm_kshare_splitstrap",
+            "x": 10508.184,
+            "y": 31153.04,
+            "o": "R0",
+            "w": 146.88,
+            "h": 146.88,
+            "rule": "grant slot side_vmks_NW1"
+          },
+          "grid_blocked_cells": 240
+        },
+        {
+          "instance": "xc_NW2",
+          "placement": {
+            "m": "ot_hbm_svc_sm_xcal_rel_t",
+            "x": 10742.76,
+            "y": 31153.04,
+            "o": "R0",
+            "w": 209.952,
+            "h": 210.6,
+            "rule": "grant slot side_xc_NW2"
+          },
+          "grid_blocked_cells": 440
+        },
+        {
+          "instance": "sm_NW3",
+          "placement": {
+            "m": "ot_hbm_accel_smh_attn",
+            "x": 10638.648,
+            "y": 23885.496,
+            "o": "R180",
+            "w": 1939.68,
+            "h": 6955.2,
+            "rule": "grant slot sm_NW3"
+          },
+          "grid_blocked_cells": 185
+        },
+        {
+          "instance": "wbc_NW",
+          "placement": {
+            "m": "ot_hbm_svc_wbw_copy",
+            "x": 10702.8,
+            "y": 31320.0,
+            "o": "R0",
+            "w": 21.6,
+            "h": 21.6,
+            "rule": "grant slot wbc_NW"
+          },
+          "grid_blocked_cells": 9
+        }
+      ],
+      "nominal_site_footprint_total": 128540.905,
+      "nominal_site_contributors": [
+        {
+          "driver": "hleaf_NW.a_cfg_addr+a_cfg_data",
+          "sinks": [
+            "calendar_NW",
+            "cp_svg_NW1",
+            "cp_svg_NW3",
+            "hb_coll_NW",
+            "hb_quant_NW",
+            "smw_NW",
+            "xc_NW0",
+            "xc_NW2",
+            "xl_NW_ctl"
+          ],
+          "bits": 268,
+          "pins": {
+            "driver": [
+              10119.6,
+              25966.5
+            ],
+            "sinks": {
+              "calendar_NW": [
+                11719.1,
+                22070.3
+              ],
+              "cp_svg_NW1": [
+                10146.7,
+                30909.6
+              ],
+              "cp_svg_NW3": [
+                12420.1,
+                30909.6
+              ],
+              "hb_coll_NW": [
+                8227.3,
+                17948.4
+              ],
+              "hb_quant_NW": [
+                4656.6,
+                21828.7
+              ],
+              "smw_NW": [
+                12735.6,
+                21394.8
+              ],
+              "xc_NW0": [
+                8679.0,
+                31245.8
+              ],
+              "xc_NW2": [
+                10952.6,
+                31245.8
+              ],
+              "xl_NW_ctl": [
+                4972.5,
+                23461.5
+              ]
+            }
+          },
+          "stations_in_window": 3,
+          "pads_in_window": [
+            {
+              "sink": "xc_NW2",
+              "stages": 52,
+              "x": 10975.0,
+              "y": 31245.0
+            }
+          ],
+          "nominal_site_footprint": 41646.95
+        },
+        {
+          "driver": "hleaf_NW.a_cfg_target+a_cfg_v+a_desc_base+a_desc_limit+a_desc_loops+a_desc_v+a_launch_v",
+          "sinks": [
+            "calendar_NW",
+            "cp_svg_NW1",
+            "cp_svg_NW3",
+            "hb_coll_NW",
+            "hb_quant_NW",
+            "smw_NW",
+            "xc_NW0",
+            "xc_NW2",
+            "xl_NW_ctl"
+          ],
+          "bits": 52,
+          "pins": {
+            "driver": [
+              10119.6,
+              25952.6
+            ],
+            "sinks": {
+              "calendar_NW": [
+                11719.1,
+                22100.9
+              ],
+              "cp_svg_NW1": [
+                10124.0,
+                30868.6
+              ],
+              "cp_svg_NW3": [
+                12397.4,
+                30868.6
+              ],
+              "hb_coll_NW": [
+                8254.0,
+                17948.4
+              ],
+              "hb_quant_NW": [
+                4656.6,
+                21855.5
+              ],
+              "smw_NW": [
+                12776.8,
+                21394.8
+              ],
+              "xc_NW0": [
+                8679.0,
+                31259.2
+              ],
+              "xc_NW2": [
+                10952.6,
+                31259.2
+              ],
+              "xl_NW_ctl": [
+                5160.6,
+                23461.5
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [
+            {
+              "sink": "xc_NW2",
+              "stages": 53,
+              "x": 10975.0,
+              "y": 31255.0
+            }
+          ],
+          "nominal_site_footprint": 41646.95
+        },
+        {
+          "driver": "hb_router_ids.ids+ids_cohort+ids_layer+ids_v",
+          "sinks": [
+            "svg_NW0",
+            "svg_NW1",
+            "svg_NW2",
+            "svg_NW3",
+            "svg_NW4",
+            "svg_NW5",
+            "svg_NW6",
+            "svg_NW7",
+            "svg_SW0",
+            "svg_SW1",
+            "svg_SW2",
+            "svg_SW3",
+            "svg_SW4",
+            "svg_SW5",
+            "svg_SW6",
+            "svg_SW7"
+          ],
+          "bits": 79,
+          "pins": {
+            "driver": [
+              14450.5,
+              15923.3
+            ],
+            "sinks": {
+              "svg_NW0": [
+                9300.1,
+                30937.1
+              ],
+              "svg_NW1": [
+                10436.9,
+                30937.1
+              ],
+              "svg_NW2": [
+                11573.7,
+                30937.1
+              ],
+              "svg_NW3": [
+                12710.5,
+                30937.1
+              ],
+              "svg_NW4": [
+                13847.3,
+                30937.1
+              ],
+              "svg_NW5": [
+                14984.1,
+                30937.1
+              ],
+              "svg_NW6": [
+                16120.9,
+                30937.1
+              ],
+              "svg_NW7": [
+                17257.7,
+                30937.1
+              ],
+              "svg_SW0": [
+                9300.1,
+                2024.4
+              ],
+              "svg_SW1": [
+                10436.9,
+                2024.4
+              ],
+              "svg_SW2": [
+                11573.7,
+                2024.4
+              ],
+              "svg_SW3": [
+                12710.5,
+                2024.4
+              ],
+              "svg_SW4": [
+                13847.3,
+                2024.4
+              ],
+              "svg_SW5": [
+                14984.1,
+                2024.4
+              ],
+              "svg_SW6": [
+                16120.9,
+                2024.4
+              ],
+              "svg_SW7": [
+                17257.7,
+                2024.4
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [
+            {
+              "sink": "svg_NW1",
+              "stages": 4,
+              "x": 10455.0,
+              "y": 30925.0
+            }
+          ],
+          "nominal_site_footprint": 4543.304
+        },
+        {
+          "driver": "svg_NW3.sm_packet",
+          "sinks": [
+            "hb_idx__s_NW",
+            "sm_NW3"
+          ],
+          "bits": 1099,
+          "pins": {
+            "driver": [
+              12598.5,
+              30937.1
+            ],
+            "sinks": {
+              "hb_idx__s_NW": [
+                6926.5,
+                31246.4
+              ],
+              "sm_NW3": [
+                10869.9,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 3028.869
+        },
+        {
+          "driver": "svg_NW2.sm_packet",
+          "sinks": [
+            "hb_idx__s_NW",
+            "sm_NW2"
+          ],
+          "bits": 1099,
+          "pins": {
+            "driver": [
+              11461.7,
+              30937.1
+            ],
+            "sinks": {
+              "hb_idx__s_NW": [
+                6926.5,
+                31246.4
+              ],
+              "sm_NW2": [
+                9176.2,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 3028.869
+        },
+        {
+          "driver": "hleaf_NW.b_cfg_addr+b_cfg_data+b_cfg_target+b_cfg_v",
+          "sinks": [
+            "col_sfu_NW",
+            "cp_svg_NW0",
+            "cp_svg_NW2",
+            "epcal_NW",
+            "hb_dbk_NW",
+            "hc_NW",
+            "refcfg_NW",
+            "vmfc_NW",
+            "xc_NW1",
+            "xc_NW3"
+          ],
+          "bits": 277,
+          "pins": {
+            "driver": [
+              10188.7,
+              25965.4
+            ],
+            "sinks": {
+              "col_sfu_NW": [
+                10895.0,
+                21928.1
+              ],
+              "cp_svg_NW0": [
+                8972.1,
+                30908.3
+              ],
+              "cp_svg_NW2": [
+                11280.0,
+                30908.3
+              ],
+              "epcal_NW": [
+                9982.9,
+                25701.7
+              ],
+              "hb_dbk_NW": [
+                10904.9,
+                22287.2
+              ],
+              "hc_NW": [
+                11318.5,
+                19245.1
+              ],
+              "refcfg_NW": [
+                9010.5,
+                31271.4
+              ],
+              "vmfc_NW": [
+                11977.3,
+                21261.4
+              ],
+              "xc_NW1": [
+                9815.8,
+                31246.6
+              ],
+              "xc_NW3": [
+                12089.4,
+                31246.6
+              ]
+            }
+          },
+          "stations_in_window": 3,
+          "pads_in_window": [],
+          "nominal_site_footprint": 2271.652
+        },
+        {
+          "driver": "wbk_NW.w_k_addr+w_k_v+w_k_wdata",
+          "sinks": [
+            "vmks_NW3"
+          ],
+          "bits": 1148,
+          "pins": {
+            "driver": [
+              10260.6,
+              30422.6
+            ],
+            "sinks": {
+              "vmks_NW3": [
+                12898.8,
+                31284.0
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "vmks_NW0.fill_bank+fill_data+fill_epoch+fill_slot+fill_v",
+          "sinks": [
+            "vmdel_NW3"
+          ],
+          "bits": 280,
+          "pins": {
+            "driver": [
+              9421.9,
+              31153.1
+            ],
+            "sinks": {
+              "vmdel_NW3": [
+                12731.8,
+                21448.8
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "xc_NW2.cmd_ext+kv_desc",
+          "sinks": [
+            "sm_NW2"
+          ],
+          "bits": 173,
+          "pins": {
+            "driver": [
+              10952.6,
+              31289.4
+            ],
+            "sinks": {
+              "sm_NW2": [
+                9289.1,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "svg_NW2.sm_command",
+          "sinks": [
+            "sm_NW2"
+          ],
+          "bits": 83,
+          "pins": {
+            "driver": [
+              11560.2,
+              30937.1
+            ],
+            "sinks": {
+              "sm_NW2": [
+                9283.8,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "vmfc_NW.payload",
+          "sinks": [
+            "vmks_NW0",
+            "vmks_NW1",
+            "vmks_NW2",
+            "vmks_NW3"
+          ],
+          "bits": 37,
+          "pins": {
+            "driver": [
+              12141.4,
+              21299.7
+            ],
+            "sinks": {
+              "vmks_NW0": [
+                9380.1,
+                31153.1
+              ],
+              "vmks_NW1": [
+                10516.9,
+                31153.1
+              ],
+              "vmks_NW2": [
+                11653.7,
+                31153.1
+              ],
+              "vmks_NW3": [
+                12790.5,
+                31153.1
+              ]
+            }
+          },
+          "stations_in_window": 4,
+          "pads_in_window": [
+            {
+              "sink": "vmks_NW1",
+              "stages": 5,
+              "x": 10515.0,
+              "y": 31145.0
+            }
+          ],
+          "nominal_site_footprint": 1259.712
+        },
+        {
+          "driver": "vmks_NW1.c_k_addr+c_k_len+c_k_tag+c_k_v+c_k_we+c_kr_rdy",
+          "sinks": [
+            "ctl_NW_p07"
+          ],
+          "bits": 54,
+          "pins": {
+            "driver": [
+              10621.7,
+              31161.3
+            ],
+            "sinks": {
+              "ctl_NW_p07": [
+                10345.9,
+                31618.0
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 757.217
+        },
+        {
+          "driver": "hb_idx__s_NW.score",
+          "sinks": [
+            "hb_idx__xq_N"
+          ],
+          "bits": 297,
+          "pins": {
+            "driver": [
+              5886.5,
+              31347.4
+            ],
+            "sinks": {
+              "hb_idx__xq_N": [
+                11664.0,
+                21092.4
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 757.217
+        },
+        {
+          "driver": "ctl_NW_p04.kr_data",
+          "sinks": [
+            "vmks_NW1"
+          ],
+          "bits": 256,
+          "pins": {
+            "driver": [
+              9657.6,
+              31618.0
+            ],
+            "sinks": {
+              "vmks_NW1": [
+                10574.0,
+                31299.8
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 757.217
+        },
+        {
+          "driver": "vmks_NW1.fill_bank+fill_data+fill_epoch+fill_slot+fill_v",
+          "sinks": [
+            "vmdel_NW7"
+          ],
+          "bits": 280,
+          "pins": {
+            "driver": [
+              10558.7,
+              31153.1
+            ],
+            "sinks": {
+              "vmdel_NW7": [
+                12429.4,
+                21600.0
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 757.217
+        },
+        {
+          "driver": "svg_NW3.sm_command",
+          "sinks": [
+            "sm_NW3"
+          ],
+          "bits": 83,
+          "pins": {
+            "driver": [
+              12697.0,
+              30937.1
+            ],
+            "sinks": {
+              "sm_NW3": [
+                10762.3,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 757.217
+        },
+        {
+          "driver": "hleaf_NW.b_desc_base+b_desc_limit+b_desc_loops",
+          "sinks": [
+            "cp_svg_NW0",
+            "cp_svg_NW2",
+            "epcal_NW",
+            "hb_dbk_NW",
+            "hc_NW",
+            "vmfc_NW",
+            "xc_NW1",
+            "xc_NW3"
+          ],
+          "bits": 41,
+          "pins": {
+            "driver": [
+              10188.7,
+              25972.4
+            ],
+            "sinks": {
+              "cp_svg_NW0": [
+                8950.1,
+                30868.5
+              ],
+              "cp_svg_NW2": [
+                11258.0,
+                30868.5
+              ],
+              "epcal_NW": [
+                10009.4,
+                25701.7
+              ],
+              "hb_dbk_NW": [
+                10934.6,
+                22406.7
+              ],
+              "hc_NW": [
+                11318.5,
+                19254.9
+              ],
+              "vmfc_NW": [
+                11977.3,
+                21271.0
+              ],
+              "xc_NW1": [
+                9815.8,
+                31256.3
+              ],
+              "xc_NW3": [
+                12089.4,
+                31256.3
+              ]
+            }
+          },
+          "stations_in_window": 3,
+          "pads_in_window": [],
+          "nominal_site_footprint": 419.904
+        },
+        {
+          "driver": "hleaf_NW.b_desc_v+b_launch_v",
+          "sinks": [
+            "col_sfu_NW",
+            "cp_svg_NW0",
+            "cp_svg_NW2",
+            "epcal_NW",
+            "hb_dbk_NW",
+            "hc_NW",
+            "vmfc_NW",
+            "xc_NW1",
+            "xc_NW3"
+          ],
+          "bits": 2,
+          "pins": {
+            "driver": [
+              10188.7,
+              25972.8
+            ],
+            "sinks": {
+              "col_sfu_NW": [
+                10895.0,
+                21949.3
+              ],
+              "cp_svg_NW0": [
+                8950.1,
+                30873.4
+              ],
+              "cp_svg_NW2": [
+                11258.0,
+                30873.4
+              ],
+              "epcal_NW": [
+                10013.0,
+                25701.7
+              ],
+              "hb_dbk_NW": [
+                10924.0,
+                22406.7
+              ],
+              "hc_NW": [
+                11318.5,
+                19273.3
+              ],
+              "vmfc_NW": [
+                11977.3,
+                21289.3
+              ],
+              "xc_NW1": [
+                9815.8,
+                31274.7
+              ],
+              "xc_NW3": [
+                12089.4,
+                31274.7
+              ]
+            }
+          },
+          "stations_in_window": 3,
+          "pads_in_window": [],
+          "nominal_site_footprint": 419.904
+        },
+        {
+          "driver": "ctl_NW_p05.k_rdy+k_wr_done+kr_beat+kr_tag+kr_v",
+          "sinks": [
+            "vmks_NW1"
+          ],
+          "bits": 24,
+          "pins": {
+            "driver": [
+              9889.4,
+              31618.0
+            ],
+            "sinks": {
+              "vmks_NW1": [
+                10627.6,
+                31153.1
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 279.936
+        },
+        {
+          "driver": "col_idx.prm",
+          "sinks": [
+            "hb_idx__s_NE",
+            "hb_idx__s_NW",
+            "hb_idx__s_SE",
+            "hb_idx__s_SW"
+          ],
+          "bits": 1,
+          "pins": {
+            "driver": [
+              14234.5,
+              15045.5
+            ],
+            "sinks": {
+              "hb_idx__s_NE": [
+                20009.8,
+                31246.4
+              ],
+              "hb_idx__s_NW": [
+                7307.9,
+                31246.4
+              ],
+              "hb_idx__s_SE": [
+                20009.8,
+                484.2
+              ],
+              "hb_idx__s_SW": [
+                7307.9,
+                484.2
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 279.936
+        }
+      ],
+      "input_sha256": {
+        "case_a_manifest.json": "e31aade80d253ef866b423120ad702c964aa52d52642a4223b601fa083f7f658",
+        "lanes_report.json": "3b5cd2005adb4783e4f07be458b1d27f681ec79b35f5bebe6cfeddc81bedd6b5",
+        "stations_lanes.json": "8a46c24b2851ae5496ff68ff8df634955274a816d84a7715353b3bb0253c8d02",
+        "root_sites.json": "29d1b8c084755516283c595496604b9dd369ce2affeb47efe95158a0093ce570"
+      }
+    },
+    "O": {
+      "report_window": [
+        1.546,
+        [
+          10450,
+          30800
+        ],
+        142964,
+        92450
+      ],
+      "exact_free_grid_cells": 1849,
+      "exact_capacity": 92450,
+      "intersecting_actual_bodies": [
+        {
+          "instance": "svg_NW1",
+          "placement": {
+            "m": "ot_hbm_svc_sm_group_rel_id",
+            "x": 9764.28,
+            "y": 30937.04,
+            "o": "MX",
+            "w": 776.304,
+            "h": 646.92,
+            "rule": "PC band box (d2)"
+          },
+          "grid_blocked_cells": 420
+        },
+        {
+          "instance": "svg_NW2",
+          "placement": {
+            "m": "ot_hbm_svc_sm_group_rel_id",
+            "x": 10901.088,
+            "y": 30937.04,
+            "o": "MX",
+            "w": 776.304,
+            "h": 646.92,
+            "rule": "PC band box (d2)"
+          },
+          "grid_blocked_cells": 420
+        },
+        {
+          "instance": "xc_NW2",
+          "placement": {
+            "m": "ot_hbm_svc_sm_xcal_rel_t",
+            "x": 10677.96,
+            "y": 31045.04,
+            "o": "R0",
+            "w": 209.952,
+            "h": 210.6,
+            "rule": "grant slot side_xc_NW2"
+          },
+          "grid_blocked_cells": 484
+        },
+        {
+          "instance": "sm_NW3",
+          "placement": {
+            "m": "ot_hbm_accel_smh_attn",
+            "x": 10638.648,
+            "y": 23885.496,
+            "o": "R180",
+            "w": 1939.68,
+            "h": 6955.2,
+            "rule": "grant slot sm_NW3"
+          },
+          "grid_blocked_cells": 185
+        },
+        {
+          "instance": "wbc_NW",
+          "placement": {
+            "m": "ot_hbm_svc_wbw_copy",
+            "x": 10702.8,
+            "y": 31320.0,
+            "o": "R0",
+            "w": 21.6,
+            "h": 21.6,
+            "rule": "grant slot wbc_NW"
+          },
+          "grid_blocked_cells": 9
+        }
+      ],
+      "nominal_site_footprint_total": 138969.815,
+      "nominal_site_contributors": [
+        {
+          "driver": "hleaf_NW.a_cfg_target+a_cfg_v+a_desc_base+a_desc_limit+a_desc_loops+a_desc_v+a_launch_v",
+          "sinks": [
+            "calendar_NW",
+            "cp_svg_NW1",
+            "cp_svg_NW3",
+            "hb_coll_NW",
+            "hb_quant_NW",
+            "smw_NW",
+            "xc_NW0",
+            "xc_NW2",
+            "xl_NW_ctl"
+          ],
+          "bits": 52,
+          "pins": {
+            "driver": [
+              10119.6,
+              25952.6
+            ],
+            "sinks": {
+              "calendar_NW": [
+                11719.1,
+                22100.9
+              ],
+              "cp_svg_NW1": [
+                10124.0,
+                30868.6
+              ],
+              "cp_svg_NW3": [
+                12397.4,
+                30868.6
+              ],
+              "hb_coll_NW": [
+                8254.0,
+                17948.4
+              ],
+              "hb_quant_NW": [
+                4656.6,
+                21855.5
+              ],
+              "smw_NW": [
+                12776.8,
+                21394.8
+              ],
+              "xc_NW0": [
+                8614.2,
+                31200.5
+              ],
+              "xc_NW2": [
+                10887.8,
+                31200.5
+              ],
+              "xl_NW_ctl": [
+                5160.6,
+                23461.5
+              ]
+            }
+          },
+          "stations_in_window": 4,
+          "pads_in_window": [
+            {
+              "sink": "xc_NW2",
+              "stages": 55,
+              "x": 10895.0,
+              "y": 31205.0
+            }
+          ],
+          "nominal_site_footprint": 44675.82
+        },
+        {
+          "driver": "hleaf_NW.a_cfg_addr+a_cfg_data",
+          "sinks": [
+            "calendar_NW",
+            "cp_svg_NW1",
+            "cp_svg_NW3",
+            "hb_coll_NW",
+            "hb_quant_NW",
+            "smw_NW",
+            "xc_NW0",
+            "xc_NW2",
+            "xl_NW_ctl"
+          ],
+          "bits": 268,
+          "pins": {
+            "driver": [
+              10119.6,
+              25966.5
+            ],
+            "sinks": {
+              "calendar_NW": [
+                11719.1,
+                22070.3
+              ],
+              "cp_svg_NW1": [
+                10146.7,
+                30909.6
+              ],
+              "cp_svg_NW3": [
+                12420.1,
+                30909.6
+              ],
+              "hb_coll_NW": [
+                8227.3,
+                17948.4
+              ],
+              "hb_quant_NW": [
+                4656.6,
+                21828.7
+              ],
+              "smw_NW": [
+                12735.6,
+                21394.8
+              ],
+              "xc_NW0": [
+                8614.2,
+                31187.1
+              ],
+              "xc_NW2": [
+                10887.8,
+                31187.1
+              ],
+              "xl_NW_ctl": [
+                4972.5,
+                23461.5
+              ]
+            }
+          },
+          "stations_in_window": 4,
+          "pads_in_window": [
+            {
+              "sink": "xc_NW2",
+              "stages": 54,
+              "x": 10895.0,
+              "y": 31185.0
+            }
+          ],
+          "nominal_site_footprint": 43918.602
+        },
+        {
+          "driver": "hb_router_ids.ids+ids_cohort+ids_layer+ids_v",
+          "sinks": [
+            "svg_NW0",
+            "svg_NW1",
+            "svg_NW2",
+            "svg_NW3",
+            "svg_NW4",
+            "svg_NW5",
+            "svg_NW6",
+            "svg_NW7",
+            "svg_SW0",
+            "svg_SW1",
+            "svg_SW2",
+            "svg_SW3",
+            "svg_SW4",
+            "svg_SW5",
+            "svg_SW6",
+            "svg_SW7"
+          ],
+          "bits": 79,
+          "pins": {
+            "driver": [
+              14450.5,
+              15923.3
+            ],
+            "sinks": {
+              "svg_NW0": [
+                9358.4,
+                30937.1
+              ],
+              "svg_NW1": [
+                10495.2,
+                30937.1
+              ],
+              "svg_NW2": [
+                11632.0,
+                30937.1
+              ],
+              "svg_NW3": [
+                12768.8,
+                30937.1
+              ],
+              "svg_NW4": [
+                13905.6,
+                30937.1
+              ],
+              "svg_NW5": [
+                15042.4,
+                30937.1
+              ],
+              "svg_NW6": [
+                16179.2,
+                30937.1
+              ],
+              "svg_NW7": [
+                17316.1,
+                30937.1
+              ],
+              "svg_SW0": [
+                9358.4,
+                2024.4
+              ],
+              "svg_SW1": [
+                10495.2,
+                2024.4
+              ],
+              "svg_SW2": [
+                11632.0,
+                2024.4
+              ],
+              "svg_SW3": [
+                12768.8,
+                2024.4
+              ],
+              "svg_SW4": [
+                13905.6,
+                2024.4
+              ],
+              "svg_SW5": [
+                15042.4,
+                2024.4
+              ],
+              "svg_SW6": [
+                16179.2,
+                2024.4
+              ],
+              "svg_SW7": [
+                17316.1,
+                2024.4
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [
+            {
+              "sink": "svg_NW1",
+              "stages": 4,
+              "x": 10555.0,
+              "y": 31005.0
+            }
+          ],
+          "nominal_site_footprint": 3786.086
+        },
+        {
+          "driver": "svg_NW3.sm_packet",
+          "sinks": [
+            "hb_idx__s_NW",
+            "sm_NW3"
+          ],
+          "bits": 1099,
+          "pins": {
+            "driver": [
+              12603.0,
+              30937.1
+            ],
+            "sinks": {
+              "hb_idx__s_NW": [
+                6926.5,
+                31246.4
+              ],
+              "sm_NW3": [
+                10859.2,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 3028.869
+        },
+        {
+          "driver": "svg_NW2.sm_packet",
+          "sinks": [
+            "hb_idx__s_NW",
+            "sm_NW2"
+          ],
+          "bits": 1099,
+          "pins": {
+            "driver": [
+              11466.2,
+              30937.1
+            ],
+            "sinks": {
+              "hb_idx__s_NW": [
+                6926.5,
+                31246.4
+              ],
+              "sm_NW2": [
+                9186.9,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 3028.869
+        },
+        {
+          "driver": "hleaf_NW.b_cfg_addr+b_cfg_data+b_cfg_target+b_cfg_v",
+          "sinks": [
+            "col_sfu_NW",
+            "cp_svg_NW0",
+            "cp_svg_NW2",
+            "epcal_NW",
+            "hb_dbk_NW",
+            "hc_NW",
+            "refcfg_NW",
+            "vmfc_NW",
+            "xc_NW1",
+            "xc_NW3"
+          ],
+          "bits": 277,
+          "pins": {
+            "driver": [
+              10188.7,
+              25965.4
+            ],
+            "sinks": {
+              "col_sfu_NW": [
+                10895.0,
+                21928.1
+              ],
+              "cp_svg_NW0": [
+                8972.1,
+                30908.3
+              ],
+              "cp_svg_NW2": [
+                11280.0,
+                30908.3
+              ],
+              "epcal_NW": [
+                9982.9,
+                25701.7
+              ],
+              "hb_dbk_NW": [
+                10904.9,
+                22287.2
+              ],
+              "hc_NW": [
+                11318.5,
+                19245.1
+              ],
+              "refcfg_NW": [
+                9010.5,
+                31309.2
+              ],
+              "vmfc_NW": [
+                11977.3,
+                21261.4
+              ],
+              "xc_NW1": [
+                9751.0,
+                31187.9
+              ],
+              "xc_NW3": [
+                12024.6,
+                31187.9
+              ]
+            }
+          },
+          "stations_in_window": 3,
+          "pads_in_window": [],
+          "nominal_site_footprint": 2271.652
+        },
+        {
+          "driver": "wbk_NW.w_k_addr+w_k_v+w_k_wdata",
+          "sinks": [
+            "vmks_NW3"
+          ],
+          "bits": 1148,
+          "pins": {
+            "driver": [
+              10260.6,
+              30422.6
+            ],
+            "sinks": {
+              "vmks_NW3": [
+                12946.6,
+                31406.5
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "vmks_NW1.g_k_wr_done+g_kr_beat+g_kr_data",
+          "sinks": [
+            "svg_NW1"
+          ],
+          "bits": 1044,
+          "pins": {
+            "driver": [
+              10574.1,
+              31473.0
+            ],
+            "sinks": {
+              "svg_NW1": [
+                10540.5,
+                31069.1
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "vmks_NW1.g_kr_tag+g_kr_v",
+          "sinks": [
+            "svg_NW1"
+          ],
+          "bits": 72,
+          "pins": {
+            "driver": [
+              10636.4,
+              31537.4
+            ],
+            "sinks": {
+              "svg_NW1": [
+                10540.5,
+                30975.4
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "vmks_NW1.fill_bank+fill_data+fill_epoch+fill_slot+fill_v",
+          "sinks": [
+            "vmdel_NW7"
+          ],
+          "bits": 280,
+          "pins": {
+            "driver": [
+              10714.0,
+              31439.4
+            ],
+            "sinks": {
+              "vmdel_NW7": [
+                12429.4,
+                21600.0
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "xc_NW2.cmd_ext",
+          "sinks": [
+            "sm_NW2"
+          ],
+          "bits": 109,
+          "pins": {
+            "driver": [
+              10887.8,
+              31225.4
+            ],
+            "sinks": {
+              "sm_NW2": [
+                9294.5,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "xc_NW2.kv_desc",
+          "sinks": [
+            "sm_NW2"
+          ],
+          "bits": 64,
+          "pins": {
+            "driver": [
+              10887.8,
+              31239.8
+            ],
+            "sinks": {
+              "sm_NW2": [
+                9090.0,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "svg_NW2.sm_command",
+          "sinks": [
+            "sm_NW2"
+          ],
+          "bits": 83,
+          "pins": {
+            "driver": [
+              11564.7,
+              30937.1
+            ],
+            "sinks": {
+              "sm_NW2": [
+                9294.5,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 2,
+          "pads_in_window": [],
+          "nominal_site_footprint": 1514.435
+        },
+        {
+          "driver": "hb_idx__s_NW.score",
+          "sinks": [
+            "hb_idx__xq_N"
+          ],
+          "bits": 297,
+          "pins": {
+            "driver": [
+              5886.5,
+              31347.4
+            ],
+            "sinks": {
+              "hb_idx__xq_N": [
+                11664.0,
+                21092.4
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 757.217
+        },
+        {
+          "driver": "vmks_NW0.fill_bank+fill_data+fill_epoch+fill_slot+fill_v",
+          "sinks": [
+            "vmdel_NW3"
+          ],
+          "bits": 280,
+          "pins": {
+            "driver": [
+              9577.2,
+              31439.4
+            ],
+            "sinks": {
+              "vmdel_NW3": [
+                12731.8,
+                21448.8
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 757.217
+        },
+        {
+          "driver": "xc_NW3.kv_desc",
+          "sinks": [
+            "sm_NW3"
+          ],
+          "bits": 64,
+          "pins": {
+            "driver": [
+              12024.6,
+              31239.8
+            ],
+            "sinks": {
+              "sm_NW3": [
+                10956.1,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 757.217
+        },
+        {
+          "driver": "svg_NW3.sm_command",
+          "sinks": [
+            "sm_NW3"
+          ],
+          "bits": 83,
+          "pins": {
+            "driver": [
+              12701.5,
+              30937.1
+            ],
+            "sinks": {
+              "sm_NW3": [
+                10751.6,
+                30840.6
+              ]
+            }
+          },
+          "stations_in_window": 1,
+          "pads_in_window": [],
+          "nominal_site_footprint": 757.217
+        },
+        {
+          "driver": "hleaf_NW.b_desc_base+b_desc_limit+b_desc_loops",
+          "sinks": [
+            "cp_svg_NW0",
+            "cp_svg_NW2",
+            "epcal_NW",
+            "hb_dbk_NW",
+            "hc_NW",
+            "vmfc_NW",
+            "xc_NW1",
+            "xc_NW3"
+          ],
+          "bits": 41,
+          "pins": {
+            "driver": [
+              10188.7,
+              25972.4
+            ],
+            "sinks": {
+              "cp_svg_NW0": [
+                8950.1,
+                30868.5
+              ],
+              "cp_svg_NW2": [
+                11258.0,
+                30868.5
+              ],
+              "epcal_NW": [
+                10009.4,
+                25701.7
+              ],
+              "hb_dbk_NW": [
+                10934.6,
+                22406.7
+              ],
+              "hc_NW": [
+                11318.5,
+                19254.9
+              ],
+              "vmfc_NW": [
+                11977.3,
+                21271.0
+              ],
+              "xc_NW1": [
+                9751.0,
+                31197.6
+              ],
+              "xc_NW3": [
+                12024.6,
+                31197.6
+              ]
+            }
+          },
+          "stations_in_window": 3,
+          "pads_in_window": [],
+          "nominal_site_footprint": 419.904
+        },
+        {
+          "driver": "ctl_NW_p09.owner_fault_split+pc_fault",
+          "sinks": [
+            "sfault_NW"
+          ],
+          "bits": 7,
+          "pins": {
+            "driver": [
+              10864.8,
+              31756.1
+            ],
+            "sinks": {
+              "sfault_NW": [
+                9295.0,
+                30881.9
+              ]
+            }
+          },
+          "stations_in_window": 3,
+          "pads_in_window": [],
+          "nominal_site_footprint": 419.904
+        },
+        {
+          "driver": "ctl_NW_p10.owner_fault_split+pc_fault",
+          "sinks": [
+            "sfault_NW"
+          ],
+          "bits": 7,
+          "pins": {
+            "driver": [
+              11130.3,
+              31756.1
+            ],
+            "sinks": {
+              "sfault_NW": [
+                9295.0,
+                30881.9
+              ]
+            }
+          },
+          "stations_in_window": 3,
+          "pads_in_window": [],
+          "nominal_site_footprint": 419.904
+        }
+      ],
+      "input_sha256": {
+        "case_a_manifest.json": "bf84365a6d54f9e05ca914243399254d900f3b82a0edd4d886759748e7025a31",
+        "lanes_report.json": "1be784c622c4cb01bfceeba1f09aaf3f18e164260992e14075f0839dbfe5b423",
+        "stations_lanes.json": "a6a6885f265f0f93e9f3e8cbad6ae3fbe8bc242b44690715841e03dfea1d215d",
+        "root_sites.json": "4a05244a5bb13fadc50ef10ae3131455a6de746ab8ffa25f84b82e7d0cf1302e"
+      }
+    }
+  },
+  "grid_delta": {
+    "lost_free_cells": 612,
+    "gained_free_cells": 509,
+    "lost_capacity": 30600,
+    "gained_capacity": 25450,
+    "O_blocker_attribution": [
+      {
+        "instance": "svg_NW1",
+        "lost_cells": 161
+      },
+      {
+        "instance": "svg_NW2",
+        "lost_cells": 132
+      },
+      {
+        "instance": "xc_NW2",
+        "lost_cells": 319
+      }
+    ],
+    "N_removed_blocker_attribution": [
+      {
+        "instance": "svg_NW1",
+        "gained_cells": 19
+      },
+      {
+        "instance": "svg_NW2",
+        "gained_cells": 19
+      },
+      {
+        "instance": "vmks_NW1",
+        "gained_cells": 221
+      },
+      {
+        "instance": "xc_NW2",
+        "gained_cells": 250
+      }
+    ]
+  },
+  "nominal_site_footprint_deltas": [
+    {
+      "driver": "hleaf_NW.a_cfg_target+a_cfg_v+a_desc_base+a_desc_limit+a_desc_loops+a_desc_v+a_launch_v",
+      "N": 41646.95,
+      "O": 44675.82,
+      "delta": 3028.869
+    },
+    {
+      "driver": "vmks_NW1.c_k_addr+c_k_len+c_k_tag+c_k_v+c_k_we+c_kr_rdy",
+      "N": 3028.869,
+      "O": 0.0,
+      "delta": -3028.869
+    },
+    {
+      "driver": "vmks_NW1.fill_bank+fill_data+fill_epoch+fill_slot+fill_v",
+      "N": 3028.869,
+      "O": 6057.738,
+      "delta": 3028.869
+    },
+    {
+      "driver": "hleaf_NW.a_cfg_addr+a_cfg_data",
+      "N": 41646.95,
+      "O": 43918.602,
+      "delta": 2271.652
+    },
+    {
+      "driver": "vmks_NW1.g_k_wr_done+g_kr_beat+g_kr_data",
+      "N": 0.0,
+      "O": 1514.435,
+      "delta": 1514.435
+    },
+    {
+      "driver": "xc_NW2.kv_desc",
+      "N": 0.0,
+      "O": 1514.435,
+      "delta": 1514.435
+    },
+    {
+      "driver": "xc_NW2.cmd_ext",
+      "N": 0.0,
+      "O": 1514.435,
+      "delta": 1514.435
+    },
+    {
+      "driver": "vmks_NW1.g_kr_tag+g_kr_v",
+      "N": 0.0,
+      "O": 1514.435,
+      "delta": 1514.435
+    },
+    {
+      "driver": "xc_NW2.cmd_ext+kv_desc",
+      "N": 1514.435,
+      "O": 0.0,
+      "delta": -1514.435
+    },
+    {
+      "driver": "vmfc_NW.payload",
+      "N": 1259.712,
+      "O": 0.0,
+      "delta": -1259.712
+    },
+    {
+      "driver": "wbc_NW.o_wbw_base+o_wbw_total+o_wbw_v",
+      "N": 839.808,
+      "O": 0.0,
+      "delta": -839.808
+    },
+    {
+      "driver": "ctl_NW_p04.kr_data",
+      "N": 757.217,
+      "O": 0.0,
+      "delta": -757.217
+    },
+    {
+      "driver": "vmks_NW0.fill_bank+fill_data+fill_epoch+fill_slot+fill_v",
+      "N": 3786.086,
+      "O": 3028.869,
+      "delta": -757.217
+    },
+    {
+      "driver": "xc_NW3.kv_desc",
+      "N": 0.0,
+      "O": 757.217,
+      "delta": 757.217
+    },
+    {
+      "driver": "hb_router_ids.ids+ids_cohort+ids_layer+ids_v",
+      "N": 4543.304,
+      "O": 3786.086,
+      "delta": -757.217
+    },
+    {
+      "driver": "ctl_NW_p10.owner_fault_split+pc_fault",
+      "N": 0.0,
+      "O": 419.904,
+      "delta": 419.904
+    },
+    {
+      "driver": "ctl_NW_p11.row_v",
+      "N": 0.0,
+      "O": 419.904,
+      "delta": 419.904
+    },
+    {
+      "driver": "ctl_NW_p12.row_v",
+      "N": 0.0,
+      "O": 419.904,
+      "delta": 419.904
+    },
+    {
+      "driver": "ctl_NW_p09.owner_fault_split+pc_fault",
+      "N": 0.0,
+      "O": 419.904,
+      "delta": 419.904
+    },
+    {
+      "driver": "ctl_NW_p09.row_v",
+      "N": 0.0,
+      "O": 419.904,
+      "delta": 419.904
+    },
+    {
+      "driver": "ctl_NW_p10.row_v",
+      "N": 0.0,
+      "O": 419.904,
+      "delta": 419.904
+    },
+    {
+      "driver": "ctl_NW_p12.owner_fault_split+pc_fault",
+      "N": 0.0,
+      "O": 419.904,
+      "delta": 419.904
+    },
+    {
+      "driver": "ctl_NW_p13.owner_fault_split+pc_fault",
+      "N": 0.0,
+      "O": 279.936,
+      "delta": 279.936
+    },
+    {
+      "driver": "ctl_NW_p14.owner_fault_split+pc_fault",
+      "N": 0.0,
+      "O": 279.936,
+      "delta": 279.936
+    },
+    {
+      "driver": "ctl_NW_p15.owner_fault_split+pc_fault",
+      "N": 0.0,
+      "O": 279.936,
+      "delta": 279.936
+    }
+  ],
+  "six_missed_homes": [
+    {
+      "instance": "refcfg_SW",
+      "actual": {
+        "m": "ot_hbm_pc_refresh_cfg",
+        "x": 8985.6,
+        "y": 1593.0,
+        "o": "R0",
+        "w": 51.84,
+        "h": 51.84,
+        "rule": "region pc_SW0"
+      },
+      "expected": {
+        "m": "ot_hbm_pc_refresh_cfg",
+        "x": 9200.4,
+        "y": 2073.6,
+        "o": "R0",
+        "w": 51.84,
+        "h": 51.84,
+        "rule": "region pc_SW0"
+      },
+      "actual_intersects_window": false,
+      "expected_intersects_window": false
+    },
+    {
+      "instance": "refcfg_NW",
+      "actual": {
+        "m": "ot_hbm_pc_refresh_cfg",
+        "x": 8985.6,
+        "y": 31309.2,
+        "o": "R0",
+        "w": 51.84,
+        "h": 51.84,
+        "rule": "region pc_NW0"
+      },
+      "expected": {
+        "m": "ot_hbm_pc_refresh_cfg",
+        "x": 9200.4,
+        "y": 30866.4,
+        "o": "R0",
+        "w": 51.84,
+        "h": 51.84,
+        "rule": "region pc_NW0"
+      },
+      "actual_intersects_window": false,
+      "expected_intersects_window": false
+    },
+    {
+      "instance": "cij_SW",
+      "actual": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 7732.8,
+        "y": 15006.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_SW"
+      },
+      "expected": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 7646.4,
+        "y": 15006.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_SW"
+      },
+      "actual_intersects_window": false,
+      "expected_intersects_window": false
+    },
+    {
+      "instance": "cij_SE",
+      "actual": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 18424.8,
+        "y": 15055.2,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_SE"
+      },
+      "expected": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 18511.2,
+        "y": 15055.2,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_SE"
+      },
+      "actual_intersects_window": false,
+      "expected_intersects_window": false
+    },
+    {
+      "instance": "cij_NW",
+      "actual": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 7965.0,
+        "y": 17490.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_NW"
+      },
+      "expected": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 7878.6,
+        "y": 17490.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_NW"
+      },
+      "actual_intersects_window": false,
+      "expected_intersects_window": false
+    },
+    {
+      "instance": "cij_NE",
+      "actual": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 18424.8,
+        "y": 17490.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_NE"
+      },
+      "expected": {
+        "m": "ot_hgi_coll_inj_idx_join_rg",
+        "x": 18511.2,
+        "y": 17490.6,
+        "o": "R0",
+        "w": 216.0,
+        "h": 432.0,
+        "rule": "region coll_NE"
+      },
+      "actual_intersects_window": false,
+      "expected_intersects_window": false
+    }
+  ],
+  "demand_attribution_limit": "Report demand is cap.used booked across neighbouring bins (consume radius2 or4); emitted stations contain sites but not per-station forced/spread or per-bin booking ledger. Nominal site-footprint membership is exact for emitted coordinates but cannot be equated to booked-window demand. No reroute/replan performed.",
+  "single_correction_proposal": {
+    "status": "PROPOSED_ONLY_NOT_SELECTED_NO_GEN",
+    "basis": "true six explicit slot bindings plus local north stack opening the lower NW corridor",
+    "moves": {
+      "xc_NW2": {
+        "x": 10677.96,
+        "y": 31373.36,
+        "w": 209.952,
+        "h": 210.6
+      },
+      "vmks_NW1": {
+        "x": 10572.984,
+        "y": 31215.68,
+        "w": 146.88,
+        "h": 146.88
+      },
+      "wbc_NW": {
+        "x": 10854.0,
+        "y": 31320.0,
+        "w": 21.6,
+        "h": 21.6
+      }
+    },
+    "static_actual_nonrelay_body_overlaps": [],
+    "interSVG_gap_x": [
+      10540.584,
+      10901.088
+    ],
+    "xc_vmks_vertical_clearance_um": 10.8,
+    "xc_top_to_existing_controller_row_um": 34.04,
+    "six_slot_corrections": "unchanged exact prepared O2 mappings, source/params/clock parents remain identical",
+    "SVG_solid_quads": "unchanged O future geometry obligation; no old closed view alias",
+    "other_changes": 0,
+    "expected_effect": "Remove XC from lower dominant window and move its cfg return/command anchors north; preserve real body sizes and H/full reticle. Capacity effect is unmeasured; mandatory actual GEN guard and S4 required only after ROOT disposition."
+  }
+}
