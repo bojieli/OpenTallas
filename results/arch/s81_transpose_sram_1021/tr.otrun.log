@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr
+ot-run: ot-epyc7       admits   612 GB (avail 526, growth 98, headroom 0, waiters 0/0 GB) load 43/96 running 19 disk 4682 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_tr
+ot-run: LOAD SPILL: ot-epyc7 would run at 1.32 x cores; moving to ot-gold2
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-s81-merge-sram-1021 (0.3 GB) ot-epyc7 -> ot-gold2 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 467 changed entries in 5 s; running on ot-gold2; written files go back to ot-epyc7 after the run
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-2936918-1792608910 after 0 s
+TR_RESULT checks=4730 vectors=18920 errors=0
+- tools/s81_dv/svc_rs/merge_sram/tb_tr.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48us; walltime 2.008 s; speed 23.978 us/s
+- Verilator: cpu 2.007 s on 1 threads; allocated 9 MB
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-2936918-1792608910): exit 0
+ot-run: SPILL: outputs copied back ot-gold2 -> ot-epyc7; RAN on ot-gold2: exit 0

@@ -1,0 +1,27 @@
+{
+  "source": "4918af131",
+  "status": "MINIMUM_SOURCE_PASS",
+  "unit": "oth-ubuntu-2936918-1792608910",
+  "host": "ot-gold2",
+  "source_host": "ot-epyc7",
+  "scope": "actual tr_x vs exact original flop tr_x, TD32/DPT8/NL4/all4XOFF0/8/16/24, FP4/FP8 nonzero scales+pad, bothhalves/all32rows/all8dims/4simultaneouswriters/maskedwrite-through/readbubbles/qk_bypass/3resetrefillepochs",
+  "cycle_checks": 4730,
+  "vector_checks": 18920,
+  "errors": 0,
+  "build_seconds": 45.473,
+  "allocated_MB": 362.438,
+  "macros_per_stream": 72,
+  "total_macros": 288,
+  "allocated_bits": 1179648,
+  "useful_bits": 36864,
+  "default_enabled": false,
+  "causal_controls": "LIVE separate source-currentMUT0/readold/wrongdim/wronghalf",
+  "unqualified": [
+    "actualwholeATTengine/service",
+    "native_data_scale_pad_control_fanout",
+    "clock/reset_profile",
+    "physical_macro_placement",
+    "calendar",
+    "SSFF"
+  ]
+}
