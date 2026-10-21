@@ -25,3 +25,8 @@ SAFE checklist (pre-gate):
 8 Schedule PASS: reader request +s+3 controller edges, response +s+1 (priced by S81-CAL, lanes/S81-IDX3R.md).
 Benches (closure loop, Verilator 5.050): ctrl3_ctrls PASS (tb_dsfd_ctrl_rg3_mux, rg3 vs record rg2 bit-identical +
 reader traffic, kit defines), mutants cms1-4 FAIL; witnesses results/rtl/s81_idx4kits_1020/witness/.
+
+## S81-COLLECT/RG3 10-21: wide re-floorplan successors s81ctrl_rg3w / s81ctrl_rg3sw
+rg3/rg3s regate @464c7f801 FAILED CTS (face bands too thin for 3.1k pins + io flops; hold repair stuck; GPL overflow 36.7%).
+spec_rg3w.json / spec_rg3sw.json: outline 561.6 x 324, two abutted SRAM stacks per PC, pin plans gen_pins_w.py modes w / sw.
+See physical/ref_tile/s81ctrl_rg3w/README.md for the checklist.

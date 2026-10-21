@@ -1,0 +1,245 @@
+{
+ "name": "s81ctrl_rg3w",
+ "top": "dsfd_ctrl_rg3",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+  "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_bb.v",
+  "rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 561.6,
+  "h": 324.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "inst": "g_pc[0].u_pc.u_q.u_mem",
+   "at": [
+    86.4,
+    64.8
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "inst": "g_pc[0].u_pc.u_r.u_mem",
+   "at": [
+    86.4,
+    165.522
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "inst": "g_pc[1].u_pc.u_q.u_mem",
+   "at": [
+    345.6,
+    64.8
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "inst": "g_pc[1].u_pc.u_r.u_mem",
+   "at": [
+    345.6,
+    165.522
+   ],
+   "orient": "MX",
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "N": [
+   "rq",
+   "rd",
+   "rrq",
+   "rrd",
+   "clk",
+   "ck_o"
+  ],
+  "S": [
+   "k_v",
+   "k_rdy",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_we",
+   "k_wdata",
+   "k_wstrb",
+   "k_wr_done",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "ckh"
+  ],
+  "W": [
+   "rst_n"
+  ]
+ },
+ "sdc_extra": [
+  "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_hclk.sdc"
+ ],
+ "recipe": 4,
+ "hold_budget": "tile",
+ "hold_budget_reason": "CDC leaf: two asynchronous roots (clk stream / ckh HBM) through ot_s81ph_afifo_g; every PHY-face pin is a flop at the face (k_rdy registered since S81-SAFE-FIX 10-19)",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin at its face in its own clock domain (S81-SAFE-FIX 10-19: rq pin register, rd/rk/wd/status output flops on clk; PHY k_rdy/kr_*/k_wr_done pin flops and k_* output flops on ckh -- k_rdy was the last exception and is now a face flop with kept per-group copies). The flow pin-register hook clocks one domain only; on the ckh PHY face it would put clk flops on hclk pins and add a cycle inside the PHY valid/ready loop."
+ },
+ "io_flop_at_pins": {
+  "cols": 4
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "structural_change": "S81-COLLECT/RG3 10-21 structural re-floorplan of dsfd_ctrl_rg3 after the rg3/rg3s regate CTS FAIL (388.8 x 324 2x2 SRAMs left a 29 um N band and 43 um S band for 3.1k face pins + io flops: faces 98% spanned, PHY-face hold repair stuck k_rdy->krq_c -23.7 ps / ld[0] -71 ps, GPL overflow 36.7% tiles): outline 561.6 x 324 (aspect 1.73), the 4 SRAM FIFOs as two abutted N-S stacks, one per PC (x 86.4 / 345.6; u_q R0 at y 64.8 pins toward S, u_r MX on top at y 165.522 pins toward N, bare touching faces), so S (PHY, 64.8 um) and N (stream+reader, 57.7 um) are full-width macro-free std-cell bands plus a 144.7 um centre column. Same RTL/defines as rg3. Pin plan: N face per PC half (PC0 rq rd rrq rrd | clk ck_o | PC1 rq rd rrq rrd) 1,882 pins over 553 um = 3.4 pins/um alternating M3/M5; S = n32s PHY pins re-spread 1,245 over 553 um = 2.3/um; rst_n W mid.",
+ "job": {
+  "owner": "Claude:S81-COLLECT/RG3",
+  "branch": "claude/s81-rg3fp-1021",
+  "tag": "rg3w",
+  "purpose": "S81 CTRL rg3 (MU.BAL.SX.3): n32s controller + non-inline index reader client face (rrq/rrd), wide re-floorplan main",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_ctrl_rg3 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DS81CTRL_SRAM_FIFO -DS81CTRL_SRAM_P192 -DS81CTRL_NATIVE32 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192_bb.v rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ctrl3_ctrls",
+    "cmd": "S81CTRL_FIFO_IMPL=sram_p192 bash results/rtl/s81_idx3r_1020/run_ctrl3.sh {RUN} ctrls 0 \"pass_s1|+SEED=1\" \"pass_s2|+SEED=2\" \"pass_lat60|+SEED=4 +LAT=60\" \"pass_slothit|+SEED=1 +SLOTHIT=1\"",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^CTRL3_CAMPAIGN PASS",
+    "pass_witness": "results/rtl/s81_idx4kits_1020/witness/ctrls.log"
+   },
+   {
+    "name": "ctrl3_cms1",
+    "cmd": "S81CTRL_FIFO_IMPL=sram_p192 bash results/rtl/s81_idx3r_1020/run_ctrl3.sh {RUN} cms1 1 \"fail_s1|+SEED=1\"",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CTRL3_CASE OK \\S+/fail_\\S+: TB_CTRL3 FAIL",
+    "fail_witness": "results/rtl/s81_idx4kits_1020/witness/cms1.log"
+   },
+   {
+    "name": "ctrl3_cms2",
+    "cmd": "S81CTRL_FIFO_IMPL=sram_p192 bash results/rtl/s81_idx3r_1020/run_ctrl3.sh {RUN} cms2 2 \"fail_s1|+SEED=1\"",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CTRL3_CASE OK \\S+/fail_\\S+: TB_CTRL3 FAIL",
+    "fail_witness": "results/rtl/s81_idx4kits_1020/witness/cms2.log"
+   },
+   {
+    "name": "ctrl3_cms3",
+    "cmd": "S81CTRL_FIFO_IMPL=sram_p192 bash results/rtl/s81_idx3r_1020/run_ctrl3.sh {RUN} cms3 3 \"fail_s1|+SEED=1\"",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CTRL3_CASE OK \\S+/fail_\\S+: TB_CTRL3 FAIL",
+    "fail_witness": "results/rtl/s81_idx4kits_1020/witness/cms3.log"
+   },
+   {
+    "name": "ctrl3_cms4",
+    "cmd": "S81CTRL_FIFO_IMPL=sram_p192 bash results/rtl/s81_idx3r_1020/run_ctrl3.sh {RUN} cms4 4 \"fail_slothit|+SEED=1 +SLOTHIT=1\"",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^CTRL3_CASE OK \\S+/fail_\\S+: TB_CTRL3 FAIL",
+    "fail_witness": "results/rtl/s81_idx4kits_1020/witness/cms4.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81ctrl_rg3w/views",
+  "record_to": "results/rtl/ref_tile/s81ctrl_rg3w",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "physical/s81_ctrl_rg2",
+   "physical/s81_ctrl_rg3",
+   "results/rtl/s81_idx3r_1020",
+   "results/rtl/s81_idx4kits_1020",
+   "rtl/chip",
+   "rtl/dsrom_sys/s81_glue",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/hdc/kv",
+   "rtl/hdc/v41x",
+   "rtl/lib"
+  ]
+ },
+ "io_tcl": "physical/s81_ctrl_rg3/dsfd_ctrl_rg3_w_pins.tcl",
+ "forwarded_clock": true,
+ "boundary_tcl": [
+  "physical/s81_ctrl_rg2/dsfd_ctrl_rg2_hclk.sdc"
+ ],
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "clk"
+ },
+ "defines": [
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "8",
+  "OT_CKKM_PORT": "clk"
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl",
+  "physical/s81_ctrl_rg3/clock_split_hclk.tcl"
+ ],
+ "std_area_um2": 3000,
+ "fill_reason": {
+  "pin_bound": "measured: rg3/rg3s regate @464c7f801 at 388.8 x 324 (fill 39%) FAILED CTS with N 1,882 / S 1,269 pins spanning 98% of 380 um faces, PHY-face hold repair stuck (k_rdy->krq_c -23.7 ps, ld[0] -71 ps; 1,000 iterations, 4.6k buffers) and GPL routability overflow 36.7% of tiles; the tile is pin/face-band bound (std cells 3.3k um2): N/S faces widened 44% to 561.6 um (3.4 / 2.3 pins/um) with macro-free 64.8 / 57.7 um face bands; outline area set by the faces, not by cell area"
+ }
+}
