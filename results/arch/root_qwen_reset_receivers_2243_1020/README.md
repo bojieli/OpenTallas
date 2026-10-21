@@ -1,0 +1,7 @@
+# ROOT review: receiving-clock reset plan correction
+
+Selective ed5b5c214 only on mainf4c1582ab: reset-tree map now counts clock receivers, excluding trunk output driver. A forwarded hop0 receives ck and drives ck_o; counting its own output as another sampling clock incorrectly suppressed the single-clock synchronizer plan. Single-clock and mixed-leaf checks remain.
+
+Source-bound production receipt ce6c99ec8 + binding7d30831c6 preserved under results/rtl/qw_reset_inputs_1020. Baseline and8cd production audits fail2 foreign releases; corrected actual run passes0, same13761 repeaters, endpoints3->5. Two exact final leaves now clock on pll_fwd and feed hop0 enables in that same clock. The production recipe has broader generator/facts patches: this is not a claim that narrow tree wholeGEN passed. ROOT independently computed canonical _reset_tree AST SHA21161c98/9043chars and helper source SHAb158e843, identical to actual replay snapshots. Remaining GENfacts failure is preserved; no routed timing, ring epoch/calendar or die closure qualification asserted.
+
+Narrow candidate direct legacy reset tests + forwarded production-shaped causal tests PASS and Python compile PASS on unpinned ep6 unit737977-1792561520 exit0. Earlier unit721288 failed before completing tests because staging omitted static testdata; fixture corrected, original setup log retained. No change to shared closure helpers, guard requires no daemon sync.
