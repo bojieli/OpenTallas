@@ -17,8 +17,10 @@
    "rtl/lib/ot_rst_relay_bounded32.sv",
    "rtl/test/kv_bind8_1020",
    "rtl/test/nearhbm",
+   "tools/hdc_golden.py",
    "tools/qwen_attention_native/rate_1015",
-   "tools/qwen_kv_die/pv_floor_bench.sh"
+   "tools/qwen_kv_die/pv_floor_bench.sh",
+   "tools/qwen_nearhbm_attn_ref.py"
   ]
  },
  "stages": {
@@ -61,7 +63,9 @@
      "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
      "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
      "rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv",
-     "rtl/test/nearhbm/tb_qkd_pvw_die_t.sv"
+     "rtl/test/nearhbm/tb_qkd_pvw_die_t.sv",
+     "tools/hdc_golden.py",
+     "tools/qwen_nearhbm_attn_ref.py"
     ]
    },
    {
@@ -92,7 +96,9 @@
      "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
      "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
      "rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv",
-     "rtl/test/nearhbm/tb_qkd_pvw_die_t.sv"
+     "rtl/test/nearhbm/tb_qkd_pvw_die_t.sv",
+     "tools/hdc_golden.py",
+     "tools/qwen_nearhbm_attn_ref.py"
     ],
     "fail_regex": "^PV_FLOOR FAIL$",
     "fail_witness": "results/arch/kv_floor2_1020/pv_floor_m1.log",
@@ -126,7 +132,9 @@
      "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv",
      "rtl/qwen_sys/split_20261014/qkd_pv_rtrunk.sv",
      "rtl/qwen_sys/split_20261014/qkd_pvw_die_t.sv",
-     "rtl/test/nearhbm/tb_qkd_pvw_die_t.sv"
+     "rtl/test/nearhbm/tb_qkd_pvw_die_t.sv",
+     "tools/hdc_golden.py",
+     "tools/qwen_nearhbm_attn_ref.py"
     ],
     "fail_regex": "^PV_FLOOR FAIL$",
     "fail_witness": "results/arch/kv_floor2_1020/pv_floor_m3.log",
