@@ -17439,7 +17439,7 @@ def hbm_tkm_e86_v5_cone_model():
         padding='partial high chunk uses actual remaining bits; no kept padded/pass-through aliases',
         comparator_count=68*4+9*16+12*4,
         GN_feedback='move EXACT qc?flags:gn ternary inside kept GN leaf; gc consumes selected output directly',
-        qc_copy_invariant='existing copies all startX, share sameD and same source regionalclock; caseequal every edge',
+        qc_copy_invariant='g_fan32_state.g_d[d].g_w[w].g_k[k].g_live.qc has NO reset, NO initial value: always @(posedge ckr[rg(SRC/GP)]) qc<=pclear_w[SRC][V]. Every compared copy has same SRC,V, clock expression and exact D wire. No asynchronous reset or distinct reset-domain path exists; functional clr is pipelined DATA through pin_clr and pc, not a flop reset. Thus RTL startsX identically and copies become equal at first common edge; existing functional4edgeCLR boot defines usable hardware state.',
         four_state_reasoning='AND/OR strong-Kleene distributivity/associativity preserves old bitwise formula; Z is treated identically by same initial bitwise operators. No relational< or logical== shortcut; GN ternary unchanged.',
         state_bits_added=0,cycles_added=0,tile_hop_edges=4,SETTLE_for_NT32=136,
         prior_legacy_to_PRE1_cost='separate existing +32first/+64finish; unchanged by v5',
