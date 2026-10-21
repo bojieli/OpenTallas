@@ -293,4 +293,6 @@ fi
 # Q-KV 10-16: over-block capacity from each block's real top layer (post-expand elements.lef) -- the old die-layer-only
 # capacity over-counted crossings over M5 tiles (kvs13i fine max 2.26 -> 1.48)
 python3 tools/qwen_kv_die/kvsys_window.py --split $H14 --lef $O/case_kv/elements.lef $( [ -f $O/expand.json ] && echo --expand $O/expand.json ) --out $O/window.json > $O/window.log
+python3 tools/qwen_kv_die/kv_gen_safety.py --case "$O/case_kv" --libs "$O/libs" > "$O/gen_safety_export.log" 2>&1 \
+  || { tail -6 "$O/gen_safety_export.log"; echo 'KV GEN safety facts export REFUSED'; exit 12; }
 echo "prep done: $(cat $O/case_kv/SOURCE_COMMIT) $(tail -1 $O/bind.log | head -c 300)"
