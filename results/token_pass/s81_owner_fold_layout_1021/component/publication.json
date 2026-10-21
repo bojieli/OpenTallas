@@ -1,0 +1,131 @@
+{
+  "schema": "opentallas.s81.owner_pair.publication.v1",
+  "status": "PASS_SOURCE_COMPONENT",
+  "unit": "oth-ubuntu-3705667-1792616681",
+  "host": "ot-epyc9",
+  "exit_code": 0,
+  "outputs_copied_back": "ot-gold1",
+  "source_commit": "7f127176b",
+  "bench_commit": "ae6ce4550",
+  "full_layer": false,
+  "full_collective": false,
+  "full_token": false,
+  "shipping_g8_equivalent": false,
+  "driver_sha256": "640f18d63aca60f8219276169055d3710abf1a6b7e50f1f0ae1619384e298efa",
+  "observed": {
+    "native_commands": 30,
+    "stage_writes": 8,
+    "local_pair_writes": 8,
+    "vs_result_writes": 6,
+    "fp32_output_elements": 8,
+    "positive_faults": 0,
+    "numerical_negative_bad": 1,
+    "pair_write_pin_edges": [
+      [
+        89,
+        896
+      ],
+      [
+        97,
+        897
+      ],
+      [
+        105,
+        898
+      ],
+      [
+        113,
+        899
+      ],
+      [
+        121,
+        900
+      ],
+      [
+        129,
+        901
+      ],
+      [
+        137,
+        902
+      ],
+      [
+        145,
+        903
+      ],
+      [
+        238,
+        904
+      ],
+      [
+        318,
+        905
+      ],
+      [
+        398,
+        908
+      ],
+      [
+        478,
+        909
+      ],
+      [
+        798,
+        904
+      ],
+      [
+        878,
+        905
+      ],
+      [
+        958,
+        908
+      ],
+      [
+        1038,
+        909
+      ]
+    ],
+    "vs_write_pin_edges": [
+      [
+        548,
+        912
+      ],
+      [
+        628,
+        913
+      ],
+      [
+        708,
+        916
+      ],
+      [
+        1108,
+        912
+      ],
+      [
+        1188,
+        913
+      ],
+      [
+        1268,
+        917
+      ]
+    ]
+  },
+  "age_scope": {
+    "local_rdout_raw_CTL_to_VP_sw_pin": 29,
+    "rb_raw_CTL_to_VP_extension_write_pin": 28,
+    "sram_commit_after_write_pin": {
+      "edges": 1,
+      "qualification": "source composition; not separately instrumented in this cut"
+    },
+    "note": "Bench conservatively spaces steps by80edges; no optimal latency/rate claim. CTL slots, producer dates and current full-die links remain unbound."
+  },
+  "open": [
+    "actual wo_b producer/capture",
+    "four-rank ingress",
+    "selected die row leases/routes",
+    "full tile/result calendar"
+  ]
+}

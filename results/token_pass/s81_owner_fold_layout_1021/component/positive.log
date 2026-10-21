@@ -1,0 +1,28 @@
+PAIR_WRITE 89 row=896 mask=0f
+PAIR_WRITE 97 row=897 mask=0f
+PAIR_WRITE 105 row=898 mask=0f
+PAIR_WRITE 113 row=899 mask=0f
+PAIR_WRITE 121 row=900 mask=0f
+PAIR_WRITE 129 row=901 mask=0f
+PAIR_WRITE 137 row=902 mask=0f
+PAIR_WRITE 145 row=903 mask=0f
+PAIR_WRITE 238 row=904 mask=ff
+PAIR_WRITE 318 row=905 mask=ff
+PAIR_WRITE 398 row=908 mask=ff
+PAIR_WRITE 478 row=909 mask=ff
+RB_WRITE 548 row=912 mask=0f
+RB_WRITE 628 row=913 mask=0f
+RB_WRITE 708 row=916 mask=0f
+PAIR_WRITE 798 row=904 mask=ff
+PAIR_WRITE 878 row=905 mask=ff
+PAIR_WRITE 958 row=908 mask=ff
+PAIR_WRITE 1038 row=909 mask=ff
+RB_WRITE 1108 row=912 mask=0f
+RB_WRITE 1188 row=913 mask=0f
+RB_WRITE 1268 row=917 mask=0f
+OWNER_PAIR mut=0 bad=0 commands=30 rf=0 xf=0 pf=0 sf=0
+OWNER_PAIR PASS
+- /srv/opentallas-scratch/claude/codex-tok-s81-layers/dense_driver/fold_layout_r3/src/tools/s81_dv/owner_pair_1021/tb_owner_pair.sv:62: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.885 s; speed 2.410 us/s
+- Verilator: cpu 0.885 s on 1 threads; allocated 15 MB
