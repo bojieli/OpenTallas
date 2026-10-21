@@ -62,23 +62,18 @@ module qfd_dv_s8_fdn_arf1 (
     wire [1094:0] ch_raw = {p_ar ? chu_q[1094:548] : own_ch[1094:548], p_dd ? chu_q[547:0] : own_ch[547:0]};
     reg [3:0] arf_sid; reg arf_sid_ok;
     wire setid=cmd_q[0] && cmd_q[3:1]==3'd7;
-    always @(posedge ck or negedge rst[1])
-      if(!rst[1]) begin arf_sid<=0;arf_sid_ok<=0;end
+    always @(posedge ck or negedge rst[0])
+      if(!rst[0]) begin arf_sid<=0;arf_sid_ok<=0;end
       else if(setid) begin arf_sid<=cmd_q[7:4];arf_sid_ok<=1;end
     wire go=cmd_q[0] && arf_sid_ok && (cmd_q[115:112]==arf_sid || cmd_q[115:112]==4'hf) && cmd_q[3:1]!=3'd7;
     reg arf_arm;reg[31:0]arf_tag;reg[15:0]arf_wm1,arf_cnt;
     wire c_xcc=go && cmd_q[3:1]==0 && cmd_q[5:4]==0;
     wire arf_fr=arf_arm && ch_raw[1094];wire arf_last=arf_cnt==arf_wm1;
     wire arf_bad=(c_xcc && arf_arm && !(arf_fr && arf_last)) || (ch_raw[1094] && !arf_arm && arf_sid==0);
-    // Payload/tag/counter are meaningful only while arf_arm. Control reset uses
-    // the existing independent kept copy1, preserving original copy0's20loads.
-    always @(posedge ck or negedge rst[1])
-      if(!rst[1])arf_arm<=0;
-      else if(c_xcc)arf_arm<=1;
-      else if(arf_fr && arf_last)arf_arm<=0;
-    always @(posedge ck)
-      if(c_xcc)begin arf_tag<=cmd_q[54:23];arf_wm1<=cmd_q[22:7]-16'd1;arf_cnt<=0;end
-      else if(arf_fr)arf_cnt<=arf_cnt+16'd1;
+    always @(posedge ck or negedge rst[0])
+      if(!rst[0])begin arf_arm<=0;arf_tag<=0;arf_wm1<=0;arf_cnt<=0;end
+      else if(c_xcc)begin arf_arm<=1;arf_tag<=cmd_q[54:23];arf_wm1<=cmd_q[22:7]-16'd1;arf_cnt<=0;end
+      else if(arf_fr)begin arf_cnt<=arf_cnt+16'd1;if(arf_last)arf_arm<=0;end
     wire[546:0]ar_out=arf_fr ? {1'b1,arf_tag,ch_raw[1061],arf_last,ch_raw[1059:548]} : ch_raw[1094:548];
     wire[1094:0]ch_m={ar_out,ch_raw[547:0]};
     always @(posedge ck or negedge rst[0])

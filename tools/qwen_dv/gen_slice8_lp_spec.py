@@ -12,17 +12,13 @@ ROOT=g7.ROOT
 OUT_DIR='rtl/qwen_dv/s5/s8/lp'
 REC_DIR='results/arch/codex_slice2_native_1021/s8'
 CHILD_SOURCES=[x for x in g7.CHILD_SOURCES if x not in ['rtl/qwen_dv/s5/p3/qfd_dv_s5_suvm_su8p3.sv','rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv']]+[
-    'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1','qfd_dv_s8_station_tail1']]
+    'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1']]
 
 def make_flat():
     import gen_slice8_rp_source
     gen_slice8_rp_source.main()
-    import gen_s8_station_tail
-    gen_s8_station_tail.main()
     g7.make_flat()
     text=g7.FLAT6.read_text().replace('module qfd_dv_s7_flat (','module qfd_dv_s8_flat (',1)
-    text=text.replace('qfd_dv_redstn2_region u_r','qfd_dv_s8_station_tail1 u_r')
-    assert text.count('qfd_dv_s8_station_tail1 u_r')==8
     old='`ifndef OT_S5_HARD\n        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))\n`endif'
     new='`ifdef OT_S8_SIM\n        #(.NCH(4), .READ_PIN_PIPE(1), .FILL_PIPE(1))\n`else\n'+old+'\n`endif'
     assert text.count(old)==32
