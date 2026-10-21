@@ -2,7 +2,7 @@
 """Select the measured iterated-tag collective configuration before r15 synthesis.
 
 ROWS=256 supports the measured DS RS144 programme (218 rows, 862/872 cycles).
-Use the exact issuer_m256/v7 source manifest; a ROWS override of old v8g RTL
+Use the qualified issuer_m256v8 native32 source manifest; a ROWS override of old v8g RTL
 without its 8-bit programme-counter and issuer selection is insufficient.
 """
 import argparse

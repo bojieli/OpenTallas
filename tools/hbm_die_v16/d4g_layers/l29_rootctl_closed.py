@@ -16,7 +16,7 @@ def apply(c, latency_report=None):
         i.setdefault('params',{}).update(PARAMS)
         return dict(selected='SOURCE_ONLY',params=i['params'],reason='timing computed after current S4/S8; hard view deferred',record=RECORD)
     rows,_=L.check(c);rs=[r for r in rows if r['client']=='hb_idx__ctl']
-    pads=[p for p in latency_report.get('pads',[]) if p['at'].startswith('hb_idx__ctl.')]
+    pads=[p for p in latency_report.get('pads',[]) if p['at'].startswith('hb_idx__ctl.') or 'hb_idx__ctl' in p.get('note','')]
     seg=[s for s in latency_report.get('segments',[]) if s['name'] in ('ctl_cq_cr','ctl_sel')]
     reasons=[]
     if i['params']!=PARAMS:reasons.append('parameters differ from exact closed tuple')

@@ -40,6 +40,8 @@ def main():
             nw = Path(a.views) / 'wrap' / f"{v['wrapper']}.sv"
             if not (pv and pv['kind'] == 'SYNTH' and pw.is_file() and pw.read_bytes() == nw.read_bytes()):
                 synth[cell] = 'new cell or wrapper differs from the previous run'; continue
+            if pv.get('env', '') != v.get('env', ''):
+                synth[cell] = 'compile environment differs from the previous run'; continue
             # A previous wrapper proves only the parameter binding.  Its implementation can change while the
             # wrapper remains byte-identical (GEN2e reused old split2/split3 timing after RTL changes).
             # Always validate the immutable source inventory below as well.

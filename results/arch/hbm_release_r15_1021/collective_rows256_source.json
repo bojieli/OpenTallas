@@ -1,14 +1,53 @@
 {
- "source_manifest": "/home/ubuntu/scratch/tokfunc-xdie/run1021a/main_rows256/src.manifest.tsv",
+ "source_manifest": "602c75a8a:results/rtl/ref_tile/hcoll_issuer_r256v8/production_ds_rs144/src.manifest.json",
  "bench_rev": "f480d998c5dd54ed2637e55f939667c8e488f902",
+ "source_rev": "7754785b7698b0bacaf7ba0d46ecd7b5520467a3",
  "params": {
   "AR_ITER": 1,
   "ROWS": 256
  },
+ "defines": [
+  "OT_COLL_ISSUER256_NATIVE32"
+ ],
  "sources": [
   {
+   "path": "rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_step.sv",
+   "blob": "803da67874bc1d1a7f10bf2174f32630d7f19471",
+   "kind": "bench"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/xdie/tb_xdie_hbm_coll.sv",
+   "blob": "52b696a381743b9b4778600b76c7f7fc44003f59",
+   "kind": "bench"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/xdie/run_xdie_hbm_coll.sh",
+   "blob": "43d05464d856ac24625e8b102a1d66bbc0dc158f",
+   "kind": "bench"
+  },
+  {
+   "path": "rtl/hbm_accel/generic/collective/xdie/tok_func_xdie_cases.sh",
+   "blob": "a49f04e286c383408ab47c211ac4f04e1fead4b6",
+   "kind": "bench"
+  },
+  {
+   "path": "tools/xdie_hbm_step_compile.py",
+   "blob": "5456d3bec000c56163109307507ac6816e992315",
+   "kind": "bench"
+  },
+  {
+   "path": "tools/xdie_hbm_coll_compile.py",
+   "blob": "832fd768e8572a97174b313cd44ce5d55ed4e1b8",
+   "kind": "bench"
+  },
+  {
+   "path": "tools/tok_func_hbm_xdie_report.py",
+   "blob": "6386ef94a275f9c41e10e9087b8bf22c0361a8b1",
+   "kind": "bench"
+  },
+  {
    "path": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
-   "blob": "e9e94f126b1eecac0ac1f799166fa348d1cb124b",
+   "blob": "2fa120831e3a93b1b01f2eaeb149310f6b41a193",
    "kind": "die"
   },
   {
@@ -337,6 +376,11 @@
    "kind": "die"
   },
   {
+   "path": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_issuer_m256v8.sv",
+   "blob": "6c2fbc7fc0ffb1a79e8b39c5f4d5a6c1227a431e",
+   "kind": "die"
+  },
+  {
    "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
    "blob": "5bc98c28984933ee28de284c4413e4681aa35823",
    "kind": "die"
@@ -391,17 +435,5 @@
    "blob": "be0818f052458d2d58172c8f764ab0627996f725",
    "kind": "include"
   }
- ],
- "measured": {
-  "DS_RS144": {
-   "cycles": [
-    862,
-    872
-   ],
-   "published": 144,
-   "exact": 144,
-   "faults": 0
-  }
- },
- "qualification": "TOKEN_COMPONENT_EVIDENCE; die synthesis/native/physical pending"
+ ]
 }
