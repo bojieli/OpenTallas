@@ -22,6 +22,8 @@ src=(rtl/test/tb_hbm_hc_eng4_static.sv $H/ot_hbm_hc_root_static.sv $H/ot_hbm_hc_
 # (ot_hbm_hc_bankrc_static.sv, hier block ot_hbm_hc_bankrc_core); otherwise byte-identical.
 vlt=rtl/test/tb_hbm_hc_eng4_static_hier.vlt
 if [[ "${HC_XDEF:-}" == *HC_BANK_RC* ]]; then src+=($H/ot_hbm_hc_bankrc_static.sv); vlt=rtl/test/tb_hbm_hc_eng4_static_hier_rc.vlt; fi
+# HBM-COLLECT10/HCE2 10-21: +define+HC_BANK_RW7 (e2 chain landing rings) also needs the shared landing master
+if [[ "${HC_XDEF:-}" == *HC_BANK_RW7* ]]; then src+=(rtl/common/landed_parent/ot_pl_land.sv); fi
 # HC-RINGPLAN 10-19: HC_XDEF = extra verilator defines (e.g. the GEN2d closed ring "+define+HC_DRLY=2 +define+HC_XRLY=0":
 # bank 0 DRLY 2, no b7->b0 relay, hub/root DRLY 2); unset = byte-identical build.
 # HH-9 10-19: HC_CPR (default 1 = the adopted ring: bank chain pin registers, chain +11 edges -> RAW0 165 + 11)

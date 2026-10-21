@@ -60,7 +60,19 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
     // sources cvc / nvc / ssc, leaf go ov_r) are replicated once per SRAM row on that row's root (w_re / w_addr on
     // clk_rw[r], x_re / x_addr on clk_rx[r], cvc / nvc / ssc / ov on clk_re[r]), loaded from the same chain taps on the
     // same edge (0 added edges).  clk_c keeps only the cv / cd chain, fin_q and f_o.  STG 0 = unchanged.
-    parameter integer STG = 0)(
+    parameter integer STG = 0,
+    // HBM-COLLECT10/HCE2 10-21 CSPL 1 (10-20 CLOCK RULE, edge tile e2): the cv / cd stage chain runs ~730 um from the W in-face
+    // (d_*) to the E out-face (o_*), and e2_rw4 / rw4c failed CTS with one root over it (clk_c pin-flop spread 432.1 / clk
+    // 461.7 ps TT).  CSPL 1 splits it into two clock regions: W region clk_c keeps stages 0..LS (taps 0 / 1 / 3 used in the
+    // W half), the E region root (core port clk_o, unused at CPO 0) holds the out register.  The crossing is a fixed-latency
+    // mesochronous landing ring (ot_pl_land_w / _r, D 4, read offset K 2 set at reset, no flow control): stage LS -> slot
+    // (1 edge) -> read K edges later = exactly the 3 chain edges LS+1..OT it replaces, so o_* keep their age (0 added
+    // edges).  The fault flag f (f_in W face, f_out E face, 2 edges, aligned with the leaf sums -- the centre samples it
+    // with leaf_v) lands in a D 4 / K 1 ring: f_in pin -> slot on the W row-3 root clk_rw[3] (= old fin_q edge), read on
+    // the E row-3 root clk_rx[3] OR lf_any (= old f_o edge): 0 added edges.  The x SRAM write copies move from clk_d[h]
+    // to their x SRAM's root clk_rx[h] (E side) so no root spans the W weight column and the E x column.  Requires CPO 0.
+    // MUT 3 (bench): chain read offset K 3 (one edge late) -> ring lockstep must FAIL.
+    parameter integer CSPL = 0)(
     input  wire          clk, clk_c, clk_o,
     // HBM-HCBANK9 10-20: clk_a = write mass (beat assembler hold / asm_q, lb_q, write data wd_q) off the in-face pin root
     // clk (the _rl / _rm cb tops; every older top ties it to clk).
@@ -185,7 +197,37 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
         w_addr <= cd[0][19:10];
         x_addr <= cd[0][9:0];
     end
-    assign q_v = cv[OT]; assign {q_ss, q_nv, q_wa, q_xa} = cd[OT]; assign q_f = f_o;
+    if (CSPL == 0) begin : g_nspl
+        assign q_v = cv[OT]; assign {q_ss, q_nv, q_wa, q_xa} = cd[OT]; assign q_f = f_o;
+    end else begin : g_spl
+        localparam integer LS = 5, LK = (MUT == 3) ? 3 : 2;  // slot = edge LS+1, read = LS+1+LK = OT (8)
+        // chain landing: W region clk_c ring (beside stage LS) -> E region clk_o read (the o_* out registers)
+        wire [4*DW-1:0] lc_bank; wire [4*3-1:0] lc_epo; wire [3:0] lc_vld; wire [DW-1:0] lc_o;
+        ot_pl_land_w #(.W(DW), .D(4)) u_lcw (.ck(clk_c), .rsi(rn_st), .i({cv[LS], cd[LS]}), .bank(lc_bank), .epo(lc_epo),
+            .vld(lc_vld));
+        ot_pl_land_r #(.W(DW), .D(4), .K(LK)) u_lcr (.ck(clk_o), .rsi(rn_st), .bank(lc_bank), .epo(lc_epo), .vld(lc_vld),
+            .o(lc_o));
+        assign q_v = lc_o[DW-1]; assign {q_ss, q_nv, q_wa, q_xa} = lc_o[DW-2:0];
+        // fault flag landing: slots written by the f_in pin on clk_rw[3] (W row 3), read K 1 on clk_rx[3] (E row 3)
+        wire [3:0] lf_bank; wire [4*3-1:0] lf_epo; wire [3:0] lf_vld;
+        ot_pl_land_w #(.W(1), .D(4)) u_lfw (.ck(clk_rw[3]), .rsi(rn_st), .i(c_f), .bank(lf_bank), .epo(lf_epo), .vld(lf_vld));
+        reg f_rq, f_warm, f_e; reg [2:0] f_rc;
+        wire [2:0] f_x = f_rc - 3'd1; wire [1:0] f_sel = f_x[1:0];
+        always @(posedge clk_rx[3]) f_rq <= rn_st;
+        always @(posedge clk_rx[3])
+            if (!f_rq) begin f_rc <= 3'd0; f_warm <= 1'b0; end
+            else begin f_rc <= f_rc + 3'd1; if (f_rc == 3'd0) f_warm <= 1'b1; end
+        always @(posedge clk_rx[3] or negedge rn_st)
+            if (!rn_st) f_e <= 1'b0;
+            else f_e <= (f_warm && lf_vld[f_sel] && lf_bank[f_sel]) || lf_any;
+        assign q_f = f_e;
+`ifndef SYNTHESIS
+        always @(posedge clk_rx[3])
+            if (f_warm && lf_vld[f_sel] && lf_epo[f_sel*3 +: 3] != f_x)
+                $error("LAND_FAULT %m: f read slot %0d epoch %0d, expected %0d", f_sel, lf_epo[f_sel*3 +: 3], f_x);
+        initial if (CPO != 0) $fatal(1, "bankrc CSPL 1 needs CPO 0 (clk_o is the E chain region root)");
+`endif
+    end
     // lane enables (task at local ML) from 4 kept copies of cv[ML] / nv / ss, each loaded from tap ML - 1
     // (STG 1: copy r on its row's lane-enable root clk_re[r] instead of clk_c; same tap, same edge)
     wire [3:0] cvc, ssc; wire [27:0] nvc;
@@ -261,7 +303,9 @@ module ot_hbm_hc_bankrc_core #(parameter integer MUT = 0, parameter integer CPI 
         end
         if (WROW != 0) begin : g_wr
             (* keep = "true" *) reg [255:0] wr;
-            always @(posedge clk_d[h]) wr <= ds;
+            wire ckx_w;
+            if (CSPL != 0) begin : g_cx assign ckx_w = clk_rx[h]; end else begin : g_cd assign ckx_w = clk_d[h]; end
+            always @(posedge ckx_w) wr <= ds;
             assign d = wr;
         end else begin : g_nwr
             assign d = ds;
@@ -654,6 +698,22 @@ module ot_hbm_hc_bankq_ft_rw4c_static #(parameter integer MUT = 0)(
 );
     wire clk_c = clk;
     `OT_HCB_FTRW4_BODY(clk)
+endmodule
+// _rw7 (HBM-COLLECT10/HCE2 10-21, e2 MAIN + FALLBACK kits share it): rw4 + STG 1 (per-row stage-control copies, as rw5)
+// + CSPL 1: the cv / cd chain split into a W clock region (clk_c) and an E clock region (clk_ce) joined by a D 4 / K 2
+// landing ring, the f flag by a D 4 / K 1 ring (clk_w3 -> clk_x3), x SRAM write copies on clk_x<h>.  0 added edges.
+module ot_hbm_hc_bankq_ft_rw7_static #(parameter integer MUT = 0)(
+    input wire clk, clk_c, clk_ce, clk_w0, clk_w1, clk_w2, clk_w3, clk_x0, clk_x1, clk_x2, clk_x3, clk_e0, clk_e1, clk_e2, clk_e3,
+    `OT_HCB_RW_CK input wire [7:0] ck_l, ck_w, input wire [3:0] ck_x, input wire rst_n,
+    `OT_HCB_RC_CHAIN,
+    input  wire [2047:0] sum_in, output wire [2047:0] sum_out, input wire f_in, output wire f_out,
+    `OT_HCB_RCFT_PORTS
+);
+    `OT_HCB_RCFT_BODY
+    ot_hbm_hc_bankrc_core #(.MUT(MUT), .WROW(2), .STG(1), .CSPL(1)) u_c (.clk(clk), .clk_c(clk_c), .clk_o(clk_ce), .clk_a(clk),
+        .clk_ri({4{clk}}), .clk_rw({clk_w3, clk_w2, clk_w1, clk_w0}), .clk_rx({clk_x3, clk_x2, clk_x1, clk_x0}),
+        .clk_re({clk_e3, clk_e2, clk_e1, clk_e0}), .clk_q({4{clk}}), `OT_HCB_RW_V, .first(1'b0),
+        `OT_HCB_RC_CONN, .sum_in(sum_in), .sum_out(sum_out), .f_in(f_in), .f_out(f_out));
 endmodule
 // ================= HBM-HCBANK10 10-21: _rw5 / _rw5m (b0, cb) =================
 // Gate evidence: b0_rw2 clk FAIL 140.6 ps TT (hold / asm 1.8 k on the in-face root), b0_rl clk 82.8 (pin flops only, the 48

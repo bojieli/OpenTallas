@@ -202,6 +202,16 @@ module ot_hbm_hc_qeng_static #(
     `define OT_HCQ_BFCK .clk_c(clk), .clk_w0(clk), .clk_w1(clk), .clk_w2(clk), .clk_w3(clk), .clk_x0(clk), .clk_x1(clk), \
         .clk_x2(clk), .clk_x3(clk), .clk_e0(clk), .clk_e1(clk), .clk_e2(clk), .clk_e3(clk), .clk_d0(clk), .clk_d1(clk), \
         .clk_d2(clk), .clk_d3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+  `ifdef HC_BANK_RW7
+    // HBM-COLLECT10/HCE2 10-21: e2 edge tiles _rw7 (chain W/E clock regions + landing rings, clk_ce); MUT 6 = e2 chain
+    // landing read offset one edge late (bankrc MUT 3)
+    `undef OT_HCQ_BF
+    `undef OT_HCQ_BFCK
+    `define OT_HCQ_BF ot_hbm_hc_bankq_ft_rw7_static
+    `define OT_HCQ_BFCK .clk_c(clk), .clk_ce(clk), .clk_w0(clk), .clk_w1(clk), .clk_w2(clk), .clk_w3(clk), .clk_x0(clk), \
+        .clk_x1(clk), .clk_x2(clk), .clk_x3(clk), .clk_e0(clk), .clk_e1(clk), .clk_e2(clk), .clk_e3(clk), .clk_d0(clk), \
+        .clk_d1(clk), .clk_d2(clk), .clk_d3(clk), .ck_l({8{clk}}), .ck_w({8{clk}}), .ck_x({4{clk}}),
+  `endif
     `undef OT_HCQ_B0CK
     `define OT_HCQ_B0CK .clk_s0(clk), .clk_s1(clk),
  `elsif HC_BANK_RM
@@ -256,7 +266,7 @@ module ot_hbm_hc_qeng_static #(
     for (genvar e = 0; e < 2; e = e + 1) begin : g_ft          // e 0: bank 2 (N, wc_n), e 1: bank 6 (S, wc_s)
         localparam integer K0 = 2 + 4 * e;
         wire [12:0] wc = (e == 0) ? wc_n : wc_s;
-        `OT_HCQ_BF #(.MUT(0)) u_b (.clk(clk), `OT_HCQ_BFCK .rst_n(rb[K0]), `OT_HCQ_CHAIN(K0),
+        `OT_HCQ_BF #(.MUT((MUT == 6) ? 3 : 0)) u_b (.clk(clk), `OT_HCQ_BFCK .rst_n(rb[K0]), `OT_HCQ_CHAIN(K0),
             .sum_in(jsum[K0*2048 +: 2048]), .f_in(jf[K0]),
             .xb_v(x_wave_v), .xb_beat(x_wave_beat), .xb_d(xs[K0*256 +: 256]),
             .wv(wc[12]), .xv(wc[11]), .j(wc[10]), .wa(wc[9:0]), .wfault(wf[K0]),
