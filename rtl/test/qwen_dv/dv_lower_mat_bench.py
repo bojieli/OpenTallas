@@ -107,9 +107,9 @@ def dd_by_slice(log):
     return out
 
 
-def mat(rng, rows, split):
-    w = rng.integers(-127, 128, size=(rows, split * KC)).astype(F)
-    x = (rng.standard_normal(split * KC) * 2.0).astype(F)
+def mat(rng, rows, split, kc):
+    w = rng.integers(-127, 128, size=(rows, split * kc)).astype(F)
+    x = (rng.standard_normal(split * kc) * 2.0).astype(F)
     s = G.to_bf16((rng.random(rows) * 0.02 + 1e-3).astype(F))
     parts = B.l6_parts(w, x, split)
     return dict(w=w, x=x, s=s, parts=parts, y=None)
@@ -296,7 +296,7 @@ def calibrate(work, seed):
 # ------------------------------------------------------------------------------------------------ runs
 def run_vm(work, name, ages, rng, mutant):
     m = D.ownership()[name]
-    gm = real_mat(name, m['split']) if FIX else expect_y(name, mat(rng, m['blocks'][-1]['rows'][1], m['split']), m['split'])
+    gm = real_mat(name, m['split']) if FIX else expect_y(name, mat(rng, m['blocks'][-1]['rows'][1], m['split'], M.STN_KC[name]), m['split'])
     lay = M.btab_layout(D.ownership())
     tabs = M.btab_stream(lay, {name: gm['s']})
     ev = LB.Events()
@@ -317,17 +317,22 @@ def run_vm(work, name, ages, rng, mutant):
     go, gn, ginfo = gold_y(gm, errs)
     last = max(f for d in low['deliveries'] for f in d['far'])
     return ok + go, n + gn, errs, dict(stn=len(low['stn']), slices=sorted(low['expected_vm']), isa_gold=ginfo,
-                                       delivery_span_cycles=last - base, producer_kc=low['kc'],
+                                       delivery_span_cycles=None, legacy_schedule_anchor_span_cycles=last - base,
+                                       first_stn_command_edge=base + min(c['edge'] for c in ch.commands()),
+                                       first_cluster_word_edge=min(d['far'][0] - low['prefix_edges'] - SK for d in low['deliveries']),
+                                       last_cluster_word_edge=last,
+                                       first_vm_write_edge=None, last_vm_write_edge=None,
+                                       vm_write_observability='reused tb has no VM-write probe; exact readback and final drain bound only',
+                                       producer_kc=low['kc'],
                                        producer_words_per_cluster_per_round=8 * low['kc'],
                                        producer_scope='STN/VM cut-boundary protocol; upstream MAC arithmetic not simulated here',
-                                       span_note='VM-landing ops have no output pin: span = last tile word consumed - '
-                                                 'first lowered edge (station drain = stn_ages); exactness by readback')
+                                       span_note='legacy anchor span is not measured VM latency; input pin edges and readback/drain bounds are recorded separately')
 
 
 def run_od(work, ages, rng, mutant):
     own = D.ownership()
     lay = M.btab_layout(own)
-    gms = {n: (real_mat(n, own[n]['split']) if FIX else expect_y(n, mat(rng, 4096, own[n]['split']), own[n]['split']))
+    gms = {n: (real_mat(n, own[n]['split']) if FIX else expect_y(n, mat(rng, 4096, own[n]['split'], M.STN_KC[n]), own[n]['split']))
            for n in ('o', 'down')}
     tabs = M.btab_stream(lay, {n: g['s'] for n, g in gms.items()}, mutant=mutant)   # matrix scales in; BTAB 1.0 out
     ev = LB.Events()
@@ -416,7 +421,7 @@ def run_lm(work, ages, rng, mutant):
     lay = M.btab_layout(own)
     hg = own['lm_head']
     rows = hg['blocks'][-1]['rows'][1]
-    gm = expect_y('lm_head', mat(rng, rows, 512), 512)
+    gm = expect_y('lm_head', mat(rng, rows, 512, M.STN_KC['lm_head']), 512)
     tabs = M.btab_stream(lay, {'lm_head': gm['s']})
     ev = LB.Events()
     t, _ = prelude(ev, LB.T0, tabs)
