@@ -10,7 +10,9 @@ module qfd_dv_slice2_lpc #(
     // results/arch/qwen_split_compute_1014/q_slice_1017/hardening):
     parameter integer SU_LT = 0,                // 1: the 8 SU lanes are the hard lane tile qfd_dv_su_lane (LT/LOFF/RTREE 1)
     parameter integer HD_W130 = 0,              // 1: the heads are qfd_dv_heads_w130 (closed qfd_xs_leaf_w130 leaves)
-    parameter integer MU_NU = 1                 // MU-QWEN R4: users of the LM-head running argmax (1 = single-user, today)
+    parameter integer MU_NU = 1,                // MU-QWEN R4: users of the LM-head running argmax (1 = single-user, today)
+    parameter integer ARF = 0,                  // QW-LAYERGAP: 1 = AR message framer (header), 2 = mutant
+    parameter integer RP = 0                    // QW-LAYERGAP: 1 = per-token RoPE row from the return chain, 2 = mutant
 ) (
     input  wire           ck,
     input  wire           rst_n,
@@ -226,8 +228,22 @@ module qfd_dv_slice2_lpc #(
     assign hd_sw_a = xt_a;
     assign hd_sw_d = xt_f;
     assign hd_fe = xt_bad;
+    // ------------------------------------------------------------------ RoPE row from the return chain (RP)
+    reg        rp_arm; reg [9:0] rp_base; reg [2:0] rp_k;
+    wire       c_rpa = (RP != 0) && go && kind == 3'd0 && cmd_q[5:4] == 2'd1;
+    wire       rp_w = (RP != 0) && rp_arm && dd_q[519] && dd_q[518];
+    wire       rp_bk = rp_k[0] ^ (RP == 2);
+    wire       rp_bad = (c_rpa && rp_arm) || (rp_w && dd_q[514:512] != rp_k) || (rp_w && tw_we);
+    always @(posedge ck or negedge rst)
+        if (!rst) begin rp_arm <= 1'b0; rp_base <= 10'd0; rp_k <= 3'd0; end
+        else if (c_rpa) begin rp_arm <= 1'b1; rp_base <= cmd_q[15:6]; rp_k <= 3'd0; end
+        else if (rp_w) begin rp_k <= rp_k + 3'd1; if (rp_k == 3'd7) rp_arm <= 1'b0; end
+    wire        vtw_we = tw_we || rp_w;
+    wire [1:0]  vtw_kind = rp_w ? 2'd1 : tw_kind;
+    wire [23:0] vtw_addr = rp_w ? {12'd0, 1'b1, rp_bk, rp_base + {8'd0, rp_k[2:1]}} : tw_addr;
+    wire [1023:0] vtw_data = rp_w ? {dd_q[511:0], dd_q[511:0]} : tw_data;
     // ------------------------------------------------------------------ VM write merge (16-el and 1-el sources)
-    wire ar_v = ar_q[517] && ar_en && !g_arm, dd_v = dd_q[519] && !dd_q[518] && dd_en, em_v = dd_q[519] && dd_q[518] && em_en;
+    wire ar_v = ar_q[517] && ar_en && !g_arm, dd_v = dd_q[519] && !dd_q[518] && dd_en, em_v = dd_q[519] && dd_q[518] && em_en && !rp_w;
     wire [23:0] em_wa = em_base + {12'd0, em_k, 4'd0};
     wire st_vm = r_v && stn_dst[0];
     wire [23:0] ar_wa = ar_base + {12'd0, ar_k, 4'd0};
@@ -246,7 +262,7 @@ module qfd_dv_slice2_lpc #(
         else if (c_prt) begin ar_k <= 8'd0; em_k <= 8'd0; end
         else begin if (ar_v) ar_k <= ar_k + 8'd1; if (em_v) em_k <= em_k + 8'd1; end
     wire vm_fault;
-    qfd_dv_vm #(.MUT(MUT)) u_vm (.ck(ck), .rst_n(rst),
+    qfd_dv_vm #(.MUT(MUT), .CRH((RP != 0) ? 1 : 0)) u_vm (.ck(ck), .rst_n(rst),
         .a_re(va_re), .b_re(vb_re), .c_re(vc_re), .a_addr(va_addr), .b_addr(vb_addr), .c_addr(vc_addr),
         .a_q(va_q), .b_q(vb_q), .c_q(vc_q),
         .cr_re(cr_re), .cr_addr(cr_addr), .cr_q(cr_q),
@@ -256,7 +272,7 @@ module qfd_dv_slice2_lpc #(
         .su_we(su_vm_we), .su_waddr(vm_waddr), .su_wdata(vm_wdata),
         .w16_we(w16_we), .w16_addr(w16_addr), .w16_data(w16_data),
         .w1_we(w1_we), .w1_addr(w1_addr), .w1_data(w1_data),
-        .tw_we(tw_we), .tw_kind(tw_kind), .tw_addr(tw_addr), .tw_data(tw_data), .fault(vm_fault));
+        .tw_we(vtw_we), .tw_kind(vtw_kind), .tw_addr(vtw_addr), .tw_data(vtw_data), .fault(vm_fault));
     // ------------------------------------------------------------------ XC (kind 0): collective command (sub 0 COLL)
     wire c_xc = go && kind == 3'd0;
     always @(posedge ck or negedge rst)
@@ -302,9 +318,23 @@ module qfd_dv_slice2_lpc #(
     wire [547:0] own_ddw = kv_any ? {1'b1, kv_kind, kv_we, kv_loc, kv_wdata, 89'd0}
                                   : {1'b1, 2'd0, su_q_we, q_loc, vm_wdata, 89'd0};
     wire        p_ar = chu_q[1094], p_dd = chu_q[547];
+    wire        ar_ov = p_ar || own_ar || arx_v;
+    wire [546:0] ar_raw = p_ar ? chu_q[1094:548] : own_ar ? own_arw : arx_v ? arx_w : 547'd0;
+    // AR message framer (ARF, header): tag / last stamped in front of the ch_dn_o register
+    reg         arf_arm; reg [31:0] arf_tag; reg [15:0] arf_wm1, arf_cnt;
+    wire        c_xcc = (ARF != 0) && go && kind == 3'd0 && cmd_q[5:4] == 2'd0;
+    wire        arf_fr = (ARF != 0) && arf_arm && ar_ov;
+    wire        arf_last = arf_cnt == ((ARF == 2) ? arf_wm1 - 16'd1 : arf_wm1);
+    wire [546:0] ar_out = arf_fr ? {1'b1, arf_tag, ar_raw[513], arf_last, ar_raw[511:0]} : ar_raw;
+    wire        arf_bad = (ARF != 0) && ((c_xcc && arf_arm && !(arf_fr && arf_last)) ||
+                                         (ar_ov && !arf_arm && sid_q == 4'd0));
+    always @(posedge ck or negedge rst)
+        if (!rst) begin arf_arm <= 1'b0; arf_tag <= 32'd0; arf_wm1 <= 16'd0; arf_cnt <= 16'd0; end
+        else if (c_xcc) begin arf_arm <= 1'b1; arf_tag <= cmd_q[54:23]; arf_wm1 <= cmd_q[22:7] - 16'd1; arf_cnt <= 16'd0; end
+        else if (arf_fr) begin arf_cnt <= arf_cnt + 16'd1; if (arf_last) arf_arm <= 1'b0; end
     always @(posedge ck or negedge rst)
         if (!rst) ch_dn_o <= 1095'd0;
-        else ch_dn_o <= {p_ar ? chu_q[1094:548] : own_ar ? own_arw : arx_v ? arx_w : 547'd0,
+        else ch_dn_o <= {ar_out,
                          p_dd ? chu_q[547:0] : own_dd ? own_ddw : 548'd0};
     wire ch_bad = (p_ar && (own_ar || arx_v)) || (own_ar && arx_v) || (p_dd && own_dd);
     wire dd_bad = ch_bad || (kv_any && q_any) || (kv_any && (kv_kind == 2'd0 || kv_kind == 2'd3));
@@ -314,7 +344,7 @@ module qfd_dv_slice2_lpc #(
         if (!rst) begin port_fault <= 1'b0; ar_rank <= 3'd0; ar_last <= 1'b0; end
         else begin
             port_fault <= port_fault | w16_coll | w1_coll | win_bad | red_bad | dd_bad | (ar_v && ar_q[516]) |
-                          (c_xc && cmd_q[5:4] != 2'd0) | am_emit_empty | am_mu_fault | (su_go && !su_ready) |
+                          (c_xc && cmd_q[5:4] != 2'd0 && !(RP != 0 && cmd_q[5:4] == 2'd1)) | arf_bad | rp_bad | am_emit_empty | am_mu_fault | (su_go && !su_ready) |
                           g_fault | (c_am && cmd_q[7] && g_arm);
             if (ar_v) begin ar_rank <= ar_q[515:513]; ar_last <= ar_q[512]; end
         end
@@ -346,6 +376,7 @@ module qfd_dv_slice2_lpc #(
     initial if (MUT < 0 || (MUT > 12 && MUT != 14 && MUT != 15)) $fatal(1, "qfd_dv_slice2_lpc: MUT %0d undefined", MUT);
     initial if (HD_W130 != 1) $fatal(1, "qfd_dv_slice2_lpc: the landed re-cut is the HD_W130 = 1 slice");
     initial if (DIR < 0 || DIR > 1) $fatal(1, "qfd_dv_slice2: DIR %0d undefined", DIR);
+    initial if (ARF < 0 || ARF > 2 || RP < 0 || RP > 2) $fatal(1, "qfd_dv_slice2: ARF %0d / RP %0d undefined", ARF, RP);
 endmodule
 
 

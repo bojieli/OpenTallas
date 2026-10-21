@@ -269,6 +269,14 @@ def cmd_xc(dst, mode, words, tag):
     return _cmd(0, [(0, 2), (mode, 1), (words, 16), (tag, 32)], dst)
 
 
+def cmd_rope_arm(dst, crom_word):
+    # QW-LAYERGAP 10-20 (qfd_dv_slice2 RP 1): XC sub 1 = ROPE ARM, cmd[15:6] = CROM 16-pair word base; the slice writes the
+    # next 8 group-1 D2D return words (beat k = 0..7) into CROM word base + k // 2, bank k % 2, then disarms
+    if not 0 <= crom_word < 1024:
+        raise LowerError(f'ROPE ARM CROM word {crom_word}')
+    return _cmd(0, [(1, 2), (crom_word, 10)], dst)
+
+
 def decode_cmd(c):
     """the qfd_dv_slice2 decode (mirror of its cmd_q field slices)"""
     kind, dst = (c >> 1) & 7, c >> 112
@@ -284,6 +292,12 @@ def decode_cmd(c):
                  amnb=b(97, 6), rdir=b(103, 1))
     elif kind == 4:
         d.update(ar_base=b(4, 24), dd_base=b(28, 24), ar_en=b(52, 1), dd_en=b(53, 1), em_base=b(54, 24), em_en=b(78, 1))
+    elif kind == 0:     # XC: sub 0 COLL {mode, words, tag}; sub 1 ROPE ARM {CROM word} (QW-LAYERGAP, RP 1)
+        d.update(sub=b(4, 2))
+        if d['sub'] == 0:
+            d.update(mode=b(6, 1), words=b(7, 16), tag=b(23, 32))
+        elif d['sub'] == 1:
+            d.update(crom_word=b(6, 10))
     elif kind == 7:
         d.update(id=b(4, 4))
     return d
