@@ -601,12 +601,12 @@ module ot_s81dv_xfin #(
     // N32 (SRAM build): bounded 2-edge reset leaves (prefix + leaf from the pin = the release edge of rs[1]):
     // [0] scalar control, [1] mdc, [2] ew_q, [3..8] collector vectors (2 each), [9] epf, [10..14] finishes,
     // [15] xstop raw handled inside; default build: every leaf = rstn
-    wire [23:0] rt;
+    wire [31:0] rt;
 `ifdef OT_S81DV_XFIN_SRAM
-    ot_s81dv_finish_reset2 #(.LEAVES(24)) u_top_reset (.clk(clk), .rst_n(rst_n), .q(rt));
+    ot_s81dv_finish_reset2 #(.LEAVES(32)) u_top_reset (.clk(clk), .rst_n(rst_n), .q(rt));
     wire rst_xs = rst_n;                           // xstop N32 builds its own 2-edge leaves
 `else
-    assign rt = {24{rstn}};
+    assign rt = {32{rstn}};
     wire rst_xs = rstn;
 `endif
     reg go_c; reg mode_c; reg [31:0] eps_c; reg sv_c; reg [7:0] si_c; reg [31:0] s_c;
@@ -755,7 +755,7 @@ module ot_s81dv_xfin #(
     always @(posedge clk or negedge rt[0]) if (!rt[0]) rb_v <= 1'b0; else rb_v <= fr_v;
     always @(posedge clk) rb_d <= fr;
     // ---------------------------------------------------------------- ENG finish: one per copy
-    wire [2:0] tbad; wire [3:0] cr_v, cf; wire [4*10-1:0] crk; wire [31:0] chh [0:3], ckk [0:3], cdd [0:3];
+    wire [2:0] tbad; wire [3:0] cr_v, cf; wire [4*25-1:0] crk; wire [31:0] chh [0:3], ckk [0:3], cdd [0:3];
     genvar pp, cc;
     generate
         for (pp = 0; pp < 3; pp = pp + 1) begin : g_dec
@@ -778,7 +778,7 @@ module ot_s81dv_xfin #(
       , .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rt[10 + cc]), .go(go_f[cc]),
                 .f_v(fv), .f_t(ft), .f_base(fb), .f_d(dl_d), .r_v(cr_v[cc]), .r_hh(chh[cc]), .r_kk(ckk[cc]), .r_dd(cdd[cc]),
 `ifdef OT_S81DV_XFIN_SRAM
-                .r_vk(crk[cc * 10 +: 10]),
+                .r_vk(crk[cc * 25 +: 25]),
 `endif
                 .fault(cf[cc]));
         end
@@ -787,34 +787,40 @@ module ot_s81dv_xfin #(
     reg [3:0] epd; reg [31:0] ehh [0:3], ekk [0:3], edd [0:3];
     integer d2;
 `ifdef OT_S81DV_XFIN_SRAM
-    // N32: the pending set is kept 4x (control + one per result field), each with its own r_v copy, so every
-    // select (capture enable, source select, lowest-pending one-hot) drives <= 32 loads; same values as below
-    (* keep *) reg [3:0] epf [0:3];
-    wire [3:0] eallf [0:3], eohf [0:3];
-    genvar ef;
-    for (ef = 0; ef < 4; ef = ef + 1) begin : g_ef
-        assign eallf[ef] = epf[ef] | {crk[30 + 6 + ef], crk[20 + 6 + ef], crk[10 + 6 + ef], crk[0 + 6 + ef]};
+    // Byte-owned capture and selection: every finish pulse owns only eight
+    // payload bits. Pending copies use the same release and update edges.
+    (* keep *) reg [3:0] epf [0:12];
+    (* keep *) reg [12:0] ep_go;
+    always @(posedge clk) ep_go <= {13{go}};
+    wire [3:0] eallf [0:12], eohf [0:12];
+    genvar ef, eb;
+    for (ef = 0; ef < 13; ef = ef + 1) begin : g_ef
+        assign eallf[ef] = epf[ef] | {crk[75 + 12 + ef], crk[50 + 12 + ef], crk[25 + 12 + ef], crk[12 + ef]};
         assign eohf[ef] = eallf[ef] & ~(eallf[ef] - 4'd1);
+        always @(posedge clk or negedge rt[24 + ef/2])
+            if (!rt[24 + ef/2]) epf[ef] <= 4'd0;
+            else if (ep_go[ef]) epf[ef] <= 4'd0;
+            else epf[ef] <= eallf[ef] & ~eohf[ef];
     end
     wire [3:0] eall = eallf[0], eoh = eohf[0];
     always @(posedge clk or negedge rt[9])
-        if (!rt[9]) begin epd <= 4'd0; e_v <= 1'b0; for (d2 = 0; d2 < 4; d2 = d2 + 1) epf[d2] <= 4'd0; end
-        else if (gcc[2]) begin epd <= 4'd0; e_v <= 1'b0; for (d2 = 0; d2 < 4; d2 = d2 + 1) epf[d2] <= 4'd0; end
-        else begin
-            epd <= eall & ~eoh; e_v <= |eall;
-            for (d2 = 0; d2 < 4; d2 = d2 + 1) epf[d2] <= eallf[d2] & ~eohf[d2];
-        end
-    always @(posedge clk) begin
-        for (d2 = 0; d2 < 4; d2 = d2 + 1) begin
-            if (crk[d2 * 10 + 0]) ehh[d2] <= chh[d2];
-            if (crk[d2 * 10 + 1]) ekk[d2] <= ckk[d2];
-            if (crk[d2 * 10 + 2]) edd[d2] <= cdd[d2];
-        end
-        for (d2 = 0; d2 < 4; d2 = d2 + 1) begin
+        if (!rt[9]) begin epd <= 4'd0; e_v <= 1'b0; end
+        else if (gcc[2]) begin epd <= 4'd0; e_v <= 1'b0; end
+        else begin epd <= eall & ~eoh; e_v <= |eall; end
+    always @(posedge clk)
+        for (d2 = 0; d2 < 4; d2 = d2 + 1)
             if (eohf[0][d2]) e_c <= d2;
-            if (eohf[1][d2]) e_hh <= crk[d2 * 10 + 3] ? chh[d2] : ehh[d2];
-            if (eohf[2][d2]) e_kk <= crk[d2 * 10 + 4] ? ckk[d2] : ekk[d2];
-            if (eohf[3][d2]) e_dd <= crk[d2 * 10 + 5] ? cdd[d2] : edd[d2];
+    for (eb = 0; eb < 4; eb = eb + 1) begin : g_emit_byte
+        integer dc;
+        always @(posedge clk) begin
+            for (dc = 0; dc < 4; dc = dc + 1) begin
+                if (crk[dc*25+eb]) ehh[dc][eb*8+:8] <= chh[dc][eb*8+:8];
+                if (crk[dc*25+4+eb]) ekk[dc][eb*8+:8] <= ckk[dc][eb*8+:8];
+                if (crk[dc*25+8+eb]) edd[dc][eb*8+:8] <= cdd[dc][eb*8+:8];
+                if (eohf[1+eb][dc]) e_hh[eb*8+:8] <= crk[dc*25+eb] ? chh[dc][eb*8+:8] : ehh[dc][eb*8+:8];
+                if (eohf[5+eb][dc]) e_kk[eb*8+:8] <= crk[dc*25+4+eb] ? ckk[dc][eb*8+:8] : ekk[dc][eb*8+:8];
+                if (eohf[9+eb][dc]) e_dd[eb*8+:8] <= crk[dc*25+8+eb] ? cdd[dc][eb*8+:8] : edd[dc][eb*8+:8];
+            end
         end
     end
 `else

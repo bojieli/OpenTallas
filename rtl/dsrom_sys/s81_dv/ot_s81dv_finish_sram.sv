@@ -252,7 +252,7 @@ module ot_s81dv_eng_finish_sram #(
     output reg               r_v,         // one pulse when all three roots are final
     output reg  [31:0]       r_hh, r_kk, r_dd,
     output wire              fault,
-    output wire [9:0]        r_vk         // N32: KEPT copies of r_v (xfin e_* capture 3 + select 3 + pending 4)
+    output wire [24:0]       r_vk         // N32: 12 byte capture/select owners + 13 pending owners
 );
     localparam integer T   = 3;
     localparam integer NVP = (NV <= 1) ? 1 : (1 << $clog2(NV));
@@ -453,11 +453,11 @@ module ot_s81dv_eng_finish_sram #(
             end
         end
     // r_vk: same next state as r_v (reset 0; go_t[1] clears; set on the completing root write)
-    (* keep *) reg [9:0] rvk;
+    (* keep *) reg [24:0] rvk;
     always @(posedge clk or negedge rc[6])
-        if (!rc[6]) rvk <= 10'd0;
-        else if (go_t[1]) rvk <= 10'd0;
-        else rvk <= {10{dn != {T{1'b1}} && (dn | {wr_v && wr_n == 2 * NVP + 1, wr_v && wr_n == NVP + 1, wr_v && wr_n == 1})
+        if (!rc[6]) rvk <= 25'd0;
+        else if (go_t[1]) rvk <= 25'd0;
+        else rvk <= {25{dn != {T{1'b1}} && (dn | {wr_v && wr_n == 2 * NVP + 1, wr_v && wr_n == NVP + 1, wr_v && wr_n == 1})
                         == {T{1'b1}}}};
     assign r_vk = rvk;
     always @(posedge clk) begin
