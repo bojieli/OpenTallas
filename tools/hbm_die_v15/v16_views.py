@@ -132,7 +132,7 @@ def main():
         k = k_of[m]; k_of[m] += 1
         cell = m if nvar[m] == 1 else f'{m}__pv{k}'
         ports = {p: v['bits'] for p, v in rep['ports'].items()}
-        rv = real_view(m, ports, rep['params'], rep.get('physical_view'))
+        rv = None if rep.get('force_synth') else real_view(m, ports, rep['params'], rep.get('physical_view'))
         ent = dict(master=m, cell=cell, instances=insts, representative=insts[0], params=rep['params'],
                    source=rep['source'], ports=len(ports), port_bits=sum(ports.values()),
                    requested_physical_view=rep.get('physical_view'), closed_record=rep.get('closed_record'))

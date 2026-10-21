@@ -23,7 +23,13 @@
 // beyond the 7-edge non-face model (d4g hfd_vms_bank_native_q0_faces input pin flop = 1, plus any die relay / landing
 // stages on the rq4 / rr4 lanes): the owner tap moves to own[7+VM_RT]. Every response face (INDEX, TOPK, ARGMAX) leaves
 // VM_RT edges later. Default 0 = bit-identical to r3.
-module ot_hbm_idx_vm_share_leaf_r #(parameter integer MUT = 0, parameter integer VM_RT = 0)(
+// F32 (HBM-IDX6 2026-10-20, native32 census of g2d: share.g_pair[].leaf o[]/rr_q drove 257 loads = the ARGMAX lane
+// valid gating 256 data bits in the tree): 1 = the leaf masks the ARGMAX data per 32-bit word with its OWN kept copy of
+// the steered valid (8 copies a bank: vm_rr valid pin-register copy AND own-tap copy, both loaded on the edges rr_q /
+// own[7+VM_RT] are), and the tree ORs the pre-masked data (AMNOMASK 1 = bench mutant AMMUT 3: data left unmasked).
+// Same argmax_m every edge. 0 = as built.
+module ot_hbm_idx_vm_share_leaf_r #(parameter integer MUT = 0, parameter integer VM_RT = 0, parameter integer F32 = 0,
+    parameter integer AMNOMASK = 0)(
     input  wire          clk, rst_n,
     input  wire [33:0]   index_rq, topk_rq, argmax_rq,   // registered sources (pin flops / TOPK request register)
     output reg  [33:0]   vm_rq,
@@ -57,10 +63,22 @@ module ot_hbm_idx_vm_share_leaf_r #(parameter integer MUT = 0, parameter integer
         // the bank answers n+7+VM_RT (port); rr_q holds it one edge later, own[7+VM_RT] holds the owner booked at n+1 then
         assign index_rr[257*b +: 257]  = {rr_q[257*b+256] && o[3*b],   rr_q[257*b +: 256]};
         assign topk_rr[257*b +: 257]   = {rr_q[257*b+256] && o[3*b+1], rr_q[257*b +: 256]};
-        assign argmax_rr[257*b +: 257] = {rr_q[257*b+256] && o[3*b+2], rr_q[257*b +: 256]};
+        if (F32 == 0) begin : g_am
+            assign argmax_rr[257*b +: 257] = {rr_q[257*b+256] && o[3*b+2], rr_q[257*b +: 256]};
+        end else begin : g_am32
+            wire [7:0] vc, oc;                  // kept copies: vm_rr valid pin register / argmax own tap of bank b
+            wire [5:0] o_pre = own[((MUT == 1) ? 6 : 7) + VM_RT - 1];
+            for (genvar w = 0; w < 8; w = w + 1) begin : g_w
+                ot_hbm_idx_kreg #(.W(1)) uv (.clk(clk), .rst_n(rst_n), .d(vm_rr[257*b+256]), .q(vc[w]));
+                ot_hbm_idx_kreg #(.W(1)) uo (.clk(clk), .rst_n(rst_n), .d(o_pre[3*b+2]), .q(oc[w]));
+                assign argmax_rr[257*b + 32*w +: 32] = (AMNOMASK != 0) ? rr_q[257*b + 32*w +: 32]
+                                                                       : (rr_q[257*b + 32*w +: 32] & {32{vc[w] && oc[w]}});
+            end
+            assign argmax_rr[257*b+256] = rr_q[257*b+256] && o[3*b+2];
+        end
     end
 endmodule
-module ot_hbm_idx_vm_share_amtree #(parameter integer AMMUT = 0)(
+module ot_hbm_idx_vm_share_amtree #(parameter integer AMMUT = 0, parameter integer F32 = 0)(
     input  wire          clk,
     input  wire [2055:0] am_rr,             // 8 lanes {owner-steered valid, data256} from the leaves' pin registers
     output reg  [263:0]  argmax_m           // {lane valid8, data256}, stage B (place at the E face)
@@ -73,7 +91,7 @@ module ot_hbm_idx_vm_share_amtree #(parameter integer AMMUT = 0)(
                 w[(AMMUT == 2) ? 256 + 7 - l : 256 + l] = rr[257*l+256];
                 d = rr[257*l +: 256];
                 if (AMMUT == 4) for (e = 0; e < 8; e = e + 1) d[32*e +: 32] = rr[257*l + 32*(7-e) +: 32];
-                if (rr[257*l+256] || AMMUT == 3) w[255:0] = w[255:0] | d;
+                if (rr[257*l+256] || AMMUT == 3 || F32 != 0) w[255:0] = w[255:0] | d;   // F32: d pre-masked by the leaf
             end
             lanes = w;
         end
@@ -86,7 +104,8 @@ module ot_hbm_idx_vm_share_amtree #(parameter integer AMMUT = 0)(
         argmax_m <= a0 | a1 | ((AMMUT == 1) ? h1b : 264'd0);
     end
 endmodule
-module ot_hbm_idx_vm_share_static_amr #(parameter integer MUT = 0, parameter integer AMMUT = 0, parameter integer VM_RT = 0)(
+module ot_hbm_idx_vm_share_static_amr #(parameter integer MUT = 0, parameter integer AMMUT = 0, parameter integer VM_RT = 0,
+    parameter integer F32 = 0)(
     input  wire          clk,
     input  wire          rst_n,
     input  wire [135:0]  index_rq, topk_rq, argmax_rq,   // registered sources
@@ -98,12 +117,12 @@ module ot_hbm_idx_vm_share_static_amr #(parameter integer MUT = 0, parameter int
 );
     wire [3:0] f; wire [2055:0] am;
     for (genvar p = 0; p < 4; p = p + 1) begin : g_pair
-        ot_hbm_idx_vm_share_leaf_r #(.MUT(MUT), .VM_RT(VM_RT)) leaf(.clk(clk), .rst_n(rst_n),
+        ot_hbm_idx_vm_share_leaf_r #(.MUT(MUT), .VM_RT(VM_RT), .F32(F32), .AMNOMASK(AMMUT == 3 ? 1 : 0)) leaf(.clk(clk), .rst_n(rst_n),
             .index_rq(index_rq[34*p +: 34]), .topk_rq(topk_rq[34*p +: 34]), .argmax_rq(argmax_rq[34*p +: 34]),
             .vm_rq(vm_rq[34*p +: 34]), .vm_rr(vm_rr[514*p +: 514]), .index_rr(index_rr[514*p +: 514]),
             .topk_rr(topk_rr[514*p +: 514]), .argmax_rr(am[514*p +: 514]), .fault(f[p]));
     end
-    ot_hbm_idx_vm_share_amtree #(.AMMUT(AMMUT)) tree(.clk(clk), .am_rr(am), .argmax_m(argmax_m));
+    ot_hbm_idx_vm_share_amtree #(.AMMUT(AMMUT), .F32(F32)) tree(.clk(clk), .am_rr(am), .argmax_m(argmax_m));
     assign fault = |f;
 endmodule
 `default_nettype wire
