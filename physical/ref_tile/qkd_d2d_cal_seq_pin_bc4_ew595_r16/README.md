@@ -26,3 +26,5 @@ name).  Bound by kvsys_prep when OT_KV_ATTN_R16=1 and OT_KV_EMB_WIN=595 (default
    (--attn-tx-shift 1 --status-delay 213) and bound on both link ends (KV target 11 + this tile; compute side LEAD9-QW)
 
 Gate review (PNG inspection per item) is appended below after the --cts gate.
+
+Gate (2026-10-21 00:37, exact source snapshot ff1b66d2d): WARN, zero failures. Native census maximum28, zero dynamic/reset violations; reset raw fanout1. Trial GRT overflow0, M2 use22.24%. TT/FF pin-flop spread2.0/2.0ps, setup+170ps, hold+49.3ps. The only warnings are utilisation40–42% in the existing DCAL slot. PNGs viewed: full W/E pin faces, S-centred clock, no macros, continuous standard-cell core, distributed density without isolated islands. Existing production/miter witnesses from8380bdc71 remain the behavioral basis. Proceed to route; this gate is not routed closure.
