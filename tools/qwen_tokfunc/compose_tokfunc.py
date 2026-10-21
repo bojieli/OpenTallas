@@ -195,6 +195,8 @@ def main():
     build_tree(a.repo, a.base_rev, tree)
     base = run_compose(tree, f'{REC}/inputs.json', a.out / 'cycles_base.json')
     report = dict(schema='opentallas.tokfunc.qwen_rom.v1', base_rev=a.base_rev, asm=a.asm, grade=a.grade,
+                  clock_period_ps=833.0, clock_hz=CLK_HZ,
+                  rate_convention='composer uses rounded 833 ps period (1.200480192 GHz)',
                   model_of_record=dict(u1_tok_s=4403.2, u4_tok_s=11750.6, cycles=272641), base_reproduced=base)
     if not a.base_only:
         res = load_results(a.results)

@@ -77,3 +77,8 @@ Admission callbacks must preserve phase: SEG2/base16 before actual adm_done allo
 HOST filler O61 owners1..3 while cal_user0; recurrent Ckind12 after admission uses
 the actual scheduled user and held O61. The old diagnostic OVL bench has no admission
 playback, so it does not establish that phase contract.
+
+Rate arithmetic uses the composition engine's rounded833ps period
+(1.200480192GHz):279731cycles =4291.6tok/s. At exact1.2GHz the same count
+is4289.8tok/s. Baseline272641/4403.2 also uses833ps (exact1.2GHz gives4401.4).
+The report records this clock basis explicitly; no new RTL measurement is involved.
