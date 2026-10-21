@@ -101,11 +101,14 @@
    "disk_roots": {
     "/": 100
    },
-   "note": "Onboarded 2026-10-?? (FLEET-NEW2 pre-staged 10-19): Cherry 1036669 'dear-crayfish', US-Chicago, 2x AMD EPYC 7543 (Zen 3, NO AVX-512), role throughput like ot-epyc7. bringup_epyc9.sh fills cores/ram_gb from nproc/MemTotal.",
+   "note": "Onboarded 2026-10-?? (FLEET-NEW2 pre-staged 10-19): Cherry 1036669 'dear-crayfish', US-Chicago, 2x AMD EPYC 7543 (Zen 3, NO AVX-512), role throughput like ot-epyc7. bringup_epyc9.sh fills cores/ram_gb from nproc/MemTotal. | CODEX 2026-10-21: scratch2 aliases root-backed /home/ubuntu/ot-scratch; new runs choose capacity, existing run paths stay pinned.",
    "external_jobs": [],
    "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
    "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
-   "role": "throughput"
+   "role": "throughput",
+   "alt_bases": [
+    "/srv/opentallas-scratch2/claude/closure-loop"
+   ]
   },
   {
    "name": "ot-epyc7",

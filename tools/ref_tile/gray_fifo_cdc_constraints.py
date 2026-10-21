@@ -229,6 +229,47 @@ EXTENSIONS = 'reviewed_gray_fifo_extensions'
 NAME = re.compile(r'[A-Za-z][A-Za-z0-9_]*')
 REF = re.compile(r'[A-Za-z_][A-Za-z0-9_.$\[\]]*')
 
+# Actual vendor library bytes, not a handwritten cell-function table. Broaden only with a reviewed physical model.
+TECH_LIBERTIES = {
+    'fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038': frozenset({'AND2x2_ASAP7_75t_R'}),
+}
+
+
+def tech_cell_libraries(spec, root=None):
+    """Explicit, source-bound functional inputs for physical cells used in the CDC RTL."""
+    ext = spec.get(EXTENSIONS) or {}
+    if not isinstance(ext, dict):
+        raise GrayFifoError('reviewed_gray_fifos extensions must be an object')
+    rows = ext.get('tech_cell_liberties')
+    if rows is None:
+        return ()
+    if not isinstance(rows, list) or not rows:
+        raise GrayFifoError('reviewed_gray_fifos tech_cell_liberties must be a nonempty list')
+    result, paths, masters = [], set(), set()
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {'path', 'sha256', 'cells'}:
+            raise GrayFifoError('reviewed_gray_fifos tech_cell_liberties entries are {path, sha256, cells}')
+        path, digest, cells = row['path'], row['sha256'], row['cells']
+        if (not isinstance(path, str) or not re.fullmatch(r'[A-Za-z0-9_./+-]+\.lib', path)
+                or Path(path).is_absolute() or '..' in Path(path).parts or path in paths):
+            raise GrayFifoError('reviewed_gray_fifos unsafe or duplicate tech-cell Liberty path')
+        if not isinstance(digest, str) or digest not in TECH_LIBERTIES:
+            raise GrayFifoError('reviewed_gray_fifos tech-cell Liberty is not a reviewed actual library fingerprint')
+        if (not isinstance(cells, list) or not cells or any(not isinstance(c, str) for c in cells)
+                or len(set(cells)) != len(cells) or set(cells) - TECH_LIBERTIES[digest] or masters.intersection(cells)):
+            raise GrayFifoError('reviewed_gray_fifos tech-cell masters must be distinct reviewed physical cells')
+        if root is not None:
+            base = Path(root).resolve()
+            p = (base / path).resolve()
+            if not p.is_relative_to(base) or not re.fullmatch(r'[A-Za-z0-9_./+-]+', str(p)):
+                raise GrayFifoError('reviewed_gray_fifos unsafe tech-cell Liberty path')
+            if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest() != digest:
+                raise GrayFifoError('reviewed_gray_fifos tech-cell Liberty bytes differ from their actual library fingerprint')
+        paths.add(path)
+        masters.update(cells)
+        result.append((path, digest, tuple(sorted(cells))))
+    return tuple(result)
+
 
 def extensions(spec):
     """Opt-in extension mode (ROOT-0330-CDC 2026-10-18), absent = the original policy unchanged:
@@ -245,9 +286,10 @@ def extensions(spec):
     ext = spec.get(EXTENSIONS)
     if ext is None:
         return None
-    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'dual_clock_srams', 'why'}:
+    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'dual_clock_srams', 'tech_cell_liberties', 'why'}:
         raise GrayFifoError(f'reviewed_gray_fifos {EXTENSIONS} must be an object with level_synchronizers / '
-                            'die_constant_inputs / why only (no false paths, groups or waivers)')
+                            'die_constant_inputs / dual_clock_srams / tech_cell_liberties / why only (no false paths, groups or waivers)')
+    tech_cell_libraries(spec)
     dual = ext.get('dual_clock_srams', [])
     if not isinstance(dual, list) or len(set(dual)) != len(dual) or any(n not in DUAL_SRAM for n in dual):
         raise GrayFifoError('reviewed_gray_fifos dual_clock_srams must name distinct fingerprinted supported masters')
@@ -414,7 +456,7 @@ def _elaborate_sources(spec, root):
 
 
 @lru_cache(maxsize=16)
-def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=False):
+def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=False, tech_libraries=()):
     # Byte hashes are part of the key; no caller-supplied graph or receipt can stand in for this elaboration.
     root = Path(root)
     if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', top):
@@ -425,6 +467,26 @@ def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=Fals
         if hashlib.sha256(p.read_bytes()).hexdigest() != digest:
             raise GrayFifoError('reviewed_gray_fifos source changed during elaboration')
         paths.append(str(p))
+    liberty_steps = ''
+    for path, digest, allowed in tech_libraries:
+        if digest not in TECH_LIBERTIES or not allowed or set(allowed) - TECH_LIBERTIES[digest]:
+            raise GrayFifoError('reviewed_gray_fifos unreviewed physical cell/library during elaboration')
+        p = (root / path).resolve()
+        if not p.is_relative_to(root.resolve()) or not re.fullmatch(r'[A-Za-z0-9_./+-]+', str(p)):
+            raise GrayFifoError('reviewed_gray_fifos unsafe tech-cell Liberty path')
+        content = p.read_bytes()
+        if hashlib.sha256(content).hexdigest() != digest:
+            raise GrayFifoError('reviewed_gray_fifos tech-cell Liberty changed during elaboration')
+        declared = set(re.findall(rb'(?m)^\s*cell\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', content))
+        if not set(c.encode() for c in allowed) <= declared:
+            raise GrayFifoError('reviewed_gray_fifos physical cell missing from actual Liberty')
+        # read_liberty (without -lib) imports the real functions. Drop all other vendor masters before hierarchy
+        # checking so an undeclared/unknown cell remains an error. Its default redefinition error rejects RTL models
+        # shadowing vendor masters; neither -overwrite nor permissive missing-function options are used.
+        liberty_steps += f'read_liberty {p}; '
+        discard = sorted(c.decode() for c in declared if c.decode() not in allowed)
+        if discard:
+            liberty_steps += 'delete ' + ' '.join(discard) + '; '
     args = ''
     for name, value in params:
         if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name) or type(value) is not int:
@@ -435,7 +497,7 @@ def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=Fals
         # (d) mode reads -defer (as the census / KV-HOSTCL-CDC2 lint): modules elaborate only with their actual
         # parameters, so a default-parameter elaboration guard ($fatal in an initial) does not fire
         keep = f'tcl {root}/physical/common_flow/ot_keep_regs.tcl; ' if preserve_kept else ''
-        cmd = (f'read_verilog{" -defer" if defer else ""} -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
+        cmd = (f'read_verilog{" -defer" if defer else ""} -sv -DSYNTHESIS {" ".join(paths)}; {liberty_steps}hierarchy -check -top {top}{args}; '
                f'proc; {keep}flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
         run = subprocess.run([yosys, '-Q', '-T', '-p', cmd], capture_output=True, text=True)
         if run.returncode:
@@ -887,9 +949,11 @@ def _lint(spec, root):
     relationship(spec)
     ext = extensions(spec)
     hashes, reviewed_files = _elaborate_sources(spec, root)
+    tech_libraries = tech_cell_libraries(spec, root)
     document = elaborate(str(Path(root).resolve()), spec['top'], hashes,
                          tuple(sorted(spec.get('params', {}).items())), _yosys(), spec.get(S.KEY) is not None,
-                         preserve_kept=bool((ext or {}).get('dual_clock_srams')))
+                         preserve_kept=bool((ext or {}).get('dual_clock_srams')),
+                         **({'tech_libraries': tech_libraries} if tech_libraries else {}))
     net = _netlist(document, spec, _macro_clock_pins(spec, root), True) if ext is not None else _netlist(document, spec)
     ds = spec['clock_entry_domains']
     period = {n: FAMILIES[n] for n in ds}
@@ -1335,6 +1399,8 @@ def _lint(spec, root):
         if dual_macros:
             record['dual_clock_macros'] = dual_macros
         record['counts'].update(gated=len(gated), lsrc=len(levels), macro=len(macro_domain))
+    if tech_libraries:
+        record['tech_cell_liberties'] = [dict(path=p, sha256=h, cells=list(c)) for p, h, c in tech_libraries]
     return record
 
 
