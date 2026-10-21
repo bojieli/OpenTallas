@@ -24,3 +24,20 @@ Fleet source generation (existing selected source snapshot, no RTL build):
 python3 tools/s81_dv/layer_prog/entry_inputs.py --tree ../../tree \
   --fixtures ../../fixtures/L0 --out ../entry_inputs_L0_current.json
 ```
+
+`entry_boot.py` is the native host/walker job builder. It consumes this input
+map, requires an actual source-qualified mechanism receipt for every selected
+raw input port (`ri_w`, `ri_e`, `vi`), checks compiled production hashes, and
+emits ordinary 515-bit host CSR words with real target5/HLOAD/GAIN commands.
+Two leaves fit each real128-row job. The target5 cadence is two edges, matching
+the source mechanism vehicle. V ACK remains issue+5; a separate fixed END
+minimum carries local measured lifetimes plus the explicitly conditional die
+route model. The builder refuses legacy compilers without END-fence support.
+
+At this source milestone, only the actual SID5/leaf0 `ri_w` mechanism is known
+to pass. Selected `u_s_2N` uses `ri_e`, and column4 uses `vi`; those are separate
+required interfaces. The builder therefore refuses whole-entry generation
+until their actual receipts exist. No write/command ages are copied from W to
+E/V. Actual incoming descriptors, global clock/route phases, whole-entry
+lifetimes and sixteen-slice norm/gather remain held even after local receipts.
+No KS descriptor is fabricated in the emitted host programming words.
