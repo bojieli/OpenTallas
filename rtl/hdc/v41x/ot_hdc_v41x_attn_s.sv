@@ -735,6 +735,25 @@ module ot_hdc_v41x_attn_s #(
         end
     endfunction
 
+`ifdef OT_SVC_STAGESEL_N32
+function automatic [NL*ROWW-1:0] fill_live_mask(input integer xoff);
+    integer lane,x,b;reg[NL*ROWW-1:0]m;
+    begin
+        m='0;
+        for(lane=0;lane<NL;lane=lane+1)begin
+            m[lane*ROWW+264]=1'b1;
+            for(b=256;b<264;b=b+1)m[lane*ROWW+b]=1'b1;
+            for(x=xoff;x<xoff+DPT;x=x+1)begin
+                for(b=0;b<8;b=b+1)m[lane*ROWW+8*x+b]=1'b1;
+                for(b=0;b<4;b=b+1)m[lane*ROWW+4*x+b]=1'b1;
+                for(b=0;b<8;b=b+1)m[lane*ROWW+128+8*(x/16)+b]=1'b1;
+            end
+        end
+        fill_live_mask=m;
+    end
+endfunction
+`endif
+
     // ================= tile inputs (E1 register) =================
     reg              e_ld_v, e_ld_mode, e_ld_w2v;
     reg [BW-1:0]     e_ld_bank;
@@ -790,23 +809,7 @@ module ot_hdc_v41x_attn_s #(
                     // Preserve both edges and the legacy full-word path for unused bits.
                     initial if(REPL!=2 || D!=32 || S!=1 || NL!=4 || TD!=32 || DPT!=8 || ROWW!=265)
                         $error("STAGESEL_N32 requires exact current G4 staging shape");
-                    function automatic [NL*ROWW-1:0] fill_live_mask();
-                        integer lane,x,b;reg[NL*ROWW-1:0]m;
-                        begin
-                            m='0;
-                            for(lane=0;lane<NL;lane=lane+1)begin
-                                m[lane*ROWW+264]=1'b1;
-                                for(b=256;b<264;b=b+1)m[lane*ROWW+b]=1'b1;
-                                for(x=(gk*DPT)%32;x<(gk*DPT)%32+DPT;x=x+1)begin
-                                    for(b=0;b<8;b=b+1)m[lane*ROWW+8*x+b]=1'b1;
-                                    for(b=0;b<4;b=b+1)m[lane*ROWW+4*x+b]=1'b1;
-                                    for(b=0;b<8;b=b+1)m[lane*ROWW+128+8*(x/16)+b]=1'b1;
-                                end
-                            end
-                            fill_live_mask=m;
-                        end
-                    endfunction
-                    localparam [NL*ROWW-1:0] FILL_LIVE=fill_live_mask();
+                    localparam [NL*ROWW-1:0] FILL_LIVE=fill_live_mask((gk*DPT)%32);
                     localparam [NL*ROWW-1:0] QK_LIVE=({NL*ROWW{1'b1}}>>(NL*ROWW-GW))<<((gk/S)*ROWW);
                     wire[NL*ROWW-1:0]qf,qq;
                     ot_hdc_v41x_stagepick_n32 #(.W(NL*ROWW),.LIVE(FILL_LIVE))u_fill_pick(
