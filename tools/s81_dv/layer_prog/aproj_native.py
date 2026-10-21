@@ -9,6 +9,37 @@ import math
 from pathlib import Path
 
 
+def atomic_chunks(rows, row_limit, template_limit):
+    """Pack native issuer rows without placing a job reload inside an atomic span.
+
+    An atomic group's first..last rows define its interval even if other
+    engines interleave. Overlapping atomic intervals therefore stay together.
+    An interval that cannot fit one real job fails closed.
+    """
+    spans = {}
+    for i, row in enumerate(rows):
+        group = row.get('grp')
+        if group is not None:
+            if group not in spans:
+                spans[group] = [i, i]
+            spans[group][1] = i
+    blocks=[];start=0
+    for boundary in range(1, len(rows)+1):
+        if not any(lo < boundary <= hi for lo, hi in spans.values()):
+            blocks.append(rows[start:boundary]);start=boundary
+    chunks=[];current=[];used=set()
+    for block in blocks:
+        templates={r['tix'] for r in block if 'tix' in r}
+        if len(block)>row_limit or len(templates)>template_limit:
+            raise ValueError('atomic native command interval exceeds one issuer job; no source-safe split')
+        if current and (len(current)+len(block)>row_limit or len(used|templates)>template_limit):
+            chunks.append(current);current=[];used=set()
+        current+=block;used|=templates
+    if current:
+        chunks.append(current)
+    return chunks
+
+
 def phase_material(field):
     import v41_die_images_w17w10 as I
     return [v for ph in field.phases for v in I.phase_words(ph)], list(field.stream)
