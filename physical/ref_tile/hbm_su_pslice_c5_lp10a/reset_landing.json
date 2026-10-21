@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_su_programme_pslice_c5_lp8",
+ "enable": false,
+ "reason": "the RTL lands every regional reset port: rst_n_<r> has ONE sink, u_lpr_<r> (ot_pl_pad N 3 on ck_<r> beside its pin: 2 landing stages + 1 reach relay; lp.py regional_reset_ports, priced in the landed record: reset release +3); a kit landing would add 2 unpriced release edges"
+}
