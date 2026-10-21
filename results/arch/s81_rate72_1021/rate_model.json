@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.s81.rate72.v1",
+ "lane": "TOK-RATE-1021",
+ "grade": "MODEL",
+ "map": "results/arch/s81_map72_1021/r2_241/stage_map_f72r224gpq_241.json (ccff664a5, qualified, 241 stages / 964 layer dies)",
+ "inputs": {
+  "receipt_rate_model": "static_capacity_receipt_stage_map_f72r224gpq_241.json cycles/rate_model (switched 1008-cycle hops; base = 139-stage composed calendar MODEL)",
+  "calendar": "claude/s81-link5-cal-1021@c028c373c results/arch/mu_s81_1018/calendar_{ar,mtp}.json (81-stage, LINK5, direct; 44 AR users, MTP 9+4)",
+  "hop_latency": "claude/rack-1021@4b528ad2b results/arch/release_rack_1021/hop_latency.json (stage_hop D max 266, tp_mesh 251, head_hop 257)"
+ },
+ "method": "T(241,direct) = receipt T(241,switched) - per-class direct saving (crossings x (453 - D_max)) + L5B-CAL TX hold; tp_mesh/head crossings carried from the L5B-CAL offchip_saving record (per-layer collectives, not per stage); stage_hop crossings = 240; MTP tau from receipt (4.159); users carried from the 81-stage calendar (241-stage MU calendar NOT priced)",
+ "saving_ar": {
+  "tp_mesh": 51914,
+  "stage_hop": 44880,
+  "head_hop": 196
+ },
+ "saving_mtp": {
+  "tp_mesh": 55550,
+  "stage_hop": 44880,
+  "head_hop": 196
+ },
+ "tx_hold": {
+  "ar": 4920,
+  "mtp": 5316
+ },
+ "tau": 4.159,
+ "rows": {
+  "G16": {
+   "T_ar_switched": 1289178.6,
+   "T_ar_direct": 1197108.6,
+   "ar_per_user": 1002.4,
+   "ar_users": 44,
+   "ar_aggregate": 44106,
+   "T_mtp_switched": 1773242.8,
+   "T_mtp_direct": 1677932.8,
+   "mtp_per_user": 2974.4,
+   "mtp_users": 9,
+   "mtp_fillers": 4,
+   "mtp_aggregate": 30779,
+   "ar_users_upper_if_windows_le_20701": 57
+  },
+  "G4": {
+   "T_ar_switched": 1333185.2,
+   "T_ar_direct": 1241115.2,
+   "ar_per_user": 966.9,
+   "ar_users": 44,
+   "ar_aggregate": 42542,
+   "T_mtp_switched": 1798030.0,
+   "T_mtp_direct": 1702720.0,
+   "mtp_per_user": 2931.1,
+   "mtp_users": 9,
+   "mtp_fillers": 4,
+   "mtp_aggregate": 30247,
+   "ar_users_upper_if_windows_le_20701": 59
+  }
+ },
+ "reference_81stage_calendar": {
+  "ar": "44 x 1,317.4 = 57,967 (period 910,864)",
+  "mtp": "9 x 4,060.6 + 4 fillers = 40,450"
+ },
+ "owed": [
+  "241-stage MU calendar (dv_mu_calendar on the 72-frame stage model): users, windows, holds",
+  "per-layer RTL bench on the 72-frame die (none yet); receipt base is a 139-stage MODEL"
+ ]
+}
