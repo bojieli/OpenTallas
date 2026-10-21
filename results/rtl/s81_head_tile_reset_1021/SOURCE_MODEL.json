@@ -19,5 +19,18 @@
   "old_native_max": 121,
   "four_join_valid_same_edge_copies_old": 1,
   "four_join_valid_same_edge_copies_new": 5,
-  "status": "SOURCE_PROPOSAL_NATIVE_PENDING"
+  "status": "SOURCE_PROPOSAL_NATIVE_PENDING",
+  "parent_release_contract": {
+    "adopted_in_H4": false,
+    "old_leaf_sync_reset_edges": 2,
+    "new_leaf_sync_reset_edges": 3,
+    "parent_reset_path": "retain actual existing parent reset path and per-instance depth; this proposal changes only leaf landing",
+    "per_tile_total_release_depth_formula": "actual_parent_release_depth + 3 (was actual_parent_release_depth + 2)",
+    "max_parent_startup_budget_delta_edges": 1,
+    "assertion_age_delta_edges": 1,
+    "first_go_requirement": "first accepted tile go must follow the selected leaf reset release; reuse actual parent startup schedule only after its +1 budget is priced",
+    "steady_state_traffic_cycles_delta": 0,
+    "bench_source": "20087f28a",
+    "bench_scope": "actual new source tile inside existing golden mini: all startup/reset-reassert edges compared against depth3, old depth2 model records exactly three one-edge differences; physical mapped/native qualification pending"
+  }
 }
