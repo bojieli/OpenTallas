@@ -184,8 +184,10 @@ PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroo
             ('_pj' if os.environ.get('OT_KV_EMB_PJ', '0') == '1' else '') +   # KV-EMB4 10-20: kvs_emb u_join PIPE_JOIN=1 (+1 word-stream edge)
             ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + ('_sr' if PC_SRAM else '') +
             '.sv')   # KV-DOMSPLIT; KV-PC
+ROPE = os.environ.get('OT_KV_ROPE', '0') == '1'
+ROPE_OVL = os.environ.get('OT_KV_ROPE_OVL','0') == '1'
 RTL_FILE = (PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + ('_gs2' if GRP_SAFE2 else '') +
-            ('_g6c' if GRP_S6C else '') + '.sv')
+            ('_g6c' if GRP_S6C else '') + ('_rope' if ROPE else '') + ('_ovl' if ROPE_OVL else '') + '.sv')
 GRP_PRIVATE0_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_private0.sv'
 GRP_SAFE2_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s2.sv'
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
@@ -235,6 +237,8 @@ if GRP_SAFE2:
     KIND_MASTER.update(grp='qkd_kvs_grp_s2', grp_h='qkd_kvs_grp_h_s2')
 if GRP_S6C:
     KIND_MASTER.update(grp='qkd_kvs_grp_s6c', grp_h='qkd_kvs_grp_h_s6c')
+if ROPE:
+    KIND_MASTER['emb']='qkd_kvs_emb_rope_ovl' if ROPE_OVL else 'qkd_kvs_emb_rope'
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
                  boot_obs='bobs', diecfg='dcfg')
@@ -1689,6 +1693,10 @@ def rope_context_tiles(tiles):
         raise ValueError('KV RoPE context needs MU1, HROOT and tile kits')
     emb, ctl = tiles['kvs_emb'], tiles['kvs_ctl']
     emb['ports']['i_head_record'] = dict(dir='input', width=552, cls='special', src=None)
+    ovl=os.environ.get('OT_KV_ROPE_OVL','0')=='1'
+    if ovl:
+        emb['ports']['i_ovl_users']=dict(dir='input',width=4,cls='special',src=None)
+        emb['ports']['i_kvn_fault']=dict(dir='input',width=1,cls='special',src=None)
     emb['wires'] += ['    wire w_rope_start, w_rope_fault;',
                      '    wire [17:0] w_rope_token;', '    wire [15:0] w_rope_epoch;']
     native = int(os.environ.get('OT_KV_EMB_N32', '0'))
@@ -1697,10 +1705,11 @@ def rope_context_tiles(tiles):
     if delay != 1024:
         raise ValueError('KV RoPE EW1627 image requires the actual 1024-edge second HBM sweep separation')
     emb['body'] = [
-        f'    qkd_kvs_emb_ctx #(.NATIVE32({native}), .PIPE_JOIN({pipe}), .ROPE(1), .ROPE_DELAY({delay})) u_context ('
+        f'    qkd_kvs_emb_ctx #(.NATIVE32({native}), .PIPE_JOIN({pipe}), .ROPE(1), .ROPE_DELAY({delay}), .OVL({int(ovl)})) u_context ('
         '.ck(ck), .rst_n(rst_n), '
         '.i_ctx({i_head_record[3],i_head_record[3],i_head_record[551:516],i_head_record[64:4]}), '
-        '.d2d__emb_tx_slot(d2d__emb_tx_slot), .i_ctl(i_ctl), '
+        + ('.head_rx_user(i_ovl_users[3:2]), .emb_tx_user(i_ovl_users[1:0]), .kvn_ctx_fault(i_kvn_fault), ' if ovl else '.head_rx_user(2\'d0), .emb_tx_user(2\'d0), .kvn_ctx_fault(1\'b0), ')
+        + '.d2d__emb_tx_slot(d2d__emb_tx_slot), .i_ctl(i_ctl), '
         + ', '.join(f'.i_hroot_{st}(i_hroot_{st})' for st in STACKS)
         + ', .rowtx__emb_tx_v(w_rowtx__emb_tx_v), .rowtx__emb_tx_payload(w_rowtx__emb_tx_payload), '
         '.px_st(w_rope_start), .px_tok(w_rope_token), .px_tep(w_rope_epoch), .emb_fault(w_rope_fault));'
@@ -1795,7 +1804,7 @@ def bindings():
         seen[mst] = d
         ports = {pn: [pn] for pn, v in t['ports'].items() if v['cls'] != 'pad'}
         cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] else {}
-        source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else (RTL_FILE if GRP_SAFE2 else PUBLIC_RTL_FILE)
+        source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else (RTL_FILE if GRP_SAFE2 or ROPE else PUBLIC_RTL_FILE)
         if GRP_SAFE2 and t['kind'] in ('grp', 'grp_h'):
             source_file = GRP_S6C_RTL[t['kind']] if GRP_S6C else GRP_SAFE2_RTL
         if PC_SRAM and KITS and t['kind'] in PC_RLAND_KINDS:
@@ -2010,6 +2019,11 @@ def inject(m, K):
     fk = m.setdefault('forks', {})
     if ROPE:
         fk.setdefault('hrec_rx', []).append(('kvs_emb', 'i_head_record'))
+        if os.environ.get('OT_KV_ROPE_OVL','0')=='1':
+            fk['hrec_rx'].append(('kvnc','head'))
+            add(('rope_ovl_users','kv_oneway',4,[('d2d_kv','ovu'),('kvs_emb','i_ovl_users')]))
+            fk.setdefault('rope_ovl_users',[]).append(('kvnc','ovu'))
+            add(('rope_kvn_fault','kv_oneway',1,[('kvnc','flt'),('kvs_emb','i_kvn_fault')]))
         rec['rope_context'] = dict(source='compute native stage1 descriptor C->K kind12', width=552,
             owner='record[60:0]', position='owner[18:6]', start='kvs_emb.o_ctx_svc -> kvs_ctl.d2d__svc', bundle=174)
     for (dinst, dport), loads in nets.items():

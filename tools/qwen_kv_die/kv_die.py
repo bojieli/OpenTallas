@@ -1015,6 +1015,9 @@ def pll_model_binding():
 # host_input_producers.json).  Die bundles: svc (27 producer words, the root's port order), lup (link_up, NL = 2 real
 # link ends), rec_tx / rec_rx (the HOST record port), lrc (exceptional link reset / recovery clear from the root),
 # fdi (the UCIe native 583-b word), fwd_epoch / fwd_link_rst_n (two forwarded bumps to the compute die)
+ROPE_OVL = os.environ.get('OT_KV_ROPE_OVL', '0') == '1'
+if ROPE_OVL and not (os.environ.get('OT_KV_ROPE') == '1' and os.environ.get('OT_KV_MU') == '1' and os.environ.get('OT_KV_HOST_OBSX', '0') == '0'):
+    raise ValueError('RoPE OVL needs actual ROPE/MU source and non-OBSX partition')
 D2DS_FILE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv'
 D2DS_SVC = ['transport_fault', 'native_links_drained', 'native_link_reset_seen', 'native_retrained', 'abort_drained',
             'native_kv_drained', 'native_vm_drained', 'native_collective_drained', 'native_host_drained',
@@ -1056,7 +1059,8 @@ D2DS_SFM_PARAMS = ('SAFE_RC', 'SRAMV', 'FEG')
 # sfm3 (kits qkd_d2d_static_r7w_sfm3 / ovl_sfm3; OT_KV_D2DS_KIT=qkd_d2d_static_r7w_sfm3).  The bound r7w_sfm2 view FAILS
 # the mandatory native census (72 roots > 32, max 152); sfm3 census PASS 32.
 D2DS_SFM_TOPS = {'qkd_d2d_static_sfm': D2DS_SFM_FILE,
-                 'qkd_d2d_static_sfm3': 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv'}
+                 'qkd_d2d_static_sfm3': 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv',
+                 'qkd_d2d_static_ovl_sfm3': 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv'}
 
 
 def d2ds_kit():
@@ -1068,6 +1072,8 @@ def d2ds_kit():
     if not sp.is_file():
         return 'qkd_d2d_static', D2DS_FILE, {}
     spec = json.loads(sp.read_text())
+    if ROPE_OVL and spec.get('top') != 'qkd_d2d_static_ovl_sfm3':
+        raise ValueError('RoPE OVL needs its actual OVL sfm3 end, not a single-user stand-in')
     if spec.get('top') not in D2DS_SFM_TOPS:
         return 'qkd_d2d_static', D2DS_FILE, {}
     pr = spec.get('params', {})
@@ -1286,7 +1292,8 @@ DCAL_CFG = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data', 'cal_start', 'cal_
 # from the current d2d_cal_image by kv_static_programme.link_cfg_words; kv_static_boot_join binds it on the link end, so the
 # die nets n_ks_kvs_ctl__boot__link_cfg_* reach the d2ds identity pins). The calendar sequencer qkd_dcal drives only the
 # run strobes cal_start / cal_seg; its own cfg_* outputs (a compile-time image, stale whenever TXDP changes) are load-less.
-DCAL_CS = ['cal_start', 'cal_seg']
+DCAL_CS = ['cal_start', 'cal_seg'] + (['cal_start_rx', 'cal_seg_rx', 'cal_user_tx', 'cal_user_rx'] if ROPE_OVL else [])
+DCAL_CS_BITS = 8 if ROPE_OVL else 2
 DCAL_CFGW = ['cfg_tx_we', 'cfg_rx_we', 'cfg_addr', 'cfg_data']
 DCAL_WH = (18.792, 28.08)
 # KV-DCAL-BOOTCFG 10-19 (OT_KV_DCAL_BC=1, needs OT_KV_DCAL=1 + OT_KV_STATIC_DIE=1; default off): the boot-only producer above
@@ -1329,7 +1336,15 @@ if DCAL_BC4:
         else (25.92, 34.56)
 
 
+if ROPE_OVL:
+    DCAL_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_ovl_rope.sv'
+    DCAL_WH = (216, 129.6)
+
 def dcal_binding():
+    if ROPE_OVL:
+        return dict(module='qkd_d2d_cal_seq_pin_ovl_rope', file=DCAL_FILE, parameters=dict(MUT=0,MUT_HALT_REWIND=0),
+            ports=dict(ck=['ck'],rst_n=['rst_n'],cal=list(DCAL_CS),dcfg=list(DCAL_CFGW),ego=['epoch_go'],
+                hlt=['halt'],rld=['reload'],flt=['fault'],kad=['adm_done'],**{g:[p] for g,p in DCAL_BC_GROUPS.items()}),sliced={},classed={})
     if DCAL_BC4:
         return dict(module='qkd_d2d_cal_seq_pin_bc4', file=DCAL_BC4_FILE, parameters=dict(EP_SKEW=3, GO_OFS=0, MUT=0),
                     ports=dict(ck=['ck'], rst_n=['rst_n'], cal=list(DCAL_CS), dcfg=list(DCAL_CFGW), ego=['epoch_go'],
@@ -1352,6 +1367,8 @@ def _d2ds_binding_dcal():
     # (KV-DCAL-BOOTCFG: dcfg only under OT_KV_DCAL_BC, which kvsys_prep records in kv_flags.env for the re-run)
     b = d2ds_binding()
     b['ports'].update(cal=list(DCAL_CS), eab=['epoch_abort'])
+    if ROPE_OVL:
+        b['ports']['ovu']=['tx_user','rx_user']
     if DCAL_BC:
         b['ports'].update(dcfg=list(DCAL_CFGW))
     return b
@@ -1377,7 +1394,14 @@ BINDINGS.update(qkd_kvnc=dict(module='qkd_kvn_ctx_cal', file=KVNC_FILE, paramete
                               ports=dict(ck=['ck'], rst_n=['rst_n'], cs=['cal_start'], lay=['layer'], cht=['cohort_tag'],
                                          chg=['cohort_gen'], kvi=['compiled_identity', 'compiled_generation']),
                               sliced={}, classed={}))
-BINDINGS['qkd_dcal']['ports']['lay'] = ['layer']
+if ROPE_OVL:
+    KVNC_FILE='rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv'
+    BINDINGS['qkd_kvnc']=dict(module='qkd_kvn_ctx_ovl_rope',file=KVNC_FILE,parameters=dict(MUT_USER=0,MUT_STALE=0),
+        ports=dict(ck=['ck'],rst_n=['rst_n'],head=['head_record'],ovu=['ovl_users'],calrx=['calrx'],kad=['adm_done'],
+          kvi=['compiled_identity','compiled_generation'],flt=['fault'],rld=['reseed']),sliced={},classed={})
+    KVNC_WH=(86.4,86.4)
+else:
+    BINDINGS['qkd_dcal']['ports']['lay'] = ['layer']
 BINDINGS['qkd_d2ds']['ports']['kvi'] = ['kvn_compiled_identity', 'kvn_compiled_generation']
 RTL.update(qkd_kvnc=KVNC_FILE)
 
@@ -2949,11 +2973,11 @@ def _d2ds_swap(m):
         it = F.Inst('dcal', 'qkd_dcal', up(d_.x + d_.w + 21.6, GX), up(d_.y + d_.h / 2 - h_ / 2, GY), w_ - SHAVE, h_ - SHAVE,
                     'R0', kind='ctl', region='io')
         m['insts'].append(it)
-        add(('dcal_cfg', 'spine_local', len(DCAL_CS), [('dcal', 'cal'), ('d2d_kv', 'cal')]))
+        add(('dcal_cfg', 'spine_local', DCAL_CS_BITS, [('dcal', 'cal'), ('d2d_kv', 'cal')]))
         if DCAL_BC:      # KV-DCAL-BOOTCFG: the merged cfg word (boot + runtime base writes) -> the D2D end's cfg port
             add(('dcal_dcfg', 'spine_local', 1 + 1 + 6 + 32, [('dcal', 'dcfg'), ('d2d_kv', 'dcfg')]))
         add(('dcal_hlt', 'spine_local', 1, [('d2d_kv', 'eab'), ('dcal', 'hlt')]))
-        add(('dcal_rld', 'kv_oneway', 1, [('host', 'program_begin_v'), ('dcal', 'rld')]))
+        add(('dcal_rld', 'kv_oneway', 1, [('host', 'program_begin_v'), ('dcal', 'rld')] + ([('kvnc','rld')] if ROPE_OVL else [])))
         for i_, (bid, cl, bits, eps) in enumerate(B):
             if bid == 'clk_core_c':
                 B[i_] = (bid, cl, bits, list(eps) + [('dcal', 'ck')])
@@ -2967,14 +2991,17 @@ def _d2ds_swap(m):
             kw_, kh_ = up(KVNC_WH[0] + SHAVE, GX), up(KVNC_WH[1] + SHAVE, GY)
             kt = F.Inst('kvnc', 'qkd_kvnc', dc_.x, up(dc_.y - 21.6 - kh_, GY), kw_ - SHAVE, kh_ - SHAVE, 'R0', kind='ctl', region='io')
             m['insts'].append(kt)
-            add(('kvnc_lay', 'spine_local', 6, [('dcal', 'lay'), ('kvnc', 'lay')]))
-            add(('kvnc_cht', 'kv_oneway', 59, [('host', 'cohort_tag'), ('kvnc', 'cht')]))
-            add(('kvnc_chg', 'kv_oneway', 2, [('host', 'cohort_gen'), ('kvnc', 'chg')]))
+            if ROPE_OVL:
+                add(('kvnc_adm', 'spine_local', 1, [('dcal','kad'),('kvnc','kad')]))
+            else:
+                add(('kvnc_lay', 'spine_local', 6, [('dcal', 'lay'), ('kvnc', 'lay')]))
+                add(('kvnc_cht', 'kv_oneway', 59, [('host', 'cohort_tag'), ('kvnc', 'cht')]))
+                add(('kvnc_chg', 'kv_oneway', 2, [('host', 'cohort_gen'), ('kvnc', 'chg')]))
             add(('kvnc_kvi', 'spine_local', 59 + 2, [('kvnc', 'kvi'), ('d2d_kv', 'kvi')]))
             for i_, (bid, cl, bits, eps) in enumerate(B):
                 if bid == 'clk_core_c':
                     B[i_] = (bid, cl, bits, list(eps) + [('kvnc', 'ck')])
-            m['extra_conns']['kvnc'] = [f'.cs(n_dcal_cfg[{KVNC_CS_BIT}])']
+            m['extra_conns']['kvnc'] = ['.calrx({n_dcal_cfg[7:6],n_dcal_cfg[3:2]})'] if ROPE_OVL else [f'.cs(n_dcal_cfg[{KVNC_CS_BIT}])']
             if SEQST:
                 # OT_KV_SEQ_STATIC: master swap of slot `seq`; the layer programme sits one channel W of the HOST root,
                 # level with its centre (HOST authority on abutting buses; tok_start rides kv_oneway relays from DCAL)

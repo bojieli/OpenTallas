@@ -141,6 +141,13 @@ if [ "${OT_KV_DCAL:-0}" = 1 ]; then
       DCV=$B4V; echo "OT_KV_DCAL_BC4: qkd_dcal -> $B4V (safe K22)"
     else echo "OT_KV_DCAL_BC4 FRAME: no view at $B4V yet; qkd_dcal stays an ASSUMED frame (kit $B4K not closed)"; fi
   fi
+  if [ "${OT_KV_ROPE_OVL:-0}" = 1 ]; then
+    DCV=
+    OVV=physical/ref_tile/qkd_d2d_cal_seq_pin_ovl_rope/views/qkd_d2d_cal_seq_pin_ovl_rope
+    if [ -f "$OVV/qkd_d2d_cal_seq_pin_ovl_rope.lef" ] && [ -f "$OVV/qkd_d2d_cal_seq_pin_ovl_rope_tt.lib" ] && [ -f "$OVV/qkd_d2d_cal_seq_pin_ovl_rope_ff.lib" ]; then
+      DCV=$OVV; echo "OT_KV_ROPE_OVL: actual independent K TX/RX list player binds $OVV"
+    else echo "OT_KV_ROPE_OVL FRAME: actual list-player view absent; no old BC4 view alias"; fi
+  fi
   [ -z "$DCV" ] || BV="$BV --view qkd_dcal=$DCV"
 fi
 # OT_KV_KVNC=1 (Q-KVSYS PVJOIN 10-16, needs OT_KV_DCAL=1): the KVN context leaf qkd_kvn_ctx_cal (kv_die.py KVNC) on its view

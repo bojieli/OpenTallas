@@ -12,10 +12,12 @@
 //     register together);
 //   - emb_fault = ctx_start | join | row_tx sticky faults (previously internal; owner of the health sink: KV-HEALTH).
 // ---------------------------------------------------------------------------------------------------------------------
-module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0, parameter integer ROPE=0, parameter integer ROPE_DELAY=1024) (
+module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_JOIN = 0, parameter integer ROPE=0, parameter integer ROPE_DELAY=1024, parameter integer OVL=0) (
     input  wire          ck,
     input  wire          rst_n,
     input  wire [98:0]   i_ctx,
+    input wire [1:0] head_rx_user,emb_tx_user,
+    input wire kvn_ctx_fault,
     input  wire [0:0]    d2d__emb_tx_slot,
     output wire [0:0]    rowtx__emb_tx_v,
     output wire [547:0]  rowtx__emb_tx_payload,
@@ -86,5 +88,12 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
     assign px_st = sweep_start;
     assign px_tok = (!st&&(rope_start||rope_phase))?rope_id:tok;
     assign px_tep = (!st&&(rope_start||rope_phase))?rope_epoch:tep;
-    assign emb_fault = cf | jf | rf;
+    reg ovl_fault;
+    always @(posedge ck or negedge rst_n)
+      if(!rst_n)ovl_fault<=0;
+      else if(OVL)begin
+        if(i_ctx[98]&&i_ctx[91:88]==12&&head_rx_user!=i_ctx[44:43])ovl_fault<=1;
+        if(d2d__emb_tx_slot[0]&&emb_tx_user!=tep[1:0])ovl_fault<=1;
+      end
+    assign emb_fault = cf | jf | rf | (OVL&&(ovl_fault|kvn_ctx_fault));
 endmodule
