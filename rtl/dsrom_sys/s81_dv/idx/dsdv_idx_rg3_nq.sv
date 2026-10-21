@@ -23,6 +23,6 @@ module dsdv_idx_rg3_nq #(
     output wire [9:0]    st
 );
     wire [512:0] qo_end;      // chain end: no downstream reader
-    dsdv_idx_rg3 #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .IQD(IQD), .SQD(SQD), .LFD(LFD), .EL(EL)) u_rg3 (
+    dsdv_idx_rg3_nq_native #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .IQD(IQD), .SQD(SQD), .LFD(LFD), .EL(EL)) u_rg3 (
         .ck(ck), .rst(rst), .sid(sid), .qi(qi), .qo(qo_end), .si(si), .so(so), .rqo(rqo), .rri(rri), .st(st));
 endmodule
