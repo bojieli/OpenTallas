@@ -87,13 +87,14 @@ def export_model(model, pin_pos):
             for b in sorted(rb):
                 crossings.append(dict(id=bid, src_region=a, dst_region=b,
                                       landing=landing, bits=bits, src=si, dst=di))
-    lane_instances = set()
+    lane_segments = set()
     for lane in (model.get('fwd_lanes') or {}).get('lanes', []):
         st = lane.get('stations') or []
         land = lane.get('landing')
-        lane_instances.update(st)
-        if land:
-            lane_instances.add(land)
+        n = int(lane.get('n', len(st) + bool(land)))
+        lane_segments.add(lane['bid'])
+        lane_segments.update(f"{lane['bid']}__r{k}" for k in range(1, n + 1))
+        lane_segments.update(f"fep_{lane['bid']}__r{k}" for k in range(1, n))
         # Only an instantiated SRAM landing ring counts. rlyrl reset capture
         # flops are recorded as unlanded rather than mistaken for rings.
         ring = land if land in by and by[land].master.startswith(RING) else None
@@ -110,7 +111,7 @@ def export_model(model, pin_pos):
                               src=[si, sp], dst=[di, dp]))
             # Forwarded lanes are checked end-to-end above, on actual regional
             # roots, not on their intermediate forwarded-clock nets.
-            if si in lane_instances or di in lane_instances:
+            if bid in lane_segments:
                 continue
             ring = di if by[di].master.startswith(RING) else None
             cross(bid, si, di, bits, ring)

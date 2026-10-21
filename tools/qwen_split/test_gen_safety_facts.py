@@ -93,3 +93,12 @@ def test_case_hook_writes_final_output(tmp_path):
     doc = json.loads((tmp_path / 'case/gen_safety_facts.json').read_text())
     assert doc['schema'] == 'opentallas.die_gen_safety_facts.v1'
     assert len(doc['wires']) == 3
+
+
+def test_foreign_reset_into_forwarded_lane_is_still_checked():
+    m, pos = fixture()
+    m['buses'].append(('foreign_rst', 'reset', 1, [('b', 'rst_q'), ('h0', 'en')]))
+    f = export_model(m, pos)
+    bad = [c for c in f['crossings'] if c['id'] == 'foreign_rst']
+    assert len(bad) == 1 and bad[0]['landing'] is None
+    assert check_facts(f)['counts']['no_landing'] == 1
