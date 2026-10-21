@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 out=$1
+mode=${2:-primary}
+case "$mode" in primary|oldcounter) ;; *) exit 2;; esac
 mkdir -p "$out/fixture"
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 verilator --version > "$out/version.txt"
@@ -21,6 +23,30 @@ srcs=(rtl/test/qwen_dv/s8/tb_selected_tail_pair.sv rtl/test/qwen_dv/s8/selected_
  rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_32x64_m1/ot_sram_1r1w_32x64_m1.v
  physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
+if [[ "$mode" == oldcounter ]]; then
+ python3 - "${srcs[2]}" "$out/fixedjb8.sv" <<'MUT'
+import sys
+from pathlib import Path
+s=Path(sys.argv[1]).read_text()
+for old,new in [('wlo == word_last','wlo == JB - 1'),('whi == word_last','whi == JB - 1')]:
+ assert s.count(old)==1
+ s=s.replace(old,new)
+Path(sys.argv[2]).write_text(s)
+MUT
+ srcs[2]="$out/fixedjb8.sv"
+fi
+sha256sum "${srcs[@]}" > "$out/sources.sha256"
 verilator --binary --timing -j 8 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_selected_tail_pair --Mdir "$out/obj" "${srcs[@]}" > "$out/build.log" 2>&1
+sha256sum "$out/obj/Vtb_selected_tail_pair" > "$out/binary.sha256"
+set +e
 "$out/obj/Vtb_selected_tail_pair" +FIX="$out/fixture" > "$out/primary.log" 2>&1
+rc=$?
+set -e
 cat "$out/primary.log"
+if [[ "$mode" == oldcounter ]]; then
+ [[ $rc -ne 0 ]]
+ grep -q 'SELECTED_TAIL_NOT_DRAINED receiver0 sender0 halves192 left3/3' "$out/primary.log"
+ echo "FIXEDJB8_CAUSAL_NEGATIVE_PASS rc=$rc"
+else
+ exit "$rc"
+fi
