@@ -1,0 +1,22 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: ot-epyc7       admits   385 GB (avail 490, growth 220, headroom 0, waiters 0/0 GB) load 33/96 running 9 disk 4429 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2355473-1792625986 after 0 s
+%Warning-UNOPTFLAT: rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv:407:17: Signal unoptimizable: Circular combinational logic: 'ot_s81dv_xfin.g_cp[0].u_e.VD'
+                                                                       : ... note: In instance 'ot_s81dv_xfin.g_cp[0].u_e'
+  407 |     wire        VD [0:T-1][1:2*NVP-1];
+      |                 ^~
+                    ... For warning description see https://verilator.org/warn/UNOPTFLAT?v=5.050
+                    ... Use "/* verilator lint_off UNOPTFLAT */" and lint_on around source to disable this message.
+                    rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv:407:17:      Example path: ot_s81dv_xfin.g_cp[0].u_e.VD
+                    rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv:459:34:      Example path: ASSIGNW
+                    rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv:407:17:      Example path: ot_s81dv_xfin.g_cp[0].u_e.VD
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 2.043 MB sources in 122 modules, into 99.179 MB in 87 C++ files needing 0.000 MB
+- Verilator: Walltime 62.859 s (elab=6.766, cvt=53.881, bld=0.000); cpu 62.851 s on 1 threads; allocated 3635.535 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2355473-1792625986): exit 0

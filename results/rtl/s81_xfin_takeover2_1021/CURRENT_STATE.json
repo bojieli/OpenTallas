@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-21T16:20:16.501284-07:00",
+  "updated": "2026-10-21T16:54:53.856888-07:00",
   "owner": "CODEX-S81-XFV-1021 /root/s81_lead/slice_collect",
   "qualified_FP": {
     "source": "560abe5d2",
@@ -17,26 +17,34 @@
     "metadata_correction": "7bc832496 / PROOF_METADATA_CORRECTION.json"
   },
   "current_whole_source": {
-    "finish_control": "b00440f56",
+    "finish_control": "3b38a98fa",
     "FP": "8f11a8749",
-    "qualification": "ENGpositive exactpreport source6881PASS, laterporthelper exhaustive/mathparser PASS; NORM/currentcausals/native pending",
-    "changes": "real-only 12 scheduler groups/ceil(NB/3) consumer copies; separate16 leaf-go plus12 command-go loads28; same-edge control, no protocol edge change",
+    "qualification": "component read native6+allowner profiles PASS; wholecurrent3b golden/native pending",
     "no_adoption": true,
-    "FP_interface_proof": "7ebe+8f11 minimalunsignedport/net +explicit signedcasts, helperexhaustive24576bad0/mappedOpenROADPASS295a0d626"
+    "model": "r31_READ_OH_MODEL; 93SRAM/0newedges/35fewerFF/+6769localbusbits"
   },
   "active_XFIN": {
-    "native": {
-      "source": "8f3718c55",
-      "stage": "ot-epyc7:/srv/opentallas-scratch/claude/codex-xfin-r23-1021",
-      "unit": "oth-ubuntu-1622436-1792621560",
+    "R33_native": {
+      "source": "3b38a98fa",
+      "unit": "oth-ubuntu-2383629-1792626401",
+      "host": "ot-epyc7",
       "mem_gib": 64,
-      "state": "LIVE OPT_EXPR after TECHMAP; diagnostic predecessor contains unused kept copies corrected in current source, no adoption",
-      "binding": "r23_live_container_binding.json"
+      "stage": "/srv/opentallas-scratch/claude/codex-xfin-r33native-1021",
+      "state": "LIVE"
     },
-    "mechanism": {
-      "source": "8f3718c55",
-      "unit": "oth-ubuntu-1622434-1792621560",
-      "state": "TERMINAL PASS16 slices128results err0/fault0/rb0 GO526 partial464; diagnostic predecessor only"
+    "R31_ENG128": {
+      "source": "3b38a98fa",
+      "unit": "oth-ubuntu-2415606-1792626854",
+      "host": "ot-epyc7",
+      "mem_gib": 128,
+      "stage": "/srv/opentallas-scratch/claude/codex-xfin-r31-1021",
+      "state": "LIVE exact authorized continuation after confirmed64MEMCG; no compiled objects existed"
+    },
+    "R27_native": {
+      "source": "6881/b004+FP731",
+      "host": "ot-epyc5",
+      "unit": "oth-ubuntu-3231441-1792623325",
+      "state": "LIVE predecessor oldread201 expected; preserve actual result"
     }
   },
   "prior_measured": {
@@ -48,12 +56,13 @@
     "r20": "560 fullnative terminal Error247/noNETLIST/peak66960120KB;64GiB kernelMEMCG strongly consistent timing/RSS but exact removed Docker binding unproven; no native verdict"
   },
   "VS": {
-    "source": "8f57521dc",
-    "evidence": "839f6997e",
-    "FB_job": "s81sl_vs_n32f-n32f-71ac7943d",
-    "submission_source": "71ac7943d",
-    "state": "RUNNING route; all12benchesok",
-    "MAIN": "terminalclockFAIL129.5/123.1ps preservedf4e364ef6; no retry"
+    "state": "READY",
+    "job": "s81sl_vs_n32f-n32f-71ac7943d",
+    "receipt": "c4849a10c",
+    "TT_ps": 12.98,
+    "FF_ps": 12.28,
+    "DRC": 0,
+    "next": "root exclusive finalintake"
   },
   "XGT_XO": {
     "source": "f5f35855d",
@@ -104,5 +113,10 @@
     "actual_all18_sources_match_git": true,
     "cid": "ad60cc9ced9e8d648b291619ada2ce6a8009c9a1f2336fb5fb47b7cf4304d86a",
     "state": "LIVE synth normaladmission autoSPILL ep7\u2192ep5; originalconfig/93SRAMs unchanged"
+  },
+  "XGT": {
+    "source": "f5f35855d",
+    "native": "BOTH PASS32/0/0 receipt7800bff3c",
+    "gate": "BOTH current CTScomplete, postCTSprocess live; no terminalGRT yet; local13:08JSON stale"
   }
 }

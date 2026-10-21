@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r34-mutleaf-1021
+ot-run: ot-epyc7       admits   261 GB (avail 499, growth 317, headroom 0, waiters 0/0 GB) load 31/96 running 12 disk 4428 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r34-mutleaf-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r34-mutleaf-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r34-mutleaf-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-xfin-r34-mutleaf-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-xfin-r34-mutleaf-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2413230-1792626823 after 0 s
+READ_OH TR=1 checks=1264 bad=0
+- /srv/opentallas-scratch/claude/codex-xfin-r34-mutleaf-1021/read_oh_tb.sv:31: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.299 s; speed 4.226 us/s
+- Verilator: cpu 0.299 s on 1 threads; allocated 9 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2413230-1792626823): exit 0

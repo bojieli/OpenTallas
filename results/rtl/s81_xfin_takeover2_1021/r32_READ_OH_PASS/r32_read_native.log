@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r32read-1021
+ot-run: ot-epyc7       admits   271 GB (avail 475, growth 286, headroom 0, waiters 0/0 GB) load 27/96 running 12 disk 4429 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r32read-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r32read-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r32read-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-xfin-r32read-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-xfin-r32read-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2373041-1792626244 after 0 s
+CENSUS new_read PASS max 6 over32 0 seq_over32 0 rst_n_loads 0 errors 0
+   Chip area for module '\read_new_leaf': 0.000000
+      350   33.242 cells
+   Chip area for module '$paramod$d9cd611aedf54464cc04f17c7bb821964431bcc6\ot_s81dv_finish_readgroup_oh': 33.242400
+DONE new_read rc=0 secs=97
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2373041-1792626244): exit 0

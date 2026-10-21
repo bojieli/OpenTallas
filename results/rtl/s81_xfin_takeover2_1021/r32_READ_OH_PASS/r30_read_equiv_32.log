@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: ot-epyc7       admits   437 GB (avail 495, growth 189, headroom 0, waiters 0/0 GB) load 33/96 running 8 disk 4431 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2340145-1792625756 after 1 s
+READ_OH TR=3 checks=3792 bad=0
+- /srv/opentallas-scratch/claude/codex-xfin-r30read-1021/read_oh_tb.sv:28: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.456 s; speed 8.322 us/s
+- Verilator: cpu 0.456 s on 1 threads; allocated 10 MB
+READ_OH TR=1 checks=1264 bad=0
+- /srv/opentallas-scratch/claude/codex-xfin-r30read-1021/read_oh_tb.sv:28: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.029 s; speed 44.356 us/s
+- Verilator: cpu 0.029 s on 1 threads; allocated 8 MB
+READ_OH TR=3 checks=3792 bad=0
+- /srv/opentallas-scratch/claude/codex-xfin-r30read-1021/read_oh_tb.sv:28: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.501 s; speed 7.575 us/s
+- Verilator: cpu 0.500 s on 1 threads; allocated 10 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2340145-1792625756): exit 0

@@ -1,0 +1,25 @@
+{
+  "updated": "2026-10-21T16:54:53.856888-07:00",
+  "source": "3b38a98fa",
+  "helper_source": "aa3f08729 unchanged body in3b",
+  "scope": "component only, no whole-parent/native/physical qualification",
+  "native": {
+    "profile": "TREES3 FIRST0 CNT3 NV80 K5 P3",
+    "verdict": "PASS",
+    "max_fanout": 6,
+    "violations": 0,
+    "role_errors": 0,
+    "area_um2": 33.2424,
+    "unit": "oth-ubuntu-2373041-1792626244"
+  },
+  "equivalence": {
+    "baseline_norm": 1264,
+    "baseline_eng": 3792,
+    "mutassoc_eng": 3792,
+    "mutleaf_norm": 1264,
+    "bad": 0,
+    "coverage": "all79 legal nodes per tree x16 selected-owner combinations; all macro-facing ren/ra/sa/sb/ha/hb compared including CE0 addresses",
+    "mutleaf_fixture_correction": "originalR30 assigned owners before leaf1->2 remap; correctedR34 assigns actualselected leafowner, full1264 bad0; earlier subset preserved"
+  },
+  "source_helper_sha256": "07d656958a918ef631d2f4487b39134f2866e36ef2e9a46e2d254021f6aef848"
+}

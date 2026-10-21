@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: ot-epyc7       admits   418 GB (avail 489, growth 197, headroom 0, waiters 0/0 GB) load 39/96 running 9 disk 4434 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-xfin-r30read-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2239242-1792625502 after 0 s
+READ_OH TR=1 checks=1264 bad=0
+- /srv/opentallas-scratch/claude/codex-xfin-r30read-1021/read_oh_tb.sv:28: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.027 s; speed 46.496 us/s
+- Verilator: cpu 0.027 s on 1 threads; allocated 8 MB
+Terminated                 /usr/local/bin/ot-heavy --mem 8 --tag otrun-ubuntu-49372-625501871 --max-wait 120 -- bash read_oh_run.sh
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2239242-1792625502): exit 143

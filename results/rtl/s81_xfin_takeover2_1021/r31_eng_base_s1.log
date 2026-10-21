@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: ot-epyc7       admits   328 GB (avail 481, growth 251, headroom 0, waiters 0/0 GB) load 26/96 running 11 disk 4429 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-xfin-r31-1021/src
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2366518-1792626144 after 0 s
+Terminated                 /usr/local/bin/ot-heavy --mem 64 --tag otrun-ubuntu-97346-626144006 --max-wait 120 -- env J=2 bash /srv/opentallas-scratch/claude/codex-xfin-r31-1021/bench_eng_base_s1/existing_runner.sh /srv/opentallas-scratch/claude/codex-xfin-r31-1021/bench_eng_base_s1 base 0 0 1
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2366518-1792626144): exit 143

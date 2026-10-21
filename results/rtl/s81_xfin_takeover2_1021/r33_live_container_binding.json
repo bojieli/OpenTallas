@@ -1,0 +1,41 @@
+{
+  "Id": "962fe58ba6fcfa258ce25fb4245a79eef97c9c4250d07443c744502bf1cc0570",
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 2383716,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-21T23:46:42.273743133Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "Mounts": [
+    {
+      "Type": "bind",
+      "Source": "/srv/opentallas-scratch/claude/codex-xfin-r33native-1021/native",
+      "Destination": "/work",
+      "Mode": "",
+      "RW": true,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/srv/opentallas-scratch/claude/codex-xfin-r33native-1021/src",
+      "Destination": "/src",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    }
+  ],
+  "Memory": 68719476736,
+  "Labels": {
+    "org.opencontainers.image.version": "22.04",
+    "ot.owner": "CODEX-S81-XFV-1021",
+    "ot.source": "3b38a98fa"
+  }
+}
