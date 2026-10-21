@@ -49,3 +49,7 @@ Legacy c216 and captured main92 K-die scenes already import actual M4/clkM5 UCIe
 ## Source recovery correction to initial geometry choice
 
 The initial wide-eb7bba geometry analysis remains true for that source, but is not the selected original GEN profile. The separately published tall4c62ffde profile now resolves the outline mismatch without any invented90-degree allowance. `serdes_source_candidates.tgz` seals both north-wide76a5022b and north-tall4c62ffde source bundles. `original_gen_contracts.tgz` seals original run/gen/candidate scripts and their SHA256SUMS, all three verified locally as read-only text. The parent/source owner must authorize any new continuation; this packet still executes no GEN/bind/audit.
+
+## Exact modeled Q UCIe phase law
+
+The source nface model drives lclk from its own free-running `always #(LCLK_HALF_NS)` oscillator (default1GHz), with no identity assignment from clk. Its latency pipe and tx_up update on input clk; the lclk/clk relationship is not a physical insertion arc. TTlib supplies no lclk timing arcs. Captured clock_contract.json explicitly states clock_generation OPEN for real common-PLL/divider implementation and physical delivery, qualification=false. Preserve these distinctions; a modeled oscillator does not establish source insertion R or a checked phase relationship.
