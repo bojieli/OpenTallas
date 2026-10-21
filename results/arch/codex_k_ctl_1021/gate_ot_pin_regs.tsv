@@ -1,0 +1,63 @@
+port	dir	width	cycles	why
+ck	input	1	0	clock
+rst_n	input	1	0	reset
+boot__boot_pr	input	143	1	pin register
+boot__boot_image_target	input	4	1	pin register
+boot__boot_image_ready	input	1	1	pin register
+boot__boot_image_fault	input	1	1	pin register
+boot__boot_image_epoch	input	16	1	pin register
+boot__boot_image_digest	input	64	1	pin register
+d2d__svc	input	174	1	pin register
+por_n	input	1	0	reset
+embgw__bw	input	293	1	pin register
+st	input	1	1	pin register
+auth	input	82	1	pin register
+cht	input	59	1	pin register
+chg	input	2	1	pin register
+d2d__skw	input	12	1	pin register
+oobs__host_launch_quiet	input	1	1	pin register
+oobs__host_upstream_quiet	input	6	1	pin register
+d2d__srx	input	522	1	pin register
+d2d__kvn_word_identity	input	59	1	pin register
+d2d__kvn_word_generation	input	2	1	pin register
+boot__link_cfg_tx_we	output	1	1	pin register
+boot__link_cfg_rx_we	output	1	1	pin register
+boot__link_cfg_addr	output	6	1	pin register
+boot__link_cfg_data	output	32	1	pin register
+kvi	output	61	1	pin register
+oobs__kv_drained_local	output	1	1	pin register
+oobs__kv_flush_local	output	1	1	pin register
+oobs__kv_active_local	output	1	1	pin register
+dcfg__age_vport__0_16	output	16	1	pin register
+dcfg__age_vport__16_16	output	16	1	pin register
+dcfg__age_vport__32_16	output	16	1	pin register
+dcfg__age_vport__48_16	output	16	1	pin register
+kg	output	23	1	pin register
+dcfg__age_vport__64_16	output	16	1	pin register
+dcfg__age_vport__80_16	output	16	1	pin register
+dcfg__age_vport__96_16	output	16	1	pin register
+dcfg__age_vport__112_16	output	16	1	pin register
+dcfg__age_vport__128_16	output	16	1	pin register
+dcfg__age_vport__144_16	output	16	1	pin register
+dcfg__age_vport__160_16	output	16	1	pin register
+dcfg__age_vport__176_16	output	16	1	pin register
+dcfg__age_vport__192_16	output	16	1	pin register
+dcfg__age_vport__208_16	output	16	1	pin register
+dcfg__age_vport__224_16	output	16	1	pin register
+dcfg__age_vport__240_16	output	16	1	pin register
+lp	output	21	1	pin register
+boot__setup_ready	output	1	1	pin register
+own__native_reserved	output	1	1	pin register
+own__ownership_valid	output	1	1	pin register
+cf_root__fault	output	1	1	pin register
+dcfg__age_pv	output	16	1	pin register
+o_attn	output	109	1	pin register
+o_emb	output	73	1	pin register
+o_hroot_WS	output	1118	0	excluded
+i_hroot_WS	input	144	1	pin register
+o_hroot_WN	output	1118	0	excluded
+i_hroot_WN	input	144	1	pin register
+o_hroot_ES	output	1118	0	excluded
+i_hroot_ES	input	144	1	pin register
+o_hroot_EN	output	1118	0	excluded
+i_hroot_EN	input	144	1	pin register

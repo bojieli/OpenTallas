@@ -1,0 +1,17 @@
+{
+  "gate_wrapper_sha256": "b1777ef1c095145de9333f15acaa1722aafb1afb4e7aab32707e315459a88893",
+  "source_file_sha256": "d2211b151fe249b6ad417f7f94e34bede4874852e900fe3a30fdd9b4b03f4a1c",
+  "source_module_sha256": "857c132872240c8d8a60e048b785c1ccb22d1987d222e13c881ec747347115df",
+  "source_commit": "61e127f40eb85e3a096d7811a793992935b4c890",
+  "top": "qkd_kvs_ctl",
+  "core_rename": "qkd_kvs_ctl__ot_pr_core",
+  "params": {},
+  "edges": {
+    "data_inputs": 1,
+    "non_hroot_outputs": 1,
+    "o_hroot_outputs": 0,
+    "reset_landing": 2
+  },
+  "gate_wrapper_remote": "ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_ctl_c32d-20261021-053438/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_ctl_asap7_ref_gate/base/ot_pin_regs_wrapper.v",
+  "route_wrapper_comparison": "PENDING until route export; do not bind wires-only EDGES0"
+}
