@@ -1,0 +1,543 @@
+{
+ "schema": "opentallas.die_reset_release_check.v1",
+ "verdict": "FAIL",
+ "diagnostic": "dv2f20g5r2b_static_pre_sta",
+ "static": {
+  "counts": {
+   "INTRA": 11431,
+   "FOREIGN": 3520,
+   "LANDED": 820
+  },
+  "families": [
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_field",
+    "dst_master": "qfd_rst_rep",
+    "n": 1649
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_field",
+    "dst_master": "qfd_rst_rep_p8",
+    "n": 1345
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_field",
+    "dst_master": "qfd_c_b16_dv",
+    "n": 449
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_rst_rep",
+    "n": 21
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_fwd_s",
+    "dst_master": "qfd_rst_rep",
+    "n": 4
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_io",
+    "dst_master": "ot_qfd_serdes_112g_x12_phy_s597",
+    "n": 3
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_field",
+    "dst_master": "qfd_dv_slice2_w",
+    "n": 3
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstseq_rom",
+    "dst_master": "qfd_rst_rep",
+    "n": 2
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_io",
+    "dst_master": "qfd_rlyh0_1_NS_65x30",
+    "n": 2
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_io",
+    "dst_master": "qfd_rlyh0_1_WE_65x30",
+    "n": 2
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_rlyh0_1_SE_65x30",
+    "n": 2
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_field",
+    "dst_master": "qfd_rlyh0_1_EN_65x30",
+    "n": 2
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rs_bump",
+    "dst_master": "qfd_rst_rep",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_tt_ctlm_dv",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_sys_face_mu_dhobs",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq",
+    "dst_master": "qfd_native59_dv_service",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq",
+    "dst_master": "qfd_embedding_word_provider",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_field",
+    "dst_master": "qfd_dv_slice2_e",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_mu_ctx_rx_die",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_io",
+    "dst_master": "qfd_rlyh0_597_NS_104x60",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_io",
+    "dst_master": "qfd_rlyh0_597_WE_104x60",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_rlyh0_18_WE_65x30",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_rlyh0_6_WE_65x30",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_rlyh0_18_SE_65x30",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_rlyh0_76_SN_65x30",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_rlyh0_1_WN_65x30",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq_ctlm",
+    "dst_master": "qfd_rlyh0_69_SE_65x30",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_d2d__fo1__r4",
+    "dst_master": "qfd_rlyh0_1_NS_65x30",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_d2d__fo2__r4",
+    "dst_master": "qfd_rlyh0_1_NS_65x30",
+    "n": 1
+   },
+   {
+    "cls": "FOREIGN",
+    "tree": "rstt_rst_seq",
+    "dst_master": "qfd_rlyh0_2_EN_65x30",
+    "n": 1
+   }
+  ],
+  "examples": {
+   "FOREIGN": [
+    {
+     "src": "rstt_rst_io_3",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_coll"
+     ],
+     "net": "n_rst_io__t99",
+     "dst": "io_serdes/rst_n",
+     "dst_master": "ot_qfd_serdes_112g_x12_phy_s597",
+     "dst_region": [
+      "n_clk_serdes0"
+     ]
+    },
+    {
+     "src": "rs_bump",
+     "src_master": "qfd_rstsync",
+     "src_region": [
+      "n_clk_d2d"
+     ],
+     "net": "n_rst_fwd_s",
+     "dst": "rstt_rst_fwd_s_1/d",
+     "dst_master": "qfd_rst_rep",
+     "dst_region": [
+      "n_clk_r664"
+     ]
+    },
+    {
+     "src": "rstt_rst_seq_ctlm_2",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r55"
+     ],
+     "net": "n_rst_seq_ctlm__t54",
+     "dst": "tt_ctlm/rst_n",
+     "dst_master": "qfd_tt_ctlm_dv",
+     "dst_region": [
+      "n_clk_r54"
+     ]
+    },
+    {
+     "src": "rstt_rst_seq_ctlm_2",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r55"
+     ],
+     "net": "n_rst_seq_ctlm__t54",
+     "dst": "mu_dhobs/rst_n",
+     "dst_master": "qfd_sys_face_mu_dhobs",
+     "dst_region": [
+      "n_clk_r54"
+     ]
+    },
+    {
+     "src": "rstt_rst_io_2",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_coll"
+     ],
+     "net": "n_rst_io__t215",
+     "dst": "io_serdes_1/rst_n",
+     "dst_master": "ot_qfd_serdes_112g_x12_phy_s597",
+     "dst_region": [
+      "n_clk_serdes1"
+     ]
+    },
+    {
+     "src": "rstt_rst_io_1",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_coll"
+     ],
+     "net": "n_rst_io__t238",
+     "dst": "io_serdes_2/rst_n",
+     "dst_master": "ot_qfd_serdes_112g_x12_phy_s597",
+     "dst_region": [
+      "n_clk_serdes2"
+     ]
+    },
+    {
+     "src": "rstseq_rom",
+     "src_master": "qfd_rstseq",
+     "src_region": [
+      "n_clk_r54"
+     ],
+     "net": "n_rst_seq",
+     "dst": "rstt_rst_seq_18/d",
+     "dst_master": "qfd_rst_rep",
+     "dst_region": [
+      "n_clk_d2d"
+     ]
+    },
+    {
+     "src": "rstseq_rom",
+     "src_master": "qfd_rstseq",
+     "src_region": [
+      "n_clk_r54"
+     ],
+     "net": "n_rst_io",
+     "dst": "rstt_rst_io_21/d",
+     "dst_master": "qfd_rst_rep",
+     "dst_region": [
+      "n_clk_coll"
+     ]
+    },
+    {
+     "src": "rstt_rst_seq_6",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_d2d"
+     ],
+     "net": "n_rst_seq__t62",
+     "dst": "native59/rst_n",
+     "dst_master": "qfd_native59_dv_service",
+     "dst_region": [
+      "n_clk_r54"
+     ]
+    },
+    {
+     "src": "rstt_rst_seq_14",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_d2d"
+     ],
+     "net": "n_rst_seq__t28",
+     "dst": "embed_prov/rst_n",
+     "dst_master": "qfd_embedding_word_provider",
+     "dst_region": [
+      "n_clk_r54"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_402",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r610"
+     ],
+     "net": "n_rst_field__t6480",
+     "dst": "c16_W0_0/rst_c0r0",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_427",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r612"
+     ],
+     "net": "n_rst_field__t6514",
+     "dst": "c16_W0_0/rst_c2r0",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_378",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r606"
+     ],
+     "net": "n_rst_field__t6552",
+     "dst": "c16_W0_0/rst_c0r1",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_378",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r606"
+     ],
+     "net": "n_rst_field__t6552",
+     "dst": "c16_W0_0/rst_c1r1",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_378",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r606"
+     ],
+     "net": "n_rst_field__t6552",
+     "dst": "c16_W1_0/rst_c3r1",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r20"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_375",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r605"
+     ],
+     "net": "n_rst_field__t6564",
+     "dst": "c16_W0_0/rst_c0r2",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_375",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r605"
+     ],
+     "net": "n_rst_field__t6564",
+     "dst": "c16_W0_0/rst_c1r2",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_375",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r605"
+     ],
+     "net": "n_rst_field__t6564",
+     "dst": "c16_W1_0/rst_c2r2",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r20"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_401",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r609"
+     ],
+     "net": "n_rst_field__t6578",
+     "dst": "c16_W0_0/rst_c0r3",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_426",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r611"
+     ],
+     "net": "n_rst_field__t6588",
+     "dst": "c16_W0_0/rst_c2r3",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_448",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r822"
+     ],
+     "net": "n_rst_field__t8250",
+     "dst": "c16_W0_0/rst_c3r1",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_448",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r822"
+     ],
+     "net": "n_rst_field__t8250",
+     "dst": "c16_E0_0/rst_c3r1",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r100"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_447",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r821"
+     ],
+     "net": "n_rst_field__t8259",
+     "dst": "c16_W0_0/rst_c2r1",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_447",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r821"
+     ],
+     "net": "n_rst_field__t8259",
+     "dst": "c16_E0_0/rst_c2r1",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r100"
+     ]
+    },
+    {
+     "src": "rstt_rst_field_446",
+     "src_master": "qfd_rst_rep",
+     "src_region": [
+      "n_clk_r821"
+     ],
+     "net": "n_rst_field__t8272",
+     "dst": "c16_W0_0/rst_c3r2",
+     "dst_master": "qfd_c_b16_dv",
+     "dst_region": [
+      "n_clk_r101",
+      "n_clk_r48"
+     ]
+    }
+   ]
+  }
+ },
+ "sta": "NOT RUN (static structure only)",
+ "reset_instances": 13780,
+ "corners": [],
+ "inputs": {
+  "die_v": "/srv/opentallas-scratch/claude/mu-die-qw/dv2f20g5r2b/p2/die.v",
+  "setup": null,
+  "hold": null
+ },
+ "rule": "COORD 10-20 21:29 (c) + owner CLOCK RULE 08:55: reset release lands in the receiving region clock"
+}
