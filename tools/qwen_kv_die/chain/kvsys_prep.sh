@@ -244,12 +244,7 @@ if [ "${OT_KV_RLY_STD:-0}" = 1 ]; then
   EXP="--expanded $O/expand.json"
 fi
 [ "${OT_KV_RLY_STD_NETLIST_ONLY:-0}" = 1 ] || kv_orient prefwd
-# KV-CLOCK 10-18 (OT_KV_FWD=1, landed-regions standard): every relay run that crosses core clock trees -> a forwarded
-# half-cycle lane (hop-0 station on the source root, half-cycle stations, LANDING read on the receiving root);
-# RUN/fwd_lanes.json.  OT_KV_FWD_NETLIST_ONLY=1: before the lane kits close (bind checks only, never a physical run)
-if [ "${OT_KV_FWD:-0}" = 1 ]; then
-  python3 tools/qwen_kv_die/kv_fwd_lanes.py --run $O ${OT_KV_FWD_NETLIST_ONLY:+--netlist-only} > $O/fwd_lanes.log 2>&1 || { tail -5 $O/fwd_lanes.log; exit 7; }
-  EXP="--expanded $O/expand.json"
+kv_land_lag() {
   # KVR-LANDLAG 10-19: every forwarded-clock landed crossing of the laned netlist (qkd_landsh* / qkd_landsh0*) checked
   # against its compiled age, FAIL CLOSED: lane traced on die.v == fwd_lanes.json row, K straps from the landing's own
   # tie cells == (E + cal + h0(n)) mod 8, the strap age inside the ring window, and the latency the hardware delivers
@@ -262,6 +257,14 @@ if [ "${OT_KV_FWD:-0}" = 1 ]; then
     if [ "${OT_KV_LAND_LAG_DIAG:-0}" = 1 ]; then tail -1 $O/land_lag.log > $O/LAND_LAG_DIAGNOSTIC
     else tail -4 $O/land_lag.log; echo "LAND_LAG_KV FAIL: landed crossings vs compiled ages ($O/case_kv/land_lag.json)"; exit 9; fi; }
   tail -1 $O/land_lag.log | cut -c1-400
+}
+# KV-CLOCK 10-18 (OT_KV_FWD=1, landed-regions standard): every relay run that crosses core clock trees -> a forwarded
+# half-cycle lane (hop-0 station on the source root, half-cycle stations, LANDING read on the receiving root);
+# RUN/fwd_lanes.json.  OT_KV_FWD_NETLIST_ONLY=1: before the lane kits close (bind checks only, never a physical run)
+if [ "${OT_KV_FWD:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_fwd_lanes.py --run $O ${OT_KV_FWD_NETLIST_ONLY:+--netlist-only} > $O/fwd_lanes.log 2>&1 || { tail -5 $O/fwd_lanes.log; exit 7; }
+  EXP="--expanded $O/expand.json"
+  [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ] || kv_land_lag
 fi
 # KV-HEALTH 10-19 (OT_KV_HEALTH=1; kvs14r default ON = MU release): the continuous registered health plane -- every
 # landing / KC / DCAL fault source -> no-reset OR joins + relay pipes per clock root, cross-root on spare bits of the
@@ -274,6 +277,16 @@ if [ "${OT_KV_HEALTH:-0}" = 1 ]; then
     || { tail -5 $O/health_plane.log; echo "KV_HEALTH install FAILED ($O/health_plane.log)"; exit 11; }
   grep '^KV_HEALTH' $O/health_plane.log | cut -c1-900
   EXP="--expanded $O/expand.json"
+fi
+# Opt-in actual source-preserving reset stations after all lane/health placements.
+# The existing land-lag check below consumes the recompiled G-R0/K calendar once.
+if [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_final_reset_stations.py --run "$O" > "$O/final_reset_stations.log" 2>&1 \
+    || { tail -5 "$O/final_reset_stations.log"; echo "KV_FINAL_RESET_STATIONS source generation failed"; exit 6; }
+  export OT_KV_FINAL_RESET_CALENDAR="$O/final_reset_stations/calendar.json"
+fi
+if [ "${OT_KV_FWD:-0}" = 1 ] && [ "${OT_KV_FINAL_RESET_STATIONS:-0}" = 1 ]; then
+  kv_land_lag
 fi
 [ "${OT_KV_FWD_NETLIST_ONLY:-0}" = 1 ] || kv_orient final --check-only
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)
