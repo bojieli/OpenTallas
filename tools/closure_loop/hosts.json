@@ -30,34 +30,6 @@
    ]
   },
   {
-   "name": "ot-epyc6",
-   "label": "EPYC6",
-   "cores": 128,
-   "cap": 141,
-   "base": "/srv/opentallas-scratch/claude/closure-loop",
-   "max_job_threads": 64,
-   "max_job_ram_gb": 900,
-   "min_free_disk_gb": 200,
-   "caps": [
-    "verilator",
-    "yosys",
-    "iverilog",
-    "orfs"
-   ],
-   "ram_gb": 1133,
-   "disk_roots": {
-    "/": 100,
-    "/srv/opentallas-scratch2": 30
-   },
-   "note": "Onboarded 2026-10-19 (FLEET-NEW): Cherry 1036642 'sacred-porpoise', 185.189.44.151 SE-Stockholm, AMD EPYC 9554P 64C/128T 3.1-3.75 GHz (Zen 4), 1152 GB DDR5 (1133 GB MemTotal), NVMe: 894 GB OS + /srv/opentallas-scratch = md RAID0 2x3.5 TB (7.0 TB) + /srv/opentallas-scratch2 3.5 TB (docker data-root). EUR 2.68/h. Configured as ot-epyc5 (toolchain/PDK md5 identical, ot-heavy, earlyoom, ORFS image 16470cea1d34). | FLEET-NEW2 2026-10-19: alt_bases = the host's other scratch NVMe volume; NEW job dirs go to whichever run root has more free disk (run_base); existing runs keep their paths.",
-   "external_jobs": [],
-   "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
-   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
-   "alt_bases": [
-    "/srv/opentallas-scratch2/claude/closure-loop"
-   ]
-  },
-  {
    "name": "ot-epyc8",
    "label": "EPYC8",
    "cores": 128,
@@ -251,6 +223,7 @@
   }
  ],
  "retired_hosts": [
-  "ot-epyc4"
+  "ot-epyc4",
+  "ot-epyc6"
  ]
 }
