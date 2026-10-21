@@ -228,9 +228,9 @@ module tb_dsdv_eng_rr;
                 @(negedge ck);
                 vi_s = 0; vi_n = 0; rdr_rq[0] = 0; rdr_rq[46] = 0;
                 rdr_rq[1] = own[0] > 0; rdr_rq[47] = own[1] > 0;   // reader window: open while its requests are owed
-                if (cyc >= tw - 400 && cyc < tw - 40 && cyc % 9 == 0) begin
+                if (cyc >= tw - 250 && cyc < tw - 40 && cyc % 9 == 0) begin
                     vi_s[275:20] = {8{mix(cyc * 3 + 1)}}; vi_s[3:0] = 4'b0001; rung_n = rung_n + 1; end
-                if (cyc >= tw - 400 && cyc < tw - 40 && cyc % 11 == 0) begin
+                if (cyc >= tw - 250 && cyc < tw - 40 && cyc % 11 == 0) begin
                     vi_n[275:20] = {8{mix(cyc * 5)}}; vi_n[3:0] = 4'b0001; rung_n = rung_n + 1; end
             end
             while (cyc < tw - 20) begin
