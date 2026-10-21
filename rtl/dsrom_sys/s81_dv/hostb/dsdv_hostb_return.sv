@@ -1,5 +1,7 @@
 `timescale 1ns/1ps
 `default_nettype none
+// require_kit is source-bound only to G8 WALK issuer6c77b4 (valid/token[52:32]);
+// future producer schemas need their own source contract, never infer user/pos.
 // Actual producer bits sampled at a compiled slot, never manufacture KIT/done.
 module dsdv_hostb_return(input wire ck,rst_n,configured,
  input wire sample_slot,send_slot,require_kit,context_valid,
@@ -11,7 +13,7 @@ module dsdv_hostb_return(input wire ck,rst_n,configured,
  output reg [1103:0] return_ring,output reg [3:0] fault);
  wire rn;ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
  reg pending;reg [511:0] held;
- wire sample_good=sample_slot && configured && context_valid && stage_id<241 && !(require_kit&&!t_kd[53]);
+ wire sample_good=sample_slot && configured && context_valid && stage_id<241 && !(require_kit&&(!t_kd[53]||t_kd[52:32]!=token));
  reg [511:0] record;
  always @* begin
    record=0;record[31:0]=32'h31454248;record[35:32]=2;record[39:36]=3;

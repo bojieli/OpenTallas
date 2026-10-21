@@ -9,6 +9,7 @@ module dsdv_hostb_rx (
  input wire [1:0] local_rank, input wire [31:0] epoch_id,
  input wire [63:0] programme_id, input wire [47:0] receiver_edge,transit_body_edge,
  input wire [15:0] expected_tid, input wire [7:0] expected_header_stage,
+ input wire [9:0] expected_user,input wire [20:0] expected_position,expected_token,
  input wire header_slot, input wire job_active, input wire starter_armed,
  input wire [1103:0] ring_i,
  output wire [1103:0] local_ring,
@@ -27,7 +28,8 @@ module dsdv_hostb_rx (
  wire [3:0] op=p[39:36];
  wire addressed=(p[47:40]==local_stage && p[49:48]==local_rank);
  wire shape=p[31:0]==32'h31454248 && p[35:32]==4'd2 && p[47:40]<8'd241 && op<4;
- wire identity=configured && p[161:130]==epoch_id && p[273:210]==programme_id && p[65:50]==expected_tid;
+ wire identity=configured && p[161:130]==epoch_id && p[273:210]==programme_id && p[65:50]==expected_tid &&
+ p[87:78]==expected_user && p[108:88]==expected_position && p[129:109]==expected_token;
  reg pending, target;
  reg [47:0] body_edge;
  reg [31:0] expected_crc;
