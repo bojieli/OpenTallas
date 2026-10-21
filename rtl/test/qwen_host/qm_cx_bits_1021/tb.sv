@@ -5,7 +5,8 @@ module tb;
     reg[63:0] wd=0;
     wire gf,go,ge,df,dover,de;
     wire[AW:0] gw,gr,dw,dr;
-    wire[63:0] gd,dd;
+    wire[63:0] gd,dd,local_valid;
+    reg[63:0] gold_capture,dut_capture;reg gold_v=0,dut_v=0;
     integer errors=0,checks=0,write_cycles=0,read_cycles=0;
     reg[63:0] lfsr=64'h123456789abcdef1;
     always #5 wc=~wc;
@@ -15,10 +16,18 @@ module tb;
       .rclk(rc),.rrst_n(rn),.rd(rd),.rempty(ge),.rdata(gd),.rcount(gr));
     qkc_afifo_bits_1021 #(.W(64),.AW(AW),.MUT_ROTATE(MUT)) dut(
       .wclk(wc),.wrst_n(wn),.wr(wr),.wdata(wd),.wfull(df),.wfreed(dw),.ovf(dover),
-      .rclk(rc),.rrst_n(rn),.rd(rd),.rempty(de),.rdata(dd),.rcount(dr));
+      .rclk(rc),.rrst_n(rn),.rd(rd),.rempty(de),.rdata(dd),.rd_valid(local_valid),.rcount(dr));
+    always @(posedge rc)if(rd&&!ge)gold_capture<=gd;
+    for(genvar b=0;b<64;b=b+1)begin:g_local_capture
+      always @(posedge rc)if(rd&&local_valid[b])dut_capture[b]<=dd[b];
+    end
+    always @(posedge rc or negedge rn)
+      if(!rn)begin gold_v<=0;dut_v<=0;end
+      else begin gold_v<=rd&&!ge;dut_v<=rd&&!de;end
     task automatic check;
       if(wn&&rn)begin
         checks=checks+1;
+        if(gold_v!==dut_v||(gold_v&&gold_capture!==dut_capture))errors=errors+1;
         if({gf,go,ge,gw,gr}!={df,dover,de,dw,dr})begin
           errors=errors+1;if(errors<4)$display("control mismatch t=%0t",$time);
         end

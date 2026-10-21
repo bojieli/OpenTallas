@@ -1,0 +1,17 @@
+{
+  "qualified": false,
+  "source_sha256": "ed40c664ac9ac7c96120b33329891575e4e285313f74ff518cffd57b0bd960d2",
+  "retained_leaf_instances": 64,
+  "leaf_flops": 65,
+  "total_leaf_flops": 4160,
+  "top_cells": 7076,
+  "leaf_cells": 320,
+  "keep_spec": {
+    "route": {
+      "synth_keep_modules": [
+        "qkc_afifo_w1a4s2_1021"
+      ]
+    }
+  },
+  "remaining": "whole native32/controller/reset source qualification"
+}

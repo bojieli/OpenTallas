@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "netlist": {
+    "path": "resynth.v",
+    "sha256": "e46ef379b14fabf869c4784dfcc5fb9aa3eea249b6974e9fd746504cb9ce917a"
+  },
+  "top": "qkd_hr_ingest_soft_n32",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 94822,
+  "max_dynamic_loads": 32,
+  "role_errors": [],
+  "violations": [],
+  "constant_output_bits_count": 5498,
+  "full_report": {
+    "path": "/srv/opentallas-scratch/claude/codex-hroot-engine-1021/soft_copy_probe_r9/native.json",
+    "sha256": "a60fab05a936c4de1c444c2ad00f2b360f3e0c36f491fc8aa1dcc3b0decaa866"
+  },
+  "qualified": false
+}

@@ -21,12 +21,21 @@ module qkc_afifo_bits_1021 #(
     for(genvar b=0;b<W;b=b+1)begin:g_bit
         // SKEW_SYNC is a validation-only model of unequal legal visibility.
         // The release uses SYNC=2 on every original primitive.
+        if(AW==4 && SYNC==2 && SKEW_SYNC==0)begin:g_fixed
+        qkc_afifo_w1a4s2_1021 u_fifo(
+            .wclk(wclk),.wrst_n(wrst_n),.wr((MUT_UNCOORD!=0)?wr:all_push),.wdata(wdata[b]),
+            .wfull(full_b[b]),.wfreed(freed_b[(AW+1)*b +: AW+1]),.ovf(ovf_b[b]),
+            .rclk(rclk),.rrst_n(rrst_n),.rd((MUT_UNCOORD!=0)?rd:all_pop),.rempty(empty_b[b]),
+            .rdata(head[b]),.rcount(count_b[(AW+1)*b +: AW+1])
+        );
+        end else begin:g_generic
         ot_link_afifo #(.W(1),.AW(AW),.SYNC(SYNC+((SKEW_SYNC!=0)?b%2:0))) u_fifo(
             .wclk(wclk),.wrst_n(wrst_n),.wr((MUT_UNCOORD!=0)?wr:all_push),.wdata(wdata[b]),
             .wfull(full_b[b]),.wfreed(freed_b[(AW+1)*b +: AW+1]),.ovf(ovf_b[b]),
             .rclk(rclk),.rrst_n(rrst_n),.rd((MUT_UNCOORD!=0)?rd:all_pop),.rempty(empty_b[b]),
             .rdata(head[b]),.rcount(count_b[(AW+1)*b +: AW+1])
         );
+        end
     end
     // Preserve the original sticky overflow meaning even though blocked writes
     // are suppressed before reaching the slices. Keep every slice fault visible.
@@ -61,4 +70,18 @@ module qkc_afifo_bits_1021 #(
     assign rcount=count_tree[1];
     assign rd_valid=~empty_b;
     assign rdata=(MUT_ROTATE!=0)?{head[W-2:0],head[W-1]}:head;
+endmodule
+
+// Fixed release leaf: keep this ordinary module using existing
+// route.synth_keep_modules. The pinned FIFO source remains unchanged and plain
+// source CDC elaboration traverses this wrapper to its reviewed original.
+module qkc_afifo_w1a4s2_1021(
+ input wire wclk,wrst_n,wr,wdata,
+ output wire wfull,output wire[4:0]wfreed,output wire ovf,
+ input wire rclk,rrst_n,rd,
+ output wire rempty,rdata,output wire[4:0]rcount
+);
+ ot_link_afifo #(.W(1),.AW(4),.SYNC(2)) u_fifo(
+  .wclk(wclk),.wrst_n(wrst_n),.wr(wr),.wdata(wdata),.wfull(wfull),.wfreed(wfreed),.ovf(ovf),
+  .rclk(rclk),.rrst_n(rrst_n),.rd(rd),.rempty(rempty),.rdata(rdata),.rcount(rcount));
 endmodule

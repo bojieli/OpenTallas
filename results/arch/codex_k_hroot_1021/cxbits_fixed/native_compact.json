@@ -1,0 +1,93 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "netlist": {
+    "path": "mapped.v",
+    "sha256": "3640cf2d3ab3265e8a80a2630dd8e886bb83edc4ff1b44b83244919ebcd99c6c"
+  },
+  "top": "qkc_afifo_bits_1021",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 20718,
+  "max_dynamic_loads": 2305,
+  "role_errors": [],
+  "violations": [
+    {
+      "driver": "wrst_n",
+      "driver_role": "input_port",
+      "net": "wrst_n",
+      "loads": 2305
+    },
+    {
+      "driver": "rrst_n",
+      "driver_role": "input_port",
+      "net": "rrst_n",
+      "loads": 1216
+    },
+    {
+      "driver": "_10460_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_04169_",
+      "loads": 125
+    },
+    {
+      "driver": "_10494_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_04202_",
+      "loads": 179
+    },
+    {
+      "driver": "_10497_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "wfreed[2]",
+      "loads": 129
+    },
+    {
+      "driver": "_10499_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_04205_",
+      "loads": 129
+    },
+    {
+      "driver": "_10501_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_04206_",
+      "loads": 65
+    },
+    {
+      "driver": "_10502_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_04207_",
+      "loads": 65
+    },
+    {
+      "driver": "_10503_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_04208_",
+      "loads": 70
+    },
+    {
+      "driver": "_10517_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "_04221_",
+      "loads": 56
+    },
+    {
+      "driver": "_12852_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "all_pop",
+      "loads": 64
+    },
+    {
+      "driver": "_12853_/Y",
+      "driver_role": "combinational_or_macro",
+      "net": "all_push",
+      "loads": 128
+    }
+  ],
+  "constant_output_bits_count": 0,
+  "full_report": {
+    "path": "/srv/opentallas-scratch/claude/codex-hroot-engine-1021/cxbits_fixed_map/native.json",
+    "sha256": "157819e2bdf08ae1b8dd9e5b1e025500c4c60e96e464a2474829df0078b7bbb5"
+  },
+  "qualified": false
+}

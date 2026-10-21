@@ -1,0 +1,90 @@
+{
+ "schema": "opentallas.kv_group.structural_copy.v1",
+ "qualified": false,
+ "original_top": "native_soft",
+ "top": "qkd_hr_ingest_soft_n32",
+ "source_sha256": "cd9bfe54638f61a338c20b14a92c1f0933b9c432deb0ba7cee405173bafdd1b0",
+ "parser_sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+ "generated_sha256": "b07971cf145ae6c9b73f2dcabdc6c631502f8fb93f62e7308254ec3eb30a4b07",
+ "fixedpoint_history": [
+  94940,
+  94941,
+  94941
+ ],
+ "original_cells": 94904,
+ "generated_cells": 94941,
+ "max_terminal_loads": 32,
+ "port_copies": {
+  "soft_pin_15362": 2,
+  "soft_pin_16479": 2
+ },
+ "allowed_heavy_inputs": [],
+ "output_copies": {},
+ "copied_cells": [
+  {
+   "cell": 1136,
+   "original": "_3499_",
+   "type": "NOR3xp33_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 1137,
+   "original": "_3500_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 1157,
+   "original": "_3520_",
+   "type": "OR3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 19
+  },
+  {
+   "cell": 1162,
+   "original": "_3525_",
+   "type": "OAI21xp33_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 5
+  },
+  {
+   "cell": 2402,
+   "original": "_4765_",
+   "type": "AO21x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 21751,
+   "original": "u_rank__u_qm.u_eng.u19158_c0.u_cell",
+   "type": "OAI21xp33_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 11
+  },
+  {
+   "cell": 66262,
+   "original": "u_rank__u_qm.u_eng.u6307_c5.u_cell",
+   "type": "AND3x1_ASAP7_75t_R",
+   "kind": "comb",
+   "copies": 2
+  },
+  {
+   "cell": 92071,
+   "original": "u_rank__u_qm.u_eng.u85341_c2.u_cell",
+   "type": "DFFASRHQNx1_ASAP7_75t_R",
+   "kind": "ff",
+   "copies": 2
+  }
+ ],
+ "macros": [],
+ "required_before_gate": [
+  "mapped census after re-synthesis",
+  "source-pinned exact library model",
+  "sequential equivalence",
+  "independent arbitrary-init cold-boot/reset convergence"
+ ],
+ "entrypoint_sha256": "9ecc0b30518a049f20aec14ab29b27221f8ea5439570720b6de5c96427ccd149",
+ "output_policy": "no special engine done_v boundary exists in this cut"
+}
