@@ -97,6 +97,11 @@ XLAT = {1: (84, 2), 2: (88, 3), 0: (81, 1)}               # fmt -> (first beat a
 # block n-1's copy drained: OPEN_IL), copy = 5/16 edge a sector; the go needs the copy done + RMARGIN.
 FLAT = int(os.environ.get("SMB_FLAT", 200))
 RMARGIN = int(os.environ.get("SMB_RMARGIN", 8))
+# Controller-specific fixed source model. h9b remains 11/8 edges per line;
+# successors must supply and qualify their own bound using the unchanged RTL binary.
+RES_LINE_NUM = int(os.environ.get("SMB_RES_LINE_NUM", 11))
+RES_LINE_DEN = int(os.environ.get("SMB_RES_LINE_DEN", 8))
+assert RES_LINE_NUM > 0 and RES_LINE_DEN > 0
 RESMODEL = os.environ.get("SMB_RESMODEL", "0" if XMODE == "bench13" else "1") == "1"
 
 
@@ -481,7 +486,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
                     L_ = b["n_lines"]
                     rs = max(rm["res"][n - 1] + 3 if n else 0, rm["dend"][n - LANDING] + 2 if n >= LANDING else 0,
                              (ids_rc + 2) if (kd["exp"] and n_after and ids_rc is not None) else 0)
-                    rd = max(rs + FLAT, (rm["rdy"][n - 1] if n else 0) + -(-L_ * 11 // 8))
+                    rd = max(rs + FLAT, (rm["rdy"][n - 1] if n else 0) + -(-L_ * RES_LINE_NUM // RES_LINE_DEN))
                     op_ = max(rd, rm["ret"][n - 2] if n >= 2 else 0, rm["dend"][n - 1] if n else 0) + 1
                     de = op_ + _drain_edges(L_) + 2
                     lo = max(lo, de + RMARGIN)
@@ -535,7 +540,7 @@ def compile_all(fix_root: Path, smw_root: Path, layers, mut=""):
     assert len({e[0] for e in ing}) == len(ing), "two ingress words on one edge"
     assert len({e[0] for e in xw_ev}) == len(xw_ev), "two x beats on one edge"
     n_end = last_cmd_abs + DRAIN
-    budget = dict(static_schedule=dict(pace_num=PACE_NUM, head_pace_num=HEAD_PACE_NUM, pace_den=PACE_DEN, pace_add=PACE_ADD, first_go=FIRST_GO, residency_model=RESMODEL, fetch_bound=FLAT), descriptors=len(descs), table_rows=TBL, programme_words_matvec=store.top - ATT_RESERVED,
+    budget = dict(static_schedule=dict(pace_num=PACE_NUM, head_pace_num=HEAD_PACE_NUM, pace_den=PACE_DEN, pace_add=PACE_ADD, first_go=FIRST_GO, residency_model=RESMODEL, fetch_bound=FLAT, ready_line_num=RES_LINE_NUM, ready_line_den=RES_LINE_DEN), descriptors=len(descs), table_rows=TBL, programme_words_matvec=store.top - ATT_RESERVED,
                   attention_reserved=ATT_RESERVED, store_top=store.top, store_words=PSTORE,
                   distinct_programmes=len(store.progs),
                   per_kind=[dict(name=k["name"], layer=k["layer"], descriptors=k["d1"] - k["d0"], nonexpert_blocks=k["nonexp_blocks"],
