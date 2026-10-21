@@ -145,6 +145,25 @@ def a_rows(rank):
     return list(range(80 * rank, 80 * rank + 80)) + list(range(320 + 32 * rank, 320 + 32 * rank + 32))
 
 
+# TOK-FUNC2-S81-L0B (10-21): vehicle placements of the other end-slice collectives, the a_allgather convention (own part
+# at the 3 end slices' leaf 0, every rank's part at the same rows on every die; even-based consecutive row pairs):
+#   router_allgather  the rank's 96 router scores (softplus_sqrt, FP32, 4 a row) at RT_BASE + 24 r .. + 23 (24 rows,
+#                     clear of the vs map 512..647 and the KV adapter rows 672..819 of u_s_3N)
+#   substage_hop0     the exit slice's h (vp HSTORE, vn half-row layout: 32 rows a leaf at HOP_BASE) on all 5 leaves,
+#                     out of the E end u_s_7S over d.ES -> (d+1).WS to the next sub-stage die's u_s_0S (same rows)
+RT_BASE = 656
+HOP_BASE = 848
+HSTORE_LEAD = 64             # vp HSTORE (32 rows) completes before the first RDOUT reads them (lower_vs ENG_HSTORE_LEAD)
+VP_HSTORE = 4
+
+
+def rt_rows(rank):
+    return list(range(RT_BASE + 24 * rank, RT_BASE + 24 * rank + 24))
+
+
+HOP_LEG = ('u_s_7S', 'E', 'u_s_0S')
+
+
 # TP4 circuits (TOKEN-XDIE-S81 vehicle / p4l plan): d.ES <-> (d+1).WS, d.EN <-> (d+2).WN -> each die sends its own part
 # out of s_0S (W, to d-1's s_7S), s_7S (E, to d+1's s_0S) and s_7N (E, to d+2's s_0N); parts land at s_0S (rank d-1),
 # s_7S (rank d+1), s_0N (rank d+2).
@@ -164,9 +183,16 @@ GAP_PLACE = dict(module='tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)'
                          'the real lep + lane tiles); the production rows of the own part at the 3 end slices (the '
                          'capture rows of the a_proj return + the on-die move to s_0S / s_7S / s_7N) and the consumer '
                          'placement of the 3 received parts are not compiled yet')
-GAP_FOLD = dict(module='ot_s81sl_vs (SU add) / TOKEN-PASS-S81', port='owner fold ((p0+p1)+(p2+p3))',
-                missing='RS + AG transport uses the benched RD endpoint ABI; the owning slice fold (an SU op on vs) has '
-                        'no encoder yet (vs fork) and the RS row ownership is not placed')
+GAP_FOLD = dict(module='ot_s81sl_vs RB operand layout x ot_s81sl_xr RD receive (S81-ELEM / S81-SLICE)',
+                port='owner fold ((p0+p1)+(p2+p3)): RB n rows reads the PAIR (a0 + 2 s, a0 + 2 s + 1)',
+                missing='TOK-FUNC2-S81-L0B 10-21: the encoder exists (layer_prog/owner_fold.py, VS RB, bench '
+                        'run_owner_fold.sh PASS + MUT2 FAIL) but its operands cannot be assembled from the collective: '
+                        'RB adds row a0 + 2 s to row a0 + 2 s + 1 (ot_s81sl_vs.sv op 11), so p_a[r] and p_b[r] of two '
+                        'DIFFERENT ranks must share one even row pair, while an RD receive writes whole even pairs from '
+                        'ONE sender with mask 0xff (ot_s81sl_xr.sv:421; rows R, R + 1 = 8 consecutive elements of one '
+                        'partial) and target-5 rows are static.  (p2 + p3) has two remote operands: no placement '
+                        'exists.  Fix candidates: a vs RB2 op (row a0 + s + row a1 + s, a0 even / a1 odd -> one bank '
+                        'each), or a word-masked RD receive (dst row parity); RS ownership placement then follows')
 GAP_FFN_COMBINE = dict(module='final_ffn.py / xs_calendar --final-ffn-placement',
                        port='output-row-owned VS13 then result allgather',
                        missing='actual VS13/POST words and capture/move map exist; bind VPX lifetimes, current RD paths '
@@ -202,29 +228,71 @@ def lower(die, op, ctx):
                                  missing='actual source paths and all-leaf calendars; actual POST/native timing'))
         return dict(status='PARTIAL', unit='slice vp POST (a0 = R + 1: post row, comb R+2..R+5) -> vn h store',
                     insts=[ctx.get('slice')], gap=GAP_POST, bench=BENCH_VP)
+    if name == 'attn.rows_allgather' and ctx.get('sched', {}).get('kind', 'sliding') == 'sliding' \
+            and not any(o['op'] in ('attn.gather', 'attn.idx.topk_final') for o in ctx.get('sched', {}).get('ops', [])):
+        # TOK-FUNC2-S81-L0B: on a window-only layer the attended rows ARE the window rows, and every rank's svc_rs holds
+        # the whole window ring in its own HBM (lower_svc: the 127-row image + this position's OWN_ROW, written by every
+        # rank from its replicated kv) -> the gather moves nothing; scores / P.V read them through WIN_LOAD.
+        chk = None
+        fx = ctx.get('fixtures')
+        if fx is not None and (fx / 'ops/attn.rows_allgather.bin').exists():
+            import numpy as np
+            a = np.fromfile(fx / 'ops/attn.rows_allgather.bin', np.uint32)
+            b = np.fromfile(fx / 'ops/attn.window_load.bin', np.uint32)
+            chk = bool(a.shape == b.shape and (a == b).all())
+            if not chk:
+                return dict(status='GAP', unit='svc_rs window ring (no transport)', insts=[], bench=None,
+                            gap=dict(module='lower_vpx', port='rows_allgather', missing='fixture rows_allgather != '
+                                     'window_load: the attended rows are not the local window'))
+        return dict(status='PARTIAL', unit='svc_rs WIN_LOAD window ring (rank-local HBM image): no transport',
+                    insts=[], rows=[], templates=[], events=[], bench=None, window_identity=chk,
+                    gap=dict(module='dv_layer_price (TP_X attn.rows_allgather) / lower_svc WIN_LOAD',
+                             port='attn.rows_allgather',
+                             missing='window-only layer: nothing crosses a die (fixture rows_allgather == window_load '
+                                     'bitwise%s); the priced 1024-cycle collective is not on the critical path and '
+                                     'should be repriced 0; qualification rides the svc window_load / scores bench' %
+                                     ('' if chk else ', not checked: no --fixtures')))
     if name.endswith('a_allgather') or name.endswith('rows_allgather') or name.endswith('router_allgather') \
             or re.search(r'substage_hop\d+$', name):
         rank = int(ctx.get('rank', 0))
         sl = die.slices()
         rows, templates, events, insts = [], [], [], []
-        own = a_rows(rank) if name.endswith('a_allgather') else []
+        hop = bool(re.search(r'substage_hop\d+$', name))
+        own = a_rows(rank) if name.endswith('a_allgather') else rt_rows(rank) if name.endswith('router_allgather') \
+            else list(range(HOP_BASE, HOP_BASE + 32)) if hop else []
         used = set()
-        for src, d, peer in LEGS:
+        legs = [(HOP_LEG + (k,)) for k in range(5)] if hop else [l + (0,) for l in LEGS]
+        P = beat_period()
+        for li, (src, d, peer, leaf) in enumerate(legs):
             if src not in sl or not own:
                 continue
             sid, psid = sl[src]['sid'], sl[peer]['sid']
-            leg = leg_program(sid, d, psid, own, t0=0)
+            # hop: the 5 leaves of the exit slice share its xr send packer -> leaf k's beats follow leaf k - 1's
+            nb = -(-len(own) // (2 * PAIRS))
+            leg = leg_program(sid, d, psid, own, leaf=leaf, t0=(P * nb + 1) * leaf if hop else 0)
             eng = 0 if src.endswith('N') else 1
+            if hop and leaf == 0:
+                from dv_layer_compile import ctl_path   # noqa: E402
+                ti = len(templates)
+                templates.append((f'{src}.hstore', _payload(1 << sid, 0, 0x1F, _vp(VP_HSTORE, a0=HOP_BASE))))
+                rows.append(dict(eng=eng, issue=t0, arg=ti, what=f'{src} HSTORE h -> rows {HOP_BASE}.. (5 leaves)'))
+                used.add((eng, t0))
+                t0 += HSTORE_LEAD
             # the calendar issues each CTL so that it is on the slice pin at its leg cycle: issue = t0 + cycle - lat
             from dv_layer_compile import ctl_path   # noqa: E402 (plugin runs inside the compiler)
             lat = ctl_path(die, src)['edges']
             first = min(c['cycle'] for c in leg['ctl'])
-            # one V row per engine per edge (vo_n / vo_s): the legs of one tier are staggered whole (the pin-relative
-            # programme of each slice is unchanged)
-            sh = 0
-            while any((eng, t0 + c['cycle'] - first + sh) in used for c in leg['ctl']):
-                sh += 1
-            first -= sh
+            if hop and leaf:
+                first = hop_first                   # one time base for the exit slice's 5 serial leaf legs
+            else:
+                # one V row per engine per edge (vo_n / vo_s): the legs of one tier are staggered whole (the
+                # pin-relative programme of each slice is unchanged)
+                sh = 0
+                while any((eng, t0 + c['cycle'] - first + sh) in used for c in leg['ctl']):
+                    sh += 1
+                first -= sh
+                hop_first = first
+            assert not any((eng, t0 + c['cycle'] - first) in used for c in leg['ctl']), 'V row collision'
             used |= {(eng, t0 + c['cycle'] - first) for c in leg['ctl']}
             for c in leg['ctl']:
                 ti = len(templates)
@@ -243,15 +311,29 @@ def lower(die, op, ctx):
                 hdr = rd_beat(s['src'], 1, s['dst_mask'], s['leaf'], s['dst_row'], s['pairs'], 0)
                 events.append(dict(cycle=ce, inst=src, port='lep (outward line port)', dir='out', kind='RD',
                                    tag=f'rows {s["rows"][0]}..{s["rows"][-1]} -> sid {psid}',
-                                   payload='fixture a_allgather words', boundary='offdie',
+                                   payload=f'fixture {name} words', boundary='offdie',
                                    observe=f'{src} outward ring port ({"ro_w" if d == "W" else "ro_e"} of the slice '
                                            f'inside the lep master) -> lt_lk link lanes',
                                    words=[[ce, f'{hdr:x}', f'{(1 << 52) - 1:x}']],
                                    data_masked='row pairs [1075:52] = leaf rows (fixture)'))
-            insts.append(src)
+            if src not in insts:
+                insts.append(src)
         st = 'PARTIAL' if own else 'GAP'
         gap = GAP_PLACE if own else dict(GAP_PLACE, missing='same endpoint ABI as attn.a_allgather (bench_vpx); the '
                                          'production rows of this op are not placed')
+        if name.endswith('router_allgather'):
+            gap = dict(GAP_PLACE, port='softplus_sqrt RA_OUT rows (16 slices) -> end slices; end slices -> RB_IN',
+                       missing=f'vehicle placement emitted (rank part at end-slice leaf 0 rows {RT_BASE} + 24 r, '
+                               'bench_vpx ABI): the on-die move of the 16 slices\' RA_OUT rows (578..579) to the end '
+                               'slices and the delivery of the gathered 384 scores to each slice\'s RB_IN rows (24 '
+                               'scores of rank sid // 4) are not compiled; RB_IN interleaves score / bias rows, so '
+                               'the pair-granular RD receive cannot write it directly (needs a move layout)')
+        elif hop:
+            gap = dict(GAP_PLACE, port='h of all 16 slices -> exit end slice u_s_7S -> next die u_s_0S (HLOAD)',
+                       missing=f'vehicle emitted: HSTORE of the exit slice\'s h (rows {HOP_BASE}..+31, 5 leaves) + '
+                               '20 RD beats over the real lep; the on-die move of the other 15 slices\' h to the exit, '
+                               'the next die\'s HLOAD consumer and the leg choice (d.ES -> (d+1).WS assumed) are not '
+                               'compiled; 320 beats over one leg (>= 1600 edges at P = 5) exceed the priced 1032')
         return dict(status=st, unit='end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive', insts=insts,
                     gap=gap, rows=rows, templates=templates, events=events, bench=BENCH)
     if name.endswith('allreduce'):
