@@ -12,7 +12,7 @@ VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 $VL --version > "$OUT/verilator.version" 2>&1
 I=rtl/dsrom_sys/s81_link
 ( SIM=verilator VERILATOR=$VL VL_JOBS=4 VL_EXTRA="-I$I" MUTS="0 1 2 4" bash $I/col/lp6b/ot_pdie_serdes_col_lp6b_bench.sh "$OUT/lp" > "$OUT/lp.log" 2>&1 ) &
-LS="$I/col/tb_s81_pdie_col.sv $I/col/ot_pdie_serdes_col_lpw6.sv $I/col/lp6b/ot_pdie_serdes_col_lp6b.sv $I/col/ot_s81_col_leaf.sv \
+LS="$I/col/tb_s81_pdie_col.sv $I/col/ot_pdie_serdes_col_lpw6b.sv $I/col/lp6b/ot_pdie_serdes_col_lp6b.sv $I/col/ot_s81_col_leaf.sv \
  $I/col/ot_s81_pma_models.sv $I/ot_s81_kp4_common.sv $I/ot_s81_kp4_bm.sv $I/ot_s81_kp4_dsyn.sv $I/ot_s81_kp4_ddly.sv \
  $I/ot_s81_kp4_dchn.sv $I/ot_s81_kp4_dout.sv $I/ot_s81_kp4_enc.sv $I/ot_s81_kp4_dec.sv $I/ot_pdie_serdes.sv $I/col/ot_s81_rate_match_sr.sv \
  rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv rtl/common/landed_parent/ot_pl_land_reset_forest.sv rtl/common/landed_parent/ot_pl_land_regwe.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v \
