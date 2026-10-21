@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "counter_byte_nextstate_cases": 524288,
+  "terminal_complete_field_values": 128,
+  "probe_index_onehot_witness_cases": 2048,
+  "amax_retained_nonconstant_positions": 25,
+  "amax_original_field_width": 31,
+  "extra_pipeline_edges": 0,
+  "scope": "static full-counter truth/priority only; actual RTLgoldens/causals/native stillrequired"
+}

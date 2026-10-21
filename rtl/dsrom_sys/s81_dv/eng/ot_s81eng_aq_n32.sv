@@ -74,9 +74,22 @@ module ot_s81sl_aq12x_eng_n32 (
         nf1 <= nfx; nf2 <= nf1; nf3 <= nf2; nf4 <= nf3; nf5 <= nf4;
     end
     // -- S5: max(m4[0], m4[1], floor): three parallel compares and a select -----------------------
-    reg [30:0] amax;
     wire ab = m4[0] >= m4[1], af = m4[0] >= FLOOR_FP8, bf = m4[1] >= FLOOR_FP8;
-    always @(posedge clk) amax <= (ab && af) ? m4[0] : (!ab && bf) ? m4[1] : FLOOR_FP8;
+`ifdef OT_S81ENG_RR_MUL_N32
+    wire[30:0]amax;wire[30:0]amax_next=(ab&&af)?m4[0]:(!ab&&bf)?m4[1]:FLOOR_FP8;
+    // Preserve every real nonconstant BF16/floor capture identity at the original S5 edge.
+    // Other positions remain ordinary captures, preserving generic FP32 semantics and constant pruning.
+    for(genvar mb=0;mb<31;mb=mb+1)begin:g_amax
+        if((31'h7fffb717>>mb)&1)begin:g_owned
+            (* keep=1 *)ot_s81eng_rr_amaxbit u_b(.ck(clk),.d(amax_next[mb]),.q(amax[mb]));
+        end else begin:g_free
+            reg q;always @(posedge clk)q<=amax_next[mb];assign amax[mb]=q;
+        end
+    end
+`else
+    reg[30:0]amax;
+    always @(posedge clk)amax<=(ab&&af)?m4[0]:(!ab&&bf)?m4[1]:FLOOR_FP8;
+`endif
 
     // -- S6..S10: amax * (1/448) ----------------------------------------------------------------
     wire [31:0] prod;
@@ -223,4 +236,9 @@ endmodule
 
 (* keep_hierarchy = 1 *)module ot_s81eng_aq_exp(input wire clk,input wire[10:0] ep_next,dm_next,output reg[10:0] ep,dm);
  always @(posedge clk)begin ep<=ep_next;dm<=dm_next;end
+endmodule
+
+// A real captured field bit, used by its original multiplier input position.
+(* keep_hierarchy=1 *)module ot_s81eng_rr_amaxbit(input wire ck,d,output reg q);
+ always @(posedge ck)q<=d;
 endmodule

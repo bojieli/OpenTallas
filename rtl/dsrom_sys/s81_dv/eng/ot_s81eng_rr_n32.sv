@@ -87,13 +87,17 @@ module ot_s81eng_xq_n32 #(
     else if(probe_start)begin fc_probe<=0;tx_probe<=1;end
     else if(tx_probe)begin fc_probe<=fc_probe+1'b1;if(fc_probe==7'd95)tx_probe<=0;end
     reg  [63:0] rv;                        // beat ring row written (window)
+    wire[5:0] rv_row;wire[63:0] rv_setmask;wire train_last,rv_seen;
+    ot_s81eng_rr_rowmask u_rowmask(.bc(bc),.row(rv_row),.mask(rv_setmask));
+    ot_s81eng_rr_trainlast u_last(.fc(fc),.last(train_last));
+    ot_s81eng_rr_probe_read u_probe(.ix(fc_probe[6:2]),.rv(rv[31:0]),.seen(rv_seen));
     wire [1023:0] br_rd;
     wire [5:0]  rda = {1'b0, fc[6:2]} + ((fc[1:0] >= 2'd2) ? 6'd1 : 6'd0);   // beat b + 1 read from fragment 2 of b
     ot_sram_1r1w_64x512_m1_r2c2 u_b0 (.clk(ck), .r_ce_in(1'b1), .r_addr_in(tx ? rda : 6'd0), .rd_out(br_rd[511:0]),
-        .w_ce_in(bw), .w_addr_in(bc - 6'd1), .wd_in(bwd[511:0]), .w_mask_in({512{1'b1}}),
+        .w_ce_in(bw), .w_addr_in(rv_row), .wd_in(bwd[511:0]), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     ot_sram_1r1w_64x512_m1_r2c2 u_b1 (.clk(ck), .r_ce_in(1'b1), .r_addr_in(tx ? rda : 6'd0), .rd_out(br_rd[1023:512]),
-        .w_ce_in(bw), .w_addr_in(bc - 6'd1), .wd_in({485'd0, bwd[538:512]}), .w_mask_in({512{1'b1}}),
+        .w_ce_in(bw), .w_addr_in(rv_row), .wd_in({485'd0, bwd[538:512]}), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     // the beat being sent: full = {pad, payload 532, idx 8, src 4, hops 5, kind 3, v}
     reg  [538:0] cur;
@@ -123,13 +127,13 @@ module ot_s81eng_xq_n32 #(
             if (first && !tx && tc == 8'(TXD - 1)) begin tx <= 1'b1; fc <= 7'd0; end
             else if (tx) begin
                 fc <= fc + 7'd1;
-                if (fc == 7'd95) begin tx <= 1'b0; first <= 1'b0; bc <= 6'd0; end
+                if (train_last) begin tx <= 1'b0; first <= 1'b0; bc <= 6'd0; end
             end
             pa <= (ia[0] && (ia[3:1] == 3'd1 || ia[3:1] == 3'd2) && pa == 2'd0) ? 2'd3 : (pa != 2'd0) ? pa - 2'd1 : 2'd0;
             pb <= (ib_[0] && (ib_[3:1] == 3'd1 || ib_[3:1] == 3'd2) && pb == 2'd0) ? 2'd3 : (pb != 2'd0) ? pb - 2'd1 : 2'd0;
             vo_b[0] <= txk[0] ? full[276*fck[1:0]] : ia[0];
             vo_a[0] <= txk[48] ? full[276*fck[97:96]] : ib_[0];
-            if ((qv && af) || (tx && fc[1:0] == 2'd0 && !rv[fc_probe[6:2]]) || (tx && (pva || pvb)) ||
+            if ((qv && af) || (tx && fc[1:0] == 2'd0 && !rv_seen) || (tx && (pva || pvb)) ||
                 (qv && qtag[0] && bc == 6'd24))
                 fault <= 1'b1;
         end
@@ -139,7 +143,7 @@ module ot_s81eng_xq_n32 #(
         vo_a[vbit]<=txk[48+vbit/6]?full[276*fck[2*(48+vbit/6)+:2]+vbit]:ib_[vbit];
     end
     for(genvar rb=0;rb<8;rb=rb+1)begin:g_rv
-        ot_s81eng_rr_rvbyte #(.BANK(rb)) u_b(.ck(ck),.rn(rl[4+rb]),.tx(txk[rb]),.fc(fc),.bw(bw),.bc(bc),.q(rv[8*rb+:8]));
+        ot_s81eng_rr_rvbyte #(.BANK(rb)) u_b(.ck(ck),.rn(rl[4+rb]),.tx(txk[rb]),.last(train_last),.bw(bw),.mask(rv_setmask[8*rb+:8]),.q(rv[8*rb+:8]));
     end
     for(genvar cb=0;cb<49;cb=cb+1)begin:g_cur
         ot_s81eng_rr_curcap u_c(.ck(ck),.tx(txk[cb]),.fc(fck[2*cb+:2]),.d(br_rd[11*cb+:11]),.q(cur[11*cb+:11]));
@@ -435,11 +439,40 @@ endmodule
 (* keep_hierarchy=1 *)module ot_s81eng_rr_bitcap(input wire ck,d,output reg q);
  always @(posedge ck)q<=d;
 endmodule
-(* keep_hierarchy=1 *)module ot_s81eng_rr_rvbyte #(parameter integer BANK=0)(input wire ck,rn,tx,input wire[6:0]fc,input wire bw,input wire[5:0]bc,output reg[7:0]q);
- wire[5:0]row=bc-6'd1;
+(* keep_hierarchy=1 *)module ot_s81eng_rr_rvbyte #(parameter integer BANK=0)(input wire ck,rn,tx,last,bw,input wire[7:0]mask,output reg[7:0]q);
+ wire clear_word,set_word;
+ ot_s81eng_rr_rvselect u_sel(.tx(tx),.last(last),.bw(bw),.mask(mask),.clear_word(clear_word),.set_word(set_word));
  always @(posedge ck or negedge rn)if(!rn)q<=0;
- else if(tx&&fc==7'd95)q<=0;
- else if(bw&&row[5:3]==BANK)q<=q|(8'd1<<row[2:0]);
+ else if(clear_word)q<=0;
+ else if(set_word)q<=q|mask;
+endmodule
+
+(* keep_hierarchy=1 *)module ot_s81eng_rr_rvselect(input wire tx,last,bw,input wire[7:0]mask,output wire clear_word,set_word);
+ assign clear_word=tx&&last;
+ assign set_word=bw&&(|mask);
+endmodule
+(* keep_hierarchy=1 *)module ot_s81eng_rr_pre3(input wire[2:0]a,output wire[7:0]y);
+ for(genvar b=0;b<8;b=b+1)begin:g_d assign y[b]=(a==3'(b));end
+endmodule
+(* keep_hierarchy=1 *)module ot_s81eng_rr_pre2(input wire[1:0]a,output wire[3:0]y);
+ for(genvar b=0;b<4;b=b+1)begin:g_d assign y[b]=(a==2'(b));end
+endmodule
+(* keep_hierarchy=1 *)module ot_s81eng_rr_rowmask(input wire[5:0]bc,output wire[5:0]row,output wire[63:0]mask);
+ assign row=bc-6'd1;
+ wire[7:0]lo,hi;
+ ot_s81eng_rr_pre3 u_lo(.a(row[2:0]),.y(lo));
+ ot_s81eng_rr_pre3 u_hi(.a(row[5:3]),.y(hi));
+ for(genvar b=0;b<64;b=b+1)begin:g_d assign mask[b]=hi[b/8]&&lo[b%8];end
+endmodule
+(* keep_hierarchy=1 *)module ot_s81eng_rr_trainlast(input wire[6:0]fc,output wire last);
+ assign last=fc==7'd95;
+endmodule
+(* keep_hierarchy=1 *)module ot_s81eng_rr_probe_read(input wire[4:0]ix,input wire[31:0]rv,output wire seen);
+ wire[7:0]lo;wire[3:0]hi;wire[31:0]hit;
+ ot_s81eng_rr_pre3 u_lo(.a(ix[2:0]),.y(lo));
+ ot_s81eng_rr_pre2 u_hi(.a(ix[4:3]),.y(hi));
+ for(genvar b=0;b<32;b=b+1)begin:g_d assign hit[b]=rv[b]&&hi[b/8]&&lo[b%8];end
+ assign seen=|hit;
 endmodule
 
 (* keep_hierarchy=1 *)module ot_s81eng_rr_headsel(input wire[2:0]ix,input wire v,output wire[5:0]q);
