@@ -2,7 +2,7 @@
 
 Structural fix for g2ef TT -416.9ps setup: vm_rq and index_rr now leave literal kept face registers. ARGMAX raw request is captured by vm_rq face registers, keeping ARGMAX VMX77; INDEX RTT +2 requires die pad -2, TOPK +1/row. FACEQ default0 unchanged.
 
-SAFE review before first gate (10-21 09:47):
+SAFE review before first gate (10-21 09:41):
 1 PASS fixed: literal face outputs, automatic io_flop_at_pins anchors direct registers.
 2 PASS planning: one local region; datapath hop S/N <=259.2um, E/W <=432um with pin-output retiming; fallback reach measured at gate, no claimed waiver.
 3 pending mapped native census: predecessor max32; FACEQ removes arq flop and adds direct flops; no high-fanout control added.
