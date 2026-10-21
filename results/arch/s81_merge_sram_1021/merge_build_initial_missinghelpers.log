@@ -1,0 +1,35 @@
+%Error-MODMISSING: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:141:13: Cannot find file containing module: 'ot_hdc_v41x_vdly'
+  141 |             ot_hdc_v41x_vdly #(.D(FPL - 1)) u_dv (.clk(clk), .rst_n(rst_n), .d(v0), .q(dv));
+      |             ^~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        ot_hdc_v41x_vdly
+                        ot_hdc_v41x_vdly.v
+                        ot_hdc_v41x_vdly.sv
+                        ../out/obj_merge/ot_hdc_v41x_vdly
+                        ../out/obj_merge/ot_hdc_v41x_vdly.v
+                        ../out/obj_merge/ot_hdc_v41x_vdly.sv
+                   ... With current working directory '/srv/opentallas-scratch/claude/codex-s81-merge-sram-1021/src_merge'
+%Error-MODMISSING: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:142:13: Cannot find file containing module: 'ot_hdc_v41x_dly'
+  142 |             ot_hdc_v41x_dly #(.W(2 + MLEV), .D(FPL - 1)) u_dt (.clk(clk), .d({fin0, live0 && (blk0[gl] || fin0), blk0}),
+      |             ^~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:176:17: Cannot find file containing module: 'ot_hdc_v41x_qaddf'
+  176 |                 ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(a),
+      |                 ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:179:17: Cannot find file containing module: 'ot_hdc_v41x_dly'
+  179 |                 ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(lf[gl*H+gh] | (use_ & head[32])), .q(fdq));
+      |                 ^~~~~~~~~~~~~~~
+%Error-MODMISSING: tools/s81_dv/svc_rs/merge_sram/merge_ref.sv:51:13: Cannot find file containing module: 'ot_hdc_v41x_vdly'
+   51 |             ot_hdc_v41x_vdly #(.D(FPL - 1)) u_dv (.clk(clk), .rst_n(rst_n), .d(v0), .q(dv));
+      |             ^~~~~~~~~~~~~~~~
+%Error-MODMISSING: tools/s81_dv/svc_rs/merge_sram/merge_ref.sv:52:13: Cannot find file containing module: 'ot_hdc_v41x_dly'
+   52 |             ot_hdc_v41x_dly #(.W(2 + MLEV), .D(FPL - 1)) u_dt (.clk(clk), .d({fin0, live0 && (blk0[gl] || fin0), blk0}),
+      |             ^~~~~~~~~~~~~~~
+%Error-MODMISSING: tools/s81_dv/svc_rs/merge_sram/merge_ref.sv:72:17: Cannot find file containing module: 'ot_hdc_v41x_qaddf'
+   72 |                 ot_hdc_v41x_qaddf #(.LAT(FPL), .F12(F12)) u_a (.clk(clk), .rst_n(rst_n), .v(1'b1), .a(a),
+      |                 ^~~~~~~~~~~~~~~~~
+%Error-MODMISSING: tools/s81_dv/svc_rs/merge_sram/merge_ref.sv:75:17: Cannot find file containing module: 'ot_hdc_v41x_dly'
+   75 |                 ot_hdc_v41x_dly #(.W(1), .D(FPL)) u_fd (.clk(clk), .d(lf[gl*H+gh] | (use_ & head[32])), .q(fdq));
+      |                 ^~~~~~~~~~~~~~~
+%Error: Exiting due to 8 error(s)

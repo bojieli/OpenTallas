@@ -62,5 +62,26 @@
       "status": "CAUGHT"
     }
   ],
-  "scope": "528-bit ring, depth2/8,3reset/refill epochs,validbubbles,store/nonstore,repeatpayload; actual merge association/FP/ages proof still live; no native/physical/calendar claim"
+  "scope": "528-bit ring, depth2/8,3reset/refill epochs,validbubbles,store/nonstore,repeatpayload; actual merge association/FP/ages proof still live; no native/physical/calendar claim",
+  "selected_merge_golden": {
+    "status": "PASS",
+    "source": "167d7b115",
+    "baseline": "d4a246de4 merge_x exact body with module rename only",
+    "unit": "oth-ubuntu-2951391-1792608367",
+    "host": "ot-epyc7",
+    "H": 16,
+    "DPT": 8,
+    "MLEV": 5,
+    "FPL": 5,
+    "F12": 1,
+    "jobs": 9,
+    "blocks_per_job": 20,
+    "reset_refill_epochs": 3,
+    "cycle_checks": 2378,
+    "output_vectors": 72,
+    "mismatches": 0,
+    "verilator_build_seconds": 146.428,
+    "allocated_MB": 1723.504,
+    "scope": "same original FP arithmetic/order/flags and exact ov ages, actual real SRAM macro model; no full ATT/service/native/physical/calendar adoption"
+  }
 }

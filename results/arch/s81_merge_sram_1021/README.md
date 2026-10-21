@@ -1,0 +1,9 @@
+# Same-age merge-ring SRAM source candidate
+
+Opt-in source167d7b115, OT_SVC_MERGE_SRAM absent by default. The preimplementation model is MODEL.md. Twenty528-bit ring levels use100 existing32x128 SRAM macros;84,480 useful bits and409,600 allocated bits. Original floating-point add association, flags, tags and output age are unchanged. The query store was already SRAM and QMEM_SRAM does not select it under production OT_SVC_ATT_SRAM.
+
+Actual macro read-old mechanism passes depth2 and8, three reset/refill epochs,3596 and3578 checked edges; six causal wrong-write-pointer, bubble-advance and late-read mutants all produce mismatches. Initial uninitialized ring values are never asserted; legal first-block refill establishes defined contents after each reset.
+
+Selected actual merge_x H16/DPT8/MLEV5/FPL5/F12 compares byte-exactly against the unchanged flop baseline over nine20-block jobs and three reset/refill epochs, including bubbles. PASS2378 checked cycles/72 output vectors/zero result, flag or valid-cycle mismatches; ep7 unit2951391-1792608367. Reference preserves the baseline body with its module name changed. The first compile missed actual helper source files; the failure is preserved and corrected source manifest is retained. Raw build output is compressed.
+
+Actual current-ABI ATT/controller legal fixtures96a0cd3ad precede this source repair and do not qualify its integration. The selected merge proof establishes this mechanism only. Whole service native/profile, landed clocks/reset, source-selected calendar and physical SRAM placement/SSFF remain open. Native bare failuree3a16235d is preserved. In particular production TRX1/REPL2 still declares36864 persistent transpose bits (four streams ×64 rows×8 dimensions×18); this needs its own real banked source repair before any rule5 qualification. The fixed four-subbeat528-bit reassembly delay is an alignment pipeline, distinct from arbitrary persistent query storage.
