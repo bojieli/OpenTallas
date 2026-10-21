@@ -122,7 +122,7 @@ def wave_plan(*, F, senders, source_sectors, destination_sectors, vm_rt,
                 read_calendar_obligation=('bind 4x8 actual request-lane delays OR reserve all banks exclusively '
                     'to COLL read-group3/write-code2 over common full epoch, including existing run-out; '
                     'VM_RT alone does not resolve physical bank read edges'),
-                sequence_completion_qualified=(tuple(senders) != (0,)),
+                sequence_completion_qualified=False,
                 single_wave_proof_scope=('data transactions equal qualified F16 first wave; one-row programme completion not executed'
                                          if tuple(senders) == (0,) else None),
                 source_quarters=list(senders), inactive_source_quarters=sorted(set(range(4))-set(senders)),
