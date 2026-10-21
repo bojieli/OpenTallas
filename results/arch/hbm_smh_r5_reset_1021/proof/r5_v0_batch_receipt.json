@@ -1,0 +1,44 @@
+[
+  {
+    "var": 0,
+    "hmut": 0,
+    "process_rc": 0,
+    "expected": "PASS",
+    "qualified": true
+  },
+  {
+    "var": 0,
+    "hmut": 1,
+    "process_rc": 1,
+    "expected": "FAIL",
+    "qualified": true
+  },
+  {
+    "var": 0,
+    "hmut": 2,
+    "process_rc": 1,
+    "expected": "FAIL",
+    "qualified": true
+  },
+  {
+    "var": 0,
+    "hmut": 3,
+    "process_rc": 1,
+    "expected": "FAIL",
+    "qualified": true
+  },
+  {
+    "var": 0,
+    "hmut": 5,
+    "process_rc": 1,
+    "expected": "FAIL",
+    "qualified": true
+  },
+  {
+    "var": 0,
+    "hmut": 6,
+    "process_rc": 1,
+    "expected": "FAIL",
+    "qualified": true
+  }
+]

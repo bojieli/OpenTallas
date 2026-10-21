@@ -1,0 +1,77 @@
+{
+  "state": "ALL_ACTUAL_NATIVE_HARD_LIBS_MATCH_COMMITTED_SELECTED_VIEWS",
+  "sources": [
+    {
+      "path": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc/ot_hbm_accel_smh_bdc_ff.lib",
+      "actual_native_sha256": "829b3ce2fdc56c6fdba8214fcef519193b88fb4d347a894bf799a1b7fd7d6fd0",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc/ot_hbm_accel_smh_bdc_tt.lib",
+      "actual_native_sha256": "31d6bc96f83b8a122021b3b6dc393db854fdbe6fa5a63180a12c75073ab2bf9c",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_pvm_ref_s4a/views/ot_hbm_sm_pv_merge_s3/ot_hbm_sm_pv_merge_s3_ff.lib",
+      "actual_native_sha256": "0fe35edaed4dc5bc9aa4d29acaa018651921b7315f853b50ce2f62d237bc58c7",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_pvm_ref_s4a/views/ot_hbm_sm_pv_merge_s3/ot_hbm_sm_pv_merge_s3_tt.lib",
+      "actual_native_sha256": "6f8dad1e6eb493586bbaa1e9ca86495c5dc7b0442c1bc12c16c694da2404a339",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu/ot_hbm_accel_smh_tcl_gu_ff.lib",
+      "actual_native_sha256": "6db8a245d7df4b387646f4617fb1efa7c245fdf4fbb89d0a19838c69689787dc",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu/ot_hbm_accel_smh_tcl_gu_tt.lib",
+      "actual_native_sha256": "9d5521c36b88f1c2d56591c25e76e8ef99b3bb945628130e6ade0ee19e37ba99",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct/ot_hbm_accel_smh_tct_ff.lib",
+      "actual_native_sha256": "d2ba8c9929089a7617c023189a362e7f4cc73d4c349ca3b71c7262a229fac39b",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct/ot_hbm_accel_smh_tct_tt.lib",
+      "actual_native_sha256": "1dff8e584f64e558b05a50cfda751d30706eb41e7ab5eac524d6bfcf8e447701",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e/ot_smh_tr_group_row_e_ff.lib",
+      "actual_native_sha256": "8b25ae1c39e38bf3da1a601888ed50decf6fb8f6d51b439d5296d608df7b1466",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e/ot_smh_tr_group_row_e_tt.lib",
+      "actual_native_sha256": "cb1d57332fe81d605f01c4768b9c652fd33ba481b32abd6e43be224c9c8ee5fa",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w/ot_smh_tr_group_row_w_ff.lib",
+      "actual_native_sha256": "6f9e6054fbadd441dd8e8a48e3878a697a7ad6eb2ce8709672c95e3bbb3cbe9e",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w/ot_smh_tr_group_row_w_tt.lib",
+      "actual_native_sha256": "6b7da00f2a78025bfef90e03fb7dfe2afbee074f68fd1f2761d06d6debd40ca9",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_xs_p192d_bay/views/ot_hbm_accel_smh_xs/ot_hbm_accel_smh_xs_ff.lib",
+      "actual_native_sha256": "76f6dc947663ec304894c589a7930d15a2a74437ef6f04cab6f0989651b35615",
+      "committed_blob_matches": true
+    },
+    {
+      "path": "physical/ref_tile/smh_xs_p192d_bay/views/ot_hbm_accel_smh_xs/ot_hbm_accel_smh_xs_tt.lib",
+      "actual_native_sha256": "de3f720d1dccde9f32f574cc1090999067c89ec13f25ac29cb9a577a2ea8cda2",
+      "committed_blob_matches": true
+    }
+  ],
+  "standard_libs": "Exactimage16470cea... and fullcanonicalnative reportsretainactualloadedLiberty SHA/roles; no libraryrole/policychange",
+  "qualified_leaf_selection": "PVMs4a unchanged; r10b notselected. No hardleaf internalSTA qualification weakened."
+}

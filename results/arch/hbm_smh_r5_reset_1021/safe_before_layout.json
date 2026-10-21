@@ -1,16 +1,16 @@
 {
-  "state": "SOURCE_PREPARATION_ONLY_NO_LAYOUT_ADMISSION",
+  "state": "QUALIFIED_SOURCE_READY_FOR_NECESSARY_LAYOUT_NOT_PHYSICAL_PASS",
   "source_hardware_commit": "0f1f5dff8",
   "scope": "SMHr5 D4 K2 chunk24 same-edge local writer reset copies plus north scalar forest leaf partition. Old native120, later45/39 failures retained. No common primitive/policy modifications.",
   "checklist": {
     "1_pins": "Existing LP/pin flops/actual clock/reset contracts unchanged; fresh native/gate still mandatory",
     "2_reach": "Existing reset region depth3 and<=405 staged geometry retained; added same-age local leaves require actual placed reach/SAFE check",
-    "3_fanout": "South actual32PASS; North fresh actualnative pending for scalar repair; no waiver",
+    "3_fanout": "ALL4 actual native PASS max32/0viol/0roleerrors. North fresh scalar repair and south source-local writer. Canonical raw gz/summary committed; old120/45/39 failures retained.",
     "4_logic_depth": "Reset write guard identical2input logicalcondition; data paths unchanged",
     "5_storage": "Same D4/E2 local ring, W24 chunks; unchanged epoch/valid/unwritten-slot semantics",
     "6_geometry": "No outline/childplacement changes; actual new reset FFs must be evaluated by placement and viewed PNGs",
     "7_clock": "Same actual existing3/2 roots andhardchildrefs; no regional relabel; strictactual80TT/FF and parent/dieSTA still required",
-    "8_schedule": "Zero new data/reset edges; existing r518MAIN/15FB hop calendar retained. Full R5/LP qualification stillpending; oldMUT4miss notwaived."
+    "8_schedule": "Zero new data/reset edges; existing r5 G18MAIN/G15FB calendar retained. Current VAR0/1 positive PASS12796; all HMUT1/2/3/5/6 causal FAIL qualified. ALL4 LP positive plus M1/M2/M4 causal FAIL qualified; oldMUT4miss retained separately."
   },
   "forms": {
     "n_m": {
@@ -118,5 +118,6 @@
       }
     }
   },
-  "next": "Collect raw canonical native; existingR5 and4LP positive+causal mutants. Only then bounded necessarylayout with exactsource SAFE/gatepacket; root criticalgeometry approval before REVIEW/submission."
+  "next": "Final canonical generated-kit freeze; necessary exactsource gate under8client budget. Actual native/clock/reach/GRT/STA and critical PNG root approval before REVIEW/submit; no physical PASS inferred.",
+  "source_capture_commit": "ee878fef4"
 }

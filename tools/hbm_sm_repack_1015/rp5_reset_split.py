@@ -80,6 +80,18 @@ def main():
             job["branch"]="codex/smh-r5-reset-1340-1021"
             job["tag"]=f"r5{h}_{v}_rs2"
             note="SMH source-local reset repair: same-edge per-D4-slot writer rq copies; north MAINm/FBc scalar consumers use parallel leaves at unchanged reset-forest depth. Original120 then45/39 nativeFAIL retained; actual repairednativePASS32 all4. No data/reset/clock edges or region/port/primitive-policy changes. Existing R5+LP witnesses mandatory before layout; actual strict80TT/FF, PNG/SAFE and critical coordinator review before route."
+            # Current source-specific negative receipts replace obsolete
+            # original witnesses (especially the old missed MUT4).
+            evidence="results/arch/hbm_smh_r5_reset_1021"
+            job["extra_paths"]=list(dict.fromkeys(job.get("extra_paths",[])+[evidence]))
+            for bench in job.get("benches",[]):
+                if bench.get("expect")!="fail":continue
+                m=re.fullmatch(r"r5_mut(\d+)",bench["name"])
+                if m:
+                    variant=0 if v=="m" else 1
+                    bench["fail_witness"]=f"{evidence}/proof/r5_v{variant}_m{m.group(1)}.log"
+                elif bench["name"].startswith("lp_"):
+                    bench["fail_witness"]=f"{evidence}/proof/lp_{h}_{v}_wrapper.log"
             job["structural_change"]=note
             d["structural_change"]=note
             p.write_text(json.dumps(d,indent=1)+"\n")

@@ -1,0 +1,95 @@
+{
+  "state": "PASS_EXISTING_SELECTED_R5_POSITIVE_AND_REQUIRED_CAUSAL_MUTANTS",
+  "source_inputs_commit": "ee878fef4",
+  "rows": [
+    {
+      "variant": 0,
+      "mutant": 0,
+      "expected": "PASS",
+      "sha256": "35bd17ef152d4945f928c7ebbcb1bbe91f5662cba14408e28c9c3ff9a23ffcc4",
+      "file": "r5_v0_m0.log"
+    },
+    {
+      "variant": 0,
+      "mutant": 1,
+      "expected": "FAIL",
+      "sha256": "a605662fd043ffa2b00dbc5dc4228f6433651c842d9d3c9144ac1f1b285cb348",
+      "file": "r5_v0_m1.log"
+    },
+    {
+      "variant": 0,
+      "mutant": 2,
+      "expected": "FAIL",
+      "sha256": "398c856d5f7b57a2c3362ebc389cd6993e0ab053497c7bf6852c7550e4e8ea2b",
+      "file": "r5_v0_m2.log"
+    },
+    {
+      "variant": 0,
+      "mutant": 3,
+      "expected": "FAIL",
+      "sha256": "cad4592e3878b3ece0f55365c3c56d4d019b4225a227957056b3da768d2ed273",
+      "file": "r5_v0_m3.log"
+    },
+    {
+      "variant": 0,
+      "mutant": 5,
+      "expected": "FAIL",
+      "sha256": "325f4d596004f61fcb5ff4628e1486005db4756d10d101a89bdb190cc555a416",
+      "file": "r5_v0_m5.log"
+    },
+    {
+      "variant": 0,
+      "mutant": 6,
+      "expected": "FAIL",
+      "sha256": "8199ff590fad802478414869e0fad1227da3b2fcb25f4262cc767b4282111d88",
+      "file": "r5_v0_m6.log"
+    },
+    {
+      "variant": 1,
+      "mutant": 0,
+      "expected": "PASS",
+      "sha256": "a8540cdf5d23ed465437e1f77d226ec8b9c99c7ef0731a2e5752dc1e7f808ea4",
+      "file": "r5_v1_m0.log"
+    },
+    {
+      "variant": 1,
+      "mutant": 1,
+      "expected": "FAIL",
+      "sha256": "b5110e24c798ee0fdae7eae50fb08b8712c3369c7313889085e66424aed0faf2",
+      "file": "r5_v1_m1.log"
+    },
+    {
+      "variant": 1,
+      "mutant": 2,
+      "expected": "FAIL",
+      "sha256": "396d42b8308b02a2edd4a163985b616a8dbe70bc0411e6ef2cc6bd887ad2a03e",
+      "file": "r5_v1_m2.log"
+    },
+    {
+      "variant": 1,
+      "mutant": 3,
+      "expected": "FAIL",
+      "sha256": "49604dbb923a7794008c92afa5ff6ffec121db1e30df5b0339da032e4f5e58ac",
+      "file": "r5_v1_m3.log"
+    },
+    {
+      "variant": 1,
+      "mutant": 5,
+      "expected": "FAIL",
+      "sha256": "a138fd95fa60470155d48a021dfa429c4ef617dc3608ca96f77c5c8a04c0cded",
+      "file": "r5_v1_m5.log"
+    },
+    {
+      "variant": 1,
+      "mutant": 6,
+      "expected": "FAIL",
+      "sha256": "fb631988901ea56fd230d359ba38f55cf73dd6d0f9bf1fc6d8443a17ff8b5313",
+      "file": "r5_v1_m6.log"
+    }
+  ],
+  "runtime_source_root": "codex-smh-r5-reset-scalar-1021",
+  "units": [
+    "oth-ubuntu-1050100-1792617682",
+    "oth-ubuntu-1072535-1792617694"
+  ]
+}
