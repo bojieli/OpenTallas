@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qfd_tt_head_static_h16yb",
+ "reviewer": "coordinator (QK-CLOSEOUT/QKC-CTLM, owner 10-21 submit-first-PASS)",
+ "verdict": "APPROVED",
+ "time": "2026-10-21T09:05:00-07:00",
+ "gate_commit": "e4bfb48c2",
+ "checklist": {
+  "lattice": "PASS: 8 SRAM macros in two aligned columns (6x 32x128 W column, 2x 64x512 R0 centre, rd_out face west toward the FIFO column)",
+  "std_cell_band": "PASS: one std-cell region around the macros, wide W/centre/E channels, post-place density <=0.6 (E pin-edge column and S pin strip highest, green)",
+  "pin_spread": "PASS: 1718 pins on E face column + S face strip (same pin set as h16x), no single-point cluster",
+  "clock_entry": "PASS: single root ck_head S face beside the pin strip, TT/FF pin-flop spread 47.1/44.1 (<=80)",
+  "shape": "PASS: 345.6x302.4 (1.14:1), fill 0.385"
+ },
+ "notes": "QKC-CTLM 10-21: gate WARN 0 fail 6 warn, census max32, trial GRT ovf 0 (M2 34.5%), gate-place TT reg->reg -118.8 / macro->reg -42.7 (h16x -228/-191), hold +48.5; PNGs floorplan/density viewed; not a critical tile; h16yb (no fence) leads over h16y; reroute_reason rtl_change (H16X=2 + SRAM R0)",
+ "geometry_sha256": "3536c3d52b283d3654811f41860622a0177cab0ccfe1e92b5225d1e16826a05a"
+}
