@@ -1,0 +1,15 @@
+ATTN1 cfg seed=1 njob=12 bub=20 static=0 t=640 nq=192 nk=486 np=486 NTP=1 NMUT=1
+MISMATCH sc beat 0 row 0/0 rc 76
+MISMATCH sc beat 1 row 4/4 rc 80
+MISMATCH sc beat 2 row 8/8 rc 84
+MISMATCH sc beat 3 row 12/12 rc 88
+MISMATCH sc beat 4 row 16/16 rc 92
+MISMATCH sc beat 5 row 20/20 rc 96
+MISMATCH sc beat 6 row 24/24 rc 100
+MISMATCH sc beat 7 row 28/28 rc 104
+ATTN1_COMPLETE expected_sc=486 expected_pv=96 incomplete=0 inputs0=12/192/486/486 inputs1=12/192/486/486
+ATTN1LOCK cycles=7270 sc=486/486 pv=96/96 mismatches=582 sc_mis=486 pv_mis=96 FAIL
+- tools/s81_dv/svc_rs/tb_attn1_nt1.sv:215: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 148.766 s; speed 48.939 ns/s
+- Verilator: cpu 144.647 s on 1 threads; allocated 153 MB

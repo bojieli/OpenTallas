@@ -1,0 +1,7 @@
+ATTN1 cfg seed=1 njob=12 bub=20 static=0 t=640 nq=192 nk=486 np=486 NTP=1 NMUT=0
+ATTN1_COMPLETE expected_sc=486 expected_pv=96 incomplete=0 inputs0=12/192/486/486 inputs1=12/192/486/486
+ATTN1LOCK cycles=7270 sc=486/486 pv=96/96 mismatches=0 sc_mis=0 pv_mis=0 PASS
+- tools/s81_dv/svc_rs/tb_attn1_nt1.sv:215: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 166.972 s; speed 43.603 ns/s
+- Verilator: cpu 154.394 s on 1 threads; allocated 153 MB
