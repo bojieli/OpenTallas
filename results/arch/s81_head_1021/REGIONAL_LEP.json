@@ -55,5 +55,10 @@
     "credit_RTT": 4
   },
   "parent_ML_additional_cycles": "not assumed; actual E2 midpoint placement must prove <=405um or add and price registered boundary",
-  "physical_status": "new master; no legacy single-root LEP/CRED8 lane aliases; packing and closed views outstanding"
+  "physical_status": "new master; no legacy single-root LEP/CRED8 lane aliases; packing and closed views outstanding",
+  "matched_lane_defines": [
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF"
+  ],
+  "matched_lane_source": "6e7ef70bc (HEAD2300ea5f2)"
 }

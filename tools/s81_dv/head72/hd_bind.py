@@ -186,6 +186,7 @@ def main():
         T.setdefault('rtl_files',[]).append('rtl/dsrom_sys/s81_head/ot_s81hd_ctl_peer.sv')
         T['rtl_files'].append('rtl/dsrom_sys/s81_head/physical/fan32_cells.v')
     if facts.get('lep_regional'):
+        T['defines']=list(dict.fromkeys(T.get('defines',[])+['OT_COLL_NATIVE32','OT_COLL_NATIVE32_OFF']))
         # New source master: never alias the old single-root endpoint or CRED8 views.
         lm=copy.deepcopy(M['ot_s81hd_lep'])
         lm.update(module='ot_s81hd_lep_regional', view=None, clock_ports=['ck','ck_A','ck_B'],
