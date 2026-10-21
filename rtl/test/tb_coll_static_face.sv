@@ -18,7 +18,9 @@
 // ---------------------------------------------------------------------------
 module tb_coll_static_face #(
     parameter integer FW = 546, PHY = 339, L = 376, R = 0, PEER_R = 0,
-    parameter integer XS = 0, PHI = 0, NW = 240, START = 80, TOK_REG = 1, SAFE = 0
+    parameter integer XS = 0, PHI = 0, NW = 240, START = 80, TOK_REG = 1, SAFE = 0,
+    // QW-COLLIO2: PLAND=1 = codec PHY pins on their own region clock pck (= lck delayed by PPH/8 T), landed by rings
+    parameter integer PLAND = 0, PLD = 2, PLK = 1, PPH = 0
 ) ();
     localparam integer PW = FW + 51;
     localparam real T = 0.8333333;
@@ -28,6 +30,12 @@ module tb_coll_static_face #(
         always @(clk) lck = clk;
     end else begin : g_phi1
         always @(clk) lck <= #(T / 4) clk;
+    end endgenerate
+    reg pck = 0;
+    generate if (PPH == 0) begin : g_pph0
+        always @(lck) pck = lck;
+    end else begin : g_pph
+        always @(lck) pck <= #(T * PPH / 8.0) lck;
     end endgenerate
     reg [4:0] rcnt = 0;
     wire rst_n = rcnt[4];
@@ -84,15 +92,16 @@ module tb_coll_static_face #(
     wire [1:0] ptslot, prslot;
     genvar f;
     generate for (f = 0; f < 2; f = f + 1) begin : g_face
-        qfd_coll_static_face #(.FW(FW), .PHY(PHY), .L(L), .R(R), .PEER_R(PEER_R), .TOK_REG(TOK_REG), .SAFE(SAFE)) u_face (
+        qfd_coll_static_face #(.FW(FW), .PHY(PHY), .L(L), .R(R), .PEER_R(PEER_R), .TOK_REG(TOK_REG), .SAFE(SAFE),
+            .PLAND(PLAND), .PLD(PLD), .PLK(PLK)) u_face (
             .cal_ck(clk), .cal_lck(lck), .tx_wck(clk), .tx_rck(lck), .rx_wck(lck), .rx_rck(clk),
-            .codec_ck({5{lck}}), .rst_n(rst_n),
+            .codec_ck({5{lck}}), .codec_phy_ck(pck), .rst_n(rst_n),
             .tx_slot(send[f]), .peer_slot(send[1 - f]), .tx_valid(send[f]), .tx_data(f == 0 ? txd0 : txd1),
             .rx_valid(rxv[f]), .rx_data(rxd[f]),
             .phy_up(1'b1), .phy_rx_valid(prv[f]), .phy_rx(prx[f]),
             .phy_tx_valid(ptv[f]), .phy_tx(ptx[f]), .phy_tx_slot(ptslot[f]), .phy_rx_slot(prslot[f]),
             .cdc_fault(cdcf[f]), .epoch_abort(abort[f]), .fault_cause(cause[f]));
-        tb_face_phy_pipe #(.W(PW), .L(PHY + XS)) u_phy (.clk(lck), .rst_n(rst_n), .v_in(ptv[f]), .d_in(ptx[f]),
+        tb_face_phy_pipe #(.W(PW), .L(PHY + XS)) u_phy (.clk(PLAND ? pck : lck), .rst_n(rst_n), .v_in(ptv[f]), .d_in(ptx[f]),
             .v_out(prv[1 - f]), .d_out(prx[1 - f]));
     end endgenerate
     // receiver check: face 1 receives face 0's words (and face 0 face 1's) at exactly t + LAT, LAT = L - R
@@ -135,8 +144,8 @@ module tb_coll_static_face #(
     initial begin
         wait (sent0 == NW && sent1 == NW);
         repeat (LAT + 40) @(posedge clk);
-        $display("COLL_FACE_BENCH TOK_REG=%0d FW=%0d PHY=%0d L=%0d R=%0d PEER_R=%0d XS=%0d PHI=%0d words %0d %0d got %0d %0d latency %0d errors %0d faults %0d unexpected %0d",
-                 TOK_REG, FW, PHY, L, R, PEER_R, XS, PHI, sent0, sent1, got1, got0, lat_seen, errors, faults, unexpected);
+        $display("COLL_FACE_BENCH PLAND=%0d PLD=%0d PLK=%0d PPH=%0d TOK_REG=%0d FW=%0d PHY=%0d L=%0d R=%0d PEER_R=%0d XS=%0d PHI=%0d words %0d %0d got %0d %0d latency %0d errors %0d faults %0d unexpected %0d",
+                 PLAND, PLD, PLK, PPH, TOK_REG, FW, PHY, L, R, PEER_R, XS, PHI, sent0, sent1, got1, got0, lat_seen, errors, faults, unexpected);
         if (errors == 0 && faults == 0 && unexpected == 0 && got0 == NW && got1 == NW)
             $display("COLL_STATIC_FACE PASS");
         else
