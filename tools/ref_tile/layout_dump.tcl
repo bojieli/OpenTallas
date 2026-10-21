@@ -108,13 +108,6 @@ puts $f " \"stats\": {\"fill\": [format %.3f [expr {($std + $barea) / $dA}]], \"
 puts $f " \"occupancy_schema\": \"opentallas.layout.occupancy.v1\","
 puts $f " \"std_cells\": \[[join $std_cells ",\n  "]\],"
 puts $f " \"rows\": \[[join $rows ",\n  "]\],"
-# HBM-MC3G 10-20: a lattice_channel_bound band kit (physical/common_flow/std_band_fence.tcl) leaves ot_band_roles.json
-# (exact pin / clock instances outside the band) beside the odb; embed it for tools/ref_tile/band_exception_harvest.py.
-if {[info exists ::env(OT_LAYOUT_ODB)] && [file exists [file join [file dirname $::env(OT_LAYOUT_ODB)] ot_band_roles.json]]} {
-  set rf [open [file join [file dirname $::env(OT_LAYOUT_ODB)] ot_band_roles.json]]
-  puts $f " \"band_roles\": [string trim [read $rf]],"
-  close $rf
-}
 puts $f " \"clocks\": \[[join $clocks ", "]\],"
 puts $f " \"blocks\": \[[join $blocks ",\n  "]\],"
 puts $f " \"pins\": \[[join $pins ",\n  "]\],"

@@ -62,7 +62,13 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
     //   post decision and the u_post read address are independent of the SRAM output.  POST_REG also sets the AQ's
     //   ACT_HEAD=1 (head-bank ACT override when the head bank is closed): with the shifted enqueue timing the fixed bank-0-first
     //   ACT order starved a closed high-index head bank for ever (face_txn stalled at 7909/12944 beats).  0 = unchanged.
-    parameter integer POST_REG=0
+    parameter integer POST_REG=0,
+    // WE_LOCAL=1 (HBM-MC3D 10-20): the MC3c t242 route failed TT -160.9 ps on metadata_wp -> j -> we -> 20 regional
+    //   mf_valid D pins (734 ps clk->D: one INVx4 + 4 wire buffers spreading one we/wa net over the 20 META_SELECT
+    //   regions).  Now four region groups x four banks own KEPT copies of metadata_wp (same D, same reset), compute
+    //   j / (j<length) / wa locally, and every region captures accepted and (j<length) in two kept flops whose AND
+    //   is mf_valid.  Same values on the same edges (no added cycle); SRAM write ports keep the original cone.
+    parameter integer WE_LOCAL=0
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -351,12 +357,35 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
         else begin rp_sel<=next_rp[1:0];ep_sel<=next_ep[1:0];
           rp_hi<=next_rp[QW-1:2];ep_hi<=next_ep[QW-1:2];end
       wire[BITS-1:0]hbank[0:3],ebank[0:3];
-      for(genvar b=0;b<4;b=b+1)begin:FORWARD
-        (* keep="true",dont_touch="true" *) reg mf_valid;
-        (* keep="true",dont_touch="true" *) reg[QW-3:0]mf_address;
+      wire acc_q;   // WE_LOCAL: regional accepted capture
+      if(WE_LOCAL!=0)begin:g_acc
+        (* keep="true",dont_touch="true" *) reg acc_r;
         always @(posedge clk or negedge meta_rst_n)
-          if(!meta_rst_n)mf_valid<=0;else mf_valid<=meta_we[b];
-        always @(posedge clk)mf_address<=meta_wa[b];
+          if(!meta_rst_n)acc_r<=0;else acc_r<=accepted;
+        assign acc_q=acc_r;
+      end else begin:g_noacc
+        assign acc_q=1'b0;
+      end
+      for(genvar b=0;b<4;b=b+1)begin:FORWARD
+        wire mf_valid;
+        (* keep="true",dont_touch="true" *) reg[QW-3:0]mf_address;
+        if(WE_LOCAL!=0)begin:g_local
+          (* keep="true",dont_touch="true" *) reg jlt_q;
+          always @(posedge clk or negedge meta_rst_n)
+            if(!meta_rst_n)jlt_q<=0;else jlt_q<=META_WE_GROUP[s/5].BANK[b].jlt;
+`ifdef BW_MUT_WE_NOACC
+          assign mf_valid=jlt_q;
+`else
+          assign mf_valid=acc_q&&jlt_q;
+`endif
+          always @(posedge clk)mf_address<=META_WE_GROUP[s/5].BANK[b].wa_hi;
+        end else begin:g_shared
+          (* keep="true",dont_touch="true" *) reg mf_valid_q;
+          always @(posedge clk or negedge meta_rst_n)
+            if(!meta_rst_n)mf_valid_q<=0;else mf_valid_q<=meta_we[b];
+          assign mf_valid=mf_valid_q;
+          always @(posedge clk)mf_address<=meta_wa[b];
+        end
         assign hbank[b]=(mf_valid&&mf_address==rp_hi)?
           mf_data[b][LO+:BITS]:qh[b][LO+:BITS];
         assign ebank[b]=(mf_valid&&mf_address==ep_hi)?
@@ -415,6 +444,24 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_safe #(
       always @(posedge clk or negedge region_rst_n[4+g])
         if(!region_rst_n[4+g])metadata_wp[g]<=0;
         else metadata_wp[g]<=metadata_wp_next;
+    end
+    // WE_LOCAL: per (region group, bank) kept write-pointer copies; same D/reset as metadata_wp[b/2].
+    for(genvar G=0;G<4;G=G+1)begin:META_WE_GROUP
+      for(genvar b=0;b<4;b=b+1)begin:BANK
+        wire[QW-1:0]wpl;
+        if(WE_LOCAL!=0)begin:g_wpl
+          (* keep="true",dont_touch="true" *) reg[QW-1:0]wpl_q;
+          always @(posedge clk or negedge region_rst_n[4+b/2])
+            if(!region_rst_n[4+b/2])wpl_q<=0;else wpl_q<=metadata_wp_next;
+          assign wpl=wpl_q;
+        end else begin:g_nowpl
+          assign wpl=metadata_wp[b/2];
+        end
+        wire[1:0]j=2'(b)-wpl[1:0];
+        wire jlt={1'b0,j}<length;
+        wire[QW-1:0]wa=wpl+QW'(j);
+        wire[QW-3:0]wa_hi=wa[QW-1:2];
+      end
     end
     for(genvar b=0;b<4;b=b+1)begin:METADATA
       wire[1:0]j=2'(b)-metadata_wp[b/2][1:0];wire we=accepted&&{1'b0,j}<length;

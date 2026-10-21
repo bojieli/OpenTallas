@@ -105,7 +105,19 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 RECIPE_LATEST = 4
 RESET_LANDING_RULE = ("ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth "
                       "fan-out; reset release latency is a scheduled constant")
-PIN_REGS_RULE = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
+PIN_REGS_RULE_STRICT = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
+# OWNER 10-20 ~09:05 (supersedes the 10-15 rule): pin registers are required only at region crossings (landing rings)
+# and on wires over the 405 um reach; touching tiles in the SAME region may connect directly when the combined path
+# meets timing (die / parent STA checks it).  The strict 10-15 form stays available: spec "pin_regs_rule": "every_pin"
+# (or env OT_PIN_REGS_STRICT=1).  Spec "region_crossing_ports": "<regexp>" names ports that cross a region boundary
+# with no landing ring inside the kit: those still need pin registers (the gate refuses a kit without them).
+PIN_REGS_RULE = ("OWNER RULE 10-20 09:05: pin registers only at region crossings (landing rings) and on wires over "
+                 "405 um; same-region touching tiles may connect directly when the path meets timing")
+
+
+def pin_regs_strict(s: dict) -> bool:
+    """True when the kit asks for the strict 10-15 every-pin form (spec pin_regs_rule / env OT_PIN_REGS_STRICT=1)"""
+    return s.get("pin_regs_rule") == "every_pin" or os.environ.get("OT_PIN_REGS_STRICT") == "1"
 RECIPE_HOLD_PAD = "HB2xp67_ASAP7_75t_R"
 HOLD_PAD_STRONG = "HB4xp67_ASAP7_75t_R"
 PIN_REG_SPLIT_TCL = "physical/common_flow/pin_reg_split.tcl"
@@ -255,9 +267,10 @@ def pin_regs_plan(s: dict) -> dict | None:
     if not isinstance(pr, dict):
         raise SpecError('spec: pin_regs must be an object ({"enable": true} | {"enable": false, "reason": ...})')
     if pr.get("enable") is False:
-        if not str(pr.get("reason", "")).strip():
-            raise SpecError(f"spec: pin_regs opt-out needs a recorded reason ({PIN_REGS_RULE})")
-        return {"enable": False, "reason": pr["reason"]}
+        if not str(pr.get("reason", "")).strip() and (pin_regs_strict(s) or s.get("region_crossing_ports")):
+            why = PIN_REGS_RULE_STRICT if pin_regs_strict(s) else PIN_REGS_RULE + " (this kit declares region_crossing_ports)"
+            raise SpecError(f"spec: pin_regs opt-out needs a recorded reason ({why})")
+        return {"enable": False, "reason": pr.get("reason") or PIN_REGS_RULE}
     if pr.get("exclude") and not str(pr.get("reason", "")).strip():
         raise SpecError("spec: pin_regs.exclude needs a recorded reason")
     declared = s.get("clock_ports", [])
@@ -279,7 +292,7 @@ def pin_regs_plan(s: dict) -> dict | None:
         raise SpecError("spec: pin_regs.clock must name a declared clock port or bit")
     return {"enable": True, "clock": ck, "clock_ports": cks, "reset_ports": resets, "exclude": pr.get("exclude", ""),
             "reset": pr.get("reset", ""), "reason": pr.get("reason", ""),
-            "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE,
+            "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE_STRICT,
             "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
 
 
@@ -2025,19 +2038,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     # boundary. In particular, POST_CTS must write a correct SDC for the next stage.
     post_plain = ([] if multi else [f"source /src/{QDM}/post_plain.tcl"]) + btcl
     pre_ref = (["estimate_parasitics -placement"] if multi else [f"source /src/{QDM}/pre_ref_skew.tcl"]) + btcl
-    # spec "post_cts_extra" / "post_grt_extra" (HBM-MC3G 10-20): repo Tcl hooks sourced at POST_CTS / POST_GLOBAL_ROUTE only,
-    # BEFORE the boundary SDC rewrite (e.g. physical/common_flow/std_band_post_cts.tcl: CTS births join the
-    # lattice_channel_bound std-cell band).  Kits without the keys regenerate byte-identically.
-    stage_extra = {}
-    for key in ("post_cts_extra", "post_grt_extra"):
-        for rel in s.get(key, []):
-            if not isinstance(rel, str) or rel.startswith("/") or ".." in Path(rel).parts or not re.fullmatch(r"[A-Za-z0-9_./-]+", rel):
-                raise SpecError(f"{key} must name safe relative repo Tcl files")
-            if not (ROOT / rel).is_file():
-                raise SpecError(f"missing {key} hook: {rel}")
-            stage_extra.setdefault(key, []).append(f"source /src/{rel}")
-    stage_hooks = {"post_cts.tcl": stage_extra.get("post_cts_extra", []) + post_plain,
-                   "post_grt.tcl": stage_extra.get("post_grt_extra", []) + post_plain,
+    stage_hooks = {"post_cts.tcl": post_plain, "post_grt.tcl": post_plain,
                    "pre_drt.tcl": pre_ref, "pre_fill.tcl": pre_ref,
                    "post_fill.tcl": post_plain}
     return {"pre_cts.tcl": "\n".join(pre_cts) + "\n", "pre_grt.tcl": "\n".join(pre_grt) + "\n",
@@ -2345,7 +2346,7 @@ def pin_balance_env(r: dict, lc: dict | None = None) -> list:
 
 def referenced_paths(s: dict, kd: str) -> list:
     """every repo file the routed flow reads (for the source-sync check of the gate)"""
-    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pin_hook_after_flops", []), *s.get("pre_dpl_extra", []), *s.get("post_cts_extra", []), *s.get("post_grt_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
+    out = [*s["sources"], *s.get("boundary_tcl", []), *s.get("pre_cts_extra", []), *s.get("pin_hook_before_flops", []), *s.get("pin_hook_after_flops", []), *s.get("pre_dpl_extra", []), f"{kd}/kit.env", f"{kd}/clock.sdc", f"{kd}/signoff.sdc", *([f"{kd}/signoff_ffrepair.sdc"] if io_hold_relief_ps(s) else []), f"{kd}/pdn.tcl", f"{kd}/pre_cts.tcl",
            *[f"{kd}/{f}" for f in ("post_cts.tcl", "post_grt.tcl", "pre_drt.tcl", "pre_fill.tcl", "post_fill.tcl")],
            f"{kd}/pre_grt.tcl", f"{kd}/post_drt.tcl", "tools/ref_tile/ref_route.sh",
            f"{QDM}/io_ref_skew.sdc", f"{QDM}/io_plain.sdc", f"{QDM}/repair_budget.tcl", f"{QDM}/pre_cts_skew.tcl",
