@@ -84,7 +84,8 @@ def expand_channel(source, receiver, extra, baseline_w, baseline_h, west=0., max
         reservation=dict(split_lanes=2, class_frame_um=[104, 106],
                          independent_frames=True, row_endcap_pitch_um=12.96,
                          required_width_um=2*104+3*12.96),
-        added_pipeline_stages=0, token_age_delta=0,
+        explicit_pipeline_stages_added=0, token_age_delta=None,
+        rebuilt_lane_ages='derive from actual GEN relay topology; calendar recompilation required',
         scope='physical channel/outline expansion; actual GEN decides placement; calendar remains HOLD')
     out['source'] = out.get('source', '') + f' | expand {receiver} channel by {extra} um, array west {west} um, outline +{extra-west} um'
     return out

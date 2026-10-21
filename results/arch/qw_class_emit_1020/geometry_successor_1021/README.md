@@ -11,7 +11,10 @@ west129.6. W services stay fixed; western service clearance consumed129.6.
 Die32983.176x24288.824 stays inside33000um guard, outline area increment0.
 Two independent104x106 class footprints and12.96um row/endcap slots need246.88um
 of channel width. This is a physical reservation; actual GEN still decides legal
-native outline/pin placement. No additional pipeline stages or token ages.
+native outline/pin placement. The floorplan transform inserts no explicit pipeline stage. GEN rebuilds real
+relay topology, so final stage counts and token-age deltas remain pending actual
+relay-table derivation and calendar recompilation. Frozen0125 metadata zero
+was a transform-only statement and must not be read as final age equivalence.
 
 classgeom0105 failed at the actual core-feed bump because retaining its old
 17409.6,12096 coordinate overlapped shifted dvs_E0. The next single successor
