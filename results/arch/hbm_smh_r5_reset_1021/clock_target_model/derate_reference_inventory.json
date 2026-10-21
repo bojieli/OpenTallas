@@ -1,0 +1,56 @@
+{
+  "all25_GitHub_blob_hashes_verified": true,
+  "references": [
+    {
+      "file": "CtsOptions.h",
+      "line": 299,
+      "text": "void setDelayBufferDerate(float derate) { delayBufferDerate_ = derate; }"
+    },
+    {
+      "file": "CtsOptions.h",
+      "line": 300,
+      "text": "void resetDelayBufferDerate() { delayBufferDerate_ = 1.0; }"
+    },
+    {
+      "file": "CtsOptions.h",
+      "line": 301,
+      "text": "float getDelayBufferDerate() const { return delayBufferDerate_; }"
+    },
+    {
+      "file": "CtsOptions.h",
+      "line": 400,
+      "text": "float delayBufferDerate_ = 1.0;  // no derate"
+    },
+    {
+      "file": "TritonCTS.i",
+      "line": 262,
+      "text": "set_delay_buffer_derate(float derate)"
+    },
+    {
+      "file": "TritonCTS.i",
+      "line": 316,
+      "text": "return getTritonCts()->getParms()->getDelayBufferDerate();"
+    },
+    {
+      "file": "TritonCTS.i",
+      "line": 432,
+      "text": "reset_delay_buffer_derate()"
+    },
+    {
+      "file": "TritonCTS.tcl",
+      "line": 118,
+      "text": "cts::set_delay_buffer_derate $buffer_derate"
+    },
+    {
+      "file": "TritonCTS.tcl",
+      "line": 326,
+      "text": "cts::reset_delay_buffer_derate"
+    },
+    {
+      "file": "TritonCTS.tcl",
+      "line": 552,
+      "text": "cts::set_delay_buffer_derate $buffer_derate"
+    }
+  ],
+  "operational_cpp_consumer_count": 0
+}

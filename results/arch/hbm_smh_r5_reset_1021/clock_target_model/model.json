@@ -1,0 +1,835 @@
+{
+  "grade": "PINNED_CTS_TARGET_MODEL_NOT_ACTUAL_R5_CLOCK_PROOF",
+  "source_commit": "27cecb44b",
+  "pinned_OpenROAD": "26Q3-1510-g6cb3f2b704",
+  "all14_actual_Lib_targets": [
+    {
+      "path": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc/ot_hbm_accel_smh_bdc_ff.lib",
+      "sha256": "829b3ce2fdc56c6fdba8214fcef519193b88fb4d347a894bf799a1b7fd7d6fd0",
+      "master": "ot_hbm_accel_smh_bdc",
+      "corner": "ff",
+      "clock_pin": "clk",
+      "min_rise_ps": 125.55587,
+      "min_fall_ps": 131.14479,
+      "max_rise_ps": 154.93535,
+      "max_fall_ps": 161.73343,
+      "generic_CTS_max_average_ps": 158.33438999999998,
+      "r4_spine_max_rise_target_ps": 154.93535,
+      "exported_boundary": {
+        "n": 1137,
+        "mean": 148.0,
+        "min": 139.7,
+        "max": 154.9
+      },
+      "exported_all": {
+        "n": 10670,
+        "mean": 143.5,
+        "min": 133.7,
+        "max": 154.9
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -18.634389999999996,
+        -3.434389999999979
+      ],
+      "centred_boundary_target_ps": 147.3
+    },
+    {
+      "path": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc/ot_hbm_accel_smh_bdc_tt.lib",
+      "sha256": "31d6bc96f83b8a122021b3b6dc393db854fdbe6fa5a63180a12c75073ab2bf9c",
+      "master": "ot_hbm_accel_smh_bdc",
+      "corner": "tt",
+      "clock_pin": "clk",
+      "min_rise_ps": 155.40579,
+      "min_fall_ps": 166.92795,
+      "max_rise_ps": 188.08043,
+      "max_fall_ps": 200.07721,
+      "generic_CTS_max_average_ps": 194.07882,
+      "r4_spine_max_rise_target_ps": 188.08043,
+      "exported_boundary": {
+        "n": 1137,
+        "mean": 180.9,
+        "min": 172.0,
+        "max": 188.1
+      },
+      "exported_all": {
+        "n": 10670,
+        "mean": 175.8,
+        "min": 165.5,
+        "max": 188.1
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -22.078820000000007,
+        -5.978820000000013
+      ],
+      "centred_boundary_target_ps": 180.05
+    },
+    {
+      "path": "physical/ref_tile/smh_pvm_ref_s4a/views/ot_hbm_sm_pv_merge_s3/ot_hbm_sm_pv_merge_s3_ff.lib",
+      "sha256": "0fe35edaed4dc5bc9aa4d29acaa018651921b7315f853b50ce2f62d237bc58c7",
+      "master": "ot_hbm_sm_pv_merge_s3",
+      "corner": "ff",
+      "clock_pin": "clk",
+      "min_rise_ps": 194.1067,
+      "min_fall_ps": 204.04759,
+      "max_rise_ps": 308.767,
+      "max_fall_ps": 329.25577,
+      "generic_CTS_max_average_ps": 319.011385,
+      "r4_spine_max_rise_target_ps": 308.767,
+      "exported_boundary": {
+        "n": 1127,
+        "mean": 244.5,
+        "min": 215.4,
+        "max": 262.4
+      },
+      "exported_all": {
+        "n": 14243,
+        "mean": 239.8,
+        "min": 198.9,
+        "max": 308.8
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -103.61138500000001,
+        -56.61138500000004
+      ],
+      "centred_boundary_target_ps": 238.89999999999998
+    },
+    {
+      "path": "physical/ref_tile/smh_pvm_ref_s4a/views/ot_hbm_sm_pv_merge_s3/ot_hbm_sm_pv_merge_s3_tt.lib",
+      "sha256": "6f8dad1e6eb493586bbaa1e9ca86495c5dc7b0442c1bc12c16c694da2404a339",
+      "master": "ot_hbm_sm_pv_merge_s3",
+      "corner": "tt",
+      "clock_pin": "clk",
+      "min_rise_ps": 239.93108,
+      "min_fall_ps": 259.06796,
+      "max_rise_ps": 362.72147,
+      "max_fall_ps": 389.84634,
+      "generic_CTS_max_average_ps": 376.283905,
+      "r4_spine_max_rise_target_ps": 362.72147,
+      "exported_boundary": {
+        "n": 1127,
+        "mean": 294.1,
+        "min": 263.2,
+        "max": 313.2
+      },
+      "exported_all": {
+        "n": 14243,
+        "mean": 289.6,
+        "min": 251.1,
+        "max": 362.7
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -113.08390500000002,
+        -63.083905000000016
+      ],
+      "centred_boundary_target_ps": 288.2
+    },
+    {
+      "path": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu/ot_hbm_accel_smh_tcl_gu_ff.lib",
+      "sha256": "6db8a245d7df4b387646f4617fb1efa7c245fdf4fbb89d0a19838c69689787dc",
+      "master": "ot_hbm_accel_smh_tcl_gu",
+      "corner": "ff",
+      "clock_pin": "clk",
+      "min_rise_ps": 122.04034,
+      "min_fall_ps": 127.58514,
+      "max_rise_ps": 152.70598,
+      "max_fall_ps": 160.14442,
+      "generic_CTS_max_average_ps": 156.42520000000002,
+      "r4_spine_max_rise_target_ps": 152.70598,
+      "exported_boundary": {
+        "n": 518,
+        "mean": 143.0,
+        "min": 136.7,
+        "max": 148.7
+      },
+      "exported_all": {
+        "n": 8415,
+        "mean": 139.3,
+        "min": 129.6,
+        "max": 152.7
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -19.72520000000003,
+        -7.725200000000029
+      ],
+      "centred_boundary_target_ps": 142.7
+    },
+    {
+      "path": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu/ot_hbm_accel_smh_tcl_gu_tt.lib",
+      "sha256": "9d5521c36b88f1c2d56591c25e76e8ef99b3bb945628130e6ade0ee19e37ba99",
+      "master": "ot_hbm_accel_smh_tcl_gu",
+      "corner": "tt",
+      "clock_pin": "clk",
+      "min_rise_ps": 151.11662,
+      "min_fall_ps": 162.90555,
+      "max_rise_ps": 184.19604,
+      "max_fall_ps": 197.40474,
+      "generic_CTS_max_average_ps": 190.80039,
+      "r4_spine_max_rise_target_ps": 184.19604,
+      "exported_boundary": {
+        "n": 518,
+        "mean": 175.5,
+        "min": 168.8,
+        "max": 181.1
+      },
+      "exported_all": {
+        "n": 8415,
+        "mean": 171.0,
+        "min": 160.5,
+        "max": 184.2
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -22.00038999999998,
+        -9.700389999999999
+      ],
+      "centred_boundary_target_ps": 174.95
+    },
+    {
+      "path": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct/ot_hbm_accel_smh_tct_ff.lib",
+      "sha256": "d2ba8c9929089a7617c023189a362e7f4cc73d4c349ca3b71c7262a229fac39b",
+      "master": "ot_hbm_accel_smh_tct",
+      "corner": "ff",
+      "clock_pin": "clk",
+      "min_rise_ps": 124.84694,
+      "min_fall_ps": 130.31262,
+      "max_rise_ps": 154.23022,
+      "max_fall_ps": 160.62515,
+      "generic_CTS_max_average_ps": 157.427685,
+      "r4_spine_max_rise_target_ps": 154.23022,
+      "exported_boundary": {
+        "n": 585,
+        "mean": 143.1,
+        "min": 137.8,
+        "max": 151.1
+      },
+      "exported_all": {
+        "n": 10232,
+        "mean": 142.9,
+        "min": 132.6,
+        "max": 154.2
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -19.627684999999985,
+        -6.3276850000000024
+      ],
+      "centred_boundary_target_ps": 144.45
+    },
+    {
+      "path": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct/ot_hbm_accel_smh_tct_tt.lib",
+      "sha256": "1dff8e584f64e558b05a50cfda751d30706eb41e7ab5eac524d6bfcf8e447701",
+      "master": "ot_hbm_accel_smh_tct",
+      "corner": "tt",
+      "clock_pin": "clk",
+      "min_rise_ps": 154.55815,
+      "min_fall_ps": 166.09811,
+      "max_rise_ps": 187.3736,
+      "max_fall_ps": 199.15744,
+      "generic_CTS_max_average_ps": 193.26552,
+      "r4_spine_max_rise_target_ps": 187.3736,
+      "exported_boundary": {
+        "n": 585,
+        "mean": 175.8,
+        "min": 170.4,
+        "max": 183.5
+      },
+      "exported_all": {
+        "n": 10232,
+        "mean": 175.7,
+        "min": 164.2,
+        "max": 187.4
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -22.865520000000004,
+        -9.76552000000001
+      ],
+      "centred_boundary_target_ps": 176.95
+    },
+    {
+      "path": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e/ot_smh_tr_group_row_e_ff.lib",
+      "sha256": "8b25ae1c39e38bf3da1a601888ed50decf6fb8f6d51b439d5296d608df7b1466",
+      "master": "ot_smh_tr_group_row_e",
+      "corner": "ff",
+      "clock_pin": "clk",
+      "min_rise_ps": 78.43224,
+      "min_fall_ps": 81.89619,
+      "max_rise_ps": 99.97604,
+      "max_fall_ps": 104.39497,
+      "generic_CTS_max_average_ps": 102.185505,
+      "r4_spine_max_rise_target_ps": 99.97604,
+      "exported_boundary": {
+        "n": 1640,
+        "mean": 94.0,
+        "min": 85.2,
+        "max": 100.0
+      },
+      "exported_all": {
+        "n": 1640,
+        "mean": 94.0,
+        "min": 85.2,
+        "max": 100.0
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -16.985505000000003,
+        -2.1855050000000062
+      ],
+      "centred_boundary_target_ps": 92.6
+    },
+    {
+      "path": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e/ot_smh_tr_group_row_e_tt.lib",
+      "sha256": "cb1d57332fe81d605f01c4768b9c652fd33ba481b32abd6e43be224c9c8ee5fa",
+      "master": "ot_smh_tr_group_row_e",
+      "corner": "tt",
+      "clock_pin": "clk",
+      "min_rise_ps": 95.96502,
+      "min_fall_ps": 101.82102,
+      "max_rise_ps": 118.66171,
+      "max_fall_ps": 125.09735,
+      "generic_CTS_max_average_ps": 121.87953,
+      "r4_spine_max_rise_target_ps": 118.66171,
+      "exported_boundary": {
+        "n": 1640,
+        "mean": 112.9,
+        "min": 104.3,
+        "max": 118.7
+      },
+      "exported_all": {
+        "n": 1640,
+        "mean": 112.9,
+        "min": 104.3,
+        "max": 118.7
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -17.579530000000005,
+        -3.1795299999999997
+      ],
+      "centred_boundary_target_ps": 111.5
+    },
+    {
+      "path": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w/ot_smh_tr_group_row_w_ff.lib",
+      "sha256": "6f9e6054fbadd441dd8e8a48e3878a697a7ad6eb2ce8709672c95e3bbb3cbe9e",
+      "master": "ot_smh_tr_group_row_w",
+      "corner": "ff",
+      "clock_pin": "clk",
+      "min_rise_ps": 99.92139,
+      "min_fall_ps": 104.01633,
+      "max_rise_ps": 143.49434,
+      "max_fall_ps": 150.22464,
+      "generic_CTS_max_average_ps": 146.85949,
+      "r4_spine_max_rise_target_ps": 143.49434,
+      "exported_boundary": {
+        "n": 2458,
+        "mean": 123.9,
+        "min": 107.1,
+        "max": 143.5
+      },
+      "exported_all": {
+        "n": 2458,
+        "mean": 123.9,
+        "min": 107.1,
+        "max": 143.5
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -39.75949,
+        -3.359489999999994
+      ],
+      "centred_boundary_target_ps": 125.3
+    },
+    {
+      "path": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w/ot_smh_tr_group_row_w_tt.lib",
+      "sha256": "6b7da00f2a78025bfef90e03fb7dfe2afbee074f68fd1f2761d06d6debd40ca9",
+      "master": "ot_smh_tr_group_row_w",
+      "corner": "tt",
+      "clock_pin": "clk",
+      "min_rise_ps": 123.56953,
+      "min_fall_ps": 130.52951,
+      "max_rise_ps": 171.67358,
+      "max_fall_ps": 180.47023,
+      "generic_CTS_max_average_ps": 176.071905,
+      "r4_spine_max_rise_target_ps": 171.67358,
+      "exported_boundary": {
+        "n": 2458,
+        "mean": 150.8,
+        "min": 132.8,
+        "max": 171.7
+      },
+      "exported_all": {
+        "n": 2458,
+        "mean": 150.8,
+        "min": 132.8,
+        "max": 171.7
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -43.271904999999975,
+        -4.371904999999998
+      ],
+      "centred_boundary_target_ps": 152.25
+    },
+    {
+      "path": "physical/ref_tile/smh_xs_p192d_bay/views/ot_hbm_accel_smh_xs/ot_hbm_accel_smh_xs_ff.lib",
+      "sha256": "76f6dc947663ec304894c589a7930d15a2a74437ef6f04cab6f0989651b35615",
+      "master": "ot_hbm_accel_smh_xs",
+      "corner": "ff",
+      "clock_pin": "clk",
+      "min_rise_ps": 350.2438,
+      "min_fall_ps": 368.14661,
+      "max_rise_ps": 426.3699,
+      "max_fall_ps": 447.80826,
+      "generic_CTS_max_average_ps": 437.08907999999997,
+      "r4_spine_max_rise_target_ps": 426.3699,
+      "exported_boundary": {
+        "n": 4528,
+        "mean": 393.9,
+        "min": 366.8,
+        "max": 425.7
+      },
+      "exported_all": {
+        "n": 20578,
+        "mean": 400.0,
+        "min": 363.0,
+        "max": 452.0
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -70.28907999999996,
+        -11.389079999999979
+      ],
+      "centred_boundary_target_ps": 396.25
+    },
+    {
+      "path": "physical/ref_tile/smh_xs_p192d_bay/views/ot_hbm_accel_smh_xs/ot_hbm_accel_smh_xs_tt.lib",
+      "sha256": "de3f720d1dccde9f32f574cc1090999067c89ec13f25ac29cb9a577a2ea8cda2",
+      "master": "ot_hbm_accel_smh_xs",
+      "corner": "tt",
+      "clock_pin": "clk",
+      "min_rise_ps": 433.63318,
+      "min_fall_ps": 469.28317,
+      "max_rise_ps": 529.53033,
+      "max_fall_ps": 573.73364,
+      "generic_CTS_max_average_ps": 551.631985,
+      "r4_spine_max_rise_target_ps": 529.53033,
+      "exported_boundary": {
+        "n": 4528,
+        "mean": 485.5,
+        "min": 453.5,
+        "max": 528.9
+      },
+      "exported_all": {
+        "n": 20578,
+        "mean": 495.9,
+        "min": 450.1,
+        "max": 573.1
+      },
+      "ideal_full_Lib_balance_boundary_relative_to_glue_ps": [
+        -98.13198499999999,
+        -22.73198500000001
+      ],
+      "centred_boundary_target_ps": 491.2
+    }
+  ],
+  "regions": {
+    "n_m": {
+      "c": {
+        "tt": {
+          "real_hard_instances": [
+            "u_qk0",
+            "u_bdc0",
+            "u_h00",
+            "u_h10",
+            "u_row0",
+            "u_rowe0"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -43.271904999999975,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 43.271904999999975,
+          "centred_boundary_ideal_envelope_ps": [
+            -19.44999999999999,
+            19.44999999999999
+          ],
+          "centred_boundary_ideal_span_ps": 38.89999999999998
+        },
+        "ff": {
+          "real_hard_instances": [
+            "u_qk0",
+            "u_bdc0",
+            "u_h00",
+            "u_h10",
+            "u_row0",
+            "u_rowe0"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -39.75949,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 39.75949,
+          "centred_boundary_ideal_envelope_ps": [
+            -18.200000000000003,
+            18.200000000000003
+          ],
+          "centred_boundary_ideal_span_ps": 36.400000000000006
+        }
+      },
+      "x": {
+        "tt": {
+          "real_hard_instances": [
+            "u_xs0"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -98.13198499999999,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 98.13198499999999,
+          "centred_boundary_ideal_envelope_ps": [
+            -37.69999999999999,
+            37.69999999999999
+          ],
+          "centred_boundary_ideal_span_ps": 75.39999999999998
+        },
+        "ff": {
+          "real_hard_instances": [
+            "u_xs0"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -70.28907999999996,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 70.28907999999996,
+          "centred_boundary_ideal_envelope_ps": [
+            -29.44999999999999,
+            29.44999999999999
+          ],
+          "centred_boundary_ideal_span_ps": 58.89999999999998
+        }
+      },
+      "m": {
+        "tt": {
+          "real_hard_instances": [
+            "u_mg0.u_merge"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -113.08390500000002,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 113.08390500000002,
+          "centred_boundary_ideal_envelope_ps": [
+            -25.0,
+            25.0
+          ],
+          "centred_boundary_ideal_span_ps": 50.0
+        },
+        "ff": {
+          "real_hard_instances": [
+            "u_mg0.u_merge"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -103.61138500000001,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 103.61138500000001,
+          "centred_boundary_ideal_envelope_ps": [
+            -23.499999999999986,
+            23.499999999999986
+          ],
+          "centred_boundary_ideal_span_ps": 46.99999999999997
+        }
+      }
+    },
+    "n_f": {
+      "c": {
+        "tt": {
+          "real_hard_instances": [
+            "u_mg0.u_merge",
+            "u_qk0",
+            "u_bdc0",
+            "u_h00",
+            "u_h10",
+            "u_row0",
+            "u_rowe0"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -113.08390500000002,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 113.08390500000002,
+          "centred_boundary_ideal_envelope_ps": [
+            -25.0,
+            25.0
+          ],
+          "centred_boundary_ideal_span_ps": 50.0
+        },
+        "ff": {
+          "real_hard_instances": [
+            "u_mg0.u_merge",
+            "u_qk0",
+            "u_bdc0",
+            "u_h00",
+            "u_h10",
+            "u_row0",
+            "u_rowe0"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -103.61138500000001,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 103.61138500000001,
+          "centred_boundary_ideal_envelope_ps": [
+            -23.499999999999986,
+            23.499999999999986
+          ],
+          "centred_boundary_ideal_span_ps": 46.99999999999997
+        }
+      },
+      "x": {
+        "tt": {
+          "real_hard_instances": [
+            "u_xs0"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -98.13198499999999,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 98.13198499999999,
+          "centred_boundary_ideal_envelope_ps": [
+            -37.69999999999999,
+            37.69999999999999
+          ],
+          "centred_boundary_ideal_span_ps": 75.39999999999998
+        },
+        "ff": {
+          "real_hard_instances": [
+            "u_xs0"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -70.28907999999996,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 70.28907999999996,
+          "centred_boundary_ideal_envelope_ps": [
+            -29.44999999999999,
+            29.44999999999999
+          ],
+          "centred_boundary_ideal_span_ps": 58.89999999999998
+        }
+      }
+    },
+    "s_m": {
+      "c": {
+        "tt": {
+          "real_hard_instances": [
+            "u_qk1",
+            "u_bdc1",
+            "u_h01",
+            "u_h11",
+            "u_row1",
+            "u_rowe1"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -43.271904999999975,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 43.271904999999975,
+          "centred_boundary_ideal_envelope_ps": [
+            -19.44999999999999,
+            19.44999999999999
+          ],
+          "centred_boundary_ideal_span_ps": 38.89999999999998
+        },
+        "ff": {
+          "real_hard_instances": [
+            "u_qk1",
+            "u_bdc1",
+            "u_h01",
+            "u_h11",
+            "u_row1",
+            "u_rowe1"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -39.75949,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 39.75949,
+          "centred_boundary_ideal_envelope_ps": [
+            -18.200000000000003,
+            18.200000000000003
+          ],
+          "centred_boundary_ideal_span_ps": 36.400000000000006
+        }
+      },
+      "x": {
+        "tt": {
+          "real_hard_instances": [
+            "u_xs1"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -98.13198499999999,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 98.13198499999999,
+          "centred_boundary_ideal_envelope_ps": [
+            -37.69999999999999,
+            37.69999999999999
+          ],
+          "centred_boundary_ideal_span_ps": 75.39999999999998
+        },
+        "ff": {
+          "real_hard_instances": [
+            "u_xs1"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -70.28907999999996,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 70.28907999999996,
+          "centred_boundary_ideal_envelope_ps": [
+            -29.44999999999999,
+            29.44999999999999
+          ],
+          "centred_boundary_ideal_span_ps": 58.89999999999998
+        }
+      },
+      "m": {
+        "tt": {
+          "real_hard_instances": [
+            "u_mg1.u_merge"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -113.08390500000002,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 113.08390500000002,
+          "centred_boundary_ideal_envelope_ps": [
+            -25.0,
+            25.0
+          ],
+          "centred_boundary_ideal_span_ps": 50.0
+        },
+        "ff": {
+          "real_hard_instances": [
+            "u_mg1.u_merge"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -103.61138500000001,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 103.61138500000001,
+          "centred_boundary_ideal_envelope_ps": [
+            -23.499999999999986,
+            23.499999999999986
+          ],
+          "centred_boundary_ideal_span_ps": 46.99999999999997
+        }
+      }
+    },
+    "s_f": {
+      "c": {
+        "tt": {
+          "real_hard_instances": [
+            "u_mg1.u_merge",
+            "u_qk1",
+            "u_bdc1",
+            "u_h01",
+            "u_h11",
+            "u_row1",
+            "u_rowe1"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -113.08390500000002,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 113.08390500000002,
+          "centred_boundary_ideal_envelope_ps": [
+            -25.0,
+            25.0
+          ],
+          "centred_boundary_ideal_span_ps": 50.0
+        },
+        "ff": {
+          "real_hard_instances": [
+            "u_mg1.u_merge",
+            "u_qk1",
+            "u_bdc1",
+            "u_h01",
+            "u_h11",
+            "u_row1",
+            "u_rowe1"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -103.61138500000001,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 103.61138500000001,
+          "centred_boundary_ideal_envelope_ps": [
+            -23.499999999999986,
+            23.499999999999986
+          ],
+          "centred_boundary_ideal_span_ps": 46.99999999999997
+        }
+      },
+      "x": {
+        "tt": {
+          "real_hard_instances": [
+            "u_xs1"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -98.13198499999999,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 98.13198499999999,
+          "centred_boundary_ideal_envelope_ps": [
+            -37.69999999999999,
+            37.69999999999999
+          ],
+          "centred_boundary_ideal_span_ps": 75.39999999999998
+        },
+        "ff": {
+          "real_hard_instances": [
+            "u_xs1"
+          ],
+          "glue_reference_target_ps": 0,
+          "ideal_Lib_balance_envelope_ps": [
+            -70.28907999999996,
+            0.0
+          ],
+          "ideal_Lib_balance_span_ps": 70.28907999999996,
+          "centred_boundary_ideal_envelope_ps": [
+            -29.44999999999999,
+            29.44999999999999
+          ],
+          "centred_boundary_ideal_span_ps": 58.89999999999998
+        }
+      }
+    }
+  },
+  "derate": {
+    "config_argument": 0.75,
+    "actual_semantics_in_this_revision": "Stored/reported/reset but NO operational C++ consumer. Neither macro insertion nor residual buffer delay is multiplied by this argument in the pinned CTS source.",
+    "source_inventory": "25 files in exact src/cts/src; getDelayBufferDerate references are its CtsOptions getter plus SWIG reporting getter only; no operational C++ callsite.",
+    "computeInsertionDelay": "Uses unscaled arithmetic average of max-clocktree rise/fall delay, converts to equivalent length for HTree.",
+    "LatencyBalancer": "Uses actual rising/max parent clock arrival plus unscaled max-rise/fall average for hard sinks; worst=max(arrival+insertion). For a residual \u0394=worst-nodearrival computes floor(\u0394/bufferDelay), estimates added wirecap from source/sink spacing, recomputes bufferDelay and floor(\u0394/newDelay), inserts differences across children. No0.75 factor."
+  },
+  "limitations": [
+    "Region envelope is ideal FULL per-leaf Liberty target equalization including glue; an algebraic diagnostic, NOT measured skew or a physical lowerbound. Real HTree grouping/geometry/quantization/resizer may change node arrival.",
+    "TT and FF ideal envelopes are independently normalized by their own libraries, NOT one physical tree passing two corners.",
+    "Raw376-vs288 difference is NOT asserted as effective88ps physical skew. Actual parent delivery and ALLexportedboundaryrefs remain mandatory.",
+    "Leaf internal allspan/STA qualification retained explicitly; no new internal<=80 rule, no Liberty/SDC/reference edits."
+  ],
+  "disposition": "MAIN X/M and FB X/C have poor ideal Lib-target boundary margins; need a credible boundary-aware structural clock target/delivery plan or actual source-bound justification before four gates. No gate launch authorized by this model."
+}
