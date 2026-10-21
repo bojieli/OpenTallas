@@ -33,6 +33,7 @@ import gzip
 import hashlib
 import json
 import math
+import os
 import re
 import subprocess
 import sys
@@ -329,6 +330,15 @@ def layer_schedule(tree, layer, workload='ar'):
     g = lp.facts(plan, land, True)
     doc = json.loads((dp.TP / ('ds_rom.json' if workload == 'ar' else 'ds_rom_mtp.json')).read_text())
     delta, _ = dp.dv_deltas(doc, g, 8, 0.0, 1.0, False, ())
+    # CAPC5k with explicit C->CAP and CAP->C landings: six child edges plus
+    # three edges in each direction. Keep dependent issues behind capture.
+    # Opt-in must match ot_s81sl_slice_c1x_k8_cap5_lp; old parents unchanged.
+    cap5_extra = 12 if os.environ.get('OT_S81_CAP5_C', '0') == '1' else 0
+    if cap5_extra:
+        from layer_prog.lower_xs import OPS as capture_ops
+        for node in doc['nodes']:
+            if any(re.search(pattern, node.get('op', '')) for pattern in capture_ops):
+                delta[node['id']] = delta.get(node['id'], 0.0) + cap5_extra
     _, end = ac.solve(doc['nodes'], doc['edges'], delta)
     by = {n['id']: n for n in doc['nodes']}
     if layer in LAYERS:
@@ -366,6 +376,7 @@ def layer_schedule(tree, layer, workload='ar'):
     prefetch_lead = -min(0.0, min(o['start'] for o in ops))
     crit = sum(o['cycles'] for o in ops if o['critical'])
     return dict(layer=layer, workload=workload, span=round(span, 1), crit=round(crit, 1),
+                capture_extra_edges=cap5_extra,
                 prefetch_lead=round(prefetch_lead, 1), ops=ops, deps=deps,
                 price_source='tools/s81_dv/dv_layer_price.py facts + dv_price.dv_deltas dv_base + accepted_cost.solve')
 
@@ -935,7 +946,8 @@ def compile_layer(layer, out, tree, sl='s_0S', smoke=True, workload=None, fixtur
         composition='the layer = the slowest (critical) slice under the fixed schedule: every slice runs the same '
                     'calendar shifted by its CTL arrival; the layer span is max over slices and units of the last '
                     'scheduled event (op schedule span below = the priced critical slice)',
-        price=dict(span=sched['span'], crit=sched['crit'], source=sched['price_source']),
+        price=dict(span=sched['span'], crit=sched['crit'], source=sched['price_source'],
+                   capture_extra_edges=sched['capture_extra_edges']),
         ops=sched['ops'], deps=sched['deps'], smoke=sub, events=sorted(prog.events, key=lambda e: e['cycle']),
         event_words='LB2-S81/EVENTS: an encoded boundary event carries words [[edge, value hex, mask hex]] on `ports` '
                     '(LSB-first); dir in: the edge the consumer pin\'s landed register takes the value; dir out: the '
