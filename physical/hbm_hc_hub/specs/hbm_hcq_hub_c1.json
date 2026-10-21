@@ -676,6 +676,7 @@
  },
  "reset_landing": {
   "enable": true,
+  "clock": "clk",
   "stages": 2,
   "first_copies": {
    "rst_n": 2
