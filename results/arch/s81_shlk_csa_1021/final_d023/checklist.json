@@ -1,0 +1,351 @@
+{
+  "status": "FINAL_GATE_WARN_OWNER_REVIEW_PENDING_NO_SUBMISSION",
+  "source": "d023bedaa36697cd5423268972bb996b5fa71d54",
+  "branch": "codex/s81-shlk-csa-gates-1021",
+  "functional_evidence": {
+    "ingest_source_sha256": "49b9039bc7d92cabf5ef412f4f850e27710ad8db7ece7fe1f39b28180b0a2ad1",
+    "exact_match": "same source bytes as6ccabdca8; both staged manifests matches_provenance_commit=true",
+    "CSA": "d0273064c exactlegalHOST two seeds,1,000,098 modular checks, stream600segments andWINnegative100989; independent pairedmap700.1ps22levels\u2192510.1ps16levels",
+    "LEFT_SPLIT": "6ccabdca8 corrected unit1351786, exactHOST two seeds+stream600segments+WIN100989caught; +59sameedgeFF, no cycle/reset/ABIchange",
+    "profiles": "Exact10cbb P192/APIPE9/APIPE10/SRAM/RSZ/S10B/C/D/E/ACKP +ADDR_CSA+LEFT_SPLIT",
+    "age": "CSA/LEFT_SPLIT no age change; inherited ACKPcompletion+1/APIPE10 vs G8APIPE8 +2 remain separately priced/open toactualparent/calendar. FullHOST_EN1 preserved."
+  },
+  "visual_inspection": "Viewed both final floorplan+density PNGs. Six hardmacros legal inside/no overlap; halos and central/horizontal streets open; localized greenstd-density spine/no redisland. TrialGRT0 overflow; congestion_png unavailable, no routingimage invented. ROOT personal finalreview pending.",
+  "views": {
+    "gu": {
+      "verdict": "WARN",
+      "generated": "2026-10-21T15:42:19-0700",
+      "outline": {
+        "w": 345.6,
+        "h": 432.0
+      },
+      "source_binding": {
+        "start_commit": "d023bedaa36697cd5423268972bb996b5fa71d54",
+        "identity": "exact_content_snapshot",
+        "archive_sha256": "9554f6e4c433184685c757126be75309b5d51df985097a301d498d70f97945c8",
+        "manifest_sha256": "24d09382cf12cdf1dd311701024e7799900ef2d255ec09b4ef225e11a458c451",
+        "remote_archive_verified": true,
+        "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415"
+      },
+      "consumed_source_files": 188,
+      "gate_result_sha256": "a969d1ce2ef4dde1019a1cf6c13482604a56d1d75d10537d44a08070803a069e",
+      "final_image_sha256": {
+        "physical/ref_tile/dsdv_sh_lk_s10gu/gate_layout/density.png": "04982bef66cb072ef62228dca7915d55761ffc50b6f7560aa07a8c174e3cc840",
+        "physical/ref_tile/dsdv_sh_lk_s10gu/gate_layout/floorplan.png": "b92a6487bdccad97b985a7018a709840ad91d2da22eefe96107fc6ec3005cdb0"
+      },
+      "native": {
+        "status": "PASS",
+        "limit": 32,
+        "max_dynamic_loads": 32
+      },
+      "native_violations": 0,
+      "native_roles": 0,
+      "reset": {
+        "max_sinks": 2,
+        "ports": [
+          {
+            "port": "rst_n",
+            "sinks": 1,
+            "flops": 1,
+            "macros": 0
+          }
+        ],
+        "over": [],
+        "waived": false,
+        "ok": true
+      },
+      "clock": {
+        "max_root_sinks": 14386,
+        "tt_insertion_ps": 645.3,
+        "ff_insertion_ps": 534.6,
+        "tt_pin_spread_ps": 59.3,
+        "ff_pin_spread_ps": 45.7,
+        "tt_spread_ps": 67.7,
+        "ff_spread_ps": 54.1
+      },
+      "clock_verdict": "WARN",
+      "actual_pin_geometry": {
+        "schema": "opentallas.fp_pin_geometry.v1",
+        "verdict": "PASS",
+        "fails": [],
+        "metrics": {
+          "signal_clock_pins": 3107,
+          "pin_rectangles": 3107,
+          "pin_track_checked": 3107,
+          "pin_track_inaccessible": 0,
+          "pin_rectangles_outside": 0,
+          "missing_geometry": 0
+        },
+        "dump": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10gu-20261021-145415/routes/gate/work/orfs/gate_dump.json",
+        "dump_sha256": "ea1ba52c45e72d1146714df1d258325591caf8255a8717879d85e9e9b420f4ed",
+        "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+      },
+      "trial_route": {
+        "schema": "opentallas.ref_tile.trial_route.v1",
+        "overflow": 0,
+        "kind": "parent",
+        "skip_incremental_repair": false,
+        "rc": "0",
+        "grt_s": 1411,
+        "layers": [
+          {
+            "layer": "M1",
+            "capacity": 0,
+            "usage": 0,
+            "pct": 0.0,
+            "overflow": 0
+          },
+          {
+            "layer": "M2",
+            "capacity": 3115303,
+            "usage": 707727,
+            "pct": 22.72,
+            "overflow": 0
+          },
+          {
+            "layer": "M3",
+            "capacity": 3673862,
+            "usage": 1050991,
+            "pct": 28.61,
+            "overflow": 0
+          },
+          {
+            "layer": "M4",
+            "capacity": 2812219,
+            "usage": 242713,
+            "pct": 8.63,
+            "overflow": 0
+          },
+          {
+            "layer": "M5",
+            "capacity": 3156945,
+            "usage": 356430,
+            "pct": 11.29,
+            "overflow": 0
+          },
+          {
+            "layer": "M6",
+            "capacity": 0,
+            "usage": 0,
+            "pct": 0.0,
+            "overflow": 0
+          }
+        ],
+        "worst_layer_usage": [
+          "M3",
+          28.61
+        ],
+        "hotspot": null,
+        "congestion_png": null
+      },
+      "warn_items": [
+        {
+          "severity": "WARN",
+          "check": "fill",
+          "message": "fill 35% = (macros/children 44618 + std 7880) / outline 149299 um2 (pin-bound: Width >= 345.6 is pin-bound (N 1207 / S 913 pins, 3.5 / 2.6 per um); height set by three rows of p192 masters (77-86 um tall: the pin-pitch fix doubles macro height) plus 43-65-um row channels; fill ~30-35% is the cost of the p192 pin-access perimeter (Codex accd38c70: +1.95x macro area).)",
+          "fix": ""
+        },
+        {
+          "severity": "WARN",
+          "check": "textbook.logic_depth",
+          "message": "reg->reg stage u_ot_pr_core.u_h.host.u_hi.u_eng.a0[68]$_DFFE_PN_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.a1[194]$_DFFE_PN_/D: ~697 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage",
+          "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+        },
+        {
+          "severity": "WARN",
+          "check": "clock_rule",
+          "message": "root port:ck: 14,386 sinks on the largest root; measured TT insertion 645.3 ps, FF insertion 534.6 ps, TT pin-flop spread 59.3 ps, FF pin-flop spread 45.7 ps; WARN: insertion 645.3 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+          "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+        },
+        {
+          "severity": "WARN",
+          "check": "fill",
+          "message": "fill 35% = (hard macros 44618.3 + synthesized std cells 7919.1) / outline 149299.2 um2; pin demand per face: S 857 pins over 343.2/345.6 um (99%), N 1207 pins over 343.3/345.6 um (99%), W 660 pins over 429.3/432.0 um (99%), E 511 pins over 429.0/432.0 um (99%) (pin-bound: Width >= 345.6 is pin-bound (N 1207 / S 913 pins, 3.5 / 2.6 per um); height set by three rows of p192 masters (77-86 um tall: the pin-pitch fix doubles macro height) plus 43-65-um row channels; fill ~30-35% is the cost of the p192 pin-access perimeter (Codex accd38c70: +1.95x macro area).)",
+          "fix": ""
+        }
+      ],
+      "spec_defines": [
+        "OT_S81_SH_APIPE9",
+        "OT_S81_SH_APIPE10",
+        "OT_S81_SH_SRAM",
+        "OT_S81_SH_RSZ",
+        "OT_S81_SH_S10B",
+        "OT_S81_SH_S10C",
+        "OT_S81_SH_S10D",
+        "OT_S81_SH_S10E",
+        "OT_S81_SH_P192",
+        "OT_S81_SH_ACKP",
+        "OT_N32_ADDR_CSA",
+        "OT_N32_LEFT_SPLIT"
+      ]
+    },
+    "hu": {
+      "verdict": "WARN",
+      "generated": "2026-10-21T15:49:45-0700",
+      "outline": {
+        "w": 388.8,
+        "h": 453.6
+      },
+      "source_binding": {
+        "start_commit": "d023bedaa36697cd5423268972bb996b5fa71d54",
+        "identity": "exact_content_snapshot",
+        "archive_sha256": "cf5aef9ab07a9870c963747bc66b09a913e2f25adab2369c42121f7d7029c8a6",
+        "manifest_sha256": "8d82a0427262a3410bf089fbc9eb6da511d0348f7f83042502feb9d54435ccdc",
+        "remote_archive_verified": true,
+        "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10hu-20261021-145415"
+      },
+      "consumed_source_files": 188,
+      "gate_result_sha256": "af76ae57e476fea23fd9e22881752cfb3fa8bf0a9e0b35712baddd0934be53d8",
+      "final_image_sha256": {
+        "physical/ref_tile/dsdv_sh_lk_s10hu/gate_layout/density.png": "ee01d4cd491772ada71281d463d605c50992cfefc24533fafcf51c7d1ffa0f0f",
+        "physical/ref_tile/dsdv_sh_lk_s10hu/gate_layout/floorplan.png": "c26d0e9cad5d5811fe54a51fb8da30776b9998a9871e4ffe80f7d4961e4322f5"
+      },
+      "native": {
+        "status": "PASS",
+        "limit": 32,
+        "max_dynamic_loads": 32
+      },
+      "native_violations": 0,
+      "native_roles": 0,
+      "reset": {
+        "max_sinks": 2,
+        "ports": [
+          {
+            "port": "rst_n",
+            "sinks": 1,
+            "flops": 1,
+            "macros": 0
+          }
+        ],
+        "over": [],
+        "waived": false,
+        "ok": true
+      },
+      "clock": {
+        "max_root_sinks": 14386,
+        "tt_insertion_ps": 732.4,
+        "ff_insertion_ps": 601.7,
+        "tt_pin_spread_ps": 70.7,
+        "ff_pin_spread_ps": 47.3,
+        "tt_spread_ps": 83.1,
+        "ff_spread_ps": 59.2
+      },
+      "clock_verdict": "WARN",
+      "actual_pin_geometry": {
+        "schema": "opentallas.fp_pin_geometry.v1",
+        "verdict": "PASS",
+        "fails": [],
+        "metrics": {
+          "signal_clock_pins": 3107,
+          "pin_rectangles": 3107,
+          "pin_track_checked": 3107,
+          "pin_track_inaccessible": 0,
+          "pin_rectangles_outside": 0,
+          "missing_geometry": 0
+        },
+        "dump": "/srv/opentallas-scratch/claude/ref_gate/dsdv_sh_lk_s10hu-20261021-145415/routes/gate/work/orfs/gate_dump.json",
+        "dump_sha256": "38f0cbfab81906fb828bd413340e6e3270376f08dce09f5b10dfc65e8e01b2c0",
+        "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+      },
+      "trial_route": {
+        "schema": "opentallas.ref_tile.trial_route.v1",
+        "overflow": 0,
+        "kind": "parent",
+        "skip_incremental_repair": false,
+        "rc": "0",
+        "grt_s": 1893,
+        "layers": [
+          {
+            "layer": "M1",
+            "capacity": 0,
+            "usage": 0,
+            "pct": 0.0,
+            "overflow": 0
+          },
+          {
+            "layer": "M2",
+            "capacity": 3906743,
+            "usage": 788657,
+            "pct": 20.19,
+            "overflow": 0
+          },
+          {
+            "layer": "M3",
+            "capacity": 4618474,
+            "usage": 1107116,
+            "pct": 23.97,
+            "overflow": 0
+          },
+          {
+            "layer": "M4",
+            "capacity": 3537607,
+            "usage": 265906,
+            "pct": 7.52,
+            "overflow": 0
+          },
+          {
+            "layer": "M5",
+            "capacity": 3850524,
+            "usage": 321428,
+            "pct": 8.35,
+            "overflow": 0
+          },
+          {
+            "layer": "M6",
+            "capacity": 0,
+            "usage": 0,
+            "pct": 0.0,
+            "overflow": 0
+          }
+        ],
+        "worst_layer_usage": [
+          "M3",
+          23.97
+        ],
+        "hotspot": null,
+        "congestion_png": null
+      },
+      "warn_items": [
+        {
+          "severity": "WARN",
+          "check": "fill",
+          "message": "fill 30% = (macros/children 44618 + std 7880) / outline 176360 um2 (pin-bound: Width >= 345.6 is pin-bound (N 1207 / S 913 pins, 3.5 / 2.6 per um); height set by three rows of p192 masters (77-86 um tall: the pin-pitch fix doubles macro height) plus 43-65-um row channels; fill ~30-35% is the cost of the p192 pin-access perimeter (Codex accd38c70: +1.95x macro area).)",
+          "fix": ""
+        },
+        {
+          "severity": "WARN",
+          "check": "textbook.logic_depth",
+          "message": "reg->reg stage u_ot_pr_core.u_h.host.u_hi.u_eng.a0[68]$_DFFE_PN_ -> u_ot_pr_core.u_h.host.u_hi.u_eng.a1[194]$_DFFE_PN_/D: ~697 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage",
+          "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
+        },
+        {
+          "severity": "WARN",
+          "check": "clock_rule",
+          "message": "root port:ck: 14,386 sinks on the largest root; measured TT insertion 732.4 ps, FF insertion 601.7 ps, TT pin-flop spread 70.7 ps, FF pin-flop spread 47.3 ps; WARN: insertion 732.4 ps > 300 (guidance; boundary matched by parent compensation / landing)",
+          "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+        },
+        {
+          "severity": "WARN",
+          "check": "fill",
+          "message": "fill 30% = (hard macros 44618.3 + synthesized std cells 7919.1) / outline 176359.7 um2; pin demand per face: S 857 pins over 386.4/388.8 um (99%), N 1207 pins over 386.5/388.8 um (99%), W 668 pins over 450.9/453.6 um (99%), E 519 pins over 450.6/453.6 um (99%) (pin-bound: Width >= 345.6 is pin-bound (N 1207 / S 913 pins, 3.5 / 2.6 per um); height set by three rows of p192 masters (77-86 um tall: the pin-pitch fix doubles macro height) plus 43-65-um row channels; fill ~30-35% is the cost of the p192 pin-access perimeter (Codex accd38c70: +1.95x macro area).)",
+          "fix": ""
+        }
+      ],
+      "spec_defines": [
+        "OT_S81_SH_APIPE9",
+        "OT_S81_SH_APIPE10",
+        "OT_S81_SH_SRAM",
+        "OT_S81_SH_RSZ",
+        "OT_S81_SH_S10B",
+        "OT_S81_SH_S10C",
+        "OT_S81_SH_S10D",
+        "OT_S81_SH_S10E",
+        "OT_S81_SH_P192",
+        "OT_S81_SH_ACKP",
+        "OT_N32_ADDR_CSA",
+        "OT_N32_LEFT_SPLIT"
+      ]
+    }
+  },
+  "limits": "GateWARN is not SS/FF route closure; no RELEASE adoption or CLOSEDview alias, no REVIEW file or submit."
+}
