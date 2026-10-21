@@ -1,0 +1,6 @@
+CAPS 01040004
+PASS MU_HROOT_FULL prompt=n32 users=4 steps=18 cq_entries=12 posts=18 release_checked=18 rank_releases=144 rank_requests=144 peer_starts=126 writer_stages=648 max_users_in_flight=4 overlap_dispatch=13 overlap_post=13 epochs_out_of_global_order=2 max_post_after_kv_done=105 step_cmd_to_post_avg=2468 max=2520 span_first_cmd_to_last_post=20154 dma_reads=22 cycles=21046
+- rtl/test/mu_qwen_1018/hroot_full/tb_mu_hroot_full.sv:536: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 0.663 s; speed 31.721 us/s
+- Verilator: cpu 0.663 s on 1 threads; allocated 9 MB
