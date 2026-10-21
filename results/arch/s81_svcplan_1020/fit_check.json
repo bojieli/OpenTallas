@@ -1,0 +1,44 @@
+{
+ "scope": "MODEL arithmetic only",
+ "split": {
+  "cut_bits_per_service": 6877,
+  "cut": {
+   "q_w": 513,
+   "kv_w+m+v": 1065,
+   "sc (l_d)": 2132,
+   "p_w+v": 1025,
+   "pv_c+y+f+v": 2121,
+   "job/ready": 21
+  },
+  "min_vertical_um": 6740,
+  "bit_mm_16": 741616,
+  "die_bit_mm_mu7v2c": 402790,
+  "longest_unsited_body_um": 4600,
+  "gen_W2": "FAIL by construction (body crossing > 405 um with no site)"
+ },
+ "die_width_um": {
+  "8": {
+   "today": 31969,
+   "k8a_mid_lepmu_end": 36810,
+   "k8a_all": 34391,
+   "frames_max": 128,
+   "slices": 16
+  },
+  "7": {
+   "today": 28077,
+   "k8a_mid_lepmu_end": 32616,
+   "k8a_all": 30197,
+   "frames_max": 112,
+   "slices": 14
+  },
+  "6": {
+   "today": 24186,
+   "k8a_mid_lepmu_end": 28422,
+   "k8a_all": 26003,
+   "frames_max": 96,
+   "slices": 12
+  }
+ },
+ "reticle_die_w_max_um": 32000,
+ "slice_kits": "SLICEP claude/drive-s81-slicep-1020 @6ccaf9472: k8a 1252.8 x 6739.2, lepmu d1a/b 2462.4 x 5788.8; today slot 950 x 4600 (+50 margin = 1000 column)"
+}
