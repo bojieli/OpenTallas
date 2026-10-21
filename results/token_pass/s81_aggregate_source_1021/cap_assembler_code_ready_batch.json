@@ -44,5 +44,11 @@
  "compiler_run": false,
  "simulator_run": false,
  "actual_CAP_data_or_commit_or_lease_emitted": false,
- "KV_completeness_admitted": false
+ "KV_completeness_admitted": false,
+ "owner_selector_witness": {
+  "commit": "09fe75494",
+  "path": "results/arch/s81_die72_1021/g9_assembly/xs4_selection/executed_selector_witness.json",
+  "sha256": "93169a8a81bdec1fa6c9cf0406f9b52c319055ef617f7851541462fdfa9fc975",
+  "decision": "Genuine strictPB SRC974ec vsGEN explicitprefer23 override50485f5; no correction/rebase/resubmit/runtime authorized"
+ }
 }
