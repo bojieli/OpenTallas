@@ -2,14 +2,14 @@
 # Keep probe -> actual allocator map -> six exact chunks moving without a new
 # consumer bench or physical audit. Coordinator-side orchestration only.
 set -uo pipefail
-L=/srv/opentallas-scratch/claude/codex-s81-map72-1021
+L=/srv/opentallas-scratch/claude/codex-s81-map72-1021r2
 OTR=/home/ubuntu/bin/ot-run
 TAG=f72r224gpq
 run() { "$OTR" --mem "$1" --threads "$2" --dir "$L" -- "${@:3}"; }
 log() { echo "[$(date -Is)] $TAG $*"; }
-until ssh ot-epyc9 "grep -q PROBE_RC $L/probe_$TAG.log" 2>/dev/null; do sleep 30; done
+until ssh ot-epyc5 "grep -q PROBE_RC $L/probe_$TAG.log" 2>/dev/null; do sleep 30; done
 log 'probe terminal'
-if ! ssh ot-epyc9 "grep -q '^PROBE_RC 0$' $L/probe_$TAG.log"; then log 'PROBE FAILED'; exit 1; fi
+if ! ssh ot-epyc5 "grep -q '^PROBE_RC 0$' $L/probe_$TAG.log"; then log 'PROBE FAILED'; exit 1; fi
 N=min
 for attempt in 1 2; do
   result=$(run 8 2 bash -c "cd $L && PYTHONDONTWRITEBYTECODE=1 OT_XS_TOPO=1 OT_XS_PROP=1 python3 mk_map.py out/probe_$TAG/summary.json 224 $TAG $N 6" 2>&1)
