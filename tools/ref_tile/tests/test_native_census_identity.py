@@ -111,7 +111,7 @@ def test_constant_propagation_is_order_independent_and_retains_unary_path(roles)
     assert reduction['constant_inputs'][0]['source']['instance'] == 'inv'
 
 
-@pytest.mark.parametrize('function', ['A ? B : 0', 'UNKNOWN', 'A &', '__import__(A)'])
+@pytest.mark.parametrize('function', ['A ? B : 0', 'UNKNOWN', 'A &', '__import__(A)', '(0))'])
 def test_unknown_function_never_grants_transparency(roles, function):
     candidate = dict(roles)
     role = dict(roles['AND2x2_ASAP7_75t_R'])

@@ -446,9 +446,14 @@ def census(g, roles):
         if not role['sequential'] and not clocked:
             combinational.append((ci, ins, outs))
             for dst, function in outs:
-                if function is not None and re.sub(r'[\s()]', '', function) in ('0', '1', "1'b0", "1'b1"):
+                tree = boolean_function(function)
+                try:
+                    value = function_value(tree, {}) if tree is not None else None
+                except (KeyError, RecursionError):
+                    value = None
+                if value is not None:
                     constants.add(dst)
-                    values[dst] = int(re.sub(r'[\s()]', '', function)[-1])
+                    values[dst] = value
                     constant_sources[dst] = output_sources[dst]
                     value_sources[dst] = output_sources[dst]
     # Partial evaluation is based on actual function text and connected pin
