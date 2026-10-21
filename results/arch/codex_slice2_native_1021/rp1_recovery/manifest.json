@@ -1,0 +1,22 @@
+{
+  "scope": "Exact existing RP1 recovery; not integrated split-parent proof",
+  "files": [
+    {
+      "path": "rtl/qwen_dv/qfd_dv_slice2.sv",
+      "source": "c0f8097f3",
+      "sha256": "60cef671ab43f27ec2b3c3a4cac552cc79372e0c9fd057122818a5583450e85b"
+    },
+    {
+      "path": "rtl/qwen_dv/qfd_dv_slice2_faces.sv",
+      "source": "c0f8097f3",
+      "sha256": "26c6b9ca0388b5ddb377b729490280de55830dbe8b3a6a0c012541ce726da6a6"
+    },
+    {
+      "path": "rtl/qwen_dv/qfd_dv_vm.sv",
+      "source": "c0f8097f3",
+      "sha256": "7f1e90b163c990378c6d887c64b7fc53e2738176e6db9365fb70195bc584d447"
+    }
+  ],
+  "anchor": "6ff5be90fade7410888c49cdb0356423424a8d90",
+  "selected_consumer": "s7 split ctl/stm/suvm; requires ctl masking and new CRH bank-select source; old hard CRH view invalid"
+}

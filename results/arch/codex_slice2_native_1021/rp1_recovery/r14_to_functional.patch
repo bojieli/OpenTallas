@@ -1,0 +1,199 @@
+diff --git a/rtl/qwen_dv/qfd_dv_slice2.sv b/rtl/qwen_dv/qfd_dv_slice2.sv
+index 2164fc1db..0993cc69f 100644
+--- a/rtl/qwen_dv/qfd_dv_slice2.sv
++++ b/rtl/qwen_dv/qfd_dv_slice2.sv
+@@ -35,6 +35,20 @@
+ //   AMAX command's user cmd[9:8]); otherwise st[27:26] = ar_rank[1:0] as before.  MU_NU 1: st unchanged.  The root
+ //   faults (sc_fault) when one argmax merge holds two users' candidates (qfd_dv_scalar2).  AM_MUT 7 (bench only) drops
+ //   that check (qfd_dv_scalar2 MU_MUT 2).
++// QW-LAYERGAP 10-20 (TOK.QW.LAYER.4 die gaps; opt-in, 0 = the benched / hardened RTL bit-for-bit):
++//   ARF 1  AR MESSAGE FRAMER on the outbound AR half of ch_dn_o (the dvs_W5 -> io_collective in_* pins): an XC COLL
++//          command (kind 0 sub 0, the cc_o edge) arms {tag, words}; every AR word this slice puts on ch_dn_o while armed
++//          (own STN result, ARX, or passed from upstream) leaves with tag := the command tag and last := (count ==
++//          words - 1); the framer disarms after that word.  Zero added edges (the stamp is in front of the existing
++//          ch_dn_o register; XC_TO_WORD0 = 2 already orders cc before word 0).  Sticky port faults: an XC COLL while
++//          armed (unless that edge carries the armed message's last word); an AR word with no armed message at the
++//          W5 slice (sid 0).  ARF 2 = bench mutant (last one word early).
++//   RP 1   PER-TOKEN RoPE ROW from the D2D return chain: XC sub 1 (ROPE ARM, cmd[15:6] = CROM 16-pair word base; any
++//          dst, normally broadcast 15) arms the slice; the next 8 group-1 return words (dd {v, em 1, beat, data}, beat[2:0]
++//          = k) are written into CROM instead of the X region: word k = pairs 8k..8k+7 {hi sin, lo cos} -> CROM word
++//          base + k/2, bank k%2 (qfd_dv_vm CRH 1 single-bank write through the table port; no new SRAM).  Self-disarms
++//          after k = 7.  Sticky port faults: ARM while armed, beat != k, a stream CROM/BTAB/PROG table write on the
++//          same edge.  RP 2 = bench mutant (bank swapped).
+ // =====================================================================================================================
+ module qfd_dv_slice2 #(
+     parameter integer MUT = 0,
+@@ -44,7 +58,9 @@ module qfd_dv_slice2 #(
+     // results/arch/qwen_split_compute_1014/q_slice_1017/hardening):
+     parameter integer SU_LT = 0,                // 1: the 8 SU lanes are the hard lane tile qfd_dv_su_lane (LT/LOFF/RTREE 1)
+     parameter integer HD_W130 = 0,              // 1: the heads are qfd_dv_heads_w130 (closed qfd_xs_leaf_w130 leaves)
+-    parameter integer MU_NU = 1                 // MU-QWEN R4: users of the LM-head running argmax (1 = single-user, today)
++    parameter integer MU_NU = 1,                // MU-QWEN R4: users of the LM-head running argmax (1 = single-user, today)
++    parameter integer ARF = 0,                  // QW-LAYERGAP: 1 = AR message framer (header), 2 = mutant
++    parameter integer RP = 0                    // QW-LAYERGAP: 1 = per-token RoPE row from the return chain, 2 = mutant
+ ) (
+     input  wire           ck,
+     input  wire           rst_n,
+@@ -263,8 +279,22 @@ module qfd_dv_slice2 #(
+         .sw_v(xt_v), .sw_a(xt_a), .sw_m({64{1'b1}}), .sw_d(xt_f), .fe_i(xt_bad),
+         .n_d(n_d), .s_d(s_d), .fault(hd_fault));
+     end endgenerate
++    // ------------------------------------------------------------------ RoPE row from the return chain (RP)
++    reg        rp_arm; reg [9:0] rp_base; reg [2:0] rp_k;
++    wire       c_rpa = (RP != 0) && go && kind == 3'd0 && cmd_q[5:4] == 2'd1;
++    wire       rp_w = (RP != 0) && rp_arm && dd_q[519] && dd_q[518];
++    wire       rp_bk = rp_k[0] ^ (RP == 2);
++    wire       rp_bad = (c_rpa && rp_arm) || (rp_w && dd_q[514:512] != rp_k) || (rp_w && tw_we);
++    always @(posedge ck or negedge rst)
++        if (!rst) begin rp_arm <= 1'b0; rp_base <= 10'd0; rp_k <= 3'd0; end
++        else if (c_rpa) begin rp_arm <= 1'b1; rp_base <= cmd_q[15:6]; rp_k <= 3'd0; end
++        else if (rp_w) begin rp_k <= rp_k + 3'd1; if (rp_k == 3'd7) rp_arm <= 1'b0; end
++    wire        vtw_we = tw_we || rp_w;
++    wire [1:0]  vtw_kind = rp_w ? 2'd1 : tw_kind;
++    wire [23:0] vtw_addr = rp_w ? {12'd0, 1'b1, rp_bk, rp_base + {8'd0, rp_k[2:1]}} : tw_addr;
++    wire [1023:0] vtw_data = rp_w ? {dd_q[511:0], dd_q[511:0]} : tw_data;
+     // ------------------------------------------------------------------ VM write merge (16-el and 1-el sources)
+-    wire ar_v = ar_q[517] && ar_en && !g_arm, dd_v = dd_q[519] && !dd_q[518] && dd_en, em_v = dd_q[519] && dd_q[518] && em_en;
++    wire ar_v = ar_q[517] && ar_en && !g_arm, dd_v = dd_q[519] && !dd_q[518] && dd_en, em_v = dd_q[519] && dd_q[518] && em_en && !rp_w;
+     wire [23:0] em_wa = em_base + {12'd0, em_k, 4'd0};
+     wire st_vm = r_v && stn_dst[0];
+     wire [23:0] ar_wa = ar_base + {12'd0, ar_k, 4'd0};
+@@ -283,7 +313,7 @@ module qfd_dv_slice2 #(
+         else if (c_prt) begin ar_k <= 8'd0; em_k <= 8'd0; end
+         else begin if (ar_v) ar_k <= ar_k + 8'd1; if (em_v) em_k <= em_k + 8'd1; end
+     wire vm_fault;
+-    qfd_dv_vm #(.MUT(MUT)) u_vm (.ck(ck), .rst_n(rst),
++    qfd_dv_vm #(.MUT(MUT), .CRH((RP != 0) ? 1 : 0)) u_vm (.ck(ck), .rst_n(rst),
+         .a_re(va_re), .b_re(vb_re), .c_re(vc_re), .a_addr(va_addr), .b_addr(vb_addr), .c_addr(vc_addr),
+         .a_q(va_q), .b_q(vb_q), .c_q(vc_q),
+         .cr_re(cr_re), .cr_addr(cr_addr), .cr_q(cr_q),
+@@ -293,7 +323,7 @@ module qfd_dv_slice2 #(
+         .su_we(su_vm_we), .su_waddr(vm_waddr), .su_wdata(vm_wdata),
+         .w16_we(w16_we), .w16_addr(w16_addr), .w16_data(w16_data),
+         .w1_we(w1_we), .w1_addr(w1_addr), .w1_data(w1_data),
+-        .tw_we(tw_we), .tw_kind(tw_kind), .tw_addr(tw_addr), .tw_data(tw_data), .fault(vm_fault));
++        .tw_we(vtw_we), .tw_kind(vtw_kind), .tw_addr(vtw_addr), .tw_data(vtw_data), .fault(vm_fault));
+     // ------------------------------------------------------------------ XC (kind 0): collective command (sub 0 COLL)
+     wire c_xc = go && kind == 3'd0;
+     always @(posedge ck or negedge rst)
+@@ -339,9 +369,23 @@ module qfd_dv_slice2 #(
+     wire [547:0] own_ddw = kv_any ? {1'b1, kv_kind, kv_we, kv_loc, kv_wdata, 89'd0}
+                                   : {1'b1, 2'd0, su_q_we, q_loc, vm_wdata, 89'd0};
+     wire        p_ar = chu_q[1094], p_dd = chu_q[547];
++    wire        ar_ov = p_ar || own_ar || arx_v;
++    wire [546:0] ar_raw = p_ar ? chu_q[1094:548] : own_ar ? own_arw : arx_v ? arx_w : 547'd0;
++    // AR message framer (ARF, header): tag / last stamped in front of the ch_dn_o register
++    reg         arf_arm; reg [31:0] arf_tag; reg [15:0] arf_wm1, arf_cnt;
++    wire        c_xcc = (ARF != 0) && go && kind == 3'd0 && cmd_q[5:4] == 2'd0;
++    wire        arf_fr = (ARF != 0) && arf_arm && ar_ov;
++    wire        arf_last = arf_cnt == ((ARF == 2) ? arf_wm1 - 16'd1 : arf_wm1);
++    wire [546:0] ar_out = arf_fr ? {1'b1, arf_tag, ar_raw[513], arf_last, ar_raw[511:0]} : ar_raw;
++    wire        arf_bad = (ARF != 0) && ((c_xcc && arf_arm && !(arf_fr && arf_last)) ||
++                                         (ar_ov && !arf_arm && sid_q == 4'd0));
++    always @(posedge ck or negedge rst)
++        if (!rst) begin arf_arm <= 1'b0; arf_tag <= 32'd0; arf_wm1 <= 16'd0; arf_cnt <= 16'd0; end
++        else if (c_xcc) begin arf_arm <= 1'b1; arf_tag <= cmd_q[54:23]; arf_wm1 <= cmd_q[22:7] - 16'd1; arf_cnt <= 16'd0; end
++        else if (arf_fr) begin arf_cnt <= arf_cnt + 16'd1; if (arf_last) arf_arm <= 1'b0; end
+     always @(posedge ck or negedge rst)
+         if (!rst) ch_dn_o <= 1095'd0;
+-        else ch_dn_o <= {p_ar ? chu_q[1094:548] : own_ar ? own_arw : arx_v ? arx_w : 547'd0,
++        else ch_dn_o <= {ar_out,
+                          p_dd ? chu_q[547:0] : own_dd ? own_ddw : 548'd0};
+     wire ch_bad = (p_ar && (own_ar || arx_v)) || (own_ar && arx_v) || (p_dd && own_dd);
+     wire dd_bad = ch_bad || (kv_any && q_any) || (kv_any && (kv_kind == 2'd0 || kv_kind == 2'd3));
+@@ -351,7 +395,7 @@ module qfd_dv_slice2 #(
+         if (!rst) begin port_fault <= 1'b0; ar_rank <= 3'd0; ar_last <= 1'b0; end
+         else begin
+             port_fault <= port_fault | w16_coll | w1_coll | win_bad | red_bad | dd_bad | (ar_v && ar_q[516]) |
+-                          (c_xc && cmd_q[5:4] != 2'd0) | am_emit_empty | am_mu_fault | (su_go && !su_ready) |
++                          (c_xc && cmd_q[5:4] != 2'd0 && !(RP != 0 && cmd_q[5:4] == 2'd1)) | arf_bad | rp_bad | am_emit_empty | am_mu_fault | (su_go && !su_ready) |
+                           g_fault | (c_am && cmd_q[7] && g_arm);
+             if (ar_v) begin ar_rank <= ar_q[515:513]; ar_last <= ar_q[512]; end
+         end
+@@ -386,4 +430,5 @@ module qfd_dv_slice2 #(
+                                  !su_idle, sc_busy};
+     initial if (MUT < 0 || (MUT > 12 && MUT != 14 && MUT != 15)) $fatal(1, "qfd_dv_slice2: MUT %0d undefined", MUT);  // 14 = redstn2 kcm1 ignored, 15 = kcm1 at [58:51]
+     initial if (DIR < 0 || DIR > 1) $fatal(1, "qfd_dv_slice2: DIR %0d undefined", DIR);
++    initial if (ARF < 0 || ARF > 2 || RP < 0 || RP > 2) $fatal(1, "qfd_dv_slice2: ARF %0d / RP %0d undefined", ARF, RP);
+ endmodule
+diff --git a/rtl/qwen_dv/qfd_dv_slice2_faces.sv b/rtl/qwen_dv/qfd_dv_slice2_faces.sv
+index cd3eb7529..8ed23bd57 100644
+--- a/rtl/qwen_dv/qfd_dv_slice2_faces.sv
++++ b/rtl/qwen_dv/qfd_dv_slice2_faces.sv
+@@ -1,6 +1,6 @@
+ `timescale 1ns/1ps
+ // qfd_dv_slice2_w: GENERATED by tools/qwen_dv/gen_slice_faces.py -- DIR 0 face variant of qfd_dv_slice2 (dn face = master W).
+-module qfd_dv_slice2_w #(parameter integer MUT = 0, parameter integer SU_TLS = 1, parameter integer SU_LT = 0, parameter integer HD_W130 = 0, parameter integer MU_NU = 1) (
++module qfd_dv_slice2_w #(parameter integer MUT = 0, parameter integer SU_TLS = 1, parameter integer SU_LT = 0, parameter integer HD_W130 = 0, parameter integer MU_NU = 1, parameter integer ARF = 0, parameter integer RP = 0) (
+     input  wire ck,
+     input  wire rst_n,
+     input  wire [115:0] cmd_wi,
+@@ -88,7 +88,7 @@ module qfd_dv_slice2_w #(parameter integer MUT = 0, parameter integer SU_TLS = 1
+     assign w_rs_n = {rs_n1, rs_n0};
+     wire [1027:0] w_rs_s;
+     assign w_rs_s = {rs_s1, rs_s0};
+-    qfd_dv_slice2 #(.MUT(MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .DIR(0)) u_core (
++    qfd_dv_slice2 #(.MUT(MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .ARF(ARF), .RP(RP), .DIR(0)) u_core (
+         .ck(ck),
+         .rst_n(rst_n),
+         .cmd_i(cmd_wi),
+@@ -127,7 +127,7 @@ module qfd_dv_slice2_w #(parameter integer MUT = 0, parameter integer SU_TLS = 1
+ endmodule
+ 
+ // qfd_dv_slice2_e: GENERATED by tools/qwen_dv/gen_slice_faces.py -- DIR 1 face variant of qfd_dv_slice2 (dn face = master E).
+-module qfd_dv_slice2_e #(parameter integer MUT = 0, parameter integer SU_TLS = 1, parameter integer SU_LT = 0, parameter integer HD_W130 = 0, parameter integer MU_NU = 1) (
++module qfd_dv_slice2_e #(parameter integer MUT = 0, parameter integer SU_TLS = 1, parameter integer SU_LT = 0, parameter integer HD_W130 = 0, parameter integer MU_NU = 1, parameter integer ARF = 0, parameter integer RP = 0) (
+     input  wire ck,
+     input  wire rst_n,
+     input  wire [115:0] cmd_ei,
+@@ -215,7 +215,7 @@ module qfd_dv_slice2_e #(parameter integer MUT = 0, parameter integer SU_TLS = 1
+     assign w_rs_n = {rs_n1, rs_n0};
+     wire [1027:0] w_rs_s;
+     assign w_rs_s = {rs_s1, rs_s0};
+-    qfd_dv_slice2 #(.MUT(MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .DIR(1)) u_core (
++    qfd_dv_slice2 #(.MUT(MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(HD_W130), .MU_NU(MU_NU), .ARF(ARF), .RP(RP), .DIR(1)) u_core (
+         .ck(ck),
+         .rst_n(rst_n),
+         .cmd_i(cmd_ei),
+diff --git a/rtl/qwen_dv/qfd_dv_vm.sv b/rtl/qwen_dv/qfd_dv_vm.sv
+index 803eb9779..0999a2bcc 100644
+--- a/rtl/qwen_dv/qfd_dv_vm.sv
++++ b/rtl/qwen_dv/qfd_dv_vm.sv
+@@ -26,7 +26,8 @@
+ // with the C replica's word (both must FAIL).
+ // =====================================================================================================================
+ module qfd_dv_vm #(
+-    parameter integer MUT = 0
++    parameter integer MUT = 0,
++    parameter integer CRH = 0                  // QW-LAYERGAP: 1 = single-bank CROM write (tw_addr[11] half, [10] bank)
+ ) (
+     input  wire          ck,
+     input  wire          rst_n,
+@@ -174,13 +175,16 @@ module qfd_dv_vm #(
+                 cw_hi[b][32*l +: 32] = tw_data[64*(8*b+l) + 32 +: 32];
+             end
+     end
++    // CRH 1 (QW-LAYERGAP RoPE row, qfd_dv_slice2 RP): a kind-1 write with tw_addr[11] set writes ONE bank, tw_addr[10]
++    // (8 pairs; the slice puts the 512-b word in both halves of tw_data).  CRH 0: the original full-word write only.
+     wire cr_w = tw_we && tw_kind == 2'd1;
++    wire cr_h = (CRH != 0) && tw_addr[11];
+     generate for (bk = 0; bk < 2; bk = bk + 1) begin : g_crom
+         ot_sram_1r1w_1024x256_m2_r2c2 u_lo (.clk(ck), .r_ce_in(cr_re[0] && cr_addr[3] == bk[0]), .r_addr_in(cr_addr[4 +: 10]),
+-            .rd_out(cr_rd[(2*bk)*256 +: 256]), .w_ce_in(cr_w), .w_addr_in(tw_addr[9:0]), .wd_in(cw_lo[bk]),
++            .rd_out(cr_rd[(2*bk)*256 +: 256]), .w_ce_in(cr_w && (!cr_h || tw_addr[10] == bk[0])), .w_addr_in(tw_addr[9:0]), .wd_in(cw_lo[bk]),
+             .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+         ot_sram_1r1w_1024x256_m2_r2c2 u_hi (.clk(ck), .r_ce_in(cr_re[0] && cr_addr[3] == bk[0]), .r_addr_in(cr_addr[4 +: 10]),
+-            .rd_out(cr_rd[(2*bk+1)*256 +: 256]), .w_ce_in(cr_w), .w_addr_in(tw_addr[9:0]), .wd_in(cw_hi[bk]),
++            .rd_out(cr_rd[(2*bk+1)*256 +: 256]), .w_ce_in(cr_w && (!cr_h || tw_addr[10] == bk[0])), .w_addr_in(tw_addr[9:0]), .wd_in(cw_hi[bk]),
+             .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
+     end endgenerate
+     reg        c1_bank, c2_bank;
+@@ -243,7 +247,7 @@ module qfd_dv_vm #(
+     wire rd_bad = bad_vec(a_re, a_addr) || bad_vec(b_re, b_addr) || bad_vec(c_re, c_addr) ||
+                   (cr_re != 8'd0 && (!cr_re[0] || cr_addr[23:14] != 10'd0)) ||
+                   (cr_re != 8'd0 && bad_vec(cr_re, cr_addr & {8{24'h003FFF}}));
+-    wire tw_bad = tw_we && ((tw_kind == 2'd0) || (tw_kind == 2'd1 && tw_addr[23:10] != 0) ||
++    wire tw_bad = tw_we && ((tw_kind == 2'd0) || (tw_kind == 2'd1 && ((CRH != 0) ? (tw_addr[23:12] != 0 || (!tw_addr[11] && tw_addr[10])) : tw_addr[23:10] != 0)) ||
+                             (tw_kind == 2'd2 && (tw_addr[1:0] != 0 || tw_addr[23:9] != 0)) ||
+                             (tw_kind == 2'd3 && tw_addr[23:8] != 0));
+     always @(posedge ck or negedge rst_n)
