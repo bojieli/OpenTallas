@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/work/host_prompt_native32_certificate.py", line 105, in <module>
+    main()
+  File "/work/host_prompt_native32_certificate.py", line 99, in main
+    result = check(a.original, a.mapped, a.parser, json.loads(a.record.read_text()))
+  File "/work/host_prompt_native32_certificate.py", line 80, in check
+    assert logical_new(got) == resolve(old, oa, want), ('input relation changed', name, pn)
+  File "/work/host_prompt_native32_certificate.py", line 54, in logical_new
+    return old.ports[pn][1], inv
+KeyError: 'in_v__c1'

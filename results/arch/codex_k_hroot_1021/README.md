@@ -1,0 +1,15 @@
+# HROOT takeover recovery, 2026-10-21 09:38 PT
+
+This is a failure/recovery packet, not a gate qualification or REVIEW.
+
+PEER p32i/p32j remote runs remain live at ot-pve1:/srv/opentallas-scratch/claude/ref_gate/qkd_hr_core_peer_p32{i,j}-20261021-053601. Neither execution.log contains GATE_DONE or GATE_SCRIPT_RC. Existing local remote_incomplete JSONs are transport failures, not design verdicts. CTS hold repair last observed i -15.370 ps / 3860 buffers and j -5.526 ps / 4488 buffers. Preserve; collect only after both terminal markers using the original shipping source snapshots in /tmp/ref_gate_qkd_hr_core_peer_p32{i,j}_20261021-053601.source_snapshot.json. Do not repeat either job.
+
+Parent p10a/p10b diagnostic clients 610126/610129 and prompt n34a/n34b clients 2115912/2115913 were live. These remain preserved. Parent p10 children are stand-ins and cannot qualify the release binding.
+
+QKC-HROOT engine-only native32 work is terminal at ot-epyc9:/srv/opentallas-scratch/claude/qkc-ingest-n32/engchk. The preserved generation record says qualified=false. Re-synthesis succeeds, census FAIL: 91565 roots, rst_n=1071 loads is the only >32 violation; all other drivers <=32. This standalone reset input was deliberately excluded by the generator (allowed_heavy_inputs); that does not qualify the integrated shell. The independent structural checker terminates KeyError in_v__c1 because the generator added an explicit alias input and the checker has no alias contract. The full native census SHA and failed mapped-netlist SHA are in engine_census_summary.json; full census and source remain on the fleet. engine_resynth.log preserves the actual checker failure.
+
+Next concrete implementation step: integrate engine copies only into a private shell fork, explicitly bind in_v__c1 to a kept replica of the same ORIGINAL-edge shell in_v driver, split done_v consumers over output replicas, split the completion FIFO rbin/data-read fanout without changing Gray publication, and distribute rst_n with the shell's actual per-domain reset bank/relay at <=32 loads. Do not waive the reset input. Evaluate the actual tile at exact parameters through standard RTL/netlist equivalence plus strict bind, then whole-tile native census before layout. Gray FIFO names and RTL shell must remain available to canonical CDC lint/SDC.
+
+Source reconciliation warning: inherited claude/qkc-hroot-1021 shell already has additional clk_i_bank[1:0]/clk_i_out native6 ports, SHA f21beeef47679e7364a35e21eb0ea4f0b5c042dcbe6089494a761490147035e1. A single-family engine snapshot is not automatically equivalent to that shell; exact top/parameter/clock binding must be established before replacing u_eng. No integration source edit or new physical gate was made here.
+
+ROOT release decision relayed by parent: bind OBS=OBSX=0, retaining all functional fault/protection/transaction signals, with strict exact source binding. Future p11 must use exact MU peer, MU4 prompt, SRAM/native32 ingest and guard sources; do not alias MU0 and MU1 names. Critical gate results require real PNG review by coordinator; no fabricated REVIEW.json or direct submission/main merge.
