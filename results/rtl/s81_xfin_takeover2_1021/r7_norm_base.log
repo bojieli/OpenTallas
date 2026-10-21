@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: ot-epyc7       admits   537 GB (avail 442, growth 66, headroom 0, waiters 0/0 GB) load 67/96 running 22 disk 4619 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/elem-xfin-sram-n32r7/src
+ot-run: -> ot-epyc7
+ot-heavy: request 64G is charged 45G (class 'xfin_sram_bench.sh:norm' measured peak 29.6G, n=6+0 proved); the cap stays 64G
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-827879-1792615036 after 1 s
+DVXFIN16 slices=16 y_vecs=80 y_err=0 rstd=16 rstd_distinct=0 rstd=3fbf858b fault=0000000000000000 gf=0 last_partial_to_first_rstd=234 rstd_spread=13 LS=9 LE=29
+PASS dvxfin16
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-827879-1792615036): exit 0
