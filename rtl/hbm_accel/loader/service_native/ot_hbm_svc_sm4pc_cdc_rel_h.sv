@@ -139,10 +139,11 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  wire [7:0] fifo_wr_ready,fifo_ov;wire [7:0] fifo_wr_valid;wire [IW-1:0] fifo_wr_data[0:7];
  wire [3:0] ri_v,ri_r,ko_v,ko_r;wire [67:0] ri_tag,ko_tag;wire [15:0] ri_beat,ko_len;wire [1023:0] ri_data;wire [119:0] ko_addr;
  wire [3:0] lane_bad;
- wire [3:0] ri_owner,ri_pop,ri_feed,ri_count;
+ wire [3:0] ri_owner,ri_pop,ri_feed,ri_count,owner_stop;
  genvar pc,g;
  generate for(pc=0;pc<4;pc=pc+1)begin:pc_owner
   wire[3:0]pr;
+  ot_hbm_svc_local_and2 u_stopbuf(.a(hbm_fault),.b(1'b1),.y(owner_stop[pc]));
   ot_hbm_svc_local_and2 u_ownbuf(.a(ri_r[pc]),.b(1'b1),.y(ri_owner[pc]));
   ot_hbm_svc_local_and2 u_popbuf(.a(ri_r[pc]),.b(1'b1),.y(ri_pop[pc]));
   ot_hbm_svc_local_and2 u_feedbuf(.a(ri_r[pc]),.b(1'b1),.y(ri_feed[pc]));
@@ -151,7 +152,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   ot_hbm_svc_prefetch_owner_rel_h #(.OWNER_AW(OWNER_AW),.LB(LB)) u_owner(
    .pc_id({id_sm,2'(pc)}),.clk(hbm_clk),.rst_n(pr[2:0]),.blk_start(h_fresh),
    .block_active(h_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base(h_row_base),.block_total(h_total),
-   .block_bank(h_bank),.block_epoch(h_epoch),.stop(hbm_fault),
+   .block_bank(h_bank),.block_epoch(h_epoch),.stop(owner_stop[pc]),
    .k_ready(ko_r[pc]),.kr_v(ri_v[pc]),.kr_tag(ri_tag[17*pc+:17]),
    .kr_beat(ri_beat[4*pc+:4]),.response_take(ri_owner[pc]),
    .k_v(ko_v[pc]),.k_addr(ko_addr[30*pc+:30]),.k_len(ko_len[4*pc+:4]),.k_tag(ko_tag[17*pc+:17]),
@@ -240,10 +241,18 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   end
  end endgenerate
  // stream datapath: bank fields load while the landing block is unallocated (read only while allocated)
+ wire[LBANKS-1:0] alloc_epoch,alloc_total,alloc_done;
+ genvar ac;
+ generate for(ac=0;ac<LBANKS;ac=ac+1)begin:allocation_local
+  ot_hbm_svc_local_and2 u_e(.a(allocated[ac]),.b(1'b1),.y(alloc_epoch[ac]));
+  ot_hbm_svc_local_and2 u_t(.a(allocated[ac]),.b(1'b1),.y(alloc_total[ac]));
+  ot_hbm_svc_local_and2 u_c(.a(allocated[ac]),.b(1'b1),.y(alloc_done[ac]));
+ end endgenerate
  integer si,sb;
  always @(posedge stream_clk)begin
-  for(sb=0;sb<LBANKS;sb=sb+1)if(!allocated[sb])begin
-   bank_epoch[sb]<=reserve_epoch;bank_total[sb]<=reserve_total;
+  for(sb=0;sb<LBANKS;sb=sb+1)begin
+   if(!alloc_epoch[sb])bank_epoch[sb]<=reserve_epoch;
+   if(!alloc_total[sb])bank_total[sb]<=reserve_total;
   end
   if(draining&&!fault)begin out_bank<=drain_bank;out_epoch<=bank_epoch[drain_bank];out_ordinal<=drain_ordinal;end
  end
@@ -251,7 +260,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  always @(posedge stream_clk or negedge sc[1])begin
   if(!sc[1])for(sb=0;sb<LBANKS;sb=sb+1)completed_q[sb]<=0;
   else for(sb=0;sb<LBANKS;sb=sb+1)begin
-   if(!allocated[sb])for(si=0;si<8;si=si+1)completed_q[sb][si]<=reserve_total<=si;
+   if(!alloc_done[sb])for(si=0;si<8;si=si+1)completed_q[sb][si]<=reserve_total<=si;
    else if(|complete_event[sb])completed_q[sb]<=completed_q[sb]|complete_event[sb];
   end
  end

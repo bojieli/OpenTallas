@@ -148,6 +148,14 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  end
  assign packet_take=packet_v&&!stop&&!sticky;
  wire complete_now=landing_write&&b_rcv+1'b1==b_count;
+ wire[LBANKS*2-1:0] epoch_capture;
+ wire[LBANKS-1:0] count_capture;
+ genvar ec;
+ generate for(ec=0;ec<LBANKS;ec=ec+1)begin:reserve_capture_local
+  ot_hbm_svc_local_and2 u_lo(.a(ren_k[ec*4]),.b(1'b1),.y(epoch_capture[ec*2]));
+  ot_hbm_svc_local_and2 u_hi(.a(ren_k[ec*4]),.b(1'b1),.y(epoch_capture[ec*2+1]));
+  ot_hbm_svc_local_and2 u_count(.a(ren_k[ec*4]),.b(1'b1),.y(count_capture[ec]));
+ end endgenerate
  reg w_ce_q,cmp_q;reg [LB-1:0] w_bank_q;reg [5:0] w_row_q;reg [255:0] w_data_q;
  assign complete_v=cmp_q;assign complete_bank=w_bank_q;assign fault=sticky||underflow;
 `ifdef SVGH_MUT
@@ -174,7 +182,9 @@ module ot_hbm_svc_sm8_landing_bank_h #(
   w_data_q<=h_data;
   if(take_b)begin w_bank_q<=h_bank;w_row_q<=(HM==6)?(row^6'd1):row;end
   for(b=0;b<LBANKS;b=b+1)begin
-   if(ren_k[b*4])begin epoch_q[b*16+:16]<=r_epoch;count_q[b*7+:7]<=r_count;end
+   if(epoch_capture[b*2])epoch_q[b*16+:8]<=r_epoch[7:0];
+   if(epoch_capture[b*2+1])epoch_q[b*16+8+:8]<=r_epoch[15:8];
+   if(count_capture[b])count_q[b*7+:7]<=r_count;
    for(c=0;c<64;c=c+1)begin
     if(seen_clear[b*4+c/16])seen_q[b*64+c]<=0;
     else if(seen_set[b*64+c])seen_q[b*64+c]<=1'b1;
