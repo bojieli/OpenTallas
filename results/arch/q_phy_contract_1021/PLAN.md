@@ -28,16 +28,20 @@ Captured place.tcl has io_serdes (0.162,15129.720,MX), io_serdes_1 (0.162,7541.3
 
 ## Proposed source-owned construction, pending owner choices
 
-1. Bind one explicit source-profile bundle per exact master across port check, real-LEF binding, Liberty/model, PG and clock stages. The bundle must pin all hashes and fail on missing ports, outline or clock law. For Q UCIe the required actual lclk makes tp8 incompatible; choose the existing nface bundle explicitly, not an environment variable that changes only a blackbox header. Selector precedence must be corrected at its real source owner after exact helper path is identified.
+1. Bind one explicit source-profile bundle per exact master across port check, real-LEF binding, Liberty/model, PG and clock stages. The bundle must pin all hashes and fail on missing ports, outline or clock law. For Q UCIe the required actual lclk makes tp8 incompatible; choose the existing nface bundle explicitly, not an environment variable that changes only a blackbox header. Actual binder is tools/qwen_tp8/bind_real.py::find_view (lines150+): explicit OT_BIND_VIEW_SELECT views plus --view first, then ref_tile; nface only with OT_SPLIT_PHY_NFACE=1 and tall nested under OT_SPLIT_PHY_TALL=1; then die_masters, tp8_1013 and missing_phy/default. It never reads OT_PORT_BIND_UCIE_VIEW, which only changes the port-check header. Frozen diagnostic wrapper exports only OT_PORT_BIND_UCIE_VIEW=nface_tall, so full-source mismatch is explained. K physical/qwen_kv_die_phy is absent from fallback search; an exact explicit same-master profile is necessary. Existing CLI/selector can express this without a generic fallback alias, but original GEN flag/source identity must be recovered before applying any choice.
 2. SerDes: choose either a wide-slot floorplan using this source's legal mirrors with explicit modeled package-facing contract, or obtain a source-owned independently published90-degree-capable orientation/profile with transformed pins/PG/OBS and real package assumptions. Existing source does NOT authorize the second. No captured-slot dimension alias or implicit rotation. Width correction affects all three SerDes sites and neighbouring relay/macro geometry; model actual capacity/area/link distance before any GEN. FDI latency223 remains unchanged unless actual source changes; physical hop/landing effects must be repriced if geometry changes.
 3. K UCIe: bind the existing same-master source profile only after exact FDI/clock/source checks. Preserve nativeR as missing until the source owner supplies a legitimate modeled analog clock insertion/phase contract or measured source-bound evidence. Do not use0, another PHY's insertion, or a digital wrapper identity as a substitute.
 4. Root must decide the explicit analog-model claim scope and package-facing assumptions. These are owner-level contract choices, not routine geometry edits. No source edits/gates in this packet; current diagnostic failures remain authoritative.
 
 ## Remaining bytes/contracts
 
-* Exact real-binder selector path/precedence receipt for Q nface versus tp8 (port_bind_compute.sh selects only the header through OT_PORT_BIND_UCIE_VIEW).
+* Real-binder precedence bytes and exact diagnostic wrapper are now sealed in selector_contracts.tgz. No implicit selection change was made. Original GEN flags/source identity still required before restoring a choice.
 * SerDes package pad/bump/keepout map or explicit source-owned modeled face reservation; valid90-degree source profile if a tall slot is required.
 * Same-source PHY clock origin, insertion/phase and ETM interface law, including K nativeR and Q lclk no-arc modeled root semantics.
 * Access-contract qualification after genuine source profile binding; full current die connectivity/short/obstruction/clock checks are NOTRUN here.
 
 HBM owner confirms its ot_pdie_ucie_col/ucie_pma_gen TX/RX513-bit profile is distinct and cannot fill these gaps. Existing HBM PHY PG provenance examples are not permission to alias Q/K master interfaces.
+
+## K-die scene distinction confirmed by K owner
+
+Legacy c216 and captured main92 K-die scenes already import actual M4/clkM5 UCIe and native_phy.json records the actual source profiles. Their macro-block SHAs after normal case PG processing differ from whole raw LEF SHA by construction. The c216 missing-nativeR failure therefore occurs DESPITE correct M4 source import. This must remain separate from QDIAG captured synthetic M7/M8. K owner identity receipt: /home/ubuntu/scratch/codex-k-die-selector-1515/phy_profile_identity.json.
