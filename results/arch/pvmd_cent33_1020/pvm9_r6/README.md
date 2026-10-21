@@ -25,3 +25,14 @@ Input-port hold (-147 sum->sum1, -111 rst_n) = diagnostic SDC artifact (5_1_grt.
 r8 (bf8/work copy of bf/work, r6c verdicts kept): sequential kernel cells + their input nets stay released through 4_1_cts/5_1_grt
 so hold repair can buffer D inputs; comb kernel cells stay dont_touch; restore+change report at POST_GLOBAL_ROUTE (owner 10-20 09:05:
 standard equivalence + strict bind). Then fixed audits; 5_2_route + 5_3_fillcell only if PG binds and FF reg hold >= -5 ps.
+
+## r8 5_1_grt FAIL + r9 a/b (HBM-PVM10 10-20)
+r8 4_1_cts/4_cts PASS; 5_1_grt GRT itself PASS (overflow 0, 14.85% usage, 942.7 mm WL), then post-GRT `repair_design` died:
+`ODB-1211 load pin ...g_madd[5].g_fan32.u_m.genblk1.g_native7.u_native.c2189/A is dont_touch` -> `RSZ-3006` on net
+`...u_native.n3623` (r8/r8_do-5_1_grt.RSZ3006.tail.log). Cause: r8 released the SEQUENTIAL kernel cells and their input nets
+but left the combinational kernel cells dont_touch, so a released net with a protected load cannot be buffered. A half-release
+is structurally unworkable for the resizer. Fix (owner 10-20 09:05: equivalence + strict bind, no native proof): drop the
+bind-first kernel dont_touch for good at PRE_CTS (r9/pvm9_release_all.tcl: every dont_touch inst/net under *u_native*,
+listed, never restored), then CTS/GRT/route/finish run as a normal tile. r9a = kit CTS (main); r9b = fallback with tighter sink
+clustering (size 16, max diameter 30 um) to cut the 82 ps local kernel skew. Both from r6c 3_place.odb in copies bf9a/bf9b.
+Audits (PG after global_connect, fanout, seq reach, TT/FF STA, insertion) at 5_1_grt and 6_final. Then equivalence of the final netlist.

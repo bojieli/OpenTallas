@@ -1,0 +1,30 @@
+M3             2720155        520362           19.13%             0 /  0 /  0
+M4             2091810        229548           10.97%             0 /  0 /  0
+M5             2288923        210766            9.21%             0 /  0 /  0
+M6                   0             0            0.00%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          9369016       1391268           14.85%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 942710 um
+[INFO GRT-0014] Routed nets: 96397
+[INFO GRT-0303] Global routing runtime = 00:06:20
+Took 381 seconds: global_route -congestion_report_file /work/reports/asap7/opentallas_ot_hbm_sm_pv_merge_distributed_asap7_ref_gate/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+estimate_parasitics -global_routing
+Took 7 seconds: estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose -slew_margin 30
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     98840
+     1000 |     +0.0% |       0 |       0 |             0 |     97840
+     2000 |     +0.0% |       0 |       0 |             0 |     96840
+     3000 |     +0.0% |       0 |       0 |             0 |     95840
+     4000 |     +0.0% |       0 |       0 |             0 |     94840
+     5000 |     +0.0% |       0 |       0 |             0 |     93840
+     6000 |     +0.0% |       0 |       0 |             0 |     92840
+[WARNING ODB-1211] InsertBufferBeforeLoads: Load pin 'u_core.g_safe.g_madd\[5\].g_fan32.u_m.genblk1.g_native7.u_native.c2189/A' is dont_touch. Cannot insert a buffer.
+[ERROR RSZ-3006] Failed to insert buffer before loads for net u_core.g_safe.g_madd\[5\].g_fan32.u_m.genblk1.g_native7.u_native.n3623
+Error: global_route.tcl, 175 RSZ-3006
+Elapsed time: 8:11.11[h:]min:sec. CPU time: user 1830.37 sys 83.21 (389%). Peak memory: 2991900KB.
+make: *** [Makefile:585: do-5_1_grt] Error 1
