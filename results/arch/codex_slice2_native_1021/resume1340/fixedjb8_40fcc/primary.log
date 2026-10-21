@@ -1,0 +1,14 @@
+CFG_INPUT cycle3266 original_local3298 advance32
+CFG_PARENT side1 cycle3267 mode3 nwords3 kc8
+CFG_PARENT side0 cycle3267 mode2 nwords3 kc8
+CFG_READY side1 cycle3270 nwords3 word_last2
+CFG_READY side0 cycle3270 nwords3 word_last2
+FIRST_NEAR_PARENT side1 cycle3291
+FIRST_NEAR_PARENT side0 cycle3291
+FIRST_NEAR_PARENT side1 cycle3292
+FIRST_NEAR_PARENT side0 cycle3292
+FIRST_NEAR_PARENT side1 cycle3293
+FIRST_NEAR_PARENT side0 cycle3293
+[34507000] %Fatal: tb_selected_tail_pair.sv:81: Assertion failed in tb_selected_tail_pair: SELECTED_TAIL_NOT_DRAINED receiver0 sender0 halves192 left3/3
+%Error: rtl/test/qwen_dv/s8/tb_selected_tail_pair.sv:81: Verilog $stop
+Aborting...

@@ -1,0 +1,26 @@
+{
+  "observed_at": "2026-10-21T14:28:57.236082-07:00",
+  "verdict": "PASS causal negative",
+  "source": "5de01e82fa3fa56698e249d7c3f851f5bd2a8b8f",
+  "runner": "40fcc3473",
+  "unit": "oth-ubuntu-1116077-1792617454",
+  "host": "ot-epyc7",
+  "only_source_mutation": [
+    "wlo == word_last -> wlo == JB - 1",
+    "whi == word_last -> whi == JB - 1"
+  ],
+  "same_fixture": "91cec0e8fa87158ce2c90e128cd8e421fe05054f",
+  "actual": "SELECTED_TAIL_NOT_DRAINED receiver0 sender0 halves192 left3/3",
+  "simulation_rc": 1,
+  "ot_run_rc": 0,
+  "configuration": "same legal isolated advance32; NOT late-CFG cause",
+  "scope": "counter causal only; no parent/programme claim",
+  "files_sha256": {
+    "sources.sha256": "072f4e16a35b54a890c076af309f42dec1ac80e5288d5154ab84c5ffa4e1b408",
+    "build.log.gz": "213cb035a95c2b9c9b4bfb94137985e4ab270c3c3c74a8ee5b678a9ec818ba4e",
+    "primary.log": "8f3e35086f536d8290b606bb8f5dcdaa312a85a37c07e3625900770a7df3e859",
+    "version.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "binary.sha256": "486de49752fbc8c69dbee2babf49488e00fb66c6cbb61ed01cda1548cc9a727e",
+    "fixedjb8.sv": "3673b3ecd40c17a18aad9f49ba4c79c635d496ea03de677183de778f6736a370"
+  }
+}
