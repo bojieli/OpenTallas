@@ -49,6 +49,15 @@ import os  # noqa: E402
 import xs_flags as XO  # noqa: E402  S81-ROMOPT-A: release defaults (env overrides)
 GU_MERGE = XO.on('OT_XS_GU_MERGE')
 import xs_topo as TP  # noqa: E402  S81-RATE3: physical frames per slice (OT_XS_TOPO=1)
+# DENSE2 companion (10-20, opt-in, default off): OT_XS_GU_PROP=1 (needs OT_XS_PROP) deals the gate/up (ffn.*_gu) rows over
+# the slices IN PROPORTION to the physical frames (TP.slice_deal, as wo_b / down already are), so a 3-frame slice no
+# longer sets the die-wide gu chunk count.  The CAP tags (merged_cap) follow the same per-slice ranges.  CAPACITY PROBE
+# ONLY: the swiglu / down consumer gather of the proportional ranges is NOT yet checked (xs_calendar.py cap owed).
+GU_PROP = TP.PROP and os.environ.get('OT_XS_GU_PROP', '0') == '1'
+
+
+def gu_slice_deal(nff):
+    return TP.slice_deal(nff, NSLICE) if GU_PROP else deal(nff, NSLICE)
 # S81-ROMOPT-C (owner 10-20 ~08:45, O3): OT_XS_KSLOT=k (1 | 2 | 3) gives every element of a phase of the KSLOT_OPS up to k
 # segment CLASSES (k segments of distinct segment indices; the element takes NSEG 8 segments / 8 classes, NCH 16 chain
 # words a round, as built), so a phase holds R_k = 2 x floor(k x q pairs / nseg) rows.  Contents only (ROM images, cfg7
@@ -213,14 +222,14 @@ def op_groups(fx, op):
                 # S81-ROMOPT-A: whole (gate j, up j) pairs a frame, the frame's gates first then its ups, so gate j and
                 # up j never share a phase (they share a CAP pairing slot, see merged_cap) -- a phase <= R rows < pairs
                 g = [[[j for j in fr] + [nff + j for j in fr] for fr in deal_into(js, TP.nfr(s))]
-                     for s, js in enumerate(deal(nff, NSLICE))]
+                     for s, js in enumerate(gu_slice_deal(nff))]
                 out.append(dict(mat=f'{e}.w13', rows=rows, x=x, tie=tie, groups=g, out='bf16', expert=e,
                                 **merged_cap(nff)))
                 continue
             # one matrix per tensor (plan_phase takes one matrix per phase): gate j and up j in the same slice/frame
             for n, base in ((n1, 0), (n3, tot)):
                 rows = list(range(nff))
-                g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(deal(nff, NSLICE))]
+                g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(gu_slice_deal(nff))]
                 out.append(dict(mat=n, rows=rows, x=x, tie=[(tie_op, base + j0 + r) for r in rows], groups=g,
                                 out='bf16', expert=e))
         return out
@@ -257,7 +266,7 @@ def merged_cap(nff):
     obase = the unmerged gate region (the up region follows it, 64 ceil(span / 320) words on), every row decodes to
     the SAME (leaf, word) as the two-matrix placement, so the consumer layout is unchanged; other slices' tags lie
     outside [2 U s, 2 U s + 2 U) and fault (F9).  Checked by xs_calendar.py cap (layout == unmerged reference)."""
-    js_all = deal(nff, NSLICE)
+    js_all = gu_slice_deal(nff)
     span = max(len(js) for js in js_all)
     U = 320 * -(-span // 320)
     tags = [None] * (2 * nff)

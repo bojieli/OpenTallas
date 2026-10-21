@@ -254,7 +254,17 @@ def test_numerics():
     print('PASS test_numerics', keep, 'frames')
 
 
+def test_gu_prop_default_off():
+    import importlib
+    os.environ.pop('OT_XS_GU_PROP', None)
+    import xs_place as XP
+    importlib.reload(XP)
+    assert not XP.GU_PROP and XP.gu_slice_deal(576) == XP.deal(576, 16)
+    print('PASS test_gu_prop_default_off')
+
+
 if __name__ == '__main__':
+    test_gu_prop_default_off()
     test_default_identical()
     test_split_rows()
     test_spec_env()
