@@ -244,8 +244,14 @@ module qkd_kvs_grp_s2 #(parameter integer MUT = 0) (
     assign o_pc2_h = {w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_fcal__blk_go[2:2], w_bcdc2__sink_we, w_bcdc2__sink_seal, w_bcdc2__sink_data, w_bcdc2__sink_addr[4:0]};
     assign o_pc3 = {w_lcal__r_sector[39:30], w_lcal__r_put[3:3], w_lcal__r_layer, w_lcal__r_epoch};
     assign o_pc3_h = {w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_fcal__blk_go[3:3], w_bcdc3__sink_we, w_bcdc3__sink_seal, w_bcdc3__sink_data, w_bcdc3__sink_addr[4:0]};
-    assign o_dn = {icq_o[193:183], icq_o[270:194], (MUT == 7) ? {icq_o[182:2], icq_o[0], icq_o[1]} : icq_o[182:0]};
-    assign o_ctl = {((MUT == 5) ? i_up[125:0] : iuq), {w_drain__fault, w_drain__drained, w_cf1__fault, w_hland__q[9:9], w_bcdcf__fault_core, w_hland__q[8:8], w_hland__q[7:7], w_bcdc3__fault_core, w_hland__q[6:6], w_hland__q[5:5], w_bcdc2__fault_core, w_hland__q[4:4], w_hland__q[3:3], w_bcdc1__fault_core, w_hland__q[2:2], w_hland__q[1:1], w_bcdc0__fault_core, w_hland__q[0:0]}};
+    wire [270:0] odq_d = {icq_o[193:183], icq_o[270:194], (MUT == 7) ? {icq_o[182:2], icq_o[0], icq_o[1]} : icq_o[182:0]};
+    (* keep *) reg [270:0] odq;   // KV-GRP3 exit face flops beside the o_dn pins
+    always @(posedge ck) odq <= odq_d;
+    assign o_dn = (MUT == 8) ? odq_d : odq;
+    wire [143:0] ocq_d = {((MUT == 5) ? i_up[125:0] : iuq), {w_drain__fault, w_drain__drained, w_cf1__fault, w_hland__q[9:9], w_bcdcf__fault_core, w_hland__q[8:8], w_hland__q[7:7], w_bcdc3__fault_core, w_hland__q[6:6], w_hland__q[5:5], w_bcdc2__fault_core, w_hland__q[4:4], w_hland__q[3:3], w_bcdc1__fault_core, w_hland__q[2:2], w_hland__q[1:1], w_bcdc0__fault_core, w_hland__q[0:0]}};
+    (* keep *) reg [143:0] ocq;   // KV-GRP3 exit face flops beside the o_ctl pins
+    always @(posedge ck) ocq <= ocq_d;
+    assign o_ctl = (MUT == 8) ? ocq_d : ocq;
 endmodule
 
 // KV-GRP2 safe tile qkd_kvs_grp_h_s2: qkd_kvs_grp_h (DOMSPLIT MU/BOOT_AGES, Stage 1 private ABI) with registered faces,
@@ -483,13 +489,20 @@ module qkd_kvs_grp_h_s2 #(parameter integer MUT = 0) (
     assign o_pc2_h = {w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_fcal__blk_go[2:2], w_bcdc2__sink_we, w_bcdc2__sink_seal, w_bcdc2__sink_data, w_bcdc2__sink_addr[4:0]};
     assign o_pc3 = {w_lcal__r_sector[39:30], w_lcal__r_put[3:3], w_lcal__r_layer, w_lcal__r_epoch};
     assign o_pc3_h = {w_phase__layer_h, w_phase__epoch_h, w_phase__ctrl_go_h, w_fcal__blk_go[3:3], w_bcdc3__sink_we, w_bcdc3__sink_seal, w_bcdc3__sink_data, w_bcdc3__sink_addr[4:0]};
-    assign o_ctl = {8{{w_drain__fault, w_drain__drained, w_cf1__fault, w_hland__q[9:9], w_bcdcf__fault_core, w_hland__q[8:8], w_hland__q[7:7], w_bcdc3__fault_core, w_hland__q[6:6], w_hland__q[5:5], w_bcdc2__fault_core, w_hland__q[4:4], w_hland__q[3:3], w_bcdc1__fault_core, w_hland__q[2:2], w_hland__q[1:1], w_bcdc0__fault_core, w_hland__q[0:0]}}};
+    wire [143:0] ocq_d = {8{{w_drain__fault, w_drain__drained, w_cf1__fault, w_hland__q[9:9], w_bcdcf__fault_core, w_hland__q[8:8], w_hland__q[7:7], w_bcdc3__fault_core, w_hland__q[6:6], w_hland__q[5:5], w_bcdc2__fault_core, w_hland__q[4:4], w_hland__q[3:3], w_bcdc1__fault_core, w_hland__q[2:2], w_hland__q[1:1], w_bcdc0__fault_core, w_hland__q[0:0]}}};
+    (* keep *) reg [143:0] ocq;   // KV-GRP3 exit face flops beside the o_ctl pins
+    always @(posedge ck) ocq <= ocq_d;
+    assign o_ctl = (MUT == 8) ? ocq_d : ocq;
 endmodule
 
 // KV-GRP2: per-domain reset landing of one group tile: rst_n (core ck) and hrst_n (HBM hck) each land in two
 // registered stages beside the tile's register mass (asynchronous assert, release on the second edge of its own clock),
 // and the second stage is one KEPT flop per consumer leaf (NC core / NH HBM copies), so no reset port drives the leaves.
-// MUT 4 (bench negative control): the core copies take rst_n through one stage.
+// KV-GRP3: the port reaches ONLY the first stage (c1 / h1); every second-stage copy is asynchronously cleared by the
+// landed first stage (c1 -> RESETN, recovery/removal timed by STA in its own domain) and takes D = 1: assert stays
+// asynchronous (rst_n low -> c1 low -> copies low in the same instant), release lands on the 2nd own-clock edge exactly
+// as before (gate textbook.reset_landing: the port fans out to 1 flop, not NC + 1).
+// MUT 4 (bench negative control): the core copies are cleared by rst_n directly (release one edge early).
 module qkd_kvs_grp_s2_rst #(parameter integer NC = 1, parameter integer NH = 1, parameter integer MUT = 0) (
     input wire ck, input wire rst_n, input wire hck, input wire hrst_n,
     output wire [NC-1:0] rc, output wire [NH-1:0] rh
@@ -502,12 +515,13 @@ module qkd_kvs_grp_s2_rst #(parameter integer NC = 1, parameter integer NH = 1, 
     generate
         for (i = 0; i < NC; i = i + 1) begin : g_c
             (* keep *) reg c2;
-            always @(posedge ck or negedge rst_n) if (!rst_n) c2 <= 1'b0; else c2 <= (MUT == 4) ? 1'b1 : c1;
+            wire cr = (MUT == 4) ? rst_n : c1;
+            always @(posedge ck or negedge cr) if (!cr) c2 <= 1'b0; else c2 <= 1'b1;
             assign rc[i] = c2;
         end
         for (i = 0; i < NH; i = i + 1) begin : g_h
             (* keep *) reg h2;
-            always @(posedge hck or negedge hrst_n) if (!hrst_n) h2 <= 1'b0; else h2 <= h1;
+            always @(posedge hck or negedge h1) if (!h1) h2 <= 1'b0; else h2 <= 1'b1;
             assign rh[i] = h2;
         end
     endgenerate

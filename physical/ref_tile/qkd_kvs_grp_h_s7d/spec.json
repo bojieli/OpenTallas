@@ -1,0 +1,603 @@
+{
+ "name": "qkd_kvs_grp_h_s7d",
+ "top": "qkd_kvs_grp_h_s6c",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp/ot_sram_1r1w_4x32_m1_p192_grp_rsp_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n",
+  "hrst_n"
+ ],
+ "outline": {
+  "w": 388.8,
+  "h": 432.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "*u44516_c0?u_cell",
+   "at": [
+    43.2,
+    22.176
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u41846_c0?u_cell",
+   "at": [
+    168.048,
+    22.176
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u41848_c0?u_cell",
+   "at": [
+    168.048,
+    36.528
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u41850_c0?u_cell",
+   "at": [
+    168.048,
+    50.88
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u41852_c0?u_cell",
+   "at": [
+    168.048,
+    65.232
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u41854_c0?u_cell",
+   "at": [
+    217.728,
+    45.216
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u41856_c0?u_cell",
+   "at": [
+    217.728,
+    59.568
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u41858_c0?u_cell",
+   "at": [
+    217.728,
+    73.92
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u41860_c0?u_cell",
+   "at": [
+    217.728,
+    88.272
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "*u45957_c0?u_cell",
+   "at": [
+    43.2,
+    124.56
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42268_c0?u_cell",
+   "at": [
+    168.048,
+    124.56
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42270_c0?u_cell",
+   "at": [
+    168.048,
+    138.912
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42272_c0?u_cell",
+   "at": [
+    168.048,
+    153.264
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42274_c0?u_cell",
+   "at": [
+    168.048,
+    167.616
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42276_c0?u_cell",
+   "at": [
+    217.728,
+    147.6
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42278_c0?u_cell",
+   "at": [
+    217.728,
+    161.952
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42280_c0?u_cell",
+   "at": [
+    217.728,
+    176.304
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42282_c0?u_cell",
+   "at": [
+    217.728,
+    190.656
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "*u47398_c0?u_cell",
+   "at": [
+    43.2,
+    226.944
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42690_c0?u_cell",
+   "at": [
+    168.048,
+    226.944
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42692_c0?u_cell",
+   "at": [
+    168.048,
+    241.296
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42694_c0?u_cell",
+   "at": [
+    168.048,
+    255.648
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42696_c0?u_cell",
+   "at": [
+    168.048,
+    270.0
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42698_c0?u_cell",
+   "at": [
+    217.728,
+    249.984
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42700_c0?u_cell",
+   "at": [
+    217.728,
+    264.336
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42702_c0?u_cell",
+   "at": [
+    217.728,
+    278.688
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u42704_c0?u_cell",
+   "at": [
+    217.728,
+    293.04
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "count": 1,
+   "inst": "*u48839_c0?u_cell",
+   "at": [
+    43.2,
+    329.28
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u43112_c0?u_cell",
+   "at": [
+    168.048,
+    329.28
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u43114_c0?u_cell",
+   "at": [
+    168.048,
+    343.632
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u43116_c0?u_cell",
+   "at": [
+    168.048,
+    357.984
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u43118_c0?u_cell",
+   "at": [
+    168.048,
+    372.336
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u43120_c0?u_cell",
+   "at": [
+    217.728,
+    352.32
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u43122_c0?u_cell",
+   "at": [
+    217.728,
+    366.672
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u43124_c0?u_cell",
+   "at": [
+    217.728,
+    381.024
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp",
+   "count": 1,
+   "inst": "*u43126_c0?u_cell",
+   "at": [
+    217.728,
+    395.376
+   ],
+   "orient": "MY",
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "N": [
+   "i_ctl",
+   "o_ctl"
+  ],
+  "E": [
+   "kreq",
+   "krsp",
+   "rsp",
+   "vreq"
+  ],
+  "W": [
+   "i_pc0",
+   "i_pc0_h",
+   "o_pc0",
+   "o_pc0_h",
+   "i_pc1",
+   "i_pc1_h",
+   "o_pc1",
+   "o_pc1_h",
+   "ck",
+   "hck",
+   "af__fault",
+   "afk",
+   "afv",
+   "hrst_n",
+   "rst_n",
+   "slg__cfg_group",
+   "slg__cfg_stack",
+   "x__est",
+   "y__est__0_1",
+   "i_pc2",
+   "i_pc2_h",
+   "o_pc2",
+   "o_pc2_h",
+   "i_pc3",
+   "i_pc3_h",
+   "o_pc3",
+   "o_pc3_h"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 6.48,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 3,
+ "purpose": "KV-GRP7 10-20: KV-GRP7 s7 branch slices (388.8 x 432.0): four W->E PC-branch slices (row macro MY rd_out E -> two staggered 4-macro ring stacks A/B MY -> exit flops at E pins), E pins regrouped per branch by exact io_tcl; no ring column in front of the E face, no ring word crosses another ring column; row gap 21.9 um. KV-GRP8 s7c/s7d: ring macro LEF faces by port class (master W = clk/r_*/rd_out/w_mask[15:0], E = w_ce/w_addr/wd_in/w_mask[31:16]; MY -> read port E toward the exits, write port W toward the incoming word); s7a/s7b failed trial GRT with GRT-0183 on ring-B wd_in[3] (write word split over both faces wrapped round the abutted stack ends), also after a fresh-process resume. Same RTL/netlist as s6 (qkd_kvs_grp_h_s6c), +0 cycles.",
+ "job": {
+  "owner": "Claude:KV-GRP8",
+  "branch": "claude/kv-grp8-1020",
+  "tag": "grp_h_s7d",
+  "benches": [
+   {
+    "name": "s6_m0",
+    "cmd": "python3 tools/qwen_kv_die/kvs_grp_safe6c_bench.py --out {RUN}/bench/s6_m0 --cases m0 --raw",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^S2_PASS checks=\\d+ edges=6000 mut=0",
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_grp_s6_1020/b2/m0.log",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "s6_m1",
+    "cmd": "python3 tools/qwen_kv_die/kvs_grp_safe6c_bench.py --out {RUN}/bench/s6_m1 --cases m1 --raw",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "^S2_PASS ",
+    "fail_regex": "(S2_FAIL|PROD_VALID_FAIL|PROD_RESPONSE_FAIL|PROD_STATUS_FAIL)",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_s6_1020/b2/m1.log"
+   },
+   {
+    "name": "s6_m2",
+    "cmd": "python3 tools/qwen_kv_die/kvs_grp_safe6c_bench.py --out {RUN}/bench/s6_m2 --cases m2 --raw",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "fail",
+    "pass_regex": "^S2_PASS ",
+    "fail_regex": "(S2_FAIL|PROD_VALID_FAIL|PROD_RESPONSE_FAIL|PROD_STATUS_FAIL)",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_grp_s6_1020/b2/m2.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die",
+   "results/rtl/qwen_kv_die/kvs_grp_s6_1020",
+   "results/rtl/qwen_kv_die/canonical_seq_coupon_1020",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/qkd_kvs_kits",
+   "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp"
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "reason": "Legacy s3/s4 sources fail the native driver census (max 399) and the Codex s5 structural copy keeps a 3-deep unchanged payload flop delay line (SAFE 5, c1e5bec49). KV-GRP6 s6 (Codex s5 storage audit c1e5bec49): the 1024-b response payload passed four unchanged flop captures (PC out e0 -> hop e1 -> idata e2 -> exit e3; the middle three a >= 3-deep delay line, SAFE 5).  s6: per PC branch the payload delay is a genuine SRAM ring (8 x 4x32 1R1W macros, write slot wp at e1, read the previous slot at e2, exit copies at e3; unreset self-phasing pointers, read != write slot), payload cleared exactly as the old hop cleared it; metadata keeps its hop; two kept exit copies on both tiles; +0 cycles. Gated source = bounded-driver structural copy (max 32) of the mapped s6 RTL."
+  },
+  "views_to": "physical/ref_tile/qkd_kvs_grp_h_s6a/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_grp_h_s6a"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Mapped source preserves the exact original registered input/output boundary and cycles (canonical production bench checks all retained outputs); no new flow stage: would add an unpriced cycle."
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "KV-GRP7 s7 branch slices (388.8 x 432.0): four W->E PC-branch slices (row macro MY rd_out E -> two staggered 4-macro ring stacks A/B MY -> exit flops at E pins), E pins regrouped per branch by exact io_tcl; no ring column in front of the E face, no ring word crosses another ring column; row gap 21.9 um. KV-GRP8 s7c/s7d: ring macro LEF faces by port class (master W = clk/r_*/rd_out/w_mask[15:0], E = w_ce/w_addr/wd_in/w_mask[31:16]; MY -> read port E toward the exits, write port W toward the incoming word); s7a/s7b failed trial GRT with GRT-0183 on ring-B wd_in[3] (write word split over both faces wrapped round the abutted stack ends), also after a fresh-process resume. s6 (all four gates) failed trial GRT at the NE ring stack in front of the 99%-pinned E face.",
+ "kits_b": {
+  "frame": [
+   388.8,
+   432.0
+  ],
+  "kit_outline": [
+   388.8,
+   432.0
+  ],
+  "count": 4,
+  "rep_instance": "slg_WS_4",
+  "rtl": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv",
+  "hck_inputs": [
+   "hrst_n"
+  ],
+  "hck_outputs": [
+   "o_pc0_h",
+   "o_pc1_h",
+   "o_pc2_h",
+   "o_pc3_h"
+  ],
+  "mixed_domain_ports": [],
+  "critical": null,
+  "pin_bound_waiver": "E face 2171 bits / 388.8 um = 5.58 pins/um (K + V responses, 2 x 1024 data bits); std cells ~10-12k um2 + four p192 SRAMs 30.5k um2 in 151k um2: the perimeter, not the area, sets the outline (pin-bound waiver as sq1, coordinator-accepted)."
+ },
+ "sdc_extra": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_h_s4a_hck.sdc"
+ ],
+ "boundary_tcl": [
+  "physical/qkd_kvs_kits/qkd_kvs_grp_h_s4a_hck_boundary.tcl"
+ ],
+ "clock": "spine",
+ "reset_landing": {
+  "enable": false,
+  "reason": "Mapped source preserves original two-stage own-domain reset landing and relay topology; port has one sink each. Independent-copy cold proof converges under actual reset, no equal initial state assumption."
+ },
+ "fill_reason": {
+  "pin_bound": "4.6k signal pins on 388.8 x 432.0; E face pins regrouped per branch; outline = die slot grown to 388.8 x 432 (ROOT model)"
+ },
+ "orfs_vars": {
+  "OT_SPINE_PORTS": "ck,hck",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "0",
+  "OT_SPINE_SAFE_BALANCE": "1",
+  "OT_SPINE_LEAF_N": "16"
+ },
+ "io_tcl": "physical/qkd_kvs_kits/qkd_kvs_grp_h_s7d_io.tcl",
+ "reroute_reason": {
+  "kind": "floorplan_change",
+  "reason": "s7a/s7b gates FAIL trial GRT: GRT-0183 boxed ring-B wd_in[3] (write word split over both macro faces, wrapped round abutted stack ends), repeated after the fresh-process GRT183 resume. KV-GRP7 s7 branch slices (388.8 x 432.0): four W->E PC-branch slices (row macro MY rd_out E -> two staggered 4-macro ring stacks A/B MY -> exit flops at E pins), E pins regrouped per branch by exact io_tcl; no ring column in front of the E face, no ring word crosses another ring column; row gap 21.9 um. KV-GRP8 s7c/s7d: ring macro LEF faces by port class (master W = clk/r_*/rd_out/w_mask[15:0], E = w_ce/w_addr/wd_in/w_mask[31:16]; MY -> read port E toward the exits, write port W toward the incoming word); s7a/s7b failed trial GRT with GRT-0183 on ring-B wd_in[3] (write word split over both faces wrapped round the abutted stack ends), also after a fresh-process resume."
+ }
+}
