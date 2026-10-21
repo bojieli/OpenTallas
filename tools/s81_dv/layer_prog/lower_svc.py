@@ -353,6 +353,9 @@ def pv_words(job, s):
         t, b, wi = 4 * ST + w // 40, (w % 40) // 5, w % 5
         if wi == 0:
             d = (1 << 512) | (b << 64)
+            if job.owner is not None:
+                # Opt-in identity stamped by the actual ATT producer at GO.
+                d |= (job.owner << 72) | (ST << 92) | (t << 94) | (1 << 98)
             m = hm
         else:
             d = 0
@@ -479,7 +482,7 @@ def lower(die, op, ctx):
                        f'u_s_{"4" if pvh == "u_rsv_11" else "3"}S bi', words=pv_words(job, s), valid_bit=0,
                        data_masked='P.V values + header flags / pv_c (engine data, bit-exact in bench_svc; the cut '
                                    'bench has no HBM window image): checked = valid, the header marker pv_d[512] '
-                                   'and the header zero field pv_d[511:72] on every compiled edge'))
+                                   'and header metadata pv_d[511:72] (zero in legacy mode; source-owned identity when enabled)'))
         for inst, t in (('u_rsv_05', s['done_w']), ('u_rsv_11', s['done_e'])):
             ev.append(dict(cycle=t, inst=inst, port='jd', ports=['jd'], dir='out', kind='SVCDONE', tag='attn.job',
                            payload='done {fault, done} = 01 one edge', words=[[t - 1, '1', '3'], [t, '0', '3']]))

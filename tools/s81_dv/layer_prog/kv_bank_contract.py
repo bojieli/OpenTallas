@@ -26,7 +26,8 @@ def dispatch(kind, gain_set, job_id, drain_age, parameter_base=PARAM_BASE, opera
         raise ValueError('A positive measured fixed drain edge is required')
     if operand_base is None:
         operand_base = parameter_base + (4 if kind == 7 else 20)
-    if parameter_base % 4 or operand_base % 4 or not (0 <= parameter_base < 1024 and
+    parameter_rows = 4 if kind == 7 else 20
+    if parameter_base % 4 or operand_base % 4 or not (0 <= parameter_base <= 1024 - parameter_rows and
                                                     0 <= operand_base <= 1024 - 128):
         raise ValueError('Adapter source rows outside native leaf store')
     immediate = kind | (gain_set << 4) | (job_id << 6) | (drain_age << 16)
