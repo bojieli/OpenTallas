@@ -44,9 +44,17 @@ module ot_hbm_svc_sm_feed_rel_h #(
  assign reserve_ready=cdc_ready&&legal;      // DECOUPLE 1
  wire reserve_fire=reserve_v&&reserve_ready;
  reg[6:0]rows_q[0:LBANKS-1];reg[9:0]tag_q[0:LBANKS-1];reg open_q;reg[LB-1:0]open_land_q;reg[15:0]open_epoch_q;integer qb;
+ wire[LBANKS-1:0] row_capture,tag_capture;
+ for(genvar fc=0;fc<LBANKS;fc=fc+1)begin:g_reserve_capture
+  ot_hbm_svc_local_and2 u_row(.a(reserve_fire),.b(reserve_bank==fc),.y(row_capture[fc]));
+  ot_hbm_svc_local_and2 u_tag(.a(reserve_fire),.b(reserve_bank==fc),.y(tag_capture[fc]));
+ end
  wire open_bank_q=open_land_q[0];
  always @(posedge stream_clk)begin
-  for(qb=0;qb<LBANKS;qb=qb+1)if(reserve_fire&&reserve_bank==qb)begin rows_q[qb]<=reserve_rows;tag_q[qb]<=reserve_tag_base;end
+  for(qb=0;qb<LBANKS;qb=qb+1)begin
+   if(row_capture[qb])rows_q[qb]<=reserve_rows;
+   if(tag_capture[qb])tag_q[qb]<=reserve_tag_base;
+  end
   open_land_q<=start_bank;open_epoch_q<=start_epoch;
  end
  wire out_v,out_last;wire[LB-1:0]out_bank;wire[3:0]out_mask;wire[1023:0]out_data;wire[10:0]out_ordinal;wire[15:0]out_epoch;
@@ -80,6 +88,14 @@ module ot_hbm_svc_sm_feed_rel_h #(
  // HBM-QINT8: the packet the SM front sees (the raw packet when no INT8 mark is in flight)
  wire s1_v=i8_conv||(raw_v&&!i8_c);wire[9:0]s1_tag=i8_conv?i8_t2:raw_tag;
  wire[1098:0]s1_packet={s1_v,s1_tag,packet_observe[1087:0]};   // bench visibility (tb i8view check); no load
+ wire[3:0] read_capture;
+ for(genvar rc=0;rc<4;rc=rc+1)begin:g_read_capture
+  ot_hbm_svc_local_and2 u_buf(.a(word[83]),.b(1'b1),.y(read_capture[rc]));
+ end
+ wire[9:0] relocated_tag=word[116:107]+c_tag+c_lofs;
+ wire[5:0] relocated_row=word[106:101]+c_lofs[5:0];
+ wire[32:0] relocated_read={relocated_tag,relocated_row,c_ep,c_bank};
+ integer rcb;
  always @(posedge stream_clk)begin
   // R stage (ungated: every field is 0 on an edge without a valid word)
   cmd_r<=word[82:0];rd_r<=word[116:83];
@@ -88,7 +104,7 @@ module ot_hbm_svc_sm_feed_rel_h #(
    if(looped)begin cmd_r[6:0]<=word[6:0]+wit[6:0];cmd_r[24]<=word[24]|(wit==0);cmd_r[23]<=word[23]|wlast;end
   end
   if(word[29])cmd_r[39:30]<=word[39:30]+c_tag+c_lofs;
-  if(word[83])begin rd_r[1]<=c_bank;rd_r[17:2]<=c_ep;rd_r[23:18]<=word[106:101]+c_lofs[5:0];rd_r[33:24]<=word[116:107]+c_tag+c_lofs;end
+  for(rcb=0;rcb<33;rcb=rcb+1)if(read_capture[rcb/10])rd_r[rcb+1]<=relocated_read[rcb];
   ret_r<=word[117]&&(!looped||wlast);retf_r<={c_ep,c_bank};
   // C stage
   cmd_c<=cmd_r;ret_c<=ret_r;retf_c<=retf_r;
