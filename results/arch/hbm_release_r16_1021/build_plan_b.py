@@ -38,6 +38,10 @@ CFG = {
                hot_extra='|ot_hbm_accel_smh'),
 }
 CFG['cM'] = dict(CFG['bM'], xlmid=True); CFG['cF'] = dict(CFG['bF'], xlmid=True)
+# d*: + pgp_NW / pgp_SE (2470 b command to their 4 su_<q><g>) moved into the gap between their two SU columns (r16b: pgp_NW at
+#     the die W edge -> 148k um2 of equal-age pads on su_NW2's window 1.70; pgp_SE beside the east lk/ep row)
+CFG['dM'] = dict(CFG['cM'], pgpmid={'pgp_NW': (3610.8, 17085.6), 'pgp_SE': (20520.0, 14601.6)})
+CFG['dF'] = dict(CFG['cF'], pgpmid={'pgp_NW': (3610.8, 17085.6), 'pgp_SE': (20520.0, 14601.6)})
 CFG = CFG[var]
 FT_W, HALO = CFG['ft'], CFG['halo']
 HOT = r'^(ot_hbm_su_static_pgslice_lg|ot_hbm_su_programme_pslice_c5|ot_hbm_idx_score_quarter_static|ot_hgi_sfu_core_split3|' \
@@ -139,6 +143,8 @@ if CFG.get('xlmid'):
             aw, ah = box(n)[2:]
             move(n, x=round(ax / 0.216) * 0.216, y=round(((g0 + g1) / 2 + (-ah - 10.8 if k == 0 else 10.8)) / 0.216) * 0.216)
     fp['xl_mid_r16c'] = dict(by='HBM-OWN/DIE2', why='xl_ctl c_d/aq broadcast to both xq stacks: midpoint removes the near-stack pads')
+for n, (x_, y_) in (CFG.get('pgpmid') or {}).items():
+    move(n, x=x_, y=y_, orient='R0')
 # overlap / die checks (only NEW pairs vs the cut plan count)
 ov1 = set(map(frozenset, overlaps(srs(G) + prs(P))))
 new = sorted(map(sorted, ov1 - ov0))
