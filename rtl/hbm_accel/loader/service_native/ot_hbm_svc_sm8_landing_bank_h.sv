@@ -33,45 +33,64 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  ot_hbm_svc_async_fifo #(.WIDTH(IW),.DEPTH(RESPONSE_DEPTH)) u_response(
   .wr_clk(hbm_clk),.wr_rst_n(hbm_rst_n),.wr_valid(in_v),.wr_ready(in_ready),.wr_data(in_data),.wr_overflow(overflow),
   .rd_clk(stream_clk),.rd_rst_n(stream_rst_n),.rd_valid(packet_v),.rd_ready(packet_take),.rd_data(packet),.rd_underflow(underflow));
- // capture qualifiers: KEPT flops (0 in reset, 1 after), one per 32-bit capture slice (8 data + 1 bank/row)
- (* keep="true",dont_touch="true" *) reg[8:0]cq_k;
- always @(posedge stream_clk or negedge sr[1])if(!sr[1])cq_k<=0;else cq_k<={9{1'b1}};
- wire[8:0]cap_en=cq_k&{9{packet_v}};
+ // HBM-COLLECT10 2026-10-21 (rel8c): REGISTERED FIFO HEAD.  r2 decoded the identity check / seen / received / sticky
+ // updates straight from the FIFO head (8-slot storage mux -> epoch/row/bank compare -> 256 seen bits): every such
+ // register was a cross-family storage consumer, 492,643 bounded storage->consumer pairs in the gate's OT_GF census
+ // (61.8k per landing bank) whose per-pair finite-path proof stalled synth_odb > 8 h (rel8a/b).  Now stage A (pop edge,
+ // packet_take = packet_v && !stop && !sticky as before) copies the RAW head word into reader-family registers h_*
+ // (loaded while rd_valid, through per-slice ANDs with KEPT qualifier flops; each h bit reads only its 8 storage bits);
+ // stage B (next edge) runs the identity check / seen / received / sticky / completion on h_* (no storage in its cone)
+ // and registers the SRAM write (w_*) as before.  +1 stream edge landing -> resident and +1 edge to a fault on a bad
+ // identity (elastic HBM side, before block_ready; go slots unchanged).  A packet popped in the edge a bad one is being
+ // checked is dropped (sticky blocks stage B): the bank is in fault either way.
+ (* keep="true",dont_touch="true" *) reg[9:0]cq_k;     // [7:0] data slices, [8] fields, [9] spare field slice
+ always @(posedge stream_clk or negedge sr[1])if(!sr[1])cq_k<=0;else cq_k<={10{1'b1}};
+ wire[9:0]cap_en=cq_k&{10{packet_v}};
  // reserve stage 2: KEPT per-slot enables [slot*4+c] (c0: valid/epoch/count 24, c1/c2: seen halves 32, c3: received 7)
  (* keep="true",dont_touch="true" *) reg[LBANKS*4-1:0]ren_k;
  reg[15:0]r_epoch;reg[6:0]r_count;
  reg [LBANKS-1:0] valid_q;reg [15:0] epoch_q[0:LBANKS-1];reg [6:0] count_q[0:LBANKS-1],received_q[0:LBANKS-1];
  reg [63:0] seen_q[0:LBANKS-1];reg sticky;
- wire [10:0] ordinal=packet[IW-1:IW-11];wire [LB-1:0] bank=packet[271+LB:272];wire [15:0] epoch=packet[271:256];
- wire [5:0] row=ordinal[8:3];
- wire identity_ok=valid_q[bank]&&epoch_q[bank]==epoch&&ordinal[2:0]==BANK&&
-                 {1'b0,row}<count_q[bank]&&!seen_q[bank][row];
- wire landing_write=packet_v&&!stop&&!sticky&&identity_ok;
+ // stage A: raw head registers (h_v = popped this edge)
+ reg h_v;reg [255:0] h_data;reg [10:0] h_ordinal;reg [LB-1:0] h_bank;reg [15:0] h_epoch;
+ // stage B on registers only
+ wire [5:0] row=h_ordinal[8:3];
+ wire identity_ok=valid_q[h_bank]&&epoch_q[h_bank]==h_epoch&&h_ordinal[2:0]==BANK&&
+                 {1'b0,row}<count_q[h_bank]&&!seen_q[h_bank][row];
+ wire take_b=h_v&&!sticky;
+ wire landing_write=take_b&&identity_ok;
  assign packet_take=packet_v&&!stop&&!sticky;
- wire complete_now=landing_write&&received_q[bank]+1'b1==count_q[bank];
+ wire complete_now=landing_write&&received_q[h_bank]+1'b1==count_q[h_bank];
  reg w_ce_q,cmp_q;reg [LB-1:0] w_bank_q;reg [5:0] w_row_q;reg [255:0] w_data_q;
  assign complete_v=cmp_q;assign complete_bank=w_bank_q;assign fault=sticky||underflow;
+`ifdef SVGH_MUT
+ localparam integer HM=`SVGH_MUT;     // bench negative control 6 (HBM-COLLECT10): landing row bit 0 flipped
+`else
+ localparam integer HM=0;
+`endif
  integer b,c;
  always @(posedge stream_clk or negedge sr[0])begin
-  if(!sr[0])begin valid_q<=0;sticky<=0;w_ce_q<=0;cmp_q<=0;ren_k<=0;end
+  if(!sr[0])begin valid_q<=0;sticky<=0;w_ce_q<=0;cmp_q<=0;ren_k<=0;h_v<=0;end
   else begin
-   w_ce_q<=landing_write;cmp_q<=complete_now;
+   h_v<=packet_take;w_ce_q<=landing_write;cmp_q<=complete_now;
    for(b=0;b<LBANKS;b=b+1)for(c=0;c<4;c=c+1)ren_k[b*4+c]<=reserve_v&&reserve_bank==b;
    for(b=0;b<LBANKS;b=b+1)if(ren_k[b*4])valid_q[b]<=1;
-   if(packet_take&&!identity_ok)sticky<=1;
+   if(take_b&&!identity_ok)sticky<=1;
   end
  end
  always @(posedge stream_clk)begin
   r_epoch<=reserve_epoch;r_count<=reserve_total>BANK?7'((reserve_total+7-BANK)/8):7'd0;
-  if(cap_en[8])begin w_bank_q<=bank;w_row_q<=row;end
-  for(c=0;c<8;c=c+1)if(cap_en[c])w_data_q[c*32+:32]<=packet[c*32+:32];
+  for(c=0;c<8;c=c+1)if(cap_en[c])h_data[c*32+:32]<=packet[c*32+:32];
+  if(cap_en[8])begin h_ordinal<=packet[IW-1:IW-11];h_bank<=packet[271+LB:272];end
+  if(cap_en[9])h_epoch<=packet[271:256];
+  if(take_b)begin w_bank_q<=h_bank;w_row_q<=(HM==6)?(row^6'd1):row;w_data_q<=h_data;end
   for(b=0;b<LBANKS;b=b+1)begin
    if(ren_k[b*4])begin epoch_q[b]<=r_epoch;count_q[b]<=r_count;end
    if(ren_k[b*4+1])seen_q[b][31:0]<=0;
    if(ren_k[b*4+2])seen_q[b][63:32]<=0;
    if(ren_k[b*4+3])received_q[b]<=0;
   end
-  if(packet_take&&identity_ok)begin seen_q[bank][row]<=1;received_q[bank]<=received_q[bank]+1'b1;end
+  if(landing_write)begin seen_q[h_bank][row]<=1;received_q[h_bank]<=received_q[h_bank]+1'b1;end
  end
  ot_sram_1r1w_256x256_m2_r2c2 u_payload(
   .clk(stream_clk),.r_ce_in(read_v&&!stop&&!sticky),.r_addr_in({read_bank,read_row}),.rd_out(read_data),
