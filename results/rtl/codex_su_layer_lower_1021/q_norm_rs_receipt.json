@@ -131,7 +131,8 @@
     "side_MLAT": 4,
     "side_ALAT": 3,
     "side_repair_required": true,
-    "scalar_external_drive": false
+    "scalar_external_drive": false,
+    "scoped_source_sha256": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee"
   },
   "timing_obligations": {
     "issue_to_output": 89,
@@ -142,5 +143,5 @@
     "old_price_preserved": false,
     "connected_selected_case_RTL_required": true
   },
-  "qualification": "compiler fixture reference only; actual repaired selected scoped SIDE integration/RTL pending"
+  "qualification": "source/fixture only; actual scoped source hash bound; connected selected RTL pending"
 }
