@@ -830,6 +830,25 @@ def clocks(spec, period):
     return '\n'.join(lines) + '\n'
 
 
+def forwarded_pre_cts_tcl(spec, entry_sdc):
+    """Restore the existing forwarded-clock contract in a fresh CTS process.
+
+    write_sdc preserves clocks, but not Tcl metadata.  The CTS wrapper needs
+    these exact generated dictionaries before it checks sink ownership; the
+    complete entry SDC is reapplied after CTS as before.  No clock, endpoint
+    policy or timing constraint is changed here.
+    """
+    if not forwarded_soft_clocks(spec):
+        return []
+    out = []
+    for prefix in ('set ::ot_ce_fwd_soft ', 'set ::ot_ce_refs '):
+        matches = [line for line in entry_sdc.splitlines() if line.startswith(prefix)]
+        if len(matches) != 1:
+            raise ValueError('forwarded pre-CTS: missing or duplicate generated contract ' + prefix)
+        out.extend(matches)
+    return out
+
+
 
 def domain_io_budget(name, d):
     """(in, out) outside-share fractions of a clock-entry domain's period.  Default 0.2 / 0.2 (the nominal native pin
