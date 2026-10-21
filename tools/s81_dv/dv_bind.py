@@ -915,6 +915,32 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             prev = wn
     v += rst['verilog']
     v.append('endmodule')
+    if T.get('prune_unused_reset_leaves'):
+        # Frame epoch roots may consume a station's parent instead of its leaf.
+        # Remove only generated reset stations with no reads after final wiring;
+        # iterate so entire unused twigs disappear. Surviving sink depths stay fixed.
+        removed = []
+        while True:
+            text = '\n'.join(v)
+            uses = collections.Counter(re.findall(r'\brs(?:l)?_[A-Za-z0-9_]+\b', text))
+            dead = []
+            for row in rst['place']:
+                inst = row['inst']
+                net = inst[3:]
+                if inst in removed:
+                    continue
+                if uses[net] == 2:
+                    dead.append(inst)  # one declaration + the station's own .o
+            if not dead:
+                break
+            for inst in dead:
+                net = inst[3:]
+                v = [line for line in v if not re.search(r'\b' + re.escape(inst) + r'\s*\(', line)
+                     and line.strip() != f'wire {net};']
+            removed.extend(dead)
+        rst['place'] = [r for r in rst['place'] if r['inst'] not in removed]
+        rst['summary']['pruned_unused_reset_stations'] = removed
+        rst['summary']['stations'] -= len(removed)
     (out / 'die.v').write_text('\n'.join(v) + '\n')
     (out / 'cells_used.v').write_text(CELL_MODELS)
     (out / 'straps.json').write_text(json.dumps({'straps': straps}, indent=1))
