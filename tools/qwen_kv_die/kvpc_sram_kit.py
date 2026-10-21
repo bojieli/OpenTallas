@@ -43,8 +43,8 @@ WIT_SR3 = 'results/rtl/qwen_kv_die/kvpc_sram_sr3_1019'   # KV-PC2 sr3+ receipts 
 UNITS = [('front', (1, 4, 5)), ('return', (1, 2)), ('cdc', (1, 2)), ('tq', (1,)), ('sched', (1,)), ('ctrl', (1, 2)),
          ('path', (2,))]
 FI_UNITS = ('sched', 'ctrl', 'path')     # KV-PC3 sr6+: mutant 5 = fault-chain input landing bypassed (OT_KVPC_FI_MUT)
-SR6 = ('sr6', 'sr6b', 'sr7', 'sr7b', 'sr8', 'sr8b', 'sr9', 'sr9b', 'sr10')
-SR9 = ('sr9', 'sr9b', 'sr10')
+SR6 = ('sr6', 'sr6b', 'sr7', 'sr7b', 'sr8', 'sr8b', 'sr9', 'sr9b', 'sr10', 'sr10b')
+SR9 = ('sr9', 'sr9b', 'sr10', 'sr10b')
 # KV-PC10 sr10 (10-20): route qkd_kvs_pc_h_sr9-sr9-596963735 NEEDS_RTL FF hold -57.0 ps / DRC 5.  Classified on its 6_final
 # ODB: every worst hold path (hclk removal ot_rrs_*port_hr_q -> u_port_v1 RESETN -57.0, front_co -> u_return.hd -55.8,
 # core_clk es_merged -> es_d_q -32.2) is a 1-gate flop -> flop path whose CAPTURE leaf (clkbuf_leaf_914 / 895 at x 80-84)
@@ -58,7 +58,15 @@ SR9 = ('sr9', 'sr9b', 'sr10')
 # of the CDC up stack (R0, read face W toward the centre like the CDC banks).  Every horizontal wire (H-tree taps, read
 # words, shared bank addresses) now crosses column A within ~26 um of a channel instead of detouring up to 45 um around
 # a 5-bank stack.
-SR10 = ('sr10',)
+SR10 = ('sr10', 'sr10b')
+# KV-PC11 sr10b (10-21, parallel fallback of sr10): the sr10 gate images show column B (x 172.8) as a 7-bank stack (CDC up 5
+# + tag queue 2) over the 6-bank CDC down stack with a 10.8 um gap: the same no-horizontal-crossing barrier (M5 cap) that
+# failed sr9 in column A, now between the centre logic and the dense E-face logic (er / her / hes / land_er / land_es).
+# Column B is split into 4 / 4 / 3 groups (down 0-3 | down 4-5 + up 0-1 | up 2-4) with two 21.4 um channels (3/3/3/2 with
+# three >= 20 um channels does not fit the 2.16 um grid between the 20 um S / N pin-face keepouts); the tag queue leaves column B for a 2-bank stack at x 108.0 (MY,
+# read face E toward the centre logic) at the top of the W half (y 241.92, its sr9 height).
+SR10B = ('sr10b',)
+SR10B_COLB = (23.76, 114.48, 205.2)    # column B groups d0-3 | d4-5 u0-1 | u2-4 (2.16 um aligned)
 SR10_BASE = (23.76, 99.36, 155.52, 228.96)     # column A groups f0-2 | f3-4 | r0-2 | r3-4 (2.16 um aligned)
 # KV-PC7 sr9 (10-20): N-face pin order so every N <-> S feed-through is a straight vertical run.  Gate pc_sr8 054430
 # PRE-CTS full stage graph (Codex 29ec0814c, results/arch/kvpc_normal_copy_0720): 493 stage pairs > 405 um (max 488.3),
@@ -110,7 +118,7 @@ V_MOVE = {'c': {'front': (43.2, 'MY'), 'return': (43.2, 'MY'), 'tq': (43.2, 'MY'
           'd': {'front': (86.4, 'MY'), 'return': (86.4, 'MY'), 'tq': (86.4, 'MY')}}
 
 
-def macros(variant='a', pairs=False):
+def macros(variant='a', pairs=False, colb=False):
     out = []
     for name, glob, n, x, y in STACKS:
         if variant == 'b' and x > 100:
@@ -119,7 +127,14 @@ def macros(variant='a', pairs=False):
         for k in range(n):
             inst = glob.format(k=k, eo='eo'[k % 2])
             yk, ex = y + k * PITCH, k > 0
-            if pairs and name == 'tq':           # sr10: tag queue abuts the top of the CDC up stack (R0: read face W)
+            if colb and name == 'tq':            # sr10b: tag queue in its own stack at x 108.0 (21.6 half lattice: >= 32 um channels to columns A and B), read face E (MY)
+                x, orient, yk, ex = 108.0, 'MY', 241.92 + k * PITCH, k > 0
+            elif colb and name in ('cdc_down', 'cdc_up'):
+                i = (0 if name == 'cdc_down' else 6) + k
+                g = (0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2)[i]
+                yk = SR10B_COLB[g] + (i - (0, 4, 8)[g]) * PITCH
+                ex = i not in (0, 4, 8)
+            elif pairs and name == 'tq':           # sr10: tag queue abuts the top of the CDC up stack (R0: read face W)
                 x, orient, yk, ex = 172.8, 'R0', 151.2 + (5 + k) * PITCH, True
             elif pairs and name in ('front', 'return'):
                 i = (0 if name == 'front' else 5) + k
@@ -183,7 +198,7 @@ def derive(tile, tag, variant):
     kit = f'qkd_kvs_{tile}_{tag}'
     s['name'] = kit
     s['sources'] = [SR_TILE if f == RL_TILE else f for f in s['sources']] + NEW_RTL
-    s['macros'] = macros(variant, pairs=tag in SR10)
+    s['macros'] = macros(variant, pairs=tag in SR10, colb=tag in SR10B)
     if tag in ('sr1', 'sr2', 'sr2b'):
         s['sdc_extra'] = list(s.get('sdc_extra', [])) + [f'physical/qkd_kvs_kits/qkd_kvs_pc_{tag}_store.sdc']
     else:
@@ -276,6 +291,14 @@ def derive(tile, tag, variant):
             'w_addr net shorted on M4 at the stacked bank pins (DRC 5).  RTL = r8 528d8460a.  ' + s['purpose'])
         j['owner'] = 'Claude:KV-PC10'
         j['branch'] = 'claude/kv-pc10-1020'
+    if tag in SR10B:
+        s['structural_change'] = s['purpose'] = j['purpose'] = (
+            'KV-PC11 sr10b (parallel fallback of sr10): column B (CDC down 6 / up 5) in 4/4/3-bank groups with two '
+            '21.4 um channels and the tag queue moved to its own 2-bank stack at x 108.0 (MY): the sr10 gate showed '
+            'column B as a 7-bank over a 6-bank stack with a 10.8 um gap, the same no-horizontal-crossing barrier (M5 cap) '
+            'between the centre and the E-face logic that failed sr9 in column A.  ' + s['purpose'])
+        j['owner'] = 'Claude:KV-PC11'
+        j['branch'] = 'claude/kv-pc11-1020'
     j['extra_paths'] = sorted(set(j.get('extra_paths', [])) | {VIEW, WIT, WIT_SR3, 'rtl', 'tools/qwen_kv_die'} | ({wit} if wit else set()))
     if tag in SR10:      # ROOT11 9a59143db: kvpc_sram_1019 was never committed (job ff8919865 went NEEDS_HUMAN on it)
         j['extra_paths'] = [p for p in j['extra_paths'] if p != WIT]
