@@ -1,0 +1,54 @@
+{
+  "status": "PARTIAL_FUNCTIONAL_AND_PRIOR_LP_PASS_CURRENT_NATIVE_PENDING",
+  "source": "b4a2d8e15",
+  "model_before_RTL": "e217aafb3",
+  "flag": "OT_SVC_STAGESEL_N32 default absent",
+  "shape": {
+    "G4_transposers": 4,
+    "leaf_selectors": 344,
+    "first_edge_cohort_FF": 16,
+    "extra_FF": 360,
+    "data_edges": 2,
+    "new_data_edges": 0
+  },
+  "functional": {
+    "unit": "2383166-1792626395 ep7",
+    "complete_word_comparisons": 39976,
+    "bits_per_word": 1060,
+    "mismatches": 0,
+    "shortstage_negative": 5096,
+    "simulation_seconds": 0.181
+  },
+  "initial_form": {
+    "source": "9e4811962",
+    "unit": "2345359-1792625835",
+    "functional": "PASS same39976/5096",
+    "LP": "FAIL generate-local constantfunction; fullcompilerlog retained"
+  },
+  "scope_repair_LP": {
+    "source": "86836be7b",
+    "unit": "2361016-1792626064 ep7 mem32",
+    "status": "PASS terminal0",
+    "note": "Before b4 ordinal-elaboration change; cannot qualify later helper"
+  },
+  "current_native_and_LP": {
+    "unit": "2383166-1792626395 ep7 mem32",
+    "status": "LIVE",
+    "checker_sha256": "4e7a7a425a8669a5f586ed3aa2873038e727293a9128aabae360fcbaa2cd61e0",
+    "outputs": "out_stage_const_native/out_stage_const_lp",
+    "expected_scope": "Actual elem() consumers retained; existing independent format distribution may still FAIL. No waiver."
+  },
+  "older_native": {
+    "unit": "2363484-1792626105 ep7 mem8",
+    "baseline": "FAIL617/40",
+    "candidate": "LIVE slow rank elaboration, preserved"
+  },
+  "output_provenance": "Initial first component stdout retained locally; out_stage_select reused by later b4 functional proof before output isolation, so its currently sealed contents are exclusively b4. No claim of original first-build artifact preservation. Live old native outputs/source untouched; later native isolated out_stage_const_native.",
+  "open": [
+    "Current candidate mapped census/area",
+    "Current b4 LP hierarchy",
+    "Remaining e_ld_mode/p_go1540load cone",
+    "Full actual ATT numerical/caller/PINREG path",
+    "Wholecore native/reset/clock/physical/calendar"
+  ]
+}

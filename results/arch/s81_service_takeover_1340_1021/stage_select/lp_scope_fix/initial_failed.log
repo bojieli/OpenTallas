@@ -1,0 +1,26 @@
+%Error: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:793:54: Constant function may not be declared under generate (IEEE 1800-2023 13.4.3)
+                                                 : ... note: In instance 'dsdv_svc_attw_n1_r9_lp.u_c.u_att.u_core.u_eng'
+  793 |                     function automatic [NL*ROWW-1:0] fill_live_mask();
+      |                                                      ^~~~~~~~~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:809:56: Expecting expression to be constant, but can't determine constant for FUNCREF 'fill_live_mask'
+                                                 : ... note: In instance 'dsdv_svc_attw_n1_r9_lp.u_c.u_att.u_core.u_eng'
+        rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:793:54: ... Location of non-constant FUNC 'fill_live_mask': Constant function called under generate
+        rtl/hdc/v41x/ot_hdc_v41x_attn_s.sv:809:56: ... Called from 'fill_live_mask()' with parameters:
+  809 |                     localparam [NL*ROWW-1:0] FILL_LIVE=fill_live_mask();
+      |                                                        ^~~~~~~~~~~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '7'h6a' generates 7 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '6'h2a' generates 6 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... note: In instance 'dsdv_svc_attw_n1_r9_lp.u_c.u_att.u_core.u_eng.g_m[3].g_real.g_x.u_m.g[4].g_h[15].u_a..g_f5.u.u.u_g6'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Error: Exiting due to 2 error(s)

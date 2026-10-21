@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_stage_select
+ot-run: ot-epyc7       admits   392 GB (avail 494, growth 219, headroom 0, waiters 0/0 GB) load 31/96 running 9 disk 4430 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_stage_select
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_stage_select
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_stage_select
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_stage_select
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-service-native-recover-1021/src_stage_select
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2345359-1792625835 after 0 s
+STAGEPICK PASS complete_word_checks=39976 bits_per_word=1060 shortstage_negative=5096
+- tools/s81_dv/svc_rs/stage_select/tb_stagepick.sv:31: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 50us; walltime 68.370 s; speed 731.398 ns/s
+- Verilator: cpu 68.365 s on 1 threads; allocated 9 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2345359-1792625835): exit 1
