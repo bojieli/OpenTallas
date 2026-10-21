@@ -594,8 +594,20 @@ module ot_qwen_status_obs_rx_body(input wire [511:0] d,output wire good);
  assign good=extension_good && !(|d[303:156]);
 endmodule
 (* keep_hierarchy = "yes" *)
+module ot_qwen_status_obs_xnor_bit(input wire a,b,output wire q);
+ assign q=~(a^b);
+endmodule
+(* keep_hierarchy = "yes" *)
 module ot_qwen_status_obs_epoch_equal(input wire [15:0] a,b,output wire equal);
- assign equal=a==b;
+ wire [15:0] eq;
+ for(genvar bitno=0;bitno<16;bitno=bitno+1)begin:g_bit
+  ot_qwen_status_obs_xnor_bit u_bit(.a(a[bitno]),.b(b[bitno]),.q(eq[bitno]));
+ end
+ assign equal=&eq;
+endmodule
+(* keep_hierarchy = "yes" *)
+module ot_qwen_status_obs_capture_en(input wire ev,rs,hk,fc,epoch_good,body_good,output wire en);
+ assign en=ev && rs && hk && epoch_good && body_good && !fc;
 endmodule
 (* keep_hierarchy = "yes" *)
 module ot_qwen_status_obs_rx_chunk #(parameter integer W=16)(
@@ -606,7 +618,9 @@ module ot_qwen_status_obs_rx_chunk #(parameter integer W=16)(
 );
  wire epoch_good;
  ot_qwen_status_obs_epoch_equal u_epoch(.a(he),.b(epoch16),.equal(epoch_good));
- wire en=ev && rs && hk && epoch_good && body_good && !fc;
+ wire en;
+ ot_qwen_status_obs_capture_en u_en(.ev(ev),.rs(rs),.hk(hk),.fc(fc),
+  .epoch_good(epoch_good),.body_good(body_good),.en(en));
  always @(posedge ck or negedge rst_n)
   if(!rst_n) q<=0; else if(en) q<=capture_d;
 endmodule
