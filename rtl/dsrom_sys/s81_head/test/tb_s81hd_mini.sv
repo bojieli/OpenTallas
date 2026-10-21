@@ -7,7 +7,9 @@
 // Plusargs: +DIR (xa.hex / xb.hex) +ROW0_0 +ROW0_1 +TEN0 +TEN1 +FLT_IN +XINF_M (slice index whose xa lane 0 is BF16 +Inf;
 // -1 none) +NPOS (positions) +GAP (cycles between gos) +EXP_ROW +EXP_BITS (hex) +EXP_FLT +EXP_CYC (-1: no cycle check).
 // Prints "POS <n> RES <row> <bits> <flt> <cyc>" per position and "TB_PASS" / "TB_FAIL <why>".
-module tb_s81hd_mini #(parameter integer SK = 8);
+// Every logit a running bundle forms (element l_v / l_d, 128 a tile a position) is checked bit for bit against the
+// golden logits t0lg.hex / t1lg.hex in +DIR (local row order): "LOGITS <tile> <exact>/<formed>".
+module tb_s81hd_mini #(parameter integer SK = 7);
     reg ck = 1'b0, rst_n = 1'b0;
     always #0.5 ck = ~ck;
     reg  [564:0] bi = '0;
@@ -20,6 +22,32 @@ module tb_s81hd_mini #(parameter integer SK = 8);
     ot_s81hd_tile #(.INSTANCE("t0")) u_t0 (.ck(ck), .rst_n(rst_n), .i(sw), .o(t0o), .row0(r0_0), .ten(t0en));
     ot_s81hd_tile #(.INSTANCE("t1")) u_t1 (.ck(ck), .rst_n(rst_n), .i(t0o), .o(t1o), .row0(r0_1), .ten(t1en));
     ot_s81hd_spr u_spr (.ck(ck), .rst_n(rst_n), .i(so), .iw(t1o), .ie(se), .o(ro));
+    // logit exactness: element q's k-th logit = local row 32 q + k
+    reg [31:0] lg0 [0:127];
+    reg [31:0] lg1 [0:127];
+    integer lgn [0:1][0:3];
+    integer lok [0:1], lnum [0:1];
+    initial begin : lg_init
+        integer t, q;
+        for (t = 0; t < 2; t = t + 1) begin lok[t] = 0; lnum[t] = 0; for (q = 0; q < 4; q = q + 1) lgn[t][q] = 0; end
+    end
+    genvar gq;
+    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_lchk
+        always @(negedge ck) if (rst_n) begin
+            if (u_t0.u_b.g_a[gq].lv) begin
+                lnum[0] = lnum[0] + 1;
+                if (u_t0.u_b.g_a[gq].ld === lg0[32 * gq + (lgn[0][gq] % 32)]) lok[0] = lok[0] + 1;
+                else $display("LOGIT_MISMATCH t0 row %0d %08h != %08h", 32 * gq + (lgn[0][gq] % 32), u_t0.u_b.g_a[gq].ld, lg0[32 * gq + (lgn[0][gq] % 32)]);
+                lgn[0][gq] = lgn[0][gq] + 1;
+            end
+            if (u_t1.u_b.g_a[gq].lv) begin
+                lnum[1] = lnum[1] + 1;
+                if (u_t1.u_b.g_a[gq].ld === lg1[32 * gq + (lgn[1][gq] % 32)]) lok[1] = lok[1] + 1;
+                else $display("LOGIT_MISMATCH t1 row %0d %08h != %08h", 32 * gq + (lgn[1][gq] % 32), u_t1.u_b.g_a[gq].ld, lg1[32 * gq + (lgn[1][gq] % 32)]);
+                lgn[1][gq] = lgn[1][gq] + 1;
+            end
+        end
+    end endgenerate
     reg [255:0] ma [0:255];
     reg [255:0] mb [0:63];
     reg [8*1024-1:0] dir;
@@ -51,6 +79,8 @@ module tb_s81hd_mini #(parameter integer SK = 8);
         r0_0 = row0_0[16:0]; r0_1 = row0_1[16:0]; t0en = ten0[0]; t1en = ten1[0];
         $readmemh({dir, "/xa.hex"}, ma);
         $readmemh({dir, "/xb.hex"}, mb);
+        $readmemh({dir, "/t0lg.hex"}, lg0);
+        $readmemh({dir, "/t1lg.hex"}, lg1);
         repeat (4) @(negedge ck);
         rst_n = 1'b1;
         repeat (8) @(negedge ck);
@@ -72,6 +102,9 @@ module tb_s81hd_mini #(parameter integer SK = 8);
         end
         repeat (200) @(negedge ck);
         if (nres != npos) begin $display("TB_FAIL results %0d != positions %0d", nres, npos); bad = bad + 1; end
+        $display("LOGITS t0 %0d/%0d t1 %0d/%0d", lok[0], lnum[0], lok[1], lnum[1]);
+        if (!$test$plusargs("NOLG") && (lok[0] != lnum[0] || lok[1] != lnum[1])) begin $display("TB_FAIL logits"); bad = bad + 1; end
+        if (lnum[0] != 128 * npos * ten0 || lnum[1] != 128 * npos * ten1) begin $display("TB_FAIL logit count"); bad = bad + 1; end
         if (bad == 0) $display("TB_PASS positions %0d", npos); else $display("TB_FAIL %0d mismatches", bad);
         $finish;
     end

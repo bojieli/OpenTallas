@@ -21,7 +21,8 @@ module ot_s81hd_bundle #(
     parameter integer BST = 2,
     parameter [8:0] CUT = 9'b1_0111_1011,
     parameter integer SPLIT9 = 0,          // ot_v41_fadd SPLIT9 (+1 adder latency, the skew follows)
-    parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+    parameter integer NC = 1,              // ot_s81hd_elem NC: native-census arithmetic (adder LAT 7 -> SK 7)
+    parameter integer SK = NC ? 7 : 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
     parameter INSTANCE = "h",
     parameter integer IOREG = 0,           // ot_dsrom_head_elem IOREG (pin-registered elements)
     parameter integer SAFE = 1,            // ot_s81hd_elem SAFE (registered argmax compare; required)
@@ -60,7 +61,7 @@ module ot_s81hd_bundle #(
     wire        nc_lv, nc_done;
     wire [31:0] nc_ld, nc_bits, nc_key;
     wire [16:0] nc_row;
-    ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .INSTANCE($sformatf("%sb", INSTANCE)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_b (
+    ot_s81hd_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .INSTANCE($sformatf("%sb", INSTANCE)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9), .NC(NC), .SK(SK)) u_b (
         .clk(clk), .rst_n(rst_n), .go(go_d), .row0(17'd0), .x(xsb), .b_v(1'b0), .b_d(32'd0), .o_v(bo_v), .o_d(bo_d),
         .l_v(nc_lv), .l_d(nc_ld), .done(nc_done), .best_row(nc_row), .best_bits(nc_bits), .best_key(nc_key),
         .fault(b_fault));
@@ -95,34 +96,47 @@ module ot_s81hd_bundle #(
             .clk(clk), .rst_n(rst_n), .d({go_d, bv_r[q]}), .q({a_go[q], bv_a}));
         ot_hdc_delay #(.W(305), .D(A_INPUT_STAGES)) u_ad (
             .clk(clk), .rst_n(rst_n), .d({row_in, xsa, bd_r}), .q({row_a, x_a, bd_a}));
-        ot_s81hd_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9)) u_e (
+        ot_s81hd_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .INSTANCE($sformatf("%sa%0d", INSTANCE, q)), .IOREG(IOREG), .SAFE(SAFE), .SPLIT9(SPLIT9), .NC(NC), .SK(SK)) u_e (
             .clk(clk), .rst_n(rst_n), .go(a_go[q]), .row0(row_a), .x(x_a), .b_v(bv_a), .b_d(bd_a),
             .o_v(ov), .o_d(od), .l_v(lv), .l_d(ld),
             .head_v(head_v[q]), .head_d(head_d[32*q+:32]), .head_row(head_row[17*q+:17]), .done(a_done[q]), .best_row(a_row[q]), .best_bits(a_bits[q]),
             .best_key(a_key[q]), .fault(a_fault[q]));
     end endgenerate
-    // 2-level compare tree (lowest-id first max): level 1 (0,1) (2,3), level 2
-    function automatic [80:0] pick(input [80:0] u, input [80:0] v);   // {key, row, bits}
-        pick = (v[80:49] > u[80:49] || (v[80:49] == u[80:49] && v[48:32] < u[48:32])) ? v : u;
+    // 2-level compare tree (lowest-id first max), census-safe (HD-TILE): each level registers its decision as 11 kept
+    // copies (one per <= 8 of the 81 {key, row, bits} bits; a mapped select costs 2 load pins a bit), then selects in
+    // the next cycle.  The element bests are stable from done until the next go, so the decisions recompute every
+    // cycle; valid runs 4 stages (+2 against the original tree) and is blocked for a_go + 3 cycles: the elements
+    // clear `done` IOREG (+1) edges after a_go (the original re-raised res_v with the PREVIOUS result after a later go).
+    function automatic vbetter(input [80:0] u, input [80:0] v);   // {key, row, bits}: v replaces u
+        vbetter = v[80:49] > u[80:49] || (v[80:49] == u[80:49] && v[48:32] < u[48:32]);
     endfunction
-    reg [80:0] c1 [0:1];
-    reg        c1_v;
-    // HD-TILE 10-21: the elements clear `done` IOREG (+1) edges after a_go, so with IOREG = 1 the original
-    // `&a_done && !a_go[0]` re-raised res_v for one cycle with the PREVIOUS position's result after every later go
-    // (measured: 2nd position fired 20 cycles after go).  The block window covers a_go + 3 cycles.
+    wire [80:0] e0 = {a_key[0], a_row[0], a_bits[0]}, e1 = {a_key[1], a_row[1], a_bits[1]};
+    wire [80:0] e2 = {a_key[2], a_row[2], a_bits[2]}, e3 = {a_key[3], a_row[3], a_bits[3]};
+    (* keep *) reg [10:0] s01, s23, sf;
+    reg [80:0] c1a, c1b;
     reg [2:0]  gsh;
+    reg        v1, v2, v3;
     wire       gblk = a_go[0] | (|gsh);
+    integer bb;
+    always @(posedge clk) begin
+        s01 <= {11{vbetter(e0, e1)}};
+        s23 <= {11{vbetter(e2, e3)}};
+        for (bb = 0; bb < 81; bb = bb + 1) begin
+            c1a[bb] <= s01[bb / 8] ? e1[bb] : e0[bb];
+            c1b[bb] <= s23[bb / 8] ? e3[bb] : e2[bb];
+        end
+        sf <= {11{vbetter(c1a, c1b)}};
+        for (bb = 0; bb < 32; bb = bb + 1) res_bits[bb] <= sf[bb / 8] ? c1b[bb] : c1a[bb];
+        for (bb = 32; bb < 49; bb = bb + 1) res_row[bb - 32] <= sf[bb / 8] ? c1b[bb] : c1a[bb];
+    end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin c1_v <= 1'b0; res_v <= 1'b0; gsh <= 3'd0; end
+        if (!rst_n) begin v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; res_v <= 1'b0; gsh <= 3'd0; end
         else begin
             gsh <= {gsh[1:0], a_go[0]};
-            c1_v <= &a_done && !gblk;
-            res_v <= c1_v && !gblk;
+            v1 <= &a_done && !gblk;
+            v2 <= v1 && !gblk;
+            v3 <= v2 && !gblk;
+            res_v <= v3 && !gblk;
         end
-    always @(posedge clk) begin
-        c1[0] <= pick({a_key[0], a_row[0], a_bits[0]}, {a_key[1], a_row[1], a_bits[1]});
-        c1[1] <= pick({a_key[2], a_row[2], a_bits[2]}, {a_key[3], a_row[3], a_bits[3]});
-        {res_row, res_bits} <= pick(c1[0], c1[1]);
-    end
     assign fault = b_fault | (|a_fault);
 endmodule

@@ -18,9 +18,11 @@
 //   * pins: every input lands in a flop (W face), every output leaves a flop (E face); no combinational in -> out.
 //   * reset: control / valid bits only (go, xv, rv copies, capture / fire state); the 2-stage landing at the face and
 //     the kept reset copies are the kit's (reset_landing + reset_relay_split, mapped <= 32 loads per copy).
-//   * fanout: the 50-bit chain-best hold is enabled by 3 kept rv copies; the output select by 3 kept copies.
-// Latency: own result at go_tile + 1 + BUNDLE_LAT; fire = 2 edges after both are present (select register, output
-// register).  A position's chain best and own result must both arrive before the next go reaches the tile (static
+//   * fanout (census: <= 32 load pins a driver; a mapped select / enable costs 2 pins a bit): the 50-bit chain-best
+//     hold is enabled by 5 kept rv copies (<= 11 bits each), the output select by 7 kept copies (<= 8 bits each); the
+//     FP32 order keys come from ot_s81hd_key (2 registered stages, kept sign / -0 copies per byte).
+// Latency: own result at go_tile + 1 + BUNDLE_LAT; fire = 4 edges after both are present (2 key stages, select
+// register, output register).  A position's chain best and own result must both arrive before the next go reaches the tile (static
 // schedule: positions >= 8,357 cycles apart; no backpressure).
 // The bundle's head_v / head_d / head_row pre-argmax outputs stay internal (unused).
 // ---------------------------------------------------------------------------
@@ -40,15 +42,15 @@ module ot_s81hd_tile #(
     // ---------------- pin registers --------------------------------------------------------------------------------
     reg [511:0] x_q;
     reg         go_q, xv_q;
-    (* keep *) reg [2:0] rv_q;               // kept copies: [0] row + flt hold, [1] bits[15:0], [2] bits[31:16] + state
+    (* keep *) reg [4:0] rv_q;               // kept copies: [0] row[8:0] [1] row[16:9] + flt [2] bits[10:0] [3] bits[21:11] [4] bits[31:22] + state
     reg [16:0]  row_q;
     reg [31:0]  bits_q;
     reg         flt_q;
     reg [16:0]  row0_q;                      // straps (static)
     reg         ten_q;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin go_q <= 1'b0; xv_q <= 1'b0; rv_q <= 3'd0; end
-        else begin go_q <= i[512]; xv_q <= i[513]; rv_q <= {3{i[514]}}; end
+        if (!rst_n) begin go_q <= 1'b0; xv_q <= 1'b0; rv_q <= 5'd0; end
+        else begin go_q <= i[512]; xv_q <= i[513]; rv_q <= {5{i[514]}}; end
     always @(posedge ck) begin
         x_q <= i[511:0]; row_q <= i[531:515]; bits_q <= i[563:532]; flt_q <= i[564];
         row0_q <= row0; ten_q <= ten;
@@ -94,45 +96,49 @@ module ot_s81hd_tile #(
     reg [31:0] ch_bits;
     reg        ch_flt;
     always @(posedge ck) begin
-        if (rv_q[0]) begin ch_row <= row_q; ch_flt <= flt_q; end
-        if (rv_q[1]) ch_bits[15:0] <= bits_q[15:0];
-        if (rv_q[2]) ch_bits[31:16] <= bits_q[31:16];
+        if (rv_q[0]) ch_row[8:0] <= row_q[8:0];
+        if (rv_q[1]) begin ch_row[16:9] <= row_q[16:9]; ch_flt <= flt_q; end
+        if (rv_q[2]) ch_bits[10:0] <= bits_q[10:0];
+        if (rv_q[3]) ch_bits[21:11] <= bits_q[21:11];
+        if (rv_q[4]) ch_bits[31:22] <= bits_q[31:22];
     end
+    // order keys (2 registered stages): chain best (held) and own result (stable from res_v until the bundle's next go)
+    wire [31:0] k_own, k_ch;
+    ot_s81hd_key u_kc (.ck(ck), .x(ch_bits), .key(k_ch));
+    ot_s81hd_key u_ko (.ck(ck), .x(res_bits), .key(k_own));
 
     // ---------------- capture state, fire once per position ---------------------------------------------------------
     // own result: the rising edge of the bundle's res_v (a level until the bundle's next go) after this position's go
-    reg res_v_d, ch_have, own_have, fired, sel_v, o_rv;
+    // the keys trail their values by 2 edges: ready waits on the have flags delayed by 2
+    reg res_v_d, ch_have, ch_d1, ch_d2, own_have, own_d1, own_d2, fired, sel_v, o_rv;
     wire res_rise = res_v & ~res_v_d;
-    wire ready = ch_have & (own_have | ~b_en) & ~fired & ~go_q;
+    wire ready = ch_d2 & (own_d2 | ~b_en) & ~fired & ~go_q;
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin res_v_d <= 1'b0; ch_have <= 1'b0; own_have <= 1'b0; fired <= 1'b0; sel_v <= 1'b0; o_rv <= 1'b0; end
+        if (!rst_n) begin res_v_d <= 1'b0; ch_have <= 1'b0; ch_d1 <= 1'b0; ch_d2 <= 1'b0; own_have <= 1'b0; own_d1 <= 1'b0;
+                          own_d2 <= 1'b0; fired <= 1'b0; sel_v <= 1'b0; o_rv <= 1'b0; end
         else begin
             res_v_d  <= res_v;
-            ch_have  <= rv_q[2] | (ch_have & ~go_q);
+            ch_have  <= rv_q[4] | (ch_have & ~go_q);
+            ch_d1    <= ch_have & ~go_q;
+            ch_d2    <= ch_d1 & ~go_q;
             own_have <= (res_rise & b_en) | (own_have & ~go_q);
+            own_d1   <= own_have & ~go_q;
+            own_d2   <= own_d1 & ~go_q;
             fired    <= ready | (fired & ~go_q);
             sel_v    <= ready;
             o_rv     <= sel_v;
         end
 
     // ---------------- max under the ot_rom_argmax_rows key ----------------------------------------------------------
-    function automatic [31:0] okey(input [31:0] x);        // order-preserving key; -0 as +0
-        reg [31:0] c;
-        begin
-            c = (x == 32'h8000_0000) ? 32'd0 : x;
-            okey = c[31] ? ~c : (c | 32'h8000_0000);
-        end
-    endfunction
-    wire [31:0] k_own = okey(res_bits), k_ch = okey(ch_bits);
 `ifdef OT_S81HD_MUT_TIE_FLIP
     wire own_better = b_en && (k_own > k_ch || (k_own == k_ch && res_row > ch_row));   // MUTANT: highest id on ties
 `else
     wire own_better = b_en && (k_own > k_ch || (k_own == k_ch && res_row < ch_row));
 `endif
-    (* keep *) reg [2:0] sel_q;              // kept copies: [0] row, [1] bits[15:0], [2] bits[31:16]
+    (* keep *) reg [6:0] sel_q;              // kept copies: [2:0] row [5:0] [11:6] [16:12], [6:3] bits bytes
     reg        bflt_q;
     always @(posedge ck) begin
-        sel_q  <= {3{own_better}};
+        sel_q  <= {7{own_better}};
 `ifdef OT_S81HD_MUT_FLT_DROP
         bflt_q <= 1'b0;                      // MUTANT: bundle fault dropped
 `else
@@ -142,11 +148,11 @@ module ot_s81hd_tile #(
     reg [16:0] o_row;
     reg [31:0] o_bits;
     reg        o_flt;
+    integer b;
     always @(posedge ck) begin
-        o_row          <= sel_q[0] ? res_row : ch_row;
-        o_bits[15:0]   <= sel_q[1] ? res_bits[15:0] : ch_bits[15:0];
-        o_bits[31:16]  <= sel_q[2] ? res_bits[31:16] : ch_bits[31:16];
-        o_flt          <= ch_flt | bflt_q;
+        for (b = 0; b < 17; b = b + 1) o_row[b] <= sel_q[b < 6 ? 0 : (b < 12 ? 1 : 2)] ? res_row[b] : ch_row[b];
+        for (b = 0; b < 32; b = b + 1) o_bits[b] <= sel_q[3 + b / 8] ? res_bits[b] : ch_bits[b];
+        o_flt <= ch_flt | bflt_q;
     end
 
     assign o = {o_flt, o_bits, o_row, o_rv, xvo_q, goo_q, xo_q};

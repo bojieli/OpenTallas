@@ -188,6 +188,15 @@
   ]
  ],
  "referenced": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_key.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_fadd.sv",
   "rtl/common/ot_prefix.sv",
   "rtl/v41rom/ot_v41_fadd.sv",
   "rtl/v41rom/ot_v41_bmul2.sv",
