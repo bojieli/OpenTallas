@@ -100,51 +100,51 @@
    },
    {
     "name": "qb10_mut_old_offsets",
-    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_old_offsets {RUN}/bench/mut_old_offsets",
-    "expect": "pass",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_old_offsets {RUN}/bench/mut_old_offsets && exit 1",
+    "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_old_offsets$",
-    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_old_offsets.log"
+    "fail_regex": "^N59QB10_MUTANT_REJECTED mut_old_offsets$",
+    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_old_offsets.log"
    },
    {
     "name": "qb10_mut_qb1",
-    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_qb1 {RUN}/bench/mut_qb1",
-    "expect": "pass",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_qb1 {RUN}/bench/mut_qb1 && exit 1",
+    "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_qb1$",
-    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_qb1.log"
+    "fail_regex": "^N59QB10_MUTANT_REJECTED mut_qb1$",
+    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_qb1.log"
    },
    {
     "name": "qb10_mut_mask",
-    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_mask {RUN}/bench/mut_mask",
-    "expect": "pass",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_mask {RUN}/bench/mut_mask && exit 1",
+    "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_mask$",
-    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_mask.log"
+    "fail_regex": "^N59QB10_MUTANT_REJECTED mut_mask$",
+    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_mask.log"
    },
    {
     "name": "qb10_mut_select",
-    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_select {RUN}/bench/mut_select",
-    "expect": "pass",
+    "cmd": "bash results/arch/qw_n59_qbank10_1020/bench.sh mut_select {RUN}/bench/mut_select && exit 1",
+    "expect": "fail",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "^N59QB10_MUTANT_REJECTED mut_select$",
-    "fail_witness_note": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_select.log"
+    "fail_regex": "^N59QB10_MUTANT_REJECTED mut_select$",
+    "fail_witness": "results/arch/qw_n59_qbank10_1020/receipts_rstd/mut_select.log"
    }
   ],
   "calibrate": {
