@@ -1,0 +1,5 @@
+Qbank12a terminal physical FAIL, not infrastructure: actual trial-route RC0/overflow0 completed; sole FAIL item is TT166.9ps/FF145.6ps pin-flop spread. Gate source is an exact-content snapshot (null commit), matching all320 previously frozen consumed files including the ten daemon overlays; it must not be represented as all-47 committed input. Source/spec witnesses and original result are preserved here.
+
+The two frozen consumed specs prove a950.4×475.2 and b993.6×475.2 are different physical designs. East four SRAMs shift43.2um, pin ranges shift21.6um, and a alone specifies CTS clustering30/40um/levels2. Same source/params does not authorize transferring clocktree or route conclusions between them. The b net39744 GRT0183 packet and source cone remain separately preserved; no q8a alias.
+
+No structural successor or rerun was selected. The exact min/max boundary endpoints and their actual root-tree/placement lineage are not present in this JSON. A concrete reviewed readset of that same saved CTS scene is required before choosing one repair. API staged-LRT fixture work remains a separate legacyh16c source/clock contract.

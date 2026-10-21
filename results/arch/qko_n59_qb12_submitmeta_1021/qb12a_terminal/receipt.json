@@ -1,0 +1,738 @@
+{
+  "verdict": "FAIL",
+  "failure": "clock_rule boundary pin-flop spread",
+  "generated": "2026-10-21T16:52:29-0700",
+  "host": "ot-epyc9",
+  "gate_result_sha256": "fd71df63a0862c909ba150cfdb64540299a93a3668ca46197b0e288ad90904d8",
+  "identity": "exact_content_snapshot",
+  "manifest_sha256": "ae570fdae7e0d8f0f6e24f314fdcfc62f26c967e767c0ad979f3e5a1b5f0ad1c",
+  "archive_sha256": "1ef78ef3aa13fe206267804a8fe6ec3f3f3c3a31e2065932ccce123f08124e0d",
+  "commit": null,
+  "consumed_files_320_match_previously_frozen_packet": true,
+  "rtl_sha256": "cfdf2a1c7bac4d72eb894d2913400eee8b70e599f8ee86127f5f1c11cdfcdd89",
+  "params": {
+    "QB_ALIGN": 1,
+    "QB_LOCAL32": 1,
+    "QB_STAGE": 1,
+    "QB_M546": 1,
+    "QB_WLOCAL": 1
+  },
+  "actual_clock": {
+    "max_root_sinks": 13775,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 802.4,
+    "tt_spread_ps": 294.6,
+    "tt_pin_spread_ps": 166.9,
+    "ff_insertion_ps": 657.2,
+    "ff_spread_ps": 236.3,
+    "ff_pin_spread_ps": 145.6,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "ck",
+        "clock": "core_clk",
+        "tt": {
+          "clock_family": {
+            "core_clk": 13772
+          },
+          "boundary": {
+            "n": 1638,
+            "mean": 633.7,
+            "min": 599.5,
+            "max": 766.4
+          },
+          "all": {
+            "n": 13772,
+            "mean": 631.4,
+            "min": 507.8,
+            "max": 802.4
+          },
+          "errors": [],
+          "macros": {
+            "n": 8,
+            "nets": 8,
+            "max_per_net": 1,
+            "reg_mean": 631.4,
+            "max_slew": 263.0,
+            "max_late": 55.5,
+            "pins": [
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[0].g_m546.g_wl.u_mem/clk",
+                "arr": 686.9,
+                "slew": 138.1,
+                "late": 55.5,
+                "net": "net54398"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[1].g_m546.g_wl.u_mem/clk",
+                "arr": 634.7,
+                "slew": 218.9,
+                "late": 3.3,
+                "net": "net54405"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[2].g_m546.g_wl.u_mem/clk",
+                "arr": 577.5,
+                "slew": 212.6,
+                "late": -53.9,
+                "net": "net54400"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[3].g_m546.g_wl.u_mem/clk",
+                "arr": 535.8,
+                "slew": 263.0,
+                "late": -95.6,
+                "net": "clknet_3_3_1_ck"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[4].g_m546.g_wl.u_mem/clk",
+                "arr": 507.8,
+                "slew": 207.9,
+                "late": -123.6,
+                "net": "clknet_3_4_1_ck"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[5].g_m546.g_wl.u_mem/clk",
+                "arr": 513.9,
+                "slew": 232.7,
+                "late": -117.5,
+                "net": "clknet_3_6_1_ck"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[6].g_m546.g_wl.u_mem/clk",
+                "arr": 685.7,
+                "slew": 200.5,
+                "late": 54.3,
+                "net": "net54402"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[7].g_m546.g_wl.u_mem/clk",
+                "arr": 561.7,
+                "slew": 212.3,
+                "late": -69.7,
+                "net": "net54401"
+              }
+            ]
+          },
+          "macro_libs": 1,
+          "child_flop": {
+            "boundary": {
+              "n": 1638,
+              "mean": 633.7,
+              "min": 599.5,
+              "max": 766.4
+            },
+            "all": {
+              "n": 13772,
+              "mean": 631.4,
+              "min": 507.8,
+              "max": 802.4
+            },
+            "refs": {
+              "ot_sram_1r1w_32x546_m1_p192_mir": {
+                "basis": "no reference: raw pin arrival",
+                "ref_ps": 0.0,
+                "pins": 8
+              }
+            },
+            "soft": {
+              "boundary": {
+                "n": 1638,
+                "mean": 633.7,
+                "min": 599.5,
+                "max": 766.4
+              },
+              "all": {
+                "n": 13764,
+                "mean": 631.4,
+                "min": 599.5,
+                "max": 802.4
+              }
+            }
+          }
+        },
+        "ff": {
+          "boundary": {
+            "n": 1638,
+            "mean": 517.0,
+            "min": 485.5,
+            "max": 631.1
+          },
+          "all": {
+            "n": 13772,
+            "mean": 515.0,
+            "min": 420.9,
+            "max": 657.2
+          },
+          "child_flop": {
+            "boundary": {
+              "n": 1638,
+              "mean": 517.0,
+              "min": 485.5,
+              "max": 631.1
+            },
+            "all": {
+              "n": 13772,
+              "mean": 515.0,
+              "min": 420.9,
+              "max": 657.2
+            },
+            "refs": {
+              "ot_sram_1r1w_32x546_m1_p192_mir": {
+                "basis": "no reference: raw pin arrival",
+                "ref_ps": 0.0,
+                "pins": 8
+              }
+            },
+            "soft": {
+              "boundary": {
+                "n": 1638,
+                "mean": 517.0,
+                "min": 485.5,
+                "max": 631.1
+              },
+              "all": {
+                "n": 13764,
+                "mean": 515.0,
+                "min": 485.5,
+                "max": 657.2
+              }
+            }
+          },
+          "macros": {
+            "n": 8,
+            "nets": 8,
+            "max_per_net": 1,
+            "reg_mean": 515.0,
+            "max_slew": 265.8,
+            "max_late": 57.1,
+            "pins": [
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[0].g_m546.g_wl.u_mem/clk",
+                "arr": 572.1,
+                "slew": 136.9,
+                "late": 57.1,
+                "net": "net54398"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[1].g_m546.g_wl.u_mem/clk",
+                "arr": 528.8,
+                "slew": 220.9,
+                "late": 13.8,
+                "net": "net54405"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[2].g_m546.g_wl.u_mem/clk",
+                "arr": 480.7,
+                "slew": 214.4,
+                "late": -34.3,
+                "net": "net54400"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[3].g_m546.g_wl.u_mem/clk",
+                "arr": 447.6,
+                "slew": 265.8,
+                "late": -67.4,
+                "net": "clknet_3_3_1_ck"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[4].g_m546.g_wl.u_mem/clk",
+                "arr": 420.9,
+                "slew": 209.7,
+                "late": -94.1,
+                "net": "clknet_3_4_1_ck"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[5].g_m546.g_wl.u_mem/clk",
+                "arr": 427.6,
+                "slew": 234.9,
+                "late": -87.4,
+                "net": "clknet_3_6_1_ck"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[6].g_m546.g_wl.u_mem/clk",
+                "arr": 570.8,
+                "slew": 201.9,
+                "late": 55.8,
+                "net": "net54402"
+              },
+              {
+                "pin": "u_ot_pr_core.u_qseat.g_writer[7].g_m546.g_wl.u_mem/clk",
+                "arr": 467.0,
+                "slew": 214.1,
+                "late": -48.0,
+                "net": "net54401"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "tt_child_flop_refs": {
+      "ot_sram_1r1w_32x546_m1_p192_mir": {
+        "basis": "no reference: raw pin arrival",
+        "ref_ps": 0.0,
+        "pins": 8
+      }
+    },
+    "ff_child_flop_refs": {
+      "ot_sram_1r1w_32x546_m1_p192_mir": {
+        "basis": "no reference: raw pin arrival",
+        "ref_ps": 0.0,
+        "pins": 8
+      }
+    },
+    "measured_clock": "core_clk",
+    "verdict": "REFUSE",
+    "text": "13,775 sinks on the largest root; measured TT insertion 802.4 ps, FF insertion 657.2 ps, TT pin-flop spread 166.9 ps, FF pin-flop spread 145.6 ps; TT pin-flop spread 166.9 ps > 80 and FF pin-flop spread 145.6 ps > 80",
+    "other_roots": []
+  },
+  "trial_route": {
+    "schema": "opentallas.ref_tile.trial_route.v1",
+    "overflow": 0,
+    "kind": "parent",
+    "skip_incremental_repair": false,
+    "rc": "0",
+    "grt_s": 11502,
+    "layers": [
+      {
+        "layer": "M1",
+        "capacity": 0,
+        "usage": 0,
+        "pct": 0.0,
+        "overflow": 0
+      },
+      {
+        "layer": "M2",
+        "capacity": 6535239,
+        "usage": 1170130,
+        "pct": 17.9,
+        "overflow": 0
+      },
+      {
+        "layer": "M3",
+        "capacity": 7747663,
+        "usage": 1319901,
+        "pct": 17.04,
+        "overflow": 0
+      },
+      {
+        "layer": "M4",
+        "capacity": 5982452,
+        "usage": 963450,
+        "pct": 16.1,
+        "overflow": 0
+      },
+      {
+        "layer": "M5",
+        "capacity": 8147788,
+        "usage": 923963,
+        "pct": 11.34,
+        "overflow": 0
+      },
+      {
+        "layer": "M6",
+        "capacity": 0,
+        "usage": 0,
+        "pct": 0.0,
+        "overflow": 0
+      }
+    ],
+    "worst_layer_usage": [
+      "M2",
+      17.9
+    ],
+    "hotspot": null,
+    "congestion_png": null
+  },
+  "reset_landing": {
+    "max_sinks": 2,
+    "ports": [
+      {
+        "port": "rst_n",
+        "sinks": 1,
+        "flops": 1,
+        "macros": 0
+      }
+    ],
+    "over": [],
+    "waived": false,
+    "ok": true
+  },
+  "fail_items": [
+    {
+      "severity": "FAIL",
+      "check": "clock_rule",
+      "message": "13,775 sinks on the largest root; measured TT insertion 802.4 ps, FF insertion 657.2 ps, TT pin-flop spread 166.9 ps, FF pin-flop spread 145.6 ps; TT pin-flop spread 166.9 ps > 80 and FF pin-flop spread 145.6 ps > 80",
+      "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+    }
+  ],
+  "geometry_comparison": {
+    "a": {
+      "outline": {
+        "w": 950.4,
+        "h": 475.2,
+        "exact": true
+      },
+      "macros": [
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?0?*u_mem",
+          "at": [
+            43.2,
+            43.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?1?*u_mem",
+          "at": [
+            43.2,
+            259.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?2?*u_mem",
+          "at": [
+            259.2,
+            43.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?3?*u_mem",
+          "at": [
+            259.2,
+            259.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?4?*u_mem",
+          "at": [
+            518.4,
+            43.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?5?*u_mem",
+          "at": [
+            518.4,
+            259.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?6?*u_mem",
+          "at": [
+            734.4,
+            43.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?7?*u_mem",
+          "at": [
+            734.4,
+            259.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        }
+      ],
+      "pin_ranges": {
+        "ck": [
+          473.7,
+          476.7
+        ],
+        "qb_row": [
+          347.2,
+          469.105
+        ],
+        "qb_v": [
+          469.205,
+          470.205
+        ],
+        "qb_beat": [
+          470.305,
+          471.495
+        ],
+        "qb_full": [
+          471.595,
+          472.595
+        ],
+        "qb_committed": [
+          472.695,
+          473.695
+        ],
+        "qb_bad": [
+          473.795,
+          474.795
+        ],
+        "lcv_o": [
+          474.895,
+          475.895
+        ],
+        "stage_o": [
+          475.995,
+          477.424
+        ],
+        "dd_o": [
+          477.524,
+          608.0
+        ],
+        "dd_i": [
+          347.2,
+          473.6
+        ],
+        "layer_context_v": [
+          477.75,
+          479.75
+        ],
+        "command_stage": [
+          479.85,
+          482.85
+        ],
+        "rst_n": [
+          482.95,
+          490.95
+        ],
+        "q_slot": [
+          491.05,
+          493.05
+        ],
+        "q_slot_beat": [
+          493.15,
+          495.65
+        ]
+      },
+      "route": {
+        "pd": 0.5,
+        "threads": 8,
+        "peak_ram_gb": 32,
+        "hold_margin_ns": 0.03,
+        "macro_halo_um": 5.4,
+        "pin_balance": {
+          "group_max": 1,
+          "h": "M4",
+          "v": "M5"
+        },
+        "io_hold_margin_ns": 0.03,
+        "cts_sink": {
+          "size": 30,
+          "diameter_um": 40,
+          "extra": "-sink_clustering_levels 2"
+        }
+      }
+    },
+    "b": {
+      "outline": {
+        "w": 993.6,
+        "h": 475.2,
+        "exact": true
+      },
+      "macros": [
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?0?*u_mem",
+          "at": [
+            43.2,
+            43.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?1?*u_mem",
+          "at": [
+            43.2,
+            259.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?2?*u_mem",
+          "at": [
+            259.2,
+            43.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?3?*u_mem",
+          "at": [
+            259.2,
+            259.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?4?*u_mem",
+          "at": [
+            561.6,
+            43.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?5?*u_mem",
+          "at": [
+            561.6,
+            259.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?6?*u_mem",
+          "at": [
+            777.6,
+            43.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        },
+        {
+          "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+          "count": 1,
+          "inst": "*u_qseat*g_writer?7?*u_mem",
+          "at": [
+            777.6,
+            259.2
+          ],
+          "orient": "R0",
+          "at_exact": true
+        }
+      ],
+      "pin_ranges": {
+        "ck": [
+          495.3,
+          498.3
+        ],
+        "qb_row": [
+          368.8,
+          490.705
+        ],
+        "qb_v": [
+          490.805,
+          491.805
+        ],
+        "qb_beat": [
+          491.905,
+          493.095
+        ],
+        "qb_full": [
+          493.195,
+          494.195
+        ],
+        "qb_committed": [
+          494.295,
+          495.295
+        ],
+        "qb_bad": [
+          495.395,
+          496.395
+        ],
+        "lcv_o": [
+          496.495,
+          497.495
+        ],
+        "stage_o": [
+          497.595,
+          499.024
+        ],
+        "dd_o": [
+          499.124,
+          629.6
+        ],
+        "dd_i": [
+          368.8,
+          495.2
+        ],
+        "layer_context_v": [
+          499.35,
+          501.35
+        ],
+        "command_stage": [
+          501.45,
+          504.45
+        ],
+        "rst_n": [
+          504.55,
+          512.55
+        ],
+        "q_slot": [
+          512.65,
+          514.65
+        ],
+        "q_slot_beat": [
+          514.75,
+          517.25
+        ]
+      },
+      "route": {
+        "pd": 0.5,
+        "threads": 8,
+        "peak_ram_gb": 32,
+        "hold_margin_ns": 0.03,
+        "macro_halo_um": 5.4,
+        "pin_balance": {
+          "group_max": 1,
+          "h": "M4",
+          "v": "M5"
+        },
+        "io_hold_margin_ns": 0.03
+      }
+    }
+  },
+  "comparison_law": "same actualRTL/params; different outlines/east macro placement/pin ranges/CTS clustering. Do not transfer qb12a clocktree mechanism to qb12b physicalroute topology. q8a distinct source/cone also excluded.",
+  "stage_model": "single source ck, eight raw SRAM clock inputs with no insertion reference; TTboundary599.5..766.4, FF485.5..631.1. No head/H16ZA/hybrid record alias.",
+  "structural_repair_status": "NOT_CHOSEN. Current JSON proves spread failure, not exact min/max endpoint/root-branch spatial cause. Required reviewed readset would identify actual minimum/maximum boundary endpoint names and positions and root-to-leaf tree from the SAME preserved actualCTS scene before choosing one structural repair. No new query/run/repair launched."
+}
