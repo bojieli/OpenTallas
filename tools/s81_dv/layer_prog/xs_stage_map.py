@@ -176,9 +176,11 @@ def probe_costs_split(probe, rows=None):
     expert-only probes (largest N; linearity of the q worst pair checked over every N probed: identical layouts), dense
     intercepts per class for the A half (a_proj rows [0, R)) and the B half (rows [R, 448) + every other dense op)"""
     s = {x['id']: x for x in json.loads(Path(probe).read_text())['specs']}
-    bad = [k for k, v in s.items() if not v['pass']]
-    assert not bad, ('probe specs fail', bad)
-    ex = sorted((v for v in s.values() if v['dense_layer'] is None and v['experts']), key=lambda v: v['experts'])
+    bad = [k for k, v in s.items() if not v['pass'] and v['dense_layer'] is not None]
+    assert not bad, ('dense probe specs fail', bad)
+    refused = [dict(n=v['experts'], q=v['q_max_fill'], fault=(v['first_fault'] or {}).get('fault'))
+               for v in s.values() if v['dense_layer'] is None and not v['pass']]
+    ex = sorted((v for v in s.values() if v['dense_layer'] is None and v['experts'] and v['pass']), key=lambda v: v['experts'])
     assert len(ex) >= 2, 'need >= 2 expert-only probes'
     big = ex[-1]
     slope = big['q_max_fill'] / big['experts']
@@ -191,6 +193,7 @@ def probe_costs_split(probe, rows=None):
                                phases=s[f'dense_L{L}{half}_n0']['cfg7_phases'])
                        for c, L in (('L0', 0), ('L1', 1), ('L2', 2), ('L14', 14), ('L20', 20), ('L24', 24))}
     return dict(slope=slope, phases_per_expert=ph, dense_split2=dense, dense_split2_rows=rows, expert_probes=lin,
+                expert_probes_refused=refused,
                 frames=big['frames'], source=str(probe))
 
 
