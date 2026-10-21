@@ -42,6 +42,3 @@ not built yet, so it costs nothing.
 
 ## Gate
 (--cts gates on bf2ba3fe5 launched 10-20 ~00:05; logs lanes/HBM-COLLQ6-ISS_logs/gate_cts_*.log)
-
-## Resubmit
-fresh resubmit 10-21 (HBM-COLLECT10/ISS): hcoll_issuer_r128v9-r128v9-3d7866eb4 false NEEDS_RTL "bench_lint expected PASS but rc=1" = daemon bench-host bug (bench track on the old host run dir after ep5->ep6 re-place; src trimmed). Not RTL; kit, RTL and approved gate unchanged.
