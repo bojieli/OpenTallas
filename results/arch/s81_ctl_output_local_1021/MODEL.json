@@ -1,0 +1,38 @@
+{
+ "status": "SOURCE_PROPOSAL_NOT_ADOPTED_NO_PHYSICAL_GATE",
+ "baseline_source": "8916a1cb6",
+ "actual_failure_record": "000a6daea",
+ "controller_module": "ot_s81hd_ctl_glue_r2o",
+ "cause": "Yosys merged identical unreset frame-output registers across distant lane pin faces; actual855.9um forced-terminal reach,519badstages",
+ "mechanism": "Replace13 existing553-bit frame output register banks with13 parameter-free keep_hierarchy same-edge FF553 instances; include draft type nibble in same bank. No datapath/valid/reset/control edge added.",
+ "source_state_bits": {
+  "old_frame_banks": 7189,
+  "new_frame_banks": 7189,
+  "delta": 0
+ },
+ "mapped_state_cost": "More physical copies can survive; exact native/area not yet measured. Upper raw output FF inventory7189, cannot infer mapped delta from source declarations.",
+ "output_boundary_bits_per_edge": {
+  "mesh": 3318,
+  "draft": 2765,
+  "host": 1106
+ },
+ "clock": "existing ck, same clctl region; actual strict spread still required",
+ "reset": "Existing data-output banks are unreset; valid/control reset unchanged. No new reset tree or release age.",
+ "latency_cycles_delta": {
+  "data": 0,
+  "valid": 0,
+  "reset": 0
+ },
+ "producer_load_plan": {
+  "merged_record_payload_each_bit": 6,
+  "draft_seed_payload_each_bit": 5,
+  "draft_step_payload_each_bit": 5,
+  "rank_group_each_bit_upper_outputs": 14
+ },
+ "remaining_physical_debt": [
+  "Cannot claim complete405um reach from output replication alone; common upstream payload holds may still need distributed same-age copies/retiming or priced stages.",
+  "MAIN1036.8square placementGPL0305 andFBclock89.5/98.5+SRAMslew218.2 failures preserved; no unchanged regate.",
+  "No kit/view/source alias; parent currentHOSTB selected source remains8916 and unchanged."
+ ],
+ "next": "Existing actual controller bench adapted only top identity, then mapped native/reach; no physical campaign until actual proof and safe plan."
+}
