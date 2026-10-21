@@ -367,8 +367,10 @@ module ot_s81sl_fp_mul_n32 #(
     wire signed [11:0] sh_sub = -(r3_power + 12'sd149);
     wire [5:0] shc = (sh_sub > 12'sd63) ? 6'd63 : sh_sub[5:0];
     wire[47:0] m_round,m_sticky;
+    wire[12*6-1:0] mask_power;
+    ot_s81sl_fp_copy #(.W(12),.N(6),.CUT(K3)) u_mask_cp(.clk(clk),.d(s1_power),.q(mask_power));
     for(genvar g=0;g<6;g=g+1)begin:g_mask
-      ot_s81sl_fp_mask8 #(.LO(8*g)) u_m(.power(r3_power),.mr(m_round[8*g+:8]),.ms(m_sticky[8*g+:8]));
+      ot_s81sl_fp_mask8 #(.LO(8*g)) u_m(.power(mask_power[12*g+:12]),.mr(m_round[8*g+:8]),.ms(m_sticky[8*g+:8]));
     end
     localparam integer W4 = 1 + 1 + 2 + 1 + 96 + 1 + 1 + 12 + 12 + 6 + 48 + 48;
     wire [W4-1:0] q4;

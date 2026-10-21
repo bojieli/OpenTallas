@@ -12,7 +12,8 @@ for k in ['add','mul']:
  (r/'equiv'/('tb_'+k+'.sv')).write_text(t)
 P
 V=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator
-for k in add mul;do
+units=("$@"); if [ ${#units[@]} = 0 ];then units=(add mul);fi
+for k in "${units[@]}";do
  "$V" --cc --exe --build -j 8 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD --top-module tb_dsrom_fp32_add_l6 --Mdir "$R/equiv/$k" "$R/equiv/tb_$k.sv" rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_fp_n32.sv "$R/src/rtl/test/tb_dsrom_fp32_add_l6.cpp" -o sim > "$R/equiv/$k.build.log" 2>&1
  "$R/equiv/$k/sim" 2000000 12345 > "$R/equiv/$k.log" 2>&1
  cat "$R/equiv/$k.log"
