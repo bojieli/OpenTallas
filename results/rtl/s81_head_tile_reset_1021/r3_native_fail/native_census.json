@@ -1,0 +1,494 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "s81hd_tile_r3m",
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib",
+      "sha256": "1b5b203f3b36184bce55d3203925c53b885618708dcc4732f0a0acb156436443"
+    },
+    {
+      "path": "/src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib",
+      "sha256": "508b54b0b02055b47c488e5d2d2e4f167b67c0dcac31bbcc84564a70090bfefb"
+    }
+  ],
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_ot_s81hd_tile_r3_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "7dbf6a993af9d809cbfce8a4de1310d389cbe854f239f08d0adabc6df3ce1b19"
+  },
+  "top": "ot_s81hd_tile_r3",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 564391,
+  "max_dynamic_loads": 51,
+  "constant_output_bits": [],
+  "functional_pin_contract": "NOT_EVALUATED",
+  "pin_registration_contract": "NOT_EVALUATED",
+  "storage_contract": "NOT_EVALUATED",
+  "independent_source_contract_audit_required": true,
+  "role_errors": [],
+  "violations": [
+    {
+      "driver": "u_core.u_b.g_a[0].u_e.g_m[10].g_nc.u_m.s2_top[12]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_038872_",
+      "loads": 51,
+      "endpoints": [
+        [
+          120597,
+          "A1",
+          0
+        ],
+        [
+          120708,
+          "B2",
+          0
+        ],
+        [
+          120732,
+          "B2",
+          0
+        ],
+        [
+          123899,
+          "A1",
+          0
+        ],
+        [
+          123903,
+          "A1",
+          0
+        ],
+        [
+          123922,
+          "B2",
+          0
+        ],
+        [
+          123932,
+          "A1",
+          0
+        ],
+        [
+          123967,
+          "A1",
+          0
+        ],
+        [
+          124012,
+          "A1",
+          0
+        ],
+        [
+          124047,
+          "A1",
+          0
+        ],
+        [
+          124082,
+          "A1",
+          0
+        ],
+        [
+          124113,
+          "C1",
+          0
+        ],
+        [
+          124118,
+          "A1",
+          0
+        ],
+        [
+          124137,
+          "A1",
+          0
+        ],
+        [
+          124153,
+          "A1",
+          0
+        ],
+        [
+          124181,
+          "B2",
+          0
+        ],
+        [
+          124196,
+          "B2",
+          0
+        ],
+        [
+          124212,
+          "C1",
+          0
+        ],
+        [
+          124243,
+          "B2",
+          0
+        ],
+        [
+          124252,
+          "A1",
+          0
+        ],
+        [
+          124288,
+          "A1",
+          0
+        ],
+        [
+          124314,
+          "A1",
+          0
+        ],
+        [
+          124321,
+          "B2",
+          0
+        ],
+        [
+          124368,
+          "A1",
+          0
+        ],
+        [
+          124375,
+          "A",
+          0
+        ],
+        [
+          124376,
+          "A1",
+          0
+        ],
+        [
+          124393,
+          "B2",
+          0
+        ],
+        [
+          124430,
+          "B2",
+          0
+        ],
+        [
+          124466,
+          "A1",
+          0
+        ],
+        [
+          14326,
+          "B",
+          0
+        ],
+        [
+          14327,
+          "A2",
+          0
+        ],
+        [
+          14328,
+          "B",
+          0
+        ],
+        [
+          14329,
+          "A2",
+          0
+        ],
+        [
+          14330,
+          "B",
+          0
+        ],
+        [
+          14331,
+          "A2",
+          0
+        ],
+        [
+          14332,
+          "B",
+          0
+        ],
+        [
+          14333,
+          "A2",
+          0
+        ],
+        [
+          14334,
+          "B",
+          0
+        ],
+        [
+          14335,
+          "A2",
+          0
+        ],
+        [
+          14336,
+          "A",
+          0
+        ]
+      ]
+    },
+    {
+      "driver": "u_core.u_b.g_a[0].u_e.g_m[14].g_nc.u_m.s2_top[12]$_DFF_P_/QN",
+      "driver_role": "sequential",
+      "net": "_057072_",
+      "loads": 51,
+      "endpoints": [
+        [
+          166665,
+          "B",
+          0
+        ],
+        [
+          166666,
+          "A2",
+          0
+        ],
+        [
+          166667,
+          "B",
+          0
+        ],
+        [
+          166668,
+          "A2",
+          0
+        ],
+        [
+          166669,
+          "B",
+          0
+        ],
+        [
+          166670,
+          "A2",
+          0
+        ],
+        [
+          166671,
+          "B",
+          0
+        ],
+        [
+          166672,
+          "A2",
+          0
+        ],
+        [
+          166673,
+          "B",
+          0
+        ],
+        [
+          166674,
+          "A2",
+          0
+        ],
+        [
+          166675,
+          "B",
+          0
+        ],
+        [
+          166676,
+          "A2",
+          0
+        ],
+        [
+          166677,
+          "B",
+          0
+        ],
+        [
+          166678,
+          "A2",
+          0
+        ],
+        [
+          166679,
+          "B",
+          0
+        ],
+        [
+          166680,
+          "A2",
+          0
+        ],
+        [
+          166681,
+          "B",
+          0
+        ],
+        [
+          166682,
+          "A2",
+          0
+        ],
+        [
+          166683,
+          "B",
+          0
+        ],
+        [
+          166684,
+          "A2",
+          0
+        ],
+        [
+          166685,
+          "B",
+          0
+        ],
+        [
+          166686,
+          "A2",
+          0
+        ],
+        [
+          176562,
+          "B1",
+          0
+        ],
+        [
+          176571,
+          "B2",
+          0
+        ],
+        [
+          176577,
+          "B1",
+          0
+        ],
+        [
+          178072,
+          "A",
+          0
+        ],
+        [
+          178073,
+          "A1",
+          0
+        ],
+        [
+          179586,
+          "B2",
+          0
+        ],
+        [
+          179596,
+          "B2",
+          0
+        ],
+        [
+          179615,
+          "B2",
+          0
+        ],
+        [
+          179631,
+          "B2",
+          0
+        ],
+        [
+          179643,
+          "B2",
+          0
+        ],
+        [
+          179679,
+          "A1",
+          0
+        ],
+        [
+          179686,
+          "A1",
+          0
+        ],
+        [
+          179698,
+          "A1",
+          0
+        ],
+        [
+          179715,
+          "B2",
+          0
+        ],
+        [
+          179743,
+          "A1",
+          0
+        ],
+        [
+          179804,
+          "B2",
+          0
+        ],
+        [
+          179811,
+          "B2",
+          0
+        ],
+        [
+          179828,
+          "B2",
+          0
+        ]
+      ]
+    }
+  ],
+  "raw_receipt": {
+    "sha256": "2cf439ea027f7991126765a630a1c531218b3bd988bd4547d0960bbdd66c7588",
+    "size_bytes": 124761866,
+    "immutable_remote": "ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/s81hd_tile_r3m-20261021-113630/routes/gate/work/orfs/native_census.json",
+    "local_raw": "/home/ubuntu/scratch/codex-s81-head-chain-1021/tile_r3_native_census_raw.json",
+    "projection": "Only passing per-driver entries omitted; all violations, role errors, netlist/lib hashes and summary retained."
+  }
+}
