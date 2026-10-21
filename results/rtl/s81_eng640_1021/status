@@ -1,0 +1,16 @@
+tap1 build rc 0
+onesc build rc 0
+xq2 build rc 0
+tap2 build rc 0
+base build rc 0
+xq1 build rc 0
+rpar build rc 0
+base: TB_ENG_RR PASS ENG_RR_PY PASS
+xq1: TB_ENG_RR FAIL ENG_RR_PY FAIL
+xq2: TB_ENG_RR PASS ENG_RR_PY FAIL
+tap1: TB_ENG_RR FAIL ENG_RR_PY PASS
+tap2: TB_ENG_RR FAIL ENG_RR_PY PASS
+rpar: TB_ENG_RR FAIL ENG_RR_PY FAIL
+onesc: TB_ENG_RR FAIL ENG_RR_PY PASS
+base +SEED=2 +LAT=160: TB_ENG_RR PASS ENG_RR_PY PASS
+base +SEED=3 +LAT=60: TB_ENG_RR PASS ENG_RR_PY PASS
