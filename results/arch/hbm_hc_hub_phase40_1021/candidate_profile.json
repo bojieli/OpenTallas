@@ -81,7 +81,7 @@
     "safe2_qcen_input_landing_edges_vs_SAFE0": 1,
     "root_QCHX_delta_vs_functional_legacy_p40": 1,
     "root_RAW0_delta_vs_legacy_p40": 1,
-    "programme_image_status": "NOT_GENERATED_OR_QUALIFIED",
+    "programme_image_status": "SCOPED_K31_NPOS1_INPUT_PROFILE_ASSEMBLED_NOT_EXECUTION_QUALIFIED",
     "gather_legacy_p40_k31": {
       "G0": "L+51",
       "tail": "L+83",
@@ -98,7 +98,8 @@
     "G22_gather_calendar_delta_vs_legacy11": 0,
     "profile_helper": "tools/hbm_layer_vehicle/hc_safe2_phase40_1021.py",
     "scope": "rank0 k31 HC.HC_MIX_POST, priced record30 hc_attn (mixes + Sinkhorn), K20480, npos1, explicit relocated component VM A64/O72; not native L0",
-    "multi_position_root_calendar": "NOT_GENERATED_OR_QUALIFIED; reader40 cadence adds16 edges per additional position, gm_open/tail windows require actual npos price"
+    "multi_position_root_calendar": "NOT_GENERATED_OR_QUALIFIED; reader40 cadence adds16 edges per additional position, gm_open/tail windows require actual npos price",
+    "scoped_image_path": "results/arch/hbm_hc_hub_phase40_1021/safe2_k31_input_profile"
   },
   "clock_entries": {
     "glue": [
