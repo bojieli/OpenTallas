@@ -79,7 +79,12 @@
   "peak_ram_gb": 32,
   "hold_margin_ns": 0.03,
   "io_hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
  "structural_change": "S81-DV (owner 0cj 10-16): new leaf. Slice norm exchange: beat-partial collector, exchange ring stop (fixed hop counts, no flow control, collisions fault) and replicated golden-tree finish (ot_dsrom_su_norm vector levels verbatim, divide by D, + eps, rsqrt). Every input lands in a flop (robust first cell); no input/output hold padding (die-level hold budget at relay stations). RTL-BUILD-S81 10-18: ENG mode (mode pin, sampled with go) -- 12-vector Engram collector, slot-fill ring inject (forwards first), 4 per-copy eng_finish trees (hh/kk/dd on one adder each), e_* csum totals; NORM paths unchanged. S81-SLICE/CHILD 10-21 e2: re-close on current RTL (no RTL change); outline 345.6x345.6; e_* moved N->W (toward u_eg); io_hold_margin 0.03.",
  "job": {
@@ -183,56 +188,56 @@
  "std_area_um2_est": 60000,
  "pin_ranges": {
   "wi_v": [
-   5,
-   200
+   6.48,
+   8.933
   ],
   "wi_h": [
-   5,
-   200
+   8.933,
+   11.833
   ],
   "wi_b": [
-   5,
-   200
+   11.833,
+   17.631
   ],
   "wi_d": [
-   5,
-   200
+   17.631,
+   133.595
   ],
   "wo_v": [
-   5,
-   200
+   133.595,
+   136.048
   ],
   "wo_h": [
-   5,
-   200
+   136.048,
+   138.947
   ],
   "wo_b": [
-   5,
-   200
+   138.947,
+   144.745
   ],
   "wo_d": [
-   5,
-   200
+   144.745,
+   260.709
   ],
   "e_v": [
-   215,
-   340
+   264.635,
+   267.088
   ],
   "e_c": [
-   215,
-   340
+   267.088,
+   269.542
   ],
   "e_hh": [
-   215,
-   340
+   269.542,
+   292.734
   ],
   "e_kk": [
-   215,
-   340
+   292.734,
+   315.927
   ],
   "e_dd": [
-   215,
-   340
+   315.927,
+   339.12
   ]
  },
  "reset_landing": {
