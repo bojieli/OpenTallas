@@ -131,27 +131,30 @@ module ot_rp4a_leaf_core #(parameter integer OS = 0) (input wire clk, input wire
     wire [TAGW-1:0] itag, itag_e;
     wire [LBS*266+LSB*16-1:0] iw, ix;
     wire [255:0] pvx;          // fx when input_pv (the broadcast x word)
-    wire [7:0] ipv;            // input_pv per 32-bit fx slice
+    wire [255:0] ipv;          // input_pv per fx bit (OS: from NIPV kept copies, <= 11 bits = 22 select pins each)
     generate if (OS != 0) begin : g_xo
         reg q_iv_b, q_iv_f, q_ifirst, q_ilast, q_ifp4, q_ifirst_e, q_ilast_e;
         reg [TAGW-1:0] q_itag, q_itag_e;
         reg [LBS*266+LSB*16-1:0] q_iw, q_ix;
-        (* keep *) reg [7:0] k_ivf, k_fp4, k_w129;
+        // HBM-SMATT11 (r1 census: the 8 per-slice input_pv selects drove 64 pins = 32 bits x 2 mux pins): NIPV = 24
+        // KEPT copies of each input (x pin -> 24 + 1 loads), copy j selects fx bits [j*256/24, (j+1)*256/24) (<= 11 bits)
+        localparam integer NIPV = 24;
+        (* keep *) reg [NIPV-1:0] k_ivf, k_fp4, k_w129;
         reg [7:0] oh;
         (* keep *) reg [7:0] k_oh [0:15];
         integer i;
         always @(posedge clk) begin
             q_iv_b <= x_iv_b; q_iv_f <= x_iv_f; q_ifirst <= x_ifirst; q_ilast <= x_ilast; q_ifp4 <= x_ifp4;
             q_ifirst_e <= x_ifirst_e; q_ilast_e <= x_ilast_e; q_itag <= x_itag; q_itag_e <= x_itag_e; q_iw <= x_iw; q_ix <= x_ix;
-            k_ivf <= {8{x_iv_f}}; k_fp4 <= {8{x_ifp4}}; k_w129 <= {8{x_iw[129]}};
+            k_ivf <= {NIPV{x_iv_f}}; k_fp4 <= {NIPV{x_ifp4}}; k_w129 <= {NIPV{x_iw[129]}};
             for (i = 0; i < 8; i = i + 1) oh[i] <= (attn_column == i[2:0]);
             for (i = 0; i < 16; i = i + 1) k_oh[i] <= oh;
         end
         assign {iv_b, iv_f, ifirst, ilast, ifp4, ifirst_e, ilast_e} = {q_iv_b, q_iv_f, q_ifirst, q_ilast, q_ifp4, q_ifirst_e, q_ilast_e};
         assign itag = q_itag; assign itag_e = q_itag_e; assign iw = q_iw; assign ix = q_ix;
         genvar s, b, c;
-        for (s = 0; s < 8; s = s + 1) begin : g_ipv
-            assign ipv[s] = k_ivf[s] && k_fp4[s] && k_w129[s];
+        for (s = 0; s < 256; s = s + 1) begin : g_ipv
+            assign ipv[s] = k_ivf[(s * NIPV) / 256] && k_fp4[(s * NIPV) / 256] && k_w129[(s * NIPV) / 256];
         end
         for (s = 0; s < 16; s = s + 1) begin : g_bw
             for (b = 0; b < 16; b = b + 1) begin : g_b
@@ -166,7 +169,7 @@ module ot_rp4a_leaf_core #(parameter integer OS = 0) (input wire clk, input wire
         assign {iv_b, iv_f, ifirst, ilast, ifp4, ifirst_e, ilast_e} = {x_iv_b, x_iv_f, x_ifirst, x_ilast, x_ifp4, x_ifirst_e, x_ilast_e};
         assign itag = x_itag; assign itag_e = x_itag_e; assign iw = x_iw; assign ix = x_ix;
         assign pvx = {16{x_iw[16*attn_column +: 16]}};
-        assign ipv = {8{x_iv_f && x_ifp4 && x_iw[129]}};
+        assign ipv = {256{x_iv_f && x_ifp4 && x_iw[129]}};
     end endgenerate
     ot_hbm_accel_smh_xs
 `ifndef OT_RP4A_HARD
@@ -186,6 +189,8 @@ module ot_rp4a_leaf_core #(parameter integer OS = 0) (input wire clk, input wire
     reg [4:0] publish0;
     reg fold0; reg [2:0] fold0_a, fold0_b;
     integer fs;
+    reg [255:0] fx_n;
+    always @* for (fs = 0; fs < 256; fs = fs + 1) fx_n[fs] = ipv[fs] ? pvx[fs] : ix[LBS*266 + fs];
     always @(posedge clk)
         if (!r_x) begin bv <= 0; fv <= 0; publish0 <= 0; fold0 <= 0; end
         else begin
@@ -200,7 +205,7 @@ module ot_rp4a_leaf_core #(parameter integer OS = 0) (input wire clk, input wire
         ffirst <= ifirst_e; fqlast <= ilast_e && !input_pv; fplast <= ilast_e && input_pv;
         frfirst <= iw[132]; frlast <= iw[133]; ftag <= itag_e;
         fw <= iw[LBS*266 +: 256];
-        for (fs = 0; fs < 8; fs = fs + 1) fx[32*fs +: 32] <= ipv[fs] ? pvx[32*fs +: 32] : ix[LBS*266 + 32*fs +: 32];
+        fx <= fx_n;
     end
     wire bov, bfault, fov, qf, mf, ps_v;
     wire [31:0] by, fy, ps_data;
@@ -259,33 +264,39 @@ module ot_rp4a_leaf_core #(parameter integer OS = 0) (input wire clk, input wire
     reg gv_q, gf_q;
     reg [31:0] gy_q;
     reg [TAGW-1:0] gt_q;
-    wire [2:0] kb, kf, kp;
+    // kb/kp: [0] valid/fault, [4:1] gy select (8 bits each), [6:5] gt select (8 bits each); kf: [0] only
+    // HBM-SMATT11 (r1 census: k_b[1] / k_p[1] drove the 32-bit gy mux = 64 pins): 4 + 2 KEPT select copies
+    wire [6:0] kb, kp;
+    wire [0:0] kf;
     wire [31:0] gby, gfy, gpd;
     wire [TAGW-1:0] gbt, gft;
     wire [11:0] gsr;
     wire gbf, gff;
     generate if (OS != 0) begin : g_go
-        (* keep *) reg [2:0] k_b, k_f, k_p;
+        (* keep *) reg [6:0] k_b, k_p;
+        (* keep *) reg [0:0] k_f;
         reg [31:0] q_by, q_fy, q_pd;
         reg [TAGW-1:0] q_bt, q_ft;
         reg [11:0] q_sr;
         reg q_bf, q_ff;
         always @(posedge clk) begin
-            k_b <= {3{bov}}; k_f <= {3{fov}}; k_p <= {3{ps_v}};
+            k_b <= {7{bov}}; k_f <= fov; k_p <= {7{ps_v}};
             q_by <= by; q_fy <= fy; q_pd <= ps_data; q_bt <= bt; q_ft <= ft; q_sr <= scalar_row; q_bf <= bfault; q_ff <= ffault;
         end
         assign kb = k_b; assign kf = k_f; assign kp = k_p; assign gby = q_by; assign gfy = q_fy; assign gpd = q_pd;
         assign gbt = q_bt; assign gft = q_ft; assign gsr = q_sr; assign gbf = q_bf; assign gff = q_ff;
     end else begin : g_nogo
-        assign kb = {3{bov}}; assign kf = {3{fov}}; assign kp = {3{ps_v}}; assign gby = by; assign gfy = fy; assign gpd = ps_data;
+        assign kb = {7{bov}}; assign kf = fov; assign kp = {7{ps_v}}; assign gby = by; assign gfy = fy; assign gpd = ps_data;
         assign gbt = bt; assign gft = ft; assign gsr = scalar_row; assign gbf = bfault; assign gff = ffault;
     end endgenerate
     always @(posedge clk)
         if (!r_g) begin gv_q <= 0; gf_q <= 0; end
         else begin gv_q <= kb[0] | kf[0] | kp[0]; gf_q <= gbf | gff | (kb[0] && kf[0]) | (kp[0] && (kb[0] || kf[0])); end
+    wire [TAGW-1:0] gpt = {gsr, 1'b1, 3'd0};
+    integer gb;
     always @(posedge clk) begin
-        gy_q <= kp[1] ? gpd : kb[1] ? gby : gfy;
-        gt_q <= kp[2] ? {gsr, 1'b1, 3'd0} : kb[2] ? gbt : gft;
+        for (gb = 0; gb < 32; gb = gb + 1) gy_q[gb] <= kp[1 + gb / 8] ? gpd[gb] : kb[1 + gb / 8] ? gby[gb] : gfy[gb];
+        for (gb = 0; gb < TAGW; gb = gb + 1) gt_q[gb] <= kp[5 + gb / 8] ? gpt[gb] : kb[5 + gb / 8] ? gbt[gb] : gft[gb];
     end
     assign g = {gv_q, gf_q, gy_q, gt_q};
 endmodule
