@@ -1,5 +1,5 @@
 {
- "name": "hdie_svg_rel8d-svg_rel8d-c618db34f",
+ "name": "hdie_svg_rel8d-svg_rel8d-134f79dc0",
  "block": "ot_hbm_svc_sm_group_rel_h",
  "ref_tile": true,
  "owner": "Claude:HBM-COLLECT10/SVG",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/hbm-collect10-svgrel8c-1021",
-  "commit": "c618db34f"
+  "commit": "134f79dc0"
  },
  "stages": {
   "bench": [
@@ -75,7 +75,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hdie_svg_rel8d/hdie_svg_rel8d-svg_rel8d-c618db34f"
+   "to": "results/rtl/ref_tile/hdie_svg_rel8d/hdie_svg_rel8d-svg_rel8d-134f79dc0"
   }
  ],
  "cycles_added": 0,

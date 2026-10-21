@@ -9,7 +9,7 @@ about 985k find_timing_paths calls. Each landing bank decoded its identity check
 from the FIFO head (8-slot storage mux -> compare -> 256 seen bits), so every one of those registers was a cross-family
 consumer of ~200 storage bits. Fix (RTL, ot_hbm_svc_sm8_landing_bank_h): stage A copies the RAW head word into
 reader-family registers (loaded under rd_valid through KEPT-qualified slice ANDs; each bit reads only its 8 storage bits);
-stage B runs the identity check / seen / received / sticky / completion on those registers. Expected pairs ~8 x 2.3k + 2.6k.
+stage B runs the identity check / seen / received / sticky / completion on those registers. Bank state is held in flat vectors, not reg arrays: an array indexed by the registered h_bank became a yosys $mem, and MEMORY_DFF cloned h_bank into an anonymous flop (gate r1 failed with an OT_GF unapproved crossing). Expected pairs ~8 x 2.3k + 2.6k.
 
 Async clock groups were checked and rejected: in OpenSTA, set_clock_groups -asynchronous removes the set_max_delay /
 set_min_delay -ignore_clock_latency pairs ("No paths found", 512/512 pairs in a 833.333/1024 ps test,
