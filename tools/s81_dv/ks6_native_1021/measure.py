@@ -8,7 +8,7 @@ src=root/'rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv';top='dsdv_static_ks6'
 libs=sorted(Path('/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM').glob('*RVT_TT_nldm*.lib'));assert len(libs)==5
 seq=next(x for x in libs if 'SEQ_' in x.name);flags=' '.join('-liberty '+str(x) for x in libs)
 sha=lambda x:hashlib.sha256(x.read_bytes()).hexdigest()
-prov={'source_ref':'d64020ffb','source_sha256':sha(src),'script_sha256':sha(Path(__file__)),'library_sha256':{x.name:sha(x) for x in libs},'yosys':subprocess.check_output(['yosys','-V'],text=True).strip(),'top':top,'parameters':{'SPAN':1259408,'GRAPH_TAG':'218d375d','NOPS':128},'scope':'KS6 adapter only; no host qualification, no layout/timing/fit/adoption'}
+prov={'source_ref':'native-bank13-candidate','source_sha256':sha(src),'script_sha256':sha(Path(__file__)),'library_sha256':{x.name:sha(x) for x in libs},'yosys':subprocess.check_output(['yosys','-V'],text=True).strip(),'top':top,'parameters':{'SPAN':1259408,'GRAPH_TAG':'218d375d','NOPS':128},'scope':'KS6 adapter only; no host qualification, no layout/timing/fit/adoption'}
 (out/'provenance.json').write_text(json.dumps(prov,indent=2)+'\n')
 y=f'read_verilog -sv -DSYNTHESIS {src}\nhierarchy -check -top {top}\nsynth -top {top} -flatten -noabc\n'
 y+=''.join('read_liberty -lib '+str(x)+'\n' for x in libs)
@@ -16,7 +16,13 @@ y+=f'dfflibmap -liberty {seq}\nabc {flags} -D 833\nclean\ncheck -assert\nstat {f
 (out/'map.ys').write_text(y)
 with (out/'map.log').open('w') as f:rc=subprocess.run(['yosys','-s',str(out/'map.ys')],stdout=f,stderr=subprocess.STDOUT).returncode
 if rc:raise SystemExit(rc)
-m=json.loads((out/'mapped.json').read_text())['modules'][top];cells=collections.Counter(c['type'] for c in m['cells'].values() if c['type']!='$scopeinfo');areas={}
+mods=json.loads((out/'mapped.json').read_text())['modules'];cells=collections.Counter()
+def collect(name):
+ for c in mods[name]['cells'].values():
+  t=c['type']
+  if t in mods and not mods[t].get('attributes',{}).get('blackbox'):collect(t)
+  elif t!='$scopeinfo':cells[t]+=1
+collect(top);areas={} 
 for lib in libs:
  for name,body in re.findall(r'cell\s*\(\s*(\S+)\s*\)\s*\{(.*?)(?=\n  cell|\Z)',lib.read_text(),re.S):
   q=re.search(r'\barea\s*:\s*([\d.]+)',body)

@@ -49,7 +49,17 @@ module dsdv_static_ks6 #(
     reg [47:0] global_edge;
     reg [9:0] owner;
     // 312 payload bits: below the 2-kbit SRAM threshold. Data is unreset.
-    reg [6*52-1:0] descriptors;
+    wire [51:0] descriptor_read;
+    wire descriptor_write = !arm && fault == 0 && !immediate_bad && selected && armed && f_ks[52];
+    genvar bank;
+    generate for (bank=0;bank<4;bank=bank+1) begin : g_descriptor_bank
+        // Each independent 13-bit selector has at most26 dynamic contacts
+        // on a select root. Preserve hierarchy so identical decode cones stay
+        // local to their actual narrow storage bank, with no added edge.
+        (* keep_hierarchy = "yes" *) dsdv_static_ks6_bank13 u_data (
+            .ck(ck), .we(descriptor_write), .wr(wr), .rd(rd),
+            .d(f_ks[13*bank+:13]), .q(descriptor_read[13*bank+:13]));
+    end endgenerate
     reg [5:0] valid;
     reg [2:0] wr, rd;
     reg [23:0] wait_edges;
@@ -123,7 +133,6 @@ module dsdv_static_ks6 #(
                 armed <= 0;
             end else if (selected && armed) begin
                 if (f_ks[52]) begin
-                    descriptors[52*wr +: 52] <= f_ks[51:0];
                     valid[wr] <= 1; wr <= wr + 1'b1;
                 end
                 if (wait_edges > 1) wait_edges <= wait_edges - 1'b1;
@@ -133,7 +142,7 @@ module dsdv_static_ks6 #(
                     if (rd >= 6 || !valid[rd]) begin
                         fault[0] <= 1; armed <= 0;
                     end else begin
-                        timed_ks <= {1'b1, descriptors[52*rd +: 52]};
+                        timed_ks <= {1'b1, descriptor_read};
                         valid[rd] <= 0;
                         if (rd == 5) begin armed <= 0; done <= 1; end
                         else begin rd <= rd + 1'b1; wait_edges <= SPAN; end
@@ -146,5 +155,27 @@ module dsdv_static_ks6 #(
             end
         end
     end
+endmodule
+// Six opaque descriptors; payload unreset and below2kbit. Fixed slots and
+// explicit onehot read selection replace variable wide part-select barrels.
+(* keep_hierarchy = "yes" *)
+module dsdv_static_ks6_bank13 (
+    input wire ck,we,
+    input wire [2:0] wr,rd,
+    input wire [12:0] d,
+    output wire [12:0] q
+);
+    reg [12:0] word0,word1,word2,word3,word4,word5;
+    always @(posedge ck) begin
+        if (we && wr==0) word0<=d;
+        if (we && wr==1) word1<=d;
+        if (we && wr==2) word2<=d;
+        if (we && wr==3) word3<=d;
+        if (we && wr==4) word4<=d;
+        if (we && wr==5) word5<=d;
+    end
+    assign q=({13{rd==0}}&word0)|({13{rd==1}}&word1)|
+             ({13{rd==2}}&word2)|({13{rd==3}}&word3)|
+             ({13{rd==4}}&word4)|({13{rd==5}}&word5);
 endmodule
 `default_nettype wire
