@@ -120,8 +120,19 @@
    "master": "ot_s81sl_kv_leaf",
    "qualification": "functional real VP/SRAM component PASS; not bound/physical",
    "required_binding": "s3N leaf0 opcode15 KV_ENABLE1; producer/TP4 transport still open",
-   "binding_prepared": "apply_kv_g9.py supplies exacts3N KV_ENABLE1; remaining qualification/producer holds persist",
-   "source_policy_hold": "Currentlogicalkey emits publicot_s81sl_slice #(KV_ENABLE1); rendererselectsviews bypublicmaster, notparams. Nocurrentdefaultsliceview exists, but futuredefaultoffview mustneverqualifythisvariant. Parentreviewpendingforuniqueparameter-freepassthroughtop pinningactualproductionparams; no selectedG9GEN untilunique/configuredviewguard settled."
+   "binding_prepared": "apply_kv_g9.py now emitsuniquephysicalmaster ot_s81sl_slice_kv512, topnooverride; leaf0actualproductionKV_ENABLE1, no state/math/edges added.",
+   "source_policy_hold": "RESOLVED source-only: distinctparameter-free18portpassthrough top+exactwrapper/baseslicehashguard preventsdefaultoffsliceviewalias. PhysicalmasterUNBOUND/native+fullslicephysicalqualification/producertransport/programmeheld.",
+   "physical_master": "ot_s81sl_slice_kv512",
+   "top_params": {},
+   "fixed_child_params": {
+    "HB": 0,
+    "DL": 4,
+    "DR": 6,
+    "DX": 6,
+    "VQ_XMEM": 2,
+    "KV_ENABLE": 1,
+    "VS_MUT": 0
+   }
   },
   "eng_taps": {
    "source": "4c587294c/c8056173e",
@@ -247,5 +258,15 @@
    "publication_main": "8da2cab50"
   }
  },
- "initial_transport_preparation_commit": "c779add25d63590fc1ad67ee564a1deb39575be5"
+ "initial_transport_preparation_commit": "c779add25d63590fc1ad67ee564a1deb39575be5",
+ "configured_coll_g9": {
+  "overlay": "tools/s81_dv/release72/apply_coll_g9.py",
+  "defines": [
+   "OT_COLL_NATIVE32",
+   "OT_COLL_NATIVE32_OFF"
+  ],
+  "source_hashes": "coll_config/MODEL.json exact10CLOSEDWsource+actualmem151 API",
+  "actual_G8_original_argv": "coll_config/original_g8_argv.json DSFD_PQ_STATIC_X2only; no equivalenceclaim",
+  "runtime": "NOTRUN; originalaggregatecompilefailurepreserved, no retryuntilsource/configclosure review"
+ }
 }

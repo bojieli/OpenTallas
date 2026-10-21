@@ -8,6 +8,8 @@ programme dates, native fanout and physical qualification remain open.
 import argparse
 import copy
 import json
+import hashlib
+import subprocess
 from pathlib import Path
 
 
@@ -21,7 +23,9 @@ def apply(plan, table, source_ref):
     key = 'dsdv_slice_kv512'
     assert key not in table['masters'], 'KV source overlay already applied'
     row = copy.deepcopy(original)
-    row.setdefault('params', {})['KV_ENABLE'] = 1
+    assert not original.get('params'), 'KV512 fixed wrapper requires actual default HB0/DL4/DR6/DX6/VQ2/VS_MUT0'
+    row['module'] = 'ot_s81sl_slice_kv512'
+    row['params'] = {}
     row['ref'] = source_ref
     row['view'] = None
     row['view_note'] = ('UNBOUND G9 KV_ENABLE1 source variant; leaf0 op15 uses production D512 bank/adapter. '
@@ -29,7 +33,7 @@ def apply(plan, table, source_ref):
     table['masters'][key] = row
     block['master'] = key
     sources = ['rtl/dsrom_sys/s81_dv/slice/' + n for n in
-               ('ot_s81sl_slice.sv', 'ot_s81sl_kv_leaf.sv', 'ot_s81sl_kv_bank.sv',
+               ('ot_s81sl_slice_kv512.sv', 'ot_s81sl_slice.sv', 'ot_s81sl_kv_leaf.sv', 'ot_s81sl_kv_bank.sv',
                 'ot_s81sl_xgt.sv', 'ot_s81sl_rstopt.sv', 'ot_s81sl_xrt.sv')]
     refs = table.setdefault('rtl_refs', {}).setdefault(source_ref, [])
     prefer = table.setdefault('prefer', [])
@@ -40,15 +44,15 @@ def apply(plan, table, source_ref):
         if selected not in prefer:
             prefer.append(selected)
     plan['facts']['kv_bank_source_binding'] = dict(
-        instance='u_s_3N.lf[0].u_lf.g_kv.u_kv', master='ot_s81sl_kv_leaf', source_ref=source_ref,
-        params={'KV_ENABLE': 1}, opcode=15, gain_kind=7, kv_kind=1,
+        instance='u_s_3N.u_slice.lf[0].u_lf.g_kv.u_kv', master='ot_s81sl_kv_leaf', source_ref=source_ref,
+        params={'HB':0,'DL':4,'DR':6,'DX':6,'VQ_XMEM':2,'KV_ENABLE':1,'VS_MUT':0}, physical_master='ot_s81sl_slice_kv512', top_params={}, opcode=15, gain_kind=7, kv_kind=1,
         model='tools/s81_dv/kv_bank_1021/MODEL.json',
         status='SOURCE_ONLY_NATIVE_AND_PHYSICAL_QUALIFICATION_OWED',
         vm_input_rows=[672, 819], vm_output_rows=[672, 771],
         fixed_drain_age=1024, fixed_drain_edges=104, write_events=26, unique_spine_addresses=25,
         mechanism_receipt='6e4c28b27:results/token_pass/s81_kv_real_vp_1021/r3/result.json',
         producer_hold='Actual CAP gather, TP4 exchange, VM lifetime and issue programme are not supplied by this overlay',
-        qualification_hold='KV_ENABLE1 changes leaf hardware; no VS/default-off slice view or prior native census alias')
+        qualification_hold='Distinct parameter-free ot_s81sl_slice_kv512 pins KV_ENABLE1; default-off physicalmaster cannot match. KV_ENABLE1 changes leaf hardware; no VS/default-off slice view or prior native census alias')
 
 
 def main():
@@ -57,6 +61,11 @@ def main():
     parser.add_argument('--table', required=True, type=Path)
     parser.add_argument('--source-ref', required=True)
     args = parser.parse_args()
+    root=Path(__file__).resolve().parents[3]
+    model=json.loads((root/'tools/s81_dv/kv_bank_1021/MODEL.json').read_text())['g9_unique_master']
+    for filename,key in [('ot_s81sl_slice_kv512.sv','source_sha256'),('ot_s81sl_slice.sv','base_slice_sha256')]:
+        raw=subprocess.check_output(['git','-C',str(root),'show',args.source_ref+':rtl/dsrom_sys/s81_dv/slice/'+filename])
+        assert hashlib.sha256(raw).hexdigest()==model[key], 'exact KV512 wrapper/slice source guard failed'
     plan = json.loads(args.plan.read_text())
     table = json.loads(args.table.read_text())
     apply(plan, table, args.source_ref)
