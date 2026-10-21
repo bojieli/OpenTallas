@@ -8,7 +8,7 @@ placeholder).  OT_KV_CTL_C32 = 1 | 2 makes kv_static_die.rtl_text() emit THE SAM
 same assigns) with the members replaced by their native-census successors, into its own tile file (suffix _c32 / _c32b), so a
 kit built from that file passes kv_tile_views identity:
 
-  u_boot qkd_static_kv_boot_dispatch_mu      -> qkd_static_kv_boot_dispatch_mu_s32 (SRQ 2)        qkd_kv_ctl_s32_boot.sv
+  u_boot qkd_static_kv_boot_dispatch_mu      -> qkd_static_kv_boot_dispatch_mu_c32 (SRQ 2)        qkd_kv_ctl_c32_boot.sv
   u_dcfg qkd_kv_die_cfg_a (AGES 1)           -> qkd_kv_die_cfg_a_c32 (AGES 1)                     qkd_kv_ctl_c32_dcfg.sv
   u_fanr qkd_kv_es_fan_root2_b               -> qkd_kv_es_fan_root2_b_c32 (S32, RCOPIES 32, PH1C)  qkd_kv_ctl_c32_misc.sv
   u_lprg qkd_static_kv_layer_programme_mu    -> qkd_static_kv_layer_programme_s32 (CTLSRAM, RCOPIES 32)
@@ -36,7 +36,7 @@ D = 'rtl/qwen_sys/static_kv_die_20261017/'
 M = 'rtl/qwen_sys/mu_qwen_20261018/'
 SOURCES = (
     'rtl/lib/ot_s32_cells.sv',
-    D + 'qkd_kv_ctl_s32_boot.sv', D + 'qkd_kv_ctl_c32_misc.sv', D + 'qkd_kv_ctl_s32_writer.sv',
+    D + 'qkd_kv_ctl_c32_boot.sv', D + 'qkd_kv_ctl_c32_misc.sv', D + 'qkd_kv_ctl_s32_writer.sv',
     D + 'qkd_kv_ctl_c32_dcfg.sv', D + 'qkd_kv_ctl_c32_obs.sv',
     M + 'qkd_static_kv_layer_programme_s32.sv',
     'physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.v',
@@ -51,7 +51,7 @@ def subs(ctlsram):
     return [
         ('qkd_static_kv_boot_dispatch_mu #(.MUT(0), .DIECFG(1), .NRST(43), .LINKCFG(1), .ESCFG(1), .DIECAP(1), .MU(1), '
          '.WMUT(0)) u_boot',
-         'qkd_static_kv_boot_dispatch_mu_s32 #(.MUT(0), .DIECFG(1), .NRST(43), .LINKCFG(1), .ESCFG(1), .DIECAP(1), .MU(1), '
+         'qkd_static_kv_boot_dispatch_mu_c32 #(.MUT(0), .DIECFG(1), .NRST(43), .LINKCFG(1), .ESCFG(1), .DIECAP(1), .MU(1), '
          '.WMUT(0), .SRQ(2)) u_boot'),
         ('qkd_kv_die_cfg_a #(.NRST(43), .CAP(1), .AGES(1), .MUT(0)) u_dcfg',
          'qkd_kv_die_cfg_a_c32 #(.NRST(43), .CAP(1), .AGES(1), .MUT(0)) u_dcfg'),

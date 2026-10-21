@@ -30,7 +30,7 @@ COMMON="$S/qkd_static_kv_ownership.sv $S/qkd_static_kv_layer_programme.sv $S/qkd
  $M/qkd_static_kv_ownership_calendar_mu.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kv_die_cfg_a.sv
  physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x64_p192/ctl_sram_1r1w_64x64_p192.v
  physical/asap7_memory_macros_v2/ctl_sram_1r1w_64x128_p192/ctl_sram_1r1w_64x128_p192.v
- rtl/lib/ot_s32_cells.sv $LP $D/qkd_kv_ctl_s32_writer.sv $D/qkd_kv_ctl_c32_misc.sv $D/qkd_kv_ctl_s32_boot.sv
+ rtl/lib/ot_s32_cells.sv $LP $D/qkd_kv_ctl_s32_writer.sv $D/qkd_kv_ctl_c32_misc.sv $D/qkd_kv_ctl_c32_boot.sv
  $D/qkd_kv_ctl_c32_dcfg.sv $D/qkd_kv_ctl_c32_obs.sv"
 XI=""; RR=""; SEED=$((0x5eed)); MF=""; FROM=""; TO=""; DEF=""; KIND=tile; C32=$D/qkd_kvs_tiles_hroot_ff_k_mu_ba_c32.sv
 case "$CASE" in

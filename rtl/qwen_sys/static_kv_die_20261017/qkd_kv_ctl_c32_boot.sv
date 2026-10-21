@@ -1,4 +1,7 @@
 `timescale 1ns/1ps
+// KV-CTL10 2026-10-20: copy of qkd_kv_ctl_s32_boot.sv (codex/kv-ctl3-native36-1020 b5d750822) with the modules renamed
+// _s32 -> _c32 and ONE change: the dispatcher decodes boot_image_target once into kept one-hot wires (see tdec below),
+// because the c32 tile has no face pin registers (the die charges 0 tile pin edges) and the port net drove 34 loads.
 // KV-CTL3 10-20 (fork S32-D2; PRE-GATE NATIVE CENSUS, no driver > 32 mapped loads): census successors of the KV boot
 // dispatcher as NEW modules (the originals stay byte-identical):
 //   qkd_static_kv_boot_dispatch_s32    = qkd_static_kv_boot_dispatch (same ports / params, same outputs on every edge)
@@ -12,7 +15,7 @@
 //   * one-hot strobes: group-select leaves ot_s32_and(acc_t && group && rs_s[j], dec16) over shared 16-way decodes
 //     (controller: groups {target - 6, addr[9]} x addr[8:5] (MUT 2: ^1); landing / front: groups gi[4] x gi[3:0], gi = addr/6).
 // Lockstep vs the originals: rtl/test/mu_qwen_1018/run_kv_ctl_s32_d2.sh.
-module qkd_static_kv_boot_dispatch_s32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer SRQ=0,parameter integer RS=24)(
+module qkd_static_kv_boot_dispatch_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer SRQ=0,parameter integer RS=24)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[9:0]boot_addr_b,input wire[3:0]boot_image_target,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
  input wire[63:0]boot_image_digest,input wire execution_active,
@@ -40,6 +43,16 @@ module qkd_static_kv_boot_dispatch_s32 #(parameter integer MUT=0,parameter integ
  case(t)1:word_count=327;2:word_count=181;3:word_count=4;4,5:word_count=192;
  6,7,8,9:word_count=1024;10:word_count=(DIECFG!=0)?11'(32+NRST+1+((DIECAP!=0)?1:0)):11'd0;11:word_count=(LINKCFG!=0)?11'd66:11'd0;12:word_count=(ESCFG!=0)?11'd1024:11'd0;13:word_count=(ESCFG!=0)?11'd8:11'd0;default:word_count=0;endcase
  endfunction
+ // KV-CTL10 10-20 (native census without face pin registers: the boot_image_target input PORT drove 33/34 mapped loads):
+ // the target is decoded ONCE into KEPT one-hot wires (an ABC boundary) and every former target compare / case / index /
+ // word_count(target) reads them (same function: tdec is one-hot over the 14 targets, target 14/15 = all zero = the original
+ // default / out-of-range terms).  The port then feeds the 14 decoders, the expected_target compare and the MU wrapper only.
+ (* keep *) wire[13:0]tdec;
+ genvar gi_;
+ generate for(gi_=0;gi_<14;gi_=gi_+1)begin:g_td assign tdec[gi_]=boot_image_target==gi_; end endgenerate
+ wire[10:0]wc_t=({11{tdec[1]}}&11'd327)|({11{tdec[2]}}&11'd181)|({11{tdec[3]}}&11'd4)|({11{tdec[4]|tdec[5]}}&11'd192)|
+  ({11{tdec[6]|tdec[7]|tdec[8]|tdec[9]}}&11'd1024)|({11{tdec[10]}}&word_count(4'd10))|({11{tdec[11]}}&word_count(4'd11))|
+  ({11{tdec[12]}}&word_count(4'd12))|({11{tdec[13]}}&word_count(4'd13));
  // Registered HOST output is consumed one edge later by the real cfg inputs.
  // Final ISA readiness remains tied to the actual loader, so a new BEGIN drops
  // setup_ready immediately even after the first successful setup.
@@ -48,7 +61,7 @@ module qkd_static_kv_boot_dispatch_s32 #(parameter integer MUT=0,parameter integ
  // pin terms separately, stage 2 ANDs them.  p1-d7af727c1: boot_image_target pin -> setup_ready pin was a -698 ps
  // in->out path.  setup_ready is a boot status (HOST reads it before go), not a production edge.
  wire setup_int=(&installed)&&((MUT==3)||(&sink_applied))&&(&local_configured)&&isa_seen&&!sink_fault&&!fault&&((DIECFG==0)||diecfg_sealed)&&((LINKCFG==0)||linkcfg_done)&&((ESCFG==0)||(es12_done&&es13_done));
- wire setup_ext=boot_image_ready&&boot_image_target==0&&!boot_image_fault;
+ wire setup_ext=boot_image_ready&&tdec[0]&&!boot_image_fault;
  wire setup_c=setup_int&&setup_ext;
  generate if(SRQ==0)begin:g_sr0 assign setup_ready=setup_c; end
  else begin:g_sr2
@@ -60,28 +73,25 @@ module qkd_static_kv_boot_dispatch_s32 #(parameter integer MUT=0,parameter integ
  end endgenerate
  integer group_index,pc_index;
  // target 10 (DIECFG): the pre-boot die configuration image, only before anything else is installed
- wire t10=(DIECFG!=0)&&boot_image_target==10;
+ wire t10=(DIECFG!=0)&&tdec[10];
  wire t10_ok=(installed==0)&&(expected_target==1)&&!diecfg_done;
- wire t11=(LINKCFG!=0)&&boot_image_target==11;
- wire t12=(ESCFG!=0)&&boot_image_target==12;
- wire t13=(ESCFG!=0)&&boot_image_target==13;
+ wire t11=(LINKCFG!=0)&&tdec[11];
+ wire t12=(ESCFG!=0)&&tdec[12];
+ wire t13=(ESCFG!=0)&&tdec[13];
  wire[3:0]after9=(LINKCFG!=0)?4'd11:(ESCFG!=0)?4'd12:4'd0;
- wire t_ok=t10?t10_ok:((MUT==1||boot_image_target==expected_target)&&(boot_image_target<=9||t11||t12||t13));
+ wire t_ok=t10?t10_ok:((MUT==1||boot_image_target==expected_target)&&((|tdec[9:0])||t11||t12||t13));
  // ---- accept term (the original's else-branch of the word checks) and per-target accepts ----
- wire tv=boot_pr[74]&&boot_image_target!=0&&!fault&&!execution_active;
- wire wbad=!t_ok||{1'b0,addr}!=next_word||next_word>=word_count(boot_image_target);
+ wire tv=boot_pr[74]&&!tdec[0]&&!fault&&!execution_active;
+ wire wbad=!t_ok||{1'b0,addr}!=next_word||next_word>=wc_t;
  wire ebad=have_epoch&&boot_image_epoch!=installed_epoch;
  wire acc=tv&&!wbad&&!ebad;
- wire[13:0]tdec;
- genvar gi_;
- generate for(gi_=0;gi_<14;gi_=gi_+1)begin:g_td assign tdec[gi_]=boot_image_target==gi_; end endgenerate
  wire[13:0]acc_t;
  ot_s32_and #(.W(14)) u_acc(.s(acc),.a(tdec),.y(acc_t));
  wire ok3=acc_t[3]&&data[63:32]==0;
  wire ok11=acc_t[11]&&data[63:32]==0;
  wire ok12=acc_t[12]&&!(data[63:62]!=0||data[61:18]!=0||data[17:16]!=addr[9:8]);
  wire ok13=acc_t[13]&&!(data[63:62]!=2'd1||data[61:24]!=0);
- wire isa_w=boot_image_ready&&!ready_q&&!fault&&boot_image_target==0&&!(expected_target!=0||!have_epoch||boot_image_epoch!=installed_epoch);
+ wire isa_w=boot_image_ready&&!ready_q&&!fault&&tdec[0]&&!(expected_target!=0||!have_epoch||boot_image_epoch!=installed_epoch);
  // ---- slice literals: kept copies of the reset (identical D = rst_n) ----
  (* keep *) reg[RS-1:0]rs_s;
  always @(posedge ck)rs_s<={RS{rst_n}};
@@ -164,7 +174,7 @@ module qkd_static_kv_boot_dispatch_s32 #(parameter integer MUT=0,parameter integ
  // ---- one-hot write strobes (no hold: 0 unless a word is accepted): group-select leaves over shared 16-way decodes ----
  // Keep each small remainder step separate: monolithic /6 remapping gave addr[9] 37 loads.
  wire[4:0]gix;
- qkd_kv_ctl_s32_div6 u_gix(.a(addr),.q(gix));
+ qkd_kv_ctl_c32_div6 u_gix(.a(addr),.q(gix));
  wire[15:0]dg,dp;
  generate for(gi_=0;gi_<16;gi_=gi_+1)begin:g_dec
   assign dg[gi_]=gix[3:0]==gi_;
@@ -202,7 +212,7 @@ module qkd_static_kv_boot_dispatch_s32 #(parameter integer MUT=0,parameter integ
   layer_we<=0;writer_we<=0;ownership_we<=0;diecfg_we<=0;link_cfg_tx_we<=0;link_cfg_rx_we<=0;es_cfg_we<=0;
   if(boot_image_fault||sink_fault||(DIECFG!=0&&diecfg_fault))begin fault<=1;fault_code[0]<=1;end
   if((boot_pr[74]||boot_pr[142])&&execution_active)begin fault<=1;fault_code[1]<=1;end
-  if(boot_pr[142]&&boot_image_target!=0)begin fault<=1;fault_code[2]<=1;end
+  if(boot_pr[142]&&!tdec[0])begin fault<=1;fault_code[2]<=1;end
   if(tv)begin
    if(wbad)begin
     fault<=1;fault_code[3]<=1;
@@ -210,16 +220,16 @@ module qkd_static_kv_boot_dispatch_s32 #(parameter integer MUT=0,parameter integ
    else begin
     if(!have_epoch)begin have_epoch<=1;installed_epoch<=boot_image_epoch;end
     next_word<=next_word+1'b1;
-    case(boot_image_target)
-    1:layer_we<=1;
-    2:writer_we<=1;
-    3:begin
+    case(1'b1)
+    tdec[1]:layer_we<=1;
+    tdec[2]:writer_we<=1;
+    tdec[3]:begin
       if(data[63:32]!=0)begin fault<=1;fault_code[5]<=1;end
       else ownership_we<=1;
     end
-    4,5,6,7,8,9:;
-    10:diecfg_we<=1;
-    11:begin
+    tdec[4],tdec[5],tdec[6],tdec[7],tdec[8],tdec[9]:;
+    tdec[10]:diecfg_we<=1;
+    tdec[11]:begin
       if(data[63:32]!=0)begin fault<=1;fault_code[5]<=1;end
       else begin
        if(addr<64)begin
@@ -229,11 +239,11 @@ module qkd_static_kv_boot_dispatch_s32 #(parameter integer MUT=0,parameter integ
        end
       end
     end
-    12:begin
+    tdec[12]:begin
       if(data[63:62]!=0||data[61:18]!=0||data[17:16]!=addr[9:8])begin fault<=1;fault_code[5]<=1;end
       else es_cfg_we<=1;
     end
-    13:begin
+    tdec[13]:begin
       if(data[63:62]!=2'd1||data[61:24]!=0)begin fault<=1;fault_code[5]<=1;end
       else es_cfg_we<=!(MUT==8&&addr[2:0]==1);
     end
@@ -242,24 +252,24 @@ module qkd_static_kv_boot_dispatch_s32 #(parameter integer MUT=0,parameter integ
    end
   end
   if(boot_image_ready&&!ready_q&&!fault)begin
-   if(boot_image_target==0)begin
+   if(tdec[0])begin
     if(expected_target!=0||!have_epoch||boot_image_epoch!=installed_epoch)begin fault<=1;fault_code[6]<=1;end
     else isa_seen<=1;
    end else if(t10)begin
     if(!t10_ok||next_word!=word_count(10))begin fault<=1;fault_code[7]<=1;end
     else begin diecfg_done<=1;next_word<=0;end
-   end else if(boot_image_target!=expected_target||next_word!=word_count(boot_image_target))begin fault<=1;fault_code[7]<=1;end
+   end else if(boot_image_target!=expected_target||next_word!=wc_t)begin fault<=1;fault_code[7]<=1;end
    else if(t11)begin linkcfg_done<=1;expected_target<=(ESCFG!=0)?4'd12:4'd0;next_word<=0;end
    else if(t12)begin es12_done<=1;expected_target<=4'd13;next_word<=0;end
    else if(t13)begin es13_done<=1;expected_target<=4'd0;next_word<=0;end
-   else begin installed[boot_image_target-1'b1]<=1;expected_target<=(boot_image_target==9)?after9:expected_target+1'b1;next_word<=0;end
+   else begin installed<=installed|tdec[9:1];expected_target<=tdec[9]?after9:expected_target+1'b1;next_word<=0;end
   end
  end
  end
 endmodule
 
 // ===== MU wrapper =====
-module qkd_static_kv_boot_dispatch_mu_s32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer MU=1,parameter integer WMUT=0,parameter integer SRQ=0)(
+module qkd_static_kv_boot_dispatch_mu_c32 #(parameter integer MUT=0,parameter integer DIECFG=0,parameter integer NRST=43,parameter integer LINKCFG=0,parameter integer ESCFG=0,parameter integer DIECAP=0,parameter integer MU=1,parameter integer WMUT=0,parameter integer SRQ=0)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[3:0]boot_image_target,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
  input wire[63:0]boot_image_digest,input wire execution_active,
@@ -280,7 +290,7 @@ module qkd_static_kv_boot_dispatch_mu_s32 #(parameter integer MUT=0,parameter in
  wire o_lw,o_fault;wire[8:0]o_la;wire[63:0]o_ld;wire[7:0]o_fc;wire o_setup;
  wire[142:0]pr_o;wire[9:0]pr_ab;
  reg x_fault;reg[7:0]x_fc;
- qkd_static_kv_boot_dispatch_s32 #(.MUT(MUT),.DIECFG(DIECFG),.NRST(NRST),.LINKCFG(LINKCFG),.ESCFG(ESCFG),.DIECAP(DIECAP),.SRQ(SRQ))u_disp(
+ qkd_static_kv_boot_dispatch_c32 #(.MUT(MUT),.DIECFG(DIECFG),.NRST(NRST),.LINKCFG(LINKCFG),.ESCFG(ESCFG),.DIECAP(DIECAP),.SRQ(SRQ))u_disp(
   .ck(ck),.rst_n(rst_n),.boot_pr(pr_o),.boot_addr_b(pr_ab),.boot_image_target(boot_image_target),.boot_image_ready(boot_image_ready),
   .boot_image_fault(boot_image_fault),.boot_image_epoch(boot_image_epoch),.boot_image_digest(boot_image_digest),
   .execution_active(execution_active),.sink_applied(sink_applied),.local_configured(local_configured),.sink_fault(sink_fault),
@@ -367,21 +377,21 @@ endmodule
 // Consume the high five bits as a remainder, then emit one quotient bit per
 // low input bit. Small kept cones bound fanout without adding clock edges.
 (* keep_hierarchy *)
-module qkd_kv_ctl_s32_rem6(input wire[4:0]a, output wire[2:0]r);
+module qkd_kv_ctl_c32_rem6(input wire[4:0]a, output wire[2:0]r);
  assign r=3'(a % 5'd6);
 endmodule
 (* keep_hierarchy *)
-module qkd_kv_ctl_s32_div6_step(input wire[2:0]r, input wire b, output wire[2:0]s, output wire q);
+module qkd_kv_ctl_c32_div6_step(input wire[2:0]r, input wire b, output wire[2:0]s, output wire q);
  wire[3:0]n={r,b};
  assign q=n>=4'd6;
  assign s=q?3'(n-4'd6):n[2:0];
 endmodule
 (* keep_hierarchy *)
-module qkd_kv_ctl_s32_div6(input wire[9:0]a, output wire[4:0]q);
+module qkd_kv_ctl_c32_div6(input wire[9:0]a, output wire[4:0]q);
  wire[2:0]r[0:5];
- qkd_kv_ctl_s32_rem6 u_hi(.a(a[9:5]),.r(r[5]));
+ qkd_kv_ctl_c32_rem6 u_hi(.a(a[9:5]),.r(r[5]));
  genvar j;
  generate for(j=0;j<5;j=j+1)begin:g_s
-  qkd_kv_ctl_s32_div6_step u_s(.r(r[j+1]),.b(a[j]),.s(r[j]),.q(q[j]));
+  qkd_kv_ctl_c32_div6_step u_s(.r(r[j+1]),.b(a[j]),.s(r[j]),.q(q[j]));
  end endgenerate
 endmodule

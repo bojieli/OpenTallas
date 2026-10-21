@@ -10,8 +10,8 @@
 //     by KEPT predecode (ahi = {wr, is_age, g_ix[4:3]}, alo = g_ix[2:0] one-hot) from a KEPT copy of the data pin flop.
 //     The age registers are NOT reset: every age output is ANDed with sealed (POR 0), and sealed rises only after every
 //     age word was written exactly once in order, so an age register's power-up value is never observable (same outputs
-//     as the POR-cleared original on every edge; owner 10-20 09:05: datapath unreset).  The 304 output gates read 10
-//     KEPT copies of the sealed flop (same D / clock / clear), <= 32 loads each.
+//     as the POR-cleared original on every edge; owner 10-20 09:05: datapath unreset).  The 304 output gates read 19
+//     KEPT copies of the sealed flop (same set / POR clear), 16 bits each.
 // MUT (bench negative controls) as qkd_kv_die_cfg_a: 1-5 ECTL / reset / capability, 6 = age words one word off,
 // 7 = age outputs not gated by the seal.  No handshake, credit or ready: configuration nets, POR-held.
 module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP = 0, parameter integer AGES = 1, parameter integer MUT = 0) (
@@ -29,7 +29,7 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
     localparam integer A0 = 32 + NRST + ((CAP != 0) ? 1 : 0);   // first age word
     localparam integer NW = A0 + NA;                              // data words before the seal
     localparam [63:0] SEAL = 64'h514b5644_43464731;
-    localparam integer KE = 16, KR = (NRST + 3) / 4, KS = 10;
+    localparam integer KE = 16, KR = (NRST + 3) / 4, KS = 19;
     generate if (NRST < 1 || NW + 1 > 256 || AGES == 0) begin : g_bad
         initial $fatal(1, "qkd_kv_die_cfg_a_c32: NRST %0d CAP %0d AGES %0d (AGES 1 only)", NRST, CAP, AGES);
     end endgenerate
@@ -63,19 +63,28 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
                (MUT != 2 && ((is_ectl && d_q[63:15] != 0) || (is_rst && d_q[63:8] != 0) || (is_cap && d_q[63:1] != 0) || (is_age && age_pad))) ||
                (is_seal && (d_q != SEAL || next != NW[8:0])) || (!is_ectl && !is_rst && !is_cap && !is_age && !is_seal);
     wire wr = we_q && !(bad || fault);
-    (* keep *) reg [KS-1:0] sl_c;       // KEPT copies of sealed (age output gates)
     always @(posedge ck or negedge pr_n) begin
         if (!pr_n) begin
-            cap_q <= 1'b0; sealed <= 1'b0; fault <= 1'b0; next <= 9'd0; sl_c <= {KS{1'b0}};
+            cap_q <= 1'b0; sealed <= 1'b0; fault <= 1'b0; next <= 9'd0;
         end else if (we_q) begin
             if (bad || fault) fault <= 1'b1;
             else begin
                 next <= next + 9'd1;
                 if (is_cap) cap_q <= (MUT == 4) ? d_q[1] : d_q[0];
-                if (is_seal) begin sealed <= 1'b1; sl_c <= {KS{1'b1}}; end
+                if (is_seal) sealed <= 1'b1;
             end
         end
     end
+    // KEPT copies of sealed (one per <= 16 gated age bits), same set / clear as sealed; cleared from 2 KEPT POR copies
+    // (D = ps[0], release on the ps[1] edge) so pr_n keeps <= 32 loads
+    (* keep *) reg [1:0] rcs;
+    always @(posedge ck or negedge por_n) if (!por_n) rcs <= 2'b00; else rcs <= {2{ps[0]}};
+    (* keep *) wire sl_set = wr && is_seal;
+    (* keep *) reg [KS-1:0] sl_c;
+    genvar gs;
+    generate for (gs = 0; gs < KS; gs = gs + 1) begin : g_sl
+        always @(posedge ck or negedge rcs[gs / 10]) if (!rcs[gs / 10]) sl_c[gs] <= 1'b0; else if (sl_set) sl_c[gs] <= 1'b1;
+    end endgenerate
     // ---- ECTL / reset-region fields (S32-B form of qkd_kv_die_cfg_s32) ----
     (* keep *) wire [3:0] phi; (* keep *) wire [7:0] plo, rlo; (* keep *) wire [5:0] rhi;
     (* keep *) wire [31:0] fe; (* keep *) wire [NRST-1:0] fr;
@@ -112,6 +121,9 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
     endgenerate
     // ---- AGE words: g = 0 attention (2 x 16 b), 1..2 PV pair (8 b), 3..18 V port (16 b); unreset, seal-gated ----
     (* keep *) wire [2:0] ahi; (* keep *) wire [7:0] alo; (* keep *) wire [18:0] fa;
+    // the attention word's high half gets its own (structurally different, same function) enable: 2 x 16 bits on one
+    // enable = 64 mapped loads
+    (* keep *) wire fa0h = wr && is_age && a_q == 8'(A0 - ((MUT == 6) ? 1 : 0));
     wire [31:0] ag_attn; wire [15:0] ag_pv; wire [255:0] ag_vp;
     genvar ga;
     generate
@@ -125,7 +137,7 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
             assign fa[ga] = ahi[ga/8] && alo[ga%8];
         end
         qkd_kv_die_cfg_c32_age #(.W(16)) u_at0 (.ck(ck), .en(fa[0]), .d(dqa[15:0]), .q(ag_attn[15:0]));
-        qkd_kv_die_cfg_c32_age #(.W(16)) u_at1 (.ck(ck), .en(fa[0]), .d(dqa[31:16]), .q(ag_attn[31:16]));
+        qkd_kv_die_cfg_c32_age #(.W(16)) u_at1 (.ck(ck), .en(fa0h), .d(dqa[31:16]), .q(ag_attn[31:16]));
         for (ga = 0; ga < 2; ga = ga + 1) begin : g_pv
             qkd_kv_die_cfg_c32_age #(.W(8)) u_p (.ck(ck), .en(fa[1 + ga]), .d(dqa[7:0]), .q(ag_pv[8*ga +: 8]));
         end
@@ -133,15 +145,13 @@ module qkd_kv_die_cfg_a_c32 #(parameter integer NRST = 43, parameter integer CAP
             qkd_kv_die_cfg_c32_age #(.W(16)) u_v (.ck(ck), .en(fa[3 + ga]), .d(dqa[15:0]), .q(ag_vp[16*ga +: 16]));
         end
     endgenerate
-    // seal gating: sl_c[0] attention, sl_c[1] PV pairs, sl_c[2 + k] V ports 2k, 2k+1 (32 bits a copy)
-    wire on_at = (MUT == 7) || sl_c[0];
-    wire on_pv = (MUT == 7) || sl_c[1];
-    assign age_attn = on_at ? ag_attn : 32'd0;
-    assign age_pv = on_pv ? ag_pv : 16'd0;
+    // seal gating (16 bits a sealed copy): sl_c[0] / [1] attention low / high, sl_c[2] PV pairs, sl_c[3 + k] V port k
+    assign age_attn[15:0] = ((MUT == 7) || sl_c[0]) ? ag_attn[15:0] : 16'd0;
+    assign age_attn[31:16] = ((MUT == 7) || sl_c[1]) ? ag_attn[31:16] : 16'd0;
+    assign age_pv = ((MUT == 7) || sl_c[2]) ? ag_pv : 16'd0;
     genvar gv;
-    generate for (gv = 0; gv < 8; gv = gv + 1) begin : g_vg
-        wire on_v = (MUT == 7) || sl_c[2 + gv];
-        assign age_vport[32*gv +: 32] = on_v ? ag_vp[32*gv +: 32] : 32'd0;
+    generate for (gv = 0; gv < 16; gv = gv + 1) begin : g_vg
+        assign age_vport[16*gv +: 16] = ((MUT == 7) || sl_c[3 + gv]) ? ag_vp[16*gv +: 16] : 16'd0;
     end endgenerate
     assign fused_program_capability = cap_q && ((MUT == 5) || sealed);
 endmodule
