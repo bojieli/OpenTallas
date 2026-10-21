@@ -52,11 +52,13 @@
   "head",
   "kv"
  ],
- "diagnostic_stages": [],
+ "diagnostic_stages": [
+  "stg"
+ ],
  "stage_sources": {
   "stg": {
    "src_commit": "c0f8097f3",
-   "grade": "RTL-functional (source assembly)",
+   "grade": "DIAG (historical reused c0 binary; exact build-source/overlay identity unverified)",
    "source_note": null
   },
   "ovl4u": {
@@ -137,7 +139,8 @@
    "missing stage: tp8",
    "missing stage: ctx4u",
    "missing stage: head",
-   "missing stage: kv"
+   "missing stage: kv",
+   "diagnostic stage: stg"
   ]
  },
  "isolated_ovl_transport": {

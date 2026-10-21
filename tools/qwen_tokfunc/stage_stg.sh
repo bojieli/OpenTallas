@@ -33,6 +33,73 @@
 #                     calibrations and every run are redone on them (current per-K LAST-K bench protocol)
 #   --overlay DIR     copy DIR/<repo path> over the tree before the builds (RTL fix branches not yet in the assembly)
 set -u
+# Internal pure provenance operations. They never compile or run a simulator.
+# A manifest is made prospectively, then bound to the finished binary; an old
+# executable cannot acquire a source identity merely by being copied beside RTL.
+if [ "${1:-}" = --object-manifest ]; then
+  shift
+  python3 - "$@" <<'PY'
+import hashlib, importlib, json, os, re, shlex, sys
+from pathlib import Path
+
+mode, root_arg, snapshot_arg, overlay_arg, *rest = sys.argv[1:]
+root, snapshot = Path(root_arg).resolve(), Path(snapshot_arg)
+def sha(path):
+    h = hashlib.sha256()
+    with path.open('rb') as f:
+        for part in iter(lambda: f.read(1024 * 1024), b''): h.update(part)
+    return h.hexdigest()
+def fail(why): raise SystemExit('STG OBJECT IDENTITY REFUSED: ' + why)
+def current():
+    sys.path.insert(0, str(root / 'rtl/test/qwen_dv'))
+    b2 = importlib.import_module('dv_bench2')
+    flags = shlex.split(os.environ.get('DV_LOWER_VFLAGS', ''))
+    names = list(b2.SRCS2)
+    if '-GSU_LT=1' in flags: names += list(b2.XSRCS)
+    names += ['rtl/test/qwen_dv/main2.cpp', 'rtl/test/qwen_dv/dv_lower_bench.py',
+              'tools/qwen_layerbench/dv_lower.py',
+              'rtl/test/qwen_dv/dv_bench2.py', 'rtl/test/qwen_dv/dv_bench.py']
+    pending, inputs = [Path(n) if Path(n).is_absolute() else root / n for n in names], {}
+    while pending:
+        path = pending.pop().resolve()
+        key = str(path.relative_to(root)) if path.is_relative_to(root) else str(path)
+        if key in inputs: continue
+        if not path.is_file(): fail('missing build input ' + key)
+        inputs[key] = sha(path)
+        if path.suffix in ('.sv', '.v', '.svh', '.vh'):
+            for inc in re.findall(r'`include\s+"([^"\n]+)"', path.read_text()):
+                choices = [path.parent / inc, root / inc]
+                target = next((p for p in choices if p.is_file()), None)
+                if target is None: fail('unresolved include ' + inc + ' from ' + key)
+                pending.append(target)
+    overlay = Path(overlay_arg) if overlay_arg else None
+    return dict(schema='opentallas.stg_build_source.v1', inputs=inputs, flags=flags,
+                environment={k: v for k, v in sorted(os.environ.items())
+                             if k.startswith('DV2_') or k in ('CXX', 'CXXFLAGS', 'CPPFLAGS', 'LDFLAGS')},
+                overlay_sha256=sha(overlay) if overlay and overlay.is_file() else None)
+def read_snapshot():
+    if not snapshot.is_file(): fail('prospective build-source snapshot unavailable')
+    saved = json.loads(snapshot.read_text())
+    if saved != current(): fail('current build source/flags/overlay differ from prospective snapshot')
+    return saved
+if mode == 'snapshot':
+    if snapshot.exists(): fail('prospective snapshot already exists; preserve it')
+    snapshot.write_text(json.dumps(current(), sort_keys=True, indent=1) + '\n')
+elif mode in ('bind', 'verify'):
+    obj = Path(rest[0]); exe = obj / 'Vtb'; manifest = obj / 'build_identity.json'
+    saved = read_snapshot()
+    if not exe.is_file() or not os.access(exe, os.X_OK): fail('finished Vtb unavailable')
+    identity = dict(schema='opentallas.stg_object_identity.v1', binary_sha256=sha(exe), source=saved)
+    if mode == 'bind':
+        if manifest.exists(): fail('binary identity already exists; preserve it')
+        manifest.write_text(json.dumps(identity, sort_keys=True, indent=1) + '\n')
+    elif not manifest.is_file(): fail('binary build_identity.json unavailable; executable presence is insufficient')
+    elif json.loads(manifest.read_text()) != identity: fail('binary/source/flags/overlay identity mismatch')
+else: fail('unknown provenance operation ' + mode)
+print('STG OBJECT IDENTITY ' + mode.upper() + ' OK')
+PY
+  exit $?
+fi
 RUNROOT=$(readlink -f "$1"); shift
 NET=""; LAYERS=$(seq -s ' ' 0 35); PAR=24; STAGE=stg; FXRE=""; REUSE=""; OVL=""
 while [ $# -gt 0 ]; do case "$1" in
@@ -46,6 +113,7 @@ while [ $# -gt 0 ]; do case "$1" in
   *) echo "bad arg $1"; exit 2;; esac; done
 [ -n "$NET" ] && { echo "--die-netlist: not wired yet (see header); RTL-functional run only"; exit 4; }
 SRC=$RUNROOT/src; S=$RUNROOT/$STAGE; FXIN=$RUNROOT/stg/fx_in; FX=$S/fx; T=$S/tree; HERE=$(dirname "$(readlink -f "$0")")
+[ ! -e "$T" ] || { echo "stage tree already exists: preserve $T and select a fresh --stage"; exit 5; }
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
 verilator --version | grep -q '5.050' || { echo "need Verilator 5.050"; exit 2; }
 # fixture inputs: $FXIN/.complete marks a finished staging copy (the builds start meanwhile; fixtures wait <= 3 h for it)
@@ -79,11 +147,20 @@ fixtures() {
   echo "rc=$?" >> $FX/L$L.log; echo "L$L $(tail -2 $FX/L$L.log | head -1 | cut -c1-120)"
 }
 export -f fixtures; export FX FXIN T REUSE
-( for L in $LAYERS; do echo $L; done | xargs -P 9 -I{} bash -c 'fixtures {}' > $S/fixtures.log 2>&1 ) &
-FXPID=$!
 
 declare -A VF=( [rel]='-GMU_NU=4 -GSU_LT=1' [pos]='-GMU_NU=4 -GSU_LT=1 -GARF=1 -GRP=1' [mut]='-GMU_NU=4 -GSU_LT=1 -GARF=2 -GRP=2' )
 VB=$T/rtl/test/qwen_dv/dv_lower_vec_bench.py; MB=$T/rtl/test/qwen_dv/dv_lower_mat_bench.py
+# Validate every requested object before any fixture calculation or simulation.
+# Do not backfill a manifest for historical objects whose build inputs were not
+# recorded prospectively. Existing admitted runs and their evidence stay intact.
+for c in rel pos mut; do
+  DV_LOWER_VFLAGS="${VF[$c]}" bash "$HERE/stage_stg.sh" --object-manifest snapshot "$T" "$S/$c.build_source.json" "$S/overlay.sha256" > "$S/$c.identity.log" 2>&1 || { cat "$S/$c.identity.log"; exit 5; }
+  if [ -n "$REUSE" ]; then
+    DV_LOWER_VFLAGS="${VF[$c]}" bash "$HERE/stage_stg.sh" --object-manifest verify "$T" "$S/$c.build_source.json" "$S/overlay.sha256" "$REUSE/$c" >> "$S/$c.identity.log" 2>&1 || { cat "$S/$c.identity.log"; exit 5; }
+  fi
+done
+( for L in $LAYERS; do echo $L; done | xargs -P 9 -I{} bash -c 'fixtures {}' > $S/fixtures.log 2>&1 ) &
+FXPID=$!
 build_cfg() {   # build + slice / vec / stn calibrate on this build
   local c=$1 W=$S/$1; export DV_LOWER_VFLAGS="${VF[$1]}"
   rm -rf $W; mkdir -p $W/build $W/cal_mat $W/runs; echo "$DV_LOWER_VFLAGS" > $W/vflags.txt
@@ -93,6 +170,11 @@ build_cfg() {   # build + slice / vec / stn calibrate on this build
   python3 $T/rtl/test/qwen_dv/dv_lower_bench.py --work $W/build --calibrate > $W/build/slice_calibrate.out 2>&1; echo "rc=$?" >> $W/build/slice_calibrate.out
   echo "build+slice_calibrate $(( $(date +%s) - b0 )) s" > $W/timing.txt
   [ -x $W/build/obj_n12/Vtb ] || { echo "$c BUILD FAILED"; tail -30 $W/build/build.log; return 2; }
+  if [ -z "$REUSE" ]; then
+    bash "$HERE/stage_stg.sh" --object-manifest bind "$T" "$S/$c.build_source.json" "$S/overlay.sha256" "$W/build/obj_n12" >> "$S/$c.identity.log" 2>&1 || { cat "$S/$c.identity.log"; return 5; }
+  else
+    bash "$HERE/stage_stg.sh" --object-manifest verify "$T" "$S/$c.build_source.json" "$S/overlay.sha256" "$W/build/obj_n12" >> "$S/$c.identity.log" 2>&1 || { cat "$S/$c.identity.log"; return 5; }
+  fi
   python3 $VB --work $W/build --mode calibrate > $W/build/calibrate.out 2>&1; echo "rc=$?" >> $W/build/calibrate.out
   ln -sfn $W/build/obj_n12 $W/cal_mat/obj_n12
   python3 $MB --work $W/cal_mat --calibrate > $W/cal_mat/calibrate.out 2>&1; echo "rc=$?" >> $W/cal_mat/calibrate.out
@@ -100,8 +182,10 @@ build_cfg() {   # build + slice / vec / stn calibrate on this build
 }
 declare -A BP
 for c in rel pos mut; do build_cfg $c > $S/build_$c.log 2>&1 & BP[$c]=$!; done
-for c in rel pos mut; do wait ${BP[$c]}; echo "build $c rc=$?"; done
+BUILD_FAILED=0
+for c in rel pos mut; do wait ${BP[$c]}; rc=$?; echo "build $c rc=$rc"; [ "$rc" = 0 ] || BUILD_FAILED=1; done
 wait $FXPID; echo "fixtures done"; cat $S/fixtures.log
+[ "$BUILD_FAILED" = 0 ] || { echo 'STG refused: build/object identity failed; no stage cases run'; exit 5; }
 echo "fixtures+builds $(( $(date +%s) - t0 )) s" > $S/timing.txt
 
 # ---------------------------------------------------------------- 2. runs (one list, all cfgs, -P PAR)
