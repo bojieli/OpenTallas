@@ -1,0 +1,10 @@
+Verilator 5.050 2026-07-01 rev v5.050
+cfg0 HP=1000 IP=1666 CP=833 HGAP=0 MSTALL=0: QM_SPLIT_EQUIV FAIL mismatches=575382 errors=1728 oob=0 fault=0 dones=9/9 sectors=1664/1728 marks=0 idle=0 ck_cycles=204973
+cfg1 HP=970 IP=1666 CP=833 HGAP=0 MSTALL=0: QM_SPLIT_EQUIV FAIL mismatches=580938 errors=1728 oob=0 fault=0 dones=9/9 sectors=1664/1728 marks=0 idle=0 ck_cycles=205276
+cfg2 HP=1000 IP=1610 CP=833 HGAP=10 MSTALL=10: QM_SPLIT_EQUIV FAIL mismatches=575170 errors=1728 oob=0 fault=0 dones=9/9 sectors=1664/1728 marks=0 idle=0 ck_cycles=204810
+cfg3 HP=1043 IP=1700 CP=810 HGAP=0 MSTALL=30: QM_SPLIT_EQUIV FAIL mismatches=564756 errors=1728 oob=0 fault=0 dones=9/9 sectors=1664/1728 marks=0 idle=0 ck_cycles=205452
+cfg4 HP=1900 IP=1667 CP=833 HGAP=0 MSTALL=0: QM_SPLIT_EQUIV FAIL mismatches=496190 errors=1728 oob=0 fault=0 dones=9/9 sectors=1664/1728 marks=0 idle=0 ck_cycles=205210
+cfg5 HP=999 IP=1666 CP=833 HGAP=30 MSTALL=40: QM_SPLIT_EQUIV FAIL mismatches=575630 errors=1728 oob=0 fault=0 dones=9/9 sectors=1664/1728 marks=0 idle=0 ck_cycles=205278
+cfg6 HP=1000 IP=1666 CP=833 HGAP=0 MSTALL=70: QM_SPLIT_EQUIV FAIL mismatches=576486 errors=1728 oob=0 fault=0 dones=9/9 sectors=1664/1728 marks=0 idle=0 ck_cycles=206243
+cfg7 HP=600 IP=2500 CP=833 HGAP=50 MSTALL=20: QM_SPLIT_EQUIV FAIL mismatches=695399 errors=1728 oob=0 fault=0 dones=9/9 sectors=1664/1728 marks=0 idle=0 ck_cycles=207430
+QM_SPLIT_EQUIV_SUITE FAIL 0/8
