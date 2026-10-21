@@ -1,0 +1,48 @@
+{
+  "source": "560abe5d2",
+  "whole_fp_file_sha256": "b947b6b25a9f2829e05130bdf7d1a507aa6abdfbfee02be02e907d887eed7e8e",
+  "MUL": {
+    "LAT": 5,
+    "CUTS": "01101010",
+    "native": "PASS32/0violations/0roleerrors",
+    "existing_equiv": "2000024cycles seed12345 bad0/badr0"
+  },
+  "ADD": {
+    "LAT": 6,
+    "CUTS": "1101011",
+    "native": "source96 modulebyteidentical PASS28/0/0",
+    "existing_equiv": "source96 modulebyteidentical 2000024cycles seed12345 bad0"
+  },
+  "unchanged_module_hashes_from_qualified_ADD96": {
+    "ot_s81dv_kcut": "759e854d7e2c052d22b50b053c4e41ee42edc8467c09868f217cdef2c79d663a",
+    "ot_s81dv_fp32_add_f12_n32": "223cc8742cbc40dc551ff2d59a6cc72b1ff071c8efca2f30a5ed886433f4054b",
+    "ot_s81dv_qadd_n32": "5c71f14b3a30f14a2ef828222c654887f9a33cadf783ffab6da49cbb9c025fa5",
+    "ot_s81dv_rsqrt_n32": "8903b292cf374fe24f11a892d2782806559bc7cdb3e7b94257823502d7259bfc",
+    "ot_s81dv_fp32_mul_f12_n32": "aa403a2af61293d49fb82b4859dd9b2aed36de3c1a8b6ff13f3f9ce081fd9426",
+    "ot_s81dv_mul24_rows_n32": "c7e0f5f7ab372c793a5048d39a5bd75878a20e20c2aed568ac4388d143c087cc",
+    "ot_s81dv_qmul_n32": "d5b9edd688005d3b30d78c73c6dda26e310f64dac52a5cb6f50161aa3fc7d3fc",
+    "ot_s81dv_divc_n32": "5c2fa93070979468c6d0ce056f1f9580849ddd0611f9667c8d1827256048fec9",
+    "ot_s81dv_xfin_fp_cut": "0442c54aaf43dd91721a83fd34fcfaa273327fc698a0082f1e83dee384e59865",
+    "ot_s81dv_xfin_fp_add_n32": "ab8427b063d1baa9bde523b90b8421b6119367067430733db1d733ec1582e8dc",
+    "ot_s81dv_xfin_fp_copy": "177408a6bf3f422d35d5a4842284dcdc656e7d73ef87c59f5892a8b39d02877f",
+    "ot_s81dv_xfin_fp_mux": "52ca94597249915c895a07df3230dc8cc97670130cd11bf7d0978906d7ecd466",
+    "ot_s81dv_xfin_fp_shift": "913398411ddda7e4f9381c0e5a4d20bece803069e89443b79d4e39141172b970",
+    "ot_s81dv_xfin_fp_rows3": "5e3b232633e3f6d299cc874056afc392712b9204ab42183d30600aef0b5a0dd8",
+    "ot_s81dv_xfin_fp_pp6": "6b14030010bbc546dc389498b1b21859ce7fc7a7a0d64b3ff03bc456365fd8dd",
+    "ot_s81dv_xfin_fp_shift_chain": "f55b02708e6d74e8ec9cf66ccb1d15c9d86fa6f7c1d0da763ee43e55e8795217",
+    "ot_s81dv_xfin_fp_shift_step": "71d25d06faeb9d049dc08f6e7cee3c7ccad177893e8f23b9de7efeb4b9ed5d3f",
+    "ot_s81dv_xfin_fp_jam28": "f53569d7635c74687e88b0d3618e6568d36166558c6fc4dfc3043ab49035907e",
+    "ot_s81dv_xfin_fp_norm_pick": "d5e0d0f4fa1d6134e1e46eb656f2c71f76738e60890ef3038711b9af92f8766b",
+    "ot_s81dv_xfin_fp_bypass": "36ee6e2cea5316e872409bffe12bef8908d21ff0666ea4b120a8d3b5a1c13845",
+    "ot_s81dv_xfin_fp_add_pick": "13989ae0807b530adb45a854dc11cae034d869cda72d12d4dd52e1ab950df49e",
+    "ot_s81dv_xfin_fp_mask8": "8e3c8b11fa23a4138745778982ad144ccb9404e58ddecd4ee5cabae0f3deb447",
+    "ot_s81dv_xfin_fp_sub_pick": "4884e88bc982d17509b21dfbc084309fbb9bae7c343dfdb8d119e7379ef3b8f1",
+    "ot_s81dv_xfin_fp_out_byte": "0f2f539cbc8527b47e5edbf600a7121991442a17891d90160ce63577fa6735d7",
+    "ot_s81dv_xfin_fp_out_zero": "0834113335218a1410f489c9c4a158775e9d660e408c088434740a1b37af3986",
+    "ot_s81dv_xfin_fp_clear": "50a2f888e0645e118045a53a3a07fed949de373bac65bffc83bcdf8e8a74e99a"
+  },
+  "reset_contract": "scalar rawreset MUST arrive2edges before original operator consumer reset; internal finish_reset2 builds6samephase physical leaves, no newdata/protocoledge",
+  "standalone_adapter": "RSQ payload checked on either valid; vo/fault always checked. ADD/MUL everyy/fault unchanged everycycle. No claim of prevalid RSQpayload identity.",
+  "scope": "exactleafsource qualification; fullcurrentXFINnative+mechanism and physical integration pending",
+  "public_defaults": "shared HDC/VS FP modules unchanged; unique XFIN opt-in namespace"
+}

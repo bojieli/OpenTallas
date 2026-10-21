@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r19fp-1021
+ot-run: ot-epyc7       admits   833 GB (avail 636, growth 53, headroom 0, waiters 0/0 GB) load 39/96 running 13 disk 4467 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r19fp-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r19fp-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-xfin-r19fp-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-xfin-r19fp-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-xfin-r19fp-1021
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1389397-1792619852 after 0 s
+/src/rtl/hdc/ot_hdc_sfu.sv:23: Warning: Range [1:0] select out of bounds on signal `\line': Setting 1 LSB bits to undef.
+Warning: Replacing memory \emsk with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:719
+Warning: Replacing memory \edd with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:828
+Warning: Replacing memory \ekk with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:828
+Warning: Replacing memory \ehh with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:828
+Warning: Replacing memory \ecol with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv:737
+Warning: Replacing memory \yh with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv:330
+Warning: Replacing memory \owner with list of registers. See /src/rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv:489
+CENSUS mul_native PASS max 32 over32 0 seq_over32 0 rst_n_loads 1 errors 0
+        9    0.744 cells
+   Chip area for module '$paramod$f72aa1e80c089c70a2ef0eaae3a362fffe352344\ot_s81dv_xfin_fp_shift_step': 0.743580
+        3    0.262 cells
+DONE mul_native rc=0 secs=131
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1389397-1792619852): exit 0
