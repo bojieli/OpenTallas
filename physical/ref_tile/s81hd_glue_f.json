@@ -1,0 +1,318 @@
+{
+ "name": "s81hd_glue_f",
+ "top": "ot_s81hd_ctl_glue",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+  "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_util.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_ctl_peer.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 1209.6,
+  "h": 1209.6
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xa0",
+   "at": [
+    388.8,
+    518.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xa1",
+   "at": [
+    648.0,
+    518.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xb0",
+   "at": [
+    388.8,
+    648.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xb1",
+   "at": [
+    648.0,
+    648.0
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "sn_o",
+   "sn_i",
+   "mtx_v",
+   "mtx_d",
+   "seq_rst",
+   "seq_f_cfg",
+   "seq_f_rv",
+   "seq_f_rd",
+   "seq_t_rg",
+   "seq_t_tv",
+   "seq_t_td",
+   "seq_f_tg",
+   "seq_t_sv",
+   "seq_t_sd",
+   "seq_f_sg",
+   "seq_f_wv",
+   "seq_f_wd",
+   "seq_t_wg",
+   "seq_t_hv",
+   "seq_t_hd",
+   "seq_f_hg",
+   "seq_f_qv",
+   "seq_f_qd",
+   "seq_t_qg",
+   "seq_t_acc"
+  ],
+  "S": [
+   "ss_o",
+   "ss_i",
+   "mrx_v",
+   "mrx_d",
+   "mflt"
+  ],
+  "E": [
+   "dtx_v",
+   "dtx_d",
+   "drx_v",
+   "drx_d",
+   "dflt"
+  ],
+  "W": [
+   "ri",
+   "ro",
+   "mu_c",
+   "mu_rt",
+   "mu_rc",
+   "lw",
+   "lep_f",
+   "ctl_f",
+   "htx_v",
+   "htx_d",
+   "hrx_v",
+   "hrx_d",
+   "hflt",
+   "ck",
+   "rst_n"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 10.8,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_s81hd_kf",
+   "ot_s81hd_hreg32",
+   "ot_s81hd_cmp",
+   "ot_s81hd_pick"
+  ]
+ },
+ "structural_change": "Direct-peer CTL glue only: exact generated factor of b4f571642; M7 sequencer excluded from this leaf and bound directly on die. Existing source state/HSF0/data/reset cycles unchanged. All1291peer bits on centred223.2um Nface window; exact151.2um seq above43.2um safe channel gives fullface Manhattan<=381.6um. Native glue previously32 with identical hardchild abstract; mandatory current native before layout. True originalflat failure1778 was sequencer highfanout, not glue. MAIN/FALLBACK use existing xSRAM geometry and registered endpoints.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (HD-CTL): every input lands in a pin flop, every output leaves a flop (ot_s81hd_hreg32 / kf / grx pin stages); a recipe pin stage would add unpriced edges."
+ },
+ "job": {
+  "owner": "Codex:S81-HEAD",
+  "branch": "codex/s81-head-chain-1021",
+  "tag": "s81hd_glue_f",
+  "purpose": "S81.HEAD: head-die controller ot_s81hd_ctl to closure (TT setup / FF hold / DRC 0). SAFE review in kit README.",
+  "views_to": "physical/ref_tile/s81hd_glue_f/views",
+  "record_to": "results/rtl/ref_tile/s81hd_glue_f",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/common",
+   "rtl/dsrom_sys/mtp",
+   "rtl/dsrom_sys/s81_head",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/common_flow/clock_split_km.tcl",
+   "results/rtl/s81_head_ctl_peer_1021",
+   "tools/s81_head/split_ctl_peer.py",
+   "results/arch/s81_head_1021/ctl_peer.json"
+  ],
+  "benches": [
+   {
+    "name": "hd_ctl_base",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_peer_bench.sh {RUN}/ctl sim base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "pass_witness": "results/rtl/s81_head_ctl_peer_1021/base.log"
+   },
+   {
+    "name": "hd_ctl_mut_slice",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_peer_bench.sh {RUN}/ctl sim SLICE",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "fail_regex": "^FAIL hd_ctl xa slice mismatch",
+    "fail_witness": "results/rtl/s81_head_ctl_peer_1021/mut_SLICE.log"
+   },
+   {
+    "name": "hd_ctl_mut_tie",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_peer_bench.sh {RUN}/ctl sim TIE",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "fail_regex": "^FAIL hd_ctl local best tie \\(lowest id\\)",
+    "fail_witness": "results/rtl/s81_head_ctl_peer_1021/mut_TIE.log"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "24",
+  "OT_CKKM_PORT": "ck"
+ },
+ "fill_reason": {
+  "pin_bound": "Pin-bound: 19,016 signal pins (13 lanes x 1,112 + 2 x 1,130 bus B + 2,298 lep ring) need >= 3,170 um of face at 6/um; the 1209.6-um square carries E 5,560 / W 4,522 / N 4,454 / S 4,478 pins (4.6/um max). Std cells (~7k um2 glue + dsfd_mtp_seq) + 4 SRAM (53k um2) leave fill far below 45%: the perimeter, not the area, sets the outline. Additional1291seq signals on N:5745pins/1036.8=5.54/um, with223.2um peerwindow5.79/um; no added tilepin layer."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "pin_ranges": {
+  "seq_rst": [
+   493.2,
+   716.4
+  ],
+  "seq_f_cfg": [
+   493.2,
+   716.4
+  ],
+  "seq_f_rv": [
+   493.2,
+   716.4
+  ],
+  "seq_f_rd": [
+   493.2,
+   716.4
+  ],
+  "seq_t_rg": [
+   493.2,
+   716.4
+  ],
+  "seq_t_tv": [
+   493.2,
+   716.4
+  ],
+  "seq_t_td": [
+   493.2,
+   716.4
+  ],
+  "seq_f_tg": [
+   493.2,
+   716.4
+  ],
+  "seq_t_sv": [
+   493.2,
+   716.4
+  ],
+  "seq_t_sd": [
+   493.2,
+   716.4
+  ],
+  "seq_f_sg": [
+   493.2,
+   716.4
+  ],
+  "seq_f_wv": [
+   493.2,
+   716.4
+  ],
+  "seq_f_wd": [
+   493.2,
+   716.4
+  ],
+  "seq_t_wg": [
+   493.2,
+   716.4
+  ],
+  "seq_t_hv": [
+   493.2,
+   716.4
+  ],
+  "seq_t_hd": [
+   493.2,
+   716.4
+  ],
+  "seq_f_hg": [
+   493.2,
+   716.4
+  ],
+  "seq_f_qv": [
+   493.2,
+   716.4
+  ],
+  "seq_f_qd": [
+   493.2,
+   716.4
+  ],
+  "seq_t_qg": [
+   493.2,
+   716.4
+  ],
+  "seq_t_acc": [
+   493.2,
+   716.4
+  ]
+ }
+}

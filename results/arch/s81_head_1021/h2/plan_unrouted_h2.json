@@ -4279,8 +4279,8 @@
     "master": "dsfd_mtp_seq",
     "kind": "ctl_peer",
     "group": "clctl",
-    "x": 8607.6,
-    "y": 10486.8,
+    "x": 7905.6,
+    "y": 11124.0,
     "w": 151.2,
     "h": 151.2,
     "reg": false,
@@ -4289,8 +4289,10 @@
    "source": "b4f571642 unchanged CTL factored by split_ctl_peer.py",
    "same_region": "clctl",
    "added_cycles": 0,
-   "peer_seed_reach_um": 108,
-   "max_peer_face_manhattan_um": 334.8,
+   "peer_seed_reach_um": 43.2,
+   "peer_face": "N",
+   "glue_peer_pin_window_um": 223.2,
+   "max_peer_face_manhattan_um": 381.6,
    "physical_view": "physical/ref_tile/s81hd_mtp_peer/views/dsfd_mtp_seq",
    "original_closed_job": "mtp-mtp_seq-c-c67a71fe5-tc"
   }
@@ -8033,8 +8035,8 @@
    "master": "dsfd_mtp_seq",
    "kind": "ctl_peer",
    "group": "clctl",
-   "x": 8607.6,
-   "y": 10486.8,
+   "x": 7905.6,
+   "y": 11124.0,
    "w": 151.2,
    "h": 151.2,
    "reg": false,
@@ -20066,22 +20068,22 @@
     [
      279,
      "seq_t",
-     8499.6,
-     10562.4,
+     7981.2,
+     11080.8,
      "box"
     ],
     [
      311,
      "ctl_i",
-     8607.6,
-     10562.4,
+     7981.2,
+     11124.0,
      "box"
     ]
    ],
    "n": "Direct registered CTL/seq peer, same clctl clock region, zero added cycles",
    "endpoint_faces": [
-    "E",
-    "W"
+    "N",
+    "S"
    ],
    "payload_b": 605
   },
@@ -20094,22 +20096,22 @@
     [
      311,
      "ctl_o",
-     8607.6,
-     10562.4,
+     7981.2,
+     11124.0,
      "box"
     ],
     [
      279,
      "seq_r",
-     8499.6,
-     10562.4,
+     7981.2,
+     11080.8,
      "box"
     ]
    ],
    "n": "Direct registered CTL/seq peer, same clctl clock region, zero added cycles",
    "endpoint_faces": [
-    "W",
-    "E"
+    "S",
+    "N"
    ],
    "payload_b": 686
   }

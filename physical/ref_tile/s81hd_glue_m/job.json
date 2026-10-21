@@ -1,0 +1,135 @@
+{
+ "name": "s81hd_glue_m-s81hd_glue_m-COMMIT",
+ "block": "ot_s81hd_ctl_glue",
+ "ref_tile": true,
+ "owner": "Codex:S81-HEAD",
+ "purpose": "S81.HEAD: head-die controller ot_s81hd_ctl to closure (TT setup / FF hold / DRC 0). SAFE review in kit README.",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "codex/s81-head-chain-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/common",
+   "rtl/dsrom_sys/mtp",
+   "rtl/dsrom_sys/s81_head",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/common_flow/clock_split_km.tcl",
+   "results/rtl/s81_head_ctl_peer_1021",
+   "tools/s81_head/split_ctl_peer.py",
+   "results/arch/s81_head_1021/ctl_peer.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81hd_ctl_glue u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay_tree3.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv rtl/dsrom_sys/s81_head/ot_s81hd_util.sv rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv rtl/dsrom_sys/s81_head/ot_s81hd_ctl_peer.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hd_ctl_base",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_peer_bench.sh {RUN}/ctl sim base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "pass_witness": "results/rtl/s81_head_ctl_peer_1021/base.log"
+   },
+   {
+    "name": "hd_ctl_mut_slice",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_peer_bench.sh {RUN}/ctl sim SLICE",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "fail_regex": "^FAIL hd_ctl xa slice mismatch",
+    "fail_witness": "results/rtl/s81_head_ctl_peer_1021/mut_SLICE.log"
+   },
+   {
+    "name": "hd_ctl_mut_tie",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_peer_bench.sh {RUN}/ctl sim TIE",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "fail_regex": "^FAIL hd_ctl local best tie \\(lowest id\\)",
+    "fail_witness": "results/rtl/s81_head_ctl_peer_1021/mut_TIE.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hd_glue_m/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hd_glue_m/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81hd_glue_m --out {RUN}/record/views/ot_s81hd_ctl_glue --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81hd_glue_m/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81hd_glue_m/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81hd_glue_m/s81hd_glue_m-s81hd_glue_m-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Direct-peer CTL glue only: exact generated factor of b4f571642; M7 sequencer excluded from this leaf and bound directly on die. Existing source state/HSF0/data/reset cycles unchanged. All1291peer bits on centred223.2um Nface window; exact151.2um seq above43.2um safe channel gives fullface Manhattan<=381.6um. Native glue previously32 with identical hardchild abstract; mandatory current native before layout. True originalflat failure1778 was sequencer highfanout, not glue. MAIN/FALLBACK use existing xSRAM geometry and registered endpoints."
+}
