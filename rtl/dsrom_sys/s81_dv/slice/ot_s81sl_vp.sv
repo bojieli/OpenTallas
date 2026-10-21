@@ -124,13 +124,18 @@ module ot_s81sl_vp #(
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin srun <= 1'b0; si <= 8'd0; sop <= 4'd0; end
         else if (cv_c && op != OP_NORM && !op[3]) begin
-            srun <= 1'b1; sop <= op; si <= 8'd0; sa0 <= a0; sa1 <= a1; sqb <= cn[1:0];
-            sn <= (op == OP_GAIN) ? 8'd8 : (op == OP_POST) ? 8'd21 : (op == OP_HLOAD || op == OP_HSTORE) ? 8'd16 :
-                  (op == OP_NORMR) ? 8'd1 : cn;
+            srun <= 1'b1; sop <= op; si <= 8'd0;
         end else if (srun) begin
             si <= si + 8'd1;
             if (si == sn - 8'd1) srun <= 1'b0;
         end
+    // Unreset command payload only matters after a valid command. Keeping it
+    // out of the async control process removes reset from its enable cone.
+    always @(posedge clk) if (cv_c && op != OP_NORM && !op[3]) begin
+      sa0 <= a0; sa1 <= a1; sqb <= cn[1:0];
+      sn <= (op == OP_GAIN) ? 8'd8 : (op == OP_POST) ? 8'd21 : (op == OP_HLOAD || op == OP_HSTORE) ? 8'd16 :
+            (op == OP_NORMR) ? 8'd1 : cn;
+    end
     wire busy_hit = cv_c && op != OP_NORM && !op[3] && srun;     // an op issued over a running op: schedule violation
 
     // per-cycle leaf-store reads (bank 0 / bank 1 row) and their purpose, by op and step
@@ -190,7 +195,7 @@ module ot_s81sl_vp #(
                         if (|k_xwm[8 * G +: 4]) begin wdw = xwd_c[8 * gw +: 8]; wmw = k_xwm[8 * G + (gw/4)]; end
                     end else if (|k_xwm[8 * G + 4 +: 4]) begin wdw = xwd_c[128 + 8 * gw +: 8]; wmw = k_xwm[8 * G + 4 + (gw/4)]; end
                 end
-                if (k_hsv[G]) begin wdw = (k_hsa0[G] == (gb == 1)) ? hs_d[8 * gw +: 8] : hs_d[128 + 8 * gw +: 8]; wmw = 1'b1; end
+                if (k_hsv[G]) begin wdw = ((G == 0 ? hs_a[0] : k_hsa0[G]) == (gb == 1)) ? hs_d[8 * gw +: 8] : hs_d[128 + 8 * gw +: 8]; wmw = 1'b1; end
             end
             assign wd_f[128 * gb + 8 * gw +: 8] = wdw; assign wm_f[128 * gb + 8 * gw +: 8] = {8{wmw}};
         end
@@ -369,6 +374,18 @@ module ot_s81sl_vp #(
     localparam integer RH = RD / 2;                         // ring reset split over two relay leaves
     // Constant bit ownership keeps each async reset local. A variable vector
     // lvalue in two processes made the untouched half an async-load value.
+    wire [NWG-1:0] ring_read;
+    genvar rg;
+    generate for(rg=0;rg<NWG;rg=rg+1) begin:g_ring_read
+      reg v;
+      integer rb;
+      always @(*) begin
+        v=1'b0;
+        for(rb=0;rb<8;rb=rb+1)
+          if(8*rg+rb < RD) v=v | (wv_ring[8*rg+rb] && wv_wp[rg] == 8*rg+rb);
+      end
+      assign ring_read[rg]=v;
+    end endgenerate
     genvar gr;
     generate for (gr = 0; gr < RD; gr = gr + 1) begin : g_valid_ring
         if (gr < RH) begin : g_lo
@@ -387,7 +404,7 @@ module ot_s81sl_vp #(
     (* keep *) reg wvl; (* keep *) reg [16:0] k_wvl; reg [3:0] widx;
     always @(posedge clk or negedge rs_w)
         if (!rs_w) begin wvl <= 1'b0; k_wvl <= 17'd0; widx <= 4'd0; end
-        else begin wvl <= wv_ring[wv_p]; k_wvl <= {17{wv_ring[wv_p]}}; widx <= wvl ? widx + 4'd1 : 4'd0; end
+        else begin wvl <= |ring_read; k_wvl <= {17{|ring_read}}; widx <= wvl ? widx + 4'd1 : 4'd0; end
 
     // ---------------------------------------------------------------- vn seam (registered outputs)
     reg hrq_v; reg [3:0] hrq_i;                  // h read request this cycle (POST / HSTORE)
