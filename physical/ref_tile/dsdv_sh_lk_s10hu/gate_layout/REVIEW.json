@@ -1,0 +1,35 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-21T15:58:03.719362-07:00",
+  "gate_commit": "2026-10-21T15:49:45-0700",
+  "geometry_sha256": "26d1e6659d45a231cc45739c0b734bd7492ef3def73e4ffb6a877b2377b6f112",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "26d1e6659d45a231cc45739c0b734bd7492ef3def73e4ffb6a877b2377b6f112",
+    "components": {
+      "outline": "5b1d60aa3426b0eaf94a6dab0a357ff1806feb9607bef1d848e1ce099e4a3930",
+      "macros": "9b4e089caba1de1309db925b7918819b19b6d070f3c0372ff08a8dc9448279cf",
+      "pins": "836de8e4c36dade3eb48ccf0a2cadf9dd4e97d828c75a749fef934dc18613bf8",
+      "clock_entry": "ee4d667e029d69e2a7b068ebecb001bedb0eb80bc5d9842b2119649f7693e135"
+    }
+  },
+  "verdict": "APPROVED",
+  "approval_authority": "/root",
+  "transcribed_by": "/root/s81_lead/collect2",
+  "approval_basis": "Explicit coordinator final approval relayed by /root/s81_lead: ROOT personally reviewed final all4PNGs in97ebbffb1 at exactd023 source, MAIN+FB archives/manifests; no worker self-approval or inherited preview review.",
+  "source_start_commit": "d023bedaa36697cd5423268972bb996b5fa71d54",
+  "archive_sha256": "cf5aef9ab07a9870c963747bc66b09a913e2f25adab2369c42121f7d7029c8a6",
+  "manifest_sha256": "8d82a0427262a3410bf089fbc9eb6da511d0348f7f83042502feb9d54435ccdc",
+  "final_image_sha256": {
+    "density.png": "ee01d4cd491772ada71281d463d605c50992cfefc24533fafcf51c7d1ffa0f0f",
+    "floorplan.png": "c26d0e9cad5d5811fe54a51fb8da30776b9998a9871e4ffe80f7d4961e4322f5"
+  },
+  "checklist": {
+    "lattice": "Six p192 hardmasters at source-exact floorplan anchors on21.6um grid; MAIN anchors43.2um lattice, FB halfsteps explicit. LeftMY/rightR0, no rotation or overlap.",
+    "std_cell_band": "Continuous available std rows around two macro columns, central and horizontal streets visuallyopen; localizedgreen density, no red saturated island.",
+    "pin_spread": "Signal+clock3107 actualpins alltrackchecked;0 inaccessible/outside/missing. Fullface pinbalance; p192 macro access perimeter accepted.",
+    "clock_entry": "Explicit N-entry/landing-root source. Boundary TT/FFpinspread 70.7/47.3ps accepted. Allregister TT/FF 83.1/59.2ps separately recorded; insertion 732.4/601.7ps guidance risk retained. No changed clock rule.",
+    "shape": "FB388.8x453.6/30%fill accepted for real p192 pin-access perimeter, notminimaloutline. Six hardmacros/clearstreets; actualGRT0overflow."
+  },
+  "notes": "Gate commit and source_binding.commit are null because exactcontent snapshot; gate_commit deliberately binds actual gate.generated timestamp. ROOT accepts boundary spread/accessfill guidance while retaining insertion645/732ps and~697ps20leveldepth risks; HU83.1ps all-registerTT separate, no newrule. No SS/FF closure inferred. APIPE10+2 vs G8/APIPE8 and ACKPcompletion+1 remain actualparent/calendar pricing obligations; no G8 alias. ROOTintegration exclusivelypublishes/submits."
+}
