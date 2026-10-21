@@ -86,6 +86,31 @@ module ot_hgi_coll_fj_q2_r128(
   .tkm_del_slot(tkm_del_slot),.tkm_dest_v(tkm_dest_v),.arg_fault(1'b0),.tkm_fault(1'b0),.fault(fault),.fault_cause(fault_cause));
 endmodule
 
+// HBM-COLLQ6 10-20: the n1s0 shape (die hb_coll_SE/NW/NE = ot_hfd_coll_q2_hard_v8g #(NLINK 1)): same s128 body / RC 32
+// reset copies as ot_hgi_coll_fj_q2_r128 at NPT 1 / NS 8 (the reference ot_hgi_coll_fj_n1s0 adds PT_LOOKAHEAD 1, which is
+// exact: flow / loaded never change while checking; the s128 programme target reads its flow word from the SRAM lookahead).
+module ot_hgi_coll_fj_n1s0_r128(
+ input wire clk,rst_n,input wire [1:0] qid,
+ input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
+ input wire desc_v,input wire [11:0] desc_base,input wire [12:0] desc_limit,input wire [15:0] desc_loops,
+ input wire launch_v,program_active,issuer_busy,issuer_fault,issuer_uop_v,input wire [6:0] issuer_uop_pc,
+ output wire [36:0] issuer_cfg,output wire issuer_start,output wire [6:0] issuer_start_pc,
+ output wire configured,init_busy,program_fault,
+ input wire protocol_fault,input wire [7:0] capture_fault,input wire [17:0] select_fault,unavailable_fault,
+ input wire [0:0] link_abort,input wire ring_fault,writer_fault,reduce_fault,
+ input wire arg_capture_slot,tkm_start,input wire [3:0] tkm_del_slot,tkm_dest_v,
+ output wire fault,output wire [15:0] fault_cause);
+ ot_hgi_coll_fj_core_s128 #(.NPT(1),.SOLO(0),.NS(8),.NSL(18),.RC(32)) u(.clk(clk),.rst_n(rst_n),.qid(qid),.cfg_v(cfg_v),.cfg_target(cfg_target),
+  .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),
+  .desc_loops(desc_loops),.launch_v(launch_v),.program_active(program_active),.issuer_busy(issuer_busy),
+  .issuer_fault(issuer_fault),.issuer_uop_v(issuer_uop_v),.issuer_uop_pc(issuer_uop_pc),.issuer_cfg(issuer_cfg),
+  .issuer_start(issuer_start),.issuer_start_pc(issuer_start_pc),.configured(configured),.init_busy(init_busy),
+  .program_fault(program_fault),.protocol_fault(protocol_fault),.capture_fault(capture_fault),
+  .select_fault(select_fault),.unavailable_fault(unavailable_fault),.link_abort(link_abort),.ring_fault(ring_fault),
+  .writer_fault(writer_fault),.reduce_fault(reduce_fault),.arg_capture_slot(arg_capture_slot),.tkm_start(tkm_start),
+  .tkm_del_slot(tkm_del_slot),.tkm_dest_v(tkm_dest_v),.arg_fault(1'b0),.tkm_fault(1'b0),.fault(fault),.fault_cause(fault_cause));
+endmodule
+
 // link_e with its five same-region entry clocks (control + 4 retry-store banks) on ONE scalar clock pin: the leaf's
 // own CTS tree balances the control flops and the 4 SRAM clock pins (the parent gate's link graph read the 5-bit
 // {5{ck_sw}} pin as "no region": u_link0/1 (None) in every unlanded-link FAIL of the lpk6 / ar128 gates).
