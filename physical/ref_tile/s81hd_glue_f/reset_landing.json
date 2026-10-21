@@ -5,7 +5,8 @@
  "stages": 2,
  "clock": "ck",
  "reset_ports": [
-  "rst_n"
+  "rst_n",
+  "seq_rst"
  ],
  "rule": "ROOT-RST 2026-10-19: every reset input lands at its face in 2 registered stages, then equal-depth fan-out; reset release latency is a scheduled constant",
  "reset_release_cycles": 2

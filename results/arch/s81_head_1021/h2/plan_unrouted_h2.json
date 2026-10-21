@@ -4280,7 +4280,7 @@
     "kind": "ctl_peer",
     "group": "clctl",
     "x": 7905.6,
-    "y": 11124.0,
+    "y": 11167.2,
     "w": 151.2,
     "h": 151.2,
     "reg": false,
@@ -4289,10 +4289,10 @@
    "source": "b4f571642 unchanged CTL factored by split_ctl_peer.py",
    "same_region": "clctl",
    "added_cycles": 0,
-   "peer_seed_reach_um": 43.2,
+   "peer_seed_reach_um": 86.4,
    "peer_face": "N",
-   "glue_peer_pin_window_um": 223.2,
-   "max_peer_face_manhattan_um": 381.6,
+   "peer_pin_plan": "results/arch/s81_head_1021/peer_pin_plan_m.json",
+   "max_peer_face_manhattan_um": 386.076,
    "physical_view": "physical/ref_tile/s81hd_mtp_peer/views/dsfd_mtp_seq",
    "original_closed_job": "mtp-mtp_seq-c-c67a71fe5-tc"
   }
@@ -8036,7 +8036,7 @@
    "kind": "ctl_peer",
    "group": "clctl",
    "x": 7905.6,
-   "y": 11124.0,
+   "y": 11167.2,
    "w": 151.2,
    "h": 151.2,
    "reg": false,
@@ -20076,7 +20076,7 @@
      311,
      "ctl_i",
      7981.2,
-     11124.0,
+     11167.2,
      "box"
     ]
    ],
@@ -20097,7 +20097,7 @@
      311,
      "ctl_o",
      7981.2,
-     11124.0,
+     11167.2,
      "box"
     ],
     [

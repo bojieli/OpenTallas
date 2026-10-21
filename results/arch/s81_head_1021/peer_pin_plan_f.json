@@ -1,0 +1,158 @@
+{
+  "schema": "opentallas.head.peer-pin-plan.v1",
+  "glue_width_um": 1209.6,
+  "peer_size_um": 151.2,
+  "gap_um": 86.4,
+  "region": "clctl",
+  "max_reach_um": 386.076,
+  "rows": [
+    {
+      "port": "rst",
+      "bits": 1,
+      "lo_um": -129.6,
+      "hi_um": -129.4272,
+      "worst_manhattan_um": 152.556
+    },
+    {
+      "port": "f_cfg",
+      "bits": 42,
+      "lo_um": -129.0816,
+      "hi_um": -121.82400000000001,
+      "worst_manhattan_um": 189.23760000000001
+    },
+    {
+      "port": "f_rv",
+      "bits": 1,
+      "lo_um": -121.47840000000001,
+      "hi_um": -121.30560000000001,
+      "worst_manhattan_um": 144.43440000000004
+    },
+    {
+      "port": "f_rd",
+      "bits": 512,
+      "lo_um": -86.832,
+      "hi_um": -0.432,
+      "worst_manhattan_um": 286.092
+    },
+    {
+      "port": "t_rg",
+      "bits": 1,
+      "lo_um": -120.96000000000001,
+      "hi_um": -120.78720000000001,
+      "worst_manhattan_um": 270.92400000000004
+    },
+    {
+      "port": "t_tv",
+      "bits": 1,
+      "lo_um": -120.44160000000001,
+      "hi_um": -120.26880000000001,
+      "worst_manhattan_um": 294.4056
+    },
+    {
+      "port": "t_td",
+      "bits": 512,
+      "lo_um": 0.432,
+      "hi_um": 86.832,
+      "worst_manhattan_um": 286.092
+    },
+    {
+      "port": "f_tg",
+      "bits": 1,
+      "lo_um": 87.264,
+      "hi_um": 87.43679999999999,
+      "worst_manhattan_um": 237.4008
+    },
+    {
+      "port": "t_sv",
+      "bits": 1,
+      "lo_um": -119.92320000000001,
+      "hi_um": -119.75040000000001,
+      "worst_manhattan_um": 286.3512
+    },
+    {
+      "port": "t_sd",
+      "bits": 77,
+      "lo_um": -119.40480000000001,
+      "hi_um": -106.09920000000001,
+      "worst_manhattan_um": 314.2968
+    },
+    {
+      "port": "f_sg",
+      "bits": 1,
+      "lo_um": -105.7536,
+      "hi_um": -105.58080000000001,
+      "worst_manhattan_um": 314.5176
+    },
+    {
+      "port": "f_wv",
+      "bits": 1,
+      "lo_um": -105.2352,
+      "hi_um": -105.06240000000001,
+      "worst_manhattan_um": 318.51120000000003
+    },
+    {
+      "port": "f_wd",
+      "bits": 10,
+      "lo_um": -104.7168,
+      "hi_um": -102.98880000000001,
+      "worst_manhattan_um": 324.9048
+    },
+    {
+      "port": "t_wg",
+      "bits": 1,
+      "lo_um": -102.64320000000001,
+      "hi_um": -102.47040000000001,
+      "worst_manhattan_um": 328.0152
+    },
+    {
+      "port": "t_hv",
+      "bits": 1,
+      "lo_um": -102.12480000000001,
+      "hi_um": -101.95200000000001,
+      "worst_manhattan_um": 333.5448
+    },
+    {
+      "port": "t_hd",
+      "bits": 34,
+      "lo_um": -101.60640000000001,
+      "hi_um": -95.7312,
+      "worst_manhattan_um": 351.3144
+    },
+    {
+      "port": "f_hg",
+      "bits": 1,
+      "lo_um": -95.3856,
+      "hi_um": -95.2128,
+      "worst_manhattan_um": 357.0456
+    },
+    {
+      "port": "f_qv",
+      "bits": 1,
+      "lo_um": -94.8672,
+      "hi_um": -94.6944,
+      "worst_manhattan_um": 362.5752
+    },
+    {
+      "port": "f_qd",
+      "bits": 34,
+      "lo_um": -94.3488,
+      "hi_um": -88.47359999999999,
+      "worst_manhattan_um": 380.34479999999996
+    },
+    {
+      "port": "t_qg",
+      "bits": 1,
+      "lo_um": -88.12799999999999,
+      "hi_um": -87.95519999999999,
+      "worst_manhattan_um": 386.076
+    },
+    {
+      "port": "t_acc",
+      "bits": 57,
+      "lo_um": 87.7824,
+      "hi_um": 97.63199999999999,
+      "worst_manhattan_um": 156.276
+    }
+  ],
+  "method": "Every actual old-C LEF signal rectangle against its entire base-port pin window; source data cycles unchanged"
+}

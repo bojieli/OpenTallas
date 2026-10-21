@@ -20,14 +20,14 @@ def build(src,out,glue_size=1036.8):
   if link['i'] in ('c_ln_host0_r_l0','c_ln_mesh0_t_l1'):
    for e in link['e']:
     if e[0]==ci:e[3]=round(e[3]+21.6,4)
- seq=dict(name='mtp_seq',master='dsfd_mtp_seq',kind='ctl_peer',group='clctl',x=round(c['x']+c['w']/2-75.6,4),y=round(c['y']+c['h']+43.2,4),w=151.2,h=151.2,reg=False,orient='R0')
+ seq=dict(name='mtp_seq',master='dsfd_mtp_seq',kind='ctl_peer',group='clctl',x=round(c['x']+c['w']/2-75.6,4),y=round(c['y']+c['h']+86.4,4),w=151.2,h=151.2,reg=False,orient='R0')
  assert seq['x']+seq['w']<=old['x']+old['w'] and seq['y']>=old['y'] and seq['y']+seq['h']<=old['y']+old['h']
  si=len(B);B.append(seq);cy=round(c['y']+c['h'],4);sy=seq['y'];cx=round(c['x']+c['w']/2,4)
  for name,width,a,ap,b,bp,faces in [('seq_t',605,ci,'seq_t',si,'ctl_i',['N','S']),('seq_r',686,si,'ctl_o',ci,'seq_r',['S','N'])]:
   e=[[a,ap,cx,cy if a==ci else sy,'box'],[b,bp,cx,cy if b==ci else sy,'box']]
   assert abs(e[0][2]-e[1][2])+abs(e[0][3]-e[1][3])<=405
   p['links'].append(dict(i=name,c='unit',b=width,d=1,e=e,n='Direct registered CTL/seq peer, same clctl clock region, zero added cycles',endpoint_faces=faces,payload_b=width))
- p['facts']['ctl_peer']={'reserve':old,'glue':c,'sequencer':seq,'source':'b4f571642 unchanged CTL factored by split_ctl_peer.py','same_region':'clctl','added_cycles':0,'peer_seed_reach_um':43.2,'peer_face':'N','glue_peer_pin_window_um':223.2,'max_peer_face_manhattan_um':381.6,'physical_view':'physical/ref_tile/s81hd_mtp_peer/views/dsfd_mtp_seq','original_closed_job':'mtp-mtp_seq-c-c67a71fe5-tc'}
+ p['facts']['ctl_peer']={'reserve':old,'glue':c,'sequencer':seq,'source':'b4f571642 unchanged CTL factored by split_ctl_peer.py','same_region':'clctl','added_cycles':0,'peer_seed_reach_um':86.4,'peer_face':'N','peer_pin_plan':'results/arch/s81_head_1021/peer_pin_plan_m.json','max_peer_face_manhattan_um':386.076,'physical_view':'physical/ref_tile/s81hd_mtp_peer/views/dsfd_mtp_seq','original_closed_job':'mtp-mtp_seq-c-c67a71fe5-tc'}
  p['facts']['physical72']['design']='S81 HEAD H2 (direct CTL/seq peers)';p['facts']['instance_orientations']['mtp_seq']='R0'
  Path(out).parent.mkdir(parents=True,exist_ok=True);Path(out).write_text(json.dumps(p,indent=1)+'\n')
 if __name__=='__main__':build(*sys.argv[1:4])

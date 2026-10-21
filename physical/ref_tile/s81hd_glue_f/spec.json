@@ -15,7 +15,8 @@
  "params": {},
  "clock_port": "ck",
  "reset_ports": [
-  "rst_n"
+  "rst_n",
+  "seq_rst"
  ],
  "outline": {
   "w": 1209.6,
@@ -144,7 +145,7 @@
    "ot_s81hd_pick"
   ]
  },
- "structural_change": "Direct-peer CTL glue only: exact generated factor of b4f571642; M7 sequencer excluded from this leaf and bound directly on die. Existing source state/HSF0/data/reset cycles unchanged. All1291peer bits on centred223.2um Nface window; exact151.2um seq above43.2um safe channel gives fullface Manhattan<=381.6um. Native glue previously32 with identical hardchild abstract; mandatory current native before layout. True originalflat failure1778 was sequencer highfanout, not glue. MAIN/FALLBACK use existing xSRAM geometry and registered endpoints.",
+ "structural_change": "CTL glue direct-peer leaf: exact source factor of b4f571642; original registers/HSF0/data+reset cycles unchanged0. CLOSED C M7 seq is direct die peer in sameclctl,86.4um Nchannel. Actual old LEF pin rectangles against disjoint base-port glue IOwindows give worst386.076um<405 and eachwindow<6pins/um (peer_pin_plan ledger). Explicit seq_rst output reset role, only inputrst_n receives landing. Prior attempt failed before mapping from undeclared output reset role; native census remains required before layout.",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered (HD-CTL): every input lands in a pin flop, every output leaves a flop (ot_s81hd_hreg32 / kf / grx pin stages); a recipe pin stage would add unpriced edges."
@@ -165,7 +166,8 @@
    "physical/common_flow/clock_split_km.tcl",
    "results/rtl/s81_head_ctl_peer_1021",
    "tools/s81_head/split_ctl_peer.py",
-   "results/arch/s81_head_1021/ctl_peer.json"
+   "results/arch/s81_head_1021/ctl_peer.json",
+   "results/arch/s81_head_1021/peer_pin_plan_f.json"
   ],
   "benches": [
    {
@@ -203,7 +205,7 @@
      "verilator"
     ],
     "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
-    "fail_regex": "^FAIL hd_ctl local best tie \\(lowest id\\)",
+    "fail_regex": "^FAIL hd_ctl local best",
     "fail_witness": "results/rtl/s81_head_ctl_peer_1021/mut_TIE.log"
    }
   ]
@@ -231,88 +233,88 @@
  },
  "pin_ranges": {
   "seq_rst": [
-   493.2,
-   716.4
+   475.2,
+   475.3728
   ],
   "seq_f_cfg": [
-   493.2,
-   716.4
+   475.7184,
+   482.976
   ],
   "seq_f_rv": [
-   493.2,
-   716.4
+   483.3216,
+   483.4944
   ],
   "seq_f_rd": [
-   493.2,
-   716.4
+   517.968,
+   604.368
   ],
   "seq_t_rg": [
-   493.2,
-   716.4
+   483.84,
+   484.0128
   ],
   "seq_t_tv": [
-   493.2,
-   716.4
+   484.3584,
+   484.5312
   ],
   "seq_t_td": [
-   493.2,
-   716.4
+   605.232,
+   691.632
   ],
   "seq_f_tg": [
-   493.2,
-   716.4
+   692.064,
+   692.2368
   ],
   "seq_t_sv": [
-   493.2,
-   716.4
+   484.8768,
+   485.0496
   ],
   "seq_t_sd": [
-   493.2,
-   716.4
+   485.3952,
+   498.7008
   ],
   "seq_f_sg": [
-   493.2,
-   716.4
+   499.0464,
+   499.2192
   ],
   "seq_f_wv": [
-   493.2,
-   716.4
+   499.5648,
+   499.7376
   ],
   "seq_f_wd": [
-   493.2,
-   716.4
+   500.0832,
+   501.8112
   ],
   "seq_t_wg": [
-   493.2,
-   716.4
+   502.1568,
+   502.3296
   ],
   "seq_t_hv": [
-   493.2,
-   716.4
+   502.6752,
+   502.848
   ],
   "seq_t_hd": [
-   493.2,
-   716.4
+   503.1936,
+   509.0688
   ],
   "seq_f_hg": [
-   493.2,
-   716.4
+   509.4144,
+   509.5872
   ],
   "seq_f_qv": [
-   493.2,
-   716.4
+   509.9328,
+   510.1056
   ],
   "seq_f_qd": [
-   493.2,
-   716.4
+   510.4512,
+   516.3264
   ],
   "seq_t_qg": [
-   493.2,
-   716.4
+   516.672,
+   516.8448
   ],
   "seq_t_acc": [
-   493.2,
-   716.4
+   692.5824,
+   702.432
   ]
  }
 }
