@@ -47,6 +47,10 @@ Old single-user dies (S81 p4l-SU, dv2f14*, kvs14c, GEN2) are diagnostic only. Ru
 | HBM-DS | quadrant (SW) bench on GEN2e4: L0, L1, L2, L3 MoE, L14, L20-class, head; cross-die COLL (AG / RS144 / AR) on GEN2e4 COLL ROWS256 / AR_ITER | not in this release (owner 10-18) |
 | HBM-Qwen | quadrant bench on GEN2e4: L0, Lk, head; TP8 all-reduce on GEN2e4 | not in this release |
 
+## 4b. Die-netlist rerun hooks (TOK-FUNC, 10-21)
+- [ ] HBM-DS + HBM-Qwen (d4g): rerun the RTL-functional script against the GEN die.v of record:
+      `MODE=netlist DIE_V=<GEN die.v> CONTRACT=<GEN contract.json> SRC_REV=<GEN source rev> OUT=<dir> FIX_DS=<DS L00/L02/L14 fixtures> QOP=<Qwen operands> bash tools/hbm_layer_vehicle/tok_func_hbm.sh` (same replays/compiler; grade die-netlist). RTL-functional source-assembly run: r14 1fe61477b (TOK-FUNC-HBM, results/rtl/tok_func_hbm_1021/).
+
 ## 5. After the runs
 - [ ] Re-export the token page (compose + tools/token_pass_status.py --page-data). Remove the PRICED label from MU.CURVE
       points that are now measured.
