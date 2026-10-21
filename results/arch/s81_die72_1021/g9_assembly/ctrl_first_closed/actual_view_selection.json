@@ -1,0 +1,25 @@
+{
+ "status": "PASS",
+ "master": "dsfd_ctrl_rg3",
+ "view_refs": [
+  "12c132d60a8f0300056abb216d48ff9588e7f620",
+  "origin/main",
+  "5e08aaf9c"
+ ],
+ "selected": [
+  "5e08aaf9c",
+  "physical/ref_tile/s81ctrl_rg3s/views/dsfd_ctrl_rg3"
+ ],
+ "actual_selector_sha256": "0cbfa8926ce2290d70acd499d4de4a9dbfc4625c4d16c7a8d377dda679d41e30",
+ "selected_view_sha256": {
+  "dsfd_ctrl_rg3.lef": "f9f9e65d84bc2362431e5de97d038a03e9a0032eb7aa541d00e3260240880fc9",
+  "dsfd_ctrl_rg3_tt.lib": "456bbc3dcfdbeffe909cf460b9dcb18c7199f2f6c10d26d37b06d86b9c4942c3",
+  "dsfd_ctrl_rg3_ff.lib": "b1f4c0349dd421014b36cdee13fcb2966e5290c5967f5e69def63fc514194035",
+  "dsfd_ctrl_rg3_ss.lib": "2dc4a753f0a8ff11353cf9984b53a87ca7745082df62734e14fdcbc42c39941d",
+  "insertion.json": "acb969b94da93dd6c382ad93fa0bf5a29f34d52e2dce758f4e6e2c9040da2039",
+  "abstract.json": "aeb66de534ccc6a0aa4d43047207fd60f84a3fe6d5f335a5336c6dc1dcd25661",
+  "child_lint.json": "2e11ce4654dc0f0f66553dfede5c5b369d7c8b2032b9ce3fcfacab740995ed92"
+ },
+ "source_contract": "Packet8RTL hashes and3configureddefines; apply_ctrl_g9 must precede this check",
+ "scope": "Exact existing GEN view-selection guard only, no physical/STA/timing claim"
+}
