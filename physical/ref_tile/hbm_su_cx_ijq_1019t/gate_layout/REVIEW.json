@@ -1,15 +1,28 @@
 {
- "schema": "opentallas.tile_visual_review.v1",
- "tile": "hbm_su_cx_ijq_1019t",
- "reviewer": "LEAD2-HBM/L2H-SU (Claude) 2026-10-19",
- "verdict": "APPROVED",
- "time": "2026-10-19T17:01:58-07:00",
- "checklist": {
-  "lattice": "PASS: no macros",
-  "std_cell_band": "PASS: one full band; logic centred between the W/E pin faces (1019s density.png, identical outline/pins)",
-  "pin_spread": "PASS: full W/E faces split by port group, clock at the N-E corner; 6,293 pins pin-bound outline (util waiver in README)",
-  "clock_entry": "PASS: single root clk_q, unclustered CTS (w spread 33.9/33.2)",
-  "shape": "PASS: 216 x 388.8 exact closed-view sub-slot"
- },
- "notes": "Reviewed 1019s floorplan.png/density.png (same outline, pins, RTL); 1019t only splits the landed reset into 3 kept copies <=32 loads. Gate: PRE_ROUTE_GATE: WARN (0 fail, 5 warn)"
+  "schema": "opentallas.tile_visual_review.v1",
+  "tile": "hbm_su_cx_ijq_1019t",
+  "reviewer": "codex coordinator takeover 2026-10-21",
+  "verdict": "APPROVED",
+  "time": "2026-10-21T00:30:54.290156-07:00",
+  "gate_commit": "16b6ef486",
+  "checklist": {
+    "lattice": "PASS: no macros",
+    "std_cell_band": "PASS: one std-cell region, logic mass centred between the W/E pin faces + E pin-flop column, peak density ~0.6, no hot spot",
+    "pin_spread": "PASS: W/E full faces split by port group (6,293 pins, pin-bound 216x388.8 sub-slot; util 5% waived, rule freeze 10-20 09:35)",
+    "clock_entry": "PASS: one root clk_q at the N-E corner, 7,010 sinks, pin-flop spread TT 36.5 / FF 36.2 (<=80); insertion 347.7/290.9 guidance",
+    "shape": "PASS: 216 x 388.8 (1.8:1) exact closed-view sub-slot"
+  },
+  "notes": "Actually viewed original PNGs in own sparse WT: full continuous rows, central mass and E pin-register band, no macros. 33load select copies=32mux+own toggle retained explicit guidance exception, reset copies<=32. Geometry route qualification only; no final closure or soft-parent replacement.",
+  "geometry_sha256": "353b9605069710ae1933820e59c6bc881508146e5664995fa57898ea53fe7636",
+  "evidence": {
+    "gate_sha256": "4da46ce74bd8b38dccfd78a64be922b108659474a22d3cfb0300aaf39a0a4e24",
+    "images_viewed": {
+      "floorplan.png": "85cb6bb4fd3ee6c34009a7829c90f885b50d4be25d44f43f51c0720cbfbec47b",
+      "density.png": "aef33df2e552867ed5c15d7788290194c7a0af14c87d276007bf6775e691ebea"
+    },
+    "source_binding": {
+      "start_commit": "16b6ef486c4a8e9bee7c4ba7cdef3bf7094ee608",
+      "manifest_sha256": "be7ebde52f98adfbe592d40166e171a9b106b8b9187fe5ceed251694a9f22b97"
+    }
+  }
 }
