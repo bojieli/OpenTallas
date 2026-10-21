@@ -3,10 +3,21 @@ import argparse
 import datetime
 import hashlib
 import json
+import os
 import pathlib
 import runpy
 import subprocess
 import time
+
+
+def durable(path):
+    with path.open('rb') as f:
+        os.fsync(f.fileno())
+    fd = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
 
 
 def main():
@@ -29,6 +40,8 @@ def main():
         if not a.wait or time.monotonic() >= until:
             raise SystemExit('no verified durable deadline snapshot; no signals')
         time.sleep(1)
+    if not a.dry_run:
+        durable(path)
     ok, identity = m['verify_identity']()
     assert ok, identity
     if a.dry_run:
@@ -38,6 +51,7 @@ def main():
     arm = dict(at=m['now'](), mode='dry-run' if a.dry_run else 'deadline', identity=identity,
                snapshot_at=snapshot['at'], worker_sha=hashlib.sha256(worker.encode()).hexdigest(), delete=False)
     m['jsave'](str(state/'batch_arm_receipt.json'), arm)
+    durable(state/'batch_arm_receipt.json')
     code = worker+'\nprint(json.dumps(execute(json.loads('+repr(json.dumps(snapshot))+'), dry_run='+repr(a.dry_run)+')))\n'
     r = subprocess.run(m['SSH_H']+[m['HOST'], 'python3', '-'], input=code, capture_output=True, text=True, timeout=90)
     receipt = dict(arm=arm, rc=r.returncode, stdout=r.stdout, stderr=r.stderr)
