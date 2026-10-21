@@ -48,7 +48,39 @@ VARIANTS = {
             'half-word hf0 / hf1; rows y 561.6.. at 86.4 pitch, lanes 0/1 lower, 2/3 upper), ro [600,940] / ri '
             '[960,1300] centred on E: every lane-face hop is a pin-flop -> core register wire, logic stays in one block.'),
 }
+RXV = 'physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1'
+
+
+def nmacro(t, k, x, y):
+    return {'view': SRAM, 'inst': f'*g_tx?{t}?.g_safe_write.u_m.g_bank?{k}?.u_m', 'at': [x, y], 'orient': 'R0'}
+
+
+def rmacro(t, k, x, y):
+    return {'view': RXV, 'inst': f'*g_rx?{t}?.g_sa.g_true_sram.u_rx_mem.g_bank?{k}?.u_m', 'at': [x, y], 'orient': 'R0'}
+
+
+NATIVE = {'RX_SRAM': 1, 'IN_PIPE': 1, 'NATIVE32': 1}
+KEEP = ['ot_sram_showahead_hit5', 'ot_s81sl_lep_rx_control', 'ot_s81sl_lep_host_event', 'ot_s81sl_lep_tx_push',
+        'ot_s81sl_lep_stamp', 'ot_s81sl_lep_vcopy', 'ot_s81sl_lep_pair_ready', 'ot_s81sl_lep_return8',
+        'ot_sram_showahead_readptr']
+NWHY = (' REGATE after t5a/t5b native census FAIL (default params: max 1,559 loads, 694 drivers > 32; floorplan refused): '
+        'kit params RX_SRAM 1 / IN_PIPE 1 / NATIVE32 1 = the Codex-qualified native32 structure of lep_mu_a/_h (6cb5f3eff, '
+        'now plumbed through ot_s81sl_lep_mu_ab, defaults 0 unchanged); RX = 5 x 32x128 SRAM per lane. IN_PIPE adds +1 edge '
+        'on ro / mu_c: die u_lep params + calendar are a LEAD call before bind.')
+VARIANTS['t5c'] = dict(params=NATIVE, keep=KEEP, e=VARIANTS['t5a']['e'],
+    macros=[nmacro(t, k, 129.6, round(COL0[t] + 86.4 * k, 1)) for t in range(4) for k in range(5)] +
+           [rmacro(t, k, 388.8, round(COL0[t] + 43.2 * k, 1)) for t in range(4) for k in range(5)],
+    why='MAIN-native: t5a lane-local TX columns (x 129.6) + per-lane RX SRAM column (x 388.8, 43.2 pitch, toward the E '
+        'ri face) in the same lane band.' + NWHY)
+VARIANTS['t5d'] = dict(params=NATIVE, keep=KEEP, e=VARIANTS['t5b']['e'],
+    macros=[nmacro(t, k, 43.2 if t % 2 == 0 else 259.2, round(345.6 + 86.4 * (5 * (t // 2) + k), 1))
+            for t in range(4) for k in range(5)] +
+           [rmacro(t, k, round(43.2 + 86.4 * k, 1), round(1209.6 + 43.2 * t, 1)) for t in range(4) for k in range(5)],
+    why='FALLBACK-native: central core -- TX 2 x 10 block (x 43.2 / 259.2, y 345.6.., 86.4 pitch) with the RX SRAMs '
+        'as 4 lane rows of 5 directly above it (y 1209.6.. 43.2 pitch), ri [960,1300] beside the RX rows.' + NWHY)
+ONLY = sys.argv[2:] or list(VARIANTS)
 for v, cfg in VARIANTS.items():
+    if v not in ONLY: continue
     name = f's81sl_lepmu_{v}'; dst = RT / name
     if dst.exists(): shutil.rmtree(dst)
     dst.mkdir()
@@ -57,7 +89,7 @@ for v, cfg in VARIANTS.items():
     s['sources'] = ['rtl/lib/ot_rst_relay_tree3.sv', 'rtl/lib/ot_sram_oldread_wreg.sv', 'rtl/lib/ot_sram_showahead_1r1w.sv',
                     'rtl/lib/ot_rst_relay.sv', 'rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv',
                     'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv']
-    s['params'] = {}
+    s['params'] = cfg.get('params', {})
     s['outline'] = {'w': W, 'h': H}
     s['macros'] = cfg['macros']
     wp = []
@@ -76,6 +108,7 @@ for v, cfg in VARIANTS.items():
     s['route'].update(hold_margin_ns=0.045, io_hold_margin_ns=0.03,
                       cts_sink={'size': 24, 'diameter_um': 30, 'extra': '-distance_between_buffers 15 -balance_levels'})
     s['route'].pop('synth_keep_modules', None)
+    if cfg.get('keep'): s['route']['synth_keep_modules'] = cfg['keep']
     s['pre_cts_extra'] = []; s['orfs_vars'] = {}
     s['io_flop_at_pins'] = {'cols': 4, 'allow_none': True}
     s['job'] = dict(BASE['job'])
@@ -83,6 +116,7 @@ for v, cfg in VARIANTS.items():
                     views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}',
                     purpose='S81-LINK5: copy-A/B MU end-slice link endpoint (u_lep of ot_s81sl_slice_lepw_mab_mu_72, s_0N '
                             '5th lane pair; HOST_EN 0, MU_EN 1, AB_EN 1, NB 80) to closure (TT setup / FF hold / DRC 0).')
+    if cfg.get('params'): s['job']['extra_paths'] = s['job']['extra_paths'] + [RXV]
     s['fill_reason'] = {'pin_bound': (
         'Slot-bound: 475.2 x 1900.8 is the lepw_mab_mu u_lep slot (561.6 x 1987.2 at R0 (820.8,1728)) and its W face must '
         'face four 583.2-tall lane tiles on a 626.4 pitch (pair A + pair B, 4,456 lane pins), N face the landing (2,211 '
@@ -93,7 +127,7 @@ for v, cfg in VARIANTS.items():
         'lepw_mab_mu slot: 475.2 x 1900.8, pairs A+B on W in four lane bands [20,340] [640,960] [1020,1340] [1650,1880] '
         '(each inside its u_ln tile overlap), ro/ri/mu/clk on E, ml on N, fault S. ' + cfg['why'] +
         ' Clock: one TritonCTS tree, r6g recipe (no km16: r5e km16 lep twin 91.9/89.6). Same RTL as the die instance '
-        '(e93685328, default params), ports, cycles, SDC; 0 added cycles.')
+        '(e93685328) except the params listed, same ports and SDC.')
     (dst / 'spec.json').write_text(json.dumps(s, indent=1) + '\n')
     (dst / 'README.md').write_text(
         f'# {name} (S81-LINK5 L5B-LEPMU 10-21)\n\n{s["structural_change"]}\n\n'
