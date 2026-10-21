@@ -33,7 +33,8 @@ def validate(root, manifest):
     required = {'out.log', 'out/case/die.v', 'out/case/elements.lef',
                 'out/case/place.tcl', 'out/case/manifest.json', 'out/pin_bit_reach.json',
                 'pre_bind/port_bind.json', 'reset_sync_audit.txt', 'hier_check.line',
-                'diagnostic_compiler_failure.json', 'diagnostic_open_classification.json'}
+                'diagnostic_compiler_failure.json', 'diagnostic_open_classification.json',
+                'reset_projection_diag1340/verdict.json'}
     if not required.issubset(manifest['sha256']):
         raise ValueError('manifest misses actual source/physical prerequisites')
     if not any(line == 'rc=1' for line in (root/'out.log').read_text().splitlines()):
@@ -46,6 +47,12 @@ def validate(root, manifest):
         raise ValueError('actual per-bit reach gate failed or skipped')
     if 'PASS' not in (root/'reset_sync_audit.txt').read_text():
         raise ValueError('actual reset audit is not PASS')
+    projection = json.loads((root/'reset_projection_diag1340/verdict.json').read_text())
+    expected_die = sha(root/'out/case/die.v')
+    if projection.get('verdict') != 'PASS' or not any(
+            name.endswith('/out/case/die.v') and digest == expected_die
+            for name,digest in projection.get('sources', {}).items()):
+        raise ValueError('actual captured-netlist reset projection is not identity-bound PASS')
     if 'HIER_CHECK PASS' not in (root/'hier_check.line').read_text():
         raise ValueError('actual hierarchical source binding is not PASS')
     report = json.loads((root/'pre_bind/port_bind.json').read_text())

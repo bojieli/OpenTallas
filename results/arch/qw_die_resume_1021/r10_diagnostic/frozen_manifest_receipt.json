@@ -1,0 +1,14 @@
+{
+ "status":"EXACT_CAPTURED_CASE_FROZEN_PHYSICAL_ENTRY_NOT_YET_ADMITTED",
+ "run":"/srv/opentallas-scratch/claude/mu-die-qw/dv2f21g5r10bfp_diag1340",
+ "manifest":"saved_case_diagnostic_manifest.json",
+ "manifest_sha256":"187fdf67026f7e707ecace89742b0ef272ef5cfb130a1c5092eff6854485b98c",
+ "frozen_files":80075,
+ "actual_generator_sha256":"e5d636632c03c4a11781b64d44ac871c67a0399eb65d177e5932ab60baf69717",
+ "source":"exact r10bfp eadc640c3 selected source; new DIAG entry/guard only, no RTL/placement/GEN change",
+ "post_emit_prerequisite_unit":"2867159-1792615990 actualPASS136hierfiles/0missing,strictbind79opensonly,resetSync28248PASS",
+ "reset_projection_unit":"3711470-1792618327 ot-epyc5 PASS18measured/0mismatch",
+ "original_GEN":"FAIL rc1",
+ "programme":"legacy r6b L1 compilerFAIL4; no selected coherent73 compile/transport receipt",
+ "physical_result":"NOTRUN until actual admitted job evidence; all physical reports diagnostic only"
+}

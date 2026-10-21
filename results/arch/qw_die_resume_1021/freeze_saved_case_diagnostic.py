@@ -20,7 +20,8 @@ for p in ('out.log','src/SOURCE_COMMIT','src/results/arch/qwen_split_compute_101
           'src/results/arch/qwen_split_compute_1014/q_slice_1017/straps_dv2f18mu.json',
           'pre_bind/port_bind.json','pre_bind/lane_latency_audit.txt','pre_bind/record_bundle_audit.txt',
           'pre_bind/die_param_audit.txt','pre_bind/hr_contract.txt','reset_sync_audit.txt','hier_check.line',
-          'diagnostic_compiler_failure.json','diagnostic_open_classification.json'):
+          'diagnostic_compiler_failure.json','diagnostic_open_classification.json',
+          'reset_projection_diag1340/verdict.json','reset_release_prior_g4try3.json'):
  files.append(root/p)
 manifest=dict(schema='opentallas.saved_case_physical_diagnostic.v1',original_gen_exit=1,compiler_verdict='FAIL',
  qualification_eligible=False,compiler_scope='retained r6b legacy L1 diagnostic failure; no selected coherent73 compile result',

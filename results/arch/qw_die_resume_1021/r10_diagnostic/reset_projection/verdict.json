@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.qwen.reset-projection.v1",
+  "verdict": "PASS",
+  "measured": {
+    "rs_bump.rso_d": 2,
+    "rs_bump.rso_f": 3,
+    "rly_rst_d2d__fo2_0.b": 3,
+    "rly_rst_d2d__fo1_0.b": 3,
+    "rly_rst_d2d_0.b": 3,
+    "rly_rst_d2d__fo2_1.b": 3,
+    "rly_rst_d2d__fo1_1.b": 3,
+    "rly_rst_d2d_1.b": 3,
+    "rly_rst_d2d__fo2_2.b": 4,
+    "rly_rst_d2d__fo1_2.b": 4,
+    "rly_rst_d2d_2.b": 4,
+    "rly_rst_d2d__fo2_3.b": 5,
+    "rly_rst_d2d__fo1_3.b": 5,
+    "rly_rst_d2d_3.b": 5,
+    "rstseq_rom.rso_io": 548,
+    "rstseq_rom.rso_f": 804,
+    "rstseq_rom.rso_ctlm": 1316,
+    "rstseq_rom.rso_seq": 1572
+  },
+  "prior": {
+    "rs_bump.rso_d": 2,
+    "rs_bump.rso_f": 3,
+    "rly_rst_d2d__fo2_0.b": 3,
+    "rly_rst_d2d__fo1_0.b": 3,
+    "rly_rst_d2d_0.b": 3,
+    "rly_rst_d2d__fo2_1.b": 3,
+    "rly_rst_d2d__fo1_1.b": 3,
+    "rly_rst_d2d_1.b": 3,
+    "rly_rst_d2d__fo1_2.b": 4,
+    "rly_rst_d2d__fo2_2.b": 4,
+    "rly_rst_d2d_2.b": 4,
+    "rly_rst_d2d__fo2_3.b": 5,
+    "rly_rst_d2d_3.b": 5,
+    "rstseq_rom.rso_io": 548,
+    "rstseq_rom.rso_f": 804,
+    "rstseq_rom.rso_ctlm": 1316,
+    "rstseq_rom.rso_seq": 1572,
+    "rly_rst_d2d__fo1_3.b": 5
+  },
+  "mismatch": {},
+  "scope": "Actual emitted GEN reset-only digital projection on common-phase roots. Does not prove physical root phase or full-die qualification.",
+  "sources": {
+    "/srv/opentallas-scratch/claude/codex-q-r10-reset-compact-1021/reset_projection_diag1340/sim.log": "26f70b0a687812f129ae9ca975f0d077168576bc3c059e0142746d6ccdf3dace",
+    "/srv/opentallas-scratch/claude/codex-q-r10-reset-compact-1021/reset_release_prior_g4try3.json": "8da7bea87d1e1f71cf2322075dc4db84097ec7ce185e54355245425ba13bcf36",
+    "/srv/opentallas-scratch/claude/codex-q-r10-reset-compact-1021/out/case/die.v": "2d50bf92e09ff532d85b461b1ccac994b2e44dacb97a35aee7e4dd931c05cee0"
+  }
+}
