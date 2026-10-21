@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.kv_available_view_physical_stop.v1",
+  "selected_captured_gen": "c6520b2ee",
+  "source_selector_candidate": "538b3a2a5",
+  "physical_case": "/home/ubuntu/ot-scratch/claude/codex-kdie-main92-captured/successor/case_kv",
+  "actual_flow": {
+    "run_tcl_lines": {
+      "7": "read_lef /work/elements.lef",
+      "8": "read_verilog /work/die.v",
+      "9": "link_design qfd_die"
+    },
+    "real_source_audit": "port_bind_v2/die_bound.v is generated for strict audit, not loaded/synthesized by captured physical run",
+    "ctl": "assumed macro frame remains; no current captured-case materialization of actual soft CTL+real children"
+  },
+  "accepted_old_ctl": {
+    "source_commit": "9105d74edde715ab586cd2c40dcbc16d6fb95b80",
+    "receipt_commit": "65eda958f18dd9e07cc24756216c8f0b1a76b921",
+    "module_sha256": "6116b3c556846559aab1640e023fcf9e4edc4e854ccaa75f3cf6b084481c69cb",
+    "o_attn_bits": 77,
+    "gate_edges": "all data inputs+1 and all data outputs+1; reset release2; distinct from pending c32d"
+  },
+  "actual_current_source": {
+    "file": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv",
+    "module_sha256": "ec0a0c79c45348b9e07776cb9ff730997b7bd77d596256b7991561ae49bc7939",
+    "o_attn_bits": 109,
+    "additional_age_ports": "16x16bit dcfg__age_vport plus16bit dcfg__age_pv"
+  },
+  "required_continuation": "actual109bit soft CTL and real children represented in physical flow; incompatible77bit library/LEF excluded; existing native, safety, clock, PG and pinreach gates PASS before physical",
+  "persistent_scope": [
+    "DIAGNOSTIC_ONLY",
+    "NOT_RELEASE_BIND"
+  ],
+  "verdict": "STOP_BEFORE_PHYSICAL",
+  "whole_bind_and_schedule": "OPEN",
+  "physical_attempted": false
+}
