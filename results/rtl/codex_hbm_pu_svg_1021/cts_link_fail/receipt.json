@@ -1,0 +1,17 @@
+{
+  "status": "FAIL_PRE_LAYOUT_LINK_EXCEPTION",
+  "gate_source_ref": "4a581f01c",
+  "rtl_source_ref": "3357546231ff4576aaabce56426b5967a92b5b4b",
+  "cause_observed": "Both actual OpenROAD26Q3 synth_odb.tcl:4 link_design ot_hbm_svc_sm_group_rel_h throw stoi. No layout/CTS/native/textbook verdict produced.",
+  "cause_established": false,
+  "source_checks": "Read-only f mapped-netlist scan:45.7MB, escaped bracket suffixes balanced/numeric, no oversizedsuffix >100000 orparameterizedcells, actualAND2 pinsA/B/Y matchofficial. No causal source defect established.",
+  "mapped_sha256": {
+    "rel8e": "5ffb8f54823f82024c2c433da3cf49f886049b01d569cdab799843bec6159f9c",
+    "rel8f": "f8a7aec4b7056b853600251d66146791556f2c864d5b0e575d40812cb6dac13d"
+  },
+  "remote_roots": {
+    "rel8e": "ot-gold2:/srv/opentallas-scratch/claude/ref_gate/hdie_svg_rel8e-20261021-114652",
+    "rel8f": "ot-epyc5:/srv/opentallas-scratch2/claude/ref_gate/hdie_svg_rel8f-20261021-114653"
+  },
+  "qualification_limits": "Source-private native0/max32 and actualkeyedCDC/functional59827 remain separately scoped; no physical gate PASS, no submit/BIND/selectedH158 promotion, no unchangedretry."
+}
