@@ -1,0 +1,7 @@
+{
+  "observed_at": "2026-10-21T15:39:59.301262-07:00",
+  "verdict": "INCOMPLETE harness stall; no functionalPASS",
+  "source": "a0744418f",
+  "unit": "1732100-1792622298",
+  "diagnosis": "CPU-bound vvp gave no terminal128edge verdict; raw cold-negative printed only. Exact own vvp1732128 terminated after~90s. vvp signal exit0 is not proofPASS. Replaced procedural alias construction with continuous assigns, added timeout and required terminal marker; production untouched."
+}

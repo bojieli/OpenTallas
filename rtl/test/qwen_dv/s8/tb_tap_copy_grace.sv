@@ -13,7 +13,7 @@ reg[4:0] original=5'b10101;
 reg[3:0] copies[0:4];
 reg[31:0] lfsr=32'h51e7a902;
 reg[W-1:0] backdrop=0;
-reg[W-1:0] olddata,newdata;
+wire[W-1:0] olddata,newdata;
 integer j,k,edgecount=0,checked=0,clears=0,firstvalid=-1;
 initial begin
  for(j=0;j<5;j=j+1)copies[j]=(j%2)?4'b0101:4'b1010;
@@ -23,13 +23,14 @@ initial begin
  if(copies[0]=={4{original[0]}})$fatal(1,"cold negative failed to diverge");
  $display("TAP_GRACE_COLD_NEGATIVE D%0d raw_binary_aliases_differ_before_capture",D);
 end
-always @*begin
- olddata=backdrop;newdata=backdrop;
- for(integer f=0;f<5;f=f+1)for(integer a=0;a<12;a=a+1)begin
-  olddata[479+12*f+a]=original[f];
-  newdata[479+12*f+a]=copies[f][a/3];
+generate for(g=0;g<W;g=g+1)begin:gb
+ if(g>=479 && g<=538)begin:ga
+  assign olddata[g]=original[(g-479)/12];
+  assign newdata[g]=copies[(g-479)/12][((g-479)%12)/3];
+ end else begin:gp
+  assign olddata[g]=backdrop[g];assign newdata[g]=backdrop[g];
  end
-end
+end endgenerate
 always @(posedge ck)begin
  edgecount=edgecount+1;
  lfsr<={lfsr[30:0],lfsr[31]^lfsr[21]^lfsr[1]^lfsr[0]};
