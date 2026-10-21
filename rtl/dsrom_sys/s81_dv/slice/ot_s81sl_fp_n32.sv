@@ -367,8 +367,10 @@ module ot_s81sl_fp_mul_n32 #(
     wire signed [11:0] sh_sub = -(r3_power + 12'sd149);
     wire [5:0] shc = (sh_sub > 12'sd63) ? 6'd63 : sh_sub[5:0];
     wire[47:0] m_round,m_sticky;
+    wire[12*6-1:0] mask_power;
+    ot_s81sl_fp_copy #(.W(12),.N(6),.CUT(K3)) u_mask_cp(.clk(clk),.d(s1_power),.q(mask_power));
     for(genvar g=0;g<6;g=g+1)begin:g_mask
-      ot_s81sl_fp_mask8 #(.LO(8*g)) u_m(.sh(shc),.mr(m_round[8*g+:8]),.ms(m_sticky[8*g+:8]));
+      ot_s81sl_fp_mask8 #(.LO(8*g)) u_m(.power(mask_power[12*g+:12]),.mr(m_round[8*g+:8]),.ms(m_sticky[8*g+:8]));
     end
     localparam integer W4 = 1 + 1 + 2 + 1 + 96 + 1 + 1 + 12 + 12 + 6 + 48 + 48;
     wire [W4-1:0] q4;
@@ -565,7 +567,9 @@ endmodule
  wire[26:0] cv={sum[27:2],sum[1]|sum[0]};
  assign y=local_sum[27]?cv[LO+:W]:sum[LO+:W];
 endmodule
-(* keep_hierarchy=1 *) module ot_s81sl_fp_mask8 #(parameter integer LO=0)(input wire[5:0] sh,output wire[7:0] mr,ms);
+(* keep_hierarchy=1 *) module ot_s81sl_fp_mask8 #(parameter integer LO=0)(input wire signed[11:0] power,output wire[7:0] mr,ms);
+ wire signed[11:0] sub=-(power+12'sd149);
+ wire[5:0] sh=(sub>12'sd63)?6'd63:sub[5:0];
  for(genvar g=0;g<8;g=g+1)begin:g_b
   assign mr[g]=({6'd0,6'(LO+g)}=={6'd0,sh}-12'd1);
   assign ms[g]=({6'd0,6'(LO+g)}<{6'd0,sh}-12'd1);
@@ -575,8 +579,16 @@ endmodule
  wire sub=top?s47:s46;assign y=sub?s:n;
 endmodule
 (* keep_hierarchy=1 *) module ot_s81sl_fp_out_byte(input wire byp,zero,over,nz,input wire[7:0] code,bc,output wire[7:0] y);
- assign y=byp?bc:((zero||over||!nz)?8'd0:code);
+ wire clear;
+ ot_s81sl_fp_clear u_c(.byp(1'b0),.zero(zero),.over(over),.nz(nz),.clear(clear));
+ assign y=byp?bc:(clear?8'd0:code);
 endmodule
 (* keep_hierarchy=1 *) module ot_s81sl_fp_out_zero(input wire byp,over,nz,input wire[7:0] code,output wire[7:0] y);
- assign y=(byp||over||!nz)?8'd0:code;
+ wire clear;
+ ot_s81sl_fp_clear u_c(.byp(byp),.zero(1'b0),.over(over),.nz(nz),.clear(clear));
+ assign y=clear?8'd0:code;
+endmodule
+
+(* keep_hierarchy=1 *) module ot_s81sl_fp_clear(input wire byp,zero,over,nz,output wire clear);
+ assign clear=byp||zero||over||!nz;
 endmodule
