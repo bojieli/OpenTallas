@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Actual ORFS synthesis and loaded-Liberty native census; no floorplan/CTS/route."""
-import hashlib,json,pathlib,re,shutil,subprocess,sys
+import hashlib,json,os,pathlib,re,shutil,subprocess,sys
 r=pathlib.Path.cwd();s=r/'src';w=r/'native';w.mkdir(exist_ok=False)
 t=s/'tools/s81_dv/eng_rr/native_template';shutil.copytree(t,w,dirs_exist_ok=True)
 b=json.loads((t/'reference_native.json').read_text())
@@ -13,10 +13,12 @@ for i,p in enumerate(f):
 macros=list(dict.fromkeys(macros))
 assert len(macros)==4,macros
 assert all((s/x).is_file() for x in f)
+defines=['SYNTHESIS','OT_ENGRAM_CRCMAT','OT_S81ENG_RR_N32']
+if os.environ.get('RR_MUL_N32')=='1':defines.append('OT_S81ENG_RR_MUL_N32')
 c=(w/'config.mk').read_text();nickname='opentallas_dsdv_eng_rr_asap7_native'
 # Retain the actual lookup's ORFS synthesis settings and exact standard-cell TT/FF library selection.
 overrides={'DESIGN_NICKNAME':nickname,'DESIGN_NAME':'dsdv_eng_rr','VERILOG_FILES':' '.join('/src/'+x for x in f),
- 'VERILOG_DEFINES':'-DSYNTHESIS -DOT_ENGRAM_CRCMAT -DOT_S81ENG_RR_N32','VERILOG_TOP_PARAMS':'',
+ 'VERILOG_DEFINES':' '.join('-D'+d for d in defines),'VERILOG_TOP_PARAMS':'',
  'OT_RST_LAND':'0','OT_PIN_REGS':'0','OT_RST_COPIES_MAX':'0','OT_KEEP_PIN_REGS':'0','SDC_FILE':'/work/constraint.sdc','DIE_AREA':'0 0 1296 1209.6','CORE_AREA':'2.16 2.16 1293.84 1207.44','NUM_CORES':'8',
  'WC_LIB_FILES':'$(WC_NLDM_LIB_FILES) '+' '.join('/src/'+m+'_tt.lib' for m in macros),
  'BC_LIB_FILES':'$(BC_NLDM_LIB_FILES) '+' '.join('/src/'+m+'_ff.lib' for m in macros),
@@ -29,7 +31,7 @@ c+=''.join('export '+k+' = '+v+'\n' for k,v in overrides.items());(w/'config.mk'
 (w/'io_constraints.tcl').write_text('')
 inputs=f+[m+e for m in macros for e in ['_tt.lib','_ff.lib','.lef']]
 manifest={'snapshot_commit':(r/'snapshot_ref.txt').read_text().strip(),'top':'dsdv_eng_rr','params':{'RETURN_AGE':640,'XQ_TXD':8,'AQ_LATENCY':18},
- 'defines':['SYNTHESIS','OT_ENGRAM_CRCMAT','OT_S81ENG_RR_N32'],'mode':'ACTUAL_ORFS_SYNTH_NATIVE_ONLY_NO_PHYSICAL','landing_profile':'SOURCE_INTRINSIC_3_EDGE_RESET_NO_AUTO_PIN_OR_RESET_WRAPPER',
+ 'defines':defines,'mode':'ACTUAL_ORFS_SYNTH_NATIVE_ONLY_NO_PHYSICAL','landing_profile':'SOURCE_INTRINSIC_3_EDGE_RESET_NO_AUTO_PIN_OR_RESET_WRAPPER',
  'configuration_template':'agidock128/ref_gate/s81engm_lkp_ra640a-20261021-134946/routes/gate/work/orfs/config.mk',
  'source_sha256':{p:hashlib.sha256((s/p).read_bytes()).hexdigest() for p in inputs},
  'config_sha256':hashlib.sha256(c.encode()).hexdigest()}
