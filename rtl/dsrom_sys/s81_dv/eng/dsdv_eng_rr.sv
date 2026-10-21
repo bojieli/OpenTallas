@@ -473,7 +473,13 @@ module dsdv_eng_rr_c #(
         .ks_pos(ks[20:0]), .win_v(win_v), .win_slot(win_slot), .win_ids(win_ids), .fault(wf));
     wire hq_v, hr_v, o_v, st_v, st_bad, lf; wire [30:0] hq_atom; wire [2:0] hq_tag, hr_slot, hr_tag, o_beat, o_slot, st_slot;
     wire [3:0] hr_idx; wire [255:0] hr_d; wire [4:0] o_col; wire [263:0] o_d;
+    // S81-COLLECT/ENG 10-21: the RETURN_AGE 512 re-kit dsfd_engram_lkp_ra512 (row payload in SRAM macros, no ck_rows);
+    // define OT_ENG_LKP_STATIC14 to bind the closed static14 element instead (same pins/cycles plus ck_rows).
+`ifdef OT_ENG_LKP_STATIC14
     dsfd_engram_lkp_static14 #(.RETURN_AGE(RETURN_AGE)) u_lkp (.ck(ck), .ck_seed(ck), .ck_hash({6{ck}}), .ck_rows({6{ck}}),
+`else
+    dsfd_engram_lkp_ra512 #(.RETURN_AGE(RETURN_AGE)) u_lkp (.ck(ck), .ck_seed(ck), .ck_hash({6{ck}}),
+`endif
         .ck_n(ck), .ck_s(ck), .ck_rd(ck), .rst_n(rl[1]), .cfg_layer(ly_q), .cfg_rank(rk_q),
         .win_v(win_v), .win_slot(win_slot), .win_ids(win_ids),
         .hq_v(hq_v), .hq_atom(hq_atom), .hq_tag(hq_tag),

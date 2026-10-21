@@ -7,12 +7,14 @@ set -u
 REF=${1:?ref}; W=$(realpath -m ${2:?work}); mkdir -p $W/src
 G=${OT_GIT_DIR:-/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git}
 VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-git --git-dir=$G cat-file -e "$REF^{commit}" 2>/dev/null || git --git-dir=$G fetch -q origin claude/s81-rtlgap-eng-1021
+git --git-dir=$G cat-file -e "$REF^{commit}" 2>/dev/null || git --git-dir=$G fetch -q origin ${BR:-claude/s81-rtlgap-eng-1021}
 F=(rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv
    rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv
    rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_static.sv
    rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv
    rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv
+   rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra512.sv rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra512.sv
+   physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
    rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv rtl/lib/ot_rst_relay.sv
    rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv
    rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv
