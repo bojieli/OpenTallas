@@ -30,7 +30,11 @@ FIX_DS=${FIX_DS:?FIX_DS (dir with L00 L02 L14 fixtures: records.json operands.np
 QOP=${QOP:?QOP (dir with operands_L0.npz operands_chain.npz from qwen_layer_images snap)}
 MEM=${MEM:-256}; JOBS=${JOBS:-48}; RUN=${RUN:-1}
 STAGE_HOSTS=${STAGE_HOSTS:-"ot-gold1 ot-gold2"}
-OVERLAY=${OVERLAY-"rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv@origin/main"}
+if [ "$MODE" = source ]; then
+  OVERLAY=${OVERLAY-"rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv@origin/main"}
+else
+  OVERLAY=${OVERLAY-}
+fi
 VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 SRC_REV=$(git -C "$REPO" rev-parse --verify "$SRC_REV^{commit}") || exit 2
 TAG=${TAG:-$(basename "$OUT")}
