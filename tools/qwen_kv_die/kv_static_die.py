@@ -507,10 +507,13 @@ NATIVE_SLOTS = os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'
 # faces): OT_KV_CTL_PORTRAIT=1 takes ONLY the 345.6 x 475.2 portrait ctl slot (5.3 pins/um), not NATIVE_SLOTS' group
 # squares; the hroot words keep their planned control-channel corridors (_hroot_waypoints) as the feedthrough channel.
 CTL_PORTRAIT = os.environ.get('OT_KV_CTL_PORTRAIT', '0') == '1'
-if NATIVE_SLOTS:
-    FRAME['ctl'] = (345.6, 475.2)
-if CTL_PORTRAIT:
-    FRAME['ctl'] = (345.6, 475.2)
+if NATIVE_SLOTS or CTL_PORTRAIT:
+    # Actual c32c/c32d source-shape reservations; this does not adopt either
+    # flow-generated pin-register wrapper or its added interface edges.
+    _ctl_h=float(os.environ.get('OT_KV_CTL_SLOT_H','475.2'))
+    if _ctl_h not in (475.2,561.6):
+        raise ValueError('CTL_SLOT_H must match measured c32c475.2 or c32d561.6 source shape')
+    FRAME['ctl'] = (345.6, _ctl_h)
 
 # Special bundles (die-port order = the existing master's binding order, LSB first)
 VREQ = [('vreq_valid', 1), ('vreq_t', 14)]                                         # qkd_pv16_vport vq<p>
