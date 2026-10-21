@@ -302,7 +302,9 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     end
     reg  [BW-1:0]    e_W  [0:1][0:NR-1];
     reg  [5:0]       e_lo [0:1][0:NR-1];
-    (* keep = "true" *) reg [3:0] e_poolc [0:1];              // per-epoch pool flag, copy per 4 rows (write control start)
+    (* keep = "true" *) reg [3:0] e_poolc0, e_poolc1;         // per-epoch pool flag, copy per 4 rows (write control start);
+                                                             // plain vectors (a dynamically indexed array becomes a memory
+                                                             // and its copies merge: gate try 2, 98 loads)
     reg              e_pool [0:1];
     reg  [5:0]       e_k6 [0:1];
     reg  [7:0]       e_k3 [0:1];
@@ -315,7 +317,9 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
                     e_lo[e][r] <= b_emin[r][5:0];
                 end
             end
-        if (b_vk[0]) begin e_pool[b_epk[0]] <= b_poolm; e_poolc[b_epk[0]] <= {4{b_poolm}}; end
+        if (b_vk[0]) e_pool[b_epk[0]] <= b_poolm;
+        if (b_vk[0] && !b_epk[0]) e_poolc0 <= {4{b_poolm}};
+        if (b_vk[0] && b_epk[0]) e_poolc1 <= {4{b_poolm}};
         if (b_vk[1]) e_k6[b_epk[1]] <= b_k;
         if (b_vk[2]) e_k3[b_epk[2]] <= b_k3;
     end
@@ -368,7 +372,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
             dm1 = r_fbnao[r/4] &&
                   (r_fep[7*r + 4] ? (r_fbp1[r/4][8:0] == e_W[1][r][8:0]) : (r_fbp1[r/4][8:0] == e_W[0][r][8:0])) &&
                   (r_fep[7*r + 5] ? (r_fbp1[r/4][17:9] == e_W[1][r][17:9]) : (r_fbp1[r/4][17:9] == e_W[0][r][17:9])) && (MUT != 8);
-            plr = r_fep[7*r + 6] ? e_poolc[1][r / 4] : e_poolc[0][r / 4];
+            plr = r_fep[7*r + 6] ? e_poolc1[r / 4] : e_poolc0[r / 4];
             lor = r_fep[7*r + 6] ? e_lo[1][r] : e_lo[0][r];
             wo_s = plr ? 6'd0 : lor;
             ctl[18*lf(r) + 9*tb(r) +: 9] = {d0 || dp1 || dm1, dm1 ? 2'b10 : dp1 ? 2'b01 : 2'b00, wo_s};

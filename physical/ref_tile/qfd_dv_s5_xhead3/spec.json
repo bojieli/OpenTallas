@@ -89,7 +89,7 @@
  "safe_design_checklist": {
   "1_pins": "PASS: every input lands in a pin flop (stage P: p_g/p_ib/p_f/p_foff x3, cid_q, lqp/lqvp/lqbp, fi_q); every output is a flop Q (lw/lc kept per-chain regs, lr0_*, n_q/s_q with the retag moved before them, fault_r, l_rst_n = relay copy); rst_n -> ot_rst_relay 2 sync + 1 kept relay stage",
   "2_reach": "PASS: 216.0 x 432.0 tile, every hop < 405 um",
-  "3_fanout": "PASS (mapped census): native census PASS 0 drivers > 32 (max 32, was 75 / 2,585), rst_n 14 sinks (ot_rst_relay), 12,127 flops, 6,091 um2 mapped; depth 390.1 ps / 12 levels; kept register copies, no buffer trees",
+  "3_fanout": "PASS (mapped census): native census PASS 0 drivers > 32 (max 32, was 75 / 2,585), rst_n 14 sinks (ot_rst_relay), 12,127 flops, 6,098 um2 mapped; depth 365.1 ps / 11 levels; kept register copies, no buffer trees",
   "4_depth": "PASS (mapped textbook depth): see census; no adder after adder in one stage, registered one-hot selects",
   "5_storage": "PASS: largest indexed arrays: windows e_W[2][16] x 18 + e_lo[2][16] x 6 = 768 b, epoch fields 2 x 71 b: < 2 kb",
   "6_floorplan": "pin-bound leaf (no macros, full std-cell area): pins spread over whole faces by pin_ranges ({'N': 5.03, 'E': 3.7, 'W': 5.53, 'S': 3.74} pins/um); aspect 2.0:1",

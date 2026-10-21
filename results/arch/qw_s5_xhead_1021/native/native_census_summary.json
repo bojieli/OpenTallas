@@ -8,16 +8,16 @@
  ],
  "netlist": {
   "path": "out/nat/mapped.v",
-  "sha256": "49e11ea3a1a76b9be579fcbb3734a706ef1afd088e92e23be027522709465a06"
+  "sha256": "e26c02cea815e5408237525075aaed04f97fb768999309504f56ea61834efcd7"
  },
  "top": "qfd_dv_s5_xhead3",
  "status": "PASS",
  "limit": 32,
- "roots_examined": 40068,
+ "roots_examined": 40143,
  "max_dynamic_loads": 32,
  "constant_output_bits": [
   {
-   "port_bit": "s_d[514]",
+   "port_bit": "n_d[510]",
    "source": {
     "kind": "literal",
     "net": "1'0"
@@ -25,7 +25,7 @@
    "transparent_path": []
   },
   {
-   "port_bit": "n_d[510]",
+   "port_bit": "s_d[514]",
    "source": {
     "kind": "literal",
     "net": "1'0"
