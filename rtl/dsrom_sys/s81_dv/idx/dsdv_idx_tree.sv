@@ -446,8 +446,8 @@ module dsdv_idx_qf #(
     // rs0 low clears rnk at once (assert stays asynchronous), release 2 edges after rst as before ----
     reg rs0;
     always @(posedge ck or negedge rst) if (!rst) rs0 <= 1'b0; else rs0 <= 1'b1;
-    (* keep = "true" *) reg [4:0] rnk;
-    always @(posedge ck or negedge rs0) if (!rs0) rnk <= 5'd0; else rnk <= 5'h1F;
+    (* keep = "true" *) reg [6:0] rnk;
+    always @(posedge ck or negedge rs0) if (!rs0) rnk <= 7'd0; else rnk <= 7'h7F;
     // ---- stage 1 (pin flops) and stage 2 (merged source), valid copies ----
     reg          qs_v0, ql_v0, s1_v0, qc0_v, qc1_v;
     reg  [511:0] qs_d, ql_d, s1_d, qc0_d, qc1_d;
@@ -535,6 +535,22 @@ module dsdv_idx_qf #(
             if (!infr) begin left <= d[491:480]; if (is_tree) nsl <= d[3:0]; end
             else begin left <= left - 12'd1; if (tree && nsl != 4'd0) nsl <= nsl - 4'd1; end
         end
+    // Consumer-local parser copies capture actual next state at the original edge.
+    // Four rewrite groups and three spec groups; no added parser or output edge.
+    wire inf_next = v ? (!infr ? (d[491:480]!=12'd0) : (left==12'd1 ? 1'b0 : infr)) : infr;
+    wire tree_next = (v&&!infr) ? is_tree : tree;
+    wire [3:0] nsl_next = vc ? (!infr ? (is_tree ? d[3:0] : nsl) :
+                               ((tree&&nsl!=4'd0) ? nsl-4'd1 : nsl)) : nsl;
+    wire [41:0] pc;
+    wire [2:0] svspec;
+    generate for(genvar b=0;b<7;b=b+1)begin:g_parser_copy
+        dsdv_qf_copy #(.W(6),.ID(600+b))u(.ck(ck),.rn(b<4?rnk[5]:rnk[6]),
+            .d({inf_next,tree_next,nsl_next}),.q(pc[6*b+:6]));
+    end
+    for(genvar b=0;b<3;b=b+1)begin:g_spec_valid
+        dsdv_qf_copy #(.W(1),.ID(620+b))u(.ck(ck),.rn(rnk[6]),
+            .d(qs_vctrl|ql_vctrl),.q(svspec[b]));
+    end endgenerate
     // forwarded header fields (tag, user) of the current tree frame
     reg [7:0] h_tag; reg [9:0] h_user;
     always @(posedge ck)begin
@@ -542,11 +558,12 @@ module dsdv_idx_qf #(
         if(s1_vk[NOUT+3]&&!infr&&is_tree)h_user<=d[458:449];
     end
     // ---- spec: nine <=13-bit slices, independent kept compare copies ----
-    wire        specw = v && infr && tree && nsl != 4'd0;
     reg  [106:0] spec;
     wire [106:0] my_spec;
     generate for (c = 0; c < NSPEC; c = c + 1) begin : g_s
         localparam integer LO=13*c,N=(107-LO<13)?107-LO:13;
+        localparam integer B=4+c/3;
+        wire specw = svspec[c/3] && pc[6*B+5] && pc[6*B+4] && pc[6*B+:4]!=4'd0;
         wire [3:0] h = hit[4 * c +: 4];
         assign my_spec[LO +: N] = h[3] ? d[384 + LO +: N] : h[2] ? d[256 + LO +: N] : h[1] ? d[128 + LO +: N] :
                                   h[0] ? d[LO +: N] : spec[LO +: N];
@@ -567,7 +584,7 @@ module dsdv_idx_qf #(
     reg [511:0] qr_d;
     generate for (j = 0; j < NOUT; j = j + 1) begin : g_r
         localparam integer LO=16*j,N=(512-LO<16)?512-LO:16;
-        wire sel = s1_vk[j] && ctl1;
+        wire sel = s1_vk[j] && pc[6*(j/8)+5] && pc[6*(j/8)+4] && pc[6*(j/8)+:4]==4'd1;
         always @(posedge ck) qr_d[LO+:N] <= sel ? rw[LO+:N] : d[LO+:N];
     end endgenerate
     assign qr = {qr_d, qr_v};
