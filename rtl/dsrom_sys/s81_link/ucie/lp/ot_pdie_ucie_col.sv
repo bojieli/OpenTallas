@@ -46,7 +46,7 @@ module ot_pdie_ucie_col #(
     ot_ucie_pma_txm u_ptx (.ck(ck_tx), .d({t_live, tx_f}), .pma_tx(pma_tx), .pma_tck(pma_tck));   // region tx, t = 0
     ot_ucie_pma_rxm u_prx (.pma_rck(ck_rck), .pma_rx(pma_rx), .q(r_q));   // region rck, t = 0
     ot_pl_pad #(.W(513), .N(1)) u_prr (.ck(ck_rck), .d(r_q), .q(r_d));   // region rck, t = 0
-    ot_s81_rate_match_sr u_rm (.wclk(ck_rck), .wrst_n(lpr_c_u_rm), .w_v(r_d[512]), .w_d(r_d[511:0]), .rclk(ck_rx), .rrst_n(lpr_c_u_rm_rrst_n), .r_d(rx__o), .fault(rm_flt), .m_wce(m_wce), .m_waddr(m_waddr), .m_wd(m_wd), .m_wmask(m_wmask), .m_rce(m_rce), .m_raddr(m_raddr), .m_rd(m_rd));   // region rck, t = 0
+    ot_ucie_rate_match_pf u_rm (.wclk(ck_rck), .wrst_n(lpr_c_u_rm), .w_v(r_d[512]), .w_d(r_d[511:0]), .rclk(ck_rx), .rrst_n(lpr_c_u_rm_rrst_n), .r_d(rx__o), .fault(rm_flt), .m_wce(m_wce), .m_waddr(m_waddr), .m_wd(m_wd), .m_wmask(m_wmask), .m_rce(m_rce), .m_raddr(m_raddr), .m_rd(m_rd));   // region rck, t = 0
     ot_sram_1r1w2c_16x546_m1 u_rmm (.wclk(ck_rck), .rclk(ck_rx), .r_ce_in(m_rce), .r_addr_in(m_raddr), .rd_out(m_rd), .w_ce_in(m_wce), .w_addr_in(m_waddr), .wd_in(m_wd), .w_mask_in(m_wmask));   // region rck, t = 0
     ot_ucie_col_sts u_sts (.ck_r(ck_rck), .rst_r_n(lpr_c_u_sts_rst_r_n), .r_v(r_d[512]), .ck_t(ck_rx), .rst_t_n(lpr_c_u_sts), .rm_flt(rm_flt), .st(st__o));   // region rx, t = 0
 endmodule

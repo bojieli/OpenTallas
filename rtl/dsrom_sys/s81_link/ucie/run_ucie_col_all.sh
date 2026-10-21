@@ -16,7 +16,7 @@ $VL --version > "$OUT/verilator.version" 2>&1
 I=rtl/dsrom_sys/s81_link
 U=$I/ucie
 CS="$U/ot_ucie_col_leaf.sv $U/ot_ucie_pma_models.sv $I/col/ot_s81_col_leaf.sv $I/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv \
- $I/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v $U/lp/ot_pdie_ucie_col.sv"
+ $U/ot_ucie_rate_match_pf.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v $U/lp/ot_pdie_ucie_col.sv"
 VLF="--binary -j 4 -I$I -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1"
 python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/ot_pdie_ucie_col.json > "$OUT/audit.log" 2>&1 \
   && echo "AUDIT PASS" > "$OUT/audit.res" || echo "AUDIT FAIL" > "$OUT/audit.res"

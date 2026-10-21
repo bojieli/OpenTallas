@@ -41,7 +41,7 @@ module ot_pdie_ucie_col_flat (
     ot_pl_pad #(.W(513), .N(1)) u_prr (.ck(pma_rck), .d(r_q), .q(r_d));
     // ---- CDC children (rck -> clk)
     wire rm_flt, m_wce, m_rce; wire [3:0] m_waddr, m_raddr; wire [545:0] m_wd, m_wmask, m_rd;
-    ot_s81_rate_match_sr u_rm (.wclk(pma_rck), .wrst_n(rst), .w_v(r_d[512]), .w_d(r_d[511:0]), .rclk(clk), .rrst_n(rst),
+    ot_ucie_rate_match_pf u_rm (.wclk(pma_rck), .wrst_n(rst), .w_v(r_d[512]), .w_d(r_d[511:0]), .rclk(clk), .rrst_n(rst),
         .r_d(rx), .fault(rm_flt), .m_wce(m_wce), .m_waddr(m_waddr), .m_wd(m_wd), .m_wmask(m_wmask), .m_rce(m_rce),
         .m_raddr(m_raddr), .m_rd(m_rd));
     ot_sram_1r1w2c_16x546_m1 u_rmm (.wclk(pma_rck), .rclk(clk), .r_ce_in(m_rce), .r_addr_in(m_raddr), .rd_out(m_rd),

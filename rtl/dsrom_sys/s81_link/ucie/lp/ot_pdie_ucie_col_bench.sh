@@ -6,7 +6,7 @@
 set -u
 cd "${LP_ROOT:-$(git -C "$(dirname "$0")" rev-parse --show-toplevel 2>/dev/null || (cd "$(dirname "$0")/../../../../.." && pwd))}"
 OUT=${1:-lp_bench_out}; mkdir -p "$OUT"; SIM=${SIM:-iverilog}; rc=0
-SRCS="rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_flat.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/col/ot_s81_rate_match_sr.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv rtl/dsrom_sys/s81_link/ucie/lp/tb_ot_pdie_ucie_col.sv"
+SRCS="rtl/dsrom_sys/s81_link/ucie/ot_pdie_ucie_col_flat.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_col_leaf.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_pma_models.sv rtl/dsrom_sys/s81_link/col/ot_s81_col_leaf.sv rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv rtl/common/landed_parent/ot_pl_land.sv rtl/dsrom_sys/s81_link/ucie/ot_ucie_rate_match_pf.sv physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v rtl/dsrom_sys/s81_link/ucie/lp/ot_pdie_ucie_col.sv rtl/dsrom_sys/s81_link/ucie/lp/tb_ot_pdie_ucie_col.sv"
 python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/ot_pdie_ucie_col.json > "$OUT/audit.log" 2>&1 && echo "AUDIT PASS" || { echo "AUDIT FAIL"; rc=1; }
 python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/ot_pdie_ucie_col.json --rtl "$OUT/unland.sv" --make-unland > "$OUT/audit_unland.log" 2>&1 \
   && { echo "AUDIT-UNLAND PASSED (should FAIL)"; rc=1; } || echo "AUDIT-UNLAND FAIL (expected)"

@@ -192,6 +192,16 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # MERGE-1200 10-21: SCRATCH2-1021 run_base() falls back to the last good host probe when the probe cache was just
+    # dropped (run-dir placement on the freest scratch base only); no gate check or route helper behaviour changes.
+    "0f20951a3b233134e8b8e7b38c60a2541117d871": dict(
+        kind="neutral", paths=("tools/closure_loop/closure_loop.py",),
+        what="run_base scratch-base selection uses last good probe; placement only, gates unchanged"),
+    # ROOT 10-21: a kit-specific generator under the broad tools/ref_tile prefix; it creates only the new
+    # xhead3/xhead3b specs, with no change to shared gate checks or pre-existing kit generation.
+    "b9e2576f31ef0a5ff404bbb4693f04c0295bd173": dict(
+        kind="neutral", paths=("tools/ref_tile/specs_qw_s5_xhead/gen_xhead3_specs.py",),
+        what="new xhead3/xhead3b kit generator; shared gate and route helpers unchanged"),
     # ROOT-1021 10-21: da435c6ac / 712ed0fe8 are claude/drives81-l1f-1020 lineage commits (S81-GUSEQ / PL-GULEAF) whose
     # helper hunks are origin/main tool content carried into the branch (its later 'sync ... from origin/main
     # (byte-identical)' commits d5427b883 / 5858e903d prove the copies).  The ROOT merge resolved every helper file to
