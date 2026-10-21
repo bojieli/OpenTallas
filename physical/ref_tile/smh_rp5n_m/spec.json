@@ -221,11 +221,11 @@
   "io_hold_margin_ns": 0.03
  },
  "job": {
-  "owner": "Claude:HBM-OWN/SMH2",
-  "branch": "claude/hbm-own-smh2-r5-1021",
-  "tag": "smh_rp5n_m",
+  "owner": "CODEX-HBM-HC-1021 SMH reset subtask (PU collects SMH)",
+  "branch": "codex/smh-r5-reset-1340-1021",
+  "tag": "r5n_m_rs2",
   "purpose": "H.STA.BLK.14.6 smh_attn n half r5 MAIN 3 regions x/c/m: regional CTS roots per register mass + landed seams",
-  "structural_change": "r5: one CTS root per region (x store / columns / merge+gather), every region crossing a 4-slot fixed-latency landing (lp reschedule), replaces the single-root spine (r4sp) and K64 (r3) forms that fail the child-boundary clock rule.",
+  "structural_change": "SMH source-local reset repair: same-edge per-D4-slot writer rq copies; north MAINm/FBc scalar consumers use parallel leaves at unchanged reset-forest depth. Original120 then45/39 nativeFAIL retained; actual repairednativePASS32 all4. No data/reset/clock edges or region/port/primitive-policy changes. Existing R5+LP witnesses mandatory before layout; actual strict80TT/FF, PNG/SAFE and critical coordinator review before route.",
   "extra_paths": [
    "tools/hbm_sm_repack_1015",
    "tools/landed_parent",
@@ -495,5 +495,6 @@
   "landing_flops": 31282,
   "reset_depth": 3,
   "lp_spec": "results/arch/hbm_smh_r5_1021/lp_spec_n_m.json"
- }
+ },
+ "structural_change": "SMH source-local reset repair: same-edge per-D4-slot writer rq copies; north MAINm/FBc scalar consumers use parallel leaves at unchanged reset-forest depth. Original120 then45/39 nativeFAIL retained; actual repairednativePASS32 all4. No data/reset/clock edges or region/port/primitive-policy changes. Existing R5+LP witnesses mandatory before layout; actual strict80TT/FF, PNG/SAFE and critical coordinator review before route."
 }

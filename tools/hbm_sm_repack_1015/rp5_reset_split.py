@@ -75,6 +75,13 @@ def main():
             p=ROOT/f"physical/ref_tile/smh_rp5{h}_{v}/spec.json"
             d=json.loads(p.read_text())
             d['sources']=list(dict.fromkeys(RTL if x=='rtl/common/landed_parent/ot_pl_land_reset_forest.sv' else x for x in d['sources']))
+            job=d.setdefault("job",{})
+            job["owner"]="CODEX-HBM-HC-1021 SMH reset subtask (PU collects SMH)"
+            job["branch"]="codex/smh-r5-reset-1340-1021"
+            job["tag"]=f"r5{h}_{v}_rs2"
+            note="SMH source-local reset repair: same-edge per-D4-slot writer rq copies; north MAINm/FBc scalar consumers use parallel leaves at unchanged reset-forest depth. Original120 then45/39 nativeFAIL retained; actual repairednativePASS32 all4. No data/reset/clock edges or region/port/primitive-policy changes. Existing R5+LP witnesses mandatory before layout; actual strict80TT/FF, PNG/SAFE and critical coordinator review before route."
+            job["structural_change"]=note
+            d["structural_change"]=note
             p.write_text(json.dumps(d,indent=1)+"\n")
     p=ROOT/"rtl/hbm_accel/sm/repack/h2a5/run_rp5_2_one.sh"
     s=p.read_text()
