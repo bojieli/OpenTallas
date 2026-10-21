@@ -7,6 +7,8 @@ from pathlib import Path
 
 def construct(template):
  d=copy.deepcopy(template);allb={b['name']:b for b in d['rectangles']+d['fixed']};bs=[]
+ for name,b in allb.items():
+  if name.startswith('end_parent_'):b.update(w=2505.6,h=6825.6,scope='NEW unhardened MU assembly; unchanged actual hard children, explicit source/clock composition required')
  def put(name,x,y):
   b=copy.deepcopy(allb[name]);b.update(x=round(x,6),y=round(y,6));bs.append(b)
  # Five seven-frame columns per side; the two remaining h10s sit above the SerDes strips.
@@ -30,10 +32,10 @@ def construct(template):
  sw,sh=1728.,3758.4;gw=8*sw+7*gap;gx=(32000-gw)/2;gy=1846.4
  for i in range(16):put(f'svc_full_{i}',gx+(i//2)*(sw+gap),gy+(i%2)*(sh+gap))
  # Twelve real normal slices and four conservatively enlarged MU parents above the service group.
- sx=xextra+fw;sy=gy+2*sh+gap+86.4;vp=6825.6+gap
+ sx=xextra+fw+gap;sy=gy+2*sh+gap+86.4;vp=6825.6+gap
  for i in range(12):put(f'slice_{i:02}',sx+(i//2)*(1252.8+gap),sy+(i%2)*vp)
  ex=sx+6*(1252.8+gap)
- for i in range(4):put(f'end_parent_{i}',ex+(i//2)*(2764.8+gap),sy+(i%2)*vp)
+ for i in range(4):put(f'end_parent_{i}',ex+(i//2)*(2505.6+gap),sy+(i%2)*vp)
  # Independent small units use the remaining top/inner streets; no understated old void slots.
  put('bk_sel_00',xextra,extra_y+h10+172.8)
  top=sy+2*6825.6+gap+172.8
@@ -50,7 +52,7 @@ def construct(template):
   assert min(b['x'],b['y'])>=0 and b['x']+b['w']<=32000 and b['y']+b['h']<=25000,b
   for c in bs[i+1:]:
    assert min(b['x']+b['w'],c['x']+c['w'])<=max(b['x'],c['x']) or min(b['y']+b['h'],c['y']+c['h'])<=max(b['y'],c['y']),(b['name'],c['name'])
- return dict(scope='OWNER72 SELECTED IMPLEMENTATION CONSTRUCTION, not routed closure',die=[32000,25000],clearance=gap,best=dict(blocks=bs,unplaced=[],trial=dict(strategy='graph-aware selected construction',placed=len(bs),unplaced=0)),service_group=dict(at=[gx,gy],outline=[gw,2*sh+gap],order='even lower/odd upper; original sgN/S/E/W faces'),obligations=['MU parents actual child/source reassembly','service parent source and clocks/reset integration','actual pin projection and existing relay station legalization/cycle pricing','currentGU72 capacity/map pending'])
+ return dict(scope='OWNER72 SELECTED IMPLEMENTATION CONSTRUCTION, not routed closure',die=[32000,25000],clearance=gap,best=dict(blocks=bs,unplaced=[],trial=dict(strategy='graph-aware selected construction',placed=len(bs),unplaced=0)),service_group=dict(at=[gx,gy],outline=[gw,2*sh+gap],order='even lower/odd upper; original sgN/S/E/W faces'),mu_parent_assembly=dict(outline=[2505.6,6825.6],hardened=False,hard_children=[dict(role='slice',at=[43.2,43.2],outline=[1252.8,6739.2]),dict(role='lane0',at=[1468.8,43.2],outline=[725.76,583.2]),dict(role='lane1',at=[1468.8,799.2],outline=[725.76,583.2]),dict(role='endpoint',at=[1468.8,1555.2],outline=[561.6,561.6],note='covers current r6 e/k/t endpoints without shrinking'),dict(role='mu_land',at=[1468.8,2289.6],outline=[475.2,216])],central_cell_corridor_um=172.8,right_cell_band_um=311.04,source='new actual multi-clock normal/CAP12 + existing LP endpoint/lanes; binding source assembly required'),obligations=['MU parents actual child/source reassembly','service parent source and clocks/reset integration','actual pin projection and existing relay station legalization/cycle pricing','currentGU72 capacity/map pending'])
 def main():
  a=argparse.ArgumentParser();a.add_argument('template');a.add_argument('out');v=a.parse_args();d=construct(json.load(open(v.template)));Path(v.out).write_text(json.dumps(d,indent=1));print('SELECTED72_CONSTRUCTED',len(d['best']['blocks']))
 if __name__=='__main__':main()
