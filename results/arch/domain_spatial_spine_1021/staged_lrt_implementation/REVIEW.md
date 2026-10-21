@@ -1,0 +1,15 @@
+# Typed staged LRT source candidate
+
+The production engine now has one fixed source-record phase after canonical root balancing and before final protection. It uses the existing serial or opt-in batched LRT algorithm, target derivation, measurement, buffer limit and overshoot/backout rule. The source generator derives two exact legacy h16c raw taps from existing signed records; it exposes no callback or target override. Actual Liberty collector ownership must place each raw/reference pair on the same already declared root.
+
+The typed phase uses `ot_sp_buf` and its legal-site allocator. Overshoot backout removes only its own object and claims, preserving the other active taps and pre-existing occupancy. Ordinary and strict PG paths remain; builder PG binding runs before final protection. Every root/buffer/net is protected, recorded, and checked again when the existing outer LRT wrapper consumes the completed receipt and remeasures actual raw-minus-reference arrivals. Existing outer RAW_PIN checks remain the verdict. No protected object is unlocked.
+
+The phase accepts a repeated identical source/ownership admission before any root phase, because the existing fixture first collects and then enters the production CTS wrapper. Changed ownership or admission after construction is refused. No production collector relaxation was added.
+
+Focused tests execute both actual LRT workers with allocator integration mocks, including a causal overshoot backout; each leaves five buffers, preserves unrelated contacts and occupancy, and consumes the receipt without rebuilding. Twenty-one refusal modes run in each worker mode. Default serial and batched traces exactly match published helper58d7864b at ROOT-selected8292524470. Removing the five new engine lines restores exact canonicalaab59f9a source bytes. These are tooling mocks, not physical qualification.
+
+`receipt.json` binds the source and tests. `prepared.json`, `record_plan.json` and `generated_pre_cts.tcl` bind the source-only actual fixture preparation. The final detailed-placed ODB remains6780a647... with source/physical contact distinction11940/5187 vs11940/5188. All helpers, including current landed_raw_tap and the new typed helper, are copied from the chosen API root. The old frozen51bb helper failure remains a separate witness.
+
+ROOTintegration must project the minimal source changes onto the current FRAME tree, preserving its clock_entry_constraints.py and unrelated ref_tile changes. This worktree's framework base is historical08d715a32; no whole-file projection of older ref_tile or clock_entry_constraints is intended. The two ref_tile call changes pass ROOT into the new generator/dependency functions.
+
+The publisher owns source review and the one actual fixture run. Existing runner: `results/arch/domain_spatial_spine_1021/run_fixture.sh ctlm2 engine FRESH_DIR CURRENT_API_ROOT`, through ordinary fleet admission, pinned existing image. No EDA was launched by this lane. API publication and CTLM/shell gates remain blocked on actual original checks. This fixture's h16c records/targets do not transfer to H16ZA, HP13, RRloc or another source.

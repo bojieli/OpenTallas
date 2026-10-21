@@ -67,8 +67,11 @@ def main():
     helpers = ['physical/common_flow/clock_spine.tcl',
                'physical/common_flow/domain_spatial_spine.tcl',
                'physical/common_flow/clock_entries.tcl',
+               'physical/common_flow/landed_raw_tap.tcl',
                'physical/common_flow/clock_family.tcl',
                'physical/common_flow/native_pg_binding.tcl']
+    if (api/'physical/common_flow/spine_record_taps.tcl').is_file():
+        helpers.append('physical/common_flow/spine_record_taps.tcl')
     helper_hashes = {}
     for rel in helpers:
         (scene/rel).parent.mkdir(parents=True, exist_ok=True)
