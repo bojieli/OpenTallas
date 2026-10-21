@@ -6,6 +6,8 @@ module tb_hgi_coll_reduce_split_eq #(parameter integer SMUT_TAG=0,SMUT_BF16=0,CY
  reg clk=1'b0; always #0.5 clk=~clk;
  reg rst_n=1'b0,clear=0,in_v=0,load_v=0,add_read=0,add_issue=0,pub_read=0,pub_bf16=0,pub_release=0,pub_issue=0;
  reg [544:0] in_flit=0; reg [3:0] load_tag=0,read_tag=0,pub_tag_a=0,pub_tag_b=0; reg [32:0] pub_meta=0;
+ // HBM-COLLQ6: commands are drawn one edge ahead (*_n) and registered, so the split lanes see the D side
+ reg load_v_n=0,add_read_n=0,pub_read_n=0; reg [3:0] load_tag_n=0,read_tag_n=0,pub_tag_a_n=0,pub_tag_b_n=0;
  wire ro_v,so_v,rf,sf; wire [544:0] ro,so; wire [7:0] rc,sc;
  ot_hgi_coll_reduce_static u_ref(.clk_control(clk),.clk_state({16{clk}}),.clk_add({16{clk}}),.rst_n(rst_n),.clear(clear),
   .in_v(in_v),.in_flit(in_flit),.load_v(load_v),.load_tag(load_tag),.add_read(add_read),.read_tag(read_tag),
@@ -15,15 +17,19 @@ module tb_hgi_coll_reduce_split_eq #(parameter integer SMUT_TAG=0,SMUT_BF16=0,CY
   .clk_add({16{clk}}),.rst_n(rst_n),.clear(clear),
   .in_v(in_v),.in_flit(in_flit),.load_v(load_v),.load_tag(load_tag),.add_read(add_read),.read_tag(read_tag),
   .add_issue(add_issue),.pub_read(pub_read),.pub_tag_a(pub_tag_a),.pub_tag_b(pub_tag_b),.pub_bf16(pub_bf16),
-  .pub_meta(pub_meta),.pub_release(pub_release),.pub_issue(pub_issue),.out_v(so_v),.out_flit(so),.fault(sf),.fault_cause(sc));
+  .pub_meta(pub_meta),.pub_release(pub_release),.pub_issue(pub_issue),
+  .load_v_n(load_v_n),.load_tag_n(load_tag_n),.add_read_n(add_read_n),.read_tag_n(read_tag_n),.pub_read_n(pub_read_n),
+  .pub_tag_a_n(pub_tag_a_n),.pub_tag_b_n(pub_tag_b_n),.out_v(so_v),.out_flit(so),.fault(sf),.fault_cause(sc));
  integer cyc=0,bad=0,nv=0,nadd=0,i;
  reg rd_q=0,pb_q=0;
  always @(posedge clk) begin
   cyc<=cyc+1;
   if(cyc==8) rst_n<=1'b1;
   // weighted random programme: loads / reads (+ issue one edge later) / publishes (+ issue) with mostly legal tags
-  load_v<=($random%5==0); load_tag<=$random; read_tag<=$random; pub_tag_a<=$random; pub_tag_b<=$random;
-  add_read<=($random%4==0); pub_read<=($random%6==0); pub_bf16<=$random; pub_release<=$random; pub_meta<=$random;
+  load_v_n<=($random%5==0); load_tag_n<=$random; read_tag_n<=$random; pub_tag_a_n<=$random; pub_tag_b_n<=$random;
+  add_read_n<=($random%4==0); pub_read_n<=($random%6==0);
+  load_v<=load_v_n; load_tag<=load_tag_n; read_tag<=read_tag_n; pub_tag_a<=pub_tag_a_n; pub_tag_b<=pub_tag_b_n;
+  add_read<=add_read_n; pub_read<=pub_read_n; pub_bf16<=$random; pub_release<=$random; pub_meta<=$random;
   clear<=($random%997==0);
   for(i=0;i<17;i=i+1) in_flit[i*32+:32]<= ($random%3==0) ? {$random} : {1'b0,8'h7f+($random%8),23'h0}|$random;
   rd_q<=add_read; pb_q<=pub_read; add_issue<=add_read; pub_issue<=pub_read;

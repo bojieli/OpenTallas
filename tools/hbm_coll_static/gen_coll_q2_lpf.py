@@ -166,9 +166,16 @@ def flat(v="q2", ar=False, rows=64, suffix="", safe=False) -> str:
         w(" wire a_add_issue=ar[10];wire a_pub_read=ar[11];")
         w(" wire a_pub_bf16=ar[20],a_pub_release=ar[21],a_pub_issue=ar[22];wire [7:0] a_pub_src=ar[23+:8];")
         w(" wire [1535:0] inst_ctl={inst_d2[1535:718],4'b0,inst_d2[713:0]};")
+        if safe:   # HBM-COLLQ6: d2 (D side of the d3 uop pipe) reduce strobes + the u_ariter tag D side
+            w(" wire [54:0] ar_n={inst_d2[688+:24],inst_d2[1505+:31]};wire a_load_v_n=ar_n[0],a_add_read_n=ar_n[5],a_pub_read_n=ar_n[11];")
+            w(" wire [3:0] a_load_tag_n,a_read_tag_n,a_pub_tag_a_n,a_pub_tag_b_n;")
         w(" ot_hgi_coll_ariter_tag u_ariter(.clk_issue(clk_issue),.clk_tag(clk_reduce[0]),.iteration(tap_iteration[15:0]),")
         w("  .ar2({inst_d2[688+:24],inst_d2[1505+:31]}),.st2(inst_d2[714+:4]),.load_tag(a_load_tag),.read_tag(a_read_tag),")
-        w("  .pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),.pub_index(a_pub_index));")
+        if safe:   # HBM-COLLQ6: the tag registers' D side for the native32 reduce lanes (they land their own copies)
+            w("  .pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),.pub_index(a_pub_index),")
+            w("  .load_tag_n(a_load_tag_n),.read_tag_n(a_read_tag_n),.pub_tag_a_n(a_pub_tag_a_n),.pub_tag_b_n(a_pub_tag_b_n));")
+        else:
+            w("  .pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),.pub_index(a_pub_index));")
     else:
         w(" wire a_load_v=ar[0];wire [3:0] a_load_tag=ar[1+:4];wire a_add_read=ar[5];wire [3:0] a_read_tag=ar[6+:4];")
         w(" wire a_add_issue=ar[10];wire a_pub_read=ar[11];wire [3:0] a_pub_tag_a=ar[12+:4],a_pub_tag_b=ar[16+:4];")
@@ -263,17 +270,17 @@ def flat(v="q2", ar=False, rows=64, suffix="", safe=False) -> str:
         w(f"  .tkm_dest_v(dest_v[{NPT + 8}+:4]),.fault(fault),.fault_cause(fault_cause));")
     # reduction
     if safe:     # control soft (u_rdc) + 16 hard lanes (u_rdl<l>): ot_hgi_coll_reduce_static split exactly
-        w(" wire rd_wb;wire [3:0] rd_wb_tag;wire [15:0] rd_add_valid;wire [511:0] rd_pub_a,rd_pub_b;")
+        w(" wire rd_wb,rd_wb_n;wire [3:0] rd_wb_tag,rd_wb_tag_n;wire [15:0] rd_add_valid;wire [511:0] rd_pub_a,rd_pub_b;")
         for l in range(16):
-            w(f" ot_hgi_coll_reduce_lane u_rdl{l}(.clk(clk_reduce[{1 + l}]),.rst_n(rst_n),.load_v(a_load_v),.load_tag(a_load_tag),"
-              f".in_data(dest_d[{(ND - 1) * PWT + 32 * l}+:32]),.wb(rd_wb),.wb_tag(rd_wb_tag),.add_read(a_add_read),.read_tag(a_read_tag),"
-              f".add_issue(a_add_issue),.pub_read(a_pub_read),.pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),"
+            w(f" ot_hgi_coll_reduce_lane u_rdl{l}(.clk(clk_reduce[{1 + l}]),.rst_n(rst_n),.load_v_n(a_load_v_n),.load_tag_n(a_load_tag_n),"
+              f".in_data(dest_d[{(ND - 1) * PWT + 32 * l}+:32]),.wb_n(rd_wb_n),.wb_tag_n(rd_wb_tag_n),.add_read_n(a_add_read_n),.read_tag_n(a_read_tag_n),"
+              f".add_issue(a_add_issue),.pub_read_n(a_pub_read_n),.pub_tag_a_n(a_pub_tag_a_n),.pub_tag_b_n(a_pub_tag_b_n),"
               f".pub_a(rd_pub_a[{32 * l}+:32]),.pub_b(rd_pub_b[{32 * l}+:32]),.add_valid(rd_add_valid[{l}]));")
         w(f" ot_hgi_coll_reduce_static_ctl u_rdc(.clk_control(clk_reduce[0]),.rst_n(rst_n),.clear(p_ring[83]),.in_v(dest_v[{ND - 1}]),")
         w("  .load_v(a_load_v),.load_tag(a_load_tag),.add_read(a_add_read),.read_tag(a_read_tag),.add_issue(a_add_issue),")
         w("  .pub_read(a_pub_read),.pub_tag_a(a_pub_tag_a),.pub_tag_b(a_pub_tag_b),.pub_bf16(a_pub_bf16),")
         w("  .pub_meta({1'b1,8'hff,a_pub_src,a_pub_index}),.pub_release(a_pub_release),.pub_issue(a_pub_issue),")
-        w("  .add_valid(rd_add_valid),.pub_a(rd_pub_a),.pub_b(rd_pub_b),.wb(rd_wb),.wb_tag(rd_wb_tag),")
+        w("  .add_valid(rd_add_valid),.pub_a(rd_pub_a),.pub_b(rd_pub_b),.wb(rd_wb),.wb_tag(rd_wb_tag),.wb_n(rd_wb_n),.wb_tag_n(rd_wb_tag_n),")
         w("  .out_v(reduce_out_v),.out_flit(reduce_out_data),.fault(reduce_fault),.fault_cause(reduce_fault_cause));")
     else:
         w(" ot_hgi_coll_reduce_static u_reduce(")

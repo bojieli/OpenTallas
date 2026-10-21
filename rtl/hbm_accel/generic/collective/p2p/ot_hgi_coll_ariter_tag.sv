@@ -15,7 +15,10 @@ module ot_hgi_coll_ariter_tag(
     input wire [54:0] ar2,                 // {inst_d2[688+:24], inst_d2[1505+:31]}
     input wire [3:0] st2,                  // inst_d2[714+:4] = iter_ar_tag_step
     output reg [3:0] load_tag,read_tag,pub_tag_a,pub_tag_b,
-    output reg [15:0] pub_index
+    output reg [15:0] pub_index,
+    // HBM-COLLQ6 10-20: the D side of the tag registers (the values they take at the next clk_tag edge) for the native32
+    // reduce lanes, which land their own kept copies on that edge (0 added edges; old instantiations leave them open).
+    output wire [3:0] load_tag_n,read_tag_n,pub_tag_a_n,pub_tag_b_n
 );
     reg [15:0] it_d1,it_d2;
 `ifdef OT_ARITER_TAG_MUT_EDGE
@@ -24,6 +27,12 @@ module ot_hgi_coll_ariter_tag(
     wire [19:0] prod=it_d2*st2;
 `endif
     always @(posedge clk_issue)begin it_d1<=iteration;it_d2<=it_d1;end
+`ifdef OT_ARITER_TAG_MUT_NOSTEP
+    assign load_tag_n=ar2[1+:4];assign read_tag_n=ar2[6+:4];assign pub_tag_a_n=ar2[12+:4];assign pub_tag_b_n=ar2[16+:4];
+`else
+    assign load_tag_n=ar2[1+:4]+prod[3:0];assign read_tag_n=ar2[6+:4]+prod[3:0];assign pub_tag_a_n=ar2[12+:4]+prod[3:0];
+    assign pub_tag_b_n=ar2[16+:4]+prod[3:0];
+`endif
     always @(posedge clk_tag)begin
 `ifdef OT_ARITER_TAG_MUT_NOSTEP
         load_tag<=ar2[1+:4];read_tag<=ar2[6+:4];pub_tag_a<=ar2[12+:4];pub_tag_b<=ar2[16+:4];pub_index<=ar2[31+:16];
