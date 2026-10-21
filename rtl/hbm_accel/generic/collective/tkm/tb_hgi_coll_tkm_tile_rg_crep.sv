@@ -11,6 +11,7 @@
 module tb_hgi_coll_tkm_tile_rg_crep;
     parameter integer MUT = 0;
     parameter integer FAN32 = 0;
+    parameter integer SEAM = 0;
     parameter integer NCYC = 4000;
     parameter integer SEED = 17;
     localparam integer EW = 86, PT = 64, TW = 6, LW = 7;
@@ -28,7 +29,7 @@ module tb_hgi_coll_tkm_tile_rg_crep;
         .clk_r2(clk), .clk_r3(clk), .tid(tid), .clr(clr), .conv(conv),
         .tau_t(tau_t), .tau_l(tau_l), .ins_v(ins_v), .ins_b(ins_b), .ovf_v(ro_v), .ovf_b(ro_b), .up_in(up_in), .up_out(rup),
         .tau_o(rtau), .busy(rbusy));
-    ot_hgi_coll_tkm_tile_rg #(.EW(EW), .PT(PT), .TW(TW), .LW(LW), .PRE(1), .CREP(1), .CMUT(MUT), .FAN32(FAN32)) u_dut (.clk(clk), .clk_r0(clk), .clk_r1(clk), .clk_r2(clk),
+    ot_hgi_coll_tkm_tile_rg #(.EW(EW), .PT(PT), .TW(TW), .LW(LW), .PRE(1), .CREP(1), .CMUT(MUT), .FAN32(FAN32), .SEAM(SEAM)) u_dut (.clk(clk), .clk_r0(clk), .clk_r1(clk), .clk_r2(clk),
         .clk_r3(clk), .tid(tid), .clr(clr), .conv(conv), .tau_t(tau_t), .tau_l(tau_l), .ins_v(ins_v), .ins_b(ins_b),
         .ovf_v(do_v), .ovf_b(do_b), .up_in(up_in), .up_out(dup), .tau_o(dtau), .busy(dbusy));
     integer seed = SEED, cyc, err = 0, n_ovf = 0, n_up = 0, n_tau = 0, n_ins = 0, gap = 0;

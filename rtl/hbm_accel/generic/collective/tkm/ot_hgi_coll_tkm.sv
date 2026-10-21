@@ -702,7 +702,8 @@ endmodule
 //   CMUT 3 (bench only, FAN32 >= 2): variant-1 GN of position 20 drops its k=1 compare leg (must FAIL the lockstep).
 module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT = 64, parameter integer TW = 6,
                                  parameter integer LW = 7, parameter integer PRE = 0,
-                                 parameter integer CREP = 0, parameter integer CMUT = 0, parameter integer FAN32 = 0) (
+                                 parameter integer CREP = 0, parameter integer CMUT = 0, parameter integer FAN32 = 0,
+                                 parameter integer SEAM = 0) (
     input  wire              clk, clk_r0, clk_r1, clk_r2, clk_r3,
     input  wire [TW-1:0]     tid,
     input  wire              clr, conv,
@@ -789,6 +790,29 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
             end
         end
     end
+    // SEAM (HBM-E86-6 2026-10-20; e86v3 gate: GRT 0 but 122 / 17 / 281 ot_entry_1->2 / 2->3 / 3->4 reg->reg endpoints
+    // failed TT setup, worst -28.6 / -11.0 / -30.4 ps at the 150 ps distinct-entry reserve, ALL = cap / SX of the last four
+    // positions s of row group g (root rg(g)) -> 85-b compare -> GN leaf of positions s+1..s+4 in group g+1 (root
+    // rg(g+1)) -> gc copy). SEAM 1 removes every compare cone from the root crossing: each seam position s (last four of
+    // a group whose successor group is on a different root; e86: 12-15, 28-31, 44-47) gets a KEPT shadow X copy xs on the
+    // consumer root rg(g+1) with D = the SAME next-state wire xn of X[s] (flop -> mux -> flop: the X update path, not a
+    // compare), and the group gets a kept shadow operand capture cs (D = i_b, like cap) on that root. The compares of s
+    // for the group-(g+1) GN legs are recomputed from (xs, cs), entirely inside root rg(g+1). xs == X[s] and cs == cap
+    // from the first edge on (identical D), so function and edges are unchanged (lockstep vs CREP 0).
+    // CMUT 4 (bench only, SEAM 1): shadow xs of position 30 holds instead of loading xn (must FAIL the lockstep).
+    function automatic integer seam_g(input integer g); seam_g = (SEAM != 0) && (g + 1 < NGR) && (rg(g) != rg(g + 1)); endfunction
+    function automatic integer seam_p(input integer s); seam_p = (s < PT) && ((s % GP) >= GP - 4) && seam_g(s / GP); endfunction
+    wire [4*EW-1:0] compare_s [0:NGR-1];
+    for (genvar fg = 0; fg < NGR; fg = fg + 1) begin : g_seam_operand
+        if (seam_g(fg)) begin : g_on
+            (* keep="true", dont_touch="true" *) reg [4*EW-1:0] cs;
+            always @(posedge ckr[rg(fg + 1)]) cs <= i_b;
+            assign compare_s[fg] = cs;
+        end else begin : g_off
+            assign compare_s[fg] = compare_bg[fg][1];
+        end
+    end
+    wire [EW-1:0] xn_all [0:PT-1];
     localparam integer FW = 20, FN = (EW + FW - 1) / FW;
     // V3 (FAN32 >= 2, HBM-E86-5 2026-10-20; V2b mapped census FAIL 21 drivers / max 65): every GN bit was ONE
     // combinational net feeding all 30 same-edge gc copies of its position (6 words x 5 k), and ABC pushed the GN OR
@@ -858,6 +882,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         end
 `ifndef SYNTHESIS
         initial if(PRE==0||NP>68||(NV>1&&FN!=5))$fatal(1,"FAN32 provenance requires PRE1, NP<=68 (V3: FN 5)");
+        initial if(SEAM!=0&&(CREP==0||FAN32==0))$fatal(1,"SEAM requires CREP 1 and FAN32 != 0");
 `endif
     end else begin:g_old_state
         for(genvar g=0;g<NP;g=g+1)begin:g_g
@@ -867,8 +892,24 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     reg [EW-1:0] X [0:PT-1];
     wire [EW-1:0] SX [0:NP-1];
     wire [4*NP-1:0]    g2f;
+    wire [4*NP-1:0]    g2s;   // SEAM: compares of seam positions on the consumer root (= g2f elsewhere)
     wire [16*NGR-1:0]  gbf;
     wire [2:0] cp [0:NP-1];
+    for (gp = 0; gp < NP; gp = gp + 1) begin : g_seam_pos
+        if (seam_p(gp)) begin : g_on
+            (* keep="true", dont_touch="true" *) reg [EW-1:0] xs;
+            always @(posedge ckr[rg(gp / GP + 1)]) xs <= (CMUT == 4 && gp == 30) ? xs : xn_all[(gp < PT) ? gp : 0];
+            for (gj = 0; gj < 4; gj = gj + 1) begin : g_c
+                wire [KT-1:0] ka = xs[EW-1:1];
+                wire [KT-1:0] kb = compare_s[gp / GP][EW*gj + 1 +: KT];
+                wire lt_;
+                ot_tkm_lt_live #(.W(KT)) u_c (.a(ka), .b(kb), .lt(lt_));
+                assign g2s[4*gp + gj] = lt_;
+            end
+        end else begin : g_off
+            assign g2s[4*gp +: 4] = g2f[4*gp +: 4];
+        end
+    end
     for (gp = 0; gp < NP; gp = gp + 1) begin : g_pos
         if (gp < PT) begin : g_x assign SX[gp] = X[gp]; end else begin : g_e assign SX[gp] = {EW{1'b0}}; end
         for (gj = 0; gj < 4; gj = gj + 1) begin : g_c
@@ -923,7 +964,9 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
             wire [19:0] cg_, g2_; wire [4:0] cv_;
             for(genvar k=0;k<5;k=k+1)begin:g_in
                 assign cg_[4*k+:4]=gt_copy[d][FN+v][k];assign cv_[k]=valid_copy[d][FN+v][k];
-                assign g2_[4*k+:4]=(d>=k&&!(CMUT==3&&d==20&&v==1&&k==1))?g2f[4*((d>=k)?d-k:0)+:4]:4'd0;  // CMUT 3 (bench only): V3 variant-1 GN of position 20 drops its k=1 compare leg
+                localparam integer S2=(d>=k)?d-k:0;
+                wire [3:0] g2src=(seam_p(S2)&&rg(S2/GP)!=rg(d/GP))?g2s[4*S2+:4]:g2f[4*S2+:4];  // SEAM: consumer-root compare
+                assign g2_[4*k+:4]=(d>=k&&!(CMUT==3&&d==20&&v==1&&k==1))?g2src:4'd0;  // CMUT 3 (bench only): V3 variant-1 GN of position 20 drops its k=1 compare leg
             end
             if(FAN32==2)begin:g_kh
                 (* keep_hierarchy *) ot_tkm_gn_leaf #(.DMIN((d<5)?d:5)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]));
@@ -1024,6 +1067,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         wire [EW-1:0] xa = (gp < PT - 4) ? X[(gp < PT - 4) ? gp + 4 : 0] : up_in[EW*((gp >= PT - 4) ? gp - (PT - 4) : 0) +: EW];
         wire [EW-1:0] xn;
         always @(posedge ckr[rg(gp / GP)]) X[gp] <= xn;
+        assign xn_all[gp] = xn;
         for (gj = 0; gj < NXS; gj = gj + 1) begin : g_s
             localparam integer LO = gj * XS;
             localparam integer W = (EW - LO < XS) ? EW - LO : XS;
