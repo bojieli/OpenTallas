@@ -95,6 +95,8 @@ python3 tools/s81_dv/release72/apply_eng_overlay_g7.py "$T" > "$W/eng_overlay.lo
 printf 'ENG_OVERLAY_RC 0 %s\n' "$(date)" >> "$S"
 python3 tools/s81_dv/release72/apply_ep_clock_g8.py "$T" "$P" > "$W/ep_clock.log" 2>&1
 printf 'EP_CLOCK_RC 0 %s\n' "$(date)" >> "$S"
+python3 tools/s81_dv/release72/apply_spare_faces_g8.py "$T" "$P" > "$W/spare_faces.log" 2>&1
+printf 'SPARE_FACES_RC 0 %s\n' "$(date)" >> "$S"
 set +e
 python3 tools/s81_dv/dv_diecase.py --plan "$P" --out "$W/bind" --bind real --bind-table "$T" --land-plan "$LAND" > "$W/bind.log" 2>&1
 RC=$?; echo "BIND_RC $RC $(date)" >> "$S"

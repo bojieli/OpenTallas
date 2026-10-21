@@ -548,7 +548,12 @@
       ],
       "count": 1,
       "orient": "MY",
-      "binding_state": "UNBOUND: preserve exact actual child view; never old-parent alias"
+      "binding_state": "UNBOUND: exact RX_SRAM/IN_PIPE/NATIVE32=1; bind only matching closed lep_mu_a/h view; IN_PIPE adds one face stage on ro/mu_c (calendar margin >=113 cycles)",
+      "params": {
+        "RX_SRAM": 1,
+        "IN_PIPE": 1,
+        "NATIVE32": 1
+      }
     },
     {
       "inst": "u_land",

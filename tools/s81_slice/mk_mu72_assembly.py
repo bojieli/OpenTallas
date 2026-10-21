@@ -94,8 +94,8 @@ def assemble(normal, flavor, bindings):
     for inst,(at,envelope,orient) in roles.items():
         c = dict(inst=inst, master=modules[inst], at=at, reserved_envelope_um=envelope,
                  count=1, orient=orient)
-        if inst == "u_lep" and mab:
-            c["params"] = dict(LEP_AB_PARAMS)   # S81-LINK5B G7 (lead): lepmu t5c/t5d kit params
+        if inst == "u_lep":
+            c["params"] = dict(LEP_AB_PARAMS)   # G8: every endpoint uses exact 1/1/1 kit params
         if modules[inst] in bindings:
             c.update(copy.deepcopy(bindings[modules[inst]]))
         else:
