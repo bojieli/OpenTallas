@@ -1,0 +1,13 @@
+{
+  "scope": "own XFIN SV primitive replays r8/r10/r11/r12/r14/r15/r17/r19",
+  "correction": "Exactly2000000 loop comparisons. Runtime seed was NOT explicitly set. Prior wording2000024/seed12345 incorrectly inherited separate VS C++ bench metadata.",
+  "unchanged": "raw PASS bad0/badr0, RTLsource560, nativePASS32, parent ENG full positives+causals",
+  "affected": [
+    "results/rtl/s81_xfin_takeover2_1021/CURRENT_STATE.json",
+    "results/rtl/s81_xfin_takeover2_1021/r12_r17_LAT5/receipt.json",
+    "results/rtl/s81_xfin_takeover2_1021/r19_FP_PASS/receipt.json",
+    "results/rtl/s81_xfin_takeover2_1021/r8_fp/receipt.json"
+  ],
+  "raw_driver": "scratch/codex-s81-xfin-takeover2-1021/r8_{tb,tbm}.sv and r8_fp.sh, preserved",
+  "no_explicit_seed_claim": true
+}

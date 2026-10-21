@@ -5,13 +5,13 @@
     "LAT": 5,
     "CUTS": "01101010",
     "native": "PASS32/0violations/0roleerrors",
-    "existing_equiv": "2000024cycles seed12345 bad0/badr0"
+    "existing_equiv": "2000000 sampled comparisons; runtime seed not explicitly set bad0/badr0"
   },
   "ADD": {
     "LAT": 6,
     "CUTS": "1101011",
     "native": "source96 modulebyteidentical PASS28/0/0",
-    "existing_equiv": "source96 modulebyteidentical 2000024cycles seed12345 bad0"
+    "existing_equiv": "source96 modulebyteidentical 2000000 sampled comparisons; runtime seed not explicitly set bad0"
   },
   "unchanged_module_hashes_from_qualified_ADD96": {
     "ot_s81dv_kcut": "759e854d7e2c052d22b50b053c4e41ee42edc8467c09868f217cdef2c79d663a",

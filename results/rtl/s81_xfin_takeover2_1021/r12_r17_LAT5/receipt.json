@@ -4,7 +4,7 @@
     "status": "FAIL",
     "max_dynamic_loads": 44,
     "violations": 4,
-    "proof": "existing2M seed12345 bad0/badr0",
+    "proof": "existing2M runtime seed not explicitly set bad0/badr0",
     "scope": "leafdiagnostic, not fullXFIN qualification"
   },
   "r14": {
@@ -12,7 +12,7 @@
     "status": "FAIL",
     "max_dynamic_loads": 45,
     "violations": 2,
-    "proof": "existing2M seed12345 bad0/badr0",
+    "proof": "existing2M runtime seed not explicitly set bad0/badr0",
     "scope": "leafdiagnostic, not fullXFIN qualification"
   },
   "r15": {
@@ -20,7 +20,7 @@
     "status": "FAIL",
     "max_dynamic_loads": 37,
     "violations": 8,
-    "proof": "existing2M seed12345 bad0/badr0",
+    "proof": "existing2M runtime seed not explicitly set bad0/badr0",
     "scope": "leafdiagnostic, not fullXFIN qualification"
   },
   "r17": {
@@ -28,7 +28,7 @@
     "status": "FAIL",
     "max_dynamic_loads": 33,
     "violations": 1,
-    "proof": "existing2M seed12345 bad0/badr0",
+    "proof": "existing2M runtime seed not explicitly set bad0/badr0",
     "scope": "leafdiagnostic, not fullXFIN qualification"
   },
   "next": {
