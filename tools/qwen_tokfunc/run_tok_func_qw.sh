@@ -80,7 +80,8 @@ for s in ${STAGES//,/ }; do
   if [ -n "$best" ]; then
     incoming=$(mktemp -d "$OUT/results/.collect_${s}.XXXXXX")
     files="$OUT/logs/$s.files"
-    if ssh "$best" "python3 - '$RUNROOT/$sd'" < "$HERE/collect_files.py" > "$files" &&
+    if ssh "$best" "cat '$RUNROOT/$sd/result.json'" > "$incoming/remote_result.raw.json" &&
+      ssh "$best" "python3 - '$RUNROOT/$sd'" < "$HERE/collect_files.py" > "$files" &&
       ssh "$best" "cd '$RUNROOT/$sd' && tar -h --null -c -T -" < "$files" | tar -x -C "$incoming"; then
       # Never fill missing evidence from an earlier collection. Preserve the
       # previous folder and install this fetch as one fresh local snapshot.
