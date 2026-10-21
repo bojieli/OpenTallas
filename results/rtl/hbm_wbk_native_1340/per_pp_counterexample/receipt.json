@@ -1,0 +1,22 @@
+{
+  "source_commit": "9ee9be093",
+  "actual_unit": "ot-epyc9:oth-ubuntu-108551-1792619808",
+  "boundary": "Actual production ot_wbk8_pp_credit instantiated directly. Legal independently visible return credits, not a metastability simulation or completeWBK/CDC/native qualification.",
+  "baseline": {
+    "returncode": 0,
+    "pass": "WBK_PP_COUNTEREXAMPLE_PASS grants=9 A=4 B=3"
+  },
+  "mutant11": {
+    "returncode": 1,
+    "actual_fail": "WBK_PP_INTEGRITY unavailable expected bank granted: A=5 B=3 grants=9",
+    "no_trailing_pass": true
+  },
+  "remaining": "Finalsourceexisting3positive9mutants live. FinalsourcecanonicalCDC/native notyetlaunched pending olddiagnosticnative terminal. No physicalclaim.",
+  "files": {
+    "source.sha256": "0e237502f564dff25dd56a72fb5c15424634539eaee64ff0e84c37a4c971e3ea",
+    "run_m11.log": "8509f8b6115564c4b0d32bae00f7a2d01cbe54ad3d818da610c8446eb99e9c0e",
+    "run_m11.rc": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "run_m0.log": "38ad5e0338ee37273c06382d64ac1dc56ef48bfbcec12bce11171c739358191d",
+    "run_m0.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  }
+}
