@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH age=17
+MISMATCH age=18
+MISMATCH age=19
+CXIJQ_SAFE FAIL checks=13365 errors=8843 SD=0 MUT=6 SG=2
+[14929000] %Fatal: tb_hbm_cxijq_safe.sv:24: Assertion failed in tb_hbm_cxijq_safe: CXIJQ_SAFE FAIL
+%Error: rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_cxijq_safe.sv:24: Verilog $stop
+Aborting...
+RC sd0_m6 1

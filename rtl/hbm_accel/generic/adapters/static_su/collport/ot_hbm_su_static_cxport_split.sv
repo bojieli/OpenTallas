@@ -227,11 +227,25 @@ module ot_hbm_su_static_cxport_ij_q #(parameter integer SD=0, MUT=0, R=8, SAFE_G
  // ob bank n mod 2; R kept copies (ob write enable 2,048 / R loads each). MUT 4: off by one event.
  // SAFE_GATHER: 64 ob bank-select copies (32 enables + self each) plus one more kept copy
  // (bit RN) that only drives the 32-bit jb read mux, so no rp bit exceeds ~33 loads.
- localparam integer RN=SAFE_GATHER?64:R, RPW=SAFE_GATHER?RN+1:RN, RJ=SAFE_GATHER?RN:0;
+ // SAFE_GATHER=2 (FAM-HBM-B/CXIJQ-FB 10-21, mapped pre-gate native census of 1019t: rp[*] 65 pins, jb-mux copy 49,
+ // ring wsel 41): 256 bank-select copies (4 ob bits/bank each), 4 jb-mux copies (8 bits each), each copy its own
+ // per-bit register cell so the reset-copy pass can spread the async set loads; same values every edge.
+ localparam integer RN=(SAFE_GATHER>=2)?256:SAFE_GATHER?64:R, RJN=(SAFE_GATHER>=2)?4:SAFE_GATHER?1:0;
+ localparam integer RPW=SAFE_GATHER?RN+RJN:RN, RJ=SAFE_GATHER?RN:0;
  (* keep="true" *) reg [RPW-1:0] rp;
- always @(posedge clk_q or negedge rst_q_n)
-  if(!rst_q_n) rp <= (MUT==4) ? {RPW{1'b0}} : {RPW{1'b1}}; else rp <= ~rp;
- wire [31:0] ijd = rp[RJ] ? jb1 : jb0;
+ generate if(SAFE_GATHER>=2) begin:g_rp_bits
+  for(genvar b=0;b<RPW;b=b+1) begin:g_b
+   always @(posedge clk_q or negedge rst_q_n)
+    if(!rst_q_n) rp[b] <= (MUT==4) ? 1'b0 : 1'b1; else rp[b] <= ~rp[b];
+  end
+ end else begin:g_rp_vec
+  always @(posedge clk_q or negedge rst_q_n)
+   if(!rst_q_n) rp <= (MUT==4) ? {RPW{1'b0}} : {RPW{1'b1}}; else rp <= ~rp;
+ end endgenerate
+ wire [31:0] ijd;
+ for(genvar c=0;c<4;c=c+1) begin:g_ijd
+  assign ijd[8*c+:8] = rp[RJ+((SAFE_GATHER>=2)?c:0)] ? jb1[8*c+:8] : jb0[8*c+:8];
+ end
  wire [3:0] iv = ijd[19:16]; wire [7:0] ig = ijd[15:8]; wire [7:0] ib = ijd[7:0];
  wire ibad = |{iv[3] && (|ijd[31:29]), iv[2] && (|ijd[28:26]), iv[1] && (|ijd[25:23]), iv[0] && (|ijd[22:20])};
  wire [3:0] ctl_v; wire [15:0] ctl_gb;
@@ -244,6 +258,20 @@ module ot_hbm_su_static_cxport_ij_q #(parameter integer SD=0, MUT=0, R=8, SAFE_G
   localparam integer D=4+SD;
   reg [19:0] mem[0:D-1];
   (* keep="true" *) reg [D-1:0] wsel, rsel;
+  // SAFE_GATHER=2: WC kept write-select copies, each enabling a 20/WC-bit slice of every ring word
+  localparam integer WC=(SAFE_GATHER>=2)?4:1, WB=20/WC;
+  wire [19:0] wd = {iv,ig,ib};
+  wire [WC*D-1:0] wse;
+  if(SAFE_GATHER>=2) begin:g_wsel_c
+   for(genvar c=0;c<WC;c=c+1) begin:g_c
+    (* keep="true" *) reg [D-1:0] ws;
+    always @(posedge clk_q or negedge rst_q_n)
+     if(!rst_q_n) ws <= {{(D-1){1'b0}},1'b1}; else ws <= {ws[D-2:0],ws[D-1]};
+    assign wse[D*c+:D] = ws;
+   end
+  end else begin:g_wsel_1
+   assign wse = wsel;
+  end
   reg [2:0] warm;  // saturating; old gate warm>=D-2 at edge n == warm>=D-3 at edge n-1
   always @(posedge clk_q or negedge rst_q_n)
    if(!rst_q_n) begin
@@ -257,7 +285,9 @@ module ot_hbm_su_static_cxport_ij_q #(parameter integer SD=0, MUT=0, R=8, SAFE_G
     if(warm!=3'd7) warm <= warm+3'd1;
    end
   for(genvar w=0;w<D;w=w+1) begin:g_w
-   always @(posedge clk_q) if(wsel[w]) mem[w] <= {iv,ig,ib};
+   for(genvar c=0;c<WC;c=c+1) begin:g_c
+    always @(posedge clk_q) if(wse[D*c+w]) mem[w][WB*c+:WB] <= wd[WB*c+:WB];
+   end
   end
   reg [19:0] rd;
   always @* begin rd=20'd0; for(integer w=0;w<D;w=w+1) rd = rd | (mem[w] & {20{rsel[w]}}); end
