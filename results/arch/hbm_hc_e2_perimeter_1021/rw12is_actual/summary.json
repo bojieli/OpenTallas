@@ -1,0 +1,441 @@
+{
+  "status": "FAIL",
+  "source": "00c9d068e",
+  "actual_root": "ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_bank_e2_rw12is-20261021-161105",
+  "native": "PASS32/0viol/0roleerrors",
+  "input_3_place_SHA256": "bc971583c4b7cfa94edaf91a4b3530609c56aaf87057b8a8bbab8b3a3f9ed5e1",
+  "same_3_place_as_rw11is": true,
+  "native_source_bankrc_SHA256": "a9f2ad0f4e384d1cf755d06ac49187bebb7d12ec4e95eef22af4fba3e3f644b7",
+  "clock_states": [
+    {
+      "corner": "tt",
+      "root": "clk",
+      "status": "WARN",
+      "span_ps": 31.0,
+      "scope": "boundary",
+      "total_sinks": 881,
+      "measurement": {
+        "sinks": "881",
+        "reference_scope": "boundary",
+        "boundary_sinks": "870",
+        "min": "426.3723835490968",
+        "mean": "440.1972355636002",
+        "max": "457.3443864131253",
+        "all_mean": "440.1339749471661"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_c",
+      "status": "WARN",
+      "span_ps": 24.8,
+      "scope": "boundary",
+      "total_sinks": 342,
+      "measurement": {
+        "sinks": "342",
+        "reference_scope": "boundary",
+        "boundary_sinks": "29",
+        "min": "519.6870732309181",
+        "mean": "533.4862917589254",
+        "max": "544.4751893342261",
+        "all_mean": "524.7409902501108"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_ce",
+      "status": "PASS",
+      "span_ps": 0.6,
+      "scope": "boundary",
+      "total_sinks": 65,
+      "measurement": {
+        "sinks": "65",
+        "reference_scope": "boundary",
+        "boundary_sinks": "29",
+        "min": "210.72417506308972",
+        "mean": "211.08746492250793",
+        "max": "211.30915157710217",
+        "all_mean": "203.61713571866045"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_w0",
+      "status": "PASS",
+      "span_ps": 37.4,
+      "scope": "all_internal_only",
+      "total_sinks": 1035,
+      "measurement": {
+        "sinks": "1035",
+        "reference_scope": "all_internal_only",
+        "boundary_sinks": "1035",
+        "min": "241.52413499097727",
+        "mean": "264.3122641415843",
+        "max": "278.9247732824828",
+        "all_mean": "264.3122641415843"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_w1",
+      "status": "WARN",
+      "span_ps": 17.7,
+      "scope": "all_internal_only",
+      "total_sinks": 1035,
+      "measurement": {
+        "sinks": "1035",
+        "reference_scope": "all_internal_only",
+        "boundary_sinks": "1035",
+        "min": "393.27483094035455",
+        "mean": "403.0771846747722",
+        "max": "410.9606837933025",
+        "all_mean": "403.0771846747722"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_w2",
+      "status": "WARN",
+      "span_ps": 30.1,
+      "scope": "all_internal_only",
+      "total_sinks": 1035,
+      "measurement": {
+        "sinks": "1035",
+        "reference_scope": "all_internal_only",
+        "boundary_sinks": "1035",
+        "min": "412.123975483153",
+        "mean": "421.001128664313",
+        "max": "442.2117689712613",
+        "all_mean": "421.001128664313"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_w3",
+      "status": "WARN",
+      "span_ps": 1.5,
+      "scope": "boundary",
+      "total_sinks": 1052,
+      "measurement": {
+        "sinks": "1052",
+        "reference_scope": "boundary",
+        "boundary_sinks": "4",
+        "min": "395.0954301745609",
+        "mean": "395.8692833813924",
+        "max": "396.64394149992",
+        "all_mean": "371.48627966715014"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_x0",
+      "status": "PASS",
+      "span_ps": 17.6,
+      "scope": "all_internal_only",
+      "total_sinks": 520,
+      "measurement": {
+        "sinks": "520",
+        "reference_scope": "all_internal_only",
+        "boundary_sinks": "520",
+        "min": "231.85962964521002",
+        "mean": "243.94436787159984",
+        "max": "249.4983118972107",
+        "all_mean": "243.94436787159984"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_x1",
+      "status": "PASS",
+      "span_ps": 22.9,
+      "scope": "all_internal_only",
+      "total_sinks": 520,
+      "measurement": {
+        "sinks": "520",
+        "reference_scope": "all_internal_only",
+        "boundary_sinks": "520",
+        "min": "282.91732958401764",
+        "mean": "299.6722390232789",
+        "max": "305.8621979033265",
+        "all_mean": "299.6722390232789"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_x2",
+      "status": "WARN",
+      "span_ps": 22.3,
+      "scope": "all_internal_only",
+      "total_sinks": 520,
+      "measurement": {
+        "sinks": "520",
+        "reference_scope": "all_internal_only",
+        "boundary_sinks": "520",
+        "min": "294.9843714424616",
+        "mean": "310.00920523009825",
+        "max": "317.23465647921387",
+        "all_mean": "310.00920523009825"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_x3",
+      "status": "PASS",
+      "span_ps": 0.0,
+      "scope": "boundary",
+      "total_sinks": 526,
+      "measurement": {
+        "sinks": "526",
+        "reference_scope": "boundary",
+        "boundary_sinks": "1",
+        "min": "254.94176316427442",
+        "mean": "254.94176316427442",
+        "max": "254.94176316427442",
+        "all_mean": "250.83244577794864"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_d0",
+      "status": "WARN",
+      "span_ps": 47.4,
+      "scope": "all_internal_only",
+      "total_sinks": 512,
+      "measurement": {
+        "sinks": "512",
+        "reference_scope": "all_internal_only",
+        "boundary_sinks": "512",
+        "min": "528.4663838778268",
+        "mean": "561.6794191972302",
+        "max": "575.8534783157396",
+        "all_mean": "561.6794191972302"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_d1",
+      "status": "WARN",
+      "span_ps": 57.6,
+      "scope": "all_internal_only",
+      "total_sinks": 256,
+      "measurement": {
+        "sinks": "256",
+        "reference_scope": "all_internal_only",
+        "boundary_sinks": "256",
+        "min": "371.3773470266623",
+        "mean": "408.38008116771164",
+        "max": "429.0020023045802",
+        "all_mean": "408.38008116771164"
+      }
+    },
+    {
+      "corner": "tt",
+      "root": "clk_d2",
+      "status": "FAIL",
+      "span_ps": 130.2,
+      "scope": "all_internal_only",
+      "total_sinks": 512,
+      "measurement": null
+    },
+    {
+      "corner": "tt",
+      "root": "clk_d3",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "tt",
+      "root": "clk_h0",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "tt",
+      "root": "clk_h1",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "tt",
+      "root": "clk_h2",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "tt",
+      "root": "clk_h3",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "tt",
+      "root": "clk_e0",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "tt",
+      "root": "clk_e1",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "tt",
+      "root": "clk_e2",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "tt",
+      "root": "clk_e3",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_c",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_ce",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_w0",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_w1",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_w2",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_w3",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_x0",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_x1",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_x2",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_x3",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_d0",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_d1",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_d2",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_d3",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_h0",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_h1",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_h2",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_h3",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_e0",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_e1",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_e2",
+      "status": "NOTRUN",
+      "measurement": null
+    },
+    {
+      "corner": "ff",
+      "root": "clk_e3",
+      "status": "NOTRUN",
+      "measurement": null
+    }
+  ],
+  "failed_root": "clk_d2",
+  "FF": "NOTRUN",
+  "GRT": "NOTRUN",
+  "w3_full_internal_span": "NOT_RECORDED by canonical runtime; no4_1_cts.odb retained after guarderror. Do not substitute ALL1052 model32.551574 for actual measurement. Actual boundary1.5/4pins; all_mean371.5 only",
+  "personally_viewed": "floorplan.png; no placed densityPNG because CTSfailed",
+  "release_binding": "147729d92 results/arch/hbm_hc_b0_perimeter_1021/release_binding_and_w1_cause/release_binding_B0_E2.json explicit N scoped-ft vs WR3 upgrade, notalias",
+  "next": "no successor model/variant/gate until exact FULLROOT cause/model and N-vs-WR3 clockABI upgrade reviewed; admitted SMH/P40native preserved",
+  "w3_boundary_count": 4
+}
