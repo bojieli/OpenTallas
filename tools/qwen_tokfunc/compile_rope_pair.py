@@ -84,16 +84,16 @@ def main():
          '--token-path', str(a.token_path.resolve()),
                '--link-handoff', str(a.link_handoff.resolve())], 'ovl.log')
     run(['tools/qwen_split/d2d_ovl_release.py', str(out / 'ovl'), str(image),
-         str(out / 'release')], 'release.log')
-    release = json.loads((out / 'release/source.json').read_text())
+         str(out / 'ovl_release_rope')], 'release.log')
+    release = json.loads((out / 'ovl_release_rope/source.json').read_text())
     admission = calendar['program']['admission']
     params = dict(ROPE_OVL_FIRST_OFS=release['first_ofs'],
                   ROPE_OVL_ADM_OFS=admission['ofs'], ROPE_OVL_ADM_LEN=admission['len'],
                   ROPE_OVL_ADM_BASE=release['admission_base'])
     lines = ['// Generated from the sole pair calendar and four-ROM release.']
     lines += [f'localparam integer {key} = {value};' for key, value in params.items()]
-    lines += [f'localparam ROPE_OVL_ROM_DIR = {json.dumps(str(out / "release"))};']
-    (out / 'release/ovl_wrapper_params.svh').write_text('\n'.join(lines) + '\n')
+    lines += [f'localparam ROPE_OVL_ROM_DIR = {json.dumps(str(out / "ovl_release_rope"))};']
+    (out / 'ovl_release_rope/ovl_wrapper_params.svh').write_text('\n'.join(lines) + '\n')
     hashes = {str(p.relative_to(out)): hashlib.sha256(p.read_bytes()).hexdigest()
               for p in sorted(out.rglob('*')) if p.is_file()}
     (out / 'generated.json').write_text(json.dumps(dict(
