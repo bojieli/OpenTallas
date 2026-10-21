@@ -92,7 +92,7 @@ def build(base: dict, name: str, nt: int, band_y: float, col_gap: float, edge_x:
     for c, fin in enumerate(FIN):
         for t in range(nt):
             for k, bank in enumerate(tier_banks[c][t]):
-                macros.append({"view": VIEW, "count": 1, "inst": f"{fin}.u_values.g_bank[{bank}].u_m",
+                macros.append({"view": VIEW, "count": 1, "inst": "*" + f"{fin}.u_values.g_bank[{bank}].u_m".replace("[", "?").replace("]", "?"),
                                "at": [xs[c], round(ys0[t] + dy + k * MH, 3)], "orient": "R0", "at_exact": True})
     assert len(macros) == 93, len(macros)
     s["macros"] = macros
@@ -162,28 +162,30 @@ def main():
     base = json.loads((ROOT / "physical/ref_tile/s81dv_xfin_e2/spec.json").read_text())
     std = a.std_um2
     out = {}
-    for name, nt, edge_x, edge_y, km, dens, purpose in (
-            ("s81dv_xfin_s2", 2, 30.24, 25.92, 16, 0.55,
+    for name, nt, band0, gap0, edge_x, edge_y, km, dens, purpose in (
+            ("s81dv_xfin_s2", 2, 64.8, 21.6, 30.24, 25.92, 16, 0.55,
              "xfin 93-SRAM MAIN: 5 finish columns x 2 abutted tiers, 1 central E-W band"),
-            ("s81dv_xfin_s3", 3, 34.56, 25.92, 20, 0.47,
+            ("s81dv_xfin_s3", 3, 43.2, 36.72, 34.56, 25.92, 20, 0.45,
              "xfin 93-SRAM FALLBACK: 5 finish columns x 3 abutted tiers, 2 E-W bands, lower density")):
         # width <= 399.6 so the W->E ring pass-through (pin flop -> xstop -> pin flop, one registered hop) stays
         # <= 405 um: the widest column gap that fits, then grow the macro-free E-W band(s) (enlarge, never squeeze)
-        gap = 20.0
-        while build(base, name, nt, 54.0, gap + 2.16, edge_x, edge_y, km, std, purpose, "")["outline"]["w"] <= 399.6:
-            gap += 2.16
-        band = 54.0
-        while True:
+        def dens_of(band, gap):
             s = build(base, name, nt, band, gap, edge_x, edge_y, km, std, purpose, "")
             W, H = s["outline"]["w"], s["outline"]["h"]
             core = (W - 2 * CM) * (H - 2 * CM)
             foot = len(s["macros"]) * (MW + 2 * HALO) * (MH + 2 * HALO)   # gate metric (ref_tile.util_metrics)
-            d = std / (core - foot)
-            if d <= dens or band > 400:
+            return s, W, H, core, foot, std / (core - foot)
+        band, gap = band0, gap0
+        while True:
+            s, W, H, core, foot, d = dens_of(band, gap)
+            if d <= dens:
                 break
-            band += 2.16
+            if dens_of(band, gap + 2.16)[1] <= 399.6:
+                gap += 2.16          # widen the std-cell bands first (width <= 399.6: ring hop < 405 um)
+            else:
+                band += 2.16         # then grow the macro-free E-W band(s): enlarge, never squeeze
         why = (f"{nt} tiers x 5 finish columns, abutted R0 stacks (pins W/E only), column gap {gap:.2f} um "
-               f"(std-cell band), {'central band' if nt == 2 else 'two bands'} {band} um macro-free for every E-W wire; "
+               f"(std-cell band), {'central band' if nt == 2 else 'two bands'} {band:.2f} um macro-free for every E-W wire; "
                f"outline {W} x {H}; std {std:.0f} um2 / placeable {core - foot:.0f} = {d:.2f}; KM {km} regional clock roots.")
         s = build(base, name, nt, band, gap, edge_x, edge_y, km, std, purpose, why)
         out[name] = s
