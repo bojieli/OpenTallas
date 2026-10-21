@@ -166,6 +166,23 @@ def main():
                    'rx.o': L([[['rx', 0, 0, 276]], [['rx', 276, 0, 236], ['st', 0, 236, 2]]])}
     sl['port_note'] = 'G7 ot_pdie_serdes row, lep SerDes lk_WN0..3: tx 512 / {st, rx} 514 on 2 x 276-b lanes (long lep links)'
     M['ot_pdie_serdes_l276'] = sl
+    if facts.get('ctl_peer'):
+        import sys
+        sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 's81_head'))
+        from split_ctl_peer import PORTS
+        gp=copy.deepcopy(M['ot_s81hd_ctl']);gp['module']='ot_s81hd_ctl_glue'
+        gp['view_note']='Exact CTL glue factored from b4f571642; sequencer is a direct CLOSED same-clctl peer; zero added cycles'
+        to_seq=[(f'seq_{n}',0,w) for dr,w,n,net in PORTS if dr=='input']
+        from_seq=[(f'seq_{n}',0,w) for dr,w,n,net in PORTS if dr=='output']
+        gp['ports']['seq_t.o']=L(pack(to_seq,605));gp['ports']['seq_r.i']=L(pack(from_seq,686))
+        M['ot_s81hd_ctl_glue']=gp
+        M['dsfd_mtp_seq']=dict(module='dsfd_mtp_seq',view='physical/ref_tile/s81hd_mtp_peer/views/dsfd_mtp_seq',
+            view_note='CLOSED mtp-mtp_seq-c-c67a71fe5-tc exact LEF/libs, source-default module bodies unchanged',clk='ck',rst=None,
+            ports={'ctl_i.i':L(pack([(n,0,w) for dr,w,n,net in PORTS if dr=='input'],605)),
+                   'ctl_o.o':L(pack([(n,0,w) for dr,w,n,net in PORTS if dr=='output'],686))})
+        rw['ot_s81hd_ctl_glue']=dict(pw['ot_s81hd_ctl'],**{f'seq_{n}':w for dr,w,n,net in PORTS})
+        rw['dsfd_mtp_seq']=dict(ck=1,**{n:w for dr,w,n,net in PORTS})
+        T.setdefault('rtl_files',[]).append('rtl/dsrom_sys/s81_head/ot_s81hd_ctl_peer.sv')
     T['masters'] = M
     T['instance_orientations'] = dict(facts['instance_orientations'])
     T['unbound'] = {k: v['view_note'] for k, v in M.items()}

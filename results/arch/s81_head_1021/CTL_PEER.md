@@ -1,0 +1,7 @@
+S81 HEAD H2 factors the exact dsfd_mtp_seq instance from b4f571642 into a peer of ot_s81hd_ctl_glue. The generated glue contains the original controller body and aliases only; the reconstruction wrapper feeds the original external bench. HSF0, every state bit, data latency and reset age are unchanged (zero added cycles).
+
+The H1 controller reserve is1512x2592um. Actual glue occupies1036.8x1036.8um; the151.2um sequencer sits108um beside its Eface, inside the original reserve. Both use clctl. The seed distance is108um; the conservative face envelope is334.8um, below405um. Existing external endpoints reproject to the smaller glue rectangle. Die GRT reprojects the real sequencer pins and qualifies actual reach/DRC/timing. No separate clock domain or landing latency is introduced.
+
+The old closed C sequencer LEF and all3libs are copied byte-identically into physical/ref_tile/s81hd_mtp_peer/views/dsfd_mtp_seq for the existing real-view discovery mechanism. Original source module identities and file hashes are committed in ctl_hier_source_identity.json. Five legacy abstract access defects remain in this unmodified direct-die view; the cluster form was refused, and no abstract waiver is asserted. H1 remains an immutable independent source-view diagnostic.
+
+Validation pending: existing2position/8248slice ctl bench and SLICE/TIE mutants on reconstructed peer wrapper; H2 route+strict bind+GEN/GRT/STA/CLK on the fleet. Physical closure and whole production head functionality remain open.

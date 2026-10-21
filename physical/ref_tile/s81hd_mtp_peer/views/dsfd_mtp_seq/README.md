@@ -1,0 +1,1 @@
+Exact immutable direct-die view alias of physical/s81_ph_views/closed/dsfd_mtp_seq_c (CLOSED mtp-mtp_seq-c-c67a71fe5-tc). No LEF/LIB edits. Source identity ledger results/arch/s81_head_1021/ctl_hier_source_identity.json. Parent cluster not used; actual die GRT/STA/DRC qualifies this direct hierarchical composition. Original pin access defects remain visible, no waiver.

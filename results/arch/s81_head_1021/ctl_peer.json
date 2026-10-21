@@ -1,0 +1,138 @@
+{
+  "schema": "opentallas.head.ctl-peer.v1",
+  "source_sha256": "810fb6fc419566aaf8683b1f03cf18447ef21e9671b5ca943ea94e8290ad832c",
+  "generated_sha256": "05e730ee63a43318910614d7cdace925fc123c6275b71e325f427f77cc81dd9f",
+  "removed_instance": "    dsfd_mtp_seq u_seq (.ck(ck), .rst(seq_rn), .f_cfg({c_glen, c_plen}),\n        .f_rv(f_rv), .f_rd(f_rd), .t_rg(t_rg), .t_tv(t_tv), .t_td(t_td), .f_tg(f_tg),\n        .t_sv(t_sv), .t_sd(t_sd), .f_sg(f_sg), .f_wv(f_wv), .f_wd(f_wd), .t_wg(t_wg),\n        .t_hv(t_hv), .t_hd(t_hd), .f_hg(f_hg), .f_qv(f_qv), .f_qd(f_qd), .t_qg(t_qg), .t_acc(t_acc));",
+  "added_state_bits": 0,
+  "added_data_cycles": 0,
+  "added_reset_cycles": 0,
+  "region": "clctl",
+  "seq_ports": [
+    {
+      "direction": "input",
+      "width": 1,
+      "port": "rst",
+      "original_net": "seq_rn"
+    },
+    {
+      "direction": "input",
+      "width": 42,
+      "port": "f_cfg",
+      "original_net": "{c_glen, c_plen}"
+    },
+    {
+      "direction": "input",
+      "width": 1,
+      "port": "f_rv",
+      "original_net": "f_rv"
+    },
+    {
+      "direction": "input",
+      "width": 512,
+      "port": "f_rd",
+      "original_net": "f_rd"
+    },
+    {
+      "direction": "output",
+      "width": 1,
+      "port": "t_rg",
+      "original_net": "t_rg"
+    },
+    {
+      "direction": "output",
+      "width": 1,
+      "port": "t_tv",
+      "original_net": "t_tv"
+    },
+    {
+      "direction": "output",
+      "width": 512,
+      "port": "t_td",
+      "original_net": "t_td"
+    },
+    {
+      "direction": "input",
+      "width": 1,
+      "port": "f_tg",
+      "original_net": "f_tg"
+    },
+    {
+      "direction": "output",
+      "width": 1,
+      "port": "t_sv",
+      "original_net": "t_sv"
+    },
+    {
+      "direction": "output",
+      "width": 77,
+      "port": "t_sd",
+      "original_net": "t_sd"
+    },
+    {
+      "direction": "input",
+      "width": 1,
+      "port": "f_sg",
+      "original_net": "f_sg"
+    },
+    {
+      "direction": "input",
+      "width": 1,
+      "port": "f_wv",
+      "original_net": "f_wv"
+    },
+    {
+      "direction": "input",
+      "width": 10,
+      "port": "f_wd",
+      "original_net": "f_wd"
+    },
+    {
+      "direction": "output",
+      "width": 1,
+      "port": "t_wg",
+      "original_net": "t_wg"
+    },
+    {
+      "direction": "output",
+      "width": 1,
+      "port": "t_hv",
+      "original_net": "t_hv"
+    },
+    {
+      "direction": "output",
+      "width": 34,
+      "port": "t_hd",
+      "original_net": "t_hd"
+    },
+    {
+      "direction": "input",
+      "width": 1,
+      "port": "f_hg",
+      "original_net": "f_hg"
+    },
+    {
+      "direction": "input",
+      "width": 1,
+      "port": "f_qv",
+      "original_net": "f_qv"
+    },
+    {
+      "direction": "input",
+      "width": 34,
+      "port": "f_qd",
+      "original_net": "f_qd"
+    },
+    {
+      "direction": "output",
+      "width": 1,
+      "port": "t_qg",
+      "original_net": "t_qg"
+    },
+    {
+      "direction": "output",
+      "width": 57,
+      "port": "t_acc",
+      "original_net": "t_acc"
+    }
+  ]
+}
