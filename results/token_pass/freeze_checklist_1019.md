@@ -71,7 +71,7 @@ it is not mapped die-netlist evidence. Only actual simulated netlist coverage ea
       Closure invocation adds `--die-netlist <compute-GEN-out/case>:<KV-GEN-out/case>`.
       This hook remains unproven: source-only STG/XDIE must not be relabelled, the KV attention carve
       needs its actual `sources.txt`, and source stand-ins such as OVL4u remain diagnostic.
-      Check stage-specific coverage in `tools/qwen_tokfunc/README.md` and keep incomplete grades
+      Check stage-specific coverage in `results/rtl/tokfunc_qw_1021/README.md` and keep incomplete grades
       until those stages actually execute against the frozen hierarchy. The inherited composition
       base is 272,641 cycles; the interim head-adjusted source composition is 272,675 cycles,
       pending STG/XT1/TP8/KV results. Neither is a final token verdict.
