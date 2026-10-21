@@ -129,12 +129,76 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
     """-> (replay dict, per-fixture-record entries, summary).  fix_dir = FIX/L<LL>, smw_dir = SMW/L<LL>.
     priced_by_tag {tag: [priced i in layer order]}: a fused fixture record 'T w1+w3' (one matrix, w1 and w3 rows
     stacked) without its own priced link covers the priced records 'T w1' and 'T w3' of the same occurrence."""
-    from layer_images import CpBus
     fix_dir, smw_dir = Path(fix_dir), Path(smw_dir)
-    if quarter != 0:
-        raise ValueError("SW slice: quarter 0 only")
     if fix_dir.name != smw_dir.name:
         raise ValueError("fixture and SM weight dirs must name the same layer")
+    comps = [compile_sm(fix_dir, smw_dir, layer, k) for k in range(nsm)]
+    return lower_comps(comps, layer, boundary, design="ds", t_start=t_start, quarter=quarter,
+                       priced_by_tag=priced_by_tag, provenance="released_checkpoint_fixture")
+
+
+QWEN_TAGS = ("qkv", "o", "gu", "down")
+
+
+def compile_qwen_sm(kv_dir: Path, L: int, k: int, rank=0, tags=QWEN_TAGS):
+    """Qwen3-8B D4G8 INT8 (fmt 3) SM.MATVEC of layer L for SM k: toksim_smhbm.compile_qwen (the packed INT8 svg
+    programme, PREL mark bit 118 + xc command[116], measured fi8 runs) on the REAL captured operands
+    (qwen_sm_mv_kv.py sm_mv.json/.npz: W int8, A, O = lib.sm_int8) instead of its seeded draw; d4g8 placement rows
+    [kR, kR+R), R = ceil(m / 16)."""
+    import toksim_smhbm as TS
+    from qwen_sm_mv_unit import load_kv
+    from hgi_sim import lib as A
+    G, V = SB.MV.G, SB.MV.V
+    _, kv = load_kv(Path(kv_dir), L, rank)
+
+    def real(tags_, seed):
+        out = []
+        for i, tag in enumerate(tags_):
+            d = kv[tag]
+            W, x, O = d["W"], np.asarray(d["A"], np.float32), np.asarray(d["O"], np.float32)
+            m, K = W.shape
+            R = -(-m // 16)
+            lo, hi = k * R, (k + 1) * R
+            if hi > m:
+                raise ValueError(f"Qwen {tag}: SM {k} rows [{lo},{hi}) beyond m {m}")
+            Wk = W[lo:hi]
+            acc = np.asarray(V.csum(G.mul(Wk.astype(np.float32), G.to_bf16(x)[None, :])), np.float32)
+            lib = np.asarray(A.sm_int8(Wk, x), np.float32)
+            gok = bool(np.array_equal(acc.view(np.uint32), lib.view(np.uint32)) and
+                       np.array_equal(lib.view(np.uint32), O[lo:hi].view(np.uint32)))
+            out.append(dict(k=i, tag=tag, K=K, m=m, R=R, W=Wk, x=x, acc=acc, o=O[lo:hi].view(np.uint32), ofmt="FP32",
+                            gok=gok, slot=None, eid=None, fmt=0, row0=lo,
+                            rec=dict(tag=tag, priced=d["meta"].get("priced_d4g8", []),
+                                     desc={"A": ["VM", K, 1, "FP32", tag, L]})))
+        return out
+    q, gap, opg = TS.qwen_records, SB.X_GAP, SB.OP_GAP
+    TS.qwen_records = real
+    SB.X_GAP = gap + X_MARGIN
+    SB.OP_GAP = max(opg, RES_LAT + 64)
+    try:
+        c = TS.compile_qwen(list(tags))
+    finally:
+        TS.qwen_records, SB.X_GAP, SB.OP_GAP = q, gap, opg
+    for r in c["kinds"][0]["recs"]:
+        r.setdefault("rec", {}).setdefault("desc", {"A": ["VM", r["K"], 1, "FP32", r["tag"], L]})
+    return c
+
+
+def lower_qwen(kv_dir, L, boundary, nsm=4, t_start=4):
+    comps = [compile_qwen_sm(Path(kv_dir), L, k) for k in range(nsm)]
+    return lower_comps(comps, L, boundary, design="qwen", t_start=t_start,
+                       provenance="captured_qwen_sm_operands (qwen_sm_mv_kv, rank 0)")
+
+
+GO_LO, GO_W = 119, 24          # issuer descriptor go_at field (smb_unit.desc_row)
+
+
+def lower_comps(comps, layer, boundary, design, t_start=4, quarter=0, priced_by_tag=None, provenance=""):
+    """the slice replay of per-SM service compiles (smb_unit / toksim_smhbm compile dicts, SM k = comps[k])."""
+    from layer_images import CpBus
+    nsm = len(comps)
+    if quarter != 0:
+        raise ValueError("SW slice: quarter 0 only")
     inports = {e["name"] for e in boundary["inputs"]}
     outports = {e["name"] for e in boundary["outputs"]}
     insts = set(boundary["instances"])
@@ -142,7 +206,6 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
         {f"{p}{k}" for k in range(nsm) for p in ("sm_SW", "svg_SW", "cp_svg_SW", "xc_SW", "vmks_SW")}
     if not need <= insts:
         raise ValueError(f"slice lacks the SM chain instances {sorted(need - insts)}")
-    comps = [compile_sm(fix_dir, smw_dir, layer, k) for k in range(nsm)]
     c0 = comps[0]
     kd = c0["kinds"][0]
     E1 = kd["t_launch"] + 1                       # SMB: launch event edge + 1 = collar sample edge
@@ -150,9 +213,14 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
     # ---- per SM: programme rows (its own store), descriptor rows on SM 0's FIXED go slots (one quadrant schedule:
     # the x loader and the writer serve the four SMs together).  An SM that holds no row of a record (d4g W1 dealing)
     # has no descriptor for it; its other blocks keep SM 0's slots (go_at is absolute from the run launch).
-    go0 = {(b["k"], b["wave"]): b["go_at"] for b in c0["descs"]}
-    if len(go0) != len(c0["descs"]):
-        raise ValueError("SM 0 block identity not unique")
+    def bid(descs):
+        n = {}
+        out = []
+        for b in descs:
+            out.append((b["k"], n.get(b["k"], 0)))
+            n[b["k"]] = n.get(b["k"], 0) + 1
+        return out
+    go0 = {i_: b["go_at"] for i_, b in zip(bid(c0["descs"]), c0["descs"])}
     tables = []
     for k, c in enumerate(comps):
         prog, run, orig_desc = {}, {}, {}
@@ -166,16 +234,13 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
                 run[f["target"]] = (f["base"], f["limit"], f["loops"])
         assert set(prog) == {SVG_TGT, XC_TGT} and set(run) == {SVG_TGT, XC_TGT}, (sorted(prog), sorted(run))
         drows, early = [], 0
-        for i, b in enumerate(c["descs"]):
-            g = go0[(b["k"], b["wave"])]
+        for i, (ident, b) in enumerate(zip(bid(c["descs"]), c["descs"])):
+            g = go0[ident]
             early = max(early, b["go_at"] - g)
-            d = SB.desc_row(i, row_base=b["row_base"], landing=b["landing"], epoch=b["epoch"], rows=b["n_lines"],
-                            tag_base=b["tag_base"], prog_base=b["prog"][0], prog_limit=b["prog"][1], go_at=g,
-                            layer_stride=b["layer_stride"], expert_stride=b["expert_stride"], id_sel=b["id_sel"],
-                            row_off=b["r0"], loops=SB.C8, lstep=b["lstep"], mode=b["fmt"], mrel=1, fl=int(b["head"]),
-                            xb=b.get("xb", 0))
-            if k == 0 and (orig_desc[SVG_TGT][i] != d or orig_desc[XC_TGT][i] != d):
-                raise AssertionError("descriptor rebuild differs from the SMB compile")
+            d = orig_desc[SVG_TGT][i]
+            if orig_desc[XC_TGT][i] != d or (d >> GO_LO) & ((1 << GO_W) - 1) != b["go_at"]:
+                raise AssertionError("descriptor row / go slot differ from the service compile")
+            d = (d & ~(((1 << GO_W) - 1) << GO_LO)) | (g << GO_LO)      # SM 0's fixed slot
             drows.append((1 << 10 | i, d))
         if early > 0:
             raise ValueError(f"SM {k}: its own residency model needs a slot {early} edges after SM 0's")
@@ -189,7 +254,7 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
     for j, op in enumerate(c0["ops"]):
         r = recs[op["k"]]
         x = np.asarray(r["x"], np.float32)
-        key = (json.dumps(r["rec"]["desc"]["A"]), hashlib.sha256(x.tobytes()).hexdigest())
+        key = (json.dumps(r["rec"].get("desc", {}).get("A")), hashlib.sha256(x.tobytes()).hexdigest())
         if key not in xplace:
             rows = -(-len(x) // 64)
             if xrow + rows > 1024:
@@ -205,7 +270,7 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
         at_x = rel(op["x0"]) - XL_C
         if at_x < 0:
             raise ValueError(f"x-load of op {j} before the table can fire ({at_x})")
-        xl_entries.append((at_x, SI.xl_cmd(xbase, len(x), 1, 0, fmt=r["fmt"], xb=op["xb"])))
+        xl_entries.append((at_x, SI.xl_cmd(xbase, len(x), 1, 0, fmt=r["fmt"], xb=op.get("xb", 0))))
         R = r["R"]
         nrow = ((R - 1) >> 3) + 1
         if orow + nrow > XROW0:
@@ -317,9 +382,9 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
         if e["k"] == "D" and e["port"] not in inports:
             raise ValueError(f"replay drives {e['port']}, not a slice input")
     ev.sort(key=lambda x: (x["dom"], x["cyc"], x["k"]))
-    rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=boundary.get("slice_top", "sw"), design="ds",
+    rep = dict(schema="opentallas.hbm_slice_replay.v1", slice=boundary.get("slice_top", "sw"), design=design,
                scope="component_probe", qualifies_native_layer=False, qualifies_native_chain=False,
-               state_seed_provenance=["released_checkpoint_fixture"], layer=str(layer),
+               state_seed_provenance=[provenance], layer=str(layer),
                lowering="sm_slice_v1 (smb_unit h9b cohort1 svg/xc + xl_SW_ctl + smw_SW + calendar reservation)",
                launch_stream=c_launch, collar_launch_stream=S, end_check_stream=t_check, events=ev)
     summary = dict(sms=nsm, ops=len(ops), descriptors=[len(T["desc"]) for T in tables],
@@ -330,7 +395,7 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
                    events=sum(e["k"] != "M" for e in ev), launch_stream=c_launch,
                    first_cmd_stream=rel(ops[0]["first_cmd_abs"]) + S, last_cmd_stream=rel(ops[-1]["last_cmd_abs"]) + S,
                    layer_rel_cycles=rel(ops[-1]["last_cmd_abs"]) - rel(ops[0]["first_cmd_abs"]) if ops else 0,
-                   static_schedule=c0["budget"]["static_schedule"], x_margin=X_MARGIN, result_latency_bound=RES_LAT)
+                   static_schedule=c0["budget"].get("static_schedule"), x_margin=X_MARGIN, result_latency_bound=RES_LAT)
     per = []
     for op in ops:
         per.append(dict(k=op["k"], tag=op["tag"], fmt=op["fmt"], O_fmt=op["O_fmt"], R=op["R"], Gn=op["Gn"],
@@ -345,14 +410,19 @@ def lower(fix_dir, smw_dir, layer, boundary, nsm=4, t_start=4, quarter=0, priced
 def main():
     import argparse
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--fixtures", type=Path, required=True, help="FIX/L<LL> (ds_layer_fixtures dir)")
-    ap.add_argument("--smw", type=Path, required=True, help="SMW/L<LL> (ds_sm_weights dir)")
+    ap.add_argument("--fixtures", type=Path, help="FIX/L<LL> (ds_layer_fixtures dir)")
+    ap.add_argument("--smw", type=Path, help="SMW/L<LL> (ds_sm_weights dir)")
+    ap.add_argument("--qwen-kv", type=Path, help="Qwen: qwen_sm_mv_kv stage dir (sm_mv.json/.npz) instead of DS dirs")
     ap.add_argument("--layer", type=int, required=True)
     ap.add_argument("--boundary", type=Path, required=True)
     ap.add_argument("--sms", type=int, default=4)
     ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
-    rep, per, summ = lower(a.fixtures, a.smw, a.layer, json.loads(a.boundary.read_text()), nsm=a.sms)
+    bnd = json.loads(a.boundary.read_text())
+    if a.qwen_kv:
+        rep, per, summ = lower_qwen(a.qwen_kv, a.layer, bnd, nsm=a.sms)
+    else:
+        rep, per, summ = lower(a.fixtures, a.smw, a.layer, bnd, nsm=a.sms)
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / "replay.json").write_text(json.dumps(rep) + "\n")
     (a.out / "sm_manifest.json").write_text(json.dumps(dict(summary=summ, records=per), indent=1) + "\n")

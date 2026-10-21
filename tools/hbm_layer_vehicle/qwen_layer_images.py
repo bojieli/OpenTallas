@@ -493,6 +493,37 @@ def cmd_snap(a):
     print("QWEN_LAYER_IMAGES", json.dumps(summary))
 
 
+def sm_lower_rank(a, man, rdir):
+    """opt-in (TOK-FUNC2-HBM-SM 10-21, --sm-kv): every SM.MATVEC record of rank 0 lowered onto the slice's real SM chain
+    (sm_slice_lower.lower_qwen: INT8 packed svg programme + xl_SW_ctl + smw_SW), one component replay per (layer, tag)
+    at rdir/sm_L<L>_<tag>/replay.json, SM count reduced only where the replay exceeds --sm-nev."""
+    from hbm_layer_vehicle import sm_slice_lower as SML
+    bnd = json.loads(Path(a.boundary).read_text())
+    kv = a.sm_kv / a.stage
+    done = {}
+    for m in man["records"]:
+        if m["op"] != "SM.MATVEC":
+            continue
+        key = (int(m.get("L") or 0), m["tag"])
+        if key not in done:
+            for nsm in (4, 2, 1):
+                comps = [SML.compile_qwen_sm(kv, key[0], k, tags=(key[1],)) for k in range(nsm)]
+                rep_sm, per, summ = SML.lower_comps(comps, key[0], bnd, design="qwen",
+                                                    provenance="captured_qwen_sm_operands (qwen_sm_mv_kv, rank 0)")
+                if summ["events"] + 1 <= a.sm_nev:
+                    break
+            d = rdir / f"sm_L{key[0]}_{key[1]}"
+            d.mkdir(parents=True, exist_ok=True)
+            (d / "replay.json").write_text(json.dumps(rep_sm) + "\n")
+            done[key] = dict(replay=str(d.relative_to(rdir) / "replay.json"), summary=summ, record=per[0])
+        m.update(status="emitted", reasons=[], lowering="sm_slice_v1 (Qwen INT8 packed)", replay=done[key]["replay"],
+                 sm_record=done[key]["record"], sm_summary=done[key]["summary"])
+    man["counts"] = {k: sum(1 for x in man["records"] if x["status"] == k)
+                     for k in sorted({x["status"] for x in man["records"]})}
+    (rdir / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
+    return man
+
+
 def cmd_emit(a):
     out = {}
     for r in [int(x) for x in a.ranks.split(",")]:
@@ -502,6 +533,8 @@ def cmd_emit(a):
             draw = {int(k): v for k, v in json.loads(dr.read_text()).items()}
         man, rep = compile_rank(a.stage, r, SparseVM(a.operands, r), a.out / a.stage / f"r{r}",
                                 boundary=a.boundary, variant=a.variant, disp_raw=draw)
+        if getattr(a, "sm_kv", None) and r == 0:
+            man = sm_lower_rank(a, man, a.out / a.stage / f"r{r}")
         out[r] = dict(counts=man["counts"], events=len(rep["events"]),
                       replay_sha256=sha((a.out / a.stage / f"r{r}" / "replay.json").read_bytes()))
     print("QWEN_LAYER_IMAGES", json.dumps(dict(stage=a.stage, ranks_out=out)))
@@ -523,6 +556,9 @@ def main():
             p.add_argument("--fix", type=Path, required=True, help="fixture dir of the stage (program.hgi1, die*.u8...)")
         else:
             p.add_argument("--operands", type=Path, required=True)
+            p.add_argument("--sm-kv", type=Path, help="opt-in: qwen_sm_mv_kv root (holds <stage>/sm_mv.json): lower rank 0 "
+                           "SM.MATVEC onto the slice SM chain (sm_slice_lower)")
+            p.add_argument("--sm-nev", type=int, default=11651, help="event capacity of the slice TB the replays target")
     a = ap.parse_args()
     global NATIVE_TIMING
     if (a.native_read_return is None) != (a.native_write_return is None):
