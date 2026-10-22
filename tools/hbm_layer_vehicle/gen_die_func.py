@@ -106,6 +106,7 @@ def main():
     ap.add_argument('--die', required=True); ap.add_argument('--contract', required=True)
     ap.add_argument('--out', required=True); ap.add_argument('--report')
     ap.add_argument('--patch-open', action='store_true', help='simulate past GEN-open bits with the contract driver (listed; CONN_EQUIV stays FAIL)')
+    ap.add_argument('--open-zero', action='store_true', help='tie every GEN-open input bit to 0 (listed): unpatched GEN behaviour in a 2-state bench')
     ap.add_argument('--cdv', help='contract_die_v.py of the die source revision (default: this checkout)')
     a = ap.parse_args()
     c = ld(a.contract); I = c['instances']
@@ -191,6 +192,11 @@ def main():
             if r is not None:
                 gen[(i, p, b)] = tuple(r)
                 patched.append([i, p, b, t, list(r)])
+    elif a.open_zero:
+        # negative-control form: a GEN-open input reads 0 (what a floating pin does in a 2-state simulation); listed
+        for (i, p, b, t) in gaps:
+            gen[(i, p, b)] = ('CONST', 0, 0)
+            patched.append([i, p, b, t, ['OPEN_ZERO']])
     # equivalence vs contract
     def norm(s):
         if s is None:
