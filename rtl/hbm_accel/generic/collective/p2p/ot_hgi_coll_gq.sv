@@ -932,15 +932,18 @@ module ot_hgi_coll_gq_issue #(
 `ifdef OT_GQ_QA2
     // Actual MUL8 native census: QA src bit3 row-OR drove33 pins across8 init adders.
     // Split the same combinational row read into two kept copies, four adders each.
-    // cur_ohc[1] is an existing same-edge one-hot copy: no new calendar/control state.
+    // Native QA2 census: copy 1 reached 41 loads. Use existing copy 3 for seven
+    // read bits and copy 0 for six: actual predecessor loads 22/24 become 29/30.
+    // Every copy is the same one-hot row on the same edge; no new state or latency.
     wire [12:0] rc_qa_b;
     generate for(genvar b=0;b<13;b=b+1)begin:g_rc_qa_b
+        localparam integer QC=(b<7)?3:0;
         wire[15:0]rfb;
         for(genvar j=0;j<16;j=j+1)begin:g_r assign rfb[j]=rf[j][37+b];end
 `ifdef OT_GQ_MUT_QARD
-        (* keep="true" *)ot_hgi_coll_gq_row_bit u_rb(.r(rfb),.oh({cur_ohc[1][14:0],cur_ohc[1][15]}),.q(rc_qa_b[b]));
+        (* keep="true" *)ot_hgi_coll_gq_row_bit u_rb(.r(rfb),.oh({cur_ohc[QC][14:0],cur_ohc[QC][15]}),.q(rc_qa_b[b]));
 `else
-        (* keep="true" *)ot_hgi_coll_gq_row_bit u_rb(.r(rfb),.oh(cur_ohc[1]),.q(rc_qa_b[b]));
+        (* keep="true" *)ot_hgi_coll_gq_row_bit u_rb(.r(rfb),.oh(cur_ohc[QC]),.q(rc_qa_b[b]));
 `endif
     end endgenerate
 `ifdef OT_GQ_CHECK_INV
