@@ -307,7 +307,7 @@ if __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1':
         'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv':
             'a99ef537a41999fc21b12346cda7aae28a807ee13253db504664b55ec23152fb',
         'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c_rope_ovl.sv':
-            'e4b74c66e617b8b6f62214bc2bea4c95c3624737fe5375fd3ccf6b0f8ebeb144'}
+            'ca747bcbd9d21bd27de68042e0ceb539d8e5ab54ed9f87be1d26e520c64fe04f'}
     _expected = _D.RTL_FILE
     if _expected not in _S6C_TILES:
         raise ValueError('open-tail DS/S6C recipe unproved: ' + _D.RTL_FILE)
