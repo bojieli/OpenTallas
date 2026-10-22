@@ -494,7 +494,143 @@ def _free_cands(placer, x, y, w, h, near=10, step=4.0, rmax=400.0, ray_um=200.0,
     return out
 
 
-def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, reach, skip_loads=()):
+def _placer_remove(placer, r):
+    """take one rectangle (exact tuple) out of a Placer"""
+    x0, y0, x1, y1 = r
+    for i in range(int(x0 // placer.B), int(x1 // placer.B) + 1):
+        for j in range(int(y0 // placer.B), int(y1 // placer.B) + 1):
+            b = placer.buck.get((i, j))
+            if b and r in b:
+                b.remove(r)
+
+
+def _rs_repair(st, parent, kids, terms, placed, loc, placer, reach, box_of, margin=6.0, step=4.0, rmax=480.0,
+               max_moves=400000):
+    """STW-S81c-DIE-C23 cap23 reset-chain repair after the C22 tree DP: every station hop (station -> station child,
+    station -> fixed load) over `reach` is removed by moving stations ALONG their chain on legal free sites.
+    A violating station moves to the free site that minimises (sum of its hop excesses over reach - margin, then the
+    distance to the target): the target is the point of the intersection of the (reach - margin) diamonds around all
+    its neighbours (parent, station children, fixed loads) nearest its current point, or, when that intersection is
+    empty (a stack of chained stations whose ends are pulled apart), the minimax centre of its neighbours.  A station
+    that cannot clear its own excess PULLS its station neighbours (they move to their minimax centre when that shortens
+    their longest hop without creating an excess), so a chain planned as a stack on one point unrolls along its path
+    (rope relaxation) instead of being packed in place.  Every site stays inside the station's clock-region box
+    (box_of[inst] = its root's geometric extent grown by reach - margin: the S81.CLK region gate cannot fail) and outside
+    every block / frame / landing / relay (the Placer).  Same stations, same nets, same stage counts."""
+    import time as _t
+    t0 = _t.time()
+    R = reach - margin
+    hop = lambda a_, b_: abs(a_[0] - b_[0]) + abs(a_[1] - b_[1])
+    nb = {v: ([parent[v]] if v in parent else []) + list(kids[v]) for v in st}
+    pts = lambda v: [placed[u] for u in nb[v]] + list(terms[v])
+    exc = lambda c, P: sum(max(0.0, hop(c, q) - R) for q in P)
+    exc_r = lambda c, P: sum(max(0.0, hop(c, q) - reach) for q in P)
+
+    def viol(v):
+        return any(hop(placed[v], q) > reach for q in pts(v))
+
+    def target(v, P, cur):
+        us = [q[0] + q[1] for q in P]; vs = [q[0] - q[1] for q in P]
+        ulo, uhi, vlo, vhi = max(us) - R, min(us) + R, max(vs) - R, min(vs) + R
+        u0, v0 = cur[0] + cur[1], cur[0] - cur[1]
+        if ulo <= uhi and vlo <= vhi:
+            ut, vt = min(max(u0, ulo), uhi), min(max(v0, vlo), vhi)
+        else:
+            ut = (max(us) + min(us)) / 2 if ulo > uhi else min(max(u0, ulo), uhi)
+            vt = (max(vs) + min(vs)) / 2 if vlo > vhi else min(max(v0, vlo), vhi)
+        return (ut + vt) / 2, (ut - vt) / 2
+
+    def search(v, tx, ty, score, best0):
+        w, h = loc[v][2], loc[v][3]
+        bx = box_of.get(v)
+        if bx:
+            tx, ty = min(max(tx, bx[0]), bx[2]), min(max(ty, bx[1]), bx[3])
+        best, bestc = None, best0
+        k = 0
+        while k * step <= rmax:
+            d = k * step
+            ring = [(0.0, 0.0)] if k == 0 else []
+            for t in range(-k, k + 1):
+                ring += [(t * step, d), (t * step, -d), (d, t * step), (-d, t * step)] if k else []
+            for dx, dy in ring:
+                cx, cy = tx + dx, ty + dy
+                if bx and not (bx[0] <= cx <= bx[2] and bx[1] <= cy <= bx[3]):
+                    continue
+                c = score((cx, cy))
+                if c >= bestc:
+                    continue
+                if placer.hits((cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)):
+                    continue
+                best, bestc = (cx, cy), c
+            if best is not None and bestc[0] == 0.0:
+                break
+            k += 1
+        return best, bestc
+
+    def move(v, c):
+        w, h = loc[v][2], loc[v][3]
+        _placer_remove(placer, (loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
+        r = (c[0] - w / 2, c[1] - h / 2, c[0] + w / 2, c[1] + h / 2)
+        placer.add(r); placed[v] = c
+        loc[v] = (r[0], r[1], w, h, 'FIRM')
+
+    work = collections.deque(sorted(v for v in st if viol(v)))
+    inq = {v: 'fix' for v in work}
+    moves = pulls = 0
+    stuck = set()
+    before = len(work)
+    while work and moves + pulls < max_moves:
+        v = work.popleft(); mode = inq.pop(v)
+        P = pts(v)
+        if not P:
+            continue
+        cur = placed[v]
+        w, h = loc[v][2], loc[v][3]
+        _placer_remove(placer, (loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
+        if mode == 'fix':
+            e0 = exc_r(cur, P)
+            if e0 == 0.0:
+                placer.add((loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h)); continue
+            tx, ty = target(v, P, cur)
+            score = lambda c: (round(exc(c, P), 1), hop(c, (tx, ty)))
+            best, bc_ = search(v, tx, ty, score, (round(exc(cur, P), 1), hop(cur, (tx, ty))))
+            placer.add((loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
+            if best is not None:
+                move(v, best); moves += 1
+            if exc_r(placed[v], P) > 0.0:
+                for u in nb[v]:                    # pull the chain neighbours toward their own centres
+                    if u not in inq and (u, v) not in stuck:
+                        inq[u] = 'pull'; work.append(u)
+                if best is None:
+                    stuck.add(v)
+            for u in nb[v]:
+                if u not in inq and viol(u):
+                    inq[u] = 'fix'; work.append(u)
+            if exc_r(placed[v], P) > 0.0 and best is not None and v not in inq:
+                inq[v] = 'fix'; work.append(v)
+        else:
+            m0 = max(hop(cur, q) for q in P)
+            us = [q[0] + q[1] for q in P]; vs = [q[0] - q[1] for q in P]
+            ut, vt = (max(us) + min(us)) / 2, (max(vs) + min(vs)) / 2
+            tx, ty = (ut + vt) / 2, (ut - vt) / 2
+            score = lambda c: (round(exc(c, P), 1), max(hop(c, q) for q in P))
+            best, bc_ = search(v, tx, ty, score, (round(exc(cur, P), 1), m0 - step))
+            placer.add((loc[v][0], loc[v][1], loc[v][0] + w, loc[v][1] + h))
+            if best is not None:
+                move(v, best); pulls += 1
+                for u in nb[v]:
+                    if u not in inq:
+                        inq[u] = 'fix' if viol(u) else 'pull'
+                        work.append(u)
+    after = sum(1 for v in st if viol(v))
+    return dict(rule='C23 rope relaxation after the DP: violating stations move on free legal sites inside their clock-region '
+                     'box toward the (reach - margin) diamond intersection of their neighbours; unresolved ones pull their '
+                     'chain neighbours to their minimax centres (stacks unroll along the chain path)',
+                margin_um=margin, stations_violating_before=before, stations_violating_after=after, moves=moves, pulls=pulls,
+                budget_hit=moves + pulls >= max_moves, seconds=round(_t.time() - t0, 1), boxed=sum(1 for v in st if v in box_of))
+
+
+def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, reach, skip_loads=(), box_of=None, repair=False):
     """C22 --rs-chain-place: place every reset / gate-calendar station (dsfd_rly_1_WN, planned in hints['reset_place'],
     provisional loc = planned point) by a DP over the reset TREE (every station has one station parent: rst_sync ->
     street -> crossing -> leaf -> gate calendar -> ICG ENA / relay rs / landing rs / block rst_n).  Each station picks one
@@ -572,6 +708,11 @@ def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, re
             px_, py_, _ = placer.put(pc_[0] - w / 2, pc_[1] - h / 2, w, h, step=4.0)
             placed[v] = (px_ + w / 2, py_ + h / 2); fallback += 1
         loc[v] = (placed[v][0] - w / 2, placed[v][1] - h / 2, w, h, 'FIRM')
+    dp_over = sum(1 for v in st for u in kids[v] if hop(placed[v], placed[u]) > reach) + \
+        sum(1 for v in st for t in terms[v] if hop(placed[v], t) > reach)
+    rrep = None
+    if repair:
+        rrep = _rs_repair(st, parent, kids, terms, placed, loc, placer, reach, box_of or {})
     over, over_plan, worst = [], 0, []
     for v in st:
         for u in kids[v]:
@@ -589,7 +730,7 @@ def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, re
                placed_hops_over_reach=len(over), by_kind=dict(collections.Counter(o[0] for o in over)),
                max_hop_um=max((o[3] for o in over), default=None), fallback_spiral=fallback,
                disp_um=dict(median=round(disp[len(disp) // 2], 1), p99=round(disp[int(len(disp) * 0.99)], 1), max=round(disp[-1], 1)) if disp else None,
-               reach_um=reach, seconds=round(_t.time() - t0, 1),
+               reach_um=reach, seconds=round(_t.time() - t0, 1), dp_hops_over_reach=dp_over, repair=rrep,
                rule='tree DP: candidates near each planned point (nearest free + 4 axis rays), cost 1e6/hop over reach '
                     '+ 1e3 x excess + displacement; same stations, same stage counts')
     return rep, sorted(over, key=lambda o: -o[3])
@@ -802,6 +943,14 @@ def main():
                          '(candidates near each planned point, cost = hops over --reach-um, then displacement) after the '
                          'forward cells are relocated; same stations, same stage counts (no latency change); was a '
                          'per-station spiral that pushed 400-um planned hops to 405-1,228 um')
+    ap.add_argument('--rs-repair', action='store_true',
+                    help='STW-S81c-DIE-C23 cap23: after the --rs-chain-place DP, rope relaxation of every station hop over '
+                         '--reach-um on legal free sites inside the station clock-region box (chained stacks unroll along '
+                         'their path); same stations / stage counts')
+    ap.add_argument('--dieclk-split-um', type=float, default=0.0,
+                    help='STW-S81c-DIE-C23 cap23: a die clock root whose placed sink bbox has a side > this (or a half '
+                         'perimeter > 1.5x this) is split into geometric sub-regions (bisection at the bbox middle) with '
+                         'one entry buffer each, all in one build.py balance_group (shared TT/FF target); 0 = off')
     a = ap.parse_args()
     # ROOT14 10-20 (COORD 21:29 (a)): TT setup + FF hold on every die build, diagnostic ones included
     a.corners = DSC.required(a.corners)
@@ -1287,6 +1436,95 @@ def main():
                 decl.append(f'  wire ckrn_{p_};')
                 body.append(f'  BUFx24_ASAP7_75t_R ckr_{p_} (.A({p_}), .Y(ckrn_{p_}));')
         print(f'DIECLK entry buffers: roots={len(dieclk_ports)} (ck_* input ports with loads {len(cand_p)})', flush=True)
+
+    # ------------------------------------------------------------------ C22 reset-tree DP placement (--rs-chain-place)
+    rsdp, rsdp_over = None, []
+    if a.rs_chain_place:
+        box_of = {}
+        if a.rs_repair:
+            # C23: each station stays inside its clock root's geometric extent grown by reach - 10 um (S81.CLK gate)
+            cr_ = bc.get('clock_regions') or {}
+            if cr_.get('mode') == 'geometric':
+                grid_ = GC.Grid.from_spec(cr_['grid'])
+                reg_ = {b: (f'b_{b}' if r['kind'] == 'own_root' else r['cell']) for b, r in cr_['blocks'].items()}
+                ext_ = GC.extents(grid_, plan['blocks'], reg_, [b for b, r in cr_['blocks'].items() if r['kind'] == 'table_clock'])
+                doms_ = set(T.get('clock_domains', {}))
+                g_ = a.reach_um - 10.0
+                for p in hints['reset_place']:
+                    ck_ = [n_ for n_, _ in ibits[p['inst']].get('ck', []) if n_ in top and n_.startswith('ck_')]
+                    if ck_ and ck_[0] not in doms_ and ck_[0][3:] in ext_:
+                        e_ = ext_[ck_[0][3:]]
+                        box_of[p['inst']] = (e_[0] - g_, e_[1] - g_, e_[2] + g_, e_[3] + g_)
+        rsdp, rsdp_over = rs_chain_place([p['inst'] for p in hints['reset_place']], insts, ibits, touch, loc, placer,
+                                         hints, blocks, a.reach_um, skip_loads=set(rfw_rs) - rfw_first,
+                                         box_of=box_of, repair=a.rs_repair)
+        (out / 'rs_chain_place.tsv').write_text('kind\tcapture\tsource\thop_um\tplanned_hop_um\n' +
+                                                ''.join('\t'.join(map(str, o)) + '\n' for o in rsdp_over))
+        print('RS_CHAIN_PLACE', json.dumps(rsdp), flush=True)
+        centre = {i: (v[0] + v[2] / 2, v[1] + v[3] / 2) for i, v in loc.items()}
+    dieclk_info = None
+    split_info = {}
+    if dieclk_ports:
+        domains_ = T.get('clock_domains', {})
+        rows_, trees_ = [], []
+        sub_of = {}                       # (port, inst) -> sub-region index (C23 --dieclk-split-um)
+        S_ = a.dieclk_split_um
+
+        def _bisect(items):
+            xs_ = [q[1][0] for q in items]; ys_ = [q[1][1] for q in items]
+            wx, wy = max(xs_) - min(xs_), max(ys_) - min(ys_)
+            if len(items) < 2 or (max(wx, wy) <= S_ and wx + wy <= 1.5 * S_):
+                return [items]
+            if wx >= wy:
+                m_ = (max(xs_) + min(xs_)) / 2; A_ = [q for q in items if q[1][0] <= m_]; B_ = [q for q in items if q[1][0] > m_]
+            else:
+                m_ = (max(ys_) + min(ys_)) / 2; A_ = [q for q in items if q[1][1] <= m_]; B_ = [q for q in items if q[1][1] > m_]
+            return _bisect(A_) + _bisect(B_)
+        for p_ in dieclk_ports:
+            per = float(domains_.get(p_, {}).get('period_ps', T_PS))
+            items = sorted((o, centre[o]) for o in set(touch[p_]) if o in centre and o != f'ckr_{p_}')
+            parts = _bisect(items) if S_ > 0 and items else [items]
+            if len(parts) == 1:
+                pts = sorted(q for _, q in items)
+                xs = sorted(q[0] for q in pts); ys = sorted(q[1] for q in pts)
+                rows_.append(f'ckr_{p_} {xs[len(xs) // 2]:.3f} {ys[len(ys) // 2]:.3f}\n')
+                trees_.append(dict(name=p_, root=f'ckr_{p_}/Y', period=per, select='all'))
+                continue
+            boxes = []
+            for j, part in enumerate(parts):
+                xs = sorted(q[0] for _, q in part); ys = sorted(q[1] for _, q in part)
+                en = f'ckr_{p_}' if j == 0 else f'ckr_{p_}_r{j}'
+                rows_.append(f'{en} {xs[len(xs) // 2]:.3f} {ys[len(ys) // 2]:.3f}\n')
+                trees_.append(dict(name=p_ if j == 0 else f'{p_}_r{j}', root=f'{en}/Y', period=per, select='all', balance_group=p_))
+                boxes.append([round(xs[0], 1), round(ys[0], 1), round(xs[-1], 1), round(ys[-1], 1), len(part)])
+                for o, _ in part:
+                    if j:
+                        sub_of[(p_, o)] = j
+                if j:
+                    decl.append(f'  wire ckrn_{p_}_r{j};')
+                    body.append(f'  BUFx24_ASAP7_75t_R {en} (.A({p_}), .Y(ckrn_{p_}_r{j}));')
+            split_info[p_] = boxes
+        if sub_of:
+            by_inst = collections.defaultdict(dict)
+            for (p_, o), j in sub_of.items():
+                by_inst[o][p_] = j
+            irx = re.compile(r'^\s*\S+\s+(\S+)\s*\(')
+            for k_, ln in enumerate(body):
+                m_ = irx.match(ln)
+                if m_ and m_.group(1) in by_inst:
+                    for p_, j in by_inst[m_.group(1)].items():
+                        ln = re.sub(r'(?<![\w$])ckrn_' + re.escape(p_) + r'(?![\w$\[])', f'ckrn_{p_}_r{j}', ln)
+                    body[k_] = ln
+        (out / 'ckr_place.txt').write_text(''.join(rows_))
+        print('DIECLK_SPLIT', json.dumps(dict(split_um=S_, roots_split=len(split_info),
+                                              sub_regions=sum(len(v) for v in split_info.values()))), flush=True)
+        (out / 'dieclk_spec.json').write_text(json.dumps(dict(
+            trees=trees_, rc_layer=M8['sta_wire_rc_layer'], safe_tree=True, grid_center=True,
+            note='C22 regional die clock trees: one tree per die clock root port, rooted at its entry buffer ckr_<root>; '
+                 'no balance_group (regions are balanced inside; region crossings are landed / neighbour-judged)'), indent=1))
+        dieclk_info = dict(roots=len(dieclk_ports), iters=a.dieclk_iters, spec='dieclk_spec.json', split_um=a.dieclk_split_um,
+                           roots_split=len(split_info), entries=len(rows_), split=split_info,
+                           tool=f'{a.dcc_ref}:tools/die_clock/build.py (safe tree, grid_center, two-corner TT/FF trim)')
     hdr = [f'// S81-DIE7 REAL-VIEW die case netlist from {a.bind_dir / "die.v"} (tools/s81_dv/dv_rvcase.py): bound instances, '
            'stand-in cells rv_* where no closed view, constant bits driven by TIEHI/TIELO cells tie_tz_*',
            f'module dv_die ({", ".join(sorted(top))});']
@@ -1295,32 +1533,6 @@ def main():
         rng = f'[{lo + wv - 1}:{lo}] ' if wv > 1 or lo else ''
         hdr.append(f'  {"input" if n in tin else "output" if n in tout else "wire"} {rng}{n};')
     (out / 'die.v').write_text('\n'.join(hdr + decl + body + ['endmodule']) + '\n')
-
-    # ------------------------------------------------------------------ C22 reset-tree DP placement (--rs-chain-place)
-    rsdp, rsdp_over = None, []
-    if a.rs_chain_place:
-        rsdp, rsdp_over = rs_chain_place([p['inst'] for p in hints['reset_place']], insts, ibits, touch, loc, placer,
-                                         hints, blocks, a.reach_um, skip_loads=set(rfw_rs) - rfw_first)
-        (out / 'rs_chain_place.tsv').write_text('kind\tcapture\tsource\thop_um\tplanned_hop_um\n' +
-                                                ''.join('\t'.join(map(str, o)) + '\n' for o in rsdp_over))
-        print('RS_CHAIN_PLACE', json.dumps(rsdp), flush=True)
-        centre = {i: (v[0] + v[2] / 2, v[1] + v[3] / 2) for i, v in loc.items()}
-    dieclk_info = None
-    if dieclk_ports:
-        domains_ = T.get('clock_domains', {})
-        rows_, trees_ = [], []
-        for p_ in dieclk_ports:
-            pts = sorted(centre[o] for o in touch[p_] if o in centre)
-            xs = sorted(q[0] for q in pts); ys = sorted(q[1] for q in pts)
-            rows_.append(f'ckr_{p_} {xs[len(xs) // 2]:.3f} {ys[len(ys) // 2]:.3f}\n')
-            trees_.append(dict(name=p_, root=f'ckr_{p_}/Y', period=float(domains_.get(p_, {}).get('period_ps', T_PS)), select='all'))
-        (out / 'ckr_place.txt').write_text(''.join(rows_))
-        (out / 'dieclk_spec.json').write_text(json.dumps(dict(
-            trees=trees_, rc_layer=M8['sta_wire_rc_layer'], safe_tree=True, grid_center=True,
-            note='C22 regional die clock trees: one tree per die clock root port, rooted at its entry buffer ckr_<root>; '
-                 'no balance_group (regions are balanced inside; region crossings are landed / neighbour-judged)'), indent=1))
-        dieclk_info = dict(roots=len(dieclk_ports), iters=a.dieclk_iters, spec='dieclk_spec.json',
-                           tool=f'{a.dcc_ref}:tools/die_clock/build.py (safe tree, grid_center, two-corner TT/FF trim)')
     # ------------------------------------------------------------------ placement
     pl = []
     for i, (x, y, w_, h_, st) in sorted(loc.items()):
