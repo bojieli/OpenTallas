@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.fp_pin_geometry.v1",
+ "verdict": "PASS",
+ "fails": [],
+ "metrics": {
+  "signal_clock_pins": 1639,
+  "pin_rectangles": 1639,
+  "pin_track_checked": 1639,
+  "pin_track_inaccessible": 0,
+  "pin_rectangles_outside": 0,
+  "missing_geometry": 0
+ },
+ "dump": "corrected_e.json",
+ "dump_sha256": "e65dba979335056185b988aa7b77bdc92e891e5809b420e8d3f67ba68a33f992",
+ "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+}

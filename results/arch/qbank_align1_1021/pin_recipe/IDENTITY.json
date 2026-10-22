@@ -1,0 +1,408 @@
+{
+  "unit": "oth-ubuntu-57188-1792647693",
+  "source_sha256": {
+    "fp_margin_lint.py": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8",
+    "fp_margin_lint.tcl": "43e9e7f2633bd55619f7f6b5b9fd71862a310e30ff68eab2ad123e5064635cf5",
+    "check_e.tcl": "09e469e8d2e0062f6b4b1559d0a9ca87a41b65d422ad1c041daf53a11e39497d",
+    "io_e.tcl": "6fa0ba85a6a70be13f57768b1d0b230ed78e5c627d8c00ae970f8edbe0d60ba2",
+    "run.sh": "0fd84531d48181223485104969a02bd5cdcc3a7999b9d54deafefbf07c96811e",
+    "io_f.tcl": "e6ca670e582aaf35d7e4f60de41592de82b7b1712055aecf395fe4f0ec5065fc",
+    "check_f.tcl": "753544fc9483ef25866a7b868da59325233fa9efeb56638967f890d203ec30af"
+  },
+  "variants": [
+    {
+      "variant": "e",
+      "identities_unchanged": true,
+      "BTerm_count": 1641,
+      "identity_sha256": "dc5b4bd3c24c089a2c2a34b0a2e34a6cea97d2f330574a11f8746fd6e3db7b1e",
+      "macros_unchanged": true,
+      "actual_DEF_layers": [
+        {
+          "name": "M1",
+          "level": 1,
+          "dir": "VERTICAL",
+          "pitch": 0.036,
+          "width": 0.018,
+          "track_patterns": [
+            [
+              0.009,
+              14400,
+              0.036
+            ]
+          ]
+        },
+        {
+          "name": "M2",
+          "level": 2,
+          "dir": "HORIZONTAL",
+          "pitch": 0.036,
+          "width": 0.018,
+          "track_patterns": [
+            [
+              0.045,
+              2080,
+              0.27
+            ],
+            [
+              0.081,
+              2080,
+              0.27
+            ],
+            [
+              0.117,
+              2080,
+              0.27
+            ],
+            [
+              0.153,
+              2080,
+              0.27
+            ],
+            [
+              0.189,
+              2080,
+              0.27
+            ],
+            [
+              0.225,
+              2080,
+              0.27
+            ],
+            [
+              0.27,
+              2079,
+              0.27
+            ]
+          ]
+        },
+        {
+          "name": "M3",
+          "level": 3,
+          "dir": "VERTICAL",
+          "pitch": 0.036,
+          "width": 0.018,
+          "track_patterns": [
+            [
+              0.009,
+              14400,
+              0.036
+            ]
+          ]
+        },
+        {
+          "name": "M4",
+          "level": 4,
+          "dir": "HORIZONTAL",
+          "pitch": 0.048,
+          "width": 0.024,
+          "track_patterns": [
+            [
+              0.012,
+              11700,
+              0.048
+            ]
+          ]
+        },
+        {
+          "name": "M5",
+          "level": 5,
+          "dir": "VERTICAL",
+          "pitch": 0.048,
+          "width": 0.024,
+          "track_patterns": [
+            [
+              0.012,
+              10800,
+              0.048
+            ]
+          ]
+        },
+        {
+          "name": "M6",
+          "level": 6,
+          "dir": "HORIZONTAL",
+          "pitch": 0.064,
+          "width": 0.032,
+          "track_patterns": [
+            [
+              0.016,
+              8775,
+              0.064
+            ]
+          ]
+        },
+        {
+          "name": "M7",
+          "level": 7,
+          "dir": "VERTICAL",
+          "pitch": 0.064,
+          "width": 0.032,
+          "track_patterns": [
+            [
+              0.016,
+              8100,
+              0.064
+            ]
+          ]
+        },
+        {
+          "name": "M8",
+          "level": 8,
+          "dir": "HORIZONTAL",
+          "pitch": 0.08,
+          "width": 0.04,
+          "track_patterns": [
+            [
+              0.116,
+              7019,
+              0.08
+            ]
+          ]
+        },
+        {
+          "name": "M9",
+          "level": 9,
+          "dir": "VERTICAL",
+          "pitch": 0.08,
+          "width": 0.04,
+          "track_patterns": [
+            [
+              0.116,
+              6479,
+              0.08
+            ]
+          ]
+        },
+        {
+          "name": "Pad",
+          "level": 10,
+          "dir": "HORIZONTAL",
+          "pitch": 0.08,
+          "width": 0.04,
+          "track_patterns": [
+            [
+              0.116,
+              7019,
+              0.08
+            ]
+          ]
+        }
+      ],
+      "pin_geometry": {
+        "schema": "opentallas.fp_pin_geometry.v1",
+        "verdict": "PASS",
+        "fails": [],
+        "metrics": {
+          "signal_clock_pins": 1639,
+          "pin_rectangles": 1639,
+          "pin_track_checked": 1639,
+          "pin_track_inaccessible": 0,
+          "pin_rectangles_outside": 0,
+          "missing_geometry": 0
+        },
+        "dump": "corrected_e.json",
+        "dump_sha256": "e65dba979335056185b988aa7b77bdc92e891e5809b420e8d3f67ba68a33f992",
+        "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+      },
+      "input_odb_sha256": "5c9eb891656a3f5088aba07fd6293990217ab7dab9f4b7e6e5d1ffffeb1dff3e",
+      "corrected_dump_sha256": "e65dba979335056185b988aa7b77bdc92e891e5809b420e8d3f67ba68a33f992"
+    },
+    {
+      "variant": "f",
+      "identities_unchanged": true,
+      "BTerm_count": 1641,
+      "identity_sha256": "dc5b4bd3c24c089a2c2a34b0a2e34a6cea97d2f330574a11f8746fd6e3db7b1e",
+      "macros_unchanged": true,
+      "actual_DEF_layers": [
+        {
+          "name": "M1",
+          "level": 1,
+          "dir": "VERTICAL",
+          "pitch": 0.036,
+          "width": 0.018,
+          "track_patterns": [
+            [
+              0.009,
+              16800,
+              0.036
+            ]
+          ]
+        },
+        {
+          "name": "M2",
+          "level": 2,
+          "dir": "HORIZONTAL",
+          "pitch": 0.036,
+          "width": 0.018,
+          "track_patterns": [
+            [
+              0.045,
+              2240,
+              0.27
+            ],
+            [
+              0.081,
+              2240,
+              0.27
+            ],
+            [
+              0.117,
+              2240,
+              0.27
+            ],
+            [
+              0.153,
+              2240,
+              0.27
+            ],
+            [
+              0.189,
+              2240,
+              0.27
+            ],
+            [
+              0.225,
+              2240,
+              0.27
+            ],
+            [
+              0.27,
+              2239,
+              0.27
+            ]
+          ]
+        },
+        {
+          "name": "M3",
+          "level": 3,
+          "dir": "VERTICAL",
+          "pitch": 0.036,
+          "width": 0.018,
+          "track_patterns": [
+            [
+              0.009,
+              16800,
+              0.036
+            ]
+          ]
+        },
+        {
+          "name": "M4",
+          "level": 4,
+          "dir": "HORIZONTAL",
+          "pitch": 0.048,
+          "width": 0.024,
+          "track_patterns": [
+            [
+              0.012,
+              12600,
+              0.048
+            ]
+          ]
+        },
+        {
+          "name": "M5",
+          "level": 5,
+          "dir": "VERTICAL",
+          "pitch": 0.048,
+          "width": 0.024,
+          "track_patterns": [
+            [
+              0.012,
+              12600,
+              0.048
+            ]
+          ]
+        },
+        {
+          "name": "M6",
+          "level": 6,
+          "dir": "HORIZONTAL",
+          "pitch": 0.064,
+          "width": 0.032,
+          "track_patterns": [
+            [
+              0.016,
+              9450,
+              0.064
+            ]
+          ]
+        },
+        {
+          "name": "M7",
+          "level": 7,
+          "dir": "VERTICAL",
+          "pitch": 0.064,
+          "width": 0.032,
+          "track_patterns": [
+            [
+              0.016,
+              9450,
+              0.064
+            ]
+          ]
+        },
+        {
+          "name": "M8",
+          "level": 8,
+          "dir": "HORIZONTAL",
+          "pitch": 0.08,
+          "width": 0.04,
+          "track_patterns": [
+            [
+              0.116,
+              7559,
+              0.08
+            ]
+          ]
+        },
+        {
+          "name": "M9",
+          "level": 9,
+          "dir": "VERTICAL",
+          "pitch": 0.08,
+          "width": 0.04,
+          "track_patterns": [
+            [
+              0.116,
+              7559,
+              0.08
+            ]
+          ]
+        },
+        {
+          "name": "Pad",
+          "level": 10,
+          "dir": "HORIZONTAL",
+          "pitch": 0.08,
+          "width": 0.04,
+          "track_patterns": [
+            [
+              0.116,
+              7559,
+              0.08
+            ]
+          ]
+        }
+      ],
+      "pin_geometry": {
+        "schema": "opentallas.fp_pin_geometry.v1",
+        "verdict": "PASS",
+        "fails": [],
+        "metrics": {
+          "signal_clock_pins": 1639,
+          "pin_rectangles": 1639,
+          "pin_track_checked": 1639,
+          "pin_track_inaccessible": 0,
+          "pin_rectangles_outside": 0,
+          "missing_geometry": 0
+        },
+        "dump": "corrected_f.json",
+        "dump_sha256": "91c1d4c1ef393ed3cdc03b335bf2f49248ed0c930b4dc1a3503236d04c6144f2",
+        "validator_sha256": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8"
+      },
+      "input_odb_sha256": "1e573a11193263920a83557a495575f035746aa288583538142ab129da1c5d14",
+      "corrected_dump_sha256": "91c1d4c1ef393ed3cdc03b335bf2f49248ed0c930b4dc1a3503236d04c6144f2"
+    }
+  ]
+}
