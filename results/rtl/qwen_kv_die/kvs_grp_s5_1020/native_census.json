@@ -1,0 +1,9272 @@
+{
+ "qkd_kvs_grp_h_s3a-20261019-220148": {
+  "top": "qkd_kvs_grp_h_s2",
+  "netlist": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_h_s3a-20261019-220148/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_grp_h_s2_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "5e59d818794a97a762b917362e88de9d488a5c54cca61c13cc832c2e315f07fd",
+  "tool_sha256": "a9b5e333e696e0abe7749fa2d19e47b93787ee6b588e5d0c55ab2cd2e3214667",
+  "roots": 42766,
+  "max_loads": 399,
+  "violations": [
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 399,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[0].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[1].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[2].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[3].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 206,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 206,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 202,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 199,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[0].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[1].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[2].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[3].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_lcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 147,
+    "flops": 147,
+    "example": "u_lcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "_51493_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 146,
+    "flops": 1,
+    "example": "u_bcdc0.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_51505_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 145,
+    "flops": 1,
+    "example": "u_bcdc1.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_51677_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 144,
+    "flops": 1,
+    "example": "u_bcdc2.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_51526_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 143,
+    "flops": 1,
+    "example": "u_bcdc3.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_51640_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51824_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52115_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52271_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52427_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52581_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52735_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52890_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53046_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53201_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53355_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53510_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53665_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53820_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53974_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54128_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54283_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55457_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55748_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55904_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56060_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56214_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56369_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56523_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56678_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56832_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56986_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57140_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57294_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57449_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57603_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57757_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57912_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59082_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59373_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59529_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59686_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59840_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59996_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60150_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60305_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60459_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60613_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60767_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60921_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61076_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61230_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61384_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61539_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62719_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63010_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63166_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63323_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63477_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63632_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63786_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63941_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64095_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64249_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64403_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64557_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64712_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64866_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65173_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 112,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_drain.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 109,
+    "flops": 109,
+    "example": "u_drain.drained$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 91,
+    "flops": 1,
+    "example": "u_lcal.arm$_DFF_PN0_"
+   },
+   {
+    "net": "u_phase.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 86,
+    "flops": 86,
+    "example": "u_phase.fault_core$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_fcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 80,
+    "flops": 80,
+    "example": "u_fcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "u_rst.g_h[0].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc0.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[1].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc1.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[2].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc2.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[3].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc3.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.vrq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 74,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_69744_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 72,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51690_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51740_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51748_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48371_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54455_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54458_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54463_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54465_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54471_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54479_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54482_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54484_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54492_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58071_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58074_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58078_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58081_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58084_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58088_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58095_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58099_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58102_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58106_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58109_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58120_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61699_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61701_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61705_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61710_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61713_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61717_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61721_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61730_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61738_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61745_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61750_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61752_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65332_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65341_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65351_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65354_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65357_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65359_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65364_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65369_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65375_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65377_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65380_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65382_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65386_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_68452_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_54449_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54451_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54477_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58090_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58114_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58116_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58118_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61725_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61733_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61741_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61748_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65337_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65345_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65366_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65372_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54442_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54473_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54488_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47386_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 67,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50338_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 67,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54446_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 67,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47364_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 66,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47309_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 65,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49342_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_51288_/Y (XOR2x2_ASAP7_75t_R)",
+    "loads": 56,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47382_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 55,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50327_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 55,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47354_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_wa[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49276_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 50,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50287_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 50,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50370_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51563_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 1,
+    "example": "u_bcdcf.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "u_lcal.vpass$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 1,
+    "example": "u_lcal.r_sector[29]$_DFF_P_"
+   },
+   {
+    "net": "u_phase.hr$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 48,
+    "example": "u_phase.ctrl_go_h$_DFF_PN0_"
+   },
+   {
+    "net": "_48300_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47326_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49315_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.ad_q[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "_48334_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50299_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50355_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47333_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48288_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49324_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66348_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66436_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66485_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66534_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66587_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66640_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66687_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66749_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66846_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66943_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67040_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67137_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67235_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67332_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67429_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67527_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_68561_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.aq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49358_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 43,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 43,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48323_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48345_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_fcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50305_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49290_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49334_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47374_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48356_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51123_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51127_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[0].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[1].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[2].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[3].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.rc_c[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 37,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 37,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49295_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50348_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "_48309_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[10]$_DFF_P_"
+   }
+  ],
+  "pass_all_drivers_32": false
+ },
+ "qkd_kvs_grp_h_s3b-20261019-220148": {
+  "top": "qkd_kvs_grp_h_s2",
+  "netlist": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_h_s3b-20261019-220148/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_grp_h_s2_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "5e59d818794a97a762b917362e88de9d488a5c54cca61c13cc832c2e315f07fd",
+  "tool_sha256": "a9b5e333e696e0abe7749fa2d19e47b93787ee6b588e5d0c55ab2cd2e3214667",
+  "roots": 42766,
+  "max_loads": 399,
+  "violations": [
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 399,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[0].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[1].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[2].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[3].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 206,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 206,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 202,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 199,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[0].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[1].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[2].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[3].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_lcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 147,
+    "flops": 147,
+    "example": "u_lcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "_51493_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 146,
+    "flops": 1,
+    "example": "u_bcdc0.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_51505_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 145,
+    "flops": 1,
+    "example": "u_bcdc1.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_51677_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 144,
+    "flops": 1,
+    "example": "u_bcdc2.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_51526_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 143,
+    "flops": 1,
+    "example": "u_bcdc3.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_51640_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51824_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52115_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52271_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52427_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52581_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52735_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52890_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53046_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53201_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53355_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53510_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53665_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53820_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53974_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54128_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54283_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55457_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55748_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55904_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56060_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56214_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56369_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56523_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56678_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56832_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56986_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57140_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57294_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57449_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57603_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57757_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57912_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59082_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59373_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59529_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59686_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59840_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59996_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60150_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60305_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60459_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60613_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60767_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60921_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61076_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61230_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61384_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61539_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62719_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63010_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63166_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63323_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63477_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63632_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63786_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63941_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64095_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64249_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64403_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64557_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64712_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64866_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65173_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 112,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_drain.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 109,
+    "flops": 109,
+    "example": "u_drain.drained$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 91,
+    "flops": 1,
+    "example": "u_lcal.arm$_DFF_PN0_"
+   },
+   {
+    "net": "u_phase.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 86,
+    "flops": 86,
+    "example": "u_phase.fault_core$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_fcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 80,
+    "flops": 80,
+    "example": "u_fcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "u_rst.g_h[0].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc0.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[1].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc1.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[2].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc2.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[3].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc3.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.vrq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 74,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_69744_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 72,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51690_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51740_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51748_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48371_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54455_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54458_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54463_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54465_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54471_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54479_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54482_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54484_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54492_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58071_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58074_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58078_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58081_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58084_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58088_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58095_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58099_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58102_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58106_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58109_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58120_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61699_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61701_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61705_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61710_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61713_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61717_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61721_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61730_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61738_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61745_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61750_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61752_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65332_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65341_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65351_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65354_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65357_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65359_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65364_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65369_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65375_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65377_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65380_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65382_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65386_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_68452_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_54449_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54451_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54477_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58090_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58114_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58116_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58118_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61725_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61733_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61741_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61748_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65337_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65345_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65366_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65372_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54442_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54473_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54488_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47386_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 67,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50338_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 67,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54446_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 67,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47364_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 66,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47309_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 65,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49342_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_51288_/Y (XOR2x2_ASAP7_75t_R)",
+    "loads": 56,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47382_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 55,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50327_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 55,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47354_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_wa[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49276_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 50,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50287_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 50,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50370_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51563_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 1,
+    "example": "u_bcdcf.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "u_lcal.vpass$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 1,
+    "example": "u_lcal.r_sector[29]$_DFF_P_"
+   },
+   {
+    "net": "u_phase.hr$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 48,
+    "example": "u_phase.ctrl_go_h$_DFF_PN0_"
+   },
+   {
+    "net": "_48300_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47326_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49315_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.ad_q[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "_48334_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50299_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50355_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47333_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48288_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49324_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66348_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66436_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66485_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66534_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66587_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66640_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66687_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66749_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66846_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66943_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67040_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67137_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67235_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67332_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67429_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67527_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_68561_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.aq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49358_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 43,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 43,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48323_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48345_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_fcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50305_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49290_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49334_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47374_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48356_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51123_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51127_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[0].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[1].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[2].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[3].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.rc_c[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 37,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 37,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49295_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50348_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "_48309_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[5]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[10]$_DFF_P_"
+   }
+  ],
+  "pass_all_drivers_32": false
+ },
+ "qkd_kvs_grp_h_s4a-20261019-221603": {
+  "top": "qkd_kvs_grp_h_s4",
+  "netlist": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_h_s4a-20261019-221603/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_grp_h_s4_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "845d816cc9ac5f2ae9a441a7ad3694aab1d9f7a0b42ec6e9d8b5e86febdd1a53",
+  "tool_sha256": "a9b5e333e696e0abe7749fa2d19e47b93787ee6b588e5d0c55ab2cd2e3214667",
+  "roots": 43735,
+  "max_loads": 399,
+  "violations": [
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 399,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[0].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[1].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[2].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[3].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 206,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 206,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 202,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 197,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[0].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[1].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[2].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[3].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_lcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 147,
+    "flops": 147,
+    "example": "u_lcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "_49153_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 146,
+    "flops": 1,
+    "example": "u_bcdc0.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_49165_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 145,
+    "flops": 1,
+    "example": "u_bcdc1.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_49336_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 144,
+    "flops": 1,
+    "example": "u_bcdc2.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_49186_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 143,
+    "flops": 1,
+    "example": "u_bcdc3.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_48537_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49216_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49302_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49374_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49486_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49777_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49933_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50089_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50243_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50398_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50552_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50707_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50861_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51015_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51169_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51323_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51478_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51632_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51939_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53116_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53407_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53563_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53719_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53873_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54028_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54182_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54337_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54491_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54645_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54799_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54953_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55108_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55262_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55569_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56744_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57035_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57191_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57348_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57502_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57657_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57811_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57966_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58120_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58274_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58428_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58582_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58737_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58891_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59198_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60368_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60659_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60815_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60971_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61125_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61280_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61434_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61589_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61743_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61897_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62051_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62205_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62360_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62514_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62821_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 111,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_drain.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 109,
+    "flops": 109,
+    "example": "u_drain.drained$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 96,
+    "flops": 1,
+    "example": "u_lcal.arm$_DFF_PN0_"
+   },
+   {
+    "net": "u_phase.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 86,
+    "flops": 86,
+    "example": "u_phase.fault_core$_DFFE_PN0P_"
+   },
+   {
+    "net": "_45949_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 80,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46029_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 80,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_fcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 80,
+    "flops": 80,
+    "example": "u_fcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "u_rst.g_h[0].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc0.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[1].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc1.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[2].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc2.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[3].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc3.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.vrq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 74,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67357_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 72,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49349_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49400_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49408_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66164_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52098_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52103_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52106_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52110_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52113_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52115_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52125_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52128_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52135_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52140_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52144_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52146_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55728_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55732_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55734_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55737_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55742_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55746_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55749_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55751_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55755_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55758_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55762_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55765_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55769_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55771_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55773_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55775_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59358_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59361_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59368_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59375_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59378_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59380_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59389_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59405_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59407_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62981_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62986_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62988_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62991_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62995_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62998_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63000_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63004_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63006_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63010_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63013_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63017_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63020_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63023_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63025_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63027_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63029_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52119_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52121_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52132_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52142_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59371_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59384_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59396_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59365_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59393_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59400_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59403_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 67,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46931_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 66,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 66,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_47014_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 60,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_45020_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 57,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48027_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 57,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48947_/Y (XOR2x2_ASAP7_75t_R)",
+    "loads": 56,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47950_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 55,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_44946_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45969_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47998_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 52,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46999_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 51,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45963_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47968_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48015_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46971_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46981_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47989_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49226_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 1,
+    "example": "u_bcdcf.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "u_phase.hr$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 48,
+    "example": "u_phase.ctrl_go_h$_DFF_PN0_"
+   },
+   {
+    "net": "_46944_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48008_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_44988_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47963_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.vpass$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 1,
+    "example": "u_lcal.r_sector[29]$_DFF_P_"
+   },
+   {
+    "net": "_45040_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47907_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63996_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64084_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64133_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64182_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64235_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64288_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64335_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64397_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64581_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64678_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64775_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64872_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64970_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65067_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65260_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.aq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45009_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 43,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_fcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 43,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66277_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "_45033_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_44999_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45994_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46015_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45044_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46949_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45984_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46005_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46991_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48782_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48786_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[0].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[1].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[2].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[3].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_wa[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_lcal.rc_c[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.rc_c[3]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 33,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 33,
+    "flops": 0,
+    "example": null
+   }
+  ],
+  "pass_all_drivers_32": false
+ },
+ "qkd_kvs_grp_h_s4b-20261019-221603": {
+  "top": "qkd_kvs_grp_h_s4",
+  "netlist": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_h_s4b-20261019-221603/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_grp_h_s4_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "845d816cc9ac5f2ae9a441a7ad3694aab1d9f7a0b42ec6e9d8b5e86febdd1a53",
+  "tool_sha256": "a9b5e333e696e0abe7749fa2d19e47b93787ee6b588e5d0c55ab2cd2e3214667",
+  "roots": 43735,
+  "max_loads": 399,
+  "violations": [
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 399,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[0].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[1].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[2].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[3].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 206,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 206,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 202,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 197,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[0].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[1].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[2].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[3].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_lcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 147,
+    "flops": 147,
+    "example": "u_lcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "_49153_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 146,
+    "flops": 1,
+    "example": "u_bcdc0.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_49165_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 145,
+    "flops": 1,
+    "example": "u_bcdc1.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_49336_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 144,
+    "flops": 1,
+    "example": "u_bcdc2.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_49186_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 143,
+    "flops": 1,
+    "example": "u_bcdc3.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_48537_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49216_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49302_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49374_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49486_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49777_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49933_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50089_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50243_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50398_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50552_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50707_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50861_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51015_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51169_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51323_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51478_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51632_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51939_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53116_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53407_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53563_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53719_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53873_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54028_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54182_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54337_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54491_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54645_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54799_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54953_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55108_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55262_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55569_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56744_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57035_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57191_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57348_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57502_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57657_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57811_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57966_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58120_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58274_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58428_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58582_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58737_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58891_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59198_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60368_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60659_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60815_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60971_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61125_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61280_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61434_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61589_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61743_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61897_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62051_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62205_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62360_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62514_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62821_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 111,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_drain.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 109,
+    "flops": 109,
+    "example": "u_drain.drained$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 96,
+    "flops": 1,
+    "example": "u_lcal.arm$_DFF_PN0_"
+   },
+   {
+    "net": "u_phase.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 86,
+    "flops": 86,
+    "example": "u_phase.fault_core$_DFFE_PN0P_"
+   },
+   {
+    "net": "_45949_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 80,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46029_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 80,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_fcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 80,
+    "flops": 80,
+    "example": "u_fcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "u_rst.g_h[0].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc0.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[1].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc1.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[2].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc2.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[3].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc3.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.vrq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 74,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67357_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 72,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49349_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49400_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49408_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66164_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52098_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52103_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52106_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52110_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52113_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52115_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52125_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52128_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52135_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52140_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52144_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52146_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55728_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55732_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55734_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55737_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55742_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55746_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55749_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55751_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55755_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55758_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55762_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55765_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55769_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55771_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55773_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55775_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59358_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59361_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59368_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59375_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59378_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59380_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59389_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59405_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59407_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62981_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62986_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62988_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62991_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62995_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62998_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63000_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63004_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63006_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63010_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63013_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63017_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63020_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63023_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63025_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63027_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63029_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52119_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52121_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52132_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52142_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59371_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59384_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59396_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 69,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59365_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59393_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59400_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 68,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59403_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 67,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46931_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 66,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 66,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_47014_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 60,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_45020_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 57,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48027_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 57,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48947_/Y (XOR2x2_ASAP7_75t_R)",
+    "loads": 56,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47950_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 55,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_44946_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45969_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47998_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 52,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46999_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 51,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45963_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47968_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48015_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46971_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46981_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47989_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49226_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 1,
+    "example": "u_bcdcf.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "u_phase.hr$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 48,
+    "example": "u_phase.ctrl_go_h$_DFF_PN0_"
+   },
+   {
+    "net": "_46944_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48008_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_44988_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47963_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.vpass$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 1,
+    "example": "u_lcal.r_sector[29]$_DFF_P_"
+   },
+   {
+    "net": "_45040_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47907_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63996_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64084_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64133_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64182_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64235_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64288_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64335_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64397_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64581_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64678_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64775_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64872_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64970_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65067_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65260_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.aq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45009_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 43,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_fcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 43,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66277_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "_45033_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_44999_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45994_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46015_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45044_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46949_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_45984_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46005_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_46991_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48782_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48786_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[0].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[1].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[2].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[3].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_wa[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 36,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_lcal.rc_c[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.rc_c[3]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 33,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 33,
+    "flops": 0,
+    "example": null
+   }
+  ],
+  "pass_all_drivers_32": false
+ },
+ "qkd_kvs_grp_s3a-20261019-220148": {
+  "top": "qkd_kvs_grp_s2",
+  "netlist": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_s3a-20261019-220148/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_grp_s2_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "6e63289015b52ea3a5e05af57550e2a80ba885c4071e4d1f5dd9c98a4a6f5943",
+  "tool_sha256": "a9b5e333e696e0abe7749fa2d19e47b93787ee6b588e5d0c55ab2cd2e3214667",
+  "roots": 43694,
+  "max_loads": 399,
+  "violations": [
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 399,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 397,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[0].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[1].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[2].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[3].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 206,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 205,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 202,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 199,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[0].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[1].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[2].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[3].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_lcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 147,
+    "flops": 147,
+    "example": "u_lcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "_52355_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 146,
+    "flops": 1,
+    "example": "u_bcdc2.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_49551_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 145,
+    "flops": 1,
+    "example": "u_bcdc1.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_52175_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 144,
+    "flops": 1,
+    "example": "u_bcdc0.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_52211_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 143,
+    "flops": 1,
+    "example": "u_bcdc3.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_52324_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52394_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52477_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52494_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52785_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52941_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53097_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53251_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53406_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53560_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53715_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53869_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54023_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54177_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54331_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54486_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54640_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54947_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56112_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56403_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56559_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56715_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56869_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57024_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57178_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57333_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57487_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57641_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57795_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57949_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58104_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58258_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58412_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58567_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59744_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60035_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60191_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60347_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60501_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60656_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60810_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60965_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61119_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61273_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61427_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61581_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61736_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61890_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62197_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63370_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63661_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63817_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63973_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64127_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64282_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64436_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64591_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64745_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64899_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65053_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65207_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65362_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65516_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65823_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 111,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_drain.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 109,
+    "flops": 109,
+    "example": "u_drain.drained$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 91,
+    "flops": 1,
+    "example": "u_lcal.arm$_DFF_PN0_"
+   },
+   {
+    "net": "u_phase.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 86,
+    "flops": 86,
+    "example": "u_phase.fault_core$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_fcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 80,
+    "flops": 80,
+    "example": "u_fcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "u_rst.g_h[0].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc0.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[1].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc1.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[2].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc2.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[3].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc3.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "_49960_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 74,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.vrq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 74,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51014_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 73,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_69127_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 72,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_70422_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 72,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52369_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55106_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55110_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55115_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55119_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55121_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55124_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55126_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55129_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55131_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55135_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55138_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55142_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55145_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55149_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55152_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55154_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55156_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58726_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58729_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58731_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58736_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58740_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58744_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58746_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58750_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58752_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58756_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58759_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58762_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58764_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58768_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58770_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58772_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58774_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62356_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62359_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62361_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62365_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62368_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62372_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62375_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62379_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62383_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62386_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62390_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62393_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62397_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62399_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62401_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62403_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65983_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65986_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65988_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65995_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65997_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66001_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66003_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66006_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66008_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66012_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66015_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66019_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66022_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66025_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66028_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66030_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66032_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48044_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 66,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47997_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 65,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51045_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 65,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 64,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_48965_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 60,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50026_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_51004_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 58,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51964_/Y (XOR2x2_ASAP7_75t_R)",
+    "loads": 56,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48027_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 55,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48035_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48062_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 53,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.vpass$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 1,
+    "example": "u_lcal.r_sector[29]$_DFF_P_"
+   },
+   {
+    "net": "_48067_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49009_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50977_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52248_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 1,
+    "example": "u_bcdcf.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "u_phase.hr$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 48,
+    "example": "u_phase.ctrl_go_h$_DFF_PN0_"
+   },
+   {
+    "net": "_50966_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51031_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51024_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48015_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50009_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50926_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48998_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67004_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67092_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67141_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67190_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67244_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67294_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67341_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67403_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67500_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67597_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67694_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67791_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67889_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67986_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_68179_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_fcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.aq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49019_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 43,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48976_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49999_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50982_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48984_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49973_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49029_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50019_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.q[8]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "_48054_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.rc_c[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50038_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51797_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51801_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.rc_c[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[0].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[1].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[2].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[3].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49044_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 37,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49977_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 37,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.rc_c[3]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "_69254_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 0,
+    "example": null
+   }
+  ],
+  "pass_all_drivers_32": false
+ },
+ "qkd_kvs_grp_s3b-20261019-220148": {
+  "top": "qkd_kvs_grp_s2",
+  "netlist": "/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_grp_s3b-20261019-220148/routes/gate/work/orfs/results/asap7/opentallas_qkd_kvs_grp_s2_asap7_ref_gate/base/1_2_yosys.v",
+  "sha256": "6e63289015b52ea3a5e05af57550e2a80ba885c4071e4d1f5dd9c98a4a6f5943",
+  "tool_sha256": "a9b5e333e696e0abe7749fa2d19e47b93787ee6b588e5d0c55ab2cd2e3214667",
+  "roots": 43694,
+  "max_loads": 399,
+  "violations": [
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 399,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 398,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 397,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[0].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[1].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[2].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_rsp.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 295,
+    "flops": 295,
+    "example": "u_slg.g_hop[3].u_rsp.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 206,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 205,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 202,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 199,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_arm$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 174,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[0].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[1].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[2].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 162,
+    "flops": 162,
+    "example": "u_slg.g_pc[3].u_pc.active_epoch[0]$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_lcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 147,
+    "flops": 147,
+    "example": "u_lcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "_52355_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 146,
+    "flops": 1,
+    "example": "u_bcdc2.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_49551_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 145,
+    "flops": 1,
+    "example": "u_bcdc1.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_52175_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 144,
+    "flops": 1,
+    "example": "u_bcdc0.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_52211_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 143,
+    "flops": 1,
+    "example": "u_bcdc3.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "_52324_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52394_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52477_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 141,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52494_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52785_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52941_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53097_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53251_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53406_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53560_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53715_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_53869_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54023_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54177_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54331_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54486_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54640_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_54947_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56112_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56403_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56559_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56715_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_56869_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57024_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57178_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57333_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57487_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57641_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57795_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_57949_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58104_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58258_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58412_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58567_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_59744_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60035_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60191_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60347_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60501_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60656_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60810_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_60965_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61119_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61273_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61427_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61581_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61736_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_61890_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62197_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63370_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63661_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63817_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_63973_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64127_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64282_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64436_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64591_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64745_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_64899_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65053_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65207_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65362_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65516_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65823_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 140,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[0]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ptk[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 128,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 111,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_drain.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 109,
+    "flops": 109,
+    "example": "u_drain.drained$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 106,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 91,
+    "flops": 1,
+    "example": "u_lcal.arm$_DFF_PN0_"
+   },
+   {
+    "net": "u_phase.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 86,
+    "flops": 86,
+    "example": "u_phase.fault_core$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_fcal.rn$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 80,
+    "flops": 80,
+    "example": "u_fcal.act$_DFF_PN0_"
+   },
+   {
+    "net": "u_rst.g_h[0].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc0.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[1].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc1.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[2].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc2.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "u_rst.g_h[3].h2$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 75,
+    "flops": 74,
+    "example": "u_bcdc3.applied_hbm$_DFFE_PN0P_"
+   },
+   {
+    "net": "_49960_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 74,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.vrq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 74,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51014_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 73,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_69127_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 72,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_70422_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 72,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52369_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 71,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55106_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55110_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55115_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55119_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55121_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55124_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55126_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55129_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55131_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55135_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55138_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55142_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55145_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55149_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55152_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55154_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_55156_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58726_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58729_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58731_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58736_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58740_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58744_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58746_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58750_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58752_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58756_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58759_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58762_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58764_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58768_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58770_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58772_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_58774_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62356_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62359_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62361_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62365_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62368_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62372_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62375_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62379_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62383_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62386_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62390_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62393_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62397_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62399_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62401_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_62403_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65983_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65986_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65988_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65995_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_65997_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66001_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66003_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66006_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66008_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66012_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66015_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66019_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66022_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66025_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66028_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66030_/Y (OR4x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_66032_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 70,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48044_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 66,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_47997_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 65,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51045_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 65,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 64,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_48965_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 60,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50026_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 59,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[6]$_DFF_P_"
+   },
+   {
+    "net": "_51004_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 58,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51964_/Y (XOR2x2_ASAP7_75t_R)",
+    "loads": 56,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48027_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 55,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48035_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 54,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48062_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 53,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.vpass$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 49,
+    "flops": 1,
+    "example": "u_lcal.r_sector[29]$_DFF_P_"
+   },
+   {
+    "net": "_48067_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49009_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50977_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_52248_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 1,
+    "example": "u_bcdcf.sink_we$_DFF_PN0_"
+   },
+   {
+    "net": "u_phase.hr$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 48,
+    "flops": 48,
+    "example": "u_phase.ctrl_go_h$_DFF_PN0_"
+   },
+   {
+    "net": "_50966_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51031_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 47,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51024_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 46,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48015_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50009_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50926_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 45,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48998_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67004_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67092_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67141_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67190_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67244_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67294_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67341_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67403_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67500_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67597_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67694_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67791_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67889_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_67986_/Y (NAND2x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_68179_/Y (OR3x1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_fcal.kgo_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.u_rowctl.g_vreq.aq$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 44,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49019_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 43,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48976_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49999_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50982_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 42,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_48984_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49973_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 41,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49029_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50019_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.q[8]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 40,
+    "flops": 1,
+    "example": "u_slg.g_pc[0].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "_48054_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.rc_c[2]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[0].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 39,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_50038_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51797_/Y (OR2x2_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_51801_/Y (NOR2x1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.rc_c[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_hop[0].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[0].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[1].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[1].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[2].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[2].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_hop[3].u_req.u.rn$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 38,
+    "example": "u_slg.g_hop[3].u_req.u.b[0]$_DFF_PN0_"
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_put$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 38,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49044_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 37,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "_49977_/Y (AND3x1_ASAP7_75t_R)",
+    "loads": 37,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_lcal.rc_c[3]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 0,
+    "example": null
+   },
+   {
+    "net": "u_slg.g_pc[1].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[1].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[2].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[2].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "u_slg.g_pc[3].u_pc.g_chk1.k_ra[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)",
+    "loads": 35,
+    "flops": 1,
+    "example": "u_slg.g_pc[3].u_pc.out_t[9]$_DFF_P_"
+   },
+   {
+    "net": "_69254_/Y (AND2x2_ASAP7_75t_R)",
+    "loads": 34,
+    "flops": 0,
+    "example": null
+   }
+  ],
+  "pass_all_drivers_32": false
+ }
+}

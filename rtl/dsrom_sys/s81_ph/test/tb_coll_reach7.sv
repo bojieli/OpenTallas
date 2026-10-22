@@ -8,7 +8,7 @@
 // credit model stays inside 0..8, both pairs end with the same fault flags, and the safe7 pair delivers >= 97% of the
 // reference words.  With +define+OT_COLL_REACH8 the DUT pair is safe8 (REACH = 2: + endpoint RX FIFO write landing); +define+OT_COLL_REACH8N (with REACH8) = the parameter-free tf-less MU-die tops dsfd_coll_lane_{w,e}_safe8_ntf.  Prints the mean lo->li latency of both pairs (the added cycles, for the schedule ledger).
 module tb_coll_reach7;
- parameter integer NCYC=40000, CORE_CRED=8;
+ parameter integer NCYC=40000;
  reg clk=0,rst_n=0;always #0.5 clk=~clk;
  reg [31:0] rng=32'h8117c055;
  reg [1:0] lv[0:1], ret[0:1];
@@ -29,7 +29,7 @@ module tb_coll_reach7;
     .lo_v(lv[v][1]),.lo_r(cr[v][1]),.lo_d(ld[v][1]),.li_v(ov[v][1]),.li_r(ret[v][1]),.li_d(od[v][1]),.flt(flt[v][1]));
   end else begin:dut7
 `ifdef OT_COLL_REACH8N
-   dsfd_coll_lane_w_safe8_ntf #(.CORE_CRED(CORE_CRED)) w(
+   dsfd_coll_lane_w_safe8_ntf w(
 `elsif OT_COLL_REACH8
    dsfd_coll_lane_w_safe8 w(
 `else
@@ -38,7 +38,7 @@ module tb_coll_reach7;
     .ck(clk),.rs(rst_n),.chb(1'b1),.rx({1'b0,1'b1,tx[v][1]^imp[1],rxv[1]}),.tx(tx[v][0]),
     .lo_v(lv[v][0]),.lo_r(cr[v][0]),.lo_d(ld[v][0]),.li_v(ov[v][0]),.li_r(ret[v][0]),.li_d(od[v][0]),.flt(flt[v][0]));
 `ifdef OT_COLL_REACH8N
-   dsfd_coll_lane_e_safe8_ntf #(.CORE_CRED(CORE_CRED)) e(
+   dsfd_coll_lane_e_safe8_ntf e(
 `elsif OT_COLL_REACH8
    dsfd_coll_lane_e_safe8 e(
 `else
@@ -56,11 +56,11 @@ module tb_coll_reach7;
  integer c=0,err=0,ep=0,i,j,b;
  integer credits[0:1][0:1],pending[0:1][0:1],sk[0:1][0:1],rk[0:1][0:1],sent[0:1],got[0:1];
  longint lat[0:1]; integer tsend[0:1][0:1][0:4095];
- initial for(i=0;i<2;i=i+1) for(j=0;j<2;j=j+1) begin credits[i][j]=(i==1)?CORE_CRED:8;pending[i][j]=0;sk[i][j]=0;rk[i][j]=0;ld[i][j]=0;lv[i]=0;ret[i]=0;sent[i]=0;got[i]=0;lat[i]=0; end
+ initial for(i=0;i<2;i=i+1) for(j=0;j<2;j=j+1) begin credits[i][j]=8;pending[i][j]=0;sk[i][j]=0;rk[i][j]=0;ld[i][j]=0;lv[i]=0;ret[i]=0;sent[i]=0;got[i]=0;lat[i]=0; end
  always @(negedge clk) begin
   c=c+1;
   for(i=0;i<2;i=i+1) for(j=0;j<2;j=j+1) begin
-   if(!rst_n) begin credits[i][j]=(i==1)?CORE_CRED:8;pending[i][j]=0;sk[i][j]=0;rk[i][j]=0; end
+   if(!rst_n) begin credits[i][j]=8;pending[i][j]=0;sk[i][j]=0;rk[i][j]=0; end
    else begin
     // the word on li of side j (sampled this cycle) came from lo of side 1-j
     if(ov[i][j]) begin
@@ -72,7 +72,7 @@ module tb_coll_reach7;
     credits[i][j]=credits[i][j]+int'(cr[i][j])-int'(lv[i][j]);
     pending[i][j]=pending[i][j]+int'(ov[i][j])-int'(ret[i][j]);
     if(lv[i][j]) begin tsend[i][j][sk[i][j]%4096]=c-1; sk[i][j]=sk[i][j]+1; sent[i]=sent[i]+1; end
-    if(credits[i][j]<0||credits[i][j]>((i==1)?CORE_CRED:8)||pending[i][j]<0||pending[i][j]>((i==1)?CORE_CRED:8))begin err=err+1;if(err<8)$display("COLL_CREDIT_MODEL_ERR variant=%0d cycle=%0d side=%0d credits=%0d pending=%0d",i,c,j,credits[i][j],pending[i][j]);end
+    if(credits[i][j]<0||credits[i][j]>8||pending[i][j]<0||pending[i][j]>8)begin err=err+1;if(err<8)$display("COLL_CREDIT_MODEL_ERR variant=%0d cycle=%0d side=%0d credits=%0d pending=%0d",i,c,j,credits[i][j],pending[i][j]);end
    end
   end
   rng=rng^(rng<<13);rng=rng^(rng>>17);rng=rng^(rng<<5);

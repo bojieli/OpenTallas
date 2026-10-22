@@ -24,7 +24,7 @@ class PortClockBind(unittest.TestCase):
  def link(self,port,source=True):
   ends=[[0,port,0,0,'box'],[1,'i',100,0,'box']] if source else [[1,'o',100,0,'box'],[0,port,0,0,'box']]
   return dict(i='clock_probe',e=ends)
- def emitted(self,wrong=False,zero=False,forwarded=False):
+ def emitted(self,wrong=False,zero=False,forwarded=False,prune=None):
   table=copy.deepcopy(self.table)
   table['landing_reset_stages']={'dsfd_dvland_276':2}
   blocks=[dict(name='lep',master='regional',group='clC',x=100,y=100,w=100,h=100),
@@ -58,6 +58,17 @@ class PortClockBind(unittest.TestCase):
   reset=dict(verilog=[],depth={'rs0':2,'rs1':6},block_leaf={'lep':'rs0','other':'rs1'},
    block_parent={'lep':'rs0','other':'rs1'},block_pin={'lep':(200,150),'other':(600,150)},
    station_leaf={(n,0):'rs0' for n in chains},place=[],summary={'stations':0,'root_xy':[400,0]})
+  if prune is not None:
+   table['prune_unused_reset_leaves']=prune
+   reset['verilog']=[
+    '  wire rs_9_0;', '  reset_relay st_rs_9_0 (.ck(ck_clC), .rs(rs0), .i(rs0), .o(rs_9_0));',
+    '  wire rs_9_1;', '  reset_relay st_rs_9_1 (.ck(ck_clC), .rs(rs_9_0), .i(rs_9_0), .o(rs_9_1));',
+    '  wire rs_9_2;', '  reset_relay st_rs_9_2 (.ck(ck_clC), .rs(rs0), .i(rs0), .o(rs_9_2));']
+   reset['place']=[dict(inst=f'st_rs_9_{i}',master='reset_relay',orient='R0',xy=[100,100],kind='street') for i in range(3)]
+   reset['summary']['stations']=3
+   reset['block_leaf']['lep']='rs_9_2'
+   reset['depth']['rs_9_2']=2
+  self.last_reset=reset
   with tempfile.TemporaryDirectory() as td:
    root=Path(td);tp=root/'table.json';tp.write_text(json.dumps(table))
    with patch.object(D,'reset_tree',return_value=reset):D.emit(plan,root/'out',tp,dirs,chains,run_bind=False)
@@ -78,6 +89,22 @@ class PortClockBind(unittest.TestCase):
    self.assertRegex(text,rf'fwdi_lo{i} \(\.A\({root}\)')
  def test_production_forwarded_and_explicit_clock_refused(self):
   with self.assertRaisesRegex(ValueError,'forwarded-clock output is unsupported'):self.emitted(forwarded=True)
+ def test_production_unused_reset_pruning_is_opt_in(self):
+  text=self.emitted(prune=False)
+  self.assertIn('reset_relay st_rs_9_0 (',text)
+  self.assertIn('reset_relay st_rs_9_1 (',text)
+  self.assertIn('reset_relay st_rs_9_2 (',text)
+  self.assertEqual(self.last_reset['summary']['stations'],3)
+ def test_production_unused_reset_multilevel_twig_pruned_live_sibling_kept(self):
+  text=self.emitted(prune=True)
+  self.assertNotIn('st_rs_9_0 (',text)
+  self.assertNotIn('st_rs_9_1 (',text)
+  self.assertNotIn('wire rs_9_0;',text)
+  self.assertNotIn('wire rs_9_1;',text)
+  self.assertIn('reset_relay st_rs_9_2 (.ck(ck_clC), .rs(rs0), .i(rs0), .o(rs_9_2));',text)
+  self.assertEqual(self.last_reset['depth']['rs_9_2'],2)
+  self.assertEqual(self.last_reset['summary']['stations'],1)
+  self.assertEqual(set(self.last_reset['summary']['pruned_unused_reset_stations']),{'st_rs_9_0','st_rs_9_1'})
  def test_production_emission_wrong_B_mapping_refused(self):
   with self.assertRaisesRegex(ValueError,'exact distinct'):self.emitted(wrong=True)
  def test_actual_A_B_source_and_receiver_roots(self):

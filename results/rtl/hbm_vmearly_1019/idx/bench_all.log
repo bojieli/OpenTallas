@@ -1,0 +1,13 @@
+ot-run: ot-epyc6       admits   817 GB (avail 686, growth 113, headroom 0, waiters 0/0 GB) load 73/128 running 29 disk 5367 GB 
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2634962-1792461864 after 0 s
+CASE ia0 IDX_VME_N12 MUT0 IA0 EXPECT0 vmrt171 LB183 QL14 G4 blocks512 uses128 errors0 lb_bad0 fault0 exposed_r1 198 exposed_r2_dep 198 exposed_r3 198 raw_r2 827 A 208 534 860 1186 last_use 534 860 1186 1512 span 1102 lb_meas 183 digest c851296ee2039919 IDX_VME_N12 PASS 
+CASE ia1 IDX_VME_N12 MUT0 IA1 EXPECT1 vmrt171 LB183 QL14 G4 blocks512 uses128 errors0 lb_bad0 fault0 exposed_r1 15 exposed_r2_dep 165 exposed_r3 15 raw_r2 644 A 208 351 644 787 last_use 534 677 970 1113 span 703 lb_meas 183 digest c851296ee2039919 IDX_VME_N12 PASS 
+CASE ia0_g16 IDX_VME_N12 MUT0 IA0 EXPECT0 vmrt171 LB183 QL14 G16 blocks512 uses128 errors0 lb_bad0 fault0 exposed_r1 186 exposed_r2_dep 186 exposed_r3 186 raw_r2 1571 A 208 906 1604 2302 last_use 906 1604 2302 3000 span 2590 lb_meas 183 digest c851296ee2039919 IDX_VME_N12 PASS 
+CASE ia1_g16 IDX_VME_N12 MUT0 IA1 EXPECT1 vmrt171 LB183 QL14 G16 blocks512 uses128 errors0 lb_bad0 fault0 exposed_r1 3 exposed_r2_dep 153 exposed_r3 3 raw_r2 1388 A 208 723 1388 1903 last_use 906 1421 2086 2601 span 2191 lb_meas 183 digest c851296ee2039919 IDX_VME_N12 PASS 
+DIGEST EQUAL digest c851296ee2039919
+CASE mut1 IDX_VME_N12 MUT1 IA1 EXPECT1 vmrt171 LB183 QL14 G4 blocks512 uses125 errors167 lb_bad0 fault1 exposed_r1 0 exposed_r2_dep 0 exposed_r3 0 raw_r2 631 A 208 338 468 598 last_use 540 674 808 924 span 514 lb_meas 183 digest 3341fc3707757036 IDX_VME_N12 FAIL data/fault 
+CASE mut2 IDX_VME_N12 MUT2 IA1 EXPECT1 vmrt171 LB183 QL14 G4 blocks512 uses128 errors160 lb_bad0 fault0 exposed_r1 15 exposed_r2_dep 15 exposed_r3 15 raw_r2 644 A 208 351 494 637 last_use 534 677 820 963 span 553 lb_meas 183 digest 076ea1b995c5bdc5 IDX_VME_N12 FAIL data/fault 
+CASE mut3 IDX_VME_N12 MUT3 IA0 EXPECT1 vmrt171 LB183 QL14 G4 blocks512 uses128 errors0 lb_bad0 fault0 exposed_r1 198 exposed_r2_dep 198 exposed_r3 198 raw_r2 827 A 208 534 860 1186 last_use 534 860 1186 1512 span 1102 lb_meas 183 digest c851296ee2039919 IDX_VME_N12 FAIL exposure 
+VME_IDX_BENCH PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2634962-1792461864): exit 0

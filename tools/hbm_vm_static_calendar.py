@@ -74,8 +74,12 @@ def pack(spec, values):
     return result
 
 
-def validate_resources(spec, cycles, loops):
+def validate_resources(spec, cycles, loops, lg_pad=None):
     """Check actual bank selectors and the fixed two-edge LG tap transports.
+
+    lg_pad (TOK-FUNC-HBM-PAY 10-21): {'read': n, 'write': m} extra fixed edges on the die's LG REQUEST lanes between
+    the taps and the bank pins (l12 bank-latency pads, e.g. r14 HC chain read 6+2+7 = 15, write 0); default 0 = the
+    unpadded GEN2 transport 2*(tap+1).
 
     Dedicated engine command streams must independently prove their request
     traces. Here local-read/write bits denote reserved real LG requests, so
@@ -108,7 +112,17 @@ def validate_resources(spec, cycles, loops):
         numeric.append(values)
     # A maximum six-edge tap transport can only overlap this many neighboring
     # loop iterations. Checking their real absolute times avoids modulo aliases.
-    representative_loops = min(loops, 2 + 6//len(cycles))
+    if lg_pad is None:
+        lg_pad = {}
+    if type(lg_pad) is not dict:
+        raise ValueError('lg_pad must be an object with read/write integer depths')
+    unknown = set(lg_pad) - {'read', 'write'}
+    if unknown:
+        raise ValueError(f'Unknown lg_pad keys: {sorted(map(repr, unknown))}')
+    pad = {kind: lg_pad.get(kind, 0) for kind in ('read', 'write')}
+    if any(type(depth) is not int or depth < 0 for depth in pad.values()):
+        raise ValueError('lg_pad read/write depths must be nonnegative integers')
+    representative_loops = min(loops, 2 + (6 + max(pad.values()))//len(cycles))
     arrivals = {}
     for iteration in range(representative_loops):
         for offset, values in enumerate(numeric):
@@ -118,7 +132,7 @@ def validate_resources(spec, cycles, loops):
                     for bank in range(8):
                         if not ((values.get(name, 0) >> (tap*8+bank)) & 1):
                             continue
-                        arrival = edge + 2*(tap+1)
+                        arrival = edge + 2*(tap+1) + pad[kind]
                         key = (kind, arrival, bank)
                         if key in arrivals:
                             raise ValueError(f'LG {kind} collision at bank {bank}, edge {arrival}')
@@ -134,10 +148,10 @@ def validate_resources(spec, cycles, loops):
     # The final iteration also needs enough fixed drain cycles even for large
     # loop counts not enumerated above.
     for offset, values in enumerate(numeric):
-        for field in ('lg_local_read', 'lg_local_write'):
+        for field, kind in (('lg_local_read', 'read'), ('lg_local_write', 'write')):
             for tap in range(3):
                 if (values.get(field, 0) >> (8*tap)) & 255:
-                    if offset+2*(tap+1) >= len(cycles):
+                    if offset+2*(tap+1)+pad[kind] >= len(cycles):
                         raise ValueError('last loop would leave an LG request after programme end')
 
 
@@ -149,7 +163,7 @@ def compile_schedule(spec, schedule):
         raise ValueError('Programme must occupy a nonempty range of actual 1024-word SRAM')
     if not 1 <= loops <= 65535:
         raise ValueError('Loop count must fit the actual nonzero 16-bit counter')
-    validate_resources(spec, cycles, loops)
+    validate_resources(spec, cycles, loops, schedule.get('lg_pad'))
     writes = []
     for offset, values in enumerate(cycles):
         pc = base + offset

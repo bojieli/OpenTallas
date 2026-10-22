@@ -42,23 +42,25 @@ def writer_ages(relay):
     return out
 
 
-def emb_calendar(ctrl_lat, relay, stack_order=(0, 1, 2, 3)):
+def emb_calendar(ctrl_lat, relay, stack_order=(0, 1, 2, 3), return_relay=(0, 0, 0, 0)):
     """Absolute edges relative to r, and each PC's 8 player offsets.  ctrl_lat: controller es -> er (exact)."""
+    if len(relay) != 4 or len(return_relay) != 4 or any(x < 0 for x in (*relay, *return_relay)):
+        raise ValueError('four nonnegative down / return ages required')
     L = ctrl_lat
     issue = PLAYER + max(chain_in(s, 0, relay) for s in range(4))       # earliest edge the farthest player can issue
     ret = issue + MERGE + L
     cap = ret + 1                                                        # strap beat_v = return_slot + 1
-    j0 = cap + 1 + TRAIN_HOP * N                                         # first stack's slot 0: T = J0 - 64 = cap + 1
+    j0 = cap + 1 + TRAIN_HOP * N + max(return_relay)                                         # first stack's slot 0: T = J0 - 64 = cap + 1
     pcs, beats = {}, []
     u_scale = j0 + 4 * N + 1                                             # one-edge gap after the 128 code beats
     for k, s in enumerate(stack_order):
         for p in range(N):
             u = j0 + N * k + p
-            t = u - TRAIN_HOP * (N - p)                                  # transfer: root word at u = t + 2 + 2(31-p)
+            t = u - TRAIN_HOP * (N - p) - return_relay[s]                                  # transfer: root word at u = t + 2 + 2(31-p)
             i2 = max(ret + 1, t - 2 - L)                                 # scale issue: after the code return, and its
             r2 = i2 + MERGE + L                                          # capture after the code transfer
             c2 = r2 + 1
-            t2 = u_scale - TRAIN_HOP * (N - p)
+            t2 = u_scale - TRAIN_HOP * (N - p) - return_relay[s]
             assert t >= cap + 1 and c2 >= t + 1 and t2 >= c2 + 1, (s, p)
             a = chain_in(s, p, relay)
             ab = dict(ISS=issue, RET=ret, CAP=cap, TRN=t, SISS=i2, SRET=r2, SCAP=c2, STRN=t2)
@@ -70,7 +72,7 @@ def emb_calendar(ctrl_lat, relay, stack_order=(0, 1, 2, 3)):
     segs = [dict(off=j0 - 3, len=4 * N), dict(off=u_scale - 3, len=1)]
     words = [dict(edge=b['u'] + 2, word=b['word'], scale=0) for b in beats if b['half'] == 1]
     words.append(dict(edge=u_scale + 2, word=0, scale=1))
-    return dict(ctrl_lat=L, relay=list(relay), stack_order=list(stack_order), issue=issue, code_return=ret,
+    return dict(ctrl_lat=L, relay=list(relay), return_relay=list(return_relay), stack_order=list(stack_order), issue=issue, code_return=ret,
                 first_root_beat=j0, scale_root_beat=u_scale, last_word=u_scale + 2, beat_segments=segs, words=words,
                 pcs=pcs)
 

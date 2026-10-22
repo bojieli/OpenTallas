@@ -1,0 +1,5 @@
+LP_LOCKSTEP PASS MUT=0 compared=8904 cycles=3000 warm=31
+- rtl/dsrom_sys/s81_link/ucie/lp/tb_ot_pdie_ucie_col.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.009 s; speed 333.910 us/s
+- Verilator: cpu 0.009 s on 1 threads; allocated 7 MB

@@ -1,0 +1,6 @@
+IDX_VME_N12 MUT0 IA1 EXPECT1 vmrt171 LB183 QL14 G16 blocks512 uses128 errors0 lb_bad0 fault0 exposed_r1 3 exposed_r2_dep 153 exposed_r3 3 raw_r2 1388 A 208 723 1388 1903 last_use 906 1421 2086 2601 span 2191 lb_meas 183 digest c851296ee2039919
+IDX_VME_N12 PASS
+- rtl/test/hbm_idx_static/tb_idx_vme_n12.sv:193: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 26us; walltime 0.199 s; speed 131.650 us/s
+- Verilator: cpu 0.199 s on 1 threads; allocated 9 MB

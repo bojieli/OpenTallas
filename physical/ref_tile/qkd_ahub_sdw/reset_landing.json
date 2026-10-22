@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_ahub_static_dw",
+ "enable": false,
+ "reason": "the RTL lands it: the rst_n port drives ONLY the 2 registered stages s0 -> s1 of u_rr (rtl/lib/ot_rst_pipe.sv, keep/dont_touch, async-assert synchroniser), then 7 regional relay pipes (io, core, 4 Z trees, reciprocal leaf) fan out; port sinks = 2 <= rst_land_max 2.  A kit landing would add 2 more reset-release edges for nothing."
+}

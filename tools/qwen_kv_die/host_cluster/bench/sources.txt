@@ -5,6 +5,7 @@ physical/asap7_memory_macros/ot_sram_1r1w2c_128x516_m1/ot_sram_1r1w2c_128x516_m1
 physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v
 physical/asap7_memory_macros/ot_sram_1r1w2c_256x517_m1/ot_sram_1r1w2c_256x517_m1.v
 physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1/ot_sram_1r1w2c_32x546_m1.v
+physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir.v
 physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1.v
 physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v
 physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v
@@ -121,3 +122,4 @@ rtl/qwen_sys/host_cluster_20261017/prompt_pd/qkd_host_if_pins_observed_pd.sv
 rtl/qwen_sys/host_cluster_20261017/prompt_pd/qkd_host_prompt_capture_pins_pd.sv
 rtl/test/qwen_host/tb_hkv_prompt_pd_equiv.sv
 rtl/test/qwen_host/tb_hkv_cnt_la.sv
+rtl/physical/ot_host_die_cdc_sram.sv

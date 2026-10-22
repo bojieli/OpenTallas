@@ -37,7 +37,7 @@ sys.path.insert(0, str(ROOT / 'tools')); sys.path.insert(0, str(HERE))
 import die_port_bind as DPB          # noqa: E402
 import dv_diecase as DC              # noqa: E402
 import dv_sta_pilot as SP            # noqa: E402
-from clock_roles import contract_clock_nets
+from clock_roles import contract_clock_nets, whole_spare_frame_clock_outputs, validate_spare_frame_source_guard
 from frame_bind import orientation, orient_point, orient_face
 from forward_clock_guard import validate_native_forwarding  # noqa: E402
 from die_cluster import boundary as CB   # noqa: E402
@@ -549,9 +549,26 @@ def main():
 
     # Bind-table clock roles cover direct source->frame lanes too. Such lanes
     # have no fwd_ gate or relay to seed clocknets (e.g. slice ck_xc -> xk).
+    # Only the existing source-guarded selected72 X-chain-end declaration can
+    # omit an entire forwarded xok port. Strict bind must still be PASS; active
+    # clock outputs and every clock input keep the normal contract checks.
+    clock_directions = {m: {p: r[0] for p, r in module.ports.items()} for m, module in idx.items()}
+    strict_clock_bind = json.load(open(a.bind_dir / 'port_bind.json'))
+    unused_clock_outputs = set()
+    spare_clock_context = None
+    if strict_clock_bind.get('verdict') == 'PASS':
+        validate_spare_frame_source_guard(
+            T.get('selected72_spare_faces_g8', {}), {m: v.path for m, v in idx.items()},
+            insts, a.bind_dir / 'die.v', strict_clock_bind, git)
+        spare_clock_context = (T.get('rtl_widths', {}), json.load(open(a.bind_dir / 'pads.json')),
+                               T.get('selected72_spare_faces_g8', {}))
+        unused_clock_outputs = whole_spare_frame_clock_outputs(
+            insts, ibits, T['masters'], mod2master, clock_directions,
+            T.get('rtl_widths', {}), json.load(open(a.bind_dir / 'pads.json')),
+            T.get('selected72_spare_faces_g8', {}))
     clocknets, contract_clock_inputs = contract_clock_nets(
         insts, ibits, T['masters'], mod2master,
-        {m: {p: r[0] for p, r in module.ports.items()} for m, module in idx.items()}, clocknets)
+        clock_directions, clocknets, spare_frame_context=spare_clock_context)
 
     # ------------------------------------------------------------------ positions of every instance (centre) + sizes
     vsize = {}
@@ -1119,6 +1136,7 @@ CPUS=${CPUS:-16} MEMG=${MEMG_STA:-64} bash $D/sta.sh; sta_rc=$?; echo "sta rc $s
                 land_plan=str(a.land_plan), die_um=[W, H], area_mm2=round(W * H / 1e6, 2), view_refs=a.view_refs,
                 die_v_sha256=__import__('hashlib').sha256((a.bind_dir / 'die.v').read_bytes()).hexdigest(),
                 port_bind_rc=bc.get('port_bind_rc'), instances=len(insts),
+                unused_forward_clock_outputs=sorted(unused_clock_outputs),
                 census=dict(sorted(census.items())),
                 closed_views={m: f'{r}:{d}' for m, (r, d) in views.items() if m in {x[0] for x in insts}},
                 standin_instances=sum(1 for v in kind.values() if v == 'standin'),
