@@ -31,7 +31,8 @@ MOVE = {'ln_draft2': 'S', 'ln_mesh4': 'N'}      # lane -> new face (die y: draft
 #   lengthen their fault/CSR relays to WH1)
 EDGE = 20.0                                     # um kept free at each face end / beside the existing N/S windows
 OUT = ROOT / 'results/arch/s81_head_1021/glue_r6'
-NAMES = {'m': 's81hd_glue_r6m', 'f': 's81hd_glue_r6f'}
+REV = os.environ.get('GLUE_REV', 'r6')        # r6 = pin plan only; r8 = r6 pin plan + R7 relay-chain stations (fe55503a5)
+NAMES = {'m': f's81hd_glue_{REV}m', 'f': f's81hd_glue_{REV}f'}
 BASE_SPEC = {'m': 's81hd_glue_r4m', 'f': 's81hd_glue_r5f'}
 ORIG_LOAD, ORIG_ANCH = G.load_links, G.anchors
 
@@ -203,6 +204,7 @@ def main():
     ST6 = G.plan_stages()
     diff = {k: (ST3[k][0], ST6[k][0]) for k in ST3 if ST3[k][0] != ST6[k][0]}
     assert not diff, f'R6 changes relay stages (latency): {diff}'
+    G.OUT_RTL0 = G.OUT_RTL
     rtl = G.OUT_RTL.read_text()
     with tempfile.TemporaryDirectory() as td:
         G.OUT_RTL = Path(td) / 'top.sv'; G.gen_rtl(ST6)
@@ -247,6 +249,25 @@ def main():
             f'links re-spread uniformly over the E face. Faces (pins, max per um over 100 um): {json.dumps(dens)}. '
             + ('Plus R5 two-layer E face (every 2nd E pin M6, m6_pin_grant). ' if grant else 'Single layer (no M6 grant). ')
             + 'Same RTL file (generator-verified: identical code, every relay stage count equal), ports, widths and relay stages (latency). Prev: ' + prev)
+        if REV == 'r8':
+            # R8 = R6 pin plan + R7 recipe (COLLA2 fe55503a5): every kept relay stage j of n FIRM at j/(n+1) between its
+            # zone anchors -- here the R6 anchors (moved lanes on N/S, re-spread E lanes) -- released before DPL
+            led = json.loads((G.ARCH / 'glue_r3/relay_ledger.json').read_text())
+            led['anchors'] = {k: anchors_r6(k) for k in G.VAR}
+            led['note_r6'] = 'R6/R8 anchors (glue_r6_kits.py); relays/stages identical to R3 (asserted)'
+            lp = OUT / 'relay_ledger_r6.json'; lp.write_text(json.dumps(led, indent=1) + '\n')
+            r = subprocess.run([sys.executable, str(ROOT / 'tools/s81_head/glue_relay_place.py'), str(lp), str(G.OUT_RTL0), v,
+                                str(kd / 'relay_place.txt')], capture_output=True, text=True)
+            assert r.returncode == 0, r.stderr
+            rep['kits'][name]['relay_place'] = r.stdout.strip()
+            rel = f'physical/ref_tile/{name}/relay_place.txt'
+            s['orfs_vars'] = dict(s.get('orfs_vars', {}), OT_RELAY_PLACE=f'/src/{rel}')
+            s['pin_hook_before_flops'] = ['physical/common_flow/relay_chain_place.tcl']
+            s['pre_dpl_extra'] = ['physical/common_flow/relay_chain_release.tcl']
+            s['extra_paths'] = ['physical/common_flow/relay_chain_place.tcl', 'physical/common_flow/relay_chain_release.tcl', rel]
+            s['structural_change'] = ('R8 = R6 second-face pin plan + R7 relay-chain stations (STW-S81c-COLLA2 fe55503a5: r5m 3_place '
+                                      '4,061 one-level violators, GPL collapsed the kept 380-um relay chains): stage j of n FIRM at '
+                                      'j/(n+1) between its R6 zone anchors through GPL, released before DPL. ' + s['structural_change'])
         s['job'].update(owner='Claude:STW-S81c-DIE2-C25', branch='claude/s81hd-glue-r6-1022', tag=name,
                         views_to=f'physical/ref_tile/{name}/views', record_to=f'results/rtl/ref_tile/{name}')
         s['job']['extra_paths'] = sorted(set(s['job'].get('extra_paths', [])) | {'results/arch/s81_head_1021/glue_r6'})
@@ -259,7 +280,7 @@ def main():
                                capture_output=True, text=True)
             print(name, 'gen rc', r.returncode, (r.stdout + r.stderr).strip()[-600:])
             assert r.returncode == 0
-    (OUT / 'r6_report.json').write_text(json.dumps(rep, indent=1) + '\n')
+    (OUT / f'{REV}_report.json').write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps(rep['kits'], indent=1))
 
 

@@ -1,0 +1,973 @@
+{
+ "schema": "opentallas.s81hd.glue_r3.relays.v1",
+ "hop_um": 380.0,
+ "reset_forest_hops": 12,
+ "rule": "n = max(1, ceil((d + 100) / hop)), d = max over MAIN/FB of the Manhattan zone-anchor distance; equal n inside an age group",
+ "anchors": {
+  "m": {
+   "WH0": [
+    150.0,
+    503.15295,
+    "W"
+   ],
+   "WH1": [
+    150.0,
+    1120.6588333333332,
+    "W"
+   ],
+   "d0": [
+    150.0,
+    1738.1647,
+    "W"
+   ],
+   "d1": [
+    150.0,
+    3384.8470500000003,
+    "W"
+   ],
+   "d2": [
+    1848.8000000000002,
+    150.0,
+    "S"
+   ],
+   "m0": [
+    2010.0,
+    294.8,
+    "E"
+   ],
+   "m1": [
+    2010.0,
+    844.4,
+    "E"
+   ],
+   "m5": [
+    2010.0,
+    1394.0,
+    "E"
+   ],
+   "m2": [
+    2010.0,
+    1943.6000000000001,
+    "E"
+   ],
+   "d3": [
+    2010.0,
+    2493.2000000000003,
+    "E"
+   ],
+   "m3": [
+    2010.0,
+    3042.7999999999997,
+    "E"
+   ],
+   "d4": [
+    2010.0,
+    3592.65,
+    "E"
+   ],
+   "m4": [
+    1848.8000000000002,
+    3738.0,
+    "N"
+   ],
+   "WL": [
+    150.0,
+    2561.5058799999997,
+    "W"
+   ],
+   "N": [
+    1080.0,
+    3738.0,
+    "N"
+   ],
+   "S": [
+    1080.0,
+    150.0,
+    "S"
+   ],
+   "C": [
+    954.0,
+    1944.0,
+    "C"
+   ],
+   "RST": [
+    0.0,
+    1944.0,
+    "W"
+   ]
+  },
+  "f": {
+   "WH0": [
+    150.0,
+    562.6588333333334,
+    "W"
+   ],
+   "WH1": [
+    150.0,
+    1248.7764666666665,
+    "W"
+   ],
+   "d0": [
+    150.0,
+    1931.2941166666667,
+    "W"
+   ],
+   "d1": [
+    150.0,
+    3760.941166666666,
+    "W"
+   ],
+   "d2": [
+    2172.8,
+    150.0,
+    "S"
+   ],
+   "m0": [
+    2442.0,
+    601.776,
+    "E"
+   ],
+   "m1": [
+    2442.0,
+    1088.376,
+    "E"
+   ],
+   "m5": [
+    2442.0,
+    1574.9759999999999,
+    "E"
+   ],
+   "m2": [
+    2442.0,
+    2061.5760000000005,
+    "E"
+   ],
+   "d3": [
+    2442.0,
+    2548.176,
+    "E"
+   ],
+   "m3": [
+    2442.0,
+    3034.7760000000003,
+    "E"
+   ],
+   "d4": [
+    2442.0,
+    3788.8759999999997,
+    "E"
+   ],
+   "m4": [
+    2172.8,
+    4170.0,
+    "N"
+   ],
+   "WL": [
+    150.0,
+    2846.11765,
+    "W"
+   ],
+   "N": [
+    1296.0,
+    4170.0,
+    "N"
+   ],
+   "S": [
+    1296.0,
+    150.0,
+    "S"
+   ],
+   "C": [
+    1126.8,
+    2160.0,
+    "C"
+   ],
+   "RST": [
+    0.0,
+    2160.0,
+    "W"
+   ]
+  }
+ },
+ "relays": {
+  "xs": {
+   "src": "WL",
+   "dst": "C",
+   "stages": 5,
+   "added_edges": 5,
+   "max_dist_um": 1662.9,
+   "group": null,
+   "bits": 1067,
+   "flops": 5340
+  },
+  "tkf": {
+   "src": "WL",
+   "dst": "N",
+   "stages": 7,
+   "added_edges": 7,
+   "max_dist_um": 2469.9,
+   "group": null,
+   "bits": 1,
+   "flops": 14
+  },
+  "r": {
+   "src": "WL",
+   "dst": "WH0",
+   "stages": 7,
+   "added_edges": 7,
+   "max_dist_um": 2283.5,
+   "group": null,
+   "bits": 513,
+   "flops": 3598
+  },
+  "fwl": {
+   "src": "WL",
+   "dst": "WH1",
+   "stages": 5,
+   "added_edges": 5,
+   "max_dist_um": 1597.3,
+   "group": null,
+   "bits": 4,
+   "flops": 40
+  },
+  "lw": {
+   "src": "WL",
+   "dst": "C",
+   "stages": 5,
+   "added_edges": 5,
+   "max_dist_um": 1662.9,
+   "group": null,
+   "bits": 11,
+   "flops": 60
+  },
+  "stn": {
+   "src": "C",
+   "dst": "N",
+   "stages": 6,
+   "added_edges": 6,
+   "max_dist_um": 2179.2,
+   "group": "st",
+   "bits": 514,
+   "flops": 3096
+  },
+  "sts": {
+   "src": "C",
+   "dst": "S",
+   "stages": 6,
+   "added_edges": 6,
+   "max_dist_um": 2179.2,
+   "group": "st",
+   "bits": 514,
+   "flops": 3096
+  },
+  "om0": {
+   "src": "C",
+   "dst": "m0",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 2607.6,
+   "group": "om",
+   "bits": 82,
+   "flops": 747
+  },
+  "om1": {
+   "src": "C",
+   "dst": "m1",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 2179.2,
+   "group": "om",
+   "bits": 82,
+   "flops": 747
+  },
+  "om2": {
+   "src": "C",
+   "dst": "m2",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 1315.2,
+   "group": "om",
+   "bits": 82,
+   "flops": 747
+  },
+  "om3": {
+   "src": "C",
+   "dst": "m3",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 2179.2,
+   "group": "om",
+   "bits": 82,
+   "flops": 747
+  },
+  "om4": {
+   "src": "C",
+   "dst": "m4",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 3043.2,
+   "group": "om",
+   "bits": 82,
+   "flops": 747
+  },
+  "om5": {
+   "src": "C",
+   "dst": "m5",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 1747.2,
+   "group": "om",
+   "bits": 82,
+   "flops": 747
+  },
+  "mg": {
+   "src": "C",
+   "dst": "N",
+   "stages": 6,
+   "added_edges": 6,
+   "max_dist_um": 2179.2,
+   "group": null,
+   "bits": 81,
+   "flops": 492
+  },
+  "rc": {
+   "src": "C",
+   "dst": "WL",
+   "stages": 5,
+   "added_edges": 5,
+   "max_dist_um": 1662.9,
+   "group": null,
+   "bits": 11,
+   "flops": 60
+  },
+  "fc": {
+   "src": "C",
+   "dst": "WH1",
+   "stages": 6,
+   "added_edges": 6,
+   "max_dist_um": 1888.0,
+   "group": null,
+   "bits": 9,
+   "flops": 108
+  },
+  "sn": {
+   "src": "N",
+   "dst": "C",
+   "stages": 6,
+   "added_edges": 6,
+   "max_dist_um": 2179.2,
+   "group": "snss",
+   "bits": 50,
+   "flops": 306
+  },
+  "f4n": {
+   "src": "N",
+   "dst": "WH1",
+   "stages": 11,
+   "added_edges": 11,
+   "max_dist_um": 4067.2,
+   "group": null,
+   "bits": 1,
+   "flops": 22
+  },
+  "dt0": {
+   "src": "N",
+   "dst": "d0",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 3384.7,
+   "group": "dt",
+   "bits": 116,
+   "flops": 1638
+  },
+  "dt1": {
+   "src": "N",
+   "dst": "d1",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 1555.1,
+   "group": "dt",
+   "bits": 116,
+   "flops": 1638
+  },
+  "dt2": {
+   "src": "N",
+   "dst": "d2",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 4884.0,
+   "group": "dt",
+   "bits": 116,
+   "flops": 1638
+  },
+  "dt3": {
+   "src": "N",
+   "dst": "d3",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 2724.0,
+   "group": "dt",
+   "bits": 116,
+   "flops": 1638
+  },
+  "dt4": {
+   "src": "N",
+   "dst": "d4",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 1860.0,
+   "group": "dt",
+   "bits": 116,
+   "flops": 1638
+  },
+  "tk": {
+   "src": "N",
+   "dst": "WL",
+   "stages": 7,
+   "added_edges": 7,
+   "max_dist_um": 2469.9,
+   "group": null,
+   "bits": 513,
+   "flops": 3598
+  },
+  "acc": {
+   "src": "N",
+   "dst": "WH1",
+   "stages": 11,
+   "added_edges": 11,
+   "max_dist_um": 4067.2,
+   "group": null,
+   "bits": 57,
+   "flops": 649
+  },
+  "fn": {
+   "src": "N",
+   "dst": "WH1",
+   "stages": 11,
+   "added_edges": 11,
+   "max_dist_um": 4067.2,
+   "group": null,
+   "bits": 3,
+   "flops": 66
+  },
+  "ss": {
+   "src": "S",
+   "dst": "C",
+   "stages": 6,
+   "added_edges": 6,
+   "max_dist_um": 2179.2,
+   "group": "snss",
+   "bits": 50,
+   "flops": 306
+  },
+  "f4s": {
+   "src": "S",
+   "dst": "WH1",
+   "stages": 7,
+   "added_edges": 7,
+   "max_dist_um": 2244.8,
+   "group": null,
+   "bits": 1,
+   "flops": 14
+  },
+  "mr0": {
+   "src": "m0",
+   "dst": "C",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 2607.6,
+   "group": "mr",
+   "bits": 98,
+   "flops": 891
+  },
+  "mf0": {
+   "src": "m0",
+   "dst": "WH1",
+   "stages": 8,
+   "added_edges": 8,
+   "max_dist_um": 2673.2,
+   "group": null,
+   "bits": 4,
+   "flops": 64
+  },
+  "mr1": {
+   "src": "m1",
+   "dst": "C",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 2179.2,
+   "group": "mr",
+   "bits": 98,
+   "flops": 891
+  },
+  "mf1": {
+   "src": "m1",
+   "dst": "WH1",
+   "stages": 7,
+   "added_edges": 7,
+   "max_dist_um": 2339.2,
+   "group": null,
+   "bits": 4,
+   "flops": 56
+  },
+  "mr2": {
+   "src": "m2",
+   "dst": "C",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 1315.2,
+   "group": "mr",
+   "bits": 98,
+   "flops": 891
+  },
+  "mf2": {
+   "src": "m2",
+   "dst": "WH1",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 3203.2,
+   "group": null,
+   "bits": 4,
+   "flops": 72
+  },
+  "mr3": {
+   "src": "m3",
+   "dst": "C",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 2179.2,
+   "group": "mr",
+   "bits": 98,
+   "flops": 891
+  },
+  "mf3": {
+   "src": "m3",
+   "dst": "WH1",
+   "stages": 11,
+   "added_edges": 11,
+   "max_dist_um": 4067.2,
+   "group": null,
+   "bits": 4,
+   "flops": 88
+  },
+  "mr4": {
+   "src": "m4",
+   "dst": "C",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 3043.2,
+   "group": "mr",
+   "bits": 98,
+   "flops": 891
+  },
+  "mf4": {
+   "src": "m4",
+   "dst": "WH1",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 4931.2,
+   "group": null,
+   "bits": 4,
+   "flops": 112
+  },
+  "mr5": {
+   "src": "m5",
+   "dst": "C",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 1747.2,
+   "group": "mr",
+   "bits": 98,
+   "flops": 891
+  },
+  "mf5": {
+   "src": "m5",
+   "dst": "WH1",
+   "stages": 8,
+   "added_edges": 8,
+   "max_dist_um": 2771.2,
+   "group": null,
+   "bits": 4,
+   "flops": 64
+  },
+  "dr0": {
+   "src": "d0",
+   "dst": "N",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 3384.7,
+   "group": "dr",
+   "bits": 51,
+   "flops": 728
+  },
+  "df0": {
+   "src": "d0",
+   "dst": "WH1",
+   "stages": 3,
+   "added_edges": 3,
+   "max_dist_um": 682.5,
+   "group": null,
+   "bits": 4,
+   "flops": 24
+  },
+  "dr1": {
+   "src": "d1",
+   "dst": "N",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 1555.1,
+   "group": "dr",
+   "bits": 51,
+   "flops": 728
+  },
+  "df1": {
+   "src": "d1",
+   "dst": "WH1",
+   "stages": 7,
+   "added_edges": 7,
+   "max_dist_um": 2512.2,
+   "group": null,
+   "bits": 4,
+   "flops": 56
+  },
+  "dr2": {
+   "src": "d2",
+   "dst": "N",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 4884.0,
+   "group": "dr",
+   "bits": 51,
+   "flops": 728
+  },
+  "df2": {
+   "src": "d2",
+   "dst": "WH1",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 3108.8,
+   "group": null,
+   "bits": 4,
+   "flops": 72
+  },
+  "dr3": {
+   "src": "d3",
+   "dst": "N",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 2724.0,
+   "group": "dr",
+   "bits": 51,
+   "flops": 728
+  },
+  "df3": {
+   "src": "d3",
+   "dst": "WH1",
+   "stages": 10,
+   "added_edges": 10,
+   "max_dist_um": 3635.2,
+   "group": null,
+   "bits": 4,
+   "flops": 80
+  },
+  "dr4": {
+   "src": "d4",
+   "dst": "N",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 1860.0,
+   "group": "dr",
+   "bits": 51,
+   "flops": 728
+  },
+  "df4": {
+   "src": "d4",
+   "dst": "WH1",
+   "stages": 13,
+   "added_edges": 13,
+   "max_dist_um": 4499.2,
+   "group": null,
+   "bits": 4,
+   "flops": 104
+  },
+  "hf": {
+   "src": "WH0",
+   "dst": "WL",
+   "stages": 7,
+   "added_edges": 7,
+   "max_dist_um": 2283.5,
+   "group": null,
+   "bits": 513,
+   "flops": 3598
+  },
+  "f16b": {
+   "src": "WH0",
+   "dst": "WH1",
+   "stages": 3,
+   "added_edges": 3,
+   "max_dist_um": 686.1,
+   "group": null,
+   "bits": 1,
+   "flops": 6
+  },
+  "hfl0": {
+   "src": "WH0",
+   "dst": "WH1",
+   "stages": 3,
+   "added_edges": 3,
+   "max_dist_um": 686.1,
+   "group": null,
+   "bits": 4,
+   "flops": 24
+  },
+  "hfl1": {
+   "src": "WH1",
+   "dst": "WH1",
+   "stages": 1,
+   "added_edges": 1,
+   "max_dist_um": 0.0,
+   "group": null,
+   "bits": 4,
+   "flops": 8
+  },
+  "cwl": {
+   "src": "WH1",
+   "dst": "WL",
+   "stages": 5,
+   "added_edges": 5,
+   "max_dist_um": 1597.3,
+   "group": null,
+   "bits": 35,
+   "flops": 190
+  },
+  "cc": {
+   "src": "WH1",
+   "dst": "C",
+   "stages": 6,
+   "added_edges": 6,
+   "max_dist_um": 1888.0,
+   "group": null,
+   "bits": 19,
+   "flops": 126
+  },
+  "cn": {
+   "src": "WH1",
+   "dst": "N",
+   "stages": 11,
+   "added_edges": 11,
+   "max_dist_um": 4067.2,
+   "group": null,
+   "bits": 27,
+   "flops": 363
+  },
+  "cl_m0": {
+   "src": "WH1",
+   "dst": "m0",
+   "stages": 8,
+   "added_edges": 8,
+   "max_dist_um": 2673.2,
+   "group": null,
+   "bits": 6,
+   "flops": 64
+  },
+  "cl_m1": {
+   "src": "WH1",
+   "dst": "m1",
+   "stages": 7,
+   "added_edges": 7,
+   "max_dist_um": 2339.2,
+   "group": null,
+   "bits": 6,
+   "flops": 56
+  },
+  "cl_m2": {
+   "src": "WH1",
+   "dst": "m2",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 3203.2,
+   "group": null,
+   "bits": 6,
+   "flops": 72
+  },
+  "cl_m3": {
+   "src": "WH1",
+   "dst": "m3",
+   "stages": 11,
+   "added_edges": 11,
+   "max_dist_um": 4067.2,
+   "group": null,
+   "bits": 6,
+   "flops": 88
+  },
+  "cl_m4": {
+   "src": "WH1",
+   "dst": "m4",
+   "stages": 14,
+   "added_edges": 14,
+   "max_dist_um": 4931.2,
+   "group": null,
+   "bits": 6,
+   "flops": 112
+  },
+  "cl_m5": {
+   "src": "WH1",
+   "dst": "m5",
+   "stages": 8,
+   "added_edges": 8,
+   "max_dist_um": 2771.2,
+   "group": null,
+   "bits": 6,
+   "flops": 64
+  },
+  "cl_d0": {
+   "src": "WH1",
+   "dst": "d0",
+   "stages": 3,
+   "added_edges": 3,
+   "max_dist_um": 682.5,
+   "group": null,
+   "bits": 6,
+   "flops": 24
+  },
+  "cl_d1": {
+   "src": "WH1",
+   "dst": "d1",
+   "stages": 7,
+   "added_edges": 7,
+   "max_dist_um": 2512.2,
+   "group": null,
+   "bits": 6,
+   "flops": 56
+  },
+  "cl_d2": {
+   "src": "WH1",
+   "dst": "d2",
+   "stages": 9,
+   "added_edges": 9,
+   "max_dist_um": 3108.8,
+   "group": null,
+   "bits": 6,
+   "flops": 72
+  },
+  "cl_d3": {
+   "src": "WH1",
+   "dst": "d3",
+   "stages": 10,
+   "added_edges": 10,
+   "max_dist_um": 3635.2,
+   "group": null,
+   "bits": 6,
+   "flops": 80
+  },
+  "cl_d4": {
+   "src": "WH1",
+   "dst": "d4",
+   "stages": 13,
+   "added_edges": 13,
+   "max_dist_um": 4499.2,
+   "group": null,
+   "bits": 6,
+   "flops": 104
+  },
+  "cl_WH0": {
+   "src": "WH1",
+   "dst": "WH0",
+   "stages": 3,
+   "added_edges": 3,
+   "max_dist_um": 686.1,
+   "group": null,
+   "bits": 6,
+   "flops": 24
+  },
+  "cfl": {
+   "src": "WH1",
+   "dst": "WL",
+   "stages": 5,
+   "added_edges": 5,
+   "max_dist_um": 1597.3,
+   "group": null,
+   "bits": 1,
+   "flops": 10
+  },
+  "cfn": {
+   "src": "WH1",
+   "dst": "N",
+   "stages": 11,
+   "added_edges": 11,
+   "max_dist_um": 4067.2,
+   "group": "cfns",
+   "bits": 1,
+   "flops": 22
+  },
+  "cfs": {
+   "src": "WH1",
+   "dst": "S",
+   "stages": 11,
+   "added_edges": 11,
+   "max_dist_um": 2244.8,
+   "group": "cfns",
+   "bits": 1,
+   "flops": 22
+  }
+ },
+ "pins": {
+  "m": {
+   "count": 20307,
+   "faces": {
+    "N": {
+     "pins": 2421,
+     "per_um_face": 1.12
+    },
+    "S": {
+     "pins": 1130,
+     "per_um_face": 0.52
+    },
+    "W": {
+     "pins": 6748,
+     "per_um_face": 1.74
+    },
+    "E": {
+     "pins": 10008,
+     "per_um_face": 2.57
+    }
+   },
+   "split_ports": [
+    "dflt",
+    "drx_d",
+    "drx_v",
+    "dtx_d",
+    "dtx_v"
+   ]
+  },
+  "f": {
+   "count": 20307,
+   "faces": {
+    "N": {
+     "pins": 2421,
+     "per_um_face": 0.93
+    },
+    "S": {
+     "pins": 1130,
+     "per_um_face": 0.44
+    },
+    "W": {
+     "pins": 6748,
+     "per_um_face": 1.56
+    },
+    "E": {
+     "pins": 10008,
+     "per_um_face": 2.32
+    }
+   },
+   "split_ports": [
+    "dflt",
+    "drx_d",
+    "drx_v",
+    "dtx_d",
+    "dtx_v"
+   ]
+  }
+ },
+ "note_r6": "R6/R8 anchors (glue_r6_kits.py); relays/stages identical to R3 (asserted)"
+}
