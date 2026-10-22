@@ -11,7 +11,7 @@ module tb_showahead_land;
   ot_sram_showahead_1r1w #(.W(W),.AW(AW),.LOCAL_HIT(1),.SB(SB),.LOCAL_RA(1),.LOCAL_WA(1),.DEPTH(DEPTH)) u_old(
     .clk(clk),.rst_n({NS{rn}}),.we(we),.wa(wp),.wd(wd),.ra(rp),.q(q_old),.advance_a(adv_a),.advance_b(adv_b));
   ot_sram_showahead_1r1w_land #(.W(W),.AW(AW),.SB(SB),.DEPTH(DEPTH)) u_new(
-    .clk(clk),.rst_n({NS{rn}}),.we(we),.wa(wp),.wd(wd),.we_l(we),.wa_l(wp),.advance_a(adv_a),.advance_b(adv_b),.q(q_new));
+    .clk(clk),.rst_n({NS{rn}}),.we(we),.wa(wp),.wd(wd),.we_l({2{we}}),.wa_l({2{wp}}),.advance_a({3{adv_a}}),.advance_b({3{adv_b}}),.q(q_new));
   reg [W-1:0] mem [0:DEPTH-1];
   integer cyc=0, chk=0, bad=0, phase=0, maxn=0, hitw=0, ahead=0, k;
   wire pop = adv_a && adv_b;

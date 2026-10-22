@@ -292,7 +292,8 @@
    "ot_s81sl_lep_vq_ctl",
    "ot_s81sl_lep_vq_host",
    "ot_s81sl_lep_wp5",
-   "ot_s81sl_lep_nzcopy"
+   "ot_s81sl_lep_nzcopy",
+   "ot_s81sl_lep_vq_mem2"
   ],
   "hold_delay": true
  },
@@ -328,35 +329,35 @@
   "benches": [
    {
     "name": "lepmuh_exact_s1",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_RXLAND' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_exact_s1 lepmuh none 1",
+    "cmd": "J=2 MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_RXLAND' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_exact_s1 lepmuh none 1",
     "expect": "pass",
-    "threads": 8,
+    "threads": 2,
     "peak_ram_gb": 16,
     "pass_regex": "^BENCH_PASS lepmuh MUT=none seed 1$",
     "min_count_regex": "^PASS lep_muh: host-plane MU endpoint == single-user lep: (\\d+) H->die ring beats"
    },
    {
     "name": "lepmuh_exact_s5",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_RXLAND' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_exact_s5 lepmuh none 5",
+    "cmd": "J=2 MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_RXLAND' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_exact_s5 lepmuh none 5",
     "expect": "pass",
-    "threads": 8,
+    "threads": 2,
     "peak_ram_gb": 16,
     "pass_regex": "^BENCH_PASS lepmuh MUT=none seed 5$"
    },
    {
     "name": "lepmuh_mut_tagdrop",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_RXLAND' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_mut_tagdrop lepmuh TAGDROP 1",
+    "cmd": "J=2 MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_RXLAND' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_mut_tagdrop lepmuh TAGDROP 1",
     "expect": "fail",
-    "threads": 8,
+    "threads": 2,
     "peak_ram_gb": 16,
     "fail_regex": "^FAIL lep_muh: ok 1 rx 0 tx [1-9]",
     "fail_witness": "results/rtl/s81_lep_c12_1021/h/source_f1b5f7583/lepmuh_mut_tagdrop.log"
    },
    {
     "name": "lepmuh_mut_landcut",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_RXLAND' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_mut_landcut lepmuh LANDCUT 1",
+    "cmd": "J=2 MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4 +define+OT_S81SL_LEP_RXLAND' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_mut_landcut lepmuh LANDCUT 1",
     "expect": "fail",
-    "threads": 8,
+    "threads": 2,
     "peak_ram_gb": 16,
     "fail_regex": "^FAIL lep_muh: ok 0 rx [1-9]",
     "fail_witness": "results/rtl/s81_lep_c12_1021/h/source_f1b5f7583/lepmuh_mut_landcut.log"

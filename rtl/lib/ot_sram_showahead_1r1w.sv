@@ -121,23 +121,27 @@ endmodule
 //   else pop (advance_a && advance_b)                      -> qn = mem[rp+1]
 //   else                                                   -> hold (= mem[rp])
 // => q == mem[rp] in every cycle the FIFO is non-empty (induction), i.e. the old q; same edge, 0 added cycles.
-// Per 32-bit group: own kept write-hit comparator + kept pop AND (each select drives <= 32 mux bits); per bank:
-// head pointer copy (reset 0) for the hit compare and read-ahead pointer copy (reset 1) for the macro / forwarding.
+// Per 16-bit group: own kept write-hit comparator + kept pop AND (each select drives <= 32 mapped mux pins); per
+// bank: head pointer copy (reset 0) for the hit compare and read-ahead pointer copy (reset 1) for the macro /
+// forwarding.  Native fan-out: advance copy 0 feeds the 2x5 pointers, copies 1/2 the pop ANDs of groups <18 / >=18;
+// write-hit enable / address copy 0 / 1 likewise (callers pass kept same-value copies).
 module ot_sram_showahead_1r1w_land #(
  parameter integer W=553, AW=4, SB=8, NS=(W+SB-1)/SB, DEPTH=(1<<AW)
 )(input wire clk, input wire [NS-1:0] rst_n,
  input wire we, input wire [AW-1:0] wa, input wire [W-1:0] wd,
- input wire we_l, input wire [AW-1:0] wa_l,
- input wire advance_a,advance_b,
+ input wire [1:0] we_l, input wire [2*AW-1:0] wa_l,
+ input wire [2:0] advance_a,advance_b,
  output wire [W-1:0] q);
- localparam integer NB=(W+127)/128, NG=(W+31)/32;
+ localparam integer NB=(W+127)/128, GB=16, NG=(W+GB-1)/GB, GH=18;
  wire [NB*AW-1:0] ra1, ra0;
  genvar ar,h,b,s,g;
  generate for(ar=0;ar<NB;ar=ar+1) begin:g_read_region
+   // read-ahead copy on a mid-bank slice reset leaf (same release edge; keeps the bank's first leaf <= 32 loads)
+   localparam integer R1S=(ar*128)/SB + (((W-ar*128)>64)?8:2);
    (* keep=1 *) ot_sram_showahead_readptr1 #(.AW(AW),.DEPTH(DEPTH)) u_ptr1(
-    .clk(clk),.rn(rst_n[(ar*128)/SB]),.advance_a(advance_a),.advance_b(advance_b),.next_addr(ra1[ar*AW+:AW]));
+    .clk(clk),.rn(rst_n[R1S]),.advance_a(advance_a[0]),.advance_b(advance_b[0]),.next_addr(ra1[ar*AW+:AW]));
    (* keep=1 *) ot_sram_showahead_readptr #(.AW(AW),.DEPTH(DEPTH)) u_ptr(
-    .clk(clk),.rn(rst_n[(ar*128)/SB]),.advance_a(advance_a),.advance_b(advance_b),.next_addr(ra0[ar*AW+:AW]));
+    .clk(clk),.rn(rst_n[(ar*128)/SB]),.advance_a(advance_a[0]),.advance_b(advance_b[0]),.next_addr(ra0[ar*AW+:AW]));
  end endgenerate
  reg wv; reg [AW-1:0] waddr; reg [W-1:0] wdata, prevdata;
  always @(posedge clk `OT_LEP_AR(rst_n[0])) if(!rst_n[0]) wv<=1'b0; else wv<=we;
@@ -167,10 +171,10 @@ module ot_sram_showahead_1r1w_land #(
   assign qn[LO+:SW]=cur_q ? wdata[LO+:SW] : prev_q ? prevdata[LO+:SW] : raw[LO+:SW];
  end endgenerate
  generate for(g=0;g<NG;g=g+1) begin:g_land
-  localparam integer LO=g*32, GW=(W-LO<32)?W-LO:32;
+  localparam integer LO=g*GB, GW=(W-LO<GB)?W-LO:GB, C=(g<GH)?0:1;
   wire sel_w, sel_p;
-  (* keep=1 *) ot_sram_showahead_hit5 u_whit(.enable(we_l),.a(5'(wa_l)),.b(5'(ra0[((g*32)/128)*AW+:AW])),.hit(sel_w));
-  (* keep=1 *) ot_sram_showahead_pop2 u_pop(.a(advance_a),.b(advance_b),.q(sel_p));
+  (* keep=1 *) ot_sram_showahead_hit5 u_whit(.enable(we_l[C]),.a(5'(wa_l[C*AW+:AW])),.b(5'(ra0[((g*GB)/128)*AW+:AW])),.hit(sel_w));
+  (* keep=1 *) ot_sram_showahead_pop2 u_pop(.a(advance_a[1+C]),.b(advance_b[1+C]),.q(sel_p));
   reg [GW-1:0] hd;
 `ifdef OT_SRAM_LAND_MUT_NOAHEAD
   always @(posedge clk) hd <= sel_w ? wd[LO+:GW] : sel_p ? raw[LO+:GW] : hd;   // MUTANT: no read-ahead forwarding
