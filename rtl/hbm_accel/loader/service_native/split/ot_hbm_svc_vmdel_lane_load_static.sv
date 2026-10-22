@@ -104,7 +104,7 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  // round 5 (b11r4 census: the load_bank_epoch copy selected the 16-bit epoch mux of both compares, 34 loads): compare the
  // command epoch with BOTH bank epochs on kept nets; load_bank_epoch then selects one bit.  Same function.
  (* keep="true" *) wire lc_eq0=load_cmd[16:1]==epoch0; (* keep="true" *) wire lc_eq1=load_cmd[16:1]==epoch1;
- wire lc_epoch_eq=load_bank_epoch?lc_eq1:lc_eq0;
+ (* keep="true" *) wire lc_epoch_eq=load_bank_epoch?lc_eq1:lc_eq0;   // round 6: b11r5 still 34 (abc duplicated the select into both cones)
  wire command_ok=load_v&&!raw_issue&&owned[load_cmd[0]]&&
  block_ready_c[load_cmd[0]]&&lc_epoch_eq&&
  shape_cmd&&!landing_fault;
