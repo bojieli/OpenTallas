@@ -11,6 +11,7 @@
 // / decode net <= 32 loads; here ONE pointer pair crosses per FIFO and the fan-out is carried by same-domain copies.
 // Census shape: wr_fire -> NG kept group ANDs -> one kept AND per slice; ra bit 0 -> 4 x B mux pins (B <= 7: 28);
 // group reset sync -> GS slices x (AW + 1) <= 32.
+(* keep_hierarchy = "yes" *)
 module ot_hbm_svc_shp_and2(input wire a,b,output wire y); assign y=a&b; endmodule
 
 module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)(
@@ -23,13 +24,8 @@ module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)
  localparam integer NS=(WIDTH+SW-1)/SW,NG=(NS+GS-1)/GS;
  initial if(DEPTH<4||(DEPTH&(DEPTH-1))!=0)$error("FIFO depth must be power-of-two >=4");
  wire both_reset=wr_rst_n&&rd_rst_n;wire wr_reset,rd_reset;
-`ifdef OT_SHP_MUT_RS_MAIN_DEEP
- localparam integer MRS=3;
-`else
- localparam integer MRS=2;
-`endif
- ot_reset_sync #(.ASYNC_STAGES(MRS)) u_wr_reset(.clk(wr_clk),.async_rst_n(both_reset),.sync_rst_n(wr_reset));
- ot_reset_sync #(.ASYNC_STAGES(MRS)) u_rd_reset(.clk(rd_clk),.async_rst_n(both_reset),.sync_rst_n(rd_reset));
+ ot_reset_sync u_wr_reset(.clk(wr_clk),.async_rst_n(both_reset),.sync_rst_n(wr_reset));
+ ot_reset_sync u_rd_reset(.clk(rd_clk),.async_rst_n(both_reset),.sync_rst_n(rd_reset));
  reg [PW-1:0] wr_bin,wr_gray,rd_bin,rd_gray;
  (* async_reg="true" *)reg [PW-1:0] rd_gray_w1,rd_gray_w2,wr_gray_r1,wr_gray_r2;
  reg wr_online,rd_online;
@@ -65,17 +61,21 @@ module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)
  // ---- shared-pointer storage
  genvar g,s;
  wire [NG-1:0] gw_reset,gr_reset,gw_fire,gr_fire;
- // Group reset syncs: the SAME module with the SAME (default) parameters as u_wr_reset / u_rd_reset (checked statically by
- // tools/ref_tile/async_gray_fifo_constraints.py).  Bench-only mutants OT_SHP_MUT_RS_DEEP / OT_SHP_MUT_RS_MAIN_DEEP
- // skew them by one stage (review 10:45 (b)).
+ // Group reset leaves (r5a gate 10-22: per-group ot_reset_sync copies are logically identical and synthesis merged them
+ // back into one 140-load flop): ONE ot_reset_sync per side (u_wr_reset / u_rd_reset, above) feeds a KEPT same-domain
+ // ot_rst_fanout leaf per group (release = +1 edge after wr_reset / rd_reset; first fire is >= 2 edges after them, so
+ // the slot-index copies are out of reset before any fire: bench invariant + release margin).  Bench-only mutant
+ // OT_SHP_MUT_RS_DEEP adds one more leaf stage (review 10:45 (b)).
+ wire [NG-1:0] gw_l0,gr_l0;
+ ot_rst_fanout #(.N(NG)) u_gw_leaf(.clk(wr_clk),.rst_n_in(wr_reset),.rst_n(gw_l0));
+ ot_rst_fanout #(.N(NG)) u_gr_leaf(.clk(rd_clk),.rst_n_in(rd_reset),.rst_n(gr_l0));
 `ifdef OT_SHP_MUT_RS_DEEP
- localparam integer GRS=3;
+ ot_rst_fanout #(.N(1)) u_gw_mut[NG-1:0](.clk(wr_clk),.rst_n_in(gw_l0),.rst_n(gw_reset));
+ ot_rst_fanout #(.N(1)) u_gr_mut[NG-1:0](.clk(rd_clk),.rst_n_in(gr_l0),.rst_n(gr_reset));
 `else
- localparam integer GRS=2;
+ assign gw_reset=gw_l0; assign gr_reset=gr_l0;
 `endif
  generate for(g=0;g<NG;g=g+1)begin:g_g
-  ot_reset_sync #(.ASYNC_STAGES(GRS)) u_gw_reset(.clk(wr_clk),.async_rst_n(both_reset),.sync_rst_n(gw_reset[g]));
-  ot_reset_sync #(.ASYNC_STAGES(GRS)) u_gr_reset(.clk(rd_clk),.async_rst_n(both_reset),.sync_rst_n(gr_reset[g]));
   (* keep="true" *) ot_hbm_svc_shp_and2 u_gw(.a(wr_fire),.b(gw_reset[g]),.y(gw_fire[g]));
   (* keep="true" *) ot_hbm_svc_shp_and2 u_gr(.a(rd_fire),.b(gr_reset[g]),.y(gr_fire[g]));
  end
@@ -86,7 +86,7 @@ module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)
   // purpose as the per-slice kept driver, so each group fire net drives GS AND pins, not GS x (B write enables + AW).
   (* keep="true" *) ot_hbm_svc_shp_and2 u_wf(.a(gw_fire[s/GS]),.b(gw_reset[s/GS]),.y(wf));
   (* keep="true" *) ot_hbm_svc_shp_and2 u_rf(.a(gr_fire[s/GS]),.b(gr_reset[s/GS]),.y(rf));
-  reg [AW-1:0] wa,ra;
+  (* keep="true",dont_touch="true" *) reg [AW-1:0] wa,ra;   // per-slice copies: must not be merged
   (* mem2reg *) reg [B-1:0] mem[0:DEPTH-1];   // explicit flops, like the reviewed FIFO (async_fifo_hierarchy_audit)
   always @(posedge wr_clk or negedge gw_reset[s/GS]) if(!gw_reset[s/GS]) wa<=0; else if(wf) wa<=wa+1'b1;
   always @(posedge wr_clk) if(wf) mem[wa]<=wr_data[s*SW+:B];

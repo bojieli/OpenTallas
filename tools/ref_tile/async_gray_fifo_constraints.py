@@ -41,9 +41,9 @@ RESET_SYNC_SOURCE = 'rtl/lib/ot_reset_sync.sv'
 # declare it is checked exactly as before).  Control is the reviewed FIFO's verbatim; one Gray pair crosses; per-slice
 # wa/ra are same-domain copies; payload = g_s[s].mem[slot][b] -> rd_data[s*SW+b].
 SHP_SOURCE = 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_shp.sv'
-OPTIONAL_SOURCES = {SHP_SOURCE: ('04cce6c9d4de6cdd1e42300ea9aa6e44dad34cb500a15f054ae6e4e6881bd430',)}
+OPTIONAL_SOURCES = {SHP_SOURCE: ('08515683bb8e1187863c94f954fa34ab90c201a20731f15c5fd520e1fd63ee6b',)}
 FIFO_SRC_RANGE = {'ot_hbm_svc_async_fifo': (next(iter(SOURCES)), '6.1-51.10'),
-                  'ot_hbm_svc_async_fifo_shp': (SHP_SOURCE, '16.1-96.10')}
+                  'ot_hbm_svc_async_fifo_shp': (SHP_SOURCE, '17.1-96.10')}
 # destination period - 60 ps setup uncertainty (gray_fifo_cdc_constraints rule (c) reset bound)
 RESET_BOUND_PS = {'core': 773.333, 'hbm': 964.0}
 RELATIONSHIP = dict(kind='hbm_phy_async_gray_fifo', stream_period_ps=833.333,
@@ -159,11 +159,14 @@ def elaborate(root, top, sources, params):
             if module.get('attributes',{}).get('src')!=str((root/src_path).resolve())+':'+src_range:
                 raise ValueError('async_gray_fifo module identity does not bind reviewed source')
             if base=='ot_hbm_svc_async_fifo_shp':
-                # review (b): every group reset sync is the SAME module (same parameters) as u_wr_reset / u_rd_reset
+                # review (b): exactly the two reviewed syncs u_wr_reset / u_rd_reset (same module, same parameters), and
+                # the per-group release leaves are the kept same-domain ot_rst_fanout u_gw_leaf / u_gr_leaf behind them
                 cells=module.get('cells',{})
-                syncs={c:x['type']for c,x in cells.items()if c in('u_wr_reset','u_rd_reset')or re.fullmatch(r'g_g\[[0-9]+\]\.u_g[wr]_reset',c)}
-                if len(syncs)<4 or len(set(syncs.values()))!=1 or not {'u_wr_reset','u_rd_reset'}<=set(syncs):
-                    raise ValueError('async_gray_fifo shp group reset syncs differ from u_wr_reset/u_rd_reset: '+json.dumps(syncs,sort_keys=True)[:600])
+                syncs={c:x['type']for c,x in cells.items()if 'reset_sync' in x['type']}
+                leaves={c:x['type']for c,x in cells.items()if 'rst_fanout' in x['type']}
+                if (set(syncs)!={'u_wr_reset','u_rd_reset'} or len(set(syncs.values()))!=1
+                        or set(leaves)!={'u_gw_leaf','u_gr_leaf'}):
+                    raise ValueError('async_gray_fifo shp reset structure differs from the reviewed one: '+json.dumps([syncs,leaves],sort_keys=True)[:600])
             values=module.get('parameter_default_values',{})
             if int(values.get('DEPTH','0'),2)not in (4,8) or int(values.get('WIDTH','0'),2)<1:
                 raise ValueError('async_gray_fifo actual instance exceeds reviewed parameter shape')
