@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 module tb_tx_miter;
  parameter integer MUT=0;
+ parameter integer RDL=0,WDL=0;  // STW-S81c-COLLA 10-22: score-store read capture / write landing
  reg ck=0;always #5 ck=~ck;
  reg rn=0,reference_entry=0;
  // Reference has two reset stages, production n32 has the actual three-stage relay.
@@ -8,7 +9,7 @@ module tb_tx_miter;
  always @(posedge ck or negedge rn)if(!rn)reference_entry<=0;else reference_entry<=1;
  reg[275:0]vi=0,vo=0;
  wire[275:0]lo,ref_lo;wire[15:0]st,ref_st;
- dsdv_idx_tx_n32 #(.D(8192),.IB(64),.SRAM_MACRO(1),.MUT(MUT))dut(.ck(ck),.rst(rn),.vi(vi),.vo(vo),.lo(lo),.st(st));
+ dsdv_idx_tx_n32 #(.D(8192),.IB(64),.SRAM_MACRO(1),.MUT(MUT),.RDL(RDL),.WDL(WDL))dut(.ck(ck),.rst(rn),.vi(vi),.vo(vo),.lo(lo),.st(st));
  dsdv_idx_tx #(.D(8192),.IB(64),.SRAM_MACRO(1))reference_dut(.ck(ck),.rst(reference_entry),.vi(vi),.vo(vo),.lo(ref_lo),.st(ref_st));
  integer cycle=0,checks=0,beats=0,done_n=0,epochs=0;
  always @(posedge ck)begin
