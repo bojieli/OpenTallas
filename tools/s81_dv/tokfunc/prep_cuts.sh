@@ -5,8 +5,6 @@
 # cuts default: the sets in tools/s81_dv/tokfunc/sets (cut_0S cut_0N cut_7 cut_3S_ctl).
 # Env (G9 netlist rerun, STEWARD-TOK-S81-G9SIM 10-21): KIT_EXTRA = extra dv_rtl_kit.py args for the die kit AND every
 # cut kit (e.g. "--select rtl_extra/<sha>/rtl/.../ot_s81sl_xs4.sv:<sha256>" = the GEN-selected physical source);
-# LAND_RL=<bind_table.json> (RTLGAP-G9 10-22): dv_slice_cut --land-rl = the kit reset landing of the bound landing views
-# (bind table landing_reset_stages); without it every landing of a po2 die (RL 2) faults on the idle cut.
 # PREFER72=0 drops tools/s81_dv/tokfunc/prefer_72.f (absent at refs older than the G7 token assembly).
 set -u
 H=$(cd "$(dirname "$0")" && pwd); W=$(cd "$H/../../.." && pwd)
@@ -22,7 +20,7 @@ if [ ! -f $KD/kit.json ]; then
     || { echo "KD KIT FAIL"; tail -5 $O/cuts/KD.kit.log; exit 2; }
 fi
 one() { c=$1; C=$O/cuts/$c; K=$O/cuts/K_$c; rm -rf $C $K
-  python3 $W/tools/s81_dv/dv_slice_cut.py --die-v $DIEV --kit $KD --insts $H/sets/set_$c.txt --out $C --land-plan $LP --land-model --corner tt ${LAND_RL:+--land-rl $LAND_RL} ${LAND_RL_MUT:+--land-rl-mut} \
+  python3 $W/tools/s81_dv/dv_slice_cut.py --die-v $DIEV --kit $KD --insts $H/sets/set_$c.txt --out $C --land-plan $LP --land-model --corner tt \
     > $O/cuts/$c.cut.log 2>&1 || { echo "$c CUT FAIL: $(tail -n 2 $O/cuts/$c.cut.log)"; return 1; }
   EPP=""; [ "$c" = cut_7 ] && EPP="--ep-probe u_s_7N:u_lep.u:mf --ep-probe u_s_7S:u_lep.u:mf"
   python3 $W/tools/s81_dv/dv_slice_tb.py --ports $C/slice_ports.json --out $C $EPP >> $O/cuts/$c.cut.log 2>&1 \
