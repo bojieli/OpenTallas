@@ -1,0 +1,57 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-tok-rate-2000-1021/tools/ref_tile/pre_route_gate.py", line 51, in <module>
+    import ref_tile as RT  # noqa: E402
+  File "/home/ubuntu/wt/codex-tok-rate-2000-1021/tools/ref_tile/ref_tile.py", line 44, in <module>
+    import check_macro_track_alignment as cmta  # noqa: E402
+ModuleNotFoundError: No module named 'check_macro_track_alignment'
+Traceback (most recent call last):
+  File "/home/ubuntu/wt/codex-tok-rate-2000-1021/tools/ref_tile/pre_route_gate.py", line 51, in <module>
+    import ref_tile as RT  # noqa: E402
+  File "/home/ubuntu/wt/codex-tok-rate-2000-1021/tools/ref_tile/ref_tile.py", line 48, in <module>
+    import clock_entry_constraints  # noqa: E402
+  File "/home/ubuntu/wt/codex-tok-rate-2000-1021/tools/ref_tile/clock_entry_constraints.py", line 1916, in <module>
+    "physical/common_flow/clock_family.tcl").read_text()
+  File "/usr/lib/python3.10/pathlib.py", line 1134, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+  File "/usr/lib/python3.10/pathlib.py", line 1119, in open
+    return self._accessor.open(self, mode, buffering, encoding, errors,
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt/codex-tok-rate-2000-1021/physical/common_flow/clock_family.tcl'
+GATE INFO pin_regs: pin registers opted out: RTL already registers every data port at the pin (inputs: PINREG pin flops on io_clk -> lockup latch -> core; f_prog programme_pin_q; qy0/qy1 dedicated face capture; outputs: CPIN seam flops on io_clk for c0/c1, st from registered busy/fault through source-ck lockups). A synthesis pin register would
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE FAIL sources: 1 committed input(s) absent from the working-tree archive: ['tools/w18/corner_sta_ref.py']  -> FIX: materialize the referenced files in the sparse checkout before rerunning the gate
+PRE_ROUTE_GATE: FAIL (1 fail, 0 warn)
+GATE INFO pin_regs: pin registers opted out: RTL already registers every data port at the pin (inputs: PINREG pin flops on io_clk -> lockup latch -> core; f_prog programme_pin_q; qy0/qy1 dedicated face capture; outputs: CPIN seam flops on io_clk for c0/c1, st from registered busy/fault through source-ck lockups). A synthesis pin register would
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 40 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81bf_front_five_roots_n32_soq_20261021-200813.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81bf_front_five_roots_n32_soq_20261021-200813.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81bf_front_five_roots_n32_soq-20261021-200813
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 332 s (gate total 5098 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 3272, 'pin_rectangles': 3272, 'pin_track_checked': 3272, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 0e5876501d5e024ac9f8cbcafdc008f6a446cddacfb131d6331f2c287b452741
+GATE WARN util: synthesized std area 13504 um2 + macros 0 in core 21835: util 62%  -> FIX: enlarge: set "std_area_um2": 13504 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN dsfd_bf_front_roots cells 100,968 flops 22,680 depth 520.1 ps util 0.6116 reach 0.0 um (3.5 s)
+GATE WARN textbook.clock_domain: clock root port ck: 17,685 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. u_ot_pr_core.u_view.g_hc.c_lk[0]$_DLATCH_N_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.util_channel: utilisation 61.2% > 60% (std 13355 + macro 0 um2 in 21835 um2; target 40%-60%): enlarge the outline  -> FIX: above 60% enlarge the outline toward util 0.50-0.55; keep >= 20 um macro channels (a roomy outline is acceptable: never shrink for area)
+GATE WARN textbook.clock_guidance: clock root port:ck: 17,685 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 17,685 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE INFO cts_calibration: ss insertion all 281.7..330.7 ps (spread 49.0), boundary mean 294.5; tt insertion all 213.5..244.2 ps (spread 30.7), boundary mean 224.7; ff insertion all 172.6..195.7 ps (spread 23.1), boundary mean 182.6; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.600 vs spec PD 0.60
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/s81bf_front_five_roots_n32_soq/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg     1800 paths, worst slack 0.0 ps (e.g. u_ot_pr_core.u_view.g_hc.c_lk[336]$_DLATCH_N_/D)
+GATE INFO path_classes: reg->out      602 paths, worst slack 271.8 ps (e.g. c1[29])
+GATE INFO path_classes: setup WNS 0.0 hold WNS 4.142419740560399e-11
+GATE INFO cross_clock: ot_entry_0->ot_entry_1 max: 2 undeclared timed path(s), worst 191.7 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_1 min: 2 undeclared timed path(s), worst 346.4 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_3 max: 776 undeclared timed path(s), worst 92.6 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_3 min: 776 undeclared timed path(s), worst 363.3 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_4 max: 776 undeclared timed path(s), worst 76.7 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_0->ot_entry_4 min: 776 undeclared timed path(s), worst 349.3 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_1->ot_entry_0 max: 1379 undeclared timed path(s), worst 0.0 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_1->ot_entry_0 min: 1379 undeclared timed path(s), worst 345.1 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: ot_entry_2->ot_entry_0 max: 1024 undeclared timed path(s), worst 156.5 ps (uncertainty 150.0 ps)
+GATE INFO cross_clock: ot_entry_2->ot_entry_0 min: 1024 undeclared timed path(s), worst 354.2 ps (uncertainty 100.0 ps)
+GATE INFO cross_clock: 5 register clocks (ot_entry_0,ot_entry_1,ot_entry_2,ot_entry_3,ot_entry_4): no undeclared cross-clock reg->reg setup violation under signoff.sdc
+GATE WARN clock_rule: root port:ck: 17,685 sinks on the largest root; measured TT insertion 244.2 ps, FF insertion 195.7 ps, TT pin-flop spread 10.1 ps, FF pin-flop spread 9.3 ps; WARN: 17,685 sinks on one clock root > 15,000 (guidance)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-tok-rate-2000-1021/physical/ref_tile/s81bf_front_five_roots_n32_soq/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-tok-rate-2000-1021/physical/ref_tile/s81bf_front_five_roots_n32_soq/gate_layout/density.png
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M3 58.83% used; GRT 536 s
+PRE_ROUTE_GATE: WARN (0 fail, 5 warn)
+GATE: s81bf_front_five_roots_n32_soq/gate_result.json written (exact staged source binding; commit it with the kit)
