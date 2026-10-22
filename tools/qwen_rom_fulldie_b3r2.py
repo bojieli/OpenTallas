@@ -4650,6 +4650,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             # of a stretched hop.  OT_RELAY_FAULT_LAND_EXTRA=0 restores the single station.
             _np = npad
             _xtra = _os.environ.get('OT_RELAY_FAULT_LAND_EXTRA', '1') == '1' and str(bid).startswith('flt_') and bid in _lc_bids
+            _ftries = []
             for _try in range(3 if _xtra else 1):
                 got = []
                 # the pads sit on the segment from the sink back to the bus's last relay (or its source): pad j at
@@ -4755,14 +4756,30 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     px, py = sp[0] + w / 2, sp[1] + h / 2
                 got.reverse()          # chain order: the last pad placed (farthest along the walk) first, the sink's last
                 # judged pin to pin (the gate's p2p_hops measure; r37cxd: centre hop <= 400 but p2p 408.2)
+                # (r38cxc: still 408.2 at the gate, whose emitted relay pins differ from the allocator's face model, so
+                # the trigger keeps OT_RELAY_FAULT_LAND_MARGIN um (30) below the reach; the best try is kept)
                 _hop = max(p2p_hops(dict(pl, frames=list(pl['frames']) + got))) if _xtra else 0.0
-                if _xtra and _try < 2 and _hop > RELAY_REACH_UM - 2:
+                _lim = RELAY_REACH_UM - float(_os.environ.get('OT_RELAY_FAULT_LAND_MARGIN', '30'))
+                if _xtra:
+                    _ftries.append((_hop, _np, list(got)))
+                    if _hop > _lim - 25:
+                        print(f'FAULT_LAND {bid}: {_np} station(s) p2p hop {_hop:.1f} (trigger {_lim:.0f})', flush=True)
+                if _xtra and _try < 2 and _hop > _lim:
                     for f_ in got:
                         rm_rect((f_[0], f_[1], f_[0] + w + v.SHAVE, f_[1] + h + v.SHAVE))
-                    print(f'FAULT_LAND_EXTRA {bid}: {_np} station(s) p2p hop {_hop:.1f} > {RELAY_REACH_UM - 2:.0f} -> {_np + 1}', flush=True)
+                    print(f'FAULT_LAND_EXTRA {bid}: {_np} station(s) p2p hop {_hop:.1f} > {_lim:.0f} -> {_np + 1}', flush=True)
                     _np += 1
                     continue
                 break
+            if _xtra and len(_ftries) > 1:
+                _bh, _bn, _bg = min(_ftries, key=lambda t_: (t_[0], t_[1]))
+                if _bn != _np:
+                    for f_ in got:
+                        rm_rect((f_[0], f_[1], f_[0] + w + v.SHAVE, f_[1] + h + v.SHAVE))
+                    for f_ in _bg:
+                        add_rect((f_[0], f_[1], f_[0] + w + v.SHAVE, f_[1] + h + v.SHAVE))
+                    got, _np = _bg, _bn
+                    print(f'FAULT_LAND_EXTRA {bid}: kept the {_bn}-station try (p2p hop {_bh:.1f})', flush=True)
             pl['frames'] = list(pl['frames']) + got
             pad_done[bid] = _np
             if not sink_in_field:
