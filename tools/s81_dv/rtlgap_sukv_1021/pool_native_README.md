@@ -42,3 +42,13 @@ Reach, clock placement, physical timing and the final native limit remain open.
 No physical pool body, slot fit, CN/IK growth or production adoption is claimed
 by a source or admitted job alone. Residual mapped violations require another
 named source correction and a new immutable run.
+
+The original census input hashes match all 13 inputs of the successor generator
+exactly. The original mapped cone map resolves the 1,351-load anonymous OR3
+root to the lane pin valid and role registers; its sinks include the score-1
+capture flag and maximum-payload flops across lanes. The 760-load final-adder
+valid reaches output payload flops across lanes. The 5,391-load reset also
+reaches top controller busy and age flops. These are actual mapped endpoints,
+not an inferred assignment of anonymous cells to an arithmetic unit. The
+source repair prevents the shared owners and moves those payload consumers
+into independent helper instances before synthesis.
