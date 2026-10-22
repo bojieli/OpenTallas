@@ -20,6 +20,7 @@ contract.  Any change refuses.  No fault, clock, reset or status output is in RO
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from collections import defaultdict
@@ -84,7 +85,7 @@ SOURCES = {
 # kv_static_die --check RTL current at route A (d22bu), HROOT_LAND (d22hl2), and both + N32/PJ.  GEN_ASSERT below re-checked.
 # SQK-DIE 10-21: re-pin after 8c06b1180/dc3a6373f/8ed15aacb (default-off OT_KV_KRT_ES6_HOME placement block only;
 # no instance, port or chain-end text changed).
-GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', '8fb31acbf5e49cffa597fee3e8501e089d6f03942c054ed7bfa0d377d9ee68bd')
+GENERATOR = ('tools/qwen_kv_die/kv_static_die.py', 'fcd224f205e0379ebfa9e8cbe1f79df78e3a7ee341908eb8f59c2d954f51d732')
 
 PC = ('qkd_kvs_pc', 'qkd_kvs_pc_h')
 GRP = ('qkd_kvs_grp', 'qkd_kvs_grp_h')
@@ -375,7 +376,9 @@ def derive(die_v, root=ROOT, existing=None, pins=None):
 
     def tail_name_ok(inst, prefix):
         mt = re.fullmatch(prefix + r'_(WS|WN|ES|EN)_(\d+)', inst)
-        return bool(mt) and int(mt.group(2)) == (31 if mt.group(1)[1] == 'S' else 0)
+        # SQC-KDIE2 10-22: OT_KV_KC_INNER=1 wires the S stacks like the N stacks (kick pc31 -> pc0): every stack ends at pc0
+        kc_inner = os.environ.get('OT_KV_KC_INNER', '0') == '1'
+        return bool(mt) and int(mt.group(2)) == (31 if (mt.group(1)[1] == 'S' and not kc_inner) else 0)
 
     def traces_to(net_bits, master, port):
         """every bit follows same-index relay payload edges back to master.port"""
