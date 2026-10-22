@@ -1,0 +1,35 @@
+{
+  "baseline": "9873bd831",
+  "variants": [
+    "qfd_tile_nk_romleaf_rc14a",
+    "qfd_tile_nk_romleaf_rc14b",
+    "qfd_tile_nl_romleaf_rc14a",
+    "qfd_tile_nl_romleaf_rc14b"
+  ],
+  "source_clock_logic_change": false,
+  "added_edges": 0,
+  "hard_child_origin_or_pin_change": false,
+  "outline_um": [
+    820.8,
+    907.2
+  ],
+  "mechanism": "GPL-only source sink ownership; remove permanent EXCLUSIVE row reservations before legalization so actual repair buffers can use adjacent standard rows.",
+  "measured_failed_nk_rc13b": {
+    "instances": 224586,
+    "nets": 179575,
+    "rows": 13488,
+    "groups": 18,
+    "named_unowned_wire_cells": 8,
+    "each_intersects_actual_rows": 0
+  },
+  "causal_replay": {
+    "terminal": "PASS actualdetailed_placement and check_placement",
+    "max_displacement_um": 3.4,
+    "total_displacement_um": 19.7,
+    "hpwl_change_percent": 0,
+    "failed_odb_sha256": "9ee9313b4ae83563b7b602f411d293977e78f97feffa9211fc4be4137c04d686",
+    "repaired_odb_sha256": "414200c014ee74e17dcb176011f542a7f0c1acae2d47521ef5c635dd1637f888"
+  },
+  "canonical_source_policy": "Evolved canonical files preserved; isolated byte-exact baseline selection manifest.",
+  "node_view_binding": "Exact CLOSED NB1 published packet f6e8b355 in own fresh directory; inherited source marker not altered."
+}

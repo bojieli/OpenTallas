@@ -1,0 +1,75 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-2000-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-2000-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-2000-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-2000-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-2000-1021
+ot-run: ot-pve1        admits    -3 GB (avail 194, growth 196, headroom 0, waiters 2/20 GB) load 96/28 running 11 disk 1104 GB 
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-2000-1021
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-qw-a0-2000-1021 (0.2 GB) ot-pve1 -> ot-gold2 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 1 changed entries in 3 s; running on ot-gold2; written files go back to ot-pve1 after the run
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-581872-1792641241 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+A0_DB insts=224586 nets=179575 rows=13488 groups=18
+A0_INST wire61402 master=BUFx16f_ASAP7_75t_R bbox=359478 511110 360666 511380 group=NONE status=PLACED containing_rows=0 intersect_rows=0 dbu=1000
+A0_INST wire61936 master=BUFx16f_ASAP7_75t_R bbox=473526 331560 474714 331830 group=NONE status=PLACED containing_rows=0 intersect_rows=0 dbu=1000
+A0_INST wire61938 master=BUFx16f_ASAP7_75t_R bbox=473526 339120 474714 339390 group=NONE status=PLACED containing_rows=0 intersect_rows=0 dbu=1000
+A0_INST wire61949 master=BUFx16f_ASAP7_75t_R bbox=473526 335880 474714 336150 group=NONE status=PLACED containing_rows=0 intersect_rows=0 dbu=1000
+A0_INST wire61971 master=BUFx12f_ASAP7_75t_R bbox=359478 509220 360450 509490 group=NONE status=PLACED containing_rows=0 intersect_rows=0 dbu=1000
+A0_INST wire62023 master=BUFx16f_ASAP7_75t_R bbox=473526 337500 474714 337770 group=NONE status=PLACED containing_rows=0 intersect_rows=0 dbu=1000
+A0_INST wire62348 master=BUFx12f_ASAP7_75t_R bbox=359478 507060 360450 507330 group=NONE status=PLACED containing_rows=0 intersect_rows=0 dbu=1000
+A0_INST wire62361 master=BUFx12f_ASAP7_75t_R bbox=359478 518670 360450 518940 group=NONE status=PLACED containing_rows=0 intersect_rows=0 dbu=1000
+A0_RELEASE qrl_tx0 members=1375
+A0_RELEASE qrl_tx1 members=1375
+A0_RELEASE qrl_tx2 members=1375
+A0_RELEASE qrl_tx3 members=1375
+A0_RELEASE qrl_tx4 members=1375
+A0_RELEASE qrl_tx5 members=1375
+A0_RELEASE qrl_tx6 members=1375
+A0_RELEASE qrl_tx7 members=1375
+A0_RELEASE qrl_rsw members=2661
+A0_RELEASE qrl_rnw members=2660
+A0_RELEASE qrl_rse members=2661
+A0_RELEASE qrl_rne members=2660
+A0_RELEASE qrl_dw members=2728
+A0_RELEASE qrl_de members=2728
+A0_RELEASE qrl_dwr members=3048
+A0_RELEASE qrl_der members=3048
+A0_RELEASE qrl_land_ib members=160
+A0_RELEASE qrl_hub members=2553
+A0_RELEASED groups=18 insts=224586 nets=179575 rows=13488
+[INFO DPL-0006] Core area: 737183.46 um^2
+[INFO DPL-0007] Movable instances area: 26765.02 um^2
+[INFO DPL-0008] Fixed instances area within core: 324526.22 um^2
+[INFO DPL-0009] Utilization: 47.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 224567 cells
+[INFO DPL-0393]   height 408 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+[INFO DPL-0393]   height 1600 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 6.07s
+Placement Analysis
+---------------------------------
+total displacement         19.7 u
+average displacement        0.0 u
+max displacement            3.4 u
+original HPWL         4262577.6 u
+legalized HPWL        4262598.9 u
+delta HPWL                    0 %
+
+A0_GROUP_RELEASE_REPLAY_PASS
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-581872-1792641241): exit 0
+ot-run: SPILL: outputs copied back ot-gold2 -> ot-pve1; RAN on ot-gold2: exit 0
