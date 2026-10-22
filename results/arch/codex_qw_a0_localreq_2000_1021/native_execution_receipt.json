@@ -1,0 +1,20 @@
+{
+  "source": "b5446d22d",
+  "unit": "ot-epyc5:oth-ubuntu-3834399-1792646149",
+  "verilator": "5.050",
+  "production_elaboration": "PASS",
+  "native_positive": {
+    "status": "PASS",
+    "checks": 6399,
+    "valids": 2560,
+    "nonzero": 2560
+  },
+  "same_binary_mut4": {
+    "status": "expected FAIL",
+    "errors": 1200
+  },
+  "source_files_verified": 31,
+  "build_peak_allocated_mb": 4322.535,
+  "build_wall_s": 109.899,
+  "transport": "Local session 74283 canceled while memory admission raced; client exited 143 and explicitly retained remote command. No client exit-zero claim. Individual completed benchmark markers and same-binary mutant evidence are source-hash verified; remote transient unit has since been collected."
+}
