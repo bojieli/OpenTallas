@@ -1,0 +1,12 @@
+{
+  "status": "PLACEMENT_CTS_FAIL",
+  "source": "dc766140a",
+  "master": "ot_s81sl_lep_mu_ab_regional_r4l",
+  "native": "PASSmax32/0viol/0roles",
+  "reset": "strict3ports/1sinkPASS",
+  "bench": "NB80+resetreassertPASSdebe82754, startup+2/dataage0",
+  "gate": "ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/s81sl_lepab_r3a-20261021-151329",
+  "clock": "NOT MEASURED duectsfailed, no multi-root coveragewaiver",
+  "fallback": "stillLIVE",
+  "next": "Preserveactualplacerfailure/fullresetproof; no unchangedretry/sourcealias"
+}

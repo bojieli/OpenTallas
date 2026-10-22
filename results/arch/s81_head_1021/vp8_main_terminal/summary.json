@@ -1,0 +1,12 @@
+{
+  "status": "DUT_CLOCK_FAIL",
+  "source": "ad935cd14",
+  "boundary_tt_ps": 125.0,
+  "boundary_ff_ps": 112.6,
+  "limit_ps": 80,
+  "grt_overflow": 0,
+  "gate_dir": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81sl_vp8-20261021-131056",
+  "cause": "calibratedRCspine78.9ps didnot survive actualplatformRC strictmeasurement; symmetry/treepad/balance alreadyenabled, no unchangedretry",
+  "fallback": "stillLIVE",
+  "next": "Collectactualperpinbranch/clockcontacts beforeONEsource/physicalproposal; no waiver/submit"
+}

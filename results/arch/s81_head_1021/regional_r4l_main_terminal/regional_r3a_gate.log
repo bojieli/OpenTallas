@@ -1,0 +1,38 @@
+GATE WARN clock_span: 561.6 x 1900.8 um: one clock root over > 600 um  -> FIX: split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small
+GATE WARN fill: fill 16% = (macros/children 124928 + std 42391) / outline 1067489 um2 (pin-bound: Four lane-pitch W bands plus paired E buses (RO/MLWD and RI/MLRD each2208pins/432um=5.11/um) fix the outline. Std native42390.81054um2, macros40; RULE FREEZE low fill/aspect guidance, actual die GRT/STA and reticlefit decide.)
+GATE INFO pin_regs: pin registers opted out: Source registers at all interfaces/region crossings, existing two-stage lane relays; adding generic pin registers would change priced ages.
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-epyc5 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_s81sl_lepab_r3a_20261021-151329.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_s81sl_lepab_r3a_20261021-151329.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/s81sl_lepab_r3a-20261021-151329
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc5 in 342 s (gate total 6307 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 8949, 'pin_rectangles': 8949, 'pin_track_checked': 8949, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 bfbb2555e52a4546d1defc4402761e6acfe3b8a4c2f1d3b78713169a0b6e7009
+GATE INFO util: synthesized std area 49555 um2 + macros 124928 in core 1056870: util 6% (std-cell density 6.2% of placeable 794025 um2; total fill 16.5%)
+GATE INFO keep_modules: keep ot_sram_showahead_hit5: ot_sram_showahead_hit5 survives synthesis (40 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_rx_control: ot_s81sl_lep_rx_control survives synthesis (18 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_host_event: ot_s81sl_lep_host_event survives synthesis (36 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_tx_push: ot_s81sl_lep_tx_push survives synthesis (40 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_stamp: ot_s81sl_lep_stamp survives synthesis (10 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_vcopy: ot_s81sl_lep_vcopy survives synthesis (28 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_pair_ready: ot_s81sl_lep_pair_ready survives synthesis (4 instances)
+GATE INFO keep_modules: keep ot_s81sl_lep_return8: ot_s81sl_lep_return8 survives synthesis (8 instances)
+GATE INFO keep_modules: keep ot_sram_showahead_readptr: $paramod$759cc08167689ff53e926615631256f87759f2ef\ot_sram_showahead_readptr survives synthesis (32 instances)
+GATE INFO keep_modules: keep ot_s81sl_lepab_select: ot_s81sl_lepab_select survives synthesis (9 instances)
+GATE INFO keep_modules: keep ot_s81sl_lepab_replay_slice: $paramod$5198e38e585229c169d7c32f11e790d3c19888bd\ot_s81sl_lepab_replay_slice, $paramod$566412551362e5f0093bcae03be7925dce149e6b\ot_s81sl_lepab_replay_slice, $paramod$ed4fdfd9237fa0b7184a92712f6bd1e5a364e1b8\ot_s81sl_lepab_replay_slice survives synthesis (7 instances)
+GATE INFO keep_modules: keep ot_s81sl_lepab_replay_decode: ot_s81sl_lepab_replay_decode survives synthesis (7 instances)
+GATE INFO textbook: WARN ot_s81sl_lep_mu_ab_regional_r4l cells 335,839 flops 98,151 depth 366.7 ps util 0.1643 reach 218.5 um (6.0 s)
+GATE WARN textbook.clock_domain: clock root port clk_a: 34,506 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. g_entrance[1].first_q$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_domain: clock root port clk_b: 34,506 flops > 15,000 on one root (+0 ICGs, 20 macro clock pins; e.g. g_entrance[2].first_q$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.clock_domain: clock root port clk: 29,139 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. dispatch_fault$_DFFE_PN0P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine  -> FIX: hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root
+GATE WARN textbook.boundary: 8 input->register endpoint(s) > 3 levels (worst ro[0]->remain[6]$_DFFE_PN0P_/D 5 lv, ro[0]->remain[5]$_DFFE_PN0P_/D 5 lv, ro[0]->remain[4]$_DFFE_PN0P_/D 5 lv): allowed as a same-region direct connection when the die / parent path meets timing (owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um  -> FIX: register every boundary: pin flop in, flop out; never an ICG enable from a port
+GATE WARN textbook.clock_guidance: clock root port:clk_a: 34,526 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 34,526 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=None
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE WARN cross_clock: multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)  -> FIX: fix the signoff SDC read and re-gate with --cts
+GATE FAIL clock_rule: actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)  -> FIX: pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-s81-regional-land-1021/physical/ref_tile/s81sl_lepab_r3a/gate_layout/floorplan.png
+GATE WARN fill: fill 16% = (hard macros 124928.1 + synthesized std cells 48694.9) / outline 1067489.3 um2; pin demand per face: S 0 pins over 0.0/561.6 um (0%), N 0 pins over 0.0/561.6 um (0%), W 4560 pins over 1859.8/1900.8 um (98%), E 4597 pins over 1085.5/1900.8 um (57%) (pin-bound: Four lane-pitch W bands plus paired E buses (RO/MLWD and RI/MLRD each2208pins/432um=5.11/um) fix the outline. Std native42390.81054um2, macros40; RULE FREEZE low fill/aspect guidance, actual die GRT/STA and reticlefit decide.)
+PRE_ROUTE_GATE: FAIL (2 fail, 10 warn)
+GATE: s81sl_lepab_r3a/gate_result.json written (exact staged source binding; commit it with the kit)

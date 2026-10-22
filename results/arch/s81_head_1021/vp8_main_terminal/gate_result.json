@@ -1,0 +1,149 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_dsrom_su_hcpost_lane_pr': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81sl_vp8_20261021-131056.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81sl_vp8_20261021-131056.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81sl_vp8-20261021-131056",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-agidock128 in 138 s (gate total 13074 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2413, 'pin_rectangles': 2413, 'pin_track_checked': 2413, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 1bdb54be11edec0878effc249f98225ebd15dc6736a8916cb3a9d7b371b6e2cf",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 4790 um2 + macros 220046 in core 627635: util 1% (std-cell density 1.3% of placeable 361522 um2; total fill 35.8%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_s81sl_vp cells 32,576 flops 11,246 depth 341.7 ps util 0.3579 reach 2.3 um (1.5 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 11,246 flops > 8,000 spread over a 730 x 860 um outline (> 600 um) (+0 ICGs, 18 macro clock pins; e.g. rst_n__ot_rl0$_DFF_P_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 953.0..1391.8 ps (spread 438.8), boundary mean 1310.0; tt insertion all 755.6..1093.7 ps (spread 338.1), boundary mean 1004.9; ff insertion all 626.1..904.9 ps (spread 278.8), boundary mean 818.4; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.400 vs spec PD 0.40",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "spine built on port clk",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 2 (coarse) leaves 1589 sinks 11258 cells 2951 leaf arrival 767.2..846.2 ps (spread 78.9) pad 68.2 / 14.0 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "clock_spine",
+   "message": "OT_SPINE iter 3 (fine) leaves 1589 sinks 11258 cells 3429 leaf arrival 769.5..848.5 ps (spread 79.1) pad 68.2 / 9.8 ps",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/s81sl_vp8/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg      427 paths, worst slack -19.8 ps (e.g. u_ot_pr_core.hw_d_i[48]$_DFF_P_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->macro    173 paths, worst slack -10.2 ps (e.g. u_ot_pr_core.u_b0/w_addr_in[3])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS -1.9823254149287095e-11 hold WNS -8.162470699346613e-11",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "11,264 sinks on the largest root; measured TT insertion 1093.7 ps, FF insertion 904.9 ps, TT pin-flop spread 125.0 ps, FF pin-flop spread 112.6 ps; TT pin-flop spread 125.0 ps > 80 and FF pin-flop spread 112.6 ps > 80",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/s81-vp-r8-1021/physical/ref_tile/s81sl_vp8/gate_layout/floorplan.png; density /home/ubuntu/wt/s81-vp-r8-1021/physical/ref_tile/s81sl_vp8/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 35% = (hard macros 220046.0 + synthesized std cells 4569.2) / outline 634521.6 um2; pin demand per face: S 0 pins over 0.0/734.4 um (0%), N 786 pins over 719.7/734.4 um (98%), W 772 pins over 849.2/864.0 um (98%), E 991 pins over 849.3/864.0 um (98%) (< 50%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M2 10.67% used; GRT 8392 s",
+   "fix": ""
+  }
+ ]
+}

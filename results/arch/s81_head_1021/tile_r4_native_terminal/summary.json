@@ -1,0 +1,12 @@
+{
+  "status": "DUT_NATIVE_FAIL_NOT_TIMEOUT",
+  "source": "3834fc6d3",
+  "kit": "447f9e381",
+  "max_dynamic_loads": 33,
+  "violations_each": 68,
+  "role_errors": 0,
+  "golden_reset_mini": "4of4PASS0d2b73f20 preserved, dataage0/startup+1",
+  "cause": "optin g_exp_copies.top_q shared exponentselect flattens into encoding fanout33",
+  "physical": "NOT REACHED",
+  "next": "ONEgenuine3bit captureddata/control proposal d283f6f18 sentparentforreview; no map/build/physicalgate until scopedreview"
+}
