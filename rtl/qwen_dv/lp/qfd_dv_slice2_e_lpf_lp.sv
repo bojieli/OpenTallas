@@ -6,7 +6,8 @@
 //     4 = child reset run of 'u_hd' one stage long
 module qfd_dv_slice2_e_lpf_lp #(
     parameter integer SL_MUT = 0, parameter integer SU_TLS = 1, parameter integer SU_LT = 1,
-                            parameter integer MU_NU = 4,
+                            parameter integer MU_NU = 4,     
+                            parameter integer ARF = 0, parameter integer RP = 0,
     parameter integer MUT = 0
 ) (
     input wire rst_n,
@@ -334,7 +335,7 @@ module qfd_dv_slice2_e_lpf_lp #(
     wire lpr_c_u_tsc;  ot_pl_pad #(.W(1), .N(9)) u_lprc_u_tsc (.ck(ck_sc), .d(lpr_sc), .q(lpr_c_u_tsc));   // t(u_tsc) = 9
     wire lpr_c_u_tse;  ot_pl_pad #(.W(1), .N(9)) u_lprc_u_tse (.ck(ck_se), .d(lpr_se), .q(lpr_c_u_tse));   // t(u_tse) = 9
     // ---- children (clock pins -> their region root; reset pins -> their reset run; landed / padded inputs)
-    qfd_dv_slice2_lpc #(.MUT(SL_MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(1), .MU_NU(MU_NU), .DIR(1)) u_c (.ck(ck_core), .rst_n(lpr_c_u_c), .cmd_i(cmd_ei__l_core), .cmd_o(c_cmd_o), .hr_i(hr_ei__l_core), .hr_o(c_hr_o), .rs_s0(rs_s0__l_core), .rs_s1(rs_s1__l_core), .rs_n0(rs_n0__l_core), .rs_n1(rs_n1__l_core), .l9_i(l9_wi__l_core), .l9_o(c_l9_o), .st_up_i(st_ei__l_core), .st_up_o(c_st_up_o), .st_dn_i(st_wi__l_core), .st_dn_o(c_st_dn_o), .sc_up_i(sc_ei__l_core), .sc_up_o(c_sc_up_o), .sc_dn_i(sc_wi__l_core), .sc_dn_o(c_sc_dn_o), .ch_up_i(w_ch_up_i__l_core), .ch_dn_o(c_ch_dn_o), .ch_dn_i(w_ch_dn_i__l_core), .ch_up_o(c_ch_up_o), .hd_sid(h_sid), .hd_xpf(h_xpf), .hd_gi(h_gi), .hd_sw_v(h_sw_v), .hd_sw_a(h_sw_a), .hd_sw_d(h_sw_d), .hd_fe(h_fe), .st_n(c_st_n), .cc_o(c_cc_o), .ag_up_i(ag_wi__l_core), .ag_n(c_ag_n));   // region core, t = 3
+    qfd_dv_slice2_lpc #(.MUT(SL_MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(1), .MU_NU(MU_NU), .ARF(ARF), .RP(RP), .DIR(1)) u_c (.ck(ck_core), .rst_n(lpr_c_u_c), .cmd_i(cmd_ei__l_core), .cmd_o(c_cmd_o), .hr_i(hr_ei__l_core), .hr_o(c_hr_o), .rs_s0(rs_s0__l_core), .rs_s1(rs_s1__l_core), .rs_n0(rs_n0__l_core), .rs_n1(rs_n1__l_core), .l9_i(l9_wi__l_core), .l9_o(c_l9_o), .st_up_i(st_ei__l_core), .st_up_o(c_st_up_o), .st_dn_i(st_wi__l_core), .st_dn_o(c_st_dn_o), .sc_up_i(sc_ei__l_core), .sc_up_o(c_sc_up_o), .sc_dn_i(sc_wi__l_core), .sc_dn_o(c_sc_dn_o), .ch_up_i(w_ch_up_i__l_core), .ch_dn_o(c_ch_dn_o), .ch_dn_i(w_ch_dn_i__l_core), .ch_up_o(c_ch_up_o), .hd_sid(h_sid), .hd_xpf(h_xpf), .hd_gi(h_gi), .hd_sw_v(h_sw_v), .hd_sw_a(h_sw_a), .hd_sw_d(h_sw_d), .hd_fe(h_fe), .st_n(c_st_n), .cc_o(c_cc_o), .ag_up_i(ag_wi__l_core), .ag_n(c_ag_n));   // region core, t = 3
     qfd_dv_slice2_lps u_s (.ck(ck_core), .rst_n(lpr_c_u_s), .st_n(c_st_n__p_u_s), .ag_n(c_ag_n__p_u_s), .hd_fault(h_fault__l_core), .st(s_st), .ag_dn_o(s_ag));   // region core, t = 9
     qfd_dv_slice2_lph #(.MUT(SL_MUT)) u_hd (.ck(ck_hd), .rst_n(lpr_c_u_hd), .sid(h_sid__l_hd), .xpf(h_xpf__l_hd), .gi(h_gi__l_hd), .sw_v(h_sw_v__l_hd), .sw_a(h_sw_a__l_hd), .sw_d(h_sw_d__l_hd), .fe_i(h_fe__l_hd), .cw_n0(h_n0), .cw_n1(h_n1), .cw_n2(h_n2), .cw_n3(h_n3), .cw_s0(h_s0), .cw_s1(h_s1), .cw_s2(h_s2), .cw_s3(h_s3), .fault(h_fault));   // region hd, t = 6
     qfd_dv_slice2_e_te u_te (.ck(ck_ef), .rst_n(lpr_c_u_te), .st_dn_o(c_st_dn_o__l_ef), .sc_dn_o(c_sc_dn_o__l_ef), .ch_dn_o(c_ch_dn_o__l_ef), .cc_o(c_cc_o__l_ef), .l9_o(c_l9_o__l_ef), .st_eo(st_eo), .sc_eo(sc_eo), .arv_eo(arv_eo), .art_eo(art_eo), .arm_eo(arm_eo), .arl_eo(arl_eo), .ard_eo(ard_eo), .dd_eo(dd_eo), .ccv_eo(ccv_eo), .ccm_eo(ccm_eo), .ccw_eo(ccw_eo), .cct_eo(cct_eo), .l9_eo(l9_eo));   // region ef, t = 6
