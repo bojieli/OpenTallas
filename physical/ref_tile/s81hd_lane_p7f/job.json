@@ -1,0 +1,136 @@
+{
+ "name": "s81hd_lane_p7f-s81hd_lane_p7f_1-COMMIT",
+ "block": "ot_s81hd_lane",
+ "ref_tile": true,
+ "owner": "Claude:STW-S81c-COLLA2-VP",
+ "purpose": "HEAD lane design (b): adapter spine pads from the child's buffer family (p7f)",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/s81-head-lane-p3-1022",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_head",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "results/rtl/s81_head_ctlgate_1021",
+   "physical/ref_tile/dscoll_lane_w_s8ng/views",
+   "results/rtl/s81_head_lane_p3_1022"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81hd_lane u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay_tree3.sv rtl/dsrom_sys/s81_head/ot_s81hd_util.sv rtl/dsrom_sys/s81_head/ot_s81hd_lane.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hd_lane_base",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_bench.sh {RUN}/lane base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane flits \\d+/\\d+ exact, overflow flagged",
+    "pass_witness": "results/rtl/s81_head_ctlgate_1021/lane/base.log"
+   },
+   {
+    "name": "hd_lane_mut_ovf",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_bench.sh {RUN}/lane OVF",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane",
+    "fail_regex": "^FAIL hd_lane static overflow not flagged",
+    "fail_witness": "results/rtl/s81_head_ctlgate_1021/lane/mut_OVF.log"
+   },
+   {
+    "name": "hd_lane_mut_rp",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_bench.sh {RUN}/lane RP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane",
+    "fail_regex": "^FAIL hd_lane data: errors [1-9]",
+    "fail_witness": "results/rtl/s81_head_ctlgate_1021/lane/mut_RP.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hd_lane_p7f/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hd_lane_p7f/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81hd_lane_p7f --out {RUN}/record/views/ot_s81hd_lane --macro-view physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81hd_lane_p7f/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81hd_lane_p7f/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81hd_lane_p7f/s81hd_lane_p7f-s81hd_lane_p7f_1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "s81hd_lane_p7f (STW-S81c-COLLA2-VP 10-22, HEAD lane design (b), adapter clock that scales like the child's): p3m geometry, target = the child's routed TT boundary mean 698.4 (no new target value); symmetric insertion-aware spine (child taps at its insertion node) with subtree-shared tree pads, all pads BUFx4 (the child's CTS buffer family). Why: p3m..p5b pin-flop spread traded TT for FF (698.4: TT 28 / FF 115; 743.4: 61.5 / 85.2; 753.4: 67.9 / 81.3; 760.4: 82.1 / 67.2) because the adapter leaves carry ~700 ps of HB4 delay-cell pad chains (FF/TT ~0.70-0.75) while the child's closed tree is BUF + wire (FF/TT 0.81): any single target balances one corner. Pads made of the child's buffer family scale with the child, so the TT-balanced tree stays balanced at FF. Single ck port, RTL/ports/latency unchanged. Not chosen: hardening the adapter as its own child (a new hard kit to close first + a landed seam; kept as the successor if the pad-family fix misses 80). | prior: STW-S81c-HEAD-LANE 10-22 (successor of flat s81hd_lane_m/f: clock_rule FAIL, one 24.1k-sink root over 812 um, boundary spread TT 81.5/FF 83.0 (m), TT 112.9 (f)): HIERARCHICAL -- the lane body is the CLOSED hard child dscoll_lane_w_s8ng (own tree, routed boundary spread TT 73.5/FF 67.6; closure-loop 8151c3923 TT +9.95/FF +6.81 DRC 0), the adapter is parent soft logic on a balanced spine targeted at the child's boundary insertion. RTL, ports, widths, cycles unchanged (RELEASE FREEZE 10-22). Two-root flat variant (+ck_l port) parked NEXT-RELEASE (branch claude/s81-head-lane-p2-1021). MAIN: core face E, adapter band 129.6 um E."
+}
