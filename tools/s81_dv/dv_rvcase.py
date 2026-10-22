@@ -549,7 +549,7 @@ def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, re
         stacks[(round(plan_c[i][0], 2), round(plan_c[i][1], 2))].append(i)
     fixed, nstack = {}, 0
     for key, mem in sorted(stacks.items(), key=lambda kv: -len(kv[1])):
-        if len(mem) < 2:
+        if len(mem) < 4:          # pairs / triples (crossing + street on one point) stay with the DP
             continue
         nstack += 1
         mem.sort(key=lambda v: pos_in.get(v, 0))
