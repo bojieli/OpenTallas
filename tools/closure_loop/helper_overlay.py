@@ -192,6 +192,10 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22: tokc-sparse-keep (new files only)
+    "cc298a6f04b3bc417d29076a8e70783653af108d": dict(
+        kind="neutral",
+        what="sparse_keep.py new helper: widens a sparse worktree without deleting on-disk kits; no gate check"),
     # ROOT-MERGE-1022 10-22: claude/sqc-slice16-1022 lineage fbee65bf2 touches only qw2 slice2 kit files under
     # tools/ref_tile/specs_qw2_slice2_native|tall (plus tools/qwen_dv generators); no shared gate/helper rule changes.
     "fbee65bf263e7e0275ccd3bf695cb3f21be8b05b": dict(
