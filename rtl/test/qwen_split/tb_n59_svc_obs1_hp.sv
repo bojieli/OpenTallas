@@ -83,6 +83,23 @@ module tb_n59_svc_obs1_hp #(parameter integer SEED=1, parameter integer NRND=600
   cpt_prev=d_cpt; cpl_prev=d_cpl; if(d_cpl)ncpl=ncpl+1;
   if(d_txv||d_x3[523]||d_ecre||d_hdv)nact=nact+1;
  end
+ // Directed real embedding and RoPE fetches exercise same-state index copies.
+ reg emb_check=0;integer emb_codes=0,emb_scales=0;reg[17:0]emb_expected_token;
+ always @(negedge ck)if(emb_check)begin
+  if(d_ecre)begin
+   if(emb_codes>=72)err("too many embedding code fetches");
+   else if(d_eca!==(emb_codes<64?24'(emb_expected_token*64+emb_codes):24'(9723904+emb_expected_token*8+emb_codes-64)))err("embedding/RoPE address differs from independent model");
+   emb_codes=emb_codes+1;
+  end
+  if(d_esre)begin if(d_esa!==emb_expected_token)err("embedding scale address differs");emb_scales=emb_scales+1;end
+ end
+ task automatic embedding(input[17:0]tok);begin
+  emb_expected_token=tok;emb_codes=0;emb_scales=0;emb_check=1;
+  native_cmd=0;native_cmd[379:376]=4'hE;native_cmd[375:358]=tok;
+  @(posedge ck);#0.1 native_cmd=0;
+  repeat(100)@(posedge ck);#0.1 emb_check=0;
+  if(emb_codes!=72||emb_scales!=1)err($sformatf("embedding fetch counts code=%0d scale=%0d",emb_codes,emb_scales));
+ end endtask
  // ---- directed head-prepare scoreboard (independent model)
  reg[13:0]seqm[0:3]; reg seen[0:3];
  reg exp_v[0:15]; reg[58:0]exp_t[0:15];      // expected descriptor per future edge (ring)
@@ -124,6 +141,10 @@ module tb_n59_svc_obs1_hp #(parameter integer SEED=1, parameter integer NRND=600
   fill(2'd3,18'd1,18'd2); repeat(8)@(posedge ck); #0.1;
   checking=0;
   if(nhd!=nhd_exp||nhd_exp!=18)err($sformatf("directed descriptors seen %0d expected %0d",nhd,nhd_exp));
+  // Full valid embedding requests, including all 64 code rows and 8 RoPE rows.
+  quiet;rst_n=0;repeat(6)@(posedge ck);#0.1 rst_n=1;repeat(6)@(posedge ck);#0.1;
+  embedding(18'd17);embedding(18'd151935);
+  $display("N59OBS_EMBED_PASS requests=2 code_fetches=144 scale_fetches=2");
   // random lockstep
   repeat(NRND)begin rnd_inputs; @(posedge ck); #0.1; end
   quiet; rst_n=1; repeat(20)@(posedge ck); #0.1;

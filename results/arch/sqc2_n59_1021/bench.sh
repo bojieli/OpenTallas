@@ -12,9 +12,10 @@ SRCS=(rtl/qwen_split/qfd_native59_svc.sv rtl/qwen_split/qfd_native59_static_serv
  rtl/qwen_split/qfd_native59_q_export_control.sv rtl/qwen_split/qfd_native59_record_endpoint.sv rtl/qwen_split/qfd_kvn_static_transport.sv
  rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv
  rtl/test/qwen_split/tb_n59_svc_obs1_hp.sv)
-seed=1; old=""; new=""; expect=pass
+nrnd=6000; seed=1; old=""; new=""; expect=pass
 case "$case_" in
- s1) seed=1;; s2) seed=2;;
+ s1) seed=1;;
+ s_emb) seed=1; nrnd=0;; s2) seed=2;;
  m_hpseq) expect=fail; old="assign hp_seq={hi[13:7],lo[6:0]};"; new="assign hp_seq={hi[13:7],lo[6:0]}+14'd1;";;
  m_hpdrop) expect=fail; old="hp_v<={hp_v[0],head_prepare_v};"; new="hp_v<={hp_v[0],head_prepare_v&&head_prepare_user!=2'd2};";;
  m_ret) expect=fail; old="else native_ret<=service_ret_raw;"; new="else native_ret<=service_ret_raw^{94'd0,p_cs};";;
@@ -33,7 +34,7 @@ PY
 fi
 abs=(); for f in "${SRCS[@]}"; do abs+=("$root/$f"); done
 "$VL" --binary --timing -O1 -j 4 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module tb_n59_svc_obs1_hp \
-  -GSEED=$seed -Mdir "$run/obj" "$obs" "${abs[@]}" > "$run/build.log" 2>&1 || { echo "N59OBS_BENCH build failed"; tail -20 "$run/build.log"; exit 3; }
+  -GSEED=$seed -GNRND=$nrnd -Mdir "$run/obj" "$obs" "${abs[@]}" > "$run/build.log" 2>&1 || { echo "N59OBS_BENCH build failed"; tail -20 "$run/build.log"; exit 3; }
 "$run/obj/Vtb_n59_svc_obs1_hp" > "$run/sim.log" 2>&1; rc=$?
 cat "$run/sim.log" | grep -E '^N59OBS' | head -12
 sha256sum "$obs" "${abs[@]}" > "$run/source.sha256"
