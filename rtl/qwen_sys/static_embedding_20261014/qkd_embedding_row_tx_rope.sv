@@ -155,7 +155,7 @@ module qkd_embedding_row_tx_rope #(parameter integer MUT=0)(
    row_ready<=armed_next&&(&filled_next)&&scale_next&&(&rope_filled)&&n_next==0;
    if(word_valid[6])begin
     if(!armed_state[MAIN]||n_state[MAIN]!=0||fill_control[MAIN])fault<=1;
-    if((word_rope[6]?token_bad_rope:token_bad_emb)||epoch_second!=ep)fault<=1;
+    if((word_rope[9]?token_bad_rope:token_bad_emb)||epoch_second!=ep)fault<=1;   // own kept copy [9]
     if(word_rope[6])begin
      if(word_is_scale[6]||(rope_selected[6]&&rope_filled[index_second[2:0]]))fault<=1;
     end else if(word_is_scale[6])begin if(scale_filled)fault<=1;end

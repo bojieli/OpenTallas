@@ -41,6 +41,7 @@
 module qkd_embedding_ctx_start #(
     parameter integer MUT = 0,
     parameter integer NATIVE32 = 0,
+    parameter integer LOCAL = 4,          // SQ-KATTN2 10-21: kept registered start copies (start_local)
     parameter integer MIN_GAP = 66          // >= the 65 row records + 1: a second fill inside one row's send window faults
 ) (
     input  wire          ck,
@@ -53,7 +54,7 @@ module qkd_embedding_ctx_start #(
     input  wire [60:0]   ctx_owner,            // record[60:0]    = {gen2, TAG59}
     // fill start (to join4_cal start, row_tx fill_*, the fan root emb_* via px_*)
     output wire          start,
-    output wire [3:0] start_local,
+    output wire [LOCAL-1:0] start_local,
     output reg  [17:0]   token,
     output reg  [15:0]   epoch,
     output wire [60:0]   owner,                // last started owner (retained; diagnostic / health)
@@ -61,9 +62,10 @@ module qkd_embedding_ctx_start #(
 );
     reg start_state,fault_state;
     (* keep=1,dont_touch=1 *)reg [3:0] pending_valid;
-    reg start_delayed,fault_delayed;
-    (* keep=1,dont_touch=1 *)reg [3:0] start_banks;
-    assign start_local=NATIVE32?start_banks:{4{start_state}};
+    (* keep=1,dont_touch=1 *)reg start_delayed;
+    reg fault_delayed;
+    (* keep=1,dont_touch=1 *)reg [LOCAL-1:0] start_banks;
+    assign start_local=NATIVE32?start_banks:{LOCAL{start_state}};
     assign start=NATIVE32?start_delayed:start_state;
     assign fault=NATIVE32?fault_delayed:fault_state;
     reg [60:0] pending_owner;
@@ -113,7 +115,7 @@ module qkd_embedding_ctx_start #(
         (* keep=1,dont_touch=1 *)reg [6:0] admit_q;
         always @(posedge ck or negedge reset_region[0])
             if(!reset_region[0])begin admit_q<=0;pending_valid<=0;start_delayed<=0;start_banks<=0;fault_delayed<=0;end
-            else begin admit_q<={7{admit}};pending_valid<={4{admit}};start_delayed<=start_state;start_banks<={4{start_state}};fault_delayed<=fault_state;end
+            else begin admit_q<={7{admit}};pending_valid<={4{admit}};start_delayed<=start_state;start_banks<={LOCAL{start_state}};fault_delayed<=fault_state;end
         for(genvar group=0;group<4;group=group+1)begin:g_owner
             localparam integer LO=group*16;
             localparam integer WIDTH=(61-LO<16)?61-LO:16;
