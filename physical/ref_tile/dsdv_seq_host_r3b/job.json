@@ -60,7 +60,7 @@
     "cmd": "J=4 bash tools/s81_dv/seq_three_roots_1021/run_landing.sh {RUN}/region_missing_landing 1",
     "expect": "fail",
     "fail_regex": "^SEQ_REGION_MISSING_LANDING_CAUGHT$",
-    "fail_witness": "results/arch/codex_seq_three_roots_1021/landing_witness/out_mutant_run.log",
+    "fail_witness": "results/arch/codex_seq_three_roots_1021/witness/initial/out/missing/run.log",
     "threads": 4,
     "peak_ram_gb": 16,
     "needs": [
