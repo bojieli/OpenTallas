@@ -630,19 +630,26 @@ module ot_s81dv_eng_finish_sram #(
             end
         end
     // r_vk: same next state as r_v (reset 0; go_t[1] clears; set on the completing root write)
+    wire [11:0] rwl;                // root write lines (defined below with the root capture)
     (* keep *) reg [24:0] rvk;
     for(genvar vg=0;vg<25;vg=vg+1)begin:g_result_pulse
       always @(posedge clk or negedge rc[6])
         if (!rc[6]) rvk[vg] <= 1'b0;
         else if (go_t[(vg+1)%NGO]) rvk[vg] <= 1'b0;
+`ifdef OT_S81DV_XFIN_N13
+        // N13 (STW-S81c-COLLA 10-22, N12 census: the shared wr_v && wr_n == root compare (NAND of u_t.line / u_v.line)
+        // drove 43 loads across the 25 rvk copies): copy vg reads the kept root write lines rwl[root][vg % 4], which
+        // equal (wr_v && wr_n == root) on every cycle (N8 root capture; both 0 after reset).  Same value, same edge.
+        else rvk[vg] <= dn != {T{1'b1}} && (dn | {rwl[8 + vg % 4], rwl[4 + vg % 4], rwl[vg % 4]}) == {T{1'b1}};
+`else
         else rvk[vg] <= dn != {T{1'b1}} && (dn | {wr_v && wr_n == 2 * NVP + 1, wr_v && wr_n == NVP + 1, wr_v && wr_n == 1})
                         == {T{1'b1}};
+`endif
     end
     assign r_vk = rvk;
     // N8 root capture: per (root, byte) KEPT reset lines of the issue-stage root hit (f_q && t_q == root), LAV deep
     // like av / u_t, so rwl[r][b] == (wr_v && wr_n == root r) on every cycle (both 0 after reset); each enables 8 bits
     // (census R33: one root enable drove 32 capture muxes, 64-73 loads)
-    wire [11:0] rwl;
 `ifdef OT_S81DV_XFIN_N10
     wire[11:0] rwl_reset;
     ot_s81dv_finish_reset2 #(.LEAVES(12))u_root_capture_reset(.clk(clk),.rst_n(rst_n),.q(rwl_reset));
