@@ -4458,6 +4458,40 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                                    frames={b_: _gfr[b_] for b_ in sorted(_gmap)})
         print(f'FWD_GROUP_PADS {len(set(_gmap.values()))} bus groups / {len(_gmap)} members: '
               f'{len(_gp)} members padded {sorted(_gp.items())}', flush=True)
+    # SQC-QSTWI 10-21 (r24 GEN: hp13_hr_contract 'fixed XPF 21 != ARM capture 1 + actual GEN HR lane 19'): the fixed
+    # native tt_ctlm source compiles XPF_TRANSPORT_EDGES; the tt_ctlm.hr forwarded lane must carry exactly XPF - ARM
+    # cycles.  OT_SPLIT_HR_LANE_PIN=1 pads the hr lane with registered sink-end stations (the frame_pads mechanism:
+    # E = fwd_e_est(n) + E_sta - 2, two half-cycle frames per cycle) up to that age.  A lane already OLDER than the
+    # source fails closed here (only a source XPF regeneration can fix that).
+    if _os.environ.get('OT_SPLIT_HR_LANE_PIN') == '1' and _os.environ.get('OT_SPLIT_FWD_LANES', '0') == '1':
+        _hc = json.loads((ROOT / 'results/arch/hp13_corepub39_1021/HR_SOURCE_CONTRACT.json').read_text())
+        _hx = {(int(c_['compiled_XPF_TRANSPORT_EDGES']), int(c_['ARM72']['source_to_HR_output_edges'])) for c_ in _hc}
+        if len(_hx) != 1:
+            raise ValueError(f'HR lane pin: HR source contracts disagree {_hx}')
+        _xpf, _arm = _hx.pop()
+        _age = _xpf - _arm
+        _lph = json.loads(Path(_os.environ['OT_SPLIT_LAND_PLAN']).read_text()) if _os.environ.get('OT_SPLIT_LAND_PLAN') else {}
+        _esh = {r_['bid']: int(r_['E']) for r_ in _lph.get('links', []) if r_.get('E') is not None}
+        _hpin = {}
+        for idx, (bid, cl, bits, eps) in buses:
+            if not eps or eps[0][0] != 'tt_ctlm' or eps[0][1].lstrip('*') != 'hr':
+                continue
+            n0_ = (len(plans[idx]['frames']) if idx in plans else 0) + int(tpads.get(bid, 0))
+            es_ = _esh.get(bid, FWD_LANE_E_STA)
+            p_ = 0
+            while fwd_e_est(n0_ + p_) + es_ - FWD_LANE_E_STA + 1 < _age and p_ < 16:
+                p_ += 1
+            got_ = fwd_e_est(n0_ + p_) + es_ - FWD_LANE_E_STA + 1
+            if n0_ <= 0 or got_ != _age:
+                raise ValueError(f'HR lane pin: {bid} n {n0_} E_sta {es_} gives lane {got_} != XPF {_xpf} - ARM {_arm}; '
+                                 'regenerate the source XPF for the actual route')
+            if p_:
+                tpads[bid] = int(tpads.get(bid, 0)) + p_
+            _hpin[bid] = dict(n=n0_, pads=p_, E_sta=es_, lane_cycles=got_)
+        if not _hpin:
+            raise ValueError('HR lane pin: no tt_ctlm.hr bus on this GEN')
+        m['hr_lane_pin'] = dict(XPF=_xpf, ARM=_arm, target_lane_cycles=_age, buses=_hpin)
+        print(f'HR_LANE_PIN target {_age} (XPF {_xpf} - ARM {_arm}): {_hpin}', flush=True)
     # Reconcile the allocator's mutable occupancy with the exact frames that
     # will be emitted after repair/rip-up/jog/pre-pad trimming. Every inline
     # arrival pad must see ALL surviving frames, not a stale search grid.
