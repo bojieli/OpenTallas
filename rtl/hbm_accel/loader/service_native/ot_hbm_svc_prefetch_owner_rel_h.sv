@@ -19,7 +19,8 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  input wire [3:0] blk_start_k,         // HBMc/TILES 10-22: KEPT same-edge copies of blk_start, one per table region leaf
  input wire blk_start_c,               // HBMc/TILES 10-22: KEPT copy of blk_start for the cursor update
  input wire blk_start_t,               // HBMc/TILES 10-22: KEPT copy of blk_start for t (address path)
- input wire blk_start_u,               // HBMc/TILES 10-22: KEPT copy of blk_start for tu (compares / cursor)
+ input wire blk_start_u,               // HBMc/TILES 10-22: KEPT copy of blk_start for tu (compares)
+ input wire blk_start_v,               // HBMc/TILES 10-22: KEPT copy of blk_start for tc (cursor update)
  input wire [11:0] block_total_b,      // HBMc/TILES 10-22: KEPT copy of block_total for the words range compare
  input wire block_active,input wire [29:0] block_base,input wire [19:0] block_pcs,
  input wire [14:0] block_row_base,input wire [11:0] block_total,input wire [LB-1:0] block_bank,
@@ -70,6 +71,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  end
  wire [9:0] t=blk_start_t?10'd0:cursor;
  wire [9:0] tu=blk_start_u?10'd0:cursor;   // same value as t (separate select driver)
+ wire [9:0] tc=blk_start_v?10'd0:cursor;   // same value as t (cursor update)
  wire [10:0] words;
  ot_hbm_svc_owner_words_leaf u_words(.total_a(total),.total_b(block_total_b),.lane(lane),.words(words));
  wire full_group=words>={1'b0,tu}+4;
@@ -151,7 +153,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
    .ordinal(ordinal_local[gr]),.length(length_local[gr]));
  end
  wire fire=k_v&&k_ready;
- assign cursor_n=fire_cursor?tu+length:(blk_start_c?10'd0:cursor);
+ assign cursor_n=fire_cursor?tc+length:(blk_start_c?10'd0:cursor);
  wire fire_ticket_lo,fire_ticket_hi,fire_cursor;
  ot_hbm_svc_local_and2 u_ftl(.a(k_v),.b(k_ready),.y(fire_ticket_lo));
  ot_hbm_svc_local_and2 u_fth(.a(k_v),.b(k_ready),.y(fire_ticket_hi));

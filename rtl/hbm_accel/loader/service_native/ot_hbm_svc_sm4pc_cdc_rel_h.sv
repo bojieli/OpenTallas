@@ -51,9 +51,9 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  // [4..11] landing banks; h_rst [0] core, [1] descriptor FIFO reader, [2..5] PCs (owner + skids), [6..13] banks (FIFO
  // writers), [14] CDCs.  The FIFOs / fault CDCs AND their two leaves into their own reviewed ot_reset_sync per side.
  // HBMc/TILES 10-22: sc[2] drain copies (dbank/dord, 87 flops -> own leaves sc[2..4]), sc[5] allocation + copies
- wire[7:0]sc;wire[3:0]hc;   // hc[3]: the 28 hfresh copies
+ wire[7:0]sc;wire[4:0]hc;   // hc[3]: 32 hfresh copies, hc[4]: 4 more
  ot_rst_fanout #(.N(8)) u_sc(.clk(stream_clk),.rst_n_in(s_rst[0]),.rst_n(sc));
- ot_rst_fanout #(.N(4)) u_hc(.clk(hbm_clk),.rst_n_in(h_rst[0]),.rst_n(hc));
+ ot_rst_fanout #(.N(5)) u_hc(.clk(hbm_clk),.rst_n_in(h_rst[0]),.rst_n(hc));
  // strap identity (static): stream-side copies for the reserve check/PC set, hbm-side copy for the re-check
  reg [1:0] stack_s,stack_h;reg [2:0] sm_s;
  (* keep="true",dont_touch="true" *) reg [2:0] sm_k[0:3];   // HBMc/TILES 10-22: per-PC-field strap copies (sm_s decodes had 64 loads)
@@ -77,6 +77,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  ot_hbm_svc_fault_cdc u_stream_fault_cdc(.wr_clk(stream_clk),.wr_rst_n(s_rst[3]),
   .rd_clk(hbm_clk),.rd_rst_n(h_rst[14]),.src_fault(stream_fault),.dst_fault(stf2),.wr_overflow(),.rd_underflow());
  wire desc_wr_ready,desc_rd_valid,desc_rd_ready,desc_ov,desc_un;
+ wire [1:0] dr_k;   // HBMc/TILES 10-22: kept desc_rd_ready copies (below)
  wire [DW-1:0] desc_data;
  wire desc_wr_reset,desc_rd_reset;
  // HBMc/TILES 10-22 (native census: the constant-input AND is transparent, and the 19 slices' identical both_reset ANDs
@@ -121,7 +122,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   ot_hbm_svc_async_fifo #(.WIDTH(W),.DEPTH(4)) u_descriptor(
    .wr_clk(stream_clk),.wr_rst_n(dws_rst[ds]),.wr_valid(rf_k[ds%2]&&dwq_k[ds]),.wr_ready(ds_wr_ready[ds]),
    .wr_data(desc_wd[ds*DSW+:W]),.wr_overflow(ds_ov[ds]),
-   .rd_clk(hbm_clk),.rd_rst_n(drs_rst[ds]),.rd_valid(ds_rd_valid[ds]),.rd_ready(desc_rd_ready&&drq_k[ds]),
+   .rd_clk(hbm_clk),.rd_rst_n(drs_rst[ds]),.rd_valid(ds_rd_valid[ds]),.rd_ready(dr_k[ds%2]&&drq_k[ds]),
    .rd_data(desc_data[ds*DSW+:W]),.rd_underflow(ds_un[ds]));
  end endgenerate
  assign fault=stream_fault||hbf2||desc_ov||(|bank_fault);
@@ -130,7 +131,8 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  reg h_active;reg h_fresh;
  // HBMc/TILES 10-22 (native census: constant-input AND "buffers" are transparent): KEPT same-edge copies replace them --
  // h_fresh per owner (k: 118 loads through four u_startbuf), the row-low capture per owner (33).
- (* keep="true",dont_touch="true" *) reg [31:0] hfresh_k;   // [8*pc]: owner, [8*pc+1+r]: table region r, [8*pc+5]: cursor, [8*pc+6/7]: t / tu
+ (* keep="true",dont_touch="true" *) reg [31:0] hfresh_k;
+ (* keep="true",dont_touch="true" *) reg [3:0] hfresh_v;   // per-owner cursor-update copy   // [8*pc]: owner, [8*pc+1+r]: table region r, [8*pc+5]: cursor, [8*pc+6/7]: t / tu
  (* keep="true",dont_touch="true" *) reg [1:0] rowlow_k[0:3];
  (* keep="true",dont_touch="true" *) reg [11:0] tot_k[0:3];   // per-owner block_total copies (h_total had 128 loads)
  (* keep="true",dont_touch="true" *) reg [11:0] totb_k[0:3];  // second per-owner copy: the words range compare
@@ -143,6 +145,11 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  wire descriptor_fire=desc_rd_valid&&desc_rd_ready;
  reg rx_any;always @*begin rx_any=0;for(rb=0;rb<LBANKS;rb=rb+1)if(rx_left[rb]!=0)rx_any=1;end
  assign desc_rd_ready=!h_active&&!hbm_fault&&hc[0]&&desc_rd_valid&&rx_left[desc_data[T0-1:16]]==0;
+ // HBMc/TILES 10-22: two kept copies of desc_rd_ready (AND2 of desc_rd_valid and the same qualifier) for the 19
+ // descriptor slices' pops (one node drove 54 loads)
+ wire dr_gate=!h_active&&!hbm_fault&&hc[0]&&rx_left[desc_data[T0-1:16]]==0;
+ ot_hbm_svc_local_and2 u_dr0(.a(desc_rd_valid),.b(dr_gate),.y(dr_k[0]));
+ ot_hbm_svc_local_and2 u_dr1(.a(desc_rd_valid),.b(dr_gate),.y(dr_k[1]));
  wire desc_good=desc_data[S0+1:S0]==stack_h&&desc_data[T0+11:T0]!=0&&desc_data[T0+11:T0]<=512&&
                 {3'b0,desc_data[A0+29:A0]}+desc_data[T0+11:T0]<=33'h040000000;
  // block-field captures: while no block issues AND the descriptor FIFO head is valid (storage read only under
@@ -195,7 +202,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   ot_hbm_svc_and3_leaf u_countbuf(.a(response_ok[pc]),.b(!lane_bad[pc]),.c(ri_ready),.y(ri_count[pc]));
   ot_rst_fanout #(.N(6)) u_pr(.clk(hbm_clk),.rst_n_in(h_rst[2+pc]),.rst_n(pr));
   ot_hbm_svc_prefetch_owner_rel_h #(.OWNER_AW(OWNER_AW),.LB(LB)) u_owner(
-   .pc_id({id_sm,2'(pc)}),.clk(hbm_clk),.rst_n(pr[4:0]),.blk_start(local_start),.blk_start_k(hfresh_k[8*pc+1+:4]),.blk_start_c(hfresh_k[8*pc+5]),.blk_start_t(hfresh_k[8*pc+6]),.blk_start_u(hfresh_k[8*pc+7]),.block_total_b(totb_k[pc]),
+   .pc_id({id_sm,2'(pc)}),.clk(hbm_clk),.rst_n(pr[4:0]),.blk_start(local_start),.blk_start_k(hfresh_k[8*pc+1+:4]),.blk_start_c(hfresh_k[8*pc+5]),.blk_start_t(hfresh_k[8*pc+6]),.blk_start_u(hfresh_k[8*pc+7]),.blk_start_v(hfresh_v[pc]),.block_total_b(totb_k[pc]),
    .block_active(local_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base({h_row_base[14:2],local_row_low}),.block_total(tot_k[pc]),
    .block_bank(h_bank),.block_epoch(h_epoch),.stop(owner_stop[pc]),
    .k_ready(ko_r[pc]),.kr_v(ri_v[pc]),.kr_tag(ri_tag[17*pc+:17]),
@@ -230,6 +237,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  ot_hbm_svc_local_and2 u_dfg_a(.a(descriptor_fire),.b(desc_good),.y(dfg_a));
  ot_hbm_svc_local_and2 u_dfg_b(.a(descriptor_fire),.b(desc_good),.y(dfg_b));
  always @(posedge hbm_clk or negedge hc[3])if(!hc[3])hfresh_k<=0;else hfresh_k<={{16{dfg_b}},{16{dfg_a}}};
+ always @(posedge hbm_clk or negedge hc[4])if(!hc[4])hfresh_v<=0;else hfresh_v<={4{dfg_b}};
  always @(posedge hbm_clk or negedge hc[0])begin
   if(!hc[0])begin h_active<=0;h_fresh<=0;hbm_fault<=0;hidle_k<={4{1'b1}};end
   else begin
