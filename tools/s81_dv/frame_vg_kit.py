@@ -187,6 +187,15 @@ def main():
     if set(roms) != set(insts):
         raise SystemExit(f'ROM instances in kit RTL {len(roms)} != spec macros {len(insts)}')
     s['soft_root_macro_bindings'] = {i: dict(master=ROM, clock_pin='clk', root=roms[i]) for i in sorted(insts)}
+    # the forwarded xk[k] reaches the frame output xok[k] through the u_xo<k> relay's ck -> ck_o Liberty clock-through
+    # arc (frame forwarded-clock contract): declared exactly, else CTS refuses it (h9 vg gate 10-22 OT_FORWARDED_SOFT
+    # 'undeclared or non-clock sink xk[0] -> xok[0]')
+    xo = sorted(re.findall(r'\bdsfd_dvrly_276_NS\s+(u_xo(\d))\s*\(\.ck\(xk\[(\d)\]\)[^;]*?\.ck_o\(xok\[(\d)\]\)', kt))
+    if 'xk' in s.get('forwarded_clock_ports', []):
+        if len(xo) != 4 or any(not (d == i == o) for _, d, i, o in xo):
+            raise SystemExit(f'forwarded xk -> xok relays not found exactly in {kit}: {xo}')
+        s['forwarded_clock_outputs'] = [dict(input=f'xk[{i}]', output=f'xok[{i}]', inst=u, master='dsfd_dvrly_276_NS',
+                                             input_pin='ck', output_pin='ck_o') for u, _, i, _ in xo]
     s['structural_change'] = s.get('structural_change', '') + (
         f' | {name} (STW-S81c-DIE-FRAME 10-22): VECTOR LANDINGS (lp landing_vector_group): '
         f"{rec['audit'].get('landings', len(rec['landings']))} vector ring/read pairs carry the "

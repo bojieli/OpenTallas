@@ -296,6 +296,10 @@ def main():
         if 'xk' in pnames:
             s['forwarded_clock_ports'] = ['xk']
             s['reset_landing'] = base['reset_landing']
+            # the xk -> xok relay clock-through arcs of this band (frame forwarded-clock contract, frame_vg_kit)
+            fco = [r for r in base.get('forwarded_clock_outputs', []) if full_band.get(r['inst']) == b]
+            if fco:
+                s['forwarded_clock_outputs'] = fco
 
         else:
             s.pop('forwarded_clock_ports', None)

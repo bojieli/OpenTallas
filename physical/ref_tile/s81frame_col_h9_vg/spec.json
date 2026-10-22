@@ -2861,5 +2861,39 @@
  "reroute_reason": {
   "kind": "structural_change",
   "reason": "s81frame_col_h9_rf3rlfs1x: GPL 3_3 routability non-convergence from 3k one-bit landings on the bf-row region boundaries -> vector landings (same ports, pins, outline, clocks)"
- }
+ },
+ "forwarded_clock_outputs": [
+  {
+   "input": "xk[0]",
+   "output": "xok[0]",
+   "inst": "u_xo0",
+   "master": "dsfd_dvrly_276_NS",
+   "input_pin": "ck",
+   "output_pin": "ck_o"
+  },
+  {
+   "input": "xk[1]",
+   "output": "xok[1]",
+   "inst": "u_xo1",
+   "master": "dsfd_dvrly_276_NS",
+   "input_pin": "ck",
+   "output_pin": "ck_o"
+  },
+  {
+   "input": "xk[2]",
+   "output": "xok[2]",
+   "inst": "u_xo2",
+   "master": "dsfd_dvrly_276_NS",
+   "input_pin": "ck",
+   "output_pin": "ck_o"
+  },
+  {
+   "input": "xk[3]",
+   "output": "xok[3]",
+   "inst": "u_xo3",
+   "master": "dsfd_dvrly_276_NS",
+   "input_pin": "ck",
+   "output_pin": "ck_o"
+  }
+ ]
 }

@@ -1118,6 +1118,40 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
+ "forwarded_clock_outputs": [
+  {
+   "input": "xk[0]",
+   "output": "xok[0]",
+   "inst": "u_xo0",
+   "master": "dsfd_dvrly_276_NS",
+   "input_pin": "ck",
+   "output_pin": "ck_o"
+  },
+  {
+   "input": "xk[1]",
+   "output": "xok[1]",
+   "inst": "u_xo1",
+   "master": "dsfd_dvrly_276_NS",
+   "input_pin": "ck",
+   "output_pin": "ck_o"
+  },
+  {
+   "input": "xk[2]",
+   "output": "xok[2]",
+   "inst": "u_xo2",
+   "master": "dsfd_dvrly_276_NS",
+   "input_pin": "ck",
+   "output_pin": "ck_o"
+  },
+  {
+   "input": "xk[3]",
+   "output": "xok[3]",
+   "inst": "u_xo3",
+   "master": "dsfd_dvrly_276_NS",
+   "input_pin": "ck",
+   "output_pin": "ck_o"
+  }
+ ],
  "landed_band": true,
  "reset_landing": {
   "enable": false,
