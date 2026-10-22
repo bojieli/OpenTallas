@@ -63,6 +63,14 @@ def build(binding, ledger, requests, receipt_root):
                   'configuration_start','launch_to_calendar_zero','ownership_release_tail',
                   'port_free','parameters','instance','producer_tp','layer_id'):
         if binding.get(field) is None:missing.append('selected gather binding.'+field)
+    native=binding.get('bank_calendars') or {}
+    for quarter in ('SW','SE','NW','NE'):
+        cal=native.get(quarter)
+        if not cal:missing.append('native calendar '+quarter+' source profile');continue
+        if cal.get('target_id') is None or not cal.get('source_sha256') or not cal.get('instance'):missing.append('native calendar '+quarter+' source identity')
+        ages=cal.get('launch_to_bank_owner_edges')
+        if not isinstance(ages,list) or len(ages)!=8 or any(age is None for age in ages):
+            missing.append('native calendar '+quarter+' actual eight bank owner publication ages')
     if binding.get('status')!='PASS':missing.append('selected gather binding PASS source receipt')
     if len(requests)!=6:raise ValueError('all six route gathers are required')
     for request in requests:
@@ -85,7 +93,7 @@ def build(binding, ledger, requests, receipt_root):
         raise ValueError('actual GSC placement requires selected SEGMENTED96 source')
     control=receipt(ledger['control_transport'],receipt_root,binding)
     if control['producer_kind']!='native_control_transport':raise ValueError('actual control transport authority required')
-    for field in ('calendar_epoch','configuration_start','launch_to_calendar_zero','ownership_release_tail','parameters','producer_tp','layer_id'):
+    for field in ('calendar_epoch','configuration_start','launch_to_calendar_zero','ownership_release_tail','parameters','producer_tp','layer_id','bank_calendars'):
         if control.get(field)!=binding[field]:raise ValueError('control binding differs from hashed source receipt: '+field)
     if control.get('engine_source_sha256')!=binding['source_sha256']:
         raise ValueError('control transport receipt names a different selected engine source')
@@ -93,7 +101,9 @@ def build(binding, ledger, requests, receipt_root):
     epoch=integer(binding['calendar_epoch'],'actual calendar epoch',0,2**31-1)
     available=integer(binding['port_free'],'actual bank ownership availability',0,2**31-1)
     if available>epoch:raise ValueError('programme selects native bank ports before their actual owner releases them')
-    free=epoch+2
+    host_launch=epoch-binding['launch_to_calendar_zero']
+    owner_ready=max(host_launch+age for cal in binding['bank_calendars'].values() for age in cal['launch_to_bank_owner_edges'])
+    free=max(epoch+2,owner_ready)
     plans=[];jobs={}
     for request in requests:
         tag=request['tag'];d=deepcopy(request['descriptor'])

@@ -816,6 +816,8 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None, n
         if binding and binding.get('status')=='PASS':
             if binding.get('instance') not in bnd['instances']:
                 raise ValueError('indexed gather engine is not an actual selected slice instance')
+            if any(cal.get('instance') not in bnd['instances'] for cal in binding.get('bank_calendars',{}).values()):
+                raise ValueError('native gather bank calendar is not an actual selected slice instance')
         result = G.lower(raw,tag=tag,source_window=window,binding=binding,record_start=r['start'],placement=place)
         result['su_lower2_attempts']=[dict(lowering='native_indexed_scalar',status=result['status'],reasons=result['reasons'])]
         return result
