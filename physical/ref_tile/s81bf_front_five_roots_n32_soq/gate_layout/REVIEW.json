@@ -1,0 +1,18 @@
+{
+  "reviewer": "codex coordinator ROOT",
+  "time": "2026-10-21T21:46:05.481476-07:00",
+  "geometry_sha256": "2638f4e4fb6a0a66dc022263aad06fc238a09f40d59e20135ef9e24d26037fe8",
+  "verdict": "APPROVED",
+  "gate_source_commit": "feefbfb05",
+  "archive_sha256": "c518f377642d5f09bd448e806ba28cc95a35253b3b250c1367eae4b806a68d2b",
+  "manifest_sha256": "ee78faa6fc61b3e09984c1079c4a5565352b2f589c9a739a4bc46c50804cf60b",
+  "authority": "ROOT independently inspected floorplan, density and raw gate; approval sent to token lead in coordinator message. Token lead records that approval without self-review.",
+  "checklist": {
+    "lattice": "No macros and no lattice issue.",
+    "std_cell_band": "Continuous standard-cell area. Hot north/south strips and 61.2% utilization disclosed; zero GRT overflow.",
+    "pin_spread": "Pins occupy full faces; all 3272 pin geometries accessible.",
+    "clock_entry": "All five root boundaries below 80 ps. Worst io_e TT/FF pin spread 36.4/35.2 ps; ck is 10.1/9.3 ps. 17685 root sinks remains guidance.",
+    "shape": "116.6 x 198.7 um outline inspected; ordinary route qualification approved."
+  },
+  "scope": "Ordinary route qualification only; no final physical, die or token qualification."
+}

@@ -1,0 +1,18 @@
+{
+  "source_commit": "feefbfb05",
+  "removed_extra_path": "physical/ref_tile_specs/s81_bf_native_1015/static_pins_c10s",
+  "present_in_frozen_gate_readset": false,
+  "source_rtl_changed": false,
+  "stages_changed": false,
+  "actual_behavioural_chain": [
+    "tools/s81/bf6_front_n32_bench.py",
+    "tools/s81/bf_txn_bench.py"
+  ],
+  "unused_generator_references": [
+    "tools/s81/bf_column_c10_pinplan.py",
+    "tools/s81/bf_front_roots_abi_audit.py",
+    "tools/s81/bf_front_roots_pinplan.py"
+  ],
+  "replacement_job": "s81bf_front_five_roots_n32_soq-srcfix-feefbfb05",
+  "separate_coordinator_review_required_after_historical_nonclosed_count": true
+}

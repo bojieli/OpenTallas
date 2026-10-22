@@ -1,0 +1,18 @@
+{
+  "name": "s81bf_front_five_roots_n32_soq-ref-feefbfb05",
+  "status": "NEEDS_HUMAN",
+  "reason": "source.extra_paths not in commit feefbfb05b1d: physical/ref_tile_specs/s81_bf_native_1015/static_pins_c10s -- fix the spec (the file must be committed at the pinned commit) and re-drop",
+  "events": [
+    "2026-10-21T21:39:09-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81bf_front_five_roots_n32_soq-ref-feefbfb05.json",
+    "2026-10-21T21:39:13-07:00 CLOSED-STANDS PASS: dsfd_bf_front_roots is CLOSED with a published view (s81bf_front_five_roots_nlock_h03-ref-392d7efcb @ 392d7efcb); reroute_reason rtl_change: 6 of 45 RTL source file(s) differ from 392d7efcb: rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv, rtl/s81/ot_s81_bf_front_roots.sv, rtl/s81/ot_s81_bf_seam_roots.sv (verified)",
+    "2026-10-21T21:39:35-07:00 CLOCK-RULE at submit: 17,685 sinks on the largest root; measured TT insertion 244.2 ps, FF insertion 195.7 ps, TT pin-flop spread 10.1 ps, FF pin-flop spread 9.3 ps; WARN: 17,685 sinks on one clock root > 15,000 (guidance)",
+    "2026-10-21T21:39:35-07:00 REF_GATE WARN (refuse): sources: 21 referenced file(s) do not exist: ['physical/common_flow/anchor_row_packing.tcl', 'physical/common_flow/cg_pushdown.tcl', 'physical/common_flow/clk_net_protect.tcl', 'physical/common_flow/clock_entries.tcl', 'physical/common_flow/grt_macro_top_layer.tcl', 'physical/common_flow/link_budget_consistent.sdc'] (fix: commit them / fix the path) | clock_rule: 17,685 sinks on the largest root; measured TT insertion 244.2 ps, FF insertion 195.7 ps, TT pin-flop spread 10.1 ps, FF pin-flop spread 9.3 ps; WARN: 17,685 sinks on one clock root > 15,000 (guidance) (fix: guidance only (owner 10-17 0dq): the check is pin-flop spread <= 80 ps at TT and FF plus a neighbour-matched boundary)",
+    "2026-10-21T21:39:48-07:00 benches run in parallel with calibrate/route (4 benches; spec bench_first opts out)",
+    "2026-10-21T21:39:51-07:00 NEEDS_HUMAN: source.extra_paths not in commit feefbfb05b1d: physical/ref_tile_specs/s81_bf_native_1015/static_pins_c10s -- fix the spec (the file must be committed at the pinned commit) and re-drop",
+    "2026-10-21T21:40:32-07:00 auto-react: block dsfd_bf_front_roots has a live or closed sibling job; no action"
+  ],
+  "run": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_five_roots_n32_soq-ref-feefbfb05",
+  "host": "ot-epyc9",
+  "source_synced": false,
+  "commit_full": "feefbfb05b1dcf7c4065fd986ccbac7af66119b6"
+}
