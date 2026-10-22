@@ -357,6 +357,11 @@ module ot_s81sl_lep_core #(
     wire bsel = stamp && wab;                          // this frame goes to pair B
     reg [2*H-1:0] fr;
     wire [FRAME_NS-1:0] frame_host_pending,frame_key_pending;
+    // STW-S81c-COLLA3-LEP w14 (OT_S81SL_LEP_PUSHREP, opt-in): per push group / push lane a KEPT replica of the frame-slice
+    // pending state (ph / pk), same inputs, same reset leaf, same edges -> equal every cycle (TX_GROUP_ASSERT checks it).
+    // Its only loads are the tx_push group logic, so it sits beside the TX address groups instead of at the E-side
+    // frame slices (r7m gate: pk_r -> tx_push -> wr_group -> wp_r / count_r 545 um + 6 levels, -114 ps).
+    wire [PUSH_GROUPS+NL-1:0] frame_host_rep,frame_key_rep;
     genvar fc,fb;
     generate if(MU_EN!=0 && RX_SRAM!=0) begin:g_frame_local
       localparam integer HG=(FRAME_NS+7)/8;
@@ -385,6 +390,23 @@ module ot_s81sl_lep_core #(
               if(kp) pk_r<=0;if(kevent_r) pk_r<=1;
             end
           end
+`ifdef OT_S81SL_LEP_PUSHREP
+        if(fc<PUSH_GROUPS+NL) begin:g_rep
+          wire rph,rpk;
+`ifdef OT_S81SL_LEP_MUT_REPKEV
+          wire rep_kev=1'b0;                           // MUTANT: the replica never sees the key event
+`else
+          wire rep_kev=(HOST_EN!=0) && kevent_r;
+`endif
+          (* keep=1 *) ot_s81sl_lep_pend_rep u_rep(.clk(clk),.rn(rr[FRAME_RSTBASE+fc]),.ring(rov_r),
+            .hev((HOST_EN!=0) && host_event[fc/8]),.kev(rep_kev),.ph(rph),.pk(rpk));
+          assign frame_host_rep[fc]=rph;assign frame_key_rep[fc]=rpk;
+`ifdef OT_S81SL_TX_GROUP_ASSERT
+          always @(posedge clk) if(rr[FRAME_RSTBASE+fc] && {rph,rpk}!=={ph_r,pk_r})
+            $fatal(1,"PUSHREP replica differs slice %0d: rep %b%b slice %b%b",fc,rph,rpk,ph_r,pk_r);
+`endif
+        end
+`endif
         for(fb=8*fc;fb<8*(fc+1) && fb<2*H;fb=fb+1) begin:g_bit
           wire hd,kd;
           if(fb>=4 && fb<81) begin:g_host_payload assign hd=ph_d[fb-4]; end
@@ -429,13 +451,23 @@ module ot_s81sl_lep_core #(
         (* keep *) reg ring_r;
         always @(posedge clk `OT_LEP_AR(rr[CTRL_RSTBASE+NL+8+pg]))
           if(!rr[CTRL_RSTBASE+NL+8+pg]) ring_r<=0;else ring_r<=rvx[pg/3];
-        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && frame_host_pending[pg]),.key_go(!ring_r && !frame_host_pending[pg] && frame_key_pending[pg]),.open(wopen),.pair_b(wab),.pp(push_group[2*pg+:2]));
+`ifdef OT_S81SL_LEP_PUSHREP
+        wire php=frame_host_rep[pg],pkp=frame_key_rep[pg];
+`else
+        wire php=frame_host_pending[pg],pkp=frame_key_pending[pg];
+`endif
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && php),.key_go(!ring_r && !php && pkp),.open(wopen),.pair_b(wab),.pp(push_group[2*pg+:2]));
       end
       for(genvar pl=0;pl<NL;pl=pl+1) begin:g_lane
         (* keep *) reg ring_r;
         always @(posedge clk `OT_LEP_AR(rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl]))
           if(!rr[CTRL_RSTBASE+NL+8+PUSH_GROUPS+pl]) ring_r<=0;else ring_r<=rvx[1+pl];
-        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && frame_host_pending[PUSH_GROUPS+pl]),.key_go(!ring_r && !frame_host_pending[PUSH_GROUPS+pl] && frame_key_pending[PUSH_GROUPS+pl]),.open(wopen),.pair_b(wab),.pp(push_lane[2*pl+:2]));
+`ifdef OT_S81SL_LEP_PUSHREP
+        wire php=frame_host_rep[PUSH_GROUPS+pl],pkp=frame_key_rep[PUSH_GROUPS+pl];
+`else
+        wire php=frame_host_pending[PUSH_GROUPS+pl],pkp=frame_key_pending[PUSH_GROUPS+pl];
+`endif
+        (* keep=1 *) ot_s81sl_lep_tx_push u_push(.ring(ring_r),.host_go(!ring_r && php),.key_go(!ring_r && !php && pkp),.open(wopen),.pair_b(wab),.pp(push_lane[2*pl+:2]));
       end
     end endgenerate
     reg [1:0] sq;                                      // frame-sequence parity (TX), per pair
@@ -604,6 +636,18 @@ module ot_s81sl_lep_core #(
         (* keep=1 *) ot_s81sl_lep_vq_ctl  u_vqc(.clk(clk),.rn(rx_state_reset),.d(li_v[t]),.q(vq_c));
         (* keep=1 *) ot_s81sl_lep_vq_host u_vqh(.clk(clk),.rn(rx_state_reset),.d(li_v[t]),.q(vq_h));
         (* keep=1 *) ot_s81sl_lep_wp5 u_wpl(.clk(clk),.rn(rx_state_reset),.d(5'(wp_nx)),.q(wp_l5));
+        wire wr_c = vq_c && !full, wr_h = vq_h && !full;
+        wire [AR:0] n_nx_c = n + (AR+1)'(wr_c) - (AR+1)'(pop);
+        wire [AR:0] n_nx_h = n + (AR+1)'(wr_h) - (AR+1)'(pop);
+        assign rnex[t]=n_nx_c!=0;
+        assign rnexh[t]=n_nx_h!=0;
+`elsif OT_S81SL_LEP_VQREP
+        // STW-S81c-COLLA3-LEP w14 (opt-in): KEPT copies of the li_v landing flop vq for the rx_control lookahead (vq_c)
+        // and the host-plane enables (vq_h); same D / reset leaf / edge as vq -> identical every cycle; the original vq keeps
+        // the FIFO state.  c12f routed: ~250 vq fan-out paths in TT -235.
+        wire vq_c, vq_h;
+        (* keep=1 *) ot_s81sl_lep_vq_ctl  u_vqc(.clk(clk),.rn(rx_state_reset),.d(li_v[t]),.q(vq_c));
+        (* keep=1 *) ot_s81sl_lep_vq_host u_vqh(.clk(clk),.rn(rx_state_reset),.d(li_v[t]),.q(vq_h));
         wire wr_c = vq_c && !full, wr_h = vq_h && !full;
         wire [AR:0] n_nx_c = n + (AR+1)'(wr_c) - (AR+1)'(pop);
         wire [AR:0] n_nx_h = n + (AR+1)'(wr_h) - (AR+1)'(pop);
@@ -923,13 +967,22 @@ module ot_s81sl_lep_core #(
         localparam integer LO = 1 + c * OW, HI = (1 + (c + 1) * OW > 1104) ? 1104 : 1 + (c + 1) * OW;
         if (LO < 1104) begin : g_on
             if(RX_SRAM!=0) begin:g_registered_select
-                (* keep *) reg sa_r, sb_r, sm_r, ta_r, tb_r, tm_r;
                 wire reset_o=rr[4+NRX_MEMRST+c];
+`ifdef OT_S81SL_LEP_SELST
+                // STW-S81c-COLLA3-LEP w14 (opt-in): the six delivery-select flops of this output group in one KEPT owner
+                // (same D / reset / edge) so the kit can place it at a station between rx_control and the E-face rid
+                // owners (r7m gate: dq -> rx_control -> sm_r 968 um in one cycle, -128 ps).
+                wire sa_r, sb_r, sm_r, ta_r, tb_r, tm_r;
+                (* keep=1 *) ot_s81sl_lep_sel6 u_sel(.clk(clk),.rn(reset_o),.d(control_local[(c/8)*6+:6]),
+                    .q({tm_r,tb_r,ta_r,sm_r,sb_r,sa_r}));
+`else
+                (* keep *) reg sa_r, sb_r, sm_r, ta_r, tb_r, tm_r;
                 always @(posedge clk `OT_LEP_AR(reset_o))
                     if(!reset_o) begin sa_r<=0; sb_r<=0; sm_r<=0; ta_r<=0; tb_r<=0; tm_r<=0; end
                     else begin
                         {tm_r,tb_r,ta_r,sm_r,sb_r,sa_r}<=control_local[(c/8)*6+:6];
                     end
+`endif
                 genvar ob;
                 for(ob=LO;ob<HI;ob=ob+1) begin:g_bit
                     wire da, dbit, dm;
@@ -962,7 +1015,12 @@ module ot_s81sl_lep_core #(
     wire [1103:0] rb_r; reg mwv_r;
     for(genvar ob=0;ob<138;ob=ob+1) begin:g_ml_nface_out
       (* keep=1 *) ot_s81sl_lep_face8 u_relay(.clk(clk),.d(rb[ob*8+:8]),.q(rb_r[ob*8+:8]));
+`ifdef OT_S81SL_LEP_MUT_RLYBYP
+      if(ob==0) begin:g_byp (* keep=1 *) ot_s81sl_lep_face8 u_capture(.clk(clk),.d(rb[ob*8+:8]),.q(mwd[ob*8+:8])); end  // MUTANT
+      else begin:g_cap (* keep=1 *) ot_s81sl_lep_face8 u_capture(.clk(clk),.d(rb_r[ob*8+:8]),.q(mwd[ob*8+:8])); end
+`else
       (* keep=1 *) ot_s81sl_lep_face8 u_capture(.clk(clk),.d(rb_r[ob*8+:8]),.q(mwd[ob*8+:8]));
+`endif
     end
     always @(posedge clk `OT_LEP_AR(rnx)) if (!rnx) mwv_r <= 1'b0; else mwv_r <= rr_land;
     wire mwv_d = mwv_r;
@@ -1027,10 +1085,17 @@ module ot_s81sl_lep_core #(
     wire [52:0] ksp = h0[4 +: 53];
 `endif
     reg fh_v, fk_s; reg [513:0] fh_d; reg [51:0] fk_d; reg [3:0] lf;
+    wire fhv_la;                                       // OT_S81SL_LEP_FHLA: kept copy of the host enable lookahead flop
+`ifdef OT_S81SL_LEP_FHLA
+    localparam integer FHLA_ON = (MU_EN != 0 && RX_SRAM != 0) ? 1 : 0;
+`else
+    localparam integer FHLA_ON = 0;
+`endif
     always @(posedge clk `OT_LEP_AR(rnx))
         if (!rnx) begin fh_v <= 1'b0; fk_s <= 1'b0; end
         else begin
-            fh_v <= rel && hacc && h0[3:1] == 3'd1;
+            // w14 FHLA (MU_EN && RX_SRAM only): registered lookahead (== rel && hacc && HOST head)
+            fh_v <= (FHLA_ON != 0) ? fhv_la : (rel && hacc && h0[3:1] == 3'd1);
             fk_s <= rel && hacc && h0[3:1] == 3'd2 && ksp[52];
         end
     if(MU_EN!=0 && RX_SRAM!=0) begin:g_host_local
@@ -1039,6 +1104,14 @@ module ot_s81sl_lep_core #(
         (* keep=1 *) ot_s81sl_lep_host_enable u_host(.ne0(rnexh[0]),.ne1(rnexh[1]),.hit(rhostx[0]),.en(host_enable[hg]));
       end
       (* keep=1 *) ot_s81sl_lep_host_enable u_key(.ne0(rnexh[0]),.ne1(rnexh[1]),.hit(rksx[0]),.en(key_enable));
+      // STW-S81c-COLLA3-LEP w14 (OT_S81SL_LEP_FHLA, opt-in): fh_v = rel && hacc && h0 HOST == the registered host-enable
+      // lookahead (both lanes non-empty, head 0 a HOST frame: mhost / ring metadata); a kept copy of that flop feeds fh_v,
+      // so fh_v no longer decodes h0[3:1] from the RX SRAM 560 um away (r7m gate fh_v -72 ps).  Same edge, same value.
+      (* keep=1 *) ot_s81sl_lep_nzcopy u_fhla(.clk(clk),.rn(rr[HOST_RSTBASE+32]),.d(host_enable[4]),.q(fhv_la));
+`ifdef OT_S81SL_TX_GROUP_ASSERT
+      always @(posedge clk) if(rnx && rr[HOST_RSTBASE+32] && fhv_la!==(rel && hacc && h0[3:1]==3'd1))
+        $fatal(1,"FHLA lookahead differs from the head decode");
+`endif
       for(c=0;c<37;c=c+1) begin:g_slice
         (* keep="true" *) reg enable_r;
         wire hit=(c<33)?rhostx[0]:rksx[0];
@@ -1053,6 +1126,7 @@ module ot_s81sl_lep_core #(
         end
       end
     end else begin:g_host_legacy
+      assign fhv_la=1'b0;
       always @(posedge clk) begin
         if (rel && hacc && h0[3:1] == 3'd1) fh_d <= h0[4 +: 514];
         if (rel && hacc && h0[3:1] == 3'd2) fk_d <= ksp[51:0];
@@ -1638,4 +1712,19 @@ endmodule
 (* keep_hierarchy="yes" *)
 module ot_s81sl_lep_face8(input wire clk,input wire [7:0] d,output reg[7:0] q);
  always @(posedge clk) q<=d;
+endmodule
+
+// STW-S81c-COLLA3-LEP w14 (OT_S81SL_LEP_PUSHREP): kept replica of one frame slice's pending state (ph / pk), the same
+// next-state function as g_frame_local.g_slice (hp = !ring && ph, kp = !ring && !ph && pk; event sets win).
+(* keep_hierarchy="yes" *) module ot_s81sl_lep_pend_rep(input wire clk,rn,ring,hev,kev,output reg ph,pk);
+ always @(posedge clk `OT_LEP_AR(rn))
+   if(!rn) begin ph<=1'b0; pk<=1'b0; end
+   else begin
+     if(!ring && ph) ph<=1'b0; if(hev) ph<=1'b1;
+     if(!ring && !ph && pk) pk<=1'b0; if(kev) pk<=1'b1;
+   end
+endmodule
+// STW-S81c-COLLA3-LEP w14 (OT_S81SL_LEP_SELST): the six registered delivery selects of one rid output group.
+(* keep_hierarchy="yes" *) module ot_s81sl_lep_sel6(input wire clk,rn,input wire [5:0] d,output reg [5:0] q);
+ always @(posedge clk `OT_LEP_AR(rn)) if(!rn) q<=6'd0; else q<=d;
 endmodule

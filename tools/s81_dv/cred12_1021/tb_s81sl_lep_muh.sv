@@ -126,6 +126,11 @@ module tb_s81sl_lep_muh #(parameter integer NB = 80, parameter integer RXSRAM = 
     reg [1103:0] rrd [0:QN-1]; integer rrc [0:QN-1]; integer nrr = 0;               // R ri
     reg [1103:0] mrd [0:QN-1]; reg [31:0] mrt [0:QN-1]; integer mrc [0:QN-1]; integer nmr = 0;   // M ri
     reg [1103:0] mld_ [0:QN-1]; integer mlc [0:QN-1]; integer nml = 0;             // M landed
+`ifdef OT_S81SL_LEP_WRLY
+    localparam integer LAND_LAT = 1;   // w14 (STW-S81c-COLLA3-LEP): WRLY = +1 BOOKED edge on ml_wv / ml_wd (landing write relay)
+`else
+    localparam integer LAND_LAT = 0;
+`endif
     integer bad = 0, hid = 0, cmp_on = 0;
     // ------------------------------------------------------------------ die -> H lists
     reg [1103:0] eam [0:QN-1]; reg [1103:0] ear [0:QN-1]; integer ean = 0;
@@ -277,7 +282,7 @@ module tb_s81sl_lep_muh #(parameter integer NB = 80, parameter integer RXSRAM = 
         for (k = 0; k < gn && k < nrr; k = k + 1) begin
             if (rrd[k] !== gs[k]) begin bad = bad + 1; if (bad < 8) $display("MISMATCH R ri %0d", k); end
             if (gl[k]) begin
-                if (jj >= nml || mld_[jj] !== gt[k] || mlc[jj] != rrc[k]) begin bad = bad + 1; if (bad < 8) $display("MISMATCH M landed %0d (ring %0d) cyc %0d vs R %0d", jj, k, mlc[jj], rrc[k]); end
+                if (jj >= nml || mld_[jj] !== gt[k] || mlc[jj] != rrc[k] + LAND_LAT) begin bad = bad + 1; if (bad < 8) $display("MISMATCH M landed %0d (ring %0d) cyc %0d vs R %0d", jj, k, mlc[jj], rrc[k]); end
                 jj = jj + 1;
             end else begin
                 if (ii >= rdone || mrd[ii] !== gs[k] || mrt[ii] !== grt[k] || mrc[ii] != rrc[k]) begin
