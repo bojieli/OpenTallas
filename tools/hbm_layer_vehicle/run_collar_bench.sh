@@ -14,5 +14,6 @@ sed 's#^#masters/#; s#$#.sv#' slice/masters.txt > $DIR/masters.f
   -Wno-fatal -Wno-lint -Wno-style -Wno-MODDUP -Wno-PINMISSING -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-TIMESCALEMOD \
   -Wno-INITIALDLY -Wno-COMBDLY -Wno-BLKANDNBLK -Wno-SELRANGE -Wno-WIDTH -Wno-CASEINCOMPLETE \
   --x-initial unique --x-assign unique -f $DIR/masters.f slice/slice.v $DIR/tb_collar.sv > $DIR/build.log 2>&1 || { grep -m8 %Error $DIR/build.log; exit 2; }
+python3 $(dirname $(readlink -f $0))/../verilator_nba_guard.py $DIR/obj | tee $DIR/nba_guard.log | grep -q "INPLACE_NBA_LOOPS=0" || { echo "VERILATOR_NBA_GUARD FAIL"; exit 86; }
 $DIR/obj/Vtb_collar +verilator+rand+reset+2 > $DIR/run.log 2>&1; RC=$?
 grep -E "COLLAR_(CHECK|BENCH)" $DIR/run.log; echo "EXIT rc=$RC"
