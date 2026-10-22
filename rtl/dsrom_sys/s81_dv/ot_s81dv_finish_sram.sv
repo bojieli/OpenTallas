@@ -605,14 +605,34 @@ module ot_s81dv_eng_finish_sram #(
     for(genvar mc=MREAD;mc<8;mc=mc+1)begin:g_unused_command
       assign read_nodes[mc*NC+:NC]='0;
     end
+    `ifdef OT_S81DV_XFIN_N14
+    wire wr_v_b; wire [CW-1:0] wr_n_b;   // N14 bank copies (driven below)
+`endif
     ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(3),.NBG(NBGA)) u_values(
       .clk(clk),.dca(dca),.dcb(dcb),.ph(ph),.id(id),.fire(fire),.issue_tag(ot[NC]),
+`ifdef OT_S81DV_XFIN_N14
+      .read_nodes(read_nodes),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v_b),.wr_tag(wr_n_b),.wr_d(wr_d));
+`else
       .read_nodes(read_nodes),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag(wr_n),.wr_d(wr_d));
+`endif
     wire [LAV:0] av; wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rc[5]), .v(f_q), .vd(av));
     ot_s81dv_qadd_n32 #(.LAT(LAV)) u_a (clk, rst_n, f_q, a_q, b_q, wr_d, f_add);
     ot_hdc_delay #(.W(CW), .D(LAV)) u_t (.clk(clk), .rst_n(rc[6]), .d(t_q), .q(wr_n));
     assign wr_v = av[LAV];
+`ifdef OT_S81DV_XFIN_N14
+    // N14 (STW-S81c-COLLA 10-22, N13 census: AND(u_t.line, !u_v.line) 51 loads): the value banks read their own kept
+    // copy of the write tag / valid delay lines (same input, same depth, same reset as u_t / u_v -> identical values
+    // every cycle); the local root logic keeps u_t / u_v.
+    (* keep *) reg [CW-1:0] tkl [0:LAV-1];
+    (* keep *) reg [LAV-1:0] vkl;
+    always @(posedge clk) begin : g_tkl
+        integer z_; tkl[0] <= t_q; for (z_ = 1; z_ < LAV; z_ = z_ + 1) tkl[z_] <= tkl[z_ - 1];
+    end
+    always @(posedge clk or negedge rc[5]) if (!rc[5]) vkl <= {LAV{1'b0}}; else vkl <= {vkl[LAV-2:0], f_q};
+    assign wr_v_b = vkl[LAV-1];
+    assign wr_n_b = tkl[LAV-1];
+`endif
     // roots: node 1 of each tree
     reg [T-1:0] dn; reg flt;
     always @(posedge clk or negedge rc[7])

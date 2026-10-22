@@ -275,6 +275,10 @@ module ot_s81dv_divc_n32 #(
     reg [2:0]         s3_r, s3b_r;
     reg signed [10:0] s3_eu, s3b_eu;
     reg [6:0] d0, d1, d2, d3, d4, d5;
+`ifdef OT_S81DV_XFIN_N14
+    (* keep *) reg [2:0] s3b_rk;       // same D (d3[2:0]), same edge as s3b_r
+    always @(posedge clk) s3b_rk <= d3[2:0];
+`endif
 `ifdef OT_S81DV_XFIN_N13
     (* keep *) reg [15:8] s3_mk;      // same D (s2_m), same edge as s3_m: the S3b digit inputs own their copy
     always @(posedge clk) s3_mk <= s2_m[15:8];
@@ -289,7 +293,11 @@ module ot_s81dv_divc_n32 #(
         d2 = dstep(s3_r, s3_m[15:12]);
         d3 = dstep(d2[2:0], s3_m[11:8]);
 `endif
+`ifdef OT_S81DV_XFIN_N14
+        d4 = dstep(s3b_rk, s3b_m[7:4]);     // N14: kept copy (N13 census s3b_r[0] 33 loads)
+`else
         d4 = dstep(s3b_r, s3b_m[7:4]);
+`endif
         d5 = dstep(d4[2:0], s3b_m[3:0]);
     end
     always @(posedge clk) begin
