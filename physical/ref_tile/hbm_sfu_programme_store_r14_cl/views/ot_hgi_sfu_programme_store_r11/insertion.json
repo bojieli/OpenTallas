@@ -1,0 +1,928 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/routes/hbm_sfu_programme_store_r14_cl_r14_133946a12/work/orfs/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "clock_family": {
+   "core_clk": 14917
+  },
+  "boundary": {
+   "n": 2903,
+   "mean": 1451.3,
+   "min": 1412.0,
+   "max": 1486.3
+  },
+  "all": {
+   "n": 14917,
+   "mean": 1464.6,
+   "min": 1058.7,
+   "max": 1543.6
+  },
+  "errors": [],
+  "macros": {
+   "n": 11,
+   "nets": 11,
+   "max_per_net": 1,
+   "reg_mean": 1464.6,
+   "max_slew": 23.9,
+   "max_late": -326.6,
+   "pins": [
+    {
+     "pin": "g_leaf[0].u_leaf/clk",
+     "arr": 1118.6,
+     "slew": 22.7,
+     "late": -346.0,
+     "net": "clkbuf_sp_L1879_net"
+    },
+    {
+     "pin": "g_leaf[10].u_leaf/clk",
+     "arr": 1090.9,
+     "slew": 22.8,
+     "late": -373.7,
+     "net": "clkbuf_sp_L1878_net"
+    },
+    {
+     "pin": "g_leaf[1].u_leaf/clk",
+     "arr": 1120.5,
+     "slew": 23.0,
+     "late": -344.1,
+     "net": "clkbuf_sp_L1877_net"
+    },
+    {
+     "pin": "g_leaf[2].u_leaf/clk",
+     "arr": 1058.7,
+     "slew": 22.6,
+     "late": -405.9,
+     "net": "clkbuf_sp_L1876_net"
+    },
+    {
+     "pin": "g_leaf[3].u_leaf/clk",
+     "arr": 1118.2,
+     "slew": 22.6,
+     "late": -346.4,
+     "net": "clkbuf_sp_L1875_net"
+    },
+    {
+     "pin": "g_leaf[4].u_leaf/clk",
+     "arr": 1110.5,
+     "slew": 22.8,
+     "late": -354.1,
+     "net": "clkbuf_sp_L1874_net"
+    },
+    {
+     "pin": "g_leaf[5].u_leaf/clk",
+     "arr": 1076.9,
+     "slew": 23.8,
+     "late": -387.7,
+     "net": "clkbuf_sp_L1873_net"
+    },
+    {
+     "pin": "g_leaf[6].u_leaf/clk",
+     "arr": 1092.4,
+     "slew": 23.5,
+     "late": -372.2,
+     "net": "clkbuf_sp_L1872_net"
+    },
+    {
+     "pin": "g_leaf[7].u_leaf/clk",
+     "arr": 1138.0,
+     "slew": 23.3,
+     "late": -326.6,
+     "net": "clkbuf_sp_L1871_net"
+    },
+    {
+     "pin": "g_leaf[8].u_leaf/clk",
+     "arr": 1074.4,
+     "slew": 23.9,
+     "late": -390.2,
+     "net": "clkbuf_sp_L1870_net"
+    },
+    {
+     "pin": "g_leaf[9].u_leaf/clk",
+     "arr": 1091.5,
+     "slew": 22.7,
+     "late": -373.1,
+     "net": "clkbuf_sp_L1869_net"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 2903,
+    "mean": 1451.3,
+    "min": 1412.0,
+    "max": 1486.3
+   },
+   "all": {
+    "n": 14917,
+    "mean": 1464.9,
+    "min": 1374.7,
+    "max": 1543.6
+   },
+   "refs": {
+    "ot_hgi_sfu_store_stripe_leaf_r10": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 316.0,
+     "pins": 11
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 2903,
+     "mean": 1451.3,
+     "min": 1412.0,
+     "max": 1486.3
+    },
+    "all": {
+     "n": 14906,
+     "mean": 1464.9,
+     "min": 1402.5,
+     "max": 1543.6
+    }
+   }
+  }
+ },
+ "tt": {
+  "clock_family": {
+   "core_clk": 14917
+  },
+  "boundary": {
+   "n": 2903,
+   "mean": 1084.5,
+   "min": 1049.8,
+   "max": 1129.9
+  },
+  "all": {
+   "n": 14917,
+   "mean": 1096.5,
+   "min": 795.5,
+   "max": 1180.1
+  },
+  "errors": [],
+  "macros": {
+   "n": 11,
+   "nets": 11,
+   "max_per_net": 1,
+   "reg_mean": 1096.5,
+   "max_slew": 18.1,
+   "max_late": -214.4,
+   "pins": [
+    {
+     "pin": "g_leaf[0].u_leaf/clk",
+     "arr": 860.2,
+     "slew": 17.0,
+     "late": -236.3,
+     "net": "clkbuf_sp_L1879_net"
+    },
+    {
+     "pin": "g_leaf[10].u_leaf/clk",
+     "arr": 864.4,
+     "slew": 17.1,
+     "late": -232.1,
+     "net": "clkbuf_sp_L1878_net"
+    },
+    {
+     "pin": "g_leaf[1].u_leaf/clk",
+     "arr": 881.8,
+     "slew": 17.3,
+     "late": -214.7,
+     "net": "clkbuf_sp_L1877_net"
+    },
+    {
+     "pin": "g_leaf[2].u_leaf/clk",
+     "arr": 795.5,
+     "slew": 17.0,
+     "late": -301.0,
+     "net": "clkbuf_sp_L1876_net"
+    },
+    {
+     "pin": "g_leaf[3].u_leaf/clk",
+     "arr": 845.0,
+     "slew": 16.9,
+     "late": -251.5,
+     "net": "clkbuf_sp_L1875_net"
+    },
+    {
+     "pin": "g_leaf[4].u_leaf/clk",
+     "arr": 882.1,
+     "slew": 17.1,
+     "late": -214.4,
+     "net": "clkbuf_sp_L1874_net"
+    },
+    {
+     "pin": "g_leaf[5].u_leaf/clk",
+     "arr": 816.1,
+     "slew": 18.1,
+     "late": -280.4,
+     "net": "clkbuf_sp_L1873_net"
+    },
+    {
+     "pin": "g_leaf[6].u_leaf/clk",
+     "arr": 841.9,
+     "slew": 17.8,
+     "late": -254.6,
+     "net": "clkbuf_sp_L1872_net"
+    },
+    {
+     "pin": "g_leaf[7].u_leaf/clk",
+     "arr": 820.5,
+     "slew": 17.5,
+     "late": -276.0,
+     "net": "clkbuf_sp_L1871_net"
+    },
+    {
+     "pin": "g_leaf[8].u_leaf/clk",
+     "arr": 840.1,
+     "slew": 17.5,
+     "late": -256.4,
+     "net": "clkbuf_sp_L1870_net"
+    },
+    {
+     "pin": "g_leaf[9].u_leaf/clk",
+     "arr": 834.4,
+     "slew": 17.0,
+     "late": -262.1,
+     "net": "clkbuf_sp_L1869_net"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 2903,
+    "mean": 1084.5,
+    "min": 1049.8,
+    "max": 1129.9
+   },
+   "all": {
+    "n": 14917,
+    "mean": 1096.7,
+    "min": 1039.4,
+    "max": 1180.1
+   },
+   "refs": {
+    "ot_hgi_sfu_store_stripe_leaf_r10": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 243.9,
+     "pins": 11
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 2903,
+     "mean": 1084.5,
+     "min": 1049.8,
+     "max": 1129.9
+    },
+    "all": {
+     "n": 14906,
+     "mean": 1096.7,
+     "min": 1044.3,
+     "max": 1180.1
+    }
+   }
+  }
+ },
+ "ff": {
+  "clock_family": {
+   "core_clk": 14917
+  },
+  "boundary": {
+   "n": 2903,
+   "mean": 866.6,
+   "min": 835.9,
+   "max": 913.1
+  },
+  "all": {
+   "n": 14917,
+   "mean": 877.2,
+   "min": 637.6,
+   "max": 963.9
+  },
+  "errors": [],
+  "macros": {
+   "n": 11,
+   "nets": 11,
+   "max_per_net": 1,
+   "reg_mean": 877.2,
+   "max_slew": 15.5,
+   "max_late": -142.2,
+   "pins": [
+    {
+     "pin": "g_leaf[0].u_leaf/clk",
+     "arr": 699.7,
+     "slew": 14.4,
+     "late": -177.5,
+     "net": "clkbuf_sp_L1879_net"
+    },
+    {
+     "pin": "g_leaf[10].u_leaf/clk",
+     "arr": 719.0,
+     "slew": 14.5,
+     "late": -158.2,
+     "net": "clkbuf_sp_L1878_net"
+    },
+    {
+     "pin": "g_leaf[1].u_leaf/clk",
+     "arr": 729.7,
+     "slew": 14.7,
+     "late": -147.5,
+     "net": "clkbuf_sp_L1877_net"
+    },
+    {
+     "pin": "g_leaf[2].u_leaf/clk",
+     "arr": 637.6,
+     "slew": 14.4,
+     "late": -239.6,
+     "net": "clkbuf_sp_L1876_net"
+    },
+    {
+     "pin": "g_leaf[3].u_leaf/clk",
+     "arr": 679.5,
+     "slew": 14.3,
+     "late": -197.7,
+     "net": "clkbuf_sp_L1875_net"
+    },
+    {
+     "pin": "g_leaf[4].u_leaf/clk",
+     "arr": 735.0,
+     "slew": 14.5,
+     "late": -142.2,
+     "net": "clkbuf_sp_L1874_net"
+    },
+    {
+     "pin": "g_leaf[5].u_leaf/clk",
+     "arr": 660.7,
+     "slew": 15.5,
+     "late": -216.5,
+     "net": "clkbuf_sp_L1873_net"
+    },
+    {
+     "pin": "g_leaf[6].u_leaf/clk",
+     "arr": 687.7,
+     "slew": 15.3,
+     "late": -189.5,
+     "net": "clkbuf_sp_L1872_net"
+    },
+    {
+     "pin": "g_leaf[7].u_leaf/clk",
+     "arr": 638.0,
+     "slew": 14.9,
+     "late": -239.2,
+     "net": "clkbuf_sp_L1871_net"
+    },
+    {
+     "pin": "g_leaf[8].u_leaf/clk",
+     "arr": 692.4,
+     "slew": 14.8,
+     "late": -184.8,
+     "net": "clkbuf_sp_L1870_net"
+    },
+    {
+     "pin": "g_leaf[9].u_leaf/clk",
+     "arr": 676.5,
+     "slew": 14.3,
+     "late": -200.7,
+     "net": "clkbuf_sp_L1869_net"
+    }
+   ]
+  },
+  "macro_libs": 1,
+  "child_flop": {
+   "boundary": {
+    "n": 2903,
+    "mean": 866.6,
+    "min": 835.9,
+    "max": 913.1
+   },
+   "all": {
+    "n": 14917,
+    "mean": 877.3,
+    "min": 820.8,
+    "max": 963.9
+   },
+   "refs": {
+    "ot_hgi_sfu_store_stripe_leaf_r10": {
+     "basis": "insertion.json boundary mean",
+     "ref_ps": 200.4,
+     "pins": 11
+    }
+   },
+   "soft": {
+    "boundary": {
+     "n": 2903,
+     "mean": 866.6,
+     "min": 835.9,
+     "max": 913.1
+    },
+    "all": {
+     "n": 14906,
+     "mean": 877.3,
+     "min": 820.8,
+     "max": 963.9
+    }
+   }
+  }
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 11,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 1451,
+  "CK_SS_ALL_MEAN": 1465,
+  "CK_SS_MIN": 1412,
+  "CK_SS_ALL_MIN": 1059,
+  "CK_SS_MAX": 1486,
+  "CK_SS_ALL_MAX": 1544,
+  "CK_TT_MEAN": 1084,
+  "CK_TT_ALL_MEAN": 1096,
+  "CK_TT_MIN": 1050,
+  "CK_TT_ALL_MIN": 796,
+  "CK_TT_MAX": 1130,
+  "CK_TT_ALL_MAX": 1180,
+  "CK_FF_MEAN": 867,
+  "CK_FF_ALL_MEAN": 877,
+  "CK_FF_MIN": 836,
+  "CK_FF_ALL_MIN": 638,
+  "CK_FF_MAX": 913,
+  "CK_FF_ALL_MAX": 964,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]",
+ "clock_measurements": {
+  "clk": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/routes/hbm_sfu_programme_store_r14_cl_r14_133946a12/work/orfs/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "clock_family": {
+     "core_clk": 14917
+    },
+    "boundary": {
+     "n": 2903,
+     "mean": 1451.3,
+     "min": 1412.0,
+     "max": 1486.3
+    },
+    "all": {
+     "n": 14917,
+     "mean": 1464.6,
+     "min": 1058.7,
+     "max": 1543.6
+    },
+    "errors": [],
+    "macros": {
+     "n": 11,
+     "nets": 11,
+     "max_per_net": 1,
+     "reg_mean": 1464.6,
+     "max_slew": 23.9,
+     "max_late": -326.6,
+     "pins": [
+      {
+       "pin": "g_leaf[0].u_leaf/clk",
+       "arr": 1118.6,
+       "slew": 22.7,
+       "late": -346.0,
+       "net": "clkbuf_sp_L1879_net"
+      },
+      {
+       "pin": "g_leaf[10].u_leaf/clk",
+       "arr": 1090.9,
+       "slew": 22.8,
+       "late": -373.7,
+       "net": "clkbuf_sp_L1878_net"
+      },
+      {
+       "pin": "g_leaf[1].u_leaf/clk",
+       "arr": 1120.5,
+       "slew": 23.0,
+       "late": -344.1,
+       "net": "clkbuf_sp_L1877_net"
+      },
+      {
+       "pin": "g_leaf[2].u_leaf/clk",
+       "arr": 1058.7,
+       "slew": 22.6,
+       "late": -405.9,
+       "net": "clkbuf_sp_L1876_net"
+      },
+      {
+       "pin": "g_leaf[3].u_leaf/clk",
+       "arr": 1118.2,
+       "slew": 22.6,
+       "late": -346.4,
+       "net": "clkbuf_sp_L1875_net"
+      },
+      {
+       "pin": "g_leaf[4].u_leaf/clk",
+       "arr": 1110.5,
+       "slew": 22.8,
+       "late": -354.1,
+       "net": "clkbuf_sp_L1874_net"
+      },
+      {
+       "pin": "g_leaf[5].u_leaf/clk",
+       "arr": 1076.9,
+       "slew": 23.8,
+       "late": -387.7,
+       "net": "clkbuf_sp_L1873_net"
+      },
+      {
+       "pin": "g_leaf[6].u_leaf/clk",
+       "arr": 1092.4,
+       "slew": 23.5,
+       "late": -372.2,
+       "net": "clkbuf_sp_L1872_net"
+      },
+      {
+       "pin": "g_leaf[7].u_leaf/clk",
+       "arr": 1138.0,
+       "slew": 23.3,
+       "late": -326.6,
+       "net": "clkbuf_sp_L1871_net"
+      },
+      {
+       "pin": "g_leaf[8].u_leaf/clk",
+       "arr": 1074.4,
+       "slew": 23.9,
+       "late": -390.2,
+       "net": "clkbuf_sp_L1870_net"
+      },
+      {
+       "pin": "g_leaf[9].u_leaf/clk",
+       "arr": 1091.5,
+       "slew": 22.7,
+       "late": -373.1,
+       "net": "clkbuf_sp_L1869_net"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 2903,
+      "mean": 1451.3,
+      "min": 1412.0,
+      "max": 1486.3
+     },
+     "all": {
+      "n": 14917,
+      "mean": 1464.9,
+      "min": 1374.7,
+      "max": 1543.6
+     },
+     "refs": {
+      "ot_hgi_sfu_store_stripe_leaf_r10": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 316.0,
+       "pins": 11
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 2903,
+       "mean": 1451.3,
+       "min": 1412.0,
+       "max": 1486.3
+      },
+      "all": {
+       "n": 14906,
+       "mean": 1464.9,
+       "min": 1402.5,
+       "max": 1543.6
+      }
+     }
+    }
+   },
+   "tt": {
+    "clock_family": {
+     "core_clk": 14917
+    },
+    "boundary": {
+     "n": 2903,
+     "mean": 1084.5,
+     "min": 1049.8,
+     "max": 1129.9
+    },
+    "all": {
+     "n": 14917,
+     "mean": 1096.5,
+     "min": 795.5,
+     "max": 1180.1
+    },
+    "errors": [],
+    "macros": {
+     "n": 11,
+     "nets": 11,
+     "max_per_net": 1,
+     "reg_mean": 1096.5,
+     "max_slew": 18.1,
+     "max_late": -214.4,
+     "pins": [
+      {
+       "pin": "g_leaf[0].u_leaf/clk",
+       "arr": 860.2,
+       "slew": 17.0,
+       "late": -236.3,
+       "net": "clkbuf_sp_L1879_net"
+      },
+      {
+       "pin": "g_leaf[10].u_leaf/clk",
+       "arr": 864.4,
+       "slew": 17.1,
+       "late": -232.1,
+       "net": "clkbuf_sp_L1878_net"
+      },
+      {
+       "pin": "g_leaf[1].u_leaf/clk",
+       "arr": 881.8,
+       "slew": 17.3,
+       "late": -214.7,
+       "net": "clkbuf_sp_L1877_net"
+      },
+      {
+       "pin": "g_leaf[2].u_leaf/clk",
+       "arr": 795.5,
+       "slew": 17.0,
+       "late": -301.0,
+       "net": "clkbuf_sp_L1876_net"
+      },
+      {
+       "pin": "g_leaf[3].u_leaf/clk",
+       "arr": 845.0,
+       "slew": 16.9,
+       "late": -251.5,
+       "net": "clkbuf_sp_L1875_net"
+      },
+      {
+       "pin": "g_leaf[4].u_leaf/clk",
+       "arr": 882.1,
+       "slew": 17.1,
+       "late": -214.4,
+       "net": "clkbuf_sp_L1874_net"
+      },
+      {
+       "pin": "g_leaf[5].u_leaf/clk",
+       "arr": 816.1,
+       "slew": 18.1,
+       "late": -280.4,
+       "net": "clkbuf_sp_L1873_net"
+      },
+      {
+       "pin": "g_leaf[6].u_leaf/clk",
+       "arr": 841.9,
+       "slew": 17.8,
+       "late": -254.6,
+       "net": "clkbuf_sp_L1872_net"
+      },
+      {
+       "pin": "g_leaf[7].u_leaf/clk",
+       "arr": 820.5,
+       "slew": 17.5,
+       "late": -276.0,
+       "net": "clkbuf_sp_L1871_net"
+      },
+      {
+       "pin": "g_leaf[8].u_leaf/clk",
+       "arr": 840.1,
+       "slew": 17.5,
+       "late": -256.4,
+       "net": "clkbuf_sp_L1870_net"
+      },
+      {
+       "pin": "g_leaf[9].u_leaf/clk",
+       "arr": 834.4,
+       "slew": 17.0,
+       "late": -262.1,
+       "net": "clkbuf_sp_L1869_net"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 2903,
+      "mean": 1084.5,
+      "min": 1049.8,
+      "max": 1129.9
+     },
+     "all": {
+      "n": 14917,
+      "mean": 1096.7,
+      "min": 1039.4,
+      "max": 1180.1
+     },
+     "refs": {
+      "ot_hgi_sfu_store_stripe_leaf_r10": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 243.9,
+       "pins": 11
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 2903,
+       "mean": 1084.5,
+       "min": 1049.8,
+       "max": 1129.9
+      },
+      "all": {
+       "n": 14906,
+       "mean": 1096.7,
+       "min": 1044.3,
+       "max": 1180.1
+      }
+     }
+    }
+   },
+   "ff": {
+    "clock_family": {
+     "core_clk": 14917
+    },
+    "boundary": {
+     "n": 2903,
+     "mean": 866.6,
+     "min": 835.9,
+     "max": 913.1
+    },
+    "all": {
+     "n": 14917,
+     "mean": 877.2,
+     "min": 637.6,
+     "max": 963.9
+    },
+    "errors": [],
+    "macros": {
+     "n": 11,
+     "nets": 11,
+     "max_per_net": 1,
+     "reg_mean": 877.2,
+     "max_slew": 15.5,
+     "max_late": -142.2,
+     "pins": [
+      {
+       "pin": "g_leaf[0].u_leaf/clk",
+       "arr": 699.7,
+       "slew": 14.4,
+       "late": -177.5,
+       "net": "clkbuf_sp_L1879_net"
+      },
+      {
+       "pin": "g_leaf[10].u_leaf/clk",
+       "arr": 719.0,
+       "slew": 14.5,
+       "late": -158.2,
+       "net": "clkbuf_sp_L1878_net"
+      },
+      {
+       "pin": "g_leaf[1].u_leaf/clk",
+       "arr": 729.7,
+       "slew": 14.7,
+       "late": -147.5,
+       "net": "clkbuf_sp_L1877_net"
+      },
+      {
+       "pin": "g_leaf[2].u_leaf/clk",
+       "arr": 637.6,
+       "slew": 14.4,
+       "late": -239.6,
+       "net": "clkbuf_sp_L1876_net"
+      },
+      {
+       "pin": "g_leaf[3].u_leaf/clk",
+       "arr": 679.5,
+       "slew": 14.3,
+       "late": -197.7,
+       "net": "clkbuf_sp_L1875_net"
+      },
+      {
+       "pin": "g_leaf[4].u_leaf/clk",
+       "arr": 735.0,
+       "slew": 14.5,
+       "late": -142.2,
+       "net": "clkbuf_sp_L1874_net"
+      },
+      {
+       "pin": "g_leaf[5].u_leaf/clk",
+       "arr": 660.7,
+       "slew": 15.5,
+       "late": -216.5,
+       "net": "clkbuf_sp_L1873_net"
+      },
+      {
+       "pin": "g_leaf[6].u_leaf/clk",
+       "arr": 687.7,
+       "slew": 15.3,
+       "late": -189.5,
+       "net": "clkbuf_sp_L1872_net"
+      },
+      {
+       "pin": "g_leaf[7].u_leaf/clk",
+       "arr": 638.0,
+       "slew": 14.9,
+       "late": -239.2,
+       "net": "clkbuf_sp_L1871_net"
+      },
+      {
+       "pin": "g_leaf[8].u_leaf/clk",
+       "arr": 692.4,
+       "slew": 14.8,
+       "late": -184.8,
+       "net": "clkbuf_sp_L1870_net"
+      },
+      {
+       "pin": "g_leaf[9].u_leaf/clk",
+       "arr": 676.5,
+       "slew": 14.3,
+       "late": -200.7,
+       "net": "clkbuf_sp_L1869_net"
+      }
+     ]
+    },
+    "macro_libs": 1,
+    "child_flop": {
+     "boundary": {
+      "n": 2903,
+      "mean": 866.6,
+      "min": 835.9,
+      "max": 913.1
+     },
+     "all": {
+      "n": 14917,
+      "mean": 877.3,
+      "min": 820.8,
+      "max": 963.9
+     },
+     "refs": {
+      "ot_hgi_sfu_store_stripe_leaf_r10": {
+       "basis": "insertion.json boundary mean",
+       "ref_ps": 200.4,
+       "pins": 11
+      }
+     },
+     "soft": {
+      "boundary": {
+       "n": 2903,
+       "mean": 866.6,
+       "min": 835.9,
+       "max": 913.1
+      },
+      "all": {
+       "n": 14906,
+       "mean": 877.3,
+       "min": 820.8,
+       "max": 963.9
+      }
+     }
+    }
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 11,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 1451,
+    "CK_SS_ALL_MEAN": 1465,
+    "CK_SS_MIN": 1412,
+    "CK_SS_ALL_MIN": 1059,
+    "CK_SS_MAX": 1486,
+    "CK_SS_ALL_MAX": 1544,
+    "CK_TT_MEAN": 1084,
+    "CK_TT_ALL_MEAN": 1096,
+    "CK_TT_MIN": 1050,
+    "CK_TT_ALL_MIN": 796,
+    "CK_TT_MAX": 1130,
+    "CK_TT_ALL_MAX": 1180,
+    "CK_FF_MEAN": 867,
+    "CK_FF_ALL_MEAN": 877,
+    "CK_FF_MIN": 836,
+    "CK_FF_ALL_MIN": 638,
+    "CK_FF_MAX": 913,
+    "CK_FF_ALL_MAX": 964,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk}]"
+  }
+ }
+}

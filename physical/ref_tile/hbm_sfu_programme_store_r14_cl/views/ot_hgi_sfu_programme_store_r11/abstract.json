@@ -1,0 +1,224 @@
+{
+  "name": "ot_hgi_sfu_programme_store_r11",
+  "orfs_dir": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/routes/hbm_sfu_programme_store_r14_cl_r14_133946a12/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -1.2177192587614627e-10 min 1.22379884004431e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/routes/hbm_sfu_programme_store_r14_cl_r14_133946a12/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/record/views/ot_hgi_sfu_programme_store_r11:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_programme_store_r14_cl/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/eco/pass2/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/routed_ioref.a2_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.919336994366972e-10 min 1.81800130505394e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/routes/hbm_sfu_programme_store_r14_cl_r14_133946a12/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/record/views/ot_hgi_sfu_programme_store_r11:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_programme_store_r14_cl/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/eco/pass2/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/routed_ioref.a2_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.6450385498245623e-10 min 2.766720186286875e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/routes/hbm_sfu_programme_store_r14_cl_r14_133946a12/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/record/views/ot_hgi_sfu_programme_store_r11:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_programme_store_r14_cl/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/eco/pass2/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/routed_ioref.a2_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_programme_store_r14_cl/signoff.sdc",
+    "sha256": "c8b193d95ba024e070eac16dbf6110e643d52548e134219c9b6c7f6864fee961",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/routed_ioref.a2.json",
+    "sha256": "0d1952f096d1829157ba9ce55fa6a4d262a15a6112b25ccc954cdfb0c55dc1ca",
+    "expect_ps": {
+      "tt": 164.5,
+      "ff": 18.18
+    },
+    "tol_ps": 0.05,
+    "work": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/eco/pass2/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/routed_ioref.a2_meas/app0_io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      "/src/physical/common_flow/io_ref_routed.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/common_flow/io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      "/src/physical/ref_tile/hbm_sfu_programme_store_r14_cl/signoff.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_programme_store_r14_cl/signoff.sdc",
+        "sha256": "c8b193d95ba024e070eac16dbf6110e643d52548e134219c9b6c7f6864fee961"
+      },
+      "/src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_ff.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_ff.lib",
+        "sha256": "b27a9254a7a7b9a710ec62ace84c9188b6c3fbe00be60ef3fbadecbc5a7a6f9d"
+      },
+      "/src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_tt.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_tt.lib",
+        "sha256": "84164b93e43d938130fa4dd0811073ba43a46508cad11c06f0fb973dd5c1c286"
+      },
+      "/work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.odb": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/eco/pass2/orfs/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.odb",
+        "sha256": "d497e570e76dd5f68815b683c093e98727a1914dc889fc687cf6e5dbda1e0156"
+      },
+      "/work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/eco/pass2/orfs/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.sdc",
+        "sha256": "b6e4535d0e3968c8da59701ab566935981c6090104c75ed00c2dc26db4e7ea9e"
+      },
+      "/work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.spef": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/cl/eco/pass2/orfs/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.spef",
+        "sha256": "ece9f448893626f36ff088e77f3fef9bfc18156a6f2d86922d9a6657feabb706"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 18.1800130505394,
+        "verdict_ps": 18.18,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 164.50385498245623,
+        "verdict_ps": 164.5,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_ss.lib]",
+        "read_db /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/hbm_sfu_programme_store_r14_cl/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_ff.lib]",
+        "read_db /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/hbm_sfu_programme_store_r14_cl/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10/ot_hgi_sfu_store_stripe_leaf_r10_tt.lib]",
+        "read_db /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_r11_asap7_ref_hbm_sfu_programme_store_r14_cl_r14_133946a12/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/hbm_sfu_programme_store_r14_cl/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/home/ubuntu/ot-scratch/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12/src/physical/ref_tile/hbm_sfu_store_stripe_r10_1017/views/ot_hgi_sfu_store_stripe_leaf_r10"
+  ],
+  "abstract": {
+    "mode": "default",
+    "default_pin_access_violations": 0
+  },
+  "files": {
+    "ot_hgi_sfu_programme_store_r11.lef": "d40feacb538b10f189390acaba1bae49986f0b4d22d401db0b68fd50d689cf0d",
+    "ot_hgi_sfu_programme_store_r11_ff.lib": "8c313a9b46cc7f0ebb8b4510f5eb206c19933d88e3b95a88a9022e0513b0d827",
+    "ot_hgi_sfu_programme_store_r11_ss.lib": "d450cbf39a5732c455c558aa644fadd1c94f270cb82b8062a9d22d4d3e921b50",
+    "ot_hgi_sfu_programme_store_r11_tt.lib": "adebaf80b0a9dbbad144bbcdd171c3f2e5d632b5e6894255998d7160e88bcc0c"
+  },
+  "ok": true,
+  "checked": true,
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "76d41a2d54e99a7088d6f9a471ebf4bc0ab75be3297b97aa89b4cbb9aa318996",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "49f84ed571caf922c896834aa3b51bc4cb892b512a5859e8c4b4cbf9b45010c6"
+  }
+}
