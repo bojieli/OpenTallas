@@ -763,7 +763,22 @@ def land_edges(m):
     rec = m.get('fault_emit')
     if not rec:
         return {}
-    return {e['bid']: e for e in rec['edges'] if e['src_ck'] != e['dst_ck']}
+    # SQC-QDIE3 10-22 (die STA class S5 / QCLK landed FAIL, r11bfp: 33 zero-stage flt_t_dvs_* / flt_t_c16_* edges between
+    # the fault roots of two hard instances on ONE GEN trunk -- the regional die clock gives every hard instance its own
+    # root (OT_SPLIT_REGION_ONE_HARD), so these cross regions unlanded).  OT_SPLIT_FAULT_LAND_XOWNER=1: an edge whose two
+    # roots belong to different hard instances (master prefix OT_SPLIT_REGION_HARD) is landed too, like the data
+    # hard<->hard auto rows; 'xowner' marks it so _relays does not skip it as same-trunk.
+    out = {e['bid']: e for e in rec['edges'] if e['src_ck'] != e['dst_ck']}
+    if os.environ.get('OT_SPLIT_FAULT_LAND_XOWNER', '0') == '1':
+        hp = tuple(x for x in os.environ.get('OT_SPLIT_REGION_HARD', 'qfd_c_b16_dv,qfd_dv_slice2').split(',') if x)
+        mst = {i.name: str(i.master) for i in m['insts']}
+        R = rec.get('roots') or {}
+        own = lambda k: (R.get(k) or {}).get('owner', k)
+        for e in rec['edges']:
+            a, b = own(e['child']), own(e['parent'])
+            if e['bid'] not in out and a != b and mst.get(a, '').startswith(hp) and mst.get(b, '').startswith(hp):
+                out[e['bid']] = dict(e, xowner=True)
+    return out
 
 
 def post(v, m, G):

@@ -4395,7 +4395,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             for idx, (bid, cl, bits, eps) in buses:
                 if bid not in _fle or (idx in plans and plans[idx]['frames']) or bid in tpads:
                     continue
-                if _ckf2.get(eps[0][0]) == _ckf2.get(eps[1][0]):
+                if _ckf2.get(eps[0][0]) == _ckf2.get(eps[1][0]) and not _fle[bid].get('xowner'):
                     continue
                 tpads[bid] = 1
                 _fl_n += 1
