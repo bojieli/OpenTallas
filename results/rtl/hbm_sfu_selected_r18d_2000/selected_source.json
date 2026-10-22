@@ -1,0 +1,19 @@
+{
+  "selected_commit": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+  "graph": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r18d_2000_1021/plansM/net/pre_relay_r17.json",
+  "graph_sha256": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
+  "instance": "sfucore_SW",
+  "master": "ot_hgi_sfu_core_split3",
+  "selected_source": "rtl/hbm_accel/die_glue/scoped_d4g/sfu.sv",
+  "selected_source_sha256": "eedc69ceb1998e37c9ec7ad42bacbd75eae9eeeb663f64f4d728a10c4335d79f",
+  "explicit_parameters": {
+    "LWB": 15,
+    "LG_PATH": 15
+  },
+  "effective_default_parameters": {
+    "TAP_RR": 14,
+    "TAP_WR": 11
+  },
+  "vehicle": "Existing d76 canonical full-Qswiglu split-equivalence component vehicle, with a wires-only bus slicing adapter into exact selected split3. Reference lane sources retain the normal closed ae589 manifest. The target is the exact full scoped source closure, not generic peers or the predecessor tap parameters.",
+  "status": "STAGED_NOT_RUN"
+}
