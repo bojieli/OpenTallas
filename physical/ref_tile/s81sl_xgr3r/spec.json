@@ -1,0 +1,790 @@
+{
+ "name": "s81sl_xgr3r",
+ "top": "ot_s81sl_xgr3m",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopr.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs5.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs6.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgr.sv",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xgr3.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1/ot_sram_1r1w2c_128x64_m1_bb.v"
+ ],
+ "defines": [],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 950.4,
+  "h": 777.6
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?1?.g_mac?0?.u_mem",
+   "at": [
+    108.0,
+    86.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?1?.g_mac?1?.u_mem",
+   "at": [
+    108.0,
+    127.488
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?1?.g_mac?2?.u_mem",
+   "at": [
+    108.0,
+    168.576
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?1?.g_mac?3?.u_mem",
+   "at": [
+    108.0,
+    209.664
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?1?.g_mac?4?.u_mem",
+   "at": [
+    108.0,
+    524.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?1?.g_mac?5?.u_mem",
+   "at": [
+    108.0,
+    565.968
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?1?.g_mac?6?.u_mem",
+   "at": [
+    108.0,
+    607.056
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?1?.g_mac?7?.u_mem",
+   "at": [
+    108.0,
+    648.144
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_s.g_bank?1?.g_ex?0?.u_em",
+   "at": [
+    108.0,
+    250.752
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_s.g_bank?1?.g_ex?1?.u_em",
+   "at": [
+    168.48,
+    250.752
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?0?.g_mac?0?.u_mem",
+   "at": [
+    280.8,
+    86.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?0?.g_mac?1?.u_mem",
+   "at": [
+    280.8,
+    127.488
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?0?.g_mac?2?.u_mem",
+   "at": [
+    280.8,
+    168.576
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?0?.g_mac?3?.u_mem",
+   "at": [
+    280.8,
+    209.664
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?0?.g_mac?4?.u_mem",
+   "at": [
+    280.8,
+    524.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?0?.g_mac?5?.u_mem",
+   "at": [
+    280.8,
+    565.968
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?0?.g_mac?6?.u_mem",
+   "at": [
+    280.8,
+    607.056
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?0?.g_mac?7?.u_mem",
+   "at": [
+    280.8,
+    648.144
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_s.g_bank?0?.g_ex?0?.u_em",
+   "at": [
+    280.8,
+    250.752
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_s.g_bank?0?.g_ex?1?.u_em",
+   "at": [
+    341.28,
+    250.752
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?2?.g_mac?0?.u_mem",
+   "at": [
+    734.4,
+    86.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?2?.g_mac?1?.u_mem",
+   "at": [
+    734.4,
+    127.488
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?2?.g_mac?2?.u_mem",
+   "at": [
+    734.4,
+    168.576
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?2?.g_mac?3?.u_mem",
+   "at": [
+    734.4,
+    209.664
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?2?.g_mac?4?.u_mem",
+   "at": [
+    734.4,
+    524.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?2?.g_mac?5?.u_mem",
+   "at": [
+    734.4,
+    565.968
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?2?.g_mac?6?.u_mem",
+   "at": [
+    734.4,
+    607.056
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_s.g_bank?2?.g_mac?7?.u_mem",
+   "at": [
+    734.4,
+    648.144
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_s.g_bank?2?.g_ex?0?.u_em",
+   "at": [
+    734.4,
+    250.752
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "count": 1,
+   "inst": "*u_s.g_bank?2?.g_ex?1?.u_em",
+   "at": [
+    794.88,
+    250.752
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "*u_s.u_phase0",
+   "at": [
+    453.6,
+    524.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "*u_s.u_cal_action",
+   "at": [
+    453.6,
+    587.856
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "*u_s.u_cal_time",
+   "at": [
+    561.6,
+    524.88
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "*u_s.u_stream0",
+   "at": [
+    453.6,
+    86.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "*u_s.u_stream1",
+   "at": [
+    453.6,
+    149.376
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "*u_s.u_stream2",
+   "at": [
+    561.6,
+    86.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "count": 1,
+   "inst": "*u_s.u_stream3",
+   "at": [
+    561.6,
+    149.376
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "W": [
+   "ri_w",
+   "ro_w",
+   "nx_wi",
+   "nx_wo"
+  ],
+  "E": [
+   "ri_e",
+   "ro_e",
+   "nx_ei",
+   "nx_eo"
+  ],
+  "N": [
+   "sid",
+   "dl_ev",
+   "dl_e",
+   "dl_wv",
+   "dl_w",
+   "dl_vv",
+   "dl_vb",
+   "ci_dir",
+   "ci_b",
+   "is_v",
+   "is_d"
+  ],
+  "S": [
+   "xf_v",
+   "xf_s",
+   "xf",
+   "vi",
+   "vo",
+   "clk",
+   "rst_n",
+   "xw_v",
+   "xw_d",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   491.4,
+   493.56
+  ],
+  "rst_n": [
+   500.04,
+   502.2
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4,
+  "synth_keep_modules": [
+   "ot_s81sl_xs4_pdec",
+   "ot_s81sl_xs4_due",
+   "ot_s81sl_xs4_rng",
+   "ot_s81sl_xs4_bad",
+   "ot_s81sl_xs4_bdec",
+   "ot_s81sl_xs5_ln",
+   "ot_s81sl_xs6_fetch",
+   "ot_s81sl_xs6_dq0",
+   "ot_s81sl_xs6_dq1"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered leaf with explicit RTL face stages: every input pin lands in exactly one face flop (rstopr p_* stage, xgr is_vq / is_dq) and every output leaves a flop (MAIN xgr2 q_* output stage / FB rstopr ro_* / vo / dl_* / nx_*; xs5 xw_q; fault); io_flop_at_pins puts them at the pins.  The relay stages behind / before them are RTL edges priced in MU.S81.CAL (README); a recipe pin_regs stage would add a further unpriced edge."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "32",
+  "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+  "OT_CHANNEL_BLOCK_UM": "20",
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "fill_reason": {
+  "pin_bound": "routing/perimeter-bound, not area: 11,914 face pins (W/E 2,554 each, N 3,759, S 3,047); 950.4 x 777.6 keeps every face <= 4 pins/um (N 3,759 / 950.4 = 3.96/um; xgr 734.4 / 648 wide had N 5.1 / 5.8/um) and leaves >= 56 um std-cell bands between every macro column; 37 macros 115.8k + std ~38k um2 -> ~21% fill. Enlarged, never squeezed (PD-AUDIT xg ring)"
+ },
+ "structural_change": "STW-S81c-COLLA2 (10-22): R = s81sl_xgr3 + GPL_ROUTABILITY_DRIVEN=0 + stale keep entry ot_s81sl_xs4_fetch dropped (xgr3 uses ot_s81sl_xs6; xs4_fetch is not instantiated). s81sl_xgr3_b gate FAIL: GPL-0305 diverged after routability inflation +458% (RUDY overflow 72-82k at 4.4% std density, macro-dominated: the tool-numerics class of idxtxn32 / rg3 / glue r3) + keep_modules. Same RTL / pins / outline / macros. Prev: STW-S81c-COLLA-FRAME (10-22): successor of s81sl_xgr (0397b9edc; standalone native census FAIL max 43: u_c.u_s.g_pb[a].s_q0 / s_q1 one-hot q decodes, 6 drivers 42-43 loads) with PD-AUDIT MUST-DO: (1) master ot_s81sl_xgr3m = ot_s81sl_xgr2 with ot_s81sl_xs6 (per-bank kept q-code copies + kept decode per line pair, <= 16 loads; calendar fetch compares registered as next-state compares: due5 -> fetch one AND-OR, no edge added), same ports / edges; (2) outline 734.4 -> 950.4 wide (N face 3,759 pins <= 4/um), macro columns re-spaced (>= 56 um bands), abutted 0.024-um stack seams + every sub-20-um macro channel hard-blocked (macro_channel_block.tcl at POST_IO_PLACEMENT); (3) k-means K 32 (gate measures pin-flop spread <= 80 per root TT+FF).",
+ "job": {
+  "owner": "Claude:STW-S81c-COLLA2",
+  "branch": "claude/s81-xgr3-1021",
+  "tag": "xgr3r",
+  "purpose": "S81 end-slice u_xg master ot_s81sl_xgr3m (MAIN: xgr2 + output relay stage; xs6 kept q decodes + registered calendar fetch compares), 950.4 x 777.6, K32, sub-20-um channels blocked.",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/lib",
+   "rtl/v41rom",
+   "rtl/common",
+   "tools/s81_slice",
+   "tools/s81_static_control",
+   "tools/s81/pq_static_calendar_abi.json",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_128x64_m1",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage0",
+   "results/rtl/dsrom_recovery_20261004/immutable_fullcatalog/stage3",
+   "results/rtl/s81_xgring_1021",
+   "results/rtl/s81_xgr3_1022"
+  ],
+  "benches": [
+   {
+    "name": "xgr3m_main_bench",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^XGR_BENCH PASS top=ot_s81sl_xgr3m$",
+    "pass_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "xgr3m_main_muttiercol",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main_muttiercol L0_muttiercol",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XG_CASE L0_muttiercol FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "xgr3m_main_mutbank",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main_mutbank L0_mutbank",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XG_CASE L0_mutbank FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "xgr3m_main_mutoff",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main_mutoff L0_mutoff",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XG_CASE L0_mutoff FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "xgr3m_main_mutwcopy",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main_mutwcopy L0_mutwcopy",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XG_CASE L0_mutwcopy FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "xgr3m_main_mutexp",
+    "cmd": "env XGR_TOP=ot_s81sl_xgr3m bash tools/s81_slice/xgr3_bench.sh {RUN}/xgr3m_main_mutexp L0_mutexp",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XG_CASE L0_mutexp FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xgr3_main_bench.log"
+   },
+   {
+    "name": "rstopr",
+    "cmd": "bash tools/s81_slice/rstopr_bench.sh {RUN}/rstopr none",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^BENCH_PASS rstopr",
+    "pass_witness": "results/rtl/s81_xgring_1021/bench/rstopr_none.log"
+   },
+   {
+    "name": "rstopr_mutxooff",
+    "cmd": "bash tools/s81_slice/rstopr_bench.sh {RUN}/rstopr xooff",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xooff$",
+    "fail_witness": "results/rtl/s81_xgring_1021/bench/rstopr_xooff.log"
+   },
+   {
+    "name": "rstopr_mutxoall",
+    "cmd": "bash tools/s81_slice/rstopr_bench.sh {RUN}/rstopr xoall",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xoall$",
+    "fail_witness": "results/rtl/s81_xgring_1021/bench/rstopr_xoall.log"
+   },
+   {
+    "name": "rstopr_mutxonoflag",
+    "cmd": "bash tools/s81_slice/rstopr_bench.sh {RUN}/rstopr xonoflag",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=xonoflag$",
+    "fail_witness": "results/rtl/s81_xgring_1021/bench/rstopr_xonoflag.log"
+   },
+   {
+    "name": "rstopr_muttiercol",
+    "cmd": "bash tools/s81_slice/rstopr_bench.sh {RUN}/rstopr tiercol",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=tiercol$",
+    "fail_witness": "results/rtl/s81_xgring_1021/bench/rstopr_tiercol.log"
+   },
+   {
+    "name": "xs6_equiv",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^XS6_EQUIV_BENCH PASS$",
+    "pass_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_base.log"
+   },
+   {
+    "name": "xs6_equiv_mutbank",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_bank bank",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_bank.log"
+   },
+   {
+    "name": "xs6_equiv_mutoff",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_off off",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_off.log"
+   },
+   {
+    "name": "xs6_equiv_mutqswap",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_qswap qswap",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_qswap.log"
+   },
+   {
+    "name": "xs6_equiv_mutwcopy",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_wcopy wcopy",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_wcopy.log"
+   },
+   {
+    "name": "xs6_equiv_muttpar",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_tpar tpar",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_tpar.log"
+   },
+   {
+    "name": "xs6_equiv_mutexp",
+    "cmd": "bash tools/s81_slice/xs6_equiv.sh {RUN}/xs6_equiv_exp exp",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^XS4_CASE L0_near_s5 FAIL expected=FAIL ok=1",
+    "fail_witness": "results/rtl/s81_xgr3_1022/bench/xs6_equiv_exp.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81sl_xgr3r/views",
+  "record_to": "results/rtl/ref_tile/s81sl_xgr3r"
+ },
+ "children": [],
+ "inter": [],
+ "std_area_um2": 38000.0
+}
