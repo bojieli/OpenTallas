@@ -20,11 +20,11 @@ puts "OT_WS max [sta::worst_slack_cmd max] min [sta::worst_slack_cmd min]"
 write_timing_model -library_name dsfd_ctrl_rg3_ff /out/dsfd_ctrl_rg3_ff.lib
 
 
-if {[llength [get_ports -quiet clk_in]] == 1 && [llength [get_ports -quiet clk_out]] == 1} {
+if {!([llength [get_ports -quiet clk]] == 1 && [llength [get_ports -quiet ck_o]] == 1)} {error OT_FC_DECLARED_PORT_MISSING}
 
   set ot_fc_block [ord::get_db_block]
-  set ot_fc_ib [$ot_fc_block findBTerm clk_in]
-  set ot_fc_ob [$ot_fc_block findBTerm clk_out]
+  set ot_fc_ib [$ot_fc_block findBTerm clk]
+  set ot_fc_ob [$ot_fc_block findBTerm ck_o]
   if {[$ot_fc_ib getIoType] ne "INPUT" || [$ot_fc_ob getIoType] ne "OUTPUT"} {error OT_FC_PORT_DIRECTION}
   set ot_fc_in [$ot_fc_ib getNet]
   set ot_fc_net [$ot_fc_ob getNet]
@@ -93,8 +93,8 @@ if {[llength [get_ports -quiet clk_in]] == 1 && [llength [get_ports -quiet clk_o
   set ot_fc_delete {}
   foreach c [all_clocks] {
     foreach source [get_property $c sources] {
-      if {[get_full_name $source] eq "clk_in"} {lappend ot_fc_root $c}
-      if {[get_full_name $source] eq "clk_out"} {lappend ot_fc_delete $c}
+      if {[get_full_name $source] eq "clk"} {lappend ot_fc_root $c}
+      if {[get_full_name $source] eq "ck_o"} {lappend ot_fc_delete $c}
     }
   }
   if {[llength $ot_fc_root] != 1} {error OT_FC_UNIQUE_SOURCE_CLOCK}
@@ -118,12 +118,12 @@ if {[llength [get_ports -quiet clk_in]] == 1 && [llength [get_ports -quiet clk_o
   }
   write_sdc /out/forwarded_clock_signoff_ff.sdc
   foreach c [lsort -unique $ot_fc_delete] {delete_clock $c}
-  unset_input_delay [get_ports clk_in]
+  unset_input_delay [get_ports clk]
   set_propagated_clock [all_clocks]
   sta::find_timing_paths -path_delay max -group_path_count 1
   set ot_fc_driver_pin [get_pins "[$ot_fc_inst getName]/[[$ot_fc_it getMTerm] getName]"]
-  set ot_fc_pin [sta::get_port_pin [lindex [get_ports clk_out] 0]]
-  set ot_fc_input_pin [sta::get_port_pin [lindex [get_ports clk_in] 0]]
+  set ot_fc_pin [sta::get_port_pin [lindex [get_ports ck_o] 0]]
+  set ot_fc_input_pin [sta::get_port_pin [lindex [get_ports clk] 0]]
   foreach prop {arrival_max_rise arrival_min_rise arrival_max_fall arrival_min_fall slew_max_rise slew_max_fall} {
     set input_value [get_property $ot_fc_input_pin $prop]
     puts "OT_FC_INPUT_METRIC $prop $input_value"
@@ -142,8 +142,7 @@ if {[llength [get_ports -quiet clk_in]] == 1 && [llength [get_ports -quiet clk_o
     puts "OT_FC_METRIC $prop $value"
     puts "OT_FC_DRIVER_METRIC $prop $driver_value"
   }
-  puts "OT_FC_ROOT clk_in"
-}
+  puts "OT_FC_ROOT clk"
 
 if {[info exists ot_fc_root]} {
 delete_clock [all_clocks]
