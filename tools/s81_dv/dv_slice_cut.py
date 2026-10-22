@@ -39,7 +39,10 @@ import dv_rtl_kit as K  # noqa: E402
 
 RELAY_RE = re.compile(r'^(dsfd_dvrlyh_|dsfd_rly_|dsfd_dvland_|BUFx|INVx|ICGx)')   # ICGx: hop-0 lane clock gate (S81-LBGAP/G1)
 RESET_RE = re.compile(r'^dsfd_rly_1_')
-CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|cr|cr_s|CLK)$')
+# RTLGAP-G9 (10-22): ck_r<k> = the H9/H10 frame region roots (col_h9_l4_lp ck_r0/ck_r1/ck_r2).  Without it ck_r1/ck_r2
+# (which reach no other clock pin) were classed die_input and the bench held them at 0: two of the three frame regions
+# never clocked on every G9 cut.
+CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|ck_r\d+|cr|cr_s|CLK)$')
 
 
 FLIGHT_SIM = """// dv_flight_sim (S81-LBGAP/G1, bench side): F whole periods of lane flight between the last relay station and its
@@ -67,6 +70,24 @@ module dv_flight_sim #(parameter integer W = 1, parameter integer F = 0) (
         /* verilator lint_on COMBDLY */
         assign ck_out = ck_in & en_l;
         assign i_out = d[F - 1];
+    end endgenerate
+endmodule
+"""
+
+
+RST_LAND_SIM = """// dv_rst_land_sim (RTLGAP-G9 10-22, bench side): the kit RESET LANDING of a hardened view (physical/common_flow/
+// ot_pin_regs.tcl OT_RST_LAND, ref_tile spec reset_landing {"enable": true, "stages": RL}): the reset port passes RL
+// plain (no reset) registers <port>__ot_rl0 -> <port>__ot_rl<RL-1> on the view's data clock before the core, so assert
+// and release both move RL edges.  The RTL source has no such registers (the kit inserts them at synthesis); the die
+// calendar (dv_bind landing_reset_stages {master: RL}) opens every hop-0 gate RL edges later to match, so a bench that
+// binds the plain RTL landing reads its ring RL edges early and every landing faults (G9 idle cuts, 10-21).
+module dv_rst_land_sim #(parameter integer RL = 2) (input wire ck, input wire rs_in, output wire rs_out);
+    generate if (RL == 0) begin : g0
+        assign rs_out = rs_in;
+    end else begin : grl
+        reg [RL-1:0] rl;
+        always @(posedge ck) rl <= {rl[RL-2 < 0 ? 0 : RL-2:0], rs_in};
+        assign rs_out = rl[RL-1];
     end endgenerate
 endmodule
 """
@@ -125,6 +146,12 @@ def main(argv=None):
     ap.add_argument('--corner', default='tt', choices=['tt', 'ff'])
     ap.add_argument('--land-model', action='store_true', help='TOK-FUNC-S81: landings without a land-plan row / S1 '
                     '(model rows, die.v K placeholders) get flight F = K - 1 instead of failing (recorded source model)')
+    ap.add_argument('--land-rl', help='RTLGAP-G9 (10-22): bind table JSON (dv_bind bind_table, key landing_reset_stages '
+                    '{master: RL}, strict-checked by dv_bind against the bound landing views): every landing whose master has '
+                    'RL > 0 gets its rs through dv_rst_land_sim #(RL) on its ck = the kit reset landing of the hardened view '
+                    '(rs__ot_rl0..rl<RL-1>), which the RTL source lacks.  Without it the bench reads every ring RL edges '
+                    'before the die calendar (G + RL) and every landing faults.  Bench side only, never in the die netlist.')
+    ap.add_argument('--land-rl-mut', action='store_true', help='MUTANT ONLY: record --land-rl but bind RL 0 (landings must fault)')
     ap.add_argument('--flight-shift', type=int, default=0,
                     help='MUTANT ONLY: add this many cycles to every F (outside the window -> the landings must fault)')
     ap.add_argument('--rom-instance', action='store_true',
@@ -341,6 +368,28 @@ def main(argv=None):
             lines[i] = ln
             lane_dl[i] = dict(F=F, F_raw=f_raw, clipped=F - a.flight_shift != f_raw, s1_ps=float(s1), E=E_, D=D_, K=K_,
                               corner=a.corner, flight_shift=a.flight_shift, source=src)
+    land_rl = {}
+    if a.land_rl:
+        rl_tab = json.loads(Path(a.land_rl).read_text())
+        rl_tab = rl_tab.get('landing_reset_stages', rl_tab)
+        for i in sorted(lines):
+            mst = byname[i][0]
+            if not mst.startswith('dsfd_dvland'):
+                continue
+            rl = int(rl_tab.get(mst, 0))
+            if rl <= 0:
+                land_rl[i] = dict(master=mst, RL=0)
+                continue
+            cm = byname[i][3]
+            ck_, rs_ = cm['ck'].strip(), cm['rs'].strip()
+            ln = lines[i]
+            assert ln.count(f'.rs({cm["rs"]})') == 1, (i, 'landing rs pin not unique')
+            rlb = 0 if a.land_rl_mut else rl
+            body.append(f'  wire {i}__rs_l;   // kit reset landing of the {mst} view: rs -> {rl} plain {ck_} flops -> core'
+                        + (' (MUTANT: RL 0)' if a.land_rl_mut else ''))
+            body.append(f'  dv_rst_land_sim #(.RL({rlb})) {i}__rl (.ck({ck_}), .rs_in({rs_}), .rs_out({i}__rs_l));')
+            lines[i] = ln.replace(f'.rs({cm["rs"]})', f'.rs({i}__rs_l)', 1)
+            land_rl[i] = dict(master=mst, RL=rl, bound_RL=rlb, ck=ck_, rs=rs_)
     lost = sorted(S - set(lines))
     if lost:
         raise SystemExit(f'dv_slice_cut: instance line not found verbatim for {lost[:5]}')
@@ -350,12 +399,14 @@ def main(argv=None):
     sv = [hdr] + decl + body + [lines[i] for i in sorted(S, key=lambda x: list(byname).index(x))] + ['endmodule', '']
     if lane_dl:
         sv += [FLIGHT_SIM]
+    if any(v.get('RL') for v in land_rl.values()):
+        sv += [RST_LAND_SIM]
     (out / f'{a.name}.sv').write_text('\n'.join(sv))
     (out / 'slice_ports.json').write_text(json.dumps(dict(schema='opentallas.s81_dv.slice_ports.v1', top=a.name,
                                                           die_v=a.die_v, ports=ports), indent=1) + '\n')
     cnt = Counter(byname[i][0] for i in S)
     (out / 'slice_insts.json').write_text(json.dumps(dict(instances=len(S), by_master=dict(sorted(cnt.items())),
-                                                          how={i: how[i] for i in sorted(S)}, rom_instance_param=rom_inst, lane_flight_time=lane_dl), indent=1) + '\n')
+                                                          how={i: how[i] for i in sorted(S)}, rom_instance_param=rom_inst, lane_flight_time=lane_dl, landing_reset_landing=land_rl), indent=1) + '\n')
     nin = sum(sum(h - l + 1 for h, l in p['bits']) for p in ports.values() if p['dir'] == 'input')
     nout = sum(sum(h - l + 1 for h, l in p['bits']) for p in ports.values() if p['dir'] == 'output')
     print(f'dv_slice_cut: {len(S)} instances {dict(sorted(cnt.items()))}; ports {len(ports)} '
