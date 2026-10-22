@@ -3807,8 +3807,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                                                 frontier_limit=4000,mono=mono,corridor=r_,load_limit=lim,
                                                 p2p_on=p2p_on,RCH=RCH,gate=GATE,
                                                 edge_tests='unchanged start/end L1<=De; frame L1<=D; pin/frame distance<=RCH when p2p; free/corridor; monotone; nonoverlap when GATE; existing hop_fits'))
-                                    with open(dst_,'w') as receipt_:
-                                        json.dump(payload_,receipt_,indent=2)
+                                    # SQC-QSTWI 10-22 (r25: numpy bool in the receipt killed the GEN before the later,
+                                    # authoritative attempts): diagnostics only -> numpy scalars as Python values, never fatal
+                                    try:
+                                        _rtxt = json.dumps(payload_, indent=2,
+                                                           default=lambda o_: o_.item() if hasattr(o_, 'item') else str(o_))
+                                        with open(dst_,'w') as receipt_:
+                                            receipt_.write(_rtxt)
+                                    except Exception as _rexc:
+                                        print(f'RELAY_SITE_FAILURE receipt {pl["bid"]} not written: {_rexc!r}', flush=True)
                                 why = (f"span {a_}-{b_} of {nfr}, start {len(start)}, visited {len(par)}, sites {len(arr)}, "
                                        f"D {D:.0f}, De {De:.0f}, corridor {r_}, load {lim}, end sites {len(_e)} / free "
                                        f"{sum(1 for i_ in _e if ok(i_))} / reached {sum(1 for i_ in _e if i_ in par)}, "
