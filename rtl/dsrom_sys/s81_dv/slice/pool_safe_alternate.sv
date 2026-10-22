@@ -480,10 +480,12 @@ module ot_psf_mul (
             assign l5[96*i +: 96] = csa(l4[144*i +: 48], l4[144*i + 48 +: 48], l4[144*i + 96 +: 48]);
         end
     endgenerate
-    (* keep *) reg r3_v; (* keep *) reg r3_byp, r3_sign; (* keep *) reg [1:0] r3_err; (* keep *) reg [48*4-1:0] r3_l5; (* keep *) reg [11:0] r3_pw;
+    (* keep *) reg r3_v; (* keep *) reg r3_byp, r3_sign; (* keep *) reg [1:0] r3_err; (* keep *) reg [48*4-1:0] r3_l5;
+    (* keep *) reg [11:0] r3_pw, r3_pwb, r3_pwc;                     // power copies: 47 path | 46 path | subnormal shift
     always @(posedge clk or negedge rst_n) if (!rst_n) r3_v <= 1'b0; else r3_v <= r2_v;
     always @(posedge clk) begin
-        r3_byp <= r2_byp; r3_err <= r2_err; r3_sign <= r2_sign; r3_l5 <= l5; r3_pw <= r2_pw;
+        r3_byp <= r2_byp; r3_err <= r2_err; r3_sign <= r2_sign; r3_l5 <= l5;
+        r3_pw <= r2_pw; r3_pwb <= r2_pw; r3_pwc <= r2_pw;
     end
     // ------------------------------------------------------------ D
     wire [48*3-1:0] l6;
@@ -491,10 +493,10 @@ module ot_psf_mul (
     assign l6[0 +: 96] = csa(r3_l5[0 +: 48], r3_l5[48 +: 48], r3_l5[96 +: 48]);
     assign l6[96 +: 48] = r3_l5[144 +: 48];
     assign l7 = csa(l6[0 +: 48], l6[48 +: 48], l6[96 +: 48]);
-    wire signed [11:0] power = r3_pw;
-    wire signed [11:0] fl47 = power + 12'sd47, fl46 = power + 12'sd46;
-    wire signed [11:0] f47p1 = fl47 + 12'sd1, f46p1 = fl46 + 12'sd1;
-    wire signed [11:0] sh_sub = -(power + 12'sd149);
+    wire signed [11:0] power = r3_pw, powb = r3_pwb, powc = r3_pwc;
+    wire signed [11:0] fl47 = power + 12'sd47, fl46 = powb + 12'sd46;
+    wire signed [11:0] f47p1 = power + 12'sd48, f46p1 = powb + 12'sd47;
+    wire signed [11:0] sh_sub = -(powc + 12'sd149);
     // one-hot subnormal shift: index d - 24 for sh_sub = d in [24, 48], index 25 for sh_sub >= 49 (only sh_sub >= 24
     // can be a subnormal result: fl46 < -126 <=> power <= -173 <=> sh_sub >= 24)
     wire [2:0] shh = sh_sub[5:3], shl = sh_sub[2:0];

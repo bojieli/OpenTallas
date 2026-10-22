@@ -481,10 +481,12 @@ module ot_psf_mul (
             assign l5[96*i +: 96] = csa(l4[144*i +: 48], l4[144*i + 48 +: 48], l4[144*i + 96 +: 48]);
         end
     endgenerate
-    (* keep *) reg r3_v; (* keep *) reg r3_byp, r3_sign; (* keep *) reg [1:0] r3_err; (* keep *) reg [48*4-1:0] r3_l5; (* keep *) reg [11:0] r3_pw;
+    (* keep *) reg r3_v; (* keep *) reg r3_byp, r3_sign; (* keep *) reg [1:0] r3_err; (* keep *) reg [48*4-1:0] r3_l5;
+    (* keep *) reg [11:0] r3_pw, r3_pwb, r3_pwc;                     // power copies: 47 path | 46 path | subnormal shift
     always @(posedge clk or negedge rst_n) if (!rst_n) r3_v <= 1'b0; else r3_v <= r2_v;
     always @(posedge clk) begin
-        r3_byp <= r2_byp; r3_err <= r2_err; r3_sign <= r2_sign; r3_l5 <= l5; r3_pw <= r2_pw;
+        r3_byp <= r2_byp; r3_err <= r2_err; r3_sign <= r2_sign; r3_l5 <= l5;
+        r3_pw <= r2_pw; r3_pwb <= r2_pw; r3_pwc <= r2_pw;
     end
     // ------------------------------------------------------------ D
     wire [48*3-1:0] l6;
@@ -492,10 +494,10 @@ module ot_psf_mul (
     assign l6[0 +: 96] = csa(r3_l5[0 +: 48], r3_l5[48 +: 48], r3_l5[96 +: 48]);
     assign l6[96 +: 48] = r3_l5[144 +: 48];
     assign l7 = csa(l6[0 +: 48], l6[48 +: 48], l6[96 +: 48]);
-    wire signed [11:0] power = r3_pw;
-    wire signed [11:0] fl47 = power + 12'sd47, fl46 = power + 12'sd46;
-    wire signed [11:0] f47p1 = fl47 + 12'sd1, f46p1 = fl46 + 12'sd1;
-    wire signed [11:0] sh_sub = -(power + 12'sd149);
+    wire signed [11:0] power = r3_pw, powb = r3_pwb, powc = r3_pwc;
+    wire signed [11:0] fl47 = power + 12'sd47, fl46 = powb + 12'sd46;
+    wire signed [11:0] f47p1 = power + 12'sd48, f46p1 = powb + 12'sd47;
+    wire signed [11:0] sh_sub = -(powc + 12'sd149);
     // one-hot subnormal shift: index d - 24 for sh_sub = d in [24, 48], index 25 for sh_sub >= 49 (only sh_sub >= 24
     // can be a subnormal result: fl46 < -126 <=> power <= -173 <=> sh_sub >= 24)
     wire [2:0] shh = sh_sub[5:3], shl = sh_sub[2:0];
@@ -1268,28 +1270,34 @@ module ot_s81sl_cmp_pool #(
     wire [7:0] lo_v, lf;
     wire [255:0] lo_y, lo_y32;
     // REGIONAL CLOCK (RTLGAP-SUKV 10-22, SAFE 7): lane l = its own clock region on ck_l[l]; control <-> lane crossings
-    // are fixed-latency landing rings (ot_s81_land D 4, K 1: 2 edges each way), cut in <= 16-bit chunks.
+    // are fixed-latency landing rings (ot_s81_land D 4, K 1: 2 edges each way), cut in <= 8-bit chunks, one reset leaf per ring.
     wire [7:0] lif, lof;
     generate for (l = 0; l < 8; l = l + 1) begin : g_lane
-        wire [3:0] lrs; wire [4:0] ors; wire [34:0] li_src = {l_v[l], l_role[2*l +: 2], l_d[32 * l +: 32]}; wire [34:0] li;
+        wire [5:0] lrs; wire [9-1:0] ors; wire [34:0] li_src = {l_v[l], l_role[2*l +: 2], l_d[32 * l +: 32]}; wire [34:0] li;
         wire o_v_r, f_r; wire [31:0] y_r, y32_r; wire [65:0] lo_src, lo_l;
-        ot_psf_rtree #(.N(4)) u_lrs (.clk(ck_l[l]), .rst_n(rst_n), .q(lrs));
-        ot_psf_rtree #(.N(5)) u_ors (.clk(clk), .rst_n(rst_n), .q(ors));
-        wire [2:0] u_li_f;
-        ot_s81_land #(.W(16), .D(4)) u_li0 (.k(3'd1), .ck_f(clk), .i(li_src[15:0]), .ck(ck_l[l]), .rs(lrs[0]), .o(li[15:0]), .fault(u_li_f[0]));
-        ot_s81_land #(.W(16), .D(4)) u_li1 (.k(3'd1), .ck_f(clk), .i(li_src[31:16]), .ck(ck_l[l]), .rs(lrs[1]), .o(li[31:16]), .fault(u_li_f[1]));
-        ot_s81_land #(.W(3), .D(4)) u_li2 (.k(3'd1), .ck_f(clk), .i(li_src[34:32]), .ck(ck_l[l]), .rs(lrs[2]), .o(li[34:32]), .fault(u_li_f[2]));
+        ot_psf_rtree #(.N(5 + 1)) u_lrs (.clk(ck_l[l]), .rst_n(rst_n), .q(lrs));
+        ot_psf_rtree #(.N(9)) u_ors (.clk(clk), .rst_n(rst_n), .q(ors));
+        wire [4:0] u_li_f;
+        ot_s81_land #(.W(8), .D(4)) u_li0 (.k(3'd1), .ck_f(clk), .i(li_src[7:0]), .ck(ck_l[l]), .rs(lrs[0]), .o(li[7:0]), .fault(u_li_f[0]));
+        ot_s81_land #(.W(8), .D(4)) u_li1 (.k(3'd1), .ck_f(clk), .i(li_src[15:8]), .ck(ck_l[l]), .rs(lrs[1]), .o(li[15:8]), .fault(u_li_f[1]));
+        ot_s81_land #(.W(8), .D(4)) u_li2 (.k(3'd1), .ck_f(clk), .i(li_src[23:16]), .ck(ck_l[l]), .rs(lrs[2]), .o(li[23:16]), .fault(u_li_f[2]));
+        ot_s81_land #(.W(8), .D(4)) u_li3 (.k(3'd1), .ck_f(clk), .i(li_src[31:24]), .ck(ck_l[l]), .rs(lrs[3]), .o(li[31:24]), .fault(u_li_f[3]));
+        ot_s81_land #(.W(3), .D(4)) u_li4 (.k(3'd1), .ck_f(clk), .i(li_src[34:32]), .ck(ck_l[l]), .rs(lrs[4]), .o(li[34:32]), .fault(u_li_f[4]));
         assign lif[l] = |u_li_f;
         ot_s81sl_cmp_pool_lane #(.LM(LM), .LA(LA), .MUT(MUT)) u_l (
-            .clk(ck_l[l]), .rst_n(lrs[3]), .i_v(li[34]), .i_role(li[33:32]), .i_d(li[31:0]),
+            .clk(ck_l[l]), .rst_n(lrs[5]), .i_v(li[34]), .i_role(li[33:32]), .i_d(li[31:0]),
             .o_v(o_v_r), .o_y(y_r), .o_y32(y32_r), .fault(f_r));
         assign lo_src = {o_v_r, f_r | lif[l], y_r, y32_r};
-        wire [4:0] u_lo_f;
-        ot_s81_land #(.W(16), .D(4)) u_lo0 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[15:0]), .ck(clk), .rs(ors[0]), .o(lo_l[15:0]), .fault(u_lo_f[0]));
-        ot_s81_land #(.W(16), .D(4)) u_lo1 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[31:16]), .ck(clk), .rs(ors[1]), .o(lo_l[31:16]), .fault(u_lo_f[1]));
-        ot_s81_land #(.W(16), .D(4)) u_lo2 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[47:32]), .ck(clk), .rs(ors[2]), .o(lo_l[47:32]), .fault(u_lo_f[2]));
-        ot_s81_land #(.W(16), .D(4)) u_lo3 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[63:48]), .ck(clk), .rs(ors[3]), .o(lo_l[63:48]), .fault(u_lo_f[3]));
-        ot_s81_land #(.W(2), .D(4)) u_lo4 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[65:64]), .ck(clk), .rs(ors[4]), .o(lo_l[65:64]), .fault(u_lo_f[4]));
+        wire [8:0] u_lo_f;
+        ot_s81_land #(.W(8), .D(4)) u_lo0 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[7:0]), .ck(clk), .rs(ors[0]), .o(lo_l[7:0]), .fault(u_lo_f[0]));
+        ot_s81_land #(.W(8), .D(4)) u_lo1 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[15:8]), .ck(clk), .rs(ors[1]), .o(lo_l[15:8]), .fault(u_lo_f[1]));
+        ot_s81_land #(.W(8), .D(4)) u_lo2 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[23:16]), .ck(clk), .rs(ors[2]), .o(lo_l[23:16]), .fault(u_lo_f[2]));
+        ot_s81_land #(.W(8), .D(4)) u_lo3 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[31:24]), .ck(clk), .rs(ors[3]), .o(lo_l[31:24]), .fault(u_lo_f[3]));
+        ot_s81_land #(.W(8), .D(4)) u_lo4 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[39:32]), .ck(clk), .rs(ors[4]), .o(lo_l[39:32]), .fault(u_lo_f[4]));
+        ot_s81_land #(.W(8), .D(4)) u_lo5 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[47:40]), .ck(clk), .rs(ors[5]), .o(lo_l[47:40]), .fault(u_lo_f[5]));
+        ot_s81_land #(.W(8), .D(4)) u_lo6 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[55:48]), .ck(clk), .rs(ors[6]), .o(lo_l[55:48]), .fault(u_lo_f[6]));
+        ot_s81_land #(.W(8), .D(4)) u_lo7 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[63:56]), .ck(clk), .rs(ors[7]), .o(lo_l[63:56]), .fault(u_lo_f[7]));
+        ot_s81_land #(.W(2), .D(4)) u_lo8 (.k(3'd1), .ck_f(ck_l[l]), .i(lo_src[65:64]), .ck(clk), .rs(ors[8]), .o(lo_l[65:64]), .fault(u_lo_f[8]));
         assign lof[l] = |u_lo_f;
         assign lo_v[l] = lo_l[65]; assign lf[l] = lo_l[64] | lof[l];
         assign lo_y[32 * l +: 32] = lo_l[63:32]; assign lo_y32[32 * l +: 32] = lo_l[31:0];
