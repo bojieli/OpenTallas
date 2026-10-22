@@ -37,5 +37,25 @@
       "compared": 12796,
       "mechanism": "Landing bypass changes edges; first token lane 1 arrives at 108 instead of required 111."
     }
-  }
+  },
+  "main_current": {
+    "source": "e7adbd0c3",
+    "status": "PASS",
+    "comparisons": 12796,
+    "cycles": 4000,
+    "first_token_added_edges": 21,
+    "causal_pending": false,
+    "causal_mutant": {
+      "parameter": "MUT=1",
+      "status": "EXPECTED_REJECTION",
+      "mismatches": 11227,
+      "compared": 12796,
+      "mechanism": "Landing bypass changes edges; lane 1 first token at 98 instead of required 101."
+    },
+    "actual_host": "ot-gold1",
+    "unit": "3563433-1792646309"
+  },
+  "pair_status": "PASS",
+  "source_archive_sha256": "b6d2008f8cba39353092b2d6607b9a5df1dc8187ec66389f2505a55eebc9fb6b",
+  "physical_qualification": false
 }

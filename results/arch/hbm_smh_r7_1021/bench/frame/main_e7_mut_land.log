@@ -1,0 +1,15 @@
+R7_FIRST_TOKEN_MISMATCH lane=1 cycle=98 old=1418000000000 new=3000000000108
+R7_FIRST_TOKEN_MISMATCH lane=1 cycle=99 old=1000000000000 new=3000000000118
+R7_FIRST_TOKEN_MISMATCH lane=1 cycle=100 old=1000000000000 new=3000000000128
+R7_FIRST_TOKEN_MISMATCH lane=1 cycle=101 old=3000000000108 new=3000000000138
+R7_FIRST_TOKEN_MISMATCH lane=1 cycle=102 old=3000000000118 new=3000000000148
+R7_FIRST_TOKEN lane=0 old_cycle=93 new_cycle=114 required_added_edges=21
+R7_FIRST_TOKEN lane=1 old_cycle=80 new_cycle=98 required_added_edges=21
+R7_FIRST_TOKEN lane=2 old_cycle=47 new_cycle=68 required_added_edges=21
+R7_FIRST_TOKEN lane=3 old_cycle=47 new_cycle=68 required_added_edges=21
+R7_FRAME_ACTIVITY bdc_out=1989 qk_out=1214 pv_events=223 publications=6823 pv_inputs=0
+R7_FRAME_LOCKSTEP FAIL VAR=0 HMUT=0 mismatches=11227 of 12796
+- rtl/hbm_accel/sm/repack/h2a7/tb_ot_hbm_smh_rp7_frame.sv:133: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 83.261 s; speed 48.042 ns/s
+- Verilator: cpu 46.719 s on 1 threads; allocated 33 MB
