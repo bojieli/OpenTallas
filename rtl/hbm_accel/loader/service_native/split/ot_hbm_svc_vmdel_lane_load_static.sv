@@ -46,9 +46,14 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  always @(posedge clk)begin load_v<=load_v_i;load_cmd<=load_cmd_i;end
  // SHPRE: shape checks of the command on its way into the pin flop (input-to-reg slack 394 ps at m9)
  wire [2:0] lf_i=load_cmd_i[32:30]; wire [3:0] ln_i=load_cmd_i[55:52];
- wire [5:0] esz_i=(lf_i==0||lf_i==5)?6'd4:lf_i==1?6'd2:6'd1;
+ // m11 (HBMc/TILES4): m10 census refused load_cmd_i[30..32] at 33-37 loads (22 capture + 2 format copies + pin flop
+ // + abc spreading the format decode over the shape adders).  The format decode ends on kept nets (abc boundary), so
+ // each raw format bit drives only the three decode terms; same function.
+ (* keep="true" *) wire lf_e4_i=lf_i==0||lf_i==5; (* keep="true" *) wire lf_e2_i=lf_i==1;
+ (* keep="true" *) wire lf_bad_i=lf_i==3||lf_i==7;
+ wire [5:0] esz_i=lf_e4_i?6'd4:lf_e2_i?6'd2:6'd1;
  wire shape_com_i=load_cmd_i[18:17]<NPC&&ln_i<=8&&{1'b0,load_cmd_i[51:49]}+ln_i<=8&&
-  {1'b0,load_cmd_i[29:25]}+ln_i*esz_i<=32&&lf_i!=3&&lf_i!=7;
+  {1'b0,load_cmd_i[29:25]}+ln_i*esz_i<=32&&!lf_bad_i;
  (* keep="true" *) reg shape_cmd_q,shape_load_q;
  always @(posedge clk)begin shape_cmd_q<=shape_com_i&&(ln_i!=0||load_cmd_i[56]);shape_load_q<=shape_com_i&&ln_i!=0;end
  reg begin_v,begin_bank,start,start_bank; reg [15:0] begin_epoch,start_epoch,start_base_sector;
@@ -302,7 +307,9 @@ module ot_hbm_dma_capture_pair #(parameter COPY_ID=0,WORD=0,PAIR=0)(input wire c
  (* keep="true" *)reg[7:0]lo;
  (* keep="true" *)reg[3:0]hi;
  reg valid;
- wire[2:0]size=(cmd[7:5]==0||cmd[7:5]==5)?3'd4:cmd[7:5]==1?3'd2:3'd1;
+ // m11: size ends on a kept net (m10 census: capture[504] cmd[7] QN 33 loads after abc spread the decode into the
+ // byte_index adder / valid compare); same function.
+ (* keep="true" *) wire[2:0]size=(cmd[7:5]==0||cmd[7:5]==5)?3'd4:cmd[7:5]==1?3'd2:3'd1;
  wire[6:0]byte_index={2'd0,cmd[4:0]}+7'(WORD*size)+7'(PAIR/4);
  reg[1:0]selected;
  always @*begin
