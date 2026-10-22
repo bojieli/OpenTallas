@@ -37,6 +37,7 @@ def emit(kit, out):
     target=ROOT/out;target.mkdir(parents=True,exist_ok=True);lef=out/(s['top']+'.lef');(ROOT/lef).write_text('\n'.join(body)+'\n')
     sha=lambda n:hashlib.sha256((ROOT/n).read_bytes()).hexdigest()
     recipes=[s['io_tcl'],str(kit/'floorplan.json'),str(kit/'pin_geometry_plan.json'),str(kit/'clock.sdc'),str(kit/'signoff.sdc')]
+    if (ROOT/kit/'pin_track_recipe.json').exists(): recipes.append(str(kit/'pin_track_recipe.json'))
     r=dict(schema='opentallas.kv_d2d_source_frame.v1',kit=str(kit),top=s['top'],params=s['params'],spec_sha256=sha(kit/'spec.json'),source_sha256={n:sha(n) for n in s['sources']},pin_recipe_sha256={n:sha(n) for n in recipes},lef=str(lef),lef_sha256=sha(lef),outline=[w,h],qualification='SOURCE_FRAME_DIAGNOSTIC_ONLY',source_base='9ee754c2d',selected_source='effective bytes bound by source_sha256; candidate may contain the documented same-edge native control repair',pins=len(pins),claim='NOT_A_DIE_RESULT: literal source-frame geometry only; no timing, routing, clock, PG or hardened-view qualification')
     (target/'receipt.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps({'receipt':str(out/'receipt.json'),'pins':len(pins),'qualification':r['qualification']}))
 if __name__=='__main__':

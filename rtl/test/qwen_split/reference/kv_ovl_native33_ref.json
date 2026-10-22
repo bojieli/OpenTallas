@@ -1,0 +1,19 @@
+{
+  "source_ref": "9ee754c2d",
+  "source_path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv",
+  "source_sha256": "68fc3d6713de59579146184fdebc1f030fa3af157fabe6373c57a74f791d94de",
+  "namespace_mapping": {
+    "ot_qkvd_llr_replay_sram_leaf_sfm3": "ot_qkvd_llr_replay_sram_leaf_sfm3_native33_ref",
+    "ot_qwen_static_slot_ctl_sfm3": "ot_qwen_static_slot_ctl_sfm3_native33_ref",
+    "ot_qwen_static_slot_link_sfm3": "ot_qwen_static_slot_link_sfm3_native33_ref",
+    "ot_qwen_d2d_cal_sfg3": "ot_qwen_d2d_cal_sfg3_native33_ref",
+    "ot_qwen_d2d_static_end_sfm3": "ot_qwen_d2d_static_end_sfm3_native33_ref",
+    "ot_qwen_d2d_recovery_sfm3": "ot_qwen_d2d_recovery_sfm3_native33_ref",
+    "qkd_d2d_static_core_sfm3": "qkd_d2d_static_core_sfm3_native33_ref",
+    "qkd_d2d_static_sfm3": "qkd_d2d_static_sfm3_native33_ref",
+    "qkd_d2d_static_ovl_sfm3": "qkd_d2d_static_ovl_sfm3_native33_ref",
+    "ot_qwen_d2d_status_rx_sfm3": "ot_qwen_d2d_status_rx_sfm3_native33_ref"
+  },
+  "operation": "token-only module-name namespace substitution; all behavioral statements unchanged",
+  "scope": "unmodified current predecessor for same-edge native control-copy equivalence"
+}
