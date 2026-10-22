@@ -26,6 +26,7 @@ import argparse
 import itertools
 import json
 import math
+import os
 import re
 import shutil
 import sys
@@ -57,6 +58,22 @@ REV_BITS = (('host_fdi', 1045), ('kvn', 1), ('hb', 1), ('emf', 1), ('emr', 1))
 REV_BUS = re.compile(r'^(' + '|'.join(b for b, _ in REV_BITS) + r')(?:_|$)')
 # replica choice: minimum (outline area + PAD_COST per tied bit + INST_COST per instance), at most 5 replicas
 PAD_COST, INST_COST = 1.0, 60.0
+# SQC-KDIE5 10-22 (OT_KV_GRP_PC_HCK=1; default off: die.v byte-identical): the group <-> PC words (slg o_pc<j> ->
+# kvpc i_grp, kvpc o_grp -> slg i_pc<j>) are MIXED-domain in RTL (qkd_kvs_grp / _h, qkd_kvs_pc / _h: o_pc<j> = 95 hck
+# bits -- boot CDC sink_*, front blk_go, phase *_h -- + 33 ck bits -- landing-cal r_*; i_grp consumes them on hck
+# (cal_hck / front_hck) and ck (return path expected_*); o_grp = 295 ck + 10 hck status levels, consumed by the group's
+# drain guard through its async_reg 2-flop synchronisers).  One relay stage on the core trunk put a core flop between
+# two hck flops (1,280 unlanded crossings on kvs14r sqc3s).  With the knob every relay stage of such a chain is split
+# by LAUNCH domain: the ck bits keep their replicas on the stage's core trunk, the hck bits ride their own replicas on
+# the chain source frame's HBM clock (its 'hck' net, n_clk_hbm_<stack>) -- the kv_die.py DOMSPLIT convention (relay
+# clock = launching pin's domain; a crossing stays at the consumer's synchroniser), without the DOMSPLIT RTL re-cut.
+# Per-bit domains: the producer field layout of the generated tiles (kv_static_die.all_tiles) x the measured field
+# domains (kv_static_die.DOMSPLIT_TABLE), fail closed on a field without one; cross-checked bit-exact against the
+# RTL-elaborated frame pin roots (kv_frame_pin_roots.py, kvs14r sqc3s: 0 mismatches).  The split row must fit the
+# planned frame (fail closed).  The group gather o_ctl stays as is (its hck levels need the DOMSPLIT in-group landing).
+GRP_PC_HCK = os.environ.get('OT_KV_GRP_PC_HCK', '0') == '1'
+GRP_PC_PORTS = re.compile(r'^(o_pc\d|o_grp)$')
+GRP_PC_INST = re.compile(r'^(slg|kvpc)_(WS|WN|ES|EN)_\d+$')
 
 
 def name(s):
@@ -102,11 +119,13 @@ def dims(s, role='fwd', land=False):
     return LAND[s] if (land and role == 'fwd') else STD[s]
 
 
-def layout(w, rev=0, land=False):
+def layout(w, rev=0, land=False, split=None):
     """(frame w, frame h, [(std, dx, dy, role)]) of a w-bit relay stage with rev reverse bits (land: the forward
-    replicas are landing slots, LAND outlines; the replica choice is unchanged)"""
+    replicas are landing slots, LAND outlines; the replica choice is unchanged).  split (OT_KV_GRP_PC_HCK): the forward
+    bits' (ck, hck) counts -- each domain takes its own replicas, ck first"""
     # reverse bits ride their own replicas, MIRRORED (MY: a on the E face, b on the W face)
-    reps = [(s, 'fwd') for s in replicas(w - rev)] + [(s, 'rev') for s in replicas(rev)]
+    fwd = replicas(w - rev) if split is None else replicas(split[0]) + replicas(split[1])
+    reps = [(s, 'fwd') for s in fwd] + [(s, 'rev') for s in replicas(rev)]
     fh = max(dims(s, r, land)[1] for s, r in reps)
     out, x = [], 0.0
     for s, role in reps:
@@ -157,6 +176,76 @@ def pack(bits):
     return parts[0] if len(parts) == 1 else '{' + ', '.join(parts) + '}'
 
 
+def grp_pc_hck_domains(lines, wires):
+    """OT_KV_GRP_PC_HCK: {relay inst: (frozenset of its HCK-launched bit indices, the source frame's hck net)} for every
+    qkd_rly_* stage of a group <-> PC chain (traced back through relays to slg o_pc<j> / kvpc o_grp)"""
+    sys.path.insert(0, str(ROOT / 'tools' / 'qwen_kv_die'))
+    import kv_static_die as KSD
+    tiles = KSD.all_tiles()
+    gen = re.compile(r'^\s+(\S+) (\S+) \((.*)\);\s*$')
+    drv, relays, hck = {}, {}, {}
+    for ln in lines:
+        m = gen.match(ln)
+        if not m or m.group(1) in ('wire', 'module', 'input', 'output', 'inout'):
+            continue
+        mst, inst, body = m.groups()
+        conns = dict((c.group(1), c.group(2).strip()) for c in re.finditer(r'\.(\w+)\(([^()]*)\)', body))
+        if mst.startswith('qkd_rly_'):
+            relays[inst] = conns
+            continue
+        if not (GRP_PC_INST.match(inst) and mst.startswith('qkd_kvs_')):
+            continue
+        t = tiles.get(inst)
+        if t is None or KSD._ds_bkind(t['kind']) not in ('grp', 'pc'):
+            raise ValueError(f'OT_KV_GRP_PC_HCK: frame {inst} ({mst}) is not a generated group / PC tile')
+        hck[inst] = conns.get('hck')
+        for port, expr in conns.items():
+            if not GRP_PC_PORTS.match(port):
+                continue
+            lay = t['ports'][port].get('layout')
+            if not lay:
+                raise ValueError(f'OT_KV_GRP_PC_HCK: {inst}.{port} has no field layout')
+            dom = []
+            for _pn, w_, key in lay:
+                dom += [KSD.ds_domain(key)] * w_
+            nb = net_bits(expr, wires)
+            if len(nb) != len(dom):
+                raise ValueError(f'OT_KV_GRP_PC_HCK: {inst}.{port} {len(nb)} b connected vs {len(dom)} b laid out')
+            for b, d in zip(nb, dom):
+                drv[b] = (inst, d)
+    rdrv = {}
+    for inst, cs in relays.items():
+        for i, b in enumerate(net_bits(cs['b'], wires)):
+            rdrv[b] = (inst, i)
+    abits = {inst: net_bits(cs['a'], wires) for inst, cs in relays.items()}
+
+    def source(b, seen=()):
+        while b not in drv:
+            if b not in rdrv:
+                return None
+            r, i = rdrv[b]
+            if r in seen:
+                raise ValueError(f'OT_KV_GRP_PC_HCK: relay loop at {r}')
+            seen += (r,)
+            b = abits[r][i]
+        return drv[b]
+    out = {}
+    for inst in relays:
+        src = [source(b) for b in abits[inst]]
+        frames = {s[0] for s in src if s}
+        if not frames:
+            continue
+        if len(frames) != 1 or any(s is None for s in src):
+            raise ValueError(f'OT_KV_GRP_PC_HCK: relay {inst} mixes group / PC sources {sorted(frames)} with other bits')
+        f = frames.pop()
+        hb = frozenset(i for i, s in enumerate(src) if s[1] == 'hck')
+        if hb:
+            if not (hck.get(f) or '').startswith('n_clk_hbm_'):
+                raise ValueError(f'OT_KV_GRP_PC_HCK: {inst} carries hck bits of {f} without an n_clk_hbm_* hck ({hck.get(f)})')
+            out[inst] = (hb, hck[f])
+    return out
+
+
 def lef_macro(path):
     t = Path(path).read_text()
     m = re.search(r'^MACRO (\S+)\s*$', t, re.M)
@@ -199,6 +288,9 @@ def main(argv=None):
                replica_gap_um=REPLICA_GAP, per_master={}, totals=defaultdict(int))
     used_std = defaultdict(int)
     instance_pads = {}
+    hdom = grp_pc_hck_domains(lines, wires) if GRP_PC_HCK else {}
+    if GRP_PC_HCK:
+        rep['grp_pc_hck'] = dict(relays=len(hdom), hck_bits=sum(len(v[0]) for v in hdom.values()), split_relays={})
     for ln in lines:
         m = inst_re.match(ln)
         if not m:
@@ -215,7 +307,15 @@ def main(argv=None):
         rv = rev_bits[mst]
         bid = re.sub(r'^rly_', '', inst).rsplit('_', 1)[0]
         land = mst.endswith(LAND_SUFFIX)
-        fw_, fh_, reps = layout(W, len(rv), land=land)
+        hb, hck_net = hdom.get(inst, (frozenset(), None))
+        fwd = [i for i in range(W) if i not in set(rv)]
+        split = None
+        if hb:
+            if hb & set(rv):
+                raise ValueError(f'{inst}: OT_KV_GRP_PC_HCK hck bits {sorted(hb & set(rv))[:4]} are reverse bits')
+            fwd = [i for i in fwd if i not in hb] + sorted(hb)     # ck replicas first, then the hck replicas
+            split = (W - len(rv) - len(hb), len(hb))
+        fw_, fh_, reps = layout(W, len(rv), land=land, split=split)
         if inst not in plc:
             raise ValueError(f'{inst}: not placed in place.tcl')
         _, fx, fy, fo = plc[inst]
@@ -230,11 +330,21 @@ def main(argv=None):
         # a frame taller than the row (qkd_rly_2089: its pre-expansion abstract keeps the whole word on one M4 face)
         # centres the row on the frame's pin height
         oy = math.floor(max(0.0, frame[1] - fh_) / 2 / GY + 1e-9) * GY if fits else 0.0
-        fwd = [i for i in range(W) if i not in set(rv)]
         k_f, k_r = 0, 0
+        n_ck_rep = len(replicas(split[0])) if split else None
         for j, (s, dx, dy, role) in enumerate(reps):
             nm = f'{inst}__s{j}'
-            if role == 'fwd':
+            ck_ = conns['ck']
+            if role == 'fwd' and split:
+                # the ck part fills its own replicas only (never an hck bit in a ck replica, or the reverse)
+                part = fwd[:split[0]] if j < n_ck_rep else fwd[split[0]:]
+                off = k_f if j < n_ck_rep else k_f - split[0]
+                idx = part[off:off + s]
+                k_f += len(idx)
+                if j >= n_ck_rep:
+                    ck_ = hck_net
+                    rep['grp_pc_hck']['split_relays'].setdefault(inst, []).append(nm)
+            elif role == 'fwd':
                 idx = fwd[k_f:k_f + s]
                 k_f += len(idx)
                 ain = [A[i] for i in idx] + ['0'] * (s - len(idx))
@@ -251,7 +361,7 @@ def main(argv=None):
                 sp = f'n_{nm}__spare'
                 add_wires.append(f'  wire [{s - len(bout) - 1}:0] {sp};')
                 bout = bout + [f'{sp}[{t}]' for t in range(s - len(bout))]
-            new_lines.append(f'  {name(s)} {nm} (.ck({conns["ck"]}), .a({pack(ain)}), .b({pack(bout)}));')
+            new_lines.append(f'  {name(s)} {nm} (.ck({ck_}), .a({pack(ain)}), .b({pack(bout)}));')
             # a mirrored frame (kv_pin_repair.py relays are MY: a on the E face) mirrors the row and every replica
             sw_, sh_ = dims(s, role, land)
             px = fw_ - dx - sw_ if flx else dx

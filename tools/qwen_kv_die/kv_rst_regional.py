@@ -47,9 +47,26 @@ PER_TREE = os.environ.get('OT_KV_RST_PER_TREE', '0') == '1'
 CORNERS = ('tt', 'ff', 'ss')
 
 
-def _load_ck(insts, nm):
-    """the core clock tree net of a load instance (its first 'ck*' / 'clk*' port on n_clk_core_*), or None"""
-    return next((c[2] for c in insts[nm][2] if c[0].startswith(('ck', 'clk')) and isinstance(c[2], str)
+# SQC-KDIE5 10-22 (OT_KV_GRP_PC_HCK=1; default off: die.v byte-identical): an HBM-domain reset load -- the hrst_n /
+# hrst pin of a block with an HBM clock (qkd_kvs_grp / _h, qkd_kvs_pc / _h hrst_n; qkd_ctrl_kc hrst), or the reset of a
+# block clocked ONLY by an HBM clock (qkd_hbm3e_phy_pc rst_n) -- is grouped on that block's n_clk_hbm_<stack> net, so
+# its station tree runs on the HBM clock (one root hop a tree, as every OT_KV_RST_PER_TREE group) instead of putting a
+# core station flop in front of an hck reset pin (128 kvpc hrst_n + 4 phy rst_n crossings on kvs14r sqc3s)
+GRP_PC_HCK = os.environ.get('OT_KV_GRP_PC_HCK', '0') == '1'
+HBM_RST_PINS = ('hrst_n', 'hrst')
+
+
+def _load_ck(insts, nm, ci=None):
+    """the core clock tree net of a load instance (its first 'ck*' / 'clk*' port on n_clk_core_*), or None.
+    OT_KV_GRP_PC_HCK with the load pin (conn index ci): an HBM-domain reset pin -> the block's n_clk_hbm_* net"""
+    cs = insts[nm][2]
+    if GRP_PC_HCK and ci is not None:
+        hck = next((c[2] for c in cs if c[0].startswith(('hck', 'ck', 'clk', 'pll_hbm')) and isinstance(c[2], str)
+                    and c[2].startswith('n_clk_hbm_')), None)
+        core = any(isinstance(c[2], str) and c[2].startswith('n_clk_core_') for c in cs)
+        if hck and (cs[ci][0] in HBM_RST_PINS or not core):
+            return hck
+    return next((c[2] for c in cs if c[0].startswith(('ck', 'clk')) and isinstance(c[2], str)
                  and c[2].startswith('n_clk_core_')), None)
 
 
@@ -219,7 +236,7 @@ def main(argv=None):
         dxy = drv[3]
         rad = max(abs(L[3][0] - dxy[0]) + abs(L[3][1] - dxy[1]) for L in mov)
         # KV-CLOCK 10-18: with OT_KV_RST_PER_TREE a short net whose loads span core trees is re-planned (one group a tree)
-        multi_tree = PER_TREE and len({_load_ck(insts, L[0]) for L in mov} - {None}) > 1
+        multi_tree = PER_TREE and len({_load_ck(insts, L[0], L[1]) for L in mov} - {None}) > 1
         if rad <= KEEP_UM and len(mov) <= CR.FAN and not multi_tree:
             rep['kept_nets'] += 1
             continue
@@ -233,7 +250,7 @@ def main(argv=None):
         if PER_TREE:
             by_ck = defaultdict(list)
             for L in mov:
-                by_ck[_load_ck(insts, L[0])].append(L)
+                by_ck[_load_ck(insts, L[0], L[1])].append(L)
             if len(by_ck) > 1 and None in by_ck:      # clock-less loads ride with the largest clocked group
                 big = max(sorted(k_ for k_ in by_ck if k_), key=lambda k_: len(by_ck[k_]))
                 by_ck[big] += by_ck.pop(None)
