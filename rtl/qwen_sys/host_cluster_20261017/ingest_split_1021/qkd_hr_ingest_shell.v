@@ -3,7 +3,9 @@
 // single-clock engine tile qkd_hr_ingest_eng (touching tile, direct wires). Instance name u_rank__u_qm kept, so the
 // reviewed CDC synchroniser paths of the qkd_hr_ingest_qm kits are unchanged.
 `timescale 1ns/1ps
-module qkd_hr_ingest_shell #(parameter integer KW = 20) (
+// QE3-HROOT 10-21: SPIPE6 (default 0 = unchanged) selects the owner's six-slot engine contract; the shell then fails
+// malformed IKEY descriptors closed (cdc shell IKEY_GUARD, fault code 8) before the engine.
+module qkd_hr_ingest_shell #(parameter integer KW = 20, parameter integer SPIPE6 = 0) (
   input  wire         ck_core, ck_host, ck_ingest, host_rst_n,
   output wire         service_faults,
   input  wire [511:0] u_rank__qm_d,
@@ -35,7 +37,7 @@ module qkd_hr_ingest_shell #(parameter integer KW = 20) (
   input  wire         eng_busy,
   input  wire [31:0]  eng_nsec
 );
-  qkd_hr_ingest_cdc_shell #(.AW(32), .HDMAX(128), .KVHMAX(2), .RMW_EN(0), .MUT(0), .NATIVE_ROWS(1), .QPIPE(2), .KW(KW)) u_rank__u_qm (
+  qkd_hr_ingest_cdc_shell #(.AW(32), .HDMAX(128), .KVHMAX(2), .RMW_EN(0), .MUT(0), .NATIVE_ROWS(1), .QPIPE(2), .KW(KW), .IKEY_GUARD(SPIPE6)) u_rank__u_qm (
     .rst_n(host_rst_n), .clk_h(ck_host), .h_v(u_rank__qm_v), .h_cls(u_rank__qm_cls), .h_d(u_rank__qm_d), .h_crn(u_rank__qm_crn),
     .t_v(u_rank__qm_t_v), .t_d(u_rank__qm_t_d), .t_cr(u_rank__qm_t_cr),
     .clk_i(ck_ingest),

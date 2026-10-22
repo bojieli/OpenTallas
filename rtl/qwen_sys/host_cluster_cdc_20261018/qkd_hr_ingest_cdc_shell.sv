@@ -66,7 +66,8 @@
 //   in request order on i_rv / i_rd.  RMW_EN 0: the read path is absent and an rmw descriptor is a fault.
 // Fault codes (sticky, fail closed: after a fault the host stream is drained and dropped): 1 QKV descriptor with
 //   QKV_EN 0, 2 rmw descriptor with RMW_EN 0, 3 reserved class, 4 host overflow (sender ignored credits),
-//   5 completion FIFO overflow, 6 read-return overflow (die fabric returned more reads than issued).
+//   5 completion FIFO overflow, 6 read-return overflow (die fabric returned more reads than issued), 7 non-native QKV
+//   strides (NATIVE_ROWS), 8 malformed IKEY first / nkeys / nb (IKEY_GUARD only).
 // MUT (bench mutants, must FAIL): 1 flips bit 30 (element 0 exponent MSB) of the 7th payload beat; 2 reports done tags + 1.
 // ---------------------------------------------------------------------------
 module qkd_hr_ingest_cdc_shell #(
@@ -99,7 +100,13 @@ module qkd_hr_ingest_cdc_shell #(
     // engine's QMUT 1 (K lane bank) / 2 (stale slot fields).
     parameter integer NATIVE_ROWS=1,
     parameter integer QPIPE  = 2,
-    parameter integer KW     = 20      // engine w_v copies (e_wv_c), one per ox_w chunk (<= 15 b)
+    parameter integer KW     = 20,     // engine w_v copies (e_wv_c), one per ox_w chunk (<= 15 b)
+    // QE3-HROOT 10-21 (OWNER 16:58:23, NEW six-slot SPIPE6 engine only; 0 = legacy, unchanged): explicit fail-closed IKEY
+    // descriptor contract grounded in the actual producer (tools/rtl_hdc_kv_ingest_campaign.py case_ikey 213-216: first and
+    // nkeys multiples of 16, sender pads the short final group, nb = len(beats_of(68 B x nkeys))): an IKEY descriptor with
+    // n0[3:0] != 0, n2[3:0] != 0 or nb != 17 x n2/16 is never given to the engine; it is popped and dropped and raises the
+    // sticky fault code 8 (fail closed: the host stream is then drained and dropped, exactly as codes 1-7).
+    parameter integer IKEY_GUARD = 0
 ) (
     input  wire              rst_n,
     // host link face
@@ -240,6 +247,10 @@ module qkd_hr_ingest_cdc_shell #(
         hdesc[47:16]>=native_kspan||hdesc[21:16]!=0||
         (hdesc[219:216]==2&&hdesc[31])||
         hdesc[79:48]!=(hdesc[47:16]+native_kspan));
+    // IKEY_GUARD: n0 first key [167:144], n2 keys [199:184], nb beats [255:240]; 16 keys x 68 B = 17 beats of 64 B exactly.
+    wire [16:0] ikey_nb_exp = {1'b0, hdesc[199:188], 4'd0} + {5'd0, hdesc[199:188]};
+    wire bad_ikey = (IKEY_GUARD != 0) && hdesc[3:0] == 4'd3 &&
+        (hdesc[147:144] != 4'd0 || hdesc[187:184] != 4'd0 || {1'b0, hdesc[255:240]} != ikey_nb_exp);
 
     // engine face (the engine is the separate tile qkd_hr_ingest_eng; e_* are ports)
     // RMW_EN must be 0 (no read-return face) and MUT < 3 (engine mutants live in the engine tile)
@@ -250,7 +261,7 @@ module qkd_hr_ingest_cdc_shell #(
     reg  [3:0]   pcnt;                      // payload beats seen (MUT 1)
     wire [511:0] pay = (MUT == 1 && pcnt == 4'd6) ? (hx_head[511:0] ^ (512'd1 << 30)) : hx_head[511:0];
     wire         hv_i = !hx_empty;
-    wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw && !bad_native;
+    wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw && !bad_native && !bad_ikey;
     wire         take_p = hv_i && !f_any && hcl == 2'd2;
     // engine inputs: d_v / d_data / in_v (two kept copies, the engine's in_v / in_v__c1) / in_data / w_rdy.
     // RMW_EN 0: r_rdy, rd_v, rd_data are the constants 0 (e_rrdy, e_rdv, e_rdd below), tied in the engine tile.
@@ -267,7 +278,7 @@ module qkd_hr_ingest_cdc_shell #(
             else case (hcl_b)
                 2'd0: hx_pop = (hx_head[7:0] == 8'd2) ? mark_go :
                               ((CSR_HOLD_ACK != 0 && hx_head[7:0] == 0) ? csr_ready : 1'b1);
-                2'd1: hx_pop = (bad_qkv || bad_rmw || bad_native) ? 1'b1 : e_drdy;
+                2'd1: hx_pop = (bad_qkv || bad_rmw || bad_native || bad_ikey) ? 1'b1 : e_drdy;
                 2'd2: hx_pop = e_inrdy;
                 default: hx_pop = 1'b1;
             endcase
@@ -341,6 +352,7 @@ module qkd_hr_ingest_cdc_shell #(
                 if (hv_i && hcl_c == 2'd1 && bad_qkv)      f_code <= 8'd1;
                 else if (hv_i && hcl_c == 2'd1 && bad_rmw) f_code <= 8'd2;
                 else if (hv_i && hcl_c == 2'd1 && bad_native) f_code <= 8'd7;
+                else if (hv_i && hcl_c == 2'd1 && bad_ikey)   f_code <= 8'd8;
                 else if (hv_i && hcl_c == 2'd3)            f_code <= 8'd3;
                 else if (hx_ovf_i)                        f_code <= 8'd4;
                 else if (cx_ovf)                          f_code <= 8'd5;

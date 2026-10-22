@@ -1,6 +1,8 @@
---- 539/b491
-+++ SPIPE6 source-only candidate
-@@ -81,6 +81,8 @@
+diff --git a/rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv b/rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv
+index d669c814c..e09ce4f81 100644
+--- a/rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv
++++ b/rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv
+@@ -81,6 +81,8 @@ module qkd_host_native_engine #(
      //           ap1_rbase = base + stack * stride, then the pitch product / IKEY sums: three bubble edges a row.
      parameter integer QKV    = 1,
      parameter integer APIPE  = 0,
@@ -9,7 +11,7 @@
      // QPIPE = 1 (qwen-1010/c 2026-10-10; 0 = unchanged): qfd_io_host preroute -1.2 .. -2.3 ns at clk_i (135 k of 139 k
      // endpoints): the QKV banks bk / bv (2 x 512 x 128 b of flops) were written through four computed-index 512-entry
      // decodes and read through 512:1 x 128 b muxes, behind sd[slot] field muxes and the beat's FP8 quantisers in the same
-@@ -397,11 +399,12 @@
+@@ -397,11 +399,12 @@ module qkd_host_native_engine #(
      reg         ap_ok;
      reg  [31:0] ap_raddr, ap_kcode, ap_kscal;
      reg         ap_mine;
@@ -27,7 +29,7 @@
      // this cycle's stream step
      reg  [5:0]  st_pop;
      reg         st_wv, st_adv;
-@@ -436,7 +439,168 @@
+@@ -436,7 +439,168 @@ module qkd_host_native_engine #(
              endcase
          end
      end
@@ -197,7 +199,7 @@
      // ROWS: the row ends with its last output sector (this die) or its last bytes (dropped)
      wire st_row_end = u_mine ? (st_sec + 5'd1 >= s_pitch) : (st_rem <= 16'd32);
  
-@@ -449,9 +613,10 @@
+@@ -449,9 +613,10 @@ module qkd_host_native_engine #(
      wire [255:0]  qp_wd;
      wire          qp_busy;                   // QPIPE: a beat / sector still in the input or drain pipeline
      wire          qk_wv = (QPIPE != 0) ? qp_wv : q_wv;
@@ -211,7 +213,7 @@
      wire w_fire = w_v && w_rdy;
      // done / sector-count outputs (APIPE 2: registered write fire, done one edge later)
      reg         done_r, done_q, wf_q;
-@@ -467,13 +632,13 @@
+@@ -467,13 +632,13 @@ module qkd_host_native_engine #(
  `ifdef OT_ING_MUT_NSECLAG
      assign done_v = done_r; assign done_tag = dtag_r;                       // mutant: done leaves before its last count
  `else
@@ -227,7 +229,7 @@
  
      // dispatch: a QKV descriptor takes the other slot once it is drained (and an
      // RMW descriptor waits for any preload in flight); a stream descriptor starts
-@@ -482,9 +647,9 @@
+@@ -482,9 +647,9 @@ module qkd_host_native_engine #(
      reg  [1:0] s_fill;                     // QPIPE: slot dispatched, its last bank write not yet landed
      wire q_disp = (QKV != 0) && dh_v && dh_mode == M_QKV && !qi_act && !st_act && !s_full[nslot] && !s_pre[nslot]
                    && !(qo_act && qo_slot == nslot) && (!dh[6] || (!pr_act && pr_out == 0 && s_pre == 2'b00))
@@ -239,7 +241,7 @@
      wire       qp_fset;                    // QPIPE: the slot's last bank write lands (s_full)
      wire       qp_fslot;
      wire       qp_dv;                      // QPIPE: a fenced block's last sector left the write port
-@@ -501,15 +666,19 @@
+@@ -501,15 +666,19 @@ module qkd_host_native_engine #(
              dq_n <= 0; dq_rd <= 0; dq_wr <= 0;
              s_full <= 2'b00; s_pre <= 2'b00; s_fill <= 2'b00; qi_act <= 1'b0; qi_slot <= 1'b0; qo_act <= 1'b0; qo_slot <= 1'b0;
              pr_act <= 1'b0; pr_out <= 0; st_act <= 1'b0; st_pad <= 1'b0; ra_n <= 0; ra_rp <= 0; ra_wp <= 0;
@@ -261,7 +263,7 @@
              if (q_beat || ra_push || pad_take) n_beats <= n_beats + 1;
              // descriptor queue
              if (d_v && d_rdy) begin dq[dq_wr] <= d_data; dq_wr <= dq_wr + 1'b1; end
-@@ -625,9 +794,10 @@
+@@ -625,9 +794,10 @@ module qkd_host_native_engine #(
              if (st_pad) begin
                  // the segment's last-beat padding (and any extra padding beats) is dropped
                  ra_n <= 0; ra_rp <= 0; ra_wp <= 0;
@@ -274,3 +276,157 @@
                  end
              end else begin
                  ra_n <= ra_n + (ra_push ? 9'd64 : 9'd0) - (st_go ? {3'd0, st_pop} : 9'd0);
+diff --git a/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_eng.v b/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_eng.v
+index fb1a94dba..6ab8b866e 100644
+--- a/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_eng.v
++++ b/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_eng.v
+@@ -12,7 +12,10 @@
+ //   w_v -> 1 kept BUF stem -> KW kept BUFs (keep only, NOT dont_touch: e1a GPL RSZ-3006 could not buffer the dont_touch stem load) -> eng_wv_c[KW-1:0] (the shell's ox_w chunk selects).
+ // QKD_HR_ENG_RTL (benches only): the behavioural qkd_host_native_engine with the same configuration instead of the netlist.
+ `timescale 1ns/1ps
+-module qkd_hr_ingest_eng #(parameter integer KW = 20) (
++// QE3-HROOT 10-21: SPIPE6 (default 0 = unchanged) passes the owner's six-slot stream contract to the behavioural engine.
++// The native32 netlist branch is the OLD 539 source: SPIPE6 != 0 there is refused (no old-view alias); a SPIPE6 native
++// netlist exists only after owner approval of the pre-build packet and its own regeneration/census.
++module qkd_hr_ingest_eng #(parameter integer KW = 20, parameter integer SPIPE6 = 0) (
+   input  wire         ck_ingest,
+   input  wire         ck_rl,       // engine-region reset landing clock (same 600 MHz ingest family, own small CTS root;
+                                    // the cluster ties it to ck_ingest): clocks only the 35 reset leaves
+@@ -46,7 +49,7 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
+     qkd_hr_eng_rst_leaf #(.ID(r)) u_leaf (.ck(ck_rl), .rn(rst_l0[r / 18]), .d(1'b1), .q(rst_c[r]));
+   end
+ `ifdef QKD_HR_ENG_RTL
+-  qkd_host_native_engine #(.AW(32), .HDMAX(128), .KVHMAX(2), .QKV(1), .APIPE(0), .QPIPE(2), .NATIVE_ROWS(1), .QMUT(0)) u_eng (
++  qkd_host_native_engine #(.AW(32), .HDMAX(128), .KVHMAX(2), .QKV(1), .APIPE(0), .SPIPE6(SPIPE6), .QPIPE(2), .NATIVE_ROWS(1), .QMUT(0)) u_eng (
+     .clk(ck_ingest), .clk_bank({ck_ingest, ck_ingest}), .clk_out(ck_ingest), .rst_n(rst_c[0]),
+     .d_v(eng_dv), .d_rdy(eng_drdy), .d_data(eng_ddata), .in_v(eng_inv_a), .in_rdy(eng_inrdy), .in_data(eng_indata),
+     .w_v(eng_wv), .w_rdy(eng_wrdy), .w_addr(eng_waddr), .w_data(eng_wdata),
+@@ -57,6 +60,7 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
+   assign eng_done_c = eng_done;
+   assign eng_wv_c = {KW{eng_wv}};
+ `else
++  generate if (SPIPE6 != 0) begin : g_bad_spipe6_netlist QKD_HR_ENG_SPIPE6_NETLIST_NOT_REGENERATED refuse(); end endgenerate
+   genvar k;
+   (* keep *) BUFx2_ASAP7_75t_R u_done_c (.A(eng_done_a), .Y(eng_done_c));
+   wire wv_stem;
+diff --git a/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_qm.v b/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_qm.v
+index e91b18858..855c2e219 100644
+--- a/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_qm.v
++++ b/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_qm.v
+@@ -6,6 +6,8 @@
+ `timescale 1ns/1ps
+ module qkd_hr_ingest_qm(ck_core, ck_host, ck_ingest, host_rst_n, service_faults, u_rank__qm_d, u_rank__qm_cls, u_rank__qm_v, u_rank__qm_crn, u_rank__ov, u_rank__owe, u_rank__oa, u_rank__od, u_rank__ocr, u_rank__qm_t_cr, u_rank__qm_t_d, u_rank__qm_t_v, host_upstream_quiet_core, host_upstream_quiet_host, host_upstream_quiet_ingest);
+   localparam integer KW = 20;
++  // QE3-HROOT 10-21: owner six-slot contract selector for BOTH children (engine stream + shell IKEY fail-closed guard).
++  parameter integer SPIPE6 = 0;
+   input ck_core, ck_host, ck_ingest, host_rst_n;
+   output service_faults;
+   input [511:0] u_rank__qm_d;
+@@ -26,7 +28,7 @@ module qkd_hr_ingest_qm(ck_core, ck_host, ck_ingest, host_rst_n, service_faults,
+   wire [KW-1:0] eng_wv_c;
+   wire [31:0] eng_waddr, eng_raddr, eng_nsec;
+   wire [7:0] eng_tag;
+-  qkd_hr_ingest_shell #(.KW(KW)) u_qm (
++  qkd_hr_ingest_shell #(.KW(KW), .SPIPE6(SPIPE6)) u_qm (
+     .ck_core(ck_core), .ck_host(ck_host), .ck_ingest(ck_ingest), .host_rst_n(host_rst_n), .service_faults(service_faults),
+     .u_rank__qm_d(u_rank__qm_d), .u_rank__qm_cls(u_rank__qm_cls), .u_rank__qm_v(u_rank__qm_v), .u_rank__qm_crn(u_rank__qm_crn),
+     .u_rank__ov(u_rank__ov), .u_rank__owe(u_rank__owe), .u_rank__oa(u_rank__oa), .u_rank__od(u_rank__od), .u_rank__ocr(u_rank__ocr),
+@@ -37,7 +39,7 @@ module qkd_hr_ingest_qm(ck_core, ck_host, ck_ingest, host_rst_n, service_faults,
+     .eng_indata(eng_indata), .eng_wrdy(eng_wrdy), .eng_drdy(eng_drdy), .eng_inrdy(eng_inrdy), .eng_wv(eng_wv), .eng_wv_c(eng_wv_c),
+     .eng_waddr(eng_waddr), .eng_wdata(eng_wdata), .eng_rv(eng_rv), .eng_raddr(eng_raddr), .eng_done(eng_done),
+     .eng_done_a(eng_done_a), .eng_done_b(eng_done_b), .eng_done_c(eng_done_c), .eng_tag(eng_tag), .eng_busy(eng_busy), .eng_nsec(eng_nsec));
+-  qkd_hr_ingest_eng #(.KW(KW)) u_eng (
++  qkd_hr_ingest_eng #(.KW(KW), .SPIPE6(SPIPE6)) u_eng (
+     .ck_ingest(ck_ingest), .ck_rl(ck_ingest),
+     .eng_rst_n(eng_rst_n), .eng_dv(eng_dv), .eng_ddata(eng_ddata), .eng_inv_a(eng_inv_a), .eng_inv_b(eng_inv_b),
+     .eng_indata(eng_indata), .eng_wrdy(eng_wrdy), .eng_drdy(eng_drdy), .eng_inrdy(eng_inrdy), .eng_wv(eng_wv), .eng_wv_c(eng_wv_c),
+diff --git a/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v b/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v
+index d6ecdf3a3..47842847c 100644
+--- a/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v
++++ b/rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v
+@@ -3,7 +3,9 @@
+ // single-clock engine tile qkd_hr_ingest_eng (touching tile, direct wires). Instance name u_rank__u_qm kept, so the
+ // reviewed CDC synchroniser paths of the qkd_hr_ingest_qm kits are unchanged.
+ `timescale 1ns/1ps
+-module qkd_hr_ingest_shell #(parameter integer KW = 20) (
++// QE3-HROOT 10-21: SPIPE6 (default 0 = unchanged) selects the owner's six-slot engine contract; the shell then fails
++// malformed IKEY descriptors closed (cdc shell IKEY_GUARD, fault code 8) before the engine.
++module qkd_hr_ingest_shell #(parameter integer KW = 20, parameter integer SPIPE6 = 0) (
+   input  wire         ck_core, ck_host, ck_ingest, host_rst_n,
+   output wire         service_faults,
+   input  wire [511:0] u_rank__qm_d,
+@@ -35,7 +37,7 @@ module qkd_hr_ingest_shell #(parameter integer KW = 20) (
+   input  wire         eng_busy,
+   input  wire [31:0]  eng_nsec
+ );
+-  qkd_hr_ingest_cdc_shell #(.AW(32), .HDMAX(128), .KVHMAX(2), .RMW_EN(0), .MUT(0), .NATIVE_ROWS(1), .QPIPE(2), .KW(KW)) u_rank__u_qm (
++  qkd_hr_ingest_cdc_shell #(.AW(32), .HDMAX(128), .KVHMAX(2), .RMW_EN(0), .MUT(0), .NATIVE_ROWS(1), .QPIPE(2), .KW(KW), .IKEY_GUARD(SPIPE6)) u_rank__u_qm (
+     .rst_n(host_rst_n), .clk_h(ck_host), .h_v(u_rank__qm_v), .h_cls(u_rank__qm_cls), .h_d(u_rank__qm_d), .h_crn(u_rank__qm_crn),
+     .t_v(u_rank__qm_t_v), .t_d(u_rank__qm_t_d), .t_cr(u_rank__qm_t_cr),
+     .clk_i(ck_ingest),
+diff --git a/rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv b/rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv
+index 965b23877..34fd8f30b 100644
+--- a/rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv
++++ b/rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv
+@@ -66,7 +66,8 @@
+ //   in request order on i_rv / i_rd.  RMW_EN 0: the read path is absent and an rmw descriptor is a fault.
+ // Fault codes (sticky, fail closed: after a fault the host stream is drained and dropped): 1 QKV descriptor with
+ //   QKV_EN 0, 2 rmw descriptor with RMW_EN 0, 3 reserved class, 4 host overflow (sender ignored credits),
+-//   5 completion FIFO overflow, 6 read-return overflow (die fabric returned more reads than issued).
++//   5 completion FIFO overflow, 6 read-return overflow (die fabric returned more reads than issued), 7 non-native QKV
++//   strides (NATIVE_ROWS), 8 malformed IKEY first / nkeys / nb (IKEY_GUARD only).
+ // MUT (bench mutants, must FAIL): 1 flips bit 30 (element 0 exponent MSB) of the 7th payload beat; 2 reports done tags + 1.
+ // ---------------------------------------------------------------------------
+ module qkd_hr_ingest_cdc_shell #(
+@@ -99,7 +100,13 @@ module qkd_hr_ingest_cdc_shell #(
+     // engine's QMUT 1 (K lane bank) / 2 (stale slot fields).
+     parameter integer NATIVE_ROWS=1,
+     parameter integer QPIPE  = 2,
+-    parameter integer KW     = 20      // engine w_v copies (e_wv_c), one per ox_w chunk (<= 15 b)
++    parameter integer KW     = 20,     // engine w_v copies (e_wv_c), one per ox_w chunk (<= 15 b)
++    // QE3-HROOT 10-21 (OWNER 16:58:23, NEW six-slot SPIPE6 engine only; 0 = legacy, unchanged): explicit fail-closed IKEY
++    // descriptor contract grounded in the actual producer (tools/rtl_hdc_kv_ingest_campaign.py case_ikey 213-216: first and
++    // nkeys multiples of 16, sender pads the short final group, nb = len(beats_of(68 B x nkeys))): an IKEY descriptor with
++    // n0[3:0] != 0, n2[3:0] != 0 or nb != 17 x n2/16 is never given to the engine; it is popped and dropped and raises the
++    // sticky fault code 8 (fail closed: the host stream is then drained and dropped, exactly as codes 1-7).
++    parameter integer IKEY_GUARD = 0
+ ) (
+     input  wire              rst_n,
+     // host link face
+@@ -240,6 +247,10 @@ module qkd_hr_ingest_cdc_shell #(
+         hdesc[47:16]>=native_kspan||hdesc[21:16]!=0||
+         (hdesc[219:216]==2&&hdesc[31])||
+         hdesc[79:48]!=(hdesc[47:16]+native_kspan));
++    // IKEY_GUARD: n0 first key [167:144], n2 keys [199:184], nb beats [255:240]; 16 keys x 68 B = 17 beats of 64 B exactly.
++    wire [16:0] ikey_nb_exp = {1'b0, hdesc[199:188], 4'd0} + {5'd0, hdesc[199:188]};
++    wire bad_ikey = (IKEY_GUARD != 0) && hdesc[3:0] == 4'd3 &&
++        (hdesc[147:144] != 4'd0 || hdesc[187:184] != 4'd0 || {1'b0, hdesc[255:240]} != ikey_nb_exp);
+ 
+     // engine face (the engine is the separate tile qkd_hr_ingest_eng; e_* are ports)
+     // RMW_EN must be 0 (no read-return face) and MUT < 3 (engine mutants live in the engine tile)
+@@ -250,7 +261,7 @@ module qkd_hr_ingest_cdc_shell #(
+     reg  [3:0]   pcnt;                      // payload beats seen (MUT 1)
+     wire [511:0] pay = (MUT == 1 && pcnt == 4'd6) ? (hx_head[511:0] ^ (512'd1 << 30)) : hx_head[511:0];
+     wire         hv_i = !hx_empty;
+-    wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw && !bad_native;
++    wire         take_d = hv_i && !f_any && hcl == 2'd1 && !bad_qkv && !bad_rmw && !bad_native && !bad_ikey;
+     wire         take_p = hv_i && !f_any && hcl == 2'd2;
+     // engine inputs: d_v / d_data / in_v (two kept copies, the engine's in_v / in_v__c1) / in_data / w_rdy.
+     // RMW_EN 0: r_rdy, rd_v, rd_data are the constants 0 (e_rrdy, e_rdv, e_rdd below), tied in the engine tile.
+@@ -267,7 +278,7 @@ module qkd_hr_ingest_cdc_shell #(
+             else case (hcl_b)
+                 2'd0: hx_pop = (hx_head[7:0] == 8'd2) ? mark_go :
+                               ((CSR_HOLD_ACK != 0 && hx_head[7:0] == 0) ? csr_ready : 1'b1);
+-                2'd1: hx_pop = (bad_qkv || bad_rmw || bad_native) ? 1'b1 : e_drdy;
++                2'd1: hx_pop = (bad_qkv || bad_rmw || bad_native || bad_ikey) ? 1'b1 : e_drdy;
+                 2'd2: hx_pop = e_inrdy;
+                 default: hx_pop = 1'b1;
+             endcase
+@@ -341,6 +352,7 @@ module qkd_hr_ingest_cdc_shell #(
+                 if (hv_i && hcl_c == 2'd1 && bad_qkv)      f_code <= 8'd1;
+                 else if (hv_i && hcl_c == 2'd1 && bad_rmw) f_code <= 8'd2;
+                 else if (hv_i && hcl_c == 2'd1 && bad_native) f_code <= 8'd7;
++                else if (hv_i && hcl_c == 2'd1 && bad_ikey)   f_code <= 8'd8;
+                 else if (hv_i && hcl_c == 2'd3)            f_code <= 8'd3;
+                 else if (hx_ovf_i)                        f_code <= 8'd4;
+                 else if (cx_ovf)                          f_code <= 8'd5;

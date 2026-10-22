@@ -12,7 +12,10 @@
 //   w_v -> 1 kept BUF stem -> KW kept BUFs (keep only, NOT dont_touch: e1a GPL RSZ-3006 could not buffer the dont_touch stem load) -> eng_wv_c[KW-1:0] (the shell's ox_w chunk selects).
 // QKD_HR_ENG_RTL (benches only): the behavioural qkd_host_native_engine with the same configuration instead of the netlist.
 `timescale 1ns/1ps
-module qkd_hr_ingest_eng #(parameter integer KW = 20) (
+// QE3-HROOT 10-21: SPIPE6 (default 0 = unchanged) passes the owner's six-slot stream contract to the behavioural engine.
+// The native32 netlist branch is the OLD 539 source: SPIPE6 != 0 there is refused (no old-view alias); a SPIPE6 native
+// netlist exists only after owner approval of the pre-build packet and its own regeneration/census.
+module qkd_hr_ingest_eng #(parameter integer KW = 20, parameter integer SPIPE6 = 0) (
   input  wire         ck_ingest,
   input  wire         ck_rl,       // engine-region reset landing clock (same 600 MHz ingest family, own small CTS root;
                                    // the cluster ties it to ck_ingest): clocks only the 35 reset leaves
@@ -46,7 +49,7 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
     qkd_hr_eng_rst_leaf #(.ID(r)) u_leaf (.ck(ck_rl), .rn(rst_l0[r / 18]), .d(1'b1), .q(rst_c[r]));
   end
 `ifdef QKD_HR_ENG_RTL
-  qkd_host_native_engine #(.AW(32), .HDMAX(128), .KVHMAX(2), .QKV(1), .APIPE(0), .QPIPE(2), .NATIVE_ROWS(1), .QMUT(0)) u_eng (
+  qkd_host_native_engine #(.AW(32), .HDMAX(128), .KVHMAX(2), .QKV(1), .APIPE(0), .SPIPE6(SPIPE6), .QPIPE(2), .NATIVE_ROWS(1), .QMUT(0)) u_eng (
     .clk(ck_ingest), .clk_bank({ck_ingest, ck_ingest}), .clk_out(ck_ingest), .rst_n(rst_c[0]),
     .d_v(eng_dv), .d_rdy(eng_drdy), .d_data(eng_ddata), .in_v(eng_inv_a), .in_rdy(eng_inrdy), .in_data(eng_indata),
     .w_v(eng_wv), .w_rdy(eng_wrdy), .w_addr(eng_waddr), .w_data(eng_wdata),
@@ -57,6 +60,7 @@ module qkd_hr_ingest_eng #(parameter integer KW = 20) (
   assign eng_done_c = eng_done;
   assign eng_wv_c = {KW{eng_wv}};
 `else
+  generate if (SPIPE6 != 0) begin : g_bad_spipe6_netlist QKD_HR_ENG_SPIPE6_NETLIST_NOT_REGENERATED refuse(); end endgenerate
   genvar k;
   (* keep *) BUFx2_ASAP7_75t_R u_done_c (.A(eng_done_a), .Y(eng_done_c));
   wire wv_stem;

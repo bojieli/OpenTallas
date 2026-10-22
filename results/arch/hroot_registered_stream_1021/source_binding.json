@@ -1,7 +1,27 @@
 {
   "base_commit": "539e8df61",
-  "base_sha256": "b49162d88eb2f47e1dfee5c9036ac08a20ffe9b0796b70a89bb3cb2f0d5d1d63",
-  "candidate_sha256": "999bf9c27c1529cff7a48ccbd032a82be1d2e6088a2a6ad14b983eb13cc76529",
+  "files": {
+    "rtl/qwen_sys/host_20261013/qkd_host_native_engine.sv": {
+      "base_sha256": "b49162d88eb2f47e1dfee5c9036ac08a20ffe9b0796b70a89bb3cb2f0d5d1d63",
+      "candidate_sha256": "999bf9c27c1529cff7a48ccbd032a82be1d2e6088a2a6ad14b983eb13cc76529"
+    },
+    "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv": {
+      "base_sha256": "6a295b47916004bd6fcb7b59cb075c46367a448301acec3dac34254084f0f337",
+      "candidate_sha256": "b56ae297df9c1800d98775e9bd25c9bff14a29e0a5043d8c600de9cf5e127e1a"
+    },
+    "rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_qm.v": {
+      "base_sha256": "29b36e20a6e803c45b5f76ff46aa14d9698b103578dc2c3dc566155aa2d9b1be",
+      "candidate_sha256": "cdb4fd3066e679bb0e9528d18f8d9e5daf5403c339018360ec7af2ddfe4cb8dc"
+    },
+    "rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_eng.v": {
+      "base_sha256": "636336c7d1202613a9706ada4e346ae3c3c19449616532131ee661ce643beda0",
+      "candidate_sha256": "c5face9280b456bdb42ae7e3cdfa20980b90f768fbecd6cecc574d201b181175"
+    },
+    "rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v": {
+      "base_sha256": "f25c44385d7e6a7aa5f5585fb08b96e0e0ccf8a03899ac6f08eb1c2d70018b2a",
+      "candidate_sha256": "fcf1b1cae8772e097864272d22bd8f6298aa93294526f2f0576c765d0bc28a0d"
+    }
+  },
   "parameters": {
     "AW": 32,
     "HDMAX": 128,
@@ -11,7 +31,8 @@
     "SPIPE6": 1,
     "QPIPE": 2,
     "NATIVE_ROWS": 1,
-    "QMUT": 0
+    "QMUT": 0,
+    "shell_IKEY_GUARD": "=SPIPE6"
   },
-  "scope": "selected source/model implementation only; NO compile/simulation/map/native/cold/gate yet"
+  "scope": "selected source/model only; Verilator lint-only parse; NO map/build/sim/native/cold/gate (OWNER 16:43:07/16:58:23 review first)"
 }
