@@ -19,7 +19,10 @@ Mutants (must FAIL):  --mut rmut  tile MUT 1 (ring-stop egress flit bit flipped)
                       --mut g5    tile MUT 6 (hub bank select copies fed by the decode, not the g5 hub-side register: pq select one edge early)
                       --mut g7    tile MUT 7 (the g6 hub landing br kept on the bank returns: the contract's g7 pr -1 missing)
                       --mut g7e   tile MUT 8 (the g6 eg tile relays kept: the contract's g7 eg -2 missing)
-    vms_glue_tile_equiv.py --quadrant SW|NW|SE|NE --out DIR [--mut rmut|land|sid] [--cycles N]
+g8r (HBMb/SMH7-VMG 10-21): --top t3 benches the REGIONAL-CLOCK master hfd_hgi_vms_glue_<k>_t3 (SW / NW) against the SAME
+<k>_t_ref contract with clk_s = clk = clk_n driven from the tb clock; tag VMS_GLUE_T3_EQUIV.  t3 mutants (must FAIL):
+                      --mut cks / ckn  clk_s / clk_n held low (the band root really clocks that band's registers)
+    vms_glue_tile_equiv.py --quadrant SW|NW|SE|NE --out DIR [--mut rmut|land|sid] [--cycles N] [--top t|t3]
 """
 import argparse, sys
 from pathlib import Path
@@ -51,11 +54,17 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--quadrant', required=True, choices=list(KEY))
     ap.add_argument('--out', required=True, type=Path)
-    ap.add_argument('--mut', choices=('rmut', 'land', 'sid', 'g3', 'g4', 'g5', 'g7', 'g7e'))
+    ap.add_argument('--mut', choices=('rmut', 'land', 'sid', 'g3', 'g4', 'g5', 'g7', 'g7e', 'cks', 'ckn'))
+    ap.add_argument('--top', choices=('t', 't3'), default='t')
     ap.add_argument('--cycles', type=int, default=4000)
     a = ap.parse_args(); q = a.quadrant; k = KEY[q]; c = G.M[k]
     if a.mut == 'sid' and q not in SID:
         raise SystemExit('vms_glue_tile_equiv: --mut sid is for the strapped E master (SE / NE)')
+    t3 = a.top == 't3'
+    if t3 and k not in G.R3:
+        raise SystemExit('vms_glue_tile_equiv: --top t3 exists for SW / NW only')
+    if a.mut in ('cks', 'ckn') and not t3:
+        raise SystemExit('vms_glue_tile_equiv: --mut cks / ckn need --top t3')
     rp = G.ref_ports(k, c); tp = G.ports(k, c)
     ins = [(n, w) for n, d, w in rp if d == 'input' and n not in ('clk', 'rst_n', 'sid')]
     outs = [(n, w) for n, d, w in rp if d == 'output']
@@ -75,7 +84,12 @@ def main():
         f, hi, lo = tile_slice(nm, c)
         tgt = f if d == 'input' else f'a_{f}'
         conn.append(f'.{nm}({tgt}[{hi}:{lo}])' if hi is not None else f'.{nm}({tgt})')
-    T.append(f'  hfd_hgi_vms_glue_{k}_t #(.MUT({mut})) dut (.clk(clk), .rst_n(rst_n), {strap}\n    ' + ',\n    '.join(conn) + ');')
+    if t3:
+        cks = "1'b0" if a.mut == 'cks' else 'clk'
+        ckn = "1'b0" if a.mut == 'ckn' else 'clk'
+        T.append(f'  hfd_hgi_vms_glue_{k}_t3 #(.MUT({mut})) dut (.clk_s({cks}), .clk(clk), .clk_n({ckn}), .rst_n(rst_n), {strap}\n    ' + ',\n    '.join(conn) + ');')
+    else:
+        T.append(f'  hfd_hgi_vms_glue_{k}_t #(.MUT({mut})) dut (.clk(clk), .rst_n(rst_n), {strap}\n    ' + ',\n    '.join(conn) + ');')
     rconn = [f'.{n}({n})' for n, _ in ins] + [f'.{n}(b_{n})' for n, _ in outs]
     rstrap = '.sid(sid_ref), ' if c['sid'] == 'strap' else ''
     T.append(f'  hfd_hgi_vms_glue_{k}_t_ref u_ref (.clk(clk), .rst_n(rst_n), {rstrap}\n    ' + ',\n    '.join(rconn) + ');')
@@ -97,13 +111,14 @@ def main():
     T.append('      if (cyc % 128 == 119) rst_n = 0;')
     T.append('      if (cyc % 128 == 127) rst_n = 1;')
     T.append('    end')
-    T.append(f'    $display("VMS_GLUE_LT_EQUIV {q} %s checks=%0d errors=%0d", (errs == 0 && chk > 0) ? "PASS" : "FAIL", chk, errs);')
+    tag = 'VMS_GLUE_T3_EQUIV' if t3 else 'VMS_GLUE_LT_EQUIV'
+    T.append(f'    $display("{tag} {q} %s checks=%0d errors=%0d", (errs == 0 && chk > 0) ? "PASS" : "FAIL", chk, errs);')
     T.append('    $finish;')
     T.append('  end')
     T.append('endmodule')
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'tb_vms_glue_lt.sv').write_text('\n'.join(T) + '\n')
-    print('VMS_GLUE_TILE_TB', q, f'hfd_hgi_vms_glue_{k}_t', 'MUT=' + (a.mut or 'none'), f'cycles={a.cycles}')
+    print('VMS_GLUE_TILE_TB', q, f'hfd_hgi_vms_glue_{k}_{a.top}', 'MUT=' + (a.mut or 'none'), f'cycles={a.cycles}')
 
 
 if __name__ == '__main__':
