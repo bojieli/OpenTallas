@@ -1,5 +1,5 @@
 {
-  "status": "PRESERVED_GATE_WARN_COORDINATOR_CLOCK_REFUSAL",
+  "status": "INITIAL_REFUSAL_PRESERVED_COORDINATOR_RULE_CORRECTION_APPROVES_NORMAL_SUBMIT",
   "gate_generated": "2026-10-21T22:02:03-0700",
   "source": "a47419169c48abf75fc66bb5132fcccb4935e971",
   "geometry_sha256": "c594bd5e75b91a75fdce2ccdf08db570423534e2fcc61b25781436e7ab073192",
@@ -1348,5 +1348,6 @@
   "successors": {
     "main": "dsdv_mu_hwin_c22s, each macro clock its own driven leaf, symmetric fanout8",
     "alternate": "dsdv_mu_hwin_c22t, each macro clock its own driven leaf, symmetric fanout4"
-  }
+  },
+  "current_decision": "ROOT reread binding common_brief and actual pre_route_gate: owner 0dq judges pin-flop within-region spread <=80ps, explicitly not all-register leaf spread. Prior full-envelope blanket veto was overstated and corrected. Actual pin TT48.5/FF47.2 pass. Geometry approval permits normal submission; full raw envelope/macro diagnostics remain disclosed risks, no CLOSED or die qualification."
 }

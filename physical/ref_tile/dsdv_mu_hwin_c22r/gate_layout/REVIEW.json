@@ -1,0 +1,19 @@
+{
+ "reviewer": "codex coordinator",
+ "time": "2026-10-21T23:28:04-07:00",
+ "gate_commit": "2026-10-21T22:02:03-0700",
+ "geometry_sha256": "c594bd5e75b91a75fdce2ccdf08db570423534e2fcc61b25781436e7ab073192",
+ "verdict": "APPROVED",
+ "authority": "Coordinator personally reviewed both PNGs and raw gate, approved exact geometry under the existing 84-SRAM lattice/channel exception and explicitly authorized normal submission after rereading binding owner 0dq pin-flop rule. No new all-register clock threshold or waiver.",
+ "source_commit": "a47419169c48abf75fc66bb5132fcccb4935e971",
+ "source_archive_sha256": "a0e584b170c4fc568955e05ad82a678601e02a1e60cc4348082aca73c01aef24",
+ "source_manifest_sha256": "183db6d88eebb398a3e67909be4eb6f8e92de145fba634b6491068e4410ac795",
+ "checklist": {
+  "lattice": "84 SRAM bodies on the actual 43.2 um lattice, at least24.8 um channels, halo8.64 um, outline561.6 by388.8 um.",
+  "std_cell_band": "Single full-width band y159.84..206.28 measured48.801379 percent density, outside area0. Existing lattice/channel geometry exception retained; no squeeze.",
+  "pin_spread": "Actual353 signal and clock pins accessible, none outside or missing. Central thin-face packing is disclosed; no full-face-span claim.",
+  "clock_entry": "Actual S-centre clock entry, native max32 PASS and TT/FF pin-flop spread48.5/47.2 ps. Full raw endpoint envelope106.0/111.5 ps, macro late74.6/84.3 ps and macro slew349.9/360.8 ps remain disclosed diagnostics. Actual routed STA and real parent compensation remain required.",
+  "shape": "Exact561.6 by388.8 source-bound84-SRAM geometry, NEV16 fallback contract, independent from preferred NEV8 q."
+ },
+ "qualification_scope": "Normal source-specific route qualification only. GRT zero overflow and approval do not imply CLOSED, parent qualification or die credit."
+}
