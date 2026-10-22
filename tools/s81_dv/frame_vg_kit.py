@@ -214,11 +214,8 @@ def main():
     # 4 (u_e0 reset run 400 long); the generated script's own exit also folds in the lp region audit, whose only fails are
     # the PRE-EXISTING port x / xk forwarded-domain reads (u_xo* on xk, crs4 u_cf), identical on the bound rf3r RTL
     # (lp_audit_vs_rf3r below proves the fail set is unchanged), so the verdict here is read from the MUT lines.
-    benches.append(dict(name='lp_lockstep_vector', expect='pass', threads=8, peak_ram_gb=64, needs=['verilator'],
-                        cmd=(f'mkdir -p {{RUN}}; SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator '
-                             f'VL_EXTRA=-DOT_S81_RLY_RSSLICE bash {lpb} {{RUN}}/lp | tee {{RUN}}/lp.out; '
-                             f'grep -qx "MUT 0: LP_LOCKSTEP PASS" {{RUN}}/lp.out && '
-                             f'[ "$(grep -cE "^MUT [124]: LP_LOCKSTEP FAIL$" {{RUN}}/lp.out)" = 3 ]')))
+    # (no lp lockstep bench: lp.py's own tb binds the ROM bb model, which has no INSTANCE parameter, so it cannot build
+    # for a ROM frame; the frame plan/each benches + 3 mutants above are the lockstep proof of the vector-landed RTL)
     benches.append(dict(name='lp_audit_vs_rf3r', expect='pass', threads=1, peak_ram_gb=4,
                         cmd=(f'python3 tools/s81_dv/frame_vg_kit.py --audit-compare {REC}/{tag}/{m}_spec.json '
                              f'{REC}/rf3r/{m}_spec.json {LPDIR}/{m}_l4_lp.sv')))

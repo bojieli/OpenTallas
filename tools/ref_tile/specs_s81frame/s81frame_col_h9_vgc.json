@@ -2272,16 +2272,6 @@
     "cmd": "python3 tools/s81_dv/frame_reset_audit.py rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_rf3.sv"
    },
    {
-    "name": "lp_lockstep_vector",
-    "expect": "pass",
-    "threads": 8,
-    "peak_ram_gb": 64,
-    "needs": [
-     "verilator"
-    ],
-    "cmd": "mkdir -p {RUN}; SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator VL_EXTRA=-DOT_S81_RLY_RSSLICE bash rtl/dsrom_sys/s81_dv/frame_lp/vgc/col_h9_l4_lp_bench.sh {RUN}/lp | tee {RUN}/lp.out; grep -qx \"MUT 0: LP_LOCKSTEP PASS\" {RUN}/lp.out && [ \"$(grep -cE \"^MUT [124]: LP_LOCKSTEP FAIL$\" {RUN}/lp.out)\" = 3 ]"
-   },
-   {
     "name": "lp_audit_vs_rf3r",
     "expect": "pass",
     "threads": 1,
