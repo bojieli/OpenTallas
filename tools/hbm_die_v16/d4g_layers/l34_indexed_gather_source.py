@@ -23,7 +23,7 @@ def apply(graph, read_sample, write_commit, records):
     for item in list(c['open_outputs']):
         n,p,b=item
         if n!='su_indexed_gather':continue
-        assert p in ('done','edge_index','engine_busy','engine_done','engine_start','descriptor'),p
+        assert p in ('active','done','edge_index','engine_busy','engine_done','engine_start','descriptor'),p
         c['edges'].append(dict(name='l34_observe_'+p,bits=b,source=[n,p,0,b],sink=['obs_SW','obs',lo,lo+b],
             clock='stream',ready_or_credit=False,allowed_exception=None,
             basis='Actual F20 gather debug export read by the existing host-query observer',region='su_indexed_gather'))
