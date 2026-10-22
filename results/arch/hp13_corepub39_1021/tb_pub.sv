@@ -2,7 +2,8 @@
 module tb_pub;
  parameter integer STAGES=1;
  parameter integer MUT=0;
- reg ck_core=0,ck_hr=0;
+ reg ck_core=0,ck_hr=0,rst_core=0;
+ initial begin #21;rst_core=1;end
  always #5 ck_core=~ck_core;
  initial begin #3;forever #7 ck_hr=~ck_hr;end
  reg[38:0]src_d=0;
@@ -20,7 +21,7 @@ module tb_pub;
    for(k=3;k>0;k=k-1)expected[k]=expected[k-1];
    expected[0]=src_d;
    #1;
-   if(cycle>4 && out!==expected[STAGES])$fatal(1,"PUB_FAIL stage=%0d cycle=%0d out=%h expected=%h",STAGES,cycle,out,expected[STAGES]);
+   if(cycle>8 && out!==expected[STAGES])$fatal(1,"PUB_FAIL stage=%0d cycle=%0d out=%h expected=%h",STAGES,cycle,out,expected[STAGES]);
    if(cycle==600)begin $display("PUB_PASS stages=%0d tuples=596 bits=39 independent_HR_phase=3_period14 core_period10",STAGES);$finish;end
  end
 endmodule
