@@ -1,0 +1,6 @@
+COLL_REACH7_STATS ref4 sent=37025 received=36912 mean_latency=122.51 | safe7 sent=37427 received=37313 mean_latency=114.19 | faults ref4=000/000 safe7=000/000 | naks=4/5 replays=7/5 timeouts=2/1
+COLL_REACH7 PASS received=37313/36912 errors=0
+- rtl/dsrom_sys/s81_ph/test/tb_coll_reach7.sv:103: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 40us; walltime 8.555 s; speed 4.675 us/s
+- Verilator: cpu 8.549 s on 1 threads; allocated 9 MB
