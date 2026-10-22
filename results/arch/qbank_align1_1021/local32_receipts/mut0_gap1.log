@@ -1,0 +1,5 @@
+QB_PASS ALIGN=1 LOCAL32=1 GAP=1 rows=32 checks=512
+- /srv/opentallas-scratch/claude/codex-qbank-align-2000/local32_ready/tb_qbank_local.sv:42: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.004 s; speed 327.916 us/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 8 MB

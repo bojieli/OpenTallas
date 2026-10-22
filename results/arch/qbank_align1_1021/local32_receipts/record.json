@@ -1,0 +1,35 @@
+{
+  "source_sha256": {
+    "qbank.sv": "558f9d9aba8c030b3072c81aa93a7d614477da3abada46015ccdf43693a85b33",
+    "sram.v": "36d6c40d8ac6ea92330a01b30b92e08658b437c24d2f279065144ea5d3420f00",
+    "tb_qbank_local.sv": "ca713e5c70cc99a2f0555af831e129b293d17522ae7987b57229dd1043979aea",
+    "run_local.py": "31a6c990bf764175d45eecca67e9ecd1d22e24dd639aee66ea0b8d4d673cee49"
+  },
+  "params": {
+    "QB_ALIGN": 1,
+    "QB_LOCAL32": 1
+  },
+  "cases": [
+    {
+      "mut": 0,
+      "gap": 1,
+      "rc": 0,
+      "expected": true,
+      "binary_sha256": "cef4eb7a2120ac972fd4b6cee59d8bfd8eba0bec748598928e4919fa90281e0d"
+    },
+    {
+      "mut": 0,
+      "gap": 2,
+      "rc": 0,
+      "expected": true,
+      "binary_sha256": "cef4eb7a2120ac972fd4b6cee59d8bfd8eba0bec748598928e4919fa90281e0d"
+    },
+    {
+      "mut": 1,
+      "gap": 1,
+      "rc": 1,
+      "expected": true,
+      "binary_sha256": "afc1a210ac203c2ae14337b894307aded7f4f3affe7785aee956ccb9a72e86fe"
+    }
+  ]
+}

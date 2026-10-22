@@ -186,6 +186,31 @@
       "results/rtl/tokfunc3_qw_1021/qbank_alignment_current"
     ],
     "views_to": "physical/ref_tile/qfd_n59_qbank_align1c/views",
-    "record_to": "results/rtl/ref_tile/qfd_n59_qbank_align1c"
+    "record_to": "results/rtl/ref_tile/qfd_n59_qbank_align1c",
+    "benches": [
+      {
+        "name": "qbank_local32_positive",
+        "cmd": "python3 results/arch/qbank_align1_1021/bench_local.py positive {RUN}/bench/qbank_local32_positive",
+        "expect": "pass",
+        "pass_regex": "QB_PASS ALIGN=1 LOCAL32=1 GAP=2 rows=32 checks=512",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "qbank_packing_mutant",
+        "cmd": "python3 results/arch/qbank_align1_1021/bench_local.py packing_mutant {RUN}/bench/qbank_packing_mutant",
+        "expect": "fail",
+        "fail_regex": "QB_FAIL",
+        "fail_witness": "results/arch/qbank_align1_1021/local32_receipts/mut1_gap1.log",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ]
   }
 }

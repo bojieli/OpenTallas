@@ -1,0 +1,12 @@
+QB_MISMATCH cycle=106 beat=0 lane=0 row=ddb779b8 expected=3f800007 ALIGN=1 GAP=1
+QB_MISMATCH cycle=106 beat=0 lane=1 row=3f800007 expected=ddb779b8 ALIGN=1 GAP=1
+QB_MISMATCH cycle=106 beat=0 lane=2 row=1a266d1a expected=7beef369 ALIGN=1 GAP=1
+QB_MISMATCH cycle=106 beat=0 lane=3 row=7beef369 expected=1a266d1a ALIGN=1 GAP=1
+QB_MISMATCH cycle=106 beat=0 lane=4 row=5695607c expected=b85de6cb ALIGN=1 GAP=1
+QB_MISMATCH cycle=106 beat=0 lane=5 row=b85de6cb expected=5695607c ALIGN=1 GAP=1
+QB_MISMATCH cycle=106 beat=0 lane=6 row=930453de expected=f4ccda2d ALIGN=1 GAP=1
+QB_MISMATCH cycle=106 beat=0 lane=7 row=f4ccda2d expected=930453de ALIGN=1 GAP=1
+QB_FAIL ALIGN=1 GAP=1 got=32 checks=512 errors=512
+[1446000] %Fatal: tb_qbank_local.sv:41: Assertion failed in tb_qbank
+%Error: /srv/opentallas-scratch/claude/codex-qbank-align-2000/local32_ready/tb_qbank_local.sv:41: Verilog $stop
+Aborting...

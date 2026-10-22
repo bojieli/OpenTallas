@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qbank-align-2000/local32_proof
+ot-run: ot-epyc7       admits   143 GB (avail 396, growth 296, headroom 0, waiters 0/0 GB) load 231/96 running 61 disk 4265 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-qbank-align-2000/local32_proof
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-qbank-align-2000/local32_proof
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-qbank-align-2000/local32_proof
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qbank-align-2000/local32_proof
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qbank-align-2000/local32_proof
+ot-run: LOAD SPILL: ot-epyc7 would run at 2.78 x cores; moving to ot-epyc9
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-qbank-align-2000 (0.0 GB) ot-epyc7 -> ot-epyc9 (no host with --dir admits 16 GB now)
+ot-run: SPILL: copied 6 changed entries in 3 s; running on ot-epyc9; written files go back to ot-epyc7 after the run
+ot-heavy: waiting for memory on ot-epyc9: need 0.7 x 16 = 11 GB, admissible 15 GB: available 106 GB, growth charged 95 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 75 GB at x1), young 30 GB, floor 50 GB
