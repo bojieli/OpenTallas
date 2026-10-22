@@ -1,0 +1,190 @@
+{
+ "name": "s81hd_lane_p4a",
+ "top": "ot_s81hd_lane",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_util.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_lane.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 898.56,
+  "h": 669.6,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "W": [
+   "rx",
+   "tx"
+  ],
+  "E": [
+   "tx_v",
+   "tx_d",
+   "rx_v",
+   "rx_d",
+   "flt",
+   "ck",
+   "rst_n",
+   "chb"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_s81hd_kf",
+   "ot_s81hd_lane_txs"
+  ],
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "job": {
+  "owner": "Claude:STW-S81c-HEAD-LANE",
+  "branch": "claude/s81-head-lane-p3-1022",
+  "tag": "s81hd_lane_p4a",
+  "purpose": "S81.HEAD.LANE: head-die lane block as cluster (CLOSED s8ng lane child + static adapter), frozen interface, to closure (TT setup / FF hold / DRC 0). MAIN",
+  "views_to": "physical/ref_tile/s81hd_lane_p4a/views",
+  "record_to": "results/rtl/ref_tile/s81hd_lane_p4a",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_head",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "results/rtl/s81_head_ctlgate_1021",
+   "physical/ref_tile/dscoll_lane_w_s8ng/views",
+   "results/rtl/s81_head_lane_p3_1022"
+  ],
+  "benches": [
+   {
+    "name": "hd_lane_base",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_bench.sh {RUN}/lane base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane flits \\d+/\\d+ exact, overflow flagged",
+    "pass_witness": "results/rtl/s81_head_ctlgate_1021/lane/base.log"
+   },
+   {
+    "name": "hd_lane_mut_ovf",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_bench.sh {RUN}/lane OVF",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane",
+    "fail_regex": "^FAIL hd_lane static overflow not flagged",
+    "fail_witness": "results/rtl/s81_head_ctlgate_1021/lane/mut_OVF.log"
+   },
+   {
+    "name": "hd_lane_mut_rp",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_bench.sh {RUN}/lane RP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane",
+    "fail_regex": "^FAIL hd_lane data: errors [1-9]",
+    "fail_witness": "results/rtl/s81_head_ctlgate_1021/lane/mut_RP.log"
+   }
+  ]
+ },
+ "recipe": 1,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered, unchanged RTL (release freeze): tx_d -> txd_p, tx_v -> 2 kept ot_s81hd_kf pin flops, rx_v / rx_d / flt leave flops (rv_q / rd_q / flt_q); rx / tx / chb are wires to the CLOSED child's own pin registers (lr landing, gearbox beat, endpoint chb flop). A recipe pin stage would change the frozen latency contract."
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf",
+   "count": 1,
+   "inst": "*u_ln",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "inter": [],
+ "pin_ranges": {
+  "rx": [
+   45.36,
+   331.56
+  ],
+  "tx": [
+   333.72,
+   619.92
+  ],
+  "tx_d": [
+   45.36,
+   317.52
+  ],
+  "tx_v": [
+   319.68,
+   320.76
+  ],
+  "chb": [
+   324.0,
+   326.16
+  ],
+  "ck": [
+   341.28,
+   343.44
+  ],
+  "rst_n": [
+   345.6,
+   347.76
+  ],
+  "rx_v": [
+   349.92,
+   351.0
+  ],
+  "flt": [
+   353.2,
+   358.56
+  ],
+  "rx_d": [
+   360.72,
+   624.24
+  ]
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck",
+  "reason": "rst_n lands in 2 ck flops at the core face, then ot_rst_relay_tree3 (35 slice leaves + lane + rx + misc, every leaf <= ~32 reset pins); the child lands its own rs (tree3 inside the closed view)"
+ },
+ "fill_reason": {
+  "pin_bound": "child-bound: the CLOSED 725.76 x 583.2 lane view + a 43.2-um ring + the adapter band; parent std ~2.6k um2 (adapter 3-flit buffer in 35 kept slices + pin flops) in the band; never shrink."
+ },
+ "structural_change": "s81hd_lane_p4a (STW-S81c-COLLA 10-22): p3m geometry; spine child insertion target 743.4 ps (was TT boundary mean 698.4): p3m/p3f measured TT spread 28 but FF 106-115 because the CLOSED lane child scales FF/TT 0.81 vs the parent spine 0.75 -> target shifted so the child sits early at TT and late at FF by about the same amount (both < 80 expected). RTL/ports unchanged.",
+ "child_clock_ref": "boundary",
+ "child_clock_ref_reason": "the parent adapter talks to the child's boundary pin registers (lo_* landing, li_* sender, W-face rx/tx flops): target = the child's routed boundary insertion (insertion.json TT mean 698.4), not its deepest leaf",
+ "std_area_um2": 2600.0,
+ "slot_change_request": {
+  "reason": "H10 reserve ln_* is 518.4 x 1123.2 R0; the closed lane child is 725.76 x 583.2 (no R90 for SRAM views), so the head die re-slots the 13 lanes to 898.56 x 669.6 (area 0.602 mm2 vs 0.582 reserve). Ports / widths / protocol / cycles unchanged (freeze). Faces: SerDes rx/tx on W (MY for the E-SerDes lanes); core tx_d/rx_d/v/flt/ck/rst_n/chb on E (as m/f)."
+ }
+}
