@@ -68,6 +68,14 @@ def load(p):
 MAX_PAD = 128  # rtl/hbm_accel/die_glue/hbfd_rrl.sv defines hbfd_rrl_pad2 .. hbfd_rrl_pad128 (405 um hops on a 31.8 mm die: ages ~90)
 
 
+# NW-FIX (10-22, r18h S8 NW root): ZONE_SPLIT {zone: [x, ...]} splits a d4b region into x-bands <zone>a, <zone>b, ...
+# (r18h NW = x 0-15.5k x y 16.5k-top, 1,210 sinks, ONE root over sm_NW3 in a relay-packed pocket: 0-5 free homes in
+# its 320 um stage diamond).  ROOT_CAPACITY K: regional-root candidate sites whose stage diamond (budget) holds fewer
+# than K free relay homes are tried last (same rings, same budget; nothing relaxed).
+ZONE_SPLIT = {}
+ROOT_CAPACITY = 0
+
+
 def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='d4b', mut_skew=False, max_root_tries=40,
           survey=None, relay_rows=False, overfly=None, host_hops=None, compact=False, carrier=None, host_form='hop'):
     if reach <= 0 or fanout < 1:
@@ -133,7 +141,10 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             # FOREST2: the centre column spans the full die height (~31.8 mm); one root at its middle gave 16 mm
             # root->leaf chains (44 release stages on GEN2a).  Split it N/S like the quadrants.
             return 'C' + ('N' if y >= H / 2 else 'S')
-        return ('N' if y >= H / 2 else 'S') + ('W' if x < (W / 2 if zones == 'quadrant' else CB0) else 'E')
+        z = ('N' if y >= H / 2 else 'S') + ('W' if x < (W / 2 if zones == 'quadrant' else CB0) else 'E')
+        if z in ZONE_SPLIT:
+            z += 'abcdefgh'[sum(x >= b for b in ZONE_SPLIT[z])]
+        return z
 
     # HBM-RSTROW (coordinator 0jp, Proposal A): relay rows carry their own reset (reset_rows.py).  Only row heads are
     # forest sinks; their leaves release at domain age + off (off <= 0) so every station releases by D + 1 + depth.
@@ -456,7 +467,13 @@ def build(c, manifest, views, relay_views=None, reach=405., fanout=2048, zones='
             # Regional-root home: try the sink centroid, then alternative homes around it, and keep the FIRST site whose
             # whole region (POR hop chain + every leaf chain) routes inside the fixed reach budget.  A pocket that is
             # walled off within the budget is skipped; the budget is never relaxed.
-            for k, site in enumerate(g.root_sites(centre([s[1] for s in Z]))[:max_root_tries]):
+            sites = g.root_sites(centre([s[1] for s in Z]))
+            if ROOT_CAPACITY:
+                cap = {i: g.free_homes_within(xy, g.budget) for i, xy in enumerate(sites)}
+                sites = [sites[i] for i in sorted(range(len(sites)), key=lambda i: (cap[i] < ROOT_CAPACITY, i))]
+                log('  region', z, 'root capacity', sorted(cap.values(), reverse=True)[:8], 'sites >=', ROOT_CAPACITY,
+                    sum(v >= ROOT_CAPACITY for v in cap.values()), 'of', len(cap))
+            for k, site in enumerate(sites[:max_root_tries]):
                 snap = g.snapshot()
                 log('  region', z, 'try', k, 'site', [round(v) for v in site])
                 try:
@@ -641,6 +658,10 @@ def main():
     ap.add_argument('--route-slack', type=int, default=64)
     ap.add_argument('--route-reuse', action='store_true',
                     help='L2H-GEN2D-RST 10-19: stage a chain along ONE routed path (re-route only when the suffix is unusable)')
+    ap.add_argument('--zone-split', action='append', default=[],
+                    help='NW-FIX: ZONE:x1[,x2..] split a forest region into x-bands (e.g. NW:10020)')
+    ap.add_argument('--root-capacity', type=int, default=0,
+                    help='NW-FIX: try regional-root sites with >= K free homes in the stage budget diamond first')
     ap.add_argument('--route-max-pops', type=int, default=3_000_000)
     ap.add_argument('--carrier-home-um', type=float, default=64.8,
                     help='L2H-GEN2D-RST 10-19: carrier station home search radius (reach-checked)')
@@ -650,6 +671,11 @@ def main():
     reset_forest_geometry.ROUTE_DETOUR, reset_forest_geometry.ROUTE_SLACK = a.route_detour, a.route_slack
     reset_forest_geometry.ROUTE_MAX_POPS = a.route_max_pops
     reset_forest_geometry.ROUTE_REUSE = a.route_reuse
+    global ROOT_CAPACITY
+    ROOT_CAPACITY = a.root_capacity
+    for zs in a.zone_split:
+        zn, xs = zs.split(':')
+        ZONE_SPLIT[zn] = sorted(float(v) for v in xs.split(','))
     try:
         survey = [] if a.survey else None
         carrier = None
