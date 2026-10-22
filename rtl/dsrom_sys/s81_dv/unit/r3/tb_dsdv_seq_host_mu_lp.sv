@@ -1,12 +1,13 @@
 `timescale 1ns/1ps
 // STW-S81c-COLLA3 10-22: lockstep dsdv_seq_host_mu_lp (exact dsdv_seq_host_mu ports) against the reference
 // dsdv_seq_host_mu built on the r3_lp compiler re-schedule: dsdv_seq_host_c_r3_rsref (lp.py reference, +2 edges per landed
-// crossing) + dsdv_mu_hslot NSLOT 47, both on rst_n delayed RD = relay 4 + core RB 4 = 8 edges.  Every output port,
+// crossing) + dsdv_mu_hslot NSLOT 47, both on rst_n delayed RD = face landing 2 + relay 4 + core RB 4 = 10 edges (rev2).  The rev2 hslot relay
+// stage moves the hslot timeline +1 edge, so t_kd / t_mf are compared against the reference delayed by exactly 1 edge.  Every output port,
 // including t_kd (hslot slot word) and t_mf, is compared every cycle after warm-up.  Mutants: MU_LP_MUT 1 (hslot reset
 // epoch slip), 2 (t_kd without slot word), LPMUT (r3_lp landing mutant -> MUT of u_core).
 module tb_dsdv_seq_host_mu_lp;
     parameter integer MU_LP_MUT = 0, LPMUT = 0, NC = 8000, SEED = 1;
-    localparam integer V = 276, RD = 8, WARM = 32 + RD + 24, BOOT0 = 32 + RD - 2, GAP = 48, RLW = 100, ST0 = BOOT0 + 64;
+    localparam integer V = 276, RD = 10, WARM = 32 + RD + 24, BOOT0 = 32 + RD - 2, GAP = 48, RLW = 100, ST0 = BOOT0 + 64;
     reg clk = 1'b0;  always #0.5 clk = ~clk;
     reg rst = 1'b0;  reg [RD-1:0] rst_dl = 0;
     always @(posedge clk) rst_dl <= {rst_dl[RD-2:0], rst};
@@ -25,8 +26,11 @@ module tb_dsdv_seq_host_mu_lp;
         .sink_k(sink_k), .vi_s(vi_s), .vi_n(vi_n), .f_host(f_host), .f_lf(f_lf), .f_ks(f_ks), .s_jd_w(s_jd_w), .s_jd_e(s_jd_e),
         .s_hc_w(s_hc_w), .s_hc_e(s_hc_e), .st_rg_w(st_rg_w), .st_rg_e(st_rg_e), .vo_s(r_vo_s), .vo_n(r_vo_n), .t_host(r_t_host),
         .t_kd(r_kd), .s_j(r_s_j), .s_hw_w(r_s_hw_w), .s_hw_e(r_s_hw_e), .cw_v(r_cw_v), .cw_a(r_cw_a), .cw_d(r_cw_d));
-    dsdv_mu_hslot #(.NSLOT(47), .MUT(0)) u_rhs (.ck(clk), .rst_n(rst_f), .f_ks(f_ks), .f_kd(r_kd), .f_mc(f_mc), .t_ku(r_ku), .t_mf(r_t_mf));
-    assign r_t_kd = {r_kd[53:32], r_ku[30:0], 1'b0};
+    dsdv_mu_hslot #(.NSLOT(47), .MUT(0)) u_rhs (.ck(clk), .rst_n(rst_f), .f_ks(f_ks), .f_kd(r_kd), .f_mc(f_mc), .t_ku(r_ku), .t_mf(r_t_mf0));
+    wire [53:0] r_t_kd0 = {r_kd[53:32], r_ku[30:0], 1'b0};
+    reg  [53:0] r_t_kd_q; reg [3:0] r_t_mf_q; wire [3:0] r_t_mf0;
+    always @(posedge clk) begin r_t_kd_q <= r_t_kd0; r_t_mf_q <= r_t_mf0; end
+    assign r_t_kd = r_t_kd_q; assign r_t_mf = r_t_mf_q;
     integer cyc, nc, bad, kuact;
     task rnd_inputs; begin
         tap_k = $urandom; sink_k = $urandom; f_lf = $urandom; s_jd_w = $urandom; s_jd_e = $urandom; s_hc_w = $urandom;

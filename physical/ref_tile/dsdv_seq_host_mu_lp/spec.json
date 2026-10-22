@@ -135,8 +135,8 @@
    669.6
   ],
   "f_ks": [
-   216.0,
-   669.6
+   129.6,
+   259.2
   ],
   "s_hc_w": [
    216.0,
@@ -159,8 +159,8 @@
    669.6
   ],
   "t_kd": [
-   216.0,
-   669.6
+   172.8,
+   302.4
   ],
   "f_mc": [
    43.2,
@@ -293,16 +293,7 @@
   "cell": "HB2xp67_ASAP7_75t_R"
  },
  "child_clock_ref": "boundary",
- "clock": "cts",
- "child_centre_tap": {
-  "children": [
-   "u_core.u_l0",
-   "u_core.u_l1",
-   "u_core.u_l2",
-   "u_core.u_blk",
-   "u_core.u_bvc",
-   "u_hs"
-  ],
-  "why": "one ck root over the 1512-um cluster: per-child centre-tapped buffer chains to each CLOSED child clock pin (the r3_lp regional roots become 3 child-pin groups of the same ck, owner-approved mu_lp plan (c)); 80 ps boundary gate unchanged."
- }
+ "clock": "spine",
+ "clock_why": "rev2 (gate 15:57, ep5 cts.log): \"cts\" + child_centre_tap left the six hard children unbalanced -- child_centre_tap is armed only for landed multiple_cts_roots kits, so the tap never ran; child clock pins arrived 838..1674 ps (u_l0 internal insertion 551 ps vs 233-300 for the others), FF hold -589 ps on 2,434 IO endpoints (u_l2/vi_n), 23k hold buffers, DPL-0033 overlaps.  The cluster default \"spine\" puts each hard child clock pin on its own leaf with the child insertion (Liberty max_clock_tree_path) as target, so every child boundary lands at one arrival.",
+ "pin_ranges_why": "rev2 wire_reach (f_ks -> u_hs 842 um): f_ks next to u_l0 f_ks (u_l0 E face y 218-271) and the hslot relay ks_r; t_kd between kd_r and the hslot t_ku face; f_mc / t_mf at the hslot (unchanged)"
 }
