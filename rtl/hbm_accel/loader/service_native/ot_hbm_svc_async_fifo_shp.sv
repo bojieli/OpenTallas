@@ -17,7 +17,7 @@
 // asynchronously with wr_reset / rd_reset and DEASSERT SYNCHRONOUSLY on a wr_clk / rd_clk edge (the leaf flop's D =
 // wr_online / rd_online), on the same edge as rd_online_w1 / wr_online_r1 capture; the first fire needs the _w2 / _r2
 // flag, i.e. >= 1 edge later (bench margin).  The tool admits this exact wiring only (COORD re-ack 10-22 (b)).
-// group reset sync -> GS slices x (AW + 1) <= 32.
+// group reset leaf -> GE slices x (DEPTH + 1) + 1 <= 32.
 (* keep_hierarchy = "yes" *)
 module ot_hbm_svc_shp_and2(input wire a,b,output wire y); assign y=a&b; endmodule
 // Group release leaf: N kept copies of the side's own online flag (D = wr_online / rd_online, NOT a constant 1: a D=1
@@ -36,7 +36,10 @@ module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)
  output wire [WIDTH-1:0] rd_data,output reg rd_underflow
 );
  localparam integer AW=$clog2(DEPTH),PW=AW+1;
- localparam integer NS=(WIDTH+SW-1)/SW,NG=(NS+GS-1)/GS;
+ // v4 census (gate 2298644: u_gr_leaf rst_n 64 loads = 1 + 7 x (8 rs + 1)): effective group size GE so that one leaf
+ // output drives 1 + GE x (DEPTH + 1) <= 32 pins (rs ring + u_rf + u_gr); write side shares it (wa AW + u_wf, fewer).
+ localparam integer GE=(GS<31/(DEPTH+1))?GS:31/(DEPTH+1);
+ localparam integer NS=(WIDTH+SW-1)/SW,NG=(NS+GE-1)/GE;
  initial if(DEPTH<4||(DEPTH&(DEPTH-1))!=0)$error("FIFO depth must be power-of-two >=4");
  wire both_reset=wr_rst_n&&rd_rst_n;wire wr_reset,rd_reset;
  ot_reset_sync u_wr_reset(.clk(wr_clk),.async_rst_n(both_reset),.sync_rst_n(wr_reset));
@@ -100,15 +103,15 @@ module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)
   wire wf,rf;
   // u_wf / u_rf re-AND the group reset already inside gw_fire / gr_fire (logically redundant, review 10:45 (d)): kept on
   // purpose as the per-slice kept driver, so each group fire net drives GS AND pins, not GS x (B write enables + AW).
-  (* keep="true" *) ot_hbm_svc_shp_and2 u_wf(.a(gw_fire[s/GS]),.b(gw_reset[s/GS]),.y(wf));
-  (* keep="true" *) ot_hbm_svc_shp_and2 u_rf(.a(gr_fire[s/GS]),.b(gr_reset[s/GS]),.y(rf));
+  (* keep="true" *) ot_hbm_svc_shp_and2 u_wf(.a(gw_fire[s/GE]),.b(gw_reset[s/GE]),.y(wf));
+  (* keep="true" *) ot_hbm_svc_shp_and2 u_rf(.a(gr_fire[s/GE]),.b(gr_reset[s/GE]),.y(rf));
   (* keep="true",dont_touch="true" *) reg [AW-1:0] wa;   // per-slice copy: must not be merged
   // per-slice one-hot read slot (v4): rs == 1 << rd_bin[AW-1:0]; each rs[d] drives B AND pins + the next ring stage
   (* keep="true",dont_touch="true",fsm_encoding="none" *) reg [DEPTH-1:0] rs;
   (* mem2reg *) reg [B-1:0] mem[0:DEPTH-1];   // explicit flops, like the reviewed FIFO (async_fifo_hierarchy_audit)
-  always @(posedge wr_clk or negedge gw_reset[s/GS]) if(!gw_reset[s/GS]) wa<=0; else if(wf) wa<=wa+1'b1;
+  always @(posedge wr_clk or negedge gw_reset[s/GE]) if(!gw_reset[s/GE]) wa<=0; else if(wf) wa<=wa+1'b1;
   always @(posedge wr_clk) if(wf) mem[wa]<=wr_data[s*SW+:B];
-  always @(posedge rd_clk or negedge gr_reset[s/GS]) if(!gr_reset[s/GS]) rs<={{(DEPTH-1){1'b0}},1'b1};
+  always @(posedge rd_clk or negedge gr_reset[s/GE]) if(!gr_reset[s/GE]) rs<={{(DEPTH-1){1'b0}},1'b1};
 `ifdef OT_SHP_MUT_RS_TWICE   // bench-only mutant (COORD re-ack (a)): slice 0's read ring rotates twice per fire
    else if(rf) rs<=(s==0)?{rs[DEPTH-3:0],rs[DEPTH-1:DEPTH-2]}:{rs[DEPTH-2:0],rs[DEPTH-1]};
 `else

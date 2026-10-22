@@ -10,7 +10,7 @@ def run(root):
     except ValueError as e: return 'REFUSED: '+str(e)[:160]
 print('v4 actual:',run(Path('.').resolve()))
 for name,old,new in [('leaf d=1',".d(wr_online),.rst_n(gw_l0)",".d(1'b1),.rst_n(gw_l0)"),
-                     ('rs reset from rd_reset',"negedge gr_reset[s/GS]) if(!gr_reset[s/GS]) rs<=","negedge rd_reset) if(!rd_reset) rs<="),
+                     ('rs reset from rd_reset',"negedge gr_reset[s/GE]) if(!gr_reset[s/GE]) rs<=","negedge rd_reset) if(!rd_reset) rs<="),
                      ('leaf rst from both_reset',".rst_n_in(rd_reset),.d(rd_online)",".rst_n_in(both_reset),.d(rd_online)")]:
     d=Path(tempfile.mkdtemp())
     for p in srcs:

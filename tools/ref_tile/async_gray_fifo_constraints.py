@@ -41,9 +41,9 @@ RESET_SYNC_SOURCE = 'rtl/lib/ot_reset_sync.sv'
 # declare it is checked exactly as before).  Control is the reviewed FIFO's verbatim; one Gray pair crosses; per-slice
 # wa/ra are same-domain copies; payload = g_s[s].mem[slot][b] -> rd_data[s*SW+b].
 SHP_SOURCE = 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_shp.sv'
-OPTIONAL_SOURCES = {SHP_SOURCE: ('258939975691e3c336a19e33ed02c7beb4d2660708bf0c5ff73825a33c50a593',)}
+OPTIONAL_SOURCES = {SHP_SOURCE: ('a94d6220d0660a783025665d2f43f567d2aac5606f2ed7f2aade10bb4c1b50c0',)}
 FIFO_SRC_RANGE = {'ot_hbm_svc_async_fifo': (next(iter(SOURCES)), '6.1-51.10'),
-                  'ot_hbm_svc_async_fifo_shp': (SHP_SOURCE, '32.1-121.10')}
+                  'ot_hbm_svc_async_fifo_shp': (SHP_SOURCE, '32.1-124.10')}
 # destination period - 60 ps setup uncertainty (gray_fifo_cdc_constraints rule (c) reset bound)
 RESET_BOUND_PS = {'core': 773.333, 'hbm': 964.0}
 RELATIONSHIP = dict(kind='hbm_phy_async_gray_fifo', stream_period_ps=833.333,
