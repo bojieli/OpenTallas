@@ -53,7 +53,7 @@
     },
     {
       "path": "rtl/qwen_split/qfd_sys_face_lctx3_wrapped.sv",
-      "sha256": "c2d2ccfaecdba929c5b861f5b5d90b709859ef0f150efd026aa01a45fac39b3c"
+      "sha256": "b25c0bdd8ad7f14fe0f5fac605fb87e441c6ce2bbae793b46d685b3973cf8b40"
     },
     {
       "path": "rtl/qwen_split/qfd_sysface_cfg_copy.sv",
@@ -95,5 +95,7 @@
     "cfg_publications": "182edge source comparison:28 independent data publications equal original c_data",
     "head": "arbitrary-state transition SAT PASS; actual emitter97edges/32records all548bits/fault and23tx_v publications match",
     "record": "exact5caf source inputs; existing SAT2069comparisons and1887check1024PW+8DW lockstep/causals retained"
-  }
+  },
+  "abi_port_count": 93,
+  "frontend_note": "Wrapper production-only MU/MU_HEAD/ROPE defaults set1 so Yosys evaluates its declared profile before chparam; selected1 profile behavior/ages unchanged. L_CONTEXTS remains default0."
 }

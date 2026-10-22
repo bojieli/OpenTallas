@@ -3,13 +3,13 @@ module qfd_sys_face_lctx3_wrapped #(
     parameter integer L_CONTEXTS = 0,       // opt-in segmented L0/L1 playback; selected only with a qualified compiler image
     parameter integer MUT = 0,
     parameter OVL_ROM_DIR = "rtl/qwen_sys/d2d_static_20261015/ovl_release_rope",
-    parameter integer MU = 0,                  // MU-DQ-SYSFACE 10-19: 1 = Qwen ROM 4-user release (filler head contexts, see below)
+    parameter integer MU = 1,                  // MU-DQ-SYSFACE 10-19: 1 = Qwen ROM 4-user release (filler head contexts, see below)
     parameter integer GO_OFS = 3,              // qfd_d2d_cal_seq go-path edges = the T image's token-run cycle (sys_face_image.GO_OFS)
     parameter [20*36-1:0] START_ADJ = '0,
     parameter ROM_VIAMAP = "",
     parameter ROM_INSTANCE = "sys_face_cfg",
-    parameter integer ROPE = 0,                // tagged eight-word RoPE row follows the embedding
-    parameter integer MU_HEAD = 0              // 1: filler head contexts (tt_native_pos[17:16] != 0) not checked here
+    parameter integer ROPE = 1,                // tagged eight-word RoPE row follows the embedding
+    parameter integer MU_HEAD = 1              // 1: filler head contexts (tt_native_pos[17:16] != 0) not checked here
 ) (ck, rst_n, cfg_tx_we, cfg_rx_we, cfg_addr, cfg_data, cal_start, cal_seg, cal_start_rx, cal_seg_rx, cal_user_tx, cal_user_rx, fwd_epoch, rx_payload, prog_rx_v, prog_witness_slot, prog_auth_slot, prog_context_slot, prog_tx_observed_v, prog_tx_record, prog_head_context_slot, prog_head_context_user, head_descriptor_v, head_descriptor_tag, head_descriptor_generation, emb_rx_v, emb_rx_slot, d2d_fault, d2d_epoch_abort, status_epoch16, vm_drained, collective_drained, collective_busy, crom_fault, execution_active, admit_ready, result_v, result_done, result_fault, result_cause, result_tag, result_gen, result_token, result_value, result_cycles, seq_dc, seq_program_obs, seq_descriptor_obs, seq_cfg_image_ready, seq_dh, tt_program_obs, tt_control_stores_ready, tt_layer_context_v, tt_command_stage, tt_native_tok, tt_native_pos, tt_pw, tt_kok, tt_kwd, tt_fab, host_epoch_valid, host_fused_capability, host_epoch, host_tag, host_generation, q_slot, q_slot_beat, kv_word_slot, kv_word_index, visibility_slot, complete_slot, native_fault, emb_word_v, emb_word_data, emb_word_token, emb_word_index, emb_word_scale, emb_word_epoch, emb_expected_slot, emb_expected_token, emb_expected_word, emb_expected_scale, emb_expected_epoch, emb_fill_begin, emb_fill_token, emb_fill_epoch, emb_core_epoch, obs_fault, emb_prov_fault, io_cmd_free, io_fault, io_shared_fault, fault);
   input ck;
   input rst_n;

@@ -46,6 +46,8 @@ def main():
  core=core.replace(old,mux)
  # Preserve the actual existing capture wrapper, its per-port order and reset relay.
  params=core[core.index('#(')+2:core.index(') (')]
+ for production in ['MU','MU_HEAD','ROPE']:
+  params=re.sub(r'(parameter integer '+production+r'\s*=\s*)0',r'\g<1>1',params,count=1)
  wrapper=wrapper.replace('module qfd_sys_face_ovl_lctx2 (','module qfd_sys_face_lctx3_wrapped #('+params+') (',1)
  names=['L_CONTEXTS','MUT','OVL_ROM_DIR','MU','GO_OFS','START_ADJ','ROM_VIAMAP','ROM_INSTANCE','ROPE','MU_HEAD']
  forward=','.join('.'+n+'('+n+')' for n in names)
