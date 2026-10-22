@@ -53,6 +53,19 @@ grep -qE "qkd_(rlysh0?|landsh0?)_" "$D" && F+=(--rtl-file "$R/rtl/qwen_sys/kv_fw
 if [ "${OT_KV_STATIC_DIE:-0}" = 1 ]; then
   KT=$(cd $R/tools/qwen_kv_die && python3 -c 'import kv_static_die as S; print(S.RTL_FILE)' 2>/dev/null | tail -1)
   [ -n "$KT" ] && [ -f "$R/$KT" ] && F+=(--rtl-file "$R/$KT")
+  # The active S6C assembly deliberately omits the native registered groups.
+  # Pass their actual source files to BOTH strict compilation/hierarchy passes.
+  for NATIVE in $(cd "$R/tools/qwen_kv_die" && python3 -c 'import kv_static_die as S; print(" ".join(sorted(S.GRP_S6C_RTL.values())) if S.GRP_S6C else "")'); do
+    [ -f "$R/$NATIVE" ] || { echo "missing selected native RTL: $NATIVE"; exit 3; }
+    F+=(--rtl-file "$R/$NATIVE")
+  done
+  if [ "${OT_KV_GRP_S6C:-0}" = 1 ]; then
+    # Exact canonical functional PDK model already used by S6C qualification.
+    # SRAM behavioral models are loaded by die_port_bind's normal macro roots.
+    CELL_MODEL="results/rtl/qwen_kv_die/canonical_seq_coupon_1020/formal_compatible/library_model_pdk.v"
+    [ -f "$R/$CELL_MODEL" ] || { echo "missing qualified S6C cell model: $CELL_MODEL"; exit 3; }
+    F+=(--rtl-file "$R/$CELL_MODEL")
+  fi
   # KV-FACELAND-WIRE 10-19: face-landed top tiles bind their kit's wrapper (<master>_fl; two files define qkd_kvs_attn_fl)
   for FLW in $(cd $R/tools/qwen_kv_die && python3 -c 'import kv_static_die as S; print(" ".join(sorted({b["file"] for b in S.bindings().values() if b["module"].endswith("_fl")})))' 2>/dev/null | tail -1); do
     [ -f "$R/$FLW" ] && F+=(--rtl-file "$R/$FLW" --rtl-file "$R/rtl/lib/ot_rst_relay.sv" --rtl-file "$R/rtl/lib/ot_pin_land.sv")

@@ -1,0 +1,14 @@
+N59OBS_ERR cyc=17 descriptor tag 000480003180180 expected 000280003180180
+N59OBS_ERR cyc=18 head_descriptor differs
+N59OBS_ERR cyc=19 head_descriptor differs
+N59OBS_ERR cyc=20 head_descriptor differs
+N59OBS_ERR cyc=21 head_descriptor differs
+N59OBS_ERR cyc=22 head_descriptor differs
+N59OBS_ERR cyc=22 descriptor tag 000880183b91640 expected 000480183b91640
+N59OBS_ERR cyc=23 head_descriptor differs
+N59OBS activity edges=274 descriptors=18 completions=0
+N59OBS_FAIL errors=3236
+- /srv/opentallas-scratch/claude/codex-tok-qw-2000/svc_current_src/rtl/test/qwen_split/tb_n59_svc_obs1_hp.sv:133: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.239 s; speed 50.990 us/s
+- Verilator: cpu 0.200 s on 1 threads; allocated 7 MB

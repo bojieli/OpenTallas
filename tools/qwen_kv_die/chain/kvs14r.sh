@@ -128,10 +128,14 @@ unset OT_BIND_DIAGNOSTIC
 [ -s $R/RST_HOLD_DIAGNOSTIC ] && export OT_BIND_DIAGNOSTIC=1
 [ "${OT_KV_PARAM_DIAG:-0}" = 1 ] && export OT_BIND_DIAGNOSTIC=1
 say "chain start (laned netlist; OT_BIND_DIAGNOSTIC=${OT_BIND_DIAGNOSTIC:-0})"
+if [ "${OT_KV_STRICT_CHAIN_ONLY:-0}" = 1 ] && [ -n "${OT_BIND_DIAGNOSTIC:-}" ]; then
+  say "STRICT CHAIN REFUSED: prep emitted diagnostic marker(s); no diagnostic fallback"
+  exit 1
+fi
 bash "$W/tools/qwen_kv_die/chain/die_chain.sh" kv "$R" "$W" > "$R/chain.log" 2>&1 || say "chain rc=$?"
 # a refused launch gate (native bind / RELAY_CHECK) stops die_chain before GRT: re-run once stamped DIAGNOSTIC so the GRT /
 # STA / DCC evidence of this floorplan still exists (NOT_A_DIE_RESULT names the failed gate; never a die result)
-if [ -z "${OT_BIND_DIAGNOSTIC:-}" ] && tail -3 $R/STATUS.log | grep -q 'no die job launched'; then
+if [ "${OT_KV_STRICT_CHAIN_ONLY:-0}" != 1 ] && [ -z "${OT_BIND_DIAGNOSTIC:-}" ] && tail -3 $R/STATUS.log | grep -q 'no die job launched'; then
   export OT_BIND_DIAGNOSTIC=1; say "launch gate refused: chain re-run DIAGNOSTIC (not a die result)"
   bash "$W/tools/qwen_kv_die/chain/die_chain.sh" kv "$R" "$W" > "$R/chain_diag.log" 2>&1 || say "chain (diagnostic) rc=$?"
 fi

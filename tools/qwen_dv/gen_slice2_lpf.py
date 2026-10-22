@@ -190,7 +190,8 @@ def top():
          "// (tb rtl/test/qwen_dv/tb_qfd_dv_slice2_e_lpf.sv).  Face outputs pass wires-only children in their face regions.",
          "// =====================================================================================================================",
          "module qfd_dv_slice2_e_lpf #(parameter integer SL_MUT = 0, parameter integer SU_TLS = 1, parameter integer SU_LT = 1,",
-         "                            parameter integer MU_NU = 4) (   // MU-QWEN R4: the 4-user LM-head argmax (MU-ADOPT-SLICE)",
+         "                            parameter integer MU_NU = 4,     // MU-QWEN R4: the 4-user LM-head argmax (MU-ADOPT-SLICE)",
+         "                            parameter integer ARF = 0, parameter integer RP = 0) (   // QW-LAYERGAP AR framer / RoPE row (kits bind 1)",
          ports, ");"]
     w = o.append
     w("    wire [1094:0] w_ch_up_i = {arv_wi, art_wi, arm_wi, arl_wi, ard_wi, dd_wi};")
@@ -202,7 +203,7 @@ def top():
       "    wire [3:0]    h_sid;\n    wire [71:0]   h_xpf;\n    wire [379:0]  h_gi;\n    wire          h_sw_v, h_fe, h_fault;\n"
       "    wire [23:0]   h_sw_a;\n    wire [64*32-1:0] h_sw_d;\n"
       "    wire [515:0]  h_n0, h_n1, h_n2, h_n3, h_s0, h_s1, h_s2, h_s3;")
-    w("    qfd_dv_slice2_lpc #(.MUT(SL_MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(1), .MU_NU(MU_NU), .DIR(1)) u_c (.ck(ck), .rst_n(rst_n),\n"
+    w("    qfd_dv_slice2_lpc #(.MUT(SL_MUT), .SU_TLS(SU_TLS), .SU_LT(SU_LT), .HD_W130(1), .MU_NU(MU_NU), .ARF(ARF), .RP(RP), .DIR(1)) u_c (.ck(ck), .rst_n(rst_n),\n"
       "        .cmd_i(cmd_ei), .cmd_o(c_cmd_o), .hr_i(hr_ei), .hr_o(c_hr_o),\n"
       "        .rs_s0(rs_s0), .rs_s1(rs_s1), .rs_n0(rs_n0), .rs_n1(rs_n1), .l9_i(l9_wi), .l9_o(c_l9_o),\n"
       "        .st_up_i(st_ei), .st_up_o(c_st_up_o), .st_dn_i(st_wi), .st_dn_o(c_st_dn_o),\n"
@@ -253,8 +254,8 @@ def tb():
         o.append(f"    wire [{w - 1}:0] a_{n}, b_{n};")
     ca = ", ".join([".ck(ck)", ".rst_n(rst_n)"] + [f".{n}({n})" for _, n in ins] + [f".{n}(a_{n})" for _, n in outs])
     cb = ", ".join([".ck(ck)", ".rst_n(rst_n)"] + [f".{n}({n})" for _, n in ins] + [f".{n}(b_{n})" for _, n in outs])
-    o.append(f"    qfd_dv_slice2_e #(.SU_LT(1), .HD_W130(1), .MU_NU(4)) u_ref ({ca});")
-    o.append(f"    qfd_dv_slice2_e_lpf #(.SU_LT(1), .MU_NU(4)) u_lpf ({cb});")
+    o.append(f"    qfd_dv_slice2_e #(.SU_LT(1), .HD_W130(1), .MU_NU(4), .ARF(1), .RP(1)) u_ref ({ca});")
+    o.append(f"    qfd_dv_slice2_e_lpf #(.SU_LT(1), .MU_NU(4), .ARF(1), .RP(1)) u_lpf ({cb});")
     quiet = {"cmd_ei", "rv_ei", "re_ei", "rr_ei", "rl_ei", "rd_ei", "dr_ei", "arv_wi", "art_wi", "arm_wi", "arl_wi", "ard_wi",
              "dd_wi", "ag_wi", "l9_wi", "rs_n0", "rs_n1", "rs_s0", "rs_s1"}
     o.append("    integer pnz [0:%d];" % (len(outs) - 1))

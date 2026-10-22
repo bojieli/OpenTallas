@@ -1,0 +1,114 @@
+{
+ "record": "7db6d6351",
+ "route_source": "ba18b20b1",
+ "master": "dsfd_coll_lane_e_safe8_ntf",
+ "view_root": "physical/ref_tile/dscoll_lane_e_s8ng/views/dsfd_coll_lane_e_safe8_ntf/",
+ "outline_um": {
+  "w": 725.76,
+  "h": 583.2
+ },
+ "params": {},
+ "effective_contract": "No top parameters; CORE_CRED8; CH_BOARD700/TF_CLEANUP1/REACH2; two-edge RX data/write landing with corresponding delayed credit; native32/source-defined no tf port. Not CRED12.",
+ "defines": [
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF"
+ ],
+ "guard": {
+  "hook": [
+   "physical/qwen_die_masters/sram_edge_guard.tcl"
+  ],
+  "OT_MEG_DEPTH_UM": "6.0",
+  "halo_um": 5.4,
+  "OT_MEG_OUT_UM": "not set (mainguard)"
+ },
+ "pin_track_at_origin_zero": {
+  "R0": {
+   "orient": "R0",
+   "origin_nm": [
+    0,
+    0
+   ],
+   "layers": {
+    "M4": {
+     "pins": 2143,
+     "offtrack": 0,
+     "max_offset_nm": 0.0
+    }
+   }
+  },
+  "MX": {
+   "orient": "MX",
+   "origin_nm": [
+    0,
+    0
+   ],
+   "layers": {
+    "M4": {
+     "pins": 2143,
+     "offtrack": 2143,
+     "max_offset_nm": 24.0
+    }
+   }
+  },
+  "MY": {
+   "orient": "MY",
+   "origin_nm": [
+    0,
+    0
+   ],
+   "layers": {
+    "M4": {
+     "pins": 2143,
+     "offtrack": 0,
+     "max_offset_nm": 0.0
+    }
+   }
+  },
+  "R180": {
+   "orient": "R180",
+   "origin_nm": [
+    0,
+    0
+   ],
+   "layers": {
+    "M4": {
+     "pins": 2143,
+     "offtrack": 2143,
+     "max_offset_nm": 24.0
+    }
+   }
+  }
+ },
+ "orientation_note": "Actual exported full-pin checker at0,0 only; caller must recheck actual planned translation/orientation, no fit/orientation alias.",
+ "gate_binding": {
+  "start_commit": "ffb9d6552a2a4f4abf8415df587b4c539c5c132d",
+  "archive_sha256": "9e87c3fd0d446984ffac2d19b41266681bf165dfe7a348157b897b028a2b2571",
+  "manifest_sha256": "b3f9e068f61d2d67545926e06ea05a970b42c27e3afcdbec3a1061c0eb79c86f"
+ },
+ "source_hashes": {
+  "rtl/link/ot_link_crc32.sv": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97",
+  "rtl/lib/ot_rst_relay_tree3.sv": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv": "767d0fb750db539d0c7076709cb7d39b0fd8df8ad1d058e9c8aa0d1c41881a7b",
+  "rtl/lib/ot_sram_oldread_b64.sv": "161f89764da3f079cb91164b269cb6f725348396b4644336318663d20e8e7a14",
+  "rtl/lib/ot_sram_showahead_b64.sv": "cc40f94107dc230bec6fffbb5af17c781bf908ba3f243c4ead50a1aac6e47b9a",
+  "rtl/common/ot_link_credit_rx_b64.sv": "bb05b7a574db1ee8c7cf5900e7e56819c3f905cd62d68aa54e4fd9f11ef0e461",
+  "rtl/common/ot_link_credit_tx_rc.sv": "41108469675c237202611513fdc868ce4c026b556b8400e0a15bc2ccc8dbb25a",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv": "f7fe6c1c242eb7d96cf856bc2492fa5a090e825672ddffb73fb8ed9d73ca6536",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv": "87089dff259f7300acfec4969e6c0a1d0db83e31d2f5082dc54342676a8c5625",
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv": "fa80d7a05d9e2de49364ef35d1e9292555b13564bf522a1d155809c332c15989"
+ },
+ "view_hashes": {
+  "physical/ref_tile/dscoll_lane_e_s8ng/views/dsfd_coll_lane_e_safe8_ntf/dsfd_coll_lane_e_safe8_ntf.lef": "612c8e25052c38b5a1992b0077d4bdc7d603ed251dcca1405cc7d79be3a21a50",
+  "physical/ref_tile/dscoll_lane_e_s8ng/views/dsfd_coll_lane_e_safe8_ntf/dsfd_coll_lane_e_safe8_ntf_tt.lib": "b8e562731c17664584532e529b706b30c2912c641491a2233703fbb643bdb414",
+  "physical/ref_tile/dscoll_lane_e_s8ng/views/dsfd_coll_lane_e_safe8_ntf/dsfd_coll_lane_e_safe8_ntf_ff.lib": "16147861a5acb7f96e46d800c96e7d2332b1de3dbf1beb3807ed460f984ad267",
+  "physical/ref_tile/dscoll_lane_e_s8ng/views/dsfd_coll_lane_e_safe8_ntf/dsfd_coll_lane_e_safe8_ntf_ss.lib": "68125d23eb1007be9c4a1fe78fe5d840d08cd9136ad279168b6fd6c181ebf6dc",
+  "physical/ref_tile/dscoll_lane_e_s8ng/views/dsfd_coll_lane_e_safe8_ntf/insertion.json": "b17a751d6b07738496cd79db44ea635b6f950ad16e0831830e63eeddb3751033"
+ },
+ "actual_lef_sha256": "612c8e25052c38b5a1992b0077d4bdc7d603ed251dcca1405cc7d79be3a21a50",
+ "measured": {
+  "tt_ps": 0.25,
+  "ff_ps": 2.81,
+  "drc": 0,
+  "ss_sensitivity_ps": -259.64
+ }
+}

@@ -171,8 +171,9 @@ def model(root):
         src,dst=b['source_rank'],b['destination_rank']
         delta=(dst-src)%4
         # Source-qualified LEGS topology: ES→WS +1, WS→ES -1,
-        # EN→WN +2. Both +/-1 links use S, +2 uses N.
-        end_source,end_destination = {1:(14,0),3:(0,14),2:(15,1)}[delta]
+        # EN<->EN +2 (S81-LINK5 10-21: one bidirectional d+2 circuit, the
+        # parts land on s_7N; s_0N is the stage NEXT/PREV endpoint).
+        end_source,end_destination = {1:(14,0),3:(0,14),2:(15,15)}[delta]
         outbound=network.route(b['source_sid'],end_source,src,src,b['leaf'],b['source_row'],SCRATCH,4)
         inbound=network.route(end_destination,b['sid'],dst,dst,b['leaf'],SCRATCH,b['row'],4)
         for leg in outbound+inbound: leg['source_leaf']=b['leaf']

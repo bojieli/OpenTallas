@@ -147,6 +147,19 @@ SPLIT_GROUP = 32
 
 
 # ----------------------------------------------------------------------------------------------------- verilog parsing
+def sticky_history_ref(name: str, offset: int, lag: int) -> str:
+    """Bits asserted throughout the allowed sticky lag window, across reset epochs.
+
+    An endpoint-only AND treats a pre-reset assertion as continuous when the
+    same bit reasserts after reset. Require every intervening sample instead;
+    the configured lag and the no-early-assertion bound stay unchanged.
+    """
+    return "(" + " & ".join(
+        f"dlo_{name}[{age - 1}]" if age > 0 else f"fo_{name}"
+        for age in range(offset, offset + lag + 1)
+    ) + ")"
+
+
 def preprocess(text: str, defines) -> str:
     """comments stripped, `ifdef / `ifndef / `elsif / `else / `endif resolved (as pre_route_gate._vlog_preprocess)"""
     text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
@@ -549,6 +562,11 @@ class Parent:
             raise SystemExit("landing_reset_forest must be an explicit boolean")
         if self.reset_forest and not self.chunk_bits:
             raise SystemExit("landing_reset_forest requires explicit landing_chunk_bits")
+        self.child_reset_forest = spec.get("landing_child_reset_forest", False)
+        if type(self.child_reset_forest) is not bool:
+            raise SystemExit("landing_child_reset_forest must be an explicit boolean")
+        if self.child_reset_forest and not self.reset_forest:
+            raise SystemExit("landing_child_reset_forest requires landing_reset_forest")
         if self.chunk_bits and not 1 <= self.chunk_bits <= 24:
             raise SystemExit("landing_chunk_bits must be 1..24 (kept local selector fanout)")
         if self.direct_timing and (self.D != 4 or self.E != 2):
@@ -928,6 +946,27 @@ class Parent:
                     chunks=count, first_expr='+'.join(row['terms']), chunks_expr=count_expr))
                 row['leaves'] += count
                 row['terms'].append(count_expr)
+        if self.child_reset_forest:
+            for row in regions.values():
+                row['child_bindings'] = []
+            def child_leaf(region, inst, pin=None, bit=None):
+                row = regions[region]
+                row['child_bindings'].append(dict(inst=inst, pin=pin, bit=bit,
+                    leaf=row['leaves'], first_expr='+'.join(row['terms'])))
+                row['leaves'] += 1
+                row['terms'].append('1')
+            for ins in self.insts:
+                pins = [pin for pin, ex in ins['conns'].items()
+                        if self.cports[ins['module']][pin] == 'in'
+                        and pin in (self.S.get('reset_pins') or []) and ex.strip() == self.rst]
+                if len(pins) > 32:
+                    raise SystemExit(f"landing_child_reset_forest {ins['inst']}: one child pad exceeds32 reset ports")
+                if pins:
+                    child_leaf(self.region[ins['inst']], ins['inst'])
+            for (inst,pin), binding in self.regional_bindings.items():
+                if binding['role'] == 'resets':
+                    for bit, region in enumerate(binding['regions']):
+                        child_leaf(region, inst, pin, bit)
         for region, row in regions.items():
             if row['leaves'] > 1024:
                 raise SystemExit(f'landing_reset_forest {region}: {row["leaves"]} leaves exceeds1024')
@@ -939,7 +978,7 @@ class Parent:
             scalar_uses += sum(binding['regions'].count(region) for binding in self.regional_bindings.values()
                                if binding['role'] == 'resets')
             row['scalar_child_pad_port_uses'] = scalar_uses
-            if scalar_uses > 32:
+            if scalar_uses > 32 and not self.child_reset_forest:
                 raise SystemExit(f'landing_reset_forest {region} scalar child reset boundary has {scalar_uses} ports; partition still required')
         root_loads = 0 if self.rports is not None else sum(v['branches'] if depth == 2 else 1 for v in regions.values())
         if root_loads > 32:
@@ -1104,6 +1143,12 @@ class Parent:
               f".d({src}), .q({q}));   // align {inst}: +{k}")
             sub[(inst, net)] = q
         # child resets
+        def child_reset_input(region, inst, pin=None, bit=None):
+            if not self.child_reset_forest:
+                return rsel(('c', inst), region) if pin is None else f'lpr_{region}'
+            binding = next(v for v in forest['regions'][region]['child_bindings']
+                           if (v['inst'], v['pin'], v['bit']) == (inst, pin, bit))
+            return f'lpr_{region}_leaves[({binding["first_expr"]})]'
         mc = self.mut_child(P)
         rsub = {}
         for ins in self.insts:
@@ -1112,7 +1157,7 @@ class Parent:
             if any(self.cports[ins["module"]][pin] == "in" and pin in (S.get("reset_pins") or []) and ex.strip() == self.rst for pin, ex in ins["conns"].items()):
                 m4 = int(S.get("mut4_stages", 1))
                 kk = f"(MUT == 4) ? {tc + m4} : {tc}" if i == mc and mut else f"{tc}"
-                w(f"    wire lpr_c_{i};  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d({rsel(('c', i), r)}), .q(lpr_c_{i}));"
+                w(f"    wire lpr_c_{i};  ot_pl_pad #(.W(1), .N({kk})) u_lprc_{i} (.ck(ck_{r}), .d({child_reset_input(r,i)}), .q(lpr_c_{i}));"
                   + (f"   // t({i}) = {tc}" if not self.reference else f"   // reference schedule: held {tc} past the landing epochs"))
                 rsub[i] = f"lpr_c_{i}"
         # Internal regional reset ports receive the same logical child delay as
@@ -1127,7 +1172,7 @@ class Parent:
                 name = f'lpr_b_{i}_{pin}_{bit}'
                 kk = f'(MUT == 4) ? {tc+1} : {tc}' if i == mc and mut else str(tc)
                 w(f'    wire {name}; ot_pl_pad #(.W(1), .N({kk})) u_lprb_{i}_{pin}_{bit} '
-                  f'(.ck(ck_{r}), .d(lpr_{r}), .q({name}));')
+                  f'(.ck(ck_{r}), .d({child_reset_input(r,i,pin,bit)}), .q({name}));')
                 names.append(name)
             brsub[i,pin] = '{' + ', '.join(reversed(names)) + '}'
         # children
@@ -1452,8 +1497,8 @@ class Parent:
             off = t.get(f"port:{n}", 0)
             ref = f"dlo_{n}[{off - 1}]" if off > 0 else f"fo_{n}"
             if n in sticky:
-                lagref = f"dlo_{n}[{off + sticky[n] - 1}]" if off + sticky[n] > 0 else f"fo_{n}"
-                L.append(f"                nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & {ref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
+                lagref = sticky_history_ref(n, off, sticky[n])
+                L.append(f"                nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
                          f"if (bad <= 5) $display(\"LP_MISMATCH sticky port={n} cycle=%0d flat=%h landed=%h\", cyc, {ref}, lo_{n}); end")
                 continue
             L.append(f"                nc = nc + 1; if (lo_{n} !== {ref}) begin bad = bad + 1; "
@@ -1500,8 +1545,8 @@ class Parent:
             off = t.get(f"port:{n}", 0)
             ref = f"dlo_{n}[{off - 1}]" if off > 0 else f"fo_{n}"
             if n in sticky:
-                lagref = f"dlo_{n}[{off + sticky[n] - 1}]" if off + sticky[n] > 0 else f"fo_{n}"
-                L.append(f"            nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & {ref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
+                lagref = sticky_history_ref(n, off, sticky[n])
+                L.append(f"            nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
                          f"if (bad <= 5) $display(\"LP_MISMATCH sticky port={n} cycle=%0d flat=%h landed=%h\", cyc, {ref}, lo_{n}); end")
             else:
                 L.append(f"            nc = nc + 1; if (lo_{n} !== {ref}) begin bad = bad + 1; "

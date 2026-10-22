@@ -18,7 +18,7 @@ if [ "${REUSE:-0}" = 1 ] && [ -x "$OUT/obj/Vtb_hbm_slice" ]; then echo "REUSE bu
   # Verilate WITHOUT --build: the hier blocks are verilated serially (make -j1 hier_verilation) -- Verilator 5.050's
   # _hier.mk two-target rule runs a block twice under make -j (PCH race + double memory, HBM-TKM3 47debc90b) -- then
   # the C++ is built in parallel (hier_build -j JOBS).
-  /usr/bin/time -v -o "$OUT/build.time" bash -c '"$0" --cc --exe --main --timing ${HIER:---hierarchical} -j "$1" -O1 \
+  /usr/bin/time -v -o "$OUT/build.time" bash -c '"$0" --cc --exe --main --timing ${HIER:---hierarchical} -j 1 -O1 \
     --unroll-count 16384 --unroll-stmts 4000000 --top-module tb_hbm_slice -Mdir "$2/obj" \
     -Wno-fatal -Wno-lint -Wno-style -Wno-MODDUP -Wno-PINMISSING -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-TIMESCALEMOD \
     -Wno-INITIALDLY -Wno-COMBDLY -Wno-BLKANDNBLK -Wno-SELRANGE -Wno-WIDTH -Wno-CASEINCOMPLETE \

@@ -335,7 +335,8 @@ def compile_qwen(tags, seed=20261019, wide=False):
                               ((word >> (2048 * g)) & ((1 << 2048) - 1))))
         op = dict(layer="qwen", k=r["k"], tag=r["tag"], fmt="INT8", O_fmt="FP32", m=r["m"], K=r["K"], R=r["R"],
                   Gn=r["Gn"], slot=None, eid=None, blocks=len(r["blocks"]), lines=sum(b["n_lines"] for b in r["blocks"]),
-                  bytes_hbm=sum(b["n_lines"] for b in r["blocks"]) * 136, bytes_int8=r["R"] * r["K"], priced=None)
+                  bytes_hbm=sum(b["n_lines"] for b in r["blocks"]) * 136, bytes_int8=r["R"] * r["K"], priced=None,
+                  x0=x0, x_end=x_end)
         for bi, b in enumerate(r["blocks"]):
             lo = rc
             if prev_go is not None:

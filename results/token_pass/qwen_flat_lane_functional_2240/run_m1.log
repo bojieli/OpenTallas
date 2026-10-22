@@ -1,0 +1,259 @@
+RETIRE edge=169 class=0 row=0 age=19 value=bec78000
+RETIRE edge=170 class=0 row=1 age=19 value=bed80000
+RETIRE edge=171 class=0 row=2 age=19 value=bed48000
+RETIRE edge=172 class=0 row=3 age=19 value=bec00000
+RETIRE edge=173 class=0 row=4 age=19 value=be9d8000
+RETIRE edge=174 class=0 row=5 age=19 value=be600000
+RETIRE edge=175 class=0 row=6 age=19 value=bdea0000
+RETIRE edge=176 class=0 row=7 age=19 value=00000000
+RETIRE edge=177 class=0 row=8 age=19 value=3df20000
+RETIRE edge=178 class=0 row=9 age=19 value=3e700000
+RETIRE edge=179 class=0 row=10 age=19 value=3eaf8000
+RETIRE edge=180 class=0 row=11 age=19 value=3ee00000
+RETIRE edge=181 class=0 row=12 age=19 value=3f034000
+RETIRE edge=182 class=0 row=13 age=19 value=3f100000
+RETIRE edge=183 class=0 row=14 age=19 value=3f14c000
+RETIRE edge=184 class=0 row=15 age=19 value=3f100000
+OUTPUT_MISMATCH edge=525 addr=15 got=3e701cce want=3f100000 age=360
+RETIRE edge=525 class=0 row=15 age=360 value=3e701cce
+OUTPUT_MISMATCH edge=526 addr=32 got=3e57662e want=3e3e16ce age=69
+RETIRE edge=526 class=1 row=32 age=69 value=3e57662e
+WRITE_MISMATCH edge=526 row=15
+OUTPUT_MISMATCH edge=527 addr=33 got=3e9a27c2 want=3e880aa4 age=69
+RETIRE edge=527 class=1 row=33 age=69 value=3e9a27c2
+WRITE_MISMATCH edge=527 row=32
+OUTPUT_MISMATCH edge=528 addr=34 got=3ece386e want=3eb5fd28 age=69
+RETIRE edge=528 class=1 row=34 age=69 value=3ece386e
+WRITE_MISMATCH edge=528 row=33
+OUTPUT_MISMATCH edge=529 addr=35 got=3f03f5a4 want=3ee8e864 age=69
+RETIRE edge=529 class=1 row=35 age=69 value=3f03f5a4
+WRITE_MISMATCH edge=529 row=34
+OUTPUT_MISMATCH edge=530 addr=36 got=3f238c54 want=3f1054ab age=69
+RETIRE edge=530 class=1 row=36 age=69 value=3f238c54
+WRITE_MISMATCH edge=530 row=35
+OUTPUT_MISMATCH edge=531 addr=37 got=3f45ade7 want=3f2e738d age=69
+RETIRE edge=531 class=1 row=37 age=69 value=3f45ade7
+WRITE_MISMATCH edge=531 row=36
+OUTPUT_MISMATCH edge=532 addr=38 got=3f6a0000 want=3f4e8118 age=69
+RETIRE edge=532 class=1 row=38 age=69 value=3f6a0000
+WRITE_MISMATCH edge=532 row=37
+OUTPUT_MISMATCH edge=533 addr=39 got=3f87fa52 want=3f700000 age=69
+RETIRE edge=533 class=1 row=39 age=69 value=3f87fa52
+WRITE_MISMATCH edge=533 row=38
+OUTPUT_MISMATCH edge=534 addr=40 got=3f9b5df9 want=3f891c68 age=69
+RETIRE edge=534 class=1 row=40 age=69 value=3f9b5df9
+WRITE_MISMATCH edge=534 row=39
+OUTPUT_MISMATCH edge=535 addr=41 got=3fae9957 want=3f9a1542 age=69
+RETIRE edge=535 class=1 row=41 age=69 value=3fae9957
+WRITE_MISMATCH edge=535 row=40
+OUTPUT_MISMATCH edge=536 addr=42 got=3fc0e680 want=3faa3be8 age=69
+RETIRE edge=536 class=1 row=42 age=69 value=3fc0e680
+WRITE_MISMATCH edge=536 row=41
+OUTPUT_MISMATCH edge=537 addr=43 got=3fd13e59 want=3fb8a822 age=69
+RETIRE edge=537 class=1 row=43 age=69 value=3fd13e59
+WRITE_MISMATCH edge=537 row=42
+OUTPUT_MISMATCH edge=538 addr=44 got=3fde48f6 want=3fc42a73 age=69
+RETIRE edge=538 class=1 row=44 age=69 value=3fde48f6
+WRITE_MISMATCH edge=538 row=43
+OUTPUT_MISMATCH edge=539 addr=45 got=3fe64ac2 want=3fcb3b65 age=69
+RETIRE edge=539 class=1 row=45 age=69 value=3fe64ac2
+WRITE_MISMATCH edge=539 row=44
+OUTPUT_MISMATCH edge=540 addr=46 got=3fe70dd0 want=3fcbe786 age=69
+RETIRE edge=540 class=1 row=46 age=69 value=3fe70dd0
+WRITE_MISMATCH edge=540 row=45
+WRITE_MISMATCH edge=541 row=46
+OUTPUT_MISMATCH edge=811 addr=47 got=400fffff want=3fc3b75e age=339
+RETIRE edge=811 class=1 row=47 age=339 value=400fffff
+OUTPUT_MISMATCH edge=812 addr=64 got=3f980000 want=3fe3fffe age=48
+RETIRE edge=812 class=2 row=64 age=48 value=3f980000
+WRITE_MISMATCH edge=812 row=47
+OUTPUT_MISMATCH edge=813 addr=65 got=3f8fffff want=3fc00000 age=48
+RETIRE edge=813 class=2 row=65 age=48 value=3f8fffff
+WRITE_MISMATCH edge=813 row=64
+OUTPUT_MISMATCH edge=814 addr=66 got=3f880000 want=3fa9ffff age=48
+RETIRE edge=814 class=2 row=66 age=48 value=3f880000
+WRITE_MISMATCH edge=814 row=65
+OUTPUT_MISMATCH edge=815 addr=67 got=3f800000 want=3f99999a age=48
+RETIRE edge=815 class=2 row=67 age=48 value=3f800000
+WRITE_MISMATCH edge=815 row=66
+OUTPUT_MISMATCH edge=816 addr=68 got=3f700000 want=3f8c0000 age=48
+RETIRE edge=816 class=2 row=68 age=48 value=3f700000
+WRITE_MISMATCH edge=816 row=67
+OUTPUT_MISMATCH edge=817 addr=69 got=3f5fffff want=3f7fffff age=48
+RETIRE edge=817 class=2 row=69 age=48 value=3f5fffff
+WRITE_MISMATCH edge=817 row=68
+OUTPUT_MISMATCH edge=818 addr=70 got=3f500000 want=3f69ffff age=48
+RETIRE edge=818 class=2 row=70 age=48 value=3f500000
+WRITE_MISMATCH edge=818 row=69
+OUTPUT_MISMATCH edge=819 addr=71 got=3f400000 want=3f555556 age=48
+RETIRE edge=819 class=2 row=71 age=48 value=3f400000
+WRITE_MISMATCH edge=819 row=70
+OUTPUT_MISMATCH edge=820 addr=72 got=3f300000 want=3f41999a age=48
+RETIRE edge=820 class=2 row=72 age=48 value=3f300000
+WRITE_MISMATCH edge=820 row=71
+OUTPUT_MISMATCH edge=821 addr=73 got=3f200000 want=3f2e8ba3 age=48
+RETIRE edge=821 class=2 row=73 age=48 value=3f200000
+WRITE_MISMATCH edge=821 row=72
+OUTPUT_MISMATCH edge=822 addr=74 got=3f100000 want=3f1c0000 age=48
+RETIRE edge=822 class=2 row=74 age=48 value=3f100000
+WRITE_MISMATCH edge=822 row=73
+OUTPUT_MISMATCH edge=823 addr=75 got=3effffff want=3f09d89e age=48
+RETIRE edge=823 class=2 row=75 age=48 value=3effffff
+WRITE_MISMATCH edge=823 row=74
+OUTPUT_MISMATCH edge=824 addr=76 got=3edfffff want=3eefffff age=48
+RETIRE edge=824 class=2 row=76 age=48 value=3edfffff
+WRITE_MISMATCH edge=824 row=75
+OUTPUT_MISMATCH edge=825 addr=77 got=3ebfffff want=3ecccccc age=48
+RETIRE edge=825 class=2 row=77 age=48 value=3ebfffff
+WRITE_MISMATCH edge=825 row=76
+OUTPUT_MISMATCH edge=826 addr=78 got=3ea00000 want=3ea9ffff age=48
+RETIRE edge=826 class=2 row=78 age=48 value=3ea00000
+WRITE_MISMATCH edge=826 row=77
+WRITE_MISMATCH edge=827 row=78
+OUTPUT_MISMATCH edge=1127 addr=79 got=3f8fffff want=3e878788 age=348
+RETIRE edge=1127 class=2 row=79 age=348 value=3f8fffff
+OUTPUT_MISMATCH edge=1128 addr=96 got=3f3a2944 want=3f63fffe age=57
+RETIRE edge=1128 class=3 row=96 age=57 value=3f3a2944
+WRITE_MISMATCH edge=1128 row=79
+OUTPUT_MISMATCH edge=1129 addr=97 got=3f4ba592 want=3f6b26a7 age=57
+RETIRE edge=1129 class=3 row=97 age=57 value=3f4ba592
+WRITE_MISMATCH edge=1129 row=96
+OUTPUT_MISMATCH edge=1130 addr=98 got=3f5708ee want=3f706a94 age=57
+RETIRE edge=1130 class=3 row=98 age=57 value=3f5708ee
+WRITE_MISMATCH edge=1130 row=97
+OUTPUT_MISMATCH edge=1131 addr=99 got=3f5db3d8 want=3f72dce8 age=57
+RETIRE edge=1131 class=3 row=99 age=57 value=3f5db3d8
+WRITE_MISMATCH edge=1131 row=98
+OUTPUT_MISMATCH edge=1132 addr=100 got=3f607fdc want=3f727cb4 age=57
+RETIRE edge=1132 class=3 row=100 age=57 value=3f607fdc
+WRITE_MISMATCH edge=1132 row=99
+OUTPUT_MISMATCH edge=1133 addr=101 got=3f5fffff want=3f6f7750 age=57
+RETIRE edge=1133 class=3 row=101 age=57 value=3f5fffff
+WRITE_MISMATCH edge=1133 row=100
+OUTPUT_MISMATCH edge=1134 addr=102 got=3f5c9e07 want=3f69ffff age=57
+RETIRE edge=1134 class=3 row=102 age=57 value=3f5c9e07
+WRITE_MISMATCH edge=1134 row=101
+OUTPUT_MISMATCH edge=1135 addr=103 got=3f56a99a want=3f62462e age=57
+RETIRE edge=1135 class=3 row=103 age=57 value=3f56a99a
+WRITE_MISMATCH edge=1135 row=102
+OUTPUT_MISMATCH edge=1136 addr=104 got=3f4e60da want=3f58738d age=57
+RETIRE edge=1136 class=3 row=104 age=57 value=3f4e60da
+WRITE_MISMATCH edge=1136 row=103
+OUTPUT_MISMATCH edge=1137 addr=105 got=3f43f58b want=3f4cac36 age=57
+RETIRE edge=1137 class=3 row=105 age=57 value=3f43f58b
+WRITE_MISMATCH edge=1137 row=104
+OUTPUT_MISMATCH edge=1138 addr=106 got=3f379090 want=3f3f0f68 age=57
+RETIRE edge=1138 class=3 row=106 age=57 value=3f379090
+WRITE_MISMATCH edge=1138 row=105
+OUTPUT_MISMATCH edge=1139 addr=107 got=3f2953fe want=3f2fb856 age=57
+RETIRE edge=1139 class=3 row=107 age=57 value=3f2953fe
+WRITE_MISMATCH edge=1139 row=106
+OUTPUT_MISMATCH edge=1140 addr=108 got=3f195cc1 want=3f1ebebe age=57
+RETIRE edge=1140 class=3 row=108 age=57 value=3f195cc1
+WRITE_MISMATCH edge=1140 row=107
+OUTPUT_MISMATCH edge=1141 addr=109 got=3f07c3b7 want=3f0c378c age=57
+RETIRE edge=1141 class=3 row=109 age=57 value=3f07c3b7
+WRITE_MISMATCH edge=1141 row=108
+OUTPUT_MISMATCH edge=1142 addr=110 got=3ee93cf2 want=3ef06a94 age=57
+RETIRE edge=1142 class=3 row=110 age=57 value=3ee93cf2
+WRITE_MISMATCH edge=1142 row=109
+WRITE_MISMATCH edge=1143 row=110
+OUTPUT_MISMATCH edge=1477 addr=111 got=3ecb441d want=3ec590fd age=391
+RETIRE edge=1477 class=3 row=111 age=391 value=3ecb441d
+OUTPUT_MISMATCH edge=1478 addr=128 got=3e9ada4e want=3ea0eb42 age=100
+RETIRE edge=1478 class=4 row=128 age=100 value=3e9ada4e
+WRITE_MISMATCH edge=1478 row=111
+OUTPUT_MISMATCH edge=1479 addr=129 got=3ebb9717 want=3ec39a7d age=100
+RETIRE edge=1479 class=4 row=129 age=100 value=3ebb9717
+WRITE_MISMATCH edge=1479 row=128
+OUTPUT_MISMATCH edge=1480 addr=130 got=3ed3a2dd want=3edd75ed age=100
+RETIRE edge=1480 class=4 row=130 age=100 value=3ed3a2dd
+WRITE_MISMATCH edge=1480 row=129
+OUTPUT_MISMATCH edge=1481 addr=131 got=3ee3957e want=3eef063e age=100
+RETIRE edge=1481 class=4 row=131 age=100 value=3ee3957e
+WRITE_MISMATCH edge=1481 row=130
+OUTPUT_MISMATCH edge=1482 addr=132 got=3eec1d38 want=3ef8eb82 age=100
+RETIRE edge=1482 class=4 row=132 age=100 value=3eec1d38
+WRITE_MISMATCH edge=1482 row=131
+OUTPUT_MISMATCH edge=1483 addr=133 got=3eedfb58 want=3efbdae7 age=100
+RETIRE edge=1483 class=4 row=133 age=100 value=3eedfb58
+WRITE_MISMATCH edge=1483 row=132
+OUTPUT_MISMATCH edge=1484 addr=134 got=3ee9ffff want=3ef89b23 age=100
+RETIRE edge=1484 class=4 row=134 age=100 value=3ee9ffff
+WRITE_MISMATCH edge=1484 row=133
+OUTPUT_MISMATCH edge=1485 addr=135 got=3ee104fe want=3eefffff age=100
+RETIRE edge=1485 class=4 row=135 age=100 value=3ee104fe
+WRITE_MISMATCH edge=1485 row=134
+OUTPUT_MISMATCH edge=1486 addr=136 got=3ed3e814 want=3ee2e508 age=100
+RETIRE edge=1486 class=4 row=136 age=100 value=3ed3e814
+WRITE_MISMATCH edge=1486 row=135
+OUTPUT_MISMATCH edge=1487 addr=137 got=3ec38520 want=3ed227c0 age=100
+RETIRE edge=1487 class=4 row=137 age=100 value=3ec38520
+WRITE_MISMATCH edge=1487 row=136
+OUTPUT_MISMATCH edge=1488 addr=138 got=3eb0b064 want=3ebea1cc age=100
+RETIRE edge=1488 class=4 row=138 age=100 value=3eb0b064
+WRITE_MISMATCH edge=1488 row=137
+OUTPUT_MISMATCH edge=1489 addr=139 got=3e9c3168 want=3ea92363 age=100
+RETIRE edge=1489 class=4 row=139 age=100 value=3e9c3168
+WRITE_MISMATCH edge=1489 row=138
+OUTPUT_MISMATCH edge=1490 addr=140 got=3e86beb4 want=3e926e52 age=100
+RETIRE edge=1490 class=4 row=140 age=100 value=3e86beb4
+WRITE_MISMATCH edge=1490 row=139
+OUTPUT_MISMATCH edge=1491 addr=141 got=3e61f504 want=3e766408 age=100
+RETIRE edge=1491 class=4 row=141 age=100 value=3e61f504
+WRITE_MISMATCH edge=1491 row=140
+OUTPUT_MISMATCH edge=1492 addr=142 got=3e36e153 want=3e4810f1 age=100
+RETIRE edge=1492 class=4 row=142 age=100 value=3e36e153
+WRITE_MISMATCH edge=1492 row=141
+WRITE_MISMATCH edge=1493 row=142
+OUTPUT_MISMATCH edge=1792 addr=143 got=3ecb441d want=3e1ae907 age=84
+RETIRE edge=1792 class=4 row=143 age=84 value=3ecb441d
+OUTPUT_MISMATCH edge=1793 addr=128 got=3e9ada4e want=3ea0eb42 age=100
+RETIRE edge=1793 class=4 row=128 age=100 value=3e9ada4e
+WRITE_MISMATCH edge=1793 row=143
+OUTPUT_MISMATCH edge=1794 addr=129 got=3ebb9717 want=3ec39a7d age=100
+RETIRE edge=1794 class=4 row=129 age=100 value=3ebb9717
+WRITE_MISMATCH edge=1794 row=128
+OUTPUT_MISMATCH edge=1795 addr=130 got=3ed3a2dd want=3edd75ed age=100
+RETIRE edge=1795 class=4 row=130 age=100 value=3ed3a2dd
+WRITE_MISMATCH edge=1795 row=129
+OUTPUT_MISMATCH edge=1796 addr=131 got=3ee3957e want=3eef063e age=100
+RETIRE edge=1796 class=4 row=131 age=100 value=3ee3957e
+WRITE_MISMATCH edge=1796 row=130
+OUTPUT_MISMATCH edge=1797 addr=132 got=3eec1d38 want=3ef8eb82 age=100
+RETIRE edge=1797 class=4 row=132 age=100 value=3eec1d38
+WRITE_MISMATCH edge=1797 row=131
+OUTPUT_MISMATCH edge=1798 addr=133 got=3eedfb58 want=3efbdae7 age=100
+RETIRE edge=1798 class=4 row=133 age=100 value=3eedfb58
+WRITE_MISMATCH edge=1798 row=132
+OUTPUT_MISMATCH edge=1799 addr=134 got=3ee9ffff want=3ef89b23 age=100
+RETIRE edge=1799 class=4 row=134 age=100 value=3ee9ffff
+WRITE_MISMATCH edge=1799 row=133
+OUTPUT_MISMATCH edge=1800 addr=135 got=3ee104fe want=3eefffff age=100
+RETIRE edge=1800 class=4 row=135 age=100 value=3ee104fe
+WRITE_MISMATCH edge=1800 row=134
+OUTPUT_MISMATCH edge=1801 addr=136 got=3ed3e814 want=3ee2e508 age=100
+RETIRE edge=1801 class=4 row=136 age=100 value=3ed3e814
+WRITE_MISMATCH edge=1801 row=135
+OUTPUT_MISMATCH edge=1802 addr=137 got=3ec38520 want=3ed227c0 age=100
+RETIRE edge=1802 class=4 row=137 age=100 value=3ec38520
+WRITE_MISMATCH edge=1802 row=136
+OUTPUT_MISMATCH edge=1803 addr=138 got=3eb0b064 want=3ebea1cc age=100
+RETIRE edge=1803 class=4 row=138 age=100 value=3eb0b064
+WRITE_MISMATCH edge=1803 row=137
+OUTPUT_MISMATCH edge=1804 addr=139 got=3e9c3168 want=3ea92363 age=100
+RETIRE edge=1804 class=4 row=139 age=100 value=3e9c3168
+WRITE_MISMATCH edge=1804 row=138
+OUTPUT_MISMATCH edge=1805 addr=140 got=3e86beb4 want=3e926e52 age=100
+RETIRE edge=1805 class=4 row=140 age=100 value=3e86beb4
+WRITE_MISMATCH edge=1805 row=139
+OUTPUT_MISMATCH edge=1806 addr=141 got=3e61f504 want=3e766408 age=100
+RETIRE edge=1806 class=4 row=141 age=100 value=3e61f504
+WRITE_MISMATCH edge=1806 row=140
+OUTPUT_MISMATCH edge=1807 addr=142 got=3e36e153 want=3e4810f1 age=100
+RETIRE edge=1807 class=4 row=142 age=100 value=3e36e153
+WRITE_MISMATCH edge=1807 row=141
+WRITE_MISMATCH edge=1808 row=142
+[1858000] %Fatal: tb_flat_lane.sv:76: Assertion failed in tb_flat_lane: FLAT_LANE_FAIL bad=160
+%Error: tools/qwen_flat_lane_2235/tb_flat_lane.sv:76: Verilog $stop
+Aborting...

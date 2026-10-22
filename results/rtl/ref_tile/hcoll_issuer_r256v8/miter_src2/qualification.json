@@ -1,0 +1,24 @@
+{
+  "schema": "opentallas.issuer256.source_qualification.v1",
+  "source_commit": "7406d282a",
+  "coherent_callsite_commit": "7754785b7",
+  "dut": "ot_hgi_coll_issuer_m256v8",
+  "source_sha256": "66cf27d347ac85600983932a23b0086ffc9582f4e657823a5ee3df206e3688c3",
+  "selected_reference": "ot_hgi_coll_issuer_m256 in ot_hgi_coll_static_issuer_v7.sv",
+  "rows": 256,
+  "program_cfg_bits": 37,
+  "pc_bits": 8,
+  "programmes": 600,
+  "positive": "PASS",
+  "causal_mutants": {
+    "reload": "REJECTED",
+    "nofwd": "REJECTED",
+    "swap": "REJECTED"
+  },
+  "native": {
+    "status": "PASS",
+    "max_dynamic_loads": 32,
+    "roots_examined": 19833
+  },
+  "production_DS_RS144": "RUNNING separately; not qualified by this receipt"
+}

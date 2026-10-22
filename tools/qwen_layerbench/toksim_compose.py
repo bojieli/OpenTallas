@@ -217,6 +217,18 @@ def compose(inp, variant=None):
         dict(term='per-layer die edges NOT folded into the layer schedule', n=36,
              cycles=die_edges.get('unfolded_cycles', 0) if folded else die_edges['cycles'],
              grade=die_edges['grade'], src=die_edges['source']),
+    ]
+    # QW-TOKSCHED2: ledger edges with cycles_l0 (e.g. the XDIE L0 attention window) differ in the cold layer: the
+    # composed L0 carries the chained value, this term moves it to the L0 value (one row per grade)
+    l0c = {}
+    for e in (die_edges.get('edges') or []) if folded else []:
+        if 'cycles_l0' in e:
+            d0 = e['cycles_l0'] - e['cycles']
+            if d0:
+                l0c[e.get('grade', 'PRICED')] = l0c.get(e.get('grade', 'PRICED'), 0) + d0
+    terms += [dict(term=f'L0-only die-edge correction (ledger cycles_l0, {gr})', n=1, cycles=v, grade=gr,
+                   src=die_edges['source']) for gr, v in sorted(l0c.items())]
+    terms += [
         dict(term='LM head + argmax (compute die)', n=1, cycles=head['cycles'], grade=head['grade'], src=head['source']),
         dict(term='embedding row fetch through the KV die (token start)', n=1, cycles=emb['cycles'], grade=emb['grade'],
              src=emb['source']),

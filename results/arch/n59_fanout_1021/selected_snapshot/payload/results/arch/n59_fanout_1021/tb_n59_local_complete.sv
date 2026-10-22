@@ -1,0 +1,106 @@
+`timescale 1ns/1ps
+module tb_n59_local_complete;
+reg ck=0;always #5 ck=~ck;
+reg  rst_n=0;
+reg  source_fault=0;
+reg  begin_slot=0;
+reg [58:0] begin_tag=0;
+reg  request_slot=0;
+reg [58:0] request_tag=0;
+reg [19:0] result_base_word=0;
+reg  qr_committed=0;
+reg [58:0] qr_tag=0;
+wire  a_kernel_request_v, b_kernel_request_v;
+wire [58:0] a_kernel_request_tag, b_kernel_request_tag;
+reg  q_slot=0;
+reg [75:0] q_slot_pub=0;
+reg [4:0] q_slot_beat=0;
+reg  q_v=0;
+reg [4:0] q_beat=0;
+reg [58:0] q_tag=0;
+reg [511:0] q_data=0;
+wire  a_kernel_q_v, b_kernel_q_v;
+wire [4:0] a_kernel_q_beat, b_kernel_q_beat;
+wire [58:0] a_kernel_q_tag, b_kernel_q_tag;
+wire [511:0] a_kernel_q_data, b_kernel_q_data;
+reg  result_slot=0;
+reg [75:0] result_slot_pub=0;
+reg [4:0] result_slot_beat=0;
+reg  result_v=0;
+reg [4:0] result_beat=0;
+reg [58:0] result_tag=0;
+reg [511:0] result_data=0;
+wire [23:0] a_kernel_request_pub, b_kernel_request_pub;
+wire [24:0] a_vm_write_pub, b_vm_write_pub;
+wire  a_vm_write_v, b_vm_write_v;
+wire [19:0] a_vm_write_word, b_vm_write_word;
+wire [4:0] a_vm_write_beat, b_vm_write_beat;
+wire [58:0] a_vm_write_tag, b_vm_write_tag;
+wire [511:0] a_vm_write_data, b_vm_write_data;
+reg  vm_commit_v=0;
+reg [4:0] vm_commit_beat=0;
+reg [58:0] vm_commit_tag=0;
+reg  kernel_done=0;
+reg [58:0] kernel_done_tag=0;
+wire  a_completing, b_completing;
+wire [58:0] a_completed_tag, b_completed_tag;
+reg  complete_slot=0;
+wire  a_completed, b_completed;
+wire  a_active, b_active;
+wire  a_fault, b_fault;
+wire [94:0] a_native_ret, b_native_ret;
+reg [12:0] begin_pub=0;
+reg [6:0] request_pub=0;
+reg [4:0] q_slot_beat_pub=0;
+reg [4:0] result_slot_beat_pub=0;
+reg [4:0] vm_commit_beat_pub=0;
+reg [4:0] q_slot_beat_pub2=0;
+reg [4:0] result_slot_beat_pub2=0;
+reg [4:0] vm_commit_beat_pub2=0;
+reg [4:0] q_slot_beat_pub3=0;
+reg [4:0] result_slot_beat_pub3=0;
+reg [4:0] vm_commit_beat_pub3=0;
+reg [4:0] vm_commit_beat_pub4=0;
+qfd_native59_static_service_obs1 #(.LOCAL32(1),.FANOUT_LOCAL(1)) u_a(.ck(ck),.rst_n(rst_n),.source_fault(source_fault),.begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(result_base_word),.qr_committed(qr_committed),.qr_tag(qr_tag),.kernel_request_v(a_kernel_request_v),.kernel_request_tag(a_kernel_request_tag),.q_slot(q_slot),.q_slot_pub({76{q_slot}}),.q_slot_beat(q_slot_beat),.q_v(q_v),.q_beat(q_beat),.q_tag(q_tag),.q_data(q_data),.kernel_q_v(a_kernel_q_v),.kernel_q_beat(a_kernel_q_beat),.kernel_q_tag(a_kernel_q_tag),.kernel_q_data(a_kernel_q_data),.result_slot(result_slot),.result_slot_pub({76{result_slot}}),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),.kernel_request_pub(a_kernel_request_pub),.vm_write_pub(a_vm_write_pub),.vm_write_v(a_vm_write_v),.vm_write_word(a_vm_write_word),.vm_write_beat(a_vm_write_beat),.vm_write_tag(a_vm_write_tag),.vm_write_data(a_vm_write_data),.vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),.completing(a_completing),.completed_tag(a_completed_tag),.complete_slot(complete_slot),.completed(a_completed),.active(a_active),.fault(a_fault),.native_ret(a_native_ret),.begin_pub({13{begin_slot}}),.request_pub({7{request_slot}}),.q_slot_beat_pub(q_slot_beat),.result_slot_beat_pub(result_slot_beat),.vm_commit_beat_pub(vm_commit_beat),.q_slot_beat_pub2(q_slot_beat),.result_slot_beat_pub2(result_slot_beat),.vm_commit_beat_pub2(vm_commit_beat),.q_slot_beat_pub3(q_slot_beat),.result_slot_beat_pub3(result_slot_beat),.vm_commit_beat_pub3(vm_commit_beat),.vm_commit_beat_pub4(vm_commit_beat));
+qfd_n59_static_service_frozen #(.LOCAL32(1)) u_b(.ck(ck),.rst_n(rst_n),.source_fault(source_fault),.begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(result_base_word),.qr_committed(qr_committed),.qr_tag(qr_tag),.kernel_request_v(b_kernel_request_v),.kernel_request_tag(b_kernel_request_tag),.q_slot(q_slot),.q_slot_pub({76{q_slot}}),.q_slot_beat(q_slot_beat),.q_v(q_v),.q_beat(q_beat),.q_tag(q_tag),.q_data(q_data),.kernel_q_v(b_kernel_q_v),.kernel_q_beat(b_kernel_q_beat),.kernel_q_tag(b_kernel_q_tag),.kernel_q_data(b_kernel_q_data),.result_slot(result_slot),.result_slot_pub({76{result_slot}}),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),.kernel_request_pub(b_kernel_request_pub),.vm_write_pub(b_vm_write_pub),.vm_write_v(b_vm_write_v),.vm_write_word(b_vm_write_word),.vm_write_beat(b_vm_write_beat),.vm_write_tag(b_vm_write_tag),.vm_write_data(b_vm_write_data),.vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),.completing(b_completing),.completed_tag(b_completed_tag),.complete_slot(complete_slot),.completed(b_completed),.active(b_active),.fault(b_fault),.native_ret(b_native_ret),.begin_pub({13{begin_slot}}),.request_pub({7{request_slot}}),.q_slot_beat_pub(q_slot_beat),.result_slot_beat_pub(result_slot_beat),.vm_commit_beat_pub(vm_commit_beat),.q_slot_beat_pub2(q_slot_beat),.result_slot_beat_pub2(result_slot_beat),.vm_commit_beat_pub2(vm_commit_beat),.q_slot_beat_pub3(q_slot_beat),.result_slot_beat_pub3(result_slot_beat),.vm_commit_beat_pub3(vm_commit_beat),.vm_commit_beat_pub4(vm_commit_beat));
+integer edges=0, completions=0;
+task step;begin @(posedge ck);#1;edges=edges+1;
+if(a_kernel_request_v!==b_kernel_request_v)$fatal(1,"N59_COMPLETE mismatch kernel_request_v edge %0d",edges);
+if(a_kernel_request_tag!==b_kernel_request_tag)$fatal(1,"N59_COMPLETE mismatch kernel_request_tag edge %0d",edges);
+if(a_kernel_q_v!==b_kernel_q_v)$fatal(1,"N59_COMPLETE mismatch kernel_q_v edge %0d",edges);
+if(a_kernel_q_beat!==b_kernel_q_beat)$fatal(1,"N59_COMPLETE mismatch kernel_q_beat edge %0d",edges);
+if(a_kernel_q_tag!==b_kernel_q_tag)$fatal(1,"N59_COMPLETE mismatch kernel_q_tag edge %0d",edges);
+if(a_kernel_q_data!==b_kernel_q_data)$fatal(1,"N59_COMPLETE mismatch kernel_q_data edge %0d",edges);
+if(a_kernel_request_pub!==b_kernel_request_pub)$fatal(1,"N59_COMPLETE mismatch kernel_request_pub edge %0d",edges);
+if(a_vm_write_pub!==b_vm_write_pub)$fatal(1,"N59_COMPLETE mismatch vm_write_pub edge %0d",edges);
+if(a_vm_write_v!==b_vm_write_v)$fatal(1,"N59_COMPLETE mismatch vm_write_v edge %0d",edges);
+if(a_vm_write_word!==b_vm_write_word)$fatal(1,"N59_COMPLETE mismatch vm_write_word edge %0d",edges);
+if(a_vm_write_beat!==b_vm_write_beat)$fatal(1,"N59_COMPLETE mismatch vm_write_beat edge %0d",edges);
+if(a_vm_write_tag!==b_vm_write_tag)$fatal(1,"N59_COMPLETE mismatch vm_write_tag edge %0d",edges);
+if(a_vm_write_data!==b_vm_write_data)$fatal(1,"N59_COMPLETE mismatch vm_write_data edge %0d",edges);
+if(a_completing!==b_completing)$fatal(1,"N59_COMPLETE mismatch completing edge %0d",edges);
+if(a_completed_tag!==b_completed_tag)$fatal(1,"N59_COMPLETE mismatch completed_tag edge %0d",edges);
+if(a_completed!==b_completed)$fatal(1,"N59_COMPLETE mismatch completed edge %0d",edges);
+if(a_active!==b_active)$fatal(1,"N59_COMPLETE mismatch active edge %0d",edges);
+if(a_fault!==b_fault)$fatal(1,"N59_COMPLETE mismatch fault edge %0d",edges);
+if(a_native_ret!==b_native_ret)$fatal(1,"N59_COMPLETE mismatch native_ret edge %0d",edges);
+if(a_completed)completions=completions+1;@(negedge ck);end endtask
+integer op,b;
+initial begin
+step();step();rst_n=1;step();step();
+for(op=1;op<=2;op=op+1)begin
+ begin_tag={16'(op),6'd1,18'd3,13'd2,6'd0};request_tag=begin_tag;qr_tag=begin_tag;q_tag=begin_tag;result_tag=begin_tag;vm_commit_tag=begin_tag;kernel_done_tag=begin_tag;
+ begin_slot=1;step();begin_slot=0;qr_committed=1;result_base_word=20'd100;request_slot=1;step();request_slot=0;
+ for(b=0;b<32;b=b+1)begin
+  q_slot=1;q_v=1;q_slot_beat=5'(b);q_beat=5'(b);q_data={16{32'(1000*op+b)}};step();q_slot=0;q_v=0;
+  result_slot=1;result_v=1;result_slot_beat=5'(b);result_beat=5'(b);result_data={16{32'(2000*op+b)}};step();result_slot=0;result_v=0;
+  vm_commit_v=1;vm_commit_beat=5'(b);step();vm_commit_v=0;
+ end
+ kernel_done=1;step();kernel_done=0;step();complete_slot=1;step();
+ if(!a_completed||a_completed_tag!==begin_tag||a_fault)$fatal(1,"N59_COMPLETE legal completion missing");
+ complete_slot=0;step();step();
+end
+rst_n=0;step();rst_n=1;step();begin_slot=1;step();begin_slot=0;request_slot=1;step();request_slot=0;complete_slot=1;step();
+if(!a_fault||a_completed)$fatal(1,"N59_COMPLETE early completion accepted");
+$display("N59_COMPLETE_PASS edges=%0d completions=%0d early_rejected=1",edges,completions);$finish;end
+endmodule
