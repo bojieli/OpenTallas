@@ -67,7 +67,7 @@ module ot_hgi_sfu_vm_static_bridge #(
  wire [31:0] dr_sector;
  wire [511:0] dr_data;
  wire [4*36-1:0] dr_region;
- wire [8*32*7-1:0] scalar_meta_copies;   // HBMc/TILES 10-22 (k14): 32 kept copies per (group, slot), one per (nibble, sector group) (k12: 8, 37 loads)
+ wire [8*64*7-1:0] scalar_meta_copies;   // HBMc/TILES 10-22 (k14): 32 kept copies per (group, slot), one per (nibble, sector group) (k12: 8, 37 loads)
  if(NATIVE32 && DRAIN_PIPE!=0)begin:g_drain_region_copies
   for(genvar r=0;r<4;r=r+1)begin:g_r
    (* keep=1,dont_touch=1 *) reg [33:0] data_q;
@@ -138,9 +138,10 @@ module ot_hgi_sfu_vm_static_bridge #(
    scalar_data=0;
    for(integer sg=0;sg<4;sg=sg+1)
     for(integer n=0;n<8;n=n+1)
-     for(integer b=0;b<8;b=b+1)
-      if(scalar_meta_copies[7*(32*b+4*n+sg)+6] && scalar_meta_copies[7*(32*b+4*n+sg)+3] && scalar_meta_copies[7*(32*b+4*n+sg)+4+:2]==sg)
-       scalar_data[32*sg+4*n+:4]=local_rr[257*b+32*scalar_meta_copies[7*(32*b+4*n+sg)+:3]+4*n+:4];
+     for(integer h=0;h<2;h=h+1)   // k14c: one copy per (nibble, sector group, 2-bit half) -- 4-bit copies drove 37 loads
+      for(integer b=0;b<8;b=b+1)
+       if(scalar_meta_copies[7*(64*b+8*n+2*sg+h)+6] && scalar_meta_copies[7*(64*b+8*n+2*sg+h)+3] && scalar_meta_copies[7*(64*b+8*n+2*sg+h)+4+:2]==sg)
+        scalar_data[32*sg+4*n+2*h+:2]=local_rr[257*b+32*scalar_meta_copies[7*(64*b+8*n+2*sg+h)+:3]+4*n+2*h+:2];
   end
  end
  function automatic [255:0] round_sector(input [255:0] data,input do_round);
@@ -199,12 +200,12 @@ module ot_hgi_sfu_vm_static_bridge #(
    end
    assign meta_q=meta[READ_RETURN];
    if(NATIVE32 && READ_RETURN>1)begin:g_scalar_meta_copies
-    // HBMc/TILES 10-22: two-level same-edge copies: 4 kept level-A copies of the scalar fields of meta[READ_RETURN-1]
+    // HBMc/TILES 10-22: two-level same-edge copies: 8 kept level-A (one per nibble) copies of the scalar fields of meta[READ_RETURN-1]
     // (D from meta[READ_RETURN-2], same reset -> always equal to meta[READ_RETURN-1]'s fields), each feeding 8 of the
-    // 32 final copies (one per nibble x sector group; a 16-copy layout still drove 37 select loads per copy).
+    // 64 final copies (one per nibble x sector group x 2-bit half; 16 and 32-copy layouts still drove 37 select loads).
     for(genvar sl=0;sl<2;sl=sl+1)begin:g_s
      wire [6:0] fld_n={meta[READ_RETURN-2][12+2*LWB+sl],meta[READ_RETURN-2][8+2*LWB+2*sl+:2],meta[READ_RETURN-2][6+sl],meta[READ_RETURN-2][3*sl+:3]};
-     for(genvar ca=0;ca<4;ca=ca+1)begin:g_a
+     for(genvar ca=0;ca<8;ca=ca+1)begin:g_a
       (* keep=1,dont_touch=1 *) reg [6:0] fld_a;
       always @(posedge clk_lg[g] `OT_SFU_ARST(rst_lg_n[g]))
        if(!rst_lg_n[g])fld_a<=0;else fld_a<=fld_n;
@@ -212,7 +213,7 @@ module ot_hgi_sfu_vm_static_bridge #(
        (* keep=1,dont_touch=1 *) reg [6:0] scalar_q;
        always @(posedge clk_lg[g] `OT_SFU_ARST(rst_lg_n[g]))
         if(!rst_lg_n[g])scalar_q<=0;else scalar_q<=fld_a;
-       assign scalar_meta_copies[7*((2*g+sl)*32+8*ca+cb)+:7]=scalar_q;
+       assign scalar_meta_copies[7*((2*g+sl)*64+8*ca+cb)+:7]=scalar_q;
       end
      end
     end

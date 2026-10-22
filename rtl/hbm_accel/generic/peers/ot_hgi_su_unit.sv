@@ -716,8 +716,12 @@ module ot_hgi_su_lgroup2 #(
     if (RRF) begin:g_hits
         for (genvar hl=0; hl<N; hl=hl+1) begin:g_l
             for (genvar hb=0; hb<N; hb=hb+1) begin:g_b
-                ot_hgi_su_lane_hit #(.LN(LN),.BANK(hb)) u_a(.re(rr[hl]),.bank(ra[hl*AW+:LN]),.hit(hit_a[hl*N+hb]));
-                ot_hgi_su_lane_hit #(.LN(LN),.BANK(hb)) u_b(.re(rq[hl]),.bank(ra[hl*AW+:LN]),.hit(hit_b[hl*N+hb]));
+                // k14c census: two leaves per (lane, bank) loaded each rd_addr bank bit 2N+3 = 35 times; one kept
+                // bank-equality leaf per (lane, bank) (N+3 loads), then the rr / rq enables AND its single output.
+                wire eq;
+                ot_hgi_su_lane_eq #(.LN(LN),.BANK(hb)) u_e(.bank(ra[hl*AW+:LN]),.eq(eq));
+                assign hit_a[hl*N+hb]=rr[hl] && eq;
+                assign hit_b[hl*N+hb]=rq[hl] && eq;
             end
         end
     end else begin:g_nohits
@@ -2985,4 +2989,7 @@ endmodule
 // HBMc/TILES 10-22: kept (lane, bank) claim leaf for ot_hgi_su_lgroup2 RRF=1
 (* keep_hierarchy=1 *) module ot_hgi_su_lane_hit #(parameter integer LN=4, BANK=0)(input wire re,input wire [LN-1:0] bank,output wire hit);
  assign hit=re && bank==LN'(BANK);
+endmodule
+(* keep_hierarchy=1 *) module ot_hgi_su_lane_eq #(parameter integer LN=4, BANK=0)(input wire [LN-1:0] bank,output wire eq);
+ assign eq=bank==LN'(BANK);
 endmodule
