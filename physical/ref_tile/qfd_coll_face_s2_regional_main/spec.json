@@ -331,7 +331,7 @@
   "enable": false,
   "reason": "SAFE/TOK_REG registered owning roots; exact calendar neutral. PHY-up captured; no extra automatic data stages."
  },
- "structural_change": "Native regional-tree production S2 face, six actual SRAM macros and explicit roots for calendar, two-clock channels, four banks and PHY. Removes hybrid hard-entry purity restriction by implementing the real sequential regions, not replacing a hard-child timing model. Local bank landing shares the bank SRAM tree; sticky fault returns use actual fixed-slot4/K2 rings. Larger frame and10.8um macro halos reserve landing and routing bands. Existing phase/calendar/CRC/data protocol maintained; status visibility is3edges later and must be measured. No threshold change/timing exception.",
+ "structural_change": "Native regional-tree production S2 face, six actual SRAM macros and explicit roots for calendar, two-clock channels, four banks and PHY. Removes hybrid hard-entry purity restriction by implementing the real sequential regions, not replacing a hard-child timing model. Local bank landing shares the bank SRAM tree; sticky fault returns use actual fixed-slot4/K2 rings. Larger frame and10.8um macro halos reserve landing and routing bands. Existing phase/calendar/CRC/data protocol maintained; status visibility is3edges later and must be measured. No threshold change/timing exception. Native source2 failure explicitly repaired: collision controls14groups, publication resets8bytegroups, write/version4groups, read-select4groups, eight final face-reset copies, all original stages retained.",
  "slot_change_request": "S2 native regional frame 907.2 square; original734.4x864. Must reprice parent slot before binding.",
  "job": {
   "owner": "CODEX-QW-COLLIO-2000",
@@ -464,12 +464,18 @@
  "reset_landing": {
   "enable": true,
   "stages": 2,
-  "clock": "cal_ck"
+  "clock": "cal_ck",
+  "copies": {
+   "rst_n": 8
+  }
  },
  "io_flop_at_pins": {
   "cols": 8,
   "allow_none": true
  },
  "inter": [],
- "layer_cap": "M5"
+ "layer_cap": "M5",
+ "reset_relay_split": {
+  "max_loads": 32
+ }
 }

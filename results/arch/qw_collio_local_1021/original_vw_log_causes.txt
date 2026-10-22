@@ -1,0 +1,34 @@
+RUN qfd_coll_face_p_plv-20261021-082402
+3_3_place_gp.log [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.
+Error: global_place.tcl, 69 GPL-0305
+RUN qfd_coll_face_s2_plv-20261021-082416
+3_3_place_gp.log 
+4_1_cts.log OT_HYBRID CLOCK_RULE tt codec0 WARN pin_spread=73.0 scope=all_internal_only sinks=4466 WARN: insertion all_mean 438.1 / pin_mean 438.1 ps > 300 (guidance)
+OT_HYBRID CLOCK_RULE tt codec0p PASS pin_spread=38.4 scope=boundary sinks=2019
+OT_HYBRID CLOCK_RULE tt codec0 WARN pin_spread=72.8 scope=all_internal_only sinks=4466 WARN: insertion all_mean 438.3 / pin_mean 438.3 ps > 300 (guidance)
+OT_HYBRID CLOCK_RULE tt codec0p PASS pin_spread=38.2 scope=boundary sinks=2019
+RUN qfd_coll_face_r_plv-20261021-082404
+3_3_place_gp.log [ERROR GPL-0305] RePlAce diverged during gradient descent calculation, resulting in an invalid step length (Inf or NaN). This is often caused by numerical instability or high placement density. Consider reducing placement density to potentially resolve the issue.
+Error: global_place.tcl, 69 GPL-0305
+RUN qfd_coll_face_s1_plv-20261021-082410
+3_3_place_gp.log 
+4_1_cts.log OT_HYBRID CLOCK_RULE tt codec0 FAIL pin_spread=86.0 scope=all_internal_only sinks=4466 WARN: insertion all_mean 439.8 / pin_mean 439.8 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root codec0 pin-flop spread 86.0 ps > 80 at tt (all_internal_only, 4466 of 4466 sinks)
+RUN qfd_coll_face_s0_plv-20261021-082411
+3_3_place_gp.log 
+4_1_cts.log OT_HYBRID CLOCK_RULE tt codec0 FAIL pin_spread=89.0 scope=all_internal_only sinks=4466 WARN: insertion all_mean 440.3 / pin_mean 440.3 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root codec0 pin-flop spread 89.0 ps > 80 at tt (all_internal_only, 4466 of 4466 sinks)
+RUN qfd_coll_face_s2_plw-20261021-082417
+3_3_place_gp.log 
+4_1_cts.log OT_HYBRID CLOCK_RULE tt codec0 FAIL pin_spread=91.5 scope=all_internal_only sinks=4466 WARN: insertion all_mean 451.7 / pin_mean 451.7 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root codec0 pin-flop spread 91.5 ps > 80 at tt (all_internal_only, 4466 of 4466 sinks)
+RUN qfd_coll_face_s0_plw-20261021-082419
+3_3_place_gp.log 
+4_1_cts.log OT_HYBRID CLOCK_RULE tt codec0 FAIL pin_spread=93.6 scope=all_internal_only sinks=4466 WARN: insertion all_mean 439.1 / pin_mean 439.1 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root codec0 pin-flop spread 93.6 ps > 80 at tt (all_internal_only, 4466 of 4466 sinks)
+RUN /srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s1_pl4v-20261021-082406
+OT_HYBRID CLOCK_RULE tt codec0 FAIL pin_spread=96.1 scope=all_internal_only sinks=5862 WARN: insertion all_mean 451.0 / pin_mean 451.0 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root codec0 pin-flop spread 96.1 ps > 80 at tt (all_internal_only, 5862 of 5862 sinks)
+RUN /srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_s1_pl4w-20261021-082408
+OT_HYBRID CLOCK_RULE tt codec0 FAIL pin_spread=107.8 scope=all_internal_only sinks=5862 WARN: insertion all_mean 445.6 / pin_mean 445.6 ps > 300 (guidance)
+Error: cts.tcl, 36 OT_HYBRID: glue root codec0 pin-flop spread 107.8 ps > 80 at tt (all_internal_only, 5862 of 5862 sinks)

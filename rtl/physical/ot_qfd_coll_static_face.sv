@@ -100,10 +100,20 @@ module qfd_coll_static_face #(
  assign tx_word=tx_full[FW-1:0];assign rx_data=rx_full[FW-1:0];
  // Source-identical storage to qfd_io_xfifo_static: R514 pads its high32
  // storage bits, retaining the same546-bit physical CDC master and latency.
- qfd_static_ch546 u_tx(.wck(tx_wck),.rck(tx_rck),.rst_n(rst_n),
+`ifdef OT_COLL_REGIONAL
+ qfd_static_ch546_regional u_tx(
+`else
+ qfd_static_ch546 u_tx(
+`endif
+.wck(tx_wck),.rck(tx_rck),.rst_n(rst_n),
  .w_slot(tws),.w_addr(twa),.w_version(twsver),.i_valid(tx_valid_i),.i_data({{(546-FW){1'b0}},tx_data_i}),
  .r_slot(trs),.r_addr(tra),.r_version(trsver),.o_valid(tx_observed),.o_data(tx_full),.w_fault(cdc_fault_i[0]),.r_fault(cdc_fault_i[1]));
- qfd_static_ch546 u_rx(.wck(rx_wck),.rck(rx_rck),.rst_n(rst_n),
+`ifdef OT_COLL_REGIONAL
+ qfd_static_ch546_regional u_rx(
+`else
+ qfd_static_ch546 u_rx(
+`endif
+.wck(rx_wck),.rck(rx_rck),.rst_n(rst_n),
  .w_slot(rws),.w_addr(rwa),.w_version(rwv),.i_valid(codec_valid),.i_data({{(546-FW){1'b0}},codec_data}),
  .r_slot(rrs),.r_addr(rra),.r_version(rrv),.o_valid(rx_valid),.o_data(rx_full),.w_fault(cdc_fault_i[2]),.r_fault(cdc_fault_i[3]));
  initial if(FW!=546 && FW!=514)$error("collectiveface546/514only");
