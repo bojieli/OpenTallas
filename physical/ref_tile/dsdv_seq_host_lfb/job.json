@@ -25,7 +25,8 @@
    "rtl/hdc/ingest",
    "rtl/lib",
    "rtl/link",
-   "results/arch/codex_seq_linked_taps_1021"
+   "results/arch/codex_seq_linked_taps_1021",
+   "tools/s81_dv/seqhost_branch_1021"
   ]
  },
  "stages": {
@@ -51,6 +52,18 @@
     "expect": "pass",
     "pass_regex": "^SEQHOST_C_GATE PASS$",
     "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/"
+   },
+   {
+    "name": "seqhost_mut1",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" J=4 bash tools/s81_dv/seqhost_branch_1021/run_mutant.sh {RUN}/seqhost_mut1",
+    "expect": "fail",
+    "fail_regex": "SEQHOST_EXPLICIT_MUT1_CAUGHT",
+    "fail_witness": "results/arch/codex_seq_linked_taps_1021/seqhost_mut1.log",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
    }
   ],
   "calibrate": {
