@@ -719,10 +719,18 @@ module ot_s81dv_xfin #(
     // ---------------------------------------------------------------- ENG collector: 12 vectors x NVL partials
     reg e1_v; reg [3:0] e1_vec; reg [2:0] e1_l; reg [31:0] e1_d; reg e1_bad;
     integer a;
+`ifdef OT_S81DV_XFIN_N21
+    // N21 (STW-S81c-COLLA3 10-22, N20 census si_c[2] QN 33 loads): the ENG decode reads its own distinct-ID kept copy of
+    // the captured lane index (same D s_i, same edge as si_c); si_c keeps only inj_v.
+    wire [7:0] si_cd;
+    ot_s81dv_sicp #(.ID(6)) u_cd (.clk(clk), .d(s_i), .q(si_cd));
+`else
+    wire [7:0] si_cd = si_c;
+`endif
     always @(*) begin : dec5                       // v = si_c / NVL, leaf = si_c % NVL (si_c < 256)
         e1_bad = 1'b1; e1_vec = 4'd0; e1_l = 3'd0;
         for (a = 0; a < NE; a = a + 1)
-            if (si_c >= a * NVL && si_c < (a + 1) * NVL) begin e1_bad = 1'b0; e1_vec = a; e1_l = si_c - a * NVL; end
+            if (si_cd >= a * NVL && si_cd < (a + 1) * NVL) begin e1_bad = 1'b0; e1_vec = a; e1_l = si_cd - a * NVL; end
     end
     reg ev_q, ebad_q; reg [3:0] evec_q; reg [2:0] el_q; reg [31:0] ed_q;
     always @(posedge clk or negedge rt[0]) if (!rt[0]) ev_q <= 1'b0; else ev_q <= sv_c && mdc[NENG];

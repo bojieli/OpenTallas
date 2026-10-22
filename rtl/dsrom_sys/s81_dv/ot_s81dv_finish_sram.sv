@@ -290,7 +290,11 @@ module ot_s81dv_norm_finish_sram #(
     end
     ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(1),.NBG(NBGA)) u_values(
       .clk(clk),.dca(dca),.dcb(dcb),.ph(ph),.id(id),.fire(fire),.issue_tag({1'b0,ot[NVP]}),
-      .read_nodes(read_nodes),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag({1'b0,wr_n}),.wr_d(wr_d));
+      .read_nodes(read_nodes),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag({1'b0,wr_n}),.wr_d(wr_d)
+`ifdef OT_S81DV_XFIN_N21
+      ,.wr_v_e(1'b0),.wr_tag_e(9'd0)
+`endif
+      );
     wire [LAV:0] av;
     wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rc[5]), .v(f_q), .vd(av));
@@ -619,10 +623,21 @@ module ot_s81dv_eng_finish_sram #(
     `ifdef OT_S81DV_XFIN_N14
     wire wr_v_b; wire [CW-1:0] wr_n_b;   // N14 bank copies (driven below)
 `endif
-    ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(3),.NBG(NBGA)) u_values(
+`ifdef OT_S81DV_XFIN_N21
+    wire wr_v_e; wire [CW-1:0] wr_n_e;   // N21 previous-stage taps of the N14 bank copies (driven below)
+`endif
+    ot_s81dv_finish_banks #(.NV(NV),.K(K),.P(P),.TREES(3),.NBG(NBGA)
+`ifdef OT_S81DV_XFIN_N21
+      ,.WEARLY(1)
+`endif
+      ) u_values(
       .clk(clk),.dca(dca),.dcb(dcb),.ph(ph),.id(id),.fire(fire),.issue_tag(ot[NC]),
 `ifdef OT_S81DV_XFIN_N14
-      .read_nodes(read_nodes),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v_b),.wr_tag(wr_n_b),.wr_d(wr_d));
+      .read_nodes(read_nodes),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v_b),.wr_tag(wr_n_b),.wr_d(wr_d)
+`ifdef OT_S81DV_XFIN_N21
+      ,.wr_v_e(wr_v_e),.wr_tag_e(wr_n_e)
+`endif
+      );
 `else
       .read_nodes(read_nodes),.rd_active(f_q),.a_q(a_q),.b_q(b_q),.wr_v(wr_v),.wr_tag(wr_n),.wr_d(wr_d));
 `endif
@@ -643,6 +658,10 @@ module ot_s81dv_eng_finish_sram #(
     always @(posedge clk or negedge rc[5]) if (!rc[5]) vkl <= {LAV{1'b0}}; else vkl <= {vkl[LAV-2:0], f_q};
     assign wr_v_b = vkl[LAV-1];
     assign wr_n_b = tkl[LAV-1];
+`ifdef OT_S81DV_XFIN_N21
+    assign wr_v_e = vkl[LAV-2];
+    assign wr_n_e = tkl[LAV-2];
+`endif
 `endif
     // roots: node 1 of each tree
     reg [T-1:0] dn; reg flt;
@@ -708,7 +727,7 @@ module ot_s81dv_eng_finish_sram #(
         end
     assign fault = flt;
 endmodule
-module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1,NVP=(1<<$clog2(NV)),NBG=1)(
+module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1,NVP=(1<<$clog2(NV)),NBG=1,WEARLY=0)(
  // N8 (STW-S81-COLLA-XFIN 10-21): the leaf write ports select from the finish's two predecoded one-hot flit base
  // sets dca/dcb ([t][p][x] = valid && tree == t && base == x, x < NV; one per payload half) instead of per-bank
  // subtract/compare decode of ivb/itb/ibb copies (census R33: 132-load ibb, 103-load payload nodes). Same values,
@@ -718,6 +737,10 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1,NVP=(1<<$
  input wire[TREES*NV*P-1:0] ph,input wire[P*K*32-1:0] id,
  input wire fire,input wire[8:0] issue_tag,input wire[8*TREES*NVP-1:0] read_nodes,input wire rd_active,output reg[31:0] a_q,b_q,
  input wire wr_v,input wire[8:0] wr_tag,input wire[31:0] wr_d
+`ifdef OT_S81DV_XFIN_N21
+ // N21: the same write valid / tag ONE edge earlier (the delay line's previous stage), for WEARLY internal banks
+ ,input wire wr_v_e,input wire[8:0] wr_tag_e
+`endif
 );
  localparam integer RM=(TREES==3)?2:1,NB=P*K+2*RM,NREAD=(NB+2)/3,NOWNER=(P*K+8)/9;
  localparam integer MUT_ASSOC=`ifdef OT_S81DV_MUT_EASSOC (TREES==3) `else 0 `endif;
@@ -1469,7 +1492,22 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1,NVP=(1<<$
    ot_s81dv_finish_leafw #(.NV(NV),.K(K),.P(P),.TREES(TREES),.PB(bank/K),.R(bank%K)) u_w(
      .da(dca[(((bank%K)*NBG)/K)*TREES*P*NV+:TREES*P*NV]),.db(dcb),.id(id),.wp(wp),.wm(leaf_mask));
   end else begin:g_internal
+`ifdef OT_S81DV_XFIN_N21
+   if(WEARLY)begin:g_wq
+    // N21 (STW-S81c-COLLA3 10-22, N20 census: AND(vkl[5], !tkl[5][8]) = wr_v && the tag-tree bit, shared by the four
+    // internal banks' decode, 41-66 loads in cp0/1/3): each internal bank REGISTERS its own write enable / slot from
+    // the delay line's previous stage (wr_v_e/wr_tag_e at t-1 == wr_v/wr_tag at t; both lines reset/clear alike), so
+    // the enable that drives its 8 mask8 cells + SRAM w_ce is a kept flop per bank.  Same values, same edge.
+    wire[10:0] dwe=descriptor({1'b0,wr_tag_e[6:0]},wr_tag_e[8:7]);
+    (* keep *) reg[6:0] wq;
+    always @(posedge clk) wq<={wr_v_e && wr_tag_e[6:0]!=1 && dwe[10:6]==bank,dwe[5:1],dwe[0]};
+    assign wp={wq,wr_d};
+   end else begin:g_wc
+    assign wp={wr_v && wr_tag[6:0]!=1 && dw[10:6]==bank,dw[5:1],dw[0],wr_d};
+   end
+`else
    assign wp={wr_v && wr_tag[6:0]!=1 && dw[10:6]==bank,dw[5:1],dw[0],wr_d};
+`endif
   end
   wire[63:0] mask;
 `ifdef OT_S81DV_XFIN_N11
