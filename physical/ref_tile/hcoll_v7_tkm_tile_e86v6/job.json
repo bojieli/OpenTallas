@@ -1,0 +1,173 @@
+{
+ "name": "hcoll_v7_tkm_tile_e86v6-v6-COMMIT",
+ "block": "ot_hgi_coll_tkm_tile_e86_v6",
+ "ref_tile": true,
+ "owner": "Claude STEWARD-HBM/IDX-E86",
+ "purpose": "E86 v6 (MAIN, 302.4 sq): v5 + KLEAF 1 -- every CREP select copy (s_*2, g_pc32/g_face sources, m/mu/mo) in a non-parameterised keep_hierarchy leaf, block compare u_b duplicated per position half (keep_hierarchy); fixes v5 native census FAIL 2573/max2064 (merged select copies) and u_b.lt 42-48. Same edges/function (lockstep vs CREP 0), zero cycles added.",
+ "threads": 8,
+ "peak_ram_gb": 40,
+ "source": {
+  "branch": "claude/hbm-e86-v6-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/tkm",
+   "results/rtl/hbm_e86_v6_1021"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_tkm_tile_e86_v6 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_tile_e86_v6.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "e86v6_fourstate",
+    "cmd": "mkdir -p {RUN}/bench/fourstate && iverilog -g2012 -s tb_tkm_e86_v5_fourstate -o {RUN}/bench/fourstate/probe rtl/hbm_accel/generic/collective/tkm/tb_tkm_e86_v5_fourstate.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv && vvp -n {RUN}/bench/fourstate/probe",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ],
+    "pass_regex": "E86_V5_FOURSTATE PASS",
+    "pass_witness": "results/rtl/hbm_e86_v6_1021/qual/fourstate.log"
+   },
+   {
+    "name": "e86v6_m0",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m0 4000 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TKM_RG_CREP MUT0 cycles4000 .*errors0 PASS",
+    "pass_witness": "results/rtl/hbm_e86_v6_1021/qual/m0/run0.log"
+   },
+   {
+    "name": "e86v6_m1",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m1 4000 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TKM_RG_CREP MUT1 cycles4000 .*errors[1-9][0-9]* FAIL",
+    "fail_witness": "results/rtl/hbm_e86_v6_1021/qual/m1/run1.log"
+   },
+   {
+    "name": "e86v6_m3",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m3 4000 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TKM_RG_CREP MUT3 cycles4000 .*errors[1-9][0-9]* FAIL",
+    "fail_witness": "results/rtl/hbm_e86_v6_1021/qual/m3/run3.log"
+   },
+   {
+    "name": "e86v6_m4",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m4 4000 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TKM_RG_CREP MUT4 cycles4000 .*errors[1-9][0-9]* FAIL",
+    "fail_witness": "results/rtl/hbm_e86_v6_1021/qual/m4/run4.log"
+   },
+   {
+    "name": "e86v6_m5",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m5 4000 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TKM_RG_CREP MUT5 cycles4000 .*errors[1-9][0-9]* FAIL",
+    "fail_witness": "results/rtl/hbm_e86_v6_1021/qual/m5/run5.log"
+   },
+   {
+    "name": "e86v6_m6",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m6 4000 6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TKM_RG_CREP MUT6 cycles4000 .*errors[1-9][0-9]* FAIL",
+    "fail_witness": "results/rtl/hbm_e86_v6_1021/qual/m6/run6.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.025 OT_MM_FF_SDC='physical/ref_tile/hcoll_v7_tkm_tile_e86v6/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_v7_tkm_tile_e86v6/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 40
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_v7_tkm_tile_e86v6 --out {RUN}/record/views/ot_hgi_coll_tkm_tile_e86_v6  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_v7_tkm_tile_e86v6/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_v7_tkm_tile_e86v6/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86v6/hcoll_v7_tkm_tile_e86v6-v6-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "E86 V6 (STEWARD-HBM/IDX-E86 10-21): v5 6c9 + KLEAF 1 kept-leaf select copies (ot_tkm_kff1/3/4, ot_tkm_sel_src, keep_hierarchy) and per-half kept block compares; v5 standalone native FAIL 2573/max2064 was opt_merge folding identical-D select copies. MAIN outline 302.4 sq; same PRE1/CREP1/FAN32 2/SEAM1/LT_GROUP5/GCFOLD1 edges, five clock entries."
+}
