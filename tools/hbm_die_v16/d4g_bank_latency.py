@@ -58,7 +58,10 @@ RULES = {
         ('lg_rq', 'rd', 'READ_RETURN', 10, 10, BANK_RD, 'ot_hbm_vm_lg_static_bank: near SU 10 = 4 own + bank read 6'),
         ('lg_wq', 'wr', 'WRITE_RETURN', 7, 7, BANK_WR, 'near SU 7 = 4 own + bank commit 3')],
     'ot_hgi_sm_xload_cl2_ctlx': [
-        ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'RD_LAT 6 = ot_vms_bank_static rq->rr n+6, zero die stages; list = per-bank vector '
+        ('rq', 'rd', 'RD_LAT', 6, 7, BANK_RD, 'RD_LAT 7 = ot_vms_bank_static rq->rr n+6 wired directly, zero die stages '
+         '(STEWARD-TOK-HBM 10-21, measured: the cl2 ctl captures rr raw at its pins and checks the wave valid at md[RLM+1], '
+         'so RD_LAT 6 against the static bank direct faults resp_bad on the first wave -- the RTL header ref 6 is one '
+         'edge short; bench rtl/test/hbm_layer/tb_xl_cl2_banklat_ref.sv: 6 FAIL, 7 PASS); list = per-bank vector '
          '(HBM-BANKLAT-XL: element b = registers rq pin -> bank b -> rr pin; ctl staggers bank b issue by max - l_b)')],
     'ot_hgi_sm_xload_cl2p_ctlx': [
         ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'cl2p (x_fmt 3) ctlx: same RD_LAT contract as cl2 ctlx; SCALAR only until its '
