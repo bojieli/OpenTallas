@@ -70,10 +70,12 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
  wire [2:0] lf=load_cmd[32:30];
  wire [3:0] ln=load_cmd[55:52];
  wire [5:0] esz=(lf==0||lf==5)?6'd4:lf==1?6'd2:6'd1;
- wire load_ok=load_v&&!raw_issue&&owned[load_cmd[0]]&&
+ wire command_ok=load_v&&!raw_issue&&owned[load_cmd[0]]&&
  block_ready_c[load_cmd[0]]&&load_cmd[16:1]==(load_cmd[0]?epoch1:epoch0)&&
- load_cmd[18:17]<NPC&&ln!=0&&ln<=8&&{1'b0,load_cmd[51:49]}+ln<=8&&
+ load_cmd[18:17]<NPC&&(ln!=0||load_cmd[56])&&ln<=8&&{1'b0,load_cmd[51:49]}+ln<=8&&
  {1'b0,load_cmd[29:25]}+ln*esz<=32&&lf!=3&&lf!=7&&!landing_fault;
+ wire load_ok=command_ok&&ln!=0;
+ wire release_only=command_ok&&ln==0;
  wire issue=raw_issue||load_ok;
  wire rb=load_ok?load_cmd[0]:(running ? bank_r : start_bank);
  wire [1:0] rg=load_ok?load_cmd[18:17]:(running ? group_q : 2'd0);
@@ -90,9 +92,9 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
    sticky<=0;group_q<=0;out_group<=0;out_v<=0;out_slot<=0;
   end else begin
    out_v<=raw_issue && !landing_fault;out_slot<=rs;out_group<=rg;
-   if(load_v&&!load_ok)sticky<=1;
+   if(load_v&&!command_ok)sticky<=1;
    if(lv1&&out_v)sticky<=1;
-   if(load_ok&&load_cmd[56])owned[load_cmd[0]]<=0;
+   if(command_ok&&load_cmd[56])owned[load_cmd[0]]<=0;
    if(begin_v) begin
     if(owned[begin_bank] || (lstart && start_bank==begin_bank)) sticky<=1;
     else begin owned[begin_bank]<=1;if(begin_bank)epoch1<=begin_epoch;else epoch0<=begin_epoch;end
