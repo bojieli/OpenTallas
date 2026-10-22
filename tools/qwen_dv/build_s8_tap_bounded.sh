@@ -20,3 +20,7 @@ Path(sys.argv[1]+'/tap_seed.sv').write_text(text)
 GEN
 yosys -p "read_verilog -sv -DSYNTHESIS $out/tap_seed.sv; hierarchy -check -top qfd_dv_s8_tap_seed; synth -top qfd_dv_s8_tap_seed -flatten -noabc -nofsm -noshare; dffunmap; write_json $out/tap.json" > "$out/yosys.log" 2>&1
 python3 tools/qwen_dv/ctlm6_bound_macro.py "$out/tap.json" --top qfd_dv_s8_tap_seed --name qfd_dv_s8_tap_bounded --out "$out/qfd_dv_s8_tap_bounded.sv" --helpers "$out/qfd_dv_s8_tap_bounded_helpers.sv" --record "$out/source_record.json" --load-cap 16 --transparent-inverters --retain-mux --shared-helpers --retain-all-comb
+# QE3-SLICE2 10-21: private helper namespace. The shared qfd_bmath_* helpers are byte-identical to the subset in
+# rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv, which the same s8 parent also reads -> Yosys -defer refused the
+# re-definition (w12c/w12cb census). Rename only; cells, IDs and keep_hierarchy are unchanged.
+sed -i 's/\bqfd_bmath_/qfd_s8tap_bmath_/g' "$out/qfd_dv_s8_tap_bounded.sv" "$out/qfd_dv_s8_tap_bounded_helpers.sv"
