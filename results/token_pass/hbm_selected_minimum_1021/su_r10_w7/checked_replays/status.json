@@ -1,0 +1,56 @@
+{
+  "status": "WAITING_FOR_EXISTING_BINARY",
+  "observed_at": "2026-10-21T22:41:56.758374-07:00",
+  "original_replay": "Diagnostic only: blocked grade suppressed every numerical C event. No PASS accepted from that run.",
+  "binary": "Existing selected R10/W7 build, unchanged source/TB/objects; no new compile.",
+  "capacity": 553,
+  "policy": "Remove exactly six source-proven initial-zero or same-value holds; every actual transition and input remains. Split explicit faults across identical deterministic replays to fit preserved capacity.",
+  "checks": [
+    {
+      "name": "checks_0",
+      "replay_sha256": "6e8ced402015ddd7afaed567c831a1bb2b075f10539b1985033d73e14b691ad1",
+      "drives": 546,
+      "checks": 6,
+      "non_memory_events": 552,
+      "native_vm_checks": [
+        {
+          "port": "vm:0",
+          "edge": 7402
+        }
+      ]
+    },
+    {
+      "name": "checks_1",
+      "replay_sha256": "0e909785f60b14387e95bc9a773e3bb9b63eefe4b8d5785bb334ea343a177a55",
+      "drives": 546,
+      "checks": 4,
+      "non_memory_events": 550,
+      "native_vm_checks": [
+        {
+          "port": "vm:0",
+          "edge": 7402
+        },
+        {
+          "port": "vm:0",
+          "edge": 7466
+        }
+      ]
+    },
+    {
+      "name": "checks_mutant",
+      "replay_sha256": "0916fbc370c4b21fb51f4bcf104d07845d453a8c746a4fefe3a5a73ca83746b4",
+      "drives": 546,
+      "checks": 6,
+      "non_memory_events": 552,
+      "native_vm_checks": [
+        {
+          "port": "vm:0",
+          "edge": 7402
+        }
+      ]
+    }
+  ],
+  "source_mutant": "Only first actual router A word is changed to FP32+1; original expected outputs unchanged.",
+  "retention": "Actual native VM full sector must match at serial7402 and7466; also checks four untouched inactive neighbours.",
+  "scope": "One logical TP96 rank component; no physical TP192 ownership/all-rank configuration/calendar promotion."
+}
