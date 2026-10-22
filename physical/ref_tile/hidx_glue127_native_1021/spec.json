@@ -1,0 +1,118 @@
+{
+ "name": "hidx_glue127_native_1021",
+ "top": "ot_hidx_chunk_glue",
+ "kind": "tile",
+ "layer_cap": "M5",
+ "params": {
+  "VL_EXTRA": 23,
+  "RESET_F32": 0
+ },
+ "sources": [
+  "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_c.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_rst_relay_l.sv"
+ ],
+ "defines": [],
+ "clock": "cts",
+ "clock_port": "clk",
+ "clock_ports": [
+  "clk"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 648,
+  "h": 604.8,
+  "exact": true
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "pins": {
+  "W": [
+   "ql_v",
+   "ql_head",
+   "ql_codes",
+   "ql_sc",
+   "ql_w",
+   "k_v",
+   "k_kv",
+   "k_key",
+   "hb",
+   "rst_n"
+  ],
+  "E": [
+   "col_rst_n",
+   "col_qv",
+   "col_q",
+   "col_key",
+   "col_hid"
+  ],
+  "N": [
+   "clk"
+  ],
+  "S": [
+   "col_cs",
+   "col_cf",
+   "col_prdy",
+   "c_v",
+   "c_kv",
+   "c_sum",
+   "c_fault",
+   "online",
+   "n_v",
+   "n_kv",
+   "n_sum",
+   "n_fault"
+  ]
+ },
+ "route": {
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pd": 0.5,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Diagnostic source-native mapping only, no added FFs."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Diagnose exact existing source reset tree; no auto landing or source transformation."
+ },
+ "keep_pin_regs": true,
+ "job": {
+  "owner": "CODEX-HBM-COL8-PARENT-2000",
+  "branch": "codex/hbm-col8-parent-2000-1021",
+  "tag": "main",
+  "purpose": "Exact shared residual chunk glue mapping with VL_EXTRA23. Diagnostic only; no controller hard footprint or timing claim.",
+  "extra_paths": [
+   "tools/orfs_allcorner_spef.py"
+  ],
+  "benches": []
+ },
+ "safe_design_checklist": {
+  "1": "Exact source ports retained.",
+  "2": "648 by 604.8 diagnostic IO envelope only.",
+  "3": "Actual native census judges all reset and data drivers.",
+  "4": "No arithmetic change.",
+  "5": "Existing 5 by 127 valid FF line is explicit.",
+  "6": "No qualified controller floorplan claim.",
+  "7": "Single shared chunk clock.",
+  "8": "No active edges changed."
+ },
+ "hold_budget": "die",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "diagnostic": true
+}

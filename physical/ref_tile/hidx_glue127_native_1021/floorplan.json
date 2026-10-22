@@ -1,0 +1,107 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hidx_glue127_native_1021",
+ "top": "ot_hidx_chunk_glue",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  648.0,
+  604.8
+ ],
+ "core": [
+  2.16,
+  2.16,
+  645.84,
+  602.64
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "ql_v",
+   "ql_head",
+   "ql_codes",
+   "ql_sc",
+   "ql_w",
+   "k_v",
+   "k_kv",
+   "k_key",
+   "hb",
+   "rst_n"
+  ],
+  "E": [
+   "col_rst_n",
+   "col_qv",
+   "col_q",
+   "col_key",
+   "col_hid"
+  ],
+  "N": [
+   "clk"
+  ],
+  "S": [
+   "col_cs",
+   "col_cf",
+   "col_prdy",
+   "c_v",
+   "c_kv",
+   "c_sum",
+   "c_fault",
+   "online",
+   "n_v",
+   "n_kv",
+   "n_sum",
+   "n_fault"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "clock_span",
+   "648.0 x 604.8 um: one clock root over > 600 um",
+   "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  ]
+ ],
+ "referenced": [
+  "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_c.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/lib/ot_rst_relay_l.sv",
+  "physical/ref_tile/hidx_glue127_native_1021/kit.env",
+  "physical/ref_tile/hidx_glue127_native_1021/clock.sdc",
+  "physical/ref_tile/hidx_glue127_native_1021/signoff.sdc",
+  "physical/ref_tile/hidx_glue127_native_1021/pdn.tcl",
+  "physical/ref_tile/hidx_glue127_native_1021/pre_cts.tcl",
+  "physical/ref_tile/hidx_glue127_native_1021/post_cts.tcl",
+  "physical/ref_tile/hidx_glue127_native_1021/post_grt.tcl",
+  "physical/ref_tile/hidx_glue127_native_1021/pre_drt.tcl",
+  "physical/ref_tile/hidx_glue127_native_1021/pre_fill.tcl",
+  "physical/ref_tile/hidx_glue127_native_1021/post_fill.tcl",
+  "physical/ref_tile/hidx_glue127_native_1021/pre_grt.tcl",
+  "physical/ref_tile/hidx_glue127_native_1021/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
+ ]
+}
