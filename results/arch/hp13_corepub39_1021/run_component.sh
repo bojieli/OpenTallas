@@ -6,8 +6,8 @@ mkdir -p "$OUT"
 V=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator
 "$V" --version
 D=results/arch/hp13_corepub39_1021
-for s in 1 2; do
- for mut in 0 1 2; do
+for s in ${ONLY_STAGES:-1 2}; do
+ for mut in ${MUTS:-0 1 2}; do
  "$V" --binary --timing -j 2 -Wno-fatal -Wno-lint -Wno-style --top-module tb_pub -GSTAGES=$s -GMUT=$mut \
   "$D/tb_pub.sv" "$D/component_$s.sv" \
   rtl/qwen_dv/headprep13/corepub39/qfd_hp13_corepub39.sv \
@@ -17,6 +17,7 @@ for s in 1 2; do
  "$OUT/obj${s}_m$mut/Vtb_pub" > "$OUT/run${s}_m$mut.log" 2>&1
  rc=$?
  set -e
+ if [ "${RAW_NEG:-0}" = 1 ]; then cat "$OUT/run${s}_m$mut.log"; exit "$rc"; fi
  if [ "$mut" = 0 ]; then
    test "$rc" = 0; grep -q PUB_PASS "$OUT/run${s}_m$mut.log"
  else
