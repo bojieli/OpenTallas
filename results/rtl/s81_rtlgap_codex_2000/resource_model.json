@@ -78,5 +78,50 @@
     "original_pool_outline_at_40pct_um2": 239624.59634999998,
     "outline_excludes_channels_and_clock": true
   },
-  "qualification": "Model inventory and measured source cycles only; physical body, reachable placement, native max32, per-region clocks and timing remain open"
+  "qualification": "Model inventory and measured source cycles only; physical body, reachable placement, native max32, per-region clocks and timing remain open",
+  "pool_native_structural_successors": {
+    "source": "f219a0003",
+    "numeric_receipts": "859e67506",
+    "lanes": 8,
+    "features": 512,
+    "same_vm_read_write_shape": true,
+    "peak_VM_bytes_per_edge": 32,
+    "input_bytes": 8192,
+    "output_bytes": 2048,
+    "pair_reads": 256,
+    "pair_writes": 64,
+    "measured_component_finish_edges": 391,
+    "arithmetic_edges_added": 0,
+    "deepest_reset_release_edges": 6,
+    "predecessor_lane_reset_edges": 2,
+    "additional_reset_startup_edges": 4,
+    "reset_calendar_adopted": false,
+    "source_reset_FF_delta": 331,
+    "main": {
+      "table_bits_per_group": 8,
+      "groups_per_lane": 8,
+      "added_source_table_index_FF": 512,
+      "total_new_source_FF_before_mapping_merges": 843,
+      "unit": "ot-epyc7/763833-1792647167"
+    },
+    "alternate": {
+      "table_bits_per_group": 4,
+      "groups_per_lane": 16,
+      "added_source_table_index_FF": 1024,
+      "total_new_source_FF_before_mapping_merges": 1355,
+      "unit": "ot-epyc7/764540-1792647167"
+    },
+    "FP_payload_outputs_removed_from_reset": 5168,
+    "data_FF_edges_preserved": true,
+    "new_SRAM_macros": 0,
+    "mapped_area_delta": null,
+    "keep_policy_physical_FF_delta": "Unknown until actual mapping; source counts exclude suppression of predecessor merging",
+    "boundary_bits_per_edge": {
+      "VM_request_address": 10,
+      "VM_read_payload": 256,
+      "VM_write_payload": 256,
+      "VM_write_mask": 8
+    },
+    "physical_native_and_clock_status": "Unqualified; both ordinary synth/native chains live; no slot-fit or native limit credit"
+  }
 }
