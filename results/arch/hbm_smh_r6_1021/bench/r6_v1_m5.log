@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits  -146 GB (avail 555, growth 657, headroom 0, waiters 0/0 GB) load 64/128 running 25 disk 1695 GB 
+ot-run: ot-epyc7       admits   -48 GB (avail 411, growth 445, headroom 0, waiters 0/0 GB) load 46/96 running 20 disk 4503 GB 
+ot-run: ot-epyc9       admits   388 GB (avail 569, growth 297, headroom 0, waiters 0/0 GB) load 95/128 running 49 disk 2095 GB 
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-4155927-1792629713 after 4 s
+Verilator 5.050 2026-07-01 rev v5.050
+R6_MISMATCH port=gout cycle=801 flat=f41ebadddbc6c1c126694df19da72c100025a3000000000258 landed=f41ebadddbc6c1c126694df19cce09af002a23000000000258
+R6_MISMATCH port=gout cycle=802 flat=a8a3bdd1ac9895525deac124afb203b40025e3e68cdf480268 landed=a8a3bdd1ac9895525deac124ad553cb4002a63e68cdf480268
+R6_MISMATCH port=gout cycle=803 flat=442e570a60804261ac0979d8dcccb794002623551ff9c00208 landed=442e570a60804261ac0979d8de749f64002aa3551ff9c00208
+R6_MISMATCH port=gout cycle=804 flat=e2e7a8e216b4592ae46504414d54287800266346554d000218 landed=e2e7a8e216b4592ae46504414f355fa6002ae346554d000218
+R6_MISMATCH port=gout cycle=805 flat=6c7b455ab8a6da95a781c42b3e737f300026a3649964e80228 landed=6c7b455ab8a6da95a781c42b3e9d41b0502b23649964e80228
+R6_ACTIVITY bdc_out=1994 qk_out=1218 pv_events=223 publications=6850 pv_inputs=986
+R6_LOCKSTEP FAIL VAR=1 HMUT=5 mismatches=3163 of 12796
+- rtl/hbm_accel/sm/repack/h2a6/tb_ot_hbm_smh_rp6_2.sv:116: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 1.869 s; speed 2.140 us/s
+- Verilator: cpu 1.869 s on 1 threads; allocated 21 MB
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-4155927-1792629713): exit 1
+EXIT 1

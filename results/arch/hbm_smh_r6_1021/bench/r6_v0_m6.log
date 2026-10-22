@@ -1,0 +1,24 @@
+ot-run: ot-epyc5       admits  -149 GB (avail 553, growth 657, headroom 0, waiters 0/0 GB) load 64/128 running 25 disk 1695 GB 
+ot-run: ot-epyc7       admits   -48 GB (avail 411, growth 445, headroom 0, waiters 0/0 GB) load 46/96 running 20 disk 4503 GB 
+ot-run: ot-epyc9       admits   388 GB (avail 569, growth 297, headroom 0, waiters 1/32 GB) load 95/128 running 49 disk 2095 GB 
+ot-run: -> ot-epyc9
+ot-heavy: waiting for memory on ot-epyc9: need 0.7 x 32 = 22 GB, admissible -7 GB: available 566 GB, growth charged 571 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 551 GB at x1), young 240 GB, floor 50 GB
+ot-heavy: NOT RUN: no memory on ot-epyc9 within 120 s (need 0.7 x 32 = 22 GB, admissible -13 GB: available 546 GB, growth charged 555 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 535 GB at x1), young 225 GB, floor 50 GB): bash /srv/opentallas-scratch/claude/hbm-elem13-smh-r6/src_aba0eff/r6b.sh r6 0 6
+ot-run: REBALANCE: not admitted on ot-epyc9 within 120 s; placing again
+ot-run: -> ot-epyc7 (will queue: admits -41 GB < 32 GB)
+ot-heavy: waiting for memory on ot-epyc7: need 0.7 x 32 = 22 GB, admissible -41 GB: available 418 GB, growth charged 447 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 427 GB at x1), young 42 GB, floor 50 GB
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2770575-1792629843 after 82 s
+Verilator 5.050 2026-07-01 rev v5.050
+R6_MISMATCH port=gout cycle=801 flat=44670de257720b0b7f8912feaca03c70002463558ffa600608 landed=44670de257720b0b7f8912feaca03c7000246346bff8800618
+R6_MISMATCH port=gout cycle=802 flat=3dda3ff94009e570f59767812ee1fa680024a346bff8800618 landed=3dda3ff94009e570f59767812ee1fa680024a364a6bb980628
+R6_MISMATCH port=gout cycle=803 flat=d97655e05b25bcf96380fcda2db442d00024e364a6bb980628 landed=d97655e05b25bcf96380fcda2db442d00024e3f2260d600638
+R6_MISMATCH port=gout cycle=804 flat=c79a910cf742baec4e653df27f1fed18002523f2260d600638 landed=c79a910cf742baec4e653df27f1fed1800252360b7bf100648
+R6_MISMATCH port=gout cycle=805 flat=442f305e0c4685ff27863c2dcf0027e800256360b7bf100648 landed=442f305e0c4685ff27863c2dcf0027e8002563000000000258
+R6_ACTIVITY bdc_out=1994 qk_out=1218 pv_events=223 publications=6850 pv_inputs=986
+R6_LOCKSTEP FAIL VAR=0 HMUT=6 mismatches=3185 of 12796
+- rtl/hbm_accel/sm/repack/h2a6/tb_ot_hbm_smh_rp6_2.sv:116: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 1.691 s; speed 2.365 us/s
+- Verilator: cpu 1.691 s on 1 threads; allocated 21 MB
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2770575-1792629843): exit 1
+EXIT 1

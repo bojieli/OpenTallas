@@ -1,0 +1,27 @@
+ot-run: ot-epyc5       admits  -149 GB (avail 553, growth 657, headroom 0, waiters 0/0 GB) load 64/128 running 25 disk 1695 GB 
+ot-run: ot-epyc7       admits   -48 GB (avail 411, growth 445, headroom 0, waiters 0/0 GB) load 46/96 running 20 disk 4503 GB 
+ot-run: ot-epyc9       admits   388 GB (avail 569, growth 297, headroom 0, waiters 2/80 GB) load 95/128 running 49 disk 2095 GB 
+ot-run: -> ot-epyc9
+ot-heavy: waiting for memory on ot-epyc9: need 0.7 x 48 = 34 GB, admissible -8 GB: available 564 GB, growth charged 570 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 549 GB at x1), young 238 GB, floor 50 GB
+ot-heavy: NOT RUN: no memory on ot-epyc9 within 120 s (need 0.7 x 48 = 34 GB, admissible 9 GB: available 546 GB, growth charged 540 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 520 GB at x1), young 220 GB, floor 50 GB): bash /srv/opentallas-scratch/claude/hbm-elem13-smh-r6/src_aba0eff/r6b.sh lp s_m
+ot-run: REBALANCE: not admitted on ot-epyc9 within 120 s; placing again
+ot-run: -> ot-epyc9 (will queue: admits 10 GB < 48 GB)
+ot-heavy: waiting for memory on ot-epyc9: need 0.7 x 48 = 34 GB, admissible 23 GB: available 546 GB, growth charged 530 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 510 GB at x1), young 219 GB, floor 50 GB
+ot-heavy: NOT RUN: no memory on ot-epyc9 within 120 s (need 0.7 x 48 = 34 GB, admissible 18 GB: available 549 GB, growth charged 536 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 516 GB at x1), young 150 GB, floor 50 GB): bash /srv/opentallas-scratch/claude/hbm-elem13-smh-r6/src_aba0eff/r6b.sh lp s_m
+ot-run: REBALANCE: not admitted on ot-epyc9 within 120 s; placing again
+ot-run: -> ot-epyc9 (will queue: admits 17 GB < 48 GB)
+ot-heavy: waiting for memory on ot-epyc9: need 0.7 x 48 = 34 GB, admissible 18 GB: available 551 GB, growth charged 538 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 518 GB at x1), young 153 GB, floor 50 GB
+ot-heavy: NOT RUN: no memory on ot-epyc9 within 120 s (need 0.7 x 48 = 34 GB, admissible -8 GB: available 560 GB, growth charged 565 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 545 GB at x1), young 37 GB, floor 50 GB): bash /srv/opentallas-scratch/claude/hbm-elem13-smh-r6/src_aba0eff/r6b.sh lp s_m
+ot-run: REBALANCE: not admitted on ot-epyc9 within 120 s; placing again
+ot-run: -> ot-epyc5 (will queue: admits -8 GB < 48 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 48 = 34 GB, admissible -16 GB: available 543 GB, growth charged 554 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 531 GB at x1), young 43 GB, floor 57 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3949291-1792630096 after 101 s
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+MUT 1: LP_LOCKSTEP FAIL
+MUT 2: LP_LOCKSTEP FAIL
+MUT 4: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3949291-1792630096): exit 0
+EXIT 0
