@@ -75,7 +75,37 @@ def port_key(master, cls, driver_port, sink_port):
     return driver_port, sink_port
 
 
-def cfg_launch_order(consts, master_of):
+def leaf_copy_rows(rows, master_of):
+    """{(leaf instance, copy letter): ([word row indices], [launch row indices])} for the host cfg leaf copy rows"""
+    out = collections.defaultdict(lambda: ([], []))
+    for bi, r in enumerate(rows):
+        di, ps = r['driver'].split('.', 1)
+        if not CFG_LEAF.match(master_of.get(di) or ''):
+            continue
+        for p in ps.split('+'):
+            mw, ml = CFG_LEAF_WORD.match(p), CFG_LEAF_LAUNCH.match(p)
+            if mw or ml:
+                out[di, (mw or ml).group(1)][0 if mw else 1].append(bi)
+                break
+    return out
+
+
+def launch_floor(words, launches, eff):
+    """uniform pad (equal age kept) each launch row needs so that its age >= the cfg word age at every shared sink.
+    eff(row, sink) -> age or None (row does not reach the sink / not this transport).  Returns {launch row: deficit}"""
+    out = {}
+    for lb in launches:
+        d = 0
+        for s_, la in eff(lb):
+            wa = [w for w in (eff(wb, s_) for wb in words) if w is not None]
+            if wa and la is not None:
+                d = max(d, max(wa) - la)
+        if d > 0:
+            out[lb] = d
+    return out
+
+
+def cfg_launch_order(consts, master_of, model=None):
     """HBMb/NW 10-21 CFG-LAUNCH-ORDER: per cfg leaf copy and sink, the launch strobe age must be >= the cfg/desc word age
     (the receivers fault on cv/dv coinciding with lv and act on lv only after the word).  Returns (problems, rows)."""
     word, launch = collections.defaultdict(dict), collections.defaultdict(dict)
@@ -90,6 +120,8 @@ def cfg_launch_order(consts, master_of):
                 continue
             for s_, e_ in (x.get('sink_edges') or {}).items():
                 key = (di, (mw or ml).group(1))
+                if e_ is None and model:   # --land without E: the PORT-AGE-LAND diagnostic model (E = 1)
+                    e_ = model.get((x.get('bus'), s_))
                 if e_ is not None:
                     tgt[key][s_] = max(tgt[key].get(s_, e_), e_)
     probs, rows = [], []
@@ -249,11 +281,11 @@ def main():
         rd_ = region(r['driver'].split('.', 1)[0])
         return rd_ is None or any(region(s_) is None or (region(s_) != rd_ and frozenset((region(s_), rd_)) not in neigh)
                                   for s_ in r['sinks'])
-    port_eff, port_rows, port_mixed = {}, collections.defaultdict(set), collections.defaultdict(set)
+    port_eff, port_rows, port_mixed, fwd_of = {}, collections.defaultdict(set), collections.defaultdict(set), {}
     for bi, r in enumerate(st['rows']):
         if not rowbits.get(bi) or r['driver'].split('.', 1)[0] not in inst:
             continue
-        fwd = _inter_row(r)
+        fwd = _inter_row(r); fwd_of[bi] = fwd
         pl_ = {p_['sink']: p_['stages'] for p_ in r.get('pads', [])}
         for s_, d_ in zip(r['sinks'], r['sink_depths']):
             port_eff[bi, s_] = d_ + pl_.get(s_, 0)
@@ -291,6 +323,20 @@ def main():
             break
     else:
         problems.append('PORT-AGE: equal-age pad fixpoint not reached in 64 passes')
+    # HBMb/NW 10-21 CFG-LAUNCH floor (plain rows): a cfg leaf copy's launch strobe row is raised UNIFORMLY (equal age kept)
+    # until it reaches every receiver no earlier than that receiver's aligned cfg word (r16q: hleaf_SW.b launch 37 < word 38).
+    leaf_rows = leaf_copy_rows(st['rows'], {k: v.get('master') for k, v in inst.items()})
+    def _plain_eff(b_, s_=None):
+        if fwd_of.get(b_, True):
+            return [] if s_ is None else None
+        if s_ is None:
+            return [(x_, port_eff[b_, x_] + port_pad[b_, x_]) for x_ in st['rows'][b_]['sinks'] if (b_, x_) in port_eff]
+        return port_eff[b_, s_] + port_pad[b_, s_] if (b_, s_) in port_eff else None
+    for (di_, c_), (wbs_, lbs_) in sorted(leaf_rows.items()):
+        for lb_, d_ in launch_floor(wbs_, lbs_, _plain_eff).items():
+            for s_ in st['rows'][lb_]['sinks']:
+                port_pad[lb_, s_] += d_
+            notes.append(f'CFG-LAUNCH floor: {st["rows"][lb_]["driver"]} +{d_} equal-age stages (plain)')
     for (s_, sp_, d_, p_), bis_ in sorted(port_mixed.items()):
         if (s_, sp_, d_, p_) in port_rows and not a.port_age_land:
             problems.append(f'PORT-AGE: {d_}.{p_} -> {s_}.{sp_} split over forwarded AND plain rows (align at the landing plan)')
@@ -587,6 +633,17 @@ def main():
                 break
         else:
             raise ValueError('PORT-AGE-LAND fixpoint failed')
+        # HBMb/NW 10-21 CFG-LAUNCH floor (landed rows), same rule as the plain floor above, on the landed age model
+        def _land_eff(b_, s_=None):
+            t_ = f'rf{b_:04d}'
+            if s_ is None:
+                return [(k_[1], age(k_)) for k_ in land_by_key if k_[0] == t_]
+            return age((t_, s_)) if (t_, s_) in land_by_key else None
+        for (di_, c_), (wbs_, lbs_) in sorted(leaf_rows.items()):
+            for lb_, d_ in launch_floor(wbs_, lbs_, _land_eff).items():
+                for s_, _a in _land_eff(lb_):
+                    extra[f'rf{lb_:04d}', s_] += d_
+                notes.append(f'CFG-LAUNCH floor: {st["rows"][lb_]["driver"]} +{d_} equal-age stages (landed)')
         for (tag, sink), count in sorted(extra.items()):
             row = row_by_tag[tag]; sk = row['sinks'][sink]
             lr = land_by_key[tag, sink]
@@ -616,7 +673,9 @@ def main():
             const_by_tag[tag]['sink_edges'][sink] = lr['latency_edges']
             port_age_pads.append(dict(row=st['rows'][int(tag[2:])]['driver'], sink=sink, pads=count,
                                       transport='landed', diagnostic_E=lr['E'] is None))
-    cl_probs, cl_rows = cfg_launch_order(consts, {k: v.get('master') for k, v in inst.items()})
+    _model = {(x['bus'], x['sink']): -(-x['stations'] // 2) + 1 + (x['E'] if x['E'] is not None else 1) + x['pads']
+              for x in land_rows} if a.land else None
+    cl_probs, cl_rows = cfg_launch_order(consts, {k: v.get('master') for k, v in inst.items()}, _model)
     problems += cl_probs
     notes.append(f'CFG-LAUNCH-ORDER: {len(cl_rows)} leaf copy sinks checked, {len(cl_probs)} launch-before-word')
     eq = collections.defaultdict(int)
