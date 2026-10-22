@@ -1,0 +1,565 @@
+{
+ "name": "qfd_tile_nk_romleaf_rc15a",
+ "top": "qfd_tile_nk_rp2_romleaf_rr",
+ "kind": "cluster",
+ "clock": "hybrid_entries",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_rs",
+  "ck_rn",
+  "ck_rsw",
+  "ck_rnw",
+  "ck_dw",
+  "ck_de",
+  "ck_tx0",
+  "ck_tx1",
+  "ck_tx2",
+  "ck_tx3",
+  "ck_tx4",
+  "ck_tx5",
+  "ck_tx6",
+  "ck_tx7",
+  "ck_rp0",
+  "ck_rp1",
+  "ck_rp2",
+  "ck_rp3",
+  "ck_rp4",
+  "ck_rp5",
+  "ck_rp6",
+  "ck_rp7",
+  "ck_rp8",
+  "ck_rp9",
+  "ck_fa0",
+  "ck_fa1",
+  "ck_fa2",
+  "ck_fa3",
+  "ck_fa4",
+  "ck_lsl0",
+  "ck_lsl1",
+  "ck_lsl2",
+  "ck_lsl3",
+  "ck_lsl4",
+  "ck_lsl5",
+  "ck_lsl6",
+  "ck_lsl7",
+  "ck_node"
+ ],
+ "clock_cts_roots": [
+  "ck",
+  "ck_rn",
+  "ck_rs",
+  "ck_rsw",
+  "ck_rnw",
+  "ck_dw",
+  "ck_de",
+  "ck_tx0",
+  "ck_tx1",
+  "ck_tx2",
+  "ck_tx3",
+  "ck_tx4",
+  "ck_tx5",
+  "ck_tx6",
+  "ck_tx7",
+  "ck_fa0",
+  "ck_fa1",
+  "ck_fa2",
+  "ck_fa3",
+  "ck_fa4"
+ ],
+ "required_hybrid_roots": {
+  "standard_cell_cts": [
+   "ck",
+   "ck_rn",
+   "ck_rs",
+   "ck_rsw",
+   "ck_rnw",
+   "ck_dw",
+   "ck_de",
+   "ck_tx0",
+   "ck_tx1",
+   "ck_tx2",
+   "ck_tx3",
+   "ck_tx4",
+   "ck_tx5",
+   "ck_tx6",
+   "ck_tx7",
+   "ck_fa0",
+   "ck_fa1",
+   "ck_fa2",
+   "ck_fa3",
+   "ck_fa4"
+  ],
+  "hard_child_entry": {
+   "ck_node": "u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node/clk",
+   "ck_lsl0": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh/clk",
+   "ck_lsl4": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh/clk",
+   "ck_lsl1": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh/clk",
+   "ck_lsl5": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh/clk",
+   "ck_lsl2": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh/clk",
+   "ck_lsl6": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh/clk",
+   "ck_lsl3": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh/clk",
+   "ck_lsl7": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh/clk",
+   "ck_rp0": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf/clk",
+   "ck_rp1": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf/clk",
+   "ck_rp2": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf/clk",
+   "ck_rp3": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf/clk",
+   "ck_rp4": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf/clk",
+   "ck_rp5": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf/clk",
+   "ck_rp6": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf/clk",
+   "ck_rp7": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf/clk",
+   "ck_rp8": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf/clk",
+   "ck_rp9": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf/clk"
+  }
+ },
+ "sources": [
+  "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32.sv",
+  "rtl/physical/a0_rc14_selected_2000/ot_qw_land4_n32_select.sv",
+  "rtl/physical/ot_qwen_rom_tile_die.sv",
+  "rtl/hdc/kv/ot_qwen_kv_land_merge.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_matvec.sv",
+  "rtl/physical/a0_rc14_selected_2000/ot_qwen_me_array_w12.sv",
+  "rtl/physical/a0_rc15_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
+  "rtl/hdc/ot_qwen_w12_arith.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_nr.sv",
+  "rtl/physical/ot_qwen_rom_tile_nk.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/physical/bb/ot_qwen_tile_node_bb.v",
+  "rtl/physical/bb/ot_qwen_tile_lsl_fp1_bb.v",
+  "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
+  "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv",
+  "rtl/physical/bb/ot_qwen_tile_romleaf_bb.v"
+ ],
+ "defines": [
+  "OT_QWEN_LSL_FP1"
+ ],
+ "params": {
+  "REGROOT_MODE": 9
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/qw_a0_rc14_children/node_nb1/ot_qwen_tile_node",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.genblk5.g_ndh.u_node",
+   "at": [
+    388.8,
+    432.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh",
+   "at": [
+    259.2,
+    129.6
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh",
+   "at": [
+    259.2,
+    302.4
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh",
+   "at": [
+    259.2,
+    475.20000000000005
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh",
+   "at": [
+    259.2,
+    648.0000000000001
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh",
+   "at": [
+    475.2,
+    129.6
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh",
+   "at": [
+    475.2,
+    302.4
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh",
+   "at": [
+    475.2,
+    475.20000000000005
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh",
+   "at": [
+    475.2,
+    648.0000000000001
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+   "at": [
+    43.2,
+    216.0
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+   "at": [
+    43.2,
+    561.6000000000001
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+   "at": [
+    43.2,
+    734.4000000000001
+   ],
+   "orient": "MY",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "at": [
+    604.8,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+   "at": [
+    604.8,
+    216.0
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+   "at": [
+    604.8,
+    388.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+   "at": [
+    604.8,
+    561.6000000000001
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
+   "count": 1,
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+   "at": [
+    604.8,
+    734.4000000000001
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "macros": [],
+ "outline": {
+  "w": 820.8,
+  "h": 907.2,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "ck_dw",
+   "ck_fa0",
+   "ck_fa1",
+   "ck_fa2",
+   "ck_fa3",
+   "ck_lsl0",
+   "ck_lsl1",
+   "ck_lsl2",
+   "ck_lsl3",
+   "ck_node",
+   "ck_rnw",
+   "ck_rp0",
+   "ck_rp1",
+   "ck_rp2",
+   "ck_rp3",
+   "ck_rp4",
+   "ck_rsw",
+   "ck_tx0",
+   "ck_tx1",
+   "ck_tx2",
+   "ck_tx3",
+   "n_a",
+   "n_b",
+   "n_y",
+   "t_out"
+  ],
+  "E": [
+   "ck",
+   "ck_de",
+   "ck_fa4",
+   "ck_lsl4",
+   "ck_lsl5",
+   "ck_lsl6",
+   "ck_lsl7",
+   "ck_rn",
+   "ck_rp5",
+   "ck_rp6",
+   "ck_rp7",
+   "ck_rp8",
+   "ck_rp9",
+   "ck_rs",
+   "ck_tx4",
+   "ck_tx5",
+   "ck_tx6",
+   "ck_tx7",
+   "rst_n",
+   "tap",
+   "tie_hi",
+   "tie_lo",
+   "tile_id"
+  ]
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "child_lattice_um": 43.2,
+ "layer_cap": "M7",
+ "recipe": 3,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 8
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "refglob": "*",
+ "inter": [],
+ "structural_change": "A0 rc15: replace one shared north/south any-request reduction with private combinational OR5 decoding beside each hard ROM leaf. Existing request flops, every clock, edge, reset, address and enable contract are unchanged. GPL decoders use actual free standard rows beside each any_d pin and retain rc14 reservation release before DPL. Source variants isolated from canonical RTL; no duplicated register state.",
+ "job": {
+  "owner": "Codex:CODEX-QW-A0-2000",
+  "branch": "codex/qw-a0-localreq-2000-1021",
+  "tag": "rc15a",
+  "purpose": "A0 local combinational request decode beside each actual ROM leaf; zero added state/edges, entry0-to-leaf contract retained; repairs observed shared bank4 any_d distribution cone.",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "results/arch/qwen_romleaf_1552/bench/parent_nk_clock_mutant.log",
+   "results/arch/qwen_romleaf_1552/bench/parent_nk_positive.log",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/physical/ot_qwen_tile_lsl_fp1.sv",
+   "rtl/physical/ot_qwen_tile_node.sv",
+   "rtl/physical/ot_qwen_tile_romleaf.sv",
+   "rtl/physical/qfd_tile_nk_rp1.sv",
+   "rtl/physical/qfd_tile_nk_rp2_45.sv",
+   "rtl/test/tb_qwen_a0_rr6.sv",
+   "rtl/test/tb_qwen_a0_rr8.sv",
+   "rtl/test/tb_qwen_romleaf_parent_nk_native.sv",
+   "tools/qwen_a0_safe",
+   "tools/qwen_romleaf",
+   "tools/ref_tile/specs_q_tile_repack/qfd_tile_nk_rp1_a1.json",
+   "rtl/physical/ot_qw_land4.sv",
+   "rtl/test/tb_qwen_a0_rr9.sv",
+   "rtl/physical/ot_qw_land4_n32.sv",
+   "rtl/physical/ot_qw_land4_n32_select.sv",
+   "rtl/hdc/ot_qwen_rom_tile_w12_land32.sv",
+   "rtl/hdc/ot_qwen_w12_matvec_land32.sv",
+   "tools/qwen_romleaf/rc11",
+   "tools/qwen_romleaf/rc12",
+   "tools/qwen_romleaf/rc13",
+   "tools/qwen_romleaf/rc14_2000",
+   "rtl/physical/a0_rc14_selected_2000",
+   "results/arch/codex_qw_a0_2000_1021",
+   "physical/ref_tile/qw_a0_rc14_children",
+   "tools/qwen_romleaf/rc15_2000",
+   "rtl/physical/a0_rc15_selected_2000",
+   "results/arch/codex_qw_a0_localreq_2000_1021"
+  ],
+  "views_to": "physical/ref_tile/qfd_tile_nk_romleaf_rc15a/views",
+  "record_to": "results/rtl/ref_tile/qfd_tile_nk_romleaf_rc15a",
+  "benches": [
+   {
+    "name": "parent_native_0",
+    "cmd": "bash tools/qwen_romleaf/rc15_2000/parent_native_pinned.sh {RUN}/bench/parent_native 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560",
+    "pass_witness": "results/arch/codex_qw_a0_localreq_2000_1021/parent_native_PASS.log"
+   },
+   {
+    "name": "parent_native_leaf_clock_4",
+    "cmd": "bash tools/qwen_romleaf/rc15_2000/parent_native_pinned.sh {RUN}/bench/parent_native 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "ROMLEAF_PARENT_NK_NATIVE_FAIL|ROMLEAF_PARENT_NK_MISMATCH",
+    "fail_witness": "results/arch/codex_qw_a0_localreq_2000_1021/parent_native_clock_MUT4_FAIL.log"
+   }
+  ],
+  "cycles_added": 0,
+  "hold_merge": "CRITICAL A0 (critical_tiles.txt): gate PNG + checklist review only; no REVIEW.json / submit by the lane agent."
+ },
+ "slot_change_request": "QW-CLUSTER3/A0 rc1: die slot changes 457.92 x 1166.4 -> 820.8 x 907.2 (+210.5k um2 per tile); die re-plan required before adoption; pin faces W/E kept.",
+ "io_tcl": "tools/qwen_romleaf/rc14_2000/baseline/nk_pins.tcl",
+ "pin_hook_before_flops": [
+  "tools/qwen_romleaf/rc14_2000/baseline/nk_rc13_regions.tcl",
+  "tools/qwen_romleaf/rc15_2000/local_request_decode.tcl"
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL already samples tap/tile_id/rst_n on ck_fa4, n_a/n_b on their face roots and launches t_out/n_y on their face roots; node-less twin omits n_* ports. Preserve these proved native stages and their fixed calendar; tie_hi/tie_lo are constant straps. Additional generic wrapper stages would duplicate the existing registers. Native all-pin timing still required."
+ },
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "orfs_vars": {
+  "DONT_BUFFER_PORTS": "1",
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "ENABLE_DPO": "0"
+ },
+ "hold_merge": "CRITICAL A0 (critical_tiles.txt): gate PNG + checklist review only; no REVIEW.json / submit by the lane agent.",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck",
+  "copies": {
+   "rst_n": 16
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "pre_cts_extra": [
+  "tools/qwen_romleaf/rc14_2000/baseline/ck_km_split.tcl",
+  "tools/qwen_romleaf/rc14_2000/baseline/ck_km_cts_nets.tcl"
+ ],
+ "pre_dpl_extra": [
+  "tools/qwen_romleaf/rc14_2000/release_placement_reservations.tcl"
+ ],
+ "reroute_reason": {
+  "kind": "floorplan_change",
+  "reason": "Observed rc14a CTS setup repair leaves 165 unresolved endpoints, worst -80.179 ps at bank4 any_d. Complete preceding DPL path proves 580.03 ps data via global any reduction and seven repeaters. Preserve all rc14 runs and timing constraints; local combinational distribution successor keeps the same logical edge."
+ },
+ "safe_design_checklist": {
+  "1_pins": "Pin helper and all data/clock/reset landing stages byte-exact original9873; no external pin movement. Every actual child origin43.2um lattice.",
+  "2_reach": "Original per-consumer compact clock-sink placement groups retained during GPL; initial native landing ring spans and fixed hard-child/pin shapes unchanged. Actual reach and postrepair drift measured at gate.",
+  "3_fanout": "Source semantics and connectivity identical9873 full native32 path, canonical helpers from current main; gate repeats exact Liberty census.",
+  "4_depth": "No logical cell/register/datapath/timing constraint change; same REGROOT_MODE9, landed K2/D4 crossings and +6 original t_out price. No new edge.",
+  "5_storage": "19 exact hard children NK/18 NL with original pin contracts and43.2 origins; node binding actual CLOSED NB1 record with exact inherited geometry, original provenance marker retained historically.",
+  "6_floorplan": "Same820.8x907.2 hard layout and actual legal rows. Source FF reservations shape GPL only; opening adjacent repair row capacity fixes illegal wire placements causally at max3.4um displacement/0percentHPWL on actual failedODB.",
+  "7_clock": "Original measured kmeans roots, compensation, landed source roots retained; no clock uncertainty/corner relaxation. All TT/FF boundary spreads still must pass80ps at actual parent.",
+  "8_reset": "Original two-edge reset landing and max32 relay splitting unchanged; no reset/data contract modification."
+ }
+}
