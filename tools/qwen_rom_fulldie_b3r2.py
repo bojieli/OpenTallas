@@ -4044,6 +4044,19 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             r_ = (it.x, it.y, it.x + it.w, it.y + it.h)
             if not free(r_, 0.432):
                 sp_ = None
+                # SQC-QDIE4 10-22 (OT_SPLIT_FAULT_LAND_KEEP_REACH=1): a moved root takes the nearest free box from which
+                # every fault edge pass 1 kept as a direct wire still meets the reach pin to pin (pin offsets are
+                # translation-invariant, R0); none within the ring -> the nearest free box (the recheck below relays it)
+                _kr = []
+                if _os.environ.get('OT_SPLIT_FAULT_LAND_KEEP_REACH', '0') == '1':
+                    for idx_, (bid_, cl_, bits_, eps_) in buses:
+                        if idx_ in keep and idx_ not in plans and str(bid_).startswith('flt_') and len(eps_) == 2:
+                            for a_, b_ in ((0, 1), (1, 0)):
+                                if eps_[a_][0] == it.name and eps_[b_][0] != it.name:
+                                    p_ = _pp(*eps_[a_])
+                                    _kr.append((p_[0] - it.x, p_[1] - it.y, _pp(*eps_[b_])))
+                _lim_kr = RELAY_REACH_OK - 5.0
+                _fb_sp = None
                 for ring in range(1, 120):
                     st = ring * 4.32
                     cs_ = [(i * 4.32, s_ * st) for s_ in (-1, 1) for i in range(-ring, ring + 1)] + \
@@ -4051,10 +4064,16 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     for dx, dy in sorted(cs_, key=lambda t: (abs(t[0]) + abs(t[1]), t)):
                         x0, y0 = v.dn(it.x + dx, v.GX), v.dn(it.y + dy, v.GY)
                         if free((x0, y0, x0 + it.w, y0 + it.h), 0.432):
+                            if _kr and any(abs(x0 + ox_ - q_[0]) + abs(y0 + oy_ - q_[1]) > _lim_kr for ox_, oy_, q_ in _kr):
+                                _fb_sp = _fb_sp or (x0, y0)
+                                continue
                             sp_ = (x0, y0)
                             break
                     if sp_:
                         break
+                if sp_ is None and _fb_sp is not None:
+                    print(f'FAULT_EMIT defer keep-reach: {it.name} no in-reach free box, nearest taken', flush=True)
+                    sp_ = _fb_sp
                 if sp_ is None:
                     raise ValueError(f'relays: deferred fault root {it.name} has no free box within 518 um')
                 far = max(far, abs(sp_[0] - it.x) + abs(sp_[1] - it.y))
@@ -4068,6 +4087,34 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 pl_['P0'], pl_['P1'] = _pp(*pl_['eps'][0]), _pp(*pl_['eps'][1])
                 pl_['d'] = abs(pl_['P0'][0] - pl_['P1'][0]) + abs(pl_['P0'][1] - pl_['P1'][1])
                 pl_['path'] = [pl_['P0'], (pl_['P0'][0], pl_['P1'][1]), pl_['P1']]
+        # SQC-QDIE4 10-22 (dv2f21g5r34..r39: flt_t_embed_prov_g0 408.2 um pin to pin, never in plans): a fault edge that
+        # pass 1 kept as a DIRECT wire (<= RELAY_REACH_OK on the pre-move root boxes) was never re-measured after its root
+        # moved here, so the move stretched it past the reach with no relay.  Every kept fault edge touching a moved root
+        # is re-measured on the live pins and, when now over the direct-wire limit, becomes a plan searched in the late
+        # fault pass like every other fault edge (observation path +1 registered station; same reach and gates).
+        _rk = []
+        if mv and _os.environ.get('OT_RELAY_FAULT_MOVED_RECHECK', '1') == '1':
+            for idx_, (bid_, cl_, bits_, eps_) in buses:
+                if idx_ in plans or idx_ not in keep or not str(bid_).startswith('flt_') or len(eps_) != 2 \
+                        or not any(e_[0] in mv for e_ in eps_):
+                    continue
+                P0_, P1_ = _pp(*eps_[0]), _pp(*eps_[1])
+                for P_, e_ in ((P0_, eps_[0]), (P1_, eps_[1])):
+                    PT_EXT[_pt_key(P_)] = pos.ext(*e_)
+                    if hasattr(pos, 'face'):
+                        PT_FACE[_pt_key(P_)] = pos.face(*e_)
+                d_ = abs(P0_[0] - P1_[0]) + abs(P0_[1] - P1_[1])
+                pl_ = dict(bid=bid_, cl=cl_, bits=bits_, eps=eps_, P0=P0_, P1=P1_, frames=[], d=d_,
+                           path=[P0_, (P0_[0], P1_[1]), P1_])
+                if max(p2p_hops(pl_)) <= RELAY_REACH_OK:
+                    continue
+                plans[idx_] = pl_
+                keep.pop(idx_, None)
+                _flt_late.append(idx_)
+                _rk.append((bid_, round(max(p2p_hops(pl_)), 1)))
+        m.setdefault('fault_emit', {})['moved_direct_over'] = _rk
+        print(f'FAULT_EMIT defer recheck: {len(_rk)} direct fault edges over {RELAY_REACH_OK:.0f} after the root moves '
+              f'-> late relay search: {_rk[:12]}', flush=True)
         m.setdefault('fault_emit', {})['deferred_roots_moved'] = dict(n=len(moved), max_um=round(far, 1), names=moved[:40])
         print(f'FAULT_EMIT defer: fault roots landed after the data relays; {len(moved)} moved (max {far:.0f} um)', flush=True)
         _fl_done[0] = True
