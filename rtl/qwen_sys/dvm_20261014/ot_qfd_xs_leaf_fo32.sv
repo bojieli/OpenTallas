@@ -190,7 +190,7 @@ module ot_qfd_xs_leaf_fo32 #(
         ot_qfd_xs_mux_rep16 #(.LN(7), .SW(RSW)) u_m (.d(mem_all[2176*SRC +: 2176]), .s(sr), .q(tr[gt]));
         // assembly of elements 0 .. 2: two halves, each enabled from its own kept copy of the sequencer state
         // (one shared position enable measured 36 pins: 16 bits x 2 pins + valid/enable)
-        reg [47:0] ad;
+        reg [23:0] adl, adh;                             // low / high bytes of elements 0 .. 2 (separate registers)
         reg [2:0]  av, ae;
         wire       een = hen[el];
         (* keep *) reg       asv0, asv1;
@@ -198,12 +198,13 @@ module ot_qfd_xs_leaf_fo32 #(
         always @(posedge clk) begin asv0 <= sv_n; asv1 <= sv_n; ael0 <= el_n; ael1 <= el_n; end
         always @(posedge clk)
             if (asv0 && ael0 != 2'd3) begin
-                ad[16*ael0 +: 8] <= een ? tr[gt][7:0] : 8'd0;
+                adl[8*ael0 +: 8] <= een ? tr[gt][7:0] : 8'd0;
                 av[ael0] <= een && tr[gt][16];
                 ae[ael0] <= een;
             end
         always @(posedge clk)
-            if (asv1 && ael1 != 2'd3) ad[16*ael1 + 8 +: 8] <= een ? tr[gt][15:8] : 8'd0;
+            if (asv1 && ael1 != 2'd3) adh[8*ael1 +: 8] <= een ? tr[gt][15:8] : 8'd0;
+        wire [47:0] ad = {adh[23:16], adl[23:16], adh[15:8], adl[15:8], adh[7:0], adl[7:0]};
         assign asm_d[gt] = ad; assign asm_v[gt] = av; assign asm_e[gt] = ae;
         assign l_en[gt] = hen[3];
     end endgenerate
