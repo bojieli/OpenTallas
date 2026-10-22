@@ -1,5 +1,5 @@
 {
-  "status": "SOURCE_AUDIT_PASS_BEHAVIORAL_PROOF_RUNNING",
+  "status": "LANDING_AND_CAUSAL_AND_FULL_PROGRAM_PASS_PHYSICAL_PENDING",
   "source": "cf8b7657a",
   "root_ports": [
     "ck_lk",
@@ -398,5 +398,27 @@
     "Canonical physical child-centre taps retain actual per-corner endpoint measurements and unchanged 80 ps limit.",
     "Actual landing positive, missing-landing causal proof and full programme positive must pass before physical admission.",
     "Initial R3 full programme failure retained: 144 south output mismatches, all other classes zero. The source path includes both SQ/VC forward and return landings, so south command age is original plus six, not plus four."
-  ]
+  ],
+  "proofs": {
+    "landing": {
+      "source": "cf8b7657a",
+      "unit": "2393832",
+      "result": "PASS"
+    },
+    "missing_landing": {
+      "source": "cf8b7657a",
+      "unit": "2393832",
+      "result": "CAUGHT, actual exit 1"
+    },
+    "initial_program": {
+      "source": "cf8b7657a",
+      "unit": "2393832",
+      "result": "FAIL, 144 south mismatches, preserved"
+    },
+    "corrected_program": {
+      "source": "216d3961811a570baa92a0ec63862f68a6f585a8",
+      "unit": "2851148-1792649895",
+      "result": "PASS, all seven mismatch classes zero, six jobs, 50 rows, first legal input 8/output 18"
+    }
+  }
 }

@@ -41,6 +41,6 @@ for suffix,extra in [('a',0),('b',43.2)]:
    lines += [f'set ::lpf_r [odb::dbRegion_create $::lpf_blk "lp_fence_{g}"]','odb::dbBox_create $::lpf_r '+' '.join(f'[expr {{round({v:.6f}*$::lpf_dbu)}}]' for v in box),f'set ::lpf_g({g}) [odb::dbGroup_create $::lpf_r "lp_fence_grp_{g}"]']
   g=reg+'_rst';groups.append(g)
   lines += [f'set ::lpf_r [odb::dbRegion_create $::lpf_blk "lp_fence_{g}"]','odb::dbBox_create $::lpf_r '+' '.join(f'[expr {{round({v:.6f}*$::lpf_dbu)}}]' for v in [432,y0,464.4+extra,y1]),f'set ::lpf_g({g}) [odb::dbGroup_create $::lpf_r "lp_fence_grp_{g}"]']
-  for h in [f'u_lpr_{reg}_p']+[f'u_lpr_{reg}_c{i}' for i in range(4)]+[f'u_lprc_u_l{list(bands).index(reg)}']:own[h]=g
+  for h in [f'u_lpr_{reg}_p']+[f'u_lpr_{reg}_c{i}' for i in range(8 if reg == 'sq' else 4)]+[f'u_lprc_u_l{list(bands).index(reg)}']:own[h]=g
  lines+=['array set ::lpf_own {'+' '.join(f'{k} {v}' for k,v in own.items())+'}',tail,'foreach r {'+' '.join(groups)+'} {','  if {![info exists ::lpf_n($r)] || $::lpf_n($r) < 1} { error "LP_FENCE: region $r got no landing cells" }','  if {![info exists ::lpf_c($r)]} { set ::lpf_c($r) 0 }','  puts "LP_FENCE $r cells=$::lpf_n($r) read_cone=$::lpf_c($r)"','}']
  Path(fence).write_text('\n'.join(lines)+'\n')

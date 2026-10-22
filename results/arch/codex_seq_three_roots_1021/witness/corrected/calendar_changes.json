@@ -1,0 +1,16 @@
+{
+  "service_completion_rows": "+4 edges",
+  "host_to_issuer_request": "+2 edges, phase scheduled two earlier",
+  "job_command_return": "+2 edges",
+  "kit_done_return": "+2 edges",
+  "southbound_command_output": "+6 edges total: two LK/SQ plus two SQ/VC command plus two VC/SQ return",
+  "rung_each_direction": "+4 edges",
+  "config_cw": "+4 edges",
+  "SQ_VC_loop": "+4 edges, two forward and two return",
+  "host_ingest": "unchanged",
+  "boot_release_extra_edges": 4,
+  "total_reset_release_edges": 7,
+  "earliest_legal_rung_input_edge": 8,
+  "first_legal_inputs": "Known north and south beats at edge 8, every output check active",
+  "status": "Needs actual behavioral positive; these are source-derived expectations."
+}
