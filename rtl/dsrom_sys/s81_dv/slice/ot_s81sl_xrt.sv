@@ -702,6 +702,14 @@ module ot_s81sl_xrt #(
     // (FOREG = 1: one more dedicated output flop, +2; no pin_reg_split needed).  Fault is a sticky check, never a
     // schedule input (header): 0 data cycles, 0 token-rate change.
     (* keep *) reg fa; (* keep *) reg fb; (* keep *) reg fc; reg fcore;
+    // XRT3R census (gate 14:14: u_sk q[1] / q[3] 34 loads = two 4:16 shift-compares on sid_k): sid is a strap (static
+    // from reset), so its one-hot is captured once in kept flops and the pair-partner mask is the same flops with adjacent
+    // bits swapped (1 << (k ^ 1) == pair-swap of 1 << k): wiring only, same values, same edges.
+    (* keep *) reg [15:0] sk_oh;
+    always @(posedge clk) sk_oh <= 16'd1 << sid_k;
+    wire [15:0] sk_ohx;
+    genvar skx;
+    generate for (skx = 0; skx < 16; skx = skx + 1) begin : g_skx assign sk_ohx[skx] = sk_oh[skx ^ 1]; end endgenerate
     always @(posedge clk or negedge rs_f)
         if (!rs_f) begin fa <= 1'b0; fb <= 1'b0; fc <= 1'b0; end
         else begin
@@ -710,8 +718,8 @@ module ot_s81sl_xrt #(
                   ((|pv) && erun);
             fc <= (vct && (pk_go || sc_rel)) | (pk_go && sc_rel) | (s_scv && esc && wsc) | (tg[4] && (|lov1)) | f_bw |
                   so_f | (so_go && (vct || pk_go || sc_rel))      // S81-SMWIRE / BIND mu4 terms (send/inject region)
-                  | (pair_v && (vct || sc_rel || so_go || s_mask != (16'd1 << (sid_k ^ 4'd1))))   // RG-FFN transport
-                  | (s_local && ((|s_dir) || s_kind != K_RD || s_mask != (16'd1 << sid_k)));
+                  | (pair_v && (vct || sc_rel || so_go || s_mask != sk_ohx))   // RG-FFN transport
+                  | (s_local && ((|s_dir) || s_kind != K_RD || s_mask != sk_oh));
         end
     generate if (FOREG != 0) begin : g_foreg
         always @(posedge clk or negedge rs_f)
