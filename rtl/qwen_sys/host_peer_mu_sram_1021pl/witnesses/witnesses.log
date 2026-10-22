@@ -1,0 +1,16 @@
+# QE3-HROOT-PEER2 10-21 witnesses (Verilator 5.050)
+CODEQ PASS checks=2927623 words=7896501 class1=2501009 class1_consumed=63095 forwarded_compares=3808 class8=817999 resets=72377
+CODEQ PASS checks=2926916 words=7890890 class1=2501992 class1_consumed=64134 forwarded_compares=3880 class8=820165 resets=73084
+QKD_HR_PE_CRX_MUTANT (same-edge table write ignored): CODEQ FAIL cyc=2523
+LCEQ PASS checks=2956967 terminal_accepted=13125 cancel_accepts=90 posts=12048 dispatches=60 resets=43033
+LCEQ PASS checks=2956770 terminal_accepted=13163 cancel_accepts=91 posts=12112 dispatches=55 resets=43230
+QKD_HR_PE_LHD_MUTANT (head ignores same-edge capture): LCEQ FAIL cyc=197
+# system scenario benches rtl/test/mu_qwen_1018/run_mu_peer.sh with both edits patched into mu_qwen_20261018 codec_mu/lifecycle_mu (base = unpatched):
+BASE MU_PEER tb_mu_peer_e2e rc=0: PASS MU_PEER_E2E uidslot=0 release_checked_posts=12 rank_releases=96 users=4 rounds=3 steps=12 posts=12 rank_requests=96 peer_starts=84 writer_stages=432 overlap_dispatch=10 overlap_post=10 epochs_out_of_global_order=1 max_post_after_kv_done=34 cycles=10936
+BASE MU_PEER tb_mu_peer_abort rc=0: PASS MU_PEER_ABORT cancels=3 (u0 terminated identity, u1+u2 live) posts=15 after 12 normal steps
+BASE MU_PEER tb_mu_peer_e2e_uid rc=0: PASS MU_PEER_E2E uidslot=1 release_checked_posts=12 rank_releases=96 users=4 rounds=3 steps=12 posts=12 rank_requests=96 peer_starts=84 writer_stages=432 overlap_dispatch=10 overlap_post=10 epochs_out_of_global_order=1 max_post_after_kv_done=34 cycles=10936
+BASE MU_PEER tb_mu_peer_abort_uid rc=0: PASS MU_PEER_ABORT cancels=3 (u0 terminated identity, u1+u2 live) posts=15 after 12 normal steps
+NEW MU_PEER tb_mu_peer_e2e rc=0: PASS MU_PEER_E2E uidslot=0 release_checked_posts=12 rank_releases=96 users=4 rounds=3 steps=12 posts=12 rank_requests=96 peer_starts=84 writer_stages=432 overlap_dispatch=10 overlap_post=10 epochs_out_of_global_order=1 max_post_after_kv_done=45 cycles=10937
+NEW MU_PEER tb_mu_peer_abort rc=0: PASS MU_PEER_ABORT cancels=3 (u0 terminated identity, u1+u2 live) posts=15 after 12 normal steps
+NEW MU_PEER tb_mu_peer_e2e_uid rc=0: PASS MU_PEER_E2E uidslot=1 release_checked_posts=12 rank_releases=96 users=4 rounds=3 steps=12 posts=12 rank_requests=96 peer_starts=84 writer_stages=432 overlap_dispatch=10 overlap_post=10 epochs_out_of_global_order=1 max_post_after_kv_done=45 cycles=10937
+NEW MU_PEER tb_mu_peer_abort_uid rc=0: PASS MU_PEER_ABORT cancels=3 (u0 terminated identity, u1+u2 live) posts=15 after 12 normal steps
