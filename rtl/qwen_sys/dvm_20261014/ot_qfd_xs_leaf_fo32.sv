@@ -142,7 +142,7 @@ module ot_qfd_xs_leaf_fo32 #(
     wire [2:0]  asm_e [0:1];
     wire [1:0]  l_en;
     wire [1:0]  coll;
-    genvar gn, lv, c;
+    genvar gn, lv, c, hb;
     generate for (gt = 0; gt < 2; gt = gt + 1) begin : g_t
         // primary sequencer (reference behaviour); the primary held request keeps only the four element enables
         wire       req = rp_v && (rp_t == gt);
@@ -162,19 +162,24 @@ module ot_qfd_xs_leaf_fo32 #(
         // after the first reset edge; no reset load).
         wire [6:0] nsel [0:NG-1];
         for (gn = 0; gn < NG; gn = gn + 1) begin : g_n
-            (* keep *) reg       cva, cta, cvb, ctb, cep_;
+            (* keep *) reg       cvb, ctb, cep_;
             (* keep *) reg [5:0] cp0;                       // element 0 position from the pins
             (* keep *) reg [1:0] cel;
             (* keep *) reg       chep;
             (* keep *) reg [23:0] chp;                      // positions of elements 0 .. 3
             always @(posedge clk) begin
-                cva <= r_v; cta <= r_t; cvb <= r_v; ctb <= r_t; cep_ <= r_ep; cp0 <= r_p[5:0]; cel <= el_n;
+                cvb <= r_v; ctb <= r_t; cep_ <= r_ep; cp0 <= r_p[5:0]; cel <= el_n;
             end
-            wire creqa = cva && (cta == gt);
             wire creqb = cvb && (ctb == gt);
-            always @(posedge clk) if (creqa) begin
-                chep <= cep_;
-                chp <= {rp_p[26:21], rp_p[19:14], rp_p[12:7], rp_p[5:0]};
+            for (hb = 0; hb < 4; hb = hb + 1) begin : g_ha
+                // own raw request capture per element group (one shared 25-bit load enable measured 50 pins)
+                (* keep *) reg cva, cta;
+                always @(posedge clk) begin cva <= r_v; cta <= r_t; end
+                wire creqa = cva && (cta == gt);
+                always @(posedge clk) if (creqa) chp[6*hb +: 6] <= rp_p[7*hb +: 6];
+                if (hb == 0) begin : g_ep
+                    always @(posedge clk) if (creqa) chep <= cep_;
+                end
             end
             wire [1:0] nel = creqb ? 2'd0 : cel + 1'b1;
             assign nsel[gn] = creqb ? {cep_, cp0} : {chep, chp[6*nel +: 6]};
@@ -196,18 +201,19 @@ module ot_qfd_xs_leaf_fo32 #(
         // (one shared position enable measured 36 pins: 16 bits x 2 pins + valid/enable)
         reg [23:0] adl, adh;                             // low / high bytes of elements 0 .. 2 (separate registers)
         reg [2:0]  av, ae;
-        wire       een = hen[el];
+        (* keep *) reg [3:0] hl, hh;                     // per-half copies of hen (one shared hen[el] measured 54 pins)
+        always @(posedge clk) if (req) begin hl <= {rp_p[27], rp_p[20], rp_p[13], rp_p[6]}; hh <= {rp_p[27], rp_p[20], rp_p[13], rp_p[6]}; end
         (* keep *) reg       asv0, asv1;
         (* keep *) reg [1:0] ael0, ael1;
         always @(posedge clk) begin asv0 <= sv_n; asv1 <= sv_n; ael0 <= el_n; ael1 <= el_n; end
         always @(posedge clk)
             if (asv0 && ael0 != 2'd3) begin
-                adl[8*ael0 +: 8] <= een ? tr[gt][7:0] : 8'd0;
-                av[ael0] <= een && tr[gt][16];
-                ae[ael0] <= een;
+                adl[8*ael0 +: 8] <= hl[ael0] ? tr[gt][7:0] : 8'd0;
+                av[ael0] <= hl[ael0] && tr[gt][16];
+                ae[ael0] <= hl[ael0];
             end
         always @(posedge clk)
-            if (asv1 && ael1 != 2'd3) adh[8*ael1 +: 8] <= een ? tr[gt][15:8] : 8'd0;
+            if (asv1 && ael1 != 2'd3) adh[8*ael1 +: 8] <= hh[ael1] ? tr[gt][15:8] : 8'd0;
         wire [47:0] ad = {adh[23:16], adl[23:16], adh[15:8], adl[15:8], adh[7:0], adl[7:0]};
         assign asm_d[gt] = ad; assign asm_v[gt] = av; assign asm_e[gt] = ae;
         assign l_en[gt] = hen[3];
