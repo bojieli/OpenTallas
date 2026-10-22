@@ -1444,7 +1444,7 @@ D=$(cd $(dirname $0) && pwd); N=dvrvhold-$$
 [ -f $D/out/grt.odb ] || exit 3
 mv $D/out/grt.odb $D/out/grt_prehold.odb || exit 3
 timeout ${HOLD_TIMEOUT:-5h} docker run --rm --name $N --cpus=${CPUS:-8} --memory=${MEMG:-96}g -v $D:/work -w /work openroad/orfs:asap7lock \
-  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/hold_eco.tcl > /work/out/hold_eco.log 2>&1; rc=\$?; chmod -R a+rwX /work/out; exit \$rc"
+  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/hold_eco.tcl > /work/out/hold_eco.log 2>&1; rc=\\$?; chmod -R a+rwX /work/out; exit \\$rc"
 rc=$?
 if [ $rc -ne 0 ] || ! grep -q OT_HOLD_DONE $D/out/hold_eco.log 2>/dev/null; then
   docker rm -f $N >/dev/null 2>&1; rm -f $D/out/grt.odb; mv $D/out/grt_prehold.odb $D/out/grt.odb; echo "HOLD_ECO_FAILED rc=$rc (pre-ECO grt.odb kept)" > $D/out/hold_eco.exit; exit $rc
