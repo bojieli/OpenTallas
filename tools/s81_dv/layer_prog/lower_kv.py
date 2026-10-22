@@ -14,7 +14,7 @@ from layer_prog.lower_vs import ctl_payload, row_write, _dvc
 
 OPS = [r'^(?:mtp\.)?attn\.(?:kv_norm\..*|kv_rope_qdq|cmp\.(?:k_norm\..*|norm\..*|k_rope_qdq|row_qdq|pool))$']
 UNIT = 'ot_s81sl_kv_leaf / ot_s81_su_kv (KV, GK, CN, IK, CP)'
-BENCH = 'results/rtl/s81_rtlgap_sukv_1021'
+BENCH = 'results/rtl/s81_rtlgap_codex_2000/SUKV/run2'
 KINDS = dict(KV=1, GK=7, CN=12, IK=13, CP=14)
 # Measured at the adapter's VLAT4 command boundary, NOT the issuer boundary.
 ADAPTER_DONE = dict(KV=1130, GK=1025, CN=1218, IK=1058, CP=390)
@@ -44,7 +44,7 @@ def validate(program, sched):
     if program.get('schema') != 'opentallas.s81.kv_program.v1':
         raise ValueError('unsupported KV programme receipt schema')
     ops = {o['id']: o for o in sched['ops']}
-    seen, intervals = {}, []
+    seen, intervals, records, reads = {}, [], {}, []
     for job in program['jobs']:
         kind = job['kind']
         if kind not in KINDS:
@@ -66,11 +66,30 @@ def validate(program, sched):
         issue = _integer(job['issue'], 'issue', 0, 2**24-1)
         context = _integer(job['context'], 'context', 0, 3)
         capture = issue + _integer(job['capture_offset'], 'actual CTL/VP capture offset', 1)
+        if job['done_age'] != ADAPTER_DONE[kind]:
+            raise ValueError('selected VLAT4 source needs its exact measured pin-to-done age')
         done = capture + _integer(job['done_age'], 'measured command-to-done', ADAPTER_DONE[kind])
         release = _integer(job['release_edge'], 'final consumer release', done)
         if not job.get('source_receipt'):
             raise ValueError('source-bound command timing receipt required')
-        intervals.append((min([issue] + [w['issue'] for w in job.get('writes', [])]), release, context))
+        identifier = job.get('id', job['owner']+'::'+kind)
+        if identifier in records:
+            raise ValueError('duplicate physical job identity')
+        intervals.append((capture, done + 1, identifier))
+        outputs = set()
+        if kind != 'GK':
+            ready = _integer(job['output_ready_edge'], 'native read availability', done + 2)
+            _integer(release, 'output lifetime end', ready)
+            first_write = _integer(job['first_output_write_edge'], 'first native output write', capture, done + 1)
+            expected_first_write = done - 251 if kind == 'CP' else capture + 1030
+            if first_write != expected_first_write:
+                raise ValueError('first native output commit differs from selected source phase schedule')
+            outputs = (_range(job['output_base'], job['output_base']+127) if kind == 'CP' else
+                       _range(672, dict(KV=771, CN=863, IK=703)[kind]))
+        else:
+            ready, first_write = done, done
+        records[identifier] = dict(job=job, outputs=outputs, ready=ready, first_write=first_write, done=done)
+
         if kind == 'CP':
             bases = [job['slot0_base'], job['slot1_base']]
             required = _range(bases[0], bases[0]+255) | _range(bases[1], bases[1]+255)
@@ -104,7 +123,13 @@ def validate(program, sched):
                 raise ValueError('actual row producer and source receipt required')
             if _integer(res['ready_edge'], 'producer ready edge') >= capture:
                 raise ValueError('producer rows are not ready before command capture')
-            _integer(res['release_edge'], 'producer residency end', done)
+            last_read = _integer(res['last_read_edge'], 'actual last input read', capture, done)
+            _integer(res['release_edge'], 'producer residency end', last_read + 1)
+            if rows & outputs and last_read >= first_write:
+                raise ValueError('output overwrite precedes completion of the source input reads')
+            reads.append(dict(job=identifier, rows=rows, ready=res['ready_edge'], end=last_read+1,
+                              producer_job=res.get('producer_job')))
+
         if not required <= available:
             raise ValueError('physical job lacks required native input rows')
         if kind == 'IK' and not any(r.get('format') == 'fp32_zero_prefix384' and
@@ -116,12 +141,32 @@ def validate(program, sched):
             _integer(int(wr['word128'], 16), 'native input word', 0, 2**128-1)
             if not wr.get('producer') or wr.get('role') not in ('input', 'gain', 'parameter', 'zero_prefix'):
                 raise ValueError('CTL writes must be actual producer inputs, gains or parameters')
-            if _integer(wr['issue'], 'input write issue') + job['capture_offset'] >= capture:
-                raise ValueError('input write does not precede command')
-    # The single real leaf port is exclusive even when logical contexts differ.
+            write_issue = _integer(wr['issue'], 'native input write issue', 0, 2**24-1)
+            commit = _integer(wr['commit_edge'], 'actual native input write commit', write_issue, capture-1)
+            intervals.append((commit, commit+1, identifier+'::input_write'))
+
+    # Port ownership ends after the final registered native write, independently
+    # of output row leases. CP output can remain live while CN consumes it.
     for a, b in zip(sorted(intervals), sorted(intervals)[1:]):
-        if b[0] <= a[1]:
-            raise ValueError('SUKV scratch/port lifetime overlaps another context/job')
+        if b[0] < a[1]:
+            raise ValueError('SUKV port reservation overlaps another command or input write')
+    for read in reads:
+        producer = read['producer_job']
+        if producer is not None:
+            if producer not in records or producer == read['job']:
+                raise ValueError('unknown or self-referential native row producer')
+            record = records[producer]
+            if not read['rows'] <= record['outputs'] or read['ready'] < record['ready']:
+                raise ValueError('producer does not own these rows or output is not readable yet')
+        for identifier, record in records.items():
+            if identifier in (read['job'], producer):
+                continue
+            if read['rows'] & record['outputs'] and max(read['ready'], record['first_write']) < min(read['end'], record['done']+2):
+                raise ValueError('another physical job overwrites live native input rows')
+        for record in records.values():
+            for wr in record['job'].get('writes', []):
+                if wr['row'] in read['rows'] and read['ready'] <= wr['commit_edge'] < read['end']:
+                    raise ValueError('CTL input write overwrites a live producer row')
     return seen
 
 
