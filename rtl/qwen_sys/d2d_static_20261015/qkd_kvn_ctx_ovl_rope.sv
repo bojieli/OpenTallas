@@ -22,7 +22,8 @@ module qkd_kvn_ctx_ovl_rope #(
  reg [1:0] uq,cuser_q;
  reg cstart_q,cseg_q,adm_q;
  // Read selectors are independent same-edge captures, eight owner bits each.
- (* keep=1,dont_touch=1 *)reg [1:0] uq_read[0:7],cu_read[0:7];
+ (* keep=1,dont_touch=1 *)reg [1:0] uq_read[0:15];
+ (* keep=1,dont_touch=1 *)reg [1:0] cu_read[0:7];
  (* keep=1,dont_touch=1 *)reg [1:0] uq_write[0:3];
  (* keep=1,dont_touch=1 *)reg [3:0] take_legal_q;
  (* keep=1,dont_touch=1 *)reg [1:0] stage_user_q;
@@ -40,7 +41,8 @@ module qkd_kvn_ctx_ovl_rope #(
    hq<=head_record;uq<=rx_user;cuser_q<=cal_user_rx;
    cstart_q<=calrx[0];cseg_q<=calrx[1];adm_q<=adm_done;
    stage_user_q<=cal_user_rx;
-   for(i=0;i<8;i=i+1)begin uq_read[i]<=rx_user;cu_read[i]<=cal_user_rx;end
+   for(i=0;i<16;i=i+1)uq_read[i]<=rx_user;
+   for(i=0;i<8;i=i+1)cu_read[i]<=cal_user_rx;
    for(i=0;i<4;i=i+1)begin
      uq_write[i]<=rx_user;take_legal_q[i]<=take_in&&legal_head(head_record,rx_user);
    end
@@ -48,6 +50,7 @@ module qkd_kvn_ctx_ovl_rope #(
  reg [60:0] owners[0:3];
  reg [3:0] have;
  reg [5:0] stage[0:3];
+ reg [3:0] stage_valid;
  wire [60:0] owner=hq[64:4];
  wire take=hq[3]&&hq[546:543]==4'd12;
  wire legal=legal_head(hq,uq);
@@ -56,14 +59,18 @@ module qkd_kvn_ctx_ovl_rope #(
  generate for(g=0;g<8;g=g+1)begin:read_group
    localparam integer LO=g*8;
    localparam integer N=(LO+8>61)?61-LO:8;
-   assign previous[LO+:N]=owners[uq_read[g]][LO+:N];
    assign chosen[LO+:N]=owners[cu_read[g]][LO+:N];
+ end
+ for(g=0;g<16;g=g+1)begin:previous_group
+   localparam integer LO=g*4;
+   localparam integer N=(LO+4>61)?61-LO:4;
+   if(N>0)assign previous[LO+:N]=owners[uq_read[g]][LO+:N];
  end endgenerate
  wire have_u=have[uq];
  wire bad_previous=have_u&&(owner[58:45]<previous[58:45]||
    (owner[58:45]==previous[58:45]&&owner!=previous));
  wire previous_ok=!reseed&&!bad_previous&&(MUT_STALE==0||!have_u);
- wire [5:0] selected_stage=stage[stage_user_q];
+ wire [5:0] selected_stage=stage_valid[stage_user_q]?stage[stage_user_q]:6'd0;
  wire bad_stage=selected_stage==0||selected_stage>=36;
  // Fault timing and sticky behavior are unchanged, including reseed priority.
  always @(posedge ck or negedge reset_last)
@@ -73,22 +80,28 @@ module qkd_kvn_ctx_ovl_rope #(
      if(cstart_q&&adm_q&&!cseg_q&&bad_stage)fault<=1;
    end
  generate for(b=0;b<4;b=b+1)begin:owner_bank
+   // Reset/reseed invalidate the stage; the private counter is unreset.
+   // A segment start overwrites it before it is visible, preserving stage0.
    always @(posedge ck or negedge reset_bank[b])
-     if(!reset_bank[b])begin have[b]<=0;stage[b]<=0;end
-     else if(reseed)begin have[b]<=0;stage[b]<=0;end
+     if(!reset_bank[b])begin have[b]<=0;stage_valid[b]<=0;end
+     else if(reseed)begin have[b]<=0;stage_valid[b]<=0;end
      else begin
        if(take&&legal&&previous_ok&&uq==b)have[b]<=1;
-       if(cstart_q&&adm_q&&cuser_q==b)begin
-         if(cseg_q)stage[b]<=1;
-         else if(stage[b]>0&&stage[b]<36)stage[b]<=stage[b]+1;
-       end
+       if(cstart_q&&adm_q&&cuser_q==b&&cseg_q)stage_valid[b]<=1;
      end
+   always @(posedge ck)if(cstart_q&&adm_q&&cuser_q==b)begin
+     if(cseg_q)stage[b]<=1;
+     else if(stage_valid[b]&&stage[b]>0&&stage[b]<36)stage[b]<=stage[b]+1;
+   end
    for(g=0;g<4;g=g+1)begin:write_group
      localparam integer LO=g*16;
      localparam integer N=(LO+16>61)?61-LO:16;
-     // Each qualifier drives at most16 data-bit muxes. The data stays unreset.
+     // Keep the complete enable as a boundary: do not factor a shared
+     // predicate through all244 owner-bit muxes. Each cone owns <=16 bits.
+     (* keep=1,dont_touch=1 *)wire write_enable;
+     assign write_enable=reset_bank[b]&&take_legal_q[g]&&uq_write[g]==b&&previous_ok;
      always @(posedge ck)
-       if(reset_bank[b]&&take_legal_q[g]&&uq_write[g]==b&&previous_ok)
+       if(write_enable)
          owners[b][LO+:N]<=owner[LO+:N];
    end
  end endgenerate
@@ -99,7 +112,8 @@ module qkd_kvn_ctx_ovl_rope #(
 `ifdef OT_FO_CHECK
  integer n;
  always @(posedge ck)if(reset_last)begin
-   for(n=0;n<8;n=n+1)if(uq_read[n]!==uq||cu_read[n]!==cuser_q)$fatal(1,"CTX_COPY_MISMATCH read");
+   for(n=0;n<16;n=n+1)if(uq_read[n]!==uq)$fatal(1,"CTX_COPY_MISMATCH previous");
+   for(n=0;n<8;n=n+1)if(cu_read[n]!==cuser_q)$fatal(1,"CTX_COPY_MISMATCH chosen");
    for(n=0;n<4;n=n+1)if(uq_write[n]!==uq||take_legal_q[n]!==(take&&legal))$fatal(1,"CTX_COPY_MISMATCH write");
    if(stage_user_q!==cuser_q)$fatal(1,"CTX_COPY_MISMATCH stage");
  end
