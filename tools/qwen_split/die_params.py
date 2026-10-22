@@ -118,10 +118,17 @@ def txdp_from_image(path=IMAGE):
 def gen_params(insts, hr_rows, image=IMAGE):
     """the GEN's assignments: insts = [(name, master)] of the die model -> {master: {param: value, _source}}."""
     masters = {mst for _, mst in insts}
-    if HEAD_PREP and TT_MASTER in masters:
-        HP13.reject_unbound_hr_age()  # fixed native cannot inherit flat parameter/HR-age assumptions
     out, rec = {}, {}
-    if TT_MASTER in masters:
+    fixed_native = HEAD_PREP and TT_MASTER in masters
+    if fixed_native:
+        if os.environ.get('OT_QWEN_HP13_COREPUB', '0') not in ('1', '2'):
+            HP13.reject_unbound_hr_age()
+        from qwen_split.hp13_hr_contract import reconcile
+        T, r = reconcile(ROOT, TT_MASTER, hr_rows)
+        out[TT_MASTER] = dict(_source='exact fixed native source; no parameter overrides')
+        rec['xpf'] = r
+        rec['fixed_native'] = True
+    elif TT_MASTER in masters:
         T, r = xpf_transport_edges(hr_rows)
         out[TT_MASTER] = dict(XPF_TRANSPORT_EDGES=T, STAGE_ME=TT_STAGE_ME,
                               _source='QLB-GEN G-C1: 1 hr pin register + hr lane cycles as built '
@@ -137,7 +144,7 @@ def gen_params(insts, hr_rows, image=IMAGE):
         if not 2 <= nu <= 4:
             raise ValueError(f'OT_QWEN_MU_NU {nu} outside 2..4')
         src = f'MU-DIE-QW: OT_QWEN_MU_NU={nu} (owner 0kc release MU die; MU-QW-B1 OPSEG 1, MU-ADOPT-SLICE MU_NU)'
-        if TT_MASTER in masters:
+        if TT_MASTER in masters and not fixed_native:
             out[TT_MASTER].update(NU=nu, OPSEG=1)
             out[TT_MASTER]['_source'] += '; ' + src
         # TOK.QW.LAYER.4 (STEWARD-TOK-QW 10-21): the release die runs a real token only with the QW-LAYERGAP slice RTL
@@ -168,12 +175,13 @@ def gen_params(insts, hr_rows, image=IMAGE):
             # MU-DQ-BOOTCTX (COORD 0kg (1)): the leaf drives tt_ctlm.ctx_x; the ctlm takes it with CTX_SRC 1
             out[CTXRX_MASTER] = dict(NU=nu, _source='MU-DQ-BOOTCTX (COORD 0kg (1)): filler initial context from the KV host '
                                      'plane, MU-KV-CTX kind-12 MU slot')
-            out[TT_MASTER].update(CTX_SRC=1)
+            if not fixed_native:
+                out[TT_MASTER].update(CTX_SRC=1)
             out[TT_MASTER]['_source'] += '; MU-DQ-BOOTCTX: CTX_SRC 1 (ctx_x from qfd_mu_ctx_rx_die)'
             rec['ctxrx'] = dict(nu=nu)
         # MU-DQ-BOOTCTX: fillers' native59 contexts (tt_ctlm FCTX 1: base-0x10 filler LOCAL SEG starts raise the head
         # layer context) and the face's HOST-context check limited to user 0 (qfd_sys_face MU_HEAD 1; MU-DQ-SYSFACE re-close)
-        if TT_MASTER in masters:
+        if TT_MASTER in masters and not fixed_native:
             out[TT_MASTER].update(FCTX=1)
             out[TT_MASTER]['_source'] += '; MU-DQ-BOOTCTX: FCTX 1 (filler native contexts)'
         if 'qfd_sys_face' in masters:
@@ -253,6 +261,11 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
     prm = json.loads(pj.read_text()).get('masters', {}) if pj.exists() else {}
     pb = json.loads(Path(port_bind).read_text())
     fails, req = [], {}
+    fixed_native = HEAD_PREP and os.environ.get('OT_QWEN_HP13_COREPUB', '0') in ('1', '2')
+    fixed_params = {}
+    if fixed_native:
+        from qwen_split.hp13_hr_contract import compiled_params
+        fixed_params = compiled_params(ROOT, TT_MASTER)
     for mst, r in sorted(pb['masters'].items()):
         path = r.get('rtl')
         if not path:
@@ -264,13 +277,14 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
         mods = {m_.name: m_ for m_ in DPB.parse_modules(Path(path).read_text(errors='replace'), path)}
         if mst not in mods:
             continue
-        if mst == CTXRX_MASTER and (prm.get(mst, {}).get('NU') != prm.get(TT_MASTER, {}).get('NU') or
-                                    prm.get(TT_MASTER, {}).get('CTX_SRC') != 1):
+        tt_params = fixed_params if fixed_native else prm.get(TT_MASTER, {})
+        if mst == CTXRX_MASTER and (prm.get(mst, {}).get('NU') != tt_params.get('NU') or
+                                    tt_params.get('CTX_SRC') != 1):
             fails.append(f'{mst}.NU {prm.get(mst, {}).get("NU")} / {TT_MASTER}.NU {prm.get(TT_MASTER, {}).get("NU")} / '
                          f'CTX_SRC {prm.get(TT_MASTER, {}).get("CTX_SRC")}: the ctx leaf needs the same NU and CTX_SRC 1')
         if mst == DHOBS_MASTER:
             fails += dhobs_check(mods[mst])
-            if prm.get(mst, {}).get('NU') != prm.get(TT_MASTER, {}).get('NU'):
+            if prm.get(mst, {}).get('NU') != tt_params.get('NU'):
                 fails.append(f'{mst}.NU {prm.get(mst, {}).get("NU")} != {TT_MASTER}.NU {prm.get(TT_MASTER, {}).get("NU")}')
         tp = trapped_params(mods[mst])
         if not tp:
@@ -313,7 +327,14 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
             if not sink:
                 fails.append(f'{bid}: no consumer of the hr bus in die.v')
         try:
-            T, xr = xpf_transport_edges(rows) if rows and all(r is None or r.get('E') is not None or r.get('n') for _, r in rows) else (None, None)
+            if HEAD_PREP and os.environ.get('OT_QWEN_HP13_COREPUB', '0') in ('1', '2'):
+                from qwen_split.hp13_hr_contract import reconcile
+                T, xr = reconcile(ROOT, TT_MASTER, rows)
+                overrides = set(prm.get(TT_MASTER, {})) - {'_source'}
+                if overrides:
+                    fails.append('fixed HP13 native has parameter overrides: ' + str(sorted(overrides)))
+            else:
+                T, xr = xpf_transport_edges(rows) if rows and all(r is None or r.get('E') is not None or r.get('n') for _, r in rows) else (None, None)
         except ValueError as e:
             T = None
             fails.append(str(e))
@@ -325,7 +346,7 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
                          f'{xr["lane_cycles"]})')
     # (b2) Q-DIE14: tt_ctlm runs the QLB-PROG deployment image (ctlm_image.py) -> STAGE_ME must be 1 (as built 0 starts
     # the layer programme in stage 0 and faults 'start while active' in stage 1)
-    if tt and prm.get(TT_MASTER, {}).get('STAGE_ME') != TT_STAGE_ME:
+    if tt and not (HEAD_PREP and os.environ.get('OT_QWEN_HP13_COREPUB', '0') in ('1', '2')) and prm.get(TT_MASTER, {}).get('STAGE_ME') != TT_STAGE_ME:
         fails.append(f'{TT_MASTER}.STAGE_ME = {prm.get(TT_MASTER, {}).get("STAGE_ME")} (the deployment image needs {TT_STAGE_ME})')
     # (c) TXDP == the committed production image
     tr = None

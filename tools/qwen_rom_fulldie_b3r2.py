@@ -1159,6 +1159,9 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
     m['b3r2']['r21v_su_vm_abut'] = su_vm_abut
     if before_relays is not None and getattr(v, 'FACE_PACK_FINAL', False):
         _face_pack_final(v, m)   # outermost: after every pin-moving wrapper
+    if m.get('hp13_clock_bind'):
+        from qwen_split.hp13_clock_bind import audit_final as audit_hp13_clock_discharge
+        audit_hp13_clock_discharge(m)  # also rejects a skipped/early-return regional rebuild
     from qwen_split.gen_safety_facts import install as _install_gen_safety
     _install_gen_safety(v, m, lambda: _pin_pos(v, m, strict=True))
     return v, m
@@ -7279,10 +7282,16 @@ def _regions_from_placement(m):
             regs[kk]['extent_mm'], regs[kk]['within_5p25'] = ext, ext <= REGION_MAX_MM + 1e-9
         work += [k, nk]
     _gen16_clock_refile(m, regs, by, per)
+    if m.get('hp13_clock_bind'):
+        symbols = set(m['hp13_clock_bind']['symbols'].values())
+        keep = [b for b in keep if b[0] not in symbols]
     moved = sum(1 for bus in m['buses'] if re.fullmatch(r'clk_r\d+', bus[0])
                 for i, p in bus[3] if not p.startswith('pll_r')
                 and f'clk_r{region_at(regs, by[i].x + by[i].w / 2, by[i].y + by[i].h / 2)}' != bus[0])
     m['buses'] = keep + [(f'clk_r{k}', 'clock_trunk', 1, [(root, f'pll_r{k}')] + per[k]) for k in sorted(per)]
+    if m.get('hp13_clock_bind'):
+        from qwen_split.hp13_clock_bind import audit_final
+        audit_final(m)
     m['b3r2']['regions_from_placement'] = dict(sinks=len(sinks), duplicate_sinks_removed=duplicates, refiled=moved, region_nets=len(per), split=split)
 
 
@@ -7419,6 +7428,13 @@ def _gen16_clock_refile(m, regs, by, per):
                 per[nk] = mv
                 r2.append(dict(region=r0['name'], kept=hs[0], moved=h, new_root=f'pll_r{nk}', pins=len(mv)))
 
+    # Resolve source-bound endpoint owners only after actual regional roots exist.
+    if m.get('hp13_clock_bind'):
+        from qwen_split.hp13_clock_bind import finalize as finalize_hp13_clocks
+        finalize_hp13_clocks(m, per, rec, by)
+    elif m.get('ck_follow_port'):
+        from qwen_split.clock_follow_port import apply as follow_port_apply
+        follow_port_apply(m, per, rec)
     # Ownership is checked against FINAL roots, after both column and hard splits.
     if os.environ.get('OT_SPLIT_RST_REGION_LAND', '0') == '1':
         from qwen_split.reset_region_capture import finalize as _final_reset_capture
@@ -8017,6 +8033,9 @@ def case_pdn(v, m, work, bump_um, rev='r4'):
     """Real-technology die (legality, track assert, pin access) with power abstracts (VDD/VSS M7 + M8 rails on every
     element, tools/qwen_rom_fulldie_pg_r3.powered_lef) and the connected r4 full-die pdn.tcl (write_pdn_r4);
     run_pdn.tcl runs pdngen + check_power_grid."""
+    if m.get('hp13_clock_bind'):
+        from qwen_split.hp13_clock_bind import audit_final as audit_hp13_clock_discharge
+        audit_hp13_clock_discharge(m)
     man = v.case_real(m, work)
     M = v.masters(m, 1)
     pw = v.port_widths(m, 1)

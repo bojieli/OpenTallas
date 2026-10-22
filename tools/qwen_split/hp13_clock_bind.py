@@ -1,54 +1,100 @@
-"""Connect the selected two-clock TT source to explicit existing clock endpoints.
-
-This constructs logical topology only. Regional phase, insertion and data landing
-qualification remain the responsibility of the actual generated die chain.
-"""
+"""Typed source-clock ownership, resolved only after regional partitioning."""
 import os
 
 
 def apply(model, buses, instances, tt_ports):
-    if os.environ.get('OT_QWEN_HP13_CLOCKS', '0') != '1':
-        return None
-    for port in ('ck_core', 'ck_hr'):
-        if tt_ports.get(port) != (1, 'input'):
-            raise ValueError('HP13 clock binding: actual TT input differs: ' + port)
-    groups = [g.split(',') for g in os.environ.get('OT_SPLIT_CK_COROOT', '').split(';')]
-    if any('tt_ctlm' in g for g in groups):
-        raise ValueError('HP13 clock binding: legacy first-clock TT co-root is forbidden')
-    by = {i.name: i for i in instances}
-    targets = {'ck_core': ('native59', 'ck'), 'ck_hr': ('dvs_W5', 'ck')}
-    endpoints = list(targets.values()) + [('embed_prov', 'ck')]
-    found = {}
-    for endpoint in endpoints:
-        rows = [(j, b) for j, b in enumerate(buses)
-                if b[1] == 'clock_trunk' and endpoint in b[3]]
-        if len(rows) != 1 or rows[0][1][2] != 1:
-            raise ValueError('HP13 clock binding: actual receiving root is not unique: ' + str(endpoint))
-        j, b = rows[0]
-        if len(b[3]) < 2 or tuple(b[3][0]) == endpoint:
-            raise ValueError('HP13 clock binding: missing actual clock driver: ' + str(endpoint))
-        found[endpoint] = (j, b)
-    domains = {n: by[n].domain for n, _ in endpoints}
-    if any(not isinstance(d, str) or not d for d in domains.values()):
-        raise ValueError('HP13 clock binding: actual functional clock family is missing: ' + str(domains))
-    if len(set(domains.values())) != 1:
-        raise ValueError('HP13 clock binding: selected 1:1 functional clock families disagree: ' + str(domains))
-    core = found[targets['ck_core']][1]
-    hr = found[targets['ck_hr']][1]
-    embed = found[('embed_prov', 'ck')][1]
-    if core[0] != embed[0]:
-        raise ValueError('HP13 clock binding: native and embedding core roots differ')
-    if core[3][0][0] != hr[3][0][0]:
-        raise ValueError('HP13 clock binding: selected roots have different actual clock producers')
-    if any(i == 'tt_ctlm' for b in buses if b[1] == 'clock_trunk' for i, _ in b[3]):
-        raise ValueError('HP13 clock binding: TT clock endpoint already exists')
-    record = dict(kind='same_pll_fixed_phase', ratio=[1, 1], phase_ps=0,
-                  physical_phase_status='UNMEASURED', domains=domains, pins={})
-    for port, endpoint in targets.items():
-        j, b = found[endpoint]
-        current = buses[j]
-        buses[j] = (current[0], current[1], current[2], list(current[3]) + [('tt_ctlm', port)])
-        record['pins'][port] = dict(receiver=list(endpoint), bus=b[0], driver=list(b[3][0]))
-    model['hp13_clock_bind'] = record
-    print('HP13_CLOCK_BIND', record, flush=True)
-    return record
+    if os.environ.get('OT_QWEN_HP13_CLOCKS', '0') != '1': return
+    if any(tt_ports.get(p) != (1, 'input') for p in ('ck_core', 'ck_hr')):
+        raise ValueError('HP13 actual source clock inputs differ')
+    if any('tt_ctlm' in g.split(',') for g in os.environ.get('OT_SPLIT_CK_COROOT', '').split(';')):
+        raise ValueError('HP13 legacy first-clock TT co-root is forbidden')
+    by = {i.name:i for i in instances}
+    targets = {'ck_core':('native59','ck'), 'ck_hr':('dvs_W5','ck')}
+    if any(i not in by for i,p in targets.values()):
+        raise ValueError('HP13 actual receiving clock instance is absent')
+    if any(i=='tt_ctlm' for b in buses if b[1]=='clock_trunk' for i,p in b[3]):
+        raise ValueError('HP13 clock input already connected before explicit construction')
+    # These typed symbols contain no clock driver and cannot reach accepted RTL.
+    # FE uses the source port identity; final regional construction removes them.
+    symbols = {}
+    for p in targets:
+        bid='hp13_symbol_'+p
+        buses.append((bid,'clock_trunk',1,[('tt_ctlm',p)]))
+        symbols[p]=bid
+    model['hp13_clock_bind']=dict(status='SYMBOLIC_OWNER_ONLY', physical_phase_status='UNMEASURED',
+        intended_relation=dict(kind='same_pll_fixed_phase',ratio=[1,1],phase_ps=0),
+        targets={p:list(e) for p,e in targets.items()}, symbols=symbols)
+    model['hp13_deferred_follow']={('tt_ctlm',p):e for p,e in targets.items()}
+    print('HP13_CLOCK_SYMBOLS',model['hp13_clock_bind'],flush=True)
+
+
+def defer_fault(model, follower, owner, clock_index):
+    if owner!='tt_ctlm' or 'hp13_clock_bind' not in model: return False
+    bid=model['buses'][clock_index][0]
+    matches=[p for p,b in model['hp13_clock_bind']['symbols'].items() if b==bid]
+    if len(matches)!=1:
+        raise ValueError('HP13 fault node has no source-proven clock port: '+str((follower,bid)))
+    model['hp13_deferred_follow'][follower]=('tt_ctlm',matches[0])
+    return True
+
+
+def finalize(model, per, record, by):
+    info=model.get('hp13_clock_bind')
+    if not info:return
+    mapping=model['hp13_deferred_follow']; resolved={}
+    def terminal(e,seen=()):
+        if e in seen:raise ValueError('HP13 deferred clock ownership cycle')
+        return terminal(mapping[e],seen+(e,)) if e in mapping else e
+    locations={}
+    for k,eps in per.items():
+        for e in eps: locations.setdefault(e,[]).append(k)
+    terminals={terminal(e) for e in mapping}
+    for e in terminals:
+        if len(locations.get(e,[]))!=1:
+            raise ValueError('HP13 final actual receiving root is not unique: '+str((e,locations.get(e))))
+    # Verify the selected functional clock families at the unique-root stage.
+    domains={i:by[i].domain for i,p in terminals}
+    if any(not isinstance(d,str) or not d for d in domains.values()) or len(set(domains.values()))!=1:
+        raise ValueError('HP13 selected related functional clock families disagree: '+str(domains))
+    legacy=model.setdefault('ck_follow',{}); explicit=model.setdefault('ck_follow_port',{})
+    for f in mapping:
+        e=terminal(f);k=locations[e][0]
+        if f[0] not in by:raise ValueError('HP13 follower actual instance absent: '+str(f))
+        if f[0]!='tt_ctlm' and not by[f[0]].master.startswith('qfd_fault_or_n'):
+            raise ValueError('HP13 deferred follower is not a source-proven fault primitive: '+str(f))
+        if len(locations.get(f,[]))>1:raise ValueError('HP13 follower has multiple actual regions: '+str(f))
+        if f not in locations:per[k].append(f);locations[f]=[k]
+        legacy[f]=e[0];explicit[f]=e
+        resolved[str(f)]=dict(source_owner=list(mapping[f]),terminal=list(e),region=k)
+    from qwen_split.clock_follow_port import apply as resolve
+    resolve(model,per,record)
+    info.update(status='REGIONAL_ENDPOINTS_RESOLVED',domains=domains,followers=resolved)
+
+
+def audit_final(model):
+    info=model.get('hp13_clock_bind')
+    if not info:return
+    if info['status'] not in ('REGIONAL_ENDPOINTS_RESOLVED', 'ACTUAL_CLOCK_NETS_RESOLVED'):
+        raise ValueError('HP13 clock ownership never resolved')
+    symbols=set(info['symbols'].values())
+    if any(b[0] in symbols for b in model['buses']):raise ValueError('HP13 semantic symbol escaped final construction')
+    clock={}
+    for bid,kind,width,eps in model['buses']:
+        if kind!='clock_trunk':continue
+        for e in eps[1:]:clock.setdefault(e,[]).append((bid,eps[0]))
+    receipt={}
+    for p,target in info['targets'].items():
+        rows=clock.get(('tt_ctlm',p),[]);other=clock.get(tuple(target),[])
+        if len(rows)!=1 or rows!=other:raise ValueError('HP13 final source/receiver clock binding differs: '+p)
+        receipt[p]=dict(bus=rows[0][0],driver=list(rows[0][1]),receiver=target)
+    for f,row in model['hp13_deferred_follow'].items():
+        got=clock.get(f,[])
+        if len(got)!=1 or got!=clock.get(row,[]):
+            raise ValueError('HP13 final follower differs from its source-proven owner clock: '+str(f))
+    if clock.get(('embed_prov','ck'),[]) != clock.get(('native59','ck'),[]):
+        raise ValueError('HP13 final native/embedding core roots differ')
+    if model.get('hp13_cf_clock'):
+        model['hp13_cf_clock'].update(status='ACTUAL_CLOCK_NET_RESOLVED_PHYSICAL_PHASE_UNMEASURED',
+            actual_clock=receipt['ck_hr'])
+    info.update(status='ACTUAL_CLOCK_NETS_RESOLVED',actual_pins=receipt)
+    print('HP13_CLOCK_BIND_FINAL',info,flush=True)

@@ -94,6 +94,22 @@ def _tt_cf_clock_guard(m, hard):
     multi-clock TT needs an explicit per-port owner + landing; fail closed, never guess the capturing root)."""
     if 'cf' not in hard.get('tt_ctlm', ()):
         return None
+    if m.get('hp13_clock_bind'):
+        import hashlib
+        root = Path(__file__).resolve().parents[2]
+        master = next(i.master for i in m['insts'] if i.name == 'tt_ctlm')
+        proof = json.loads((root / 'results/arch/hp13_corepub39_1021/CLOCK_OWNERS.json').read_text())
+        rows = [r for r in proof if r['master'] == master]
+        if len(rows) != 1:
+            raise ValueError('HP13 cf has no exact selected-source clock proof: ' + master)
+        row = rows[0]; rtl = (root / row['rtl']).read_bytes()
+        if hashlib.sha256(rtl).hexdigest() != row['rtl_sha256'] or row['cf']['driver_statement'] not in rtl.decode():
+            raise ValueError('HP13 cf selected source/driver differs from clock proof')
+        if row['cf']['clock_port'] != 'ck_hr':
+            raise ValueError('HP13 cf actual clock owner differs')
+        m['hp13_cf_clock'] = dict(source=row['rtl'], sha256=row['rtl_sha256'],
+            owner=['tt_ctlm', 'ck_hr'], status='SOURCE_OWNER_ONLY_PENDING_FINAL_REGIONAL_RESOLUTION')
+        return 'tt_ctlm.ck_hr'
     cks = sorted({b for b, cl, _n, eps in m['buses'] if cl == 'clock_trunk' and any(e[0] == 'tt_ctlm' for e in eps)})
     if len(cks) != 1:
         raise ValueError(f'fault emit: tt_ctlm.cf needs exactly one tt_ctlm clock root, found {cks}')
@@ -233,6 +249,20 @@ def _clock_bus(ckx, inst, M_ports):
             return ckx[(inst, p)]
     cands = sorted(j for (i, p), j in ckx.items() if i == inst)
     return cands[0] if cands else None
+
+
+def _fault_clock_bus(m, ckx, inst):
+    if inst == 'tt_ctlm' and m.get('hp13_cf_clock'):
+        if (inst, 'ck_hr') not in ckx:
+            raise ValueError('HP13 cf semantic HR owner is absent')
+        return ckx[(inst, 'ck_hr')]
+    return _clock_bus(ckx, inst, None)
+
+
+def _follow_fault_clock(m, follow, follower, owner, clock_index):
+    from qwen_split.hp13_clock_bind import defer_fault
+    if not defer_fault(m, follower, owner, clock_index):
+        follow[follower] = owner
 
 
 def _reset_bus(rsx, inst):
@@ -479,7 +509,7 @@ def pre(v, m, G):
     follow = m.setdefault('ck_follow', {})
     roots = {}
     for o, r in sorted(owners.items()):
-        cj, rj = _clock_bus(ckx, o, None), _reset_bus(rsx, o)
+        cj, rj = _fault_clock_bus(m, ckx, o), _reset_bus(rsx, o)
         if rj is None and cj is not None:
             rj = _near_reset(m, rsx, by, o, cj)
             rec.setdefault('borrowed_reset', {})[o] = m['buses'][rj][0] if rj is not None else None
@@ -508,7 +538,7 @@ def pre(v, m, G):
         by[nm] = it
         _join(m, cj, (nm, 'ck'))
         _join(m, rj, (nm, 'rs'))
-        follow[(nm, 'ck')] = o
+        _follow_fault_clock(m, follow, (nm, 'ck'), o, cj)
         roots[o] = dict(inst=nm, xy=_ctr(it), clock=m['buses'][cj][0], reset=m['buses'][rj][0], children=[],
                         zone=zn.of_box((it.x, it.y, it.x + W, it.y + H)),
                         array=by[o].master.startswith(ARRAY_MASTERS), owner=o, cj=cj, rj=rj)
@@ -582,7 +612,7 @@ def pre(v, m, G):
                 cj, rj = roots[o]['cj'], roots[o]['rj']
                 _join(m, cj, (nm, 'ck'))
                 _join(m, rj, (nm, 'rs'))
-                follow[(nm, 'ck')] = o
+                _follow_fault_clock(m, follow, (nm, 'ck'), o, cj)
                 roots[key] = dict(roots[o], inst=nm, xy=_ctr(it), children=[], zone=z if z is not None else 'out',
                                   landings_in_group=len(ps), site_tier=tier)
                 tiers[tier] += 1
@@ -716,7 +746,7 @@ def _cover_clock(v, m, o, cj0, pts, roots, by, q, occ, occ_g, occ_0, zn, follow,
         by[nm] = it
         _join(m, cj0, (nm, 'ck'))
         _join(m, roots[o]['rj'], (nm, 'rs'))
-        follow[(nm, 'ck')] = o
+        _follow_fault_clock(m, follow, (nm, 'ck'), o, cj0)
         c_ = _ctr(it)
         cov = [q_ for q_ in unc if _man(c_, q_) <= CAP_UM][:CAP_MAXM]
         z = zn.of_box((it.x, it.y, it.x + W, it.y + H))
@@ -769,12 +799,12 @@ def post(v, m, G):
             inst, port = e['inst'], e['port']
             if (inst, port) in used:
                 bad.append(f'{inst}.{port}: already connected'); continue
-            cj, rj = _clock_bus(ckx, inst, None), _reset_bus(rsx, inst)
+            cj, rj = _fault_clock_bus(m, ckx, inst), _reset_bus(rsx, inst)
             src.append((inst, port, e['real'], e['bit'], cj, rj, tuple(e['xy'])))
     for inst, ports in ([] if bit_sources else _hard().items()):
         it = by[inst]
         mp = M[it.master].ports
-        cj, rj = _clock_bus(ckx, inst, None), _reset_bus(rsx, inst)
+        cj, rj = _fault_clock_bus(m, ckx, inst), _reset_bus(rsx, inst)
         for p in ports:
             if (inst, p) in used:
                 bad.append(f'{inst}.{p}: already connected'); continue
@@ -848,7 +878,7 @@ def post(v, m, G):
         by[nm] = it
         _join(m, kcj[cj], (nm, 'ck'))
         _join(m, rj, (nm, 'rs'))
-        follow[(nm, 'ck')] = owner
+        _follow_fault_clock(m, follow, (nm, 'ck'), owner, kcj[cj])
         nodes[nm] = dict(it=it, n=0, ck=cj, rs=rj, owner=owner, root=False, up=None)
         return nm
 
