@@ -1,0 +1,28 @@
+{
+  "status": "NATIVE_PASS_ONLY",
+  "functional_source": "f9d6fc51f",
+  "physical_specialization_manifest": "results/arch/hbm_col8_parent_1021/hardmeta_specialization.json",
+  "source_readset": "results/arch/hbm_col8_parent_1021/split_dependencies.json",
+  "full_shipped_readset": "results/arch/hbm_col8_parent_1021/physical_map_readset.json",
+  "native_unit": "oth-ubuntu-1837728-1792649356",
+  "json_export_unit": "oth-ubuntu-2751217-1792649842",
+  "association_export_unit": "oth-ubuntu-2863644-1792649902",
+  "native_roots": 135448,
+  "native_max_load": 32,
+  "native_violations": 0,
+  "physical_status": "Explicit stop after native census; no floorplan/CTS/routing qualification.",
+  "files": {
+    "export_tool.txt": "c3d3e0c173c138a7ca1436700ddd784d77529f58fb69bb8395e4fe77e46742e6",
+    "native_pass.json": "853ccc233ec05098061dc8adeef7532f3940da829292c523b006962f8b025618",
+    "residual_cell_association.json.gz": "47679aa99467ada1797d7daafff96c00d0d02fd4328ec9be46c969498fabf063",
+    "residual_mapped.v.gz": "2e1dbe6e507b85308e671aac1a09a5bd91ddb0811ef33c1ea70ff282e2e66d21",
+    "native_census.json.gz": "ee86013829c16b92154cb1f970160ece19981de208212cdeee7eb027c9f4fd21",
+    "association_summary.json": "db366c49be117e3fd7a2741c0f6c785edcde98a1120300d27d1c90d4437fba8b",
+    "physical_readset_check.json": "f13fd3a894db4e0c401720b28ae395a8e4f3322986b8715a8a364a9691ba1778",
+    "residual_mapped.json.gz": "8dde89d6b83ed94a694f6680c8c21f33aa9f7e3c76adea701a049241acc5281a",
+    "source_receipt.txt": "2ae1f40680f0922ac80aa6aa3f5610e3929f19bde9569fa94389ae4cc6a802d3",
+    "synth_stat.txt": "f2f0ce906f72a2455de8faf415357dac2e91503f0918c01dfb2f872711b8ac17"
+  },
+  "outer_driver_exit": 1,
+  "outer_driver_scope": "Native census PASS then deliberate exit before floorplan; absent floorplan outputs are expected. This is not a canonical physical gate PASS."
+}
