@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hbm_smh_rp6s_f",
+ "enable": false,
+ "reason": "the lp RTL lands rst_n (pin stage u_lpr_pin on its face band, regional run rooted in u, same-depth reset forest, depth 3 + 1) and ot_rp5_rst kept copies per consumer; priced in the landed record"
+}

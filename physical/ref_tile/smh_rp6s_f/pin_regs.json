@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_smh_rp6s_f",
+ "enable": false,
+ "reason": "every data pin is registered in RTL: inputs rin (ot_rp4l_pinrow), bin (pinbeat), xs straps (5-stage strap), gin (u_gn u_v/u_d), xi_* (u_lands / u_xgi / u_xpi); outputs rout launched by the r6 glue pin register u_ro, bout by u_be2, xo_* by u_xbo / u_xgo / u_xpo, gout by the u_gs output registers.  Recipe-3 pin registers would add cycles to the priced lp schedule.  rp4a: the static attn strap lands in 2 kept stages (u_as_n / u_as_s)."
+}
