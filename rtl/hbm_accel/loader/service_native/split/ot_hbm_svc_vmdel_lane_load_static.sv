@@ -117,17 +117,22 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  // Address selection does not wait for ownership/shape validation. Read CE
  // still requires load_ok; conflicting or malformed requests set sticky fault
  // and cannot produce a valid output. Raw-only schedules keep their old path.
- wire rb=load_v?load_cmd[0]:(running ? bank_r : start_bank);
- wire [1:0] rg=load_v?load_cmd[18:17]:(running ? group_q : 2'd0);
- wire [5:0] rs=load_v?load_cmd[24:19]:(running ? slot_q : 6'd0);
+ // m11/b11 round 4 (b11r3 census: running = busy_c flop at 33 loads): the address selects and the raw request read a
+ // hierarchy-kept copy of running with the same next state (cannot be merged with running).  Same value every edge.
+ wire running_n=!reset_copy[2] ? 1'b0 : start_ok ? 1'b1 : (running && slot_q==63 && group_q==GLAST) ? 1'b0 : running;
+ wire running_a;
+ (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(1),.COPY_ID(2500),.S(1)) u_running_a(.clk(clk),.d(running_n),.q(running_a));
+ wire rb=load_v?load_cmd[0]:(running_a ? bank_r : start_bank);
+ wire [1:0] rg=load_v?load_cmd[18:17]:(running_a ? group_q : 2'd0);
+ wire [5:0] rs=load_v?load_cmd[24:19]:(running_a ? slot_q : 6'd0);
  // A bank requested for reading cannot accept a fill on this edge. This
  // hazard check deliberately precedes read validation: valid schedules are
  // unchanged, and an invalid conflicting request already latches fault.
  // After such a fault, rejected fills and their counter/pcbad side effects
  // can differ from the old implementation. No invalid read or output is
  // enabled; complete ownership/epoch/full/shape checks remain above.
- wire raw_request=running||start;
- wire raw_request_bank=running?bank_r:start_bank;
+ wire raw_request=running_a||start;
+ wire raw_request_bank=running_a?bank_r:start_bank;
  wire clear_bank=begin_v && !owned[begin_bank] && !(lstart && start_bank==begin_bank);
  always @(posedge clk) if(!reset_copy[1])begin bad<=0;end
  else if(start)begin
