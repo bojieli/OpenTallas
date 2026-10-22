@@ -81,6 +81,7 @@ BUNDLES = {
 }
 # These ports exist only on the source-complete head-prepare successor. Match by actual endpoint pins.
 if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
+    BUNDLES['SF.q_slot'] = _same(SF,N59,('q_slot','q_slot_beat'))
     BUNDLES['TT.head_prepare'] = [('tt_ctlm',p,N59,q) for p,q in (
         ('emb_start','head_prepare_v'),('emb_token','head_prepare_token'),
         ('emb_position','head_prepare_position'),('emb_user','head_prepare_user'))]
