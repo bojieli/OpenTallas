@@ -252,7 +252,10 @@ if __import__('os').environ.get('OT_KV_HROOT_LAND', '0') == '1' and __import__('
 # KV-EMB4 10-20: OT_KV_EMB_N32=1 (route A base point only): the die tile file is qkd_kvs_tiles_hroot_ff_k_mu_ba_n32.sv,
 # identical to _k_mu_ba except the kvs_emb u_join #(.NATIVE32(1)) (native32 join/cal: kept per-segment controls, six-edge
 # regional reset release, 0 active cycles).  Same roles, same chain ends.
-if __import__('os').environ.get('OT_KV_EMB_N32', '0') == '1':
+# The composed S6C/SRAM point is pinned as one generated source below.
+if __import__('os').environ.get('OT_KV_EMB_N32', '0') == '1' and not (
+        __import__('os').environ.get('OT_KV_PC_SRAM', '0') == '1' and
+        __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1'):
     # KV-EMBWIN16 10-20: also on the HROOT_LAND point (_k_hl_mu_ba -> _k_hl_mu_ba_n32[_pj], kv_static_die --rtl at d22hl2
     # flags + N32 [+ PJ]; differs from _k_hl_mu_ba only in the kvs_emb u_join NATIVE32 / PIPE_JOIN parameters)
     _N32 = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ba.sv': (
@@ -307,7 +310,9 @@ if __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1':
         'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c.sv':
             'a99ef537a41999fc21b12346cda7aae28a807ee13253db504664b55ec23152fb',
         'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_gs2_g6c_rope_ovl.sv':
-            'ca747bcbd9d21bd27de68042e0ceb539d8e5ab54ed9f87be1d26e520c64fe04f'}
+            'ca747bcbd9d21bd27de68042e0ceb539d8e5ab54ed9f87be1d26e520c64fe04f',
+        'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_rl_sr_gs2_g6c_rope_ovl.sv':
+            '5292c0d1631cd60f5a3dd2a76370b0e40fbb10cf5310b6c85f975835f37ac606'}
     _expected = _D.RTL_FILE
     if _expected not in _S6C_TILES:
         raise ValueError('open-tail DS/S6C recipe unproved: ' + _D.RTL_FILE)
@@ -317,6 +322,9 @@ if __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1':
     SOURCES[TILES] = _S6C_TILES[_expected]
     DS_GROUP_SOURCES = {'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv': 'b612b7382ac23346ec75edf1501e6fdb23267d870aa433322a38c1b0429f2a00', 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv': '6e1b7fd0daf74439afac1064ace66c91cb1836bf17635575aa46d3287ecacdb1'}
     SOURCES.update(DS_GROUP_SOURCES)
+    if _D.PC_SRAM:
+        SOURCES['rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv'] = 'f5b97a6e1a23b855cc4cf4f6c52973ba6d5d117f9da85cea275a2d6cfa8bdf53'
+        SOURCES['rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv'] = '11d27a69443b998136e424f93bbac4c5f986734f20c262c31f41b1087b54702e'
     GRP = ()
     for _role in ('tok_dup', 'odn_tail'):
         ASSERT.pop(_role)
