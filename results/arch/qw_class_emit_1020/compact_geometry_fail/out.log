@@ -1,0 +1,297 @@
+NATIVE_ORIGINS applied 5
+NATIVE_ORIGINS final verified 5
+G5_CLOCKING coll_blk_divider=ckdiv_coll_blk@[1598.4, 12139.2] ucie_phy_clock=io_ucie.lclk@ core_feed=ckb_core@[17496.0, 12096.0]
+FWD_LAND_EW ['qfd_dv_slice2']: 215 side-by-side buses take E/W landing frames
+P2 rst_d2d spine_local 1 n 3 cc 423 p2p 408 back False path [(1105, 24235), (1105, 23350), (691, 23350)]
+P2 rst_d2d__fo1 spine_local 1 n 3 cc 426 p2p 395 back False path [(1105, 24235), (1105, 23345), (691, 23345)]
+P2 rst_d2d__fo2 spine_local 1 n 4 cc 430 p2p 400 back False path [(1105, 24235), (1105, 22626), (1350, 22626)]
+P2 serdes0_tx coll_fdi 597 n 3 cc 464 p2p 404 back False path [(804, 14128), (804, 15130), (768, 15130)]
+P2 serdes0_txv coll_fdi 1 n 3 cc 456 p2p 426 back False path [(790, 14128), (790, 15130), (753, 15130)]
+P2 serdes0_rx coll_fdi 597 n 2 cc 448 p2p 418 back False path [(796, 15130), (796, 14128), (833, 14128)]
+P2 serdes0_rxv coll_fdi 1 n 2 cc 428 p2p 397 back False path [(782, 15130), (782, 14128), (819, 14128)]
+P2 serdes0_up coll_fdi 1 n 2 cc 421 p2p 391 back False path [(753, 15130), (753, 14128), (790, 14128)]
+P2 serdes2_tx coll_fdi 597 n 8 cc 534 p2p 473 back False path [(1517, 9971), (1517, 7416), (768, 7416)]
+P2 serdes2_txv coll_fdi 1 n 9 cc 665 p2p 635 back False path [(1502, 9971), (1502, 7416), (753, 7416)]
+P2 serdes2_rx coll_fdi 597 n 9 cc 1804 p2p 1743 back True path [(796, 7416), (796, 9971), (1545, 9971)]
+P2 serdes2_rxv coll_fdi 1 n 10 cc 1650 p2p 1620 back True path [(782, 7416), (782, 9971), (1531, 9971)]
+P2 serdes2_up coll_fdi 1 n 8 cc 2004 p2p 1957 back True path [(753, 7416), (753, 9971), (1502, 9971)]
+P2 ng_tt_native_tok_0__fo1 spine_local 18 n 2 cc 511 p2p 481 back False path [(912, 22086), (912, 22570), (1231, 22570)]
+P2 ng_tt_native_pos_0__fo1 spine_local 18 n 3 cc 619 p2p 588 back True path [(909, 22086), (909, 22577), (1231, 22577)]
+P2 ng_tt_layer_context_v_0__fo1 spine_local 1 n 3 cc 412 p2p 382 back False path [(907, 22086), (907, 22563), (1231, 22563)]
+P2 ng_tt_command_stage_0__fo1 spine_local 6 n 2 cc 553 p2p 523 back False path [(906, 22086), (906, 22565), (1231, 22565)]
+P2 lnk_fwd_epoch spine_local 1 n 3 cc 434 p2p 416 back False path [(1165, 24267), (1165, 23143), (691, 23143)]
+P2 lnk_fwd_epoch__fo1 spine_local 1 n 4 cc 428 p2p 397 back False path [(1165, 24267), (1165, 22626), (1236, 22626)]
+P2 lnk_fwd_lrst spine_local 1 n 3 cc 442 p2p 427 back False path [(1225, 24267), (1225, 23137), (691, 23137)]
+P2 lnk_native_tx_slot spine_local 1 n 1 cc 414 p2p 399 back False path [(224, 23079), (224, 22712), (514, 22712)]
+P2 lnk_native_tx_v spine_local 1 n 1 cc 409 p2p 394 back False path [(509, 22712), (509, 23079), (229, 23079)]
+P2 lnk_native_rx_v spine_local 1 n 1 cc 399 p2p 384 back False path [(525, 23079), (525, 22712), (455, 22712)]
+P2 lnk_rx_payload__fo1 spine_local 548 n 3 cc 492 p2p 388 back False path [(451, 23079), (451, 22626), (1397, 22626)]
+P2 lnk_rx_payload__fo2 spine_local 548 n 3 cc 422 p2p 450 back False path [(451, 23079), (451, 22840), (1555, 22840)]
+P2 lnk_native_rx_slot spine_local 1 n 0 cc 383 p2p 383 back False path [(526, 23079), (526, 22712), (510, 22712)]
+P2 lnk_native_rx_slot_kind spine_local 4 n 0 cc 381 p2p 382 back False path [(527, 23079), (527, 22712), (513, 22712)]
+P2 lnk_native_rx_slot_beat spine_local 5 n 0 cc 385 p2p 385 back False path [(529, 23079), (529, 22712), (512, 22712)]
+P2 lnk_kv_x3_slot spine_local 1 n 2 cc 415 p2p 400 back False path [(216, 23352), (216, 22712), (454, 22712)]
+P2 lnk_x3 spine_local 524 n 3 cc 647 p2p 543 back False path [(544, 22712), (544, 23264), (216, 23264)]
+P2 lnk_x3_identity spine_local 59 n 3 cc 633 p2p 585 back True path [(574, 22712), (574, 23165), (216, 23165)]
+P2 lnk_x3_generation spine_local 2 n 3 cc 447 p2p 399 back False path [(570, 22712), (570, 23155), (216, 23155)]
+P2 sf_cfg_tx_we spine_local 1 n 2 cc 428 p2p 413 back False path [(1239, 22626), (1239, 23339), (691, 23339)]
+P2 sf_cfg_rx_we spine_local 1 n 3 cc 453 p2p 388 back False path [(1240, 22626), (1240, 23334), (691, 23334)]
+P2 sf_cfg_addr spine_local 6 n 3 cc 411 p2p 381 back False path [(1241, 22626), (1241, 23317), (691, 23317)]
+P2 sf_cfg_data spine_local 32 n 2 cc 434 p2p 428 back False path [(1245, 22626), (1245, 23229), (691, 23229)]
+P2 sf_cal_start spine_local 1 n 2 cc 415 p2p 383 back False path [(1248, 22626), (1248, 23153), (691, 23153)]
+P2 sf_status_epoch16 spine_local 16 n 5 cc 597 p2p 532 back False path [(1448, 22626), (1448, 23151), (216, 23151)]
+P2 sf_vm_drained spine_local 1 n 5 cc 563 p2p 498 back False path [(1450, 22626), (1450, 23148), (216, 23148)]
+P2 sf_collective_drained spine_local 1 n 5 cc 563 p2p 499 back False path [(1451, 22626), (1451, 23147), (216, 23147)]
+P2 sf_collective_busy spine_local 1 n 5 cc 564 p2p 499 back False path [(1452, 22626), (1452, 23146), (216, 23146)]
+P2 sf_crom_fault spine_local 1 n 5 cc 512 p2p 448 back False path [(1453, 22626), (1453, 23145), (216, 23145)]
+P2 sf_execution_active spine_local 1 n 5 cc 746 p2p 681 back False path [(1454, 22626), (1454, 23144), (216, 23144)]
+P2 sf_admit_ready spine_local 1 n 5 cc 565 p2p 500 back False path [(1455, 22626), (1455, 23143), (216, 23143)]
+P2 sf_result_v spine_local 1 n 5 cc 626 p2p 561 back False path [(1456, 22626), (1456, 23142), (216, 23142)]
+P2 sf_result_done spine_local 1 n 5 cc 610 p2p 546 back False path [(1457, 22626), (1457, 23141), (216, 23141)]
+P2 sf_result_fault spine_local 1 n 5 cc 826 p2p 762 back False path [(1458, 22626), (1458, 23140), (216, 23140)]
+P2 sf_result_cause spine_local 4 n 5 cc 645 p2p 581 back False path [(1459, 22626), (1459, 23139), (216, 23139)]
+P2 sf_result_tag spine_local 59 n 4 cc 691 p2p 626 back False path [(1465, 22626), (1465, 23128), (216, 23128)]
+P2 sf_result_gen spine_local 2 n 4 cc 540 p2p 508 back False path [(1470, 22626), (1470, 23117), (216, 23117)]
+P2 sf_result_token spine_local 18 n 4 cc 624 p2p 559 back False path [(1473, 22626), (1473, 23113), (216, 23113)]
+P2 sf_result_value spine_local 32 n 4 cc 662 p2p 597 back False path [(1477, 22626), (1477, 23104), (216, 23104)]
+P2 sf_result_cycles spine_local 32 n 5 cc 621 p2p 556 back False path [(1483, 22626), (1483, 23093), (216, 23093)]
+P2 sf_prog_tx_observed_v spine_local 1 n 3 cc 460 p2p 428 back False path [(1254, 22626), (1254, 23079), (533, 23079)]
+P2 sf_prog_tx_record spine_local 548 n 3 cc 567 p2p 463 back False path [(1301, 22626), (1301, 23079), (607, 23079)]
+P2 sf_prog_rx_v spine_local 1 n 3 cc 558 p2p 493 back False path [(682, 23079), (682, 22626), (1250, 22626)]
+P2 sf_prog_rx_v__fo1 spine_local 1 n 2 cc 426 p2p 381 back False path [(682, 23079), (682, 22891), (1555, 22891)]
+P2 sf_prog_witness_slot spine_local 1 n 3 cc 445 p2p 413 back True path [(530, 23079), (530, 22626), (1251, 22626)]
+P2 sf_prog_auth_slot spine_local 1 n 3 cc 480 p2p 447 back False path [(531, 23079), (531, 22626), (1252, 22626)]
+P2 sf_prog_context_slot spine_local 1 n 4 cc 533 p2p 468 back True path [(532, 23079), (532, 22626), (1253, 22626)]
+P2 sf_prog_context_slot__fo1 spine_local 1 n 2 cc 431 p2p 398 back False path [(532, 23079), (532, 22890), (1555, 22890)]
+P2 sf_emb_rx_v spine_local 1 n 4 cc 491 p2p 426 back False path [(682, 23079), (682, 22626), (1445, 22626)]
+P2 sf_emb_rx_slot spine_local 1 n 4 cc 470 p2p 406 back False path [(683, 23079), (683, 22626), (1446, 22626)]
+P2 sf_d2d_fault spine_local 1 n 3 cc 511 p2p 446 back False path [(691, 23090), (691, 22626), (1237, 22626)]
+P2 sf_tt_pw spine_local 75 n 1 cc 414 p2p 414 back False path [(1231, 22515), (1231, 22086), (986, 22086)]
+P2 sf_tt_kok spine_local 1 n 1 cc 414 p2p 398 back False path [(1231, 22560), (1231, 22086), (972, 22086)]
+P2 sf_tt_fab spine_local 1 n 1 cc 442 p2p 410 back False path [(1231, 22562), (1231, 22086), (971, 22086)]
+P2 sf_emb_word_v spine_local 1 n 2 cc 456 p2p 426 back False path [(1236, 22496), (1236, 21875), (1361, 21875)]
+P2 sf_emb_word_data spine_local 512 n 1 cc 376 p2p 428 back False path [(1331, 22496), (1331, 21951), (1361, 21951)]
+P2 sf_emb_word_token spine_local 18 n 1 cc 428 p2p 415 back False path [(1429, 22496), (1429, 22029), (1361, 22029)]
+P2 sf_emb_word_index spine_local 6 n 1 cc 395 p2p 381 back False path [(1434, 22496), (1434, 22033), (1361, 22033)]
+P2 sf_emb_fill_begin spine_local 1 n 1 cc 406 p2p 391 back False path [(1461, 22496), (1461, 22063), (1361, 22063)]
+P2 sf_emb_fill_token spine_local 18 n 2 cc 435 p2p 405 back False path [(1465, 22496), (1465, 22068), (1361, 22068)]
+P2 sf_emb_core_epoch spine_local 16 n 1 cc 444 p2p 432 back False path [(1478, 22496), (1478, 22079), (1361, 22079)]
+P2 sf_io_fault spine_local 1 n 25 cc 523 p2p 493 back False path [(1564, 12118), (1564, 22496), (1484, 22496)]
+P2 sf_io_shared_fault spine_local 1 n 25 cc 559 p2p 529 back False path [(1564, 12152), (1564, 22496), (1485, 22496)]
+P2 sf_strap_bump_pkg_s0 spine_local 1 n 5 cc 438 p2p 408 back False path [(1615, 10113), (1615, 11979), (1564, 11979)]
+P2 sf_strap_bump_pkg_s1 spine_local 1 n 4 cc 455 p2p 440 back False path [(1615, 10213), (1615, 11979), (1564, 11979)]
+P2 sf_strap_bump_die_ps spine_local 1 n 5 cc 568 p2p 538 back False path [(1615, 10313), (1615, 11981), (1564, 11981)]
+P2 dv_x0_rt_re tree_spine 1 n 1 cc 176 p2p 161 back True path [(17453, 11748), (17518, 11748), (17518, 11748), (17582, 11748)]
+P2 dv_x0_rt_rr tree_spine 3 n 1 cc 202 p2p 187 back True path [(17453, 11752), (17518, 11752), (17518, 11752), (17582, 11752)]
+P2 dv_x0_rt_rl tree_spine 1 n 1 cc 228 p2p 213 back True path [(17453, 11756), (17518, 11756), (17518, 11756), (17582, 11756)]
+P2 dv_x0_rt_rd tree_spine 512 n 1 cc 245 p2p 253 back True path [(17453, 11809), (17518, 11809), (17518, 11809), (17582, 11809)]
+P2 dv_x0_dr_dr tree_spine 520 n 1 cc 349 p2p 359 back True path [(17453, 11912), (17518, 11912), (17518, 11912), (17582, 11912)]
+P2 dv_x0_ag_ag tree_spine 10 n 1 cc 160 p2p 146 back True path [(17582, 11967), (17518, 11967), (17518, 11967), (17453, 11967)]
+P2 dvw_arv_wo tree_spine 1 n 2 cc 430 p2p 398 back False path [(2030, 11511), (1601, 11511), (1601, 11996), (1564, 11996)]
+P2 dvw_ard_wo tree_spine 512 n 2 cc 421 p2p 400 back False path [(2030, 11582), (1601, 11582), (1601, 12023), (1564, 12023)]
+P2 dvw_arl_wo tree_spine 1 n 2 cc 431 p2p 401 back False path [(2030, 11529), (1601, 11529), (1601, 12049), (1564, 12049)]
+P2 dvw_arm_wo tree_spine 1 n 2 cc 445 p2p 415 back False path [(2030, 11525), (1601, 11525), (1601, 12051), (1564, 12051)]
+P2 dvw_rv_wi tree_spine 1 n 1 cc 424 p2p 409 back False path [(1564, 12059), (1601, 12059), (1601, 11744), (2030, 11744)]
+P2 dvw_rd_wi tree_spine 512 n 1 cc 416 p2p 422 back False path [(1564, 12085), (1601, 12085), (1601, 11809), (2030, 11809)]
+P2 dvw_rl_wi tree_spine 1 n 1 cc 428 p2p 396 back False path [(1564, 12112), (1601, 12112), (1601, 11756), (2030, 11756)]
+P2 dvw_dd_wo tree_spine 548 n 27 cc 438 p2p 410 back False path [(2030, 11687), (1601, 11687), (1601, 22194), (912, 22194)]
+P2 dvw_dr_wi tree_spine 520 n 27 cc 436 p2p 397 back False path [(965, 22194), (1601, 22194), (1601, 11912), (2030, 11912)]
+P2 dvw_hr_wi tree_spine 453 n 24 cc 672 p2p 611 back False path [(851, 20271), (1601, 20271), (1601, 11012), (2030, 11012)]
+P2 dvw_cmd_wi tree_spine 116 n 25 cc 438 p2p 408 back False path [(823, 20271), (1601, 20271), (1601, 10954), (2030, 10954)]
+P2 dvw_ss_wo tree_spine 107 n 23 cc 448 p2p 418 back False path [(2030, 11982), (1601, 11982), (1601, 20271), (879, 20271)]
+P2 dvw_ag_wo tree_spine 10 n 23 cc 484 p2p 454 back False path [(2030, 11967), (1601, 11967), (1601, 20271), (816, 20271)]
+P2 dvw_st_wi tree_spine 1088 n 25 cc 704 p2p 583 back True path [(937, 20271), (1601, 20271), (1601, 11376), (2030, 11376)]
+P2 dvw_io_collective_cmd_free spine_local 1 n 25 cc 456 p2p 439 back False path [(1564, 12123), (1564, 22496), (1483, 22496)]
+P2 dvw_native59_emb_code_re spine_local 1 n 1 cc 425 p2p 410 back False path [(994, 22251), (994, 21870), (1118, 21870)]
+P2 dvw_native59_emb_code_addr spine_local 24 n 1 cc 462 p2p 448 back False path [(994, 22199), (994, 21870), (1125, 21870)]
+P2 dvw_native59_emb_scale_re spine_local 1 n 1 cc 464 p2p 449 back False path [(994, 22257), (994, 21870), (1337, 21870)]
+P2 dvw_embed_prov_embed_code_q spine_local 512 n 1 cc 480 p2p 564 back False path [(1233, 21870), (1233, 22225), (994, 22225)]
+P2 dvw_embed_prov_embed_scale_q spine_local 16 n 1 cc 427 p2p 415 back False path [(1350, 21870), (1350, 22256), (994, 22256)]
+P2 dvw_sys_face_seq_dh spine_local 187 n 2 cc 531 p2p 427 back False path [(1490, 22593), (1490, 22086), (961, 22086)]
+P2 dvw_sys_face_seq_dh__fo1 spine_local 187 n 3 cc 615 p2p 511 back False path [(1490, 22593), (1490, 22103), (765, 22103)]
+P2 dvw_tt_ctlm_cal_program_obs spine_local 76 n 2 cc 424 p2p 410 back False path [(926, 22086), (926, 22531), (1490, 22531)]
+P2 dvw_tt_ctlm_cal_descriptor_obs spine_local 69 n 3 cc 705 p2p 675 back True path [(917, 22086), (917, 22553), (1490, 22553)]
+P2 dvw_tt_ctlm_cal_image_ready spine_local 1 n 2 cc 396 p2p 380 back False path [(922, 22086), (922, 22501), (1490, 22501)]
+P2 dvw_tt_ctlm_dc spine_local 56 n 2 cc 501 p2p 487 back False path [(948, 22086), (948, 22510), (1490, 22510)]
+P2 dvw_mu_ctxrx_ctx_x spine_local 129 n 3 cc 712 p2p 607 back False path [(1565, 22810), (1565, 22086), (938, 22086)]
+P2 ng_embed_fault_0 spine_local 1 n 1 cc 424 p2p 409 back False path [(1355, 21870), (1355, 22496), (1482, 22496)]
+P2R rst_d2d True n 4 3 s 
+P2R rst_d2d__fo1 True n 4 3 s 
+P2R rst_d2d__fo2 True n 4 3 s 
+P2R serdes0_tx True n 2 6 s 
+P2R serdes0_txv True n 3 7 s 
+P2R serdes0_rx True n 3 7 s 
+P2R serdes0_rxv True n 3 7 s 
+P2R serdes0_up True n 3 7 s 
+P2R serdes2_tx True n 8 7 s 
+P2R serdes2_txv True n 10 8 s 
+P2R serdes2_rx True n 8 8 s 
+P2R serdes2_rxv True n 9 10 s 
+P2R serdes2_up True n 9 12 s 
+P2R ng_tt_native_tok_0__fo1 True n 2 12 s 
+P2R ng_tt_native_pos_0__fo1 True n 2 12 s 
+P2R ng_tt_layer_context_v_0__fo1 True n 2 12 s 
+P2R ng_tt_command_stage_0__fo1 True n 2 12 s 
+P2R lnk_fwd_epoch True n 4 12 s 
+P2R lnk_fwd_epoch__fo1 True n 4 13 s 
+P2R lnk_fwd_lrst True n 4 13 s 
+P2R lnk_native_tx_slot True n 1 13 s 
+P2R lnk_native_tx_v True n 1 13 s 
+P2R lnk_native_rx_v True n 1 13 s 
+P2R lnk_rx_payload__fo1 True n 3 13 s 
+P2R lnk_rx_payload__fo2 True n 3 13 s 
+P2R lnk_native_rx_slot True n 1 13 s 
+P2R lnk_native_rx_slot_kind True n 1 13 s 
+P2R lnk_native_rx_slot_beat True n 1 13 s 
+P2R lnk_kv_x3_slot True n 3 13 s 
+P2R lnk_x3 True n 2 13 s 
+P2R lnk_x3_identity True n 2 13 s 
+P2R lnk_x3_generation True n 2 13 s 
+P2R sf_cfg_tx_we True n 3 14 s 
+P2R sf_cfg_rx_we True n 3 15 s 
+P2R sf_cfg_addr True n 3 15 s 
+P2R sf_cfg_data True n 3 15 s 
+P2R sf_cal_start True n 2 15 s 
+P2R sf_status_epoch16 True n 4 16 s 
+P2R sf_vm_drained True n 5 16 s 
+P2R sf_collective_drained True n 5 16 s 
+P2R sf_collective_busy True n 4 16 s 
+P2R sf_crom_fault True n 4 17 s 
+P2R sf_execution_active True n 5 17 s 
+P2R sf_admit_ready True n 5 17 s 
+P2R sf_result_v True n 4 18 s 
+P2R sf_result_done True n 4 18 s 
+P2R sf_result_fault True n 4 19 s 
+P2R sf_result_cause True n 4 20 s 
+P2R sf_result_tag True n 4 20 s 
+P2R sf_result_gen True n 4 21 s 
+P2R sf_result_token True n 6 22 s 
+P2R sf_result_value True n 6 23 s 
+P2R sf_result_cycles True n 6 23 s 
+P2R sf_prog_tx_observed_v True n 3 23 s 
+P2R sf_prog_tx_record True n 3 23 s 
+P2R sf_prog_rx_v True n 2 23 s 
+P2R sf_prog_rx_v__fo1 True n 2 23 s 
+P2R sf_prog_witness_slot True n 3 23 s 
+P2R sf_prog_auth_slot True n 3 23 s 
+P2R sf_prog_context_slot True n 4 23 s 
+P2R sf_prog_context_slot__fo1 True n 4 24 s 
+P2R sf_emb_rx_v True n 3 24 s 
+P2R sf_emb_rx_slot True n 4 24 s 
+P2R sf_d2d_fault True n 2 24 s 
+P2R sf_tt_pw True n 1 24 s 
+P2R sf_tt_kok True n 1 24 s 
+P2R sf_tt_fab True n 1 24 s 
+P2R sf_emb_word_v True n 1 24 s 
+P2R sf_emb_word_data True n 2 24 s 
+P2R sf_emb_word_token True n 1 24 s 
+P2R sf_emb_word_index True n 1 24 s 
+P2R sf_emb_fill_begin True n 1 24 s 
+P2R sf_emb_fill_token True n 1 24 s 
+P2R sf_emb_core_epoch True n 1 24 s 
+P2R sf_io_fault True n 27 29 s 
+P2R sf_io_shared_fault True n 27 34 s 
+P2R sf_strap_bump_pkg_s0 True n 4 34 s 
+P2R sf_strap_bump_pkg_s1 True n 4 35 s 
+P2R sf_strap_bump_die_ps True n 4 35 s 
+P2R dv_x0_rt_re True n 1 35 s 
+P2R dv_x0_rt_rr True n 1 35 s 
+P2R dv_x0_rt_rl True n 1 35 s 
+P2R dv_x0_rt_rd False n 0 39 s span 0-1 of 1, start 0, visited 0, sites 110028, D 486, De 377, corridor None, load None, end sites 53 / free 0 / reached 0, P0 (17453, 11809) P1 (17582, 11809)
+P2R dv_x0_dr_dr True n 1 44 s 
+P2R dv_x0_ag_ag True n 1 44 s 
+P2R dvw_arv_wo True n 2 44 s 
+P2R dvw_ard_wo True n 3 44 s 
+P2R dvw_arl_wo True n 2 44 s 
+P2R dvw_arm_wo True n 2 45 s 
+P2R dvw_rv_wi True n 1 45 s 
+P2R dvw_rd_wi True n 1 45 s 
+P2R dvw_rl_wi True n 2 45 s 
+P2R dvw_dd_wo True n 26 46 s 
+P2R dvw_dr_wi True n 26 48 s 
+P2R dvw_hr_wi True n 24 49 s 
+P2R dvw_cmd_wi True n 27 54 s 
+P2R dvw_ss_wo True n 23 59 s 
+P2R dvw_ag_wo True n 24 65 s 
+P2R dvw_st_wi True n 21 73 s 
+P2R dvw_io_collective_cmd_free True n 27 78 s 
+P2R dvw_native59_emb_code_re True n 1 78 s 
+P2R dvw_native59_emb_code_addr True n 1 78 s 
+P2R dvw_native59_emb_scale_re True n 1 78 s 
+P2R dvw_embed_prov_embed_code_q True n 2 78 s 
+P2R dvw_embed_prov_embed_scale_q True n 1 78 s 
+P2R dvw_sys_face_seq_dh True n 2 78 s 
+P2R dvw_sys_face_seq_dh__fo1 True n 3 78 s 
+P2R dvw_tt_ctlm_cal_program_obs True n 2 78 s 
+P2R dvw_tt_ctlm_cal_descriptor_obs True n 2 78 s 
+P2R dvw_tt_ctlm_cal_image_ready True n 3 78 s 
+P2R dvw_tt_ctlm_dc False n 0 79 s span 0-2: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 86 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 87 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 88 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 90 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 91 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 93 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 94 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 95 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 96 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 98 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 99 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 100 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 101 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 103 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 104 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 105 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 107 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 108 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 109 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 111 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 112 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 114 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 115 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 116 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 118 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 119 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 120 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 122 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 124 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 126 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 128 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 130 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 132 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 135 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 137 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 139 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 141 s span 0-1: pin-to-pin 402
+P2R dvw_tt_ctlm_dc False n 1 143 s span 0-1: pin-to-pin 402
+P2R ng_tt_native_tok_0__fo1 False n 1 145 s span 0-1: pin-to-pin 402
+P2R sf_emb_fill_begin True n 1 145 s 
+P2R dvw_mu_ctxrx_ctx_x True n 15 150 s 
+P2R ng_embed_fault_0 True n 2 150 s 
+LAND_CROSS ['d2d_rom', 'sys_face']: 12 cross-root buses / 91 bits get a landing station
+LAND_LIST 446 listed: 446 landing stations added (+0 hard<->hard auto), 0 already framed, 182 on one GEN trunk root (regional die clock splits them), 0 not on this GEN, 0 owed in-face ()
+RECORD_BUNDLES 9 bundles / 44 members: 0 members padded or landed with their bundle
+DIE_PARAMS qfd_tt_ctlm_dv.XPF_TRANSPORT_EDGES=20 qfd_tt_ctlm_dv.STAGE_ME=1 qfd_tt_ctlm_dv.NU=4 qfd_tt_ctlm_dv.OPSEG=1 qfd_tt_ctlm_dv.CTX_SRC=1 qfd_tt_ctlm_dv.FCTX=1 qfd_dv_slice2_w.MU_NU=4 qfd_dv_slice2_e.MU_NU=4 qfd_sys_face.MU=1 qfd_sys_face.MU_HEAD=1 qfd_sys_face_mu_dhobs.NU=4 qfd_mu_ctx_rx_die.NU=4 qfd_d2d_static.TXDP=167838472
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-qw-classpack2258/src/tools/qwen_tp8/relay_data_run.py", line 16, in <module>
+    v, m = D.load_qwen()[:2]
+           ~~~~~~~~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-qw-classpack2258/src/tools/die_top_lint.py", line 236, in load_qwen
+    v, m = B.selected(True, cdc=B._cdc_arg(cdc), **r)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-qw-classpack2258/src/tools/qwen_rom_fulldie_b3r2.py", line 1133, in selected
+    _relays_fanout(v, m, relay_pitch)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-qw-classpack2258/src/tools/qwen_rom_fulldie_b3r2.py", line 2025, in _relays_fanout
+    _relays(v, m, pitch)
+    ~~~~~~~^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-qw-classpack2258/src/tools/qwen_rom_fulldie_b3r2.py", line 4782, in _relays
+    install(v, m)
+    ~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-qw-classpack2258/src/tools/qwen_split/fwd_class_emit.py", line 211, in install
+    pack_classes(v,m,{r['instance'] for r in receipts})
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-qw-classpack2258/src/tools/qwen_split/fwd_class_emit.py", line 312, in pack_classes
+    raise ValueError(f'class packing: no legal <=405um site for {name} ({i.master}), last {reason}')
+ValueError: class packing: no legal <=405um site for rly_dv_ch_E1_ar_ard_0 (qfd_landh0_600_EN_104x106), last dvs_E2
+rc=1

@@ -34,11 +34,22 @@ SOURCES = {
          '08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b'),
     'rtl/lib/ot_reset_sync.sv':
         ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',
-         # 9c1a1ca96 / ba140fd98 (main 10-22): adds OUTPUT_COPIES / TREE parameters, defaults (1 / 0) keep the reviewed
-         # 2-stage reset_pipe and sync_rst_n = reset_pipe[ASYNC_STAGES-1] byte-for-byte in function; the elaborated
-         # wiring check below still runs on every admitted FIFO
+         # coordinator 10-22 (ba140fd98 seq-b1): OUTPUT_COPIES/TREE added; defaults (1, 0) select g_original, which is
+         # byte-for-byte the old logic.  Admitted ONLY with every instance at OUTPUT_COPIES=1, TREE=0 (reset_sync_scopes)
          '607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a'),
 }
+# ot_reset_sync parameters a reviewed instance must elaborate with (g_original); absent = the 489e493c source (none)
+RESET_SYNC_ORIGINAL = {'OUTPUT_COPIES': 1, 'TREE': 0}
+
+
+def reset_sync_original(values, scope):
+    """refuse an ot_reset_sync instance unless OUTPUT_COPIES=1 and TREE=0 (g_original, the reviewed logic)"""
+    for name, want in RESET_SYNC_ORIGINAL.items():
+        raw = values.get(name)
+        got = want if raw is None else int(str(raw), 2) if re.fullmatch(r'[01]+', str(raw)) else None
+        if got != want:
+            raise ValueError(f'async_gray_fifo ot_reset_sync {scope or "<top>"} elaborates {name}={raw!r}; only the reviewed '
+                             'g_original form (OUTPUT_COPIES=1, TREE=0) is admitted')
 RESET_SYNC_SOURCE = 'rtl/lib/ot_reset_sync.sv'
 # COORD review 2026-10-22 10:45 (kshare r5a, APPROVED WITH CONDITIONS): the shared-pointer bit-sliced FIFO is admitted
 # ONLY as this exact module from this exact source (sha256 + Yosys src range); it is OPTIONAL (a parent that does not
@@ -249,6 +260,7 @@ def reset_sync_scopes(document,top,root):
                     raise ValueError('async_gray_fifo ot_reset_sync identity does not bind reviewed source')
                 stages=int(mod.get('parameter_default_values',{}).get('ASYNC_STAGES','10'),2)
                 if stages<2:raise ValueError('async_gray_fifo ot_reset_sync requires >= 2 stages')
+                reset_sync_original(mod.get('parameter_default_values',{}),full)
                 if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_.\[\]]*',full):raise ValueError('async_gray_fifo unsupported reset scope '+full)
                 found.append(full)
                 # the last stage drives sync_rst_n; synthesis may name that flop after the output or a parent net of it
@@ -314,7 +326,7 @@ def extend(body, spec, root):
         raise ValueError('async_gray_fifo ownership gate changed; revalidate extension')
     body = body.replace(marker, '  ot_ag_complete\n' + marker)
     body = body.replace('  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}',
-                        '  set ::ot_ag_seen {}\n  set ::ot_ag_pending {}\n  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}')
+                        '  set ::ot_ag_seen {}\n  set ::ot_ag_pending {}\n  set ::ot_ag_tie_memo {}\n  set ::ot_ag_tie_stats {}\n  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}')
     return bindings(record) + TCL + '\n' + body
 
 
@@ -329,13 +341,47 @@ set ::ot_ag_reset_seen {}
 # (hdie_svc_vm_kshare: >10k pairs, 11+ h in synth_odb and again at every hook re-source).  The checks, the error and
 # PATH_DEFERRED messages are identical; a BOUNDED line is printed only after that pair's proof passed.
 set ::ot_ag_pending {}
+set ::ot_ag_tie_memo {}
+set ::ot_ag_tie_stats {}
+proc ot_ag_owner {object} {
+  # A path startpoint/launch named by what owns it: a top port (or top-level pin) by its own name, else its cell.
+  if {[sta::object_type $object] eq "Port" || ([sta::object_type $object] eq "Pin" && [$object is_top_level_port])} {
+    return [list port [get_full_name $object]]
+  }
+  if {[sta::object_type $object] eq "Instance"} {return [list cell [get_full_name $object]]}
+  set cell [get_cells -quiet -of_objects $object]
+  if {[llength $cell] != 1} {return {}}
+  return [list cell [get_full_name $cell]]
+}
+proc ot_ag_sole_launch {launch target} {
+  # TOKc-GRAY 10-22: 1 iff every actual startpoint of the target's fanin belongs to the launch itself.  Then every path
+  # that ends at the target starts at the launch, so "-to target" reports exactly the path set of "-from launch -to
+  # target" while reusing the one full arrival update; the "-from" filter re-searches the launch's whole fanout cone per
+  # query (a reset-tree flop's clear arcs reach most of its lane: ~6 s per reset pair on hdie_svc_vm_kshare_r4).  Any
+  # other fanin (a second launch, the pin itself, an unowned object) keeps the original filtered query.
+  set own [ot_ag_owner [lindex $launch 0]]
+  if {[llength $launch] != 1 || ![llength $own]} {return 0}
+  set starts [get_fanin -flat -startpoints_only -to $target]
+  if {![llength $starts]} {return 0}
+  foreach start $starts {
+    if {[ot_ag_owner $start] ne $own} {return 0}
+  }
+  return 1
+}
 proc ot_ag_verify {} {
   set pending $::ot_ag_pending
   set ::ot_ag_pending {}
+  set direct 0
   foreach row $pending {
     lassign $row kind launch target start_name target_name done
+    set sole [ot_ag_sole_launch $launch $target]
+    incr direct $sole
     foreach k {max min} {
-      set paths [find_timing_paths -from $launch -to $target -path_delay $k -group_path_count 1 -endpoint_path_count 1]
+      if {$sole} {
+        set paths [find_timing_paths -to $target -path_delay $k -group_path_count 1 -endpoint_path_count 1]
+      } else {
+        set paths [find_timing_paths -from $launch -to $target -path_delay $k -group_path_count 1 -endpoint_path_count 1]
+      }
       if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
         if {$kind eq "reset"} {
           puts "OT_ASYNC_GRAY PATH_DEFERRED reset $start_name -> $target_name $k (strict at sign-off)"
@@ -353,6 +399,7 @@ proc ot_ag_verify {} {
     }
     if {$done ne ""} {puts $done}
   }
+  puts "OT_ASYNC_GRAY VERIFY_DEDUP pairs=[llength $pending] sole_launch_unfiltered=$direct filtered=[expr {[llength $pending] - $direct}]"
 }
 proc ot_ag_public_nets {cell} {
   set result {}
@@ -456,6 +503,27 @@ proc ot_ag_reset_bound {start pin bound {done {}}} {
   set_min_delay -ignore_clock_latency 0.0 -from $launch -to $pin
   lappend ::ot_ag_pending [list reset $launch $pin [get_full_name $start] [get_full_name $pin] $done]
 }
+proc ot_ag_tie_driven {nets} {
+  # 1 iff every driver (output pin) on the pin's actual net(s) is a TIEHI/TIELO cell (vacuously 1 without a net).
+  # TOKc-GRAY 10-22: the verdict is a function of the net alone, so it is computed once per net per SDC read and
+  # shared by every async pin on that net.  hdie_svc_vm_kshare_r4 ties thousands of DFFASRHQNx1 SET/RESET pins to a
+  # few tie nets; re-scanning the whole tie net for each pin was O(pins x net fanout) (~0.12 s per async pin, hours).
+  # The memo is cleared at the start of every ownership pass (the netlist is fixed while the SDC is read).
+  set key {}
+  foreach n $nets {lappend key [get_full_name $n]}
+  if {[dict exists $::ot_ag_tie_memo $key]} {
+    dict incr ::ot_ag_tie_stats reused
+    return [dict get $::ot_ag_tie_memo $key]
+  }
+  set tied 1
+  foreach d [get_pins -quiet -of_objects $nets] {
+    if {[get_property $d direction] ne "output"} continue
+    if {![regexp {^TIE(HI|LO)x} [get_property [get_cells -quiet -of_objects $d] ref_name]]} {set tied 0}
+  }
+  dict set ::ot_ag_tie_memo $key $tied
+  dict incr ::ot_ag_tie_stats scanned
+  return $tied
+}
 proc ot_ag_async_control {pin cells inputs} {
   # Reset recovery/removal stays timed within a domain. A FIFO data/pointer publication must
   # never acquire an async-control exception by sharing a legitimate D target.  A cross-domain asynchronous control
@@ -468,12 +536,9 @@ proc ot_ag_async_control {pin cells inputs} {
     # the pin itself as its only startpoint (HBMA-SVC 10-17, hdie_svc_stack_fault SETN of u_ca.u_status.rd_bin[2]).
     # Admit exactly that case, and only when every driver of the pin's net is a tie cell.
     if {[get_full_name $start] eq [get_full_name $pin]} {
-      set tied 1
-      foreach d [get_pins -quiet -of_objects [get_nets -quiet -of_objects $pin]] {
-        if {[get_property $d direction] ne "output"} continue
-        if {![regexp {^TIE(HI|LO)x} [get_property [get_cells -quiet -of_objects $d] ref_name]]} {set tied 0}
+      if {![ot_ag_tie_driven [get_nets -quiet -of_objects $pin]]} {
+        error "OT_ASYNC_GRAY: asynchronous control without a register or tie driver [get_full_name $pin]"
       }
-      if {!$tied} {error "OT_ASYNC_GRAY: asynchronous control without a register or tie driver [get_full_name $pin]"}
       continue
     }
     set name [get_full_name $start]
@@ -580,6 +645,9 @@ proc ot_ag_complete {} {
     }
   }
   if {$::ot_ag_primitive && ![dict exists $::ot_ag_seen [list {} payload]]} {error "OT_ASYNC_GRAY: missing primitive payload crossing"}
+  set scanned [expr {[dict exists $::ot_ag_tie_stats scanned] ? [dict get $::ot_ag_tie_stats scanned] : 0}]
+  set reused [expr {[dict exists $::ot_ag_tie_stats reused] ? [dict get $::ot_ag_tie_stats reused] : 0}]
+  puts "OT_ASYNC_GRAY TIE_DRIVER_DEDUP nets_scanned=$scanned pins_covered=[expr {$scanned + $reused}]"
   puts "OT_ASYNC_GRAY STRUCTURAL_PASS $::ot_ag_seen reset_sync_inputs=$::ot_ag_reset_seen (bounded CDC; no physical closure claim)"
 }
 '''

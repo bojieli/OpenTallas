@@ -8,6 +8,7 @@ link reset) are qfd_sigbump hard-macro models.  Inputs with no compute-die produ
 record, the STATUS/RESULT record) are enumerated, never tied.
 """
 import hashlib
+import os
 from pathlib import Path
 
 from qwen_split.closed_view import enabled as view_enabled, install_master as view_install, view_frame
@@ -16,6 +17,14 @@ from qwen_split.source_pin_plan import rtl_ports
 ROOT = Path(__file__).resolve().parents[2]
 MASTER = 'qfd_d2d_static'
 SOURCE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv'
+if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
+    MASTER = 'qfd_d2d_static_ovl_sf7'
+    SOURCE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl_sf7.sv'
+if os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1':
+    if os.environ.get('OT_QWEN_HEAD_PREP', '0') != '1':
+        raise ValueError('STATUS observer v1 requires coherent head-prepare source')
+    MASTER = 'qfd_d2d_static_ovl_sf7_obs1'
+    SOURCE = 'rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv'
 BUMP = 'qfd_sigbump'
 BUMP_WH = 43.176
 
@@ -28,6 +37,9 @@ def apply(model):
     d2d.master = MASTER
     ports = rtl_ports(ROOT / SOURCE, MASTER)
     vf = view_frame(MASTER) if view_enabled() else None
+    if os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1':
+        # Candidate frame only: no historical abstract/source identity is inherited.
+        vf = (388.8, 172.8)
     frame = None
     if vf is not None:
         # Q-VIEWFRAME 10-16: the slot takes the CLOSED view's outline (r5 475.2 x 280.8, bind_view_select.json) instead
@@ -90,6 +102,8 @@ def apply(model):
                              (nat, 'x3_generation', 'd2d_rom', 'x3_generation')]:
         n = ports[sp][0] if src == 'd2d_rom' else ports[dp][0]
         new.append((f'lnk_{sp}', 'spine_local', n, [(src, sp), (dst, dp)]))
+    # The selected DV native owns the user inputs.  It is installed after the
+    # pre-DV b2 graph, so dv_case joins these source-exact buses at that stage.
     out = []
     for b, c, n, es in kept:
         if b == clk_bus:
@@ -114,8 +128,41 @@ def apply(model):
                qualified=False)
     if frame is not None:
         rec['view_frame'] = frame
+    if os.environ.get('OT_QWEN_HEAD_PREP','0') == '1':
+        rec['physical_status'] = 'NEW unclosed source pins; historical OVL outline only, no old view/source alias'
+        rec['historical_outline_um'] = [d2d.w,d2d.h]
     model['static_link_bind'] = rec
     return rec
+
+
+def _peer_pin_xy(model, by, Master):
+    """SQC-QDIE4 10-22 (OT_PIN_PEER_PIN=1): d2d_rom port -> die (x, y) of its ucie_kv peer's own LEF pin-group centroid
+    (the PHY abstract is fixed), so the FDI groups are assigned facing their real partner pins."""
+    from qwen_split.native_static_io_bind import phy_master
+    uk = by.get('ucie_kv')
+    if uk is None:
+        return {}
+    pm = phy_master(Master, 'ot_qkvd_ucie_x64_phy', 'physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy')
+    o = getattr(uk, 'orient', 'R0')
+    out = {}
+    for b, c, n, es in model['buses']:
+        if c in ('clock_trunk', 'reset') or len(es) != 2:
+            continue
+        for (i0, p0), (i1, p1) in ((es[0], es[1]), (es[1], es[0])):
+            if i0 != 'd2d_rom' or i1 != 'ucie_kv' or p1 not in pm.ports:
+                continue
+            _, nb, f, _, zs, _ = pm.ports[p1]
+            z = sum(zs) / len(zs)
+            if f in 'NS':
+                x = uk.x + (pm.w - z if o in ('MY', 'R180') else z)
+                y = uk.y + (pm.h if (f == 'N') != (o in ('MX', 'R180')) else 0.0)
+            else:
+                y = uk.y + (pm.h - z if o in ('MX', 'R180') else z)
+                x = uk.x + (pm.w if (f == 'E') != (o in ('MY', 'R180')) else 0.0)
+            out[('d2d_rom', p0)] = (round(x, 3), round(y, 3))
+    model.setdefault('static_link_bind', {})['peer_pin_wishes'] = {p: list(v) for (_, p), v in sorted(out.items())}
+    print(f'PEER_PIN d2d_rom -> ucie_kv pin wishes: {sorted(out.items())}', flush=True)
+    return out
 
 
 def install_masters(M, model, Master, partition_master):
@@ -123,11 +170,12 @@ def install_masters(M, model, Master, partition_master):
         return
     from qwen_split.native_graph_bind import assign_pins, peer_map
     by = {i.name: i for i in model['insts']}
-    if view_enabled() and view_frame(MASTER) is not None:
+    if os.environ.get('OT_QWEN_HEAD_PREP','0') != '1' and view_enabled() and view_frame(MASTER) is not None:
         # Q-VIEWFRAME 10-16: every die port on the closed view's own pin (fails closed on any port without one)
         view_install(M, model, Master, by['d2d_rom'], MASTER, rtl_ports(ROOT / SOURCE, MASTER), partition_master)
     else:
-        assign_pins(M, model, Master, by['d2d_rom'], MASTER, SOURCE, peer_map(model), partition_master)
+        assign_pins(M, model, Master, by['d2d_rom'], MASTER, SOURCE, peer_map(model), partition_master,
+                    peer_xy=_peer_pin_xy(model, by, Master) if os.environ.get('OT_PIN_PEER_PIN', '0') == '1' else None)
     q = Master(BUMP, BUMP_WH, BUMP_WH, 3, 'package signal bump receiver (hard-macro model)')
     q.ports['o'] = ('pins', 1, 'N', 'M5', [round(.012 + round((BUMP_WH / 2 - .012) / .048) * .048, 4)], 1)
     q.order.append('o')

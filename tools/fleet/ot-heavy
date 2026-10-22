@@ -1,5 +1,5 @@
 #!/bin/bash
-# ot-heavy v12 (2026-10-18 FLEET-OOM: pinned Verilator 5.050 / yosys 0.68 first on PATH for every job); v11 (2026-10-18: die waiters re-try every 5 s; DIE-FIRST v2 in reconcile only orders, never holds idle memory; no load test anywhere); v9 (2026-10-16: docker run inherits the declared --memory via the ot-heavy-docker shim); v8 (2026-10-13 owner 17:55: admission, placement and the per-unit table use ONE arithmetic, `ot-heavy-reconcile --gate` = books(); see that file: a unit is charged what it can still grow into, bounded by its own observed peak and its class peak; no request waits while > 25 % of RAM is really available and the 20 % floor holds); v7 (2026-10-13: --tag LABEL (shown in ps; ot-run cancels its own waiter by it), --max-wait SEC (exit 75 'NOT RUN' instead of waiting for ever), an 'admitted' line on stderr after a wait); v6 (2026-10-13 owner: growth charged to a running unit is capped from its own observed peak after 5 min, plus a real-memory floor of 20 % of RAM); v5 (2026-10-13: /etc/ot-heavy.conf is re-read on every attempt, so a headroom change reaches queued waiters); v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
+# ot-heavy v13 (2026-10-22 TOKc-ADM: the command runs under ot-heavy-exit in its scope, which reports EARLYOOM / MEMCG-OOM kills); v12 (2026-10-18 FLEET-OOM: pinned Verilator 5.050 / yosys 0.68 first on PATH for every job); v11 (2026-10-18: die waiters re-try every 5 s; DIE-FIRST v2 in reconcile only orders, never holds idle memory; no load test anywhere); v9 (2026-10-16: docker run inherits the declared --memory via the ot-heavy-docker shim); v8 (2026-10-13 owner 17:55: admission, placement and the per-unit table use ONE arithmetic, `ot-heavy-reconcile --gate` = books(); see that file: a unit is charged what it can still grow into, bounded by its own observed peak and its class peak; no request waits while > 25 % of RAM is really available and the 20 % floor holds); v7 (2026-10-13: --tag LABEL (shown in ps; ot-run cancels its own waiter by it), --max-wait SEC (exit 75 'NOT RUN' instead of waiting for ever), an 'admitted' line on stderr after a wait); v6 (2026-10-13 owner: growth charged to a running unit is capped from its own observed peak after 5 min, plus a real-memory floor of 20 % of RAM); v5 (2026-10-13: /etc/ot-heavy.conf is re-read on every attempt, so a headroom change reaches queued waiters); v4 (2026-10-13 owner: an over-sized request is ADMITTED on its measured class size; v3 counts docker memory via use.<unit>; v2 2026-10-12, owner: any host takes any task as long as memory allows; no fixed slot counts).
 # Runs a large build / bench under a hard memory cap and admits it only when the host's memory allows:
 #   ot-heavy --mem <GB> [--slots-class big|small (ignored)] -- <command...>
 # Admission (v10, owner 2026-10-17 "admit as soon as possible"): `ot-heavy-reconcile --gate`: MemAvailable - (growth
@@ -76,11 +76,19 @@ while :; do
         [ -d "$_d" ] && export PATH="$_d:$PATH"
       done
     fi
+    # VL_JCAP_1022 (fleet 2026-10-22: ep5 / filled by OOM dumps): Verilator C++ builds peak ~30 GB per cc1plus, so
+    # every Verilator make in this job runs at most floor(MEM / per-cc1plus GB) jobs (ot-vl-jcap). OT_VL_JCAP=0 opts out.
+    if [ "${OT_VL_JCAP:-1}" != 0 ] && [ -x /usr/local/bin/ot-vl-jcap ]; then
+      _jc=$(timeout 20 /usr/local/bin/ot-vl-jcap --env "$MEM" -- "$@") && eval "$_jc"; unset _jc
+    fi
     [ -x /usr/local/lib/ot-heavy/bin/docker ] && export PATH="/usr/local/lib/ot-heavy/bin:$PATH"
+    # EXIT_REPORT_1022 (v17 TOKc-ADM): ot-heavy-exit runs the command inside the scope and, on a non-zero exit, reports
+    # EARLYOOM (host-level earlyoom kill of one of the job's processes) or MEMCG-OOM instead of a bare 143 / exit 2
+    _OTX=(); if [ "${OT_HEAVY_EXIT_REPORT:-1}" != 0 ] && [ -x /usr/local/lib/ot-heavy/ot-heavy-exit ]; then _OTX=(/usr/local/lib/ot-heavy/ot-heavy-exit "$UNIT"); fi
     # OOMADJ_999_1022: a non-die job starts at oom_score_adj 0 (its launcher may sit in a protected die tree at -999,
     # or a legacy -1000 one, which would make the job un-killable by its own scope's memcg OOM: livelock at the cap).
     if [ "${OT_HEAVY_PRIO:-}" != die ]; then echo 0 > /proc/self/oom_score_adj 2>/dev/null || true; fi
-    exec systemd-run --user --scope -q --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 -- "$@"
+    exec systemd-run --user --scope -q --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 -- "${_OTX[@]}" "$@"
   fi
   flock -u 8; exec 8>&-
   [ $waited = 0 ] && echo "ot-heavy: waiting for memory on $(hostname): $WHY" >&2

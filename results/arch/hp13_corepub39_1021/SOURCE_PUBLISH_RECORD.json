@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.hp13.core_publisher_local_edges.v1",
+  "clock_unit": "ck_core rising edges relative to actual GI source Q",
+  "calendar_sample_edges": 1,
+  "variants": {
+    "1": {
+      "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_1",
+      "producer_offset_edges": 0,
+      "output_offset_edges": 1,
+      "source_to_output_edges": 1,
+      "total_source_local_edges": 2
+    },
+    "2": {
+      "master": "qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2",
+      "producer_offset_edges": 0,
+      "output_offset_edges": 2,
+      "source_to_output_edges": 2,
+      "total_source_local_edges": 3
+    }
+  },
+  "die_transport_edges": null,
+  "clock_root_phase_relation": "actual GEN root/landing evidence remains required"
+}

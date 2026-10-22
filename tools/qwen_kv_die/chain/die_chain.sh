@@ -137,6 +137,9 @@ if [ "${OT_DIE_CLOCK_PHYS:-0}" = 1 ]; then
   # QW-GEN2 10-19: dv2f18dh2 died here (ORD-0007: ln of the root-owned docker output -> Permission denied): copy, never link
   rm -f $G/floorplan_pdn.odb; cp $R/dieclk/${OT_DIE_CLOCK_VARIANT:-spine}/tt/clock.odb $G/floorplan_pdn.odb || { say "DIE CLOCK PHYS: clock.odb copy FAIL"; exit 1; }
   say "DIE CLOCK PHYS: $(grep -h -E 'CHECK TT\+FF|QCLK_SPINE_NEIGHBOUR|QCLK_SPINE_MANIFEST|QCLK_REGIONAL|DIECLK_STA_LAT' $R/dieclk/STATUS.log | tr '\n' ' ' | cut -c1-900)"
+  # QW-DIECLK3 10-19: the built die clock nets (sigType CLOCK, n_dc_*) route on the clock layers with a 2W2S NDR, never as
+  # M4/M5 signals over the hard blocks (dv2f19g2: 5050 M4 overflow from n_dc_* leaves over capacity-0 CB16 gcells)
+  export OT_GRT_CLOCK_LAYERS=${OT_GRT_CLOCK_LAYERS:-M6-M9} OT_GRT_CLOCK_NDR=${OT_GRT_CLOCK_NDR:-1}
 fi
 # ROOT14 10-20 (owner: reduce die closure risk): GEN hard checks before any GRT (tools/die_safety/gen_check.py):
 # every region crossing landed (ring) with a clock root on both sides, every die wire hop <= 405 um (relay site within
@@ -178,7 +181,7 @@ if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
       mv $G/die_rep_call.tcl.new $G/die_rep_call.tcl || { say "DIE_REPAIR FAIL: fclk data-port contract"; exit 1; }
   fi
 fi
-$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0} OT_DIE_SIGNAL_TOP_LAYER=${OT_DIE_SIGNAL_TOP_LAYER:-M8}
+$ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=${OT_ITERS:-30} OT_TILE_UM=4.8 OT_ROUTE_RESET=${OT_ROUTE_RESET:-0} OT_DIE_REPAIR=${OT_DIE_REPAIR:-0} OT_DIE_SIGNAL_TOP_LAYER=${OT_DIE_SIGNAL_TOP_LAYER:-M8} OT_GRT_CLOCK_LAYERS=${OT_GRT_CLOCK_LAYERS:-} OT_GRT_CLOCK_NDR=${OT_GRT_CLOCK_NDR:-0}
 if [ "${OT_DIE_REPAIR:-0}" = 1 ]; then
   say "$(python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json)" || true
   python3 $SRC/tools/die_repeaters/step.py check $G/die_repeaters.json > /dev/null || { say "DIE_REPAIR FAIL: no GRT result is a die result"; exit 1; }

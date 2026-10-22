@@ -73,7 +73,10 @@ FAMILIES = {'core': 833.333, 'host': 1000.0, 'ingest': 1666.667, 'phy': 1043.0,
             'hbm': 1024.0}    # HBM PHY CK/2 (RBH-STK 2026-10-18; cdc_sync_constraints ASYNC_RELATIONSHIP hbm_period_ps)
 SETUP_UNCERTAINTY_PS = 60.0
 RESET_SYNC = ('ot_reset_sync', 'rtl/lib/ot_reset_sync.sv',
-              ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',))
+              ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',
+               # coordinator 10-22 (ba140fd98): OUTPUT_COPIES/TREE added, defaults select g_original (= the old logic);
+               # admitted only when every instance elaborates g_original (_lint: no g_tree/g_regions, output = last stage)
+               '607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a'))
 # Reviewed FIFO sources. A chain is (name, source register, stage registers, direction); a stage pattern with {k}
 # enumerates k = 0, 1, ... while the register exists. w2r: source on the writer side, stages on the reader side.
 REVIEWED = {
@@ -1048,6 +1051,17 @@ def _lint(spec, root):
                 raise GrayFifoError(f'reviewed_gray_fifos reset synchroniser {scope} stages do not share one async control')
             if net.consumers.get(pipe[0], []) != [(net.flops[pipe[1]]['cell'], 'D')]:
                 raise GrayFifoError(f'reviewed_gray_fifos reset synchroniser {scope} stage 0 drives more than stage 1')
+            # coordinator 10-22 (607e5cbb admitted): only the g_original form (OUTPUT_COPIES=1, TREE=0) is reviewed.  The
+            # flattened netlist has no parameters; g_tree / g_regions leave their named (kept) generate scopes and
+            # reset_*__ot_rlv copies, and g_original drives sync_rst_n straight from the last reset_pipe stage.
+            rprefix = scope + '.' if scope else ''
+            other = [k for k in keys_with(rprefix) if k[len(rprefix):].startswith(
+                ('g_tree.', 'g_regions.', 'reset_regions__ot_rlv', 'reset_l1__ot_rlv'))]
+            out = net.bit_of.get(rprefix + 'sync_rst_n')
+            if other or (out is not None and out != pipe[-1]):
+                raise GrayFifoError(f'reviewed_gray_fifos reset synchroniser {scope or "<top>"} is not the reviewed '
+                                    'g_original form (OUTPUT_COPIES=1, TREE=0): '
+                                    + (other[0] if other else 'sync_rst_n is not the last reset_pipe stage'))
             for i, q in enumerate(pipe):
                 tag(q, ('rst', f'r{len(resets)}', 'pipe', i))
             resets.append(dict(scope=scope, domain=doms.pop(), stages=len(pipe)))

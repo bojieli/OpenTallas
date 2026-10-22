@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-q-tt-hp-lp-1021/tools/qwen_dv/ctlm6_bound_macro.py", line 416, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/srv/opentallas-scratch/claude/codex-q-tt-hp-lp-1021/tools/qwen_dv/ctlm6_bound_macro.py", line 415, in main
+    s,h,r=build(Path(a.json).read_bytes(),a.top,a.name,a.drop_output,a.collapse_delays,a.load_cap,a.transparent_inverters,a.retain_mux,a.shared_helpers,a.retain_bit,a.retain_all_comb,a.fuse_ao,a.retain_keep,json.loads(Path(a.macro_contracts).read_text()) if a.macro_contracts else None,a.undef_mux_proof);r['retained_driver_bits']=a.retain_bit;r['retained_all_combinational_operators']=a.retain_all_comb;r['retained_keep_nets']=a.retain_keep;Path(a.out).write_text(s);Path(a.helpers).write_text('\n'.join(h)+'\n');Path(a.record).write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2))
+          ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/codex-q-tt-hp-lp-1021/tools/qwen_dv/ctlm6_bound_macro.py", line 188, in build
+    raise ValueError(f'{n}: unsupported enabled FF ABI: {typ}')
+ValueError: $auto$ff.cc:337:slice$51931: unsupported enabled FF ABI: $_DFFE_PP_
