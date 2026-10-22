@@ -180,6 +180,79 @@ def forwarded_soft_clocks(spec):
     return out
 
 
+BAND_GENERATOR = "tools/s81_dv/frame_hier_kit.py"
+
+
+def landed_band_record(spec, root, rec, path):
+    """S81 frame MAIN-hier (b2, STW-S81c-DIE-FRAME 10-22): the record of ONE hard row band of an lp landed parent.
+    A band is a single region (one root) of the parent; a landing whose ring and read both sit in it would be whole
+    (impossible: a landing joins two regions, so "landings" is empty); every landing is a HALF ("landing_halves": side "w" =
+    ring here, its bank / epo / vld leave on output ports; side "r" = read here, they arrive on input ports), timed by
+    landed_sdc as the same -setup E / -hold D-1 multicycle against the port.  Validated against the parent lp record
+    (fail closed): every half exists there, with this band's region on the right side."""
+    if rec.get("kind") != "landed_band" or rec.get("top") != spec.get("top"):
+        raise ValueError(f'{path}: not the landed_band record of {spec.get("top")}')
+    regions = rec.get("regions")
+    if not isinstance(regions, dict) or len(regions) != 1:
+        raise ValueError(f"{path}: a band is exactly one region of its parent")
+    (rname, reg), = regions.items()
+    if [reg.get("clock_port")] != list(spec["clock_ports"]) or reg.get("clock_port") != spec["clock_port"]:
+        raise ValueError(f"{path}: band clock port {reg.get('clock_port')} differs from clock_ports")
+    parent = json.loads((Path(root) / rec["parent_record"]).read_text())
+    if parent.get("generator") != "tools/landed_parent/lp.py":
+        raise ValueError(f"{path}: parent_record is not an lp.py record")
+    if (rec.get("D"), rec.get("E")) != (parent.get("D"), parent.get("E")):
+        raise ValueError(f"{path}: D / E differ from the parent record")
+    if rec.get("landing_implementation") != parent.get("landing_implementation"):
+        raise ValueError(f"{path}: landing_implementation differs from the parent record")
+    pl = {L["name"]: L for L in parent.get("landings") or []}
+    if rec.get("landings"):
+        # a landing crosses two regions and a band is one region: every landing of a band is a half
+        raise ValueError(f"{path}: a band holds no whole landing (ring and read sit on different region roots)")
+    seen = set()
+    for h in rec.get("landing_halves") or []:
+        P = pl.get(h.get("name"))
+        side = h.get("side")
+        if P is None or side not in ("w", "r") or h["name"] in seen:
+            raise ValueError(f"{path}: invalid landing half {h}")
+        if (side == "w" and P["src_region"] != rname) or (side == "r" and P["dst_region"] != rname):
+            raise ValueError(f"{path}: half {h['name']}/{side} is on the wrong region (band region {rname})")
+        ports = h.get("ports")
+        if not isinstance(ports, list) or sorted(ports) != sorted(f"lpl_{h['name']}_{k}" for k in ("bank", "epo", "vld")):
+            raise ValueError(f"{path}: half {h['name']} must carry exactly its bank / epo / vld ports")
+        seen.add(h["name"])
+    names = [L.get("name") for L in rec.get("landings") or []]
+    if any(not isinstance(n, str) or not re.fullmatch(r"[A-Za-z0-9_]+", n) for n in names) or len(set(names)) != len(names):
+        raise ValueError(f"{path}: invalid landing names")
+    return rec
+
+
+def half_landing_sdc(rec):
+    """port-side multicycles of a band's landing halves (see landed_band_record); [] without halves"""
+    hs = rec.get("landing_halves") or []
+    if not hs:
+        return []
+    D, E = rec["D"], rec["E"]
+    o = [f"# ---- landed band: {len(hs)} landing halves at the band face, multicycle -setup {E} -hold {D - 1} against the port",
+         "set ot_lh_miss 0"]
+    for h in hs:
+        n = h["name"]
+        cells = f"u_lpl_{n}_{h['side']}"
+        ports = " ".join(f"lpl_{n}_{k}*" for k in ("bank", "epo", "vld"))
+        o += [f"set ot_lh_c [get_cells -quiet {cells}.*]",
+              f"if {{[llength $ot_lh_c] == 0}} {{ set ot_lh_c [get_cells -quiet {cells}/*] }}",
+              f"set ot_lh_p [get_ports -quiet {{{ports}}}]",
+              "if {[llength $ot_lh_c] == 0 || [llength $ot_lh_p] == 0} { incr ot_lh_miss } else {"]
+        if h["side"] == "r":
+            o += [f"  set_multicycle_path -setup {E} -from $ot_lh_p -to $ot_lh_c",
+                  f"  set_multicycle_path -hold {D - 1} -from $ot_lh_p -to $ot_lh_c", "}"]
+        else:
+            o += [f"  set_multicycle_path -setup {E} -from $ot_lh_c -to $ot_lh_p",
+                  f"  set_multicycle_path -hold {D - 1} -from $ot_lh_c -to $ot_lh_p", "}"]
+    o.append(f'puts "OT_LP_HALF_SDC [expr {{{len(hs)} - $ot_lh_miss}}] of {len(hs)} landing halves constrained"')
+    return o
+
+
 def landed_record(spec, root):
     """The lp.py record (<top>_lp_record.json) of a landed cluster, validated against the spec (fail closed)."""
     if not landed_cluster(spec):
@@ -198,6 +271,10 @@ def landed_record(spec, root):
     if spec.get("cdc_synchronizers") is not None:
         raise ValueError("landed cluster: CDC synchronizers are leaf-tile features")
     rec = json.loads((Path(root) / path).read_text())
+    if (rec.get("generator") == BAND_GENERATOR) != (spec.get("landed_band") is True):
+        raise ValueError(f'{path}: spec "landed_band": true iff the record is a {BAND_GENERATOR} landed_band record')
+    if rec.get("generator") == BAND_GENERATOR:
+        return landed_band_record(spec, root, rec, path)
     if rec.get("generator") != "tools/landed_parent/lp.py" or rec.get("top") != spec.get("top"):
         raise ValueError(f'{path}: not the lp.py record of {spec.get("top")}')
     regions = rec.get("regions")
@@ -653,6 +730,8 @@ def landed_sdc(spec, root):
                 " }\n}\n" + seam)
     D, E = rec["D"], rec["E"]
     names = [L["name"] for L in rec.get("landings") or []]
+    if rec.get("kind") == "landed_band" and not impl.get("no_data_multicycle"):
+        seam = "\n".join(half_landing_sdc(rec)) + ("\n" if rec.get("landing_halves") else "") + seam
     if impl.get("no_data_multicycle"):
         # QW-CTLM3 10-19 (lp.py landing_mcp false): no exception at all -- every ring -> read cone (slot data, valid,
         # selectors, reset-adjacent) is timed single-cycle at full STA, which is conservative for a read K >= 1 edges
@@ -775,7 +854,10 @@ def domains(spec):
         related_data(spec)
     # a cluster qualifies only as a LANDED cluster (lp.py record named; landed_record() validates it in load_spec)
     landed = landed_cluster(spec) and isinstance(spec.get('landed_record'), str) and bool(spec.get('children'))
-    if leaf and (spec.get('kind') != 'tile' and not landed or declared is None or len(spec.get('clock_ports', [])) < 2):
+    # a landed BAND (landed_band_record: one region of an lp parent, "landed_band": true) has exactly one root
+    band = landed and spec.get('landed_band') is True
+    if leaf and (spec.get('kind') != 'tile' and not landed or declared is None
+                 or len(spec.get('clock_ports', [])) < (1 if band else 2)):
         raise ValueError('multiple_cts_roots requires a leaf tile, at least two roots and explicit IO domains')
     if declared is None:
         return {'core': dict(ratio=[1, 1], ports=list(spec['clock_ports']),
