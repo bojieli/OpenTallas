@@ -31,7 +31,16 @@ def prepare(plan,table,manifest,wrapper_ref):
     entry['ports']['pvcopy.o']={'lanes':split_pv(True)}
     entry['ports']['pvlocal.i']={'land':True,'lanes':[{'split':[['local_pv_landed',i*276,0,min(276,562-i*276)]]} for i in range(3)]}
     entry['ports']['pvpeer.i']={'land':True,'lanes':[{'split':[['peer_pv',i*276,0,min(276,562-i*276)]]} for i in range(3)]}
+    entry['ports']['pvlocal.i'].update(adapter='dsdv_pv_local_land_276',out_w=276)
     table['masters']['dsdv_svc_pvso_entry']=entry
+    local_path='rtl/dsrom_sys/s81_dv/land/dsdv_pv_local_land.sv'
+    import hashlib
+    local_hash=hashlib.sha256(Path(local_path).read_bytes()).hexdigest()
+    table['rtl_refs'].setdefault(wrapper_ref,[]).append(local_path)
+    table['rtl_widths']['dsdv_pv_local_land_276']=dict(ck_f=1,i=276,ck=1,rs=1,k=6,o=276,fault=1)
+    table.setdefault('landing_assemblies',{})['dsdv_pv_local_land_276']=dict(ref=wrapper_ref,path=local_path,sha256=local_hash,reset_stages=0,qualification='UNHARDENED_RTL_ASSEMBLY',slots=32,steady_words_per_cycle=1)
+    table.setdefault('landing_k_width',{})['dsdv_pv_local_land_276']=6
+    table.setdefault('landing_reset_stages',{})['dsdv_pv_local_land_276']=0
     table['rtl_widths']['dsdv_svc_rs_pvso_entry']=dict(table['rtl_widths']['dsdv_svc_rs_entry'],local_pv_landed=562,peer_pv=562,so_ready=1,so_done=1,so_fault_code=12)
     for name in ('rsv_05','rsv_11'):
         blocks[name][1]['master']='dsdv_svc_pvso_entry'
@@ -75,7 +84,7 @@ def prepare(plan,table,manifest,wrapper_ref):
     for member in table.get('frame_members',[]):
         if member.get('master')=='ot_v41_rom_elem_q_qxpq_w10':member['ref']=frame_ref
     table['functional_successor']={'so_source':SO,'sukv_raw_source':KV,'sukv_wrapper_ref':wrapper_ref,
-        'pv_layout':'{pv_x48,pv_d513,pv_v1}','added_ingress_sram_macros':272,'added_ingress_sram_bits':557056,
+        'pv_layout':'{pv_x48,pv_d513,pv_v1}','added_ingress_sram_macros':272,'added_ingress_sram_bits':557056,'local_ring':{'instances':6,'D':32,'W':276,'bank_bits':52992,'read_register_bits':1656,'epoch_bits':1152,'bank_delta_vs_D8_bits':39744,'data_flop_area_model_um2':(32+1)*276*6*.29/.45,'area_model':'Data flops only at .29um2 /45percent; epoch/control and physical utilization remain owed','endpoints':{'rsv_05':'pv outputs -> source clock gate -> D32 local_pv_landed on same entry root/reset','rsv_11':'pv outputs -> source clock gate -> D32 local_pv_landed on same entry root/reset'},'qualified_window':'N0,E17,K17 includes zero flight; bounded phase bench + actual STA required'},
         'frame_element_source':{'ref':frame_ref,'path':qpath,'CPR':0,'authority':'Exact frozen CPR0 frame/schedule; no CPR1 view alias'},'new_parent_views_qualified':False,'body_area':'stand-in pending mapped logic and ingress placement; not inherited closure',
         'hbc':'Not selected until real stage/rank, clock/reset origin and upstream arrival authority exist'}
 def hbc_disabled(plan,table,source_ref,regional_manifest):
@@ -147,6 +156,16 @@ def hbc_disabled(plan,table,source_ref,regional_manifest):
         'transport_live_bits':{'forward':571,'reverse':132},'transport_wire_bits':{'forward':828,'reverse':276}}
 
 
+def validate_local_ring_window(stages, E, K, D):
+    """Reject modulo aliases on the selected same-entry, zero-relay copy.
+
+    Its clock roots coincide; a legal window must include zero flight:
+    (E-D)T < 0 < ET. Actual routed min/max flight still needs die STA.
+    """
+    if stages != 0 or E != K or not (E - D < 0 < E):
+        raise ValueError(f'local P.V ring cannot retain selected age: N{stages} E{E} K{K} D{D}')
+
+
 def finish(plan,land):
     rows={r['link']:r for r in land['links']};links={l['i']:l for l in plan['links']}
     ledger={}
@@ -157,9 +176,12 @@ def finish(plan,land):
         age=max(math.ceil(links[n].get('s',0)/2)+max(2,math.ceil(.47*links[n].get('s',0))+1)+1 for n in names)
         for name in names:
             l=links[name];n=l.get('s',0);e=max(2,math.ceil(.47*n)+1);k=age-math.ceil(n/2)-1
+            if '_local_' in name:
+                e=k
+                validate_local_ring_window(n,e,k,32)
             if not e<=k<=63:raise ValueError((name,n,e,k))
-            rows[name]=dict(link=name,cls='attn',dst=plan['blocks'][l['e'][1][0]]['name'],bits=276,stages=n,E=e,K=k,D=8,
-                master='dsfd_dvland_276l',force_landing=not n,model=True,bundle=f'pvso_{producer}',
+            rows[name]=dict(link=name,cls='attn',dst=plan['blocks'][l['e'][1][0]]['name'],bits=276,stages=n,E=e,K=k,D=32 if '_local_' in name else 8,
+                master='dsdv_pv_local_land_276' if '_local_' in name else 'dsfd_dvland_276l',force_landing=not n,model=True,bundle=f'pvso_{producer}',
                 K_source='Actual routed station count; all three local and three peer lanes at one producer age; pilot physical window owed')
         ledger[producer]={'age_cycles':age,'lanes':{n:{k:rows[n][k] for k in ('stages','E','K','D','master')} for n in names}}
     if 'hbc_forward_l0' in links:
