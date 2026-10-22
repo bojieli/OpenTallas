@@ -13,6 +13,7 @@ print(' '.join(sorted({'--rtl-file '+f for i in c['instances'].values() for f in
 python3 tools/die_port_bind.py $O/die.v --top hbm_v16_die $EXTRA --allow-model ot_hbm3e_phy_rc_e8p5 --allow-model ot_hbm_pll_bb \
   --rtl-root rtl --rtl-root physical/hbm_mtp/rtl --rtl-root physical/hbm_accel_die_views/common --rtl-root physical/hbm_accel_die_views/quant/rtl \
   --rtl-root physical/hbm_generic/argmax18/rtl --rtl-root physical/hbm_xp_aq_tree13_1014 --lib-root physical/asap7_memory_macros --lib-root physical/asap7_memory_macros_v2 \
+  --prefer rtl/hdc/ot_hdc_fp32_mul_lat.sv \
   --define OT_SMH_FC_HIER --strap-file $O/straps.json --pad-file $O/die.v.pads.json \
   --unread-review $R --unread-contract $C --unread-manifest $M --unread-manifest-sha256 $H \
   --out $O/port_bind.json > $O/strict_replay.log 2>&1
