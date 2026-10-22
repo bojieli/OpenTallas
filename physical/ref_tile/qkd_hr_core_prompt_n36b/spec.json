@@ -1,0 +1,849 @@
+{
+ "name": "qkd_hr_core_prompt_n36b",
+ "top": "qkd_hr_core_prompt_mu4p5_n32",
+ "kind": "tile",
+ "recipe": 4,
+ "clock_port": "ck_core",
+ "reset_ports": [
+  "u_rank__u_control__por_n"
+ ],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true,
+  "macro_out_pins": [
+   "rd_out"
+  ]
+ },
+ "sources": [
+  "rtl/qwen_sys/host_prompt_mu4p5_n32_1021/qkd_hr_core_prompt_mu4p5_n32.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v"
+ ],
+ "params": {},
+ "defines": [],
+ "children": [],
+ "inter": [],
+ "outline": {
+  "w": 604.8,
+  "h": 561.6,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "static_setup_ready",
+   "boot_image_target",
+   "boot_image_ready",
+   "boot_image_fault",
+   "token_epoch_valid",
+   "token_epoch",
+   "service_abort",
+   "ingest_permission",
+   "crom_fault",
+   "record_send_kind",
+   "record_witness_slot",
+   "record_rx_v",
+   "record_tx_v",
+   "record_tx_observed_v",
+   "record_fault",
+   "execution_active",
+   "program_ready",
+   "program_authorized_footer_v",
+   "program_begin_v",
+   "program_auth_v",
+   "program_expected_pw",
+   "program_expected_dw",
+   "hc",
+   "irq",
+   "host_rst_n",
+   "link_rst_n",
+   "hbm_rst_n",
+   "boot_go",
+   "die_rst_n",
+   "sys_ready",
+   "source_cr",
+   "available",
+   "service_faults",
+   "host_link_reset_req",
+   "host_interface_idle",
+   "allocated_valid",
+   "native_context_owned",
+   "u_rank__u_control__por_n",
+   "u_rank__u_control__service_ready",
+   "u_rank__program_fault",
+   "u_rank__ingress_fault",
+   "u_rank__commit_fault",
+   "host_observer_fault",
+   "u_rank__source_fault",
+   "cq_client_tag",
+   "cq_commit_v",
+   "cq_slot",
+   "cq_token",
+   "native_request_pos",
+   "native_request_tag",
+   "native_request_token",
+   "native_request_v",
+   "step_client_tag",
+   "step_issue_v",
+   "step_pos",
+   "step_retire_client_tag",
+   "step_retire_cq",
+   "step_retire_pos",
+   "step_retire_slot",
+   "step_retire_token",
+   "step_retire_v",
+   "step_slot",
+   "u_rank__u_control__begin_epoch",
+   "u_rank__begin_fault",
+   "u_rank__u_control__ctrl_begin_available",
+   "u_rank__u_control__begin_cr",
+   "u_rank__u_control__begin_v",
+   "u_rank__u_control__boot8",
+   "u_rank__peer_pending_ack",
+   "u_rank__guarded_physical",
+   "u_rank__peer_service_epoch",
+   "u_rank__peer_service_ready",
+   "u_rank__u_control__startup_allowed",
+   "u_rank__guarded_transport",
+   "u_rank__u_control__cmd_cr",
+   "u_rank__u_control__cmd_v",
+   "u_rank__u_control__u_packet__hr",
+   "u_rank__u_control__u_packet__hv",
+   "u_rank__u_control__u_packet__htc",
+   "u_rank__u_control__u_packet__ht",
+   "u_rank__rx_cr",
+   "u_rank__rx_v",
+   "u_rank__program_rx_cr",
+   "u_rank__program_rx_v"
+  ],
+  "S": [
+   "die_id",
+   "u_rank__u_control__u_packet__hd",
+   "u_rank__u_control__u_packet__htd",
+   "u_rank__rx_d"
+  ],
+  "E": [
+   "package_abort",
+   "cq_pos",
+   "native_request_gen",
+   "u_rank__u_control__kst8",
+   "u_rank__u_control__tk8",
+   "u_rank__u_control__cmd_hc",
+   "u_rank__program_rx_d"
+  ],
+  "W": [
+   "ck_core",
+   "boot_pr",
+   "program_epoch",
+   "program_digest",
+   "service_diag_raw",
+   "service_status",
+   "link_up",
+   "record_rx",
+   "record_tx",
+   "program_authorized_footer64",
+   "program_auth_epoch",
+   "program_auth_digest",
+   "fault_src"
+  ]
+ },
+ "pin_ranges": {
+  "static_setup_ready": [
+   75.6,
+   529.2
+  ],
+  "boot_image_target": [
+   75.6,
+   529.2
+  ],
+  "boot_image_ready": [
+   75.6,
+   529.2
+  ],
+  "boot_image_fault": [
+   75.6,
+   529.2
+  ],
+  "token_epoch_valid": [
+   75.6,
+   529.2
+  ],
+  "token_epoch": [
+   75.6,
+   529.2
+  ],
+  "service_abort": [
+   75.6,
+   529.2
+  ],
+  "ingest_permission": [
+   75.6,
+   529.2
+  ],
+  "crom_fault": [
+   75.6,
+   529.2
+  ],
+  "record_send_kind": [
+   75.6,
+   529.2
+  ],
+  "record_witness_slot": [
+   75.6,
+   529.2
+  ],
+  "record_rx_v": [
+   75.6,
+   529.2
+  ],
+  "record_tx_v": [
+   75.6,
+   529.2
+  ],
+  "record_tx_observed_v": [
+   75.6,
+   529.2
+  ],
+  "record_fault": [
+   75.6,
+   529.2
+  ],
+  "execution_active": [
+   75.6,
+   529.2
+  ],
+  "program_ready": [
+   75.6,
+   529.2
+  ],
+  "program_authorized_footer_v": [
+   75.6,
+   529.2
+  ],
+  "program_begin_v": [
+   75.6,
+   529.2
+  ],
+  "program_auth_v": [
+   75.6,
+   529.2
+  ],
+  "program_expected_pw": [
+   75.6,
+   529.2
+  ],
+  "program_expected_dw": [
+   75.6,
+   529.2
+  ],
+  "hc": [
+   75.6,
+   529.2
+  ],
+  "irq": [
+   75.6,
+   529.2
+  ],
+  "host_rst_n": [
+   75.6,
+   529.2
+  ],
+  "link_rst_n": [
+   75.6,
+   529.2
+  ],
+  "hbm_rst_n": [
+   75.6,
+   529.2
+  ],
+  "boot_go": [
+   75.6,
+   529.2
+  ],
+  "die_rst_n": [
+   75.6,
+   529.2
+  ],
+  "sys_ready": [
+   75.6,
+   529.2
+  ],
+  "source_cr": [
+   75.6,
+   529.2
+  ],
+  "available": [
+   75.6,
+   529.2
+  ],
+  "service_faults": [
+   75.6,
+   529.2
+  ],
+  "host_link_reset_req": [
+   75.6,
+   529.2
+  ],
+  "host_interface_idle": [
+   75.6,
+   529.2
+  ],
+  "allocated_valid": [
+   75.6,
+   529.2
+  ],
+  "native_context_owned": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__por_n": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__service_ready": [
+   75.6,
+   529.2
+  ],
+  "u_rank__program_fault": [
+   75.6,
+   529.2
+  ],
+  "u_rank__ingress_fault": [
+   75.6,
+   529.2
+  ],
+  "u_rank__commit_fault": [
+   75.6,
+   529.2
+  ],
+  "host_observer_fault": [
+   75.6,
+   529.2
+  ],
+  "u_rank__source_fault": [
+   75.6,
+   529.2
+  ],
+  "cq_client_tag": [
+   75.6,
+   529.2
+  ],
+  "cq_commit_v": [
+   75.6,
+   529.2
+  ],
+  "cq_slot": [
+   75.6,
+   529.2
+  ],
+  "cq_token": [
+   75.6,
+   529.2
+  ],
+  "native_request_pos": [
+   75.6,
+   529.2
+  ],
+  "native_request_tag": [
+   75.6,
+   529.2
+  ],
+  "native_request_token": [
+   75.6,
+   529.2
+  ],
+  "native_request_v": [
+   75.6,
+   529.2
+  ],
+  "step_client_tag": [
+   75.6,
+   529.2
+  ],
+  "step_issue_v": [
+   75.6,
+   529.2
+  ],
+  "step_pos": [
+   75.6,
+   529.2
+  ],
+  "step_retire_client_tag": [
+   75.6,
+   529.2
+  ],
+  "step_retire_cq": [
+   75.6,
+   529.2
+  ],
+  "step_retire_pos": [
+   75.6,
+   529.2
+  ],
+  "step_retire_slot": [
+   75.6,
+   529.2
+  ],
+  "step_retire_token": [
+   75.6,
+   529.2
+  ],
+  "step_retire_v": [
+   75.6,
+   529.2
+  ],
+  "step_slot": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__begin_epoch": [
+   75.6,
+   529.2
+  ],
+  "u_rank__begin_fault": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__ctrl_begin_available": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__begin_cr": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__begin_v": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__boot8": [
+   75.6,
+   529.2
+  ],
+  "u_rank__peer_pending_ack": [
+   75.6,
+   529.2
+  ],
+  "u_rank__guarded_physical": [
+   75.6,
+   529.2
+  ],
+  "u_rank__peer_service_epoch": [
+   75.6,
+   529.2
+  ],
+  "u_rank__peer_service_ready": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__startup_allowed": [
+   75.6,
+   529.2
+  ],
+  "u_rank__guarded_transport": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__cmd_cr": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__cmd_v": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__u_packet__hr": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__u_packet__hv": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__u_packet__htc": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__u_packet__ht": [
+   75.6,
+   529.2
+  ],
+  "u_rank__rx_cr": [
+   75.6,
+   529.2
+  ],
+  "u_rank__rx_v": [
+   75.6,
+   529.2
+  ],
+  "u_rank__program_rx_cr": [
+   75.6,
+   529.2
+  ],
+  "u_rank__program_rx_v": [
+   75.6,
+   529.2
+  ],
+  "die_id": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__u_packet__hd": [
+   75.6,
+   529.2
+  ],
+  "u_rank__u_control__u_packet__htd": [
+   75.6,
+   529.2
+  ],
+  "u_rank__rx_d": [
+   75.6,
+   529.2
+  ],
+  "package_abort": [
+   70.2,
+   491.4
+  ],
+  "cq_pos": [
+   70.2,
+   491.4
+  ],
+  "native_request_gen": [
+   70.2,
+   491.4
+  ],
+  "u_rank__u_control__kst8": [
+   70.2,
+   491.4
+  ],
+  "u_rank__u_control__tk8": [
+   70.2,
+   491.4
+  ],
+  "u_rank__u_control__cmd_hc": [
+   70.2,
+   491.4
+  ],
+  "u_rank__program_rx_d": [
+   70.2,
+   491.4
+  ],
+  "ck_core": [
+   280.8,
+   281.2
+  ],
+  "boot_pr": [
+   70.2,
+   491.4
+  ],
+  "program_epoch": [
+   70.2,
+   491.4
+  ],
+  "program_digest": [
+   70.2,
+   491.4
+  ],
+  "service_diag_raw": [
+   70.2,
+   491.4
+  ],
+  "service_status": [
+   70.2,
+   491.4
+  ],
+  "link_up": [
+   70.2,
+   491.4
+  ],
+  "record_rx": [
+   70.2,
+   491.4
+  ],
+  "record_tx": [
+   70.2,
+   491.4
+  ],
+  "program_authorized_footer64": [
+   70.2,
+   491.4
+  ],
+  "program_auth_epoch": [
+   70.2,
+   491.4
+  ],
+  "program_auth_digest": [
+   70.2,
+   491.4
+  ],
+  "fault_src": [
+   70.2,
+   491.4
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Exact native32 source e3fa4a6d, mapped from production MU4 ps5 flow pin registers; every pin already registered."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Actual mapped reset profile first1/final4/2edges PASS; final max31; all6 inherited graph negatives refused; evidence/reset_profile.json."
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "inst": "u54863_c0/u_cell",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "u57316_c0/u_cell",
+   "at": [
+    43.2,
+    388.8
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "inst": "u59048_c0/u_cell",
+   "at": [
+    345.6,
+    43.2
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "inst": "u59583_c0/u_cell",
+   "at": [
+    345.6,
+    388.8
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "inst": "u59584_c0/u_cell",
+   "at": [
+    475.20000000000005,
+    388.8
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "inst": "u59585_c0/u_cell",
+   "at": [
+    345.6,
+    475.20000000000005
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2",
+   "inst": "u59586_c0/u_cell",
+   "at": [
+    475.20000000000005,
+    475.20000000000005
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "structural_change": "N36 production MU4 PS5: capture raw return/context before generation arithmetic and event write (+1 host retirement, feedback and CQ event edge; II1), segmented8-bit counters, stored CQ/prompt increment, synchronous DATA reset and valid-protected reset-free context DATA; native32 source e3fa4a6d exact45583 primitive/pin correspondence and mandatory mapped census PASS. Separate MAIN/FB enlarged lattice geometry with program macros separated; no prior view alias.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "n35a/b CTS internal setup -102/-146ps and hold -124/-169ps; actual17-level MQ/context/arith and tail/full/counter cones plus DATA ASYNC reset. Structural return pipeline/counters/DATA separation; old failures retained."
+ },
+ "slot_change_request": "Parent repack required to fit new outline 604.8 x 561.6; no old-view alias.",
+ "safe_design_checklist": {
+  "1_pins": "Every pin already registered in exact flow-wrapped native source; faces span75% <=6pins/um. Reset first1/final4/2edge proof PASS.",
+  "2_reach": "Macro rd_out capture flops anchored; face flops anchored. Enlarged outline, longest pin-to-central mass ~300um; actual reach measured by gate.",
+  "3_fanout": "Actual source-native mapped census PASS max32; 45583 primitive and pin relations exact. Physical gate repeats actual Liberty census.",
+  "4_depth": "Actual mapped native graph depth496.8ps vs ps4 608ps; MQ/context select registered separately from compare/event arithmetic. Actual route setup/hold still required. Counter local increments8bits; stored CQ/prompt next values avoid increment+compare cones.",
+  "5_storage": "7 real SRAMs, all43.2um lattice. Queue x gap>=81um, program x gap63.288um/y gap68.58um; no abutted stack.",
+  "6_floorplan": "604.8x561.6, fullwidth central standard band between lower queue and upper program/prompt rows; enlarged geometry, actual util/images owed.",
+  "7_clock": "ck_core W middle beside central register mass; inherited face-anchored boundary tree and equalization branch. Actual TT/FF pin-flop spread<=80 required.",
+  "8_reset": "Asynchronous reset retained on validity/control. Host and AXI DATA use synchronous reset; context DATA unreset behind held/ev/seen/pend validity;64validrecord canonical bits/edges PASS."
+ },
+ "job": {
+  "owner": "Codex:CODEX-KPROMPT-N36-2000",
+  "branch": "codex/kprompt-n36-2000-1021",
+  "tag": "n36b",
+  "purpose": "Structural production MU4 host prompt successor; +1 host retirement/feedback/CQ event edge",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir.v",
+   "results/arch/qe3_hroot_prompt35_1021/",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_pd/ot_hkv_cnt_la.sv",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_csr_service_pins_rr.sv",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_ctl_service_pins_rr.sv",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_safe/",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_safe3/",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_safe4/",
+   "rtl/qwen_sys/host_prompt_mu4p4_n32_1021/evidence/",
+   "rtl/test/mu_qwen_1018/lists/tb_qkd_host_mu_out.f",
+   "rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv",
+   "rtl/test/qwen_host/tb_hkv_cnt_la32.sv",
+   "rtl/test/qwen_host/tb_hkv_mu4_idle.sv",
+   "rtl/test/qwen_host/tb_hkv_prompt_mem.sv",
+   "rtl/test/qwen_host/tb_hkv_prompt_mem_r.sv",
+   "rtl/test/qwen_host/tb_qkd_host_axi_packet.sv",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_axi.sh",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_counters32.sh",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_host_mu.sh",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_idle_lifecycle.py",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_mem.sh",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_safe5/",
+   "rtl/qwen_sys/host_prompt_mu4p5_n32_1021/",
+   "results/arch/codex_kprompt_n36_2000_1021/",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_n36_lifecycle.py",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_n36_context.py",
+   "rtl/test/qwen_host/tb_hkv_context_n36.sv",
+   "rtl/test/qwen_host/tb_hkv_cnt_seg.sv",
+   "rtl/qwen_sys/mu_qwen_20261018/qkd_host_record_port_mu.sv",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_n36_mem.sh",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_n36_axi.sh",
+   "rtl/test/qwen_host/tb_hkv_prompt_mem_r.sv",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_n36_counter.sh"
+  ],
+  "benches": [
+   {
+    "name": "n36_lifecycle",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/prompt_n36_lifecycle.py {RUN}/idle exact ps4",
+    "pass_regex": "IDLE_LIFECYCLE PASS"
+   },
+   {
+    "name": "n36_raw_retire",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/prompt_n36_lifecycle.py {RUN}/raw raw_retire ps4",
+    "fail_regex": "IDLE_FAIL",
+    "fail_witness": "results/arch/codex_kprompt_n36_2000_1021/raw_retire_fail.log"
+   },
+   {
+    "name": "n36_context",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/prompt_n36_context.py {RUN}/context",
+    "pass_regex": "N36_CONTEXT PASS"
+   },
+   {
+    "name": "prompt_counters32",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_counters32.sh {RUN}/cn32",
+    "pass_regex": "PROMPT_CN32_SUITE PASS"
+   },
+   {
+    "name": "prompt_mem_suite",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_n36_mem.sh {RUN}/mem_suite \"pass wide bypass addr\" r",
+    "pass_regex": "PROMPT_MEM_SUITE PASS 2 positive 2 causal mutants"
+   },
+   {
+    "name": "prompt_mem_addr",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_n36_mem.sh {RUN}/mem_addr addr r",
+    "fail_regex": "PROMPT_MEM FAIL",
+    "fail_witness": "results/arch/codex_kprompt_n36_2000_1021/mem_r_addr_fail_v5050.log"
+   },
+   {
+    "name": "prompt_mem_vis",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_n36_mem.sh {RUN}/mem_vis bypass r",
+    "fail_regex": "PROMPT_MEM FAIL",
+    "fail_witness": "results/arch/codex_kprompt_n36_2000_1021/mem_r_vis_fail_v5050.log"
+   },
+   {
+    "name": "prompt_axi",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_n36_axi.sh {RUN}/axi prompt_safe5",
+    "pass_regex": "PASS HOST_AXI_PACKET"
+   },
+   {
+    "name": "n36_segmented_counters",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_n36_counter.sh {RUN}/counter",
+    "pass_regex": "HKV_CNT_LA PASS"
+   }
+  ]
+ },
+ "pre_cts_extra": [
+  "physical/ref_tile/qkd_hr_core_prompt_n36b/bnd_branch.tcl"
+ ]
+}

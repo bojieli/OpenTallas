@@ -43,3 +43,6 @@ with (out / 'run.log').open('w') as f:
 log = (out / 'run.log').read_text()
 print(log, flush=True)
 assert (run.returncode == 0 and 'IDLE_LIFECYCLE PASS' in log) if mode == 'exact' else (run.returncode != 0 and ('IDLE_FAIL' in log or mode == 'raw_retire'))
+
+if mode == 'raw_retire':
+    raise SystemExit(run.returncode)
