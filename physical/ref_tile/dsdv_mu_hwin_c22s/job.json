@@ -1,0 +1,153 @@
+{
+ "name": "dsdv_mu_hwin_c22s-c22s-COMMIT",
+ "block": "dsdv_mu_hwin_capture_1019",
+ "ref_tile": true,
+ "owner": "CODEX-S81-COLLB-2000",
+ "purpose": "HWIN c22r FB: LOCAL_RECORD=1 regional duplicate admission (c21q/c21r cmp_r->rec_r TT -148), NEV 16 on c21r 84-SRAM geometry, row-pruned band, pd 0.55.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/s81-hwin-clock-leaves-2318",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "rtl/dsrom_sys/s81_ph",
+   "tools/hwin_private_package_1019",
+   "tools/s81_dv/hwin_struct_1021",
+   "results/arch/s81_hwin_struct_1021"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_mu_hwin_capture_1019 #(.NSLOT(47), .NEV(16), .NEP(4), .NRT(2), .MUT(0), .HEAD_STAGE(1), .COMPACT_PTR(1), .CHECK_STAGE(1), .LIVE_COUNT(1), .RAW_SELECT(1), .LOCAL_BOOT(1), .EARLY_HEAD_CAPTURE(1), .CFG_RELAY(1), .DUE_COPIES(2), .SAFE_NATIVE(1), .LOCAL_RECORD(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_mem_1019.sv rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_early_1019.sv rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin_capture_1019.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "c22_ns47",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/ns47 ns47",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^MUWIN PASS$",
+    "min_count_regex": "^MUWIN starts (\\d+) fires \\d+ expected \\d+ K \\d+ t_mf 0000 hslot 0000 hwin 00$"
+   },
+   {
+    "name": "c22_ns2",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/ns2 ns2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^MUWIN PASS$"
+   },
+   {
+    "name": "c22_norelay",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/norelay norelay",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "EARLY_MITER|CBREF_MITER",
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/norelay/run.log"
+   },
+   {
+    "name": "c22_eastcopy",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/eastcopy eastcopy",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "EARLY_MITER|CBREF_MITER",
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/eastcopy/run.log"
+   },
+   {
+    "name": "c22_mut2",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/mut2 mut2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "EARLY_MITER|CBREF_MITER",
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/mut2/run.log"
+   },
+   {
+    "name": "c22_eastdue",
+    "cmd": "NEV_KIT=16 bash physical/ref_tile/dsdv_mu_hwin_c22r/run_c22_bench.sh {RUN}/eastdue eastdue",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "fail_regex": "event boot count differs",
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/eastdue/run.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsdv_mu_hwin_c22s/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsdv_mu_hwin_c22s/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsdv_mu_hwin_c22s --out {RUN}/record/views/dsdv_mu_hwin_capture_1019 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsdv_mu_hwin_c22s/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsdv_mu_hwin_c22s/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsdv_mu_hwin_c22s/dsdv_mu_hwin_c22s-c22s-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-ELEM2-HWIN successor of dsdv_mu_hwin_c21r (daemon NEEDS_RTL: c21q TT -148.19 / FF -8.26, c21r TT -141.73 / FF -11.76, DRC 0). Failing class: g_compare_copy.cmp_r -> 47-entry identity compare + OR reduce -> global duplicate flag udup -> distributed to all 16x2 event rec_r + slot record_group across the 561.6 um band (two 113/148 ps buffer hops, arrival 1222.75 vs required 1081.02). Fix (RTL, codex adf49d4f8 LOCAL_RECORD=1): each of the (NEV/4 event + 6 slot) record consumer groups gets its own kept duplicate-region cone (2 local 10-bit user landing flops, 47 compares, 8-entry partial ORs), so admission drives <= 8 local record flops instead of a band-wide broadcast; 0 cycles added (waveform miter vs frozen HWIN21cb + anchor). NEV 16 fallback on the unchanged c21r 84-SRAM geometry (superset of the die's 8 events). Physical: c21j hash-locked native manifests/fences dropped (cannot qualify changed RTL); c21h row-pruned band + GPL row envelope instead; pd 0.55; OPT_POST_GRT_WNS=0 pre_grt kept (EST-0104 class). Clock structural successor to c22r complete raw endpoint-envelope failure TT106.0/FF111.5 ps and macro slew349.9/360.8 ps. Each actual SRAM clock pin receives a dedicated physical driven leaf. Symmetric physical buffer branches distribute the same source clock to SRAMs and bounded local flop leaves. No clock-target or limit change; exact complete TT/FF envelope and macro slew must be measured.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "note": "dsdv_mu_hwin_c21r NEEDS_RTL TT -148/-142 (cmp_r -> rec_r global duplicate admission); LOCAL_RECORD=1 regional admission successor, codex adf49d4f8."
+ }
+}

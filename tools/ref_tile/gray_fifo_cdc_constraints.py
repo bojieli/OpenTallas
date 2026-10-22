@@ -53,6 +53,7 @@ period - 60 ps) and ``set_min_delay -ignore_clock_latency 0``, with a finite-pat
 multicycle or same-family exception is generated; every tagged register must sit in its tagged family, and every
 pointer bit crossing must be seen in the mapped graph. Not a physical-closure or metastability-MTBF claim.
 """
+import bisect
 import hashlib
 import json
 import re
@@ -229,6 +230,47 @@ EXTENSIONS = 'reviewed_gray_fifo_extensions'
 NAME = re.compile(r'[A-Za-z][A-Za-z0-9_]*')
 REF = re.compile(r'[A-Za-z_][A-Za-z0-9_.$\[\]]*')
 
+# Actual vendor library bytes, not a handwritten cell-function table. Broaden only with a reviewed physical model.
+TECH_LIBERTIES = {
+    'fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038': frozenset({'AND2x2_ASAP7_75t_R'}),
+}
+
+
+def tech_cell_libraries(spec, root=None):
+    """Explicit, source-bound functional inputs for physical cells used in the CDC RTL."""
+    ext = spec.get(EXTENSIONS) or {}
+    if not isinstance(ext, dict):
+        raise GrayFifoError('reviewed_gray_fifos extensions must be an object')
+    rows = ext.get('tech_cell_liberties')
+    if rows is None:
+        return ()
+    if not isinstance(rows, list) or not rows:
+        raise GrayFifoError('reviewed_gray_fifos tech_cell_liberties must be a nonempty list')
+    result, paths, masters = [], set(), set()
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {'path', 'sha256', 'cells'}:
+            raise GrayFifoError('reviewed_gray_fifos tech_cell_liberties entries are {path, sha256, cells}')
+        path, digest, cells = row['path'], row['sha256'], row['cells']
+        if (not isinstance(path, str) or not re.fullmatch(r'[A-Za-z0-9_./+-]+\.lib', path)
+                or Path(path).is_absolute() or '..' in Path(path).parts or path in paths):
+            raise GrayFifoError('reviewed_gray_fifos unsafe or duplicate tech-cell Liberty path')
+        if not isinstance(digest, str) or digest not in TECH_LIBERTIES:
+            raise GrayFifoError('reviewed_gray_fifos tech-cell Liberty is not a reviewed actual library fingerprint')
+        if (not isinstance(cells, list) or not cells or any(not isinstance(c, str) for c in cells)
+                or len(set(cells)) != len(cells) or set(cells) - TECH_LIBERTIES[digest] or masters.intersection(cells)):
+            raise GrayFifoError('reviewed_gray_fifos tech-cell masters must be distinct reviewed physical cells')
+        if root is not None:
+            base = Path(root).resolve()
+            p = (base / path).resolve()
+            if not p.is_relative_to(base) or not re.fullmatch(r'[A-Za-z0-9_./+-]+', str(p)):
+                raise GrayFifoError('reviewed_gray_fifos unsafe tech-cell Liberty path')
+            if not p.is_file() or hashlib.sha256(p.read_bytes()).hexdigest() != digest:
+                raise GrayFifoError('reviewed_gray_fifos tech-cell Liberty bytes differ from their actual library fingerprint')
+        paths.add(path)
+        masters.update(cells)
+        result.append((path, digest, tuple(sorted(cells))))
+    return tuple(result)
+
 
 def extensions(spec):
     """Opt-in extension mode (ROOT-0330-CDC 2026-10-18), absent = the original policy unchanged:
@@ -245,9 +287,10 @@ def extensions(spec):
     ext = spec.get(EXTENSIONS)
     if ext is None:
         return None
-    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'dual_clock_srams', 'why'}:
+    if not isinstance(ext, dict) or set(ext) - {'level_synchronizers', 'die_constant_inputs', 'dual_clock_srams', 'tech_cell_liberties', 'why'}:
         raise GrayFifoError(f'reviewed_gray_fifos {EXTENSIONS} must be an object with level_synchronizers / '
-                            'die_constant_inputs / why only (no false paths, groups or waivers)')
+                            'die_constant_inputs / dual_clock_srams / tech_cell_liberties / why only (no false paths, groups or waivers)')
+    tech_cell_libraries(spec)
     dual = ext.get('dual_clock_srams', [])
     if not isinstance(dual, list) or len(set(dual)) != len(dual) or any(n not in DUAL_SRAM for n in dual):
         raise GrayFifoError('reviewed_gray_fifos dual_clock_srams must name distinct fingerprinted supported masters')
@@ -414,7 +457,7 @@ def _elaborate_sources(spec, root):
 
 
 @lru_cache(maxsize=16)
-def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=False):
+def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=False, tech_libraries=()):
     # Byte hashes are part of the key; no caller-supplied graph or receipt can stand in for this elaboration.
     root = Path(root)
     if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', top):
@@ -425,6 +468,26 @@ def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=Fals
         if hashlib.sha256(p.read_bytes()).hexdigest() != digest:
             raise GrayFifoError('reviewed_gray_fifos source changed during elaboration')
         paths.append(str(p))
+    liberty_steps = ''
+    for path, digest, allowed in tech_libraries:
+        if digest not in TECH_LIBERTIES or not allowed or set(allowed) - TECH_LIBERTIES[digest]:
+            raise GrayFifoError('reviewed_gray_fifos unreviewed physical cell/library during elaboration')
+        p = (root / path).resolve()
+        if not p.is_relative_to(root.resolve()) or not re.fullmatch(r'[A-Za-z0-9_./+-]+', str(p)):
+            raise GrayFifoError('reviewed_gray_fifos unsafe tech-cell Liberty path')
+        content = p.read_bytes()
+        if hashlib.sha256(content).hexdigest() != digest:
+            raise GrayFifoError('reviewed_gray_fifos tech-cell Liberty changed during elaboration')
+        declared = set(re.findall(rb'(?m)^\s*cell\s*\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)', content))
+        if not set(c.encode() for c in allowed) <= declared:
+            raise GrayFifoError('reviewed_gray_fifos physical cell missing from actual Liberty')
+        # read_liberty (without -lib) imports the real functions. Drop all other vendor masters before hierarchy
+        # checking so an undeclared/unknown cell remains an error. Its default redefinition error rejects RTL models
+        # shadowing vendor masters; neither -overwrite nor permissive missing-function options are used.
+        liberty_steps += f'read_liberty {p}; '
+        discard = sorted(c.decode() for c in declared if c.decode() not in allowed)
+        if discard:
+            liberty_steps += 'delete ' + ' '.join(discard) + '; '
     args = ''
     for name, value in params:
         if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', name) or type(value) is not int:
@@ -435,7 +498,7 @@ def elaborate(root, top, sources, params, yosys, defer=False, preserve_kept=Fals
         # (d) mode reads -defer (as the census / KV-HOSTCL-CDC2 lint): modules elaborate only with their actual
         # parameters, so a default-parameter elaboration guard ($fatal in an initial) does not fire
         keep = f'tcl {root}/physical/common_flow/ot_keep_regs.tcl; ' if preserve_kept else ''
-        cmd = (f'read_verilog{" -defer" if defer else ""} -sv -DSYNTHESIS {" ".join(paths)}; hierarchy -check -top {top}{args}; '
+        cmd = (f'read_verilog{" -defer" if defer else ""} -sv -DSYNTHESIS {" ".join(paths)}; {liberty_steps}hierarchy -check -top {top}{args}; '
                f'proc; {keep}flatten; memory; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}')
         run = subprocess.run([yosys, '-Q', '-T', '-p', cmd], capture_output=True, text=True)
         if run.returncode:
@@ -559,7 +622,9 @@ def _bdd_of(net, bdd, bit, level, cache, cut=frozenset()):
         drv = net.driver.get(b)
         if drv is None:
             raise GrayFifoError(f'reviewed_gray_fifos undriven bit {b} in a storage-gating cone')
-        if drv[0] in ('flop', 'port') or b in cut:
+        # SQK-INGEST 10-21: a hard-macro output (e.g. a dual-clock SRAM read port, extension mode) is a leaf like a
+        # flop Q: a free variable (sound, every value), as _cone_cut already treats it
+        if drv[0] in ('flop', 'port', 'macro') or b in cut:
             cache[b] = bdd.var(level(b))
             stack.pop()
             continue
@@ -887,9 +952,11 @@ def _lint(spec, root):
     relationship(spec)
     ext = extensions(spec)
     hashes, reviewed_files = _elaborate_sources(spec, root)
+    tech_libraries = tech_cell_libraries(spec, root)
     document = elaborate(str(Path(root).resolve()), spec['top'], hashes,
                          tuple(sorted(spec.get('params', {}).items())), _yosys(), spec.get(S.KEY) is not None,
-                         preserve_kept=bool((ext or {}).get('dual_clock_srams')))
+                         preserve_kept=bool((ext or {}).get('dual_clock_srams')),
+                         **({'tech_libraries': tech_libraries} if tech_libraries else {}))
     net = _netlist(document, spec, _macro_clock_pins(spec, root), True) if ext is not None else _netlist(document, spec)
     ds = spec['clock_entry_domains']
     period = {n: FAMILIES[n] for n in ds}
@@ -917,9 +984,25 @@ def _lint(spec, root):
 
     evmode = spec.get(S.KEY) is not None
 
+    # HBMb/IDXSU 10-21: every per-FIFO name lookup below used to scan all of net.bit_of with a fresh regex per key
+    # (ot_hbm_svc_wb_kport_q PP=1: 1,920 FIFOs x ~250k names -> ~20 s per FIFO, >10 h per kit lint).  The names are
+    # sorted once; each lookup visits only the names under its own prefix (bisect), in the original dict order where
+    # the order is observable (tag()).  Same predicates, same results.
+    order = {k: i for i, k in enumerate(net.bit_of)}
+    sorted_keys = sorted(net.bit_of)
+
+    def keys_with(prefix):
+        i = bisect.bisect_left(sorted_keys, prefix)
+        out = []
+        while i < len(sorted_keys) and sorted_keys[i].startswith(prefix):
+            out.append(sorted_keys[i])
+            i += 1
+        return out
+
     def bits_of(scope, reg, constant=False):
         prefix = scope + '.' if scope else ''
-        keys = [k for k in net.bit_of if k == prefix + reg or re.fullmatch(re.escape(prefix + reg) + r'\[\d+\]', k)]
+        indexed = re.compile(re.escape(prefix + reg) + r'\[\d+\]')
+        keys = [k for k in keys_with(prefix + reg) if k == prefix + reg or indexed.fullmatch(k)]
         keys.sort(key=lambda k: int(k[k.rfind('[') + 1:-1]) if k != prefix + reg else -1)
         out = []
         for k in keys:
@@ -1031,15 +1114,16 @@ def _lint(spec, root):
                 for i, q in enumerate(s):
                     tag(q, ('sync1' if j == 0 else 'stage', fid, cname, i))
         prefix = scope + '.' if scope else ''
-        storage = sorted({b for k, b in net.bit_of.items() if k.startswith(prefix) and
+        storage = sorted({b for k, b in ((k, net.bit_of[k]) for k in keys_with(prefix)) if
                           STORAGE.fullmatch(k[len(prefix):]) and b in net.flops})
         for q in storage:
             if net.domain(q) != writer:
                 raise GrayFifoError(f'reviewed_gray_fifos storage {net.key(q)} is not on the writer side {writer}')
             tag(q, ('mem', fid, 'mem', 0))
         if r['read_stage'] is not None:
-            for k, b in net.bit_of.items():
-                if k.startswith(prefix) and r['read_stage'].fullmatch(k[len(prefix):]) and b in net.flops:
+            for k in sorted(keys_with(prefix), key=order.__getitem__):
+                b = net.bit_of[k]
+                if r['read_stage'].fullmatch(k[len(prefix):]) and b in net.flops:
                     if net.domain(b) != reader:
                         raise GrayFifoError(f'reviewed_gray_fifos read stage {net.key(b)} is not on the reader side')
                     tag(b, ('rstage', fid, 'mem', 0))
@@ -1076,8 +1160,10 @@ def _lint(spec, root):
                 if net.domain(empty[0]) != reader:
                     raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
                 valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
-        head = {b for k, b in net.bit_of.items() if isinstance(b, int) and b not in net.flops and
-                re.fullmatch(re.escape(prefix + ('rdata' if base == 'ot_link_afifo' else 'rd_data')) + r'(?:\[\d+\])?', k)}
+        hname = prefix + ('rdata' if base == 'ot_link_afifo' else 'rd_data')
+        hpat = re.compile(re.escape(hname) + r'(?:\[\d+\])?')
+        head = {b for k, b in ((k, net.bit_of[k]) for k in keys_with(hname)) if isinstance(b, int) and
+                b not in net.flops and hpat.fullmatch(k)}
         fifos[fid] = dict(scope=scope, module=base, writer=writer, reader=reader, valid=valid, head=head,
                           storage=set(storage), chains={c[0]: len(c[4]) for c in chains},
                           pointer_max_delay_ps=round(min(period[writer], period[reader]) - SETUP_UNCERTAINTY_PS, 3),
@@ -1335,6 +1421,8 @@ def _lint(spec, root):
         if dual_macros:
             record['dual_clock_macros'] = dual_macros
         record['counts'].update(gated=len(gated), lsrc=len(levels), macro=len(macro_domain))
+    if tech_libraries:
+        record['tech_cell_liberties'] = [dict(path=p, sha256=h, cells=list(c)) for p, h, c in tech_libraries]
     return record
 
 
@@ -1468,8 +1556,28 @@ def _word(value):
     return '{' + value + '}'
 
 
+def _rst_copy_aliases(roles):
+    """SQK-INGEST 10-21: kit reset_relay_split (physical/common_flow/ot_rst_copies.py) names each KEPT reset-bank
+    leaf copy k of family F `ot_rrs__<F mangled, last 60>__c<k>`; synthesis then carries only that name on the leaf
+    flop. Alias exactly those names (bare and pin-register-wrapped family) to the leaf's own reset-pipe role, so OT_GF
+    still recognises the reviewed bank leaf (no new role, nothing else admitted)."""
+    out = {}
+    for k, r in roles.items():
+        m = re.fullmatch(r'(.+\.last)\[(\d+)\]', k)
+        if not m or not r or r[0] != 'rst':
+            continue
+        for fam in (m.group(1), 'u_ot_pr_core.' + m.group(1)):
+            alias = 'ot_rrs__' + re.sub(r'[^A-Za-z0-9_]', '_', fam)[-60:] + '__c' + m.group(2)
+            if alias in roles or out.get(alias, r) != r:
+                raise GrayFifoError(f'reviewed_gray_fifos reset-copy alias {alias} collides')
+            out[alias] = r
+    return out
+
+
 def bindings(record):
-    roles = ' '.join(_word(k) + ' {' + ' '.join(str(x) for x in r) + '}' for k, r in sorted(record['roles'].items()))
+    allroles = dict(record['roles'])
+    allroles.update(_rst_copy_aliases(record['roles']))
+    roles = ' '.join(_word(k) + ' {' + ' '.join(str(x) for x in r) + '}' for k, r in sorted(allroles.items()))
     fifos = ' '.join('{' + fid + '} {writer ' + f['writer'] + ' reader ' + f['reader'] + ' ptr '
                      + repr(f['pointer_max_delay_ps']) + ' store ' + repr(f['storage_max_delay_ps'])
                      + ' store_read ' + str(int(f['storage_read'])) + ' chains {'
@@ -1729,30 +1837,74 @@ proc ot_gf_launch {start} {
   return $launch
 }
 set ::ot_gf_pending {}
+set ::ot_gf_groups {}
 proc ot_gf_bound {start target bound} {
-  # Constraints are applied here; the finite-path proof runs once all are applied (ot_gf_verify). Interleaving
-  # set_*_delay with find_timing_paths re-searched the whole design per crossing (O(N^2): ~13-50 crossings/min, a
-  # 12.8k-bit storage FIFO leaf ~15 h in synth_odb, HKV-HRADM 10-19).
+  # Every actual crossing is classified (and refused) by its caller exactly as before; here it is only recorded.
+  # Exceptions are applied once per BUS in ot_gf_verify: one set_max/min_delay -from {launches} -to {targets} per
+  # (bound, launch FIFO, launch role) group, never one per bit.  ~25.8k point-to-point exceptions (hdie_svg_rel8e/f,
+  # ~100 bit-sliced FIFOs) stalled synth_odb >5 h in the per-pair proof under that many exceptions (STEWARD-HBM 10-21).
+  # (Earlier: interleaving set_*_delay with find_timing_paths was O(N^2), HKV-HRADM 10-19.)
   set launch [ot_gf_launch $start]
-  set_max_delay -ignore_clock_latency $bound -from $launch -to $target
-  set_min_delay -ignore_clock_latency 0.0 -from $launch -to $target
-  lappend ::ot_gf_pending [list $launch $target [get_full_name $start] [get_full_name $target]]
+  if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
+    # Ports can belong to different families; keep each source separate so a Cartesian bus
+    # exception never reaches an unrelated same-family input path.
+    set role [list port [get_full_name $start]]
+  } else {
+    set role [lrange [ot_gf_role $launch] 0 1]
+  }
+  set key [list $bound $role]
+  set ln [get_full_name $launch]; set tn [get_full_name $target]
+  dict set ::ot_gf_groups $key launches $ln $launch
+  dict set ::ot_gf_groups $key targets $tn $target
+  lappend ::ot_gf_pending [list $key $ln $tn [get_full_name $start]]
 }
 proc ot_gf_verify {} {
+  # (1) a bus exception covers the launch x target product; it may cover only pairs of its own bound.  Every actual
+  # cross-family path into a register D / async pin was enumerated by the caller, so an actual pair (L,T) whose own
+  # group differs from another group holding both L and T would receive a second bound: refused.
+  set lg {}; set tg {}
+  dict for {key g} $::ot_gf_groups {
+    foreach n [dict keys [dict get $g launches]] {dict lappend lg $n $key}
+    foreach n [dict keys [dict get $g targets]] {dict lappend tg $n $key}
+  }
   foreach item $::ot_gf_pending {
-    lassign $item launch target sname tname
-    foreach kind {max min} {
-      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-        puts "OT_GF PATH_DEFERRED $sname -> $tname $kind (strict at sign-off)"
-        continue
-      }
-      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-        error "OT_GF: missing finite bounded $kind path $sname -> $tname"
+    lassign $item key ln tn sname
+    foreach k [dict get $lg $ln] {
+      if {$k ne $key && [lsearch -exact [dict get $tg $tn] $k] >= 0 && [lindex $k 0] != [lindex $key 0]} {
+        error "OT_GF: bus exception [lrange $k 1 end] (bound [lindex $k 0]) would also cover $sname -> $tn (bound [lindex $key 0])"
       }
     }
   }
+  # (2) apply one max/min exception per bus
+  dict for {key g} $::ot_gf_groups {
+    set bound [lindex $key 0]
+    set from [dict values [dict get $g launches]]; set to [dict values [dict get $g targets]]
+    set_max_delay -ignore_clock_latency $bound -from $from -to $to
+    set_min_delay -ignore_clock_latency 0.0 -from $from -to $to
+    puts "OT_GF BUS [lrange $key 1 end] bound $bound launches [llength $from] targets [llength $to]"
+  }
+  # (3) prove each recorded launch/target pair. A finite path from another launch in the bus
+  # cannot establish that this particular crossing remains timed.
+  set deferred 0
+  foreach item $::ot_gf_pending {
+    lassign $item key ln tn sname
+    set launch [dict get $::ot_gf_groups $key launches $ln]
+    set target [dict get $::ot_gf_groups $key targets $tn]
+    foreach kind {max min} {
+      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+        puts "OT_GF PATH_DEFERRED $sname -> $tn $kind (strict at sign-off)"
+        incr deferred
+        continue
+      }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+        error "OT_GF: missing finite bounded $kind path $sname -> $tn"
+      }
+    }
+  }
+  puts "OT_GF BUSES [dict size $::ot_gf_groups] pairs [llength $::ot_gf_pending] deferred $deferred"
   set ::ot_gf_pending {}
+  set ::ot_gf_groups {}
 }
 proc ot_gf_crossing {start pin source target source_domain target_domain} {
   if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {

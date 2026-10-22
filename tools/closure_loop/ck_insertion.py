@@ -24,7 +24,7 @@ from the route's config.mk, /src = the job snapshot): active-edge arrival and sl
 (the SRAM wd_in / addr hold stall of ds-1010 lcrph: one shallow macro leaf, 165-260 ps slew, ~60 ps late).  The verdict is
 rec["macro_clk"]; the closure loop flags it after CTS and its auto-react class f reads it.
 """
-import argparse, json, re, subprocess, tempfile, sys
+import argparse, json, os, re, subprocess, tempfile, sys
 from pathlib import Path
 
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
@@ -183,10 +183,25 @@ if {[llength $dout]} {
 """
 
 
+# SPINE RC-CAL (S81-ELEM2-XFV 10-21): a clock_spine.tcl tree is balanced on the RCX-calibrated clock wire RC
+# (ot_rc_cal_apply spine, OT_SPINE_RC_CAL default 1) and the hold flow times it on that RC too; measuring its CTS odb on
+# setRC.tcl's platform clock RC (C 0.145 vs 0.10 fF/um) inflated a wire-dominated spine's pin-flop spread by ~45%
+# (s81sl_vp8 r8: platform 125.0/112.6 ps TT/FF vs calibrated 77.5/69.9; FB 120.4/121.5 vs 71.7/57.7).  So the placement
+# measurement of a spine-clocked odb uses the same calibrated clock RC (same env as tools/orfs_hold_mm.tcl:
+# OT_RC_CAL=0 disables, OT_RC_CAL_R / OT_RC_CAL_C override).  TritonCTS trees and routed (SPEF) reads are unchanged.
+_RCC_ON = os.environ.get("OT_RC_CAL", "1") != "0"
+_RCC_R = os.environ.get("OT_RC_CAL_R", "1.40E-02")
+_RCC_C = os.environ.get("OT_RC_CAL_C", "1.05E-01")
+SPINE_RC_CAL_TCL = (r"""set ot_ck_sp 0
+foreach ot_ck_i [[ord::get_db_block] getInsts] { if {[string match clkbuf_sp_* [$ot_ck_i getName]]} { set ot_ck_sp 1; break } }
+if {$ot_ck_sp} { set_wire_rc -clock -resistance %s -capacitance %s; puts "OT_CK_RC_CAL spine clock wire R %s C %s" }
+""" % (_RCC_R, _RCC_C, _RCC_R, _RCC_C)) if _RCC_ON else ""
+
+
 def tcl(corner, db, sdc, routed, clock, mlibs=(), raw_source=False):
     C = corner.upper()
     ml = "\n".join(f"read_liberty {l}" for l in mlibs)
-    par = "read_spef /base/6_final.spef" if routed else f"source {PLAT}/setRC.tcl\nestimate_parasitics -placement"
+    par = "read_spef /base/6_final.spef" if routed else f"source {PLAT}/setRC.tcl\n{SPINE_RC_CAL_TCL}estimate_parasitics -placement"
     return f"""
 foreach l [glob {PLAT}/lib/NLDM/*RVT_{C}*] {{ read_liberty $l }}
 foreach l [glob {PLAT}/lib/NLDM/*_LVT_{C}_* {PLAT}/lib/NLDM/*_SLVT_{C}_*] {{ if {{![string match *FAKE* $l]}} {{ read_liberty $l }} }}
