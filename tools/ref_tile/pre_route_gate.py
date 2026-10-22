@@ -2776,6 +2776,9 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          + list(sp.get("sources", [])) + list(sp.get("sdc_extra", []))
          + [it["view"] for it in sp.get("macros", []) + sp.get("children", [])]
          + ([sp["contract"]["file"]] if sp.get("contract") else [])
+         # landed_record (STW-S81c 10-22): load_spec validates a landed cluster's lp.py record at ROOT; without it every
+         # landed cluster (s81lk_serdes_col_sp10a/sp11a) went SKIP "gate error SpecError: No such file ... _record.json"
+         + ([sp["landed_record"]] if isinstance(sp.get("landed_record"), str) else [])
          # job.benches_from too (flowfix 10-13): gen_job reads the shared bench template, and without it the whole gate
          # went SKIP "gate error FileNotFoundError" for every kit that has one (all s81hc_cry* / ctr* kits of 10-13)
          + ([sp["job"]["benches_from"]] if (sp.get("job") or {}).get("benches_from") else [])
