@@ -1,0 +1,274 @@
+{
+ "name": "s81hd_tile_r6kf",
+ "top": "ot_s81hd_tile_r3",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat_ncr.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native_h32.v",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_key.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_fadd.sv",
+  "rtl/common/ot_prefix.sv",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/v41rom/ot_v41_bmul2.sv",
+  "rtl/v41rom/ot_dsrom_bmul3.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_tile_r3.sv"
+ ],
+ "params": {
+  "IOREG": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 648.0,
+  "h": 648.0
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?0?.u_e.u_rom0",
+   "at": [
+    86.4,
+    477.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?0?.u_e.u_rom1",
+   "at": [
+    86.4,
+    540.336
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.u_b.u_rom0",
+   "at": [
+    259.2,
+    477.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.u_b.u_rom1",
+   "at": [
+    259.2,
+    540.336
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?1?.u_e.u_rom0",
+   "at": [
+    432.0,
+    477.36
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?1?.u_e.u_rom1",
+   "at": [
+    432.0,
+    540.336
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?2?.u_e.u_rom1",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?2?.u_e.u_rom0",
+   "at": [
+    172.8,
+    106.176
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?3?.u_e.u_rom1",
+   "at": [
+    345.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?3?.u_e.u_rom0",
+   "at": [
+    345.6,
+    106.176
+   ],
+   "orient": "MX",
+   "at_exact": true
+  }
+ ],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.045,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 12,
+   "diameter_um": 18,
+   "extra": "-distance_between_buffers 15 -balance_levels"
+  },
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pins": {
+  "W": [
+   "i",
+   "row0",
+   "ten",
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "o"
+  ]
+ },
+ "pin_ranges": {
+  "i": [
+   20.0,
+   628.0
+  ],
+  "o": [
+   20.0,
+   628.0
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin (inputs land in face flops, outputs leave flops); recipe pin_regs would add an unpriced stage."
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "32",
+  "OT_CKKM_PORT": "ck"
+ },
+ "structural_change": "STW-S81c-HEAD-TILE 10-21 clock-structural fallback of R6 (22a89b512 RTL, native32 split, byte-identical sources; outline 648 x 648 = H10 die tile reserve, macro lattice unchanged). R5f synth: ~126k flops on ONE TritonCTS root over 648 um (gate WARN clock_span; 8x the 15k/root guidance; no head tile ever reached CTS). Here the ck port net is split by placed-sink 2-D k-means into 32 regional clock roots (physical/common_flow/clock_split_km.tcl, closed precedent dscoll_lane_w_s12h K32 at 725.8 x 583.2): one BUFx24 local root per region (~3937 sinks, ~114 um span), CTS builds one short tree per region under a balanced top tree; leaf groups 12 sinks / 18 um. Same port, clock, flops, constraints, cycles and pins; one external clock root (die binding unchanged). Pin flops at faces (io_flop_at_pins) join their face regions.",
+ "reset_landing": {
+  "enable": false,
+  "reason": "Top RTL explicitly implements three synchronous face landing stages in kept source families2/64/1536 with standard equivalence-proven redistribution; an additional kit wrapper would double land reset. Startup assertion/release +1 edge versus old two-stage kit is recorded, traffic unchanged."
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "job": {
+  "owner": "STW-S81c-HEAD-TILE",
+  "branch": "claude/s81hd-tile-r6k-1021",
+  "tag": "r6kf",
+  "extra_paths": [
+   "rtl/common",
+   "rtl/v41rom",
+   "rtl/hdc",
+   "rtl/dsrom_sys/s81_head",
+   "tools/s81_head",
+   "results/rtl/s81_head_tile_1021",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "tools/prepare_fp32_fan32_models.py",
+   "results/rtl/fp32_add_native_clone_1020/final_packet",
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8",
+   "tools/s81_head_r3",
+   "results/rtl/s81_head_tile_reset_1021"
+  ],
+  "benches": [
+   {
+    "name": "hd_mini_all",
+    "cmd": "bash tools/s81_head_r3/bench.sh {RUN}/hd_mini_all ALL none",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^BENCH_PASS s81hd_mini SCEN=ALL MUT=none \\(4/4\\)$"
+   },
+   {
+    "name": "hd_mut_tie_flip",
+    "cmd": "bash tools/s81_head_r3/bench.sh {RUN}/hd_mut_tie_flip C TIE_FLIP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^C: TB_FAIL row 21946 != 21818$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_tie_flip.log"
+   },
+   {
+    "name": "hd_mut_go_drop",
+    "cmd": "bash tools/s81_head_r3/bench.sh {RUN}/hd_mut_go_drop A GO_DROP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^A: TB_FAIL results 0 != positions 2$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_go_drop.log"
+   },
+   {
+    "name": "hd_mut_ten_ignored",
+    "cmd": "bash tools/s81_head_r3/bench.sh {RUN}/hd_mut_ten_ignored B TEN_IGNORED",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^B: TB_FAIL row 21946 != 22141$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_ten_ignored.log"
+   },
+   {
+    "name": "hd_mut_flt_drop",
+    "cmd": "bash tools/s81_head_r3/bench.sh {RUN}/hd_mut_flt_drop D FLT_DROP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^D: TB_FAIL flt 0 != 1$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_flt_drop.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81hd_tile_r6kf/views",
+  "record_to": "results/rtl/ref_tile/s81hd_tile_r6kf",
+  "purpose": "HEAD tile R6 RTL with 32 regional k-means clock roots (clock-safe fallback, parallel to R6m/R6f)."
+ },
+ "fill_reason": {
+  "macro_bound": "Macro-bound: 10 x ot_rom_4096x274_m8 (125.3 x 63.0 um, 78.9k um2, side-face pins needing >= 47-um column channels) as 5 abutted element stacks in a 648.0 x 648.0 square; std-cell fill under 40% is the price of the macro columns and the 565-b W / E faces, not a squeezed target (RULE FREEZE 10-20: tile fill is guidance)."
+ }
+}
