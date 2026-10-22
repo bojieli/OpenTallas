@@ -1,0 +1,68 @@
+// stand-in pin source: header of ot_s81sl_vs from rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vs.sv with default parameters {'XL': '6', 'MUT': '0'}
+module ot_s81sl_vs (
+input  wire          clk,
+    input  wire          rst_n,
+    
+    input  wire          s_v,
+    input  wire [159:0]  s_d,
+    
+    output reg           x_rv,
+    output reg  [9:0]    x_ra,
+    input  wire          x_qv,
+    input  wire [255:0]  x_qd,
+    output reg           x_wv,
+    output reg  [9:0]    x_wa,
+    output reg  [7:0]    x_wm,
+    output reg  [255:0]  x_wd,
+    
+    output reg           u_v,
+    output reg  [2:0]    u_i,
+    output reg  [255:0]  u,
+    output reg           um_v,
+    output reg           um_q,
+    output reg           um_b,
+    output reg  [7:0]    um_i,
+    
+    output reg           sw_v,
+    output reg  [255:0]  sw_d,
+    output reg  [31:0]   sw_w,
+    output reg  [31:0]   sw_lim,
+    input  wire          sw_vi,
+    input  wire [63:0]   sw_ri,
+    input  wire          sw_fi,
+    
+    output reg           ra_v,
+    output reg  [31:0]   ra_x,
+    input  wire          ra_vi,
+    input  wire [31:0]   ra_ri,
+    input  wire          ra_fi,
+    
+    output reg           ve_rv,
+    output reg  [1:0]    ve_rc,
+    output reg  [127:0]  ve_rh,
+    output reg  [127:0]  ve_rk,
+    output reg  [127:0]  ve_rw,
+    input  wire          ve_pv,
+    input  wire [1:0]    ve_pc,
+    input  wire [31:0]   ve_phh,
+    input  wire [31:0]   ve_pkk,
+    input  wire [31:0]   ve_pdd,
+    output reg           ve_av,
+    output reg  [1:0]    ve_ac,
+    output reg  [255:0]  ve_ah,
+    output reg  [255:0]  ve_aval,
+    output reg  [31:0]   ve_ag,
+    input  wire          ve_ov,
+    input  wire [1:0]    ve_oc,
+    input  wire [255:0]  ve_oy,
+    input  wire          ve_fi,
+    
+    output reg           e_v,
+    output reg  [1:0]    e_c,
+    output reg  [95:0]   e_d,
+    input  wire          g_v,
+    input  wire [1:0]    g_c,
+    input  wire [31:0]   g_d,
+    output reg           fault
+);
+endmodule

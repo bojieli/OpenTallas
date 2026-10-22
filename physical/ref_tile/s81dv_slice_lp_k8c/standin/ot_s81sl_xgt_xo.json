@@ -1,0 +1,62 @@
+{
+ "clock_port": "clk",
+ "outline": {
+  "w": 734.4,
+  "h": 777.6
+ },
+ "pins": {
+  "W": [
+   "ri_w",
+   "ro_w",
+   "nx_wi",
+   "nx_wo"
+  ],
+  "E": [
+   "ri_e",
+   "ro_e",
+   "nx_ei",
+   "nx_eo"
+  ],
+  "N": [
+   "sid",
+   "dl_ev",
+   "dl_e",
+   "dl_wv",
+   "dl_w",
+   "dl_vv",
+   "dl_vb",
+   "ci_dir",
+   "ci_b",
+   "is_v",
+   "is_d"
+  ],
+  "S": [
+   "xf_v",
+   "xf_s",
+   "xf",
+   "vi",
+   "vo",
+   "clk",
+   "rst_n",
+   "xw_v",
+   "xw_d",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   383.4,
+   385.56
+  ],
+  "rst_n": [
+   392.04,
+   394.2
+  ]
+ },
+ "top": "ot_s81sl_xgt_xo",
+ "sources": [
+  "physical/ref_tile/s81dv_slice_lp_k8c/standin/ot_s81sl_xgt_xo_hdr.sv"
+ ],
+ "name": "standin_ot_s81sl_xgt_xo",
+ "_note": "S81-SLICE/PARENT 10-21 stand-in (DIAGNOSTIC, STANDIN_NOT_A_VIEW) at the successor outline/faces of ot_s81sl_xgt_xo"
+}

@@ -1,0 +1,55 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "standin": true,
+ "clock": "clk",
+ "assumed_ps": {
+  "tt": 414.0,
+  "ff": 340.0,
+  "ss": 536.0
+ },
+ "tt": {
+  "boundary": {
+   "n": 7651,
+   "mean": 414.0,
+   "min": 404.0,
+   "max": 424.0
+  },
+  "all": {
+   "n": 7651,
+   "mean": 414.0,
+   "min": 404.0,
+   "max": 424.0
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": {
+   "n": 7651,
+   "mean": 340.0,
+   "min": 330.0,
+   "max": 350.0
+  },
+  "all": {
+   "n": 7651,
+   "mean": 340.0,
+   "min": 330.0,
+   "max": 350.0
+  },
+  "errors": []
+ },
+ "ss": {
+  "boundary": {
+   "n": 7651,
+   "mean": 536.0,
+   "min": 526.0,
+   "max": 546.0
+  },
+  "all": {
+   "n": 7651,
+   "mean": 536.0,
+   "min": 526.0,
+   "max": 546.0
+  },
+  "errors": []
+ }
+}
