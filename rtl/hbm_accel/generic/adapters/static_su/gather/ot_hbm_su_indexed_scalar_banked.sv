@@ -20,9 +20,9 @@ module ot_hbm_su_indexed_scalar_banked #(
  end
  wire[55:0]product=SEGMENTED96!=0?56'(segmented_address):56'(index_value)*56'(mul)+56'(base);
  function automatic[4:0]bank_of(input[23:0]a);bank_of={a[17:16],a[5:3]};endfunction
- wire[PW-1:0]local_phase[0:3];
- for(genvar c=0;c<4;c=c+1)begin:phasecopy
-  ot_hbm_gather_phase_copy #(.PW(PW)) counter(.clk(clk),.rst_n(rrst[0]),.clear(start&&!busy),.q(local_phase[c]));
+ wire[PW-1:0]local_phase[0:5];
+ for(genvar c=0;c<6;c=c+1)begin:phasecopy
+  ot_hbm_gather_phase_copy #(.PW(PW)) counter(.clk(clk),.rst_n(rrst[1+c]),.clear(start&&!busy),.q(local_phase[c]));
  end
  wire rd_fire,wr_fire;
  ot_hbm_gather_phase_fire #(.SI(SI),.WI(WI)) fire(.phase(16'(local_phase[0])),.busy(busy),.rd(rd_fire),.wr(wr_fire));
@@ -45,7 +45,7 @@ module ot_hbm_su_indexed_scalar_banked #(
  for(genvar b=0;b<4;b=b+1)begin:capture
   ot_hbm_gather_sample_byte #(.EDGE(READ_SAMPLE+MUT_PHASE)) index_capture(.clk(clk),.busy(busy),.phase(16'(local_phase[1])),.d(returned_word[b*8+:8]),.q(index_value[b*8+:8]));
   for(genvar c=0;c<2;c=c+1)begin:vcopy
-   ot_hbm_gather_sample_byte #(.EDGE(SS)) value_capture(.clk(clk),.busy(busy),.phase(16'(local_phase[2+c])),.d(returned_word[b*8+:8]),.q(value[c][b*8+:8]));
+   ot_hbm_gather_sample_byte #(.EDGE(SS)) value_capture(.clk(clk),.busy(busy),.phase(16'(local_phase[2+2*c+b/2])),.d(returned_word[b*8+:8]),.q(value[c][b*8+:8]));
   end
  end
  // Descriptor data remains stable for the entire scheduled transaction. Raw
