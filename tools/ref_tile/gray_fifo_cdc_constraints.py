@@ -53,6 +53,7 @@ period - 60 ps) and ``set_min_delay -ignore_clock_latency 0``, with a finite-pat
 multicycle or same-family exception is generated; every tagged register must sit in its tagged family, and every
 pointer bit crossing must be seen in the mapped graph. Not a physical-closure or metastability-MTBF claim.
 """
+import bisect
 import hashlib
 import json
 import re
@@ -983,9 +984,25 @@ def _lint(spec, root):
 
     evmode = spec.get(S.KEY) is not None
 
+    # HBMb/IDXSU 10-21: every per-FIFO name lookup below used to scan all of net.bit_of with a fresh regex per key
+    # (ot_hbm_svc_wb_kport_q PP=1: 1,920 FIFOs x ~250k names -> ~20 s per FIFO, >10 h per kit lint).  The names are
+    # sorted once; each lookup visits only the names under its own prefix (bisect), in the original dict order where
+    # the order is observable (tag()).  Same predicates, same results.
+    order = {k: i for i, k in enumerate(net.bit_of)}
+    sorted_keys = sorted(net.bit_of)
+
+    def keys_with(prefix):
+        i = bisect.bisect_left(sorted_keys, prefix)
+        out = []
+        while i < len(sorted_keys) and sorted_keys[i].startswith(prefix):
+            out.append(sorted_keys[i])
+            i += 1
+        return out
+
     def bits_of(scope, reg, constant=False):
         prefix = scope + '.' if scope else ''
-        keys = [k for k in net.bit_of if k == prefix + reg or re.fullmatch(re.escape(prefix + reg) + r'\[\d+\]', k)]
+        indexed = re.compile(re.escape(prefix + reg) + r'\[\d+\]')
+        keys = [k for k in keys_with(prefix + reg) if k == prefix + reg or indexed.fullmatch(k)]
         keys.sort(key=lambda k: int(k[k.rfind('[') + 1:-1]) if k != prefix + reg else -1)
         out = []
         for k in keys:
@@ -1097,15 +1114,16 @@ def _lint(spec, root):
                 for i, q in enumerate(s):
                     tag(q, ('sync1' if j == 0 else 'stage', fid, cname, i))
         prefix = scope + '.' if scope else ''
-        storage = sorted({b for k, b in net.bit_of.items() if k.startswith(prefix) and
+        storage = sorted({b for k, b in ((k, net.bit_of[k]) for k in keys_with(prefix)) if
                           STORAGE.fullmatch(k[len(prefix):]) and b in net.flops})
         for q in storage:
             if net.domain(q) != writer:
                 raise GrayFifoError(f'reviewed_gray_fifos storage {net.key(q)} is not on the writer side {writer}')
             tag(q, ('mem', fid, 'mem', 0))
         if r['read_stage'] is not None:
-            for k, b in net.bit_of.items():
-                if k.startswith(prefix) and r['read_stage'].fullmatch(k[len(prefix):]) and b in net.flops:
+            for k in sorted(keys_with(prefix), key=order.__getitem__):
+                b = net.bit_of[k]
+                if r['read_stage'].fullmatch(k[len(prefix):]) and b in net.flops:
                     if net.domain(b) != reader:
                         raise GrayFifoError(f'reviewed_gray_fifos read stage {net.key(b)} is not on the reader side')
                     tag(b, ('rstage', fid, 'mem', 0))
@@ -1142,8 +1160,10 @@ def _lint(spec, root):
                 if net.domain(empty[0]) != reader:
                     raise GrayFifoError(f'reviewed_gray_fifos {net.key(empty[0])} is not on the reader side')
                 valid = ('and', ((rst[0], 1), (stage['wonl'][5][-1][0], 1), (empty[0], 0)))
-        head = {b for k, b in net.bit_of.items() if isinstance(b, int) and b not in net.flops and
-                re.fullmatch(re.escape(prefix + ('rdata' if base == 'ot_link_afifo' else 'rd_data')) + r'(?:\[\d+\])?', k)}
+        hname = prefix + ('rdata' if base == 'ot_link_afifo' else 'rd_data')
+        hpat = re.compile(re.escape(hname) + r'(?:\[\d+\])?')
+        head = {b for k, b in ((k, net.bit_of[k]) for k in keys_with(hname)) if isinstance(b, int) and
+                b not in net.flops and hpat.fullmatch(k)}
         fifos[fid] = dict(scope=scope, module=base, writer=writer, reader=reader, valid=valid, head=head,
                           storage=set(storage), chains={c[0]: len(c[4]) for c in chains},
                           pointer_max_delay_ps=round(min(period[writer], period[reader]) - SETUP_UNCERTAINTY_PS, 3),
