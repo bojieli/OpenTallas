@@ -114,7 +114,9 @@ def lower(raw, *, tag, source_window=None, binding=None, record_start=0, placeme
                       score_base=physical_base,score_limit=max(segments)+96 if segmented else physical_base+(hi-lo),
                       dest_word=8*(placement.map[o.base//8] if o.base//8 in placement.map else
                                    placement.get(o.base//8,0,tag+':indexed_O'))+o.base%8)
-    if segmented:descriptor['segment_bases']=list(segments)
+    if segmented:
+        descriptor['segment_bases']=list(segments)
+        base['native_gather']['address_expression']='segment_bases[U32(live VM[index_word]) // 96] + U32(live VM[index_word]) % 96'
     if job.get('descriptor')!=descriptor:
         raise ValueError('compiler placement differs from the actual native producer receipt descriptor')
     for name in ('index_word','score_base','dest_word'):
@@ -172,9 +174,14 @@ def programme_replay(plans, binding):
         raise ValueError('all six source-bound route gathers must be present')
     epoch=integer(binding['calendar_epoch'],'actual calendar epoch',0,2**31-1)
     selector_tail=integer(binding['ownership_release_tail'],'actual selector ownership release tail',0,65535)
+    if integer(binding['port_free'],'actual bank ownership availability',0,2**31-1)>epoch:
+        raise ValueError('programme epoch precedes actual native bank port release')
+    profile=phases(binding['parameters']['READ_SAMPLE'],binding['parameters']['WRITE_COMMIT'])
     rows=[];previous_release=0
     for ix,plan in enumerate(plans):
         rec=plan['native_gather'];start=rec['start']-epoch
+        if rec['done']!=rec['start']+profile['done']:
+            raise ValueError('gather done differs from actual selected source phase profile')
         release=rec['done']+2-epoch
         if start<previous_release:raise ValueError('indexed gather programme port reservations overlap')
         if rec['descriptor'].get('segment_bases') is not None and binding['parameters'].get('SEGMENTED96')!=1:

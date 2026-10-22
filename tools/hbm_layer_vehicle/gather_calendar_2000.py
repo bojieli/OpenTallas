@@ -89,7 +89,9 @@ def build(binding, ledger, requests, receipt_root):
         if control.get(field)!=binding[field]:raise ValueError('control binding differs from hashed source receipt: '+field)
     profile=phases(binding['parameters']['READ_SAMPLE'],binding['parameters']['WRITE_COMMIT'])
     epoch=integer(binding['calendar_epoch'],'actual calendar epoch',0,2**31-1)
-    free=max(epoch+2,integer(binding['port_free'],'actual bank ownership availability',0,2**31-1))
+    available=integer(binding['port_free'],'actual bank ownership availability',0,2**31-1)
+    if available>epoch:raise ValueError('programme selects native bank ports before their actual owner releases them')
+    free=epoch+2
     plans=[];jobs={}
     for request in requests:
         tag=request['tag'];d=deepcopy(request['descriptor'])
