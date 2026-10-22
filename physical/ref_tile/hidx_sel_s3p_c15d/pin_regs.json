@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hidx_s3_flat_lp",
+ "enable": false,
+ "reason": "wires-only landed parent: every port lands in a hard child's pin flop (quadrant in_line_<q> -> in_p1, ctl op/pass/addr/k -> cw_r/k_r) or leaves from a child output register; the lp rings / reads are the only parent flops"
+}
