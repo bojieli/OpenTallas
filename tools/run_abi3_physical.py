@@ -2598,6 +2598,63 @@ def orfs_config_lines(
 KEEP_REGS_HOOK = "/src/physical/common_flow/ot_keep_regs.tcl"
 
 
+NATIVE_FANOUT_BOUND_TOOL = "tools/ref_tile/native_fanout_bound.py"
+
+
+def native_fanout_bound(case: Path, mapped: Path, mapped_container: str, top: str, pnr: dict[str, Any],
+                        orfs_make) -> dict[str, Any] | None:
+    """FLOW-CONSTFOLD 2026-10-21: constant-identity fold + bounded driver cloning of the ORFS-mapped netlist,
+    BEFORE floorplan (and so before the pre-gate native census and any ORFS buffering).
+
+    Main 45386657d (rule native-liberty-constant-identities) makes the census count loads through cells whose proven
+    constant inputs reduce them to an identity/inverse (kept-hierarchy leaf modules keep their tied ports through
+    mapping).  tools/ref_tile/native_fanout_bound.py folds those cells (Liberty truth tables) and, only when some driver
+    exceeds the census limit of 32, replicates that driver (same type and input nets; <= 24 endpoints per copy).  A tile
+    whose netlist already passes is left byte-identical (status NO_CHANGE); a FRONTIER (over-limit input port,
+    multi-output or macro driver) is left untouched for the census to refuse -- RTL registers / distributes it.  No
+    waiver: the census still judges the result.  Opt out: OT_NATIVE_FANOUT_BOUND=0 (environment or --orfs-var)."""
+    flag = str(pnr["extra_config"].get("OT_NATIVE_FANOUT_BOUND", os.environ.get("OT_NATIVE_FANOUT_BOUND", "1")))
+    if flag.strip() == "0" or not (ROOT / NATIVE_FANOUT_BOUND_TOOL).is_file():
+        return None
+    report = case / "native_fanout_bound.json"
+    out = case / "1_2_yosys.bound.v"
+    for p in (report, out):
+        p.unlink(missing_ok=True)
+    proc = orfs_make(
+        "print-LIB_FILES >/dev/null; "
+        "LIBS=$(make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base print-LIB_FILES "
+        "| sed -n 's/^LIB_FILES: //p'); "
+        f"for m in $(dirname {mapped_container})/memories/*.lib; do "
+        "[ -f \"$m\" ] && case $m in *_pre_layout.lib) ;; *) LIBS=\"$LIBS $m\";; esac; done; "
+        f"bash /src/tools/ref_tile/native_fanout_bound.sh {mapped_container} /work/1_2_yosys.bound.v {top} "
+        "/work/native_fanout_bound.json \"$LIBS\"; echo NFB_RC=$?",
+        "native_fanout_bound.log",
+        synth_timeout_seconds(),
+    )
+    log = (proc.stdout or "") + (proc.stderr or "")
+    m = re.search(r"NFB_RC=(\d+)", log)
+    rc = int(m.group(1)) if m else -1
+    rec: dict[str, Any] = {"tool": NATIVE_FANOUT_BOUND_TOOL, "tool_sha256": sha256_file(ROOT / NATIVE_FANOUT_BOUND_TOOL),
+                           "rc": rc, "pre_sha256": sha256_file(mapped)}
+    if report.is_file():
+        try:
+            rep = json.loads(report.read_text())
+            rec.update({k: rep.get(k) for k in ("status", "pre_max_dynamic_loads", "pre_drivers_over",
+                                                "post_max_dynamic_loads", "post_drivers_over", "stats",
+                                                "frontier_count")})
+        except ValueError:
+            rec["status"] = "REPORT_UNREADABLE"
+    if rc == 0 and out.is_file() and rec.get("status") == "BOUNDED":
+        shutil.copy2(mapped, case / "1_2_yosys.prebound.v")
+        normalise_netlist(out, mapped)
+        rec["post_sha256"] = sha256_file(mapped)
+        print(f"NATIVE_FANOUT_BOUND applied: {rec}", flush=True)
+    else:
+        rec.setdefault("status", "ERROR")  # no report: the tool did not run (argparse/yosys error), never "unchanged"
+        print(f"NATIVE_FANOUT_BOUND netlist unchanged: {rec}", flush=True)
+    return rec
+
+
 def keep_regs_config_lines(config: list[str]) -> list[str]:
     """FLOW-FIX-0410 2026-10-09: (* keep *) register copies survive the ORFS yosys opt_merge.
 
@@ -2801,6 +2858,9 @@ def run_pnr(
     if endpoint_netlist and sha256_file(raw_mapped) != endpoint_netlist["mapped_netlist_sha256"]:
         raise FlowError("ORFS changed the guarded W11 endpoint input netlist")
     signed_stripped = normalise_netlist(mapped, mapped)
+    fanout_bound = None
+    if not dft and not endpoint_netlist:
+        fanout_bound = native_fanout_bound(case, mapped, mapped_container, block["top"], pnr, orfs_make)
     dft_record = None
     if dft:
         dft_record = apply_scan_insertion(mapped, case, block, view_name, corner, dft)
@@ -2842,6 +2902,7 @@ def run_pnr(
             "platform": platform_name,
             "design_nickname": nickname,
             "stopped_after": st,
+            **({"native_fanout_bound": fanout_bound} if fanout_bound else {}),
             "core_utilization_percent": core_utilization,
             "synth_memory_max_bits": synth_memory_max_bits(),
             "place_density": place_density,
@@ -2965,6 +3026,7 @@ def run_pnr(
             "helper_sha256": sha256_file(ROOT / "tools/orfs_allcorner_spef.py"),
         },
         **({"w11_endpoint_netlist": endpoint_netlist} if endpoint_netlist else {}),
+        **({"native_fanout_bound": fanout_bound} if fanout_bound else {}),
         "design_nickname": nickname,
         "netlist_normalization": {
             "signed_declarations_stripped": signed_stripped,
