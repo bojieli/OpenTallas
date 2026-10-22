@@ -1,0 +1,730 @@
+{
+  "status": "DIAGNOSTIC candidate geometry, not placed or CTS qualified",
+  "source_commit": "08d38a78f",
+  "source_sha256": "2ce6212fb8984428ada4008b1e45b0b04d07ad98bc4fd077350341f319dfbbb6",
+  "scope": "ONE actual column; 32 columns per quarter and 128 across four quarters",
+  "outline_um": [
+    907.2,
+    907.2
+  ],
+  "rectangles": [
+    {
+      "name": "u_pair0",
+      "kind": "pair",
+      "x_um": 43.2,
+      "y_um": 43.2,
+      "width_um": 216,
+      "height_um": 172.8,
+      "clock_owner": "cp[0]",
+      "orientation": "R0",
+      "view": {
+        "RID": 0,
+        "record": "97c58e235",
+        "status": "CLOSED",
+        "LEF": "physical/ref_tile/hidx_score_pair8_r0/views/ot_hidx_score_pair8_r0/ot_hidx_score_pair8_r0.lef",
+        "sha256": "90ad40af560824b2df4115aa9d6e223820844d7048e45d0d5398d9fa3670f494",
+        "width_um": 216.0,
+        "height_um": 172.8,
+        "count_per_leaf": 4,
+        "count_per_quarter": 32,
+        "count_across_four_quarters": 128
+      }
+    },
+    {
+      "name": "u_pair1",
+      "kind": "pair",
+      "x_um": 648,
+      "y_um": 43.2,
+      "width_um": 216,
+      "height_um": 172.8,
+      "clock_owner": "cp[1]",
+      "orientation": "R0",
+      "view": {
+        "RID": 1,
+        "record": "4c5e0ced5",
+        "status": "CLOSED",
+        "LEF": "physical/ref_tile/hidx_score_pair8_r1/views/ot_hidx_score_pair8_r1/ot_hidx_score_pair8_r1.lef",
+        "sha256": "bc550c99c6cffde14d2bc3e7777361cdf43ff969c833b644a259212107846a9e",
+        "width_um": 216.0,
+        "height_um": 172.8,
+        "count_per_leaf": 4,
+        "count_per_quarter": 32,
+        "count_across_four_quarters": 128
+      }
+    },
+    {
+      "name": "u_pair2",
+      "kind": "pair",
+      "x_um": 648,
+      "y_um": 691.2,
+      "width_um": 216,
+      "height_um": 172.8,
+      "clock_owner": "cp[2]",
+      "orientation": "R0",
+      "view": {
+        "RID": 2,
+        "record": "b2651c581",
+        "status": "CLOSED",
+        "LEF": "physical/ref_tile/hidx_score_pair8_r2/views/ot_hidx_score_pair8_r2/ot_hidx_score_pair8_r2.lef",
+        "sha256": "a8865e0bf389ab2e3ae30067af42abd6b7ec2fcedfd66563c5791c67fed92eb5",
+        "width_um": 216.0,
+        "height_um": 172.8,
+        "count_per_leaf": 4,
+        "count_per_quarter": 32,
+        "count_across_four_quarters": 128
+      }
+    },
+    {
+      "name": "u_pair3",
+      "kind": "pair",
+      "x_um": 43.2,
+      "y_um": 691.2,
+      "width_um": 216,
+      "height_um": 172.8,
+      "clock_owner": "cp[3]",
+      "orientation": "R0",
+      "view": {
+        "RID": 3,
+        "record": null,
+        "status": "STANDIN_NOT_A_VIEW",
+        "LEF": "physical/ref_tile/hidx_col8_standin_r3/views/ot_hidx_score_pair8_r3/ot_hidx_score_pair8_r3.lef",
+        "sha256": "32d77e6b3fc5bdc8222ed2acb30b2884ed46b8b1b3560ffc49985911cfb030f8",
+        "width_um": 216.0,
+        "height_um": 172.8,
+        "count_per_leaf": 4,
+        "count_per_quarter": 32,
+        "count_across_four_quarters": 128
+      }
+    },
+    {
+      "name": "l0.g_bank[0].u_mem",
+      "kind": "SRAM",
+      "x_um": 43.2,
+      "y_um": 259.2,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "ctl",
+        "read": "cp[0]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[0]"
+    },
+    {
+      "name": "l0.d_pin[0+:516]",
+      "kind": "FF_band",
+      "x_um": 129.6,
+      "y_um": 345.6,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "ctl",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l0.q_pin[0+:516]",
+      "kind": "FF_band",
+      "x_um": 129.6,
+      "y_um": 221.4,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[0]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l0.g_bank[1].u_mem",
+      "kind": "SRAM",
+      "x_um": 43.2,
+      "y_um": 388.8,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "ctl",
+        "read": "cp[0]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[0]"
+    },
+    {
+      "name": "l0.d_pin[516+:516]",
+      "kind": "FF_band",
+      "x_um": 86.4,
+      "y_um": 367.2,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "ctl",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l0.q_pin[516+:516]",
+      "kind": "FF_band",
+      "x_um": 183.6,
+      "y_um": 237.6,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[0]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l0.g_bank[2].u_mem",
+      "kind": "SRAM",
+      "x_um": 259.2,
+      "y_um": 259.2,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "ctl",
+        "read": "cp[0]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[0]"
+    },
+    {
+      "name": "l0.d_pin[1032+:145]",
+      "kind": "FF_band",
+      "x_um": 151.2,
+      "y_um": 362.88,
+      "width_um": 21.6,
+      "height_um": 8.64,
+      "clock_owner": "ctl",
+      "orientation": "R0",
+      "flops": 145,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l0.q_pin[1032+:145]",
+      "kind": "FF_band",
+      "x_um": 275.4,
+      "y_um": 211.68,
+      "width_um": 21.6,
+      "height_um": 8.64,
+      "clock_owner": "cp[0]",
+      "orientation": "R0",
+      "flops": 145,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l1.g_bank[0].u_mem",
+      "kind": "SRAM",
+      "x_um": 475.2,
+      "y_um": 259.2,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "cp[0]",
+        "read": "cp[1]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[1]"
+    },
+    {
+      "name": "l1.d_pin[0+:516]",
+      "kind": "FF_band",
+      "x_um": 399.6,
+      "y_um": 232.2,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[0]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l1.q_pin[0+:516]",
+      "kind": "FF_band",
+      "x_um": 648.0,
+      "y_um": 226.8,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[1]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l1.g_bank[1].u_mem",
+      "kind": "SRAM",
+      "x_um": 691.2,
+      "y_um": 259.2,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "cp[0]",
+        "read": "cp[1]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[1]"
+    },
+    {
+      "name": "l1.d_pin[516+:516]",
+      "kind": "FF_band",
+      "x_um": 534.6,
+      "y_um": 237.6,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[0]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l1.q_pin[516+:516]",
+      "kind": "FF_band",
+      "x_um": 707.4,
+      "y_um": 237.6,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[1]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l1.g_bank[2].u_mem",
+      "kind": "SRAM",
+      "x_um": 475.2,
+      "y_um": 388.8,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "cp[0]",
+        "read": "cp[1]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[1]"
+    },
+    {
+      "name": "l1.d_pin[1032+:178]",
+      "kind": "FF_band",
+      "x_um": 437.4,
+      "y_um": 227.88,
+      "width_um": 21.6,
+      "height_um": 8.64,
+      "clock_owner": "cp[0]",
+      "orientation": "R0",
+      "flops": 178,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l1.q_pin[1032+:178]",
+      "kind": "FF_band",
+      "x_um": 648.0,
+      "y_um": 346.68,
+      "width_um": 21.6,
+      "height_um": 8.64,
+      "clock_owner": "cp[1]",
+      "orientation": "R0",
+      "flops": 178,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l2.g_bank[0].u_mem",
+      "kind": "SRAM",
+      "x_um": 475.2,
+      "y_um": 518.4,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "cp[1]",
+        "read": "cp[2]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[2]"
+    },
+    {
+      "name": "l2.d_pin[0+:516]",
+      "kind": "FF_band",
+      "x_um": 621.0,
+      "y_um": 475.2,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[1]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l2.q_pin[0+:516]",
+      "kind": "FF_band",
+      "x_um": 550.8,
+      "y_um": 637.2,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[2]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l2.g_bank[1].u_mem",
+      "kind": "SRAM",
+      "x_um": 691.2,
+      "y_um": 518.4,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "cp[1]",
+        "read": "cp[2]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[2]"
+    },
+    {
+      "name": "l2.d_pin[516+:516]",
+      "kind": "FF_band",
+      "x_um": 707.4,
+      "y_um": 475.2,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[1]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l2.q_pin[516+:516]",
+      "kind": "FF_band",
+      "x_um": 626.4,
+      "y_um": 658.8,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[2]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l2.g_bank[2].u_mem",
+      "kind": "SRAM",
+      "x_um": 691.2,
+      "y_um": 388.8,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "cp[1]",
+        "read": "cp[2]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[2]"
+    },
+    {
+      "name": "l2.d_pin[1032+:178]",
+      "kind": "FF_band",
+      "x_um": 691.2,
+      "y_um": 227.88,
+      "width_um": 21.6,
+      "height_um": 8.64,
+      "clock_owner": "cp[1]",
+      "orientation": "R0",
+      "flops": 178,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l2.q_pin[1032+:178]",
+      "kind": "FF_band",
+      "x_um": 723.6,
+      "y_um": 622.08,
+      "width_um": 21.6,
+      "height_um": 8.64,
+      "clock_owner": "cp[2]",
+      "orientation": "R0",
+      "flops": 178,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l3.g_bank[0].u_mem",
+      "kind": "SRAM",
+      "x_um": 259.2,
+      "y_um": 388.8,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "cp[2]",
+        "read": "cp[3]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[3]"
+    },
+    {
+      "name": "l3.d_pin[0+:516]",
+      "kind": "FF_band",
+      "x_um": 426.6,
+      "y_um": 507.6,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[2]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l3.q_pin[0+:516]",
+      "kind": "FF_band",
+      "x_um": 189.0,
+      "y_um": 653.4,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[3]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l3.g_bank[1].u_mem",
+      "kind": "SRAM",
+      "x_um": 43.2,
+      "y_um": 561.6,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "cp[2]",
+        "read": "cp[3]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[3]"
+    },
+    {
+      "name": "l3.d_pin[516+:516]",
+      "kind": "FF_band",
+      "x_um": 302.4,
+      "y_um": 653.4,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[2]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l3.q_pin[516+:516]",
+      "kind": "FF_band",
+      "x_um": 5.4,
+      "y_um": 761.4,
+      "width_um": 32.4,
+      "height_um": 10.8,
+      "clock_owner": "cp[3]",
+      "orientation": "R0",
+      "flops": 516,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l3.g_bank[2].u_mem",
+      "kind": "SRAM",
+      "x_um": 259.2,
+      "y_um": 561.6,
+      "width_um": 169.56,
+      "height_um": 76.68,
+      "clock_owner": {
+        "write": "cp[2]",
+        "read": "cp[3]"
+      },
+      "orientation": "R0",
+      "master": "ot_sram_1r1w2c_64x516_m1",
+      "reset_owner": "reset_leaf[3]"
+    },
+    {
+      "name": "l3.d_pin[1032+:145]",
+      "kind": "FF_band",
+      "x_um": 486.0,
+      "y_um": 616.68,
+      "width_um": 21.6,
+      "height_um": 8.64,
+      "clock_owner": "cp[2]",
+      "orientation": "R0",
+      "flops": 145,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l3.q_pin[1032+:178]",
+      "kind": "FF_band",
+      "x_um": 135.0,
+      "y_um": 676.08,
+      "width_um": 21.6,
+      "height_um": 8.64,
+      "clock_owner": "cp[3]",
+      "orientation": "R0",
+      "flops": 178,
+      "reset": "data unreset",
+      "placement": "Reserved band; center endpoints audited, detailed cells not placed"
+    },
+    {
+      "name": "l3.d_pin[1177+:33]",
+      "kind": "FF_band",
+      "x_um": 572.4,
+      "y_um": 699.84,
+      "width_um": 10.8,
+      "height_um": 4.32,
+      "clock_owner": "cp[2]",
+      "orientation": "R0",
+      "flops": 33,
+      "reset": "data unreset"
+    },
+    {
+      "name": "CTL_local_control_reserve",
+      "kind": "control_reserve",
+      "x_um": 43.2,
+      "y_um": 475.2,
+      "width_um": 172.8,
+      "height_um": 32.4,
+      "clock_owner": "ctl",
+      "orientation": "R0",
+      "reset_owner": "u_reset",
+      "notes": "Actual pointer/reset/control reserve; incoming chunk payload anchor is center. Shared chunk glue is outside this column, not replicated here."
+    },
+    {
+      "name": "CTL_return_readers",
+      "kind": "FF_band",
+      "x_um": 421.2,
+      "y_um": 480.6,
+      "width_um": 21.6,
+      "height_um": 10.8,
+      "clock_owner": "ctl",
+      "orientation": "R0",
+      "flops": 37,
+      "reset_owner": "reset_leaf[4:8]"
+    },
+    {
+      "name": "lrdy0.writer_and_ring",
+      "kind": "FF_band",
+      "x_um": 324.0,
+      "y_um": 341.28,
+      "width_um": 10.8,
+      "height_um": 8.64,
+      "clock_owner": "cp[0]",
+      "orientation": "R0",
+      "flops": 8,
+      "reset_owner": "reset_leaf[5]"
+    },
+    {
+      "name": "lrdy1.writer_and_ring",
+      "kind": "FF_band",
+      "x_um": 615.6,
+      "y_um": 346.68,
+      "width_um": 10.8,
+      "height_um": 8.64,
+      "clock_owner": "cp[1]",
+      "orientation": "R0",
+      "flops": 8,
+      "reset_owner": "reset_leaf[6]"
+    },
+    {
+      "name": "lrdy2.writer_and_ring",
+      "kind": "FF_band",
+      "x_um": 637.2,
+      "y_um": 643.68,
+      "width_um": 10.8,
+      "height_um": 8.64,
+      "clock_owner": "cp[2]",
+      "orientation": "R0",
+      "flops": 8,
+      "reset_owner": "reset_leaf[7]"
+    },
+    {
+      "name": "lrdy3.writer_and_ring",
+      "kind": "FF_band",
+      "x_um": 340.2,
+      "y_um": 643.68,
+      "width_um": 10.8,
+      "height_um": 8.64,
+      "clock_owner": "cp[3]",
+      "orientation": "R0",
+      "flops": 8,
+      "reset_owner": "reset_leaf[8]"
+    },
+    {
+      "name": "lret.writer_and_ring",
+      "kind": "FF_band",
+      "x_um": 334.8,
+      "y_um": 666.9,
+      "width_um": 21.6,
+      "height_um": 16.2,
+      "clock_owner": "cp[3]",
+      "orientation": "R0",
+      "flops": 136,
+      "reset_owner": "reset_leaf[4]"
+    }
+  ],
+  "replication": {
+    "per_leaf": {
+      "columns": 4,
+      "pairs": 16,
+      "region_occurrences": 20
+    },
+    "per_quarter": {
+      "leaves": 8,
+      "columns": 32,
+      "pairs": 128,
+      "region_occurrences": 160,
+      "new_wide_ring_SRAMs": 384
+    },
+    "four_quarters": {
+      "columns": 128,
+      "pairs": 512,
+      "region_occurrences": 640,
+      "new_wide_ring_SRAMs": 1536
+    }
+  },
+  "clock_scope": {
+    "declared_clock_input_bits_per_quarter": 271,
+    "used_clock_input_bits_per_quarter": 143,
+    "legacy_unused_odd_hslice_clock_bits": 128,
+    "used_clock_derivation": "128 pair clocks + 8 chunk glue clocks + 2 engine + 2 meta + 2 tail + 1 control. Column control clocks share their leaf chunk clock; do not count logical region occurrences as independent external clocks."
+  },
+  "active_delta_edges": 23,
+  "extra_die_hops": "Not yet composed; price actual placement hops separately",
+  "reset_status": "Baseline raw reset fails. Face-reset successor mechanism passed; physical qualification pending.",
+  "reach_audit": {
+    "kind": "Exact LEF pin midpoint and pessimistic full FF band corner Manhattan bounds; not detailed route or CTS proof",
+    "net_count": 19036,
+    "max_center_um": 393.216,
+    "max_band_corner_um": 400.776,
+    "violations": [],
+    "hard_macro_halo_um": 5.4
+  },
+  "source_bindings": {
+    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1.lef": "be0d1be8807e8a96b8a5927f1e6586d1619927ad740abf4633d0f88501ede2a6",
+    "rtl/hdc/v41x/ot_hbm_idx_col8_sram_landed.sv": "2ce6212fb8984428ada4008b1e45b0b04d07ad98bc4fd077350341f319dfbbb6"
+  },
+  "next": "Compose actual full-count placement and qualify clock/reset/timing. R3 remains a stand-in."
+}
