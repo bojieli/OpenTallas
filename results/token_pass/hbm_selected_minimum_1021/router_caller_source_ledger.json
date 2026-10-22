@@ -26,7 +26,11 @@
     "metadata_source": "tools/hbm_layer_vehicle/ds_layer_fixtures.py",
     "executable_su_transform_proven": false,
     "inspected_placement_pass": "tools/hgi_sim/d4g_quadrant_1017.py place_programme only reports class census/capacity, not descriptor transformation",
-    "physical_binding": null
+    "physical_binding": null,
+    "new_executable_transform": "tools/hbm_layer_vehicle/emit_router_shards_1021.py",
+    "command_roundtrip_coverage": "576 concrete two-word commands from all 288 original router records across L0/L2/L14; exact original footprints partition once; selected HGI codecs byte-identical.",
+    "native_execution_qualified": false,
+    "distinction": "Concrete command construction now exists. Native execution, actual collective rank configuration and physical ownership remain unproven."
   },
   "source_ledger": "input_identity.json and /home/ubuntu/scratch/codex-hbm-idxsu-2000/r18_selected_su_router_inventory.json",
   "actual_source_inputs": "Recovered rank0 router A from native fixture input, never full GSC fixture O",
