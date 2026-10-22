@@ -809,12 +809,11 @@ endfunction
                     // Preserve both edges and the legacy full-word path for unused bits.
                     initial if(REPL!=2 || D!=32 || S!=1 || NL!=4 || TD!=32 || DPT!=8 || ROWW!=265)
                         $error("STAGESEL_N32 requires exact current G4 staging shape");
-                    localparam [NL*ROWW-1:0] FILL_LIVE=fill_live_mask((gk*DPT)%32);
-                    localparam [NL*ROWW-1:0] QK_LIVE=({NL*ROWW{1'b1}}>>(NL*ROWW-GW))<<((gk/S)*ROWW);
+                    // SVCATT 10-21: dense leaves (no LIVE masks: yosys SIGSEGV on the 1060-bit mask functions)
                     wire[NL*ROWW-1:0]qf,qq;
-                    ot_hdc_v41x_stagepick_n32 #(.W(NL*ROWW),.LIVE(FILL_LIVE))u_fill_pick(
+                    ot_hdc_v41x_stagepick_n32 #(.W(NL*ROWW))u_fill_pick(
                         .clk(clk),.source_select(bbuf),.legacy_select(bs),.bank0(st_q0),.bank1(st_q1),.word_out(qf));
-                    ot_hdc_v41x_stagepick_n32 #(.W(NL*ROWW),.LIVE(QK_LIVE))u_qk_pick(
+                    ot_hdc_v41x_stagepick_n32 #(.W(NL*ROWW))u_qk_pick(
                         .clk(clk),.source_select(fbuf),.legacy_select(fs),.bank0(st_q0),.bank1(st_q1),.word_out(qq));
 `else
                     wire [NL*ROWW-1:0] qf = bs ? st_q1 : st_q0;

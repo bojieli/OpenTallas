@@ -37,3 +37,16 @@ python3 $R/tools/ref_tile/native_census.py --netlist $O/flat.v --top $T --out $O
 cat $O/census.log
 python3 $R/attrib.py $O/flat.v $O/census.json $O/attrib.json > $O/attrib.log 2>&1 || true
 head -60 $O/attrib.log
+if [ "${GRAPH:-0}" = 1 ]; then
+  python3 $R/svcatt_bound_graph.py $O/flat.json --top $T --name ${T}_n32 --out $O/bounded.v --limit 32 --collect-frontier --budget-only > $O/graph.log 2>&1 || true
+  cat $O/graph.log
+  python3 - $O/bounded.v.frontier.json <<'PY' || true
+import json,sys,collections,re
+r=json.load(open(sys.argv[1]));print(r['status'],'clones',r['clones'],'frontier',r['frontier'])
+c=collections.Counter();m={}
+for x in r['rows']:
+  n=(x.get('names') or ['?'])[0];k=x['reason'][:12]+' '+re.sub(r'\[\d+\]','[*]',n)
+  c[k]+=1;m[k]=max(m.get(k,0),x['loads'])
+for k,v in c.most_common(80):print(v,m[k],k)
+PY
+fi
