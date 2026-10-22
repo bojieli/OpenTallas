@@ -1,0 +1,11 @@
+--- a/tools/hbm_layer_vehicle/su_layer_lower_1021.py
++++ b/tools/hbm_layer_vehicle/su_layer_lower_1021.py
+@@ -1217,7 +1217,7 @@
+                                                           lowering=dict(supported=False, owner="TOK-FUNC2-HBM-SU"))
+     if unit != 2 or not scalar_rf_profile(sut, desc):
+         return refusal("scalar_side_pipe_small_vector_profile_only")
+-    if q != 0 or not isinstance(timing, NativeTiming) or timing != NativeTiming(18, 15) or rf_local not in (0, 1):
++    if q != 0 or not isinstance(timing, NativeTiming) or timing != NativeTiming(10, 7) or rf_local not in (0, 1):
+         return refusal("selected_quarter0_native_timing_and_RF_LOCAL_required")
+     if data is None:
+         return refusal("real_pre_operation_VM_words_required")

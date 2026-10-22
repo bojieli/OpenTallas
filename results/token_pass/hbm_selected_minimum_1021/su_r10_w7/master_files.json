@@ -1,0 +1,95 @@
+{
+  "hbfd_rly_136_EW": [
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "hbfd_rly_136_NS": [
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "hbfd_rly_48_EW": [
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "hbfd_rly_48_NS": [
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "hbfd_rly_48_SN": [
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "hbfd_rly_48_WE": [
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "hfd_ckgen_nolink": [
+    "rtl/hbm_accel/control/hfd_ckgen.sv",
+    "rtl/hbm_accel/control/hfd_ckgen_nolink.sv",
+    "rtl/hbm_accel/control/tb_hfd_ckgen.sv"
+  ],
+  "hfd_hgi_vm_calendar_f20": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+  ],
+  "hfd_hgi_vm_calendar_f20_role": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+  ],
+  "hfd_vms_bank_native_q0_faces": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv"
+  ],
+  "ot_hbm_host_cfg_leaf_sw": [
+    "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "ot_hbm_su_bridge_release_s": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release_s.sv"
+  ],
+  "ot_hbm_su_programme_pslice_c5": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "ot_hbm_su_static_pgslice_lg": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+    "rtl/hdc/ot_hdc_fastfp.sv",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "rtl/hdc/ot_hdc_prefix.sv"
+  ],
+  "ot_hbm_su_static_qcore_r13": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree_r13.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static_r13.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13.sv",
+    "rtl/hdc/ot_hdc_fp32_add_n32.sv",
+    "rtl/hdc/ot_hdc_prefix.sv"
+  ],
+  "ot_hbm_su_stree_leaf": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv"
+  ],
+  "ot_hbm_su_stree_root": [
+    "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv"
+  ]
+}

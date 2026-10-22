@@ -1,0 +1,306 @@
+{
+  "observed_utc": "2026-10-22T05:30:16.839581+00:00",
+  "jobs": [
+    {
+      "name": "conn_p40",
+      "unit": "oth-ubuntu-1446663-1792620258.scope",
+      "root": "/srv/opentallas-scratch/claude/tok-func2-hbm/conn_p40",
+      "state": "active",
+      "phase": "C++ compilation/link",
+      "process_counts": {
+        "g++": 16,
+        "bash": 1,
+        "time": 1,
+        "make": 2,
+        "cc1plus": 16
+      },
+      "guard_pids": [],
+      "build_or_sim_pids": [
+        [
+          582915,
+          "g++"
+        ],
+        [
+          2491145,
+          "make"
+        ],
+        [
+          572809,
+          "g++"
+        ],
+        [
+          572810,
+          "cc1plus"
+        ],
+        [
+          574728,
+          "g++"
+        ],
+        [
+          574729,
+          "cc1plus"
+        ],
+        [
+          582919,
+          "cc1plus"
+        ],
+        [
+          583688,
+          "g++"
+        ],
+        [
+          583705,
+          "cc1plus"
+        ],
+        [
+          4140187,
+          "make"
+        ],
+        [
+          569781,
+          "g++"
+        ],
+        [
+          569783,
+          "cc1plus"
+        ],
+        [
+          581047,
+          "cc1plus"
+        ],
+        [
+          581945,
+          "g++"
+        ],
+        [
+          584633,
+          "g++"
+        ],
+        [
+          570939,
+          "g++"
+        ],
+        [
+          570940,
+          "cc1plus"
+        ],
+        [
+          584636,
+          "cc1plus"
+        ],
+        [
+          581965,
+          "cc1plus"
+        ],
+        [
+          576082,
+          "g++"
+        ],
+        [
+          572243,
+          "g++"
+        ],
+        [
+          572244,
+          "cc1plus"
+        ],
+        [
+          576083,
+          "cc1plus"
+        ],
+        [
+          578130,
+          "g++"
+        ],
+        [
+          578135,
+          "cc1plus"
+        ],
+        [
+          583766,
+          "g++"
+        ],
+        [
+          584534,
+          "g++"
+        ],
+        [
+          584535,
+          "cc1plus"
+        ],
+        [
+          579421,
+          "g++"
+        ],
+        [
+          579422,
+          "cc1plus"
+        ],
+        [
+          583775,
+          "cc1plus"
+        ],
+        [
+          576744,
+          "g++"
+        ],
+        [
+          576745,
+          "cc1plus"
+        ],
+        [
+          580968,
+          "g++"
+        ]
+      ],
+      "executable_exists": false
+    },
+    {
+      "name": "rope4168",
+      "unit": "oth-ubuntu-3233716-1792634887.scope",
+      "root": "/srv/opentallas-scratch/claude/steward-tokb-hbm/rope4168",
+      "state": "active",
+      "phase": "C++ compilation/link",
+      "process_counts": {
+        "g++": 7,
+        "cc1plus": 7,
+        "time": 1,
+        "make": 6,
+        "bash": 1
+      },
+      "guard_pids": [],
+      "build_or_sim_pids": [
+        [
+          586114,
+          "g++"
+        ],
+        [
+          586115,
+          "cc1plus"
+        ],
+        [
+          585230,
+          "g++"
+        ],
+        [
+          3236124,
+          "make"
+        ],
+        [
+          583330,
+          "g++"
+        ],
+        [
+          583331,
+          "cc1plus"
+        ],
+        [
+          585252,
+          "cc1plus"
+        ],
+        [
+          583722,
+          "g++"
+        ],
+        [
+          583729,
+          "cc1plus"
+        ],
+        [
+          3705016,
+          "make"
+        ],
+        [
+          586170,
+          "g++"
+        ],
+        [
+          586175,
+          "cc1plus"
+        ],
+        [
+          3723328,
+          "make"
+        ],
+        [
+          586178,
+          "make"
+        ],
+        [
+          3706704,
+          "make"
+        ],
+        [
+          585299,
+          "g++"
+        ],
+        [
+          3717847,
+          "make"
+        ],
+        [
+          585304,
+          "cc1plus"
+        ],
+        [
+          585953,
+          "g++"
+        ],
+        [
+          585958,
+          "cc1plus"
+        ]
+      ],
+      "executable_exists": false
+    },
+    {
+      "name": "pv_continuation",
+      "unit": "oth-ubuntu-3204411-1792644783.scope",
+      "root": "/srv/opentallas-scratch/claude/codex-hbm-pv-minimum-1638",
+      "state": "active",
+      "phase": "C++ compilation/link",
+      "process_counts": {
+        "g++": 3,
+        "cc1plus": 3,
+        "make": 2,
+        "bash": 1
+      },
+      "guard_pids": [],
+      "build_or_sim_pids": [
+        [
+          3205670,
+          "g++"
+        ],
+        [
+          3205671,
+          "g++"
+        ],
+        [
+          3205672,
+          "cc1plus"
+        ],
+        [
+          3205673,
+          "g++"
+        ],
+        [
+          3205674,
+          "cc1plus"
+        ],
+        [
+          3205675,
+          "cc1plus"
+        ],
+        [
+          3205339,
+          "make"
+        ],
+        [
+          3205337,
+          "make"
+        ]
+      ],
+      "executable_exists": false
+    }
+  ]
+}

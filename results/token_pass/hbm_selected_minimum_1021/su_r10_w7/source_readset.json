@@ -1,0 +1,150 @@
+{
+  "rtl_rev": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+  "helper_rev": "a20d45b67f553d203f8df97cc9d2960ace1b1ef8",
+  "helpers": [
+    "tools/hbm_layer_vehicle/flatten_masters.py",
+    "tools/hbm_layer_vehicle/run_slice_vehicle.sh",
+    "tools/hbm_layer_vehicle/gen_slice_tb.py",
+    "tools/hbm_layer_vehicle/layer_images.py",
+    "tools/hbm_layer_vehicle/native_su_calendar.py"
+  ],
+  "helper_patch": "helper_profile_gate.patch",
+  "sources": [
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+    },
+    {
+      "path": "rtl/hbm_accel/control/hfd_ckgen.sv",
+      "sha256": "8b94242114190216d1769bd344b4bdd0a40d3b721ed5a06397e9bd76be75df4f"
+    },
+    {
+      "path": "rtl/hbm_accel/control/hfd_ckgen_nolink.sv",
+      "sha256": "010978fccae72e9df4799f7d53be269068496f987d470d53abcf6bd3c1449133"
+    },
+    {
+      "path": "rtl/hbm_accel/control/tb_hfd_ckgen.sv",
+      "sha256": "85bbd06db99391cf443812c638eab76faaa4d96aefbc189f4b2da000c617ef5e"
+    },
+    {
+      "path": "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv",
+      "sha256": "c181eaddb3787a958397b9e4a58246779d1db921c29ee7b6d1c1d87f31abc86d"
+    },
+    {
+      "path": "rtl/hbm_accel/die_glue/ot_hbm_rly.sv",
+      "sha256": "6885ac1a168df5f58537cad363cf59ccde05bfcd253046080fe425b0ac3e63aa"
+    },
+    {
+      "path": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+      "sha256": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv",
+      "sha256": "e1a7343e0253f19e646c9c5aa9eaf370a824d8311078d3f75e863ab55ce977d0"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+      "sha256": "de834bcd0dc4e267bad87ea0a5283ee873f30e0ae94ae6fa34a8588965eeb255"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
+      "sha256": "55753aec33b4a8d7bf40869ea5b060802ee4dc284fed3c648955bdc084c8f05d"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree_r13.sv",
+      "sha256": "14a2ca80b4d5a21f149e4aacb7a8a73a8fd7566d93329ef3d94434b56e7e9ea6"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static_r13.sv",
+      "sha256": "6782658e8d4a4b68da76baa18721cf92123172772c67d4ae28bf662f1224cd13"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release_s.sv",
+      "sha256": "f49291fd08950a1191d1d7937783ac5559fbcea9b0cb4d06065fefee4acbb485"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
+      "sha256": "332ddd8dae6c96a5b84d32efc2b7a0298e86843038df13c810e77333d6592192"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13.sv",
+      "sha256": "7dbe0bd904d02f77b78388e37db16f79eda0a33ef9b09af63cce890886335877"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv",
+      "sha256": "f5f2c1c46e2b269cee1ad907ca4d446186e0cc905ee3913be9a4b25b12b65670"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+      "sha256": "2a7d478da253fb741749607d8a803ebb5bb2186dc2825f0aa78055f4dfa1dfc4"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv",
+      "sha256": "a60a2419fdf85e3f684effb0f0a850afe895dd2f8dfddaf9b2cc393ee11c8870"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+      "sha256": "c55ad634a94838dc57e4c8111e97dcb8319fb2d7474dfe1e3bce3a115b16e621"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+      "sha256": "e4ccfb648bf5c4b642ca9a4610d55558447fdd4ce93be1e07048bef2aa64349b"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+      "sha256": "9e4e60326d3e9c7be30ae746ba44fd2a7943f126a4c54e6e37ac56f7a92f72a7"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+      "sha256": "14ab5c39bf793e1da1b551630847ee1a7b8660c60421c45ee679be2bb52cbb55"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+      "sha256": "06107909fe1bbf3d3fe2622e388eefd39964ab10977cf6f8fc4db4da8842db72"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+      "sha256": "cd766d1e10aba61a57ad0db66d3ddcde16b5ff01bcc2004edbdeeeb6ec559015"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+      "sha256": "a36c62a72205f4359b58a832deab23736baa320ba5b2d0153ac99278779c6c21"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+      "sha256": "2d9fc6c6bd4e145ce98ba5cffa785559bdab880e4d39bb6759a2bfd8deb1f960"
+    },
+    {
+      "path": "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+      "sha256": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa"
+    },
+    {
+      "path": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
+      "sha256": "653f0a9ceea31efbae71dbafb62947985830528f870883955d1648a070087378"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_n32.sv",
+      "sha256": "78743cacf5530694212e92270e18590c4d2aa758cf4e1b0c19993d6dacad7667"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    }
+  ]
+}

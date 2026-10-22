@@ -1,0 +1,330 @@
+{
+  "observed_utc": "2026-10-22T05:30:16.838876+00:00",
+  "jobs": [
+    {
+      "name": "conn_idx",
+      "unit": "oth-ubuntu-2784934-1792614887.scope",
+      "root": "/srv/opentallas-scratch/claude/tok-func2-hbm/conn_idx",
+      "state": "active",
+      "phase": "NBA guarded scan after frontend",
+      "process_counts": {
+        "time": 1,
+        "bash": 2,
+        "python3": 1
+      },
+      "guard_pids": [
+        2792251
+      ],
+      "build_or_sim_pids": [],
+      "executable_exists": false
+    },
+    {
+      "name": "smsl_pad",
+      "unit": "oth-ubuntu-3972842-1792632879.scope",
+      "root": "/srv/opentallas-scratch/claude/steward-tok-hbm/smsl_pad",
+      "state": "active",
+      "phase": "C++ compilation/link",
+      "process_counts": {
+        "g++": 16,
+        "cc1plus": 16,
+        "make": 2,
+        "time": 1,
+        "bash": 1
+      },
+      "guard_pids": [],
+      "build_or_sim_pids": [
+        [
+          3987841,
+          "g++"
+        ],
+        [
+          3987842,
+          "cc1plus"
+        ],
+        [
+          3974156,
+          "g++"
+        ],
+        [
+          3974160,
+          "cc1plus"
+        ],
+        [
+          2062497,
+          "make"
+        ],
+        [
+          3991074,
+          "g++"
+        ],
+        [
+          3973412,
+          "g++"
+        ],
+        [
+          3975973,
+          "g++"
+        ],
+        [
+          3991076,
+          "cc1plus"
+        ],
+        [
+          3973415,
+          "cc1plus"
+        ],
+        [
+          3975976,
+          "cc1plus"
+        ],
+        [
+          3991228,
+          "g++"
+        ],
+        [
+          3990589,
+          "g++"
+        ],
+        [
+          3991229,
+          "cc1plus"
+        ],
+        [
+          3991231,
+          "g++"
+        ],
+        [
+          3990592,
+          "cc1plus"
+        ],
+        [
+          3991232,
+          "cc1plus"
+        ],
+        [
+          3991234,
+          "g++"
+        ],
+        [
+          3991235,
+          "cc1plus"
+        ],
+        [
+          3991627,
+          "g++"
+        ],
+        [
+          3991629,
+          "cc1plus"
+        ],
+        [
+          3991120,
+          "g++"
+        ],
+        [
+          3973715,
+          "make"
+        ],
+        [
+          3991122,
+          "cc1plus"
+        ],
+        [
+          3975509,
+          "g++"
+        ],
+        [
+          3975510,
+          "cc1plus"
+        ],
+        [
+          3979099,
+          "g++"
+        ],
+        [
+          3974492,
+          "g++"
+        ],
+        [
+          3974493,
+          "cc1plus"
+        ],
+        [
+          3979102,
+          "cc1plus"
+        ],
+        [
+          3974757,
+          "g++"
+        ],
+        [
+          3974758,
+          "cc1plus"
+        ],
+        [
+          3989502,
+          "g++"
+        ],
+        [
+          3989503,
+          "cc1plus"
+        ]
+      ],
+      "executable_exists": false
+    },
+    {
+      "name": "smsl_rl8",
+      "unit": "oth-ubuntu-3978050-1792633004.scope",
+      "root": "/srv/opentallas-scratch/claude/steward-tok-hbm/smsl_rl8",
+      "state": "active",
+      "phase": "C++ compilation/link",
+      "process_counts": {
+        "g++": 16,
+        "cc1plus": 16,
+        "bash": 1,
+        "make": 2,
+        "time": 1
+      },
+      "guard_pids": [],
+      "build_or_sim_pids": [
+        [
+          3986960,
+          "g++"
+        ],
+        [
+          3986961,
+          "cc1plus"
+        ],
+        [
+          3421970,
+          "g++"
+        ],
+        [
+          3421971,
+          "cc1plus"
+        ],
+        [
+          3987864,
+          "g++"
+        ],
+        [
+          3987869,
+          "cc1plus"
+        ],
+        [
+          3991337,
+          "g++"
+        ],
+        [
+          3991338,
+          "cc1plus"
+        ],
+        [
+          3987756,
+          "g++"
+        ],
+        [
+          3987757,
+          "cc1plus"
+        ],
+        [
+          3991213,
+          "g++"
+        ],
+        [
+          3987375,
+          "g++"
+        ],
+        [
+          3987376,
+          "cc1plus"
+        ],
+        [
+          3991214,
+          "cc1plus"
+        ],
+        [
+          3429176,
+          "g++"
+        ],
+        [
+          3987001,
+          "g++"
+        ],
+        [
+          3429177,
+          "cc1plus"
+        ],
+        [
+          3987002,
+          "cc1plus"
+        ],
+        [
+          3988155,
+          "g++"
+        ],
+        [
+          3987005,
+          "g++"
+        ],
+        [
+          3987134,
+          "g++"
+        ],
+        [
+          3987006,
+          "cc1plus"
+        ],
+        [
+          3987135,
+          "cc1plus"
+        ],
+        [
+          3988156,
+          "cc1plus"
+        ],
+        [
+          3991237,
+          "g++"
+        ],
+        [
+          2863174,
+          "make"
+        ],
+        [
+          3995847,
+          "make"
+        ],
+        [
+          3987399,
+          "g++"
+        ],
+        [
+          3987400,
+          "cc1plus"
+        ],
+        [
+          3991239,
+          "cc1plus"
+        ],
+        [
+          3991243,
+          "g++"
+        ],
+        [
+          3991244,
+          "cc1plus"
+        ],
+        [
+          3991030,
+          "g++"
+        ],
+        [
+          3991031,
+          "cc1plus"
+        ]
+      ],
+      "executable_exists": false
+    }
+  ]
+}
