@@ -65,6 +65,8 @@ module ot_psf_delay #(parameter integer W = 32, parameter integer D = 1) (input 
 endmodule
 
 // Kogge-Stone adder / incrementer with kept levels (copies of ot_hdc_ksadd_k / ot_hdc_inc_k: ABC cannot re-ripple)
+// kept hierarchy: a constant operand must not fold the prefix levels onto one operand net (Horner adders, b = C[k])
+(* keep_hierarchy = "yes" *)
 module ot_psf_ks #(parameter integer W = 28) (input wire [W-1:0] a, input wire [W-1:0] b, input wire cin,
                                               output wire [W-1:0] s, output wire cout);
     localparam integer L = $clog2(W + 1);
