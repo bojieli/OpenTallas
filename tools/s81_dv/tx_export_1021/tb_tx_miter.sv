@@ -45,6 +45,12 @@ module tb_tx_miter;
      drive(a,0);a=0;a[0]=1;a[3:1]=4;a[5:4]=2'(lane);a[6]=1;a[35:20]=16'hffff;drive(a,0);idle(4);
     end
    end
+   // STW-S81c-TOK4 10-22: partial-mask rewrite of lane 0 window 0 (the window the lookups read): new scores under lane
+   // mask 16'h5a5a, so lookups of masked-OUT positions must still return the first write (catches a write-mask mutant).
+   a=0;a[0]=1;a[3:1]=4;a[5:4]=2'd0;a[7]=1;a[19:16]=1;a[39:20]=20'd0;drive(a,0);idle(3);
+   a=0;a[0]=1;a[3:1]=4;a[5:4]=2'd0;
+   for(integer x=0;x<16;x=x+1)a[20+16*x+:16]=16'(16'h4000+epoch*8192+x*13+5);
+   drive(a,0);a=0;a[0]=1;a[3:1]=4;a[5:4]=2'd0;a[6]=1;a[35:20]=16'h5a5a;drive(a,0);idle(4);
    idle(16);
    p=0;p[7:0]=8'h5c;p[10:8]=2;p[20:16]=8;p[22:21]=0;p[30:23]=8'h77;p[40:31]=64;p[60:41]=0;p[68:61]=8'h45;p[84:69]=200;p[87:85]=4;p[99:88]=200;
    a=0;a[0]=1;a[3:1]=0;a[21+:186]=p;drive(0,a);idle(8);
