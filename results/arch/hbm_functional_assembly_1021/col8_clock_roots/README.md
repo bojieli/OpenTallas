@@ -1,0 +1,5 @@
+The actual EP5 construction job used exact mapped Col8 clock pins and the accepted full-count geometry to allocate 640 real regional root buffers and the existing PLL-to-region trunk. There are 7,064 clock cells in total, all with unique names and nonoverlapping complete sites. The actual root cell output still needs its local mapped sink tree.
+
+Each column uses its real ctl and four cp source bits. The source graph retains 143 active clock bits per quarter: 136 feed columns and seven are additional residual controller clocks. Residual controller roots are not counted as completed here. Metadata clk and clk_mem remain literal separate terminals of the same existing clk_meta source. Four actual mapped half-cycle clock inverters are retained with their negative-edge identities.
+
+All 36 old-body moves and 632 invalidated automatic relay bodies are carried forward. The topology is not clock signoff: local trees, residual hard-metadata placement, actual pin reach, TT/FF propagation, reset delivery and data calendars remain open. Clock-cell area is reserved explicitly; no signal-relay capacity or token rate is credited.

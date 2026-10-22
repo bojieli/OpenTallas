@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits    68 GB (avail 290, growth 242, headroom 0, waiters 0/0 GB) load 53/128 running 29 disk 728 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-clockconstruct-2000-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-clockconstruct-2000-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-clockconstruct-2000-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-clockconstruct-2000-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-clockconstruct-2000-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-clockconstruct-2000-1021
+ot-run: -> ot-epyc5
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 16 = 11 GB, admissible -2 GB: available 289 GB, growth charged 291 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 268 GB at x1), young 162 GB, floor 57 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1247428-1792648214 after 10 s
+COL8_ROOT_CONSTRUCTION 640 actual root cells; 7064 clock buffers total; source clock bits143/quarter; local trees and propagated STA OPEN
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1247428-1792648214): exit 0

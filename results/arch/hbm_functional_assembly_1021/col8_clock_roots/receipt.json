@@ -1,0 +1,75 @@
+{
+ "source_commit": "22c264089",
+ "unit": "oth-ubuntu-1247428-1792648214",
+ "host": "ot-epyc5",
+ "exit_code": 0,
+ "report_sha256": "7159f9d51d19fd4be2e03ffa4e0b6c2c2249307028c8ade6336dd8e2ffb0ac05",
+ "roots": 640,
+ "clock_buffers": 7064,
+ "site_allocation": {
+  "cells": 7064,
+  "max_displacement_um": 2.49,
+  "mean_displacement_um": 0.418,
+  "reserved_site_um": [
+   1.62,
+   0.27
+  ],
+  "overlap": 0,
+  "basis": "asap7sc7p5t_28_R_1x_220121a.lef; complete cell outside conservative hard-block grid",
+  "timing": "Topology insertion estimate predates site allocation; actual propagated STA required"
+ },
+ "reserved_clock_cell_area_um2": 3045.1788000000006,
+ "clock_signoff": false,
+ "source_clock_bits_per_quarter": 143,
+ "column_clock_bits_per_quarter": 136,
+ "retained_negative_edge_inverters": [
+  {
+   "sink": [
+    "l0.face_release$_DFF_NN0_",
+    "CLK"
+   ],
+   "prototype_clock": "ctl",
+   "cell": "_21022_",
+   "master": "INVx1_ASAP7_75t_R",
+   "source_bit": 2
+  },
+  {
+   "sink": [
+    "l1.face_release$_DFF_NN0_",
+    "CLK"
+   ],
+   "prototype_clock": "cp[0]",
+   "cell": "_21035_",
+   "master": "INVx1_ASAP7_75t_R",
+   "source_bit": 3
+  },
+  {
+   "sink": [
+    "l2.face_release$_DFF_NN0_",
+    "CLK"
+   ],
+   "prototype_clock": "cp[1]",
+   "cell": "_21048_",
+   "master": "INVx1_ASAP7_75t_R",
+   "source_bit": 4
+  },
+  {
+   "sink": [
+    "l3.face_release$_DFF_NN0_",
+    "CLK"
+   ],
+   "prototype_clock": "cp[2]",
+   "cell": "_21061_",
+   "master": "INVx1_ASAP7_75t_R",
+   "source_bit": 5
+  }
+ ],
+ "open": [
+  "local clock buffer trees for all actual mapped FF and hard-macro clock sinks",
+  "residual mapped placement and metadata literal terminal compensation",
+  "propagated clock TT/FF and actual pin reach after cell-site placement",
+  "all transformed reset and data delivery routes and fixed calendars",
+  "ordinary existing root-within-body repair in the composed whole-die tree"
+ ],
+ "owner_read_only_review": "HBM owner independently checked unique names and complete cell boxes against bounds, pairs/SRAM/FF bands, moved bodies, HC and45keepouts; zero intersections. Remaining scope stays open."
+}
