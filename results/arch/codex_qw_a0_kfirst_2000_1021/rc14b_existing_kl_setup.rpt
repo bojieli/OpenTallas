@@ -1,0 +1,98 @@
+Startpoint: u_ot_pr_core.u_g.u_tile.u_tile.u_logic.ib_i[125]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ot_entry_0)
+Endpoint: u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.genblk3.g_ctl_rr8.g_fc[2].kl$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by ot_entry_0)
+Path Group: ot_entry_0
+Path Type: max
+Mode: ss
+Corner: WC
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.00    0.00    0.00   clock ot_entry_0 (rise edge)
+                        206.90  206.90   clock network delay (ideal)
+                  0.00    0.00  206.90 ^ u_ot_pr_core.u_g.u_tile.u_tile.u_logic.ib_i[125]$_DFF_P_/CLK (DFFHQNx3_ASAP7_75t_R)
+     4    4.13   33.04   65.93  272.83 ^ u_ot_pr_core.u_g.u_tile.u_tile.u_logic.ib_i[125]$_DFF_P_/QN (DFFHQNx3_ASAP7_75t_R)
+                                         _000001_ (net)
+                 33.06    0.42  273.25 ^ _234924_/A (INVx1_ASAP7_75t_R)
+     1    1.38   17.34   15.88  289.13 v _234924_/Y (INVx1_ASAP7_75t_R)
+                                         _127186_ (net)
+                 17.34    0.07  289.20 v place35120/A (BUFx6f_ASAP7_75t_R)
+     7    5.38   11.18   22.08  311.28 v place35120/Y (BUFx6f_ASAP7_75t_R)
+                                         net35119 (net)
+                 11.24    0.46  311.74 v place35118/A (BUFx3_ASAP7_75t_R)
+     7    5.76   17.96   24.58  336.32 v place35118/Y (BUFx3_ASAP7_75t_R)
+                                         net35117 (net)
+                 17.96    0.10  336.42 v _234931_/D (OR4x1_ASAP7_75t_R)
+     1    1.49   19.83   43.44  379.86 v _234931_/Y (OR4x1_ASAP7_75t_R)
+                                         _127193_ (net)
+                 19.83    0.09  379.95 v _234932_/B (OAI21x1_ASAP7_75t_R)
+     1    0.63   14.33    9.74  389.68 ^ _234932_/Y (OAI21x1_ASAP7_75t_R)
+                                         _127194_ (net)
+                 14.33    0.03  389.72 ^ _234933_/B1 (AO32x1_ASAP7_75t_R)
+     1    0.55   12.13   24.78  414.49 ^ _234933_/Y (AO32x1_ASAP7_75t_R)
+                                         _127195_ (net)
+                 12.13    0.02  414.51 ^ _234949_/B (AND5x1_ASAP7_75t_R)
+     2    2.00   27.08   43.36  457.87 ^ _234949_/Y (AND5x1_ASAP7_75t_R)
+                                         _127211_ (net)
+                 27.09    0.18  458.06 ^ place29897/A (BUFx3_ASAP7_75t_R)
+     1    0.78    7.46   21.15  479.21 ^ place29897/Y (BUFx3_ASAP7_75t_R)
+                                         net29896 (net)
+                  7.46    0.05  479.26 ^ _235000_/A (AND5x1_ASAP7_75t_R)
+     1    0.65   15.89   34.74  514.00 ^ _235000_/Y (AND5x1_ASAP7_75t_R)
+                                         _127262_ (net)
+                 15.89    0.03  514.02 ^ _235001_/C (OR3x1_ASAP7_75t_R)
+     1    1.01   12.90   19.08  533.11 ^ _235001_/Y (OR3x1_ASAP7_75t_R)
+                                         _127263_ (net)
+                 12.90    0.08  533.18 ^ _235007_/C (AND4x2_ASAP7_75t_R)
+     1    2.70   23.65   40.95  574.13 ^ _235007_/Y (AND4x2_ASAP7_75t_R)
+                                         _127269_ (net)
+                 23.69    0.52  574.65 ^ place29844/A (BUFx6f_ASAP7_75t_R)
+     1    3.86   10.72   21.19  595.84 ^ place29844/Y (BUFx6f_ASAP7_75t_R)
+                                         net29843 (net)
+                 11.15    1.13  596.96 ^ place29843/A (BUFx6f_ASAP7_75t_R)
+     1    2.40    7.80   16.37  613.33 ^ place29843/Y (BUFx6f_ASAP7_75t_R)
+                                         net29842 (net)
+                  7.80    0.08  613.42 ^ wire43793/A (BUFx16f_ASAP7_75t_R)
+     1   34.76   17.39   22.10  635.51 ^ wire43793/Y (BUFx16f_ASAP7_75t_R)
+                                         net43792 (net)
+                221.74   69.81  705.33 ^ wire43792/A (BUFx16f_ASAP7_75t_R)
+     1   17.64   20.46   53.46  758.78 ^ wire43792/Y (BUFx16f_ASAP7_75t_R)
+                                         net43791 (net)
+                 64.50   19.18  777.96 ^ place29842/A (BUFx6f_ASAP7_75t_R)
+     1   13.01   24.49   33.83  811.79 ^ place29842/Y (BUFx6f_ASAP7_75t_R)
+                                         net29841 (net)
+                 43.29   11.35  823.14 ^ place29841/A (BUFx6f_ASAP7_75t_R)
+     1   25.09   32.15   34.10  857.24 ^ place29841/Y (BUFx6f_ASAP7_75t_R)
+                                         net29840 (net)
+                128.74   39.12  896.36 ^ place29840/A (BUFx6f_ASAP7_75t_R)
+     1    1.19   10.71   35.31  931.67 ^ place29840/Y (BUFx6f_ASAP7_75t_R)
+                                         net29839 (net)
+                 10.71    0.07  931.74 ^ _235074_/A2 (OAI21x1_ASAP7_75t_R)
+     1    0.66   20.20    9.11  940.85 v _235074_/Y (OAI21x1_ASAP7_75t_R)
+                                         _127334_ (net)
+                 20.20    0.04  940.89 v _235077_/A2 (AO22x1_ASAP7_75t_R)
+     3    4.07   35.77   41.21  982.09 v _235077_/Y (AO22x1_ASAP7_75t_R)
+                                         _127336_ (net)
+                 35.79    0.52  982.61 v _235093_/B (NOR2x1_ASAP7_75t_R)
+     3    3.68   54.81   29.63 1012.24 ^ _235093_/Y (NOR2x1_ASAP7_75t_R)
+                                         _127346_ (net)
+                 54.82    0.30 1012.54 ^ _235097_/B (AO21x1_ASAP7_75t_R)
+     1    1.28   18.26   27.14 1039.68 ^ _235097_/Y (AO21x1_ASAP7_75t_R)
+                                         _065314_ (net)
+                 18.27    0.13 1039.81 ^ u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.genblk3.g_ctl_rr8.g_fc[2].kl$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                               1039.81   data arrival time
+
+                  0.00  770.00  770.00   clock ot_entry_0 (rise edge)
+                        206.90  976.90   clock network delay (ideal)
+                        -60.00  916.90   clock uncertainty
+                          0.00  916.90   clock reconvergence pessimism
+                                916.90 ^ u_ot_pr_core.u_g.u_tile.u_tile.u_logic.u_me.g_issue_fast.genblk3.g_ctl_rr8.g_fc[2].kl$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                        -21.37  895.53   library setup time
+                                895.53   data required time
+-----------------------------------------------------------------------------
+                                895.53   data required time
+                               -1039.81   data arrival time
+-----------------------------------------------------------------------------
+                               -144.28   slack (VIOLATED)
+

@@ -1,0 +1,51 @@
+{
+  "scope": "Necessary successor combining private request-any with same-edge kc_is_1 threshold decode",
+  "request_source": "82ab47806",
+  "baseline_control_source": "9873bd831",
+  "observed_run": "NL rc14b 20261021-210616",
+  "setup_final": {
+    "slack_ps": -168.467,
+    "endpoints": 89,
+    "endpoint": "g_ctl_rr8.g_fc[2].kl"
+  },
+  "existing_pre_cts_path": {
+    "start": "ib_i[125]",
+    "end": "g_ctl_rr8.g_fc[2].kl",
+    "launch_entry": 0,
+    "capture_entry": 0,
+    "data_ps": 832.91,
+    "slack_ps": -144.28
+  },
+  "original_semantics": "unsigned zero-extended NW-bit i_k <= (32-bit unsigned 1 shifted by unsigned 4-bit i_split), selected only by i_wsrc; otherwise i_k == 1",
+  "source_contract": {
+    "NW_production": 16,
+    "NW_supported": [
+      1,
+      32
+    ],
+    "i_split_bits": 4,
+    "legal_source_split_values": [
+      0,
+      15
+    ]
+  },
+  "generalized_predicate_contract": "For shifts 0..31 compare against exact 32-bit onehot. For shifts 32..63 the 32-bit shifted value is zero, so only zero K passes. For shift >= NW and <32 all zero-extended NW-bit K pass. No signed comparison.",
+  "plan": "Parallel constant threshold predicates plus balanced selection; one private pure combinational helper feeding unchanged kl_nx mux. No new registers, clocks or edges. Place the helper in an existing free central standard-cell strip adjacent to control state. Retain private per-leaf any decode.",
+  "latency_edges_added": 0,
+  "state_bits_added": 0,
+  "new_hard_children": 0,
+  "geometry_um": [
+    820.8,
+    907.2
+  ],
+  "lattice_um": 43.2,
+  "band_model": "Existing free 17.8 um central strip between the hub and east TX band; reserve a 5.4 x 43.2 um GPL-only decode region with measured row capacity >=4x cell area. Release before DPL.",
+  "native_fanout_limit": 32,
+  "required_validation": [
+    "full production NW16 K x all 6-bit shifts, zero extension and shift-out cases",
+    "NW32 directed threshold boundaries, unsigned high-bit cases and out-of-width shifts",
+    "same-edge clocked kl flag sequence, source-pinned existing parent positive and MUT4",
+    "actual native/load census, geometry and strict MAIN/fallback gates"
+  ],
+  "phase_authority": "Final original CTS clocks and successor actual clocks; no constraints change. XM9 remains separate."
+}
