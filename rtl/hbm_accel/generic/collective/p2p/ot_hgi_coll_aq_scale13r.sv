@@ -97,13 +97,25 @@ module ot_hgi_coll_aq_mul13r (
     endfunction
 
 `ifdef OT_GQ_FAN32
+`ifdef OT_GQ_SHN32
+    // SHN32 (STEWARD-HBM/COLL R12 10-21): the stage-1 operand normalizer a_raw << lead_shift_24(a_raw) was one shared
+    // barrel shifter; its shift-select nets reached 34 actual loads in the k11q/k11r native census (PRE_GATE refused).
+    // Three kept chunks (8 output bits each), each with its own leading-zero count, so every select net drives one
+    // 8-bit window only. Same value on every bit, same edge, no added cycle (tb_aq_scale13r_eq covers every a field).
+    wire [23:0] s1_ann;
+    generate for (genvar c = 0; c < 3; c = c + 1) begin : g_norm_chunk
+        (* keep="true" *) ot_hgi_coll_aq_norm_chunk #(.LO(8*c), .W(8)) u_n(.a(a), .q(s1_ann[8*c +: 8]));
+    end endgenerate
+`else
+    wire [23:0] s1_ann = a_raw << a_shift;
+`endif
     wire[23:0]s1_ac[0:5];
     generate for(genvar g=0;g<6;g=g+1)begin:g_s1_operand_copy
         ot_hgi_coll_scale_data_ff u_ff(.clk(clk),
 `ifdef OT_GQ_MUT_SCALE_DATA
-            .d((g==0)?((a_raw<<a_shift)^24'd1):(a_raw<<a_shift)),
+            .d((g==0)?(s1_ann^24'd1):s1_ann),
 `else
-            .d(a_raw<<a_shift),
+            .d(s1_ann),
 `endif
             .q(s1_ac[g]));
     end endgenerate
@@ -116,7 +128,7 @@ module ot_hgi_coll_aq_mul13r (
     // chain before the decision mux (k3 gate: s2_pp0 -> s3_floor_q 768 ps / 21 levels, PC TT -51.4 ps).
     // Same 5 edges, same registers' meaning, no added cycle.
     wire [2:0] s1_hi3; wire s1_inv6t;
-    wire [23:0] s1_an = a_raw << a_shift;
+    wire [23:0] s1_an = s1_ann;
     ot_hgi_coll_scale_top_in_ff u_top_in(.clk(clk), .d({b == 32'h3e2aaaab, s1_an[23:21]}), .q({s1_inv6t, s1_hi3}));
 `ifdef OT_GQ_MUT_S2TOP_K
     wire s2_top_d = s1_hi3[2] & s1_hi3[1] & s1_hi3[0];              // mutant: the 1/448 threshold for both coefficients
@@ -279,6 +291,20 @@ module ot_hgi_coll_aq_scale13r(input wire clk,rst_n,v,input wire [31:0] a,b,outp
 `ifndef SYNTHESIS
  always @(posedge clk)if(rst_n&&v&&b!=32'h3b124925&&b!=32'h3e2aaaab)$fatal(1,"AQ_SCALE_COEFFICIENT_UNSUPPORTED");
 `endif
+endmodule
+
+// SHN32: one 8-bit window of the normalized significand a_raw << lead_shift_24(a_raw), with its own leading-zero count.
+(* keep_hierarchy="yes" *)
+module ot_hgi_coll_aq_norm_chunk #(parameter integer LO=0, W=8)(input wire [31:0] a, output wire [W-1:0] q);
+    wire [23:0] raw = {(a[30:23] != 8'd0), a[22:0]};
+    reg [4:0] sh;
+    integer k;
+    always @* begin
+        sh = 5'd23;
+        for (k = 0; k <= 23; k = k + 1) if (raw[k]) sh = 5'd23 - k[4:0];
+    end
+    wire [23:0] n = raw << sh;
+    assign q = n[LO +: W];
 endmodule
 
 (* keep_hierarchy="yes" *)
