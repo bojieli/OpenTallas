@@ -20,8 +20,12 @@ docker run --rm --user "$(id -u):$(id -g)" -v "$out:/work" -w /work --entrypoint
  set -euo pipefail
  mkdir -p libs
  for stem in AO INVBUF OA SEQ SIMPLE; do
-  case $stem in AO|SIMPLE) stamp=211120;;INVBUF|OA) stamp=220122;;SEQ) stamp=220123;;esac
-  cp "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_${stem}_RVT_TT_nldm_${stamp}.lib" libs/
+  case $stem in AO|OA|SIMPLE) stamp=211120;;INVBUF) stamp=220122;;SEQ) stamp=220123;;esac
+  src="/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_${stem}_RVT_TT_nldm_${stamp}.lib"
+  # Preserve the frozen map input basename; the verified OA body is identical.
+  target="libs/asap7sc7p5t_${stem}_RVT_TT_nldm_${stamp}.lib"
+  if [ "$stem" = OA ]; then target=libs/asap7sc7p5t_OA_RVT_TT_nldm_220122.lib; fi
+  if [ -f "$src" ]; then cp "$src" "$target"; else gzip -dc "$src.gz" > "$target"; fi
  done
  L="";for f in libs/*.lib;do L="$L $f";done
  yosys -Q -T -p "read_liberty -ignore_miss_func $L; write_verilog -noattr models.original.v"
