@@ -709,6 +709,20 @@ module ot_hgi_su_lgroup2 #(
     end else if(NATIVE32 && NLW==0)begin:g_native_lane_readsel
     // s8: a lane can claim only its static candidate banks (lane 0: any), exactly the banks lok admits, so each raw
     // lane enable reaches <=4 bank selects (lane 0: 16) instead of every bank. Same lowest-lane-wins order.
+    // HBMc/TILES 10-22 RRF=1: each (lane, bank) claim is two kept hit leaves -- hit_a (rr) selects b_re and the low
+    // half of the row, hit_b (rq, same function) the high half -- so no decode term drives a whole 11-bit row mux.
+    localparam integer RBL=RB/2;
+    wire [N*N-1:0] hit_a,hit_b;
+    if (RRF) begin:g_hits
+        for (genvar hl=0; hl<N; hl=hl+1) begin:g_l
+            for (genvar hb=0; hb<N; hb=hb+1) begin:g_b
+                ot_hgi_su_lane_hit #(.LN(LN),.BANK(hb)) u_a(.re(rr[hl]),.bank(ra[hl*AW+:LN]),.hit(hit_a[hl*N+hb]));
+                ot_hgi_su_lane_hit #(.LN(LN),.BANK(hb)) u_b(.re(rq[hl]),.bank(ra[hl*AW+:LN]),.hit(hit_b[hl*N+hb]));
+            end
+        end
+    end else begin:g_nohits
+        assign hit_a=0;assign hit_b=0;
+    end
     always @* begin : rsel
         integer rj_, sl_, bb, ll, kk; reg [LWB-1:0] sa; reg [LN-1:0] bl; reg cand;
         sa = {LWB{1'b0}}; bl = {LN{1'b0}}; cand = 1'b0;
@@ -730,6 +744,10 @@ module ot_hgi_su_lgroup2 #(
                 for (ll = N - 1; ll >= 0; ll = ll - 1) begin
                     cand = (ll == 0);
                     for (kk = 0; kk < NCAND; kk = kk + 1) if (cbank(ll, kk) == bb) cand = 1'b1;
+                    if (RRF) begin
+                        if (cand && hit_a[ll*N+bb]) begin b_re[bb] = 1'b1; b_ra[bb][RBL-1:0] = ra[ll*AW + LN +: RBL]; end
+                        if (cand && hit_b[ll*N+bb]) b_ra[bb][RB-1:RBL] = ra[ll*AW + LN + RBL +: RB-RBL];
+                    end else
                     if (cand && rr[ll] && ra[ll*AW +: LN] == bb) begin
                         b_re[bb] = 1'b1; b_ra[bb] = ra[ll*AW + LN +: RB];
                     end
@@ -987,11 +1005,13 @@ module ot_hgi_su_lgroup2 #(
         if (NATIVE32) begin:g_on
             (* keep=1,dont_touch=1 *) reg [N-1:0] bank_q;
             if (RRF) begin:g_rrf
+                // capture the 4-bit bank index (rq enables 4 flops), decode the one-hot after the register in a kept
+                // leaf: same bank_q value every edge
+                (* keep=1,dont_touch=1 *) reg [LN-1:0] bidx_q;
+                always @(posedge clk) if(rq[nl]) bidx_q <= ra[nl*AW+:LN];
                 wire [N-1:0] onehot;
-                ot_hgi_su_bank_onehot #(.N(N),.LN(LN)) u_onehot(.bank(ra[nl*AW+:LN]),.onehot(onehot));
-                for(genvar nb=0; nb<N; nb=nb+1) begin:g_bank
-                    always @(posedge clk) if(rq[nl]) bank_q[nb] <= onehot[nb];
-                end
+                ot_hgi_su_bank_onehot #(.N(N),.LN(LN)) u_onehot(.bank(bidx_q),.onehot(onehot));
+                always @* bank_q = onehot;
             end else begin:g_rr
             for(genvar nb=0; nb<N; nb=nb+1) begin:g_bank
                 always @(posedge clk) if(rr[nl]) bank_q[nb] <= (ra[nl*AW+:LN]==LN'(nb));
@@ -2961,4 +2981,8 @@ endmodule
  for(genvar b=0;b<N;b=b+1)begin:g_b
   assign onehot[b]=(bank==LN'(b));
  end
+endmodule
+// HBMc/TILES 10-22: kept (lane, bank) claim leaf for ot_hgi_su_lgroup2 RRF=1
+(* keep_hierarchy=1 *) module ot_hgi_su_lane_hit #(parameter integer LN=4, BANK=0)(input wire re,input wire [LN-1:0] bank,output wire hit);
+ assign hit=re && bank==LN'(BANK);
 endmodule
