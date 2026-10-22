@@ -193,7 +193,16 @@ endmodule
 
 // The control of ot_hgi_coll_reduce_static, verbatim, with the 16 lanes outside (wb / wb_tag out, add_valid /
 // pub_a / pub_b in).
-module ot_hgi_coll_reduce_static_ctl #(parameter integer MUT_TAG=0,MUT_BF16=0,MODE_COPY_MUT=0)(
+// HBMc/COLL-LP 10-22 (private opt-in CLEAR_LEAVES, default 0 = unchanged): the clear of the 16 valid + 16 pending
+// tag bits is taken from CLEAR_LEAVES kept reset-qualified leaves (clear && rst_n; inside the clocked else-branch rst_n
+// is 1, so the value is identical), each serving 32/CLEAR_LEAVES flops: the uop-slice output pin p_ring[83] then drives
+// CLEAR_LEAVES + the fault term instead of 33 mapped loads (safe24 census, u_up7/d3 inst[713]).  No edge, no state.
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_reduce_clear_leaf #(parameter integer ID=0)(input wire rst_n, clear, output wire q);
+ assign q = clear && rst_n;
+endmodule
+
+module ot_hgi_coll_reduce_static_ctl #(parameter integer MUT_TAG=0,MUT_BF16=0,MODE_COPY_MUT=0,CLEAR_LEAVES=0)(
  input wire clk_control,
  input wire rst_n,clear,in_v,
  input wire load_v,input wire [3:0] load_tag,
@@ -233,6 +242,15 @@ module ot_hgi_coll_reduce_static_ctl #(parameter integer MUT_TAG=0,MUT_BF16=0,MO
   assign bf_packed[256+l*16+:16]=bf16(pub_b[l*32+:32]);
  end
  assign fault=|fault_cause;
+ localparam integer NCL=(CLEAR_LEAVES>0)?CLEAR_LEAVES:1;
+ wire [NCL-1:0] clear_q;
+ generate if(CLEAR_LEAVES>0)begin:g_clear_leaves
+  for(genvar g=0;g<CLEAR_LEAVES;g=g+1)begin:g_leaf
+   (* keep="true" *) ot_hgi_coll_reduce_clear_leaf #(.ID(g)) u_clear(.rst_n(rst_n),.clear(clear),.q(clear_q[g]));
+  end
+ end else begin:g_clear_wire
+  assign clear_q=clear;
+ end endgenerate
  always @(posedge clk_control or negedge rst_n)begin:control
   reg [7:0] nf;
   if(!rst_n)begin
@@ -273,7 +291,7 @@ module ot_hgi_coll_reduce_static_ctl #(parameter integer MUT_TAG=0,MUT_BF16=0,MO
    pipe_v<={pipe_v[6:0],add_issue};pipe_tag[0]<=read_tag_q;
    for(integer k=1;k<8;k=k+1)pipe_tag[k]<=pipe_tag[k-1];
    for(integer t=0;t<16;t=t+1)begin
-    if(clear)begin valid[t]<=0;pending[t]<=0;end
+    if(clear_q[(t*NCL)/16])begin valid[t]<=0;pending[t]<=0;end
     else begin
      if((load_v&&load_tag==t)||(wb&&wb_tag==t)||
         (add_issue&&read_tag_q==t)||(pub_issue&&pub_release_q&&(pub_a_q==t||(pub_bf_q&&pub_b_q==t))))

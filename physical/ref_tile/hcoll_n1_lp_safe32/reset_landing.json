@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_hfd_coll_n1s0_lp_ars256",
+ "enable": false,
+ "reason": "the lp.py RTL lands it: rst_n -> u_lpr_root (1 stage, ck_sw) -> u_lpr_<r> regional runs per region (sw/wr/rg/hd/lk) -> per-child u_lprc_* pads; the port net has ONE sink (ROOT-RST rule satisfied in RTL)"
+}

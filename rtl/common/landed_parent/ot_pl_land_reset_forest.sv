@@ -30,6 +30,11 @@ endmodule
 
 module ot_pl_land_vector_reset_w #(
     parameter integer W=1073,D=4,CHUNK_BITS=24,KEPT_ENABLE=0,
+    // HBMc/COLL-LP 10-22 (private opt-in, default 0 = unchanged): N32GB > 0 builds each chunk with the existing
+    // ot_pl_land_n32_local_w (rtl/common/landed_parent/ot_pl_land_n32.sv): one kept one-hot selector copy per N32GB data
+    // bits, so a slot enable drives ~2*N32GB+2 mapped loads (KEPT_ENABLE local_w measured 2*CW+8 = 56 at CW 24, safe24
+    // census).  Same ports, slot layout, per-chunk rsi, K / reset ages and read contract (unchanged ot_pl_land_local_r).
+    parameter integer N32GB=0,
     parameter integer AW=(D<=2)?1:$clog2(D),
     parameter integer CHUNKS=(W+CHUNK_BITS-1)/CHUNK_BITS
 )(
@@ -44,8 +49,13 @@ module ot_pl_land_vector_reset_w #(
         localparam integer CW=(W-c*CHUNK_BITS<CHUNK_BITS)?W-c*CHUNK_BITS:CHUNK_BITS;
         wire [D*CW-1:0] cb;
         wire [D*(AW+1)-1:0] ce;
-        (* keep_hierarchy="yes" *) ot_pl_land_local_w #(.W(CW),.D(D),.KEPT_ENABLE(KEPT_ENABLE)) u_local(
-            .ck(ck),.rsi(rsi[c]),.i(i[c*CHUNK_BITS+:CW]),.bank(cb),.epo(ce),.vld(vld[c*D+:D]));
+        if(N32GB>0) begin:g_n32
+            (* keep_hierarchy="yes" *) ot_pl_land_n32_local_w #(.W(CW),.D(D),.GB(N32GB)) u_local(
+                .ck(ck),.rsi(rsi[c]),.i(i[c*CHUNK_BITS+:CW]),.bank(cb),.epo(ce),.vld(vld[c*D+:D]));
+        end else begin:g_kw
+            (* keep_hierarchy="yes" *) ot_pl_land_local_w #(.W(CW),.D(D),.KEPT_ENABLE(KEPT_ENABLE)) u_local(
+                .ck(ck),.rsi(rsi[c]),.i(i[c*CHUNK_BITS+:CW]),.bank(cb),.epo(ce),.vld(vld[c*D+:D]));
+        end
         for(genvar s=0;s<D;s=s+1) begin:g_slot
             assign bank[s*W+c*CHUNK_BITS+:CW]=cb[s*CW+:CW];
         end

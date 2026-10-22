@@ -8,7 +8,16 @@
 // No reset (as v8g): it_d* are defined two edges after the issuer's iteration, the tags one edge after the d2 stream.
 // Mutants (bench only): OT_ARITER_TAG_MUT_NOSTEP drops the product (= v8g OT_COLL_ARITER_MUT_NOSTEP on the leaf alone);
 // OT_ARITER_TAG_MUT_EDGE takes the iteration one edge early (it_d1).
-module ot_hgi_coll_ariter_tag(
+// HBMc/COLL-LP 10-22 (private opt-in PP_LEAF, default 0 = unchanged): the product it_d2 x st2 is formed from four kept
+// partial-product leaves (one per st2 bit, 16 AND2 each) and summed in the parent, so a st2 bit (a uop-slice macro output
+// pin) drives <= 16 mapped loads instead of the 37-42 ABC gave the flat multiplier (safe24 census, u_up7/d2
+// inst_d2[714..717]).  Exact: prod[15:0] = sum_j (st2[j] ? it_d2 << j : 0) mod 2^16; only prod[15:0] is used.
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_ariter_pp(input wire s, input wire [15:0] x, output wire [15:0] y);
+    assign y = x & {16{s}};
+endmodule
+
+module ot_hgi_coll_ariter_tag #(parameter integer PP_LEAF = 0)(
     input wire clk_issue,                  // v8g clk_issue (it_d1 / it_d2)
     input wire clk_tag,                    // v8g clk_reduce[0] (t_load / t_read / t_pa / t_pb / t_idx)
     input wire [15:0] iteration,           // issuer tap_iteration[15:0]
@@ -22,10 +31,20 @@ module ot_hgi_coll_ariter_tag(
 );
     reg [15:0] it_d1,it_d2;
 `ifdef OT_ARITER_TAG_MUT_EDGE
-    wire [19:0] prod=it_d1*st2;
+    wire [15:0] it_m=it_d1;
 `else
-    wire [19:0] prod=it_d2*st2;
+    wire [15:0] it_m=it_d2;
 `endif
+    wire [19:0] prod;
+    generate if (PP_LEAF != 0) begin : g_pp
+        wire [15:0] pp [0:3];
+        for (genvar j = 0; j < 4; j = j + 1) begin : g_bit
+            (* keep_hierarchy = "yes" *) ot_hgi_coll_ariter_pp u_pp (.s(st2[j]), .x(it_m), .y(pp[j]));
+        end
+        assign prod = {4'd0, pp[0] + (pp[1] << 1) + (pp[2] << 2) + (pp[3] << 3)};
+    end else begin : g_mul
+        assign prod = it_m * st2;
+    end endgenerate
     always @(posedge clk_issue)begin it_d1<=iteration;it_d2<=it_d1;end
 `ifdef OT_ARITER_TAG_MUT_NOSTEP
     assign load_tag_n=ar2[1+:4];assign read_tag_n=ar2[6+:4];assign pub_tag_a_n=ar2[12+:4];assign pub_tag_b_n=ar2[16+:4];
