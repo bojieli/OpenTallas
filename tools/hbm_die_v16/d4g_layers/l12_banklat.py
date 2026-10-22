@@ -481,7 +481,40 @@ def run(c, rep, max_iter=8, check=L.check, bm=None, bi=None, segs=None):
 SEG_PARAM = {'ctl_cq_cr': ('hb_idx__ctl', 'CR_RT'), 'argmax_cq_cr': ('hb_argmax', 'ACK'), 'ctl_sel': ('hb_idx__ctl', 'SEL_LAT')}
 
 
-def reprice(over, I, bm, bi):
+NEED_RE = re.compile(r'^(\S+)\.(\w+) = (\d+), .*?need (\d+)')
+# HC qhub phases track the HC LG tap term (overlay h15.8: tap + 5 / + 5 / + 4; functional coupling the LAT class does not check)
+QHUB = ('ot_hbm_hc_qhub_static', 'ot_hgi_sfu_lg_pair_tap_leaf_term')
+
+
+def need_rows(rep):
+    """over-budget rows + LAT FAIL rows that state a scalar need ('X.P = have, ... need N')."""
+    rows = list(rep.get('over_budget') or [])
+    for f in rep.get('final_fail') or []:
+        for b in f.get('bad') or []:
+            m = NEED_RE.match(str(b))
+            if m and int(m.group(4)) > int(m.group(3)):
+                rows.append(dict(client=m.group(1), param=m.group(2), have=int(m.group(3)), rt=int(m.group(4)),
+                                 budget_rt=int(m.group(3)), from_lat_fail=True))
+    return rows
+
+
+def apply_qdq_rl(c, rl):
+    """qdq r3: RL is a runtime strap (ctl rl_cfg = RL+4+2*XR), never a netlist parameter -> raise without re-synthesis."""
+    q = c.get('qdq_split') or {}
+    if not q or rl is None:
+        return
+    rli = rl + 4 + 2 * int(q['XR'])
+    if rli > 126:
+        raise SystemExit(f'L12_FAIL qdq RL {rl}: RLI {rli} beyond ctl_r4 126')
+    q['RL'] = rl
+    for n in q['lgs']:
+        c['instances'][n].setdefault('latency_budget', {})['RL'] = rl
+    for st in c['straps']:
+        if st['inst'] == q['ctl'] and st['port'] == 'rl_cfg':
+            st['value'] = rli; st['reason'] = f'HBMb/R18 l12 reprice: qdq RL {rl} -> RLI = RL+4+2*XR = {rli}'
+
+
+def reprice(over, I, bm, bi, qdq=None):
     """HBMb/R18 10-21: measured need for every over-budget row (budget raised by exactly the lane shortfall; per-bank
     vectors element-wise, master budgets = max over its instances).  Mutates bm/bi, returns the delta list."""
     need = {}
@@ -502,6 +535,8 @@ def reprice(over, I, bm, bi):
             idx = bank_index(x['bank']) if isinstance(x.get('have'), list) and x.get('bank') else None
         if d <= 0 or inst not in I:
             continue
+        if qdq is not None and prm == 'RL' and inst in (qdq.get('lgs') or []):
+            qdq['_need'] = max(qdq.get('_need', 0), int(x['have']) + d); continue
         if inst in bi and prm in bi[inst][1]:
             key = ('inst', inst)
         else:
@@ -527,6 +562,16 @@ def reprice(over, I, bm, bi):
         else:
             bm[key] = {**bm.get(key, {}), prm: new}
         out.append(dict(scope=scope, key=key, param=prm, **{'from': cur, 'to': new}))
+    tap = bm.get(QHUB[1]) or {}
+    if any(x['key'] == QHUB[1] for x in out) and 'READ_RETURN' in tap and 'WRITE_RETURN' in tap:
+        qh = dict(RD_CAPTURE=int(tap['READ_RETURN']) + 5, GATHER_PHASE=int(tap['READ_RETURN']) + 5, DONE_LAT=int(tap['WRITE_RETURN']) + 4)
+        cur = {k: (bm.get(QHUB[0]) or {}).get(k) for k in qh}
+        bm[QHUB[0]] = {**bm.get(QHUB[0], {}), **qh}
+        out.append(dict(scope='master', key=QHUB[0], param='RD_CAPTURE/GATHER_PHASE/DONE_LAT (tap coupling)', **{'from': cur, 'to': qh}))
+    if qdq is not None and qdq.get('_need', 0) > int(qdq.get('RL') or 0):
+        out.append(dict(scope='qdq', key=qdq.get('parent'), param='RL (strap rl_cfg)', **{'from': qdq.get('RL'), 'to': qdq['_need']}))
+        qdq['RL'] = qdq.pop('_need')
+    qdq is not None and qdq.pop('_need', None)
     return out
 
 
@@ -561,10 +606,11 @@ def main():
                                                      deltas=ov.get('deltas'), price=ov.get('price')))
     N, summ = run(c, rep, a.max_iter, bm=bm, bi=bi)
     reprices = []
+    qrl = dict(parent=qs.get('parent'), lgs=qs.get('lgs'), RL=qs.get('RL')) if qs else None
     for attempt in range(a.reprice_rounds if a.reprice_out else 0):
-        if summ is None or rep['problems'] or not rep['over_budget']:
+        if summ is None or rep['problems'] or not (rep['over_budget'] or summ['fail']):
             break
-        d = reprice(rep['over_budget'], c['instances'], bm, bi)
+        d = reprice(need_rows(rep), c['instances'], bm, bi, qrl)
         if not d:
             break
         reprices.append(dict(round=attempt + 1, deltas=d))
@@ -572,6 +618,8 @@ def main():
         c = load(a.inp)
         if qs.get('parent') and qs['parent'] not in c['instances']:
             bi.pop(qs['parent'], None)
+        if qrl:
+            apply_qdq_rl(c, qrl['RL'])
         N, summ = run(c, rep, a.max_iter, bm=bm, bi=bi)
     if a.reprice_out:
         rep['reprice'] = reprices

@@ -1,0 +1,286 @@
+{
+ "schema": "opentallas.hbm.d4g.l12_reprice.v1",
+ "inp": "/home/ubuntu/scratch/hbmb-r18/l12chk/in.json",
+ "overlay": "results/arch/hbm_release_r16_1021/l12_budget_r18.json",
+ "rule": "HBMb/R18 10-21: over-budget lanes on the actual geometry raise the budget to the measured need (explicit, recorded, priced via lanes/STEWARD-TOK.md; never an undersized bind, never silent)",
+ "rounds": [
+  {
+   "round": 1,
+   "deltas": [
+    {
+     "scope": "inst",
+     "key": "hb_argmax",
+     "param": "VMX",
+     "from": 78,
+     "to": 88
+    },
+    {
+     "scope": "inst",
+     "key": "hb_idx__ctl",
+     "param": "SEL_LAT",
+     "from": 30,
+     "to": 40
+    },
+    {
+     "scope": "inst",
+     "key": "hb_idx__ctl",
+     "param": "VM_RT",
+     "from": 65,
+     "to": 74
+    },
+    {
+     "scope": "inst",
+     "key": "hb_idx__nwsh",
+     "param": "BANK_RT",
+     "from": 40,
+     "to": 52
+    },
+    {
+     "scope": "inst",
+     "key": "hcollrs_SE",
+     "param": "BANK_RT",
+     "from": 72,
+     "to": 77
+    },
+    {
+     "scope": "inst",
+     "key": "hcollrs_SW",
+     "param": "BANK_RT",
+     "from": 73,
+     "to": 98
+    },
+    {
+     "scope": "master",
+     "key": "ot_hbm_su_static_pgslice_lg",
+     "param": "READ_RETURN",
+     "from": 18,
+     "to": 22
+    },
+    {
+     "scope": "master",
+     "key": "ot_hbm_su_static_pgslice_lg",
+     "param": "WRITE_RETURN",
+     "from": 15,
+     "to": 19
+    },
+    {
+     "scope": "master",
+     "key": "ot_hfd_coll_q2_hard_v8g",
+     "param": "VM_RT",
+     "from": 76,
+     "to": 81
+    },
+    {
+     "scope": "master",
+     "key": "ot_hfd_coll_q3_hard_v8x",
+     "param": "VM_RT",
+     "from": 76,
+     "to": 97
+    },
+    {
+     "scope": "master",
+     "key": "ot_hgi_coll_gq_issue",
+     "param": "VM_RT",
+     "from": 76,
+     "to": 96
+    },
+    {
+     "scope": "master",
+     "key": "ot_hgi_sfu_lg_pair_tap_leaf",
+     "param": "READ_RETURN",
+     "from": 24,
+     "to": 32
+    },
+    {
+     "scope": "master",
+     "key": "ot_hgi_sfu_lg_pair_tap_leaf",
+     "param": "WRITE_RETURN",
+     "from": 21,
+     "to": 29
+    },
+    {
+     "scope": "master",
+     "key": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+     "param": "READ_RETURN",
+     "from": 34,
+     "to": 40
+    },
+    {
+     "scope": "master",
+     "key": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+     "param": "WRITE_RETURN",
+     "from": 31,
+     "to": 37
+    },
+    {
+     "scope": "master",
+     "key": "ot_hgi_sm_xload_cl2_ctlx",
+     "param": "RD_LAT",
+     "from": [
+      38,
+      41,
+      28,
+      30,
+      54,
+      56,
+      44,
+      46
+     ],
+     "to": [
+      41,
+      44,
+      28,
+      30,
+      63,
+      66,
+      44,
+      46
+     ]
+    },
+    {
+     "scope": "master",
+     "key": "ot_hbm_hc_qhub_static",
+     "param": "RD_CAPTURE/GATHER_PHASE/DONE_LAT (tap coupling)",
+     "from": {
+      "RD_CAPTURE": 39,
+      "GATHER_PHASE": 39,
+      "DONE_LAT": 35
+     },
+     "to": {
+      "RD_CAPTURE": 45,
+      "GATHER_PHASE": 45,
+      "DONE_LAT": 41
+     }
+    },
+    {
+     "scope": "qdq",
+     "key": "hb_quant_NW",
+     "param": "RL (strap rl_cfg)",
+     "from": 54,
+     "to": 75
+    }
+   ]
+  },
+  {
+   "round": 2,
+   "deltas": [
+    {
+     "scope": "master",
+     "key": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+     "param": "READ_RETURN",
+     "from": 40,
+     "to": 46
+    },
+    {
+     "scope": "master",
+     "key": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+     "param": "WRITE_RETURN",
+     "from": 37,
+     "to": 43
+    },
+    {
+     "scope": "master",
+     "key": "ot_hbm_hc_qhub_static",
+     "param": "RD_CAPTURE/GATHER_PHASE/DONE_LAT (tap coupling)",
+     "from": {
+      "RD_CAPTURE": 45,
+      "GATHER_PHASE": 45,
+      "DONE_LAT": 41
+     },
+     "to": {
+      "RD_CAPTURE": 51,
+      "GATHER_PHASE": 51,
+      "DONE_LAT": 47
+     }
+    }
+   ]
+  }
+ ],
+ "final_budgets": {
+  "master": {
+   "ot_hbm_su_static_pgslice_lg": {
+    "READ_RETURN": 22,
+    "WRITE_RETURN": 19
+   },
+   "ot_hgi_sfu_lg_pair_tap_leaf": {
+    "READ_RETURN": 32,
+    "WRITE_RETURN": 29
+   },
+   "ot_hgi_sfu_lg_pair_tap_leaf_term": {
+    "READ_RETURN": 46,
+    "WRITE_RETURN": 43
+   },
+   "ot_hgi_sfu_core_split3": {
+    "TAP_RR": 24,
+    "TAP_WR": 21
+   },
+   "ot_hbm_hc_qhub_static": {
+    "RD_CAPTURE": 51,
+    "GATHER_PHASE": 51,
+    "DONE_LAT": 47
+   },
+   "ot_hgi_sm_xload_cl2_ctlx": {
+    "RD_LAT": [
+     41,
+     44,
+     28,
+     30,
+     63,
+     66,
+     44,
+     46
+    ]
+   },
+   "ot_hgi_dma_back_static_vp4_banks_cp": {
+    "RR_RT": 80
+   },
+   "ot_hfd_coll_q2_hard_v8g": {
+    "VM_RT": 81
+   },
+   "ot_hfd_coll_q3_hard_v8x": {
+    "VM_RT": 97
+   },
+   "ot_hgi_coll_gq_issue": {
+    "VM_RT": 96
+   }
+  },
+  "inst": {
+   "hcollrs_SW": {
+    "BANK_RT": 98
+   },
+   "hcollrs_SE": {
+    "BANK_RT": 77
+   },
+   "hcollrs_NW": {
+    "BANK_RT": 72
+   },
+   "hcollrs_NE": {
+    "BANK_RT": 72
+   },
+   "hb_idx__nwsh": {
+    "BANK_RT": 52
+   },
+   "hb_idx__ctl": {
+    "VM_RT": 74,
+    "CR_RT": 36,
+    "SEL_LAT": 40
+   },
+   "hb_argmax": {
+    "VMX": 88,
+    "ACK": 52
+   },
+   "hb_idx__op_SW": {
+    "VM_RT_EXTRA": 171
+   },
+   "hb_idx__op_SE": {
+    "VM_RT_EXTRA": 171
+   },
+   "hb_idx__op_NW": {
+    "VM_RT_EXTRA": 173
+   },
+   "hb_idx__op_NE": {
+    "VM_RT_EXTRA": 171
+   }
+  }
+ }
+}
