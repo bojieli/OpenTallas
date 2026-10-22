@@ -1,0 +1,67 @@
+{
+  "schema": "opentallas.s81.sukv.source_resource_model.v1",
+  "baseline": "Current configured D512 KV512 source; die physical stand-in is not its measured area",
+  "reused": {
+    "kve_engines": 64,
+    "kve_rope_subset": 8,
+    "kvq_engines": 16,
+    "kv_reduce": "QNH4xNE16 plusQNR_NE4_D512",
+    "event_sram_macros_32x64": 144,
+    "event_sram_bits": 294912
+  },
+  "additional_CN_IK": {
+    "new_kve_bank": false,
+    "new_event_sram_macros": 0,
+    "CN_E4M3_FP4_writer32": 16,
+    "IK_UE8M0_FP4_writer32": 4,
+    "preRoPE_norm_write512": 16,
+    "IK_QNH_NE8": 2,
+    "IK_QNR_NE2_D128": 1,
+    "reason": "Existing depth32 event SRAM accepts3CN events per bank and2IK events in4banks"
+  },
+  "pool": {
+    "lanes": 8,
+    "features": 512,
+    "groups": 64,
+    "per_lane": {
+      "sub_FP32_add_lat4": 1,
+      "den_FP32_add_lat4": 1,
+      "final_FP32_add_lat4": 1,
+      "exp_LM5_LA4_depth71": 1,
+      "divide_depth33": 1,
+      "FP32_multiply_lat5": 1
+    },
+    "mutable_tag_queue_bits": 16,
+    "new_SRAM_macros": 0,
+    "readonly_exp_case_tables": {
+      "copies": 8,
+      "depth": 256,
+      "source_width": 64,
+      "representation": "normal combinational ROM mapping; no mutable memory"
+    },
+    "input_bytes": 8192,
+    "output_bytes": 2048,
+    "peak_VM_bytes_per_edge": 32,
+    "VM_pair_reads": 256,
+    "VM_pair_writes": 64,
+    "issue_edges": 372,
+    "measured_finish_edges_VLAT4": 391,
+    "measured_finish_edges_VLAT1": 388
+  },
+  "regional_clock_plan_counts": {
+    "pool_lane": 8,
+    "pool_top": 1,
+    "IK_half_reduce": 2,
+    "IK_final_reduce": 1,
+    "CN_IK_writers": "Place by their existing localKVQ region; cross-region paths need measured landed binding"
+  },
+  "area": {
+    "status": "PENDING_ACTUAL_MAPPED_SYNTHESIS",
+    "normal_pool_native_unit": "ot-epyc7/3758592-1792639443",
+    "additional_cell_area_um2": null,
+    "minimum_outline_growth_um2": null,
+    "growth_formula": "additional mapped standard-cell area divided by selected utilization in[0.4,0.6], plus actual relay/clock channels; no SRAM delta forCN/IK/pool",
+    "must_not_assume_existing_slot_fit": true
+  },
+  "qualification": "Model inventory and measured source cycles only; physical body, reachable placement, native max32, per-region clocks and timing remain open"
+}
