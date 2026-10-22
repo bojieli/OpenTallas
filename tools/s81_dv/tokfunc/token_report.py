@@ -23,12 +23,13 @@ def main():
     p.add_argument('--aggregate-source')
     p.add_argument('--entry-producer')
     p.add_argument('--entry-replay', help='run_entry_replay.py entry_replay.json (native HOST jobs on the u_seqhost cut)')
+    p.add_argument('--head-cut', help='head_cut/run_head_cut.sh result.json (LM head on the bound head die, per-tile cut TB)')
     p.add_argument('--ladder', help='rung/gap ledger (results/token_pass/tokfunc3_s81_1021/ladder.json)')
     p.add_argument('--die-v')
     a = p.parse_args()
     evidence = {}
     for name in ('head', 'mu', 'mu_link', 'layers', 'owner_fold', 'kv_consumer', 'dense_source',
-                 'entry_norm', 'aggregate_source', 'entry_producer', 'entry_replay'):
+                 'entry_norm', 'aggregate_source', 'entry_producer', 'entry_replay', 'head_cut'):
         path = getattr(a, name)
         f = Path(path) if path else None
         evidence[name] = dict(path=path, status='PENDING')
@@ -105,6 +106,19 @@ def main():
             if er.get('verdict') == 'PASS_CUT_COMPONENT':
                 lad['gaps'].pop('G-HOSTCUT-BUILD', None)
                 lad['rungs']['entry']['blocked_by'] = [g for g in lad['rungs']['entry']['blocked_by'] if g != 'G-HOSTCUT-BUILD']
+        hc = evidence['head_cut'].get('receipt')
+        if hc:
+            lad['rungs'].setdefault('head_die', {})
+            lad['rungs']['head_die'] = dict(
+                status='PASS_CUT' if hc.get('ok') else 'FAIL',
+                bind=hc.get('bind'), cases={k: (v.get('verdict'), v.get('expect')) for k, v in hc.get('cases', {}).items()},
+                cycles=(hc.get('cases', {}).get('b') or {}).get('cycles'),
+                build_peak_rss_gb=hc.get('build_peak_rss_gb'))
+            if hc.get('ok'):
+                lad['gaps'].pop('G-HEAD-DIE-TB', None)
+                for r in lad['rungs'].values():
+                    if isinstance(r, dict) and 'blocked_by' in r:
+                        r['blocked_by'] = [g for g in r['blocked_by'] if g != 'G-HEAD-DIE-TB']
         record['ladder'] = lad
         record['highest_rung_pass'] = next((r for r in ('multi_user_50AR', 'token_1user', 'chained', 'per_layer')
                                             if lad['rungs'].get(r, {}).get('status') == 'PASS'), None)

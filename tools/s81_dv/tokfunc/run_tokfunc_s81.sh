@@ -10,6 +10,8 @@ FOLD_JSON=
 KV_BASELINE=; KV_JSON=; DENSE_VECTORS=; DENSE_JSON=
 ENTRY_NORM_JSON=; AGGREGATE_SOURCE_JSON=; ENTRY_PRODUCER_JSON=
 # Native entry HOST jobs on a BUILT u_seqhost cut (cut_3S_ctl): kit, obj (with sim), idle run, replay progs, fixture meta.
+# Head die (G-HEAD-DIE-TB): per-tile CUT-A x 253 + whole bound head die CUT-B (head_cut/run_head_cut.sh).
+HEAD_DIE_SRC=; HEAD_DIE_BIND=; HEAD_DIE_IMG=; HEAD_DIE_TILES=; HEAD_DIE_REF=; HEAD_CUT_JSON=
 ENTRY_KIT=; ENTRY_OBJ=; ENTRY_IDLE=; ENTRY_PROGS=; ENTRY_META=; ENTRY_USER=0; ENTRY_REPLAY_JSON=
 LADDER_JSON=$(cd "$(dirname "$0")/../../.." && pwd)/results/token_pass/tokfunc3_s81_1021/ladder.json
 while (($#)); do
@@ -30,6 +32,9 @@ while (($#)); do
     --entry-norm-json) ENTRY_NORM_JSON=$2; shift 2;;
     --aggregate-source-json) AGGREGATE_SOURCE_JSON=$2; shift 2;;
     --entry-producer-json) ENTRY_PRODUCER_JSON=$2; shift 2;;
+    --head-die-src) HEAD_DIE_SRC=$2; shift 2;; --head-die-bind) HEAD_DIE_BIND=$2; shift 2;;
+    --head-die-img) HEAD_DIE_IMG=$2; shift 2;; --head-die-tiles) HEAD_DIE_TILES=$2; shift 2;;
+    --head-die-ref) HEAD_DIE_REF=$2; shift 2;; --head-cut-json) HEAD_CUT_JSON=$2; shift 2;;
     *) echo "unknown argument: $1" >&2; exit 2;;
   esac
 done
@@ -94,6 +99,13 @@ if [ "$REPORT" = 0 ]; then
     python3 "$H/head_mtp_report.py" --run "$WORK/head" --prep "$HEAD_PREP" --out "$WORK/head.json"
     HEAD_JSON=$WORK/head.json
   fi
+  if [ -n "$HEAD_DIE_BIND" ]; then
+    # LM head on the CURRENT bound head die: CUT-A (each tile full RTL, logits bit-exact) -> recorded bundle faces ->
+    # CUT-B (whole bound dv_die RTL, bundle input faces bit-checked, token / BEST / RESULT vs golden) + 3 mutants (FAIL).
+    bash "$H/head_cut/run_head_cut.sh" "$HEAD_DIE_SRC" "$HEAD_DIE_BIND" "$HEAD_DIE_IMG" "$HEAD_DIE_TILES" "$HEAD_DIE_REF" \
+      "$WORK/head_cut" > "$WORK/head_cut.log" 2>&1 || true
+    HEAD_CUT_JSON=$WORK/head_cut/result.json
+  fi
   if [ -n "$MU_STAGE" ]; then
     # A source-pinned endpoint stage prepared by tools/xdie_s81_2/stage.sh.
     (cd "$MU_STAGE"; bash "$H/mu_fleet.sh" build) > "$WORK/mu_build.log" 2>&1 || true
@@ -120,6 +132,7 @@ ARGS=(--work "$WORK" --out "$WORK/token.json" --grade "$GRADE" --ref "$REF")
 [ -z "$AGGREGATE_SOURCE_JSON" ] || ARGS+=(--aggregate-source "$AGGREGATE_SOURCE_JSON")
 [ -z "$ENTRY_PRODUCER_JSON" ] || ARGS+=(--entry-producer "$ENTRY_PRODUCER_JSON")
 [ -z "$ENTRY_REPLAY_JSON" ] || ARGS+=(--entry-replay "$ENTRY_REPLAY_JSON")
+[ -z "$HEAD_CUT_JSON" ] || ARGS+=(--head-cut "$HEAD_CUT_JSON")
 [ ! -f "$LADDER_JSON" ] || ARGS+=(--ladder "$LADDER_JSON")
 [ -z "$DIE" ] || ARGS+=(--die-v "$DIE")
 python3 "$H/token_report.py" "${ARGS[@]}"
