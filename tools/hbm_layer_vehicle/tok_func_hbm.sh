@@ -13,6 +13,7 @@
 #
 #   env: OUT (local work dir) SRC_REV CONTRACT [DIE_V] [L12_OVERLAY] [OVERLAY] [REPLAYS] [MEM=256] [JOBS=48]
 #        [STAGE_HOSTS="ot-gold1 ot-gold2"] (data staged there; ot-run unpinned picks among hosts that have it)
+#        [PRIO=die] (ot-run --priority die for the BUILD: die-netlist / release token gate builds; 10-22 STEWARD-HBMc)
 #        [RUN=1] (0 = assemble + emit only)
 #   Emission: DS L0/L2/L14 (layer_images, fixtures FIX_DS=<dir with L00 L02 L14>) and Qwen L0 + L0->L1 chain ranks 0/5
 #   (qwen_layer_images emit, operands QOP=<dir with operands_{L0,chain}.npz>), SU native READ/WRITE_RETURN read from
@@ -21,6 +22,67 @@ set -u -o pipefail
 T=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$T/../.." && pwd)
 REPO=${REPO:-/home/ubuntu/OpenTallas}
 MODE=${MODE:-source}
+# TOK-FUNC3-HBM (10-21): CLI hooks.  --die-netlist <GEN die.v> = closure rerun of this SAME script (MODE=gen_rtl,
+#   DIE_V=<die.v>; CONTRACT/SRC_REV must name the post-relay contract and its exact commit).  --reuse = run frozen
+#   replay sets on an EXISTING slice binary (no re-assembly, no rebuild; see REUSE below).
+while [ $# -gt 0 ]; do case "$1" in
+  --die-netlist) MODE=gen_rtl; DIE_V=${2:?--die-netlist <GEN die.v>}; shift 2;;
+  --reuse) REUSE=1; shift;;
+  *) echo "unknown arg $1" >&2; exit 2;;
+esac; done
+# REUSE=1: FROZEN=<dir with replay/<set>/ + emit/ (or <set>.json) + tb_slice.sv + slice.v> [EXTRA_SETS="<replay dir>:<json dir> ..."
+#   run INSTEAD of same-name frozen sets, e.g. the Qwen --safe-calendar packet] [ONLY="set ..."]
+#   BIN_HOST=<host> BIN_ROOT=<remote root holding out/obj/Vtb_hbm_slice + slice/{tb_slice.sv,slice.v}> [BOUNDARY=<boundary.json>]
+#   The frozen TB/slice must be byte-identical to the binary's (fail closed); replays run in a separate run root on
+#   BIN_HOST (RUNROOT, symlinked out/obj, the binary root is never written), then the same report (per-layer, chain,
+#   token rungs with measured stream/serial/HBM cycles).
+if [ "${REUSE:-0}" = 1 ]; then
+  T=$(cd "$(dirname "$0")" && pwd)
+  OUT=${OUT:?OUT}; FROZEN=${FROZEN:?FROZEN}; BIN_HOST=${BIN_HOST:?BIN_HOST}; BIN_ROOT=${BIN_ROOT:?BIN_ROOT}
+  SRC_REV=${SRC_REV:?SRC_REV (provenance of the binary)}; CONTRACT=${CONTRACT:?CONTRACT}
+  TAG=${TAG:-$(basename "$OUT")}; RUNROOT=${RUNROOT:-/srv/opentallas-scratch/claude/tok-func3-hbm/$TAG}
+  # Canonicalise on the execution host: existing parent symlinks must not hide
+  # an overlap that lets staging or the out/obj link modify the binary tree.
+  printf -v REUSE_GUARD 'python3 - %q %q' "$BIN_ROOT" "$RUNROOT"
+  timeout 300 ssh "$BIN_HOST" "$REUSE_GUARD" <<'PY_GUARD' || exit 4
+import os, sys
+binary, run = (os.path.realpath(p) for p in sys.argv[1:])
+if os.path.commonpath((binary, run)) in (binary, run):
+    print(f"REUSE_PATH_OVERLAP binary={binary} run={run}", file=sys.stderr)
+    sys.exit(4)
+print(f"REUSE_PATH_DISJOINT binary={binary} run={run}")
+PY_GUARD
+  mkdir -p "$OUT/log" "$OUT/rj" "$OUT/stage/slice/replay"; L=$OUT/log
+  say() { echo "$(date -Is) $*" | tee -a "$L/summary.log"; }
+  timeout 300 ssh "$BIN_HOST" "test -x $BIN_ROOT/out/obj/Vtb_hbm_slice" || { say "NO_BINARY $BIN_HOST:$BIN_ROOT"; exit 4; }
+  want=$(cd "$FROZEN" && sha256sum tb_slice.sv slice.v | awk '{print $1}' | tr '\n' ' ')
+  have=$(timeout 300 ssh "$BIN_HOST" "cd $BIN_ROOT/slice && sha256sum tb_slice.sv slice.v" | awk '{print $1}' | tr '\n' ' ')
+  [ "$want" = "$have" ] || { say "TB_MISMATCH frozen=[$want] binary=[$have]"; exit 4; }
+  BINSHA=$(timeout 600 ssh "$BIN_HOST" "sha256sum $BIN_ROOT/out/obj/Vtb_hbm_slice" | cut -d' ' -f1)
+  say "REUSE binary=$BIN_HOST:$BIN_ROOT sha256=$BINSHA tb+slice identical [$want]"
+  cp "$FROZEN/tb_slice.sv" "$FROZEN/slice.v" "$OUT/stage/slice/"; cp "${BOUNDARY:-$FROZEN/boundary.json}" "$OUT/stage/slice/boundary.json" || exit 2
+  cp "$T/check_slice_run.py" "$OUT/stage/"
+  NAMES=()
+  addset() { # $1 replay dir, $2 dir with <name>.json (rj) or emit/
+    local rd=$1 jd=$2 n
+    for d in "$rd"/*/; do n=$(basename "$d"); [ -f "$d/hdr.mem" ] || continue
+      case " ${NAMES[*]} " in *" $n "*) say "KEEP $n (EXTRA_SETS override; frozen copy not run)"; continue;; esac
+      if [ -f "$jd/$n.json" ]; then cp "$jd/$n.json" "$OUT/rj/$n.json"
+      else local l=${n%%_x*}; local x=${n#"$l"}; local e="$jd/emit/$l/replay${x}.json"; if [ -f "$e" ]; then cp "$e" "$OUT/rj/$n.json"; else cp "$d/index.json" "$OUT/rj/$n.json" || return 2; say "RJ_FROM_INDEX $n"; fi; fi
+      NAMES+=("$n"); rsync -a --delete "$d" "$OUT/stage/slice/replay/$n/"; done; }
+  for xs in ${EXTRA_SETS:-}; do addset "${xs%%:*}" "${xs#*:}" || exit 2; done   # first: they replace same-name frozen sets
+  addset "$FROZEN/replay" "$FROZEN" || exit 2
+  [ -z "${ONLY:-}" ] || NAMES=($ONLY)
+  timeout 600 ssh "$BIN_HOST" "mkdir -p $RUNROOT/out && ln -sfn $BIN_ROOT/out/obj $RUNROOT/out/obj" || exit 2
+  timeout 1800 rsync -a "$OUT/stage/" "$BIN_HOST:$RUNROOT/" || exit 2
+  say "STAGED ${#NAMES[@]} sets -> $BIN_HOST:$RUNROOT"
+  REMOTE="$RUNROOT" RDIR=slice/replay HOST="$BIN_HOST" OUT="$OUT" PAR="${RUN_PAR:-8}" RUN_MEM="${RUN_MEM:-64}" \
+    bash "$T/run_pay_replays.sh" "${NAMES[@]}"; SIM_RC=$?
+  python3 "$T/tok_func_hbm_report.py" --out "$OUT" --mode "${MODE:-source}" --rev "$SRC_REV" --contract "$CONTRACT" \
+    --binary "$BIN_HOST:$BIN_ROOT/out/obj/Vtb_hbm_slice" --binary-sha256 "$BINSHA" "${NAMES[@]}"; RRC=$?
+  say "DONE reuse sim_rc=$SIM_RC report_rc=$RRC report=$OUT/report.json"
+  exit "$RRC"
+fi
 case "$MODE" in
   source|gen_rtl) ;;
   *) echo "MODE=$MODE unsupported: mapped-netlist qualification requires frozen mapped hierarchy and libraries; use gen_rtl for GEN composition with source children" >&2; exit 2;;
@@ -46,7 +108,7 @@ fi
 SU_LOWER2=${SU_LOWER2:-$CONNECTED_LOWERING}
 if [ "$CONNECTED_LOWERING" = 1 ]; then
   CONNECTED_ARGS=(--connected-lowering --side-source "$OUT/bundle/rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv")
-  HC_ARGS=(--connected-hc --checkpoint "${HC_CHECKPOINT:-/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors}")
+  HC_ARGS=(--connected-hc --checkpoint "${HC_CHECKPOINT:-$HOME/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277}")
   CUT_ARGS=(--include "^(hc_eng|hleaf_SE|sucore_(SW|SE|NW|NE)|stl_(SW|SE|NW|NE)|stu_(SW|SE|NW|NE)_[0-9]{2}|std_(SW|SE|NW|NE)_[0-9]{2}[ab]|str_C)$")
 fi
 # TOK-FUNC2-HBM-CX: CX=1 (default with CONNECTED_LOWERING=1) emits the DS layers with the COLL/HC components CONNECTED
@@ -110,6 +172,7 @@ for o in $OVERLAY; do f=${o%@*}; r=${o#*@}; [ "$r" = "$o" ] && r=origin/main
   git -C "$REPO" show "$r:$f" > "$OUT/bundle/$f" || { say "OVERLAY_FAIL $o"; exit 3; }
   say "OVERLAY $f <- $r $(git -C "$REPO" rev-parse "$r") sha256=$(sha256sum "$OUT/bundle/$f" | cut -d' ' -f1)"; done
 cp "$T/check_slice_run.py" "$OUT/bundle/"
+[ "${HIERWRAP:-0}" = 1 ] && cp "$T/hier_param_wrap.py" "$T/run_slice_vehicle.sh" "$OUT/bundle/"
 
 # 2. SW quadrant slice (input pads/relays pulled in: the die's own lane latency in front of the slice) --------------
 RLX=${RELAY_RE:-'^(l12p_|rf\d+_)'}
@@ -125,7 +188,7 @@ CXR=""
 PV_ARGS=()
 [ "${PV_PROBABILITY_CANDIDATE:-0}" != 1 ] || PV_ARGS=(--pv-probability-candidate --pv-probability-source "$OUT/bundle" --pv-probability-contract "$FC")
 for LL in 00 02 14; do l=$((10#$LL))
-  CXA=(); if [ "$CX" = 1 ]; then CXA=(--cx --cx-contract "$FC" --cx-l12 "$OUT/l12.json" --cx-checkpoint "${HC_CHECKPOINT:-/home/ubuntu/OpenTallas/build/models/deepseek-v4.1-flash-reduced-v2/model-00001-of-00001.safetensors}" --cx-ops "COLL,HC$([ "$CX_IDX" = 1 ] && echo ,IDX)"); [ "$l" = 14 ] && CXA+=($CX_L14); fi
+  CXA=(); if [ "$CX" = 1 ]; then CXA=(--cx --cx-contract "$FC" --cx-l12 "$OUT/l12.json" --cx-checkpoint "${HC_CHECKPOINT:-$HOME/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277}" --cx-ops "COLL,HC$([ "$CX_IDX" = 1 ] && echo ,IDX)"); [ "$l" = 14 ] && CXA+=($CX_L14); fi
   (cd "$ROOT" && python3 tools/hbm_layer_vehicle/layer_images.py --design ds --layer $l --programme "$FIX_DS/L$LL/images/ds_v41_1M_L${LL}_per_die.json" \
      --fixtures "$FIX_DS/L$LL" --boundary "$B" "${CONNECTED_ARGS[@]}" "${SU2_ARGS[@]}" --native-read-return $RR --native-write-return $WR "${CXA[@]}" "${SM_ARGS[@]}" "${PV_ARGS[@]}" --out "$OUT/emit/ds_l$l") > "$L/emit_ds_l$l.log" 2>&1 \
     || { say "EMIT_FAIL ds_l$l"; exit 3; }; cp "$OUT/emit/ds_l$l/replay.json" "$RJ/ds_l$l.json"; say "EMIT ds_l$l $(tail -c 260 "$L/emit_ds_l$l.log" | tr -d '\n')"
@@ -195,7 +258,7 @@ fi
 
 # 4. stage + build + run (fleet, unpinned) ---------------------------------------------------------------------------
 for h in $STAGE_HOSTS; do timeout 600 ssh "$h" "mkdir -p $REMOTE" && timeout 1800 rsync -a --delete "$OUT/bundle/" "$h:$REMOTE/" && say "STAGED $h:$REMOTE"; done
-/home/ubuntu/bin/ot-run --mem "$MEM" --threads "$JOBS" --disk 200 --dir "$REMOTE" -- env SRC="$REMOTE" OUT="$REMOTE/out" JOBS="$JOBS" BUILD_ONLY=1 bash run_slice_vehicle.sh > "$L/build.log" 2>&1
+/home/ubuntu/bin/ot-run ${PRIO:+--priority $PRIO} --mem "$MEM" --threads "$JOBS" --disk 200 --dir "$REMOTE" -- env SRC="$REMOTE" OUT="$REMOTE/out" JOBS="$JOBS" HIERWRAP="${HIERWRAP:-0}" BUILD_ONLY=1 bash run_slice_vehicle.sh > "$L/build.log" 2>&1
 BRC=$?; H=$(grep -o 'RAN on [a-z0-9-]*' "$L/build.log" | tail -1 | awk '{print $3}'); say "BUILD rc=$BRC host=$H"
 [ -n "$H" ] && timeout 120 ssh "$H" "test -x $REMOTE/out/obj/Vtb_hbm_slice" || { say NO_BINARY; exit 4; }
 ATT_RC=0

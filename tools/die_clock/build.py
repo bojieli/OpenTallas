@@ -921,6 +921,7 @@ def build(a):
 def measure_only(a):
     rec = json.loads(Path(a.measure).read_text())
     out = Path(a.out)
+    out.mkdir(parents=True, exist_ok=True)
     D = Die(a)
     D.setup_sta([tuple(c) for c in rec['clocks']], rec['spec'].get('rc_layer', 'M8'))
     allpins = sorted(rec['sinks']) + [f'{c[0]}/Y' for c in rec['cells']]

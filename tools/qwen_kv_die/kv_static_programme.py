@@ -112,19 +112,20 @@ if LINK_EMB_WIN:
     if not LINK_EMB_WIN.isdigit():
         raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN!r}: an integer edge count expected')
     LINK_IMAGE = LINK_IMAGE.replace('.svh', f'_ew{int(LINK_EMB_WIN)}.svh')
-    if not (ROOT / LINK_IMAGE).is_file():
-        raise SystemExit(f'OT_KV_EMB_WIN={LINK_EMB_WIN}: no committed pair image {LINK_IMAGE} '
-                         f'(D2D_MU={int(LINK_MU)} D2D_EMB_WINDOW={LINK_EMB_WIN} tools/qwen_split/d2d_cal_image_production.sh)')
 # KV-PROG17 10-20: the r16 attention tile (OT_KV_ATTN_R16=1, kv_static_die.ATTN_R16) moves the K RESULT burst +1 (TX_SHIFT)
 # and the K STATUS +213 (STATUS_DELAY) in every layer, so target 11 must load the r16 pair image
 # d2d_cal_image[_mu][_ew<N>]_r16.svh (d2d_cal_image_production.sh D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213); fail closed.
 LINK_R16 = os.environ.get('OT_KV_ATTN_R16', '0') == '1'
 if LINK_R16:
     LINK_IMAGE = LINK_IMAGE.replace('.svh', '_r16.svh')
-    if not (ROOT / LINK_IMAGE).is_file():
-        raise SystemExit(f'OT_KV_ATTN_R16=1: no committed r16 pair image {LINK_IMAGE} (D2D_MU={int(LINK_MU)} '
-                         f'D2D_EMB_WINDOW={LINK_EMB_WIN or ""} D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 '
-                         'tools/qwen_split/d2d_cal_image_production.sh)')
+# The OVL source uses the actual RoPE pair image, not an intermediate scalar variant.
+LINK_ROPE_OVL = os.environ.get('OT_KV_ROPE_OVL', '0') == '1'
+if LINK_ROPE_OVL:
+    LINK_IMAGE = LINK_IMAGE.replace('.svh', '_rope.svh')
+if not (ROOT / LINK_IMAGE).is_file():
+    raise SystemExit(f'no committed selected pair image {LINK_IMAGE} '
+                     f'(MU={int(LINK_MU)}, EMB_WINDOW={LINK_EMB_WIN!r}, '
+                     f'R16={int(LINK_R16)}, ROPE_OVL={int(LINK_ROPE_OVL)})')
 
 
 def image_die_stages(img=None, root=None):
@@ -156,7 +157,7 @@ LINK_DIE_STAGES = image_die_stages()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
              '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
-             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else [])
+             '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else []) + (['--rope'] if LINK_ROPE_OVL else [])
 #            + --token-path (decompressed in link_calendar)
 T_MAX = 8192
 CORE_U, HBM_U = 625, 768
@@ -357,16 +358,28 @@ CAL_DELTAS_ZERO = dict(hroot=dict(chain=0, fan=0, gather=0, embedding=0), emb_jo
                        ahub=dict(compiler_edges=0, pad=False), seam=dict(compiler_edges=0, pin=False))
 
 
+def final_reset_calendar():
+    path = os.environ.get('OT_KV_FINAL_RESET_CALENDAR')
+    if not path: return None
+    data = json.loads(Path(path).read_text())
+    if data.get('schema') != 'opentallas.kv_final_reset_stations.v1':
+        raise ValueError('unknown final reset station calendar')
+    return dict(data, ledger_path=path)
+
+
 def cal_deltas(ksd=None):
     env = os.environ.get
     ctl = env('OT_KV_CTL_C32', '0')
     if ctl not in ('0', '1', '2'):
         raise ValueError(f'OT_KV_CTL_C32={ctl!r}: no calendar law')
     hl = hroot_landing(ksd)
-    return dict(hroot=hl, emb_join=1 if env('OT_KV_EMB_PJ', '0') == '1' else 0,
+    deltas = dict(hroot=hl, emb_join=1 if env('OT_KV_EMB_PJ', '0') == '1' else 0,
                 ctl_own_leave=CTL_OWN_GUARD_LEAD if ctl != '0' else 0, ctl_boot_setup_ready=2 if ctl != '0' else 0,
                 ahub=dict(compiler_edges=0, pad=env('OT_KV_AHUB_PAD', '0') == '1', proof='kv_static_params AHUB_OFS_BOUND'),
                 seam=dict(compiler_edges=0, pin=env('OT_KV_SEAM_PIN', '0') == '1', proof='link_image_check (TXDP_K 22)'))
+    reset = final_reset_calendar()
+    if reset is not None: deltas['final_reset_stations'] = reset
+    return deltas
 
 
 # ---- KV-CAL15: embedding row fill deadline (RESULT -> the row_tx header slot) -----------------------------------------
@@ -898,6 +911,15 @@ def die_retirement_contract(rx_cmd, tx_first, tx_end, service_end, token_period)
                 token_period=token_period)
     c = RC.build(succ, rst, prog, 6 + 5, default_depth=None if depth is None else int(depth))   # link = --txl 6 --phy 5
     need = c['reset']['required_sink_release_depth']
+    reset = final_reset_calendar()
+    if reset is not None:
+        # Budget the generated station delay against THIS die plane's whole-plane requirement (K.RST 10-21: never a
+        # constant from an older plane -- the 325 of PROG17/d22hl2 made every opt-in run read 414 > HOLD273).
+        need = need + int(reset['max_added_reset_edges'])
+        c['reset'].update(required_sink_release_depth=need,
+                          hold_counter_bits=max(8,math.ceil(math.log2(need))),
+                          final_reset_stations=reset)
+        for source in c['sources']: source['sink_release_age'] = need
     c['reset'].update(bound_hold=RETIRE_HOLD_BOUND, fits_bound_hold=need <= RETIRE_HOLD_BOUND,
                       default_depth=None if depth is None else int(depth))
     return c

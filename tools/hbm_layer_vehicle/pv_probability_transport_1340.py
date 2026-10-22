@@ -47,9 +47,10 @@ def compile_transport(input_plan, *, destinations, contract, gq_source_path, fir
                 raise ValueError('SW copy would overwrite live source window')
             intervals.append((base,base+16))
     rt=[contract['instances']['hcollgi_'+q]['params']['VM_RT'] for q in QUARTERS]
-    if rt!=[74]*4:
-        raise ValueError('matching qualified VM_RT74 four-stop source required')
-    span=174
+    # r15 bound VM_RT 74 on all four stops; r18 l12 binds 76. The wave compiler takes the bound value (equal on all stops).
+    if len(set(rt))!=1 or rt[0] not in (74,76):
+        raise ValueError('matching VM_RT74 (r15) / VM_RT76 (r18) four-stop source required')
+    span=100+rt[0]  # = gq_wave_1021 wave_span (174 at VM_RT74)
     period=first_fire+len(windows)*span
     if type(first_fire) is not int or first_fire<0 or period>=65536:
         raise ValueError('invalid fixed GQ programme period')

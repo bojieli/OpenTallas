@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits    42 GB (avail 319, growth 290, headroom 0, waiters 2/96 GB) load 51/128 running 34 disk 826 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-target-default-r8-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-target-default-r8-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-target-default-r8-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-target-default-r8-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-target-default-r8-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-target-default-r8-2000
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-995547-1792647516 after 0 s
+PROGRAM_INSTALL_READY PASS case=-1 actual2x1024x256 macros sparse/missing/generation/invalid/multi-target/full1024 fixed edges
+tb_hbm_program_install_ready.sv:137: $finish called at 35820000 (1ps)
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-995547-1792647516): exit 0

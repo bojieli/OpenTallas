@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.kv_d2d_source_frame.v1",
+  "kit": "physical/ref_tile/qkd_d2d_static_ovl_sfm3_cf1",
+  "top": "qkd_d2d_static_ovl_sfm3",
+  "params": {
+    "NTX": 3,
+    "TXDP": 50529302,
+    "SAFE_RC": 1,
+    "SRAMV": 2,
+    "FEG": 1
+  },
+  "spec_sha256": "9289834484a90e289a6c3f0ac389f7b6eb1d8a578acb854ea48d09f67c3c394b",
+  "source_sha256": {
+    "rtl/lib/ot_rst_pipe.sv": "29203f84edfc6009125d3b26330534d3c6af6900d2ad4c44bf7d490f2ee96664",
+    "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv": "5af1eb77614de845771413c279de8858017a1e8220407e847d501537b110f43a",
+    "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv": "7a6c49228700d1956ca5618e1bd1130d58f23972d273f0258007380025a8b1dd",
+    "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv": "c26d7db02ac097230eaea6d2902e872bfde77c9cc733d0aef3f65e069cfedbbe",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "713858300e2a534ca739afa5579d673f3acc0832cb97386d98a63f4adc53ae2a",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv": "5f195b4304470722e41f5af44337f74fc31b70990bc74bce5a680f6df2b41607",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv": "c74e71552631c487426980953cd4b803e6455b8eb671c538f1ba3c578f3f63d0",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv": "6927365f6d204079b19780ce74bbc1dddc6bd051a03d30061d6f6de2a15eb3bd",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe_fo.sv": "9b3694353d39abc17f83e52f2f6de4273fa3dbe498a138dbee147e436bcefb67",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv": "2a19cdb5dd60035e51c916ae1f96617ed8d35a03f3a0778ca4e5e41644109331",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv": "68fc3d6713de59579146184fdebc1f030fa3af157fabe6373c57a74f791d94de",
+    "rtl/qwen_split/qfd_kvn_static_transport.sv": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb",
+    "physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288_bb.v": "1c73f0dd60671fec51283900ff52663936188d1e32385ea6ce3e61faaff9b308"
+  },
+  "pin_recipe_sha256": {
+    "physical/ref_tile/qkd_d2d_static_ovl_sfm3_cf1/assigned_pins.tcl": "831e75e7a66b89590340cb66e9e751b503ff875b62d599dcc2ccd19ead933da1",
+    "physical/ref_tile/qkd_d2d_static_ovl_sfm3_cf1/floorplan.json": "07289fe2bd7b19e9225279f23cfc32b0fde5f8c31502f2e3669de7b0ceccb568",
+    "physical/ref_tile/qkd_d2d_static_ovl_sfm3_cf1/pin_geometry_plan.json": "3227d066e8ead4395db5d3181c35bad16d1a3237fe24fc405208a7512fdbe52d",
+    "physical/ref_tile/qkd_d2d_static_ovl_sfm3_cf1/clock.sdc": "52a42b4567dcf29ae7a851c14dfc73710379378ae9dd3a7dfe0d5cb011955388",
+    "physical/ref_tile/qkd_d2d_static_ovl_sfm3_cf1/signoff.sdc": "8e1beb008069bbb63c4884e9d5f4ed488068d3142c0b1dfb298a4d098cdd594d"
+  },
+  "lef": "physical/source_frames/kv_ovl_2000/cf1/qkd_d2d_static_ovl_sfm3.lef",
+  "lef_sha256": "2e078961bf22693b9f9fb930cbdfbba86824b1255211da060383ab4c231556d8",
+  "outline": [
+    561.6,
+    345.6
+  ],
+  "qualification": "SOURCE_FRAME_DIAGNOSTIC_ONLY",
+  "selected_source": "9ee754c2d",
+  "pins": 4896,
+  "claim": "NOT_A_DIE_RESULT: literal source-frame geometry only; no timing, routing, clock, PG or hardened-view qualification"
+}

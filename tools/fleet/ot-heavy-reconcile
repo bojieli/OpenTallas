@@ -88,6 +88,19 @@ tasks as soon as possible"):
   Active Verilator frontend phases (verified executable in the scope's current cgroup) retain full declared
   remaining growth until the frontend exits. Flat RSS or a lowered class reservation cannot predict its next AST phase.
   Other sampled phases keep the v13 rate policy; this does not restore full reservations for long-running yosys jobs.
+  v14 OLD SLOW (SCHED-TUNE2, owner 2026-10-22: gold2 showed admits -55 GB with 436 GB free at load 32/112 because
+  6-15 h cc1plus compiles at 54-87 GB, growing a few MB per sample, each held its whole declared --mem through the
+  frontend-phase rule while its verilator_bin only waited on its --build): a unit older than OLD_S (7200 s) whose
+  measured growth is below OLD_SLOW_GB (5 GB) per 10 min and whose every verilator_bin pid has a make/compiler
+  descendant is charged min(ceiling - now, OLD_MULT (3) x rate x OLD_HORIZON_S (1800 s), OLD_CAP_GB (32)).  rate = RSS
+  slope over rss_hist (now kept 30 min, not 3 samples), never below the last-two-sample v13 rate.  A frontend still in
+  its AST phase keeps the full declared charge (13:01 TP192 grew again after a plateau); other units keep v13 (stable 0;
+  rising 2 x rate x 600 s, already under the v14 charge below 5 GB/10 min), so v14 never charges more than v13.
+  Young units, the host floor, the settled floor, the admit lock and the 5 x 64 GB replay regression are unchanged.
+  v15 BUILD WAIT (SCHED-TUNE2 10-22 05:38: ep9 charged 253 GB to a 1.8 h K_cut_7 whose frontend had peaked at 234 GB
+  and only waited on eight 2-11 GB cc1plus): the build-waiting charge applies from GROW_WINDOW_S (OLD_S 7200 -> 600);
+  growth >= OLD_SLOW_GB/10 min is charged the v13 rate rule min(margin, 2 x rate x 600 s) instead of the full remainder.
+  AST-phase frontends (incl. hierarchical sub-frontends under make) still keep their full declared charge.
   Safety stays with the per-job caps (scope MemoryMax, docker --memory via ot-heavy-docker), swap and earlyoom.
   DIE-FIRST unchanged: a waiting die trial's request is held free against non-die requests.
 
@@ -187,6 +200,38 @@ def active_verilator_frontends(cgdir):
     names = {"verilator_bin", "verilator_bin_dbg"}
     return [p["pid"] for p in procs(cgdir)
             if os.path.basename(p["exe"].removesuffix(" (deleted)")) in names]
+
+
+def frontend_waiting_on_build(cgdir, fpids):
+    """True when every Verilator frontend pid in this scope has a build child (make / C++ compiler) in the scope:
+    a --build verilator_bin whose AST phase is over and which only waits for the C++ compile"""
+    if not fpids:
+        return False
+    parent, comm = {}, {}
+    for pid in rd(f"{cgdir}/cgroup.procs").split():
+        try:
+            parent[int(pid)] = int(rd(f"/proc/{pid}/stat").rsplit(")", 1)[1].split()[1])
+        except (IndexError, ValueError):
+            continue
+        comm[int(pid)] = rd(f"/proc/{pid}/comm").strip()
+    waiting = set()
+    for pid, c in comm.items():                      # walk each build process up to its frontend (sh -c make ...)
+        if c not in BUILD:
+            continue
+        p, seen = parent.get(pid), 0
+        while p in parent and seen < 64:
+            if p in fpids:
+                waiting.add(p)
+            p, seen = parent[p], seen + 1
+    return all(f in waiting for f in fpids)
+
+
+def hist_rate(hist):
+    """GB/s of RSS over the kept rss_hist window (>= 0), and the window span in s"""
+    if len(hist) < 2 or hist[-1][0] <= hist[0][0]:
+        return 0.0, 0.0
+    span = hist[-1][0] - hist[0][0]
+    return max(0.0, (hist[-1][1] - hist[0][1]) / GB / span), span
 
 
 def is_sim(p):
@@ -454,7 +499,8 @@ def main():
         # v13 GROWTH RATE (SCHED-TUNE 10-21): s["samples"] is wiped on every pass that sees a compiler / GRT / a new
         # process key, so it never held an RSS delta for a building job.  rss_hist keeps the last 3 cron samples of
         # scope + container RSS, never reset; rate_gbs = GB/s between the last two when RSS rose > max(5 %, 0.5 GiB).
-        h = [x for x in s.get("rss_hist", []) if NOW - x[0] <= 3 * FLAT_S][-2:] + [[NOW, rss]]
+        # v14: keep the whole 30-min window (the OLD SLOW rate); the v13 rate below still reads only the last two
+        h = [x for x in s.get("rss_hist", []) if NOW - x[0] <= 3 * FLAT_S][-40:] + [[NOW, rss]]
         s["rss_hist"] = h
         (t0, r0), (t1, r1) = h[-2] if len(h) >= 2 else h[-1], h[-1]
         rose = len(h) >= 2 and t1 > t0 and r1 - r0 > max(0.05 * r0, GB // 2)
@@ -638,14 +684,20 @@ def read_units():
                          sampled=bool(s.get("rss_hist") or s.get("samples") or s.get("first")),
                          rate=float(s.get("rate_gbs") or 0.0),
                          declared=max(req, int(meta[0]) if meta[:1] and meta[0].isdigit() else req),
-                         frontend_pids=active_verilator_frontends(cg)))
+                         frontend_pids=(fp := active_verilator_frontends(cg)),
+                         frontend_waiting=frontend_waiting_on_build(cg, fp),
+                         slow=hist_rate(s.get("rss_hist", []))[0], slow_span=hist_rate(s.get("rss_hist", []))[1]))
     return rows
 
 
 YOUNG_S, MID_S, PLENTY, GONE_S = 300, 1800, 0.35, 20
 DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v8 (owner 2026-10-17), see the module text
                 GROW_WINDOW_S=600, GROWING_FACTOR=1.0, LAUNCH_HOLD_S=120,    # v12 GROWING RESERVATION (SCHED-MEM 10-21)
-                RATE_HORIZON_S=600, RATE_MULT=2.0, SETTLED_FLOOR_FRAC=0.02)  # v13 GROWTH RATE (SCHED-TUNE 10-21)
+                RATE_HORIZON_S=600, RATE_MULT=2.0, SETTLED_FLOOR_FRAC=0.02,  # v13 GROWTH RATE (SCHED-TUNE 10-21)
+                OLD_S=600, OLD_SLOW_GB=5.0, OLD_MULT=3.0, OLD_HORIZON_S=1800, OLD_CAP_GB=32.0,
+                OLD_MIN_SPAN_S=200,                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
+                MEASURED_RESERVE=1.0, RESERVE_K=1.5, RESERVE_HORIZON_S=1800,  # v16 MEASURED RESERVE (coordinator 10-22)
+                GROWTH_CAP_AVAIL_FRAC=0.25, DIE_HEADROOM_GB=64.0)
 
 
 def conf(key):
@@ -694,7 +746,11 @@ def books(rows, total, avail, table, gf=None):
             continue
         now = r["now"]
         margin = max(0.0, r["ceil"] - now)
-        if r.get("frontend_pids"):
+        # v14 OLD SLOW / v15 BUILD WAIT: past GROW_WINDOW_S (v14: 2 h), measured, frontend only waiting on its --build
+        orate = max(r.get("slow", 0.0), r.get("rate", 0.0))
+        build_wait = (r.get("frontend_waiting") and r["age"] >= max(win, conf("OLD_S")) and r.get("sampled", True) and
+                      (r.get("slow_span", 0.0) >= conf("OLD_MIN_SPAN_S") or r.get("rate", 0.0) > 0))
+        if r.get("frontend_pids") and not build_wait:
             # A real Verilator frontend can grow again after a long AST/DFG plateau. Its declared budget
             # stays pending until that executable exits, even when class reconciliation lowered res.
             r["grow"], r["pending"] = max(0.0, r.get("declared", r["req"]) - now), True
@@ -702,6 +758,14 @@ def books(rows, total, avail, table, gf=None):
             # v12/v13: admitted in the last GROW_WINDOW_S, or reconcile has no RSS sample of it yet (still building):
             # its whole remaining reservation
             r["grow"], r["pending"] = gfull * margin, True
+        elif r.get("frontend_pids"):
+            # v14: an old, slowly growing --build job whose frontend only waits on the C++ compile (cc1plus RSS is
+            # what grows): 3 x the growth its measured rate gives over the next 30 min, at most 32 GB, <= the margin
+            if orate * 600 < conf("OLD_SLOW_GB"):
+                r["grow"] = min(margin, conf("OLD_MULT") * orate * conf("OLD_HORIZON_S"), conf("OLD_CAP_GB"))
+            else:                                      # v15: a fast -j cc1plus burst: the v13 rate rule
+                r["grow"] = min(margin, conf("RATE_MULT") * orate * conf("RATE_HORIZON_S"))
+            r["pending"] = True
         elif r.get("rate", 0.0) > 0:
             # v13: RSS rose > 5 % between the last two cron samples: RATE_MULT x the measured rate over RATE_HORIZON_S
             r["grow"], r["pending"] = min(margin, conf("RATE_MULT") * r["rate"] * conf("RATE_HORIZON_S")), True
@@ -709,11 +773,25 @@ def books(rows, total, avail, table, gf=None):
             # v13: stable or old: nothing beyond what it holds (earlyoom + per-job MemoryMax + the settled floor below)
             r["grow"] = 0.0
             settled += margin
+        # v16 MEASURED RESERVE (coordinator 10-22, owner 10-17 "admit ASAP, light reservations, swap is the safety net";
+        # ep7 10-22: avail 632 GB, growth charged 510 -> admits 176, S81 H11 300 GB die build queued): a running unit
+        # past YOUNG_S with an RSS sample is charged what its MEASURED growth gives over the next ~30 min, never the
+        # full projection (declared - now): min(projection above, RESERVE_K x observed rate x RESERVE_HORIZON_S).
+        if conf("MEASURED_RESERVE") and r["age"] >= YOUNG_S and r.get("sampled", True) and r["grow"] > 0:
+            r["grow"] = max(0.0, min(r["grow"], conf("RESERVE_K") * orate * conf("RESERVE_HORIZON_S")))
+            r["pending"] = r["pending"] and r["grow"] > 0
         if r["pending"]:
             pending += r["grow"]
     # v13: a small host floor for the settled units' combined slack, never above that slack
     sfloor = min(settled, conf("SETTLED_FLOOR_FRAC") * total)
-    return dict(grow=sum(r["grow"] for r in rows) + sfloor, young=young, plenty=plenty, pending=pending, settled_floor=sfloor,
+    grow = sum(r["grow"] for r in rows) + sfloor
+    unstarted = sum(r["grow"] for r in rows if not r["active"])
+    if conf("MEASURED_RESERVE"):
+        # v16: the whole growth charge is capped at GROWTH_CAP_AVAIL_FRAC (25 %) of physical MemAvailable; swap and the
+        # per-job MemoryMax (memcg OOM, oom_score_adj -999/0 since 10-22) are the safety net
+        cap = conf("GROWTH_CAP_AVAIL_FRAC") * max(avail, 0.0)
+        grow, pending = min(grow, cap), min(pending, cap)
+    return dict(grow=grow, young=young, plenty=plenty, pending=pending, settled_floor=sfloor, unstarted=unstarted,
                 used=sum(r["now"] for r in rows), reserved=sum(r["res"] for r in rows if r["active"]),
                 running=sum(1 for r in rows if r["active"]), fresh=sum(1 for r in rows if r["active"] and r["age"] < 90))
 
@@ -739,6 +817,16 @@ def admissible(total, avail, b, floor, need=None):
     MemAvailable - the full sum of supported unit growth, and leave MemAvailable above the floor"""
     need = conf("NEED_FACTOR") if need is None else need
     return min(avail - charged_growth(b, total), avail - floor) / need
+
+
+def die_admissible(avail, b, floor, need, can):
+    """the largest request a die-level job is admitted at now.  v9-v15: current memory minus pending growth (/ NEED);
+    v16 (coordinator 10-22): physical MemAvailable - DIE_HEADROOM_GB (64) >= its request, minus only the memory of
+    units admitted but not started yet (they hold nothing MemAvailable can show); swap is the safety net"""
+    old = max(can, min(avail - b.get("pending", 0.0) - b.get("settled_floor", 0.0), avail - floor) / need)
+    if not conf("MEASURED_RESERVE"):
+        return old
+    return max(can, avail - b.get("unstarted", 0.0) - conf("DIE_HEADROOM_GB"))
 
 
 def holds_admit_lock(fd=8):
@@ -780,7 +868,7 @@ def gate_locked(mem, argv):
     # v9: a die job is admitted on current memory alone; v12: memory promised to units admitted in the last
     # GROW_WINDOW_S / still growing (b["pending"]) is not current memory, so it is charged to die jobs too
     # v13: and the settled floor (die jobs still never pay the settled units' growth itself)
-    can_die = max(can, min(avail - b.get("pending", 0.0) - b.get("settled_floor", 0.0), avail - floor) / need)
+    can_die = die_admissible(avail, b, floor, need, can)
     me_die = os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(argv, os.getcwd())
     if me_die and can < res <= can_die:
         note = (note + "; " if note else "") + f"DIE: admitted on current memory ({avail:.0f} GB available, {b.get('pending', 0.0):.0f} GB pending charged, settled growth not charged)"
@@ -789,7 +877,7 @@ def gate_locked(mem, argv):
     if held and can - res < held:
         ok, note = False, (note + "; " if note else "") + f"DIE-FIRST: {held:.0f} GB held for a waiting die trial"
     print(f"{'OK' if ok else 'NO'} {res} {cls} | need {need:g} x {res} = {need * res:.0f} GB, admissible {can:.0f} GB: "
-          f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB (v13 rate rule, uncapped sum, settled floor {b.get('settled_floor', 0.0):.0f} GB; pending {b.get('pending', 0.0):.0f} GB at x{conf('GROWING_FACTOR'):g}), young {b['young']:.0f} GB, "
+          f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB (v16 measured reserve, cap {100 * conf('GROWTH_CAP_AVAIL_FRAC'):g} % of available, settled floor {b.get('settled_floor', 0.0):.0f} GB; pending {b.get('pending', 0.0):.0f} GB at x{conf('GROWING_FACTOR'):g}), young {b['young']:.0f} GB, "
           f"floor {floor:.0f} GB" + (f"; {note}" if note else ""))
 
 
@@ -874,6 +962,7 @@ def free(path):
     b = books(rows, total, avail, table)
     head, floor = 0, floor_gb(total)
     can = admissible(total, avail, b, floor)
+    can_die = die_admissible(avail, b, floor, conf("NEED_FACTOR"), can)
     wait, req = waiters(table)
     try:
         v = os.statvfs(path)
@@ -886,7 +975,7 @@ def free(path):
                           young_gb=round(b["young"]), plenty=b["plenty"], headroom_gb=head, floor_gb=round(floor),
                           cpu_load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=b["running"],
                           fresh=b["fresh"], waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
-                          admit_gb=round(can), free_gb=round(can) - sum(wait))))
+                          admit_gb=round(can), free_gb=round(can) - sum(wait), die_admit_gb=round(can_die))))
 
 
 def units():
@@ -919,10 +1008,12 @@ def selftest():
             bad.append(f"{name}: got {got:.2f}, want {want:.2f}")
     one = lambda avail, **k: books([u(**k)], T, avail, tab, 0.5)["grow"]
     # v12/v13: admitted < GROW_WINDOW_S ago or not sampled yet -> whole remaining; rising -> 2 x rate x 10 min; else 0
-    keys = ("GROW_WINDOW_S", "GROWING_FACTOR", "LAUNCH_HOLD_S", "RATE_HORIZON_S", "RATE_MULT", "SETTLED_FLOOR_FRAC")
+    keys = ("GROW_WINDOW_S", "GROWING_FACTOR", "LAUNCH_HOLD_S", "RATE_HORIZON_S", "RATE_MULT", "SETTLED_FLOOR_FRAC",
+            "OLD_S", "OLD_SLOW_GB", "OLD_MULT", "OLD_HORIZON_S", "OLD_CAP_GB", "OLD_MIN_SPAN_S", "MEASURED_RESERVE",
+            "RESERVE_K", "RESERVE_HORIZON_S", "GROWTH_CAP_AVAIL_FRAC", "DIE_HEADROOM_GB")
     saved = {k: os.environ.get(k) for k in keys}
     os.environ.update(GROW_WINDOW_S="600", GROWING_FACTOR="1.0", LAUNCH_HOLD_S="120", RATE_HORIZON_S="600",
-                      RATE_MULT="2", SETTLED_FLOOR_FRAC="0")
+                      RATE_MULT="2", SETTLED_FLOOR_FRAC="0", MEASURED_RESERVE="0")
     chk("v12 young (60 s): whole remaining reservation", one(800), 90)
     chk("v12 young, lowered reservation bounds it", one(300, res=40, cls="x"), 30)
     chk("v13 old, no reconcile sample yet (building): whole remaining", one(300, age=4000, now=60.0, obs=60.0, sampled=False), 40)
@@ -934,6 +1025,21 @@ def selftest():
     chk("v12 not started 60 s, launcher alive: still held", one(800, active=False, res=64, file_age=60, launcher_alive=True), 64)
     chk("v12 not started 60 s, launcher gone: nothing", one(800, active=False, res=64, file_age=60, launcher_alive=False), 0)
     chk("gone for 30 s: nothing", one(800, active=False, res=64, file_age=30), 0)
+    os.environ.update(OLD_S="600", OLD_SLOW_GB="5", OLD_MULT="3", OLD_HORIZON_S="1800", OLD_CAP_GB="32", OLD_MIN_SPAN_S="200")
+    # v14 OLD SLOW: gold2 10-22, 15 h cc1plus at 83 of 200 GB growing ~4e-5 GB/s: 3 x rate x 1800 s (v13 frontend: 117)
+    g2 = dict(age=54000, req=200.0, res=200, now=83.0, obs=160.0, slow_span=1200.0, declared=200,
+              frontend_pids=[1], frontend_waiting=True)
+    chk("v14 old slow --build waiting: 3 x 30-min growth", one(300, slow=4e-5, **g2), 0.216)
+    chk("v14 old slow 3 GB/10 min: 27", one(300, slow=0.005, **g2), 27)
+    chk("v14 old slow 4.7 GB/10 min: capped at 32", one(300, slow=0.0079, **g2), 32)
+    chk("v14 old slow: never above the margin", one(300, slow=0.0079, **dict(g2, now=190.0)), 10)
+    chk("v15 build wait >= 5 GB/10 min: v13 2 x rate x 600", one(300, rate=0.01, slow=0.01, **g2), 12)
+    chk("v15 1.4 h build wait: 3 x 30-min growth", one(300, slow=0.005, **dict(g2, age=5000)), 27)
+    chk("v15 build wait inside GROW_WINDOW_S: frontend rule (full)", one(300, slow=0.005, **dict(g2, age=500)), 117)
+    chk("v14 window too short: frontend rule (full)", one(300, slow=0.005, **dict(g2, slow_span=120.0)), 117)
+    chk("v14 frontend still in its AST phase: full declared", one(300, slow=4e-5, **dict(g2, frontend_waiting=False)), 117)
+    chk("v14 non-frontend old slow stable: v13 0", one(300, slow=0.005, **dict(g2, frontend_pids=[])), 0)
+    chk("v14 non-frontend old rising: v13 2 x rate x 600", one(300, rate=0.005, slow=0.005, **dict(g2, frontend_pids=[])), 6)
     os.environ.update(SETTLED_FLOOR_FRAC="0.02")
     chk("v13 settled floor: 2 % of RAM", one(300, age=4000, req=512.0, res=512, now=490.0, obs=490.0), 20)
     chk("v13 settled floor never above the settled slack", one(300, age=4000, now=95.0, obs=95.0), 5)
@@ -957,6 +1063,27 @@ def selftest():
     chk("the floor is the stop", admissible(T, 100, dict(grow=0.0, young=0.0), 50, 0.7), 71.43)
     chk("AGIdock: 65 GB available cannot cover 68 GB growth", admissible(128, 65, dict(grow=68.0, young=0.0), 6.4, 0.7), -4.285714)
     chk("EPYC4: 539 available minus full 119 GB growth", admissible(1133, 539, dict(grow=119.0, young=0.0), 56.65, 0.7), 600.0)
+    # v16 MEASURED RESERVE (coordinator 10-22): ep7 avail 632 GB, growth charged 510 GB -> admitted only 176 GB
+    os.environ.update(MEASURED_RESERVE="1", RESERVE_K="1.5", RESERVE_HORIZON_S="1800", GROWTH_CAP_AVAIL_FRAC="0.25",
+                      DIE_HEADROOM_GB="64", SETTLED_FLOOR_FRAC="0")
+    fe = dict(age=54000, req=600.0, res=600, now=90.0, obs=90.0, declared=600, frontend_pids=[1], frontend_waiting=False)
+    chk("v16 frontend full projection 510 -> 1.5 x rate x 1800 s", one(632, rate=0.002, **fe), 5.4)
+    chk("v16 frontend never above its projection (cap not binding at 5 TB)", one(5000, rate=1.0, **fe), 510)
+    chk("v16 stable frontend (rate 0): 0", one(632, rate=0.0, **fe), 0)
+    chk("v16 young (< YOUNG_S): unchanged v12 rule", one(800), 90)
+    chk("v16 unsampled: unchanged (full remaining)", one(632, age=4000, now=60.0, obs=60.0, sampled=False), 40)
+    ep7 = [u(unit=f"g{i}", age=600 + i, req=200.0, res=200, now=30.0, obs=30.0, sampled=False) for i in range(3)] + \
+          [u(unit="f", rate=1.0, **fe)]
+    b7 = books(ep7, 1008, 632, tab)
+    chk("v16 ep7: raw 3 x 170 + 510 = 1020 GB capped at 25 % of 632", b7["grow"], 158)
+    chk("v16 ep7: non-die admits (632 - 158) / 0.7 (v15: (632 - 510) / 0.7 = 174)", admissible(1008, 632, b7, 50.4, 0.7), 677.14)
+    chk("v16 ep7: 300 GB H11 die build admitted (632 - 64 >= 300)", die_admissible(632, b7, 50.4, 0.7, 0) >= 300, 1)
+    b5 = books([u(unit="f", rate=1.0, **fe)], 1133, 230, tab)
+    chk("v16 ep5 230 GB available: 300 GB die build still refused", die_admissible(230, b5, 56.65, 0.7, 0) >= 300, 0)
+    bn = books([u(unit="n", active=False, res=200, file_age=3)], 1008, 632, tab)
+    chk("v16 die pays unstarted admissions: 632 - 200 - 64", die_admissible(632, bn, 50.4, 0.7, 0), 368)
+    os.environ.update(MEASURED_RESERVE="0")
+    chk("v16 off: ep7 legacy uncapped growth", books(ep7, 1008, 632, tab)["grow"], 1020)
     for k, v in saved.items():
         if v is None:
             os.environ.pop(k, None)

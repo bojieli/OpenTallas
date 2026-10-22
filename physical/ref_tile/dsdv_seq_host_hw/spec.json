@@ -1,0 +1,266 @@
+{
+ "name": "dsdv_seq_host_hw",
+ "top": "dsdv_seq_host_c",
+ "kind": "cluster",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host_c.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 1036.8,
+  "exact": true
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/dsdv_sh_lk_s10hq/views/dsdv_sh_lk",
+   "count": 1,
+   "inst": "*u_l0",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq",
+   "count": 1,
+   "inst": "*u_l1",
+   "at": [
+    86.4,
+    583.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc",
+   "count": 1,
+   "inst": "*u_l2",
+   "at": [
+    86.4,
+    777.6
+   ],
+   "orient": "R0"
+  }
+ ],
+ "macros": [],
+ "pins": {
+  "S": [
+   "s_hc_e",
+   "s_hw_e",
+   "s_jd_e",
+   "st_rg_e",
+   "vi_s",
+   "vo_s"
+  ],
+  "N": [
+   "cw_v",
+   "cw_a",
+   "cw_d",
+   "vi_n",
+   "vo_n",
+   "tap_k",
+   "sink_k"
+  ],
+  "W": [
+   "f_host",
+   "f_lf",
+   "t_host"
+  ],
+  "E": [
+   "f_ks",
+   "s_hc_w",
+   "s_hw_w",
+   "s_j",
+   "s_jd_w",
+   "st_rg_w",
+   "t_kd",
+   "ck",
+   "rst_n"
+  ]
+ },
+ "pin_ranges": {
+  "vi_s": [
+   181.83,
+   306.31
+  ],
+  "vo_s": [
+   306.34,
+   430.82
+  ],
+  "s_hw_e": [
+   48.39,
+   180.07
+  ],
+  "s_hc_e": [
+   44.4,
+   48.4
+  ],
+  "s_jd_e": [
+   180.05,
+   181.03
+  ],
+  "st_rg_e": [
+   181.06,
+   181.84
+  ],
+  "f_host": [
+   44.98,
+   433.89
+  ],
+  "f_lf": [
+   434.12,
+   436.92
+  ],
+  "t_host": [
+   437.14,
+   495.0
+  ],
+  "f_ks": [
+   46.08,
+   98.9
+  ],
+  "s_hc_w": [
+   100.52,
+   108.98
+  ],
+  "s_hw_w": [
+   109.59,
+   403.22
+  ],
+  "s_j": [
+   403.83,
+   436.48
+  ],
+  "s_jd_w": [
+   437.09,
+   438.5
+  ],
+  "st_rg_w": [
+   439.11,
+   440.52
+  ],
+  "t_kd": [
+   441.12,
+   494.9
+  ],
+  "cw_v": [
+   90.64,
+   91.04
+  ],
+  "cw_a": [
+   90.92,
+   93.67
+  ],
+  "cw_d": [
+   93.51,
+   160.37
+  ],
+  "vi_n": [
+   160.23,
+   232.58
+  ],
+  "vo_n": [
+   232.44,
+   304.53
+  ],
+  "tap_k": [
+   304.66,
+   306.86
+  ],
+  "sink_k": [
+   306.72,
+   308.94
+  ],
+  "ck": [
+   539.85,
+   540.15
+  ],
+  "rst_n": [
+   542.25,
+   542.55
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "wires-only cluster: every parent port goes straight to one leaf pin, and every seq_host leaf is flop-first / flop-last at its pins (lk RL 1 rung landed at both faces); a recipe pin register would add an unpriced stage on the rung / host / status paths"
+ },
+ "structural_change": "S81-ELEM2-SEQ 10-21 FALLBACK of dsdv_seq_host_h: lk|sq channel 43.2 -> 86.4 (lk N -> sq S ~1,000 nets + spine delay for lk TT insertion 647.6 vs sq 315.4 / vc 376.6), sq/vc moved N by 43.2, ck/rst_n centred in the wider channel; outline 475.2x1036.8. S81-ELEM2-SEQ gate2 10-21: clock spine targets each child's ROUTED boundary-register insertion (child_clock_ref boundary: lk 551.1 / sq 269.1 / vc 300.4 TT) instead of the lib max_clock_tree_path (lk 647.6 / sq 315.4 / vc 376.6; offsets 96.5 / 46.3 / 76.2 ps differ, so gate1 handed lk boundary flops ~50 ps early vs sq: TT pin-flop spread 101.3 > 80, FF 64.3, GRT ovf 0). S81-ELEM2-SEQ 10-21: child view swap -- u_l0 dsdv_sh_lk = CLOSED s10hq view (job dsdv_sh_lk_s10hq-dsdv_sh_lk_s10hq-649101c0d, src 649101c0d, TT +33.16 / FF +17.42 / DRC 0, 388.8x453.6, pins = the stand-in's plan within 0.72 um; stand-in lacked s_hw_e[216]) replaces the s10f-timed DECLARED PIN STAND-IN; parent bench simulates the exact lk RTL of 649101c0d with its defines (APIPE10/S10B..S10E, TB_HSH 8) + lk mutants. Same outline/pins/placement/SDC as the S81-SEQHP gate. Prior: S81-SEQHP-1021 re-pack of dsdv_seq_host_c for the RL1 lk successor s10h (388.8x453.6, p192 masters, claude/s81-shlk-1021 @254543064): vertical stack on the 43.2 lattice, lk DECLARED PIN STAND-IN (43.2,43.2) / sq CLOSED (86.4,540.0) / vc CLOSED (86.4,734.4); 43.2 channels (lk N face -> sq S face ~1,000 nets; parent M6/M7 over the M5-capped children); outline 475.2x993.6 = S81 die seqhost slot for s10h. Parent S/W/E pins = lk faces, N pins = vc N face; ck/rst_n on E in the lk|sq channel.",
+ "job": {
+  "owner": "Claude:S81-ELEM2-SEQ",
+  "branch": "claude/s81-elem2-seq-1021",
+  "tag": "shphw",
+  "purpose": "S81-ELEM2-SEQ dsdv_seq_host_hw (FALLBACK, 86.4 lk|sq channel): CLOSED lk s10hq (649101c0d) + CLOSED sq + vc views",
+  "views_to": "physical/ref_tile/dsdv_seq_host_hw/views",
+  "record_to": "results/rtl/ref_tile/dsdv_seq_host_hw",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/dsdv_sh_lk_s10hq/views",
+   "physical/rom_host_ingest/rtl",
+   "results/arch/landed_parent_1018/dsdv_seq_host/core_b",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_ingest",
+   "rtl/dsrom_sys/s81_static_control",
+   "rtl/hdc/ingest",
+   "rtl/lib",
+   "rtl/link"
+  ],
+  "benches": [
+   {
+    "name": "seqhost_c_gate",
+    "cmd": "VL_EXTRA=\"-DOT_S81_SH_APIPE9 -DOT_S81_SH_APIPE10 -DOT_S81_SH_SRAM -DOT_S81_SH_RSZ -DOT_S81_SH_S10B -DOT_S81_SH_S10C -DOT_S81_SH_S10D -DOT_S81_SH_S10E -DTB_HSH=8\" bash rtl/dsrom_sys/s81_dv/unit/test/run_seq_host_c_bench.sh {RUN}/seqhost_c",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "needs": [
+     "verilator"
+    ],
+    "expect": "pass",
+    "pass_regex": "^SEQHOST_C_GATE PASS$",
+    "min_count_regex": "^SEQHOST seed=\\d+ .* cmds N/S/G/J=(\\d+)/"
+   }
+  ]
+ },
+ "defines": [
+  "OT_DSDV_SEQHOST_HARD"
+ ],
+ "hard_define": "OT_DSDV_SEQHOST_HARD",
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "child_clock_ref": "boundary"
+}

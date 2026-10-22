@@ -21,6 +21,16 @@
 // the quarter-ST P.V: 160 words at the half-PVH entry pins, back to back, FIRST WORD AT THE COMPILED CYCLE, every value
 // bit-exact; one jd done per entry AT THE COMPILED CYCLE, no jd fault, no slice fault, HBM credits <= 8; the PV frame
 // after the last fold score.
+// RTLGAP-SO (10-21): meta [15] ALLQ (CFG [54], slices built -DOT_SVC_ALLQ): every slice owns its tile's P.V -- the E
+// entry emits tiles 0..7 and the W entry tiles 8..15, 320 words each, back to back from the SAME compiled first cycle;
+// all 512 dims x 16 heads bit-exact vs fixture attn.pv, both jd done pulses at the compiled cycle (pv_last + 1).
+// RTLGAP-SUKV (10-22, G-NORMALIZE-SO): meta [16] SO (ALLQ + SMT = 1 slices: the job carries SOT after WIN_LOAD and the SO
+// programme SMJ kind 5 + 16 operand frames after the P.V drain), [17] SO obase, [18] owner; oexp.hex = the o rows
+// (fixture attn.normalize.unrope BF16, [g * 32 + k]).  SO checks: every slice writes 32 SO rows (jid 22, addr obase +
+// 8 k + g / 2, mask 00FF / FF00, the head-parity half bit-exact vs oexp); each entry emits 8 heads x 8 beats x 3 SO gather
+// words, every one stamped pv_x[47] (inside the booked window), route = 1, hdr {1, 0, 5A, owner, head, group, idx}
+// exact and lo / hi = rows 4 b .. 4 b + 3 of the head bit-exact; no unstamped word beyond the 640 P.V words; jd done
+// at the compiled (booked-retire) cycle; no target / gather / tree fault (slice fault 0).
 `ifndef RS_OBS
 `define RS_OBS
 `endif
@@ -44,7 +54,8 @@ module tb_svc_lower;
     reg [255:0] hbm [longint];
     reg [1023:0] dir;
     integer seed = 1, lat = 40;
-    integer NQ, T, JW, JE, NH, EXP_PV0, EXP_DONE, EXP_DONE_W, GO_C, PV_C, i, PMODE, NPW;
+    integer NQ, T, JW, JE, NH, EXP_PV0, EXP_DONE, EXP_DONE_W, GO_C, PV_C, i, PMODE, NPW, ALLQ, SO, SO_OB, OWNER;
+    reg [255:0] oexp [0:16*32-1];
     reg [511:0] pexp [0:511];
     reg [32:0] JWORD;
     function automatic integer tile_of(input integer sd); reg [21:0] r; r = rs_role(4'(sd)); tile_of = r[3:0]; endfunction
@@ -55,7 +66,8 @@ module tb_svc_lower;
         $readmemh({dir, "/meta.hex"}, meta);
         NQ = meta[0]; T = meta[1]; JW = meta[2]; JE = meta[3]; JWORD = {meta[5][0], meta[4]}; NH = meta[6];
         EXP_PV0 = meta[7]; EXP_DONE = meta[8]; GO_C = meta[9]; PV_C = meta[10]; EXP_DONE_W = meta[12];
-        PMODE = meta[13]; NPW = meta[14];
+        PMODE = meta[13]; NPW = meta[14]; ALLQ = meta[15]; SO = meta[16]; SO_OB = meta[17]; OWNER = meta[18];
+        if (SO != 0) $readmemh({dir, "/oexp.hex"}, oexp);
         if (PMODE != 0) $readmemh({dir, "/pexp.hex"}, pexp, 0, NPW - 1);
         if (meta[11] != ST) begin $display("image ST %0d != bench ST %0d", meta[11], ST); $finish; end
         $readmemh({dir, "/qcyc.hex"}, qcyc, 0, NQ - 1);
@@ -77,7 +89,7 @@ module tb_svc_lower;
     wire [4*DW-1:0] dn_i [0:15], dn_o [0:15]; wire [4*UW-1:0] up_i [0:15], up_o [0:15];
     wire [2*341-1:0] rq [0:15]; reg [1:0] rk [0:15], wd [0:15], rv [0:15];
     reg [2*256-1:0] r_data [0:15]; reg [2*17-1:0] r_tag [0:15]; reg [2*4-1:0] r_beat [0:15];
-    wire [15:0] pv_v, w_v; wire [512:0] pv_d [0:15]; wire [13:0] w_a [0:15]; wire [15:0] w_m [0:15];
+    wire [15:0] pv_v, w_v; wire [512:0] pv_d [0:15]; wire [47:0] pv_x [0:15]; wire [13:0] w_a [0:15]; wire [15:0] w_m [0:15];
     wire [511:0] w_d [0:15]; wire [11:0] w_st [0:15];
     reg [32:0] jcmd [0:1]; reg q_v = 0; reg [511:0] q_d = 0;
     wire [1:0] jdx [0:1]; wire [8:0] hcx [0:1]; wire [1:0] rfx; wire [1:0] stx [0:1];
@@ -120,7 +132,7 @@ module tb_svc_lower;
                 .gi_v(gi_v[gs]), .gi_d(gi_d[gs]), .go_v(go_v[gs]), .go_d(go_d[gs]),
                 .si_v(si_v[gs]), .si_d(si_d[gs]), .so_v(so_v[gs]), .so_d(so_d[gs]),
                 .rq(rq[gs]), .rk(rk[gs]), .wd(wd[gs]), .rv(rv[gs]), .r_data(r_data[gs]), .r_tag(r_tag[gs]),
-                .r_beat(r_beat[gs]), .hs(hsv[gs]), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]),
+                .r_beat(r_beat[gs]), .hs(hsv[gs]), .pv_v(pv_v[gs]), .pv_d(pv_d[gs]), .pv_x(pv_x[gs]),
                 .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
         end else begin : g_n
             `RS_SL_MOD u (.ck(ck), .rst(rst), .sid(4'(gs)),
@@ -130,7 +142,7 @@ module tb_svc_lower;
                 .rq(rq[gs]), .rk(rk[gs]), .wd(wd[gs]), .rv(rv[gs]), .r_data(r_data[gs]), .r_tag(r_tag[gs]),
                 .r_beat(r_beat[gs]), .hs(hsv[gs]),
                 .w_v(w_v[gs]), .w_a(w_a[gs]), .w_m(w_m[gs]), .w_d(w_d[gs]), .w_st(w_st[gs]), .obs(obs[gs]));
-            assign pv_v[gs] = 1'b0; assign pv_d[gs] = '0;
+            assign pv_v[gs] = 1'b0; assign pv_d[gs] = '0; assign pv_x[gs] = '0;
         end
     end endgenerate
     wire [15:0] sflt; wire [31:0] afc [0:15];
@@ -180,6 +192,17 @@ module tb_svc_lower;
     integer qi = 0, late_q = 0, rt_beats = 0, sc_err = 0, sc_chk = 0, ord_err = 0;
     integer se_rows [0:15], se_err = 0, se_chk = 0, wrows [0:15];
     integer pv_err = 0, pv_chk = 0, pv_first = -1, pv_last = -1, pv_gap = 0, pv_other = 0, pv_n = 0;
+    integer aq_n [0:1], aq_first [0:1], aq_last [0:1];                 // ALLQ: per entry (0 = W, 1 = E)
+    initial for (i = 0; i < 2; i = i + 1) begin aq_n[i] = 0; aq_first[i] = -1; aq_last[i] = -1; end
+    integer so_rows [0:15], so_first [0:15], so_last [0:15], so_err = 0;
+    integer gw_n [0:1], gw_first [0:1], gw_last [0:1], gw_ph [0:1], gw_err = 0, gw_beat [0:15], gw_hfirst [0:15];
+    reg [1023:0] gw_buf [0:1];
+    initial for (i = 0; i < 16; i = i + 1) begin so_rows[i] = 0; so_first[i] = -1; so_last[i] = -1; gw_beat[i] = 0; gw_hfirst[i] = -1; end
+    initial for (i = 0; i < 2; i = i + 1) begin gw_n[i] = 0; gw_first[i] = -1; gw_last[i] = -1; gw_ph[i] = 0; end
+    integer pvd_fd = 0;                // ALLQ: every RTL P.V word {entry, cycle, pv_d 513} -> IMG/pv_dump_s<seed>.hex
+    integer sed_fd = 0;                // ALLQ: every RTL SE operand row {slice, cycle, se_d 512} -> IMG/se_dump_s<seed>.hex
+    initial begin #2; if (ALLQ != 0) begin pvd_fd = $fopen($sformatf("%0s/pv_dump_s%0d.hex", dir, seed), "w");
+                                           sed_fd = $fopen($sformatf("%0s/se_dump_s%0d.hex", dir, seed), "w"); end end
     reg [7:0] pvc [0:15]; reg [63:0] pvf [0:15];
     integer first_rt = -1, last_rt = -1, done_c [0:1], n_done [0:1];
     integer p_first = -1, p_last = -1, p_beats = 0, p_err = 0, p_chk = 0, pf_err = 0, we_first [0:15], we_last [0:15];
@@ -238,6 +261,7 @@ module tb_svc_lower;
         for (int s = 0; s < 16; s++) begin
             if (se_v[s]) begin
                 integer rr, t; t = tile_of(s);
+                if (sed_fd != 0) $fdisplay(sed_fd, "%0d %0d %0128h", s, cyc, se_d[s]);
                 for (rr = 0; rr < 16; rr = rr + 1) if (16 * se_rows[s] + rr < T) begin
                     se_chk = se_chk + 1;
                     if (se_d[s][32*rr +: 32] !== scm[16 * se_rows[s] + rr][t*33 +: 32]) begin
@@ -248,8 +272,71 @@ module tb_svc_lower;
                 end
                 se_rows[s] = se_rows[s] + 1;
             end
-            if (w_v[s]) wrows[s] = wrows[s] + 1;
-            if (pv_v[s]) begin
+            if (w_v[s] && (SO == 0 || w_st[s][11:4] == 8'h21)) wrows[s] = wrows[s] + 1;
+            else if (w_v[s]) begin                                          // SO o row k of head g = tile
+                integer g, k; g = tile_of(s); k = so_rows[s];
+                if (so_first[s] < 0) so_first[s] = cyc; so_last[s] = cyc;
+                if (k >= 32 || w_st[s][11:4] != 8'h22 || w_a[s] != 14'(SO_OB + 8 * k + g / 2) ||
+                    w_m[s] != ((g % 2) ? 16'hff00 : 16'h00ff) ||
+                    ((g % 2) ? w_d[s][511:256] : w_d[s][255:0]) !== oexp[32 * g + (k % 32)]) begin
+                    so_err = so_err + 1;
+                    if (so_err < 8) $display("SO MISMATCH slice %0d head %0d row %0d a %0h m %0h st %0h", s, g, k, w_a[s], w_m[s], w_st[s]);
+                end
+                so_rows[s] = so_rows[s] + 1;
+            end
+            if (pv_v[s] && SO != 0 && pv_x[s][47]) begin                    // SO gather word (entry stamp)
+                integer k, hd, bt; reg [512:0] wd;
+                k = (s == RS_ENTRY_E) ? 1 : 0; wd = pv_d[s];
+                if (s != RS_ENTRY_E && s != RS_ENTRY_W) pv_other = pv_other + 1;
+                if (gw_first[k] < 0) gw_first[k] = cyc; gw_last[k] = cyc;
+                if (pv_x[s][44:43] != 2'd1 || pv_x[s][46:45] != 2'd0 || pv_x[s][42:0] != 43'd0) gw_err = gw_err + 1;
+                if (gw_ph[k] < 2) begin
+                    if (wd[512]) gw_err = gw_err + 1;
+                    gw_buf[k][512 * gw_ph[k] +: 512] = wd[511:0];
+                    gw_ph[k] = gw_ph[k] + 1;
+                end else begin
+                    hd = wd[11:8]; bt = wd[2:0];
+                    if (!wd[512] || wd[511:40] != 0 || wd[39:32] != 8'h5A || wd[31:12] != 20'(OWNER) ||
+                        wd[7] != (hd >= 8) || wd[6:3] != {1'b0, 3'(hd % 8)} || ((hd >= 8) != (k == 0)) ||
+                        bt != gw_beat[hd]) gw_err = gw_err + 1;
+                    for (int r = 0; r < 4; r++)
+                        if (gw_buf[k][256 * r +: 256] !== oexp[32 * hd + 4 * bt + r]) begin
+                            gw_err = gw_err + 1;
+                            if (gw_err < 8) $display("GW MISMATCH entry %0d head %0d beat %0d row %0d", s, hd, bt, r);
+                        end
+                    if (gw_beat[hd] == 0) gw_hfirst[hd] = cyc - 2;
+                    gw_beat[hd] = gw_beat[hd] + 1; gw_ph[k] = 0;
+                end
+                gw_n[k] = gw_n[k] + 1;
+            end else if (pv_v[s] && ALLQ != 0) begin
+                integer wi, t, dm, h, k;
+                k = (s == RS_ENTRY_E) ? 1 : 0;
+                if (pvd_fd != 0) $fdisplay(pvd_fd, "%0d %0d %0129h", s, cyc, pv_d[s]);
+                if (s != RS_ENTRY_E && s != RS_ENTRY_W) pv_other = pv_other + 1;
+                else begin
+                    t = (k == 1 ? 0 : 8) + aq_n[k] / 40; wi = aq_n[k] % 5;
+                    if (aq_first[k] < 0) aq_first[k] = cyc; else if (cyc != aq_last[k] + 1) pv_gap = pv_gap + 1;
+                    aq_last[k] = cyc;
+                    if (aq_n[k] >= 320) pv_err = pv_err + 1;
+                    else if (wi == 0) begin
+                        if (!pv_d[s][512]) pv_err = pv_err + 1;
+                        pvc[s] = pv_d[s][71:64]; pvf[s] = pv_d[s][63:0];
+                    end else begin
+                        if (pv_d[s][512]) pv_err = pv_err + 1;
+                        dm = 32 * t + 8 * (wi - 1) + pvc[s];
+                        for (h = 0; h < H; h = h + 1) begin
+                            pv_chk = pv_chk + 1;
+                            if (pv_d[s][32*h +: 32] !== pvm[dm][h*33 +: 32] || pvf[s][16 * (wi - 1) + h] !== pvm[dm][h*33 + 32]) begin
+                                pv_err = pv_err + 1;
+                                if (pv_err < 8) $display("PV MISMATCH entry %0d tile %0d dim %0d head %0d got %08x f%0d exp %08x f%0d", s, t, dm, h,
+                                    pv_d[s][32*h +: 32], pvf[s][16 * (wi - 1) + h], pvm[dm][h*33 +: 32], pvm[dm][h*33 + 32]);
+                            end
+                        end
+                    end
+                    aq_n[k] = aq_n[k] + 1; pv_n = pv_n + 1;
+                    if (pv_first < 0 || cyc < pv_first) pv_first = cyc; if (cyc > pv_last) pv_last = cyc;
+                end
+            end else if (pv_v[s]) begin
                 integer wi, t, dm, h;
                 if (s != ((PVH == 1) ? RS_ENTRY_E : RS_ENTRY_W)) pv_other = pv_other + 1;
                 else begin
@@ -296,7 +383,7 @@ module tb_svc_lower;
             end else if (PMODE != 0 && pf_i[k] > 0) begin pf_err = pf_err + 1; pf_i[k] = 0; end   // a gap inside the frame
         end
         if ((n_done[0] > 0 && n_done[1] > 0 && cyc > done_c[0] + 300 && cyc > done_c[1] + 300) || cyc >= MAXCYC) begin
-            integer bad_se, bad_w, sched_bad, pv_early; reg [15:0] fl; reg [31:0] fc0;
+            integer bad_se, bad_w, sched_bad, pv_early; reg [15:0] fl; reg [31:0] fc0; reg so_ok; so_ok = 1;
             bad_se = 0; bad_w = 0; fl = 0; fc0 = 0;
             for (int s = 0; s < 16; s++) begin
                 if (se_rows[s] != (T + 15) / 16) bad_se = bad_se + 1;
@@ -304,8 +391,12 @@ module tb_svc_lower;
                 fl[s] = sflt[s]; if (sflt[s] && fc0 == 0) fc0 = afc[s];
             end
             pv_early = (PMODE == 0 && last_rt >= PV_C) ? 1 : 0;
-            sched_bad = (pv_first != EXP_PV0) + (pv_last != EXP_PV0 + 159) + (done_c[0] != EXP_DONE_W) + (done_c[1] != EXP_DONE) +
+            sched_bad = (pv_first != EXP_PV0) + (pv_last != EXP_PV0 + ((ALLQ != 0) ? 319 : 159)) + (done_c[0] != EXP_DONE_W) + (done_c[1] != EXP_DONE) +
                         (late_q != 0) + (qi != NQ) + pv_early;
+            if (ALLQ != 0) sched_bad = sched_bad + (aq_first[0] != EXP_PV0) + (aq_first[1] != EXP_PV0) +
+                                       (aq_last[0] != EXP_PV0 + 319) + (aq_last[1] != EXP_PV0 + 319);
+            if (ALLQ != 0) $display("SVCLOW_ALLQ W first=%0d last=%0d words=%0d E first=%0d last=%0d words=%0d exp_first=%0d exp_last=%0d",
+                aq_first[0], aq_last[0], aq_n[0], aq_first[1], aq_last[1], aq_n[1], EXP_PV0, EXP_PV0 + 319);
             $display("SVCLOW_SCHED go=%0d pv_frame=%0d first_score=%0d last_score=%0d pv_first=%0d exp_pv_first=%0d pv_last=%0d done_W=%0d exp_done_W=%0d done_E=%0d exp_done_E=%0d n_done=%0d/%0d q_sent=%0d/%0d late_q=%0d pv_early=%0d hbm_wr=%0d hbm_rd=%0d sched_bad=%0d",
                 GO_C, PV_C, first_rt, last_rt, pv_first, EXP_PV0, pv_last, done_c[0], EXP_DONE_W, done_c[1], EXP_DONE, n_done[0], n_done[1],
                 qi, NQ, late_q, pv_early, hbm_wr, hbm_rd, sched_bad);
@@ -318,15 +409,30 @@ module tb_svc_lower;
                 $display("SVCLOW_P pmode=%0d go=%0d p_nominal=%0d erow_first=%0d erow_last_min=%0d erow_last_max=%0d p_beat_first=%0d p_beat_last=%0d pf_W=%0d pf_E=%0d pf_n=%0d/%0d p_beats=%0d p_checked=%0d p_errors=%0d pf_errors=%0d npw=%0d",
                     PMODE, GO_C, PV_C, wf_min, wl_min, wl_max, p_first, p_last, pf_c[0], pf_c[1], pf_n[0], pf_n[1], p_beats, p_chk, p_err, pf_err, NPW);
             end
-            $display("SVCLOW die=%0d st=%0d T=%0d root_beats=%0d sc_checked=%0d sc_errors=%0d order_errors=%0d se_checked=%0d se_errors=%0d se_bad_slices=%0d sm_rows_bad=%0d pv_checked=%0d pv_errors=%0d pv_words=%0d pv_gaps=%0d pv_other_entry=%0d jd_fault=%0d root_fault=%0d slice_faults=%04x first_fault_code=%08x cred_err=%0d sched_bad=%0d cycles=%0d verdict=%s",
-                DIE, ST, T, rt_beats, sc_chk, sc_err, ord_err, se_chk, se_err, bad_se, bad_w, pv_chk, pv_err, pv_n, pv_gap, pv_other,
+            if (SO != 0) begin
+                integer bad_so; bad_so = 0;
+                for (int s = 0; s < 16; s++) begin
+                    if (so_rows[s] != 32 || gw_beat[tile_of(s)] != 8) bad_so = bad_so + 1;
+                    $display("SVCLOW_SOH slice=%0d head=%0d so_rows=%0d so_first=%0d so_last=%0d beats=%0d gw_first=%0d",
+                        s, tile_of(s), so_rows[s], so_first[s], so_last[s], gw_beat[tile_of(s)], gw_hfirst[tile_of(s)]);
+                end
+                $display("SVCLOW_SO so_errors=%0d bad_heads=%0d gw_W=%0d gw_E=%0d gw_first_W=%0d gw_last_W=%0d gw_first_E=%0d gw_last_E=%0d gw_errors=%0d",
+                    so_err, bad_so, gw_n[0], gw_n[1], gw_first[0], gw_last[0], gw_first[1], gw_last[1], gw_err);
+                so_ok = (so_err == 0 && bad_so == 0 && gw_err == 0 && gw_n[0] == 192 && gw_n[1] == 192 && gw_ph[0] == 0 && gw_ph[1] == 0);
+            end
+            $display("SVCLOW die=%0d st=%0d allq=%0d T=%0d root_beats=%0d sc_checked=%0d sc_errors=%0d order_errors=%0d se_checked=%0d se_errors=%0d se_bad_slices=%0d sm_rows_bad=%0d pv_checked=%0d pv_errors=%0d pv_words=%0d pv_gaps=%0d pv_other_entry=%0d jd_fault=%0d root_fault=%0d slice_faults=%04x first_fault_code=%08x cred_err=%0d sched_bad=%0d cycles=%0d verdict=%s",
+                DIE, ST, ALLQ, T, rt_beats, sc_chk, sc_err, ord_err, se_chk, se_err, bad_se, bad_w, pv_chk, pv_err, pv_n, pv_gap, pv_other,
                 jdx[0][1] | jdx[1][1], rfx != 0, fl, fc0, cred_err, sched_bad, cyc,
                 (sc_err == 0 && ord_err == 0 && rt_beats == (T + 3) / 4 && sc_chk == T * H && se_err == 0 && se_chk == 16 * T &&
-                 bad_se == 0 && bad_w == 0 && pv_err == 0 && pv_chk == 4 * 8 * 4 * 16 && pv_n == 160 && pv_gap == 0 &&
+                 bad_se == 0 && bad_w == 0 && pv_err == 0 &&
+                 ((ALLQ == 0 && pv_chk == 4 * 8 * 4 * 16 && pv_n == 160) ||
+                  (ALLQ != 0 && pv_chk == D * H && pv_n == 640 && aq_n[0] == 320 && aq_n[1] == 320)) && pv_gap == 0 &&
                  pv_other == 0 && n_done[0] == 1 && n_done[1] == 1 && !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 &&
-                 cred_err == 0 && sched_bad == 0 && cyc < MAXCYC &&
+                 cred_err == 0 && sched_bad == 0 && cyc < MAXCYC && so_ok &&
                  (PMODE == 0 || (p_err == 0 && pf_err == 0 && p_beats == (T + 3) / 4 && p_chk == 64 * ((T + 3) / 4) &&
                                  pf_n[0] == 1 && pf_n[1] == 1 && pf_i[0] == 0 && pf_i[1] == 0))) ? "PASS" : "FAIL");
+            if (pvd_fd != 0) $fclose(pvd_fd);
+            if (sed_fd != 0) $fclose(sed_fd);
             $finish;
         end
     end

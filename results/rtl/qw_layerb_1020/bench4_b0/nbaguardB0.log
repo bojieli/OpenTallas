@@ -1,0 +1,8 @@
+VERILATOR_NBA_GUARD FAIL
+/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB0/coll/: loops_checked=24 INPLACE_NBA_LOOPS=0
+/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB0/die/: loops_checked=689 INPLACE_NBA_LOOPS=4
+  INPLACE_NBA_LOOP x1 ot_qwen_rom_rt_die_w12_stream4_tagged_ar__DOT__u_hbm__DOT__t_rd_sectors
+  INPLACE_NBA_LOOP x1 kvw_ce
+  INPLACE_NBA_LOOP x1 st_rsp_stall
+  INPLACE_NBA_LOOP x1 ot_qwen_rom_rt_die_w12_stream4_tagged_ar__DOT__u_kv__DOT__unnamedblk5__DOT__n
+/srv/opentallas-scratch/claude/lb2qc-ref-1018/bldB0/tile/: loops_checked=16 INPLACE_NBA_LOOPS=0

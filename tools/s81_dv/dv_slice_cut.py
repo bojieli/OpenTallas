@@ -26,6 +26,7 @@ clock_from}}, DIR/slice_insts.json (instances by master, how each was included).
 """
 import argparse
 import gzip
+import hashlib
 import json
 import math
 import re
@@ -39,7 +40,10 @@ import dv_rtl_kit as K  # noqa: E402
 
 RELAY_RE = re.compile(r'^(dsfd_dvrlyh_|dsfd_rly_|dsfd_dvland_|BUFx|INVx|ICGx)')   # ICGx: hop-0 lane clock gate (S81-LBGAP/G1)
 RESET_RE = re.compile(r'^dsfd_rly_1_')
-CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|cr|cr_s|CLK)$')
+# RTLGAP-G9 (10-22): ck_r<k> = the H9/H10 frame region roots (col_h9_l4_lp ck_r0/ck_r1/ck_r2).  Without it ck_r1/ck_r2
+# (which reach no other clock pin) were classed die_input and the bench held them at 0: two of the three frame regions
+# never clocked on every G9 cut.
+CLOCK_PORT_RE = re.compile(r'^(clk|ck|ck_f|ck_i|ck_r\d+|cr|cr_s|CLK)$')
 
 
 FLIGHT_SIM = """// dv_flight_sim (S81-LBGAP/G1, bench side): F whole periods of lane flight between the last relay station and its
@@ -70,6 +74,19 @@ module dv_flight_sim #(parameter integer W = 1, parameter integer F = 0) (
     end endgenerate
 endmodule
 """
+
+RST_LAND = """// dv_rst_land (TOKc-S81, 10-22, bench side): the kit reset landing of a hardened landing view (ref_tile reset_landing
+// {"enable": true, "stages": N}, physical/common_flow/ot_pin_regs.tcl OT_RST_LAND: rs -> rs__ot_rl0 .. rs__ot_rl<N-1>
+// plain ck flops -> core).  The die calendar (dv_bind landing_reset_stages, bind landing_reset_check.json) opens the
+// hop-0 gate N edges later for exactly these masters, so the RTL landing body without it reads N edges early (fault).
+module dv_rst_land #(parameter integer N = 2) (input wire ck, input wire rs, output wire o);
+    reg [N-1:0] q = {N{1'b0}};
+    always @(posedge ck) q <= {q, rs};
+    assign o = q[N-1];
+endmodule
+"""
+
+
 
 
 def load_masters(kit, D, names):
@@ -131,6 +148,10 @@ def main(argv=None):
                     help='give every instance of a master with a string INSTANCE parameter (the frames: their ROM macros '
                          'load <OT_ROM_DIR>/<INSTANCE>_cX_Y.viamap.hex) .INSTANCE("<instance name>") -- die.v passes none, so '
                          'every frame of one master would read the same ROM image (die-netlist gap, recorded)')
+    ap.add_argument('--landing-reset', default='auto',
+                    help='bind landing_reset_check.json (rows master/rl): every landing whose bound view carries the kit '
+                         'reset landing (rl > 0) gets dv_rst_land #(rl) on its rs, as the hardened view and the die gate '
+                         'calendar have it; auto = <die.v dir>/landing_reset_check.json when present, none = off (pre-po2 dies)')
     ap.add_argument('--repo', default=str(K.ROOT))
     a = ap.parse_args(argv)
     out = Path(a.out).resolve(); out.mkdir(parents=True, exist_ok=True)
@@ -341,6 +362,34 @@ def main(argv=None):
             lines[i] = ln
             lane_dl[i] = dict(F=F, F_raw=f_raw, clipped=F - a.flight_shift != f_raw, s1_ps=float(s1), E=E_, D=D_, K=K_,
                               corner=a.corner, flight_shift=a.flight_shift, source=src)
+    land_rl, land_rl_src = {}, None
+    lr_path = (Path(a.die_v).parent / 'landing_reset_check.json') if a.landing_reset == 'auto' else \
+        (None if a.landing_reset == 'none' else Path(a.landing_reset))
+    if lr_path is not None and lr_path.exists():
+        LR = json.loads(lr_path.read_text())
+        if LR.get('verdict') != 'PASS':
+            raise SystemExit(f'dv_slice_cut: {lr_path} verdict {LR.get("verdict")} (die calendar vs views unresolved)')
+        rl_by_master = {r['master']: int(r['rl']) for r in LR['rows']}
+        land_rl_src = dict(path=str(lr_path), sha256=hashlib.sha256(lr_path.read_bytes()).hexdigest(), by_master=rl_by_master)
+        for i in sorted(lines):
+            mst = byname[i][0]
+            if not mst.startswith('dsfd_dvland'):
+                continue
+            if mst not in rl_by_master:
+                raise SystemExit(f'dv_slice_cut: landing {i} master {mst} not in {lr_path}')
+            rl = rl_by_master[mst]
+            if rl <= 0:
+                continue
+            cm = byname[i][3]
+            ln = lines[i]
+            if ln.count(f'.rs({cm["rs"]})') != 1:
+                raise SystemExit(f'dv_slice_cut: landing {i}: rs pin not found once')
+            lines[i] = ln.replace(f'.rs({cm["rs"]})', f'.rs({i}__rs_l)', 1)
+            body.append(f'  wire {i}__rs_l;   // kit reset landing {rl} stages ({mst} view)')
+            body.append(f'  dv_rst_land #(.N({rl})) {i}__rl (.ck({cm["ck"]}), .rs({cm["rs"]}), .o({i}__rs_l));')
+            land_rl[i] = rl
+    elif a.landing_reset not in ('auto', 'none'):
+        raise SystemExit(f'dv_slice_cut: --landing-reset {a.landing_reset} not found')
     lost = sorted(S - set(lines))
     if lost:
         raise SystemExit(f'dv_slice_cut: instance line not found verbatim for {lost[:5]}')
@@ -350,12 +399,15 @@ def main(argv=None):
     sv = [hdr] + decl + body + [lines[i] for i in sorted(S, key=lambda x: list(byname).index(x))] + ['endmodule', '']
     if lane_dl:
         sv += [FLIGHT_SIM]
+    if land_rl:
+        sv += [RST_LAND]
     (out / f'{a.name}.sv').write_text('\n'.join(sv))
     (out / 'slice_ports.json').write_text(json.dumps(dict(schema='opentallas.s81_dv.slice_ports.v1', top=a.name,
                                                           die_v=a.die_v, ports=ports), indent=1) + '\n')
     cnt = Counter(byname[i][0] for i in S)
     (out / 'slice_insts.json').write_text(json.dumps(dict(instances=len(S), by_master=dict(sorted(cnt.items())),
-                                                          how={i: how[i] for i in sorted(S)}, rom_instance_param=rom_inst, lane_flight_time=lane_dl), indent=1) + '\n')
+                                                          how={i: how[i] for i in sorted(S)}, rom_instance_param=rom_inst, lane_flight_time=lane_dl,
+                                                          landing_reset=dict(source=land_rl_src, stages=land_rl)), indent=1) + '\n')
     nin = sum(sum(h - l + 1 for h, l in p['bits']) for p in ports.values() if p['dir'] == 'input')
     nout = sum(sum(h - l + 1 for h, l in p['bits']) for p in ports.values() if p['dir'] == 'output')
     print(f'dv_slice_cut: {len(S)} instances {dict(sorted(cnt.items()))}; ports {len(ports)} '

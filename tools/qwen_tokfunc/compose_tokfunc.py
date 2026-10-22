@@ -36,7 +36,7 @@ BASE_PATHS = ['tools', REC, 'rtl/physical',
               'results/rtl/qwen_q_export_1014/xpf/static', 'results/rtl/qlb_gen_1018/dv2f14bq',
               'results/rtl/qw_attnret_1019']
 CLK_HZ = 1e12 / 833.0
-STAGES = ['stg', 'xt1', 'xdie', 'tp8', 'ovl4u', 'ctx4u', 'head', 'kv']
+STAGES = ['stg', 'xt1', 'xdie', 'tp8', 'ovl4u', 'ctx4u', 'head', 'kv', 'chain']
 
 
 def sh(cmd, **kw):
@@ -147,6 +147,15 @@ def apply(inp, res, tree, results_dir, grade_label):
             inp['attention'].setdefault('split', {}).update(kv_service=int(kvs), kv_service_grade=sgrade('kv'))
             applied.append(f'kv_service {kvs} <- kv')
             remeasured.add('kv')
+    if ok('chain'):
+        # TOK-FUNC3-QW: the token's real q/k/v through the KV attention RTL, every layer (ctx 8192): the slowest layer's
+        # CMD-at-face -> last RESULT beat out is the attention service the static calendar must reserve
+        st = (res['chain'].get('cycles', {}).get('kv_attention_u1_ctx8192') or {}).get('start_to_retire') or {}
+        if st.get('n') == 36:
+            inp['attention'].setdefault('split', {}).update(kv_service=int(st['max']), kv_service_grade=sgrade('chain'))
+            remeasured.add('kv'); applied.append(f"kv_service {st['max']} (max of 36 real-token layers) <- chain")
+        else:
+            problems.append('chain: PASS but per-layer start_to_retire incomplete')
     if ok('tp8'):
         c = res['tp8']['cycles']; e = pick(c, 'E', 'AR256_E'); ls = pick(c, 'LS', 'ls')
         if e is not None and ls is not None:
@@ -226,6 +235,13 @@ def main():
     if not a.base_only:
         report['current_token_price'] = dict(status='QUALIFIED_STAGE_COMPOSITION' if token_pass else 'HELD',
             reasons=problems + [f'missing stage: {s}' for s in missing] + [f'diagnostic stage: {s}' for s in diagnostic])
+        if 'chain' in res:
+            c = res['chain']
+            report['chain'] = dict(verdict=c.get('verdict'), grade=c.get('grade'), hand_off=c.get('hand_off'),
+                                   kv_attention=c.get('cycles', {}).get('kv_attention_u1_ctx8192'),
+                                   kv_attention_token_36_layers=c.get('cycles', {}).get('kv_attention_token_36_layers_start_to_status'),
+                                   kv_attention_u4_cmd_period=c.get('cycles', {}).get('kv_attention_u4_cmd_period'),
+                                   gaps=c.get('gaps'), failures=c.get('failures'))
         if 'ovl4u' in res:
             report['isolated_ovl_transport'] = dict(verdict=res['ovl4u'].get('verdict'),
                 scope='compiled fixture exchanges at release master pins; no full-token throughput claim',

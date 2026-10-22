@@ -522,9 +522,9 @@ def sm_lower_rank(a, man, rdir):
         key = (int(m.get("L") or 0), m["tag"])
         if key not in done:
             for nsm in (4, 2, 1):
-                comps = [SML.compile_qwen_sm(kv, key[0], k, tags=(key[1],)) for k in range(nsm)]
-                rep_sm, per, summ = SML.lower_comps(comps, key[0], bnd, design="qwen",
-                                                    provenance="captured_qwen_sm_operands (qwen_sm_mv_kv, rank 0)")
+                rep_sm, per, summ = SML.lower_comps_refresh(
+                    lambda k: SML.compile_qwen_sm(kv, key[0], k, tags=(key[1],)), nsm, key[0], bnd, design="qwen",
+                    provenance="captured_qwen_sm_operands (qwen_sm_mv_kv, rank 0)")
                 if summ["events"] + 1 <= a.sm_nev:
                     break
             d = rdir / f"sm_L{key[0]}_{key[1]}"

@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.s81.kv_lower_component_receipt.v1",
+  "pass_component": true,
+  "fleet_host": "ot-epyc5",
+  "unit": "oth-ubuntu-1095400-1792641287",
+  "exit": 0,
+  "source_arithmetic_reused": "c49d6e45c (six positives and nine causal negatives; owned by RTLGAP)",
+  "source_contract_from": "08b7f2cda",
+  "qualification": "SYNTHETIC COMPILER COMPONENT ONLY. No actual producer dates, die binding, or full token qualification.",
+  "checks": [
+    "KV/CN/IK/CP actual source command encoders",
+    "GK prerequisite with qualified input bases528/896",
+    "native context bits and END fence",
+    "actual compiler Prog.absorb over140templates",
+    "28 causal programme rejections"
+  ],
+  "sources": {
+    "tools/s81_dv/layer_prog/lower_kv.py": "f059cb1d108814f61fe9b705e28a7d309826e3c144951c0fea1293fabbc4a918",
+    "tools/s81_dv/layer_prog/test_lower_kv.py": "d1e52cf65304c1c6764d9246bf01743055ee85d6b82b60c1b3114a4da95a6179",
+    "tools/s81_dv/layer_prog/kv_bank_contract.py": "cc7016c3b4212438befe2e9413c0189b7b9d6513258b19737397dc6bdd34e49f",
+    "tools/s81_dv/dv_layer_compile.py": "21b899a9f56c90acc37205c82b3ba475e2e1a3102ded1abdc1442313baede823"
+  },
+  "timing_convention": "Adapter pin capture to completion = measured bench finish_edges minus1; ctl_path+DL+6 includes RSTOP2 subtraction, XRT5, VP/KV3.",
+  "previous_receipt": "receipt.json and replay_r2.log retained unchanged"
+}

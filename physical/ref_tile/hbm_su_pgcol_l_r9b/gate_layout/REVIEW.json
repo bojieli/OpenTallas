@@ -1,0 +1,13 @@
+{
+  "reviewer": "codex HBM IDX SU takeover coordinator",
+  "time": "2026-10-21T21:18:40.087169-07:00",
+  "gate_commit": "2026-10-21T21:19:03-0700",
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "Two macro column origins at x43.2 and216.0; lower origins y43.2 and43.2; bank rows retain exact macro-height pitch 41.04 and same approved R8 coordinates.",
+    "std_cell_band": "Connected central band between the two facing SRAM columns; actual density PNG inspected, no red hotspot.",
+    "pin_spread": "Full S face: same693pins below6 perum. Alternate cfg/data placement preserves central register band.",
+    "clock_entry": "Symmetric planned local-leaf spine, TT/FF spread20.2/18.4 ps; insertion364.1/296.5 ps guidance.",
+    "shape": "Same345.6x453.6 and17 SRAMs; actual density PNG inspected, no red hotspot. GRT0."
+  }
+}

@@ -1,0 +1,141 @@
+{
+ "name": "dsdv_seq_host_b1m-dsdv_seq_host_b1m-COMMIT",
+ "block": "dsdv_seq_host_c_r3_lp",
+ "ref_tile": true,
+ "owner": "STW-S81c-COLLA2",
+ "purpose": "seq (B) parent (MAIN) on the closed MAIN band views",
+ "threads": 16,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/s81-seq-b1-1022",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x257_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_16x289_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile/dsdv_sh_lk_s10hq/views",
+   "physical/rom_host_ingest/rtl",
+   "results/arch/landed_parent_1018/dsdv_seq_host/core_b",
+   "rtl/dsrom_sys/s81_ctrl",
+   "rtl/dsrom_sys/s81_dv/unit",
+   "rtl/dsrom_sys/s81_ingest",
+   "rtl/dsrom_sys/s81_static_control",
+   "rtl/hdc/ingest",
+   "rtl/lib",
+   "rtl/link",
+   "results/arch/codex_seq_linked_taps_1021",
+   "tools/s81_dv/seq_three_roots_1021",
+   "results/arch/codex_seq_three_roots_1021",
+   "rtl/common/landed_parent",
+   "tools/landed_parent/lp_fence_release.tcl",
+   "physical/ref_tile/dsdv_sh_lb_lk_b1m/views",
+   "physical/ref_tile/dsdv_sh_lb_vc_b1m/views",
+   "results/closure_loop/dsdv_sh_lb_lk_b1m-dsdv_sh_lb_lk_b1m-a8b9dc305",
+   "results/closure_loop/dsdv_sh_lb_vc_b1m-dsdv_sh_lb_vc_b1m-a8b9dc305",
+   "results/rtl/ref_tile/dsdv_sh_lb_lk_b1m",
+   "results/rtl/ref_tile/dsdv_sh_lb_vc_b1m"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsdv_seq_host_c_r3_lp u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_n32.sv rtl/common/landed_parent/ot_pl_land_rst_copy.sv rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_c_r3_lb.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "region_program",
+    "cmd": "J=4 bash tools/s81_dv/seq_three_roots_1021/run_program.sh {RUN}/region_program 0",
+    "expect": "pass",
+    "pass_regex": "^SEQ_REGION_PROGRAM_PASS$",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "region_missing_landing",
+    "cmd": "J=4 bash tools/s81_dv/seq_three_roots_1021/run_landing.sh {RUN}/region_missing_landing 1",
+    "expect": "fail",
+    "fail_regex": "^SEQ_REGION_MISSING_LANDING_CAUGHT$",
+    "fail_witness": "results/arch/codex_seq_three_roots_1021/witness/initial/out/missing/run.log",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/dsdv_seq_host_b1m/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/dsdv_seq_host_b1m/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/dsdv_seq_host_b1m --out {RUN}/record/views/dsdv_seq_host_c_r3_lp --macro-view physical/ref_tile/dsdv_sh_lb_lk_b1m/views/dsdv_sh_lb_lk --macro-view physical/ref_tile/dsdv_sh_lb_vc_b1m/views/dsdv_sh_lb_vc --macro-view physical/ref_tile/dsdv_sh_lk_s10hq/views/dsdv_sh_lk --macro-view physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq --macro-view physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/dsdv_seq_host_b1m/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/dsdv_sh_lb_lk_b1m/views/dsdv_sh_lb_lk",
+   "physical/ref_tile/dsdv_sh_lb_vc_b1m/views/dsdv_sh_lb_vc",
+   "physical/ref_tile/dsdv_sh_lk_s10hq/views/dsdv_sh_lk",
+   "physical/ref_tile/dsdv_sh_sq/views/dsdv_sh_sq",
+   "physical/ref_tile/dsdv_sh_vc/views/dsdv_sh_vc"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/dsdv_seq_host_b1m/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/dsdv_seq_host_b1m/dsdv_seq_host_b1m-dsdv_seq_host_b1m-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "seq (B) parent (successor of r3e/r3f: soft landing halves under one root per region strung along 1,339-um faces, ck_lk spread 452/378): the landing halves + regional reset runs are hardened VERBATIM in the CLOSED band children dsdv_sh_lb_lk/vc_b1m (daemon a8b9dc305; declared multi_root_children); the parent = 3 closed children + 2 closed bands, wires only, every parent root feeds only hard-child clock pins.  Same module/ports/edges/outline."
+}

@@ -65,9 +65,14 @@ def relay_trunk(buses, by, src, dst):
     word, never a core trunk for an HBM word; mixed bundles take the core trunk (recorded by the callers)."""
     dom = launch_domain(by, src, dst)
     pre = 'clk_hbm_' if dom == 'hbm' else 'clk_core_'
+    # K.RST 10-21: membership = the trunk's LOADS (b[3][1:]), never its driver.  The PLL drives every clk_core_* trunk,
+    # so 'any endpoint' put the PLL lock pin relay (rly_pinfix_pll_lock_0__s0, at the PLL in region c) on the first core
+    # trunk in bus order (clk_core_WS): kv_fwd_lanes then laned a c -> c hop as WS -> c and gated the PLL lock with a
+    # die-reset en 28,959.8 um away (boot deadlock: the HOST releases die_rst_n only after pll_locked) and the opt-in
+    # reset transport priced that wire at +89 release edges (HOLD 414 > h273b).  kv_die's main planner already skips eps[0].
     for inst in (src[0], dst[0] if dst else None):
         j = next((j for j, b in enumerate(buses) if b is not None and b[1] == 'clock_trunk' and b[0].startswith(pre)
-                  and any(i == inst for i, _ in b[3])), None)
+                  and any(i == inst for i, _ in b[3][1:])), None)
         if j is not None:
             return j, dom
     if dom == 'hbm':
@@ -90,7 +95,33 @@ def _far(K, end, p, q):
     return d_ if d_ is not None else abs(p[0]-q[0])+abs(p[1]-q[1])
 
 
-def _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=0.0, a_end=None, b_end=None):
+class CollisionIndex:
+    """Conservative rectangle lookup; preserve original obstacle order and comparisons."""
+    def __init__(self, insts, cell=256.0):
+        self.cell, self.items, self.bins = cell, [], {}
+        for it in insts:
+            self.add(it)
+
+    def cells(self, x0, y0, x1, y1):
+        for x in range(math.floor(x0/self.cell), math.floor(x1/self.cell)+1):
+            for y in range(math.floor(y0/self.cell), math.floor(y1/self.cell)+1):
+                yield x, y
+
+    def add(self, it):
+        index = len(self.items)
+        self.items.append(it)
+        for cell in self.cells(it.x, it.y, it.x+it.w, it.y+it.h):
+            self.bins.setdefault(cell, []).append(index)
+
+    def candidates(self, x0, y0, x1, y1):
+        indices = set()
+        for cell in self.cells(x0, y0, x1, y1):
+            indices.update(self.bins.get(cell, ()))
+        return [self.items[index] for index in sorted(indices)]
+
+
+def _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=0.0, a_end=None, b_end=None,
+            obstacle_index=None):
     if x < 4.32 or y < 4.32 or x+width+4.32 > m['die']['w'] or y+height+4.32 > m['die']['h']:
         return None
     orient = 'MY' if bp[0] < ap[0] else 'R0'
@@ -99,8 +130,10 @@ def _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=0.0
     remaining = _far(K, b_end, (out_x, y+height/2), bp)
     if left > cap or remaining >= distance-1+detour:
         return None
+    obstacles = (obstacle_index.candidates(x-4.32, y-4.32, x+width+4.32, y+height+4.32)
+                 if obstacle_index is not None else m['insts'])
     if any(min(x+width+4.32,i.x+i.w)-max(x-4.32,i.x) > .001 and
-           min(y+height+4.32,i.y+i.h)-max(y-4.32,i.y) > .001 for i in m['insts']+staged):
+           min(y+height+4.32,i.y+i.h)-max(y-4.32,i.y) > .001 for i in obstacles+staged):
         return None
     return (remaining,x,y,left,out_x,orient)
 
@@ -110,6 +143,7 @@ def repair(K, m):
     m['assigned_ports'] = {n: {p: list(v) for p, v in mm.ports.items()}
                            for n, mm in M.items() if not n.startswith('qkd_rly')}
     by = {i.name: i for i in m['insts']}
+    obstacle_index = CollisionIndex(m['insts'])
     additions, buses, unresolved, widened = [], [], [], {}
     for bid, cls, bits, eps in m['buses']:
         if len(eps) != 2 or cls in K.ABUT or cls in ('clock_trunk', 'reset', 'constant'):
@@ -150,7 +184,8 @@ def repair(K, m):
               grid = K.GRID/2
               choices = []
               for x,y in _cands(K, target, grid, 16):
-                  c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, a_end=ae_, b_end=(b, pb))
+                  c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, a_end=ae_, b_end=(b, pb),
+                               obstacle_index=obstacle_index)
                   if c_:
                       choices.append(c_)
               if not choices and (attempt == 1 or not widened.get(bid)):
@@ -160,7 +195,8 @@ def repair(K, m):
                   ring = [(x, y) for x, y in _cands(K, target, grid, 40)]
                   for x, y in ring:
                       # a boxed-in pin may step AROUND its blocker first (bounded detour; later stages must progress)
-                      c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=cap, a_end=ae_, b_end=(b, pb))
+                      c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=cap, a_end=ae_, b_end=(b, pb),
+                                   obstacle_index=obstacle_index)
                       if c_:
                           choices.append(c_)
               if not choices:
@@ -180,6 +216,8 @@ def repair(K, m):
         if not staged:
             buses.append((bid,cls,bits,eps));continue
         m['insts'].extend(staged)
+        for it in staged:
+            obstacle_index.add(it)
         by.update({i.name:i for i in staged})
         buses.extend(chain+[(bid+'__pinfix'+str(len(staged)),cls,bits,[previous,(b,pb)])])
         base=bid.split('__r')[0]

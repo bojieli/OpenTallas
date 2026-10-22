@@ -27,7 +27,7 @@ done
 sha256sum "$R" "$s/ot_hbm_su_programme.sv" "$s/ot_hbm_su_programme_part.sv" "$s/ot_hbm_su_programme_pgcol.sv" \
   "$s/tb_hbm_su_programme_pgcol.sv" tools/hbm_static/su_programme_compile.py "$OUT/vec/prog.mem" > "$OUT/sources.sha256"
 build(){ "$vl" --binary --timing -O1 -j "${JOBS:-8}" -Wno-fatal -Wno-WIDTHTRUNC -Wno-WIDTHEXPAND --top-module tb_hbm_su_programme_pgcol \
-  -I"$OUT/q0" -GMUT="$1" --Mdir "$OUT/obj$1" "$R" "$s/ot_hbm_su_programme.sv" "$s/ot_hbm_su_programme_part.sv" \
+  -I"$OUT/q0" -GMUT="$1" -GNCX="${NCX:-0}" --Mdir "$OUT/obj$1" "$R" "$s/ot_hbm_su_programme.sv" "$s/ot_hbm_su_programme_part.sv" \
   "$s/ot_hbm_su_programme_pgcol.sv" "$s/tb_hbm_su_programme_pgcol.sv" "$M" > "$OUT/build$1.log" 2>&1 \
   || { tail -20 "$OUT/build$1.log"; echo "SU_PROGRAMME_PGCOL BUILD_FAIL MUT=$1"; exit 2; }; }
 run(){ set +e; "$OUT/obj$1/Vtb_hbm_su_programme_pgcol" +DIR="$OUT/q$4" $2 > "$OUT/run_$3_q$4.log" 2>&1; local rc=$?; set -e

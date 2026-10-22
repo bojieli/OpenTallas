@@ -38,7 +38,9 @@
  "params": {
   "SU_TLS": 1,
   "SU_LT": 1,
-  "MU_NU": 4
+  "MU_NU": 4,
+  "ARF": 1,
+  "RP": 1
  },
  "out_dir": "rtl/qwen_dv/lp",
  "record_dir": "results/arch/landed_parent_1018/qfd_dv_slice2_e_lpf",
