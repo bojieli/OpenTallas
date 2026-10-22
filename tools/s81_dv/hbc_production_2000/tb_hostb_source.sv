@@ -7,6 +7,19 @@ module tb_hostb_source;
  .ck(ck),.rst_n(rn),.select_hbe(1'b1),.upstream_fault(upstream),.f_host(515'd0),.f_ks(53'd0),
  .hbe_f_host(host),.starter_f_ks(ks),.hbe_ks_slot(slot),.issue_host(issue_host),.issue_ks(issue_ks),
  .engram_f_ks(egks),.hostb_fault(fault),.hb_starter_armed(armed));
+ wire [514:0] external_host;wire [52:0] external_ks,external_eg;wire[2:0]external_fault;wire external_armed;
+ dsdv_hostb_source #(.HOSTB_ENABLE(1),.STATIC_KS6(0)) external_dut(
+ .ck(ck),.rst_n(rn),.select_hbe(1'b1),.upstream_fault(1'b0),.f_host(515'd0),.f_ks(53'd0),
+ .hbe_f_host(host),.starter_f_ks(ks),.hbe_ks_slot(slot),.issue_host(external_host),.issue_ks(external_ks),
+ .engram_f_ks(external_eg),.hostb_fault(external_fault),.hb_starter_armed(external_armed));
+ always @(posedge ck)begin
+  #0.01;
+  if(rn&&edge_n>30)begin
+   if(external_fault||external_armed)$fatal(1,"external booked path manufactured armed/fault");
+   if(external_ks!==ks||external_eg!==ks)$fatal(1,"external booked descriptor altered");
+   if(external_host[0]!==host[0]||(host[0]&&external_host!==host))$fatal(1,"external booked host word altered");
+  end
+ end
  integer mode=0,i,edge_n=0,seen=0,last_edge=0;reg[511:0]d;reg[47:0]epoch;
  function[52:0]desc(input integer n);desc={1'b1,10'd37,21'(100+n),21'(200+n)};endfunction
  always @(posedge ck)begin

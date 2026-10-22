@@ -31,12 +31,16 @@
 // (native census: context_valid 35 loads, receiver_edge bits 33-38 loads > 32).
 module dsdv_hostb_stage_hbc #(
  parameter integer ENABLE=0, LOCAL_STAGE=255, LOCAL_RANK=4, PHASE_BOUND=0,
+ parameter integer RETURN_LOCAL=0, RETURN_REQUIRE_KIT=1,
+ parameter [47:0] RETURN_ARRIVAL_DEADLINE=48'hffffffffffff,
  parameter [63:0] CLOCK_RESET_ID=64'd0,
  parameter [47:0] BOOT_HEADER_EDGE=48'hffffffffffff,
  parameter [47:0] BOOT_COMMIT_EDGE=48'hffffffffffff
 )(
  input wire ck,rst_n,job_active,starter_armed,
  input wire [1103:0] from_prev,local_ro,return_ro,
+ input wire [76:0] status_t_host,input wire [53:0] status_t_kd,
+ output wire [3:0] return_fault,
  output wire [1103:0] to_local,next_ro,
  output wire [514:0] f_host,output wire [52:0] ks_descriptor,
  output wire [2:0] ks_slot,output wire [5:0] arm_mask,
@@ -50,6 +54,7 @@ module dsdv_hostb_stage_hbc #(
    .header_slot(1'b0),.job_active(job_active),.starter_armed(starter_armed),.from_prev(from_prev),.local_ro(local_ro),
    .return_ro(return_ro),.forward_slot(1'b0),.return_slot(1'b0),.to_local(to_local),.next_ro(next_ro),
    .f_host(f_host),.ks_descriptor(ks_descriptor),.ks_slot(ks_slot),.arm_mask(arm_mask),.arm_commit(arm_commit),.fault(fault));
+  assign return_fault=0;
   assign context_valid=0;assign receiver_edge=0;assign boot_edge=0;assign hbc_fault=0;
  end else begin:g_hbc
   wire [1103:0] after_hbc;wire [511:0] active_fields;wire context_valid_bk;wire [47:0] receiver_edge_bk;
@@ -60,18 +65,33 @@ module dsdv_hostb_stage_hbc #(
    .receiver_edge(receiver_edge),.boot_edge(boot_edge),.fault(hbc_fault),
    .context_valid_bk(context_valid_bk),.receiver_edge_bk(receiver_edge_bk));
   wire [15:0] tid;wire [9:0] user_id;wire [20:0] position,token;wire [31:0] epoch_id;wire [63:0] programme_id;
-  wire [7:0] data_stage;wire [1:0] data_rank;wire next_header_slot,next_forward_slot,source_return_tx_slot;wire [47:0] transit_body_edge;
+  wire [7:0] data_stage;wire [1:0] data_rank;wire next_header_slot,next_forward_slot,source_return_tx_slot,status_sample_slot,return_send_slot;wire [47:0] transit_body_edge;
   (* keep_hierarchy="yes" *) dsdv_hbc1_affine_book u_book(.ck(ck),.rst_n(rst_n),.context_valid(context_valid_bk),
    .fields(active_fields),.receiver_edge(receiver_edge_bk),.tid(tid),.user_id(user_id),.position(position),.token(token),
    .epoch_id(epoch_id),.programme_id(programme_id),.expected_data_stage(data_stage),.expected_data_rank(data_rank),
    .next_header_slot(next_header_slot),.next_forward_slot(next_forward_slot),.prev_header_slot(),.prev_forward_slot(),
-   .status_sample_slot(),.return_send_slot(),.source_return_TX_slot(source_return_tx_slot),.transit_body_edge(transit_body_edge));
+   .status_sample_slot(status_sample_slot),.return_send_slot(return_send_slot),.source_return_TX_slot(source_return_tx_slot),.transit_body_edge(transit_body_edge));
+  wire [1103:0] actual_return;
+  if(RETURN_LOCAL!=0)begin:g_return
+   // This date is a compiled UPSTREAM arrival authority, not local PREV input.
+   // Refuse an unprofiled route rather than fabricating a deadline.
+   initial if(RETURN_ARRIVAL_DEADLINE==48'hffffffffffff)
+    $fatal(1,"HBC return requires explicit compiled upstream arrival date");
+   dsdv_hostb_return u_return(.ck(ck),.rst_n(rst_n),.configured(context_valid),
+    .sample_slot(status_sample_slot),.send_slot(return_send_slot),.require_kit(RETURN_REQUIRE_KIT!=0),
+    .context_valid(context_valid),.stage_id(LOCAL_STAGE[7:0]),.rank_id(LOCAL_RANK[1:0]),
+    .tid(tid),.user_id(user_id),.position(position),.token(token),.epoch_id(epoch_id),
+    .arrival_deadline(RETURN_ARRIVAL_DEADLINE),.programme_id(programme_id),
+    .t_host(status_t_host),.t_kd(status_t_kd),.return_ring(actual_return),.fault(return_fault));
+  end else begin:g_external_return
+   assign actual_return=return_ro;assign return_fault=0;
+  end
   dsdv_hostb_stage #(.ENABLE(1)) u_stage(.ck(ck),.rst_n(rst_n),.configured(context_valid),
    .local_stage(LOCAL_STAGE[7:0]),.local_rank(LOCAL_RANK[1:0]),.epoch_id(epoch_id),.programme_id(programme_id),
    .receiver_edge(receiver_edge),.transit_body_edge(transit_body_edge),.expected_tid(tid),
    .expected_header_stage(data_stage),.expected_user(user_id),.expected_position(position),.expected_token(token),
    .header_slot(next_header_slot),.job_active(job_active),.starter_armed(starter_armed),.from_prev(after_hbc),
-   .local_ro(local_ro),.return_ro(return_ro),.forward_slot(next_forward_slot),.return_slot(source_return_tx_slot),
+   .local_ro(local_ro),.return_ro(actual_return),.forward_slot(next_forward_slot),.return_slot(source_return_tx_slot),
    .to_local(to_local),.next_ro(next_ro),.f_host(f_host),.ks_descriptor(ks_descriptor),.ks_slot(ks_slot),
    .arm_mask(arm_mask),.arm_commit(arm_commit),.fault(fault));
  end endgenerate
