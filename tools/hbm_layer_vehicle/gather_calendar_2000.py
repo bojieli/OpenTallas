@@ -25,9 +25,28 @@ def receipt(spec, root, binding):
     if record.get('status')!='PASS':raise ValueError('producer receipt is not PASS: '+str(path))
     if record.get('producer_kind') not in ('native_vm_producer','all_rank_native_arrival','native_vm_allocation','native_control_transport'):
         raise ValueError('fixture, imaged far end or prospective producer is not readiness evidence')
-    for field in ('die_sha256','clock_epoch_identity'):
+    for field in ('die_sha256','clock_epoch_identity','layer_id'):
         if record.get(field)!=binding[field]:raise ValueError('source receipt has different '+field)
     if not record.get('source_sha256'):raise ValueError('producer source identity absent')
+    if record['producer_kind']=='all_rank_native_arrival':
+        run=integer(record['aggregation_run'],'actual aggregation run',0,3)
+        tp=integer(binding['producer_tp'],'actual source producer TP',96,192)
+        if tp not in (96,192) or record.get('producer_tp')!=tp:raise ValueError('actual source producer TP identity required')
+        nranks=tp//4
+        shards=record.get('source_shards',[])
+        if len(shards)!=nranks:raise ValueError('96-word arrival lacks actual source rank shards')
+        ranks=set()
+        for shard_spec in shards:
+            shard=receipt(shard_spec,root,binding)
+            rank=integer(shard['rank'],'actual source rank',nranks*run,nranks*(run+1)-1)
+            if shard['producer_kind']!='native_vm_producer' or shard.get('producer_tp')!=tp or shard['word_count']!=384//tp:
+                raise ValueError('aggregation source must be actual source-owned rank producer')
+            if rank in ranks or shard['logical_score_range']!=[384*rank//tp,384*(rank+1)//tp]:
+                raise ValueError('duplicated or misassigned actual score shard')
+            ranks.add(rank)
+            if record['ready_edge']<shard['ready_edge']:
+                raise ValueError('arrival precedes native source readiness')
+        if record['word_count']!=96:raise ValueError('aggregation native run must contain96 words')
     record['source_receipt']=str(path)+':sha256:'+spec['sha256']
     return record
 
@@ -42,12 +61,12 @@ def build(binding, ledger, requests, receipt_root):
     missing=[]
     for field in ('die_sha256','source_sha256','clock_epoch_identity','calendar_epoch',
                   'configuration_start','launch_to_calendar_zero','ownership_release_tail',
-                  'port_free','parameters','instance'):
+                  'port_free','parameters','instance','producer_tp','layer_id'):
         if binding.get(field) is None:missing.append('selected gather binding.'+field)
     if binding.get('status')!='PASS':missing.append('selected gather binding PASS source receipt')
     if len(requests)!=6:raise ValueError('all six route gathers are required')
     for request in requests:
-        for key in ('index','rank0','rank1','rank2','rank3','output_allocation'):
+        for key in ('index','run0','run1','run2','run3','output_allocation'):
             name=request['tag']+'::'+key
             if ledger.get(name) is None:missing.append(name+' actual native producer/allocation receipt')
     if ledger.get('control_transport') is None:missing.append('actual native control transport receipt')
@@ -66,7 +85,7 @@ def build(binding, ledger, requests, receipt_root):
         raise ValueError('actual GSC placement requires selected SEGMENTED96 source')
     control=receipt(ledger['control_transport'],receipt_root,binding)
     if control['producer_kind']!='native_control_transport':raise ValueError('actual control transport authority required')
-    for field in ('calendar_epoch','configuration_start','launch_to_calendar_zero','ownership_release_tail','parameters','source_sha256'):
+    for field in ('calendar_epoch','configuration_start','launch_to_calendar_zero','ownership_release_tail','parameters','source_sha256','producer_tp','layer_id'):
         if control.get(field)!=binding[field]:raise ValueError('control binding differs from hashed source receipt: '+field)
     profile=phases(binding['parameters']['READ_SAMPLE'],binding['parameters']['WRITE_COMMIT'])
     epoch=integer(binding['calendar_epoch'],'actual calendar epoch',0,2**31-1)
@@ -75,30 +94,31 @@ def build(binding, ledger, requests, receipt_root):
     for request in requests:
         tag=request['tag'];d=deepcopy(request['descriptor'])
         producers={key:receipt(ledger[tag+'::'+key],receipt_root,binding)
-                   for key in ('index','rank0','rank1','rank2','rank3','output_allocation')}
+                   for key in ('index','run0','run1','run2','run3','output_allocation')}
         expected={'index':(d['index_word'],1),'output_allocation':(d['dest_word'],1)}
         if len(d.get('segment_bases',[]))!=4:raise ValueError('actual four GSC native runs required')
-        expected.update({f'rank{i}':(address,96) for i,address in enumerate(d['segment_bases'])})
+        expected.update({f'run{i}':(address,96) for i,address in enumerate(d['segment_bases'])})
         for key,(first,n) in expected.items():
             record=producers[key]
-            allowed=('native_vm_allocation',) if key=='output_allocation' else (('native_vm_producer',) if key in ('index','rank0') else ('all_rank_native_arrival',))
+            allowed=('native_vm_allocation',) if key=='output_allocation' else (('native_vm_producer',) if key=='index' else ('all_rank_native_arrival',))
+            if key.startswith('run') and record.get('aggregation_run')!=int(key[-1]):raise ValueError('source arrival has wrong logical score run')
             if record['producer_kind'] not in allowed:raise ValueError('incorrect source producer authority '+tag+' '+key)
             integer(first,'actual producer first word',0,(1<<18)-n)
             if (record['first_word'],record['word_count'])!=(first,n):
                 raise ValueError('request placement differs from actual source producer '+tag+' '+key)
         ready=max(integer(producers[k]['ready_edge'],'actual native readable edge',0,2**31-1)
-                  for k in ('index','rank0','rank1','rank2','rank3'))
+                  for k in ('index','run0','run1','run2','run3'))
         output=producers['output_allocation']
         start=max(free,ready+1,integer(output['free_edge'],'output allocation available',0,2**31-1),
                   math.ceil(request['earliest_model_issue']))
         done=start+profile['done']
-        for key in ('index','rank0','rank1','rank2','rank3'):
+        for key in ('index','run0','run1','run2','run3'):
             integer(producers[key]['release_edge'],'actual retained producer lifetime',done,2**31-1)
         integer(output['release_edge'],'actual output allocation lifetime',done+2,2**31-1)
         job=dict(index_ready=producers['index']['ready_edge'],
-                 score_ready=max(producers[k]['ready_edge'] for k in ('rank0','rank1','rank2','rank3')),
+                 score_ready=max(producers[k]['ready_edge'] for k in ('run0','run1','run2','run3')),
                  port_free=start,index_release=producers['index']['release_edge'],
-                 score_release=min(producers[k]['release_edge'] for k in ('rank0','rank1','rank2','rank3')),
+                 score_release=min(producers[k]['release_edge'] for k in ('run0','run1','run2','run3')),
                  output_release=output['release_edge'],producer_receipts=producers)
         jobs[tag]=job
         plans.append(dict(status='native_gather_emitted',native_gather=dict(tag=tag,descriptor=d,start=start,done=done)))
