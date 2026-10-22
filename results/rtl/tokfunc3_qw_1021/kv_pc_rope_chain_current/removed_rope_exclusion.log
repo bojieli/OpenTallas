@@ -1,0 +1,4 @@
+CHAIN_TOKEN_PASS tok=384 issue=1 return=1 capture=1 transfer=1
+[776] %Fatal: tb.sv:11: Assertion failed in tb.tick: wrong identity/scale
+%Error: /srv/opentallas-scratch/claude/codex-tok-qw-2000/kv_chain_src/tb.sv:11: Verilog $stop
+Aborting...

@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.qwen.kvpc-rope-chain-minimum.v1",
+  "status": "PASS_COMPONENT_SOURCE_ONLY",
+  "source_revision": "65cb1678b",
+  "owner": "/root/token/qwen",
+  "unit": "oth-ubuntu-367494-1792646806",
+  "client_pid": 2521746,
+  "checks": [
+    "cold reset before configuration",
+    "one boot landing word with exact payload and one returned credit",
+    "ordinary token 384 has one scale issue/return/capture/transfer",
+    "RoPE token 151936 has no home scale issue/return/capture/transfer",
+    "mid-run reset followed by both token cases in reverse order",
+    "removed RoPE exclusion mutant produces forbidden scale issue and is rejected"
+  ],
+  "scope": "Exact changed chain only. Does not instantiate SRAM arrays or full selected S6C parent and does not qualify physical views or GEN transport.",
+  "next_required_job": {
+    "name": "tok_qw_s6c_parent_boot_token_65cb",
+    "owner": "/root/token/qwen",
+    "source": "65cb1678b",
+    "status": "AWAITING_ACTUAL_GEN_BOOT_IMAGES_AND_SOURCE_BOUND_AGES",
+    "obligations": [
+      "selected parent boot and first token",
+      "cold SRAM start with actual programme",
+      "actual admission before first kind12 context"
+    ]
+  },
+  "sha256": {
+    "removed_rope_exclusion.log": "f60fb9e45c2a2db8be32e0a90bd1bb68279800bc5cb9c09c78a6042b20c4e8a2",
+    "mutant.sv": "47b0805a66766e1dd36a8bc1b30858ab2b938b0c0570bf8c750d8122e6081cd6",
+    "positive.log": "3d44ab9cbb2d08c641d8d1dc427dc84716a6f0247cc1f9444d783bcaf0ba3949",
+    "chain.sv": "ba04049ce66d37808ad6ed8ba8126b7e00564ce5d16cb521de922821dbe6c048",
+    "source.json": "b2642ccc4488e7351990ab7369d49a0509a591afd89983c5b9ef159a400c22f1",
+    "positive.build.log": "f7ec019f2cbf2e70dddc8c113edf245a92f9184dd8b00b08a2e75dd9dec0be5d",
+    "run.py": "f48bd8666ad0f32a93e62f1074fb7da3e86a29099de63868189b412893991d15",
+    "binaries.sha256": "d8baf35c878a3eda672d94620d879aba09fc48250731a05af66816b49ccfc5fb",
+    "record.json": "d58337b61aa387bd1b483c06f1566804c431f3736ac6014a0da4f02b3e492923",
+    "tb.sv": "d8fc5931aa56124a0b62d75d014db7a1849e5fab9180d75ac012c794bdd1fc33",
+    "removed_rope_exclusion.build.log": "61e5704a328cc5fc19b57db3137044075e3d7148580a5de69efb016971e9cb16"
+  }
+}
