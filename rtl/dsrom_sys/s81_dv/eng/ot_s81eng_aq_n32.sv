@@ -76,16 +76,13 @@ module ot_s81sl_aq12x_eng_n32 (
     // -- S5: max(m4[0], m4[1], floor): three parallel compares and a select -----------------------
     wire ab = m4[0] >= m4[1], af = m4[0] >= FLOOR_FP8, bf = m4[1] >= FLOOR_FP8;
 `ifdef OT_S81ENG_RR_MUL_N32
-    wire[30:0]amax;wire[30:0]amax_next=(ab&&af)?m4[0]:(!ab&&bf)?m4[1]:FLOOR_FP8;
-    // Preserve every real nonconstant BF16/floor capture identity at the original S5 edge.
-    // Other positions remain ordinary captures, preserving generic FP32 semantics and constant pruning.
-    for(genvar mb=0;mb<31;mb=mb+1)begin:g_amax
-        if((31'h7fffb717>>mb)&1)begin:g_owned
-            (* keep=1 *)ot_s81eng_rr_amaxbit u_b(.ck(clk),.d(amax_next[mb]),.q(amax[mb]));
-        end else begin:g_free
-            reg q;always @(posedge clk)q<=amax_next[mb];assign amax[mb]=q;
-        end
-    end
+    // STW-S81-COLLB-2 10-21: the S5 amax capture moves INTO the multiplier's own input cut (CUTS bit 0 = 1), same edge:
+    // the former kept amaxbit flops each fed the multiplier's whole combinational front end (lzc32 + two norm12
+    // shifters + zero/nonfinite + the k0 capture), 30..34 loads per bit in the kit flow (gate census: g_amax[22] 34).
+    // With K0 = 1 the select output is captured once by u_k0 (lzc/zero/nonfinite precomputed before the edge) and the
+    // normalisation becomes the staged shift chain -> fan-out bounded by construction.  Function and cycle unchanged:
+    // amax_next enters at S5 with vl[5], one fewer external register + one more internal cut = the same output edge.
+    wire[30:0]amax_next=(ab&&af)?m4[0]:(!ab&&bf)?m4[1]:FLOOR_FP8;
 `else
     reg[30:0]amax;
     always @(posedge clk)amax<=(ab&&af)?m4[0]:(!ab&&bf)?m4[1]:FLOOR_FP8;
@@ -96,7 +93,10 @@ module ot_s81sl_aq12x_eng_n32 (
     wire        pfault;
 `ifdef OT_S81ENG_RR_MUL_N32
     // Internal two-edge reset forest reconstitutes exactly the original consumer release edge.
-    ot_s81dv_qmul_n32 #(.LAT(5)) u_scale (clk, rst_mul_early_n, vl[6], {1'b0, amax}, INV_448, prod, pfault);
+    wire [1:0] s_err; wire s_vo;
+    ot_s81dv_fp32_mul_f12_n32 #(.CUTS(8'b01101011)) u_scale (.clk(clk), .rst_n(rst_mul_early_n), .valid_in(vl[5]),
+        .a({1'b0, amax_next}), .b(INV_448), .y(prod), .err(s_err), .valid_out(s_vo));
+    assign pfault = s_vo && (s_err != 2'd0);
 `else
     ot_hdc_qmul_lat #(5) u_scale (clk, rst_n, vl[6], {1'b0, amax}, INV_448, prod, pfault);
 `endif
