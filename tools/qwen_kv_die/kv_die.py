@@ -5518,6 +5518,12 @@ def case(m, work):
         man = F.case_real(m, work)
     finally:
         F.masters, F.port_widths = saved
+    # The physical writer must use the same S6C producer slices as the standalone
+    # netlist writer. Otherwise its repeated .est ports leave private fork heads
+    # without a driver after expansion and prevent the AHUB age-padding step.
+    if m.get('fork_slices') or m.get('narrow_src'):
+        die_v = work / 'die.v'
+        die_v.write_text(narrow_transports(m, die_v.read_text()))
     _case_ties(m, work / 'die.v')
     if KSD.ON and m['geo'].get('static_die'):
         # KVR-DERIVE 10-19: the case's die.v gets the per-instance parameter sidecar too (F.case_real writes die.v with the

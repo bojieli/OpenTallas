@@ -342,12 +342,23 @@ if __import__('os').environ.get('OT_KV_GRP_S6C', '0') == '1':
         ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv', 'qkd_kvs_grp_s6c',
          ['input wire [270:0] i_ctl;', 'output wire [270:0] o_dn;'])]
     GEN_ASSERT['odn_h_slice'] = ['GRP_H_CTL_PRIVATE = 194', "m.setdefault('narrow_src', {})[bid] = (dinst, dport, bits)"]
-    ROLES[('qkd_kvs_emb', 'px_tok')] = ('emb_tok_dead', 'DUP')
-    ROLES[('qkd_kvs_emb', 'px_tep')] = ('emb_tok_dead', 'DUP')
+    _emb_master = _D.KIND_MASTER['emb']
+    if _D.ROPE:
+        # RoPE exports the same token and epoch twice: dedicated PC-pass faces
+        # and the context service consumed by CTL. S6C removes the PC passes.
+        ASSERT['emb_tok_dead'] = [(TILES, _emb_master, [
+            'assign px_tok = w_rope_token;', 'assign px_tep = w_rope_epoch;',
+            'assign o_ctx_svc = {d2d__svc[173:110],w_rope_token,d2d__svc[91:90],w_rope_epoch,d2d__svc[73:25],w_rope_start,d2d__svc[23:0]};'])]
+        GEN_ASSERT['emb_tok_dead'] = ["ctl['ports']['d2d__svc'].update(cls='bundle', peer='kvs_emb')"]
+    ROLES[(_emb_master, 'px_tok')] = ('emb_tok_dead', 'DUP')
+    ROLES[(_emb_master, 'px_tep')] = ('emb_tok_dead', 'DUP')
     ROLES[('qkd_kvs_grp_s6c', 'o_dn')] = ('odn_h_slice', 'SLICE')
     WHY['emb_tok_dead'] = ('qkd_kvs_emb px_tok/px_tep = d2d__svc[109:92]/[89:74] wire copies of its own input (u_rowtx '
                            'consumes the same bits); the DS private group ABI deleted their only reader (x__tok/x__tep); '
                            'the D2D end reads engine_result_token/_tag from the hsvc trunk')
+    if _D.ROPE:
+        WHY['emb_tok_dead'] = ('RoPE px_tok/px_tep duplicate w_rope_token/w_rope_epoch in o_ctx_svc; '
+                               'CTL consumes that service word; S6C removed only the redundant PC-pass faces')
     WHY['odn_h_slice'] = ('o_dn[270:194] of a chain-end s6c group: the H group reads the private i_ctl[193:0] only; '
                           'the generator plans that transport at 194 b (wire rotation tail, no logic)')
 
