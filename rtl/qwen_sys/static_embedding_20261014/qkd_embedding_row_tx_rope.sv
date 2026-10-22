@@ -30,7 +30,7 @@ module qkd_embedding_row_tx_rope #(parameter integer MUT=0)(
  (* keep=1,dont_touch=1 *)reg [PAY-1:0] slot_payload;
  (* keep=1,dont_touch=1 *)reg [CONTROLS-1:0] slot_control,fill_control;
  (* keep=1,dont_touch=1 *)reg [3:0] fill_flags;
- (* keep=1,dont_touch=1 *)reg [2:0] fill_metadata;
+ (* keep=1,dont_touch=1 *)reg [3:0] fill_metadata;
  (* keep=1,dont_touch=1 *)reg [9:0] word_valid,word_is_scale;
  (* keep=1,dont_touch=1 *)reg [63:0] index_hot;
  always @(posedge ck)begin
@@ -52,7 +52,7 @@ module qkd_embedding_row_tx_rope #(parameter integer MUT=0)(
    slot_control[i]<=slot_first[(i+PAY)%3];fill_control[i]<=fill_first[i%2];
   end
   for(integer i=0;i<4;i=i+1)fill_flags[i]<=fill_first[(i+CONTROLS)%2];
-  for(integer i=0;i<3;i=i+1)fill_metadata[i]<=fill_first[(i+CONTROLS+4)%2];
+  for(integer i=0;i<4;i=i+1)fill_metadata[i]<=fill_first[(i+CONTROLS+4)%2];
   word_valid<={10{word_v_first}};word_is_scale<={10{word_scale_first}};
   for(integer i=0;i<64;i=i+1)index_hot[i]<=index_first[i/16]==6'(i);
  end
@@ -69,15 +69,21 @@ module qkd_embedding_row_tx_rope #(parameter integer MUT=0)(
  end
  (* keep=1,dont_touch=1 *)reg [6:0] n_state[0:CONTROLS-1];
  (* keep=1,dont_touch=1 *)reg [CONTROLS-1:0] armed_state;
+ // SQ-KATTN2 10-21 (native census 37 drivers 34..58): every payload slice decodes its header / RoPE beat from
+ // REGISTERED kept flags (two byte-half copies each) updated with its own counter, so neither the counter MSB nor a
+ // shared comparator fans out to 16 x 3 mux pins.  Same values on the same edges as n_state==0 / n_state>=65.
+ (* keep=1,dont_touch=1 *)reg [1:0] is_hdr[0:CONTROLS-1];
+ (* keep=1,dont_touch=1 *)reg [1:0] is_rope[0:CONTROLS-1];
  for(genvar c=0;c<CONTROLS;c=c+1)begin:g_state
+  wire [6:0] n_nx=fill_control[c]?7'd0:((slot_control[c]&&n_state[c]!=7'd73)?n_state[c]+7'd1:n_state[c]);
   always @(posedge ck or negedge reset_regions[c])
-   if(!reset_regions[c])begin n_state[c]<=0;armed_state[c]<=0;end
+   if(!reset_regions[c])begin n_state[c]<=0;armed_state[c]<=0;is_hdr[c]<=2'b11;is_rope[c]<=2'b00;end
    else begin
+    n_state[c]<=n_nx;is_hdr[c]<={2{n_nx==7'd0}};is_rope[c]<={2{n_nx>=7'd65}};
     if(slot_control[c])begin
-     if(n_state[c]!=7'd73)n_state[c]<=n_state[c]+7'd1;
      if(n_state[c]==7'd72)armed_state[c]<=0;
     end
-    if(fill_control[c])begin n_state[c]<=0;armed_state[c]<=1;end
+    if(fill_control[c])armed_state[c]<=1;
    end
  end
  reg [63:0] filled;wire [63:0] filled_next;
@@ -92,7 +98,8 @@ module qkd_embedding_row_tx_rope #(parameter integer MUT=0)(
  always @(posedge ck)begin
   if(fill_metadata[0])tok[15:0]<=ftok_second[15:0];
   if(fill_metadata[1])tok[17:16]<=ftok_second[17:16];
-  if(fill_metadata[2])begin ep<=fep_second;pos<=pos_second;end
+  if(fill_metadata[2])ep<=fep_second;
+  if(fill_metadata[3])pos<=pos_second;
   if(word_valid[4]&&word_is_scale[4]&&!word_rope[4]&&armed_state[SCALE]&&n_state[SCALE]==0)scale<=data_second[15:0];
  end
  wire resident=armed_state[MAIN]&&(&filled)&&scale_filled&&(&rope_filled);
@@ -122,8 +129,11 @@ module qkd_embedding_row_tx_rope #(parameter integer MUT=0)(
   wire [5:0] word_out=(MUT==1)?n_state[p][5:0]:n_state[p][5:0]-6'd1;
   wire [547:0] body={tok,word_out,12'd0,memory_q};
   wire [547:0] rope_body={tok,6'(n_state[p]-65),11'd0,1'b1,rope_q};
-  always @(posedge ck)if(slot_payload[p])
-   emb_tx_payload[LO+:WIDTH]<=n_state[p]==0?header[LO+:WIDTH]:(n_state[p]>=65?rope_body[LO+:WIDTH]:body[LO+:WIDTH]);
+  localparam integer HW=WIDTH/2;
+  always @(posedge ck)if(slot_payload[p])begin
+   emb_tx_payload[LO+:HW]<=is_hdr[p][0]?header[LO+:HW]:(is_rope[p][0]?rope_body[LO+:HW]:body[LO+:HW]);
+   emb_tx_payload[LO+HW+:WIDTH-HW]<=is_hdr[p][1]?header[LO+HW+:WIDTH-HW]:(is_rope[p][1]?rope_body[LO+HW+:WIDTH-HW]:body[LO+HW+:WIDTH-HW]);
+  end
  end
  wire [6:0] n_next=fill_control[MAIN]?7'd0:
   (slot_control[MAIN]&&n_state[MAIN]!=73?n_state[MAIN]+7'd1:n_state[MAIN]);
@@ -133,6 +143,8 @@ module qkd_embedding_row_tx_rope #(parameter integer MUT=0)(
   (word_valid[6]&&word_is_scale[6]&&!word_rope[6]?1'b1:scale_filled);
  wire duplicate_word=|(filled&index_hot);
  wire [17:0] expected_rope_token=18'd151936+{8'd0,pos[12:3]};
+ // compare both expectations first: word_rope[6] selects one bit, not an 18-b operand mux
+ wire token_bad_rope=token_second!=expected_rope_token,token_bad_emb=token_second!=tok;
  assign row_open=(MUT==4)?row_ready:armed_state[MAIN];
  always @(posedge ck or negedge reset_regions[46])
   if(!reset_regions[46])begin emb_tx_v<=0;fault<=0;scale_filled<=0;row_ready<=0;end
@@ -143,7 +155,7 @@ module qkd_embedding_row_tx_rope #(parameter integer MUT=0)(
    row_ready<=armed_next&&(&filled_next)&&scale_next&&(&rope_filled)&&n_next==0;
    if(word_valid[6])begin
     if(!armed_state[MAIN]||n_state[MAIN]!=0||fill_control[MAIN])fault<=1;
-    if(token_second!=(word_rope[6]?expected_rope_token:tok)||epoch_second!=ep)fault<=1;
+    if((word_rope[9]?token_bad_rope:token_bad_emb)||epoch_second!=ep)fault<=1;   // own kept copy [9]
     if(word_rope[6])begin
      if(word_is_scale[6]||(rope_selected[6]&&rope_filled[index_second[2:0]]))fault<=1;
     end else if(word_is_scale[6])begin if(scale_filled)fault<=1;end

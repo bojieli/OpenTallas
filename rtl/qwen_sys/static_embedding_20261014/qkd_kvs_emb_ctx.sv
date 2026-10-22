@@ -17,7 +17,7 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
     input  wire          rst_n,
     input  wire [98:0]   i_ctx,
     input wire [1:0] head_rx_user,emb_tx_user,
-    input wire kvn_ctx_fault,
+    input wire kvn_ctx_fault,ovl_adm_done,
     input  wire [0:0]    d2d__emb_tx_slot,
     output wire [0:0]    rowtx__emb_tx_v,
     output wire [547:0]  rowtx__emb_tx_payload,
@@ -38,11 +38,12 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
     reg rope_pending, rope_start;
     reg [17:0] rope_id;
     reg [15:0] rope_epoch;
-    wire [3:0] start_local;
+    wire [5:0] start_local;   // SQ-KATTN2 10-21: [0] rope_epoch [1] rope_id [2] position [3] RoPE delay [4] px_tok mux [5] px_tep mux
     // Metadata uses independently kept start copies on the original retire edge.
     always @(posedge ck)begin
       if(start_local[1] && ROPE)rope_id<=18'd151936+{8'd0,accepted_owner[18:9]};
-      if(start_local[2] && ROPE)begin position<=accepted_owner[18:6];rope_epoch<=tep;end
+      if(start_local[2] && ROPE)position<=accepted_owner[18:6];
+      if(start_local[0] && ROPE)rope_epoch<=tep;   // SQ-KATTN2 10-21: own start bank (bank 2 had 29 + loads)
     end
     always @(posedge ck or negedge rst_n)
       if(!rst_n)begin rope_count<=0;rope_pending<=0;rope_start<=0;end
@@ -60,6 +61,13 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
     always @(posedge ck or negedge rst_n)
       if(!rst_n)rope_phase<=0;
       else if(start_local[3])rope_phase<=0;else if(rope_start)rope_phase<=1;
+    // SQ-KATTN2 10-21 (native census): the px_tok / px_tep RoPE selects are two kept registered copies of
+    // (rope_start || rope_phase), each computed from the next values of both, so no shared OR fans to 34 mux pins.
+    wire rope_start_nx=!(start_local[3]&&ROPE)&&rope_pending&&rope_count==0;
+    wire rope_phase_nx=start_local[3]?1'b0:(rope_start?1'b1:rope_phase);
+    (* keep=1,dont_touch=1 *)reg [1:0] rope_sel;
+    always @(posedge ck or negedge rst_n)
+      if(!rst_n)rope_sel<=0;else rope_sel<={2{rope_start_nx||rope_phase_nx}};
     wire [17:0] tok;
     wire [15:0] tep;
     wire        cf, jf, rf, row_open;
@@ -68,7 +76,7 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
     wire [17:0] w_token;
     wire [5:0]  w_index;
     wire [15:0] w_epoch;
-    qkd_embedding_ctx_start #(.NATIVE32(NATIVE32),.MIN_GAP(ROPE?74:66)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]), .ctx_observed_v(i_ctx[97]),
+    qkd_embedding_ctx_start #(.NATIVE32(NATIVE32),.LOCAL(6),.MIN_GAP(ROPE?74:66)) u_ctx (.ck(ck), .rst_n(rst_n), .row_open(row_open), .ctx_v(i_ctx[98]&&(!OVL||ovl_adm_done)), .ctx_observed_v(i_ctx[97]&&(!OVL||ovl_adm_done)),
         .ctx_hdr(i_ctx[96:61]), .ctx_owner(i_ctx[60:0]), .start(st), .start_local(start_local), .token(tok), .epoch(tep), .owner(accepted_owner), .fault(cf));
     qkd_embedding_static_join4_cal #(.MUT(0), .NATIVE32(NATIVE32), .PIPE_JOIN(PIPE_JOIN)) u_join (.ck(ck), .rst_n(rst_n), .up0(i_hroot_WS), .up1(i_hroot_WN),
         .up2(i_hroot_ES), .up3(i_hroot_EN), .start(sweep_start), .rope_sweep(ROPE && rope_start), .cfg_we(i_ctl[72]), .cfg_addr(i_ctl[7:0]), .cfg_data(i_ctl[71:8]),
@@ -86,14 +94,16 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
         .fault(rf), .row_ready(), .row_open(row_open));
     end endgenerate
     assign px_st = sweep_start;
-    assign px_tok = (!st&&(rope_start||rope_phase))?rope_id:tok;
-    assign px_tep = (!st&&(rope_start||rope_phase))?rope_epoch:tep;
+    // native census: the 18 / 16 output selects ride their own registered start copies (st itself = px_st, sweep, fill)
+    assign px_tok = (!start_local[4]&&rope_sel[0])?rope_id:tok;
+    assign px_tep = (!start_local[5]&&rope_sel[1])?rope_epoch:tep;
     reg ovl_fault;
     always @(posedge ck or negedge rst_n)
       if(!rst_n)ovl_fault<=0;
       else if(OVL)begin
-        if(i_ctx[98]&&i_ctx[91:88]==12&&head_rx_user!=i_ctx[44:43])ovl_fault<=1;
-        if(d2d__emb_tx_slot[0]&&emb_tx_user!=tep[1:0])ovl_fault<=1;
+        if(ovl_adm_done&&i_ctx[98]&&i_ctx[91:88]==12&&head_rx_user!=i_ctx[44:43])ovl_fault<=1;
+        if(ovl_adm_done&&d2d__emb_tx_slot[0]&&emb_tx_user!=tep[1:0])ovl_fault<=1;
+        if(kvn_ctx_fault)ovl_fault<=1;   // SQ-KATTN2 10-21: registered (gate: i_kvn_fault N -> emb_fault E 527 um unregistered); sticky source, +1 edge
       end
-    assign emb_fault = cf | jf | rf | (OVL&&(ovl_fault|kvn_ctx_fault));
+    assign emb_fault = cf | jf | rf | (OVL&&ovl_fault);
 endmodule
