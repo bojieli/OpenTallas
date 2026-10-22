@@ -97,5 +97,11 @@
     "Actual selected lane native root/pin/storage census and physical MAIN/ALT closure.",
     "Selected parent instance and clock/reset-route binding.",
     "Current die programme timing projection and eight-lane composition remain separate."
-  ]
+  ],
+  "bench_guards": {
+    "reset_assert_edges": 8,
+    "pre_class_issue_guard_edges": 140,
+    "drain_edges": 150,
+    "shorter_production_guard_qualified": false
+  }
 }
