@@ -278,8 +278,14 @@ module ot_vms_rstop_lt #(
         for(integer k=0;k<COMMIT_DELAY;k=k+1) if(cq_r[k]) begin cr_rd=cr_rd|cring[k]; cv_rd=cv_rd|cvr[k]; end
     end
     wire [7:0] commit_mask_o=cr_rd[9:2]; wire [1:0] commit_src_o=cr_rd[1:0];
+    // HBMc/TILES 10-22 (g7t, SW g7s route TT -69.27 at u_cw.ev -> outstanding, 17 D pins): carry-select update.
+    // fh[15] && source_q==2 == enable_q && source_q==2 && |ev (the source-2 header valid), so the increment no longer
+    // waits for the 5-way header mux; the +2 / +1 / -1 sums are formed from the register in parallel and one 4:1 select
+    // picks inc*(dr?1:2) - ack (identical value every edge).
+    wire o_inc=enable_q && source_q==3'd2 && (|ev);
+    wire [15:0] o_p2=outstanding+16'd2, o_p1=outstanding+16'd1, o_m1=outstanding-16'd1;
     always @(posedge clk or negedge rl[35]) if(!rl[35]) outstanding<=0;
-        else outstanding<=outstanding + ((fh[15] && source_q==2)?(dr?16'd1:16'd2):16'd0) - (ack_q?16'd1:16'd0);
+        else outstanding<= o_inc ? ((dr==ack_q) ? (dr ? outstanding : o_p2) : o_p1) : (ack_q ? o_m1 : outstanding);
     always @(posedge clk or negedge rl[1]) begin
         if(!rl[1]) begin
             ack_o<=0;wko<='0;mirror_busy<=0;fault<=0;
