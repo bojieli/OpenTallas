@@ -1,0 +1,119 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "clock_span",
+   "message": "1036.8 x 1036.8 um: one clock root over > 600 um",
+   "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: SAFE/TOK_REG registered owning roots; exact calendar neutral. PHY-up captured; no extra automatic data stages.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-gold1 for 64 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_qfd_coll_face_p_regional_fb_20261021-212510.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_qfd_coll_face_p_regional_fb_20261021-212510.log; host dir ot-gold1:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_p_regional_fb-20261021-212510",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-gold1 in 520 s (gate total 2091 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 2321, 'pin_rectangles': 2321, 'pin_track_checked': 2321, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 362c9663cb06274f2b756b4c7786fd1f0c54937b207dbbe3470097343c0ee3e1",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 6961 um2 + macros 82232 in core 1066015: util 1% (std-cell density 0.7% of placeable 948247 um2; total fill 8.4%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "PASS qfd_coll_face_p_pl cells 45,029 flops 13,406 depth 483.4 ps util 0.0839 reach 0.0 um (4.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR GPL-0307] RePlAce divergence detected: Current overflow is low and increasing relative to minimum,and the HPWL has significantly worsened. Consider re-running with a smaller max_phi_cof value.",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.550 vs spec PD 0.55",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "cross_clock",
+   "message": "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)",
+   "fix": "fix the signoff SDC read and re-gate with --cts"
+  },
+  {
+   "severity": "FAIL",
+   "check": "clock_rule",
+   "message": "actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)",
+   "fix": "pin-flop spread > 80 ps at TT or FF (owner 10-17 0dq): re-balance the tree over the pin flops (clock entry beside the register mass, pin flops grouped by face) or split into hardened leaves with their own roots; insertion and sink count alone never split a tile"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-qw-collio-native-2000-1021/physical/ref_tile/qfd_coll_face_p_regional_fb/gate_layout/floorplan.png",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "fill",
+   "message": "fill 8% = (hard macros 82232.2 + synthesized std cells 7207.9) / outline 1074954.2 um2; pin demand per face: S 2 pins over 517.4/1036.8 um (50%), N 0 pins over 0.0/1036.8 um (0%), W 1300 pins over 1033.9/1036.8 um (100%), E 1403 pins over 1034.0/1036.8 um (100%) (< 35%)",
+   "fix": "do not shrink for area: regroup the macros / children so links stay short, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+  }
+ ]
+}

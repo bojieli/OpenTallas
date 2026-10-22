@@ -1,0 +1,44 @@
+{
+  "failed_run": "ot-gold1:/srv/opentallas-scratch/claude/ref_gate/qfd_coll_face_p_regional_fb-20261021-212510",
+  "failed_odb": "routes/gate/work/orfs/results/asap7/opentallas_qfd_coll_face_p_pl_asap7_ref_gate/base/3_3_place_gp-failed.odb",
+  "failed_dump_sha256": "876e9573aec547190de64c59e95a20a4f731b8b7e5e15b965ba1b9488da9c18e",
+  "density_max": 1.731,
+  "hotspot_window_um": [
+    675,
+    390,
+    705,
+    650
+  ],
+  "hotspot_groups": {
+    "unowned_timing_repair": 18343,
+    "ot_cr_codec": 2414,
+    "ot_cr_lcal": 5
+  },
+  "timing_repair": {
+    "long_wires": 6848,
+    "buffers": 18016,
+    "resized": 5971,
+    "area_added_percent": 46.53,
+    "routability_inflation_percent": 0
+  },
+  "successor_scope": [
+    "P MAIN",
+    "P fallback"
+  ],
+  "unchanged": [
+    "RTL",
+    "12 clocks",
+    "outline",
+    "6 raw SRAM macros",
+    "PD0.55",
+    "80ps clockspread rule",
+    "payload age56"
+  ],
+  "repair": [
+    "codec east channel widened to PHY boundary",
+    "TX write/read independent clocks share one placement ownership group",
+    "RX write/read independent clocks share one placement ownership group",
+    "dissolve assertion expects ten actual groups",
+    "honest measured std area and pin-bound perimeter evidence"
+  ]
+}
