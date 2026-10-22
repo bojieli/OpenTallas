@@ -289,7 +289,7 @@
   ],
   "hold_delay": true
  },
- "structural_change": "Matched landed MU72 endpoint: CRED8/DR8 -> CRED12/DR12. Source-bound native32/RSTHD/NFACE/RPRLY contract retained. No added pipeline edge; receive pointer/address is sized for twelve entries. Production-depth matched-credit benches and mapped gate census required. Main retains actual648x604.8 SRAM floorplan and local balanced spine.",
+ "structural_change": "CRED12 first actual mapped native FAIL one driver host_ra[0]37 loads (host + KS metadata muxes shared a pointer). META4 gives host and KS independent kept same-edge read pointers; four address owners instead of three. Same pointer advance, reset release and read edge; no changed stream latency. Matched landed MU72 endpoint: CRED8/DR8 -> CRED12/DR12. Source-bound native32/RSTHD/NFACE/RPRLY contract retained. No added pipeline edge; receive pointer/address is sized for twelve entries. Production-depth matched-credit benches and mapped gate census required. Main retains actual648x604.8 SRAM floorplan and local balanced spine.",
  "pin_regs": {
   "enable": false,
   "reason": "Source-registered as s81sl_lep / s81sl_lepmua (ro / li / ml_rd / t_host / t_kd / mu_c land in pin flops, ri / lo / ml_wd / mu_rt / f_host / f_ks / f_lf / fault leave flops); recipe pin_regs would add an unpriced stage."
@@ -319,7 +319,7 @@
   "benches": [
    {
     "name": "lepmuh_exact_s1",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_exact_s1 lepmuh none 1",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_exact_s1 lepmuh none 1",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -328,7 +328,7 @@
    },
    {
     "name": "lepmuh_exact_s5",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_exact_s5 lepmuh none 5",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_exact_s5 lepmuh none 5",
     "expect": "pass",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -336,7 +336,7 @@
    },
    {
     "name": "lepmuh_mut_tagdrop",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_mut_tagdrop lepmuh TAGDROP 1",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_mut_tagdrop lepmuh TAGDROP 1",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -345,7 +345,7 @@
    },
    {
     "name": "lepmuh_mut_landcut",
-    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_mut_landcut lepmuh LANDCUT 1",
+    "cmd": "MU_CTRL32=1 MU_RX_SRAM=1 MU_IN_PIPE=1 MU_EXTRA_DEFS='+define+OT_S81SL_LEP_NFACE +define+OT_S81SL_LEP_RSTHD +define+OT_S81SL_LEP_RPRLY +define+OT_S81SL_LEP_META4' bash tools/s81_dv/cred12_1021/run.sh {RUN}/lepmuh_mut_landcut lepmuh LANDCUT 1",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
@@ -424,6 +424,7 @@
  "defines": [
   "OT_S81SL_LEP_NFACE",
   "OT_S81SL_LEP_RSTHD",
-  "OT_S81SL_LEP_RPRLY"
+  "OT_S81SL_LEP_RPRLY",
+  "OT_S81SL_LEP_META4"
  ]
 }

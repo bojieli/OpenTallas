@@ -635,8 +635,13 @@ module ot_s81sl_lep_core #(
         if (MU_EN != 0) begin : g_sa
             wire kd = (t % 2 == 0) ? (dq[0] && (dq[3:1] == K_XB || dq[3:1] == K_XQ)) : (dq[TG - H] && dq[TG + 1 - H]);
             reg [DR-1:0] mk,mrk,mtk,mhost,mks; reg hk;
-            wire [3*AR-1:0] meta_read_next;
-            for(genvar mp=0;mp<3;mp=mp+1) begin:g_meta_ptr
+            `ifdef OT_S81SL_LEP_META4
+            localparam integer META_READ_OWNERS=4;
+`else
+            localparam integer META_READ_OWNERS=3;
+`endif
+            wire [META_READ_OWNERS*AR-1:0] meta_read_next;
+            for(genvar mp=0;mp<META_READ_OWNERS;mp=mp+1) begin:g_meta_ptr
               if(NATIVE32!=0 && RX_SRAM!=0) begin:g_local
 `ifdef OT_S81SL_LEP_MUT_NOPAIR
                 wire mb=(t==0)?1'b1:rne_meta[2*(t/2)+1];
@@ -648,11 +653,15 @@ module ot_s81sl_lep_core #(
                   .next_addr(meta_read_next[mp*AR+:AR]));
               end else begin:g_shared assign meta_read_next[mp*AR+:AR]=rp_nx;end
             end
-            wire [AR-1:0] host_ra=meta_read_next[0+:AR],ring_ra=meta_read_next[AR+:AR],land_ra=meta_read_next[2*AR+:AR];
+`ifdef OT_S81SL_LEP_META4
+            wire [AR-1:0] host_ra=meta_read_next[0+:AR],ks_ra=meta_read_next[AR+:AR],ring_ra=meta_read_next[2*AR+:AR],land_ra=meta_read_next[3*AR+:AR];
+`else
+            wire [AR-1:0] host_ra=meta_read_next[0+:AR],ks_ra=meta_read_next[0+:AR],ring_ra=meta_read_next[AR+:AR],land_ra=meta_read_next[2*AR+:AR];
+`endif
             wire host_d=(t==0) && !dq[0] && dq[3:1]==3'd1;
             wire ks_d=(t==0) && !dq[0] && dq[3:1]==3'd2;
             assign rhostx[t]=we[host_ra]?host_d:mhost[host_ra];
-            assign rksx[t]=we[host_ra]?ks_d:mks[host_ra];
+            assign rksx[t]=we[ks_ra]?ks_d:mks[ks_ra];
             wire rd=(t%2==0)?dq[0]:1'b0;
             wire td=(t%2!=0)?dq[TG-H]:1'b0;
             assign rringx[t]=we[ring_ra]?rd:mrk[ring_ra];
