@@ -37,8 +37,8 @@ B=$KVOBJ/obj/Vtb_kvattn_rel
 [ -x "$B" ] || { echo "no KV binary $B"; exit 2; }
 [ -d "$IN/fx" ] && [ -d "$IN/p8191/kv_pre" ] || { echo "missing $IN/{fx,p8191} (run_tok_func_qw.sh prep chain)"; exit 2; }
 [ ! -e "$O" ] || { echo "runs dir exists: preserve $O"; exit 5; }
-GTOOLS=$(readlink -f "$(ls -d "$KVOBJ"/../src_*/tools 2>/dev/null | head -1)" 2>/dev/null)
-[ -n "$GTOOLS" ] || GTOOLS=$KVROOT/src/tools
+GT0=$(ls -d "$KVOBJ"/../src_*/tools 2>/dev/null | head -1); GTOOLS=""; [ -n "$GT0" ] && GTOOLS=$(readlink -f "$GT0")
+[ -n "$GTOOLS" ] || GTOOLS=$(readlink -f "$KVROOT/src/tools")
 mkdir -p "$V" "$O"
 sha256sum "$B" > "$C/binary.sha256"
 # the default vehicle is source-bound to 0e597ed1c (53/54 non-bench sources byte-identical to the c0f8097f3 assembly; the
