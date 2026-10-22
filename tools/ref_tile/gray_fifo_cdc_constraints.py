@@ -1883,28 +1883,79 @@ proc ot_gf_verify {} {
     set_min_delay -ignore_clock_latency 0.0 -from $from -to $to
     puts "OT_GF BUS [lrange $key 1 end] bound $bound launches [llength $from] targets [llength $to]"
   }
-  # (3) prove each recorded launch/target pair. A finite path from another launch in the bus
-  # cannot establish that this particular crossing remains timed.
-  set deferred 0
+  # (3) prove each recorded launch/target pair: a finite path from another launch in the bus cannot establish that
+  # this particular crossing remains timed.  Same guarantee, batched (HBMc/SVGSMH-SVG 10-21: 51.5k per-pair
+  # find_timing_paths on hdie_svg_rel8e stalled synth_odb >1.5 h): per bus and kind ONE query from all bus launches
+  # to the bus targets, keeping up to 2x(launches per target)+2 distinct-pin paths per endpoint; a pair is proven
+  # when a returned path has exactly that (startpoint register/port, endpoint pin) and finite slack (a finite path
+  # L->T exists <=> the worst L->T path is finite).  Any pair the batch did not show is proven by the exact per-pair
+  # query, so a crowded endpoint costs time, never coverage.
+  set need {}
   foreach item $::ot_gf_pending {
     lassign $item key ln tn sname
-    set launch [dict get $::ot_gf_groups $key launches $ln]
-    set target [dict get $::ot_gf_groups $key targets $tn]
+    dict set need $key $tn $ln $sname
+  }
+  set deferred 0; set batched 0; set single 0
+  dict for {key tg} $need {
+    set g [dict get $::ot_gf_groups $key]
+    set from [dict values [dict get $g launches]]
+    set to {}; set k 1
+    dict for {tn ls} $tg {
+      lappend to [dict get $g targets $tn]
+      if {[dict size $ls] > $k} {set k [dict size $ls]}
+    }
+    set epc [expr {2 * $k + 2}]
     foreach kind {max min} {
-      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
-      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-        puts "OT_GF PATH_DEFERRED $sname -> $tn $kind (strict at sign-off)"
-        incr deferred
-        continue
+      set got {}; set reached {}
+      foreach path [find_timing_paths -from $from -to $to -path_delay $kind -group_path_count [expr {$epc * [llength $to]}] \
+                      -endpoint_path_count $epc -unique_paths_to_endpoint] {
+        set en [get_full_name [get_property $path endpoint]]
+        dict set reached $en 1
+        if {![ot_ce_finite [get_property $path slack]]} continue
+        dict set got [list [ot_gf_start_name [get_property $path startpoint]] $en] 1
       }
-      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
-        error "OT_GF: missing finite bounded $kind path $sname -> $tn"
+      dict for {tn ls} $tg {
+        dict for {ln sname} $ls {
+          if {[dict exists $got [list $ln $tn]]} {incr batched; continue}
+          incr single
+          # No bus launch reaches tn at all (each endpoint keeps <= epc paths and the group cap is epc x targets, so
+          # the cap cannot hide one): the single-pair query is empty too, and gets the same deferral or refusal.
+          set paths [expr {[dict exists $reached $tn] ? "" : "none"}]
+          ot_gf_pair_proof $kind [dict get $g launches $ln] [dict get $g targets $tn] $sname $tn deferred $paths
+        }
       }
     }
   }
-  puts "OT_GF BUSES [dict size $::ot_gf_groups] pairs [llength $::ot_gf_pending] deferred $deferred"
+  puts "OT_GF BUSES [dict size $::ot_gf_groups] pairs [llength $::ot_gf_pending] deferred $deferred proofs batched $batched single $single"
   set ::ot_gf_pending {}
   set ::ot_gf_groups {}
+}
+proc ot_gf_start_name {sp} {
+  # The launch name ot_gf_bound recorded: the port for a top-level port, else the startpoint's register instance.
+  if {[sta::object_type $sp] eq "Port" || ([sta::object_type $sp] eq "Pin" && [$sp is_top_level_port])} {
+    return [get_full_name $sp]
+  }
+  set c [get_cells -quiet -of_objects $sp]
+  if {[llength $c] != 1} {return ""}
+  return [get_full_name $c]
+}
+proc ot_gf_pair_proof {kind launch target sname tn deferred_var {known ""}} {
+  # The exact single-pair proof (a3080d9c9): the worst launch->target path of this kind must exist and be finite.
+  # known "none": the batched bus query already showed no path into tn, so this query's empty answer is not re-run.
+  upvar $deferred_var deferred
+  if {$known eq "none"} {
+    set paths {}
+  } else {
+    set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+  }
+  if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+    puts "OT_GF PATH_DEFERRED $sname -> $tn $kind (strict at sign-off)"
+    incr deferred
+    return
+  }
+  if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
+    error "OT_GF: missing finite bounded $kind path $sname -> $tn"
+  }
 }
 proc ot_gf_crossing {start pin source target source_domain target_domain} {
   if {[lindex [split [get_full_name $pin] /] end] ne "D" || [get_property $pin direction] ne "input"} {

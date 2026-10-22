@@ -8,6 +8,7 @@ channel does). The generic Liberty is a timing-graph fixture only, never physica
 """
 import copy
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -244,7 +245,7 @@ def fixture_lib(module):
     return '\n'.join(rows + ['}'])
 
 
-def sta_case(root, out, name, mut=0):
+def sta_case(root, out, name, mut=0, extra=''):
     paths = ' '.join(str(root / f) for f in spec()['sources'])
     synth = (f'read_verilog -sv -DSYNTHESIS {paths}; hierarchy -check -top gf_fix -chparam MUT {mut}; '
              f'synth -top gf_fix -flatten -noabc; dffunmap; abc -g simple; clean; write_json {out / "fix.json"}')
@@ -283,7 +284,7 @@ def sta_case(root, out, name, mut=0):
             w = len(m['ports'][n]['bits'])
             outs += [f'{{{n}}} {domain}'] if w == 1 else [f'{{{n}[{i}]}} {domain}' for i in range(w)]
     body = (f'read_liberty {{{out}/probe.lib}}\nread_verilog {{{vp}}}\nlink_design gf_fix\n'
-            + C.clocks(spec(), 833.333) + generated
+            + C.clocks(spec(), 833.333) + generated + '\n' + extra
             + f'\nset ins [dict create {" ".join(ins)}]\nset outs [dict create {" ".join(outs)}]\n'
             + 'if {[catch {ot_ce_leaf_ownership $ins $outs} message]} {puts stderr $message; exit 1}\n'
             + 'puts ACTUAL_GF_GRAPH_PASS\nexit 0\n')
@@ -317,6 +318,45 @@ class ActualGraph(Fixture):
                 self.assertNotEqual(rc, 0, log)
                 self.assertNotIn('ACTUAL_GF_GRAPH_PASS', log)
                 self.assertIn('OT_GF:', log)
+
+
+    def test_pair_proof_batched_and_masked_pairs_refused(self):
+        # HBMc/SVGSMH-SVG 10-21: ot_gf_verify (3) proves every recorded launch->target pair with one batched query per
+        # bus and kind (single-pair query only for pairs the batch did not show).  The guarantee is unchanged: a pair
+        # masked by a false path, or a recorded pair with no actual launch->target path, is still refused.
+        out = self.root / 'sta'
+        out.mkdir()
+        rc, log = sta_case(self.root, out, 'normal')
+        self.assertEqual(rc, 0, log)
+        m = re.search(r'OT_GF BUSES (\d+) pairs (\d+) deferred 0 proofs batched (\d+) single (\d+)', log)
+        self.assertIsNotNone(m, log)
+        self.assertEqual(int(m.group(3)) + int(m.group(4)), 2 * int(m.group(2)), log)
+        self.assertEqual(int(m.group(4)), 0, log)          # the fixture's buses never crowd an endpoint
+        pick = ('foreach item $::ot_gf_pending {lassign $item key ln tn sname; '
+                'if {[lindex $key 1 0] eq "mem" && [dict size [dict get $::ot_gf_groups $key launches]] > 1} break}\n')
+        mutants = {
+            # one actual storage crossing of a multi-launch bus masked by a false path: its bus siblings still have
+            # finite paths into the same target, so only a per-pair proof can see it
+            'pair_masked': ('rename ot_gf_verify ot_gf_verify_real\nproc ot_gf_verify {} {\n' + pick +
+                            '  set_false_path -from [dict get $::ot_gf_groups $key launches $ln] '
+                            '-to [dict get $::ot_gf_groups $key targets $tn]\n'
+                            '  puts "MUTANT $ln -> $tn"\n  ot_gf_verify_real\n}\n'),
+            # a recorded pair that pairs a bus launch with another bit's target (no actual path between them)
+            'pair_unreached': ('rename ot_gf_verify ot_gf_verify_real\nproc ot_gf_verify {} {\n'
+                               '  foreach a $::ot_gf_pending {lassign $a ka la ta\n'
+                               '    foreach b $::ot_gf_pending {lassign $b kb lb tb sb\n'
+                               '      if {$ka eq $kb && [lindex $ka 1 0] eq "src" && $la ne $lb && $ta ne $tb} break}\n'
+                               '    if {$ka eq $kb && [lindex $ka 1 0] eq "src" && $la ne $lb && $ta ne $tb} break}\n'
+                               '  lappend ::ot_gf_pending [list $ka $lb $ta $sb]\n'
+                               '  puts "MUTANT $lb -> $ta"\n  ot_gf_verify_real\n}\n'),
+        }
+        for name, extra in mutants.items():
+            with self.subTest(case=name):
+                rc, log = sta_case(self.root, out, name, extra=extra)
+                self.assertNotEqual(rc, 0, log)
+                self.assertIn('MUTANT ', log)
+                self.assertNotIn('ACTUAL_GF_GRAPH_PASS', log)
+                self.assertRegex(log, r'OT_GF: missing finite bounded max path')
 
 
 # ---------------------------------------------------------------------------------------------------------------------
