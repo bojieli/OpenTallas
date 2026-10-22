@@ -1513,11 +1513,15 @@ module tb_hbm_dma_load_static;
  fv=0;repeat(8)@(negedge clk);
  if(!ready[0]||ft)$fatal(1,"landing not ready");
  for(k=0;k<N;k=k+1)begin
- lv=1;cmd=cmds[k];if(k==N-1)cmd[56]=1;sent=sent+1;if(firstin<0)firstin=cyc+1;@(negedge clk);
+ lv=1;cmd=cmds[k];sent=sent+1;if(firstin<0)firstin=cyc+1;@(negedge clk);
  end
  lv=0;repeat(10)@(negedge clk);
  $display("LOAD_METRICS sent=%0d got=%0d errors=%0d fault=%0b command_to_output_edges=%0d II=1",sent,got,errors,ft,firstout-firstin);
  if(errors||got!=N||ft)$fatal(1,"DMA_LOAD_STATIC FAIL");
+ @(negedge clk);lv=1;cmd=cmds[N-1];cmd[55:52]=0;cmd[56]=1;
+ @(negedge clk);lv=0;repeat(8)@(negedge clk);
+ if(ft||got!=N)$fatal(1,"release-only emitted data or faulted");
+ $display("RELEASE_ONLY PASS zero_payload=1 zero_fault=1");
  @(negedge clk);lv=1;cmd=cmds[N-1];@(negedge clk);lv=0;repeat(8)@(negedge clk);
  if(!ft||got!=N)$fatal(1,"released source bank accepted or fault missing");
  $display("OWNERSHIP_RELEASE PASS rejected_reuse=1 extra_packets=0");
