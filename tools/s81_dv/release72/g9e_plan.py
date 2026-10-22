@@ -46,6 +46,7 @@ def kit_faces(spec):
 def main():
     a = argparse.ArgumentParser(); a.add_argument('plan'); a.add_argument('k8c'); a.add_argument('k8e'); a.add_argument('out')
     a.add_argument('--centre', type=float, default=302.4); a.add_argument('--top-street', type=float, default=129.6)
+    a.add_argument('--east-frame-relief', action='store_true', help='move f_4R01 to the free East inner slot, opening the measured6.016um throat')
     a.add_argument('--east-service-strip', action='store_true', help='move eng/seqhost/bk_col into the free east inner column; releases the top strip for a wider center')
     a.add_argument('--bksel-h', type=float, default=4536.0); a.add_argument('--seq', type=float, nargs=2, default=[1080.0, 1036.8])
     a.add_argument('--streets', type=float, nargs=7, default=[172.8, 129.6, 129.6, 129.6, 129.6, 129.6, 172.8])
@@ -82,6 +83,10 @@ def main():
     f4 = by['f_4R01']; g = by['gunit']
     g['x'] = f4['x']; g['y'] = round(H - SEAL - g['h'], 4)
     g['scope'] = 'G9e: E inner column above h10 frame f_4R01 (frees the slice-column top strip for the centre channel)'
+    assert not (v.east_frame_relief and v.east_service_strip), 'East slot cannot hold both relocation choices'
+    if v.east_frame_relief:
+        f4['y'] = round(f4['y'] + f4['h'] + GAP, 4)
+        f4['scope'] = 'G9e capacity successor: move intact f_4R01 north into free East slot; open its former East throat'
     if v.east_service_strip:
         y = round(f4['y'] + f4['h'] + GAP, 4)
         for name in ('eng', 'seqhost', 'bk_col'):
@@ -143,7 +148,7 @@ def main():
               column_w={f's_{k}': colw[k] for k in ORDER}, streets_um=v.streets, centre_channel_um=centre,
               lower_row_y=y_lo, upper_row_y=y_up, top_strip_y=strip_y, top_street_um=v.top_street,
               wrappers={n: w[0] for n, w in sorted(WRAP.items())}, wrapper_ref='claude/s81-slicep-k8c-1021 6ff783251 (k8c / k8e)',
-              east_service_strip=v.east_service_strip, gunit=[g['x'], g['y']], bk_sel=[by['bk_sel'][k] for k in 'xywh'], seqhost=[by['seqhost'][k] for k in 'xywh'],
+              east_frame_relief=v.east_frame_relief, east_service_strip=v.east_service_strip, gunit=[g['x'], g['y']], bk_sel=[by['bk_sel'][k] for k in 'xywh'], seqhost=[by['seqhost'][k] for k in 'xywh'],
               moved_or_resized=moved, row_right_edge=round(x, 3), row_right_limit=x_end)
     p['facts']['physical72']['g9e'] = ch
     p['facts']['physical72']['routing'] = 'G9e unrouted: dv_route72c.py required'

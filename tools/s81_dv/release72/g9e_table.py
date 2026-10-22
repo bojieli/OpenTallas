@@ -122,6 +122,21 @@ def main():
             xy = [round(b['x'] + b['w'] / 2, 3), round(b['y'] + (k + 0.5) * b['h'] / 12, 3)]
             if d['receiver_pin_xy_um'] != xy:
                 d['receiver_pin_xy_um'] = xy; moved += 1
+    # An intact relocated frame keeps its native pin map/orientation and root names;
+    # translate its three clock receiver seeds by the same physical body delta.
+    logical_blocks = {b['name']: b for b in old['blocks']}
+    for name, b in blocks.items():
+        if not name.startswith('f_'):
+            continue
+        original = logical_blocks[name]
+        dx, dy = b['x'] - original['x'], b['y'] - original['y']
+        if not (dx or dy):
+            continue
+        for domain in doms.values():
+            if domain.get('receiver_instance') == f'u_{name}':
+                x, y = domain['receiver_pin_xy_um']
+                domain['receiver_pin_xy_um'] = [round(x + dx, 4), round(y + dy, 4)]
+                domain['receiver_pin_source'] = 'Exact native frame pin seed translated with intact moved body'
     cv = t['child_views']
     for k, v in CHILD.items():
         cv[k] = v
