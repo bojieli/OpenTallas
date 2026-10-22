@@ -1,0 +1,255 @@
+{
+ "name": "hcoll_v7_tkm_tile_e86v7b",
+ "top": "ot_hgi_coll_tkm_tile_e86_v7",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+  "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_tile_e86_v7.sv"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "clock": "multiple_cts_roots",
+ "reset_ports": [],
+ "outline": {
+  "w": 388.8,
+  "h": 388.8
+ },
+ "layer_cap": "M6",
+ "layer_cap_grant": "B2 SPEC D-B2-7 TKM kept inside hb_coll; hardened chain children use M6 beneath M7 parent straps",
+ "pins": {
+  "N": [
+   "ins_v",
+   "ins_b",
+   "clk",
+   "clk_r0",
+   "clk_r1",
+   "clk_r2",
+   "clk_r3",
+   "up_out"
+  ],
+  "S": [
+   "ovf_v",
+   "ovf_b",
+   "up_in"
+  ],
+  "W": [
+   "clr",
+   "conv",
+   "busy"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex HBM COLL",
+  "branch": "codex/hbm-e86-bg7-2100-1021",
+  "tag": "e86v7b",
+  "purpose": "E86 BGREP structural successor, 388.8 um square: isolated kept operands for both block-comparator halves. Fix actual V6 native FAIL 576 drivers, max48. Added12728 unreset datapath FF, no port cycles or arithmetic change; full PT64/EW86 lockstep and mutants required. Larger area reserved, no outline squeezing.",
+  "benches": [
+   {
+    "name": "e86v7_fourstate",
+    "cmd": "mkdir -p {RUN}/bench/fourstate && iverilog -g2012 -s tb_tkm_e86_v5_fourstate -o {RUN}/bench/fourstate/probe rtl/hbm_accel/generic/collective/tkm/tb_tkm_e86_v5_fourstate.sv rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv && vvp -n {RUN}/bench/fourstate/probe",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog",
+     "vvp"
+    ],
+    "pass_regex": "E86_V5_FOURSTATE PASS",
+    "pass_witness": "results/rtl/hbm_e86_v6_1021/qual/fourstate.log"
+   },
+   {
+    "name": "e86v7_m0",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 BGREP=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m0 4000 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TKM_RG_CREP MUT0 cycles4000 .*errors0 PASS",
+    "pass_witness": "results/rtl/hbm_e86_v6_1021/qual/m0/run0.log"
+   },
+   {
+    "name": "e86v7_m1",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 BGREP=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m1 4000 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TKM_RG_CREP MUT1 cycles4000 .*errors[1-9][0-9]* FAIL",
+    "fail_witness": "results/rtl/hbm_e86_v6_1021/qual/m1/run1.log"
+   },
+   {
+    "name": "e86v7_m3",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 BGREP=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m3 4000 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TKM_RG_CREP MUT3 cycles4000 .*errors[1-9][0-9]* FAIL",
+    "fail_witness": "results/rtl/hbm_e86_v6_1021/qual/m3/run3.log"
+   },
+   {
+    "name": "e86v7_m4",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 BGREP=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m4 4000 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TKM_RG_CREP MUT4 cycles4000 .*errors[1-9][0-9]* FAIL",
+    "fail_witness": "results/rtl/hbm_e86_v6_1021/qual/m4/run4.log"
+   },
+   {
+    "name": "e86v7_m5",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 BGREP=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m5 4000 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TKM_RG_CREP MUT5 cycles4000 .*errors[1-9][0-9]* FAIL",
+    "fail_witness": "results/rtl/hbm_e86_v6_1021/qual/m5/run5.log"
+   },
+   {
+    "name": "e86v7_m6",
+    "cmd": "FAN32=2 SEAM=1 LT_GROUP=5 GCFOLD=1 KLEAF=1 BGREP=1 bash rtl/hbm_accel/generic/collective/tkm/run_tile_rg_crep.sh {RUN}/bench/m6 4000 6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TKM_RG_CREP MUT6 cycles4000 .*errors[1-9][0-9]* FAIL",
+    "fail_witness": "results/rtl/hbm_e86_v6_1021/qual/m6/run6.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/tkm",
+   "results/rtl/hbm_e86_v6_1021"
+  ],
+  "cycles_added": 0,
+  "views_to": "physical/ref_tile/hcoll_v7_tkm_tile_e86v7b/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v7_tkm_tile_e86v7b"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "pin_reg_split": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_hgi_coll_tkm_tile registers its inputs (p_* stage) and every output is a flop (ovf_v/ovf_b/up_out/tau_o/busy reg): the TKM chain timing is fixed by tkm_static SETTLE"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "clock_ports": [
+  "clk",
+  "clk_r0",
+  "clk_r1",
+  "clk_r2",
+  "clk_r3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "clr",
+    "conv",
+    "ins_v",
+    "ins_b"
+   ],
+   "outputs": [
+    "busy"
+   ]
+  },
+  "r0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r0"
+   ],
+   "inputs": [],
+   "outputs": [
+    "up_out"
+   ]
+  },
+  "r1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r1"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "r3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_r3"
+   ],
+   "inputs": [
+    "up_in"
+   ],
+   "outputs": [
+    "ovf_v",
+    "ovf_b"
+   ]
+  }
+ },
+ "io_tcl": "physical/ref_tile/hcoll_v7_tkm_tile_e86v7b/io_spread.tcl",
+ "structural_change": "Actual V6 production native census found288 p_bg and288 q_bg drivers above32, max48. BGREP=1 adds dedicated p/q operand captures for both kept block-comparator halves, plus an independent pin-stage source. New pin-source fanout18, original source retains<=30. Each operand drives four key comparators; actual native census must verify<=32 before layout. No reset or arithmetic changes, no added cycles. SAME SEAM1 regional timing and production PT64/EW86 profile. Added12728 datapath FF; MAIN345.6/FB388.8 squares reserve area instead of squeezing."
+}

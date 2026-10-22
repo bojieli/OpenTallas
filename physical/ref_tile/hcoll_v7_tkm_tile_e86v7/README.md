@@ -1,0 +1,7 @@
+# E86 BGREP structural successor (e86v7)
+
+Source e0c36e9da adds the default-off BGREP parameter; wrapper e86_v7 enables it at the existing production PT64/EW86/PRE1/CREP1/FAN32=2/SEAM1/LT_GROUP5/GCFOLD1/KLEAF1 profile. V6 failed the actual mapped census with576 over-limit drivers (288 p_bg,288 q_bg), maximum48. All original failures and source qualification remain preserved.
+
+The exact model delta is12728 unreset datapath flops, zero cycles on every port, and unchanged four items per cycle throughput. The new pin capture drives18 dedicated word captures; the original pin source retains at most30. Each comparator-half source drives four comparators instead of eight. MAIN345.6 and fallback388.8 um squares reserve additional area before build; actual synthesis area and physical checks decide fitness. This candidate is not adopted.
+
+SAFE review:1 unchanged registered pin/region interfaces;2 bounded outline and existing SEAM1 structure, actual reach gate required;3 structural kept-source isolation as above, mapped census<=32 required before floorplan;4 no new logic depth or arithmetic;5 explicit additional datapath captures, no indexed storage;6 larger outlines and regenerated full-face pin plan;7 same five local roots and clock constraints, measured TT/FF spread required;8 same static schedule and zero added cycles. Reset behavior is unchanged because the new captures are datapath only. Full-shape lockstep and existing causal mutants are running on the fleet before adoption.
