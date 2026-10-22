@@ -1,0 +1,254 @@
+{
+ "scope": "column-pair merge of service72 (PINBOUND fix); pure hierarchy regroup of dsdv_svc_group72",
+ "masters": {
+  "dsdv_svc_pair72": 6,
+  "dsdv_svc_pair72_entry": 2
+ },
+ "pair_outline_main_um": [
+  1728.0,
+  7603.2
+ ],
+ "pair_outline_fb_um": [
+  2160.0,
+  7603.2
+ ],
+ "internal_links_per_pair": 2,
+ "die_links_ew": 28,
+ "link_width": 4545,
+ "face_pins": {
+  "ew_per_face": 18180,
+  "ew_pins_per_um_main": 2.39,
+  "single_slot_ns_before": 5.26
+ },
+ "links": [
+  {
+   "source": 0,
+   "destination": 2,
+   "pair_from": 0,
+   "pair_to": 1,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 1,
+   "destination": 3,
+   "pair_from": 0,
+   "pair_to": 1,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 2,
+   "destination": 4,
+   "pair_from": 1,
+   "pair_to": 2,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 2,
+   "destination": 0,
+   "pair_from": 1,
+   "pair_to": 0,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 3,
+   "destination": 5,
+   "pair_from": 1,
+   "pair_to": 2,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 3,
+   "destination": 1,
+   "pair_from": 1,
+   "pair_to": 0,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 4,
+   "destination": 6,
+   "pair_from": 2,
+   "pair_to": 3,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 4,
+   "destination": 2,
+   "pair_from": 2,
+   "pair_to": 1,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 5,
+   "destination": 7,
+   "pair_from": 2,
+   "pair_to": 3,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 5,
+   "destination": 3,
+   "pair_from": 2,
+   "pair_to": 1,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 6,
+   "destination": 8,
+   "pair_from": 3,
+   "pair_to": 4,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 6,
+   "destination": 4,
+   "pair_from": 3,
+   "pair_to": 2,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 7,
+   "destination": 9,
+   "pair_from": 3,
+   "pair_to": 4,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 7,
+   "destination": 5,
+   "pair_from": 3,
+   "pair_to": 2,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 8,
+   "destination": 10,
+   "pair_from": 4,
+   "pair_to": 5,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 8,
+   "destination": 6,
+   "pair_from": 4,
+   "pair_to": 3,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 9,
+   "destination": 11,
+   "pair_from": 4,
+   "pair_to": 5,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 9,
+   "destination": 7,
+   "pair_from": 4,
+   "pair_to": 3,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 10,
+   "destination": 12,
+   "pair_from": 5,
+   "pair_to": 6,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 10,
+   "destination": 8,
+   "pair_from": 5,
+   "pair_to": 4,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 11,
+   "destination": 13,
+   "pair_from": 5,
+   "pair_to": 6,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 11,
+   "destination": 9,
+   "pair_from": 5,
+   "pair_to": 4,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 12,
+   "destination": 14,
+   "pair_from": 6,
+   "pair_to": 7,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 12,
+   "destination": 10,
+   "pair_from": 6,
+   "pair_to": 5,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 13,
+   "destination": 15,
+   "pair_from": 6,
+   "pair_to": 7,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 13,
+   "destination": 11,
+   "pair_from": 6,
+   "pair_to": 5,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 14,
+   "destination": 12,
+   "pair_from": 7,
+   "pair_to": 6,
+   "width": 4545,
+   "banks": 17
+  },
+  {
+   "source": 15,
+   "destination": 13,
+   "pair_from": 7,
+   "pair_to": 6,
+   "width": 4545,
+   "banks": 17
+  }
+ ],
+ "regroup_proof": {
+  "method": "yosys flatten of dsdv_svc_group72 vs dsdv_svc_group72p with dsdv_svc_rs_c_group72/dsdv_svc_face72/ot_reset_sync blackboxed; every blackbox input bit, cell type+parameters and top output bit compared after instance-name canonicalisation (pair72_regroup_cmp.py)",
+  "sinks": 534648,
+  "diffs": 0
+ }
+}
