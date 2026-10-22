@@ -29,9 +29,18 @@
 // valid bits are reset (data unreset).
 // Cycles (compiler-known, off-die elastic): tx_v pin -> lo_v 5 edges (pin copy, slice flop, buffer write, send flop) with a credit
 // in hand; li_v -> rx_v 1 edge.  flt = {adapter fault, lane flt[2:0] = {meso, gearbox, endpoint}} from flops.
+// TWO REGIONAL CLOCK ROOTS (STW-S81c-HEAD-LANE 10-22, owner clock rule pin-flop spread <= 80 ps TT+FF, landed regions):
+//   ck   = core/adapter region root (N-face pin flops: tx_d/tx_v pin copies, rx_v/rx_d, flt, reset landing + tree);
+//   ck_l = lane-body region root (dsfd_coll_lane_w_safe8_ntf u_ln + the rx-enable flop beside the W-face SerDes landing).
+//   The die delivers both from one PLL, same frequency, phase 0, each neighbour-matched (ck_l to the SerDes side, ck to
+//   the ctl links).  Every ck <-> ck_l crossing is already register -> register (txs ld -> u_ln core landing u_ski;
+//   u_ln sender u_sko li_d/li_v -> rd_q/rv_q; lane lo_r -> u_cr* kept copies; lane flt -> flt_q; reset leaves -> the
+//   lane's own reset relay), so the seam is a fixed-latency landed crossing: 0 added cycles, function unchanged
+//   (a bench with ck_l = ck is cycle-identical to the one-root block).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81hd_lane (
     input  wire          ck,
+    input  wire          ck_l,        // lane-body region root (same PLL / frequency / phase as ck)
     input  wire          rst_n,
     input  wire          chb,
     input  wire [513:0]  rx,
@@ -49,11 +58,11 @@ module ot_s81hd_lane (
     wire r_lane = rr[NS], r_rx = rr[NS + 1], r_misc = rr[NS + 2];
     // ---- lane rx word and receive enable
     reg rxen;
-    always @(posedge ck or negedge r_misc) if (!r_misc) rxen <= 1'b0; else rxen <= 1'b1;
+    always @(posedge ck_l or negedge r_misc) if (!r_misc) rxen <= 1'b0; else rxen <= 1'b1;   // lane region (beside the rx landing)
     wire [514:0] lrx = {rx[512], rx[513], rx[511:0], rxen};
     // ---- the lane tile (closed kit dscoll_lane_w_s8n*)
     wire lo_v, lo_r, li_v, li_r; wire [552:0] lo_d, li_d; wire [2:0] lf;
-    dsfd_coll_lane_w_safe8_ntf u_ln (.ck(ck), .rs(r_lane), .chb(chb), .rx(lrx), .tx(tx), .lo_v(lo_v), .lo_r(lo_r),
+    dsfd_coll_lane_w_safe8_ntf u_ln (.ck(ck_l), .rs(r_lane), .chb(chb), .rx(lrx), .tx(tx), .lo_v(lo_v), .lo_r(lo_r),
         .lo_d(lo_d), .li_v(li_v), .li_r(li_r), .li_d(li_d), .flt(lf));
     // ---- TX: bit-sliced 3-flit buffer, credit sender
     // pin stage: tx_d lands here, tx_v / lo_r land in 2 kept copies each (<= 18 slices per copy)

@@ -17,9 +17,9 @@ module tb_s81hd_lane;
     reg tv [0:1]; reg [552:0] td [0:1];
     wire [511:0] tx [0:1]; wire rv [0:1]; wire [552:0] rd [0:1]; wire [3:0] flt [0:1];
     reg [511:0] imp [0:1];
-    ot_s81hd_lane u_a (.ck(ck), .rst_n(rst_n), .chb(1'b1), .rx({2'b10, tx[1] ^ imp[1]}), .tx(tx[0]),
+    ot_s81hd_lane u_a (.ck(ck), .ck_l(ck), .rst_n(rst_n), .chb(1'b1), .rx({2'b10, tx[1] ^ imp[1]}), .tx(tx[0]),
         .tx_v(tv[0]), .tx_d(td[0]), .rx_v(rv[0]), .rx_d(rd[0]), .flt(flt[0]));
-    ot_s81hd_lane u_b (.ck(ck), .rst_n(rst_n), .chb(1'b1), .rx({2'b10, tx[0] ^ imp[0]}), .tx(tx[1]),
+    ot_s81hd_lane u_b (.ck(ck), .ck_l(ck), .rst_n(rst_n), .chb(1'b1), .rx({2'b10, tx[0] ^ imp[0]}), .tx(tx[1]),
         .tx_v(tv[1]), .tx_d(td[1]), .rx_v(rv[1]), .rx_d(rd[1]), .flt(flt[1]));
     function automatic [552:0] word(input integer side, input integer k);
         reg [31:0] h; integer b; begin
