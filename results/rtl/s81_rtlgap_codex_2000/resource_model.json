@@ -128,7 +128,13 @@
     "status": "OPEN: current raw75 and private pool source use one generic clk",
     "native_fanout_is_not_regional_clock_qualification": true,
     "current_IK_half_clocks": "ot_s81sl_kv_bank g_iks ties ck_half to {2{sk}}, with same sk for final reduce",
-    "required_pool_successor_ports": {
+    "required_IK_successor": "Two independently delivered half clocks plus final reduce clock, with landed partial-sum and publish/control crossings",
+    "actual_crossing_data_edges": null,
+    "additional_arithmetic_latency": null,
+    "physical_clock_and_phase_authority": null,
+    "source_port_aliasing_is_not_a_successor": true,
+    "next": "Use actual repaired area/reach to choose a real single-region hard pool or implement the multiple-region source ports/rings. Neither option is physically qualified by current native jobs.",
+    "multi_region_pool_successor_ports": {
       "control_clocks": 1,
       "lane_clocks": 8,
       "landed_control_to_each_lane_bits": 35,
@@ -145,11 +151,18 @@
       ],
       "all_eight_functional_result_arrivals_must_equal_age": true
     },
-    "required_IK_successor": "Two independently delivered half clocks plus final reduce clock, with landed partial-sum and publish/control crossings",
-    "actual_crossing_data_edges": null,
-    "additional_arithmetic_latency": null,
-    "physical_clock_and_phase_authority": null,
-    "source_port_aliasing_is_not_a_successor": true,
-    "next": "Keep current native repairs as single-clock engineering components. Implement real landed regional leaf and caller ABI before assigning multiple root timing or token credit."
+    "single_region_pool_alternative": {
+      "implemented": false,
+      "proposal": "One real monolithic pool hard leaf with one clock, separate from full SUKV stand-in",
+      "requirements": [
+        "Actual repaired area and outline",
+        "Every single-cycle path within 405um or a real registered/landed hop",
+        "Actual SS setup and FF hold",
+        "Actual within-region clock spread proof",
+        "Real slice-to-pool VM/control boundary landings and source-bound clock/reset delivery"
+      ],
+      "existing_generic_full_slice_clock_is_not_proof": true,
+      "clock_root_inventory_is_not_an_owner_mandate": true
+    }
   }
 }
