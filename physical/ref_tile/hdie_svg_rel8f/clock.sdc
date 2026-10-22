@@ -115,7 +115,9 @@ proc ot_gf_bound {start target bound} {
   # (Earlier: interleaving set_*_delay with find_timing_paths was O(N^2), HKV-HRADM 10-19.)
   set launch [ot_gf_launch $start]
   if {[sta::object_type $start] eq "Port" || ([sta::object_type $start] eq "Pin" && [$start is_top_level_port])} {
-    set role port
+    # Ports can belong to different families; keep each source separate so a Cartesian bus
+    # exception never reaches an unrelated same-family input path.
+    set role [list port [get_full_name $start]]
   } else {
     set role [lrange [ot_gf_role $launch] 0 1]
   }
@@ -150,28 +152,21 @@ proc ot_gf_verify {} {
     set_min_delay -ignore_clock_latency 0.0 -from $from -to $to
     puts "OT_GF BUS [lrange $key 1 end] bound $bound launches [llength $from] targets [llength $to]"
   }
-  # (3) finite-path proof per bus: every bounded target endpoint has a finite max and min path from its bus
-  set want {}
+  # (3) prove each recorded launch/target pair. A finite path from another launch in the bus
+  # cannot establish that this particular crossing remains timed.
+  set deferred 0
   foreach item $::ot_gf_pending {
     lassign $item key ln tn sname
-    dict set want $key $tn $sname
-  }
-  set deferred 0
-  dict for {key g} $::ot_gf_groups {
-    set from [dict values [dict get $g launches]]; set to [dict values [dict get $g targets]]
-    set n [expr {[llength $to] + 1}]
+    set launch [dict get $::ot_gf_groups $key launches $ln]
+    set target [dict get $::ot_gf_groups $key targets $tn]
     foreach kind {max min} {
-      set got {}
-      foreach path [find_timing_paths -from $from -to $to -path_delay $kind -group_path_count $n -endpoint_path_count 1] {
-        if {[ot_ce_finite [get_property $path slack]]} {dict set got [get_full_name [get_property $path endpoint]] 1}
+      set paths [find_timing_paths -from $launch -to $target -path_delay $kind -group_path_count 1 -endpoint_path_count 1]
+      if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
+        puts "OT_GF PATH_DEFERRED $sname -> $tn $kind (strict at sign-off)"
+        incr deferred
+        continue
       }
-      dict for {tn sname} [dict get $want $key] {
-        if {[dict exists $got $tn]} continue
-        if {[info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
-          puts "OT_GF PATH_DEFERRED $sname -> $tn $kind (strict at sign-off)"
-          incr deferred
-          continue
-        }
+      if {![llength $paths] || ![ot_ce_finite [get_property [lindex $paths 0] slack]]} {
         error "OT_GF: missing finite bounded $kind path $sname -> $tn"
       }
     }

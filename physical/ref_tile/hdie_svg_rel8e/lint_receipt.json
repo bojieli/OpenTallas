@@ -244,7 +244,7 @@
     "tool": {
      "cdc_sync_constraints.py": "90f9238d184c1886e75f982c77e92873f95e733b581c726d432163a3995bf963",
      "clock_entry_constraints.py": "07d5d74df16c3cbd9a1696cbf06749f7e357a16a90b7eabbb84a3656eb54e92c",
-     "gray_fifo_cdc_constraints.py": "107495170f218af5dbf1e62a3e0fcc6dfaaabf9028aad4cd1e4f44c6b2881085",
+     "gray_fifo_cdc_constraints.py": "bdc950da605ac3244793e987010fa25de1ca30ef5faeb9357e1976c9eb454f2b",
      "single_clock_contract.py": "989f49c16622d6483a208d6e944843778cb85073c584fc66618579273b515c52"
     },
     "tool_data": {
@@ -252,9 +252,9 @@
     },
     "yosys": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
    },
-   "created": "2026-10-21T19:08:59-0700",
-   "host": "ot-agidock128",
-   "key": "833c083e3bf94b998def2258127b1ad7f50db553f45ae07d0a29190e1077ef34",
+   "created": "2026-10-21T21:22:13-0700",
+   "host": "ot-gold1",
+   "key": "40c972db2e8ad0aeccaaeba6cf94b8106ec897a65465120187d6d1952791cd39",
    "record": {
     "counts": {
      "consumer": 2410,
@@ -284752,7 +284752,7 @@
      }
     ]
    },
-   "seconds": 2414
+   "seconds": 200
   }
  },
  "schema": "opentallas.ref_tile.lint_receipt.v1"
