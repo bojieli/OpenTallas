@@ -47,7 +47,7 @@ module dsdv_idx_vmux_n32 #(
     always @(posedge ck or negedge rst) if (!rst) rs0 <= 1'b0; else rs0 <= 1'b1;
     genvar k;
     generate for (k = 0; k < 3; k = k + 1) begin : g_rn
-        dsdv_vmx_copy #(.W(1), .ID(100 + k)) u_rn (.ck(ck), .rn(rst), .d(rs0), .q(rnk[k]));
+        dsdv_vmx_copy #(.W(1), .ID(100 + k)) u_rn (.ck(ck), .rn(rs0), .d(rs0), .q(rnk[k]));
     end endgenerate
 
     // ---- valid pins: original landing flop (o[0], fault) on rnk[0]
