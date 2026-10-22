@@ -21,6 +21,12 @@ SRC=(rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_hdc_v41x_i
      rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv
      rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv
      rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg2.sv rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3.sv rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3.sv)
+# Select actual NQ-only native successor without changing the normal reader source/bench.
+if [ "${IDX3R_NQ_NATIVE:-0}" = 1 ]; then
+  sed 's/dsdv_idx_rg3 #(/dsdv_idx_rg3_nq_native #(/g' rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_rg3.sv > "$D/tb_dsdv_idx_rg3.sv"
+  SRC[${#SRC[@]}-1]="$D/tb_dsdv_idx_rg3.sv"
+  SRC+=(rtl/dsrom_sys/s81_dv/idx/dsdv_idx_rg3_nq_native.sv)
+fi
 if [ ! -x "$D/obj/Vtb_dsdv_idx_rg3" ]; then
   "$VL" --version > "$D/build.log"
   sha256sum "${SRC[@]}" >> "$D/build.log"
