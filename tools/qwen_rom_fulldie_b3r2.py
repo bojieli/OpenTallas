@@ -5175,7 +5175,7 @@ class _RstOcc:
     def free(self, r, gap):
         return r[0] >= gap and r[1] >= gap and r[2] <= self.W - gap and r[3] <= self.H - gap and self.hit(r, gap) is None
 
-    def site(self, tx, ty, box=None, lim=600.0, w=RST_W, h=RST_H, gap=RST_GAP_UM):
+    def site(self, tx, ty, box=None, lim=600.0, w=RST_W, h=RST_H, gap=RST_GAP_UM, budget=4000):
         """lower-left corner (on the GX / GY lattice) of a free w x h frame near the centre (tx, ty); `box` =
         (x0, y0, x1, y1) limits the frame centre.  Best-first over edge projections: a blocked candidate is pushed
         past each edge of the block that stops it (so a target inside a block, or between abutting blocks, walks out
@@ -5183,7 +5183,7 @@ class _RstOcc:
         import heapq
         gx, gy = self.gx, self.gy
         heap, seen, best, pops = [(0.0, tx, ty)], set(), None, 0
-        while heap and pops < 4000:
+        while heap and pops < budget:
             d, cx, cy = heapq.heappop(heap)
             pops += 1
             if d > lim or (best is not None and d >= best[0]):
@@ -5244,8 +5244,8 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         N = {}                                  # node id -> dict(x, y (frame corner), kids, sinks)
         seq = [0]
 
-        def new(tx, ty, box=None, _N=N, _seq=seq, _bid=bid):
-            s = occ.site(tx, ty, box)
+        def new(tx, ty, box=None, _N=N, _seq=seq, _bid=bid, lim=600.0, budget=4000):
+            s = occ.site(tx, ty, box, lim=lim, budget=budget)
             if s is None:
                 return None
             occ.add((s[0], s[1], s[0] + RST_W, s[1] + RST_H))
@@ -5462,7 +5462,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
         pads = [0, 0]
         pad_moved = [0]
 
-        def chain(k, lv, p=None):
+        def chain(k, lv, p=None, pxy=None):
             """pad chain of lv levels in front of node k; returns the node that takes k's place in its parent's net.
             QKO-QDIE 10-21 (dv2f21g5r9bfp assert ('rst_field', 'pad')): the fault-OR tree of a FAULT=1 GEN fills the
             sites beside some children, so the nearest-site search from k comes back empty.  The pad chain belongs to
@@ -5472,14 +5472,34 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
             head, prev = None, None
             for mst in [RST_PAD] * (lv // RST_PAD_LV) + [RST_REP] * (lv % RST_PAD_LV):
                 a = new(*c_(k))
-                if a is None and p is not None:
-                    (x0, y0), (x1, y1) = c_(k), c_(p)
+                far = c_(p) if p is not None else pxy
+                if a is None and far is not None:
+                    (x0, y0), (x1, y1) = c_(k), far
                     for t in (0.25, 0.5, 0.75, 1.0):
                         a = new(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t)
                         if a is not None:
                             pad_moved[0] += 1
                             break
-                assert a is not None, (bid, 'pad')
+                # QK3-QGEN 10-21 (dv2f21g5r10af assert ('rst_field', 'pad'), SG129.6 / base r4a): the nearest-site walk
+                # gives up after 4000 best-first pops; among the dense fault-OR / relay / landing cells of a FAULT=1 GEN
+                # that budget is spent within a few tens of um, so a free channel inside the edge span is never seen.
+                # Same edge, same levels: a wide walk (budget 200k) bounded so both hops stay inside one net
+                # (centre = the edge midpoint, lim = RST_NET_UM / 2 - 20; else beside k, lim = RST_NET_UM - 40).
+                # The emitted pins are re-checked at RST_OK_UM by _reset_reach_gate as before.
+                if a is None:
+                    (x0, y0) = c_(k)
+                    tries = []
+                    if far is not None:
+                        tries.append(((x0 + far[0]) / 2, (y0 + far[1]) / 2, RST_NET_UM / 2 - 20))
+                    tries.append((x0, y0, RST_NET_UM - 40))
+                    for tx_, ty_, lm_ in tries:
+                        a = new(tx_, ty_, lim=lm_, budget=200000)
+                        if a is not None:
+                            pad_moved[0] += 1
+                            break
+                if a is None:
+                    raise ValueError(f'reset tree: {bid} pad chain of {lv} levels has no free site within one net of '
+                                     f'child {[round(q, 1) for q in c_(k)]} / parent {None if far is None else [round(q, 1) for q in far]}')
                 N[a]['master'] = mst
                 pads[mst == RST_PAD] += 1
                 if prev is None:
@@ -5490,7 +5510,7 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
             if prev is not None:
                 N[prev]['outs'] = [[('node', k)]]
             return head if head is not None else k
-        first = chain(root, hdom[net['dom']] - ht[root])
+        first = chain(root, hdom[net['dom']] - ht[root], pxy=net['drv'][2])
         for p in [k for k in N if k in ht and not N[k]['sinks']]:
             N[p]['outs'] = [[(kind, chain(o, ht[p] - 1 - ht[o], p)) if kind == 'node' else (kind, o) for kind, o in g_]
                             for g_ in N[p]['outs']]
