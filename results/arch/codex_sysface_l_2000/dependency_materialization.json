@@ -1,0 +1,581 @@
+{
+  "source": "8895a2b79",
+  "repair": "Materialize existing exact source top-level tools Tcl/sh dependencies in a fresh run; no source bytes changed",
+  "first_failure": "EP9 unit368892-1792646468 missing tools/orfs_hold_mm.tcl at synth_odb; original mapped object retained",
+  "replacement": "EP9 unit449997-1792646669 /srv/opentallas-scratch2/claude/codex-sysface-l-native2-1021/src",
+  "scope": "historical-image native-only, stop before floorplan",
+  "files": [
+    {
+      "path": "tools/bootstrap_ihp_model_tools.sh",
+      "sha256": "71ef006a786cd6311a4fc4422bf1ef91920afff866e17b951766de2562079cb4"
+    },
+    {
+      "path": "tools/bootstrap_ihp_pdk.sh",
+      "sha256": "fab2554f688d149fbe3887c9c55361d2c513a84200e116722bedecf92c424b0b"
+    },
+    {
+      "path": "tools/bootstrap_sky130_pdk.sh",
+      "sha256": "5e6e4c33861d1a1bef2c95ce2ab6430790fa34d7999d4ec7b479b718775131c6"
+    },
+    {
+      "path": "tools/bootstrap_sky130_physical_tools.sh",
+      "sha256": "4c2dc716c88044aaf0b289d9297fa5583efc3b57efddf9d4380a4c928c556cdf"
+    },
+    {
+      "path": "tools/bootstrap_verilator_5_050.sh",
+      "sha256": "2cead44971a113b017f77374ab20c0a5a01ad52b44ba71b62e635997e220701c"
+    },
+    {
+      "path": "tools/ctl_spec_seed8_fix_bench.sh",
+      "sha256": "8a73e36ba98c4111229daeabead5baaab05202d827a67d08352aed385c354b24"
+    },
+    {
+      "path": "tools/die_clock_check.tcl",
+      "sha256": "6bdca8cf6ff89f9a585b1ff711819db80c09b6abb37685c8c3eea3e0955c73aa"
+    },
+    {
+      "path": "tools/die_relay_chain_step.sh",
+      "sha256": "2f5c800135b54fd9c174cbffe6e1484e0797c2a19eb37c0c16799eb3d996d47c"
+    },
+    {
+      "path": "tools/dsrom_markov_lookup_pg_diag.tcl",
+      "sha256": "c4b697a126a55dabfec687dc9bd2caf60b4128cd5ec6599b95549b2de381e130"
+    },
+    {
+      "path": "tools/dsrom_q_abstract.tcl",
+      "sha256": "b60e386291a90c3ed1074c472c8c7b4390ccbdd4a676b7e0b2d937d5c42abd67"
+    },
+    {
+      "path": "tools/dsrom_softmax_egress_payload_gate.sh",
+      "sha256": "6a3d9389610d3779793490b16d596f53a67f41164fb6d2792bab5d7303adf991"
+    },
+    {
+      "path": "tools/dsrom_su_div2b_gate.sh",
+      "sha256": "a2e9c7b02c242a4c0420af43120e32dea5d837886ecea3a59bd82eecc9f71857"
+    },
+    {
+      "path": "tools/dsrom_v9_parent_pin_extract.tcl",
+      "sha256": "30236484052696d1c1bde9c6b97e31f7ac32e96f404862facc392806112972e8"
+    },
+    {
+      "path": "tools/dsrom_wfc_canonical_exact.sh",
+      "sha256": "34a580e1e753b4627883631a2553f0e6ad57d1518e6c83b20554feb3d422bf90"
+    },
+    {
+      "path": "tools/dsrom_wfc_decoded_read_exact.sh",
+      "sha256": "17e54d92a7c8f7a3165da8c194cecda975ba5f70b87827f2faee66ff919968cb"
+    },
+    {
+      "path": "tools/dsrom_wfc_enclosing_exact.sh",
+      "sha256": "6732d42fa0a717d4a8f832e735d3f79c964ab5d0364422eb3c12ff1fbcaa53f3"
+    },
+    {
+      "path": "tools/dsrom_wfc_protected_exact.sh",
+      "sha256": "b09f308b606ad594b59f8709b081a9c9e082d5c73fa1436d1d168e5b3bdefaa3"
+    },
+    {
+      "path": "tools/dsrom_wfc_reset_reference_recipe.sh",
+      "sha256": "1263cb28038d866202b8ba34494e303d2d214584522f0c44ae3ce07a481b2178"
+    },
+    {
+      "path": "tools/dsrom_wfc_structural_full_exact.sh",
+      "sha256": "972e90970ee6bf0f5c3653b01815b47fa11c58bc3c3ba2dc6597bbd73b34ef6f"
+    },
+    {
+      "path": "tools/dsrom_wfc_structural_nominal_exact.sh",
+      "sha256": "57ada6b3d008ec0ea951e90f0407db2580f864cc181055779d6e915ee6ac3713"
+    },
+    {
+      "path": "tools/dsrom_wfc_tokpipe_eco_observer.sh",
+      "sha256": "4fe5aa0d0badf0b247a55588583d46eea9db5722ed6d5c80e4efe5606ce22463"
+    },
+    {
+      "path": "tools/fp_margin_lint.tcl",
+      "sha256": "43e9e7f2633bd55619f7f6b5b9fd71862a310e30ff68eab2ad123e5064635cf5"
+    },
+    {
+      "path": "tools/full_sm_rf_service_exact_gate.sh",
+      "sha256": "60cc2900426fd71aee613d9e6461a3d404745f5d682916f7a5f0aa18c8242d15"
+    },
+    {
+      "path": "tools/ha2_cts_diagnostic.tcl",
+      "sha256": "0aeba4d8105842c80139d03649701f23c8c1afbc9c67927f0d8ac2e74b05b402"
+    },
+    {
+      "path": "tools/ha2_cts_saved_reports.tcl",
+      "sha256": "bdfef5c1f4b4bd77a0dd9d34bb97136f2fa40a17723e84ea36c7801230946c16"
+    },
+    {
+      "path": "tools/ha2_tu_owner_component.sh",
+      "sha256": "11b9b15cb2dbbe918d13479c7f418798ba1fd2fa41abce2279fa93b7aa3e7bae"
+    },
+    {
+      "path": "tools/ha2_tu_owner_route.sh",
+      "sha256": "38a612800032b9066d7dc606593a028f25867259ab8bf55932d612e0e72baa73"
+    },
+    {
+      "path": "tools/hbm_accel_die_run_case.sh",
+      "sha256": "9d65f7976b8060ed60c87f2649e5f22a2dbd617457d43e5983de1c0c009ef0f8"
+    },
+    {
+      "path": "tools/hbm_collective_endpoint_route_continuation.sh",
+      "sha256": "5a34ae41c9293d7dd8e8b304cb5026ef88794db30c0bed21a075dd840b08f8c9"
+    },
+    {
+      "path": "tools/hbm_collective_endpoint_txmask_route.sh",
+      "sha256": "be6257e089b3ff9173d7d4c574da4042ebc272f124eb222d5f0f2c107ef6667d"
+    },
+    {
+      "path": "tools/hbm_collective_txmask_fanout_route.sh",
+      "sha256": "895e8ced8de8576389a10b876501723e6c154b58d09c490ce4de14045168f6ca"
+    },
+    {
+      "path": "tools/hbm_die_glue_pg_run.sh",
+      "sha256": "b00da71e93244f7ef9457c4a074b34fddda55804c05920f2be351fb6120e2bb8"
+    },
+    {
+      "path": "tools/hbm_die_ir_run.sh",
+      "sha256": "631af8c5c5db9073f3e048d73297ac5b31e3c07b9aaf5dd71f47ee546cb6bd84"
+    },
+    {
+      "path": "tools/hbm_die_pg_run.sh",
+      "sha256": "a7caba40a2acc2f5886c549777cf4eb0d836842a01ee7fedc23611bb12835d0a"
+    },
+    {
+      "path": "tools/hbm_die_post_grt.sh",
+      "sha256": "9eccecd631b2fd73c6f9cf9886f3596416a72fe3eadc0dbf76992003d26669b3"
+    },
+    {
+      "path": "tools/hbm_die_sta_chain.sh",
+      "sha256": "223b5d813ad2732f6f648246d35a6511db207557611957f13c12ad6ffcfa7be3"
+    },
+    {
+      "path": "tools/hbm_forks_final_paths.tcl",
+      "sha256": "8f9daf1c8f4b21ac6d254d857fdc652f60212b475920f31b669be2e585fe0e4c"
+    },
+    {
+      "path": "tools/hbm_forks_seq_paths.tcl",
+      "sha256": "c0ca616c6b3ed0de97a71e092a2b1a89d5eed6148506c6a80051c9839b19f27c"
+    },
+    {
+      "path": "tools/hbm_item9_context32_exact.sh",
+      "sha256": "94bf6717b0bc2829d0b6d929426860fed767a667c03f2cc7bec44514b9b5394b"
+    },
+    {
+      "path": "tools/hbm_item9_context32_geo_exact.sh",
+      "sha256": "54f554aba0c462de94dea1ca49e1b07deb48c06f43d9be81f16de49d7ee4e676"
+    },
+    {
+      "path": "tools/hbm_item9_context32_pipe_exact.sh",
+      "sha256": "6472c2e395a02854d588b99601137483ef1b9912de9fb714f4b0d646ce7af4af"
+    },
+    {
+      "path": "tools/hbm_item9_context32_synth.sh",
+      "sha256": "1eece57fc152608fec372b343854ddc419c1f0129e2402e295a56042d79f65b6"
+    },
+    {
+      "path": "tools/hbm_item9_context32_tree_exact.sh",
+      "sha256": "20e9463f5042cbc3817dd712a9cc3017c987e217ae0d5d2cb428e4c4fa55ab97"
+    },
+    {
+      "path": "tools/hbm_item9_context32_txctrl_exact.sh",
+      "sha256": "d61b69692ed2641169a3ebb0bab8764216f640de15e75b4e4f5516fca1a41361"
+    },
+    {
+      "path": "tools/hbm_item9_ha2_owner_index_exact.sh",
+      "sha256": "b7b422c8f1a9c842c2f74387ee0859e3d8deeb66d22cb3e3186a9d91d0b41df0"
+    },
+    {
+      "path": "tools/hbm_item9_mux32_exact.sh",
+      "sha256": "348e0506d6e34a78c3672b6a0985a49a3505af30a0a775c1d99465a149fe2948"
+    },
+    {
+      "path": "tools/hbm_item9_mux32_geo_exact.sh",
+      "sha256": "afa2fea8e01f2f6ed8eab02d5de8ac3b93ce42c47fedc15b0dab9fbed746929d"
+    },
+    {
+      "path": "tools/hbm_item9_mux32_tree_exact.sh",
+      "sha256": "3bd0621975a96760f7bbd07d7c0cde6833d816bec8f580d233fda70c6d8c8a8a"
+    },
+    {
+      "path": "tools/hbm_item9_route.sh",
+      "sha256": "61821d0c8bec664e9f3389be281d921403d2ce2342c419b1f03784f24cf03126"
+    },
+    {
+      "path": "tools/hbm_link_retry_pathfinding.sh",
+      "sha256": "f627a0e5f970d733cc7cfd207ade6eb40a6d01bfd44d3bd7a430709c9f6286f7"
+    },
+    {
+      "path": "tools/hbm_link_retry_pathfinding_wide.sh",
+      "sha256": "7fdb1712d333b0186200bfd028ba10e069477404d4ff2451011b169e9ac874ed"
+    },
+    {
+      "path": "tools/hbm_link_retry_pipeline_pathfinding.sh",
+      "sha256": "d8e12b2e5c5ed7acd3a278f213d6a5b4c13494325050d07a37a38a9cee9d2d4d"
+    },
+    {
+      "path": "tools/hbm_native_idx_cut_bench.sh",
+      "sha256": "a950d0571daa803f9627a5e769ad4398307169d7bd00068b4584620ba311b56b"
+    },
+    {
+      "path": "tools/hbm_native_idx_landing_bench.sh",
+      "sha256": "87f741a5f69d52c51b50c47397d2b9324575696f7b91aa8b18b43dce89387b2b"
+    },
+    {
+      "path": "tools/hbm_native_idx_owned_bench.sh",
+      "sha256": "857bc75eda33d97965c6f9fb7e555e3e3e43ae44cf77bf2eed5ea741e2c2d2b2"
+    },
+    {
+      "path": "tools/hbm_native_idx_parent_bench.sh",
+      "sha256": "b840cb8988609330fa4ca52cd2e811adf2bcb6f9711a865dd8e71a0a3bb3ba5d"
+    },
+    {
+      "path": "tools/hbm_native_idx_parent_mutants.sh",
+      "sha256": "24c4e57db7d727fc8f7a2cabc18fa3c8c3d5b1017bfdf49c2ac92112ccb5ab9a"
+    },
+    {
+      "path": "tools/hbm_ta15_digital_body_route.sh",
+      "sha256": "2b1716528ddd0ade03c69438a6a9d9cbd15d81227acd1ba8a9c45126a71ab40d"
+    },
+    {
+      "path": "tools/hbm_ta15_production_body_route.sh",
+      "sha256": "7a11c6ddc1287afbc3b898de65b3347ae29c0652664ba8470229cdb687952e55"
+    },
+    {
+      "path": "tools/hbm_vm_strap_parent_gate.sh",
+      "sha256": "c511d4f3df995df71defc2917d0f67401ccfe052b3c8f93da73f09c3d3ea3c26"
+    },
+    {
+      "path": "tools/hfd_idx_lfifo_bench.sh",
+      "sha256": "19f8f25257f53a822aa7d49df238b48d269e25b6152d9c42b48b0021bd24bd9f"
+    },
+    {
+      "path": "tools/hgi_coll_decode_gate.sh",
+      "sha256": "f7c18c8b7e97d024fbbc47794f578b6700c204e64a57cbc8926afaf3055dd9aa"
+    },
+    {
+      "path": "tools/hgi_coll_row_gate.sh",
+      "sha256": "ae917529060d8f271072ef3ecbd3da5a918274c5a50f765c3023c9c893308576"
+    },
+    {
+      "path": "tools/hgi_idx_chunk_el_bench.sh",
+      "sha256": "2deeabd70a5b4c05e1379fc86c0a9aa35cad7ec3565ef6157f0ea3b19412f524"
+    },
+    {
+      "path": "tools/hgi_idx_engine_hslice_bench.sh",
+      "sha256": "d88dea55a9fc03e00b6a4a5a42230118c14069ca0f6440afa52ea7a2ddb6a1c4"
+    },
+    {
+      "path": "tools/hgi_quant_block_mutant.sh",
+      "sha256": "84dfbb996c9f7ce5e1ad635529a1c027dbceeb3e88fcfcc3a9eb17f75bc68309"
+    },
+    {
+      "path": "tools/hgi_quant_decode_bench.sh",
+      "sha256": "27b6f4733456308f0b2a6d34280d9efb8562bfaa2599b752d809b1d933c98732"
+    },
+    {
+      "path": "tools/hgi_quant_decode_remote.sh",
+      "sha256": "f4fa2719059686e2266f4659effe6aed62317f7c7477e0ed81f9dc9e1efd964e"
+    },
+    {
+      "path": "tools/hgi_quant_vector_bench.sh",
+      "sha256": "ebf59270aac0eeab0a6432a562fe743404adccbbfa1e99ef70f6a1a5b547da1d"
+    },
+    {
+      "path": "tools/hgi_quant_vm_synth.sh",
+      "sha256": "ca84d728e1b4a0478cf65cdd593effad2f979b5d5117f33efacfdbfa38675cf5"
+    },
+    {
+      "path": "tools/hgi_quant_vm_transport_bench.sh",
+      "sha256": "eb9d97ded45c04aae4173668905f822fafe9489754c768bf3ee2b9a6a72585af"
+    },
+    {
+      "path": "tools/hgi_quant_vm_transport_p_bench.sh",
+      "sha256": "03ad513d7baadbc38257b7a882b531d4c1be3cf8110c19893160e16e40cd1997"
+    },
+    {
+      "path": "tools/hgi_sm_pub_parent_gate.sh",
+      "sha256": "974e69c1e3e0cd65563780a05e5683206034866d08652b1a7c0e9d550f2e7bdf"
+    },
+    {
+      "path": "tools/hgi_topk_heap_bench.sh",
+      "sha256": "398fa71be4cffec88b91404b4a1cc33abf4186f610d2e0b67a70089239967757"
+    },
+    {
+      "path": "tools/mtp_exact_spec_state_sweep.sh",
+      "sha256": "b2ac805009d5787153a0fb015e2ccc5870ad75a00400a6e66a786cf43b76a692"
+    },
+    {
+      "path": "tools/nash_w2_publication_gate.sh",
+      "sha256": "813a7bb229e2b4f8c7d9b5a20a96c11c2c6f9bb8bbe83ca291b2c9c8640f4519"
+    },
+    {
+      "path": "tools/orfs_hold_mm.tcl",
+      "sha256": "e4debd987a144ea506fc38d3e990ae2b07cfdd695a0e2847b770357fcec17290"
+    },
+    {
+      "path": "tools/preroute_gate.tcl",
+      "sha256": "cb26dd3c1faa53058290838dd53e53b2f6ba55a0cece82c0e833c6b0c3fcea68"
+    },
+    {
+      "path": "tools/prove_bf16_add_equivalence.sh",
+      "sha256": "297cd8247c257082b753ef017f4636bd426df22a17b6561e94853c71d163131a"
+    },
+    {
+      "path": "tools/prove_reduction_tree_equivalence.sh",
+      "sha256": "511ed95e841f462703c98e7dd96716b0d3540b2f514ff4cf1726f7295f6b4dea"
+    },
+    {
+      "path": "tools/pve1_odb_endpoint_audit.tcl",
+      "sha256": "8fc3837aac0d563744bc1f70f3a32bf2d20384719fb6e964432192efecc257b4"
+    },
+    {
+      "path": "tools/qwen_code_pair_ties.tcl",
+      "sha256": "95dbaa01a26841d6bd38285e08b3981801724d480de900ca868e585161e56bd3"
+    },
+    {
+      "path": "tools/qwen_die_tile_etm_ff.sh",
+      "sha256": "437bade04d6c3d34499b9ce91910c474a9c17f154e54727eb3fe9fba200bbabf"
+    },
+    {
+      "path": "tools/qwen_land_merge_preplaced_gate.sh",
+      "sha256": "55df3aa9f93eee2eb469f578404d6f11c7b55a95339c0159d6a4c15869bb7287"
+    },
+    {
+      "path": "tools/qwen_o4_int8_arith_droute.tcl",
+      "sha256": "4811f608ba0f253207d59005ced8ea71e501429d1c911fffe3bcd975c42f01d2"
+    },
+    {
+      "path": "tools/qwen_o4_int8_arith_extracted_sta.tcl",
+      "sha256": "e8599370084b847558957654832855551ebff820c68d45513e3a5089a2c0133d"
+    },
+    {
+      "path": "tools/qwen_o4_int8_arith_openroad.tcl",
+      "sha256": "3869072053aad9501c4e3e56fc10ed24a5c85631ec5909bb0a090a0720676345"
+    },
+    {
+      "path": "tools/qwen_qkez_phase_suite.sh",
+      "sha256": "304ca0144eabb39dac289e67ebd63825542872a40b6e9b8cd1f83745657bed8c"
+    },
+    {
+      "path": "tools/qwen_r25_su_quarter_elaborate.sh",
+      "sha256": "1aaf102d096621871c8eea0e3e2dc913564451e7a3d2bc91fba494515fb0427c"
+    },
+    {
+      "path": "tools/qwen_rom_fulldie_run_case.sh",
+      "sha256": "b87c40a15aaa05d25f4450509864a03758021fcff33c5d8a3384928fcf32e8b1"
+    },
+    {
+      "path": "tools/qwen_slab_capture_gate.sh",
+      "sha256": "7d00e7ac76f104b1ec74a1e0189998c3432632876462d7583dccf48d73f069a9"
+    },
+    {
+      "path": "tools/qwen_slab_share_run_splitface.sh",
+      "sha256": "e08a23ad765b1e183bc023a690fb33b58c88caa6aed44452a20ecd5b5f9eee02"
+    },
+    {
+      "path": "tools/qwen_slab_share_run_splitface_l7.sh",
+      "sha256": "a2268c2ba123d495a36eadba2ae31782b83ec9cf8788a89e99b2d64337884ce7"
+    },
+    {
+      "path": "tools/qwen_tile_r5_node_bench.sh",
+      "sha256": "5d4e7eb5a2de2800c5b56d5485282f8dd05c53f9b0dd32bd589a81eae2ed7014"
+    },
+    {
+      "path": "tools/qwen_tp8_attention_service_build.sh",
+      "sha256": "f800ffd06009116133b14f95c3f0e8f921b0f3bc9c42c3e0d1a674dd8cf693d3"
+    },
+    {
+      "path": "tools/qwen_tp8_attention_service_rtl_build.sh",
+      "sha256": "e8241f551766a92494e061c400dec1569300ec9942055be631a6a2cba528c431"
+    },
+    {
+      "path": "tools/qwen_tp8_attention_service_rtl_check.sh",
+      "sha256": "6e758285cd0b370d23c6e9f56773f7ab4a114956b70abaa7e0632e85d253447a"
+    },
+    {
+      "path": "tools/qwen_tp8_finalize_run.sh",
+      "sha256": "5b2f647d3f4c3eb67e4a8709d2369c8214cc7d555362503019604371d15fabe0"
+    },
+    {
+      "path": "tools/qwen_tp8_pv256_ordered_run.sh",
+      "sha256": "42eb8f0172c352db93520f4b73c377bb3dc66f5981bc3fb6f27c638dc6a5c4c6"
+    },
+    {
+      "path": "tools/qwen_tp8_pv256_parallel_run.sh",
+      "sha256": "373ce113cd9e04171e3d7ebcca5e0c078749dd885529316c03b9475e725ff991"
+    },
+    {
+      "path": "tools/qwen_tp8_pv256_small_contexts_run.sh",
+      "sha256": "b654f917182d3c0a3d470651055c5ef41d5b4ee612642f90e1d54430a4ae84c2"
+    },
+    {
+      "path": "tools/qwen_tp8_pv256_static_final_run.sh",
+      "sha256": "459e48943e549b03090e36c894b7d45170cf281f6e924efd5d9cd2588988aae4"
+    },
+    {
+      "path": "tools/qwen_tp8_pv256_static_run.sh",
+      "sha256": "f185daeeef27141877778cc4413e2eb56b7dbbd231757a2bf0a0dd99a5c075d4"
+    },
+    {
+      "path": "tools/qwen_tp8_pv256_tree_run.sh",
+      "sha256": "e327f9fb785a9a2c5495cc684883536df38b69af17ac38b37e36ba7968e7f2ef"
+    },
+    {
+      "path": "tools/qwen_tp8_vrow_prod_run.sh",
+      "sha256": "39b903ba64dc8d556ab1fc9c0a2aa17a2c82015028990310d3780be62c70035a"
+    },
+    {
+      "path": "tools/rom_express_link_place.tcl",
+      "sha256": "0842bea5e30987ed8055221fd697a74fdbe644e47efe2f433f2c0849df6ad4e3"
+    },
+    {
+      "path": "tools/run_dsrom_field_address_gate.sh",
+      "sha256": "a1756129dcd64e06a52a20c4ccb98195ff85920dd0f811a096c19aeb6b569c9a"
+    },
+    {
+      "path": "tools/run_dsrom_hc_input_reader_gate.sh",
+      "sha256": "0783cf267c6882e613b695ee5d3b72e63a57da965b3d1250a9d0ccdc9a26a101"
+    },
+    {
+      "path": "tools/run_dsrom_hc_join_gate.sh",
+      "sha256": "6f894ceceddaae0188860d789307775fcb4f31907a8e659abf2d8f5c29bb7c92"
+    },
+    {
+      "path": "tools/run_dsrom_hc_join_route.sh",
+      "sha256": "5e3f623e89e21d39f681b0906dfce6e6db3fce1405a98177c961c75fcb6f0cd2"
+    },
+    {
+      "path": "tools/run_dsrom_hc_mean_capture.sh",
+      "sha256": "5d0d556f22fb1bde2c1b9cf35fae1a356ab33039eec14a396dad2fca3dbb74b7"
+    },
+    {
+      "path": "tools/run_dsrom_hc_mean_route.sh",
+      "sha256": "3558939e08ae8d7e8f3984ff6fdb83aaec9d0bc7afea1b9434db94a247404c2c"
+    },
+    {
+      "path": "tools/run_dsrom_hc_reader_route.sh",
+      "sha256": "64e92c2a42aa293d59bbff89f1ebf5f21a08f72f438e0d13b17936c44380999c"
+    },
+    {
+      "path": "tools/run_dsrom_static_provider_gate.sh",
+      "sha256": "b234321688a9d269a5c09127d092782770da45ebadbac663f62c805994cb4737"
+    },
+    {
+      "path": "tools/run_hbm_gather_borrow_joint.sh",
+      "sha256": "9effec53de60e68bada8c89a669d0854ee6321640eca9ac5bdd9359de256894d"
+    },
+    {
+      "path": "tools/run_hbm_gather_fence_owner_ampere.sh",
+      "sha256": "b9c97719509954a04ec19e6828a0935e4217178efec22ab0ac5899a444a14557"
+    },
+    {
+      "path": "tools/run_hbm_gather_readback_fault_ampere.sh",
+      "sha256": "4e8ae7e90a2bc6126e2b2823e7d3e6447aea92ace918cf5b792cedcc960a832e"
+    },
+    {
+      "path": "tools/run_hbm_integrated_gather_exact.sh",
+      "sha256": "7029b55f3063ca77163af6f99f0d74219fe4394ebef0ee215816ab713b6008e5"
+    },
+    {
+      "path": "tools/run_hdc_matvec_memory_tile.sh",
+      "sha256": "efccd6d0af8da366e94ccafc958687d4d42ae6965e8541be78b88e28576582c0"
+    },
+    {
+      "path": "tools/run_hdc_matvec_memory_tile_g4w4.sh",
+      "sha256": "5ebc59a8b96867c312770d2b85708ed100f1537c04010a71e44b366355143bbe"
+    },
+    {
+      "path": "tools/run_hdc_matvec_memory_tile_g4w4_command_arrival.sh",
+      "sha256": "65b1e5f9af7ac5cdd6144cb4c821fa7888efdf8197bd49f246f8e7820c7dc56a"
+    },
+    {
+      "path": "tools/run_hdc_matvec_memory_tile_g4w4_command_arrival_full.sh",
+      "sha256": "5bbab1ddb5de227a8cf1f88e1c42b199758d6bd4998f442cf31598ec219d98e2"
+    },
+    {
+      "path": "tools/run_hdc_matvec_memory_tile_g4w4_ingress.sh",
+      "sha256": "49170f562c52b5cbf1ae9ecab686c24e7baa4ed954035801d2667c6093505654"
+    },
+    {
+      "path": "tools/run_hdc_matvec_memory_tile_g4w4_tns5.sh",
+      "sha256": "34112b163d3de6a890efa6f3478e6635b954a07a9ad5b04ae9b6bc707fdf55ea"
+    },
+    {
+      "path": "tools/run_hdc_matvec_memory_tile_g4w8.sh",
+      "sha256": "8f5d53e9a8bc58ec47fd21c11b7dd12e5e69db960e2bcc2558f6cefad90f6fe1"
+    },
+    {
+      "path": "tools/run_hdc_matvec_memory_tile_ingress.sh",
+      "sha256": "b48a32a8e9a5b716f928692d3a99bae2954cf449e4424e472774d4fa10ee0e5b"
+    },
+    {
+      "path": "tools/run_hdc_matvec_memory_tile_ingress_slew60.sh",
+      "sha256": "660e747468f7bf6c53d5dc512013ff127d0edb0d502d466927fef2be58d1f108"
+    },
+    {
+      "path": "tools/run_hdc_qwen_int8_arith_physical.sh",
+      "sha256": "fcda3444cf5f71988d4f74f06f7b2ca07e65eac9216fe7555a3546f6524441b1"
+    },
+    {
+      "path": "tools/run_hdc_v41x_idx_pool_batch_physical.sh",
+      "sha256": "901a00e47530c7e7eec52ad0de9e88e15661a09b4f5f34827602fa11a7767e55"
+    },
+    {
+      "path": "tools/run_hdc_v41x_idx_pool_finish_physical.sh",
+      "sha256": "04ee519970a75ef9e43fc4db6053680dd7392749ce5ac2d4ff1b2f8d7b7c0b64"
+    },
+    {
+      "path": "tools/run_hdc_v41x_idx_pool_kwr_physical.sh",
+      "sha256": "b94a6c386f70bc399e2716114a45756e573c09effb9259d15ef5542aa31ac0cc"
+    },
+    {
+      "path": "tools/run_hdc_v41x_wgt_route.sh",
+      "sha256": "a63cb02fd49901e869e45cdf8be31426b42987a645e8bec652d90178da95795c"
+    },
+    {
+      "path": "tools/run_qwen_m5_reduce_route.sh",
+      "sha256": "b7d41299a89f3507b12673695def6e9c5d64e643b5b1759a11d2f860df535460"
+    },
+    {
+      "path": "tools/run_speculative_acceptance_campaign.sh",
+      "sha256": "80647f3f07bcb2bdd4b00e8df1241b0d80e15e3b0cdb9dd2543bfea2dc975559"
+    },
+    {
+      "path": "tools/svc_aq_act_cut_lockstep.sh",
+      "sha256": "8fa3d35ac31d6e4ee31703c967de9adf768e72993b4cd305b4128a1ae33e61df"
+    },
+    {
+      "path": "tools/svc_aq_block_nonempty_lockstep.sh",
+      "sha256": "41de5e6e88cfe9886be1b7c07bc2bb2255d8f79ce53754a30c60184f981ec2bc"
+    },
+    {
+      "path": "tools/svc_aq_head_ready_lockstep.sh",
+      "sha256": "615d851668c32f9fb7ef0030b5e8dec8729d4116719ba13a889188aae19b8ce1"
+    },
+    {
+      "path": "tools/svc_aq_slot_ready_lockstep.sh",
+      "sha256": "98f2311c0fd600ff1f417cf5771bf5381952caf231e4b763fa4e27118e99593f"
+    },
+    {
+      "path": "tools/v41_l0_live_chain_build.sh",
+      "sha256": "ff10be402eaa2a3661d20ee4a191c6383eafb3254cff5ccafb7a4066196e9daa"
+    },
+    {
+      "path": "tools/w15_trunk_m79.tcl",
+      "sha256": "c356c27f2d393de2f95ae9a94abf78df2befb5ac24a4cdac56db4645d523db8d"
+    },
+    {
+      "path": "tools/w15_trunk_m89.tcl",
+      "sha256": "a873da7236d8e06eb218e41188074395b3efec869ee20c295cd07f7bec65f793"
+    },
+    {
+      "path": "tools/w2_phase_seat_calibration.sh",
+      "sha256": "06e5800bce4e5ee7865c1751d8d75857b1fcdd7d56fd50c8dfbbec699ff56773"
+    },
+    {
+      "path": "tools/w5_context_audit.tcl",
+      "sha256": "63c48c39d479d3cad261b0cd9a09e33a15e8207ccc637d4d1af55815e4bed0eb"
+    }
+  ]
+}
