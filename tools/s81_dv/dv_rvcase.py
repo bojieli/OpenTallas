@@ -502,9 +502,13 @@ def clock_regions_report(insts, ibits, T, mod2master, top, loc, links, LP, plan,
         ra, rb = pin_root.get(f'u_{L["src"]}'), pin_root.get(f'u_{L["dst"]}')
         ring = (f'ld_{ln}' in loc) or (ln in lp and bkind.get(L['dst']) == 'frame' and bool(L['pts']))
         by_pair[tuple(sorted((f'u_{L["src"]}', f'u_{L["dst"]}')))].append((ln, ra != rb, ring, L['cls']))
-    unlanded = []
+    unlanded, async_pairs = [], 0
+    asyn = {k for k, v in T.get('clock_domains', {}).items() if v.get('asynchronous_to_core')}
     for (a_, b_), rows in sorted(by_pair.items()):
         if not any(c for _, c, _, _ in rows):
+            continue
+        if pin_root.get(a_) in asyn or pin_root.get(b_) in asyn:
+            async_pairs += 1          # declared asynchronous domain (PHY ck_hbm, async FIFO): CDC, not a region crossing
             continue
         if all(r for _, c, r, _ in rows if c):
             landed_pairs.append([a_, b_, 'lane_ring'])
@@ -532,7 +536,9 @@ def clock_regions_report(insts, ibits, T, mod2master, top, loc, links, LP, plan,
                           rule='every non-frame root: placed sink bbox inside its extent (cell U member blocks | own block) + reach'),
                 regions=gate['roots'],
                 crossings=dict(reset_release_landed=len(rx), lane_ring_landed_pairs=sum(1 for p_ in landed_pairs if p_[2] == 'lane_ring'),
-                               unlanded_neighbour_pairs=len(unlanded), unlanded_first=unlanded[:20],
+                               unlanded_neighbour_pairs=len(unlanded), async_domain_pairs=async_pairs,
+                               unlanded_by_class=dict(collections.Counter(k for u in unlanded for k in u['classes'])),
+                               unlanded_first=unlanded[:20],
                                reset_reads_across_roots=dict(sink_x),
                                max_reset_crossings_on_path=(bc.get('reset') or {}).get('max_crossings_on_path')),
                 landed_rule='reset release crossing = one extra registered stage <child>_xk on the receiving region root '

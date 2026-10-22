@@ -15,13 +15,18 @@ import dv_bind as D  # noqa: E402
 import geo_clock as GC  # noqa: E402
 
 
-def test_grid_s81_die_is_9x7_and_fits_80ps():
+def test_grid_s81_die_is_11x6_and_fits_80ps():
     g = GC.Grid(33000.0, 26000.0)
-    assert (g.nx, g.ny) == (9, 7)
-    assert g.cw == pytest.approx(3666.667, abs=1e-2) and g.ch == pytest.approx(3714.286, abs=1e-2)
+    assert (g.nx, g.ny) == (11, 6)
+    assert g.cw == pytest.approx(3000.0) and g.ch == pytest.approx(4333.333, abs=1e-2)
+    assert GC.region_spread_ps(g.cw, g.ch) == pytest.approx(77.1, abs=0.05)
     assert GC.region_spread_ps(g.cw, g.ch) <= GC.SPREAD_PS
-    # the next coarser grid (8 x 6) does not fit the in-region budget in the same model
+    # the S81 column blocks (svc_rs 3802, SerDes 3845, bk_sel 4190 um tall) fit one row
+    assert max(3802, 3845, 4190) <= g.ch
+    # coarser grids do not fit the in-region budget in the same model
+    assert GC.region_spread_ps(33000 / 10, 26000 / 6) > GC.SPREAD_PS
     assert GC.region_spread_ps(33000 / 8, 26000 / 6) > GC.SPREAD_PS
+    assert (GC.Grid(9000.0, 3000.0, 3000.0).nx, GC.Grid(9000.0, 3000.0, 3000.0).ny) == (3, 1)
     # same wire model as tools/die_clock_check.wire_ps
     assert GC.wire_ps(420.0) == pytest.approx(25 + 8.6e-4 * 420 * 420)
     assert GC.wire_ps(840.0) == pytest.approx(2 * GC.wire_ps(420.0))
@@ -30,11 +35,11 @@ def test_grid_s81_die_is_9x7_and_fits_80ps():
 def test_grid_regions_and_clamp():
     g = GC.Grid(33000.0, 26000.0)
     assert g.region(0, 0) == 'g0_0'
-    assert g.region(32999.9, 25999.9) == 'g8_6'
-    assert g.region(33000.0, 26000.0) == 'g8_6'            # clamped on the die edge
-    assert g.region(3700.0, 3700.0) == 'g1_0'
+    assert g.region(32999.9, 25999.9) == 'g10_5'
+    assert g.region(33000.0, 26000.0) == 'g10_5'           # clamped on the die edge
+    assert g.region(3100.0, 4300.0) == 'g1_0'
     x0, y0, x1, y1 = g.box('g1_0')
-    assert x0 <= 3700.0 < x1 and y0 <= 3700.0 < y1
+    assert x0 <= 3100.0 < x1 and y0 <= 4300.0 < y1
     h = GC.Grid.from_spec(g.spec())
     assert (h.nx, h.ny, h.cw, h.ch) == (g.nx, g.ny, g.cw, g.ch)
 
@@ -47,23 +52,26 @@ def test_block_regions_kinds():
     g = GC.Grid(33000.0, 26000.0)
     blocks = [dict(name='fr', master='f', x=100, y=100, w=1500, h=5000),        # table clock (frame), oversize anyway
               dict(name='small', master='u', x=4000, y=100, w=400, h=300),
+              dict(name='col', master='u', x=9134, y=2724, w=1728, h=3802),     # svc_rs-like column: fits a row
               dict(name='tall', master='u', x=9000, y=10000, w=1253, h=6739),   # slice-like: own root
               dict(name='phy', master='phy', x=12000, y=100, w=8500, h=1177)]   # fixed clock_port
     reg, info = GC.block_regions(blocks, g, TABLE)
     assert info['fr']['kind'] == 'table_clock' and reg['fr'] == 'g0_0'
     assert reg['small'] == 'g1_0' and info['small']['kind'] == 'grid'
+    assert reg['col'] == 'g3_1' and info['col']['kind'] == 'grid'
     assert reg['tall'] == 'b_tall' and info['tall']['kind'] == 'own_root'
     assert info['phy']['kind'] == 'table_clock'
     ext = GC.extents(g, blocks, reg)
     assert ext['b_tall'] == (9000, 10000, 10253, 16739)
     assert ext['g1_0'] == g.box('g1_0')                 # 'small' lies inside its cell
-    assert len([r for r in ext if r.startswith('g')]) == 63
+    assert ext['g3_1'] == (9000.0, 2724, 12000.0, 2 * g.ch)   # the cell grown by its whole column block
+    assert len([r for r in ext if r.startswith('g')]) == 66
 
 
 def test_root_gate():
     g = GC.Grid(33000.0, 26000.0)
     ext = GC.extents(g, [], {})
-    ok = GC.root_gate({'g0_0': [('a', 10, 10), ('b', 3666 + 400, 3714 + 400)]}, ext)
+    ok = GC.root_gate({'g0_0': [('a', 10, 10), ('b', 3000 + 400, 4333 + 400)]}, ext)
     assert ok['verdict'] == 'PASS' and ok['roots']['g0_0']['sinks'] == 2
     bad = GC.root_gate({'g0_0': [('a', 10, 10), ('far', 20000, 20000)], 'cl0N': [('x', 1, 1)]}, ext)
     assert bad['verdict'] == 'FAIL' and set(bad['fails']) == {'g0_0', 'cl0N'}
@@ -155,6 +163,7 @@ def test_reset_tree_geometric_crossings(monkeypatch):
         assert geo['depth'][leaf] >= leg['depth'][leaf]
         assert s['block_release_depth'][b] == geo['depth'][leaf] + 1
     assert set(s['clock_regions']) <= {'g0_0', 'g1_0', 'g2_0'}
+    assert s['stations'] == len(st_geo) + 2 == leg['summary']['stations'] + len(xk)   # + the 2 root synchronisers
 
 
 def test_emit_geometric_prunes_unused_region_ports():

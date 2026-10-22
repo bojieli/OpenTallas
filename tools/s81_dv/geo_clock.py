@@ -5,15 +5,18 @@ Replaces the LOGICAL cluster roots ck_cl0N..ck_cl7S / ck_south<c> / ck_void<c> /
 nearest block: one root spread over up to 20.7 x 23.9 mm, G9d) with roots of a fixed geometric grid:
 
   * grid       nx x ny equal cells over the die outline, origin = die origin (the floorplan's coordinate frame);
-               region g<i>_<j> = cell column i (x), row j (y); top port ck_g<i>_<j>.  Cell target CELL_UM = 3750 um
-               -> 33 x 26 mm die: 9 x 7 cells of 3667 x 3714 um.
+               region g<i>_<j> = cell column i (x), row j (y); top port ck_g<i>_<j>.  Cell target CELL_UM =
+               (3000, 4334) um -> 33 x 26 mm die: 11 x 6 cells of 3000 x 4333 um.  The rows are tall enough for the
+               die's 3.8-4.2 mm column blocks (svc_rs 3802, SerDes 3845, bk_sel 4190 um) to sit whole in one region,
+               the columns narrow enough for the spread model below.
   * sizing     die_clock_check's wire model (tools/die_clock_check.wire_ps = H-DIE stage_ps 25 + 8.6e-4 L^2 per
                420-um BUFx24/M8 stage) of a region tree fed at the cell centre: the root -> farthest-sink wire is
-               cw/2 + ch/2 = 3690 um -> modelled insertion wire_ps(3690) = 1552 ps.  Two sinks of one region differ at
+               cw/2 + ch/2 = 3667 um -> modelled insertion wire_ps(3667) = 1543 ps.  Two sinks of one region differ at
                most by their NON-COMMON path (<= the insertion); at a TT/FF de-tracking of TRACK_DERATE = 5 % of that
-               path the in-region spread bound is 77.6 ps <= the owner's 80 ps (rule 10-20: 80 ps WITHIN a region).
-               A 4.1 x 4.3 mm cell (8 x 6) models 89 ps > 80, so 9 x 7 is the coarsest grid that fits.  The 80 ps is
-               then MEASURED by die STA + die_clock_check per region (the model only sizes the cell).
+               path the in-region spread bound is 77.1 ps <= the owner's 80 ps (rule 10-20: 80 ps WITHIN a region).
+               10 x 6 (3300 x 4333) models 80.3 ps and 8 x 6 89 ps > 80; 9 x 7 (77.6 ps) splits the 3.8 mm column
+               blocks into own roots (G9 plan: 215 vs 148 cross-root 0-stage pairs, legacy logical roots 141).  The
+               80 ps is then MEASURED by die STA + die_clock_check per region (the model only sizes the cell).
   * blocks     a block whose own clock comes from the bind table (frames: ck_frame_<f>_r{0,1,2}; LEP slices:
                ck_ep_*; masters with a fixed clock_port, e.g. the PHY ck_hbm) keeps it; its grid region is the cell of
                its centre (used only by the region-root fallbacks).  Every other block takes the root of the cell
@@ -39,7 +42,7 @@ from __future__ import annotations
 
 import math
 
-CELL_UM = 3750.0          # target cell edge (see sizing above)
+CELL_UM = (3000.0, 4334.0)   # target cell (x, y) edge (see grid / sizing above)
 TRACK_DERATE = 0.05       # TT/FF de-tracking of a non-common clock path (sizing assumption; STA measures the result)
 SPREAD_PS = 80.0          # owner 10-20: spread budget WITHIN a region
 REACH_UM = 405.0          # owner reach (registered hop)
@@ -63,10 +66,11 @@ def region_spread_ps(cw, ch, derate=TRACK_DERATE):
 
 class Grid:
     def __init__(self, W, H, cell=CELL_UM):
-        if W <= 0 or H <= 0 or cell <= 0:
+        cx, cy = (cell, cell) if isinstance(cell, (int, float)) else cell
+        if W <= 0 or H <= 0 or cx <= 0 or cy <= 0:
             raise ValueError(f'geo_clock: bad grid {W} x {H} / {cell}')
         self.W, self.H = float(W), float(H)
-        self.nx, self.ny = int(math.ceil(W / cell - 1e-9)), int(math.ceil(H / cell - 1e-9))
+        self.nx, self.ny = int(math.ceil(W / cx - 1e-9)), int(math.ceil(H / cy - 1e-9))
         self.cw, self.ch = self.W / self.nx, self.H / self.ny
 
     @classmethod

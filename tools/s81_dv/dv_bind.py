@@ -278,7 +278,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     blocks = plan['blocks']
     cr_ = T.get('clock_regions') or {}
     if cr_.get('mode', 'geometric') == 'geometric':
-        grid = GC.Grid(W, H, float(cr_.get('cell_um', GC.CELL_UM)))
+        grid = GC.Grid(W, H, cr_.get('cell_um', GC.CELL_UM))
         reg, reg_info = GC.block_regions(blocks, grid, T)
     elif cr_['mode'] == 'logical':
         grid, reg_info = None, {}
@@ -1417,7 +1417,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM, g
     leaves = collections.Counter(list(station_srv.values()) + list(block_srv.values()))
     depths = [rel(c) + 2 for c in tree]
     ncomp = sum(1 for c in tree if c[0] == 's')
-    summary = dict(grid_um=GRID, root_cell=list(root[1:]), root_xy=pos[root], stations=len(tree) + 2,
+    summary = dict(grid_um=GRID, root_cell=list(root[1:]), root_xy=pos[root], stations=len(tree) + 2 + len(xings),
                    street_stations=len(tree) - ncomp, lane_reset_bits=ncomp, max_release_depth=max(depths),
                    min_release_depth=min(depths), max_relay_fanout=max(leaves.values()),
                    region_release_depth={r: max(rel(c) + 2 for c in tree if creg(c) == r) for r in set(map(creg, tree))},
