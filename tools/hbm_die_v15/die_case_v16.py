@@ -1580,7 +1580,8 @@ def main():
          'module hbm_v16_die (' + ', '.join(hdr) + ');']
     # HBMc/CHAIN 10-22 GEN_OPEN_INPUT_CHECK: every contract net end / clock / reset pin of a placed instance is emitted,
     # and no non-strap INPUT bit is left nc_ (strap bits = contract straps, constants of the design, listed open).
-    _expect = set(e_ for d, ends in nets.items() for e_ in ends if e_[0] in inst) | set(k for k in leafclk if k[0] in inst)
+    _inst = set(inst)       # inst is a list: 'in inst' per net end was O(83k) x 12M ends (GEN hung 70 min, c1bb32ac3)
+    _expect = set(e_ for d, ends in nets.items() for e_ in ends if e_[0] in _inst) | set(k for k in leafclk if k[0] in _inst)
     _dropped = sorted(_expect - connected)
     _strap = set()
     for st_ in C.get('straps', []):
