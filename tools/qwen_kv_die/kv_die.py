@@ -112,6 +112,9 @@ CDC_VIEW_LEF = 'physical/ref_tile/qkd_cdc_wleaf_ref/views/qkd_cdc_wleaf/qkd_cdc_
 # KV-BIND12 10-20 (OT_KV_RLY_FINE=1, default off): a relay chain that finds no spot on the G-lattice offsets retries the same
 # path points with sub-cell y / x offsets (RLY_FINE_STEPS) before refusing (kv_die._relays chain_)
 RLY_FINE = __import__('os').environ.get('OT_KV_RLY_FINE', '0') == '1'
+ROUTE_DEFER = __import__('os').environ.get('OT_KV_ROUTE_DEFER', '0') == '1'    # KDIE4-PH: see _relays
+if ROUTE_DEFER and __import__('os').environ.get('OT_KV_PINFIX_ROUTE', '0') != '1':
+    raise ValueError('OT_KV_ROUTE_DEFER=1 needs OT_KV_PINFIX_ROUTE=1 (kv_pin_repair seats the deferred chains)')
 RLY_FINE_XY = __import__('os').environ.get('OT_KV_RLY_FINE_XY', '0') == '1'
 RLY_FINE_STEPS = (10.8, -10.8, 21.6, -21.6, 32.4, -32.4)
 RLY_D2D_FIRST = __import__('os').environ.get('OT_KV_RLY_D2D_FIRST', '0') == '1'   # KV-BIND12: wide D2D words placed first
@@ -4210,6 +4213,20 @@ def _relays(m):
                     st_['path'] = route(a, b, pa, pb)
                 finally:
                     SP['on'] = False
+        if ROUTE_DEFER and st_['k'] and bid not in tree_meta and not bid.startswith('pv') and \
+                not any(st_.get(k_) for k_ in ('min_k', 'exact_k', 'soft_k', 'max_k')) and \
+                bid not in forks_ and bid not in forks_.values() and bid not in tap_src_ and \
+                not any(bid in v_ for v_ in tap_src_.values()) and \
+                len(st_['path']) * G > max(3.0 * lengths.get(bid, 0.0), lengths.get(bid, 0.0) + 2000.0):
+            # KDIE4-PH 10-22 (OT_KV_ROUTE_DEFER=1, default off; with OT_KV_PINFIX_ROUTE=1): a plain chain whose retry had to
+            # re-route around every placed relay and came back as a gross detour (ovm: ks_d2d_kv__kvn_word_identity, a
+            # 1.36-mm word, 99 stations down the PV pair's W side and back -> K.kvn_writer then needed 94 pad stations
+            # on seqst_rx in the full D2D zone) is left unrelayed here; kv_pin_repair's exhaustive search seats it between
+            # the drawn pins after every chain is placed (fewest stations over the free spots left).  Never a chain with a
+            # stage target, a reset / boot tree hop, a PV word or a fork trunk / tapped branch.
+            m.setdefault('route_deferred', []).append(dict(bus=bid, stations=st_['k'], path_um=round(len(st_['path']) * G, 1),
+                                                           first_route_um=lengths.get(bid)))
+            rollback_()
         n = st_['k']
         if (seam_first or seam_last) and n:
             seams.append(dict(bus=bid, hop='first' if seam_first else 'last', src=src_dom, dst=dst_dom, stages=n,
