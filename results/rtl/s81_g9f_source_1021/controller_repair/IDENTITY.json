@@ -1,0 +1,27 @@
+{
+ "actual_unit": "oth-ubuntu-1355565-1792648740",
+ "host": "ot-epyc5",
+ "source_tcl_ref": "ba8472062",
+ "source_tcl_sha256": "c29b1536e52425681652b7a276046b296457e75be8edfc690fdcb52ad4384831",
+ "original_odb_sha256": "2de51e0633efed7ab0beb7d7e96aac22b55ccb5b32ff5342340d595c373a3bb4",
+ "original_source": "cap5 source8f626dcdb; original saved fail ODB unchanged",
+ "actual_branch_audit": {
+  "nets": 14801217,
+  "branches": 14831781,
+  "over160": 1174064,
+  "over405": 185,
+  "ambiguous_drivers": 212440,
+  "missing_pin_xy": 0,
+  "top_port_nets": 0,
+  "skipped": 14844
+ },
+ "remaining_failure_classes": {
+  "dsfd_rly_1_WN": 185
+ },
+ "controller_subclass_verdict": "PASS zero controller branches above405um",
+ "whole_die_verdict": "FAIL remaining185reset branches; endpoint-home successor actual placed audit owed",
+ "construction_trigger_um": 400,
+ "unchanged_actual_audit_limit_um": 405,
+ "added_protocol_edges": 0,
+ "qualification": "Geometry-only isolated controller repair. Full source physical timing/clock, root reset geometry and production dates remain unqualified."
+}

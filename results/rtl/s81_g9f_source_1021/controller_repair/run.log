@@ -1,0 +1,29 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_DIE_REP spread placed=650 unplaced=0 util=0.30/0.60 hard=0 on_obstacle=30 bin_um=8.64 bins=119 full=0 max_ring=1 mean_disp_um=6.10 max_disp_um=15.50 s=35
+S81_CTRL_CORNER roots=8704 traced=31129 branches=144 buffers=650 unplaced=0 over160=0 max_um=134.548
+	Command being timed: "openroad -no_init -exit /work/test3.tcl"
+	User time (seconds): 66.57
+	System time (seconds): 16.67
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:23.37
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 23712048
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 74
+	Minor (reclaiming a frame) page faults: 5968558
+	Voluntary context switches: 655
+	Involuntary context switches: 601
+	Swaps: 0
+	File system inputs: 10096832
+	File system outputs: 10113824
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

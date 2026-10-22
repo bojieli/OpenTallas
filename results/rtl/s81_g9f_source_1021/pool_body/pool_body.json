@@ -1,0 +1,47 @@
+{
+ "source_pool": "75c077ec9 original mapped source; native FAIL retained",
+ "mapped_area_um2": 95849.83854,
+ "area_unit_factor": 1,
+ "unit_authority": "ASAP7 liberty AND2x2 area0.08748 = LEF0.324x0.270um; measured by RTL gap owner",
+ "utilization_range": [
+  0.4,
+  0.6
+ ],
+ "outline_range_um2": [
+  159749.7309,
+  239624.59634999998
+ ],
+ "added_height_um": 216.0,
+ "added_outline_um2": 270604.8,
+ "preserved_corridor_um": 432.0,
+ "before": {
+  "s_3N": {
+   "x": 15114.592,
+   "y": 10520.6,
+   "w": 1252.8,
+   "h": 6739.2
+  },
+  "s_3S": {
+   "x": 15114.592,
+   "y": 17691.8,
+   "w": 1252.8,
+   "h": 6739.2
+  }
+ },
+ "after": {
+  "s_3N": {
+   "x": 15114.592,
+   "y": 10520.6,
+   "w": 1252.8,
+   "h": 6955.2
+  },
+  "s_3S": {
+   "x": 15114.592,
+   "y": 17907.8,
+   "w": 1252.8,
+   "h": 6739.2
+  }
+ },
+ "all_changed_bodies_nonoverlapping": true,
+ "qualification": "POOL-ONLY RESERVATION; extra CN/IK and repaired-pool mapped area, native, placement and clock remain OPEN"
+}
