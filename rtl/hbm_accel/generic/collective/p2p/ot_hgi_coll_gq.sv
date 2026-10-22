@@ -73,6 +73,14 @@ module ot_hgi_coll_gq_issue #(
     parameter integer ISSUE_AHEAD = 0
 )(
     input  wire          clk, rst_n,
+`ifdef OT_GQ_R15L
+    // R15L (HBMc/COLL-GQ 10-22, PD-AUDIT gq_issue C2 must-do "landed seams between the regions"): the two quantiser
+    // regions (u_aq0 = W SRAM stack, u_aq1 = E SRAM stack) run on their OWN related phase-0 roots; clk stays the core
+    // (centre band) root.  Every seam is a registered same-edge crossing: core aq_v / aq_x flops -> aq S0 input register,
+    // aq vo / q / e / fault output registers -> core capture flops (aq_vo_q / aq_q_q / aq_ebc / aq_fault_q).  0 edges added
+    // on every data path; each region resets from its own relay on its own root (+3 release edges inside aq only).
+    input  wire          clk_a0, clk_a1,
+`endif
     input  wire [1:0]    qid,
     input  wire [7:0]    tgt,
     // F20 host frame
@@ -182,10 +190,24 @@ module ot_hgi_coll_gq_issue #(
     // ot_hdc_delay_hc (same edges; the shift line cost 64,598 CTS hold buffers in this leaf), synthesised flat in this
     // leaf (saves 2 x 1,290 leaf pins)
     reg [1:0] aq_v; reg [2047:0] aq_x; wire [1:0] aq_vo, aq_fault; wire [511:0] aq_q; wire [19:0] aq_e; wire [1023:0] aq_y;
+`ifdef OT_GQ_R15L
+    // regional reset landing: rl[4] / rl[5] (core relay copies) re-land on the region root through one ot_rst_relay each
+    // (async assert, 2 sync + 1 kept relay stage on clk_aN); only the aq valid / pointer flops use it (data is reset-free)
+    wire ck_a0 = clk_a0, ck_a1 = clk_a1;
+    wire [0:0] rla0, rla1;
+    generate if (1) begin : g_ra0 ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk_a0), .rst_n_in(rl[4]), .rst_n(rla0)); end endgenerate
+    generate if (1) begin : g_ra1 ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk_a1), .rst_n_in(rl[5]), .rst_n(rla1)); end endgenerate
+    wire rst_a0 = rla0[0], rst_a1 = rla1[0];
+    ot_hgi_coll_aq13 #(.LMUT(MUT == 7)) u_aq0(.clk(ck_a0), .rst_n(rst_a0), .v(aq_v[0]), .fp4(1'b0), .x(aq_x[1023:0]), .vo(aq_vo[0]),
+        .q(aq_q[255:0]), .e(aq_e[9:0]), .y(aq_y[511:0]), .fault(aq_fault[0]));
+    ot_hgi_coll_aq13 #(.LMUT(MUT == 7)) u_aq1(.clk(ck_a1), .rst_n(rst_a1), .v(aq_v[1]), .fp4(1'b0), .x(aq_x[2047:1024]), .vo(aq_vo[1]),
+        .q(aq_q[511:256]), .e(aq_e[19:10]), .y(aq_y[1023:512]), .fault(aq_fault[1]));
+`else
     ot_hgi_coll_aq13 #(.LMUT(MUT == 7)) u_aq0(.clk(clk), .rst_n(rl[4]), .v(aq_v[0]), .fp4(1'b0), .x(aq_x[1023:0]), .vo(aq_vo[0]),
         .q(aq_q[255:0]), .e(aq_e[9:0]), .y(aq_y[511:0]), .fault(aq_fault[0]));
     ot_hgi_coll_aq13 #(.LMUT(MUT == 7)) u_aq1(.clk(clk), .rst_n(rl[5]), .v(aq_v[1]), .fp4(1'b0), .x(aq_x[2047:1024]), .vo(aq_vo[1]),
         .q(aq_q[511:256]), .e(aq_e[19:10]), .y(aq_y[1023:512]), .fault(aq_fault[1]));
+`endif
     reg [1:0] q_id;
     always @(posedge clk) q_id <= qid;
     function automatic [1:0] nextq(input [1:0] q); case (q) 2'd0: nextq = 2'd1; 2'd1: nextq = 2'd3; 2'd3: nextq = 2'd2; default: nextq = 2'd0; endcase endfunction
@@ -1531,7 +1553,11 @@ module ot_hgi_coll_gq #(parameter integer MUT = 0, parameter integer VM_RT = 0, 
 );
     localparam integer LSW = (ISSUE_AHEAD > 1) ? 2 : ((ISSUE_AHEAD > 0) ? 1 : 0);
     wire ld_fire, ld_ev_v; wire [52+LSW:0] ld_desc; wire [9+LSW:0] ld_ev_k; wire [1:0] ld_p_v; wire [511:0] ld_p_d;
-    ot_hgi_coll_gq_issue #(.MUT(MUT), .VM_RT(VM_RT), .ISSUE_AHEAD(ISSUE_AHEAD)) u_issue(.clk(clk_issue), .rst_n(rst_n), .qid(qid), .tgt(tgt), .cfg_v(cfg_v),
+    ot_hgi_coll_gq_issue #(.MUT(MUT), .VM_RT(VM_RT), .ISSUE_AHEAD(ISSUE_AHEAD)) u_issue(.clk(clk_issue),
+`ifdef OT_GQ_R15L
+        .clk_a0(clk_issue), .clk_a1(clk_issue),
+`endif
+        .rst_n(rst_n), .qid(qid), .tgt(tgt), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured), .tgt_fault(tgt_fault),
         .active(active), .done(done), .fault(fault), .isa_ring(isa_ring), .isa_lp_data(isa_lp_data),
