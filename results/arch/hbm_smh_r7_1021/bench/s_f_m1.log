@@ -1,0 +1,9 @@
+R7_MISMATCH gout cyc=257 old=6527124741476c53f603d99e73c8f960aba35b274b0c000268 new=6527124741476c53f603d99e7e8fa5cd28c45f274b0c000268
+R7_MISMATCH gout cyc=258 old=08f3cef09be832f3ded2f7d122d9e53d453e3f45cbee000278 new=08f3cef09be832f3ded2f7d12b156184eed02745cbee000278
+R7_MISMATCH gout cyc=259 old=e92dcf565efb888abe6587747e74d56f0e655f000000000288 new=e92dcf565efb888abe65877477025a06c15113000000000288
+R7_MISMATCH gout cyc=260 old=6af187a384bd0d73223b85b67e8fa5cd28c45f000000000298 new=6af187a384bd0d73223b85b6790a446e38b867000000000298
+R7_MISMATCH gout cyc=261 old=920f4f26f08e782318ca97d98b156184eed0270000003702a8 new=920f4f26f08e782318ca97d9816bc5039c6da70000003702a8
+R7_RETIME FAIL h=s v=f MUT=1 compared=5486 mismatches=2743
+[30000000] %Fatal: tb_ot_hbm_smh_rp7s_f_retime.sv:38: Assertion failed in tb_ot_hbm_smh_rp7s_f_retime: retiming mismatch
+%Error: rtl/hbm_accel/sm/repack/h2a7/lp_s_f/tb_ot_hbm_smh_rp7s_f_retime.sv:38: Verilog $stop
+Aborting...
