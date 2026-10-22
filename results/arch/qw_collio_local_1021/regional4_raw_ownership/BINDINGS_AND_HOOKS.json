@@ -1,0 +1,214 @@
+[
+  {
+    "kit": "qfd_coll_face_p_regional4_main",
+    "files": {
+      "physical/ref_tile/qfd_coll_face_p_regional4_main/spec.json": "9228154f7f2f561f37ae9646f9b2c9f8c593ca0a1e1f32d4693141b3dd7d6aa3",
+      "physical/ref_tile/qfd_coll_face_p_regional4_main/pre_gpl.tcl": "d5c39c5e8b1bfda7c756c0d10ec22c7f19ecac412141655359fa23e8240059b2",
+      "physical/ref_tile/qfd_coll_face_p_regional4_main/pre_dpl.tcl": "6b239ae8e7e8cf2db3803cdd1cb136e94587db86ba34469d2a26586c04cb454e",
+      "physical/ref_tile/qfd_coll_face_p_regional4_main/pre_cts.tcl": "c816c86433286d97dd12cc76c6b4c89187ed6a7488db99af185bbc83c105c7ac",
+      "physical/ref_tile/qfd_coll_face_p_regional4_main/clock_regions.tcl": "63bb05035e25763a15be615000c47648ec7c86178c58f2e231da0b697367ecdc",
+      "physical/ref_tile/qfd_coll_face_p_regional4_main/clock_regions_dissolve.tcl": "4de67270850bd4e839d0ac892ffeff9cd16a3a8fd5872c7249376893880bd836"
+    },
+    "bindings": {
+      "u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec1"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec2"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec3"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec4"
+      },
+      "u_body.u_rx.u_mem": {
+        "master": "ot_sram_1r1w2c_64x546_m1",
+        "clock_pins": {
+          "rclk": "rx_rck",
+          "wclk": "rx_wck"
+        }
+      },
+      "u_body.u_tx.u_mem": {
+        "master": "ot_sram_1r1w2c_64x546_m1",
+        "clock_pins": {
+          "rclk": "tx_rck",
+          "wclk": "tx_wck"
+        }
+      }
+    },
+    "validated_liberty_sha256": {
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ff.lib": "3267f513a584c50980ddb85d1b6e1e9879a15a764b8aa749f125e65607f17c48",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib": "0e6668f4417a0a449784d60e1ec8545cb9eb750d92591e9639523795b796a058",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib": "b15626b72d40256d4dec034212ad2a8541af7c839f3ef2c2f2b8fa8e9fbd0c16",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib": "bcd68206a8602806e80881a7c2067076cca9dbcbd21611fae97ab49f3a930879"
+    }
+  },
+  {
+    "kit": "qfd_coll_face_p_regional4_fb",
+    "files": {
+      "physical/ref_tile/qfd_coll_face_p_regional4_fb/spec.json": "daff244a1a8568dcef1e048e3701887e1f0b393061d0b5c456ca32534218674e",
+      "physical/ref_tile/qfd_coll_face_p_regional4_fb/pre_gpl.tcl": "1c7727f0f9be66d81f984cc08621e32ab22b70b5433ca49d32ff639e04ebc9f4",
+      "physical/ref_tile/qfd_coll_face_p_regional4_fb/pre_dpl.tcl": "c8ac83835c2fa1e3a447e2baf3ea3ddf6f6041658d687ad261334a4b58eea1fd",
+      "physical/ref_tile/qfd_coll_face_p_regional4_fb/pre_cts.tcl": "92cd339382ca696573511302c2a9690f93dc4b5d653b9b9cec8dbf89ccb64982",
+      "physical/ref_tile/qfd_coll_face_p_regional4_fb/clock_regions.tcl": "8ac5430dbd823e587fc0c90e0cc4897823d1415e989afcc8bdb338140548bc29",
+      "physical/ref_tile/qfd_coll_face_p_regional4_fb/clock_regions_dissolve.tcl": "4de67270850bd4e839d0ac892ffeff9cd16a3a8fd5872c7249376893880bd836"
+    },
+    "bindings": {
+      "u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec1"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec2"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec3"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec4"
+      },
+      "u_body.u_rx.u_mem": {
+        "master": "ot_sram_1r1w2c_64x546_m1",
+        "clock_pins": {
+          "rclk": "rx_rck",
+          "wclk": "rx_wck"
+        }
+      },
+      "u_body.u_tx.u_mem": {
+        "master": "ot_sram_1r1w2c_64x546_m1",
+        "clock_pins": {
+          "rclk": "tx_rck",
+          "wclk": "tx_wck"
+        }
+      }
+    },
+    "validated_liberty_sha256": {
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ff.lib": "3267f513a584c50980ddb85d1b6e1e9879a15a764b8aa749f125e65607f17c48",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib": "0e6668f4417a0a449784d60e1ec8545cb9eb750d92591e9639523795b796a058",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib": "b15626b72d40256d4dec034212ad2a8541af7c839f3ef2c2f2b8fa8e9fbd0c16",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib": "bcd68206a8602806e80881a7c2067076cca9dbcbd21611fae97ab49f3a930879"
+    }
+  },
+  {
+    "kit": "qfd_coll_face_s0_regional4_main",
+    "files": {
+      "physical/ref_tile/qfd_coll_face_s0_regional4_main/spec.json": "e6b7b3fa0797ff26a42f0bb986cfad469a8529378952b9e1b09c456c671757fe",
+      "physical/ref_tile/qfd_coll_face_s0_regional4_main/pre_gpl.tcl": "89a754e259817348a7a3b80fa597c9c99392a67056f6745680aa6d29997c5fbc",
+      "physical/ref_tile/qfd_coll_face_s0_regional4_main/pre_dpl.tcl": "a30a3d10dd0294ee9079ab89814c4c4c5fd9e2ca499632973e92672c1130d320",
+      "physical/ref_tile/qfd_coll_face_s0_regional4_main/pre_cts.tcl": "4d088cc7d7860606d5f3b5a39ba7311ecd2bcfaddc58d1c9f64c9c6382c21f53",
+      "physical/ref_tile/qfd_coll_face_s0_regional4_main/clock_regions.tcl": "74600fd61b9e779b0c1376bf603bdb6956af61ddc0491a122e2d7d69403c01bd",
+      "physical/ref_tile/qfd_coll_face_s0_regional4_main/clock_regions_dissolve.tcl": "4de67270850bd4e839d0ac892ffeff9cd16a3a8fd5872c7249376893880bd836"
+    },
+    "bindings": {
+      "u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec1"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec2"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec3"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec4"
+      },
+      "u_body.u_rx.u_mem": {
+        "master": "ot_sram_1r1w2c_64x546_m1",
+        "clock_pins": {
+          "rclk": "rx_rck",
+          "wclk": "rx_wck"
+        }
+      },
+      "u_body.u_tx.u_mem": {
+        "master": "ot_sram_1r1w2c_64x546_m1",
+        "clock_pins": {
+          "rclk": "tx_rck",
+          "wclk": "tx_wck"
+        }
+      }
+    },
+    "validated_liberty_sha256": {
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ff.lib": "3267f513a584c50980ddb85d1b6e1e9879a15a764b8aa749f125e65607f17c48",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib": "0e6668f4417a0a449784d60e1ec8545cb9eb750d92591e9639523795b796a058",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib": "b15626b72d40256d4dec034212ad2a8541af7c839f3ef2c2f2b8fa8e9fbd0c16",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib": "bcd68206a8602806e80881a7c2067076cca9dbcbd21611fae97ab49f3a930879"
+    }
+  },
+  {
+    "kit": "qfd_coll_face_s0_regional4_fb",
+    "files": {
+      "physical/ref_tile/qfd_coll_face_s0_regional4_fb/spec.json": "c4bad3986f6d9da4c79bb3635775d24f3ab96a209826445fffecdef9abab82cc",
+      "physical/ref_tile/qfd_coll_face_s0_regional4_fb/pre_gpl.tcl": "1a7b5062a66a94c35890d93b6be9ae87e3b438f50d4903edd089548e706f570e",
+      "physical/ref_tile/qfd_coll_face_s0_regional4_fb/pre_dpl.tcl": "06f995ab572c7b4fbb7dd2a142cbce249b6b1e8166542a67041a20632e02047f",
+      "physical/ref_tile/qfd_coll_face_s0_regional4_fb/pre_cts.tcl": "9f3ce49d705da9e58a3a4038ddcfc1c022a115375d275a1f74bfe7472050ece8",
+      "physical/ref_tile/qfd_coll_face_s0_regional4_fb/clock_regions.tcl": "6fce8093980158e1170403f4925e7485f139f564db267e09edb55aeed45a9f9e",
+      "physical/ref_tile/qfd_coll_face_s0_regional4_fb/clock_regions_dissolve.tcl": "4de67270850bd4e839d0ac892ffeff9cd16a3a8fd5872c7249376893880bd836"
+    },
+    "bindings": {
+      "u_body.g_codec_pl.u_codec.g_bank[0].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec1"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[1].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec2"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[2].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec3"
+      },
+      "u_body.g_codec_pl.u_codec.g_bank[3].g_local.u_store.u_sram": {
+        "master": "ot_sram_1r1w_64x512_m1_r2c2",
+        "clock_pin": "clk",
+        "root": "codec4"
+      },
+      "u_body.u_rx.u_mem": {
+        "master": "ot_sram_1r1w2c_64x546_m1",
+        "clock_pins": {
+          "rclk": "rx_rck",
+          "wclk": "rx_wck"
+        }
+      },
+      "u_body.u_tx.u_mem": {
+        "master": "ot_sram_1r1w2c_64x546_m1",
+        "clock_pins": {
+          "rclk": "tx_rck",
+          "wclk": "tx_wck"
+        }
+      }
+    },
+    "validated_liberty_sha256": {
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_ff.lib": "3267f513a584c50980ddb85d1b6e1e9879a15a764b8aa749f125e65607f17c48",
+      "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib": "0e6668f4417a0a449784d60e1ec8545cb9eb750d92591e9639523795b796a058",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib": "b15626b72d40256d4dec034212ad2a8541af7c839f3ef2c2f2b8fa8e9fbd0c16",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib": "bcd68206a8602806e80881a7c2067076cca9dbcbd21611fae97ab49f3a930879"
+    }
+  }
+]
