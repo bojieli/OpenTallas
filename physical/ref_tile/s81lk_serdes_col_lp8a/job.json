@@ -1,5 +1,5 @@
 {
- "name": "s81lk_serdes_col_lp8a-lpk8a-COMMIT",
+ "name": "s81lk_serdes_col_lp8a-lpk8a-e979db0d7",
  "block": "ot_pdie_serdes_col_lp8a",
  "ref_tile": true,
  "owner": "Claude:STW-S81-OWN7",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "claude/s81-serdes-own7-1021",
-  "commit": "COMMIT",
+  "commit": "e979db0d7",
   "extra_paths": [
    "rtl/common/landed_parent/ot_pl_land_regwe.sv",
    "rtl/dsrom_sys/s81_link/col/lp8a/ot_pdie_serdes_col_lp8a_record.json",
@@ -150,7 +150,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81lk_serdes_col_lp8a/s81lk_serdes_col_lp8a-lpk8a-COMMIT"
+   "to": "results/rtl/ref_tile/s81lk_serdes_col_lp8a/s81lk_serdes_col_lp8a-lpk8a-e979db0d7"
   }
  ],
  "cycles_added": 0,
