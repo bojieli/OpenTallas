@@ -1,10 +1,15 @@
 {
-  "observed_at": "2026-10-21T21:46:36-07:00",
+  "observed_at": "2026-10-21T21:49:14-07:00",
   "selected_r18_source": "d76bf51b4",
   "next_physical_revision": {
-    "source": "13cbe8431",
-    "change": "eight cxij slot origins only",
-    "final_post_S8b_contract": "pending"
+    "source": "57cd9d54d",
+    "name": "r18d",
+    "controller": 1937517,
+    "branch": "codex/hbm-r18d-2000-1021",
+    "change": "NW pair moves north to fix nine actual GEN overlaps; other r18c outboard pairs and d76 RTL remain unchanged",
+    "artifact_root": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r18d_2000_1021/plansM",
+    "final_post_S8b_contract": "pending",
+    "candidate_dma_or_gather_promotion": false
   },
   "full_token_status": "INCOMPLETE",
   "candidate_sfu_r24": {
@@ -59,7 +64,7 @@
     "route_edges": 5,
     "sample_to_packet_edges": 10,
     "preceding_drive_to_packet_cycles": 11,
-    "physical_status": "Exact native5 summaries committed86a8d9acc: MAIN/fallback census PASS max32/zero violations/78725 roots. Pin, functional-pin and storage contracts not evaluated by census. Geometry/CTS live; no physical closure/adoption.",
+    "physical_status": "Exact native5 summaries committed 86a8d9acc: MAIN/fallback census PASS maximum 32, zero violations and 78,725 roots. Pin, functional-pin and storage contracts not evaluated by census. Geometry/CTS live; no physical closure/adoption.",
     "selected_die_status": "new converter and route remain candidate only",
     "native_census_evidence": [
       {
