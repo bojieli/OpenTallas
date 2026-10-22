@@ -38,7 +38,9 @@ COL6 = {
     'lk_WN3': (XL, Y_TOP_ROW), 'lk_WN1': (XR, Y_TOP_ROW),
     'f_3L01': (XL, Y_TOP_ROW + SD_H + GAP),
 }
-VARIANTS = {'main': dict(d_c=172.8, d_l=172.8), 'fb': dict(d_c=259.2, d_l=259.2)}
+# FB rsv drop stays 172.8: at 259.2 the rsv_04/05 <-> rsv_03 dn links (805 b) need a relay station and no 805-b relay
+# view exists (cap24 FB r1 GEN, dn_05_03); the FB keeps the larger s_0N / s_7 moves.
+VARIANTS = {'main': dict(d_c=172.8, d_l=172.8, d_s7=172.8), 'fb': dict(d_c=259.2, d_l=172.8, d_s7=259.2)}
 
 
 def main():
@@ -54,7 +56,7 @@ def main():
     for i in range(4, 14):
         move[f'rsv_{i:02d}'] = (0.0, -spec['d_l'])
     for n in ('s_7S', 's_7N'):
-        move[n] = (0.0, spec['d_l'])
+        move[n] = (0.0, spec['d_s7'])
     rec = {}
     for n, (dx, dy) in move.items():
         b = by[n]; rec[n] = dict(before=[round(b['x'], 4), round(b['y'], 4)])
@@ -88,7 +90,7 @@ def main():
     assert not inside, inside
     p['facts']['physical72']['cap24'] = dict(variant=v.variant, tool='g9f_cap24_plan.py', base='cap19 FB plan (g9f_cap19_plan.py --variant fb)',
                                              moves=rec, w_street_um=[round(XL, 2), round(y0, 2), round(s0, 2), round(y1, 2)],
-                                             centre_channel_plus_um=spec['d_c'], lower_channel_plus_um=spec['d_l'],
+                                             centre_channel_plus_um=spec['d_c'], lower_channel_rsv_down_um=spec['d_l'], s7_up_um=spec['d_s7'],
                                              rule='rigid re-slot into white space; no resize, no pin/face/interface change')
     p['facts']['physical72']['routing'] = 'cap24 unrouted: dv_route72c.py required'
     Path(v.out).write_text(json.dumps(p, indent=1))
