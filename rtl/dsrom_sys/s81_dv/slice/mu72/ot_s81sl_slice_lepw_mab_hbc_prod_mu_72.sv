@@ -159,7 +159,7 @@ module ot_s81sl_slice_lepw_mab_hbc_prod_mu_72 #(
     dsdv_hostb_stage_hbc #(.ENABLE(1),.LOCAL_STAGE(HBC_LOCAL_STAGE),.LOCAL_RANK(HBC_LOCAL_RANK),
       .PHASE_BOUND(HBC_PHASE_BOUND),.CLOCK_RESET_ID(HBC_CLOCK_RESET_ID),
       .BOOT_HEADER_EDGE(HBC_BOOT_HEADER_EDGE),.BOOT_COMMIT_EDGE(HBC_BOOT_COMMIT_EDGE),
-      .VARIABLE_WORDS(1),.RETURN_LOCAL(1),.RETURN_REQUIRE_KIT(1),.RETURN_ARRIVAL_DEADLINE(HBC_RETURN_ARRIVAL_DEADLINE)) u_hbc(
+      .VARIABLE_WORDS(1),.ALLOW_RELOAD(1),.RETURN_LOCAL(1),.RETURN_REQUIRE_KIT(1),.RETURN_ARRIVAL_DEADLINE(HBC_RETURN_ARRIVAL_DEADLINE)) u_hbc(
       .ck(ck_K),.rst_n(lpr_K_leaves[LPR_LEAVES_K-1]),.job_active(hb_status_t_host[65]),.starter_armed(hb_starter_armed),
       .from_prev(lri_ep),.local_ro(lro__l_K),.return_ro(lro__l_K),
       .status_t_host(hb_status_t_host),.status_t_kd(hb_status_t_kd),.return_fault(hb_return_fault),

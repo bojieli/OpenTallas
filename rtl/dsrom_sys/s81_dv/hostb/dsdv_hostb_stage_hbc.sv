@@ -31,7 +31,7 @@
 // (native census: context_valid 35 loads, receiver_edge bits 33-38 loads > 32).
 module dsdv_hostb_stage_hbc #(
  parameter integer ENABLE=0, LOCAL_STAGE=255, LOCAL_RANK=4, PHASE_BOUND=0,
- parameter integer RETURN_LOCAL=0, RETURN_REQUIRE_KIT=1, VARIABLE_WORDS=0,
+ parameter integer RETURN_LOCAL=0, RETURN_REQUIRE_KIT=1, VARIABLE_WORDS=0, ALLOW_RELOAD=0,
  parameter [47:0] RETURN_ARRIVAL_DEADLINE=48'hffffffffffff,
  parameter [63:0] CLOCK_RESET_ID=64'd0,
  parameter [47:0] BOOT_HEADER_EDGE=48'hffffffffffff,
@@ -59,7 +59,7 @@ module dsdv_hostb_stage_hbc #(
  end else begin:g_hbc
   wire [1103:0] after_hbc;wire [511:0] active_fields;wire context_valid_bk;wire [47:0] receiver_edge_bk;
   (* keep_hierarchy="yes" *) dsdv_hbc1_loader #(.ENABLE(1),.LOCAL_STAGE(LOCAL_STAGE),.LOCAL_RANK(LOCAL_RANK),
-   .PHASE_BOUND(PHASE_BOUND),.VARIABLE_WORDS(VARIABLE_WORDS),.CLOCK_RESET_ID(CLOCK_RESET_ID),.BOOT_HEADER_EDGE(BOOT_HEADER_EDGE),
+   .PHASE_BOUND(PHASE_BOUND),.VARIABLE_WORDS(VARIABLE_WORDS),.ALLOW_RELOAD(ALLOW_RELOAD),.CLOCK_RESET_ID(CLOCK_RESET_ID),.BOOT_HEADER_EDGE(BOOT_HEADER_EDGE),
    .BOOT_COMMIT_EDGE(BOOT_COMMIT_EDGE)) u_loader(.ck(ck),.rst_n(rst_n),.ring_i(from_prev),.job_active(job_active),
    .local_ring(after_hbc),.active_fields(active_fields),.context_valid(context_valid),
    .receiver_edge(receiver_edge),.boot_edge(boot_edge),.fault(hbc_fault),

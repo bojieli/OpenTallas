@@ -4,7 +4,7 @@
 // Compile-time slots/clock/reset identity are required; defaults refuse writes.
 // This is the addressed local consumer, not a nonlocal bootstrap router.
 module dsdv_hbc1_loader #(
- parameter integer ENABLE=0, LOCAL_STAGE=255, LOCAL_RANK=4, PHASE_BOUND=0, VARIABLE_WORDS=0,
+ parameter integer ENABLE=0, LOCAL_STAGE=255, LOCAL_RANK=4, PHASE_BOUND=0, VARIABLE_WORDS=0, ALLOW_RELOAD=0,
  parameter [63:0] CLOCK_RESET_ID=64'd0,
  parameter [47:0] BOOT_HEADER_EDGE=48'hffffffffffff,
  parameter [47:0] BOOT_COMMIT_EDGE=48'hffffffffffff
@@ -42,9 +42,18 @@ module dsdv_hbc1_loader #(
   wire header_shape=p[35:32]==1&&p[177:114]==CLOCK_RESET_ID&&!(|p[511:290]);
   wire load_header=command&&addressed&&p[39:36]==0;
   wire commit_header=command&&addressed&&p[39:36]==1;
-  wire load_format=header_shape&&p[65:50]==0&&p[81:66]==512&&p[289:242]==BODY_EDGE;
-  wire load_slot=boot_edge==BOOT_HEADER_EDGE;
-  wire load_permit=!valid&&!job_active&&f==0&&VALID_PROFILE;
+  reg ever_committed,slot_armed;
+  reg[47:0] local_body_slot,local_commit_slot;
+  wire[48:0] retire_wide={1'b0,active_fields[393:346]}+49'd3;
+  wire retire_ready=ALLOW_RELOAD!=0&&valid&&!job_active&&!(|pending)&&!(|ready)&&
+    !retire_wide[48]&&receiver_edge>=retire_wide[47:0];
+  wire[48:0] next_body_wide={1'b0,boot_edge}+49'd4;
+  wire[47:0] body_date=ALLOW_RELOAD!=0?local_body_slot:BODY_EDGE;
+  wire[47:0] commit_date=ALLOW_RELOAD!=0?local_commit_slot:BOOT_COMMIT_EDGE;
+  wire dated=ALLOW_RELOAD==0||slot_armed;
+  wire load_format=header_shape&&p[65:50]==0&&p[81:66]==512&&p[289:242]==((ALLOW_RELOAD!=0&&ever_committed)?next_body_wide[47:0]:BODY_EDGE)&&!next_body_wide[48];
+  wire load_slot=(!ever_committed&&boot_edge==BOOT_HEADER_EDGE)||retire_ready;
+  wire load_permit=(!valid&&!ever_committed||retire_ready)&&!job_active&&f==0&&VALID_PROFILE;
   wire load_good=load_header&&load_format&&load_slot&&load_permit;
   wire[95:0] expected;wire[31:0] expected_crc=expected[31:0];wire[63:0] expected_programme=expected[95:32];
   wire[31:0] actual_crc;dsdv_hostb_crc512 u_crc(.d(shadow),.q(actual_crc));
@@ -62,10 +71,10 @@ module dsdv_hbc1_loader #(
    shadow[511:500]==0&&shadow[163:100]==expected_programme&&
    first_header>seed+COMMIT_DELTA+4&&ks_capture>end_header_wide[47:0]&&
    prev_input>ks_capture&&status_sample<return_send&&return_send<prev_input;
-  wire body_check=boot_edge==BODY_EDGE+1&&body_seen;
+  wire body_check=dated&&boot_edge==body_date+1&&body_seen;
   wire body_good=body_check&&actual_crc==expected_crc&&body_shape&&f==0;
   wire commit_permit=header_shape&&p[65:50]==1&&p[81:66]==0&&
-   p[289:242]==BOOT_COMMIT_EDGE&&boot_edge==BOOT_COMMIT_EDGE&&p[113:82]==expected_crc&&
+   dated&&p[289:242]==commit_date&&boot_edge==commit_date&&p[113:82]==expected_crc&&
    p[241:178]==expected_programme&&(&ready)&&!valid&&!job_active&&f==0&&VALID_PROFILE;
   wire commit_good=commit_header&&commit_permit;
   always @* begin
@@ -74,22 +83,27 @@ module dsdv_hbc1_loader #(
     if(load_header&&!load_good)f_n[0]=1;
     if(VALID_PROFILE&&boot_edge==BOOT_HEADER_EDGE&&!load_good)f_n[0]=1;
     if(command&&addressed&&p[39:36]>1)f_n[1]=1;
-    if(boot_edge==BODY_EDGE&&(|pending)&&!hv)f_n[2]=1;
-    if(hv&&(|pending)&&boot_edge!=BODY_EDGE)f_n[2]=1;
+    if(dated&&boot_edge==body_date&&(|pending)&&!hv)f_n[2]=1;
+    if(hv&&(|pending)&&boot_edge!=body_date)f_n[2]=1;
     if(body_check&&!body_good)f_n[3]=1;
     if(commit_header&&!commit_good)f_n[4]=1;
-    if(boot_edge==BOOT_COMMIT_EDGE&&!commit_good)f_n[5]=1;
-    if(command&&addressed&&(valid||job_active))f_n[6]=1;
+    if(dated&&boot_edge==commit_date&&!commit_good)f_n[5]=1;
+    if(command&&addressed&&((valid&&!load_good)||job_active))f_n[6]=1;
     if(job_active&&((|pending)||(|ready)))f_n[6]=1;
     if(command&&addressed&&!VALID_PROFILE)f_n[7]=1;
+    if(ALLOW_RELOAD!=0&&load_good)valid_n=0;
     if(commit_good)valid_n=1;
    end
   end
   always @(posedge ck or negedge rn)begin
-   if(!rn)begin valid<=0;f<=0;body_seen<=0;end
+   if(!rn)begin valid<=0;f<=0;body_seen<=0;ever_committed<=0;slot_armed<=0;end
    else begin
     valid<=valid_n;f<=f_n;
-    if(boot_edge==BODY_EDGE&&(|pending))body_seen<=hv;
+    if(load_good)begin
+     body_seen<=0;slot_armed<=1;
+     local_body_slot<=p[289:242];local_commit_slot<=p[289:242]+COMMIT_DELTA;
+    end else if(dated&&boot_edge==body_date&&(|pending))body_seen<=hv;
+    if(commit_good)ever_committed<=1;
    end
   end
   genvar k;
@@ -108,12 +122,12 @@ module dsdv_hbc1_loader #(
    else begin:g_carry_bk assign carry_epoch_bk=&receiver_edge_bk[k*12-1:0];end
    (* keep_hierarchy="yes" *)dsdv_hbc_epoch12 #(.ID(k+4)) u_epoch_bk(.ck(ck),.commit_request(commit_header),.commit_permit(commit_permit),.valid(valid),.fault_clear(f==0),.carry(carry_epoch_bk),
     .d(epoch_at_next[12*k+:12]),.q(receiver_edge_bk[12*k+:12]));
-   (* keep_hierarchy="yes" *)dsdv_hbc_owner #(.ID(k),.BODY_EDGE(BODY_EDGE),.COMMIT_EDGE(BOOT_COMMIT_EDGE)) u_owner(
-    .ck(ck),.rst_n(rst_n),.load_header(load_good),.body_good(body_good),.edge_now(boot_edge),.pending(pending[k]),.ready(ready[k]));
+   (* keep_hierarchy="yes" *)dsdv_hbc_owner #(.ID(k),.BODY_EDGE(BODY_EDGE),.COMMIT_EDGE(BOOT_COMMIT_EDGE),.DYNAMIC(ALLOW_RELOAD)) u_owner(
+    .ck(ck),.rst_n(rst_n),.load_header(load_good),.body_good(body_good),.body_due(dated&&boot_edge==body_date),.commit_due(dated&&boot_edge==commit_date),.edge_now(boot_edge),.pending(pending[k]),.ready(ready[k]));
   end
   for(k=0;k<4;k=k+1)begin:g_dates
-   (* keep_hierarchy="yes" *)dsdv_hbc_fixed_date #(.ID(k),.DATE(BODY_EDGE)) u_shadow_date(.edge_now(boot_edge),.match(shadow_date[k]));
-   (* keep_hierarchy="yes" *)dsdv_hbc_fixed_date #(.ID(k+4),.DATE(BOOT_COMMIT_EDGE)) u_active_date(.edge_now(boot_edge),.match(active_date[k]));
+   (* keep_hierarchy="yes" *)dsdv_hbc_fixed_date #(.ID(k),.DATE(BODY_EDGE),.DYNAMIC(ALLOW_RELOAD)) u_shadow_date(.edge_now(boot_edge),.local_date(local_body_slot),.match(shadow_date[k]));
+   (* keep_hierarchy="yes" *)dsdv_hbc_fixed_date #(.ID(k+4),.DATE(BOOT_COMMIT_EDGE),.DYNAMIC(ALLOW_RELOAD)) u_active_date(.edge_now(boot_edge),.local_date(local_commit_slot),.match(active_date[k]));
   end
   for(k=0;k<8;k=k+1)begin:g_header
    wire[95:0] d={p[241:178],p[113:82]};
@@ -149,13 +163,13 @@ endmodule
 module dsdv_hbc_header_enable #(parameter integer ID=0)(input wire request,format_ok,slot,permit,output wire en);
  assign en=request&&format_ok&&slot&&permit;
 endmodule
-module dsdv_hbc_owner #(parameter integer ID=0,parameter[47:0]BODY_EDGE=0,COMMIT_EDGE=0)(
- input wire ck,rst_n,load_header,body_good,input wire[47:0]edge_now,output reg pending,ready);
+module dsdv_hbc_owner #(parameter integer ID=0,parameter[47:0]BODY_EDGE=0,COMMIT_EDGE=0,parameter integer DYNAMIC=0)(
+ input wire ck,rst_n,load_header,body_good,body_due,commit_due,input wire[47:0]edge_now,output reg pending,ready);
  wire rn;(* keep_hierarchy="yes" *)ot_reset_sync #(.ASYNC_STAGES(2)) u_reset(.clk(ck),.async_rst_n(rst_n),.sync_rst_n(rn));
  always @(posedge ck or negedge rn)if(!rn)begin pending<=0;ready<=0;end
  else begin
-  if(load_header)pending<=1;else if(edge_now>=BODY_EDGE)pending<=0;
-  if(body_good)ready<=1;else if(edge_now>=COMMIT_EDGE)ready<=0;
+  if(load_header)pending<=1;else if(DYNAMIC!=0?body_due:edge_now>=BODY_EDGE)pending<=0;
+  if(load_header)ready<=0;else if(body_good)ready<=1;else if(DYNAMIC!=0?commit_due:edge_now>=COMMIT_EDGE)ready<=0;
  end
 endmodule
 module dsdv_hbc_field #(parameter integer ID=0,W=12)(
@@ -167,7 +181,7 @@ endmodule
 module dsdv_hbc_fixed_enable #(parameter integer ID=0)(input wire owner,date_match,output wire en);
  assign en=owner&&date_match;
 endmodule
-module dsdv_hbc_fixed_date #(parameter integer ID=0,parameter[47:0]DATE=0)(input wire[47:0]edge_now,output wire match);
- assign match=edge_now==DATE;
+module dsdv_hbc_fixed_date #(parameter integer ID=0,parameter[47:0]DATE=0,parameter integer DYNAMIC=0)(input wire[47:0]edge_now,local_date,output wire match);
+ assign match=edge_now==(DYNAMIC!=0?local_date:DATE);
 endmodule
 `default_nettype wire
