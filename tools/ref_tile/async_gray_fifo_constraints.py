@@ -33,8 +33,23 @@ SOURCES = {
          # QF-SFAULT 10-18: ot_hbm_svc_fault_cdc per-domain ot_reset_sync (FIFO module lines 6-51 byte-identical)
          '08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b'),
     'rtl/lib/ot_reset_sync.sv':
-        ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',),
+        ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',
+         # coordinator 10-22 (ba140fd98 seq-b1): OUTPUT_COPIES/TREE added; defaults (1, 0) select g_original, which is
+         # byte-for-byte the old logic.  Admitted ONLY with every instance at OUTPUT_COPIES=1, TREE=0 (reset_sync_scopes)
+         '607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a'),
 }
+# ot_reset_sync parameters a reviewed instance must elaborate with (g_original); absent = the 489e493c source (none)
+RESET_SYNC_ORIGINAL = {'OUTPUT_COPIES': 1, 'TREE': 0}
+
+
+def reset_sync_original(values, scope):
+    """refuse an ot_reset_sync instance unless OUTPUT_COPIES=1 and TREE=0 (g_original, the reviewed logic)"""
+    for name, want in RESET_SYNC_ORIGINAL.items():
+        raw = values.get(name)
+        got = want if raw is None else int(str(raw), 2) if re.fullmatch(r'[01]+', str(raw)) else None
+        if got != want:
+            raise ValueError(f'async_gray_fifo ot_reset_sync {scope or "<top>"} elaborates {name}={raw!r}; only the reviewed '
+                             'g_original form (OUTPUT_COPIES=1, TREE=0) is admitted')
 RESET_SYNC_SOURCE = 'rtl/lib/ot_reset_sync.sv'
 # destination period - 60 ps setup uncertainty (gray_fifo_cdc_constraints rule (c) reset bound)
 RESET_BOUND_PS = {'core': 773.333, 'hbm': 964.0}
@@ -183,6 +198,7 @@ def reset_sync_scopes(document,top,root):
                     raise ValueError('async_gray_fifo ot_reset_sync identity does not bind reviewed source')
                 stages=int(mod.get('parameter_default_values',{}).get('ASYNC_STAGES','10'),2)
                 if stages<2:raise ValueError('async_gray_fifo ot_reset_sync requires >= 2 stages')
+                reset_sync_original(mod.get('parameter_default_values',{}),full)
                 if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_.\[\]]*',full):raise ValueError('async_gray_fifo unsupported reset scope '+full)
                 found.append(full)
                 # the last stage drives sync_rst_n; synthesis may name that flop after the output or a parent net of it
