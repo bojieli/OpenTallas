@@ -282,7 +282,7 @@ module qkd_d2d_static_core #(parameter integer MUT = 0, parameter integer NL = 2
     qkd_host_link_services #(.NL(NL)) u_hls (.ck(ck), .rst_n(local_rst_n[3]),
         .d2d_link_up(lu), .serdes_up(serdes_up), .d2d_transport_fault(tf), .d2d_links_drained(dr),
         .d2d_link_reset_seen(seen), .d2d_retrained(rt),
-        .rec_tx_slot(txs[1]), .rec_tx_kind(tk), .rec_tx_beat(tb), .rec_rx_event(rxe[1]), .rec_rx_slot(rxs[1]),
+        .rec_tx_slot(txs[1]), .rec_tx_kind(tk), .rec_tx_beat(tb), .rec_rx_event(rxe[1]), .rec_rx_slot(rxs[1]), .rec_rx_kind(rk),
         .rx_payload(rxp), .c_vm_drained(s_vm), .c_collective_drained(s_co), .c_collective_busy(s_cb),
         .c_crom_fault(s_cf), .c_execution_active(s_ea), .c_admit_ready(s_ar), .c_status_fresh(s_fr),
         .kv_drained_local(kv_drained_local), .kv_flush_local(kv_flush_local), .host_drained_local(host_drained_local),
