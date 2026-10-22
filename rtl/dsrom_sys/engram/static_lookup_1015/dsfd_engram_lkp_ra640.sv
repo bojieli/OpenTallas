@@ -50,6 +50,9 @@ module dsfd_engram_lkp_ra640 #(
     input  wire                  ck_s,      // st9: S-face pin flops (HBM request out, HBM response in); st10: + engine control
     input  wire                  ck_rd,     // st10: read-select region (c* bank captures, E1)
     input  wire                  rst_n,
+`ifdef OT_S81ENG_RR_N32
+    input wire[15:0] rst_regions, // same external release phase, actual per-control owners
+`endif
     input  wire                  cfg_layer,
     input  wire [1:0]            cfg_rank,
     // window (compiler slot)
@@ -99,6 +102,19 @@ module dsfd_engram_lkp_ra640 #(
     always @(posedge ck) begin cl_q <= cfg_layer; cr_q <= cfg_rank; end
     wire [2:0] hrt_w;                        // ra640: kept second pin flop of hr_tag (seen write decode / wbank)
     (* keep = 1 *) ot_s81eng_kq #(.W(3)) u_hrt_w (.clk(ck_s), .d(hr_tag), .q(hrt_w));
+    // ELEM-ENG2 n32 (native census 10-21: wv_q 115 / hri_q 40 loads): kept pin-flop copies, same pins / edges / reset.
+    // wv_c[4:0] -> accept_ids groups, wv_c[7:5] -> accept_seen bank pairs; hri_w[4b +: 4] -> accept_seen bank b.
+    wire [7:0]  wv_c;
+    wire [23:0] hri_w;
+    genvar gc;
+    generate
+        for (gc = 0; gc < 8; gc = gc + 1) begin : g_wv_c
+            (* keep = 1 *) ot_s81eng_kqr #(.W(1)) u_wv (.clk(ck_n), .rst_n(rst_n), .d(win_v), .q(wv_c[gc]));
+        end
+        for (gc = 0; gc < 6; gc = gc + 1) begin : g_hri_w
+            (* keep = 1 *) ot_s81eng_kq #(.W(4)) u_hri (.clk(ck_s), .d(hr_idx), .q(hri_w[4*gc +: 4]));
+        end
+    endgenerate
     // ---- engine ---------------------------------------------------------------------
     wire        e_hqv, e_ov, e_stv, e_stb, e_fault;
     wire [30:0] e_hqa;
@@ -109,10 +125,14 @@ module dsfd_engram_lkp_ra640 #(
     wire [263:0] e_od;
     ot_s81_engram_lookup_ra640 #(.RETURN_AGE(RETURN_AGE), .ROWSTRIPE(ROWSTRIPE), .NR(4), .CPR(6), .NSLOT(NSLOT), .ABW(36),
                                   .PIPE(1)) u_e (
-        .clk(ck), .clk_ctl(ck_s), .clk_rd(ck_rd), .clk_em(ck_n), .clk_seed(ck_seed), .clk_hash(ck_hash), .rst_n(rst_n), .cfg_layer(cl_q), .cfg_rank(cr_q),
+        .clk(ck), .clk_ctl(ck_s), .clk_rd(ck_rd), .clk_em(ck_n), .clk_seed(ck_seed), .clk_hash(ck_hash), .rst_n(rst_n),
+`ifdef OT_S81ENG_RR_N32
+        .rst_regions(rst_regions),
+`endif
+        .cfg_layer(cl_q), .cfg_rank(cr_q),
         .win_valid(wv_q), .win_slot(ws_q), .win_ids(wid_q),
         .hq_valid(e_hqv), .hq_atom(e_hqa), .hq_len(), .hq_tag(e_hqt),
-        .hr_valid(hrv_q), .hr_slot(hrs_q), .hr_tag(hrt_q), .hr_tag_w(hrt_w), .hr_idx(hri_q), .hr_data(hrd_q),
+        .hr_valid(hrv_q), .hr_slot(hrs_q), .hr_tag(hrt_q), .hr_tag_w(hrt_w), .hr_idx(hri_q), .win_valid_c(wv_c), .hr_idx_w(hri_w), .hr_data(hrd_q),
         .o_valid(e_ov), .o_col(e_oc), .o_beat(e_ob), .o_slot(e_os), .o_data(e_od),
         .st_valid(e_stv), .st_slot(e_sts), .st_bad(e_stb), .fault(e_fault));
     // ---- output pin flops -----------------------------------------------------------
