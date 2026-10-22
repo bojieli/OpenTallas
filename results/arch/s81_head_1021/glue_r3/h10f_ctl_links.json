@@ -1,0 +1,764 @@
+{
+ "schema": "opentallas.s81hd.glue_r3.ctl_links.v1",
+ "source": "claude/s81-head-h10-1021 9269bdd67 results/arch/s81_head_1021/h10f/plan_unrouted_h10.json",
+ "glue": {
+  "x": 8434.8,
+  "y": 9698.4,
+  "w": 2592.0,
+  "h": 4320.0
+ },
+ "links": [
+  {
+   "link": "sp_o_N0",
+   "port": "sn_o",
+   "face": "N",
+   "pos_um": 1134.0,
+   "bits": 682,
+   "peer": "spo_N0"
+  },
+  {
+   "link": "sp_r_N0",
+   "port": "sn_i",
+   "face": "N",
+   "pos_um": 1458.0,
+   "bits": 682,
+   "peer": "spr_N0"
+  },
+  {
+   "link": "sp_o_S0",
+   "port": "ss_o",
+   "face": "S",
+   "pos_um": 1134.0,
+   "bits": 682,
+   "peer": "spo_S0"
+  },
+  {
+   "link": "sp_r_S0",
+   "port": "ss_i",
+   "face": "S",
+   "pos_um": 1458.0,
+   "bits": 682,
+   "peer": "spr_S0"
+  },
+  {
+   "link": "c_ln_host0_t_l0",
+   "port": "ln_host0_t",
+   "face": "W",
+   "pos_um": 273.1765,
+   "bits": 276,
+   "peer": "ln_host0"
+  },
+  {
+   "link": "c_ln_host0_t_l1",
+   "port": "ln_host0_t",
+   "face": "W",
+   "pos_um": 387.5294,
+   "bits": 276,
+   "peer": "ln_host0"
+  },
+  {
+   "link": "c_ln_host0_t_l2",
+   "port": "ln_host0_t",
+   "face": "W",
+   "pos_um": 523.4823,
+   "bits": 276,
+   "peer": "ln_host0"
+  },
+  {
+   "link": "c_ln_host0_r_l0",
+   "port": "ln_host0_r",
+   "face": "W",
+   "pos_um": 616.2353,
+   "bits": 276,
+   "peer": "ln_host0"
+  },
+  {
+   "link": "c_ln_host0_r_l1",
+   "port": "ln_host0_r",
+   "face": "W",
+   "pos_um": 730.5883,
+   "bits": 276,
+   "peer": "ln_host0"
+  },
+  {
+   "link": "c_ln_host0_r_l2",
+   "port": "ln_host0_r",
+   "face": "W",
+   "pos_um": 844.9412,
+   "bits": 276,
+   "peer": "ln_host0"
+  },
+  {
+   "link": "c_ln_host1_t_l0",
+   "port": "ln_host1_t",
+   "face": "W",
+   "pos_um": 959.2941,
+   "bits": 276,
+   "peer": "ln_host1"
+  },
+  {
+   "link": "c_ln_host1_t_l1",
+   "port": "ln_host1_t",
+   "face": "W",
+   "pos_um": 1073.6471,
+   "bits": 276,
+   "peer": "ln_host1"
+  },
+  {
+   "link": "c_ln_host1_t_l2",
+   "port": "ln_host1_t",
+   "face": "W",
+   "pos_um": 1188.0,
+   "bits": 276,
+   "peer": "ln_host1"
+  },
+  {
+   "link": "c_ln_host1_r_l0",
+   "port": "ln_host1_r",
+   "face": "W",
+   "pos_um": 1323.9529,
+   "bits": 276,
+   "peer": "ln_host1"
+  },
+  {
+   "link": "c_ln_host1_r_l1",
+   "port": "ln_host1_r",
+   "face": "W",
+   "pos_um": 1416.7059,
+   "bits": 276,
+   "peer": "ln_host1"
+  },
+  {
+   "link": "c_ln_host1_r_l2",
+   "port": "ln_host1_r",
+   "face": "W",
+   "pos_um": 1531.0588,
+   "bits": 276,
+   "peer": "ln_host1"
+  },
+  {
+   "link": "c_ln_draft0_t_l0",
+   "port": "ln_draft0_t",
+   "face": "W",
+   "pos_um": 1645.4117,
+   "bits": 276,
+   "peer": "ln_draft0"
+  },
+  {
+   "link": "c_ln_draft0_t_l1",
+   "port": "ln_draft0_t",
+   "face": "W",
+   "pos_um": 1759.7647,
+   "bits": 276,
+   "peer": "ln_draft0"
+  },
+  {
+   "link": "c_ln_draft0_t_l2",
+   "port": "ln_draft0_t",
+   "face": "W",
+   "pos_um": 1874.1177,
+   "bits": 276,
+   "peer": "ln_draft0"
+  },
+  {
+   "link": "c_ln_draft0_r_l0",
+   "port": "ln_draft0_r",
+   "face": "W",
+   "pos_um": 1988.4706,
+   "bits": 276,
+   "peer": "ln_draft0"
+  },
+  {
+   "link": "c_ln_draft0_r_l1",
+   "port": "ln_draft0_r",
+   "face": "W",
+   "pos_um": 2102.8235,
+   "bits": 276,
+   "peer": "ln_draft0"
+  },
+  {
+   "link": "c_ln_draft0_r_l2",
+   "port": "ln_draft0_r",
+   "face": "W",
+   "pos_um": 2217.1765,
+   "bits": 276,
+   "peer": "ln_draft0"
+  },
+  {
+   "link": "c_lep_t_l0",
+   "port": "lep_t",
+   "face": "W",
+   "pos_um": 2331.5294,
+   "bits": 276,
+   "peer": "lep"
+  },
+  {
+   "link": "c_lep_t_l1",
+   "port": "lep_t",
+   "face": "W",
+   "pos_um": 2445.8823,
+   "bits": 276,
+   "peer": "lep"
+  },
+  {
+   "link": "c_lep_t_l2",
+   "port": "lep_t",
+   "face": "W",
+   "pos_um": 2560.2353,
+   "bits": 276,
+   "peer": "lep"
+  },
+  {
+   "link": "c_lep_t_l3",
+   "port": "lep_t",
+   "face": "W",
+   "pos_um": 2674.5883,
+   "bits": 276,
+   "peer": "lep"
+  },
+  {
+   "link": "c_lep_t_l4",
+   "port": "lep_t",
+   "face": "W",
+   "pos_um": 2788.9412,
+   "bits": 276,
+   "peer": "lep"
+  },
+  {
+   "link": "c_lep_r_l0",
+   "port": "lep_r",
+   "face": "W",
+   "pos_um": 2903.2941,
+   "bits": 276,
+   "peer": "lep"
+  },
+  {
+   "link": "c_lep_r_l1",
+   "port": "lep_r",
+   "face": "W",
+   "pos_um": 3017.6471,
+   "bits": 276,
+   "peer": "lep"
+  },
+  {
+   "link": "c_lep_r_l2",
+   "port": "lep_r",
+   "face": "W",
+   "pos_um": 3132.0,
+   "bits": 276,
+   "peer": "lep"
+  },
+  {
+   "link": "c_lep_r_l3",
+   "port": "lep_r",
+   "face": "W",
+   "pos_um": 3246.3529,
+   "bits": 276,
+   "peer": "lep"
+  },
+  {
+   "link": "c_lep_r_l4",
+   "port": "lep_r",
+   "face": "W",
+   "pos_um": 3360.7059,
+   "bits": 276,
+   "peer": "lep"
+  },
+  {
+   "link": "c_ln_draft1_t_l0",
+   "port": "ln_draft1_t",
+   "face": "W",
+   "pos_um": 3475.0588,
+   "bits": 276,
+   "peer": "ln_draft1"
+  },
+  {
+   "link": "c_ln_draft1_t_l1",
+   "port": "ln_draft1_t",
+   "face": "W",
+   "pos_um": 3589.4117,
+   "bits": 276,
+   "peer": "ln_draft1"
+  },
+  {
+   "link": "c_ln_draft1_t_l2",
+   "port": "ln_draft1_t",
+   "face": "W",
+   "pos_um": 3703.7647,
+   "bits": 276,
+   "peer": "ln_draft1"
+  },
+  {
+   "link": "c_ln_draft1_r_l0",
+   "port": "ln_draft1_r",
+   "face": "W",
+   "pos_um": 3818.1177,
+   "bits": 276,
+   "peer": "ln_draft1"
+  },
+  {
+   "link": "c_ln_draft1_r_l1",
+   "port": "ln_draft1_r",
+   "face": "W",
+   "pos_um": 3932.4706,
+   "bits": 276,
+   "peer": "ln_draft1"
+  },
+  {
+   "link": "c_ln_draft1_r_l2",
+   "port": "ln_draft1_r",
+   "face": "W",
+   "pos_um": 4046.8235,
+   "bits": 276,
+   "peer": "ln_draft1"
+  },
+  {
+   "link": "c_ln_draft2_t_l0",
+   "port": "ln_draft2_t",
+   "face": "E",
+   "pos_um": 252.0,
+   "bits": 276,
+   "peer": "ln_draft2"
+  },
+  {
+   "link": "c_ln_draft2_t_l1",
+   "port": "ln_draft2_t",
+   "face": "E",
+   "pos_um": 324.0,
+   "bits": 276,
+   "peer": "ln_draft2"
+  },
+  {
+   "link": "c_ln_draft2_t_l2",
+   "port": "ln_draft2_t",
+   "face": "E",
+   "pos_um": 396.0,
+   "bits": 276,
+   "peer": "ln_draft2"
+  },
+  {
+   "link": "c_ln_draft2_r_l0",
+   "port": "ln_draft2_r",
+   "face": "E",
+   "pos_um": 468.0,
+   "bits": 276,
+   "peer": "ln_draft2"
+  },
+  {
+   "link": "c_ln_draft2_r_l1",
+   "port": "ln_draft2_r",
+   "face": "E",
+   "pos_um": 540.0,
+   "bits": 276,
+   "peer": "ln_draft2"
+  },
+  {
+   "link": "c_ln_draft2_r_l2",
+   "port": "ln_draft2_r",
+   "face": "E",
+   "pos_um": 612.0,
+   "bits": 276,
+   "peer": "ln_draft2"
+  },
+  {
+   "link": "c_ln_mesh0_t_l0",
+   "port": "ln_mesh0_t",
+   "face": "E",
+   "pos_um": 705.6,
+   "bits": 276,
+   "peer": "ln_mesh0"
+  },
+  {
+   "link": "c_ln_mesh0_t_l1",
+   "port": "ln_mesh0_t",
+   "face": "E",
+   "pos_um": 756.0,
+   "bits": 276,
+   "peer": "ln_mesh0"
+  },
+  {
+   "link": "c_ln_mesh0_t_l2",
+   "port": "ln_mesh0_t",
+   "face": "E",
+   "pos_um": 828.0,
+   "bits": 276,
+   "peer": "ln_mesh0"
+  },
+  {
+   "link": "c_ln_mesh0_r_l0",
+   "port": "ln_mesh0_r",
+   "face": "E",
+   "pos_um": 900.0,
+   "bits": 276,
+   "peer": "ln_mesh0"
+  },
+  {
+   "link": "c_ln_mesh0_r_l1",
+   "port": "ln_mesh0_r",
+   "face": "E",
+   "pos_um": 972.0,
+   "bits": 276,
+   "peer": "ln_mesh0"
+  },
+  {
+   "link": "c_ln_mesh0_r_l2",
+   "port": "ln_mesh0_r",
+   "face": "E",
+   "pos_um": 1044.0,
+   "bits": 276,
+   "peer": "ln_mesh0"
+  },
+  {
+   "link": "c_ln_mesh1_t_l0",
+   "port": "ln_mesh1_t",
+   "face": "E",
+   "pos_um": 1116.0,
+   "bits": 276,
+   "peer": "ln_mesh1"
+  },
+  {
+   "link": "c_ln_mesh1_t_l1",
+   "port": "ln_mesh1_t",
+   "face": "E",
+   "pos_um": 1188.0,
+   "bits": 276,
+   "peer": "ln_mesh1"
+  },
+  {
+   "link": "c_ln_mesh1_t_l2",
+   "port": "ln_mesh1_t",
+   "face": "E",
+   "pos_um": 1260.0,
+   "bits": 276,
+   "peer": "ln_mesh1"
+  },
+  {
+   "link": "c_ln_mesh1_r_l0",
+   "port": "ln_mesh1_r",
+   "face": "E",
+   "pos_um": 1332.0,
+   "bits": 276,
+   "peer": "ln_mesh1"
+  },
+  {
+   "link": "c_ln_mesh1_r_l1",
+   "port": "ln_mesh1_r",
+   "face": "E",
+   "pos_um": 1404.0,
+   "bits": 276,
+   "peer": "ln_mesh1"
+  },
+  {
+   "link": "c_ln_mesh1_r_l2",
+   "port": "ln_mesh1_r",
+   "face": "E",
+   "pos_um": 1476.0,
+   "bits": 276,
+   "peer": "ln_mesh1"
+  },
+  {
+   "link": "c_ln_mesh5_t_l0",
+   "port": "ln_mesh5_t",
+   "face": "E",
+   "pos_um": 1548.0,
+   "bits": 276,
+   "peer": "ln_mesh5"
+  },
+  {
+   "link": "c_ln_mesh5_t_l1",
+   "port": "ln_mesh5_t",
+   "face": "E",
+   "pos_um": 1620.0,
+   "bits": 276,
+   "peer": "ln_mesh5"
+  },
+  {
+   "link": "c_ln_mesh5_t_l2",
+   "port": "ln_mesh5_t",
+   "face": "E",
+   "pos_um": 1692.0,
+   "bits": 276,
+   "peer": "ln_mesh5"
+  },
+  {
+   "link": "c_ln_mesh5_r_l0",
+   "port": "ln_mesh5_r",
+   "face": "E",
+   "pos_um": 1764.0,
+   "bits": 276,
+   "peer": "ln_mesh5"
+  },
+  {
+   "link": "c_ln_mesh5_r_l1",
+   "port": "ln_mesh5_r",
+   "face": "E",
+   "pos_um": 1836.0,
+   "bits": 276,
+   "peer": "ln_mesh5"
+  },
+  {
+   "link": "c_ln_mesh5_r_l2",
+   "port": "ln_mesh5_r",
+   "face": "E",
+   "pos_um": 1908.0,
+   "bits": 276,
+   "peer": "ln_mesh5"
+  },
+  {
+   "link": "c_ln_mesh2_t_l0",
+   "port": "ln_mesh2_t",
+   "face": "E",
+   "pos_um": 1980.0,
+   "bits": 276,
+   "peer": "ln_mesh2"
+  },
+  {
+   "link": "c_ln_mesh2_t_l1",
+   "port": "ln_mesh2_t",
+   "face": "E",
+   "pos_um": 2052.0,
+   "bits": 276,
+   "peer": "ln_mesh2"
+  },
+  {
+   "link": "c_ln_mesh2_t_l2",
+   "port": "ln_mesh2_t",
+   "face": "E",
+   "pos_um": 2124.0,
+   "bits": 276,
+   "peer": "ln_mesh2"
+  },
+  {
+   "link": "c_ln_mesh2_r_l0",
+   "port": "ln_mesh2_r",
+   "face": "E",
+   "pos_um": 2196.0,
+   "bits": 276,
+   "peer": "ln_mesh2"
+  },
+  {
+   "link": "c_ln_mesh2_r_l1",
+   "port": "ln_mesh2_r",
+   "face": "E",
+   "pos_um": 2268.0,
+   "bits": 276,
+   "peer": "ln_mesh2"
+  },
+  {
+   "link": "c_ln_mesh2_r_l2",
+   "port": "ln_mesh2_r",
+   "face": "E",
+   "pos_um": 2340.0,
+   "bits": 276,
+   "peer": "ln_mesh2"
+  },
+  {
+   "link": "c_ln_draft3_t_l0",
+   "port": "ln_draft3_t",
+   "face": "E",
+   "pos_um": 2412.0,
+   "bits": 276,
+   "peer": "ln_draft3"
+  },
+  {
+   "link": "c_ln_draft3_t_l1",
+   "port": "ln_draft3_t",
+   "face": "E",
+   "pos_um": 2484.0,
+   "bits": 276,
+   "peer": "ln_draft3"
+  },
+  {
+   "link": "c_ln_draft3_t_l2",
+   "port": "ln_draft3_t",
+   "face": "E",
+   "pos_um": 2556.0,
+   "bits": 276,
+   "peer": "ln_draft3"
+  },
+  {
+   "link": "c_ln_draft3_r_l0",
+   "port": "ln_draft3_r",
+   "face": "E",
+   "pos_um": 2628.0,
+   "bits": 276,
+   "peer": "ln_draft3"
+  },
+  {
+   "link": "c_ln_draft3_r_l1",
+   "port": "ln_draft3_r",
+   "face": "E",
+   "pos_um": 2700.0,
+   "bits": 276,
+   "peer": "ln_draft3"
+  },
+  {
+   "link": "c_ln_draft3_r_l2",
+   "port": "ln_draft3_r",
+   "face": "E",
+   "pos_um": 2772.0,
+   "bits": 276,
+   "peer": "ln_draft3"
+  },
+  {
+   "link": "c_ln_mesh3_t_l0",
+   "port": "ln_mesh3_t",
+   "face": "E",
+   "pos_um": 2844.0,
+   "bits": 276,
+   "peer": "ln_mesh3"
+  },
+  {
+   "link": "c_ln_mesh3_t_l1",
+   "port": "ln_mesh3_t",
+   "face": "E",
+   "pos_um": 2916.0,
+   "bits": 276,
+   "peer": "ln_mesh3"
+  },
+  {
+   "link": "c_ln_mesh3_t_l2",
+   "port": "ln_mesh3_t",
+   "face": "E",
+   "pos_um": 2988.0,
+   "bits": 276,
+   "peer": "ln_mesh3"
+  },
+  {
+   "link": "c_ln_mesh3_r_l0",
+   "port": "ln_mesh3_r",
+   "face": "E",
+   "pos_um": 3060.0,
+   "bits": 276,
+   "peer": "ln_mesh3"
+  },
+  {
+   "link": "c_ln_mesh3_r_l1",
+   "port": "ln_mesh3_r",
+   "face": "E",
+   "pos_um": 3132.0,
+   "bits": 276,
+   "peer": "ln_mesh3"
+  },
+  {
+   "link": "c_ln_mesh3_r_l2",
+   "port": "ln_mesh3_r",
+   "face": "E",
+   "pos_um": 3204.0,
+   "bits": 276,
+   "peer": "ln_mesh3"
+  },
+  {
+   "link": "c_ln_draft4_t_l0",
+   "port": "ln_draft4_t",
+   "face": "E",
+   "pos_um": 3276.0,
+   "bits": 276,
+   "peer": "ln_draft4"
+  },
+  {
+   "link": "c_ln_draft4_t_l1",
+   "port": "ln_draft4_t",
+   "face": "E",
+   "pos_um": 3348.0,
+   "bits": 276,
+   "peer": "ln_draft4"
+  },
+  {
+   "link": "c_ln_draft4_t_l2",
+   "port": "ln_draft4_t",
+   "face": "E",
+   "pos_um": 3420.0,
+   "bits": 276,
+   "peer": "ln_draft4"
+  },
+  {
+   "link": "c_ln_draft4_r_l0",
+   "port": "ln_draft4_r",
+   "face": "E",
+   "pos_um": 3492.0,
+   "bits": 276,
+   "peer": "ln_draft4"
+  },
+  {
+   "link": "c_ln_draft4_r_l1",
+   "port": "ln_draft4_r",
+   "face": "E",
+   "pos_um": 3564.0,
+   "bits": 276,
+   "peer": "ln_draft4"
+  },
+  {
+   "link": "c_ln_draft4_r_l2",
+   "port": "ln_draft4_r",
+   "face": "E",
+   "pos_um": 3636.0,
+   "bits": 276,
+   "peer": "ln_draft4"
+  },
+  {
+   "link": "c_ln_mesh4_t_l0",
+   "port": "ln_mesh4_t",
+   "face": "E",
+   "pos_um": 3708.0,
+   "bits": 276,
+   "peer": "ln_mesh4"
+  },
+  {
+   "link": "c_ln_mesh4_t_l1",
+   "port": "ln_mesh4_t",
+   "face": "E",
+   "pos_um": 3780.0,
+   "bits": 276,
+   "peer": "ln_mesh4"
+  },
+  {
+   "link": "c_ln_mesh4_t_l2",
+   "port": "ln_mesh4_t",
+   "face": "E",
+   "pos_um": 3852.0,
+   "bits": 276,
+   "peer": "ln_mesh4"
+  },
+  {
+   "link": "c_ln_mesh4_r_l0",
+   "port": "ln_mesh4_r",
+   "face": "E",
+   "pos_um": 3924.0,
+   "bits": 276,
+   "peer": "ln_mesh4"
+  },
+  {
+   "link": "c_ln_mesh4_r_l1",
+   "port": "ln_mesh4_r",
+   "face": "E",
+   "pos_um": 3996.0,
+   "bits": 276,
+   "peer": "ln_mesh4"
+  },
+  {
+   "link": "c_ln_mesh4_r_l2",
+   "port": "ln_mesh4_r",
+   "face": "E",
+   "pos_um": 4068.0,
+   "bits": 276,
+   "peer": "ln_mesh4"
+  },
+  {
+   "link": "seq_t",
+   "port": "seq_t",
+   "face": "N",
+   "pos_um": 1296.0,
+   "bits": 605,
+   "peer": "mtp_seq"
+  },
+  {
+   "link": "seq_r",
+   "port": "seq_r",
+   "face": "N",
+   "pos_um": 1296.0,
+   "bits": 686,
+   "peer": "mtp_seq"
+  }
+ ]
+}
