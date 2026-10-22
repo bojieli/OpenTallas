@@ -1,0 +1,13 @@
+{
+  "unit": "oth-ubuntu-3193491-1792649983",
+  "host": "ot-epyc9",
+  "status": "PASS",
+  "reason": "Corrected unused_inputs_removed metadata to unused_inputs_preserved; all eleven unused lane0/SFH0 ports already remained in emitted RTL",
+  "byte_comparison": "cmp confirmed both complete emitted RTL files identical to source703669f8c",
+  "scope": "Constructor metadata correction only; no simulation, mapping or functional-source change",
+  "generator_sha256": "1d1d9385bd1a2539b5c85c8409f23bc5b119c4890c5aae6a80eaa97072580aa9",
+  "unchanged_source_sha256": {
+    "rtl/qwen_flat_native_2000/qfd_flat_ml1_native_helpers.sv": "c18f83c2ebef85817fcc6b87a71d05619826d31449ae4f7598b1b907e0c66c58",
+    "rtl/qwen_flat_native_2000/qfd_flat_ml1_native_bounded.sv": "98112ffd8ab4f4ebfa6469260b36dfaf513143a92ed18fe6613b6760d80c1092"
+  }
+}

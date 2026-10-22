@@ -4354,19 +4354,7 @@
   },
   "unconsumed_cells_removed": 0,
   "dropped_outputs": [],
-  "unused_inputs_removed": [
-    "asi",
-    "bsi",
-    "csi",
-    "dsi",
-    "sy_exp_y",
-    "sy_exp_vo",
-    "sy_exp_f",
-    "sy_rcp_y",
-    "sy_rcp_f",
-    "sy_rsq_y",
-    "sy_rsq_f"
-  ],
+  "unused_inputs_removed": [],
   "holding_chain_count": 0,
   "holding_ring_groups": [],
   "actual_final_rings": [],
@@ -4405,5 +4393,19 @@
   ],
   "graph_sha256": "f43c6478556a7a6c08ffaa1686d2434423050dcd0e42464f7f27e9c16360e6bc",
   "reset_forest_node_count": 76,
-  "reset_owned_functional_ff_count": 1721
+  "reset_owned_functional_ff_count": 1721,
+  "unused_inputs_preserved": [
+    "asi",
+    "bsi",
+    "csi",
+    "dsi",
+    "sy_exp_y",
+    "sy_exp_vo",
+    "sy_exp_f",
+    "sy_rcp_y",
+    "sy_rcp_f",
+    "sy_rsq_y",
+    "sy_rsq_f"
+  ],
+  "metadata_correction": "Original full ABI preserves the listed unused lane0/SFH0 inputs. Historical full graph receipt named this list unused_inputs_removed; no input or source RTL was actually removed."
 }
