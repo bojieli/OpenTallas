@@ -1,0 +1,119 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "fix": "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_hbm_hc_qtree16_static': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-epyc5 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_hbm_hcq_hub_c9p40b_20261021-213347.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_hbm_hcq_hub_c9p40b_20261021-213347.log; host dir ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/hbm_hcq_hub_c9p40b-20261021-213347",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc5 in 247 s (gate total 467 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 9907, 'pin_rectangles': 9907, 'pin_track_checked': 9907, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 a6683b34c3e9a7e08ad31f7e52ac9772e346848c3404b53feb7881bb0a742621",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "util",
+   "message": "synthesized std area 8184 um2 + macros 62706 in core 533017: util 2% (std-cell density 1.8% of placeable 457282 um2; total fill 13.3%)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN ot_hbm_hc_qhub_static cells 55,900 flops 15,328 depth 493.4 ps util 0.1332 reach 0.6 um (1.4 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port clk: 15,328 flops > 15,000 on one root (+0 ICGs, 1 macro clock pins; e.g. configured$_DFF_PN0_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:clk: 15,329 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 15,329 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "cts_run",
+   "message": "placement / CTS of the kit failed: [ERROR RSZ-3006] Failed to insert buffer before loads for net xb_beat_s[1]",
+   "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
+  },
+  {
+   "severity": "WARN",
+   "check": "cts_calibration",
+   "message": "CTS rc=2 ck_insertion rc=None",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.550 vs spec PD 0.55",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "cross_clock",
+   "message": "multi-clock kit: the cross-clock reg->reg analysis did not complete (see the remote pc.log: signoff.sdc read / STA error)",
+   "fix": "fix the signoff SDC read and re-gate with --cts"
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:clk: 15,329 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 15,329 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-hbm-qhub-boundary-2000/physical/ref_tile/hbm_hcq_hub_c9p40b/gate_layout/floorplan.png",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 13% = (hard macros 62705.8 + synthesized std cells 8274.9) / outline 539343.4 um2; pin demand per face: S 2037 pins over 728.0/734.4 um (99%), N 2854 pins over 728.1/734.4 um (99%), W 2426 pins over 727.7/734.4 um (99%), E 2726 pins over 727.8/734.4 um (99%) (pin-bound: 9,903 literal face pins on the die slot = the 734.4 um hole of the 3x3 HC bank ring (pins abut the banks; W 2,335 b on 0..731 um); the ~50k um2 of logic + SRAM sit in ONE central standard-cell band (345.6 um at 194.4..540.0), the collar carries only pin wires + repeaters)",
+   "fix": ""
+  }
+ ]
+}
