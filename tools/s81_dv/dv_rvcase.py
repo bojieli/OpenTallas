@@ -540,8 +540,36 @@ def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, re
     hop = lambda a_, b_: abs(a_[0] - b_[0]) + abs(a_[1] - b_[1])
     hc = lambda h: 0.0 if h <= reach else 1e6 + 1e3 * (h - reach)
     cand, f = {}, {}
+    # STACKS: the bind plans whole epoch / endpoint chains (up to 101 stations) on ONE point.  Each stack is packed
+    # first as a compact snake: the n nearest free slots around the point, visited nearest-neighbour from the slot
+    # closest to the stack's outside parent, assigned in chain (pre-order) order -> in-stack hops ~ one slot pitch.
+    pos_in = {v: k for k, v in enumerate(order)}
+    stacks = collections.defaultdict(list)
+    for i in st:
+        stacks[(round(plan_c[i][0], 2), round(plan_c[i][1], 2))].append(i)
+    fixed, nstack = {}, 0
+    for key, mem in sorted(stacks.items(), key=lambda kv: -len(kv[1])):
+        if len(mem) < 2:
+            continue
+        nstack += 1
+        mem.sort(key=lambda v: pos_in.get(v, 0))
+        w, h = loc[mem[0]][2], loc[mem[0]][3]
+        slots = [(cx + w / 2, cy + h / 2) for cx, cy, _ in
+                 _free_cands(placer, key[0] - w / 2, key[1] - h / 2, w, h, near=len(mem) + 4, step=w + 1.0, rmax=2000.0, per_ray=0)]
+        ext = next((parent[v] for v in mem if parent.get(v) not in mem and v in parent), None)
+        cur = plan_c[ext] if ext else key
+        for v in mem:
+            if not slots:
+                break
+            k = min(range(len(slots)), key=lambda j: hop(cur, slots[j]))
+            q = slots.pop(k)
+            placer.add((q[0] - w / 2, q[1] - h / 2, q[0] + w / 2, q[1] + h / 2))
+            fixed[v] = q; cur = q
     for i in st:
         x0, y0, w, h, _ = loc[i]
+        if i in fixed:
+            cand[i] = [(fixed[i][0], fixed[i][1], hop(fixed[i], plan_c[i]))]
+            continue
         cs = _free_cands(placer, x0, y0, w, h)
         cand[i] = [(cx + w / 2, cy + h / 2, dd) for cx, cy, dd in cs] or [(x0 + w / 2, y0 + h / 2, 0.0)]
     best_child = {}
@@ -562,6 +590,10 @@ def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, re
             ranks = sorted(range(len(cand[v])), key=lambda k: hc(hop(pc, cand[v][k][:2])) + f[v][k])
         else:
             ranks = sorted(range(len(cand[v])), key=lambda k: f[v][k])
+        if v in fixed:
+            placed[v] = fixed[v]
+            loc[v] = (placed[v][0] - w / 2, placed[v][1] - h / 2, w, h, 'FIRM')
+            continue
         for k in ranks:
             cx, cy, _ = cand[v][k]
             r = (cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)
@@ -602,6 +634,7 @@ def rs_chain_place(stations, insts, ibits, touch, loc, placer, hints, blocks, re
     disp = sorted(hop(placed[v], plan_c[v]) for v in st)
     rep = dict(stations=len(st), roots=len(roots), station_hops=sum(len(k_) for k_ in kids.values()),
                load_hops=sum(len(t_) for t_ in terms.values()), planned_station_hops_over_reach=over_plan,
+               stacks=nstack, stacked_stations=len(fixed),
                placed_hops_over_reach=len(over), by_kind=dict(collections.Counter(o[0] for o in over)),
                max_hop_um=max((o[3] for o in over), default=None), fallback_spiral=fallback,
                disp_um=dict(median=round(disp[len(disp) // 2], 1), p99=round(disp[int(len(disp) * 0.99)], 1), max=round(disp[-1], 1)) if disp else None,
