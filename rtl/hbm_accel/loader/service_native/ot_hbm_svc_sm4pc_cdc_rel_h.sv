@@ -409,7 +409,8 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  end
 endmodule
 // HBMc/TILES 10-22: kept 3-input AND leaf: one instance per consumer family gives a distinct driver of the same function.
-(* keep_hierarchy=1 *) module ot_hbm_svc_and3_leaf(input wire a,b,c,output wire y);
+module ot_hbm_svc_and3_leaf   // kept by name (spec route.synth_keep_modules; reviewed_gray_fifos refuse keep_hierarchy attributes)
+(input wire a,b,c,output wire y);
  assign y=a&&b&&c;
 endmodule
 `default_nettype wire

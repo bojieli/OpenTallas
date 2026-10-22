@@ -228,7 +228,8 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
 endmodule
 // HBMc/TILES 10-22: per-region kept issue-field leaf (same function as the owner's ordinal_d / length) and per-group beat
 // decode: separate instances are separate drivers (no shared node fans out to all 32 table entries).
-(* keep_hierarchy=1 *) module ot_hbm_svc_owner_issue_leaf(input wire blk_start,input wire [9:0] cursor,input wire [19:0] pcs,
+module ot_hbm_svc_owner_issue_leaf   // kept by name (spec route.synth_keep_modules; reviewed_gray_fifos refuse keep_hierarchy attributes)
+(input wire blk_start,input wire [9:0] cursor,input wire [19:0] pcs,
  input wire [4:0] pc,input wire [10:0] words,output wire [10:0] ordinal,output wire [2:0] length);
  wire [9:0] t=blk_start?10'd0:cursor;
  reg [1:0] lane;integer j;      // the owner's lane, recomputed locally (same function as the owner's select loop)
@@ -237,16 +238,19 @@ endmodule
  assign ordinal={t[8:0],2'b0}+lane;
  assign length=full_group?3'd4:3'd1;
 endmodule
-(* keep_hierarchy=1 *) module ot_hbm_svc_owner_beat_leaf(input wire [3:0] beat,output wire [3:0] onehot);
+module ot_hbm_svc_owner_beat_leaf   // kept by name (spec route.synth_keep_modules; reviewed_gray_fifos refuse keep_hierarchy attributes)
+(input wire [3:0] beat,output wire [3:0] onehot);
  for(genvar b=0;b<4;b=b+1)begin:g_b assign onehot[b]=(beat==b); end
 endmodule
 // HBMc/TILES 10-22: kept return-tag decode leaf and words leaf (distinct drivers; the range compare and the arithmetic
 // read separate kept copies of block_total)
-(* keep_hierarchy=1 *) module ot_hbm_svc_owner_tag_leaf(input wire [4:0] tag,output wire [7:0] hi,output wire [3:0] lo);
+module ot_hbm_svc_owner_tag_leaf   // kept by name (spec route.synth_keep_modules; reviewed_gray_fifos refuse keep_hierarchy attributes)
+(input wire [4:0] tag,output wire [7:0] hi,output wire [3:0] lo);
  for(genvar h=0;h<8;h=h+1)begin:g_h assign hi[h]=(tag[4:2]==h); end
  for(genvar l=0;l<4;l=l+1)begin:g_l assign lo[l]=(tag[1:0]==l); end
 endmodule
-(* keep_hierarchy=1 *) module ot_hbm_svc_owner_words_leaf(input wire [11:0] total_a,total_b,input wire [1:0] lane,output wire [10:0] words);
+module ot_hbm_svc_owner_words_leaf   // kept by name (spec route.synth_keep_modules; reviewed_gray_fifos refuse keep_hierarchy attributes)
+(input wire [11:0] total_a,total_b,input wire [1:0] lane,output wire [10:0] words);
  wire [11:0] w=(total_a+3-lane)/4;
  assign words=total_b>lane?w[10:0]:11'd0;
 endmodule

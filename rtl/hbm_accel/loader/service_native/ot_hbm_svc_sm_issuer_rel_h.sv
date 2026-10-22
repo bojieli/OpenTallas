@@ -128,10 +128,16 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  // (0 start_bank port, 1 start_v selects, 2..4 the producer's copies).
  wire[LB-1:0]sh_land,sh_land1;wire[4*LB-1:0]sq_land;wire[QD-1:0]sq_sel;
  for(genvar hq=0;hq<QD;hq=hq+1)begin:g_sq_land assign sq_land[hq*LB+:LB]=sq[hq][LB-1:0];assign sq_sel[hq]=sqr_k[hq*NQS]; end
- ot_hbm_svc_qhead_leaf #(.W(LB),.QD(QD)) u_sh0(.sel(sq_sel),.q(sq_land),.y(sh_land));
- ot_hbm_svc_qhead_leaf #(.W(LB),.QD(QD)) u_sh1(.sel(sq_sel),.q(sq_land),.y(sh_land1));
+ // HBMc/TILES 10-22: un-parameterised 2-bit x 4-deep leaf (QD is fixed 4; LB 1 zero-extends) so the kit can keep it by
+ // name (route.synth_keep_modules): reviewed_gray_fifos kits refuse keep_hierarchy attributes in the sources.
+ wire[7:0]sq_land2;wire[1:0]sh_land_w,sh_land1_w;wire[5:0]start_bank_w;
+ for(genvar hq=0;hq<4;hq=hq+1)begin:g_sq_land2 assign sq_land2[hq*2+:2]=2'(sq_land[hq*LB+:LB]); end
+ ot_hbm_svc_qhead_leaf u_sh0(.sel(sq_sel),.q(sq_land2),.y(sh_land_w));
+ ot_hbm_svc_qhead_leaf u_sh1(.sel(sq_sel),.q(sq_land2),.y(sh_land1_w));
+ assign sh_land=sh_land_w[LB-1:0]; assign sh_land1=sh_land1_w[LB-1:0];
  for(genvar hk=0;hk<3;hk=hk+1)begin:g_sh_k
-  ot_hbm_svc_qhead_leaf #(.W(LB),.QD(QD)) u_shk(.sel(sq_sel),.q(sq_land),.y(start_bank_k[hk*LB+:LB]));
+  ot_hbm_svc_qhead_leaf u_shk(.sel(sq_sel),.q(sq_land2),.y(start_bank_w[hk*2+:2]));
+  assign start_bank_k[hk*LB+:LB]=start_bank_w[hk*2+:LB];
  end
  assign start_v=sq_n!=0&&gq_n<QD&&block_ready[sh_land1]&&!cache_owned[sh_land1[0]];
  assign start_bank=sh_land;assign start_epoch=sh[LB+:16];
@@ -281,8 +287,8 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  end
 endmodule
 // HBMc/TILES 10-22: kept one-hot queue-head mux leaf (one instance per consumer family = distinct drivers)
-(* keep_hierarchy=1 *) module ot_hbm_svc_qhead_leaf #(parameter integer W=1,QD=4)(input wire[QD-1:0]sel,input wire[QD*W-1:0]q,output reg[W-1:0]y);
+module ot_hbm_svc_qhead_leaf(input wire[3:0]sel,input wire[7:0]q,output reg[1:0]y);   // kept by name (spec synth_keep_modules)
  integer k;
- always @*begin y=0;for(k=0;k<QD;k=k+1)if(sel[k])y=y|q[k*W+:W];end
+ always @*begin y=0;for(k=0;k<4;k=k+1)if(sel[k])y=y|q[k*2+:2];end
 endmodule
 `default_nettype wire
