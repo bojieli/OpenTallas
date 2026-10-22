@@ -141,8 +141,8 @@
    "count": 1,
    "inst": "*u_t0",
    "at": [
-    777.6,
-    43.2
+    789.696,
+    34.56
    ],
    "orient": "R0"
   },
@@ -151,8 +151,8 @@
    "count": 1,
    "inst": "*u_t1",
    "at": [
-    777.6,
-    129.6
+    789.696,
+    120.96
    ],
    "orient": "R0"
   },
@@ -161,8 +161,8 @@
    "count": 1,
    "inst": "*u_t2",
    "at": [
-    777.6,
-    216.0
+    789.696,
+    207.36
    ],
    "orient": "R0"
   },
@@ -171,8 +171,8 @@
    "count": 1,
    "inst": "*u_t3",
    "at": [
-    777.6,
-    302.4
+    789.696,
+    293.76
    ],
    "orient": "R0"
   },
@@ -181,8 +181,8 @@
    "count": 1,
    "inst": "*u_r0",
    "at": [
-    777.6,
-    388.8
+    789.696,
+    380.16
    ],
    "orient": "R0"
   },
@@ -191,8 +191,8 @@
    "count": 1,
    "inst": "*u_r1",
    "at": [
-    777.6,
-    518.4
+    789.696,
+    509.76
    ],
    "orient": "R0"
   }
@@ -245,9 +245,9 @@
   "reason": "every hard sub-child lands rst_n itself (2 stages + own tree3, identical in each), so the parent adds no landing (same release edge as the flat lane: 2 + tree3)."
  },
  "fill_reason": {
-  "pin_bound": "child-bound: the CLOSED 725.76 x 583.2 lane view + 43.2-um ring + the stacked adapter sub-children band (x 777.6-864); parent soft = rxen only; never shrink."
+  "pin_bound": "child-bound: the CLOSED 725.76 x 583.2 lane view + 43.2-um ring + the stacked adapter sub-children band (x 789.696-876.096: 20.7-um channel to the lane view, 20.3 um to the E core edge); parent soft = rxen only; never shrink."
  },
- "structural_change": "s81hd_lane_p9 (STW-S81c-DIE3-LANE 10-22, HEAD lane design (b) successor): the adapter is STACKED hard sub-children (ot_s81hd_lsc_*), each closed with its own local CTS root, replacing p8's single 4,523-sink adapter root along the 583-um strip (TT 163-170 / FF 140-162) and p7f/p6a's pad-chain slice hold (FF -98.9 / -63.0). Parent = closed lane child + sub-children, judged per linked child pair TT+FF; RTL ot_s81hd_lane_{sc6,sc4}.sv cycle-exact vs the current ot_s81hd_lane (eq bench + OVF/RP/SKEW mutants). Ports/widths/edges frozen.",
+ "structural_change": "s81hd_lane_p9 (STW-S81c-DIE3-LANE 10-22, HEAD lane design (b) successor): the adapter is STACKED hard sub-children (ot_s81hd_lsc_*), each closed with its own local CTS root, replacing p8's single 4,523-sink adapter root along the 583-um strip (TT 163-170 / FF 140-162) and p7f/p6a's pad-chain slice hold (FF -98.9 / -63.0). Parent = closed lane child + sub-children, judged per linked child pair TT+FF; RTL ot_s81hd_lane_{sc6,sc4}.sv cycle-exact vs the current ot_s81hd_lane (eq bench + OVF/RP/SKEW mutants). Ports/widths/edges frozen. Parent floorplan (STW-S81c-DIE4-LANE 10-22): the frozen 898.56-um outline leaves no 43.2-um child-lattice x for the 86.4-wide column with >=20 um to both the lane view (E edge x768.96, itself off the 43.2 lattice) and the E pin face (old x777.6 = 8.6-um channel). Column moved to x789.696 (child_lattice_um 1.728 = lcm(site 0.054, M1-M7 tracks 0.036/0.048/0.064), so every child pin stays on track; children connect PG M5->parent M6, independent of x): lane channel 20.7 um, E core edge 20.3 um. MAIN stack shifted down 8.64 um (row + track aligned; t0 y34.56 ... r1 y509.76) so r1m clears the N core edge by 28.1 um (was 19.4); 21.6-um inter-child channels kept.",
  "child_clock_ref": "boundary",
  "child_clock_ref_reason": "the parent adapter talks to the child's boundary pin registers (lo_* landing, li_* sender, W-face rx/tx flops): target = the child's routed boundary insertion (insertion.json TT mean 698.4), not its deepest leaf",
  "std_area_um2": 2600.0,
@@ -256,5 +256,6 @@
  },
  "orfs_vars": {
   "OT_SPINE_PAD_CELL": "BUFx4_ASAP7_75t_R"
- }
+ },
+ "child_lattice_um": 1.728
 }

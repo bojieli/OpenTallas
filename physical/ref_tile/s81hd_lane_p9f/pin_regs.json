@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81hd_lane",
+ "enable": false,
+ "reason": "Source-registered, unchanged edges (freeze): tx_d/tx_v land in the TX / control sub-children's pin flops, rx_v/rx_d/flt leave the control / RX sub-children's flops; rx/tx/chb are wires to the CLOSED lane child; the only parent flop is rxen."
+}

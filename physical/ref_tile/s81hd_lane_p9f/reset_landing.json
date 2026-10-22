@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "ot_s81hd_lane",
+ "enable": false,
+ "reason": "every hard sub-child lands rst_n itself (2 stages + own tree3, identical in each), so the parent adds no landing (same release edge as the flat lane: 2 + tree3)."
+}
