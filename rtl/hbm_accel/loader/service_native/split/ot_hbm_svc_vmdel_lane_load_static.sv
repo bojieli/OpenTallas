@@ -93,7 +93,7 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
   end else begin
    out_v<=raw_issue && !landing_fault;out_slot<=rs;out_group<=rg;
    if(load_v&&!command_ok)sticky<=1;
-   if(lv1&&out_v)sticky<=1;
+   if(lv2&&out_v)sticky<=1;
    if(command_ok&&load_cmd[56])owned[load_cmd[0]]<=0;
    if(begin_v) begin
     if(owned[begin_bank] || (lstart && start_bank==begin_bank)) sticky<=1;
@@ -147,35 +147,71 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
   else begin full0<=&f0;full1<=&f1;pcbad<=|bad_v; end
  // decoded constant-index group select (no runtime part-select)
  wire [255:0] sel;
- if(NPC==4)begin:sel4
-  assign sel=({256{out_group==2'd0}}&macro_data[0+:256])|({256{out_group==2'd1}}&macro_data[256+:256])|
-             ({256{out_group==2'd2}}&macro_data[512+:256])|({256{out_group==2'd3}}&macro_data[768+:256]);
- end else begin:sel2
-  assign sel=({256{out_group[0]==1'b0}}&macro_data[0+:256])|({256{out_group[0]==1'b1}}&macro_data[256+:256]);
+ for(genvar part=0;part<16;part=part+1)begin:raw_slice
+   wire[NPC*16-1:0] d;
+   for(genvar pcid=0;pcid<NPC;pcid=pcid+1)assign d[pcid*16+:16]=macro_data[pcid*256+part*16+:16];
+   (* keep_hierarchy="yes" *) ot_hbm_dma_raw_select #(.NPC(NPC),.COPY_ID(part)) u(.clk(clk),.group_i(rg),.d(d),.q(sel[part*16+:16]));
  end
- wire [15:0] sector0=(NPC==4)?base_q+{5'b0,out_slot,out_group,3'b0}:base_q+{6'b0,out_slot,out_group[0],3'b0};
-
  // Static read commands carry exact source ownership and output destination. No arbitration.
- wire [255:0] aligned_source=sel>>(lc0[29:25]*8);
- reg lv0,lv1;reg [61:0] lc0,lc1;reg [255:0] lpayload;
+ reg lv0,lv1,lv2;reg[61:0]lc0,lc1,lc2;
  always @(posedge clk)begin
-   if(!rst_s)begin lv0<=0;lv1<=0;end
-   else begin lv0<=load_ok;lv1<=lv0;end
-   lc0<=load_cmd;lc1<=lc0;
-   for(integer w=0;w<8;w=w+1)begin
-     case(lc0[32:30])
-       0,5:lpayload[w*32+:32]<=aligned_source[w*32+:32];
-       1:lpayload[w*32+:32]<={16'd0,aligned_source[w*16+:16]};
-       default:lpayload[w*32+:32]<={24'd0,aligned_source[w*8+:8]};
-     endcase
-   end
- end
- always @(posedge clk)begin
- load_dest_bank<=lc1[59:57];load_dest_q<=lc1[61:60];
- load_dq[279:0]<={lc1[48:33],converted,mask};
- if(!rst_s)load_dq[280]<=0;else load_dq[280]<=lv1&&!fault_c;
+  if(!rst_s)begin lv0<=0;lv1<=0;lv2<=0;end
+  else begin lv0<=load_ok;lv1<=lv0;lv2<=lv1;end
+  lc0<=load_cmd;lc1<=lc0;lc2<=lc1;
+  load_dest_bank<=lc2[59:57];load_dest_q<=lc2[61:60];
+  load_dq[279:264]<=lc2[48:33];
+  if(!rst_s)load_dq[280]<=0;else load_dq[280]<=lv2&&!fault_c;
  end
  assign load_out_v=load_dq[280];
+ wire[63:0]capture_cmd;
+ wire[27:0]scatter_cmd;
+ for(genvar c=0;c<8;c=c+1)begin:cap_root
+  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(8),.COPY_ID(c)) u(.clk(clk),.d({load_cmd_i[32:30],load_cmd_i[29:25]}),.q(capture_cmd[c*8+:8]));
+ end
+ for(genvar c=0;c<4;c=c+1)begin:scatter_root
+  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(7),.COPY_ID(8+c)) u(.clk(clk),.d({load_cmd_i[55:52],load_cmd_i[51:49]}),.q(scatter_cmd[c*7+:7]));
+ end
+ wire[511:0]normalized;
+ for(genvar c=0;c<256;c=c+1)begin:capture
+  (* keep_hierarchy="yes" *) ot_hbm_dma_capture_pair #(.COPY_ID(c),.WORD((c%128)/16),.PAIR(c%16)) u(.clk(clk),.cmd_i(capture_cmd[(c/32)*8+:8]),.source(sel),.q(normalized[c*2+:2]));
+ end
+ wire[255:0]word_data;
+ for(genvar w=0;w<8;w=w+1)for(genvar half=0;half<2;half=half+1)begin:convert_word
+  (* keep_hierarchy="yes" *) ot_hbm_dma_convert_half #(.COPY_ID(w*2+half),.HALF(half),.MUT(MUT)) u(.clk(clk),.fmt_i(lc0[32:30]),.raw(normalized[half*256+w*32+:32]),.q(word_data[w*32+half*16+:16]));
+ end
+ for(genvar c=0;c<128;c=c+1)begin:scatter
+  (* keep_hierarchy="yes" *) ot_hbm_dma_scatter_pair #(.COPY_ID(c),.WORD(c/16),.PAIR(c%16)) u(.clk(clk),.dest_i(scatter_cmd[(c/32)*7+:7]),.d(word_data),.q(load_dq[8+c*2+:2]));
+ end
+ wire[63:0]mask_cmd;
+ for(genvar b=0;b<8;b=b+1)begin:mask
+  (* keep_hierarchy="yes" *) ot_hbm_dma_mask #(.COPY_ID(b),.WORD(b)) u(.clk(clk),.d({load_cmd_i[55:52],load_cmd_i[51:49]}),.q(load_dq[b]));
+ end
+ assign dq_c={out_v && !fault_c,sector0[15:3],bank_q,sel,8'hff};
+endmodule
+
+(* keep_hierarchy="yes" *)
+module ot_hbm_dma_raw_select #(parameter NPC=2,COPY_ID=0)(input wire clk,input wire[1:0]group_i,input wire[NPC*16-1:0]d,output reg[15:0]q);
+ (* keep="true" *)reg[1:0]group_q;
+ always @(posedge clk)group_q<=group_i;
+ always @*begin q=0;for(integer g=0;g<NPC;g=g+1)if(group_q==g)q=q|d[g*16+:16];end
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_hbm_dma_cmd_copy #(parameter W=8,COPY_ID=0)(input wire clk,input wire[W-1:0]d,output reg[W-1:0]q);
+ always @(posedge clk)q<=d;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_hbm_dma_capture_pair #(parameter COPY_ID=0,WORD=0,PAIR=0)(input wire clk,input wire[7:0]cmd_i,input wire[255:0]source,output reg[1:0]q);
+ (* keep="true" *)reg[7:0]cmd;
+ integer size,idx;
+ always @*begin size=(cmd[7:5]==0||cmd[7:5]==5)?4:cmd[7:5]==1?2:1;idx=(cmd[4:0]+WORD*size)*8+PAIR*2;end
+ always @(posedge clk)begin
+ cmd<=cmd_i;
+ q<=(PAIR<size*4)?2'(source>>idx):2'b00;
+ end
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_hbm_dma_convert_half #(parameter COPY_ID=0,HALF=0,MUT=0)(input wire clk,input wire[2:0]fmt_i,input wire[31:0]raw,output reg[15:0]q);
+ (* keep="true" *)reg[2:0]fmt;
     function automatic [31:0] i8_f(input [7:0] c);
         reg [7:0] a; reg [2:0] p; integer k;
         begin
@@ -210,15 +246,24 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
  endcase
  end
  endfunction
- reg [255:0] converted,ordered;reg [7:0] mask;integer j;
- always @*begin
- ordered=0;
- for(j=0;j<8;j=j+1)if(j<lc1[55:52])
- ordered[j*32+:32]=decode_word(lpayload[j*32+:32],lc1[32:30]);
- converted=ordered<<(lc1[51:49]*32);
- if(MUT==1&&lc1[32:30]==1)converted[16]=!converted[16];
- mask=8'(((9'd1<<lc1[55:52])-1)<<lc1[51:49]);
+
+ wire[31:0]result=decode_word(raw,fmt);
+ always @(posedge clk)begin
+ fmt<=fmt_i;
+ q<=result[HALF*16+:16]^((MUT==1&&fmt==1&&HALF==1)?16'h0001:16'h0000);
  end
- assign dq_c={out_v && !fault_c,sector0[15:3],bank_q,sel,8'hff};
 endmodule
+(* keep_hierarchy="yes" *)
+module ot_hbm_dma_scatter_pair #(parameter COPY_ID=0,WORD=0,PAIR=0)(input wire clk,input wire[6:0]dest_i,input wire[255:0]d,output reg[1:0]q);
+ (* keep="true" *)reg[6:0]p0,p1,p2;
+ integer src;
+ always @*src=WORD-p2[2:0];
+ always @(posedge clk)begin p0<=dest_i;p1<=p0;p2<=p1;q<=(WORD>=p2[2:0]&&WORD<p2[2:0]+p2[6:3])?2'(d>>(src*32+PAIR*2)):2'b00;end
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_hbm_dma_mask #(parameter COPY_ID=0,WORD=0)(input wire clk,input wire[6:0]d,output reg q);
+ (* keep="true" *)reg[6:0]p0,p1,p2,p3;
+ always @(posedge clk)begin p0<=d;p1<=p0;p2<=p1;p3<=p2;q<=WORD>=p3[2:0]&&WORD<p3[2:0]+p3[6:3];end
+endmodule
+
 `default_nettype wire
