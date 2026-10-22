@@ -1,0 +1,405 @@
+{
+ "name": "hidx_sel_s3p_c14a",
+ "top": "ot_hidx_s3_flat_lp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp_hard.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_ctl.sv",
+  "rtl/hbm_accel/index/sel_s3/ot_hidx_s3_q.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_landing_native.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_ctl",
+ "clock_ports": [
+  "ck_ctl",
+  "ck_q0",
+  "ck_q1",
+  "ck_q2",
+  "ck_q3"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_ctl"
+   ],
+   "inputs": [
+    "rst_n",
+    "op",
+    "pass",
+    "addr",
+    "k"
+   ],
+   "outputs": [
+    "fault"
+   ]
+  },
+  "q0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_q0"
+   ],
+   "inputs": [
+    "in_line_0"
+   ],
+   "outputs": [
+    "selected_v_0",
+    "selected_line_0"
+   ]
+  },
+  "q1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_q1"
+   ],
+   "inputs": [
+    "in_line_1"
+   ],
+   "outputs": [
+    "selected_v_1",
+    "selected_line_1"
+   ]
+  },
+  "q2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_q2"
+   ],
+   "inputs": [
+    "in_line_2"
+   ],
+   "outputs": [
+    "selected_v_2",
+    "selected_line_2"
+   ]
+  },
+  "q3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_q3"
+   ],
+   "inputs": [
+    "in_line_3"
+   ],
+   "outputs": [
+    "selected_v_3",
+    "selected_line_3"
+   ]
+  }
+ },
+ "landed_record": "results/rtl/hbm_idx_static/selector_s3/ot_hidx_s3_flat_lp_record.json",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: rst_n -> u_rst_l0 -> u_rst_l1 (2 plain kept stages on ck_ctl, fenced in the ctl box) -> 5 kept equal-age root copies u_lpr_root_* -> regional pads; the port net has ONE sink; release +2 edges priced in the landed record (RB 4)"
+ },
+ "outline": {
+  "w": 691.2,
+  "h": 648.0,
+  "exact": true
+ },
+ "macros": [],
+ "children": [
+  {
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
+   "count": 1,
+   "inst": "u_q0",
+   "at": [
+    43.2,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
+   "count": 1,
+   "inst": "u_q1",
+   "at": [
+    388.8,
+    388.8
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
+   "count": 1,
+   "inst": "u_q2",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_sel_s3u_b/views/ot_hidx_s3_q",
+   "count": 1,
+   "inst": "u_q3",
+   "at": [
+    388.8,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/ref_tile/hidx_sel_s3d_a/views/ot_hidx_s3_ctl",
+   "count": 1,
+   "inst": "u_ctl",
+   "at": [
+    302.4,
+    302.4
+   ],
+   "at_exact": true
+  }
+ ],
+ "pins": {
+  "W": [
+   "in_line_0",
+   "in_line_1",
+   "in_line_2",
+   "in_line_3"
+  ],
+  "E": [
+   "selected_v_0",
+   "selected_line_0",
+   "selected_v_1",
+   "selected_line_1",
+   "selected_v_2",
+   "selected_line_2",
+   "selected_v_3",
+   "selected_line_3"
+  ],
+  "S": [
+   "ck_ctl",
+   "ck_q0",
+   "ck_q1",
+   "ck_q2",
+   "ck_q3",
+   "rst_n",
+   "op",
+   "pass",
+   "addr",
+   "k",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "in_line_0": [
+   391.2,
+   497.2
+  ],
+  "in_line_1": [
+   498.2,
+   604.2
+  ],
+  "in_line_2": [
+   44.0,
+   150.0
+  ],
+  "in_line_3": [
+   151.0,
+   257.0
+  ],
+  "selected_v_0": [
+   391.2,
+   391.4
+  ],
+  "selected_line_0": [
+   392.2,
+   497.2
+  ],
+  "selected_v_1": [
+   498.2,
+   498.4
+  ],
+  "selected_line_1": [
+   499.2,
+   604.2
+  ],
+  "selected_v_2": [
+   44.0,
+   44.2
+  ],
+  "selected_line_2": [
+   45.0,
+   150.0
+  ],
+  "selected_v_3": [
+   151.0,
+   151.2
+  ],
+  "selected_line_3": [
+   152.0,
+   257.0
+  ],
+  "ck_ctl": [
+   299.0,
+   299.2
+  ],
+  "ck_q0": [
+   280.0,
+   280.2
+  ],
+  "ck_q1": [
+   318.0,
+   318.2
+  ],
+  "ck_q2": [
+   276.0,
+   276.2
+  ],
+  "ck_q3": [
+   322.0,
+   322.2
+  ],
+  "rst_n": [
+   301.0,
+   301.2
+  ],
+  "op": [
+   289.0,
+   290.0
+  ],
+  "pass": [
+   290.2,
+   290.8
+  ],
+  "addr": [
+   291.0,
+   293.0
+  ],
+  "k": [
+   293.2,
+   296.0
+  ],
+  "fault": [
+   303.0,
+   303.2
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "period_ps": 833.333333,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M6",
+   "v": "M7"
+  }
+ },
+ "structural_change": "STEWARD-HBM/IDX 10-21 c14: c13 + post-CTS child_centre_tap on u_q0..u_q3/u_ctl clock pins (c13a ck_q2 soft 527-531 vs child 371-408 TT, 159 ps pair). Prior: STEWARD-HBM/IDX c13a 10-21 (after c12/c12b CTS FAIL): 2-stage rst_n face landing in RTL (u_rst_l0/l1, release +2) + one compact soft-sink fence per region root on the port side of its child clock pin (TritonCTS pads registers up to pin + ETM insertion), reset chain in the ctl box, no pin anchor; c12 outline / children; boxes in the middle band and the centre column; children = CLOSED s3u_b d903bcf15 + s3d_a db0cdd31d views (exact).",
+ "slot_change_request": "Selector parent 691.2x648 (ports / pin faces as c12); reset release +2 edges (rst_n face landing), data latency unchanged; hard children exact s3u_b d903bcf15 + s3d_a db0cdd31d.",
+ "job": {
+  "owner": "Claude:STEWARD-HBM/IDX",
+  "branch": "claude/hbm-idx-sel-c14-1021",
+  "tag": "c14a",
+  "purpose": "STEWARD-HBM/IDX c13a 10-21 (after c12/c12b CTS FAIL): 2-stage rst_n face landing in RTL (u_rst_l0/l1, release +2) + one compact soft-sink fence per region root on the port side of its child clock pin (TritonCTS pads registers up to pin + ETM insertion), reset chain in the ctl box, no pin anchor; c12 outline / children; boxes in the middle band and the centre column; children = CLOSED s3u_b d903bcf15 + s3d_a db0cdd31d views (exact).",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "rtl/lib",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/index/sel_s3",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_s3_selector_vectors.py",
+   "tools/landed_parent",
+   "results/rtl/hbm_idx_static/selector_s3",
+   "physical/ref_tile/hidx_sel_s3p_c14a",
+   "physical/common_flow/child_centre_tap.tcl"
+  ],
+  "benches": [
+   {
+    "name": "selector_s3_lp_lockstep",
+    "cmd": "LP_ROOT=$PWD SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp_bench.sh {RUN}/lp",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "pass_regex": "BENCH_EXIT 0",
+    "pass_witness": "results/rtl/hbm_idx_static/selector_s3/lp_c13/bench.log"
+   },
+   {
+    "name": "selector_s3_lp_causal_mutant",
+    "cmd": "LP_ROOT=$PWD SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator MUTS=1 bash rtl/hbm_accel/index/sel_s3/lp/ot_hidx_s3_flat_lp_bench.sh {RUN}/lp_mut1 && cat {RUN}/lp_mut1/mut1.log && exit 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "fail_regex": "LP_LOCKSTEP FAIL",
+    "fail_witness": "results/rtl/hbm_idx_static/selector_s3/lp_c13/mut1.log"
+   }
+  ]
+ },
+ "inter": [],
+ "recipe": 4,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "wires-only landed parent: every port lands in a hard child's pin flop (quadrant in_line_<q> -> in_p1, ctl op/pass/addr/k -> cw_r/k_r) or leaves from a child output register; the lp rings / reads are the only parent flops"
+ },
+ "pin_hook_before_flops": [
+  "tools/landed_parent/specs/hidx_sel_s3p_c13a_fences.tcl"
+ ],
+ "pre_dpl_extra": [
+  "tools/landed_parent/lp_fence_release.tcl"
+ ],
+ "orfs_vars": {
+  "OT_OFLOP_PORT_RE": "^ot_no_pin_flop$"
+ },
+ "safe_design_checklist": {
+  "1_pins": "PASS: ports / faces unchanged from c12 (die slot pin plan); every input lands in a child pin register (in_line -> q in_p1, op/pass/addr/k -> ctl) or the rst_n face landing; every output leaves a child register; region crossings are the 20 lp landings",
+  "2_reach": "PASS: single-cycle hops bounded by the fence plan (read o -> child ctl pins, child ret / qfault -> ring, root copy -> regional pad, S pin -> u_rst_l0) <= ~375 um; ring -> read is the declared E = 2 multicycle landing",
+  "3_fanout": "PASS: c12 native census max 32 kept (chunk12 landings unchanged); +2 reset stages drive 1 load each",
+  "4_depth": "PASS: datapath unchanged (c12 reg->reg +54 ps, in->macro / reg->macro repaired in route); no new logic",
+  "5_storage": "PASS: no parent storage beyond the D = 4 landing slots; SRAMs only inside the closed q children",
+  "6_floorplan": "PASS: children on the 43.2 lattice, >= 43.2-um channels, fences 6.48 um off every child edge, released before DPL",
+  "7_clock": "FIXED (c12 FAIL ck_ctl 89.8 / ck_q2 199.0 TT): one compact soft box per region root on the PORT side of its child clock pin, so the register tree is earlier than pin + ETM insertion and TritonCTS pads it to match (it never delays the macro branch); the 5 face-anchored reset copies (ck_ctl late outliers) now sit in the ctl box",
+  "8_reset": "FIXED (c12 FAIL reset_landing 5 sinks): rst_n -> u_rst_l0 -> u_rst_l1 (2 plain kept stages, ck_ctl) -> 5 kept equal-age root copies -> regional pads; reset only on control / valid; release +2 edges uniform (record RB 4)"
+ },
+ "child_centre_tap": {
+  "children": [
+   "u_q0",
+   "u_q1",
+   "u_q2",
+   "u_q3",
+   "u_ctl"
+  ],
+  "why": "c13a ep9 4_1_cts: ck_q2 soft registers 527-531 ps TT vs u_q2 boundary flops 371-408 (pin ~100 ps; q2 landing box on its N data face, clock pin on the S face): TritonCTS only pads registers up to pin + child insertion, never delays the macro -> pair 159.3 TT / 134.1 FF. Post-CTS dont-touch buffer tap centres each child range on its soft range (no tap where centred)."
+ }
+}

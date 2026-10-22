@@ -1966,6 +1966,12 @@ def gen_hooks(s: dict, kd: str) -> dict:
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
         # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
         pre_cts.extend(clock_entry_constraints.landed_raw_tcl(s, ROOT))
+        # HBM-ELEM13/SU-PSLICE14 10-21 (opt-in "child_centre_tap"): centre a hard child's boundary range on its root's soft
+        # registers after CTS (wraps the CTS above; the boundary wrapper below re-applies clock_entry.sdc after it)
+        try:
+            pre_cts.extend(clock_entry_constraints.child_centre_tcl(s, ROOT))
+        except (ValueError, OSError) as error:
+            raise SpecError(str(error)) from error
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
@@ -2398,6 +2404,8 @@ def referenced_paths(s: dict, kd: str) -> list:
                 out += ["physical/common_flow/landed_raw_tap.tcl"] + sorted({v["record"] for v in raw.values()})
                 out += sorted({f"{ch['view']}/port_latency.json" for ch in s["children"]})
                 out += sorted({v["verdict"] for v in raw.values()})
+            if s.get("child_centre_tap") is not None:
+                out += ["physical/common_flow/child_centre_tap.tcl", "physical/common_flow/native_pg_binding.tcl"]
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
