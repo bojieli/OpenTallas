@@ -33,7 +33,8 @@ import full_die_v16 as F  # noqa: E402
 ROW = re.compile(r'^(rf\d+)_')
 SRC = 'rtl/hbm_accel/die_glue/hbfd_rly_masters.sv'
 DEPS = ['rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
-WIDTHS = {'WE': (48, 136, 304, 624, 1136), 'EW': (48, 136, 304, 624, 1136), 'NS': (48, 136, 624), 'SN': (48, 136, 624)}
+SRC_TW = 'rtl/hbm_accel/die_glue/hbfd_exact_tail_classes.sv'
+DEPS_TW = ['rtl/hbm_accel/die_glue/hbfd_rly_masters.sv', 'rtl/hbm_accel/die_glue/ot_hbm_rly.sv', 'rtl/lib/ot_rst_relay.sv']
 REGION = 'r18h_stations'
 
 
@@ -65,10 +66,11 @@ class Layer:
     def add_inst(self, name, master, note, domain, source=SRC, deps=DEPS, params=None):
         assert name not in self.I, name
         params = params or {}
-        if (master, source) not in self.ports:
-            self.ports[(master, source)] = self.rtl.ports(master, source, params)
+        pk = (master, source, json.dumps(params, sort_keys=True))
+        if pk not in self.ports:
+            self.ports[pk] = self.rtl.ports(master, source, params)
         self.I[name] = dict(master=master, source=source, params=params, slot=None, owner='HBMc/CHAIN r18h', note=note,
-                            rtl_deps=list(deps), region=REGION, ports=json.loads(json.dumps(self.ports[(master, source)])))
+                            rtl_deps=list(deps), region=REGION, ports=json.loads(json.dumps(self.ports[pk])))
         self.c['masters'][master] = self.c['masters'].get(master, 0) + 1
         for kind, p in (('clock', 'ck'), ('reset', 'rs')):
             self.c['clock_resets'].append(dict(instance=name, port=p, bits=1, domain=domain, kind=kind,
@@ -94,10 +96,15 @@ class Layer:
         """sinks: [(src_bit (i,p,b), dst_bit (i,p,b))]; k stations (the first pads_at_driver of them at path[0], the rest
         evenly on path[0] -> path[1]).  Returns new edges (old ones are removed by the caller)."""
         n = len(sinks); fl = flow(*path)
-        W = next((w for w in WIDTHS[fl] if w >= n), WIDTHS[fl][-1])
-        ntile = math.ceil(n / W)
-        master = f'hbfd_rly_{W}_{fl}'
-        tw, th = self.size(master)
+        # exact-width tiles (no spare bits -> no new unread bits): full hbfd_rly_624_<flow> tiles, the remainder on the
+        # run's exact tail class hbfd_rly_{48|624}_<flow>_tw #(TW) (hbfd_exact_tail_classes.sv, as the relay layer's tails)
+        tiles = []; lo = 0
+        while n - lo > 624:
+            tiles.append((f'hbfd_rly_624_{fl}', SRC, DEPS, {}, lo, lo + 624)); lo += 624
+        r = n - lo
+        base = 48 if r <= 48 else 624
+        tiles.append((f'hbfd_rly_{base}_{fl}_tw', SRC_TW, DEPS_TW, {'TW': r}, lo, n))
+        ntile = len(tiles)
         cur = [s for s, _ in sinks]      # current driver of each bus bit
         E = []
         moving = k - pads_at_driver
@@ -108,15 +115,14 @@ class Layer:
                 f = (j - pads_at_driver + 1) / (moving + 1)
                 cx = path[0][0] + (path[1][0] - path[0][0]) * f; cy = path[0][1] + (path[1][1] - path[0][1]) * f
             nxt = []
-            for t in range(ntile):
+            for t, (master, src_, deps_, params_, lo, hi) in enumerate(tiles):
                 name = f'rh{gid:04d}_s{j:02d}_t{t}'
-                lo, hi = t * W, min(n, (t + 1) * W)
+                tw, th = self.size(re.sub(r'_tw$', '', master))
                 x0 = max(0.0, cx - tw / 2 + (t - (ntile - 1) / 2) * tw); y0 = max(0.0, cy - th / 2)
                 self.add_inst(name, master, f'r18h station {j + 1}/{k} ({label}); tile {t}/{ntile}; home ({x0:.3f}, {y0:.3f}) um',
-                              clock)
-                # spare input bits carry real bus bits (strict bind: no tie-offs), never reach a load
-                src = [cur[lo + (b % (hi - lo))] for b in range(W)]
-                E += self.edges_from_bits(src, name, 'i', 0, clock, f'r18h station {label}')
+                              clock, source=src_, deps=deps_, params=dict(params_))
+                assert self.I[name]['ports']['i']['bits'] == hi - lo, (name, master, params_)
+                E += self.edges_from_bits(cur[lo:hi], name, 'i', 0, clock, f'r18h station {label}')
                 nxt += [(name, 'o', b) for b in range(hi - lo)]
             cur = nxt
         # last stage -> loads
