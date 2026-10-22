@@ -2201,10 +2201,12 @@ def parent_link_graph(spec: dict | None) -> dict | None:
             i = balanced(st, k)
             if i is None:
                 continue
-        m = re.match(r"\s*([A-Za-z_]\w*)\s*(?=\()", st[i:])
+        # QE3-CTLM2 10-21: a native (flat) parent names its hard children with ESCAPED identifiers
+        # (\u_gi.g_wtn.u_wtn ); the name is the text after the backslash up to the whitespace
+        m = re.match(r"\s*(\\\S+|[A-Za-z_]\w*)\s*(?=\()", st[i:])
         if not m:
             continue
-        inst, k = m[1], i + m.end()
+        inst, k = m[1].lstrip("\\"), i + m.end()
         e = balanced(st, k)
         if e is None or st[e:].strip():
             continue
