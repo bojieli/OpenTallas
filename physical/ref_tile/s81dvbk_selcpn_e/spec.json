@@ -289,10 +289,10 @@
  },
  "structural_change": "Source/model only. RTL, public ports, fixed booking, clock periods/uncertainties and reset profile unchanged from cb73. Grow to388.8square; redistribute whole named bundles on four faces; explicitly balance existing CTS levels. Actual reach/body/clock/GRT still unqualified.",
  "job": {
-  "owner": "Claude:S81-ELEM/ELEM-BKG",
-  "branch": "codex/s81-topk-main-refusal-1625",
+  "owner": "Claude:S81-ELEM2-BKSEL",
+  "branch": "claude/s81-bksel-sq-1021",
   "tag": "cpne",
-  "purpose": "SOURCE/MODEL only: square388 four-face capacity and balanced CTS successor of actual cb73 MAIN clock/GRT/pin-capacity refusal. No gate admitted.",
+  "purpose": "MAIN square388 four-face successor of cb73 MAIN clock/GRT/pin-capacity refusal (TritonCTS -balance_levels); gate MAIN with FB s81dvbk_selcpn_f (spine clock) in parallel.",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
    "rtl/dsrom_sys/s81_dv/unit/bk/plana",
