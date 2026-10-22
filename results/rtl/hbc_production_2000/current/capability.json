@@ -54,8 +54,20 @@
     "ALLOW_RELOAD": 1,
     "RETURN_LOCAL": 1
   },
-  "full_assembly_elaborated": false,
+  "full_assembly_elaborated": true,
   "die_instance_bound": false,
   "production_clock_book_bound": false,
-  "static_ks6_current_MTP_qualified": false
+  "static_ks6_current_MTP_qualified": false,
+  "assembly_elaboration": {
+    "unit": "oth-ubuntu-572258-1792641023",
+    "host": "ot-gold2",
+    "source": "f1f9919b7 sameRTL929c756c3",
+    "profile": "explicitTEST_not_production",
+    "yosys": "0.68",
+    "ports": 55,
+    "direct_cells": 32,
+    "check_problems": 0,
+    "derived_profile_path": "results/rtl/hbc_production_2000/elaboration/derived_hbc_profile.json",
+    "derived_profile_sha256": "cc6287df68de5536ac12c261480c7a9bab1a3564e4246264b4f318cc78d68e71"
+  }
 }
