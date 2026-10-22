@@ -579,6 +579,48 @@ def landed_raw_tcl(spec, root):
     return [f'set ::ot_lrt_targets [dict create {rows}]', 'source /src/physical/common_flow/landed_raw_tap.tcl']
 
 
+def child_centre_tap(spec, root):
+    """HBM-ELEM13/SU-PSLICE14 10-21 (opt-in spec "child_centre_tap": {"children": [inst, ..], "why": ..}): the LANDED
+    multiple_cts_roots cluster's hard children whose clock pin gets the post-CTS centring tap
+    (physical/common_flow/child_centre_tap.tcl).  Returns {inst: {tt: [min, max], ff: .., ss: ..}} from each child's
+    views/<child>/insertion.json boundary; {} without the key (kits byte-identical).  Fails closed on a non-landed spec,
+    an unknown / duplicate instance or a view without a boundary range."""
+    cfg = spec.get("child_centre_tap")
+    if cfg is None:
+        return {}
+    if not landed_cluster(spec):
+        raise ValueError("child_centre_tap requires a landed multiple_cts_roots cluster")
+    if not isinstance(cfg, dict) or not isinstance(cfg.get("why"), str) or not cfg["why"].strip():
+        raise ValueError('child_centre_tap: {"children": [inst, ..], "why": "..."}')
+    kids = cfg.get("children")
+    if not isinstance(kids, list) or not kids or len(set(kids)) != len(kids) or not all(isinstance(k, str) for k in kids):
+        raise ValueError("child_centre_tap.children: a nonempty list of distinct hard-child instances")
+    views = {ch.get("inst"): ch.get("view") for ch in spec.get("children") or [] if isinstance(ch, dict)}
+    out = {}
+    for k in kids:
+        if not views.get(k):
+            raise ValueError(f"child_centre_tap: {k} is not a hard child (children[].inst) of this cluster")
+        ins = json.loads((Path(root) / views[k] / "insertion.json").read_text())
+        row = {}
+        for c in ("tt", "ff", "ss"):
+            b = (ins.get(c) or {}).get("boundary") or {}
+            if b.get("min") is None or b.get("max") is None:
+                raise ValueError(f"child_centre_tap: {views[k]}/insertion.json has no {c} boundary min/max")
+            row[c] = [float(b["min"]), float(b["max"])]
+        out[k] = row
+    return out
+
+
+def child_centre_tcl(spec, root):
+    """pre_cts.tcl lines that arm child_centre_tap.tcl ([] without the spec key: kits byte-identical)"""
+    rows = child_centre_tap(spec, root)
+    if not rows:
+        return []
+    body = " ".join(f"{{{k}}} {{" + " ".join(f"{c} {{{v[c][0]:g} {v[c][1]:g}}}" for c in ("tt", "ff", "ss")) + "}"
+                    for k, v in sorted(rows.items()))
+    return [f"set ::ot_cct_children [dict create {body}]", "source /src/physical/common_flow/child_centre_tap.tcl"]
+
+
 def landed_sdc(spec, root):
     """Landing multicycles (LANDING-CONTRACT L5, lp.py Pm.sdc): ring u_lpl_<n>_w -> read u_lpl_<n>_r -setup E -hold D-1.
     Cell-based, so they are independent of the root clock names; '' for every non-landed spec (kits byte-identical).
