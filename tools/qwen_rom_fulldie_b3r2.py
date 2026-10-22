@@ -3996,6 +3996,16 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             _fs = set(_flt)
             work = [idx for idx in work if idx not in _fs] + _flt
             print(f'FAULT_EMIT relay order: {len(_flt)} fault-tree edges lifted and re-searched after the data buses', flush=True)
+        # SQC-QSTWI 10-22 (r28/r29 receipts: dvw_st_wi BFS reached only y >= 17483, never past the 250.6-um slot beside
+        # io_serdes (SerDes0, x <= 1563.7, y 15130..17450) that every W5 west-face wide bus shares; its 185.8-um frames
+        # need a whole slot row, the narrower buses (<= 95 um) pair up in a row): OT_RELAY_FIRST=bid[,bid] searches the
+        # named lifted chains FIRST, so the widest bus books its rows before the narrow ones fill every row.  Same rule as
+        # QW-G5STA's widest-first landing pads.  Order only: same sites, predicates, reach and gates.
+        _first = [b_ for b_ in _os.environ.get('OT_RELAY_FIRST', '').split(',') if b_]
+        if _first:
+            _fi = [idx for b_ in _first for idx in work if plans[idx]['bid'] == b_]
+            work = _fi + [idx for idx in work if idx not in _fi]
+            print(f'RELAY_FIRST {[plans[i]["bid"] for i in _fi]} searched first (of {_first})', flush=True)
     ripped = set()
     rounds = 0
     RIP_ROUNDS = int(_os.environ.get('OT_RELAY_RIP_ROUNDS', '40'))   # QW-G5F2: rip-up budget (default the historical 40)
