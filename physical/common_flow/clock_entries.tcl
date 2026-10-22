@@ -16,15 +16,40 @@ proc ot_ce_raw_memory_sink {inst pin source} {
   set master [[$inst getMaster] getName]
   if {[info exists ::ot_ce_counts] && [dict exists $::ot_ce_counts $master]} {return 0}
   set name [string map {\\ {}} [$inst getName]]
-  if {![info exists ::ot_ce_raw_memory_bindings] || ![dict exists $::ot_ce_raw_memory_bindings $name]} {return 0}
+  if {![info exists ::ot_ce_raw_memory_bindings]} {return 0}
+  # KV-HOST6 10-20: a pin-register wrapper (ref_tile pin_regs) prefixes the core as u_ot_pr_core; the spec binding names
+  # the core instance exactly as place.tcl's ot_ref_wrapped_match does
+  if {![dict exists $::ot_ce_raw_memory_bindings $name]} {
+    if {![regsub {^u_ot_pr_core[./]} $name {} core] || ![dict exists $::ot_ce_raw_memory_bindings $core]} {return 0}
+    set name $core
+  }
   set b [dict get $::ot_ce_raw_memory_bindings $name]
   set leaf [lindex [split [get_full_name $pin] /] end]
-  if {$master ne [dict get $b master] || $leaf ne [dict get $b clock_pin] || $source ne [dict get $b root]} {
-    error "OT_HYBRID: raw memory $name actual master/pin/source differs from its exact source binding"
+  if {[dict exists $b clock_pins]} {
+    # dual-clock raw memory: each actual Liberty clock pin is a sink of exactly its own bound region root
+    set cps [dict get $b clock_pins]
+    if {$master ne [dict get $b master] || ![dict exists $cps $leaf] || $source ne [dict get $cps $leaf]} {
+      error "OT_HYBRID: raw memory $name actual master/pin/source differs from its exact source binding"
+    }
+    set key "$name/$leaf"
+  } else {
+    if {$master ne [dict get $b master] || $leaf ne [dict get $b clock_pin] || $source ne [dict get $b root]} {
+      error "OT_HYBRID: raw memory $name actual master/pin/source differs from its exact source binding"
+    }
+    set key $name
   }
-  if {[dict exists $::ot_ce_raw_memory_seen $name]} {error "OT_HYBRID: duplicate raw memory clock sink $name"}
-  dict set ::ot_ce_raw_memory_seen $name 1
+  if {[dict exists $::ot_ce_raw_memory_seen $key]} {error "OT_HYBRID: duplicate raw memory clock sink $key"}
+  dict set ::ot_ce_raw_memory_seen $key 1
   return 1
+}
+proc ot_ce_raw_memory_expected {} {
+  set keys {}
+  dict for {name b} $::ot_ce_raw_memory_bindings {
+    if {[dict exists $b clock_pins]} {
+      foreach leaf [dict keys [dict get $b clock_pins]] {lappend keys "$name/$leaf"}
+    } else {lappend keys $name}
+  }
+  return [lsort $keys]
 }
 # TW-HBM-COLLP 10-19: a landed hard child's clock pin may carry only timing checks (a capture domain with no clk->Q arc
 # in the ETM, e.g. the COLL writer's clk_rgx_data* landing captures).  OpenSTA does not list it in all_registers
@@ -39,6 +64,67 @@ proc ot_ce_check_only_clock_pin {pin} {
   }
   return 0
 }
+# Exact optional clock-output pairs. Walk the actual loaded netlist, allowing only
+# single-input Liberty buffers/inverters and the one source-validated hard clock
+# feedthrough. An ordinary output, gate, extra driver or wrong source fails.
+proc ot_ce_check_forwarded_output {port source} {
+  set name [get_full_name $port]
+  if {![info exists ::ot_ce_fwd_outputs] || ![dict exists $::ot_ce_fwd_outputs $name]} {return 0}
+  set row [dict get $::ot_ce_fwd_outputs $name]
+  set block [ord::get_db_block]
+  set bt [$block findBTerm $name]
+  if {$bt eq "NULL" || [$bt getIoType] ne "OUTPUT" || [dict get $row input] ne $source} {
+    error "OT_FORWARDED_OUTPUT: wrong direction or source $name"
+  }
+  # OpenSTA get_nets -of_objects accepts pins, not Port objects. Resolve the
+  # already validated actual OpenDB BTerm net, then use the exact STA object
+  # (no name/glob alias, including bus-bit outputs).
+  set dn [$bt getNet]
+  if {$dn eq "NULL"} {error "OT_FORWARDED_OUTPUT: missing output net $name"}
+  set net [list [sta::db_net_to_sta $dn]]; set through 0; set inversions 0
+  for {set step 0} {$step < 256 && [llength $net] == 1} {incr step} {
+    set inputs {}
+    foreach p [get_ports -quiet -of_objects $net] {
+      set b [$block findBTerm [get_full_name $p]]
+      if {$b ne "NULL" && [$b getIoType] eq "INPUT"} {lappend inputs $p}
+    }
+    set drivers [get_pins -quiet -of_objects $net -filter "direction == output"]
+    if {[llength $inputs]} {
+      if {[llength $inputs] != 1 || [get_full_name $inputs] ne $source || [llength $drivers]
+          || $through != 1 || ($inversions % 2) != 0} {
+        error "OT_FORWARDED_OUTPUT: ambiguous source or phase $name"
+      }
+      dict set ::ot_ce_fwd_outputs_seen $name 1
+      puts "OT_FORWARDED_OUTPUT preserved $source -> $name through=[dict get $row inst]"
+      return 1
+    }
+    if {[llength $drivers] != 1} {error "OT_FORWARDED_OUTPUT: missing or multiple drivers $name"}
+    set cell [get_cells -quiet -of_objects $drivers]
+    if {[llength $cell] != 1} {error "OT_FORWARDED_OUTPUT: ambiguous cell $name"}
+    set cn [get_full_name $cell]; set master [get_property $cell ref_name]
+    if {[dict exists $::ot_ce_counts $master]} {
+      if {$through != 0 || $cn ne [dict get $row inst] || $master ne [dict get $row master]
+          || [get_property $drivers lib_pin_name] ne [dict get $row output_pin]} {
+        error "OT_FORWARDED_OUTPUT: undeclared hard clock feedthrough $name"
+      }
+      set pin [get_pins -quiet -of_objects $cell -filter "lib_pin_name == [dict get $row input_pin]"]
+      if {[llength $pin] != 1 || ![ot_ce_check_only_clock_pin $pin]} {
+        error "OT_FORWARDED_OUTPUT: feedthrough source is not actual Liberty clock $name"
+      }
+      incr through
+    } else {
+      set lc [get_lib_cells -quiet -of_objects $cell]
+      set pin [get_pins -quiet -of_objects $cell -filter "direction == input"]
+      if {[llength $lc] != 1 || [llength $pin] != 1
+          || (![get_property $lc is_buffer] && ![get_property $lc is_inverter])} {
+        error "OT_FORWARDED_OUTPUT: gating or ordinary data logic $name"
+      }
+      if {[get_property $lc is_inverter]} {incr inversions}
+    }
+    set net [get_nets -quiet -of_objects $pin]
+  }
+  error "OT_FORWARDED_OUTPUT: missing unique source path $name"
+}
 if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""} {
   rename clock_tree_synthesis ot_ce_cts_orig
   proc clock_tree_synthesis {args} {
@@ -47,6 +133,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
     set dbu [expr {double([$block getDbUnitsPerMicron])}]
     set n 0; set bad 0; set far 0; set cts_nets {}; set cts_seen {}; set entry_nets {}
     set ::ot_ce_raw_memory_seen [dict create]
+    set ::ot_ce_fwd_outputs_seen [dict create]
     set ot_ce_unused_hits 0
     set roots [expr {[info exists ::ot_ce_cts_roots] ? $::ot_ce_cts_roots : {}}]
     foreach clk [all_clocks] {
@@ -99,6 +186,33 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
           lappend cts_nets [$net getName]
           continue
         }
+        # A declared forwarded input remains physically source-synchronous. It is
+        # timed as a real clock for its exact soft sinks, but never balanced with
+        # the regional CTS roots. The clock-entry SDC already proves all exact
+        # soft cell memberships and structural source ancestry; check every
+        # endpoint here as well before CTS mutates any regional tree.
+        if {[info exists ::ot_ce_fwd_soft] && [dict exists $::ot_ce_fwd_soft $pname]} {
+          set info [dict get $::ot_ce_fwd_soft $pname]
+          if {[get_full_name $clk] ne [dict get $info clock]} {error "OT_FORWARDED_SOFT: wrong clock alias $pname"}
+          set actual {}
+          foreach p [all_registers -clock [get_full_name $clk] -clock_pins] {dict set actual [get_full_name $p] 1}
+          foreach pin [get_fanout -flat -endpoints_only -from $src] {
+            set output [get_ports -quiet [get_full_name $pin]]
+            if {[llength $output] == 1 && [ot_ce_check_forwarded_output $output $pname]} continue
+            set cell [get_cells -quiet -of_objects $pin]
+            if {[llength $cell] != 1} {error "OT_FORWARDED_SOFT: non-cell endpoint $pname"}
+            set name [get_full_name $cell]
+            set key "[get_property $cell ref_name]/[get_property $pin lib_pin_name]"
+            if {[dict exists $::ot_ce_counts [get_property $cell ref_name]]
+                && ([dict exists $actual [get_full_name $pin]] ||
+                    ([info exists ::ot_ce_refs] && [dict exists $::ot_ce_refs $key]))} continue
+            if {$name ni [dict get $info cells] || ![dict exists $actual [get_full_name $pin]]} {
+              error "OT_FORWARDED_SOFT: undeclared or non-clock sink $pname -> [get_full_name $pin]"
+            }
+          }
+          puts "OT_FORWARDED_SOFT preserved $pname (separate from regional CTS)"
+          continue
+        }
         set sinks {}
         foreach it [$net getITerms] { if {[$it isInputSignal]} { lappend sinks $it } }
         if {[llength $sinks] != 1} {
@@ -122,8 +236,12 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
       }
     }
     if {[info exists ::ot_ce_raw_memory_bindings]
-        && [lsort [dict keys $::ot_ce_raw_memory_bindings]] ne [lsort [dict keys $::ot_ce_raw_memory_seen]]} {
+        && [ot_ce_raw_memory_expected] ne [lsort [dict keys $::ot_ce_raw_memory_seen]]} {
       error "OT_HYBRID: declared raw-memory clock sinks were not all reached from their granted source roots"
+    }
+    if {[info exists ::ot_ce_fwd_outputs]
+        && [lsort [dict keys $::ot_ce_fwd_outputs]] ne [lsort [dict keys $::ot_ce_fwd_outputs_seen]]} {
+      error "OT_FORWARDED_OUTPUT: declared output coverage mismatch"
     }
     if {$ot_ce_unused_hits} { puts "OT_LANDED UNUSED_PINS $ot_ce_unused_hits unloaded hard-child input pins on region roots (routed-netlist proven; not sinks)" }
     if {$bad} { error "OT_ENTRIES: $bad clock entries are not port -> one hard-child clock pin" }
