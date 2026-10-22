@@ -731,6 +731,17 @@ def job_rank_tree_rd(fx, rank=0, k_dies=None, layer='L20', t_q=0, tag0=0x30, boo
                                          if 'tx' in plans[d] else None)) for d in sorted(plans)])
 
 
+def plana_booking():
+    """STW-S81-TOPK-VMUX (10-21): book the rank tree on the vmtx' die master (dsdv_bk_sel_vmtx_n32: vmux_n32 + the
+    landed PlanA n32 parent + vdly 28 + tx_n32).  Fixed, compiler-booked edges against the flat dsdv_bk_sel
+    (results/arch/s81_topk_plana_parent_1021/timing_ledger.json): rung_forward +28 (vi_n -> vo_s pass: PIN_TO_PIN 2 -> 30;
+    the tx-job CTL reaches the tx 28 edges later, so TX_OFF 5 -> 33), external tail 640 -> 796 (last ingress at the vi
+    pin -> first drain window slot).  The boot first-input delta (+64: first input >= 164) is met by every tree t_q >= 164.
+    Mutates the module constants (one booking a process)."""
+    global PIN_TO_PIN, TAIL_BUDGET, TX_OFF
+    PIN_TO_PIN, TAIL_BUDGET, TX_OFF = 30, 796, 33
+
+
 def write_tree_bench(fx, out, k_dies, t_q=200, leg=LEG, mutant=None, layer='L20'):
     """stim.txt '<edge> <die> s|n <hex>' (s = vmux i_s at edge - VMUX_LAT, n = bk_sel vi_n), exp.json, args.txt
     (plusargs).  Mutants (stimulus only; the expectation stays golden): corrupt = the root's lowest selected own key
@@ -1051,6 +1062,7 @@ def main(argv=None):
     t.add_argument('--t0', type=int, default=200)
     t.add_argument('--leg', type=int, default=LEG)
     t.add_argument('--mutant', default=None, choices=(None, 'corrupt'))
+    t.add_argument('--plana', action='store_true', help='book the vmtx_n32 (PlanA n32 parent) latencies')
     tc = sub.add_parser('tree-rd-check')
     tc.add_argument('--run', required=True)
     tc.add_argument('--dir', required=True)
@@ -1059,6 +1071,8 @@ def main(argv=None):
     c.add_argument('--dir', required=True)
     a = ap.parse_args(argv)
     if a.cmd == 'tree-rd':
+        if a.plana:
+            plana_booking()
         print(json.dumps(write_tree_bench(a.fixtures, a.out, a.k_dies, t_q=a.t0, leg=a.leg, mutant=a.mutant)))
         return
     if a.cmd == 'tree-rd-check':
