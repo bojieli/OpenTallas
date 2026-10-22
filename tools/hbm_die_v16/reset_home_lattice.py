@@ -54,6 +54,7 @@ def need(manifest, views, relay_views, pitch, site=32.4, slide=108.0, margin=64.
     d_blk = distance_transform_cdt(blk_blk, metric='taxicab') * GRID
     W, H = manifest['die_um']
     full = lattice(W, H, pitch, site, slide, margin)
+    nohome = []
     sites, st = [], dict(lattice=len(full), no_home_even_without_relays=0, home_in_reach=0)
     for s_ in full:
         cx, cy = s_['x'] + site / 2, s_['y'] + site / 2
@@ -62,6 +63,7 @@ def need(manifest, views, relay_views, pitch, site=32.4, slide=108.0, margin=64.
             st['home_in_reach'] += 1
         elif d_blk[j, i] > R:
             st['no_home_even_without_relays'] += 1
+            nohome.append([round(cx, 2), round(cy, 2)])
         else:
             s_ = dict(s_, why=f'need-only reset home: no free home within {R:.1f} um (lane relays filled it; '
                               f'{d_all[j, i]:.0f} um with relays, {d_blk[j, i]:.0f} um without)')
@@ -69,6 +71,7 @@ def need(manifest, views, relay_views, pitch, site=32.4, slide=108.0, margin=64.
     st.update(need=len(sites), radius_um=round(R, 2), budget_um=round(g.budget, 2), overflown_relays=g.overflown_count,
               area_mm2=round(len(sites) * site * site / 1e6, 4), die_mm2=round(W * H / 1e6, 2),
               full_area_mm2=round(len(full) * site * site / 1e6, 4))
+    st['no_home_points'] = nohome   # for the forest replay check: none may sit on a reset path the forest needs
     return sites, st
 
 
