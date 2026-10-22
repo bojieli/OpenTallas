@@ -3476,6 +3476,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     # M8/M9, only the relays need free area, so the fewest-relay chain with every hop <= pitch is found exactly
     import numpy as np
     from scipy.spatial import cKDTree
+    terminal_receipts = set()  # immutable named occupancy evidence; no search or acceptance change
     site_cache = {}
     grid0 = {}
     for it in m['insts']:              # sites ignore relays (ok() re-checks every site against the live grid)
@@ -3735,6 +3736,35 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                             hit, par, start = bfs(De, mono)
                             if hit is None:
                                 _e = tree.query_ball_point(P1, De, p=1)     # sites at the load end: all / free / reached
+                                if (_os.environ.get('OT_RELAY_SITE_FAILURE') and _e and
+                                        not any(ok(i_) for i_ in _e) and pl['bid'] not in terminal_receipts):
+                                    # Preserve the first all-occupied terminal neighbourhood, before later rip-ups
+                                    # change ownership. This extends the existing source-bound failure receipt only.
+                                    terminal_receipts.add(pl['bid'])
+                                    named = {tuple((it.x,it.y,it.x+it.w,it.y+it.h)):it.name for it in m['insts']}
+                                    for owner_, plan_ in plans.items():
+                                        for fk_, frame_ in enumerate(plan_['frames']):
+                                            named[(frame_[0],frame_[1],frame_[0]+frame_[2]+v.SHAVE,
+                                                   frame_[1]+frame_[3]+v.SHAVE)] = str(plan_.get('bid',owner_))+':'+str(fk_)
+                                    rows_ = []
+                                    for i_ in _e:
+                                        x_, y_ = map(float, arr[i_]); rect_ = (x_,y_,x_+W,y_+H)
+                                        overlaps_ = set()
+                                        for gx_ in range(int(rect_[0]//BK),int(rect_[2]//BK)+1):
+                                            for gy_ in range(int(rect_[1]//BK),int(rect_[3]//BK)+1):
+                                                for q_ in grid.get((gx_,gy_),()):
+                                                    if (q_[0]<rect_[2]-1e-6 and rect_[0]<q_[2]-1e-6 and
+                                                            q_[1]<rect_[3]-1e-6 and rect_[1]<q_[3]-1e-6):
+                                                        overlaps_.add(tuple(q_))
+                                        rows_.append(dict(site=rect_,corridor_allowed=near is None or bool(near[i_]),
+                                                          occupied_by=[dict(rect=q_,owner=named.get(q_,'reserved relay/pad'))
+                                                                       for q_ in sorted(overlaps_)]))
+                                    base_ = _os.environ['OT_RELAY_SITE_FAILURE']
+                                    dst_ = base_ + '.' + str(pl['bid']) + '.terminal.json'
+                                    with open(dst_,'w') as receipt_:
+                                        json.dump(dict(bid=pl['bid'],bits=bits,frame=[W,H],P0=P0,P1=P1,
+                                                       D=D,De=De,span=[a_,b_],terminal_sites=rows_,
+                                                       source_rule='same free()/corridor predicate; diagnostics only'),receipt_,indent=2)
                                 why = (f"span {a_}-{b_} of {nfr}, start {len(start)}, visited {len(par)}, sites {len(arr)}, "
                                        f"D {D:.0f}, De {De:.0f}, corridor {r_}, load {lim}, end sites {len(_e)} / free "
                                        f"{sum(1 for i_ in _e if ok(i_))} / reached {sum(1 for i_ in _e if i_ in par)}, "
