@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "qfd_tile_nk_romleaf_rc14b",
+  "top": "qfd_tile_nk_rp2_romleaf_rr",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 148004,
+  "max_dynamic_loads": 32,
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "7ef01896c138116413be8f1152127599c347feb4cf27668b9abc3afaaecff50f"
+  },
+  "liberty": [
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "9e3848d247f9bbc8d405ee55617af98797b6d5be9a1af02988ec5d59ca9dad99"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "cc9651e9235bcd29bba0737b7ba7a8afddde7462df3ff48d3870c22d05c86fb3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+      "sha256": "0c93d44fcc6a30182d71031997771ea3fc0d09235201e9252f71daf48a1c7a38"
+    },
+    {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+    },
+    {
+      "path": "/src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf_ff.lib",
+      "sha256": "4d10f24c07dfadb02c7a3080e579fcc6bd5b28a847993c2136e85d071e3ebc5e"
+    },
+    {
+      "path": "/src/physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf_tt.lib",
+      "sha256": "ab92943155147429fc620c7c722c730c79d435ee772a7fbeb76380d657eb272b"
+    },
+    {
+      "path": "/src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_ff.lib",
+      "sha256": "32fe1d955dd1507ca90bfa78292af59274e51558eec84578d3c5b8b4889f3ba7"
+    },
+    {
+      "path": "/src/physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1/ot_qwen_tile_lsl_fp1_tt.lib",
+      "sha256": "9eb668b625423dca8a9e1178db7751436f573467336bb4b7fa74796f99993dc9"
+    },
+    {
+      "path": "/src/physical/ref_tile/qw_a0_rc14_children/node_nb1/ot_qwen_tile_node/ot_qwen_tile_node_ff.lib",
+      "sha256": "94e612901fd42fb42bebf309452ee796cba5b85fbcab5aba1d263a41adfca0aa"
+    },
+    {
+      "path": "/src/physical/ref_tile/qw_a0_rc14_children/node_nb1/ot_qwen_tile_node/ot_qwen_tile_node_tt.lib",
+      "sha256": "55ce1333a9b0493cfe8d95a0fb55d5a879ec38e9a8f630bc4d47093dcd6100ee"
+    }
+  ]
+}
