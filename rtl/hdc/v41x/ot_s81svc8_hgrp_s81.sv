@@ -205,13 +205,20 @@ module ot_s81svc8_hgrp_s81 #(
                 .d({ld_mode, ld_grp, gid_m}), .q({p_mode, p_grp, p_gid}));
             assign p_w2v = w2v_r0[gh];          // per-head R0 copy (same edge)
             wire [7:0] p_head = p_gid * HG + gh;
-            assign write_normal = p_v && !p_mode && (p_grp == p_head);
+            // 935353a7a native BLOCKED (unregistered port ld_mode[0] 34 loads: the per-head R0 mode copies are pure port
+            // copies, merged and never cloned).  Capture the valid-qualified mode split at the same R0 edge (one AND level
+            // in front of the pin flop, reset like p_v): pvn = R0(ld_v && !ld_mode), pvm = R0(ld_v && ld_mode) ==
+            // p_v && !p_mode / p_v && p_mode after the edge (p_v resets to 0, so the products reset to 0) -> identical.
+            wire pvn, pvm;
+            ot_hdc_v41x_kreg #(.W(2), .R(1)) u_pvm (.clk(clk), .rst_n(rst_l), .d({ld_v && ld_mode, ld_v && !ld_mode}),
+                .q({pvm, pvn}));
+            assign write_normal = pvn && (p_grp == p_head);
             for (gk = 0; gk < TD/R; gk = gk + 1) begin : g_wdecode
-                assign write_low[gk]  = p_v && p_mode && (p_grp == gk);
+                assign write_low[gk]  = pvm && (p_grp == gk);
 `ifdef SVC8_POST_MUT
-                assign write_high[gk] = p_v && p_mode && p_w2v && (p_grp == gk);   // bench mutant: high slot lost
+                assign write_high[gk] = pvm && p_w2v && (p_grp == gk);   // bench mutant: high slot lost
 `else
-                assign write_high[gk] = p_v && p_mode && p_w2v && ((p_grp + 8'd1) == gk);
+                assign write_high[gk] = pvm && p_w2v && ((p_grp + 8'd1) == gk);
 `endif
             end
             // Explicit per-(slot group, bank) write enables, kept nets (abc must not flatten them back into the
