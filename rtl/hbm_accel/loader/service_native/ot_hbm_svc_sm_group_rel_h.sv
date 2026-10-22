@@ -44,7 +44,7 @@ module ot_hbm_svc_sm_group_rel_h #(parameter integer LBANKS=4,parameter integer 
  ot_rst_fanout #(.N(15)) u_hr(.clk(hbm_clk),.rst_n_in(hrs),.rst_n(hr));
  // st[0..4] issuer, st[5] feed control, st[6..7] programme leaf, st[8] cache
  wire reserve_v,reserve_ready,start_v,program_start_v,program_done,feed_fault,issuer_fault;
- wire[31:0]reserve_base;wire[14:0]reserve_row_base;wire[11:0]reserve_total;wire[LB-1:0]reserve_bank,start_bank;
+ wire[31:0]reserve_base;wire[14:0]reserve_row_base;wire[11:0]reserve_total;wire[LB-1:0]reserve_bank,start_bank;wire[3*LB-1:0]start_bank_k;
  wire[15:0]reserve_epoch,start_epoch,program_start_loops;wire[6:0]reserve_rows;wire[9:0]reserve_tag_base;
  wire[PAW-1:0]program_start_base;wire[PAW:0]program_start_limit;wire[45:0]program_start_ctx;wire[LBANKS-1:0]block_ready;wire[1:0]cache_ready,cache_owned;
  assign fault=feed_fault||issuer_fault;
@@ -55,7 +55,7 @@ module ot_hbm_svc_sm_group_rel_h #(parameter integer LBANKS=4,parameter integer 
   .reserve_v(reserve_v),.reserve_ready(reserve_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),
   .reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_rows(reserve_rows),
   .reserve_tag_base(reserve_tag_base),.block_ready(block_ready),.cache_ready(cache_ready),.cache_owned(cache_owned),
-  .start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),.program_start_v(program_start_v),
+  .start_v(start_v),.start_bank(start_bank),.start_bank_k(start_bank_k),.start_epoch(start_epoch),.program_start_v(program_start_v),
   .program_start_base(program_start_base),.program_start_limit(program_start_limit),.program_start_loops(program_start_loops),
   .program_start_ctx(program_start_ctx),.program_done(program_done));
  ot_hbm_svc_sm_feed_rel_h #(.LBANKS(LBANKS),.PAW(PAW)) feed(
@@ -64,7 +64,7 @@ module ot_hbm_svc_sm_group_rel_h #(parameter integer LBANKS=4,parameter integer 
   .reserve_v(reserve_v),.reserve_ready(reserve_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),
   .reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),.reserve_rows(reserve_rows),
   .reserve_tag_base(reserve_tag_base),.block_ready(block_ready),.cache_ready(cache_ready),.cache_owned(cache_owned),
-  .start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),
+  .start_v(start_v),.start_bank(start_bank),.start_bank_k(start_bank_k),.start_epoch(start_epoch),
   .program_cfg_we(program_cfg_we),.program_cfg_addr(program_cfg_addr),.program_cfg_data(program_cfg_data),
   .program_start_v(program_start_v),.program_start_base(program_start_base),.program_start_limit(program_start_limit),
   .program_start_loops(program_start_loops),.program_start_ctx(program_start_ctx),.program_active(program_active),.program_done(program_done),.fault(feed_fault),

@@ -27,8 +27,8 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  output wire [255:0] read_data
 );
  initial if(LBANKS!=4)$fatal(1,"landing_bank_h: LBANKS 4 (one 256x256 macro)");
- wire[1:0]sr;
- ot_rst_fanout #(.N(2)) u_sr(.clk(stream_clk),.rst_n_in(stream_rst_n),.rst_n(sr));
+ wire[2:0]sr;   // HBMc/TILES 10-22: sr[2] = the 32 ren_k copies (sr[0] had 40 reset pins)
+ ot_rst_fanout #(.N(3)) u_sr(.clk(stream_clk),.rst_n_in(stream_rst_n),.rst_n(sr));
  // HBM-COLLECT11 2026-10-21 (rel8e, COORDINATOR DECISION 2: no census waiver for the FIFO's 571-load read/write
  // select decode): the response FIFO is RSN BIT-SLICED instances of the reviewed ot_hbm_svc_async_fifo, byte-identical
  // module (hash pin intact), only WIDTH differs (RSW = 5 bits: mapped DEPTH16 census max 32 loads;
@@ -133,15 +133,21 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  end
  // HBMc/TILES 10-22: row / bank decodes read KEPT same-edge copies of the head bits (loaded with the head slice that
  // holds them), not constant-input AND "buffers" (transparent to the native census: hq row bits had 100 loads).
- (* keep="true",dont_touch="true" *) reg[5:0] row_k[0:7];
+ (* keep="true",dont_touch="true" *) reg[5:0] row_k[0:1];   // 0: row[5:3] decode, 1: row[2:0] decode
  (* keep="true",dont_touch="true" *) reg[LB-1:0] hbank_k[0:LBANKS-1];
  integer rk,rkb;
  always @(posedge stream_clk)begin
-  for(rk=0;rk<8;rk=rk+1)for(rkb=0;rkb<6;rkb=rkb+1)if(cap_en[(IW-11+3+rkb)/RSW])row_k[rk][rkb]<=packet[IW-11+3+rkb];
+  for(rk=0;rk<2;rk=rk+1)for(rkb=0;rkb<6;rkb=rkb+1)if(cap_en[(IW-11+3+rkb)/RSW])row_k[rk][rkb]<=packet[IW-11+3+rkb];
   for(rk=0;rk<LBANKS;rk=rk+1)for(rkb=0;rkb<LB;rkb=rkb+1)if(cap_en[(272+rkb)/RSW])hbank_k[rk][rkb]<=packet[272+rkb];
  end
+ // row_sel[rr] = (row == rr) as a real AND2 of the high / low 3-bit decodes (each decode term drives 8 ANDs)
+ wire [7:0] row_hi,row_lo;
+ for(genvar rd=0;rd<8;rd=rd+1)begin:g_row_dec
+  assign row_hi[rd]=(row_k[0][5:3]==rd);
+  assign row_lo[rd]=(row_k[1][2:0]==rd);
+ end
  for(genvar rr=0;rr<64;rr=rr+1)begin:g_row_select
-  assign row_sel[rr]=(row_k[rr/8]==rr);
+  ot_hbm_svc_local_and2 u_rs(.a(row_hi[rr/8]),.b(row_lo[rr%8]),.y(row_sel[rr]));
  end
  reg [15:0]b_epoch;reg [6:0]b_count,b_rcv;reg b_valid,b_seen;
  integer br,cr;
@@ -191,11 +197,12 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  localparam integer HM=0;
 `endif
  integer b,c;
+ always @(posedge stream_clk or negedge sr[2])
+  if(!sr[2])ren_k<=0;else for(b=0;b<LBANKS;b=b+1)for(c=0;c<8;c=c+1)ren_k[b*8+c]<=reserve_v&&reserve_bank==b;
  always @(posedge stream_clk or negedge sr[0])begin
-  if(!sr[0])begin valid_q<=0;sticky<=0;w_ce_q<=0;cmp_q<=0;ren_k<=0;h_v<=0;end
+  if(!sr[0])begin valid_q<=0;sticky<=0;w_ce_q<=0;cmp_q<=0;h_v<=0;end
   else begin
    h_v<=packet_take;w_ce_q<=landing_write;cmp_q<=complete_now;
-   for(b=0;b<LBANKS;b=b+1)for(c=0;c<8;c=c+1)ren_k[b*8+c]<=reserve_v&&reserve_bank==b;
    for(b=0;b<LBANKS;b=b+1)if(ren_k[b*8+2])valid_q[b]<=1;
    if(take_b&&!identity_ok)sticky<=1;
   end

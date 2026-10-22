@@ -14,8 +14,9 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  parameter integer OWNER_AW=5,parameter integer LB=1
 )(
  input wire [4:0] pc_id,
- input wire clk,input wire[2:0]rst_n,
+ input wire clk,input wire[4:0]rst_n,   // HBMc/TILES 10-22: [3]/[4] = generation copies (24 flops each)
  input wire blk_start,
+ input wire [3:0] blk_start_k,         // HBMc/TILES 10-22: KEPT same-edge copies of blk_start, one per table region leaf
  input wire block_active,input wire [29:0] block_base,input wire [19:0] block_pcs,
  input wire [14:0] block_row_base,input wire [11:0] block_total,input wire [LB-1:0] block_bank,
  input wire [15:0] block_epoch,input wire stop,k_ready,kr_v,input wire [16:0] kr_tag,
@@ -77,6 +78,9 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  assign k_addr={row,bhi,col,pc_q^col^hi5,blo};
  assign k_len={1'b0,length};assign k_tag=ticket;
  wire [OWNER_AW-1:0] alloc=ticket[OWNER_AW-1:0],ret=kr_tag[OWNER_AW-1:0];
+ // HBMc/TILES 10-22: KEPT copies of the allocation pointer (= ticket[4:0], loaded with ticket's next value): a for the
+ // valid_n decode, b for k_v's free test (ticket[3:0] had 47 loads)
+ (* keep="true",dont_touch="true" *) reg [OWNER_AW-1:0] alloc_a,alloc_b;
  // Local row-select branches drive <=16 bits each. The binary tag decoder
  // feeds four real gate inputs, instead of one selected-row net driving51 bits.
  wire [ENTRIES-1:0] rgen_sel,rep_sel,rord_sel,rctl_sel;
@@ -111,7 +115,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
    valid_r=valid_r|(valid_q[rr]&rctl_sel[rr]);
   end
  end
- assign k_v=block_active&&!blk_start&&selected&&t<words&&!valid_q[alloc]&&!sticky&&!stop;
+ assign k_v=block_active&&!blk_start&&selected&&t<words&&!valid_q[alloc_b]&&!sticky&&!stop;
  assign response_ok=kr_v&&valid_r&&generation_r==kr_tag[16:OWNER_AW]&&kr_beat<length_r&&!seen_r[kr_beat]&&!sticky&&!stop;
  wire [1:0] word_offset=permuted_r?(kr_beat[1:0]^row_low_r):2'd0;
  assign response_ordinal=ordinal_r+{7'd0,word_offset,2'b0};
@@ -127,12 +131,17 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  // KEPT registers loaded with ticket's next value (= ticket, same edge), the ordinal / length copies are per-region kept
  // leaves (ot_hbm_svc_owner_issue_leaf) computing the same function from t / lane / words; the beat decode is per group.
  wire [GW-1:0] generation_local[0:RG-1];
+ // KEPT cursor copies (loaded with cursor's next value) so each region leaf forms its own t (t had 43-73 loads)
+ wire [9:0] cursor_n;
+ (* keep="true",dont_touch="true" *) reg [9:0] cur_k[0:RG-1];
  wire [10:0] ordinal_local[0:RG-1];
  wire [2:0] length_local[0:RG-1];
  for(genvar gr=0;gr<RG;gr=gr+1)begin:g_issue_field_tree
-  ot_hbm_svc_owner_issue_leaf u_leaf(.t(t),.lane(lane),.words(words),.ordinal(ordinal_local[gr]),.length(length_local[gr]));
+  ot_hbm_svc_owner_issue_leaf u_leaf(.blk_start(blk_start_k[gr]),.cursor(cur_k[gr]),.lane(lane),.words(words),
+   .ordinal(ordinal_local[gr]),.length(length_local[gr]));
  end
  wire fire=k_v&&k_ready;
+ assign cursor_n=fire_cursor?t+length:(blk_start?10'd0:cursor);
  wire fire_ticket_lo,fire_ticket_hi,fire_cursor;
  ot_hbm_svc_local_and2 u_ftl(.a(k_v),.b(k_ready),.y(fire_ticket_lo));
  ot_hbm_svc_local_and2 u_fth(.a(k_v),.b(k_ready),.y(fire_ticket_hi));
@@ -152,14 +161,14 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  wire[3:0] ret_done_local,fire_valid_local;
  for(genvar vg=0;vg<4;vg=vg+1)begin:g_valid_control
   ot_hbm_svc_local_and2 u_ret(.a(ret_done),.b(ret[4:3]==vg),.y(ret_done_local[vg]));
-  ot_hbm_svc_local_and2 u_fire(.a(fire),.b(alloc[4:3]==vg),.y(fire_valid_local[vg]));
+  ot_hbm_svc_local_and2 u_fire(.a(fire),.b(alloc_a[4:3]==vg),.y(fire_valid_local[vg]));
  end
  // next valid (allocate at fire, free at the last beat)
  reg [ENTRIES-1:0] valid_n;integer e,ve;
  always @*begin
   valid_n=valid_q;
   for(ve=0;ve<ENTRIES;ve=ve+1)begin
-   if(fire_valid_local[ve/8]&&alloc==ve)valid_n[ve]=1;
+   if(fire_valid_local[ve/8]&&alloc_a==ve)valid_n[ve]=1;
    if(ret_done_local[ve/8]&&ret==ve)valid_n[ve]=0;
   end
  end
@@ -167,15 +176,15 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  wire [16:0] ticket_n={fire_ticket_hi?ticket[16:9]+(&ticket[8:0]):ticket[16:9],fire_ticket_lo?ticket[8:0]+1'b1:ticket[8:0]};
  (* keep="true",dont_touch="true" *) reg [GW-1:0] gen_k[0:RG-1];   // KEPT copies of ticket[16:OWNER_AW] (same reset/D)
  for(genvar gk=0;gk<RG;gk=gk+1)begin:g_gen_copy
-  always @(posedge clk or negedge rst_n[0])if(!rst_n[0])gen_k[gk]<=0;else gen_k[gk]<=ticket_n[16:OWNER_AW];
+  always @(posedge clk or negedge rst_n[3+gk/2])if(!rst_n[3+gk/2])gen_k[gk]<=0;else gen_k[gk]<=ticket_n[16:OWNER_AW];
   assign generation_local[gk]=gen_k[gk];
  end
  always @(posedge clk or negedge rst_n[0])begin
-  if(!rst_n[0])begin ticket<=0;sticky<=0;issuing_q<=0;end
+  if(!rst_n[0])begin ticket<=0;sticky<=0;issuing_q<=0;alloc_a<=0;alloc_b<=0;end
   else begin
    issuing_q<=issuing;
    if(blk_start&&issuing_q)sticky<=1;
-   ticket<=ticket_n;
+   ticket<=ticket_n;alloc_a<=ticket_n[OWNER_AW-1:0];alloc_b<=ticket_n[OWNER_AW-1:0];
    if(kr_v&&!response_ok)sticky<=1;
   end
  end
@@ -189,8 +198,8 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  end
  // datapath: cursor + tag table (no reset)
  always @(posedge clk)begin
-  if(blk_start)cursor<=0;
-  if(fire_cursor)cursor<=t+length;
+  cursor<=cursor_n;
+  for(e=0;e<RG;e=e+1)cur_k[e]<=cursor_n;
   for(e=0;e<ENTRIES;e=e+1)begin
    // Kept free copies bound actual mux pins, not just the number of flops:
    // each hold mux consumes two enable pins. Epoch16 =>32; generation12 =>24.
@@ -207,8 +216,9 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
 endmodule
 // HBMc/TILES 10-22: per-region kept issue-field leaf (same function as the owner's ordinal_d / length) and per-group beat
 // decode: separate instances are separate drivers (no shared node fans out to all 32 table entries).
-(* keep_hierarchy=1 *) module ot_hbm_svc_owner_issue_leaf(input wire [9:0] t,input wire [1:0] lane,input wire [10:0] words,
- output wire [10:0] ordinal,output wire [2:0] length);
+(* keep_hierarchy=1 *) module ot_hbm_svc_owner_issue_leaf(input wire blk_start,input wire [9:0] cursor,input wire [1:0] lane,
+ input wire [10:0] words,output wire [10:0] ordinal,output wire [2:0] length);
+ wire [9:0] t=blk_start?10'd0:cursor;
  wire full_group=words>={1'b0,t}+4;
  assign ordinal={t[8:0],2'b0}+lane;
  assign length=full_group?3'd4:3'd1;

@@ -30,6 +30,7 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  output wire[9:0]reserve_tag_base,
  input wire[LBANKS-1:0]block_ready,input wire[1:0]cache_ready,cache_owned,
  output wire start_v,output wire[LB-1:0]start_bank,output wire[15:0]start_epoch,
+ output wire[3*LB-1:0]start_bank_k,   // HBMc/TILES 10-22: distinct same-function copies of start_bank (kept head-mux leaves)
  output wire program_start_v,output wire[PAW-1:0]program_start_base,output wire[PAW:0]program_start_limit,
  output wire[15:0]program_start_loops,
  output wire[45:0]program_start_ctx,   // {row_off12, tag_base10, epoch16, bank1, lstep4, fl1, mode2}
@@ -83,11 +84,17 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  wire[3:0]a_sel=a[176:173];
  wire a_ids=a_sel==0||(ids_ok_q&&ids_layer_q==layer_q);
  wire a_go=a_v&&!p_v&&a_ids;
+ // HBMc/TILES 10-22: the id select reads two KEPT copies of a[176:173] (loaded with a's slice enable), one per half of
+ // the id word (a[173..176] had 44 loads through the 6 x 9-bit select)
+ (* keep="true",dont_touch="true" *) reg[3:0]asel_lo,asel_hi;
  reg[IDW-1:0]a_id;integer ai;
  always @*begin
   a_id={IDW{1'bx}};
   if(a_sel==0||MUT==2)a_id=0;
-  else for(ai=0;ai<NID;ai=ai+1)if(a_sel==ai+1)a_id=ids_q[ai*IDW+:IDW];
+  else for(ai=0;ai<NID;ai=ai+1)begin
+   if(asel_lo==ai+1)a_id[IDW/2-1:0]=ids_q[ai*IDW+:IDW/2];
+   if(asel_hi==ai+1)a_id[IDW-1:IDW/2]=ids_q[ai*IDW+IDW/2+:IDW-IDW/2];
+  end
  end
  wire[25:0]s_blk={8'd0,p[46:32],p[9:7]}+{2'd0,p_lay}+{2'd0,p_id};
  wire s_go=p_v&&!st_v;
@@ -111,8 +118,18 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
    if(gqr_k[qk*NQS+qb/SS])gh[qb]=gh[qb]|gq[qk][qb];
   end
  end
- wire[LB-1:0]sh_land=sh[LB-1:0];wire[LB-1:0]gh_land=gh[LB-1:0];
- assign start_v=sq_n!=0&&gq_n<QD&&block_ready[sh_land]&&!cache_owned[sh_land[0]];
+ wire[LB-1:0]gh_land=gh[LB-1:0];
+ // HBMc/TILES 10-22 (native census: the start-queue head bank sh[LB-1:0] fed start_bank, block_ready / cache_owned and the
+ // producer's epoch / ready selects -- 59 loads): five kept head-mux leaves give five distinct drivers of the same value
+ // (0 start_bank port, 1 start_v selects, 2..4 the producer's copies).
+ wire[LB-1:0]sh_land,sh_land1;wire[4*LB-1:0]sq_land;wire[QD-1:0]sq_sel;
+ for(genvar hq=0;hq<QD;hq=hq+1)begin:g_sq_land assign sq_land[hq*LB+:LB]=sq[hq][LB-1:0];assign sq_sel[hq]=sqr_k[hq*NQS]; end
+ ot_hbm_svc_qhead_leaf #(.W(LB),.QD(QD)) u_sh0(.sel(sq_sel),.q(sq_land),.y(sh_land));
+ ot_hbm_svc_qhead_leaf #(.W(LB),.QD(QD)) u_sh1(.sel(sq_sel),.q(sq_land),.y(sh_land1));
+ for(genvar hk=0;hk<3;hk=hk+1)begin:g_sh_k
+  ot_hbm_svc_qhead_leaf #(.W(LB),.QD(QD)) u_shk(.sel(sq_sel),.q(sq_land),.y(start_bank_k[hk*LB+:LB]));
+ end
+ assign start_v=sq_n!=0&&gq_n<QD&&block_ready[sh_land1]&&!cache_owned[sh_land1[0]];
  assign start_bank=sh_land;assign start_epoch=sh[LB+:16];
  reg go_busy;
  wire[23:0]gh_at=gh[LB+55+:24];
@@ -243,6 +260,7 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
   // stage registers: load while the stage is empty (the KEPT copy of its valid gates each <= 32-bit slice)
   for(ab=0;ab<200;ab=ab+1)begin
    if(!av_k[ab/SS])a[ab]<=rd[ab];
+   if(ab>=173&&ab<=176&&!av_k[ab/SS])begin asel_lo[ab-173]<=rd[ab];asel_hi[ab-173]<=rd[ab];end
    if(!pv_k[ab/SS])p[ab]<=a[ab];
   end
   for(ab=0;ab<24;ab=ab+1)begin
@@ -257,5 +275,10 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
    if(gqw_k[qk*NQS+qb/SS])gq[qk][qb]<=sh[qb];
   end
  end
+endmodule
+// HBMc/TILES 10-22: kept one-hot queue-head mux leaf (one instance per consumer family = distinct drivers)
+(* keep_hierarchy=1 *) module ot_hbm_svc_qhead_leaf #(parameter integer W=1,QD=4)(input wire[QD-1:0]sel,input wire[QD*W-1:0]q,output reg[W-1:0]y);
+ integer k;
+ always @*begin y=0;for(k=0;k<QD;k=k+1)if(sel[k])y=y|q[k*W+:W];end
 endmodule
 `default_nettype wire

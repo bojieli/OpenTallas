@@ -138,7 +138,11 @@ module ot_smh_calendar_static_xh #(
     end else begin:g_rk0
         assign calendar_rk=1'b0;
     end
+    // HBMc/TILES 10-22: two pc_step ANDs (pc low / high field; one drove 34 loads), same function
+    wire pc_step_hi;
     ot_hbm_svc_local_and2 u_pc_step(.a(running),.b(!at_end),.y(pc_step));
+    ot_hbm_svc_local_and2 u_pc_step_hi(.a(running),.b(!at_end),.y(pc_step_hi));
+    wire [AW-1:0] pc_inc=pc+1'b1;
     // datapath: payload, ordinal, context, identity (no reset), gated by the per-slice KEPT copies
     integer cb;
     always @(posedge clk)begin
@@ -166,7 +170,8 @@ module ot_smh_calendar_static_xh #(
         if(wrap_capture[2])loops_left[15:8]<=loops_next[15:8];
         if(wrap_capture[3])iter_r[7:0]<=iter_next[7:0];
         if(wrap_capture[4])iter_r[15:8]<=iter_next[15:8];
-        if(pc_step)pc<=pc+1'b1;
+        if(pc_step)pc[5:0]<=pc_inc[5:0];
+        if(pc_step_hi)pc[AW-1:6]<=pc_inc[AW-1:6];
     end
     // control (rst_n[0]: 11 flops; rst_n[1]: valid1 copies)
     always @(posedge clk or negedge rst_n[0])

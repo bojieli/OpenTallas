@@ -26,7 +26,7 @@ module ot_hbm_svc_sm_feed_rel_h #(
  input wire[14:0]reserve_row_base,input wire[11:0]reserve_total,
  input wire[LB-1:0]reserve_bank,input wire[15:0]reserve_epoch,input wire[6:0]reserve_rows,input wire[9:0]reserve_tag_base,
  output wire[LBANKS-1:0]block_ready,output wire[1:0]cache_ready,cache_owned,
- input wire start_v,input wire[LB-1:0]start_bank,input wire[15:0]start_epoch,
+ input wire start_v,input wire[LB-1:0]start_bank,input wire[15:0]start_epoch,input wire[3*LB-1:0]start_bank_k,
  input wire program_cfg_we,input wire[PAW-1:0]program_cfg_addr,input wire[255:0]program_cfg_data,
  input wire program_start_v,input wire[PAW-1:0]program_start_base,input wire[PAW:0]program_start_limit,input wire[15:0]program_start_loops,
  input wire[45:0]program_start_ctx,
@@ -49,7 +49,7 @@ module ot_hbm_svc_sm_feed_rel_h #(
   ot_hbm_svc_local_and2 u_row(.a(reserve_fire),.b(reserve_bank==fc),.y(row_capture[fc]));
   ot_hbm_svc_local_and2 u_tag(.a(reserve_fire),.b(reserve_bank==fc),.y(tag_capture[fc]));
  end
- (* keep="true",dont_touch="true" *) reg [LB-1:0] oland_k[0:2];
+ (* keep="true",dont_touch="true" *) reg [LB-1:0] oland_k[0:3];   // 0 rows, 1/3 tag lo/hi, 2 open bank
  wire open_bank_q;assign open_bank_q=oland_k[2][0];
  always @(posedge stream_clk)begin
   for(qb=0;qb<LBANKS;qb=qb+1)begin
@@ -57,13 +57,13 @@ module ot_hbm_svc_sm_feed_rel_h #(
    if(tag_capture[qb])tag_q[qb]<=reserve_tag_base;
   end
   open_land_q<=start_bank;open_epoch_q<=start_epoch;
-  for(qb=0;qb<3;qb=qb+1)oland_k[qb]<=start_bank;
+  for(qb=0;qb<4;qb=qb+1)oland_k[qb]<=start_bank;
  end
  wire out_v,out_last;wire[LB-1:0]out_bank;wire[3:0]out_mask;wire[1023:0]out_data;wire[10:0]out_ordinal;wire[15:0]out_epoch;
  ot_hbm_svc_sm4pc_cdc_rel_h #(.LBANKS(LBANKS)) producer(
   .id_stack(id_stack),.id_sm(id_sm),.stream_clk(stream_clk),.hbm_clk(hbm_clk),.s_rst(s_rst),.h_rst(h_rst),
   .reserve_v(reserve_fire),.reserve_ready(cdc_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),.reserve_total(reserve_total),.reserve_bank(reserve_bank),.reserve_epoch(reserve_epoch),
-  .block_ready(block_ready),.start_v(start_v),.start_bank(start_bank),.start_epoch(start_epoch),
+  .block_ready(block_ready),.start_v(start_v),.start_bank(start_bank),.start_bank_k(start_bank_k),.start_epoch(start_epoch),
   .out_v(out_v),.out_mask(out_mask),.out_data(out_data),.out_ordinal(out_ordinal),.out_bank(out_bank),.out_epoch(out_epoch),.out_last(out_last),.fault(cdc_fault),
   .k_v(k_v),.k_rdy(k_rdy),.k_addr(k_addr),.k_len(k_len),.k_tag(k_tag),.kr_v(kr_v),.kr_rdy(kr_rdy),.kr_tag(kr_tag),.kr_beat(kr_beat),.kr_data(kr_data));
  wire[95:0]indices;wire[63:0]epochs;
@@ -140,7 +140,7 @@ module ot_hbm_svc_sm_feed_rel_h #(
  end
  assign sm_command=programme[82:0];
  ot_hbm_svc_static_sm_packed136_h rows(
-  .clk(stream_clk),.rst_n(st_rst[3]),.open_v(open_q),.open_bank(open_bank_q),.open_epoch(open_epoch_q),.open_count(rows_q[oland_k[0]]),.open_tag_base(tag_q[oland_k[1]]),
+  .clk(stream_clk),.rst_n(st_rst[3]),.open_v(open_q),.open_bank(open_bank_q),.open_epoch(open_epoch_q),.open_count(rows_q[oland_k[0]]),.open_tag_base({tag_q[oland_k[3]][9:5],tag_q[oland_k[1]][4:0]}),
   .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
   .read_v(programme_v_q&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
   .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),

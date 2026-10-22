@@ -32,6 +32,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  input wire [11:0] reserve_total,input wire [LB-1:0] reserve_bank,input wire [15:0] reserve_epoch,
  output wire [LBANKS-1:0] block_ready,
  input wire start_v,input wire [LB-1:0] start_bank,input wire [15:0] start_epoch,
+ input wire [3*LB-1:0] start_bank_k,   // HBMc/TILES 10-22: distinct copies of start_bank (0/1 epoch lo/hi select, 2 ready/drain)
  output reg out_v,output reg [3:0] out_mask,output wire [1023:0] out_data,
  output reg [10:0] out_ordinal,output reg [LB-1:0] out_bank,output reg [15:0] out_epoch,
  output reg out_last,output wire fault,
@@ -49,16 +50,19 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  // ---------------- reset leaves: s_rst [0] core, [1] reserve copies, [2] descriptor FIFO writer, [3] fault CDCs,
  // [4..11] landing banks; h_rst [0] core, [1] descriptor FIFO reader, [2..5] PCs (owner + skids), [6..13] banks (FIFO
  // writers), [14] CDCs.  The FIFOs / fault CDCs AND their two leaves into their own reviewed ot_reset_sync per side.
- wire[1:0]sc;wire[2:0]hc;
- ot_rst_fanout #(.N(2)) u_sc(.clk(stream_clk),.rst_n_in(s_rst[0]),.rst_n(sc));
+ // HBMc/TILES 10-22: sc[2] drain copies (dbank/dord, 87 flops -> own leaves sc[2..4]), sc[5] allocation + copies
+ wire[5:0]sc;wire[2:0]hc;
+ ot_rst_fanout #(.N(6)) u_sc(.clk(stream_clk),.rst_n_in(s_rst[0]),.rst_n(sc));
  ot_rst_fanout #(.N(3)) u_hc(.clk(hbm_clk),.rst_n_in(h_rst[0]),.rst_n(hc));
  // strap identity (static): stream-side copies for the reserve check/PC set, hbm-side copy for the re-check
  reg [1:0] stack_s,stack_h;reg [2:0] sm_s;
- always @(posedge stream_clk)begin stack_s<=id_stack;sm_s<=id_sm;end
+ (* keep="true",dont_touch="true" *) reg [2:0] sm_k[0:3];   // HBMc/TILES 10-22: per-PC-field strap copies (sm_s decodes had 64 loads)
+ integer smk;
+ always @(posedge stream_clk)begin stack_s<=id_stack;sm_s<=id_sm;for(smk=0;smk<4;smk=smk+1)sm_k[smk]<=id_sm;end
  always @(posedge hbm_clk)stack_h<=id_stack;
  // descriptor word {pcs20,row_base15,base32,total12,bank LB,epoch16}
  localparam integer T0=16+LB,A0=28+LB,S0=58+LB,R0=60+LB,P0=75+LB,DW=95+LB,IW=283+LB;
- wire [19:0] reserve_pcs={sm_s,2'd3,sm_s,2'd2,sm_s,2'd1,sm_s,2'd0}; // = the four PCs 4k..4k+3 of SM k
+ wire [19:0] reserve_pcs={sm_k[3],2'd3,sm_k[2],2'd2,sm_k[1],2'd1,sm_k[0],2'd0}; // = the four PCs 4k..4k+3 of SM k
  wire [32:0] reserve_end={3'b0,reserve_base[29:0]}+reserve_total;
  wire pcs_unique=reserve_pcs[4:0]!=reserve_pcs[9:5]&&reserve_pcs[4:0]!=reserve_pcs[14:10]&&reserve_pcs[4:0]!=reserve_pcs[19:15]&&reserve_pcs[9:5]!=reserve_pcs[14:10]&&reserve_pcs[9:5]!=reserve_pcs[19:15]&&reserve_pcs[14:10]!=reserve_pcs[19:15];
  wire descriptor_ok=pcs_unique&&reserve_base[29:10]==0&&reserve_base[6:0]==0&&reserve_row_base<32768&&reserve_total!=0&&reserve_total<=512&&reserve_base[31:30]==stack_s&&reserve_end<=33'h040000000;
@@ -115,8 +119,10 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  reg h_active;reg h_fresh;
  // HBMc/TILES 10-22 (native census: constant-input AND "buffers" are transparent): KEPT same-edge copies replace them --
  // h_fresh per owner (k: 118 loads through four u_startbuf), the row-low capture per owner (33).
- (* keep="true",dont_touch="true" *) reg [3:0] hfresh_k;
+ (* keep="true",dont_touch="true" *) reg [19:0] hfresh_k;   // [5*pc]: owner, [5*pc+1+r]: its table region r
  (* keep="true",dont_touch="true" *) reg [1:0] rowlow_k[0:3];
+ (* keep="true",dont_touch="true" *) reg [11:0] tot_k[0:3];   // per-owner block_total copies (h_total had 128 loads)
+ wire [3:0] hcapt;
  (* keep="true",dont_touch="true" *) reg [3:0] hidle_k;   // = !h_active (block-field capture enables, <= 32 b each)
  reg [LB-1:0] h_bank;reg [15:0] h_epoch;reg [29:0] h_base;reg [11:0] h_total;reg [19:0] h_pcs;reg [14:0] h_row_base;
  wire [11:0] rx_left[0:LBANKS-1];wire [3:0] issue_done;integer rb;
@@ -136,6 +142,9 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   localparam integer IDLE=(ch<2)?0:(ch<5)?1:(ch<9)?2:3;
   ot_hbm_svc_local_and2 u_gate(.a(hidle_k[IDLE]),.b(desc_rd_valid),.y(hcap[ch]));
  end endgenerate
+ for(genvar ct=0;ct<4;ct=ct+1)begin:cap_total
+  ot_hbm_svc_local_and2 u_gate(.a(hidle_k[3]),.b(desc_rd_valid),.y(hcapt[ct]));
+ end
  always @(posedge hbm_clk)begin
   if(hcap[0])h_pcs[9:0]<=desc_data[P0+:10];
   if(hcap[1])h_pcs[19:10]<=desc_data[P0+10+:10];
@@ -144,6 +153,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   if(hcap[4])h_base[29:20]<=desc_data[A0+20+:10];
   if(hcap[5])h_row_base[9:0]<=desc_data[R0+:10];
   for(rb=0;rb<4;rb=rb+1)if(hcap[5])rowlow_k[rb]<=desc_data[R0+:2];
+  for(rb=0;rb<4;rb=rb+1)if(hcapt[rb])tot_k[rb]<=desc_data[T0+:12];
   if(hcap[6])h_row_base[14:10]<=desc_data[R0+10+:5];
   if(hcap[7])h_total[9:0]<=desc_data[T0+:10];
   if(hcap[8])h_total[11:10]<=desc_data[T0+10+:2];
@@ -156,11 +166,11 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  wire [3:0] ri_owner,ri_pop,ri_feed,ri_count,owner_stop;
  genvar pc,g;
  generate for(pc=0;pc<4;pc=pc+1)begin:pc_owner
-  wire[3:0]pr;
+  wire[5:0]pr;
   wire local_start,local_active;
   wire[1:0] local_row_low;
   assign local_row_low=rowlow_k[pc];
-  assign local_start=hfresh_k[pc];
+  assign local_start=hfresh_k[5*pc];
   ot_hbm_svc_local_and2 u_activebuf(.a(h_active),.b(1'b1),.y(local_active));
   ot_hbm_svc_local_and2 u_stopbuf(.a(hbm_fault),.b(1'b1),.y(owner_stop[pc]));
   // ri_r computed by four separate kept leaves (one per consumer family), same function
@@ -169,20 +179,20 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   ot_hbm_svc_and3_leaf u_popbuf(.a(response_ok[pc]),.b(!lane_bad[pc]),.c(ri_ready),.y(ri_pop[pc]));
   ot_hbm_svc_and3_leaf u_feedbuf(.a(response_ok[pc]),.b(!lane_bad[pc]),.c(ri_ready),.y(ri_feed[pc]));
   ot_hbm_svc_and3_leaf u_countbuf(.a(response_ok[pc]),.b(!lane_bad[pc]),.c(ri_ready),.y(ri_count[pc]));
-  ot_rst_fanout #(.N(4)) u_pr(.clk(hbm_clk),.rst_n_in(h_rst[2+pc]),.rst_n(pr));
+  ot_rst_fanout #(.N(6)) u_pr(.clk(hbm_clk),.rst_n_in(h_rst[2+pc]),.rst_n(pr));
   ot_hbm_svc_prefetch_owner_rel_h #(.OWNER_AW(OWNER_AW),.LB(LB)) u_owner(
-   .pc_id({id_sm,2'(pc)}),.clk(hbm_clk),.rst_n(pr[2:0]),.blk_start(local_start),
-   .block_active(local_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base({h_row_base[14:2],local_row_low}),.block_total(h_total),
+   .pc_id({id_sm,2'(pc)}),.clk(hbm_clk),.rst_n(pr[4:0]),.blk_start(local_start),.blk_start_k(hfresh_k[5*pc+1+:4]),
+   .block_active(local_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base({h_row_base[14:2],local_row_low}),.block_total(tot_k[pc]),
    .block_bank(h_bank),.block_epoch(h_epoch),.stop(owner_stop[pc]),
    .k_ready(ko_r[pc]),.kr_v(ri_v[pc]),.kr_tag(ri_tag[17*pc+:17]),
    .kr_beat(ri_beat[4*pc+:4]),.response_take(ri_owner[pc]),
    .k_v(ko_v[pc]),.k_addr(ko_addr[30*pc+:30]),.k_len(ko_len[4*pc+:4]),.k_tag(ko_tag[17*pc+:17]),
    .response_ok(response_ok[pc]),.response_ordinal(response_ordinal[pc]),
    .response_epoch(response_epoch[pc]),.response_bank(response_bank[pc]),.fault(pc_fault[pc]),.issue_done(issue_done[pc]));
-  ot_hbm_svc_pin_skid2_r32 #(.WIDTH(51)) u_kq(.clk(hbm_clk),.rst_n(pr[3]),.in_v(ko_v[pc]),.in_r(ko_r[pc]),
+  ot_hbm_svc_pin_skid2_r32 #(.WIDTH(51)) u_kq(.clk(hbm_clk),.rst_n(pr[5]),.in_v(ko_v[pc]),.in_r(ko_r[pc]),
    .in_data({ko_tag[17*pc+:17],ko_len[4*pc+:4],ko_addr[30*pc+:30]}),.out_v(k_v[pc]),.out_r(k_rdy[pc]),
    .out_data({k_tag[17*pc+:17],k_len[4*pc+:4],k_addr[30*pc+:30]}));
-  ot_hbm_svc_pin_skid2_r32 #(.WIDTH(277)) u_kr(.clk(hbm_clk),.rst_n(pr[3]),.in_v(kr_v[pc]),.in_r(kr_rdy[pc]),
+  ot_hbm_svc_pin_skid2_r32 #(.WIDTH(277)) u_kr(.clk(hbm_clk),.rst_n(pr[5]),.in_v(kr_v[pc]),.in_r(kr_rdy[pc]),
    .in_data({kr_data[256*pc+:256],kr_beat[4*pc+:4],kr_tag[17*pc+:17]}),.out_v(ri_v[pc]),.out_r(ri_pop[pc]),
    .out_data({ri_data[256*pc+:256],ri_beat[4*pc+:4],ri_tag[17*pc+:17]}));
   // PC pc feeds landing FIFOs pc (ordinal[2]=0) and pc+4 (ordinal[2]=1) only
@@ -201,8 +211,9 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
   end
  end
  // hc[0]: h_active, h_fresh, hbm_fault, hidle copies (7); hc[1] / hc[2]: rx_left of landing blocks 0-1 / 2-3 (24 each)
+ always @(posedge hbm_clk or negedge hc[0])if(!hc[0])hfresh_k<=0;else hfresh_k<={20{descriptor_fire&&desc_good}};
  always @(posedge hbm_clk or negedge hc[0])begin
-  if(!hc[0])begin h_active<=0;h_fresh<=0;hbm_fault<=0;hidle_k<={4{1'b1}};hfresh_k<=0;end
+  if(!hc[0])begin h_active<=0;h_fresh<=0;hbm_fault<=0;hidle_k<={4{1'b1}};end
   else begin
    if(stf2||desc_un||(|fifo_ov)||(|pc_fault)||(|lane_bad))hbm_fault<=1;
    if(descriptor_fire)begin
@@ -210,7 +221,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
     else h_active<=1;
    end
    h_fresh<=descriptor_fire&&desc_good;
-   hfresh_k<={4{descriptor_fire&&desc_good}};
+
    hidle_k<={4{!(h_active?!(!descriptor_fire&&!h_fresh&&(&issue_done)):(descriptor_fire&&desc_good))}};
    // issue phase ends when every owner has issued the block; returns are counted per landing bank
    if(h_active&&!descriptor_fire&&!h_fresh&&(&issue_done))h_active<=0;
@@ -239,15 +250,19 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  // values (same reset, same edge).  bank k: 0 total / allocation, 1 output fields, 2 / 3 landing reads 0-3 / 4-7;
  // ordinal k: 0-3 output-lane selects, 4 / 5 landing candidates 0-3 / 4-7, 6 output / total compare.
  wire start_acc;wire drain_last;
- wire [LB-1:0] drain_bank_n=start_acc?start_bank:drain_bank;
+ wire [LB-1:0] sbk0=start_bank_k[0+:LB],sbk1=start_bank_k[LB+:LB],sbk2=start_bank_k[2*LB+:LB];
+ wire [LB-1:0] drain_bank_n=start_acc?sbk2:drain_bank;
  wire [10:0] drain_ordinal_n=(draining&&!fault&&!drain_last)?drain_ordinal+drain_count:(start_acc?11'd0:drain_ordinal);
- (* keep="true",dont_touch="true" *) reg [4*LB-1:0] dbank_v;     // flat vectors: no memory inference under the async reset
+ (* keep="true",dont_touch="true" *) reg [5*LB-1:0] dbank_v;   // k4: allocation clear     // flat vectors: no memory inference under the async reset
  (* keep="true",dont_touch="true" *) reg [7*11-1:0] dord_v;
- always @(posedge stream_clk or negedge sc[0])
-  if(!sc[0])begin dbank_v<=0;dord_v<=0;end
-  else begin dbank_v<={4{drain_bank_n}};dord_v<={7{drain_ordinal_n}};end
- wire [LB-1:0] dbank_k[0:3];wire [10:0] dord_k[0:6];
- for(genvar dk=0;dk<4;dk=dk+1)begin:g_dbank assign dbank_k[dk]=dbank_v[dk*LB+:LB]; end
+ always @(posedge stream_clk or negedge sc[2])
+  if(!sc[2])dbank_v<=0;else dbank_v<={5{drain_bank_n}};
+ for(genvar dg=0;dg<7;dg=dg+1)begin:g_dord_rst
+  always @(posedge stream_clk or negedge sc[3+dg/4])
+   if(!sc[3+dg/4])dord_v[dg*11+:11]<=0;else dord_v[dg*11+:11]<=drain_ordinal_n;
+ end
+ wire [LB-1:0] dbank_k[0:4];wire [10:0] dord_k[0:6];
+ for(genvar dk=0;dk<5;dk=dk+1)begin:g_dbank assign dbank_k[dk]=dbank_v[dk*LB+:LB]; end
  for(genvar dk=0;dk<7;dk=dk+1)begin:g_dord assign dord_k[dk]=dord_v[dk*11+:11]; end
  wire [11:0] drain_total=bank_total[dbank_k[0]];
  assign drain_last=dord_k[6]+drain_count>=drain_total;
@@ -291,9 +306,9 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  always @*begin
   allocated_n=allocated;
   if(reserve_fire)allocated_n[reserve_bank]=1;
-  if(draining&&!fault&&drain_last)allocated_n[dbank_k[0]]=0;
+  if(draining&&!fault&&drain_last)allocated_n[dbank_k[4]]=0;
  end
- (* keep="true",dont_touch="true" *) reg [LBANKS-1:0] alloc_e_k,alloc_t_k,alloc_d_k;
+ (* keep="true",dont_touch="true" *) reg [LBANKS-1:0] alloc_e_k,alloc_eh_k,alloc_t_k,alloc_d_k;
  assign alloc_epoch=alloc_e_k;assign alloc_total=alloc_t_k;assign alloc_done=alloc_d_k;
  wire out_epoch_capture,out_ordinal_capture,out_bank_capture;
  ot_hbm_svc_local_and2 u_oec(.a(draining),.b(!fault),.y(out_epoch_capture));
@@ -302,7 +317,8 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  integer si,sb;
  always @(posedge stream_clk)begin
   for(sb=0;sb<LBANKS;sb=sb+1)begin
-   if(!alloc_epoch[sb])bank_epoch[sb]<=reserve_epoch;
+   if(!alloc_epoch[sb])bank_epoch[sb][7:0]<=reserve_epoch[7:0];
+   if(!alloc_eh_k[sb])bank_epoch[sb][15:8]<=reserve_epoch[15:8];
    if(!alloc_total[sb])bank_total[sb]<=reserve_total;
   end
   if(out_bank_capture)out_bank<=dbank_k[1];
@@ -323,12 +339,13 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  end endgenerate
  // Allocation state uses a real separate reset branch, with identical release edge.
  wire allocated_reset_n;
- ot_hbm_svc_local_and2 u_alloc_reset(.a(sc[0]),.b(1'b1),.y(allocated_reset_n));
+ assign allocated_reset_n=sc[5];
  always @(posedge stream_clk or negedge allocated_reset_n)begin
-  if(!allocated_reset_n)begin allocated<=0;alloc_e_k<=0;alloc_t_k<=0;alloc_d_k<=0;end
-  else begin allocated<=allocated_n;alloc_e_k<=allocated_n;alloc_t_k<=allocated_n;alloc_d_k<=allocated_n;end
+  if(!allocated_reset_n)begin allocated<=0;alloc_e_k<=0;alloc_eh_k<=0;alloc_t_k<=0;alloc_d_k<=0;end
+  else begin allocated<=allocated_n;alloc_e_k<=allocated_n;alloc_eh_k<=allocated_n;alloc_t_k<=allocated_n;alloc_d_k<=allocated_n;end
  end
- assign start_acc=start_v&&!(draining||!ready_q[start_bank]||start_epoch!=bank_epoch[start_bank]||fault);
+ wire [15:0] start_epoch_ref={bank_epoch[sbk1][15:8],bank_epoch[sbk0][7:0]};
+ assign start_acc=start_v&&!(draining||!ready_q[sbk2]||start_epoch!=start_epoch_ref||fault);
  // sc[0]: remaining stream controls
  always @(posedge stream_clk or negedge sc[0])begin
   if(!sc[0])begin
@@ -346,7 +363,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
    end
    if(start_v)begin
     if(!start_acc)stream_fault<=1;
-    else begin draining<=1;drain_bank<=start_bank;drain_ordinal<=0;drain_phase<=0;ready_q[start_bank]<=0;end
+    else begin draining<=1;drain_bank<=sbk2;drain_ordinal<=0;drain_phase<=0;ready_q[sbk2]<=0;end
    end
    if(draining&&!fault)begin
     out_v<=1;drain_phase<=drain_phase==4?0:drain_phase+1'b1;
