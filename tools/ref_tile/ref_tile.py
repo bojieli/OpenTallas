@@ -300,13 +300,17 @@ def pin_regs_plan(s: dict) -> dict | None:
 # wire RC (OT_RC_CAL, tools/orfs_hold_mm.tcl) and the hold flow times it on that RC, and main f02b312f0 measures
 # spine-clocked CTS odbs on it in ck_insertion.py; the in-flow hybrid clock rule (ot_ce_apply) still measured on the
 # platform setRC (C 0.145 vs 0.105 fF/um) and stopped wire-dominated island spines (E2 rw13isc h1 129 vs 26.7 balanced,
-# rw14is d0 93 vs 26.1).  This wraps ONE ot_ce_apply call in the same calibrated RC when (a) clock spine cells
+# rw14is d0 93 vs 26.1; CB rw10is q3 FF 81.9 via signoff.sdc).  This wraps the ot_ce_apply call of clock_entry.sdc,
+# signoff.sdc and clock.sdc in the same calibrated RC when (a) clock spine cells
 # clkbuf_sp_* exist and (b) the spine is not detail-routed (no dbWire): placement (CTS) and global-route (GRT)
 # estimates only; routed / SPEF measurements are unchanged.  The platform RC is restored and re-estimated after.
 CE_RC_CAL_TCL = r'''proc ot_ce_rc_cal_begin {} {
   set ::ot_ce_rcc ""
   if {![llength [info commands ot_rc_cal_apply]] || ![llength [info commands ord::get_db_block]]} {
     puts "OT_CE_RC_CAL off: no ot_rc_cal_apply in this stage"; return
+  }
+  for {set l [info level]} {$l > 0} {incr l -1} {
+    if {[lindex [info level $l] 0] eq "ot_rc_cal_hold"} { puts "OT_CE_RC_CAL off: inside ot_rc_cal_hold (calibrated RC already active)"; return }
   }
   set sp ""
   foreach i [[ord::get_db_block] getInsts] { if {[string match clkbuf_sp_* [$i getName]]} { set sp $i; break } }
@@ -332,11 +336,15 @@ proc ot_ce_rc_cal_end {} {
 '''
 
 
-def _ce_rc_cal_wrap(text: str) -> str:
-    lines = text.rstrip("\n").split("\n")
-    if lines[-1].strip() != "ot_ce_apply":
-        raise SpecError("clock_rc_cal_measure: generated clock_entry.sdc no longer ends with one ot_ce_apply call")
-    return "\n".join(lines[:-1]) + "\n" + CE_RC_CAL_TCL + "ot_ce_rc_cal_begin\not_ce_apply\not_ce_rc_cal_end\n"
+def _ce_rc_cal_wrap(text: str, name: str) -> str:
+    lines = text.split("\n")
+    idx = [i for i, l in enumerate(lines) if l.strip() == "ot_ce_apply"]
+    if not idx:
+        return text
+    if len(idx) != 1:
+        raise SpecError(f"clock_rc_cal_measure: {name} has {len(idx)} standalone ot_ce_apply calls (expected 1)")
+    i = idx[0]
+    return "\n".join(lines[:i] + [CE_RC_CAL_TCL.rstrip("\n"), "ot_ce_rc_cal_begin", "ot_ce_apply", "ot_ce_rc_cal_end"] + lines[i + 1:])
 
 
 def ce_generate(s: dict) -> str:
@@ -2034,8 +2042,6 @@ def gen_hooks(s: dict, kd: str) -> dict:
             if not (s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + ce_generate(s)
-        if s.get("clock_rc_cal_measure"):
-            files["clock_entry.sdc"] = _ce_rc_cal_wrap(files["clock_entry.sdc"])
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
@@ -2686,6 +2692,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
              **gen_hooks(s, kd), "floorplan.json": json.dumps(fp, indent=1) + "\n",
              "spec.json": json.dumps(({**raw_spec, "m6_pin_grant": lc["m6_pin_grant"]} if lc.get("m6_pin_grant")
                                       else {k: v for k, v in s.items()}), indent=1) + "\n"}
+    if s.get("clock_rc_cal_measure"):
+        for f in ("clock_entry.sdc", "signoff.sdc", "clock.sdc"):
+            if f in files:
+                files[f] = _ce_rc_cal_wrap(files[f], f)
     prp = pin_regs_plan(s)
     if prp is not None:
         files["pin_regs.json"] = json.dumps({"schema": "opentallas.ref_tile.pin_regs.v1", "top": s["top"], **prp},

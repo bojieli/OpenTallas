@@ -746,6 +746,37 @@ proc ot_ce_apply {} {
   }
   puts "OT_ENTRIES COMP DONE $corner [llength $rows] entries phi=$ref boundary=$lmin..$lmax"
 }
+proc ot_ce_rc_cal_begin {} {
+  set ::ot_ce_rcc ""
+  if {![llength [info commands ot_rc_cal_apply]] || ![llength [info commands ord::get_db_block]]} {
+    puts "OT_CE_RC_CAL off: no ot_rc_cal_apply in this stage"; return
+  }
+  for {set l [info level]} {$l > 0} {incr l -1} {
+    if {[lindex [info level $l] 0] eq "ot_rc_cal_hold"} { puts "OT_CE_RC_CAL off: inside ot_rc_cal_hold (calibrated RC already active)"; return }
+  }
+  set sp ""
+  foreach i [[ord::get_db_block] getInsts] { if {[string match clkbuf_sp_* [$i getName]]} { set sp $i; break } }
+  if {$sp eq ""} { puts "OT_CE_RC_CAL off: no clock spine cells"; return }
+  foreach it [$sp getITerms] {
+    set n [$it getNet]
+    if {$n ne "NULL" && [$it isOutputSignal] && [$n getWire] ne "NULL"} { puts "OT_CE_RC_CAL off: spine detail-routed"; return }
+  }
+  set mode [ot_rc_cal_mode]
+  if {[ot_rc_cal_apply spine]} {
+    estimate_parasitics $mode
+    set ::ot_ce_rcc $mode
+    puts "OT_CE_RC_CAL on: hybrid clock rule measured on the calibrated spine clock RC ($mode)"
+  }
+}
+proc ot_ce_rc_cal_end {} {
+  if {[info exists ::ot_ce_rcc] && $::ot_ce_rcc ne ""} {
+    ot_rc_cal_restore
+    estimate_parasitics $::ot_ce_rcc
+    set ::ot_ce_rcc ""
+  }
+}
+ot_ce_rc_cal_begin
 ot_ce_apply
+ot_ce_rc_cal_end
 
 set_propagated_clock [all_clocks]

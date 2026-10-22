@@ -685,6 +685,9 @@ proc ot_ce_rc_cal_begin {} {
   if {![llength [info commands ot_rc_cal_apply]] || ![llength [info commands ord::get_db_block]]} {
     puts "OT_CE_RC_CAL off: no ot_rc_cal_apply in this stage"; return
   }
+  for {set l [info level]} {$l > 0} {incr l -1} {
+    if {[lindex [info level $l] 0] eq "ot_rc_cal_hold"} { puts "OT_CE_RC_CAL off: inside ot_rc_cal_hold (calibrated RC already active)"; return }
+  }
   set sp ""
   foreach i [[ord::get_db_block] getInsts] { if {[string match clkbuf_sp_* [$i getName]]} { set sp $i; break } }
   if {$sp eq ""} { puts "OT_CE_RC_CAL off: no clock spine cells"; return }
