@@ -765,7 +765,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                                  parameter integer LW = 7, parameter integer PRE = 0,
                                  parameter integer CREP = 0, parameter integer CMUT = 0, parameter integer FAN32 = 0,
                                  parameter integer SEAM = 0, parameter integer LT_GROUP = 0, parameter integer GCFOLD = 0,
-                                 parameter integer KLEAF = 0) (
+                                 parameter integer KLEAF = 0, parameter integer BGREP = 0) (
     input  wire              clk, clk_r0, clk_r1, clk_r2, clk_r3,
     input  wire [TW-1:0]     tid,
     input  wire              clr, conv,
@@ -834,6 +834,25 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     for (gg = 0; gg < NGR; gg = gg + 1) begin : g_ctl
         always @(posedge ckr[rg(gg)]) begin
             q_clr_g[gg] <= p_clr; q_conv_g[gg] <= p_conv; q_v_g[gg] <= p_v; q_vg[gg] <= p_vg[gg]; q_bg[gg] <= p_bg[gg];
+        end
+    end
+    // BGREP: V6 census found288 p_bg and288 q_bg drivers over32, max48.
+    // Dedicated captures isolate each comparator half. A separate pin-stage
+    // source feeds18 captures; the original source retains its <=30 loads.
+    // Same regional edges, unreset data, no added port latency.
+    wire[4*EW-1:0] block_p[0:NGR-1][0:1],block_q[0:NGR-1][0:1];
+    wire[4*EW-1:0] i_b_block;
+    if(BGREP!=0 && PRE!=0)begin:g_bg_pin
+        (* keep_hierarchy="yes" *)ot_tkm_bg_ff #(.W(4*EW)) u_pin(.clk(clk),.d(ins_b),.q(i_b_block));
+    end else begin:g_bg_pin_alias assign i_b_block=i_b;end
+    for(genvar bg=0;bg<NGR;bg=bg+1)begin:g_bg_copy
+        for(genvar h=0;h<2;h=h+1)begin:g_half
+            if(BGREP!=0)begin:g_on
+                (* keep_hierarchy="yes" *)ot_tkm_bg_ff #(.W(4*EW)) u_p(.clk((PRE!=0)?ckr[rg(bg)]:clk),.d(i_b_block),.q(block_p[bg][h]));
+                (* keep_hierarchy="yes" *)ot_tkm_bg_ff #(.W(4*EW)) u_q(.clk(ckr[rg(bg)]),.d(block_p[bg][h]),.q(block_q[bg][h]));
+            end else begin:g_alias
+                assign block_p[bg][h]=p_bg[bg];assign block_q[bg][h]=q_bg[bg];
+            end
         end
     end
     // FAN32 operand provenance: one kept compare capture per four positions.
@@ -1000,14 +1019,16 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     for (gg = 0; gg < NGR; gg = gg + 1) begin : g_bb
         for (gj = 0; gj < 4; gj = gj + 1) begin : g_j
             for (gk = 0; gk < 4; gk = gk + 1) begin : g_k
-                wire [KT-1:0] ka = q_bg[gg][EW*gj + 1 +: KT];
-                wire [KT-1:0] kb = p_bg[gg][EW*gk + 1 +: KT];
+                wire [KT-1:0] ka = block_q[gg][0][EW*gj + 1 +: KT];
+                wire [KT-1:0] kb = block_p[gg][0][EW*gk + 1 +: KT];
+                wire [KT-1:0] ka_h1 = block_q[gg][1][EW*gj + 1 +: KT];
+                wire [KT-1:0] kb_h1 = block_p[gg][1][EW*gk + 1 +: KT];
                 wire lt_;
                 if(KLEAF!=0&&LT_GROUP!=0)begin:g_khalf
                     // V6: one kept compare per position half: v5 one u_b.lt fed 8 positions x 3 GN variants (42-48 loads)
                     wire lt_h1;
                     (* keep_hierarchy *) ot_tkm_lt_chunked #(.W(KT),.G(LT_GROUP)) u_b0 (.a(ka),.b(kb),.lt(lt_));
-                    (* keep_hierarchy *) ot_tkm_lt_chunked #(.W(KT),.G(LT_GROUP)) u_b1 (.a(ka),.b(kb),.lt(lt_h1));
+                    (* keep_hierarchy *) ot_tkm_lt_chunked #(.W(KT),.G(LT_GROUP)) u_b1 (.a(ka_h1),.b(kb_h1),.lt(lt_h1));
                     assign gbf_h[1][16*gg + 4*gj + gk] = lt_h1;
                 end else if(LT_GROUP!=0)begin:g_chunked
                     ot_tkm_lt_chunked #(.W(KT),.G(LT_GROUP)) u_b (.a(ka),.b(kb),.lt(lt_));
@@ -1230,3 +1251,10 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     end
 endmodule
 `default_nettype wire
+
+(* keep_hierarchy="yes" *)
+module ot_tkm_bg_ff #(parameter integer W=344)(input wire clk,input wire[W-1:0]d,output wire[W-1:0]q);
+    (* keep="true",dont_touch="true" *)reg[W-1:0]r;
+    always @(posedge clk)r<=d;
+    assign q=r;
+endmodule
