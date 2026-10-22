@@ -13,11 +13,7 @@ set -u
 O=$(realpath -m "$1"); V=$2; mkdir -p "$O"
 export PATH="$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH"
 S=tools/hwin_private_package_1019/sim
-if [ ! -d "$S" ]; then
-  mkdir -p "$O/deps"
-  git archive e20095385d2024cabe267f4227e1fb17c24dac90 tools/hwin_private_package_1019 | tar -x -C "$O/deps"
-  S=$O/deps/tools/hwin_private_package_1019/sim
-fi
+[ -d "$S" ] || { echo "BENCH_DEPENDENCY_MISSING $S (include committed fixture in source export)"; exit 3; }
 U=$S/rtl/dsrom_sys/s81_dv/unit; R=rtl/dsrom_sys/s81_dv/unit
 K=tools/s81_dv/hwin_struct_1021
 declare -A PIN=([dsdv_mu_hwin_capture_1019]=fd37205500ff5ca79b8112dd19d075a112280e5d3817b0c81173ee9024314254
