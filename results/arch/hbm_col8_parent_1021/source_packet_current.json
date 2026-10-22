@@ -56,5 +56,7 @@
   "R3_current_reach": "r3_closed_binding.json: 19036 paths at unchanged accepted coordinates, max400.776um, no violations.",
   "storage_scope": "Wide seams use 12 actual SRAMs per column; metadata is exact CLOSED SRAM. Existing residual small keep delay shift lines and segmented valid/fault delay state remain explicitly present in source and mapped counts; native census does not qualify their storage style or physical timing.",
   "physical_status": "Native-only component construction input. Parent detailed placement, routing, clocks/reset and final source-bound delivery/return ages remain open.",
-  "producer_scope": "No native VM producer/readable/retention or executable cross-rank caller proof is inferred from component fixtures."
+  "producer_scope": "No native VM producer/readable/retention or executable cross-rank caller proof is inferred from component fixtures.",
+  "R3_exact_source_capsule": "results/arch/hbm_col8_parent_1021/r3_closed_source.tar.gz",
+  "R3_exact_source_readset": "results/arch/hbm_col8_parent_1021/r3_closed_source_readset.json"
 }
