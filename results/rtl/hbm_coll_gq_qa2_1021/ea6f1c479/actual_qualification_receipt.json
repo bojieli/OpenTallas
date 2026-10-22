@@ -1,0 +1,44 @@
+{
+  "collected_local_time": "2026-10-21T22:27:55.765568",
+  "source_commit": "ea6f1c479",
+  "actual_fleet_job": 1770731,
+  "actual_result": "both full IA cases passed, fault checks passed, causal mutant failed at named invariant; wrapper terminal exit 0",
+  "positive_cases": [
+    {
+      "case": "out_ia1",
+      "actual_logs_present": true,
+      "tail_markers": [
+        "out_ia1/f5.log",
+        "out_ia1/s0.log"
+      ]
+    },
+    {
+      "case": "out_ia2",
+      "actual_logs_present": true,
+      "tail_markers": [
+        "out_ia2/f5.log",
+        "out_ia2/s0.log"
+      ]
+    }
+  ],
+  "causal_mutant": "out_qa_mut",
+  "required_invariant": "GQ_QA2_INV_FAIL",
+  "logs_sha256": {
+    "native_k14z.json": "bed1ae96eec778bf32b579510a6a85eb165cf3c8911cc50e700dd41c9f4e1c57",
+    "native_k14y.json": "a754169276de17ba51b50babffa3b5615db2479117df849f970e48ae199072a9",
+    "out_ia2/sources.sha256": "177e3ba080f14647683e65b445e873cda22b0bb74042378ab0059c0f62ff77ce",
+    "out_ia2/build.log": "0e718943a7c06c20fa9edd4dca89e7de27327ae5ba48183d637e40bf69ada42d",
+    "out_ia2/f5.log": "acf5a5750f290fb0fb7e1817fda5fa5262c2d5ef70cd9f1524370a4a478a4de7",
+    "out_ia2/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "out_ia2/s0.log": "4345063016404e5deac3018eb80d9c1f1d22f2171b364f8ec1e7c22b46207931",
+    "out_ia1/sources.sha256": "177e3ba080f14647683e65b445e873cda22b0bb74042378ab0059c0f62ff77ce",
+    "out_ia1/build.log": "0f9b3d2d0c74ee657d0dc8ba477e7280ce87df4cfdb8f4c3e6fdfd6f009bcb3a",
+    "out_ia1/f5.log": "3820c1be4c11d238c70863800a3151c5dfc0ae58170149457d1b9cddc0c2a342",
+    "out_ia1/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "out_ia1/s0.log": "6c27fb70d9b35ecaf74f4e80fce46fe9005056e39bdf469022dbf10da3944d82",
+    "out_qa_mut/sources.sha256": "177e3ba080f14647683e65b445e873cda22b0bb74042378ab0059c0f62ff77ce",
+    "out_qa_mut/ia_check.log": "94fe2799d8f3ece30e326e15e728763c2f158c2cf09923926de2eab5c1eb52f2",
+    "out_qa_mut/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "out_qa_mut/s0.log": "e0d399723795cfe6eb564aa5bfc8c9c96b9b537028a911577a9f6979631b3738"
+  }
+}
