@@ -1,0 +1,263 @@
+{
+ "name": "hbm_hc_tail_child_k4-k4-COMMIT",
+ "block": "ot_hbm_hc_tail_child_static",
+ "ref_tile": true,
+ "owner": "Claude:HBM-ELEM13/HC-TAIL",
+ "purpose": "H.STA.BLK.1 HC Sinkhorn tail child MAIN k4 (hard child x2 in the HC root, TAILC=1): TPIPE 1 + SKP 2 (SQO) + SDIV 17, gate-level CLONED netlist (per-module ABC map, bound_fanout_clone --limit 24, retained re-synth, compact). Square 388.8 x 388.8; mixes W / bases+scales+launch N / result E, clk+rst_n S. Parallel fallback = hbm_hc_tail_child_k4b (same netlist, equal-delay clock spine). | SAFE checklist (HBM-ELEM13/HC-TAIL 10-21, rebuilt after the k3 --cts gate: TT placement -300 / CTS SS -363 at the Sinkhorn sticky fault flop, cone = steady quotient Q3 segment + range compare + 16-way s_bad OR from 1,938 cut flops; FF hold stall -39.7 (5 R2R) after 24.6k hold buffers): 1 pins PASS (RTL pin flop + 2nd stage on every data pin, output pin flops; rst_n reset_landing 2 then ot_rst_relay 3 regions + kept leaf) | 2 reach PASS by plan: square 388.8 um < 405, every pin->core hop registered; post-GRT 405 by gate | 3 fanout PASS: clone limit 24, native32 census on mapped + retained netlist | 4 depth FIXED: no multicycle; Sinkhorn steady step now 16 single-period segments with the quotient output cut QO (y / range registered, SQO 1 via SKP 2, SDIV 17): the fault OR and the st write start at registers; tail TPIPE 1 unchanged (k3b same tail: TT -22 pre-repair) | 5 storage PASS: no runtime-indexed flop array > 2 kb (the 6,144-b mix store is in the HC root, SRAM under SAFE 1) | 6 floorplan PASS: no macros, util ~0.48, square, one full std-cell band | 7 clock: ONE root clk, no derived clock; boundary pin-flop spread <= 80 by --cts gate (k3: 28.7/28.6) | 8 reset PASS: only control/valid flops reset (data OT_FP_DATA_NORST), regional relay; schedule static, no backpressure; child L 989 (+493 edges over L 496): root TAILC emit offset TE 2 -> 495 (root xr4).",
+ "threads": 32,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/hc13-tail-k4-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/hbm_hc_tail_child",
+   "tools/prepare_fp32_fan32_models.py",
+   "results/rtl/fp32_add_native_clone_1020/final_packet/cells.v.gz",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_child_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_os_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+   "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+   "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+   "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+   "rtl/test/run_hbm_hc_tail_child_eq.sh",
+   "rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_k2.v",
+   "rtl/hdc/v41/ot_hdc_sinkhorn_ce.sv",
+   "results/rtl/hbm_hc_root_safe_1020/tail_child_hc8",
+   "rtl/hdc/v41/ot_hdc_sinkhorn_cp.sv",
+   "rtl/hdc/v41/ot_hdc_sk_arith_cp.sv",
+   "results/rtl/hbm_hc_root_safe_1020/tail_child_hc9",
+   "results/rtl/hbm_hc_root_safe_1020/tail_child_hc10",
+   "rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_k4.v"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_hc_tail_child_static u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_k4.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "tailc_native_lockstep",
+    "cmd": "python3 tools/prepare_fp32_fan32_models.py --out {RUN}/cells.v && TC_OFF=495 TC_GAP=1040 bash rtl/test/run_hbm_hc_tail_child_eq.sh {RUN}/nat 0 48 1 rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_k4.v {RUN}/cells.v",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TAILC PASS cases=48",
+    "sources": [
+     "rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_tail_child_static_k4.v",
+     "tools/prepare_fp32_fan32_models.py",
+     "results/rtl/fp32_add_native_clone_1020/final_packet/cells.v.gz",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_fdiv.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+     "rtl/test/run_hbm_hc_tail_child_eq.sh",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_ce.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_cp.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith_cp.sv"
+    ],
+    "pass_witness": "results/rtl/hbm_hc_root_safe_1020/tail_child_hc10/tailc_k4_native_m0_run.log"
+   },
+   {
+    "name": "tailc_rtl_lockstep",
+    "cmd": "TC_PARAMS='.TPIPE(1),.SKP(2),.SDIV(17)' TC_OFF=495 TC_GAP=1040 bash rtl/test/run_hbm_hc_tail_child_eq.sh {RUN}/m0 0 48 1",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TAILC PASS cases=48",
+    "sources": [
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_child_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_os_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_fdiv.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+     "rtl/test/run_hbm_hc_tail_child_eq.sh",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_ce.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_cp.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith_cp.sv"
+    ],
+    "pass_witness": "results/rtl/hbm_hc_root_safe_1020/tail_child_hc10/tailc_k4_rtl_m0_run.log"
+   },
+   {
+    "name": "tailc_rtl_mut1_rowmax",
+    "cmd": "TC_PARAMS='.TPIPE(1),.SKP(2),.SDIV(17)' TC_OFF=495 TC_GAP=1040 bash rtl/test/run_hbm_hc_tail_child_eq.sh {RUN}/m1 1 48 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TAILC PASS",
+    "fail_regex": "TAILC FAIL",
+    "sources": [
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_child_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_os_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_fdiv.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+     "rtl/test/run_hbm_hc_tail_child_eq.sh",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_ce.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_cp.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith_cp.sv"
+    ],
+    "fail_witness": "results/rtl/hbm_hc_root_safe_1020/tail_child_hc10/tailc_k4_rtl_mut1_run.log"
+   },
+   {
+    "name": "tailc_rtl_mut_skp2_sdiv16",
+    "cmd": "TC_PARAMS='.TPIPE(1),.SKP(2),.SDIV(16)' TC_OFF=453 TC_GAP=1040 bash rtl/test/run_hbm_hc_tail_child_eq.sh {RUN}/ms 0 48 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TAILC PASS",
+    "fail_regex": "TAILC FAIL",
+    "sources": [
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_child_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_os_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_tail_unit_static.sv",
+     "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv",
+     "rtl/hdc/ot_hdc_prefix.sv",
+     "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+     "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+     "rtl/hdc/ot_hdc_fastfp.sv",
+     "rtl/hdc/ot_hdc_fastfp_lat.sv",
+     "rtl/hdc/ot_hdc_delay.sv",
+     "rtl/hdc/ot_hdc_sfu.sv",
+     "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+     "rtl/hdc/v41/ot_hdc_fdiv.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith.sv",
+     "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv",
+     "rtl/lib/ot_rst_relay.sv",
+     "rtl/test/tb_hbm_hc_tail_child_eq.sv",
+     "rtl/test/run_hbm_hc_tail_child_eq.sh",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_ce.sv",
+     "rtl/hdc/v41/ot_hdc_sinkhorn_cp.sv",
+     "rtl/hdc/v41/ot_hdc_sk_arith_cp.sv"
+    ],
+    "fail_witness": "results/rtl/hbm_hc_root_safe_1020/tail_child_hc10/tailc_k4_rtl_s16_run.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_hc_tail_child_k4/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_hc_tail_child_k4/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 32,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_hc_tail_child_k4 --out {RUN}/record/views/ot_hbm_hc_tail_child_static  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_hc_tail_child_k4/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_hc_tail_child_k4/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_hc_tail_child_k4/hbm_hc_tail_child_k4-k4-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Sinkhorn steady-step quotient output cut QO (ot_hdc_sinkhorn_cp SQO 1, SKP 2, SDIV 17; removes the k3 Q3->range->s_bad OR->fault cone) on the k3 floorplan and default CTS"
+}
