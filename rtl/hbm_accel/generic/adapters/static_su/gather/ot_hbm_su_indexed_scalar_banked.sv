@@ -4,7 +4,7 @@
 // produced by 32 local headers, rather than clearing/registering 32 wide buses.
 module ot_hbm_su_indexed_scalar_banked #(
  parameter integer READ_SAMPLE=9,WRITE_COMMIT=5,SEGMENTED96=0,MUT_PHASE=0
-)(input wire clk,rst_n,start,input wire[23:0]index_word,score_base,score_limit,dest_word,dyn_mul,
+)(input wire clk,rst_n,start,start_aux,input wire[23:0]index_word,score_base,score_limit,dest_word,dyn_mul,
  input wire[71:0]extra_bases,input wire[8223:0]rr,
  output wire[543:0]rq,output wire[8991:0]wq,output reg busy,done,fault);
  localparam SI=READ_SAMPLE+2,SS=2*READ_SAMPLE+2,WI=2*READ_SAMPLE+4,END=WI+WRITE_COMMIT;
@@ -22,7 +22,11 @@ module ot_hbm_su_indexed_scalar_banked #(
  function automatic[4:0]bank_of(input[23:0]a);bank_of={a[17:16],a[5:3]};endfunction
  wire[PW-1:0]local_phase[0:5];
  for(genvar c=0;c<6;c=c+1)begin:phasecopy
-  ot_hbm_gather_phase_copy #(.PW(PW)) counter(.clk(clk),.rst_n(rrst[1+c]),.start(start),.busy(busy),.q(local_phase[c]));
+  ot_hbm_gather_phase_copy #(.PW(PW)) counter(.clk(clk),.rst_n(rrst[1+c]),.start(c<3?start:start_aux),.busy(running[1]),.q(local_phase[c]));
+ end
+ wire[1:0]running;
+ for(genvar c=0;c<2;c=c+1)begin:busycopy
+  ot_hbm_gather_busy_copy copy(.clk(clk),.rst_n(rrst[0]),.start(c==0?start:start_aux),.finish(phase==END),.q(running[c]));
  end
  wire rd_fire,wr_fire;
  ot_hbm_gather_phase_fire #(.SI(SI),.WI(WI)) fire(.phase(16'(local_phase[0])),.busy(busy),.rd(rd_fire),.wr(wr_fire));
@@ -43,9 +47,9 @@ module ot_hbm_su_indexed_scalar_banked #(
   assign returned_word[bit_n]=|column;
  end
  for(genvar b=0;b<4;b=b+1)begin:capture
-  ot_hbm_gather_sample_byte #(.EDGE(READ_SAMPLE+MUT_PHASE)) index_capture(.clk(clk),.busy(busy),.phase(16'(local_phase[1])),.d(returned_word[b*8+:8]),.q(index_value[b*8+:8]));
+  ot_hbm_gather_sample_byte #(.EDGE(READ_SAMPLE+MUT_PHASE)) index_capture(.clk(clk),.busy(running[0]),.phase(16'(local_phase[1])),.d(returned_word[b*8+:8]),.q(index_value[b*8+:8]));
   for(genvar c=0;c<2;c=c+1)begin:vcopy
-   ot_hbm_gather_sample_byte #(.EDGE(SS)) value_capture(.clk(clk),.busy(busy),.phase(16'(local_phase[2+2*c+b/2])),.d(returned_word[b*8+:8]),.q(value[c][b*8+:8]));
+   ot_hbm_gather_sample_byte #(.EDGE(SS)) value_capture(.clk(clk),.busy(running[c]),.phase(16'(local_phase[2+2*c+b/2])),.d(returned_word[b*8+:8]),.q(value[c][b*8+:8]));
   end
  end
  // Descriptor data remains stable for the entire scheduled transaction. Raw
@@ -157,5 +161,11 @@ endmodule
  (* keep *) reg[PW-1:0]held;
  always @(posedge clk or negedge rst_n)if(!rst_n)held<=0;else if(start&&!busy)held<=0;else held<=held+1'b1;
  assign q=held;
+endmodule
+(* keep_hierarchy *) module ot_hbm_gather_busy_copy(input wire clk,rst_n,start,finish,output reg q);
+ always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else begin
+  if(start&&!q)q<=1;
+  if(q&&finish)q<=0;
+ end
 endmodule
 `default_nettype wire

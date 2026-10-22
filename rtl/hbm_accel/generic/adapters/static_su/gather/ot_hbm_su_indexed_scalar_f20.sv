@@ -54,7 +54,9 @@ module ot_hbm_su_indexed_scalar_f20 #(
  end
  reg row_entry;
  assign descriptor=row[119:0];
- assign engine_start=active && (NATIVE_BANKED==0||edge_index>=2) && edge_index==row[135:120];
+ wire start_aux;
+ (* keep *) ot_hbm_gather_start_test #(.NATIVE(NATIVE_BANKED)) start0(.active(active),.edge_index(edge_index),.date(row[135:120]),.q(engine_start));
+ (* keep *) ot_hbm_gather_start_test #(.NATIVE(NATIVE_BANKED)) start1(.active(active),.edge_index(edge_index),.date(row[135:120]),.q(start_aux));
  localparam integer MIN_RELEASE=2*READ_SAMPLE+WRITE_COMMIT+7;
  always @(posedge clk or negedge resets[1])begin
   if(!resets[1])begin active<=0;done<=0;program_fault<=0;edge_index<=0;pc<=0;last<=0;row_entry<=0;end
@@ -87,7 +89,7 @@ module ot_hbm_su_indexed_scalar_f20 #(
  end
  if(NATIVE_BANKED!=0)begin:g_banked
  ot_hbm_su_indexed_scalar_banked #(.READ_SAMPLE(READ_SAMPLE),.WRITE_COMMIT(WRITE_COMMIT),.SEGMENTED96(SEGMENTED96),.MUT_PHASE(MUT_PHASE)) engine(
-  .clk(clk),.rst_n(resets[2]),.start(engine_start),
+  .clk(clk),.rst_n(resets[2]),.start(engine_start),.start_aux(start_aux),
   .index_word(descriptor[23:0]),.score_base(descriptor[47:24]),.score_limit(descriptor[71:48]),
   .dest_word(descriptor[95:72]),.dyn_mul(descriptor[119:96]),.extra_bases(row[223:152]),.rr(rr),.rq(rq),.wq(wq),
   .busy(engine_busy),.done(engine_done),.fault(engine_fault));
@@ -152,5 +154,8 @@ endmodule
  input wire clk,we,sv,advance,input wire[7:0]wa,input wire[111:0]wd,input wire[2:0]start_row,
  output reg we_q,sv_q,advance_q,output reg[7:0]wa_q,output reg[111:0]wd_q,output reg[2:0]start_q);
  always @(posedge clk)begin we_q<=we;sv_q<=sv;advance_q<=advance;wa_q<=wa;wd_q<=wd;start_q<=start_row;end
+endmodule
+(* keep_hierarchy *) module ot_hbm_gather_start_test #(parameter NATIVE=1)(input wire active,input wire[15:0]edge_index,date,output wire q);
+ assign q=active&&(NATIVE==0||edge_index>=2)&&edge_index==date;
 endmodule
 `default_nettype wire
