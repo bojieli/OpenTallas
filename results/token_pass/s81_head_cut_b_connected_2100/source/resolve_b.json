@@ -1,0 +1,43 @@
+{
+ "iterations": 2,
+ "added": {
+  "ot_pdie_serdes_col": {
+   "file": "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/rtl/dsrom_sys/s81_link/col/ot_pdie_serdes_col.sv",
+   "alternatives": []
+  },
+  "ot_sram_1r1w2c_256x64_m1": {
+   "file": "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.v",
+   "alternatives": [
+    "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_bb.v"
+   ]
+  },
+  "ot_sram_1r1w2c_32x64_m1": {
+   "file": "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+   "alternatives": [
+    "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v"
+   ]
+  },
+  "ot_sram_1r1w_64x512_m1_r2c2": {
+   "file": "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192.sv",
+   "alternatives": [
+    "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/rtl/lib/sram_p192_1019/ot_sram_1r1w_64x512_m1_r2c2__p192bs.sv",
+    "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/qwen_tt_static_cluster_1015/sram_proof_stubs.v",
+    "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+    "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+    "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+    "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
+   ]
+  },
+  "ot_s81_kp4_dec_native_flat_lp": {
+   "file": "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/rtl/dsrom_sys/s81_link/lp/ot_s81_kp4_dec_native_flat_lp.sv",
+   "alternatives": []
+  },
+  "ot_sram_1r1w_64x512_m1_r2c2_p192_mir": {
+   "file": "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir.v",
+   "alternatives": [
+    "/srv/opentallas-scratch/claude/stw-s81-head-h10/h10m/src/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v"
+   ]
+  }
+ },
+ "lint_errors": []
+}
