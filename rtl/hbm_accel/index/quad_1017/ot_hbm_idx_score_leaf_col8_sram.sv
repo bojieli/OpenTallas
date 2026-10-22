@@ -31,7 +31,7 @@ module ot_hbm_idx_score_leaf_col8_sram #(parameter integer AUXW = 30)(
     assign e_qv = g_qv; assign e_q = g_q; assign e_kv = g_kv; assign e_kkv = g_kkv; assign e_key = g_key; assign e_aux = g_aux;
     wire c_v_u, on; wire [3:0] c_kv_u, c_f_u; wire [127:0] c_s_u;
     wire n_v; wire [3:0] n_kv, n_f; wire [127:0] n_s;
-    ot_hbm_idx_chunk_col8_sram core(.clk(clk), .clk_pair(clk_pair), .rst_n(rst_n), .hb(hb_p),
+    ot_hbm_idx_chunk_col8_face core(.clk(clk), .clk_pair(clk_pair), .rst_n(rst_n), .hb(hb_p),
         .ql_v(f_qv), .ql_head(f_q[QW-1 -: 8]), .ql_codes(f_q[QW-9 -: 512]), .ql_sc(f_q[47:16]), .ql_w(f_q[15:0]),
         .k_v(f_kv), .k_kv(f_kkv), .k_key(f_key),
         .c_v(c_v_u), .c_kv(c_kv_u), .c_sum(c_s_u), .c_fault(c_f_u), .online(on),

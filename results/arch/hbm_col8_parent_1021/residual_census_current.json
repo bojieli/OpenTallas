@@ -1,0 +1,95 @@
+{
+  "kind": "Exact source-static residual hierarchy census; no mapped footprint claim",
+  "source_commit": "2645e40ea plus exact face hierarchy hookup",
+  "TP": 192,
+  "source_sha256": {
+    "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_col8_sram.sv": "207ec8fcddce3cfebfa9a090d60bbe0c06a5f1153f79bee5cc2c0275cff516d7",
+    "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_leaf_col8_sram.sv": "de2bc1e1e93822dcb8aa1d273fd4dd5bacfe3927b87b87b8439055e5459bbdce",
+    "rtl/hdc/v41x/ot_hbm_idx_chunk_col8_sram.sv": "f47d30a96af0fe9f122a62078342b39f717d0e29835ac230c03f0fcd7c2a0499",
+    "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_c.sv": "c6c7900365d49bdb0164aea3136d546f05d70944366c65e884a28e46a3ae0736",
+    "rtl/hdc/v41x/ot_hbm_idx_owned_native.sv": "c6db045a09c977c1a5bd5e675ae940c9703734d3a0b182212eb0a723d589d0b9"
+  },
+  "outside_columns_per_quarter": {
+    "leaf_wrappers": 8,
+    "shared_chunk_glue": 8,
+    "engine_glue": 2,
+    "tail_native": 2,
+    "tail_fp32_add_lat7": 24,
+    "keep_delay_W4_D129": 2,
+    "metadata_delay_W25_D146": 2,
+    "quarter_input_W_glue_output_and_fault": 1
+  },
+  "leaf_wrapper_per_instance": {
+    "W_data_register_bits": 2788,
+    "E_data_register_bits": 2780,
+    "sum_bus_two_stages_bits": 1104,
+    "total_declared_ff_bits": 6672,
+    "total_eight_wrappers": 53376,
+    "clock": "clk_chunk[e*4+c]",
+    "reset": "rst_c, with data registers unreset"
+  },
+  "shared_chunk_glue_per_instance": {
+    "parameter_VL_EXTRA": 23,
+    "parameter_QLATE": 0,
+    "parameter_SUM_PAD": 0,
+    "parameter_ONL_PAD": 0,
+    "LAT_SC": 26,
+    "LAT_T": 32,
+    "XLAT": 23,
+    "LATE": 127,
+    "valid_line_segments": 32,
+    "valid_line_bits": 635,
+    "input_and_hid_register_bits": 2822,
+    "ready_register_bits": 32,
+    "registered_output_and_online_bits": 138,
+    "reset_relay_flops": 40,
+    "total_declared_ff_bits": 3667,
+    "total_eight_glue_instances": 29336,
+    "clock": "same clk_chunk as associated leaf",
+    "storage": "Existing 5-bit segmented valid line is resettable FF storage. Physical native footprint and any required SRAM conversion remain open."
+  },
+  "quarter_ctl": {
+    "input_register_bits": 5178,
+    "score_output_register_bits": 306,
+    "fault_sticky_bits": 1,
+    "reset_relay_flops": 3,
+    "clock": "clk_ctl"
+  },
+  "per_engine": {
+    "direct_engine_register_bits": 85,
+    "keep_delay_declared_ff_bits": 516,
+    "metadata_delay_declared_ff_bits": 58,
+    "metadata_successor": "Real 256x256 SRAM now hooked into quarter with exact D146; MAIN/FB physical gates live, no closed footprint.",
+    "tail_fp32_adders": 12,
+    "tail_input_register_bits": 537,
+    "tail_valid_line_bits": 126,
+    "tail_output_register_bits": 73,
+    "tail_fault_delay_bits": 84,
+    "tail_reset_relay_bits": 7,
+    "tail_internal_adder_flops": "OPEN; native synthesis needed, not guessed from LAT7",
+    "clocks": {
+      "engine": "clk_engine[e]",
+      "keep": "clk_engine[e]",
+      "metadata": "clk_meta[e]",
+      "tail": "clk_tail[e]"
+    }
+  },
+  "geometry_status": "No exact closed residual footprint. Old 1512 x 1512 slot may be retained only as conservative diagnostic residual reserve, not native qualification or legal whole-root clock proof.",
+  "column_exclusions": "Column geometry excludes all shared chunk glue, leaf wrapper registers, engine/meta/tail/quarter control. Do not remove these from die inventory.",
+  "four_quarter_counts": {
+    "leaf_wrappers": 32,
+    "shared_chunk_glue": 32,
+    "engine_glue": 8,
+    "tail_native": 8,
+    "tail_fp32_add_lat7": 96,
+    "metadata_delay": 8,
+    "keep_delay": 8,
+    "quarter_ctl": 4
+  },
+  "metadata_macro_count_per_quarter": 2,
+  "metadata_macro_count_four_quarters": 8,
+  "metadata_macro_um": [
+    172.8,
+    41.04
+  ]
+}

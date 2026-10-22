@@ -1,0 +1,8 @@
+ot-run: ot-epyc5       admits   115 GB (avail 436, growth 355, headroom 0, waiters 1/192 GB) load 71/128 running 38 disk 917 GB 
+ot-run: -> ot-epyc5 (will queue: admits 115 GB < 153 GB)
+ot-heavy: waiting for memory on ot-epyc5: need 0.7 x 153 = 107 GB, admissible 116 GB: available 436 GB, growth charged 354 GB (v13 rate rule, uncapped sum, settled floor 23 GB; pending 332 GB at x1), young 64 GB, floor 57 GB
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1578519-1792643845 after 81 s
+CHUNK_RT_EQUIV checks 2344 outputs 1063 nonzero_sums 1063 errors 0 gapk 2 qlate 0
+CHUNK_RT_EQUIV PASS checks 2344
+CHUNK_RT_MODE pos rc=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1578519-1792643845): exit 0
