@@ -1,0 +1,7 @@
+ot-run: ot-epyc5       admits   169 GB (avail 409, growth 290, headroom 0, waiters 0/0 GB) load 55/128 running 36 disk 891 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3450351-1792644568 after 1 s
+CHUNK_RT_EQUIV checks 2344 outputs 1063 nonzero_sums 1063 errors 0 gapk 2 qlate 0
+CHUNK_RT_EQUIV PASS checks 2344
+CHUNK_RT_MODE pos rc=0
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3450351-1792644568): exit 0
