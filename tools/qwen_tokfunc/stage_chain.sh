@@ -45,6 +45,11 @@ sha256sum "$B" > "$C/binary.sha256"
 # 54th adds default-0 RX_FREE/TX_FREE parameters left 0 by the identical instantiator: results/rtl/tokfunc2_qw_1021/kv)
 KVSRC=$(grep -oE "\b[0-9a-f]{9}\b" "$KVOBJ/SOURCE_COMMIT.txt" 2>/dev/null | head -1)
 GRADE="RTL-functional (source-bound KV vehicle ${KVSRC:-$KVOBJ})"
+# a vehicle built by stage kv on the source assembly (KVOBJ = RUNROOT/kv/out, its stage verdict RUNROOT/kv/result.json
+# PASS with grade "RTL-functional (source assembly)") carries that grade (STEWARD-TOKb-QW 10-21)
+KVG=$(python3 -c "import json,sys;r=json.load(open(sys.argv[1]));print(r.get('verdict',''),'|',r.get('grade',''))" \
+  "$KVOBJ/../result.json" 2>/dev/null || true)
+case "$KVG" in "PASS | RTL-functional (source assembly)"*) GRADE="RTL-functional (source assembly) KV vehicle = stage kv build $KVSRC";; esac
 [ -n "$NET" ] && GRADE="die-netlist"
 echo "$GRADE" > "$C/GRADE"
 FD=$(sed -nE 's/^FD=([0-9]+).*/\1/p' "$KVOBJ/fd.txt" 2>/dev/null); FD=${FD:-3}; echo "FD=$FD (from $KVOBJ/fd.txt)" > "$C/fd.txt"
