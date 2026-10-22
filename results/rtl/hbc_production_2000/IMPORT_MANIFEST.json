@@ -59,7 +59,7 @@
     "results/rtl/hbc_production_2000/variable_counts/w33.log": "32d99d3c6aef8b5381854dcbb5368272916fa06ed7169b5476fd545bace6e0a7",
     "results/rtl/hbc_production_2000/variable_counts/w515.log": "c2d171a9ebca3cc5d6afdd41e74fe1a8858f7c93f19f79f067dc6cdde3974675",
     "results/rtl/hbc_production_2000/version.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
-    "tools/s81_dv/hbc_production_2000/elaborate.sh": "00ebcd4cca0ec2bfd2a5783cde64802dd7f8f43043921d35366601239a81217d",
+    "tools/s81_dv/hbc_production_2000/elaborate.sh": "6c194c5513b59a23c647fe917ee5f2e128b9ca08899dadec9bf8bd52786352e3",
     "tools/s81_dv/hbc_production_2000/gen_native.py": "7852af569fe3f9bf88c320d59422601e3759fd11fcbbb8d683c9c99209d251dd",
     "tools/s81_dv/hbc_production_2000/gen_reload.py": "f0cc567c08696484c9262c58297596d2f025dbb856cbf409b613ffb83ba1e527",
     "tools/s81_dv/hbc_production_2000/gen_variable.py": "f2b23bb3ca661fc69bd2cba2283cfd00aead08974acdf496dae152e03fa4f442",
@@ -76,5 +76,17 @@
     "tools/s81_dv/hostctx_1021/tb_hostb_stage_hbc.sv": "826e4303475de45cb4bc342e6b312d4c159a137f5497fc4d82f01d1e040f5732"
   },
   "unchanged_KS6_sha256": "758c0d32743231c626a0d8c774ca21d533757cbaf65cef84c003bf1c0001ef5c",
-  "scope": "bounded HOST(b) source/capability/evidence only; no die bind/view/constraint/helper changes"
+  "scope": "bounded HOST(b) source/capability/evidence only; no die bind/view/constraint/helper changes",
+  "reproducibility_followup": {
+    "commit": "bc0815dce",
+    "changed_recipe": {
+      "path": "tools/s81_dv/hbc_production_2000/elaborate.sh",
+      "original_import_sha256": "00ebcd4cca0ec2bfd2a5783cde64802dd7f8f43043921d35366601239a81217d",
+      "current_sha256": "6c194c5513b59a23c647fe917ee5f2e128b9ca08899dadec9bf8bd52786352e3"
+    },
+    "additional_files": {
+      "tools/s81_dv/hbc_production_2000/prepare_prior.py": "80ceedce8834197187ca2783420b6eea2a2d485c7586bc451d3162a9b96d7dd3"
+    },
+    "RTL_unchanged": true
+  }
 }
