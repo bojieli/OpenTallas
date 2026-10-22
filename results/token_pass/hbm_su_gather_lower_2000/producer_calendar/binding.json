@@ -1,0 +1,25 @@
+{
+  "status": "PARTIAL",
+  "engine": "ot_hbm_su_indexed_scalar",
+  "clock": "stream",
+  "die_sha256": null,
+  "source_sha256": null,
+  "clock_epoch_identity": null,
+  "calendar_epoch": null,
+  "configuration_start": null,
+  "launch_to_calendar_zero": null,
+  "ownership_release_tail": null,
+  "port_free": null,
+  "parameters": null,
+  "instance": null,
+  "target_id": 180,
+  "control_transport": "ot_static_program_target",
+  "diagnostic_graph_sha256": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
+  "diagnostic_source_ref": "57cd9d54d",
+  "source_owners": {
+    "native_gather_and_IDX": "/root/hbm/idxsu",
+    "GSC_native_arrival": "/root/hbm/coll",
+    "final_route_age_composition": "/root/hbm/chain",
+    "calendar_implementation": "/root/s81_kv_lower"
+  }
+}

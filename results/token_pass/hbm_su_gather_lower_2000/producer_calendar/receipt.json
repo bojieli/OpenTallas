@@ -1,0 +1,18 @@
+{
+  "scope": "Actual missing-authority replay; no producer dates or execution qualified",
+  "host": "ot-gold1",
+  "unit": "oth-ubuntu-2650321-1792645105",
+  "status": "PASS",
+  "result": "PARTIAL",
+  "source_sha256": "d4fdc756b204254abf527a238a7148d719d31000927ac08506bb0a8f2e05a039",
+  "sources": {
+    "diagnostic_graph": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
+    "diagnostic_source_ref": "57cd9d54d"
+  },
+  "implementation_owner": "/root/s81_kv_lower",
+  "active_source_owners": {
+    "IDX_and_gather_endpoint": "/root/hbm/idxsu",
+    "GSC_producer": "/root/hbm/coll",
+    "whole_route_composition": "/root/hbm/chain"
+  }
+}
