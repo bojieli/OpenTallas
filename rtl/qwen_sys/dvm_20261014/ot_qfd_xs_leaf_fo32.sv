@@ -64,6 +64,8 @@ module ot_qfd_xs_leaf_fo32 #(
         if (!rst_n) begin wv <= 1'b0; cv <= 1'b0; end
         else begin wv <= w_v; cv <= c_v; end
     always @(posedge clk) begin wep <= w_ep; woff <= w_off; wm <= w_m; wctl <= w_ctl; cep <= c_ep; end
+    (* keep *) reg [63:0] wma, wmb;                     // raw kept mask copies: one per entry half (4 entries each)
+    always @(posedge clk) begin wma <= w_m; wmb <= w_m; end
     // FILL_PIPE = 1 output stage
     reg pv, pcv, pep, pcep;
     reg [5:0] poff;
@@ -112,9 +114,11 @@ module ot_qfd_xs_leaf_fo32 #(
                 for (ge = 0; ge < 2; ge = ge + 1) begin : g_e
                     wire pw  = kv && (kep == ge) && en && cond;   // into both entry halves (2 loads)
                     wire clr = kcv && (kcep == ge);
-                    ot_qfd_xs_ent9 u_lo (.clk(clk), .p(pw), .m(wm[EP]), .clr(clr), .d(wd[16*EP +: 8]),
+                    wire we_lo = pw && wma[EP];                     // distinct mask copies -> distinct enable nets
+                    wire we_hi = pw && wmb[EP];
+                    ot_qfd_xs_ent9 u_lo (.clk(clk), .we(we_lo), .clr(clr), .d(wd[16*EP +: 8]),
                                          .q({mem_all[2176*gt + 17*(64*ge + EP) + 16], mem_all[2176*gt + 17*(64*ge + EP) +: 8]}));
-                    ot_qfd_xs_ent8 u_hi (.clk(clk), .p(pw), .m(wm[EP]), .d(wd[16*EP + 8 +: 8]),
+                    ot_qfd_xs_ent8 u_hi (.clk(clk), .we(we_hi), .d(wd[16*EP + 8 +: 8]),
                                          .q(mem_all[2176*gt + 17*(64*ge + EP) + 8 +: 8]));
                 end
             end
@@ -287,18 +291,16 @@ module ot_qfd_xs_mux_rep16 #(parameter integer LN = 7, parameter integer SW = 13
     assign q = g_l[LN].n;
 endmodule
 
-// one {valid, BF16} storage entry = two kept halves, each with its OWN write enable p & m (a gate inside the half), so
-// an enable net drives 8 bits (2 pins each) + valid <= 17 pins (one shared enable measured 33: ASAP7 maps the enable
-// mux on 2 pins per bit)
+// one {valid, BF16} storage entry = two kept halves, each with its OWN write-enable input net (formed in the parent
+// from distinct mask copies), so an enable drives 8 bits (2 pins each) + valid <= 17 pins (one shared enable measured
+// 33; an enable formed inside the half was decomposed by ABC into its mask bit: wm 73)
 (* keep_hierarchy = "yes" *) module ot_qfd_xs_ent9 (
     input  wire       clk,
-    input  wire       p,
-    input  wire       m,
+    input  wire       we,
     input  wire       clr,
     input  wire [7:0] d,
     output wire [8:0] q          // {valid, data[7:0]}
 );
-    wire we = p & m;
     reg [7:0] r;
     reg       v;
     always @(posedge clk) if (we) r <= d;
@@ -310,12 +312,10 @@ endmodule
 
 (* keep_hierarchy = "yes" *) module ot_qfd_xs_ent8 (
     input  wire       clk,
-    input  wire       p,
-    input  wire       m,
+    input  wire       we,
     input  wire [7:0] d,
     output wire [7:0] q
 );
-    wire we = p & m;
     reg [7:0] r;
     always @(posedge clk) if (we) r <= d;
     assign q = r;
