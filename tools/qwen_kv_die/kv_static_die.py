@@ -2332,7 +2332,10 @@ def place(m, K, geo, F):
     GX, GY = K.GX, K.GY
     up = K.up
     SH = K.SHAVE
-    pcw, pch = 270.0, 302.4
+    # PC sr13 keeps the existing vertical pitch but reserves its full hardened body
+    # plus the 2.16 um die shave. The neighbouring host column follows the new
+    # width, so relay planning sees the enlarged obstacles before assigning wires.
+    pcw, pch = (390.96, 358.56) if os.environ.get('OT_KV_PC_SR13_SLOTS', '0') == '1' else (270.0, 302.4)
     gap = 21.6
     for st in STACKS:
         cx, cy, cw, ch, co, cm = geo[st]['ctrl']
