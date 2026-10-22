@@ -1117,6 +1117,7 @@ def main():
             used[dp['instance']].add(pn)
     # clocks / resets
     clk = defaultdict(lambda: defaultdict(list)); rst = defaultdict(list)
+    src_rst = []     # HBMc/CHAIN 10-22: (source inst, source port) of every non-hb_ckgen reset (refcfg_<q>.pc_rst_n)
     for r in C['clock_resets']:
         n = r['instance']
         if n not in cell_of:
@@ -1125,9 +1126,31 @@ def main():
         pins_ = [pin(r['port'], b, k) for k in range(r['bits'])]
         if r['kind'] == 'clock':
             clk[r['domain']][n] += pins_
+        elif r.get('source') and r['source'][0] != CKGEN:
+            # HBMc/CHAIN 10-22 (freeze class 3): a reset whose contract source is a block output (64 PC controllers
+            # ctl_<q>_pNN.rst_n <- refcfg_<q>.pc_rst_n: "PC reset released only after the refresh row is loaded") is wired
+            # to that output, never to hb_ckgen.por_<dom> (which left the PCs released at POR and pc_rst_n dangling).
+            si, sp = r['source'][0], r['source'][1]
+            if si not in cell_of:
+                raise SystemExit(f'RESET_SOURCE_EXCLUDED {n}.{r["port"]} <- {si}.{sp}: refusing to tie it to POR')
+            sb = ports[cell_of[si]][sp]
+            for k, lp in enumerate(pins_):
+                d = (si, pin(sp, sb, k if sb is not None and r['bits'] > 1 else 0))
+                nets.setdefault(d, [d]).append((n, lp)); used[si].add(d[1])
+            src_rst.append((si, sp))
         else:
             rst[r['domain']] += [(n, p) for p in pins_]
         used[n].update(pins_)
+    print('reset sources: por', sum(len(v) for v in rst.values()), 'block-sourced', len(src_rst), sorted(set(src_rst))[:8], flush=True)
+    # HBMc/CHAIN 10-22 GEN check (owner: no stubs / open inputs): a block-sourced reset may never sit on a por tree, and
+    # no contract edge into a cfg collar / PC controller may be dropped (would leave its input open).
+    _blk = {(r_['instance'], r_['port']) for r_ in C['clock_resets'] if r_['kind'] != 'clock' and r_.get('source') and r_['source'][0] != CKGEN}
+    _por_bad = [(n, p_) for lst in rst.values() for (n, p_) in lst if (n, re.sub(r'\[\d+\]$', '', p_)) in _blk]
+    _drop_bad = {k: v for k, v in dropped.items() if any(str(x).startswith(('col_', 'ctl_')) for x in (k if isinstance(k, tuple) else (k,)))}
+    if _por_bad or _drop_bad:
+        raise SystemExit(f'GEN_RESET_OPEN_CHECK FAIL por_bound_block_resets {_por_bad[:6]} dropped_collar_pc_edges {_drop_bad}')
+    print('GEN_RESET_OPEN_CHECK PASS block-sourced resets', len(src_rst), 'collar/pc dropped edges 0', flush=True)
+    src_rst_fp = ''.join(f'set_false_path -from [get_pins {si}/{sp}*]   ;# block-sourced reset (as por: distribution not modelled)\n' for si, sp in sorted(set(src_rst)))
 
     # ---------------- SYNTH abstracts (pin faces toward peers) ----------------
     peer_xy = defaultdict(list)   # (inst, port) -> [(x, y, bits)]
@@ -1610,7 +1633,7 @@ set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_false_path -from [get_pins {CKGEN}/por_*]
-# die clock check (ROOT d59a62a37): dump the die clock network + STA arrivals; report with tools/die_clock_check.py
+{src_rst_fp}# die clock check (ROOT d59a62a37): dump the die clock network + STA arrivals; report with tools/die_clock_check.py
 set ::env(OT_DCC_OUT) /work/out/die_clock_dump.tsv
 set ::env(OT_DCC_ROOTS) "{' '.join(clock_root_names)}"
 set ::env(OT_DCC_MAX_FANOUT) {a.pair_max_tiles}
