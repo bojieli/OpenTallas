@@ -1,0 +1,57 @@
+{
+  "source": "8f964de8e",
+  "host": "ot-epyc7",
+  "unit": "oth-ubuntu-1067891-1792641542",
+  "actual_source_dir": "/srv/opentallas-scratch/claude/codex-vmux-parent-reset-2058/src",
+  "all_remote_source_hashes_match": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+    "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+    "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_vmux_n32.sv",
+    "rtl/dsrom_sys/s81_dv/idx/test/tb_dsdv_idx_vmux_n32.sv"
+  ],
+  "verilator": "5.050",
+  "edges": 20000,
+  "valid_beats": 13317,
+  "VMUX_edges": 2,
+  "VDLY_edges": 28,
+  "reset_release_edges": 2,
+  "results": {
+    "vm0_dl2": {
+      "vmux": "PASS",
+      "vmux_mismatches": 0,
+      "vdly": "FAIL",
+      "vdly_mismatches": 5538
+    },
+    "vm0_dl0": {
+      "vmux": "PASS",
+      "vmux_mismatches": 0,
+      "vdly": "PASS",
+      "vdly_mismatches": 0
+    },
+    "vm2_dl0": {
+      "vmux": "FAIL",
+      "vmux_mismatches": 5553,
+      "vdly": "PASS",
+      "vdly_mismatches": 0
+    },
+    "vm3_dl0": {
+      "vmux": "FAIL",
+      "vmux_mismatches": 3271,
+      "vdly": "PASS",
+      "vdly_mismatches": 0
+    },
+    "vm0_dl1": {
+      "vmux": "PASS",
+      "vmux_mismatches": 0,
+      "vdly": "FAIL",
+      "vdly_mismatches": 6046
+    },
+    "vm1_dl0": {
+      "vmux": "FAIL",
+      "vmux_mismatches": 6625,
+      "vdly": "PASS",
+      "vdly_mismatches": 0
+    }
+  },
+  "scope": "minimum VMUX+VDLY mechanism qualification; not full composed tree or native/physical parent qualification"
+}
