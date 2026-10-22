@@ -220,8 +220,18 @@ module ot_s81svc8_hgrp_s81 #(
             // SVC7_GRAPH BLOCKED ld_w2v port 34 loads).  Function = the g_prewrite priority normal > high > low.
             (* keep *) wire [NBANK-1:0] p_bs;
             (* keep *) wire [TD/R*NBANK-1:0] en_n, en_h, en_l;
+            // c85aef230 native BLOCKED (unregistered port ld_bank[2] 34 loads: the bound graph merges the per-head
+            // port-equivalent R0 bank copies and never clones a register fed straight by a port).  Capture the bank
+            // ONE-HOT at the same R0 edge (one 3-bit compare in front of the pin flop, as w2v_r0): R0(ld_bank == gb)
+            // == (R0(ld_bank) == gb), so p_bs, en_* and every ab write are identical; the decoded registers are no
+            // longer pure port copies, so the replicator may clone them.  The port now loads NBANK compares per head.
+            wire [NBANK-1:0] bs_d, bs_q;
+            for (gb = 0; gb < NBANK; gb = gb + 1) begin : g_bsd
+                assign bs_d[gb] = (ld_bank == gb);
+            end
+            ot_hdc_v41x_kreg #(.W(NBANK), .R(0)) u_bs (.clk(clk), .rst_n(rst_l), .d(bs_d), .q(bs_q));
             for (gb = 0; gb < NBANK; gb = gb + 1) begin : g_bs
-                assign p_bs[gb] = (r_ld_bank == gb);
+                assign p_bs[gb] = bs_q[gb];
                 for (gk = 0; gk < TD/R; gk = gk + 1) begin : g_en
                     assign en_n[gk*NBANK + gb] = write_normal && p_bs[gb];
                     assign en_h[gk*NBANK + gb] = write_high[gk] && p_bs[gb];
