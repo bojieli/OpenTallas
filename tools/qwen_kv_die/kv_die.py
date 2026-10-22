@@ -3392,13 +3392,21 @@ def _relays(m):
         src_f = ends_f[0]
         if len(set(loads_f)) != len(loads_f) or any(e_ in ends_f for e_ in loads_f):
             raise ValueError(f'kv die fork {bid_f}: duplicate load or driver alias')
+        narrow_f = (m.get('fork_narrow') or {}).get(bid_f, {})
         for i_f, ld_f in enumerate(loads_f):
             nm_f = f'{bid_f}__f{i_f}'
             if nm_f in fork_names:
                 raise ValueError(f'kv die fork {nm_f}: bus name collision')
             fork_names.add(nm_f)
             forks_[nm_f] = bid_f
-            br_ = (nm_f, 'kv_oneway', bits_f, [src_f, ld_f])
+            # SQ-KATTN2 10-21: a branch whose load reads only the low slice of the trunk word is planned at that width
+            # (its relays carry the consumed bits only); write_netlist joins its first segment to the trunk net's slice
+            w_f = narrow_f.get(f'{ld_f[0]}.{ld_f[1]}', bits_f)
+            if not 0 < w_f <= bits_f:
+                raise ValueError(f'kv die fork {nm_f}: narrow width {w_f} outside the trunk word {bits_f}')
+            if w_f != bits_f:
+                m.setdefault('fork_slices', {})[nm_f] = (bid_f, w_f, tuple(src_f))
+            br_ = (nm_f, 'kv_oneway', w_f, [src_f, ld_f])
             if __import__('os').environ.get('OT_KV_FORK_PRIO', '1' if _ectl_st_frame(True) else '0') == '1':
                 # DIE-KV-REPLACE 10-19: a fork branch is planned right after its trunk (it keeps the trunk's priority:
                 # pvh_<st>_<k>__f0 -> astk vh<k> was planned LAST and found the group-top corner full on the grown ECTL)
@@ -4012,7 +4020,12 @@ def _relays(m):
             bf_, cf_, wf_, ef_ = nb[idx_[nm_f]]
             bt_, ct_, wt_, et_ = nb[idx_[bid_f]]
             if wf_ != wt_:
-                raise ValueError(f'kv die fork {nm_f}: width {wf_} != trunk width {wt_}')
+                sl_ = (m.get('fork_slices') or {}).get(nm_f)
+                if not sl_ or sl_[0] != bid_f or sl_[1] != wf_ or wf_ > wt_:
+                    raise ValueError(f'kv die fork {nm_f}: width {wf_} != trunk width {wt_}')
+                if ef_[0] != et_[0]:
+                    raise ValueError(f'kv die fork {nm_f}: driver {ef_[0]} != trunk driver {et_[0]}')
+                continue            # narrowed branch: its first segment stays its own bus (true pin widths); netlist slices
             if ef_[0] != et_[0]:
                 raise ValueError(f'kv die fork {nm_f}: driver {ef_[0]} != trunk driver {et_[0]}')
             nb[idx_[bid_f]] = (bt_, ct_, wt_, list(et_) + [e_ for e_ in ef_[1:] if e_ not in et_])
@@ -5126,12 +5139,66 @@ def static_instance_params(m):
     return out
 
 
+def narrow_transports(m, text):
+    """SQ-KATTN2 10-21: transports planned at their consumed width (kv_static_die GRP_EST_PRIVATE / GRP_H_CTL_PRIVATE).
+
+    fork_slices {branch: (trunk, w, (drv, port))}: the narrowed branch's first segment n_<branch> is not a second driver
+    connection: its loads read n_<trunk>[w-1:0] and the driver's duplicate .port(n_<branch>) is dropped.
+    narrow_src {bus: (drv, port, full)}: the producer keeps a full-width first-segment net; every other connection on it
+    reads the low [w-1:0] slice (w = the planned bus width)."""
+    bw = {b_[0]: b_[2] for b_ in m['buses']}
+    lines = text.split('\n')
+    inst_re = re.compile(r'^  (\S+) (\S+) \((.*)\);$')
+
+    def edit(fn):
+        n_ = 0
+        for i_, ln in enumerate(lines):
+            mt = inst_re.match(ln)
+            if mt:
+                new = fn(mt.group(2), mt.group(3))
+                if new != mt.group(3):
+                    lines[i_] = f'  {mt.group(1)} {mt.group(2)} ({new});'
+                    n_ += 1
+        return n_
+    for nm_, (trunk, w, (drv, dport)) in sorted((m.get('fork_slices') or {}).items()):
+        if bw.get(nm_) != w or trunk not in bw:
+            raise ValueError(f'narrow_transports: {nm_} not planned at {w} b off {trunk}')
+        net, tnet = f'n_{nm_}', f'n_{trunk}'
+        decl = f'  wire [{w - 1}:0] {net};'
+        if lines.count(decl) != 1:
+            raise ValueError(f'narrow_transports: {net} declaration missing')
+        lines.remove(decl)
+        dup = f'.{dport}({net})'
+        if edit(lambda inst, body: re.sub(r',\s*' + re.escape(dup) + r'|' + re.escape(dup) + r',\s*', '', body)
+                if inst == drv and dup in body else body) != 1:
+            raise ValueError(f'narrow_transports: driver {drv}.{dport} has no {net} connection')
+        if edit(lambda inst, body: body.replace(f'({net})', f'({tnet}[{w - 1}:0])')) < 1:
+            raise ValueError(f'narrow_transports: {net} has no load')
+    for bid, (drv, dport, full) in sorted((m.get('narrow_src') or {}).items()):
+        w, net = bw[bid], f'n_{bid}'
+        decl = f'  wire [{w - 1}:0] {net};'
+        if lines.count(decl) != 1 or not w < full:
+            raise ValueError(f'narrow_transports: {net} declaration / width {w} vs {full}')
+        lines[lines.index(decl)] = f'  wire [{full - 1}:0] {net};'
+
+        def sl(inst, body, net=net, w=w, drv=drv, dport=dport):
+            return re.sub(r'\.(\w+)\(' + re.escape(net) + r'\)',
+                          lambda c_: c_.group(0) if (inst == drv and c_.group(1) == dport) else
+                          f'.{c_.group(1)}({net}[{w - 1}:0])', body)
+        if edit(sl) < 1:
+            raise ValueError(f'narrow_transports: {net} has no load')
+    return '\n'.join(lines)
+
+
 def write_netlist(m, k, path, top='qkd_die'):
     if os.environ.get('OT_KV_GRP_PRIVATE0', '0') == '1' and k != 1:
         raise ValueError('GRP_PRIVATE0 requires full-width parent nets (k=1)')
     if os.environ.get('OT_KV_GRP_SAFE2', '0') == '1' and k != 1:
         raise ValueError('GRP_SAFE2 requires full-width parent nets (k=1)')
     F.write_netlist(m, k, path, top=top)
+    if m.get('fork_slices') or m.get('narrow_src'):
+        p_ = Path(path)
+        p_.write_text(narrow_transports(m, p_.read_text()))
     if m['geo'].get('static_die'):
         # KVJ-G2: per-instance parameters (ECTL kiss RESPONSE_LAT from this plan's K request / response relays) as a
         # sidecar the strict bind reads (kv_bound_netlist); die.v stays a parameter-free structural netlist

@@ -124,6 +124,15 @@ GRP_S6C = os.environ.get('OT_KV_GRP_S6C', '0') == '1'
 if GRP_S6C and not (GRP_SAFE2 and os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'):
     raise ValueError('GRP_S6C requires OT_KV_GRP_SAFE2=1 (DS private ABI + parent connections) and OT_KV_NATIVE_SLOTS=1 '
                      '(the closed group tiles are 388.8 wide; the legacy group frame is narrower)')
+# SQ-KATTN2 10-21 (GRP_SAFE2 transports at the consumed width): the private group ABI reads x__est[0:0] and the H group
+# i_ctl[193:0] (kv_grp_safe2.frame_port_widths).  The die used to carry the full 13-b EST word down every group fork
+# (32 x ~70 relay stages) and the full 271-b o_dn word into each H group, then slice at the consumer: 692 driven bits nobody
+# reads (captured998 strict bind FAIL unread_net_bits).  The generator now plans those transports at the consumed width:
+# EST group fork branches 1 b (kv_die fork_narrow -> the branch's first relay reads n_est[0:0]); the o_dn bus into an H group
+# 194 b (narrow_src: the producer keeps its full 271-b net, the first stage reads [193:0]; o_dn[270:194] of those four
+# chain-end s6c groups is the declared private tail, kv_open_tail_roles odn_h_slice).
+GRP_EST_PRIVATE = 1
+GRP_H_CTL_PRIVATE = 194
 GRP_S6C_RTL = dict(grp='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv',
                    grp_h='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv')
 GROUP_SLOT = dict(grp=(388.8, float(os.environ.get('OT_KV_GRP_SLOT_H', '432.0')) if GRP_S6C else 388.8),
@@ -1992,6 +2001,11 @@ def inject(m, K):
         if dinst == 'embgw' and dport == 'est':
             fk.setdefault('est', [])
             fk['est'] += [l_ for l_ in loads if l_ not in fk['est']]
+            if GRP_SAFE2:
+                nf_ = m.setdefault('fork_narrow', {}).setdefault('est', {})
+                for l_ in loads:
+                    if tiles.get(l_[0], {}).get('kind') in ('grp', 'grp_h') and l_[1] == 'x__est':
+                        nf_[f'{l_[0]}.{l_[1]}'] = GRP_EST_PRIVATE
             continue
         if bits is None:
             raise ValueError(f'kv_static_die: no width for {dinst}.{dport}')
@@ -2003,6 +2017,12 @@ def inject(m, K):
             loads = [('dcal', DCAL_BC_LINK[l_[1]]) if l_[0] == 'd2d_kv' and l_[1] in DCAL_BC_LINK else l_ for l_ in loads]
             rec.setdefault('dcal_bc', []).append(f'{dinst}.{dport} -> ' + ', '.join(f'{a}.{b}' for a, b in loads))
         bid = _bid(dinst, dport, seen_buses)
+        if GRP_SAFE2 and dport == 'o_dn' and loads and \
+                all(tiles.get(c_, {}).get('kind') == 'grp_h' and p_ == 'i_ctl' for c_, p_ in loads):
+            if bits != 271:
+                raise ValueError(f'kv_static_die: {dinst}.o_dn -> H i_ctl: expected the 271-b control word, got {bits}')
+            m.setdefault('narrow_src', {})[bid] = (dinst, dport, bits)
+            bits = GRP_H_CTL_PRIVATE
         add((bid, 'kv_oneway', bits, [(dinst, dport), loads[0]]))
         if len(loads) > 1:
             fk[bid] = list(loads[1:])
