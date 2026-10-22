@@ -68,6 +68,8 @@ def forwarded_payload_width(master):
         match = re.fullmatch(pattern, master)
         if match:
             return int(match[1])
+    if master in ('dsdv_pv_local_land_n32_276', 'dsdv_pv_local_land_n32_source4_276'):
+        return 276
     if master == 'dsfd_dvland_pvrd':
         return 562
     return None
@@ -653,13 +655,14 @@ def main():
         ibits[nm] = pb
     top = set(tin) | set(tout)
     clocks_sdc = clock_sdc(T, top)
+    landing_instances = {row['inst'] for row in hints['landings']}
     # clock nets: region roots, lane forwarded clocks (relay ck / ck_o, landing ck_f, forward cells), peer clocks (bind clk_peer)
     clocknets = {n for n in top if n.startswith('ck_')}
     for mst, nm, _, cm in insts:
         cps = []
         if mst.startswith('dsfd_dvrlyh_') or mst.startswith('dsfd_dvrly_'):
             cps = ['ck', 'ck_o']
-        elif mst.startswith('dsfd_dvland_'):
+        elif nm in landing_instances:
             cps = ['ck_f', 'ck']
         elif mst.endswith('_ASAP7_75t_R') and nm.startswith('fwd_'):
             cps = ['A', 'Y', 'CLK', 'GCLK']     # BUFx8 forward / ICGx4 hop-0 lane clock gate (S81-LBGAP/G1)
@@ -752,6 +755,14 @@ def main():
         else:
             w_, h_ = short, long_; yy = y - h_ / 2; xx = b['x'] - w_ - 2.0 if f == 'W' else b['x'] + b['w'] + 2.0
             pref = [(0, 1), (0, -1), (-1 if f == 'W' else 1, 0)]
+        body = T.get('landing_assemblies', {}).get(mst_of[i], {}).get('body_um')
+        if body:
+            # Explicit source/native outline grant, fixed orientation. No inherited view.
+            w_, h_ = map(float, body)
+            if f in 'SN':
+                xx = x - w_ / 2; yy = b['y'] - h_ - 2.0 if f == 'S' else b['y'] + b['h'] + 2.0
+            else:
+                yy = y - h_ / 2; xx = b['x'] - w_ - 2.0 if f == 'W' else b['x'] + b['w'] + 2.0
         px_, py_, dd = placer.put(xx, yy, w_, h_, prefer=pref)
         loc[i] = (px_, py_, w_, h_, 'FIRM'); moved['landing'] += dd is not None and dd > 0
         if dd is None or dd > 200:
