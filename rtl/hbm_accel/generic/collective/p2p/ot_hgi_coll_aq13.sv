@@ -144,10 +144,46 @@ module ot_hgi_coll_aq13 #(parameter integer MUT=0, parameter integer LMUT=0) (
         if (!rst_n) s2a_v <= 1'b0;
         else s2a_v <= s1_v;
     end
+`ifdef OT_GQ_R13N
+    // R13 (HBMb/COLL-GQ 10-21, k12q native census: u_aq1.s1_m[1][30] / s1_m[2][30] QN 38 loads each = the FLAT S2 mx4,
+    // whose 31-bit select ABC rebuilt around the two magnitude MSBs (28 OR3 select terms)). S2 now has the S1 structure:
+    // two kept winner-decode copies per 4:1 max (lo / hi half of the select), each reading its OWN kept register copy of
+    // the four S1 magnitudes (ot_hgi_coll_aq_mag_ff, loaded from the same s1_m_d at the same edge); the data select reads
+    // s1_m (1 load per bit). Same function (mx4_win = mx4 tie rule), same edge, 0 cycles.
+    wire [30:0] s1_ml [0:7];
+    wire [30:0] s1_mh [0:7];
+    wire [30:0] s2a_m_d [0:1];
+    generate for (genvar gi = 0; gi < 8; gi = gi + 1) begin : g_s1_copy
+        ot_hgi_coll_aq_mag_ff u_l(.clk(clk), .d(s1_m_d[gi]), .q(s1_ml[gi]));
+        ot_hgi_coll_aq_mag_ff u_h(.clk(clk), .d(s1_m_d[gi]), .q(s1_mh[gi]));
+    end
+    for (genvar g2 = 0; g2 < 2; g2 = g2 + 1) begin : g_mx4_s2
+        wire [3:0] w_lo, w_hi;
+        (* keep = "true" *) ot_hgi_coll_aq_mx4_win u_wlo(.a(s1_ml[4*g2]), .b(s1_ml[4*g2+1]), .c(s1_ml[4*g2+2]), .d(s1_ml[4*g2+3]), .w(w_lo));
+`ifdef OT_GQ_MUT_S2W
+        // mutant: the hi-half winner copy compares a/b swapped (selects the wrong high half whenever a != b wins)
+        (* keep = "true" *) ot_hgi_coll_aq_mx4_win u_whi(.a(s1_mh[4*g2+1]), .b(s1_mh[4*g2]), .c(s1_mh[4*g2+2]), .d(s1_mh[4*g2+3]), .w(w_hi));
+`else
+        (* keep = "true" *) ot_hgi_coll_aq_mx4_win u_whi(.a(s1_mh[4*g2]), .b(s1_mh[4*g2+1]), .c(s1_mh[4*g2+2]), .d(s1_mh[4*g2+3]), .w(w_hi));
+`endif
+        for (genvar bi = 0; bi < 31; bi = bi + 1) begin : g_bit
+            wire [3:0] w = (bi < 16) ? w_lo : w_hi;
+            assign s2a_m_d[g2][bi] = (w[0] & s1_m[4*g2][bi]) | (w[1] & s1_m[4*g2+1][bi]) | (w[2] & s1_m[4*g2+2][bi]) | (w[3] & s1_m[4*g2+3][bi]);
+        end
+    end endgenerate
+`ifdef OT_GQ_CHECK_INV
+    always @(posedge clk) for (i = 0; i < 8; i = i + 1)
+        if (s1_ml[i] !== s1_m[i] || s1_mh[i] !== s1_m[i]) $fatal(1, "GQ_R13_INV_FAIL s1 copy %0d", i);
+`endif
+`endif
     always @(posedge clk) begin
         s2a_fp4 <= s1_fp4; s2a_nf <= s1_nf;
+`ifdef OT_GQ_R13N
+        for (i = 0; i < 2; i = i + 1) s2a_m[i] <= s2a_m_d[i];
+`else
         for (i = 0; i < 2; i = i + 1)
             s2a_m[i] <= mx4(s1_m[4*i],s1_m[4*i+1],s1_m[4*i+2],s1_m[4*i+3]);
+`endif
     end
 
     // -- S2b: 2 -> 1 and the floor ----------------------------------------------------------
@@ -497,5 +533,14 @@ module ot_hgi_coll_aq_mx4_win(input wire [30:0] a, b, c, d, output wire [3:0] w)
 `else
     assign w = {!ad && !bd && !cd, !ac && !bc && cd, !ab && bc && bd, ab && ac && ad};
 `endif
+endmodule
+`endif
+`ifdef OT_GQ_R13N
+// R13: one kept register copy of an S1 31-bit magnitude (fixed width: no paramod rename, so the copies stay distinct).
+(* keep_hierarchy = "yes" *)
+module ot_hgi_coll_aq_mag_ff(input wire clk, input wire [30:0] d, output wire [30:0] q);
+    (* keep = "true", dont_touch = "true" *) reg [30:0] r;
+    always @(posedge clk) r <= d;
+    assign q = r;
 endmodule
 `endif

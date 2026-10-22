@@ -889,6 +889,28 @@ module ot_hgi_coll_gq_issue #(
                 sfv[r] <= fv(kn, r,flit_r2[r]); scd[r] <= is_code(flit_i(kn, r,flit_r2[2+r]));
             end
 `ifdef OT_GQ_FAN32
+`ifdef OT_GQ_R13N
+    // R13 (HBMb/COLL-GQ 10-21, k12r native census: the row AND-OR output rc[40] (src bit 3) drove 33 fire-edge loads:
+    // gather hold + slot bank + 12 src_copy holds + the 8 qa init adders rc[49:37] + k). The qa adders (and the qoh
+    // one-hot base) now read their OWN kept row read of src[12:0] (13 ot_hgi_coll_gq_row_bit, keep_hierarchy) on
+    // cur_ohc[0] (k12r census 11 loads/bit -> ~24). Same row (every cur_ohc copy == 1 << cur), same edge, 0 cycles.
+    wire [12:0] rc_qa;
+    generate for (genvar b = 0; b < 13; b = b + 1) begin : g_rc_qa
+        wire [15:0] rfb;
+        for (genvar j = 0; j < 16; j = j + 1) begin : g_r assign rfb[j] = rf[j][37 + b]; end
+`ifdef OT_GQ_MUT_QARD
+        // mutant: the qa row read uses the NEXT row (cur + 1)
+        (* keep = "true" *) ot_hgi_coll_gq_row_bit u_rb(.r(rfb), .oh({cur_ohc[0][14:0], cur_ohc[0][15]}), .q(rc_qa[b]));
+`else
+        (* keep = "true" *) ot_hgi_coll_gq_row_bit u_rb(.r(rfb), .oh(cur_ohc[0]), .q(rc_qa[b]));
+`endif
+    end endgenerate
+`ifdef OT_GQ_CHECK_INV
+    always @(posedge clk) if (rn && run && rc_qa !== rc[49:37]) $fatal(1, "GQ_R13_INV_FAIL rc_qa=%h rc=%h", rc_qa, rc[49:37]);
+`endif
+`else
+    wire [12:0] rc_qa = rc[49:37];
+`endif
     wire[7:0] qa_r2;
     ot_hgi_coll_gq_control_hold #(.W(8)) u_qa_r2(.clk(clk),.a(fire_allow_bank[1]),.b(fire_time_bank[1]),.d({8{rc1c[3]}}),.q(qa_r2));
     generate for(genvar q=0;q<8;q=q+1)begin:g_qa_control
@@ -902,10 +924,10 @@ module ot_hgi_coll_gq_issue #(
         (* keep="true" *)ot_hgi_coll_gq_issue_allow u_ev(.iss(iss),.iph(iph),.q(ev_local));
         wire[10:0] i0=rc1c[4+q]?11'(R):(R==0?11'd0:11'h7ff);
         always @(posedge clk)
-            if(fire_local)qa[q]<=rc[49:37]+13'({i0,2'b00}+W);
+            if(fire_local)qa[q]<=rc_qa+13'({i0,2'b00}+W);
             else if(ev_local)qa[q]<=qa[q]+(qa_r2[q]?13'd8:13'd4);
 `ifdef OT_GQ_N32
-        wire[2:0] qb0=rc[39:37]+3'({i0[0],2'b00}+W);
+        wire[2:0] qb0=rc_qa[2:0]+3'({i0[0],2'b00}+W);
         always @(posedge clk)
             if(fire_oh)qoh[q]<=oh8(qb0);
             else if(ev_local&&!qa_r2[q])qoh[q]<={qoh[q][3:0],qoh[q][7:4]};
