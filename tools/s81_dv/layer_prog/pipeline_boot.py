@@ -106,11 +106,41 @@ def native_job(directory, job_index=0):
                 first_row_issue=decoded[0]['issue'], first_command_issue=commands[0]['issue'],
                 end_issue=decoded[-1]['issue'], seal_phase=(seal[0][1] >> 7) & 3,
                 seal_word_index=seal[0][0], programme_payload_sha256=digest,
-                programme_id64=int(digest[:16], 16), graph_tag32=int(digest[:8], 16),
+                programme_id64=int(digest[:16], 16), programme_tag32=int(digest[:8], 16),
                 native_calendar_sha256=sha(cp), host_file=str(hp), host_file_sha256=sha(hp),
                 compiler_lowering_sha256=sha(lowering) if lowering.exists() else None,
                 sealed_programme_held=job.get('sealed_programme_held', True),
                 native_job=job_index, native_job_count=len(jobs), reload_direct_edges=len(words) * D.HOST_SLOT)
+
+
+# Source-selected capability from the matched nativeA/B receiver proof, not
+# caller-advertised limits. Original fixed417 source remains the fallback.
+RECEIVER_CAPABILITY_SHA256 = '6f412d849bba44378b24ffa5e72fed96f256ab33806a6a3da05aa53d1017493f'
+
+
+def receiver_capability(contract, root):
+    if not contract.get('capability_receipt'):
+        return None
+    receipt = Path(root) / contract['capability_receipt']
+    if sha(receipt) != RECEIVER_CAPABILITY_SHA256:
+        raise ValueError('receiver capability is not the qualified source-selected receipt')
+    cap = json.loads(receipt.read_text())
+    if cap['schema'] != 'opentallas.s81.hostb.receiver_capability.v1':
+        raise ValueError('unsupported selected receiver capability schema')
+    source = Path(root) / contract['capability_source_root']
+    for name, digest in cap['source_hashes'].items():
+        if sha(source/name) != digest:
+            raise ValueError('selected receiver RTL differs from capability source '+name)
+    actual = cap['component_parameters']
+    if actual != dict(ENABLE=1,VARIABLE_WORDS=1,ALLOW_RELOAD=1,HOSTB_ENABLE=1,STATIC_KS6=0):
+        raise ValueError('receiver capability selected parameters differ')
+    for key, value in actual.items():
+        if contract.get('selected_parameters',{}).get(key) != value:
+            raise ValueError('booking must select the exact qualified receiver parameters '+key)
+    wrapper='rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_source.sv'
+    if contract['source_sha256'] != cap['source_hashes'][wrapper]:
+        raise ValueError('receiver wrapper and full capability source closure differ')
+    return dict(receipt_sha256=sha(receipt), **cap)
 
 
 def hbc_payload(context, booking, host_slots, nwords, ks_date):
@@ -256,19 +286,22 @@ def compile_pipeline(calendar, bookings, root, out):
                              booked_status_sample=booking['hbc_book']['local_status_sample']))
         # Existing HBC1 is417 words, one immutable active context. Do not
         # silently claim it reloads identities or accepts arbitrary native H.
-        # Source-selected variable-word/reload capability is still being
-        # integrated by the die owner. Caller booleans cannot certify RTL.
-        # Until its exact selected source/parameter receipt is available,
-        # treat the original loader as fixed417, immutable-context.
-        gaps.append(dict(job=index,cause='receiver_capability_not_source_bound',
-                         selected_contract='legacy417/no-reload until exact bound extension receipt'))
-        if len(job['words']) != 417:
+        capability = receiver_capability(contract, root)
+        if capability is None:
+            gaps.append(dict(job=index,cause='receiver_capability_not_source_bound',
+                             selected_contract='legacy417/no-reload until exact bound extension receipt'))
+        supports_words = (capability['word_count']['minimum'] <= len(job['words']) <= capability['word_count']['maximum']
+                          if capability else len(job['words']) == 417)
+        if not supports_words:
             gaps.append(dict(job=index, cause='receiver_host_word_count_mismatch',
-                             actual=len(job['words']), receiver=417))
+                             actual=len(job['words']), receiver=capability['word_count'] if capability else 417))
         if not contract.get('die_v_sha256') or contract['die_v_sha256'] != job['native_die_sha256']:
             gaps.append(dict(job=index,cause='native_programme_not_current_strict_die',
                              native_die_sha256=job['native_die_sha256'], receiver_die_sha256=contract.get('die_v_sha256')))
-        gaps.append(dict(job=index, cause='HBC_context_load_commit_lifecycle_not_bound'))
+        if not capability or not capability['die_instance_bound'] or not capability['production_clock_book_bound']:
+            gaps.append(dict(job=index, cause='HBC_context_load_commit_lifecycle_not_bound'))
+        if capability and not capability['full_assembly_elaborated']:
+            gaps.append(dict(job=index,cause='selected_receiver_full_assembly_not_elaborated'))
         if job['sealed_programme_held']:
             gaps.append(dict(job=index, cause='native_compiler_row_lifetimes_held'))
         if not job['all_stage_ops_lowered']:
@@ -289,13 +322,13 @@ def compile_pipeline(calendar, bookings, root, out):
             last_host_seq_capture=last_host_capture,
             native_direct_reload_edges=job['reload_direct_edges'],
             HBE_reload_seq_capture_span=last_host_capture-host_slots[0]['receiver_header_edge'],
-            pipeline_window=window, receiver_contract=contract,
+            pipeline_window=window, receiver_contract=contract, receiver_capability=capability,
             static_ks6_enabled=False, inline_ARM_emitted=False, hbc=hbc, packets=packets)
         (path/'programme.json').write_text(json.dumps(record,indent=1)+'\n')
         compiled.append(dict(stage=stage,rank=rank,user=user,position_index=pos,
                              native_job=job['native_job'],dir=path.name,
                              programme_payload_sha256=job['programme_payload_sha256'],
-                             graph_tag32=f'{job["graph_tag32"]:08x}',
+                             programme_tag32=f'{job["programme_tag32"]:08x}',
                              first_command_edge=first_cmd,end_command_edge=end_edge))
     # A later job cannot load PW/template data until the old real END has
     # propagated through busy status to RX (body >= END+2, seq capture >= END+6).

@@ -88,6 +88,32 @@ def run(root):
     assert any(g['cause']=='receiver_capability_not_source_bound' for g in rr['gaps'])
     assert sum(g['cause']=='receiver_host_word_count_mismatch' for g in rr['gaps'])==2
     caught.append(dict(case='caller_capability_flags',error='source-bound extension receipt remains required'))
+    cap_path=root.parent/'receiver_capability.json'
+    if cap_path.exists():
+        selected=deepcopy(book)
+        for job in selected['jobs']:
+            job['receiver_contract'].update(capability_receipt='../receiver_capability.json',
+                capability_source_root='../receiver_source', selected_parameters=dict(
+                    ENABLE=1,VARIABLE_WORDS=1,ALLOW_RELOAD=1,HOSTB_ENABLE=1,STATIC_KS6=0))
+        rr=P.compile_pipeline(calendar,selected,root,root/'selected_receiver')
+        assert rr['status']=='PARTIAL'
+        assert not any(g['cause'] in ('receiver_host_word_count_mismatch','receiver_capability_not_source_bound')
+                       for g in rr['gaps'])
+        assert any(g['cause']=='HBC_context_load_commit_lifecycle_not_bound' for g in rr['gaps'])
+        caught.append(dict(case='qualified_variable_source',result='33/515 accepted, unbound production remains PARTIAL'))
+        fake=root/'altered_capability.json'
+        fake.write_text(cap_path.read_text().replace('"die_instance_bound": false','"die_instance_bound": true'))
+        bad=deepcopy(selected);bad['jobs'][0]['receiver_contract']['capability_receipt']='altered_capability.json'
+        try:P.compile_pipeline(calendar,bad,root,root/'altered_capability')
+        except ValueError as exc:caught.append(dict(case='altered_capability_receipt',error=str(exc)))
+        else:raise AssertionError('missed altered capability receipt')
+        wrong=root/'wrong_receiver';shutil.copytree(root.parent/'receiver_source',wrong)
+        f=wrong/'rtl/dsrom_sys/s81_dv/hostb/dsdv_hbc1_loader.sv'
+        f.write_text(f.read_text()+'\n// altered source witness\n')
+        bad=deepcopy(selected);bad['jobs'][0]['receiver_contract']['capability_source_root']='wrong_receiver'
+        try:P.compile_pipeline(calendar,bad,root,root/'altered_receiver_source')
+        except ValueError as exc:caught.append(dict(case='altered_receiver_source',error=str(exc)))
+        else:raise AssertionError('missed altered receiver source')
     # Corrupt real emitted payload and retain original compiler manifest.
     bad_dir=root/'A_mutated';shutil.copytree(root/'A',bad_dir)
     hp=bad_dir/'prog/host_boot.memh';words=hp.read_text().split();words[3]=f'{int(words[3],16)^2:0129x}'
