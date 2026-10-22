@@ -13,6 +13,37 @@ ROOT = Path(__file__).resolve().parents[3]
 BASE = Path('rtl/dsrom_sys/s81_dv/slice')
 
 
+def bind_defines():
+    """the die bind's +define set (port_bind.json defines), e.g. cap14 OT_S81SL_KV_TRANSPORT selects xrt1/xrt3:
+    OT_S81_SELECTED_DEFINES=A,B,... (TOKc-S81 10-22); unset = none"""
+    return {d for d in os.environ.get('OT_S81_SELECTED_DEFINES', '').split(',') if d}
+
+
+def preprocess(text, defines=None):
+    """resolve `ifdef / `ifndef / `elsif / `else / `endif with the bind defines (no macro expansion)"""
+    defines = bind_defines() if defines is None else defines
+    out, stack = [], []          # stack of (parent_active, this_branch_taken, active)
+    for line in text.split('\n'):
+        m = re.match(r'\s*`(ifdef|ifndef|elsif|else|endif)\b\s*(\w*)', line)
+        active = all(a for _, _, a in stack)
+        if not m:
+            if active:
+                out.append(line)
+            continue
+        kw, name = m.groups()
+        if kw in ('ifdef', 'ifndef'):
+            c = (name in defines) == (kw == 'ifdef')
+            stack.append((active, c, c))
+        elif kw == 'elsif':
+            pa, taken, _ = stack.pop(); c = (not taken) and name in defines
+            stack.append((pa, taken or c, c))
+        elif kw == 'else':
+            pa, taken, _ = stack.pop(); stack.append((pa, True, not taken))
+        else:
+            stack.pop()
+    return '\n'.join(out)
+
+
 def resolve(die, slice_inst, source_root=None):
     explicit = source_root is not None or bool(os.environ.get('OT_S81_SELECTED_SOURCE_ROOT'))
     source_root = Path(source_root or os.environ.get('OT_S81_SELECTED_SOURCE_ROOT') or ROOT)
@@ -33,7 +64,7 @@ def resolve(die, slice_inst, source_root=None):
         path = paths[0]
         raw = path.read_text()
         sources[str(path.relative_to(source_root))] = hashlib.sha256(path.read_bytes()).hexdigest()
-        clean = re.sub(r'/\*.*?\*/|//[^\n]*', '', raw, flags=re.S)
+        clean = preprocess(re.sub(r'/\*.*?\*/|//[^\n]*', '', raw, flags=re.S))
         match = re.search(r'\bmodule\s+' + re.escape(master) + r'\b(.*?)\bendmodule\b', clean, re.S)
         if not match:
             raise ValueError('selected source does not define master ' + master)
