@@ -1,0 +1,4 @@
+ERR case0 score87367 valid1 got6f55aa336f55aa336f55aa336f55aa336f55aa336f55aa336f55aa3300000000 expected6f55aa336f55aa336f55aa336f55aa336f55aa336f55aa336f55aa333e815547
+[58220000] %Fatal: tb_indexed_scalar_f20.sv:99: Assertion failed in tb_indexed_scalar_f20: GATHER_F20_CURRENT FAIL checks=304 errors=1
+%Error: rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_f20.sv:99: Verilog $stop
+Aborting...

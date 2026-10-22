@@ -1,0 +1,23 @@
+ot-run: ot-epyc5       admits    -1 GB (avail 500, growth 500, headroom 0, waiters 4/165 GB) load 93/128 running 35 disk 1038 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000 (0.2 GB) ot-epyc5 -> ot-gold2 (no host with --dir admits 8 GB now)
+ot-run: SPILL: copied 428 changed entries in 75 s; running on ot-gold2; written files go back to ot-epyc5 after the run
+ot-heavy: waiting for memory on ot-gold2: need 0.7 x 8 = 6 GB, admissible -5 GB: available 426 GB, growth charged 429 GB (v13 rate rule, uncapped sum, settled floor 20 GB; pending 409 GB at x1), young 21 GB, floor 50 GB
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-726779-1792643140 after 142 s
+PROFILE launch cycle=91
+PROFILE local_edge0 cycle=94
+PROFILE engine_start cycle=102 local=8
+PROFILE engine_done_observed cycle=131 local=37
+PROFILE programme_done_observed cycle=132
+GATHER_F20_CURRENT PASS checks=304 canonical_routes=6 structural_routes=32 banks=32 SRAMs=96 fixed_cycles=41
+- rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_f20.sv:109: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 55us; walltime 0.309 s; speed 176.322 us/s
+- Verilator: cpu 0.309 s on 1 threads; allocated 11 MB
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-726779-1792643140): exit 0
+ot-run: SPILL: outputs copied back ot-gold2 -> ot-epyc5; RAN on ot-gold2: exit 0

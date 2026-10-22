@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       admits   -11 GB (avail 482, growth 490, headroom 0, waiters 5/173 GB) load 100/128 running 37 disk 1038 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-hbm-gather-f20-2000 (0.0 GB) ot-epyc5 -> ot-gold1 (no host with --dir admits 16 GB now)
+ot-run: SPILL: copied 292 changed entries in 8 s; running on ot-gold1; written files go back to ot-epyc5 after the run
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-1664433-1792642961 after 0 s
+ERR case0 score87367 valid1 got6f55aa336f55aa336f55aa336f55aa336f55aa336f55aa336f55aa3300000000 expected6f55aa336f55aa336f55aa336f55aa336f55aa336f55aa336f55aa333e815547
+[58220000] %Fatal: tb_indexed_scalar_f20.sv:99: Assertion failed in tb_indexed_scalar_f20: GATHER_F20_CURRENT FAIL checks=304 errors=1
+%Error: rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_f20.sv:99: Verilog $stop
+Aborting...
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-1664433-1792642961): exit 1
+ot-run: SPILL: outputs copied back ot-gold1 -> ot-epyc5; RAN on ot-gold1: exit 1

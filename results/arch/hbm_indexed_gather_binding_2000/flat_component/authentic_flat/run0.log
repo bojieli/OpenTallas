@@ -1,0 +1,8 @@
+BUNDLE layer_group=0 programme_cycles=191 target=180 rows=6
+BUNDLE layer_group=1 programme_cycles=191 target=180 rows=6
+BUNDLE layer_group=2 programme_cycles=191 target=180 rows=6
+GATHER_F20_CURRENT PASS authentic_cases=18 masked_word_checks=144 bundles=3 rows_per_bundle=6 banks=32 SRAMs=96 R=9 W=5
+- rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_f20.sv:129: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 36us; walltime 0.208 s; speed 171.994 us/s
+- Verilator: cpu 0.208 s on 1 threads; allocated 12 MB

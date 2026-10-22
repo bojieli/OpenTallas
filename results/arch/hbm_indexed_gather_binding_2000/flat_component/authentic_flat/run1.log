@@ -1,0 +1,24 @@
+BUNDLE layer_group=0 programme_cycles=191 target=180 rows=6
+AUTHENTIC MISMATCH layer=0 scalar=0
+AUTHENTIC MISMATCH layer=0 scalar=1
+AUTHENTIC MISMATCH layer=0 scalar=2
+AUTHENTIC MISMATCH layer=0 scalar=3
+AUTHENTIC MISMATCH layer=0 scalar=4
+AUTHENTIC MISMATCH layer=0 scalar=5
+BUNDLE layer_group=1 programme_cycles=191 target=180 rows=6
+AUTHENTIC MISMATCH layer=1 scalar=0
+AUTHENTIC MISMATCH layer=1 scalar=1
+AUTHENTIC MISMATCH layer=1 scalar=2
+AUTHENTIC MISMATCH layer=1 scalar=3
+AUTHENTIC MISMATCH layer=1 scalar=4
+AUTHENTIC MISMATCH layer=1 scalar=5
+BUNDLE layer_group=2 programme_cycles=191 target=180 rows=6
+AUTHENTIC MISMATCH layer=2 scalar=0
+AUTHENTIC MISMATCH layer=2 scalar=1
+AUTHENTIC MISMATCH layer=2 scalar=2
+AUTHENTIC MISMATCH layer=2 scalar=3
+AUTHENTIC MISMATCH layer=2 scalar=4
+AUTHENTIC MISMATCH layer=2 scalar=5
+[35780000] %Fatal: tb_indexed_scalar_f20.sv:128: Assertion failed in tb_indexed_scalar_f20.run_authentic_bundle: GATHER_F20_CURRENT FAIL authentic18 checks=144 errors=18
+%Error: rtl/hbm_accel/generic/adapters/static_su/gather/tb_indexed_scalar_f20.sv:128: Verilog $stop
+Aborting...
