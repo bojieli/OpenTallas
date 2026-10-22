@@ -33,7 +33,11 @@ SOURCES = {
          # QF-SFAULT 10-18: ot_hbm_svc_fault_cdc per-domain ot_reset_sync (FIFO module lines 6-51 byte-identical)
          '08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b'),
     'rtl/lib/ot_reset_sync.sv':
-        ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',),
+        ('489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd',
+         # 9c1a1ca96 / ba140fd98 (main 10-22): adds OUTPUT_COPIES / TREE parameters, defaults (1 / 0) keep the reviewed
+         # 2-stage reset_pipe and sync_rst_n = reset_pipe[ASYNC_STAGES-1] byte-for-byte in function; the elaborated
+         # wiring check below still runs on every admitted FIFO
+         '607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a'),
 }
 RESET_SYNC_SOURCE = 'rtl/lib/ot_reset_sync.sv'
 # COORD review 2026-10-22 10:45 (kshare r5a, APPROVED WITH CONDITIONS): the shared-pointer bit-sliced FIFO is admitted
