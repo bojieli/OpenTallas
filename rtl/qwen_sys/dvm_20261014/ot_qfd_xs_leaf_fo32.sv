@@ -171,12 +171,13 @@ module ot_qfd_xs_leaf_fo32 #(
                 cvb <= r_v; ctb <= r_t; cep_ <= r_ep; cp0 <= r_p[5:0]; cel <= el_n;
             end
             wire creqb = cvb && (ctb == gt);
-            for (hb = 0; hb < 4; hb = hb + 1) begin : g_ha
-                // own raw request capture per element group (one shared 25-bit load enable measured 50 pins)
+            for (hb = 0; hb < 2; hb = hb + 1) begin : g_ha
+                // own raw request capture per half (elements 2hb, 2hb+1; one shared 25-bit load enable measured 50 pins;
+                // four per-element captures put 41 loads on the r_v / r_t input pins at NG=4)
                 (* keep *) reg cva, cta;
                 always @(posedge clk) begin cva <= r_v; cta <= r_t; end
                 wire creqa = cva && (cta == gt);
-                always @(posedge clk) if (creqa) chp[6*hb +: 6] <= rp_p[7*hb +: 6];
+                always @(posedge clk) if (creqa) chp[12*hb +: 12] <= {rp_p[14*hb+7 +: 6], rp_p[14*hb +: 6]};
                 if (hb == 0) begin : g_ep
                     always @(posedge clk) if (creqa) chep <= cep_;
                 end
