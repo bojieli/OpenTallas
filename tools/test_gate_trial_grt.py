@@ -31,6 +31,9 @@ class Trial(unittest.TestCase):
     def run_trial(self, outcomes, saved=False):
         def run(cmd, stdout, stderr):
             self.commands.append(cmd)
+            self.assertIn("GENERATE_ARTIFACTS_ON_FAILURE=1", cmd[-1])
+            self.assertIn("GLOBAL_ROUTE_ARGS='-allow_congestion -verbose'", cmd[-1])
+            self.assertIn("SKIP_INCREMENTAL_REPAIR=0 grt", cmd[-1])
             if '-o /work/' in cmd[-1]:
                 self.assertEqual((self.results / '4_cts.odb').read_bytes(), b'resized checkpoint')
                 self.assertIn('SKIP_INCREMENTAL_REPAIR=0 grt', cmd[-1])
