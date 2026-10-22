@@ -1,0 +1,10 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_dv_s5_sc2-sc2k-29922b083 bench bench_sc2_kit_mut host ot-gold1 run /srv/opentallas-scratch/claude/closure-loop/qfd_dv_s5_sc2-sc2k-29922b083 log cl/bench_sc2_kit_mut.a1b1.log captured 2026-10-21T09:09:30-07:00
+# fail_regex 'SC2_EQ FAIL errors='
+CONSTRUCT_DONE
+MISMATCH stream 0 ev 20 ref t=111 0000c55f8158723b dut t=114 0000a38d2f7a83d2 off=3
+MISMATCH stream 1 count ref=2125 dut=2160
+SC2_EQ FAIL errors=4222
+[194690000] %Fatal: tb_sc2.sv:138: Assertion failed in tb_sc2: SC2_EQ FAIL
+%Error: rtl/test/qwen_dv/s5_scred2/tb_sc2.sv:138: Verilog $stop
+Aborting...

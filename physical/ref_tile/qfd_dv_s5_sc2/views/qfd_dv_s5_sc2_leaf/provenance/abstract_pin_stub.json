@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/qfd_dv_s5_sc2_leaf.lef",
+    "sha256": "2d9ccba0f65e163cdce46e6b6ed1de43c2a6699acea53bc1aa44bdf1373eb22f"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qfd_dv_s5_sc2-sc2k-29922b083/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_dv_s5_sc2-sc2k-29922b083/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_dv_s5_sc2-sc2k-29922b083/record/views/qfd_dv_s5_sc2_leaf/provenance/raw/qfd_dv_s5_sc2_leaf.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qfd_dv_s5_sc2-sc2k-29922b083/record/views/qfd_dv_s5_sc2_leaf/provenance/qfd_dv_s5_sc2_leaf.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 198 OBS rects moved into 197 pins: ck, dn_i[0], dn_i[10], dn_i[11], dn_i[12], dn_i[13], dn_i[14], dn_i[15], dn_i[16], dn_i[17], dn_i[18], dn_i[19]; pockets: 6938 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qfd_dv_s5_sc2-sc2k-29922b083/record/views/qfd_dv_s5_sc2_leaf/provenance/qfd_dv_s5_sc2_leaf.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "qfd_dv_s5_sc2_leaf 291.6 x 291.6: PG M5 VDD 54 stripes (98% spread, 100% cov) / VSS 54 stripes (98% spread, 100% cov); strap M6; face pins 572 blocked-above 0 blocked-same 0; clock ck insertion 406 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "qfd_dv_s5_sc2_leaf",
+      "W": 291.6,
+      "H": 291.6,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 54,
+            "dir": "V",
+            "spread": 0.981,
+            "coverage": 1.0,
+            "shapes_on_top": 54
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 54,
+            "dir": "V",
+            "spread": 0.981,
+            "coverage": 1.0,
+            "shapes_on_top": 54
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 572,
+        "blocked_above": 0,
+        "covered_below": 0,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck": {
+          "max_ps": 406.0,
+          "min_ps": 325.1
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 6938
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      },
+      "pin_access_violations": 0
+    }
+  },
+  "output": {
+    "path": "qfd_dv_s5_sc2_leaf.lef",
+    "sha256": "784843cc5ea45ce88a2be7f32288faa0c903a2e84c33a9131a34a192330e523c"
+  }
+}
