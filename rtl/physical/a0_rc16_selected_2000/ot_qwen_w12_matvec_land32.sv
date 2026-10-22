@@ -396,7 +396,7 @@ module ot_qwen_w12_matvec_part #(
     //: REGROOT 8 descriptor load enables: ldv[l] = go copy & kept idle copy (assigned in g_ctl_rr8)
     localparam integer NLDD = 75;          // descriptor-register load groups (<= 12 bits: ~2 mux loads per bit)
     localparam integer NLD  = NLDD + 6;    // + 4 split-copy tiers, wsrc copies, ktot copies
-    wire [NLD-1:0] ldv;
+    wire [NLD-1:0] ldv, ldv_go, ldv_idle;
     wire [4*AW-1:0] tsc, wcc;      // REGROOT 8: per-group KV-offset copies of ts / wcs (descriptor load groups)
     //: REGROOT 8 one-hot split copies (1 << split, loaded with the descriptor): a shift by the split becomes an AND-OR
     //: of constant shifts, each one-hot bit driving <= one consumer's output bits.  Owners: 0..3 tsh quarters,
@@ -498,7 +498,8 @@ module ot_qwen_w12_matvec_part #(
             for (genvar ks=0; ks<NW; ks=ks+6) begin : g_kmux_slice
                 localparam integer KW = (NW-ks < 6) ? NW-ks : 6;
                 ot_qwen_a0_mux_slice #(.W(KW)) u_mux (
-                    .sel((REGROOT >= 8) ? ldv[NLDD+5] : ld_go),
+                    .en_a((REGROOT >= 8) ? ldv_go[NLDD+5] : ld_go),
+                    .en_b((REGROOT >= 8) ? ldv_idle[NLDD+5] : 1'b1),
                     .a(i_k[ks +: KW]), .b(ktot_r[ks +: KW]),
                     .y(ktot_nx[ks +: KW]));
             end
@@ -1040,7 +1041,9 @@ end else begin : g_issue_fast
             assign idc[fg] = i;
         end
         for (fg = 0; fg < NLD; fg = fg + 1) begin : g_le
-            assign ldv[fg] = go_cp[NGOF + fg % NLG] && idc[fg / NLG];
+            assign ldv_go[fg] = go_cp[NGOF + fg % NLG];
+            assign ldv_idle[fg] = idc[fg / NLG];
+            assign ldv[fg] = ldv_go[fg] && ldv_idle[fg];
         end
         wire [AW-1:0] sbase_in = (INT8_WEIGHT != 0 && INT8_SCALE_WCS_BASE != 0) ? i_wcs : i_wbase;
         localparam integer DW = 3*NW + 5 + 1 + 4 + 3 + 12*AW + 8*AW + 16*NOH;
@@ -2486,7 +2489,7 @@ endmodule
 // Kept combinational slices bound the existing hold/load select pin fanout.
 (* keep_hierarchy = "yes" *)
 module ot_qwen_a0_mux_slice #(parameter integer W=6) (
- input wire sel, input wire [W-1:0] a,b, output wire [W-1:0] y
+ input wire en_a,en_b, input wire [W-1:0] a,b, output wire [W-1:0] y
 );
- assign y = sel ? a : b;
+ assign y = (en_a && en_b) ? a : b;
 endmodule
