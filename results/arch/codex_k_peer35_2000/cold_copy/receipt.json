@@ -1,0 +1,25 @@
+{
+  "fleet_unit": "oth-ubuntu-2302975-1792648879",
+  "fleet_host": "ot-epyc9",
+  "source_commit": "5b514ab81",
+  "native_sha256": "0fc3015d0fe957bb5d23f7fe4b8e296dae34c1292114863b2436ed2205d0535f",
+  "source_sha256": "a8eb922f097e6a39ace7b58e3c51fe29faa68f2426114b57a4c2c6c5f06ed2a5",
+  "copy_monitor": "actual copied coordinator por_n_q cell u94021_c0/c1",
+  "initial_state": "independent random initial state, seed27 randreset2, OT_MEM_NO_INIT actual p192 SRAM model",
+  "cases": {
+    "exact": {
+      "result": "PEER_NATIVE PASS edges=99984 toggled_ports=30",
+      "log_sha256": "68a01f3857207ca4979fd5eea9cc2fadfe3474eff83821129cc3487e379fde71"
+    },
+    "invert_d": {
+      "result": "PEER_NATIVE FAIL COPY_STATE edge=18",
+      "log_sha256": "2042ce5847ea717e5ee508ccfde6a723045dff0bbb26a2b534e32e09a7b1bec8"
+    },
+    "hold_clk": {
+      "result": "PEER_NATIVE FAIL COPY_STATE edge=20",
+      "log_sha256": "4392f5a2270004d31d4133fb00396566262a63c286126dbeffb5b0ab165aac3b"
+    }
+  },
+  "pass": true,
+  "physical_qualification": false
+}

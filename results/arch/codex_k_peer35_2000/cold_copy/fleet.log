@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-k-peer35-cold-2000/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-k-peer35-cold-2000/src
+ot-run: ot-epyc9       admits   252 GB (avail 441, growth 265, headroom 0, waiters 0/0 GB) load 104/128 running 45 disk 1694 GB 
+ot-run: ot-gold2       admits     6 GB (avail 426, growth 422, headroom 0, waiters 0/0 GB) load 28/112 running 20 disk 2701 GB 
+ot-run: ot-gold1       admits   223 GB (avail 490, growth 334, headroom 0, waiters 0/0 GB) load 325/112 running 63 disk 1506 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-k-peer35-cold-2000/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-k-peer35-cold-2000/src
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc9 at 1.34 x cores
+ot-run: -> ot-epyc9
+ot-run: SCRATCH2: /srv/opentallas-scratch/claude/codex-k-peer35-cold-2000/out -> /srv/opentallas-scratch2/claude/codex-k-peer35-cold-2000/out (1693 GB free vs 102 GB on /srv/opentallas-scratch)
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2302975-1792648879 after 0 s
+PEER_NATIVE PASS edges=99984 toggled_ports=30
+PEER_NATIVE FAIL COPY_STATE edge=18
+PEER_NATIVE FAIL COPY_STATE edge=20
+P35_COLD_COPY_OBLIGATIONS_PASS
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2302975-1792648879): exit 0
