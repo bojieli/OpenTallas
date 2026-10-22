@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "s81sl_lepmuh_r8m",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T14:15:00-07:00",
+ "gate_commit": "29cc6038781d4e1792f35c3cb52d3e50c343512c",
+ "geometry_sha256": "b73bf53fb0d3c847ca8052fb79f30e9dbea3b7101e6027a467d7186272835caf",
+ "checklist": {
+  "lattice": "20-SRAM lattice, widened TX/RX channels (85 um)",
+  "std_cell_band": "std cells in channels, density low (4%)",
+  "pin_spread": "all four faces ~100% span (pin-bound, fill 18.8%)",
+  "clock_entry": "22.0k sinks TT/FF spread 44.0/40.4 ps <=80 (>15k / insertion guidance)",
+  "shape": "648 x 605 um, trial GRT 0 (M2 33.7%)"
+ },
+ "notes": "COORD 10-22 14:15 APPROVED as a PARALLEL ROUTE ATTEMPT only: lep_mu_h has no live route (c12m route crashed twice, c13m/f gates infra-FAIL). Placement-RC macro->reg -141.4 (g_ml_nface_out capture) and reg->reg -128.3 are NOT expected to be recovered by route repair; the structural successor (capture beside each macro + registered hop to the face, +1 edge, OT_RELAY_PLACE on relay chains) must run in parallel. First CLOSED binds."
+}
