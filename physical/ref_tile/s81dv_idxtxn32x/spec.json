@@ -187,9 +187,45 @@
   "views_to": "physical/ref_tile/s81dv_idxtxn32x/views",
   "record_to": "results/rtl/ref_tile/s81dv_idxtxn32x",
   "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "rtl/dsrom_sys/s81_dv/idx",
    "rtl/lib",
-   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+   "tools/s81_dv/tx_export_1021"
+  ],
+  "benches": [
+   {
+    "name": "tx_x_lockstep",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=2' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_x_lockstep 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^TX_MITER_PASS$"
+   },
+   {
+    "name": "tx_x_mut5_bank_sel",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=2' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_x_mut5_bank_sel 5",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TX_MISMATCH "
+   },
+   {
+    "name": "tx_x_mut4_wmask",
+    "cmd": "VL=$(command -v verilator) TX_G='-GRDL=1 -GWDL=1 -GWDC=1 -GSCS=1 -GRIL=1 -GRHP=1 -GREF_LPX=2' J=4 bash tools/s81_dv/tx_export_1021/run_tx.sh {RUN}/tx_x_mut4_wmask 4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^TX_MISMATCH "
+   }
   ]
  },
  "children": [],
