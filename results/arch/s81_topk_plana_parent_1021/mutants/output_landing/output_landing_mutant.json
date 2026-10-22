@@ -1,0 +1,6 @@
+{
+  "mutation": "final southbound landing210 bypassed; all other RTL/calendar bytes unchanged",
+  "source_sha256": "021f992704f395eb150d3db861341396d7b81955f1d3fbd85ad77a9af4378c87",
+  "mutant_sha256": "82fb456c4cef096f9bd693f7f018882a9a3d0857c421a749ec16c7b313ecdac5",
+  "expected_effect": "all southbound output beats two edges early; fixed compiler calendar must reject"
+}

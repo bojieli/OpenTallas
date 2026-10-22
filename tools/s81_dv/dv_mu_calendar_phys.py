@@ -70,6 +70,7 @@ SHIFT_SEARCH = False            # STEWARD-TOK: --mtp-shift-search (position hold
 MTP_HOLD = 'step'               # STEWARD-TOK: MTP stage hold = whole step ('step') or one job a position ('position')
 HOP_REF = 120                  # stage hops in the composed DAG record
 H_MSG = LEG.H_MSG              # 652 link serialisation a message
+LANE_LANDING_CYCLES = 0        # measured sender + receiver region landing cost per crossing
 HOST_TOK = LEG.HOST_TOK
 SCHEMA = 'opentallas.s81_dv.mu_calendar_phys.v1'
 E_OPS = {'ffn.experts_gu', 'ffn.swiglu', 'ffn.route_w', 'ffn.quant2', 'ffn.down', 'ffn.weights'}
@@ -128,7 +129,7 @@ DENSE2_SER = 8                 # capacity receipt inter_die: link_busy_add_per_p
 def dcyc(cls):
     if REL['offchip'] != 'direct':
         return SWITCHED
-    return json.loads(HOPLAT.read_text())['systems']['S81'][cls]['D_cycles_max']
+    return json.loads(HOPLAT.read_text())['systems']['S81'][cls]['D_cycles_max'] + LANE_LANDING_CYCLES
 
 
 def x_flat(cls='stage_hop'):
@@ -1288,7 +1289,11 @@ def main(argv=None):
                          'or one job a position (copy free between positions; needs per-position job starts)')
     ap.add_argument('--mtp-shift-search', action='store_true', help='MTP pipeline + --mtp-hold position: greedy '
                     'first-fit phase-grid shifts instead of uniform shifts (the exact checker still decides)')
+    ap.add_argument('--lane-landing-cycles', type=int, default=0, choices=[0, 6, 7],
+                    help='Measured end-slice lane crossing cost: 6 landing edges, 7 with IN_PIPE')
     a = ap.parse_args(argv)
+    global LANE_LANDING_CYCLES
+    LANE_LANDING_CYCLES = a.lane_landing_cycles
     global MTP_HOLD, SHIFT_SEARCH
     MTP_HOLD, SHIFT_SEARCH = a.mtp_hold, a.mtp_shift_search
     if a.release241:

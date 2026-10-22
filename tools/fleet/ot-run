@@ -110,7 +110,7 @@ sigtimedwait, so the message names the SENDER (pid + command line), and one line
 """
 import concurrent.futures as cf, json, os, re, shlex, signal, subprocess, sys, threading, time
 
-HOSTS = ["ot-epyc5", "ot-epyc6", "ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"]   # ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
+HOSTS = ["ot-epyc5", "ot-epyc7", "ot-epyc9", "ot-gold2", "ot-gold1", "ot-pve1", "ot-agidock128"]   # ot-epyc5 added 2026-10-18 (FLEET-EPYC5); ot-epyc6/7 2026-10-19 (FLEET-NEW); ot-epyc8 2026-10-19 (FLEET-NEW2)
 # HOST ROLES (FLEET-NEW 2026-10-19): ot-epyc7 is 2x EPYC 7443 (Zen 3, slower per thread).  A "throughput" host takes
 # tile gates / routes / benches FIRST (while its projected load <= 1.0 x cores); die-level jobs (--priority die / DIE_RE:
 # die chains, die STA) go to the other hosts and use a throughput host only when no other host admits them.
@@ -1048,8 +1048,9 @@ def spill_lock(roots):
 # already held a copy of it (a second job of the lane, a re-place) "failed".  --overwrite-dir / --no-overwrite-dir are
 # refused together with --keep-newer-files, so the extraction filters exactly that error: it counts only for a path that
 # is NOT a directory after the run; any other tar or zstd error still fails the copy.
-TAR_X = ("e=$(mktemp); zstd -q -d | tar -C / --keep-newer-files --warning=no-ignore-newer -xf - 2>$e; s=(${PIPESTATUS[@]}); "
+TAR_X = ("e=$(mktemp); zstd -q -d | tar -C / \"${OT_TAR_TRANSFORMS[@]}\" --keep-newer-files --warning=no-ignore-newer -xf - 2>$e; s=(${PIPESTATUS[@]}); "
          "if [ ${s[0]} -ne 0 ]; then cat $e >&2; rm -f $e; exit ${s[0]}; fi; rc=${s[1]}; "
+         "if grep -q 'Warning: Cannot stat:' $e; then cat $e >&2; rm -f $e; exit 97; fi; "
          "if [ $rc -ne 0 ]; then bad=$(grep -v -x 'tar: Exiting with failure status due to previous errors' $e | "
          "while IFS= read -r l; do p=${l#tar: }; q=${p%: Unexpected inconsistency when making directory}; "
          "if [ \"$q\" = \"$p\" ] || ! [ -d \"/$q\" ]; then echo \"$l\"; fi; done); "
@@ -1058,7 +1059,21 @@ TAR_X = ("e=$(mktemp); zstd -q -d | tar -C / --keep-newer-files --warning=no-ign
 
 def tar_x(roots):
     """the extraction command (stdin = zstd tar stream) under the per-lane flock"""
-    return f"flock {spill_lock(roots)} bash -c {shlex.quote(TAR_X)}"
+    # GNU tar's keep-newer stat can silently skip files below an absolute directory
+    # symlink (scratch2 -> /home/...): warning + exit 0. Rewrite member names to
+    # the receiver's actual root, retaining the existing keep-newer semantics.
+    code = """import os, sys
+for root in sys.argv[1:]:
+    real = os.path.realpath(root)
+    if root != real:
+        source = root.lstrip('/').translate(str.maketrans({c: chr(92)+c for c in '.^$*[' + chr(92)}))
+        target = real.lstrip('/').replace(chr(92), chr(92)*2).replace('&', chr(92)+'&')
+        print('--transform=flags=rh;s|^'+source+'/|'+target+'/|;s|^'+source+'$|'+target+'|')
+"""
+    canonical = "python3 -c " + shlex.quote(code) + " " + " ".join(map(shlex.quote, roots))
+    setup = (f"ot_xforms=$({canonical}) || exit 97; OT_TAR_TRANSFORMS=(); "
+             'if [ -n "$ot_xforms" ]; then mapfile -t OT_TAR_TRANSFORMS <<< "$ot_xforms"; fi; ')
+    return f"flock {spill_lock(roots)} bash -c {shlex.quote(setup + TAR_X)}"
 
 
 def spill_fwd_cmd(src, dst, roots, stamp, listed=False):

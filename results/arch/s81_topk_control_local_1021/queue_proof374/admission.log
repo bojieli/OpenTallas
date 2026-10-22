@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue374
+ot-run: ot-epyc7       admits   164 GB (avail 191, growth 76, headroom 0, waiters 0/0 GB) load 59/96 running 16 disk 4685 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue374
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue374
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue374
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue374
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-topk-control-local-1021/queue374
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3071910-1792608739 after 0 s
+QUEUE_CASE mut=0 rc=0 accepted
+QUEUE_CASE mut=1 rc=1 accepted
+QUEUE_CASE mut=2 rc=1 accepted
+QUEUE_CASE mut=3 rc=1 accepted
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3071910-1792608739): exit 0

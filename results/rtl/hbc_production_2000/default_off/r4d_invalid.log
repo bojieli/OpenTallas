@@ -1,0 +1,274 @@
+
+-- Executing script file `r4d_invalid.ys' --
+
+1. Executing Verilog-2005 frontend: prior/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv
+Parsing SystemVerilog input from `prior/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81ph_coll_lane_safe4'.
+Generating RTLIL representation for module `\dsfd_coll_lane_w_safe4'.
+Generating RTLIL representation for module `\dsfd_coll_lane_e_safe4'.
+Generating RTLIL representation for module `\dsfd_coll_lane_w_safe7'.
+Generating RTLIL representation for module `\dsfd_coll_lane_e_safe7'.
+Generating RTLIL representation for module `\dsfd_coll_lane_w_safe8'.
+Generating RTLIL representation for module `\dsfd_coll_lane_e_safe8'.
+Generating RTLIL representation for module `\dsfd_coll_lane_w_safe8_ntf'.
+Generating RTLIL representation for module `\dsfd_coll_lane_e_safe8_ntf'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: prior/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv
+Parsing SystemVerilog input from `prior/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81sl_lep_core'.
+Warning: Replacing memory \g_rx[1].mem with list of registers. See prior/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:622
+Warning: Replacing memory \g_rx[0].mem with list of registers. See prior/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv:622
+Generating RTLIL representation for module `\ot_s81sl_lep'.
+Generating RTLIL representation for module `\ot_s81sl_lep_nh'.
+Generating RTLIL representation for module `\ot_s81sl_lep_mu'.
+Generating RTLIL representation for module `\ot_s81sl_lep_mu_ab'.
+Generating RTLIL representation for module `\ot_s81sl_lep_mu_a'.
+Generating RTLIL representation for module `\ot_s81sl_lep_mu_h'.
+Generating RTLIL representation for module `\ot_s81sl_slice_lep'.
+Generating RTLIL representation for module `\ot_s81sl_slice_lepw'.
+Generating RTLIL representation for module `\ot_s81sl_slice_lepe'.
+Generating RTLIL representation for module `\ot_s81sl_slice_lepe_nh'.
+Generating RTLIL representation for module `\ot_s81sl_lep_rx_control'.
+Generating RTLIL representation for module `\ot_s81sl_lep_host_event'.
+Generating RTLIL representation for module `\ot_s81sl_lep_tx_push'.
+Generating RTLIL representation for module `\ot_s81sl_lep_host_enable'.
+Generating RTLIL representation for module `\ot_s81sl_lep_stamp'.
+Generating RTLIL representation for module `\ot_s81sl_lep_host_hold8'.
+Generating RTLIL representation for module `\ot_s81sl_lep_key_hold8'.
+Generating RTLIL representation for module `\ot_s81sl_lep_host_preserve'.
+Generating RTLIL representation for module `\ot_s81sl_lep_vcopy'.
+Generating RTLIL representation for module `\ot_s81sl_lep_status_region'.
+Generating RTLIL representation for module `\ot_s81sl_lep_pair_ready'.
+Generating RTLIL representation for module `\ot_s81sl_lep_return8'.
+Generating RTLIL representation for module `\ot_s81sl_lep_std_enable'.
+Generating RTLIL representation for module `\ot_s81sl_std_tx_qualify'.
+Generating RTLIL representation for module `\ot_s81sl_lep_bsel_next'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: prior/rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv
+Parsing SystemVerilog input from `prior/rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81sl_slice_c1x_k8_cap5r_lp'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: prior/rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv
+Parsing SystemVerilog input from `prior/rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_mu_land'.
+Warning: Replacing memory \tag with list of registers. See prior/rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv:95
+Warning: Replacing memory \cnt with list of registers. See prior/rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv:90
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: prior/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv
+Parsing SystemVerilog input from `prior/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81sl_lep_mu_ab_regional'.
+Generating RTLIL representation for module `\ot_s81sl_lepab_relay2'.
+Generating RTLIL representation for module `\ot_s81sl_lepab_cross'.
+Generating RTLIL representation for module `\ot_s81sl_lepab_select'.
+Generating RTLIL representation for module `\ot_s81sl_lepab_merge'.
+Generating RTLIL representation for module `\ot_s81sl_lepab_replay_slice'.
+Generating RTLIL representation for module `\ot_s81sl_lepab_replay_decode'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: prior/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r3r.sv
+Parsing SystemVerilog input from `prior/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r3r.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81sl_lep_mu_ab_regional_r3r'.
+Generating RTLIL representation for module `\ot_s81sl_lepab_cross_r3r'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: prior/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r4l.sv
+Parsing SystemVerilog input from `prior/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r4l.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81sl_lep_mu_ab_regional_r4l'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: prior/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv
+Parsing SystemVerilog input from `prior/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_mu72_land'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: prior/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_lnland.sv
+Parsing SystemVerilog input from `prior/rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_lnland.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_mu72_lnland'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: prior/rtl/common/landed_parent/ot_pl_land.sv
+Parsing SystemVerilog input from `prior/rtl/common/landed_parent/ot_pl_land.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pl_land_w'.
+Warning: Replacing memory \e with list of registers. See prior/rtl/common/landed_parent/ot_pl_land.sv:41
+Warning: Replacing memory \b with list of registers. See prior/rtl/common/landed_parent/ot_pl_land.sv:41
+Generating RTLIL representation for module `\ot_pl_land_r'.
+Generating RTLIL representation for module `\ot_pl_land_chunk_w'.
+Generating RTLIL representation for module `\ot_pl_land_chunk_r'.
+Generating RTLIL representation for module `\ot_pl_land_local_w'.
+Warning: Replacing memory \epoch with list of registers. See prior/rtl/common/landed_parent/ot_pl_land.sv:191
+Warning: Replacing memory \data with list of registers. See prior/rtl/common/landed_parent/ot_pl_land.sv:191
+Generating RTLIL representation for module `\ot_pl_land_local_r'.
+Generating RTLIL representation for module `\ot_pl_pad'.
+Warning: Replacing memory \g_reg.r with list of registers. See prior/rtl/common/landed_parent/ot_pl_land.sv:263
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: prior/rtl/common/landed_parent/ot_pl_land_field_copies.sv
+Parsing SystemVerilog input from `prior/rtl/common/landed_parent/ot_pl_land_field_copies.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pl_land_field_copy_bit'.
+Generating RTLIL representation for module `\ot_pl_land_field_copy_group'.
+Generating RTLIL representation for module `\ot_pl_land_field_copies'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: prior/rtl/common/landed_parent/ot_pl_land_kept_enable.sv
+Parsing SystemVerilog input from `prior/rtl/common/landed_parent/ot_pl_land_kept_enable.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pl_land_local_kw'.
+Warning: Replacing memory \epoch with list of registers. See prior/rtl/common/landed_parent/ot_pl_land_kept_enable.sv:41
+Warning: Replacing memory \data with list of registers. See prior/rtl/common/landed_parent/ot_pl_land_kept_enable.sv:41
+Generating RTLIL representation for module `\ot_pl_land_vector_reset_kw_w'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: prior/rtl/common/landed_parent/ot_pl_land_n32.sv
+Parsing SystemVerilog input from `prior/rtl/common/landed_parent/ot_pl_land_n32.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pl_land_n32_oh'.
+Generating RTLIL representation for module `\ot_pl_land_n32_local_w'.
+Generating RTLIL representation for module `\ot_pl_land_n32_chunk_w'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: prior/rtl/common/landed_parent/ot_pl_land_physical.sv
+Parsing SystemVerilog input from `prior/rtl/common/landed_parent/ot_pl_land_physical.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pl_land_phys_chunk_w'.
+Generating RTLIL representation for module `\ot_pl_land_phys_chunk_r'.
+Generating RTLIL representation for module `\ot_pl_land_phys_local_w'.
+Warning: Replacing memory \data with list of registers. See prior/rtl/common/landed_parent/ot_pl_land_physical.sv:40
+Generating RTLIL representation for module `\ot_pl_land_phys_local_r'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: prior/rtl/common/landed_parent/ot_pl_land_reset_forest.sv
+Parsing SystemVerilog input from `prior/rtl/common/landed_parent/ot_pl_land_reset_forest.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pl_land_reset_forest'.
+Generating RTLIL representation for module `\ot_pl_land_vector_reset_w'.
+Generating RTLIL representation for module `\ot_pl_land_vector_reset_r'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: prior/rtl/common/landed_parent/ot_pl_land_rst_copy.sv
+Parsing SystemVerilog input from `prior/rtl/common/landed_parent/ot_pl_land_rst_copy.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pl_land_rst_copy'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: prior/rtl/common/landed_parent/ot_pl_stream_land.sv
+Parsing SystemVerilog input from `prior/rtl/common/landed_parent/ot_pl_stream_land.sv' to AST representation.
+Generating RTLIL representation for module `\ot_pl_stream_hop'.
+Generating RTLIL representation for module `\ot_pl_stream_land'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: rtl/lib/ot_reset_sync.sv
+Parsing SystemVerilog input from `rtl/lib/ot_reset_sync.sv' to AST representation.
+Generating RTLIL representation for module `\ot_reset_sync'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_hold.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_hold.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_hostb_hold_enable'.
+Generating RTLIL representation for module `\dsdv_hostb_header_enable'.
+Generating RTLIL representation for module `\dsdv_hostb_header_address'.
+Generating RTLIL representation for module `\dsdv_hostb_hold_bits'.
+Generating RTLIL representation for module `\dsdv_hostb_header_bank'.
+Generating RTLIL representation for module `\dsdv_hostb_return_bank'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_crc512.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_crc512.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_hostb_crc512'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_rx.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_rx.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_hostb_rx'.
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_tx.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_tx.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_hostb_tx'.
+Generating RTLIL representation for module `\dsdv_hostb_select_root'.
+Generating RTLIL representation for module `\dsdv_hostb_select_bank'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_hostb_stage'.
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_dv/hostb/dsdv_hbc1_loader.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_dv/hostb/dsdv_hbc1_loader.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_hbc1_loader'.
+Generating RTLIL representation for module `\dsdv_hbc_ctx_copy'.
+Generating RTLIL representation for module `\dsdv_hbc_boot12'.
+Generating RTLIL representation for module `\dsdv_hbc_epoch12'.
+Generating RTLIL representation for module `\dsdv_hbc_epoch_enable'.
+Generating RTLIL representation for module `\dsdv_hbc_header_enable'.
+Generating RTLIL representation for module `\dsdv_hbc_owner'.
+Generating RTLIL representation for module `\dsdv_hbc_field'.
+Generating RTLIL representation for module `\dsdv_hbc_fixed_enable'.
+Generating RTLIL representation for module `\dsdv_hbc_fixed_date'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_dv/hostb/dsdv_hbc1_affine_book.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_dv/hostb/dsdv_hbc1_affine_book.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_hbc1_affine_book'.
+Generating RTLIL representation for module `\dsdv_hbc_book_enable'.
+Generating RTLIL representation for module `\dsdv_hbc_book_next12'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_return.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_return.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_hostb_return'.
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage_hbc.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage_hbc.sv' to AST representation.
+Generating RTLIL representation for module `\dsdv_hostb_stage_hbc'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72.sv
+Parsing SystemVerilog input from `rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72'.
+Successfully finished Verilog frontend.
+Parameter \HBC_ENABLE = 1
+
+29. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72'.
+Parameter \HBC_ENABLE = 1
+Generating RTLIL representation for module `$paramod\ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72\HBC_ENABLE=s32'00000000000000000000000000000001'.
+
+30. Executing HIERARCHY pass (managing design hierarchy).
+
+30.1. Analyzing design hierarchy..
+Top module:  \ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72
+Used module:     \dsdv_hostb_stage_hbc
+Used module:         \dsdv_hostb_stage
+Parameter \ENABLE = 0
+
+30.2. Executing AST frontend in derive mode using pre-parsed AST for module `\dsdv_hostb_stage'.
+Parameter \ENABLE = 0
+Generating RTLIL representation for module `$paramod\dsdv_hostb_stage\ENABLE=s32'00000000000000000000000000000000'.
+Parameter \ENABLE = 1
+Parameter \LOCAL_STAGE = 255
+Parameter \LOCAL_RANK = 4
+Parameter \PHASE_BOUND = 0
+Parameter \RETURN_LOCAL = 1
+Parameter \RETURN_REQUIRE_KIT = 1
+Parameter \VARIABLE_WORDS = 1
+Parameter \ALLOW_RELOAD = 1
+Parameter \RETURN_ARRIVAL_DEADLINE = 48'111111111111111111111111111111111111111111111111
+Parameter \CLOCK_RESET_ID = 64'0000000000000000000000000000000000000000000000000000000000000000
+Parameter \BOOT_HEADER_EDGE = 48'111111111111111111111111111111111111111111111111
+Parameter \BOOT_COMMIT_EDGE = 48'111111111111111111111111111111111111111111111111
+
+30.3. Executing AST frontend in derive mode using pre-parsed AST for module `\dsdv_hostb_stage_hbc'.
+Parameter \ENABLE = 1
+Parameter \LOCAL_STAGE = 255
+Parameter \LOCAL_RANK = 4
+Parameter \PHASE_BOUND = 0
+Parameter \RETURN_LOCAL = 1
+Parameter \RETURN_REQUIRE_KIT = 1
+Parameter \VARIABLE_WORDS = 1
+Parameter \ALLOW_RELOAD = 1
+Parameter \RETURN_ARRIVAL_DEADLINE = 48'111111111111111111111111111111111111111111111111
+Parameter \CLOCK_RESET_ID = 64'0000000000000000000000000000000000000000000000000000000000000000
+Parameter \BOOT_HEADER_EDGE = 48'111111111111111111111111111111111111111111111111
+Parameter \BOOT_COMMIT_EDGE = 48'111111111111111111111111111111111111111111111111
+Generating RTLIL representation for module `$paramod$a4be04e32ae6413da0dcdddf9a4c6bc1f33f99d5\dsdv_hostb_stage_hbc'.
+rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_stage_hbc.sv:79: ERROR: Can't resolve task name `$fatal'.

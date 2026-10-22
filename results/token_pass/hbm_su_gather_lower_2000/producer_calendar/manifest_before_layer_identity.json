@@ -1,0 +1,115 @@
+{
+  "schema": "opentallas.hbm.gather_calendar.v1",
+  "status": "PARTIAL",
+  "qualifies_native_layer": false,
+  "qualifies_native_chain": false,
+  "jobs": {
+    "route.gather0": {
+      "start": null,
+      "done": null
+    },
+    "route.gather1": {
+      "start": null,
+      "done": null
+    },
+    "route.gather2": {
+      "start": null,
+      "done": null
+    },
+    "route.gather3": {
+      "start": null,
+      "done": null
+    },
+    "route.gather4": {
+      "start": null,
+      "done": null
+    },
+    "route.gather5": {
+      "start": null,
+      "done": null
+    }
+  },
+  "missing": [
+    "selected gather binding.die_sha256",
+    "selected gather binding.source_sha256",
+    "selected gather binding.clock_epoch_identity",
+    "selected gather binding.calendar_epoch",
+    "selected gather binding.configuration_start",
+    "selected gather binding.launch_to_calendar_zero",
+    "selected gather binding.ownership_release_tail",
+    "selected gather binding.port_free",
+    "selected gather binding.parameters",
+    "selected gather binding.instance",
+    "selected gather binding.producer_tp",
+    "selected gather binding PASS source receipt",
+    "route.gather0::index actual native producer/allocation receipt",
+    "route.gather0::run0 actual native producer/allocation receipt",
+    "route.gather0::run1 actual native producer/allocation receipt",
+    "route.gather0::run2 actual native producer/allocation receipt",
+    "route.gather0::run3 actual native producer/allocation receipt",
+    "route.gather0::output_allocation actual native producer/allocation receipt",
+    "route.gather1::index actual native producer/allocation receipt",
+    "route.gather1::run0 actual native producer/allocation receipt",
+    "route.gather1::run1 actual native producer/allocation receipt",
+    "route.gather1::run2 actual native producer/allocation receipt",
+    "route.gather1::run3 actual native producer/allocation receipt",
+    "route.gather1::output_allocation actual native producer/allocation receipt",
+    "route.gather2::index actual native producer/allocation receipt",
+    "route.gather2::run0 actual native producer/allocation receipt",
+    "route.gather2::run1 actual native producer/allocation receipt",
+    "route.gather2::run2 actual native producer/allocation receipt",
+    "route.gather2::run3 actual native producer/allocation receipt",
+    "route.gather2::output_allocation actual native producer/allocation receipt",
+    "route.gather3::index actual native producer/allocation receipt",
+    "route.gather3::run0 actual native producer/allocation receipt",
+    "route.gather3::run1 actual native producer/allocation receipt",
+    "route.gather3::run2 actual native producer/allocation receipt",
+    "route.gather3::run3 actual native producer/allocation receipt",
+    "route.gather3::output_allocation actual native producer/allocation receipt",
+    "route.gather4::index actual native producer/allocation receipt",
+    "route.gather4::run0 actual native producer/allocation receipt",
+    "route.gather4::run1 actual native producer/allocation receipt",
+    "route.gather4::run2 actual native producer/allocation receipt",
+    "route.gather4::run3 actual native producer/allocation receipt",
+    "route.gather4::output_allocation actual native producer/allocation receipt",
+    "route.gather5::index actual native producer/allocation receipt",
+    "route.gather5::run0 actual native producer/allocation receipt",
+    "route.gather5::run1 actual native producer/allocation receipt",
+    "route.gather5::run2 actual native producer/allocation receipt",
+    "route.gather5::run3 actual native producer/allocation receipt",
+    "route.gather5::output_allocation actual native producer/allocation receipt",
+    "actual native control transport receipt"
+  ],
+  "source_binding": {
+    "status": "PARTIAL",
+    "engine": "ot_hbm_su_indexed_scalar",
+    "clock": "stream",
+    "die_sha256": null,
+    "source_sha256": null,
+    "clock_epoch_identity": null,
+    "calendar_epoch": null,
+    "configuration_start": null,
+    "launch_to_calendar_zero": null,
+    "ownership_release_tail": null,
+    "port_free": null,
+    "parameters": null,
+    "instance": null,
+    "target_id": 180,
+    "control_transport": "ot_static_program_target",
+    "diagnostic_graph_sha256": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
+    "diagnostic_source_ref": "57cd9d54d",
+    "source_owners": {
+      "native_gather_and_IDX": "/root/hbm/idxsu",
+      "GSC_native_arrival": "/root/hbm/coll",
+      "final_route_age_composition": "/root/hbm/chain",
+      "calendar_implementation": "/root/s81_kv_lower"
+    },
+    "producer_tp": null,
+    "programme_tp": 96,
+    "diagnostic_selected_source_tp": 192
+  },
+  "obligations": [
+    "No fixture output, imaged far end, model completion or cut check edge supplies producer readiness.",
+    "Whole token requires actual upstream producers and downstream consumer leases."
+  ]
+}
