@@ -191,6 +191,11 @@ def gen_params(insts, hr_rows, image=IMAGE):
         if NATIVE_MASTER not in masters or SF_MASTER not in masters:
             raise ValueError('head prepare requires the actual source-complete native and OVL face masters')
         out.setdefault(NATIVE_MASTER, {}).update(HEAD_PREP=1, NU=nu)
+        # SQ-C2-N59 svc5/5b harden the existing receive-first/local-decode
+        # implementation. Carry the selected child's parameters into its parent.
+        if os.environ.get('OT_QWEN_NATIVE_SVC5', '0') == '1':
+            out[NATIVE_MASTER].update(SVC_RECV=1, SVC_LOCAL32=1)
+            rec['native_svc5'] = dict(SVC_RECV=1, SVC_LOCAL32=1)
         out.setdefault(SF_MASTER, {}).update(MU=int(nu>1), MU_HEAD=int(nu>1), ROPE=1)
         rec['head_prepare'] = dict(source='c_emb stored token/position/user, never RESULT',
                                   transport='derive both bundle ages from actual GEN; no zero default')
