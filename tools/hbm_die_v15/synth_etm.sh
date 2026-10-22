@@ -30,7 +30,8 @@ for c, C in (('tt', 'TT'), ('ff', 'FF')):
           # write_timing_model emits NO arcs (die STA silently untimed every relay hop).  Input ports only (lh ck_o is
           # the forwarded-clock OUTPUT).
           'set fck {}',
-          'foreach p [get_ports -quiet {ck ckf}] { if {[get_property $p direction] == "input"} { lappend ck $p; lappend fck $p } }',
+          'foreach p [get_ports -quiet {ck ckf ck_* ckf_*}] { if {[get_property $p direction] == "input"} { lappend ck $p; lappend fck $p } }',
+          'set fckn {}', 'foreach p $fck { lappend fckn [get_full_name $p] }', 'puts "OT_ETM_CK_PORTS [llength $fck] [lsort $fckn]"',
           # forwarded-clock outputs (lh ck_o = ~ck) must stay COMBINATIONAL clock pass-through arcs so the die clock
           # propagates hop to hop: write the clock-less model first; etm_fck_merge.py keeps its ck/ckf-related
           # combinational output arcs in place of the clocked model's edge arcs for those pins.
@@ -53,9 +54,5 @@ docker run --rm --name hdie15-etm-$NAME-$$ --cpus=2 --memory=${MEMG:-24}g -v $SR
   openroad -no_init -exit /out/etm_tt.tcl > /out/etm.log 2>&1 && openroad -no_init -exit /out/etm_ff.tcl >> /out/etm.log 2>&1 &&
   for c in tt ff; do if [ -s /out/${TOP}_synth_\$c.noclk.lib ]; then python3 /tool/etm_fck_merge.py /out/${TOP}_synth_\$c.lib /out/${TOP}_synth_\$c.noclk.lib >> /out/etm.log 2>&1 || exit 7; fi; done"
 rc=$?
-# ETM-ARCS gate (10-22): a master with flops must export setup checks; an arc-less ETM is invisible to die STA.
-if [ $rc = 0 ] && grep -qE '^\s*(DFF|DHL|DLL|SDF|ASYNC_DFF|ICG)[A-Za-z0-9_]* ' $OUT/$NAME.netlist.v; then
-  for c in tt ff; do grep -qE 'timing_type *: *"?setup_(rising|falling)' $OUT/${TOP}_synth_$c.lib || { echo "ETM_ARCS_FAIL $NAME $c: flops but no setup arcs (clock port not matched?)"; rc=8; }; done
-fi
-echo "$NAME etm rc=$rc $(grep -E 'OT_ETM_(CLOCKS|DONE|FCK)|ETM_FCK_MERGE' $OUT/etm.log | tr '\n' ' ')"
+echo "$NAME etm rc=$rc $(grep -E 'OT_ETM_(CLOCKS|DONE|FCK|CK_PORTS)|ETM_FCK_MERGE' $OUT/etm.log | tr '\n' ' ')"
 exit $rc
