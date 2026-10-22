@@ -14,7 +14,7 @@ module tb_pv_so_program;
  if(lv)nl=nl+1;
  end
  task tick;@(negedge clk);#0.01;endtask
- task send(input[511:0]w,input bit private_);begin q={2'd0,w,1'b1};#0.1;if(private_ && qp!==0)$fatal(1,"PROGRAM_PRIVATE_LEAK");if(!private_ && qp!==q)$fatal(1,"PROGRAM_PUBLIC_CHANGED");tick();end endtask
+ task send(input[511:0]w,input bit private_);begin q={2'd0,w,1'b1};if(mut==3)q[514]=1;#0.1;if(private_ && qp!==0)$fatal(1,"PROGRAM_PRIVATE_LEAK");if(!private_ && qp!==q)$fatal(1,"PROGRAM_PUBLIC_CHANGED");tick();end endtask
  reg[511:0]h;
  initial begin
  if($value$plusargs("mut=%d",mut));repeat(4)tick();rn=1;repeat(3)tick();

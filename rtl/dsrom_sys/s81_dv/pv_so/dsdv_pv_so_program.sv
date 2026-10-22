@@ -26,6 +26,7 @@ module dsdv_pv_so_program #(parameter integer ENABLE=0)(
   else begin
    cfg_v<=0;param_v<=0;launch<=0;
    if(ENABLE!=0 && v)begin
+    if(q[514])fault<=1; // private frames must preserve transport fault visibility
     if(!in_frame)begin
      in_frame<=d[491:480]!=0;left<=d[491:480];private_frame<=d[511:508]==15;row_<=0;
      if(ph)begin
