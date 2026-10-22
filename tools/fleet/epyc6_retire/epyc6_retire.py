@@ -563,13 +563,18 @@ def copy_roots(roots, final):
         if payload:
             ver = agi_py("list", payload, timeout=3 * 3600)
     if final:
-        errs = retain_copy_errors(errs, summ, ver)
+        # Recheck real free bytes after the hash pass; its duration may be long.
+        free = run(SSH_A + [AGI, "df -B1 --output=avail /archive | tail -1"],
+                   timeout=60).stdout.strip()
+        archive_free_bytes = int(free) if free.isdigit() else None
+        errs = retain_copy_errors(errs, summ, ver, archive_free_bytes)
         jsave(f"{STATE}/final_archive_verification.json",
-              dict(at=now(), verification=ver, copy_errors=errs))
+              dict(at=now(), verification=ver, copy_errors=errs,
+                   archive_free_bytes=archive_free_bytes, floor_bytes=AGI_FLOOR))
     return summ, errs, ver
 
 
-def retain_copy_errors(errs, summ, ver):
+def retain_copy_errors(errs, summ, ver, archive_free_bytes):
     """A complete final SHA verification supersedes only a no-copy space estimate."""
     retained = dict(errs)
     for root, error in errs.items():
@@ -577,7 +582,8 @@ def retain_copy_errors(errs, summ, ver):
         source = summ.get(root, {})
         # This estimate subtracts the whole source even if it is already archived.
         # Never forgive rsync failures, incomplete receipts or non-final copies.
-        if (error.startswith("AGIdock /archive free ") and error.endswith(" GB (copy held)")
+        if (type(archive_free_bytes) is int and archive_free_bytes >= AGI_FLOOR
+                and error.startswith("AGIdock /archive free ") and error.endswith(" GB (copy held)")
                 and source.get("exists") is True
                 and proof.get("ok") is True
                 and proof.get("n") == source.get("files", -1) + source.get("links", -1)

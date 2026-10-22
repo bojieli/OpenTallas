@@ -34,30 +34,36 @@ class VerifiedCopyFloor(unittest.TestCase):
         return json.loads(result.stdout)
 
     def test_complete_regular_and_symlink_bytes_remove_only_estimate(self):
-        self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, self.verify()), {})
+        self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, self.verify(), self.m.AGI_FLOOR), {})
+
+    def test_actual_space_below_floor_or_unknown_keeps_hold(self):
+        proof = self.verify()
+        for free in [self.m.AGI_FLOOR - 1, None, True]:
+            with self.subTest(free=free):
+                self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, proof, free), self.errs)
 
     def test_same_size_corruption_keeps_hold(self):
         (self.dst / "source.sv").write_bytes(b"new")
-        self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, self.verify()), self.errs)
+        self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, self.verify(), self.m.AGI_FLOOR), self.errs)
 
     def test_missing_file_keeps_hold(self):
         (self.dst / "source.sv").unlink()
-        self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, self.verify()), self.errs)
+        self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, self.verify(), self.m.AGI_FLOOR), self.errs)
 
     def test_changed_symlink_keeps_hold(self):
         (self.dst / "link").unlink()
         (self.dst / "link").symlink_to("other.sv")
-        self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, self.verify()), self.errs)
+        self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, self.verify(), self.m.AGI_FLOOR), self.errs)
 
     def test_rsync_failure_never_cleared(self):
         errs = {self.root: "rsync rc 23: unreadable file"}
-        self.assertEqual(self.m.retain_copy_errors(errs, self.summ, self.verify()), errs)
+        self.assertEqual(self.m.retain_copy_errors(errs, self.summ, self.verify(), self.m.AGI_FLOOR), errs)
 
     def test_missing_or_incomplete_receipt_keeps_hold(self):
         for proof in [{}, {str(self.dst): dict(ok=True)},
                       {str(self.dst): dict(ok=True,n=1,missing=0,size_mismatch=0,hash_mismatch=0)}]:
             with self.subTest(proof=proof):
-                self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, proof), self.errs)
+                self.assertEqual(self.m.retain_copy_errors(self.errs, self.summ, proof, self.m.AGI_FLOOR), self.errs)
 
 if __name__ == "__main__":
     unittest.main()
