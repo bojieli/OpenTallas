@@ -8,7 +8,7 @@
 // svc3: tx payload too (TX_FREE, MCTX 1) and the DV fault as four sticky flops.
 module qfd_native59_svc_obs1 #(
  parameter integer MUT=0,CODEC_MUT=0,NATIVE_PROFILE=0,LAND_QUALIFIED=0,LAND_EDGES=8,
- parameter integer RECV_INPUTS=0,RECV_MUT=0,LOCAL32=0,LOCAL_MUT=0,
+ parameter integer RECV_INPUTS=0,RECV_MUT=0,LOCAL32=0,LOCAL_MUT=0,FANOUT_LOCAL=0,
  parameter integer ROPE=0,USER_BIND=0,HEAD_PREP=0,NU=1,parameter [13:0] MU_SEQ0=14'd0,parameter integer MCTX=0,EMB_RELAY=0
 )(
  input wire ck,rst_n,
@@ -401,20 +401,48 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[13:0]fseq_rd={fseq[c_user_h][13:7],fseq[c_user_r][6:0]};
  wire[1:0]c_user_f=MU?pu_pub[4]:2'd0;   // R3i: == c_user (fstart read)
  wire[13:0]c_seq=(HEAD_PREP==0&&fstart[c_user_f]&&c_l0&&MUT!=6)?fseq_rd+14'd1:fseq_rd;
+ // Same-edge tuple-user publications: each has the original second-stage D/reset.
+ wire[1:0]hp_user_pub[0:11];wire[11:0]hp_valid_pub,hp_fill_pub,hp_host_pub;
+ generate for(genvar hc=0;hc<12;hc=hc+1)begin:g_hp_publication
+  if(FANOUT_LOCAL)begin:g_local
+   (* keep = "true" *) reg[1:0]u;(* keep = "true" *) reg v;
+   always @(posedge ck or negedge rst_top)if(!rst_top)begin u<=0;v<=0;end else begin u<=hp_u0;v<=hp_v[0];end
+   assign hp_user_pub[hc]=u;assign hp_valid_pub[hc]=v;
+  end else begin:g_alias assign hp_user_pub[hc]=hp_u1;assign hp_valid_pub[hc]=hp_v[1];end
+  assign hp_fill_pub[hc]=HEAD_PREP!=0&&MU!=0&&hp_valid_pub[hc]&&hp_user_pub[hc]!=0;
+  assign hp_host_pub[hc]=HEAD_PREP!=0&&hp_valid_pub[hc]&&hp_user_pub[hc]==0;
+ end endgenerate
  wire hp_fill=HEAD_PREP!=0&&MU!=0&&hp_v[1]&&hp_u1!=2'd0;
  wire hp_host=HEAD_PREP!=0&&hp_v[1]&&hp_u1==2'd0;
  reg hp_host_pending,hp_host_fault;reg[17:0]hp_host_token,hp_host_position;
  wire hp_host_match=hp_host_pending&&p_hev&&p_hfc&&p_ht[58:43]==p_he&&
     p_ht[36:19]==hp_host_token&&p_ht[18:6]==hp_host_position[12:0]&&p_ht[42:37]==0&&p_ht[5:0]==0;
  always @(posedge ck or negedge rst_top)
-  if(!rst_top)begin hp_host_pending<=0;hp_host_fault<=0;hp_host_token<=0;hp_host_position<=0;end
+  if(!rst_top)begin hp_host_pending<=0;hp_host_fault<=0;if(!FANOUT_LOCAL)begin hp_host_token<=0;hp_host_position<=0;endend
   else begin
    if(hp_host)begin
     if(hp_host_pending||hp_t1>=151936||hp_p1>=8192)hp_host_fault<=1;
-    hp_host_pending<=1;hp_host_token<=hp_t1;hp_host_position<=hp_p1;
+    hp_host_pending<=1;if(!FANOUT_LOCAL)begin hp_host_token<=hp_t1;hp_host_position<=hp_p1;end
    end else if(hp_host_match&&!hp_fill)hp_host_pending<=0;
   end
- wire[13:0]hp_seq=fstart[hp_u1]?fseq[hp_u1]+14'd1:fseq[hp_u1];
+ generate if(FANOUT_LOCAL)begin:g_hp_host_capture
+  for(genvar hg=0;hg<4;hg=hg+1)begin:g_chunk
+   always @(posedge ck or negedge rst_top)
+    if(!rst_top)begin
+     if(hg<2)hp_host_token[9*hg+:9]<=0;else hp_host_position[9*(hg-2)+:9]<=0;
+    end else if(hp_host_pub[hg])begin
+     if(hg<2)hp_host_token[9*hg+:9]<=hp_t1[9*hg+:9];else hp_host_position[9*(hg-2)+:9]<=hp_p1[9*(hg-2)+:9];
+    end
+  end
+ end endgenerate
+ wire[13:0]hp_seq;
+ generate if(FANOUT_LOCAL)begin:g_hp_seq_local
+  wire[13:0]lo=fstart[hp_user_pub[10]]?fseq[hp_user_pub[10]]+14'd1:fseq[hp_user_pub[10]];
+  wire[13:0]hi=fstart[hp_user_pub[11]]?fseq[hp_user_pub[11]]+14'd1:fseq[hp_user_pub[11]];
+  assign hp_seq={hi[13:7],lo[6:0]};
+ end else begin:g_hp_seq_legacy
+  assign hp_seq=fstart[hp_u1]?fseq[hp_u1]+14'd1:fseq[hp_u1];
+ end endgenerate
  wire[1:0]c_tag=(MUT==5&&c_user==2'd3)?2'd0:c_user;
  wire[1:0]c_user_e=MU?pu_pub[3]:2'd0,c_user_e2=MU?pu_pub[5]:2'd0;   // R3h/j: == c_user (begin_tag epoch select low / high)
  wire[15:0]c_epoch_f={c_seq,c_tag};
@@ -452,20 +480,36 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  // Available one service edge after begin_slot; the sole paired calendar must price this output age
  // and its physical landing before reserving a C->K CONTEXT slot ahead of the matching HBM fetch.
  always @(posedge ck or negedge rst_top)
-  if(!rst_top)begin head_descriptor_v<=0;head_descriptor_tag<=0;head_descriptor_generation<=0;end
+  if(!rst_top)begin head_descriptor_v<=0;if(!FANOUT_LOCAL)head_descriptor_tag<=0;head_descriptor_generation<=0;end
   else begin
    head_descriptor_v<=HEAD_PREP!=0?(hp_fill||hp_host_match):(begin_slot&&(begin_tag[42:37]==6'd1));
    if(hp_fill)begin
-    head_descriptor_tag<={hp_seq,hp_u1,6'd0,hp_t1,hp_p1[12:0],6'd0};
+    if(!FANOUT_LOCAL)head_descriptor_tag<={hp_seq,hp_u1,6'd0,hp_t1,hp_p1[12:0],6'd0};
     head_descriptor_generation<=p_hg;
    end else if(HEAD_PREP!=0&&hp_host_match)begin
-    head_descriptor_tag<={p_ht[58:43],6'd0,p_ht[36:0]};
+    if(!FANOUT_LOCAL)head_descriptor_tag<={p_ht[58:43],6'd0,p_ht[36:0]};
     head_descriptor_generation<=p_hg;
    end else if(HEAD_PREP==0&&begin_slot&&(begin_tag[42:37]==6'd1))begin
-    head_descriptor_tag<={begin_tag[58:43],6'd0,begin_tag[36:0]};
+    if(!FANOUT_LOCAL)head_descriptor_tag<={begin_tag[58:43],6'd0,begin_tag[36:0]};
     head_descriptor_generation<=p_hg;
    end
   end
+ generate if(FANOUT_LOCAL)begin:g_hp_descriptor_local
+  wire[58:0]fill_tag={hp_seq,hp_user_pub[9],6'd0,hp_t1,hp_p1[12:0],6'd0};
+  wire[58:0]host_tag={p_ht[58:43],6'd0,p_ht[36:0]};
+  wire[58:0]legacy_tag={begin_tag[58:43],6'd0,begin_tag[36:0]};
+  for(genvar hd=0;hd<6;hd=hd+1)begin:g_chunk
+   localparam integer W=(hd==5)?9:10;
+   wire host_accept,legacy_accept;
+   qfd_n59_final_decode #(.N(2)) u_host(.a({hp_host_match,!hp_fill_pub[4+hd]}),.y(host_accept));
+   qfd_n59_final_decode #(.N(3)) u_legacy(.a({HEAD_PREP==0,begin_slot,begin_tag[42:37]==6'd1}),.y(legacy_accept));
+   always @(posedge ck or negedge rst_top)
+    if(!rst_top)head_descriptor_tag[10*hd+:W]<=0;
+    else if(hp_fill_pub[4+hd])head_descriptor_tag[10*hd+:W]<=fill_tag[10*hd+:W];
+    else if(HEAD_PREP!=0&&host_accept)head_descriptor_tag[10*hd+:W]<=host_tag[10*hd+:W];
+    else if(legacy_accept)head_descriptor_tag[10*hd+:W]<=legacy_tag[10*hd+:W];
+  end
+ end endgenerate
  // ---------------------------------------------------------------- dd word decode (the bank relays bnd_dd_i one edge: see the header)
  wire dd_v=p_dd[547];wire[1:0]dd_kind=p_dd[546:545];wire[7:0]dd_mask=p_dd[544:537];
  wire dd_q=dd_v&&dd_kind==2'd0,dd_kv=dd_v&&(dd_kind==2'd1||dd_kind==2'd2);
@@ -738,7 +782,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
    assign svc_begin_pub[k]=nc_pub[22+13*gs+k]&&sel_nf[gs];
   end
   wire[4:0]vm_commit_beat_pub,vm_commit_beat_pub2,vm_commit_beat_pub3,vm_commit_beat_pub4;
-  qfd_native59_static_service_obs1 #(.LOCAL32(LOCAL32)) u_service(
+  qfd_native59_static_service_obs1 #(.LOCAL32(LOCAL32),.FANOUT_LOCAL(FANOUT_LOCAL)) u_service(
   .ck(ck),.rst_n(rst_svc),.source_fault(src_fault),
   .begin_slot(begin_slot&&sel_nf[gs]),.begin_tag(begin_tag),.request_slot(req_s),.request_tag(request_tag),.result_base_word(base),
   .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(s_req_v[gs]),.kernel_request_pub(kreq_pub),.vm_write_pub(s_vm_pub[gs]),.kernel_request_tag(req_tag),
@@ -772,8 +816,21 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  // e1/e2/e3 (and optional e4) pipeline carries valid, beat, and payload ages.
  localparam integer ROPE_FIRST=77;
  reg emb_act;reg[6:0]emb_k;reg[17:0]emb_tok;
+ wire[6:0]emb_k_pub[0:1];
+ generate for(genvar ek=0;ek<2;ek=ek+1)begin:g_emb_index_pub
+  if(FANOUT_LOCAL)begin:g_local
+   (* keep = "true" *) reg[6:0]q;
+   always @(posedge ck or negedge rst_top)
+    if(!rst_top)q<=0;
+    else begin
+     if(emb_go&&!emb_act&&!cmd_bad)q<=0;
+     if(emb_act)q<=q+7'd1;
+    end
+   assign emb_k_pub[ek]=q;
+  end else begin:g_alias assign emb_k_pub[ek]=emb_k;end
+ end endgenerate
  wire emb_read=emb_act&&(emb_k<=7'd64||(ROPE!=0&&emb_k>=7'(ROPE_FIRST)));
- wire[23:0]rope_addr=24'd9723904+{3'd0,emb_tok,3'd0}+24'(emb_k-7'(ROPE_FIRST));
+ wire[23:0]rope_addr=24'd9723904+{3'd0,emb_tok,3'd0}+24'(emb_k_pub[1]-7'(ROPE_FIRST));
  reg e1,e2,e3;reg[6:0]k1,k2,k3;
  (* keep = "true" *) reg e3b;(* keep = "true" *) reg[6:0]k3b;   // R3g: == e3 / k3 (half of the e4c / k4c copies)
  // R3e: 3 kept copies of emb_act (the same set / clear statements, so ea_c[k] == emb_act on every edge): [0] code
@@ -799,7 +856,7 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
     emb_k<=emb_k+7'd1;if(emb_k==(ROPE?7'(ROPE_FIRST+7):7'd64))begin emb_act<=0;ea_c<=0;end
    end
    // read edge (e1: the re flop is at the pin), provider answer (e2), answer in the pin register (e3)
-   e1<=emb_read;k1<=emb_k;e2<=e1;k2<=k1;e3<=e2;k3<=k2;e3b<=e2;k3b<=k2;
+   e1<=emb_read;k1<=emb_k_pub[0];e2<=e1;k2<=k1;e3<=e2;k3<=k2;e3b<=e2;k3b<=k2;
   end
  // ---------------------------------------------------------------- dr_o: group 0 attention result / group 1 embedding row
  wire g0=vm_write_v;

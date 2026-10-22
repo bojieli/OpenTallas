@@ -10,7 +10,7 @@
 // This module contains no arithmetic and cannot fabricate Q or result words.
 // TAG59={epoch16,stage6,token18,position13,segment6}; stages1..36.
 module qfd_native59_static_service_obs1 #(
- parameter integer MUT_EARLY_COMPLETE=0,LOCAL32=0
+ parameter integer MUT_EARLY_COMPLETE=0,LOCAL32=0,FANOUT_LOCAL=0
 )(
  input wire ck,rst_n,input wire source_fault,
  input wire begin_slot,input wire [58:0] begin_tag,
@@ -79,7 +79,16 @@ module qfd_native59_static_service_obs1 #(
  // R3c (QW-CB16A0 10-20): Q capture holds use the parent's same-edge kept q_slot publications ([63:0] data bytes,
  // [71:64] tag bytes, [72] beat, [73]/[74] q_seen low/high, [75] count/checks); the kernel-request and VM-write valids
  // publish kept same-D copies (each copy = the original register on every edge).  LOCAL32 0: aliases, no added flops.
- wire kreq_d=request_slot&&!fault&&!source_fault,vmw_d=result_slot&&!fault&&!source_fault;
+ wire kreq_d,vmw_d,kreq_pub_d;
+ generate if(FANOUT_LOCAL)begin:g_final_publication
+  qfd_n59_final_decode u_kr(.a({request_slot,!fault,!source_fault}),.y(kreq_d));
+  qfd_n59_final_decode u_vw(.a({result_slot,!fault,!source_fault}),.y(vmw_d));
+  qfd_n59_final_decode u_kp(.a({rp[6],!fault,!source_fault}),.y(kreq_pub_d));
+ end else begin:g_legacy_publication
+  assign kreq_d=request_slot&&!fault&&!source_fault;
+  assign vmw_d=result_slot&&!fault&&!source_fault;
+  assign kreq_pub_d=rp[6]&&!fault&&!source_fault;
+ end endgenerate
  generate if(LOCAL32)begin:g_q_payload32
   for(genvar qg=0;qg<64;qg=qg+1)begin:g_data
    always @(posedge ck or negedge rst_n)
@@ -97,7 +106,7 @@ module qfd_native59_static_service_obs1 #(
    else if(q_slot_pub[72])kernel_q_beat<=qsb2;
   for(genvar c=0;c<24;c=c+1)begin:g_kreq
    (* keep = "true" *) reg q;
-   always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=rp[6]&&!fault&&!source_fault;   // R3e: == kreq_d
+   always @(posedge ck or negedge rst_n)if(!rst_n)q<=0;else q<=kreq_pub_d;   // R3e: == kreq_d
    assign kernel_request_pub[c]=q;
   end
   for(genvar c=0;c<25;c=c+1)begin:g_vmw
@@ -117,11 +126,17 @@ module qfd_native59_static_service_obs1 #(
  // reports actual single-operation availability even after completion, when
  // the head still selects this face before the next ordinary-ROM command.
  wire complete_ok=requested&&done_seen&&(&q_seen)&&(&result_seen)&&(&committed);
+ wire[12:0]accepted_begin;
+ for(genvar ac=0;ac<13;ac=ac+1)begin:g_accepted_begin
+  if(FANOUT_LOCAL)begin:g_local
+   qfd_n59_final_decode u_accept(.a({bp[ac],!active,legal_tag}),.y(accepted_begin[ac]));
+  end else begin:g_alias assign accepted_begin[ac]=bp[ac]&&!(active||!legal_tag);end
+ end
  // Observe the exact accepted-completion predicate, at the existing edge.
  assign completing=rst_n && complete_slot && active && (complete_ok || MUT_EARLY_COMPLETE!=0) && !fault && !source_fault;
  for(genvar oc=0;oc<4;oc=oc+1) begin:g_obs_tag
   localparam integer LO=15*oc,W=(oc==3)?14:15;
-  qfd_status_obs_hold_chunk #(.W(W)) u_tag (.ck(ck),.a(rst_n && complete_slot),
+  qfd_status_obs_hold_chunk #(.W(W),.FINAL_DECODE(FANOUT_LOCAL)) u_tag (.ck(ck),.a(rst_n && complete_slot),
    .b(active && (complete_ok || MUT_EARLY_COMPLETE!=0)),.c(!fault && !source_fault),
    .d(tag[LO+:W]),.q(completed_tag[LO+:W]));
  end
@@ -141,19 +156,19 @@ module qfd_native59_static_service_obs1 #(
    // R3e: the accepted begin / request clears and captures are grouped per kept publication (<= 32 loads each); same
    // statements, same order, same conditions (bp[k] == begin_slot, rp[k] == request_slot).
    if(begin_slot&&(active||!legal_tag))fault<=1;
-   if(bp[0]&&!(active||!legal_tag))tag[14:0]<=begin_tag[14:0];
-   if(bp[1]&&!(active||!legal_tag))tag[29:15]<=begin_tag[29:15];
-   if(bp[2]&&!(active||!legal_tag))tag[44:30]<=begin_tag[44:30];
-   if(bp[3]&&!(active||!legal_tag))tag[58:45]<=begin_tag[58:45];
-   if(bp[4]&&!(active||!legal_tag))q_seen[15:0]<=0;
-   if(bp[5]&&!(active||!legal_tag))q_seen[31:16]<=0;
-   if(bp[6]&&!(active||!legal_tag))q_count<=0;
-   if(bp[7]&&!(active||!legal_tag))result_seen[15:0]<=0;
-   if(bp[8]&&!(active||!legal_tag))result_seen[31:16]<=0;
-   if(bp[9]&&!(active||!legal_tag))result_count<=0;
-   if(bp[10]&&!(active||!legal_tag))committed[15:0]<=0;
-   if(bp[11]&&!(active||!legal_tag))committed[31:16]<=0;
-   if(bp[12]&&!(active||!legal_tag))begin commit_count<=0;context_valid<=1;requested<=0;done_seen<=0;end
+   if(accepted_begin[0])tag[14:0]<=begin_tag[14:0];
+   if(accepted_begin[1])tag[29:15]<=begin_tag[29:15];
+   if(accepted_begin[2])tag[44:30]<=begin_tag[44:30];
+   if(accepted_begin[3])tag[58:45]<=begin_tag[58:45];
+   if(accepted_begin[4])q_seen[15:0]<=0;
+   if(accepted_begin[5])q_seen[31:16]<=0;
+   if(accepted_begin[6])q_count<=0;
+   if(accepted_begin[7])result_seen[15:0]<=0;
+   if(accepted_begin[8])result_seen[31:16]<=0;
+   if(accepted_begin[9])result_count<=0;
+   if(accepted_begin[10])committed[15:0]<=0;
+   if(accepted_begin[11])committed[31:16]<=0;
+   if(accepted_begin[12])begin commit_count<=0;context_valid<=1;requested<=0;done_seen<=0;end
    if(rp[0])kernel_request_tag[14:0]<=request_tag[14:0];
    if(rp[1])kernel_request_tag[29:15]<=request_tag[29:15];
    if(rp[2])kernel_request_tag[44:30]<=request_tag[44:30];

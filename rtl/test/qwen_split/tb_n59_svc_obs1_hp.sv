@@ -41,7 +41,7 @@ module tb_n59_svc_obs1_hp #(parameter integer SEED=1, parameter integer NRND=600
   .dr_o(P``_dr),.emb_code_re(P``_ecre),.emb_code_addr(P``_eca),.emb_scale_re(P``_esre),.emb_scale_addr(P``_esa), \
   .emb_code_q(emb_code_q),.emb_scale_q(emb_scale_q),.visibility_slot(visibility_slot),.complete_slot(complete_slot), \
   .completed(P``_cpl),.native_ret(P``_ret),.fault(P``_flt)
- qfd_native59_svc_obs1 #(.HEAD_PREP(1),.NU(4),.ROPE(1),.USER_BIND(1),.MCTX(1),.EMB_RELAY(1),.RECV_INPUTS(1),.LOCAL32(1))
+ qfd_native59_svc_obs1 #(.FANOUT_LOCAL(1),.HEAD_PREP(1),.NU(4),.ROPE(1),.USER_BIND(1),.MCTX(1),.EMB_RELAY(1),.RECV_INPUTS(1),.LOCAL32(1))
   u_dut(`N59_PORTS(d),.completed_tag(d_cpt));
  qfd_native59_svc #(.HEAD_PREP(1),.NU(4),.ROPE(1),.USER_BIND(1),.MCTX(1),.EMB_RELAY(1),.RECV_INPUTS(1),.LOCAL32(1))
   u_ref(`N59_PORTS(r));

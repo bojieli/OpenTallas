@@ -15,10 +15,10 @@ SRCS=(rtl/qwen_split/qfd_native59_svc.sv rtl/qwen_split/qfd_native59_static_serv
 seed=1; old=""; new=""; expect=pass
 case "$case_" in
  s1) seed=1;; s2) seed=2;;
- m_hpseq) expect=fail; old="wire[13:0]hp_seq=fstart[hp_u1]?fseq[hp_u1]+14'd1:fseq[hp_u1];"; new="wire[13:0]hp_seq=fstart[hp_u1]?fseq[hp_u1]+14'd2:fseq[hp_u1];";;
+ m_hpseq) expect=fail; old="assign hp_seq={hi[13:7],lo[6:0]};"; new="assign hp_seq={hi[13:7],lo[6:0]}+14'd1;";;
  m_hpdrop) expect=fail; old="hp_v<={hp_v[0],head_prepare_v};"; new="hp_v<={hp_v[0],head_prepare_v&&head_prepare_user!=2'd2};";;
  m_ret) expect=fail; old="else native_ret<=service_ret_raw;"; new="else native_ret<=service_ret_raw^{94'd0,p_cs};";;
- m_hosttag) expect=fail; old="head_descriptor_tag<={p_ht[58:43],6'd0,p_ht[36:0]};"; new="head_descriptor_tag<={p_ht[58:43],6'd1,p_ht[36:0]};";;
+ m_hosttag) expect=fail; old="wire[58:0]host_tag={p_ht[58:43],6'd0,p_ht[36:0]};"; new="wire[58:0]host_tag={p_ht[58:43],6'd1,p_ht[36:0]};";;
  *) echo "N59OBS_BENCH unknown case $case_"; exit 2;;
 esac
 obs="$root/$OBS"
