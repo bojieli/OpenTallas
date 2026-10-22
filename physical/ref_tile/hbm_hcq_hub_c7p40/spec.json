@@ -325,7 +325,7 @@
    },
    {
     "name": "ptgt_fan32_exact",
-    "cmd": "bash rtl/hbm_accel/generic/vm/static/run_ptgt_fan32.sh {RUN}/bench/p0 0",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/run_ptgt_fan32.sh {RUN}/bench/p0 0 1",
     "expect": "pass",
     "pass_regex": "^PTGT_FAN32 PASS MUT=0",
     "threads": 4,
@@ -336,7 +336,7 @@
    },
    {
     "name": "ptgt_fan32_mut1",
-    "cmd": "bash rtl/hbm_accel/generic/vm/static/run_ptgt_fan32.sh {RUN}/bench/p1 1",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/run_ptgt_fan32.sh {RUN}/bench/p1 1 1",
     "expect": "fail",
     "pass_regex": "^PTGT_FAN32 PASS MUT=1",
     "fail_regex": "^MISMATCH cyc=[0-9]+ c |PTGT_FAN32 FAIL MUT=1",
@@ -358,7 +358,8 @@
   "RD_CAPTURE": 39,
   "GATHER_PHASE": 39,
   "GATHER_PERIOD": 40,
-  "DONE_LAT": 35
+  "DONE_LAT": 35,
+  "TARGET_SCAN_BOUNDARY": 1
  },
  "structural_change": "Explicit SAFE2 phase39/PERIOD40 source upgrade from C6r: retain native32/SRAM binding fixes and four real hard tree entries;6bit readerphase, original HCP arithmetic unchanged. Separate rootQCHX12 SYS146to147/RAW178to179 source/calendar price; scoped k31npos1 gathered-tail G0+51/tail+83/emit+583 only. Readerpositive/mutant evidence40ec8b3d7; fullnative/rootcalendar/model/physical unqualified, selectedN23 unchanged.",
  "pin_ranges": {

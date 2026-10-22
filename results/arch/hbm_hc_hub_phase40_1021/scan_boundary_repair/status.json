@@ -1,10 +1,16 @@
 {
-  "status": "SOURCE_CANDIDATE_WITNESS_NATIVE_PENDING",
+  "status": "EXISTING_TARGET_WITNESS_AND_CANONICAL_GEN_PASS_NATIVE_PENDING",
   "failed_source": "453f3acef",
   "failure_archive": "0a21a887b",
   "source_mode": "TARGET_SCAN_BOUNDARY1",
   "external_edge_delta": 0,
   "default_mode": 0,
   "published_native_authority": "45386657d47b3997fd1c019b85cd60bb98a01ea0",
-  "qualification": "No behavioral/native/root-calendar/physical pass inferred"
+  "qualification": "No behavioral/native/root-calendar/physical pass inferred",
+  "source_commit": "dc7b59b93",
+  "unit": "oth-ubuntu-3499996-1792627315",
+  "positive": "PTGT_FAN32 PASS MUT=0 configured1335 starts891 faults512",
+  "mutant": "MUT1 terminal fail/mismatch as required",
+  "GEN": "exit0",
+  "native": "NOTRUN"
 }

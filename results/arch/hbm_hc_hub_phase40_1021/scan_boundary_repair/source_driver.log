@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits   539 GB (avail 875, growth 497, headroom 0, waiters 0/0 GB) load 23/128 running 19 disk 1750 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3499996-1792627315 after 0 s
+P40_SCAN_BOUNDARY_SOURCE_MATCH dc7b59b93
+P40_SCAN_TARGET_EXIT positive=0 mutant=1
+/srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021/p0.log:PTGT_FAN32 PASS MUT=0 configured=1335 starts=891 faults=512
+/srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021/p1.log:MISMATCH cyc=5057 c 0/0 f 0/1 sv 0/0
+/srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021/p1.log:MISMATCH cyc=5058 c 1/0 f 0/1 sv 0/0
+/srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021/p1.log:MISMATCH cyc=5059 c 1/0 f 0/1 sv 0/0
+/srv/opentallas-scratch/claude/codex-hc-p40-scan-boundary-1021/p1.log:MISMATCH cyc=5060 c 1/0 f 0/1 sv 0/0
+REF_TILE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it) -> pass --area-um2 / std_area_um2 from the synthesis smoke
+REF_TILE kit physical/ref_tile/hbm_hcq_hub_c7p40 outline 734.4 x 734.4 um (spec outline (exact: the closed view's sub-slot)); job hbm_hcq_hub_c7p40-c6r-dc7b59b93
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3499996-1792627315): exit 0
