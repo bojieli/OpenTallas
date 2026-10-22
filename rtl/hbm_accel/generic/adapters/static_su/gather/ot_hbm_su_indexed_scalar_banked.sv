@@ -20,11 +20,15 @@ module ot_hbm_su_indexed_scalar_banked #(
  end
  wire[55:0]product=SEGMENTED96!=0?56'(segmented_address):56'(index_value)*56'(mul)+56'(base);
  function automatic[4:0]bank_of(input[23:0]a);bank_of={a[17:16],a[5:3]};endfunction
+ wire[PW-1:0]local_phase[0:3];
+ for(genvar c=0;c<4;c=c+1)begin:phasecopy
+  ot_hbm_gather_phase_copy #(.PW(PW)) counter(.clk(clk),.rst_n(rrst[0]),.clear(start&&!busy),.q(local_phase[c]));
+ end
  wire rd_fire,wr_fire;
- ot_hbm_gather_phase_fire #(.SI(SI),.WI(WI)) fire(.phase(16'(phase)),.busy(busy),.rd(rd_fire),.wr(wr_fire));
+ ot_hbm_gather_phase_fire #(.SI(SI),.WI(WI)) fire(.phase(16'(local_phase[0])),.busy(busy),.rd(rd_fire),.wr(wr_fire));
  wire[23:0]read_address;
  for(genvar c=0;c<3;c=c+1)begin:read_mux
-  ot_hbm_gather_read_byte #(.PW(PW)) mux(.phase(phase),.ix(ix[c*8+:8]),.score(score_address[c*8+:8]),.q(read_address[c*8+:8]));
+  ot_hbm_gather_read_byte #(.PW(PW)) mux(.phase(local_phase[0]),.ix(ix[c*8+:8]),.score(score_address[c*8+:8]),.q(read_address[c*8+:8]));
  end
  for(genvar b=0;b<32;b=b+1)begin:bank
   ot_hbm_gather_bank_header #(.B(b)) head(.clk(clk),.rst_n(rrst[1+b/4]),
@@ -39,9 +43,9 @@ module ot_hbm_su_indexed_scalar_banked #(
   assign returned_word[bit_n]=|column;
  end
  for(genvar b=0;b<4;b=b+1)begin:capture
-  ot_hbm_gather_sample_byte #(.EDGE(READ_SAMPLE+MUT_PHASE)) index_capture(.clk(clk),.busy(busy),.phase(16'(phase)),.d(returned_word[b*8+:8]),.q(index_value[b*8+:8]));
+  ot_hbm_gather_sample_byte #(.EDGE(READ_SAMPLE+MUT_PHASE)) index_capture(.clk(clk),.busy(busy),.phase(16'(local_phase[1])),.d(returned_word[b*8+:8]),.q(index_value[b*8+:8]));
   for(genvar c=0;c<2;c=c+1)begin:vcopy
-   ot_hbm_gather_sample_byte #(.EDGE(SS)) value_capture(.clk(clk),.busy(busy),.phase(16'(phase)),.d(returned_word[b*8+:8]),.q(value[c][b*8+:8]));
+   ot_hbm_gather_sample_byte #(.EDGE(SS)) value_capture(.clk(clk),.busy(busy),.phase(16'(local_phase[2+c])),.d(returned_word[b*8+:8]),.q(value[c][b*8+:8]));
   end
  end
  // Descriptor data remains stable for the entire scheduled transaction. Raw
@@ -146,5 +150,10 @@ endmodule
  wire[23:0]selected=rank==0?base:rank==1?bases[23:0]:rank==2?bases[47:24]:bases[71:48];
  wire[31:0]address={8'b0,selected}+offset;
  assign q=address[N*8+:8];
+endmodule
+(* keep_hierarchy *) module ot_hbm_gather_phase_copy #(parameter PW=5)(input wire clk,rst_n,clear,output wire[PW-1:0]q);
+ (* keep *) reg[PW-1:0]held;
+ always @(posedge clk or negedge rst_n)if(!rst_n)held<=0;else if(clear)held<=0;else held<=held+1'b1;
+ assign q=held;
 endmodule
 `default_nettype wire

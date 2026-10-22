@@ -76,11 +76,14 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
         if(!reset_live)begin cv<=0;dv<=0;lv<=0;end
         else begin cv<=cfg_v;dv<=desc_v;lv<=launch_v;end
     if(INSTALLED_ROWS!=0)begin:g_bounded_descriptor
-        // dv is reset-qualified at the input capture. Payload storage needs no
-        // wide reset-qualified write enable; valid controls every consumer.
-        always @(posedge clk)if(dv && target==tid && !(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>ROWS))begin
-            stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;
+        // Invalid descriptors still fault in the control path. Payload captures
+        // may proceed because no consumer can launch an invalid generation.
+        wire[23:0]payload={1'b0,base[PCW-1:0],limit[PCW:0],loops};
+        wire[23:0]resident;
+        for(genvar c=0;c<3;c=c+1)begin:chunk
+            ot_static_target_descriptor_byte capture(.clk(clk),.valid(dv),.target(target),.tid(tid),.data(payload[c*8+:8]),.q(resident[c*8+:8]));
         end
+        always @*begin stored_base=resident[22:20];stored_limit=resident[19:16];stored_loops=resident[15:0];end
     end
     always @(posedge clk or negedge reset_live)
         if(!reset_live)begin
@@ -136,5 +139,8 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                 end
             end
         end
+endmodule
+(* keep_hierarchy *) module ot_static_target_descriptor_byte(input wire clk,valid,input wire[7:0]target,tid,data,output reg[7:0]q);
+ always @(posedge clk)if(valid&&target==tid)q<=data;
 endmodule
 `default_nettype wire
