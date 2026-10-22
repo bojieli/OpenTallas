@@ -1,0 +1,7 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job s81hd_spo_m-s81hd_spo_m-6398c44bc bench bench_hd_mut_spo_ow_drop host ot-gold2 run /srv/opentallas-scratch/claude/closure-loop/s81hd_spo_m-s81hd_spo_m-6398c44bc log cl/bench_hd_mut_spo_ow_drop.a1b1.log captured 2026-10-21T08:16:45-07:00
+# fail_regex '^A: TB_FAIL results 0 != positions 2$'
+Verilator 5.050 2026-07-01 rev v5.050
+A: TB_FAIL results 0 != positions 2
+A: TB_FAIL 1 mismatches
+BENCH_FAIL s81hd_mini SCEN=A MUT=SPO_OW_DROP (0/1)

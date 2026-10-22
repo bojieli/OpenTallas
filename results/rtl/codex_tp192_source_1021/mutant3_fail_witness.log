@@ -1,0 +1,11 @@
+TKM_CTL_EXACTEDGE_MISMATCH cycle=24714 port=conv_s tick=24692
+TKM_CTL_EXACTEDGE_MISMATCH cycle=24715 port=conv_s tick=24693
+TKM_CTL_EXACTEDGE_MISMATCH cycle=24716 port=conv_s tick=24694
+TKM_CTL_EXACTEDGE_MISMATCH cycle=24717 port=conv_s tick=24695
+TKM_CTL_EXACTEDGE_MISMATCH cycle=24718 port=conv_s tick=24696
+TKM_CTL_EXACTEDGE_MISMATCH cycle=24719 port=conv_s tick=24697
+TKM_CTL_EXACTEDGE_MISMATCH cycle=24720 port=conv_s tick=24698
+TKM_CTL_EXACTEDGE_MISMATCH cycle=24721 port=conv_s tick=24699
+[21116000] %Fatal: tb_tkm_ctl_exactedge.sv:110: Assertion failed in tb_tkm_ctl_exactedge.unnamedblk5: TKM_CTL_EXACTEDGE FAIL mismatches=156 entries=24704 writes=64 reads=128 buffer=128
+%Error: rtl/hbm_accel/generic/collective/tkm/bench/tb_tkm_ctl_exactedge.sv:110: Verilog $stop
+Aborting...

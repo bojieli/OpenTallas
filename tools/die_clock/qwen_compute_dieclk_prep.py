@@ -17,7 +17,7 @@ import json
 import hashlib
 import re
 from pathlib import Path
-from qualification import carry_unqualified
+from qualification import carry_unqualified, require_measured_input_boundaries
 
 LAT = re.compile(r'set_clock_latency -source -clock \[get_clocks (\S+)\] (-?[0-9.]+) \[get_pins \{([^}]+)\}\]')
 PIN = re.compile(r'get_pins -quiet \{([^}]+)\}')
@@ -88,6 +88,7 @@ def main():
     cl = {c: read_clocks(a.clocks_dir / f'clocks_{c}.tcl') for c in ('tt', 'ff', 'ss')}
     lat_tt, per, pin_clk = cl['tt']
     views = json.loads((a.clocks_dir / 'views.json').read_text())
+    require_measured_input_boundaries(views)
     real = set(views.get('real', {})) | set(views.get('hard_macro', {}))
     roots = collections.defaultdict(list)
     for ln in open(a.geom / 'clknets.tsv'):

@@ -49,6 +49,27 @@ import os  # noqa: E402
 import xs_flags as XO  # noqa: E402  S81-ROMOPT-A: release defaults (env overrides)
 GU_MERGE = XO.on('OT_XS_GU_MERGE')
 import xs_topo as TP  # noqa: E402  S81-RATE3: physical frames per slice (OT_XS_TOPO=1)
+# DENSE2 companion (10-20, opt-in, default off): OT_XS_GU_PROP=1 (needs OT_XS_PROP) deals the gate/up (ffn.*_gu) rows over
+# the slices IN PROPORTION to the physical frames (TP.slice_deal, as wo_b / down already are), so a 3-frame slice no
+# longer sets the die-wide gu chunk count.  The CAP tags (merged_cap) follow the same per-slice ranges.  CAPACITY PROBE
+# ONLY: the swiglu / down consumer gather of the proportional ranges is NOT yet checked (xs_calendar.py cap owed).
+# DRIVE-S81-GUPROP (10-20): the consumer of the gate/up rows is the SW op of the BEAT leaf (lower_vs.shares: leaf
+# G = 9 slot + j // 64 runs ff [64 j', +64) of the slot, operand row pair (SW_IN + 2 s, + 1) = (gate quad s, up quad s),
+# ot_s81sl_vs.sv op 8).  The producer slice's capture reaches it only as RD row pairs (ot_s81sl_xr RD: up to 4 row
+# pairs (row, row + 1, ..) a beat, one pair a cycle into the leaf), so a gather record moves ONE (gate quad, up quad)
+# row pair.  Hence with GU_PROP (i) every slice's share is a whole number of quads (GU_QUAD; largest-remainder dealing of
+# the 144 quads in proportion to the frames -- the unquantised deal (47 / 35 / 18 rows at 98 frames) splits consumer
+# quads over two slices and off the row grid) and (ii) merged_cap places gate quad q / up quad q of the slice as the row
+# pair (2 q, 2 q + 1) of its capture region (SW layout), see merged_cap.  gu_gather.py emits + checks the records.
+GU_PROP = TP.PROP and os.environ.get('OT_XS_GU_PROP', '0') == '1'
+GU_QUAD = 4                    # vs op 8 SW: 4 elements a row, a group = (gate row, up row)
+
+
+def gu_slice_deal(nff):
+    if not GU_PROP:
+        return deal(nff, NSLICE)
+    assert nff % GU_QUAD == 0, nff
+    return [[GU_QUAD * q + r for q in qs for r in range(GU_QUAD)] for qs in TP.slice_deal(nff // GU_QUAD, NSLICE)]
 # S81-ROMOPT-C (owner 10-20 ~08:45, O3): OT_XS_KSLOT=k (1 | 2 | 3) gives every element of a phase of the KSLOT_OPS up to k
 # segment CLASSES (k segments of distinct segment indices; the element takes NSEG 8 segments / 8 classes, NCH 16 chain
 # words a round, as built), so a phase holds R_k = 2 x floor(k x q pairs / nseg) rows.  Contents only (ROM images, cfg7
@@ -213,14 +234,16 @@ def op_groups(fx, op):
                 # S81-ROMOPT-A: whole (gate j, up j) pairs a frame, the frame's gates first then its ups, so gate j and
                 # up j never share a phase (they share a CAP pairing slot, see merged_cap) -- a phase <= R rows < pairs
                 g = [[[j for j in fr] + [nff + j for j in fr] for fr in deal_into(js, TP.nfr(s))]
-                     for s, js in enumerate(deal(nff, NSLICE))]
+                     for s, js in enumerate(gu_slice_deal(nff))]
+                if GU_PROP:     # DRIVE-S81-GUPROP: same frame row counts, collision-free rows (gu_prop_frames)
+                    g = gu_prop_frames(nff, gu_slice_deal(nff), rows_per_phase(fx, f'{e}.w13', op))
                 out.append(dict(mat=f'{e}.w13', rows=rows, x=x, tie=tie, groups=g, out='bf16', expert=e,
                                 **merged_cap(nff)))
                 continue
             # one matrix per tensor (plan_phase takes one matrix per phase): gate j and up j in the same slice/frame
             for n, base in ((n1, 0), (n3, tot)):
                 rows = list(range(nff))
-                g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(deal(nff, NSLICE))]
+                g = [[[j for j in fr] for fr in deal_into(js, TP.nfr(s))] for s, js in enumerate(gu_slice_deal(nff))]
                 out.append(dict(mat=n, rows=rows, x=x, tie=[(tie_op, base + j0 + r) for r in rows], groups=g,
                                 out='bf16', expert=e))
         return out
@@ -249,6 +272,40 @@ def op_groups(fx, op):
     raise KeyError(op)
 
 
+def rows_per_phase(fx, mat, op, npairs=None):
+    """R of a matrix's phases (as phase_list)"""
+    f = fmt_of(fx, mat)
+    K = fx.w(mat).shape[1] * (2 if f == 'fp4' else 1)
+    nseg, _ = nseg_for(f, K, npairs or NPAIRS)
+    return 2 * nsr_max(nseg, npairs or NPAIRS, kslot_of(op))
+
+
+def gu_prop_frames(nff, js_all, R):
+    """DRIVE-S81-GUPROP: the frame rows of a GU_PROP merged matrix.  Every frame keeps the row COUNT of the default
+    dealing (deal_into: whole gate / up pairs, so the phase count and the q worst pair are unchanged) and its rows split
+    into the die-wide chunks exactly as TP.chunk does; which rows fill them is chosen so the capture pairing store never
+    collides: the slice's cells are ordered quad-major (gate quad q, up quad q, q = 0, 1, ..) and the phases take
+    consecutive runs of that order.  A cell's cap slot is (8 (q mod 8) + r [+ 4 up]) (merged_cap), so the only cells
+    sharing a slot are 64 apart in the order, and a phase holds <= 8 R <= 64 rows of the slice: never two of them."""
+    assert TP.TOPO is not None, 'GU_PROP needs the physical frames (xs_topo)'
+    cnt = [[len(x) for x in deal(len(js), TP.nfr(s))] for s, js in enumerate(js_all)]
+    most = max(2 * c for cs in cnt for c in cs)
+    nch = -(-most // R)
+    out = []
+    for s, js in enumerate(js_all):
+        cells = [(k, GU_QUAD * q + r) for q in range(len(js) // GU_QUAD) for k in (0, 1) for r in range(GU_QUAD)]
+        sizes = [[divmod(2 * c, nch)[0] + (1 if ch < divmod(2 * c, nch)[1] else 0) for ch in range(nch)] for c in cnt[s]]
+        frames = [[] for _ in cnt[s]]
+        it = iter(cells)
+        for ch in range(nch):
+            assert sum(sz[ch] for sz in sizes) <= 64, ('GU_PROP phase rows > 64 a slice', s, ch)
+            for f, sz in enumerate(sizes):
+                frames[f] += [js[i] + k * nff for k, i in (next(it) for _ in range(sz[ch]))]
+        assert next(it, None) is None
+        out.append(frames)
+    return out
+
+
 def merged_cap(nff):
     """S81-ROMOPT-A: capture-root row tags of a GU_MERGE matrix (rows gate 0..nff-1 ++ up 0..nff-1).
     ot_s81sl_cap decodes ONE range a cfg_d: e = tag - rbase < rcnt, leaf = (e >> 6) % 5,
@@ -257,12 +314,25 @@ def merged_cap(nff):
     obase = the unmerged gate region (the up region follows it, 64 ceil(span / 320) words on), every row decodes to
     the SAME (leaf, word) as the two-matrix placement, so the consumer layout is unchanged; other slices' tags lie
     outside [2 U s, 2 U s + 2 U) and fault (F9).  Checked by xs_calendar.py cap (layout == unmerged reference)."""
-    js_all = deal(nff, NSLICE)
+    js_all = gu_slice_deal(nff)
     span = max(len(js) for js in js_all)
     U = 320 * -(-span // 320)
     tags = [None] * (2 * nff)
     rng = []
     for s, js in enumerate(js_all):
+        if GU_PROP:
+            # DRIVE-S81-GUPROP: SW row-pair layout.  local element i = 4 q + r: gate -> e = 320 (q // 8) + 8 (q % 8) + r,
+            # up -> e + 4; e < 64 decodes to leaf 0 word obase + e, e in [320, 384) to leaf 0 wrap 1 word obase + 64 +
+            # e % 64, so gate quad q = row obase / 4 + 2 q, up quad q = the next row (q < 16: span <= 64 a slice).
+            # Pairing slot (8 (q % 8) + r [+ 4]): quads q, q + 8 share slots -- gu_prop_frames keeps them in different phases
+            assert len(js) % GU_QUAD == 0 and len(js) <= 64, (s, len(js))
+            for i, j in enumerate(js):
+                q, r = divmod(i, GU_QUAD)
+                e = 320 * (q // 8) + 8 * (q % 8) + r
+                tags[j], tags[nff + j] = 2 * U * s + e, 2 * U * s + e + 4
+            nq = len(js) // GU_QUAD
+            rng.append((2 * U * s, 8 * nq if nq <= 8 else 320 + 8 * (nq - 8)))
+            continue
         for i, j in enumerate(js):
             tags[j], tags[nff + j] = 2 * U * s + i, 2 * U * s + U + i
         rng.append((2 * U * s, U + len(js)))

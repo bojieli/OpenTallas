@@ -1,0 +1,4 @@
+{"name": "qwen_tx_rnep_r0", "ok": true, "checked": true, "files": {"qwen_tx_rnep_r0.lef": "2a8af42ed5dd0e6e8f2480e81aea1b481a8acb910897a58d040edb9f8da31639", "qwen_tx_rnep_r0_ff.lib": "727de141063947baedcf86c13e52997cc8a75a6309c9ed3c6feaf4195c3fbe4c", "qwen_tx_rnep_r0_ss.lib": "ded783ccedcc03e512b9cff5a940114e554d6176ee6acc89efc9cddbc6566962", "qwen_tx_rnep_r0_tt.lib": "ce767e417bac21f4c0fc5438802b1644de078db374e85a89ec40ed2acc33674f"}}
+CK_SS_MEAN=106 CK_SS_ALL_MEAN=106 CK_SS_MIN=103 CK_SS_ALL_MIN=103 CK_SS_MAX=109 CK_SS_ALL_MAX=109 CK_TT_MEAN=78 CK_TT_ALL_MEAN=78 CK_TT_MIN=75 CK_TT_ALL_MIN=75 CK_TT_MAX=80 CK_TT_ALL_MAX=80 CK_FF_MEAN=62 CK_FF_ALL_MEAN=62 CK_FF_MIN=59 CK_FF_ALL_MIN=59 CK_FF_MAX=65 CK_FF_ALL_MAX=65 CK_ROUTE_REF=SS
+pinstub: 4 OBS rects moved into 4 pins: clk, q[240], q[254], rst_n; pockets: 14 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)
+REF_TILE export qwen_tx_rnep_r0: views rc=0 child_lint PASS 

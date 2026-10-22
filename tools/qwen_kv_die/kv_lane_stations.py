@@ -255,8 +255,10 @@ def siblings(name, std_names):
     return sorted(n for n in std_names if pat.fullmatch(n))
 
 
-def plan_repairs(viol_pairs, pre_lines, lane_lines, new, lanes, geo, dirs, expr_bits, classes, tag, cache):
+def plan_repairs(viol_pairs, pre_lines, lane_lines, new, lanes, geo, dirs, expr_bits, classes, tag, cache, min_depth=None):
     """viol_pairs: {(src_inst, dst_inst)} transport pairs over reach on the adapted placement.
+    min_depth {P: D} (KV-AHUB10 AHUB_PAD_POST): an AFTER group containing P gets at least D receiving-side stages on every
+    load (D edges of fixed-offset hub pad, beside the load) even when one stage would reach.
     Returns (edits, records, refused): edits = list of ('before', Q, N, ck, S, xy) / ('after', P, N, ck, S, xy, loads)."""
     net = Net(lane_lines, dirs, expr_bits)
     pre = {}
@@ -484,6 +486,7 @@ def plan_repairs(viol_pairs, pre_lines, lane_lines, new, lanes, geo, dirs, expr_
                 plans.append(dict(P=P, S=S, ck=ck, pmst=pmst, nmst=nmst, loads=loads, stages=stages))
             if ok and plans:
                 D = max(st['depth'] for pl in plans for st in pl['stages'] if st['taps'])
+                D = max([D] + [int((min_depth or {}).get(pl['P'], 0)) for pl in plans])
                 for pl in plans:
                     if not pad_to(pl, D, tag, names):
                         ok = False

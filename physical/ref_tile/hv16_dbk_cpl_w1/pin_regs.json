@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_dma_back_static_vp4_banks_cplw",
+ "enable": false,
+ "reason": "HBM-DBK9 10-21: the parent registers its whole boundary in RTL (ot_hgi_dma_back_static_vp4_banks_cplw): every rr bit lands at its face (l1), and now EVERY output leaves from a kept face register on a regional root (wd S/N on clk_out[0-3], wb_* on clk_out[3], rq on clk_land[3], status/collar on clk_rst); a generic flow pin flop would add a second, unpriced cycle. SAFE-HBM-DBK 10-21: wa/wb_ready now land in a kept N-face register (clk_out[3])."
+}

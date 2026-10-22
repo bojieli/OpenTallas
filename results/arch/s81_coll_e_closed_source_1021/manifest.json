@@ -1,0 +1,72 @@
+{
+  "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+  "closed_record": "7db6d6351",
+  "status": "TT_PATHFINDING_CLOSED",
+  "tt_ps": 0.25,
+  "ff_ps": 2.81,
+  "ss_sensitivity_ps": -259.64,
+  "drc": 0,
+  "canonical_source_preserved": true,
+  "sources": [
+    {
+      "original_path": "rtl/link/ot_link_crc32.sv",
+      "snapshot_path": "results/arch/s81_coll_e_closed_source_1021/src/rtl/link/ot_link_crc32.sv",
+      "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "sha256": "2ce3961b122aec70a8a509e4f5638904363d72f6bc90db93e5ff1a35b71e4c97"
+    },
+    {
+      "original_path": "rtl/lib/ot_rst_relay_tree3.sv",
+      "snapshot_path": "results/arch/s81_coll_e_closed_source_1021/src/rtl/lib/ot_rst_relay_tree3.sv",
+      "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "sha256": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+      "snapshot_path": "results/arch/s81_coll_e_closed_source_1021/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+      "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "sha256": "767d0fb750db539d0c7076709cb7d39b0fd8df8ad1d058e9c8aa0d1c41881a7b"
+    },
+    {
+      "original_path": "rtl/lib/ot_sram_oldread_b64.sv",
+      "snapshot_path": "results/arch/s81_coll_e_closed_source_1021/src/rtl/lib/ot_sram_oldread_b64.sv",
+      "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "sha256": "161f89764da3f079cb91164b269cb6f725348396b4644336318663d20e8e7a14"
+    },
+    {
+      "original_path": "rtl/lib/ot_sram_showahead_b64.sv",
+      "snapshot_path": "results/arch/s81_coll_e_closed_source_1021/src/rtl/lib/ot_sram_showahead_b64.sv",
+      "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "sha256": "cc40f94107dc230bec6fffbb5af17c781bf908ba3f243c4ead50a1aac6e47b9a"
+    },
+    {
+      "original_path": "rtl/common/ot_link_credit_rx_b64.sv",
+      "snapshot_path": "results/arch/s81_coll_e_closed_source_1021/src/rtl/common/ot_link_credit_rx_b64.sv",
+      "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "sha256": "bb05b7a574db1ee8c7cf5900e7e56819c3f905cd62d68aa54e4fd9f11ef0e461"
+    },
+    {
+      "original_path": "rtl/common/ot_link_credit_tx_rc.sv",
+      "snapshot_path": "results/arch/s81_coll_e_closed_source_1021/src/rtl/common/ot_link_credit_tx_rc.sv",
+      "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "sha256": "41108469675c237202611513fdc868ce4c026b556b8400e0a15bc2ccc8dbb25a"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+      "snapshot_path": "results/arch/s81_coll_e_closed_source_1021/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv",
+      "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "sha256": "f7fe6c1c242eb7d96cf856bc2492fa5a090e825672ddffb73fb8ed9d73ca6536"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+      "snapshot_path": "results/arch/s81_coll_e_closed_source_1021/src/rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_safe3.sv",
+      "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "sha256": "87089dff259f7300acfec4969e6c0a1d0db83e31d2f5082dc54342676a8c5625"
+    },
+    {
+      "original_path": "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+      "snapshot_path": "results/arch/s81_coll_e_closed_source_1021/src/rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv",
+      "source_commit": "ba18b20b1e7b4e7213bf22770e71282063f2b42c",
+      "sha256": "fa80d7a05d9e2de49364ef35d1e9292555b13564bf522a1d155809c332c15989"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+IDXRD_CASE OK asis_tt/fail_asis_small: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 3 mut 0 sram 1 ckh 900 hdr_to_last -2285 end_to_last -2350 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=187928 wall=2:53.25

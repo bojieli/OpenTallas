@@ -1,0 +1,22 @@
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-618725-1792461682 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+VMEARLY move 0 nsec 64 rows 1 chunks 8: cmd 15 issue_at 21 drain_at 104 end_at 113 first_wd 107 last_wd 114    
+VMEARLY exposed move 0 -> 1: 87 edges (first_wd 202 - last_wd 114 - 1)
+VMEARLY move 1 nsec 64 rows 1 chunks 8: cmd 110 issue_at 116 drain_at 199 end_at 208 first_wd 202 last_wd 209    
+VMEARLY exposed move 1 -> 2: 89 edges (first_wd 299 - last_wd 209 - 1)
+VMEARLY move 2 nsec 17 rows 1 chunks 3: cmd 205 issue_at 211 drain_at 296 end_at 300 first_wd 299 last_wd 301    
+VMEARLY exposed move 2 -> 3: 87 edges (first_wd 389 - last_wd 301 - 1)
+VMEARLY move 3 nsec 8 rows 80 chunks 80: cmd 297 issue_at 303 drain_at 386 end_at 467 first_wd 389 last_wd 468    
+VMEARLY exposed move 3 -> 4: 87 edges (first_wd 556 - last_wd 468 - 1)
+VMEARLY move 4 nsec 1023 rows 1 chunks 128: cmd 464 issue_at 470 drain_at 553 end_at 682 first_wd 556 last_wd 683    
+VMEARLY exposed move 4 -> 5: 87 edges (first_wd 771 - last_wd 683 - 1)
+VMEARLY move 5 nsec 64 rows 1 chunks 8: cmd 679 issue_at 685 drain_at 768 end_at 777 first_wd 771 last_wd 778 RAW
+VMEARLY RAW move 5: producer retire 685 -> issue 685 -> first wd 771 (+86) -> last wd 778 (+93)
+VMEARLY PASS RR_RT=80 K=3 LEAD=6 moves=6 beats=1872 exposed_sum=437 over 5 back-to-back pairs (mean 87), RAW new data exact
+- rtl/hbm_accel/generic/peers/static/tb_dma_vp4_vmearly.sv:153: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8us; walltime 0.015 s; speed 527.667 us/s
+- Verilator: cpu 0.015 s on 1 threads; allocated 8 MB
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-618725-1792461682): exit 0
+EXIT 0

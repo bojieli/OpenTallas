@@ -1,0 +1,28 @@
+SRC 20071be974b0470b7306ddde1259c9085f132443 K 1 phys_files 3930 Tue Oct 20 22:32:44 PDT 2026
+PLAN_RC 0
+PLAN_FACTS n_frames 122 rom_slots 1130 die_um [31968.5, 25000.0] worst_cut 1.3704 cut_over 33 over_reach 0 relays 3685 bit_mm 489286
+IDXRD4 stations_per_pair {'0': 11, '1': 12, '2': 12, '3': 13, '4': 14, '5': 14, '6': 14, '7': 13}
+IDXRD4 phy_edge_cut {'W': (0.383, 0.372), 'E': (0.383, 0.372)} channel {'at': 'ctrl_00', 'bits': 9734, 'height_um': 444.0, 'cut': 0.786, 'cut_m8': 0.578, 'tracks_um': {'m2_m7': 27.9, 'm2_m8': 37.9}}
+BIND_RC 0
+DIE_PORT_BIND PASS masters=46 instances=12266 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=44 pad_bits=213604 spare_out_bits=204921 unresolved_children=0 ambiguous_children=0 variant_children=16 landing_reset_mismatch=0 landing_reset_unresolved=0
+MAINCHK_RC 0
+DIE_PORT_BIND PASS masters=46 instances=12266 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=44 pad_bits=213604 spare_out_bits=204921 unresolved_children=0 ambiguous_children=0 variant_children=16 landing_reset_mismatch=0 landing_reset_unresolved=0
+4456931242b3154816be7f3741e4214db59ef74205f5962cb2f03b1dbd8f11ae  /srv/opentallas-scratch/claude/s81-die11/mu7i4d2/bind/bind/die.v
+4456931242b3154816be7f3741e4214db59ef74205f5962cb2f03b1dbd8f11ae  /srv/opentallas-scratch/claude/s81-die11/mu7i4d2/bind_mainchk/bind/die.v
+bind PASS undriven 0 tied 0 unconn 0 stub 0 unbound 0
+bind PLAN_NOT_IN_RTL [] OPEN []
+bind FAILS {'masters': 46, 'instances': 12266, 'strap_ports': 44, 'pad_bits': 213604, 'spare_out_bits': 204921, 'variant_children': 16}
+bind_mainchk PASS undriven 0 tied 0 unconn 0 stub 0 unbound 0
+bind_mainchk PLAN_NOT_IN_RTL [] OPEN []
+bind_mainchk FAILS {'masters': 46, 'instances': 12266, 'strap_ports': 44, 'pad_bits': 213604, 'spare_out_bits': 204921, 'variant_children': 16}
+STRICT_BIND PASS
+CASE_RC 0 M8 corridor=1 macro_views=1 ctrl_ref=12c132d60a8f0300056abb216d48ff9588e7f620 dieflow=20071be974b0470b7306ddde1259c9085f132443 dcc=98070b1b5b27ac879d0daab47827842412f56684
+/srv/opentallas-scratch/claude/s81-die11/mu7i4d2/case/run.tcl:1
+/srv/opentallas-scratch/claude/s81-die11/mu7i4d2/case/sta_ff.tcl:1
+/srv/opentallas-scratch/claude/s81-die11/mu7i4d2/case/sta_ss.tcl:1
+/srv/opentallas-scratch/claude/s81-die11/mu7i4d2/case/sta_tt.tcl:1
+rc_layer {M8}
+signal M2-M8 -clock M5-M9
+CTRL_VIEW STANDIN PHY_VIEW 12c132d60a8f0300056abb216d48ff9588e7f620:physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5_k
+RELAY_VIEWS ['12c132d60']
+STANDINS 190

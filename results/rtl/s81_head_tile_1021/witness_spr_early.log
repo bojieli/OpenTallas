@@ -1,0 +1,12 @@
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2491925-1792594730 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+A: POS 0 RES 0 00000000 0 7
+A: TB_FAIL row 0 != 21946
+A: TB_FAIL bits 00000000 != 4173a558
+A: TB_FAIL cycles 7 != 8375
+A: POS 1 RES 21946 4173a558 0 7
+A: TB_FAIL cycles 7 != 8375
+A: TB_FAIL 4 mismatches
+BENCH_FAIL s81hd_mini SCEN=A MUT=SPR_EARLY (0/1)
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2491925-1792594730): exit 1

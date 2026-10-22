@@ -1,0 +1,16 @@
+{
+  "rtl_source": "c0f8097f3",
+  "bench_repair": "da6100d9fe9d690f885e52c690cc590a0d292ef2",
+  "flags": "-GMU_NU=4 -GSU_LT=1",
+  "original_binary": "ot-gold1:/srv/opentallas-scratch/claude/tokfunc-qw-1021/stg/rel/build/obj_n12/Vtb",
+  "scope": "LM STN/VM tail diagnostic at cluster-output cut; no upstream MAC/full-token claim",
+  "hashes": {
+    "bin/Vtb": "e0c6b5e2fc002c45f7c216fdbacc5a4f6988c2423762ea2864e1ce33db3041f5",
+    "ages.json": "5d5601f353d2ed56cab28ae332d973a4a008f16c11b34c5b86333f0881c2127e",
+    "tree/tools/qwen_layerbench/dv_lower_mat.py": "e0f4c467f17e7a75549eed09b9b1766fe6202d2fced8a2e4a90867c936477613",
+    "tree/rtl/test/qwen_dv/dv_lower_mat_bench.py": "ad7f6337afc0aedf6976e671f4c2b8c81b7d801dfbd80839f6a8a93c9ab02742",
+    "tree/tools/qwen_tokfunc/run_stg_mat_repair.sh": "231514d90e92ac613f3ceb85500f9943ecd0a3e61d0af2fd4a3a9e8d5dea413c",
+    "tree/tools/qwen_tokfunc/collect_mat_repair.py": "53c1c86694944815791c9a75201eeb167f5fba4685b7a4c085daf8a31ba5f2ef"
+  },
+  "calibration": "R1 same binary CALIBRATE OK"
+}

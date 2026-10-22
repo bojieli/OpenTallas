@@ -19,7 +19,10 @@ if [ $CMD = build ]; then
   LANE=rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv; LEP=rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv
   [ $SET = asb ] && LANE=rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.g8r2.sv
   [ $SET = mu ] && LEP=rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.mu.sv
-  SRCS="rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
+  # g7 (TOK-FUNC-S81/MURATE 10-21): the lep file as G7 binds it (stage.sh G7_COMMIT) + its RX_SRAM/NATIVE32 library leaves
+  XS=""; [ $SET = g7 ] && { LEP=rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.g7.sv
+    XS="rtl/lib/ot_rst_relay_tree3.sv rtl/lib/ot_sram_oldread_wreg.sv rtl/lib/ot_sram_showahead_1r1w.sv physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v"; }
+  SRCS="$XS rtl/link/ot_link_crc32.sv rtl/common/ot_link_credit.sv rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv
    rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv
    rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv $LANE
    $L/ot_s81_kp4_common.sv $L/ot_s81_kp4_enc.sv $L/ot_s81_kp4_bm.sv $L/ot_s81_kp4_dsyn.sv $L/ot_s81_kp4_ddly.sv $L/ot_s81_kp4_dchn.sv

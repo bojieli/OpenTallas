@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: ot-gold1       admits  1171 GB (avail 912, growth 93, headroom 0, waiters 0/0 GB) load 59/112 running 25 disk 2640 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-mtp-overflow-1021
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-1770879-1792604278 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+ot-run: interrupted (signal 15 from pid 3201067 (exited; parent 3201066 ())); the command is STILL RUNNING on ot-gold1 (unit oth-ubuntu-1770879-1792604278): NOT COMPLETED

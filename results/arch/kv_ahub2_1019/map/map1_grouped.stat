@@ -1,0 +1,54 @@
+
+14. Printing statistics.
+
+=== qkd_ahub_grouped_zh_transport_private ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+     9151        - wires
+    12892        - wire bits
+     1485        - public wires
+     5226        - public wire bits
+       13        - ports
+      681        - port bits
+    10484  1281.48 cells
+      102        -   $scopeinfo
+        4     0.35   A2O1A1Ixp33_ASAP7_75t_R
+        1    0.087   AND2x2_ASAP7_75t_R
+        2    0.175   AND3x1_ASAP7_75t_R
+        2    0.204   AND4x1_ASAP7_75t_R
+        1    0.117   AND5x1_ASAP7_75t_R
+       24      2.1   AO21x1_ASAP7_75t_R
+        2    0.292   AO221x1_ASAP7_75t_R
+       68    5.949   AOI211xp5_ASAP7_75t_R
+      372   27.119   AOI21xp33_ASAP7_75t_R
+       83    8.471   AOI221xp5_ASAP7_75t_R
+      161   14.084   AOI22xp33_ASAP7_75t_R
+        2    0.204   AOI311xp33_ASAP7_75t_R
+       75    6.561   AOI31xp33_ASAP7_75t_R
+       51   19.333   DFFASRHQNx1_ASAP7_75t_R
+     2659  775.364   DFFHQNx1_ASAP7_75t_R
+     2714   118.71   INVx1_ASAP7_75t_R
+     1346   78.499   NAND2xp33_ASAP7_75t_R
+       92    6.707   NAND3xp33_ASAP7_75t_R
+      600   34.992   NOR2xp33_ASAP7_75t_R
+      108    7.873   NOR3xp33_ASAP7_75t_R
+        7    0.612   NOR4xp25_ASAP7_75t_R
+        2    0.204   NOR5xp2_ASAP7_75t_R
+       97    8.486   O2A1O1Ixp33_ASAP7_75t_R
+       64    6.532   OA21x2_ASAP7_75t_R
+       34    5.949   OA222x2_ASAP7_75t_R
+      154   22.453   OA22x2_ASAP7_75t_R
+     1181   86.095   OAI21xp33_ASAP7_75t_R
+      157   16.023   OAI221xp5_ASAP7_75t_R
+      236   20.645   OAI22xp33_ASAP7_75t_R
+       37    3.237   OAI31xp33_ASAP7_75t_R
+       44    3.849   OR2x2_ASAP7_75t_R
+        2    0.204   OR4x1_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\qkd_ahub_grouped_zh_transport_private': 1281.479940
+     of which used for sequential elements: 794.697480 (62.01%)
+

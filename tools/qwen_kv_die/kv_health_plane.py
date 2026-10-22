@@ -397,11 +397,38 @@ def pack_msb(bits):
     return parts[0] if len(parts) == 1 else '{' + ', '.join(parts) + '}'
 
 
+def closed_cell_geometry():
+    """Pin centres from the actual emitted CLOSED masters, before choosing sites.
+
+    Pipe cells are qkd_rlys_1, not qkd_astk_fault_join. Their input/output
+    y=6.492 differs from join y=10.812; a join-only placement can exceed REACH.
+    """
+    result = {}
+    for kind, spec in MASTERS.items():
+        path = ROOT / spec['view'] / (spec['master'] + '.lef')
+        if not path.exists():
+            if NETLIST_ONLY:
+                continue
+            raise ValueError('health geometry requires actual CLOSED LEF: ' + str(path))
+        macro = parse_lef(path.read_text())[spec['master']]
+        def point(port):
+            pin = macro['pins'].get(port) or macro['pins'].get(port + '[0]')
+            if not pin or pin['xy'] is None:
+                raise ValueError(f"{spec['master']}: no actual LEF pin {port}")
+            return pin['xy']
+        result[kind] = dict(master=spec['master'], size=macro['size'],
+                            inputs=[point('a'), point('a' if kind == 'pipe' else 'b')],
+                            output=point('b' if kind == 'pipe' else 'q'),
+                            lef_sha256=sha(path), lef=str(path.relative_to(ROOT)))
+    return result
+
+
 def install(run, strict=False, dry=False, profiles=None, diagnostic=False):
     die = Die(run)
     inv = inventory(die)
     tinv = dict(sources=inv['sources'], physical_obstacles=obstacles(die), consumer=inv['consumer'],
-                spare_transport_candidates=inv['lanes'], requirements=[], physical_blockers=inv['blockers'])
+                spare_transport_candidates=inv['lanes'], requirements=[], physical_blockers=inv['blockers'],
+                cell_geometry=closed_cell_geometry())
     plan = T.propose(tinv)
     # leaf latency to the sink (plan graph), + the existing ufh's AHUB edges
     lat = {}

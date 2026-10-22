@@ -378,8 +378,8 @@ function card(h, i) {
     <canvas class="grid"></canvas><div class="offline" hidden></div>
     <div class="hm"><span>RAM <b class="mu"></b></span><span class="mp"></span></div><div class="bar"><i></i></div>
     <div class="hm"><span>load <b class="ld"></b></span><span>containers <b class="dk"></b></span><span>loop routes <b class="rt"></b></span></div><div class="hsum" title="every job on this host (Fleet jobs table): closure-loop routes, other ot-heavy/ot-run jobs and containers, ot-heavy waiters in the admission queue"></div><div class="gpu" hidden></div>`;
-  el.classList.add(/EPYC/.test(h.kind) ? 'bigc' : 'smallc');
-  $(/EPYC/.test(h.kind) ? 'hostsBig' : 'hostsSmall').appendChild(el);
+  el.classList.add(/EPYC|Xeon/.test(h.kind) ? 'bigc' : 'smallc');
+  $(/EPYC|Xeon/.test(h.kind) ? 'hostsBig' : 'hostsSmall').appendChild(el);
   c = {el, cv: el.querySelector('canvas'), cur: [], tgt: [], n: 0};
   el.querySelector('.nm').textContent = h.label;
   const hc = HOSTCOL[i % HOSTCOL.length];
@@ -447,7 +447,7 @@ function updateHosts(d) {
     const c = card(h, i), el = c.el, up = h.cores && h.cores.length && (h.state === 'up' || h.state === 'stale');
     const sd = el.querySelector('.sdot'); sd.hidden = !h._held;   // numbers held from the last good sample: a small marker only
     if (h._held) sd.title = 'no fresh sample' + (h._t ? ' · last good ' + FV.hms(FV.toClient(h._t)) : '') + (h.error ? ' · ' + h.error : '');
-    el.className = 'host ' + (/EPYC/.test(h.kind) ? 'bigc ' : 'smallc ') + (up ? '' : h.state);
+    el.className = 'host ' + (/EPYC|Xeon/.test(h.kind) ? 'bigc ' : 'smallc ') + (up ? '' : h.state);
     setText(el.querySelector('.hk'), h.kind + ' · ' + ((d.regions[h.region] || {}).label || '') + (h.alias ? ' · ' + h.alias : ''));
     el.querySelector('.offline').hidden = !!up; c.cv.hidden = !up;
     if (!up) {
