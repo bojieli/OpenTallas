@@ -12,7 +12,15 @@
 // the compiler issues start only when block_ready (checked, fault otherwise); no credits, no ready, no retry.
 // Bench: tb_hbm_svc_vmdel_lane_n_lockstep.sv (NPC 2 lane vs the d4f NPC 4 lane on the same fills).
 // Original history (unchanged mechanics) follows.
-module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, WCE_SPEC = 0) (
+// HBMc/TILES3 10-22 (m9 TT -219.3 / b9 -161.0: owned -> block_ready_c -> load_cmd_ok -> issue -> u_payload r_ce_in, ~890 ps
+// with ~450 ps of long wire between the central control and the PC macros):
+//  SHPRE=1 (0 edges): the command shape checks (group < NPC, ln/sub/offset/format ranges) are pure functions of load_cmd_i,
+//   computed in the pin-flop stage and registered beside load_cmd (shape_*_q == f(load_cmd) on every edge): exact.
+//  RPIPE=1 (+1 edge, COORD 12:20 accepted): the payload read port (r_ce / r_addr) is registered in a kept per-PC module
+//   beside its macro; every consumer of the read data (raw group select, out_v/slot/group, the load capture/convert/
+//   scatter/mask command pipes, lv/lc) moves one edge later, so dq / load_dq / load_out_v / load_dest_* are +1 edge;
+//   full/pcbad/block_ready/busy/fault and the write port are unchanged.
+module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, WCE_SPEC = 0, SHPRE = 0, RPIPE = 0) (
  input wire clk,rst_n,input wire [2:0] bank_id,
  input wire begin_v_i,begin_bank_i,input wire [15:0] begin_epoch_i,
  input wire start_i,start_bank_i,input wire [15:0] start_epoch_i,start_base_sector_i,
@@ -36,6 +44,13 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(1),.COPY_ID(2300)) u_load_epoch_bank(.clk(clk),.d(load_cmd_i[0]),.q(load_bank_epoch));
  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(1),.COPY_ID(2301)) u_start_epoch_bank(.clk(clk),.d(start_bank_i),.q(start_bank_epoch));
  always @(posedge clk)begin load_v<=load_v_i;load_cmd<=load_cmd_i;end
+ // SHPRE: shape checks of the command on its way into the pin flop (input-to-reg slack 394 ps at m9)
+ wire [2:0] lf_i=load_cmd_i[32:30]; wire [3:0] ln_i=load_cmd_i[55:52];
+ wire [5:0] esz_i=(lf_i==0||lf_i==5)?6'd4:lf_i==1?6'd2:6'd1;
+ wire shape_com_i=load_cmd_i[18:17]<NPC&&ln_i<=8&&{1'b0,load_cmd_i[51:49]}+ln_i<=8&&
+  {1'b0,load_cmd_i[29:25]}+ln_i*esz_i<=32&&lf_i!=3&&lf_i!=7;
+ (* keep="true" *) reg shape_cmd_q,shape_load_q;
+ always @(posedge clk)begin shape_cmd_q<=shape_com_i&&(ln_i!=0||load_cmd_i[56]);shape_load_q<=shape_com_i&&ln_i!=0;end
  reg begin_v,begin_bank,start,start_bank; reg [15:0] begin_epoch,start_epoch,start_base_sector;
  reg [NPC-1:0] fill_v,fill_bank; reg [6*NPC-1:0] fill_slot; reg [16*NPC-1:0] fill_epoch; reg [256*NPC-1:0] fill_data;
  initial if(NPC!=2&&NPC!=4)$fatal(1,"ot_hbm_svc_vmdel_lane_n: NPC 2 or 4");
@@ -77,10 +92,13 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  wire [2:0] lf=load_cmd[32:30];
  wire [3:0] ln=load_cmd[55:52];
  wire [5:0] esz=(lf==0||lf==5)?6'd4:lf==1?6'd2:6'd1;
+ wire shape_cmd=(SHPRE!=0)?shape_cmd_q:(load_cmd[18:17]<NPC&&(ln!=0||load_cmd[56])&&ln<=8&&{1'b0,load_cmd[51:49]}+ln<=8&&
+ {1'b0,load_cmd[29:25]}+ln*esz<=32&&lf!=3&&lf!=7);
+ wire shape_load=(SHPRE!=0)?shape_load_q:(load_cmd[18:17]<NPC&&ln!=0&&ln<=8&&{1'b0,load_cmd[51:49]}+ln<=8&&
+ {1'b0,load_cmd[29:25]}+ln*esz<=32&&lf!=3&&lf!=7);
  wire command_ok=load_v&&!raw_issue&&owned[load_cmd[0]]&&
  block_ready_c[load_cmd[0]]&&load_cmd[16:1]==(load_bank_epoch?epoch1:epoch0)&&
- load_cmd[18:17]<NPC&&(ln!=0||load_cmd[56])&&ln<=8&&{1'b0,load_cmd[51:49]}+ln<=8&&
- {1'b0,load_cmd[29:25]}+ln*esz<=32&&lf!=3&&lf!=7&&!landing_fault;
+ shape_cmd&&!landing_fault;
  wire load_ok=command_ok&&ln!=0;
  wire release_only=command_ok&&ln==0;
  // HBMc/TILES 10-22 (H.STA.DMA.LOAD, routes m5 TT -191.5 / m7 TT -265.3 at the payload CE pins): the read CE
@@ -89,8 +107,7 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  // Identical function (every edge, valid or malformed); no read is enabled that the old expression did not enable.
  wire load_cmd_ok=load_v&&owned[load_cmd[0]]&&
  block_ready_c[load_cmd[0]]&&load_cmd[16:1]==(load_bank_epoch?epoch1:epoch0)&&
- load_cmd[18:17]<NPC&&ln!=0&&ln<=8&&{1'b0,load_cmd[51:49]}+ln<=8&&
- {1'b0,load_cmd[29:25]}+ln*esz<=32&&lf!=3&&lf!=7&&!landing_fault;
+ shape_load&&!landing_fault;
  wire issue=raw_issue||load_cmd_ok;
  // Address selection does not wait for ownership/shape validation. Read CE
  // still requires load_ok; conflicting or malformed requests set sticky fault
@@ -140,6 +157,16 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
   if(!reset_copy[6])begin out_group<=0;out_slot<=0;end
   else begin out_group<=rg;out_slot<=rs;end
  end
+ // RPIPE: the read data arrives one edge later; out_v / out_slot / out_group / raw group select follow it
+ reg out_v1; reg [5:0] out_slot1; reg [1:0] out_group1,rg1; reg [15:0] base_q1;
+ always @(posedge clk)begin
+  if(!reset_copy[2])out_v1<=0;else out_v1<=out_v;
+  if(!reset_copy[6])begin out_group1<=0;out_slot1<=0;end else begin out_group1<=out_group;out_slot1<=out_slot;end
+  rg1<=rg;base_q1<=base_q;
+ end
+ wire out_v_e=(RPIPE!=0)?out_v1:out_v; wire [5:0] out_slot_e=(RPIPE!=0)?out_slot1:out_slot;
+ wire [1:0] out_group_e=(RPIPE!=0)?out_group1:out_group; wire [1:0] rg_e=(RPIPE!=0)?rg1:rg;
+ wire [15:0] base_e=(RPIPE!=0)?base_q1:base_q;   // sector of a beat = base of its block, one edge later too
  wire[NPC*2-1:0]local_lstart,local_start_ok,local_raw_done,local_load_release;
  for(genvar c=0;c<NPC*2;c=c+1)begin:window_decode
   (* keep_hierarchy="yes" *) ot_hbm_dma_window_decode #(.NPC(NPC),.COPY_ID(c)) u(
@@ -178,8 +205,14 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
   wire fill_ok=fill_base && (WCE_SPEC!=0 || !seen_current);
   // n counts accepted (always distinct, !seen) writes, so &seen == (n==64) == n[6]: a registered full flag
   assign f0[g]=&full0_part; assign f1[g]=&full1_part; assign bad_v[g]=|pbad_part;
+  wire r_ce,r_ce_c=issue && !landing_fault && rg==g; wire [6:0] r_addr,r_addr_c={rb,rs};
+  if(RPIPE!=0)begin:g_rport
+   (* keep_hierarchy="yes" *) ot_hbm_dma_rport u_rport(.clk(clk),.ce_i(r_ce_c),.addr_i(r_addr_c),.ce(r_ce),.addr(r_addr));
+  end else begin:g_rdirect
+   assign r_ce=r_ce_c; assign r_addr=r_addr_c;
+  end
   ot_sram_1r1w_128x256_m1_r2c2 u_payload (
-   .clk(clk),.r_ce_in(issue && !landing_fault && rg==g),.r_addr_in({rb,rs}),.rd_out(macro_data[g*256+:256]),
+   .clk(clk),.r_ce_in(r_ce),.r_addr_in(r_addr),.rd_out(macro_data[g*256+:256]),
    .w_ce_in(fill_ok),.w_addr_in({fb,fs}),.wd_in(fill_data[g*256+:256]),.w_mask_in({256{1'b1}}),
    .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  end endgenerate
@@ -192,27 +225,30 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  for(genvar part=0;part<16;part=part+1)begin:raw_slice
    wire[NPC*16-1:0] d;
    for(genvar pcid=0;pcid<NPC;pcid=pcid+1)assign d[pcid*16+:16]=macro_data[pcid*256+part*16+:16];
-   (* keep_hierarchy="yes" *) ot_hbm_dma_raw_select #(.NPC(NPC),.COPY_ID(part)) u(.clk(clk),.group_i(rg),.d(d),.q(sel[part*16+:16]));
+   (* keep_hierarchy="yes" *) ot_hbm_dma_raw_select #(.NPC(NPC),.COPY_ID(part)) u(.clk(clk),.group_i(rg_e),.d(d),.q(sel[part*16+:16]));
  end
- wire [15:0]sector0=(NPC==4)?base_q+{5'b0,out_slot,out_group,3'b0}:base_q+{6'b0,out_slot,out_group[0],3'b0};
+ wire [15:0]sector0=(NPC==4)?base_e+{5'b0,out_slot_e,out_group_e,3'b0}:base_e+{6'b0,out_slot_e,out_group_e[0],3'b0};
  // Static read commands carry exact source ownership and output destination. No arbitration.
- reg lv0,lv1,lv2,lv3;reg[61:0]lc0,lc1,lc2,lc3;
+ reg lv0,lv1,lv2,lv3,lv4;reg[61:0]lc0,lc1,lc2,lc3,lc4;
  always @(posedge clk)begin
-  if(!reset_copy[3])begin lv0<=0;lv1<=0;lv2<=0;lv3<=0;end
-  else begin lv0<=load_ok;lv1<=lv0;lv2<=lv1;lv3<=lv2;end
-  lc0<=load_cmd;lc1<=lc0;lc2<=lc1;lc3<=lc2;
-  load_dest_bank<=lc3[59:57];load_dest_q<=lc3[61:60];
-  load_dq[279:264]<=lc3[48:33];
-  if(!reset_copy[4])load_dq[280]<=0;else load_dq[280]<=lv3&&!fault_c;
+  if(!reset_copy[3])begin lv0<=0;lv1<=0;lv2<=0;lv3<=0;lv4<=0;end
+  else begin lv0<=load_ok;lv1<=lv0;lv2<=lv1;lv3<=lv2;lv4<=lv3;end
+  lc0<=load_cmd;lc1<=lc0;lc2<=lc1;lc3<=lc2;lc4<=lc3;
+ end
+ wire lv_e=(RPIPE!=0)?lv4:lv3; wire [61:0] lc_e=(RPIPE!=0)?lc4:lc3;
+ always @(posedge clk)begin
+  load_dest_bank<=lc_e[59:57];load_dest_q<=lc_e[61:60];
+  load_dq[279:264]<=lc_e[48:33];
+  if(!reset_copy[4])load_dq[280]<=0;else load_dq[280]<=lv_e&&!fault_c;
  end
  assign load_out_v=load_dq[280];
  wire[175:0]capture_cmd;
  wire[41:0]scatter_cmd;
  for(genvar c=0;c<22;c=c+1)begin:cap_root
-  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(8),.COPY_ID(c)) u(.clk(clk),.d({load_cmd_i[32:30],load_cmd_i[29:25]}),.q(capture_cmd[c*8+:8]));
+  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(8),.COPY_ID(c),.S(1+RPIPE)) u(.clk(clk),.d({load_cmd_i[32:30],load_cmd_i[29:25]}),.q(capture_cmd[c*8+:8]));
  end
  for(genvar c=0;c<6;c=c+1)begin:scatter_root
-  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(7),.COPY_ID(8+c)) u(.clk(clk),.d({load_cmd_i[55:52],load_cmd_i[51:49]}),.q(scatter_cmd[c*7+:7]));
+  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(7),.COPY_ID(8+c),.S(1+RPIPE)) u(.clk(clk),.d({load_cmd_i[55:52],load_cmd_i[51:49]}),.q(scatter_cmd[c*7+:7]));
  end
  wire[2047:0]source_copies;
  for(genvar c=0;c<8;c=c+1)begin:source_copy
@@ -220,7 +256,7 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  end
  wire[5:0]fmt_copies;
  for(genvar c=0;c<2;c=c+1)begin:format_copy
-  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(3),.COPY_ID(3100+c)) u(.clk(clk),.d(load_cmd_i[32:30]),.q(fmt_copies[c*3+:3]));
+  (* keep_hierarchy="yes" *) ot_hbm_dma_cmd_copy #(.W(3),.COPY_ID(3100+c),.S(1+RPIPE)) u(.clk(clk),.d(load_cmd_i[32:30]),.q(fmt_copies[c*3+:3]));
  end
  wire[1023:0]normalized;
  for(genvar c=0;c<512;c=c+1)begin:capture
@@ -235,9 +271,9 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0, W
  end
  wire[63:0]mask_cmd;
  for(genvar b=0;b<8;b=b+1)begin:mask
-  (* keep_hierarchy="yes" *) ot_hbm_dma_mask #(.COPY_ID(b),.WORD(b)) u(.clk(clk),.d({load_cmd_i[55:52],load_cmd_i[51:49]}),.q(load_dq[b]));
+  (* keep_hierarchy="yes" *) ot_hbm_dma_mask #(.COPY_ID(b),.WORD(b),.X(RPIPE)) u(.clk(clk),.d({load_cmd_i[55:52],load_cmd_i[51:49]}),.q(load_dq[b]));
  end
- assign dq_c={out_v && !fault_c,sector0[15:3],bank_q,sel,8'hff};
+ assign dq_c={out_v_e && !fault_c,sector0[15:3],bank_q,sel,8'hff};
 endmodule
 
 (* keep_hierarchy="yes" *)
@@ -247,8 +283,18 @@ module ot_hbm_dma_raw_select #(parameter NPC=2,COPY_ID=0)(input wire clk,input w
  always @*begin q=0;for(integer g=0;g<NPC;g=g+1)if(group_q==g)q=q|d[g*16+:16];end
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_hbm_dma_cmd_copy #(parameter W=8,COPY_ID=0)(input wire clk,input wire[W-1:0]d,output reg[W-1:0]q);
- always @(posedge clk)q<=d;
+module ot_hbm_dma_cmd_copy #(parameter W=8,COPY_ID=0,S=1)(input wire clk,input wire[W-1:0]d,output reg[W-1:0]q);
+ if(S>1)begin:g_pre
+  (* keep="true" *) reg[W-1:0]p[0:S-2];
+  always @(posedge clk)begin p[0]<=d;for(integer i=1;i<S-1;i=i+1)p[i]<=p[i-1];q<=p[S-2];end
+ end else begin:g_one
+  always @(posedge clk)q<=d;
+ end
+endmodule
+// RPIPE read port: r_ce / r_addr registered beside the payload macro (HBMc/TILES3 10-22)
+(* keep_hierarchy="yes" *)
+module ot_hbm_dma_rport(input wire clk,input wire ce_i,input wire[6:0]addr_i,output reg ce,output reg[6:0]addr);
+ always @(posedge clk)begin ce<=ce_i;addr<=addr_i;end
 endmodule
 (* keep_hierarchy="yes" *)
 module ot_hbm_dma_capture_pair #(parameter COPY_ID=0,WORD=0,PAIR=0)(input wire clk,input wire[7:0]cmd_i,input wire[255:0]source,output reg[1:0]q);
@@ -321,9 +367,10 @@ module ot_hbm_dma_scatter_pair #(parameter COPY_ID=0,WORD=0,PAIR=0)(input wire c
  always @(posedge clk)begin p0<=dest_i;p1<=p0;p2<=p1;p3<=p2;q<=(WORD>=p3[2:0]&&WORD<p3[2:0]+p3[6:3])?2'(d>>(src*32+PAIR*2)):2'b00;end
 endmodule
 (* keep_hierarchy="yes" *)
-module ot_hbm_dma_mask #(parameter COPY_ID=0,WORD=0)(input wire clk,input wire[6:0]d,output reg q);
- (* keep="true" *)reg[6:0]p0,p1,p2,p3,p4;
- always @(posedge clk)begin p0<=d;p1<=p0;p2<=p1;p3<=p2;p4<=p3;q<=WORD>=p4[2:0]&&WORD<p4[2:0]+p4[6:3];end
+module ot_hbm_dma_mask #(parameter COPY_ID=0,WORD=0,X=0)(input wire clk,input wire[6:0]d,output reg q);
+ (* keep="true" *)reg[6:0]p0,p1,p2,p3,p4,p5;
+ wire[6:0]pl=(X!=0)?p5:p4;
+ always @(posedge clk)begin p0<=d;p1<=p0;p2<=p1;p3<=p2;p4<=p3;p5<=p4;q<=WORD>=pl[2:0]&&WORD<pl[2:0]+pl[6:3];end
 endmodule
 
 

@@ -41,7 +41,18 @@ module tb_hbm_svc_vmdel_lane_n_lockstep;
   .full0_all({8{c_f0}}),.full1_all({8{c_f1}}),.pcbad_all({8{c_pb}}),.full0(c_f0),.full1(c_f1),.pcbad(c_pb),
   .block_ready(c_br),.busy(c_bz),.fault(c_ft),.dq(c_dq));
  integer nc4=0, e4=0;
- always @(negedge clk) if(rst_n) begin nc4=nc4+1; if({c_dq,c_br,c_bz,c_ft,c_f0,c_f1,c_pb}!=={a_dq,a_br,a_bz,a_ft,a_f0,a_f1,a_pb}) e4=e4+1; end
+`ifdef SHPRE
+ defparam u_b.SHPRE=1; defparam u_c.SHPRE=1;
+`endif
+`ifdef RPIPE
+ // HBMc/TILES3 10-22: RPIPE lanes deliver dq one edge after the d4f lane (status outputs unchanged)
+ defparam u_b.RPIPE=1; defparam u_c.RPIPE=1;
+ localparam integer RP=1; reg [280:0] a_dq_d=0; always @(negedge clk) a_dq_d<=a_dq;
+ wire [280:0] a_dq_cmp=a_dq_d;
+`else
+ localparam integer RP=0; wire [280:0] a_dq_cmp=a_dq;
+`endif
+ always @(negedge clk) if(rst_n) begin nc4=nc4+1; if({c_dq,c_br,c_bz,c_ft,c_f0,c_f1,c_pb}!=={a_dq_cmp,a_br,a_bz,a_ft,a_f0,a_f1,a_pb}) e4=e4+1; end
  // beat queues
  reg [280:0] qa [0:4095]; integer ta [0:4095]; reg [280:0] qb [0:4095]; integer tb_ [0:4095];
  integer na=0, nb=0, cyc=0, errs=0, k, blk, s, g, nblk=0, tstart [0:7]; reg [15:0] bases [0:7];
@@ -88,7 +99,7 @@ module tb_hbm_svc_vmdel_lane_n_lockstep;
     else begin
      if(qb[j][263:0]!==qa[s][263:0] || {qb[j][279:267],3'b0}!==bases[blk]+16'(sl_*16+gr*8) || qb[j][266:264]!==qa[s][266:264]) begin
       errs=errs+1; if(errs<6) $display("MISMATCH blk %0d slot %0d group %0d", blk, sl_, gr); end
-     if(tb_[j]-tstart[blk]!==ta[blk*256]-tstart[blk]+sl_*2+gr) begin errs=errs+1; if(errs<6) $display("TIMING blk %0d slot %0d group %0d: %0d", blk, sl_, gr, tb_[j]-tstart[blk]); end
+     if(tb_[j]-tstart[blk]!==ta[blk*256]-tstart[blk]+sl_*2+gr+RP) begin errs=errs+1; if(errs<6) $display("TIMING blk %0d slot %0d group %0d: %0d", blk, sl_, gr, tb_[j]-tstart[blk]); end
      k=k+1;
     end
    end

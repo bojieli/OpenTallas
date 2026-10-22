@@ -15,6 +15,16 @@ module tb_eq;
  `ifdef SPEC
  defparam u0.WCE_SPEC=1;
 `endif
+`ifdef SHPRE
+ defparam u0.SHPRE=1;
+`endif
+`ifdef RPIPE
+ defparam u0.RPIPE=1;
+`endif
+ // RPIPE (HBMc/TILES3 10-22): the DUT read port and dq / load outputs are one edge later than the reference: compare them
+ // with the reference's previous-edge values; cycles where the reference fault changes are skipped (fault gates outputs
+ // at the later edge), as are the 2 edges after a reset release.
+ reg [1:0] p_rce; reg p_ov; reg [1:0] p_dqq; reg [2:0] p_db; reg [280:0] p_ld,p_dq; reg p_ft=0; integer p_rst=0;
  `INST(ot_hbm_svc_vmdel_lane_load_static,0)
  `INST(gold_ot_hbm_svc_vmdel_lane_load_static,1)
  integer cyc=0,err=0,rce=0,iss=0,nf=0; reg spec_f=0; reg [15:0] ep0,ep1;
@@ -29,11 +39,22 @@ module tb_eq;
   if(rst_n && !spec_f && (u0.pc[0].u_payload.w_ce_in!==u1.pc[0].u_payload.w_ce_in || u0.pc[1].u_payload.w_ce_in!==u1.pc[1].u_payload.w_ce_in)) spec_f=1;
 `endif
   if(rst_n && !spec_f) begin
+`ifdef RPIPE
+   if(p_rst>=2) begin
+   if({u0.pc[0].u_payload.r_ce_in,u0.pc[1].u_payload.r_ce_in,u0.pc[0].u_payload.w_ce_in,u0.pc[1].u_payload.w_ce_in}!==
+      {p_rce,u1.pc[0].u_payload.w_ce_in,u1.pc[1].u_payload.w_ce_in}) begin err=err+1; if(err<5)$display("CE_MISMATCH %0d",cyc); end
+   if({f0[0],f1[0],pb[0],bz[0],ft[0],br[0]}!=={f0[1],f1[1],pb[1],bz[1],ft[1],br[1]} ||
+      (ft[1]==p_ft && {ov[0],dq_[0],db[0],ld[0],dq[0]}!=={p_ov,p_dqq,p_db,p_ld,p_dq})) begin err=err+1; if(err<5)$display("OUT_MISMATCH %0d",cyc); end
+   end
+`else
    if({u0.pc[0].u_payload.r_ce_in,u0.pc[1].u_payload.r_ce_in,u0.pc[0].u_payload.w_ce_in,u0.pc[1].u_payload.w_ce_in}!==
       {u1.pc[0].u_payload.r_ce_in,u1.pc[1].u_payload.r_ce_in,u1.pc[0].u_payload.w_ce_in,u1.pc[1].u_payload.w_ce_in}) begin err=err+1; if(err<5)$display("CE_MISMATCH %0d",cyc); end
    if({f0[0],f1[0],pb[0],bz[0],ft[0],ov[0],br[0],dq_[0],db[0],ld[0],dq[0]}!=={f0[1],f1[1],pb[1],bz[1],ft[1],ov[1],br[1],dq_[1],db[1],ld[1],dq[1]}) begin err=err+1; if(err<5)$display("OUT_MISMATCH %0d",cyc); end
-   nf=nf+(ft[1]!=0); rce=rce+u0.pc[0].u_payload.r_ce_in+u0.pc[1].u_payload.r_ce_in; iss=iss+u0.load_cmd_ok;
+`endif
+  nf=nf+(ft[1]!=0); rce=rce+u0.pc[0].u_payload.r_ce_in+u0.pc[1].u_payload.r_ce_in; iss=iss+u0.load_cmd_ok;
   end
+  p_rce={u1.pc[0].u_payload.r_ce_in,u1.pc[1].u_payload.r_ce_in}; p_ov=ov[1]; p_dqq=dq_[1]; p_db=db[1]; p_ld=ld[1]; p_dq=dq[1]; p_ft=ft[1];
+  p_rst=rst_n?p_rst+1:0;
   // stimulus: biased random; periodic resets clear sticky faults
   if(cyc%3000==0) rst_n=0; else if(cyc%3000==8) rst_n=1;
   bb=$urandom; bv=(($urandom%8)==0)&&((!u1.owned[bb]&&!u1.start)||($urandom%3000)==0); bep=bb?16'd2:16'd1;

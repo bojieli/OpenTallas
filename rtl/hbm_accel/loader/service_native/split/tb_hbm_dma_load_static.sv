@@ -6,6 +6,15 @@ module tb_hbm_dma_load_static;
  reg clk=0,rst_n=0;always #1 clk=~clk;
  reg bv=0,lv=0;reg[61:0]cmd=0;reg[1:0]fv=0;reg[11:0]fs=0;reg[511:0]fd=0;
  wire f0,f1,pbad,ft,busy,ov;wire[1:0]ready;wire[280:0]dq,raw_dq;wire[2:0]db;wire[1:0]destq;
+`ifdef SHPRE
+ defparam u.SHPRE=1;
+`endif
+`ifdef SPEC
+ defparam u.WCE_SPEC=1;
+`endif
+`ifdef RPIPE
+ defparam u.RPIPE=1;   // HBMc/TILES3 10-22: +1 edge read port; the checks compare the beat sequence, not edges
+`endif
  ot_hbm_svc_vmdel_lane_load_static #(.NPC(2),.MUT(`MUT)) u(.clk(clk),.rst_n(rst_n),.bank_id(3'd0),
  .begin_v_i(bv),.begin_bank_i(1'b0),.begin_epoch_i(16'd7),.start_i(1'b0),.start_bank_i(1'b0),.start_epoch_i(16'd0),.start_base_sector_i(16'd0),
  .fill_v_i(fv),.fill_bank_i(2'b0),.fill_slot_i(fs),.fill_epoch_i({2{16'd7}}),.fill_data_i(fd),
