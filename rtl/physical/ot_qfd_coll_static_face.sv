@@ -32,7 +32,23 @@ module qfd_coll_static_face #(
  if(TOK_REG)begin:g_tok_reg
   reg ts_q,tv_q,ps_q;reg[FW-1:0]td_q;reg[3:0]cf_q;
   always @(posedge cal_ck)begin ts_q<=tx_slot;tv_q<=tx_valid;td_q<=tx_data;ps_q<=peer_slot;end
+`ifdef OT_COLL_REGIONAL
+  // Sticky diagnostic returns cross in fixed-slot rings, rather than a
+  // direct hard-child status wire into the calendar pin register.
+  wire [3:0] cf_landed;
+  wire [3:0] cf_roots={rx_rck,rx_wck,tx_rck,tx_wck};
+  for(genvar f=0;f<4;f=f+1)begin:g_fault_land
+    wire rs_f;wire [1:0] fq;
+    ot_reset_sync u_fr(.clk(cf_roots[f]),.async_rst_n(rst_n),.sync_rst_n(rs_f));
+    ot_coll_meso_ring #(.W(2),.C(1),.D(4),.K(2),.REG_OUT(1))u_ring(
+      .ck_w(cf_roots[f]),.rs_w(rs_f),.ck_r(cal_ck),.rs_r(rs_core[0]),
+      .d({1'b0,cdc_fault_i[f]}),.q(fq));
+    assign cf_landed[f]=fq[0];
+  end
+  always @(posedge cal_ck)cf_q<=cf_landed;
+`else
   always @(posedge cal_ck)cf_q<=cdc_fault_i;
+`endif
   assign {tx_slot_i,tx_valid_i,tx_data_i,peer_slot_i}={ts_q,tv_q,td_q,ps_q};assign cdc_fault=cf_q;
  end else begin:g_tok_direct
   assign {tx_slot_i,tx_valid_i,tx_data_i,peer_slot_i}={tx_slot,tx_valid,tx_data,peer_slot};assign cdc_fault=cdc_fault_i;

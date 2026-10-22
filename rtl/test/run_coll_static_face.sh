@@ -30,6 +30,8 @@ case $MUT in
   *) echo "bad MUT $MUT"; exit 2 ;;
 esac
 [ "${HARD:-0}" = 1 ] && DEF+=(-DOT_QFD_FACE_HARD)
+[ "${BANK_LOCAL:-0}" = 1 ] && DEF+=(-DOT_COLL_BANK_LOCAL)
+[ "${REGIONAL:-0}" = 1 ] && DEF+=(-DOT_COLL_REGIONAL)
 ok=1
 for PHI in $PHIS; do
   exe="$OUT/face_m${MUT}_phi${PHI}.vvp"

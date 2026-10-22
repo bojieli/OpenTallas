@@ -84,7 +84,7 @@ endmodule
 
 // Codec with a separate PHY pin-register region (phy_ck): same ports as ot_qwen_static_slot_link plus phy_ck.
 module ot_qwen_static_slot_link_pl #(
-    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, LD=2, LK=1, BWREG=1
+    parameter integer FW=548, CW=16, PW=FW+19+CW, MUT=0, SAFE=0, LD=2, LK=1, BWREG=1, BLOCAL=0
 )(
     input wire [4:0] ck,
     input wire phy_ck,
@@ -119,7 +119,19 @@ module ot_qwen_static_slot_link_pl #(
     // macro pins: epoch_begin (cal_lck) / c_abort (codec0) -> we, u_tx o_data (tx_rck macro) -> din.  Now every
     // crossing ends at a flop in the bank's own entry and the flop -> SRAM path is single-entry.  Write lands 1 edge
     // later (static calendar: the replay read of a slot is far behind its write).
+`ifdef OT_COLL_BANK_LOCAL
+    localparam integer USE_LOCAL_BANK=1;
+`else
+    localparam integer USE_LOCAL_BANK=BLOCAL;
+`endif
     for(genvar b=0;b<4;b=b+1)begin:g_bank
+      if(USE_LOCAL_BANK) begin:g_local
+        // The landing and SRAM share a real local clock tree INSIDE this
+        // hardened child. The face clock entry remains port -> child clock.
+        ot_coll_bank_land137 u_store(.ck(ck[b+1]),.we(issue_write),
+          .wa(wr_slot),.ra(rd_slot),.rd_v(rd_v),.din(wd[b*BW+:BW]),
+          .dout(rd[b*BW+:BW]));
+      end else begin:g_legacy
         wire bwe;
         wire [5:0] bwa, bra;
         wire [BW-1:0] bdin;
@@ -143,6 +155,7 @@ module ot_qwen_static_slot_link_pl #(
 `endif
             .ck(ck[b+1]),.we(bwe),.wa(bwa),.ra(bra),
             .din(bdin),.dout(rd[b*BW+:BW]));
+      end
     end
     // region resets: one 2-edge synchroniser per clock, kept copies per ring side
     wire [2:0] rs_c;
@@ -175,4 +188,50 @@ module ot_qwen_static_slot_link_pl #(
     ot_coll_meso_ring #(.W(PW+10),.D(LD),.K(LK),.C(10),.REG_OUT(1)) u_tx_land(
         .ck_w(ck[0]),.rs_w(rs_c[1]),.ck_r(phy_ck),.rs_r(rs_p[1]),
         .d({c_tx_flit,c_cause,c_abort,c_tx_v}),.q({p_tx_flit,fault_cause,epoch_abort,p_tx_v}));
+endmodule
+
+// Opt-in local-clock bank landing. Same write age as BWREG; predicted read
+// address equals the current calendar address after every active edge.
+// Data/address registers are unreset: the static slot ownership protocol
+// forbids consuming an unwritten slot. No valid/credit flow control added.
+module ot_coll_bank_land137 (
+ input wire ck,we,rd_v,input wire [5:0] wa,ra,
+ input wire [136:0] din,output wire [136:0] dout
+);
+ reg we_q;
+ reg [5:0] wa_q,ra_q;
+ reg [136:0] din_q;
+ always @(posedge ck) begin
+   we_q<=we;wa_q<=wa;din_q<=din;ra_q<=ra+{5'd0,rd_v};
+ end
+ // Local equivalent of the production bank, with kept collision controls
+ // per ten output bits. A single hit bit previously drove274 native pins.
+ localparam integer NG=14;
+ reg wq;
+ reg [5:0] aq;
+ reg [136:0] dq,dqq,out_q;
+ (* keep="true", dont_touch="true" *) reg [NG-1:0] hit0,hit1;
+ wire [511:0] mr;
+ always @(posedge ck) begin
+   wq<=we_q;aq<=wa_q;dq<=din_q;dqq<=dq;
+ end
+ for(genvar g=0;g<NG;g=g+1)begin:g_hit
+   localparam integer LO=g*10;
+   localparam integer N=(137-LO<10)?137-LO:10;
+   always @(posedge ck) begin
+`ifdef OT_QKD_REPLAY_HIT_MUT
+     hit0[g]<=we_q && wa_q!=ra_q;
+`else
+     hit0[g]<=we_q && wa_q==ra_q;
+`endif
+     hit1[g]<=wq && aq==ra_q;
+     out_q[LO+:N]<=hit0[g]?dq[LO+:N]:hit1[g]?dqq[LO+:N]:mr[LO+:N];
+   end
+ end
+ ot_sram_1r1w_64x512_m1_r2c2 u_sram(
+   .clk(ck),.r_ce_in(1'b1),.r_addr_in(ra_q),.rd_out(mr),
+   .w_ce_in(wq),.w_addr_in(aq),.wd_in({375'd0,dq}),
+   .w_mask_in({375'd0,{137{1'b1}}}),
+   .rr_en(2'd0),.rr_addr(12'd0),.cr_en(2'd0),.cr_sel(18'd0));
+ assign dout=out_q;
 endmodule
