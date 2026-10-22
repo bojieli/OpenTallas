@@ -13,8 +13,10 @@
     "rows": 32,
     "bits": 512,
     "total_bits": 131072,
-    "total_bytes": 16384,
-    "macro_area_um2": 101966.688
+    "macro_area_um2": 101966.688,
+    "physical_allocation_bytes": 16384,
+    "logical_live_Q_payload_bytes": 2048,
+    "logical_capacity": "512 FP32 Q seats; owner/select picks current value across8 writer banks"
   },
   "hardware_capacity_bits_per_edge": {
     "dd_i": 548,
