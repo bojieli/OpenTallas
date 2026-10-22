@@ -1,0 +1,48 @@
+{
+  "status": "PREFLIGHT_SOURCE_PLAN_ONLY_NO_EXECUTION",
+  "original_audit_commit": "4e3d7d7c69c38a6c41a6b45e0642f174b60ac80f",
+  "original_before_hashes": "before.sha256",
+  "original_native": "one raw TIELO188 FAIL remains HOLD; prior normal timingCLOSED separate",
+  "target": {
+    "driver": "_29601_/L",
+    "master": "TIELOx1_ASAP7_75t_R",
+    "function": "0",
+    "net": "_15892_",
+    "odb_net_id": 15893,
+    "direct_sink_pins": 172,
+    "native_terminals": 188
+  },
+  "existing_mechanism": {
+    "command": "repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIELOx1_ASAP7_75t_R/L",
+    "stage": "after read_db installed6_final.odb+actualLib/SDC loading, before normal legalization/incrementalrouting/extraction/signoff",
+    "normal_stack": "hold_eco.sh accepts ECO_RB_DB=6_final.odb; normal SHA-bound NATIVE_NORMALIZE_TCL path",
+    "actual_blocker": "Frozen and inspected source NATIVE_NORMALIZE_BLOCK whitelist supports qkd_ectl_a_tp8_epoch_direct|hfd_ep_static only. R1 unsupported. ROOTpublisher must implement/review bounded exact R1 support and linked staging before ANY command can run; no direct lane ECO."
+  },
+  "proposed_owner_staging": {
+    "new_root": "/srv/opentallas-scratch/claude/codex-col8r1-tielo-distribution-1021",
+    "input": "copy original installed final6 ODB/SDC/SPEF/config and exact frozenhelpers with hashes, read-only originals; create NEW output, source snapshot/linkedreceipt parent original005325591 +audit4e3",
+    "command_template_REVIEW_ONLY": "ECO_RB_DB=6_final.odb ORFS_IMAGE=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 NATIVE_NORMALIZE_TCL=<ROOTpublished-qualified-R1-plan> NATIVE_NORMALIZE_SHA256=<actualplanSHA> NATIVE_NORMALIZE_BLOCK=<ROOTpublished-exact-R1-ABI> KEEPWIRES=0 FREEZE=0 bash <ROOTpublished-hold_eco.sh> <new-input-base> <new-signoff-base> <new-exclusive-output> ot_hidx_score_pair8_r1 <exactoriginal-post-SDCs>",
+    "supported_as_is": false,
+    "no_launch_until": "ROOTpublisher exact helper/source/readset/normal linked command qualified; placeholders deliberately cannot execute"
+  },
+  "protection_handling": "Snapshot original protection flags; refuse if target driver/net/immediate sinks protected or canonical command cannot distribute; NEVER clear/force flags. Verify unaffected connections and flags exact. Repair_tie_fanout may visit allties: reject if ANY non-target original net/pin connectivity changes; preserve unary/inversion tree and every immediate sink pin/constant polarity. No blanket tie rewrite.",
+  "physical_budget": {
+    "max_new_tie_cells": 172,
+    "actual_cell_area_um2": 0.04374,
+    "max_new_cell_area_um2": 7.52328,
+    "new_registers": 0,
+    "new_edges": 0,
+    "new_clocks": 0,
+    "outline_change": 0
+  },
+  "affected_nets": "Original target plus only new real tie outputnets to original immediatepins; original downstream INV/BUF connections unchanged. No fake identity partitions. Exact new tiecell master/function/placement/PG binding and each old sink must be recorded.",
+  "acceptance": "Normal TTsetup/FFhold/DRC plus actual postECO all-driver native<=32 includingconstants/reach<=405 and complete routed TTFF clockaudit using exact published native_audit.py2528 and originalfrozen ck_insertion0671. Sameauditrecipe run.sh with newR/D/B and independentlytiednewODB SHA; no CTSfallback. Before/after all auditinputSHA unchanged. No oldsource alias/bind until strictPASS.",
+  "frozen_helpers": {
+    "hold_eco.sh": "3e362671e57a81d36234591883f48f73544b981b0ec371fb514ec3c48d088b7d",
+    "hold_eco.tcl": "54124948665b04ce8e8b4aef076eeeabe7e8415ba5cfc1b81450f6654fa91e5b",
+    "hold_eco_window.tcl": "ad0d172d3b11952a27c22e11e02f6dd2158d200179faed87e58dbb953d99ac35",
+    "hold_eco_sdc.py": "81d7c403edb7899d96d88deb5b616d9821c066fefd6cbc6bc99328a1124ad9a7",
+    "hold_eco_corner.tcl": "58a7c443623e233abe36ef12cc93cead969035878cbba5257a952eea6dc8830e"
+  },
+  "unqualified": "ExactnewROOTsupport/stagedmetadata/newnets/signoff notyetexecuted; no completion/bind claim"
+}
