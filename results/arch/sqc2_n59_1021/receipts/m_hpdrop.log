@@ -1,0 +1,12 @@
+N59OBS_ERR cyc=15 descriptor valid 0 expected 1 at edge 4
+N59OBS_ERR cyc=16 head_descriptor differs
+N59OBS_ERR cyc=17 head_descriptor differs
+N59OBS_ERR cyc=23 descriptor valid 0 expected 1 at edge 12
+N59OBS_ERR cyc=24 head_descriptor differs
+N59OBS_ERR cyc=25 head_descriptor differs
+N59OBS_ERR cyc=28 descriptor valid 0 expected 1 at edge 17
+N59OBS_ERR cyc=29 head_descriptor differs
+N59OBS activity edges=185 descriptors=13 completions=0
+N59OBS_FAIL errors=1521
+N59OBS_CASE m_hpdrop FAIL
+N59OBS_MUTANT_REJECTED m_hpdrop
