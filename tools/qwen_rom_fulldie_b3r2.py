@@ -5298,6 +5298,8 @@ RST_OK_UM = 480.0
 RST_NET_UM = float(os.environ.get('OT_RST_NET_UM', RST_NET_UM))
 RST_OK_UM = float(os.environ.get('OT_RST_OK_UM', RST_OK_UM))
 RST_GAP_UM = 2.16                # clearance to every other instance
+# SQC-QDIE3 10-22: OT_RST_PAD_CLUSTER=1 (default) keeps every reset pad chain in one pocket on its edge (see chain()).
+_rst_pad_cluster = os.environ.get('OT_RST_PAD_CLUSTER', '1') == '1'
 
 
 def _hp(pts):
@@ -5632,8 +5634,24 @@ def _rst_tree_build(nets, rects, W, H, gx, gy, pitch=RST_PITCH_UM):
             re-checked at RST_OK_UM by _reset_reach_gate as before).  Same levels / cycles / equal depth."""
             head, prev = None, None
             for mst in [RST_PAD] * (lv // RST_PAD_LV) + [RST_REP] * (lv % RST_PAD_LV):
-                a = new(*c_(k))
                 far = c_(p) if p is not None else pxy
+                a = None
+                if _rst_pad_cluster:
+                    # SQC-QDIE3 10-22 (die STA class S2, r11bfp: 74 rst_field hops 418-783 um, all pad-chain nets): every
+                    # pad was searched beside the CHILD with lim 600, so in a crowded field consecutive pads of one chain
+                    # alternated between two free pockets on either side of k (rstt_rst_field_6044 x 3481 -> 6045 x 2823,
+                    # 658 um, on two region clocks).  The chain is ONE pocket: the first cell on the edge p..k (midpoint
+                    # first, both hops <= RST_NET_UM / 2 + d / 2), every later cell beside the previous one.
+                    if prev is not None:
+                        a = new(*c_(prev), lim=RST_NET_UM / 4, budget=20000)
+                    else:
+                        x0_, y0_ = c_(k)
+                        for tx_, ty_ in ([((x0_ + far[0]) / 2, (y0_ + far[1]) / 2)] if far is not None else []) + [(x0_, y0_)]:
+                            a = new(tx_, ty_, lim=RST_NET_UM / 2 - 20, budget=20000)
+                            if a is not None:
+                                break
+                if a is None:
+                    a = new(*c_(k))
                 if a is None and far is not None:
                     (x0, y0), (x1, y1) = c_(k), far
                     for t in (0.25, 0.5, 0.75, 1.0):
