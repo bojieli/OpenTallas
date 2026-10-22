@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_sys_face_lctx5k_hybrid",
+ "enable": false,
+ "reason": "Actual full explicit source already contains every original boundary capture and same-D producer copies; never stack automatic pinregs. Source graph and wrapper maps bind input1/output1/reset2+3."
+}

@@ -1,0 +1,208 @@
+{
+ "name": "qfd_sys_face_lctx5kf",
+ "top": "qfd_sys_face_lctx5k_hybrid",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_sys_face_lctx5k_hybrid.sv",
+  "rtl/qwen_split/qfd_sys_face_lctx4_helpers.sv",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
+ ],
+ "params": {
+  "MU": 1,
+  "MU_HEAD": 1,
+  "ROPE": 1,
+  "L_CONTEXTS": 1,
+  "MUT": 0,
+  "GO_OFS": 3
+ },
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/d2d_static_20261015"
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 388.8,
+  "h": 216,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    129.6,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
+   "count": 1,
+   "at": [
+    216,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "fwd_epoch",
+   "d2d_fault",
+   "d2d_epoch_abort",
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "prog_rx_v",
+   "prog_witness_slot",
+   "prog_auth_slot",
+   "prog_context_slot",
+   "prog_tx_observed_v",
+   "prog_tx_record",
+   "ck",
+   "rst_n",
+   "rx_payload",
+   "emb_rx_v",
+   "emb_rx_slot",
+   "status_epoch16",
+   "vm_drained",
+   "collective_drained",
+   "collective_busy",
+   "crom_fault",
+   "execution_active",
+   "admit_ready",
+   "result_v",
+   "result_done",
+   "result_fault",
+   "result_cause",
+   "result_tag",
+   "result_gen",
+   "result_token",
+   "result_value",
+   "result_cycles",
+   "cal_start_rx",
+   "cal_seg_rx",
+   "cal_user_tx",
+   "cal_user_rx",
+   "prog_head_context_slot",
+   "prog_head_context_user",
+   "head_descriptor_v",
+   "head_descriptor_tag",
+   "head_descriptor_generation",
+   "obs_fault"
+  ],
+  "W": [
+   "tt_pw",
+   "tt_program_obs",
+   "tt_control_stores_ready",
+   "tt_kok",
+   "tt_kwd",
+   "tt_fab",
+   "tt_layer_context_v",
+   "tt_command_stage",
+   "tt_native_tok",
+   "tt_native_pos",
+   "native_fault",
+   "q_slot",
+   "q_slot_beat",
+   "kv_word_slot",
+   "kv_word_index",
+   "visibility_slot",
+   "complete_slot",
+   "host_epoch_valid",
+   "host_fused_capability",
+   "host_epoch",
+   "host_tag",
+   "host_generation"
+  ],
+  "S": [
+   "emb_word_v",
+   "emb_word_data",
+   "emb_word_token",
+   "emb_word_index",
+   "emb_word_scale",
+   "emb_word_epoch",
+   "emb_expected_slot",
+   "emb_expected_token",
+   "emb_expected_word",
+   "emb_expected_scale",
+   "emb_expected_epoch",
+   "emb_fill_begin",
+   "emb_fill_token",
+   "emb_fill_epoch",
+   "emb_core_epoch",
+   "emb_prov_fault",
+   "io_cmd_free",
+   "io_fault",
+   "io_shared_fault",
+   "fault"
+  ],
+  "E": [
+   "seq_cfg_image_ready",
+   "seq_dc",
+   "seq_program_obs",
+   "seq_descriptor_obs",
+   "seq_dh"
+  ]
+ },
+ "recipe": 4,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "sink_clustering": false
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03
+ },
+ "structural_change": "STEWARD-QKc 10-22: lctx4_bounded graph (same 93 ports, FFs, 3 ROMs, reset/pipeline edges, 0 cycles) with keep_hierarchy only on the 1,554 deliberate copy cells (391 groups); 35,490 cells flat for ABC (lctx4 depth 85 / 60-OR chain cannot meet 833 ps). Outline 345.6x216: N face 1,394 pin bits <= ~4/um (lctx3/4 slot 302.4 = 4.61/um). lctx5k: also keep_hierarchy on every FF and every cell with fanout>=8 (lctx5m census max 66: ABC QN absorption / fanout growth on load-bounded nets).",
+ "job": {
+  "owner": "CLAUDE:STEWARD-QKc",
+  "branch": "claude/sqc-sysface-1022",
+  "tag": "lctx5kf",
+  "cycles_added": 0,
+  "purpose": "Q.STA.SYSFACE lctx5k FALLBACK 388.8x216",
+  "benches": []
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual full explicit source already contains every original boundary capture and same-D producer copies; never stack automatic pinregs. Source graph and wrapper maps bind input1/output1/reset2+3."
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": false,
+ "hold_budget": "die",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ }
+}
