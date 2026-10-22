@@ -1,5 +1,5 @@
 {
- "name": "s81engm_lkp_ra640q-r640q-COMMIT",
+ "name": "s81engm_lkp_ra640q-r640q-24b7e5fa1",
  "block": "dsfd_engram_lkp_ra640",
  "ref_tile": true,
  "owner": "CODEX-S81-COLLB-2000",
@@ -8,13 +8,41 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/s81-lookup-spines-2120",
-  "commit": "COMMIT",
+  "commit": "24b7e5fa1",
   "extra_paths": [
    "rtl/dsrom_sys/engram",
    "rtl/hdc/v41",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "rtl/dsrom_sys/s81_dv/eng",
-   "tools/s81_dv/eng_rr"
+   "tools/s81_dv/eng_rr",
+   "rtl/dsrom_sys/s81_ph/ctrl/dsfd_ctrl_rg3.sv",
+   "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_ctrl_pcr.sv",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g_sram.sv",
+   "rtl/dsrom_sys/s81_ph/ctrl/ot_s81ph_afifo_g.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_afifo.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x340_p192/ot_sram_1r1w2c_16x340_p192.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+   "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "results/arch/codex_lookup_spines_1021/export_witness"
   ]
  },
  "stages": {
@@ -28,6 +56,42 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "lookup_base",
+    "cmd": "J=4 bash tools/s81_dv/eng_rr/bench_lookup_snapshot.sh {RUN}/lookup_base base",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^LOOKUP_BENCH PASS base$",
+    "min_count_regex": "^TB_ENG_RR_STATS .* row_beats (\\d+) "
+   },
+   {
+    "name": "lookup_rpar",
+    "cmd": "J=4 bash tools/s81_dv/eng_rr/bench_lookup_snapshot.sh {RUN}/lookup_rpar rpar",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^LOOKUP_CAUSAL_FAIL rpar$",
+    "fail_witness": "results/arch/codex_lookup_spines_1021/export_witness/mutant_wrapper.log"
+   },
+   {
+    "name": "lookup_onesc",
+    "cmd": "J=4 bash tools/s81_dv/eng_rr/bench_lookup_snapshot.sh {RUN}/lookup_onesc onesc",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^LOOKUP_CAUSAL_FAIL onesc$",
+    "fail_witness": "results/arch/codex_lookup_spines_1021/export_witness/onesc_wrapper.log"
    }
   ],
   "calibrate": {
@@ -80,7 +144,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81engm_lkp_ra640q/s81engm_lkp_ra640q-r640q-COMMIT"
+   "to": "results/rtl/ref_tile/s81engm_lkp_ra640q/s81engm_lkp_ra640q-r640q-24b7e5fa1"
   }
  ],
  "cycles_added": 0,
