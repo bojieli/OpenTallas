@@ -12,7 +12,7 @@
 // the compiler issues start only when block_ready (checked, fault otherwise); no credits, no ready, no retry.
 // Bench: tb_hbm_svc_vmdel_lane_n_lockstep.sv (NPC 2 lane vs the d4f NPC 4 lane on the same fills).
 // Original history (unchanged mechanics) follows.
-module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4) (
+module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
  input wire clk,rst_n,input wire [2:0] bank_id,
  input wire begin_v_i,begin_bank_i,input wire [15:0] begin_epoch_i,
  input wire start_i,start_bank_i,input wire [15:0] start_epoch_i,start_base_sector_i,
@@ -154,12 +154,19 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4) (
  wire [15:0] sector0=(NPC==4)?base_q+{5'b0,out_slot,out_group,3'b0}:base_q+{6'b0,out_slot,out_group[0],3'b0};
 
  // Static read commands carry exact source ownership and output destination. No arbitration.
+ wire [255:0] aligned_source=sel>>(lc0[29:25]*8);
  reg lv0,lv1;reg [61:0] lc0,lc1;reg [255:0] lpayload;
  always @(posedge clk)begin
    if(!rst_s)begin lv0<=0;lv1<=0;end
    else begin lv0<=load_ok;lv1<=lv0;end
    lc0<=load_cmd;lc1<=lc0;
-   lpayload<=sel;
+   for(integer w=0;w<8;w=w+1)begin
+     case(lc0[32:30])
+       0,5:lpayload[w*32+:32]<=aligned_source[w*32+:32];
+       1:lpayload[w*32+:32]<={16'd0,aligned_source[w*16+:16]};
+       default:lpayload[w*32+:32]<={24'd0,aligned_source[w*8+:8]};
+     endcase
+   end
  end
  always @(posedge clk)begin
  load_dest_bank<=lc1[59:57];load_dest_q<=lc1[61:60];
@@ -201,15 +208,15 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4) (
  endcase
  end
  endfunction
- reg [255:0] converted;reg [7:0] mask;integer j;integer bytepos;integer outpos;integer size;
+ reg [255:0] converted,ordered;reg [7:0] mask;integer j;
  always @*begin
- converted=0;mask=0;size=(lc1[32:30]==0||lc1[32:30]==5)?4:lc1[32:30]==1?2:1;
- for(j=0;j<8;j=j+1)if(j<lc1[55:52])begin
- bytepos=lc1[29:25]+j*size;outpos=lc1[51:49]+j;
- converted[outpos*32+:32]=decode_word(32'(lpayload>>(bytepos*8)),lc1[32:30]);mask[outpos]=1;
+ ordered=0;
+ for(j=0;j<8;j=j+1)if(j<lc1[55:52])
+ ordered[j*32+:32]=decode_word(lpayload[j*32+:32],lc1[32:30]);
+ converted=ordered<<(lc1[51:49]*32);
+ if(MUT==1&&lc1[32:30]==1)converted[16]=!converted[16];
+ mask=8'(((9'd1<<lc1[55:52])-1)<<lc1[51:49]);
  end
- end
-
  assign dq_c={out_v && !fault_c,sector0[15:3],bank_q,sel,8'hff};
 endmodule
 `default_nettype wire
