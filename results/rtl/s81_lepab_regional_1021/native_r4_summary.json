@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "status": "PASS",
+  "limit": 32,
+  "roots_examined": 230399,
+  "max_dynamic_loads": 32,
+  "netlist": {
+    "path": "/srv/opentallas-scratch/claude/codex-s81-lepab-regional-1021/native4/mapped.v",
+    "sha256": "d5f338f806992b77e85a398a6b0603bb9cf03692ea48bb687c2e375a0ef5fd12"
+  },
+  "violation_count": 0,
+  "role_error_count": 0,
+  "report_sha256": "85068a4aeda43359badfbf2b6a8e1597001042850269c3b87f4ec75708a29f4a",
+  "report_path": "/srv/opentallas-scratch/claude/codex-s81-lepab-regional-1021/native4/native_census.json",
+  "source_manifest": {
+    "top": "ot_s81sl_lep_mu_ab_regional",
+    "sources": {
+      "rtl/lib/ot_rst_relay_tree3.sv": "9e1c702bdfaa519b5057e00b495ff6479fe6dea27662946df2fd001d4a7027e7",
+      "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "rtl/lib/ot_sram_oldread_wreg.sv": "67df3246d6cb5648945ca87ef2fd2f46f6e631df622bc19f39432286f97a46f0",
+      "rtl/lib/ot_sram_showahead_1r1w.sv": "71d2f165d8280107d143a15dd2728b11a88007ca9df0ea7c099f19469a67c864",
+      "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+      "rtl/common/landed_parent/ot_pl_land.sv": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
+      "rtl/common/landed_parent/ot_pl_land_n32.sv": "f65e61ea0f42b7eb10e3fa9af434e456927134504479043a0d8b3b1332bd1edf",
+      "rtl/common/landed_parent/ot_pl_land_field_copies.sv": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
+      "rtl/common/landed_parent/ot_pl_land_reset_forest.sv": "6c8d60d1f1d6a9b91a8a6a39015fe94811a14fb5f59f7bba17b0934678c68b71",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv": "3106d0e1d6402b3212b05526e0ebbe5e636883caaf025820b0471e605aff82f2",
+      "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv": "980c3c70832cdc01024d4649616d3a3dc76e7a510c8b2e64801e2e0b4ec29f9d",
+      "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v": "a8fb2509a28f91a30c9b28184fd9be11f30eea9f847797cb8c5435f8870c6128"
+    },
+    "libs": {
+      "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+      "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+      "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+      "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+      "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+    },
+    "keep_modules": [
+      "ot_sram_showahead_hit5",
+      "ot_s81sl_lep_rx_control",
+      "ot_s81sl_lep_host_event",
+      "ot_s81sl_lep_tx_push",
+      "ot_s81sl_lep_stamp",
+      "ot_s81sl_lep_vcopy",
+      "ot_s81sl_lep_pair_ready",
+      "ot_s81sl_lep_return8",
+      "ot_sram_showahead_readptr",
+      "ot_s81sl_lepab_select"
+    ],
+    "keep_regs_hook_sha256": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b"
+  },
+  "violations": [],
+  "std_area_um2": 42390.81054,
+  "sequential_area_um2": 29530.44864
+}

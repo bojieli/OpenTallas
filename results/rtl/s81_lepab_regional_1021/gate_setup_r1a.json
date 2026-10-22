@@ -1,0 +1,35 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "clock_span",
+   "message": "561.6 x 1900.8 um: one clock root over > 600 um",
+   "fix": "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
+  },
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 16% = (macros/children 124928 + std 42391) / outline 1067489 um2 (pin-bound: Four lane-pitch W bands plus paired E buses (RO/MLWD and RI/MLRD each2208pins/432um=5.11/um) fix the outline. Std native42390.81054um2, macros40; RULE FREEZE low fill/aspect guidance, actual die GRT/STA and reticlefit decide.)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Source registers at all interfaces/region crossings, existing two-stage lane relays; adding generic pin registers would change priced ages.",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "sources",
+   "message": "1 committed input(s) absent from the working-tree archive: ['tools/w18/corner_sta_ref.py']",
+   "fix": "materialize the referenced files in the sparse checkout before rerunning the gate"
+  }
+ ]
+}
