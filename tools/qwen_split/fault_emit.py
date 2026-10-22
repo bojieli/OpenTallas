@@ -855,8 +855,26 @@ def post(v, m, G):
     for k_, o_ in list(fol0.items()):
         if o_ in inst_owner or (o_, 'ck') in fol0:
             fol0[k_] = _res(o_)
-    src = [(s_[0], s_[1], s_[2], s_[3], _res(fol0[(s_[0], 'ck')]) if (s_[0], 'ck') in fol0 else _res(s_[0]), s_[5], s_[6])
-           for s_ in src]
+    # SQC-QDIE4 10-22 (r38cxd / r40cxe 'rly_dvw_ag_wo_2x.fault clock ... has no region root (plan stale)'): under
+    # OT_QWEN_HP13_CLOCKS a forwarded-lane landing whose data endpoint is tt_ctlm has its clock follow DEFERRED
+    # (hp13_clock_bind.defer_data -> hp13_deferred_follow, resolved by finalize AFTER this pass), so ck_follow has no row
+    # and the landing looked like its own owner.  Its fault source follows the same terminal the finalize will give it:
+    # the deferred chain's end, a tt_ctlm symbolic clock port mapped to its receiving instance (hp13 targets).
+    hpf = m.get('hp13_deferred_follow') or {}
+    hpt = (m.get('hp13_clock_bind') or {}).get('targets') or {}
+
+    def _hp_owner(inst):
+        e, seen_ = (inst, 'ck'), set()
+        if e not in hpf or e in fol0:
+            return None
+        while e in hpf and e not in seen_:
+            seen_.add(e)
+            e = tuple(hpf[e])
+        if e[0] == 'tt_ctlm' and e[1] in hpt:
+            return hpt[e[1]][0]
+        return e[0]
+    src = [(s_[0], s_[1], s_[2], s_[3], _res(fol0[(s_[0], 'ck')]) if (s_[0], 'ck') in fol0 else
+            _res(_hp_owner(s_[0]) or s_[0]), s_[5], s_[6]) for s_ in src]
     root_ck = collections.defaultdict(list)
     kcj, krs = {}, {}
     for o, it in roots.items():
