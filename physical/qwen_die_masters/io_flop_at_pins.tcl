@@ -265,30 +265,36 @@ if {[llength $ot_extra]} {
   }
   set ot_rows [lsort -integer -index 0 $ot_rows]
   # Reserve all firm/fixed footprints, including existing pin anchors and stages.
+  # SQC-CB16c 2026-10-22: rows are sorted by yMin, so a box can only overlap rows with yMin in
+  # (box.yMin - tallest row, box.yMax): bisect to that window instead of scanning every row for every
+  # FIRM instance (W17real slice: 721,704 FIRM x 75,495 rows = 5.4e10 Tcl iterations, hours).  Same
+  # overlap test, same row index ri, same per-row append order -> ot_occupied is identical.
+  set ot_row_hmax 0
+  foreach row $ot_rows { lassign $row ry rx ex ey; if {$ey - $ry > $ot_row_hmax} { set ot_row_hmax [expr {$ey - $ry}] } }
+  set ot_nrows [llength $ot_rows]
+  proc ot_of_occupy {box} {
+    upvar 1 ot_rows ot_rows ot_occupied ot_occupied ot_row_hmax ot_row_hmax ot_nrows ot_nrows
+    set ylo [$box yMin]; set yhi [$box yMax]
+    # last row with yMin <= ylo - hmax cannot overlap (its yMax <= yMin + hmax <= ylo); start after it
+    set ri [expr {[lsearch -sorted -integer -index 0 -bisect $ot_rows [expr {$ylo - $ot_row_hmax}]] + 1}]
+    for {} {$ri < $ot_nrows} {incr ri} {
+      lassign [lindex $ot_rows $ri] ry rx ex ey pitch orient
+      if {$ry >= $yhi} break
+      if {$ylo < $ey && $yhi > $ry} {
+        dict lappend ot_occupied $ri [list [$box xMin] [$box xMax]]
+      }
+    }
+  }
   set ot_occupied [dict create]
   foreach inst [$ot_blk getInsts] {
     if {[$inst getPlacementStatus] ni {FIRM LOCKED COVER}} continue
-    set box [$inst getBBox]
-    set ri 0
-    foreach row $ot_rows {
-      lassign $row ry rx ex ey pitch orient
-      if {[$box yMin] < $ey && [$box yMax] > $ry} {
-        dict lappend ot_occupied $ri [list [$box xMin] [$box xMax]]
-      }
-      incr ri
-    }
+    ot_of_occupy [$inst getBBox]
   }
   foreach blockage [$ot_blk getBlockages] {
-    set box [$blockage getBBox]
-    set ri 0
-    foreach row $ot_rows {
-      lassign $row ry rx ex ey pitch orient
-      if {[$box yMin] < $ey && [$box yMax] > $ry} {
-        dict lappend ot_occupied $ri [list [$box xMin] [$box xMax]]
-      }
-      incr ri
-    }
+    ot_of_occupy [$blockage getBBox]
   }
+  # sorted per-row blocks cached (lsort is stable: same list as sorting on every request); dropped on append
+  set ot_occ_sorted [dict create]
   foreach request $ot_extra {
     lassign $request port name bt ff
     set box [$bt getBBox]
@@ -299,8 +305,10 @@ if {[llength $ot_extra]} {
     foreach row $ot_rows {
       lassign $row ry rx ex ey pitch orient
       if {$height != $ey - $ry || $pitch <= 0} { incr ri; continue }
-      set blocks {}
-      if {[dict exists $ot_occupied $ri]} { set blocks [lsort -integer -index 0 [dict get $ot_occupied $ri]] }
+      if {![dict exists $ot_occ_sorted $ri]} {
+        dict set ot_occ_sorted $ri [expr {[dict exists $ot_occupied $ri] ? [lsort -integer -index 0 [dict get $ot_occupied $ri]] : {}}]
+      }
+      set blocks [dict get $ot_occ_sorted $ri]
       lappend blocks [list $ex $ex]
       set start $rx
       foreach block $blocks {
@@ -323,6 +331,7 @@ if {[llength $ot_extra]} {
     $ff setLocation $x $y
     $ff setPlacementStatus FIRM
     dict lappend ot_occupied $ri [list $x [expr {$x + $width}]]
+    dict unset ot_occ_sorted $ri
     lappend ot_list $name
     incr ot_ni
     puts "OT_IOFLOP extra capture $port -> $name at ($x, $y) DBU"
