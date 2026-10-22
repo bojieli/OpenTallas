@@ -13087,7 +13087,7 @@
       "h": 777.6
     },
     "d2d_rom": {
-      "m": "qfd_d2d_static_ovl_sf7",
+      "m": "qfd_d2d_static_ovl_sf7_obs1",
       "x": 17824.968,
       "y": 21150.72,
       "o": "MX",
@@ -13244,5 +13244,15 @@
     },
     "outline_reference": "physical/ref_tile/qfd_d2d_static_sf7w/views/qfd_d2d_static_ovl_sf7; outline only; new HEAD_CONTEXT port requires new source view",
     "containment": "new388.8x172.8 lies inside old777.576x518.376 at identical origin/orientation; actual overlap/outside checks unchanged"
+  },
+  "status_observer_home": {
+    "master": "qfd_d2d_static_ovl_sf7_obs1",
+    "outline_um": [
+      388.8,
+      172.8
+    ],
+    "kind": "new candidate frame; no historical source/view adoption",
+    "source": "static_link_bind.py STATUS_OBS selects exact observer master",
+    "checks": "unchanged overlap, outside and exact master/outline checks"
   }
 }
