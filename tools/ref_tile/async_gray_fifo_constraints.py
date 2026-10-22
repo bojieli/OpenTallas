@@ -258,13 +258,45 @@ set ::ot_ag_reset_seen {}
 set ::ot_ag_pending {}
 set ::ot_ag_tie_memo {}
 set ::ot_ag_tie_stats {}
+proc ot_ag_owner {object} {
+  # A path startpoint/launch named by what owns it: a top port (or top-level pin) by its own name, else its cell.
+  if {[sta::object_type $object] eq "Port" || ([sta::object_type $object] eq "Pin" && [$object is_top_level_port])} {
+    return [list port [get_full_name $object]]
+  }
+  if {[sta::object_type $object] eq "Instance"} {return [list cell [get_full_name $object]]}
+  set cell [get_cells -quiet -of_objects $object]
+  if {[llength $cell] != 1} {return {}}
+  return [list cell [get_full_name $cell]]
+}
+proc ot_ag_sole_launch {launch target} {
+  # TOKc-GRAY 10-22: 1 iff every actual startpoint of the target's fanin belongs to the launch itself.  Then every path
+  # that ends at the target starts at the launch, so "-to target" reports exactly the path set of "-from launch -to
+  # target" while reusing the one full arrival update; the "-from" filter re-searches the launch's whole fanout cone per
+  # query (a reset-tree flop's clear arcs reach most of its lane: ~6 s per reset pair on hdie_svc_vm_kshare_r4).  Any
+  # other fanin (a second launch, the pin itself, an unowned object) keeps the original filtered query.
+  set own [ot_ag_owner [lindex $launch 0]]
+  if {[llength $launch] != 1 || ![llength $own]} {return 0}
+  set starts [get_fanin -flat -startpoints_only -to $target]
+  if {![llength $starts]} {return 0}
+  foreach start $starts {
+    if {[ot_ag_owner $start] ne $own} {return 0}
+  }
+  return 1
+}
 proc ot_ag_verify {} {
   set pending $::ot_ag_pending
   set ::ot_ag_pending {}
+  set direct 0
   foreach row $pending {
     lassign $row kind launch target start_name target_name done
+    set sole [ot_ag_sole_launch $launch $target]
+    incr direct $sole
     foreach k {max min} {
-      set paths [find_timing_paths -from $launch -to $target -path_delay $k -group_path_count 1 -endpoint_path_count 1]
+      if {$sole} {
+        set paths [find_timing_paths -to $target -path_delay $k -group_path_count 1 -endpoint_path_count 1]
+      } else {
+        set paths [find_timing_paths -from $launch -to $target -path_delay $k -group_path_count 1 -endpoint_path_count 1]
+      }
       if {![llength $paths] && [info exists ::env(OT_HOLD_MM)] && $::env(OT_HOLD_MM) eq "1" && ![info exists ::ot_mm_active]} {
         if {$kind eq "reset"} {
           puts "OT_ASYNC_GRAY PATH_DEFERRED reset $start_name -> $target_name $k (strict at sign-off)"
@@ -282,6 +314,7 @@ proc ot_ag_verify {} {
     }
     if {$done ne ""} {puts $done}
   }
+  puts "OT_ASYNC_GRAY VERIFY_DEDUP pairs=[llength $pending] sole_launch_unfiltered=$direct filtered=[expr {[llength $pending] - $direct}]"
 }
 proc ot_ag_public_nets {cell} {
   set result {}
