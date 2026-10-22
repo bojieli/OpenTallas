@@ -24,6 +24,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_landed_cluster 1
 set ::ot_ce_landed_child_pins 7
+set ::ot_ce_multi_root_children {{u_blk} {u_bvc}}
 set ::ot_ce_check_only [dict create {dsdv_sh_lb_lk/ck_lk} 1 {dsdv_sh_lb_lk/ck_sq} 1 {dsdv_sh_lb_vc/ck_sq} 1 {dsdv_sh_lb_vc/ck_vc} 1 {dsdv_sh_lk/ck} 1 {dsdv_sh_sq/ck} 1 {dsdv_sh_vc/ck} 1]
 set ::ot_ce_refs [dict create {dsdv_sh_lk/ck} {tt {512.9 551.1 598.3} ff {422.5 455.9 491.4} ss {659.6 705.5 773.3}} {dsdv_sh_sq/ck} {tt {239.1 269.1 293.4} ff {195.9 224.7 247.9} ss {309.9 341.0 367.6}} {dsdv_sh_vc/ck} {tt {285.9 300.4 316.8} ff {230.3 243.8 259.9} ss {379.3 395.5 412.9}} {dsdv_sh_lb_lk/ck_lk} {tt {253.8 271.8 292.0} ff {206.4 223.6 243.4} ss {331.5 351.8 372.4}} {dsdv_sh_lb_lk/ck_sq} {tt {264.9 277.3 291.8} ff {216.9 228.6 242.5} ss {343.9 357.4 373.0}} {dsdv_sh_lb_vc/ck_sq} {tt {256.5 273.7 304.2} ff {207.3 224.1 253.5} ss {338.1 356.4 389.1}} {dsdv_sh_lb_vc/ck_vc} {tt {260.9 273.1 292.6} ff {213.0 224.6 243.7} ss {339.2 352.7 372.7}}]
 set ::ot_ce_counts [dict create {dsdv_sh_lk} 1 {dsdv_sh_sq} 1 {dsdv_sh_vc} 1 {dsdv_sh_lb_lk} 1 {dsdv_sh_lb_vc} 1]
@@ -666,7 +667,7 @@ proc ot_ce_apply {} {
         set key "$master/[get_property $pin lib_pin_name]"
         if {![dict exists $::ot_ce_refs $key]} { error "OT_LANDED: CTS root $name reaches unbound hard-child pin [get_full_name $pin]" }
         set cname [get_full_name $cell]
-        if {[dict exists $::ot_ce_landed_owner $cname] && [dict get $::ot_ce_landed_owner $cname] ne [dict get $::ot_ce_source_domains $name]} {
+        if {[dict exists $::ot_ce_landed_owner $cname] && [dict get $::ot_ce_landed_owner $cname] ne [dict get $::ot_ce_source_domains $name] && [lsearch -exact $::ot_ce_multi_root_children $cname] < 0} {
           error "OT_LANDED: hard child $cname clock pins on different region roots"
         }
         dict set ::ot_ce_landed_owner $cname [dict get $::ot_ce_source_domains $name]

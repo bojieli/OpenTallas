@@ -194,12 +194,12 @@
   "enable": false,
   "reason": "wires-only cluster: every parent port goes straight to one leaf pin, and every seq_host leaf is flop-first / flop-last at its pins (lk RL 1 rung landed at both faces); a recipe pin register would add an unpriced stage on the rung / host / status paths"
  },
- "structural_change": "seq (B) parent (successor of r3e/r3f: soft landing halves under one root per region strung along 1,339-um faces, ck_lk spread 452/378): the landing halves + regional reset runs are hardened VERBATIM in the CLOSED band children dsdv_sh_lb_lk/vc_b1m (daemon a8b9dc305); the parent = 3 closed children + 2 closed bands, wires only, every parent root feeds only hard-child clock pins.  Same module/ports/edges/outline.",
+ "structural_change": "seq (B) parent (successor of r3e/r3f: soft landing halves under one root per region strung along 1,339-um faces, ck_lk spread 452/378): the landing halves + regional reset runs are hardened VERBATIM in the CLOSED band children dsdv_sh_lb_lk/vc_b1m (daemon a8b9dc305; declared multi_root_children); the parent = 3 closed children + 2 closed bands, wires only, every parent root feeds only hard-child clock pins.  Same module/ports/edges/outline.",
  "job": {
   "owner": "STW-S81c-COLLA2",
   "branch": "claude/s81-seq-b1-1022",
   "tag": "dsdv_seq_host_b1m",
-  "purpose": "seq (B) parent (MAIN) on closed band views",
+  "purpose": "seq (B) parent (MAIN) on the closed MAIN band views",
   "views_to": "physical/ref_tile/dsdv_seq_host_b1m/views",
   "record_to": "results/rtl/ref_tile/dsdv_seq_host_b1m",
   "extra_paths": [
@@ -224,7 +224,11 @@
    "rtl/common/landed_parent",
    "tools/landed_parent/lp_fence_release.tcl",
    "physical/ref_tile/dsdv_sh_lb_lk_b1m/views",
-   "physical/ref_tile/dsdv_sh_lb_vc_b1m/views"
+   "physical/ref_tile/dsdv_sh_lb_vc_b1m/views",
+   "results/closure_loop/dsdv_sh_lb_lk_b1m-dsdv_sh_lb_lk_b1m-a8b9dc305",
+   "results/closure_loop/dsdv_sh_lb_vc_b1m-dsdv_sh_lb_vc_b1m-a8b9dc305",
+   "results/rtl/ref_tile/dsdv_sh_lb_lk_b1m",
+   "results/rtl/ref_tile/dsdv_sh_lb_vc_b1m"
   ],
   "benches": [
    {
@@ -363,5 +367,15 @@
    "u_bvc"
   ],
   "why": "The actual r2 roots failed child versus soft boundary checks. Insert real per-root clock buffer chains using exact CLOSED child TT/FF/SS boundary ranges, retaining actual clock measurements and the unchanged 80 ps gate."
- }
+ },
+ "multi_root_children": [
+  {
+   "inst": "u_blk",
+   "job": "dsdv_sh_lb_lk_b1m-dsdv_sh_lb_lk_b1m-a8b9dc305"
+  },
+  {
+   "inst": "u_bvc",
+   "job": "dsdv_sh_lb_vc_b1m-dsdv_sh_lb_vc_b1m-a8b9dc305"
+  }
+ ]
 }
