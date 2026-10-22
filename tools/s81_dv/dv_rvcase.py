@@ -1066,6 +1066,16 @@ def main():
 
     # ------------------------------------------------------------------ GRT run
     repair = DC.die_repair_tcl(out, a.dieflow_ref, rc_layer=M8['repeater_rc_layer'], skip=()) if a.die_repair else '# no die repair\n'
+    if a.die_repair and T.get('controller_corner_repair'):
+        shutil.copy(HERE / 'ctrl_corner.tcl', out / 'ctrl_corner.tcl')
+        hook = ('source /work/ctrl_corner.tcl\n'
+                'if {[s81_ctrl_corner_repair /work/ctrl_corner] != 0} { write_db /work/out/ctrl_corner.fail.odb; exit 5 }\n'
+                'global_connect\n')
+        # These physical buffers must be present BEFORE clock/data balancing.
+        marker = 'ot_die_rep_fclk_equalize '
+        if marker not in repair:
+            raise ValueError('controller corner repair requires forwarded-clock equalization')
+        repair = repair.replace(marker, hook + marker, 1)
     # Relay RTL's complete forwarded payload is i[W-1:0]; rs is a separate
     # synchronous reset tree, not payload. Declare the width as well as the port
     # so a missing/disconnected payload bit fails the structural audit.
