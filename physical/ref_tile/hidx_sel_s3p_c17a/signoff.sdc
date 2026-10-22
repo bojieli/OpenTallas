@@ -31,7 +31,7 @@ set ::ot_ce_landed_child_pins 5
 set ::ot_ce_check_only [dict create {ot_hidx_s3_ctl/clk} 1 {ot_hidx_s3_q/clk} 1]
 set ::ot_ce_refs [dict create {ot_hidx_s3_q/clk} {tt {271.6 286.2 308.1} ff {219.0 232.2 251.2} ss {360.5 378.3 403.8}} {ot_hidx_s3_ctl/clk} {tt {97.4 100.3 102.7} ff {73.7 76.4 79.0} ss {140.0 143.7 146.7}}]
 set ::ot_ce_counts [dict create {ot_hidx_s3_q} 4 {ot_hidx_s3_ctl} 1]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {op} {pass} {addr} {k}} outputs {{fault}}} {q0} {clock ot_io_q0 io_budget_ps 166.667 inputs {{in_line_0}} outputs {{selected_v_0} {selected_line_0}}} {q1} {clock ot_io_q1 io_budget_ps 166.667 inputs {{in_line_1}} outputs {{selected_v_1} {selected_line_1}}} {q2} {clock ot_io_q2 io_budget_ps 166.667 inputs {{in_line_2}} outputs {{selected_v_2} {selected_line_2}}} {q3} {clock ot_io_q3 io_budget_ps 166.667 inputs {{in_line_3}} outputs {{selected_v_3} {selected_line_3}}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {op} {pass} {addr} {k}} outputs {{fault}}} {q0} {clock ot_io_q0 io_budget_ps 166.667 inputs {{in_line_0} {in_line_1}} outputs {}} {q1} {clock ot_io_q1 io_budget_ps 166.667 inputs {} outputs {{selected_v_0} {selected_line_0} {selected_v_1} {selected_line_1}}} {q2} {clock ot_io_q2 io_budget_ps 166.667 inputs {{in_line_2} {in_line_3}} outputs {}} {q3} {clock ot_io_q3 io_budget_ps 166.667 inputs {} outputs {{selected_v_2} {selected_line_2} {selected_v_3} {selected_line_3}}}]
 set ::ot_ce_source_domains [dict create {ck_ctl} {core} {ck_q0} {q0} {ck_q1} {q1} {ck_q2} {q2} {ck_q3} {q3}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{ck_ctl} {ck_q0} {ck_q1} {ck_q2} {ck_q3}}

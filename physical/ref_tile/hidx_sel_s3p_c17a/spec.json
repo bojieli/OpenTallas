@@ -62,12 +62,10 @@
     "ck_q0"
    ],
    "inputs": [
-    "in_line_0"
+    "in_line_0",
+    "in_line_1"
    ],
-   "outputs": [
-    "selected_v_0",
-    "selected_line_0"
-   ]
+   "outputs": []
   },
   "q1": {
    "ratio": [
@@ -77,10 +75,10 @@
    "ports": [
     "ck_q1"
    ],
-   "inputs": [
-    "in_line_1"
-   ],
+   "inputs": [],
    "outputs": [
+    "selected_v_0",
+    "selected_line_0",
     "selected_v_1",
     "selected_line_1"
    ]
@@ -94,12 +92,10 @@
     "ck_q2"
    ],
    "inputs": [
-    "in_line_2"
+    "in_line_2",
+    "in_line_3"
    ],
-   "outputs": [
-    "selected_v_2",
-    "selected_line_2"
-   ]
+   "outputs": []
   },
   "q3": {
    "ratio": [
@@ -109,10 +105,10 @@
    "ports": [
     "ck_q3"
    ],
-   "inputs": [
-    "in_line_3"
-   ],
+   "inputs": [],
    "outputs": [
+    "selected_v_2",
+    "selected_line_2",
     "selected_v_3",
     "selected_line_3"
    ]
