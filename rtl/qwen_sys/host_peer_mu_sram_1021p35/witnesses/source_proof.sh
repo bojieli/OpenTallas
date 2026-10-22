@@ -17,7 +17,7 @@ run_case(){
  tail -4 "$OUT/run_$case_name.log"
 }
 if [[ ${SKIP_LC_NORMAL:-0} != 1 ]];then run_case lc tb_lc_equiv none ref_lifecycle_p34.sv tb_lc_equiv.sv pass;fi
-run_case lc_stale tb_lc_equiv QKD_HR_PE_LHD_MUTANT ref_lifecycle_p34.sv tb_lc_equiv.sv fail
+if [[ ${SKIP_LC_NEG:-0} != 1 ]];then run_case lc_stale tb_lc_equiv QKD_HR_PE_LHD_MUTANT ref_lifecycle_p34.sv tb_lc_equiv.sv fail;fi
 run_case rx tb_rx OT_PEER_RX_SRAM ref_packet_p34.sv tb_rx.sv pass
 run_case rx_flags tb_rx 'OT_PEER_RX_SRAM QKD_PEER35_FLAGS_MUTANT' ref_packet_p34.sv tb_rx.sv fail
 echo P35_SOURCE_PROOF_PASS
