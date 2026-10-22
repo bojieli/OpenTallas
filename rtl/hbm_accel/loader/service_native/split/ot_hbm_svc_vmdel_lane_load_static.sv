@@ -83,7 +83,15 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
  {1'b0,load_cmd[29:25]}+ln*esz<=32&&lf!=3&&lf!=7&&!landing_fault;
  wire load_ok=command_ok&&ln!=0;
  wire release_only=command_ok&&ln==0;
- wire issue=raw_issue||load_ok;
+ // HBMc/TILES 10-22 (H.STA.DMA.LOAD, routes m5 TT -191.5 / m7 TT -265.3 at the payload CE pins): the read CE
+ // no longer waits for start_ok in series with the command checks. command_ok = !raw_issue && load_cmd_ok, so
+ // raw_issue || (command_ok && ln!=0) == raw_issue || (load_cmd_ok && ln!=0): the two validations run in parallel.
+ // Identical function (every edge, valid or malformed); no read is enabled that the old expression did not enable.
+ wire load_cmd_ok=load_v&&owned[load_cmd[0]]&&
+ block_ready_c[load_cmd[0]]&&load_cmd[16:1]==(load_bank_epoch?epoch1:epoch0)&&
+ load_cmd[18:17]<NPC&&ln!=0&&ln<=8&&{1'b0,load_cmd[51:49]}+ln<=8&&
+ {1'b0,load_cmd[29:25]}+ln*esz<=32&&lf!=3&&lf!=7&&!landing_fault;
+ wire issue=raw_issue||load_cmd_ok;
  // Address selection does not wait for ownership/shape validation. Read CE
  // still requires load_ok; conflicting or malformed requests set sticky fault
  // and cannot produce a valid output. Raw-only schedules keep their old path.
