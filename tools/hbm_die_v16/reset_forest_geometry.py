@@ -112,6 +112,11 @@ def bounded_route(grid, a, b, max_run):
 class Geometry:
     def __init__(self, manifest, views, relay_views, reach, overfly=None, prefix='hbfd_rrl_'):
         self.pl = manifest['placement']
+        # HBMc/CHAIN 10-22: GEN legally places relay stations inside (or straddling the mouth of) a master's carved
+        # feedthrough channel (manifest.carved_feedthrough per master; die_case_v16 'solid rectangles').  Those channels
+        # carry no OBS in the abstract: free area for homes/routes, and a pin inside one is reachable, not buried --
+        # only when the pin's owner overlaps the block nowhere outside the channels (overlap_in_channels).
+        self.carved = manifest.get('carved_feedthrough') or {}
         self.W, self.H = manifest['die_um']
         self.expected_hashes = manifest.get('consumed_view_sha256', {})
         self.views, self.relay_views = Path(views), Path(relay_views or views)
@@ -139,8 +144,12 @@ class Geometry:
             # overflown like the forest's own reserved relay tiles -- they block HOMES (self.grid) but not the routing
             # grid's blocked-run budget (self.rgrid).  Default None = every placed instance blocks both (unchanged).
             m_ = v.get('m') or v.get('master') or ''
-            (overflown if ofly and ofly.match(m_) and max(v['w'], v['h']) <= 64.8 else obstacles).append(
-                (v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']))
+            if ofly and ofly.match(m_) and max(v['w'], v['h']) <= 64.8:
+                overflown.append((v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']))
+            else:
+                # HBMc/CHAIN 10-22: a master's carved feedthrough channels are free die area (no OBS in its abstract,
+                # GEN 'solid rectangles'): homes and routes may use them like any free area.
+                obstacles.extend(self.solid(v))
         self.overflown_count = len(overflown)
         # spatial bins for the buried-pin check (post-landing cases place ~57k instances x ~31k reset pins)
         self.BIN = 500.0
@@ -279,8 +288,53 @@ class Geometry:
         for other in self.bins.get((int(xy[0] // self.BIN), int(xy[1] // self.BIN)), ()):
             q = self.pl[other]
             if other != name and q['x'] + .5 < xy[0] < q['x'] + q['w'] - .5 and q['y'] + .5 < xy[1] < q['y'] + q['h'] - .5:
+                if self.in_channel(other, xy) and self.overlap_in_channels(name, other):
+                    continue
                 raise GeometryError(f'buried reset pin {name}.{p} under {other}')
         return xy
+
+    def channel_rects(self, q):
+        """Placed-frame rectangles of q's master carved feedthrough channels."""
+        o, out = q.get('o', 'R0'), []
+        for ch in self.carved.get(q.get('m') or q.get('master') or '', ()):
+            (x0, x1), (y0, y1) = ch['x_um'], ch['y_um']
+            if o in ('MY', 'R180'):
+                x0, x1 = q['w'] - x1, q['w'] - x0
+            if o in ('MX', 'R180'):
+                y0, y1 = q['h'] - y1, q['h'] - y0
+            out.append((q['x'] + x0, q['y'] + y0, q['x'] + x1, q['y'] + y1))
+        return out
+
+    def solid(self, q):
+        rects = [(q['x'], q['y'], q['x'] + q['w'], q['y'] + q['h'])]
+        for cx0, cy0, cx1, cy1 in self.channel_rects(q):
+            nxt = []
+            for x0, y0, x1, y1 in rects:
+                if cx1 <= x0 or cx0 >= x1 or cy1 <= y0 or cy0 >= y1:
+                    nxt.append((x0, y0, x1, y1)); continue
+                if x0 < cx0: nxt.append((x0, y0, cx0, y1))
+                if cx1 < x1: nxt.append((cx1, y0, x1, y1))
+                ix0, ix1 = max(x0, cx0), min(x1, cx1)
+                if y0 < cy0: nxt.append((ix0, y0, ix1, cy0))
+                if cy1 < y1: nxt.append((ix0, cy1, ix1, y1))
+            rects = nxt
+        return rects
+
+    def overlap_in_channels(self, name, other):
+        """True when name's outline overlaps other ONLY inside other's carved channels (a relay station placed in, or
+        straddling the mouth of, a die-owned feedthrough channel -- legal GEN placement, its pins reachable there)."""
+        a, b = self.pl[name], self.pl[other]
+        ix0, iy0 = max(a['x'], b['x']), max(a['y'], b['y'])
+        ix1, iy1 = min(a['x'] + a['w'], b['x'] + b['w']), min(a['y'] + a['h'], b['y'] + b['h'])
+        if ix1 <= ix0 or iy1 <= iy0:
+            return True
+        return any(x0 - .01 <= ix0 and ix1 <= x1 + .01 and y0 - .01 <= iy0 and iy1 <= y1 + .01
+                   for x0, y0, x1, y1 in self.channel_rects(b))
+
+    def in_channel(self, other, xy):
+        """True when xy lies inside one of other's carved feedthrough channels."""
+        return any(x0 - .01 <= xy[0] <= x1 + .01 and y0 - .01 <= xy[1] <= y1 + .01
+                   for x0, y0, x1, y1 in self.channel_rects(self.pl[other]))
 
     def reach_mask(self, point):
         """Free grid cells reachable from point by a path whose every blocked (overflown) run is within the SAME fixed
