@@ -425,7 +425,10 @@ module ot_s81dv_xstop #(
     // decisions per 32-bit chunk, eng (= md) per mux group, and one dl_v / dl_b copy per finish (NF); 0 edges.
     parameter integer N32 = 0,
     parameter integer NF  = 5,
-    parameter integer NENG = 1
+    parameter integer NENG = 1,
+    // N8 = 1 (STW-S81-COLLA-XFIN 10-21, with N32): forward / eng selects per byte lane instead of per 32-bit chunk
+    // (census R33: a chunk select drove 32 mux bits = 62-65 loads); eng then needs 2 * K * 4 + 4 copies
+    parameter integer N8 = 0
 ) (
     input  wire            clk,
     input  wire            rst_n,
@@ -453,6 +456,7 @@ module ot_s81dv_xstop #(
     output reg             fault
 );
     localparam integer NCH = (K * 32 + 31) / 32;
+    localparam integer NC8 = N8 ? K * 4 : NCH, SW = (K * 32) / NC8;   // select slices and their width
     generate if (N32 == 0) begin : g_orig
     // input flops
     reg iv0, iv1, iv2; reg [3:0] ih1, ih2; reg [7:0] ib0, ib1, ib2; reg [K*32-1:0] id0, id1, id2;
@@ -489,58 +493,63 @@ module ot_s81dv_xstop #(
         assign dlb_f = {NF{ib2, ib1, ib0}};
     end else begin : g_n32
         // N32: rst_n is RAW here (the xfin top passes the pin reset); local 2-edge leaves = the former rstn edge
+        // N8 (STW-S81-COLLA-XFIN 10-21): every payload select is BYTE-granular (census R33: the per-32-bit-chunk
+        // forward decisions fec/fwc and eng selects drove 62-65 loads).  NBY = K*4 byte lanes.
+        //   forward copies [y] byte y of eo_d/wo_d, [NBY] eo_v/wo_v/fault/ej_free, [NBY+1] eo_h/eo_b (wo_h/wo_b)
+        //   eng copies: [y] jd byte y, [NBY+y] id0 byte y, [2NBY] iv0/ib0, [2NBY+1] dl copies 0..1,
+        //   [2NBY+2] dl copies 2..NF-1, [2NBY+3] jv/jb   (NENG = 2*NBY+4)
+        // Every copy is a function-identical same-edge register of the original; no edge moves.
+        localparam integer NBY = NCH * 4;
         wire [2:0] xr;
         ot_s81dv_finish_reset2 #(.LEAVES(3)) u_xrst (.clk(clk), .rst_n(rst_n), .q(xr));
-        // eng copies: [c] jd chunk c, [NCH+c] id0 chunk c, [2NCH] iv0/ib0, [2NCH+1] dl copies 0..1, [2NCH+2] 2..NF-1,
-        // [2NCH+3] jv/jb
         reg iv0, iv1, iv2; reg [3:0] ih1, ih2; reg [7:0] ib0, ib1, ib2; reg [K*32-1:0] id0, id1, id2;
-        (* keep *) reg [NCH:0] iv1c, iv2c; (* keep *) reg [4*(NCH+1)-1:0] ih1c, ih2c;
+        (* keep *) reg [NBY+1:0] iv1c, iv2c; (* keep *) reg [4*(NBY+2)-1:0] ih1c, ih2c;
         (* keep *) reg [NF*3-1:0] dlv_c; (* keep *) reg [NF*24-1:0] dlb_c;
         always @(posedge clk or negedge xr[0])
-            if (!xr[0]) begin iv0 <= 1'b0; iv1 <= 1'b0; iv2 <= 1'b0; iv1c <= {(NCH+1){1'b0}}; iv2c <= {(NCH+1){1'b0}}; end
+            if (!xr[0]) begin iv0 <= 1'b0; iv1 <= 1'b0; iv2 <= 1'b0; iv1c <= {(NBY+2){1'b0}}; iv2c <= {(NBY+2){1'b0}}; end
             else begin
-                iv0 <= eng[2*NCH] ? ej_v : inj_v; iv1 <= wi_v; iv2 <= ei_v;
-                iv1c <= {(NCH+1){wi_v}}; iv2c <= {(NCH+1){ei_v}};
+                iv0 <= eng[2*NBY] ? ej_v : inj_v; iv1 <= wi_v; iv2 <= ei_v;
+                iv1c <= {(NBY+2){wi_v}}; iv2c <= {(NBY+2){ei_v}};
             end
         integer c;
         always @(posedge clk or negedge xr[1])
             if (!xr[1]) dlv_c <= {(NF*3){1'b0}};
             else for (c = 0; c < NF; c = c + 1)
-                dlv_c[c*3 +: 3] <= {ei_v, wi_v, eng[c < 2 ? 2*NCH+1 : 2*NCH+2] ? ej_v : inj_v};
+                dlv_c[c*3 +: 3] <= {ei_v, wi_v, eng[c < 2 ? 2*NBY+1 : 2*NBY+2] ? ej_v : inj_v};
         always @(posedge clk) begin
-            ib0 <= eng[2*NCH] ? ej_b : inj_base;
-            for (c = 0; c < NCH; c = c + 1) id0[c*32 +: 32] <= eng[NCH+c] ? ej_d[c*32 +: 32] : inj_d[c*32 +: 32];
+            ib0 <= eng[2*NBY] ? ej_b : inj_base;
+            for (c = 0; c < NBY; c = c + 1) id0[c*8 +: 8] <= eng[NBY+c] ? ej_d[c*8 +: 8] : inj_d[c*8 +: 8];
             ih1 <= wi_h; ib1 <= wi_b; id1 <= wi_d; ih2 <= ei_h; ib2 <= ei_b; id2 <= ei_d;
-            ih1c <= {(NCH+1){wi_h}}; ih2c <= {(NCH+1){ei_h}};
+            ih1c <= {(NBY+2){wi_h}}; ih2c <= {(NBY+2){ei_h}};
             for (c = 0; c < NF; c = c + 1)
-                dlb_c[c*24 +: 24] <= {ei_b, wi_b, eng[c < 2 ? 2*NCH+1 : 2*NCH+2] ? ej_b : inj_base};
+                dlb_c[c*24 +: 24] <= {ei_b, wi_b, eng[c < 2 ? 2*NBY+1 : 2*NBY+2] ? ej_b : inj_base};
         end
-        wire [NCH:0] fec, fwc;
+        wire [NBY+1:0] fec, fwc;
         genvar g;
-        for (g = 0; g <= NCH; g = g + 1) begin : g_f
+        for (g = 0; g < NBY + 2; g = g + 1) begin : g_f
             assign fec[g] = iv1c[g] && ih1c[g*4 +: 4] > 4'd1;
             assign fwc[g] = iv2c[g] && ih2c[g*4 +: 4] > 4'd1;
         end
-        assign ej_free = !(fec[NCH] || fwc[NCH]);
-        wire       jv = eng[2*NCH+3] ? ej_v : iv0;
-        wire [7:0] jb = eng[2*NCH+3] ? ej_b : ib0;
+        assign ej_free = !(fec[NBY] || fwc[NBY]);
+        wire       jv = eng[2*NBY+3] ? ej_v : iv0;
+        wire [7:0] jb = eng[2*NBY+3] ? ej_b : ib0;
         wire [K*32-1:0] jd;
-        for (g = 0; g < NCH; g = g + 1) begin : g_jd
-            assign jd[g*32 +: 32] = eng[g] ? ej_d[g*32 +: 32] : id0[g*32 +: 32];
+        for (g = 0; g < NBY; g = g + 1) begin : g_jd
+            assign jd[g*8 +: 8] = eng[g] ? ej_d[g*8 +: 8] : id0[g*8 +: 8];
         end
         always @(posedge clk or negedge xr[2])
             if (!xr[2]) begin eo_v <= 1'b0; wo_v <= 1'b0; fault <= 1'b0; end
             else begin
-                eo_v <= fec[NCH] || (jv && HE > 0);
-                wo_v <= fwc[NCH] || (jv && HW > 0);
-                if (jv && (fec[NCH] || fwc[NCH])) fault <= 1'b1;
+                eo_v <= fec[NBY] || (jv && HE > 0);
+                wo_v <= fwc[NBY] || (jv && HW > 0);
+                if (jv && (fec[NBY] || fwc[NBY])) fault <= 1'b1;
             end
         always @(posedge clk) begin
-            if (fec[NCH]) begin eo_h <= ih1 - 4'd1; eo_b <= ib1; end else begin eo_h <= HE[3:0]; eo_b <= jb; end
-            if (fwc[NCH]) begin wo_h <= ih2 - 4'd1; wo_b <= ib2; end else begin wo_h <= HW[3:0]; wo_b <= jb; end
-            for (c = 0; c < NCH; c = c + 1) begin
-                eo_d[c*32 +: 32] <= fec[c] ? id1[c*32 +: 32] : jd[c*32 +: 32];
-                wo_d[c*32 +: 32] <= fwc[c] ? id2[c*32 +: 32] : jd[c*32 +: 32];
+            if (fec[NBY+1]) begin eo_h <= ih1 - 4'd1; eo_b <= ib1; end else begin eo_h <= HE[3:0]; eo_b <= jb; end
+            if (fwc[NBY+1]) begin wo_h <= ih2 - 4'd1; wo_b <= ib2; end else begin wo_h <= HW[3:0]; wo_b <= jb; end
+            for (c = 0; c < NBY; c = c + 1) begin
+                eo_d[c*8 +: 8] <= fec[c] ? id1[c*8 +: 8] : jd[c*8 +: 8];
+                wo_d[c*8 +: 8] <= fwc[c] ? id2[c*8 +: 8] : jd[c*8 +: 8];
             end
         end
         assign dl_v = {iv2, iv1, iv0};
@@ -614,30 +623,59 @@ module ot_s81dv_xfin #(
     always @(posedge clk or negedge rt[0]) if (!rt[0]) sv_c <= 1'b0; else sv_c <= s_v;
     // finish go: one KEPT same-edge copy of go_c per finish instance under the SRAM build (NATIVE32, ELEM-XFV/XFIN
     // 10-21: each SRAM finish fans its go into <=32 go_t copies; go_c itself drove 82 loads); default build = go_c
-    wire [9:0] go_f;
+    // N8 (STW-S81-COLLA-XFIN 10-21): [10 + cc] = second go_mem copy of ENG finish cc (its per-tree mem_go owners)
+    wire [13:0] go_f;
 `ifdef OT_S81DV_XFIN_SRAM
-    (* keep *) reg [9:0] go_fr;
-    always @(posedge clk) go_fr <= {10{go}};
+    (* keep *) reg [13:0] go_fr;
+    always @(posedge clk) go_fr <= {14{go}};
     assign go_f = go_fr;
 `else
-    assign go_f = {10{go_c}};
+    assign go_f = {14{go_c}};
 `endif
     reg md;                                        // mode of the current go
     always @(posedge clk or negedge rt[0]) if (!rt[0]) md <= 1'b0; else if (go_c) md <= mode_c;
     // N32 (SRAM build): KEPT same-edge copies of md (xstop eng muxes 14 + finish gating 3) and of go_c (collector
     // clears); NMD/NGC = 1 in the default build (one copy = the original register).
+    // N8 (SRAM build, STW-S81-COLLA-XFIN 10-21): every word select / write enable reads a byte-lane copy (<= 8 bits x 2
+    // mux loads).  NB8 byte lanes of the flit; xstop eng copies [y] jd byte y, [NB8+y] id0 byte y, [2NB8..2NB8+3] as
+    // before; top copies [NENG] ev / ew / fv even, [NENG+1] tbad / fv odd, [NENG+2] inj_v / norm f_v, [NENG+3+y] col
+    // byte lane y, [NENG+7] pend-copy inject flags.  mdc halves: enable gcc[0] / gcc[1], mode copy mode_cc[0] / [1],
+    // reset leaf rt[1] / rt[15].  gcc (SRAM): [0] mdc half 0 + eflt, [1] mdc half 1 + flt, [2 + v] vector v clears,
+    // [14] / [15] ENG result-pending clears (+ epd).  No edge moves: every copy is the original register's twin.
 `ifdef OT_S81DV_XFIN_SRAM
-    localparam integer N32 = 1, NENG = 14, NMD = NENG + 3, NGC = 10;
+    localparam integer N32 = 1, NB8 = NVL * 4, NENG = 2 * NB8 + 4, NMD = NENG + 8, NGC = 16, NMH = NMD / 2;
+    localparam integer GEF = 0, GEP = 15, GFL = 1, NPC = NVL * 4, MEJ = NENG + 7;
 `else
-    localparam integer N32 = 0, NENG = 1, NMD = NENG + 3, NGC = 10;
+    localparam integer N32 = 0, NB8 = NVL * 4, NENG = 1, NMD = NENG + 3, NGC = 10, NMH = NMD;
+    localparam integer GEF = 1, GEP = 2, GFL = 3, NPC = NVL, MEJ = NENG + 1;
 `endif
     (* keep *) reg [NMD-1:0] mdc; (* keep *) reg [NGC-1:0] gcc;
     always @(posedge clk) gcc <= {NGC{go}};
+`ifdef OT_S81DV_XFIN_SRAM
+    (* keep *) reg [1:0] mode_cc;
+    always @(posedge clk) mode_cc <= {2{mode}};
+    always @(posedge clk or negedge rt[1]) if (!rt[1]) mdc[NMH-1:0] <= {NMH{1'b0}}; else if (gcc[0]) mdc[NMH-1:0] <= {NMH{mode_cc[0]}};
+    always @(posedge clk or negedge rt[15])
+        if (!rt[15]) mdc[NMD-1:NMH] <= {(NMD-NMH){1'b0}}; else if (gcc[1]) mdc[NMD-1:NMH] <= {(NMD-NMH){mode_cc[1]}};
+`else
     always @(posedge clk or negedge rt[1]) if (!rt[1]) mdc <= {NMD{1'b0}}; else if (gcc[0]) mdc <= {NMD{mode_c}};
+`endif
     // ---------------------------------------------------------------- NORM collector (closed x5 logic, gated by !md)
     reg [NVL*32-1:0] col; reg inj_v;
     always @(posedge clk or negedge rt[0]) if (!rt[0]) inj_v <= 1'b0; else inj_v <= sv_c && !mdc[NENG+2] && si_c == NVL - 1;
+`ifdef OT_S81DV_XFIN_SRAM
+    // N8: byte-lane capture owners (copies of sv_c / si_c, own md copy per lane); the same write, 8 bits per enable
+    (* keep *) reg [3:0] sv_cb; (* keep *) reg [31:0] si_cb;
+    always @(posedge clk) si_cb <= {4{s_i}};
+    always @(posedge clk or negedge rt[16]) if (!rt[16]) sv_cb <= 4'd0; else sv_cb <= {4{s_v}};
+    integer cy, cz;
+    always @(posedge clk)
+        for (cy = 0; cy < NVL; cy = cy + 1)
+            for (cz = 0; cz < 4; cz = cz + 1)
+                if (sv_cb[cz] && !mdc[NENG+3+cz] && si_cb[cz*8 +: 8] == cy) col[cy*32 + 8*cz +: 8] <= s_c[8*cz +: 8];
+`else
     always @(posedge clk) if (sv_c && !mdc[NENG+2]) col[si_c * 32 +: 32] <= s_c;
+`endif
     // slice id strap: captured once per cycle like every pin (static value); base = sid * NVL
     reg [3:0] sid_c;
     always @(posedge clk) sid_c <= sid;
@@ -661,38 +699,51 @@ module ot_s81dv_xfin #(
     always @(posedge clk or negedge rt[0]) if (!rt[0]) ev_q <= 1'b0; else ev_q <= sv_c && mdc[NENG];
     always @(posedge clk) begin ebad_q <= e1_bad; evec_q <= e1_vec; el_q <= e1_l; ed_q <= s_c; end
     // same-edge one-hot forms of the same decode (N32): ew_q[v] = ev && !bad && vec == v, el_oh = 1 << leaf
-    reg [NE-1:0] ew_q; reg [NVL-1:0] el_oh; (* keep *) reg [31:0] ed_q2;
+    reg [NE-1:0] ew_q; reg [NVL-1:0] el_oh;
     always @(posedge clk or negedge rt[2]) if (!rt[2]) ew_q <= {NE{1'b0}};
         else ew_q <= (sv_c && mdc[NENG] && !e1_bad) ? ({{(NE-1){1'b0}}, 1'b1} << e1_vec) : {NE{1'b0}};
-    always @(posedge clk) begin el_oh <= {{(NVL-1){1'b0}}, 1'b1} << e1_l; ed_q2 <= s_c; end
+    always @(posedge clk) el_oh <= {{(NVL-1){1'b0}}, 1'b1} << e1_l;
+`ifdef OT_S81DV_XFIN_SRAM
+    // N8: byte-lane copies of the capture decode: ew_qb[h] (bytes 2h, 2h+1), el_ohb[y] (byte y), edq[k] (vectors 2k,
+    // 2k+1) -- each ecol byte enable drives 8 bits (census R33: 60 word enables of 65 loads, ed_q2 60, el_oh 38)
+    (* keep *) reg [2*NE-1:0] ew_qb; (* keep *) reg [4*NVL-1:0] el_ohb; (* keep *) reg [6*32-1:0] edq;
+    always @(posedge clk or negedge rt[16]) if (!rt[16]) ew_qb <= {(2*NE){1'b0}};
+        else ew_qb <= {2{(sv_c && mdc[NENG] && !e1_bad) ? ({{(NE-1){1'b0}}, 1'b1} << e1_vec) : {NE{1'b0}}}};
+    always @(posedge clk) begin el_ohb <= {4{{{(NVL-1){1'b0}}, 1'b1} << e1_l}}; edq <= {6{s_c}}; end
+`else
+    (* keep *) reg [31:0] ed_q2;
+    always @(posedge clk) ed_q2 <= s_c;
+`endif
     reg [NVL*32-1:0] ecol [0:NE-1];
     reg [NVL-1:0] emsk [0:NE-1];
     reg [NE-1:0] pend; reg eflt;
-    // pend + one KEPT same-update copy per 32-bit vdat chunk (N32: psel drove 12 x 160 mux loads)
-    (* keep *) reg [NVL*NE-1:0] pendc;
+    // pend + one KEPT same-update copy per vdat slice of PW bits (N32: per 32-bit chunk, psel drove 12 x 160 mux
+    // loads; N8 SRAM: per byte, NPC = 4 NVL copies -- a 32-bit chunk copy drove 67 loads)
+    localparam integer PW = 32 * NVL / NPC;
+    (* keep *) reg [NPC*NE-1:0] pendc;
     wire [NE-1:0] psel = pend & ~(pend - {{(NE-1){1'b0}}, 1'b1});   // lowest pending vector
     wire ej_free; wire pany = |pend;
     // ej_v and per-chunk copies of it (pendc chunk updates), each <= 12 loads
-    wire [NVL:0] ejc;
+    wire [NPC:0] ejc;
     genvar ejg;
-    for (ejg = 0; ejg <= NVL; ejg = ejg + 1) begin : g_ejc
+    for (ejg = 0; ejg <= NPC; ejg = ejg + 1) begin : g_ejc
         // chunk copies read their own kept pend copy (|pendc == |pend), so they are distinct nets
-        if (ejg < NVL) begin : g_c
-            assign ejc[ejg] = mdc[NENG+1] && (|pendc[ejg*NE +: NE]) && ej_free;
+        if (ejg < NPC) begin : g_c
+            assign ejc[ejg] = mdc[MEJ] && (|pendc[ejg*NE +: NE]) && ej_free;
         end else begin : g_p
             assign ejc[ejg] = mdc[NENG+1] && pany && ej_free;
         end
     end
-    wire ej_v = ejc[NVL];
+    wire ej_v = ejc[NPC];
     reg [3:0] vsel; reg [NVL*32-1:0] vdat;
     integer b2, b3;
     always @(*) begin
         vsel = 4'd0; vdat = {NVL*32{1'b0}};
         for (b2 = 0; b2 < NE; b2 = b2 + 1) if (psel[b2]) vsel = b2;
-        for (b3 = 0; b3 < NVL; b3 = b3 + 1)
+        for (b3 = 0; b3 < NPC; b3 = b3 + 1)
             for (b2 = 0; b2 < NE; b2 = b2 + 1)
                 if ((pendc[b3*NE +: NE] & ~(pendc[b3*NE +: NE] - {{(NE-1){1'b0}}, 1'b1})) == ({{(NE-1){1'b0}}, 1'b1} << b2))
-                    vdat[b3*32 +: 32] = ecol[b2][b3*32 +: 32];
+                    vdat[b3*PW +: PW] = ecol[b2][b3*PW +: PW];
     end
 `ifdef OT_S81DV_MUT_ETAG
     wire [3:0] vtag = (sid_c == 4'd3 && vsel == 4'd1) ? 4'd5 : (sid_c == 4'd3 && vsel == 4'd5) ? 4'd1 : vsel;
@@ -710,35 +761,46 @@ module ot_s81dv_xfin #(
             if (ew_q[c2] && (|(emsk[c2] & el_oh))) rep = 1'b1;
         end
     end
-    // per vector v: pend[v], its NVL chunk copies and emsk[v] on leaf rt[3 + v/2] and go-clear copy gcc[4 + v/2]
+    // per vector v: pend[v], its NPC copies and emsk[v] on leaf rt[RV] and go-clear copy gcc[GV] (N8: one leaf and
+    // one go copy per vector, 26 flops each; default build: rt[3 + v/2], gcc[4 + v/2])
     genvar vv;
     for (vv = 0; vv < NE; vv = vv + 1) begin : g_cv
+        localparam integer RV = N32 ? ((vv < 6) ? 3 + vv : 11 + vv) : 3 + vv / 2;
+        localparam integer GV = N32 ? 2 + vv : 4 + vv / 2;
         integer cc3;
-        always @(posedge clk or negedge rt[3 + vv / 2])
-            if (!rt[3 + vv / 2]) begin
+        always @(posedge clk or negedge rt[RV])
+            if (!rt[RV]) begin
                 pend[vv] <= 1'b0; emsk[vv] <= {NVL{1'b0}};
-                for (cc3 = 0; cc3 < NVL; cc3 = cc3 + 1) pendc[cc3*NE + vv] <= 1'b0;
-            end else if (gcc[4 + vv / 2]) begin
+                for (cc3 = 0; cc3 < NPC; cc3 = cc3 + 1) pendc[cc3*NE + vv] <= 1'b0;
+            end else if (gcc[GV]) begin
                 pend[vv] <= 1'b0; emsk[vv] <= {NVL{1'b0}};
-                for (cc3 = 0; cc3 < NVL; cc3 = cc3 + 1) pendc[cc3*NE + vv] <= 1'b0;
+                for (cc3 = 0; cc3 < NPC; cc3 = cc3 + 1) pendc[cc3*NE + vv] <= 1'b0;
             end else begin
-                pend[vv] <= (ejc[NVL] ? (pend[vv] & ~psel[vv]) : pend[vv]) | pset[vv];
-                for (cc3 = 0; cc3 < NVL; cc3 = cc3 + 1)
+                pend[vv] <= (ejc[NPC] ? (pend[vv] & ~psel[vv]) : pend[vv]) | pset[vv];
+                for (cc3 = 0; cc3 < NPC; cc3 = cc3 + 1)
                     pendc[cc3*NE + vv] <= (ejc[cc3] ? (pendc[cc3*NE + vv] & ~psel[vv]) : pendc[cc3*NE + vv]) | pset[vv];
                 if (ew_q[vv]) emsk[vv] <= emsk[vv] | el_oh;
             end
     end
     always @(posedge clk or negedge rt[0])
-        if (!rt[0]) eflt <= 1'b0; else if (gcc[1]) eflt <= 1'b0; else if ((ev_q && ebad_q) || rep) eflt <= 1'b1;
-    integer c4, c5;
+        if (!rt[0]) eflt <= 1'b0; else if (gcc[GEF]) eflt <= 1'b0; else if ((ev_q && ebad_q) || rep) eflt <= 1'b1;
+    integer c4, c5, c6;
+`ifdef OT_S81DV_XFIN_SRAM
+    always @(posedge clk)
+        for (c4 = 0; c4 < NE; c4 = c4 + 1)
+            for (c5 = 0; c5 < NVL; c5 = c5 + 1)
+                for (c6 = 0; c6 < 4; c6 = c6 + 1)
+                    if (ew_qb[(c6/2)*NE + c4] && el_ohb[c6*NVL + c5]) ecol[c4][c5*32 + 8*c6 +: 8] <= edq[(c4/2)*32 + 8*c6 +: 8];
+`else
     always @(posedge clk)
         for (c4 = 0; c4 < NE; c4 = c4 + 1)
             for (c5 = 0; c5 < NVL; c5 = c5 + 1)
                 if (ew_q[c4] && el_oh[c5]) ecol[c4][c5 * 32 +: 32] <= (c4 < NE / 2) ? ed_q : ed_q2;
+`endif
     // ---------------------------------------------------------------- exchange ring stop
     wire [2:0] dl_v; wire [3*8-1:0] dl_b; wire [3*NVL*32-1:0] dl_d; wire xf, rf;
     wire [5*3-1:0] dlv_f; wire [5*24-1:0] dlb_f;    // per-finish copies (copy 4 = NORM finish)
-    ot_s81dv_xstop #(.K(NVL), .HE(HE), .HW(HW), .N32(N32), .NF(5), .NENG(NENG)) u_x (.clk(clk), .rst_n(rst_xs), .inj_v(inj_v), .inj_base(sbase),
+    ot_s81dv_xstop #(.K(NVL), .HE(HE), .HW(HW), .N32(N32), .NF(5), .NENG(NENG), .N8(N32)) u_x (.clk(clk), .rst_n(rst_xs), .inj_v(inj_v), .inj_base(sbase),
         .inj_d(col), .wi_v(wi_v), .wi_h(wi_h), .wi_b(wi_b), .wi_d(wi_d), .ei_v(ei_v), .ei_h(ei_h), .ei_b(ei_b), .ei_d(ei_d),
         .eo_v(eo_v), .eo_h(eo_h), .eo_b(eo_b), .eo_d(eo_d), .wo_v(wo_v), .wo_h(wo_h), .wo_b(wo_b), .wo_d(wo_d),
         .dl_v(dl_v), .dl_b(dl_b), .dl_d(dl_d),
@@ -783,7 +845,7 @@ module ot_s81dv_xfin #(
 `endif
       , .K(NVL), .P(3), .LA(LA)) u_e (.clk(clk), .rst_n(rt[10 + cc]),
 `ifdef OT_S81DV_XFIN_SRAM
-                .go(go_f[cc*2]), .go_mem(go_f[cc*2+1]),
+                .go(go_f[cc*2]), .go_mem(go_f[cc*2+1]), .go_mem2(go_f[10+cc]),
 `else
                 .go(go_f[cc]),
 `endif
@@ -800,9 +862,7 @@ module ot_s81dv_xfin #(
 `ifdef OT_S81DV_XFIN_SRAM
     // Byte-owned capture and selection: every finish pulse owns only eight
     // payload bits. Pending copies use the same release and update edges.
-    (* keep *) reg [3:0] epf [0:12];
-    (* keep *) reg [6:0] ep_go;
-    always @(posedge clk) ep_go <= {7{go}};
+    (* keep *) reg [3:0] epf [0:12];   // N8: clears from gcc[14] (ef 0..6) / gcc[15] (ef 7..12, + epd)
     wire [3:0] eallf [0:12], eohf [0:12];
     genvar ef, eb;
     for (ef = 0; ef < 13; ef = ef + 1) begin : g_ef
@@ -810,13 +870,13 @@ module ot_s81dv_xfin #(
         assign eohf[ef] = eallf[ef] & ~(eallf[ef] - 4'd1);
         always @(posedge clk or negedge rt[24 + ef/2])
             if (!rt[24 + ef/2]) epf[ef] <= 4'd0;
-            else if (ep_go[ef/2]) epf[ef] <= 4'd0;
+            else if (gcc[ef < 7 ? 14 : 15]) epf[ef] <= 4'd0;
             else epf[ef] <= eallf[ef] & ~eohf[ef];
     end
     wire [3:0] eall = eallf[0], eoh = eohf[0];
     always @(posedge clk or negedge rt[9])
         if (!rt[9]) begin epd <= 4'd0; e_v <= 1'b0; end
-        else if (gcc[2]) begin epd <= 4'd0; e_v <= 1'b0; end
+        else if (gcc[GEP]) begin epd <= 4'd0; e_v <= 1'b0; end
         else begin epd <= eall & ~eoh; e_v <= |eall; end
     always @(posedge clk)
         for (d2 = 0; d2 < 4; d2 = d2 + 1)
@@ -851,7 +911,7 @@ module ot_s81dv_xfin #(
 `endif
     reg flt;
     always @(posedge clk or negedge rt[0])
-        if (!rt[0]) flt <= 1'b0; else if (gcc[3]) flt <= 1'b0; else if (xf || rf || eflt || (|tbad) || (|cf)) flt <= 1'b1;
+        if (!rt[0]) flt <= 1'b0; else if (gcc[GFL]) flt <= 1'b0; else if (xf || rf || eflt || (|tbad) || (|cf)) flt <= 1'b1;
     assign fault = flt;
 endmodule
 

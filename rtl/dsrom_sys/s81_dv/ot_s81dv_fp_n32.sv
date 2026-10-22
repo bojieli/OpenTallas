@@ -16,28 +16,46 @@ module ot_s81dv_kcut #(parameter integer W = 2, parameter integer CUT = 1) (inpu
     end endgenerate
 endmodule
 
-module ot_s81dv_fp32_add_f12_n32 #(parameter integer CUTS=7'b1101011)(
+module ot_s81dv_fp32_add_f12_n32 #(parameter integer CUTS=7'b1101011,NYC=0)(
  input wire clk,rst_n,valid_in,input wire[31:0]a,b,
- output wire[31:0]y,output wire[1:0]err,output wire valid_out);
+ output wire[31:0]y,output wire[1:0]err,output wire valid_out,output wire[32*(NYC>0?NYC:1)-1:0] yc);
  // Same existing two release edges from raw finish reset. Six independent
  // physical leaves serve pipeline valid, four output bytes and err/valid.
  wire[5:0] rl;
  ot_s81dv_finish_reset2 #(.LEAVES(6)) u_rl(.clk(clk),.rst_n(rst_n),.q(rl));
- ot_s81dv_xfin_fp_add_n32 #(.CUTS(CUTS)) u_partition(.clk(clk),.rst_n(rl),.valid_in(valid_in),.a(a),.b(b),.y(y),.err(err),.valid_out(valid_out));
+ ot_s81dv_xfin_fp_add_n32 #(.CUTS(CUTS),.NYC(NYC)) u_partition(.clk(clk),.rst_n(rl),.valid_in(valid_in),.a(a),.b(b),.y(y),.yc(yc),.err(err),.valid_out(valid_out));
 endmodule
 
-module ot_s81dv_qadd_n32 #(parameter integer LAT = 6) (
+module ot_s81dv_qadd_n32 #(parameter integer LAT = 6, parameter integer NYC = 0) (
     input wire clk, input wire rst_n, input wire v, input wire [31:0] a, input wire [31:0] b, output wire [31:0] y,
-    output wire fault
+    output wire fault, output wire [32*(NYC>0?NYC:1)-1:0] yc
 );
     generate if (LAT == 6) begin : g6
         wire [1:0] err; wire vo;
-        ot_s81dv_fp32_add_f12_n32 #(.CUTS(7'b1101011)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y),
-            .err(err), .valid_out(vo));
+        ot_s81dv_fp32_add_f12_n32 #(.CUTS(7'b1101011), .NYC(NYC)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y),
+            .err(err), .valid_out(vo), .yc(yc));
         assign fault = vo && (err != 2'd0);
     end else begin : g_bad
         ot_s81dv_qadd_n32_requires_LAT6 u_bad();
     end endgenerate
+endmodule
+
+// N8: a D-cycle data line (no reset, like ot_hdc_delay RESET 0) whose last stage is two KEPT equal registers.
+module ot_s81dv_kline2 #(parameter integer W = 32, parameter integer D = 1) (
+    input wire clk, input wire [W-1:0] d, output wire [W-1:0] q, output wire [W-1:0] qn
+);
+    wire [W-1:0] pre;
+    if (D > 1) begin : g_pre
+        reg [W*(D-1)-1:0] line;
+        if (D > 2) begin : g_s always @(posedge clk) line <= {line[W*(D-2)-1:0], d}; end
+        else begin : g_1 always @(posedge clk) line <= d; end
+        assign pre = line[W*(D-1)-1 -: W];
+    end else begin : g_w
+        assign pre = d;
+    end
+    (* keep *) reg [W-1:0] ra, rb;
+    always @(posedge clk) begin ra <= pre; rb <= pre; end
+    assign q = ra; assign qn = rb;
 endmodule
 
 // ot_dsrom_rsqrt verbatim (same Newton steps, constants, depth) with its three adds on ot_s81dv_qadd_n32.
@@ -49,6 +67,7 @@ module ot_s81dv_rsqrt_n32 #(
     input  wire        rst_n,
     input  wire        v,
     input  wire [31:0] x,
+    input  wire [31:0] xk,                      // N8: equal same-edge copy of x for the seed (y0) path
     output wire [31:0] y,
     output wire        vo,
     output wire        fault
@@ -66,34 +85,43 @@ module ot_s81dv_rsqrt_n32 #(
     assign vd = {vdb[DB:1], vda};
     assign vo = vd[DEPTH];
 
-    reg [31:0] y0;
+    // N8 (STW-S81-COLLA-XFIN 10-21): the squaring m_yy reads its two operands and the d_y line from three KEPT
+    // same-edge copies of each y_k (census R33: y0 / m_y.y drove both multiplier inputs + d_y, 59-62 loads); h_k
+    // likewise feeds m_hm and the next h line from two copies.  Same values, same edges.
+    (* keep *) reg [31:0] y0, y0b, y0c;
     wire [31:0] y0_n;
     wire        unused_cy;
-    ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_y0 (.a(32'h5F3759DF), .b(~{1'b0, x[31:1]}), .cin(1'b1), .s(y0_n),
+    ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_y0 (.a(32'h5F3759DF), .b(~{1'b0, xk[31:1]}), .cin(1'b1), .s(y0_n),
                                                       .cout(unused_cy));
-    always @(posedge clk) y0 <= y0_n;
+    always @(posedge clk) begin y0 <= y0_n; y0b <= y0_n; y0c <= y0_n; end
     wire [31:0] half;
     wire [31:0] hd [0:2];
     wire [31:0] yi [0:3];
+    wire [31:0] yib [0:3];                      // N8: operand-b copy of yi
+    wire [31:0] yic [0:3];                      // N8: d_y copy of yi
+    wire [31:0] hdn [0:2];                      // N8: next-line copy of hd
     wire [31:0] yy [0:2];
     wire [31:0] hm [0:2];
     wire [31:0] s [0:2];
     wire [31:0] yd [0:2];
     wire [12:0] f;
     ot_s81dv_qmul_n32 #(LM) m_half (clk, rst_n, v, x, 32'h3F000000, half, f[12]);   // LM
-    ot_hdc_delay #(.W(32), .D(1)) d_h0 (clk, rst_n, half, hd[0]);       // 1 + LM
-    assign yi[0] = y0;
+    ot_s81dv_kline2 #(.W(32), .D(1)) d_h0 (.clk(clk), .d(half), .q(hd[0]), .qn(hdn[0]));       // 1 + LM
+    assign yi[0] = y0; assign yib[0] = y0b; assign yic[0] = y0c;
     genvar k;
     generate
         for (k = 0; k < 3; k = k + 1) begin : g_nr
             if (k < 2) begin : g_h
-                ot_hdc_delay #(.W(32), .D(IT)) d_h (clk, rst_n, hd[k], hd[k+1]);
+                ot_s81dv_kline2 #(.W(32), .D(IT)) d_h (.clk(clk), .d(hdn[k]), .q(hd[k+1]), .qn(hdn[k+1]));
             end
-            ot_s81dv_qmul_n32 #(LM) m_yy (clk, rst_n, vd[1 + IT*k],             yi[k], yi[k], yy[k], f[4*k]);
+            ot_s81dv_qmul_n32 #(LM) m_yy (clk, rst_n, vd[1 + IT*k],             yi[k], yib[k], yy[k], f[4*k]);
             ot_s81dv_qmul_n32 #(LM) m_hm (clk, rst_n, vd[1 + IT*k + LM],        hd[k], yy[k], hm[k], f[4*k+1]);
             ot_s81dv_qadd_n32 #(.LAT(LA)) a_s  (clk, rst_n, vd[1 + IT*k + 2*LM],      32'h3FC00000, {~hm[k][31], hm[k][30:0]}, s[k], f[4*k+2]);
-            ot_hdc_delay #(.W(32), .D(2*LM + LA)) d_y (clk, rst_n, yi[k], yd[k]);
-            ot_s81dv_qmul_n32 #(LM) m_y  (clk, rst_n, vd[1 + IT*k + 2*LM + LA], yd[k], s[k], yi[k+1], f[4*k+3]);
+            ot_hdc_delay #(.W(32), .D(2*LM + LA)) d_y (clk, rst_n, yic[k], yd[k]);
+            wire [63:0] ycp;
+            ot_s81dv_qmul_n32 #(.LAT(LM), .NYC(2)) m_y (.clk(clk), .rst_n(rst_n), .v(vd[1 + IT*k + 2*LM + LA]), .a(yd[k]),
+                .b(s[k]), .y(yi[k+1]), .fault(f[4*k+3]), .yc(ycp));
+            assign yib[k+1] = ycp[31:0]; assign yic[k+1] = ycp[63:32];
         end
     endgenerate
     assign y = yi[3];
@@ -102,14 +130,14 @@ endmodule
 
 // ELEM-XFV/XFIN 10-21: NATIVE32 successor of ot_hdc_fp32_mul_f12 #(8'b01101010) (ot_hdc_qmul_lat LAT 5), bit and cycle
 // equal; kept copies at k1 (significands, split AND rows), k3 (power, 4 mask quarters), k5 (top, shift), k7 (encode x2).
-module ot_s81dv_fp32_mul_f12_n32 #(parameter integer CUTS=8'b01101010)(
+module ot_s81dv_fp32_mul_f12_n32 #(parameter integer CUTS=8'b01101010,NYC=0)(
  input wire clk,rst_n,valid_in,input wire[31:0]a,b,
- output wire[31:0]y,output wire[1:0]err,output wire valid_out);
+ output wire[31:0]y,output wire[1:0]err,output wire valid_out,output wire[32*(NYC>0?NYC:1)-1:0] yc);
  // Same existing two release edges from raw finish reset. Six independent
  // physical leaves serve pipeline valid, four output bytes and err/valid.
  wire[5:0] rl;
  ot_s81dv_finish_reset2 #(.LEAVES(6)) u_rl(.clk(clk),.rst_n(rst_n),.q(rl));
- ot_s81dv_xfin_fp_mul_n32 #(.CUTS(CUTS)) u_partition(.clk(clk),.rst_n(rl),.valid_in(valid_in),.a(a),.b(b),.y(y),.err(err),.valid_out(valid_out));
+ ot_s81dv_xfin_fp_mul_n32 #(.CUTS(CUTS),.NYC(NYC)) u_partition(.clk(clk),.rst_n(rl),.valid_in(valid_in),.a(a),.b(b),.y(y),.yc(yc),.err(err),.valid_out(valid_out));
 endmodule
 
 // ot_hdc_mul24_rows with split operand copies: partial product (row i, bit k) = a[i >= 12 ? 1 : 0][k] & b[k >= 12][i]
@@ -149,14 +177,14 @@ module ot_s81dv_mul24_rows_n32 (
         assign rows[288 +: 96] = l2[432 +: 96];
     endgenerate
 endmodule
-module ot_s81dv_qmul_n32 #(parameter integer LAT = 5) (
+module ot_s81dv_qmul_n32 #(parameter integer LAT = 5, parameter integer NYC = 0) (
     input wire clk, input wire rst_n, input wire v, input wire [31:0] a, input wire [31:0] b, output wire [31:0] y,
-    output wire fault
+    output wire fault, output wire [32*(NYC>0?NYC:1)-1:0] yc
 );
     generate if (LAT == 5) begin : g_l5
         wire [1:0] err; wire vo;
-        ot_s81dv_fp32_mul_f12_n32 #(.CUTS(8'b01101010)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y),
-            .err(err), .valid_out(vo));
+        ot_s81dv_fp32_mul_f12_n32 #(.CUTS(8'b01101010), .NYC(NYC)) u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y),
+            .err(err), .valid_out(vo), .yc(yc));
         assign fault = vo && (err != 2'd0);
     end else begin : g_bad
         ot_s81dv_qmul_n32_requires_LAT5 u_bad();
@@ -357,7 +385,8 @@ module ot_s81dv_xfin_fp_cut #(parameter integer W = 2, parameter integer CUT = 0
 endmodule
 
 module ot_s81dv_xfin_fp_add_n32 #(
-    parameter integer CUTS = 7'b1101011
+    parameter integer CUTS = 7'b1101011,
+    parameter integer NYC = 0          // N8: kept same-edge copies of the result register
 ) (
     input  wire        clk,
     input  wire [5:0]  rst_n,
@@ -365,6 +394,7 @@ module ot_s81dv_xfin_fp_add_n32 #(
     input  wire [31:0] a,
     input  wire [31:0] b,
     output reg  [31:0] y,
+    output wire [32*(NYC>0?NYC:1)-1:0] yc,
     output reg  [1:0]  err,
     output reg         valid_out
 );
@@ -580,7 +610,13 @@ module ot_s81dv_xfin_fp_add_n32 #(
       wire[7:0] nd;
       ot_s81dv_xfin_fp_out_byte u_e(.byp(byp_cp[g]),.zero(u_zero),.over(over),.nz(nz),.code(code[8*g+:8]),.bc(u_code[8*g+:8]),.y(nd));
       always @(posedge clk or negedge rst_n[g+1]) if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
+    for(genvar c=0;c<NYC;c=c+1)begin:g_yc
+        (* keep *) reg[7:0] r;
+        always @(posedge clk or negedge rst_n[g+1]) if(!rst_n[g+1])r<=0;else r<=nd;
+        assign yc[32*c+8*g+:8]=r;
+      end
     end
+    if(NYC==0)begin:g_noyc assign yc=32'd0; end
     always @(posedge clk or negedge rst_n[5])begin
       if(!rst_n[5])begin err<=E_NONE;valid_out<=0;end
       else begin
@@ -591,7 +627,8 @@ module ot_s81dv_xfin_fp_add_n32 #(
 endmodule
 
 module ot_s81dv_xfin_fp_mul_n32 #(
-    parameter integer CUTS = 8'b01101011
+    parameter integer CUTS = 8'b01101011,
+    parameter integer NYC = 0          // N8: kept same-edge copies of the result register
 ) (
     input  wire        clk,
     input  wire [5:0]  rst_n,
@@ -599,6 +636,7 @@ module ot_s81dv_xfin_fp_mul_n32 #(
     input  wire [31:0] a,
     input  wire [31:0] b,
     output reg  [31:0] y,
+    output wire [32*(NYC>0?NYC:1)-1:0] yc,
     output reg  [1:0]  err,
     output reg         valid_out
 );
@@ -769,8 +807,11 @@ module ot_s81dv_xfin_fp_mul_n32 #(
     wire s_rb = |(s2_prod & s2_mr);
     wire s_st = |(s2_prod & s2_ms);
     wire[23:0] main;
+    // N8: k5 copies of {sub47, sub46} (same cut source as q5), one per main byte pick
+    wire[5:0] sub_cp;
+    ot_s81dv_xfin_fp_copy #(.W(2),.N(3),.CUT(K5)) u_sub_cp(.clk(clk),.d({q_s47,q_s46}),.q(sub_cp));
     for(genvar g=0;g<3;g=g+1)begin:g_main
-      ot_s81dv_xfin_fp_sub_pick u_m(.top(top_cp[7+g]),.s47(s2_sub47),.s46(s2_sub46),.s(s_main[8*g+:8]),.n(n_main[8*g+:8]),.y(main[8*g+:8]));
+      ot_s81dv_xfin_fp_sub_pick u_m(.top(top_cp[7+g]),.s47(sub_cp[2*g+1]),.s46(sub_cp[2*g]),.s(s_main[8*g+:8]),.n(n_main[8*g+:8]),.y(main[8*g+:8]));
     end
     wire rb = is_sub ? s_rb : n_rb;
     wire st = is_sub ? s_st : n_st;
@@ -820,7 +861,13 @@ module ot_s81dv_xfin_fp_mul_n32 #(
       wire[7:0] nd;
       ot_s81dv_xfin_fp_out_zero u_e(.byp(o_byp),.over(over),.nz(nz),.code(code[8*g+:8]),.y(nd));
       always @(posedge clk or negedge rst_n[g+1])if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
+    for(genvar c=0;c<NYC;c=c+1)begin:g_yc
+        (* keep *) reg[7:0] r;
+        always @(posedge clk or negedge rst_n[g+1]) if(!rst_n[g+1])r<=0;else r<=nd;
+        assign yc[32*c+8*g+:8]=r;
+      end
     end
+    if(NYC==0)begin:g_noyc assign yc=32'd0; end
     always @(posedge clk or negedge rst_n[5])begin
       if(!rst_n[5])begin err<=E_NONE;valid_out<=0;end
       else begin valid_out<=o_v;if(o_byp)err<=o_err;else if(over)err<=E_OVERFLOW;else err<=E_NONE;end
