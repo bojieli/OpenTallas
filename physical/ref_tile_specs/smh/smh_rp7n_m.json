@@ -1,0 +1,559 @@
+{
+ "name": "smh_rp7n_m",
+ "top": "ot_hbm_smh_rp7n_m",
+ "kind": "cluster",
+ "sources": [
+  "rtl/lib/ot_hdly.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2_p192_mir/ot_sram_1r1w_64x512_m1_r2c2_p192_mir_bb.v",
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "rtl/hbm_accel/cg/ot_cg_tile.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_compact_transport.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_split_masters.sv",
+  "rtl/hbm_accel/sm/ot_hbm_smh_transport_group.sv",
+  "rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv",
+  "rtl/hbm_accel/sm/repack/ot_rp4l_children.sv",
+  "rtl/hbm_accel/sm/attn/ot_hbm_sm_pv_merge_s3.sv",
+  "rtl/hbm_accel/sm/repack/h2/ot_hbm_smh_rp4h.sv",
+  "rtl/hbm_accel/sm/repack/h2a/ot_hbm_smh_rp4ah.sv",
+  "rtl/hbm_accel/sm/repack/h2a5/ot_hbm_smh_rp5_soft.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/hbm_accel/sm/repack/h2a5/ot_rp5_land_reset_split.sv",
+  "rtl/hbm_accel/sm/repack/h2a7/lp_n_m/ot_hbm_smh_rp7n_m.sv",
+  "rtl/hbm_accel/sm/repack/h2a7/ot_rp7_delay_ring.sv"
+ ],
+ "params": {},
+ "defines": [
+  "OT_SMH_CG_ENREG",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_RSTPIN",
+  "OT_SMH_HIER",
+  "OT_SMH_PTW_OHDLY",
+  "OT_SMH_PINREG",
+  "OT_SMH_XREL",
+  "OT_SMH_PRODUCTION_SHAPE",
+  "OT_SMH_COMPACT_PT",
+  "OT_SMH_GROUP_TRANSPORT",
+  "OT_SMH_WEST_SPLIT",
+  "OT_SMH_TRANSPORT_KEEP",
+  "OT_SMH_RP4_SRST",
+  "OT_RP4A_HARD"
+ ],
+ "clock_port": "ck_m",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 691.2,
+  "h": 1512.0
+ },
+ "child_lattice_um": 43.2,
+ "children": [
+  {
+   "view": "physical/ref_tile/smh_pvm_ref_s4a/views/ot_hbm_sm_pv_merge_s3",
+   "count": 1,
+   "at": [
+    302.4,
+    43.2
+   ],
+   "orient": "R0",
+   "inst": "u_mg0.u_merge"
+  },
+  {
+   "view": "physical/ref_tile/smh_tct_ref_p45/views/ot_hbm_accel_smh_tct",
+   "count": 1,
+   "at": [
+    345.6,
+    388.8
+   ],
+   "orient": "R0",
+   "inst": "u_qk0"
+  },
+  {
+   "view": "physical/ref_tile/smh_bdc_ref_p50/views/ot_hbm_accel_smh_bdc",
+   "count": 1,
+   "at": [
+    172.8,
+    518.4
+   ],
+   "orient": "MX",
+   "inst": "u_bdc0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu",
+   "count": 1,
+   "at": [
+    345.6,
+    518.4
+   ],
+   "orient": "R0",
+   "inst": "u_h00"
+  },
+  {
+   "view": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu",
+   "count": 1,
+   "at": [
+    475.20000000000005,
+    518.4
+   ],
+   "orient": "R0",
+   "inst": "u_h10"
+  },
+  {
+   "view": "physical/ref_tile/smh_xs_p192d_bay/views/ot_hbm_accel_smh_xs",
+   "count": 1,
+   "at": [
+    172.8,
+    734.4
+   ],
+   "orient": "MX",
+   "inst": "u_xs0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_w_ref/views/ot_smh_tr_group_row_w",
+   "count": 1,
+   "at": [
+    216.0,
+    388.8
+   ],
+   "orient": "R0",
+   "inst": "u_row0"
+  },
+  {
+   "view": "physical/ref_tile/smh_tr_group_row_e_ref/views/ot_smh_tr_group_row_e",
+   "count": 1,
+   "at": [
+    604.8,
+    388.8
+   ],
+   "orient": "R0",
+   "inst": "u_rowe0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rin_n",
+   "bin",
+   "ck_m",
+   "ck_cpw",
+   "ck_c",
+   "ck_u",
+   "ck_xs"
+  ],
+  "E": [
+   "rout_n",
+   "bout",
+   "ck_cpe"
+  ],
+  "N": [
+   "gin",
+   "xs_a1",
+   "xs_g1",
+   "xs_a2",
+   "xs_g2",
+   "attn",
+   "ck_t",
+   "ck_tpw",
+   "ck_tpe"
+  ],
+  "S": [
+   "xo_b",
+   "rst_n",
+   "xo_g0",
+   "xo_gp"
+  ]
+ },
+ "orfs_vars": {
+  "OT_IO_REF_CLASS": "1",
+  "GPL_TIMING_DRIVEN": "0",
+  "DONT_BUFFER_PORTS": "1"
+ },
+ "refglob": "*",
+ "io_flop_at_pins": {
+  "cols": 10,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "every data pin is registered in RTL: inputs rin (ot_rp4l_pinrow), bin (pinbeat), xs straps (5-stage strap), gin (u_gn u_v/u_d), xi_* (u_lands / u_xgi / u_xpi); outputs rout launched by the r6 glue pin register u_ro, bout by u_be2, xo_* by u_xbo / u_xgo / u_xpo, gout by the u_gs output registers.  Recipe-3 pin registers would add cycles to the priced lp schedule.  rp4a: the static attn strap lands in 2 kept stages (u_as_n / u_as_s)."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 192,
+  "hold_delay": true,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4 M6",
+   "v": "M5 M7"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "job": {
+  "owner": "CODEX-HBM-SVGSMH-2000",
+  "branch": "codex/hbm-svgsmh-2000-1021",
+  "tag": "smh_rp7n_m",
+  "purpose": "r7 structural landed face clocks and source-pinned exact retiming",
+  "structural_change": "r6 MAIN: GEOMETRIC band roots (ck_u, ck_t, ck_c, ck_m) with placement fences (every cell in its band), every band seam a 4-slot landing, relay chains split at the seams, rout glue pin register, reset captured at its face band; replaces r5 register-mass DOMAINS (TT spread 242 / 415 / 267).",
+  "extra_paths": [
+   "tools/hbm_sm_repack_1015",
+   "tools/landed_parent",
+   "rtl/common/landed_parent",
+   "rtl/hbm_accel/sm/repack/h2a6",
+   "rtl/hbm_accel/sm/repack/h2a5",
+   "rtl/hbm_accel/sm/repack/h2",
+   "rtl/hbm_accel/sm/repack/h2a",
+   "results/arch/hbm_smh_r6_1021",
+   "physical/hbm_smh_r6",
+   "physical/ref_tile/smh_xs_p192d_bay/views",
+   "rtl/hbm_accel/sm/repack/h2a7",
+   "results/arch/hbm_smh_r7_1021",
+   "physical/hbm_smh_r7"
+  ],
+  "benches": [
+   {
+    "name": "retime",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a7/lp_n_m/retime.sh {RUN}/retime0 0",
+    "expect": "pass",
+    "pass_regex": "R7_RETIME PASS",
+    "pass_witness": "results/arch/hbm_smh_r7_1021/bench/n_m_m0.log",
+    "threads": 8,
+    "peak_ram_gb": 64
+   },
+   {
+    "name": "mut_land",
+    "cmd": "bash rtl/hbm_accel/sm/repack/h2a7/lp_n_m/retime.sh {RUN}/retime1 1",
+    "expect": "fail",
+    "fail_regex": "R7_RETIME FAIL",
+    "fail_witness": "results/arch/hbm_smh_r7_1021/bench/n_m_m1.log",
+    "threads": 8,
+    "peak_ram_gb": 64
+   }
+  ]
+ },
+ "macros": [],
+ "inter": [],
+ "recipe": 3,
+ "keep_pin_regs": true,
+ "child_clock_ref": "boundary",
+ "pin_ranges": {
+  "rin_n": [
+   302.4,
+   475.2
+  ],
+  "bin": [
+   1127.52,
+   1506.96
+  ],
+  "rout_n": [
+   302.4,
+   475.2
+  ],
+  "bout": [
+   1127.52,
+   1506.96
+  ],
+  "gin": [
+   216.0,
+   248.4
+  ],
+  "xs_a1": [
+   250.56,
+   254.88
+  ],
+  "xs_g1": [
+   257.04,
+   259.2
+  ],
+  "xs_a2": [
+   261.36,
+   264.6
+  ],
+  "xs_g2": [
+   266.76,
+   268.92
+  ],
+  "attn": [
+   271.08,
+   273.24
+  ],
+  "xo_b": [
+   4.32,
+   410.4
+  ],
+  "rst_n": [
+   412.56,
+   413.64
+  ],
+  "xo_g0": [
+   604.8,
+   617.76
+  ],
+  "xo_gp": [
+   619.92,
+   650.16
+  ],
+  "ck_m": [
+   159.46,
+   160.54
+  ],
+  "ck_t": [
+   345.06,
+   346.14
+  ],
+  "ck_tpw": [
+   42.66,
+   43.74
+  ],
+  "ck_tpe": [
+   647.46,
+   648.54
+  ],
+  "ck_cpw": [
+   499.46,
+   500.54
+  ],
+  "ck_c": [
+   559.46,
+   560.54
+  ],
+  "ck_cpe": [
+   499.46,
+   500.54
+  ],
+  "ck_u": [
+   989.46,
+   990.54
+  ],
+  "ck_xs": [
+   917.46,
+   918.54
+  ]
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "the lp RTL lands rst_n (pin stage u_lpr_pin on its face band, regional run rooted in u, same-depth reset forest, depth 3 + 1) and ot_rp5_rst kept copies per consumer; priced in the landed record"
+ },
+ "hard_define": "OT_RP4A_HARD",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_m",
+  "ck_t",
+  "ck_tpw",
+  "ck_tpe",
+  "ck_cpw",
+  "ck_c",
+  "ck_cpe",
+  "ck_u",
+  "ck_xs"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_m"
+   ],
+   "inputs": [
+    "rst_n"
+   ],
+   "outputs": [
+    "xo_b",
+    "xo_g0",
+    "xo_gp"
+   ]
+  },
+  "t": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_t"
+   ],
+   "inputs": [
+    "xs_a1",
+    "xs_g1",
+    "xs_a2",
+    "xs_g2",
+    "attn",
+    "gin"
+   ],
+   "outputs": []
+  },
+  "tpw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_tpw"
+   ],
+   "inputs": [
+    "bin"
+   ],
+   "outputs": []
+  },
+  "tpe": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_tpe"
+   ],
+   "inputs": [],
+   "outputs": [
+    "bout"
+   ]
+  },
+  "cpw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_cpw"
+   ],
+   "inputs": [
+    "rin_n"
+   ],
+   "outputs": []
+  },
+  "c": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_c"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "cpe": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_cpe"
+   ],
+   "inputs": [],
+   "outputs": [
+    "rout_n"
+   ]
+  },
+  "u": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_u"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "xs": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_xs"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "landed_record": "results/arch/hbm_smh_r7_1021/ot_hbm_smh_rp7n_m_record.json",
+ "safe_design_checklist": {
+  "1_pins": "Existing registered faces kept; face stages now use their own landed root. Original hard-child pin registers unchanged.",
+  "2_reach": "Face/body and x-store/body paths all enter fixed-latency D4/E2 rings; regional placement boxes retained. Actual placed reach remains a gate obligation.",
+  "3_fanout": "Kept W24 landing reset field copies and same-edge per-consumer reset copies. Native census must pass before layout; no waiver.",
+  "4_depth": "No arithmetic logic added; all schedule compensation is registered. Original hard children unchanged.",
+  "5_storage": "Landings are D4 rings. Additional delay compensation is a fixed-throughput chain of three-slot rings in kept eight-bit chunks; no indexed wide flop store or long shift pipeline. Same 3/6/9/12 data-edge ages; phase reset copies are bounded.",
+  "6_floorplan": "Unchanged 691.2x1512.0 pin-bound outline; original hard children and 43.2 lattice retained. Face groups never shrink the qualified macros.",
+  "7_clock": "9 landed regional roots; face pins separated from hard-child insertion, x-store on own root; child centring taps; TT/FF within-region spread <=80 remains required. Hold margins 0.03.",
+  "8_schedule": "Static retiming against r6, interface output offsets {'rout_n': 6, 'bout': 6, 'xo_b': 3, 'xo_g0': 9, 'xo_gp': 9}; regional reset depth 4. Edge equality recorded for every source/read pair; exact miter and priced composition required."
+ },
+ "landed": {
+  "record": "results/arch/hbm_smh_r7_1021/ot_hbm_smh_rp7n_m_record.json",
+  "landings": 46,
+  "landing_flops": 112523,
+  "reset_depth": 4,
+  "lp_spec": "results/arch/hbm_smh_r7_1021/lp_spec_n_m.json"
+ },
+ "structural_change": "r7 landed external face roots plus separate x-store clock; deterministic compensation preserves r6 fan-in ages",
+ "pin_hook_before_flops": [
+  "physical/hbm_smh_r7/fence_smh_rp7n_m.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/hbm_smh_r7/fence_dissolve.tcl"
+ ],
+ "child_centre_tap": {
+  "children": [
+   "u_mg0.u_merge",
+   "u_qk0",
+   "u_bdc0",
+   "u_h00",
+   "u_h10",
+   "u_xs0",
+   "u_row0",
+   "u_rowe0"
+  ],
+  "why": "Hard-child roots centred independently of external pin roots; actual gate decides."
+ }
+}
