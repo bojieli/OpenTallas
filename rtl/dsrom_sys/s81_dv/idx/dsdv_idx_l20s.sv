@@ -161,7 +161,9 @@ module dsdv_idx_txm_n32 #(
             .ck(ck), .re(re), .ra(ra), .we((WDC != 0) ? we_b : we), .wa((WDC != 0) ? wa_b : wa), .wd((WDC != 0) ? wd_b : wd),
             .wm_next(wm_next), .p(pb));
         always @(posedge ck) rd <= pa | pb;
-    end else if (SRAM_MACRO) begin : g_m
+    end endgenerate
+    // STW-S81c-TOK4 10-22: independent generate ifs (yosys named an else-if branch genblk1.g_m -> kit macro paths u_sm.g_m.* not found)
+    generate if (SRAM_MACRO && SPLIT == 0) begin : g_m
         localparam integer NB = D / 1024;
         initial if (D % 1024 != 0 || D < 1024) $fatal(1, "dsdv_idx_txm_n32: D must be a multiple of 1024");
         wire [255:0] q [0:NB-1];
@@ -243,7 +245,8 @@ module dsdv_idx_txm_n32 #(
                     mx[32 * g +: 32] = mx[32 * g +: 32] | (q[k][32 * g +: 32] & {32{bsk[8 * k + g]}});
         end
         always @(posedge ck) rd <= mx;
-    end else begin : g_b
+    end endgenerate
+    generate if (!SRAM_MACRO) begin : g_b
         reg [255:0] mem [0:D-1];
         reg [255:0] q;
         always @(posedge ck) begin
