@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.qbank.intermediate_cts.v1",
+  "status": "INTERMEDIATE_NOT_QUALIFIED_GRT_LIVE",
+  "source_commit": "a290b4b05",
+  "kit": "qfd_n59_qbank_align1f",
+  "remote": "ot-epyc5:/srv/opentallas-scratch/claude/ref_gate/qfd_n59_qbank_align1f-20261021-224344",
+  "report_sha256": "4af0c6d28099b42a54dfb0197ac2fe9413bf4d0c595bdb3370a95a434310d035",
+  "route_period_ps": 770,
+  "wns_ps": -157.73,
+  "clock_setup_skew_including_uncertainty_ps": [
+    228.09,
+    232.82
+  ],
+  "worst_sync_path": "g_seg[9].g_ctrl.face[11] -> g_seg[9].g_ctrl.ov[6]",
+  "ff_removal_ps": -29.59,
+  "ff_input_hold_ps": -76.05,
+  "source_delta": "none",
+  "waiver": false,
+  "successor": "g/h stock single-root TritonCTS 1f8d419e5; same data/reset/pin contract"
+}
