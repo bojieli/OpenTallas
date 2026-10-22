@@ -1,0 +1,103 @@
+{
+  "status": "SOURCE_BODY_GRANTS_ONLY_NOT_QUALIFIED_PARENT",
+  "outline_um": [
+    907.2,
+    4536.0
+  ],
+  "body_grants": [
+    {
+      "name": "TX_FB",
+      "origin_um": [
+        129.6,
+        0
+      ],
+      "size_um": [
+        626.4,
+        561.6
+      ]
+    },
+    {
+      "name": "VMUX_FB",
+      "origin_um": [
+        43.2,
+        604.8
+      ],
+      "size_um": [
+        216,
+        216
+      ]
+    },
+    {
+      "name": "VDLY_soft_macro_bank",
+      "origin_um": [
+        345.6,
+        604.8
+      ],
+      "size_um": [
+        345.6,
+        216
+      ]
+    },
+    {
+      "name": "PlanA_control_h_plus_margin",
+      "origin_um": [
+        0,
+        864
+      ],
+      "size_um": [
+        907.2,
+        3672
+      ]
+    }
+  ],
+  "VDLY": {
+    "implementation": "real soft logic plus three ot_sram_1r1w_32x128_m1 macros, no additional hard tile requirement",
+    "macro_size_um": [
+      51.408,
+      20.79
+    ],
+    "macro_origins_um": [
+      [
+        388.8,
+        648
+      ],
+      [
+        475.2,
+        648
+      ],
+      [
+        561.6,
+        648
+      ]
+    ],
+    "horizontal_pin_face_channels_um": 34.992,
+    "storage_bits": 12288,
+    "write_and_read_bytes_per_cycle_each": 48,
+    "useful_payload_bits_per_cycle": 275,
+    "source_delay_edges": 28,
+    "old_standalone_mapped_total_area_um2": 3408,
+    "old_native_max_dynamic_loads": 28,
+    "new_native_qualification": "not yet measured after hierarchical reset change; parent census required"
+  },
+  "clock_contract": {
+    "literal_pairs": 40,
+    "planA_pairs": 39,
+    "common_clk": "clk/rst_n for VMUX, VDLY, TX; must be explicitly unified with ck_r37/rst_n_r37 region or separately declared with real delivery; no silent alias",
+    "new_clock_waivers": false
+  },
+  "calendar": {
+    "VMUX_edges": 2,
+    "VDLY_edges": 28,
+    "parent_pin_to_pin": 30,
+    "TOPK_tail": 796,
+    "TX_OFF": 33,
+    "selection_tail_delta_from_640": 156,
+    "new_reset_delta_edges": 0
+  },
+  "limits": [
+    "Origins and body sizes do not prove actual paired pin reach, landing sites, PG, CTS or signoff.",
+    "PlanA parent control h body model3585.6 plus86.4margin gives3672.",
+    "VDLY shares the216high band beside VMUX; placing VMUX below TX would create an unregistered >405umhop.",
+    "Actual native pin geometry and all parent source forwarding remain unqualified until parent build."
+  ]
+}

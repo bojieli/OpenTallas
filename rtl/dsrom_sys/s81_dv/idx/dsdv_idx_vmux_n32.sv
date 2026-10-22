@@ -107,8 +107,8 @@ module dsdv_idx_vdly #(
     reg rs0;
     wire [1:0] rn;
     always @(posedge ck or negedge rst) if (!rst) rs0 <= 1'b0; else rs0 <= 1'b1;
-    dsdv_vmx_copy #(.W(1), .ID(200)) u_rn0 (.ck(ck), .rn(rst), .d(rs0), .q(rn[0]));
-    dsdv_vmx_copy #(.W(1), .ID(201)) u_rn1 (.ck(ck), .rn(rst), .d(rs0), .q(rn[1]));
+    dsdv_vmx_copy #(.W(1), .ID(200)) u_rn0 (.ck(ck), .rn(rs0), .d(rs0), .q(rn[0]));
+    dsdv_vmx_copy #(.W(1), .ID(201)) u_rn1 (.ck(ck), .rn(rs0), .d(rs0), .q(rn[1]));
     // valid: N-flop reset chain (rn[0]); first stage = the valid pin flop
     reg [NV-1:0] vc;
     always @(posedge ck or negedge rn[0]) if (!rn[0]) vc <= '0; else vc <= {vc[NV-2:0], i[0]};

@@ -1,6 +1,15 @@
 `ifndef TX_SRAM
 `define TX_SRAM 0
 `endif
+`ifndef VM_MUT
+`define VM_MUT 0
+`endif
+`ifndef DL_MUT
+`define DL_MUT 0
+`endif
+`ifndef VDLY
+`define VDLY 28
+`endif
 `timescale 1ns/1ps
 // S81-L20DIE (10-19): compose bench of the static index RANK TREE on the REAL die units: per die a dsdv_idx_vmux
 // (bk_sel S-face ingress merge), the selector dsdv_bk_sel (die.v u_bk_sel straps: tap_k 0x11, sink_k 0x10, ik 4, ek 5,
@@ -29,14 +38,27 @@ module tb_idx_tree;
     string fn;
     genvar g;
     generate for (g = 0; g < ND; g = g + 1) begin : d
-`ifdef TREE_DIEM
+`ifdef TREE_DIEM_N32
+        // STW-S81-TOPK-VMUX (10-21): vmtx' = dsdv_bk_sel_vmtx_n32 (vmux_n32 + landed PlanA n32 parent + vdly + tx_n32);
+        // every parent region on the bench clock / reset (regional skew is the die's, not this bench's); stimulus booked
+        // with lower_bk tree-rd --plana
+        dsdv_bk_sel_vmtx_n32 #(.TX_MUT(`TX_MUT), .TX_SRAM(`TX_SRAM), .VM_MUT(`VM_MUT), .DL_MUT(`DL_MUT), .VDLY(`VDLY)) u_die (
+            .clk(clk), .rst_n(rst_n), .tap_k(8'h11), .sink_k(8'h10),
+            .ik(3'd4), .ek(3'd5), .uid(8'h5B), .eg_n(1'b0), .vi_s({V{1'b0}}), .vo_n(vo_n[g]), .vi_n(vi_n[g]), .vo_s(vo_s[g]),
+            .vi_idx(i_s[g]), .ca(i_a[g]), .cb(i_b[g]), .fault(f_sel[g]), .vm_fault(f_vm[g]), .tl_o(lo[g]), .tx_st(tst[g]),
+            .ck_core(clk), .ck_r1(clk), .ck_r2(clk), .ck_r3(clk), .ck_r4(clk), .ck_r5(clk), .ck_r6(clk), .ck_r7(clk), .ck_r8(clk), .ck_r9(clk), .ck_r10(clk), .ck_r11(clk), .ck_r12(clk), .ck_r13(clk), .ck_r14(clk), .ck_r15(clk), .ck_r16(clk), .ck_r17(clk), .ck_r18(clk), .ck_r19(clk), .ck_r20(clk), .ck_r21(clk), .ck_r22(clk), .ck_r23(clk), .ck_r24(clk), .ck_r25(clk), .ck_r26(clk), .ck_r27(clk), .ck_r28(clk), .ck_r29(clk), .ck_r30(clk), .ck_r31(clk), .ck_r32(clk), .ck_r33(clk), .ck_r34(clk), .ck_r35(clk), .ck_r36(clk), .ck_r37(clk), .ck_r38(clk), .rst_n_core(rst_n), .rst_n_r1(rst_n), .rst_n_r2(rst_n), .rst_n_r3(rst_n), .rst_n_r4(rst_n), .rst_n_r5(rst_n), .rst_n_r6(rst_n), .rst_n_r7(rst_n), .rst_n_r8(rst_n), .rst_n_r9(rst_n), .rst_n_r10(rst_n), .rst_n_r11(rst_n), .rst_n_r12(rst_n), .rst_n_r13(rst_n), .rst_n_r14(rst_n), .rst_n_r15(rst_n), .rst_n_r16(rst_n), .rst_n_r17(rst_n), .rst_n_r18(rst_n), .rst_n_r19(rst_n), .rst_n_r20(rst_n), .rst_n_r21(rst_n), .rst_n_r22(rst_n), .rst_n_r23(rst_n), .rst_n_r24(rst_n), .rst_n_r25(rst_n), .rst_n_r26(rst_n), .rst_n_r27(rst_n), .rst_n_r28(rst_n), .rst_n_r29(rst_n), .rst_n_r30(rst_n), .rst_n_r31(rst_n), .rst_n_r32(rst_n), .rst_n_r33(rst_n), .rst_n_r34(rst_n), .rst_n_r35(rst_n), .rst_n_r36(rst_n), .rst_n_r37(rst_n), .rst_n_r38(rst_n));
+`elsif TREE_DIEM
         // S81-RTLGAP/RG-L20 (10-21): the 72-frame die bk_sel master itself (dsdv_bk_sel_vmtx = vmux + bk_sel +
         // dsdv_idx_tx_n32), die straps as the IDX4 bind table; i_r (column rung) idle as before
         dsdv_bk_sel_vmtx #(.TX_MUT(`TX_MUT), .TX_SRAM(`TX_SRAM)) u_die (.clk(clk), .rst_n(rst_n), .tap_k(8'h11), .sink_k(8'h10),
             .ik(3'd4), .ek(3'd5), .uid(8'h5B), .eg_n(1'b0), .vi_s({V{1'b0}}), .vo_n(vo_n[g]), .vi_n(vi_n[g]), .vo_s(vo_s[g]),
             .vi_idx(i_s[g]), .ca(i_a[g]), .cb(i_b[g]), .fault(f_sel[g]), .vm_fault(f_vm[g]), .tl_o(lo[g]), .tx_st(tst[g]));
 `else
+`ifdef TREE_VMN32
+        dsdv_idx_vmux_n32 #(.MUT(`VM_MUT)) u_vm (.ck(clk), .rst(rst_n), .i_r({V{1'b0}}), .i_s(i_s[g]), .i_a(i_a[g]), .i_b(i_b[g]), .o(vi_s[g]), .fault(f_vm[g]));
+`else
         dsdv_idx_vmux u_vm (.ck(clk), .rst(rst_n), .i_r({V{1'b0}}), .i_s(i_s[g]), .i_a(i_a[g]), .i_b(i_b[g]), .o(vi_s[g]), .fault(f_vm[g]));
+`endif
         dsdv_bk_sel u_bk_sel (.clk(clk), .rst_n(rst_n), .tap_k(8'h11), .sink_k(8'h10), .ik(3'd4), .ek(3'd5), .uid(8'h5B),
             .eg_n(1'b0), .vi_s(vi_s[g]), .vo_n(vo_n[g]), .vi_n(vi_n[g]), .vo_s(vo_s[g]), .fault(f_sel[g]));
         dsdv_idx_tx #(.MUT(`TX_MUT), .SRAM_MACRO(`TX_SRAM)) u_tx (.ck(clk), .rst(rst_n), .vi(vi_s[g]), .vo(vo_s[g]), .lo(lo[g]), .st(tst[g]));
