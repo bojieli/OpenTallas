@@ -14,6 +14,8 @@ ENGINE_BALANCING_BASE_SHA256 = 'aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506
 GUARD = 'physical/common_flow/domain_spatial_spine.tcl'
 PG_BINDING = 'physical/common_flow/native_pg_binding.tcl'
 RECORD_TAPS = 'physical/common_flow/spine_record_taps.tcl'
+CHILD_INS = 'physical/common_flow/domain_spine_child_ins.tcl'
+CHILD_INS_MODES = ('boundary_record',)
 
 
 def record_tap_plan(spec, root):
@@ -66,6 +68,50 @@ def record_tap_plan(spec, root):
     return plan
 
 
+def child_insertion_targets(spec, root):
+    """SQ-TTC4 10-21 (Q.STA.TTC.4, landed-regions standard: a parent root is judged at the CHILD FLOPS, TT and FF <= 80):
+    {"<master>/<clock pin>": TT ps} = the hard child's own insertion from its CLOSED record, on exactly the basis the gate
+    judges (pre_route_gate.root_child_flops): clock_measurements[pin].tt.boundary.mean of a CTS-root pin, the child's
+    tt.boundary.mean when it has one clock pin and no per-pin record, the leaf pin -> SRAM wire mean (landed_raw_pins
+    refs) of a raw entry.  The per-domain spine balances every hard-child clock-pin leaf at pin arrival + this value, so
+    the child's boundary flops arrive WITH the root's soft flops (safe12c / LRT fixture: ck_core wtn R 141.6 -> span
+    149.2, ck_hr ck_head R 303.1 -> span 363.2 when the pin itself is balanced).  Fail closed on a missing record."""
+    import json
+    import clock_entry_constraints as C
+    root = Path(root)
+    out = {}
+    for child in spec.get('children') or []:
+        view = root / child['view']
+        ins = json.loads((view / 'insertion.json').read_text())
+        cm = ins.get('clock_measurements') or {}
+        lib = (view / f'{view.name}_tt.lib').read_text(errors='replace')
+        clocks = sorted(pin for pin, body in C._lib_pin_blocks(lib).items() if re.search(r'clock\s*:\s*true', body))
+        if not clocks:
+            raise ValueError(f'child_insertion: {view.name} has no Liberty clock pin')
+        raw = None
+        for pin in clocks:
+            row = cm.get(pin) if cm else None
+            b = ((row or {}).get('tt') or {}).get('boundary') if cm else (ins.get('tt') or {}).get('boundary')
+            if cm and row is None:
+                raise ValueError(f'child_insertion: {view.name}/{pin} has no clock_measurements record')
+            if not cm and len(clocks) != 1:
+                raise ValueError(f'child_insertion: {view.name} has {len(clocks)} clock pins but no per-pin record')
+            if b and b.get('n') and b.get('mean') is not None:
+                value = float(b['mean'])
+            else:
+                if raw is None:
+                    raw = C.landed_raw_pins(view, root)
+                if pin not in raw:
+                    raise ValueError(f'child_insertion: {view.name}/{pin} has neither a boundary nor a raw record')
+                value = float(raw[pin]['refs']['tt'][1])
+            if not math.isfinite(value) or value < 0:
+                raise ValueError(f'child_insertion: {view.name}/{pin} insertion {value} not a finite non-negative ps')
+            out[f'{view.name}/{pin}'] = round(value, 1)
+    if not out:
+        raise ValueError('child_insertion requires hard children')
+    return out
+
+
 def _tcl(value):
     if isinstance(value, dict):
         return '[dict create ' + ' '.join(_tcl(k) + ' ' + _tcl(v)
@@ -82,7 +128,8 @@ def validate(spec, domains, root):
         return None
     fields = {'version', 'roots', 'symmetric', 'bin_um', 'leaf_max', 'iterations',
               'rc_cal', 'macro_leaf', 'macro_pin_leaf'}
-    if not isinstance(value, dict) or set(value) != fields:
+    # SQ-TTC4 10-21: optional 'child_insertion' (absent = every existing kit byte-identical)
+    if not isinstance(value, dict) or set(value) - {'child_insertion'} != fields:
         raise ValueError('domain_spatial_spine requires exactly the documented fields')
     if type(value['version']) is not int or value['version'] != 1:
         raise ValueError('domain_spatial_spine requires version1')
@@ -118,6 +165,15 @@ def validate(spec, domains, root):
                for binding in spec.get('soft_root_macro_bindings', {}).values())
     if dual and not (value['macro_leaf'] and value['macro_pin_leaf']):
         raise ValueError('dual-clock raw memories require macro_leaf and macro_pin_leaf')
+    if 'child_insertion' in value:
+        if value['child_insertion'] not in CHILD_INS_MODES:
+            raise ValueError(f'domain_spatial_spine child_insertion must be one of {CHILD_INS_MODES}')
+        if not (value['macro_leaf'] and value['macro_pin_leaf'] and value['symmetric']):
+            raise ValueError('child_insertion requires macro_leaf, macro_pin_leaf and symmetric (one leaf per hard-child '
+                             'clock pin, tapped early by the symmetric builder)')
+        # the targets themselves are derived (fail closed) by after_entries/dependencies from the kit's source root
+        if not (Path(root) / CHILD_INS).is_file():
+            raise ValueError('domain_spatial_spine child-insertion helper missing')
     path = Path(root) / ENGINE
     if hashlib.sha256(path.read_bytes()).hexdigest() != ENGINE_SHA256:
         raise ValueError('domain_spatial_spine canonical engine differs from reviewed staged-phase bytes')
@@ -146,10 +202,21 @@ def before_entries(spec):
     return out
 
 
+def child_insertion_tcl(spec, root):
+    """after the engine: the per-pin child-insertion dict + the fixed leaf-arrival wrapper ([] without the option)"""
+    value = spec.get('domain_spatial_spine')
+    if value is None or 'child_insertion' not in value:
+        return []
+    targets = child_insertion_targets(spec, root)
+    return ['# SQ-TTC4 10-21: hard-child clock-pin leaves balanced at pin + the child record insertion (child flops)',
+            'set ::ot_sp_child_ins ' + _tcl(targets),
+            f'source /src/{CHILD_INS}']
+
+
 def after_entries(spec, root=None):
     if spec.get('domain_spatial_spine') is None:
         return []
-    out = [f'source /src/{GUARD}']
+    out = child_insertion_tcl(spec, root) + [f'source /src/{GUARD}']
     plan = record_tap_plan(spec, root) if spec.get('children') else {}
     if plan:
         out += ['set ::ot_sp_record_taps_v1 ' + _tcl(dict(version=1, model='hybrid_raw', records=plan)),
@@ -163,6 +230,10 @@ def dependencies(spec, root=None):
     if spec.get('domain_spatial_spine') is None:
         return []
     out = [ENGINE, GUARD, PG_BINDING]
+    if 'child_insertion' in spec['domain_spatial_spine']:
+        out += [CHILD_INS]
+        out += [f"{ch['view']}/insertion.json" for ch in spec.get('children') or []]
+        out += [f"{ch['view']}/{Path(ch['view']).name}_tt.lib" for ch in spec.get('children') or []]
     plan = record_tap_plan(spec, root) if spec.get('children') else {}
     if plan:
         out += [RECORD_TAPS, 'physical/common_flow/landed_raw_tap.tcl']

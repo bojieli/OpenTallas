@@ -32,6 +32,9 @@ def main():
     p.add_argument('output', type=Path)
     p.add_argument('--api-root', required=True, type=Path,
                    help='ROOT current99/FRAME projection with API, not an older whole ref_tile file')
+    p.add_argument('--child-insertion', action='store_true',
+                   help='SQ-TTC4 10-21: opt the ctlm2 case into domain_spatial_spine.child_insertion (one leaf per '
+                        'hard-child clock pin, balanced at pin + record insertion)')
     a = p.parse_args()
     out = a.output.resolve()
     if out.exists():
@@ -70,6 +73,8 @@ def main():
                'physical/common_flow/landed_raw_tap.tcl',
                'physical/common_flow/clock_family.tcl',
                'physical/common_flow/native_pg_binding.tcl']
+    if a.child_insertion:
+        helpers.append('physical/common_flow/domain_spine_child_ins.tcl')
     if (api/'physical/common_flow/spine_record_taps.tcl').is_file():
         helpers.append('physical/common_flow/spine_record_taps.tcl')
     helper_hashes = {}
@@ -87,7 +92,10 @@ def main():
     config = dict(version=1, roots=[dict(domain=next(n for n, d in domains.items() if port in d['ports']), port=port)
                                    for port in spec['clock_ports']],
                   symmetric=True, bin_um=30, leaf_max=16, iterations=10, rc_cal=False,
-                  macro_leaf=a.case == 'shell3', macro_pin_leaf=a.case == 'shell3')
+                  macro_leaf=a.case == 'shell3' or a.child_insertion,
+                  macro_pin_leaf=a.case == 'shell3' or a.child_insertion)
+    if a.child_insertion:
+        config['child_insertion'] = 'boundary_record'
     variant = copy.deepcopy(spec)
     variant['domain_spatial_spine'] = config
     D.validate(variant, domains, api)
