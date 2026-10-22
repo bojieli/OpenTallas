@@ -134,6 +134,77 @@ class Capacity:
         self.win[max(0, x - r):x + r + 1, max(0, y - r):y + r + 1] -= d
 
 
+def _eqtree_job(arg):
+    """HBMc/CHAIN-WIN 10-22 (--eq-tree routed): topology of an EQUAL-AGE row chosen on ROUTED lengths.
+    The Prim tree over Manhattan pin distances (die_relay_stations.tree) ignores obstacles: on r18 the su_NE1 +150 um
+    shift flipped a Manhattan tie (NE1->NE0 4148 > NE3->NE2 4000), so pgp_NE.command (1742 b) reached su_NE0 through
+    the S channel (depth 30 -> 55) and the equal-age pads of the near sinks (41 + 30 stages) piled at their pins.
+    Here each candidate tree over the SAME nodes (driver + sink pins; no new Steiner point, no port change) is scored on
+    routed path lengths: stages = stations (one per PLAN um of cumulative routed length) + equal-age pad stages
+    (dmax - depth per sink).  Candidates: the Manhattan Prim tree (kept on ties), Prim-Dijkstra trees with alpha in
+    {0, .25, .5, 1} on routed lengths, and the star.  Routes/stations/pads are then planned exactly as before."""
+    from scipy.sparse.csgraph import dijkstra
+    bi, P_, par0, PLAN = arg
+    R_ = _ROUTER; n = len(P_)
+    nodes = [R_.node(p) for p in P_]
+    span = max(md(a, b) for a in P_ for b in P_)
+    lim = 4 * span + 20 * R_.R
+    L = np.full((n, n), np.inf)
+    for i in range(n):
+        s, sa = nodes[i]
+        dist, pred = dijkstra(R_.graph, indices=s, return_predecessors=True, limit=lim)
+        for j in range(n):
+            if j == i:
+                L[i, j] = 0.0; continue
+            t, sb = nodes[j]
+            if t == s:
+                L[i, j] = sa + sb; continue
+            if not np.isfinite(dist[t]):
+                continue
+            h, k = 0, t
+            while k != s:
+                k = int(pred[k]); h += 1
+            L[i, j] = h * R_.G + sa + sb
+    if not np.isfinite(L).all():
+        return bi, par0, dict(kept='unrouted')
+
+    def score(par):
+        cum = [0.0] * n; seen = {0}; todo = list(range(1, n))
+        while todo:
+            nxt = [v for v in todo if par[v] in seen]
+            if not nxt:
+                return None
+            for v in nxt:
+                cum[v] = cum[par[v]] + L[par[v], v]; seen.add(v); todo.remove(v)
+        st = sum(math.floor(cum[v] / PLAN) - math.floor(cum[par[v]] / PLAN) for v in range(1, n))
+        dep = [max(0, math.ceil(cum[v] / PLAN) - 1) for v in range(1, n)]
+        dmax = max(dep)
+        return st + sum(dmax - d for d in dep), dmax, st
+
+    def prim_dijkstra(alpha):
+        par = [-1] * n; cum = [0.0] * n; done = [False] * n; done[0] = True
+        for _ in range(n - 1):
+            best = None
+            for u in range(n):
+                if done[u]:
+                    for v in range(n):
+                        if not done[v]:
+                            k = alpha * cum[u] + L[u, v]
+                            if best is None or k < best[0] - 1e-9:
+                                best = (k, u, v)
+            _, u, v = best; par[v] = u; cum[v] = cum[u] + L[u, v]; done[v] = True
+        return par
+    cands = [('manhattan_prim', list(par0))] + [(f'pd{al}', prim_dijkstra(al)) for al in (0.0, 0.25, 0.5, 1.0)] + \
+            [('star', [-1] + [0] * (n - 1))]
+    s0 = score(par0); best = ('manhattan_prim', list(par0), s0)
+    for name, par in cands[1:]:
+        sc = score(par)
+        if sc is not None and (sc[0], sc[1]) < (best[2][0], best[2][1]):
+            best = (name, par, sc)
+    return bi, best[1], dict(tree=best[0], stages_before=s0[0], stages_after=best[2][0], dmax_before=s0[1],
+                             dmax_after=best[2][1])
+
+
 def _route_job(arg):
     bi, P_, par = arg
     R_ = _ROUTER; out = {}
@@ -303,6 +374,9 @@ def main():
     ap.add_argument('--cap-util', type=float, default=0.5, help='HBM-DIE9: share of free area lane rows may book (rest: forest, repeaters, clock, homes)')
     ap.add_argument('--cap-bin-um', type=float, default=50.0)
     ap.add_argument('--cap-radius', type=int, default=2, help='bins each side a station row may spread over (GEN slides rows <= 150 um)')
+    ap.add_argument('--eq-tree', choices=('manhattan', 'routed'), default='manhattan',
+                    help='HBMc/CHAIN-WIN: equal_age_pad row topology: manhattan Prim (default, unchanged) or chosen on routed '
+                         'lengths to minimise stations + equal-age pad stages (same nodes, no port change)')
     ap.add_argument('--cap-halo', type=float, default=1.2, help='row footprint factor over the bare tile area (legalisation)')
     a = ap.parse_args()
     st = load(a.stations); P = load(a.pins)['instances']; c = load(a.contract); man = load(a.manifest)
@@ -396,6 +470,15 @@ def main():
         P_, par, dist = DS.tree(dp, [sp[s_] for s_ in r['sinks']])
         jobs[bi] = (bi, P_, par, 48 if r['bits'] <= 48 else 624, list(r['sinks']))
     import multiprocessing as mp
+    if a.eq_tree == 'routed':
+        eq = [(bi, j[1], j[2], PLAN) for bi, j in jobs.items() if st['rows'][bi]['cls'] == 'equal_age_pad' and len(j[1]) > 2]
+        with mp.get_context('fork').Pool(a.jobs) as pool:
+            for bi, par_, info in pool.imap_unordered(_eqtree_job, eq, chunksize=1):
+                j = jobs[bi]; jobs[bi] = (bi, j[1], par_, j[3], j[4])
+                if info.get('tree', 'manhattan_prim') != 'manhattan_prim':
+                    st['rows'][bi]['eq_tree'] = info; rep['eq_tree_changed'] += 1
+                    rep['eq_tree_stage_gain'] += info['stages_before'] - info['stages_after']
+        print('EQ_TREE routed rows', len(eq), 'changed', rep['eq_tree_changed'], 'est stage gain', rep['eq_tree_stage_gain'], flush=True)
     cap = None
     if a.capacity:
         with mp.get_context('fork').Pool(a.jobs) as pool:
