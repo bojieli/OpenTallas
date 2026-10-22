@@ -1,0 +1,69 @@
+{
+  "assembly_source": "880b247a9",
+  "not_sr13_adoption": true,
+  "metadata_only_no_timing_exception": true,
+  "sha256": {
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds_rl_sr.sv": "8678f1a8a80e0eaa233e41a14d478b56fa3f9ee7bd6b4da88d8f04cc07b34cd3",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv": "11d27a69443b998136e424f93bbac4c5f986734f20c262c31f41b1087b54702e",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv": "f5b97a6e1a23b855cc4cf4f6c52973ba6d5d117f9da85cea275a2d6cfa8bdf53"
+  },
+  "both_modules": [
+    "qkd_kvs_pc",
+    "qkd_kvs_pc_h"
+  ],
+  "ports": {
+    "pc__pi[288:0]": {
+      "direction": "input",
+      "capture_clock": "hck",
+      "witness": "selected qkd_kvpc_s_sched rv_q <= pi_v and qkd_kvpc_s_port rd_q <= pi[288:1], both posedge hclk; tile ties all pll_hbm_* to hck"
+    },
+    "pc__po[327:0]": {
+      "direction": "output",
+      "launch_clock": "hck",
+      "witness": "selected qkd_kvpc_s_sched po <= packed PHY word on posedge hclk"
+    },
+    "i_grp[32:0]": {
+      "direction": "input",
+      "capture_clock": "ck",
+      "witness": "expected epoch/layer/sector metadata and expected_put in qkd_kvpc_s_return captured on ck; no extra sr13 face register in current assembly"
+    },
+    "i_grp_h[94:0]": {
+      "direction": "input",
+      "capture_clock": "hck",
+      "witness": "calibration configuration/go and front block go use cal_hck/front_hck tied hck; no sr13 face register"
+    },
+    "o_grp[294:0]": {
+      "direction": "output",
+      "launch_clock": "ck",
+      "witness": "returned actual metadata/data, core idle/fault and core completion status"
+    },
+    "o_grp_h[9:0]": {
+      "direction": "output",
+      "launch_clock": "hck",
+      "witness": "HBM-side idle/fault/front hold flags"
+    },
+    "o_next": {
+      "direction": "output",
+      "launch_clock": "ck",
+      "witness": "qkd_kvpc_s_rhop / qkd_kvpc_s_rhead clock ck"
+    },
+    "o_prev (normal PC only)": {
+      "direction": "output",
+      "launch_clock": "ck",
+      "witness": "selected chain station ck"
+    },
+    "pc__front_hbm_data[3:0]": {
+      "direction": "input",
+      "capture_clock": null,
+      "classification": "unused legacy port",
+      "witness": "qkd_kvpc_s_front pll_hbm_data declaration unused; selected SRAM write/read clock pll_hbm, not this vector"
+    },
+    "pc__return_hbm_data[3:0]": {
+      "direction": "input",
+      "capture_clock": null,
+      "classification": "unused legacy port",
+      "witness": "qkd_kvpc_s_return pll_hbm_data declaration unused; selected SRAM write pll_hbm and read ck"
+    }
+  },
+  "warning": "Use selected SRAM clones rather than old qkd_static_kv_pc_path_nc storage bodies. The old bodies used per-bank PHY storage clocks; current selected SRAM source explicitly removed that clock usage. Confirm current generated netlist has no active sink before removing legacy fh/rh data checks. A multi-clock tile has no blanket root."
+}
