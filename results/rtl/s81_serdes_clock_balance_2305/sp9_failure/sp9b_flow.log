@@ -1,0 +1,50 @@
+OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/ref_tile/s81lk_serdes_col_sp9b/signoff.sdc]
+FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:
+r1w2c_16x546_m1_tt.lib
+read_liberty /src/physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn/ot_s81_kp4_dchn_tt.lib
+read_liberty /src/physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly/ot_s81_kp4_ddly_tt.lib
+read_liberty /src/physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout/ot_s81_kp4_dout_tt.lib
+read_liberty /src/physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn/ot_s81_kp4_dsyn_tt.lib
+read_liberty /src/physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc/ot_s81_kp4_enc_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_s81_pma_rxn/ot_s81_pma_rxn_ff.lib
+read_liberty /src/physical/asap7_memory_macros/ot_s81_pma_txm/ot_s81_pma_txm_ff.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w2c_16x546_m1/ot_sram_1r1w2c_16x546_m1_ff.lib
+read_liberty /src/physical/ref_tile/s81lk_kp4_dchn/views/ot_s81_kp4_dchn/ot_s81_kp4_dchn_ff.lib
+read_liberty /src/physical/ref_tile/s81lk_kp4_ddly/views/ot_s81_kp4_ddly/ot_s81_kp4_ddly_ff.lib
+read_liberty /src/physical/ref_tile/s81lk_kp4_dout/views/ot_s81_kp4_dout/ot_s81_kp4_dout_ff.lib
+read_liberty /src/physical/ref_tile/s81lk_kp4_dsyn/views/ot_s81_kp4_dsyn/ot_s81_kp4_dsyn_ff.lib
+read_liberty /src/physical/ref_tile/s81lk_kp4_enc/views/ot_s81_kp4_enc/ot_s81_kp4_enc_ff.lib
+read_db /work/results/asap7/opentallas_ot_pdie_serdes_col_lp8b_asap7_ref_gate/base/2_3_floorplan_tapcell.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_pdie_serdes_col_lp8b_asap7_ref_gate/base/2_1_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_pdie_serdes_col_lp8b_asap7_ref_gate/base/2_1_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_pdie_serdes_col_lp8b_asap7_ref_gate/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0001] Inserting grid: hard_m5 - u_chn
+[INFO PDN-0001] Inserting grid: hard_m5 - u_dly
+[INFO PDN-0001] Inserting grid: hard_m5 - u_out
+[INFO PDN-0001] Inserting grid: hard_m5 - u_syn
+[INFO PDN-0001] Inserting grid: hard_m5 - u_enc
+[INFO PDN-0001] Inserting grid: sram - u_prx
+[INFO PDN-0001] Inserting grid: sram - u_ptx
+[INFO PDN-0001] Inserting grid: sram - u_rmm
+[WARNING PDN-0232] The grid "sram - u_prx" (Instance) does not contain any shapes or vias.
+[WARNING PDN-0232] The grid "sram - u_ptx" (Instance) does not contain any shapes or vias.
+[ERROR PDN-0233] Failed to generate full power grid.
+Error: pdn.tcl, 7 PDN-0233
+
+Elapsed time: 0:09.80[h:]min:sec. CPU time: user 14.51 sys 7.45 (224%). Peak memory: 525608KB.
+Elapsed time: 1:00.74[h:]min:sec. CPU time: user 61.64 sys 1.82 (104%). Peak memory: 474048KB.
+Elapsed time: 0:03.63[h:]min:sec. CPU time: user 3.49 sys 0.15 (99%). Peak memory: 418716KB.
+Elapsed time: 0:04.60[h:]min:sec. CPU time: user 4.38 sys 0.21 (99%). Peak memory: 506968KB.
+Elapsed time: 0:13.78[h:]min:sec. CPU time: user 13.38 sys 0.40 (99%). Peak memory: 1161608KB.
+make[1]: *** [Makefile:464: do-2_4_floorplan_pdn] Error 1
+make: *** [Makefile:464: /work/results/asap7/opentallas_ot_pdie_serdes_col_lp8b_asap7_ref_gate/base/2_4_floorplan_pdn.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/ref_gate/s81lk_serdes_col_sp9b-20261021-231315/routes/gate/physical.json

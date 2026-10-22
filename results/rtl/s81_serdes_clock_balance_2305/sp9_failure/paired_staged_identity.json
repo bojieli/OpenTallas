@@ -1,0 +1,60 @@
+[
+  {
+    "kit": "sp9a",
+    "start_commit": "7b4611c62ae2baffffc3b4578c2f88e904912441",
+    "archive_sha256": "9c75de07e3b910cb0c4aed0fbfe2a17cf7b9161a374448be9a9519f53d3ddb6d",
+    "manifest_sha256": "d4d468f75f9069f50b8f8b930cba98320e3892882690718cfe250566420f1a5a",
+    "host": "ot-epyc5",
+    "run": "/srv/opentallas-scratch/claude/ref_gate/s81lk_serdes_col_sp9a-20261021-231312",
+    "captured": "2026-10-21T23:14:13-0700",
+    "checks": [
+      {
+        "path": "physical/common_flow/clock_spine.tcl",
+        "sha256": "aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83",
+        "matches_staged": true,
+        "consumed": true
+      },
+      {
+        "path": "physical/ref_tile/s81lk_serdes_col_sp9a/pre_cts.tcl",
+        "sha256": "4343fcecc3a98c38504dd6be64002975387583b6c01730b145ee83665bb765be",
+        "matches_staged": true,
+        "consumed": true
+      },
+      {
+        "path": "physical/ref_tile/s81lk_serdes_col_sp9a/spine_ins.tcl",
+        "sha256": "79210c98a1d3e4699fc1fbfa1173bbcf9e52e218d8be8ebc4066b4bff496bed5",
+        "matches_staged": true,
+        "consumed": true
+      }
+    ]
+  },
+  {
+    "kit": "sp9b",
+    "start_commit": "7b4611c62ae2baffffc3b4578c2f88e904912441",
+    "archive_sha256": "5626fe3c2ec91dc9fbbf519a8747682ee05a7e442a1d4834ff42f51e2d8fd137",
+    "manifest_sha256": "b4b4eda691e858655bc6893d82f0e21f3e56ba8190982bd3c2bc33cd2c54cd07",
+    "host": "ot-epyc5",
+    "run": "/srv/opentallas-scratch/claude/ref_gate/s81lk_serdes_col_sp9b-20261021-231315",
+    "captured": "2026-10-21T23:14:12-0700",
+    "checks": [
+      {
+        "path": "physical/common_flow/clock_spine.tcl",
+        "sha256": "aab59f9a4f61ffbbaefa56c611d6793f1e3e59e40e256506de269ed902fd7d83",
+        "matches_staged": true,
+        "consumed": true
+      },
+      {
+        "path": "physical/ref_tile/s81lk_serdes_col_sp9b/pre_cts.tcl",
+        "sha256": "85ce34a62c60100cc48c10ea9d119bae406c3c0ba2b4144c6abb88f302488ed0",
+        "matches_staged": true,
+        "consumed": true
+      },
+      {
+        "path": "physical/ref_tile/s81lk_serdes_col_sp9b/spine_ins.tcl",
+        "sha256": "79210c98a1d3e4699fc1fbfa1173bbcf9e52e218d8be8ebc4066b4bff496bed5",
+        "matches_staged": true,
+        "consumed": true
+      }
+    ]
+  }
+]
