@@ -694,6 +694,8 @@ def load_spec(path: str) -> dict:
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
     if s.get("cdc_synchronizers") is not None and (s.get("clock") != "multiple_cts_roots" or s["kind"] != "tile"):
         raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
+    if s.get("cts_engine") is not None and s.get("clock") != "multiple_cts_roots":
+        raise SpecError("cts_engine requires multiple_cts_roots")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
         cps = s.get("clock_ports")
         # PL-KIT 10-18: multiple_cts_roots is also a LANDED cluster (tools/landed_parent/lp.py parents): kind cluster with
@@ -715,8 +717,6 @@ def load_spec(path: str) -> dict:
                 raise SpecError("cts_engine must be tritoncts or spine")
             if s.get("cts_engine") == "spine" and s["kind"] != "tile":
                 raise SpecError("cts_engine spine is a multiple_cts_roots leaf-tile option")
-        elif s.get("cts_engine") is not None:
-            raise SpecError("cts_engine requires multiple_cts_roots")
             if s["kind"] == "cluster":
                 try:
                     clock_entry_constraints.landed_record(s, ROOT)
