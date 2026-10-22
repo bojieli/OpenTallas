@@ -386,6 +386,10 @@ def main():
     ap.add_argument("--txl", type=int, required=True)
     ap.add_argument("--phy", type=int, default=5)
     ap.add_argument("--ofs", type=int, default=0)
+    ap.add_argument("--status-ofs", type=int, default=None,
+                    help="program profile: compute STATUS (kind 15) send offset after the Q command edge; layer_compile passes "
+                         "the offset its L1 image compiled with (searched 40..48 against the die's TXD), so segment 0 of the "
+                         "program equals cal_L1; default = 40 with --pinreg, else 38 (images unchanged)")
     ap.add_argument("--txd-c", default="1,1,1,1", help="compute end codec latency per TX port")
     ap.add_argument("--txd-k", default="1,1,1,1", help="KV end codec latency per TX port")
     ap.add_argument("--spec", help="message list JSON (default: bench layer profile)")
@@ -454,7 +458,7 @@ def main():
         msgs = json.load(open(a.spec))
     elif a.profile == "program":
         msgs, layout = program_profile(txl_p, phy_p, a.token_path, host_stages=a.host_stages,
-                                        st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu,
+                                        st_ofs=(a.status_ofs if a.status_ofs is not None else (40 if a.pinreg else 38)), handoff=a.link_handoff, mu=a.mu,
                                         host_req=a.ctx_host_req, emb_fill=a.emb_fill_edges, emb_window=a.emb_window,
                                         status_delay=a.status_delay,
                                         attn_tx_shift=a.attn_tx_shift, rope=a.rope, layer_period_min=a.layer_period_min,head_prepare_edges=a.head_prepare_edges)   # STATUS capture after the (+2) KVN captures
@@ -476,7 +480,7 @@ def main():
             with open(f"{a.out}/cal_{k}_seg2.memh", "w") as f:
                 f.write(f"{base2.get(k, 0):08x}\n")
     spans = {sg: max(max(t["rx_out"], t["cyc"]) for t in table if t["seg"] == sg) for sg in {t["seg"] for t in table}}
-    rec = dict(txl=a.txl, phy=a.phy, phy_compiled=phy_c, pinreg=a.pinreg, ofs=a.ofs, txd=txd, entries={k: len(v) for k, v in imgs.items()},
+    rec = dict(txl=a.txl, phy=a.phy, phy_compiled=phy_c, pinreg=a.pinreg, ofs=a.ofs, txd=txd, **({"status_ofs": a.status_ofs} if a.status_ofs is not None else {}), entries={k: len(v) for k, v in imgs.items()},
                seg1_base=base, seg2_base=base2, span=spans.get(0, 0), spans=spans, messages=table)
     if layout:
         # absolute program: segment 0 replayed at every priced layer start, segment 1 at token start (cycle 0)

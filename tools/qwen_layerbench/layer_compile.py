@@ -710,6 +710,7 @@ def main(argv=None):
     run([sys.executable, 'tools/qwen_split/d2d_link_calendar.py', '--out', str(prog.resolve()), '--txl', str(a.txl), '--phy', str(a.phy),
          '--profile', 'program', '--txd-c', ','.join(map(str, raw['C'])), '--txd-k', ','.join(map(str, raw['K'])),
          '--host-stages', str(host_stages), '--link-handoff', a.link_handoff, '--pinreg', '--token-path', str(tpx.resolve())]
+        + (['--status-ofs', str(st_ofs)] if st_ofs != 40 else [])   # SQC-QDIE5: program segment 0 = the L1 image's STATUS slot
         + (['--emb-window', str(a.emb_window)] if a.emb_window is not None else []),
         d2d / 'program.log')
     run([sys.executable, 'tools/qwen_split/d2d_cal_seq_image.py', str(prog.resolve()), str((d2d / 'd2d_cal_image.svh').resolve())],
