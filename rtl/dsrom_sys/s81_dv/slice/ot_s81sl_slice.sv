@@ -37,6 +37,10 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_leaf #(
     parameter integer AQ_XMEM = 2,
+    parameter integer KV_ENABLE = 0, // one production D512 bank in designated die slice/leaf only
+    parameter integer KV_HARD_RQ = 0, // reuse CLOSED D512 reduce and quant views
+    parameter integer KV_CNIK = 0,   // RTLGAP-SUKV: KV_ENABLE leaf also runs CN 12 / IK 13 on its bank (opt-in)
+    parameter integer KV_CP = 0,     // RTLGAP-SUKV: KV_ENABLE leaf also has the compressor pool CP 14 (opt-in)
     parameter integer VS_MUT = 0       // bench negative controls only (ot_s81sl_vs MUT); 0 in every build
 ) (
     input  wire          clk,
@@ -78,6 +82,24 @@ module ot_s81sl_leaf #(
     wire swv, swvi, swfi; wire [255:0] swd; wire [31:0] sww, swl; wire [63:0] swri;
     wire rav, ravi, rafi, rfv, rff; wire [31:0] rax, rari, rfu, rfu2, rfmx;
     wire f_vp, f_vn, f_vq, f_vs;
+    wire vs_xrv,vs_xwv;wire [9:0]vs_xra,vs_xwa;wire[7:0]vs_xwm;wire[255:0]vs_xwd;
+    wire kvbusy,kvdone,kvfault,kv_xrv,kv_xwv;wire[9:0]kv_xra,kv_xwa;wire[7:0]kv_xwm;wire[255:0]kv_xwd;
+    wire kv_cmd=KV_ENABLE && s_d[3:0]==15;
+    assign x_rv=kvbusy?kv_xrv:vs_xrv;assign x_ra=kvbusy?kv_xra:vs_xra;
+    assign x_wv=kvbusy?kv_xwv:vs_xwv;assign x_wa=kvbusy?kv_xwa:vs_xwa;
+    assign x_wm=kvbusy?kv_xwm:vs_xwm;assign x_wd=kvbusy?kv_xwd:vs_xwd;
+    reg kv_conflict;
+    always @(posedge clk or negedge rst_n)if(!rst_n)kv_conflict<=0;
+      else if(kvbusy && (vs_xrv || vs_xwv || (s_v && !kv_cmd)))kv_conflict<=1;
+    generate if(KV_ENABLE)begin:g_kv
+      ot_s81sl_kv_leaf #(.CNIK(KV_CNIK),.CP(KV_CP),.HARD_RQ(KV_HARD_RQ)) u_kv(.clk(clk),.rst_n(rst_n),.c_v(s_v),.c_d(s_d),
+       .busy(kvbusy),.done(kvdone),.fault(kvfault),.x_rv(kv_xrv),.x_ra(kv_xra),
+       .x_qv(x_qv && kvbusy),.x_qd(x_qd),.x_wv(kv_xwv),.x_wa(kv_xwa),.x_wm(kv_xwm),.x_wd(kv_xwd));
+    end else begin:g_no_kv
+      assign kvbusy=0;assign kvdone=0;assign kvfault=0;
+      assign kv_xrv=0;assign kv_xra=0;assign kv_xwv=0;assign kv_xwa=0;assign kv_xwm=0;assign kv_xwd=0;
+    end endgenerate
+
     ot_s81sl_vp u_vp (.clk(clk), .rst_n(rst_n), .c_v(c_v), .c_d(c_d), .sw_v(sw_v), .sw_a(sw_a), .sw_m(sw_m), .sw_d(sw_d),
         .cw_v(cw_v), .cw_a(cw_a), .cw_d(cw_d), .lo_v(lo_v), .lo_d(lo_d),
         .s_v(s_v), .s_d(s_d), .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd),
@@ -95,8 +117,8 @@ module ot_s81sl_leaf #(
     // Frozen hard child: its Liberty/blackbox has no parameters.
     ot_s81sl_vs u_vs (
 `endif
-        .clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
-        .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
+        .clk(clk), .rst_n(rst_n), .s_v(s_v && !kv_cmd), .s_d(s_d),
+        .x_rv(vs_xrv), .x_ra(vs_xra), .x_qv(x_qv && !kvbusy), .x_qd(x_qd), .x_wv(vs_xwv), .x_wa(vs_xwa), .x_wm(vs_xwm), .x_wd(vs_xwd),
         .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .sw_v(swv), .sw_d(swd), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
         .ra_v(rav), .ra_x(rax), .ra_vi(ravi), .ra_ri(rari), .ra_fi(rafi),
@@ -125,7 +147,7 @@ module ot_s81sl_leaf #(
         .u_v(u_v), .u_i(u_i), .u(u), .sid(sid), .k(k), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
         .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(f_vq));
     // vsw / RA lane / ve faults are sticky in their leaves and reach vs (sw_fi / ra_fi / ve_fi -> vs fault)
-    assign fault = f_vp | f_vn | f_vq | f_vs;
+    assign fault = f_vp | f_vn | f_vq | f_vs | kvfault | kv_conflict;
 endmodule
 
 module ot_s81sl_slice #(
@@ -134,6 +156,10 @@ module ot_s81sl_slice #(
     parameter integer DR = 6,        // frame return lanes -> capture root (worst entry face to the centre, 2.3 mm)
     parameter integer DX = 6,        // x streamer -> x-chain heads (centre to the bottom face)
     parameter integer VQ_XMEM = 2,   // vq's x wait line: 2 = the one-macro sub-beat SRAM ring (the s81sl_vq kit), 0 = flops
+    parameter integer KV_ENABLE = 0, // opt-in production KV bank on leaf0; no view alias
+    parameter integer KV_HARD_RQ = 0, // reuse CLOSED D512 reduce and quant views
+    parameter integer KV_CNIK = 0,   // RTLGAP-SUKV: leaf0 bank also runs CN / IK (needs KV_ENABLE)
+    parameter integer KV_CP = 0,     // RTLGAP-SUKV: leaf0 also hosts the compressor pool (needs KV_ENABLE)
     parameter integer VS_MUT = 0     // bench negative controls only (ot_s81sl_vs MUT through the leaves); 0 in every build
 ) (
     input  wire            clk,
@@ -170,7 +196,7 @@ module ot_s81sl_slice #(
     wire [4:0] ev_l, ev_x, gv_l; wire [9:0] ec_l, ec_x, gc_l; wire [479:0] ed_l, ed_x; wire [159:0] gd_l;
     genvar k;
     generate for (k = 0; k < 5; k = k + 1) begin : lf
-        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
+        ot_s81sl_leaf #(.AQ_XMEM(VQ_XMEM), .VS_MUT(VS_MUT), .KV_ENABLE(KV_ENABLE && k==0), .KV_CNIK(KV_CNIK), .KV_CP(KV_CP), .KV_HARD_RQ(KV_HARD_RQ)) u_lf (.clk(clk), .rst_n(rst_n), .sid(sid), .k(k[2:0]),
             .c_v(c_v_l[k]), .c_d(c_d_l[160 * k +: 160]),
             .sw_v(sw_v_l[k]), .sw_a(sw_a_l[10 * k +: 10]), .sw_m(sw_m_l[8 * k +: 8]), .sw_d(sw_d_l[256 * k +: 256]),
             .cw_v(cw_v_l[2 * k +: 2]), .cw_a(cw_a_l[24 * k +: 24]), .cw_d(cw_d_l[64 * k +: 64]),
@@ -203,7 +229,12 @@ module ot_s81sl_slice #(
         .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w), .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b),
         .is_v(is_v), .is_d(is_d), .xw_v(xw_v), .xw_d(xw_d), .fault(f_xg));
     generate if (HB != 0) begin : g_c3
-        ot_s81sl_xr3 u_xr (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
+`ifdef OT_S81SL_KV_TRANSPORT
+        ot_s81sl_xrt3 u_xr (
+`else
+        ot_s81sl_xr3 u_xr (
+`endif
+            .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .bi(bi), .bo(bo),
             .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
             .p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x),
@@ -211,7 +242,12 @@ module ot_s81sl_slice #(
             .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si),
             .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
     end else begin : g_c1
-        ot_s81sl_xr1 u_xr (.clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
+`ifdef OT_S81SL_KV_TRANSPORT
+        ot_s81sl_xrt1 u_xr (
+`else
+        ot_s81sl_xr1 u_xr (
+`endif
+            .clk(clk), .rst_n(rst_n), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w),
             .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b),
             .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x),
             .p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x),

@@ -33,11 +33,11 @@ class GrowthAccounting(unittest.TestCase):
         env.start()
         self.addCleanup(env.stop)
 
-    def gate(self, rows, available):
+    def gate(self, rows, available, inv='1'):
         out = io.StringIO()
         with patch.object(R, 'sizes', return_value={}), patch.object(R, 'meminfo', return_value=(1008, available)), \
              patch.object(R, 'read_units', return_value=copy.deepcopy(rows)), patch.object(R, 'die_like', return_value=False), \
-             patch.object(R, 'die_hold', return_value=0), patch.dict(R.os.environ, {'OT_HEAVY_PRIO': ''}), \
+             patch.object(R, 'die_hold', return_value=0), patch.dict(R.os.environ, {'OT_HEAVY_PRIO': '', 'HARD_INVARIANT': inv}), \
              patch.object(R, 'holds_admit_lock', return_value=True), contextlib.redirect_stdout(out):
             R.gate(64, ['bash', 'run_replay.sh'])
         return out.getvalue()
@@ -52,7 +52,7 @@ class GrowthAccounting(unittest.TestCase):
         # Young scopes have not yet taken their measured ~38.5 GiB each; the former cap erased that future growth.
         observed_avail = [190, 187, 178, 163, 146]
         old_rows, fixed_rows = initial_rows(), initial_rows()
-        old_admitted, fixed_admitted = [], []
+        old_admitted, fixed_admitted, inv_rows, inv_admitted = [], [], initial_rows(), []
         for i, available in enumerate(observed_avail):
             old_book = R.books(copy.deepcopy(old_rows), 1008, available, {})
             old_can = min(available - min(old_book['grow'], .10 * 1008), available - 50.4) / .7
@@ -60,13 +60,20 @@ class GrowthAccounting(unittest.TestCase):
             old_admitted.append(old_ok)
             if old_ok:
                 old_rows.append(row(f'old-replay{i}', 0, 64, 10))
-            fixed_ok = self.gate(fixed_rows, available).startswith('OK ')
+            fixed_ok = self.gate(fixed_rows, available, inv='0').startswith('OK ')
+            inv_ok = self.gate(inv_rows, available).startswith('OK ')
+            inv_admitted.append(inv_ok)
+            if inv_ok:
+                inv_rows.append(row(f'inv-replay{i}', 0, 64, 10))
             fixed_admitted.append(fixed_ok)
             if fixed_ok:
                 fixed_rows.append(row(f'replay{i}', 0, 64, 10))
         self.assertEqual(old_admitted, [True] * 5)
         # v12 GROWING RESERVATION: each young replay is charged its whole 64 GB until it holds it -> #3..#5 refused
         self.assertEqual(fixed_admitted, [True, True, False, False, False])
+        # v17 HARD INVARIANT (TOKc-ADM 10-22): 818 in use + 20 floor + 64 <= 944 admits #1; #2 adds its fresh 64 -> 966 > 944
+        self.assertLessEqual(sum(inv_admitted), sum(fixed_admitted))
+        self.assertEqual(inv_admitted, [True, False, False, False, False])
         self.assertEqual(fixed_rows[0]['res'], 512)
         self.assertEqual(fixed_rows[0]['now'], 490.25)
 
@@ -77,7 +84,7 @@ class GrowthAccounting(unittest.TestCase):
         self.assertAlmostEqual(R.admissible(1008, 146, book, 50.4, .7), (146 - book['grow']) / .7)
         text = self.gate(rows, 146)
         self.assertTrue(text.startswith('NO '), text)
-        self.assertIn('uncapped sum', text)
+        self.assertIn('v16 measured reserve', text)      # v16: young replays are charged in full, running growth capped
         self.assertNotIn('cap 0.1', text)
 
     def test_low_growth_job_is_still_admitted_and_real_floor_remains(self):

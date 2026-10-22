@@ -22,7 +22,15 @@ sys.path.insert(0, str(TOOLS))
 from hbm_layer_vehicle import hc_images as HC
 from hbm_layer_vehicle.layer_images import CpBus
 
-CHECKPOINT_SHA256 = "f96ae55457396bc881ee592f7f7eb66d6f510b6be76faf40dca9a5629c0fa74d"
+# STEWARD-TOK-HBM-HC 10-21: the ds_native fixtures (records.json/operands.npz, HC_MIX_POST A -> O) are the full-shape
+# W17/W19 run (tools/rtl_v41_fullshape_layer_campaign.Checkpoint: the RELEASED DeepSeek-V4.1-Flash snapshot, D 5120).
+# The root's base24/scale3 runtime inputs must come from that same snapshot.  The reduced-v2 single-file checkpoint
+# (dim 160, sha f96ae554...) has different hc_* tensors: feeding it made the actual root compute mHC(A, reduced params)
+# exactly while the checks expected mHC(A, released params) -> k31 SLICE_FAIL 4/12 (rec30 hc_eng__result + 3 VM words).
+RELEASED_SNAPSHOT_REVISION = "dba1be0a40aa45a94ad051997016db3960a90277"
+RELEASED_SNAPSHOT = (Path.home() / ".cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots"
+                     / RELEASED_SNAPSHOT_REVISION)
+CHECKPOINT_SHA256 = "f96ae55457396bc881ee592f7f7eb66d6f510b6be76faf40dca9a5629c0fa74d"   # reduced-v2: NOT the fixture's
 REQUIRED_INSTANCES = ("hc_eng", "hleaf_SE", "hc_SW", "calendar_SW", "hleaf_SW", "hb_ckgen")
 ROOT_TGT, TABLE_TGT = 164, 165
 # Selected SE leaf2 -> target pin/start -> sequencer pin/start -> event/root edge.
@@ -44,17 +52,32 @@ def sha_file(path):
     return h.hexdigest()
 
 
-def checkpoint_parameters(path, layer, which="attn", expected_sha=CHECKPOINT_SHA256):
-    """Read only the released input tensors; expected output is not an argument."""
+def checkpoint_parameters(path, layer, which="attn", expected_sha=None):
+    """Read only the released input tensors; expected output is not an argument.
+
+    `path` = the released sharded snapshot directory (model.safetensors.index.json; the default and the only source
+    consistent with the ds_native fixtures, revision RELEASED_SNAPSHOT_REVISION) or, for a non-fixture use, a single
+    safetensors file whose whole-file SHA256 must equal `expected_sha`."""
     path = Path(path)
-    actual_sha = sha_file(path)
-    if actual_sha != expected_sha:
-        raise ValueError(f"checkpoint SHA256 mismatch: {actual_sha}")
+    if path.is_dir():
+        if path.name != RELEASED_SNAPSHOT_REVISION:
+            raise ValueError(f"HC parameters: snapshot {path} is not released revision {RELEASED_SNAPSHOT_REVISION}")
+        weight_map = json.loads((path / "model.safetensors.index.json").read_text())["weight_map"]
+        files = {s_: path / weight_map[f"layers.{layer}.hc_{which}_{s_}"] for s_ in ("base", "scale")}
+        actual_sha = f"snapshot:{RELEASED_SNAPSHOT_REVISION}"
+    else:
+        if expected_sha is None:
+            raise ValueError("HC parameters: a single-file checkpoint needs an explicit expected_sha (the ds_native "
+                             "fixtures use the released snapshot directory)")
+        actual_sha = sha_file(path)
+        if actual_sha != expected_sha:
+            raise ValueError(f"checkpoint SHA256 mismatch: {actual_sha}")
+        files = {"base": path, "scale": path}
     values, provenance = {}, {}
-    with path.open("rb") as f:
-        n = struct.unpack("<Q", f.read(8))[0]
-        header = json.loads(f.read(n))
-        for suffix, count in (("base", 24), ("scale", 3)):
+    for suffix, count in (("base", 24), ("scale", 3)):
+        with files[suffix].open("rb") as f:
+            n = struct.unpack("<Q", f.read(8))[0]
+            header = json.loads(f.read(n))
             name = f"layers.{layer}.hc_{which}_{suffix}"
             meta = header[name]
             if meta["dtype"] != "F32" or meta["shape"] != [count]:
@@ -64,10 +87,39 @@ def checkpoint_parameters(path, layer, which="attn", expected_sha=CHECKPOINT_SHA
                 raise ValueError(f"invalid tensor byte count: {name}")
             f.seek(8 + n + lo)
             raw = f.read(hi - lo)
-            values[suffix] = list(struct.unpack("<" + "I" * count, raw))
-            provenance[suffix] = dict(tensor=name, dtype="F32", shape=[count],
-                                      data_offsets=[lo, hi], sha256=hashlib.sha256(raw).hexdigest())
+        values[suffix] = list(struct.unpack("<" + "I" * count, raw))
+        provenance[suffix] = dict(tensor=name, file=files[suffix].name, dtype="F32", shape=[count],
+                                  data_offsets=[lo, hi], sha256=hashlib.sha256(raw).hexdigest())
     return values, dict(checkpoint=str(path), checkpoint_sha256=actual_sha, tensors=provenance)
+
+
+def mix_post_reference(A, parameters, hc=4, sinkhorn_iters=20, eps=1e-6):
+    """ds_native hc_mix_post (tools/hgi_sim/ds_native.py) in float64: [pre | post | Sinkhorn comb] of the 24 raw mixes.
+    Used only as an input/expectation CONSISTENCY guard (wrong parameters give O(1) errors), never as a check value."""
+    f32 = lambda u: np.asarray(u, np.uint32).view(np.float32).astype(np.float64)
+    m, base, scale = f32(A), f32(parameters["base"]), f32(parameters["scale"])
+    sig = lambda z: 1.0 / (1.0 + np.exp(-z))
+    pre = sig(m[:hc] * scale[0] + base[:hc]) + eps
+    post = 2.0 * sig(m[hc:2 * hc] * scale[1] + base[hc:2 * hc])
+    c = (m[2 * hc:] * scale[2] + base[2 * hc:]).reshape(hc, hc)
+    c = np.exp(c - c.max(axis=1, keepdims=True))
+    c = c / c.sum(axis=1, keepdims=True) + eps
+    c = c / (c.sum(axis=0, keepdims=True) + eps)
+    for _ in range(sinkhorn_iters - 1):
+        c = c / (c.sum(axis=1, keepdims=True) + eps)
+        c = c / (c.sum(axis=0, keepdims=True) + eps)
+    return np.concatenate([pre, post, c.ravel()])
+
+
+def check_parameters_reproduce(A, expected_O, parameters, rtol=1e-4, atol=1e-6):
+    """Refuse to emit when the runtime base/scale cannot produce the fixture's expected O from its A."""
+    ref = mix_post_reference(A, parameters)
+    exp = np.asarray(expected_O, np.uint32).view(np.float32).astype(np.float64)
+    if not np.allclose(ref, exp, rtol=rtol, atol=atol):
+        bad = int(np.argmax(np.abs(ref - exp)))
+        raise ValueError(f"HC runtime parameters do not reproduce the fixture O (max |err| {np.abs(ref - exp).max():.3g}"
+                         f" at [{bad}] ref {ref[bad]:.6g} exp {exp[bad]:.6g}): base/scale source differs from the "
+                         f"fixture golden (use the released snapshot {RELEASED_SNAPSHOT_REVISION})")
 
 
 def event_word(time, **fields):
@@ -129,6 +181,7 @@ def lower_mix_post(A, expected_O, parameters, timing, *, a_sector, o_sector,
         raise ValueError("bounded SW compiler requires an explicit three-sector SW allocation")
     if set(range(a_sector,a_sector+3)) & set(range(o_sector,o_sector+3)):
         raise ValueError("bounded G22 allocation requires disjoint input/output spans")
+    check_parameters_reproduce(A, expected_O, parameters)
     if source_profile is None:
         table, programme, schedule = root_rows(parameters, timing["resp_phase"])
     else:
@@ -446,8 +499,10 @@ def hc_pre_global_sum_fragment(*, words, selected_core, first_tree_edge, tag):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    for name in ("fixtures", "contract", "l12", "bundle", "checkpoint", "out"):
+    for name in ("fixtures", "contract", "l12", "bundle", "out"):
         ap.add_argument("--"+name, type=Path, required=True)
+    ap.add_argument("--checkpoint", type=Path, default=RELEASED_SNAPSHOT,
+                    help="released V4.1-Flash snapshot dir (default) -- the fixtures' golden weights")
     ap.add_argument("--boundary", type=Path)
     ap.add_argument("--source-plan", action="store_true")
     ap.add_argument("--record", type=int, default=30)

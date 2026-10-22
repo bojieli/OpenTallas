@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.s81_dv.mu72_overlay.v1",
- "note": "S81-DIE72-G2 10-21: bind the four end parents to the MU72 tops (main 56885bf97 + Codex 9be8939ec); ports/straps (ch_b 1) unchanged; applied after frame_bind + IDX overlay; S81-LINK5 10-21: s_0N (dsdv_slice_lepw_mu, alias row dsdv_slice_lepw_mab) -> ot_s81sl_slice_lepw_mab_mu_72 (copy-A/B lep_mu_ab, pair B lanes tx2/tx3/rx2/rx3 -> die SerDes link_0_4 / link_0_5)",
+ "note": "S81-DIE72-G2 10-21: bind the four end parents to the MU72 tops (main 56885bf97 + Codex 9be8939ec); ports/straps (ch_b 1) unchanged; applied after frame_bind + IDX overlay; S81-LINK5 10-21: s_0N (dsdv_slice_lepw_mu, alias row dsdv_slice_lepw_mab) -> ot_s81sl_slice_lepw_mab_mu_72 (copy-A/B lep_mu_ab, pair B lanes tx2/tx3/rx2/rx3 -> die SerDes link_0_4 / link_0_5); STW-S81-LAND 10-21 (STEWARD-S81): lanes u_ln<i> in their own regions -> clk_extra + ck_N0..ck_N<n-1> (apply_ep_clock_g8 gives each its die root ck_ep_<inst>_N<i>); lane_regions = die ports tx<i>/rx<i> belong to region N<i> (die landing / pin side: the lane, not K); every lep<->lane net landed in the top (ot_s81_mu72_lnland, +3 each way); u_lep CRED/DR 12, lanes CORE_CRED 12 (lane view dscoll_lane_{e,w}_s12g)",
  "masters": {
   "dsdv_slice_lepw_mus": {
    "module": "ot_s81sl_slice_lepw_mu_72",
@@ -8,6 +8,8 @@
    "clk_extra": [
     "ck_K",
     "ck_ML",
+    "ck_N0",
+    "ck_N1",
     "ck_L0",
     "ck_L1",
     "ck_L3",
@@ -27,7 +29,23 @@
      "when": "unlinked_out_bits",
      "reason": "S81-DIE72-G2: the selected72 plan has no MU replay-return lane from s_0S (only s_0N rt and s_7N hf carry mu_rt); the parameter-free MU72 top keeps the output; declared spare output, never tied or aliased"
     }
-   ]
+   ],
+   "lane_regions": {
+    "ck_N0": {
+     "lane": "u_ln0",
+     "ports": [
+      "tx0",
+      "rx0"
+     ]
+    },
+    "ck_N1": {
+     "lane": "u_ln1",
+     "ports": [
+      "tx1",
+      "rx1"
+     ]
+    }
+   }
   },
   "dsdv_slice_lepw_mu": {
    "module": "ot_s81sl_slice_lepw_mab_mu_72",
@@ -35,6 +53,10 @@
    "clk_extra": [
     "ck_K",
     "ck_ML",
+    "ck_N0",
+    "ck_N1",
+    "ck_N2",
+    "ck_N3",
     "ck_L0",
     "ck_L1",
     "ck_L3",
@@ -97,6 +119,36 @@
     "rx2": "link_0_4",
     "tx3": "link_0_5",
     "rx3": "link_0_5"
+   },
+   "lane_regions": {
+    "ck_N0": {
+     "lane": "u_ln0",
+     "ports": [
+      "tx0",
+      "rx0"
+     ]
+    },
+    "ck_N1": {
+     "lane": "u_ln1",
+     "ports": [
+      "tx1",
+      "rx1"
+     ]
+    },
+    "ck_N2": {
+     "lane": "u_ln2",
+     "ports": [
+      "tx2",
+      "rx2"
+     ]
+    },
+    "ck_N3": {
+     "lane": "u_ln3",
+     "ports": [
+      "tx3",
+      "rx3"
+     ]
+    }
    }
   },
   "dsdv_slice_lepw_mab": {
@@ -105,6 +157,10 @@
    "clk_extra": [
     "ck_K",
     "ck_ML",
+    "ck_N0",
+    "ck_N1",
+    "ck_N2",
+    "ck_N3",
     "ck_L0",
     "ck_L1",
     "ck_L3",
@@ -168,7 +224,37 @@
     "tx3": "link_0_5",
     "rx3": "link_0_5"
    },
-   "clone_from": "dsdv_slice_lepw_mu"
+   "clone_from": "dsdv_slice_lepw_mu",
+   "lane_regions": {
+    "ck_N0": {
+     "lane": "u_ln0",
+     "ports": [
+      "tx0",
+      "rx0"
+     ]
+    },
+    "ck_N1": {
+     "lane": "u_ln1",
+     "ports": [
+      "tx1",
+      "rx1"
+     ]
+    },
+    "ck_N2": {
+     "lane": "u_ln2",
+     "ports": [
+      "tx2",
+      "rx2"
+     ]
+    },
+    "ck_N3": {
+     "lane": "u_ln3",
+     "ports": [
+      "tx3",
+      "rx3"
+     ]
+    }
+   }
   },
   "dsdv_slice_lepe_nh_mus": {
    "module": "ot_s81sl_slice_lepe_nh_mu_72",
@@ -176,6 +262,8 @@
    "clk_extra": [
     "ck_K",
     "ck_ML",
+    "ck_N0",
+    "ck_N1",
     "ck_L0",
     "ck_L1",
     "ck_L3",
@@ -195,7 +283,23 @@
      "when": "unlinked_out_bits",
      "reason": "S81-DIE72-G2: the selected72 plan has no MU replay-return lane from s_7S (only s_0N rt and s_7N hf carry mu_rt); the parameter-free MU72 top keeps the output; declared spare output, never tied or aliased"
     }
-   ]
+   ],
+   "lane_regions": {
+    "ck_N0": {
+     "lane": "u_ln0",
+     "ports": [
+      "tx0",
+      "rx0"
+     ]
+    },
+    "ck_N1": {
+     "lane": "u_ln1",
+     "ports": [
+      "tx1",
+      "rx1"
+     ]
+    }
+   }
   },
   "dsdv_slice_lepe_mu": {
    "module": "ot_s81sl_slice_lepe_mu_72",
@@ -203,6 +307,8 @@
    "clk_extra": [
     "ck_K",
     "ck_ML",
+    "ck_N0",
+    "ck_N1",
     "ck_L0",
     "ck_L1",
     "ck_L3",
@@ -215,7 +321,23 @@
    ],
    "view": null,
    "assembly_spec": "physical/ref_tile/s81_mu72_assembly/lepe_mu.json",
-   "view_note": "S81-DIE72-G2: unhardened MU72 assembly ot_s81sl_slice_lepe_mu_72 (s_7N); spec physical/ref_tile/s81_mu72_assembly/lepe_mu.json (CAP5 normal u_sl + dsfd_coll_lane_*_safe8_ntf lanes + MU endpoint + ot_s81_mu72_land on ck_ML); no parent view, no CLOSED alias; all 12 clock ports read the slice region root (diagnostic implementation root, as the spec K note)"
+   "view_note": "S81-DIE72-G2: unhardened MU72 assembly ot_s81sl_slice_lepe_mu_72 (s_7N); spec physical/ref_tile/s81_mu72_assembly/lepe_mu.json (CAP5 normal u_sl + dsfd_coll_lane_*_safe8_ntf lanes + MU endpoint + ot_s81_mu72_land on ck_ML); no parent view, no CLOSED alias; all 12 clock ports read the slice region root (diagnostic implementation root, as the spec K note)",
+   "lane_regions": {
+    "ck_N0": {
+     "lane": "u_ln0",
+     "ports": [
+      "tx0",
+      "rx0"
+     ]
+    },
+    "ck_N1": {
+     "lane": "u_ln1",
+     "ports": [
+      "tx1",
+      "rx1"
+     ]
+    }
+   }
   }
  },
  "rtl_widths": {

@@ -1,0 +1,7 @@
+%Warning: /srv/opentallas-scratch/claude/codex-qw-gc3-payload-1020/cfg_candidate/qfd_tt_ctlm_opseg.viamap.hex:0: $readmem file not found
+GC3_LOAD words=1024 descriptors=8 mismatch=0 CSR=1 CAL_READY=1 CTX_BAD=0 OPSEG_FAULT=1 CF=1 FACE_FAULT=0 AUTH_FAULT=0 READY=1
+GC3_CFG_REPLAY_PASS actualNU4OPSEG1 storessealed; fullmaster held because OPSEGmask unbound
+- rtl/test/qwen_dv/tb_gc3_cfg_load.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.016 s; speed 78.172 us/s
+- Verilator: cpu 0.016 s on 1 threads; allocated 7 MB

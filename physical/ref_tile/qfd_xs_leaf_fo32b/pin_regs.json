@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_qfd_xs_leaf_fo32",
+ "enable": false,
+ "reason": "the RTL captures every input at its pin register (raw kept copies, no logic before capture) and drives every output from its own register (FILL_PIPE output stage, q/q_v/q_bad registers), as the closed w130 leaf"
+}

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Map complete literal q/BF sources once; no timing/physical/adoption claim."""
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); from yosys_pin import pinned_yosys  # TOKc-YOSYS 10-22: Yosys >= 0.68 or fail
 import argparse
 import json
 import os
@@ -90,7 +91,7 @@ def run(work,backend,reuse_q=None,only_case=None):
     if backend=='pinned-orfs':
         observed=subprocess.check_output(['docker','inspect',container,'--format','{{.Image}}'],text=True).strip()
         if observed!=expected_image:raise ValueError('pinned mapping image mismatch')
-    command=['yosys'] if backend=='local' else ['docker','exec',container,'yosys']
+    command=[pinned_yosys()] if backend=='local' else ['docker','exec',container,'yosys']
     record=dict(status='RUNNING',pid=os.getpid(),source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
         source_manifest_sha256=sha(BASE/'physical_source_manifest.json'),model_sha256=sha(BASE/'model.json'),runner_sha256=sha(Path(__file__)),
         versions={'yosys':subprocess.check_output(command+['-V'],text=True).strip()},backend=backend,

@@ -450,11 +450,16 @@ module ot_qwen_d2d_cal_sfg3 #(parameter integer NE = 32, parameter integer AW = 
     reg [4:0]  rep, bcur;
     // running and a KEPT copy share one D net (run_d); the pointer's upper half advances on the copy
     (* keep = "true", dont_touch = "true" *) reg run_c;
+    // OVL native33 repair: phase has its own kept same-edge run state.
+    // The high pointer already has32 physical loads (two banks x16);
+    // sharing its advance predicate with ph created a33rd mapped load.
+    (* keep = "true", dont_touch = "true" *) reg run_p;
     wire run_d = ht_a[3] ? 1'b0 : st_a[0] ? 1'b1 : (running && cnt == 14'd1 && rep == 5'd0 && cur[17]) ? 1'b0 : running;
     (* keep = "true", dont_touch = "true" *) always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin running <= 1'b0; run_c <= 1'b0; run_g <= 1'b0; run_w <= 8'd0; run_s <= 1'b0; end
-        else begin running <= run_d; run_c <= run_d; run_g <= run_d; run_w <= {8{run_d}}; run_s <= run_d; end
+        if (!rst_n) begin running <= 1'b0; run_c <= 1'b0; run_p <= 1'b0; run_g <= 1'b0; run_w <= 8'd0; run_s <= 1'b0; end
+        else begin running <= run_d; run_c <= run_d; run_p <= run_d; run_g <= run_d; run_w <= {8{run_d}}; run_s <= run_d; end
     wire adv   = running && cnt == 14'd1 && rep == 5'd0 && !cur[17];
+    wire adv_p = run_p && cnt == 14'd1 && rep == 5'd0 && !cur[17];
     wire adv_h = run_c && cnt == 14'd1 && rep == 5'd0 && !cur[17];
     // ---- pointer: one-hot + lap bit, ONE D net for master and copy (ptr <= {0,sb}+1 / ptr+1 / hold) ----
     wire [NE-1:0] sel1_h = {sel1_d1[NE-1:H], sel1_d0[H-1:0]};
@@ -471,7 +476,7 @@ module ot_qwen_d2d_cal_sfg3 #(parameter integer NE = 32, parameter integer AW = 
         end
         if (ht_a[1]) phd = ph;
         else if (st_a[3]) phd = seg_c[3] & sel1_d1[NE-1];
-        else if (adv_h) phd = ph ^ pc0[NE-1];
+        else if (adv_p) phd = ph ^ pc0[NE-1];
         else phd = ph;
     end
     (* keep = "true", dont_touch = "true" *) always @(posedge ck or negedge rst_n)
@@ -520,7 +525,7 @@ module ot_qwen_d2d_cal_sfg3 #(parameter integer NE = 32, parameter integer AW = 
     reg fo_armed = 1'b0, fo_arm0 = 1'b0;   // r3: sel1_c1 converges on the SECOND edge (its D holds from the master's Q)
     always @(posedge ck) begin
         fo_arm0 <= 1'b1;
-        if (fo_armed && (sel1_c1 !== sel1_c0 || pc1 !== pc0 || run_c !== running || ok_c !== {4{ok_c[0]}} || run_g !== running ||
+        if (fo_armed && (sel1_c1 !== sel1_c0 || pc1 !== pc0 || run_c !== running || run_p !== running || ok_c !== {4{ok_c[0]}} || run_g !== running ||
                          run_w !== {8{running}} || run_s !== running || sq !== {8{sq[0]}} || sdq1 !== sdq0 || seg_c !== {5{seg_c[0]}}))
             $display("FO_COPY_MISMATCH %m t=%0t sel1 %h/%h pc %h/%h", $time, sel1_c0, sel1_c1, pc0, pc1);
         fo_armed <= fo_arm0;
@@ -1002,7 +1007,7 @@ module qkd_d2d_static_core_sfm3 #(parameter integer MUT = 0, parameter integer N
     qkd_host_link_services #(.NL(NL)) u_hls (.ck(ck), .rst_n(local_rst_n[3]),
         .d2d_link_up(lu), .serdes_up(serdes_up), .d2d_transport_fault(tf), .d2d_links_drained(dr),
         .d2d_link_reset_seen(seen), .d2d_retrained(rt),
-        .rec_tx_slot(txs[1]), .rec_tx_kind(tk), .rec_tx_beat(tb), .rec_rx_event(rxe[1]), .rec_rx_slot(rxs[1]),
+        .rec_tx_slot(txs[1]), .rec_tx_kind(tk), .rec_tx_beat(tb), .rec_rx_event(rxe[1]), .rec_rx_slot(rxs[1]), .rec_rx_kind(rk),
         .rx_payload(rxp), .c_vm_drained(s_vm), .c_collective_drained(s_co), .c_collective_busy(s_cb),
         .c_crom_fault(s_cf), .c_execution_active(s_ea), .c_admit_ready(s_ar), .c_status_fresh(s_fr),
         .kv_drained_local(kv_drained_local), .kv_flush_local(kv_flush_local), .host_drained_local(host_drained_local),

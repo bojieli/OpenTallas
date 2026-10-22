@@ -70,6 +70,13 @@ def rtl_text(path, commit, src_prefixes, local_dirs):
     if t.returncode and Path(p).is_absolute() and Path(p).is_file():
         # QXF-SEAMK 10-18: a die chain's source tree without git history (rsync'd src/): the run's own file (recorded)
         return Path(p).read_text(errors='replace'), f'disk:{p}'
+    if t.returncode and not Path(p).is_absolute():
+        # QW-G5RELAUNCH 10-20: a relative port_bind path in a git-less run src/ (rsync'd die-chain tree, dv2f20g5r2b
+        # phase2 'not a git repository'): the run's own tree (ROOT = this tool's src/, the GEN source) or a --src-prefix
+        for base in [ROOT, *src_prefixes]:
+            q = Path(base) / rel
+            if q.is_file():
+                return q.read_text(errors='replace'), f'disk:{q}'
     if t.returncode:
         raise SystemExit(f'netlist_relay_stages: git show {commit}:{rel} failed: {t.stderr.strip()[:200]}')
     return t.stdout, f'git:{commit}:{rel}'
@@ -211,9 +218,13 @@ def export(die_v, pb, design, commit, src_prefixes, local_dirs, plan_id, reach=N
         relay = is_relay(mst)
         if re.match(r'^(qfd_land|qkd_land)', mst):
             ks = [cm.get(k, '').strip() for k in ('k2', 'k1', 'k0')]
-            hi, lo = cm.get('tie_hi'), cm.get('tie_lo')
-            if hi and lo and hi != lo and all(k in (hi, lo) for k in ks):
-                land_k[name] = sum((1 << (2 - i)) for i, k in enumerate(ks) if k == hi)
+            hi, lo = (cm.get('tie_hi') or '').strip(), (cm.get('tie_lo') or '').strip()
+            # SQ-QB2-RELAY 10-21: K 7 / K 0 straps use ONE polarity, so the GEN (tools/qwen_split/reset_calendar_audit.py
+            # emits ftk_<bid>_<pol> only for a polarity with k pins) leaves the other tie output open; such a strap is
+            # fully tied from the instance's own tie cell.  Every k pin must still be this instance's tie_hi / tie_lo net.
+            ties = {n: v for n, v in ((hi, 1), (lo, 0)) if n}
+            if ties and hi != lo and all(k in ties for k in ks):
+                land_k[name] = sum(ties[k] << (2 - i) for i, k in enumerate(ks))
             else:
                 problems.append(f'{name}: landing K strap not tied from tie_hi / tie_lo: {ks}')
         for pn, b in bits.items():

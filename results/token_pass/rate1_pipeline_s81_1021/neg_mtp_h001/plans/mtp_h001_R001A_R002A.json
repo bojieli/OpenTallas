@@ -1,0 +1,149 @@
+{
+"schema": "opentallas.tokfunc_s81.mu_hop_plan.v1",
+"mode": "mtp",
+"hop": "R001->R002",
+"sender_index": 1,
+"why": "",
+"resource": "link.R001.A-R002.A",
+"period": 1684168,
+"users": [
+0
+],
+"gap_compress": {
+"cap": null,
+"gaps_compressed": 0
+},
+"replay_scope": "sampled link resource messages",
+"compiled_position_graph": false,
+"modeled_message_receive_age": 821,
+"absolute_rebase": 18136,
+"phase_quantum": 4,
+"phase_preserved": true,
+"generator_warm_requirement": "multiple of four edges",
+"same_user_serial_delays": {
+"count": 0,
+"max": 0,
+"first": []
+},
+"same_user_adjacent": {
+"count": 3,
+"min_gap": 656,
+"first": [
+{
+"user": 0,
+"gap": 656,
+"label": "partial L0 pos 0"
+},
+{
+"user": 0,
+"gap": 18373,
+"label": "x L0 pos 1"
+},
+{
+"user": 0,
+"gap": 3488,
+"label": "partial L0 pos 1"
+}
+]
+},
+"graph": "pipeline_graph",
+"hop_cycles": 821,
+"land_lead": 447,
+"users_shift": {
+"0": 0
+},
+"overlaps": 1,
+"negative": {
+"user": 0,
+"k": 1,
+"index": 1,
+"graph_T": 21626,
+"claimed_T": 18464,
+"busy": {
+"user": 0,
+"label": "x L0 pos 0",
+"T": 18138,
+"end": 18790
+},
+"mode": "rtl",
+"rtl_issue_T": 18794,
+"deadline_T": 19285,
+"collisions": 1,
+"first": {
+"resource": "link.R001.A-R002.A",
+"users": [
+0,
+0
+],
+"overlap": 326,
+"intervals": [
+[
+18138,
+18790
+],
+[
+18464,
+19116
+]
+],
+"same_user": true
+},
+"result": "FAULT"
+},
+"msgs": [
+{
+"user": 0,
+"T": 18138,
+"position": 0,
+"m": 0,
+"label": "x L0 pos 0",
+"length": 652,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "A",
+"t": 2
+},
+{
+"user": 0,
+"T": 18794,
+"position": 0,
+"m": 1,
+"label": "partial L0 pos 0",
+"length": 652,
+"rx_first_age": 44,
+"rx_complete_age": 491,
+"copy_a": "A",
+"copy_b": "A",
+"injected": true,
+"claimed_T": 18464,
+"t": 658
+},
+{
+"user": 0,
+"T": 37167,
+"position": 1,
+"m": 2,
+"label": "x L0 pos 1",
+"length": 652,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "A",
+"t": 19031
+},
+{
+"user": 0,
+"T": 40655,
+"position": 1,
+"m": 3,
+"label": "partial L0 pos 1",
+"length": 652,
+"rx_first_age": 374,
+"rx_complete_age": 821,
+"copy_a": "A",
+"copy_b": "A",
+"t": 22519
+}
+]
+}

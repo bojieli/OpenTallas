@@ -1,0 +1,185 @@
+{
+ "name": "qfd_coll_face_s1_band-band-COMMIT",
+ "block": "qfd_coll_face_s1_safe",
+ "ref_tile": true,
+ "owner": "Claude:QW-COLLIO",
+ "purpose": "S1 face codec-band successor (QW-COLLIO); non-critical; submit on PASS",
+ "threads": 8,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/qw-collio-1020",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/ref_tile/qfd_coll_bank137/views",
+   "physical/ref_tile/qfd_static_ch546/views",
+   "results/rtl/qwen_coll_face_1018",
+   "rtl/test/run_coll_static_face.sh",
+   "rtl/test/tb_coll_static_face.sv",
+   "rtl/physical/qwen_coll_safe_1019",
+   "results/rtl/qwen_coll_safe_1019",
+   "tools/orfs_allcorner_spef.py",
+   "results/rtl/qw_collio_1020"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_coll_face_s1_safe u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_QFD_FACE_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/physical/qwen_coll_safe_1019/qfd_coll_face_s1_safe.sv rtl/physical/ot_qfd_coll_static_face.sv rtl/physical/ot_qfd_static_transport.sv rtl/rom/ot_coll_static_linkcal.sv rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_bb.v physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "coll_face_pass",
+    "cmd": "FACE_L=378 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^COLL_STATIC_FACE_BENCH PASS MUT=0$",
+    "pass_witness": "results/rtl/qw_collio_1020/bench3/m0.log",
+    "min_count_regex": "^MUT=0 PHI=1 COLL_FACE_BENCH .* got (\\d+) "
+   },
+   {
+    "name": "coll_face_mut_rx_early",
+    "cmd": "FACE_L=378 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=1$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m1.log"
+   },
+   {
+    "name": "coll_face_mut_cdc_latency",
+    "cmd": "FACE_L=378 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=2$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m2.log"
+   },
+   {
+    "name": "coll_face_mut_phy_long",
+    "cmd": "FACE_L=378 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=3$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m3.log"
+   },
+   {
+    "name": "coll_face_mut_bank_hit",
+    "cmd": "FACE_L=378 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m4 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=4$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m4.log"
+   },
+   {
+    "name": "coll_face_mut_ring_early",
+    "cmd": "FACE_L=378 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=5$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m5.log"
+   },
+   {
+    "name": "coll_face_mut_land_unlanded",
+    "cmd": "FACE_L=378 SAFE=1 SIM=verilator HARD=1 bash rtl/test/run_coll_static_face.sh {RUN}/m6 6",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^COLL_STATIC_FACE_BENCH FAIL MUT=6$",
+    "fail_witness": "results/rtl/qw_collio_1020/bench3/m6.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_coll_face_s1_band/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_coll_face_s1_band/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_coll_face_s1_band --out {RUN}/record/views/qfd_coll_face_s1_safe --macro-view physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf --macro-view physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_coll_face_s1_band/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/qfd_coll_bank137/views/ot_qkvd_llr_replay_sram_leaf",
+   "physical/ref_tile/qfd_static_ch546/views/qfd_static_ch546"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_coll_face_s1_band/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_coll_face_s1_band/qfd_coll_face_s1_band-band-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "QW-COLLIO 10-20 band: codec-band successor of qfd_coll_face_s1_safe (FAIL: codec0 TT pin spread 450.8 ps / CTS rc2; s1 r4: reach 554 um, spread 306, reg->macro -551). Root cause: no codec std-cell region - 4 W-pinned banks sat between the CDC channels and the PHY pins (950 um flow axis), so codec0 sinks scattered over every macro channel. Now W->E flow: W pins -> CDC column (ch546 TX R0 / RX MY, banks 0/1 MY with pins facing the band) -> dedicated full-height codec band 198.7 um -> banks 2/3 R0 (pins facing band) -> PHY pins on E (<=260 um over banks). No rotated macros. Same SAFE=1 RTL/bench as s1_safe."
+}

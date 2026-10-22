@@ -1,0 +1,18 @@
+INFO token ep 0101 st 0 rope 0 fault 0
+MISMATCH cyc 2177 emb start tok 25182/010e1 ep 0105/0105 rope_sweep 1
+INFO token ep 0105 st 2 rope 0 fault 0
+MISMATCH cyc 3299 emb start tok 251ff/00063 ep 0109/0109 rope_sweep 1
+INFO token ep 0109 st 4 rope 0 fault 0
+MISMATCH cyc 4421 emb start tok 2557f/2517f ep 010e/010e rope_sweep 1
+INFO token ep 010e st 6 rope 0 fault 0
+MISMATCH cyc 5543 emb start tok 25182/00005 ep 0111/0111 rope_sweep 1
+INFO token ep 0111 st 8 rope 0 fault 1
+MISMATCH cyc 6665 emb start tok 25185/0004d ep 0201/0201 rope_sweep 1
+INFO token ep 0201 st 10 rope 0 fault 0
+COVER checks=6714 starts=10 rope=0 ok_faults=000 wrong_head=1 wrong_tx=1 kvn=1
+FAIL starts 10 rope 0 (want 5/5)
+KVS_EMB_ROPE_OVL FAIL errors=6 checks=6714
+- rtl/qwen_sys/static_embedding_20261014/test/tb_qkd_kvs_emb_rope_ovl.sv:105: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 0.018 s; speed 306.883 us/s
+- Verilator: cpu 0.018 s on 1 threads; allocated 7 MB

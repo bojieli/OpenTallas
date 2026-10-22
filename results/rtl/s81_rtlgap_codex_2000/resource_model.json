@@ -1,0 +1,168 @@
+{
+  "schema": "opentallas.s81.sukv.source_resource_model.v1",
+  "baseline": "Current configured D512 KV512 source; die physical stand-in is not its measured area",
+  "reused": {
+    "kve_engines": 64,
+    "kve_rope_subset": 8,
+    "kvq_engines": 16,
+    "kv_reduce": "QNH4xNE16 plusQNR_NE4_D512",
+    "event_sram_macros_32x64": 144,
+    "event_sram_bits": 294912
+  },
+  "additional_CN_IK": {
+    "new_kve_bank": false,
+    "new_event_sram_macros": 0,
+    "CN_E4M3_FP4_writer32": 16,
+    "IK_UE8M0_FP4_writer32": 4,
+    "preRoPE_norm_write512": 16,
+    "IK_QNH_NE8": 2,
+    "IK_QNR_NE2_D128": 1,
+    "reason": "Existing depth32 event SRAM accepts3CN events per bank and2IK events in4banks"
+  },
+  "pool": {
+    "lanes": 8,
+    "features": 512,
+    "groups": 64,
+    "per_lane": {
+      "sub_FP32_add_lat4": 1,
+      "den_FP32_add_lat4": 1,
+      "final_FP32_add_lat4": 1,
+      "exp_LM5_LA4_depth71": 1,
+      "divide_depth33": 1,
+      "FP32_multiply_lat5": 1
+    },
+    "mutable_tag_queue_bits": 16,
+    "new_SRAM_macros": 0,
+    "readonly_exp_case_tables": {
+      "copies": 8,
+      "depth": 256,
+      "source_width": 64,
+      "representation": "normal combinational ROM mapping; no mutable memory"
+    },
+    "input_bytes": 8192,
+    "output_bytes": 2048,
+    "peak_VM_bytes_per_edge": 32,
+    "VM_pair_reads": 256,
+    "VM_pair_writes": 64,
+    "issue_edges": 372,
+    "measured_finish_edges_VLAT4": 391,
+    "measured_finish_edges_VLAT1": 388
+  },
+  "regional_clock_plan_counts": {
+    "pool_lane": 8,
+    "pool_top": 1,
+    "IK_half_reduce": 2,
+    "IK_final_reduce": 1,
+    "CN_IK_writers": "Place by their existing localKVQ region; cross-region paths need measured landed binding"
+  },
+  "area": {
+    "status": "POOL_MAPPED_NATIVE_FAIL",
+    "normal_pool_native_unit": "ot-epyc7/3758592-1792639443",
+    "additional_cell_area_um2": null,
+    "minimum_outline_growth_um2": null,
+    "growth_formula": "additional mapped standard-cell area divided by selected utilization in[0.4,0.6], plus actual relay/clock channels; no SRAM delta forCN/IK/pool",
+    "must_not_assume_existing_slot_fit": true,
+    "pool_mapped_cells": 875879,
+    "pool_mapped_cell_area_asap7_report_units": 95849.83854,
+    "pool_sequential_cell_area_asap7_report_units": 29646.06804,
+    "pool_report": "results/rtl/s81_rtlgap_codex_2000/pool_native/synth_stat.txt",
+    "remaining": "Original pool native FAIL; private MAIN and alternate source successors run actual numerical checks then normal native synthesis. CN/IK growth, physical body, reset calendar, clocks and routing remain unqualified.",
+    "native_max_dynamic_loads": 5391,
+    "native_violating_roots": 2247,
+    "native_roots_examined": 603703,
+    "native_summary": "results/rtl/s81_rtlgap_codex_2000/pool_native/native_summary.json",
+    "area_conversion_authority": "results/rtl/s81_rtlgap_codex_2000/pool_native/area_conversion_authority.json",
+    "report_area_to_physical_um2": 1.0,
+    "original_unqualified_pool_cell_area_um2": 95849.83854,
+    "original_pool_outline_at_60pct_um2": 159749.7309,
+    "original_pool_outline_at_40pct_um2": 239624.59634999998,
+    "outline_excludes_channels_and_clock": true
+  },
+  "qualification": "Model inventory and measured source cycles only; physical body, reachable placement, native max32, per-region clocks and timing remain open",
+  "pool_native_structural_successors": {
+    "source": "f219a0003",
+    "numeric_receipts": "859e67506",
+    "lanes": 8,
+    "features": 512,
+    "same_vm_read_write_shape": true,
+    "peak_VM_bytes_per_edge": 32,
+    "input_bytes": 8192,
+    "output_bytes": 2048,
+    "pair_reads": 256,
+    "pair_writes": 64,
+    "measured_component_finish_edges": 391,
+    "arithmetic_edges_added": 0,
+    "deepest_reset_release_edges": 6,
+    "predecessor_lane_reset_edges": 2,
+    "additional_reset_startup_edges": 4,
+    "reset_calendar_adopted": false,
+    "source_reset_FF_delta": 331,
+    "main": {
+      "table_bits_per_group": 8,
+      "groups_per_lane": 8,
+      "added_source_table_index_FF": 512,
+      "total_new_source_FF_before_mapping_merges": 843,
+      "unit": "ot-epyc7/763833-1792647167"
+    },
+    "alternate": {
+      "table_bits_per_group": 4,
+      "groups_per_lane": 16,
+      "added_source_table_index_FF": 1024,
+      "total_new_source_FF_before_mapping_merges": 1355,
+      "unit": "ot-epyc7/764540-1792647167"
+    },
+    "FP_payload_outputs_removed_from_reset": 5168,
+    "data_FF_edges_preserved": true,
+    "new_SRAM_macros": 0,
+    "mapped_area_delta": null,
+    "keep_policy_physical_FF_delta": "Unknown until actual mapping; source counts exclude suppression of predecessor merging",
+    "boundary_bits_per_edge": {
+      "VM_request_address": 10,
+      "VM_read_payload": 256,
+      "VM_write_payload": 256,
+      "VM_write_mask": 8
+    },
+    "physical_native_and_clock_status": "Unqualified; both ordinary synth/native chains live; no slot-fit or native limit credit"
+  },
+  "regional_clock_implementation": {
+    "status": "OPEN: current raw75 and private pool source use one generic clk",
+    "native_fanout_is_not_regional_clock_qualification": true,
+    "current_IK_half_clocks": "ot_s81sl_kv_bank g_iks ties ck_half to {2{sk}}, with same sk for final reduce",
+    "required_IK_successor": "Two independently delivered half clocks plus final reduce clock, with landed partial-sum and publish/control crossings",
+    "actual_crossing_data_edges": null,
+    "additional_arithmetic_latency": null,
+    "physical_clock_and_phase_authority": null,
+    "source_port_aliasing_is_not_a_successor": true,
+    "next": "Use actual repaired area/reach to choose a real single-region hard pool or implement the multiple-region source ports/rings. Neither option is physically qualified by current native jobs.",
+    "multi_region_pool_successor_ports": {
+      "control_clocks": 1,
+      "lane_clocks": 8,
+      "landed_control_to_each_lane_bits": 35,
+      "control_to_lane_fields": [
+        "valid",
+        "role2",
+        "FP32_operand32"
+      ],
+      "landed_each_lane_to_control_bits": 34,
+      "lane_to_control_fields": [
+        "valid",
+        "BF16_widened32",
+        "fault"
+      ],
+      "all_eight_functional_result_arrivals_must_equal_age": true
+    },
+    "single_region_pool_alternative": {
+      "implemented": false,
+      "proposal": "One real monolithic pool hard leaf with one clock, separate from full SUKV stand-in",
+      "requirements": [
+        "Actual repaired area and outline",
+        "Every single-cycle path within 405um or a real registered/landed hop",
+        "Actual SS setup and FF hold",
+        "Actual within-region clock spread proof",
+        "Real slice-to-pool VM/control boundary landings and source-bound clock/reset delivery"
+      ],
+      "existing_generic_full_slice_clock_is_not_proof": true,
+      "clock_root_inventory_is_not_an_owner_mandate": true
+    }
+  }
+}

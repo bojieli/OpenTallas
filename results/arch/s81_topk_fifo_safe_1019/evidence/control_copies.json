@@ -1,0 +1,468 @@
+[
+  {
+    "module": "$paramod$28dadac711ea76a6a919c97b28d3a3fd9abce4e0\\ot_sram_showahead_1r1w",
+    "kept_flag_count": 74,
+    "unique_kept_flag_bits": 74,
+    "maximum_actual_flag_Q_loads": 16,
+    "flags": {
+      "g_slice[0].cur_q": [
+        16
+      ],
+      "g_slice[0].prev_q": [
+        16
+      ],
+      "g_slice[10].cur_q": [
+        16
+      ],
+      "g_slice[10].prev_q": [
+        16
+      ],
+      "g_slice[11].cur_q": [
+        16
+      ],
+      "g_slice[11].prev_q": [
+        16
+      ],
+      "g_slice[12].cur_q": [
+        16
+      ],
+      "g_slice[12].prev_q": [
+        16
+      ],
+      "g_slice[13].cur_q": [
+        16
+      ],
+      "g_slice[13].prev_q": [
+        16
+      ],
+      "g_slice[14].cur_q": [
+        16
+      ],
+      "g_slice[14].prev_q": [
+        16
+      ],
+      "g_slice[15].cur_q": [
+        16
+      ],
+      "g_slice[15].prev_q": [
+        16
+      ],
+      "g_slice[16].cur_q": [
+        16
+      ],
+      "g_slice[16].prev_q": [
+        16
+      ],
+      "g_slice[17].cur_q": [
+        16
+      ],
+      "g_slice[17].prev_q": [
+        16
+      ],
+      "g_slice[18].cur_q": [
+        16
+      ],
+      "g_slice[18].prev_q": [
+        16
+      ],
+      "g_slice[19].cur_q": [
+        16
+      ],
+      "g_slice[19].prev_q": [
+        16
+      ],
+      "g_slice[1].cur_q": [
+        16
+      ],
+      "g_slice[1].prev_q": [
+        16
+      ],
+      "g_slice[20].cur_q": [
+        16
+      ],
+      "g_slice[20].prev_q": [
+        16
+      ],
+      "g_slice[21].cur_q": [
+        16
+      ],
+      "g_slice[21].prev_q": [
+        16
+      ],
+      "g_slice[22].cur_q": [
+        16
+      ],
+      "g_slice[22].prev_q": [
+        16
+      ],
+      "g_slice[23].cur_q": [
+        16
+      ],
+      "g_slice[23].prev_q": [
+        16
+      ],
+      "g_slice[24].cur_q": [
+        16
+      ],
+      "g_slice[24].prev_q": [
+        16
+      ],
+      "g_slice[25].cur_q": [
+        16
+      ],
+      "g_slice[25].prev_q": [
+        16
+      ],
+      "g_slice[26].cur_q": [
+        16
+      ],
+      "g_slice[26].prev_q": [
+        16
+      ],
+      "g_slice[27].cur_q": [
+        16
+      ],
+      "g_slice[27].prev_q": [
+        16
+      ],
+      "g_slice[28].cur_q": [
+        16
+      ],
+      "g_slice[28].prev_q": [
+        16
+      ],
+      "g_slice[29].cur_q": [
+        16
+      ],
+      "g_slice[29].prev_q": [
+        16
+      ],
+      "g_slice[2].cur_q": [
+        16
+      ],
+      "g_slice[2].prev_q": [
+        16
+      ],
+      "g_slice[30].cur_q": [
+        16
+      ],
+      "g_slice[30].prev_q": [
+        16
+      ],
+      "g_slice[31].cur_q": [
+        16
+      ],
+      "g_slice[31].prev_q": [
+        16
+      ],
+      "g_slice[32].cur_q": [
+        16
+      ],
+      "g_slice[32].prev_q": [
+        16
+      ],
+      "g_slice[33].cur_q": [
+        16
+      ],
+      "g_slice[33].prev_q": [
+        16
+      ],
+      "g_slice[34].cur_q": [
+        16
+      ],
+      "g_slice[34].prev_q": [
+        16
+      ],
+      "g_slice[35].cur_q": [
+        16
+      ],
+      "g_slice[35].prev_q": [
+        16
+      ],
+      "g_slice[36].cur_q": [
+        16
+      ],
+      "g_slice[36].prev_q": [
+        16
+      ],
+      "g_slice[3].cur_q": [
+        16
+      ],
+      "g_slice[3].prev_q": [
+        16
+      ],
+      "g_slice[4].cur_q": [
+        16
+      ],
+      "g_slice[4].prev_q": [
+        16
+      ],
+      "g_slice[5].cur_q": [
+        16
+      ],
+      "g_slice[5].prev_q": [
+        16
+      ],
+      "g_slice[6].cur_q": [
+        16
+      ],
+      "g_slice[6].prev_q": [
+        16
+      ],
+      "g_slice[7].cur_q": [
+        16
+      ],
+      "g_slice[7].prev_q": [
+        16
+      ],
+      "g_slice[8].cur_q": [
+        16
+      ],
+      "g_slice[8].prev_q": [
+        16
+      ],
+      "g_slice[9].cur_q": [
+        16
+      ],
+      "g_slice[9].prev_q": [
+        16
+      ]
+    }
+  },
+  {
+    "module": "$paramod$f169d0f4ba54b86610fcbdcc1533aa82d0d07ea0\\ot_sram_showahead_1r1w",
+    "kept_flag_count": 76,
+    "unique_kept_flag_bits": 76,
+    "maximum_actual_flag_Q_loads": 16,
+    "flags": {
+      "g_slice[0].cur_q": [
+        16
+      ],
+      "g_slice[0].prev_q": [
+        16
+      ],
+      "g_slice[10].cur_q": [
+        16
+      ],
+      "g_slice[10].prev_q": [
+        16
+      ],
+      "g_slice[11].cur_q": [
+        16
+      ],
+      "g_slice[11].prev_q": [
+        16
+      ],
+      "g_slice[12].cur_q": [
+        16
+      ],
+      "g_slice[12].prev_q": [
+        16
+      ],
+      "g_slice[13].cur_q": [
+        16
+      ],
+      "g_slice[13].prev_q": [
+        16
+      ],
+      "g_slice[14].cur_q": [
+        16
+      ],
+      "g_slice[14].prev_q": [
+        16
+      ],
+      "g_slice[15].cur_q": [
+        16
+      ],
+      "g_slice[15].prev_q": [
+        16
+      ],
+      "g_slice[16].cur_q": [
+        16
+      ],
+      "g_slice[16].prev_q": [
+        16
+      ],
+      "g_slice[17].cur_q": [
+        16
+      ],
+      "g_slice[17].prev_q": [
+        16
+      ],
+      "g_slice[18].cur_q": [
+        16
+      ],
+      "g_slice[18].prev_q": [
+        16
+      ],
+      "g_slice[19].cur_q": [
+        16
+      ],
+      "g_slice[19].prev_q": [
+        16
+      ],
+      "g_slice[1].cur_q": [
+        16
+      ],
+      "g_slice[1].prev_q": [
+        16
+      ],
+      "g_slice[20].cur_q": [
+        16
+      ],
+      "g_slice[20].prev_q": [
+        16
+      ],
+      "g_slice[21].cur_q": [
+        16
+      ],
+      "g_slice[21].prev_q": [
+        16
+      ],
+      "g_slice[22].cur_q": [
+        16
+      ],
+      "g_slice[22].prev_q": [
+        16
+      ],
+      "g_slice[23].cur_q": [
+        16
+      ],
+      "g_slice[23].prev_q": [
+        16
+      ],
+      "g_slice[24].cur_q": [
+        16
+      ],
+      "g_slice[24].prev_q": [
+        16
+      ],
+      "g_slice[25].cur_q": [
+        16
+      ],
+      "g_slice[25].prev_q": [
+        16
+      ],
+      "g_slice[26].cur_q": [
+        16
+      ],
+      "g_slice[26].prev_q": [
+        16
+      ],
+      "g_slice[27].cur_q": [
+        16
+      ],
+      "g_slice[27].prev_q": [
+        16
+      ],
+      "g_slice[28].cur_q": [
+        16
+      ],
+      "g_slice[28].prev_q": [
+        16
+      ],
+      "g_slice[29].cur_q": [
+        16
+      ],
+      "g_slice[29].prev_q": [
+        16
+      ],
+      "g_slice[2].cur_q": [
+        16
+      ],
+      "g_slice[2].prev_q": [
+        16
+      ],
+      "g_slice[30].cur_q": [
+        16
+      ],
+      "g_slice[30].prev_q": [
+        16
+      ],
+      "g_slice[31].cur_q": [
+        16
+      ],
+      "g_slice[31].prev_q": [
+        16
+      ],
+      "g_slice[32].cur_q": [
+        16
+      ],
+      "g_slice[32].prev_q": [
+        16
+      ],
+      "g_slice[33].cur_q": [
+        16
+      ],
+      "g_slice[33].prev_q": [
+        16
+      ],
+      "g_slice[34].cur_q": [
+        16
+      ],
+      "g_slice[34].prev_q": [
+        16
+      ],
+      "g_slice[35].cur_q": [
+        16
+      ],
+      "g_slice[35].prev_q": [
+        16
+      ],
+      "g_slice[36].cur_q": [
+        16
+      ],
+      "g_slice[36].prev_q": [
+        16
+      ],
+      "g_slice[37].cur_q": [
+        1
+      ],
+      "g_slice[37].prev_q": [
+        1
+      ],
+      "g_slice[3].cur_q": [
+        16
+      ],
+      "g_slice[3].prev_q": [
+        16
+      ],
+      "g_slice[4].cur_q": [
+        16
+      ],
+      "g_slice[4].prev_q": [
+        16
+      ],
+      "g_slice[5].cur_q": [
+        16
+      ],
+      "g_slice[5].prev_q": [
+        16
+      ],
+      "g_slice[6].cur_q": [
+        16
+      ],
+      "g_slice[6].prev_q": [
+        16
+      ],
+      "g_slice[7].cur_q": [
+        16
+      ],
+      "g_slice[7].prev_q": [
+        16
+      ],
+      "g_slice[8].cur_q": [
+        16
+      ],
+      "g_slice[8].prev_q": [
+        16
+      ],
+      "g_slice[9].cur_q": [
+        16
+      ],
+      "g_slice[9].prev_q": [
+        16
+      ]
+    }
+  }
+]

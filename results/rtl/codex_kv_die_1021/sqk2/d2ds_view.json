@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.qwen_kv.d2ds_view_select.v1",
+ "mode": "auto",
+ "kit": "qkd_d2d_static_r7w_sfm2",
+ "bind": "physical/ref_tile/qkd_d2d_static_r7w_sfm2/views/qkd_d2d_static_sfm",
+ "die_txdp": "0x03030416",
+ "die_ntx": 3,
+ "top": "qkd_d2d_static_sfm",
+ "view_params": {
+  "NTX": 3,
+  "TXDP": 50529302,
+  "SAFE_RC": 1,
+  "SRAMV": 2,
+  "FEG": 1
+ },
+ "view": "physical/ref_tile/qkd_d2d_static_r7w_sfm2/views/qkd_d2d_static_sfm",
+ "view_txdp": "0x03030416",
+ "view_ntx": 3,
+ "decision": "BIND",
+ "why": "closed view hardened at the die TXDP / NTX"
+}
