@@ -5,7 +5,7 @@ from pathlib import Path
 variant=sys.argv[1];assert variant in ('main','alternate')
 root=Path.cwd();base=root.parent
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
-rtl=root/f'pool_safe_{variant}.sv';tb=root/'tb_pool_native.sv'
+rtl=root/(sys.argv[2] if len(sys.argv)>2 else f'pool_safe_{variant}.sv');tb=root/(sys.argv[3] if len(sys.argv)>3 else 'tb_pool_native.sv')
 record={'variant':variant,'source_sha256':{str(p.relative_to(root)):sha(p) for p in (rtl,tb,Path(__file__))},'numerical':{},'native':None}
 def save(): (root/'result.json').write_text(json.dumps(record,indent=2)+'\n')
 vl=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
