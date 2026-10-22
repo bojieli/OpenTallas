@@ -105,9 +105,16 @@ def qup(x):
 #   host      S81.HOST option (b) (owner 07:10 10-21): stage dies start jobs from their local calendar (no per-job
 #             host / KS frame on the stage circuits); this remains MODEL until the actual HOST descriptor programme
 #             is connected. The host plane is the head die's (HOST_TOK a token a user).
-REL = dict(offchip='switched', links_serial=False, land=False, attn='G16', idx_lat=0, eng_age=0, eng_ii=0)
+#   lnland    STW-S81-LAND (10-21, STEWARD-S81): each end-slice lane is its own clock region (ck_N0/ck_N1) and every
+#             lep <-> lane net is landed (ot_s81_mu72_lnland, +3 destination edges each way).  Every die-to-die crossing
+#             leaves through a sender lep -> lane landing and enters through a receiver lane -> lep landing: + LNLAND = 6
+#             cycles a crossing (TP4 mesh collectives x their crossings, stage / head hops, the stage-hop law HOP, x_flat).
+#             Credit round trips grow +6; lep CRED / DR and lane CORE_CRED go 8 -> 12 so the beat rate is unchanged
+#             (tb_s81_mu72_lnland: burst arrival = unlanded CRED8 die + 6).
+LNLAND = 6
+REL = dict(offchip='switched', links_serial=False, land=False, attn='G16', idx_lat=0, eng_age=0, eng_ii=0, lnland=0)
 REL0 = dict(REL)
-REL241 = dict(offchip='direct', links_serial=True, land=True, attn='G4', idx_lat=40, eng_age=640, eng_ii=704)
+REL241 = dict(offchip='direct', links_serial=True, land=True, attn='G4', idx_lat=40, eng_age=640, eng_ii=704, lnland=LNLAND)
 HOPLAT = ROOT / 'results/arch/release_rack_1021/hop_latency.json'
 SWITCHED = 453
 X_FLAT = 563                   # tb_xdie_s81_2 LEG 1 crossing incl. the die lane legs and the 453 switched leg
@@ -124,7 +131,7 @@ DENSE2_SER = 8                 # capacity receipt inter_die: link_busy_add_per_p
 def dcyc(cls):
     if REL['offchip'] != 'direct':
         return SWITCHED
-    return json.loads(HOPLAT.read_text())['systems']['S81'][cls]['D_cycles_max']
+    return json.loads(HOPLAT.read_text())['systems']['S81'][cls]['D_cycles_max'] + REL['lnland']
 
 
 def x_flat(cls='stage_hop'):
