@@ -1615,13 +1615,13 @@
   "tools/ref_tile/specs_qw2_slice2_native/qfd_dv_slice2_w14sc_fences.tcl"
  ],
  "job": {
-  "owner": "CODEX-QELEMENTS-2000",
-  "branch": "codex/qelements-slice-parent-1021",
+  "owner": "SQC-SLICE",
+  "branch": "claude/sqc-slice16-1022",
   "tag": "r16w",
-  "purpose": "Actual CLOSED tail1 p7b and CRH RP1 parent assembly, geometry gate pending",
-  "views_to": "physical/ref_tile/qfd_dv_slice2_w14sc/views",
-  "record_to": "results/rtl/ref_tile/qfd_dv_slice2_w14sc",
-  "hold_merge": "Diagnostic source-native assembly only; no placement/routing/adoption",
+  "purpose": "W slice parent with CLOSED p7b tail1 + CRH RP1 (ARF1/RP1 s8); gate MAIN",
+  "views_to": "physical/ref_tile/qfd_dv_slice2_w16real/views",
+  "record_to": "results/rtl/ref_tile/qfd_dv_slice2_w16real",
+  "hold_merge": "gate kit; adoption only after CLOSED + die-owner bind",
   "extra_paths": [
    "rtl/qwen_dv",
    "rtl/hdc",
