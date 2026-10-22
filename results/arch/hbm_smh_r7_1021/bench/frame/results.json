@@ -27,8 +27,15 @@
     "comparisons": 12796,
     "cycles": 4000,
     "first_token_added_edges": 36,
-    "causal_pending": true,
+    "causal_pending": false,
     "actual_host": "ot-gold1",
-    "unit": "3563433-1792646309"
+    "unit": "3563433-1792646309",
+    "causal_mutant": {
+      "parameter": "MUT=1",
+      "status": "EXPECTED_REJECTION",
+      "mismatches": 11213,
+      "compared": 12796,
+      "mechanism": "Landing bypass changes edges; first token lane 1 arrives at 108 instead of required 111."
+    }
   }
 }
