@@ -1,0 +1,152 @@
+{
+ "schema": "opentallas.hbm.l25-renewed-drift-review.v1",
+ "reviewer": "HBMb/CHAIN (STEWARD-HBMb sub, Claude) 2026-10-21: renewed semantic delta review of the RTL drift that refused L25 on r16q S5/S5B and r17",
+ "time": "2026-10-21T19:05:00-07:00",
+ "base_review": "r16q planqM unread/S5/review_transfer.json (transfer of e08e4c2f / ROOT 2beccb8e lineage, 309 entries, 65,066 b)",
+ "target_source": "claude/hbm-r17-1021 (r16q bytes identical for the six r16q drifts)",
+ "method": "per file: exact old pin located in history (sha256 match), full diff read, module header port lists old vs new parsed, reviewed entries with a driver instance of the file and entries whose evidence names an instance of the file as consumer, die port_bind unread_nets on those instances",
+ "delta_review_r17": {
+  "repinned_sources": [
+   {
+    "path": "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv",
+    "old_rev": "167cae17c",
+    "old_sha256": "32e68bbd89af6e890132e022800d3ac096371a040caa94b1253602d51200d567",
+    "new_sha256": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee",
+    "masters": [
+     "ot_hbm_su_static_pgslice_lg"
+    ],
+    "port_header_changes": {
+     "ot_hbm_su_static_pgslice__d4g_pgslice": {
+      "removed": [],
+      "added": [
+       "input wire [11:0] tree_cmd",
+       "output wire [66:0] tree_o"
+      ],
+      "new_module": false
+     },
+     "ot_hbm_su_static_pgslice_lg": {
+      "removed": [],
+      "added": [
+       "input wire [11:0] tree_cmd",
+       "output wire [66:0] tree_o"
+      ],
+      "new_module": false
+     }
+    },
+    "reviewed_driver_entries": [],
+    "reviewed_entries_naming_as_consumer": [],
+    "review": "167cae17c->cb64d7b68/77afa7aee: (1) side unit MLAT/ALAT localparam 3/3 -> parameters passed from the slice (die MLAT 4 ALAT 3): arithmetic depth only, ports unchanged; (2) PRETREE param (die 1): new input tree_cmd[11:0] + output tree_o[66:0] on ot_hbm_su_static_pgslice_lg/__d4g_pgslice; PRETREE=1 instantiates the closed leaf ot_hbm_su_red_pretree_s on clk_ctl, its fault ORed into the sticky slice fault. No reviewed entry has a su_<q><g> (pgslice_lg) driver, and no reviewed entry names a pgslice instance as a consumer; the r16q die has 0 unread bits on any su_* or tree_o net (port_bind unread_nets) and the die total stays 65,066 = approved, so the new face is fully read and no reviewed bit gains or loses a reader. Unread bits remain semantically unread."
+   },
+   {
+    "path": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+    "old_rev": "fcf411d6c",
+    "old_sha256": "9dc4c623299ecb66d3a708ad68664c6cde1369ef007730016c2a335ea0ca7f42",
+    "new_sha256": "e7a488357661de0046537fcae0072260633d72353b4afe7f8aba3408717a64bd",
+    "masters": [
+     "ot_hfd_coll_q2_hard_v8g",
+     "ot_hfd_coll_q3_hard_v8x",
+     "ot_hgi_coll_tkm_m_tp192"
+    ],
+    "port_header_changes": {},
+    "reviewed_driver_entries": [],
+    "reviewed_entries_naming_as_consumer": [],
+    "review": "fcf411d6c->50799fb45: PW default widened to 8 b when ROWS>128 in fj_core/fj_q3/fj_q2/fj_n2s1/fj_n1s0/issuer_m (internal programme-counter width only; no port list change of any die master: hb_coll_<q> q2/q3 v8x/v8g and tkm_m_tp192). No reviewed entry drives from or is consumed by an instance of these masters; die unread nets on hb_coll_*/tkm_*: 0. Unread bits remain semantically unread."
+   },
+   {
+    "path": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+    "old_rev": "fcf411d6c",
+    "old_sha256": "d2aca3d96273ff3689153a77a7d0617e540edf480a6dad1834c9f68174f7c98c",
+    "new_sha256": "f41ec9893198864d4a101c6b183c7091c8f4fa11f7550f9ff3090f4ca14cb8bc",
+    "masters": [
+     "ot_hfd_coll_q2_hard_v8g",
+     "ot_hfd_coll_q3_hard_v8x"
+    ],
+    "port_header_changes": {},
+    "reviewed_driver_entries": [],
+    "reviewed_entries_naming_as_consumer": [],
+    "review": "fcf411d6c->50799fb45/0ad75fd57: body ROWS>128 selects the 256-row issuer leaf ot_hgi_coll_issuer_m256 (or m256v8 under OT_COLL_ISSUER256_NATIVE32) with the same port map/edges as issuer_m; PW widening; wrapper parameter order VM_RT moved before AR_ITER (all instantiations by name). Header port lists of ot_hfd_coll_q3_hard_v8x / q2_hard_v8g unchanged; no reviewed entry on or consumed by hb_coll_<q>; die unread nets there: 0. Unread bits remain semantically unread."
+   },
+   {
+    "path": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+    "old_rev": "74d218d51",
+    "old_sha256": "e9335e6ac6687064d726a858a2eeb887f78e8d65809867b04a4b241809797024",
+    "new_sha256": "6ae77a0d63dc7acda9633986416943d96b9ca92826074257f9b955d4c5cb2ff8",
+    "masters": [
+     "ot_hgi_sm_xload_cl2_bdring",
+     "ot_hgi_sm_xload_cl2_ctlx"
+    ],
+    "port_header_changes": {},
+    "reviewed_driver_entries": [],
+    "reviewed_entries_naming_as_consumer": [
+     "xl_NE_aqhi.y",
+     "xl_NE_aqlo.y",
+     "xl_NW_aqhi.y",
+     "xl_NW_aqlo.y",
+     "xl_SE_aqhi.y",
+     "xl_SE_aqlo.y",
+     "xl_SW_aqhi.y",
+     "xl_SW_aqlo.y"
+    ],
+    "review": "74d218d51->50799fb45: ctl RD_LAT scalar -> 64-b per-bank vector (per-bank request stagger from one tapped delay line; md depth RLM+1), PIN_NATIVE kept l_d_o pin-register copy, RST_PRE / ctlx landed reset (rp1/rp2/rq_n, rn_o from its own kept flop). Only ctl/ctlw/ctlx bodies change; module port lists unchanged; ot_hgi_sm_xload_cl2_bdring byte-identical. Reviewed entries naming cl2 instances: xl_<q>_aq{lo,hi}.y (8 x 512 b, unused_alternate_representation) cite xq_<q>_p{0,1}_bd (bdring) as consumers of the ENCODED q/e only -- bdring is unchanged and the aq tree y port is still left open by the x-load path (xql u_aq_lo/u_aq_hi .y()). Claim holds; unread bits remain semantically unread. (Separate functional NOTICE STEWARD-TOK 19:15: die RD_LAT vector needs N_b+8 -- a calendar value, not an unread-bit question; r18.)"
+   },
+   {
+    "path": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+    "old_rev": "74d218d51",
+    "old_sha256": "5c9956df83adff888ce51b35cba942007dbb44c34a9eb906a9ae501757dbe157",
+    "new_sha256": "2f58109f5b051db0790bdb66c49f4e10c6c9d3830dab3c4a0cf494bc50c369e8",
+    "masters": [
+     "ot_hgi_sm_xload_xq_pegress"
+    ],
+    "port_header_changes": {},
+    "reviewed_driver_entries": [],
+    "reviewed_entries_naming_as_consumer": [],
+    "review": "74d218d51->50799fb45: RD_LAT typed 64-b vector passed through; CTL_OLD bench-only generate (default 0 = the die ctlx path, unchanged connections incl. aq .y() open). Port list of xq_pegress and xql unchanged; no reviewed entry on or consumed by these instances. Unread bits remain semantically unread."
+   },
+   {
+    "path": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+    "old_rev": "198cbe31e",
+    "old_sha256": "d32133359d7b559a852a4066ffb398dfa3e999173fc5de6c7962292fc9979c25",
+    "new_sha256": "05f5acd8bbc7953a0ce8ba02dd3d697489d5c327bee7bb09bd8def049f2a4c1e",
+    "masters": [
+     "ot_hbm_idx_rootctl_static_am"
+    ],
+    "port_header_changes": {},
+    "reviewed_driver_entries": [],
+    "reviewed_entries_naming_as_consumer": [
+     "col_idx.rec"
+    ],
+    "review": "198cbe31e->39c8e421b: RSTL (die 1: landed reset, no in-RTL relay) and FAN32 (die 1: calendar_static_f32, topk_static_f32 with NGO kept go copies, share F32 kept valid masks) structural forms; bench tb_idx_rootctl_am_f32_eq proves FAN32 0 vs 1 lockstep on every output every edge. Module port list unchanged (topk_k..topk_r_str still rec[155:0], index_rr 2056 b). Reviewed entries naming hb_idx__ctl: col_idx.rec[156:220] reserved_record_abi (TOPK uses rec[155:0]: unchanged port widths/slices) and hidxr_SW_rr2.o[296:303] zero pad (pad is die wiring {8'd0, index_rr[2055:1760]}, index_rr width unchanged). Claims hold; unread bits remain semantically unread."
+   },
+   {
+    "path": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+    "old_rev": "911b90eb2",
+    "old_sha256": "f3c7f27fa7ed1335d586f82a409c0fbd0d228795d9a777ea6bd5f4a5559e3a79",
+    "new_sha256": "3ac68eac827f4357b47640631fea8fbbdb3082d8c5d4374544ab1384ac9e9f90",
+    "masters": [
+     "ot_hbm_su_static_cxport_dl_q",
+     "ot_hbm_su_static_cxport_dl_s",
+     "ot_hbm_su_static_cxport_ij",
+     "ot_hbm_su_static_cxport_rc_q",
+     "ot_hbm_su_static_cxport_rc_s"
+    ],
+    "port_header_changes": {
+     "ot_hbm_cxijq_sel_copy": {
+      "removed": [],
+      "added": [
+       "input wire clk,rst_n",
+       "input wire[19:0]ctl",
+       "output reg[63:0]q"
+      ],
+      "new_module": true
+     }
+    },
+    "reviewed_driver_entries": [],
+    "reviewed_entries_naming_as_consumer": [],
+    "review": "911b90eb2->1b4077277 (r17 l32 bind source): ij_q SAFE_GATHER (die 1 = CLOSED hbm_su_cx_ijq_1019t view): circular one-hot control ring + 8 kept ot_hbm_cxijq_sel_copy decoders + two-stage registered gather, same calendar edges (lockstep OBR1+SAFE1 PASS, MUT4/6 FAIL per HBM-ELEM13 17:08 NOTICE); SAFE_GATHER passthrough in ij / split compositions; new keep_hierarchy leaf ot_hbm_cxijq_sel_copy. No port list change of ij_s/ij_q/dl_*/rc_* masters; no reviewed entry on or consumed by a cx* instance (r16q die unread nets on cx*: 0). Unread bits remain semantically unread."
+   }
+  ],
+  "entries_changed": 0,
+  "approved_bits": 65066,
+  "scope": "renewed review CANDIDATE (pending ROOT/LEAD digest admission as the strict proposal): re-pins only these exact old->new bytes; entries/bits/classifications unchanged; no physical/native/token qualification granted"
+ }
+}
