@@ -1,6 +1,9 @@
 foreach p [glob /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/*RVT_TT*] {read_liberty $p}
 foreach p [glob /src/physical/asap7_memory_macros_v2/ot_sram_1r1w2c_*x64_m1/*_tt.lib] {read_liberty $p}
 read_db /work/fixture.odb
+# Require a legal pre-CTS input before attributing placement effects to this tree.
+check_placement -verbose
+puts "Q11_BASELINE_PLACEMENT_PASS"
 read_sdc /src/physical/ref_tile/qfd_coll_split_q11a/clock.sdc
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
 set blk [ord::get_db_block]

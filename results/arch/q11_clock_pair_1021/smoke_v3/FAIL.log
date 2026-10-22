@@ -1,0 +1,103 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-v3-2000
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-v3-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-v3-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-v3-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-v3-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-v3-2000
+ot-run: ot-agidock128  admits    14 GB (avail 30, growth 21, headroom 0, waiters 0/0 GB) load 30/64 running 18 disk 171 GB 
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-q11-pair-v3-2000 (0.6 GB) ot-agidock128 -> ot-epyc5 (no host with --dir admits 16 GB now)
+ot-run: SPILL: copied 2301 changed entries in 22 s; running on ot-epyc5; written files go back to ot-agidock128 after the run
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-999977-1792647538 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+REF_TILE spine: child insertion targets 
+Q11 clock pairs installed: authentic same-edge SRAM/control/capture and local reset groups
+Q11_ROLE_TRACE clock_instances=18734 launches=949 captures=1704
+Q11_PAIR_GROUP REST leaves=2069
+Q11_PAIR_GROUP g_xf_fan32.u_xf/g_st\[2\].genblk1.genblk1.g_dr.u_dr.g_b\[0\].u_m leaves=299
+Q11_PAIR_GROUP g_xf_fan32.u_xf/g_rsg\[3\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=3
+Q11_PAIR_GROUP g_pf_fan32.u_pf/g_rsg\[1\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=2
+Q11_PAIR_GROUP g_pf_fan32.u_pf/g_rsg\[3\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=3
+Q11_PAIR_GROUP g_pf_fan32.u_pf/g_rsg\[2\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=4
+Q11_PAIR_GROUP g_xf_fan32.u_xf/g_rsg\[1\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=2
+Q11_PAIR_GROUP g_xf_fan32.u_xf/g_rsg\[2\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=3
+Q11_PAIR_COVERAGE endpoints=18746 SRAMs=12 counter_bits=9 output_bits=128 reset_sources=6 reset_targets=112 components=8
+Q11_PAIR_ARRIVAL group=g_pf_fan32.u_pf/g_rsg\[1\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=15 min=311.888 max=312.300 spread=0.412 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_pf_fan32.u_pf/g_rsg\[3\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=22 min=317.911 max=350.252 spread=32.341 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_pf_fan32.u_pf/g_rsg\[2\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=22 min=338.720 max=352.646 spread=13.927 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=REST sinks=16463 min=599.261 max=657.138 spread=57.876 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_xf_fan32.u_xf/g_rsg\[1\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=15 min=305.736 max=306.143 spread=0.407 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_xf_fan32.u_xf/g_st\[2\].genblk1.genblk1.g_dr.u_dr.g_b\[0\].u_m sinks=2165 min=535.622 max=584.853 spread=49.230 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_xf_fan32.u_xf/g_rsg\[2\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=22 min=302.574 max=325.903 spread=23.329 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_xf_fan32.u_xf/g_rsg\[3\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=22 min=305.036 max=329.954 spread=24.918 ps (diagnostic)
+OT_SPINE iter 0 (coarse) leaves 2385 sinks 18746 cells 4771 leaf arrival 302.7..657.1 ps (spread 354.4) pad 60.0 / 14.0 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+[WARNING DPL-0005] Overlap check failed (2).
+[WARNING DPL-0011] Padding check failed (2).
+[WARNING DPL-0006] Site aligned check failed (99936).
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+OT_SPINE WARNING: check_placement failed after spine insertion (DPL-0033); legalising movable cells around the spine
+[INFO DPL-0006] Core area: 66428.81 um^2
+[INFO DPL-0007] Movable instances area: 11025.83 um^2
+[INFO DPL-0008] Fixed instances area within core: 15939.65 um^2
+[INFO DPL-0009] Utilization: 40.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 113751 cells
+[INFO DPL-0393]   height 103 row(s): 8 cells
+[INFO DPL-0393]   height 154 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       2702 |       524 |      2133
+        1 |       1124 |       116 |      1008
+        2 |        646 |        58 |       561
+        3 |        328 |        30 |       298
+        4 |        171 |        13 |       158
+        5 |         53 |         7 |        46
+        6 |         30 |         4 |        26
+        7 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 7.
+[INFO DPL-0500] Runtime: 3.15s
+Placement Analysis
+---------------------------------
+total displacement      33078.9 u
+average displacement        0.3 u
+max displacement           16.0 u
+original HPWL          779631.4 u
+legalized HPWL         796937.1 u
+delta HPWL                    2 %
+
+[WARNING DPL-0005] Overlap check failed (2).
+[WARNING DPL-0011] Padding check failed (2).
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: smoke.tcl, 29 DPL-0033
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-999977-1792647538): exit 1
+ot-run: SPILL: outputs copied back ot-epyc5 -> ot-agidock128; RAN on ot-epyc5: exit 1
