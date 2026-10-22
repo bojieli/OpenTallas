@@ -182,7 +182,11 @@ def lockstep_tb(name, P, ref_inst, dut_inst, clocks, resets, edges, mut, extra_i
     return '\n'.join(L) + '\n'
 
 
+XDEFS = []   # QE3-PC2 sr10f: --define (variant build defines, e.g. OT_KVPC_CAL_DNR), applied to every unit
+
+
 def build_run(out, top, files, defines, threads, tag, plus=()):
+    defines = list(defines) + XDEFS
     dirs = sorted({str(Path(s).parent) for s in files if not s.startswith(str(out))} | {'rtl/lib'})
     cmd = ['verilator', '--binary', '--timing', '-j', str(threads), '-Wno-fatal', '-Wno-lint', '-Wno-style',
            '-Wno-TIMESCALEMOD', '-Wno-MULTIDRIVEN', '--top-module', top, '-Mdir', str(out / 'obj'), '-o', 'sim'] + \
@@ -215,7 +219,9 @@ def main():
     ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--out', required=True)
     ap.add_argument('--threads', type=int, default=8)
+    ap.add_argument('--define', action='append', default=[], help='extra RTL define (variant build), e.g. OT_KVPC_CAL_DNR')
     a = ap.parse_args()
+    XDEFS.extend(a.define)
     out = Path(a.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
     plus = [f'+seed={a.seed}'] + ([f'+edges={a.edges}'] if a.edges else [])
@@ -330,8 +336,14 @@ def main():
         '      if (bad < 8) $display("MISMATCH t=%0d out pc__hfx %h/%h", t, hfx_m, u_dut.pc__hfx); end end',
         '  final $display("HFX active_edges=%0d final=%b", hfx_act, hfx_m);'])
     xin = {'pc__front_hbm_data': '{4{hck}}', 'pc__return_hbm_data': '{4{hck}}'}
+    tdly = {'pc__fi': 'hck', 'pc__ki': 'hck', 'x__est__0_1': 'ck'}
+    # QE3-PC2 sr10e: the DUT pc_h tile lands i_grp (ck) / i_grp_h (hck) in face registers (+1 edge each, priced)
+    if 'i_grp_q <= i_grp' in dut:
+        tdly.update({'i_grp': 'ck'})
+    if 'i_grp_h_q <= i_grp_h' in dut:
+        tdly.update({'i_grp_h': 'hck'})
     tb = lockstep_tb('tb_kvpc_tile', P, 'ref_tile', 'dut_tile', {'ck': 417, 'hck': 512}, {'rst_n': 'ck', 'hrst_n': 'hck'},
-                     edges, a.mut, extra_in=xin, tag='TILE', extra=hfx, qual={'pc__er': (0, 258, 1), 'pc__her': (0, 258, 1)}, ref_delay={'pc__fi': 'hck', 'pc__ki': 'hck', 'x__est__0_1': 'ck'})
+                     edges, a.mut, extra_in=xin, tag='TILE', extra=hfx, qual={'pc__er': (0, 258, 1), 'pc__her': (0, 258, 1)}, ref_delay=tdly)
     (out / 'tb.sv').write_text(tb)
     files = [str(out / 'tb.sv'), str(out / 'tiles.sv')] + base
     defs = {1: ['OT_KVPC_MUT_TQ_NEXT'], 2: ['OT_KVPC_FRONT_MUT4'], 3: ['OT_KVPC_CDC_UP_MUT'],

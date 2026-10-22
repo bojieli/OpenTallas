@@ -1802,10 +1802,17 @@ module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  if(!rn)begin
  we_q<=0;seal_q<=0;go_q<=0;
  wv<=0;fc<=0;fe<=0;le<=0;gk<=0;ga<=0;
- low_seen<=0;high_seen<=0;sealed<=0;active_epoch<=0;active_row<=0;
+ low_seen<=0;high_seen<=0;sealed<=0;active_epoch<=0;
+`ifndef OT_KVPC_CAL_DNR
+ active_row<=0;
+`endif
  static_cmd_owner<=0;static_cmd<=0;reserved_rd<=0;reserved_static_col<=0;reserved_write_col<=0;
  static_epoch<=0;static_read_q<=0;fault<=0;idle<=1;
+`ifdef OT_KVPC_CAL_DNR
+ for(i=0;i<N;i=i+1)begin left_q[i]<=0;burst_q[i]<=0;end
+`else
  for(i=0;i<N;i=i+1)begin wait_q[i]<=0;left_q[i]<=0;burst_q[i]<=0;end
+`endif
  end else begin
  we_q<=cfg_we;seal_q<=seal;go_q<=go;
  wv<={{9{wv_g && cfg_addr[4]}},{9{wv_g && !cfg_addr[4]}}};
@@ -1814,7 +1821,10 @@ module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
   fe[i*3 +: 3]<={3{fire_nx[i] && ng_f}};
   le[i*2 +: 2]<={2{live_nx[i] && ng_l}};
   gk[i*3 +: 3]<={3{(i<8)?gok_a:gok_b}};
-  wait_q[i]<=wait_nx[i*16 +: 16];left_q[i]<=left_nx[i*10 +: 10];burst_q[i]<=burst_nx[i*4 +: 4];
+`ifndef OT_KVPC_CAL_DNR
+  wait_q[i]<=wait_nx[i*16 +: 16];
+`endif
+  left_q[i]<=left_nx[i*10 +: 10];burst_q[i]<=burst_nx[i*4 +: 4];
  end
  ga<={gok_b,gok_b,gok_a};
  static_cmd<=event_cmd;reserved_rd<=event_mask[0];reserved_static_col<=event_mask[1];reserved_write_col<=event_mask[2];
@@ -1828,9 +1838,21 @@ module qkd_kvpc_s_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  if(seal_q)begin if(allseen&&!live_any)sealed<=1;else fault<=1;end
  if(go_q && (!sealed || live_any || we_q))fault<=1;
  if(ga[0])active_epoch<=epoch_q;
+`ifndef OT_KVPC_CAL_DNR
  if(ga[1])active_row<=19'(ROW0)+{13'b0,layer_q};
+`endif
  if(ga[2])static_cmd_owner<=1;
  end
+`ifdef OT_KVPC_CAL_DNR
+ // QE3-PC2 sr10f 2026-10-21 (SAFE checklist 8): wait_q / active_row are DATA, reset-free.  wait_q[k] is read only while
+ // entry k is live (left_q != 0, reset) and every go load (gk) rewrites both bytes; active_row is read only in a fired
+ // (live) event and is loaded by ga[1] on that same go.  While rn is low gk/fe/le/ga are 0, so both simply hold.
+ // Removes 16x16 + 19 async RESETN pins (the sr10b reset-removal hold class on the calendar rn copies).
+ always @(posedge hck)begin
+  for(integer j=0;j<N;j=j+1)wait_q[j]<=wait_nx[j*16 +: 16];
+  if(ga[1])active_row<=19'(ROW0)+{13'b0,layer_q};
+ end
+`endif
 endmodule
 
 // ---- ot_qkd_static_ctrl_pc_emb_kvpc_s: clone of ot_qkd_static_ctrl_pc_emb (rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv) with 10 substitution(s); kept copy families rp[3]x2(2), col_bank[5]x11(1), col_col[5]x3(1), row_row[19]x2(1), head_first[10]x2(1) ----

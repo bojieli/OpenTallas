@@ -1627,18 +1627,27 @@ module qkd_kvs_pc_h (
         else rland_hck_s2__qv <= {8{rland_hck_s1}};
 `endif
     assign w_rland__hrst_n = rland_hck_s2__qv[0];   // KV-PC5: 8 kept copies of the landed reset (ot_rst_copies)
-    wire [15:0] pc__expected_epoch = i_grp[15:0];
-    wire [5:0] pc__expected_layer = i_grp[21:16];
-    wire [0:0] pc__expected_put = i_grp[22:22];
-    wire [9:0] pc__expected_sector = i_grp[32:23];
-    wire [4:0] pc__cal_cfg_addr = i_grp_h[4:0];
-    wire [63:0] pc__cal_cfg_data = i_grp_h[68:5];
-    wire [0:0] pc__cal_seal = i_grp_h[69:69];
-    wire [0:0] pc__cal_cfg_we = i_grp_h[70:70];
-    wire [0:0] pc__front_blk_go = i_grp_h[71:71];
-    wire [0:0] pc__cal_go = i_grp_h[72:72];
-    wire [15:0] pc__cal_epoch = i_grp_h[88:73];
-    wire [5:0] pc__cal_layer = i_grp_h[94:89];
+    // QE3-PC2 sr10e 2026-10-21 (SAFE checklist 1, priced +1 edge each, handed to the die schedule like fi_q/ki_q/ebr_q):
+    // i_grp (ck) and i_grp_h (hck) land in face registers before the expected_put / cal_go lookahead decode.  sr10b CTS
+    // and sr10c/d TT@770: i_grp[22] -> AND3 -> 20 cap_qv / slot__qv copies (-35.6 .. -163.7 ps) and i_grp_h[72] -> gok_b
+    // -> gk copies (-41.9 ps) inside the 0.2 T input budget, the negative-setup cones that refuse hold buffers (RSZ-0064).
+    // No reset (pure data copies of the pins; the consumers' own landed resets gate them as before).
+    (* keep *) reg [32:0] i_grp_q;
+    (* keep *) reg [94:0] i_grp_h_q;
+    always @(posedge ck) i_grp_q <= i_grp;
+    always @(posedge hck) i_grp_h_q <= i_grp_h;
+    wire [15:0] pc__expected_epoch = i_grp_q[15:0];
+    wire [5:0] pc__expected_layer = i_grp_q[21:16];
+    wire [0:0] pc__expected_put = i_grp_q[22:22];
+    wire [9:0] pc__expected_sector = i_grp_q[32:23];
+    wire [4:0] pc__cal_cfg_addr = i_grp_h_q[4:0];
+    wire [63:0] pc__cal_cfg_data = i_grp_h_q[68:5];
+    wire [0:0] pc__cal_seal = i_grp_h_q[69:69];
+    wire [0:0] pc__cal_cfg_we = i_grp_h_q[70:70];
+    wire [0:0] pc__front_blk_go = i_grp_h_q[71:71];
+    wire [0:0] pc__cal_go = i_grp_h_q[72:72];
+    wire [15:0] pc__cal_epoch = i_grp_h_q[88:73];
+    wire [5:0] pc__cal_layer = i_grp_h_q[94:89];
     wire [779:0] pc__chain_i = i_next[779:0];
     wire [298:0] w_embr__upo;
     wire [0:0] w_embr__fault;
