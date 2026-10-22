@@ -73,13 +73,15 @@ def prepare(plan,table,manifest,wrapper_ref):
 def hbc_disabled(plan,table,source_ref,regional_manifest):
     """Bind real HBC and fixed transport while production enable stays off."""
     blocks={b['name']:(i,b) for i,b in enumerate(plan['blocks'])}
-    end=table['masters']['dsdv_slice_lepw_mab']
+    _,body=blocks['s_0N']
+    end=table['masters'][body['master']]
+    old_module=end['module']
     top='ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72'
     end.update(module=top,ref=source_ref,view=None,params={'HBC_ENABLE':0},
         view_note='Actual R4D HBC/status/transport source. HBC_ENABLE0; production identity and dates unassigned.')
     extra=['ck_K','ck_ML','ck_KA','ck_KB','ck_L0','ck_L1','ck_L3','ck_L4','ck_CAP_RT','ck_CAP_CW','ck_CAP_CE','ck_CAP_RN','ck_CAP_RS']
     end['clk_extra']=extra;end.pop('clock_ports',None)
-    shape=dict(table['rtl_widths']['ot_s81sl_slice_lepw_mab_mu_72'])
+    shape=dict(table['rtl_widths'][old_module])
     for k in list(shape):
         if k.startswith('ck_N'):shape.pop(k)
     shape.update(ck_KA=1,ck_KB=1,hb_status_t_host=77,hb_status_t_kd=54,hb_starter_armed=1,
