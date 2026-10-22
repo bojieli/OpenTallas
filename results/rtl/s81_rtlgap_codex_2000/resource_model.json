@@ -70,7 +70,13 @@
     "native_max_dynamic_loads": 5391,
     "native_violating_roots": 2247,
     "native_roots_examined": 603703,
-    "native_summary": "results/rtl/s81_rtlgap_codex_2000/pool_native/native_summary.json"
+    "native_summary": "results/rtl/s81_rtlgap_codex_2000/pool_native/native_summary.json",
+    "area_conversion_authority": "results/rtl/s81_rtlgap_codex_2000/pool_native/area_conversion_authority.json",
+    "report_area_to_physical_um2": 1.0,
+    "original_unqualified_pool_cell_area_um2": 95849.83854,
+    "original_pool_outline_at_60pct_um2": 159749.7309,
+    "original_pool_outline_at_40pct_um2": 239624.59634999998,
+    "outline_excludes_channels_and_clock": true
   },
   "qualification": "Model inventory and measured source cycles only; physical body, reachable placement, native max32, per-region clocks and timing remain open"
 }
