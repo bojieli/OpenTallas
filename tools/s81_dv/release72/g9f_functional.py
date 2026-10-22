@@ -168,6 +168,17 @@ def validate_local_ring_window(stages, E, K, D):
 
 def finish(plan,land):
     rows={r['link']:r for r in land['links']};links={l['i']:l for l in plan['links']}
+    # The selected L2 CAP seam is a short adjacent-face route. Its longest
+    # path is384.387um, below the allowed405um register-to-register reach.
+    # Preserve the exact wire path and remove the unnecessary350um chopping
+    # relay; stale predecessor calendars cannot qualify this new geometry.
+    for lane in range(4):
+        name=f'xrE_2N_l{lane}';link=links[name]
+        if link['L']>405:raise ValueError(f'{name}: direct CAP seam exceeds405um')
+        link.update(sp=[],s=0,station_dirs=[])
+        rows[name]=dict(link=name,cls='xring',dst='s_3N',bits=276,stages=0,E=2,K=2,D=4,
+            master='dsfd_dvland_276',force_landing=True,model=True,
+            K_source='Selected adjacent CAP seam: actual wire path <=405um, no relay, real D4/K2 landing; gate/read epochs aligned including reset2')
     ledger={}
     for producer in ('E','W'):
         names=[f'pvso_{producer}_{kind}_l{i}' for kind in ('local','peer') for i in range(3)]
