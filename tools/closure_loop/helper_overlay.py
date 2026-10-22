@@ -192,6 +192,13 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22: claude/hbm-pslice-lp14-1021 17f38120b (HBM-ELEM13/SU-PSLICE14). The merge resolved
+    # physical/common_flow/child_centre_tap.tcl to main's newer copy (58622b026, Gate-Rule: neutral), its ref_tile.py
+    # hunk is byte-identical to main's, and the rest are NEW pslice_c5 lp14a/b kit spec/pin/fence files -> no gate rule
+    # an older gate blob saw changes.
+    "17f38120bb4a6dce5f38384bbed1a80d2bb276dd": dict(
+        kind="neutral",
+        what="pslice lp14: new kit files; cct + ref_tile.py identical to main's copies"),
     # START-NONFAIL/HBM-CANC 10-21: claude/hbm-ks13-agtool-1021. async_gray SDC applies every bounded pair's
     # set_max/min_delay first and proves each pair's finite max/min path in one ot_ag_verify pass (was one
     # find_timing_paths re-search per pair).  Same exceptions/checks/errors/PATH_DEFERRED texts; ASAP7 equivalence on
