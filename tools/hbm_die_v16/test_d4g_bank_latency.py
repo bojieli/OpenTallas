@@ -58,15 +58,17 @@ def status(c):
 
 
 def test():
-    assert status(contract(6, 0, 0, bank='ot_vms_bank_static'))[:2] == ('PASS', 6)          # reference: n+6, no lanes
-    assert status(contract(6, 0, 0))[:2] == ('FAIL', 7)                                        # faces pin flop +1
-    assert status(contract(7, 0, 0))[:2] == ('PASS', 7)
-    assert status(contract(10, 2, 1))[:2] == ('PASS', 10)                                      # 6 + 1 + 2 + 1
-    st, want, s = status(contract(10, 2, 1, bank2_extra=1))                                    # unequal lanes -> pad
-    assert st == 'FAIL' and want == 11 and s['unequal'] == 1
-    c = contract(10, 2, 1, bank2_extra=3); c['instances']['xl']['params']['RD_LAT'] = [10, 13]   # per-bank vector
+    # cl2 ctl reference (measured, tb_xl_cl2_banklat_ref.sv): RD_LAT 7 at ot_vms_bank_static n+6 wired directly
+    assert status(contract(6, 0, 0, bank='ot_vms_bank_static'))[:2] == ('FAIL', 7)          # the old header ref 6
+    assert status(contract(7, 0, 0, bank='ot_vms_bank_static'))[:2] == ('PASS', 7)
+    assert status(contract(7, 0, 0))[:2] == ('FAIL', 8)                                        # faces pin flop +1
+    assert status(contract(8, 0, 0))[:2] == ('PASS', 8)
+    assert status(contract(11, 2, 1))[:2] == ('PASS', 11)                                      # 7 + 1 + 2 + 1
+    st, want, s = status(contract(11, 2, 1, bank2_extra=1))                                    # unequal lanes -> pad
+    assert st == 'FAIL' and want == 12 and s['unequal'] == 1
+    c = contract(10, 2, 1, bank2_extra=3); c['instances']['xl']['params']['RD_LAT'] = [11, 14]   # per-bank vector
     assert status(c)[0] == 'PASS'
-    c['instances']['xl']['params']['RD_LAT'] = [10, 12]
+    c['instances']['xl']['params']['RD_LAT'] = [10, 13]                                       # d4g die 10-21: one short
     assert status(c)[0] == 'FAIL'
     # share2 (HBM-BANKLAT-COLL): BANK_RT 7 = 6 + faces pin; clients add the excess 1 (QDQ RL 7 -> 8, gather VM_RT 0 -> 1)
     assert share_status(share_contract(7, 1, 8)) == {'rs': ('PASS', 7), 'qd': ('PASS', 8), 'gi': ('PASS', 1)}
