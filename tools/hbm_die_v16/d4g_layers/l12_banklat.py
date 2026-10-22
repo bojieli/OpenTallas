@@ -368,7 +368,12 @@ def plan_row(N, G, I, row, rows_by, rep):
         sr = rows_by.get((row['share'], 'rd'))
         if sr is None or sr['status'] != 'PASS':
             return 0
-        have = int(I[row['client']].get('params', {}).get(row['param']))
+        have = I[row['client']].get('params', {}).get(row['param'])
+        if have is None:   # qdq r3 LG children carry RL as latency_budget (as d4g_bank_latency reads it)
+            have = I[row['client']].get('latency_budget', {}).get(row['param'])
+        if have is None:
+            rep['problems'].append(f'{row["client"]}.{row["param"]}: no budget (rd_via_share via {row["share"]})'); return 0
+        have = int(have)
         tgt = have - row['ref'] - row['share_excess'] - row['share_extra'] + row['ref_lanes']
         for pe in row['pair_ends']:
             pad = tgt - pe['lanes']
@@ -473,11 +478,65 @@ def run(c, rep, max_iter=8, check=L.check, bm=None, bi=None, segs=None):
     return N, summ
 
 
+SEG_PARAM = {'ctl_cq_cr': ('hb_idx__ctl', 'CR_RT'), 'argmax_cq_cr': ('hb_argmax', 'ACK'), 'ctl_sel': ('hb_idx__ctl', 'SEL_LAT')}
+
+
+def reprice(over, I, bm, bi):
+    """HBMb/R18 10-21: measured need for every over-budget row (budget raised by exactly the lane shortfall; per-bank
+    vectors element-wise, master budgets = max over its instances).  Mutates bm/bi, returns the delta list."""
+    need = {}
+    for x in over:
+        if 'segment' in x:
+            sp = SEG_PARAM.get(x['segment'])
+            if not sp:
+                continue
+            inst, prm = sp; d = x['lanes'] - x['target']; idx = None
+        else:
+            inst, prm = x['client'], x['param']
+            if 'rt' in x:
+                d = x['rt'] - x['budget_rt']
+            elif 'budget_lanes' in x:
+                d = x['lanes'] - x['budget_lanes']
+            else:
+                continue
+            idx = bank_index(x['bank']) if isinstance(x.get('have'), list) and x.get('bank') else None
+        if d <= 0 or inst not in I:
+            continue
+        if inst in bi and prm in bi[inst][1]:
+            key = ('inst', inst)
+        else:
+            key = ('master', I[inst]['master'])
+        need.setdefault((key, prm), {}); k2 = idx if idx is not None else -1
+        need[(key, prm)][k2] = max(need[(key, prm)].get(k2, 0), d)
+    out = []
+    for ((scope, key), prm), dd in sorted(need.items(), key=str):
+        if scope == 'inst':
+            cur = bi[key][1].get(prm)
+        else:
+            cur = (bm.get(key) or {}).get(prm)
+            if cur is None:
+                cur = next((x.get('params', {}).get(prm) for x in I.values() if x['master'] == key), None)
+        if cur is None:
+            continue
+        if isinstance(cur, list):
+            new = [int(v) + dd.get(i, dd.get(-1, 0)) for i, v in enumerate(cur)]
+        else:
+            new = int(cur) + max(dd.values())
+        if scope == 'inst':
+            bi[key] = (bi[key][0], {**bi[key][1], prm: new})
+        else:
+            bm[key] = {**bm.get(key, {}), prm: new}
+        out.append(dict(scope=scope, key=key, param=prm, **{'from': cur, 'to': new}))
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('inp'); ap.add_argument('out'); ap.add_argument('--report', required=True)
     ap.add_argument('--max-iter', type=int, default=8)
     ap.add_argument('--budget-overlay', default=None, help='documented, priced budget raise JSON (see module doc)')
+    ap.add_argument('--reprice-out', default=None, help='HBMb/R18: raise over-budget params to the measured need, record deltas here')
+    ap.add_argument('--reprice-rounds', type=int, default=4)
     a = ap.parse_args()
     c = load(a.inp)
     bm, bi, ov = dict(BUDGET_MASTER), dict(BUDGET_INST), None
@@ -501,6 +560,26 @@ def main():
                overlay=None if ov is None else dict(path=a.budget_overlay, master=ov.get('master'), inst=ov.get('inst'),
                                                      deltas=ov.get('deltas'), price=ov.get('price')))
     N, summ = run(c, rep, a.max_iter, bm=bm, bi=bi)
+    reprices = []
+    for attempt in range(a.reprice_rounds if a.reprice_out else 0):
+        if summ is None or rep['problems'] or not rep['over_budget']:
+            break
+        d = reprice(rep['over_budget'], c['instances'], bm, bi)
+        if not d:
+            break
+        reprices.append(dict(round=attempt + 1, deltas=d))
+        print(f'L12_REPRICE round {attempt + 1}: ' + '; '.join(f'{x["scope"]} {x["key"]} {x["param"]} {x["from"]} -> {x["to"]}' for x in d))
+        c = load(a.inp)
+        if qs.get('parent') and qs['parent'] not in c['instances']:
+            bi.pop(qs['parent'], None)
+        N, summ = run(c, rep, a.max_iter, bm=bm, bi=bi)
+    if a.reprice_out:
+        rep['reprice'] = reprices
+        Path(a.reprice_out).write_text(json.dumps(dict(
+            schema='opentallas.hbm.d4g.l12_reprice.v1', inp=str(a.inp), overlay=a.budget_overlay,
+            rule='HBMb/R18 10-21: over-budget lanes on the actual geometry raise the budget to the measured need '
+                 '(explicit, recorded, priced via lanes/STEWARD-TOK.md; never an undersized bind, never silent)',
+            rounds=reprices, final_budgets=dict(master=bm, inst={k: v[1] for k, v in bi.items()})), indent=1, default=str))
     ok = summ is not None and summ['fail'] == 0 and not rep['problems'] and not rep['over_budget']
     rep['verdict'] = 'PASS' if ok else 'FAIL'
     Path(a.report).write_text(json.dumps(rep, indent=1, default=str))

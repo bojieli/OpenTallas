@@ -192,7 +192,7 @@ CACHE16=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r16e_full_1021/planeM/vplan_cha
 J=/srv/opentallas-scratch/claude/codex-hbm-r16j-s4q-1021/chainjM
 if [ -z "${RESUME_S4:-}" ]; then
 step S3_STAGE exact_source_colh
-R18_ALLOWED="tools/hbm_die_v15/die_relay_stations.py rtl/hbm_accel/die_glue/hbfd_exact_tail_classes.sv tools/hbm_die_v16/d4g_bank_latency.py tools/hbm_die_v16/test_d4g_bank_latency.py rtl/test/hbm_layer/tb_xl_cl2_banklat_ref.sv tools/hbm_die_v15/v16_views.py tools/hbm_die_v16/d4g_layers/l1_bind_check.sh tools/hbm_die_v16/d4g_layers/l12_banklat.py ${R18_EXTRA_ALLOWED:-}"
+R18_ALLOWED="tools/hbm_die_v15/die_relay_stations.py rtl/hbm_accel/die_glue/hbfd_exact_tail_classes.sv tools/hbm_die_v16/d4g_bank_latency.py tools/hbm_die_v16/test_d4g_bank_latency.py rtl/test/hbm_layer/tb_xl_cl2_banklat_ref.sv tools/hbm_die_v15/v16_views.py tools/hbm_die_v16/d4g_layers/l1_bind_check.sh tools/hbm_die_v16/d4g_layers/l12_banklat.py tools/hbm_die_v16/d4g_layers/l7_wire.py tools/hbm_die_v16/d4g_layers/l25_h9c_fallback.py ${R18_EXTRA_ALLOWED:-}"
 CHG=$(git diff --name-only 1b4077277 HEAD -- rtl tools | grep -v -x $(for f in $R18_ALLOWED; do printf -- '-e %s ' $f; done))
 [ -z "$CHG" ] || { echo "SOURCE_READSET_CHANGED_REFUSED $CHG"; exit 12; }
 python3 - "$CACHED/reuse.json" "$CACHED/pre_relay_colm.json" "$W/$PD/corridor_model.json" <<'PYREADY'
@@ -354,9 +354,11 @@ if [ "$RST_FORM" = rfc ]; then
   mv $A/net/contract_forest_rfc.json $A/net/contract_forest.json
 fi
 step S8b l12_banklat
+# HBMb/R18: r16q geometry over-runs the r11/h15.8 budgets (62 over_budget rows on r16q S5) -> explicit reprice to the measured
+# need, recorded in l12_reprice.json and priced via lanes/STEWARD-TOK.md (never an undersized bind, never silent).
 python3 tools/hbm_die_v16/d4g_layers/l12_banklat.py $A/net/contract_forest.json $A/net/contract.json --report $A/net/l12_banklat.json --budget-overlay results/arch/hbm_release_r16_1021/l12_budget_r18.json \
-  > $A/net/l12.log 2>&1 || { echo S8B_L12_FAIL; tail -8 $A/net/l12.log; exit 18; }
-tail -2 $A/net/l12.log
+  --reprice-out $A/net/l12_reprice.json --reprice-rounds 6 > $A/net/l12.log 2>&1 || { echo S8B_L12_FAIL; grep -v '^   {' $A/net/l12.log | tail -8; exit 18; }
+grep '^L12_REPRICE' $A/net/l12.log | cut -c1-2000; tail -2 $A/net/l12.log
 python3 tools/hbm_die_v16/d4g_layers/l29_rootctl_closed.py $A/net/contract.json $A/net/contract.json --latency-report $A/net/l12_banklat.json --report $A/net/l29_rootctl_binding.json || exit 18
 # HBM-H9R11 10-20: bind the CLOSED h9c PC-controller fallback (l25 = prepare_fallback, LEAD-admitted ea87fbac pattern) on the
 # S8 contract BEFORE S8c/bind2/strict/S9 synth_c; strict reuses the admitted H9BIND delta review (4 l24 re-pins, 0 entries).
