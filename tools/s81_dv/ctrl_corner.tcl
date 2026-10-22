@@ -47,7 +47,8 @@ proc s81_ctrl_corner_repair {prefix} {
      if {[$sink getIoType] ne "INPUT"} continue
      set z [s81_cc_xy $sink]
      set length [expr {abs([lindex $a 0]-[lindex $z 0])+abs([lindex $a 1]-[lindex $z 1])}]
-     if {$length>405.0*$dbu} {lappend todo [list $drv $sink $box [$ctrl getName] [[$pin getMTerm] getName] [expr {$length/$dbu}]]}
+     # Conservative construction headroom: actual pin-average reach is still audited at405um.
+     if {$length>400.0*$dbu} {lappend todo [list $drv $sink $box [$ctrl getName] [[$pin getMTerm] getName] [expr {$length/$dbu}]]}
      set inst [$sink getInst];set mst [[$inst getMaster] getName]
      if {[string match BUFx* $mst] || [string match INVx* $mst]} {
       foreach p [$inst getITerms] {if {[$p getIoType] eq "OUTPUT"} {lappend queue $p}}
