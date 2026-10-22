@@ -17,5 +17,6 @@ python3 tools/die_port_bind.py $O/die.v --top hbm_v16_die $EXTRA --allow-model o
   --define OT_SMH_FC_HIER --strap-file $O/straps.json --pad-file $O/die.v.pads.json \
   --unread-review $R --unread-contract $C --unread-manifest $M --unread-manifest-sha256 $H \
   --out $O/port_bind.json > $O/strict_replay.log 2>&1
+bind_rc=$?
 tail -1 $O/strict_replay.log
-grep -q "^DIE_PORT_BIND PASS" $O/strict_replay.log
+[ "$bind_rc" = 0 ] && grep -q "^DIE_PORT_BIND PASS" $O/strict_replay.log
