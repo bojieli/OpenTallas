@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "source": "b2a07db8c",
+  "scope": "Existing native leg of actual 80-SRAM SFU operand-store vehicle; new same-edge row / rotate / selection controls, not the complete FPIPE1 candidate.",
+  "controller": 2684152,
+  "unit": "EP9 2139636-1792648479",
+  "exit": 0,
+  "params": {
+    "NATIVE32": 1,
+    "WROT": 1,
+    "WPIPE": 1,
+    "FPIPE": 0
+  },
+  "operand_checks": 143360,
+  "shape": "4x28672",
+  "read_words_per_edge": 64,
+  "stage_sectors_per_edge": 8,
+  "output_words_per_edge": 16,
+  "memory_latency": 1,
+  "scalar_broadcast": 16,
+  "address_identity": "exact",
+  "negatives_rejected": [
+    "MUT_ADDR",
+    "MUT_RANGE",
+    "MUT_SCALAR_ADDR"
+  ],
+  "complete_candidate_proof": "Separate exact R24 CORE3L1 / FPIPE1 proof remains in progress.",
+  "objects_retained": "ot-epyc9:/srv/opentallas-scratch2/claude/codex-sfuc-k12-operand-2000/out"
+}

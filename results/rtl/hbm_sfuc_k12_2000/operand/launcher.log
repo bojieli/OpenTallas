@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch2/claude/codex-sfuc-k12-operand-2000
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch2/claude/codex-sfuc-k12-operand-2000
+ot-run: ot-epyc9       admits   174 GB (avail 445, growth 323, headroom 0, waiters 0/0 GB) load 116/128 running 39 disk 1707 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch2/claude/codex-sfuc-k12-operand-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch2/claude/codex-sfuc-k12-operand-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/codex-sfuc-k12-operand-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/codex-sfuc-k12-operand-2000
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2139636-1792648479 after 0 s
+PASS SFU actual80SRAM operand store shape4x28672 operand_checks=143360 read_words_per_edge=64 stage_sectors_per_edge=8 output_words_per_edge=16 memory_latency=1 scalar_broadcast=16 address_identity=exact
+MUT_ADDR REJECTED
+MUT_RANGE REJECTED
+MUT_SCALAR_ADDR REJECTED
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2139636-1792648479): exit 0
