@@ -108,6 +108,27 @@ def ovl4u(root, S, a):
     cyc["codec"] = 2
     if "H_frame" in out.get("codec1", {}):
         cyc["codec1_H_frame"] = out["codec1"]["H_frame"]; cyc["codec1_aggregate_tok_s_833ps"] = out["codec1"]["aggregate_tok_s_833ps"]
+    if (S / "release_masters.txt").exists():
+        return dict(verdict="PASS" if ok_all else "FAIL", dut=(S / "release_masters.txt").read_text().strip(),
+                    golden="every C->K and K->C frame of the 4-user F16 frame: written frame == bench golden of its port "
+                           "(producer word / kind-15 STATUS encoding / kind-5 KVN encoding), delivered in order bit-exact at "
+                           "the receiver end on the compiled port/kind/beat with rx_user == sender user; KV pins: every "
+                           "STATUS result and KVN word == the compute pins; per-user exchanges/tokens counted at the compute "
+                           "master pins = compiled counts (tb_d2d_ovl_mu_rel checks)",
+                    cycles=cyc, mutants=mutants,
+                    stand_ins=["UCIe PHY = ot_qkvd_ucie_x64_phy_model (modelled off-chip leg; LAT = P_PHY - 2, the masters' "
+                               "FDI pin flops are real)", "3-flop package bump of the forwarded epoch / link reset (modelled)",
+                               "producers/consumers at the master pins are tb models (native CMD/Q, program witness, KVN x3, "
+                               "HOST record, attention RESULT/STATUS, embedding row; result_v pulses for the STATUS codec); "
+                               "the release masters (sf7 / sfm3), OVL sequencers, STATUS/KVN codecs, recovery, CRC and slot "
+                               "SRAM links are assembly RTL",
+                               "macro view ot_sram_1r1w_64x137_m1_r2c2_p192 from 545cdd4bc (the closed sf7w kit's view; not "
+                               "in the assembly's asap7_memory_macros_v2)"],
+                    logs=logs + [f"runs/codec{c}/{name}/run.log" for c in (1, 2)
+                                  for name in ("pass", "asbuilt_one_playhead", "mut_collide", "mut_slot", "mut_user")]
+                              + [f"runs/codec{c}/{name}" for c in (1, 2)
+                                 for name in ("source.sha256", "verilator.txt")]
+                              + ["release_masters.txt"], runs=out)
     return dict(verdict="PASS" if ok_all else "FAIL",
                 golden="every C->K and K->C D2D frame of the 4-user F16 frame bit-exact against the compiled producer words "
                        "(tb_d2d_ovl_mu checks), per-user exchanges/tokens = compiled counts",
@@ -169,7 +190,8 @@ def ctx4u(root, S, a):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("stage", choices=("tp8", "ovl4u", "ctx4u")); ap.add_argument("runroot", type=Path)
     ap.add_argument("--grade", default="RTL-functional (source assembly)"); ap.add_argument("--lanes")
-    a = ap.parse_args(); root = a.runroot.resolve(); S = root / a.stage
+    ap.add_argument("--stage-dir", help="run directory under RUNROOT (default: the stage name; ovl4u --release-masters: ovl4u_rel)")
+    a = ap.parse_args(); root = a.runroot.resolve(); S = root / (a.stage_dir or a.stage)
     body = dict(tp8=tp8, ovl4u=ovl4u, ctx4u=ctx4u)[a.stage](root, S, a)
     res = dict(stage=a.stage, grade=a.grade, src_commit=asm_commit(root), **body)
     ov = S / "ovl_overlay.txt"

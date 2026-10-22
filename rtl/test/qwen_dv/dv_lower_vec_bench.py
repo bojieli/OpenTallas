@@ -43,6 +43,7 @@ import dv_lower_vec as V        # noqa: E402
 G, F = B.G, B.F
 N, BLOCK = D.NSLICE, D.BLOCK
 P_CMD, P_ARET, P_SWI = LB.P_CMD, LB.P_ARET, LB.P_SWI
+P_DRET = 40                     # dvs_W5.ch_dn_i D2D return half (native59 dr_o)
 T0 = 16
 BENCH_PIDX = dict(qkr_ps=16, rs_dd=17, qn_dd=18, gur_dd=19, readback=20)
 PLACEHOLDER = dict(add_psum_out=[0, 100, 200], xs_out=[0, 8, 16, 24, 32, 40], silu_out=[0, 8], red_vm=100,
@@ -102,6 +103,8 @@ def boot(ev, imgs):
 def lowered(ev, lw, base):
     for w in lw['crom_table']:
         ev.at(base + w['edge'], P_SWI, D.stream_table_word(1, w['dst'], w['eaddr'], int(w['payload'], 16)))
+    for w in lw.get('rope_return', []):            # QW-LAYERGAP: the RoPE row as group-1 dr words (native59 format)
+        ev.at(base + w['edge'], P_DRET, int(w['word'], 16))
     for c in lw['commands']:
         ev.cmd(base + c['edge'], int(c['cmd'], 16))
     return base + max(c['edge'] for c in lw['commands'])
@@ -491,7 +494,7 @@ def run_attn(work, lw, rng, tag):
     return ok, 1, errs, info
 
 
-def main_run(work, mode, mutant, seed, ages, ar_order='slice', fixture=None):
+def main_run(work, mode, mutant, seed, ages, ar_order='slice', fixture=None, rope='stream'):
     rng = np.random.default_rng(seed)
     consts = consts_for(rng)
     fix = {}
@@ -503,7 +506,7 @@ def main_run(work, mode, mutant, seed, ages, ar_order='slice', fixture=None):
                 consts[k] = fix[k].astype(F)
         if 'pos' in fix:
             consts['pos'] = int(fix['pos'])
-    lw = V.lower_vec(mode, mutant, ages=ages, consts=consts, ar_order=ar_order)
+    lw = V.lower_vec(mode, mutant, ages=ages, consts=consts, ar_order=ar_order, rope=rope)
     (work / f'lowering_{mode}.json' if not mutant else work / f'lowering_{mode}_{mutant}.json').write_text(
         json.dumps(lw, indent=1) + '\n')
     lw['_consts'] = consts
@@ -512,7 +515,7 @@ def main_run(work, mode, mutant, seed, ages, ar_order='slice', fixture=None):
     ok, n, errs, info = dict(resid=run_resid, qk=run_qk, silu=run_silu, attn=run_attn)[mode](work, lw, rng, tag)
     verdict = 'PASS' if ok == n and not errs else 'FAIL'
     print(f'DV_LOWER_VEC {mode} {verdict} {ok}/{n} mutant={mutant or 0} commands={len(lw["commands"])} '
-          f'collisions={len(lw["collisions"])} ar_order={ar_order} fixture={Path(fixture).name if fixture else 0} {info}')
+          f'collisions={len(lw["collisions"])} ar_order={ar_order} rope={rope} fixture={Path(fixture).name if fixture else 0} {info}')
     for e in errs[:10]:
         print('   ', e)
     return 0 if verdict == 'PASS' else 1
@@ -527,6 +530,8 @@ def main():
                     help='residual AR return order; row matches the production collective')
     ap.add_argument('--ages', help='vec_ages.json (default: the committed one)')
     ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--rope', choices=('stream', 'rx'), default='stream',
+                    help='QW-LAYERGAP: rx = RoPE row over the D2D return chain (needs the RP 1 slice: DV_LOWER_VFLAGS=-GRP=1)')
     ap.add_argument('--fixture', help='npz of real stage operands + ISA gold (tools/qwen_layerbench/dv_layer_fixture.py)')
     a = ap.parse_args()
     work = Path(a.work)
@@ -534,7 +539,7 @@ def main():
     if a.mode == 'calibrate':
         return calibrate(work, a.seed)
     ages = V.load_ages(a.ages) if a.ages else None
-    return main_run(work, a.mode, a.mutant, a.seed, ages, a.ar_order, a.fixture)
+    return main_run(work, a.mode, a.mutant, a.seed, ages, a.ar_order, a.fixture, a.rope)
 
 
 if __name__ == '__main__':

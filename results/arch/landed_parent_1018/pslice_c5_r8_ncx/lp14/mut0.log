@@ -1,0 +1,5 @@
+LP_LOCKSTEP PASS MUT=0 compared=299460 cycles=20000 warm=35
+- rtl/hbm_accel/generic/adapters/static_su/programme/landed/tb_ot_hbm_su_programme_pslice_c5_lp14.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 20us; walltime 2.270 s; speed 8.810 us/s
+- Verilator: cpu 2.268 s on 1 threads; allocated 10 MB

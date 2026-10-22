@@ -125,10 +125,12 @@ module qfd_native59_compute_service #(
  .write_v(vm_write_v),.write_beat(vm_write_beat),.write_tag59(vm_write_tag),
  .visibility_slot(visibility_slot),.write_commit_v(write_commit_v),.write_commit_line(write_commit_line),.write_commit_mask(write_commit_mask),
  .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag59(vm_commit_tag),.complete(commit_complete),.fault(commit_fault));
+ // Same-edge request publications drive the endpoint tag and command-data selections.
+ wire [23:0] kernel_request_pub;
  qfd_native59_static_service u_service(
  .ck(ck_service),.rst_n(rst_n),.source_fault(context_fault|qtag_fault|export_control_fault|q_fault|formatter_fault|x3_fault|record_fault|commit_fault|visibility_fault|vm_address_fault),
  .begin_slot(begin_slot),.begin_tag(begin_tag),.request_slot(request_slot),.request_tag(request_tag),.result_base_word(base),
- .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(req_v),.kernel_request_tag(req_tag),
+ .qr_committed(q_committed),.qr_tag(q_epoch_tag),.kernel_request_v(req_v),.kernel_request_pub(kernel_request_pub),.kernel_request_tag(req_tag),
  .q_slot(q_slot),.q_slot_beat(q_slot_beat),.q_v(q[523]),.q_beat(q[516:512]),.q_tag(q_frame_tag),.q_data(q[511:0]),
  .kernel_q_v(kq_v),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
  .result_slot(result_slot),.result_slot_beat(result_slot_beat),.result_v(result_v),.result_beat(result_beat),.result_tag(result_tag),.result_data(result_data),
@@ -136,7 +138,7 @@ module qfd_native59_compute_service #(
  .vm_commit_v(vm_commit_v),.vm_commit_beat(vm_commit_beat),.vm_commit_tag(vm_commit_tag),.kernel_done(kernel_done),.kernel_done_tag(kernel_done_tag),
  .complete_slot(complete_slot),.completed(completed),.active(active),.fault(svc_fault),.native_ret(service_ret_raw));
  qfd_native59_record_endpoint #(.CODEC_MUT(CODEC_MUT))u_record(
- .ck(ck_record),.rst_n(rst_n),.operation_tag(operation_tag),.kernel_request_v(req_v),.kernel_request_tag(req_tag),
+ .ck(ck_record),.rst_n(rst_n),.operation_tag(operation_tag),.kernel_request_v(req_v),.kernel_request_pub(kernel_request_pub),.kernel_request_tag(req_tag),
  .kernel_q_v(kq_v),.kernel_q_beat(kq_beat),.kernel_q_tag(kq_tag),.kernel_q_data(kq_data),
  .tx_slot(tx_slot),.tx_slot_kind(tx_slot_kind),.tx_slot_beat(tx_slot_beat),.tx_valid(native_tx_v),.tx_payload(native_tx_payload),
  .rx_event(native_rx_v),.rx_payload(native_rx_payload),.rx_slot(rx_slot),.rx_slot_kind(rx_slot_kind),.rx_slot_beat(rx_slot_beat),

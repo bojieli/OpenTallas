@@ -1,0 +1,14 @@
+Verilator 5.050 2026-07-01 rev v5.050
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 0: LP_LOCKSTEP PASS
+BENCH_EXIT 0
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 1: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+AUDIT PASS
+AUDIT-UNLAND FAIL (expected)
+MUT 2: LP_LOCKSTEP FAIL
+BENCH_EXIT 0
+lp14 @012bfff73; ot-run unit on ot-epyc9 (ot-heavy PATH Verilator 5.050), run dir /srv/opentallas-scratch/claude/su_pslice14_bench_012bfff73/out

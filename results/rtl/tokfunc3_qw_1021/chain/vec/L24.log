@@ -1,0 +1,2 @@
+KVREAL 24 {"layer": 24, "position": 8191, "fx": "/srv/opentallas-scratch2/claude/tokfunc3-qw-1021/chain/in/fx", "kv_pre": "/srv/opentallas-scratch2/claude/tokfunc3-qw-1021/chain/in/p8191/kv_pre/L24_die0.npy", "q_from": "L24_qk.npz gold_q (stg qk RTL output, bit-exact)", "p_row_from": "L24_qk.npz gold_k/gold_v (stg qk RTL output, bit-exact)", "kv_pre_p_row_zero": true, "kv_fp8_representable": true, "tp4_repro_word_mismatch": 0, "tp8_vs_tp4_attn": {"words_differ": 328, "max_ulp": 124}}
+rc=0

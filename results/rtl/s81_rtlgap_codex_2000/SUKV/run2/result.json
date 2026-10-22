@@ -1,0 +1,271 @@
+{
+ "schema": "opentallas.s81_rtlgap_sukv.gate.v1",
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "fixtures": "/srv/opentallas-scratch/claude/rtlgap-sukv-1021/fx",
+ "golden_checks": {
+  "L2": {
+   "pool_vs_fixture": true,
+   "norm_vs_fixture": true,
+   "row_qdq_vs_fixture": true,
+   "knorm_vs_fixture": true,
+   "k_rope_qdq_vs_fixture": true,
+   "cn_qdq_rows_eq_fixture": true
+  },
+  "L14": {
+   "pool_vs_fixture": true,
+   "norm_vs_fixture": true,
+   "row_qdq_vs_fixture": true,
+   "knorm_vs_fixture": true,
+   "k_rope_qdq_vs_fixture": true,
+   "cn_qdq_rows_eq_fixture": true
+  },
+  "L20": {
+   "norm_vs_fixture": true,
+   "row_qdq_vs_fixture": true,
+   "knorm_vs_fixture": true,
+   "k_rope_qdq_vs_fixture": true,
+   "cn_qdq_rows_eq_fixture": true
+  },
+  "SYN": {}
+ },
+ "positive": {
+  "L2_v4": {
+   "ok": true,
+   "jobs": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV_JOB CP kind=14 finish_edges=391 reads=256 pair_writes=64 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=2557 fault=0",
+    "SUKV_JOB CN kind=12 finish_edges=1219 reads=74 pair_writes=96 events=48 first_event_age=244 last_event_age=273 first_event=2821 last_read=2651 fault=0",
+    "SUKV_JOB IK kind=13 finish_edges=1059 reads=74 pair_writes=16 events=8 first_event_age=259 last_event_age=272 first_event=4056 last_read=3871 fault=0",
+    "SUKV bad=0 fault=0 cycles=4854",
+    "SUKV PASS CN/IK on the production KV bank + CP pool through native VM pairs (VLAT 4)"
+   ]
+  },
+  "L2_v1": {
+   "ok": true,
+   "jobs": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV_JOB CP kind=14 finish_edges=388 reads=256 pair_writes=64 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=2557 fault=0",
+    "SUKV_JOB CN kind=12 finish_edges=1219 reads=74 pair_writes=96 events=48 first_event_age=241 last_event_age=270 first_event=2815 last_read=2648 fault=0",
+    "SUKV_JOB IK kind=13 finish_edges=1059 reads=74 pair_writes=16 events=8 first_event_age=256 last_event_age=269 first_event=4050 last_read=3868 fault=0",
+    "SUKV bad=0 fault=0 cycles=4851",
+    "SUKV PASS CN/IK on the production KV bank + CP pool through native VM pairs (VLAT 1)"
+   ]
+  },
+  "L14_v4": {
+   "ok": true,
+   "jobs": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV_JOB CP kind=14 finish_edges=391 reads=256 pair_writes=64 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=2557 fault=0",
+    "SUKV_JOB CN kind=12 finish_edges=1219 reads=74 pair_writes=96 events=48 first_event_age=244 last_event_age=273 first_event=2821 last_read=2651 fault=0",
+    "SUKV_JOB IK kind=13 finish_edges=1059 reads=74 pair_writes=16 events=8 first_event_age=259 last_event_age=272 first_event=4056 last_read=3871 fault=0",
+    "SUKV_JOB GKKV kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=4923 fault=0",
+    "SUKV_JOB KV kind=1 finish_edges=1131 reads=74 pair_writes=52 events=26 first_event_age=266 last_event_age=285 first_event=6150 last_read=5958 fault=0",
+    "SUKV bad=0 fault=0 cycles=7013",
+    "SUKV PASS CN/IK on the production KV bank + CP pool through native VM pairs (VLAT 4)"
+   ]
+  },
+  "L20_v4": {
+   "ok": true,
+   "jobs": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV_JOB CN kind=12 finish_edges=1219 reads=74 pair_writes=96 events=48 first_event_age=244 last_event_age=273 first_event=2429 last_read=2259 fault=0",
+    "SUKV_JOB IK kind=13 finish_edges=1059 reads=74 pair_writes=16 events=8 first_event_age=259 last_event_age=272 first_event=3664 last_read=3479 fault=0",
+    "SUKV bad=0 fault=0 cycles=4462",
+    "SUKV PASS CN/IK on the production KV bank + CP pool through native VM pairs (VLAT 4)"
+   ]
+  },
+  "SYN_v4": {
+   "ok": true,
+   "jobs": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV_JOB CP kind=14 finish_edges=391 reads=256 pair_writes=64 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=2557 fault=0",
+    "SUKV_JOB CN kind=12 finish_edges=1219 reads=74 pair_writes=96 events=48 first_event_age=244 last_event_age=273 first_event=2821 last_read=2651 fault=0",
+    "SUKV_JOB IK kind=13 finish_edges=1059 reads=74 pair_writes=16 events=8 first_event_age=259 last_event_age=272 first_event=4056 last_read=3871 fault=0",
+    "SUKV bad=0 fault=0 cycles=4854",
+    "SUKV PASS CN/IK on the production KV bank + CP pool through native VM pairs (VLAT 4)"
+   ]
+  },
+  "L14_eng_knorm": {
+   "ok": true,
+   "lines": [
+    "KNORM copies=4 bad=0 fault=0 norm_latency=73 gates=4",
+    "KNORM PASS eng.knorm = ot_s81sl_eg u_nh/u_nk bit-exact (L14 fixture)"
+   ]
+  }
+ },
+ "negative": {
+  "CP_MUT1": {
+   "failed": true,
+   "lines": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV CP32 mismatch feature=0 got=bdaeeb34 want=bcf60450",
+    "SUKV CP32 mismatch feature=1 got=3e441de6 want=3e5b1e54",
+    "SUKV CP32 mismatch feature=2 got=bd5c1fdf want=bd4b36dc",
+    "SUKV CP32 mismatch feature=3 got=be7e282a want=be2fa7c3"
+   ]
+  },
+  "CP_MUT2": {
+   "failed": true,
+   "lines": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV CP32 mismatch feature=0 got=3e77065c want=bcf60450",
+    "SUKV CP32 mismatch feature=1 got=3e2540ea want=3e5b1e54",
+    "SUKV CP32 mismatch feature=2 got=bd902a36 want=bd4b36dc",
+    "SUKV CP32 mismatch feature=3 got=be7b8c02 want=be2fa7c3"
+   ]
+  },
+  "CP_MUT3": {
+   "failed": true,
+   "lines": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV_JOB CP kind=14 finish_edges=391 reads=256 pair_writes=64 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=2557 fault=0",
+    "SUKV CP mismatch row=0 word=3 got=be2f0000 want=be300000",
+    "SUKV CP mismatch row=0 word=4 got=bebc0000 want=bebd0000",
+    "SUKV CP mismatch row=0 word=7 got=be420000 want=be430000"
+   ]
+  },
+  "CP_MUT4": {
+   "failed": true,
+   "lines": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV CP32 mismatch feature=3 got=be2fa7c4 want=be2fa7c3",
+    "SUKV CP32 mismatch feature=4 got=bebc88f6 want=bebc88f7",
+    "SUKV CP32 mismatch feature=7 got=be42f076 want=be42f077",
+    "SUKV CP32 mismatch feature=12 got=3f38090d want=3f38090c"
+   ]
+  },
+  "CP_MUT5": {
+   "failed": true,
+   "lines": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV CP32 mismatch feature=0 got=00000000 want=bcf60450",
+    "SUKV CP32 mismatch feature=1 got=00000000 want=3e5b1e54",
+    "SUKV CP32 mismatch feature=2 got=00000000 want=bd4b36dc",
+    "SUKV CP32 mismatch feature=3 got=00000000 want=be2fa7c3"
+   ]
+  },
+  "CNIK_MUT1": {
+   "failed": true,
+   "lines": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV_JOB CP kind=14 finish_edges=391 reads=256 pair_writes=64 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=2557 fault=0",
+    "SUKV_JOB CN kind=12 finish_edges=1219 reads=74 pair_writes=96 events=48 first_event_age=244 last_event_age=273 first_event=2821 last_read=2651 fault=0",
+    "SUKV_JOB IK kind=13 finish_edges=1059 reads=74 pair_writes=16 events=8 first_event_age=267 last_event_age=280 first_event=4064 last_read=3871 fault=0",
+    "SUKV IKQ mismatch row=0 word=0 got=3f00bf00 want=3e80be80"
+   ]
+  },
+  "CNIK_MUT2": {
+   "failed": true,
+   "lines": [
+    "SUKV_JOB GK3 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=197 fault=0",
+    "SUKV_JOB GK0 kind=7 finish_edges=1026 reads=66 pair_writes=0 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=1224 fault=0",
+    "SUKV_JOB CP kind=14 finish_edges=391 reads=256 pair_writes=64 events=0 first_event_age=-1 last_event_age=-1 first_event=-1 last_read=2557 fault=0",
+    "SUKV_JOB CN kind=12 finish_edges=1219 reads=74 pair_writes=96 events=48 first_event_age=244 last_event_age=273 first_event=2821 last_read=2651 fault=0",
+    "SUKV CNN mismatch row=0 word=0 got=3e083eb8 want=3e14bca9",
+    "SUKV CNN mismatch row=0 word=1 got=3d763ce4 want=bdd9bd18"
+   ]
+  },
+  "knorm_seqsum": {
+   "failed": true,
+   "lines": [
+    "KNORM mismatch copy 0 rs_h 4095ef66/4095ef56 rs_k 3fc7e024/3fc7e017",
+    "KNORM mismatch copy 1 rs_h 40d1c1b2/40d1c17b rs_k 3f9f02b5/3f9f02b5",
+    "KNORM mismatch copy 2 rs_h 40705559/4070552f rs_k 3f9aacdc/3f9aacf2",
+    "KNORM mismatch copy 3 rs_h 4117e78a/4117e778 rs_k 3f077a4d/3f077a55",
+    "KNORM copies=4 bad=4 fault=0 norm_latency=73 gates=4",
+    "[428000] %Fatal: tb_s81sl_eg_knorm.sv:38: Assertion failed in tb_s81sl_eg_knorm: KNORM FAIL"
+   ]
+  },
+  "knorm_swap": {
+   "failed": true,
+   "lines": [
+    "KNORM mismatch copy 0 rs_h 3fc7e017/4095ef56 rs_k 4095ef56/3fc7e017",
+    "KNORM mismatch copy 1 rs_h 3f9f02b5/40d1c17b rs_k 40d1c17b/3f9f02b5",
+    "KNORM mismatch copy 2 rs_h 3f9aacf2/4070552f rs_k 4070552f/3f9aacf2",
+    "KNORM mismatch copy 3 rs_h 3f077a55/4117e778 rs_k 4117e778/3f077a55",
+    "KNORM copies=4 bad=4 fault=0 norm_latency=73 gates=4",
+    "[428000] %Fatal: tb_s81sl_eg_knorm.sv:38: Assertion failed in tb_s81sl_eg_knorm: KNORM FAIL"
+   ]
+  }
+ },
+ "source_sha256": {
+  "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+  "rtl/hdc/ot_hdc_fp32_f12.sv": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv": "4becec96c1d40d80bafa532ee8f4f3c201d7418c80bbd40d963273a2a1e88de4",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv": "eb940d1da87c783432778e360dc3310be78157707da45c97630a67375cbdd9cd",
+  "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv": "b5340082cf91c28bcd88cf61b7eb49723ae7a39ea6d4d75939db323d8f3ae5cc",
+  "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv": "3292e2e8fa73ac1cbef5042171364e9ced031cf5c5af5f95ec83ac559456309a",
+  "rtl/dsrom_sys/s81_suhc/dsfd_sp_su.sv": "64e10b95a4eb28c82f008ebbf59d4f9a3ed917f74c0ddb3617964458678600df",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv": "23aa6cf6006c2ecd9012903246a18efcfd616c1ff9c453ca5a5a5b18ada134d6",
+  "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+  "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+  "rtl/hdc/v41x/ot_dsrom_su_swiglu.sv": "3b1749f5d4c5bdea21ffe08ccf534aaf83fe693a372ad9d0c2340a0a6340452f",
+  "rtl/hdc/v41x/ot_dsrom_su_f12.sv": "20dfd59c8a559c736bcb1bc978515d547d3767e0005f7369b489e4e95552f751",
+  "rtl/hdc/v41x/ot_dsrom_su_fdiv_f12.sv": "ce752646f3cd2834b973e50295778c5b422e15d4faab1d39ac41ca4c5a3ead41",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax.sv": "56340c82937f8957dd3578e038f24cfc1d0d80e7ee41acc00639ead1f9956918",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_add.sv": "94173957c6c3a6e498c8aeb3c1fba4874bffc0f308003a91945c69f6adfd0983",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_add6.sv": "e5b292dfee16ff5c84744f8c25fd4085b33fd931520870e9cb0fc3452e31697b",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_exp6.sv": "d45fab080feba88cb1aaa0d80ac8c90ec182ad829cb8da0b5b6e4e9556945151",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_f12r.sv": "51bedeb6b8a5df29ca97dbd57635000e4e8f6e9959d98e8d3421eccf4812d83d",
+  "rtl/hdc/v41x/ot_dsrom_su_softmax_m9.sv": "0a00a6805491b96e6a4c7206c55d1ccd84c16f8da1e8bd0da09a3fbbf29c35d2",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+  "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv": "804cf233a0e051d0d72fb3cf1a8b11d3e8c65bdbab3d8f664d98c07ae7c8797b",
+  "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv": "2f7ec21829e132dc0be7fb8c7de896e4a50456220498f1dc7ee298a386a98aa1",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv": "cd568b2f3868d1a76b2e8bf5dfcab2c5b5afeec5cdd51cc1bcf047a7bfa9d683",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_ctl.sv": "05704171f0698698cb9caf52a2da70feaa2315047185141c59793f7781254279",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_norm_lg.sv": "eac8375b873aacaef2886066ff57ca388f5643ee8e4aca38bea168c6e6532b94",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_tile.sv": "1ff6bac5dc190bc285d2337925f65af4b33dc16376e712fc73c5d3cc2ad5b57e",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qb.sv": "1ff3518791a1d63f0fc31b225bdc69da973f224f936f875afeb973037d97a73f",
+  "rtl/hdc/ot_sram_dline.sv": "76656320b9ae4390e93566eba95282d750283e4ee9cdbf91fd4c4ff4c5d4eb13",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sw.sv": "6ce300eb50ee9c39fb46c6d10987045c09b1d17f476c9c9328b3ab199a33c531",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv": "5ff9881c86e88e9b26b5d50a91bfdb643ab8c632156b1b88ef2d3d1df062bde8",
+  "rtl/hdc/ot_sram_bank.sv": "d2b4494ff2b2bfd91aed19a973a3043cafc849bad9a50bc2318c7a44de7a7f11",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv": "50b6dc804cc1e8d84725d937374d704f17cc0747afc7a13886e33acd305f76e2",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv": "2d8e98a3f25eea07416ac5a408a58e9fb21e302bc08532bbb345ac184dbe3b96",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv": "e13011d0e89dd9b558ec376605b35bc497c36413f1a5c0d090aa560c0ef85f63",
+  "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv": "86157cfdac1960b7c4eba0e2af357f1bf005084d4f23163766f75b4064de5a73",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv": "508643dcf063cc738f0b38c2cfa487335077950002d5886f88049be52c801a57",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv": "22033667f1b92cc1fea05008b983842c9c1fe44661561bc13206a78b1bd5ae6d",
+  "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv": "65bc614399b3942c3e035c6b8db071335ff0a8e9fafef2d8daafd518f76b7c1b",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv": "ed3d0a679c87dcae97c880c209087948df4c35c45f2fb6d360361736bade188e",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv": "9c3690e306326bd840345531dab57e64e236ad300b9a8de7d28adfc92e43de11",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cmp_pool.sv": "ba05dc9e224aef5e33b010c1cecb204f3913d5399ea3c49c51698ad21cf07b16",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv": "71b52f3016e76f1ef9ed3ca81333a73a0866b071dd4fa1c9f5727c49701c550b",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv": "893b7f7aedb186ccb2fb9a1b215fc128b1ebb601943b7e24aaec68745d40a17e",
+  "rtl/dsrom_sys/s81_dv/eng/ot_s81sl_eg.sv": "6220a8390f29edd9498cfe8a9c752342f2c244726e5b72a569db0ca99b00040f",
+  "rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_kv_leaf_sukv.sv": "65114bde32eb10e2a7d9d84c1cfaf561050758efa9691e909a5a820c631483aa",
+  "rtl/dsrom_sys/s81_dv/eng/test/tb_s81sl_eg_knorm.sv": "f38512eb49b08a18c63043a1af9ca9db3bb182ee03555d8ff902cb177bf2eebb",
+  "tools/s81_dv/rtlgap_sukv_1021/gate.py": "a9e6378a501d749d9ddba9c5157149d7503d9712c08e117c6ec01a0e9cdc0df0"
+ },
+ "status": "PASS"
+}

@@ -1,0 +1,116 @@
+{
+ "name": "qfd_hp13_corepub39_p2",
+ "top": "qfd_hp13_corepub39",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_dv/headprep13/corepub39/qfd_hp13_corepub39.sv"
+ ],
+ "params": {
+  "STAGES": 2
+ },
+ "clock": "cts",
+ "clock_port": "ck",
+ "outline": {
+  "w": 43.2,
+  "h": 43.2,
+  "exact": true
+ },
+ "children": [],
+ "macros": [],
+ "inter": [],
+ "pins": {
+  "S": [
+   "i"
+  ],
+  "N": [
+   "o"
+  ],
+  "W": [
+   "ck"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 4,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the publisher itself is the registered39-bit input/output boundary; no additional unpriced pin register"
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "data publisher has no reset port; sourceGIvalid reset is retained and startup must warm sample+publisher edges"
+ },
+ "safe_design_checklist": {
+  "1_pins": "39input bits capture directly into the coherent clocked bank;39outputs registered; full S/N faces, <1pin/um",
+  "2_reach": "43.2um tile, bounded source bank component; actual fullHP13 GI-to-bank route and die landings remain separate obligations",
+  "3_fanout": "each datum drives at most one next-stageD, each output serves at most2actualconsumer branches; core clock39or78FF",
+  "4_depth": "plain register pipe, zero combinational data depth",
+  "5_storage": "39*STAGES FF, no inferred RAM",
+  "6_floorplan": "43.2um square lattice component, no macros; low-fill diagnostic component gate does not justify shrinking parent",
+  "7_clock": "one actual core clock port ck, no HR input; normal measuredTT/FF clockspread gate unchanged",
+  "8_schedule": "2 publisher edges; totalcalendar sample-to-output 3core edges; no dieclocktransport credit"
+ },
+ "structural_change": "new independent coherent39-bit core publisher, 2stage(s), no legacyclockrename or domainmerge",
+ "job": {
+  "owner": "Codex:HP13-LANDING-2000",
+  "branch": "codex/hp13-landing-2000",
+  "tag": "p2",
+  "purpose": "minimum newbank physicalmechanism gate; fullsource integration and actual regional landings ownedqdie",
+  "extra_paths": [
+   "results/arch/hp13_corepub39_1021",
+   "rtl/qwen_dv/headprep13/native32/qfd_tt_ctlm_dv_hp13_rrloc_helpers.sv"
+  ],
+  "benches": [
+   {
+    "name": "publisher_positive",
+    "cmd": "ONLY_STAGES=2 MUTS=0 RAW_NEG=0 bash results/arch/hp13_corepub39_1021/run_component.sh {RUN}/pub2_m0",
+    "expect": "pass",
+    "pass_regex": "PUB_PASS",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "publisher_mut_clock",
+    "cmd": "ONLY_STAGES=2 MUTS=1 RAW_NEG=1 bash results/arch/hp13_corepub39_1021/run_component.sh {RUN}/pub2_m1",
+    "expect": "fail",
+    "fail_regex": "PUB_FAIL",
+    "fail_witness": "results/arch/hp13_corepub39_1021/bench_v5050/run2_m1.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "publisher_mut_dropped_tuple",
+    "cmd": "ONLY_STAGES=2 MUTS=2 RAW_NEG=1 bash results/arch/hp13_corepub39_1021/run_component.sh {RUN}/pub2_m2",
+    "expect": "fail",
+    "fail_regex": "PUB_FAIL",
+    "fail_witness": "results/arch/hp13_corepub39_1021/bench_v5050/run2_m2.log",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "reset_ports": [],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

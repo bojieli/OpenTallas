@@ -21,6 +21,10 @@
 // q frames (SVC FRAME PROTOCOL v1.1 header; payload as svc_c unless stated):
 //   12 CFG      [29:0] WB (window ring base); TOK-S81-GAPS/SVCP (10-19, G10): [32] ST valid, [31:30] ST = the die's HBM
 //               stack position (P.V quarter / held-row stack); [32] = 0 keeps the parameter ST (legacy frames)
+//               RTLGAP-SO (10-21, -DOT_SVC_ALLQ only): [54] ALLQ = every slice is a P.V owner (all 4 quarters on THIS
+//               die: the slice's tile P.V is a per-dim sum over rows inside the tile, its window rows are in its own 2 PCs
+//               and its p store holds the job's P, so no other die is needed); every selected row is then needed by
+//               every tile (ROWS for all pairs), and the drain slot pvs is the 10-b all-owner slot (rs_pvslot_all)
 //    3 OWN_ROW  [479:459] pos, [458:449] user; payload block b = {scale 8, codes 256}: block t is written (2 writes)
 //    2 WIN_LOAD as svc_c ([29:0] SB, [88:81] wcount, [98:89] nsel, [119:99] first window pos, [458:449] user, tag)
 //    7 SEL_IDS  as svc_c; the slice records per rank whether the row is this stack's (held) and fetches its own rows
@@ -72,14 +76,19 @@ module dsdv_svc_att #(
     parameter integer PFIFO = 512,
     parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
-    parameter bit SRAM_MACRO = 0
+    parameter bit SRAM_MACRO = 0,
+    parameter integer PV_IDENTITY = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
     input  wire [3:0]           sid,
     input  wire [3:0]           tile,
     input  wire [7:0]           gd,
+`ifdef OT_SVC_ALLQ
+    input  wire [9:0]           pvs,               // compiled P.V drain slot after the job's PVO (ALLQ: rs_pvslot_all)
+`else
     input  wire [7:0]           pvs,               // compiled P.V drain slot after the job's PVO (255: not an owner)
+`endif
     input  wire                 root,
     // the slice's copy of the broadcast stream (centre register)
     input  wire                 q_v,
@@ -124,6 +133,9 @@ module dsdv_svc_att #(
     output wire [15:0]          pvo_o,
     output wire [15:0]          jc_o,
     output wire [1:0]           st_o
+`ifdef OT_SVC_ALLQ
+    , output wire               allq_o             // CFG [54] (RTLGAP-SO): all-quarter P.V ownership of the job
+`endif
 );
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
@@ -155,17 +167,34 @@ module dsdv_svc_att #(
     // ------------------------------------------------------------------ CFG / job state
     reg [29:0] wb, sb;
     reg [1:0] st_r;                                 // stack position: CFG [31:30] when [32], else the parameter ST
-    reg [7:0] wcount; reg [9:0] nsel; reg [20:0] wfirst; reg [9:0] wuser;
+`ifdef OT_SVC_ALLQ
+    reg allq_r;                                     // RTLGAP-SO: CFG [54], all 16 slices own their tile's P.V
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) allq_r <= 1'b0;
+        else if (hdr_mine && h_type == 4'd12) allq_r <= q_d[54];
+    assign allq_o = allq_r;
+`endif
+    reg [7:0] wcount; reg [9:0] nsel; reg [20:0] wfirst,wposition; reg [9:0] wuser;
+`ifdef OT_SVC_ALLQ
+    wire [1:0] pv_owner_quarter=allq_r?tile[3:2]:st_r;
+`else
+    wire [1:0] pv_owner_quarter=st_r;
+`endif
+    wire [439:0] pv_provenance;wire pv_identity_bad;
+    dsdv_pv_source_identity #(.ENABLE(PV_IDENTITY)) u_pv_identity (
+      .clk(clk),.rst_n(rst_n),.cfg_v(hdr_mine && h_type==4'd12),.cfg_owner(q_d[52:33]),.cfg_valid(q_d[53]),
+      .launch(go),.launch_ok(job_open && !job_active && !run && !dr_arm && !dr_on),.user_id(wuser),.tag_id(tagj),.quarter(pv_owner_quarter),.tile(tile),.position(wposition),
+      .provenance(pv_provenance),.bad(pv_identity_bad));
     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
     wire start = hdr_mine && h_type == 4'd2;
     wire [9:0] tjob = 10'(wcount) + nsel;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
+        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wposition <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
         else begin
             if (hdr_mine && h_type == 4'd12) begin wb <= q_d[29:0]; if (q_d[32]) st_r <= q_d[31:30]; end
             if (start && !job_open) begin
                 sb <= q_d[29:0]; wcount <= q_d[88:81]; nsel <= q_d[98:89]; wfirst <= q_d[119:99];
-                wuser <= q_d[458:449]; tagj <= q_d[502:495];
+                wuser <= q_d[458:449]; tagj <= q_d[502:495];wposition<=q_d[479:459];
             end
         end
     always @(posedge clk) tjob_o <= tjob;
@@ -310,7 +339,11 @@ module dsdv_svc_att #(
             row = 4 * (32'(rc) - 1) + j; need = 1'b0; ok = 1'b0;
             if (row < 32'(tjob)) begin
                 kc_m[j] = 1'b1;
+`ifdef OT_SVC_ALLQ
+                need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r || allq_r;
+`else
                 need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r;
+`endif
                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
                 kc_w[265*j +: 265] = rowword(row, land[row], wsc, wcount, wfirst, need);
                 rel_bad[j] = need && !ok;
@@ -324,10 +357,19 @@ module dsdv_svc_att #(
     wire [PFW:0] pcnt = pw - pr;
     reg [15:0] p_left;
     wire [1:0] pstep = (p_left >= 16'd2) ? 2'd2 : 2'(p_left);
+`ifdef OT_SVC_ALLQ
+    wire pvown = tile[3:2] == st_r || allq_r;
+`else
     wire pvown = tile[3:2] == st_r;
+`endif
     wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
     wire ep_ready;
+`ifdef RTLGAP_MUT_ALLQ_NOP
+    // RTL MUTANT (bench only): ALLQ drains every slice, but P stays gated to quarter ST -> 12 tiles of zero P.V
+    wire [2*TD*16-1:0] ep_w = (tile[3:2] == st_r) ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
+`else
     wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
+`endif
 
     // ------------------------------------------------------------------ engine (unchanged, D = 32: S = 1, LS = 0)
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;
@@ -361,7 +403,7 @@ module dsdv_svc_att #(
     always @(posedge clk) if (pv_v) pvq[pvw[PA-1:0]] <= {pv_c, pv_y, pv_f};
     wire [PVB-1:0] pb = pvq[pvr[PA-1:0]];
     always @(posedge clk) if (dr_on)
-        pv_od <= (p_i == 0) ? {1'b1, 440'd0, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
+        pv_od <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
 
     // ------------------------------------------------------------------ sequential
     integer k;
@@ -498,6 +540,7 @@ module dsdv_svc_att #(
                 run <= 1'b1; rc <= 10'd1; ej_v <= 1'b1; job_active <= 1'b1; pv_n <= 0;
                 if (dr_arm || dr_on) fc[22] <= 1'b1;                          // a start while P.V of the last job drains
                 dr_arm <= pvown;
+                if(pv_identity_bad) fc[23]<=1'b1;
                 p_left <= (16'(tjob) + 16'(R) - 1) / 16'(R);
                 if (q_have != 5'd16) fc[9] <= 1'b1;                           // q not loaded at the compiled start
             end else if (run) begin
@@ -557,4 +600,25 @@ module dsdv_svc_att #(
             if (sc_v && !job_active) fc[18] <= 1'b1;
         end
     end
+endmodule
+// Exact source-owned identity used by the real ATT header above. Keeping launch
+// context separate from CFG prevents later configuration from relabelling an old
+// P.V drain. No numerical payload enters this block.
+module dsdv_pv_source_identity #(parameter integer ENABLE=0)(
+ input wire clk,rst_n,cfg_v,input wire[19:0]cfg_owner,input wire cfg_valid,
+ input wire launch,launch_ok,input wire[9:0]user_id,input wire[7:0]tag_id,
+ input wire[1:0]quarter,input wire[3:0]tile,input wire[20:0]position,
+ output wire[439:0]provenance,output wire bad
+);
+ generate if(ENABLE==0)begin:g_disabled assign provenance=440'd0;assign bad=1'b0;end
+ else begin:g_enabled
+  reg[19:0]pending,owner;reg valid,live;reg[1:0]q;reg[3:0]t;reg[20:0]pos;
+  always @(posedge clk or negedge rst_n)if(!rst_n)begin pending<=0;owner<=0;valid<=0;live<=0;q<=0;t<=0;pos<=0;end
+  else begin
+   if(cfg_v)begin pending<=cfg_owner;valid<=cfg_valid;end
+   if(launch)begin owner<=pending;live<=launch_ok && valid && pending[17:0]=={user_id,tag_id};q<=quarter;t<=tile;pos<=position;end
+  end
+  assign provenance={392'd0,pos,live,t,q,owner};
+  assign bad=launch && (!launch_ok || !valid || pending[17:0]!={user_id,tag_id});
+ end endgenerate
 endmodule

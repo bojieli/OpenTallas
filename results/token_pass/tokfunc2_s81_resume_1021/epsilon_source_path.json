@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.s81.entry_norm_epsilon_source.v1",
+ "status": "SOURCE_PATH_VERIFIED_NOT_RUNTIME_PROOF",
+ "shipping_root": "/srv/opentallas-scratch/claude/codex-s81-g8-resume-1021/die72-g8iq",
+ "die_sha256": "8ef3b748e5b14da4446d29576702d2828a056943481c650a65b5f5b18bf84838",
+ "epsilon_source": {
+  "path": "compiler/models/deepseek-v4.1-flash/inference_config.json",
+  "sha256": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+  "key": "norm_eps",
+  "value": 1e-20
+ },
+ "native_XFIN_templates_checked": 16,
+ "eps_bits": "1e3ce508",
+ "sources": {
+  "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv": {
+   "sha256": "fbbd94f494642f645e924f1f97df2bcdfbeff4170848da7c5616cca17dd71fa2",
+   "statements": [
+    {
+     "line": 155,
+     "text": "wire lpr_c_u_xf;  ot_pl_pad #(.W(1), .N(7)) u_lprc_u_xf (.ck(ck_C), .d(lpr_C), .q(lpr_c_u_xf));   // reference schedule: held 7 past the landing epochs"
+    },
+    {
+     "line": 180,
+     "text": "ot_s81sl_xrt1 u_xr (.clk(ck_C), .rst_n(lpr_c_u_xr), .sid(sid), .dl_ev(dl_ev), .dl_e(dl_e), .dl_wv(dl_wv), .dl_w(dl_w), .dl_vv(dl_vv), .dl_vb(dl_vb), .ci_dir(ci_dir), .ci_b(ci_b), .c_v(c_v_x), .c_d(c_d_x), .sw_v(sw_v_x), .sw_a(sw_a_x), .sw_m(sw_m_x), .sw_d(sw_d_x), .lo_v(lo_v_x), .lo_d(lo_d_x), .p_v(p_v_x), .p_d(p_d_x), .rb_v(rb_v_x), .rb_d(rb_d_x), .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));   // region C, t = 0"
+    },
+    {
+     "line": 181,
+     "text": "ot_s81dv_xfin u_xf (.clk(ck_C), .rst_n(lpr_c_u_xf), .go(x_go), .mode(x_mode), .sid(sid), .eps(x_eps), .s_v(x_sv), .s_i(x_si), .s(x_s), .wi_v(nx_wi[172]), .wi_h(nx_wi[171:168]), .wi_b(nx_wi[167:160]), .wi_d(nx_wi[159:0]), .ei_v(nx_ei[172]), .ei_h(nx_ei[171:168]), .ei_b(nx_ei[167:160]), .ei_d(nx_ei[159:0]), .eo_v(nx_eo[172]), .eo_h(nx_eo[171:168]), .eo_b(nx_eo[167:160]), .eo_d(nx_eo[159:0]), .wo_v(nx_wo[172]), .wo_h(nx_wo[171:168]), .wo_b(nx_wo[167:160]), .wo_d(nx_wo[159:0]), .rb_v(x_rbv), .rb_d(x_rbd), .e_v(xe_v), .e_c(xe_c), .e_hh(xe_hh), .e_kk(xe_kk), .e_dd(xe_dd), .fault(f_xf));   // region C, t = 0"
+    },
+    {
+     "line": 182,
+     "text": "ot_s81sl_eg u_eg (.clk(ck_C), .rst_n(lpr_c_u_eg), .eps(x_eps), .scale(x_scale), .i_v(xe_v), .i_c(xe_c), .i_hh(xe_hh), .i_kk(xe_kk), .i_dd(xe_dd), .g_v(eg_v), .g_c(eg_c), .g(eg_d), .fault(f_eg));   // region C, t = 0"
+    }
+   ]
+  },
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": {
+   "sha256": "cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64",
+   "statements": [
+    {
+     "line": 249,
+     "text": "for (k = 0; k < 8; k = k + 1) tg1_c[k] <= (ce || cw || cv) && tgt0 == 5'd1;"
+    },
+    {
+     "line": 505,
+     "text": "assign x_eps = x_eps_q; assign x_scale = x_scale_q; assign x_mode = x_mode_q;"
+    },
+    {
+     "line": 523,
+     "text": "x_eps_m[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : x_eps_m[8 * k +: 8];"
+    },
+    {
+     "line": 526,
+     "text": "x_eps_q[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : 8'd0;  // mutant: output copies do not hold"
+    },
+    {
+     "line": 529,
+     "text": "x_eps_q[8 * k +: 8] <= tg1_c[k] ? body[8 * k +: 8] : x_eps_m[8 * k +: 8];"
+    }
+   ]
+  },
+  "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv": {
+   "sha256": "9095cfd2553c96355713c205750fa0c285ec88dc3eafde06005c81b24d3d81cd",
+   "statements": [
+    {
+     "line": 72,
+     "text": "always @(posedge clk) begin ib <= f_base; id <= f_d; eps_c <= eps; end"
+    },
+    {
+     "line": 202,
+     "text": "ot_dsrom_qadd #(.LAT(LA)) u_eps (clk, rstn, mq_v, mq, eps_c, me, f_eps);"
+    },
+    {
+     "line": 529,
+     "text": "always @(posedge clk) begin go_c <= go; mode_c <= mode; eps_c <= eps; si_c <= s_i; s_c <= s; end"
+    },
+    {
+     "line": 598,
+     "text": ".rst_n(rstn), .go(go_c), .f_v(dl_v & {3{!md}}), .f_base(dl_b), .f_d(dl_d), .eps(eps_c), .r_v(fr_v), .r(fr), .fault(rf));"
+    }
+   ]
+  }
+ },
+ "holds": [
+  "actual descriptor/runtime command acceptance and partial/rstd mechanism proof",
+  "selected clocks/reset/die timing remain unqualified"
+ ]
+}

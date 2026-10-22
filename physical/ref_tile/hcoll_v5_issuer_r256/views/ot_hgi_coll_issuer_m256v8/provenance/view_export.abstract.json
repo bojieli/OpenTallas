@@ -1,0 +1,235 @@
+{
+  "name": "ot_hgi_coll_issuer_m256v8",
+  "orfs_dir": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/routes/hcoll_issuer_r256v8_grid_grid_95a231167/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -3.306501739075429e-10 min 6.050371315069469e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/routes/hcoll_issuer_r256v8_grid_grid_95a231167/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/record/views/ot_hgi_coll_issuer_m256v8:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/ref_tile/hcoll_issuer_r256v8_grid/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/eco-vtswap-t10/pass1/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.3884215999127036e-10 min 7.159994819261328e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/routes/hcoll_issuer_r256v8_grid_grid_95a231167/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/record/views/ot_hgi_coll_issuer_m256v8:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/ref_tile/hcoll_issuer_r256v8_grid/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/eco-vtswap-t10/pass1/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.6688206372350578e-11 min 3.012667892932086e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/routes/hcoll_issuer_r256v8_grid_grid_95a231167/work/orfs:/in:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/record/views/ot_hgi_coll_issuer_m256v8:/out",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/ref_tile/hcoll_issuer_r256v8_grid/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/eco-vtswap-t10/pass1/orfs:/work:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src:/src:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "-v",
+        "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2:/mv1:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/ref_tile/hcoll_issuer_r256v8_grid/signoff.sdc",
+    "sha256": "af971e13b4aebdd33fa45e99e3f7ff81e0de5da98cfa721af19809776133f183",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/routed_ioref.a1.json",
+    "sha256": "6227426126e34a81eda9cce624efb05c28d7dfa860c5fbec1b9b8b1c05cae375",
+    "expect_ps": {
+      "tt": 16.69,
+      "ff": 7.16
+    },
+    "tol_ps": 0.05,
+    "work": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/eco-vtswap-t10/pass1/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib",
+        "sha256": "a3a974f3e507422e63fb2ed36b88815b3eb21b0715d43c8fcce18aad0b40f7a9"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib",
+        "sha256": "c725d57f52609ac9bcd2f3557fac1d8bb617659329744ac037879f52281cbb00"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_ff.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_ff.lib",
+        "sha256": "0082029b840f0d920257ee27e82a21392a7117c56ac77b40d19f775b846b29ff"
+      },
+      "/src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_tt.lib": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_tt.lib",
+        "sha256": "a52c15bfdb7edfb5101bfa6f85a69fa1df4b795117e17aca785a331c0169f2ed"
+      },
+      "/src/physical/common_flow/io_ref_routed.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/common_flow/io_ref_routed.sdc",
+        "sha256": "4ba7ce68d84e6b3e6c145239487c10fd46fe78fcf9a9e978d18355bc4dff6095"
+      },
+      "/src/physical/ref_tile/hcoll_issuer_r256v8_grid/signoff.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/ref_tile/hcoll_issuer_r256v8_grid/signoff.sdc",
+        "sha256": "af971e13b4aebdd33fa45e99e3f7ff81e0de5da98cfa721af19809776133f183"
+      },
+      "/work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.odb": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/eco-vtswap-t10/pass1/orfs/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.odb",
+        "sha256": "3c93862439085dcb5eb01700cb12e61b27c127ddd387eaede498fbc7f2f8de75"
+      },
+      "/work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.sdc": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/eco-vtswap-t10/pass1/orfs/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.sdc",
+        "sha256": "c90abbecde65fae17dd59cd209e1e3fdb93984d47e0e4a70bf2278cfa9d1cfaa"
+      },
+      "/work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.spef": {
+        "host": "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/cl/eco-vtswap-t10/pass1/orfs/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.spef",
+        "sha256": "6620bcc948cac03cf680c5a535301b6c1ca9dac295114d22167461f8fbabb6f0"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 7.159994819261328,
+        "verdict_ps": 7.16,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 16.688206372350578,
+        "verdict_ps": 16.69,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ss.lib /src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_ss.lib]",
+        "read_db /work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/hcoll_issuer_r256v8_grid/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib /src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_ff.lib]",
+        "read_db /work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/hcoll_issuer_r256v8_grid/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "set ::env(OT_PF_MACRO_LIBS) [list /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib /src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_tt.lib]",
+        "read_db /work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_ot_hgi_coll_issuer_m256v8_asap7_ref_hcoll_issuer_r256v8_grid_grid_95a231167/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /src/physical/ref_tile/hcoll_issuer_r256v8_grid/signoff.sdc",
+        "read_sdc /src/physical/common_flow/io_ref_routed.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+    "/home/ubuntu/ot-scratch/claude/closure-loop/hcoll_issuer_r256v8_grid-grid-95a231167/src/physical/asap7_memory_macros_v2/ot_sram_1rw_256x64_m4_r2c2"
+  ],
+  "vt_flavours_added": [
+    "L"
+  ],
+  "abstract": {
+    "mode": "default",
+    "default_pin_access_violations": 0
+  },
+  "files": {
+    "ot_hgi_coll_issuer_m256v8.lef": "8a635dab72ddfae6a6e2e312eef3f01fe2769eaae1ef329c1f70bb8771d35714",
+    "ot_hgi_coll_issuer_m256v8_ff.lib": "1b2ae32f2bfb7d33daeb25e292d81d7c4de9573edd40e7c4a4113240eba59e8d",
+    "ot_hgi_coll_issuer_m256v8_ss.lib": "66ba4ed5410351fc138fcb1b1be978fcb4ad5ffdb38fa8b5bde80d49fa43b30e",
+    "ot_hgi_coll_issuer_m256v8_tt.lib": "4af0651fd8235d8a9a949744575e6c4dcceadbcec12957aa9ef31fbe883b32e7"
+  },
+  "ok": true,
+  "checked": true
+}

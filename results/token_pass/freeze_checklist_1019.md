@@ -75,11 +75,17 @@ it is not mapped die-netlist evidence. Only actual simulated netlist coverage ea
       until those stages actually execute against the frozen hierarchy. The inherited composition
       base is 272,641 cycles; the interim head-adjusted source composition is 272,675 cycles,
       pending STG/XT1/TP8/KV results. Neither is a final token verdict.
+      Stage `chain` (TOK-FUNC3-QW): the real token through the KV attention vehicle on all 36 layers takes
+      the KV part of `--die-netlist` as `<KV-netlist-vehicle-out>` (its `obj/Vtb_kvattn_rel`, built by stage
+      `kv --die-netlist`); the compute-die hand-off checks re-read the frozen run's stg fixtures.
 - [ ] S81 ROM: `tools/s81_dv/tokfunc/run_tokfunc_s81.sh --ref <frozen-commit>
       --work <fleet-dir> --fixtures <fixture-dir>`; closure adds `--die-v <die.v>
       --port-bind <port_bind.json> --plan <plan.json> --land <land.json>`.
       Run the selected 72-frame, 241-stage G4 assembly and its 50-user AR / 10-user MTP calendar.
       The closure hook remains pending actual replay/head coverage; a source PASS cannot be relabelled.
+      Entry rung (TOK-FUNC3-S81 10-21): add `--entry-kit/--entry-obj/--entry-idle-run/--entry-progs
+      --entry-fixture-meta --entry-ks-user` (a BUILT cut_3S_ctl binary of the same die; never builds) to replay the
+      native HOST entry jobs; rung/gap ledger results/token_pass/tokfunc3_s81_1021/ladder.json (`--ladder`).
 - [ ] HBM (both models): `tools/hbm_layer_vehicle/tok_func_hbm.sh` with `MODE=source`,
       pinned `SRC_REV` and the current contract; existing source pilot uses the r14 SW slice.
       At GEN use the SAME script with `MODE=gen_rtl`, `DIE_V=<GEN-die.v>`,
@@ -87,3 +93,6 @@ it is not mapped die-netlist evidence. Only actual simulated netlist coverage ea
       That mode rebuilds source children and retains the GEN-composition grade. `MODE=netlist`
       must fail closed until the frozen mapped hierarchy and libraries can actually be simulated.
       SU-only programmes and format-open/unsupported operations leave layer/token coverage incomplete.
+      Closure one-liner (TOK-FUNC3-HBM 10-21): `tok_func_hbm.sh --die-netlist <GEN-die.v>` (same as MODE=gen_rtl).
+      Re-running already-emitted frozen sets on an existing binary: `tok_func_hbm.sh --reuse` with FROZEN/BIN_HOST/BIN_ROOT
+      (TB+slice sha must equal the binary's; report.json carries per-layer/chain rungs and measured cycles).

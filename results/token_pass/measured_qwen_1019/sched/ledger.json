@@ -193,6 +193,31 @@
     "pre_o"
    ],
    "source": "QW-XDIE claude/qw-xdie-2150 486462c3f results/rtl/xdie_qwen_1018/cur_r3/record.json (compute dv2f20g5r2b src cfc5a82ac x KV d22bu kvs14r gen9 src ccc9418ac, qkd_kvs_attn_fl r17 RETIRE_STATIC1 STATUS_DELAY213; Verilator 5.050 ep6 62/62 as expected; cur_pair 35 layers bit-exact): schedule X_L1_35 8, X_L0 -214, status_tail 213, compiled period 7056 vs 6842, token_delta_vs_priced_L1_35 7735 = 35 x 221. L0 = X_L0 -214 + tail 213 = -1. NEWEST, not REL: both dies' BOUND link images fail (F-CUR1 KV K22 image shift0/sd0, F-CUR2 compute codec-1 C_RX); the measured law needs ONE recompiled pair image bound on both dies. d22bu as-built seam 13/9/11 needs route R (+2/exchange -> +2/layer if adopted) or route P (0)."
+  },
+  {
+   "label": "AR message framer (qfd_dv_slice2 ARF 1): XC tag + message-last stamped in front of the existing ch_dn_o register at dvs_W5",
+   "cycles": 0,
+   "cycles_asbuilt": 0,
+   "scope": "successor",
+   "grade": "REL-PENDING",
+   "at": [
+    "o_ar",
+    "down_ar",
+    "lm_arx"
+   ],
+   "source": "QW-LAYERGAP 10-20 claude/qw-layergap-1020 (rtl/qwen_dv/qfd_dv_slice2.sv ARF; dv_lower_mat.ar_framed): zero edges, XC_TO_WORD0 2 unchanged; calibrate on the ARF build must report stn ages MATCH (run_layergap.sh pos)"
+  },
+  {
+   "label": "per-token RoPE row over the D2D return chain (qfd_dv_slice2 RP 1): 1 broadcast ROPE ARM + 8 group-1 return words at stage 0, CROM write",
+   "cycles": 0,
+   "cycles_per_token": 24,
+   "cycles_asbuilt": 0,
+   "scope": "successor",
+   "grade": "PRICED",
+   "at": [
+    "token_start"
+   ],
+   "source": "QW-LAYERGAP 10-20 (dv_lower_vec.rope_rx: ARM lead N 12 + 8 words + 4 = 24 edges before the first RoPE read; overlaps the L0 rmsnorm/qkv (first RoPE op is > 400 edges after token start) -> 0 on the critical path; +8 return-chain slots/token/user beside the 65 embedding words; the producer (native59 ROPE read of 8 words + KV EMBW +8 link words or a compute-side RoPE ROM) is owed and priced by its owner)"
   }
  ],
  "not_on_token_path": [

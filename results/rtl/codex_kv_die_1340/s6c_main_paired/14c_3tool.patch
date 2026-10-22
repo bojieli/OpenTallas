@@ -1,0 +1,74 @@
+diff --git a/tools/qwen_kv_die/bind_views.py b/tools/qwen_kv_die/bind_views.py
+index 5d50c266e..622f9d5a7 100644
+--- a/tools/qwen_kv_die/bind_views.py
++++ b/tools/qwen_kv_die/bind_views.py
+@@ -198,6 +198,14 @@ def bind(case, libs, master, vdir):
+         # absent from the original frame pin list. Widths are checked against
+         # the real scalar pin and the net declaration before admitting them.
+         die_text = (case / 'die.v').read_text()
++        if KV.KSD.GRP_SAFE2:
++            import kv_grp_safe2
++            actual_frame = kv_grp_safe2.frame_port_widths(master, frame_w, die_text)
++            if actual_frame != frame_w:
++                rec['private_abi_frame_correction'] = {
++                    p: dict(frame=frame_w[p], actual=actual_frame[p])
++                    for p in actual_frame if actual_frame[p] != frame_w[p]}
++            frame_w = actual_frame
+         die_widths = {n: int(hi) + 1 for hi, n in re.findall(r'wire\s+\[(\d+):0\]\s+(\S+);', die_text)}
+         extra = set()
+         for body in re.findall(r'^\s+' + re.escape(master) + r'\s+\S+\s+\((.*?)\);', die_text, re.M):
+diff --git a/tools/qwen_kv_die/kv_die.py b/tools/qwen_kv_die/kv_die.py
+index 1f6a33d07..c9acccd8f 100644
+--- a/tools/qwen_kv_die/kv_die.py
++++ b/tools/qwen_kv_die/kv_die.py
+@@ -4153,6 +4153,10 @@ def masters(m, k=1, port_bits=None):
+     for bid, cl, bits, eps in m['buses']:
+         for inst, port in eps:
+             used.setdefault(by[inst].master, {})[port.lstrip('*')] = max(bits, used.get(by[inst].master, {}).get(port.lstrip('*'), 0))
++    if KSD.GRP_SAFE2:
++        import kv_grp_safe2
++        used = {master: kv_grp_safe2.frame_port_widths(master, ports)
++                for master, ports in used.items()}
+     if m['geo'].get('kv_wq_binary') and not m['geo'].get('split'):
+         # Physical eight-bit lane port survives; only its low3 pins enter the bus.
+         for g in range(4):
+diff --git a/tools/qwen_kv_die/kv_grp_safe2.py b/tools/qwen_kv_die/kv_grp_safe2.py
+index 79dfcff4f..fa7718531 100644
+--- a/tools/qwen_kv_die/kv_grp_safe2.py
++++ b/tools/qwen_kv_die/kv_grp_safe2.py
+@@ -405,6 +405,35 @@ def apply_tiles(tiles, emit):
+         raise ValueError(f'kv_grp_safe2: replica counts changed: {counts}')
+ 
+ 
++
++def frame_port_widths(master, widths, parent_text=None):
++    """Physical pins describe the actual private parent slices, not the wider
++    transport nets. parent_connections already emits EST[0] / H CTL[193:0].
++    Keep the strict view-width comparison; refuse unexpected frames or unsliced
++    parent connections instead of making a wide abstract alias a narrow view.
++    """
++    if master not in MASTERS.values():
++        return widths
++    out = dict(widths)
++    rules = {'x__est': (1, 13)}
++    if master == MASTERS['grp_h']:
++        rules['i_ctl'] = (194, 271)
++    for port, (actual, transport) in rules.items():
++        if port not in out or max(out[port], 1) not in (actual, transport):
++            raise ValueError(f'kv_grp_safe2: unexpected frame width {master}.{port}: {out.get(port)}')
++        out[port] = actual
++    if parent_text is not None:
++        instances = list(re.finditer(r'\b' + re.escape(master) + r'\s+(\w+)\s*\((.*?)\);', parent_text, re.S))
++        if not instances:
++            raise ValueError(f'kv_grp_safe2: no actual parent instances of {master}')
++        for match in instances:
++            conns = dict(re.findall(r'\.(\w+)\(([^()]*)\)', match[2]))
++            for port, (actual, _) in rules.items():
++                if not re.fullmatch(r'\w+\[' + str(actual - 1) + r':0\]', conns.get(port, '').strip()):
++                    raise ValueError(f'kv_grp_safe2: {match[1]}.{port} is not the source private slice [{actual - 1}:0]')
++    return out
++
++
+ def parent_connections(text):
+     """die netlist: drop the deleted pins' connections, explicit EST[0:0] / H i_ctl[193:0] slices (producers intact)"""
+     counts = {MASTERS['grp']: 0, MASTERS['grp_h']: 0}

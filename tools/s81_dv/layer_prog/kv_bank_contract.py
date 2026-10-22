@@ -20,8 +20,8 @@ def dispatch(kind, gain_set, job_id, drain_age, parameter_base=PARAM_BASE, opera
     does not establish ownership or transport the a_proj result into the SRAM.
     """
     from layer_prog.lower_vs import vp_cmd
-    if kind not in (1, 7) or gain_set not in range(4) or job_id not in range(256):
-        raise ValueError('Unsupported production KV/GK job field')
+    if kind not in (1, 7, 12, 13) or gain_set not in range(4) or job_id not in range(256):
+        raise ValueError('Unsupported production KV/GK/CN/IK job field')
     if type(drain_age) is not int or not 128 <= drain_age < 2**16:
         raise ValueError('Measured fixed drain edge must satisfy the source minimum of 128')
     if operand_base is None:
@@ -99,3 +99,47 @@ def contract():
                               'absolute issue dates, service OWN_ROW handoff and whole-calendar lifetimes '
                               'remain unqualified. Source minimum 128 is an encoding bound; the measured '
                               'fixed drain age is 1024.')
+
+
+def pool_dispatch(slot0_base, slot1_base, output_base):
+    """Encode CP14. Inputs are actual producer rows, never fixture outputs.
+
+    Each input record contains128 native KV rows then128 native score rows.
+    The pool writes128 BF16-widened native rows. Overlap is legal only for
+    exact in-place replacement of one input's KV section (RTL's live range).
+    """
+    from layer_prog.lower_vs import vp_cmd
+    if any(type(v) is not int or v % 4 for v in (slot0_base, slot1_base, output_base)):
+        raise ValueError('CP record and output bases must be four-row aligned integers')
+    if not (0 <= slot0_base <= 768 and 0 <= slot1_base <= 768 and 0 <= output_base <= 896):
+        raise ValueError('CP record or output outside native1024-row store')
+    if max(slot0_base, slot1_base) < min(slot0_base, slot1_base) + 256:
+        raise ValueError('CP slot records overlap')
+    for base in (slot0_base, slot1_base):
+        if output_base != base and output_base < base + 256 and output_base + 128 > base:
+            raise ValueError('CP output overlaps a live input record')
+    return vp_cmd(15, a0=slot0_base, a1=slot1_base, n=32, imm=14 | (output_base << 4))
+
+
+def sukv_contract():
+    """Exact source ABI extension. Absolute calendar still consumes measured ages."""
+    return dict(schema='opentallas.s81.sukv_bank_contract.v1', slice=SLICE, leaf=LEAF,
+        enables=dict(KV_ENABLE=1, KV_CNIK=1, KV_CP=1),
+        command_op=15, source='rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_leaf.sv',
+        norm_jobs={
+            'CN':dict(kind=12, gain_set=3, dimension=512, reads=74, events=48,
+                      qdq_native_rows=[672,735], raw_native_rows=[736,799], norm_native_rows=[800,863],
+                      format='FP4 E2M1 with E4M3 scale, block16; BF16 pre-RoPE norm output'),
+            'IK':dict(kind=13, gain_set=0, dimension=128, reads=74, events=8,
+                      zero_operand_prefix_rows=96, qdq_native_rows=[672,687], raw_native_rows=[688,703],
+                      format='FP4 E2M1 with UE8M0 scale, block32')},
+        pool=dict(kind=14, dimension=512, ratio=2, issue_edges=372, pair_reads=256,
+                  pair_writes=64, slot_native_rows=256, output_native_rows=128,
+                  arithmetic='softmax across2 rows per feature; golden sequential2-term sum then BF16'),
+        eng_knorm=dict(instance='each slice.u_eg.u_nh / u_nk', new_hardware=False,
+                       divisor=5120, epsilon='1e-20', producer='actual chunk8 sum of h*h and k*k'),
+        lifetime='Each job owns the leaf port through busy deassertion, including the final registered pair write; '
+                 'gain records precede CN/IK; IK requires zero-prefix plus the real128-dimensional key.',
+        calendar_qualified=False,
+        schedule='Use actual measured command-to-done ages plus actual XRT/landing transfer ages; '
+                 'source issue-edge counts alone are not absolute compiler dates.')

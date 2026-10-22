@@ -33,7 +33,12 @@
 
 // one input lane: pin register + STG transport stages + decode into the native beat
 module ot_s81ph_sel_in #(
-    parameter integer STG = 6
+    parameter integer STG = 6,
+`ifdef OT_S81PH_SEL_INDEXED13
+    parameter integer INDEXED13 = 1
+`else
+    parameter integer INDEXED13 = 0
+`endif
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -56,19 +61,39 @@ module ot_s81ph_sel_in #(
     output reg          e_link
 );
     // used bits: {fault, live, type 4, tag 8, data [272:0], valid} = 288
-    localparam integer UW = 288;
-    wire [UW-1:0] u = {lane[514], lane[513], lane[512:501], lane[273:1], lane[0]};
+    // Type 8 (opt-in): 13 original-index/score tuples, mask and last.
+    // Original indices preserve golden tie/order semantics; no ordinal remap RAM.
+    localparam integer DW = INDEXED13 ? 482 : 273;
+    localparam integer UW = DW + 15;
+    wire [UW-1:0] u = {lane[514], lane[513], lane[512:501], lane[DW:1], lane[0]};
     reg  [UW-1:0] s [0:STG];
     integer i;
     always @(posedge clk) begin
         s[0] <= u;
         for (i = 1; i <= STG; i = i + 1) s[i] <= s[i-1];
     end
+    // Keep independent format selects beside the tuple registers: <=20 data
+    // loads per copy, rather than one decoded bit driving the whole 468b mux.
+    wire [26:0] indexed_format;
+    genvar fs;
+    generate for (fs = 0; fs < 27; fs = fs + 1) begin : g_indexed_format
+        if (INDEXED13) begin : g_on
+            (* keep = "true" *) reg f [0:STG];
+            integer fi;
+            always @(posedge clk) begin
+                f[0] <= lane[512:509] == 4'd8;
+                for (fi = 1; fi <= STG; fi = fi + 1) f[fi] <= f[fi-1];
+            end
+            assign indexed_format[fs] = f[STG];
+        end else begin : g_off
+            assign indexed_format[fs] = 1'b0;
+        end
+    end endgenerate
     wire [UW-1:0] w = s[STG];
     wire          v    = w[0];
-    wire [272:0]  d    = w[273:1];
-    wire [7:0]    tag  = w[281:274];
-    wire [3:0]    t4   = w[285:282];
+    wire [481:0] d = {{(482-DW){1'b0}}, w[DW:1]};
+    wire [7:0] tag = w[DW+8:DW+1];
+    wire [3:0] t4 = w[DW+12:DW+9];
     reg  [19:0]   cur;
     wire [20:0]   nxt = {1'b0, cur} + 21'd16;
     always @(posedge clk or negedge rst_n) begin
@@ -86,6 +111,14 @@ module ot_s81ph_sel_in #(
                     4'd6: begin
                         if (!act) e_orphan <= 1'b1;
                         cur <= d[19:0];
+                    end
+                    4'd8: begin
+                        if (!INDEXED13) e_fmt <= 1'b1;
+                        else if (!act) e_orphan <= 1'b1;
+                        else begin
+                            b_v <= 1'b1;
+                            if (d[481]) act <= 1'b0;
+                        end
                     end
                     4'd2: begin
                         if (!act) e_orphan <= 1'b1;
@@ -112,6 +145,16 @@ module ot_s81ph_sel_in #(
 `else
         for (l = 0; l < 16; l = l + 1) b_idx[20*l +: 20] <= cur + l[19:0];
 `endif
+        if (INDEXED13 && indexed_format[26]) begin
+            b_lv <= {3'b000, d[480:468]};
+            b_last <= d[481];
+        end
+        if (INDEXED13) begin
+            for (l = 0; l < 13; l = l + 1) begin
+                if (indexed_format[2*l]) b_val[16*l +: 16] <= d[36*l +: 16];
+                if (indexed_format[2*l+1]) b_idx[20*l +: 20] <= d[36*l+16 +: 20];
+            end
+        end
         h_k <= d[29:20];
         h_tag <= tag;
         h_q <= d[31:30];

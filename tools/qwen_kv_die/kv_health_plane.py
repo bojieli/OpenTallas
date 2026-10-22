@@ -110,7 +110,8 @@ HP_PIN = dict(a=[0.042, 10.812], b=[0.042, 10.956], q=[21.558, 10.812])
 # KV-BIND4 10-19: exported health sources (kv_static_die HEALTH_SRC buses) whose die-frame pin is INOUT / group-named: the RTL
 # direction (qkd_ctrl_strip.sv qkd_ctrl_kc `output kf`; qkd_d2d_cal_seq_bc4.sv `output reg fault` = die group flt, kv_die
 # dcal_binding) overrides the frame so the source's own pin is never counted as its reader; PIN_ALIAS = the LEF pin name.
-SRC_DIRS = dict(qkd_ctrl_kc=dict(kf='OUTPUT'), qkd_dcal=dict(flt='OUTPUT'))
+SRC_DIRS = dict(qkd_ctrl_kc=dict(kf='OUTPUT'), qkd_dcal=dict(flt='OUTPUT'),
+                qkd_kvs_emb_rope=dict(emb_fault='OUTPUT'))
 PIN_ALIAS = dict(qkd_dcal=dict(flt='fault'))
 
 
@@ -243,6 +244,8 @@ def inventory(die):
                                         'flt; OT_KV_DCAL_FLT=1 routes it to afr d[8])'))
         else:
             add('dcal', port, 'ck', 'rst_n', True, owner='KV-DCAL2')
+    if 'kvs_emb' in die.cells and die.cells['kvs_emb'][0] == 'qkd_kvs_emb_rope':
+        add('kvs_emb', 'emb_fault', 'ck', 'rst_n', True, owner='KV RoPE accepted context / HBM join / row transmitter')
     # KV-BIND4: PC fault export family (pc__hfx, sticky per bit)
     pport, pw = PC_HFX
     for i, (m, p, c) in sorted(die.cells.items()):
@@ -397,11 +400,38 @@ def pack_msb(bits):
     return parts[0] if len(parts) == 1 else '{' + ', '.join(parts) + '}'
 
 
+def closed_cell_geometry():
+    """Pin centres from the actual emitted CLOSED masters, before choosing sites.
+
+    Pipe cells are qkd_rlys_1, not qkd_astk_fault_join. Their input/output
+    y=6.492 differs from join y=10.812; a join-only placement can exceed REACH.
+    """
+    result = {}
+    for kind, spec in MASTERS.items():
+        path = ROOT / spec['view'] / (spec['master'] + '.lef')
+        if not path.exists():
+            if NETLIST_ONLY:
+                continue
+            raise ValueError('health geometry requires actual CLOSED LEF: ' + str(path))
+        macro = parse_lef(path.read_text())[spec['master']]
+        def point(port):
+            pin = macro['pins'].get(port) or macro['pins'].get(port + '[0]')
+            if not pin or pin['xy'] is None:
+                raise ValueError(f"{spec['master']}: no actual LEF pin {port}")
+            return pin['xy']
+        result[kind] = dict(master=spec['master'], size=macro['size'],
+                            inputs=[point('a'), point('a' if kind == 'pipe' else 'b')],
+                            output=point('b' if kind == 'pipe' else 'q'),
+                            lef_sha256=sha(path), lef=str(path.relative_to(ROOT)))
+    return result
+
+
 def install(run, strict=False, dry=False, profiles=None, diagnostic=False):
     die = Die(run)
     inv = inventory(die)
     tinv = dict(sources=inv['sources'], physical_obstacles=obstacles(die), consumer=inv['consumer'],
-                spare_transport_candidates=inv['lanes'], requirements=[], physical_blockers=inv['blockers'])
+                spare_transport_candidates=inv['lanes'], requirements=[], physical_blockers=inv['blockers'],
+                cell_geometry=closed_cell_geometry())
     plan = T.propose(tinv)
     # leaf latency to the sink (plan graph), + the existing ufh's AHUB edges
     lat = {}

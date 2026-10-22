@@ -2,6 +2,7 @@
 # Owner no-stub gate for the Qwen split COMPUTE die: port-bind DIE_V against real RTL (compute-die lead r3, 2026-10-14).
 # usage: tools/qwen_split/port_bind_compute.sh DIE_V OUTDIR     (exit 0 only when the die binds)
 #   1. die relays / reset repeaters / the clock receiver of THIS build -> generated RTL (gen_relay_rtl.py)
+#   (OT_PORT_BIND_UCIE_VIEW=DIR: the UCIe PHY view of record, QW-GEN5 g5 = nface_tall_1017 with the lclk FDI clock output)
 #   (OT_PORT_BIND_STRAPS=FILE: the plan's own strap manifest, e.g. q_slice_1017/straps_dv2f8.json for the dv face dies)
 #   2. tools/die_port_bind.py (full child closure since Q-STUB 10-17: every module under a die master must resolve;
 #      memory macros from physical/asap7_memory_macros) with the compute-die RTL (rtl/ tree + the link / clock / reset slots), the hard-macro
@@ -18,7 +19,7 @@ RTP=; [ "${OT_PORT_BIND_REF_TILE_PREFER:-1}" = 1 ] && RTP=--ref-tile-prefer
 T45=; grep -q 'ck_fa0' $D && T45="--rtl-file $R/rtl/physical/qfd_tile_rp2_45_slots.sv --rtl-file $R/rtl/physical/qfd_tile_nk_rp2_45.sv --rtl-file $R/rtl/physical/qfd_tile_nl_rp2_45.sv"
 python3 $R/tools/die_port_bind.py $D $T45 --rtl-file $O/die_glue.sv --rtl-file $R/rtl/qwen_split/qfd_link_slots.sv --rtl-file $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv \
   --rtl-file $R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv \
-  --rtl-file $R/physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v \
+  --rtl-file $R/${OT_PORT_BIND_UCIE_VIEW:-physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy}/ot_qfd_ucie_x64_phy_bb.v \
   --rtl-file $R/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v \
   --allow-model qfd_ckbump --allow-model qfd_sigbump --allow-model ot_qkvd_ucie_x64_phy --allow-model ot_qkvd_ucie_x64_phy_model \
   --allow-model ot_qfd_ucie_x64_phy --allow-model ot_qfd_serdes_112g_x12_phy_s597 \

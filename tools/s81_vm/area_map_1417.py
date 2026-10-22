@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Map isolated53-source stripe leaves in ORFS, using calibrated native area."""
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parents[1])); from yosys_pin import pinned_yosys  # TOKc-YOSYS 10-22: Yosys >= 0.68 or fail
 import argparse
 import hashlib
 import json
@@ -37,7 +38,7 @@ if params:ys+='chparam '+ ' '.join(f'-set {k} {v}' for k,v in params.items())+f'
 ys+=f'hierarchy -top {top}\nsynth -top {top} -flatten -noabc\n'
 ys+=f'write_json {a.out}/generic.json\ndffunmap\ndfflibmap -liberty {lib}\nabc -liberty {lib}\nclean\nstat -liberty {lib}\nwrite_json {a.out}/mapped.json\nwrite_verilog {a.out}/mapped.v\n'
 (a.out/'map.ys').write_text(ys)
-cmd=['yosys','-s',str(a.out/'map.ys')]
+cmd=[pinned_yosys(),'-s',str(a.out/'map.ys')]
 with (a.out/'map.log').open('w') as f:r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT)
 receipt=dict(schema='opentallas.s81.vm-area-stripe-map.v1',kind=a.kind,top=top,parameters=params,
  returncode=r.returncode,source_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),libraries=libraries,command=cmd,

@@ -771,9 +771,9 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     """--host-boot B: the compiled host boot stream (prog/host_boot.memh, 515-b host words, the dsdv_seq_host L0
     format) delivered on u_seqhost.f_host one word every 5th edge from bench cycle B (tb_dv_prog_seqhost's host slots),
     the lane-live flags f_lf = 4'b0101 held from cycle 0, and ONE job start on f_ks at bench cycle --ks (word
-    --ks-word, default the seqhost bench's {v, user 37, pos 1000, tok 5000}).  The calendar accepts the start only on its
-    start phase (ot_dsdv_fixed_issue), a reset-tree artefact of the cut: give --ks, and sweep its residue mod 4 once per
-    build if the first run misses (record the accepted residue).  Layer cycle 0 = KS + 5: KS is the f_ks LANDED edge (the
+    --ks-word, default the seqhost bench's {v, user 37, tok 1000, pos 5000}).  The calendar accepts the start only on its
+    start phase (ot_dsdv_fixed_issue), a reset-tree artefact of the cut: derive --ks from the actual reset/phase
+    contract. The default is a diagnostic estimate, not a production launch. Layer cycle 0 = KS + 5: KS is the f_ks LANDED edge (the
     lane's last flop), u_seqhost's pin flop captures it one edge later (t = KS + 1), and the compiled V command leaves vo
     at t + issue + 11 = issue + 7 in layer cycles (dsdv_seq_host header, check_seqhost.py).  TOK-S81-GAPS/CTL 10-19,
     measured on G8 cut_3S_ctl (ks 2547): vo_n of row 8 (issue 1141) at 3700 = KS + 12 + issue; SVCJ on jw_E / jw_W one
@@ -788,7 +788,32 @@ def host_boot_words(a, die, prog, S, words, cut=None):
                              f'idle run {a.idle_run}): the boot header would be dropped; use >= {live["live"] + 2}')
     ks = a.ks if a.ks is not None else a.host_boot + 5 * len(hs) + 64
     a.t0 = ks + 5
-    ksw = int(a.ks_word, 16)
+    from ks_descriptor import encode as encode_ks, fixture_word
+    meta_path = getattr(a, 'ks_fixture_meta', None)
+    if S.get('input_sources') and not meta_path:
+        raise ValueError('native entry programme requires --ks-fixture-meta and --ks-user; an opaque word is not fixture provenance')
+    supplied = int(a.ks_word, 16) if a.ks_word is not None else None
+    if meta_path:
+        if getattr(a, 'ks_user', None) is None:
+            raise ValueError('fixture descriptor requires explicit --ks-user from incoming HOST context')
+        raw = Path(meta_path).read_bytes(); meta = json.loads(raw)
+        meta_sha = hashlib.sha256(raw).hexdigest()
+        if S.get('fixture_meta_sha256') and S['fixture_meta_sha256'] != meta_sha:
+            raise ValueError('KS fixture metadata differs from native entry programme')
+        if S.get('input_sources'):
+            files = json.loads((Path(meta_path).parent/'files.json').read_text())
+            if any(files.get(name, {}).get('sha256') != spec.get('sha256')
+                   for name, spec in S['input_sources'].items()):
+                raise ValueError('KS fixture input identity differs from native entry programme')
+        ksw = fixture_word(meta, user=a.ks_user, supplied=supplied)
+        provenance = dict(status='SOURCE_METADATA_ONLY_NO_RUNTIME_PRODUCER', fixture_meta_sha256=meta_sha,
+                          user=a.ks_user, token=meta['token'], position=meta['position'],
+                          runtime_provenance_qualified=False)
+    else:
+        # Preserve the existing opaque legal-bench wire value while naming its
+        # fields according to the real RTL, rather than reversing tok/pos.
+        ksw = supplied if supplied is not None else encode_ks(user=37, token=1000, position=5000)
+        provenance = dict(status='DIAGNOSTIC_OPAQUE_OR_SYNTHETIC', runtime_provenance_qualified=False)
     end = int(max([w['cycle_land'] for w in words] + [0]) + a.t0 + 64)
     out = list(words)
     out += [word_at(die, 'u_seqhost', 'f_host', h, a.host_boot + 5 * i - a.t0, 'HOST', f'host_boot[{i}]')
@@ -799,7 +824,7 @@ def host_boot_words(a, die, prog, S, words, cut=None):
     out += [word_at(die, 'u_seqhost', 'f_lf', 0b0101, c - a.t0, 'LF', 'lane live', hold=c0 - a.t0)
             for c in range(c0, end)]
     return out, dict(boot_start=a.host_boot, seqhost_live=live, words=len(hs), last_word=a.host_boot + 5 * (len(hs) - 1), ks=ks,
-                     ks_word=f'{ksw:x}', t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}',
+                     ks_word=f'{ksw:x}', ks_provenance=provenance, t0=a.t0, f_lf=f'0101 held from landed bench cycle {c0}',
                      memh_sha256=hashlib.sha256((prog / 'prog/host_boot.memh').read_bytes()).hexdigest())
 
 
@@ -990,7 +1015,9 @@ def main(argv=None):
     g.add_argument('--idle-run', default=None, help='idle run dir of this cut build (trace.txt): derives u_seqhost reset '
                    'release; --host-boot defaults to it + 8 and is refused below it + 2')
     g.add_argument('--ks', type=int, default=None)
-    g.add_argument('--ks-word', default=f'{(1 << 52) | (37 << 42) | (1000 << 21) | 5000:x}')
+    g.add_argument('--ks-word', default=None, help='opaque diagnostic word, or exact fixture descriptor checked against --ks-fixture-meta/--ks-user')
+    g.add_argument('--ks-fixture-meta', help='fixture meta.json; native entry replay requires this descriptor provenance')
+    g.add_argument('--ks-user', type=int, help='explicit incoming HOST user; not inferred from fixture rank')
     g = sp.add_parser('check')
     g.add_argument('--replay', required=True)
     g.add_argument('--run', required=True)

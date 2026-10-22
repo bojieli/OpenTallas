@@ -1,0 +1,69 @@
+{
+ "bounds": [
+  0.0,
+  1183.68,
+  2280.96,
+  3369.6
+ ],
+ "channel_um": 0.0,
+ "bands": {
+  "s81frame_col_h9_vgch_b0": {
+   "outline": {
+    "w": 1436.832,
+    "h": 1183.68,
+    "exact": true
+   },
+   "children": 45,
+   "macros": 35,
+   "ports": 42,
+   "pins": 8417,
+   "clock": "ck_r0",
+   "faces": {
+    "E": 8,
+    "N": 34
+   }
+  },
+  "s81frame_col_h9_vgch_b1": {
+   "outline": {
+    "w": 1436.832,
+    "h": 1097.28,
+    "exact": true
+   },
+   "children": 38,
+   "macros": 35,
+   "ports": 72,
+   "pins": 12501,
+   "clock": "ck_r1",
+   "faces": {
+    "E": 1,
+    "S": 34,
+    "N": 37
+   }
+  },
+  "s81frame_col_h9_vgch_b2": {
+   "outline": {
+    "w": 1436.832,
+    "h": 1088.64,
+    "exact": true
+   },
+   "children": 32,
+   "macros": 35,
+   "ports": 38,
+   "pins": 6384,
+   "clock": "ck_r2",
+   "faces": {
+    "E": 1,
+    "S": 37
+   }
+  }
+ },
+ "kit": "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_vgch.sv",
+ "twin": "rtl/dsrom_sys/s81_dv/frame_lp/vgch/col_h9_l4_lp_rf3r.sv",
+ "far_nets": {
+  "lpr_root": [
+   "0",
+   "1",
+   "2"
+  ]
+ }
+}

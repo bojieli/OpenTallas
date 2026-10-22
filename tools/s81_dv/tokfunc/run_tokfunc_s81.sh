@@ -5,9 +5,13 @@ set -euo pipefail
 H=$(cd "$(dirname "$0")" && pwd)
 REF=; WORK=; FIX=; DIE=; PB=; PLAN=; LAND=; REPORT=0; ASM=; SRC=
 HEAD_PREP=; HEAD_FIX=; MU_STAGE=; HEAD_JSON=; MU_JSON=; LAYERS_JSON=
-CAL_AR=; CAL_MTP=
+CAL_AR=; CAL_MTP=; MU_LINK_JSON=
 FOLD_JSON=
 KV_BASELINE=; KV_JSON=; DENSE_VECTORS=; DENSE_JSON=
+ENTRY_NORM_JSON=; AGGREGATE_SOURCE_JSON=; ENTRY_PRODUCER_JSON=
+# Native entry HOST jobs on a BUILT u_seqhost cut (cut_3S_ctl): kit, obj (with sim), idle run, replay progs, fixture meta.
+ENTRY_KIT=; ENTRY_OBJ=; ENTRY_IDLE=; ENTRY_PROGS=; ENTRY_META=; ENTRY_USER=0; ENTRY_REPLAY_JSON=
+LADDER_JSON=$(cd "$(dirname "$0")/../../.." && pwd)/results/token_pass/tokfunc3_s81_1021/ladder.json
 while (($#)); do
   case "$1" in
     --ref) REF=$2; shift 2;; --work) WORK=$2; shift 2;;
@@ -17,11 +21,19 @@ while (($#)); do
     --source-root) SRC=$2; shift 2;; --head-prep) HEAD_PREP=$2; shift 2;;
     --head-fixtures) HEAD_FIX=$2; shift 2;; --mu-stage) MU_STAGE=$2; shift 2;;
     --head-json) HEAD_JSON=$2; shift 2;; --mu-json) MU_JSON=$2; shift 2;;
+    --mu-link-json) MU_LINK_JSON=$2; shift 2;;
     --layers-json) LAYERS_JSON=$2; shift 2;; --report-only) REPORT=1; shift;;
     --calendar-ar) CAL_AR=$2; shift 2;; --calendar-mtp) CAL_MTP=$2; shift 2;;
     --owner-fold-json) FOLD_JSON=$2; shift 2;;
     --kv-baseline) KV_BASELINE=$2; shift 2;; --kv-json) KV_JSON=$2; shift 2;;
     --dense-source-vectors) DENSE_VECTORS=$2; shift 2;; --dense-source-json) DENSE_JSON=$2; shift 2;;
+    --entry-norm-json) ENTRY_NORM_JSON=$2; shift 2;;
+    --aggregate-source-json) AGGREGATE_SOURCE_JSON=$2; shift 2;;
+    --entry-producer-json) ENTRY_PRODUCER_JSON=$2; shift 2;;
+    --entry-kit) ENTRY_KIT=$2; shift 2;; --entry-obj) ENTRY_OBJ=$2; shift 2;;
+    --entry-idle) ENTRY_IDLE=$2; shift 2;; --entry-progs) ENTRY_PROGS=$2; shift 2;;
+    --entry-meta) ENTRY_META=$2; shift 2;; --entry-user) ENTRY_USER=$2; shift 2;;
+    --entry-replay-json) ENTRY_REPLAY_JSON=$2; shift 2;;
     *) echo "unknown argument: $1" >&2; exit 2;;
   esac
 done
@@ -73,6 +85,13 @@ if [ "$REPORT" = 0 ]; then
       > "$WORK/dense_source.log" 2>&1 || true
     DENSE_JSON=$WORK/dense_source/check.json
   fi
+  if [ -n "$ENTRY_OBJ" ] && [ -n "$ENTRY_PROGS" ]; then
+    # Consumes an existing cut binary; never builds (a live build is not duplicated).  Mutant: corrupted host header.
+    python3 "$H/run_entry_replay.py" --src "$SRC" --die-v "$WORK/tree/results/arch/s81_dv_1016/bind9/die.v.gz" --cut "$WORK/cuts/cut_3S_ctl" --kit "$ENTRY_KIT" \
+      --obj "$ENTRY_OBJ" --idle-run "$ENTRY_IDLE" --progs "$ENTRY_PROGS" --fixture-meta "$ENTRY_META" \
+      --ks-user "$ENTRY_USER" --out "$WORK/entry_replay" --mutant 15:corrupt:hf_7N_l0:13 > "$WORK/entry_replay.log" 2>&1 || true
+    ENTRY_REPLAY_JSON=$WORK/entry_replay/entry_replay.json
+  fi
   # These component benches use their source-pinned RTL, even in netlist mode.
   if [ -n "$HEAD_PREP" ] && [ -n "$HEAD_FIX" ]; then
     (cd "$SRC"; bash "$H/head_mtp_fleet.sh" "$HEAD_PREP" "$HEAD_FIX" "$WORK/head") > "$WORK/head.log" 2>&1 || true
@@ -96,9 +115,15 @@ fi
 ARGS=(--work "$WORK" --out "$WORK/token.json" --grade "$GRADE" --ref "$REF")
 [ -z "$HEAD_JSON" ] || ARGS+=(--head "$HEAD_JSON")
 [ -z "$MU_JSON" ] || ARGS+=(--mu "$MU_JSON")
+[ -z "$MU_LINK_JSON" ] || ARGS+=(--mu-link "$MU_LINK_JSON")
 [ -z "$LAYERS_JSON" ] || ARGS+=(--layers "$LAYERS_JSON")
 [ -z "$FOLD_JSON" ] || ARGS+=(--owner-fold "$FOLD_JSON")
 [ -z "$KV_JSON" ] || ARGS+=(--kv-consumer "$KV_JSON")
 [ -z "$DENSE_JSON" ] || ARGS+=(--dense-source "$DENSE_JSON")
+[ -z "$ENTRY_NORM_JSON" ] || ARGS+=(--entry-norm "$ENTRY_NORM_JSON")
+[ -z "$AGGREGATE_SOURCE_JSON" ] || ARGS+=(--aggregate-source "$AGGREGATE_SOURCE_JSON")
+[ -z "$ENTRY_PRODUCER_JSON" ] || ARGS+=(--entry-producer "$ENTRY_PRODUCER_JSON")
+[ -z "$ENTRY_REPLAY_JSON" ] || ARGS+=(--entry-replay "$ENTRY_REPLAY_JSON")
+[ ! -f "$LADDER_JSON" ] || ARGS+=(--ladder "$LADDER_JSON")
 [ -z "$DIE" ] || ARGS+=(--die-v "$DIE")
 python3 "$H/token_report.py" "${ARGS[@]}"

@@ -1,0 +1,17 @@
+{
+  "failed_source": "16a35bc82",
+  "failed_units": [
+    "1059661-1792647892",
+    "1059978-1792647892"
+  ],
+  "failure": "KeyError kvnc in masters: recurring context leaf removed as superseded before OVL endpoints were inserted",
+  "repair": "Preserve kvnc only for RoPE OVL; select its single real KVI output instead of static programme KVI; retain real admission, calrx, head, OVL user, fault, clock and reset paths",
+  "scope": "Graph only; emitted RTL unchanged, no behavioral or parent transport PASS claimed",
+  "unused_export": "Static ctl.kvi remains unconsumed in OVL; this is not an output-role waiver",
+  "generator_sha256": "fe4cd5d7cadd19a89d613e571032217e5f91171f5044dd237ebe554ce1fb0c60",
+  "pending": [
+    "actual GEN graph, clocks, relay ages and boot images",
+    "actual selected-parent token/cold SRAM",
+    "complete progressing identical 65-file hierarchy"
+  ]
+}

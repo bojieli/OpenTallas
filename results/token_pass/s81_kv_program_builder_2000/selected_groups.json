@@ -1,0 +1,128 @@
+{
+  "schema": "opentallas.s81.kv_selected_groups.v1",
+  "source_host": "ot-gold1",
+  "source_path": "/srv/opentallas-scratch/claude/codex-tok-s81-layers/out/prog_L2_su/lowering.json",
+  "source_sha256": "998ef5405c6f4b56e8c9b1d9d0110df19c2411bfdf5f49062e4b1a3b5fb92152",
+  "qualification": "ACTUAL INHERITED OPERATION IDS ONLY; dates are model schedule and not current CAP/binding dates",
+  "groups": {
+    "CP": {
+      "owner": "L2.attn.cmp.pool",
+      "covers": [
+        "L2.attn.cmp.pool"
+      ],
+      "ops": [
+        {
+          "id": "L2.attn.cmp.pool",
+          "op": "attn.cmp.pool",
+          "start": 3610.9,
+          "end": 3900.8
+        }
+      ]
+    },
+    "KV": {
+      "owner": "L2.attn.kv_norm.sumsq",
+      "covers": [
+        "L2.attn.kv_norm.sumsq",
+        "L2.attn.kv_norm.rsqrt",
+        "L2.attn.kv_norm.scale",
+        "L2.attn.kv_rope_qdq"
+      ],
+      "ops": [
+        {
+          "id": "L2.attn.kv_norm.sumsq",
+          "op": "attn.kv_norm.sumsq",
+          "start": 3610.9,
+          "end": 3613.9
+        },
+        {
+          "id": "L2.attn.kv_norm.rsqrt",
+          "op": "attn.kv_norm.rsqrt",
+          "start": 3613.9,
+          "end": 3613.9
+        },
+        {
+          "id": "L2.attn.kv_norm.scale",
+          "op": "attn.kv_norm.scale",
+          "start": 3613.9,
+          "end": 3613.9
+        },
+        {
+          "id": "L2.attn.kv_rope_qdq",
+          "op": "attn.kv_rope_qdq",
+          "start": 3613.9,
+          "end": 3867.9
+        }
+      ]
+    },
+    "CN": {
+      "owner": "L2.attn.cmp.norm.sumsq",
+      "covers": [
+        "L2.attn.cmp.norm.sumsq",
+        "L2.attn.cmp.norm.rsqrt",
+        "L2.attn.cmp.norm.scale",
+        "L2.attn.cmp.row_qdq"
+      ],
+      "ops": [
+        {
+          "id": "L2.attn.cmp.norm.sumsq",
+          "op": "attn.cmp.norm.sumsq",
+          "start": 3900.8,
+          "end": 4054.5
+        },
+        {
+          "id": "L2.attn.cmp.norm.rsqrt",
+          "op": "attn.cmp.norm.rsqrt",
+          "start": 4054.5,
+          "end": 4218.8
+        },
+        {
+          "id": "L2.attn.cmp.norm.scale",
+          "op": "attn.cmp.norm.scale",
+          "start": 4218.8,
+          "end": 4260.5
+        },
+        {
+          "id": "L2.attn.cmp.row_qdq",
+          "op": "attn.cmp.row_qdq",
+          "start": 4260.5,
+          "end": 4412.5
+        }
+      ]
+    },
+    "IK": {
+      "owner": "L2.attn.cmp.k_norm.sumsq",
+      "covers": [
+        "L2.attn.cmp.k_norm.sumsq",
+        "L2.attn.cmp.k_norm.rsqrt",
+        "L2.attn.cmp.k_norm.scale",
+        "L2.attn.cmp.k_rope_qdq"
+      ],
+      "ops": [
+        {
+          "id": "L2.attn.cmp.k_norm.sumsq",
+          "op": "attn.cmp.k_norm.sumsq",
+          "start": 4776.9,
+          "end": 4929.5
+        },
+        {
+          "id": "L2.attn.cmp.k_norm.rsqrt",
+          "op": "attn.cmp.k_norm.rsqrt",
+          "start": 4929.5,
+          "end": 5093.8
+        },
+        {
+          "id": "L2.attn.cmp.k_norm.scale",
+          "op": "attn.cmp.k_norm.scale",
+          "start": 5093.8,
+          "end": 5135.5
+        },
+        {
+          "id": "L2.attn.cmp.k_rope_qdq",
+          "op": "attn.cmp.k_rope_qdq",
+          "start": 5135.5,
+          "end": 5278.2
+        }
+      ]
+    }
+  }
+}

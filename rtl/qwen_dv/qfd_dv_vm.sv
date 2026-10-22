@@ -26,7 +26,8 @@
 // with the C replica's word (both must FAIL).
 // =====================================================================================================================
 module qfd_dv_vm #(
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer CRH = 0                  // QW-LAYERGAP: 1 = single-bank CROM write (tw_addr[11] half, [10] bank)
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -174,13 +175,16 @@ module qfd_dv_vm #(
                 cw_hi[b][32*l +: 32] = tw_data[64*(8*b+l) + 32 +: 32];
             end
     end
+    // CRH 1 (QW-LAYERGAP RoPE row, qfd_dv_slice2 RP): a kind-1 write with tw_addr[11] set writes ONE bank, tw_addr[10]
+    // (8 pairs; the slice puts the 512-b word in both halves of tw_data).  CRH 0: the original full-word write only.
     wire cr_w = tw_we && tw_kind == 2'd1;
+    wire cr_h = (CRH != 0) && tw_addr[11];
     generate for (bk = 0; bk < 2; bk = bk + 1) begin : g_crom
         ot_sram_1r1w_1024x256_m2_r2c2 u_lo (.clk(ck), .r_ce_in(cr_re[0] && cr_addr[3] == bk[0]), .r_addr_in(cr_addr[4 +: 10]),
-            .rd_out(cr_rd[(2*bk)*256 +: 256]), .w_ce_in(cr_w), .w_addr_in(tw_addr[9:0]), .wd_in(cw_lo[bk]),
+            .rd_out(cr_rd[(2*bk)*256 +: 256]), .w_ce_in(cr_w && (!cr_h || tw_addr[10] == bk[0])), .w_addr_in(tw_addr[9:0]), .wd_in(cw_lo[bk]),
             .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
         ot_sram_1r1w_1024x256_m2_r2c2 u_hi (.clk(ck), .r_ce_in(cr_re[0] && cr_addr[3] == bk[0]), .r_addr_in(cr_addr[4 +: 10]),
-            .rd_out(cr_rd[(2*bk+1)*256 +: 256]), .w_ce_in(cr_w), .w_addr_in(tw_addr[9:0]), .wd_in(cw_hi[bk]),
+            .rd_out(cr_rd[(2*bk+1)*256 +: 256]), .w_ce_in(cr_w && (!cr_h || tw_addr[10] == bk[0])), .w_addr_in(tw_addr[9:0]), .wd_in(cw_hi[bk]),
             .w_mask_in({256{1'b1}}), .rr_en(2'b00), .rr_addr(18'd0), .cr_en(2'b00), .cr_sel(16'd0));
     end endgenerate
     reg        c1_bank, c2_bank;
@@ -243,7 +247,7 @@ module qfd_dv_vm #(
     wire rd_bad = bad_vec(a_re, a_addr) || bad_vec(b_re, b_addr) || bad_vec(c_re, c_addr) ||
                   (cr_re != 8'd0 && (!cr_re[0] || cr_addr[23:14] != 10'd0)) ||
                   (cr_re != 8'd0 && bad_vec(cr_re, cr_addr & {8{24'h003FFF}}));
-    wire tw_bad = tw_we && ((tw_kind == 2'd0) || (tw_kind == 2'd1 && tw_addr[23:10] != 0) ||
+    wire tw_bad = tw_we && ((tw_kind == 2'd0) || (tw_kind == 2'd1 && ((CRH != 0) ? (tw_addr[23:12] != 0 || (!tw_addr[11] && tw_addr[10])) : tw_addr[23:10] != 0)) ||
                             (tw_kind == 2'd2 && (tw_addr[1:0] != 0 || tw_addr[23:9] != 0)) ||
                             (tw_kind == 2'd3 && tw_addr[23:8] != 0));
     always @(posedge ck or negedge rst_n)

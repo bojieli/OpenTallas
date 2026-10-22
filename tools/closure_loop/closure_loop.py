@@ -62,6 +62,7 @@ from source_archive import build_archive, repo_path
 import git_mirror
 from postroute_recovery import remote_command as postroute_probe_command
 import submit_lint
+import infra_eco_continuation as IEC
 import bench_count
 import macro_clk
 import retired_hosts
@@ -1606,17 +1607,23 @@ def report_stopped_waiters(host, rows):
 # (global) OOM killer as the largest process -- EPYC3 18:54:23 PDT openroad 122.5 GB, EPYC1 21:49:01 PDT openroad
 # 123.5 GB (dmesg 'Out of memory: Killed process'), not by stuckscan (its KILL_STAGE / EARLY_FAIL at those minutes hit
 # other hosts' or other jobs' own run dirs).  Memory-only admission does not reserve for a die run's growth, so every
-# host probe marks die-level containers (names / run mounts below) oom_score_adj -1000: the kernel then picks a block
-# route instead.  Die containers are also never stopped by a loop kill (DIE_CONTAINER_SKIP in every kill loop).
+# host probe marks die-level containers (names / run mounts below) oom_score_adj DIE_OOM_SCORE_ADJ: the kernel then picks
+# a block route instead.  Die containers are also never stopped by a loop kill (DIE_CONTAINER_SKIP in every kill loop).
+# OOMADJ_999_1022 (fleet 2026-10-22): -999, never -1000.  -1000 (OOM_SCORE_ADJ_MIN) also exempts the process from the
+# memcg OOM killer of its own docker --memory / scope MemoryMax, so a die job at its cap livelocked (neither finished
+# nor failed) and flooded kern.log with memcg dumps (ep5 +44 GB in 13 min).  At -999 the global OOM killer still picks
+# every other process first, and a job at its own cap fails visibly.  A process already at -1000 (launched before the
+# fix) is left as it is: raising it could kill a job livelocked at its cap; ot-protect-die reports it.
 DIE_CONTAINER_RE = r"^/?(qfd_dietop_|qfd_die_|qfd_gw_|dieev_|de2_|die_|dsrom_s81|s81_l1|s81_grt_|r25gp|hbm_r25gp|qwen_r22k)"
 DIE_MOUNT_RE = r"/(die-evidence[^/ ]*|kv-die)/"
+DIE_OOM_SCORE_ADJ = -999
+_DIE_OOM_SET = (f"case \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" in {DIE_OOM_SCORE_ADJ}|-1000|'') ;; "
+                f"*) echo {DIE_OOM_SCORE_ADJ} | sudo -n tee /proc/$p/oom_score_adj;; esac; ")
 DIE_OOM_PROBE = ("(for c in $(docker ps -q 2>/dev/null); do i=$(docker inspect --format '{{.Name}} {{range .Mounts}}{{.Source}} {{end}}' $c 2>/dev/null); "
                  f"echo \"$i\" | grep -qE '{DIE_CONTAINER_RE}|{DIE_MOUNT_RE}' || continue; "
-                 "for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -1000 ] || "
-                 "echo -1000 | sudo -n tee /proc/$p/oom_score_adj; done; done; "
+                 f"for p in $(docker top $c -eo pid 2>/dev/null | tail -n +2); do {_DIE_OOM_SET}done; done; "
                  # native die processes (synth / STA outside docker) under die-evidence*/ or kv-die/
-                 f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do [ \"$(cat /proc/$p/oom_score_adj 2>/dev/null)\" = -1000 ] || "
-                 "echo -1000 | sudo -n tee /proc/$p/oom_score_adj; done) >/dev/null 2>&1; true")
+                 f"for p in $(pgrep -f '{DIE_MOUNT_RE}' 2>/dev/null); do {_DIE_OOM_SET}done) >/dev/null 2>&1; true")
 # HOST-EMERGENCY (drive-1010 2026-10-10): EPYC2 (6 GB), EPYC4 (7 GB) and EPYC3 (2 GB, 13:26) hung -- the biggest
 # consumers were agent benches OUTSIDE the loop (verilator 75-120 GB at oom_score_adj 0) that MEM-GUARD cannot stop, and
 # the kernel OOM killer acted too late (sshd stalls first).  Every host probe now runs this early-OOM step: below
@@ -3726,6 +3733,9 @@ def bench_copy_script(original, private):
 
 
 def launch_stage(j, st, cmd):
+    linked = j.get("linked_infra_eco")
+    if linked and st["kind"] not in IEC.ALLOWED:
+        raise ValueError("linked infrastructure continuation cannot launch " + st["kind"])
     if st["kind"] == "route" and (j.get("eco") or j.get("eco_history") or j.get("eco_stack")):
         retire_eco_for_reroute(j)       # LOST-CLOSED (ROOT-1130): a new route is never judged by the old route's ECO
     if st["kind"] in ("route", "calibrate"):
@@ -3749,6 +3759,7 @@ def launch_stage(j, st, cmd):
         BLOCK=j["spec"]["block"], COMMIT=rebound["source_commit"] if rebound else j["commit_full"], THREADS=str(st.get("threads", 4)),
         CL_PHASE=st["kind"], CL_LABEL_SUFFIX="_cal" if st["kind"] == "calibrate" else "",
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
+    env += IEC.pinned_env(j)
     env += f"export OT_PG_JOB_STRICT={int(pg_strict(j))}\n"
     if not pg_strict(j):
         env += "export OT_PG_STRICT=0\n"
@@ -3823,7 +3834,8 @@ def launch_stage(j, st, cmd):
         # (SKIP_CTS_REPAIR_TIMING=1 through hold_corners_patch.py OT_CAL_CTS_ONLY): 40 calibrates sat 4-25 h in CTS hold
         # repair (mm, HM 50) measuring nothing.  Applied to every calibrate, whatever its route_hold_corners.
         ship_helpers(j["host"], j["run"], j)
-        env += f"export OT_CAL_CTS_ONLY=1\npython3 {j['run']}/cl/hold_corners_patch.py {j['run']}/src\n"
+        if not linked:  # linked source was explicitly restored/transformed and hash-sealed
+            env += f"export OT_CAL_CTS_ONLY=1\npython3 {j['run']}/cl/hold_corners_patch.py {j['run']}/src\n"
         if route_ref(j):
             # CALIB-CORNER: CTS at the route corner, insertion referenced to it (ck_insertion.py --route-corner)
             env += f"export OT_ORFS_CORNER={shlex.quote(route_corner(j))}\nexport OT_CAL_ROUTE_CORNER={shlex.quote(route_corner(j))}\n"
@@ -4100,7 +4112,7 @@ def remote_ok(j, cmd, timeout=300):
     if not cmd:
         return True, ""
     source = j.get("stage_source", f"{j['run']}/src")
-    r = ssh(j["host"], f"cd {shlex.quote(source)} && {subst(cmd, j)}", timeout=timeout)
+    r = ssh(j["host"], IEC.pinned_env(j) + f"cd {shlex.quote(source)} && {subst(cmd, j)}", timeout=timeout)
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
 
 
@@ -6177,7 +6189,8 @@ def routed_ioref(j, m):
         ssh(j["host"], f"mkdir -p {j['run']}/cl_ioref && cat > {j['run']}/cl_ioref/meas_resta.py",
             input=mr_body.decode(), timeout=60, check=True)
         rr["meas_resta_sha256"] = hashlib.sha256(mr_body).hexdigest()
-        r = ssh(j["host"], f"python3 {j['run']}/cl_ioref/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
+        image_arg = (" --image " + shlex.quote(j["linked_infra_eco"]["manifest"]["runtime"]["image"])) if j.get("linked_infra_eco") else ""
+        r = ssh(j["host"], f"python3 {j['run']}/cl_ioref/meas_resta.py{image_arg} --orfs {shlex.quote(orfs)} --src {j['run']}/src "
                            f"--out {out} {app}", timeout=12000)
     try:
         res = json.loads([x for x in r.stdout.splitlines() if x.startswith("{")][-1])
@@ -7307,6 +7320,8 @@ def hold_eco_resources(j):
     peak = measured_peak_gb(j["spec"])
     measured = math.ceil(max(1.25 * peak, peak + 4)) if peak else 0
     ram = math.ceil(max(8, route_ram, measured))
+    if j.get("linked_infra_eco"):
+        ram = max(ram, j["linked_infra_eco"]["manifest"]["runtime"]["ram_gb"])
     return 8, max(32, ram) if ram > LIGHT_STAGE_RAM_GB else ram
 
 
@@ -10422,6 +10437,40 @@ for c in $(docker ps -q); do {DIE_CONTAINER_SKIP}docker inspect --format '{{{{ra
     save_job(j)
 
 
+@locked_job_command
+def cmd_link_infra_eco(a):
+    """Create a separate postroute-only record; never alter or retry a CANCELLED parent."""
+    parent = load_job(a.name)
+    manifest = json.loads(Path(a.manifest).read_text())
+    child = IEC.build(parent, manifest, a.new_name)
+    child["stage_idx"] = next(i for i, st in enumerate(stage_list(child["spec"])) if st["kind"] == "verdict")
+    if child["host"] not in {h["name"] for h in hosts_table()}:
+        raise ValueError("restored runtime host is not in the current fleet")
+    if not a.apply:
+        print(json.dumps(dict(dry=True, new_record=child), indent=1))
+        return
+    with job_lock(a.new_name):
+        if jpath(a.new_name).exists():
+            raise ValueError("new record already exists")
+        for path in (STATE / "jobs").glob("*.json"):
+            other = json.loads(path.read_text())
+            if ((other.get("linked_infra_eco") or {}).get("parent") or {}).get("name") == a.name:
+                raise ValueError("parent already has a linked infrastructure continuation")
+        request = dict(manifest=manifest, parent=parent)
+        program = "import sys\nsys.argv=" + repr(["infra_eco_continuation", "prepare", json.dumps(request)]) + "\n"
+        program += (HERE / "infra_eco_continuation.py").read_text()
+        r = ssh(child["host"], "python3 -", input=program, timeout=600, check=True)
+        verified = json.loads(r.stdout)
+        if verified.get("manifest_sha256") != IEC.canonical_sha(manifest) or not verified.get("verified"):
+            raise ValueError("remote restoration verification differs")
+        child["linked_infra_eco"]["runtime_verification"] = verified
+        child["created"] = now_iso()
+        event(child, "new linked infrastructure ECO-only continuation of immutable " + a.name)
+        save_job(child)
+        ledger(child, "LINKED-INFRA-ECO: original CANCELLED parent unchanged; no route or bench stages")
+        print(child["name"])
+
+
 def validate_overlay_recovery(j):
     expected_failure = dict(ss_ps=-340500.58, ff_ps=-59.43, drc=0, cells_added=0, errors=[])
     expected_pre = dict(ss_ps=190.49, ff_ps=-70.99)
@@ -10697,6 +10746,9 @@ def main():
     ks = sub.add_parser("kill-stage"); ks.add_argument("name"); ks.add_argument("--why", required=True)
     ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
+    li = sub.add_parser("link-infra-eco", help="new linked ECO-only record from a verified infrastructure-cancelled parent")
+    li.add_argument("name"); li.add_argument("--new-name", required=True); li.add_argument("--manifest", required=True)
+    li.add_argument("--apply", action="store_true", help="default read-only; apply verifies restored runtime then creates only new record")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
     el = sub.add_parser("recover-export-lint"); el.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
@@ -10723,6 +10775,8 @@ def main():
         cmd_submit_recheck(a)
     elif a.cmd == "retry":
         cmd_retry(a)
+    elif a.cmd == "link-infra-eco":
+        cmd_link_infra_eco(a)
     elif a.cmd == "retry-eco":
         cmd_retry_eco(a)
     elif a.cmd == "bench-rebind":

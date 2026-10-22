@@ -1,0 +1,962 @@
+{
+ "stage": "R000",
+ "user": 0,
+ "position_index": 0,
+ "copy": "A",
+ "context": {
+  "stage_id": 0,
+  "rank": 0,
+  "transaction_id": 37,
+  "user": 0,
+  "position": 1048575,
+  "token": 16754,
+  "epoch_identity": 4129,
+  "programme_id64": 18318082790226627268
+ },
+ "programme": {
+  "rows": [
+   {
+    "i": 0,
+    "issue": 24,
+    "done": 29,
+    "engine": 0,
+    "arg": 0,
+    "row76": "00001d0000180000000"
+   },
+   {
+    "i": 1,
+    "issue": 149,
+    "done": 154,
+    "engine": 0,
+    "arg": 1,
+    "row76": "00009a0000950000001"
+   },
+   {
+    "i": 2,
+    "issue": 150,
+    "done": 155,
+    "engine": 0,
+    "arg": 2,
+    "row76": "00009b0000960000002"
+   },
+   {
+    "i": 3,
+    "issue": 280,
+    "done": 285,
+    "engine": 0,
+    "arg": 3,
+    "row76": "00011d0001180000003"
+   },
+   {
+    "i": 4,
+    "issue": 300,
+    "done": 305,
+    "engine": 0,
+    "arg": 4,
+    "row76": "00013100012c0000004"
+   },
+   {
+    "i": 5,
+    "issue": 323,
+    "done": 328,
+    "engine": 0,
+    "arg": 5,
+    "row76": "0001480001430000005"
+   },
+   {
+    "i": 6,
+    "issue": 789,
+    "done": 0,
+    "engine": 14,
+    "arg": 0,
+    "row76": "000000000315e000000"
+   },
+   {
+    "i": 7,
+    "issue": 809,
+    "done": 0,
+    "engine": 15,
+    "arg": 0,
+    "row76": "000000000329f000000"
+   }
+  ],
+  "commands": [
+   {
+    "i": 0,
+    "issue": 24,
+    "done": 29,
+    "engine": 0,
+    "arg": 0,
+    "row76": "00001d0000180000000"
+   },
+   {
+    "i": 1,
+    "issue": 149,
+    "done": 154,
+    "engine": 0,
+    "arg": 1,
+    "row76": "00009a0000950000001"
+   },
+   {
+    "i": 2,
+    "issue": 150,
+    "done": 155,
+    "engine": 0,
+    "arg": 2,
+    "row76": "00009b0000960000002"
+   },
+   {
+    "i": 3,
+    "issue": 280,
+    "done": 285,
+    "engine": 0,
+    "arg": 3,
+    "row76": "00011d0001180000003"
+   },
+   {
+    "i": 4,
+    "issue": 300,
+    "done": 305,
+    "engine": 0,
+    "arg": 4,
+    "row76": "00013100012c0000004"
+   },
+   {
+    "i": 5,
+    "issue": 323,
+    "done": 328,
+    "engine": 0,
+    "arg": 5,
+    "row76": "0001480001430000005"
+   }
+  ],
+  "nops": 8,
+  "issuer_stage": 0,
+  "all_stage_ops_lowered": false,
+  "lowering_status_counts": {
+   "PARTIAL": 1
+  },
+  "native_die_sha256": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+  "first_row_issue": 24,
+  "first_command_issue": 24,
+  "end_issue": 809,
+  "seal_phase": 0,
+  "seal_word_index": 26,
+  "programme_payload_sha256": "fe36e73e8da78ac4a7a4d1ccdc66edd445aa27777a8f12e02f91a4ebea209f71",
+  "programme_id64": 18318082790226627268,
+  "graph_tag32": 4265011006,
+  "native_calendar_sha256": "dc27a118a9186f32e0a8d0c19191f9988e8d5b47dbb08c23aedbd71181330b1c",
+  "host_file": "exercise_r3/A/prog/host_boot.memh",
+  "host_file_sha256": "f447419df448a739e023c18398328e7f29c2dbc6b90387ecf9f8e9e5ca0a3441",
+  "compiler_lowering_sha256": "13f2f10222e031b84d1a1f2c54e9983f79655962f7a8b8b49489f28140b9e3f8",
+  "sealed_programme_held": true,
+  "native_job": 0,
+  "native_job_count": 1,
+  "reload_direct_edges": 165
+ },
+ "descriptor_file_sha256": "04a05cddc219d02c8e0f6946500fb1a49ec8707ffdbb2575bb9bdc1bbfecf603",
+ "ks53": "1000082e4fffff",
+ "sampled_edge_convention": "posedge sampled, NBA outputs visible only after that edge",
+ "seq_ks_capture": 10602,
+ "seq_first_command": 10630,
+ "seq_END_command": 11415,
+ "native_seal_seq_capture": 10424,
+ "earliest_seq_ks": 10556,
+ "earliest_status_sample": 11419,
+ "first_host_seq_capture": 10008,
+ "last_host_seq_capture": 10520,
+ "native_direct_reload_edges": 165,
+ "HBE_reload_seq_capture_span": 520,
+ "pipeline_window": [
+  10630,
+  11331
+ ],
+ "receiver_contract": {
+  "source_sha256": "792f588ad90d481cd70edbc91a0a18b486194d5e4e63e4d08f6d2840bc50d200",
+  "clock_reset_identity": "TEST_COMMON_CLOCK_EXPLICIT_NOT_PRODUCTION",
+  "host_body_to_seq_capture_edges": 4,
+  "ks_header_to_seq_capture_edges": 2,
+  "issuer_stage": 0,
+  "host_word_count": 417,
+  "production_lifecycle_bound": false,
+  "die_v_sha256": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718"
+ },
+ "static_ks6_enabled": false,
+ "inline_ARM_emitted": false,
+ "hbc": {
+  "body512": "00000000000000b27400000000b26c00000000c1fc00000000a5a0101021010000000002710000000000000fe36e73e8da78ac400001021020b93ffffc000025",
+  "body_crc32c": "322b78ea",
+  "fields": {
+   "transaction_id": 37,
+   "user": 0,
+   "position": 1048575,
+   "token": 16754,
+   "epoch_identity": 4129,
+   "programme_id64": 18318082790226627268,
+   "local_epoch_at_config_body_capture": 0,
+   "first_NEXT_header": 10000,
+   "NEXT_header_stride": 16,
+   "HOST_word_count": 33,
+   "target_body_gap": 4,
+   "transit_body_gap": 4,
+   "KS_capture": 10600,
+   "PREV_return_input_capture": 12415,
+   "local_status_sample": 11419,
+   "local_return_send": 11421,
+   "expected_data_stage": 0,
+   "expected_data_rank": 0,
+   "flags": 0
+  },
+  "records": [
+   {
+    "receiver_boot_capture_edge": 20,
+    "payload512": "00000000000000000000000000000000000000000000000000000000000000000063f8db9cfa369e2b100000000000004084c8ade3a808000000000131434248"
+   },
+   {
+    "receiver_boot_capture_edge": 24,
+    "payload512": "00000000000000b27400000000b26c00000000c1fc00000000a5a0101021010000000002710000000000000fe36e73e8da78ac400001021020b93ffffc000025"
+   },
+   {
+    "receiver_boot_capture_edge": 30,
+    "payload512": "0000000000000000000000000000000000000000000000000000000000000000007bf8db9cfa369e2b100000000000004084c8ade3a800000004001131434248"
+   }
+  ]
+ },
+ "packets": [
+  {
+   "head_edge": 9997,
+   "receiver_capture_edge": 10000,
+   "opcode": "HOST_WORD",
+   "word_index": 0,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10000,
+   "transit_slot_books": [],
+   "payload512": "000000000000000000000000000000000000000000000000000235103567f8db9cfa369e2b10000000009c5000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10001,
+   "receiver_capture_edge": 10004,
+   "opcode": "HOST_WORD",
+   "word_index": 0,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10000,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000011"
+  },
+  {
+   "head_edge": 10013,
+   "receiver_capture_edge": 10016,
+   "opcode": "HOST_WORD",
+   "word_index": 1,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10016,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000000dae7a217f8db9cfa369e2b10000000009c9000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10017,
+   "receiver_capture_edge": 10020,
+   "opcode": "HOST_WORD",
+   "word_index": 1,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10016,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c00100000000010"
+  },
+  {
+   "head_edge": 10029,
+   "receiver_capture_edge": 10032,
+   "opcode": "HOST_WORD",
+   "word_index": 2,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10032,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000016a8d6e43f8db9cfa369e2b10000000009cd000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10033,
+   "receiver_capture_edge": 10036,
+   "opcode": "HOST_WORD",
+   "word_index": 2,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10032,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010"
+  },
+  {
+   "head_edge": 10045,
+   "receiver_capture_edge": 10048,
+   "opcode": "HOST_WORD",
+   "word_index": 3,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10048,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000000ca12c57bf8db9cfa369e2b10000000009d1000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10049,
+   "receiver_capture_edge": 10052,
+   "opcode": "HOST_WORD",
+   "word_index": 3,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10048,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400006000000010"
+  },
+  {
+   "head_edge": 10061,
+   "receiver_capture_edge": 10064,
+   "opcode": "HOST_WORD",
+   "word_index": 4,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10064,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000036acf5347f8db9cfa369e2b10000000009d5000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10065,
+   "receiver_capture_edge": 10068,
+   "opcode": "HOST_WORD",
+   "word_index": 4,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10064,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800001d00000010"
+  },
+  {
+   "head_edge": 10077,
+   "receiver_capture_edge": 10080,
+   "opcode": "HOST_WORD",
+   "word_index": 5,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10080,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000022dd82d87f8db9cfa369e2b10000000009d9000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10081,
+   "receiver_capture_edge": 10084,
+   "opcode": "HOST_WORD",
+   "word_index": 5,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10080,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000100000010"
+  },
+  {
+   "head_edge": 10093,
+   "receiver_capture_edge": 10096,
+   "opcode": "HOST_WORD",
+   "word_index": 6,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10096,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000003acaadaa3f8db9cfa369e2b10000000009dd000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10097,
+   "receiver_capture_edge": 10100,
+   "opcode": "HOST_WORD",
+   "word_index": 6,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10096,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000400025400000010"
+  },
+  {
+   "head_edge": 10109,
+   "receiver_capture_edge": 10112,
+   "opcode": "HOST_WORD",
+   "word_index": 7,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10112,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000000a4cfb747f8db9cfa369e2b10000000009e1000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10113,
+   "receiver_capture_edge": 10116,
+   "opcode": "HOST_WORD",
+   "word_index": 7,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10112,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000800009a00000010"
+  },
+  {
+   "head_edge": 10125,
+   "receiver_capture_edge": 10128,
+   "opcode": "HOST_WORD",
+   "word_index": 8,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10128,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000003f396320ff8db9cfa369e2b10000000009e5000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10129,
+   "receiver_capture_edge": 10132,
+   "opcode": "HOST_WORD",
+   "word_index": 8,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10128,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000200000010"
+  },
+  {
+   "head_edge": 10141,
+   "receiver_capture_edge": 10144,
+   "opcode": "HOST_WORD",
+   "word_index": 9,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10144,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000001ca7a0fc7f8db9cfa369e2b10000000009e9000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10145,
+   "receiver_capture_edge": 10148,
+   "opcode": "HOST_WORD",
+   "word_index": 9,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10144,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000400025800000010"
+  },
+  {
+   "head_edge": 10157,
+   "receiver_capture_edge": 10160,
+   "opcode": "HOST_WORD",
+   "word_index": 10,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10160,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000002d75c8a17f8db9cfa369e2b10000000009ed000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10161,
+   "receiver_capture_edge": 10164,
+   "opcode": "HOST_WORD",
+   "word_index": 10,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10160,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000800009b00000010"
+  },
+  {
+   "head_edge": 10173,
+   "receiver_capture_edge": 10176,
+   "opcode": "HOST_WORD",
+   "word_index": 11,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10176,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000000b4c371cbf8db9cfa369e2b10000000009f1000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10177,
+   "receiver_capture_edge": 10180,
+   "opcode": "HOST_WORD",
+   "word_index": 11,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10176,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000000000000300000010"
+  },
+  {
+   "head_edge": 10189,
+   "receiver_capture_edge": 10192,
+   "opcode": "HOST_WORD",
+   "word_index": 12,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10192,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000002b77b207f8db9cfa369e2b10000000009f5000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10193,
+   "receiver_capture_edge": 10196,
+   "opcode": "HOST_WORD",
+   "word_index": 12,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10192,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000000400046000000010"
+  },
+  {
+   "head_edge": 10205,
+   "receiver_capture_edge": 10208,
+   "opcode": "HOST_WORD",
+   "word_index": 13,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10208,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000001eb4c9abf8db9cfa369e2b10000000009f9000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10209,
+   "receiver_capture_edge": 10212,
+   "opcode": "HOST_WORD",
+   "word_index": 13,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10208,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000000800011d00000010"
+  },
+  {
+   "head_edge": 10221,
+   "receiver_capture_edge": 10224,
+   "opcode": "HOST_WORD",
+   "word_index": 14,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10224,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000004f0a0d1ff8db9cfa369e2b10000000009fd000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10225,
+   "receiver_capture_edge": 10228,
+   "opcode": "HOST_WORD",
+   "word_index": 14,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10224,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000400000010"
+  },
+  {
+   "head_edge": 10237,
+   "receiver_capture_edge": 10240,
+   "opcode": "HOST_WORD",
+   "word_index": 15,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10240,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000000b3b86053f8db9cfa369e2b1000000000a01000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10241,
+   "receiver_capture_edge": 10244,
+   "opcode": "HOST_WORD",
+   "word_index": 15,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10240,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000040004b000000010"
+  },
+  {
+   "head_edge": 10253,
+   "receiver_capture_edge": 10256,
+   "opcode": "HOST_WORD",
+   "word_index": 16,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10256,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000020010cadff8db9cfa369e2b1000000000a05000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10257,
+   "receiver_capture_edge": 10260,
+   "opcode": "HOST_WORD",
+   "word_index": 16,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10256,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000800013100000010"
+  },
+  {
+   "head_edge": 10269,
+   "receiver_capture_edge": 10272,
+   "opcode": "HOST_WORD",
+   "word_index": 17,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10272,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000003085f4edbf8db9cfa369e2b1000000000a09000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10273,
+   "receiver_capture_edge": 10276,
+   "opcode": "HOST_WORD",
+   "word_index": 17,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10272,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005000000000000000500000010"
+  },
+  {
+   "head_edge": 10285,
+   "receiver_capture_edge": 10288,
+   "opcode": "HOST_WORD",
+   "word_index": 18,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10288,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000000412fd8bff8db9cfa369e2b1000000000a0d000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10289,
+   "receiver_capture_edge": 10292,
+   "opcode": "HOST_WORD",
+   "word_index": 18,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10288,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005000000000400050c00000010"
+  },
+  {
+   "head_edge": 10301,
+   "receiver_capture_edge": 10304,
+   "opcode": "HOST_WORD",
+   "word_index": 19,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10304,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000000e5a6dd27f8db9cfa369e2b1000000000a11000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10305,
+   "receiver_capture_edge": 10308,
+   "opcode": "HOST_WORD",
+   "word_index": 19,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10304,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005000000000800014800000010"
+  },
+  {
+   "head_edge": 10317,
+   "receiver_capture_edge": 10320,
+   "opcode": "HOST_WORD",
+   "word_index": 20,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10320,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000001fe8c06c7f8db9cfa369e2b1000000000a15000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10321,
+   "receiver_capture_edge": 10324,
+   "opcode": "HOST_WORD",
+   "word_index": 20,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10320,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000200000000000010"
+  },
+  {
+   "head_edge": 10333,
+   "receiver_capture_edge": 10336,
+   "opcode": "HOST_WORD",
+   "word_index": 21,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10336,
+   "transit_slot_books": [],
+   "payload512": "000000000000000000000000000000000000000000000000000062fce3a7f8db9cfa369e2b1000000000a19000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10337,
+   "receiver_capture_edge": 10340,
+   "opcode": "HOST_WORD",
+   "word_index": 21,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10336,
+   "transit_slot_books": [],
+   "payload512": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000060000000004000c5700000010"
+  },
+  {
+   "head_edge": 10349,
+   "receiver_capture_edge": 10352,
+   "opcode": "HOST_WORD",
+   "word_index": 22,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10352,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000012a3a2d53f8db9cfa369e2b1000000000a1d000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10353,
+   "receiver_capture_edge": 10356,
+   "opcode": "HOST_WORD",
+   "word_index": 22,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10352,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000800000000000010"
+  },
+  {
+   "head_edge": 10365,
+   "receiver_capture_edge": 10368,
+   "opcode": "HOST_WORD",
+   "word_index": 23,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10368,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000028b9221f3f8db9cfa369e2b1000000000a21000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10369,
+   "receiver_capture_edge": 10372,
+   "opcode": "HOST_WORD",
+   "word_index": 23,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10368,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007000000000300000000000010"
+  },
+  {
+   "head_edge": 10381,
+   "receiver_capture_edge": 10384,
+   "opcode": "HOST_WORD",
+   "word_index": 24,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10384,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000001b6819977f8db9cfa369e2b1000000000a25000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10385,
+   "receiver_capture_edge": 10388,
+   "opcode": "HOST_WORD",
+   "word_index": 24,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10384,
+   "transit_slot_books": [],
+   "payload512": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000070000000004000ca700000010"
+  },
+  {
+   "head_edge": 10397,
+   "receiver_capture_edge": 10400,
+   "opcode": "HOST_WORD",
+   "word_index": 25,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10400,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000003bb81fffbf8db9cfa369e2b1000000000a29000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10401,
+   "receiver_capture_edge": 10404,
+   "opcode": "HOST_WORD",
+   "word_index": 25,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10400,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007000000000800000000000010"
+  },
+  {
+   "head_edge": 10413,
+   "receiver_capture_edge": 10416,
+   "opcode": "HOST_WORD",
+   "word_index": 26,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10416,
+   "transit_slot_books": [],
+   "payload512": "000000000000000000000000000000000000000000000000000313ac492ff8db9cfa369e2b1000000000a2d000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10417,
+   "receiver_capture_edge": 10420,
+   "opcode": "HOST_WORD",
+   "word_index": 26,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10416,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e00100000000010"
+  },
+  {
+   "head_edge": 10429,
+   "receiver_capture_edge": 10432,
+   "opcode": "HOST_WORD",
+   "word_index": 27,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10432,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000003d80ac0e3f8db9cfa369e2b1000000000a31000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10433,
+   "receiver_capture_edge": 10436,
+   "opcode": "HOST_WORD",
+   "word_index": 27,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10432,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000009600000000000000000000000000000000200200013"
+  },
+  {
+   "head_edge": 10445,
+   "receiver_capture_edge": 10448,
+   "opcode": "HOST_WORD",
+   "word_index": 28,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10448,
+   "transit_slot_books": [],
+   "payload512": "000000000000000000000000000000000000000000000000000361ec692bf8db9cfa369e2b1000000000a35000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10449,
+   "receiver_capture_edge": 10452,
+   "opcode": "HOST_WORD",
+   "word_index": 28,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10448,
+   "transit_slot_books": [],
+   "payload512": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c202c400000000300200113"
+  },
+  {
+   "head_edge": 10461,
+   "receiver_capture_edge": 10464,
+   "opcode": "HOST_WORD",
+   "word_index": 29,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10464,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000000fa8fd19ff8db9cfa369e2b1000000000a39000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10465,
+   "receiver_capture_edge": 10468,
+   "opcode": "HOST_WORD",
+   "word_index": 29,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10464,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000200200213"
+  },
+  {
+   "head_edge": 10477,
+   "receiver_capture_edge": 10480,
+   "opcode": "HOST_WORD",
+   "word_index": 30,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10480,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000022acdd167f8db9cfa369e2b1000000000a3d000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10481,
+   "receiver_capture_edge": 10484,
+   "opcode": "HOST_WORD",
+   "word_index": 30,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10480,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b40008000000000000000000000000200200313"
+  },
+  {
+   "head_edge": 10493,
+   "receiver_capture_edge": 10496,
+   "opcode": "HOST_WORD",
+   "word_index": 31,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10496,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000001caea118ff8db9cfa369e2b1000000000a41000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10497,
+   "receiver_capture_edge": 10500,
+   "opcode": "HOST_WORD",
+   "word_index": 31,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10496,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b40010000000000000000000000000200200413"
+  },
+  {
+   "head_edge": 10509,
+   "receiver_capture_edge": 10512,
+   "opcode": "HOST_WORD",
+   "word_index": 32,
+   "part": 0,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10512,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000000003ee2341cbf8db9cfa369e2b1000000000a45000004084082e4fffff0008080094000231454248"
+  },
+  {
+   "head_edge": 10513,
+   "receiver_capture_edge": 10516,
+   "opcode": "HOST_WORD",
+   "word_index": 32,
+   "part": 1,
+   "expected_header_stage": 0,
+   "destination_header_slot": 10512,
+   "transit_slot_books": [],
+   "payload512": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040200200513"
+  },
+  {
+   "head_edge": 10597,
+   "receiver_capture_edge": 10600,
+   "opcode": "KS_DESCRIPTOR",
+   "expected_header_stage": 0,
+   "destination_header_slot": 10600,
+   "transit_slot_books": [],
+   "payload512": "0000000000000000000000000000000000000000000000400020b93ffffff8db9cfa369e2b1000000000a5a000004084082e4fffff0000d40094001231454248"
+  }
+ ]
+}

@@ -1078,7 +1078,7 @@ fi
 # incremental re-route: ~2 min instead of ~25); parent / cluster kits keep the full trial.
 if [ "{TRIAL}" = 1 ]; then
   GT0=$(date +%s)
-  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 {GRTX}grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
+  ot_capped gate_grt_${{R##*/}} python3 tools/run_abi3_physical.py gate-trial-grt --case "$C" --results "$B" --source "$R/src" --image {IMG} --container gate_grt_${{R##*/}} --make-args "{GRTX}" --log "$R/grt.log"; echo "GATE_GRT_RC=$? GATE_GRT_S=$(( $(date +%s) - GT0 ))"
   GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
   [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
   [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
@@ -1446,6 +1446,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
 
 
 FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 10-15 (parent / cluster kits)
+FILL_ROOMY, FILL_HI = RT.FILL_ROOMY, RT.FILL_HI   # OWNER 10-19/10-21: < 40% roomy (INFO), > 60% WARN enlarge; never shrink
 
 
 def is_parent_kit(spec: dict) -> bool:
@@ -1546,11 +1547,16 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
                 g.add("FAIL", "measured_band_fill", "; ".join(measured["errors"]),
                       "fix actual placement/row envelope; preserve this failed receipt")
         if fill < FILL_FAIL and not reason:
-            g.add("FAIL", "fill", msg + f" (< {FILL_FAIL:.0%})", "shrink the outline / regroup the macros, or record "
+            g.add("FAIL", "fill", msg + f" (< {FILL_FAIL:.0%})", "do not shrink for area: regroup the macros / children "
+                  "so links stay short, or record "
                   "\"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin "
                   "demand above shows the edges are full")
-        elif fill < FILL_WARN:
-            g.add("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" (< {FILL_WARN:.0%})"))
+        elif reason and fill < FILL_WARN:
+            g.add("WARN", "fill", msg + f" (pin-bound: {reason})")
+        elif fill < FILL_ROOMY:
+            g.add("INFO", "fill", msg + f" (< {FILL_ROOMY:.0%}: outline roomy; acceptable)")
+        elif fill > FILL_HI:
+            g.add("WARN", "fill", msg + f" (> {FILL_HI:.0%})", "enlarge the outline toward fill 0.50-0.55")
         else:
             g.add("INFO", "fill", msg)
     if "GATE_GRT_RC=" in out:
@@ -1756,13 +1762,15 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
         area = synthesis_std_area(area, fp["blocks"])
         halo = float(spec["route"].get("macro_halo_um", RT.HALO_UM)) if spec.get("recipe", 1) >= 2 else RT.HALO_UM
         um = RT.util_metrics(area, fp["blocks"], core, halo)
-        # high util is a closure risk (FAIL > 70%); low util only costs wire / area (closed blocks sit at 6-22%): WARN
+        # high util is a closure risk (WARN > 60%, FAIL > 70%: enlarge); low util is INFO (outline roomy; acceptable --
+        # closed blocks sit at 6-22%; OWNER 10-19/10-21 never shrink for area)
         sev, _ok = RT.util_severity(um)
         mac = um["macro_um2"]
         g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {um['util']:.0%}"
               + (f" (std-cell density {um['density']:.1%} of placeable {um['placeable_um2']:.0f} um2; total fill "
                  f"{um['total_fill']:.1%})" if mac else ""),
-              f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
+              (f"enlarge: set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO"
+               else ("outline roomy; acceptable (do not shrink)" if not _ok and um["util"] < RT.UTIL_LO else "")))
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     check_memory_ff(g, out)
     check_keep_modules(g, kd, spec, out)
@@ -2201,10 +2209,12 @@ def parent_link_graph(spec: dict | None) -> dict | None:
             i = balanced(st, k)
             if i is None:
                 continue
-        m = re.match(r"\s*([A-Za-z_]\w*)\s*(?=\()", st[i:])
+        # QE3-CTLM2 10-21: a native (flat) parent names its hard children with ESCAPED identifiers
+        # (\u_gi.g_wtn.u_wtn ); the name is the text after the backslash up to the whitespace
+        m = re.match(r"\s*(\\\S+|[A-Za-z_]\w*)\s*(?=\()", st[i:])
         if not m:
             continue
-        inst, k = m[1], i + m.end()
+        inst, k = m[1].lstrip("\\"), i + m.end()
         e = balanced(st, k)
         if e is None or st[e:].strip():
             continue
@@ -2267,6 +2277,15 @@ def cross_region_links(graph: dict, cdc: dict | None = None) -> tuple:
         if any(RESET_RUN_RE.fullmatch(i) for i in mm) and \
                 len({insts[i]["root"] for i in mm if not RESET_RUN_RE.fullmatch(i)}) <= 1:
             continue                                    # reset run hop: crosses only between reset-run stages
+        # STW-S81c-DIE-FRAME 10-22: a RESET SYNCHRONISER landing into a preserved forwarded clock (S81 frames FRRST:
+        # rst_n__frl on ck_r0 -> ot_reset_sync u_xrl<k> on xk[k] -> u_xo<k>.rs): the synchroniser's clock is a forwarded
+        # port (no region root), the net reaches it ONLY on its async_rst_n pin (async assert / 2-flop release on the
+        # receiving clock = the reset landing itself), and every other member sits on one root.
+        syncs = [i for i in mm if insts[i]["root"] is None and insts[i].get("module") == "ot_reset_sync"
+                 and graph.get("pinsof", {}).get((net, i)) == {"async_rst_n"}]
+        if syncs and len({insts[i]["root"] for i in mm if i not in syncs}) <= 1 and \
+                all(insts[i]["root"] is not None for i in mm if i not in syncs):
+            continue
         issues.append(f"unlanded cross-region link {net}: " + ", ".join(f"{i} ({insts[i]['root']})" for i in mm))
     ring_of = {}                            # share_rings: read-half base -> its ring's base (net with one w + r halves)
     for net, members in nets.items():
@@ -2509,7 +2528,8 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             if rec is not None:
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
-        if isinstance(binding, dict) and binding.get("schema") == SB.SCHEMA and binding.get("files"):
+        if isinstance(binding, dict) and binding.get("schema") == SB.SCHEMA and binding.get("files") \
+                and binding.get("execution_kind") != "metadata-classification":
             try:
                 binding = narrow_consumed_tools(binding, gate_executed_tools(binding, kd))
                 d["source_binding"] = binding        # the relaxing-rule allowlist record is read from here
@@ -2549,7 +2569,13 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             reason += f"; {n_tools} staged tool file(s) outside the gate-executed closure not bound (ROOT8-CONSUMED)"
         if note is not None:
             note.append(reason)
-        if binding.get("staged_remeasurement"):
+        if binding.get("execution_kind") == "metadata-classification":
+            issues = SB.metadata_classification_issues(binding, ROOT, kd.name, d, source_commit)
+            if issues:
+                return no("; ".join(issues))
+            if note is not None:
+                note.append("verified typed metadata classification; original physical archive remains separate")
+        elif binding.get("staged_remeasurement"):
             log = binding.get("staged_measurement_log")
             if not isinstance(log, str) or not SB.staged_remeasurement_matches_log(binding, log.encode()):
                 return no("staged remeasurement persisted log missing or receipt mismatch")
@@ -2641,7 +2667,8 @@ TEXTBOOK_FIX = {
     "boundary": "register every boundary: pin flop in, flop out; never an ICG enable from a port",
     "logic_depth": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration",
     "wire_reach": "relay flops every <= 500 um, or move the logic next to its pins/macros",
-    "util_channel": "size the outline to util 0.50-0.55 with >= 20 um macro channels",
+    "util_channel": "above 60% enlarge the outline toward util 0.50-0.55; keep >= 20 um macro channels (a roomy outline "
+                    "is acceptable: never shrink for area)",
     "reset_landing": "land every reset input at its face in 2 registered stages, then fan out at equal depth: kit "
                      "\"reset_landing\": {\"enable\": true} (ref_tile inserts rst_l0 -> rst_l1 at synthesis) or the RTL's own "
                      "rst_l0 / rst_l1 (one relay copy per region); reset release latency is a scheduled constant",

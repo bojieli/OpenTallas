@@ -7,6 +7,15 @@ MACRO ot_qfd_ucie_x64_phy
   SYMMETRY X Y ;
   SIZE 777.600 BY 777.600 ;
   CLASS BLOCK ;
+  PIN lclk
+    DIRECTION OUTPUT ;
+    USE CLOCK ;
+    SHAPE ABUTMENT ;
+    PORT
+      LAYER M5 ;
+      RECT 338.568 777.408 338.592 777.600 ;
+    END
+  END lclk
   PIN clk
     DIRECTION INPUT ;
     USE CLOCK ;

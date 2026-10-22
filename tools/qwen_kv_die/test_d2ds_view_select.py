@@ -67,3 +67,17 @@ def test_unknown_top_fails_closed(tmp_path):
     sfm_kit(tmp_path, TX, top='qkd_d2d_static_ovl_sfm')
     rc, rec = S.select('auto', kit='qkd_d2d_static_r7w_sfm2', root=tmp_path, die_txdp=TX, die_ntx=NTX)
     assert rc == 3 and rec['bind'] is None
+
+
+def test_registered_rope_sfm3_top_uses_same_view_contract(tmp_path):
+    top = 'qkd_d2d_static_ovl_sfm3'
+    sfm_kit(tmp_path, TX, top=top)
+    args = dict(kit='qkd_d2d_static_r7w_sfm2', root=tmp_path, die_txdp=TX, die_ntx=NTX)
+    rc, rec = S.select('auto', **args)
+    assert rc == 0 and rec['decision'] == 'BIND' and rec['top'] == top
+    assert S.select('auto', **dict(args, die_txdp=TX + 1))[0] == 3
+    assert S.select('auto', **dict(args, die_ntx=2))[0] == 3
+    (tmp_path / rec['view'] / f'{top}.lef').unlink()
+    rc, rec = S.select('auto', **args)
+    assert rc == 0 and rec['decision'] == 'FRAME' and rec['bind'] is None
+    assert S.select('1', **args)[0] == 2
