@@ -18,7 +18,8 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
  input wire blk_start,
  input wire [3:0] blk_start_k,         // HBMc/TILES 10-22: KEPT same-edge copies of blk_start, one per table region leaf
  input wire blk_start_c,               // HBMc/TILES 10-22: KEPT copy of blk_start for the cursor update
- input wire blk_start_t,               // HBMc/TILES 10-22: KEPT copy of blk_start for t
+ input wire blk_start_t,               // HBMc/TILES 10-22: KEPT copy of blk_start for t (address path)
+ input wire blk_start_u,               // HBMc/TILES 10-22: KEPT copy of blk_start for tu (compares / cursor)
  input wire [11:0] block_total_b,      // HBMc/TILES 10-22: KEPT copy of block_total for the words range compare
  input wire block_active,input wire [29:0] block_base,input wire [19:0] block_pcs,
  input wire [14:0] block_row_base,input wire [11:0] block_total,input wire [LB-1:0] block_bank,
@@ -68,9 +69,10 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
   for(j=0;j<4;j=j+1)if(pcs[j*5+:5]==pc_q)begin selected=1;lane=j;end
  end
  wire [9:0] t=blk_start_t?10'd0:cursor;
+ wire [9:0] tu=blk_start_u?10'd0:cursor;   // same value as t (separate select driver)
  wire [10:0] words;
  ot_hbm_svc_owner_words_leaf u_words(.total_a(total),.total_b(block_total_b),.lane(lane),.words(words));
- wire full_group=words>={1'b0,t}+4;
+ wire full_group=words>={1'b0,tu}+4;
  wire [2:0] length=full_group?3'd4:3'd1;
  wire [14:0] row=row_base;
  wire [2:0] slot=block_base[9:7];
@@ -123,12 +125,12 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
    valid_r=valid_r|(valid_q[rr]&rctl_sel[rr]);
   end
  end
- assign k_v=block_active&&!blk_start&&selected&&t<words&&!valid_q[alloc_b]&&!sticky&&!stop;
+ assign k_v=block_active&&!blk_start&&selected&&tu<words&&!valid_q[alloc_b]&&!sticky&&!stop;
  assign response_ok=kr_v&&valid_r&&generation_r==kr_tag[16:OWNER_AW]&&kr_beat<length_r&&!seen_r[kr_beat]&&!sticky&&!stop;
  wire [1:0] word_offset=permuted_r?(kr_beat[1:0]^row_low_r):2'd0;
  assign response_ordinal=ordinal_r+{7'd0,word_offset,2'b0};
  assign response_epoch=epoch_r;assign response_bank=bank_r;assign fault=sticky;
- wire issuing=block_active&&selected&&t<words;
+ wire issuing=block_active&&selected&&tu<words;
  assign issue_done=!issuing;
  function automatic [3:0] mask_for(input [2:0] n);
   case(n)1:mask_for=1;4:mask_for=15;default:mask_for=0;endcase
@@ -149,7 +151,7 @@ module ot_hbm_svc_prefetch_owner_rel_h #(
    .ordinal(ordinal_local[gr]),.length(length_local[gr]));
  end
  wire fire=k_v&&k_ready;
- assign cursor_n=fire_cursor?t+length:(blk_start_c?10'd0:cursor);
+ assign cursor_n=fire_cursor?tu+length:(blk_start_c?10'd0:cursor);
  wire fire_ticket_lo,fire_ticket_hi,fire_cursor;
  ot_hbm_svc_local_and2 u_ftl(.a(k_v),.b(k_ready),.y(fire_ticket_lo));
  ot_hbm_svc_local_and2 u_fth(.a(k_v),.b(k_ready),.y(fire_ticket_hi));
