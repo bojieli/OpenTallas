@@ -98,14 +98,17 @@ def prepare(J, leaf, fw, fh):
     # Place all actual relay/tap/glue rectangles in remaining slots. Anchor
     # each to its source owner, then choose the nearest legal lattice position.
     # This is geometry only: measured pin reach/clock/STA remains a die gate.
-    spread=stage_spread_targets(J,cells,placed,leaf,pending) if STAGE_SPREAD else {}
-    order=sorted(pending,key=lambda n:(n not in spread,n))
+    # OT_KV_ASTK_STAGE_SPREAD: non-relay leaves (er owners, fault join, taps) first, then the relay stages against them
+    spread={}
+    order=sorted(pending,key=lambda n:('g_stage[' in n,n)) if STAGE_SPREAD else sorted(pending)
     for n in order:
+        if STAGE_SPREAD and 'g_stage[' in n and not spread:
+            spread=stage_spread_targets(J,cells,placed,leaf,pending) or {None:None}
         t=cells[n]['type'].lstrip('\\')
         if t not in leaf:raise ValueError(f'{n}: missing native closed leaf {t}')
         w,h=leaf[t]['size'];e=re.search(r'g_(?:ep|owner)\[(\d+)\]',n)
         anchor=center(int(e[1])) if e else fh-237.6
-        if n in spread:
+        if n in spread and spread[n]:
             ty,tx=spread[n]
             candidates=((abs(y+h/2-ty)+0.25*abs(x+w/2-tx),x,y)
                         for y in (i*54.0 for i in range(int(fh/54)))
