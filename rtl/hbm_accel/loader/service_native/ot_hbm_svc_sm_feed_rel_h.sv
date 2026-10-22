@@ -49,13 +49,15 @@ module ot_hbm_svc_sm_feed_rel_h #(
   ot_hbm_svc_local_and2 u_row(.a(reserve_fire),.b(reserve_bank==fc),.y(row_capture[fc]));
   ot_hbm_svc_local_and2 u_tag(.a(reserve_fire),.b(reserve_bank==fc),.y(tag_capture[fc]));
  end
- wire open_bank_q=open_land_q[0];
+ (* keep="true",dont_touch="true" *) reg [LB-1:0] oland_k[0:2];
+ wire open_bank_q;assign open_bank_q=oland_k[2][0];
  always @(posedge stream_clk)begin
   for(qb=0;qb<LBANKS;qb=qb+1)begin
    if(row_capture[qb])rows_q[qb]<=reserve_rows;
    if(tag_capture[qb])tag_q[qb]<=reserve_tag_base;
   end
   open_land_q<=start_bank;open_epoch_q<=start_epoch;
+  for(qb=0;qb<3;qb=qb+1)oland_k[qb]<=start_bank;
  end
  wire out_v,out_last;wire[LB-1:0]out_bank;wire[3:0]out_mask;wire[1023:0]out_data;wire[10:0]out_ordinal;wire[15:0]out_epoch;
  ot_hbm_svc_sm4pc_cdc_rel_h #(.LBANKS(LBANKS)) producer(
@@ -69,11 +71,12 @@ module ot_hbm_svc_sm_feed_rel_h #(
   assign indices[l*24+:24]=out_ordinal+l;assign epochs[l*16+:16]=out_epoch;
  end
  wire[134:0]word;wire[45:0]wctx;wire[15:0]wit;wire wlast,word_v;wire[31:0]ordinal;wire cache_busy;
- ot_smh_calendar_static_xh #(.W(135),.AW(PAW),.XW(46)) programme_leaf(
+ wire[3:0] word83_k;   // HBMc/TILES 10-22: kept copies of calendar[83] (read flag) for the read-capture enables
+ ot_smh_calendar_static_xh #(.W(135),.AW(PAW),.XW(46),.RKB(83),.RKN(4)) programme_leaf(
   .clk(stream_clk),.rst_n(st_rst[2:1]),.cfg_we(program_cfg_we),.cfg_addr(program_cfg_addr),.cfg_data(program_cfg_data),
   .start_v(program_start_v),.start_base(program_start_base),.start_limit(program_start_limit),.start_loops(program_start_loops),
   .start_ctx(program_start_ctx),.calendar(word),.calendar_ctx(wctx),.calendar_iter(wit),.calendar_lastit(wlast),
-  .calendar_v(word_v),.ordinal(ordinal),.active(program_active),.done(program_done),.fault(programme_fault));
+  .calendar_v(word_v),.ordinal(ordinal),.active(program_active),.done(program_done),.fault(programme_fault),.calendar_rk(word83_k));
  // RELOC (P2), as ot_hbm_svc_sm_feed_programmed_rel_id PREL 1 / XSLOT 0
  wire[11:0]c_roff=wctx[45:34];wire[9:0]c_tag=wctx[33:24];wire[15:0]c_ep=wctx[23:8];wire c_bank=wctx[7];
  wire[3:0]c_lstep=wctx[6:3];wire c_fl=wctx[2];wire[1:0]c_fmt=wctx[1:0];
@@ -90,8 +93,13 @@ module ot_hbm_svc_sm_feed_rel_h #(
  wire[1098:0]s1_packet={s1_v,s1_tag,packet_observe[1087:0]};   // bench visibility (tb i8view check); no load
  wire[3:0] read_capture;
  for(genvar rc=0;rc<4;rc=rc+1)begin:g_read_capture
-  ot_hbm_svc_local_and2 u_buf(.a(word[83]),.b(1'b1),.y(read_capture[rc]));
+  assign read_capture[rc]=word83_k[rc];
  end
+ // KEPT copies of rd_r[1] (read bank) and retf_c[0] (retire bank), loaded with the same next values, for the cache's
+ // select families; and of open_land_q per consumer (k: 68 loads)
+ (* keep="true",dont_touch="true" *) reg [3:0] rbank_k;
+ (* keep="true",dont_touch="true" *) reg [1:0] tbank_k;
+
  wire[9:0] relocated_tag=word[116:107]+c_tag+c_lofs;
  wire[5:0] relocated_row=word[106:101]+c_lofs[5:0];
  wire[32:0] relocated_read={relocated_tag,relocated_row,c_ep,c_bank};
@@ -105,9 +113,10 @@ module ot_hbm_svc_sm_feed_rel_h #(
   end
   if(word[29])cmd_r[39:30]<=word[39:30]+c_tag+c_lofs;
   for(rcb=0;rcb<33;rcb=rcb+1)if(read_capture[rcb/10])rd_r[rcb+1]<=relocated_read[rcb];
+  rbank_k<={4{read_capture[0]?relocated_read[0]:word[84]}};
   ret_r<=word[117]&&(!looped||wlast);retf_r<={c_ep,c_bank};
   // C stage
-  cmd_c<=cmd_r;ret_c<=ret_r;retf_c<=retf_r;
+  cmd_c<=cmd_r;ret_c<=ret_r;retf_c<=retf_r;tbank_k<={2{retf_r[0]}};
   if(word_v&&ordinal==0&&c_fl)begin cmd_c[28]<=1'b1;cmd_c[27:26]<=c_fmt;end
   if(i8_c&&raw_v)i8_t1<=raw_tag;i8_t2<=i8_t1;     // held tag (as ot_smh_static_int8), 2 deep: no delay line
  end
@@ -131,10 +140,11 @@ module ot_hbm_svc_sm_feed_rel_h #(
  end
  assign sm_command=programme[82:0];
  ot_hbm_svc_static_sm_packed136_h rows(
-  .clk(stream_clk),.rst_n(st_rst[3]),.open_v(open_q),.open_bank(open_bank_q),.open_epoch(open_epoch_q),.open_count(rows_q[open_land_q]),.open_tag_base(tag_q[open_land_q]),
+  .clk(stream_clk),.rst_n(st_rst[3]),.open_v(open_q),.open_bank(open_bank_q),.open_epoch(open_epoch_q),.open_count(rows_q[oland_k[0]]),.open_tag_base(tag_q[oland_k[1]]),
   .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
   .read_v(programme_v_q&&programme[83]),.read_bank(programme[84]),.read_epoch(programme[100:85]),.read_row(programme[106:101]),.read_tag(programme[116:107]),
   .retire_v(programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),
+  .read_bank_k(rbank_k),.retire_bank_k(tbank_k),
   .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
  assign fault=descriptor_fault||cdc_fault||cache_fault||programme_fault||feed_fault||inj_f||i8_f;
 endmodule

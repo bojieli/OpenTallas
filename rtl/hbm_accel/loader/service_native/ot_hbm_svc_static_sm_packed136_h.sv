@@ -23,6 +23,9 @@ module ot_hbm_svc_static_sm_packed136_h (
  input wire [3:0] sector_v,input wire [95:0] sector_index,input wire [63:0] sector_epoch,input wire [1023:0] sector_data,
  input wire read_v,read_bank,input wire [15:0] read_epoch,input wire [5:0] read_row,input wire [9:0] read_tag,
  input wire retire_v,retire_bank,input wire [15:0] retire_epoch,
+ // HBMc/TILES 10-22: KEPT same-edge copies of read_bank / retire_bank from the feed's registers (each serves one select
+ // family; constant-input AND buffers are transparent to the native census: read_bank had 78 loads)
+ input wire [3:0] read_bank_k,input wire [1:0] retire_bank_k,
  output wire [1:0] block_ready,bank_owned,output wire busy,fault,output wire [1098:0] out_packet
 );
 `ifdef SVGH_MUT
@@ -53,12 +56,8 @@ module ot_hbm_svc_static_sm_packed136_h (
  wire row_write=row_slot&&!sticky;
  wire open_ok=open_v&&!running&&!owned[open_bank]&&open_count!=0&&open_count<=64&&!sticky&&!(retire_v&&retire_bank==open_bank);
  wire rbe0,rbe1,rbc,rbt,tbe0,tbe1;
- ot_hbm_svc_local_and2 u_rbe0(.a(read_bank),.b(1'b1),.y(rbe0));
- ot_hbm_svc_local_and2 u_rbe1(.a(read_bank),.b(1'b1),.y(rbe1));
- ot_hbm_svc_local_and2 u_rbc(.a(read_bank),.b(1'b1),.y(rbc));
- ot_hbm_svc_local_and2 u_rbt(.a(read_bank),.b(1'b1),.y(rbt));
- ot_hbm_svc_local_and2 u_tbe0(.a(retire_bank),.b(1'b1),.y(tbe0));
- ot_hbm_svc_local_and2 u_tbe1(.a(retire_bank),.b(1'b1),.y(tbe1));
+ assign rbe0=read_bank_k[0];assign rbe1=read_bank_k[1];assign rbc=read_bank_k[2];assign rbt=read_bank_k[3];
+ assign tbe0=retire_bank_k[0];assign tbe1=retire_bank_k[1];
  wire [15:0]read_epoch_ref={epoch[rbe1][15:8],epoch[rbe0][7:0]};
  wire [15:0]retire_epoch_ref={epoch[tbe1][15:8],epoch[tbe0][7:0]};
  wire [9:0] exp_tag=tagb[rbt]+{4'd0,read_row};
@@ -92,7 +91,8 @@ module ot_hbm_svc_static_sm_packed136_h (
  wire [7:0]rph_local;
  for(genvar pg=0;pg<2;pg=pg+1)begin:g_phase_tree
   for(genvar ph=0;ph<4;ph=ph+1)begin:g_phase
-   ot_hbm_svc_local_and2 u_c(.a(rph_n==((HM==1)?2'(ph+1):2'(ph))),.b(1'b1),.y(rph_local[pg*4+ph]));
+   localparam [1:0] PH=(HM==1)?2'(ph+1):2'(ph);
+   ot_hbm_svc_local_and2 u_c(.a(PH[1]?rph_n[1]:!rph_n[1]),.b(PH[0]?rph_n[0]:!rph_n[0]),.y(rph_local[pg*4+ph]));
   end
  end
  wire [2:0]run_local;

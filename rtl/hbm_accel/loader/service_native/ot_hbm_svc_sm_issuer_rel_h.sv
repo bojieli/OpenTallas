@@ -46,8 +46,10 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  always @(posedge clk)begin desc_addr_q<=desc_addr;desc_data_q<=desc_data;end
  reg rd_q;reg[DAW-1:0]rp,rp_q;wire[255:0]rd;
  wire rd_go,rd_pointer_capture,rd_count_capture;
- ot_hbm_svc_local_and2 u_rpc(.a(rd_go),.b(1'b1),.y(rd_pointer_capture));
- ot_hbm_svc_local_and2 u_rcc(.a(rd_go),.b(1'b1),.y(rd_count_capture));
+ // HBMc/TILES 10-22 (native census: constant-input ANDs are transparent): real 2-input ANDs = rd_go (same function)
+ wire rd_gate;
+ ot_hbm_svc_local_and2 u_rpc(.a(running),.b(rd_gate),.y(rd_pointer_capture));
+ ot_hbm_svc_local_and2 u_rcc(.a(running),.b(rd_gate),.y(rd_count_capture));
  localparam integer SS=12,NRS=(256+SS-1)/SS;                                  // rd mux bank-select copies (32 b each)
  (* keep="true",dont_touch="true" *) reg[NRS-1:0]rsel_k;    // = rp_q[7] (unreset, as rp_q)
  generate if(DD==128)begin:g_t1
@@ -89,7 +91,8 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  end
  wire[25:0]s_blk={8'd0,p[46:32],p[9:7]}+{2'd0,p_lay}+{2'd0,p_id};
  wire s_go=p_v&&!st_v;
- assign rd_go=running&&n_rd!=0&&!a_v&&!rd_q;
+ assign rd_gate=n_rd!=0&&!a_v&&!rd_q;
+ assign rd_go=running&&rd_gate;
  wire[6:0]st_rows=st[71:65];
  wire[12:0]st_total=(((st_rows*136)+127)>>7)<<2;
  assign reserve_v=st_v&&reserve_ready;
@@ -208,11 +211,14 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  localparam integer NIC=(IDW*NID+8+SS-1)/SS;
  wire[NIC-1:0]ids_capture;
  wire[5:0]run_capture;
+ // HBMc/TILES 10-22: each capture strobe = real AND2(port valid, qualifier) (ids_ok had 125 loads through constant ANDs)
+ wire ids_gate=!(ID_COHORT!=0&&(!running||run_v||ids_ok_q||ids_layer!=layer_q||ids_cohort!=run_cohort_q));
+ wire run_gate=!(running||run_count==0||{1'b0,run_base}+run_count>(DD));
  for(genvar ic=0;ic<NIC;ic=ic+1)begin:g_ids_capture
-  ot_hbm_svc_local_and2 u_c(.a(ids_ok),.b(1'b1),.y(ids_capture[ic]));
+  ot_hbm_svc_local_and2 u_c(.a(ids_v),.b(ids_gate),.y(ids_capture[ic]));
  end
  for(genvar rcg=0;rcg<6;rcg=rcg+1)begin:g_run_capture
-  ot_hbm_svc_local_and2 u_c(.a(run_ok),.b(1'b1),.y(run_capture[rcg]));
+  ot_hbm_svc_local_and2 u_c(.a(run_v),.b(run_gate),.y(run_capture[rcg]));
  end
  wire[23:0]p_lay_d=(MUT==1)?24'd0:24'(layer_q)*24'(a[157:143]);
  wire[23:0]p_id_d=24'(a_id)*24'(a[172:158]);

@@ -12,7 +12,11 @@ module ot_smh_calendar_static_xh #(
     parameter integer W=135,
     parameter integer AW=11,
     parameter integer XW=1,
-    parameter integer MUT=0 // 1 wrong wrap PC, 2 extra cycle at loop boundary, 3 context not captured (stale)
+    parameter integer MUT=0, // 1 wrong wrap PC, 2 extra cycle at loop boundary, 3 context not captured (stale)
+    // HBMc/TILES 10-22: RKN > 0 adds calendar_rk = RKN KEPT same-edge copies of calendar[RKB] (a consumer's per-group
+    // enables; a constant-input AND buffer is transparent to the native census).  RKN 0: calendar_rk is 0.
+    parameter integer RKB=0,
+    parameter integer RKN=0
 )(
     input wire clk,input wire[1:0]rst_n,
     input wire cfg_we,
@@ -29,7 +33,8 @@ module ot_smh_calendar_static_xh #(
     output reg calendar_lastit,
     output reg calendar_v,
     output reg [31:0] ordinal,
-    output reg active,done,fault
+    output reg active,done,fault,
+    output wire [((RKN>0)?RKN:1)-1:0] calendar_rk
 );
 `ifdef SVGH_MUT
  localparam integer HM=`SVGH_MUT;     // HBM-SVGREL8 bench negative controls (see the kit README)
@@ -110,14 +115,28 @@ module ot_smh_calendar_static_xh #(
         assign issued_next[ic*8+:8]=issued[ic*8+:8]+carry;
     end
     wire [15:0]loops_next=loops_left-1'b1,iter_next=iter_r+1'b1;
+    // HBMc/TILES 10-22 (native census: constant-input ANDs are transparent; start_ok had 192 loads, wrap 92, running
+    // 55): every capture strobe is a REAL 2-input AND of a register and its qualifier, and the issue strobes are KEPT
+    // copies of running (loaded with its next value).  Same function, same edge.
+    wire start_gate=!(busy||cfg_we_q||!legal_start);
+    wire wrap_gate=at_end&&loops_left!=1;
     for(genvar stg=0;stg<10+NXS;stg=stg+1)begin:g_start_tree
-        ot_hbm_svc_local_and2 u_c(.a(start_ok),.b(1'b1),.y(start_capture[stg]));
+        ot_hbm_svc_local_and2 u_c(.a(start_v_q),.b(start_gate),.y(start_capture[stg]));
     end
+    (* keep="true",dont_touch="true" *) reg [2:0] run_k;
     for(genvar ig=0;ig<3;ig=ig+1)begin:g_issue_tree
-        ot_hbm_svc_local_and2 u_c(.a(running),.b(1'b1),.y(issue_capture[ig]));
+        assign issue_capture[ig]=run_k[ig];
     end
     for(genvar wg=0;wg<5;wg=wg+1)begin:g_wrap_tree
-        ot_hbm_svc_local_and2 u_c(.a(wrap_next),.b(1'b1),.y(wrap_capture[wg]));
+        ot_hbm_svc_local_and2 u_c(.a(running),.b(wrap_gate),.y(wrap_capture[wg]));
+    end
+    wire running_n=(start_v_q&&start_gate)?1'b1:((running&&{1'b0,pc}+1'b1==limit&&(loops_left==1||MUT==2))?1'b0:running);
+    if(RKN>0)begin:g_rk
+        (* keep="true",dont_touch="true" *) reg [RKN-1:0] rk_q;
+        always @(posedge clk)rk_q<={RKN{v1_k[RKB/SC]&&wok_k[RKB/SC]&&captured[RKB]}};
+        assign calendar_rk=rk_q;
+    end else begin:g_rk0
+        assign calendar_rk=1'b0;
     end
     ot_hbm_svc_local_and2 u_pc_step(.a(running),.b(!at_end),.y(pc_step));
     // datapath: payload, ordinal, context, identity (no reset), gated by the per-slice KEPT copies
@@ -152,11 +171,11 @@ module ot_smh_calendar_static_xh #(
     // control (rst_n[0]: 11 flops; rst_n[1]: valid1 copies)
     always @(posedge clk or negedge rst_n[0])
         if(!rst_n[0])begin
-            cfg_we_q<=0;start_v_q<=0;running<=0;
+            cfg_we_q<=0;start_v_q<=0;running<=0;run_k<=0;
             valid0<=0;valid1<=0;last0<=0;last1<=0;calendar_v<=0;
             active<=0;done<=0;fault<=0;
         end else begin
-            cfg_we_q<=cfg_we;start_v_q<=start_v;
+            cfg_we_q<=cfg_we;start_v_q<=start_v;run_k<={3{running_n}};
             valid0<=running;valid1<=valid0;last0<=running && final_issue;last1<=last0;
             calendar_v<=valid1;
             active<=busy;done<=valid1 && last1;
