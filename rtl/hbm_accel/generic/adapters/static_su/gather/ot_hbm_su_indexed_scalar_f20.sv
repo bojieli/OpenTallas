@@ -28,7 +28,7 @@ module ot_hbm_su_indexed_scalar_f20 #(
  wire[151:0]row=rows[pc];
  assign descriptor=row[119:0];
  assign engine_start=active && edge_index==row[135:120];
- localparam integer MIN_RELEASE=2*READ_SAMPLE+WRITE_COMMIT+6;
+ localparam integer MIN_RELEASE=2*READ_SAMPLE+WRITE_COMMIT+7;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin active<=0;done<=0;program_fault<=0;edge_index<=0;pc<=0;last<=0;end
   else begin

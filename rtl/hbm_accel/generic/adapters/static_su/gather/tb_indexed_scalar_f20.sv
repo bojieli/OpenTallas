@@ -42,7 +42,7 @@ module tb_indexed_scalar_f20;
    cfg_data=0;cfg_data[255:240]=16'hc7a1;
    cfg_data[23:0]=ix^(MUT==1?24'd1:24'd0);cfg_data[47:24]=base;cfg_data[71:48]=limit;
    cfg_data[95:72]=dst^(MUT==2?24'd8:24'd0);cfg_data[119:96]=24'd1;
-   cfg_data[135:120]=16'd8;cfg_data[151:136]=16'd48;
+   cfg_data[135:120]=16'd8;cfg_data[151:136]=16'd38;
    cfg_v=1;@(negedge clk);cfg_v=0;repeat(6)@(negedge clk);
    desc_v=1;@(negedge clk);desc_v=0;
    repeat(10)@(negedge clk);
@@ -53,7 +53,16 @@ module tb_indexed_scalar_f20;
  integer c,i,j,errors=0,checks=0,cyc=0,start_c,first_cycles=0;
  integer sel,score,idxadr,destadr,bank;
  reg[255:0]data,expected;
- always @(posedge clk)cyc=cyc+1;
+ always @(posedge clk)begin
+  cyc=cyc+1;
+  if(c==0)begin
+   if(launch_v)$display("PROFILE launch cycle=%0d",cyc);
+   if(active&&edge_index==0)$display("PROFILE local_edge0 cycle=%0d",cyc);
+   if(es)$display("PROFILE engine_start cycle=%0d local=%0d",cyc,edge_index);
+   if(ed)$display("PROFILE engine_done_observed cycle=%0d local=%0d",cyc,edge_index);
+   if(done)$display("PROFILE programme_done_observed cycle=%0d",cyc);
+  end
+ end
  function automatic integer bankof(input integer adr);bankof=((adr>>16)&3)*8+((adr>>3)&7);endfunction
  task automatic load_sector(input integer adr,input[255:0]payload);
   begin
@@ -62,7 +71,7 @@ module tb_indexed_scalar_f20;
   end
  endtask
  initial begin
-  repeat(8)@(negedge clk);rst_n=1;preload=1;
+  repeat(8)@(negedge clk);rst_n=1;preload=1;repeat(12)@(negedge clk);
   // Six canonical scalar routes plus32 structural routes spanning all SID/bank.
   for(c=0;c<38;c=c+1)begin
    if(c<6)begin
