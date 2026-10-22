@@ -1,0 +1,175 @@
+{
+ "schema": "opentallas.s81.cap_source_dependency_audit.v1",
+ "snapshot_commit": "d3e6197f3bbf2084115fd9f3a0ab784d2dff913a",
+ "published_main_commit": "e217a58d6587742cdce7f6ce43b9883826532a4e",
+ "source_files": [
+  {
+   "path": "tools/s81_dv/tokfunc/selected_cap_phase.py",
+   "snapshot_sha256": "973e2aadbf940a4caf321b1233ab47d111455639e2fd80e593a6adfa4472c567",
+   "published_main_sha256": null,
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": true
+  },
+  {
+   "path": "tools/s81_dv/tokfunc/stage_aggregate_programme.py",
+   "snapshot_sha256": "852bf6303963c45e166bf258c2dd0c6c206ab050d5cb02dbc1c4e32cf9b1d80d",
+   "published_main_sha256": null,
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": true
+  },
+  {
+   "path": "tools/s81_dv/tokfunc/aggregate_tb.py",
+   "snapshot_sha256": "b0f5ab3e07d5baba9ecc97bc6349baa2320e79f97207e901b7b159aca05bd440",
+   "published_main_sha256": null,
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": true
+  },
+  {
+   "path": "tools/s81_dv/tokfunc/generate_wkv_phase_source.py",
+   "snapshot_sha256": "95544edcfd1b8f752f56c2db4309ac2c2a08717801e0f1ba7c8b71526992ca31",
+   "published_main_sha256": null,
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": true
+  },
+  {
+   "path": "tools/s81_dv/tokfunc/selected_frame_schedule.py",
+   "snapshot_sha256": "878a5f35099a00666b7a2275d3457626a9084642bab37163a43fc9a71c8f9a6b",
+   "published_main_sha256": null,
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": true
+  },
+  {
+   "path": "tools/s81_dv/frame_return_plan.py",
+   "snapshot_sha256": "d35c89f170a3ca8af35bb3aca1ed8fba9c7456685a0c4b66aa4ada47448e7fd8",
+   "published_main_sha256": "dd96cee59649cf3805bc897b10163fc5ab5dc77e125ad8fe6b7fd29f3cd7b9d9",
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": false
+  },
+  {
+   "path": "tools/s81_dv/frame_bench.py",
+   "snapshot_sha256": "f3c98b7ffb41c7d67b26259cf52b55e26411ebee7dc305ade5d0d36b2ca7b11a",
+   "published_main_sha256": "1f3ab65048b592b895d9df670cc318df751453e3bf3b9a2cbe7c5b6e70abf12a",
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": false
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/lower_xs.py",
+   "snapshot_sha256": "c2f6523293d8e0a1ef0ca40a213d91a99f0a923652a65d42902cb42fbc36d205",
+   "published_main_sha256": "89091fb1b1c791b94759e09b599c08736ca24099e0165fd10188917368024015",
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": false
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/aproj_native.py",
+   "snapshot_sha256": "38413f72c74892e05fde36ea15b7d033d1f8a571fbae7ed26724b3b70ecbe5b5",
+   "published_main_sha256": "ae5d74ce99ce8d75ea2ff2f5689d84fc345951ec5851ee2dc2306307061a114a",
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": false
+  },
+  {
+   "path": "tools/s81_dv/dv_layer_compile.py",
+   "snapshot_sha256": "784eaf8fb6b37bc84aa0fa8e6005c47032535d1bb65ff8f0894909a6ac2eac1b",
+   "published_main_sha256": "1e26495715f1c8a992a35170307482883b1e8fe0d2dd54eea31bc4470a350517",
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": false
+  },
+  {
+   "path": "tools/landed_parent/lp.py",
+   "snapshot_sha256": "07a5382c70339d5dab10a5136e3f2ef12ac5ed5020f14245f2beffa8f17123d7",
+   "published_main_sha256": "07a5382c70339d5dab10a5136e3f2ef12ac5ed5020f14245f2beffa8f17123d7",
+   "identical": true,
+   "snapshot_absent": false,
+   "published_absent": false
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/xs_calendar.py",
+   "snapshot_sha256": "5201899a649f081b53d46e82ba9454b1e0b21d89c0ada371df1b5d7d1bba8c40",
+   "published_main_sha256": "5201899a649f081b53d46e82ba9454b1e0b21d89c0ada371df1b5d7d1bba8c40",
+   "identical": true,
+   "snapshot_absent": false,
+   "published_absent": false
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/kv_operand_feed.py",
+   "snapshot_sha256": "2a09da7ff28b19489465b5a77de5ba2b89c973634c3fd8f82ccf886a23748f50",
+   "published_main_sha256": null,
+   "identical": false,
+   "snapshot_absent": false,
+   "published_absent": true
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/kv_bank_contract.py",
+   "snapshot_sha256": "57cbf5b03f4dcfeb114ee8c8fbdecfa79b40b1b54c5c8e55e96b146d3c5e883b",
+   "published_main_sha256": "57cbf5b03f4dcfeb114ee8c8fbdecfa79b40b1b54c5c8e55e96b146d3c5e883b",
+   "identical": true,
+   "snapshot_absent": false,
+   "published_absent": false
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/slice_source.py",
+   "snapshot_sha256": null,
+   "published_main_sha256": "100c655cded73ad982963d29ad769552e8b90ba09f66008a9a24251314af423a",
+   "identical": false,
+   "snapshot_absent": true,
+   "published_absent": false
+  }
+ ],
+ "function_API_comparisons": [
+  {
+   "path": "tools/s81_dv/layer_prog/aproj_native.py",
+   "function": "phase_material",
+   "snapshot_AST_sha256": "6514060d97bad7eaae1144611c714842eb49cb7c826a7ff978ea44c213f1aaf4",
+   "published_AST_sha256": "6514060d97bad7eaae1144611c714842eb49cb7c826a7ff978ea44c213f1aaf4",
+   "identical": true
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/aproj_native.py",
+   "function": "programme",
+   "snapshot_AST_sha256": "e7aab9cb3155b67d559ab9b3c17f806a5954755183ec62573bda5742d89c7367",
+   "published_AST_sha256": "6572b15ff974df1424d6ba8a8e25bbff4c94bd4d381dcdfb4ca8a445fc1584d2",
+   "identical": false
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/lower_xs.py",
+   "function": "a_proj_rows",
+   "snapshot_AST_sha256": "3e7b50b708cb42bf8547f66384d011ee5e0ccc80d2450933ec37a9b9ebce31aa",
+   "published_AST_sha256": "3e7b50b708cb42bf8547f66384d011ee5e0ccc80d2450933ec37a9b9ebce31aa",
+   "identical": true
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/lower_xs.py",
+   "function": "frame_programme",
+   "snapshot_AST_sha256": "d94b9e9e00439604228b6822f80969c5c0e74caacd0b58f27015db043b5113f4",
+   "published_AST_sha256": "920fd5ed4d9d0597bd12eb3009e956325931cb022a0e75df78a77aea93411b12",
+   "identical": false
+  },
+  {
+   "path": "tools/s81_dv/layer_prog/lower_xs.py",
+   "function": "field_images",
+   "snapshot_AST_sha256": "dbbdd777d81d6571ac70c7837d9de7d27999a032b912691555fb13c2f94872d8",
+   "published_AST_sha256": "dbbdd777d81d6571ac70c7837d9de7d27999a032b912691555fb13c2f94872d8",
+   "identical": true
+  }
+ ],
+ "generator_self_contained": false,
+ "aggregate_driver_held": true,
+ "independent_ready": "selected_cap_phase.py top-level imports stdlib only; ComponentDie/configured_profile/explicit_capture source primitives; require_selected_profile needs exactpublic823 KVguard. local_programme remainsconditional until its listedcompiler dependencies arebound.",
+ "no_projection": [
+  "wholeoldaproj_native.py",
+  "wholeolddv_layer_compile.py",
+  "staleprivatelauncher/archive",
+  "aggregatebranchancestry"
+ ],
+ "compiler_run": false,
+ "simulator_run": false
+}
