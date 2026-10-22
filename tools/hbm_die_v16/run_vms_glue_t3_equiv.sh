@@ -21,6 +21,6 @@ cat "$D.gen.log"
 "$V" --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module tb_vms_glue_lt -Mdir "$D/obj" \
   "${src[@]}" "$D/tb_vms_glue_lt.sv" > "$D.build.log" 2>&1 || { grep -m5 %Error "$D.build.log"; echo "$TAG $q BUILDFAIL"; exit 1; }
 "$D/obj/Vtb_vms_glue_lt" > "$D.sim.log" 2>&1
-rm -rf "$D/obj"
+if [ "${VMS_KEEP_OBJECTS:-0}" != 1 ]; then rm -rf "$D/obj"; fi
 grep -E "$TAG|MISMATCH" "$D.sim.log" | tail -6
 grep -Eq "^$TAG $q PASS checks=[1-9][0-9]* errors=0$" "$D.sim.log"   # exit 0 only on a counted PASS (mutants: non-zero)
