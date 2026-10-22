@@ -6,7 +6,81 @@
     "graph_sha256": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
     "selected_su_inventory_source_commit": "d76bf51b4",
     "inventory_file": "/home/ubuntu/scratch/codex-hbm-idxsu-2000/r18_selected_su_router_inventory.json",
-    "inventory_sha256": "8a93bef0b14c9123209c635595f9a2c21692bb83a2af45979aca4ad9a3433ef9"
+    "inventory_sha256": "8a93bef0b14c9123209c635595f9a2c21692bb83a2af45979aca4ad9a3433ef9",
+    "selected_worktree_matches_inventory": {
+      "matching_materialized_files": 17,
+      "unmaterialized_files": [],
+      "checks": {
+        "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv": {
+          "inventory_sha256": "de834bcd0dc4e267bad87ea0a5283ee873f30e0ae94ae6fa34a8588965eeb255",
+          "actual_selected_sha256": "de834bcd0dc4e267bad87ea0a5283ee873f30e0ae94ae6fa34a8588965eeb255"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv": {
+          "inventory_sha256": "e1a7343e0253f19e646c9c5aa9eaf370a824d8311078d3f75e863ab55ce977d0",
+          "actual_selected_sha256": "e1a7343e0253f19e646c9c5aa9eaf370a824d8311078d3f75e863ab55ce977d0"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13.sv": {
+          "inventory_sha256": "7dbe0bd904d02f77b78388e37db16f79eda0a33ef9b09af63cce890886335877",
+          "actual_selected_sha256": "7dbe0bd904d02f77b78388e37db16f79eda0a33ef9b09af63cce890886335877"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree_r13.sv": {
+          "inventory_sha256": "14a2ca80b4d5a21f149e4aacb7a8a73a8fd7566d93329ef3d94434b56e7e9ea6",
+          "actual_selected_sha256": "14a2ca80b4d5a21f149e4aacb7a8a73a8fd7566d93329ef3d94434b56e7e9ea6"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static_r13.sv": {
+          "inventory_sha256": "6782658e8d4a4b68da76baa18721cf92123172772c67d4ae28bf662f1224cd13",
+          "actual_selected_sha256": "6782658e8d4a4b68da76baa18721cf92123172772c67d4ae28bf662f1224cd13"
+        },
+        "rtl/hdc/ot_hdc_fastfp.sv": {
+          "inventory_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+          "actual_selected_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+        },
+        "rtl/hdc/ot_hdc_fp32_add_n32.sv": {
+          "inventory_sha256": "78743cacf5530694212e92270e18590c4d2aa758cf4e1b0c19993d6dacad7667",
+          "actual_selected_sha256": "78743cacf5530694212e92270e18590c4d2aa758cf4e1b0c19993d6dacad7667"
+        },
+        "rtl/hdc/ot_hdc_prefix.sv": {
+          "inventory_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+          "actual_selected_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h5.sv": {
+          "inventory_sha256": "dd63e1b72a21ce3580c2e422cb8e43f383a9a1a316d7f979400c8407b4bee570",
+          "actual_selected_sha256": "dd63e1b72a21ce3580c2e422cb8e43f383a9a1a316d7f979400c8407b4bee570"
+        },
+        "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": {
+          "inventory_sha256": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee",
+          "actual_selected_sha256": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv": {
+          "inventory_sha256": "55753aec33b4a8d7bf40869ea5b060802ee4dc284fed3c648955bdc084c8f05d",
+          "actual_selected_sha256": "55753aec33b4a8d7bf40869ea5b060802ee4dc284fed3c648955bdc084c8f05d"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore_hw.sv": {
+          "inventory_sha256": "f9f4e69e26a8e24b6883405784da679cffdc5cb601a93699dbd5b5847fe9b069",
+          "actual_selected_sha256": "f9f4e69e26a8e24b6883405784da679cffdc5cb601a93699dbd5b5847fe9b069"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv": {
+          "inventory_sha256": "96d8450033bbb98d2262562633480afd9179455fbd63b6c2107d6455f2201f9d",
+          "actual_selected_sha256": "96d8450033bbb98d2262562633480afd9179455fbd63b6c2107d6455f2201f9d"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv": {
+          "inventory_sha256": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a",
+          "actual_selected_sha256": "d2a4968e067d60f16349357bfbe0aadc58edd22d8b7cb89f1142a9f62ad7982a"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv": {
+          "inventory_sha256": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219",
+          "actual_selected_sha256": "2c061c815a470df94e21b149fc02e9e352be722f31cb28e51440ced123f88219"
+        },
+        "rtl/lib/ot_rst_relay.sv": {
+          "inventory_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+          "actual_selected_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+        },
+        "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_bridge_release_s.sv": {
+          "inventory_sha256": "f49291fd08950a1191d1d7937783ac5559fbcea9b0cb4d06065fefee4acbb485",
+          "actual_selected_sha256": "f49291fd08950a1191d1d7937783ac5559fbcea9b0cb4d06065fefee4acbb485"
+        }
+      }
+    }
   },
   "source_files": {
     "rtl/hbm_accel/die_glue/scoped_d4g/pgslice.sv": "175c0fb162f416bed35ce69b8e58f42e600cf256ba7cd9576b0f13189275b2ee",
