@@ -1,0 +1,20 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job hbm_sfu_programme_store_r14_cl-r14-133946a12 bench bench_split_mutant_flip11 host ot-epyc9 run /srv/opentallas-scratch2/claude/closure-loop/hbm_sfu_programme_store_r14_cl-r14-133946a12 log cl/bench_split_mutant_flip11.a1b1.log captured 2026-10-21T14:40:09-07:00
+# fail_regex 'SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT'
+SFU_SPLIT_EQUIV_MISMATCH edge=6408 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6409 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6410 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6411 out=0 lg_ro=1 status=0
+[5608000] %Fatal: tb_hgi_sfu_split_equiv.sv:321: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_EQUIV FAIL mismatching_edges=192 of 6675
+SFU_SPLIT_EQUIV_MISMATCH edge=6411 out=0 lg_ro=1 status=0
+[5608000] %Fatal: tb_hgi_sfu_split_equiv.sv:321: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_EQUIV FAIL mismatching_edges=192 of 6675
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:321: Verilog $stop
+Aborting...
+SFU_SPLIT_GATE MUTANT flip11 REJECTED (expected)
+SFU_SPLIT_EQUIV_MISMATCH edge=6408 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6409 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6410 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6411 out=0 lg_ro=1 status=0
+[5608000] %Fatal: tb_hgi_sfu_split_equiv.sv:321: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_EQUIV FAIL mismatching_edges=192 of 6675
+%Error: rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:321: Verilog $stop
+Aborting...
