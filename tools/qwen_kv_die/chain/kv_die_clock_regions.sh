@@ -6,8 +6,8 @@
 # (LANDED / RESET_ROOT / GAP) against RUN/fwd_lanes.json.
 # usage: kv_die_clock_regions.sh RUN SRC_WORKTREE      (waits for the chain's real case: STATUS 'real case:' line)
 set -u
-R=$1; S=$2; C=$R/case_kv; D=$R/dieclk
-say() { echo "$(date '+%F %T %Z') DIECLK $*" >> $R/STATUS.log; }
+R=$1; S=$2; C=$R/case_kv; D=${OT_DIECLK_DIR:-$R/dieclk}   # OT_DIECLK_DIR: side rerun into its own dir (QK3-PHYCLK)
+say() { echo "$(date '+%F %T %Z') DIECLK${OT_DIECLK_DIR:+($(basename $D))} $*" >> $R/STATUS.log; }
 mkdir -p $D/tools; chmod a+rwx $D
 while :; do
   grep -q 'REAL CASE' $R/STATUS.log 2>/dev/null && { say "not run: the real case failed"; exit 1; }
@@ -34,6 +34,13 @@ m = {k: dict(view=v['view'], source='insertion.json (kvsys clocks.json measured)
                                              v['R_ps']['tt'][p]] for p in v['R_ps'].get('tt', {})}) for k, v in c['measured'].items()}
 json.dump(dict(schema='opentallas.die_clock.targets.v1', masters=m), open(sys.argv[2], 'w'), indent=1)
 PY
+# QK3-PHYCLK 10-21: the STA's assumed_ideal masters (off-chip PHY abstracts + generated pin-registered element models)
+# enter the targets with the STA's own R 0, admitted only for a pin-referenced Liberty boundary (no clock_tree_path,
+# arcs related to the cell's own clock pins), labelled + listed under 'assumed' (kvs14r-*-sqk2* died: 'missing native
+# insertion R for ot_qkvd_ucie_x64_phy/clk')
+python3 $S/tools/die_clock/boundary_targets.py --clocks $R/libs/clocks.json --libs $R/libs --targets $D/targets.json \
+  > $D/boundary_targets.log 2>&1 || { say "boundary targets FAIL (dieclk/boundary_targets.log): $(tail -1 $D/boundary_targets.log | cut -c1-300)"; exit 1; }
+say "$(tail -1 $D/boundary_targets.log)"
 ROOTS=pll/pll_c,pll/pll_WS,pll/pll_WN,pll/pll_ES,pll/pll_EN,pll/pll_hbm_WS,pll/pll_hbm_WN,pll/pll_hbm_ES,pll/pll_hbm_EN
 DK="docker run --rm --cpus=8 --memory=${DC_MEM:-90}g -v $D:/work -v $C:/case:ro -v $R/libs:/kvlibs:ro -w /work openroad/orfs:asap7lock bash -lc"
 PRE='source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; for c in tt ff; do for g in $(cat /work/libs_$c.glob); do ls $g; done > /work/libs_$c.txt; done;'
