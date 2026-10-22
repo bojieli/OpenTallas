@@ -30,6 +30,10 @@ while (($#)); do
     --entry-norm-json) ENTRY_NORM_JSON=$2; shift 2;;
     --aggregate-source-json) AGGREGATE_SOURCE_JSON=$2; shift 2;;
     --entry-producer-json) ENTRY_PRODUCER_JSON=$2; shift 2;;
+    --entry-kit) ENTRY_KIT=$2; shift 2;; --entry-obj) ENTRY_OBJ=$2; shift 2;;
+    --entry-idle) ENTRY_IDLE=$2; shift 2;; --entry-progs) ENTRY_PROGS=$2; shift 2;;
+    --entry-meta) ENTRY_META=$2; shift 2;; --entry-user) ENTRY_USER=$2; shift 2;;
+    --entry-replay-json) ENTRY_REPLAY_JSON=$2; shift 2;;
     *) echo "unknown argument: $1" >&2; exit 2;;
   esac
 done

@@ -93,8 +93,15 @@ def resolve(die, slice_inst, source_root=None):
     body(cap)
     added = 0
     if streamer == 'ot_s81sl_xs4':
-        known = '974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9'
-        if sources[str(BASE / (streamer + '.sv'))] != known:
+        # capture-stage receipts: XS4 sources whose streamer capture adds exactly ONE edge.
+        #   974ec6f3 = the native xs4 (xg5 lineage ab6b3f7b4), capture stage measured.
+        #   50485a59 = the G9 GEN-selected physical xs4 (bind rtl_extra 8a495768, S81-FIX2/XG 5feb5dc07 + ELEM-XFV):
+        #     974ec6f3 plus kept same-D/same-enable/same-edge register copies only (act_g, hb_q1 -> hbk_o, wps0,
+        #     keep_hierarchy bdec predecode = combinational) for native fanout <= 32; no register stage added on any
+        #     path (diff-reviewed TOKc-S81 10-22: every new reg is loaded on the same edge/enable as the reg it copies).
+        known = {'974ec6f3e0ca8deb84d6690c03f10035213b6a3bc94ff178edeb9549f29b9ca9',
+                 '50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808'}
+        if sources[str(BASE / (streamer + '.sv'))] not in known:
             raise ValueError('changed XS4 source has no matching capture-stage receipt')
         added = 1
     return dict(schema='opentallas.s81.selected_slice_source.v1', slice=slice_inst,
