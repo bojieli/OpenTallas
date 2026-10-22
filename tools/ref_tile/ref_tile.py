@@ -692,6 +692,7 @@ def load_spec(path: str) -> dict:
     # child gets its clock from its OWN port on the cluster face ("clock_ports": one scalar port per child clock pin, the
     # RTL wires port -> child clock pin).  The die delivers phi - R_i at each entry (R_i = entry wire + the child's routed
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
+    multiport_spine(s)
     if s.get("cdc_synchronizers") is not None and (s.get("clock") != "multiple_cts_roots" or s["kind"] != "tile"):
         raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
@@ -1952,6 +1953,16 @@ SPINE_PIN_LOOKUP = """        regexp {[^/]+$} [get_full_name $pin] pn
 HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
 
+def multiport_spine(s: dict) -> bool:
+    """Opt-in physical trees; domain ownership and timing remain with clock_entries."""
+    distribution = s.get("clock_distribution")
+    if distribution is None:
+        return False
+    if distribution != "spine" or s.get("clock") != "multiple_cts_roots" or s.get("kind") != "tile":
+        raise SpecError("clock_distribution=spine requires a multiple_cts_roots leaf tile")
+    return True
+
+
 def gen_hooks(s: dict, kd: str) -> dict:
     try:
         raw_bindings, _ = raw_macro_clocks.contract(s, ROOT)
@@ -1975,6 +1986,12 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 pre_cts.extend(clock_entry_constraints.landed_pre_cts_tcl(s, ROOT))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
         pre_cts.extend(clock_entry_constraints.forwarded_pre_cts_tcl(s, entry_sdc))
+        if multiport_spine(s):
+            # Install FIRST: clock_entries must still wrap the physical builder,
+            # validate every source root and measure every domain after its tree.
+            pre_cts += ["set ::env(OT_SPINE_PORTS) {" + ",".join(clock_ports(s)) + "}",
+                        "set ::env(OT_SPINE_CTS_REST) 0",
+                        "source /src/physical/common_flow/clock_spine.tcl"]
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
         # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
@@ -2379,6 +2396,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     out += clock_entry_constraints.single_clock_contract.evidence_paths(s)
+    if multiport_spine(s):
+        out += ["physical/common_flow/clock_spine.tcl", "physical/common_flow/native_pg_binding.tcl"]
     out += [p for p, _, _ in clock_entry_constraints.gray_fifo_cdc_constraints.tech_cell_libraries(s, ROOT)]
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
