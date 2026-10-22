@@ -547,6 +547,22 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             rst['summary']['block_release_depth'][n] += rst['depth'][local] - rst['depth'][leaf]
         target = 'block_parent' if early and bname[n]['master'] in fw else 'block_leaf'
         rst[target][n] = local
+    # STW-S81c-DIE2 (10-22, STEWARD-S81c 05:28): a block kit hardened with its own reset landing (ref_tile reset_landing
+    # {"enable": true, "stages": RL}: rst_n -> RL plain ck flops -> core; ctrl_rg3 +2, head spo/spr +2) releases its core
+    # RL edges after its die reset leaf.  Table "kit_reset_landing_stages" {master: RL} books it in block_release_depth
+    # (boot/programme epoch); data latencies and the hop-0 gate calendar are unchanged (landing masters keep using
+    # landing_reset_stages).
+    kit_rl = T.get('kit_reset_landing_stages', {})
+    bad_rl = sorted(m for m in kit_rl if str(m).startswith('dsfd_dvland'))
+    if bad_rl:
+        raise SystemExit(f'dv_bind: kit_reset_landing_stages names landing masters {bad_rl}: use landing_reset_stages')
+    brd = rst['summary']['block_release_depth']
+    for n in sorted(bname):
+        rl_ = int(kit_rl.get(bname[n]['master'], 0))
+        if rl_ and n in brd:
+            brd[n] += rl_
+            rst['summary'].setdefault('kit_reset_landing', {})[n] = rl_
+            rst['summary']['max_release_depth'] = max(rst['summary']['max_release_depth'], brd[n])
     base_epoch = {n: rst['depth'][leaf] for n, leaf in base_leaf.items()}
     dependencies = collections.defaultdict(list)
     for n_, cps in sorted(ckin.items()):
