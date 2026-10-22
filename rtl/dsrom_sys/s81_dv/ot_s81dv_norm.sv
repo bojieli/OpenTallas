@@ -681,12 +681,22 @@ module ot_s81dv_xfin #(
     // N8: byte-lane capture owners (copies of sv_c / si_c, own md copy per lane); the same write, 8 bits per enable
     (* keep *) reg [3:0] sv_cb; (* keep *) reg [31:0] si_cb;
     always @(posedge clk) si_cb <= {4{s_i}};
+`ifdef OT_S81DV_XFIN_N15
+    // N15 (STW-S81c-COLLA 10-22, N14 census si_cb[1/2/4] 36-40 loads): one kept lane-index copy per (byte lane, half of
+    // the NVL target lanes); same D (s_i), same edge as si_cb.
+    (* keep *) reg [63:0] si_cbh;
+    always @(posedge clk) si_cbh <= {8{s_i}};
+`endif
     always @(posedge clk or negedge rt[16]) if (!rt[16]) sv_cb <= 4'd0; else sv_cb <= {4{s_v}};
     integer cy, cz;
     always @(posedge clk)
         for (cy = 0; cy < NVL; cy = cy + 1)
             for (cz = 0; cz < 4; cz = cz + 1)
+`ifdef OT_S81DV_XFIN_N15
+                if (sv_cb[cz] && !mdc[NENG+3+cz] && si_cbh[(cz*2 + ((cy >= NVL/2) ? 1 : 0))*8 +: 8] == cy) col[cy*32 + 8*cz +: 8] <= s_c[8*cz +: 8];
+`else
                 if (sv_cb[cz] && !mdc[NENG+3+cz] && si_cb[cz*8 +: 8] == cy) col[cy*32 + 8*cz +: 8] <= s_c[8*cz +: 8];
+`endif
 `else
     always @(posedge clk) if (sv_c && !mdc[NENG+2]) col[si_c * 32 +: 32] <= s_c;
 `endif
