@@ -76,8 +76,13 @@ module ot_s81svc8_hgrp_s81 #(
     //    a register's, which the mapped-graph replicator clones in equal-age copies.
     //    e03f5fc0e (one flop) still left 41 loads on it and svc7_bound_graph does not clone it back onto the port:
     //    one kept R0 copy a head (port load HG = 4, each copy ~10 loads), same D, same edge.
+    //    db31dbf97 (one copy per head) still BLOCKED (47): the bounded graph merges port-equivalent copies and never
+    //    clones a register fed straight by a port.  Fold ld_mode into the capture instead (one AND level in front, same
+    //    edge): w2v_r0 = R0(ld_mode && ld_w2v).  Every consumer of the w2v capture already ANDs it with the R0 ld_mode
+    //    (write_high: p_mode && p_w2v; g_original hi only selects when r_ld_mode), so values are identical; the register
+    //    is no longer a pure port copy, so the replicator may clone it.
     (* keep *) reg [HG-1:0] w2v_r0;
-    always @(posedge clk) w2v_r0 <= {HG{ld_w2v}};
+    always @(posedge clk) w2v_r0 <= {HG{ld_mode && ld_w2v}};
     // -- R0: boundary registers
     reg              r_iv;
     reg [BW-1:0]     r_ibank;
