@@ -1,0 +1,35 @@
+{
+  "source": "2b540fc95",
+  "actual_host": "ot-epyc5",
+  "profile": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
+  "results": {
+    "sw": {
+      "unit": "1112428-1792648062",
+      "archive_sha256": "f02f80aa5dc3b2ccb541297441e8b349f4c6d795a9fcbac49905e4192c6ac83e",
+      "status": "PASS",
+      "limit": 32,
+      "roots_examined": 162628,
+      "max_dynamic_loads": 32,
+      "role_errors": [],
+      "violations": []
+    },
+    "nw": {
+      "unit": "1113700-1792648066",
+      "archive_sha256": "ce5daf38c7d76b9cadd73157ec73c6e6a194bd3bcd4c2264414368fcd860501a",
+      "status": "PASS",
+      "limit": 32,
+      "roots_examined": 116421,
+      "max_dynamic_loads": 32,
+      "role_errors": [],
+      "violations": []
+    }
+  },
+  "scope": "Native census only. All crossings timed, no physical clock or layout qualification inferred."
+}
