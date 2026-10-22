@@ -1,7 +1,7 @@
 {
   "status": "PREPARED_REVIEW_ONLY_NO_FULL_GENERATOR_LAUNCHED",
   "original_dp_sha256": "17bafbc4bddd6fd252b2f84356427302d103671d9f8731e9c7ab664c652544e8",
-  "overlay_dp_sha256": "4cb18c1948888b0c8b6e8d78f6bdb207d80dc7652f494ad863b7b0114c756932",
+  "overlay_dp_sha256": "a5b5f4ce34272da14f65b86bfe2ed00c27b6cfdc70c41031cc2db7dc7d6e1a9d",
   "pv_alias_sha256": "18de838a9bfcf127207172b13254c2fbe6e25c5579db0097fe98e47cf19cc1a7",
   "selected_r17_sources": {
     "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r17.sv": "2ffb5082d4403d1637359973122b56c1ce8e6abd4498abdcf5824c2088127bcf",
@@ -5806,5 +5806,6 @@
     "final link reverify all original 35 archive hashes",
     "full 46 expected outcomes and 288 exact handoffs at selected r17 runtime params",
     "runtime K/V/Q/fin/reset/status causal controls"
-  ]
+  ],
+  "unsupported_outer_profiles": "Elaboration refuses QK_ISSUE_AGE!=34, ROW_RETURN_LAT!=21, Z_STRIDE!=16, FIRST_INPUT_AGE!=20; PV additionally refuses PAIR outside0/1 and MUT!=0"
 }

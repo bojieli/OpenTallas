@@ -1,0 +1,30 @@
+{
+  "scope": "Tool mechanism only, not current Qwen full-vehicle qualification",
+  "source_sha": {
+    "run.py": "0a64a3a7c9fe0c8787289087da7b866d8ab80374b51ce1bbfc245674bc5378ac",
+    "main.cpp": "3d6552dda4b20ef0fa10ba725eddf795115a45bf33d0e501de5793e82b8779ca",
+    "leaf.sv": "f1caf569b3ef509383321153df31cf61c1969e418641f203048cf6683001a8aa",
+    "top.sv": "380fb484520f4a449bedea27b6450b8b59916e657a8224ed3721c1dea945fcea",
+    "cut.vlt": "f31d2f68ce5680f9fe87266708721cbcab0f44a7a965324bac0c1e42da927d36",
+    "compare.sv": "5ddcb4c965c51f5c4bc47b7fa0347b6bb64ee86cf4d8fc8ebb73c83321359e90"
+  },
+  "archive_sha256": "c58c8e219449e45c644ca02dbb4666c7553ec453b79624c364a27092ec754336",
+  "binary_sha256": "a63c6c4fca3b56370c0472fcb946f97cf215e2cedff672752934f9b92d615345",
+  "params": {
+    "N": 32
+  },
+  "checks": [
+    {
+      "name": "positive",
+      "rc": 0,
+      "output": "REAL_ARCHIVE_BINDING_PASS edges=120 halfchecks=240 resets=2 state_nonzero=114 firstflat=3 firstbound=3\n",
+      "ok": true
+    },
+    {
+      "name": "input_mutant",
+      "rc": 1,
+      "output": "BINDING_DATA_MISMATCH phase=rise edge=91 flat=d51ef2ce bound=d51ef2cf\n",
+      "ok": true
+    }
+  ]
+}

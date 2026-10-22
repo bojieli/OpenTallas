@@ -48,6 +48,10 @@ module kvattn_rel_dp #(
  localparam integer FIRST_INPUT_AGE=1+V_RL;
  localparam integer QK_REQ_RELAYS=2,QK_RSP_PIN_STAGES=3;
  localparam integer ROW_RETURN_LAT=K_EXT+QK_REQ_RELAYS+QK_RSP_PIN_STAGES;
+ // Fixed genuine archive specializations; unsupported outer controls must not silently reuse them.
+ generate if(QK_ISSUE_AGE!=34 || ROW_RETURN_LAT!=21 || Z_STRIDE!=16 || FIRST_INPUT_AGE!=20)begin:bad_archive_profile
+  UNSUPPORTED_ATTENTION_ARCHIVE_PROFILE invalid();
+ end endgenerate
  // ---------------- the one landing edge of the root-side words ----------------
  reg [164:0] ahs;reg [191:0] acal;reg [30:0] pvst;reg [64:0] pvfst;
  always @(posedge clk or negedge rst_n)
