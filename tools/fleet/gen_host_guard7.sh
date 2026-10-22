@@ -25,11 +25,11 @@ while kill -0 $P 2>/dev/null; do
     echo "$new" | grep -q '^FETCHED' && { echo "$(date -Is) $N HIDE+PLAN+TOOL"; hide; plan; tool; }
     echo "$new" | grep -q -E '^STEP S(8|9) ' && { echo "$(date -Is) $N UNHIDE"; unhide; }
   fi
-  t=$((t+1)); [ $((t % 20)) -eq 0 ] && /home/ubuntu/scratch/hbmc-r18e-1021/syn_partial_sweep.sh $B 2>&1 | sed "s/^/$(date -Is) $N /"   # v4: every 5 min move stale partial syn dirs (fetch picks them)
+  t=$((t+1)); [ $((t % 20)) -eq 0 ] && "$(dirname "$(readlink -f "$0")")"/syn_partial_sweep.sh $B 2>&1 | sed "s/^/$(date -Is) $N /"   # v4: every 5 min move stale partial syn dirs (fetch picks them)
   sleep 15
 done
 # v7 (STEWARD 10-22 16:20): on controller exit a held copy holding only src*/syn staging (partial; all syn cells are fetched
 # into $A) is DELETED, not restored: a restored unmarked partial lane root qualifies as a real --dir host and a later
 # un-pinned ot-run of the lane runs GEN there with no inputs (exit 127). Anything else is restored as before.
-dropstale() { for h in $HOSTS; do timeout 120 ssh -o ControlPath=none -o ConnectTimeout=15 $h "H=$B.hbmc_hold; [ -d \$H ] || exit 0; o=\$(ls -A \$H | grep -vE '^(src|src_[0-9a-f]+|syn)\$'); if [ -z \"\$o\" ]; then rm -rf \$H && echo DROPPED_PARTIAL; fi" 2>&1 | sed "s/^/$N $h /"; done; }
+dropstale() { for h in $HOSTS; do timeout 120 ssh -o ControlPath=none -o ConnectTimeout=15 $h "H=$B.hbmc_hold; [ -d \$H ] || exit 0; o=\$(ls -A \$H | grep -vE '^(src|src_[0-9a-f]+|syn|syn_partial_hbmc)\$'); if [ -z \"\$o\" ]; then rm -rf \$H && echo DROPPED_PARTIAL; fi" 2>&1 | sed "s/^/$N $h /"; done; }
 echo "$(date -Is) $N controller gone -> DROP partial copies, UNHIDE the rest"; dropstale; unhide
