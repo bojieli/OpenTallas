@@ -22,12 +22,7 @@ module ot_sram_showahead_1r1w #(
  genvar b,s;
  generate for(b=0;b<NB;b=b+1) begin:g_bank
 `ifdef OT_SHOWAHEAD_FLOP
-  // STW-S81c-COLLA 10-22 (TOPK control h NEEDS_RTL: SRAM rd_out 278 ps SS clk->q -> queue head -> packet done, TT -111):
-  // opt-in flop register file with the macro's exact contract (registered read of the OLD word, read-before-write,
-  // same write port timing), so the forwarding below is unchanged.  Depth 2**AW (<= 32) words.
-  reg [127:0] mf [0:(1<<AW)-1]; reg [127:0] rq;
-  always @(posedge clk) begin rq <= mf[ra]; if (mw) mf[mwa] <= padded[b*128+:128]; end
-  assign raw[b*128+:128] = rq;
+  // flop variant: storage lives in g_fs below (raw driven there)
 `elsif OT_SRAM_P192
   // pitch-192 pin-limited 32x128 (51.408x39.960, W/E 4.98/4.95 pins/um); same ports/timing contract
   ot_sram_1r1w_32x128_m1_p192_rc u_m(.clk(clk),.r_ce_in(1'b1),.r_addr_in(5'(ra)),
@@ -39,6 +34,21 @@ module ot_sram_showahead_1r1w #(
    .wd_in(padded[b*128+:128]),.w_mask_in({128{1'b1}}));
 `endif
  end
+`ifdef OT_SHOWAHEAD_FLOP
+ // STW-S81c-COLLA 10-22 (TOPK control h NEEDS_RTL: SRAM clk->q -> queue head -> packet done, TT -111): opt-in flop
+ // storage per 16-bit slice.  The macro read is registered (old word); here the read ADDRESS is registered (kept copy
+ // per slice, same edge) and the word is read combinationally after the edge.  They differ only when the landing write
+ // (wv/waddr) hits the read address on that edge, and exactly then previous_hit selects prevdata (= that write's data),
+ // so q is identical.  Write enables decode from per-slice kept copies of wv / waddr (same D, same edge, same reset).
+ for(s=0;s<NS;s=s+1) begin:g_fs
+  localparam integer LO=s*16, SW=(W-LO<16)?W-LO:16;
+  (* keep="true" *) reg [AW-1:0] rap_s, wa_s; (* keep="true" *) reg wv_s;
+  reg [SW-1:0] mfs [0:(1<<AW)-1];
+  always @(posedge clk or negedge rst_n[s]) if(!rst_n[s]) wv_s<=1'b0; else wv_s<=we;
+  always @(posedge clk) begin rap_s<=ra; wa_s<=wa; if(wv_s) mfs[wa_s]<=wdata[LO+:SW]; end
+  assign raw[LO+:SW]=mfs[rap_s];
+ end
+`endif
  for(s=0;s<NS;s=s+1) begin:g_slice
   localparam integer LO=s*16, SW=(W-LO<16)?W-LO:16;
   (* keep="true" *) reg cur_q, prev_q;
