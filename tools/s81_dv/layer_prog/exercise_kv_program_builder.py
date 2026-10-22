@@ -44,6 +44,10 @@ def run(root):
     expect('disabled_pool',lambda:B.build(TestRoute(),schedule,wrong,ledger,tr,unit))
     wrong=deepcopy(binding);wrong['source_hashes']['rtl/dsrom_sys/s81_dv/slice/ot_s81sl_kv_bank.sv']='0'*64
     expect('unmeasured_bank_source',lambda:B.build(TestRoute(),schedule,wrong,ledger,tr,unit))
+    wrong=deepcopy(binding);wrong['parameters']['HARD_RQ']=1-binding['parameters'].get('HARD_RQ',0)
+    expect('wrong_reduce_source_selection',lambda:B.build(TestRoute(),schedule,wrong,ledger,tr,unit))
+    wrong=deepcopy(binding);wrong['source_hashes']['rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv']='0'*64
+    expect('unbound_native_write_pipeline',lambda:B.build(TestRoute(),schedule,wrong,ledger,tr,unit))
     cp=next(g for g in groups if g['kind']=='CP');owner=cp['owner']
     record=dict(status='PASS',producer_kind='TEST_ONLY_SYNTHETIC_SOURCE',clock_epoch_identity='TEST_ONLY_EPOCH',
         edge_convention='native_command_epoch_relative_sampled_edges',native_command_epoch_seq_edge=0,

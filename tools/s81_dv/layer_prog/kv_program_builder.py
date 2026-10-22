@@ -33,7 +33,14 @@ sys.path.insert(0,str(Path(__file__).resolve().parent.parent))
 from dv_layer_compile import Die, ctl_path
 
 DONE=dict(KV=1130,GK=1025,CN=1218,IK=1058,CP=390)
-UNIT_RECEIPT_SHA='0576658123f753e2dace8e3549bca06ccd11a6155a9d11ca49c44abcd3eff3aa'
+UNIT_RECEIPTS={
+    '0576658123f753e2dace8e3549bca06ccd11a6155a9d11ca49c44abcd3eff3aa':0,
+    '4d169bcd4bc1edb34574ef4a2cd41c14927eae4bfc865438b3567d1bf9513aee':1,
+}
+NATIVE_COMMIT_SOURCE={
+    'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vp.sv':'d7073948db44727894d838f37b47056749e07890a2ada02ee6fb0f2bd9dc9b15',
+    'physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v':'6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828',
+}
 TRANSPORT_RECEIPT_SHA='b07a81645924fd52a68d4b25e0ff20594b8bc7d8a8a215fd5b05009821bd4199'
 
 
@@ -62,11 +69,17 @@ def derive_profile(die,binding,transport_receipt,unit_receipt):
         raise ValueError('native producer binding differs from actual die.v')
     if binding.get('status')!='PASS' or binding.get('instance')!='u_s_3N':
         raise ValueError('actual selected KV slice binding PASS required')
-    if sha(transport_receipt)!=TRANSPORT_RECEIPT_SHA or sha(unit_receipt)!=UNIT_RECEIPT_SHA:
+    if sha(transport_receipt)!=TRANSPORT_RECEIPT_SHA or sha(unit_receipt) not in UNIT_RECEIPTS:
         raise ValueError('selected XRT/SUKV timing receipts differ; use a measured source profile')
+    hard_rq=UNIT_RECEIPTS[sha(unit_receipt)]
+    if binding['parameters'].get('HARD_RQ',0)!=hard_rq:
+        raise ValueError('selected HARD_RQ differs from exact measured source profile')
     source=Path(binding['source_root'])
     for name,digest in binding['source_hashes'].items():
         if sha(source/name)!=digest:raise ValueError('bound RTL source changed '+name)
+    for name,digest in NATIVE_COMMIT_SOURCE.items():
+        if binding['source_hashes'].get(name)!=digest:
+            raise ValueError('native VP/SRAM commit source differs '+name)
     unit=json.loads(Path(unit_receipt).read_text())
     if unit.get('status')!='PASS':raise ValueError('qualified SUKV source receipt must pass')
     for name,digest in unit['source_sha256'].items():
@@ -85,8 +98,9 @@ def derive_profile(die,binding,transport_receipt,unit_receipt):
     # ctl_path events include RSTOP2. Qualified XRT raw CTL pin->c_v is5;
     # then DL relay, VP pin sample1, SU forward1, KV pin sample1.
     offset=cp['edges']-2+transport['component_edges']['CTL_pin_to_c_v']+dl+3
-    return dict(capture_offset=offset,leaf_downrelay=dl,ctl_path=cp,
+    return dict(capture_offset=offset,leaf_downrelay=dl,ctl_path=cp,hard_rq=hard_rq,
         source_receipt=str(unit_receipt),source_receipt_sha256=sha(unit_receipt),
+        native_commit_source_sha256=NATIVE_COMMIT_SOURCE,
         transport_receipt_sha256=sha(transport_receipt),adapter_done=DONE,
         first_native_write=dict(KV=1030,CN=1030,IK=1030,CP=139),
         last_read_completion_bound=dict(KV=80,CN=80,IK=80,GK=72,CP=378),
