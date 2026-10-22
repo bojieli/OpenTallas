@@ -77,6 +77,9 @@ while :; do
       done
     fi
     [ -x /usr/local/lib/ot-heavy/bin/docker ] && export PATH="/usr/local/lib/ot-heavy/bin:$PATH"
+    # OOMADJ_999_1022: a non-die job starts at oom_score_adj 0 (its launcher may sit in a protected die tree at -999,
+    # or a legacy -1000 one, which would make the job un-killable by its own scope's memcg OOM: livelock at the cap).
+    if [ "${OT_HEAVY_PRIO:-}" != die ]; then echo 0 > /proc/self/oom_score_adj 2>/dev/null || true; fi
     exec systemd-run --user --scope -q --unit="$UNIT" -p MemoryMax=${MEM}G -p MemorySwapMax=0 -- "$@"
   fi
   flock -u 8; exec 8>&-
