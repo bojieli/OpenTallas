@@ -61,8 +61,24 @@
       "face_high_address_publications": 120,
       "face_beat_publications": 20
     },
-    "FF_cost": "Actual mapped total and removals pending census; these source declarations are not an additive mapped FF total",
+    "FF_cost": "Actual mapped +2744 unreset FF; asynchronous reset FF unchanged at1803. No added pipeline edge. Source declarations are not separately added to this measured delta.",
     "latency": "No added edge by direct source comparison; two actual32-row cadences pass; route/die programme dates remain open",
-    "proof_commit": "454efe0f2"
+    "proof_commit": "454efe0f2",
+    "mapped_inventory": {
+      "source_commit": "454efe0f2",
+      "physical_main": "qfd_n59_qbank_align1c",
+      "physical_alt": "qfd_n59_qbank_align1d",
+      "std_cells": 55798,
+      "macro_count": 8,
+      "std_cell_area_um2": 7325.75,
+      "macro_area_um2_rounded": 101967,
+      "mapped_FF_current": 10596,
+      "mapped_FF_original_LOCAL320": 7852,
+      "mapped_FF_delta": 2744,
+      "unreset_FF_current": 8793,
+      "unreset_FF_original": 6049,
+      "async_reset_FF_current_and_original": 1803,
+      "evidence": "native_cd_pass.json; native_a_fail.json; exact native netlist paths and SHA bind inventory"
+    }
   }
 }
