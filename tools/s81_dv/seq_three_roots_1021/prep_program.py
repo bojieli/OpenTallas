@@ -10,7 +10,7 @@ s=re.sub(r'\bdut\.u_l([012])\b',r'dut.u_c.u_l\1',s)
 replace('LVS = LVO + RL, LJ = 2, LKD = 3, LR = 6 + RL, LS = 9, LCW = 3, LCF = 6',
         'LVS = LVO + RL + 4, LJ = 4, LKD = 5, LR = 10 + RL, LS = 9, LCW = 5, LCF = 10')
 replace('LVO = 7, LVS', 'LVO = 9, LVS')
-replace('LVS = LVO + RL + 4', 'LVS = 7 + RL + 4')
+replace('LVS = LVO + RL + 4', 'LVS = 7 + RL + 6')
 replace('DV_V = 5', 'DV_V = 9')
 replace('DV_S = LS + 5', 'DV_S = LS + 9')
 # The LK -> SQ landing adds two edges before job acceptance. Present the request
@@ -35,4 +35,4 @@ f=re.search(r'F="(.*?)"\ngrep',s,re.S).group(1).replace('$U','rtl/dsrom_sys/s81_
 f=[x for x in f if x not in ['rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host_c.sv','rtl/dsrom_sys/s81_dv/unit/test/dsdv_seq_host_bw.sv']]
 f+=['rtl/common/landed_parent/ot_pl_land.sv','rtl/common/landed_parent/ot_pl_land_n32.sv','rtl/common/landed_parent/ot_pl_land_rst_copy.sv','rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_c_r3_lp.sv','rtl/dsrom_sys/s81_dv/unit/r3/dsdv_seq_host_r3_bw.sv',str(tb)]
 (out/'files.txt').write_text('\n'.join(dict.fromkeys(f))+'\n')
-(out/'calendar_changes.json').write_text(json.dumps({'service_completion_rows':'+4 edges','host_to_issuer_request':'+2 edges, phase scheduled two earlier','job_command_return':'+2 edges','kit_done_return':'+2 edges','southbound_command_output':'+2 edges','rung_each_direction':'+4 edges','config_cw':'+4 edges','SQ_VC_loop':'+4 edges, two forward and two return','host_ingest':'unchanged','boot_release_extra_edges':4,'total_reset_release_edges':7,'earliest_legal_rung_input_edge':8,'first_legal_inputs':'Known north and south beats at edge 8, every output check active','status':'Needs actual behavioral positive; these are source-derived expectations.'},indent=2)+'\n')
+(out/'calendar_changes.json').write_text(json.dumps({'service_completion_rows':'+4 edges','host_to_issuer_request':'+2 edges, phase scheduled two earlier','job_command_return':'+2 edges','kit_done_return':'+2 edges','southbound_command_output':'+6 edges total: two LK/SQ plus two SQ/VC command plus two VC/SQ return','rung_each_direction':'+4 edges','config_cw':'+4 edges','SQ_VC_loop':'+4 edges, two forward and two return','host_ingest':'unchanged','boot_release_extra_edges':4,'total_reset_release_edges':7,'earliest_legal_rung_input_edge':8,'first_legal_inputs':'Known north and south beats at edge 8, every output check active','status':'Needs actual behavioral positive; these are source-derived expectations.'},indent=2)+'\n')
