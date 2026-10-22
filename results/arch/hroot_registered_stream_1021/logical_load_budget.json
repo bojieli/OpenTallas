@@ -1,0 +1,96 @@
+{
+  "scope": "source-bit/contact budget before any build. No native/physical census or admitted source copy/port binding",
+  "data_bits_total": 2088,
+  "async_reset_controls_total": 10,
+  "rows": [
+    {
+      "stage": "descriptor preparation",
+      "unreset_bits": 54,
+      "ASR_bits": 0,
+      "data_enable": "prep phase1/2",
+      "minimum_enable_groups_at_max32": 2,
+      "conservative_groups_at30": 2,
+      "reset_contacts": 0
+    },
+    {
+      "stage": "P0",
+      "unreset_bits": 409,
+      "ASR_bits": 1,
+      "data_enable": "st_go",
+      "minimum_enable_groups_at_max32": 13,
+      "conservative_groups_at30": 14,
+      "reset_contacts": 1
+    },
+    {
+      "stage": "P1",
+      "unreset_bits": 418,
+      "ASR_bits": 1,
+      "data_enable": "ready1 && v0",
+      "minimum_enable_groups_at_max32": 14,
+      "conservative_groups_at30": 14,
+      "reset_contacts": 1
+    },
+    {
+      "stage": "P2",
+      "unreset_bits": 322,
+      "ASR_bits": 1,
+      "data_enable": "ready2 && v1",
+      "minimum_enable_groups_at_max32": 11,
+      "conservative_groups_at30": 11,
+      "reset_contacts": 1
+    },
+    {
+      "stage": "P3",
+      "unreset_bits": 307,
+      "ASR_bits": 1,
+      "data_enable": "ready3 && v2",
+      "minimum_enable_groups_at_max32": 10,
+      "conservative_groups_at30": 11,
+      "reset_contacts": 1
+    },
+    {
+      "stage": "P4",
+      "unreset_bits": 289,
+      "ASR_bits": 1,
+      "data_enable": "ready4 && v3",
+      "minimum_enable_groups_at_max32": 10,
+      "conservative_groups_at30": 10,
+      "reset_contacts": 1
+    },
+    {
+      "stage": "P5",
+      "unreset_bits": 289,
+      "ASR_bits": 1,
+      "data_enable": "ready5 && v4",
+      "minimum_enable_groups_at_max32": 10,
+      "conservative_groups_at30": 10,
+      "reset_contacts": 1
+    },
+    {
+      "stage": "prep phase + constantsvalid",
+      "unreset_bits": 0,
+      "ASR_bits": 3,
+      "data_enable": "dispatch/prep",
+      "minimum_enable_groups_at_max32": 0,
+      "conservative_groups_at30": 0,
+      "reset_contacts": 3
+    },
+    {
+      "stage": "done pending",
+      "unreset_bits": 0,
+      "ASR_bits": 1,
+      "data_enable": "padding && drain",
+      "minimum_enable_groups_at_max32": 0,
+      "conservative_groups_at30": 0,
+      "reset_contacts": 1
+    }
+  ],
+  "ready_equations": {
+    "ready5": "!v5 || !write5 || w_rdy",
+    "readyj": "!vj || ready[j+1] for j0..4",
+    "issue": "st_adv && ready0",
+    "pipeline_empty_after_last_retire": "!(|v[4:0]) && (!v5 || ready5), used only while st_pad blocks issue"
+  },
+  "clock": "same existing engine clk; no new clock/reset ages",
+  "copy_obligations": "Every actual mapped root/pin <=32 with strict selected-wrapper native census. Old35 reset leaves/copycertificate not carried to this source. No independent copy inputs assumed equal without actual source binding."
+}

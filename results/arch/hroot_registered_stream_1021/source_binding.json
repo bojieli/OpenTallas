@@ -1,0 +1,17 @@
+{
+  "base_commit": "539e8df61",
+  "base_sha256": "b49162d88eb2f47e1dfee5c9036ac08a20ffe9b0796b70a89bb3cb2f0d5d1d63",
+  "candidate_sha256": "999bf9c27c1529cff7a48ccbd032a82be1d2e6088a2a6ad14b983eb13cc76529",
+  "parameters": {
+    "AW": 32,
+    "HDMAX": 128,
+    "KVHMAX": 2,
+    "QKV": 1,
+    "APIPE": 0,
+    "SPIPE6": 1,
+    "QPIPE": 2,
+    "NATIVE_ROWS": 1,
+    "QMUT": 0
+  },
+  "scope": "selected source/model implementation only; NO compile/simulation/map/native/cold/gate yet"
+}

@@ -81,6 +81,8 @@ module qkd_host_native_engine #(
     //           ap1_rbase = base + stack * stride, then the pitch product / IKEY sums: three bubble edges a row.
     parameter integer QKV    = 1,
     parameter integer APIPE  = 0,
+    // Owner-selected six-slot stream architecture; explicit new temporal ABI.
+    parameter integer SPIPE6 = 0,
     // QPIPE = 1 (qwen-1010/c 2026-10-10; 0 = unchanged): qfd_io_host preroute -1.2 .. -2.3 ns at clk_i (135 k of 139 k
     // endpoints): the QKV banks bk / bv (2 x 512 x 128 b of flops) were written through four computed-index 512-entry
     // decodes and read through 512:1 x 128 b muxes, behind sd[slot] field muxes and the beat's FP8 quantisers in the same
@@ -397,11 +399,12 @@ module qkd_host_native_engine #(
     reg         ap_ok;
     reg  [31:0] ap_raddr, ap_kcode, ap_kscal;
     reg         ap_mine;
-    wire [31:0] u_raddr = (APIPE != 0) ? ap_raddr : s_raddr;
-    wire [31:0] u_kcode = (APIPE != 0) ? ap_kcode : k_code;
-    wire [31:0] u_kscal = (APIPE != 0) ? ap_kscal : k_scal;
-    wire        u_mine  = (APIPE != 0) ? ap_mine  : s_mine;
-    wire        ap_go   = (APIPE == 0) || ap_ok || st_mode == M_RAW;
+    wire sp_constants_ok, sp_empty, sp_pending, sp_rdy0, sp_drain_edge;
+    wire [31:0] u_raddr = (SPIPE6 != 0) ? s_raddr : ((APIPE != 0) ? ap_raddr : s_raddr);
+    wire [31:0] u_kcode = (SPIPE6 != 0) ? k_code : ((APIPE != 0) ? ap_kcode : k_code);
+    wire [31:0] u_kscal = (SPIPE6 != 0) ? k_scal : ((APIPE != 0) ? ap_kscal : k_scal);
+    wire        u_mine  = (SPIPE6 != 0) ? s_mine : ((APIPE != 0) ? ap_mine : s_mine);
+    wire        ap_go   = (SPIPE6 != 0) ? sp_constants_ok : ((APIPE == 0) || ap_ok || st_mode == M_RAW);
     // this cycle's stream step
     reg  [5:0]  st_pop;
     reg         st_wv, st_adv;
@@ -436,7 +439,168 @@ module qkd_host_native_engine #(
             endcase
         end
     end
-    wire st_go = st_adv && (!st_wv || w_rdy);
+    wire st_go = st_adv && ((SPIPE6 != 0) ? sp_rdy0 : (!st_wv || w_rdy));
+
+    // Six ordered elastic operation slots, P0..P5. No payload reset or mask.
+    // A no-write token preserves source progress/order without consuming a credit.
+    // Only selected AW32/K2/QPIPE2 production shape is proposed in this lane.
+    generate if (SPIPE6 != 0 && (AW != 32 || APIPE != 0 || HDMAX != 128 || KVHMAX != 2 || QKV != 1 || QPIPE != 2 || NATIVE_ROWS != 1 || QMUT != 0)) begin : g_bad_spipe6
+        QKD_SPIPE6_UNREVIEWED_PARAMETER_SHAPE refuse();
+    end endgenerate
+    function automatic [16:0] sp_add16(input [15:0] a,b,input ci);
+        reg [15:0] g[0:4],p[0:4]; reg [16:0] z; integer l,i;
+        begin
+            g[0]=a&b; p[0]=a^b;
+            for(l=0;l<4;l=l+1) for(i=0;i<16;i=i+1)
+                if(i>=(1<<l)) begin
+                    g[l+1][i]=g[l][i]|(p[l][i]&g[l][i-(1<<l)]);
+                    p[l+1][i]=p[l][i]&p[l][i-(1<<l)];
+                end else begin g[l+1][i]=g[l][i];p[l+1][i]=p[l][i];end
+            z[0]=p[0][0]^ci;
+            for(i=1;i<16;i=i+1)z[i]=p[0][i]^(g[4][i-1]|(p[4][i-1]&ci));
+            z[16]=g[4][15]|(p[4][15]&ci); sp_add16=z;
+        end
+    endfunction
+    function automatic [159:0] sp_reduce10(input [319:0] x);
+        reg [31:0] a[0:9],b[0:6],c[0:4];integer i;
+        begin
+            for(i=0;i<10;i=i+1)a[i]=x[i*32+:32];
+            for(i=0;i<3;i=i+1)begin
+                b[2*i]=a[3*i]^a[3*i+1]^a[3*i+2];
+                b[2*i+1]=((a[3*i]&a[3*i+1])|(a[3*i]&a[3*i+2])|(a[3*i+1]&a[3*i+2]))<<1;
+            end
+            b[6]=a[9];
+            for(i=0;i<2;i=i+1)begin
+                c[2*i]=b[3*i]^b[3*i+1]^b[3*i+2];
+                c[2*i+1]=((b[3*i]&b[3*i+1])|(b[3*i]&b[3*i+2])|(b[3*i+1]&b[3*i+2]))<<1;
+            end
+            c[4]=b[6];sp_reduce10={c[4],c[3],c[2],c[1],c[0]};
+        end
+    endfunction
+    function automatic [63:0] sp_reduce5(input [159:0] x);
+        reg [31:0] a[0:4],b[0:3],c[0:2],z0,z1;integer i;
+        begin
+            for(i=0;i<5;i=i+1)a[i]=x[i*32+:32];
+            b[0]=a[0]^a[1]^a[2];b[1]=((a[0]&a[1])|(a[0]&a[2])|(a[1]&a[2]))<<1;b[2]=a[3];b[3]=a[4];
+            c[0]=b[0]^b[1]^b[2];c[1]=((b[0]&b[1])|(b[0]&b[2])|(b[1]&b[2]))<<1;c[2]=b[3];
+            z0=c[0]^c[1]^c[2];z1=((c[0]&c[1])|(c[0]&c[2])|(c[1]&c[2]))<<1;
+            sp_reduce5={z1,z0};
+        end
+    endfunction
+    reg [5:0] sp_v;
+    wire [5:0] sp_ready;
+    reg [1:0] sp_prep;
+    reg sp_const_valid;
+    reg [16:0] sp_ring_lo;
+    reg [31:0] sp_ring_mask;
+    reg sp_ring_nz,sp_ring_poison;
+    reg [2:0] sp_ns_mask;
+    wire [16:0] sp_ring_hi=sp_add16(st_d[143:128],16'hffff,sp_ring_lo[16]);
+    assign sp_constants_ok=sp_const_valid;
+    assign sp_empty=!(|sp_v);
+    reg sp_done_pending;
+    assign sp_pending=sp_done_pending;
+    reg [255:0] sp_data[0:5];
+    reg [5:0] sp_write;
+    reg [3:0] sp_poison;
+    // P0 snapshot (151 address bits), plus payload/write/whole-arithmetic witness.
+    reg [31:0] sp_base0,sp_stride0,sp_mask0,sp_row0;
+    reg sp_rnz0;
+    reg [4:0] sp_pitch0,sp_sec0;
+    reg [1:0] sp_ldie0,sp_lns0,sp_mode0;
+    reg [2:0] sp_nsm0,sp_ph0;
+    // P1/P2 carry-save state; P3 registered low carry; P4/P5 complete address.
+    reg [159:0] sp_sum1;
+    reg [63:0] sp_sum2;
+    reg [15:0] sp_low3,sp_hx3,sp_hy3;
+    reg sp_carry3;
+    reg [31:0] sp_addr4,sp_addr5;
+    wire [16:0] sp_low_result=sp_add16(sp_sum2[15:0],sp_sum2[47:32],1'b0);
+    wire [16:0] sp_high_result=sp_add16(sp_hx3,sp_hy3,sp_carry3);
+    assign sp_ready[5]=!sp_v[5]||!sp_write[5]||w_rdy;
+    for(genvar sj=0;sj<5;sj=sj+1)begin : g_sp_ready
+        assign sp_ready[sj]=!sp_v[sj]||sp_ready[sj+1];
+    end
+    assign sp_rdy0=sp_ready[0];
+    // Used only while st_pad blocks new issues; includes same-edge final retire.
+    assign sp_drain_edge=!(|sp_v[4:0])&&(!sp_v[5]||sp_ready[5]);
+    wire [31:0] sp_gd1=(sp_row0>>4)>>sp_ldie0;
+    wire [31:0] sp_gs1=sp_gd1>>sp_lns0;
+    wire [2:0] sp_stk1=sp_gd1[2:0]&sp_nsm0;
+    wire [31:0] sp_local1=sp_rnz0?(sp_row0&sp_mask0):((sp_gs1<<4)|(sp_row0&32'd15));
+    wire [31:0] sp_sb1=sp_gs1>>6;
+    wire [4:0] sp_qgroup1=5'd1+{1'b0,sp_gs1[5:2]};
+    reg [31:0] sp_terms[0:9];integer si;
+    always @* begin
+        for(si=0;si<10;si=si+1)sp_terms[si]=32'd0;
+        case(sp_mode0)
+            M_RAW:begin sp_terms[0]=sp_base0;sp_terms[1]=sp_row0;end
+            M_ROWS:begin
+                sp_terms[0]=sp_base0;
+                for(si=0;si<3;si=si+1)sp_terms[1+si]=sp_rnz0?32'd0:((sp_stride0<<si)&{32{sp_stk1[si]}});
+                for(si=0;si<5;si=si+1)sp_terms[4+si]=(sp_local1<<si)&{32{sp_pitch0[si]}};
+                sp_terms[9]={27'd0,sp_sec0};
+            end
+            M_IKEY:begin
+                sp_terms[0]=sp_base0;
+                for(si=0;si<3;si=si+1)sp_terms[1+si]=sp_rnz0?32'd0:((sp_stride0<<si)&{32{sp_stk1[si]}});
+                sp_terms[4]=sp_sb1<<11;sp_terms[5]=sp_sb1<<7;
+                if(sp_ph0<3'd2)begin
+                    sp_terms[6]={27'd0,sp_qgroup1}<<7;
+                    sp_terms[7]={30'd0,sp_gs1[1:0]}<<5;
+                    sp_terms[8]=(sp_row0&32'd15)<<1;sp_terms[9]={29'd0,sp_ph0};
+                end else if(sp_ph0==3'd2)begin
+                    for(si=0;si<10;si=si+1)sp_terms[si]=32'd0;
+                end else begin
+                    sp_terms[6]={26'd0,sp_gs1[5:0]}<<1;
+                    sp_terms[7]=(sp_ph0==3'd4)?32'd1:32'd0;
+                end
+            end
+            default:begin end
+        endcase
+    end
+    wire [319:0] sp_terms_flat={sp_terms[9],sp_terms[8],sp_terms[7],sp_terms[6],sp_terms[5],sp_terms[4],sp_terms[3],sp_terms[2],sp_terms[1],sp_terms[0]};
+    integer sv;
+    always @(posedge clk or negedge rst_n)begin
+        if(!rst_n)begin sp_v<=0;sp_prep<=0;sp_const_valid<=0;end
+        else if(SPIPE6!=0)begin
+            if(s_disp)begin sp_prep<=1;sp_const_valid<=0;end
+            else if(sp_prep==1)sp_prep<=2;
+            else if(sp_prep==2)begin sp_prep<=0;sp_const_valid<=1;end
+            else if(!st_act)sp_const_valid<=0;
+            if(sp_ready[0])sp_v[0]<=st_go;
+            for(sv=1;sv<6;sv=sv+1)if(sp_ready[sv])sp_v[sv]<=sp_v[sv-1];
+        end
+    end
+    integer sdj;
+    always @(posedge clk)if(SPIPE6!=0)begin
+        if(sp_prep==1)begin
+            sp_ring_lo<=sp_add16(st_d[127:112],16'hffff,1'b0);
+            sp_ring_nz<=(st_d[143:112]!=0);
+            sp_ring_poison<=(^st_d[143:112])^(^st_d[143:112]);
+            sp_ns_mask<=(3'd1<<st_d[233:232])-3'd1;
+        end
+        if(sp_prep==2)sp_ring_mask<={sp_ring_hi[15:0],sp_ring_lo[15:0]}^{32{sp_ring_poison}};
+        if(st_go)begin
+            sp_base0<=st_d[47:16];sp_stride0<=st_d[79:48];sp_mask0<=sp_ring_mask;sp_row0<=st_row;
+            sp_rnz0<=sp_ring_nz;sp_pitch0<=s_pitch;sp_sec0<=st_sec;sp_ldie0<=s_ldie;sp_lns0<=s_lns;
+            sp_mode0<=st_mode;sp_nsm0<=sp_ns_mask;sp_ph0<=st_ph;sp_data[0]<=st_wd;sp_write[0]<=st_wv;
+            // Exact original arithmetic alternative, BEFORE global QKV/outputmux.
+            sp_poison[0]<=(^st_wa)^(^st_wa);
+        end
+        for(sdj=1;sdj<6;sdj=sdj+1)if(sp_ready[sdj]&&sp_v[sdj-1])begin
+            sp_data[sdj]<=sp_data[sdj-1];sp_write[sdj]<=sp_write[sdj-1];
+        end
+        for(sdj=1;sdj<4;sdj=sdj+1)if(sp_ready[sdj]&&sp_v[sdj-1])sp_poison[sdj]<=sp_poison[sdj-1];
+        if(sp_ready[1]&&sp_v[0])sp_sum1<=sp_reduce10(sp_terms_flat);
+        if(sp_ready[2]&&sp_v[1])sp_sum2<=sp_reduce5(sp_sum1);
+        if(sp_ready[3]&&sp_v[2])begin
+            sp_low3<=sp_low_result[15:0];sp_carry3<=sp_low_result[16];sp_hx3<=sp_sum2[31:16];sp_hy3<=sp_sum2[63:48];
+        end
+        if(sp_ready[4]&&sp_v[3])sp_addr4<={sp_high_result[15:0],sp_low3}^{32{sp_poison[3]}};
+        if(sp_ready[5]&&sp_v[4])sp_addr5<=sp_addr4;
+    end
+
     // ROWS: the row ends with its last output sector (this die) or its last bytes (dropped)
     wire st_row_end = u_mine ? (st_sec + 5'd1 >= s_pitch) : (st_rem <= 16'd32);
 
@@ -449,9 +613,10 @@ module qkd_host_native_engine #(
     wire [255:0]  qp_wd;
     wire          qp_busy;                   // QPIPE: a beat / sector still in the input or drain pipeline
     wire          qk_wv = (QPIPE != 0) ? qp_wv : q_wv;
-    assign w_v    = qk_wv || st_wv;
-    assign w_addr = qk_wv ? ((QPIPE != 0) ? qp_wa : (qo_hb + qo_s)) : st_wa;
-    assign w_data = qk_wv ? ((QPIPE != 0) ? qp_wd : q_sec) : st_wd;
+    wire sp_external_v=sp_v[5]&&sp_write[5];
+    assign w_v    = qk_wv || ((SPIPE6!=0)?sp_external_v:st_wv);
+    assign w_addr = qk_wv ? ((QPIPE != 0) ? qp_wa : (qo_hb + qo_s)) : ((SPIPE6!=0)?sp_addr5:st_wa);
+    assign w_data = qk_wv ? ((QPIPE != 0) ? qp_wd : q_sec) : ((SPIPE6!=0)?sp_data[5]:st_wd);
     wire w_fire = w_v && w_rdy;
     // done / sector-count outputs (APIPE 2: registered write fire, done one edge later)
     reg         done_r, done_q, wf_q;
@@ -467,13 +632,13 @@ module qkd_host_native_engine #(
 `ifdef OT_ING_MUT_NSECLAG
     assign done_v = done_r; assign done_tag = dtag_r;                       // mutant: done leaves before its last count
 `else
-    assign done_v = (APIPE >= 2) ? done_q : done_r; assign done_tag = (APIPE >= 2) ? dtag_q : dtag_r;
+    assign done_v = (SPIPE6==0 && APIPE >= 2) ? done_q : done_r; assign done_tag = (SPIPE6==0 && APIPE >= 2) ? dtag_q : dtag_r;
 `endif
     assign n_sectors = nsec_r;
     wire ra_push = st_act && !st_pad && in_v && (ra_n <= 9'd192) && (st_beats != 0);
     wire pad_take = st_act && st_pad && in_v && (st_beats != 0);
     assign in_rdy = qi_act || (st_act && (st_pad ? (st_beats != 0) : ((ra_n <= 9'd192) && (st_beats != 0))));
-    assign busy = dh_v || qi_act || qo_act || pr_act || (s_pre != 0) || st_act || (s_full != 0) || qp_busy;
+    assign busy = dh_v || qi_act || qo_act || pr_act || (s_pre != 0) || st_act || (s_full != 0) || qp_busy || ((SPIPE6!=0)&&(!sp_empty||sp_pending));
 
     // dispatch: a QKV descriptor takes the other slot once it is drained (and an
     // RMW descriptor waits for any preload in flight); a stream descriptor starts
@@ -482,9 +647,9 @@ module qkd_host_native_engine #(
     reg  [1:0] s_fill;                     // QPIPE: slot dispatched, its last bank write not yet landed
     wire q_disp = (QKV != 0) && dh_v && dh_mode == M_QKV && !qi_act && !st_act && !s_full[nslot] && !s_pre[nslot]
                   && !(qo_act && qo_slot == nslot) && (!dh[6] || (!pr_act && pr_out == 0 && s_pre == 2'b00))
-                  && !((QPIPE != 0) && s_fill[nslot]);
+                  && !((QPIPE != 0) && s_fill[nslot]) && (SPIPE6==0 || (sp_empty&&!sp_pending));
     wire s_disp = dh_v && dh_mode != M_QKV && !qi_act && !st_act && !qo_act && s_full == 2'b00 && !pr_act
-                  && s_pre == 2'b00 && !qp_busy;
+                  && s_pre == 2'b00 && !qp_busy && (SPIPE6==0 || (sp_empty&&!sp_pending));
     wire       qp_fset;                    // QPIPE: the slot's last bank write lands (s_full)
     wire       qp_fslot;
     wire       qp_dv;                      // QPIPE: a fenced block's last sector left the write port
@@ -501,15 +666,19 @@ module qkd_host_native_engine #(
             dq_n <= 0; dq_rd <= 0; dq_wr <= 0;
             s_full <= 2'b00; s_pre <= 2'b00; s_fill <= 2'b00; qi_act <= 1'b0; qi_slot <= 1'b0; qo_act <= 1'b0; qo_slot <= 1'b0;
             pr_act <= 1'b0; pr_out <= 0; st_act <= 1'b0; st_pad <= 1'b0; ra_n <= 0; ra_rp <= 0; ra_wp <= 0;
-            done_r <= 1'b0; dtag_r <= 0; nsec_r <= 0; n_beats <= 0;
+            done_r <= 1'b0; dtag_r <= 0; nsec_r <= 0; n_beats <= 0; sp_done_pending<=0;
             qi_t <= 0; qi_g <= 0; qi_d <= 0; qi_v <= 1'b0; qo_v <= 1'b0; qo_g <= 0; qo_s <= 0; qo_hb <= 0;
             pr_v <= 1'b0; pr_g <= 0; pr_s <= 0; pr_hb <= 0; pr_slot <= 1'b0;
             pt_v <= 1'b0; pt_g <= 0; pt_s <= 0; st_ph <= 0; st_beats <= 0; st_row <= 0; st_left <= 0;
             st_rem <= 0; st_sec <= 0;
         end else begin
             done_r <= 1'b0;
+            if(SPIPE6!=0 && sp_done_pending)begin
+                sp_done_pending<=0;
+                if(st_d[7])begin done_r<=1;dtag_r<=st_d[15:8];end
+            end
             if (QPIPE != 0 && qp_dv) begin done_r <= 1'b1; dtag_r <= qp_dtag; end
-            if ((APIPE >= 2) ? wf_q : w_fire) nsec_r <= nsec_r + 1;
+            if ((SPIPE6==0 && APIPE >= 2) ? wf_q : w_fire) nsec_r <= nsec_r + 1;
             if (q_beat || ra_push || pad_take) n_beats <= n_beats + 1;
             // descriptor queue
             if (d_v && d_rdy) begin dq[dq_wr] <= d_data; dq_wr <= dq_wr + 1'b1; end
@@ -625,9 +794,10 @@ module qkd_host_native_engine #(
             if (st_pad) begin
                 // the segment's last-beat padding (and any extra padding beats) is dropped
                 ra_n <= 0; ra_rp <= 0; ra_wp <= 0;
-                if (st_beats == 0 || (pad_take && st_beats == 16'd1)) begin
+                if ((st_beats == 0 || (pad_take && st_beats == 16'd1)) && (SPIPE6==0 || sp_drain_edge)) begin
                     st_act <= 1'b0; st_pad <= 1'b0;
-                    if (st_d[7]) begin done_r <= 1'b1; dtag_r <= st_d[15:8]; end
+                    if(SPIPE6!=0)sp_done_pending<=1;
+                    else if (st_d[7]) begin done_r <= 1'b1; dtag_r <= st_d[15:8]; end
                 end
             end else begin
                 ra_n <= ra_n + (ra_push ? 9'd64 : 9'd0) - (st_go ? {3'd0, st_pop} : 9'd0);

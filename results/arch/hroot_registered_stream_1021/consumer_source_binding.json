@@ -1,0 +1,17 @@
+{
+  "source_commit": "539e8df61",
+  "files": {
+    "rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_eng.v": "636336c7d1202613a9706ada4e346ae3c3c19449616532131ee661ce643beda0",
+    "rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_qm.v": "29b36e20a6e803c45b5f76ff46aa14d9698b103578dc2c3dc566155aa2d9b1be",
+    "rtl/qwen_sys/host_cluster_20261017/ingest_split_1021/qkd_hr_ingest_shell.v": "f25c44385d7e6a7aa5f5585fb08b96e0e0ccf8a03899ac6f08eb1c2d70018b2a",
+    "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_ingest_cdc_shell.sv": "6a295b47916004bd6fcb7b59cb075c46367a448301acec3dac34254084f0f337",
+    "rtl/qwen_sys/host_20261013/qkd_host_native_qm.sv": "76cab365e4d14165bfe34b611d6931dea5c07e2e5b4d97cca4ae21a31e93bfa1",
+    "rtl/qwen_sys/host_20261013/qkd_host_native_qm_debt.sv": "d96721095b99b8bbe37fc7d3ee00121c76c7f3a37e683d5476fa074006889836",
+    "rtl/qwen_sys/host_cluster_cdc_20261018/qkd_hr_native_qm_cdc.sv": "cf7078b6ea6b5452b3ac352da8016010baa60a884a3c49a2f0d6e04c294e89b6",
+    "tools/rtl_hdc_kv_ingest_campaign.py": "184f63ac390a299e109cc99fad6afe43515cfb7eb99f716fed7290d120a86b94",
+    "tools/rtl_rom_host_ingest_bench.py": "53a881623280e85661a53b91d28bcd0a66ec1356a0a8a4ff4419bcca8cbad45b",
+    "tools/kv_ingest_ref.py": "9cc66372dac0b82d24ea0c02a7af1e71fbfa37d743bfcd476eba71ab33c111a2",
+    "rtl/test/qwen_host/qm_sram_1021/qkd_hr_native_qm_cdc_ref.sv": "4a7ac04dba3512da6519df3945746a5d6c5dc4e033ef71bfe9241c66e449c3ef"
+  },
+  "scope": "read-only actual selected wrapper/glue/shell and generic origin consumers; native shipping source not changed/adopted"
+}
