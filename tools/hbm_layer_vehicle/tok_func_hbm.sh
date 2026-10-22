@@ -175,7 +175,7 @@ cp "$T/check_slice_run.py" "$OUT/bundle/"
 [ "${HIERWRAP:-0}" = 1 ] && cp "$T/hier_param_wrap.py" "$T/run_slice_vehicle.sh" "$OUT/bundle/"
 
 # 2. SW quadrant slice (input pads/relays pulled in: the die's own lane latency in front of the slice) --------------
-RLX=${RELAY_RE:-'^(l12p_|rf\d+_)'}
+RLX=${RELAY_RE:-'^(l12p_|rf\d+_|rh\d+_)'}
 python3 "$T/cut_slice.py" --die "$DIEV" --contract "$FC" --set sw --with-relays "$RLX" "${CUT_ARGS[@]}" --out "$OUT/bundle/slice" > "$L/cut.log" 2>&1 || { say CUT_FAIL; exit 3; }
 say "$(grep -m1 '^SLICE' "$L/cut.log")"
 

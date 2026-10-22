@@ -44,7 +44,7 @@ def main():
     tgt = {s['inst']: s['value'] for s in c['straps'] if s['port'] == 'tgt'}
     collars = ['col_su', 'col_idx'] + [f'col_sfu_{q}' for q in ('SW', 'SE', 'NW', 'NE')]
     r = subprocess.run([sys.executable, str(T / 'cut_slice.py'), '--die', a.die, '--contract', a.contract,
-                        '--include', '^(' + '|'.join(collars) + '|hb_ckgen)$', '--with-relays', r'^(l12p_|rf\d+_)',
+                        '--include', '^(' + '|'.join(collars) + '|hb_ckgen)$', '--with-relays', r'^(l12p_|rf\d+_|rh\d+_)',
                         '--relays-out', '--out', str(out / 'slice')], capture_output=True, text=True)
     (out / 'cut.log').write_text(r.stdout + r.stderr)
     if r.returncode:
