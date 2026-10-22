@@ -1,3 +1,8 @@
+"""Emit real source fills and checks for the existing r010 gain consumer cut.
+
+Arguments: emitted DS L0 directory, actual source-byte directory, fixture L00,
+output directory. This is a component subset; other quarters remain open.
+"""
 import json,sys,hashlib
 from pathlib import Path
 import numpy as np
@@ -10,6 +15,7 @@ for sector,words in record['preload'].items():
 f=json.loads((fixture/'records.json').read_text())['records']['0']; r=next(r for r in f if r['op']=='DMA.LOAD' and r['tag']=='q_norm.gain');a,o=r['desc']['A'],r['desc']['O']
 metadata=json.loads((source/'sources.json').read_text());s=next(s for s in metadata['records'] if s['layer']==0 and s['tag']==r['tag']);raw=(source/s['file']).read_bytes();assert hashlib.sha256(raw).hexdigest()==r['inputs']['A']['sha256']
 expected=np.load(fixture/'operands.npz')[r['outputs']['O']['array']]
+assert hashlib.sha256(np.ascontiguousarray(expected).tobytes()).hexdigest()==r['outputs']['O']['sha256']
 chunks=[];index=0
 while index<o[1]:
  if o[0]+index not in mapping:index+=1;continue
@@ -38,6 +44,8 @@ for wi,(key,ops) in enumerate(windows.items()):
   cmd=load_word(**fields);data=0;mask=0
   for j in range(fields['count']):
    logical=op['logical_word']+j;word=fields['word']+j
+   source_index=2*(logical-o[0])
+   assert int.from_bytes(raw[source_index:source_index+2],'little')<<16==int(expected[logical-o[0]])
    data|=int(expected[logical-o[0]])<<(32*word);mask|=1<<word
   packet=(1<<280)|(fields['sector']<<264)|(data<<8)|mask
   loads.append(dict(lane=op['source']['lane'],command=f'{cmd:016x}',logical_word=op['logical_word'],count=fields['count'],
