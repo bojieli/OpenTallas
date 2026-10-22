@@ -10,6 +10,9 @@ proc ot_ckb_route {name master R from to drv} {
   set P [expr {2.0 * ([lindex $R 2]-[lindex $R 0]+[lindex $R 3]-[lindex $R 1])}]
   set d [expr {fmod($to-$from+2*$P,$P)}]
   if {$d > $P/2} {set d [expr {$d-$P}]}
+  # Coincident branch points need no wire repeater. The node itself already
+  # provides the binary split; adding another stage here creates artificial depth.
+  if {abs($d) < 0.01} {return $drv}
   set n [expr {max(1,int(ceil(abs($d)/[ot_ckr_env OT_CKR_STEP_UM 150.0])))}]
   for {set k 1} {$k <= $n} {incr k} {
     set drv [ot_ckr_chainbuf ${name}_w$k $master $R [expr {$from+$d*$k/double($n)}] $drv]
