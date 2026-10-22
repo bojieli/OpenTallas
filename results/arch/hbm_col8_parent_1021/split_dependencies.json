@@ -1,6 +1,6 @@
 {
-  "source_commit": "b056ec205",
-  "split_contract_sha256": "1929ead1e4dfa8b864cebc8c57bce9eff5373887d3c679e4815d38c330678ed3",
+  "source_commit": "f9d6fc51f",
+  "split_contract_sha256": "bdeb4a12e0a5e67525bdb5782bd826fb7c4d1f4b5762e0774d58153c86876856",
   "production_RTL": [
     "rtl/hdc/v41x/ot_hbm_idx_chunk_col8_control.sv",
     "rtl/common/landed_parent/ot_pl_land_physical.sv",
@@ -39,7 +39,7 @@
     "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_c.sv"
   ],
   "pair_source_for_simulation_only": "rtl/hdc/v41x/ot_hbm_idx_score_col8.sv",
-  "physical_pair_binding": "Bind u_pair0..3 to their exact real hard views, not generic ot_hidx_score_pair8 or an alias. R3 remains a stand-in pending CLOSED. Hard macro modules must remain black boxes in die synthesis.",
+  "physical_pair_binding": "Bind u_pair0..3 to their exact real hard views, not generic ot_hidx_score_pair8 or an alias. R3 is exact CLOSED record 32615a054, source cd4bb7587. Hard macro modules must remain black boxes in die synthesis.",
   "raw_memory_views": [
     "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1",
     "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2"
@@ -76,7 +76,7 @@
     "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
     "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
     "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
-    "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_col8_control.sv": "59ab5af4843e11d52bffc4564ce95095a66121693431d9f7eebe253d147d58a0",
+    "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_col8_control.sv": "65a4120999f40e3269f59a6a0f951bca62dd9b2b57ceedd87a5ee478839cad44",
     "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_leaf_col8_control.sv": "2494535306bfdb47a13747268311267f09fd79f2803568dd8aeba6180c80de31",
     "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_fault_static.sv": "11f55322ed3110312ab56645a6a9900efabb70f2e6df99b18ad9fbb81b244f06",
     "rtl/hdc/v41x/ot_hidx_meta_sram146.sv": "e6546dff0e32e203f3a61bc7d2e755305d179f662daadda0dddcb19ede71d24f",
@@ -96,6 +96,13 @@
       "main": "6a5b95375",
       "count": 8,
       "D": 146
+    },
+    "ot_hidx_score_pair8_r3": {
+      "view": "physical/ref_tile/hidx_score_pair8_r3/views/ot_hidx_score_pair8_r3",
+      "record": "32615a054",
+      "source": "cd4bb7587",
+      "source_sha256": "f84b916e9d75a746a558d0f5830d8d335a282e2530b36f1cf28ac372d94710b4",
+      "count": 128
     }
   }
 }

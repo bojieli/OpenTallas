@@ -10668,8 +10668,59 @@
   "notes": [
     "No registers added or removed by the cut. All leaf W/E registers, shared glue, engine, metadata and tail remain in u_control.",
     "Connections of replicated query and head-ID fields are wires to the original shared glue outputs, not extra register copies.",
-    "All pair and SRAM bodies retain real masters. R3 is still an explicit stand-in.",
+    "All pair and SRAM bodies retain real masters. R3 is exact CLOSED record 32615a054, source cd4bb7587.",
     "Controller clock ports for pair hslice are retained but unused; all 128 active pair clocks go to real columns."
   ],
-  "metadata_binding": "Eight real CLOSED D146 masters; exact source bytes and literal clk_meta connections. This is component binding, not parent delivery/return timing qualification."
+  "metadata_binding": "Eight real CLOSED D146 masters; exact source bytes and literal clk_meta connections. This is component binding, not parent delivery/return timing qualification.",
+  "hard_pair_bindings": {
+    "u_pair0": {
+      "master": "ot_hidx_score_pair8_r0",
+      "view": "physical/ref_tile/hidx_score_pair8_r0/views/ot_hidx_score_pair8_r0",
+      "record": "97c58e235",
+      "source": "e774eeaa5",
+      "LEF": "physical/ref_tile/hidx_score_pair8_r0/views/ot_hidx_score_pair8_r0/ot_hidx_score_pair8_r0.lef",
+      "lef_sha256": "90ad40af560824b2df4115aa9d6e223820844d7048e45d0d5398d9fa3670f494",
+      "width_um": 216.0,
+      "height_um": 172.8,
+      "count_per_quarter": 32,
+      "count_four_quarters": 128
+    },
+    "u_pair1": {
+      "master": "ot_hidx_score_pair8_r1",
+      "view": "physical/ref_tile/hidx_score_pair8_r1/views/ot_hidx_score_pair8_r1",
+      "record": "4c5e0ced5",
+      "source": "e774eeaa5",
+      "LEF": "physical/ref_tile/hidx_score_pair8_r1/views/ot_hidx_score_pair8_r1/ot_hidx_score_pair8_r1.lef",
+      "lef_sha256": "bc550c99c6cffde14d2bc3e7777361cdf43ff969c833b644a259212107846a9e",
+      "width_um": 216.0,
+      "height_um": 172.8,
+      "count_per_quarter": 32,
+      "count_four_quarters": 128
+    },
+    "u_pair2": {
+      "master": "ot_hidx_score_pair8_r2",
+      "view": "physical/ref_tile/hidx_score_pair8_r2/views/ot_hidx_score_pair8_r2",
+      "record": "b2651c581",
+      "source": "e774eeaa5",
+      "LEF": "physical/ref_tile/hidx_score_pair8_r2/views/ot_hidx_score_pair8_r2/ot_hidx_score_pair8_r2.lef",
+      "lef_sha256": "a8865e0bf389ab2e3ae30067af42abd6b7ec2fcedfd66563c5791c67fed92eb5",
+      "width_um": 216.0,
+      "height_um": 172.8,
+      "count_per_quarter": 32,
+      "count_four_quarters": 128
+    },
+    "u_pair3": {
+      "master": "ot_hidx_score_pair8_r3",
+      "view": "physical/ref_tile/hidx_score_pair8_r3/views/ot_hidx_score_pair8_r3",
+      "record": "32615a054",
+      "source": "cd4bb7587",
+      "LEF": "physical/ref_tile/hidx_score_pair8_r3/views/ot_hidx_score_pair8_r3/ot_hidx_score_pair8_r3.lef",
+      "lef_sha256": "fb960040caf6fa481bca36c690da0e0e80d403224f642cce61f1d573c4ee2a9d",
+      "width_um": 216.0,
+      "height_um": 172.8,
+      "count_per_quarter": 32,
+      "count_four_quarters": 128
+    }
+  },
+  "source_revision": "f9d6fc51f: four same-edge high-index capture FF, no calendar/port changes"
 }
