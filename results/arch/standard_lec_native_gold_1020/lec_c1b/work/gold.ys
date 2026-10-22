@@ -1,0 +1,16 @@
+read_verilog -sv cells.v
+read_verilog -sv -DSYNTHESIS /srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1b-c1b-e91f9005e/src/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qtree16_static.sv /srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1b-c1b-e91f9005e/src/rtl/hdc/ot_hdc_fp32_add_lat_fan32.sv /srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1b-c1b-e91f9005e/src/rtl/hdc/ot_hdc_fp32_add_lat7_fan32_native.v /srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1b-c1b-e91f9005e/src/rtl/hdc/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1b-c1b-e91f9005e/src/rtl/hdc/ot_hdc_prefix.sv /srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1b-c1b-e91f9005e/src/rtl/hdc/ot_hdc_fastfp.sv /srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1b-c1b-e91f9005e/src/rtl/lib/ot_rst_relay.sv
+chparam -set MUT 0 ot_hbm_hc_qtree16_static
+chparam -set TLA 7 ot_hbm_hc_qtree16_static
+rename ot_hbm_hc_qtree16_static ot_hbm_hc_qtree16_static__ot_pr_core
+read_verilog -sv /srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1b-c1b-e91f9005e/routes/hbm_hcq_tree16_c1b_c1b_e91f9005e/work/orfs/results/asap7/opentallas_ot_hbm_hc_qtree16_static_asap7_ref_hbm_hcq_tree16_c1b_c1b_e91f9005e/base/ot_rst_land_wrapper.v
+hierarchy -check -top ot_hbm_hc_qtree16_static
+proc
+setattr -unset keep_hierarchy
+setattr -mod -unset keep_hierarchy
+flatten
+memory -nomap
+memory_map
+opt_clean
+rename ot_hbm_hc_qtree16_static gold
+write_rtlil gold.il

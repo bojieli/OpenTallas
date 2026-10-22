@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.s81_kv.transport_source.v1",
+  "state": "REAL_SOURCE_BOUND_NOT_PHYSICALLY_QUALIFIED",
+  "adoption": "Opt-in OT_S81SL_KV_TRANSPORT selects xrt1/xrt3 in normal ot_s81sl_slice; default off. MU end parents already xrt in G7.",
+  "upstream_source_ref": "00f45f497dc19709df8518d6662d01a80d2747c1",
+  "upstream_binding_ref": "59a8155d3210e0eda5cca33c2498d3592b3852e2",
+  "source_pins": {
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": {
+      "sha256": "cfc3feb9b99bf96dada241b4f6323c116e888eddd25d0ad504f5cde0ba170b64",
+      "git_blob": "57d8518e367b0fa5bef5f8edc5c1c75bf8f2f890"
+    },
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv": {
+      "sha256": "8b885d8021621ae9196b9dbd09a39ec265ce827a5d905db7c36a2f94c74b3dea",
+      "git_blob": "cfd5c5c8729e59fb6c8457041c28bb3567fbb612"
+    },
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt.sv": {
+      "sha256": "b933756528978841878cb23d332a6b5620248f7b3082684a1550c71eb63be0a8",
+      "git_blob": "d1917afdffecf892e691c5ab060f627c9aa9213e"
+    }
+  },
+  "typed_V": {
+    "word": "1 | (4<<1) | (leaf<<4) | (even_row<<7) | (pair256<<17)",
+    "config": "dir4,kind4,mask1<<(sid^1),pairs1..4; each pair forwarded immediately",
+    "constraint": "partner only; even row; top3 bits zero"
+  },
+  "local_copy": {
+    "config": "dir0,kind4,mask1<<sid,body44=1",
+    "constraint": "No ring injection; own RD unpacker; slot collision still faults"
+  },
+  "component_edges": {
+    "CTL_pin_to_c_v": 5,
+    "lo_to_V_out": 5,
+    "V_input_to_sw": 6,
+    "local_CI_to_sw": 3
+  },
+  "inherited_native": {
+    "xrt1_max_loads": 32,
+    "xrt3_max_loads": 32,
+    "over32": 0,
+    "rst_n_loads": 16
+  },
+  "inherited_checks": {
+    "source": "results/rtl/s81_rtlgap_ffn_1021 at00f45f497",
+    "positive": "transport cut mut0,256+128pairs,localcopy,resetabort",
+    "negative": "mut1..11 rejected; XRhb0/1 seeds1/2 and six XR mutants"
+  },
+  "holds": [
+    "actual72frame DENSE2A/B aligned active-frame placement and CAP producer plan",
+    "actual cross-rank KV128 x4 exchange and row routing, no fake source rows",
+    "die station/landing ages and line conflicts must enter static compiler calendar",
+    "bank native fanout, local clock regions and physical slot fit"
+  ]
+}

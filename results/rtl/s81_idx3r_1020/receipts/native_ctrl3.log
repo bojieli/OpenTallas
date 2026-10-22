@@ -1,0 +1,26 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-epyc7       admits  1080 GB (avail 806, growth 39, headroom 0, waiters 10/578 GB) load 28/96 running 14 disk 5268 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-idx3r-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-4039143-1792537253 after 2 s
+NATIVE_REFUSE {'high_fanout': 189, 'reset_landing': 1}
+   net _112348_/QN (DFFASRHQNx1_ASAP7_75t_R): 362 loads > 32
+   net _111680_/QN (DFFASRHQNx1_ASAP7_75t_R): 362 loads > 32
+   net _112922_/QN (DFFASRHQNx1_ASAP7_75t_R): 256 loads > 32
+   net _112254_/QN (DFFASRHQNx1_ASAP7_75t_R): 256 loads > 32
+   net _112637_/QN (DFFASRHQNx1_ASAP7_75t_R): 128 loads > 32
+   net _112663_/QN (DFFASRHQNx1_ASAP7_75t_R): 128 loads > 32
+   net _112636_/QN (DFFASRHQNx1_ASAP7_75t_R): 128 loads > 32
+   net _112648_/QN (DFFASRHQNx1_ASAP7_75t_R): 128 loads > 32
+   net _112649_/QN (DFFASRHQNx1_ASAP7_75t_R): 128 loads > 32
+   net _112238_/QN (DFFASRHQNx1_ASAP7_75t_R): 128 loads > 32
+   net _112651_/QN (DFFASRHQNx1_ASAP7_75t_R): 128 loads > 32
+   net _112657_/QN (DFFASRHQNx1_ASAP7_75t_R): 128 loads > 32
+   reset port rst_n: 4 sinks (4 flops, 0 hard-child / macro pins, e.g. _110301_/RESETN) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile "reset_landing": {"enable": true}, or RT
+NATIVE_WARN None
+summary high_fanout: net _112348_/QN (DFFASRHQNx1_ASAP7_75t_R): 362 loads (362 flops, e.g. _095363_) > 32: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast | reset_landing: reset port rst_n: 4 sinks (4 flops, 0 hard-child / macro pins, e.g. _110301_/RESETN) reached without a landing register (> 2): land it at the face in 2 registered stages (ref_tile "reset_landing": {"enable": true}, or RTL rst_l0 -> rst_l1 per region), then fan out at equal depth
+NATIVE_DONE
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-4039143-1792537253): exit 0

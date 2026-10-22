@@ -1,0 +1,253 @@
+{
+ "name": "qkd_kvs_attn_rv4",
+ "top": "qkd_kvs_attn_fl",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv",
+  "rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv",
+  "rtl/lib/ot_pin_land.sv",
+  "rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv"
+ ],
+ "params": {
+  "RETIRE_STATIC": 1,
+  "STATUS_DELAY": 213
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "d2d__srx",
+   "d2d__rx_payload",
+   "d2d__att_tx_slot",
+   "d2d__att_tx_kind",
+   "d2d__att_tx_beat"
+  ],
+  "E": [
+   "attn__tx_valid",
+   "attn__tx_payload",
+   "i_ctl"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "ufs_WS",
+   "ufs_WN",
+   "ufs_ES",
+   "ufs_EN",
+   "ufh",
+   "ufp0",
+   "ufp1",
+   "uff",
+   "ufk_WS",
+   "ufk_WN",
+   "ufk_ES",
+   "ufk_EN",
+   "fin"
+  ],
+  "W": [
+   "pvst",
+   "pvfst",
+   "ahs",
+   "prg",
+   "acal_WS",
+   "acal_WN",
+   "acal_ES",
+   "acal_EN",
+   "arh"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every public pin is registered IN THE RTL (checklist 1): d2d RX record/event land straight in the codec landing flops (no logic, no enable), TX slot pins in ls_* flops, uf* fault pins one flop per pin, fin / i_ctl in ot_pin_land face flops (issue: 12 kept face copies); every output is a flop (tx launch, prg launch, root/face registers; OT_KEEP_PIN_REGS + pin_reg_split give each output pin its own launch flop). A kit recipe-3 pin register would add an unpriced edge to every crossing."
+ },
+ "kind": "tile",
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_min_tracks": 4,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "recipe": 3,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 302.4,
+  "h": 302.4,
+  "exact": true
+ },
+ "structural_change": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term. KV-HEALTH/KV-RETIRE release timing: RETIRE_STATIC=1, STATUS_DELAY=213 (STATUS at compiled_end-1 = 1998 relative to the link law; end = tx_first+34+213).",
+ "job": {
+  "owner": "Claude:KV-ATTN2",
+  "branch": "claude/kv-attn2b-1019",
+  "tag": "rv4",
+  "purpose": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term. KV-HEALTH/KV-RETIRE release timing: RETIRE_STATIC=1, STATUS_DELAY=213 (STATUS at compiled_end-1 = 1998 relative to the link law; end = tx_first+34+213).",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_attn_fl u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv rtl/qwen_sys/kv_bootage_20261019/qkd_kvs_attn_r16.sv rtl/lib/ot_pin_land.sv rtl/lib/face_land/qkd_kvs_attn_fl_r16.sv",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rv_pair_ba5",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m0 0 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_RVPAIR_ALL PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "rv_mut1_fields_early",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m1 1 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m1/verdict.log"
+   },
+   {
+    "name": "rv_mut2_check_misaligned",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m2 2 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m2/verdict.log"
+   },
+   {
+    "name": "rv_mut3_admission_no_check",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m3 3 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m3/verdict.log"
+   },
+   {
+    "name": "rv_mut4_tx_shift0",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m4 4 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m4/verdict.log"
+   },
+   {
+    "name": "rv_mut5_status_copy_early",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m5 5 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m5/verdict.log"
+   },
+   {
+    "name": "rv_mut6_face_stale_beat",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m6 6 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m6/verdict.log"
+   },
+   {
+    "name": "rv_mut7_fault_root_one_pin",
+    "cmd": "RVB=r16 bash tools/qwen_kv_die/attn_rv_1019/rv_pair_bench.sh {RUN}/r16rs_pair_m7 7 \"0 1 2 3 4 5 6 7 8 9 10\" RS=1 SD=213",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^KVS_RVPAIR_ALL FAIL",
+    "fail_witness": "results/rtl/kv_attn_rv_1019/r16rs_m7/verdict.log"
+   }
+  ],
+  "extra_paths": [
+   "rtl",
+   "tools/qwen_kv_die/attn_rv_1019",
+   "results/rtl/kv_attn_rv_1019"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_attn_rv4/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_attn_rv4",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term. KV-HEALTH/KV-RETIRE release timing: RETIRE_STATIC=1, STATUS_DELAY=213 (STATUS at compiled_end-1 = 1998 relative to the link law; end = tx_first+34+213)."
+  }
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "SAFE ATTN rv (KV-ATTN2 10-19, tree K.STA.ATTN): structural redesign of the core TT -569 ps / upstream 816 ps cone -- the RX record check (493-bit zero test + expectation compare + direction + time) is REGISTERED flop->flop one edge after the landing (qkd_native_attention_record_rv), the admission request leaves the controller as 10 kept register copies (root accept slices <= 36 flops), issue / load / status_slot / calendar strobes are kept copies (<= 32 loads), the result face captures its 512-bit beat unconditionally (no fin[0] enable), RX zero flags only from the landed copy, fault-root ufk pins land per pin; reset landed by the kit (balanced 2-stage, 2 first / 48 final kept copies, <= 32 reset loads per copy). ADDED: +1 edge K.rx_record (every RX observation, root/face/RESULT/STATUS/prg/arh +1, calendar TX_SHIFT 1: tx_first 1751 / end 1785), priced in lanes/KV-GEN9.md. Pair lockstep vs ba5 (B = A + 1 edge, 11 modes, 155,024 checks) PASS; mutants 1-7 FAIL. r16 SUCCESSOR of rv1/rv2 (same function/edges/pair bench): every kept-copy family re-cut to <= 16 flops per copy (<= ~32 terminal pins), run landing copies, root running copy, unconditional face calendar pipe, guard accept enable over kept valid copies, producer tag capture without the fault term. KV-HEALTH/KV-RETIRE release timing: RETIRE_STATIC=1, STATUS_DELAY=213 (STATUS at compiled_end-1 = 1998 relative to the link law; end = tx_first+34+213)."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "first_copies": {
+   "rst_n": 2
+  },
+  "copies": {
+   "rst_n": 48
+  }
+ },
+ "clock": "spine",
+ "pin_ranges": {
+  "ck": [
+   150.912,
+   151.392
+  ]
+ },
+ "slot_change_request": "Outline 302.4 um square, ba4 full-face groups N d2d / E tx+i_ctl / S ck,rst,uf*,fin / W outputs; ages vs ba1/bs: K.rx_record +1 (RESULT/STATUS TX slots +1: tx_first 1751, end 1785; ks_pvst/ks_ahs/ks_pvfst/acal/ks_prg/ks_arh +1 relative to the RX record), reset assert/release = kit landing 2 edges (was ot_rst_relay async assert / release +3); fin +1 / i_ctl +1 unchanged.",
+ "reset_relay_split": {
+  "max_loads": 32
+ }
+}

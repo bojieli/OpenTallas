@@ -1,0 +1,222 @@
+{
+ "VERDICT": "FAIL",
+ "frame": "u_f_0L00",
+ "op": "ffn.down",
+ "env": {
+  "OT_XS_QPAIRS": "12",
+  "OT_XS_GU_MERGE": "1",
+  "OT_XS_TOPO": "1",
+  "OT_XS_PROP": "1",
+  "OT_XS_CAL_SEGMENT": "1",
+  "OT_XS_KSLOT": "3",
+  "OT_XS_KSLOT_OPS": null
+ },
+ "topo": {
+  "enabled": true,
+  "frames_per_slice": [
+   8,
+   8,
+   8,
+   8,
+   7,
+   8,
+   6,
+   8,
+   6,
+   8,
+   7,
+   8,
+   8,
+   8,
+   8,
+   8
+  ],
+  "die_sha": "d0222e67dc3da5c5c163a959aafdbfe2858613d3c609e05eece77467cfbf7fc8"
+ },
+ "runs": [
+  {
+   "phase": 1,
+   "rows": 11,
+   "rc": 0,
+   "pv_words": 55,
+   "bad": [],
+   "faults": [
+    "FAULT edge 293 status 11 lx 0",
+    "FAULT edge 294 status 11 lx 0",
+    "FAULT edge 295 status 11 lx 0",
+    "FAULT edge 296 status 11 lx 0"
+   ],
+   "end": "END edges=1053 ret_words=24 xo_checked=1051 fault=4 spine_fault=0"
+  },
+  {
+   "phase": 2,
+   "rows": 11,
+   "rc": 0,
+   "pv_words": 55,
+   "bad": [],
+   "faults": [
+    "FAULT edge 274 status 11 lx 0",
+    "FAULT edge 275 status 11 lx 0",
+    "FAULT edge 276 status 11 lx 0",
+    "FAULT edge 277 status 11 lx 0"
+   ],
+   "end": "END edges=1034 ret_words=20 xo_checked=1032 fault=4 spine_fault=0"
+  },
+  {
+   "phase": 3,
+   "rows": 11,
+   "rc": 0,
+   "pv_words": 55,
+   "bad": [],
+   "faults": [
+    "FAULT edge 272 status 11 lx 0",
+    "FAULT edge 273 status 11 lx 0",
+    "FAULT edge 274 status 11 lx 0",
+    "FAULT edge 275 status 11 lx 0"
+   ],
+   "end": "END edges=1038 ret_words=21 xo_checked=1036 fault=4 spine_fault=0"
+  },
+  {
+   "phase": 4,
+   "rows": 11,
+   "rc": 0,
+   "pv_words": 55,
+   "bad": [],
+   "faults": [
+    "FAULT edge 275 status 11 lx 0",
+    "FAULT edge 276 status 11 lx 0",
+    "FAULT edge 277 status 11 lx 0",
+    "FAULT edge 278 status 11 lx 0"
+   ],
+   "end": "END edges=1036 ret_words=21 xo_checked=1034 fault=4 spine_fault=0"
+  },
+  {
+   "phase": 5,
+   "rows": 11,
+   "rc": 0,
+   "pv_words": 55,
+   "bad": [],
+   "faults": [
+    "FAULT edge 278 status 11 lx 0",
+    "FAULT edge 279 status 11 lx 0",
+    "FAULT edge 280 status 11 lx 0",
+    "FAULT edge 281 status 11 lx 0"
+   ],
+   "end": "END edges=1041 ret_words=19 xo_checked=1039 fault=4 spine_fault=0"
+  },
+  {
+   "phase": 6,
+   "rows": 11,
+   "rc": 0,
+   "pv_words": 55,
+   "bad": [],
+   "faults": [
+    "FAULT edge 271 status 11 lx 0",
+    "FAULT edge 272 status 11 lx 0",
+    "FAULT edge 273 status 11 lx 0",
+    "FAULT edge 274 status 11 lx 0"
+   ],
+   "end": "END edges=1034 ret_words=18 xo_checked=1032 fault=4 spine_fault=0"
+  },
+  {
+   "phase": 7,
+   "rows": 11,
+   "rc": 0,
+   "pv_words": 55,
+   "bad": [],
+   "faults": [
+    "FAULT edge 273 status 11 lx 0",
+    "FAULT edge 274 status 11 lx 0",
+    "FAULT edge 275 status 11 lx 0",
+    "FAULT edge 276 status 11 lx 0"
+   ],
+   "end": "END edges=1036 ret_words=20 xo_checked=1034 fault=4 spine_fault=0"
+  }
+ ],
+ "table": {
+  "3": {
+   "0": {
+    "d": [
+     0
+    ],
+    "words": 140,
+    "by_seg": {
+     "0": [
+      0
+     ],
+     "1": [
+      0
+     ],
+     "2": [
+      0
+     ],
+     "3": [
+      0
+     ],
+     "4": [
+      0
+     ]
+    }
+   },
+   "1": {
+    "d": [
+     1,
+     2
+    ],
+    "words": 140,
+    "by_seg": {
+     "0": [
+      1,
+      2
+     ],
+     "1": [
+      1,
+      2
+     ],
+     "2": [
+      1,
+      2
+     ],
+     "3": [
+      1,
+      2
+     ],
+     "4": [
+      1
+     ]
+    }
+   },
+   "2": {
+    "d": [
+     2,
+     4
+    ],
+    "words": 105,
+    "by_seg": {
+     "0": [
+      2,
+      4
+     ],
+     "1": [
+      2,
+      4
+     ],
+     "2": [
+      2,
+      4
+     ],
+     "3": [
+      2,
+      4
+     ],
+     "4": [
+      2
+     ]
+    }
+   }
+  }
+ },
+ "rule": "d = PV edge - (e0 + last_beat(seg) + off(pair) + seg_extra(seg)) per (slots n in the element, slot j)",
+ "binary_sha256": "e9e0a4b55a831dce40709c99e399997aec0e53c11575743ecbfaf46a43a0a592",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+}

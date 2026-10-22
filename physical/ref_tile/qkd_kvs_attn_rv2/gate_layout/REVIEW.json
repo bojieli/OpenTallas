@@ -1,0 +1,18 @@
+{
+  "reviewer": "coordinator claude (KV-ATTN2 sub-lane of LEAD2-KV; PNGs personally viewed)",
+  "verdict": "APPROVED",
+  "gate_commit": "15138d8e1fa0803c5f9ac61f39698e21428a74c7",
+  "scope": "Structurally safe attention tile (registered RX validation + admission); gate WARN only util (pin-limited) and clock insertion guidance.",
+  "checklist": {
+    "lattice": "N/A no macros",
+    "std_cell_band": "PASS full-core rows, no islands; WAIVED util 3.2%: pin-limited outline (3,284 pins, N face 1,080 at 0.192 um), mass at the W output face / N RX face as expected",
+    "pin_spread": "PASS 3,284 pins on-track/accessible, full faces, N 1080 on 302.4 um = 3.6/um",
+    "clock_entry": "PASS S-centre ck feeding the local spine; TT/FF pin-flop spread 42.9/40.9 ps; insertion 503.5/413.9 ps (guidance)",
+    "shape": "PASS 302.4 square 1:1"
+  },
+  "timing": "TT placement RC reg->reg +61.4 ps, reg->out +293.2 ps, hold +42.3 ps; trial GRT overflow 0 (M2 11.33%); depth 503.4 ps / 13 levels; reach worst 118.8 um / 0 violations",
+  "behavior_evidence": [
+    "results/rtl/kv_attn_rv_1019/m0/verdict.log"
+  ],
+  "time": "2026-10-19T17:09:36.305263-07:00"
+}

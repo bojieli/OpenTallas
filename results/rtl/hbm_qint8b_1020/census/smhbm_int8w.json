@@ -1,0 +1,116 @@
+{
+ "group": "smhbm",
+ "variant": "int8w",
+ "branch": "claude/hbm-smint8w-1020@2f065f124",
+ "controller": "successor MC3 (not bound), rotated layout",
+ "pace": 80,
+ "designs": {
+  "qwen": {
+   "SM.MATVEC": {
+    "law": "shape_table",
+    "shapes": {
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"HBM\", 4096, 1536, \"INT8\"], \"O\": [\"VM\", 1536, 1, \"FP32\"]}": {
+      "cycles": 2469.0,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_accel_smh_attn #(ENABLE_INT8 1, INT8W 1) (ot_hbm_sm_i8w_front, HBM-QINT8B) <- ot_hbm_svc_sm_group_rel_id <- ot_hbm_svc_vm_kshare_splitstrap <- 4 x ot_hbm_svc_pc_ctrl_leaf_cfg_safe MC3 (successor)",
+      "bound_in_die": false,
+      "rtl_source": "claude/hbm-smint8w-1020@2f065f124",
+      "bench": "rtl/test/hbm_accel/svg_rel/tb_toksim_smhbm.sv + tools/hbm_layer_vehicle/toksim_smhbm.py (TOKSIM_PC=mc3 TOKSIM_QWEN_MODE=int8w -DTOKSIM_I8W)",
+      "job": "ot-epyc5:/srv/opentallas-scratch2/claude/hbm-qint8b-1020/tok/out/w8_qkv48_p80.json",
+      "verilator": "5.050",
+      "measured_int8_span": 2213,
+      "blocks_int8": 24,
+      "lines_int8": 1536,
+      "bytes_hbm": 208896,
+      "R_tp8": 48,
+      "model_cost": 8224.7,
+      "ratio": 0.3002,
+      "notes": "WIDE INT8 front measured directly (mode 3, 64 packed lines / 64-word block, one line an edge), bit-exact PASS, pace 80/64+8 (HBM-bound: p72/p64 fault at the svg cdc)"
+     },
+     "{\"A\": [\"VM\", 1024, 1, \"FP32\"], \"B\": [\"HBM\", 1024, 4096, \"INT8\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+      "cycles": 1751.0,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_accel_smh_attn #(ENABLE_INT8 1, INT8W 1) (ot_hbm_sm_i8w_front, HBM-QINT8B) <- ot_hbm_svc_sm_group_rel_id <- ot_hbm_svc_vm_kshare_splitstrap <- 4 x ot_hbm_svc_pc_ctrl_leaf_cfg_safe MC3 (successor)",
+      "bound_in_die": false,
+      "rtl_source": "claude/hbm-smint8w-1020@2f065f124",
+      "bench": "rtl/test/hbm_accel/svg_rel/tb_toksim_smhbm.sv + tools/hbm_layer_vehicle/toksim_smhbm.py (TOKSIM_PC=mc3 TOKSIM_QWEN_MODE=int8w -DTOKSIM_I8W)",
+      "job": "ot-epyc5:/srv/opentallas-scratch2/claude/hbm-qint8b-1020/tok/out/w8_o128_p80.json",
+      "verilator": "5.050",
+      "measured_int8_span": 1495,
+      "blocks_int8": 16,
+      "lines_int8": 1024,
+      "bytes_hbm": 139264,
+      "R_tp8": 128,
+      "model_cost": 5613.9,
+      "ratio": 0.3119,
+      "notes": "WIDE INT8 front measured directly (mode 3, 64 packed lines / 64-word block, one line an edge), bit-exact PASS, pace 80/64+8 (HBM-bound: p72/p64 fault at the svg cdc)"
+     },
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"HBM\", 4096, 6144, \"INT8\"], \"O\": [\"VM\", 6144, 1, \"FP32\"]}": {
+      "cycles": 8805.0,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_accel_smh_attn #(ENABLE_INT8 1, INT8W 1) (ot_hbm_sm_i8w_front, HBM-QINT8B) <- ot_hbm_svc_sm_group_rel_id <- ot_hbm_svc_vm_kshare_splitstrap <- 4 x ot_hbm_svc_pc_ctrl_leaf_cfg_safe MC3 (successor)",
+      "bound_in_die": false,
+      "rtl_source": "claude/hbm-smint8w-1020@2f065f124",
+      "bench": "rtl/test/hbm_accel/svg_rel/tb_toksim_smhbm.sv + tools/hbm_layer_vehicle/toksim_smhbm.py (TOKSIM_PC=mc3 TOKSIM_QWEN_MODE=int8w -DTOKSIM_I8W)",
+      "job": "ot-epyc5:/srv/opentallas-scratch2/claude/hbm-qint8b-1020/tok/out/w8_gu192_p80.json",
+      "verilator": "5.050",
+      "measured_int8_span": 8549,
+      "blocks_int8": 96,
+      "lines_int8": 6144,
+      "bytes_hbm": 835584,
+      "R_tp8": 192,
+      "model_cost": 31722.0,
+      "ratio": 0.2776,
+      "notes": "WIDE INT8 front measured directly (mode 3, 64 packed lines / 64-word block, one line an edge), bit-exact PASS, pace 80/64+8 (HBM-bound: p72/p64 fault at the svg cdc)"
+     },
+     "{\"A\": [\"VM\", 3072, 1, \"FP32\"], \"B\": [\"HBM\", 3072, 4096, \"INT8\"], \"O\": [\"VM\", 4096, 1, \"FP32\"]}": {
+      "cycles": 4581.0,
+      "golden": "PASS",
+      "rtl_master": "ot_hbm_accel_smh_attn #(ENABLE_INT8 1, INT8W 1) (ot_hbm_sm_i8w_front, HBM-QINT8B) <- ot_hbm_svc_sm_group_rel_id <- ot_hbm_svc_vm_kshare_splitstrap <- 4 x ot_hbm_svc_pc_ctrl_leaf_cfg_safe MC3 (successor)",
+      "bound_in_die": false,
+      "rtl_source": "claude/hbm-smint8w-1020@2f065f124",
+      "bench": "rtl/test/hbm_accel/svg_rel/tb_toksim_smhbm.sv + tools/hbm_layer_vehicle/toksim_smhbm.py (TOKSIM_PC=mc3 TOKSIM_QWEN_MODE=int8w -DTOKSIM_I8W)",
+      "job": "ot-epyc5:/srv/opentallas-scratch2/claude/hbm-qint8b-1020/tok/out/w8_down128_p80.json",
+      "verilator": "5.050",
+      "measured_int8_span": 4325,
+      "blocks_int8": 48,
+      "lines_int8": 3072,
+      "bytes_hbm": 417792,
+      "R_tp8": 128,
+      "model_cost": 16057.1,
+      "ratio": 0.2853,
+      "notes": "WIDE INT8 front measured directly (mode 3, 64 packed lines / 64-word block, one line an edge), bit-exact PASS, pace 80/64+8 (HBM-bound: p72/p64 fault at the svg cdc)"
+     },
+     "{\"A\": [\"VM\", 4096, 1, \"FP32\"], \"B\": [\"HBM\", 4096, 37984, \"INT8\"], \"O\": [\"STREAM\", 37984, 1, \"FP32\"]}": {
+      "cycles": 52629.0,
+      "golden": null,
+      "rtl_master": "ot_hbm_accel_smh_attn #(ENABLE_INT8 1, INT8W 1) (ot_hbm_sm_i8w_front, HBM-QINT8B) <- ot_hbm_svc_sm_group_rel_id <- ot_hbm_svc_vm_kshare_splitstrap <- 4 x ot_hbm_svc_pc_ctrl_leaf_cfg_safe MC3 (successor)",
+      "bound_in_die": false,
+      "law_point": "affine",
+      "model_cost": 194081.8,
+      "ratio": 0.2712,
+      "notes": "LM head TP-8 R 1187 > 256-row table: affine fixed 101.0 + 594 wide INT8 blocks x 88.00 + 256 (fit qkv48/gu192 wide runs)"
+     }
+    },
+    "ratio": 0.2846,
+    "grade": "measured-newest-bench-passing-not-bound",
+    "affine": {
+     "fixed": 101.0,
+     "per_block": 88.0,
+     "residuals": {
+      "qkv48": 0.0,
+      "o128": -14.0,
+      "gu192": 0.0,
+      "down128": 0.0
+     }
+    },
+    "int8_path_finding": "wide INT8 front: one packed line an edge (128 codes/edge), HBM-bound at pace 80/64+8 (88 edges / 64-line block vs 136 on the narrow front)",
+    "pending": [
+     "INT8W bound in the die SM master (HBM-DIE6)",
+     "x-load p=5 parts on the die x-loader (columns 0 and 4)",
+     "VM writer descriptor P=2, rows B = A + 8*stride (compiler)"
+    ]
+   }
+  }
+ }
+}

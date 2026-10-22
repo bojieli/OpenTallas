@@ -1,0 +1,26 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_kvs_attn_rv4-rv4-69bab6da2 bench bench_rv_mut3_admission_no_check host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_kvs_attn_rv4-rv4-69bab6da2 log cl/bench_rv_mut3_admission_no_check.a1b1.log captured 2026-10-19T18:15:34-07:00
+# fail_regex '^KVS_RVPAIR_ALL FAIL'
+KVS_RVPAIR build B=r16 mut=3 RS=1 SD=213 verilator Verilator 5.050 2026-07-01 rev v5.050
+KVS_RVPAIR PASS mode=0 mut=3 checks=43236 errors=0 cmds=3 req=3 Q=96 TX=99 faultA=0 faultB=0
+MISMATCH cyc=136 pvst
+MISMATCH cyc=136 pvfst
+MISMATCH cyc=136 ahs
+MISMATCH cyc=136 acal
+MISMATCH cyc=136 prg valids
+MISMATCH cyc=137 pvst
+MISMATCH cyc=137 pvfst
+MISMATCH cyc=137 ahs
+MISMATCH cyc=137 acal
+MISMATCH cyc=138 pvst
+KVS_RVPAIR FAIL mode=1 mut=3 checks=14315 errors=8089 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=2 mut=3 checks=14354 errors=0 cmds=1 req=1 Q=6 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=3 mut=3 checks=14357 errors=0 cmds=1 req=1 Q=9 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=4 mut=3 checks=14380 errors=0 cmds=1 req=1 Q=32 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=5 mut=3 checks=14383 errors=0 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=6 mut=3 checks=14387 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=7 mut=3 checks=14391 errors=0 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=8 mut=3 checks=14352 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=9 mut=3 checks=14387 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=10 mut=3 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR_ALL FAIL mut=3 modes=11 checks=158598 fails=1

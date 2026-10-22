@@ -140,6 +140,43 @@ def install_masters(M, model, Master, partition_master):
     validate_case_masters(M, model)
 
 
+def validate_source_partition(physical_ports, source_ports, joins, fault_bits):
+    """Require exact RTL bit coverage after real fault-output pin partitioning.
+
+    SOURCE_BITS splits an output vector into scalar physical fragments. The
+    emitter joins those fragments back to the original RTL bits; their names
+    alone therefore cannot be compared with the unpartitioned RTL port names.
+    """
+    coverage = {p: set() for p in source_ports}
+    aliases = {}
+    for e in fault_bits:
+        value = (e['real'], e['bit'])
+        if e['port'] in aliases and aliases[e['port']] != value:
+            raise ValueError(f'static link conflicting source-bit contracts: {e["port"]}')
+        aliases[e['port']] = value
+    for pin, spec in physical_ports.items():
+        width = spec[1]
+        if pin in source_ports:
+            real, bits = pin, list(range(source_ports[pin][0]))
+        else:
+            if pin not in joins or pin not in aliases:
+                raise ValueError(f'static link physical pin has no actual source fragment: {pin}')
+            real, bits = joins[pin]
+            if real not in source_ports or source_ports[real][1] != 'output':
+                raise ValueError(f'static link fault fragment is not an RTL output: {pin}')
+            if len(bits) != 1 or aliases[pin] != (real, bits[0]):
+                raise ValueError(f'static link fault fragment differs from actual source-bit contract: {pin}')
+        if width != len(bits) or any(type(b) != int or b < 0 or b >= source_ports[real][0] for b in bits):
+            raise ValueError(f'static link physical pin width/range differs from RTL: {pin}')
+        if len(set(bits)) != len(bits) or coverage[real].intersection(bits):
+            raise ValueError(f'static link physical source bits repeated: {pin}')
+        coverage[real].update(bits)
+    missing = {p: sorted(set(range(w)) - coverage[p]) for p, (w, _) in source_ports.items()
+               if coverage[p] != set(range(w))}
+    if missing:
+        raise ValueError(f'static link physical source bits missing: {missing}')
+
+
 def validate_case_masters(M, model):
     """Refuse a case whose source graph and actual generated master set diverge."""
     if not model.get('static_link_bind'):
@@ -150,8 +187,10 @@ def validate_case_masters(M, model):
     if missing or retired:
         raise ValueError(f'static link physical master contract: missing={sorted(missing)} retired={sorted(retired)}')
     source_ports = rtl_ports(ROOT / SOURCE, MASTER)
-    if set(M[MASTER].ports) != set(source_ports):
-        raise ValueError('static link physical master ports disagree with the actual RTL')
+    instances = {i.name for i in model['insts'] if i.master == MASTER}
+    fault_bits = [e for e in model.get('fault_source_bit_contract', []) if e['inst'] in instances]
+    validate_source_partition(M[MASTER].ports, source_ports,
+                              model.get('port_join', {}).get(MASTER, {}), fault_bits)
     phy = M['ot_qkvd_ucie_x64_phy']
     for p, n in [('clk', 1), ('rst_n', 1), ('tx_flit', 583), ('rx_flit', 583),
                  ('tx_v', 1), ('rx_v', 1), ('tx_up', 1)]:

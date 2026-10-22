@@ -1,0 +1,45 @@
+{
+ "cell": "qfd_d2d_static_ovl_sf7",
+ "view": "physical/ref_tile/qfd_d2d_static_sf7w/views/qfd_d2d_static_ovl_sf7",
+ "lib_cell": "qfd_d2d_static_ovl_sf7",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean -> relative C 318.9"
+ ],
+ "R_ps": 318.9,
+ "spread_ps": 50.0,
+ "relative_to": "given tt=318.9,ff=262.0",
+ "outputs": 1170,
+ "inputs": 2455,
+ "launch_ps": 168.7,
+ "launch_pin": "rx_payload[278]",
+ "capture_ps": 105.9,
+ "capture_pin": "x3[77]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 46.4,
+ "ff_launch_min_ps": 69.5,
+ "ff_hold_need_ps": -14.0,
+ "relative": {
+  "tt": {
+   "clock_pin": "ck",
+   "rel_min_ps": -27.3,
+   "rel_max_ps": 22.7,
+   "mismatch_ps": 27.3,
+   "offset_ps": 0.0,
+   "comp_ps": 318.9
+  },
+  "ff": {
+   "clock_pin": "ck",
+   "rel_min_ps": -25.5,
+   "rel_max_ps": 20.9,
+   "mismatch_ps": 25.5,
+   "offset_ps": 0.0,
+   "comp_ps": 262.0
+  }
+ },
+ "pass": true,
+ "fail_why": ""
+}

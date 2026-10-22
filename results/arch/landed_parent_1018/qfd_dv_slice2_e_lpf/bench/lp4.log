@@ -1,0 +1,5 @@
+LP_LOCKSTEP PASS MUT=4 compared=47883 cycles=1500 warm=48
+- rtl/qwen_dv/lp/tb_qfd_dv_slice2_e_lpf_lp.sv:242: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 2.387 s; speed 628.328 ns/s
+- Verilator: cpu 2.387 s on 1 threads; allocated 54 MB

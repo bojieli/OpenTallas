@@ -278,6 +278,12 @@ endmodule
 module qfd_rlyr0_1_NS_65x30 (input wire ck, input wire [0:0] a, output wire [0:0] b, output wire ck_o);
     ot_qfd_rlane_st #(.W(1)) u_st (.cap(ck), .a(a), .b(b), .ck_o(ck_o));
 endmodule
+module qfd_rlyr_1_EN_65x30 (input wire ckf, input wire [0:0] a, output wire [0:0] b, output wire ck_o);
+    ot_qfd_rlane_st #(.W(1)) u_st (.cap(ckf), .a(a), .b(b), .ck_o(ck_o));
+endmodule
+module qfd_rlyr_1_ES_65x30 (input wire ckf, input wire [0:0] a, output wire [0:0] b, output wire ck_o);
+    ot_qfd_rlane_st #(.W(1)) u_st (.cap(ckf), .a(a), .b(b), .ck_o(ck_o));
+endmodule
 module qfd_rlyr_1_EW_65x30 (input wire ckf, input wire [0:0] a, output wire [0:0] b, output wire ck_o);
     ot_qfd_rlane_st #(.W(1)) u_st (.cap(ckf), .a(a), .b(b), .ck_o(ck_o));
 endmodule
@@ -291,5 +297,11 @@ module qfd_rlyrl_1_EN_65x30 (input wire ck, input wire [0:0] a, output wire [0:0
     ot_qfd_rlane_land #(.W(1)) u_land (.ck(ck), .a(a), .b(b));
 endmodule
 module qfd_rlyrl_1_EW_65x30 (input wire ck, input wire [0:0] a, output wire [0:0] b);
+    ot_qfd_rlane_land #(.W(1)) u_land (.ck(ck), .a(a), .b(b));
+endmodule
+module qfd_rlyrl_1_NE_65x30 (input wire ck, input wire [0:0] a, output wire [0:0] b);
+    ot_qfd_rlane_land #(.W(1)) u_land (.ck(ck), .a(a), .b(b));
+endmodule
+module qfd_rlyrl_1_NW_65x30 (input wire ck, input wire [0:0] a, output wire [0:0] b);
     ot_qfd_rlane_land #(.W(1)) u_land (.ck(ck), .a(a), .b(b));
 endmodule

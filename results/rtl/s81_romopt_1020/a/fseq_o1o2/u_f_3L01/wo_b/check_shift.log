@@ -1,0 +1,29 @@
+COVERAGE row 0 segments [] of 2
+COVERAGE row 2 segments [] of 2
+COVERAGE row 4 segments [] of 2
+COVERAGE row 6 segments [] of 2
+COVERAGE row 8 segments [] of 2
+COVERAGE row 10 segments [] of 2
+PLAN_MISMATCH predicted 11 words, got 5; first diff ((367, 0, (0, 1, 2), 1023770286, 0), (367, 1, (0, 1, 2), 1022592704, 0))
+XS_PLACE_CHECK FAIL u_f_3L01 attn.wo_b phase 1 mutant=None rows=11 fixture_rows=0 errors=7 END edges=2452 ret_words=42 xo_checked=2450 fault=0
+COVERAGE row 0 segments [] of 2
+COVERAGE row 2 segments [] of 2
+COVERAGE row 4 segments [] of 2
+COVERAGE row 6 segments [] of 2
+COVERAGE row 8 segments [] of 2
+COVERAGE row 10 segments [] of 2
+PLAN_MISMATCH predicted 11 words, got 5; first diff ((367, 0, (0, 1, 2), 3168941798, 0), (367, 1, (0, 1, 2), 988561280, 0))
+XS_PLACE_CHECK FAIL u_f_3L01 attn.wo_b phase 2 mutant=None rows=11 fixture_rows=0 errors=7 END edges=2452 ret_words=42 xo_checked=2450 fault=0
+COVERAGE row 0 segments [] of 2
+COVERAGE row 2 segments [] of 2
+COVERAGE row 4 segments [] of 2
+COVERAGE row 8 segments [] of 2
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((367, 0, (0, 1, 2), 961343232, 0), (367, 1, (0, 1, 2), 3110756224, 0))
+XS_PLACE_CHECK FAIL u_f_3L01 attn.wo_b phase 3 mutant=None rows=10 fixture_rows=0 errors=5 END edges=2452 ret_words=42 xo_checked=2450 fault=0
+COVERAGE row 0 segments [] of 2
+COVERAGE row 2 segments [] of 2
+COVERAGE row 4 segments [] of 2
+COVERAGE row 8 segments [] of 2
+PLAN_MISMATCH predicted 10 words, got 6; first diff ((367, 0, (0, 1, 2), 3147233932, 0), (367, 1, (0, 1, 2), 1002646744, 0))
+XS_PLACE_CHECK FAIL u_f_3L01 attn.wo_b phase 4 mutant=None rows=10 fixture_rows=0 errors=5 END edges=2452 ret_words=42 xo_checked=2450 fault=0
+TOKSIM_FGU_SEQ FAIL op attn.wo_b PER 127 phases 4 rows 42 fixture_rows 0 go0 63 last_ret 764 span 701 errors 24 ['UNASSIGNED_RET edge 366 07a0afd5c10000045', 'UNASSIGNED_RET edge 371 1794d49e610008045', 'UNASSIGNED_RET edge 374 07ad403a010010045']

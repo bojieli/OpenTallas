@@ -1,0 +1,25 @@
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e13w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e13w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e13e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e13e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e8w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e8w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e8e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e8e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e4w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e4w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e4e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rom12-1020/out/bench12/experts_gu2/f_e4e_0.viamap.hex:0: $readmem file not found
+RET 390 17c6586581000844b
+RET 391 17d0b0ed21000c44b
+RET 392 17e241646100000cb
+RET 393 07db61c70100040cb
+RET 399 07c9919801000804b
+RET 400 17a6f0e001000c04b
+RET 410 07c3343001000888b
+RET 411 17a2851801000c88b
+END edges=1074 ret_words=8 xo_checked=1072 fault=0 spine_fault=0
+- rtl/dsrom_sys/s81_dv/frame/test/tb_s81dv_frame.sv:126: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 18.370 s; speed 58.764 ns/s
+- Verilator: cpu 16.981 s on 1 threads; allocated 46 MB

@@ -1,0 +1,13 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_embedding_row_tx_ctx_c1b-c1b-7ea686674 bench bench_row_tx_ctx_mutant3 host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_c1b-c1b-7ea686674 log cl/bench_row_tx_ctx_mutant3.a1b1.log captured 2026-10-19T22:47:21-07:00
+# fail_regex '^FAIL'
+Verilator 5.050 2026-07-01 rev v5.050
+== MUT 3
+FAIL cyc 148 token 0 item 2: got tok 00000 w 1 lo 29e38d8a99622763 exp tok 00000 w 1 lo 99b00d821c390390
+FAIL cyc 149 token 0 item 3: got tok 00000 w 2 lo 99b00d821c390390 exp tok 00000 w 2 lo 512d561e03bedb7b
+FAIL cyc 150 token 0 item 4: got tok 00000 w 3 lo 512d561e03bedb7b exp tok 00000 w 3 lo 2660a44f26a4ce35
+FAIL cyc 151 token 0 item 5: got tok 00000 w 4 lo 2660a44f26a4ce35 exp tok 00000 w 4 lo 9857bed2ba9486e3
+FAIL cyc 152 token 0 item 6: got tok 00000 w 5 lo 9857bed2ba9486e3 exp tok 00000 w 5 lo 8b555a652e2d0532
+POSITIVE tokens=24 items=1560 headers_ok=24 words_ok=24 fault=0
+FAIL item counts
+ROW_OPEN high_samples=5675 falls=24

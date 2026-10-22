@@ -1,0 +1,5 @@
+FAN32_EQ_PASS comparisons=49800 LAT3..7 DRST0+1 with in-flight reset
+- rtl/test/hdc/tb_fp32_add_fan32.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 50us; walltime 0.055 s; speed 915.179 us/s
+- Verilator: cpu 0.055 s on 1 threads; allocated 8 MB

@@ -1,0 +1,162 @@
+{
+ "name": "qkd_kvs_emb_e2b-e2b-COMMIT",
+ "block": "qkd_kvs_emb",
+ "ref_tile": true,
+ "owner": "Claude:KV-CLKFIX",
+ "purpose": "KV-CLKFIX e2b: safe-clock successor of qkd_kvs_emb e1 (80 ps rule). NATIVE-SWEEP/NS-KVEMB 10-18: native re-kit of qkd_kvs_emb (closed i2 fails native capture 465.2/95 pins, 34 comb pins, spread TT 341.9 / FF 240.7): recipe-3 pin registers on every pin incl. rst_n. KV-INTEG/KITS-A 10-18 (RTL-BUILD-KV M1): kit of the generated singleton static tile qkd_kvs_emb.  Bench: LOCKSTEP of the kit top (one ck) against the die-bound tile of the same design point without OT_KV",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/kv-clkfix-emb-1019",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl",
+   "tools",
+   "results/arch/qwen_kv_static_programme_1017",
+   "results/arch/qwen_kv_die",
+   "results/arch/qwen_kv_pvfin_1017",
+   "results/rtl/qwen_kv_die/kvs_kits_ns_1018",
+   "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_kvs_emb u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "emb_lockstep",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m0 emb 0",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb .* errors=0 mut=0",
+    "min_count_regex": "checks=(\\d+)",
+    "pass_witness": "results/rtl/qwen_kv_die/kvs_kits_ns_1018/emb_m0.log"
+   },
+   {
+    "name": "emb_mut1",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m1 emb 1",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=1 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_ns_1018/emb_m1.log"
+   },
+   {
+    "name": "emb_mut2",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m2 emb 2",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=2 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_ns_1018/emb_m2.log"
+   },
+   {
+    "name": "emb_mut3",
+    "cmd": "KVS_SIM=verilator bash tools/qwen_kv_die/kvs_tile_bench.sh {RUN}/bench/emb_m3 emb 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_TILE PASS tile=emb ",
+    "fail_regex": "^KVS_TILE FAIL tile=emb .* mut=3 ",
+    "fail_witness": "results/rtl/qwen_kv_die/kvs_kits_ns_1018/emb_m3.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_kvs_emb_e2b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_kvs_emb_e2b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_kvs_emb_e2b --out {RUN}/record/views/qkd_kvs_emb --macro-view physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_kvs_emb_e2b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/qkd_embedding_row_tx/views/qkd_embedding_row_tx"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_kvs_emb/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_kvs_emb/qkd_kvs_emb_e2b-e2b-COMMIT"
+  }
+ ],
+ "cycles_added": 2,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "KV-CLKFIX e2b 10-19: clock distribution only (same RTL, pins, outline, child placement as e1 c84feb9f9; 0 cycles). Routed e1 view pin-flop spread TT 149.9 (native receipt results/rtl/ref_tile/qkd_kvs_emb/native_pin_audit_e1-c84feb9f9.json); per-flop census (results/arch/kv_clkfix_1019/emb_e1_census.txt): one early single-flop leaf (rst_n__ot_q 792) + two late 6-flop i_hroot_ES leaves (905/942) whose per-leaf pad chains did not track the routed RC; every other pin flop 835..900. OT_SPINE_TREE_PAD=1: subtree-common padding (the delay a whole subtree needs is inserted once at its root), so the pad count follows the tree imbalance, not the leaf count; leaf balancing on the RC-CAL clock RC (clock_spine OT_SPINE_RC_CAL default since ROOT-RST 10-19, absent at e1).",
+ "reroute_reason": {
+  "kind": "native_spread",
+  "closed_job": "qkd_kvs_emb-e1-c84feb9f9",
+  "source": "results/rtl/ref_tile/qkd_kvs_emb/native_pin_audit_e1-c84feb9f9.json",
+  "cell": "qkd_kvs_emb",
+  "fix": "clock spine topology OT_SPINE_TREE_PAD=1 + RC-CAL leaf balance (same RTL/pins/outline); the e1 view fails the 80 ps pin-flop rule (TT 149.9) and cannot bind",
+  "previous_attempts": [
+   "qkd_kvs_emb-i2-5561116d2",
+   "qkd_kvs_emb-e1-d99def0cd (flow failure, no TT overlay)",
+   "qkd_kvs_emb-e1-939c4f0de (NEEDS_RTL FF hold -6.74 child->pin-flop skew)",
+   "qkd_kvs_emb gate 1202b0612 WARN 0 fail (GRT 0) refused at daemon check: stale overlay tools (orfs_hold_mm.tcl RC-CAL 594825ff5, textbook_lint RESET-LANDING d4c49c8d3); tools re-taken from origin/main, reset_landing opt-out recorded",
+   "qkd_kvs_emb-e1-c84feb9f9 (CLOSED, routed spread TT 149.9 / FF 66.7: native FAIL)"
+  ]
+ }
+}

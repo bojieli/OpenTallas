@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       admits  1188 GB (avail 908, growth 76, headroom 0, waiters 0/0 GB) load 22/128 running 16 disk 320 GB 
+ot-run: ot-epyc6       admits   583 GB (avail 522, growth 113, headroom 0, waiters 0/0 GB) load 136/128 running 27 disk 3712 GB 
+ot-run: ot-epyc7       admits   904 GB (avail 693, growth 61, headroom 0, waiters 0/0 GB) load 35/96 running 22 disk 5267 GB 
+ot-run: ot-epyc9       admits  1028 GB (avail 770, growth 42, headroom 0, waiters 0/0 GB) load 58/128 running 18 disk 94 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1456631-1792519110 after 0 s
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12|st2 round 0 best faults 2 root words 36 cfg (7000005, 60000, 10, 10) time 52
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12|st2 round 1 best faults 1 root words 34 cfg (7001005, 60000, 10, 10) time 98
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12|st2 round 2 best faults 1 root words 34 cfg (7001005, 60000, 10, 10) time 144
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12|st2 round 3 best faults 1 root words 34 cfg (7001005, 60000, 10, 10) time 191
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12|st2 round 4 best faults 1 root words 34 cfg (7001005, 60000, 10, 10) time 247
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12|st2 round 5 best faults 1 root words 34 cfg (7001005, 60000, 10, 10) time 293
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12|st2 round 6 best faults 1 root words 34 cfg (7001005, 60000, 10, 10) time 339
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12|st2 round 7 best faults 1 root words 34 cfg (7001005, 60000, 10, 10) time 384
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12|st2 round 8 best faults 1 root words 34 cfg (7001005, 60000, 10, 10) time 431
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3|r12|st2 round 9 best faults 1 root words 34 cfg (7001005, 60000, 10, 10) time 475
+KSLOT_SEARCH_NO_LAYOUT col_h9|fp4|5120|5|6|3|r12|st2 best faults 1
+KSLOT_SEARCH_DONE []
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1456631-1792519110): exit 0

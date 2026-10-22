@@ -1,0 +1,200 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch/claude/closure-loop/dsrom-qelem-qs5f-ob2-tc-hm25-cl-4b2f835cb/cl/eco/pass1/orfs/results/asap7/opentallas_ot_v41_rom_elem_q_qxpq_w10_asap7_dsrom_qx10qm_dsrom_qelem_qs5f_ob2_tc_hm25_cl_4b2f835cb_20261006/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 720,
+   "mean": 664.1,
+   "min": 647.9,
+   "max": 688.9
+  },
+  "all": {
+   "n": 53102,
+   "mean": 667.2,
+   "min": 571.8,
+   "max": 715.6
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 4,
+   "max_per_net": 1,
+   "reg_mean": 667.2,
+   "max_slew": 33.9,
+   "max_late": -68.0,
+   "pins": [
+    {
+     "pin": "u_e.g_mac[0].g_pp.u_rom0/clk",
+     "arr": 599.2,
+     "slew": 33.9,
+     "late": -68.0,
+     "net": "clknet_1_0__leaf_u_e.g_cg.u_cg.gclk"
+    },
+    {
+     "pin": "u_e.g_mac[0].g_pp.u_rom1/clk",
+     "arr": 598.3,
+     "slew": 31.2,
+     "late": -68.9,
+     "net": "clknet_1_1__leaf_u_e.g_cg.u_cg.gclk"
+    },
+    {
+     "pin": "u_e.g_mac[1].g_pp.u_rom0/clk",
+     "arr": 574.6,
+     "slew": 29.8,
+     "late": -92.6,
+     "net": "clknet_1_0__leaf_clonenet_1_u_e.g_cg.u_cg.gclk"
+    },
+    {
+     "pin": "u_e.g_mac[1].g_pp.u_rom1/clk",
+     "arr": 575.4,
+     "slew": 30.4,
+     "late": -91.8,
+     "net": "clknet_1_1__leaf_clonenet_1_u_e.g_cg.u_cg.gclk"
+    }
+   ]
+  },
+  "macro_libs": 0
+ },
+ "tt": {
+  "boundary": {
+   "n": 720,
+   "mean": 489.4,
+   "min": 476.8,
+   "max": 507.7
+  },
+  "all": {
+   "n": 53102,
+   "mean": 491.3,
+   "min": 426.7,
+   "max": 525.4
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 4,
+   "max_per_net": 1,
+   "reg_mean": 491.3,
+   "max_slew": 29.4,
+   "max_late": -56.7,
+   "pins": [
+    {
+     "pin": "u_e.g_mac[0].g_pp.u_rom0/clk",
+     "arr": 434.6,
+     "slew": 29.4,
+     "late": -56.7,
+     "net": "clknet_1_0__leaf_u_e.g_cg.u_cg.gclk"
+    },
+    {
+     "pin": "u_e.g_mac[0].g_pp.u_rom1/clk",
+     "arr": 433.7,
+     "slew": 26.7,
+     "late": -57.6,
+     "net": "clknet_1_1__leaf_u_e.g_cg.u_cg.gclk"
+    },
+    {
+     "pin": "u_e.g_mac[1].g_pp.u_rom0/clk",
+     "arr": 429.4,
+     "slew": 25.4,
+     "late": -61.9,
+     "net": "clknet_1_0__leaf_clonenet_1_u_e.g_cg.u_cg.gclk"
+    },
+    {
+     "pin": "u_e.g_mac[1].g_pp.u_rom1/clk",
+     "arr": 430.1,
+     "slew": 25.9,
+     "late": -61.2,
+     "net": "clknet_1_1__leaf_clonenet_1_u_e.g_cg.u_cg.gclk"
+    }
+   ]
+  },
+  "macro_libs": 0
+ },
+ "ff": {
+  "boundary": {
+   "n": 720,
+   "mean": 386.8,
+   "min": 376.2,
+   "max": 403.5
+  },
+  "all": {
+   "n": 53102,
+   "mean": 388.3,
+   "min": 340.6,
+   "max": 413.7
+  },
+  "errors": [],
+  "macros": {
+   "n": 4,
+   "nets": 4,
+   "max_per_net": 1,
+   "reg_mean": 388.3,
+   "max_slew": 27.4,
+   "max_late": -44.1,
+   "pins": [
+    {
+     "pin": "u_e.g_mac[0].g_pp.u_rom0/clk",
+     "arr": 337.9,
+     "slew": 27.4,
+     "late": -50.4,
+     "net": "clknet_1_0__leaf_u_e.g_cg.u_cg.gclk"
+    },
+    {
+     "pin": "u_e.g_mac[0].g_pp.u_rom1/clk",
+     "arr": 336.9,
+     "slew": 24.7,
+     "late": -51.4,
+     "net": "clknet_1_1__leaf_u_e.g_cg.u_cg.gclk"
+    },
+    {
+     "pin": "u_e.g_mac[1].g_pp.u_rom0/clk",
+     "arr": 343.4,
+     "slew": 23.3,
+     "late": -44.9,
+     "net": "clknet_1_0__leaf_clonenet_1_u_e.g_cg.u_cg.gclk"
+    },
+    {
+     "pin": "u_e.g_mac[1].g_pp.u_rom1/clk",
+     "arr": 344.2,
+     "slew": 23.8,
+     "late": -44.1,
+     "net": "clknet_1_1__leaf_clonenet_1_u_e.g_cg.u_cg.gclk"
+    }
+   ]
+  },
+  "macro_libs": 0
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 4,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 664,
+  "CK_SS_ALL_MEAN": 667,
+  "CK_SS_MIN": 648,
+  "CK_SS_ALL_MIN": 572,
+  "CK_SS_MAX": 689,
+  "CK_SS_ALL_MAX": 716,
+  "CK_TT_MEAN": 489,
+  "CK_TT_ALL_MEAN": 491,
+  "CK_TT_MIN": 477,
+  "CK_TT_ALL_MIN": 427,
+  "CK_TT_MAX": 508,
+  "CK_TT_ALL_MAX": 525,
+  "CK_FF_MEAN": 387,
+  "CK_FF_ALL_MEAN": 388,
+  "CK_FF_MIN": 376,
+  "CK_FF_ALL_MIN": 341,
+  "CK_FF_MAX": 404,
+  "CK_FF_ALL_MAX": 414,
+  "CK_ROUTE_REF": "SS"
+ }
+}

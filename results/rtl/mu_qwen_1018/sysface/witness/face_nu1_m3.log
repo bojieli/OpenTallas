@@ -1,0 +1,6 @@
+WARNING: /srv/opentallas-scratch/claude/mu-dq-sysface/src/rtl/test/qwen_split/tb_qfd_sys_face.sv:38: $readmemh(/srv/opentallas-scratch/claude/mu-dq-sysface/runs/gnu_m3/img/cfg_writes.memh): Not enough words in the file for the requested range [0:255].
+ERR @90 PW replay word mismatch
+ERR @1122 program ledgers did not commit
+ERR @1126 kind-14 witness not accepted by the KV-side receiver
+SYS_FACE_FAIL MUT=3 timeout (errors 3, face_fault 1 cal_fault 0)
+/srv/opentallas-scratch/claude/mu-dq-sysface/src/rtl/test/qwen_split/tb_qfd_sys_face.sv:295: $finish called at 450000000 (1ps)

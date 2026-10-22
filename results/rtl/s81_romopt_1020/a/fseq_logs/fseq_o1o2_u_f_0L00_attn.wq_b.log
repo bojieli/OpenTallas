@@ -1,0 +1,6 @@
+FSEQA u_f_0L00 attn.wq_b golden P 126 nph 11 PASS as_expected rows=5 fixture_rows=5 errors=0 END edges=4209 ret_words=64 xo_checked=4207 fault=0
+TOKSIM_FGU_SEQ PASS op attn.wq_b PER 126 phases 11 rows 64 fixture_rows 64 go0 63 last_ret 1621 span 1558 errors 0 []
+FSEQA u_f_0L00 attn.wq_b period_below_floor P 125 nph 11 FAIL as_expected  FAIL op attn.wq_b PER 125 phases 11 rows 64 fixture_rows 64 go0 63 last_ret 1611 span 1548 errors 4 ['FAULT edge 429 status 11 lx 0', 'FAULT edge 430 status 11 lx 0', 'FAULT edge 431 status 11 lx 0']
+FSEQA u_f_0L00 attn.wq_b shift P 126 nph 11 FAIL as_expected rows 64 fixture_rows 64 go0 63 last_ret 1621 span 1558 errors 44 ['UNASSIGNED_RET edge 353 17f63ccda10010087', 'UNASSIGNED_RET edge 357 07d48102010008087', 'UNASSIGNED_RET edge 360 17b18f3d010000087']
+FSEQA u_f_0L00 attn.wq_b swap P 126 nph 11 FAIL as_expected w 5 lo 0 k 2 got 3f46a225/0 want 3f3dcd44/0']", "PHASE_FAIL p3: ['MISMATCH edge 353 row 4 lo 0 k 2 got 3d6da320/0 want 3f8545e7/0', 'MISMATCH edge 354 row 5 lo 0 k 2 got 3efbb4e0/0 want 3f58a63e/0']"]
+FSEQA_VERDICT u_f_0L00 attn.wq_b PASS span 1558

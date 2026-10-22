@@ -1,0 +1,67 @@
+{
+  "source_commit": "d7d461617676b9a5e5ef6e5d860b74a140373806",
+  "source_cache_followup_commit": "9b41881fe",
+  "tool": "Verilator 5.050",
+  "host": "ot-epyc5",
+  "defines": [
+    "OT_QFD_DV_SAFE_STORAGE"
+  ],
+  "parameters": {
+    "SU_LT": 1,
+    "HD_W130": 1,
+    "MU_NU": 4
+  },
+  "positive": {
+    "E": {
+      "FACE": 2,
+      "cases": [
+        "a",
+        "c",
+        "f",
+        "g",
+        "k",
+        "q",
+        "m",
+        "o",
+        "n"
+      ],
+      "result": "PASS",
+      "unit": "oth-ubuntu-1556627-1792423752"
+    },
+    "W": {
+      "FACE": 1,
+      "cases": [
+        "a",
+        "c",
+        "f",
+        "g",
+        "k",
+        "q",
+        "m",
+        "o",
+        "n"
+      ],
+      "result": "PASS",
+      "unit": "oth-ubuntu-1556626-1792423752"
+    }
+  },
+  "mutants": {
+    "14": {
+      "FACE": 1,
+      "case": "k",
+      "result": "FAIL expected",
+      "matches": 128,
+      "total": 512,
+      "unit": "oth-ubuntu-1556628-1792423752"
+    },
+    "15": {
+      "FACE": 1,
+      "case": "q",
+      "result": "FAIL expected",
+      "matches": 0,
+      "total": 512,
+      "unit": "oth-ubuntu-1556629-1792423752"
+    }
+  },
+  "scope": "Storage/reset/scalar core qualification only. Regional clock/landed SU8 loop/native physical integration is pending and is not qualified by these benches."
+}

@@ -50,6 +50,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import lower_xs as LX  # noqa: E402
 import numpy as np  # noqa: E402
+import xs_topo as TP  # noqa: E402  S81-RATE3: physical frames per slice (OT_XS_TOPO=1)
 
 ROOT = LX.ROOT
 NSLICE, NFRAME = 16, 8
@@ -98,13 +99,13 @@ def _bf_groups(fx, op):
         u = fx.w('gate').view('<u2')
         r0 = m['tp_split']['router_rows'][m['rank']][0]
         rows = list(range(u.shape[0]))
-        g = [deal_into(js, NFRAME) for js in deal(len(rows), NSLICE)]
+        g = [deal_into(js, TP.nfr(s)) for s, js in enumerate(deal(len(rows), NSLICE))]
         return [dict(mat='gate', u16=u, rows=rows, x=fx.op('ffn.norm.scale'), tie=[('ffn.router', r0 + r) for r in rows],
                      tie_kind='fp32', groups=g, out='fp32')]
     if op == 'attn.cmp.wk':
         u = fx.w('indexer.wk').view('<u2')
         rows = list(range(u.shape[0]))
-        g = [deal_into(js, NFRAME) for js in deal(len(rows), NSLICE)]
+        g = [deal_into(js, TP.nfr(s)) for s, js in enumerate(deal(len(rows), NSLICE))]
         return [dict(mat='indexer.wk', u16=u, rows=rows, x=fx.op('attn.cmp.norm.scale'),
                      tie=[('attn.cmp.wk', r) for r in rows], tie_kind='bf16', groups=g, out='bf16')]
     if op == 'attn.wo_a':
@@ -121,10 +122,34 @@ def _bf_groups(fx, op):
         ngr = o.size // K
         o_rank = tot // ngr
         per = deal(ra1 - ra0, NSLICE)            # slice s owns rank rows per[s] (all in one head group: o_rank % per == 0)
+        # S81-SMWIRE (10-19): the SO target gather wiring delivers each head group's o to ONE slice tier (group 0 =
+        # heads 0..7, E svc half -> s_4S band -> S-tier line, even sid; group 1 = heads 8..15, W half -> s_3S band -> V rung
+        # -> s_3N -> N-tier line, odd sid; tools/s81_dv/sm_target/smwire_cal.py wo_a_group).  So slice s takes row
+        # chunk 8 (s & 1) + (s >> 1) when the rank's rows split into two equal groups of 8 chunks.
+        _g = [sorted({(ra0 + r) // o_rank for r in c}) for c in per]
+        if NSLICE == 16 and all(len(x) == 1 for x in _g) and len({x[0] for x in _g[:8]}) == 1 and \
+                len({x[0] for x in _g[8:]}) == 1 and _g[0] != _g[8]:
+            per = [per[8 * (s & 1) + (s >> 1)] for s in range(NSLICE)]
+            if TP.PROP and TP.TOPO is not None:
+                # S81-RATE3 (OT_XS_PROP=1): inside each head group (even sids = group 0, odd = group 1) the group's
+                # contiguous rows go to its 8 slices in proportion to their physical frames (chunk order s >> 1), so a
+                # 6-frame slice no longer sets the die-wide BF phase count; every slice stays inside one head group
+                for k in (0, 1):
+                    sl_k = sorted((s for s in range(NSLICE) if (s & 1) == k), key=lambda s: s >> 1)
+                    rows_k = [r for s in sl_k for r in per[s]]
+                    ftot = sum(TP.TOPO[s] for s in sl_k)
+                    q = [len(rows_k) * TP.TOPO[s] / ftot for s in sl_k]
+                    cnt = [int(x) for x in q]
+                    for i in sorted(range(len(sl_k)), key=lambda i: (-(q[i] - cnt[i]), i))[:len(rows_k) - sum(cnt)]:
+                        cnt[i] += 1
+                    off = 0
+                    for s, c in zip(sl_k, cnt):
+                        per[s] = rows_k[off:off + c]
+                        off += c
         grp_of = [{(ra0 + r) // o_rank for r in per[s]} for s in range(NSLICE)]
         assert all(len(x) == 1 for x in grp_of), 'a slice spans two wo_a groups'
         rows = list(range(ra1 - ra0))
-        g = [deal_into(per[s], NFRAME) for s in range(NSLICE)]
+        g = [deal_into(per[s], TP.nfr(s)) for s in range(NSLICE)]
         # ONE die-wide phase sequence: every slice streams ITS group's o from its own vector memory (same phase words,
         # same stream shape, the x differs per slice)
         return [dict(mat='wo_a', u16=u, rows=rows, x=None, x_slice=[o.reshape(ngr, K)[grp_of[s].pop()] for s in range(NSLICE)],

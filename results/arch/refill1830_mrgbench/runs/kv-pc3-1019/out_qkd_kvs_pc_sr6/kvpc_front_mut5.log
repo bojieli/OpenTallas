@@ -1,0 +1,16 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=16 put 1/1 co 1418e7524c1/17724800459 hold 0/0 occ 12/12 idle 0/0 fo 0/0 fg 0/0
+MISMATCH t=17 put 1/1 co 06c783546d3/1418e7524c1 hold 0/0 occ 12/12 idle 0/0 fo 0/0 fg 0/0
+MISMATCH t=18 put 1/1 co 02303223a6d/06c783546d3 hold 0/0 occ 12/12 idle 0/0 fo 0/0 fg 0/0
+MISMATCH t=19 put 1/1 co 0de6249f0eb/02303223a6d hold 0/0 occ 12/12 idle 0/0 fo 0/0 fg 0/0
+MISMATCH t=20 put 1/1 co 16eb8e08e05/0de6249f0eb hold 0/0 occ 12/12 idle 0/0 fo 0/0 fg 0/0
+MISMATCH t=21 put 1/1 co 0db77f6bdff/16eb8e08e05 hold 0/0 occ 12/12 idle 0/0 fo 0/0 fg 0/0
+MISMATCH t=22 put 1/1 co 067fbd42329/0db77f6bdff hold 0/0 occ 12/12 idle 0/0 fo 0/0 fg 0/0
+MISMATCH t=23 put 0/0 co 067fbd42328/0db77f6bdfe hold 0/0 occ 12/12 idle 0/0 fo 0/0 fg 0/0
+MISMATCH t=24 put 0/0 co 067fbd42328/0db77f6bdfe hold 0/0 occ 13/13 idle 0/0 fo 0/0 fg 0/0
+KVPC_FRONT FAIL edges=40000 checks=40000 errors=39126 puts=22890 holds=8489 mut=5
+- rtl/test/qwen_static_kv/kvpc_sram/tb_kvpc_front.sv:85: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 41us; walltime 0.030 s; speed 1.379 ms/s
+- Verilator: cpu 0.030 s on 1 threads; allocated 7 MB
+

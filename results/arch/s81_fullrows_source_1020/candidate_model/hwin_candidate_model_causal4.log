@@ -1,0 +1,12 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+MODEL_GRAPH tag=before signal_sha=16b5b44b333d535b91c1c40c5362adc63fe8739e6baf02f172d971d119d9e2dc inst_dnt=0 net_dnt=0
+OT_PG_FINAL_PASS native_pg_terminals=149704
+CANDIDATE_BIRTH_PG_READY stage=MODEL newly_bound=14292
+HWIN_NATIVE_MANIFEST cells=56567 inherited=1 exact_flow_removed=3013
+MODEL_GRAPH tag=after signal_sha=16b5b44b333d535b91c1c40c5362adc63fe8739e6baf02f172d971d119d9e2dc inst_dnt=0 net_dnt=0
+MODEL_BATCH_ADMISSION_PASS functional=72510 unowned=0 NO_PLACEMENT_RUN
+MODEL_NEW_FF_CAUSAL_REJECT HWIN_BIRTH unmodelled functional cell MODEL_UNDECLARED_FF DFFHQNx1_ASAP7_75t_R
+MODEL_PROTECTED_UNBOUND_CAUSAL_REJECT OT_PG_ORDER_PROTECTED_UNBOUND MODEL_PROTECTED_UNBOUND

@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_hr_cdc_pc-c3-50430b600/record/views/qkd_hr_cdc_pc/provenance/qkd_hr_cdc_pc.candidate.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_hr_cdc_pc-pg2-506d8829a/record/views/qkd_hr_cdc_pc/provenance/qkd_hr_cdc_pc.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "qkd_hr_cdc_pc 151.2 x 151.2: PG M5 VDD 28 stripes (96% spread, 100% cov) / VSS 28 stripes (96% spread, 100% cov); strap M6; face pins 2163 blocked-above 0 blocked-same 0; clock ck_core insertion 286 ps; clock ck_phy_fam insertion 278 ps; pockets M5 0 (closed)",
+ "summary": "qkd_hr_cdc_pc 151.2 x 151.2: PG M5 VDD 28 stripes (96% spread, 100% cov) / VSS 28 stripes (96% spread, 100% cov); strap M6; face pins 2163 blocked-above 0 blocked-same 0; clock ck_core insertion 272 ps; clock ck_phy_fam insertion 280 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkd_hr_cdc_pc",
   "W": 151.2,
@@ -38,7 +38,7 @@
   "face": {
    "face_pins": 2163,
    "blocked_above": 0,
-   "covered_below": 0,
+   "covered_below": 35,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
@@ -47,12 +47,12 @@
   },
   "clock_insertion": {
    "ck_core": {
-    "max_ps": 286.03,
-    "min_ps": 209.84
+    "max_ps": 272.24,
+    "min_ps": 210.74
    },
    "ck_phy_fam": {
-    "max_ps": 278.36,
-    "min_ps": 207.79
+    "max_ps": 279.9,
+    "min_ps": 206.71
    }
   },
   "pockets": {
@@ -61,7 +61,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 2902
+    "added": 3329
    },
    "count": 0,
    "area_um2": 0,

@@ -1,0 +1,82 @@
+{
+  "scope": "PC per-pin ownership port only; no HCDC new-source or physical qualification inferred",
+  "base": "68b9cad6c",
+  "candidate": "b97c0f63a",
+  "original_port": "9eeb7aa07",
+  "helper_sha256": "375084ce607b0d9d429e2d3c56e996353305ef47b21ce3584f0948c54728fec3",
+  "helper_git_blob": "c16bc42c06c6894555dbd1b723e7bf5105c8faaa",
+  "original_source_byte_identical": true,
+  "original_mapped_proofs": {
+    "exact": {
+      "original_path": "/home/ubuntu/scratch/codex-host-cdc-safe/dualrole_diagnostic/exact.log",
+      "sha256": "e9c0f9f5ef6258c82cb3374902aa0a96974620cc28fdf0ee121045f2befb21a6",
+      "committed_log": "exact.log.gz",
+      "witness": "PASS ACTUAL_MAPPED_DUAL_ROLE_OWNERSHIP",
+      "claim": "PASS"
+    },
+    "wrong_clock": {
+      "original_path": "/home/ubuntu/scratch/codex-host-cdc-safe/dualrole_diagnostic/wrong_clock.log",
+      "sha256": "3898cdc6caaeda1be199ada310426334bb56077e4be9f3dc6cf3e266307a6c9b",
+      "committed_log": "wrong_clock.log.gz",
+      "witness": "differs from its exact reviewed root ck_phy_fam",
+      "claim": "REFUSED"
+    },
+    "wrong_producer": {
+      "original_path": "/home/ubuntu/scratch/codex-host-cdc-safe/dualrole_diagnostic/wrong_producer.log",
+      "sha256": "ac3c12902e8c291c034a391a940f524147473bf5afa0522400eb14c3a5287dba",
+      "committed_log": "wrong_producer.log.gz",
+      "witness": "input u_rank__raw_rx_cr has wrong domain",
+      "claim": "REFUSED"
+    },
+    "wrong_master": {
+      "original_path": "/home/ubuntu/scratch/codex-host-cdc-safe/dualrole_diagnostic/wrong_master.log",
+      "sha256": "a684aa752d3b5ab4efb6ab6297093fe7a75114b68d2049a1a34e9a6169a2c16e",
+      "committed_log": "wrong_master.log.gz",
+      "witness": "mapped dual SRAM master differs",
+      "claim": "REFUSED"
+    },
+    "missing_port_role": {
+      "original_path": "/home/ubuntu/scratch/codex-host-cdc-safe/dualrole_diagnostic/missing_port_role.log",
+      "sha256": "50e58d8c5949688610ca3b52ee1a724263e3f265e1bb0d4d4a2d19d06810fd10",
+      "committed_log": "missing_port_role.log.gz",
+      "witness": "unreviewed actual dual SRAM input pin",
+      "claim": "REFUSED"
+    }
+  },
+  "current_pc_gate": {
+    "path": "/home/ubuntu/wt/kv-host6-1020/physical/ref_tile/qkd_hr_cdc_pc_sram1e/gate_result.json",
+    "sha256": "9785ba5ed54ae19d084b6cde452089b1e4f15cbddbe771964db7b526f0c84522",
+    "kit": "qkd_hr_cdc_pc_sram1e",
+    "verdict": "WARN",
+    "generated": "2026-10-20T04:20:54-0700",
+    "snapshot": "028a6c3474db4648ff5c18fb92aa70de3b558847c331faf63b9c72fc9af129e4",
+    "start_commit": "ed2cf338ab2ff3b23139a1b9131ce9fa3bd0138c",
+    "helper_source_binding": {
+      "path": "tools/ref_tile/gray_fifo_cdc_constraints.py",
+      "kind": "file",
+      "sha256": "375084ce607b0d9d429e2d3c56e996353305ef47b21ce3584f0948c54728fec3",
+      "git_blob": "c16bc42c06c6894555dbd1b723e7bf5105c8faaa",
+      "source": "working_tree",
+      "matches_provenance_commit": true
+    },
+    "frozen_signoff_sdc_sha256": "f723bcc9f2f8362ccdecdf0ebeb44a58fd39b76f72340ca55816c0032c21e64f",
+    "full_dual_tcl_byte_identical": true,
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_hr_cdc_pc_sram1e-20261020-030933"
+  },
+  "regression": {
+    "new_failure_ids": 0,
+    "fixed_failure_ids": 0,
+    "base_summary": "73 failed, 681 passed, 24 skipped, 324 subtests passed",
+    "candidate_summary": "73 failed, 681 passed, 24 skipped, 324 subtests passed"
+  },
+  "default_sdc_modes": [
+    "FIFO",
+    "extension",
+    "events",
+    "ordinary"
+  ],
+  "note": "Old local candidate_debug.sdc predates the final constant-self helper and is not used for source identity; current PC1e frozen SDC contains the whole exact final dual helper.",
+  "original_sdc_contains_exact_dual_tcl": true,
+  "original_replay_remote": "ot-epyc5:/srv/opentallas-scratch/claude/codex-host-dualrole-diagnostic-1020/replay_cases",
+  "original_replay_manifest_sha256": "f3357a1c1752d1a4b8d0d3ad06be1deb5d592953c46f1ad1f71fd651384cf0fd"
+}

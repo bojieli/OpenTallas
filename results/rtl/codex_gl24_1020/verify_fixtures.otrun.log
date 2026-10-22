@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-gl24-1020
+ot-run: ot-epyc6       admits   990 GB (avail 806, growth 113, headroom 0, waiters 0/0 GB) load 157/128 running 38 disk 4753 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-gl24-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-gl24-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-gl24-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-gl24-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2935171-1792483532 after 0 s
+FIXTURE_SHA_PASS L24 31 27
+FIXTURE_SHA_PASS L28 31 27
+FIXTURE_SHA_PASS L32 31 27
+FIXTURE_SHA_PASS L36 31 27
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2935171-1792483532): exit 0

@@ -1,0 +1,91 @@
+{
+ "schema": "opentallas.s81.frame_schedule_cost.v1",
+ "status": "COMPOSED_NOT_NATIVE",
+ "programme": "Full existing AR and MTP token DAGs; no workload reduction or price change",
+ "schedule_inputs": [
+  {
+   "path": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h9_schedule.json",
+   "sha256": "2a5486d697651dd548fbd2e479889135d8b10ed1247805017abdcf844bba8fa4",
+   "added_path_edges": {
+    "e0.r0": 6,
+    "e0.r1": -72,
+    "e1.r0": 6,
+    "e1.r1": -69,
+    "e2.r0": 6,
+    "e2.r1": -72,
+    "e3.r0": 6,
+    "e3.r1": -69,
+    "e5.r0": 12,
+    "e5.r1": -70,
+    "e6.r0": 12,
+    "e6.r1": -66,
+    "e7.r0": 12,
+    "e7.r1": -69,
+    "e9.r0": 12,
+    "e9.r1": -66,
+    "e10.r0": 18,
+    "e10.r1": -67,
+    "e11.r0": 18,
+    "e11.r1": -64,
+    "e12.r0": 12,
+    "e12.r1": -67,
+    "e14.r0": 12,
+    "e14.r1": -50
+   }
+  },
+  {
+   "path": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/col_h10_schedule.json",
+   "sha256": "af99eebc55dc4919bf354c2f8eb27706d2cb99dce9f3ef70f228036533a89202",
+   "added_path_edges": {
+    "e0.r0": 6,
+    "e0.r1": -72,
+    "e2.r0": 6,
+    "e2.r1": -69,
+    "e3.r0": 6,
+    "e3.r1": -73,
+    "e4.r0": 6,
+    "e4.r1": -69,
+    "e6.r0": 12,
+    "e6.r1": -70,
+    "e7.r0": 12,
+    "e7.r1": -67,
+    "e8.r0": 6,
+    "e8.r1": -70,
+    "e9.r0": 6,
+    "e9.r1": -67,
+    "e11.r0": 12,
+    "e11.r1": -68,
+    "e12.r0": 18,
+    "e12.r1": -65,
+    "e13.r0": 12,
+    "e13.r1": -68,
+    "e14.r0": 12,
+    "e14.r1": -65
+   }
+  }
+ ],
+ "worst_added_edges_per_phase": 18,
+ "baseline_price": "results/arch/s81_dv_1016/p4l/price_land_p4l2E.json",
+ "baseline_sha256": "12e20a35a000c647489a494848f6656a73b1ab1ecd6f7fb9364fe30bd530ed17",
+ "workloads": {
+  "ar": {
+   "dag_sha256": "7732ac056dd194f81b1a048abefdeb6fb6c03d24c48a6bea7dd6378f2eb19ea4",
+   "baseline_composed_cycles": 854861.947826092,
+   "landed_composed_cycles": 867317.9478260919,
+   "critical_path_added_cycles": 12455.999999999884,
+   "composed_e2e_loss_pct": 1.4361515325747032,
+   "changed_field_nodes": 324,
+   "phase_counts": 736
+  },
+  "mtp": {
+   "dag_sha256": "165d5ff0f84a0fd289ef9cc20b75d9f250613d8be51f2ab72762dd282d05232f",
+   "baseline_composed_cycles": 1206605.8753623245,
+   "landed_composed_cycles": 1221131.8753623245,
+   "critical_path_added_cycles": 14526.0,
+   "composed_e2e_loss_pct": 1.18955211087991,
+   "changed_field_nodes": 280,
+   "phase_counts": 692
+  }
+ },
+ "qualification_note": "The bound charges the worst extracted station+return path once per existing field phase, including MTP wave expansion. RTL frame programme, mutants and physical gates remain required; no accepted-cost ledger entry."
+}

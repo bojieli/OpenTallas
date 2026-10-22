@@ -1,0 +1,905 @@
+{
+ "schema": "opentallas.s81_rtlgap.eng_bind_request.v1",
+ "lane": "S81-RTLGAP/RG-ENG",
+ "date": "2026-10-21",
+ "for_": "S81-LINK5 (die top / links) + LEAD-S81-G3 (G4 GEN, floorplan slots, bind table)",
+ "rtl": "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv (+ rtl/dsrom_sys/engram/static_lookup_1015 = 428af274c blobs)",
+ "bench": "results/rtl/s81_rtlgap_eng_1021/check.json",
+ "masters": {
+  "dsdv_eng_rr": {
+   "module": "dsdv_eng_rr",
+   "clk": "ck",
+   "rst": [
+    "rst_n",
+    "low"
+   ],
+   "straps": [
+    "cfg_en",
+    "cfg_layer",
+    "cfg_rank"
+   ],
+   "strap_values": {
+    "cfg_en": "1 on an Engram home die (holds L1 or L14), else 0",
+    "cfg_layer": "1'b0 L1 / 1'b1 L14",
+    "cfg_rank": "TP rank of the die (2 b)"
+   },
+   "ports": {
+    "f_ks.i": 53,
+    "rco.o": 43,
+    "pci.i": 268,
+    "vS.i (vi_s)": 276,
+    "vS.o (vo_s)": 276,
+    "vN.i (vi_n)": 276,
+    "vN.o (vo_n)": 276
+   },
+   "top_ports": [
+    {
+     "port": "st",
+     "dir": "output",
+     "bits": 4,
+     "note": "sticky faults {xq, head, lookup, window} -> die status fold"
+    }
+   ],
+   "view": null,
+   "view_note": "new cluster: kit + gate owed; contains the CRITICAL dsfd_engram_lkp_static14 (closed view at RETURN_AGE 128; this cluster needs RETURN_AGE 512 -> re-kit of the same source, coordinator decides)",
+   "slot": "top strip east of bk_col (x >= 20.5 mm, y 23.49 mm, beside s_6S/s_7N), est. ~1.0 x 1.2 mm (8 ROM 4096x72 token map, 3 x SRAM 64x512, 1 x SRAM 512x128, lookup 324 x 216, aq12x)"
+  },
+  "dsdv_eng_tap": {
+   "module": "dsdv_eng_tap",
+   "clk": "ck",
+   "rst": [
+    "rst_n",
+    "low"
+   ],
+   "straps": [
+    "sid"
+   ],
+   "ports": {
+    "rci.i": 43,
+    "rco.o": 43,
+    "pci.i": 268,
+    "pco.o": 268,
+    "rqi.i": 92,
+    "rqo.o": 92,
+    "rri.i": 544,
+    "rro.o": 544
+   },
+   "top_ports": [
+    {
+     "port": "fault",
+     "dir": "output",
+     "bits": 1
+    }
+   ],
+   "view": null
+  },
+  "dsdv_eng_tap_w": {
+   "module": "dsdv_eng_tap_w",
+   "clk": "ck",
+   "rst": [
+    "rst_n",
+    "low"
+   ],
+   "straps": [
+    "sid"
+   ],
+   "ports": {
+    "rci.i": 43,
+    "pco.o": 268,
+    "rqi.i": 92,
+    "rqo.o": 92,
+    "rri.i": 544,
+    "rro.o": 544
+   },
+   "top_ports": [
+    {
+     "port": "fault",
+     "dir": "output",
+     "bits": 1
+    }
+   ],
+   "view": null,
+   "note": "west chain end: no rco / pci ports (the request chain ends, the response chain starts here)"
+  }
+ },
+ "instances": [
+  {
+   "inst": "eng",
+   "master": "dsdv_eng_rr"
+  },
+  {
+   "inst": "etap_00",
+   "master": "dsdv_eng_tap_w",
+   "sid": "4'd0",
+   "slot": "beside ctrl_00 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_01",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd1",
+   "slot": "beside ctrl_01 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_02",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd2",
+   "slot": "beside ctrl_02 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_03",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd3",
+   "slot": "beside ctrl_03 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_04",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd4",
+   "slot": "beside ctrl_04 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_05",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd5",
+   "slot": "beside ctrl_05 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_06",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd6",
+   "slot": "beside ctrl_06 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_07",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd7",
+   "slot": "beside ctrl_07 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_08",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd8",
+   "slot": "beside ctrl_08 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_09",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd9",
+   "slot": "beside ctrl_09 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_10",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd10",
+   "slot": "beside ctrl_10 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_11",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd11",
+   "slot": "beside ctrl_11 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_12",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd12",
+   "slot": "beside ctrl_12 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_13",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd13",
+   "slot": "beside ctrl_13 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_14",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd14",
+   "slot": "beside ctrl_14 (south controller row, in the 142-um gap / above its N face)"
+  },
+  {
+   "inst": "etap_15",
+   "master": "dsdv_eng_tap",
+   "sid": "4'd15",
+   "slot": "beside ctrl_15 (south controller row, in the 142-um gap / above its N face)"
+  }
+ ],
+ "links": {
+  "f_ks": "s_7N.f_ks (53 b) gets a SECOND sink eng.f_ks (fork at the end slice or its first station); seqhost.f_ks unchanged",
+  "rung_column6": [
+   "tvN_s_6S (s_6S.vo -> s_6N.vi) becomes s_6S.vo -> eng.vi_s and eng.vo_n -> s_6N.vi",
+   "tvS_s_6N (s_6N.vo -> s_6S.vi) becomes s_6N.vo -> eng.vi_n and eng.vo_s -> s_6S.vi",
+   "column 6 rung latency +2 edges (eng pin in + out) + the stations of the detour to the top strip: compiler"
+  ],
+  "reader_reroutes": [
+   {
+    "was": "irg_00.rqo[0 +: 92] -> ctrl_00.rrq",
+    "now": [
+     "irg_00.rqo[0 +: 92] -> etap_00.rqi",
+     "etap_00.rqo -> ctrl_00.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_00.rrd -> irg_00.rri[0 +: 544]",
+    "now": [
+     "ctrl_00.rrd -> etap_00.rri",
+     "etap_00.rro -> irg_00.rri[0 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_00.rqo[92 +: 92] -> ctrl_01.rrq",
+    "now": [
+     "irg_00.rqo[92 +: 92] -> etap_01.rqi",
+     "etap_01.rqo -> ctrl_01.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_01.rrd -> irg_00.rri[544 +: 544]",
+    "now": [
+     "ctrl_01.rrd -> etap_01.rri",
+     "etap_01.rro -> irg_00.rri[544 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_01.rqo[0 +: 92] -> ctrl_02.rrq",
+    "now": [
+     "irg_01.rqo[0 +: 92] -> etap_02.rqi",
+     "etap_02.rqo -> ctrl_02.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_02.rrd -> irg_01.rri[0 +: 544]",
+    "now": [
+     "ctrl_02.rrd -> etap_02.rri",
+     "etap_02.rro -> irg_01.rri[0 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_01.rqo[92 +: 92] -> ctrl_03.rrq",
+    "now": [
+     "irg_01.rqo[92 +: 92] -> etap_03.rqi",
+     "etap_03.rqo -> ctrl_03.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_03.rrd -> irg_01.rri[544 +: 544]",
+    "now": [
+     "ctrl_03.rrd -> etap_03.rri",
+     "etap_03.rro -> irg_01.rri[544 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_02.rqo[0 +: 92] -> ctrl_04.rrq",
+    "now": [
+     "irg_02.rqo[0 +: 92] -> etap_04.rqi",
+     "etap_04.rqo -> ctrl_04.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_04.rrd -> irg_02.rri[0 +: 544]",
+    "now": [
+     "ctrl_04.rrd -> etap_04.rri",
+     "etap_04.rro -> irg_02.rri[0 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_02.rqo[92 +: 92] -> ctrl_05.rrq",
+    "now": [
+     "irg_02.rqo[92 +: 92] -> etap_05.rqi",
+     "etap_05.rqo -> ctrl_05.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_05.rrd -> irg_02.rri[544 +: 544]",
+    "now": [
+     "ctrl_05.rrd -> etap_05.rri",
+     "etap_05.rro -> irg_02.rri[544 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_03.rqo[0 +: 92] -> ctrl_06.rrq",
+    "now": [
+     "irg_03.rqo[0 +: 92] -> etap_06.rqi",
+     "etap_06.rqo -> ctrl_06.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_06.rrd -> irg_03.rri[0 +: 544]",
+    "now": [
+     "ctrl_06.rrd -> etap_06.rri",
+     "etap_06.rro -> irg_03.rri[0 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_03.rqo[92 +: 92] -> ctrl_07.rrq",
+    "now": [
+     "irg_03.rqo[92 +: 92] -> etap_07.rqi",
+     "etap_07.rqo -> ctrl_07.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_07.rrd -> irg_03.rri[544 +: 544]",
+    "now": [
+     "ctrl_07.rrd -> etap_07.rri",
+     "etap_07.rro -> irg_03.rri[544 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_04.rqo[0 +: 92] -> ctrl_08.rrq",
+    "now": [
+     "irg_04.rqo[0 +: 92] -> etap_08.rqi",
+     "etap_08.rqo -> ctrl_08.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_08.rrd -> irg_04.rri[0 +: 544]",
+    "now": [
+     "ctrl_08.rrd -> etap_08.rri",
+     "etap_08.rro -> irg_04.rri[0 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_04.rqo[92 +: 92] -> ctrl_09.rrq",
+    "now": [
+     "irg_04.rqo[92 +: 92] -> etap_09.rqi",
+     "etap_09.rqo -> ctrl_09.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_09.rrd -> irg_04.rri[544 +: 544]",
+    "now": [
+     "ctrl_09.rrd -> etap_09.rri",
+     "etap_09.rro -> irg_04.rri[544 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_05.rqo[0 +: 92] -> ctrl_10.rrq",
+    "now": [
+     "irg_05.rqo[0 +: 92] -> etap_10.rqi",
+     "etap_10.rqo -> ctrl_10.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_10.rrd -> irg_05.rri[0 +: 544]",
+    "now": [
+     "ctrl_10.rrd -> etap_10.rri",
+     "etap_10.rro -> irg_05.rri[0 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_05.rqo[92 +: 92] -> ctrl_11.rrq",
+    "now": [
+     "irg_05.rqo[92 +: 92] -> etap_11.rqi",
+     "etap_11.rqo -> ctrl_11.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_11.rrd -> irg_05.rri[544 +: 544]",
+    "now": [
+     "ctrl_11.rrd -> etap_11.rri",
+     "etap_11.rro -> irg_05.rri[544 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_06.rqo[0 +: 92] -> ctrl_12.rrq",
+    "now": [
+     "irg_06.rqo[0 +: 92] -> etap_12.rqi",
+     "etap_12.rqo -> ctrl_12.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_12.rrd -> irg_06.rri[0 +: 544]",
+    "now": [
+     "ctrl_12.rrd -> etap_12.rri",
+     "etap_12.rro -> irg_06.rri[0 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_06.rqo[92 +: 92] -> ctrl_13.rrq",
+    "now": [
+     "irg_06.rqo[92 +: 92] -> etap_13.rqi",
+     "etap_13.rqo -> ctrl_13.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_13.rrd -> irg_06.rri[544 +: 544]",
+    "now": [
+     "ctrl_13.rrd -> etap_13.rri",
+     "etap_13.rro -> irg_06.rri[544 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_07.rqo[0 +: 92] -> ctrl_14.rrq",
+    "now": [
+     "irg_07.rqo[0 +: 92] -> etap_14.rqi",
+     "etap_14.rqo -> ctrl_14.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_14.rrd -> irg_07.rri[0 +: 544]",
+    "now": [
+     "ctrl_14.rrd -> etap_14.rri",
+     "etap_14.rro -> irg_07.rri[0 +: 544]"
+    ]
+   },
+   {
+    "was": "irg_07.rqo[92 +: 92] -> ctrl_15.rrq",
+    "now": [
+     "irg_07.rqo[92 +: 92] -> etap_15.rqi",
+     "etap_15.rqo -> ctrl_15.rrq"
+    ]
+   },
+   {
+    "was": "ctrl_15.rrd -> irg_07.rri[544 +: 544]",
+    "now": [
+     "ctrl_15.rrd -> etap_15.rri",
+     "etap_15.rro -> irg_07.rri[544 +: 544]"
+    ]
+   }
+  ],
+  "request_chain": "eng.rco -> etap_15.rci; etap_k.rco -> etap_(k-1).rci, k = 15..1 (43 b, east -> west along the controller row; stations every <= 405 um)",
+  "response_chain": "etap_0.pco -> etap_1.pci -> ... -> etap_15.pco -> eng.pci (268 b, west -> east)",
+  "chain_latency_note": "the bench used 2 relay stages a hop (CS 2) + 2 each way on the chain ends: response age 435 at HBM 160 ns vs RETURN_AGE 512; more stations eat that margin 2 edges a hop"
+ },
+ "pricing": {
+  "edges_from_f_ks": {
+   "win": 4,
+   "first_request": 26,
+   "first_xq_fragment": 556,
+   "last_xq_fragment": 651
+  },
+  "lookup_ii": 576,
+  "reader_links": "+1 edge each way (tap register) + detour stations on every irg <-> ctrl reader link: dsdv_idx_rg3 T0 slack (S81-IDX3R: +41 floor, record T0 400/1500)",
+  "svc_calendar": "every PC: no svc word while its tap holds the Engram reader window (~f_ks + 27 .. + 140)"
+ },
+ "tap_detail": [
+  {
+   "inst": "etap_00",
+   "master": "dsdv_eng_tap_w",
+   "strap_sid": "4'd0",
+   "slot": "beside ctrl_00 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_00.rqo[0 +: 92] -> ctrl_00.rrq",
+     "now": [
+      "irg_00.rqo[0 +: 92] -> etap_00.rqi",
+      "etap_00.rqo -> ctrl_00.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_00.rrd -> irg_00.rri[0 +: 544]",
+     "now": [
+      "ctrl_00.rrd -> etap_00.rri",
+      "etap_00.rro -> irg_00.rri[0 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_01.rco",
+    "rco": null,
+    "pci": null,
+    "pco": "etap_01.pci"
+   }
+  },
+  {
+   "inst": "etap_01",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd1",
+   "slot": "beside ctrl_01 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_00.rqo[92 +: 92] -> ctrl_01.rrq",
+     "now": [
+      "irg_00.rqo[92 +: 92] -> etap_01.rqi",
+      "etap_01.rqo -> ctrl_01.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_01.rrd -> irg_00.rri[544 +: 544]",
+     "now": [
+      "ctrl_01.rrd -> etap_01.rri",
+      "etap_01.rro -> irg_00.rri[544 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_02.rco",
+    "rco": "etap_00.rci",
+    "pci": "etap_00.pco",
+    "pco": "etap_02.pci"
+   }
+  },
+  {
+   "inst": "etap_02",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd2",
+   "slot": "beside ctrl_02 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_01.rqo[0 +: 92] -> ctrl_02.rrq",
+     "now": [
+      "irg_01.rqo[0 +: 92] -> etap_02.rqi",
+      "etap_02.rqo -> ctrl_02.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_02.rrd -> irg_01.rri[0 +: 544]",
+     "now": [
+      "ctrl_02.rrd -> etap_02.rri",
+      "etap_02.rro -> irg_01.rri[0 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_03.rco",
+    "rco": "etap_01.rci",
+    "pci": "etap_01.pco",
+    "pco": "etap_03.pci"
+   }
+  },
+  {
+   "inst": "etap_03",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd3",
+   "slot": "beside ctrl_03 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_01.rqo[92 +: 92] -> ctrl_03.rrq",
+     "now": [
+      "irg_01.rqo[92 +: 92] -> etap_03.rqi",
+      "etap_03.rqo -> ctrl_03.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_03.rrd -> irg_01.rri[544 +: 544]",
+     "now": [
+      "ctrl_03.rrd -> etap_03.rri",
+      "etap_03.rro -> irg_01.rri[544 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_04.rco",
+    "rco": "etap_02.rci",
+    "pci": "etap_02.pco",
+    "pco": "etap_04.pci"
+   }
+  },
+  {
+   "inst": "etap_04",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd4",
+   "slot": "beside ctrl_04 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_02.rqo[0 +: 92] -> ctrl_04.rrq",
+     "now": [
+      "irg_02.rqo[0 +: 92] -> etap_04.rqi",
+      "etap_04.rqo -> ctrl_04.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_04.rrd -> irg_02.rri[0 +: 544]",
+     "now": [
+      "ctrl_04.rrd -> etap_04.rri",
+      "etap_04.rro -> irg_02.rri[0 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_05.rco",
+    "rco": "etap_03.rci",
+    "pci": "etap_03.pco",
+    "pco": "etap_05.pci"
+   }
+  },
+  {
+   "inst": "etap_05",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd5",
+   "slot": "beside ctrl_05 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_02.rqo[92 +: 92] -> ctrl_05.rrq",
+     "now": [
+      "irg_02.rqo[92 +: 92] -> etap_05.rqi",
+      "etap_05.rqo -> ctrl_05.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_05.rrd -> irg_02.rri[544 +: 544]",
+     "now": [
+      "ctrl_05.rrd -> etap_05.rri",
+      "etap_05.rro -> irg_02.rri[544 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_06.rco",
+    "rco": "etap_04.rci",
+    "pci": "etap_04.pco",
+    "pco": "etap_06.pci"
+   }
+  },
+  {
+   "inst": "etap_06",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd6",
+   "slot": "beside ctrl_06 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_03.rqo[0 +: 92] -> ctrl_06.rrq",
+     "now": [
+      "irg_03.rqo[0 +: 92] -> etap_06.rqi",
+      "etap_06.rqo -> ctrl_06.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_06.rrd -> irg_03.rri[0 +: 544]",
+     "now": [
+      "ctrl_06.rrd -> etap_06.rri",
+      "etap_06.rro -> irg_03.rri[0 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_07.rco",
+    "rco": "etap_05.rci",
+    "pci": "etap_05.pco",
+    "pco": "etap_07.pci"
+   }
+  },
+  {
+   "inst": "etap_07",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd7",
+   "slot": "beside ctrl_07 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_03.rqo[92 +: 92] -> ctrl_07.rrq",
+     "now": [
+      "irg_03.rqo[92 +: 92] -> etap_07.rqi",
+      "etap_07.rqo -> ctrl_07.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_07.rrd -> irg_03.rri[544 +: 544]",
+     "now": [
+      "ctrl_07.rrd -> etap_07.rri",
+      "etap_07.rro -> irg_03.rri[544 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_08.rco",
+    "rco": "etap_06.rci",
+    "pci": "etap_06.pco",
+    "pco": "etap_08.pci"
+   }
+  },
+  {
+   "inst": "etap_08",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd8",
+   "slot": "beside ctrl_08 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_04.rqo[0 +: 92] -> ctrl_08.rrq",
+     "now": [
+      "irg_04.rqo[0 +: 92] -> etap_08.rqi",
+      "etap_08.rqo -> ctrl_08.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_08.rrd -> irg_04.rri[0 +: 544]",
+     "now": [
+      "ctrl_08.rrd -> etap_08.rri",
+      "etap_08.rro -> irg_04.rri[0 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_09.rco",
+    "rco": "etap_07.rci",
+    "pci": "etap_07.pco",
+    "pco": "etap_09.pci"
+   }
+  },
+  {
+   "inst": "etap_09",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd9",
+   "slot": "beside ctrl_09 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_04.rqo[92 +: 92] -> ctrl_09.rrq",
+     "now": [
+      "irg_04.rqo[92 +: 92] -> etap_09.rqi",
+      "etap_09.rqo -> ctrl_09.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_09.rrd -> irg_04.rri[544 +: 544]",
+     "now": [
+      "ctrl_09.rrd -> etap_09.rri",
+      "etap_09.rro -> irg_04.rri[544 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_10.rco",
+    "rco": "etap_08.rci",
+    "pci": "etap_08.pco",
+    "pco": "etap_10.pci"
+   }
+  },
+  {
+   "inst": "etap_10",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd10",
+   "slot": "beside ctrl_10 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_05.rqo[0 +: 92] -> ctrl_10.rrq",
+     "now": [
+      "irg_05.rqo[0 +: 92] -> etap_10.rqi",
+      "etap_10.rqo -> ctrl_10.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_10.rrd -> irg_05.rri[0 +: 544]",
+     "now": [
+      "ctrl_10.rrd -> etap_10.rri",
+      "etap_10.rro -> irg_05.rri[0 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_11.rco",
+    "rco": "etap_09.rci",
+    "pci": "etap_09.pco",
+    "pco": "etap_11.pci"
+   }
+  },
+  {
+   "inst": "etap_11",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd11",
+   "slot": "beside ctrl_11 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_05.rqo[92 +: 92] -> ctrl_11.rrq",
+     "now": [
+      "irg_05.rqo[92 +: 92] -> etap_11.rqi",
+      "etap_11.rqo -> ctrl_11.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_11.rrd -> irg_05.rri[544 +: 544]",
+     "now": [
+      "ctrl_11.rrd -> etap_11.rri",
+      "etap_11.rro -> irg_05.rri[544 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_12.rco",
+    "rco": "etap_10.rci",
+    "pci": "etap_10.pco",
+    "pco": "etap_12.pci"
+   }
+  },
+  {
+   "inst": "etap_12",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd12",
+   "slot": "beside ctrl_12 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_06.rqo[0 +: 92] -> ctrl_12.rrq",
+     "now": [
+      "irg_06.rqo[0 +: 92] -> etap_12.rqi",
+      "etap_12.rqo -> ctrl_12.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_12.rrd -> irg_06.rri[0 +: 544]",
+     "now": [
+      "ctrl_12.rrd -> etap_12.rri",
+      "etap_12.rro -> irg_06.rri[0 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_13.rco",
+    "rco": "etap_11.rci",
+    "pci": "etap_11.pco",
+    "pco": "etap_13.pci"
+   }
+  },
+  {
+   "inst": "etap_13",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd13",
+   "slot": "beside ctrl_13 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_06.rqo[92 +: 92] -> ctrl_13.rrq",
+     "now": [
+      "irg_06.rqo[92 +: 92] -> etap_13.rqi",
+      "etap_13.rqo -> ctrl_13.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_13.rrd -> irg_06.rri[544 +: 544]",
+     "now": [
+      "ctrl_13.rrd -> etap_13.rri",
+      "etap_13.rro -> irg_06.rri[544 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_14.rco",
+    "rco": "etap_12.rci",
+    "pci": "etap_12.pco",
+    "pco": "etap_14.pci"
+   }
+  },
+  {
+   "inst": "etap_14",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd14",
+   "slot": "beside ctrl_14 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_07.rqo[0 +: 92] -> ctrl_14.rrq",
+     "now": [
+      "irg_07.rqo[0 +: 92] -> etap_14.rqi",
+      "etap_14.rqo -> ctrl_14.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_14.rrd -> irg_07.rri[0 +: 544]",
+     "now": [
+      "ctrl_14.rrd -> etap_14.rri",
+      "etap_14.rro -> irg_07.rri[0 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "etap_15.rco",
+    "rco": "etap_13.rci",
+    "pci": "etap_13.pco",
+    "pco": "etap_15.pci"
+   }
+  },
+  {
+   "inst": "etap_15",
+   "master": "dsdv_eng_tap",
+   "strap_sid": "4'd15",
+   "slot": "beside ctrl_15 (south controller row, in the 142-um gap / above its N face)",
+   "reroute": [
+    {
+     "was": "irg_07.rqo[92 +: 92] -> ctrl_15.rrq",
+     "now": [
+      "irg_07.rqo[92 +: 92] -> etap_15.rqi",
+      "etap_15.rqo -> ctrl_15.rrq"
+     ]
+    },
+    {
+     "was": "ctrl_15.rrd -> irg_07.rri[544 +: 544]",
+     "now": [
+      "ctrl_15.rrd -> etap_15.rri",
+      "etap_15.rro -> irg_07.rri[544 +: 544]"
+     ]
+    }
+   ],
+   "chain": {
+    "rci": "eng.rco",
+    "rco": "etap_14.rci",
+    "pci": "etap_14.pco",
+    "pco": "eng.pci"
+   }
+  }
+ ]
+}

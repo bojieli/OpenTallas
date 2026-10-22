@@ -1,0 +1,503 @@
+........................................................................ [  6%]
+........................................................................ [ 12%]
+........................................................................ [ 18%]
+................................................... [ 22%]
+...............................F...................... [ 27%]
+.................................................................... [ 32%]
+.....................................................F.............................................................................F.ss........ [ 44%]
+...........F.Fss........................................................ [ 50%]
+......................................ss................................................................ [ 59%]
+................................................sss...s.......s.........F................................................................ [ 71%]
+.......................................s................................ [ 77%]
+...............F.....................Fssss......... [ 81%]
+............................................................. [ 86%]
+s..................................................................... [ 92%]
+........................................................................ [ 98%]
+...............                                                          [100%]
+=================================== FAILURES ===================================
+_ ExportLintRecovery.test_actual_publish_keeps_original_overlay_and_adds_separate_recovery_receipt _
+
+self = <test_export_lint_recovery.ExportLintRecovery testMethod=test_actual_publish_keeps_original_overlay_and_adds_separate_recovery_receipt>
+
+    def test_actual_publish_keeps_original_overlay_and_adds_separate_recovery_receipt(self):
+        import closure_loop as C
+        recovery = E.prepare(self.request)
+        original = copy.deepcopy(self.j['route_overlay_plan'])
+        j = dict(self.j, export_lint_recovery=recovery, host='ot-epyc1tb')
+        j['spec'] = dict(source=dict(branch='codex/test'), block='station', owner='test',
+                         dry_run_git=True, record=[])
+        state = self.run / 'state'
+        response = SimpleNamespace(stdout='a' * 40, returncode=0)
+        with patch.object(C, 'STATE', state), patch.object(C, 'claude_owns_main', return_value=False), \
+             patch.object(C, 'gfetch'), patch.object(C, 'wt_add', side_effect=lambda p,*a: p.mkdir(parents=True,exist_ok=True)), \
+             patch.object(C, 'wt_rm'), patch.object(C, 'git', return_value=response), \
+             patch.object(C, 'sh', return_value=SimpleNamespace(stdout='',returncode=0)):
+>           C.publish(j, self.j['metrics'])
+
+tools/closure_loop/test_export_lint_recovery.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/closure_loop/closure_loop.py:4771: in publish
+    f"{metrics['drc']}{setup_sensitivity_text(metrics)} {measured_clock_text(metrics)} (source {j['commit_full'][:9]}, {host_cfg(j['host'])['label']} "
+                                                                                                                        ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ot-epyc1tb'
+
+    def host_cfg(name):
+>       return next(h for h in hosts_table() if h["name"] == name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tools/closure_loop/closure_loop.py:335: StopIteration
+_____ MacroPinCoverage.test_fresh_route_requires_opt_in_and_records_reason _____
+
+self = <test_hold_eco_macro_pins.MacroPinCoverage testMethod=test_fresh_route_requires_opt_in_and_records_reason>
+
+        def test_fresh_route_requires_opt_in_and_records_reason(self):
+            source = (HERE / "hold_eco.tcl").read_text()
+            # the guide decision (header + strategy); since d767c270e/3a655cf87 the A-scoped native normalization block
+            # sits between them and needs a real block, so it is skipped here (ot_native "" = the default, no plan)
+            guide_check = (source[source.index("set guides [expr"):source.index("set snap [dict create]")] +
+                           source[source.index('if {$guides} {\n  puts "OT_ECO route_strategy incremental'):
+                                  source.index('if {$ot_native ne ""} {\n  source $ot_native')])
+            route = source[source.index("set ra [expr"):source.index("filler_placement")]
+            with tempfile.TemporaryDirectory() as tmp:
+>               output = self.run_tcl(r'''
+    set ot_eco_pk 0; set ot_eco_meg 0; set ot_native ""
+    proc envd {n d} {if {[info exists ::env($n)]} {return $::env($n)}; return $d}
+    unset -nocomplain ::env(OT_ALLOW_FRESH_GRT)
+    namespace eval grt {proc have_routes {} {return $::have_guides}}
+    set calls {}
+    proc global_route args {lappend ::calls $args}
+    proc detailed_route args {incr ::drt_calls; error "DRT-0218"}
+    set have_guides 0
+    set rc [catch {@CHECK@} err]
+    if {!$rc || ![string match {*requires OT_ALLOW_FRESH_GRT=1*} $err] || [llength $calls]} {
+        error "missing guides did not fail closed"
+    }
+    set have_guides 1
+    @CHECK@
+    if {$calls ne {-start_incremental}} {error "original guides not used"}
+    set ::env(OT_OUT) .
+    set drt_calls 0
+    set fz [dict create]
+    set rc [catch {@ROUTE@} err]
+    if {!$rc || ![string match {*DRT-0218*} $err] || $drt_calls != 1} {error "guide rejection swallowed"}
+    if {$calls ne {-start_incremental {-end_incremental -allow_congestion -resistance_aware}}} {
+        error "unexpected fresh route: $calls"
+    }
+    # Opt-in retries a rejected guide once, and does not turn a second DRT
+    # failure into a completed candidate. Final acceptance is still external.
+    set ::env(OT_ALLOW_FRESH_GRT) 1
+    set calls {}; set drt_calls 0
+    set block test_block
+    proc test_block args {return {}}
+    proc detailed_route args {incr ::drt_calls; if {$::drt_calls == 1} {error "DRT-0218"}}
+    @CHECK@
+    @ROUTE@
+    if {$drt_calls != 2 || [llength $calls] != 3} {error "explicit fallback did not run"}
+    if {[lindex $calls end] ne {-allow_congestion -congestion_iterations 30 -resistance_aware}} {error "wrong fallback"}
+    set have_guides 0; set calls {}; set drt_calls 1
+    @CHECK@
+    @ROUTE@
+    if {[llength $calls] != 1 || $drt_calls != 2} {error "missing-guide opt-in failed"}
+    set have_guides 1; set calls {}; set drt_calls 0
+    proc detailed_route args {incr ::drt_calls; error "DRT-0218"}
+    @CHECK@
+    set rc [catch {@ROUTE@} err]
+    if {!$rc || $drt_calls != 2} {error "failed fallback swallowed"}
+    puts PASS
+    '''.replace("@CHECK@", guide_check).replace("@ROUTE@", route), tmp)
+
+tools/closure_loop/test_hold_eco_macro_pins.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/closure_loop/test_hold_eco_macro_pins.py:117: in run_tcl
+    self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+E   AssertionError: 1 != 0 : OT_ECO route guides from the db: 0
+E   OT_ECO route guides from the db: 1
+E   OT_ECO route_strategy incremental_original_guides
+E   OT_ECO route guides from the db: 1
+E   OT_ECO route_strategy incremental_original_guides
+E   OT_ECO guide re-route failed (DRT-0218): explicitly requested fresh global route
+E   OT_ECO route_strategy fresh_global reason rejected_guides explicit_opt_in 1
+E   can't read "ot_m6_stub": no such variable
+E       while executing
+E   "if {$ot_m6_stub ne ""} { ot_m6_apply remove }"
+E       (file "/tmp/tmpi4b8v8_g/test.tcl" line 122)
+____________________ test_restart_waits_for_background_work ____________________
+
+    def test_restart_waits_for_background_work():
+        class F:
+            def __init__(self, done):
+                self._d = done
+    
+            def done(self):
+                return self._d
+        with patch.dict(cl._RESTART, {"why": "x"}), patch.object(cl, "log", lambda *a: None), \
+                patch.object(cl, "_HOUSE_FUTURE", F(False)), patch.object(cl, "_RECOVERY_FUTURE", None):
+            assert cl.restart_if_requested() is False
+        with patch.dict(cl._RESTART, {"why": "x"}), patch.object(cl, "log", lambda *a: None), \
+                patch.object(cl, "_HOUSE_FUTURE", F(True)), patch.object(cl, "_RECOVERY_FUTURE", None):
+            try:
+                cl.restart_if_requested()
+>               raise AssertionError("expected SystemExit")
+E               AssertionError: expected SystemExit
+
+tools/closure_loop/test_inprocess_sync.py:52: AssertionError
+______________ test_run_abi3_pre_hook_patched_once_and_idempotent ______________
+
+    def test_run_abi3_pre_hook_patched_once_and_idempotent():
+>       old = show(PRE_HOOK, kb.RUN)
+              ^^^^^^^^^^^^^^^^^^^^^^
+
+tools/closure_loop/test_keep_regs_backport.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/closure_loop/test_keep_regs_backport.py:13: in show
+    return subprocess.run(["git", "show", f"{rev}:{rel}"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['git', 'show', '5e08582cb:tools/run_abi3_physical.py'],)
+kwargs = {'cwd': PosixPath('/srv/opentallas-scratch/claude/codex-cdc-liberty-1021/ve_review_repo_1619'), 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 128 args: ['git', 'show', '5e08582cb:tools/run_abi3_phys...>
+stdout = ''
+stderr = 'fatal: not a git repository (or any of the parent directories): .git\n'
+retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'show', '5e08582cb:tools/run_abi3_physical.py']' returned non-zero exit status 128.
+
+/usr/lib/python3.14/subprocess.py:578: CalledProcessError
+________________ test_smh_pre_hook_patched_once_and_idempotent _________________
+
+    def test_smh_pre_hook_patched_once_and_idempotent():
+>       old = show(PRE_HOOK, kb.SMH)
+              ^^^^^^^^^^^^^^^^^^^^^^
+
+tools/closure_loop/test_keep_regs_backport.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/closure_loop/test_keep_regs_backport.py:13: in show
+    return subprocess.run(["git", "show", f"{rev}:{rel}"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['git', 'show', '5e08582cb:tools/hbm_accel_smh_physical.py'],)
+kwargs = {'cwd': PosixPath('/srv/opentallas-scratch/claude/codex-cdc-liberty-1021/ve_review_repo_1619'), 'stderr': -1, 'stdout': -1, 'text': True}
+process = <Popen: returncode: 128 args: ['git', 'show', '5e08582cb:tools/hbm_accel_smh...>
+stdout = ''
+stderr = 'fatal: not a git repository (or any of the parent directories): .git\n'
+retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'show', '5e08582cb:tools/hbm_accel_smh_physical.py']' returned non-zero exit status 128.
+
+/usr/lib/python3.14/subprocess.py:578: CalledProcessError
+______ CompletedRouteRecovery.test_grt_congestion_is_terminal_not_retried ______
+
+self = <test_postroute_recovery.CompletedRouteRecovery testMethod=test_grt_congestion_is_terminal_not_retried>
+
+    def test_grt_congestion_is_terminal_not_retried(self):
+        # 8740289f6: GRT-0116 is deterministic -> EARLY_FAIL_CONGESTION, no retry, no post-route repair
+        j = self.route_job(); fleet = Fleet(); fleet.choose = Mock()
+        with patch.object(C, 'ssh', return_value=subprocess.CompletedProcess([], 0, 'null', '')), \
+             patch.object(C, 'stage_tail', return_value='[ERROR GRT-0116] routing congestion'), patch.object(C, 'log'):
+>           C.crash(j, {'kind': 'route', 'key': 'route'}, fleet, 'rc=2')
+
+tools/closure_loop/test_postroute_recovery.py:83: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/closure_loop/closure_loop.py:5149: in crash
+    finish(j, "EARLY_FAIL_CONGESTION", f"global route finished with congestion (GRT-0116): {err[:200]}",
+tools/closure_loop/closure_loop.py:4879: in finish
+    ledger(j, ledger_text)
+tools/closure_loop/closure_loop.py:4810: in ledger
+    where = f"{host_cfg(j['host'])['label']}:{j['run']}" if j.get("host") else "-"
+               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'ot-epyc1tb'
+
+    def host_cfg(name):
+>       return next(h for h in hosts_table() if h["name"] == name)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       StopIteration
+
+tools/closure_loop/closure_loop.py:335: StopIteration
+__________________________ GateClock.test_submit_side __________________________
+
+self = <test_rule_enforcement.GateClock testMethod=test_submit_side>
+
+    def test_submit_side(self):
+        with tempfile.TemporaryDirectory() as td, patch.object(PG, "ROOT", None):
+            PG.ROOT = Path(td)
+            sev = lambda kd, **kw: (lambda g: (PG.check_clock_evidence(g, kd, **kw), g.verdict)[1])(PG.Gate())  # noqa: E731
+            self.assertEqual(sev(self.kit(td)), "PASS")                            # nothing known: in-flow lint judges
+            self.assertEqual(sev(self.kit(td), known_sinks=48000), "WARN")         # history says big: guidance
+            self.assertEqual(sev(self.kit(td), known_sinks=48000, closed_stands=True), "PASS")
+            self.assertEqual(sev(self.kit(td), known_sinks=9000), "PASS")
+>           self.assertEqual(sev(self.kit(td, GOOD), known_sinks=48000), "WARN")   # measured, sinks > 15k: guidance
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tools/closure_loop/test_rule_enforcement.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/closure_loop/test_rule_enforcement.py:159: in <lambda>
+    sev = lambda kd, **kw: (lambda g: (PG.check_clock_evidence(g, kd, **kw), g.verdict)[1])(PG.Gate())  # noqa: E731
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tools/closure_loop/test_rule_enforcement.py:159: in <lambda>
+    sev = lambda kd, **kw: (lambda g: (PG.check_clock_evidence(g, kd, **kw), g.verdict)[1])(PG.Gate())  # noqa: E731
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tools/ref_tile/pre_route_gate.py:2604: in check_clock_evidence
+    frozen, _ = HO.capture_plan(DAEMON_TREE, ROOT, pg_strict=strict)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tools/closure_loop/helper_overlay.py:121: in capture_plan
+    literal = (Path(daemon) / rel).read_bytes()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/pathlib/__init__.py:778: in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/home/ubuntu/wt-claude-closure-daemon-1010/physical/common_flow/cg_pushdown.tcl')
+mode = 'rb', buffering = 0, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/home/ubuntu/wt-claude-closure-daemon-1010/physical/common_flow/cg_pushdown.tcl'
+
+/usr/lib/python3.14/pathlib/__init__.py:772: FileNotFoundError
+__________________________ test_run_base_picks_freest __________________________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x709b77707bb0>
+
+    def test_run_base_picks_freest(monkeypatch):
+        cfg = dict(name="hx", base="/srv/a/claude/closure-loop", alt_bases=["/srv/b/claude/closure-loop"])
+        monkeypatch.setattr(cl, "host_cfg", lambda n: cfg)
+    
+        class F:
+            probe_cache = {}
+        monkeypatch.setattr(cl, "FLEET_REF", None)
+        assert cl.run_base("hx") == cfg["base"]                       # no fleet: the base
+        monkeypatch.setattr(cl, "FLEET_REF", F)
+>       assert cl.run_base("hx") == cfg["base"]                       # no probe yet: the base
+               ^^^^^^^^^^^^^^^^^
+
+tools/closure_loop/test_run_base_alt.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'hx'
+
+    def run_base(name):
+        """the run root (of host_bases) with the most free disk in the latest probe; the base when unknown"""
+        cfg = host_cfg(name)
+        bases = host_bases(cfg)
+        if len(bases) == 1 or FLEET_REF is None:
+            return bases[0]
+        cached = FLEET_REF.probe_cache.get(name)
+        info = cached[1] if isinstance(cached, tuple) and len(cached) > 1 else None
+        # SCRATCH2-1021 (2026-10-21): every placement calls fleet.launched(h) -- which drops probe_cache[h] -- right before
+        # run_base(h), so the cache was always empty here and every new run dir went to the base (ot-epyc5 scratch hit 100 %
+        # with 2.4 TB free on scratch2).  Fall back to the last good probe.
+        if not (info or {}).get("bases_gb"):
+>           good = FLEET_REF.last_good.get(name)
+                   ^^^^^^^^^^^^^^^^^^^
+E           AttributeError: type object 'F' has no attribute 'last_good'
+
+tools/closure_loop/closure_loop.py:321: AttributeError
+_ StatusResilience.test_timeout_and_transport_error_preserve_status_and_next_intake (exception='TimeoutExpired') _
+
+self = <test_status_resilience.StatusResilience testMethod=test_timeout_and_transport_error_preserve_status_and_next_intake>
+
+    def test_timeout_and_transport_error_preserve_status_and_next_intake(self):
+        for exception in (subprocess.TimeoutExpired('ssh', 30), OSError('transport unavailable')):
+            with self.subTest(exception=type(exception).__name__), tempfile.TemporaryDirectory() as temp:
+                path = Path(temp)/'STATUS.md'
+                path.write_text('old status\n')
+                hosts = [{'name': 'bad', 'label': 'bad', 'cores': 8}, {'name': 'good', 'label': 'good', 'cores': 16}]
+                healthy = SimpleNamespace(returncode=0, stdout='4\n128\n')
+                with patch.object(cl, 'STATUS_MD', path), patch.object(cl, 'all_jobs', return_value=[]), \
+                     patch.object(cl, 'hosts_table', return_value=hosts), patch.object(cl, 'ssh', side_effect=[exception, healthy, exception, healthy]), \
+                     patch.object(cl, 'ingest') as ingest, patch.object(cl, 'release_bulk'), patch.object(cl, 'release_deep'), \
+                     patch.object(cl, 'schedule_recovery'), patch.object(cl, '_POOL', Mock()), patch.object(cl, 'STATE', Path(temp)):
+                    # Exercise the real dispatch tick twice: the failed status
+                    # peer from tick 1 must not prevent tick 2 from ingesting.
+                    cl.tick(SimpleNamespace())
+                    cl.tick(SimpleNamespace())
+>                   self.assertEqual(ingest.call_count, 2)
+E                   AssertionError: 0 != 2
+
+tools/closure_loop/test_status_resilience.py:27: AssertionError
+_ StatusResilience.test_timeout_and_transport_error_preserve_status_and_next_intake (exception='OSError') _
+
+self = <test_status_resilience.StatusResilience testMethod=test_timeout_and_transport_error_preserve_status_and_next_intake>
+
+    def test_timeout_and_transport_error_preserve_status_and_next_intake(self):
+        for exception in (subprocess.TimeoutExpired('ssh', 30), OSError('transport unavailable')):
+            with self.subTest(exception=type(exception).__name__), tempfile.TemporaryDirectory() as temp:
+                path = Path(temp)/'STATUS.md'
+                path.write_text('old status\n')
+                hosts = [{'name': 'bad', 'label': 'bad', 'cores': 8}, {'name': 'good', 'label': 'good', 'cores': 16}]
+                healthy = SimpleNamespace(returncode=0, stdout='4\n128\n')
+                with patch.object(cl, 'STATUS_MD', path), patch.object(cl, 'all_jobs', return_value=[]), \
+                     patch.object(cl, 'hosts_table', return_value=hosts), patch.object(cl, 'ssh', side_effect=[exception, healthy, exception, healthy]), \
+                     patch.object(cl, 'ingest') as ingest, patch.object(cl, 'release_bulk'), patch.object(cl, 'release_deep'), \
+                     patch.object(cl, 'schedule_recovery'), patch.object(cl, '_POOL', Mock()), patch.object(cl, 'STATE', Path(temp)):
+                    # Exercise the real dispatch tick twice: the failed status
+                    # peer from tick 1 must not prevent tick 2 from ingesting.
+                    cl.tick(SimpleNamespace())
+                    cl.tick(SimpleNamespace())
+>                   self.assertEqual(ingest.call_count, 2)
+E                   AssertionError: 0 != 2
+
+tools/closure_loop/test_status_resilience.py:27: AssertionError
+=========================== short test summary info ============================
+FAILED tools/closure_loop/test_export_lint_recovery.py::ExportLintRecovery::test_actual_publish_keeps_original_overlay_and_adds_separate_recovery_receipt
+FAILED tools/closure_loop/test_hold_eco_macro_pins.py::MacroPinCoverage::test_fresh_route_requires_opt_in_and_records_reason
+FAILED tools/closure_loop/test_inprocess_sync.py::test_restart_waits_for_background_work
+FAILED tools/closure_loop/test_keep_regs_backport.py::test_run_abi3_pre_hook_patched_once_and_idempotent
+FAILED tools/closure_loop/test_keep_regs_backport.py::test_smh_pre_hook_patched_once_and_idempotent
+FAILED tools/closure_loop/test_postroute_recovery.py::CompletedRouteRecovery::test_grt_congestion_is_terminal_not_retried
+FAILED tools/closure_loop/test_rule_enforcement.py::GateClock::test_submit_side
+FAILED tools/closure_loop/test_run_base_alt.py::test_run_base_picks_freest - ...
+SUBFAILED(exception='TimeoutExpired') tools/closure_loop/test_status_resilience.py::StatusResilience::test_timeout_and_transport_error_preserve_status_and_next_intake
+SUBFAILED(exception='OSError') tools/closure_loop/test_status_resilience.py::StatusResilience::test_timeout_and_transport_error_preserve_status_and_next_intake

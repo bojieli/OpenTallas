@@ -1,0 +1,26 @@
+{
+  "tested_guard_commit": "6b6f2d591",
+  "native_helper_sha256": "f5cdc3c33eded52c4d2bf51058a5083c15ab8eabe8c710b74d08ca26e5d87ccb",
+  "test_only_correction": "e11bcbea5",
+  "focused_final": "65 passed",
+  "initial_focus": "64 passed,1 fixture failure: old positive fixture supplied malformed raw SHA despite the new guard; preserved",
+  "actual_old_new": {
+    "old_raw_sha256": "6d1d28a1d58ab5088166ffb25084c552ae7810b51ee401801a55fc3434fc7cea",
+    "new_raw_sha256": "c53dd281eba6a845dff175c6e88876013eb106c5cd3cb6c52053c449f88a2368",
+    "exit_codes": [
+      0,
+      0
+    ],
+    "raw_status": "FAIL",
+    "max": 34,
+    "exact_violation_count": 15,
+    "role_errors": [],
+    "admission": "PASS_WITH_SCOPED_WAIVER",
+    "canonical_sha256": "24f05e9e4e08b9590b5ce8d6e1d2b00958c5fb0fea739cd7934f7da46b5dc228"
+  },
+  "read_only_input_mount": "Each original frozen ORFS root mounted /work:ro; all output files in private /audit root",
+  "remote_root": "ot-epyc7:/srv/opentallas-scratch/claude/root5-ktree-finalguard-1020",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "setup_history": "First launcher redirection typo created focused.rc+ (not a shell parse error); initial and corrected source-identical diagnostic clients both completed. Final shared reports verified only after both clients terminal. Original focused failure retained; fixture-corrected65PASS ran in a separate private focus_fixed copy. No immutable original gate/source/test artifact edited.",
+  "remaining": "ROOT imports exacttest-onlyfix and owns publication/runtime deployment. No codefeature beyond finalguard added."
+}

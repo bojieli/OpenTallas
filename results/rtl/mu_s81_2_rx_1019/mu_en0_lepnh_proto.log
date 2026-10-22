@@ -1,0 +1,5 @@
+LEPNH_STATS H->A ring 400/400 | A->H ring 459/459 host-plane frames 0 | mismatches 0 fault ring 0 HOST 1 KS 1
+PASS lep_nh: H->A 400 + A->H 459 ring beats bit-exact in order, no host-plane frame sent; HOST and KS frames into the HOST_EN 0 endpoint flagged (fault), not delivered
+BENCH_PASS lep_nh MUT=none seed 5
+rc=0
+# MU-S81-2/RX 10-19 ot-run ot-epyc4, source claude/mu-s81-2-rx-1019 ddc529908 (staged r2), Verilator 5.050; die P = ot_s81sl_lep_mu_ab (s81sl_lepmu), dies A / B = ot_s81sl_lep_mu_a (s81sl_lepmua)

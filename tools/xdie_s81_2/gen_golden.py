@@ -3,6 +3,12 @@
 current die RTL, plus the MU-S81 multi-user case).  Copy of tools/xdie_s81/gen_golden.py (TOKEN-XDIE-S81, gate_g5
 7e61eeb2e); without --mu the output is byte-identical to it (stim.sha256 of gate_g5 reproduces).
 
+--xl5 (S81-LINK5 10-21, tb XL5 1): the stage hop on its OWN circuit: die d's s_0N (port 2, class N) pair A -> the
+same-rank die of the next stage (tb: the chain closed on the group, lands on d's own s_0N pair B); TP beats unchanged
+(port 3 now lands on (d+2).s_7N).  MU h message under --xl5: from s_0N only (ab 0), 40,960 B = ceil(NB_total / NB)
+consecutive tag windows of NB beats each (lep NB 80 unchanged), window j at th + j (NB + 16), pos + j NB, its mu_c
+4 cycles before its first beat (the previous window is closed by then: no window overlap fault).
+
 MU (--mu-users U): user u (0 = the latency user) runs ONE repetition of the 8 TP collectives (pair A, untagged, as the
 single user) from its start, then its stage-hop h message: every end-slice endpoint of every die sends NB = 80 XB beats
 (40,960 B / 4 end slices / 128 B, ot_s81sl_lep_core NB) inside a TX tag window opened by one mu_c command 4 cycles
@@ -40,16 +46,36 @@ Deadlines (static-schedule check): deadline(k) = max(start + LAT[class] + ceil(k
 beat deadline + ceil(PER)) (a port drains in order at PER: a burst issued before the previous one drained queues) with class S (s_0S / s_7S
 ports: UCIe lane 0 + SerDes lane 1) or N (s_0N / s_7N: 2 x SerDes); 0 = no deadline (calibration run).  The AR
 all-gather phase starts at the RS phase's last deadline + 1 + FOLD (static: issued whatever the link did).
+
+--dl-model fluid (XDIE-S81-MU 10-19, the PHASE-FREE compiler crossing model; default linear = the old goldens, byte-identical):
+the lane slot server is modelled as a fluid queue per sender (port, pair) at the lane slot rate R = 4096/3069 cycles a
+beat (FMT1 gearbox 3 slots / 4 beats, 1 idle beat / 1024): q_k = max(issue_k, q_(k-1) + R), deadline_k = FLAT +
+ceil(q_k) + GUARD (FLAT 563 = the measured fixed crossing incl. the die lane legs, 553 at LEG 0; GUARD 1).  On the
+committed m2 / c runs every landing lies in [deadline - 2, deadline] (land - (FLAT + ceil q) in [-1, +1] for every
+beat of every user: the 1-2-cycle per-user differences are the lane slot PHASE, which this model bounds without
+knowing it).  The deadline depends only on issue cycles relative to the user's start, so every user (and the single
+user) gets the same compiled crossing cycles; tools/xdie_s81_2/win_check.py checks the two-sided window.
+--mu-copy-a-only: the MU-die vehicle (copy-A-only endpoints ot_s81sl_lep_mu_a / lep_mu HOST_EN 1, tb MU 2): every h
+window opens with ab 0; with --mu-mode real, --mu-users-of A keeps only the calendar's copy-A users (the users an
+MU (copy-A) die group serves; the copy-B users run on the MAB dies' pair B).
 """
 from __future__ import annotations
 
+from fractions import Fraction
+
 import argparse
+import gzip
 import hashlib
 import json
 import math
 from pathlib import Path
 
 import numpy as np
+
+
+def calendar_bytes(path):
+    raw = Path(path).read_bytes()
+    return gzip.decompress(raw) if raw.startswith(b'\x1f\x8b') else raw
 
 ND, NP = 4, 4
 BEAT_B = 128
@@ -116,16 +142,41 @@ def main():
     ap.add_argument("--mu-cal", default="", help="MU-S81 calendar json (slots[u].shift) for --mu-mode real")
     ap.add_argument("--dense-gap", type=int, default=150)
     ap.add_argument("--nb", type=int, default=80, help="h beats per endpoint (lep NB)")
+    ap.add_argument("--dl-model", default="linear", choices=("linear", "fluid"))
+    ap.add_argument("--fluid-lat", type=int, default=563, help="fixed crossing latency (563 LEG 1, 553 LEG 0)")
+    ap.add_argument("--fluid-guard", type=int, default=1)
+    ap.add_argument("--reserve-mu-tag", action="store_true",
+                    help="MU endpoint even for SU traffic: reserve bits1077:1045 cleared by MU RX")
+    ap.add_argument("--mu-copy-a-only", action="store_true")
+    ap.add_argument("--xl5", action="store_true", help="S81-LINK5: stage hop on s_0N pair A -> next stage s_0N pair B")
+    ap.add_argument("--mu-users-of", default="", help="real mode: keep only the calendar users of this copy (A / B)")
+    ap.add_argument("--mu-hop-plan", default="", help="TOK-FUNC-S81/MURATE: stage-hop messages of one calendar link "
+                    "resource (tools/s81_dv/tokfunc/mu_hop_plan.py: msgs [{user, t, m, label}]); --xl5 only; no TP collectives")
+    ap.add_argument("--mu-user-range", default="", help="TOK-FUNC-S81/MURATE: real mode, users a:b only (calendar shifts "
+                    "rebased to user a; tags keep the calendar user ids); default all")
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     lat = parse_cls(a.lat, {}); per = parse_cls(a.per, {})
-    gate = bool(lat) and bool(per)
+    if a.xl5:                    # the stage-hop circuit (s_0N, port 2) is its own class H (default: the N values)
+        CLASS[2] = "H"
+        if lat:
+            lat.setdefault("H", lat["N"])
+        if per:
+            per.setdefault("H", per["N"])
+    gate = (bool(lat) and bool(per)) or a.dl_model == "fluid"
     only = set(a.only.split(",")) if a.only else None
 
     port_busy = {}   # sender port -> last compiled landing deadline (the port drains its queue in order at PER)
+    fq = {}          # fluid model: sender (port, pair) -> q of its previous beat (Fraction)
+    RF = Fraction(4096, 3069)
 
-    def deadline(start, k, cls, dp=None, pair=0):
+    def deadline(start, k, cls, dp=None, pair=0, issue=None):
         dp = None if dp is None else (dp if pair == 0 else (dp, pair))
+        if a.dl_model == "fluid":
+            assert dp is not None and issue is not None
+            q = Fraction(issue) if dp not in fq else max(Fraction(issue), fq[dp] + RF)
+            fq[dp] = q
+            return a.fluid_lat + math.ceil(q) + a.fluid_guard
         if not gate:
             return 0
         d = start + int(lat[cls]) + math.ceil(k * per[cls])
@@ -142,16 +193,34 @@ def main():
     inst = 0
     U = a.mu_users
     global MU_SPARE
-    MU_SPARE = bool(U)
+    MU_SPARE = bool(U) or a.reserve_mu_tag
     shifts = None
     if U and a.mu_mode == "real":
-        cal = json.loads(Path(a.mu_cal).read_text())
+        cal = json.loads(calendar_bytes(a.mu_cal))
         shifts = {sl["user"]: int(sl["shift"]) for sl in cal["slots"]}
-    plan = [(0, None, None)] if not U else [(u, u, None) for u in range(U)]
+    users = list(range(U))
+    if U and a.mu_users_of and shifts is not None:
+        cop = {sl["user"]: sl["copy"]["S002"] for sl in cal["slots"]}
+        users = [u for u in range(U) if cop[u] == a.mu_users_of]
+    base = 0
+    if U and a.mu_user_range:
+        ua, ub = (int(x) for x in a.mu_user_range.split(":"))
+        users = [u for u in users if ua <= u < ub]
+        if shifts is not None:
+            base = shifts[users[0]]
+    plan = [(0, None, None)] if not U else [(u, u, None) for u in users]
+    hop = None
+    if a.mu_hop_plan:            # MURATE: replaces the per-user loop (no TP collectives, only the link resource's messages)
+        assert a.xl5, "--mu-hop-plan needs --xl5 (the stage-hop circuit)"
+        hop = json.loads(Path(a.mu_hop_plan).read_text())
+        plan = []
+        MU_SPARE = True
+        users = sorted({m["user"] for m in hop["msgs"]})
+        U = len(users)
     for rep_or_user, user, _ in plan:
       if user is not None:
         if shifts is not None:
-            t_u = WARM + shifts[user]
+            t_u = WARM + shifts[user] - base
             assert t_u >= t, f"user {user}: calendar start {t_u} before the previous user's end {t}"
             t = t_u
       for rep in (range(a.reps) if user is None else [0]):
@@ -172,7 +241,7 @@ def main():
                     rec["src_sha"][d] = hashlib.sha256(data).hexdigest()
                     for p in PORT_TO:
                         for k, c in enumerate(chunks(data)):
-                            lines.append((t + k, d * NP + p, beat_word(c, inst, k, d * NP + p), deadline(t, k, CLASS[p], d * NP + p)))
+                            lines.append((t + k, d * NP + p, beat_word(c, inst, k, d * NP + p), deadline(t, k, CLASS[p], d * NP + p, issue=t + k)))
                 end = t + rec["beats_per_peer"]
             elif kind == "AR":
                 n = pb // 4
@@ -191,7 +260,7 @@ def main():
                         data = parts[d][o * q:(o + 1) * q].tobytes()
                         cs = chunks(data)
                         for k, c in enumerate(cs):
-                            dl = deadline(t, k, CLASS[p], d * NP + p)
+                            dl = deadline(t, k, CLASS[p], d * NP + p, issue=t + k)
                             rs_dead = max(rs_dead, dl)
                             lines.append((t + k, d * NP + p, beat_word(c, inst, k, d * NP + p), dl))
                 # phase 2 all-gather of the folded quarter (owner o = d) at its compiled cycle
@@ -201,47 +270,90 @@ def main():
                     data = fold[d * q:(d + 1) * q].tobytes()
                     for p in PORT_TO:
                         for k, c in enumerate(chunks(data)):
-                            lines.append((t2 + k, d * NP + p, beat_word(c, inst + 1, k, d * NP + p), deadline(t2, k, CLASS[p], d * NP + p)))
+                            lines.append((t2 + k, d * NP + p, beat_word(c, inst + 1, k, d * NP + p), deadline(t2, k, CLASS[p], d * NP + p, issue=t2 + k)))
                 rec["inst_ag"] = inst + 1
                 inst += 1
                 end = t2 + rec["beats_per_peer"]
-            else:  # P2P stage hop: die d -> d+1 over its ES port
-                rec.update(beats=len(chunks(bytes(pb))), port="ES")
+            else:  # P2P stage hop: die d -> d+1 over its ES port (--xl5: s_0N pair A -> next stage rank d s_0N pair B)
+                hp, hc = (2, "H") if a.xl5 else (1, "S")
+                rec.update(beats=len(chunks(bytes(pb))), port="WN_A" if a.xl5 else "ES")
                 for d in range(ND):
                     data = rng.integers(0, 256, pb, dtype=np.uint8).tobytes()
                     rec["src_sha"][d] = hashlib.sha256(data).hexdigest()
                     for k, c in enumerate(chunks(data)):
-                        lines.append((t + k, d * NP + 1, beat_word(c, inst, k, d * NP + 1), deadline(t, k, "S", d * NP + 1)))
+                        lines.append((t + k, d * NP + hp, beat_word(c, inst, k, d * NP + hp), deadline(t, k, hc, d * NP + hp, issue=t + k)))
                 end = t + rec["beats"]
             insts.append(rec)
             inst += 1
             t = end + a.gap
       if user is not None:
         # the user's stage-hop h message: NB tagged XB beats from every endpoint, on the user's copy
-        ab = 1 if user % 2 else 0
+        ab = 0 if (a.mu_copy_a_only or a.xl5) else (1 if user % 2 else 0)
         pos = 4096 + 17 * user
         th = t
         rec = dict(inst=inst, name="mu_hop", kind="MUH", payload_B=a.nb * BEAT_B * ND * NP, rep=0, start=th, src_sha={},
                    user=user, copy="B" if ab else "A", pos=pos, beats_per_peer=a.nb)
         rng = np.random.default_rng(1000 * inst + 17)
         cmd = (pos << 13) | (user << 3) | (0 << 2) | (ab << 1) | 1
+        nwin = NP if a.xl5 else 1                     # --xl5: the 4 end slices' shares leave s_0N in 4 windows
+        eps = [2] if a.xl5 else list(range(NP))
+        tend = th + a.nb
         for d in range(ND):
-            for p in range(NP):
+            for p in eps:
                 dp = d * NP + p
-                mucmds.append((th - 4, dp, cmd))
-                data = rng.integers(0, 256, a.nb * BEAT_B, dtype=np.uint8).tobytes()
+                data = rng.integers(0, 256, nwin * a.nb * BEAT_B, dtype=np.uint8).tobytes()
                 rec["src_sha"][dp] = hashlib.sha256(data).hexdigest()
-                for k in range(a.nb):
-                    w = 1 | (2 << 1) | (3 << 4) | ((dp & 0xF) << 9)                       # XB, hops 3, src
-                    w |= (1 << 13) | (user << 14) | (pos << 24) | (ab << 45)                # bench mirror
-                    pl = int.from_bytes(data[k * BEAT_B:(k + 1) * BEAT_B], "little") & ((1 << 981) - 1)
-                    w |= pl << 64                                                         # [1044:64]
-                    w |= (inst & 0xFF) << 1088
-                    w |= (k & 0xFF) << 1096
-                    lines.append((th + k, dp, w, deadline(th, k, CLASS[p], dp, ab)))
+                for j in range(nwin):
+                    tj = th + j * (a.nb + 16); posj = pos + j * a.nb
+                    cmdj = (posj << 13) | (user << 3) | (0 << 2) | (ab << 1) | 1
+                    mucmds.append((tj - 4, dp, cmdj))
+                    tend = max(tend, tj + a.nb)
+                    for k in range(a.nb):
+                        kk = j * a.nb + k
+                        w = 1 | (2 << 1) | (3 << 4) | ((dp & 0xF) << 9)                       # XB, hops 3, src
+                        w |= (1 << 13) | (user << 14) | (posj << 24) | (ab << 45)               # bench mirror
+                        pl = int.from_bytes(data[kk * BEAT_B:(kk + 1) * BEAT_B], "little") & ((1 << 981) - 1)
+                        w |= pl << 64                                                         # [1044:64]
+                        w |= (inst & 0xFF) << 1088
+                        w |= (kk & 0xFF) << 1096
+                        lines.append((tj + k, dp, w, deadline(tj, k, CLASS[p], dp, ab, issue=tj + k)))
         insts.append(rec)
         inst += 1
-        t = th + a.nb + (a.dense_gap if a.mu_mode == "dense" else a.gap)
+        if a.xl5:
+            rec.update(windows=nwin, port="WN_A", beats_per_peer=nwin * a.nb)
+        t = tend + (a.dense_gap if a.mu_mode == "dense" else a.gap)
+    if hop is not None:
+        # each message = one h of the stage-hop circuit (s_0N, port 2, class H): per die 4 tag windows of NB beats (the 4
+        # end slices' shares, 40,960 B = one H_MSG x vector), window j at t + j (NB + 16), its mu_c 4 cycles before
+        last_end = -10**9
+        for mi, msg in enumerate(hop["msgs"]):
+            user, th = int(msg["user"]), WARM + int(msg["t"])
+            assert th - 4 > last_end, f"message {mi}: starts {th} before the previous message's last window {last_end}"
+            pos = 4096 + 17 * user + 320 * int(msg["m"])
+            rec = dict(inst=inst, name="mu_hop", kind="MUH", payload_B=4 * a.nb * BEAT_B * ND, rep=0, start=th, src_sha={},
+                       user=user, copy="A", pos=pos, beats_per_peer=4 * a.nb, windows=4, port="WN_A", label=msg.get("label"),
+                       msg=int(msg["m"]))
+            rng = np.random.default_rng(1000 * inst + 17)
+            for d in range(ND):
+                dp = d * NP + 2
+                data = rng.integers(0, 256, 4 * a.nb * BEAT_B, dtype=np.uint8).tobytes()
+                rec["src_sha"][dp] = hashlib.sha256(data).hexdigest()
+                for j in range(4):
+                    tj = th + j * (a.nb + 16); posj = pos + j * a.nb
+                    mucmds.append((tj - 4, dp, (posj << 13) | (user << 3) | 1))
+                    last_end = max(last_end, tj + a.nb)
+                    for k in range(a.nb):
+                        kk = j * a.nb + k
+                        w = 1 | (2 << 1) | (3 << 4) | ((dp & 0xF) << 9)
+                        w |= (1 << 13) | (user << 14) | (posj << 24)
+                        pl = int.from_bytes(data[kk * BEAT_B:(kk + 1) * BEAT_B], "little") & ((1 << 981) - 1)
+                        w |= pl << 64
+                        w |= (inst & 0xFF) << 1088
+                        w |= (kk & 0xFF) << 1096
+                        lines.append((tj + k, dp, w, deadline(tj, k, "H", dp, 0, issue=tj + k)))
+            insts.append(rec)
+            inst += 1
+        shifts = None
     lines.sort(key=lambda x: (x[0], x[1]))
     seen = set()
     for iss, dp, _, _ in lines:
@@ -260,8 +372,25 @@ def main():
     g = dict(schema="opentallas.xdie_s81.golden.v1", beats=len(lines), beat_B=BEAT_B, warm=WARM, gap=a.gap, reps=a.reps,
              gate=gate, lat=lat, per=per, fold=a.fold, instances=insts, port_to=PORT_TO, cls=CLASS,
              last_issue=max(x[0] for x in lines), mu=dict(users=U, mode=a.mu_mode if U else None, cal=a.mu_cal or None,
-             shifts={u: shifts[u] for u in range(U)} if shifts else None, dense_gap=a.dense_gap if U else None, nb=a.nb,
-             commands=len(mucmds)))
+             shifts={u: shifts[u] for u in users} if shifts else None, dense_gap=a.dense_gap if U else None, nb=a.nb,
+             commands=len(mucmds), users_run=users, copy_a_only=a.mu_copy_a_only),
+             dl_model=dict(model=a.dl_model, R="4096/3069", flat=a.fluid_lat, guard=a.fluid_guard, window=2)
+             if a.dl_model == "fluid" else dict(model="linear"))
+    if a.mu_cal and (a.xl5 or a.reserve_mu_tag):
+        g['mu']['cal_sha256'] = hashlib.sha256(calendar_bytes(a.mu_cal)).hexdigest()
+    if a.dl_model == "linear" and not (a.mu_copy_a_only or a.mu_users_of or a.reserve_mu_tag):
+        # Preserve the exact main output format for all callers without new opt-ins.
+        g.pop('dl_model', None)
+        g['mu'].pop('users_run', None)
+        g['mu'].pop('copy_a_only', None)
+    if a.xl5:
+        g["xl5"] = dict(stage_hop="s_0N pair A -> next stage rank d s_0N pair B (tb chain closed on the group)",
+                        tp_d2="s_7N <-> (d+2).s_7N", mu_h_windows=NP if U else 0)
+    if hop is not None:
+        g["mu_hop_plan"] = dict(plan=a.mu_hop_plan, sha256=hashlib.sha256(Path(a.mu_hop_plan).read_bytes()).hexdigest(),
+                                resource=hop.get("resource"), messages=len(hop["msgs"]))
+    if a.reserve_mu_tag:
+        g["payload_contract"] = {"mu_tag_spare_bits": [1077, 1045], "reserved": True}
     (out / "golden.json").write_text(json.dumps(g, indent=1))
     print(f"beats {len(lines)} instances {len(insts)} last issue {g['last_issue']} gate {gate}")
 

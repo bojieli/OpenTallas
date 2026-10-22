@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-epyc9       admits   830 GB (avail 748, growth 167, headroom 0, waiters 0/0 GB) load 246/128 running 44 disk 29 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2677973-1792513964 after 0 s
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3 round 0 best faults 9 root words 36 cfg (4, 40000, 20, 10) time 225
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3 round 1 best faults 8 root words 34 cfg (1000, 40000, 20, 10) time 437
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3 round 2 best faults 5 root words 32 cfg (2005, 40000, 10, 10) time 645
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3 round 3 best faults 5 root words 32 cfg (2005, 40000, 10, 10) time 813
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3 round 4 best faults 5 root words 32 cfg (2005, 40000, 10, 10) time 998
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3 round 5 best faults 5 root words 32 cfg (2005, 40000, 10, 10) time 1168
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3 round 6 best faults 5 root words 32 cfg (2005, 40000, 10, 10) time 1339
+KSLOT_SEARCH col_h9|fp4|5120|5|6|3 round 7 best faults 5 root words 32 cfg (2005, 40000, 10, 10) time 1504
+KSLOT_SEARCH_NO_LAYOUT col_h9|fp4|5120|5|6|3 best faults 5
+KSLOT_SEARCH_DONE []
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2677973-1792513964): exit 0

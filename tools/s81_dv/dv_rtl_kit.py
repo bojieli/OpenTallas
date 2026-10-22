@@ -100,6 +100,7 @@ def main(argv=None):
     ap.add_argument('--repo', default=str(ROOT))
     ap.add_argument('--ref', required=True)
     ap.add_argument('--port-bind', required=True)
+    ap.add_argument('--bind-case', help='original executed bind_case.json: honor recorded index roots/final file precedence')
     ap.add_argument('--top-v', required=True)
     ap.add_argument('--top', default=None)
     ap.add_argument('--out', required=True)
@@ -111,6 +112,32 @@ def main(argv=None):
     sha = git(repo, 'rev-parse', ref).strip()
     D = load_dpb(repo, ref)
     pb = json.loads(Path(a.port_bind).read_text())
+    bind_index = None
+    if a.bind_case:
+        case_path = Path(a.bind_case)
+        command = json.loads(case_path.read_text())['port_bind_cmd']
+        assert isinstance(command, list) and command[1].endswith('/tools/die_port_bind.py')
+        snapshot = Path(command[1]).parents[1]
+        def bind_path(path):
+            if not Path(path).is_absolute():
+                assert '..' not in Path(path).parts, ('bind path escapes source root', path)
+                return str(Path(path))
+            m = re.search(r'/rtl_extra/([0-9a-f]{40})/(.*)$', str(path))
+            if m:
+                return f'rtl_extra/{m[1]}/{m[2]}'
+            if Path(path).name == 'cells_used.v':
+                return 'cells_used.v'
+            return str(Path(path).relative_to(snapshot))
+        bound_files = [(bind_path(p), p) for p in pb['rtl_files']]
+        bound_roots = [bind_path(p).rstrip('/') for p in pb['rtl_roots']]
+        original_files = [command[i+1] for i,v in enumerate(command) if v == '--rtl-file']
+        assert all(p in pb['rtl_files'] for p in original_files)
+        assert [command[i+1] for i,v in enumerate(command) if v == '--define'] == pb.get('defines', [])
+        bind_index = dict(bind_case_sha256=hashlib.sha256(case_path.read_bytes()).hexdigest(),
+            port_bind_sha256=hashlib.sha256(Path(a.port_bind).read_bytes()).hexdigest(),
+            original_command=command, original_explicit_files=original_files,
+            recorded_roots=bound_roots, final_ordered_files=[p for p,f in bound_files],
+            precedence='actual die_port_bind final files preference: later entry wins; recorded roots only')
     defines = {d: '' for d in pb.get('defines', [])}
     prefer_lists = a.prefer_list if a.prefer_list is not None else DEFAULT_PREFER
     src = out / 'src'
@@ -130,6 +157,9 @@ def main(argv=None):
         elif any(p.startswith(d + '/') for d in MACRO_DIRS) or re.match(r'physical/.+/rtl/', p):
             cand.append(p)
     cand += a.extra_file
+    if bind_index:
+        allowed = set(bind_index['final_ordered_files'])
+        cand = [p for p in cand if p in allowed or any(p.startswith(r + '/') for r in bound_roots)]
     texts = {}
     # batch read
     proc = subprocess.run(['git', '-C', str(repo), 'cat-file', '--batch'], input='\n'.join(f'{sha}:{p}' for p in cand).encode(),
@@ -154,6 +184,16 @@ def main(argv=None):
             extra[key] = m.group(1)
     texts['cells_used.v'] = ('// ASAP7 standard cells used by the S81-DV bound die top (library function models)\n'
                              + '\n'.join(CELL_MODELS.values()) + '\n').encode()
+    if bind_index:
+        hashes = {}
+        for rel, path in bound_files:
+            body = Path(path).read_bytes()
+            hashes[rel] = hashlib.sha256(body).hexdigest()
+            if rel != 'cells_used.v':
+                assert rel in texts, ('recorded bind input absent at source ref', rel)
+                assert texts[rel] == body, ('recorded bind input differs from immutable ref', rel)
+        bind_index['original_snapshot_file_sha256'] = hashes
+        bind_index['cells_used_projection'] = 'existing functional ASAP7 library models; original bind declarations separately hashed'
 
     defs = defaultdict(list)         # module -> [(path, Module)]   (parse cache: per ref sha + defines, ~3 min cold)
     import pickle
@@ -186,6 +226,11 @@ def main(argv=None):
     # ---- prefer sources, in priority order: --prefer-list files, the bind table's prefer / rtl_files, then the
     #      sources of every hardened tile (physical/ref_tile/*/spec.json `sources`) whose top is in the closure
     pref_order = []                  # [(path, label)]
+    if bind_index:
+        # The recorded final files include the actual prefer-list/ref-tile
+        # expansion. Do not widen its index with unrelated hardened snapshots.
+        pref_order += [(f, 'recorded executed bind final file order')
+                       for f in reversed(bind_index['final_ordered_files'])]
     bench_defines = {}
     for L in prefer_lists:
         for f, dfs in list_files(git(repo, 'show', f'{sha}:{L}'), L):
@@ -415,6 +460,7 @@ def main(argv=None):
          [str(tdst.relative_to(out))]
     (out / 'kit.f').write_text('\n'.join(fl) + '\n')
     rec = dict(schema='opentallas.s81_dv.rtl_kit.v1', ref=ref, sha=sha, port_bind=a.port_bind, top_v=a.top_v,
+               executed_bind_index=bind_index,
                top=a.top, top_sha256=hashlib.sha256(top_text.encode()).hexdigest(), masters=len(masters),
                modules=len(seen), files=rec_files, prefer_lists=prefer_lists, variant_choices=choices, ref_tile_specs_used=used_specs, moddup_identical=sorted(set(moddup_same)), snapshot_differs=snapshot_differs, prefer_conflicts=conflicts, bench_defines_not_applied=bench_defines,
                stripped_params=dict(stripped), defines=sorted(defines), problems=problems,

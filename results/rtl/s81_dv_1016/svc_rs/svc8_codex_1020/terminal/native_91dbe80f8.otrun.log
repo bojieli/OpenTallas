@@ -1,0 +1,13 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-epyc7       admits   444 GB (avail 411, growth 101, headroom 0, waiters 0/0 GB) load 116/96 running 28 disk 5648 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svc8-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-308679-1792489251 after 1 s
+HOST ot-epyc7 native start Tue Oct 20 02:40:52 PDT 2026 src 91dbe80f8
+SVC8_NATIVE stage=map     import textbook_lint as TL ModuleNotFoundError: No module named 'textbook_lint' 
+NATIVE_RC=1
+HOST ot-epyc7 native done Tue Oct 20 02:58:30 PDT 2026
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-308679-1792489251): exit 0

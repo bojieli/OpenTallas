@@ -34,6 +34,17 @@ class Programme(unittest.TestCase):
             ep = C.CNE.compile_programme(1, 2, T - 1, 0, 2)
             self.assertEqual(C.AC.hexcal(c), ep['calendar_hex'])
 
+    def test_pair_end_floor_law(self):
+        # KV-FLOOR1 10-20: the component profile has no floor; the die profile follows OT_KV_PVFIN_FLOOR (default off);
+        # with pv_floor the pair law is P1 = P0 (ctl_tbf), every other calendar field identical
+        self.assertFalse(C.profile('component').get('pv_floor', False))
+        pr = C.profile('die', json.loads((ROOT / C.AGES).read_text()))
+        self.assertIs(pr['pv_floor'], C.PV_FLOOR)
+        for T in (1, 129, 300, 4097, 8192):
+            a, b = C.attention_calendar(T, dict(pr, pv_floor=False)), C.attention_calendar(T, dict(pr, pv_floor=True))
+            self.assertEqual(b['P1'], a['P0'])
+            self.assertEqual({k: v for k, v in b.items() if k != 'P1'}, {k: v for k, v in a.items() if k != 'P1'})
+
     def test_attention_words_follow_the_link_slot(self):
         for r in (self.comp, self.die):
             a = r['attention']
@@ -134,7 +145,8 @@ class Programme(unittest.TestCase):
     def test_token_period_is_padded_and_every_launch_is_legal(self):
         ph = self.die['phase']
         self.assertEqual(ph['token_period_core'] % 768, 0)
-        # ROOT-QLINE 10-18: production calendar (die stages + LAYERBENCH compiled token path) = unpadded 249,389 -> 249,600
+        # ROOT-QLINE 10-18: production calendar (die stages + LAYERBENCH compiled token path) = unpadded 249,389 -> 249,600;
+        # QLB-C4 10-18: SC_TX 2 (dv2f14bq) -> attn_kv X 5 -> 7 on L1..L35 + L0 -215 (was -217): +72 -> 249,461 -> 249,600
         self.assertEqual(ph['token_period_core'], 249600)
         # HKV-DIE 10-19: current pair (compute dv2f14bq SC_TX 2: L1 X 5 -> 7, +2 edges x 36 layers; KV landed codec) =
         # unpadded 249,461 (was 249,389) -> still 249,600

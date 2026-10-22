@@ -1,0 +1,508 @@
+{
+ "source": "current PPATH/SMWIRE controller + isolated edd3f4a9e NT1 engine",
+ "placement": "329d6c07a",
+ "grid": [
+  2,
+  8
+ ],
+ "roots": 48,
+ "service_outline": [
+  1728,
+  3758.4
+ ],
+ "neighbor_gap_um": 86.4,
+ "wide_faces": {
+  "gather_bits": 2133,
+  "scatter_bits": 1077
+ },
+ "face_order": [
+  {
+   "name": "dn",
+   "width": 805
+  },
+  {
+   "name": "ud",
+   "width": 13
+  },
+  {
+   "name": "uf",
+   "width": 3
+  },
+  {
+   "name": "pv",
+   "width": 514
+  },
+  {
+   "name": "g",
+   "width": 2133
+  },
+  {
+   "name": "s",
+   "width": 1077
+  }
+ ],
+ "links": [
+  {
+   "source": 0,
+   "destination": 1,
+   "face": 0,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 0,
+   "destination": 2,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 1,
+   "destination": 3,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 1,
+   "destination": 0,
+   "face": 2,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 2,
+   "destination": 3,
+   "face": 0,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 2,
+   "destination": 4,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 2,
+   "destination": 0,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 3,
+   "destination": 5,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 3,
+   "destination": 2,
+   "face": 2,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 3,
+   "destination": 1,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 4,
+   "destination": 5,
+   "face": 0,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 4,
+   "destination": 6,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 4,
+   "destination": 2,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 5,
+   "destination": 7,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 5,
+   "destination": 4,
+   "face": 2,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 5,
+   "destination": 3,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 6,
+   "destination": 7,
+   "face": 0,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 6,
+   "destination": 8,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 6,
+   "destination": 4,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 7,
+   "destination": 9,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 7,
+   "destination": 6,
+   "face": 2,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 7,
+   "destination": 5,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 8,
+   "destination": 9,
+   "face": 0,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 8,
+   "destination": 10,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 8,
+   "destination": 6,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 9,
+   "destination": 11,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 9,
+   "destination": 8,
+   "face": 2,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 9,
+   "destination": 7,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 10,
+   "destination": 11,
+   "face": 0,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 10,
+   "destination": 12,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 10,
+   "destination": 8,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 11,
+   "destination": 13,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 11,
+   "destination": 10,
+   "face": 2,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 11,
+   "destination": 9,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 12,
+   "destination": 13,
+   "face": 0,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 12,
+   "destination": 14,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 12,
+   "destination": 10,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 13,
+   "destination": 15,
+   "face": 1,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 13,
+   "destination": 12,
+   "face": 2,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 13,
+   "destination": 11,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 14,
+   "destination": 15,
+   "face": 0,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 14,
+   "destination": 12,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 15,
+   "destination": 14,
+   "face": 2,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  },
+  {
+   "source": 15,
+   "destination": 13,
+   "face": 3,
+   "width": 4545,
+   "banks": 17,
+   "added_edges": 3
+  }
+ ],
+ "inactive_faces": [
+  {
+   "sid": 0,
+   "face": 2,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 0,
+   "face": 3,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 1,
+   "face": 0,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 1,
+   "face": 3,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 2,
+   "face": 2,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 3,
+   "face": 0,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 4,
+   "face": 2,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 5,
+   "face": 0,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 6,
+   "face": 2,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 7,
+   "face": 0,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 8,
+   "face": 2,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 9,
+   "face": 0,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 10,
+   "face": 2,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 11,
+   "face": 0,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 12,
+   "face": 2,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 13,
+   "face": 0,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 14,
+   "face": 1,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 14,
+   "face": 2,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 15,
+   "face": 0,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  },
+  {
+   "sid": 15,
+   "face": 1,
+   "contract": "p4l3_mu mode_unused: unlinked_bits; outputs spare_out_rules"
+  }
+ ],
+ "sm_landing": {
+  "command_bits": 534,
+  "return_bits": 555,
+  "edges_each": 3,
+  "roundtrip_edges": 6
+ },
+ "pv_x": "actual dsdv_sm_gx from current SOT configuration and return-word producer",
+ "scope": "source construction only; physical child binding/reset closure and calendar pricing of NT1 plus six SM landing edges remain obligations"
+}

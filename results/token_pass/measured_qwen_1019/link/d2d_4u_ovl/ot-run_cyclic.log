@@ -1,0 +1,37 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/ovly
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/ovly
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/ovly
+ot-run: ot-epyc8       admits  1123 GB (avail 866, growth 79, headroom 0, waiters 0/0 GB) load 33/128 running 21 disk 316 GB 
+ot-run: ot-epyc9       admits  1340 GB (avail 988, growth 46, headroom 0, waiters 0/0 GB) load 33/128 running 10 disk 791 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/ovly
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-qw-link/ovly
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-69222-1792459739 after 0 s
+Verilator 5.050 2026-07-01 rev v5.050
+cal codec2 pass rc=0
+cal codec2 collide rc=0
+cal codec2 slot rc=0
+cal codec2 user rc=0
+==== codec2
+asbuilt_one_playhead expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 4204: compute: compiled RX slot without a frame
+    D2DOVL_FAIL OVL 0
+mut_collide expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 4236: end fault (calendar / stray / collision): compute 1 KV 0
+    D2DOVL_FAIL OVL 1
+mut_slot expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 20826: compute: compiled RX slot without a frame
+    D2DOVL_FAIL OVL 1
+mut_user expect=FAIL got=FAIL -> OK
+    D2DOVL_ERR cyc 24100: dir 0: rx_user 3 != sender user 2 (kind 1)
+    D2DOVL_FAIL OVL 1
+pass expect=PASS got=PASS -> OK
+    D2DOVL_USER 0 exchanges 576 (compiled 576) tokens 16 (compiled 16) tok/s 4768.1
+    D2DOVL_USER 1 exchanges 540 (compiled 540) tokens 15 (compiled 15) tok/s 4470.1
+    D2DOVL_USER 2 exchanges 288 (compiled 288) tokens 8 (compiled 8) tok/s 2384.0
+    D2DOVL_USER 3 exchanges 252 (compiled 252) tokens 7 (compiled 7) tok/s 2086.0
+    D2DOVL_MEAS H 4026800 frames C->K 63098 K->C 57783 aggregate 13708.2 tok/s (frame start 4200)
+    D2DOVL_PASS OVL 1
+rc=0
+OVL_JOB_DONE
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-69222-1792459739): exit 0

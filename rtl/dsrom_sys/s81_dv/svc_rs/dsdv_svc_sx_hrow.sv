@@ -45,9 +45,17 @@ module dsdv_svc_sx_hrow #(
     output reg               fault
 );
 `ifdef DSDV_SX_MUT_ORDER
+`ifdef OT_SVC_GROUP72
+`include "dsdv_svc_sx_roles_mut_order_group72.svh"
+`else
 `include "dsdv_svc_sx_roles_mut_order.svh"
+`endif
+`else
+`ifdef OT_SVC_GROUP72
+`include "dsdv_svc_sx_roles_group72.svh"
 `else
 `include "dsdv_svc_sx_roles.svh"
+`endif
 `endif
     localparam integer W = 269, N = 8, TW = 5, SW = 137, SL = 33, NS = 4;
     reg [1:0] rs;

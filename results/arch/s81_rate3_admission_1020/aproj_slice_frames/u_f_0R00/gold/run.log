@@ -1,0 +1,40 @@
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e13w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e13w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e13e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e13e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e8w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e8w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e8e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e8e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e4w_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e4w_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e4e_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e4e_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e1b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e1b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e1_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e1_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e0b_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e0b_0.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e0_1.viamap.hex:0: $readmem file not found
+%Warning: /srv/opentallas-scratch/codex/s81-rate3-admission-1020/out/aproj_slice_frames/u_f_0R00/gold/f_e0_0.viamap.hex:0: $readmem file not found
+GO 0 63 0 4
+RET 404 17a04f8a01004040b
+RET 405 07974b1f81004440b
+RET 406 177b82ea81004804b
+RET 407 1782fa7881004c04b
+RET 409 179a2cf501004088b
+RET 410 078f5e3c41004488b
+RET 411 1782bd3501004844b
+RET 412 1754a62001004c44b
+RET 414 17b3eaff01004004b
+RET 415 1788e9c181004404b
+RET 418 0782dbf8c1004888b
+RET 419 07a276c7e1004c88b
+RET 423 17a168e541004060b
+RET 424 177d734c61004460b
+END edges=2063 ret_words=14 xo_checked=2061 fault=0 spine_fault=0
+- tools/s81_dv/layer_prog/qf_producer/tb_toksim_fgu_seq.sv:176: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 8.093 s; speed 255.606 ns/s
+- Verilator: cpu 8.092 s on 1 threads; allocated 46 MB

@@ -50,7 +50,11 @@ W5_COLL = [('arv_wo', 'in_valid'), ('ard_wo', 'in_data'), ('arl_wo', 'in_last'),
            ('rr_wi', 'out_rank'), ('re_wi', 'out_err'), ('ccv_wo', 'cmd_v'), ('ccm_wo', 'cmd_mode'),
            ('ccw_wo', 'cmd_words'), ('cct_wo', 'cmd_tag')]
 W5_PEERS = [('dd_wo', 'native59', 'dd_i'), ('dr_wi', 'native59', 'dr_o'), ('hr_wi', 'tt_ctlm', 'hr'),
-            ('cmd_wi', 'tt_ctlm', 'cmd'), ('ss_wo', 'tt_ctlm', 'ss5'), ('ag_wo', 'tt_ctlm', 'ag5')]
+            ('cmd_wi', 'tt_ctlm', 'cmd'), ('ss_wo', 'tt_ctlm', 'ss5'), ('ag_wo', 'tt_ctlm', 'ag5'),
+            # QLB-C4b 10-18: the slice stream TABLE words (PROG / CROM / BTAB, stream kinds 1..3) -- tt_ctlm's calendar
+            # TLOAD entries play them from the installed image onto the up-travelling stream at W5 (was a tie: no load
+            # path for the slice tables on the die)
+            ('st_wi', 'tt_ctlm', 'tl')]
 CDV = 'qfd_c_b16_dv'
 WCOL = ('io_collective', 'native59', 'tt_ctlm', 'embed_prov', 'sys_face')
 # Q-DIEPLAN6 10-17 (face mode, OT_SPLIT_DV_WCOL_RTL != 0): the W-column masters re-ported to the DV slices, bound on
@@ -66,6 +70,30 @@ WCOL_RTL = {'native59': ('qfd_native59_dv_service', 'rtl/qwen_split/qfd_native59
 WCOL_VIEW = {'embed_prov': ('qfd_embedding_word_provider', 'rtl/qwen_split/qfd_embedding_word_provider.sv')}
 # one regional clock / reset per re-ported master (the pre-DV multi-root pins fold onto them)
 WCOL_REN = {'rsi': 'rst_n'}
+# MU-DQ-DHUSER 10-19 (COORD 0kg item 2: no constant strap on qfd_tt_ctlm_dv.dh_user): on the multi-user die
+# (OT_QWEN_MU_NU > 1) the die-level observer qfd_sys_face_mu_dhobs (= qfd_sys_face_mu_dhuser NU, OPSEG 0, compiled lists
+# from mu_opcal.dhobs_lists) sits in the channel between tt_ctlm's N face (its dh / dh_user pins) and native59, joins the
+# face's seq_dh bus as a third endpoint (the same landed hops as tt_ctlm.dh: dh_user names the h_start on the edge
+# tt_ctlm samples it) and drives tt_ctlm.dh_user directly (one 2-b wire, no relay).  Its res_user / mu_fault stay open
+# outputs (strict bind: output_open is not a failure; no die consumer port exists on the closed face / the ctlm today).
+DHOBS = ('mu_dhobs', 'qfd_sys_face_mu_dhobs', 'rtl/qwen_split/mu/qfd_sys_face_mu_dhobs.sv')
+DHOBS_WH = (43.2, 43.2)          # outline (um): ~60 flops + the 45-entry stage list; 187 + 6 pins on its faces
+DHOBS_GAP = 17.28                # above tt_ctlm's N face (the tt_ctlm | native59 channel is 108 um)
+# x: 259.2 um W of tt_ctlm's NE corner (die x 734.4 on dv2f18; between the ctlm's dh_user (x 636) and dh (x 952-970)
+# pins).  Placement trials (GEN only, 10-19): 172.8 W (dv2f18dh) and below sys_face's S face (A) push the sys_face ->
+# native59 q_slot / q_slot_beat / visibility_slot hops over reach (405.7-485.1 um: the observer's seq_dh leg relays take
+# their sites in the sys_face | native59 corner); E of tt_ctlm (C, 20800) re-plans tt_ctlm's own dh leg (3 relays, was 2).
+# Here the GEN passes with tt_ctlm's dh leg unchanged (2 relays, E 1); the observer's leg is E 2: it sees each h_start ONE
+# edge after tt_ctlm's dh pin (GEN has no equal-E fan-out legs) -- harmless under OPSEG (dh_user constant 0, ignored).
+DHOBS_DX = 259.2
+# MU-DQ-BOOTCTX 10-19 (COORD 0kg (1) + MU-KV-CTX record): the fillers' runtime initial context.  On the MU die the die-top
+# leaf qfd_mu_ctx_rx_die sits BESIDE the closed qfd_sys_face, joins the face's existing D2D RX nets (prog_context_slot,
+# prog_rx_v, rx_payload) as one more endpoint on the face's clock / reset, and drives qfd_tt_ctlm_dv.ctx_x (129 b, the
+# boot-record layout; the ctlm takes it with CTX_SRC 1, die_params).  ctx_user / mu_fault stay open observability outputs.
+CTXRX = ('mu_ctxrx', 'qfd_mu_ctx_rx_die', 'rtl/qwen_split/mu/qfd_mu_ctx_rx.sv')
+CTXRX_WH = (43.2, 97.2)          # outline (um): ~135 flops; 550 RX inputs on its faces (<= 6 / um)
+CTXRX_GAP = 4.32                 # above sys_face's N face
+CTXRX_IN = ('prog_context_slot', 'prog_rx_v', 'rx_payload')
 
 
 def _load(env):
@@ -149,6 +177,113 @@ def _wcol_rebind(v, m, M, keep, out, wrtl):
             assign_pins(M, m, v.Master, byn[inst], mst, src, peers, partition_master)
     m.setdefault('q3h', {})['dv_wcol_rebind'] = rec
     return rec
+
+
+def _dhobs_inst(v, m, M, keep):
+    """MU-DQ-DHUSER: the observer instance on the MU die (None on a single-user die or without tt_ctlm.dh_user).
+    Placed in the tt_ctlm | native59 channel, DHOBS_DX W of tt_ctlm's NE corner; OT_SPLIT_DV_DHOBS_XY=x,y overrides.  Fail closed on any overlap."""
+    nu = int(os.environ.get('OT_QWEN_MU_NU', '1') or 1)
+    tt = next((i for i in keep if i.name == 'tt_ctlm'), None)
+    if os.environ.get('OT_SPLIT_DV_DHOBS', '1') == '0':
+        m.setdefault('q3h', {})['dv_dhobs_off'] = 'OT_SPLIT_DV_DHOBS=0: DIAGNOSTIC control only (tt_ctlm.dh_user undriven)'
+        return None
+    if nu <= 1 or tt is None:
+        return None
+    w, h = DHOBS_WH
+    xy = os.environ.get('OT_SPLIT_DV_DHOBS_XY', '').strip()
+    if xy:
+        x, y = (float(z) for z in xy.split(','))
+    else:
+        x, y = tt.x + tt.w - DHOBS_DX, tt.y + tt.h + DHOBS_GAP
+    x, y = round(round(x / 0.216) * 0.216, 3), round(y, 3)
+    hit = [i.name for i in keep if x < i.x + i.w - 1e-3 and i.x < x + w - 1e-3 and y < i.y + i.h - 1e-3 and i.y < y + h - 1e-3]
+    if hit:
+        raise ValueError(f'dv: {DHOBS[0]} at ({x}, {y}) {w} x {h} overlaps {hit[:6]}')
+    i = v.Inst(DHOBS[0], DHOBS[1], x, y, w, h, orient='R0', kind=tt.kind, region=tt.region, domain=tt.domain)
+    keep.append(i)
+    m.setdefault('q3h', {})['dv_dhobs'] = dict(inst=DHOBS[0], master=DHOBS[1], rtl=DHOBS[2], xy=[x, y], wh=[w, h], nu=nu,
+                                                rule='COORD 0kg: tt_ctlm.dh_user driven by the MU observer (no strap)')
+    return i
+
+
+def _dhobs_buses(m, out, dh_crt, has):
+    """the observer's die nets: a third endpoint on the face's seq_dh bus (whole 187 b; the observer reads [43:0]) and
+    its dh_user -> tt_ctlm.dh_user (2 b, direct).  Fail closed if the seq_dh bus, the ports or the clock / reset are
+    missing: the MU die must never fall back to an undriven / tied dh_user."""
+    n_ = DHOBS[0]
+    j = next((k for k, b in enumerate(out) if b[0] == 'dvw_sys_face_seq_dh'), None)
+    miss = [p for p in (('sys_face', 'seq_dh'), ('tt_ctlm', 'dh'), ('tt_ctlm', 'dh_user'), (n_, 'seq_dh'), (n_, 'dh_user'))
+            if not has(*p)]
+    if j is None or miss or len(dh_crt) != 2:
+        raise ValueError(f'dv: {n_}: seq_dh bus {"found" if j is not None else "MISSING"}, missing ports {miss}, '
+                         f'clock / reset {sorted(dh_crt.values())}')
+    b0, c0, n0, e0 = out[j]
+    out[j] = (b0, c0, n0, list(e0) + [(n_, 'seq_dh')])
+    out.append((f'dvw_{n_}_dh_user', 'spine_local', 2, [(n_, 'dh_user'), ('tt_ctlm', 'dh_user')]))
+    m['q3h']['dv_dhobs'].update(seq_dh_bus=b0, dh_user_bus=f'dvw_{n_}_dh_user', clock_reset=dict(
+        (f'{k[1]}', v_) for k, v_ in sorted(dh_crt.items())), open_outputs=['res_user', 'mu_fault'])
+
+
+def _ctxrx_inst(v, m, keep):
+    """MU-DQ-BOOTCTX: the ctx leaf on the MU die (None on a single-user die / without sys_face or tt_ctlm).  Placed above
+    sys_face's N face at its W edge; OT_SPLIT_DV_CTXRX_XY=x,y overrides; OT_SPLIT_DV_CTXRX=0 = diagnostic control only
+    (tt_ctlm.ctx_x then undriven: strict bind fails, as it must).  Fail closed on any overlap."""
+    nu = int(os.environ.get('OT_QWEN_MU_NU', '1') or 1)
+    sf = next((i for i in keep if i.name == 'sys_face'), None)
+    tt = next((i for i in keep if i.name == 'tt_ctlm'), None)
+    if os.environ.get('OT_SPLIT_DV_CTXRX', '1') == '0':
+        m.setdefault('q3h', {})['dv_ctxrx_off'] = 'OT_SPLIT_DV_CTXRX=0: DIAGNOSTIC control only (tt_ctlm.ctx_x undriven)'
+        return None
+    if nu <= 1 or sf is None or tt is None:
+        return None
+    w, h = CTXRX_WH
+    xy = os.environ.get('OT_SPLIT_DV_CTXRX_XY', '').strip()
+    if xy:
+        x, y = (float(z) for z in xy.split(','))
+    else:
+        x, y = sf.x, sf.y + sf.h + CTXRX_GAP
+    x, y = round(round(x / 0.216) * 0.216, 3), round(y, 3)
+    hit = [i.name for i in keep if x < i.x + i.w - 1e-3 and i.x < x + w - 1e-3 and y < i.y + i.h - 1e-3 and i.y < y + h - 1e-3]
+    if hit:
+        raise ValueError(f'dv: {CTXRX[0]} at ({x}, {y}) {w} x {h} overlaps {hit[:6]} (set OT_SPLIT_DV_CTXRX_XY)')
+    i = v.Inst(CTXRX[0], CTXRX[1], x, y, w, h, orient='R0', kind=sf.kind, region=sf.region, domain=sf.domain)
+    keep.append(i)
+    m.setdefault('q3h', {})['dv_ctxrx'] = dict(inst=CTXRX[0], master=CTXRX[1], rtl=CTXRX[2], xy=[x, y], wh=[w, h], nu=nu,
+                                                rule='COORD 0kg (1): filler initial context from the KV host plane '
+                                                     '(MU-KV-CTX kind-12 MU slot) -> tt_ctlm.ctx_x')
+    return i
+
+
+def _ctxrx_buses(m, out, cx_crt, has):
+    """the ctx leaf's die nets: one more endpoint on each of the face's RX nets (prog_context_slot, prog_rx_v,
+    rx_payload) and ctx_x -> tt_ctlm.ctx_x (129 b).  Fail closed if a face RX net, a port or the clock / reset is missing:
+    the MU die must never leave tt_ctlm.ctx_x undriven or tied."""
+    n_ = CTXRX[0]
+    if (n_, 'rst_n') not in cx_crt:
+        # QW-GEN3 10-19 (first real GEN of BOOTCTX, dv2f19g3: 'clock / reset [clk_d2d]'): sys_face's reset is the
+        # rst_d2d bus (class spine_local: rs_bump.rso_d -> d2d_rom / ucie_kv / sys_face), not a 'reset' class bus; the
+        # leaf joins THAT net as one more sink (same reset as the face whose RX nets it reads).  Still fail closed below.
+        # dv2f19g3 try 3: joining rst_d2d made a new spine_local RELAY leg (rly_rst_d2d__fo3_*) whose release edge no
+        # projection declares (reset_calendar_audit 'undeclared reset-root relationship' on the rx_payload leg landing);
+        # take the die's reset-TREE net that tt_ctlm (and mu_dhobs) use -- a declared reset root, repeater tree + landed
+        k = next((k for k, b in enumerate(out) if b[1] == 'reset' and any(e[0] == 'tt_ctlm' for e in b[3])), None)
+        if k is None:
+            k = next((k for k, b in enumerate(out) if ('sys_face', 'rst_n') in [tuple(e) for e in b[3]]), None)
+        if k is not None:
+            b0, c0, n0, e0 = out[k]
+            out[k] = (b0, c0, n0, list(e0) + [(n_, 'rst_n')])
+            cx_crt[(n_, 'rst_n')] = b0
+    js = {p: next((k for k, b in enumerate(out) if ('sys_face', p) in [tuple(e) for e in b[3]]), None) for p in CTXRX_IN}
+    miss = [p for p in [('tt_ctlm', 'ctx_x'), (n_, 'ctx_x')] + [(n_, q) for q in CTXRX_IN] if not has(*p)]
+    if None in js.values() or miss or len(cx_crt) != 2:
+        raise ValueError(f'dv: {n_}: face RX nets {js}, missing ports {miss}, clock / reset {sorted(cx_crt.values())}')
+    for p, j in js.items():
+        b0, c0, n0, e0 = out[j]
+        out[j] = (b0, c0, n0, list(e0) + [(n_, p)])
+    out.append((f'dvw_{n_}_ctx_x', 'spine_local', 129, [(n_, 'ctx_x'), ('tt_ctlm', 'ctx_x')]))
+    m['q3h']['dv_ctxrx'].update(rx_buses={p: out[j][0] for p, j in js.items()}, ctx_x_bus=f'dvw_{n_}_ctx_x',
+                                clock_reset=dict((f'{k[1]}', v_) for k, v_ in sorted(cx_crt.items())),
+                                open_outputs=['ctx_user', 'mu_fault'])
 
 
 def apply_dv(v, m):
@@ -275,6 +410,7 @@ def apply_dv(v, m):
     # ranges incl. rs_i / rs_o and the four quadrant clock entries); without it the CB contract scaled + rs_i / rs_o
     CD = _load('OT_SPLIT_DV_CONTRACT')
     ck_pins = ['ck']
+    rst_pins = []
     if CD:
         CWN, ch = CD['outline_um']['w'], CD['outline_um']['h']
         dirs = {'bco': 'output', 'rs_o': 'output', 'rs': 'output', 'tie_hi': 'output', 'tie_lo': 'output'}
@@ -284,6 +420,9 @@ def apply_dv(v, m):
             d_ = dirs.get(n_) or ('output' if n_.startswith('bco') else 'input')
             ports[n_] = dict(dir=d_, bits=p_['bits'], face=p_['face'], layer=p_['layer'], range=list(p_['range_um']))
         ck_pins = [p for p in ports if p.startswith('ck')]
+        # Q-CB16RST 10-19 (claude/q-cb16rst-1019 ac8e4c483): a contract with regional resets rst_c<c>r<r> (beside each
+        # ck_c<c>r<r>, registered on that region's clock at entry) replaces the cluster's single rst_n
+        rst_pins = sorted(p for p in ports if re.fullmatch(r'rst_c\d+r\d+', p))
         if os.environ.get('OT_SPLIT_DV_RSI_AT_RS') == '1':
             # the far cluster's rs (S face, 488.9-660.2) feeds the near cluster's rs_i (N face) across the 130-um band
             # gap; the contract's rs_i sits under rs_o (1093.7-1265.0): a 605-um jog per bit (735 um each, one relay
@@ -490,6 +629,12 @@ def apply_dv(v, m):
             continue                       # the relay planner places the lane relays itself
         else:
             raise ValueError(f'dv: instance {n} ({d["m"]}) not in the q3h model')
+    dhobs = _dhobs_inst(v, m, M, keep)
+    if dhobs is not None:
+        by[dhobs.name] = dhobs
+    ctxrx = _ctxrx_inst(v, m, keep)
+    if ctxrx is not None:
+        by[ctxrx.name] = ctxrx
     m['insts'][:] = keep
     names = {i.name for i in keep}
     # final placement gate (fail closed): no two instances overlap
@@ -506,6 +651,7 @@ def apply_dv(v, m):
         raise ValueError(f'dv: {len(ovl)} overlapping instances {ovl[:8]}')
     # ---- buses
     out, dropped, partial = [], {}, []
+    dh_crt, cx_crt = {}, {}
     slices = sorted(n for n in names if n.startswith('dvs_'))
     for bid, cl, bits, eps in m['buses']:
         if cl in ('clock_trunk', 'reset'):
@@ -513,10 +659,23 @@ def apply_dv(v, m):
             if cl == 'clock_trunk':           # a cluster's die clock entries (Q-CLUSTER: four quadrant pins)
                 e2 = [x for e in e2 for x in ([(e[0], p) for p in ck_pins] if e[0].startswith('c16_') and e[1] == 'ck'
                                               else [e])]
+            if cl == 'reset' and rst_pins:   # Q-CB16RST: a cluster's reset = 16 regional drops (one per clock region)
+                e2 = [x for e in e2 for x in ([(e[0], p) for p in rst_pins] if e[0].startswith('c16_') and e[1] == 'rst_n'
+                                              else [e])]
             if cl == 'clock_trunk' and any(e[0].startswith('c16_') for e in e2):
                 e2 += [(s, 'ck') for s in slices if not any(x == s for x, _ in e2)]
             if bid == 'rst_field':
                 e2 += [(s, 'rst_n') for s in slices]
+            if dhobs is not None and any(e[0] == 'tt_ctlm' and (cl == 'reset' or e[1].startswith('ck')) for e in e2):
+                k_ = 'ck' if cl == 'clock_trunk' else 'rst_n'
+                if (dhobs.name, k_) not in dh_crt:          # tt_ctlm's FIRST clock / reset net (it folds onto one)
+                    e2.append((dhobs.name, k_))
+                    dh_crt[(dhobs.name, k_)] = bid
+            if ctxrx is not None and any(e[0] == 'sys_face' and (cl == 'reset' or e[1].startswith('ck')) for e in e2):
+                k_ = 'ck' if cl == 'clock_trunk' else 'rst_n'
+                if (ctxrx.name, k_) not in cx_crt:          # sys_face's clock / reset net (the RX nets' domain)
+                    e2.append((ctxrx.name, k_))
+                    cx_crt[(ctxrx.name, k_)] = bid
             if len(e2) > 1:
                 out.append((bid, cl, bits, e2))
             continue
@@ -601,7 +760,7 @@ def apply_dv(v, m):
     if FX and os.environ.get('OT_SPLIT_DV_WCOL_RTL', '1') != '0':
         from qwen_split.source_pin_plan import rtl_ports
         root = Path(__file__).resolve().parents[2]
-        for inst, (mst, src) in list(WCOL_RTL.items()) + list(WCOL_VIEW.items()):
+        for inst, (mst, src) in list(WCOL_RTL.items()) + list(WCOL_VIEW.items()) + [(DHOBS[0], DHOBS[1:]), (CTXRX[0], CTXRX[1:])]:
             if inst not in names:
                 continue
             rp = rtl_ports(root / src, mst)
@@ -655,11 +814,17 @@ def apply_dv(v, m):
                 out.append((f'dvw_{si}_{sp_}', 'spine_local', M[by[si].master].ports[sp_][1], [(si, sp_), (di, dp_)]))
             else:
                 miss.append(f'{si}.{sp_}->{di}.{dp_}')
+        if dhobs is not None:
+            _dhobs_buses(m, out, dh_crt, has)
+        if ctxrx is not None:
+            _ctxrx_buses(m, out, cx_crt, has)
         m.setdefault('q3h', {}).setdefault('dv_face_missing', miss)
         if wrtl:
             _wcol_rebind(v, m, M, keep, out, wrtl)
-        # chain-end idle inputs (rule c): W5 st/sc up-travelling inputs from the W column side, E5 up-face inputs,
-        # the l9_wi of an unpaired slice -- only where no bus lands
+        # chain-end idle inputs (rule c): W5 sc up-travelling input from the W column side (no scalar producer west of
+        # W5: the scalar chain is slice-to-slice, its ROOT is on W5), E5 up-face inputs, the l9_wi of an unpaired slice --
+        # only where no bus lands.  QLB-C4b 10-18: W5 st_wi is NOT a chain-end idle input any more (tt_ctlm.tl drives
+        # it, W5_PEERS); without that bus it stays unconnected and the strict bind fails (never tied).
         conn = {e for b in out for e in b[3]}
         east = max((n for n in names if n.startswith('dvs_E')), key=lambda n: x_of[n], default=None)
         for n in sorted(names):
@@ -671,7 +836,7 @@ def apply_dv(v, m):
                     continue
                 up_in = n == east and p_.endswith('_wi') and not p_.startswith(('l9', 'cmd', 'hr', 'rv', 're', 'rr',
                                                                                 'rl', 'rd', 'dr'))
-                if (n == 'dvs_W5' and p_ in ('st_wi', 'sc_wi')) or up_in or p_ == 'l9_wi':
+                if (n == 'dvs_W5' and p_ == 'sc_wi') or up_in or p_ == 'l9_wi':
                     m['ties'].append((n, p_, pv[1], 0))
     # far-band clusters: rs_i tied low (Q-CLUSTER: the far bands tie the feedthrough input)
     fed = {e[0] for b in out for e in b[3] if e[1] == 'rs_i'}

@@ -1,0 +1,84 @@
+== run_emb_emb_late.out
+DV_LOWER_MAT emb FAIL 0/4096 mutant=emb_late {"ports": 64}
+    slice 0 X[0] (row 0): got 0x3b022952 exp 0x3c8d8d21
+    slice 0 X[1] (row 1): got 0xbc6f94a0 exp 0x3d284474
+    slice 0 X[2] (row 2): got 0xbd202286 exp 0x3c8758d7
+    slice 0 X[3] (row 3): got 0xbc52b11f exp 0xbd85717c
+    slice 0 X[4] (row 4): got 0x39d57140 exp 0x3d396ab9
+    slice 0 X[5] (row 5): got 0xbc61c61e exp 0x3cb6d5c4
+    slice 0 X[6] (row 6): got 0x3d84831b exp 0xbcdbefa1
+    slice 0 X[7] (row 7): got 0x3d4e2d59 exp 0x3cee06a6
+    slice 0 X[8] (row 8): got 0xbe0acfc0 exp 0x3c955430
+    slice 0 X[9] (row 9): got 0xbdc16f59 exp 0x3c70f40e
+rc=1
+== run_emb_m0.out
+DV_LOWER_MAT emb PASS 4096/4096 mutant=0 {"ports": 64}
+rc=0
+== run_gu_m0.out
+DV_LOWER_MAT gu PASS 3072/3072 mutant=0 {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}
+rc=0
+== run_gu_sbase1.out
+DV_LOWER_MAT gu FAIL 9/3072 mutant=sbase1 {"stn": 12, "slices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}
+    gu slice 0 row 0: got 0xc1f8b137 exp 0xc1b4ddfa
+    gu slice 0 row 1: got 0x40beb5a9 exp 0x403919bb
+    gu slice 0 row 2: got 0x42239c5d exp 0x41e2d8cd
+    gu slice 0 row 3: got 0x41885bce exp 0x41356f94
+    gu slice 0 row 4: got 0xc0702c90 exp 0xc099d1c1
+    gu slice 0 row 5: got 0xbf8d810a exp 0xbfa1b80c
+    gu slice 0 row 6: got 0x410acd46 exp 0x40f9d7e4
+    gu slice 0 row 7: got 0xbf09d2b0 exp 0xbeec7605
+    gu slice 0 row 8: got 0x413e45a6 exp 0x418635b3
+    gu slice 0 row 9: got 0xc064e9e8 exp 0xc16a685a
+rc=1
+== run_lm_amax_local.out
+DV_LOWER_MAT lm FAIL 13/26 mutant=amax_local {"best": 10925, "gather_rank": 0, "rounds": 25, "stn": 298, "collective_contract": {"arx_tag": 10925, "xc_tag": 1280114688, "tag_mismatch": 1}}
+    slice 0: die token [45] want 10925
+    slice 1: die token [45] want 10925
+    slice 2: die token [45] want 10925
+    slice 3: die token [45] want 10925
+    slice 4: die token [45] want 10925
+    slice 5: die token [45] want 10925
+    slice 6: die token [45] want 10925
+    slice 7: die token [45] want 10925
+    slice 8: die token [45] want 10925
+    slice 9: die token [45] want 10925
+rc=1
+== run_lm_m0.out
+DV_LOWER_MAT lm PASS 26/26 mutant=0 {"best": 10925, "gather_rank": 0, "rounds": 25, "stn": 298, "collective_contract": {"arx_tag": 10925, "xc_tag": 1280114688, "tag_mismatch": 1}}
+rc=0
+== run_od_m0.out
+DV_LOWER_MAT od PASS 515/515 mutant=0 {"collisions": {"o": 0, "down": 0}, "collective_contract": [{"message": "o", "cmd_tag": 0, "words": 256, "tag_mismatch": 255, "last_set": 32, "last_on_final": 1}, {"message": "down", "cmd_tag": 1, "words": 256, "tag_mismatch": 256, "last_set": 32, "last_on_final": 1}], "stn": {"o": 32, "down": 32}}
+rc=0
+== run_od_nostagger.out
+DV_LOWER_MAT od FAIL 15/515 mutant=nostagger {"collisions": {"o": 436, "down": 436}, "collective_contract": [{"message": "o", "cmd_tag": 0, "words": 256, "tag_mismatch": 81, "last_set": 3, "last_on_final": 0}, {"message": "down", "cmd_tag": 1, "words": 256, "tag_mismatch": 256, "last_set": 3, "last_on_final": 0}], "stn": {"o": 32, "down": 32}}
+    S0ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S10ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S1ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S2ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S3ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S4ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S5ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S6ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S7ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+    S8ST fault bits 1000001 (any,su,vm,stn,sc,stm,port)
+rc=1
+== run_od_xc_bc.out
+DV_LOWER_MAT od FAIL 514/515 mutant=xc_bc {"collisions": {"o": 0, "down": 0}, "collective_contract": [{"message": "o", "cmd_tag": 0, "words": 256, "tag_mismatch": 255, "last_set": 32, "last_on_final": 1}, {"message": "down", "cmd_tag": 1, "words": 256, "tag_mismatch": 256, "last_set": 32, "last_on_final": 1}], "stn": {"o": 32, "down": 32}}
+    XC: cc words on ['S10CC', 'S11CC', 'S1CC', 'S2CC', 'S3CC', 'S4CC', 'S5CC', 'S6CC', 'S7CC', 'S8CC', 'S9CC'] (only dvs_W5 reaches io_collective)
+rc=1
+== run_qkv_m0.out
+DV_LOWER_MAT qkv PASS 768/768 mutant=0 {"stn": 12, "slices": [0, 2, 4, 6, 8, 10]}
+rc=0
+== run_qkv_sbase1.out
+DV_LOWER_MAT qkv FAIL 2/768 mutant=sbase1 {"stn": 12, "slices": [0, 2, 4, 6, 8, 10]}
+    qkv slice 0 row 0: got 0xc1a72e53 exp 0xc22f97b3
+    qkv slice 0 row 1: got 0xc0f7bfb4 exp 0xbfb37dd4
+    qkv slice 0 row 2: got 0x418b085e exp 0x41819578
+    qkv slice 0 row 3: got 0xc1eb5568 exp 0xc2cbc3b5
+    qkv slice 0 row 4: got 0x4207c2a4 exp 0x414765e0
+    qkv slice 0 row 5: got 0xc2954182 exp 0xc187d6f2
+    qkv slice 0 row 6: got 0xc32e05a1 exp 0xc30670c5
+    qkv slice 0 row 7: got 0x42ad1614 exp 0x42a3f9f8
+    qkv slice 0 row 8: got 0xc206cd43 exp 0xc1971f83
+    qkv slice 0 row 9: got 0x425012f8 exp 0x408c1903
+rc=1

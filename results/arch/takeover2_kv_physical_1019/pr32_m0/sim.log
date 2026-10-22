@@ -1,0 +1,5 @@
+PR_EQ PASS checks=8256 ff_net_checks=49857984 outputs=11 ff_nets=6039
+- /srv/opentallas-scratch/claude/takeover2-kv-physical-1019/m0/tb_pr.sv:6123: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 7us; walltime 0.687 s; speed 10.074 us/s
+- Verilator: cpu 0.687 s on 1 threads; allocated 11 MB

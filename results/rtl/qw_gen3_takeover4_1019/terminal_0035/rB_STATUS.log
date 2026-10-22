@@ -1,0 +1,10 @@
+2026-10-19 22:55:14 PDT QW-DIECLK3 rB: COPY of dv2f19g3r (PDN PASS), safe tree + neighbour trim + BALANCED spine (drift fix), DIAGNOSTIC
+2026-10-19 22:55:15 PDT chain start die=r22k src=6f78e3de2 (claude/qw-gen3-1019 QW-GEN3 successor of dv2f19g2; overlay on dv2f18dh2 src 0d4c9808f) from=grt
+2026-10-19 22:55:15 PDT RELAY_CHECK PASS design=qwen_compute buses=641 digest=sha256:e31deb978dd48f3ab2a6732443c143e495d123421f099979f1753ac3dfcde26f plan=dv2f19g3r-netlist schedule=compiled_schedule:tools/qwen_layerbench/layer_compile.py
+2026-10-19 22:55:16 PDT resume: OT_LEGAL instances=31871 overlaps=0 outside=0 / OT_PDN PASS special_shapes=20430110
+2026-10-19 22:55:16 PDT DIE CLOCK PHYS start (chain_dieclk.sh rB: on case_r22k/floorplan_pdn.odb, before GRT)
+2026-10-19 23:58:35 PDT DIE CLOCK PHYS: QCLK_REGIONAL_SPEC forwarded spine clk_rx/pll_d2d[0] balance=false trees 1057 stream 1055 land_owed links 182 bits 50267 bus classes 182 grid_center True safe_tree True neighbour_pairs 10 balance_spine True 2026-10-19 23:58:14 PDT QCLK rB QCLK_REACH PASS nets 93912 over405 0 over220 640 max_um 227.6 dc_r42_B5 by_type {} hpwl_max_um 431.7 safe_tree True safe_violations {} no_xy 0 2026-10-19 23:58:27 PDT QCLK rB CHECK TT+FF: NEIGHBOUR CHECK budget 80.0 ps (TT + FF): PASS  judged 9888 pairs, over 0 2026-10-19 23:58:29 PDT QCLK rB QCLK_REGIONAL FAIL intra=ok landed=FAIL drift=ok spine=FAIL | intra over 0/897 worst  | land owed links 182 bits N50267+G0 noroot 8 | lane drift max 222.5 >T/2 0/421 | spine cells 42197 levels 664 pads 28920 model 26219.8 DIECLK_STA_LAT late measured 14347 ideal 1 of 14348 (ideal e.g. clk_rx/pll_fwd[0]) DIECLK_STA_LAT early measured 14347 ideal 1 of 14348 (ideal e.
+2026-10-19 23:58:35 PDT DIE_REPAIR design qwen_compute_fwd
+2026-10-19 23:58:36 PDT DIE_REPEATERS MISSING /srv/opentallas-scratch/claude/qw-dieclk3-1019/rB/chain/grt_r22k/die_repeaters.json
+2026-10-19 23:58:36 PDT DIE_REPAIR FAIL: no GRT result is a die result
+2026-10-19 23:58:36 PDT QW-DIECLK3 rB chain rc=1

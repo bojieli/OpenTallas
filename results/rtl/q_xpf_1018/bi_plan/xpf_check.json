@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.qwen.xpf-check.v1",
+ "log": "/srv/opentallas-scratch/claude/q-xpf-1018/bi_plan/post/smoke/ctl/run_m0_s1.log",
+ "slice": "/srv/opentallas-scratch/claude/q-xpf-1018/bi_plan/post/c_ctl",
+ "lanes": "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/out/case/fwd_lanes.json",
+ "params": "/srv/opentallas-scratch/claude/qwen-split-compute/dv2f14bi/out/case/die.v.params.json",
+ "measured_hr_lane_edges": 19,
+ "elaborated": 20,
+ "sidecar": 20,
+ "derived": 20,
+ "hr_lane": {
+  "n": 25,
+  "E": 18,
+  "E_sta": 7,
+  "K": 2
+ },
+ "ctlm_land_faults": [],
+ "lag_hist": {
+  "0": 66,
+  "1": 11,
+  "4": 2,
+  "5": 5
+ },
+ "fails": [],
+ "verdict": "PASS"
+}

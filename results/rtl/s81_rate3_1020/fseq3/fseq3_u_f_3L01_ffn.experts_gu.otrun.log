@@ -1,0 +1,33 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-rate3
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-rate3
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-rate3
+ot-run: ot-epyc9       admits   728 GB (avail 670, growth 160, headroom 0, waiters 0/0 GB) load 51/128 running 36 disk 160 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-rate3
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-rate3
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3046931-1792498091 after 1 s
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 1/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 2/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 3/19 mat exp61.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 4/19 mat exp69.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 5/19 mat exp69.w13 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 6/19 mat exp69.w13 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 1009 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 7/19 mat exp112.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 8/19 mat exp112.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 9/19 mat exp112.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 10/19 mat exp170.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 11/19 mat exp170.w13 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 12/19 mat exp170.w13 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 1009 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 13/19 mat exp299.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 14/19 mat exp299.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 15/19 mat exp299.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1006 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 16/19 mat exp357.w13 rows 4 nseg 5 faults 0 ret_words 12 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 17/19 mat exp357.w13 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 1011 mutant None
+XS_PLACE_GEN u_f_3L01 op ffn.experts_gu phase 18/19 mat exp357.w13 rows 4 nseg 5 faults 0 ret_words 10 calendar measured_class T 1009 mutant None
+FSEQ3 u_f_3L01 ffn.experts_gu P 145 nph 18 PASS =204 xo_checked=6636 fault=0
+XS_PLACE_CHECK PASS u_f_3L01 ffn.experts_gu phase 18 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6638 ret_words=204 xo_checked=6636 fault=0
+TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 145 phases 18 rows 72 fixture_rows 72 go0 63 last_ret 2874 span 2811 errors 0 []
+FSEQ3 u_f_3L01 ffn.experts_gu P 144 nph 18 FAIL s=4 fixture_rows=4 errors=0 END edges=6603 ret_words=204 xo_checked=6601 fault=4
+TOKSIM_FGU_SEQ FAIL op ffn.experts_gu PER 144 phases 18 rows 72 fixture_rows 72 go0 63 last_ret 2857 span 2794 errors 4 ['FAULT edge 448 status 11 lx 0', 'FAULT edge 449 status 11 lx 0', 'FAULT edge 450 status 11 lx 0']
+FSEQ3_VERDICT u_f_3L01 ffn.experts_gu PASS
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3046931-1792498091): exit 0

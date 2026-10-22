@@ -1,0 +1,65 @@
+{
+ "op": "ffn.shared_gu",
+ "frame": "u_f_3L01",
+ "per": 146,
+ "nph": 3,
+ "rows": 12,
+ "go0": 63,
+ "last_go": 355,
+ "first_ret": 398,
+ "last_ret": 716,
+ "words": 30,
+ "go0_to_last_ret": 653,
+ "fixture_rows": 12,
+ "errors": [
+  "PHASE_FAIL p1: ['MISMATCH edge 398 row 0 lo 0 k 1 got 3d7f7361/0 want bdebd881/0', 'MISMATCH edge 399 row 1 lo 0 k 1 got be75f3a9/0 want bdd83104/0']",
+  "PHASE_FAIL p2: ['MISMATCH edge 398 row 0 lo 0 k 1 got 3e81be02/0 want bb235000/0', 'MISMATCH edge 399 row 1 lo 0 k 1 got bda6104e/0 want bdec5eab/0']",
+  "PHASE_FAIL p3: ['MISMATCH edge 398 row 0 lo 0 k 1 got 3da0696c/0 want bcb2e12e/0', 'MISMATCH edge 399 row 1 lo 0 k 1 got 3e6f017b/0 want 3e4e65b6/0']"
+ ],
+ "phases": [
+  {
+   "i": 0,
+   "vec": "p1",
+   "phase": 1,
+   "mat": "shared.w13",
+   "rows": 4,
+   "go": 63,
+   "shift": 0,
+   "words": 10,
+   "first_ret": 398,
+   "last_ret": 424,
+   "fixture_rows": 4,
+   "pass_": false
+  },
+  {
+   "i": 1,
+   "vec": "p2",
+   "phase": 2,
+   "mat": "shared.w13",
+   "rows": 4,
+   "go": 209,
+   "shift": 146,
+   "words": 10,
+   "first_ret": 544,
+   "last_ret": 570,
+   "fixture_rows": 4,
+   "pass_": false
+  },
+  {
+   "i": 2,
+   "vec": "p3",
+   "phase": 3,
+   "mat": "shared.w13",
+   "rows": 4,
+   "go": 355,
+   "shift": 292,
+   "words": 10,
+   "first_ret": 690,
+   "last_ret": 716,
+   "fixture_rows": 4,
+   "pass_": false
+  }
+ ],
+ "end": "END edges=2293 ret_words=30 xo_checked=2291 fault=0 spine_fault=0",
+ "pass": false
+}

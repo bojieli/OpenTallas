@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_dv_lane_h_safe2",
+ "enable": false,
+ "reason": "RTL registers every pin at the face: qfd_dv_safe1_head lands every input in exactly one pin flop (q_*) and drives every output from a flop (head out flops; sx_* from the lane launch flops lv/lx_*); flow pin registers would add unpriced cycles"
+}

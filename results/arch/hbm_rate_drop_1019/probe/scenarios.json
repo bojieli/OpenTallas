@@ -1,0 +1,357 @@
+{
+ "lane": "HBM-RATE-DROP",
+ "bundle": "ot-epyc6:/srv/opentallas-scratch/claude/lh-reprice3/src (LH-REPRICE3 987863cdc tools, unchanged)",
+ "outputs": "ot-epyc6:/srv/opentallas-scratch/claude/hbm-rate-drop/out2",
+ "scenarios": {
+  "cur_asis": {
+   "env": "none",
+   "bw": 45.03,
+   "bridge": 0,
+   "base": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_hbm_bw": {
+    "ds_ar_tok_s": 1513.1,
+    "qwen_tok_s": 426.4,
+    "ds_ar_cycles": 793087.8,
+    "qwen_cycles": 2814078.0
+   },
+   "only_att_qwen": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 830.8,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1444387.7
+   },
+   "all": {
+    "ds_ar_tok_s": 1338.1,
+    "qwen_tok_s": 410.1,
+    "ds_ar_cycles": 896789.3,
+    "qwen_cycles": 2926140.0
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1206.3,
+    "qwen_tok_s": 407.0,
+    "ds_ar_cycles": 994749.7,
+    "qwen_cycles": 2948059.6
+   }
+  },
+  "cur_fixsm": {
+   "env": "FIX_SM FIX_TR",
+   "bw": 45.03,
+   "bridge": 0,
+   "base": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_hbm_bw": {
+    "ds_ar_tok_s": 1513.1,
+    "qwen_tok_s": 581.2,
+    "ds_ar_cycles": 793087.8,
+    "qwen_cycles": 2064690.0
+   },
+   "only_att_qwen": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 830.8,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1444387.7
+   },
+   "all": {
+    "ds_ar_tok_s": 1338.1,
+    "qwen_tok_s": 551.4,
+    "ds_ar_cycles": 896789.3,
+    "qwen_cycles": 2176082.0
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1206.3,
+    "qwen_tok_s": 546.0,
+    "ds_ar_cycles": 994749.7,
+    "qwen_cycles": 2198001.6
+   }
+  },
+  "cur_fixatt": {
+   "env": "FIX_ATT FIX_ATTQ",
+   "bw": 45.03,
+   "bridge": 0,
+   "base": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_hbm_bw": {
+    "ds_ar_tok_s": 1513.1,
+    "qwen_tok_s": 440.4,
+    "ds_ar_cycles": 793087.8,
+    "qwen_cycles": 2724533.3
+   },
+   "only_att_qwen": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 911.7,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1316263.7
+   },
+   "all": {
+    "ds_ar_tok_s": 1338.1,
+    "qwen_tok_s": 430.3,
+    "ds_ar_cycles": 896789.3,
+    "qwen_cycles": 2788545.8
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1206.3,
+    "qwen_tok_s": 427.0,
+    "ds_ar_cycles": 994749.7,
+    "qwen_cycles": 2810465.5
+   }
+  },
+  "cur_fixall": {
+   "env": "FIX_SM FIX_TR FIX_ATT FIX_ATTQ",
+   "bw": 45.03,
+   "bridge": 0,
+   "base": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_hbm_bw": {
+    "ds_ar_tok_s": 1513.1,
+    "qwen_tok_s": 607.6,
+    "ds_ar_cycles": 793087.8,
+    "qwen_cycles": 1975145.2
+   },
+   "only_att_qwen": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 911.7,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1316263.7
+   },
+   "all": {
+    "ds_ar_tok_s": 1338.1,
+    "qwen_tok_s": 588.7,
+    "ds_ar_cycles": 896789.3,
+    "qwen_cycles": 2038487.7
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1206.3,
+    "qwen_tok_s": 582.4,
+    "ds_ar_cycles": 994749.7,
+    "qwen_cycles": 2060407.4
+   }
+  },
+  "suc_fixall": {
+   "env": "all fixes, --bw 90.67 --bridge 1",
+   "bw": 90.67,
+   "bridge": 1,
+   "base": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_hbm_bw": {
+    "ds_ar_tok_s": 1877.6,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 639100.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_att_qwen": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 911.7,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1316263.7
+   },
+   "all": {
+    "ds_ar_tok_s": 1596.8,
+    "qwen_tok_s": 890.8,
+    "ds_ar_cycles": 751514.1,
+    "qwen_cycles": 1347137.1
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1406.9,
+    "qwen_tok_s": 876.5,
+    "ds_ar_cycles": 852914.9,
+    "qwen_cycles": 1369056.8
+   }
+  },
+  "t99_fixall": {
+   "env": "all fixes, --bw 99",
+   "bw": 99.0,
+   "bridge": 0,
+   "base": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_hbm_bw": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_att_qwen": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 911.7,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1316263.7
+   },
+   "all": {
+    "ds_ar_tok_s": 1608.6,
+    "qwen_tok_s": 891.1,
+    "ds_ar_cycles": 745996.1,
+    "qwen_cycles": 1346628.7
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1425.5,
+    "qwen_tok_s": 876.8,
+    "ds_ar_cycles": 841816.4,
+    "qwen_cycles": 1368548.5
+   }
+  },
+  "fix58": {
+   "env": "all fixes, --bw 58.8",
+   "bw": 58.8,
+   "bridge": 0,
+   "base": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_hbm_bw": {
+    "ds_ar_tok_s": 1678.5,
+    "qwen_tok_s": 766.2,
+    "ds_ar_cycles": 714931.3,
+    "qwen_cycles": 1566240.1
+   },
+   "only_att_qwen": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 911.7,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1316263.7
+   },
+   "all": {
+    "ds_ar_tok_s": 1460.8,
+    "qwen_tok_s": 729.7,
+    "ds_ar_cycles": 821446.9,
+    "qwen_cycles": 1644544.6
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1299.5,
+    "qwen_tok_s": 720.1,
+    "ds_ar_cycles": 923419.6,
+    "qwen_cycles": 1666464.3
+   }
+  },
+  "fix72": {
+   "env": "all fixes, --bw 72.52",
+   "bw": 72.52,
+   "bridge": 0,
+   "base": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_hbm_bw": {
+    "ds_ar_tok_s": 1785.4,
+    "qwen_tok_s": 902.6,
+    "ds_ar_cycles": 672099.7,
+    "qwen_cycles": 1329419.2
+   },
+   "only_att_qwen": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 911.7,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1316263.7
+   },
+   "all": {
+    "ds_ar_tok_s": 1539.4,
+    "qwen_tok_s": 852.4,
+    "ds_ar_cycles": 779530.6,
+    "qwen_cycles": 1407759.9
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1359.4,
+    "qwen_tok_s": 839.3,
+    "ds_ar_cycles": 882739.2,
+    "qwen_cycles": 1429679.7
+   }
+  },
+  "asis58": {
+   "env": "none, --bw 58.8",
+   "bw": 58.8,
+   "bridge": 0,
+   "base": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_hbm_bw": {
+    "ds_ar_tok_s": 1678.5,
+    "qwen_tok_s": 558.1,
+    "ds_ar_cycles": 714931.3,
+    "qwen_cycles": 2150015.6
+   },
+   "only_att_qwen": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 830.8,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1444387.7
+   },
+   "all": {
+    "ds_ar_tok_s": 1460.8,
+    "qwen_tok_s": 523.6,
+    "ds_ar_cycles": 821446.9,
+    "qwen_cycles": 2292037.1
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1299.5,
+    "qwen_tok_s": 518.6,
+    "ds_ar_cycles": 923419.6,
+    "qwen_cycles": 2313956.9
+   }
+  },
+  "ds32_45": {
+   "env": "FIX_DS32 (DS rows/32 sensitivity, NOT adopted)",
+   "bw": 45.03,
+   "bridge": 0,
+   "base": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 946.2,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1268221.8
+   },
+   "only_hbm_bw": {
+    "ds_ar_tok_s": 1737.5,
+    "qwen_tok_s": 426.4,
+    "ds_ar_cycles": 690661.4,
+    "qwen_cycles": 2814078.0
+   },
+   "only_att_qwen": {
+    "ds_ar_tok_s": 1905.4,
+    "qwen_tok_s": 830.8,
+    "ds_ar_cycles": 629775.1,
+    "qwen_cycles": 1444387.7
+   },
+   "all": {
+    "ds_ar_tok_s": 1504.9,
+    "qwen_tok_s": 410.1,
+    "ds_ar_cycles": 797385.3,
+    "qwen_cycles": 2926140.0
+   },
+   "info_banklat_all": {
+    "ds_ar_tok_s": 1343.7,
+    "qwen_tok_s": 407.0,
+    "ds_ar_cycles": 893065.4,
+    "qwen_cycles": 2948059.6
+   }
+  }
+ }
+}

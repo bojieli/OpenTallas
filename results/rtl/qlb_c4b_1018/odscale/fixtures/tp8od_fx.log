@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/qw-odscale
+ot-run: ot-epyc5       admits  1397 GB (avail 1037, growth 59, headroom 0, waiters 0/0 GB) load 126/128 running 11 disk 1434 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/qw-odscale
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/qw-odscale
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/qw-odscale
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qw-odscale
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qw-odscale
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-888839-1792415736 after 0 s
+TP8OD 0 {"o": 4096, "down": 4096}
+TP8OD 1 {"o": 4096, "down": 4096}
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-888839-1792415736): exit 0

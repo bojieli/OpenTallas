@@ -1,0 +1,4 @@
+mutant: pre_r0_j6 word addr 8192 value 0x40bec71e -> xor 0x00400000
+QWEN_LAYER_IMAGES {"stage": "L0", "ranks_out": {"0": {"counts": {"emitted": 5, "format_open": 24, "golden_mismatch": 1, "unsupported_lowering": 2, "v1_unsupported": 2}, "events": 8548, "replay_sha256": "f798143f41b9c2fa1bc5524ed5a9baf098fcc645f9fc02e324b5b7baac53d8c2"}}}
+MUTANT_DETECTED golden_mismatch row_scale_qkv vop_golden != HGI functional model on 1 words (first addr 8960)
+regen: flip bit 22 of word 0 of operands_L0.npz pre_r0_j6, then qwen_layer_images emit --stage L0 --ranks 0 (expected: golden_mismatch on row_scale_qkv)

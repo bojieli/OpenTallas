@@ -1,0 +1,11 @@
+RSTP=1 q-element view (NATIVE-SWEEP/NS-QXPQ 2026-10-18) for ot_v41_rom_elem_q_qxpq_w10, from the CLOSED route
+dsrom-qelem-qs5f-rstp-f9192e143-tc-hm10-cl-2bded98f0 (TT +68.11 / FF +6.39 ps, DRC 0; source 2bded98f0, hold-ECO pass2; record origin/codex/closure-record-dsrom-qelem-qs5f-rstp-f9192e143-tc-hm10-cl-2bded98f0).
+- ot_v41_rom_elem_q_qxpq_w10.lef = the record's published abstract results/rtl/dsrom_qelem_pq_20261006/qxpq_rst_1017/closed/view/q_elem.lef
+  (510.84 x 221.4, 741 pins; same as the view_export LEF in size/pin count; not installed, as for q_elem_qs5f_efs).
+- *_{tt,ff,ss}.lib + export_*.tcl/log + abstract.json: tools/tt_views/view_export.py (origin/main) VERDICT REPLAY of cl/routed_ioref.a2.json
+  on AGIdock cl/eco/pass2/orfs 6_final.odb (sha256 1e4e7074...): export TT +68.1104 / FF +6.3889 = verdict +68.11 / +6.39 (checked=true).
+  The run's src snapshot was pruned; /src was rebuilt from git 2bded98f0 (ot_rom_4096x274_m8, native_q_h1r_input.sdc, common_flow/io_ref_routed.sdc
+  = .ot_mm copy, sha cb2805c3 = cl/io_ref_routed.sdc) + the record's dsrom_q_cl_signoff.sdc; the slack check confirms the sequence.
+- insertion.json: tools/closure_loop/ck_insertion.py --routed --route-corner TC on the same ODB/SPEF: boundary TT 489.4 (462.6..501.0) FF 387.5, 53,106 sinks.
+Native audit (own-R): FAIL launch 258.9 > 220 on 4 pins (prow[26,23,24], pnseg[1]); capture PASS (rst_n 84.2); spread TT 38.4 / FF 30.5.
+Receipt results/arch/native_sweep_1018/native_qxpq_rstp_own.json.

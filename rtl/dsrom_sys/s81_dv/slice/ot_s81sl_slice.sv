@@ -89,7 +89,13 @@ module ot_s81sl_leaf #(
         .hr_v(hr_v), .hr_j(hr_j), .hr_hf(hr_hf), .hq_v(hq_v), .hq_d(hq_d), .n_go(n_go), .n_pre(n_pre),
         .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .rb_v(rb_v), .rb_d(rb_d),
         .p_v(p_v), .p_d(p_d), .y_v(y_v), .y_i(y_i), .y(y), .fault(f_vn));
-    ot_s81sl_vs #(.MUT(VS_MUT)) u_vs (.clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
+`ifndef OT_S81SL_HARD
+    ot_s81sl_vs #(.MUT(VS_MUT)) u_vs (
+`else
+    // Frozen hard child: its Liberty/blackbox has no parameters.
+    ot_s81sl_vs u_vs (
+`endif
+        .clk(clk), .rst_n(rst_n), .s_v(s_v), .s_d(s_d),
         .x_rv(x_rv), .x_ra(x_ra), .x_qv(x_qv), .x_qd(x_qd), .x_wv(x_wv), .x_wa(x_wa), .x_wm(x_wm), .x_wd(x_wd),
         .u_v(u_v), .u_i(u_i), .u(u), .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i),
         .sw_v(swv), .sw_d(swd), .sw_w(sww), .sw_lim(swl), .sw_vi(swvi), .sw_ri(swri), .sw_fi(swfi),
@@ -109,7 +115,13 @@ module ot_s81sl_leaf #(
         .o_f(rff));
     dsfd_su_t_rxsb u_rxsb (.ck(clk), .rst(rst_n), .i_v(rfv), .i_u(rfu), .i_u2(rfu2), .i_mx(rfmx), .i_f(rff),
         .o_v(ravi), .o_r(rari), .o_f(rafi));
-    ot_s81sl_vq #(.AQ_XMEM(AQ_XMEM)) u_vq (.clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y),
+`ifndef OT_S81SL_HARD
+    ot_s81sl_vq #(.AQ_XMEM(AQ_XMEM)) u_vq (
+`else
+    // Frozen hard child: its Liberty/blackbox has no parameters.
+    ot_s81sl_vq u_vq (
+`endif
+        .clk(clk), .rst_n(rst_n), .y_v(y_v), .y_i(y_i), .y(y),
         .u_v(u_v), .u_i(u_i), .u(u), .sid(sid), .k(k), .m_v(m_v), .m_q(m_q), .m_b(m_b), .m_i(m_i),
         .um_v(um_v), .um_q(um_q), .um_b(um_b), .um_i(um_i), .xf_v(xf_v), .xf_s(xf_s), .xf(xf), .fault(f_vq));
     // vsw / RA lane / ve faults are sticky in their leaves and reach vs (sw_fi / ra_fi / ve_fi -> vs fault)
@@ -131,7 +143,7 @@ module ot_s81sl_slice #(
     input  wire [1103:0]   ri_w, input wire [1103:0] ri_e, output wire [1103:0] ro_e, output wire [1103:0] ro_w,
     input  wire [275:0]    vi,   output wire [275:0] vo,
     // band port (C3)
-    input  wire [1103:0]   bi,   output wire [1103:0] bo,
+    input  wire [1103:0]   bi,   output wire [512:0] bo,
     // x chains: 0 / 1 = down (W / E frame of row 1), 2 / 3 = up (row 2)
     output wire [4*1104-1:0] xc,
     // frame return lanes (cfifo rd)
@@ -206,7 +218,7 @@ module ot_s81sl_slice #(
             .e_v(ev_x), .e_c(ec_x), .e_d(ed_x), .eg_v(eg_v), .eg_c(eg_c), .eg_d(eg_d), .g_v(gv_x), .g_c(gc_x), .g_d(gd_x),
             .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si),
             .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd), .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(f_xr));
-        assign bo = 1104'd0;     // C1 has no band port: the C1 cluster master does not expose bi / bo
+        assign bo = 513'd0;      // C1 has no band port: the C1 cluster master does not expose bi / bo
     end endgenerate
     // xfin (S81-DV leaf): sid = the slice strap (RTL-BUILD-S81: was unconnected); mode ENG -> e_* -> eg
     ot_s81dv_xfin u_xf (.clk(clk), .rst_n(rst_n), .go(x_go), .mode(x_mode), .sid(sid), .eps(x_eps), .s_v(x_sv),
@@ -224,7 +236,7 @@ module ot_s81sl_slice #(
     ot_s81sl_rly #(.W(8 * 70), .D(DR)) u_rt (.clk(clk), .d(rt), .q(rt_q));
     // cap ports (e979ee6a7): rt_w = lanes 0..3 (W frame column), rt_e = lanes 4..7; capture writes to leaves 0..2 on its
     // S face and leaves 3, 4 on its N face, 2 ports a leaf (leaf-major, as cw_*_x)
-    ot_s81sl_cap u_cap (.clk(clk), .rst_n(rst_n), .rt_w(rt_q[279:0]), .rt_e(rt_q[559:280]), .cfg_v(cfg_v), .cfg_d(cfg_d),
+    ot_s81sl_capc2 u_cap (.clk(clk), .rst_n(rst_n), .rt_w(rt_q[279:0]), .rt_e(rt_q[559:280]), .cfg_v(cfg_v), .cfg_d(cfg_d),
         .cw_s_v(cw_v_x[5:0]), .cw_s_a(cw_a_x[71:0]), .cw_s_d(cw_d_x[191:0]),
         .cw_n_v(cw_v_x[9:6]), .cw_n_a(cw_a_x[119:72]), .cw_n_d(cw_d_x[319:192]), .fault(f_cap));
     // x chains: the frame cfifo ingress word (dsfd_cfifo_crs): xd = {record xw[564:0], marker} (566 b, lanes 0..2),

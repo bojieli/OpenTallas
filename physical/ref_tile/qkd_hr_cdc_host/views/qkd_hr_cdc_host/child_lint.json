@@ -1,10 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_hr_cdc_host-c3-53973e6bc/record/views/qkd_hr_cdc_host/provenance/qkd_hr_cdc_host.candidate.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_hr_cdc_host-pg2-12d9ecc9e/record/views/qkd_hr_cdc_host/provenance/qkd_hr_cdc_host.candidate.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [],
- "summary": "qkd_hr_cdc_host 151.2 x 151.2: PG M5 VDD 28 stripes (96% spread, 100% cov) / VSS 28 stripes (96% spread, 100% cov); strap M6; face pins 1210 blocked-above 0 blocked-same 0; clock ck_core insertion 242 ps; clock ck_host insertion 244 ps; pockets M5 0 (closed)",
+ "summary": "qkd_hr_cdc_host 151.2 x 151.2: PG M5 VDD 28 stripes (96% spread, 100% cov) / VSS 28 stripes (96% spread, 100% cov); strap M6; face pins 1210 blocked-above 0 blocked-same 0; clock ck_core insertion 245 ps; clock ck_host insertion 258 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "qkd_hr_cdc_host",
   "W": 151.2,
@@ -47,12 +47,12 @@
   },
   "clock_insertion": {
    "ck_core": {
-    "max_ps": 241.62,
-    "min_ps": 198.13
+    "max_ps": 245.21,
+    "min_ps": 199.95
    },
    "ck_host": {
-    "max_ps": 243.86,
-    "min_ps": 174.32
+    "max_ps": 258.23,
+    "min_ps": 173.69
    }
   },
   "pockets": {
@@ -61,7 +61,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 2979
+    "added": 2850
    },
    "count": 0,
    "area_um2": 0,

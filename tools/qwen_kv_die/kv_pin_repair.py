@@ -83,13 +83,20 @@ def _cands(K, target, grid, r):
     return [(K.up(target[0]+x*grid, K.GX), K.up(target[1]+y*grid, K.GY)) for x in range(-r, r+1) for y in range(-r, r+1)]
 
 
-def _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=0.0):
+def _far(K, end, p, q):
+    """KV-BIND11 (OT_KV_D2D_PINS): hop p -> end measured to the end's FARTHEST realized pin (d2d words), else p -> q."""
+    f_ = getattr(K, 'ep_far', None)
+    d_ = f_(end[0], end[1], p) if (f_ and end) else None
+    return d_ if d_ is not None else abs(p[0]-q[0])+abs(p[1]-q[1])
+
+
+def _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=0.0, a_end=None, b_end=None):
     if x < 4.32 or y < 4.32 or x+width+4.32 > m['die']['w'] or y+height+4.32 > m['die']['h']:
         return None
     orient = 'MY' if bp[0] < ap[0] else 'R0'
     inp_x, out_x = (x+width-K.SHAVE,x) if orient=='MY' else (x,x+width-K.SHAVE)
-    left = abs(ap[0]-inp_x)+abs(ap[1]-(y+height/2))
-    remaining = abs(bp[0]-out_x)+abs(bp[1]-(y+height/2))
+    left = _far(K, a_end, (inp_x, y+height/2), ap)
+    remaining = _far(K, b_end, (out_x, y+height/2), bp)
     if left > cap or remaining >= distance-1+detour:
         return None
     if any(min(x+width+4.32,i.x+i.w)-max(x-4.32,i.x) > .001 and
@@ -109,7 +116,12 @@ def repair(K, m):
             buses.append((bid, cls, bits, eps)); continue
         (a, pa), (b, pb) = eps
         ap, bp = K.pin_xy(by[a], M[by[a].master], pa.lstrip('*')), K.pin_xy(by[b], M[by[b].master], pb.lstrip('*'))
-        if abs(ap[0]-bp[0]) + abs(ap[1]-bp[1]) <= (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
+        # KV-BIND11 (OT_KV_D2D_PINS): a d2d end is measured to its farthest realized view pin
+        if hasattr(K, '_d2d_pin'):
+            K._d2d_pin(by[a], pa); K._d2d_pin(by[b], pb)
+        hop_ = lambda p_, q_, first_: max(abs(p_[0]-q_[0])+abs(p_[1]-q_[1]), _far(K, (b, pb), p_, q_),  # noqa: E731
+                                          _far(K, (a, pa), q_, p_) if first_ else 0.0)
+        if hop_(ap, bp, True) <= (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
             buses.append((bid, cls, bits, eps)); continue
         width, height = 52.68, 30.24 if bits <= 512 else K.up(bits * .048 + 4, K.GY)
         if __import__('os').environ.get('OT_KV_RLY_STD', '0') == '1':
@@ -128,16 +140,17 @@ def repair(K, m):
           # Each stage is chosen in free channel space; a trapped chain is rolled back.
           for stage in range(math.ceil((abs(ap[0]-bp[0])+abs(ap[1]-bp[1]))/200)+12):
               cap = 300 if previous[0].startswith('wctl_') and bid.startswith('wencoded_') else (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH)
-              if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) <= cap:
+              if hop_(ap, bp, not staged) <= cap:
                   break
-              distance = abs(ap[0]-bp[0])+abs(ap[1]-bp[1])
+              ae_ = None if staged else (a, pa)
+              distance = max(abs(ap[0]-bp[0])+abs(ap[1]-bp[1]), _far(K, (b, pb), ap, bp))
               fraction = min(.5, 350/distance)
               target = (ap[0]+fraction*(bp[0]-ap[0])-width/2,
                         ap[1]+fraction*(bp[1]-ap[1])-height/2)
               grid = K.GRID/2
               choices = []
               for x,y in _cands(K, target, grid, 16):
-                  c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance)
+                  c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, a_end=ae_, b_end=(b, pb))
                   if c_:
                       choices.append(c_)
               if not choices and (attempt == 1 or not widened.get(bid)):
@@ -147,7 +160,7 @@ def repair(K, m):
                   ring = [(x, y) for x, y in _cands(K, target, grid, 40)]
                   for x, y in ring:
                       # a boxed-in pin may step AROUND its blocker first (bounded detour; later stages must progress)
-                      c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=cap)
+                      c_ = _choice(K, m, staged, x, y, width, height, ap, bp, cap, distance, detour=cap, a_end=ae_, b_end=(b, pb))
                       if c_:
                           choices.append(c_)
               if not choices:
@@ -159,9 +172,9 @@ def repair(K, m):
               sbid=bid if not chain else bid+'__pinfix'+str(stage)
               chain.append((sbid,cls,bits,[previous,(name,'a')]))
               previous=(name,'b');ap=(out_x,y+height/2)
-          if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) <= (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
+          if hop_(ap, bp, not staged) <= (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
             break
-        if abs(ap[0]-bp[0])+abs(ap[1]-bp[1]) > (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
+        if hop_(ap, bp, not staged) > (K.HOP_REACH if getattr(K, "HOP", False) else K.PIN_REACH):
             unresolved.append(dict(bus=bid,um=abs(initial_ap[0]-bp[0])+abs(initial_ap[1]-bp[1])));
             buses.append((bid,cls,bits,eps)); continue
         if not staged:

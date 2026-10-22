@@ -1,0 +1,116 @@
+{
+ "schema": "opentallas.token_pass.mu_curve.v1",
+ "asof": "2026-10-19 18:30 PDT",
+ "label": "PRICED until TOK.FREEZE measures it",
+ "points": [
+  {
+   "design": "ds_rom",
+   "mode": "AR",
+   "users": 1,
+   "per_user_tok_s": 1212.6,
+   "aggregate_tok_s": 1212.6,
+   "grade": "PRICED (composed; 11.0% current-RTL cycles)",
+   "per_user_vs_baseline_x": 36.7
+  },
+  {
+   "design": "ds_rom",
+   "mode": "AR",
+   "users": 46,
+   "per_user_tok_s": 1212.6,
+   "aggregate_tok_s": 55780,
+   "grade": "PRICED (modelled calendar x composed per-user)",
+   "per_user_vs_baseline_x": 36.7
+  },
+  {
+   "design": "ds_rom",
+   "mode": "MTP",
+   "users": 1,
+   "per_user_tok_s": 3611.7,
+   "aggregate_tok_s": 3611.7,
+   "grade": "PRICED (composed)",
+   "per_user_vs_baseline_x": 109.4
+  },
+  {
+   "design": "ds_rom",
+   "mode": "MTP",
+   "users": 10,
+   "per_user_tok_s": 3611.7,
+   "aggregate_tok_s": 36985,
+   "grade": "PRICED (modelled calendar)",
+   "per_user_vs_baseline_x": 109.4
+  },
+  {
+   "design": "qwen_rom",
+   "mode": "AR",
+   "users": 1,
+   "per_user_tok_s": 4766.5,
+   "aggregate_tok_s": 4766.5,
+   "grade": "PRICED (composed; old-RTL layer cycles)",
+   "per_user_vs_baseline_x": 41.5
+  },
+  {
+   "design": "qwen_rom",
+   "mode": "AR",
+   "users": 2,
+   "per_user_tok_s": 4645.4,
+   "aggregate_tok_s": 9290.9,
+   "grade": "DIAG (2-user sequencer cmd stream measured; windows old-RTL + priced)",
+   "per_user_vs_baseline_x": 40.5
+  },
+  {
+   "design": "qwen_rom",
+   "mode": "AR",
+   "users": 4,
+   "per_user_tok_s": 2321.0,
+   "aggregate_tok_s": 14054.0,
+   "per_user_note": "4,769 / 4,642 / 2,321 / 2,321 (slowest shown)",
+   "grade": "PRICED (modelled occupancy)",
+   "per_user_vs_baseline_x": 20.2
+  },
+  {
+   "design": "hbm_gen_ds",
+   "mode": "AR",
+   "users": 1,
+   "per_user_tok_s": 1233.4,
+   "aggregate_tok_s": 1233.4,
+   "grade": "PRICED (composed incl. LH-REPRICE3)",
+   "per_user_vs_baseline_x": 37.4
+  },
+  {
+   "design": "hbm_gen_qwen",
+   "mode": "AR",
+   "users": 1,
+   "per_user_tok_s": 403.2,
+   "aggregate_tok_s": 403.2,
+   "grade": "PRICED (composed incl. LH-REPRICE3)",
+   "per_user_vs_baseline_x": 3.5
+  }
+ ],
+ "a100_qwen3_8b": [
+  {
+   "users": 1,
+   "per_user_tok_s": 114.8,
+   "aggregate_tok_s": 114.8,
+   "grade": "MEASURED (A100 80GB, Vast)"
+  },
+  {
+   "users": 102,
+   "per_user_tok_s": 16.5,
+   "aggregate_tok_s": 1681.0,
+   "grade": "MEASURED (A100 80GB, Vast)"
+  }
+ ],
+ "deepseek_reference": [
+  {
+   "users": 1,
+   "per_user_tok_s": 33.0,
+   "aggregate_tok_s": 33.0,
+   "grade": "PUBLISHED 8x H100 single-user (no A100 measurement; different node, side note only)"
+  }
+ ],
+ "notes": [
+  "x = per-user decode rate (latency), y = aggregate tok/s per deployment (S81 = 520 dies + 520 stacks; Qwen ROM = one compute+KV package; A100 = one 80 GB GPU).",
+  "Iso-area/iso-power normalisation is not applied here (owner rule: count logic + HBM area both sides).",
+  "Qwen baseline = A100 80GB measured; DeepSeek has no A100 number (published 8x H100 single-user, side note)."
+ ]
+}

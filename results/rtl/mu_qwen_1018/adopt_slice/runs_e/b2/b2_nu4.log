@@ -1,0 +1,6 @@
+bench2 (f) MUT=0: PASS 3/3
+bench2 (j) MUT=0: PASS 3/3
+    bench2 (m): seed 21 gap 18 vflags -GSU_LT=1 -GHD_W130=1 -GMU_NU=4: 8 emits, 6 tie heads, end cycle 1680
+bench2 (m) MUT=0: PASS 8/8
+    bench2 (o): ovl gap 4 vflags -GSU_LT=1 -GHD_W130=1 -GMU_NU=4
+bench2 (o) MUT=0: PASS 2/2

@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job dsdv_gunit_l5-g3-37cf95cf2 bench bench_gunit_mut8 host ot-agidock128 run /srv/opentallas-scratch/claude/closure-loop/dsdv_gunit_l5-g3-37cf95cf2 log cl/bench_gunit_mut8.a1b1.log captured 2026-10-18T18:08:09-07:00
+# fail_regex '^MUT=8: GUNIT FAIL '
+MUT=8: GUNIT FAIL 52 (MUT=8)

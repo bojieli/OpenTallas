@@ -1,0 +1,229 @@
+{
+ "schema": "opentallas.hbm_qwen_sm_mv_unit.v1",
+ "lane": "SMB-INT8",
+ "kv": "/srv/opentallas-scratch/claude/smb-int8/kv/L0",
+ "kv_npz_sha256": "5fbf3de7deaf2d253e991f416b94e56c5dd7dd75022d01c9867eff68008faa6b",
+ "L": 0,
+ "bundle": "/srv/opentallas-scratch/claude/layerbench-hbm/swx2b",
+ "mut": "noswap",
+ "rtl": "ot_hbm_accel_smh_attn #(.ENABLE_INT8(1), .INT8W(1)) + ot_hbm_sm_attn_front_static + ot_hbm_sm_i8w_front (this tree) + bundle master files (DIE_DEFINES), tb_hbm_smh_attn -DOT_SMH_ATTN_I8W, Verilator 5.050",
+ "records": [
+  {
+   "tag": "qkv",
+   "L": 0,
+   "fmt": "INT8 (fmt 3) via the WIDE INT8 front (command mode 3, 128 codes/edge)",
+   "m": 768,
+   "K": 4096,
+   "rows_sm": 48,
+   "golden_selftest": "PASS",
+   "priced_d4g8": {
+    "i": 4,
+    "start": 379.2,
+    "end": 3797.8,
+    "cost": 3418.6,
+    "base_cost": 3418.6
+   },
+   "Gn": 8,
+   "bf16_lines_per_row": 64,
+   "calendar_cycles": 3156,
+   "x_beats": 832,
+   "widened_lines_checked": 256,
+   "cmd_sha256": "b735c7c07ebbacd32700340f3dc0a50f6e53d5cd6ffe52beb109484776852494",
+   "pkt_sha256": "e8c3db930ba798cad9fe31bad1fd758b01b3a0c713f825440b8d95633457acd4",
+   "xw_sha256": "b49b15a7b1885cb888561ebf10da5069e5eac6748a326ddda69dcb495e7e9671",
+   "ops": [
+    {
+     "name": "sm0",
+     "rows": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47
+     ],
+     "Rh": 24,
+     "first_line": 852,
+     "first_packet": 852,
+     "last_line": 2387,
+     "lines": 3072,
+     "packed_lines": 1536,
+     "issue_cycles": 1536,
+     "window_end": 3220,
+     "results": 24,
+     "missing": [],
+     "n_missing": 0,
+     "bad": [
+      [
+       "acc",
+       24,
+       1,
+       "00000000",
+       "429fff72"
+      ],
+      [
+       "acc",
+       25,
+       1,
+       "00000000",
+       "bf812ff8"
+      ],
+      [
+       "acc",
+       26,
+       1,
+       "00000000",
+       "c1f0de67"
+      ],
+      [
+       "acc",
+       27,
+       1,
+       "00000000",
+       "4196bc5d"
+      ],
+      [
+       "acc",
+       28,
+       1,
+       "00000000",
+       "c2064cc7"
+      ],
+      [
+       "acc",
+       29,
+       1,
+       "00000000",
+       "c28eee5f"
+      ],
+      [
+       "acc",
+       30,
+       1,
+       "00000000",
+       "c155a858"
+      ],
+      [
+       "acc",
+       31,
+       1,
+       "00000000",
+       "430b5333"
+      ],
+      [
+       "acc",
+       32,
+       1,
+       "00000000",
+       "4198eccb"
+      ],
+      [
+       "acc",
+       33,
+       1,
+       "00000000",
+       "c29fe60a"
+      ],
+      [
+       "acc",
+       34,
+       1,
+       "00000000",
+       "c28cfcd5"
+      ],
+      [
+       "acc",
+       35,
+       1,
+       "00000000",
+       "43232cc0"
+      ],
+      [
+       "acc",
+       36,
+       1,
+       "00000000",
+       "419b107d"
+      ],
+      [
+       "acc",
+       37,
+       1,
+       "00000000",
+       "41f0c4ac"
+      ],
+      [
+       "acc",
+       38,
+       1,
+       "00000000",
+       "c208cf06"
+      ],
+      [
+       "acc",
+       39,
+       1,
+       "00000000",
+       "427f3dc6"
+      ]
+     ],
+     "n_bad": 24,
+     "first_result": 1040,
+     "last_result": 2512,
+     "cycles_first_line_to_last_result": 1661,
+     "verdict": "FAIL",
+     "cycles_first_packet_to_last_result": 1661
+    }
+   ],
+   "run_rc": 0,
+   "fault": null,
+   "done": true,
+   "sim_s": 31.7,
+   "run_log_sha256": "fe7dfca9608bcb7dfac20e864ec1a3c357d01ad5e9ce6ddebf3b50f4f70a9e04",
+   "verdict": "FAIL"
+  }
+ ],
+ "verdict": "FAIL"
+}

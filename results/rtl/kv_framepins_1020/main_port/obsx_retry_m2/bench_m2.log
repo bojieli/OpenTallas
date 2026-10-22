@@ -1,0 +1,53 @@
+ERR sticky got 000000000000000000 exp 000000000000000001
+ERR it 0 ext got 000000002ac exp 0ac6f63785a (adm/rdy/run 100 lay 21 rcy 00000001)
+ERR it 0 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000000000000000 exp 000000000000000081
+ERR it 1 ext got 00000010308 exp 1088af2106c (adm/rdy/run 000 lay 33 rcy 00000081)
+ERR it 1 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000000000000000 exp 000000000000004081
+ERR it 2 ext got 000008103fb exp 1fb213ac393 (adm/rdy/run 011 lay 63 rcy 00004081)
+ERR it 2 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000000000000000 exp 000000000000204081
+ERR it 3 ext got 0004081037c exp 17c4db24fee (adm/rdy/run 100 lay 47 rcy 00204081)
+ERR it 3 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000000000000000 exp 000000000010204081
+ERR it 4 ext got 020408102d1 exp 0d1f082f033 (adm/rdy/run 001 lay 26 rcy 10204081)
+ERR it 4 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000000000000008 exp 000000000810204081
+ERR it 5 ext got 02040810255 exp 05569562d61 (adm/rdy/run 101 lay 10 rcy 10204081)
+ERR it 5 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000000000000408 exp 000000040810204081
+ERR it 6 ext got 02040810242 exp 042d38cf9d3 (adm/rdy/run 010 lay 8 rcy 10204081)
+ERR it 6 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000000000020408 exp 000002040810204081
+ERR it 7 ext got 02040810353 exp 153cbbd3cc6 (adm/rdy/run 011 lay 42 rcy 10204081)
+ERR it 7 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000000001020408 exp 000102040810204081
+ERR it 8 ext got 02040810211 exp 01103746b90 (adm/rdy/run 001 lay 2 rcy 10204081)
+ERR it 8 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000000081020408 exp 008102040810204081
+ERR it 9 ext got 0204081034a exp 14a581eecbb (adm/rdy/run 010 lay 41 rcy 10204081)
+ERR it 9 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000004081020408 exp 408102040810204081
+ERR it 10 ext got 02040810279 exp 079ddd94a24 (adm/rdy/run 001 lay 15 rcy 10204081)
+ERR it 10 HOST bits changed
+ERR nb 00000000
+ERR sticky got 000000004081020408 exp 4081020408102040c1
+ERR it 11 ext got 02040818258 exp 05865ea1ccb (adm/rdy/run 000 lay 11 rcy 102040c1)
+ERR it 11 HOST bits changed
+ERR nb 00000000
+TB_KV_OBSX_PATH FAIL errors=48
+- /srv/opentallas-scratch/claude/codex-obs-main-port-1020/src/rtl/test/qwen_host/tb_kv_obsx_path.sv:187: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.002 s; speed 1.056 ms/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 8 MB

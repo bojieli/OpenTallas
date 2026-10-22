@@ -1,0 +1,128 @@
+{
+  "schema": "opentallas.s81.native_pair_leaf4_component.v1",
+  "source_ref": "286841a838132f393f3b387f2ecce0e20111c73b",
+  "receipt": "result.json",
+  "fleet_unit": "oth-ubuntu-2772044-1792605839",
+  "clock": "single component clock; posedge pre-NBA observers",
+  "configuration_CTL_to_RDOUT_CTL_edges": 9,
+  "DL": 4,
+  "pairs_per_message": 1,
+  "source_leaf": 0,
+  "destination_leaf": 0,
+  "paths": {
+    "local": {
+      "raw_observation_cycles": {
+        "mode": 0,
+        "mut": 0,
+        "bad": 0,
+        "rf": 0,
+        "xf": 0,
+        "pf": 0,
+        "commits": 1,
+        "CTL": 90,
+        "XRcmd": 95,
+        "VPcmd": 99,
+        "VPlo": 104,
+        "XRlo": 108,
+        "CI": 112,
+        "Vout": -1,
+        "Eout": -1,
+        "XRsw": 115,
+        "VPsw": 119,
+        "SRAMcommit": 120
+      },
+      "edges_from_RDOUT_CTL_pin": {
+        "XRcmd": 5,
+        "VPcmd": 9,
+        "VPlo": 14,
+        "XRlo": 18,
+        "CI": 22,
+        "XRsw": 25,
+        "VPsw": 29,
+        "SRAMcommit": 30
+      },
+      "wire_link_age_edges": 0,
+      "readback": "all256bits match source native pair"
+    },
+    "typed_v": {
+      "raw_observation_cycles": {
+        "mode": 1,
+        "mut": 0,
+        "bad": 0,
+        "rf": 0,
+        "xf": 0,
+        "pf": 0,
+        "commits": 1,
+        "CTL": 90,
+        "XRcmd": 95,
+        "VPcmd": 99,
+        "VPlo": 104,
+        "XRlo": 108,
+        "CI": 111,
+        "Vout": 113,
+        "Eout": -1,
+        "XRsw": 119,
+        "VPsw": 123,
+        "SRAMcommit": 124
+      },
+      "edges_from_RDOUT_CTL_pin": {
+        "XRcmd": 5,
+        "VPcmd": 9,
+        "VPlo": 14,
+        "XRlo": 18,
+        "CI": 21,
+        "Vout": 23,
+        "XRsw": 29,
+        "VPsw": 33,
+        "SRAMcommit": 34
+      },
+      "wire_link_age_edges": 0,
+      "readback": "all256bits match source native pair"
+    },
+    "horizontal": {
+      "raw_observation_cycles": {
+        "mode": 2,
+        "mut": 0,
+        "bad": 0,
+        "rf": 0,
+        "xf": 0,
+        "pf": 0,
+        "commits": 1,
+        "CTL": 90,
+        "XRcmd": 95,
+        "VPcmd": 99,
+        "VPlo": 104,
+        "XRlo": 108,
+        "CI": 112,
+        "Vout": -1,
+        "Eout": 114,
+        "XRsw": 120,
+        "VPsw": 124,
+        "SRAMcommit": 125
+      },
+      "edges_from_RDOUT_CTL_pin": {
+        "XRcmd": 5,
+        "VPcmd": 9,
+        "VPlo": 14,
+        "XRlo": 18,
+        "CI": 22,
+        "Eout": 24,
+        "XRsw": 30,
+        "VPsw": 34,
+        "SRAMcommit": 35
+      },
+      "wire_link_age_edges": 0,
+      "readback": "all256bits match source native pair"
+    }
+  },
+  "main_or_full_calendar_qualified": false,
+  "exclusions": [
+    "actual capture-producer completion",
+    "absolute CTL issue dates",
+    "29-leg aggregate calendar",
+    "interrank carriage",
+    "landed links and physical timing",
+    "full layer/token"
+  ],
+  "negative_control": "One typed-V payload bit flipped at the actual receiver V input; SRAM readback rejects bad=1 with path faults zero."
+}

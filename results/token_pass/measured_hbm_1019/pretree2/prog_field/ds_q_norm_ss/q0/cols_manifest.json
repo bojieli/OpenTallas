@@ -1,0 +1,117 @@
+{
+  "schema": "opentallas.hbm.su_programme.columns.v1",
+  "qualified": false,
+  "source": "/srv/opentallas-scratch/claude/hbm-pretree3/out/progfield/ds_q_norm_ss/q0/source.mem",
+  "source_sha256": "67f28d1d0dbb1063aa9b5471b66efeb3589d014694f17171d2df57e0c27e5bf6",
+  "edges": 7111,
+  "resident_edges": null,
+  "line_bits": 2470,
+  "columns": [
+    {
+      "column": 0,
+      "index_banks": 4,
+      "image_index_banks": 4,
+      "dictionary_banks": 1,
+      "leaf_dictionary_banks": 3,
+      "leaf": "ot_hbm_su_programme_pgcol_s",
+      "dictionary_entries": 18,
+      "writes": 463
+    },
+    {
+      "column": 1,
+      "index_banks": 4,
+      "image_index_banks": 4,
+      "dictionary_banks": 1,
+      "leaf_dictionary_banks": 3,
+      "leaf": "ot_hbm_su_programme_pgcol_s",
+      "dictionary_entries": 21,
+      "writes": 466
+    },
+    {
+      "column": 2,
+      "index_banks": 4,
+      "image_index_banks": 4,
+      "dictionary_banks": 1,
+      "leaf_dictionary_banks": 3,
+      "leaf": "ot_hbm_su_programme_pgcol_s",
+      "dictionary_entries": 21,
+      "writes": 466
+    },
+    {
+      "column": 3,
+      "index_banks": 4,
+      "image_index_banks": 4,
+      "dictionary_banks": 1,
+      "leaf_dictionary_banks": 3,
+      "leaf": "ot_hbm_su_programme_pgcol_s",
+      "dictionary_entries": 11,
+      "writes": 456
+    },
+    {
+      "column": 4,
+      "index_banks": 4,
+      "image_index_banks": 4,
+      "dictionary_banks": 1,
+      "leaf_dictionary_banks": 3,
+      "leaf": "ot_hbm_su_programme_pgcol_s",
+      "dictionary_entries": 12,
+      "writes": 457
+    },
+    {
+      "column": 5,
+      "index_banks": 4,
+      "image_index_banks": 4,
+      "dictionary_banks": 1,
+      "leaf_dictionary_banks": 3,
+      "leaf": "ot_hbm_su_programme_pgcol_s",
+      "dictionary_entries": 2,
+      "writes": 447
+    },
+    {
+      "column": 6,
+      "index_banks": 4,
+      "image_index_banks": 4,
+      "dictionary_banks": 1,
+      "leaf_dictionary_banks": 3,
+      "leaf": "ot_hbm_su_programme_pgcol_s",
+      "dictionary_entries": 2,
+      "writes": 447
+    },
+    {
+      "column": 7,
+      "index_banks": 4,
+      "image_index_banks": 4,
+      "dictionary_banks": 1,
+      "leaf_dictionary_banks": 3,
+      "leaf": "ot_hbm_su_programme_pgcol_s",
+      "dictionary_entries": 2,
+      "writes": 447
+    },
+    {
+      "column": 8,
+      "index_banks": 4,
+      "image_index_banks": 4,
+      "dictionary_banks": 1,
+      "leaf_dictionary_banks": 3,
+      "leaf": "ot_hbm_su_programme_pgcol_s",
+      "dictionary_entries": 2,
+      "writes": 447
+    },
+    {
+      "column": 9,
+      "index_banks": 4,
+      "image_index_banks": 4,
+      "dictionary_banks": 1,
+      "leaf_dictionary_banks": 3,
+      "leaf": "ot_hbm_su_programme_pgcol_s",
+      "dictionary_entries": 4,
+      "writes": 449
+    }
+  ],
+  "config_transactions": 4545,
+  "cluster_macros": 70,
+  "reference_macros": 66,
+  "bank_numbering": "32 x column + local bank",
+  "mut_pc_col": 9,
+  "mut_tpl_col": 9
+}

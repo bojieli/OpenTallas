@@ -1,0 +1,65 @@
+{
+  "job": "hbm_hcq_tree16_c1-c1-e91f9005e",
+  "rc": 0,
+  "frozen_final_sha256": {
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1-c1-e91f9005e/routes/hbm_hcq_tree16_c1_c1_e91f9005e/work/orfs/results/asap7/opentallas_ot_hbm_hc_qtree16_static_asap7_ref_hbm_hcq_tree16_c1_c1_e91f9005e/base/6_final.odb": "a6a2b775690de4d3609fd80b356587299a336f0b17a4a6271483371b5fbef4b8",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1-c1-e91f9005e/routes/hbm_hcq_tree16_c1_c1_e91f9005e/work/orfs/results/asap7/opentallas_ot_hbm_hc_qtree16_static_asap7_ref_hbm_hcq_tree16_c1_c1_e91f9005e/base/6_final.v": "7e6efaab9762fb6927d7a940d88e9664103b9b3c9f432ee417a73b309ff49ed6",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1-c1-e91f9005e/routes/hbm_hcq_tree16_c1_c1_e91f9005e/work/orfs/results/asap7/opentallas_ot_hbm_hc_qtree16_static_asap7_ref_hbm_hcq_tree16_c1_c1_e91f9005e/base/6_final.spef": "97c69aa1910acda826213321eb524409dbbac8469aa6735ed866e78cbac0e632",
+    "/srv/opentallas-scratch/claude/closure-loop/hbm_hcq_tree16_c1-c1-e91f9005e/routes/hbm_hcq_tree16_c1_c1_e91f9005e/work/orfs/results/asap7/opentallas_ot_hbm_hc_qtree16_static_asap7_ref_hbm_hcq_tree16_c1_c1_e91f9005e/base/6_final.sdc": "1fac61278a12efd26aa847b450dafa448e11c59697e4e4240a7b190f1cec75fa"
+  },
+  "final_unchanged": true,
+  "pg_helper_sha256": "ecc2257f9b66cb0f6087712304151411efd1c51a7bf3c0635979c6878af13fb8",
+  "pg": {
+    "schema": "native_pg_audit.v1",
+    "status": "PASS",
+    "block": "ot_hbm_hc_qtree16_static",
+    "instance_count": 135905,
+    "pg_master_count": 75,
+    "checked": 271810,
+    "roles": {
+      "POWER": 135905,
+      "GROUND": 135905
+    },
+    "failure_count": 0,
+    "failures": [],
+    "mapping_error": "",
+    "domain_rules": [
+      {
+        "inst_pattern": ".*",
+        "pin_pattern": "^VDD$",
+        "net": "VDD",
+        "role": "POWER",
+        "region": ""
+      },
+      {
+        "inst_pattern": ".*",
+        "pin_pattern": "^VDDCE$",
+        "net": "VDD",
+        "role": "POWER",
+        "region": ""
+      },
+      {
+        "inst_pattern": ".*",
+        "pin_pattern": "^VDDPE$",
+        "net": "VDD",
+        "role": "POWER",
+        "region": ""
+      },
+      {
+        "inst_pattern": ".*",
+        "pin_pattern": "^VSS$",
+        "net": "VSS",
+        "role": "GROUND",
+        "region": ""
+      },
+      {
+        "inst_pattern": ".*",
+        "pin_pattern": "^VSSE$",
+        "net": "VSS",
+        "role": "GROUND",
+        "region": ""
+      }
+    ],
+    "regions": []
+  }
+}

@@ -112,3 +112,89 @@ def test_failing_audit_retains_repaired_database():
     text = step.tcl_call('s81', '/work/die_repeaters.json',
                          repeat_nets=['n*_fck*'], fclk_policy='fail')
     assert 'write_db {/work/die_repeaters.fclk.fail.odb}; exit 3' in text
+
+
+@pytest.mark.skipif(not shutil.which('tclsh'), reason='no tclsh')
+@pytest.mark.parametrize('fd,dmin,dmax,n', [
+    (2, 2, 4, 1),     # case_p4l3_rv xr lanes: one BUF in front of the capture clock -> 3 vs 2..4 (+-1)
+    (1, 1, 4, -1),    # r_f_0R01: 2 BUFs -> 3 vs 1..4 breaks the shallow bit (3-1 > 1): unfixable, audit fails it
+    (1, 1, 3, 1),     # r_f_0R11: 2 vs 1..3
+    (2, 0, 27, -1),   # bundle spread over 27 stages: not a clock problem, audit must fail it
+    (2, 1, 3, 0),     # already within +-1
+    (3, 1, 2, 0),     # clock deeper than data: never touched here
+])
+def test_fclk_equalize_plan(fd, dmin, dmax, n):
+    audit = Path(__file__).with_name('fclk_audit.tcl')
+    r = subprocess.run(['tclsh'], input=f'source {{{audit}}}\nputs [ot_die_rep_fclk_eq_plan {fd} {dmin} {dmax}]\n',
+                       text=True, capture_output=True)
+    assert not r.stderr, r.stderr
+    assert int(r.stdout.split()[-1]) == n
+
+
+def test_fclk_equalize_runs_before_the_audit():
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from die_repeaters import step
+    t = step.tcl_call('s81', '/work/die_repeaters.json', repeat_nets=['n*_fck*'], fclk_policy='fail', fclk_equalize=1)
+    assert t.index('ot_die_rep_fclk_equalize') < t.index('set ot_die_rep_fb [ot_die_rep_fclk_audit')
+    assert 'ot_die_rep_fclk_equalize' not in step.tcl_call('s81', '/work/die_repeaters.json', repeat_nets=['n*_fck*'])
+
+
+def test_shallow_payload_buffer_plan(tmp_path):
+    script = 'source {' + str(Path(__file__).with_name('fclk_audit.tcl')) + '}\n'
+    script += r'''
+foreach {clock depth expected} {3 1 1 3 2 0 3 3 0 1 3 0 0 0 0} {
+  set got [ot_die_rep_fclk_data_eq_plan $clock $depth]
+  if {$got != $expected} {error "plan clock=$clock data=$depth expected=$expected got=$got"}
+  if {$got > 0 && abs($clock - ($depth + $got)) > 1} {error "unbalanced"}
+}
+puts PASS
+'''
+    r = subprocess.run(['tclsh'], input=script, text=True, capture_output=True)
+    assert r.returncode == 0 and 'PASS' in r.stdout and not r.stderr, r.stdout + r.stderr
+
+
+@pytest.mark.parametrize('fd,dmin,dmax,clock_add', [(1,0,3,1),(1,1,4,2),(2,1,4,1)])
+def test_declared_payload_two_sided_equalization(tmp_path,fd,dmin,dmax,clock_add):
+    # The three actual final H1 residual classes. Generic invocation must still
+    # refuse; explicit complete-payload invocation can pad both sides, and its
+    # final depths must satisfy the original +/-1 rule for every bit.
+    audit=Path(__file__).with_name('fclk_audit.tcl')
+    script=f'source {{{audit}}}\n'
+    script+=f'puts "GENERIC [ot_die_rep_fclk_eq_plan {fd} {dmin} {dmax}]"\n'
+    script+=f'set n [ot_die_rep_fclk_eq_plan {fd} {dmin} {dmax} 1]\n'
+    script+='puts "CLOCK_ADD $n"\n'
+    script+=f'set clock [expr {{{fd}+$n}}]\n'
+    script+=f'for {{set d {dmin}}} {{$d <= {dmax}}} {{incr d}} {{\n'
+    script+='set add [ot_die_rep_fclk_data_eq_plan $clock $d]\n'
+    script+='if {abs($clock-($d+$add))>1} {error "original rule failed"}\n}\n'
+    r=subprocess.run(['tclsh'],input=script,text=True,capture_output=True)
+    assert r.returncode==0 and not r.stderr,r.stdout+r.stderr
+    assert 'GENERIC -1' in r.stdout
+    assert f'CLOCK_ADD {clock_add}' in r.stdout
+
+
+
+def test_production_equalizer_refuses_generic_wide_payload(tmp_path):
+    audit=Path(__file__).with_name('fclk_audit.tcl')
+    prefix=tmp_path/'generic'
+    script=f'source {{{audit}}}\n'+r"""
+namespace eval ord {
+    proc get_db_block {} {return block}
+    proc get_db {} {return db}
+}
+proc db {method args} {return master}
+proc block {method args} {error "generic path attempted ODB mutation"}
+rename ot_die_rep_fclk_audit original_audit
+proc ot_die_rep_fclk_audit {prefix args} {
+    set f [open $prefix.tsv w]
+    puts $f "broadcast\tmismatch\tpairing\tfclk_repeaters\tdata_min\tdata_max\tfclk_net\tcapture"
+    puts $f "0\t1\tsame_source\t1\t1\t4\tn_fck\tcap"
+    close $f
+    return 1
+}
+"""
+    script+=f'puts "UNFIXABLE [ot_die_rep_fclk_equalize {{{prefix}}} {{n_fck}} {{BUF}}]"\n'
+    r=subprocess.run(['tclsh'],input=script,text=True,capture_output=True)
+    assert r.returncode==0 and not r.stderr,r.stdout+r.stderr
+    assert 'UNFIXABLE 2' in r.stdout

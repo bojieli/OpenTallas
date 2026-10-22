@@ -1,0 +1,18 @@
+{
+  "original_cells": 3783,
+  "final_cells": 3797,
+  "added_by_type": {
+    "$_DFF_P_": 10,
+    "$_OR_": 4
+  },
+  "passes": 1,
+  "input_sha256": "89e0a0cec771b9299f776bd06fe34337d50373a1d5a13d4cafe8ca774d9c6cbb",
+  "max_data_reset_loads": 32,
+  "clock_only_excluded": true,
+  "output_boundary_assumptions": {
+    "valid_rep_each": 16,
+    "valid_out": 5,
+    "data_error_each": 1
+  },
+  "qualification": "STRUCTURAL_CONSTRUCTION_ONLY; exact equivalence and mapped clocks/timing/area required"
+}

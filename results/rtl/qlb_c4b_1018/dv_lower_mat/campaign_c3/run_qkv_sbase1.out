@@ -1,0 +1,12 @@
+DV_LOWER_MAT qkv FAIL 2/768 mutant=sbase1 {"stn": 12, "slices": [0, 2, 4, 6, 8, 10]}
+    qkv slice 0 row 0: got 0xc1a72e53 exp 0xc22f97b3
+    qkv slice 0 row 1: got 0xc0f7bfb4 exp 0xbfb37dd4
+    qkv slice 0 row 2: got 0x418b085e exp 0x41819578
+    qkv slice 0 row 3: got 0xc1eb5568 exp 0xc2cbc3b5
+    qkv slice 0 row 4: got 0x4207c2a4 exp 0x414765e0
+    qkv slice 0 row 5: got 0xc2954182 exp 0xc187d6f2
+    qkv slice 0 row 6: got 0xc32e05a1 exp 0xc30670c5
+    qkv slice 0 row 7: got 0x42ad1614 exp 0x42a3f9f8
+    qkv slice 0 row 8: got 0xc206cd43 exp 0xc1971f83
+    qkv slice 0 row 9: got 0x425012f8 exp 0x408c1903
+rc=1

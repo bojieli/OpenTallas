@@ -20,7 +20,7 @@ def clean_policy(monkeypatch):
 
 
 def test_defaults_and_explicit_subprocess_none(monkeypatch):
-    assert flow.synth_timeout_seconds() == 7200
+    assert flow.synth_timeout_seconds() is None
     assert flow.flow_timeout_seconds() == 21600
     seen = []
     def fake_run(cmd, **kwargs):
@@ -41,9 +41,10 @@ def test_environment_unlimited(monkeypatch, raw):
 
 
 @pytest.mark.parametrize("cli,kwargs,expected", [
-    ([], {}, (7200, 21600)),
+    ([], {}, (None, 21600)),
     ([], {"synth_timeout": None, "flow_timeout": None}, (None, None)),
     (["--synth-timeout-seconds", "unlimited", "--flow-timeout-seconds", "none"], {}, (None, None)),
+    (["--synth-timeout-seconds", "0"], {}, (None, 21600)),
     (["--synth-timeout-seconds", "9000", "--flow-timeout-seconds", "30000"], {}, (9000, 30000)),
     (["--synth-timeout-seconds", "9000"], {"synth_timeout": None, "flow_timeout": None}, (9000, None)),
 ])
@@ -61,7 +62,7 @@ def test_cli_and_python_overrides_reach_subprocess(monkeypatch, cli, kwargs, exp
     monkeypatch.setattr(flow, "_main", fake_main)
     assert flow.main(ARGS + cli, **kwargs) == 7
     assert tuple(seen) == expected
-    assert flow.synth_timeout_seconds() == 7200
+    assert flow.synth_timeout_seconds() is None
     assert flow.flow_timeout_seconds() == 21600
 
 
@@ -80,7 +81,7 @@ def test_environment_restored_on_driver_exception(monkeypatch):
 
 
 @pytest.mark.parametrize("flag,value,error", [
-    ("--synth-timeout-seconds", "0", SystemExit),
+    ("--synth-timeout-seconds", "-1", SystemExit),
     ("--flow-timeout-seconds", "599", flow.FlowError),
     ("--flow-timeout-seconds", "invalid", flow.FlowError),
 ])
@@ -88,17 +89,19 @@ def test_invalid_numeric_policy_preserved_before_tools(monkeypatch, flag, value,
     monkeypatch.setattr(flow, "_main", lambda args, **kwargs: pytest.fail("must validate before tools"))
     with pytest.raises(error):
         flow.main(ARGS + ["--synth-timeout-seconds", "unlimited", flag, value])
-    assert flow.synth_timeout_seconds() == 7200
+    assert flow.synth_timeout_seconds() is None
     assert flow.flow_timeout_seconds() == 21600
 
 
 @pytest.mark.parametrize("stage", ["synthesis", "sta"])
-def test_actual_stage_callback_forwards_none(monkeypatch, tmp_path, stage):
-    monkeypatch.setenv("OT_SYNTH_TIMEOUT_SECONDS", "unlimited")
+@pytest.mark.parametrize("policy,expected", [(None, None), ("0", None), ("8100", 8100)])
+def test_actual_stage_callback_forwards_policy(monkeypatch, tmp_path, stage, policy, expected):
+    if policy is not None:
+        monkeypatch.setenv("OT_SYNTH_TIMEOUT_SECONDS", policy)
     class ReachedTool(Exception):
         pass
     def fake_run(cmd, **kwargs):
-        assert kwargs["timeout"] is None
+        assert kwargs["timeout"] == expected
         assert cmd[0] == str(flow.YOSYS if stage == "synthesis" else flow.STA)
         raise ReachedTool
     monkeypatch.setattr(flow.subprocess, "run", fake_run)
@@ -138,3 +141,17 @@ def test_actual_initial_record_preserves_invocation_argv(monkeypatch, tmp_path, 
     record = json.loads(output.read_text())
     assert record["runner"]["argv"] == ["tools/run_abi3_physical.py", *argv]
     assert record["stages_requested"] == []
+
+
+@pytest.mark.parametrize("raw,expected", [("0", None), ("1", 1), ("8100", 8100)])
+def test_explicit_synth_policy(monkeypatch, raw, expected):
+    monkeypatch.setenv("OT_SYNTH_TIMEOUT_SECONDS", raw)
+    assert flow.synth_timeout_seconds() == expected
+
+
+@pytest.mark.parametrize("rc", [124, 137])
+def test_stage_exit_codes_preserved_without_timeout_relabel(rc):
+    completed = flow.run([sys.executable, "-c", f"raise SystemExit({rc})"], timeout=None)
+    assert completed.returncode == rc
+    with pytest.raises(flow.FlowError, match=f"synthesis failed with exit {rc}"):
+        flow.require_success(completed, "synthesis")

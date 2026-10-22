@@ -1,0 +1,163 @@
+{
+ "scope": "STN/VM component at cluster-output cut; no upstream MAC/full-token claim",
+ "source": {
+  "rtl_source": "c0f8097f3",
+  "bench_repair": "c80ee543ae771ef1545dd0cf8d62e4544b25a597",
+  "flags": "-GMU_NU=4 -GSU_LT=1",
+  "original_binary": "ot-gold1:/srv/opentallas-scratch/claude/tokfunc-qw-1021/stg/rel/build/obj_n12/Vtb",
+  "scope": "STN/VM at cluster-output cut; running prefixes from true FP32 sequential recurrence and 64-chunk golden tree; no upstream MAC/full-token claim",
+  "hashes": {
+   "bin/Vtb": "e0c6b5e2fc002c45f7c216fdbacc5a4f6988c2423762ea2864e1ce33db3041f5",
+   "tree/tools/qwen_layerbench/dv_lower_mat.py": "e0f4c467f17e7a75549eed09b9b1766fe6202d2fced8a2e4a90867c936477613",
+   "tree/rtl/test/qwen_dv/dv_lower_mat_bench.py": "6cc45f782aaf3c4e519619a1d0572c3a6c69f3831680deff504361937dbb9b8b",
+   "fx/L0_mat_qkv.npz": "1eacb299857342e340347bb0c28781e24e3d6103e1d7c1d436244ecedf011969",
+   "fx/L0_mat_gu.npz": "f73586144b6a6539d4b5c1545a28a2baf79b51e7cada7878ab4153569293a3e7",
+   "fx/L0_mat_od.npz": "4ba9534ca302a3409a84d3ffa5196989f36c2da1f5358b876396319546c18d68"
+  }
+ },
+ "verdict": "PASS (scoped component)",
+ "running_partial_math": "BF16 x; per-chunk FP32 add(acc,mul(w,x)) from +0 at every k; canonical pairwise tree over 64 chunks; final prefix bit-equal to existing l6_parts golden",
+ "cycle_basis": "event dates at STN command entry and cluster input pins; final sampled status is a completion upper bound",
+ "cases": {
+  "calibrate": {
+   "verdict": "PASS",
+   "expected": "PASS",
+   "summary": "CALIBRATE {\"schema\": \"opentallas.qwen.dv-mat-ages.v1\", \"l8_ar\": 26, \"ar_hop\": 2.0, \"xc_cc\": 2, \"amax_ami\": 3, \"arx_after_amv\": 3, \"faults\": []}",
+   "expected_outcome": true,
+   "ages": {
+    "schema": "opentallas.qwen.dv-mat-ages.v1",
+    "l8_ar": 26,
+    "ar_hop": 2.0,
+    "xc_cc": 2,
+    "amax_ami": 3,
+    "arx_after_amv": 3,
+    "source": "rtl/test/qwen_dv/dv_lower_mat_bench.py --calibrate (tb_qfd_dv2 N 12, Verilator 5.050): l8_ar = S0AR edge of word 0 - far-word edge (slice 0, L8, AR dst); ar_hop from slice 11; xc_cc = S0CC edge - XC chain entry; amax_ami = AMI leaving slice 5 dn_o - emit landing (entry + cmd arrival); arx_after_amv = ARX AR word at W5 - the last AMV leaving slice 1 dn_o",
+    "faults": []
+   },
+   "pin_event_cycles": {
+    "first_stn_entry": 102,
+    "first_cluster_word": 98,
+    "last_cluster_word": 589,
+    "cluster_word_publications": 128,
+    "cluster_stream_span_inclusive": 492
+   },
+   "vm_write_edges": {
+    "first": null,
+    "last": null,
+    "reason": "reused testbench has no VM-write probe; legacy anchor span is not an observed VM latency"
+   },
+   "final_status_sample": {
+    "edge": 1032,
+    "aggregate": 0,
+    "station_drained": true
+   }
+  },
+  "qkv": {
+   "verdict": "PASS",
+   "expected": "PASS",
+   "summary": "DV_LOWER_MAT qkv PASS 769/769 mutant=0 arf=0 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"producer_kc\": 8, \"producer_words_per_cluster_per_round\": 64, \"producer_scope\": \"STN/VM cut-boundary protocol; upstream MAC arithmetic not simulated here\", \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+   "expected_outcome": true,
+   "pin_event_cycles": {
+    "first_stn_entry": 134,
+    "first_cluster_word": 148,
+    "last_cluster_word": 225,
+    "cluster_word_publications": 3072,
+    "cluster_stream_span_inclusive": 78
+   },
+   "vm_write_edges": {
+    "first": null,
+    "last": null,
+    "reason": "reused testbench has no VM-write probe; legacy anchor span is not an observed VM latency"
+   },
+   "d2d_readback_publication_edges": {
+    "first": 472,
+    "last": 2817,
+    "scope": "readback observation, not VM-write timestamps"
+   },
+   "final_status_sample": {
+    "edge": 3285,
+    "aggregate": 0,
+    "station_drained": true
+   }
+  },
+  "gu": {
+   "verdict": "PASS",
+   "expected": "PASS",
+   "summary": "DV_LOWER_MAT gu PASS 3073/3073 mutant=0 arf=0 fixture=L0_mat_gu.npz {\"stn\": 12, \"slices\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], \"isa_gold\": \"isa_gold_words=3072/3072\", \"delivery_span_cycles\": 407, \"producer_kc\": 32, \"producer_words_per_cluster_per_round\": 256, \"producer_scope\": \"STN/VM cut-boundary protocol; upstream MAC arithmetic not simulated here\", \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+   "expected_outcome": true,
+   "pin_event_cycles": {
+    "first_stn_entry": 170,
+    "first_cluster_word": 184,
+    "last_cluster_word": 453,
+    "cluster_word_publications": 12288,
+    "cluster_stream_span_inclusive": 270
+   },
+   "vm_write_edges": {
+    "first": null,
+    "last": null,
+    "reason": "reused testbench has no VM-write probe; legacy anchor span is not an observed VM latency"
+   },
+   "d2d_readback_publication_edges": {
+    "first": 700,
+    "last": 5835,
+    "scope": "readback observation, not VM-write timestamps"
+   },
+   "final_status_sample": {
+    "edge": 6285,
+    "aggregate": 0,
+    "station_drained": true
+   }
+  },
+  "od": {
+   "verdict": "PASS",
+   "expected": "PASS",
+   "summary": "DV_LOWER_MAT od PASS 515/515 mutant=0 arf=0 fixture=L0_mat_od.npz {\"span_cycles\": 1555, \"isa_gold\": \"TP8-gold-only (TP8 partial, split 256; no TP4 value)\", \"collisions\": {\"o\": 0, \"down\": 0}, \"collective_contract\": [{\"message\": \"o\", \"cmd_tag\": 0, \"words\": 256, \"tag_mismatch\": 255, \"last_set\": 32, \"last_on_final\": 1}, {\"message\": \"down\", \"cmd_tag\": 1, \"words\": 256, \"tag_mismatch\": 256, \"last_set\": 32, \"last_on_final\": 1}], \"stn\": {\"o\": 32, \"down\": 32}}",
+   "expected_outcome": true,
+   "pin_event_cycles": {
+    "first_stn_entry": 250,
+    "first_cluster_word": 242,
+    "last_cluster_word": 1205,
+    "cluster_word_publications": 8192,
+    "cluster_stream_span_inclusive": 964
+   },
+   "vm_write_edges": {
+    "first": null,
+    "last": null,
+    "reason": "reused testbench has no VM-write probe; legacy anchor span is not an observed VM latency"
+   },
+   "final_status_sample": {
+    "edge": 1390,
+    "aggregate": 0,
+    "station_drained": true
+   }
+  },
+  "drop_last_k": {
+   "verdict": "FAIL",
+   "expected": "FAIL",
+   "summary": "DV_LOWER_MAT qkv FAIL 1/769 mutant=drop_last_k arf=0 fixture=L0_mat_qkv.npz {\"stn\": 12, \"slices\": [0, 2, 4, 6, 8, 10], \"isa_gold\": \"isa_gold_words=768/768\", \"delivery_span_cycles\": 407, \"producer_kc\": 8, \"producer_words_per_cluster_per_round\": 64, \"producer_scope\": \"STN/VM cut-boundary protocol; upstream MAC arithmetic not simulated here\", \"span_note\": \"VM-landing ops have no output pin: span = last tile word consumed - first lowered edge (station drain = stn_ages); exactness by readback\"}",
+   "expected_outcome": true,
+   "pin_event_cycles": {
+    "first_stn_entry": 134,
+    "first_cluster_word": 148,
+    "last_cluster_word": 217,
+    "cluster_word_publications": 2688,
+    "cluster_stream_span_inclusive": 70
+   },
+   "vm_write_edges": {
+    "first": null,
+    "last": null,
+    "reason": "reused testbench has no VM-write probe; legacy anchor span is not an observed VM latency"
+   },
+   "d2d_readback_publication_edges": {
+    "first": 472,
+    "last": 2817,
+    "scope": "readback observation, not VM-write timestamps"
+   },
+   "final_status_sample": {
+    "edge": 3285,
+    "aggregate": 512,
+    "station_drained": false
+   }
+  }
+ }
+}

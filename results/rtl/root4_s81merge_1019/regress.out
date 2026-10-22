@@ -1,0 +1,21 @@
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2387291-1792471013 after 0 s
+REG pvrd_mut_cal rc=1 | PVRD_BENCH FAIL 4 of 5 cases (mut_cal)
+REG pvrd_mut_sel rc=1 | PVRD_BENCH FAIL 4 of 5 cases (mut_sel)
+REG pvrd_pass rc=0 | PVRD_BENCH PASS 5 cases
+REG xr_hb0 rc=0 | PASS xr base hb=0 seed=1
+REG xr_bwide rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED bwide
+REG xr_hb1 rc=0 | PASS xr base hb=1 seed=1
+REG xr_row rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED row
+REG xr_nocol rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED nocol
+REG xr_porder rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED porder
+REG xr_hops rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED hops
+REG rstop_none rc=0 | BENCH_PASS rstop_sid
+REG rstop_tiercol rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=tiercol
+REG lint_dsdv_svc_rs_entry errors=0 | 
+REG lint_dsdv_svc_rs errors=0 | 
+REGRESS_DONE bad=0
+REG xr_foreg_hb0 rc=0 | PASS xr base hb=0 seed=1
+REG xr_foreg_hb1 rc=0 | PASS xr base hb=1 seed=1
+REG xr_foreg_bwide rc=0 | NEGATIVE_CONTROL_FAILED_AS_EXPECTED bwide
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2387291-1792471013): exit 0

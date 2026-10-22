@@ -1,0 +1,26 @@
+{
+ "cell": "dsdv_sh_sq",
+ "view": "/home/ubuntu/scratch/codex-s81-mu3/sh_sq_view",
+ "lib_cell": "dsdv_sh_sq",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json child_flop boundary mean"
+ ],
+ "R_ps": 269.1,
+ "spread_ps": 54.3,
+ "outputs": 1330,
+ "inputs": 1141,
+ "launch_ps": 147.3,
+ "launch_pin": "j_o[32]",
+ "capture_ps": 110.3,
+ "capture_pin": "pw_i[35]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 52.0,
+ "ff_launch_min_ps": 41.1,
+ "ff_hold_need_ps": -10.6,
+ "pass": true,
+ "fail_why": ""
+}

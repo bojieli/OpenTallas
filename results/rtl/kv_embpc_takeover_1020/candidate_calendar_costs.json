@@ -1,0 +1,29 @@
+{
+ "status": "CANDIDATE_NOT_ADOPTED",
+ "flags": {
+  "NATIVE32": 1,
+  "PIPE_JOIN": 1
+ },
+ "clock_domain": "ck 1.2GHz",
+ "active_delta_edges": {
+  "ctx_record_to_start_token_epoch": 1,
+  "px_st_to_return_train_launch": 0,
+  "host_record_to_px_st": 1,
+  "join_return_capture_to_word": 1,
+  "host_record_to_first_and_last_join_word": 2,
+  "row_tx_header_and_all_65_slots": 2,
+  "total_stream_edges": 2
+ },
+ "reset_release": {
+  "legacy_internal": 0,
+  "candidate_internal": 6,
+  "parallel_cal_and_ctx": true,
+  "added_edges": 6,
+  "inherited_tile_face_register_edges": 1,
+  "legacy_tile": 1,
+  "candidate_tile": 7,
+  "first_data_capture": "first rising edge after the six-edge regional release; boot/context idle through warmup"
+ },
+ "pricing": "shift px_st/train calendar by1, join words by2 and all65 row_tx output slots by2; retain previous last-fill-to-header margin; steady throughput unchanged",
+ "blocker": "CLOSED row_tx_ctx c1b authoritative native FAIL max1082; successor required before parent gate"
+}

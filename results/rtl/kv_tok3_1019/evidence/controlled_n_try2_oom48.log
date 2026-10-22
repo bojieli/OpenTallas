@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019
+ot-run: ot-epyc5       admits  1170 GB (avail 932, growth 113, headroom 0, waiters 0/0 GB) load 97/128 running 34 disk 777 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/kv-tok3-1019
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-416644-1792454330 after 0 s
+Terminated                 /usr/local/bin/ot-heavy --mem 48 --tag otrun-ubuntu-3895366-454329727 --max-wait 120 -- python3 run_g7_controlled_n.py
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-416644-1792454330): exit 143

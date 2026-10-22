@@ -1,0 +1,10 @@
+SFU_STORE_R11_MISMATCH edge=1842 io=1 ctl=0 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_MISMATCH edge=1843 io=1 ctl=0 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_MISMATCH edge=1844 io=1 ctl=0 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_MISMATCH edge=1845 io=1 ctl=0 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_MISMATCH edge=1846 io=1 ctl=0 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_MISMATCH edge=1847 io=1 ctl=0 pstat=0 iostat=0 fault=0/1
+SFU_STORE_R11_LOCKSTEP mode=0 seed=12345 pshift=11 ishift=6 edges=4058 mismatching=2217 active_ctl=464 active_io=568 fault_edges=0 fault_edge_r7c=-1 fault_edge_r11=1842
+[4082000] %Fatal: tb_sfu_store_r11_lockstep.sv:157: Assertion failed in tb_sfu_store_r11_lockstep.unnamedblk3: SFU_STORE_R11_LOCKSTEP FAIL fault edge r11-r7c=1843 want 6
+%Error: rtl/test/hbm_accel/generic/tb_sfu_store_r11_lockstep.sv:157: Verilog $stop
+Aborting...

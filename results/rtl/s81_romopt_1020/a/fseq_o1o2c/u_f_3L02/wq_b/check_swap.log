@@ -1,0 +1,67 @@
+MISMATCH edge 343 row 6 lo 2 k 1 got be870460/0 want be882cda/0
+MISMATCH edge 344 row 7 lo 2 k 1 got bd22ed40/0 want be62e420/0
+MISMATCH edge 348 row 4 lo 0 k 2 got be8158ea/0 want 3c62aea0/0
+MISMATCH edge 349 row 5 lo 0 k 2 got 3eb5c246/0 want bf380dc1/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((343, 6, (2, 1, 3), 3196595418, 0), (343, 6, (2, 1, 3), 3196519520, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 1 mutant=None rows=8 fixture_rows=8 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+MISMATCH edge 343 row 6 lo 2 k 1 got ba0da000/0 want bccd7180/0
+MISMATCH edge 344 row 7 lo 2 k 1 got 3e9f1bd8/0 want 3ed72088/0
+MISMATCH edge 348 row 4 lo 0 k 2 got bd991118/0 want bf7b4e80/0
+MISMATCH edge 349 row 5 lo 0 k 2 got 3f55364e/0 want 3f7631ac/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((343, 6, (2, 1, 3), 3167580544, 0), (343, 6, (2, 1, 3), 3121455104, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 2 mutant=None rows=8 fixture_rows=8 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+MISMATCH edge 343 row 6 lo 2 k 1 got 39970000/0 want 3e584420/0
+MISMATCH edge 344 row 7 lo 2 k 1 got 3eb16850/0 want 3e7192d8/0
+MISMATCH edge 348 row 4 lo 0 k 2 got bf1e09a4/0 want bf046b5a/0
+MISMATCH edge 349 row 5 lo 0 k 2 got 4005b224/0 want 3ffc8ada/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((343, 6, (2, 1, 3), 1045972000, 0), (343, 6, (2, 1, 3), 966197248, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 3 mutant=None rows=8 fixture_rows=8 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+MISMATCH edge 343 row 6 lo 2 k 1 got bd8cd3d8/0 want 3e31a0aa/0
+MISMATCH edge 344 row 7 lo 2 k 1 got be91db05/0 want bf1f5d7c/0
+MISMATCH edge 348 row 4 lo 0 k 2 got 3dd6cd82/0 want 3f68adb2/0
+MISMATCH edge 349 row 5 lo 0 k 2 got 3f8148da/0 want 3f796552/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((343, 6, (2, 1, 3), 1043439786, 0), (343, 6, (2, 1, 3), 3180123096, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 4 mutant=None rows=8 fixture_rows=8 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+MISMATCH edge 343 row 6 lo 2 k 1 got be2b6740/0 want beaa9e4d/0
+MISMATCH edge 344 row 7 lo 2 k 1 got 3c267600/0 want be1c1d80/0
+MISMATCH edge 348 row 4 lo 0 k 2 got bf0acb88/0 want be4e33c6/0
+MISMATCH edge 349 row 5 lo 0 k 2 got 3eb31383/0 want 3e9d9587/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((343, 6, (2, 1, 3), 3198852685, 0), (343, 6, (2, 1, 3), 3190515520, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 5 mutant=None rows=8 fixture_rows=8 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+MISMATCH edge 343 row 6 lo 2 k 1 got be43e280/0 want be7e8520/0
+MISMATCH edge 344 row 7 lo 2 k 1 got bdc38d00/0 want 3f3ac554/0
+MISMATCH edge 348 row 4 lo 0 k 2 got bd392b90/0 want be6df16e/0
+MISMATCH edge 349 row 5 lo 0 k 2 got 3f6e5d07/0 want bdb1586a/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((343, 6, (2, 1, 3), 3195962656, 0), (343, 6, (2, 1, 3), 3192119936, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 6 mutant=None rows=8 fixture_rows=8 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+MISMATCH edge 343 row 6 lo 2 k 1 got 3e7c6114/0 want bed7849c/0
+MISMATCH edge 344 row 7 lo 2 k 1 got bdfe1cd0/0 want be0d0130/0
+MISMATCH edge 348 row 4 lo 0 k 2 got 3a610800/0 want 3f1ae54e/0
+MISMATCH edge 349 row 5 lo 0 k 2 got 3e4f35da/0 want 3fa5968c/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((343, 6, (2, 1, 3), 3201795228, 0), (343, 6, (2, 1, 3), 1048338708, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 7 mutant=None rows=8 fixture_rows=8 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+MISMATCH edge 343 row 6 lo 2 k 1 got 3e9442d6/0 want beb7c3b0/0
+MISMATCH edge 344 row 7 lo 2 k 1 got 3d319dc0/0 want 3d0d43b0/0
+MISMATCH edge 348 row 4 lo 0 k 2 got bed998d0/0 want bfa04c7d/0
+MISMATCH edge 349 row 5 lo 0 k 2 got 3e7b8ebc/0 want 3e7b2e8c/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((343, 6, (2, 1, 3), 3199714224, 0), (343, 6, (2, 1, 3), 1049903830, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 8 mutant=None rows=8 fixture_rows=8 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+MISMATCH edge 343 row 6 lo 2 k 1 got bd74a100/0 want bdb5c6d0/0
+MISMATCH edge 344 row 7 lo 2 k 1 got bee40142/0 want 3ecb13a8/0
+MISMATCH edge 348 row 4 lo 0 k 2 got 3fb72615/0 want 3fc6b87f/0
+MISMATCH edge 349 row 5 lo 0 k 2 got 3f42d224/0 want 3fc0ae10/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((343, 6, (2, 1, 3), 3182806736, 0), (343, 6, (2, 1, 3), 3178537216, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 9 mutant=None rows=8 fixture_rows=8 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+MISMATCH edge 349 row 0 lo 0 k 2 got 3f1542db/0 want 3f41b8c1/0
+MISMATCH edge 350 row 1 lo 0 k 2 got 3fb0b586/0 want 4002f750/0
+MISMATCH edge 351 row 2 lo 0 k 2 got bea5c738/0 want bf748e10/0
+MISMATCH edge 352 row 3 lo 0 k 2 got be29333e/0 want 3e3fea32/0
+PLAN_MISMATCH predicted 10 words, got 10; first diff ((349, 0, (0, 2, 3), 1061271745, 0), (349, 0, (0, 2, 3), 1058357979, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 10 mutant=None rows=7 fixture_rows=7 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+MISMATCH edge 349 row 0 lo 0 k 2 got bf52715a/0 want bfa2977b/0
+MISMATCH edge 350 row 1 lo 0 k 2 got 3f870bae/0 want 3f8c68a9/0
+MISMATCH edge 351 row 2 lo 0 k 2 got 3ed26ff0/0 want bd753ca6/0
+MISMATCH edge 352 row 3 lo 0 k 2 got 3f44a1fc/0 want 3f9dfff0/0
+PLAN_MISMATCH predicted 10 words, got 10; first diff ((349, 0, (0, 2, 3), 3215103867, 0), (349, 0, (0, 2, 3), 3209851226, 0))
+XS_PLACE_CHECK FAIL u_f_3L02 attn.wq_b phase 11 mutant=None rows=7 fixture_rows=7 errors=5 END edges=4209 ret_words=128 xo_checked=4207 fault=0
+TOKSIM_FGU_SEQ FAIL op attn.wq_b PER 126 phases 11 rows 86 fixture_rows 86 go0 63 last_ret 1626 span 1563 errors 11 ["PHASE_FAIL p1: ['MISMATCH edge 343 row 6 lo 2 k 1 got be870460/0 want be882cda/0', 'MISMATCH edge 344 row 7 lo 2 k 1 got bd22ed40/0 want be62e420/0']", "PHASE_FAIL p2: ['MISMATCH edge 343 row 6 lo 2 k 1 got ba0da000/0 want bccd7180/0', 'MISMATCH edge 344 row 7 lo 2 k 1 got 3e9f1bd8/0 want 3ed72088/0']", "PHASE_FAIL p3: ['MISMATCH edge 343 row 6 lo 2 k 1 got 39970000/0 want 3e584420/0', 'MISMATCH edge 344 row 7 lo 2 k 1 got 3eb16850/0 want 3e7192d8/0']"]

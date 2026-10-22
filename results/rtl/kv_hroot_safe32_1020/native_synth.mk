@@ -1,0 +1,9 @@
+export DESIGN_NAME = qkd_kvs_hroot_safe32
+export PLATFORM = asap7
+export VERILOG_FILES = /work/rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_safe32.sv /work/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_hroot_safe32.sv
+export SDC_FILE = /work/results/rtl/kv_hroot_safe32_1020/native_synth.sdc
+export SYNTH_CANONICALIZE_TCL = /work/physical/common_flow/ot_keep_regs.tcl
+export NUM_CORES = 4
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_MEMORY_MAX_BITS = 4096
+export POST_SYNTH_TCL = /work/physical/qwen_kv_hroot_safe32_1020/post_synth_tie32.tcl

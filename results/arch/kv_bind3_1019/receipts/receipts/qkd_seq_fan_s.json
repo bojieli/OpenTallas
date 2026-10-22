@@ -1,0 +1,59 @@
+{
+ "evidence": {
+  "audit": "qkd_seq_fan_s.audit.json",
+  "audit_sha256": "05f0df6493323799970ee59f210f07cbe95d5029c0b8e09504e4dcd904e96aed",
+  "closed_commit": "1d16a05691d38b0c25c65183402995dfbfcf97ee",
+  "closed_job": "qkd_seq_fan_s-f1-1d16a0569",
+  "closed_lef_sha256": "f182deae9b27fd939e14f5340cec4cd276d50f1182238407ddb9e83aa47b0618",
+  "equiv_cells": 1725,
+  "equiv_log_sha256": "c25df768c94c89941e710aa89ab0d3b0ed6d92b5695a9cd40452b6202f52eef9",
+  "final_v_sha256": "4f32c61c4e143a99772b8adbbba18385445953887805615968387e983189b446",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+  "observe_zero": null,
+  "reset_base": null,
+  "sources": {
+   "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv": "c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42"
+  },
+  "state": {
+   "gate_only": 0,
+   "gate_only_sample": [],
+   "gold_only": 0,
+   "gold_only_sample": [],
+   "gold_regs": 1151,
+   "paired": 1151
+  },
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "848255f66133b2e6712471727d77c1ec9c2ca036ad5f9771b068f325b1056053",
+   "child_lint.json": "3a698297d1e4beda83d55dbe1646795ecaf9fe01e1d411e457becbbb6e32c1c4",
+   "export_ff.log": "28d70c73572659c33d39a9dd8b7fc54d83bb82f7ba27cc441a920751629b9a3e",
+   "export_ff.tcl": "f679a47387525f2144306475244954e7aeb51e9d8d97e254fb32269d29f84e8f",
+   "export_ss.log": "a7ee3c396e1d890e81a22a1705454695d07f47e03a03fdda2993a11bdaa692d2",
+   "export_ss.tcl": "9e59a2e49a7f91c681b032e52ffb5e7a622fd5fa16f3b287a597a2db995d85a1",
+   "export_tt.log": "72a6189dbdae67d1a69ee24ede16d4dd729ce9c271a6be052ba856e9bf6ad06b",
+   "export_tt.tcl": "59477f6917a551be51f40fc06a3772e183f1600638f614dd2a219b8d2ea8278b",
+   "insertion.json": "c265b005a6b9c6e27062e9534f1367490c9873576b7db92a20ae01279e97903d",
+   "provenance/abstract_pin_stub.json": "329f76b0304f69af1d5cf95a831e1b38d7cbc9a7a055b870d7b5886eb14e6f9d",
+   "provenance/raw/qkd_seq_fan_s.lef": "f182deae9b27fd939e14f5340cec4cd276d50f1182238407ddb9e83aa47b0618",
+   "provenance/view_export.abstract.json": "cffca5da5a3ec161fe81e75fcbeda1f4e831b00a9b1ac5c2c0a3e2314a93edcd",
+   "qkd_seq_fan_s.lef": "6225a6e1931a5de5219bf4050c1d0906101a06d3237c0ac75673177dfc460a18",
+   "qkd_seq_fan_s_ff.lib": "afdca7e29ed0cc1596918a46341b09777bf4ee4cfe9b5ba27fe231f9b5ab6ec5",
+   "qkd_seq_fan_s_ss.lib": "c1566ecc39eb8f0eea800883ac09a8ef802830cbb1aa4b468d43dfa31f2cddb5",
+   "qkd_seq_fan_s_tt.lib": "4b3fb00297e21bb09768cb13097aa44636c558680ec5304df952a602ded4c718"
+  },
+  "rtl": {
+   "path": "rtl/qwen_sys/static_kv_20261014/qkd_seq_static_s.sv",
+   "sha256": "c18ebfbb33c9075efc3f621f5809f6f29c9cddb039dc934922867a32cd587a42"
+  },
+  "view": "physical/ref_tile/qkd_seq_fan_s/views/qkd_seq_fan_s"
+ },
+ "module": "qkd_seq_fan_s",
+ "native_qualified": true,
+ "parameters": {
+  "MUT": 0
+ },
+ "schema": "opentallas.native_parameter_profile.v1"
+}

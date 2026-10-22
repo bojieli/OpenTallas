@@ -410,6 +410,17 @@
    "k": 3,
    "o": 512,
    "fault": 1
+  },
+  "ot_pdie_serdes_col": {
+   "clk": 1,
+   "rst": 1,
+   "tx": 512,
+   "rx": 512,
+   "st": 2,
+   "pma_tx": 544,
+   "pma_tck": 1,
+   "pma_rx": 544,
+   "pma_rck": 1
   }
  },
  "masters": {
@@ -1229,7 +1240,7 @@
      ]
     }
    },
-   "module": "ot_pdie_serdes",
+   "module": "ot_pdie_serdes_col",
    "view": null,
    "phy": true,
    "top_ports": [
@@ -1253,7 +1264,8 @@
      "dir": "input",
      "bits": 1
     }
-   ]
+   ],
+   "view_note": "STAND-IN until s81lk_serdes_col closes: landed SerDes column parent ot_pdie_serdes_col (rtl/dsrom_sys/s81_link/col, same ports as ot_pdie_serdes), slot 259.2 x 3596.4 (p4l_lkcol rev2, COORD 10-19 02:00); S81-PILOT 10-19"
   },
   "ot_hbm3e_phy_v41x_aw30_e8p5": {
    "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
@@ -2792,7 +2804,11 @@
     "st",
     "f_prog"
    ],
-   "decision": "coordinator 0cw+ (4)"
+   "decision": "coordinator 0cw+ (4)",
+   "covered_modules": [
+    "ot_s81_cfg7_seq_bf"
+   ],
+   "provenance_note": "ot_s81_cfg7_seq_bf is u_ld within this closed bfp view; it is not a standalone frame/die leaf."
   },
   {
    "master": "dsfd_cfifo_crs4",
@@ -2801,8 +2817,10 @@
    "view": null,
    "replaces": "dsfd_cfifo_crs (LANDING audit gaps 1+2)",
    "ports_used": [
-    "xd",
-    "xd2",
+    "xl0",
+    "xl1",
+    "xl2",
+    "xl3",
     "xk",
     "lk",
     "ri",
@@ -2816,7 +2834,7 @@
     "cc"
    ],
    "decision": "S81-LAND2 0dm+ (1); LANDFIX-SQ/F 10-18 binds it",
-   "view_note": "successor of r5f-507e1b0c3 (dsfd_cfifo_crs CLOSED); crs4 not hardened yet (owed)"
+   "view_note": "successor of r5f-507e1b0c3 (dsfd_cfifo_crs CLOSED); crs4 CLOSED s81coll_cfifo_crs4-c4a-f11bb1950 (TW-S81 10-19: ports xl0..xl3 = old {xd2,xd}[276k+:276], one port per lane; record merge claude/tw-s81-land-merge-1019)"
   },
   {
    "master": "dsfd_bf_front_roots",
@@ -2837,55 +2855,19 @@
    "decision": "coordinator 0db+ (3); f_prog from cfg7_seq_bfp"
   },
   {
-   "master": "dsfd_bf_col_cl",
-   "ref": "origin/claude/selem-bfcol-2020",
-   "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_cl.sv",
+   "master": "dsfd_bf_col",
+   "ref": "origin/main",
+   "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
    "view": null,
-   "view_note": "parent dsfd_bf_col gate waits on lane4r (s81_bf_cl_lane4r-r2-7c317a644) + fp views",
+   "view_note": "Actual frame binds ot_v41_bf_col compact199 inside dsfd_bf_col. Native launch/capture repair pending; fallback dsfd_bf_col_cl is not instantiated.",
    "ports_used": [
-    "leaf_ck",
-    "lane_ckl",
-    "lane_cko",
-    "rom_ck0",
-    "rom_ck1",
+    "ci",
+    "qy",
     "ck",
-    "rs"
+    "rs",
+    "r"
    ],
-   "clock_ties": [
-    {
-     "port": "lane_ckl[0]",
-     "to": "leaf_ck[2]"
-    },
-    {
-     "port": "lane_cko[0]",
-     "to": "leaf_ck[2]"
-    },
-    {
-     "port": "lane_ckl[1]",
-     "to": "leaf_ck[3]"
-    },
-    {
-     "port": "lane_cko[1]",
-     "to": "leaf_ck[3]"
-    },
-    {
-     "port": "lane_ckl[2]",
-     "to": "leaf_ck[4]"
-    },
-    {
-     "port": "lane_cko[2]",
-     "to": "leaf_ck[4]"
-    },
-    {
-     "port": "lane_ckl[3]",
-     "to": "leaf_ck[5]"
-    },
-    {
-     "port": "lane_cko[3]",
-     "to": "leaf_ck[5]"
-    }
-   ],
-   "decision": "COORD 10-17 ~16:20 BF: lane band roots leaf_ck[2+g] / lane_ckl[g] / lane_cko[g] all = frame leaf clock 2+g"
+   "decision": "AD-S81-FRAME: preserve actual compact199 frame member; no fallback substitution before proof"
   },
   {
    "master": "ot_v41_rom_elem_q_qxpq_w10",
@@ -2922,7 +2904,7 @@
   },
   "ot_s81_kp4_enc": {
    "view": "s81lk_kp4_enc-k4-10153956e (CLOSED TT +0.72 / FF +20.62; native PASS L 122.3 / C 103.5 / R 286.4 / sp 57.2)",
-   "parent": "ot_pdie_serdes (u_enc)"
+   "parent": "ot_pdie_serdes_col (u_enc)"
   },
   "dsfd_rly_38_WN": {
    "view": "s81_rly_38_wn-x1-e3cbf17fa (CLOSED TT +410.65 / FF +26.70; native PASS L 108.4 / C 60.0 / R 52.8 / sp 0.8)",

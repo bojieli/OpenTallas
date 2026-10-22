@@ -1,0 +1,85 @@
+{
+ "schema": "opentallas.qwen.dv-attn-return.v1",
+ "lane": "QW-ATTNRET",
+ "date": "2026-10-19",
+ "tool": "tools/qwen_layerbench/dv_lower_vec.py --mode attn",
+ "bench": "rtl/test/qwen_dv/dv_lower_vec_bench.py --mode attn",
+ "vehicle": "tb_qfd_dv2 N 12 (qfd_dv_slice2 x 12), Verilator 5.050, executable reused from qw-clayer reg_vec obj_n12 (RTL byte-identical, hashes in source.sha256)",
+ "verdict": "PASS",
+ "mutants": {
+  "ddwin": "FAIL (4/8 x words wrong: each owner misses its last beat)",
+  "ddbase": "FAIL (6/8 x words wrong: blocks 1..3 land outside ATT)"
+ },
+ "regression": {
+  "resid": "PASS 26/26 (ar-order row)",
+  "qk": "PASS 4/4",
+  "silu": "PASS 1/1"
+ },
+ "measured_span_edges": 98,
+ "compiled_span_edges": 98,
+ "span_rule": "first dr word at the dvs_W5 return pin (ch_dn_i) -> last o_proj x word leaving the E5 end; owners slices 0,1,2,5 also mean every slice has every x word by then (slice 5 word reaches slice 0 and 11 by edge_all)",
+ "owners": [
+  0,
+  1,
+  2,
+  5
+ ],
+ "dd_r0": 584,
+ "x_words": [
+  {
+   "slice": 0,
+   "eaddr": 0,
+   "edge_e5_rel": 71,
+   "edge_all_rel": 71
+  },
+  {
+   "slice": 0,
+   "eaddr": 64,
+   "edge_e5_rel": 79,
+   "edge_all_rel": 79
+  },
+  {
+   "slice": 1,
+   "eaddr": 128,
+   "edge_e5_rel": 78,
+   "edge_all_rel": 78
+  },
+  {
+   "slice": 1,
+   "eaddr": 192,
+   "edge_e5_rel": 86,
+   "edge_all_rel": 86
+  },
+  {
+   "slice": 2,
+   "eaddr": 256,
+   "edge_e5_rel": 85,
+   "edge_all_rel": 85
+  },
+  {
+   "slice": 2,
+   "eaddr": 320,
+   "edge_e5_rel": 93,
+   "edge_all_rel": 93
+  },
+  {
+   "slice": 5,
+   "eaddr": 384,
+   "edge_e5_rel": 90,
+   "edge_all_rel": 90
+  },
+  {
+   "slice": 5,
+   "eaddr": 448,
+   "edge_e5_rel": 98,
+   "edge_all_rel": 98
+  }
+ ],
+ "format": "dr word = qfd_native59_dv_service.dr_o group 0 {v 1, em 0, 0, beat[4:0], data 512 (lane j = element 16 b + j)}; beats 0..31 on consecutive edges (qkd_attn_result_face shift order; qfd_native59_static_service result_count == beat)",
+ "golden": "o_proj x = to_bf16(attention output) RNE, hdc_golden; bit-exact incl. zero and BF16 ties",
+ "not_covered": [
+  "per-beat LAND_EDGES of qfd_native59_dr_landing: with partitioned owners the last landing is beat 31 on slice 5 (pin + s); native59 LAND_EDGES must cover max over owners (compiler constant, not set here)",
+  "column-head tap control (hr / xpf) of the o_proj x words (existing COLUMN-HEAD x CONSUMER gap)",
+  "die relay stages between native59.dr_o and dvs_W5.ch_dn_i (span starts at the W5 pin)"
+ ]
+}

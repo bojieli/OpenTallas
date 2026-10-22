@@ -1,0 +1,32 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-epyc9       admits   798 GB (avail 718, growth 160, headroom 0, waiters 0/0 GB) load 289/128 running 46 disk 39 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2682034-1792514261 after 1 s
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3 round 0 best faults 9 root words 35 cfg (13, 40000, 10, 10) time 87
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3 round 1 best faults 3 root words 31 cfg (1005, 40000, 10, 10) time 228
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3 round 2 best faults 3 root words 30 cfg (2009, 40000, 10, 10) time 367
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3 round 3 best faults 2 root words 30 cfg (3021, 40000, 10, 10) time 470
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3 round 4 best faults 2 root words 30 cfg (3021, 40000, 10, 10) time 582
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3 round 5 best faults 2 root words 30 cfg (3021, 40000, 10, 10) time 701
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3 round 6 best faults 2 root words 30 cfg (3021, 40000, 10, 10) time 825
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3 round 7 best faults 2 root words 30 cfg (3021, 40000, 10, 10) time 937
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3 round 8 best faults 2 root words 30 cfg (3021, 40000, 10, 10) time 1043
+KSLOT_SEARCH col_h9|fp8|2304|5|6|3 round 9 best faults 2 root words 30 cfg (3021, 40000, 10, 10) time 1190
+KSLOT_SEARCH_NO_LAYOUT col_h9|fp8|2304|5|6|3 best faults 2
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3 round 0 best faults 13 root words 37 cfg (13, 40000, 10, 10) time 1248
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3 round 1 best faults 10 root words 33 cfg (1009, 40000, 10, 10) time 1380
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3 round 2 best faults 10 root words 33 cfg (1009, 40000, 10, 10) time 1492
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3 round 3 best faults 9 root words 32 cfg (3005, 40000, 10, 10) time 1616
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3 round 4 best faults 9 root words 32 cfg (3005, 40000, 10, 10) time 1730
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3 round 5 best faults 9 root words 31 cfg (5009, 40000, 10, 10) time 1839
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3 round 6 best faults 9 root words 31 cfg (5009, 40000, 10, 10) time 1942
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3 round 7 best faults 9 root words 31 cfg (5009, 40000, 10, 10) time 2036
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3 round 8 best faults 9 root words 31 cfg (5009, 40000, 10, 10) time 2123
+KSLOT_SEARCH col_h9|fp4|2304|5|6|3 round 9 best faults 9 root words 31 cfg (5009, 40000, 10, 10) time 2206
+KSLOT_SEARCH_NO_LAYOUT col_h9|fp4|2304|5|6|3 best faults 9
+KSLOT_SEARCH_DONE []
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2682034-1792514261): exit 0

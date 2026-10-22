@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_kvs_hroot_safe32",
+ "enable": false,
+ "reason": "Every data pin registered in standalone SAFE32 RTL: input root captures, distributed second captures, output launch flops; relay words have capture/mid/launch. +1 edge vs old landed, HROOT_LAND_EDGES=2. Pin anchor flow retained; no hidden flow-added data stage."
+}

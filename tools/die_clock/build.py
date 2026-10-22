@@ -36,6 +36,7 @@ import time
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import regtree as rt  # noqa: E402
+from qualification import carry_unqualified
 
 XPITCH, YPITCH = 1.620, 0.270
 PLAT = '/OpenROAD-flow-scripts/flow/platforms/asap7'
@@ -45,14 +46,34 @@ def log(*a):
     print(time.strftime('%H:%M:%S'), *a, flush=True)
 
 
+def sink_record(tree, sink, insertion):
+    # Coordinates are admission inputs, not display fields: retain actual ODB precision.
+    return dict(tree=tree, master=sink[1], x=sink[2], y=sink[3], R=insertion)
+
+
 class Sites:
     """legal 1.62 x 0.27 sites outside hard blocks (10-um grid, conservative) and outside existing std cells."""
 
-    def __init__(self, grid, W, H, taken):
+    def __init__(self, grid, W, H, taken, exact=None):
         self.g, self.W, self.H = grid, W, H
         self.nx, self.ny = int(W / XPITCH), int(H / YPITCH)
         self.occ = set(taken)
         self._search = None
+        # QW-DIECLK2 10-19 grid_center: grid cells are free when their CENTRE is outside every block, so the
+        # 17.28-um abutment gaps between hard columns (2919 / 10880 Qwen clock entries) get clock sites; every site is
+        # then checked EXACTLY against the block rectangles bucketed per grid cell (no site may overlap a block)
+        self.exact = exact
+
+    def _clear(self, x, y):
+        if self.exact is None:
+            return True
+        G = rt.GRID
+        for ci in range(int(x / G), int((x + XPITCH - 1e-9) / G) + 1):
+            for cj in range(int(y / G), int((y + YPITCH - 1e-9) / G) + 1):
+                for (x0, y0, x1, y1) in self.exact.get((ci, cj), ()):
+                    if x < x1 and x + XPITCH > x0 and y < y1 and y + YPITCH > y0:
+                        return False
+        return True
 
     def legal(self, ix, iy):
         x, y = ix * XPITCH, iy * YPITCH
@@ -63,7 +84,7 @@ class Sites:
             for cj in range(int(y / G), int((y + YPITCH - 1e-9) / G) + 1):
                 if not (0 <= ci < self.g.nx and 0 <= cj < self.g.ny and self.g.free((ci, cj))):
                     return False
-        return True
+        return self._clear(x, y)
 
     def take(self, x0, y0):
         import heapq
@@ -89,6 +110,44 @@ class Sites:
                 self.occ.add((ix, iy))
                 return round(ix * XPITCH, 3), round(iy * YPITCH, 3)
         raise ValueError(f'no legal clock site near {x0},{y0}')
+
+
+def grid_center(g, obstacles):
+    """QW-DIECLK2 10-19: re-derive g.blk with the CENTRE rule (a cell is blocked iff its centre lies inside a block)
+    and return {cell: [block rects that touch the cell]} for the exact site check.  Before: a cell touching a block
+    by 0.3 um was blocked, so a 17.28-um gap between abutted hard columns had ZERO free 10-um cells: its clock pins
+    and reset relays were driven by leaf buffers mm away (Qwen rA/rB: 114/115 intra over-budget pairs, 13-15 ns
+    region trees).  Wires may still cross blocks (MAX_RUN); only cell legality changes."""
+    G = rt.GRID
+    blk = bytearray(g.nx * g.ny)
+    exact = defaultdict(list)
+    for r in obstacles:
+        x0, y0, x1, y1 = r
+        i0 = max(0, math.ceil(x0 / G - 0.5)); i1 = min(g.nx - 1, math.floor(x1 / G - 0.5))
+        j0 = max(0, math.ceil(y0 / G - 0.5)); j1 = min(g.ny - 1, math.floor(y1 / G - 0.5))
+        for j in range(j0, j1 + 1):
+            row = j * g.nx
+            for i in range(i0, i1 + 1):
+                blk[row + i] = 1
+        # partially covered border cells (and every cell of a block smaller than a cell) keep the exact rectangle
+        a0, a1 = max(0, int(x0 // G)), min(g.nx - 1, int(x1 // G))
+        b0, b1 = max(0, int(y0 // G)), min(g.ny - 1, int(y1 // G))
+        for j in range(b0, b1 + 1):
+            row = j * g.nx
+            for i in range(a0, a1 + 1):
+                if not blk[row + i]:
+                    exact[(i, j)].append(r)
+    freed = sum(1 for k in range(len(blk)) if g.blk[k] and not blk[k])
+    g.blk = blk
+    log('grid_center: freed', freed, 'cells; exact border cells', len(exact))
+    return exact
+
+
+def collections_count(vio):
+    c = defaultdict(int)
+    for v in vio:
+        c[v['kind']] += 1
+    return dict(c)
 
 
 def esc(n):
@@ -187,6 +246,10 @@ def build(a):
     spec = json.loads(Path(a.spec).read_text())
     rt.LEAF_UM = spec.get('leaf_um', rt.LEAF_UM)
     rt.LEAF_MAX = spec.get('leaf_max', rt.LEAF_MAX)
+    # QW-DIECLK3 10-19: safe tree (regtree.SAFE: every unbuffered clock segment <= SEG_MAX, runs over blocks <= 200 um,
+    # leaves within LEAF_REACH; violations recorded in the manifest and failed by clock_reach_check.py)
+    rt.SAFE = bool(spec.get('safe_tree', False))
+    rt.SEG_MAX = float(spec.get('seg_max_um', rt.SEG_MAX))
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     D = Die(a)
     blk, u, odb = D.block, D.u, D.odb
@@ -204,7 +267,10 @@ def build(a):
                     taken.add((ix, iy))
     log('obstacles', len(obstacles), 'std cell sites taken', len(taken))
     g = rt.dct.Grid(D.W, D.H, obstacles)
-    sites = Sites(g, D.W, D.H, taken)
+    exact = None
+    if spec.get('grid_center'):
+        exact = grid_center(g, obstacles)
+    sites = Sites(g, D.W, D.H, taken, exact)
     target = load_targets(a.targets)
     # expand tree specs
     trees = []
@@ -223,6 +289,8 @@ def build(a):
         trees = [t for t in trees if t['name'] in keep or t['name'].split('_')[0] in keep]
     rec = dict(schema='opentallas.die_clock.manifest.v1', odb=a.odb, spec=spec, trees={}, cells=[], parent={}, cell_tree={},
                leaves={}, iterations=[])
+    if a.targets:
+        rec.update(carry_unqualified(json.loads(Path(a.targets).read_text())))
     clocks, sink_pins, builders = [], {}, {}
     tree_group = {t['name']: t['balance_group'] for t in trees if t.get('balance_group')}
     by_root = defaultdict(list)
@@ -268,11 +336,25 @@ def build(a):
                 continue
             leaves = rt.cluster(sinks)
             b_ = rt.Builder(g, 'dc_' + t['name'], r_of=lambda key: (target(*key.rsplit('/', 1)) or [0, 0, 0])[2])
-            model = b_.build(root, rxy, leaves)
+            txy = rxy
+            if t.get('local_root'):
+                # STAND-IN regional clock entry (landed-regions standard): the region tree starts at a local root
+                # (sink median, or the given [x, y]) instead of the shared generator pin; the spine from the generator
+                # to it is NOT built here (the GEN owes a regional clock entry / forwarded spine).  The clock is defined
+                # at the local root buffer input, so only the region tree is measured.
+                lr = t['local_root']
+                if isinstance(lr, (list, tuple)):
+                    txy = (float(lr[0]), float(lr[1]))
+                else:
+                    xs = sorted(z[2] for z in sinks); ys = sorted(z[3] for z in sinks)
+                    txy = (xs[len(xs) // 2], ys[len(ys) // 2])
+                if len(ts) != 1:
+                    raise ValueError(f'local_root needs one tree per root ({root})')
+                rec.setdefault('local_root_xy', {})[root] = [round(txy[0], 3), round(txy[1], 3)]
+            model = b_.build(root, txy, leaves)
             for s in sinks:
-                sink_pins[s[0]] = dict(tree=t['name'], master=s[1], x=round(s[2], 3), y=round(s[3], 3),
-                                      R=target(s[1], pin_key(s[0])[1]))
-            rec['trees'][t['name']] = dict(root=root, root_xy=[round(rxy[0], 3), round(rxy[1], 3)], sinks=len(sinks), model=model)
+                sink_pins[s[0]] = sink_record(t['name'], s, target(s[1], pin_key(s[0])[1]))
+            rec['trees'][t['name']] = dict(root=root, root_xy=list(rxy), sinks=len(sinks), model=model)
             builders[t['name']] = b_
             log('tree', t['name'], 'sinks', len(sinks), json.dumps(model))
         unclaimed = [x for x in loads if f'{x.getInst().getName()}/{x.getMTerm().getName()}' not in claimed]
@@ -340,7 +422,13 @@ def build(a):
             continue      # from co driving 350-460 um to the first trunk repeater) drives one buffer beside it
         rb = root_it.getBBox()
         rn = f"dc_root_{ts[0]['name']}"
-        ri = mk(rn, rt.BUF, (rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)
+        lxy = rec.get('local_root_xy', {}).get(root)
+        rxy_ = lxy if lxy else ((rb.xMin() + rb.xMax()) / 2 / u, (rb.yMin() + rb.yMax()) / 2 / u)
+        if rt.SAFE:
+            # QW-DIECLK3: the root buffer sits on the SAME free grid cell the tree's trunk route starts from (Builder.build
+            # nearest_free(root_xy)); a site searched from a median inside a hard block could land on the far side
+            rxy_ = g.xy(g.nearest_free(*rxy_))
+        ri = mk(rn, rt.BUF, *rxy_)
         insts[rn] = ri
         rec['cell_tree'][rn] = ''
         nn = odb.dbNet.create(blk, f'n_{rn}')
@@ -352,17 +440,180 @@ def build(a):
             if rec['parent'].get(c) == root:
                 rec['parent'][c] = rn
         ri.findITerm('Y').connect(nn)
-        ri.findITerm('A').connect(rnet)
+        if lxy:
+            # local_root stand-in: the generator->region spine is not built; the root buffer input sits on its own
+            # (undriven) net so STA sees an ideal clock source there, not a mm-long unbuffered wire from the generator
+            sn = odb.dbNet.create(blk, f'n_{rn}_spine')
+            sn.setSigType('CLOCK')
+            ri.findITerm('A').connect(sn)
+        else:
+            ri.findITerm('A').connect(rnet)
         rec['parent'][rn] = root
         rec.setdefault('root_buffer', {})[root] = rn
         log('root buffer', rn, 'drives', len(loads), 'tree inputs of', root)
+    # ITEM 5 (GEN16): a root buffer driving more than one trunk input gets one BUFx24 per trunk (HBM t4 / Qwen v0:
+    # 5 trunk inputs at 382-413 ps slew > 320 when one driver fed several trunks)
+    for root, rn in list(rec.get('root_buffer', {}).items()):
+        if spec.get('split_root_fanout', True) is False:
+            break
+        nn = insts[rn].findITerm('Y').getNet()
+        loads = [x for x in nn.getITerms() if x.getIoType() == 'INPUT']
+        if len(loads) < 2:
+            continue
+        x0, y0 = cell_xy[rn]
+        for j, x in enumerate(loads):
+            tn = f'{rn}_t{j}'
+            ti = mk(tn, rt.BUF, x0, y0)
+            insts[tn] = ti
+            rec['cell_tree'][tn] = rec['cell_tree'].get(x.getInst().getName(), '')
+            tnet = odb.dbNet.create(blk, f'n_{tn}')
+            tnet.setSigType('CLOCK')
+            x.disconnect()
+            x.connect(tnet)
+            ti.findITerm('Y').connect(tnet)
+            ti.findITerm('A').connect(nn)
+            c = x.getInst().getName()
+            if rec['parent'].get(c) == rn:
+                rec['parent'][c] = tn
+            rec['parent'][tn] = rn
+        log('root buffer', rn, 'split: one buffer per trunk input,', len(loads), 'trunks')
+    # ITEM 1 (GEN16): FORWARDED CLOCK SPINE.  spec "spine": {"source": "inst/pin", "period": ps, "trees": [..] (opt)}:
+    # a real buffered DME spine (obstacle grid, repeaters, legal sites) from ONE generator pin to every member region's
+    # entry (local-root buffer input); the clock is defined at the spine source, so every measured arrival = spine +
+    # region tree.  The spine merge compensates each region tree's model insertion (key = tree name), and the measured
+    # trim may add elements on spine nodes only for spec "neighbours" pairs: there is no die-wide balance target.
+    spine_roots = set()
+    sp_ = spec.get('spine')
+    if sp_:
+        src = sp_['source']
+        members = rt.spine_members(trees, set(rec['trees']), rec.get('root_buffer', {}), sp_)
+        if not members:
+            raise ValueError(f'spine {src}: no member region trees')
+        src_it = blk.findITerm(src)
+        if not src_it:
+            raise ValueError(f'spine source missing: {src}')
+        src_net = src_it.getNet()
+        if not src_net:
+            src_net = odb.dbNet.create(blk, 'n_dc_spine_gen')
+            src_net.setSigType('CLOCK')
+            src_it.connect(src_net)
+        mrb = {rb for _, rb in members}
+        dissolved = []
+        if sp_.get('dissolve_receiver'):
+            from receiver_guard import preflight
+            proof = json.loads(Path(a.targets).read_text()).get('masters', {}) if a.targets else {}
+            preflight(src_it, mrb, {t['root'] for t, _ in members}, proof)
+        for x in [x for x in src_net.getITerms() if x.getIoType() == 'INPUT']:
+            if x.getInst().getName() not in mrb:
+                # QW-GEN5 10-20 (g5, spine.dissolve_receiver): the spine starts at the core feed bump; the forwarded-
+                # clock receiver it fed (qfd_clkrx pll_fwd, an identity of the forwarded clock) is dissolved: its
+                # input is disconnected and every output must end up without loads (checked below)
+                if sp_.get('dissolve_receiver') and x.getInst().getMaster().getName() in ('qfd_clkrx', 'qfd_clkrx_qclk'):
+                    dissolved.append(f'{x.getInst().getName()}/{x.getMTerm().getName()}')
+                    x.disconnect()
+                    continue
+                raise ValueError(f'spine source {src} also drives non-member {x.getInst().getName()}/{x.getMTerm().getName()}')
+            x.disconnect()
+        if sp_.get('dissolve_receiver') and not dissolved:
+            raise ValueError(f'spine dissolve_receiver: source {src} feeds no qfd_clkrx input')
+        rmodel = {t['name']: rec['trees'][t['name']]['model'].get('model_insertion_ps', 0.0) for t, _ in members}
+        # QW-DIECLK 10-19: spine "balance": false = FORWARDED regional spine (landed-regions standard): the member regions
+        # are mesochronous (every cross-region crossing LANDED), so the spine neither compensates region insertion nor
+        # pads: geometric merge, repeaters <= SPAN, fixed latency; only the landed-lane clock drift is judged downstream
+        bal = sp_.get('balance', True)
+        # QW-DIECLK4 10-20: balance "geometric" = merge points where the region model insertions meet ON THE WIRE, no pad
+        # QW-DIECLK6 10-20 spine "topology": "spt" = shortest-path-tree forwarded spine (regtree.build_spt): bounded depth
+        # (each entry at its own geodesic delay), forwarded/unbalanced only
+        topo = sp_.get('topology', 'dme')
+        if topo == 'spt' and bal:
+            raise ValueError('spine topology spt is a forwarded (balance false) spine only')
+        sb = rt.Builder(g, 'dc_spine', r_of=(lambda key: rmodel.get(key, 0.0)) if bal else None, pads=bal is True,
+                        topo=topo)
+        sxy = ((src_it.getBBox().xMin() + src_it.getBBox().xMax()) / 2 / u,
+               (src_it.getBBox().yMin() + src_it.getBBox().yMax()) / 2 / u)
+        # A centre feed is not one of the local tree roots: retain its actual ODB
+        # pin coordinate so reach coverage includes the source-to-spine edge.
+        rec.setdefault('source_xy', {})[src] = list(sxy)
+        smodel = sb.build(src, sxy, rt.spine_leaves(members, cell_xy))
+        for n, cell, x, y in sb.bufs:
+            insts[n] = mk(n, cell, x, y)
+            rec['cell_tree'][n] = 'spine'
+        # the generator pin drives ONE spine source buffer beside it (a generator model without output drive left the
+        # first trunk input at 382-413 ps slew); the spine starts at its output
+        sbn = 'dc_spine_src'
+        insts[sbn] = mk(sbn, rt.BUF, *(g.xy(g.nearest_free(*sxy)) if rt.SAFE else sxy))
+        rec['cell_tree'][sbn] = 'spine'
+        insts[sbn].findITerm('A').connect(src_net)
+        spine_net = odb.dbNet.create(blk, 'n_dc_spine_src')
+        spine_net.setSigType('CLOCK')
+        insts[sbn].findITerm('Y').connect(spine_net)
+        rec['parent'][sbn] = src
+        orphan = []
+        for t, rb in members:
+            ai = insts[rb].findITerm('A')
+            old = ai.getNet()
+            ai.disconnect()
+            if old and old.getName() != src_net.getName() and not old.getITerms():
+                odb.dbNet.destroy(old)
+            spine_roots.add(t['root'])
+            gn = blk.findITerm(t['root'])
+            if t['root'] != src and gn and gn.getNet() and not [x for x in gn.getNet().getITerms() if x.getIoType() == 'INPUT']:
+                orphan.append(t['root'])
+        for n, drv, loads in sb.nets:
+            if drv[0] == 'pin':
+                net = spine_net
+            else:
+                net = odb.dbNet.create(blk, f'n_{drv[1]}')
+                net.setSigType('CLOCK')
+                insts[drv[1]].findITerm('Y').connect(net)
+            for ld in loads:
+                if ld[0] == 'buf':
+                    insts[ld[1]].findITerm('A').connect(net)
+                else:
+                    x = blk.findITerm(ld[1])
+                    x.disconnect()
+                    x.connect(net)
+        for k_, v_ in sb.parent.items():
+            rec['parent'][k_[:-2] if k_.endswith('/A') and k_[:-2] in mrb else k_] = sbn if v_ == src else v_
+        lv = {}
+        for c_ in [b_[0] for b_ in sb.bufs]:
+            d_, x_ = 1, c_
+            while sb.parent.get(x_) not in (None, src):
+                x_ = sb.parent[x_]; d_ += 1
+            lv[c_] = d_ + 1      # + the spine source buffer
+        if dissolved:
+            from receiver_guard import assert_disconnected
+            for rx in {d_.split('/')[0] for d_ in dissolved}:
+                assert_disconnected(blk.findInst(rx))
+        rec['spine'] = dict(source=src, period=float(sp_.get('period', 833.333333)),
+                            balance=bal if bal == 'geometric' else bool(bal), topology=topo,
+                            members=[t['name'] for t, _ in members],
+                            cells=len(sb.bufs) + 1, levels=max(lv.values(), default=0), model=smodel,
+                            generator_pins_without_loads=orphan,
+                            dissolved_receiver=dict(inputs_disconnected=dissolved, outputs_with_loads=0) if dissolved else None)
+        log('SPINE', src, 'members', len(members), 'cells', len(sb.bufs) + 1, 'levels', rec['spine']['levels'],
+            'model', json.dumps(smodel), 'generator pins left without loads', len(orphan), ' '.join(orphan[:20]))
     log('instantiated', len(rec['cells']), 'cells')
+    if rt.SAFE:
+        vio = [dict(v, tree=tn) for tn, b_ in builders.items() for v in b_.violations]
+        if sp_:
+            vio += [dict(v, tree='spine') for v in sb.violations]
+        rec['safe_tree'] = dict(seg_max_um=rt.SEG_MAX, span_um=rt.SPAN, safe_runs_um=list(rt.SAFE_RUNS),
+                                leaf_reach_um=rt.LEAF_REACH, violations=vio,
+                                run_escalations=sum(b_.run_escalations for b_ in builders.values()))
+        log('SAFE_TREE violations', len(vio), json.dumps(collections_count(vio)), 'run escalations',
+            rec['safe_tree']['run_escalations'])
+    clocks_orig = list(clocks)
     if spec.get('clock_at_root_buffer'):
         # the PLL model has no output drive / timing arc (Qwen KV qkd_pllm: STA slew 114 ns at the root buffer input);
         # the clock is defined at the root buffer input beside the PLL pin, so the delivered tree is what is measured
         clocks = [(n, rec.get('root_buffer', {}).get(p) + '/A' if rec.get('root_buffer', {}).get(p) else p, per)
                   for n, p, per in clocks]
         rec['clock_source'] = 'root buffer input (spec clock_at_root_buffer)'
+    if spine_roots:
+        per_ = rec['spine']['period']
+        clocks = [c_ for c_, o_ in zip(clocks, clocks_orig) if o_[1] not in spine_roots] + [('spine', rec['spine']['source'], per_)]
+        rec['clock_source'] = (rec.get('clock_source', '') + '; spine trees: clock at the spine source').lstrip('; ')
     D.setup_sta(clocks, spec.get('rc_layer', 'M8'))
     # measured trim.  Two delay elements: PAD (BUFx12f stacked on one site: gate delay, FF/TT ~0.77) and WPAD (BUFx24
     # local/far buffer PAIRS WPAD_UM apart: buffered wire like the tree's own repeater stages, FF/TT ~0.84).  One corner: PAD only.
@@ -477,13 +728,18 @@ def build(a):
             x, y = cell_xy[bname]
             off = (0.0, 0.0)
             if ty == 'W':     # stages alternate between the node and a free spot WPAD_UM away (wire like a tree stage)
-                for dx, dy in ((WPAD_UM, 0), (-WPAD_UM, 0), (0, WPAD_UM), (0, -WPAD_UM)):
+                # QW-DIECLK3: the far stage must sit on a LEGAL free site <= WPAD_UM away (shorter offsets tried);
+                # legacy fell back to (WPAD_UM, 0) even over a block, so sites.take put it at the nearest legal site,
+                # possibly across a hard column (an unbuffered pad pair wire of mm)
+                cand = [(s_ * dx, s_ * dy) for s_ in ((1.0, 2 / 3, 1 / 3) if rt.SAFE else (1.0,))
+                        for dx, dy in ((WPAD_UM, 0), (-WPAD_UM, 0), (0, WPAD_UM), (0, -WPAD_UM))]
+                for dx, dy in cand:
                     ix, iy = round((x + dx) / XPITCH), round((y + dy) / YPITCH)
                     if 0 <= x + dx < D.W and 0 <= y + dy < D.H and sites.legal(ix, iy):
                         off = (dx, dy)
                         break
                 else:
-                    off = (WPAD_UM, 0.0)
+                    off = (0.0, 0.0) if rt.SAFE else (WPAD_UM, 0.0)
             orig = rec['parent'][bname]
             first = None
             for j in range(k * (2 if ty == 'W' else 1)):
@@ -600,7 +856,9 @@ def build(a):
         # (min over its leaves minus what its parent already carries): group offsets land on the common path at the
         # root, subtree offsets at their branch point, only the residual at the leaves
         plan = []
-        src_bufs = set(rec.get('root_buffer', {}).values()) if spec.get('clock_at_root_buffer') else set()
+        src_bufs = {b_ for r_, b_ in rec.get('root_buffer', {}).items() if r_ not in spine_roots} if spec.get('clock_at_root_buffer') else set()
+        if spine_roots:
+            src_bufs.add('dc_spine_src')     # the clock is defined at the generator pin: nothing above the spine source buffer
         for ty in ('W', 'P'):   # W first: wire stages above, gate pads nearer the node
             units, par_of = {}, {}
             for lb, nn_ in need.items():

@@ -1,0 +1,51 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/ep7only
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/ep7only
+ot-run: ot-epyc7       admits   857 GB (avail 673, growth 73, headroom 0, waiters 0/0 GB) load 27/96 running 18 disk 5685 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/ep7only
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/ep7only
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-svc5-1019/svc6/ep7only
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-3808988-1792488053 after 0 s
+HOST ot-epyc7 sop2 recover start Tue Oct 20 02:20:54 PDT 2026
+== full1m s1
+SVCRS_SO t_sot=2517 dso=5673 so_start=8190 pv_last=6482 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=8306 last_w=8568 gw_first=8614 gw_last=9092 verdict=PASS
+SVCRS_SO_LAT o_row0_minus_q_row0 per sid: 74 69 69 64 64 59 69 64 69 64 64 59 69 64 74 69
+SVCRS_SCHED T=640 pvs=950 po=1116 pvo=1331 go=4936 last_fold_score=5237 pv_sent=5886 pv_early=0 pv_words=160 pv_first=6323 pv_last=6482 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=2 T=640 window=128 nsel=512 pairs_in=1454 go=4936 first_score=5078 last_score=5237 end=9098 root_beats=160 sc_checked=2448 sc_errors=0 order_errors=0 se_checked=2448 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=9399 verdict=PASS
+== full1m s2
+SVCRS_SO t_sot=2510 dso=5673 so_start=8183 pv_last=6489 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=8299 last_w=8561 gw_first=8607 gw_last=9085 verdict=PASS
+SVCRS_SO_LAT o_row0_minus_q_row0 per sid: 74 69 69 64 64 59 69 64 69 64 64 59 69 64 74 69
+SVCRS_SCHED T=640 pvs=950 po=1116 pvo=1331 go=4943 last_fold_score=5244 pv_sent=5893 pv_early=0 pv_words=160 pv_first=6330 pv_last=6489 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=2 T=640 window=128 nsel=512 pairs_in=1454 go=4943 first_score=5085 last_score=5244 end=9091 root_beats=160 sc_checked=2448 sc_errors=0 order_errors=0 se_checked=2448 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=9392 verdict=PASS
+== short300 s1
+SVCRS_SO t_sot=2562 dso=4078 so_start=6640 pv_last=5446 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=6756 last_w=7018 gw_first=7064 gw_last=7542 verdict=PASS
+SVCRS_SO_LAT o_row0_minus_q_row0 per sid: 74 69 69 64 64 59 69 64 69 64 64 59 69 64 74 69
+SVCRS_SCHED T=428 pvs=685 po=797 pvo=964 go=4267 last_fold_score=4515 pv_sent=4952 pv_early=0 pv_words=160 pv_first=5287 pv_last=5446 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=2 T=428 window=128 nsel=300 pairs_in=856 go=4267 first_score=4409 last_score=4515 end=7548 root_beats=107 sc_checked=1536 sc_errors=0 order_errors=0 se_checked=1536 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=7849 verdict=PASS
+== short300 s2
+SVCRS_SO t_sot=2515 dso=4078 so_start=6593 pv_last=5397 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=6709 last_w=6971 gw_first=7017 gw_last=7495 verdict=PASS
+SVCRS_SO_LAT o_row0_minus_q_row0 per sid: 74 69 69 64 64 59 69 64 69 64 64 59 69 64 74 69
+SVCRS_SCHED T=428 pvs=685 po=797 pvo=964 go=4218 last_fold_score=4466 pv_sent=4903 pv_early=0 pv_words=160 pv_first=5238 pv_last=5397 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=2 T=428 window=128 nsel=300 pairs_in=856 go=4218 first_score=4360 last_score=4466 end=7501 root_beats=107 sc_checked=1536 sc_errors=0 order_errors=0 se_checked=1536 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=7802 verdict=PASS
+== skew1m s1
+SVCRS_SO t_sot=2536 dso=6315 so_start=8851 pv_last=6864 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=8967 last_w=9229 gw_first=9275 gw_last=9753 verdict=PASS
+SVCRS_SO_LAT o_row0_minus_q_row0 per sid: 74 69 69 64 64 59 69 64 69 64 64 59 69 64 74 69
+SVCRS_SCHED T=640 pvs=950 po=1116 pvo=1331 go=5318 last_fold_score=5619 pv_sent=6268 pv_early=0 pv_words=160 pv_first=6705 pv_last=6864 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=2 T=640 window=128 nsel=512 pairs_in=1774 go=5318 first_score=5460 last_score=5619 end=9759 root_beats=160 sc_checked=2512 sc_errors=0 order_errors=0 se_checked=2512 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=10060 verdict=PASS
+== skew1m s2
+SVCRS_SO t_sot=2506 dso=6315 so_start=8821 pv_last=6854 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=8937 last_w=9199 gw_first=9245 gw_last=9723 verdict=PASS
+SVCRS_SO_LAT o_row0_minus_q_row0 per sid: 74 69 69 64 64 59 69 64 69 64 64 59 69 64 74 69
+SVCRS_SCHED T=640 pvs=950 po=1116 pvo=1331 go=5308 last_fold_score=5609 pv_sent=6258 pv_early=0 pv_words=160 pv_first=6695 pv_last=6854 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=2 T=640 window=128 nsel=512 pairs_in=1774 go=5308 first_score=5450 last_score=5609 end=9729 root_beats=160 sc_checked=2512 sc_errors=0 order_errors=0 se_checked=2512 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=10030 verdict=PASS
+== tail46 s1
+SVCRS_SO t_sot=769 dso=1690 so_start=2459 pv_last=2000 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2575 last_w=2837 gw_first=2883 gw_last=3361 verdict=PASS
+SVCRS_SO_LAT o_row0_minus_q_row0 per sid: 74 69 69 64 64 59 69 64 69 64 64 59 69 64 74 69
+SVCRS_SCHED T=46 pvs=208 po=225 pvo=296 go=1489 last_fold_score=1642 pv_sent=1697 pv_early=0 pv_words=160 pv_first=1841 pv_last=2000 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=2 T=46 window=37 nsel=9 pairs_in=18 go=1489 first_score=1631 last_score=1642 end=3367 root_beats=12 sc_checked=144 sc_errors=0 order_errors=0 se_checked=144 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=3668 verdict=PASS
+== tail46 s2
+SVCRS_SO t_sot=773 dso=1690 so_start=2463 pv_last=2004 late=0 beats=128 (W 64 E 64) words=384 errors=0 first_w=2579 last_w=2841 gw_first=2887 gw_last=3365 verdict=PASS
+SVCRS_SO_LAT o_row0_minus_q_row0 per sid: 74 69 69 64 64 59 69 64 69 64 64 59 69 64 74 69
+SVCRS_SCHED T=46 pvs=208 po=225 pvo=296 go=1493 last_fold_score=1646 pv_sent=1701 pv_early=0 pv_words=160 pv_first=1845 pv_last=2004 pv_gaps=0 pv_other_entry=0 done_W=1 done_E=1
+SVCRS die=0 st=2 T=46 window=37 nsel=9 pairs_in=18 go=1493 first_score=1635 last_score=1646 end=3371 root_beats=12 sc_checked=144 sc_errors=0 order_errors=0 se_checked=144 se_errors=0 se_bad_slices=0 sm_rows_bad=0 pv_owner_slices=4 pv_checked=2048 pv_errors=0 pv_bad_slices=0 done=2 jd_fault=0 root_fault=0 slice_faults=0000 first_fault_code=00000000 cred_err=0 cycles=3672 verdict=PASS
+HOST ot-epyc7 done Tue Oct 20 03:45:52 PDT 2026
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-3808988-1792488053): exit 0

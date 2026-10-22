@@ -16,7 +16,13 @@
 // =====================================================================================================================
 module qfd_dv_heads #(
     parameter integer AW = 24, NW = 18, XCW = 12, NH = 8, NCOLD = 48,
-    parameter integer TAP_MUT = 0, HEAD_MUT = 0
+    parameter integer TAP_MUT = 0, HEAD_MUT = 0,
+    // S-QSLICE 10-18 (opt-in): LEAF_W130 = 1 builds the 32 x leaves as the CLOSED qfd_xs_leaf_w130 view's
+    // configuration (ot_qfd_xs_leaf NCH 4, READ_PIN_PIPE 1, FILL_PIPE 1) and sets the column heads to match, exactly as
+    // ot_qfd_xslice_slots does (LEAF_READ_PIN_PIPE 1, FILL_LEAD 2 + 3, DX 10 + 1 + 3): every x delivery leaves the
+    // heads 4 edges later (compiler-visible, priced), values unchanged.  Under OT_DV_HEADS_HARD the leaves are the
+    // view's LEF / LIB cells (no parameter overrides).
+    parameter integer LEAF_W130 = 0
 ) (
     input  wire          ck,
     input  wire          rst_n,
@@ -59,6 +65,28 @@ module qfd_dv_heads #(
         for (ci = 0; ci < 4; ci = ci + 1)
             for (ri = 0; ri < 2 * NH; ri = ri + 1)
                 tids[(ci * 2 * NH + ri) * 16 +: 16] <= 16'(tid(4 * sid + ci, ri));
+    // ---------------------------------------------------------------- corridor station tags (QW-XHEAD 10-19)
+    // The die's cluster master (qfd_c_b16_dv) numbers its row stations sidx = {far, q} (near) / {far, ~q} (far) along its
+    // own bc run (row q = q-th station from the slice), and its tiles carry strap 16 cid + morton(c, q).  The heads'
+    // logical stations (tid above) are N s -> die row NH + s, S s -> die row NH-1-s, so the line for logical station s
+    // must carry the tag of the physical station whose strap is tid(s): N far (s >= 4) and S near (s < 4) are row-
+    // reversed -> tag = s ^ 3 there, s elsewhere.  Pure relabelling of the 3-bit tag fields (static per side, no flop,
+    // no edge).  XT1 witness (as-built): S station 0 served tile 26's x (chunks 104..107) to tile 16 (strap 16, ROM 16).
+    wire [4*CW-1:0] n_raw, s_raw;
+    function automatic [7:0] retag(input [7:0] t, input integer side_s);
+        reg [2:0] a, b;
+        begin
+            a = t[2:0]; b = t[6:4];
+            if (side_s ? !a[2] : a[2]) a = a ^ 3'd3;
+            if (side_s ? !b[2] : b[2]) b = b ^ 3'd3;
+            retag = {t[7], b, t[3], a};
+        end
+    endfunction
+    genvar tc;
+    generate for (tc = 0; tc < 4; tc = tc + 1) begin : g_retag
+        assign n_d[tc*CW +: CW] = {retag(n_raw[tc*CW + 1 + IBW + 128 +: 8], 0), n_raw[tc*CW +: 1 + IBW + 128]};
+        assign s_d[tc*CW +: CW] = {retag(s_raw[tc*CW + 1 + IBW + 128 +: 8], 1), s_raw[tc*CW +: 1 + IBW + 128]};
+    end endgenerate
     // ---------------------------------------------------------------- tap
     wire [HW-1:0] hw, he;
     wire          tap_fault;
@@ -84,10 +112,11 @@ module qfd_dv_heads #(
         wire [NH*28-1:0] lr_p;
         wire [NH*64-1:0] lq;
         assign lq_bad_all[NH*c +: NH] = lq_bad;
-        ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(NH), .NATIVE_AFFINE(1), .MUT(HEAD_MUT)) u_head (
+        ot_qfd_xhead #(.AW(AW), .NW(NW), .XCW(XCW), .NH(NH), .NATIVE_AFFINE(1), .MUT(HEAD_MUT),
+            .LEAF_READ_PIN_PIPE(LEAF_W130), .FILL_LEAD(2 + 3 * LEAF_W130), .DX(10 + 4 * LEAF_W130)) u_head (
             .ck(ck), .rst_n(rst_n), .tids(tids[c*16*2*NH +: 16*2*NH]), .fault_i(fch[c+1]),
             .a_d(hw), .a_r(), .b_d(), .b_r(1'b1),
-            .n_d(n_d[c*CW +: CW]), .n_r(1'b1), .s_d(s_d[c*CW +: CW]), .s_r(1'b1),
+            .n_d(n_raw[c*CW +: CW]), .n_r(1'b1), .s_d(s_raw[c*CW +: CW]), .s_r(1'b1),
             .lw_v(lw_v), .lw_ep(lw_ep), .lw_off(lw_off), .lw_m(lw_m), .lw_d(lw_d), .lw_ctl(lw_ctl),
             .lc_v(lc_v), .lc_ep(lc_ep), .lr_v(lr_v), .lr_t(lr_t), .lr_ep(lr_ep), .lr_p(lr_p),
             .lq(lq), .lq_v(lq_v), .lq_bad(lq_bad), .fault(fch[c]));
@@ -106,7 +135,11 @@ module qfd_dv_heads #(
             assign wc[0] = lw_ctl[h*NCH*18 +: NCH*18];
             for (j = 0; j < NCH; j = j + 1) begin : g_leaf
                 localparam integer LF = h * NCH + j;
-                ot_qfd_xs_leaf #(.NCH(NCH)) u_leaf (.clk(ck), .rst_n(rst_n),
+`ifdef OT_DV_HEADS_HARD
+                ot_qfd_xs_leaf u_leaf (.clk(ck), .rst_n(rst_n),
+`else
+                ot_qfd_xs_leaf #(.NCH(NCH), .READ_PIN_PIPE(LEAF_W130), .FILL_PIPE(LEAF_W130)) u_leaf (.clk(ck), .rst_n(rst_n),
+`endif
                     .w_v(wv[j]), .w_ep(wep[j]), .w_off(woff[j]), .w_m(wm[j]), .w_d(wd[j]), .w_ctl(wc[j]),
                     .c_v(cv[j]), .c_ep(cep[j]),
                     .wo_v(wv[j+1]), .wo_ep(wep[j+1]), .wo_off(woff[j+1]), .wo_m(wm[j+1]), .wo_d(wd[j+1]),
@@ -117,4 +150,27 @@ module qfd_dv_heads #(
         end
     end endgenerate
     assign fault = fch[0];
+endmodule
+
+// S-QSLICE 10-18: the hardened heads cluster (32 x qfd_xs_leaf_w130 leaves + 4 column heads + the fill tap), no
+// parameters.  sw_m is all-ones at the slice (every stream beat writes all 64 lanes), so it is internal here, not a
+// tied port of the hard child.  HEAD_MUT / TAP_MUT exist for the soft bench build only (a parent binding the hard view
+// passes none).
+module qfd_dv_heads_w130 #(parameter integer TAP_MUT = 0, parameter integer HEAD_MUT = 0) (
+    input  wire          ck,
+    input  wire          rst_n,
+    input  wire [3:0]    sid,
+    input  wire [71:0]   xpf,
+    input  wire [379:0]  gi,
+    input  wire          sw_v,
+    input  wire [23:0]   sw_a,
+    input  wire [64*32-1:0] sw_d,
+    input  wire          fe_i,
+    output wire [4*516-1:0] n_d,
+    output wire [4*516-1:0] s_d,
+    output wire          fault
+);
+    qfd_dv_heads #(.TAP_MUT(TAP_MUT), .HEAD_MUT(HEAD_MUT), .LEAF_W130(1)) u_hd (.ck(ck), .rst_n(rst_n), .sid(sid),
+        .xpf(xpf), .gi(gi), .sw_v(sw_v), .sw_a(sw_a), .sw_m({64{1'b1}}), .sw_d(sw_d), .fe_i(fe_i),
+        .n_d(n_d), .s_d(s_d), .fault(fault));
 endmodule

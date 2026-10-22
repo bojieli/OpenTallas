@@ -1,0 +1,242 @@
+{
+ "name": "qfwd_landh0d8sn_173_ew_98x171",
+ "top": "qfd_landh0d8sn_173_EW_98x171",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_land8.sv",
+  "rtl/qwen_split/qfd_land8s.sv",
+  "rtl/hdc/ot_hdc_cg.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v",
+  "physical/qwen_fwd_lane/qfd_land8w_masters.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "reset_landing": {
+  "enable": false,
+  "reason": "the RTL lands it: rs -> u_land.rs0 -> kept rs1 copies (2 registered stages on ck, async assert); the source reset en -> u_land.en_s0 -> en_icg / en_qm / en_q copies (2 stages on ck_s); both release latencies are in the die strap K"
+ },
+ "outline": {
+  "w": 98.28,
+  "h": 170.64,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "E": [
+   "a"
+  ],
+  "W": [
+   "b"
+  ],
+  "N": [
+   "ck_s",
+   "en",
+   "ck",
+   "rs",
+   "k0",
+   "k1",
+   "k2",
+   "k3",
+   "tie_hi",
+   "tie_lo",
+   "fault"
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "count": 1,
+   "at": [
+    43.2,
+    129.6
+   ]
+  }
+ ],
+ "children": [],
+ "inter": [
+  "*"
+ ],
+ "refglob": "*u_land.rc*",
+ "io_budget": {
+  "in": 0.2,
+  "out": 0.2
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "forwarded_clock": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "registered by construction: every input pin lands on one flop stage (a -> the a_q pin register of each SRAM bank, en -> en_s0, rs -> rs0, k -> k_q) and every output is a flop (o, fault); a flow pin register would add a stage the die calendar does not price (the landh0 opt-out, OWNER RULE 19:50)"
+ },
+ "sdc_extra": [
+  "physical/qwen_fwd_lane/land8_clocks.tcl"
+ ],
+ "boundary_tcl": [
+  "physical/qwen_fwd_lane/land8_clocks.tcl"
+ ],
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 16,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 2.16,
+  "macro_halo_x_um": 10.8,
+  "pin_min_tracks": 3
+ },
+ "structural_change": "QW-LANDW 10-19 (LEAD3-QW; Q.STA.LAND600.3 wide lanes, D8 contract 5a266752c, land8 pattern): new 173-b hop-0 landing master qfd_landh0d8sn_173_EW_98x171, no hop-0 clock gate (fallback): D8 SRAM record slice (3 x 64-b dual-clock SRAM banks, pin register before the write, registered read + output register; lanes 453 = 3 x 151, 520 = 174 + 2 x 173, 548 = 2 x 183 + 182); en -> 2 registered stages before the ICG enable (no combinational enable into the gate). New master, no closed view. SAFE checklist (owner 10-19): 1 pins registered (a -> a_q pin register before the macro write, en -> en_s0 -> en_icg, rs -> rs0, k -> k_q, b = output register after the registered macro read, fault flop) | 2 reach: tile 98 x 171 um | 3 fanout: per-bank kept control copies (en_q, wp, wce_q, rs1, rce_q, ra_q, use x2 <= 32 loads) in a non-parameterised kept bank module (no paramod merge) | 4 depth: macro rd_out (~245 ps) -> AND -> o, no in->out path | 5 storage: lane record 453/520/548 b x 8 slots = 3.6..4.4 kb -> dual-clock SRAM macros (ot_sram_1r1w2c_32x64_m1, 3 per slice tile, lane = 3 slice tiles) | 6 floorplan: 3 macros on the 43.2-um lattice (43.2, 43.2 / 86.4 / 129.6), 25.9-um N-S channels, >= 23 um from the pin faces, macro pin faces 5.95 pins/um (the CLOSED sram_escape64_1019 coupon), tile pin faces ~1.1 pins/um, aspect 1.74, one std band; 3 macros (< 4: no parent fill rule) | 7 clock: two roots, ICG enable = en_icg.Q only (main) / no ICG (fallback sn), vld -> use crossing timed by land8_clocks.tcl, macro write->read age by the calendar (no wclk->rd_out arc), io_hold_margin 0.03 | 8 schedule: static, K = (L + G - R0 - 2) mod 16, age (L - 3) T + phi in [1.25 T, 4.125 T]: +2 receiver edges vs the flop D8 (priced, QW-GEN3 notice)",
+ "job": {
+  "owner": "Claude:QW-LANDW",
+  "branch": "claude/qw-landw-1019",
+  "tag": "lw1",
+  "purpose": "Qwen compute die wide D8 hop-0 landing qfd_landh0d8sn_173_EW_98x171 (173 b, no hop-0 clock gate (fallback))",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_landh0d8sn_173_EW_98x171 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_land8.sv rtl/qwen_split/qfd_land8s.sv rtl/hdc/ot_hdc_cg.sv physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_bb.v physical/qwen_fwd_lane/qfd_land8w_masters.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "land8w_exact",
+    "cmd": "bash tools/qwen_split/bench_land8w.sh pass {RUN}/b_pass qfd_landh0d8sn_173_EW_98x171 173 sram",
+    "expect": "pass",
+    "pass_regex": "LAND8_BENCH_ALL PASS",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "pass_witness": "results/arch/qw_landw_1019/bench/qfd_landh0d8sn_173_EW_98x171_pass.log"
+   },
+   {
+    "name": "sel_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8w.sh sel {RUN}/b_sel qfd_landh0d8sn_173_EW_98x171 173 sram",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_1019/bench/qfd_landh0d8sn_173_EW_98x171_sel.log",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "naive_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8w.sh naive {RUN}/b_naive qfd_landh0d8sn_173_EW_98x171 173 sram",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_1019/bench/qfd_landh0d8sn_173_EW_98x171_naive.log",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "vld_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8w.sh vld {RUN}/b_vld qfd_landh0d8sn_173_EW_98x171 173 sram",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_1019/bench/qfd_landh0d8sn_173_EW_98x171_vld.log",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "encomb_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8w.sh encomb {RUN}/b_encomb qfd_landh0d8sn_173_EW_98x171 173 sram",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_1019/bench/qfd_landh0d8sn_173_EW_98x171_encomb.log",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "k3_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8w.sh k3 {RUN}/b_k3 qfd_landh0d8sn_173_EW_98x171 173 sram",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_1019/bench/qfd_landh0d8sn_173_EW_98x171_k3.log",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "wsel_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8w.sh wsel {RUN}/b_wsel qfd_landh0d8sn_173_EW_98x171 173 sram",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_1019/bench/qfd_landh0d8sn_173_EW_98x171_wsel.log",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rsel_mutant",
+    "cmd": "bash tools/qwen_split/bench_land8w.sh rsel {RUN}/b_rsel qfd_landh0d8sn_173_EW_98x171 173 sram",
+    "expect": "fail",
+    "fail_regex": "LAND8_BENCH_ALL FAIL",
+    "fail_witness": "results/arch/qw_landw_1019/bench/qfd_landh0d8sn_173_EW_98x171_rsel.log",
+    "threads": 2,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qfwd_landh0d8sn_173_ew_98x171/views",
+  "record_to": "results/rtl/ref_tile/qfwd_landh0d8sn_173_ew_98x171",
+  "extra_paths": [
+   "physical/qwen_fwd_lane",
+   "rtl/qwen_split/qfd_land8.sv",
+   "rtl/qwen_split/qfd_land8s.sv",
+   "rtl/hdc",
+   "tools/qwen_split",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "results/arch/qw_landw_1019/bench"
+  ]
+ }
+}

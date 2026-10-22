@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits   939 GB (avail 770, growth 113, headroom 0, waiters 0/0 GB) load 68/128 running 33 disk 345 GB 
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-safe-qw-slice/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3349152-1792422961 after 0 s
+bench2 (k) MUT=14: FAIL 128/512
+    S0ST fault bits 1001000 (any,su,vm,stn,sc,stm,port)
+    L8 kc3 scaled: 128/128 mismatches, first [0] got 0x4035a8e7 exp 0xc0a68dd6
+    L7 gate/up kc2: 256/256 mismatches, first [0] got 0xbf7d9b88 exp 0x4217096f
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3349152-1792422961): exit 1

@@ -1,0 +1,9 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+Traceback (most recent call last):
+  File "/audit/inspect_constant_odb.py", line 8, in <module>
+    assert len(drivers)==1 and drivers[0]['master']=='TIELOx1_ASAP7_75t_R' and drivers[0]['pin']=='L', (name,drivers)
+AssertionError: ('fault_cause[15]', [{'inst': '_16626_', 'master': 'BUFx2_ASAP7_75t_R', 'pin': 'Y', 'net': 'fault_cause[15]'}])

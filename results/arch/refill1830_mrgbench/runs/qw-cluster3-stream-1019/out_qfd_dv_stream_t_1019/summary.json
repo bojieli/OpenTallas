@@ -1,0 +1,70 @@
+{
+ "job": "/srv/opentallas-scratch/claude/refill-1830/MRGBENCH/qw-cluster3-stream-1019/src/physical/ref_tile/qfd_dv_stream_t_1019/job.json",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "results": [
+  {
+   "name": "lint",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "stream_tile_m0",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "stream_tile_m2",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "stream_tile_m21",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "stream_tile_m22",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "stream_tile_m31",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "stream_tile_m32",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "stream_tile_m33",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "stream_tile_m34",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  }
+ ],
+ "unexpected": 0
+}

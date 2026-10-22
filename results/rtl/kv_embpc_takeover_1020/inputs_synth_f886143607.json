@@ -1,0 +1,13 @@
+{
+ "name": "codex-emb-cal-native32-synth-f886143607",
+ "mode": "synth",
+ "sources": {
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv": "e1a3bbdd455fb984a96df8463844e351613e5bbb6f6e3c417766097c5d17b211",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv": "b4031ee0138af2cf4567626e185d81ded805bb1ba274ee03763a74232dc95a49",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv": "f72627bd321f8cbb7bcb7fd4bb2776ae123aef5dff3492aed7a0b53d5b5df576",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join_fan32.sv": "c66d85face0804d2bfa5141b169d4f86efdbdaf36c1099d3da72f6a6ae518031",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "tools/qwen_kv_die/attn_rv_1019/fanout_census.py": "c71d865b2385177144d2ba83880d74ea684cffc4613cf6acf6e602531451971c",
+  "ot_keep_regs.tcl": "7e423ef2b5bda4ba5bfcb60bec07c0d209f026fbabfb72b2cbf0274576ecbd7b"
+ }
+}
