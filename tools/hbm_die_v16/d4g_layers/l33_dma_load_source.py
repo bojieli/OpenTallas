@@ -90,7 +90,7 @@ def apply(c):
             i['ports'].update(load_v_i=port('input',1),load_cmd_i=port('input',62),
                 load_dq=port('output',281),load_dest_bank=port('output',3),
                 load_dest_q=port('output',2),load_out_v=port('output',1))
-            i['note']+=' | l33: raw delivery preserved, real SRAM LOAD conversion; source-to-packet4 edges'
+            i['note']+=' | l33: raw delivery preserved, real SRAM LOAD conversion; source-to-packet5 edges'
             edge([f'vmfc_{q}','payload',89+b,90+b],[lane,'load_v_i',0,1],1)
             edge([f'vmfc_{q}','payload',97,159],[lane,'load_cmd_i',0,62],62)
             edge([lane,'load_out_v',0,1],[f'obs_{q}','obs',base_obs+b,base_obs+b+1],1)
@@ -123,8 +123,9 @@ def apply(c):
     return dict(status='REAL_SOURCE_ATTACHED_PLACEMENT_AND_CALENDAR_OPEN',added_instances=added,
         changed_load_lanes=32,vmfc_role_width=159,payload=dict(preserved=[0,89],load_valid=[89,97],load_command=[97,159]),
         source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in (LOAD_SOURCE,ROUTE_SOURCE,OR_SOURCE)},
-        fixed_edges=dict(command_pin_to_conversion=4,source_join=2,destination_join=2,bank_join=1,
-                         command_pin_to_vm_request_before_die_relays=9,added_raw_delivery=1),
+        fixed_edges=dict(command_pin_to_conversion=5,source_join=2,destination_join=2,bank_join=1,
+                         command_pin_to_vm_request_before_die_relays=10,added_raw_delivery=1),
+        component_reference='command input sampled at E0; bank request appears E10 before external transport; calendar producer launch has its own age',
         physical_view_activation=False,obligations=['real source and destination regional landing and relay ages',
             'new router grants within26x33mm reticle, actual synthesis and placement',
             'compiler LOAD windows, release-only ownership, masks and destination mapping',

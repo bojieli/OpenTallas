@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-native-2000-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-native-2000-1021
+ot-run: ot-epyc9       admits   135 GB (avail 240, growth 146, headroom 0, waiters 0/0 GB) load 92/128 running 32 disk 1853 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-native-2000-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-native-2000-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-native-2000-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-load-route-native-2000-1021
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1746092-1792641644 after 0 s
+DMA_LOAD_ROUTE PASS 32 routes, raw masks, three collision classes
+- rtl/hbm_accel/loader/service_native/split/tb_hbm_dma_load_route_static.sv:57: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.003 s; speed 531.385 us/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB
+ot_hbm_dma_load_source_join rc=0    Chip area for module '$paramod\ot_hbm_dma_route_copy\COPY_ID=s32'00000000000000000000000001100111': 0.335340
+PRE_GATE_NATIVE_CENSUS PASS report=/out/native_census.json
+ot_hbm_dma_load_destination_join rc=0    Chip area for module '$paramod\ot_hbm_dma_route_copy\COPY_ID=s32'00000000000000000000000110010011': 0.335340
+PRE_GATE_NATIVE_CENSUS PASS report=/out/native_census.json
+ot_hbm_dma_load_bank_join rc=0    Chip area for module '$paramod\ot_hbm_dma_route_copy\COPY_ID=s32'00000000000000000000001111101001': 0.335340
+PRE_GATE_NATIVE_CENSUS PASS report=/out/native_census.json
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1746092-1792641644): exit 0

@@ -1,0 +1,45 @@
+{
+  "status": "MAPPED_DYNAMIC_LOAD_PASS_ONLY",
+  "source": "394f2083a",
+  "native_tools": "893fed5f6",
+  "unit": "oth-ubuntu-1746092-1792641644",
+  "host": "ot-epyc9",
+  "representative_exact_params": [
+    {
+      "master": "ot_hbm_dma_load_source_join",
+      "params": {},
+      "status": "PASS",
+      "max_dynamic_loads": 32,
+      "roots_examined": 6209,
+      "std_area_um2": 928.27944,
+      "yosys_peak_MB": 146.7
+    },
+    {
+      "master": "ot_hbm_dma_load_destination_join",
+      "params": {
+        "QID": 0
+      },
+      "status": "PASS",
+      "max_dynamic_loads": 32,
+      "roots_examined": 3469,
+      "std_area_um2": 517.47336,
+      "yosys_peak_MB": 145.58
+    },
+    {
+      "master": "ot_hbm_dma_load_bank_join",
+      "params": {
+        "BANK": 0
+      },
+      "status": "PASS",
+      "max_dynamic_loads": 32,
+      "roots_examined": 1465,
+      "std_area_um2": 201.61224,
+      "yosys_peak_MB": 142.65
+    }
+  ],
+  "route_component_test": "32paths/rawmasks/3collision classes PASS Verilator5.050",
+  "scope": "No physical timing, pin clock spread, regional landing or full caller qualification claimed.",
+  "fixed_route_edges": 5,
+  "added_raw_edges": 1,
+  "source_sha256": "11815d2cd797223ee7f87e82fdd99e0d8bbe3fc303ca6ab93945eb8b3f039608"
+}

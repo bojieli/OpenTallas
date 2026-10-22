@@ -69,6 +69,21 @@ CFG_LEAF_LAUNCH = re.compile(r'([ab])_launch_v$')
 
 def port_key(master, cls, driver_port, sink_port):
     """(driver port, sink port) identity of one functional path for PORT-AGE alignment"""
+    # Static LOAD commands and their routed destination metadata change every
+    # edge. They are single words even where the RTL exposes several ports.
+    # The existing aligner pads to the longest physical path at each receiver;
+    # it must not deliver a valid bit with another command's address or mask.
+    if (master == 'hfd_hgi_vm_calendar_f20_role' and driver_port == 'payload'
+            and sink_port in ('load_v_i', 'load_cmd_i')):
+        return 'payload', 'load_command'
+    words = {
+        'ot_hbm_svc_vmdel_lane_load_static': ('load_word', {'load_dq', 'load_dest_bank', 'load_dest_q'}),
+        'ot_hbm_dma_load_source_join': ('route_word', {'packet', 'destination'}),
+        'ot_hbm_dma_load_destination_join': ('bank_word', {'packet', 'bank'}),
+    }
+    word = words.get(master)
+    if word and driver_port in word[1]:
+        return word[0], word[0]
     m = CFG_LEAF_WORD.match(driver_port)
     if cls == 'cfg_no_pad' and m and CFG_LEAF.match(master or ''):
         return m.group(1) + '_cfgword', 'cfgword'
