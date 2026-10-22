@@ -185,16 +185,19 @@ module ot_s81sl_xrt #(
     // 160 rwr_c kept copies, 578 paths): the kind / owner predicates are decoded from the input PINS into kept flags at
     // the SAME edge as eb / wb / vb (input-to-reg slack +365 ps).  sid_oh is a static strap, so mine_* from dl_* equals
     // mine_* from the registered words; the flags reset with ev / wv / vv (rs_c).  Same values, same edges.
-    (* keep *) reg pq_ectl, pq_wctl, pq_vctl, pq_erd, pq_wrd, pq_vrd, pq_me, pq_mw, pq_mv;
+    (* keep *) reg pq_ectl, pq_wctl, pq_vctl, pq_erd, pq_wrd, pq_vrd, pq_vrdc, pq_me, pq_mw, pq_mv;
+    // own strap capture for the predecode (sid_c reached 44 loads when shared): sid is static from reset
+    (* keep *) reg [3:0] sid_p; (* keep *) reg [15:0] sid_ohp;
+    always @(posedge clk) begin sid_p <= sid; sid_ohp <= 16'd1 << sid_p; end
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) begin pq_ectl <= 1'b0; pq_wctl <= 1'b0; pq_vctl <= 1'b0; pq_erd <= 1'b0; pq_wrd <= 1'b0; pq_vrd <= 1'b0; end
+        if (!rs_c) begin pq_ectl <= 1'b0; pq_wctl <= 1'b0; pq_vctl <= 1'b0; pq_erd <= 1'b0; pq_wrd <= 1'b0; pq_vrd <= 1'b0; pq_vrdc <= 1'b0; end
         else begin
             pq_ectl <= dl_ev && dl_e[3:1] == K_CTL; pq_wctl <= dl_wv && dl_w[3:1] == K_CTL; pq_vctl <= dl_vv && dl_vb[3:1] == K_CTL;
             pq_erd <= dl_ev && (dl_e[3:1] == K_RD || dl_e[3:1] == K_CL); pq_wrd <= dl_wv && (dl_w[3:1] == K_RD || dl_w[3:1] == K_CL);
-            pq_vrd <= dl_vv && dl_vb[3:1] == K_RD;
+            pq_vrd <= dl_vv && dl_vb[3:1] == K_RD; pq_vrdc <= dl_vv && dl_vb[3:1] == K_RD;   // copy for the 32 rsv_c
         end
     always @(posedge clk) begin
-        pq_me <= |(dl_e[36:21] & sid_oh); pq_mw <= |(dl_w[36:21] & sid_oh); pq_mv <= |(dl_vb[36:21] & sid_oh);
+        pq_me <= |(dl_e[36:21] & sid_ohp); pq_mw <= |(dl_w[36:21] & sid_ohp); pq_mv <= |(dl_vb[36:21] & sid_ohp);
     end
     wire e_ctl = pq_ectl, w_ctl = pq_wctl, v_ctl = pq_vctl;
     wire e_rd = pq_erd, w_rd = pq_wrd;
@@ -283,7 +286,11 @@ module ot_s81sl_xrt #(
         for (k = 0; k < 35; k = k + 1) begin
             cvc_c[k] <= v_ctl && sp[(k / 30 + 4) % NSP]; cse_c[k] <= !v_ctl && e_sc && sp[(k / 30 + 0) % NSP];
         end
+`ifdef OT_S81SL_XR_PDC
+        for (k = 0; k < 32; k = k + 1) rsv_c[k] <= pq_vrdc && sp[(k / 30 + 2) % NSP];
+`else
         for (k = 0; k < 32; k = k + 1) rsv_c[k] <= v_rd && sp[(k / 30 + 2) % NSP];
+`endif
         eb2 <= eb[W-1:1]; wb2 <= wb[W-1:1]; vb2 <= vb[V-1:1];
         // local copy: the ci loop-back word rides the B raw word (bb2 is only the RD-from-B source; a B RD and a local
         // RD in one cycle are the two-RD fault).  C1 (HB = 0) has no B port: bb2 is the local word only.
