@@ -328,14 +328,21 @@ module ot_hgi_coll_gq_issue #(
                  (rc[0] && (rc[36:29] == 8'd0 || rc[36:29] > 8'd64 || {2'b0, rc[28:19]} != {2'b0, rc[36:29]} + {4'b0, f_es}));
     wire ev_in_v = iss && iph != 2'd2;
 `ifdef OT_GQ_FAN32
-    wire[9:0]run_copy;
+`ifdef OT_GQ_TLN
+    // R14b TLN (k14q census: run_copy[8] / tl_last_c[8] QN 43 when the 4 tl+1 copies shared tl's control copies): the
+    // tl+1 copies get their OWN registered control copies (run_copy[10..13], wrap flags [12..15]). Same values, same edges.
+    localparam integer NRC=14, NWF=16;
+`else
+    localparam integer NRC=10, NWF=12;
+`endif
+    wire[NRC-1:0]run_copy;
 `ifdef OT_GQ_N32
     // R9 (HBM-GQ8 10-20): the period-end compare tl == per-1 and lps > 1 are REGISTERED flags (tl_last / lps_gt1) kept
     // in 12 copies, one per consumer group: [0..7] cur_ohc calendar halves, [8] tl counter, [9] lps counter,
     // [10] run_next, [11] FSM. Invariants at every edge: tl_last == (tl == per-1), lps_gt1 == (lps > 1); the next
     // state is computed from the same updates as tl / per / lps (tl+2 == per while counting, per == 1 after a launch or
     // a wrap). Removes the 8 replicated wrap subtract/compare cones (R7 per/tl roots 33..61) and R6's wrap roots.
-    wire[11:0]tl_last_c,lps_gt1_c;
+    wire[NWF-1:0]tl_last_c,lps_gt1_c;
     wire[15:0]per_rd;
     wire tl_last_d=p_start_bank[13]?(per_rd==16'd1):
 `ifdef OT_GQ_MUT_TLLAST
@@ -345,7 +352,7 @@ module ot_hgi_coll_gq_issue #(
 `endif
     wire lps_gt1_d=p_start_bank[13]?(p_lp>16'd1):
                    (run_copy[9]&&tl_last_c[11]&&lps_gt1_c[11])?(lps>16'd2):lps_gt1_c[11];
-    generate for(genvar g=0;g<12;g=g+1)begin:g_wrap_flag
+    generate for(genvar g=0;g<NWF;g=g+1)begin:g_wrap_flag
         ot_hgi_coll_gq_control_ff u_last(.clk(clk),.rst_n(rn),.d(tl_last_d),.q(tl_last_c[g]));
         ot_hgi_coll_gq_control_ff u_gt1(.clk(clk),.rst_n(rn),.d(lps_gt1_d),.q(lps_gt1_c[g]));
     end endgenerate
@@ -367,7 +374,7 @@ module ot_hgi_coll_gq_issue #(
     // fire_next reads st_m only while run, and every run starts with a launch that loads tl_n <= 1). Same edges.
     wire[15:0]tl_nc[0:3];
     generate for(genvar g=0;g<4;g=g+1)begin:g_tln
-        ot_hgi_coll_gq_tln u_n(.clk(clk),.start(p_start_bank[4]),.run(run_copy[8]),.last(tl_last_c[8]),.gt1(lps_gt1_c[8]),.q(tl_nc[g]));
+        ot_hgi_coll_gq_tln u_n(.clk(clk),.start(p_start_bank[4]),.run(run_copy[10+g]),.last(tl_last_c[12+g]),.gt1(lps_gt1_c[12+g]),.q(tl_nc[g]));
     end endgenerate
 `ifdef OT_GQ_CHECK_INV
     always @(posedge clk) if(rn && run) for(integer g=0;g<4;g=g+1)
@@ -405,7 +412,7 @@ module ot_hgi_coll_gq_issue #(
 `else
     wire run_next=p_sv?1'b1:(run&&!(tl==per-16'd1&&lps<=16'd1));
 `endif
-    generate for(genvar g=0;g<10;g=g+1)begin:g_run_copy
+    generate for(genvar g=0;g<NRC;g=g+1)begin:g_run_copy
         ot_hgi_coll_gq_control_ff u_ff(.clk(clk),.rst_n(rn),
 `ifdef OT_GQ_MUT_RUN_CTL
             .d((g==0)?1'b0:run_next),
