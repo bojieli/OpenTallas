@@ -399,6 +399,20 @@ class Geometry:
         pb = self.grid.blk
         return bytearray(1 if (b == 0 and not pb[k]) else 0 for k, b in enumerate(best))
 
+    def free_homes_within(self, point, r):
+        """NW-FIX: free relay-home grid cells within Manhattan r of point (placement grid, current reservations)."""
+        ci, cj = self.grid.cell(*point)
+        R = int(r // GRID)
+        n = 0
+        for dj in range(-R, R + 1):
+            j = cj + dj
+            if not 0 <= j < self.grid.ny:
+                continue
+            w = R - abs(dj)
+            for i in range(max(0, ci - w), min(self.grid.nx, ci + w + 1)):
+                n += bool(self.grid.free((i, j)))
+        return n
+
     def unreserve(self, tile):
         """Undo the LAST reservation (only valid right after reserve())."""
         k = max(self.reserved)
