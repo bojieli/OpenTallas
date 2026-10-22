@@ -10,7 +10,9 @@ per sink instance); stations every REACH of tree distance from the driver (stati
 multicast tree flagged (H-ELEM relay4 node).  Classes:
   p2p              one sink instance: depth = ceil(L / REACH) - 1
   equal_age_pad    data multicast: every sink sees the deepest depth; near sinks get pad stations at their pins
-  cfg_no_pad       host configuration fan-out (host_static_ingress cfg_*/desc_*; HBMb/NW 10-21: also the per-quadrant host
+  cfg_no_pad       host configuration fan-out (host_static_ingress cfg_*/desc_*; HBMc/CHAIN-ING 10-21: the exact d4g master
+                   ot_hbm_host_static_ingress_obs too, launch_v on its own equal-age bus, the status-join GUARD sink padded
+                   to the word's dmax; HBMb/NW 10-21: also the per-quadrant host
                    cfg leaves ot_hbm_host_cfg_leaf_* a_/b_ cfg_*/desc_*): addressed writes, no pads -- every sink keeps its
                    own depth (per-sink arrival in the static calendar); the leaf's [ab]_launch_v strobe is split into its
                    OWN bus (key flag 'launch') and stays equal_age_pad (one 48-b lane).  Safety (receiver audit,
@@ -35,18 +37,28 @@ CFG_LEAF = re.compile(r'ot_hbm_host_cfg_leaf\w*$')
 CFG_LEAF_WORD = re.compile(r'[ab]_(cfg_|desc_)')
 CFG_LEAF_LAUNCH = re.compile(r'[ab]_launch_v$')
 RESET_PORT = re.compile(r'(por_|rst|reset)')
+# HBMc/CHAIN-ING 10-21: the d4g host ingress master is ot_hbm_host_static_ingress_obs (l21 obs readback), which CFG above
+# never matched (it wants 'ingress.'), so its cfg/desc buses stayed equal_age_pad ([7700,15400] 1.141 r16o / 1.144 r18).
+# Exact master name: cfg_*/desc_* (incl. cfg_target/cfg_v/desc_v) -> cfg_no_pad word, launch_v -> its own equal-age bus.
+# GUARD sinks (the status join snooping cv/dv/lv/cfg_target for participation + its readiness GUARD) keep the word at
+# the bus's deepest age: a pad to dmax (as equal_age_pad gave them), so the join never sees a strobe before a target.
+ING_OBS = 'ot_hbm_host_static_ingress_obs'
+ING_WORD = re.compile(r'(cfg_|desc_)')
+GUARD_SINKS = ('ot_hbm_status_join_fa', 'ot_hbm_status_join')
 
 
-def bus_flag(master, port, cfg_leaf=True):
+def bus_flag(master, port, cfg_leaf=True, ingress=True):
     """third bus-key element: True = reset port (own bus), 'launch' = cfg-leaf launch strobe (own bus), False = data"""
     if RESET_PORT.match(port):
         return True
     if cfg_leaf and CFG_LEAF.match(master or '') and CFG_LEAF_LAUNCH.match(port):
         return 'launch'
+    if cfg_leaf and ingress and master == ING_OBS and port == 'launch_v':
+        return 'launch'
     return False
 
 
-def bus_class(master, ports, nsinks, cfg_leaf=True):
+def bus_class(master, ports, nsinks, cfg_leaf=True, ingress=True):
     """p2p / cfg_no_pad / equal_age_pad for one bus (master = driver master, ports = driver port base names)"""
     if nsinks == 1:
         return 'p2p'
@@ -54,7 +66,14 @@ def bus_class(master, ports, nsinks, cfg_leaf=True):
         return 'cfg_no_pad'
     if cfg_leaf and CFG_LEAF.match(master or '') and ports and all(CFG_LEAF_WORD.match(p) for p in ports):
         return 'cfg_no_pad'
+    if cfg_leaf and ingress and master == ING_OBS and ports and all(ING_WORD.match(p) for p in ports):
+        return 'cfg_no_pad'
     return 'equal_age_pad'
+
+
+def guard_sink(cls, driver_master, sink_master, cfg_leaf=True, ingress=True):
+    """True: this cfg_no_pad sink is the ingress GUARD join and keeps the deepest word age (pad to dmax)"""
+    return cfg_leaf and ingress and cls == 'cfg_no_pad' and driver_master == ING_OBS and sink_master in GUARD_SINKS
 
 
 def tree(root, pts):
@@ -113,10 +132,11 @@ def main():
                     help='>0: obstacle-aware routed stations on this grid (relay_router.py, d4b-r); 0: legacy L-route points')
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--root-keepouts', help='DIE-CLOCK regional root sites (opentallas.die_clock.root_sites.v1): keepout boxes are station-free')
-    ap.add_argument('--cfg-leaf-class', choices=('no_pad', 'legacy'), default='no_pad',
-                    help='host cfg leaf copy buses: no_pad (HBMb/NW 10-21: cfg/desc cfg_no_pad, launch own equal-age bus) | legacy')
+    ap.add_argument('--cfg-leaf-class', choices=('no_pad', 'leaf_only', 'legacy'), default='no_pad',
+                    help='host cfg leaf copy buses: no_pad (HBMb/NW 10-21: cfg/desc cfg_no_pad, launch own equal-age bus; HBMc/CHAIN-ING '
+                         '10-21: + the ingress_obs word with a padded GUARD join) | leaf_only (leaves only, the r18 S4 rule) | legacy')
     a = ap.parse_args()
-    CL = a.cfg_leaf_class == 'no_pad'
+    CL = a.cfg_leaf_class != 'legacy'; ING = a.cfg_leaf_class == 'no_pad'
     c = Path(a.case); R = a.reach
     contract = json.loads(Path(a.contract).read_text())
     man = json.loads((c / 'manifest.json').read_text())
@@ -141,7 +161,7 @@ def main():
         # HBM-GENREACH 10-20: reset ports form their OWN bus (key flag): a reset port grouped with data ports of the same
         # sink set made the whole bus 'reset_forest' and dropped its data stations (GEN2c: hc_<q> rstb_s+wc_s+xb_d5..7 ->
         # hcb_<q>6, 787 b, 13 mm with no relay; 2,598 never-inserted buses in fp_hops_classified.json)
-        key = (d[0], tuple(sorted({l[0] for l in lds})), bus_flag(pl[d[0]]['master'], RP.base(d[1]), CL))
+        key = (d[0], tuple(sorted({l[0] for l in lds})), bus_flag(pl[d[0]]['master'], RP.base(d[1]), CL, ING))
         b = buses[key]; b['bits'] += 1; b['dpts'].append(d[2]); b['nets'].append(n); b.setdefault('ports', set()).add(RP.base(d[1]))
         for l in lds:
             b['spts'][l[0]].append(l[2])
@@ -184,7 +204,7 @@ def main():
         if pl[di]['master'] == 'ot_hbm_su_programme':
             skipped['superseded: partitioned su_programme (H-SU b82db77f9, pslice slots 92282bfcb)'].append(f'{di}.{dp}')
             continue
-        cls = bus_class(pl[di]['master'], b['ports'], len(sinks), CL)
+        cls = bus_class(pl[di]['master'], b['ports'], len(sinks), CL, ING)
         bits = b['bits']
         master = (48, math.ceil(bits / 48)) if bits <= 48 else (624, math.ceil(bits / 624))
         stations = []
@@ -202,8 +222,10 @@ def main():
                 tiles[f'hbfd_rly_{master[0]}'] += master[1]
         branch = [dict(x=round(P[i][0], 1), y=round(P[i][1], 1)) for i, k in kids.items() if k > 1 and i > 0]
         pads = []
-        if cls == 'equal_age_pad':
+        if cls in ('equal_age_pad', 'cfg_no_pad'):
             for i, s in enumerate(sinks):
+                if cls == 'cfg_no_pad' and not guard_sink(cls, pl[di]['master'], pl[s]['master'], CL, ING):
+                    continue
                 if depth[i] < dmax:
                     hp = _ROUTER.nearest_free(spts[i]) if a.route_grid > 0 else spts[i]
                     pads.append(dict(sink=s, stages=dmax - depth[i], x=round(hp[0], 1), y=round(hp[1], 1)))
