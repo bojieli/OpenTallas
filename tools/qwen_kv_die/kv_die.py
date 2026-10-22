@@ -894,7 +894,7 @@ HOST_V14 = dict(on=False)
 SLICE_W, SLICE_H = 129.6, 345.6
 # one 21.6-um routing cell W of the slice column: the write-queue controller (172.8 in the 216-um landing channel) otherwise
 # closes the channel at mid-stack and the N stacks' slot-0 slices have no die route to the root (first v1.4 plan)
-SLICE_GAP = 21.6
+SLICE_GAP = 21.6 + float(__import__('os').environ.get('OT_KV_STRIP_EXTRA', '0') or 0)   # SQC-KDIE2 10-22: HOST slice strip widening (PC sr13 slots)
 # KVJ-A 10-17 (0cx COORD decision, kv_static_join_plan item 3): the die's HOST root master is qkd_host_root_admission, the
 # successor of qkd_host_root_pt (same generated partition: qkd_host_ingest_chain_pt + the 128 die slices; adds the HOST
 # image replay outputs boot_pr / boot_image_* that drive qkd_static_kv_boot_dispatch, static_setup_ready, the native

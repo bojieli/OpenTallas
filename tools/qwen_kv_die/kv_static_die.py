@@ -196,6 +196,8 @@ def frame_engine(f):
             return g
     raise ValueError(f'no engine for ECTL frame {f}')
 PC_PITCH = 378.0
+PC_SR13 = os.environ.get('OT_KV_PC_SR13', '0') == '1'
+KC_INNER = os.environ.get('OT_KV_KC_INNER', '0') == '1'
 NPC = 32
 CORE_CK = ('ck', 'return_ck')
 HBM_CK = ('hck', 'pll_hbm', 'pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs', 'cal_hck', 'front_hck', 'return_hck')
@@ -2134,7 +2136,10 @@ def _die_joins(m, K, B, add, fk, rec):
         if mt:
             pi_[bid] = mt
     for st in STACKS:
-        rev = st[1] == 'S'
+        # SQC-KDIE2 10-22 (OT_KV_KC_INNER=1): S stacks wired like the N stacks -- kc head at the stack inner end above PC 31,
+        # kick pc31 -> pc0 on the facing ko S / ki N faces, fault pc0 -> pc31 -> kc (fo N / fi S): neighbour-adjacent hops at
+        # the PD-AUDIT PC slot (358.56 tall, 19.4-um gap at pitch 378: the ascending kick was an 811.6-um unrepairable hop)
+        rev = st[1] == 'S' and not KC_INNER
         for k in range(NPC):
             pc = f'kvpc_{st}_{k}'
             s = f'hsl_{st}_{k}'
@@ -2268,6 +2273,8 @@ def place(m, K, geo, F):
     up = K.up
     SH = K.SHAVE
     pcw, pch = 270.0, 302.4
+    if PC_SR13:     # SQC-KDIE2 10-22 (OT_KV_PC_SR13=1): PD-AUDIT PC / PC_H tile 388.8 x 356.4 -> kits_b slot frame
+        pcw, pch = 390.96, 358.56
     gap = 21.6
     for st in STACKS:
         cx, cy, cw, ch, co, cm = geo[st]['ctrl']
@@ -2322,7 +2329,7 @@ def place(m, K, geo, F):
                                      'R0' if west else 'MY', kind='static', region='strip', domain='core'))
         # kc head at the strip's outer end (S stacks: below PC 0; N stacks: above PC 31), on the PC column
         kw, kh = 64.8, 43.2
-        ky = cy - kh - 10.8 if st[1] == 'S' else cy + PC_PITCH * NPC + 10.8
+        ky = cy - kh - 10.8 if (st[1] == 'S' and not KC_INNER) else cy + PC_PITCH * NPC + 10.8
         m['insts'].append(F.Inst(f'kc_{st}', 'qkd_ctrl_kc', round(up(x_pc + pcw / 2 - kw / 2, GX), 4), round(up(ky, GY), 4),
                                  kw - SH, kh - SH, 'R0', kind='static', region='strip', domain='hbm'))
     if os.environ.get('OT_KV_KRT_ES6_HOME', '0') == '1':
