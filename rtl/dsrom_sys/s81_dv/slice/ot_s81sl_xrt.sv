@@ -185,17 +185,21 @@ module ot_s81sl_xrt #(
     // 160 rwr_c kept copies, 578 paths): the kind / owner predicates are decoded from the input PINS into kept flags at
     // the SAME edge as eb / wb / vb (input-to-reg slack +365 ps).  sid_oh is a static strap, so mine_* from dl_* equals
     // mine_* from the registered words; the flags reset with ev / wv / vv (rs_c).  Same values, same edges.
-    (* keep *) reg pq_ectl, pq_wctl, pq_vctl, pq_erd, pq_wrd, pq_vrd, pq_vrdc, pq_vrdm, pq_me, pq_mw, pq_mv;
+    (* keep *) reg pq_ectl, pq_wctl, pq_vctl, pq_erd, pq_wrd, pq_vrd, pq_me, pq_mw, pq_mv;
+    wire pq_vrdc, pq_vrdm;   // same-D copies behind keep_hierarchy (plain keep regs were merged: 36-42 loads)
+    ot_s81sl_xr_rcp #(.ID(1)) u_vrdc (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdc));
+    ot_s81sl_xr_rcp #(.ID(2)) u_vrdm (.clk(clk), .rst_n(rs_c), .d(dl_vv && dl_vb[3:1] == K_RD), .q(pq_vrdm));
     // own strap capture for the predecode (sid_c reached 44 loads when shared): sid is static from reset
-    (* keep *) reg [3:0] sid_p, sid_p2; (* keep *) reg [15:0] sid_ohp;
-    always @(posedge clk) begin sid_p <= sid; sid_p2 <= sid; sid_ohp[7:0] <= 8'(16'd1 << sid_p); sid_ohp[15:8] <= 8'((16'd1 << sid_p2) >> 8); end
+    wire [3:0] sid_p, sid_p2; (* keep *) reg [15:0] sid_ohp;
+    ot_s81sl_xr_cp #(.W(4), .ID(3)) u_sp1 (.clk(clk), .d(sid), .q(sid_p));
+    ot_s81sl_xr_cp #(.W(4), .ID(4)) u_sp2 (.clk(clk), .d(sid), .q(sid_p2));
+    always @(posedge clk) begin sid_ohp[7:0] <= 8'(16'd1 << sid_p); sid_ohp[15:8] <= 8'((16'd1 << sid_p2) >> 8); end
     always @(posedge clk or negedge rs_c)
-        if (!rs_c) begin pq_ectl <= 1'b0; pq_wctl <= 1'b0; pq_vctl <= 1'b0; pq_erd <= 1'b0; pq_wrd <= 1'b0; pq_vrd <= 1'b0; pq_vrdc <= 1'b0; pq_vrdm <= 1'b0; end
+        if (!rs_c) begin pq_ectl <= 1'b0; pq_wctl <= 1'b0; pq_vctl <= 1'b0; pq_erd <= 1'b0; pq_wrd <= 1'b0; pq_vrd <= 1'b0; end
         else begin
             pq_ectl <= dl_ev && dl_e[3:1] == K_CTL; pq_wctl <= dl_wv && dl_w[3:1] == K_CTL; pq_vctl <= dl_vv && dl_vb[3:1] == K_CTL;
             pq_erd <= dl_ev && (dl_e[3:1] == K_RD || dl_e[3:1] == K_CL); pq_wrd <= dl_wv && (dl_w[3:1] == K_RD || dl_w[3:1] == K_CL);
-            pq_vrd <= dl_vv && dl_vb[3:1] == K_RD; pq_vrdc <= dl_vv && dl_vb[3:1] == K_RD;   // copy for the 32 rsv_c
-            pq_vrdm <= dl_vv && dl_vb[3:1] == K_RD;   // copy for the rl0 / rnp / rrow selects
+            pq_vrd <= dl_vv && dl_vb[3:1] == K_RD;
         end
     always @(posedge clk) begin
         pq_me <= |(dl_e[36:21] & sid_ohp); pq_mw <= |(dl_w[36:21] & sid_ohp); pq_mv <= |(dl_vb[36:21] & sid_ohp);
@@ -735,3 +739,15 @@ module ot_s81sl_xrt3 #(parameter integer FOREG = `OT_S81SL_XR_FOREG_DEF) (
         .g_d(g_d), .x_go(x_go), .x_mode(x_mode), .x_eps(x_eps), .x_scale(x_scale), .x_sv(x_sv), .x_si(x_si), .x_s(x_s), .x_rbv(x_rbv), .x_rbd(x_rbd),
         .is_v(is_v), .is_d(is_d), .cfg_v(cfg_v), .cfg_d(cfg_d), .fault(fault));
 endmodule
+
+`ifdef OT_S81SL_XR_PDC
+// XR8 copy cells: distinct-ID keep_hierarchy registers so synthesis keeps same-D copies apart
+(* keep_hierarchy="yes" *)
+module ot_s81sl_xr_cp #(parameter integer W=1, ID=0)(input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
+ (* keep *) reg [W-1:0] r; always @(posedge clk) r<=d; assign q=r;
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_s81sl_xr_rcp #(parameter integer ID=0)(input wire clk, rst_n, d, output wire q);
+ (* keep *) reg r; always @(posedge clk or negedge rst_n) if(!rst_n) r<=1'b0; else r<=d; assign q=r;
+endmodule
+`endif
