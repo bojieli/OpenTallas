@@ -126,7 +126,7 @@ def main(argv=None):
             if not Path(path).is_absolute():
                 assert '..' not in Path(path).parts, ('bind path escapes source root', path)
                 return str(Path(path))
-            m = re.search(r'/rtl_extra/([0-9a-f]{40})/(.*)$', str(path))
+            m = re.search(r'/rtl_extra/([0-9a-f]{7,40})/(.*)$', str(path))
             if m:
                 return f'rtl_extra/{m[1]}/{m[2]}'
             if Path(path).name == 'cells_used.v':
@@ -181,7 +181,7 @@ def main(argv=None):
     # rtl_extra (other commits) from the bind's file list
     extra = {}
     for f in pb.get('rtl_files', []):
-        m = re.search(r'/rtl_extra/([0-9a-f]{40})/(.*)$', f)
+        m = re.search(r'/rtl_extra/([0-9a-f]{7,40})/(.*)$', f)
         if m:
             key = f'rtl_extra/{m.group(1)}/{m.group(2)}'
             texts[key] = git(repo, 'show', f'{m.group(1)}:{m.group(2)}', binary=True)
@@ -251,7 +251,7 @@ def main(argv=None):
             pref_order.append((f, L))
         bench_defines[L] = list_files.defines
     for f in pb.get('rtl_files', []):
-        m = re.search(r'/rtl_extra/([0-9a-f]{40})/(.*)$', f)
+        m = re.search(r'/rtl_extra/([0-9a-f]{7,40})/(.*)$', f)
         if m:
             pref_order.append((f'rtl_extra/{m.group(1)}/{m.group(2)}', 'bind rtl_extra'))
     specs = defaultdict(list)        # tile top -> [(spec path, sources)]
