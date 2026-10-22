@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       admits   -24 GB (avail 484, growth 501, headroom 0, waiters 5/173 GB) load 94/128 running 37 disk 1038 GB 
+ot-run: ot-epyc7       admits   103 GB (avail 402, growth 330, headroom 0, waiters 0/0 GB) load 217/96 running 61 disk 4311 GB 
+ot-run: ot-epyc9       admits   -23 GB (avail 121, growth 137, headroom 0, waiters 0/0 GB) load 75/128 running 31 disk 1807 GB 
+ot-run: ot-gold2       admits   -13 GB (avail 429, growth 438, headroom 0, waiters 0/0 GB) load 34/112 running 20 disk 2735 GB 
+ot-run: ot-gold1       admits   153 GB (avail 692, growth 585, headroom 0, waiters 0/0 GB) load 79/112 running 37 disk 1567 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/facesrc
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/facesrc
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-1654187-1792642922 after 0 s
+COL8_FACE_LAND_PASS checks=256 width=1210 phase=2ns latency=5
+- rtl/test/hbm_idx_static/tb_col8_sram_face.sv:12: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.004 s; speed 750.701 us/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB
+[412000] %Fatal: tb_col8_sram_face.sv:11: Assertion failed in tb_col8_land: COL8_FACE_LAND_FAIL cycle=41
+%Error: rtl/test/hbm_idx_static/tb_col8_sram_face.sv:11: Verilog $stop
+Aborting...
+COL8_FACE_PAIR_PASS
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-1654187-1792642922): exit 0
