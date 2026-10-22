@@ -1,0 +1,34 @@
+{
+  "native.json": {
+    "status": "FAIL",
+    "max_dynamic_loads": 705,
+    "roots_examined": 90499,
+    "role_errors": [],
+    "netlist": {
+      "path": "out/mapped.v",
+      "sha256": "f96c2605c2c72ceb389e3eac448d708bff461faa114b1759d18f137a86892048"
+    },
+    "violation_count": 518
+  },
+  "native_retained.json": {
+    "status": "FAIL",
+    "max_dynamic_loads": 68,
+    "roots_examined": 92091,
+    "role_errors": [],
+    "netlist": {
+      "path": "out/retained.v",
+      "sha256": "1c5239d7346a39b24ae2e56504c42589cc5c289a102c9acaf0c0a6fb5205ce60"
+    },
+    "violation_count": 24
+  },
+  "objects": {
+    "mapped.v": "f96c2605c2c72ceb389e3eac448d708bff461faa114b1759d18f137a86892048",
+    "mapped.json": "8252ada4c73a5e34b35b9532eee6d93ee844652950cf9609d3f3b04d2e9e263e",
+    "native_bfc.v": "3def89ec7dc4e7b22917f2fa65a714dd3b8d461401dcc4b96d665fc4c559666d",
+    "retained.v": "1c5239d7346a39b24ae2e56504c42589cc5c289a102c9acaf0c0a6fb5205ce60",
+    "synth.log": "644480e03bdba78bd2c211648823f0f30000b90d739ec21de187747cd79d010e",
+    "clone.log": "27cd6c5cf427d3cf27eafd57505700197f5f06c8de8211322935b4fb7a435e5f",
+    "retain.log": "8b3443a5e1a408aa75204506adc3bf412f9da5e88d3b99967cf9cf6acb398024",
+    "remote_root": "/srv/opentallas-scratch/claude/codex-root-xr4-native-2000/out"
+  }
+}
