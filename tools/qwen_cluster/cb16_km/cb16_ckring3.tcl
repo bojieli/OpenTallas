@@ -51,12 +51,79 @@ proc ot_ckr_child_ins {it} {
   set m [[$it getInst] getMaster]
   if {![$m isBlock]} { return 0.0 }
   set mn [$m getName]; set pn [[$it getMTerm] getName]
+  if {[ot_ckr_etm_on]} { set e [ot_ckr_etm_ins $mn $pn]; if {[llength $e]} { return [lindex $e 0] } }
   if {[string match qfd_tile_n?_rp2_romleaf_rr $mn]} {
     if {[dict exists $::ot_ckr_ins_pin $pn]} { return [dict get $::ot_ckr_ins_pin $pn] }
     return 150.0
   }
   if {[dict exists $::ot_ckr_ins $mn]} { return [dict get $::ot_ckr_ins $mn] }
   return 0.0
+}
+# SQC-CKE 10-22 (opt-in OT_CKR_ETM_INS=1; unset/0 = the hard-coded table above, output unchanged): hard-child clock-pin
+# insertion PER CORNER from the child ETM liberty the flow loads (the *_LIB_FILES / ADDITIONAL_LIBS views, *_tt.lib with
+# its *_ff.lib sibling; OT_CKR_ETM_LIBS overrides the list), per master AND per clock pin (cell_rise of
+# min/max_clock_tree_path).  Why (measured, rgm gate ep9 qfd_c_b8_rgm-20261022-081054 ck.json): the table is one TT value per
+# master (qfd_c_ring514 136.7 for BOTH ck_w and ck_r, whose ETM ck_r is 92.4..113.2 TT) plus per-pin TT means for the A0,
+# and FF = 0.8 x TT (stations 77.3 vs ETM FF 64.9..84.6, ring ck_r 109.4 vs 74.9..94.7).  OT_CKR_ETM_REF edge (default):
+# TT arrival + TT max_clock_tree_path (setup side), FF arrival + FF min_clock_tree_path (hold side); mid: (min+max)/2 at
+# each corner.  Used for grouping (TT value), ot_ckr_arrivals (TT and FF) and the balance loop (no 0.8 x estimate); a pin
+# without an ETM record keeps the table value and 0.8 x (counted in the OT_CKR ETM log line).
+proc ot_ckr_etm_on {} { expr {[ot_ckr_env OT_CKR_ETM_INS 0] ni {0 false no off}} }
+proc ot_ckr_etm_libs {} {
+  set src [ot_ckr_env OT_CKR_ETM_LIBS ""]
+  if {$src eq ""} {
+    foreach k [lsort [array names ::env *LIB_FILES]] { lappend src {*}$::env($k) }
+    if {[info exists ::env(ADDITIONAL_LIBS)]} { lappend src {*}$::env(ADDITIONAL_LIBS) }
+  }
+  set out {}
+  foreach f $src {
+    if {![regexp {^(.*)_(tt|ff)\.lib$} $f -> stem c]} continue
+    foreach cc {tt ff} { set g ${stem}_$cc.lib; if {[file isfile $g] && $g ni $out} { lappend out $g } }
+  }
+  return $out
+}
+proc ot_ckr_etm_parse {f c} {
+  set fh [open $f r]; set cell ""; set pin ""; set ty ""; set rise 0; set n 0
+  while {[gets $fh line] >= 0} {
+    if {[regexp {^\s*cell\s*\(\s*"?([^")\s]+)"?\s*\)} $line -> cell]} { set pin ""; set ty ""; set rise 0; continue }
+    if {[regexp {^\s*pin\s*\(\s*"?([^")\s]+)"?\s*\)} $line -> pin]} { set ty ""; set rise 0; continue }
+    if {[regexp {timing_type\s*:\s*(min|max)_clock_tree_path} $line -> t]} { set ty $t; set rise 0 }
+    if {$ty eq "" || $pin eq ""} continue
+    set i [string first cell_rise $line]
+    if {$i >= 0} { set rise 1; set line [string range $line $i end] }
+    if {$rise && [regexp {values\s*\(\s*"\s*([-0-9.eE+]+)} $line -> v]} {
+      dict set ::ot_ckr_etm $cell/$pin $c,$ty $v; incr n; set ty ""; set rise 0
+    }
+  }
+  close $fh
+  return $n
+}
+proc ot_ckr_etm_load {} {
+  if {[info exists ::ot_ckr_etm]} return
+  set ::ot_ckr_etm [dict create]; set ::ot_ckr_etm_miss [dict create]
+  set libs [ot_ckr_etm_libs]; set n 0
+  foreach f $libs { if {[regexp {_(tt|ff)\.lib$} $f -> c]} { incr n [ot_ckr_etm_parse $f $c] } }
+  puts "OT_CKR ETM: [llength $libs] child libs, $n clock_tree_path values, [dict size $::ot_ckr_etm] master/pin records, ref [ot_ckr_env OT_CKR_ETM_REF edge]"
+}
+# {tt ff} insertion (ps) of master/pin per OT_CKR_ETM_REF, or {} without a complete TT+FF record
+proc ot_ckr_etm_ins {mn pn} {
+  ot_ckr_etm_load
+  set k $mn/$pn
+  if {![dict exists $::ot_ckr_etm $k]} { dict incr ::ot_ckr_etm_miss $k; return {} }
+  set r [dict get $::ot_ckr_etm $k]
+  foreach x {tt,min tt,max ff,min ff,max} { if {![dict exists $r $x]} { dict incr ::ot_ckr_etm_miss $k; return {} } }
+  if {[ot_ckr_env OT_CKR_ETM_REF edge] eq "mid"} {
+    return [list [expr {0.5 * ([dict get $r tt,min] + [dict get $r tt,max])}] [expr {0.5 * ([dict get $r ff,min] + [dict get $r ff,max])}]]
+  }
+  return [list [dict get $r tt,max] [dict get $r ff,min]]
+}
+# FF reference of a sink pin: ETM FF value (opt-in) else 0.8 x the TT reference
+proc ot_ckr_child_ins_ff {it tt} {
+  set m [[$it getInst] getMaster]
+  if {![$m isBlock]} { return 0.0 }
+  set e [ot_ckr_etm_ins [$m getName] [[$it getMTerm] getName]]
+  if {[llength $e]} { return [lindex $e 1] }
+  return [expr {0.8 * $tt}]
 }
 # ---- geometry (um) ----
 proc ot_ckr_macros {} {
@@ -206,6 +273,14 @@ proc ot_ckr_build {port Tg} {
       set b [$it getBBox]; set x [expr {([$b xMin] + [$b xMax]) / 2.0 / $u}]; set y [expr {([$b yMin] + [$b yMax]) / 2.0 / $u}]
     } else { lassign [[$it getInst] getLocation] x y; set x [expr {$x / double($u)}]; set y [expr {$y / double($u)}] }
     lappend sinks [list $it $x $y [ot_ckr_ring_s $R $x $y] [ot_ckr_child_ins $it]]
+    if {[ot_ckr_etm_on] && [[[$it getInst] getMaster] isBlock]} {
+      set k "[[[$it getInst] getMaster] getName]/[[$it getMTerm] getName]"
+      if {![dict exists $::ot_ckr_etm_cmp $k]} {
+        set mn [lindex [split $k /] 0]; set pn [lindex [split $k /] 1]
+        set tb [expr {[string match qfd_tile_n?_rp2_romleaf_rr $mn] ? ([dict exists $::ot_ckr_ins_pin $pn] ? [dict get $::ot_ckr_ins_pin $pn] : 150.0) : ([dict exists $::ot_ckr_ins $mn] ? [dict get $::ot_ckr_ins $mn] : 0.0)}]
+        dict set ::ot_ckr_etm_cmp $k [list $tb [ot_ckr_etm_ins $mn $pn]]
+      }
+    }
   }
   # (1) trunk + port pad stages (zig-zag on the ring around the entry)
   set drv $pnet; set k 0
@@ -309,7 +384,13 @@ proc ot_ckr_leafpins {net} {   # {pin_name ins_tt} of every sequential / block c
     foreach it [$n getITerms] {
       if {![$it isInputSignal]} continue
       set m [[$it getInst] getMaster]
-      if {[$m isSequential] || [$m isBlock]} { lappend out [list "[[$it getInst] getName]/[[$it getMTerm] getName]" [ot_ckr_child_ins $it]]; continue }
+      if {[$m isSequential] || [$m isBlock]} {
+        set ins [ot_ckr_child_ins $it]
+        if {[ot_ckr_etm_on]} {
+          lappend out [list "[[$it getInst] getName]/[[$it getMTerm] getName]" $ins [ot_ckr_child_ins_ff $it $ins]]
+        } else { lappend out [list "[[$it getInst] getName]/[[$it getMTerm] getName]" $ins] }
+        continue
+      }
       foreach o [[$it getInst] getITerms] { if {[$o isOutputSignal] && [$o getNet] ne "NULL"} { lappend todo [$o getNet] } }
     }
   }
@@ -322,11 +403,12 @@ proc ot_ckr_arrivals {} {
   dict for {g pl} $::ot_ckr_grp {
     set vt 0.0; set vf 0.0
     foreach pp [dict get $::ot_ckr_leaf $g] {
-      lassign $pp pn ins
+      lassign $pp pn ins insf
+      if {$insf eq ""} { set insf [expr {0.8 * $ins}] }
       set pin [get_pins -quiet $pn]; if {![llength $pin]} continue
       set x [get_property $pin arrival_max_rise]; set y [get_property $pin arrival_min_rise]
       if {$x ne "" && $x ne "INF" && $x ne "-INF" && $x + $ins > $vt} { set vt [expr {$x + $ins}] }
-      if {$y ne "" && $y ne "INF" && $y ne "-INF" && $y + 0.8 * $ins > $vf} { set vf [expr {$y + 0.8 * $ins}] }
+      if {$y ne "" && $y ne "INF" && $y ne "-INF" && $y + $insf > $vf} { set vf [expr {$y + $insf}] }
     }
     dict set a $g [list $vt $vf]
   }
@@ -378,6 +460,9 @@ proc ot_ckr_balance {{iters_over ""} {start_mode coarse}} {
     dict set ::ot_ckr_leaf $g $lp
   }
   puts "OT_CKR balance: $ncl CTS clones of local roots folded into their groups"
+  if {[ot_ckr_etm_on]} {
+    puts "OT_CKR ETM balance: [dict size $::ot_ckr_etm_miss] block clock pins without a TT+FF ETM record (table + 0.8 x): [lrange [dict keys $::ot_ckr_etm_miss] 0 9]"
+  }
   set_propagated_clock [all_clocks]
   set rcc 0
   if {[llength [info commands ot_rc_cal_apply]]} { set rcc [ot_rc_cal_apply ckr] }
@@ -443,12 +528,21 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ckr_cts_orig] eq "
     set die [$blk getDieArea]
     set ::ot_ckr_W [expr {[$die xMax] / double($u)}]; set ::ot_ckr_H [expr {[$die yMax] / double($u)}]
     set ::ot_ckr_grp [dict create]; set ::ot_ckr_nblocked 0
+    if {[ot_ckr_etm_on]} { ot_ckr_etm_load; set ::ot_ckr_etm_cmp [dict create] }
     if {![info exists ::ot_ckr_npad]} { set ::ot_ckr_npad 0; set ::ot_ckr_padk [dict create] }
     set ports [ot_ckr_ports]
     set Tg 0
     foreach p $ports { set ::ot_ckr_plan($p) [ot_ckr_plan $p]; set Tg [expr {max($Tg, [dict get $::ot_ckr_plan($p) tot])}] }
     foreach p $ports { ot_ckr_build $p $Tg }
     puts "OT_CKR built: [dict size $::ot_ckr_grp] local roots, $::ot_ckr_nblocked buffers without a free spot within 600 um"
+    if {[ot_ckr_etm_on]} {
+      dict for {k v} $::ot_ckr_etm_cmp {
+        lassign $v tb e
+        if {[llength $e]} {
+          puts [format "OT_CKR ETM pin %s table TT %.1f FF-est %.1f -> ETM TT %.1f FF %.1f (TT %+.1f FF %+.1f ps)" $k $tb [expr {0.8 * $tb}] {*}$e [expr {[lindex $e 0] - $tb}] [expr {[lindex $e 1] - 0.8 * $tb}]]
+        } else { puts [format "OT_CKR ETM pin %s table TT %.1f: no ETM record (table kept)" $k $tb] }
+      }
+    }
     detailed_placement
     set names {}
     dict for {g pl} $::ot_ckr_grp { lappend names [[[$blk findInst $g] findITerm Y] getNet] }
