@@ -6,5 +6,9 @@ SRC=(rtl/dsrom_sys/s81_dv/idx/dsdv_bk_sel_vmtx_n32.sv rtl/dsrom_sys/s81_dv/idx/d
 sha256sum "${SRC[@]}" > "$O/sources.sha256"
 "$VL" --version > "$O/verilator.version"
 "$VL" --binary --timing -j "${J:-2}" -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -DRESET_MUT="$M" --top-module tb_topk_reset_entry "${SRC[@]}" --Mdir "$O/obj" > "$O/build.log" 2>&1
+set +e
 "$O/obj/Vtb_topk_reset_entry" > "$O/run.log" 2>&1
+rc=$?
+set -e
 cat "$O/run.log"
+exit "$rc"
