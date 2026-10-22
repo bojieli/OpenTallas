@@ -83,6 +83,9 @@ it is not mapped die-netlist evidence. Only actual simulated netlist coverage ea
       --port-bind <port_bind.json> --plan <plan.json> --land <land.json>`.
       Run the selected 72-frame, 241-stage G4 assembly and its 50-user AR / 10-user MTP calendar.
       The closure hook remains pending actual replay/head coverage; a source PASS cannot be relabelled.
+      Entry rung (TOK-FUNC3-S81 10-21): add `--entry-kit/--entry-obj/--entry-idle-run/--entry-progs
+      --entry-fixture-meta --entry-ks-user` (a BUILT cut_3S_ctl binary of the same die; never builds) to replay the
+      native HOST entry jobs; rung/gap ledger results/token_pass/tokfunc3_s81_1021/ladder.json (`--ladder`).
 - [ ] HBM (both models): `tools/hbm_layer_vehicle/tok_func_hbm.sh` with `MODE=source`,
       pinned `SRC_REV` and the current contract; existing source pilot uses the r14 SW slice.
       At GEN use the SAME script with `MODE=gen_rtl`, `DIE_V=<GEN-die.v>`,
