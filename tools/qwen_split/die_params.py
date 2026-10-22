@@ -42,7 +42,7 @@ import lane_groups as LG  # noqa: E402
 TT_MASTER, TT_PORT, TT_SINK = 'qfd_tt_ctlm_dv', 'hr', 'dvs_W5'
 if os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1':
     from qwen_split import headprep_source as HP13
-    TT_MASTER = HP13.MASTER
+    TT_MASTER = HP13.selected_master()
 TT_STAGE_ME = 1                                  # Q-DIE14 (QLB-PROG 3fac5f0ef): the compiled ctlm image needs STAGE_ME 1
 HR_PIN_REG = 1                                   # qfd_tt_ctlm_dv: hr is one register after xpf (header 'hr -> W5 hr_wi')
 HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
