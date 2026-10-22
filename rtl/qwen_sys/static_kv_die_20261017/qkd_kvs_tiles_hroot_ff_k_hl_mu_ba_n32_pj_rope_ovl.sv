@@ -1642,7 +1642,6 @@ module qkd_kvs_emb_rope_ovl (
     input wire ck,
     input wire rst_n,
     input wire [173:0] d2d__svc,
-    input wire [0:0] join__rope_sweep,
     input wire [0:0] d2d__emb_tx_slot,
     output wire [0:0] rowtx__emb_tx_v,
     output wire [547:0] rowtx__emb_tx_payload,

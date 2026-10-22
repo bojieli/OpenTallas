@@ -51,7 +51,7 @@
   "enable": false,
   "reason": "KV-EMB4 z1 10-20: the KV die static schedule charges 0 edges at every kvs_emb face (kv_tile_views EDGES rule; i2 reason: every tile<->tile / die-master hop is priced in the compiled join ages with the die relays only). Owner 10-20 09:05: pin registers only at region crossings / wires > 405 um; the e1 recipe-3 pin registers (+1 in / +1 out on every pin) made the e1 view unbindable (tile_views edges, LEC != die RTL). Crossings land at die level (die relays / landing slots, priced)."
  },
- "kind": "cluster",
+ "kind": "tile",
  "clock_port": "ck",
  "layer_cap": "M5",
  "macros": [
@@ -61,7 +61,7 @@
    "inst": "*u_context.g_rope.u_rowtx.u_row",
    "at": [
     43.2,
-    86.4
+    64.8
    ]
   },
   {
@@ -74,8 +74,6 @@
    ]
   }
  ],
- "children": [],
- "inter": [],
  "inhold": true,
  "outhold": true,
  "route": {
@@ -97,20 +95,95 @@
   "h": 302.40000000000003,
   "exact": true
  },
- "structural_change": "RoPE73: accepted HOST O61 owner starts actual two HBM sweeps; two physical SRAMs stage 64 embedding and eight RoPE words; 73 statically reserved sends. Unique qkd_kvs_emb_rope source and interface; earlier embedding view is distinct.",
+ "structural_change": "SQ-KATTN2 10-21 MAIN: RoPE73 OVL kvs_emb (generated qkd_kvs_emb_rope_ovl) with the dead join__rope_sweep face deleted at the generator (RoPE body drives u_join.rope_sweep internally; the open member input had no pin, no driver, no reader); two 64x512 SRAMs (row, rope) stacked in one W macro column x43.2 y64.8/172.8 (30 um channel, was 8.6), full E half std-cell band beside the 933-pin E face; pin_regs off (die charges 0 face edges), reset landing 2x64. Behaviour bench kvs_emb_rope_ovl_bench.sh PASS + 5 mutants FAIL. RoPE: embedding sweep start, RoPE sweep exactly 1024 edges later with token 151936+pos[12:3].",
  "job": {
-  "owner": "Codex:KV lead",
-  "branch": "codex/kv-integration-0025-1021",
-  "tag": "rope73",
+  "owner": "Claude:SQ-KATTN2",
+  "branch": "claude/sq-kattn-emb-1021",
+  "tag": "rope73o",
   "purpose": "RoPE73: accepted HOST O61 owner starts actual two HBM sweeps; two physical SRAMs stage 64 embedding and eight RoPE words; 73 statically reserved sends. Unique qkd_kvs_emb_rope source and interface; earlier embedding view is distinct.",
-  "benches": [],
+  "benches": [
+   {
+    "name": "emb_rope_ovl",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "emb_rope_ovl_m1",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   },
+   {
+    "name": "emb_rope_ovl_m2",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   },
+   {
+    "name": "emb_rope_ovl_m3",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   },
+   {
+    "name": "emb_rope_ovl_m4",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m4 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   },
+   {
+    "name": "emb_rope_ovl_m5",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   }
+  ],
   "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/lib",
    "rtl/qwen_sys/static_embedding_20261014",
    "rtl/qwen_sys/static_kv_die_20261017",
-   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+   "tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh"
   ],
-  "views_to": "physical/ref_tile/qkd_kvs_emb_rope73/views",
-  "record_to": "results/rtl/ref_tile/qkd_kvs_emb_rope73",
+  "views_to": "physical/ref_tile/qkd_kvs_emb_rope73_ovl/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_emb_rope73_ovl",
   "cycles_added": 1
  },
  "reset_landing": {
@@ -137,8 +210,9 @@
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "fill_reason": {
-  "pin_bound": "Keep die outline388.8x302.4; every face below6pins/um. Two SRAMs use43.2um placement lattice. Full core remains a standard-cell band. Actual synthesis/route closure pending."
+  "pin_bound": "outline = the KV die kvs_emb frame slot 388.8x302.4 (z3a/i2); E face 933 b / 302.4 um = 3.1 /um, S 673 b / 388.8 = 1.7, W 598 / 302.4 = 2.0, N 558 / 388.8 = 1.4 (<= 4 /um). Two 171.3x77.8 SRAMs = 23 % of the core; the rest is the std-cell band."
  },
- "diagnostic": true,
- "slot_change_request": "Actual coherent MU callback source; same two-SRAM footprint, not layout-qualified. Final GEN/callback ages and sole image pending."
+ "slot_change_request": "Actual coherent MU callback source; same two-SRAM footprint, not layout-qualified. Final GEN/callback ages and sole image pending.",
+ "children": [],
+ "inter": []
 }

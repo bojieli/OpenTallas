@@ -1716,6 +1716,13 @@ def rope_context_tiles(tiles):
     if not (HROOT and KITS and os.environ.get('OT_KV_MU', '0') == '1'):
         raise ValueError('KV RoPE context needs MU1, HROOT and tile kits')
     emb, ctl = tiles['kvs_emb'], tiles['kvs_ctl']
+    # SQ-KATTN2 10-21: the RoPE body (qkd_kvs_emb_ctx ROPE=1) drives u_join.rope_sweep internally (ROPE && rope_start,
+    # 1024 edges after the first sweep); the replaced join member's rope_sweep stays an OPEN tile input that no body
+    # reads and no die net drives (kit qkd_kvs_emb_rope73_ovl had no pin for it).  Delete the dead face instead of
+    # pinning / tying it.
+    rs = emb['ports'].pop('join__rope_sweep', None)
+    if rs is not None and (rs['dir'], rs['width'], rs['cls']) != ('input', 1, 'open'):
+        raise ValueError(f'KV RoPE: join__rope_sweep is not the dead open member input: {rs}')
     emb['ports']['i_head_record'] = dict(dir='input', width=552, cls='special', src=None)
     ovl=os.environ.get('OT_KV_ROPE_OVL','0')=='1'
     if ovl:
@@ -1739,6 +1746,8 @@ def rope_context_tiles(tiles):
         + ', .rowtx__emb_tx_v(w_rowtx__emb_tx_v), .rowtx__emb_tx_payload(w_rowtx__emb_tx_payload), '
         '.px_st(w_rope_start), .px_tok(w_rope_token), .px_tep(w_rope_epoch), .emb_fault(w_rope_fault));'
     ]
+    if any('join__rope_sweep' in x for x in emb['body'] + emb['wires']):
+        raise ValueError('KV RoPE: the RoPE body must not read the deleted join__rope_sweep face')
     for pn, expr in [('px_tok', 'w_rope_token'), ('px_tep', 'w_rope_epoch')]:
         if pn not in emb['ports']:
             raise ValueError(f'KV RoPE: missing existing PC owner face {pn}')
