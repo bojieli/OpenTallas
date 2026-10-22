@@ -1,0 +1,731 @@
+{
+ "lane": "PARENTS-LANDED",
+ "generator": "tools/landed_parent/lp.py",
+ "flat": "ot_hbm_smh_rp6s_f_flat",
+ "top": "ot_hbm_smh_rp6s_f",
+ "standard": "landed-regions-standard-1018: local region trees, every cross-region net LANDED, per-region child-flop gate (TT and FF <= 80 ps); 1-bit reset runs are the only plain cross-region hops",
+ "regions": {
+  "u": {
+   "clock_port": "ck_u",
+   "children": [
+    "u_bk1",
+    "u_oh1",
+    "u_rl1",
+    "u_rst_u12",
+    "u_st1",
+    "u_xq1",
+    "u_xs1"
+   ]
+  },
+  "t": {
+   "clock_port": "ck_t",
+   "children": [
+    "u_lands",
+    "u_lpr_pin",
+    "u_rst_t8",
+    "u_xgi",
+    "u_xpi"
+   ]
+  },
+  "c": {
+   "clock_port": "ck_c",
+   "children": [
+    "u_as",
+    "u_bdc1",
+    "u_cap1",
+    "u_fp1",
+    "u_g1p",
+    "u_go1",
+    "u_gs",
+    "u_h01",
+    "u_h11",
+    "u_mg1",
+    "u_pr_s",
+    "u_prl",
+    "u_pst",
+    "u_pub1",
+    "u_qk1",
+    "u_ro_s",
+    "u_row1",
+    "u_rowe1",
+    "u_rst_c13",
+    "u_rst_c14",
+    "u_rst_c15",
+    "u_sr_s",
+    "u_xg2",
+    "u_xp2"
+   ]
+  }
+ },
+ "D": 4,
+ "E": 2,
+ "K": 2,
+ "added_edges_per_landing": 3,
+ "window": "(2 - 4) T + t_hold < dL < 2 T - t_cq - t_setup at TT and FF",
+ "landings": [
+  {
+   "name": "0",
+   "net": "xg",
+   "src_region": "t",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_xgi"
+   ],
+   "width": 50,
+   "readers": [
+    "u_xg2.d"
+   ],
+   "ring": "u_lpl_0_w (ck_t)",
+   "read": "u_lpl_0_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_0_w.* -to u_lpl_0_r.*"
+  },
+  {
+   "name": "1",
+   "net": "xp",
+   "src_region": "t",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_xpi"
+   ],
+   "width": 100,
+   "readers": [
+    "u_xp2.d"
+   ],
+   "ring": "u_lpl_1_w (ck_t)",
+   "read": "u_lpl_1_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_1_w.* -to u_lpl_1_r.*"
+  },
+  {
+   "name": "2",
+   "net": "rl1_p",
+   "src_region": "c",
+   "dst_region": "u",
+   "src_nodes": [
+    "u_prl"
+   ],
+   "width": 818,
+   "readers": [
+    "u_rl1.d"
+   ],
+   "ring": "u_lpl_2_w (ck_c)",
+   "read": "u_lpl_2_r (ck_u)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_2_w.* -to u_lpl_2_r.*"
+  },
+  {
+   "name": "3",
+   "net": "st_p",
+   "src_region": "c",
+   "dst_region": "u",
+   "src_nodes": [
+    "u_pst"
+   ],
+   "width": 26,
+   "readers": [
+    "u_st1.d"
+   ],
+   "ring": "u_lpl_3_w (ck_c)",
+   "read": "u_lpl_3_r (ck_u)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_3_w.* -to u_lpl_3_r.*"
+  },
+  {
+   "name": "4",
+   "net": "bk1_s",
+   "src_region": "t",
+   "dst_region": "u",
+   "src_nodes": [
+    "u_lands"
+   ],
+   "width": 2069,
+   "readers": [
+    "u_bk1.d",
+    "u_oh1.d"
+   ],
+   "ring": "u_lpl_4_w (ck_t)",
+   "read": "u_lpl_4_r (ck_u)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_4_w.* -to u_lpl_4_r.*"
+  },
+  {
+   "name": "5",
+   "net": "at_m",
+   "src_region": "c",
+   "dst_region": "u",
+   "src_nodes": [
+    "u_as"
+   ],
+   "width": 5,
+   "readers": [
+    "u_xq1.at"
+   ],
+   "ring": "u_lpl_5_w (ck_c)",
+   "read": "u_lpl_5_r (ck_u)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_5_w.* -to u_lpl_5_r.*"
+  },
+  {
+   "name": "6",
+   "net": "bb1",
+   "src_region": "u",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_xq1"
+   ],
+   "width": 1084,
+   "readers": [
+    "u_bdc1.i_v",
+    "u_bdc1.i_first",
+    "u_bdc1.i_last",
+    "u_bdc1.i_fp4",
+    "u_bdc1.i_tag",
+    "u_bdc1.i_w",
+    "u_bdc1.i_x"
+   ],
+   "ring": "u_lpl_6_w (ck_u)",
+   "read": "u_lpl_6_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_6_w.* -to u_lpl_6_r.*"
+  },
+  {
+   "name": "7",
+   "net": "fb1",
+   "src_region": "u",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_xq1"
+   ],
+   "width": 534,
+   "readers": [
+    "u_h01.i_v",
+    "u_h01.i_first",
+    "u_h01.i_w",
+    "u_h01.i_x",
+    "u_h11.i_v",
+    "u_h11.i_first",
+    "u_h11.i_w",
+    "u_h11.i_x",
+    "u_qk1.i_v",
+    "u_qk1.i_last",
+    "u_qk1.i_tag",
+    "u_cap1.i_v",
+    "u_cap1.i_last",
+    "u_cap1.i_run_first",
+    "u_cap1.i_run_last",
+    "u_cap1.i_tag"
+   ],
+   "ring": "u_lpl_7_w (ck_u)",
+   "read": "u_lpl_7_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_7_w.* -to u_lpl_7_r.*"
+  },
+  {
+   "name": "8",
+   "net": "pp1",
+   "src_region": "u",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_xq1"
+   ],
+   "width": 5,
+   "readers": [
+    "u_pub1.pp"
+   ],
+   "ring": "u_lpl_8_w (ck_u)",
+   "read": "u_lpl_8_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_8_w.* -to u_lpl_8_r.*"
+  },
+  {
+   "name": "9",
+   "net": "pf1",
+   "src_region": "u",
+   "dst_region": "c",
+   "src_nodes": [
+    "u_xq1"
+   ],
+   "width": 7,
+   "readers": [
+    "u_fp1.d"
+   ],
+   "ring": "u_lpl_9_w (ck_u)",
+   "read": "u_lpl_9_r (ck_c)",
+   "added_edges": 3,
+   "sdc": "set_multicycle_path -setup 2 / -hold 3 -from u_lpl_9_w.* -to u_lpl_9_r.*"
+  }
+ ],
+ "pads": [],
+ "loose_status": {
+  "nets": [],
+  "lag": [],
+  "sticky_outputs": {},
+  "note": "sticky status flags (no reservation / valid / payload effect): landed, outside the offset solve; the reader sees each flag lag_edges later than the flat parent"
+ },
+ "reset": {
+  "port": "rst_n",
+  "net": "lpr_pin",
+  "root_region": "u",
+  "depth": 3,
+  "hops": {
+   "u": 0,
+   "t": 1,
+   "c": 2
+  },
+  "same_depth_forest": {
+   "regional_stages": 2,
+   "root_D_loads": 14,
+   "regions": {
+    "u": {
+     "leaves": 197,
+     "terms": [
+      "1",
+      "(((((817) - (0) + 1))+24-1)/24)",
+      "(((((25) - (0) + 1))+24-1)/24)",
+      "(((((2068) - (0) + 1))+24-1)/24)",
+      "(((((4) - (0) + 1))+24-1)/24)",
+      "(((((1083) - (0) + 1))+24-1)/24)",
+      "(((((533) - (0) + 1))+24-1)/24)",
+      "(((((4) - (0) + 1))+24-1)/24)",
+      "(((((6) - (0) + 1))+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "2",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 35,
+       "first_expr": "1",
+       "chunks_expr": "(((((817) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "3",
+       "role": "r",
+       "first_leaf": 36,
+       "chunks": 2,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((25) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "4",
+       "role": "r",
+       "first_leaf": 38,
+       "chunks": 87,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((2068) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "5",
+       "role": "r",
+       "first_leaf": 125,
+       "chunks": 1,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((2068) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((4) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "6",
+       "role": "w",
+       "first_leaf": 126,
+       "chunks": 46,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((2068) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((1083) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "7",
+       "role": "w",
+       "first_leaf": 172,
+       "chunks": 23,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((2068) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((533) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "8",
+       "role": "w",
+       "first_leaf": 195,
+       "chunks": 1,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((2068) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((4) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "9",
+       "role": "w",
+       "first_leaf": 196,
+       "chunks": 1,
+       "first_expr": "1+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((2068) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((6) - (0) + 1))+24-1)/24)"
+      }
+     ],
+     "branches": 7,
+     "FFs": 204,
+     "scalar_child_pad_port_uses": 1
+    },
+    "t": {
+     "leaves": 96,
+     "terms": [
+      "1",
+      "(((((49) - (0) + 1))+24-1)/24)",
+      "(((((99) - (0) + 1))+24-1)/24)",
+      "(((((2068) - (0) + 1))+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "w",
+       "first_leaf": 1,
+       "chunks": 3,
+       "first_expr": "1",
+       "chunks_expr": "(((((49) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "1",
+       "role": "w",
+       "first_leaf": 4,
+       "chunks": 5,
+       "first_expr": "1+(((((49) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((99) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "4",
+       "role": "w",
+       "first_leaf": 9,
+       "chunks": 87,
+       "first_expr": "1+(((((49) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((2068) - (0) + 1))+24-1)/24)"
+      }
+     ],
+     "branches": 3,
+     "FFs": 99,
+     "scalar_child_pad_port_uses": 3
+    },
+    "c": {
+     "leaves": 118,
+     "terms": [
+      "1",
+      "(((((49) - (0) + 1))+24-1)/24)",
+      "(((((99) - (0) + 1))+24-1)/24)",
+      "(((((817) - (0) + 1))+24-1)/24)",
+      "(((((25) - (0) + 1))+24-1)/24)",
+      "(((((4) - (0) + 1))+24-1)/24)",
+      "(((((1083) - (0) + 1))+24-1)/24)",
+      "(((((533) - (0) + 1))+24-1)/24)",
+      "(((((4) - (0) + 1))+24-1)/24)",
+      "(((((6) - (0) + 1))+24-1)/24)"
+     ],
+     "bindings": [
+      {
+       "landing": "0",
+       "role": "r",
+       "first_leaf": 1,
+       "chunks": 3,
+       "first_expr": "1",
+       "chunks_expr": "(((((49) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "1",
+       "role": "r",
+       "first_leaf": 4,
+       "chunks": 5,
+       "first_expr": "1+(((((49) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((99) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "2",
+       "role": "w",
+       "first_leaf": 9,
+       "chunks": 35,
+       "first_expr": "1+(((((49) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((817) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "3",
+       "role": "w",
+       "first_leaf": 44,
+       "chunks": 2,
+       "first_expr": "1+(((((49) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((25) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "5",
+       "role": "w",
+       "first_leaf": 46,
+       "chunks": 1,
+       "first_expr": "1+(((((49) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((4) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "6",
+       "role": "r",
+       "first_leaf": 47,
+       "chunks": 46,
+       "first_expr": "1+(((((49) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((1083) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "7",
+       "role": "r",
+       "first_leaf": 93,
+       "chunks": 23,
+       "first_expr": "1+(((((49) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((533) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "8",
+       "role": "r",
+       "first_leaf": 116,
+       "chunks": 1,
+       "first_expr": "1+(((((49) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((4) - (0) + 1))+24-1)/24)"
+      },
+      {
+       "landing": "9",
+       "role": "r",
+       "first_leaf": 117,
+       "chunks": 1,
+       "first_expr": "1+(((((49) - (0) + 1))+24-1)/24)+(((((99) - (0) + 1))+24-1)/24)+(((((817) - (0) + 1))+24-1)/24)+(((((25) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)+(((((1083) - (0) + 1))+24-1)/24)+(((((533) - (0) + 1))+24-1)/24)+(((((4) - (0) + 1))+24-1)/24)",
+       "chunks_expr": "(((((6) - (0) + 1))+24-1)/24)"
+      }
+     ],
+     "branches": 4,
+     "FFs": 122,
+     "scalar_child_pad_port_uses": 8
+    }
+   },
+   "incremental_FFs": 419,
+   "required_rtl_sources": [
+    "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+    "rtl/common/landed_parent/ot_pl_land_reset_forest.sv"
+   ],
+   "scope": "Source leaf allocation only. Scalar child internals, actual parameter binding, native reset phase/reach and all clock entries remain unqualified."
+  },
+  "note": "flat reference == landed parent with its reset delayed by depth; child c's reset run is depth + t(c)"
+ },
+ "flops": {
+  "landing": 27774,
+  "pads": 0,
+  "reset": 426
+ },
+ "communicating_region_pairs": {
+  "landed": [
+   "c-t",
+   "c-u",
+   "t-u"
+  ],
+  "reset_hops": [
+   "c-u",
+   "t-u"
+  ]
+ },
+ "compiler": {
+  "note": "every latency change vs the flat parent; the compiler schedule takes these (static calendar, no runtime flow control)",
+  "child_offset_edges": {
+   "u_rst_c13": 0,
+   "u_rst_c14": 0,
+   "u_rst_c15": 0,
+   "u_rst_t8": 0,
+   "u_rst_u12": 0,
+   "u_lpr_pin": 0,
+   "u_lands": 0,
+   "u_xgi": 0,
+   "u_xpi": 0,
+   "u_xg2": 0,
+   "u_xp2": 0,
+   "u_sr_s": 0,
+   "u_as": 0,
+   "u_pr_s": 0,
+   "u_row1": 0,
+   "u_rowe1": 0,
+   "u_ro_s": 0,
+   "u_prl": 0,
+   "u_pst": 0,
+   "u_rl1": 0,
+   "u_st1": 0,
+   "u_bk1": 0,
+   "u_oh1": 0,
+   "u_xs1": 0,
+   "u_xq1": 0,
+   "u_bdc1": 0,
+   "u_h01": 0,
+   "u_h11": 0,
+   "u_qk1": 0,
+   "u_cap1": 0,
+   "u_pub1": 0,
+   "u_fp1": 0,
+   "u_mg1": 0,
+   "u_go1": 0,
+   "u_g1p": 0,
+   "u_gs": 0
+  },
+  "input_port_offset_edges": {
+   "xss_a1": 0,
+   "xss_g1": 0,
+   "xss_a2": 0,
+   "xss_g2": 0,
+   "attn": 0,
+   "rin_s": 0,
+   "xi_b": 0,
+   "xi_g0": 0,
+   "xi_gp": 0
+  },
+  "output_port_offset_edges": {
+   "rout_s": 0,
+   "gout": 0
+  },
+  "reset_release_added_edges": 3,
+  "status_flag_lag_edges": {},
+  "schedule": "offsets",
+  "ref_params": null,
+  "rescheduled_nets": [
+   {
+    "net": "xg",
+    "src_region": "t",
+    "dst_region": "c",
+    "readers": [
+     "u_xg2.d"
+    ],
+    "width": 50,
+    "added_edges": 3
+   },
+   {
+    "net": "xp",
+    "src_region": "t",
+    "dst_region": "c",
+    "readers": [
+     "u_xp2.d"
+    ],
+    "width": 100,
+    "added_edges": 3
+   },
+   {
+    "net": "rl1_p",
+    "src_region": "c",
+    "dst_region": "u",
+    "readers": [
+     "u_rl1.d"
+    ],
+    "width": 818,
+    "added_edges": 3
+   },
+   {
+    "net": "st_p",
+    "src_region": "c",
+    "dst_region": "u",
+    "readers": [
+     "u_st1.d"
+    ],
+    "width": 26,
+    "added_edges": 3
+   },
+   {
+    "net": "bk1_s",
+    "src_region": "t",
+    "dst_region": "u",
+    "readers": [
+     "u_bk1.d",
+     "u_oh1.d"
+    ],
+    "width": 2069,
+    "added_edges": 3
+   },
+   {
+    "net": "at_m",
+    "src_region": "c",
+    "dst_region": "u",
+    "readers": [
+     "u_xq1.at"
+    ],
+    "width": 5,
+    "added_edges": 3
+   },
+   {
+    "net": "bb1",
+    "src_region": "u",
+    "dst_region": "c",
+    "readers": [
+     "u_bdc1.i_v",
+     "u_bdc1.i_first",
+     "u_bdc1.i_last",
+     "u_bdc1.i_fp4",
+     "u_bdc1.i_tag",
+     "u_bdc1.i_w",
+     "u_bdc1.i_x"
+    ],
+    "width": 1084,
+    "added_edges": 3
+   },
+   {
+    "net": "fb1",
+    "src_region": "u",
+    "dst_region": "c",
+    "readers": [
+     "u_h01.i_v",
+     "u_h01.i_first",
+     "u_h01.i_w",
+     "u_h01.i_x",
+     "u_h11.i_v",
+     "u_h11.i_first",
+     "u_h11.i_w",
+     "u_h11.i_x",
+     "u_qk1.i_v",
+     "u_qk1.i_last",
+     "u_qk1.i_tag",
+     "u_cap1.i_v",
+     "u_cap1.i_last",
+     "u_cap1.i_run_first",
+     "u_cap1.i_run_last",
+     "u_cap1.i_tag"
+    ],
+    "width": 534,
+    "added_edges": 3
+   },
+   {
+    "net": "pp1",
+    "src_region": "u",
+    "dst_region": "c",
+    "readers": [
+     "u_pub1.pp"
+    ],
+    "width": 5,
+    "added_edges": 3
+   },
+   {
+    "net": "pf1",
+    "src_region": "u",
+    "dst_region": "c",
+    "readers": [
+     "u_fp1.d"
+    ],
+    "width": 7,
+    "added_edges": 3
+   }
+  ],
+  "reschedule_note": "RESCHEDULE mode: cross-region loops; every child keeps its flat calendar (t = 0) and each landed net above arrives +3 edges later than in the flat parent: the compiler / the children's static calendars must absorb these",
+  "max_added_edges": 0
+ },
+ "warnings": [],
+ "landing_implementation": {
+  "chunk_bits": 24,
+  "direct_quarter_period_timing": false,
+  "compensated_phase_T": [
+   -0.75,
+   0.75
+  ],
+  "sample_age_T": [
+   1.25,
+   2.75
+  ],
+  "overwrite_gap_min_T": 1.25
+ },
+ "die_obligations": [
+  "drop one clock per region at the region's clock port (ck_<r>); each region builds its own local tree",
+  "communicating regions (landed pairs) need NO phase alignment inside the landing window at TT and FF",
+  "reset-hop pairs ['c-u', 't-u']: region skew within about +/-400 ps at TT and FF (1-bit single-cycle hops)",
+  "boundary ports are timed against the region in port_regions / the record; die links into them land on THAT clock"
+ ],
+ "audit": {
+  "ok": true,
+  "landings": 10,
+  "reset_hops": 3,
+  "fails": []
+ }
+}
