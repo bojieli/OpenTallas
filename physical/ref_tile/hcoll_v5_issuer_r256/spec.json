@@ -163,10 +163,10 @@
   "reason": "COLLPIN 10-18 (coordinator 0gd): the issuer's input pins cfg/start/start_pc are registered IN RTL (ot_hgi_coll_issuer_m PIN_REGS=1: cfg_q/cfgv_q/start_q/start_pc_q, +1 issue edge, lockstep SH 5); a synthesis pin stage would add a second edge. Outputs: raw done/fault/uop_v/uop_pc and tap_iteration are flop Q; raw busy = busy_c | start_q (two flops, one OR: keeps the programme target's occupancy edge identical); uop_d1/busy_d2/start_d2/busy_d3/done_d3/start_d3 are the leaf's own delay flops; tap_steps is the bank face flop AND uop_v. rst_n loads ONE synchroniser flop (rst_l)."
  },
  "job": {
-  "owner": "Claude:HBM-COLL256-KITS",
-  "branch": "claude/hbm-argmax-1019",
-  "tag": "r256",
-  "purpose": "HBM-COLL256-KITS (coordinator HANDOFF 0ky (2)(3)): the 256-row COLL issuer leaf ot_hgi_coll_issuer_m256 = v7 core (SAFE-DESIGN: metadata in 4 x 256x64 SRAM copies with a registered C/CT/CN lookahead, loop counters by id NL 32, 2 x 256x256 SRAMs per programme bank instead of 12 x 64x512; v6 ROWS 256 kept only as the miter reference). Bound by the d4g SW COLL parent at ROWS 256 (ARGMAX at VM_RT 74 = 212 rows; DS RS(144)).",
+  "owner": "Codex:CODEX-HBM-IDX-1021",
+  "branch": "codex/hbm-issuer256-1021",
+  "tag": "r256native",
+  "purpose": "Selected r15 exact issuer_m256 source (8-bit PC, ROWS256), existing macro kit recovered for mandatory first mapped native census; no128view alias.",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
    "rtl/lib/ot_rst_relay.sv",

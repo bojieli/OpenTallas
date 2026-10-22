@@ -1,0 +1,113 @@
+{
+  "schema": "opentallas.s81.topk.plana.v1",
+  "status": "HISTORICAL_MIRROR_LAYOUT_REFUSED_SOURCE_SUCCESSOR_NATIVE_REFUSED",
+  "envelope_um": [
+    907.2,
+    3283.2
+  ],
+  "quarter_um": [
+    648,
+    648
+  ],
+  "quarter_source": "f9753ee14",
+  "quarter_view_record": "0d4ba50ed",
+  "quarter_view": "physical/ref_tile/s81dvbk_sq_hq3/views/dsdv_bksel_q",
+  "quarter_origins_um": [
+    [
+      43.2,
+      43.2
+    ],
+    [
+      43.2,
+      864
+    ],
+    [
+      43.2,
+      1771.2
+    ],
+    [
+      43.2,
+      2592
+    ]
+  ],
+  "central_control_um": [
+    388.8,
+    172.8
+  ],
+  "central_glue_um": [
+    216,
+    172.8
+  ],
+  "central_origins_um": {
+    "control": [
+      43.2,
+      1555.2
+    ],
+    "glue": [
+      475.2,
+      1555.2
+    ]
+  },
+  "path_bundle_bits": {
+    "lane": 515,
+    "command": 66,
+    "credit": 1,
+    "status": 865,
+    "selected": 354
+  },
+  "path_bits_per_quarter": 1801,
+  "landing": {
+    "D": 2,
+    "E": 1,
+    "edges": 2,
+    "hops_each_way": 7,
+    "one_way_added_edges": 14,
+    "round_trip_added_edges": 28,
+    "chunk_bits": 12
+  },
+  "control": {
+    "closed_XD": 3,
+    "candidate_XD": 17,
+    "candidate_XDX": 15,
+    "closed_XR": 6,
+    "candidate_XR": 34,
+    "requires_new_view": true,
+    "reason": "Search step-A metadata delay must equal quarter command/status round trip; unchanged CLOSED selc2 is ineligible"
+  },
+  "data_flops": 151284,
+  "quarter_throughput": {
+    "lane_bits_per_edge": 515,
+    "score_bits": 16,
+    "scores_per_lane_word": 16,
+    "unit_rung_scores_per_edge": 8,
+    "credit_window": 4,
+    "source_rung_edge_budget": 16388
+  },
+  "native": "NOT_RUN",
+  "physical": "NOT_RUN",
+  "rung_added_edges_each_direction": 28,
+  "rung_landing_flops": 23184,
+  "regional_roots": 39,
+  "rung_forward_pin_to_pin_edges": 30,
+  "quarter_orientations": [
+    "MY",
+    "MY",
+    "R180",
+    "R180"
+  ],
+  "vd_added_edges": 1,
+  "vd_relay_point_um": [
+    475.2,
+    1728
+  ],
+  "credit_note": "DM4 remains bounded; added28 round-trip edges can stall selected output after4 credits. No zero-cost throughput claim; existing production-shape bench measures it.",
+  "actual_generated_landing_flops": {
+    "landing": 238532,
+    "pads": 0,
+    "reset": 509
+  },
+  "geometry_scope": "Literal hard-rectangle fit and pin/station centerline reach only. Actual cell fences, routed detours, clock trees, PG phase and congestion remain unqualified.",
+  "geometry_status": "PASS",
+  "geometry_max_um": 388.8,
+  "current_west_model": "west_paths.json"
+}

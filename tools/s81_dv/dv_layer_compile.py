@@ -571,7 +571,7 @@ class Prog:
         for row in r.get('rows', []):
             row = dict(row)
             if row['eng'] in (ENG['VN'], ENG['VS'], ENG['GUNIT']) and remap and not row.get('raw_arg'):
-                row['tix'] = remap[row['arg'] & 0x7F]
+                row['tix'] = remap[row.get('template_index', row['arg'] & 0x7F)]
                 row['arg'] = (row['arg'] & ~0x7F) | (row['tix'] & 0x7F)
             row.setdefault('done', row['issue'] + SEQ['done_v'])
             if r.get('atomic'):
