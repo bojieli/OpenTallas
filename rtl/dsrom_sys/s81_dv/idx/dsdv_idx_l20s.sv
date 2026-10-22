@@ -252,7 +252,8 @@ module dsdv_idx_tx_n32 #(
     (* keep = "true" *) reg [31:0] shs;      // [8 l + c]: lane l one-hot for m_wd[32 c +: 32]
     (* keep = "true" *) reg [3:0]  scl_m, scl_w;
     (* keep = "true" *) reg [15:0] eph;      // e_lo[32 c +: 32] load
-    (* keep = "true" *) reg [15:0] okk;      // the CTL (o_ctl) copies, see the job block
+    (* keep = "true" *) reg [16:0] okk;      // [16]: second sn copy (t/u census okk[12] 34 loads)
+         // the CTL (o_ctl) copies, see the job block
     always @(posedge ck) begin : g_pre
         integer l_, c_;
         for (l_ = 0; l_ < 4; l_ = l_ + 1) begin
@@ -265,7 +266,7 @@ module dsdv_idx_tx_n32 #(
         eph <= {16{n_ep0}};
     end
     always @(posedge ck or negedge rl[2])
-        if (!rl[2]) okk <= 16'd0; else okk <= {16{n_octl}};
+        if (!rl[2]) okk <= 17'd0; else okk <= {17{n_octl}};
 
     reg [7:0] fc_set, fc;
 
@@ -481,7 +482,11 @@ module dsdv_idx_tx_n32 #(
         end
         if(okk[10])nx_tc=0;else if(armed&&tc!=16'hffff)nx_tc=tc+16'd1;
         if(okk[11])nx_rc=0;else if(armed&&g_on&&!done)nx_rc=(rc==0)?j_r-3'd1:rc-3'd1;
-        if(okk[12])nx_sn=0;else if(armed&&g_on&&!done&&slot_q)nx_sn=sn+12'd1;
+        begin
+            nx_sn=(armed&&g_on&&!done&&slot_q)?sn+12'd1:sn;
+            if(okk[12])nx_sn[5:0]=6'd0;
+            if(okk[16])nx_sn[11:6]=6'd0;
+        end
         // staging: HDR first, else pop / flush
         if (armed && !hdr_q && !okk[8]) begin
             nx_d_h = 1'b1; nx_bq_n = 3'd1; nx_bix = 2'd0; nx_hdr_q = 1'b1; nx_lcur = j_hb;
