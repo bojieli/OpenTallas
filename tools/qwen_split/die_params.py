@@ -199,6 +199,12 @@ def gen_params(insts, hr_rows, image=IMAGE):
         if NATIVE_MASTER not in masters or SF_MASTER not in masters:
             raise ValueError('head prepare requires the actual source-complete native and OVL face masters')
         out.setdefault(NATIVE_MASTER, {}).update(HEAD_PREP=1, NU=nu)
+        qa = os.environ.get('OT_QWEN_NATIVE_QB_ALIGN', '0')
+        if qa not in ('0', '1'):
+            raise ValueError('OT_QWEN_NATIVE_QB_ALIGN must be 0 (selected legacy) or 1 (qualification candidate)')
+        if qa == '1':
+            out[NATIVE_MASTER]['QB_ALIGN'] = 1
+            rec['native_qbank_alignment'] = dict(QB_ALIGN=1, scope='source qualification candidate; matching physical view and booking required')
         # SQ-C2-N59 svc5/5b harden the existing receive-first/local-decode
         # implementation. Carry the selected child's parameters into its parent.
         if os.environ.get('OT_QWEN_NATIVE_SVC5', '0') == '1':
@@ -286,6 +292,8 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
             fails += dhobs_check(mods[mst])
             if prm.get(mst, {}).get('NU') != tt_params.get('NU'):
                 fails.append(f'{mst}.NU {prm.get(mst, {}).get("NU")} != {TT_MASTER}.NU {prm.get(TT_MASTER, {}).get("NU")}')
+        if mst == NATIVE_MASTER and os.environ.get('OT_QWEN_NATIVE_QB_ALIGN', '0') == '1' and prm.get(mst, {}).get('QB_ALIGN') != 1:
+            fails.append(f'{mst}: selected aligned qbank candidate requires explicit QB_ALIGN 1')
         tp = trapped_params(mods[mst])
         if not tp:
             continue
