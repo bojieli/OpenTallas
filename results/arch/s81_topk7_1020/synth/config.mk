@@ -1,0 +1,24 @@
+export DESIGN_NICKNAME = s81_topk7_hq
+export DESIGN_NAME = dsdv_bksel_q
+export PLATFORM = asap7
+export VERILOG_FILES = /src/rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv /src/rtl/hdc/ot_hdc_prefix.sv /src/rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv /src/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv /src/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv /src/rtl/hdc/v41x/ot_hdc_v41x_sel.sv /src/rtl/common/ot_fwd_link_stage.sv /src/rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv /src/rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv /src/rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv /src/rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv /src/rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv /src/rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv /src/rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv /src/rtl/lib/ot_sram_showahead_1r1w.sv /src/rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_bb.v /src/rtl/lib/ot_rst_relay.sv /src/rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_hist_bank.sv /src/rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_hq_parts.sv /src/rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_hq_slice.sv /src/rtl/dsrom_sys/s81_ph/ot_s81ph_hq_tile.sv
+export VERILOG_DEFINES = -DSYNTHESIS -DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_HQ
+export SDC_FILE = /work/clock.sdc
+export SYNTH_REPEATABLE_BUILD = 1
+export SYNTH_HIERARCHICAL = 0
+export SYNTH_MEMORY_MAX_BITS = 65536
+export CORNER = TC
+export ADDER_MAP_FILE = 
+export ASAP7_USE_VT = RVT
+export NUM_CORES = 4
+export OT_KEEP_PIN_REGS = 1
+export SYNTH_CANONICALIZE_TCL = /src/physical/common_flow/ot_keep_regs.tcl
+export ADDITIONAL_LIBS = /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_tt.lib /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc_tt.lib
+export ADDITIONAL_LEFS = /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.lef /src/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.lef
+export OT_RST_LAND = 1
+export OT_RST_LAND_STAGES = 2
+export OT_PIN_REGS_CLOCK = ck
+export OT_PIN_REGS_RESET_PORTS = rst
+export OT_RST_COPIES_MAX = 32
+export OT_RST_LAND_COPIES = rst=160
+export OT_RST_LAND_FIRST_COPIES = rst=8
