@@ -2838,7 +2838,7 @@
   ],
   "finding": "Frontend consumes source and generated interface SV declarations, not child archives. Final make must link the 35 exact real implementation archives and verify they remain unchanged. Interface compatibility alone is not functional qualification.",
   "preserved": "Admitted frontend and runner unchanged. Partial EP9 stage is incomplete and no replacement frontend exists.",
-  "prior_exact_vehicle_mapping": "../current_revision/kv_rope_current_exact.json",
+  "prior_exact_vehicle_mapping": "../kv_r17_current/datapath_current_mapping.json",
   "link_checks_required": [
     "all child archive SHA256 values still equal libraries_before.json after make",
     "final binary SHA256",
