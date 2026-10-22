@@ -1,0 +1,40 @@
+{
+ "cases": [
+  {
+   "mut": 11,
+   "rc": 1,
+   "pass_expected": true,
+   "line": "S2_FAIL tile=g output=rsp edge=44 side=0 mut=11 dut=92c8e4a10db515087c093176e56d57270258fcb70bf5fb534d3ad10f26232368b350b0aa579b5d0e512ce2d1832bc4396ce71c675355d4860ae4206d5f630c1969bd90188dd17a81d7cb74010870f553f742e16e79039f821e36da442ed8da78e4f7869a26390e5d6b17597683da437df4756ea468416c13ff783666fe2af4a700010001 ref=a5c00004a5c00004a5c00004a5c00004a5c00004a5c00004a5c00004a5c00004a5c00003a5c00003a5c00003a5c00003a5c00003a5c00003a5c00003a5c00003a5c00002a5c00002a5c00002a5c00002a5c00002a5c00002a5c00002a5c00002a5c00001a5c00001a5c00001a5c00001a5c00001a5c00001a5c00001a5c0000100010001"
+  }
+ ],
+ "mutants": {
+  "9": "krsp exit copy: data bit 0 inverted",
+  "10": "rsp exit copy: t bit 0 inverted",
+  "11": "ring read slot = write slot wp (same-address collision)",
+  "12": "ring read one slot later (payload one edge late)",
+  "13": "ring reset-zero removed (z = 1)",
+  "14": "ring branch 3 macro 7 write data bit 0 inverted"
+ },
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "sources": {
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s2.sv": "591406c831dd4b565a98725bd275fc627b1ce97f47a5cfa869943f2320d4a46b",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6.sv": "1eee76d10833a4df72b82fee3c56c7acd62b2b42a76b9c8563e8ccc17c74b875",
+  "physical/asap7_memory_macros/ot_sram_1r1w_4x32_m1_p192_grp_rsp/ot_sram_1r1w_4x32_m1_p192_grp_rsp.v": "94c0b7a1c85e2975132b94ede7de84afb26dfe985f97f69766b9f715664729e0",
+  "rtl/qwen_sys/static_kv_die_20261017/tb/qkd_kvs_grp_s2_ref.sv": "d7575fbb65f725ea9ffdb97302aac65680e99cc0904d31e84fba7602e3ca6e0f",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_cfault_tree.sv": "36b8433daf480bcaaacce9b36c56afbc09974dbdf449f4fbc2e8fe9ee0968efb",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_front_cal.sv": "ffe9e0047f35e66e750dc91648089be1ba2d1c31043fd50a214387a1acd4be15",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv": "2712faf10864334991cfdee2970065b422d35e50921d7181ab055452f53915af",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_lvl_land.sv": "d76c2315aa206a5d88818f05261eba4eda34917f2ccd338dfff34c7656efe76b",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_boot_cdc.sv": "da3f8210eeb2d8407d36024d1dc238d0bacf61eb79d46cf8d22aee321d0bb453",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv": "d296cd7517d602033da253e158827035506e7b9abf4fd103bbb83586553127d9",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv": "54e52aa0e901080a940eb4911b86baa70821c69bdae7982d7e4ebbc30ed1ae41",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv": "2e0c93c17c26418d1f0be1c2afe089d29a5ce332bd3807295ff128e0c8f62ce2",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_ownership.sv": "d1658764d09ede5b50022a7bdfdfa3ddcc079734dac069018a21e02cdd892c51",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_phase_launch.sv": "f4785327056c4586f8719a144859961cb98c4286a72e640a7c81664b7b91f6c3",
+  "/srv/opentallas-scratch/claude/kv-grp6/bench1/m11/ot_async_fifo_monitor_reset_qualified.sv": "8cb1e8518bc2295a6e7123609db8f5f276bcd05b52d232861e5a5299d8882803",
+  "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v": "6319cdaa8f0801336233fa6f9f35c05be298be5fb4620fa9d85791603366f477"
+ },
+ "arbitrary_init_qualification": "random reset2 seed1020 x-initial unique; SRAM OT_MEM_NO_INIT (ring + rows); legal written rows; simulation-only FIFO monitor arms on observed reset"
+}

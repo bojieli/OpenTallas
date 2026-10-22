@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.s81_dv.xs_place.v1",
+ "op": {
+  "id": "L0.attn.wq_b",
+  "op": "attn.wq_b",
+  "cls": "field",
+  "start": 1249.5,
+  "end": 2194.4,
+  "cycles": 944.9,
+  "delta": -95.0,
+  "critical": true
+ },
+ "slice": "u_s_2N",
+ "slice_index": 5,
+ "phases_die_wide": 22,
+ "mats": [
+  {
+   "mat": "wq_b",
+   "fmt": "fp8",
+   "K": 1280,
+   "nseg": 3,
+   "rows_per_phase": 8,
+   "phases": 22,
+   "rows_per_frame": [
+    86,
+    86,
+    85,
+    85,
+    85,
+    85
+   ],
+   "calendar": "measured_class",
+   "tie": "fixture",
+   "note": null
+  }
+ ],
+ "bench": null,
+ "images": "python3 tools/s81_dv/layer_prog/xs_place.py frame --frame <inst> --out DIR (all phases of the frame field; gen --op OP for one phase's bench vectors)"
+}

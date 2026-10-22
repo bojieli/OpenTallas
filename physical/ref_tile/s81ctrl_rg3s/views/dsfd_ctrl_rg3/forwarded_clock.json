@@ -1,0 +1,528 @@
+{
+  "schema": "opentallas.forwarded_clock.routed.v1",
+  "corners": {
+    "ss": {
+      "corner": "ss",
+      "input_pin": "clk",
+      "output_pin": "ck_o",
+      "driver_cell": "BUFx2_ASAP7_75t_R",
+      "driver_instance": "output3803",
+      "direct_root_buffer": false,
+      "chain": [
+        {
+          "cell": "BUFx2_ASAP7_75t_R",
+          "instance": "output3803"
+        },
+        {
+          "cell": "INVx3_ASAP7_75t_R",
+          "instance": "u_ot_pr_core.u_ck1/_0_"
+        },
+        {
+          "cell": "INVx3_ASAP7_75t_R",
+          "instance": "u_ot_pr_core.u_ck0/_0_"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_leaf_21_ot_ckkm_5_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_2_3_0_ot_ckkm_5_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_0_ot_ckkm_5_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "ot_ckkm_5"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_3_6_0_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_3_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_2_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_1_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_0_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_2_3_0_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_14_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_13_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_12_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_1_1_1_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_1_1_0_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_0_clk"
+        }
+      ],
+      "timing_sense": "positive_unate",
+      "root_waveform_ps": [
+        0.0,
+        416.66650851770913
+      ],
+      "output_rise_input_edge": "rise",
+      "output_fall_input_edge": "fall",
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 906.42804,
+        "arrival_min_rise": 882.323242,
+        "arrival_max_fall": 949.286255,
+        "arrival_min_fall": 926.20813,
+        "slew_max_rise": 621.589722,
+        "slew_max_fall": 452.752838
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 895.036621,
+        "arrival_min_rise": 870.931702,
+        "arrival_max_fall": 937.9158929999999,
+        "arrival_min_fall": 914.8377679999999,
+        "slew_max_rise": 620.986877,
+        "slew_max_fall": 451.92627
+      },
+      "input_absolute_ps": {
+        "arrival_max_rise": 0.0,
+        "arrival_min_rise": 0.0,
+        "arrival_max_fall": 416.666504,
+        "arrival_min_fall": 416.666504,
+        "slew_max_rise": 0.0,
+        "slew_max_fall": 0.0
+      },
+      "output_absolute_ps": {
+        "arrival_max_rise": 906.42804,
+        "arrival_min_rise": 882.323242,
+        "arrival_max_fall": 1365.952759,
+        "arrival_min_fall": 1342.874634,
+        "slew_max_rise": 621.589722,
+        "slew_max_fall": 452.752838
+      },
+      "driver_absolute_ps": {
+        "arrival_max_rise": 895.036621,
+        "arrival_min_rise": 870.931702,
+        "arrival_max_fall": 1354.582397,
+        "arrival_min_fall": 1331.504272,
+        "slew_max_rise": 620.986877,
+        "slew_max_fall": 451.92627
+      },
+      "input_phase_normalized_ps": {
+        "arrival_max_rise": 0.0,
+        "arrival_min_rise": 0.0,
+        "arrival_max_fall": -4.517709157880745e-06,
+        "arrival_min_fall": -4.517709157880745e-06,
+        "slew_max_rise": 0.0,
+        "slew_max_fall": 0.0
+      },
+      "output_phase_normalized_ps": {
+        "arrival_max_rise": 906.42804,
+        "arrival_min_rise": 882.323242,
+        "arrival_max_fall": 949.2862504822908,
+        "arrival_min_fall": 926.2081254822908,
+        "slew_max_rise": 621.589722,
+        "slew_max_fall": 452.752838
+      },
+      "driver_phase_normalized_ps": {
+        "arrival_max_rise": 895.036621,
+        "arrival_min_rise": 870.931702,
+        "arrival_max_fall": 937.9158884822907,
+        "arrival_min_fall": 914.8377634822907,
+        "slew_max_rise": 620.986877,
+        "slew_max_fall": 451.92627
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 11.391419000000042,
+        "arrival_min_rise": 11.391540000000077,
+        "arrival_max_fall": 11.370362000000114,
+        "arrival_min_fall": 11.370362000000114,
+        "slew_max_rise": 0.6028450000000021,
+        "slew_max_fall": 0.8265680000000089
+      },
+      "measured_at": "physical output STA terminal including routed SPEF; propagated original primary clock",
+      "odb_sha256": "784a8115fab4a31b4c866b301430aa72a49d4cdc8ea16d43284886b1a7db6b3a",
+      "spef_sha256": "675f551bbff6ff6d6d68e0dcde285b771a1c2be42a7e627ba6bcb84eb62ce154",
+      "native_signoff_sdc_sha256": "89ae04c2ec7b2d23016c872ba8112236645cec961c0814a5d6d5fa5831fd49ba",
+      "native_combinational_lib_sha256": "99c5324af5e55d6bd05212116b78498b75ed2e10d29fe03f7d4b4a2cab0d6b8b",
+      "sequential_etm_before_merge_sha256": "2dc4a753f0a8ff11353cf9984b53a87ca7745082df62734e14fdcbc42c39941d",
+      "exported_etm_sha256": "3e1c3d39a54cda38b85b3c1ebacaad86fa046d44bd8efee5b0bd20a444f187e0",
+      "extraction_tcl_sha256": "4f50eaea22f6994a3fd67752b10a7407ef2c9395b2e7611b8382bd4189574e01"
+    },
+    "ff": {
+      "corner": "ff",
+      "input_pin": "clk",
+      "output_pin": "ck_o",
+      "driver_cell": "BUFx2_ASAP7_75t_R",
+      "driver_instance": "output3803",
+      "direct_root_buffer": false,
+      "chain": [
+        {
+          "cell": "BUFx2_ASAP7_75t_R",
+          "instance": "output3803"
+        },
+        {
+          "cell": "INVx3_ASAP7_75t_R",
+          "instance": "u_ot_pr_core.u_ck1/_0_"
+        },
+        {
+          "cell": "INVx3_ASAP7_75t_R",
+          "instance": "u_ot_pr_core.u_ck0/_0_"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_leaf_21_ot_ckkm_5_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_2_3_0_ot_ckkm_5_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_0_ot_ckkm_5_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "ot_ckkm_5"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_3_6_0_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_3_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_2_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_1_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_0_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_2_3_0_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_14_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_13_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_12_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_1_1_1_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_1_1_0_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_0_clk"
+        }
+      ],
+      "timing_sense": "positive_unate",
+      "root_waveform_ps": [
+        0.0,
+        416.66650851770913
+      ],
+      "output_rise_input_edge": "rise",
+      "output_fall_input_edge": "fall",
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 487.580139,
+        "arrival_min_rise": 471.820648,
+        "arrival_max_fall": 493.7468870000001,
+        "arrival_min_fall": 477.83087100000006,
+        "slew_max_rise": 271.283112,
+        "slew_max_fall": 232.731476
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 476.242645,
+        "arrival_min_rise": 460.483154,
+        "arrival_max_fall": 482.438415,
+        "arrival_min_fall": 466.52233900000004,
+        "slew_max_rise": 269.836334,
+        "slew_max_fall": 231.045898
+      },
+      "input_absolute_ps": {
+        "arrival_max_rise": 0.0,
+        "arrival_min_rise": 0.0,
+        "arrival_max_fall": 416.666504,
+        "arrival_min_fall": 416.666504,
+        "slew_max_rise": 0.0,
+        "slew_max_fall": 0.0
+      },
+      "output_absolute_ps": {
+        "arrival_max_rise": 487.580139,
+        "arrival_min_rise": 471.820648,
+        "arrival_max_fall": 910.413391,
+        "arrival_min_fall": 894.497375,
+        "slew_max_rise": 271.283112,
+        "slew_max_fall": 232.731476
+      },
+      "driver_absolute_ps": {
+        "arrival_max_rise": 476.242645,
+        "arrival_min_rise": 460.483154,
+        "arrival_max_fall": 899.104919,
+        "arrival_min_fall": 883.188843,
+        "slew_max_rise": 269.836334,
+        "slew_max_fall": 231.045898
+      },
+      "input_phase_normalized_ps": {
+        "arrival_max_rise": 0.0,
+        "arrival_min_rise": 0.0,
+        "arrival_max_fall": -4.517709157880745e-06,
+        "arrival_min_fall": -4.517709157880745e-06,
+        "slew_max_rise": 0.0,
+        "slew_max_fall": 0.0
+      },
+      "output_phase_normalized_ps": {
+        "arrival_max_rise": 487.580139,
+        "arrival_min_rise": 471.820648,
+        "arrival_max_fall": 493.7468824822909,
+        "arrival_min_fall": 477.8308664822909,
+        "slew_max_rise": 271.283112,
+        "slew_max_fall": 232.731476
+      },
+      "driver_phase_normalized_ps": {
+        "arrival_max_rise": 476.242645,
+        "arrival_min_rise": 460.483154,
+        "arrival_max_fall": 482.43841048229086,
+        "arrival_min_fall": 466.5223344822909,
+        "slew_max_rise": 269.836334,
+        "slew_max_fall": 231.045898
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 11.337493999999992,
+        "arrival_min_rise": 11.337493999999992,
+        "arrival_max_fall": 11.308472000000052,
+        "arrival_min_fall": 11.308532000000014,
+        "slew_max_rise": 1.4467779999999948,
+        "slew_max_fall": 1.6855779999999925
+      },
+      "measured_at": "physical output STA terminal including routed SPEF; propagated original primary clock",
+      "odb_sha256": "784a8115fab4a31b4c866b301430aa72a49d4cdc8ea16d43284886b1a7db6b3a",
+      "spef_sha256": "675f551bbff6ff6d6d68e0dcde285b771a1c2be42a7e627ba6bcb84eb62ce154",
+      "native_signoff_sdc_sha256": "ddffb8336e505686e8d8cfa1aaec096d53d3de3500fb5227ce21c735dbe9e744",
+      "native_combinational_lib_sha256": "a7d135b17356752fbd8d9746a5a0d14b74874305b7e9aa816b5103b53e7ee505",
+      "sequential_etm_before_merge_sha256": "b1f4c0349dd421014b36cdee13fcb2966e5290c5967f5e69def63fc514194035",
+      "exported_etm_sha256": "12854d7afcbbe823a5b77c5bc012e49eeec7a857aa4c4f537d70df2376050f92",
+      "extraction_tcl_sha256": "ab8bd3094d692dc555c9f28d8d3028781bc5a0aa4e04704cdc137df585cbc155"
+    },
+    "tt": {
+      "corner": "tt",
+      "input_pin": "clk",
+      "output_pin": "ck_o",
+      "driver_cell": "BUFx2_ASAP7_75t_R",
+      "driver_instance": "output3803",
+      "direct_root_buffer": false,
+      "chain": [
+        {
+          "cell": "BUFx2_ASAP7_75t_R",
+          "instance": "output3803"
+        },
+        {
+          "cell": "INVx3_ASAP7_75t_R",
+          "instance": "u_ot_pr_core.u_ck1/_0_"
+        },
+        {
+          "cell": "INVx3_ASAP7_75t_R",
+          "instance": "u_ot_pr_core.u_ck0/_0_"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_leaf_21_ot_ckkm_5_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_2_3_0_ot_ckkm_5_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_0_ot_ckkm_5_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "ot_ckkm_5"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_3_6_0_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_3_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_2_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_1_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_0_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_2_3_0_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_14_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_13_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "delaybuf_12_core_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_1_1_1_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_1_1_0_clk"
+        },
+        {
+          "cell": "BUFx24_ASAP7_75t_R",
+          "instance": "clkbuf_0_clk"
+        }
+      ],
+      "timing_sense": "positive_unate",
+      "root_waveform_ps": [
+        0.0,
+        416.66650851770913
+      ],
+      "output_rise_input_edge": "rise",
+      "output_fall_input_edge": "fall",
+      "units": "ps",
+      "clk_in_to_clk_out_ps": {
+        "arrival_max_rise": 639.939636,
+        "arrival_min_rise": 620.648926,
+        "arrival_max_fall": 656.5115969999999,
+        "arrival_min_fall": 637.1982419999999,
+        "slew_max_rise": 391.413452,
+        "slew_max_fall": 312.174561
+      },
+      "driver_y_ps": {
+        "arrival_max_rise": 628.572388,
+        "arrival_min_rise": 609.281616,
+        "arrival_max_fall": 645.1705319999999,
+        "arrival_min_fall": 625.857178,
+        "slew_max_rise": 390.43692,
+        "slew_max_fall": 310.949371
+      },
+      "input_absolute_ps": {
+        "arrival_max_rise": 0.0,
+        "arrival_min_rise": 0.0,
+        "arrival_max_fall": 416.666504,
+        "arrival_min_fall": 416.666504,
+        "slew_max_rise": 0.0,
+        "slew_max_fall": 0.0
+      },
+      "output_absolute_ps": {
+        "arrival_max_rise": 639.939636,
+        "arrival_min_rise": 620.648926,
+        "arrival_max_fall": 1073.178101,
+        "arrival_min_fall": 1053.864746,
+        "slew_max_rise": 391.413452,
+        "slew_max_fall": 312.174561
+      },
+      "driver_absolute_ps": {
+        "arrival_max_rise": 628.572388,
+        "arrival_min_rise": 609.281616,
+        "arrival_max_fall": 1061.837036,
+        "arrival_min_fall": 1042.523682,
+        "slew_max_rise": 390.43692,
+        "slew_max_fall": 310.949371
+      },
+      "input_phase_normalized_ps": {
+        "arrival_max_rise": 0.0,
+        "arrival_min_rise": 0.0,
+        "arrival_max_fall": -4.517709157880745e-06,
+        "arrival_min_fall": -4.517709157880745e-06,
+        "slew_max_rise": 0.0,
+        "slew_max_fall": 0.0
+      },
+      "output_phase_normalized_ps": {
+        "arrival_max_rise": 639.939636,
+        "arrival_min_rise": 620.648926,
+        "arrival_max_fall": 656.5115924822908,
+        "arrival_min_fall": 637.1982374822908,
+        "slew_max_rise": 391.413452,
+        "slew_max_fall": 312.174561
+      },
+      "driver_phase_normalized_ps": {
+        "arrival_max_rise": 628.572388,
+        "arrival_min_rise": 609.281616,
+        "arrival_max_fall": 645.1705274822907,
+        "arrival_min_fall": 625.8571734822908,
+        "slew_max_rise": 390.43692,
+        "slew_max_fall": 310.949371
+      },
+      "output_net_delta_ps": {
+        "arrival_max_rise": 11.367247999999904,
+        "arrival_min_rise": 11.367309999999975,
+        "arrival_max_fall": 11.341065000000071,
+        "arrival_min_fall": 11.34106399999996,
+        "slew_max_rise": 0.9765320000000202,
+        "slew_max_fall": 1.2251899999999978
+      },
+      "measured_at": "physical output STA terminal including routed SPEF; propagated original primary clock",
+      "odb_sha256": "784a8115fab4a31b4c866b301430aa72a49d4cdc8ea16d43284886b1a7db6b3a",
+      "spef_sha256": "675f551bbff6ff6d6d68e0dcde285b771a1c2be42a7e627ba6bcb84eb62ce154",
+      "native_signoff_sdc_sha256": "25647693d7ce822736b1386a60c965fbeb0fdba83d19ff7fc7d72d346d13d9e4",
+      "native_combinational_lib_sha256": "8b247b41356bc17069f29a8fabfe18b4eac96aaf2085b31a1f46ec03e8cb1d98",
+      "sequential_etm_before_merge_sha256": "456bbc3dcfdbeffe909cf460b9dcb18c7199f2f6c10d26d37b06d86b9c4942c3",
+      "exported_etm_sha256": "041f79302814237cf827ec9ec9cee66ecef8b45ce6d141ccc2ac1590e3a720d2",
+      "extraction_tcl_sha256": "cbd1ba5022a64c650a15fb62a7a8a514d12942015fde4f3bacae04a54e237316"
+    }
+  },
+  "scope": "clock arc only; actual communicating-pair setup/hold remains a die check"
+}

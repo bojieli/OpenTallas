@@ -1,0 +1,35 @@
+{
+  "status": "DRAFT_BLOCKED_ON_HELPER_QUALIFICATION",
+  "service": "closure-loop.service",
+  "main_pid": 2155630,
+  "observed_kill_mode": "process",
+  "restart": "always",
+  "restart_delay_seconds": 30,
+  "stop_timeout_minutes": 45,
+  "runtime_current_sha256": "20a15b0850a504ce57adc75fda9450e5acec9f7340c6114bf50c8cb1990b28c6",
+  "published_preupgrade_sha256": "eb9b38b532f68293d5a62fc9bdd0cbf66b97ad0ff37ee26cf4c0d5fe6332bc3c",
+  "semantic_live_main_comparison": "Python AST identical;32-line comments/whitespace-only delta preserved in daemon_live_vs_main_1555.patch",
+  "prerequisites": [
+    "Complete original readset/frozen overlays/approved deterministic transforms required by helper",
+    "Focused and appropriate full paired suite NEW0",
+    "Published exact helper source and runtime backups before install",
+    "No linked READY record before actual upgraded dispatcher verification"
+  ],
+  "steps": [
+    "Capture fresh active job JSON identities and remote stage host/run/unit/start PID identities, foreground transports and child exporter processes",
+    "Durably copy jobs/state and old runtime helper files; keep daemon.lock/state roots, no restore of stale snapshot over newer state",
+    "Atomically install exact published helper/dependency files preserving modes, verify all file hashes",
+    "Recheck systemd MainPID identity, KillMode=process and Restart=always; signal ONLY main with systemctl --user kill --kill-who=main --signal=SIGTERM closure-loop.service",
+    "Existing request_stop/drain stops dispatch, lets in-flight steps and recovery/deferred merge finish/save, logs DRAINED; no force/group kill or manual timeout",
+    "Let Restart=always start new process; require new PID/start time after exact source install and normal daemon lock acquisition",
+    "Verify actual running command/source hashes/new feature dispatch, reattachment to persisted jobs and unchanged active remote identities (allow measured completed stages), preserve orphan exporter PIDs/foreground transports",
+    "Only after state/job continuity verified allow dry-run of linked manifest; apply/create READY record remains separately gated by exact runtime/readset verification"
+  ],
+  "prohibited": [
+    "systemctl stop/restart group kill",
+    "SIGKILL/killall/pattern kill",
+    "reset/rewrite old CANCELLED jobs",
+    "READY linked record under old running dispatcher",
+    "changing or killing active remote scopes/containers"
+  ]
+}

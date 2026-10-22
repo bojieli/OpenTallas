@@ -1,0 +1,8 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job dscoll_lane_e_s12g-dscoll_lane_e_s12g-fbd8694b5 bench bench_cred12_reach_m8 host ot-epyc5 run /srv/opentallas-scratch2/claude/closure-loop/dscoll_lane_e_s12g-dscoll_lane_e_s12g-fbd8694b5 log cl/bench_cred12_reach_m8.a1b1.log captured 2026-10-21T14:22:11-07:00
+# fail_regex '(^COLL_REACH7 FAIL errors=|COLL FIFO group state differs|COLL WRL )'
+Verilator 5.050 2026-07-01 rev v5.050
+[63000] %Fatal: ot_s81ph_link_ep_safe4.sv:688: Assertion failed in tb_coll_reach7.variant[1].dut7.e.u.u_ep.g_fifo_safe.g_address[0]: COLL FIFO group state differs group0
+%Error: rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep_safe4.sv:688: Verilog $stop
+Aborting...
+sim exit 1

@@ -1,0 +1,41 @@
+Verilator 5.050 2026-07-01 rev v5.050
+positive OK (pass)
+N59MU_PASS ops=14 users=4 CMD u0..3 6/3/2/3 Q 192/96/64/96 (every beat tagged {seq,user}); results 32/op matched, 1 completion/op, KVN identity tagged; user-0 == NU 1 on 1434 edges
+ret_bad OK (pass)
+N59MU_FAULT first at cycle 893 op 3 user 2
+N59MU_ERR cycle 1095 op 4: user-0 tx record != NU 1
+N59MU_ERR cycle 1099 op 4: user-0 tx record != NU 1
+N59MU_ERR cycle 1100 op 4: user-0 tx record != NU 1
+mut5_m7 OK (mutant fails)
+N59MU_FAIL mut5_m7
+N59MU_ERR cycle 1327 op 5: KVN x3 identity epoch / token
+N59MU_ERR cycle 1328 op 5: KVN x3 identity epoch / token
+N59MU_ERR cycle 1329 op 5: KVN x3 identity epoch / token
+N59MU_ERR cycle 1330 op 5: KVN x3 identity epoch / token
+mut6_seq OK (mutant fails)
+N59MU_FAIL mut6_seq
+N59MU_ERR cycle 2527 op 10: KVN x3 identity epoch / token
+N59MU_ERR cycle 2528 op 10: KVN x3 identity epoch / token
+N59MU_ERR cycle 2529 op 10: KVN x3 identity epoch / token
+N59MU_ERR cycle 2530 op 10: KVN x3 identity epoch / token
+regress_nu1 OK
+positive OK (pass)
+N59DV_PASS x3=4 tx=33(1 CMD+32 Q) ar=32 bit-exact vs OLD (+1/+1/+2 edges), native_ret every edge, done 214->215, emb group-1 words=65 at cmd+6..+70
+bad_q OK (pass)
+N59DV_ERR cycle 125: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 126: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 127: native_ret(NEW,t+1) != native_ret(OLD,t)
+mut1_q_lane OK (mutant fails)
+N59DV_ERR cycle 129: native_tx_payload differs from OLD (or not +1 edge)
+N59DV_ERR cycle 129: Q beat != element values (packing)
+N59DV_ERR cycle 130: native_tx_payload differs from OLD (or not +1 edge)
+mut2_kv_addr OK (mutant fails)
+N59DV_ERR cycle 31: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 32: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 33: native_ret(NEW,t+1) != native_ret(OLD,t)
+mut3_emb_word OK (mutant fails)
+N59DV_ERR cycle 298: embedding code word
+N59DV_ERR cycle 299: embedding code word
+N59DV_ERR cycle 300: embedding code word
+N59MU_BENCH_EXIT 0
+n59mu2 rc=0

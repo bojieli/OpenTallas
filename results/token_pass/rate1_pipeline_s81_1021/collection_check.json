@@ -1,0 +1,39 @@
+{
+  "result": "PASS",
+  "checks": [
+    "plan hash",
+    "raw run log hash",
+    "36-source manifest hash",
+    "positive/negative verdicts"
+  ],
+  "runs": [
+    {
+      "run": "ar_h001",
+      "result": "PASS",
+      "beats": 32000,
+      "last_cycle": 1252506,
+      "source_manifest": "0082618eddee7eb413d9604de68d857d24f5f2af0f5bd2f0aa262b13646c3181"
+    },
+    {
+      "run": "mtp_h001",
+      "result": "PASS",
+      "beats": 23040,
+      "last_cycle": 1516914,
+      "source_manifest": "0082618eddee7eb413d9604de68d857d24f5f2af0f5bd2f0aa262b13646c3181"
+    },
+    {
+      "run": "mtp_h120B",
+      "result": "PASS",
+      "beats": 5760,
+      "last_cycle": 1651144,
+      "source_manifest": "0082618eddee7eb413d9604de68d857d24f5f2af0f5bd2f0aa262b13646c3181"
+    },
+    {
+      "run": "neg_mtp_h001",
+      "result": "FAULT_AS_EXPECTED",
+      "beats": 1280,
+      "last_cycle": 37325,
+      "source_manifest": "0082618eddee7eb413d9604de68d857d24f5f2af0f5bd2f0aa262b13646c3181"
+    }
+  ]
+}

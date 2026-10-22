@@ -254,7 +254,7 @@ module tb_mtp_wave;
     function automatic [603:0] l0w(input integer n); integer kk; reg [73:0] id; begin kk = n % 160; id = IDN0 + n / 160;
         l0w = kk < 80 ? {id, 9'd127, 1'b0, kk == 79, 7'(kk), p2flit(2, kk)} : {id, 9'd65, 1'b0, kk == 159, 7'(kk - 80), p2flit(1, kk - 80)}; end
     endfunction
-    reg ps_v = 0, l1_v = 0, l0_v = 0; wire ps_r, l1_r, l0_r; integer p2_tx = 0, p2_rows = 0, p2_open = 0; reg [31:0] p2_s1 = 0, p2_s0 = 0;
+    reg ps_v = 0, l1_v = 0; wire ps_r, l1_r, l0_r, l0_v; integer p2_tx = 0, p2_rows = 0, p2_open = 0; reg [31:0] p2_s1 = 0, p2_s0 = 0;
     wire pr_rv; wire [593:0] pr_rd; wire [2:0] pr_ev; wire [5:0] p2l_ft;
     // primary end (board lane W4) and die B end (UCIe lane E4): the far lane ends of draft die A's adapters
     wire pP_lov, pP_lor, pP_liv, pP_lir, aP_lov, aP_lor, aP_liv, aP_lir, bB_lov, bB_lor, bB_liv, bB_lir, aB_lov, aB_lor, aB_liv, aB_lir;
@@ -283,6 +283,14 @@ module tb_mtp_wave;
     dsfd_coll_p2_ep #(.FWD_C(P2FC), .RET_C(P2RC)) u_cpe (.ck(fclk), .rst(rst_n), .c_sv(a_sv), .c_sr(a_sr), .c_sd(a_sd),
         .t_sv(ce_sv), .t_sd(ce_sd), .f_sg(ce_sg), .f_ov(ce_ov), .f_od(ce_od), .t_og(ce_og), .c_ov(a_ov), .c_or(a_or), .c_od(a_od));
     wire v0_v, v0_g; wire [603:0] v0_d;
+    // VM BE S-face is RL4: every valid beat transfers using ready from four
+    // cycles earlier, even when current ready is low. Keep payload progression
+    // on that transfer, as in the production BE producer.
+    reg [3:0] l0_ready_history = 0;
+    always @(posedge fclk)
+        if (!rst_n) l0_ready_history <= 0;
+        else l0_ready_history <= {l0_ready_history[2:0], l0_r};
+    assign l0_v = p2_open && p2_s0 < 160 * (p2_tx + 1) && l0_ready_history[3];
     dsfd_vm_p2_ep u_vpe (.ck(fclk), .rst(rst_n), .c_l0v(l0_v), .c_l0r(l0_r), .c_l0d(l0w(p2_s0)), .t_l0v(v0_v), .t_l0d(v0_d), .f_l0g(v0_g));
     wire q_l0v, q_l0g, q_l1v, q_l1g, q_sv, q_sg, q_ov, q_og, q_done, q_fault, q_corr; wire [603:0] q_l0d, q_l1d; wire [100:0] q_sd; wire [593:0] q_od;
     wv_relay #(.W(605), .N(P2FV)) r20 (.clk(fclk), .rst_n(rst_n), .d({v0_v, v0_d}), .q({q_l0v, q_l0d}));
@@ -310,9 +318,8 @@ module tb_mtp_wave;
         if (blk >= 0 && !p2_open && blk_t >= 0 && cyc >= blk_t) begin ps_v <= 1'b1; p2_open = 1; blk_t = -1; end
         if (ps_v && ps_r) begin ps_v <= 1'b0; end
         l1_v <= p2_open && p2_s1 + (l1_v && l1_r) < 80 * (p2_tx + 1);
-        l0_v <= p2_open && p2_s0 + (l0_v && l0_r) < 160 * (p2_tx + 1);
         if (l1_v && l1_r) p2_s1 <= p2_s1 + 1;
-        if (l0_v && l0_r) p2_s0 <= p2_s0 + 1;
+        if (l0_v) p2_s0 <= p2_s0 + 1;
         pr_done_q <= pr_ev[0];
         if (pr_ev[0] && !pr_done_q) done_n = done_n + 1;
         if (pr_ev[1]) fail("P2 core fault at the primary");
@@ -555,6 +562,10 @@ module wv_p2twin #(parameter integer LNK = 0) (input wire clk, rst_n, output reg
     reg cs_v = 0, c1_v = 0, c0_v = 0; wire cs_r, c1_r, c0_r, co_v; wire [593:0] co_d; wire t_done, t_fault, t_corr;
     integer starts = 0, s1 = 0, s0 = 0, received = 0, cyc = 0, t0 = 0, i, open = 0;
     integer tx_cyc [0:2];
+    reg [3:0] c0_ready_history = 0;
+    always @(posedge clk)
+        if (!rst_n) c0_ready_history <= 0;
+        else c0_ready_history <= {c0_ready_history[2:0], c0_r};
     generate if (LNK) begin : g_lnk
         wire l0v, l0g, l1v, l1g, sv, sg, ov, og; wire [603:0] l0d, l1d; wire [100:0] sd; wire [593:0] od;
         dsfd_vm_p2_ep vme (.ck(clk), .rst(rst_n), .c_l0v(c0_v), .c_l0r(c0_r), .c_l0d(l0w(s0)), .t_l0v(l0v), .t_l0d(l0d), .f_l0g(l0g));
@@ -580,13 +591,13 @@ module wv_p2twin #(parameter integer LNK = 0) (input wire clk, rst_n, output reg
     always @(negedge clk) if (rst_n) begin
         cs_v = starts < 3 && !open;
         c1_v = open && s1 < 80 * starts;
-        c0_v = open && s0 < 160 * starts;
+        c0_v = open && s0 < 160 * starts && (!LNK || c0_ready_history[3]);
     end
     always @(posedge clk) if (!rst_n) done <= 1'b0; else begin
         cyc <= cyc + 1;
         if (cs_v && cs_r) begin starts <= starts + 1; open <= 1; t0 <= cyc; end
         if (c1_v && c1_r) s1 <= s1 + 1;
-        if (c0_v && c0_r) s0 <= s0 + 1;
+        if (c0_v && (LNK || c0_r)) s0 <= s0 + 1;
         if (t_fault) begin $display("WAVE FAIL: P2 twin %0d fault", LNK); end
         if (co_v) begin
             if (co_d[81:8] !== IDN0 + received / 80 || co_d[7:1] !== 7'(received % 80)) $display("WAVE FAIL: P2 twin %0d row meta", LNK);

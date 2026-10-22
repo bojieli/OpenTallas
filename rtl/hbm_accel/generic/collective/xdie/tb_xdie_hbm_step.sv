@@ -24,6 +24,24 @@
 `ifndef XDIE_ROWS
  `define XDIE_ROWS 64
 `endif
+// TOK-FUNC-HBM-XDIE (10-21): DUT selection for the token-pass source assembly / die-netlist rerun
+// (rtl/hbm_accel/generic/collective/xdie/tok_func_xdie.sh). Default = ot_hfd_coll_q2_hard_v8g #(NLINK 1, TP 192, AR_ITER,
+// ROWS) exactly as before. XDIE_DUT_MODULE=<module> instantiates a port-compatible successor instead (no parameters):
+// the flat SAFE parent ot_hfd_coll_n1s0_lpf_ars (hard issuer_m_r128 / fj_n1s0_r128 / link_e1 / 16 reduce lanes) or a die
+// GEN netlist module of the hb_coll_NE master; XDIE_DUT_XPORTS = its extra port connections (default qid_rg/qid_wr
+// strapped to QID), XDIE_LINK = hierarchical path of its link rail leaf for the link taps (default hb.u_link0).
+`ifdef XDIE_DUT_MODULE
+ `ifndef XDIE_DUT_XPORTS
+  `define XDIE_DUT_XPORTS .qid_rg(QID), .qid_wr(QID),
+ `endif
+ `ifndef XDIE_LINK
+  `define XDIE_LINK hb.u_link0
+ `endif
+`else
+ `ifndef XDIE_LINK
+  `define XDIE_LINK hb.u_body.g_link[0].u_link
+ `endif
+`endif
 module tb_xdie2_rly #(parameter integer W = 613, parameter integer N = 10) (input wire clk, input wire [W-1:0] d, output wire [W-1:0] q);
     reg [W-1:0] s [1:N];
     always @(posedge clk) s[1] <= d;
@@ -72,7 +90,11 @@ module tb_xdie2_die #(parameter integer D = 0, parameter integer RLY = 10, param
     wire [1:0] ra_rx_slot; wire [3:0] ra_rx_kind, ra_rx_src; wire [5:0] ra_rx_tag; wire ra_rr_local; wire [2:0] ra_rr_local_tag;
     wire [1:0] ag_v; wire [3:0] ag_src; wire [5:0] ag_tag; wire [511:0] ag_d;
     wire [135:0] vm_rq; wire [2055:0] vm_rr; wire [2247:0] vm_kq;
-    ot_hfd_coll_q2_hard_v8g #(.NLINK(1), .TP(192), .AR_ITER(`XDIE_AR_ITER), .ROWS(`XDIE_ROWS)) hb (.rst_n(rst_n), .qid(QID), .clk_program(clk), .clk_control(clk),
+`ifdef XDIE_DUT_MODULE
+    `XDIE_DUT_MODULE hb (`XDIE_DUT_XPORTS .rst_n(rst_n),
+`else
+    ot_hfd_coll_q2_hard_v8g #(.NLINK(1), .TP(192), .AR_ITER(`XDIE_AR_ITER), .ROWS(`XDIE_ROWS)) hb (.rst_n(rst_n),
+`endif .qid(QID), .clk_program(clk), .clk_control(clk),
         .clk_vmasm({16{clk}}), .clk_upipe({16{clk}}), .clk_issue(clk), .clk_qslots({26{clk}}), .clk_ring({17{clk}}),
         .clk_reduce({33{clk}}), .clk_vmwrite({16{clk}}), .clk_link({5{clk}}),
         .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
@@ -189,10 +211,10 @@ module tb_xdie2_die #(parameter integer D = 0, parameter integer RLY = 10, param
     integer coll_done_seen = 0, cal_done_seen = 0, first_wr = -1, last_rx = -1, first_vm = -1, nvm = 0, first_pub = -1;
     integer first_fault = -1; reg [1:0] br_prev = 0;
     wire [2:0] g_ph = u_ep.u_tx.ph; wire [12:0] g_gc = u_ep.u_tx.gc;
-    wire l_wr = hb.u_body.g_link[0].u_link.wr_v, l_rd = hb.u_body.g_link[0].u_link.rd_v;
-    wire l_ex = hb.u_body.g_link[0].u_link.rx_expect_v, l_rxv = hb.u_body.g_link[0].u_link.rx_v;
-    wire [544:0] l_rxf = hb.u_body.g_link[0].u_link.rx_flit; wire [10:0] l_cause = hb.u_body.g_link[0].u_link.fault_cause;
-    wire l_abort = hb.u_body.g_link[0].u_link.epoch_abort;
+    wire l_wr = `XDIE_LINK.wr_v, l_rd = `XDIE_LINK.rd_v;
+    wire l_ex = `XDIE_LINK.rx_expect_v, l_rxv = `XDIE_LINK.rx_v;
+    wire [544:0] l_rxf = `XDIE_LINK.rx_flit; wire [10:0] l_cause = `XDIE_LINK.fault_cause;
+    wire l_abort = `XDIE_LINK.epoch_abort;
     wire fault_now = c_fault | gi_fault | gi_tf | cp_fault | cal_fault | ep_fault | (|l_cause) | l_abort;
     wire vm_any = |{vm_rq[16], vm_rq[33], vm_rq[50], vm_rq[67], vm_rq[84], vm_rq[101], vm_rq[118], vm_rq[135]};
     assign anyfault = (nfault != 0) | (sched_fail != 0) | (rx_bad != 0);

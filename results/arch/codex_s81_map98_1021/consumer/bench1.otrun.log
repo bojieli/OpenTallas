@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-guprop-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-guprop-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-guprop-1020
+ot-run: ot-epyc9       admits   105 GB (avail 297, growth 223, headroom 0, waiters 0/0 GB) load 394/128 running 72 disk 33 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-guprop-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-guprop-1020
+ot-run: LOAD SPILL not possible (no spill host admits it now); running on ot-epyc9 at 3.14 x cores
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3298570-1792565122 after 0 s
+GATHER_RC 0
+GATHER_RC 0
+M0 PASS 131 FAIL 10 | M1 PASS 1 FAIL 4
+BENCH_RC 0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3298570-1792565122): exit 0

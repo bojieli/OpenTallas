@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-root-qwen-reset-receivers-2243-1020
+ot-run: ot-epyc6       admits   138 GB (avail 210, growth 113, headroom 0, waiters 0/0 GB) load 131/128 running 48 disk 1966 GB 
+ot-run: ot-epyc7       admits  1073 GB (avail 852, growth 101, headroom 0, waiters 1068/51196 GB) load 91/96 running 31 disk 4975 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-root-qwen-reset-receivers-2243-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-root-qwen-reset-receivers-2243-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-root-qwen-reset-receivers-2243-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-721288-1792561430 after 0 s
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/codex-root-qwen-reset-receivers-2243-1020/tools/qwen_split/test_reset_sync_contract.py", line 46, in <module>
+    net = (Path(__file__).parent / 'testdata' / 'rstgen7_dv2f15r_reset_excerpt.v').read_text()
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 788, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 772, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/codex-root-qwen-reset-receivers-2243-1020/tools/qwen_split/testdata/rstgen7_dv2f15r_reset_excerpt.v'
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-721288-1792561430): exit 1

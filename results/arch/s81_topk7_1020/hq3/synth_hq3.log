@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/s81-topk7-1020/src
+ot-run: ot-epyc6       admits   552 GB (avail 499, growth 113, headroom 0, waiters 0/0 GB) load 302/128 running 55 disk 4337 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-topk7-1020/src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/s81-topk7-1020/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-topk7-1020/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-topk7-1020/src
+ot-run: LOAD SPILL: ot-epyc6 would run at 2.39 x cores; moving to ot-epyc5
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/s81-topk7-1020 (5.1 GB) ot-epyc6 -> ot-epyc5 (no host with --dir admits 32 GB now)
+ot-run: SPILL: copied 3703 changed entries in 141 s; running on ot-epyc5; written files go back to ot-epyc6 after the run
+ot-heavy: request 32G is charged 11G (class 'run_synth_census.sh:synth_hq#' measured peak 2.6G, n=2+0 proved); the cap stays 32G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3938867-1792493201 after 0 s
+SYNTH_RC=0
+CENSUS PASS max 32 viol 0 roots 220623
+     9882 3.75E+03     9882 3.75E+03   DFFASRHQNx1_ASAP7_75t_R
+    44132 1.29E+04    44132 1.29E+04   DFFHQNx1_ASAP7_75t_R
+   Chip area for module '\dsdv_bksel_q': 105912.987620
+FAM 2 
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3938867-1792493201): exit 0
+ot-run: SPILL: outputs copied back ot-epyc5 -> ot-epyc6; RAN on ot-epyc5: exit 0

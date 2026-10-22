@@ -52,6 +52,20 @@ FWD_BUMP = 'qfd_ckbump'
 FEED_RX = 'qfd_clkrx'
 
 
+def clock_inputs(model):
+    """Map clock RECEIVERS to roots, excluding each trunk's driver output.
+
+    A forwarded-lane station drives ck_o on a second clock net. That output
+    does not give its reset/enable flop a second sampling clock.
+    """
+    out = {}
+    for bid, cls, bits, eps in model['buses']:
+        if cls == 'clock_trunk':
+            for inst, pin in eps[1:]:
+                out.setdefault(inst, []).append((bid, pin))
+    return out
+
+
 def fwd_clocks(model):
     """QW-G5NOROOT 10-20: FORWARDED package clocks = clock trunks driven by a package clock bump (qfd_ckbump, e.g. ckb_rom
     pll_ck -> n_pll_fwd, the ROM/KV-die link clock forwarded with its bumps) that do NOT feed the die clock receiver

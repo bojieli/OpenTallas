@@ -1,22 +1,22 @@
 {
   "schema": "ot.d4g.binding.v1",
-  "by": "OWN-QDQ 2026-10-18",
+  "by": "HBM-QDQ8 2026-10-20 (was OWN-QDQ 2026-10-18)",
   "die_instance": "hb_quant_NW",
   "replaces": {
-    "master": "ot_hgi_qdq_host_split (claude/qdq-split-1018 1b0a71d6e)",
-    "why": "children ctl v1 (capture 304.0), LG v6 (launch 270.7), qw_dxl (launch 241.6/capture 220.2), qw_dbq (launch 255.1) native FAIL; program_leaf had no view"
+    "master": "ot_hgi_qdq_host_split_r2 (binding record on main, never applied) / die today binds r1 ot_hgi_qdq_host_split",
+    "why": "GEN2e4 r11 functional_bind_l24 lat_rows needs hb_quant_NW RL = 54 -> RLI = 58+2*XR exceeds ctl_r3 limit 46 (fault); ctl_r4 holds the command metadata in SRAM rings (RLI 2..126, WCI 2..63)"
   },
-  "master": "ot_hgi_qdq_host_split_r2",
-  "source": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_split_r2.sv",
+  "master": "ot_hgi_qdq_host_split_r3",
+  "source": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_split_r3.sv",
   "params": {
-    "RL": 7,
+    "RL": "54 (GEN2e4 r11 lat_rows need at hb_quant_NW; RL 7 also legal; limit RLI=RL+4+2*XR<=126, WCI=WC+2+XR<=63)",
     "WC": 4,
     "XR": "die: relay/landing stages per direction quant_NW<k> <-> quant_NW_xp, EQUAL on all 4 pairs (12 at today's grant geometry; 8 with quant_NW_xp at the LG centroid)",
     "COMPACT": 1
   },
   "rtl_deps": [
     "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_nw_program_leaf.sv",
-    "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r3.sv",
+    "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv (ot_hgi_qdq_static_transport_split_r4 + ot_hgi_qdq_transport_ctl_r4)",
     "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r2.sv (ot_hgi_qdq_lg_port_group_r2)",
     "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv (rslice/wslice)",
     "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv (+ ot_hgi_quant_decode and its sources, as job hgi_qw_dec_s260-2b1df5142-tc-cl)"
@@ -67,7 +67,7 @@
     },
     {
       "path": "quant_NW_xp",
-      "master": "ot_hgi_qdq_static_transport_split_r3",
+      "master": "ot_hgi_qdq_static_transport_split_r4",
       "params": {
         "RLI": "RL+4+2*XR",
         "WCI": "WC+2+XR",
@@ -79,24 +79,28 @@
     },
     {
       "path": "quant_NW_xp/ctl",
-      "master": "ot_hgi_qdq_transport_ctl_r3",
+      "master": "ot_hgi_qdq_transport_ctl_r4",
       "params": {
-        "NPMAX": 48,
-        "WCMAX": 32,
         "DL": 25,
         "MUT": 0
       },
-      "slot": "quant_NW_xp_ctl",
+      "slot": "quant_NW_xp_ctl (outline grows 108x108 -> 108x129.6)",
       "clock": "clk_transport",
-      "kit": "physical/ref_tile/hgi_qdq_tsplit_ctl_r3",
+      "kit": "physical/ref_tile/hgi_qdq_tsplit_ctl_r4s",
       "outline": [
         108.0,
-        108.0
+        129.6
       ],
-      "view": "physical/ref_tile/hgi_qdq_tsplit_ctl_r3/views/ot_hgi_qdq_transport_ctl_r3",
-      "job": "hgi_qdq_tsplit_ctl_r3-ctlr3-14e6fe3a2",
-      "closed": "TT +127.80 / FF +14.92 DRC 0",
-      "native": "PASS launch 177.5 capture 147.3 spread 31.2/30.2 (R 172.7)"
+      "macros": [
+        "ot_sram_1r1w_128x64_m1_p192 (ring A)",
+        "ot_sram_1r1w_64x16_m1 (ring B)"
+      ],
+      "view": "physical/ref_tile/hgi_qdq_tsplit_ctl_r4s/views/ot_hgi_qdq_transport_ctl_r4",
+      "job": "hgi_qdq_tsplit_ctl_r4s-ctlr4s-dbf0a4db8",
+      "record": "codex/closure-record-hgi_qdq_tsplit_ctl_r4s-ctlr4s-dbf0a4db8 5b80fa332 (auto-merged main c6f137b4c)",
+      "closed": "TT +269.77 / FF +12.01 DRC 0 (SS sens +58.32) @833.333 ps",
+      "native": "PASS (own R 232.2) launch 238.5 (265 same-region direct pins, owner 10-20 pin rule) capture 126.6 comb 0 spread 28.6/22.8",
+      "native_receipt": "results/hbm_static_quant_1015/host_split_r3/native/native_ot_hgi_qdq_transport_ctl_r4.json"
     },
     {
       "path": "quant_NW_xp/slice[s].rslice (s=0..3)",
@@ -159,7 +163,7 @@
       "native": "PASS spread 17.4/17.5"
     }
   ],
-  "native_receipts": "results/hbm_static_quant_1015/host_split_r2/native/summary.json",
-  "evidence": "results/hbm_static_quant_1015/host_split_r2/ (Verilator 5.050: m0/m4 PASS, m1/m2 LOCKSTEP_FAIL witnesses); bench rtl/test/hbm_accel/generic/tb_hgi_qdq_host_split_r2_lockstep.sv, runner tools/hgi_unit_tput/run_qdq_host_split_r2_lockstep.sh",
-  "die_clock_obligation_TW2": "TW2-NATIVE 10-19: program_leaf (clk_program, R 314.5 TT, spine) vs quant_NW_xp/ctl (clk_transport, R 172.7) linked 0-relay command face: relative audit native/relative_nw_program_leaf_vs_ctl_r3.json shows offset 141.8 ps TT / 105.0 ps FF (pin flops 113.5..155.8 / 87.7..114.3 from C). Die delivers clk_program ~142 ps earlier than clk_transport (parent insertion compensation, residual TT/FF drift ~37 ps < 80) or lands the command link."
+  "native_receipts": "results/hbm_static_quant_1015/host_split_r2/native/summary.json (r2 leaves) + results/hbm_static_quant_1015/host_split_r3/native/ (ctl_r4)",
+  "evidence": "results/hbm_static_quant_1015/host_split_r3/ (Verilator 5.050: a L7 / b L54 / c L54+XR12 PASS, m2 unpriced relay / m3 ring-late LOCKSTEP_FAIL, d ctl_r3 at L54 refuses) + r2 evidence results/hbm_static_quant_1015/host_split_r2/",
+  "die_clock_obligation_TW2": "10-20 re-audit vs ctl_r4: program_leaf (clk_program, R 314.5 TT) vs quant_NW_xp/ctl (clk_transport, R 232.2): native/relative_nw_program_leaf_vs_ctl_r4.json pin flops 54.0..96.3 ps from C (TT, >80). Command face crosses clocks -> per owner 10-20 clock rule it lands in a fixed-latency landing ring at the die, or the die delivers clk_program ~82 ps earlier (parent compensation). Was 141.8 ps offset vs ctl_r3."
 }

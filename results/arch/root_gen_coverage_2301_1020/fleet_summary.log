@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-root-gen-coverage-2301-1020
+ot-run: ot-epyc6       admits    94 GB (avail 179, growth 113, headroom 0, waiters 0/0 GB) load 82/128 running 53 disk 1626 GB 
+ot-run: ot-epyc7       admits  1016 GB (avail 812, growth 101, headroom 0, waiters 170/7808 GB) load 82/96 running 53 disk 4986 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-root-gen-coverage-2301-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-root-gen-coverage-2301-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-root-gen-coverage-2301-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2175456-1792562586 after 1 s
+......................                                                   [100%]
+22 passed in 0.78s
+............................                                             [100%]
+28 passed in 0.79s
+BASE_RC=0 CAND_RC=0
+
+
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2175456-1792562586): exit 0
