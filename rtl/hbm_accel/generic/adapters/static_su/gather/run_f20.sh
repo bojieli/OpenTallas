@@ -8,7 +8,9 @@ VL=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 for m in ${MUTANTS:-0 1 2 3};do
  "$VL" --binary --timing -j 8 -Wno-fatal --top-module tb_indexed_scalar_f20 -GMUT=$m --Mdir "$O/obj$m" -o vtb "$D/ot_hbm_su_indexed_scalar.sv" "$D/ot_hbm_su_indexed_scalar_f20.sv" "$D/tb_indexed_scalar_f20.sv" "$B/ot_static_program_target.sv" "$B/faces_q0/hfd_vms_bank_native_q0_faces.sv" "$B/faces_q0/ot_vms_bank_q0_faces_core.sv" "$B/faces_q0/ot_vms_bank_q0_faces_body.sv" "$B/ot_vms_ce_counter_pipe.sv" physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > "$O/build$m.log" 2>&1
  set +e
- "$O/obj$m/vtb" > "$O/run$m.log" 2>&1
+ run_args=()
+ if [[ -n ${FIXTURE:-} ]];then run_args+=("+FIXTURE=$FIXTURE" "+ROWS=${ROWS:?rows dir}");fi
+ "$O/obj$m/vtb" "${run_args[@]}" > "$O/run$m.log" 2>&1
  rc=$?
  set -e
  cat "$O/run$m.log"

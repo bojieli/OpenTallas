@@ -8,13 +8,13 @@ module tb_indexed_scalar_f20;
  wire[8223:0]raw_rr,rr;wire busy,done,fault;
  reg[8991:0]dq=0;reg[543:0]verify_rq=0;
  wire[575:0]status;
- reg cfg_v=0,desc_v=0,launch_v=0;reg[255:0]cfg_data=0;
+ reg cfg_v=0,desc_v=0,launch_v=0;reg[11:0]cfg_addr=0;reg[12:0]desc_limit=1;reg[255:0]cfg_data=0;
  wire active,configured,pf,tf,ef,es,eb,ed;wire[15:0]edge_index;wire[119:0]descriptor;
  wire[31:0]selector_fault;
  assign fault=pf|tf|ef|(|selector_fault);
- ot_hbm_su_indexed_scalar_f20 #(.READ_SAMPLE(9+(MUT==3)),.WRITE_COMMIT(5))dut(
- .clk(clk),.rst_n(rst_n),.cfg_v(cfg_v),.cfg_target(8'd180),.cfg_addr(12'd0),.cfg_data(cfg_data),
- .desc_v(desc_v),.desc_base(12'd0),.desc_limit(13'd1),.desc_loops(16'd1),.launch_v(launch_v),
+ ot_hbm_su_indexed_scalar_f20 #(.READ_SAMPLE(9),.WRITE_COMMIT(5),.MUT_PHASE(MUT==3))dut(
+ .clk(clk),.rst_n(rst_n),.cfg_v(cfg_v),.cfg_target(8'd180),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+ .desc_v(desc_v),.desc_base(12'd0),.desc_limit(desc_limit),.desc_loops(16'd1),.launch_v(launch_v),
  .rr(rr),.rq(rq),.wq(wq),.active(active),.done(done),.program_fault(pf),.configured(configured),
  .target_fault(tf),.engine_fault(ef),.edge_index(edge_index),.engine_busy(eb),.engine_done(ed),
  .engine_start(es),.descriptor(descriptor));
@@ -70,8 +70,68 @@ module tb_indexed_scalar_f20;
    @(negedge clk);dq=0;repeat(12)@(negedge clk);
   end
  endtask
+ reg[159:0]case_mem[0:17];reg[31:0]score_mem[0:6911];reg[255:0]row_mem[0:17];
+ string fixture_dir,rows_dir;
+ task automatic run_authentic_bundle;
+  integer l,n,t,wordadr,otheradr;
+  begin
+   if(!$value$plusargs("FIXTURE=%s",fixture_dir)||!$value$plusargs("ROWS=%s",rows_dir))$fatal(1,"fixture paths required");
+   $readmemh({fixture_dir,"/cases.mem"},case_mem);$readmemh({fixture_dir,"/scores.mem"},score_mem);
+   $readmemh({rows_dir,"/L0_6rows.mem"},row_mem,0,5);$readmemh({rows_dir,"/L2_6rows.mem"},row_mem,6,11);
+   $readmemh({rows_dir,"/L14_6rows.mem"},row_mem,12,17);
+   for(l=0;l<3;l=l+1)begin
+    c=1;preload=1;verify_rq=0;
+    base=case_mem[l*6][135:112];
+    for(n=0;n<48;n=n+1)begin
+     for(t=0;t<8;t=t+1)data[t*32+:32]=score_mem[l*6*384+n*8+t];
+     load_sector(base+n*8,data);
+    end
+    for(n=0;n<6;n=n+1)begin
+     wordadr=case_mem[l*6+n][159:136];data={8{32'hdeadbeef}};
+     for(t=0;t<6;t=t+1)begin
+      otheradr=case_mem[l*6+t][159:136];
+      if(otheradr/8==wordadr/8)data[(otheradr%8)*32+:32]=case_mem[l*6+t][63:32];
+     end
+     load_sector(wordadr,data);
+     load_sector(case_mem[l*6+n][87:64],{8{32'h6f55aa33}});
+    end
+    preload=0;repeat(12)@(negedge clk);
+    for(n=0;n<6;n=n+1)begin
+     cfg_addr=12'(n);cfg_data=row_mem[l*6+n];
+     if(MUT==1)cfg_data[23:0]=cfg_data[23:0]^24'd1;
+     if(MUT==2)cfg_data[95:72]=cfg_data[95:72]^24'd8;
+     cfg_v=1;@(negedge clk);cfg_v=0;@(negedge clk);
+    end
+    repeat(6)@(negedge clk);desc_limit=6;desc_v=1;@(negedge clk);desc_v=0;
+    repeat(16)@(negedge clk);
+    if(!configured)$fatal(1,"F20 six-row configuration failed");
+    launch_v=1;start_c=cyc;@(negedge clk);launch_v=0;
+    wait(done);@(negedge clk);
+    $display("BUNDLE layer_group=%0d programme_cycles=%0d target=180 rows=6",l,cyc-start_c);
+    repeat(12)@(negedge clk);
+    for(n=0;n<6;n=n+1)begin
+     wordadr=case_mem[l*6+n][87:64];bank=bankof(wordadr);verify_rq=0;
+     verify_rq[bank*17+:17]={1'b1,16'(wordadr>>3)};@(negedge clk);verify_rq=0;repeat(7)@(negedge clk);
+     expected={8{32'h6f55aa33}};
+     for(t=0;t<6;t=t+1)begin
+      otheradr=case_mem[l*6+t][87:64];
+      if(otheradr/8==wordadr/8)expected[(otheradr%8)*32+:32]=case_mem[l*6+t][31:0];
+     end
+     checks=checks+8;
+     if(raw_rr[bank*257+256]!==1 || raw_rr[bank*257+:256]!==expected)begin
+      errors=errors+1;$display("AUTHENTIC MISMATCH layer=%0d scalar=%0d",l,n);
+     end
+     repeat(8)@(negedge clk);
+    end
+    if(fault!==0||status!==0)begin errors=errors+1;$display("AUTHENTIC FAULT engine=%b banks=%h",fault,status);end
+   end
+   if(errors)$fatal(1,"GATHER_F20_CURRENT FAIL authentic18 checks=%0d errors=%0d",checks,errors);
+   $display("GATHER_F20_CURRENT PASS authentic_cases=18 masked_word_checks=%0d bundles=3 rows_per_bundle=6 banks=32 SRAMs=96 R=9 W=5",checks);$finish;
+  end
+ endtask
  initial begin
   repeat(8)@(negedge clk);rst_n=1;preload=1;repeat(12)@(negedge clk);
+  if($test$plusargs("FIXTURE"))run_authentic_bundle;
   // Six canonical scalar routes plus32 structural routes spanning all SID/bank.
   for(c=0;c<38;c=c+1)begin
    if(c<6)begin
