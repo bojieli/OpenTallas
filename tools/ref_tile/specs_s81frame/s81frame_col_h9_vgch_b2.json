@@ -15,6 +15,7 @@
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_c26l.sv",
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gen18.sv",
   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_v16.sv",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv",
   "rtl/dsrom_sys/s81_dv/frame_lp/kit/col_h9_l4_lp_kit_vgch.sv",
   "rtl/dsrom_sys/s81_dv/frame_lp/kit/dsfd_bf_col_kit.sv",
   "physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v"
@@ -708,7 +709,7 @@
  "structural_change": "S81 frame MAIN-hier (b2, STW-S81c-DIE-FRAME 10-22): band b2 of col_h9 vgch = rows y [2280.96, 3369.6) of the bound vgc landed frame (same instances / nets; frame_hier_part.py); hard band (level-2 cluster) under a level-3 M8-passthrough frame top. ",
  "frame": {
   "lp_rtl": "rtl/dsrom_sys/s81_dv/frame_lp/vgc/col_h9_l4_lp.sv",
-  "lp_rtl_sha256": "e96d7138acf50894fdacae83034b27af470f36e5ad8810fb2754ccc1e307a0a4",
+  "lp_rtl_sha256": "d3a6ba5c976cc77d01b2ce6dbc5d56e66ecc7f1774cd0911f4494ffdf1043b01",
   "bench": "results/arch/s81_dv_1016/frame_l4_cluster/compiler/bench_lp_1019 (claude/tw3-frame-1019 2911edcc2)",
   "placement": {
    "worst_disp_um": [
@@ -778,6 +779,59 @@
     "threads": 1,
     "peak_ram_gb": 8,
     "cmd": "python3 tools/s81_dv/frame_hier_kit.py --check col_h9 vgch 2"
+   },
+   {
+    "name": "frame_h9_plan_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV=rtl/dsrom_sys/s81_dv/frame_lp/vgch/col_h9_l4_lp_rf3r.sv FRAME_SCHED=results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_schedule.json LDLY=0 SET=plan KK=2048 J=8 bash tools/s81_dv/frame_bench.sh {RUN}/build_plan col_h9 0"
+   },
+   {
+    "name": "frame_h9_each_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV=rtl/dsrom_sys/s81_dv/frame_lp/vgch/col_h9_l4_lp_rf3r.sv FRAME_SCHED=results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_schedule.json LDLY=0 SET=each KK=1024 J=8 bash tools/s81_dv/frame_bench.sh {RUN}/build_each col_h9 0"
+   },
+   {
+    "name": "frame_h9_unland_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED\\ MUT=unland\\ col_h9$",
+    "cmd": "mkdir -p {RUN}; VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV=rtl/dsrom_sys/s81_dv/frame_lp/vgch/col_h9_l4_lp_rf3r.sv FRAME_SCHED=results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_schedule.json LDLY=0 SET=plan KK=2048 J=8 bash tools/s81_dv/frame_bench.sh {RUN}/build_unland col_h9 unland > {RUN}/mutant.log 2>&1; frame_rc=$?; cat {RUN}/mutant.log; if [ \"$frame_rc\" -eq 0 ] && grep -qx \"NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=unland col_h9\" {RUN}/mutant.log; then exit 1; fi; exit 0"
+   },
+   {
+    "name": "frame_h9_landread_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED\\ MUT=landread\\ col_h9$",
+    "cmd": "mkdir -p {RUN}; VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV=rtl/dsrom_sys/s81_dv/frame_lp/vgch/col_h9_l4_lp_rf3r.sv FRAME_SCHED=results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_schedule.json LDLY=0 SET=plan KK=2048 J=8 bash tools/s81_dv/frame_bench.sh {RUN}/build_landread col_h9 landread > {RUN}/mutant.log 2>&1; frame_rc=$?; cat {RUN}/mutant.log; if [ \"$frame_rc\" -eq 0 ] && grep -qx \"NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=landread col_h9\" {RUN}/mutant.log; then exit 1; fi; exit 0"
+   },
+   {
+    "name": "frame_h9_reset_mutant",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED\\ MUT=reset\\ col_h9$",
+    "cmd": "mkdir -p {RUN}; VFLAGS=-DOT_S81_RLY_RSSLICE FRAME_LP=1 FRAME_LP_SV=rtl/dsrom_sys/s81_dv/frame_lp/vgch/col_h9_l4_lp_rf3r.sv FRAME_SCHED=results/arch/s81_dv_1016/frame_l4_cluster/compiler/vgc/col_h9_schedule.json LDLY=0 SET=plan KK=2048 J=8 bash tools/s81_dv/frame_bench.sh {RUN}/build_reset col_h9 reset > {RUN}/mutant.log 2>&1; frame_rc=$?; cat {RUN}/mutant.log; if [ \"$frame_rc\" -eq 0 ] && grep -qx \"NEGATIVE_CONTROL_FAILED_AS_EXPECTED MUT=reset col_h9\" {RUN}/mutant.log; then exit 1; fi; exit 0"
    }
   ]
  },
