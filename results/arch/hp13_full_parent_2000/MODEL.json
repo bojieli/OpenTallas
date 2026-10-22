@@ -7,11 +7,11 @@
     "rtl/qwen_dv/headprep13/h16za/native32_1r_param.v": "44d54f850a0630849746de3cb907e132ec579b6155fbb10ef21fd5e20c44a9d7",
     "rtl/qwen_dv/headprep13/h16za/native32_helpers.sv": "1e021ff33742ef24529373bfab456eeb95f90c693f597963cd8c2f368c3bec88",
     "rtl/qwen_dv/qfd_tt_ctlm_dv_wtn.sv": "c904c97c3b3f40de76f0d9d280d393bc700bc26fca34decd6bec9e68e9af340c",
-    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v": "c23844e60690a83f36e7fb4fc508e91cb4f3354352299a0b13f7eb90e1b41788",
     "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v": "9e1517f87fd7fa4d41f3dc5b306131b47ec5a510ad90e109cc7e9e3fa83be074",
     "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v": "912b3f7b1cba58e98281b4ede9af326caad93c219c96cdd3510aad01933ad7fb",
     "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v": "4c8422bb160b8860bb3037d833502deb35d578439e8b13d004f8b5712eb84989",
-    "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2.sv": "6b6c3fa18de62ec8528099c0edae4db6f3069f91976f81dd23eda29fbcbbb974"
+    "rtl/qwen_dv/headprep13/corepub39/qfd_tt_ctlm_dv_hp13_rrloc_native32_cpub39_2.sv": "6b6c3fa18de62ec8528099c0edae4db6f3069f91976f81dd23eda29fbcbbb974",
+    "rtl/qwen_dv/headprep13/physical_abi/ot_rom_4096x266_m8_bb.v": "dc988a4065e81429a891884d2aa655b16569f1ba514c49812fba264633e62f56"
   },
   "primitive_count": 94443,
   "macro_count": 19,
@@ -29,5 +29,6 @@
   "clocks": "Actual core and HR roots; intended fixed1:1 phase0, physical phase and crossing timing unqualified.",
   "reset": "Exact source forest retained. External reset release/removal proof remains open.",
   "functional_scope": "Native constituent source proofs exist; no final full-parent source-programme or physical qualification claimed.",
-  "next": "Native-first MAIN/ALT, collect actual whole-parent census and named timing failures; final bench package required before submission."
+  "next": "Native-first MAIN/ALT, collect actual whole-parent census and named timing failures; final bench package required before submission.",
+  "source_abi_repair": "ROM BB includes actual functional VIAMAP/INSTANCE string metadata parameters; all pins and physical views unchanged. Original hierarchy failure retained."
 }
