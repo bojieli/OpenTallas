@@ -197,6 +197,18 @@ def main():
         rw['dsfd_mtp_seq']=dict(ck=1,**{n:w for dr,w,n,net in PORTS})
         T.setdefault('rtl_files',[]).append('rtl/dsrom_sys/s81_head/ot_s81hd_ctl_peer.sv')
         T['rtl_files'].append('rtl/dsrom_sys/s81_head/physical/fan32_cells.v')
+        # H11 r4 (STW-S81c-DIE2-C25 10-22): the first CLOSED ctl glue view (R5 / R6 kit) binds with its RTL of record (R3 top
+        # + zones from the record source commit, preferred over the H10 ot_s81hd_ctl_peer.sv glue body; same frozen ports)
+        gc = facts.get('glue_closed')
+        if gc:
+            M['ot_s81hd_ctl_glue']['view'] = gc['view']
+            M['ot_s81hd_ctl_glue']['view_note'] = (f"CLOSED {gc['kit']} (record {gc['record']}, source {gc['source']}); R3 glue RTL of record "
+                                                   f"preferred; {gc['moved_endpoints']} ctl endpoints at the kit pin plan; actual parent timing pending")
+            for ref, ps in gc['rtl_refs'].items():
+                T.setdefault('rtl_refs', {}).setdefault(ref, [])
+                T['rtl_refs'][ref] += [x for x in ps if x not in T['rtl_refs'][ref]]
+                T.setdefault('prefer', [])
+                T['prefer'] += [f'{ref}/{x}' for x in ps if f'{ref}/{x}' not in T['prefer']]
     if facts.get('lep_regional'):
         T['defines']=list(dict.fromkeys(T.get('defines',[])+['OT_COLL_NATIVE32','OT_COLL_NATIVE32_OFF']))
         # New source master: never alias the old single-root endpoint or CRED8 views.

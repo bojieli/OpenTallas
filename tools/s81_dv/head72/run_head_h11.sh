@@ -29,9 +29,10 @@ CREF=12c132d60a8f0300056abb216d48ff9588e7f620
 G=/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git
 export OT_GIT_DIR=$G OT_DIE_REPAIR_CORRIDOR=1
 W=${HD_RUN_DIR:-$D/head-h10}; mkdir -p "$W/src"; S=$W/steps.log
-for r in "$MAIN" "$SRC" "$CREF"; do git --git-dir="$G" cat-file -e "$r^{commit}" 2>/dev/null || git --git-dir="$G" fetch -q origin "$r"; done
+for r in "$MAIN" "$SRC" "$CREF" ${GLUE_RECORD:-} ${GLUE_SOURCE:-} ${GLUE_LINKS_REF:-}; do git --git-dir="$G" cat-file -e "$r^{commit}" 2>/dev/null || git --git-dir="$G" fetch -q origin "$r"; done
 BASE=results/arch/s81_dv_1016
 printf 'MAIN %s\nPLAN %s\nVIEWS %s\n' "$MAIN" "$SRC" "$CREF" > "$W/snapshot.refs"
+[ -n "${GLUE_KIT:-}" ] && printf 'GLUE %s RECORD %s SOURCE %s\n' "$GLUE_KIT" "$GLUE_RECORD" "$GLUE_SOURCE" >> "$W/snapshot.refs"
 git --git-dir="$G" archive "$MAIN" tools rtl "$BASE" physical/rom_host_ingest results/arch/die_reach_1016.json results/arch/accepted_cost_ledger_1013.json results/arch/mu_s81_1018 | tar -xf - -C "$W/src"
 git --git-dir="$G" ls-tree -r --name-only "$MAIN" physical | grep -E '(\.v|\.sv|\.vh|/spec\.json)$' | grep -v '^physical/rom_host_ingest' > "$W/phys.lst"
 mapfile -t PF < "$W/phys.lst"; git --git-dir="$G" archive "$MAIN" -- "${PF[@]}" | tar -xf - -C "$W/src"
@@ -41,7 +42,15 @@ grep -q 'from frame_bind import' tools/s81_dv/dv_bind.py
 grep -q "station_dirs" tools/s81_dv/dv_diecase.py
 export GIT_DIR=$G
 R=results/arch/s81_head_1021/${HD_VARIANT:?HD_VARIANT h11m|h11f}
-python3 tools/s81_dv/dv_route72.py "$R/plan_unrouted_h10.json" "$W/plan_routed_h10_raw.json" > "$W/route72.log" 2>&1
+PU=$R/plan_unrouted_h10.json
+# H11 r4 (STW-S81c-DIE2-C25 10-22): GLUE_KIT=s81hd_glue_r5m|r5f|r6m|r6f GLUE_RECORD=<record commit holding its CLOSED view>
+#   GLUE_SOURCE=<kit source commit> [GLUE_LINKS_REF] binds the first CLOSED ctl glue view (R6: ctl endpoints at its new faces)
+if [ -n "${GLUE_KIT:-}" ]; then
+  python3 tools/s81_dv/head72/hd_glue_bind_plan.py "$PU" "$W/plan_unrouted_glue.json" --kit "$GLUE_KIT" --record "${GLUE_RECORD:?}" \
+    --source "${GLUE_SOURCE:?}" ${GLUE_LINKS_REF:+--links-ref "$GLUE_LINKS_REF"} > "$W/glue_plan.log" 2>&1
+  PU=$W/plan_unrouted_glue.json; printf 'GLUE_PLAN_RC 0 %s %s\n' "$GLUE_KIT" "$(date)" >> "$S"
+fi
+python3 tools/s81_dv/dv_route72.py "$PU" "$W/plan_routed_h10_raw.json" > "$W/route72.log" 2>&1
 python3 tools/s81_dv/head72/hd_plan.py check "$W/plan_routed_h10_raw.json" > "$W/route_check.json"
 printf 'ROUTE_RC 0 %s\n' "$(date)" >> "$S"
 python3 tools/s81_dv/dv_station_dirs72.py "$W/plan_routed_h10_raw.json" results/arch/s81_die72_1021/relay_bodies.json "$W/plan_routed_h10.json" > "$W/station_dirs.log" 2>&1
@@ -66,7 +75,7 @@ set +e
 python3 tools/s81_dv/dv_diecase.py --plan "$P" --out "$W/bind" --bind real --bind-table "$T" --land-plan "$LAND" > "$W/bind.log" 2>&1
 RC=$?; echo "BIND_RC $RC $(date)" >> "$S"
 [ $RC -eq 0 ] || exit "$RC"
-python3 tools/s81_dv/dv_rvcase.py --plan "$P" --bind-dir "$W/bind/bind" --bind-table "$T" --land-plan "$LAND" --out "$W/case" --view-refs "$CREF" "$MAIN" "$SRC" --die-repair --dieflow-ref 33432c494a461c70406ffe5623fabae9548f6293 --dcc-ref "$MAIN" --corners tt ff ss --macro-views --signal-top-layer M8 --rfw --hold-eco --dieclk --fck-out-pin --rs-chain-place --rs-repair --dieclk-split-um 2000 ${H11_REGIONS_DIAG:+--clock-region-diag "$H11_REGIONS_DIAG"} --gen-safety-diag 'S81 head die H11 (STW-S81c-DIE): H10b + taller ctl band + cap21-23 case flags; H10 notes: (HD-CHAIN 10-21): 424 (h10m) / 450 (h10f) mm2, ctl glue enlarged to <=3.83 pins/um, lane-regional SerDes (STW-S81-HEAD H10), 253 head-bundle tiles + 13/13 spine nodes + ctl/lep/13 lanes + 17 SerDes; head tile/spo/glue/regional-lep/lane masters and ot_pdie_serdes_col is an UNCLOSED source-view stand-in (no CLOSED view exists yet); all13 exact CLOSED SPR m4 R0 bodies in existing reserves plus exact M7 dsfd_mtp_seq peer and relays, landings and reset stations bind CLOSED views; land plan = MODEL rows (F = ceil(0.47 N)), die STA re-derives; rank-0 straps; three explicit endpoint roots C/A/B and corresponding reset forests; regional child packing/reach and physical closure are owed; no production closure claim' > "$W/case_gen.log" 2>&1
+python3 tools/s81_dv/dv_rvcase.py --plan "$P" --bind-dir "$W/bind/bind" --bind-table "$T" --land-plan "$LAND" --out "$W/case" --view-refs "$CREF" "$MAIN" "$SRC" ${GLUE_RECORD:+"$GLUE_RECORD"} --die-repair --dieflow-ref 33432c494a461c70406ffe5623fabae9548f6293 --dcc-ref "$MAIN" --corners tt ff ss --macro-views --signal-top-layer M8 --rfw --hold-eco --dieclk --fck-out-pin --rs-chain-place --rs-repair --dieclk-split-um 2000 ${H11_REGIONS_DIAG:+--clock-region-diag "$H11_REGIONS_DIAG"} --gen-safety-diag 'S81 head die H11 (STW-S81c-DIE): H10b + taller ctl band + cap21-23 case flags; H10 notes: (HD-CHAIN 10-21): 424 (h10m) / 450 (h10f) mm2, ctl glue enlarged to <=3.83 pins/um, lane-regional SerDes (STW-S81-HEAD H10), 253 head-bundle tiles + 13/13 spine nodes + ctl/lep/13 lanes + 17 SerDes; head tile/spo/glue/regional-lep/lane masters and ot_pdie_serdes_col is an UNCLOSED source-view stand-in (no CLOSED view exists yet); all13 exact CLOSED SPR m4 R0 bodies in existing reserves plus exact M7 dsfd_mtp_seq peer and relays, landings and reset stations bind CLOSED views; land plan = MODEL rows (F = ceil(0.47 N)), die STA re-derives; rank-0 straps; three explicit endpoint roots C/A/B and corresponding reset forests; regional child packing/reach and physical closure are owed; no production closure claim' > "$W/case_gen.log" 2>&1
 RC=$?; echo "CASE_RC $RC $(date)" >> "$S"
 [ $RC -eq 0 ] || exit "$RC"
 [ "${H11_GEN_ONLY:-0}" = 1 ] && exit 0
