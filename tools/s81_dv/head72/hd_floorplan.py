@@ -41,7 +41,7 @@ def snap(v, q=0.0216):
 
 def construct(T=648.0, TH=None, chx=108.0, chy=108.0, cols=5, levels_n=7, levels_s=6, tiles=253,
               node=(216.0, 648.0), ctl=(1512.0, 2592.0), lep=(1296.0, 2592.0), lane=(518.4, 1123.2),
-              corr=216.0, ch_out=648.0, ch_sp=216.0, ch_lane=108.0, ch_ctl=216.0):
+              corr=216.0, ch_out=648.0, ch_sp=216.0, ch_lane=108.0, ch_ctl=216.0, serdes_band=False):
     TH = TH or T
     PX, PY = T + chx, TH + chy
     SW, SH = SERDES
@@ -141,6 +141,15 @@ def construct(T=648.0, TH=None, chx=108.0, chy=108.0, cols=5, levels_n=7, levels
     s = (H - 2 * GAP - 5 * SH) / 4
     s = int(s / 21.6) * 21.6
     ys = [GAP + r * (SH + s) for r in range(5)]
+    if serdes_band:
+        # H10 (STW-S81-HEAD 10-21): a tall ctl band makes the uniform rows miss it; centre row 2 on the band and spread
+        # rows 0/1 below and 3/4 above it (each pair evenly in its half)
+        y2 = snap(band_c - SH / 2)
+        lo = (y2 - GAP - 2 * SH - GAP) / 2                       # street between rows 0/1 and 1/2
+        hi = (H - GAP - (y2 + SH) - 2 * SH) / 2
+        lo = int(lo / 21.6) * 21.6; hi = int(hi / 21.6) * 21.6
+        ys = [GAP, GAP + SH + lo, y2, y2 + SH + hi, y2 + 2 * (SH + hi)]
+        s = min(lo, hi)
     assert ys[4] + SH <= H - GAP + 1e-6
     serdes = {}
     def sd(name, col, xcol, r, side):

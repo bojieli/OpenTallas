@@ -210,6 +210,12 @@ def main():
                     relationship='same_pll_fixed_phase',source_kind='die_top_input',
                     receiver_instance=f'u_{b["name"]}',receiver_clock_port=cp,
                     receiver_region=cp,source_ref=facts['lep_regional']['source'])
+    # H10 (STW-S81-HEAD 10-21): an abutted SerDes clocked by the declared root of the region it exchanges data with
+    # (lk_WN3 <-> lep tx3/rx3 on ck_B): the link is then intra-region instead of an unlanded edge0 crossing.
+    for inst, row in (facts.get('serdes_instance_clocks') or {}).items():
+        for net in row.values():
+            assert net in T.get('clock_domains', {}), (inst, net)
+        T.setdefault('instance_clock_ports', {})[inst] = dict(row)
     T['masters'] = M
     T['instance_orientations'] = dict(facts['instance_orientations'])
     T['unbound'] = {k: v['view_note'] for k, v in M.items() if not v.get('view')}

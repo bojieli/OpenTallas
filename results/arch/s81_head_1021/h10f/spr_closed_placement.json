@@ -1,0 +1,720 @@
+{
+ "source_plan": "results/arch/s81_head_1021/h10f/plan_pre_spr.json",
+ "source_plan_sha256": "c5c4321501577dff1778d8f850ce9d35bbe70916787e30da037b3d5f9b98c61d",
+ "selected": {
+  "source": "bb8dd356c",
+  "record": "33ea29537",
+  "view": "physical/ref_tile/s81hd_spr_m4/views/ot_s81hd_spr",
+  "module": "ot_s81hd_spr",
+  "params": {},
+  "orientation": "R0",
+  "body_um": [
+   216,
+   216
+  ],
+  "reserve_um": [
+   216,
+   648
+  ],
+  "clock_pin_face": "S",
+  "reset_stages": 2,
+  "stream_cycles": 2,
+  "added_data_cycles": 0,
+  "registered_comparison_unchanged": true,
+  "lef_sha256": "e03ee1b2ba00255ff007e3b50f99cde197e2c2e11636cc48bd8477b04704bb3f",
+  "pin_windows_nm": {
+   "i": [
+    10152,
+    215916,
+    205830,
+    216000
+   ],
+   "iw": [
+    0,
+    10176,
+    84,
+    205848
+   ],
+   "ie": [
+    215916,
+    10176,
+    216000,
+    205848
+   ],
+   "o": [
+    10152,
+    0,
+    205830,
+    84
+   ]
+  },
+  "caveat": "Exact exported R0 body inside existing reserve. Static track/window proof only; actual parent GEN/GRT/STA/CLK still decides boundary timing."
+ },
+ "checker_sha256": "cf4a96bfa60d9c534497bf364d409ba6bc0149ad49d71b9083d2ce4f82363742",
+ "scope": "Existing published check_macro_track_alignment check_placement for every signal RECT on actual proposed R0 origins; static row/site and track centres only, not routed parent proof",
+ "instances": [
+  {
+   "instance": "spr_N0",
+   "reserve": {
+    "name": "spr_N0",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN00E",
+    "x": 9784.8,
+    "y": 15746.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "R0"
+   },
+   "body": {
+    "name": "spr_N0",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN00E",
+    "x": 9784.8,
+    "y": 15962.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     15962400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_N1",
+   "reserve": {
+    "name": "spr_N1",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN01E",
+    "x": 9784.8,
+    "y": 17258.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "R0"
+   },
+   "body": {
+    "name": "spr_N1",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN01E",
+    "x": 9784.8,
+    "y": 17474.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     17474400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_N2",
+   "reserve": {
+    "name": "spr_N2",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN02E",
+    "x": 9784.8,
+    "y": 18770.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "R0"
+   },
+   "body": {
+    "name": "spr_N2",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN02E",
+    "x": 9784.8,
+    "y": 18986.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     18986400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_N3",
+   "reserve": {
+    "name": "spr_N3",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN03E",
+    "x": 9784.8,
+    "y": 20282.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "R0"
+   },
+   "body": {
+    "name": "spr_N3",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN03E",
+    "x": 9784.8,
+    "y": 20498.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     20498400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_N4",
+   "reserve": {
+    "name": "spr_N4",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN04E",
+    "x": 9784.8,
+    "y": 21794.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "R0"
+   },
+   "body": {
+    "name": "spr_N4",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN04E",
+    "x": 9784.8,
+    "y": 22010.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     22010400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_N5",
+   "reserve": {
+    "name": "spr_N5",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN05E",
+    "x": 9784.8,
+    "y": 23306.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "R0"
+   },
+   "body": {
+    "name": "spr_N5",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN05E",
+    "x": 9784.8,
+    "y": 23522.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     23522400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_N6",
+   "reserve": {
+    "name": "spr_N6",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN06E",
+    "x": 9784.8,
+    "y": 24818.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "R0"
+   },
+   "body": {
+    "name": "spr_N6",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clN06E",
+    "x": 9784.8,
+    "y": 25034.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     25034400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_S0",
+   "reserve": {
+    "name": "spr_S0",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS00E",
+    "x": 9784.8,
+    "y": 7646.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "MX"
+   },
+   "body": {
+    "name": "spr_S0",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS00E",
+    "x": 9784.8,
+    "y": 7862.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     7862400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_S1",
+   "reserve": {
+    "name": "spr_S1",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS01E",
+    "x": 9784.8,
+    "y": 6134.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "MX"
+   },
+   "body": {
+    "name": "spr_S1",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS01E",
+    "x": 9784.8,
+    "y": 6350.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     6350400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_S2",
+   "reserve": {
+    "name": "spr_S2",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS02E",
+    "x": 9784.8,
+    "y": 4622.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "MX"
+   },
+   "body": {
+    "name": "spr_S2",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS02E",
+    "x": 9784.8,
+    "y": 4838.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     4838400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_S3",
+   "reserve": {
+    "name": "spr_S3",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS03E",
+    "x": 9784.8,
+    "y": 3110.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "MX"
+   },
+   "body": {
+    "name": "spr_S3",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS03E",
+    "x": 9784.8,
+    "y": 3326.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     3326400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_S4",
+   "reserve": {
+    "name": "spr_S4",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS04E",
+    "x": 9784.8,
+    "y": 1598.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "MX"
+   },
+   "body": {
+    "name": "spr_S4",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS04E",
+    "x": 9784.8,
+    "y": 1814.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     1814400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  },
+  {
+   "instance": "spr_S5",
+   "reserve": {
+    "name": "spr_S5",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS05E",
+    "x": 9784.8,
+    "y": 86.4,
+    "w": 216.0,
+    "h": 648.0,
+    "reg": false,
+    "orient": "MX"
+   },
+   "body": {
+    "name": "spr_S5",
+    "master": "ot_s81hd_spr",
+    "kind": "spine",
+    "group": "clS05E",
+    "x": 9784.8,
+    "y": 302.4,
+    "w": 216.0,
+    "h": 216,
+    "reg": false,
+    "orient": "R0"
+   },
+   "track_check": {
+    "orient": "R0",
+    "origin_nm": [
+     9784800,
+     302400
+    ],
+    "layers": {
+     "M3": {
+      "pins": 567,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M5": {
+      "pins": 565,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     },
+     "M4": {
+      "pins": 1130,
+      "offtrack": 0,
+      "max_offset_nm": 0.0
+     }
+    }
+   }
+  }
+ ]
+}

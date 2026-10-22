@@ -1,0 +1,38 @@
+{
+ "vertical": {
+  "layers": 3,
+  "full": {
+   "ratio": 0.064,
+   "at_um": 13694.4,
+   "bits": 32636,
+   "tracks": 511058
+  },
+  "window": {
+   "ratio": 0.412,
+   "at_um": 10713.6,
+   "from_um": 9709.2,
+   "bits": 5520,
+   "window_um": 648.0,
+   "tracks": 13414
+  }
+ },
+ "horizontal": {
+  "layers": 2,
+  "full": {
+   "ratio": 0.062,
+   "at_um": 8683.2,
+   "bits": 14742,
+   "tracks": 236974
+  },
+  "window": {
+   "ratio": 0.447,
+   "at_um": 8726.4,
+   "from_um": 13716.0,
+   "bits": 3994,
+   "window_um": 648.0,
+   "tracks": 8942
+  }
+ },
+ "limit": 0.55,
+ "pass": true
+}
