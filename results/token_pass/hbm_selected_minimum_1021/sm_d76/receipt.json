@@ -1,0 +1,101 @@
+{
+  "status": "PASS",
+  "observed_at": "2026-10-21T22:49:57.787380-07:00",
+  "source": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+  "host": "ot-epyc9",
+  "unit": "oth-ubuntu-748190-1792646957",
+  "source_readset": "portable_readset.json",
+  "actual_execution_host_source_verification": {
+    "files": 57,
+    "bad": 0
+  },
+  "binary_sha256": "fbd382bcdc531b3a250c474e7bb2adf4ad3e648b5b52599d4f01ef10ecdceb7f",
+  "parameters": {
+    "ENABLE_INT8": 1
+  },
+  "defines": [
+    "OT_SMH_FC_HIER",
+    "OT_SMH_HIER",
+    "OT_SMH_XLK",
+    "OT_FP_DATA_NORST",
+    "OT_SMH_DRST0",
+    "OT_SMH_RSTRELAY"
+  ],
+  "bench_only_define": "OT_SMH_ATTN_INT8 selects existing ENABLE_INT81 bench arm; no RTL edits",
+  "scope": "One selected SM, actual native L0 k4 wq_a FP8 operands, only busiest SM row0 of13 rank0 rows; all5120 input features and40 weight lines. Checks FP32 accumulator, BF16 fixture result, other seven output columns zero and no fault. This is the changed selected BD/GU/prefix/add dependency minimum, not full tensor, final die transport or complete token.",
+  "positive": {
+    "k": 4,
+    "tag": "wq_a",
+    "occ": 0,
+    "fmt": "FP8",
+    "O_fmt": "BF16",
+    "m": 13,
+    "K": 5120,
+    "d4g_rows_die": 7,
+    "d4g_rows_sm": 1,
+    "golden_selftest": "PASS",
+    "priced": [
+      {
+        "i": 1,
+        "start": 843.95,
+        "end": 1043.5,
+        "cls": "W1",
+        "unit": "SM",
+        "base_cost": 199.97
+      }
+    ],
+    "Gn": 5,
+    "lines_per_row": 40,
+    "calendar_cycles": 1380,
+    "x_beats": 520,
+    "cmd_sha256": "e9e2263cec5231296eecc019f22ae75e9b67c9fc3a47b3a4a9339279faafb5c9",
+    "pkt_sha256": "123bd796af1993fbb984e8272ffc738bb3e9f074af9e83cb7a587b9dece5f405",
+    "xw_sha256": "797bc6af91a9977e70a2afc2029ff0441b91730745b55fcd86d54afdf68436a9",
+    "ops": [
+      {
+        "name": "sm0",
+        "rows": [
+          0
+        ],
+        "first_line": 548,
+        "last_line": 611,
+        "lines": 40,
+        "issue_cycles": 64,
+        "window_end": 1444,
+        "results": 1,
+        "missing": [],
+        "n_missing": 0,
+        "bad": [],
+        "n_bad": 0,
+        "first_result": 729,
+        "last_result": 729,
+        "cycles_first_line_to_last_result": 182,
+        "verdict": "PASS"
+      }
+    ],
+    "run_rc": 0,
+    "fault": null,
+    "done": true,
+    "sim_s": 13.2,
+    "run_log_sha256": "4418d3718d56c45c4113161ec70923fa8c302ca47182da2360b16521caa2cf43",
+    "verdict": "PASS"
+  },
+  "same_binary_causal_controls": {
+    "wbit": "Numerical FAIL with unchanged source data model and runtime source packet mutation",
+    "nopkt": "FAULT schedule cycle553, run_rc1"
+  },
+  "physical_or_full_token_qualified": false,
+  "evidence_sha256": {
+    "current/build_mv.log": "65e177e223118a81e12394c6cea287b7236ec9b7ccc252dab4978728409a15ef",
+    "current/client.log": "c9fa9c9d3261892b180a9665c8d1ca99eabd0139bd64c99cbe6a60848bd2d9b3",
+    "current/k4_nopkt_run.log": "3f24d79ea5d8107da7e1ecf3b1f73b62da57509beaef475ee9067c1ae6cb534f",
+    "current/k4_run.log": "4418d3718d56c45c4113161ec70923fa8c302ca47182da2360b16521caa2cf43",
+    "current/k4_wbit_run.log": "7795771e325fef2afa90b92d9b223cdea95726aed03eed04657ed765ee75020b",
+    "current/nopkt.json": "1a63d1d39dc3039722eb254aae3b84a6ab82f4e8071842d4cb4324524dcc12ce",
+    "current/nopkt.log": "eaa5f37d450cae9ca49a488e759f707c8b5da898c42d60fe3390ddbe99465b78",
+    "current/positive.json": "b5950191730d09b388caee6deed5956a4e1f12d3cf24bd344592f5d409f3c847",
+    "current/positive.log": "58ed1a029eae1ec9929a62029d34498bbd933ae77db296f63ad28c4236c495be",
+    "current/wbit.json": "c15c23f12da7771f7962f7af5e6a9b26badb93431bbcc74b1bf575bf9f49071c",
+    "current/wbit.log": "609f8ce61b52e453abcb5d03abad685921c210fa9f2493a14072c30d4d8edbbd"
+  }
+}

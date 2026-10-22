@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-21T22:31:55.404364-07:00",
+  "observed_at": "2026-10-21T22:49:57.787380-07:00",
   "selected_source": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
   "geometry_revision": "57cd9d54d",
   "phase": "r18d initial pre-S8 graph, final transport not available",
@@ -24,27 +24,29 @@
     {
       "unit": "SFU scoped split3",
       "owner": "/root/hbm/hc",
-      "status": "LIVE Gold1 unit3644453-1792646390, exact selected scoped split3 source frontend",
+      "status": "First selected LG15 build failed required NBA guard exit86 before simulation; exact failure retained by HC owner.",
       "change": "Source bytes identical; predecessor TAP_RR24/TAP_WR21 versus selected defaults14/11 at LG_PATH15.",
       "vehicle": "Canonical split-equivalence bench with combinational face adapter; exact scoped source closure.",
-      "next": "Resolve selected compile defines, then run exact LWB15/LG_PATH15/default taps. R24 candidate remains separate."
+      "next": "HC prepares unchanged source with larger explicit test-runner unroll budget; no guard bypass or functional PASS."
     },
     {
       "unit": "SM/SMSL arithmetic",
       "owner": "/root/token/hbm",
-      "status": "LIVE EP9 unit748190-1792646957",
+      "status": "PASS selected d76 minimum, exact same-binary controls rejected",
       "change": "smh_bd, smh_gu, fp32 add/prefix dependencies differ.",
       "vehicle": "sm_mv_unit.py --recs 4 --sm0-only consuming exact selected bundle master_files ot_hbm_accel_smh_attn closure; alternative one-SM ds640 qk/pv component.",
-      "next": "Collect selected one-SM L0k4 positive and same-binary wbit/nopkt controls. Original unadmitted queue explicitly cancelled; no predecessor build duplicated.",
-      "artifact": "sm_d76/"
+      "next": "Retain source/parameter matched one-row component proof. Broader selected array/current token paths remain separate.",
+      "artifact": "sm_d76/",
+      "receipt": "sm_d76/receipt.json"
     },
     {
       "unit": "HC static reader",
       "owner": "/root/token/hbm with /root/hbm/hc",
-      "status": "minimum needs source closure review",
+      "status": "PASS exact selected reader minimum at d008a0e6b",
       "change": "ot_hbm_hc_q_static and gathered_mix_reader_static changed.",
       "vehicle": "Existing HC collar/component replay on exact selected source.",
-      "next": "Ask HC owner to separate selected changed reader minimum from candidate SFU campaign."
+      "next": "Reader scope only; selected centre/root and produced-tensor caller remain open.",
+      "receipt": "hc_reader/receipt.json"
     },
     {
       "unit": "IDX root/topk/share and collective",

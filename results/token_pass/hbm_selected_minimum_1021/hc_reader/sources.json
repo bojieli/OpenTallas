@@ -1,0 +1,21 @@
+{
+  "source": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+  "scope": "Exact selected HC quarter reader minimum with real pair leaves and 18/15 tap; default capture/gather 23, done 19, 4 wave beats; no hub/root/full-token claim.",
+  "sources": {
+    "rtl/hbm_accel/generic/peers/static_hc/run_hc_q_static.sh": "18520dc8ae84b4959f0f105dce658dd7bb5d13c37cb5632d461681cdd2bf8d66",
+    "rtl/test/tb_hbm_hc_q_static.sv": "da5b9655739af2db61fa61ac5b2c1d3937a0c28c37cefa133b5a8adbff2d5cee",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv": "f68a556f4caa32eba68932ddb1efdfeb5be695be74e157d8eaaa494c9a373814",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv": "8da48b3e10760e87b620cb281bc0e640fbd3efff3e8368845885891c705b4ecf",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv": "7baf37a97f136e3e847430baea1cdd50667c495cdf3fcd032afa2a89c12c574b",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv": "f8e19a5cf9de239481c78e0cc8e61c8053b5a52af2aa307177ffa931b46b0a0d",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv": "2a3f380c413bef2676087338d00d18cf869562e9bb611fc93c13251f3fb3f197",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv": "a36c62a72205f4359b58a832deab23736baa320ba5b2d0153ac99278779c6c21",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split_term.sv": "535499a9426194b4d29fd0df34134375d96e2ea6927e78d5f477a4f5b48682ed",
+    "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv": "a531865c61e55476aef9b13ccbff4d8389ae33f6a836edc95d1e33f5502f1245",
+    "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv": "59502d11c80c75c8002a2f016e4d7e42ce56233d62f785899385c9753e1cbb2e",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/test/full_sm_service/sram_models.sv": "a3ef962e124bd6c9652841a81f43398a6666b24fbbc709de033b39873f1c38b8",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_xw_rx_static.sv": "b8383e7154ee8ee796bdf056e4d8eb433c47986ffe39994062053745c06a962e"
+  }
+}

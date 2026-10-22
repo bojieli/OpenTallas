@@ -1,0 +1,80 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-selected-sm-minimum-portable-1021
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-selected-sm-minimum-portable-1021
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-selected-sm-minimum-portable-1021
+ot-run: ot-gold2       admits    17 GB (avail 412, growth 400, headroom 0, waiters 0/0 GB) load 26/112 running 21 disk 2712 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-selected-sm-minimum-portable-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-selected-sm-minimum-portable-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-selected-sm-minimum-portable-1021
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-selected-sm-minimum-portable-1021 (0.0 GB) ot-gold2 -> ot-epyc9 (no host with --dir admits 96 GB now)
+ot-run: SPILL: copied 86 changed entries in 3 s; running on ot-epyc9; written files go back to ot-gold2 after the run
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-748190-1792646957 after 1 s
+{
+ "schema": "opentallas.hbm_sm_mv_unit.v1",
+ "fixtures": "fixtures",
+ "weights": "weights",
+ "bundle": "bundle",
+ "mut": null,
+ "rtl": "ot_hbm_accel_smh_attn die master (bundle master_files.json, DIE_DEFINES) in rtl/test/hbm_accel/sm_attn/tb_hbm_smh_attn.sv, Verilator 5.050",
+ "records": [
+  {
+   "k": 4,
+   "tag": "wq_a",
+   "occ": 0,
+   "fmt": "FP8",
+   "O_fmt": "BF16",
+   "m": 13,
+   "K": 5120,
+   "d4g_rows_die": 7,
+   "d4g_rows_sm": 1,
+   "golden_selftest": "PASS",
+   "priced": [
+    {
+     "i": 1,
+     "start": 843.95,
+     "end": 1043.5,
+     "cls": "W1",
+     "unit": "SM",
+     "base_cost": 199.97
+    }
+   ],
+   "Gn": 5,
+   "lines_per_row": 40,
+   "calendar_cycles": 1380,
+   "x_beats": 520,
+   "cmd_sha256": "e9e2263cec5231296eecc019f22ae75e9b67c9fc3a47b3a4a9339279faafb5c9",
+   "pkt_sha256": "123bd796af1993fbb984e8272ffc738bb3e9f074af9e83cb7a587b9dece5f405",
+   "xw_sha256": "797bc6af91a9977e70a2afc2029ff0441b91730745b55fcd86d54afdf68436a9",
+   "ops": [
+    {
+     "name": "sm0",
+     "rows": [
+      0
+     ],
+     "first_line": 548,
+     "last_line": 611,
+     "lines": 40,
+     "issue_cycles": 64,
+     "window_end": 1444,
+     "results": 1,
+     "missing": [],
+     "n_missing": 0,
+     "bad": [],
+     "n_bad": 0,
+     "first_result": 729,
+     "last_result": 729,
+     "cycles_first_line_to_last_result": 182,
+     "verdict": "PASS"
+    }
+   ],
+   "run_rc": 0,
+   "fault": null,
+   "done": true,
+   "sim_s": 13.2,
+   "run_log_sha256": "4418d3718d56c45c4113161ec70923fa8c302ca47182da2360b16521caa2cf43",
+   "verdict": "PASS"
+  }
+ ],
+ "verdict": "PASS"
+}
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-748190-1792646957): exit 0
+ot-run: SPILL: outputs copied back ot-epyc9 -> ot-gold2; RAN on ot-epyc9: exit 0
