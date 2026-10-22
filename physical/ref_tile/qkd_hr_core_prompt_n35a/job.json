@@ -1,0 +1,196 @@
+{
+ "name": "qkd_hr_core_prompt_n35a-n35a-COMMIT",
+ "block": "qkd_hr_core_prompt_mu4p4_n32",
+ "ref_tile": true,
+ "owner": "Claude:QE3-HROOT-PROMPT",
+ "purpose": "MU4 prompt ps4 (registered SRAM reads) for the MU KV die host root cluster",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/qe3-hroot-prompt35-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir.v",
+   "results/arch/qe3_hroot_prompt35_1021/",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_pd/ot_hkv_cnt_la.sv",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_csr_service_pins_rr.sv",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_rr/qkd_host_ctl_service_pins_rr.sv",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_safe/",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_safe3/",
+   "rtl/qwen_sys/host_cluster_20261017/prompt_safe4/",
+   "rtl/qwen_sys/host_prompt_mu4p4_n32_1021/evidence/",
+   "rtl/test/mu_qwen_1018/lists/tb_qkd_host_mu_out.f",
+   "rtl/test/mu_qwen_1018/tb_qkd_host_mu_out.sv",
+   "rtl/test/qwen_host/tb_hkv_cnt_la32.sv",
+   "rtl/test/qwen_host/tb_hkv_mu4_idle.sv",
+   "rtl/test/qwen_host/tb_hkv_prompt_mem.sv",
+   "rtl/test/qwen_host/tb_hkv_prompt_mem_r.sv",
+   "rtl/test/qwen_host/tb_qkd_host_axi_packet.sv",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_axi.sh",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_counters32.sh",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_host_mu.sh",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_idle_lifecycle.py",
+   "tools/qwen_kv_die/host_cluster/bench/prompt_mem.sh"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qkd_hr_core_prompt_mu4p4_n32 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/host_prompt_mu4p4_n32_1021/qkd_hr_core_prompt_mu4p4_n32.sv physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "prompt_idle_lifecycle",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/prompt_idle_lifecycle.py {RUN}/idle exact ps4",
+    "pass_regex": "IDLE_LIFECYCLE PASS"
+   },
+   {
+    "name": "prompt_idle_old",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "python3 tools/qwen_kv_die/host_cluster/bench/prompt_idle_lifecycle.py {RUN}/idle_old old_idle ps4",
+    "fail_regex": "IDLE_FAIL",
+    "fail_witness": "results/arch/qe3_hroot_prompt35_1021/ps4_old_idle_FAIL_v5050.log"
+   },
+   {
+    "name": "prompt_counters32",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_counters32.sh {RUN}/cn32",
+    "pass_regex": "PROMPT_CN32_SUITE PASS"
+   },
+   {
+    "name": "prompt_mem_suite",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_mem.sh {RUN}/mem_suite \"pass wide bypass addr\" r",
+    "pass_regex": "PROMPT_MEM_SUITE PASS 2 positive 2 causal mutants"
+   },
+   {
+    "name": "prompt_mem_addr",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_mem.sh {RUN}/mem_addr addr r",
+    "fail_regex": "PROMPT_MEM FAIL",
+    "fail_witness": "results/arch/qe3_hroot_prompt35_1021/mem_r_addr_fail_v5050.log"
+   },
+   {
+    "name": "prompt_mem_vis",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_mem.sh {RUN}/mem_vis bypass r",
+    "fail_regex": "PROMPT_MEM FAIL",
+    "fail_witness": "results/arch/qe3_hroot_prompt35_1021/mem_r_vis_fail_v5050.log"
+   },
+   {
+    "name": "prompt_axi",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 6,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash tools/qwen_kv_die/host_cluster/bench/prompt_axi.sh {RUN}/axi prompt_safe4",
+    "pass_regex": "PASS HOST_AXI_PACKET"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qkd_hr_core_prompt_n35a/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qkd_hr_core_prompt_n35a/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qkd_hr_core_prompt_n35a --out {RUN}/record/views/qkd_hr_core_prompt_mu4p4_n32 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir --macro-view physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qkd_hr_core_prompt_n35a/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qkd_hr_core_prompt_n35a/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qkd_hr_core_prompt_n35a/qkd_hr_core_prompt_n35a-n35a-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "QE3-HROOT-PROMPT 10-21 successor of n34a/n34b: SOURCE ps4 native32 (qkd_hr_core_prompt_mu4p4_n32, sha 09028f6e, census max32) = ps3 + capture flops DIRECTLY on every used SRAM rd_out (RX + completion-event queues via ot_hkv_prompt_mem_r with the read address from the registered head pointer: no macro->macro path; 4 program macros p_qr) -> macro->flop = clk->q + wire; +2 edges queue visibility, +1 program edge (static). io_flop_at_pins macro_out_pins rd_out anchors the capture flops at the macro pins. CLOCK: n34a measured recipe (pin flops anchored at their faces, boundary on its own balanced+equalised branch bnd_branch.tcl, stem at ck_core beside the central register band; n34a 58.1/55.3 ps). MAIN: n34a geometry 475.2x432 (GRT ovf 0 measured).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "n34b FAIL (spread 102/100, macro->reg -399, macro->macro -301); n34a placed macro->reg -397: ps4 registered SRAM read outputs."
+ }
+}

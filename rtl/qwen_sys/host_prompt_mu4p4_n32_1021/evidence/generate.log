@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.kv_group.structural_copy.v1",
+ "qualified": false,
+ "original_top": "qkd_hr_core_prompt_mu4_ps4",
+ "top": "qkd_hr_core_prompt_mu4p4_n32",
+ "source_sha256": "ede6faacb7c0535ff93e6097d7bfffda1a4bcf6d3fbbcdf9bb020ddf5b7d8d81",
+ "parser_sha256": "4adb3e6072ab0e5d93ddaa5205d5139c37971aa87175b1923beea9261dd2619b",
+ "generated_sha256": "09028f6e418fec6d15351ae8169aa5d01687abf3641734877a69cec0a87bd5c0",
+ "fixedpoint_history": [
+  44811,
+  44840,
+  44841,
+  44841
+ ],
+ "original_cells": 44041,
+ "generated_cells": 44841,
+ "max_terminal_loads": 32,
+ "macros": [
+  {
+   "original": "u_ot_pr_core.u_rank__u_control__u_control.u_control.u_host.u_m.u_core.u_ev_sram.u_mem",
+   "type": "ot_sram_1r1w_32x546_m1_p192_mir",
+   "instance": "u53416_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_control__u_control.u_prompt.u_m.u_core.u_sram",
+   "type": "ot_sram_1r1w_1024x256_m2_r2c2",
+   "instance": "u55869_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_control__u_packet__u_axi.u_m.u_rx_sram.u_mem",
+   "type": "ot_sram_1r1w_32x546_m1_p192_mir",
+   "instance": "u57601_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_program.u_m.g_pm[0].u_pm",
+   "type": "ot_sram_1rw_256x64_m4_r2c2",
+   "instance": "u58136_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_program.u_m.g_pm[1].u_pm",
+   "type": "ot_sram_1rw_256x64_m4_r2c2",
+   "instance": "u58137_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_program.u_m.g_pm[2].u_pm",
+   "type": "ot_sram_1rw_256x64_m4_r2c2",
+   "instance": "u58138_c0.u_cell"
+  },
+  {
+   "original": "u_ot_pr_core.u_rank__u_program.u_m.g_pm[3].u_pm",
+   "type": "ot_sram_1rw_256x64_m4_r2c2",
+   "instance": "u58139_c0.u_cell"
+  }
+ ],
+ "required_before_gate": [
+  "mapped census after re-synthesis",
+  "source-pinned exact library model",
+  "sequential equivalence",
+  "independent arbitrary-init cold-boot/reset convergence"
+ ]
+}
