@@ -98,7 +98,10 @@
   "reason": "Source-registered child of dsdv_idx_tx_n32 SPLIT (TOPK TX y): every input lands in a flop at the pin (RIL re_l/ra_l + ra_q, WDL we_l/wa_l/wd_l, wm_next mask copies); the output p is a 2-level AND-OR of flops (RDL q_l AND bank-select bsk1) registered by the parent rd (pa|pb). A pin stage would add a lookup edge (reference LPX 3) and move the compiled slot grid (lower_bk job_rank_tree_rd)."
  },
  "keep_pin_regs": true,
- "io_flop_at_pins": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
  "reset_landing": {
   "enable": false,
   "reason": "No reset input: every register of the score-store group is reset-free data (landings, captures, bank-select copies, mask copies with rn tied 1), exactly as in the x/v store; the parent owns the TX reset."
@@ -107,7 +110,7 @@
  "inhold": false,
  "outhold": false,
  "inter": [],
- "structural_change": "s81dv_idxtxga (TOPK TX y FB child, STW-S81c-TOK4 10-22): column A of the TX score store (banks 0-4, 5 x ot_sram_1r1w_1024x256) as its own hardened tile with its own clock root, so the y parent spans only the other half with its root (v/w: one root over 626 x 562 um). Same per-bank structure as x (WDL write landing, RIL read landing, RDL capture, macro_pin_flops anchors), bank-select copies local. RTL 20f1e4be0, lockstep y == reference LPX=2. r1: io_flop_at_pins OFF (gate ODB-0359: every input port lands directly in a flop that also drives a macro pin, so io_flop_at_pins (anchor at the port) and macro_pin_flops (FIRM at the macro pin) claimed the same flop; the macro-pin anchor is the timing-critical one (v/w r_ce_in -65.8), the port side is a flop-to-flop crossing from the parent with no logic).",
+ "structural_change": "s81dv_idxtxga (TOPK TX y FB child, STW-S81c-TOK4 10-22): column A of the TX score store (banks 0-4, 5 x ot_sram_1r1w_1024x256) as its own hardened tile with its own clock root, so the y parent spans only the other half with its root (v/w: one root over 626 x 562 um). Same per-bank structure as x (WDL write landing, RIL read landing, RDL capture, macro_pin_flops anchors), bank-select copies local. RTL 20f1e4be0, lockstep y == reference LPX=2. r1: OT_OFLOP_PORT_RE=^p (gate ODB-0359: every input port lands directly in a flop that also drives a macro pin, so io_flop_at_pins tried to move a macro_pin_flops FIRM anchor; inputs keep the macro-pin anchor, the timing-critical side (v/w r_ce_in -65.8); the port side is a flop-to-flop crossing from the parent with no logic).",
  "why_floorplan": "Left half of the x/v outline (313.2 x 561.6): col A x 72.576 as in v, rows pitch 95.04; W band 72.6 (read pins + wd low half), E band 65.9 (mask/wd high half, flops, 556 data pins on E toward the parent core).",
  "job": {
   "owner": "STW-S81c-TOK4",
@@ -133,7 +136,8 @@
   "OT_SPINE_SYM_MERGE": "60",
   "OT_SPINE_SYM_FAN": "8",
   "OT_MEG_OUT_UM": "1.2",
-  "OT_MEG_DEPTH_UM": "2.4"
+  "OT_MEG_DEPTH_UM": "2.4",
+  "OT_OFLOP_PORT_RE": "^p(\\[|$)"
  },
  "clock": "spine",
  "pin_hook_before_flops": [
