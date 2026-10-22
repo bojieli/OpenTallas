@@ -71,4 +71,9 @@ for a in x['instances']:
   root=a['instance'].removesuffix('.u_control')
   a['hard_children']=[{'instance':a['instance']+f'.ge[{e}].md','master':'ot_hidx_meta_sram146','view':view,'record_commit':'06d0f5e44','main_publish_commit':'6a5b95375','params':{'D':146},'fixed_width':25,'source':helper,'source_sha256':hs,'clock_pins':{'clk':root+f'.clk_meta[{e}]','clk_mem':root+f'.clk_meta[{e}]'},'outline_um':[259.2,172.8],'status':'CLOSED TT197.51 FF31.10 ps DRC0; SS sensitivity -60.10 ps'}for e in range(2)]
 x['metadata_binding']='Eight real CLOSED D146 masters; exact source bytes and literal clk_meta connections. This is component binding, not parent delivery/return timing qualification.'
+regions=json.loads((d/'column_regions.json').read_text())
+x['hard_pair_bindings']={}
+for rid,region in enumerate(regions['region_types'][1:5]):
+ v=region['view'];x['hard_pair_bindings'][f'u_pair{rid}']={'master':f'ot_hidx_score_pair8_r{rid}','view':str(pathlib.Path(v['LEF']).parent),'record':v['record'],'source':'cd4bb7587' if rid==3 else 'e774eeaa5','LEF':v['LEF'],'lef_sha256':v['sha256'],'width_um':v['width_um'],'height_um':v['height_um'],'count_per_quarter':32,'count_four_quarters':128}
+x['source_revision']='f9d6fc51f: four same-edge high-index capture FF, no calendar/port changes'
 (d/'split_contract.json').write_text(json.dumps(x,indent=2)+'\n');print('Generated 5 RTL modules and',len(contract),'real contract instances.')

@@ -35,10 +35,10 @@ for ia,ib,pa,pb,n in edges:
  newchecks.append(dict(net=n,from_um=aa.tolist(),to_um=bb.tolist(),manhattan_center_um=round(distance,4),band_corner_upper_bound_um=round(distance+rad,4)))
 bad=sorted([c for c in newchecks if c['band_corner_upper_bound_um']>405],key=lambda c:-c['band_corner_upper_bound_um'])
 result['reach_audit']=dict(kind='Exact LEF pin midpoint and pessimistic full FF band corner Manhattan bounds; not detailed route or CTS proof',net_count=len(newchecks),max_center_um=max(c['manhattan_center_um'] for c in newchecks),max_band_corner_um=max(c['band_corner_upper_bound_um'] for c in newchecks),violations=bad,hard_macro_halo_um=5.4)
-result['next']='Compose actual full-count placement and qualify clock/reset/timing. R3 remains a stand-in.'
+result['next']='Compose actual full-count placement and qualify clock/reset/timing. R3 exact CLOSED 32615a054; parent physical qualification remains open.'
 (out/'column_geometry.json').write_text(json.dumps(result,indent=2)+'\n');(out/'column_geometry_paths.json').write_text(json.dumps(newchecks,indent=2)+'\n')
 print('violations',len(bad),'max',result['reach_audit']['max_band_corner_um']);print(json.dumps(bad[:3],indent=2));print([(a['name'],pos[i].tolist()) for i,a in enumerate(bands)])
 svg=['<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -10 940 950">','<rect width="907.2" height="907.2" fill="white" stroke="black"/>']
 for a in rect:
  color={'pair':'#9cbde0','SRAM':'#e1c88f','FF_band':'#9dc79d','control_reserve':'#d7b2ce'}[a['kind']];x,y,w,h=[a[k] for k in ['x_um','y_um','width_um','height_um']];svg.append(f'<rect x="{x}" y="{907.2-y-h}" width="{w}" height="{h}" fill="{color}" stroke="black" stroke-width="0.5"/><text x="{x}" y="{907.2-y-h+8}" font-size="7">{a["name"]}</text>')
-svg.append('<text x="0" y="930" font-size="12">One column, 907.2 x 907.2 um. Diagnostic geometry. R3 is a stand-in.</text></svg>');(out/'column_geometry.svg').write_text('\n'.join(svg))
+svg.append('<text x="0" y="930" font-size="12">One column, 907.2 x 907.2 um. Diagnostic geometry. R3 exact CLOSED 32615a054; parent physical qualification remains open.</text></svg>');(out/'column_geometry.svg').write_text('\n'.join(svg))
