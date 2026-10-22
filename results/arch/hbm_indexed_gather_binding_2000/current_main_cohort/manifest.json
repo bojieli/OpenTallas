@@ -155,5 +155,16 @@
     "source_profile": "Same R10/W5, launch +4, earliest gap32, selector capture2 and tail2",
     "log": "gather_maincohort.log",
     "actual_readset_sha256_file": "actual_readset_sha256.json"
-  }
+  },
+  "runtime_payload": {
+    "fixtures/scores.mem": "46a3729b00843102f2167ae378b2b410c4420d74764c2b45e0242e5974037cdf",
+    "fixtures/gsc_layouts.json": "31fc2ea0cef905e7a90636dd3bd54dcb2512271246bcdfb88266192b2db7b5de",
+    "fixtures/plans.json": "bf147a75d45dedf3e2b5f8210fbc68a6f8ec9c35372e678f67da3c38d7c3f68a",
+    "fixtures/cases.mem": "b2a565f32dfeb224b0b5e21cfef47375710805272439160f752f106e0fa7691a",
+    "rows/scope.json": "5cc678d24518767f7cee28df24ce57327db242a3b44b2a47f0392e4226903b53",
+    "rows/L2_6rows.mem": "f56c030d90adf67ce94c58d3d1a1caecbd9f164627a4413ef5971e54f5b279e8",
+    "rows/L0_6rows.mem": "ed9e709216457e760601934f4630cfe7e8d695658e66ad1f928e582f28582cb0",
+    "rows/L14_6rows.mem": "f56c030d90adf67ce94c58d3d1a1caecbd9f164627a4413ef5971e54f5b279e8"
+  },
+  "reproduction": "Set FIXTURE and ROWS to the packaged fixtures/rows directories, then invoke the packaged run_f20.sh. Original HGI dispatch is provenance only; the bounded cases/scores/rows are sufficient for this exact component replay."
 }
