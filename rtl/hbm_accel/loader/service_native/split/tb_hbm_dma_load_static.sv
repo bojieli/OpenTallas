@@ -1,9 +1,12 @@
 `timescale 1ns/1ps
+`ifndef MUT
+`define MUT 0
+`endif
 module tb_hbm_dma_load_static;
  reg clk=0,rst_n=0;always #1 clk=~clk;
  reg bv=0,lv=0;reg[61:0]cmd=0;reg[1:0]fv=0;reg[11:0]fs=0;reg[511:0]fd=0;
  wire f0,f1,pbad,ft,busy,ov;wire[1:0]ready;wire[280:0]dq,raw_dq;wire[2:0]db;wire[1:0]destq;
- ot_hbm_svc_vmdel_lane_load_static #(.NPC(2)) u(.clk(clk),.rst_n(rst_n),.bank_id(3'd0),
+ ot_hbm_svc_vmdel_lane_load_static #(.NPC(2),.MUT(`MUT)) u(.clk(clk),.rst_n(rst_n),.bank_id(3'd0),
  .begin_v_i(bv),.begin_bank_i(1'b0),.begin_epoch_i(16'd7),.start_i(1'b0),.start_bank_i(1'b0),.start_epoch_i(16'd0),.start_base_sector_i(16'd0),
  .fill_v_i(fv),.fill_bank_i(2'b0),.fill_slot_i(fs),.fill_epoch_i({2{16'd7}}),.fill_data_i(fd),
  .full0_all({8{f0}}),.full1_all({8{f1}}),.pcbad_all({8{pbad}}),.full0(f0),.full1(f1),.pcbad(pbad),.block_ready(ready),.busy(busy),.fault(ft),.dq(raw_dq),
@@ -1510,11 +1513,14 @@ module tb_hbm_dma_load_static;
  fv=0;repeat(8)@(negedge clk);
  if(!ready[0]||ft)$fatal(1,"landing not ready");
  for(k=0;k<N;k=k+1)begin
- lv=1;cmd=cmds[k];sent=sent+1;if(firstin<0)firstin=cyc+1;@(negedge clk);
+ lv=1;cmd=cmds[k];if(k==N-1)cmd[56]=1;sent=sent+1;if(firstin<0)firstin=cyc+1;@(negedge clk);
  end
  lv=0;repeat(10)@(negedge clk);
  $display("LOAD_METRICS sent=%0d got=%0d errors=%0d fault=%0b command_to_output_edges=%0d II=1",sent,got,errors,ft,firstout-firstin);
  if(errors||got!=N||ft)$fatal(1,"DMA_LOAD_STATIC FAIL");
+ @(negedge clk);lv=1;cmd=cmds[N-1];@(negedge clk);lv=0;repeat(8)@(negedge clk);
+ if(!ft||got!=N)$fatal(1,"released source bank accepted or fault missing");
+ $display("OWNERSHIP_RELEASE PASS rejected_reuse=1 extra_packets=0");
  $display("DMA_LOAD_STATIC PASS formats=FP32,BF16,FP8E4M3,INT8,U32,UE8M0 tail_mask=all destination_offsets=all");$finish;
  end
 endmodule
