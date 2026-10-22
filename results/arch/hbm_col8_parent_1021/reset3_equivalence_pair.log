@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       admits    92 GB (avail 396, growth 332, headroom 0, waiters 1/153 GB) load 74/128 running 35 disk 835 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/reset3src
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/reset3src
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/reset3src
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/reset3src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/reset3src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-hbm-col8-parent-2000/reset3src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3646532-1792645415 after 1 s
+COL8_RESET3_PASS checks=341 regions=38 release_edges=3
+- rtl/test/hbm_idx_static/tb_col8_reset3.sv:19: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.000 s; speed 14.895 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+[45000] %Fatal: tb_col8_reset3.sv:11: Assertion failed in tb_col8_reset3: COL8_RESET3_FAIL checks=8 ref=3fffffffff actual=0000000000
+%Error: rtl/test/hbm_idx_static/tb_col8_reset3.sv:11: Verilog $stop
+Aborting...
+../run_reset3_pair.sh: line 10: rg: command not found
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3646532-1792645415): exit 127
+COL8_RESET3_PAIR_PASS_HARNESS_RECOVERED

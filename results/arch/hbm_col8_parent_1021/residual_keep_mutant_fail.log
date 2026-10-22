@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       admits   109 GB (avail 583, growth 507, headroom 0, waiters 1/384 GB) load 63/128 running 33 disk 818 GB 
+ot-run: ot-epyc7       admits   124 GB (avail 401, growth 315, headroom 0, waiters 0/0 GB) load 312/96 running 65 disk 4159 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-col8-residual2-1021/src
+ot-run: ot-gold2       admits   -11 GB (avail 414, growth 422, headroom 0, waiters 0/0 GB) load 25/112 running 21 disk 2715 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-col8-residual2-1021/src
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-col8-residual2-1021/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-col8-residual2-1021/src
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-3919139-1792646441 after 1 s
+FAN32_MODELS_PASS sha256=3606964bc33b09214c19c32b6d6bbab6cbf09f26d28d3aa9f9aec1571f657048 out=/srv/opentallas-scratch/claude/codex-col8-residual2-1021/bench_mut/cells.v
+[2020000] %Fatal: tb_col8_residual_equiv.sv:20: Assertion failed in tb_col8_residual_equiv: COL8_RESIDUAL_EQUIV_FAIL score cycle=202 ref=0a0ddca0dd8a0dd4a0dd0a0dcca0dc8a0dc4a0dc100cd00cd00c900c900bd00bd00b900bbfc01 dut=0a0ddca0dd8a0dd4a0dd0a0dcca0dc8a0dc4a0dc3fe03fe03fe03fe03fe03fe03fe03fe03fc01
+%Error: rtl/test/hbm_idx_static/tb_col8_residual_equiv.sv:20: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-3919139-1792646441): exit 1
