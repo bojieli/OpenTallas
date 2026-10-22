@@ -73,6 +73,23 @@ if [ "${CLK2:-0}" = 1 ]; then
  python3 tools/s81_dv/release72/land_xhead_clk2.py "$W/plan.json" "$W/land.json" "$W/land_x.json" ${CLK2_ARGS:-} > "$W/land_xhead.log" 2>&1 || exit 6
  mv "$W/land_x.json" "$W/land.json"
 fi
+# STEWARD 06:4x / RTLGAP BIND 06:34: census-safe su_kv cmp.pool (same module + ports, drop-in) from claude/rtlgap-sukv-so-1022
+# 28b04754d replaces 75c077ec9 ot_s81sl_cmp_pool.sv (native max 193) in u_s_3N's KV slice package: MAIN die -> pool_safe_main.sv,
+# FB die -> pool_safe_alternate.sv (single-root variants; the regional ones need 8 pool lane regions). MU.S81.CAL: CP 391 -> 431.
+POOL_REF=28b04754d; POOL_FILE=rtl/dsrom_sys/s81_dv/slice/pool_safe_$([ "$V" = main ] && echo main || echo alternate).sv
+git --git-dir="$G" cat-file -e "$POOL_REF^{commit}" 2>/dev/null || git --git-dir="$G" fetch -q origin claude/rtlgap-sukv-so-1022 || exit 6
+git --git-dir="$G" cat-file -e "$POOL_REF:$POOL_FILE" || exit 6
+python3 - "$W/table.json" "$POOL_REF" "$POOL_FILE" <<'PY' > "$W/pool_bind.log" 2>&1 || exit 6
+import json, sys
+p, ref, f = sys.argv[1:]; T = json.load(open(p)); old = 'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cmp_pool.sv'
+assert old in T['rtl_refs']['75c077ec9'], 'cmp_pool not in 75c077ec9 refs'
+T['rtl_refs']['75c077ec9'].remove(old); T['rtl_refs'].setdefault(ref, []).append(f)
+i = T['prefer'].index('75c077ec9/' + old); T['prefer'][i] = f'{ref}/{f}'
+T['functional_successor']['sukv_pool'] = dict(ref=ref, file=f, replaces='75c077ec9/' + old, census='native PASS max 29 loads/driver (RTLGAP 06:34)',
+                                              calendar='CP job kind 14: 391 -> 431 cycles (+40), MU.S81.CAL')
+json.dump(T, open(p, 'w'), indent=1)
+print('POOL_BIND', ref, f)
+PY
 python3 - "$W/land.json" <<'PY' > "$W/force_landing.log" 2>&1 || exit 6
 import json, sys
 p = sys.argv[1]; L = json.load(open(p)); n = 0
