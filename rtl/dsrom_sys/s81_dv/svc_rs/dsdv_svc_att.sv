@@ -76,7 +76,8 @@ module dsdv_svc_att #(
     parameter integer PFIFO = 512,
     parameter integer PVQ = 8,                    // P.V buffer = the beats of one job (static drain, no credit)
     parameter integer DQ = 8,
-    parameter bit SRAM_MACRO = 0
+    parameter bit SRAM_MACRO = 0,
+    parameter integer PV_IDENTITY = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -173,17 +174,27 @@ module dsdv_svc_att #(
         else if (hdr_mine && h_type == 4'd12) allq_r <= q_d[54];
     assign allq_o = allq_r;
 `endif
-    reg [7:0] wcount; reg [9:0] nsel; reg [20:0] wfirst; reg [9:0] wuser;
+    reg [7:0] wcount; reg [9:0] nsel; reg [20:0] wfirst,wposition; reg [9:0] wuser;
+`ifdef OT_SVC_ALLQ
+    wire [1:0] pv_owner_quarter=allq_r?tile[3:2]:st_r;
+`else
+    wire [1:0] pv_owner_quarter=st_r;
+`endif
+    wire [439:0] pv_provenance;wire pv_identity_bad;
+    dsdv_pv_source_identity #(.ENABLE(PV_IDENTITY)) u_pv_identity (
+      .clk(clk),.rst_n(rst_n),.cfg_v(hdr_mine && h_type==4'd12),.cfg_owner(q_d[52:33]),.cfg_valid(q_d[53]),
+      .launch(go),.launch_ok(job_open && !job_active && !run && !dr_arm && !dr_on),.user_id(wuser),.tag_id(tagj),.quarter(pv_owner_quarter),.tile(tile),.position(wposition),
+      .provenance(pv_provenance),.bad(pv_identity_bad));
     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
     wire start = hdr_mine && h_type == 4'd2;
     wire [9:0] tjob = 10'(wcount) + nsel;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
+        if (!rst_n) begin wb <= 0; sb <= 0; wcount <= 0; nsel <= 0; wfirst <= 0; wposition <= 0; wuser <= 0; tagj <= 0; st_r <= 2'(ST); end
         else begin
             if (hdr_mine && h_type == 4'd12) begin wb <= q_d[29:0]; if (q_d[32]) st_r <= q_d[31:30]; end
             if (start && !job_open) begin
                 sb <= q_d[29:0]; wcount <= q_d[88:81]; nsel <= q_d[98:89]; wfirst <= q_d[119:99];
-                wuser <= q_d[458:449]; tagj <= q_d[502:495];
+                wuser <= q_d[458:449]; tagj <= q_d[502:495];wposition<=q_d[479:459];
             end
         end
     always @(posedge clk) tjob_o <= tjob;
@@ -392,7 +403,7 @@ module dsdv_svc_att #(
     always @(posedge clk) if (pv_v) pvq[pvw[PA-1:0]] <= {pv_c, pv_y, pv_f};
     wire [PVB-1:0] pb = pvq[pvr[PA-1:0]];
     always @(posedge clk) if (dr_on)
-        pv_od <= (p_i == 0) ? {1'b1, 440'd0, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
+        pv_od <= (p_i == 0) ? {1'b1, pv_provenance, pb[PVB-1 -: 8], pb[NT*H-1:0]} : {1'b0, pb[NT*H + 32'(p_i - 1)*H*32 +: H*32]};
 
     // ------------------------------------------------------------------ sequential
     integer k;
@@ -529,6 +540,7 @@ module dsdv_svc_att #(
                 run <= 1'b1; rc <= 10'd1; ej_v <= 1'b1; job_active <= 1'b1; pv_n <= 0;
                 if (dr_arm || dr_on) fc[22] <= 1'b1;                          // a start while P.V of the last job drains
                 dr_arm <= pvown;
+                if(pv_identity_bad) fc[23]<=1'b1;
                 p_left <= (16'(tjob) + 16'(R) - 1) / 16'(R);
                 if (q_have != 5'd16) fc[9] <= 1'b1;                           // q not loaded at the compiled start
             end else if (run) begin
@@ -588,4 +600,25 @@ module dsdv_svc_att #(
             if (sc_v && !job_active) fc[18] <= 1'b1;
         end
     end
+endmodule
+// Exact source-owned identity used by the real ATT header above. Keeping launch
+// context separate from CFG prevents later configuration from relabelling an old
+// P.V drain. No numerical payload enters this block.
+module dsdv_pv_source_identity #(parameter integer ENABLE=0)(
+ input wire clk,rst_n,cfg_v,input wire[19:0]cfg_owner,input wire cfg_valid,
+ input wire launch,launch_ok,input wire[9:0]user_id,input wire[7:0]tag_id,
+ input wire[1:0]quarter,input wire[3:0]tile,input wire[20:0]position,
+ output wire[439:0]provenance,output wire bad
+);
+ generate if(ENABLE==0)begin:g_disabled assign provenance=440'd0;assign bad=1'b0;end
+ else begin:g_enabled
+  reg[19:0]pending,owner;reg valid,live;reg[1:0]q;reg[3:0]t;reg[20:0]pos;
+  always @(posedge clk or negedge rst_n)if(!rst_n)begin pending<=0;owner<=0;valid<=0;live<=0;q<=0;t<=0;pos<=0;end
+  else begin
+   if(cfg_v)begin pending<=cfg_owner;valid<=cfg_valid;end
+   if(launch)begin owner<=pending;live<=launch_ok && valid && pending[17:0]=={user_id,tag_id};q<=quarter;t<=tile;pos<=position;end
+  end
+  assign provenance={392'd0,pos,live,t,q,owner};
+  assign bad=launch && (!launch_ok || !valid || pending[17:0]!={user_id,tag_id});
+ end endgenerate
 endmodule
