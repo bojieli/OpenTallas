@@ -115,9 +115,10 @@ class GrayFifo(unittest.TestCase):
 
     def test_tree_inside_fifo_refused(self):
         inst = 'u_ch.g_afw.u_af.wr_reset_conditioner'
-        # TREE=1: the g_original check; OUTPUT_COPIES=4 (g_regions) is already refused by the pipe-structure checks
+        # TREE=1: refused by the g_original check or, when the copy tree leaves reset_pipe unused, already by the
+        # stage-count check (ROOT-MERGE-1022: either refusal is accepted); OUTPUT_COPIES=4 (g_regions) is already refused by the pipe-structure checks
         # (its last reset_pipe stage is not a flop any more), before the g_original check is reached
-        for name, dp, why in (('tree1', f'defparam {inst}.TREE = 1; defparam {inst}.OUTPUT_COPIES = 4;', 'g_original'),
+        for name, dp, why in (('tree1', f'defparam {inst}.TREE = 1; defparam {inst}.OUTPUT_COPIES = 4;', 'g_original|fewer than 2 stages'),
                               ('copies4', f'defparam {inst}.OUTPUT_COPIES = 4;', 'wr_reset_conditioner')):
             with self.subTest(mutant=name):
                 with self.assertRaisesRegex(G.GrayFifoError, why):
