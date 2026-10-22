@@ -458,7 +458,10 @@ module ot_hbm_svc_wb_kq8_core #(parameter integer FAW=2, parameter integer PP=1,
     assign e0p[gb]=fifo_empty[F0+gb*NPP];
     assign e1p[gb]=(NPP==2)?fifo_empty[F0+gb*NPP+NPP-1]:1'b1;
     wire [BW-1:0] din=(NPP==2&&rtd[IX])?r1[BW-1:0]:r0[BW-1:0];
-    wire rv=(NPP==2&&rtc[IX])?!e1p[gb]:!e0p[gb];
+    // HBMb/IDXSU 10-21: the capture valid selects with the SAME kept toggle copy (rtd) as the data mux, so each
+    // captured bit is structurally gated by its own FIFO read-valid (reviewed_gray_fifos SAT miter: rtc-gated valid with
+    // an rtd-selected payload read FIFO 1 storage while FIFO 1 was empty in the rtc!=rtd cone). rtc==rtd always.
+    wire rv=(NPP==2&&rtd[IX])?!e1p[gb]:!e0p[gb];
     integer e;
     always @(posedge hbm_clk)for(e=0;e<3;e=e+1)
      if(push&&rv&&wpo[IX][e])ent[e][5*gb+:BW]<=din;
