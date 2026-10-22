@@ -36,6 +36,14 @@ def facts(plan_p, land_p, half):
              worst_slice_to_gunit_um=max(man(cen(s), cen(B['gunit'])) for s in sl),
              worst_slice_to_edge_um=max(min(man(cen(s), cen(B[c])) for c in (('coll_WS', 'coll_WN', 'coll_ES', 'coll_EN')
                                         if 'coll_WS' in B else ('s_0S', 's_0N', 's_7S', 's_7N'))) for s in sl))
+    # G8/G9 floorplanners (dv_floorplan72_g8 / plan72_g8) record the um facts but not the derived stage counts that
+    # dv_plan.geometry_facts adds: derive them with the same formulas (TOKc-S81 10-22, G9 tree compile KeyError)
+    hop = g['hop_um']
+    if 'scalar_exchange_stages' not in g and 'worst_slice_to_slice_um' in g:
+        g['scalar_exchange_stages'] = math.ceil(g['worst_slice_to_slice_um'] / hop)
+    if 'phase_path_stages' not in g and 'worst_allgather_slice_to_frame_um' in g and 'worst_local_return_um' in g:
+        g['phase_path_stages'] = math.ceil(g['worst_allgather_slice_to_frame_um'] / hop) + \
+            math.ceil(g['worst_local_return_um'] / hop)
     hl = {l['i']: l['s'] for l in plan['links'] if l['i'].startswith(('hrq_', 'hrd_'))}
     if hl:
         g['hbm_rt_stages'] = max(hl.get(f'hrq_{k}', 0) + hl.get(f'hrd_{k}', 0) for k in {i[4:] for i in hl})

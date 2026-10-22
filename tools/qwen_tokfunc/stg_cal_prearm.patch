@@ -1,0 +1,33 @@
+--- a/rtl/test/qwen_dv/dv_lower_mat_bench.py
++++ b/rtl/test/qwen_dv/dv_lower_mat_bench.py
+@@ -245,6 +245,9 @@
+     probes = {}
+     for s in (0, N - 1):                                   # L8 AR, unscaled
+         land = t
++        # The ARF-enabled positive vehicle must have one root framer arm per
++        # eight-word probe, before its first AR word. ARF=0 ignores the arm.
++        ev.cmd(land - 2 * s - 1, D.cmd_xc(0, 0, 8, 0x100 * (s + 1)))
+         ev.cmd(land - 2 * s, D.cmd_stn(s, 1, 1, 8, 0, M.DST_AR, 0x100 * (s + 1), kc=1))
+         far = land + 10
+         for j in range(8):
+@@ -252,7 +255,9 @@
+         probes[s] = far
+         t += 200
+     xc_e = t
+-    ev.cmd(xc_e, D.cmd_xc(0, 0, 7, 0x55))
++    # This marker also arms the final one-word AMAX/ARX gather message. Seven
++    # words would leave the framer armed after the single actual ARX result.
++    ev.cmd(xc_e, D.cmd_xc(0, 1, 1, 0x55))
+     t += 40
+     # AMAX: root s0 (amnb 2) + s5; ARX armed on the root
+     ev.cmd(t - 2, D.cmd_amax(15, clear=1))  # MU lifecycle: user 0 must be open before AMAX results
+@@ -275,7 +280,8 @@
+     l8 = ar[0] - probes[0]
+     a11 = [c for c in ar if c > probes[N - 1]][0]
+     hop = (a11 - probes[N - 1] - l8) / (N - 1)
+-    cc = [c for c, _ in log.get('S0CC', [])]
++    # Probe pre-arms produce earlier CC pulses; measure only this unique marker.
++    cc = [c for c, word in log.get('S0CC', []) if (word & 0xFFFFFFFF) == 0x55]
+     ami = [c for c, w in log.get('S5SD', []) if (w >> 44) & 7 == 3]
+     amv1 = [c for c, w in log.get('S1SD', []) if (w >> 44) & 7 == 4]
+     arx = [c for c, w in log.get('S0AR', []) if (w >> 513) & 1 and c > e5]

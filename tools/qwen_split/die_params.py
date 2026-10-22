@@ -121,10 +121,18 @@ def gen_params(insts, hr_rows, image=IMAGE):
         if TT_MASTER in masters:
             out[TT_MASTER].update(NU=nu, OPSEG=1)
             out[TT_MASTER]['_source'] += '; ' + src
+        # TOK.QW.LAYER.4 (STEWARD-TOK-QW 10-21): the release die runs a real token only with the QW-LAYERGAP slice RTL
+        # bound: ARF 1 (AR message framer: io_collective tag / last-on-message-last) + RP 1 (per-token RoPE row from the
+        # D2D return chain).  STG3 c0f8097f3: ARF/RP 0 -> od/lm --arf + qk --rope rx FAIL; ARF/RP 1 -> 36 layers PASS.
+        # The slice2_e / slice2_wh kits carry the same params.  OT_QWEN_SLICE_LAYERGAP=0 = the old ARF/RP 0 views (diag).
+        lg = int(os.environ.get('OT_QWEN_SLICE_LAYERGAP', '1') or 0)
         for sm in ('qfd_dv_slice2_w', 'qfd_dv_slice2_e'):
             if sm in masters:
                 out[sm] = dict(MU_NU=nu, _source=src)
-        rec['mu'] = dict(nu=nu, opseg=1)
+                if lg:
+                    out[sm].update(ARF=1, RP=1)
+                    out[sm]['_source'] += '; QW-LAYERGAP ARF 1 RP 1 (TOK.QW.LAYER.4)'
+        rec['mu'] = dict(nu=nu, opseg=1, slice_layergap=lg)
         if 'qfd_sys_face' in masters:
             # MU-DQ-SYSFACE (COORD 0kg (a)): qfd_sys_face #(MU 1) = MU d2d image (ot_qwen_d2d_cal_seq_dies_mu.sv) + filler
             # head contexts accepted by user on tt_native_pos[17:16]; the die stand-in view stays the MU 0 rs3 view until mu1 closes

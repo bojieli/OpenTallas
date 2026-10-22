@@ -1,0 +1,34 @@
+{
+  "top": "qkd_kvn_ctx_ovl_rope",
+  "status": "FAIL",
+  "max_dynamic_loads": 246,
+  "roots_examined": 2491,
+  "role_errors": [],
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qkd_kvn_ctx_ovl_rope_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "4932c46fe03fedc4f6db3575c52546803cc655b49763e1621713bb012f76bf29"
+  },
+  "source": "4db63493b",
+  "violations": [
+    {
+      "driver": "reseed",
+      "net": "reseed",
+      "loads": 46
+    },
+    {
+      "driver": "_3168_/Y",
+      "net": "_1591_",
+      "loads": 246
+    },
+    {
+      "driver": "_3172_/Y",
+      "net": "_1595_",
+      "loads": 246
+    },
+    {
+      "driver": "u_ot_pr_core.uq_read[0][1]$_DFF_P_/QN",
+      "net": "_0434_",
+      "loads": 43
+    }
+  ]
+}

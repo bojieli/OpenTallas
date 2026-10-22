@@ -1,0 +1,38 @@
+{
+  "baseline_commit": "aef1d694e9fded989eb85868cc8214efa246da48",
+  "published_main": "97b05c443c06db0b46a0360aa338f9bf2e9e5009",
+  "helper_sha256": "bdc950da605ac3244793e987010fa25de1ca30ef5faeb9357e1976c9eb454f2b",
+  "focused": "41 passed,0 skipped",
+  "full": "2199 baseline vs2206 candidate XMLcases,38 existing failureelements each; no new full-message/text Counter entries",
+  "normalization": [
+    "temporary directory names",
+    "object repr addresses only"
+  ],
+  "scope": "Generic Yosys/OpenSTA graph and helper regression tests; not physical qualification",
+  "raw": {
+    "baseline.xml": {
+      "sha256": "97d7b859efaf8a198daf3d02cacbf2b74ebaa3dc553747dd3ac27f9d7680bf4f",
+      "bytes": 437128
+    },
+    "candidate.xml": {
+      "sha256": "97f50f798cdc2b339cb204bb584fc6a929431201e6605a5fe2921352b5483153",
+      "bytes": 438173
+    },
+    "cdc_focused.xml": {
+      "sha256": "49daea0e621619f4fb6c37c3992d5e0a94079979f2fd0dad98b7d8e4b3a54f6d",
+      "bytes": 5923
+    },
+    "baseline.log": {
+      "sha256": "4f3e63d667b0d99ec53eb15d5fdd258bc2ac49618c21922daf05e95fc22a5f44",
+      "bytes": 122938
+    },
+    "candidate.log": {
+      "sha256": "66811df9e5727bf3a9d40df0a754a42740314df69b208bd4c5362b7dd840d875",
+      "bytes": 122930
+    },
+    "cdc_focused.log": {
+      "sha256": "38e8b99e81739dfb9fdfb8ae8f577fdd310a6d2028b34ba54201d6dab2c94325",
+      "bytes": 113
+    }
+  }
+}

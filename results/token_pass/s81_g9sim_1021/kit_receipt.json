@@ -1,0 +1,126 @@
+{
+ "schema": "opentallas.s81_g9sim.kit_receipt.v1",
+ "lane": "STEWARD-TOK-S81-G9SIM 2026-10-21",
+ "die": {
+  "die_v": "ot-epyc5:/srv/opentallas-scratch/claude/s81-die10-g9c-1021/pred/bind/bind/die.v",
+  "die_v_sha256": "00715e1a11cc9681bf5f1d6a70cf5d4a2c9c3a8094730cf26291f9d3e3a4c8ea",
+  "port_bind_sha256": "309c101e3be0f1062ad35fd964db4aa6b7f348dd0704691e2a2d1f82e9700398",
+  "port_bind_summary": {
+   "masters": 48,
+   "instances": 30090,
+   "unbound_masters": 0,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 0,
+   "input_tied": 0,
+   "unparsed_connections": 0,
+   "duplicate_port_connections": 0,
+   "undriven_net_bits": 0,
+   "multi_driven_net_bits": 0,
+   "unread_net_bits": 0,
+   "output_open_ports": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 44,
+   "pad_bits": 224706,
+   "spare_out_bits": 283676,
+   "unresolved_children": 0,
+   "ambiguous_children": 0,
+   "variant_children": 26
+  },
+  "bind_case_sha256": "984bcc483036f9f3d81709f61b4c4166603d86d999c1902b498c48bade5a65e3",
+  "land_plan_g9_sha256": "abcfbdb949d218b535eb0a0efac3fb7778a7db0caee13f6a0f8c25fa3f101f0b",
+  "snapshot_refs": [
+   "PREP 3be5b0ff784590d406f4a1d79c7a7624bac33040",
+   "RTL_BASE 553741303923ab6bab36d67d17f914b1f11896c5",
+   "TOOLS 1a872af33c8d10d8123f8d4c69198e09cc04fd43",
+   "CREF 12c132d60a8f0300056abb216d48ff9588e7f620",
+   "BIND_TABLE_FIX d602169f70800e1108d755f7146ae0ae6c96534d",
+   "REUSED_FAILED_UNIT oth-ubuntu-3311561-1792624541",
+   ""
+  ],
+  "physical_case": "ot-epyc5:/srv/opentallas-scratch/claude/s81-g9d-1021/die72-g9d-{main,fb}/case (CASE_RC 0; reuses this strict bind)"
+ },
+ "kit_ref": "553741303923ab6bab36d67d17f914b1f11896c5 (G9 RTL_BASE) + bind rtl_extra (by sha)",
+ "defines": {
+  "used": [
+   "DSFD_PQ_STATIC_X2",
+   "S81CTRL_SRAM_FIFO",
+   "S81CTRL_SRAM_P192",
+   "S81CTRL_NATIVE32",
+   "OT_COLL_NATIVE32",
+   "OT_COLL_NATIVE32_OFF",
+   "OT_S81ENG_TAP_N32R2"
+  ],
+  "note": "the strict bind / GEN index defines: the owner six (manifest 96043ef4d) + OT_S81ENG_TAP_N32R2 (bind_case); no module of either cut reads OT_S81ENG_TAP_N32R2"
+ },
+ "xs4_selection": {
+  "used": "rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+  "sha256": "50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808",
+  "why": "the physical die = G9d GEN case: its dv_rvcase.py (sha c390a4eb..., = witness 09fe75494 GEN tool) on bind_case 984bcc48 runs rtl_ports(port_bind_cmd), which omits the strict prefer-list/ref-tile augmentation and selects the 8a override 50485a59 for ot_s81sl_xs4/_cal/_ctl; strict PB 309c recorded SRC 974ec6f3",
+  "applied": "dv_rtl_kit --select (die kit KD + both cut kits); kit.json selected[]",
+  "die_kit_choice": {
+   "ot_s81sl_xs4": "rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+   "ot_s81sl_xs4_rst": "rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+   "ot_s81sl_xs4_pdec": "rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+   "ot_s81sl_xs4_ctl": "rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+   "ot_s81sl_xs4_cal": "rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+   "ot_s81sl_xs4_rng": "rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+   "ot_s81sl_xs4_fetch": "rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+   "ot_s81sl_xs4_due": "rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv",
+   "ot_s81sl_xs4_bad": "rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv"
+  },
+  "finding": "ot_s81sl_xs4 is instantiated only by ot_s81sl_xgt_xo (MU72 end slices u_s_0*/u_s_7*): neither the HOST cut nor the KV-leaf cut contains it, so the selector divergence does not change these two simulations"
+ },
+ "cuts": {
+  "cut_3S_ctl": {
+   "kit_verdict": "PASS",
+   "masters": 20,
+   "modules": 353,
+   "files": 184,
+   "defines": [
+    "DSFD_PQ_STATIC_X2",
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF",
+    "OT_S81ENG_TAP_N32R2",
+    "S81CTRL_NATIVE32",
+    "S81CTRL_SRAM_FIFO",
+    "S81CTRL_SRAM_P192"
+   ],
+   "files_checked": 183,
+   "files_not_equal_to_g9_materialized": [],
+   "variant_divergence_vs_strict_pb": [],
+   "xs4_in_closure": false,
+   "problems": [],
+   "prefer_conflicts": 5
+  },
+  "cut_3N_kv": {
+   "kit_verdict": "PASS",
+   "masters": 12,
+   "modules": 275,
+   "files": 146,
+   "defines": [
+    "DSFD_PQ_STATIC_X2",
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF",
+    "OT_S81ENG_TAP_N32R2",
+    "S81CTRL_NATIVE32",
+    "S81CTRL_SRAM_FIFO",
+    "S81CTRL_SRAM_P192"
+   ],
+   "files_checked": 145,
+   "files_not_equal_to_g9_materialized": [],
+   "variant_divergence_vs_strict_pb": [],
+   "xs4_in_closure": false,
+   "problems": [],
+   "prefer_conflicts": 5
+  }
+ },
+ "tools": {
+  "branch": "claude/steward-tok-s81-g9sim-1021",
+  "base": "9a2a7891b (dv_slice_tb per-output-wire trace)",
+  "commands": "--select rtl_extra/8a495768f02316a7a8ad2e2bafef2f4d3741b741/rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xs4.sv:50485a59b26517eb34e2ae4c0918f8480ae0c5e0c96f6246b93c30c6b7970808"
+ }
+}

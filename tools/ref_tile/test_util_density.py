@@ -25,12 +25,14 @@ def test_macro_tile_dense_cells_still_fail_and_fill_bound():
     assert m["total_fill"] > RT.FILL_MAX and RT.util_severity(m) == ("FAIL", False)
 
 
-def test_no_macro_kit_is_unchanged():
-    for std, core in ((2000.0, 4000.0), (3000.0, 4000.0), (1000.0, 4000.0), (3000.0, 3900.0), (2600.0, 4000.0)):
-        u = std / core
-        old = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN")
+def test_no_macro_kit_never_advises_shrink():
+    # OWNER 10-19/10-21: < 40% roomy = INFO (acceptable), 40-60% OK, > 60% WARN (enlarge), > 70% FAIL (unchanged)
+    for std, core, want in ((1000.0, 4000.0, ("INFO", False)), (1500.0, 4000.0, ("INFO", False)),
+                            (1700.0, 4000.0, ("INFO", True)), (2000.0, 4000.0, ("INFO", True)),
+                            (2400.0, 4000.0, ("INFO", True)), (2600.0, 4000.0, ("WARN", False)),
+                            (3000.0, 3900.0, ("FAIL", False))):
         m = RT.util_metrics(std, [], core)
-        assert m["util"] == u and RT.util_severity(m)[0] == old
+        assert m["util"] == std / core and RT.util_severity(m) == want
 
 
 def _dump(std_n, macro_bbox):
@@ -43,5 +45,9 @@ def test_textbook_util_macro_density_and_no_macro_identical():
     TL.util_findings(_dump(100000, [0, 0, 161, 165.4]), dict(TL.THRESHOLDS), F, M)   # std 5400, macro 26.6k
     assert "util_channel" not in F and M["std_density"] < 0.5 and M["total_fill"] > 0.65
     F, M = {}, {}
-    TL.util_findings(_dump(100000, None), dict(TL.THRESHOLDS), F, M)                   # 5400/41600 = 13% < 45%
-    assert "outside 45%-65%" in F["util_channel"][0] and "std_density" not in M
+    TL.util_findings(_dump(100000, None), dict(TL.THRESHOLDS), F, M)                   # 5400/41600 = 13% < 40%
+    assert "util_channel" not in F and "roomy; acceptable" in M["util_note"] and "std_density" not in M
+    F, M = {}, {}
+    TL.util_findings(_dump(540000, None), dict(TL.THRESHOLDS), F, M)                   # 29160/41600 = 70% > 60%
+    assert "enlarge the outline" in F["util_channel"][0]
+    assert not any("shrink" in x for x in F["util_channel"] if "never shrink" not in x)

@@ -32,6 +32,15 @@ module dsdv_bksel_q (
     output wire [864:0] t_s,
     output wire [353:0] t_o
 );
+`ifdef OT_S81PH_SEL_HQ
+    // S81-TOPK7 hierarchical quarter (ot_s81ph_hq_tile.sv): same ports / function / edges, native-census-clean structure
+`ifndef OT_S81PH_SEL_HQ_MUT
+`define OT_S81PH_SEL_HQ_MUT 0
+`endif
+    dsfd_selt_q_hq #(.DM(4), .MUT(`OT_S81PH_SEL_HQ_MUT)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr),
+        .t_s(t_s), .t_o(t_o));
+`else
     dsfd_selt_q2 #(.DM(4), .CMP_RETIME(1), .PIPE2(1), .QIO(1), .ILD(1), .FRPR(1)) u_q (.ck(ck), .rst(rst), .lane(lane),
         .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
+`endif
 endmodule

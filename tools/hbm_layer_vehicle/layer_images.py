@@ -761,7 +761,7 @@ def vector_sectors(desc):
     return out
 
 
-def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None):
+def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None, native_components=None):
     """TOK-FUNC2-HBM-SU dispatch: the first production lowering whose profile matches the record; every attempt that
     does not emit restores the layer placement (a refused record never marks its O sectors as written)."""
     import su_program_inventory as I
@@ -792,6 +792,35 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None):
     core = {"str_C", "sucore_SW", "stl_SW"}
     tree_ok = core <= set(bnd["instances"])
     res = None
+    if unit == 2 and desc.get('A') is not None and desc['A'].indexed and tag.startswith('route.gather'):
+        from hbm_layer_vehicle import su_indexed_gather_2000 as G
+        window = None
+        if a.fixtures:
+            metadata = json.loads((a.fixtures/'records.json').read_text())['records'][str(a.rank)]
+            current = next(x for x in metadata if x['tag']==tag)
+            producers = [x for x in metadata if x['k'] < current['k'] and
+                         x.get('desc',{}).get('O',[None,0])[0] == desc['A'].base and
+                         x.get('desc',{}).get('O',[None,0])[1] > 1]
+            if producers:
+                producer = producers[-1]
+                md = producer['desc']['O']
+                window = dict(base=md[0],limit=md[0]+md[1],producer=producer['tag'],
+                              source_receipt=str(a.fixtures/'records.json')+':'+sha((a.fixtures/'records.json').read_bytes()))
+        if window is not None and native_components is not None:
+            gsc=next((c for c in native_components.comps.values() if c['x']['tag']=='router_gather.gsc' and c.get('lowered')),None)
+            if gsc is not None and gsc.get('F')==12 and gsc.get('stride')==16:
+                prefix=place.q<<13
+                window['segment_bases']=[8*(prefix|gsc['src'])]+[8*(prefix|(gsc['dst']+rank*gsc['stride'])) for rank in (1,2,3)]
+                window['placement_source']='actual active COLL GSC component allocation'
+        binding = G.load_binding(a.gather_binding) if getattr(a,'gather_binding',None) else None
+        if binding and binding.get('status')=='PASS':
+            if binding.get('instance') not in bnd['instances']:
+                raise ValueError('indexed gather engine is not an actual selected slice instance')
+            if any(cal.get('instance') not in bnd['instances'] for cal in binding.get('bank_calendars',{}).values()):
+                raise ValueError('native gather bank calendar is not an actual selected slice instance')
+        result = G.lower(raw,tag=tag,source_window=window,binding=binding,record_start=r['start'],placement=place)
+        result['su_lower2_attempts']=[dict(lowering='native_indexed_scalar',status=result['status'],reasons=result['reasons'])]
+        return result
     if a.rope_candidate and unit == 2 and sut.get('c_pair') and sut.get('b_half'):
         from hbm_layer_vehicle import su_rope_bank_1340 as RP
         import copy
@@ -906,6 +935,7 @@ def main():
     ap.add_argument("--su-lower2", action="store_true", help="TOK-FUNC2-HBM-SU opt-in production SU lowerings by "
                     "record profile on every layer (pretree reductions, scalar rsqrt, RF-broadcast B, single-row "
                     "identity lane terms); failed attempts leave the VM placement / written state untouched")
+    ap.add_argument("--gather-binding", type=Path, help="actual selected indexed-scalar VM port/clock/producer binding")
     ap.add_argument("--rf-local", type=int, default=1, help="selected su_<q><g> RF_LOCAL parameter (contract)")
     ap.add_argument('--rope-candidate', action='store_true', help='explicit unqualified candidate source: local C bank exchange and runtime coefficient staging')
     ap.add_argument('--rope-source', type=Path, help='actual candidate scoped pgslice source')
@@ -1013,6 +1043,15 @@ def main():
         cx = CX.Cx(a.fixtures, a.rank, recs, place, contract=a.cx_contract, l12=a.cx_l12, checkpoint=a.cx_checkpoint,
                    boundary=bnd, ops=set(a.cx_ops.split(",")), skip={int(x) for x in a.cx_skip.split(",") if x},
                    chapters={int(x) for x in a.cx_chapters.split(",") if x}, hc_source_profile=a.cx_hc_source_profile)
+    if cx is not None and getattr(a,'gather_binding',None):
+        gathers=[x for x in cx.frecs if x['tag'].startswith('route.gather')]
+        if gathers:
+            last=max(x['k'] for x in gathers)
+            for source in cx.comps.values():
+                if source['x']['tag']=='router_gather.gsc':
+                    md=source['x']['desc']['O']
+                    for sector in range(md[0]//8,(md[0]+md[1]-1)//8+1):
+                        place.last_read[sector]=max(place.last_read.get(sector,-1),last)
     # layer t0 (serial): reset relay 3 edges + the first record's whole configuration load + slack
     pending = []
     for r in recs:
@@ -1052,7 +1091,7 @@ def main():
                                                                f"depth NEV {a.nev}; record left for a larger TB"],
                               lowering=dict(supported=True, deferred=True))
                 elif a.su_lower2:
-                    su = su_lower2(raw, a, r, fx, vm_data, place, native_timing, bnd, fr, sfu_layout=sfu_layout)
+                    su = su_lower2(raw, a, r, fx, vm_data, place, native_timing, bnd, fr, sfu_layout=sfu_layout, native_components=cx)
                 elif a.connected_lowering and lay == 0 and r['i'] in (4, 8):
                     from hbm_layer_vehicle import su_layer_lower_1021 as SL
                     required = {'str_C', 'sucore_SW', 'sucore_SE', 'sucore_NW', 'sucore_NE'}
@@ -1080,6 +1119,20 @@ def main():
                 cx.after_su(r["i"], su, fr)
             ent.update(status=su["status"], reasons=su["reasons"], lowering=su["lowering"],
                        inputs_placeholder=su.get("inputs_placeholder"))
+            if su.get('native_gather'):
+                directory=a.out/'images'/f"r{r['i']:03d}_gather"
+                directory.mkdir(parents=True,exist_ok=True)
+                (directory/'plan.json').write_text(json.dumps(su['native_gather'],indent=1)+'\n')
+                ent['native_gather']=su['native_gather']
+                ent['native_gather_plan']=str(directory/'plan.json')
+                if su.get('native_gather_replay_events'):
+                    replay=dict(schema='opentallas.hbm_slice_replay.v1',scope='component_probe',
+                        qualifies_native_layer=False,qualifies_native_chain=False,
+                        events=su['native_gather_replay_events'],
+                        assumptions=['actual runtime producer leases required; no fixture output or resolved index injected'])
+                    (directory/'replay.json').write_text(json.dumps(replay,indent=1)+'\n')
+                    ent['native_gather_replay']=str(directory/'replay.json')
+                    ent['target_ports']=sorted({x['port'] for x in su['native_gather_replay_events'] if x['k']=='D'})
             if su.get("su_lower2_attempts") is not None:
                 ent["su_lower2_attempts"] = su["su_lower2_attempts"]
             if su.get('runtime_coefficient_moves'):
@@ -1138,6 +1191,20 @@ def main():
         if ent["blocked_by"]:
             ent["status"] = "blocked:" + ent["status"]
         manifest.append(ent)
+    gather_records=[m for m in manifest if m.get('native_gather')]
+    if getattr(a,'gather_binding',None) and gather_records:
+        from hbm_layer_vehicle import su_indexed_gather_2000 as G
+        binding=G.load_binding(a.gather_binding)
+        if len(gather_records)==6 and all(m['status']=='native_gather_emitted' for m in gather_records):
+            replay=G.programme_replay([dict(status=m['status'],native_gather=m['native_gather']) for m in gather_records],binding)
+            for event in replay['events']:
+                if event['k']=='D' and event['port'] not in inports:
+                    raise ValueError('gather programme producer is not an actual slice boundary input '+event['port'])
+            directory=a.out/'gather_programme';directory.mkdir(parents=True,exist_ok=True)
+            (directory/'replay.json').write_text(json.dumps(replay,indent=1)+'\n')
+            for record in gather_records:
+                record['native_gather_replay']=str(directory/'replay.json')
+                record['source_scope']='six-record native component; full-token composition remains open'
     # SU programmes: adjacent SU records share ONE pgp programme (one start) when they fit EDGES 7111 and the gap to
     # the next is too short to reload; each programme is loaded while the producer is idle, >= CFG_LEAD before start.
     progs = []

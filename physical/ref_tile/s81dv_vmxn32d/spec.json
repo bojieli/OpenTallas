@@ -1,0 +1,124 @@
+{
+ "name": "s81dv_vmxn32d",
+ "top": "dsdv_idx_vmux_n32",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_vmux_n32.sv"
+ ],
+ "params": {
+  "V": 276,
+  "NC": 10,
+  "MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 216,
+  "h": 216,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "i_r",
+   "i_s"
+  ],
+  "N": [
+   "i_a",
+   "i_b"
+  ],
+  "E": [
+   "o",
+   "fault"
+  ],
+  "W": [
+   "ck",
+   "rst"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Two source register edges match exact baseline VMUX; no added pin stage."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Raw reset reaches only rs0; three kept secondstage copies reset from rs0 and capture rs0, preserving two-edge release. First and second stages now physically hierarchical."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "hold_budget": "die",
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "fill_reason": {
+  "pin_bound": "1383 signal/clock pins need full faces; S/N552 pins each at3.19/um in172.8 MAIN,2.56/um in216 FB. Outline set by interface, not sparse-cell fill."
+ },
+ "structural_change": "After a/b native28/GRT0 but reset_landing FAIL4rawresetloads: physical reset hierarchy raw->rs0->3kept leaves, not4parallelrawresetconsumers. Same two release edges, zero datapath/valid-age changes; new proof launched. Standalone hardening of measured native28 VMUX kept-copy source, cycle-identical baseline: old native277 -> new28 with per-lane10 kept valid copies. Same2edges. Captured exact source checksums and20000edge positive/3mutant witnesses. Parent slot growth approved>=4449.6x907.2.",
+ "job": {
+  "branch": "codex/s81-vmux-harden-2000",
+  "owner": "CODEX-S81-COLLB-2000",
+  "tag": "s81dv_vmxn32d",
+  "purpose": "harden real bounded VMUX inside TOPK parent, pin-limited body",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/idx",
+   "tools/s81_dv/vmux_harden_1021",
+   "results/arch/codex_vmux_harden_1021",
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
+  ],
+  "views_to": "physical/ref_tile/s81dv_vmxn32d/views",
+  "record_to": "results/rtl/ref_tile/s81dv_vmxn32d",
+  "benches": [
+   {
+    "name": "vmux0",
+    "cmd": "bash tools/s81_dv/vmux_harden_1021/run_one.sh {RUN}/vm0 0",
+    "expect": "pass",
+    "timeout_s": 1800,
+    "pass_regex": "VMUX_N32 PASS nerr 0"
+   },
+   {
+    "name": "vmux1",
+    "cmd": "bash tools/s81_dv/vmux_harden_1021/run_one.sh {RUN}/vm1 1",
+    "expect": "fail",
+    "timeout_s": 1800,
+    "fail_regex": "VMUX_N32 FAIL",
+    "fail_witness": "results/arch/codex_vmux_harden_1021/vm1_dl0.log"
+   },
+   {
+    "name": "vmux2",
+    "cmd": "bash tools/s81_dv/vmux_harden_1021/run_one.sh {RUN}/vm2 2",
+    "expect": "fail",
+    "timeout_s": 1800,
+    "fail_regex": "VMUX_N32 FAIL",
+    "fail_witness": "results/arch/codex_vmux_harden_1021/vm2_dl0.log"
+   },
+   {
+    "name": "vmux3",
+    "cmd": "bash tools/s81_dv/vmux_harden_1021/run_one.sh {RUN}/vm3 3",
+    "expect": "fail",
+    "timeout_s": 1800,
+    "fail_regex": "VMUX_N32 FAIL",
+    "fail_witness": "results/arch/codex_vmux_harden_1021/vm3_dl0.log"
+   }
+  ]
+ },
+ "clock": "spine",
+ "orfs_vars": {
+  "OT_SPINE_LEAF_N": "24",
+  "OT_SPINE_BIN": "40"
+ },
+ "macros": [],
+ "children": []
+}

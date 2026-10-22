@@ -1,0 +1,26 @@
+{
+  "source_commits": [
+    "2ea9f8763",
+    "e0c282fd4",
+    "cd10afbe1"
+  ],
+  "testsuite": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "88",
+    "time": "0.345",
+    "timestamp": "2026-10-21T22:37:15.294497-07:00",
+    "hostname": "ubuntu"
+  },
+  "legacy_encoder_rows_and_record_equal": true,
+  "legacy_events": "results/rtl/qwen_layer_tput_1018/compiled_L1/compute_programme/sys_face_events.json",
+  "scope": "Compiler mechanism, typed receipt validation, and source-local qbank pin edges only. No actual GEN transport dates or production booking.",
+  "source_sha256": {
+    "tools/qwen_layerbench/layer_compile.py": "d30af12534425e516c4369d7cc705bd7ff0d77ef9496d549ee479541513871e5",
+    "tools/qwen_layerbench/test_qslot_lowering.py": "4d951d3a58e6079fa54c059f420208639209f196a18a65ef567251169fbe6105",
+    "tools/qwen_split/sys_face_image.py": "393470fc6b51f16417fe13e027c47d5eeeb84d0a4304af7d85e68029b53f9803"
+  },
+  "production_enabled": false
+}
