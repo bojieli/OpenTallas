@@ -109,8 +109,13 @@ module ot_hgi_coll_aq_mul13r (
 `else
     wire [23:0] s1_ann = a_raw << a_shift;
 `endif
-    wire[23:0]s1_ac[0:5];
-    generate for(genvar g=0;g<6;g=g+1)begin:g_s1_operand_copy
+`ifdef OT_GQ_MUL8
+    localparam integer S1_COPIES = 24;
+`else
+    localparam integer S1_COPIES = 6;
+`endif
+    wire[23:0]s1_ac[0:S1_COPIES-1];
+    generate for(genvar g=0;g<S1_COPIES;g=g+1)begin:g_s1_operand_copy
         ot_hgi_coll_scale_data_ff u_ff(.clk(clk),
 `ifdef OT_GQ_MUT_SCALE_DATA
             .d((g==0)?(s1_ann^24'd1):s1_ann),
@@ -164,9 +169,21 @@ module ot_hgi_coll_aq_mul13r (
         if (!rst_n) s2_v <= 1'b0; else s2_v <= s1_v;
     always @(posedge clk) begin
         s2_byp <= s1_byp; s2_sign <= s1_sign; s2_err <= s1_err;
+`ifdef OT_GQ_MUL8
+        // Native k14q: constant 0x25 product stage-1 operand bit drove 33 actual pins.
+        // Give each output byte a kept stage-1 operand copy. Upper-byte carry logic
+        // remains inside that byte's complete constant product cone. Same 32-bit
+        // multiply, truncation, stage-2 register, and port latency as the original.
+        for(integer by=0;by<4;by=by+1)begin
+            s2_pp0[8*by+:8] <= s1_inv6 ? (({8'd0,s1_ac[by]}*32'hAB)>>(8*by)) : (({8'd0,s1_ac[4+by]}*32'h25)>>(8*by));
+            s2_pp1[8*by+:8] <= s1_inv6 ? (({8'd0,s1_ac[8+by]}*32'hAA)>>(8*by)) : (({8'd0,s1_ac[12+by]}*32'h49)>>(8*by));
+            s2_pp2[8*by+:8] <= s1_inv6 ? (({8'd0,s1_ac[16+by]}*32'hAA)>>(8*by)) : (({8'd0,s1_ac[20+by]}*32'h92)>>(8*by));
+        end
+`else
         s2_pp0 <= s1_inv6 ? ({8'd0,s1_ac[0]}*32'hAB) : ({8'd0,s1_ac[1]}*32'h25);
         s2_pp1 <= s1_inv6 ? ({8'd0,s1_ac[2]}*32'hAA) : ({8'd0,s1_ac[3]}*32'h49);
         s2_pp2 <= s1_inv6 ? ({8'd0,s1_ac[4]}*32'hAA) : ({8'd0,s1_ac[5]}*32'h92);
+`endif
 `ifdef OT_GQ_N32
         s2_d47 <= {dc47h[86:48], dc47l[47:0]};
         s2_d46 <= {dc46h[86:48], dc46l[47:0]};

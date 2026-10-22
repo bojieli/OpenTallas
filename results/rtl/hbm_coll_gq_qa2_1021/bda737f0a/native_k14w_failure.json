@@ -1,0 +1,105 @@
+{
+  "original_report": "/srv/opentallas-scratch/claude/ref_gate/hcoll_gq_issue_k14w_1021-20261021-204236/routes/gate/work/orfs/native_census.json",
+  "sha256": "74befb221cbd80bbda29302658401485110353ddb313eb0494bb9e6962d02241",
+  "status": "FAIL",
+  "roots_examined": 124884,
+  "max_dynamic_loads": 41,
+  "failing_roots": [
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][0]$_DFFE_PN1P_/QN",
+      "driver_role": "sequential",
+      "net": "_001178_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][10]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001172_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][11]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001173_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][12]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001174_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][13]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001175_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][14]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001176_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][15]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001177_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][1]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001179_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][2]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001180_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][3]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001181_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][4]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001182_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][5]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001183_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][6]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001184_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][7]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001185_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][8]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001170_",
+      "loads": 41
+    },
+    {
+      "driver": "u_ot_pr_core.cur_ohc[1][9]$_DFFE_PN0P_/QN",
+      "driver_role": "sequential",
+      "net": "_001171_",
+      "loads": 41
+    }
+  ]
+}

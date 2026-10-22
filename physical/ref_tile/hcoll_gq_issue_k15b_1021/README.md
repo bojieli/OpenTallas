@@ -1,0 +1,5 @@
+# GQ descriptor accept fallback repair
+
+Fallback k14z actual native census found one 35-load descriptor accept cone at u_target, enabling stored base, limit, loops, and control. DESC3 gives the three existing field captures private kept accept leaves with 8, 9, and 16 enable loads. Control keeps its own cone. Same accepted predicate, edge, reset hold, arithmetic, ports, and cycles. Input scalars had actual predecessor loads 16 to 22 and gain three private gate pins. No new state. The passing MAIN remains k14y. Actual census must pass before floorplan; normal timing and clock checks remain binding.
+
+SAFE review: registered boundary and existing SRAM residency are unchanged. Existing outline and macro channels are preserved. Private combinational accept leaves bound each field enable to at most 16 bits; the mapped census remains authoritative. No added arithmetic depth, storage, clock source, or port edge. Existing full functional tests, invariants, and a causal held-limit mutant must qualify this source before adoption.

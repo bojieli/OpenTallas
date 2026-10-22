@@ -1,0 +1,263 @@
+{
+ "name": "hcoll_gq_issue_k14u_1021-k14u-COMMIT",
+ "block": "ot_hgi_coll_gq_issue",
+ "ref_tile": true,
+ "owner": "Codex:HBM-COLL-2000",
+ "purpose": "R14 S9P (HBMb/COLL-GQ 10-21, PD-AUDIT gq_issue must-do C7) on k13s: why: k9q/k9r audit 658 ps / 17 levels u_aq1.u_x.q -> s9_g (S9 grid-exponent arithmetic from raw x fields). Fix (OT_GQ_S9P): the aq SRAM element line reads one edge earlier (EARLY 1, residence 8) and a new register stage S8p holds x8 + per-element unbiased exponent eun8 + nonzero flag, so S9 starts from registered exponents; +1 internal stage, 0 edges on every port (q[n]=d[n-9] kept). wd_in already full-cycle posedge (R11). Geometry/CTS/pins identical. --- base: R13 TLN (HBMb/COLL-GQ 10-21) on k13q: why: gate k13q census FAIL max 41 = u_ot_pr_core.tl[0]/tl[1] QN 39/41 loads (tl+1 inlined into the 16 st_m row comparators of fire_next). Fix (OT_GQ_TLN): tl+1 is a REGISTER in 4 kept copies (ot_hgi_coll_gq_tln, same launch/wrap/count controls as tl), each feeding 4 st_m rows. Same edges, 0 latency change. Geometry/CTS/pins identical. --- base: R13 (HBMb/COLL-GQ 10-21) on k12q: why: gates k12q/k12r PRE_GATE_NATIVE_CENSUS_REFUSED (ot-epyc9 native_census.json): k12q u_aq1.s1_m[1][30]/s1_m[2][30] QN 38 loads = flat S2 8->2 mx4 whose 31-bit select ABC rebuilt around the two magnitude MSBs (28 OR3 select terms); k12r row AND-OR output rc[40] (src bit 3) 33 loads = gather hold + slot bank + 12 src_copy holds + 8 qa init adders. Fix (OT_GQ_R13N): (1) S2 gets the S1 structure: two kept winner-decode copies (ot_hgi_coll_aq_mx4_win lo/hi) per 4:1 max, each on its own kept register copy of the S1 magnitudes (ot_hgi_coll_aq_mag_ff), data select on s1_m; (2) the qa init adders / qoh base read their own kept 13-bit row read of src[12:0] (ot_hgi_coll_gq_row_bit on cur_ohc[0]). Same function, same edges, 0 latency change. Geometry/CTS/pins identical to k12q. --- base: R12 (STEWARD-HBM/COLL 10-21) on k11q: why: gate k11q (and its pair) PRE_GATE_NATIVE_CENSUS_REFUSED: one 34-load driver (limit 32) = shift-select of the shared stage-1 operand normalizer a_raw << lead_shift_24(a_raw) in u_aq0.u_scale.u (backward cone s2_amax[2..30], forward s1_an[*] -> 6 kept s1 operand copies + top-bit flops). Fix (OT_GQ_SHN32): three kept 8-bit normalizer chunks, each with its own leading-zero count (same value per bit, same edge, 0 latency change; tb_aq_scale13r_eq covers every a exponent field). Geometry/CTS/pins identical to k11q. --- base: R11 (HBM-ELEM13/COLL-GQ 10-21) on k10q: why: k9q route (daemon k9q-dccd7469a NEEDS_RTL, TT -119.0 / FF -34.22 / DRC 0, 262 TT viol pins) worst TT path u_aq1.u_x.g_sram[3].wd_n[61] NEGEDGE launch -> u_mem wd_in: 416 ps half-cycle budget with ~313 ps of wire/buffers; R10 kept that negedge write. Fix: the aq SRAM ring write side is launched on posedge only, removing the only half-cycle hop in the tile (MAIN: one kept posedge stage {wa,wd,ra} at the macro, ra=slot-6); q[n]=d[n-9] unchanged, read/write addresses distinct, 0 edges on every port. Same outline, macros, pins, PDN, CTS recipe as k10q. --- base: R10 (HBM-OWN/GQ2 10-21) structural fallback of hcoll_gq_issue_k9q_1020: REGISTERED fire (fire_next computed one edge ahead from a 16-row start-time match vector read through the cur / cur+1 / b0 / launch one-hots; 2 x NFP kept allow/time flops replace the combinational fire_prefix copies) and a REGISTERED fault-cause tree (5 cause flags -> one 5-input OR into the sticky fault). Same edges on every data / VM / ring / ld_* port; fault +1 edge (launch/period/fire causes). Geometry/CTS = k9q (k-means K=24). --- base: hcoll_gq_issue_k9_1020: R9 RTL (HBM-GQ8 10-20, on Codex R6 e8956f9d9): registered period-end flags tl_last/lps_gt1 in 12 kept copies replace every tl==per-1 / lps>1 compare cone (R6 wrap roots 33, R7 per/tl roots 33..61); 5 kept registered one-hot base copies (stored_oh) feed the period/fault row reads, b0_oh and cur_oh (R6 p_sb decode roots 42/37/36); same edges, same function. Geometry = literal-lattice model 35f39f06c: macros on the 43.2 lattice (stack pitch 129.6, 49.1 um channels, no abutment), outline 475.2x561.6, centre band 121.2 um, K=8 regional clock roots (main).; k-means CTS K=24 (REFILL-3)",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/hbm-gq-takeover-2000-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_bench.sh",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+   "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "tools/hgi_sim/collq_gather_1018.py",
+   "tools/hdc_golden.py",
+   "tools/hdc_golden_v41.py",
+   "physical/hbm_xp_aq_tree13_1014/tb_aq_tree13.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+   "rtl/hbm_accel/generic/collective/p2p/tb_aq_scale13r_eq.sv",
+   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/rtl/gqissue_sram_1019",
+   "rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh",
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_gq_ia.sv",
+   "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
+   "results/rtl/hbm_vmearly_k4_1020",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_coll_gq_issue #(.VM_RT(74), .ISSUE_AHEAD(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_COLLQ_SRAM -DOT_GQ_FAN32 -DOT_GQ_S2TOP -DOT_GQ_P192 -DOT_GQ_N32 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P -DOT_GQ_MUL8 --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq13.sv rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_aq_scale13r.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_hc.sv rtl/hdc/ot_hdc_cg.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir_bb.v rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq_target16.sv physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1/ot_sram_1r1w_64x16_m1_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "aq_sram_exact",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram 0",
+    "expect": "pass",
+    "pass_regex": "AQ_TREE13_EXACT_PASS blocks1024 elements32768",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "aq_sram_mut_slot",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut 1",
+    "expect": "fail",
+    "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH",
+    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/aqmut.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "aq_s2top_exact",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top 0",
+    "expect": "pass",
+    "pass_regex": "AQ_S2TOP_EXACT_PASS SCALE13R_EQ PASS checks=2097152 .*AQ_TREE13_EXACT_PASS blocks1024 elements32768",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "aq_s2top_mut_k",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut 1",
+    "expect": "fail",
+    "fail_regex": "SCALE13R_EQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/gqissue_sram_1019/k4_s2top/s2top_mutk_fail.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "collq_ia_ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1 ia1",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pass_regex": "COLLQ_IA_BENCH ia1 PASS"
+   },
+   {
+    "name": "collq_ia_ia2",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2 ia2",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pass_regex": "COLLQ_IA_BENCH ia2 PASS"
+   },
+   {
+    "name": "collq_ia_slot",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_slot slot",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "fail_regex": "COLLQ_IA MUTANT slot REJECTED|COLLQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/slot.log"
+   },
+   {
+    "name": "collq_ia_dep",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_dep dep",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "fail_regex": "COLLQ_IA MUTANT dep REJECTED|COLLQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/dep.log"
+   },
+   {
+    "name": "collq_ia_iaign",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_iaign iaign",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "fail_regex": "COLLQ_IA MUTANT iaign REJECTED|COLLQ FAIL errors=[1-9]",
+    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/iaign.log"
+   },
+   {
+    "name": "collq_ia_ia1_inv",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_CHECK_INV -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1_inv ia1",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pass_regex": "COLLQ_IA_BENCH ia1 PASS"
+   },
+   {
+    "name": "collq_ia_ia2_inv",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_CHECK_INV -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2_inv ia2",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "pass_regex": "COLLQ_IA_BENCH ia2 PASS"
+   },
+   {
+    "name": "collq_r9_mut_tllast",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_MUT_TLLAST -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_tllast ia1",
+    "expect": "fail",
+    "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
+    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_tllast.log",
+    "threads": 16,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "collq_r9_mut_ohcopy",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_MUT_OH_COPY -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_oh ia1",
+    "expect": "fail",
+    "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
+    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_ohcopy.log",
+    "threads": 16,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "collq_r10_mut_firelate",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_MUT_FIRE_LATE -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_firelate ia1",
+    "expect": "fail",
+    "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
+    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_firelate.log",
+    "threads": 16,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "aq_s2top_mut_s2w",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P -DOT_GQ_MUT_S2W' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut_s2w 0",
+    "expect": "fail",
+    "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH|AQ_TREE13_.*FAIL|MISMATCH",
+    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_s2w.log",
+    "threads": 4,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "collq_r13_mut_qard",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_MUT_QARD -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_qard ia1",
+    "expect": "fail",
+    "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
+    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_qard.log",
+    "threads": 16,
+    "peak_ram_gb": 32
+   },
+   {
+    "name": "collq_r13_mut_tln",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_MUT_TLN -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_tln ia1",
+    "expect": "fail",
+    "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
+    "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_tln.log",
+    "threads": 16,
+    "peak_ram_gb": 32
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hcoll_gq_issue_k14u_1021/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hcoll_gq_issue_k14u_1021/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hcoll_gq_issue_k14u_1021 --out {RUN}/record/views/ot_hgi_coll_gq_issue --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir --macro-view physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hcoll_gq_issue_k14u_1021/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hcoll_gq_issue_k14u_1021/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hcoll_gq_issue_k14u_1021/hcoll_gq_issue_k14u_1021-k14u-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "R11 (HBM-ELEM13/COLL-GQ 10-21) on k10q: why: k9q route (daemon k9q-dccd7469a NEEDS_RTL, TT -119.0 / FF -34.22 / DRC 0, 262 TT viol pins) worst TT path u_aq1.u_x.g_sram[3].wd_n[61] NEGEDGE launch -> u_mem wd_in: 416 ps half-cycle budget with ~313 ps of wire/buffers; R10 kept that negedge write. Fix: the aq SRAM ring write side is launched on posedge only, removing the only half-cycle hop in the tile (MAIN: one kept posedge stage {wa,wd,ra} at the macro, ra=slot-6); q[n]=d[n-9] unchanged, read/write addresses distinct, 0 edges on every port. Same outline, macros, pins, PDN, CTS recipe as k10q.\n\n--- base ---\nR10 (HBM-OWN/GQ2 10-21) on k9q: why: k9q --cts gate placement STA (TT, signoff SDC) reg->reg WNS -212.7 ps, 385 of 521 failing endpoints start at cur_ohc[0][8]: row AND-OR -> tl==start compare (fire_prefix, ~360 ps) -> one fire net buffered ~490 ps across the 475x561 tile -> qa / qoh / slot loads / gather holds / fault. Fix: fire registered (exact one-edge-ahead prediction, INV-checked against the original formula), fault causes registered (+1 edge, sticky). Same outline, macros, pins, PDN, CTS recipe.\n\n--- base ---\nREFILL-3 (10-21) parallel fallback of hcoll_gq_issue_k9_1020: k-means regional CTS K=24 (was K=8).\nWhy: k9_r4 / k9b_r4 --cts gates (10-21 04:10 / 06:20) FAILED only clock_rule: 25,590 sinks, pin-flop spread TT 145.2 / FF 133.5 ps (k9) and TT 139.1 / FF 124.3 (k9b) > 80, with census / GRT / timing passing. Same recipe that took dscoll s8n 121.6 -> s8nq 53.9 ps: more, shorter local roots under the balanced top tree. Same RTL, outline, macros, pins, PDN and cycles.\n\n--- k9 base ---\nhcoll_gq_issue_k9_1020: R9 RTL (HBM-GQ8 10-20, on Codex R6 e8956f9d9): registered period-end flags tl_last/lps_gt1 in 12 kept copies replace every tl==per-1 / lps>1 compare cone (R6 wrap roots 33, R7 per/tl roots 33..61); 5 kept registered one-hot base copies (stored_oh) feed the period/fault row reads, b0_oh and cur_oh (R6 p_sb decode roots 42/37/36); same edges, same function. Geometry = literal-lattice model 35f39f06c: macros on the 43.2 lattice (stack pitch 129.6, 49.1 um channels, no abutment), outline 475.2x561.6, centre band 121.2 um, K=8 regional clock roots (main). GQ MUL8 opt-in: actual k14q native sole33-load stage1 operand bit from constant0x25 multiplier, split each constant product into four8-output-bit cones with kept24-bit operand copies. Exact32-bit product arithmetic, same stage2 registers,0addedportcycles. SAFE1/2/4-8 unchanged; SAFE3 sourceoperand loads24copies+top<=25, each productbyte private cone; actual native gate verifies. Add432datapathflops/noreset per aq scale; same outline475.2x561.6."
+}
