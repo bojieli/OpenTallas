@@ -51,7 +51,8 @@ def need(manifest, views, relay_views, pitch, site=32.4, slide=108.0, margin=64.
     blk_all = np.frombuffer(bytes(g.grid.blk), dtype=np.uint8).reshape(ny, nx)
     blk_blk = np.frombuffer(bytes(g.rgrid.blk), dtype=np.uint8).reshape(ny, nx)
     d_all = distance_transform_cdt(blk_all, metric='taxicab') * GRID
-    d_blk = distance_transform_cdt(blk_blk, metric='taxicab') * GRID
+    d_blk, (nj, ni) = distance_transform_cdt(blk_blk, metric='taxicab', return_indices=True)
+    d_blk = d_blk * GRID
     W, H = manifest['die_um']
     full = lattice(W, H, pitch, site, slide, margin)
     nohome = []
@@ -65,6 +66,10 @@ def need(manifest, views, relay_views, pitch, site=32.4, slide=108.0, margin=64.
             st['no_home_even_without_relays'] += 1
             nohome.append([round(cx, 2), round(cy, 2)])
         else:
+            # case_bA2 GEN: 109 of 216 lattice-point sites were LOST (the GEN slides a site <= slide_um off a block;
+            # the free home was up to R away).  Snap the site onto the nearest block-free home centre instead.
+            hx, hy = (ni[j, i] + .5) * GRID, (nj[j, i] + .5) * GRID
+            s_ = dict(s_, x=round(hx - site / 2, 3), y=round(hy - site / 2, 3), lattice_xy=[s_['x'], s_['y']])
             s_ = dict(s_, why=f'need-only reset home: no free home within {R:.1f} um (lane relays filled it; '
                               f'{d_all[j, i]:.0f} um with relays, {d_blk[j, i]:.0f} um without)')
             sites.append(s_)
