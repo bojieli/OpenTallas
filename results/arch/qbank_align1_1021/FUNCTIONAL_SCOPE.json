@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.qbank.functional_scope.v1",
+  "source_sha256": "558f9d9aba8c030b3072c81aa93a7d614477da3abada46015ccdf43693a85b33",
+  "params": {
+    "QB_ALIGN": 1,
+    "QB_LOCAL32": 1
+  },
+  "our_actual_unit": "3957315-1792646001",
+  "proven": [
+    "initial reset then context clear",
+    "64-write complete512-seat fill",
+    "32row/512value exact read at gap1 and gap2",
+    "real MUT1 packing negative"
+  ],
+  "independent_token_actual_unit": "3948213-1792645977",
+  "independent_token_proven": [
+    "initial reset,64writefill,32contiguousread/512values",
+    "last-dd-to-committed4 coreedges",
+    "qslot-to-row/valid/beat4 coreedges",
+    "early-booked-date negative"
+  ],
+  "explicit_boundary_gaps": [
+    "simultaneous writer/read override",
+    "midstream reset"
+  ],
+  "booking_scope": "Token lowerer books reads after final write/commit and before next_begin. Simultaneous writer/read override is outside that booked trace. No source-general qualification is implied.",
+  "no_transfer": [
+    "external physical reset landing2 edges",
+    "transport,LP,svc,codec,retirement age",
+    "production throughput/calendar"
+  ]
+}
