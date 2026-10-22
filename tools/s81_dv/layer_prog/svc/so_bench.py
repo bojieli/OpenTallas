@@ -13,7 +13,7 @@ bits), SO o rows = fixture attn.normalize.unrope (BF16 bits), addresses / masks 
 
   so_bench.py --fixtures FX --dump IMGDIR/base [--seed 1] --out OUT     (writes OUT/{base,cs_swap,hm_shift}/)
 """
-import argparse, json, os, sys
+import argparse, hashlib, json, os, sys
 from pathlib import Path
 import numpy as np
 HERE = Path(__file__).resolve().parent
@@ -22,6 +22,28 @@ os.environ.setdefault('HDC_V41_ARITH', 'chunk8')
 import lower_svc as L  # noqa: E402
 
 E_SE_OBASE = 0x0000          # the SE job's obase (lower_svc row0 [13:0] = 0)
+
+
+def verify_reference_sources(fx):
+    """Restore the fixture's existing numerical contract before making coefficients."""
+    import hdc_golden_v41 as V
+    import hdc_golden as G
+    root = HERE.parents[3]
+    paths = {
+        'tools/hdc_golden_v41.py': Path(V.__file__),
+        'tools/hdc_golden.py': Path(G.__file__),
+        'compiler/models/deepseek-v4.1-flash/inference_config.json':
+            root / 'compiler/models/deepseek-v4.1-flash/inference_config.json',
+    }
+    expected = json.loads((Path(fx) / 'meta.json').read_text())['sources']
+    checked = {}
+    for name, path in paths.items():
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual != expected[name]:
+            raise ValueError(f'fixture reference source mismatch: {name}: '
+                             f'{actual} != {expected[name]}')
+        checked[name] = actual
+    return checked
 
 
 def read_pv_dump(path):
@@ -62,6 +84,7 @@ def read_se_dump(path):
 
 def build(fx, dump, out, seed=1):
     fx = Path(fx)
+    reference_sources = verify_reference_sources(fx)
     job = L.Job(fx, tag=0, allq=True)
     pv = read_pv_dump(Path(dump) / f'pv_dump_s{seed}.hex')
     se = read_se_dump(Path(dump) / f'se_dump_s{seed}.hex')
@@ -111,6 +134,7 @@ def build(fx, dump, out, seed=1):
         meta = [len(q), nv, L.SO_OBASE, E_SE_OBASE, sch['first_op'], sch['den'], 0, 0]
         (d / 'meta.hex').write_text(hx(meta + [0] * (16 - len(meta)), 32))
         recs[mut or 'base'] = dict(q_words=len(q), so_words=sum(len(ws) for _, ws in so), sched=sch, mutant=mut,
+                                   reference_sources=reference_sources,
                                    pv_source=str(Path(dump) / f'pv_dump_s{seed}.hex'), se_source=str(Path(dump) / f'se_dump_s{seed}.hex'))
     (Path(out) / 'so_images.json').write_text(json.dumps(recs, indent=1) + '\n')
     return recs
