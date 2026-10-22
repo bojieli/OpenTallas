@@ -53,7 +53,7 @@
    },
    {
     "name": "aq_sram_exact",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram 0",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram 0",
     "expect": "pass",
     "pass_regex": "AQ_TREE13_EXACT_PASS blocks1024 elements32768",
     "threads": 4,
@@ -61,7 +61,7 @@
    },
    {
     "name": "aq_sram_mut_slot",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut 1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_sram_exact.sh {RUN}/aq_sram_mut 1",
     "expect": "fail",
     "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH",
     "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/aqmut.log",
@@ -70,7 +70,7 @@
    },
    {
     "name": "aq_s2top_exact",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top 0",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top 0",
     "expect": "pass",
     "pass_regex": "AQ_S2TOP_EXACT_PASS SCALE13R_EQ PASS checks=2097152 .*AQ_TREE13_EXACT_PASS blocks1024 elements32768",
     "threads": 4,
@@ -78,7 +78,7 @@
    },
    {
     "name": "aq_s2top_mut_k",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut 1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut 1",
     "expect": "fail",
     "fail_regex": "SCALE13R_EQ FAIL errors=[1-9]",
     "fail_witness": "results/rtl/gqissue_sram_1019/k4_s2top/s2top_mutk_fail.log",
@@ -87,7 +87,7 @@
    },
    {
     "name": "collq_ia_ia1",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1 ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1 ia1",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -95,7 +95,7 @@
    },
    {
     "name": "collq_ia_ia2",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2 ia2",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2 ia2",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -103,7 +103,7 @@
    },
    {
     "name": "collq_ia_slot",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_slot slot",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_slot slot",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -112,7 +112,7 @@
    },
    {
     "name": "collq_ia_dep",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_dep dep",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_dep dep",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -121,7 +121,7 @@
    },
    {
     "name": "collq_ia_iaign",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_iaign iaign",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_iaign iaign",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -130,7 +130,7 @@
    },
    {
     "name": "collq_ia_ia1_inv",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_CHECK_INV -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1_inv ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_CHECK_INV -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia1_inv ia1",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -138,7 +138,7 @@
    },
    {
     "name": "collq_ia_ia2_inv",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_CHECK_INV -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2_inv ia2",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_CHECK_INV -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_ia2_inv ia2",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 32,
@@ -146,7 +146,7 @@
    },
    {
     "name": "collq_r9_mut_tllast",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUT_TLLAST -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_tllast ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_MUT_TLLAST -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_tllast ia1",
     "expect": "fail",
     "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
     "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_tllast.log",
@@ -155,7 +155,7 @@
    },
    {
     "name": "collq_r9_mut_ohcopy",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUT_OH_COPY -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_oh ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_MUT_OH_COPY -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_oh ia1",
     "expect": "fail",
     "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
     "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_ohcopy.log",
@@ -164,7 +164,7 @@
    },
    {
     "name": "collq_r10_mut_firelate",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUT_FIRE_LATE -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_firelate ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_MUT_FIRE_LATE -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_firelate ia1",
     "expect": "fail",
     "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
     "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_firelate.log",
@@ -173,7 +173,7 @@
    },
    {
     "name": "aq_s2top_mut_s2w",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P -DOT_GQ_MUT_S2W' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut_s2w 0",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P -DOT_GQ_MUT_S2W' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut_s2w 0",
     "expect": "fail",
     "fail_regex": "AQ_TREE13_NUMERIC_MISMATCH|AQ_TREE13_.*FAIL|MISMATCH",
     "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_s2w.log",
@@ -182,7 +182,7 @@
    },
    {
     "name": "collq_r13_mut_qard",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUT_QARD -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_qard ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_MUT_QARD -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_qard ia1",
     "expect": "fail",
     "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
     "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_qard.log",
@@ -191,7 +191,7 @@
    },
    {
     "name": "collq_r13_mut_tln",
-    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUT_TLN -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_tln ia1",
+    "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_MUL8 -DOT_GQ_MUT_TLN -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh {RUN}/ia_mut_tln ia1",
     "expect": "fail",
     "fail_regex": "COLLQ_IA ia1 FAIL scenario 0|COLLQ_IA ia1 fault 5 ESCAPED",
     "fail_witness": "results/rtl/hbm_coll_gq_r14_1021/main/mut_tln.log",
