@@ -93,7 +93,12 @@ def test_gen_fill_check():
     assert RT.fill_check({"kind": "tile", "macros": [1] * 4}, 100, 100, bl, 100)[0] == "FAIL"       # 17 %
     assert RT.fill_check({"kind": "tile", "macros": [1] * 4, "fill_reason": {"pin_bound": "x"}}, 100, 100, bl, 100)[0] == "WARN"
     assert RT.fill_check({"kind": "tile", "macros": [1]}, 100, 100, bl[:1], 100) is None            # a leaf tile
-    assert RT.fill_check({"kind": "cluster", "macros": [1] * 4}, 100, 100, bl, 2500)[0] == "WARN"   # 41 %
+    assert RT.fill_check({"kind": "cluster", "macros": [1] * 4}, 100, 100, bl, 2500) is None        # 41 % (40-60 OK)
+    r = RT.fill_check({"kind": "cluster", "macros": [1] * 4}, 100, 100, bl, 2200)                   # 38 %: roomy, INFO
+    assert r[0] == "INFO" and "roomy; acceptable" in r[2] and "shrink" not in r[3]
+    r = RT.fill_check({"kind": "cluster", "macros": [1] * 4}, 100, 100, bl, 5400)                   # 70 %: enlarge
+    assert r[0] == "WARN" and "enlarge" in r[3]
+    assert "shrink the outline" not in RT.fill_check({"kind": "tile", "macros": [1] * 4}, 100, 100, bl, 100)[3]
     assert RT.fill_check({"kind": "cluster", "macros": [1] * 4}, 100, 100, bl, 4000) is None        # 56 %
 
 

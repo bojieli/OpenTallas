@@ -1,0 +1,36 @@
+{
+  "source": "2301ea420",
+  "rtl_source": "4c1c62af7",
+  "host": "ot-epyc9",
+  "unit": "436699-1792646639",
+  "status": "PASS",
+  "cycles": 4000,
+  "added_edges": 0,
+  "physical_qualification": "PENDING",
+  "results": {
+    "NWcks.sim": {
+      "verdict": "VMS_GLUE_T3_EQUIV NW FAIL checks=33768 errors=1612",
+      "sha256": "6f038e24336df4e357208d8864e255a6bd488e6a9b8c39337fbeefe407a6a4dc"
+    },
+    "NWpos.sim": {
+      "verdict": "VMS_GLUE_T3_EQUIV NW PASS checks=33768 errors=0",
+      "sha256": "bb82dcd22bc0192b7d42a033c72a901d409690646500c89c9fe0d33f52ed5828"
+    },
+    "NWckn.sim": {
+      "verdict": "VMS_GLUE_T3_EQUIV NW FAIL checks=33768 errors=15562",
+      "sha256": "fdbb7c6523c2ea6445d0dc98f7e2cb5be92f87f614cd45290417f902c8b7eced"
+    },
+    "SWckn.sim": {
+      "verdict": "VMS_GLUE_T3_EQUIV SW FAIL checks=37520 errors=11247",
+      "sha256": "99da3c35fab23fb62fd5ab7dc7e561e0f18c7b5b2d32520f2ba6b2132e8898fe"
+    },
+    "SWpos.sim": {
+      "verdict": "VMS_GLUE_T3_EQUIV SW PASS checks=37520 errors=0",
+      "sha256": "f93673e7ff9f4a6b7d1106fe24889320045db4ec95a4d5b65773607ac2726336"
+    },
+    "SWcks.sim": {
+      "verdict": "VMS_GLUE_T3_EQUIV SW FAIL checks=37520 errors=18346",
+      "sha256": "7e75393940d5ca42e01ac47aa9cc0755020aa7be0c3ec879892b57d796f4402c"
+    }
+  }
+}
