@@ -1,0 +1,48 @@
+{
+  "scope": "mechanism component comparisons only; test words are not deployment programme",
+  "reset": {
+    "edges": 30,
+    "outputs": 38,
+    "assertion": "asynchronous",
+    "release": "same third clock edge as original",
+    "status": "PASS"
+  },
+  "calendars": [
+    {
+      "NE": 16,
+      "edges": 359,
+      "events": 125,
+      "status": "PASS"
+    },
+    {
+      "NE": 32,
+      "edges": 691,
+      "events": 252,
+      "status": "PASS"
+    },
+    {
+      "NE": 64,
+      "edges": 1375,
+      "events": 508,
+      "status": "PASS"
+    }
+  ],
+  "source_files": [
+    {
+      "path": "rtl/qwen_split/qfd_sys_face_ovl_lctx2.sv",
+      "sha256": "6c66d72e9be20f2caba9ea3b1e09acc72057c471b7686a06c5d07384a2839331"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_sysface_reset_same3.sv",
+      "sha256": "d9931ae40c466f0a99afea550e9f2082ba5edfd88b87c43437130ce3d4b444d4"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/qfd_syscal_lctx2.sv",
+      "sha256": "a3ae877fc3ee412dda0157eee4930ab5771ab5eb459be17318a34f5ea00a6d22"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sysface32.sv",
+      "sha256": "86f24f5ffca743777bafdc26dfe8541c81db28e446046bb3f70cf5345ab340b8"
+    }
+  ]
+}
