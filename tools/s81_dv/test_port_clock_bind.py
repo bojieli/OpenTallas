@@ -26,6 +26,7 @@ class PortClockBind(unittest.TestCase):
   return dict(i='clock_probe',e=ends)
  def emitted(self,wrong=False,zero=False,forwarded=False,prune=None):
   table=copy.deepcopy(self.table)
+  table.setdefault('clock_regions', {'mode':'logical'})
   table['landing_reset_stages']={'dsfd_dvland_276':2}
   blocks=[dict(name='lep',master='regional',group='clC',x=100,y=100,w=100,h=100),
           dict(name='other',master='legacy',group='clL',x=600,y=100,w=100,h=100)]
@@ -55,9 +56,10 @@ class PortClockBind(unittest.TestCase):
   chains={l['i']:([] if zero else [(400,150)]) for l in links};dirs={(n,0):'WE' for n in chains}
   # Fixed tiny reset topology exercises both calendar branches; emit itself builds
   # all port wires, forwarding gates, landing cells and calendar stations.
-  reset=dict(verilog=[],depth={'rs0':2,'rs1':6},block_leaf={'lep':'rs0','other':'rs1'},
+  reset=dict(verilog=[],depth={'rs0':2,'rs1':6},net_clocks={'rs0':'ck_C','rs1':'ck_g0_0'},block_leaf={'lep':'rs0','other':'rs1'},
    block_parent={'lep':'rs0','other':'rs1'},block_pin={'lep':(200,150),'other':(600,150)},
-   station_leaf={(n,0):'rs0' for n in chains},place=[],summary={'stations':0,'root_xy':[400,0]})
+   station_leaf={(n,0):'rs0' for n in chains},place=[],summary={'stations':0,'root_xy':[400,0], 'release_crossings':0, 'crossings':[],
+    'max_release_depth':6, 'block_release_depth':{'lep':3,'other':7}})
   if prune is not None:
    table['prune_unused_reset_leaves']=prune
    reset['verilog']=[

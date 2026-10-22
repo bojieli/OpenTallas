@@ -200,6 +200,7 @@ def test_emit_geometric_prunes_unused_region_ports():
     import test_port_clock_bind as T
     t = T.PortClockBind('test_production_emission_A_A_B_B_C')
     t.setUp()
+    t.table['clock_regions'] = {'mode': 'geometric'}
     text = t.emitted()
     # region roots are geometric cells, never logical groups, and every declared region root has a load
     assert not re.search(r'\bck_cl', text)
@@ -207,3 +208,36 @@ def test_emit_geometric_prunes_unused_region_ports():
     assert declared == ['ck_g0_0']             # 'other' (centre 650, 150) on the 800 x 400 test die: one cell
     for net in declared:
         assert re.search(r'\(' + net + r'\)', text)
+
+
+def test_reset_local_leaf_crossing_is_reused_and_priced(monkeypatch):
+    monkeypatch.delenv('OT_RESET_GATE', raising=False)
+    g = GC.Grid(9000.0, 3000.0, 3000.0)
+    rst = D.reset_tree(plan(BLOCKS), {'a': 'g0_0', 'b': 'g2_0'}, PTS, {}, grid=g)
+    leaf = rst['block_leaf']['a']
+    before = rst['summary']['release_crossings']
+    depth = rst['depth'][leaf]
+    master = D.RST_RLY['EW']
+    net = D.reset_local_leaf(rst, leaf, 'ck_frame_a', [10, 20], master, 'u_a')
+    assert net != leaf and rst['depth'][net] == depth + 1
+    assert rst['net_clocks'][net] == 'ck_frame_a'
+    assert D.reset_local_leaf(rst, leaf, 'ck_frame_a', [10, 20], master, 'ld_a') == net
+    assert rst['summary']['release_crossings'] == before + 1
+    row = rst['summary']['leaf_crossings'][0]
+    assert row['release_dst'] == row['release_src'] + 1
+    text = '\n'.join(rst['verilog'])
+    assert f'.ck(ck_frame_a), .rs({leaf}), .i({leaf}), .o({net})' in text
+    assert sum(p['kind'] == 'reset_leaf_crossing' for p in rst['place']) == 1
+    # A second actual root needs its own stage, with the same input age.
+    other = D.reset_local_leaf(rst, leaf, 'ck_ep_a_K', [10, 20], master, 'ld_b')
+    assert other != net and rst['depth'][other] == depth + 1
+
+
+def test_reset_local_leaf_same_root_and_legacy_do_not_change_tree(monkeypatch):
+    monkeypatch.delenv('OT_RESET_GATE', raising=False)
+    rst = D.reset_tree(plan(BLOCKS), {'a': 'g0_0', 'b': 'g2_0'}, PTS, {})
+    leaf = rst['block_leaf']['a']
+    before = '\n'.join(rst['verilog'])
+    assert D.reset_local_leaf(rst, leaf, rst['net_clocks'][leaf], [0, 0], D.RST_RLY['EW'], 'u_a') == leaf
+    assert D.reset_local_leaf(rst, leaf, 'ck_other', [0, 0], D.RST_RLY['EW'], 'u_a', False) == leaf
+    assert '\n'.join(rst['verilog']) == before
