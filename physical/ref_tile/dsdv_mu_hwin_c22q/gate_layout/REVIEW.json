@@ -1,0 +1,17 @@
+{
+  "reviewer": "codex coordinator (ROOT approval 2026-10-21 20:24 PT)",
+  "time": "2026-10-22T03:11:50.529652+00:00",
+  "gate_commit": "2026-10-21T20:06:58-0700",
+  "geometry_sha256": "f6e8601e27c1a1a2d60cf4a40f3481b0517ab61106c2a1de7b8cae5e8725865b",
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": "44 real SRAM origins on43.2um lattice, >=24.8um channels; source770cd41bb exact snapshot,10 documented canonical helper overlays retained.",
+    "std_cell_band": "one full-width band y159.84..206.28; measured density50.08%, outside0; overall17.6% lattice/channel exception ratified by ROOT.",
+    "pin_spread": "353 actual signal/clock pins,0inaccessible; full faces <=4pin/um, no pin geometry errors.",
+    "clock_entry": "8324 sinks; TT/FF insertion345/302ps, regional spread29/27.9ps; parent landing/clock STA obligations remain.",
+    "shape": "345.6x388.8um, nearly square; actual floorplan and density PNG personally viewed by ROOT."
+  },
+  "root_approval": "ROOT message to /root/s81/collb_topk: approved exact current geometry/source770cd41bb for normal qualified submit,20:24PT; no fabricated gate commit.",
+  "source_start_commit": "770cd41bb30d97992a9fba6ee78dcb504b30f134",
+  "original_gate_sha256": "7f11cee4dda808426b0d0435a79377e7d8e7d93e6363d3f5652df07de43477eb"
+}
