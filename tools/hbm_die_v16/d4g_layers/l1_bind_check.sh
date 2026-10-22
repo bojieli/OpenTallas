@@ -1,4 +1,6 @@
 #!/bin/bash
+# HBMb/R18 10-21: --prefer the canonical rtl/hdc fp32_mul_lat (qdq u_dec closure; rtl/qwen_sys/combined/nearhbm has an
+#   older 2-parameter copy that made the child AMBIGUOUS once the r3 qdq split exposed ot_hgi_qw_dec at die level).
 # H-D4G3b: emit die.v from a (layered) d4g contract and run the strict recursive port bind (as run_v16_d4b.sh).
 #   l1_bind_check.sh CONTRACT.json OUTDIR      (run from the repo root)
 set -o pipefail
@@ -15,5 +17,6 @@ print(' '.join(sorted({'--rtl-file '+f for i in c['instances'].values() for f in
 python3 tools/die_port_bind.py $O/die.v --top hbm_v16_die $EXTRA --allow-model ot_hbm3e_phy_rc_e8p5 --allow-model ot_hbm_pll_bb \
   --rtl-root rtl --rtl-root physical/hbm_mtp/rtl --rtl-root physical/hbm_accel_die_views/common --rtl-root physical/hbm_accel_die_views/quant/rtl \
   --rtl-root physical/hbm_generic/argmax18/rtl --rtl-root physical/hbm_xp_aq_tree13_1014 --lib-root physical/asap7_memory_macros --lib-root physical/asap7_memory_macros_v2 \
+  --prefer rtl/hdc/ot_hdc_fp32_mul_lat.sv \
   --define OT_SMH_FC_HIER --strap-file $O/straps.json --pad-file $O/die.v.pads.json --out $O/port_bind.json > $O/port_bind.log 2>&1; rc=$?
 tail -1 $O/port_bind.log; exit $rc

@@ -490,6 +490,12 @@ def main():
                 sys.exit(f'L12_FAIL overlay inst {n} has no BUDGET_INST entry (master pattern unknown)')
             bi[n] = (bi[n][0], {**bi[n][1], **b})
         print(f'L12 budget overlay {a.budget_overlay}: master {sorted(ov.get("master", {}))} inst {sorted(ov.get("inst", {}))}')
+    qs = c.get('qdq_split') or {}
+    if qs.get('parent') and qs['parent'] not in c['instances']:
+        # HBMb/R18 10-21: l32q split hb_quant_NW into the CLOSED r3 leaves; the RL budget now lives on the 4 LG children
+        # (latency_budget RL, read by d4g_bank_latency via DOWN_PARAM ot_hgi_qdq_lg_port_group_r2) at the netmap RL.
+        b = bi.pop(qs['parent'], None)
+        print(f'L12 qdq split: {qs["parent"]} budget {None if b is None else b[1]} -> LG children {qs.get("lgs")} RL {qs.get("RL")}')
     rep = dict(schema='opentallas.hbm.d4g.l12_banklat.v1', region=REGION, inp=str(a.inp),
                budgets=dict(master=bm, inst={k: v[1] for k, v in bi.items()}),
                overlay=None if ov is None else dict(path=a.budget_overlay, master=ov.get('master'), inst=ov.get('inst'),

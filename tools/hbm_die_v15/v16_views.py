@@ -79,7 +79,67 @@ def spec_params(view_dir):
         return None
 
 
-def real_view(m, ports=None, params=None, physical_view=None):
+_INT = re.compile(r"^\s*(?:\d+\s*'\s*[sS]?\s*([dDhHbB])\s*([0-9a-fA-F_]+)|(\d+))\s*$")
+
+
+def _int_lit(v):
+    m = _INT.match(str(v))
+    if not m:
+        return None
+    if m.group(3):
+        return int(m.group(3))
+    return int(m.group(2).replace('_', ''), {'d': 10, 'h': 16, 'b': 2}[m.group(1).lower()])
+
+
+def rtl_param_defaults(source, module):
+    """HBMb/R18 10-21: integer-literal parameter defaults of `module` in `source` (header parameters only)."""
+    try:
+        txt = (ROOT / source).read_text(errors='replace')
+    except (OSError, TypeError):
+        return {}
+    txt = re.sub(r'//[^\n]*', '', txt)
+    hm = re.search(r'\bmodule\s+' + re.escape(module) + r'\b\s*#\s*\((.*?)\)\s*\(', txt, re.S)
+    if not hm:
+        return {}
+    out = {}
+    for pm in re.finditer(r'\bparameter\b\s*(?:integer\s+|logic\s+|bit\s+)?(?:\[[^\]]*\]\s*)?(\w+)\s*=\s*([^,]+)', hm.group(1)):
+        n = _int_lit(pm.group(2))
+        if n is not None:
+            out[pm.group(1)] = n
+    return out
+
+
+def _latency_params():
+    """cycle-contract parameters the die sets per instance (d4g_bank_latency RULES: RD_LAT, READ_RETURN, ...)."""
+    import sys
+    sys.path.insert(0, str(ROOT / 'tools/hbm_die_v16'))
+    try:
+        import d4g_bank_latency as BL
+    except Exception:   # noqa: BLE001 -- the guard then covers nothing extra, as before
+        return frozenset()
+    return frozenset(r[2] for rows in BL.RULES.values() for r in rows)
+
+
+LAT_PARAMS = _latency_params()
+
+
+def default_param_miss(m, params, source):
+    """A view whose tile spec records params {} was hardened at the RTL defaults: an instance overriding an integer
+    default of a cycle-contract parameter (LAT_PARAMS, e.g. l12's per-bank RD_LAT vector on the RD_LAT 6 ctlx view)
+    must not bind it.  Functionally neutral physical params (replica counts such as bdring NR) are not checked."""
+    if not params or not source:
+        return []
+    d = rtl_param_defaults(source, m)
+    miss = []
+    for k, v in params.items():
+        if k in d and k in LAT_PARAMS:
+            iv = v if isinstance(v, int) and not isinstance(v, bool) else _int_lit(v) if isinstance(v, str) else None
+            if iv != d[k]:
+                miss.append((k, d[k], v))
+    return miss
+
+
+def real_view(m, ports=None, params=None, physical_view=None, source=None):
     """H-DIE-R8b 10-17: a master with several hardened parameter variants (ot_hbm_static_cfg_collar = col_sfu / col_su /
     col_idx) has one routed view per variant tile; pick the candidate whose LEF pins equal this variant's ports and whose
     tile spec params (when recorded) agree with the instance's.  The first sorted candidate used to win for every
@@ -87,6 +147,13 @@ def real_view(m, ports=None, params=None, physical_view=None):
     cands = real_views(m)
     if physical_view:
         cands = [rv for rv in cands if str(Path(rv[0]).relative_to(ROOT)) == physical_view]
+        d = ROOT / physical_view
+        if not cands and (d / f'{m}.lef').is_file():
+            # HBMb/R18 10-21: an explicitly requested CLOSED view outside a views/ tree (hgi_quant_wide_views/<rec>/<m>,
+            # the qdq r3 u_dec) is a candidate too; it used to fall to SYNTH silently.
+            tt, ff = sorted(d.glob(f'{m}*tt*.lib')), sorted(d.glob(f'{m}*ff*.lib'))
+            if tt and ff:
+                cands = [(d, d / f'{m}.lef', tt[0], ff[0])]
     if not cands or ports is None:
         return cands[0] if cands else None
     param_miss = False
@@ -96,6 +163,9 @@ def real_view(m, ports=None, params=None, physical_view=None):
             continue
         sp = spec_params(rv[0])
         if sp and params is not None and any(str(params.get(k, v)) != str(v) for k, v in sp.items()):
+            param_miss = True
+            continue
+        if sp == {} and default_param_miss(m, params, source):
             param_miss = True
             continue
         return rv
@@ -132,7 +202,7 @@ def main():
         k = k_of[m]; k_of[m] += 1
         cell = m if nvar[m] == 1 else f'{m}__pv{k}'
         ports = {p: v['bits'] for p, v in rep['ports'].items()}
-        rv = None if rep.get('force_synth') else real_view(m, ports, rep['params'], rep.get('physical_view'))
+        rv = None if rep.get('force_synth') else real_view(m, ports, rep['params'], rep.get('physical_view'), rep.get('source'))
         ent = dict(master=m, cell=cell, instances=insts, representative=insts[0], params=rep['params'],
                    source=rep['source'], ports=len(ports), port_bits=sum(ports.values()),
                    requested_physical_view=rep.get('physical_view'), closed_record=rep.get('closed_record'))
