@@ -1,0 +1,97 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81hd_lane_p5a",
+ "top": "ot_s81hd_lane",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  898.56,
+  669.6
+ ],
+ "core": [
+  2.16,
+  2.16,
+  896.4,
+  667.44
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": 2600.0,
+ "layer_contract": {
+  "children": {
+   "dsfd_coll_lane_w_safe8_ntf": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M7"
+  ],
+  "strap_layer": "M8"
+ },
+ "pins": {
+  "W": [
+   "rx",
+   "tx"
+  ],
+  "E": [
+   "tx_v",
+   "tx_d",
+   "rx_v",
+   "rx_d",
+   "flt",
+   "ck",
+   "rst_n",
+   "chb"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf",
+   "master": "dsfd_coll_lane_w_safe8_ntf",
+   "inst": "*u_ln",
+   "idx": 0,
+   "x": 43.2,
+   "y": 43.2,
+   "w": 725.76,
+   "h": 583.2,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [],
+ "referenced": [
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_util.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_lane.sv",
+  "physical/ref_tile/s81hd_lane_p5a/kit.env",
+  "physical/ref_tile/s81hd_lane_p5a/clock.sdc",
+  "physical/ref_tile/s81hd_lane_p5a/signoff.sdc",
+  "physical/ref_tile/s81hd_lane_p5a/pdn.tcl",
+  "physical/ref_tile/s81hd_lane_p5a/pre_cts.tcl",
+  "physical/ref_tile/s81hd_lane_p5a/post_cts.tcl",
+  "physical/ref_tile/s81hd_lane_p5a/post_grt.tcl",
+  "physical/ref_tile/s81hd_lane_p5a/pre_drt.tcl",
+  "physical/ref_tile/s81hd_lane_p5a/pre_fill.tcl",
+  "physical/ref_tile/s81hd_lane_p5a/post_fill.tcl",
+  "physical/ref_tile/s81hd_lane_p5a/pre_grt.tcl",
+  "physical/ref_tile/s81hd_lane_p5a/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/s81hd_lane_p5a/spine_ins.tcl",
+  "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf.lef",
+  "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf_ss.lib",
+  "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf_ff.lib",
+  "physical/ref_tile/dscoll_lane_w_s8ng/views/dsfd_coll_lane_w_safe8_ntf/dsfd_coll_lane_w_safe8_ntf_tt.lib",
+  "physical/ref_tile/s81hd_lane_p5a/place.tcl"
+ ]
+}
