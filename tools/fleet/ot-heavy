@@ -76,6 +76,11 @@ while :; do
         [ -d "$_d" ] && export PATH="$_d:$PATH"
       done
     fi
+    # VL_JCAP_1022 (fleet 2026-10-22: ep5 / filled by OOM dumps): Verilator C++ builds peak ~30 GB per cc1plus, so
+    # every Verilator make in this job runs at most floor(MEM / per-cc1plus GB) jobs (ot-vl-jcap). OT_VL_JCAP=0 opts out.
+    if [ "${OT_VL_JCAP:-1}" != 0 ] && [ -x /usr/local/bin/ot-vl-jcap ]; then
+      _jc=$(timeout 20 /usr/local/bin/ot-vl-jcap --env "$MEM" -- "$@") && eval "$_jc"; unset _jc
+    fi
     [ -x /usr/local/lib/ot-heavy/bin/docker ] && export PATH="/usr/local/lib/ot-heavy/bin:$PATH"
     # OOMADJ_999_1022: a non-die job starts at oom_score_adj 0 (its launcher may sit in a protected die tree at -999,
     # or a legacy -1000 one, which would make the job un-killable by its own scope's memcg OOM: livelock at the cap).
