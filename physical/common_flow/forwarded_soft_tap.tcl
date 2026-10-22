@@ -234,6 +234,27 @@ proc ot_fst_tap {} {
   }
   set changes [ot_fst_propagate_modes]
   estimate_parasitics -placement
+  # Repeat the forwarded port nets first (OT_FST_REPAIR, default 1).  TritonCTS -repair_clock_nets repairs EVERY clock net,
+  # so a TritonCTS frame got repeaters on xk[k]; a spine frame never runs TritonCTS, and the vgy spine test (10-22) left the
+  # xk[k] nets unrepeated: 300-660 ps of RC with a slow slew at the sinks, where one tap buffer added 50-450 ps.  Same
+  # resizer net repair as the clock_entries selected-root repair; a no-op on an already repeated net.
+  if {![info exists ::env(OT_FST_REPAIR)] || $::env(OT_FST_REPAIR) ne "0"} {
+    est::check_parasitics
+    set mw [rsz::check_max_wire_length 0 true]
+    set nrep 0
+    dict for {port info} $::ot_ce_fwd_soft {
+      set bt [$block findBTerm $port]
+      if {$bt eq "NULL" || $bt eq ""} { error "OT_FST: no port $port in the block" }
+      set pn [$bt getNet]
+      set dt [$pn isDoNotTouch]
+      if {$dt} { $pn setDoNotTouch 0 }
+      rsz::repair_net_cmd [sta::db_net_to_sta $pn] $mw 0 0
+      if {$dt} { $pn setDoNotTouch 1 }
+      incr nrep
+    }
+    estimate_parasitics -placement
+    puts "OT_FST repaired $nrep forwarded port nets (max wire [expr {$mw}] dbu)"
+  }
   set recs {}
   set k 0
   dict for {port info} $::ot_ce_fwd_soft {
