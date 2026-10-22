@@ -1,0 +1,22 @@
+{
+  "historical_source": "5caf06393",
+  "current_baseline": "dae8d7e02",
+  "files": [
+    {
+      "path": "rtl/qwen_split/qfd_sys_face_record_port.sv",
+      "sha256": "4ba016e7205508b8fe2919493c0828b792c858711c8cc1b4e28b1f91469aa3d2",
+      "byte_identical": true
+    },
+    {
+      "path": "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+      "sha256": "26a396b1826998c681fe23090d0dab22b5a6df9334b10fd4b47fbd967e3eb291",
+      "byte_identical": true
+    },
+    {
+      "path": "rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv",
+      "sha256": "a1b8c49fe64f11100fe3fc6fbc4f9f4a7695c157ea26671d221dd4c95843bdeb",
+      "byte_identical": true
+    }
+  ],
+  "scope": "exact component source adoption only; incoming FF/reset publications and native/physical parent qualification remain required"
+}

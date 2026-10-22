@@ -1,0 +1,17 @@
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv
+rtl/qwen_sys/d2d_static_20261015/qfd_d2d_cal_seq_ovl_rope.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_ovl_seq.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq.sv
+rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv
+rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv
+physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v
+rtl/qwen_split/qfd_sysface_reset_same3.sv
+rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sysface32.sv
+rtl/qwen_split/qfd_sys_face_lctx3_core.sv
+rtl/qwen_split/qfd_sys_face_lctx3_wrapped.sv
+rtl/qwen_split/qfd_sysface_cfg_copy.sv
+rtl/qwen_split/qfd_sysface_select_local.sv
+rtl/qwen_split/qfd_sys_face_record_port_n32.sv
+rtl/qwen_split/mu/qfd_mu_head_context_tx_lctx32.sv
+rtl/qwen_split/mu/qfd_mu_head_context_tx_lctx32_helpers.sv
+rtl/qwen_sys/d2d_static_20261015/qfd_syscal_lctx3.sv

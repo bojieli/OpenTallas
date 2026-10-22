@@ -1,0 +1,40 @@
+{
+  "scope": "same-edge component comparison and causal mutants only; no compiler deployment programme or physical claim",
+  "source_sha256": {
+    "rtl/qwen_sys/d2d_static_20261015/qfd_syscal_lctx2.sv": "a3ae877fc3ee412dda0157eee4930ab5771ab5eb459be17318a34f5ea00a6d22",
+    "rtl/qwen_split/qfd_sysface_reset_same3.sv": "d9931ae40c466f0a99afea550e9f2082ba5edfd88b87c43437130ce3d4b444d4",
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_sysface32.sv": "86f24f5ffca743777bafdc26dfe8541c81db28e446046bb3f70cf5345ab340b8"
+  },
+  "results": [
+    {
+      "case": "NE16",
+      "returncode": 0,
+      "output": "PASS CALENDAR_COMPONENT NE=16 edges=359 events=125 same-edge segment/start/halt/reset comparison"
+    },
+    {
+      "case": "NE32",
+      "returncode": 0,
+      "output": "PASS CALENDAR_COMPONENT NE=32 edges=691 events=252 same-edge segment/start/halt/reset comparison"
+    },
+    {
+      "case": "NE64",
+      "returncode": 0,
+      "output": "PASS CALENDAR_COMPONENT NE=64 edges=1375 events=508 same-edge segment/start/halt/reset comparison"
+    },
+    {
+      "case": "same3_reset",
+      "returncode": 0,
+      "output": "PASS RESET_SAME3 edges=30 all38outputs match original third-edge release and async assertion"
+    },
+    {
+      "case": "segment_base_mutant",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt/codex-sysface-l-2000/tools/qwen_split/tb_syscal_lctx2.sv:14: CALENDAR_DIFF NE=32 edge=118 ref=119e actual=5002\n       Time: 1186000 Scope: tb_syscal_lctx2"
+    },
+    {
+      "case": "pointer_mutant",
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt/codex-sysface-l-2000/tools/qwen_split/tb_syscal_lctx2.sv:14: CALENDAR_DIFF NE=32 edge=45 ref=108a actual=510a\n       Time: 456000 Scope: tb_syscal_lctx2"
+    }
+  ]
+}

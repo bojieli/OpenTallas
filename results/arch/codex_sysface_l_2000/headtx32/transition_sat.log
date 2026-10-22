@@ -1,0 +1,259 @@
+
+-- Running command `read_verilog /out/transition.sv; prep -top record32_transition -flatten; sat -verify -prove bad 0 -set-def-inputs' --
+
+1. Executing Verilog-2005 frontend: /out/transition.sv
+Parsing Verilog input from `/out/transition.sv' to AST representation.
+Generating RTLIL representation for module `\record32_transition'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \record32_transition
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \record32_transition
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module record32_transition.
+<suppressed ~786 debug messages>
+
+2.3. Executing FLATTEN pass (flatten design).
+
+2.4. Executing FUTURE pass.
+
+2.5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module record32_transition.
+
+2.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \record32_transition..
+Removed 786 unused cells and 2247 unused wires.
+<suppressed ~787 debug messages>
+
+2.7. Executing CHECK pass (checking for obvious problems).
+Checking module record32_transition...
+Found and reported 0 problems.
+
+2.8. Executing OPT pass (performing simple optimizations).
+
+2.8.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module record32_transition.
+
+2.8.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\record32_transition'.
+Computing hashes of 3195 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 3126 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 3096 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 3075 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2883 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2819 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2756 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2755 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2754 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2753 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2752 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2751 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2750 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2749 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+<suppressed ~1338 debug messages>
+Removed a total of 446 cells.
+
+2.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \record32_transition..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~2570 debug messages>
+
+2.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \record32_transition.
+    New input vector for $reduce_or cell $reduce_or$/out/transition.sv:5134$3981: { $xor$/out/transition.sv:5134$3980_Y $xor$/out/transition.sv:5134$3975_Y $xor$/out/transition.sv:5134$3970_Y $xor$/out/transition.sv:5134$3965_Y $xor$/out/transition.sv:5134$3960_Y $xor$/out/transition.sv:5134$3955_Y $xor$/out/transition.sv:5134$3950_Y $xor$/out/transition.sv:5134$3944_Y $xor$/out/transition.sv:5134$3938_Y $xor$/out/transition.sv:5134$3932_Y $xor$/out/transition.sv:5134$3926_Y $xor$/out/transition.sv:5134$3920_Y $xor$/out/transition.sv:5134$3914_Y $xor$/out/transition.sv:5134$3908_Y $xor$/out/transition.sv:5134$3902_Y $xor$/out/transition.sv:5134$3896_Y $xor$/out/transition.sv:5134$3890_Y $xor$/out/transition.sv:5134$3884_Y $xor$/out/transition.sv:5134$3878_Y $xor$/out/transition.sv:5134$3872_Y $xor$/out/transition.sv:5134$3866_Y $xor$/out/transition.sv:5134$3860_Y $xor$/out/transition.sv:5134$3854_Y $xor$/out/transition.sv:5134$3848_Y $xor$/out/transition.sv:5134$3842_Y $xor$/out/transition.sv:5134$3836_Y $xor$/out/transition.sv:5134$3830_Y $xor$/out/transition.sv:5134$3824_Y $xor$/out/transition.sv:5134$3818_Y $xor$/out/transition.sv:5134$3812_Y $xor$/out/transition.sv:5134$3806_Y $xor$/out/transition.sv:5134$3800_Y $xor$/out/transition.sv:5134$3794_Y $xor$/out/transition.sv:5134$3788_Y $xor$/out/transition.sv:5134$3782_Y $xor$/out/transition.sv:5134$3776_Y $xor$/out/transition.sv:5134$3770_Y $xor$/out/transition.sv:5134$3764_Y $xor$/out/transition.sv:5134$3758_Y $xor$/out/transition.sv:5134$3752_Y $xor$/out/transition.sv:5134$3746_Y $xor$/out/transition.sv:5134$3740_Y $xor$/out/transition.sv:5134$3734_Y $xor$/out/transition.sv:5134$3728_Y $xor$/out/transition.sv:5134$3722_Y $xor$/out/transition.sv:5134$3716_Y $xor$/out/transition.sv:5134$3710_Y $xor$/out/transition.sv:5134$3704_Y $xor$/out/transition.sv:5134$3698_Y $xor$/out/transition.sv:5134$3692_Y $xor$/out/transition.sv:5134$3686_Y $xor$/out/transition.sv:5134$3680_Y $xor$/out/transition.sv:5134$3674_Y $xor$/out/transition.sv:5134$3668_Y $xor$/out/transition.sv:5134$3662_Y $xor$/out/transition.sv:5134$3656_Y $xor$/out/transition.sv:5134$3650_Y $xor$/out/transition.sv:5134$3644_Y $xor$/out/transition.sv:5134$3638_Y $xor$/out/transition.sv:5134$3632_Y $xor$/out/transition.sv:5134$3626_Y $xor$/out/transition.sv:5134$3620_Y $xor$/out/transition.sv:5134$3614_Y $xor$/out/transition.sv:5134$3608_Y $xor$/out/transition.sv:5134$3602_Y $xor$/out/transition.sv:5134$3596_Y $xor$/out/transition.sv:5134$3590_Y $xor$/out/transition.sv:5134$3584_Y $xor$/out/transition.sv:5134$3578_Y $xor$/out/transition.sv:5134$3572_Y $xor$/out/transition.sv:5134$3566_Y $xor$/out/transition.sv:5134$3560_Y $xor$/out/transition.sv:5134$3554_Y $xor$/out/transition.sv:5134$3548_Y $xor$/out/transition.sv:5134$3542_Y $xor$/out/transition.sv:5134$3536_Y $xor$/out/transition.sv:5134$3530_Y $xor$/out/transition.sv:5134$3524_Y $xor$/out/transition.sv:5134$3518_Y $xor$/out/transition.sv:5134$3512_Y $xor$/out/transition.sv:5134$3506_Y $xor$/out/transition.sv:5134$3500_Y $xor$/out/transition.sv:5134$3494_Y $xor$/out/transition.sv:5134$3488_Y $xor$/out/transition.sv:5134$3482_Y $xor$/out/transition.sv:5134$3476_Y $xor$/out/transition.sv:5134$3470_Y $xor$/out/transition.sv:5134$3464_Y $xor$/out/transition.sv:5134$3458_Y $xor$/out/transition.sv:5134$3452_Y $xor$/out/transition.sv:5134$3446_Y $xor$/out/transition.sv:5134$3440_Y $xor$/out/transition.sv:5134$3434_Y $xor$/out/transition.sv:5134$3428_Y $xor$/out/transition.sv:5134$3422_Y $xor$/out/transition.sv:5134$3416_Y $xor$/out/transition.sv:5134$3410_Y $xor$/out/transition.sv:5134$3404_Y $xor$/out/transition.sv:5134$3398_Y $xor$/out/transition.sv:5134$3392_Y $xor$/out/transition.sv:5134$3386_Y $xor$/out/transition.sv:5134$3380_Y $xor$/out/transition.sv:5134$3374_Y $xor$/out/transition.sv:5134$3368_Y $xor$/out/transition.sv:5134$3362_Y $xor$/out/transition.sv:5134$3356_Y $xor$/out/transition.sv:5134$3350_Y $xor$/out/transition.sv:5134$3344_Y $xor$/out/transition.sv:5134$3338_Y $xor$/out/transition.sv:5134$3332_Y $xor$/out/transition.sv:5134$3326_Y $xor$/out/transition.sv:5134$3320_Y $xor$/out/transition.sv:5134$3314_Y $xor$/out/transition.sv:5134$3308_Y $xor$/out/transition.sv:5134$3302_Y $xor$/out/transition.sv:5134$3296_Y $xor$/out/transition.sv:5134$3290_Y $xor$/out/transition.sv:5134$3284_Y $xor$/out/transition.sv:5134$3278_Y $xor$/out/transition.sv:5134$3272_Y $xor$/out/transition.sv:5134$3266_Y $xor$/out/transition.sv:5134$3260_Y $xor$/out/transition.sv:5134$3254_Y $xor$/out/transition.sv:5134$3248_Y $xor$/out/transition.sv:5134$3242_Y $xor$/out/transition.sv:5134$3236_Y $xor$/out/transition.sv:5134$3230_Y $xor$/out/transition.sv:5134$3224_Y $xor$/out/transition.sv:5134$3218_Y $xor$/out/transition.sv:5134$3212_Y $xor$/out/transition.sv:5134$3206_Y $xor$/out/transition.sv:5134$3200_Y $xor$/out/transition.sv:5134$3194_Y $xor$/out/transition.sv:5134$3188_Y $xor$/out/transition.sv:5134$3182_Y $xor$/out/transition.sv:5134$3176_Y $xor$/out/transition.sv:5134$3170_Y $xor$/out/transition.sv:5134$3164_Y $xor$/out/transition.sv:5134$3158_Y $xor$/out/transition.sv:5134$3152_Y $xor$/out/transition.sv:5134$3146_Y $xor$/out/transition.sv:5134$3140_Y $xor$/out/transition.sv:5134$3134_Y $xor$/out/transition.sv:5134$3128_Y $xor$/out/transition.sv:5134$3122_Y $xor$/out/transition.sv:5134$3116_Y $xor$/out/transition.sv:5134$3110_Y $xor$/out/transition.sv:5134$3104_Y $xor$/out/transition.sv:5134$3098_Y $xor$/out/transition.sv:5134$3092_Y $xor$/out/transition.sv:5134$3086_Y $xor$/out/transition.sv:5134$3080_Y $xor$/out/transition.sv:5134$3074_Y $xor$/out/transition.sv:5134$3068_Y $xor$/out/transition.sv:5134$3062_Y $xor$/out/transition.sv:5134$3056_Y $xor$/out/transition.sv:5134$3050_Y $xor$/out/transition.sv:5134$3044_Y $xor$/out/transition.sv:5134$3038_Y $xor$/out/transition.sv:5134$3032_Y $xor$/out/transition.sv:5134$3026_Y $xor$/out/transition.sv:5134$3020_Y $xor$/out/transition.sv:5134$3014_Y $xor$/out/transition.sv:5134$3008_Y $xor$/out/transition.sv:5134$3002_Y $xor$/out/transition.sv:5134$2996_Y $xor$/out/transition.sv:5134$2990_Y $xor$/out/transition.sv:5134$2984_Y $xor$/out/transition.sv:5134$2978_Y $xor$/out/transition.sv:5134$2972_Y $xor$/out/transition.sv:5134$2966_Y $xor$/out/transition.sv:5134$2960_Y $xor$/out/transition.sv:5134$2954_Y $xor$/out/transition.sv:5134$2948_Y $xor$/out/transition.sv:5134$2942_Y $xor$/out/transition.sv:5134$2936_Y $xor$/out/transition.sv:5134$2930_Y $xor$/out/transition.sv:5134$2924_Y $xor$/out/transition.sv:5134$2918_Y $xor$/out/transition.sv:5134$2912_Y $xor$/out/transition.sv:5134$2906_Y $xor$/out/transition.sv:5134$2900_Y $xor$/out/transition.sv:5134$2894_Y $xor$/out/transition.sv:5134$2888_Y $xor$/out/transition.sv:5134$2882_Y $xor$/out/transition.sv:5134$2876_Y $xor$/out/transition.sv:5134$2870_Y $xor$/out/transition.sv:5134$2864_Y $xor$/out/transition.sv:5134$2858_Y $xor$/out/transition.sv:5134$2852_Y $xor$/out/transition.sv:5134$2846_Y $xor$/out/transition.sv:5134$2840_Y $xor$/out/transition.sv:5134$2834_Y $xor$/out/transition.sv:5134$2828_Y $xor$/out/transition.sv:5134$2822_Y $xor$/out/transition.sv:5134$2816_Y $xor$/out/transition.sv:5134$2810_Y $xor$/out/transition.sv:5134$2804_Y $xor$/out/transition.sv:5134$2798_Y $xor$/out/transition.sv:5134$2792_Y $xor$/out/transition.sv:5134$2786_Y $xor$/out/transition.sv:5134$2780_Y $xor$/out/transition.sv:5134$2774_Y $xor$/out/transition.sv:5134$2768_Y $xor$/out/transition.sv:5134$2762_Y $xor$/out/transition.sv:5134$2756_Y $xor$/out/transition.sv:5134$2750_Y $xor$/out/transition.sv:5134$2744_Y $xor$/out/transition.sv:5134$2738_Y $xor$/out/transition.sv:5134$2732_Y $xor$/out/transition.sv:5134$2726_Y $xor$/out/transition.sv:5134$2720_Y $xor$/out/transition.sv:5134$2714_Y $xor$/out/transition.sv:5134$2708_Y $xor$/out/transition.sv:5134$2702_Y $xor$/out/transition.sv:5134$2696_Y $xor$/out/transition.sv:5134$2690_Y $xor$/out/transition.sv:5134$2684_Y $xor$/out/transition.sv:5134$2678_Y $xor$/out/transition.sv:5134$2672_Y $xor$/out/transition.sv:5134$2666_Y $xor$/out/transition.sv:5134$2660_Y $xor$/out/transition.sv:5134$2654_Y $xor$/out/transition.sv:5134$2648_Y $xor$/out/transition.sv:5134$2642_Y $xor$/out/transition.sv:5134$2636_Y $xor$/out/transition.sv:5134$2630_Y $xor$/out/transition.sv:5134$2624_Y $xor$/out/transition.sv:5134$2618_Y $xor$/out/transition.sv:5134$2612_Y $xor$/out/transition.sv:5134$2606_Y $xor$/out/transition.sv:5134$2600_Y $xor$/out/transition.sv:5134$2594_Y $xor$/out/transition.sv:5134$2588_Y $xor$/out/transition.sv:5134$2582_Y $xor$/out/transition.sv:5134$2576_Y $xor$/out/transition.sv:5134$2570_Y $xor$/out/transition.sv:5134$2564_Y $xor$/out/transition.sv:5134$2558_Y $xor$/out/transition.sv:5134$2552_Y $xor$/out/transition.sv:5134$2546_Y $xor$/out/transition.sv:5134$2540_Y $xor$/out/transition.sv:5134$2534_Y $xor$/out/transition.sv:5134$2528_Y $xor$/out/transition.sv:5134$2522_Y $xor$/out/transition.sv:5134$2516_Y $xor$/out/transition.sv:5134$2510_Y $xor$/out/transition.sv:5134$2504_Y $xor$/out/transition.sv:5134$2498_Y $xor$/out/transition.sv:5134$2492_Y $xor$/out/transition.sv:5134$2486_Y $xor$/out/transition.sv:5134$2480_Y $xor$/out/transition.sv:5134$2474_Y $xor$/out/transition.sv:5134$2468_Y $xor$/out/transition.sv:5134$2462_Y $xor$/out/transition.sv:5134$2456_Y $xor$/out/transition.sv:5134$2450_Y $xor$/out/transition.sv:5134$2444_Y $xor$/out/transition.sv:5134$2438_Y $xor$/out/transition.sv:5134$2432_Y $xor$/out/transition.sv:5134$2426_Y $xor$/out/transition.sv:5134$2420_Y $xor$/out/transition.sv:5134$2414_Y $xor$/out/transition.sv:5134$2408_Y $xor$/out/transition.sv:5134$2402_Y $xor$/out/transition.sv:5134$2396_Y $xor$/out/transition.sv:5134$2390_Y $xor$/out/transition.sv:5134$2384_Y $xor$/out/transition.sv:5134$2378_Y $xor$/out/transition.sv:5134$2372_Y $xor$/out/transition.sv:5134$2366_Y $xor$/out/transition.sv:5134$2360_Y $xor$/out/transition.sv:5134$2354_Y $xor$/out/transition.sv:5134$2348_Y $xor$/out/transition.sv:5134$2342_Y $xor$/out/transition.sv:5134$2336_Y $xor$/out/transition.sv:5134$2330_Y $xor$/out/transition.sv:5134$2324_Y $xor$/out/transition.sv:5134$2318_Y $xor$/out/transition.sv:5134$2312_Y $xor$/out/transition.sv:5134$2306_Y $xor$/out/transition.sv:5134$2300_Y $xor$/out/transition.sv:5134$2294_Y $xor$/out/transition.sv:5134$2288_Y $xor$/out/transition.sv:5134$2282_Y $xor$/out/transition.sv:5134$2276_Y $xor$/out/transition.sv:5134$2270_Y $xor$/out/transition.sv:5134$2264_Y $xor$/out/transition.sv:5134$2258_Y $xor$/out/transition.sv:5134$2252_Y $xor$/out/transition.sv:5134$2246_Y $xor$/out/transition.sv:5134$2240_Y $xor$/out/transition.sv:5134$2234_Y $xor$/out/transition.sv:5134$2228_Y $xor$/out/transition.sv:5134$2222_Y $xor$/out/transition.sv:5134$2216_Y $xor$/out/transition.sv:5134$2210_Y $xor$/out/transition.sv:5134$2204_Y $xor$/out/transition.sv:5134$2198_Y $xor$/out/transition.sv:5134$2192_Y $xor$/out/transition.sv:5134$2186_Y $xor$/out/transition.sv:5134$2180_Y $xor$/out/transition.sv:5134$2174_Y $xor$/out/transition.sv:5134$2168_Y $xor$/out/transition.sv:5134$2162_Y $xor$/out/transition.sv:5134$2156_Y $xor$/out/transition.sv:5134$2150_Y $xor$/out/transition.sv:5134$2144_Y $xor$/out/transition.sv:5134$2138_Y $xor$/out/transition.sv:5134$2132_Y $xor$/out/transition.sv:5134$2126_Y $xor$/out/transition.sv:5134$2120_Y $xor$/out/transition.sv:5134$2114_Y $xor$/out/transition.sv:5134$2108_Y $xor$/out/transition.sv:5134$2102_Y $xor$/out/transition.sv:5134$2096_Y $xor$/out/transition.sv:5134$2090_Y $xor$/out/transition.sv:5134$2084_Y $xor$/out/transition.sv:5134$2078_Y $xor$/out/transition.sv:5134$2072_Y $xor$/out/transition.sv:5134$2066_Y $xor$/out/transition.sv:5134$2060_Y $xor$/out/transition.sv:5134$2054_Y $xor$/out/transition.sv:5134$2048_Y $xor$/out/transition.sv:5134$2042_Y $xor$/out/transition.sv:5134$2036_Y $xor$/out/transition.sv:5134$2030_Y $xor$/out/transition.sv:5134$2024_Y $xor$/out/transition.sv:5134$2018_Y $xor$/out/transition.sv:5134$2012_Y $xor$/out/transition.sv:5134$2006_Y $xor$/out/transition.sv:5134$2000_Y $xor$/out/transition.sv:5134$1994_Y $xor$/out/transition.sv:5134$1988_Y $xor$/out/transition.sv:5134$1982_Y $xor$/out/transition.sv:5134$1976_Y $xor$/out/transition.sv:5134$1970_Y $xor$/out/transition.sv:5134$1964_Y $xor$/out/transition.sv:5134$1958_Y $xor$/out/transition.sv:5134$1952_Y $xor$/out/transition.sv:5134$1946_Y $xor$/out/transition.sv:5134$1940_Y $xor$/out/transition.sv:5134$1934_Y $xor$/out/transition.sv:5134$1928_Y $xor$/out/transition.sv:5134$1922_Y $xor$/out/transition.sv:5134$1916_Y $xor$/out/transition.sv:5134$1910_Y $xor$/out/transition.sv:5134$1904_Y $xor$/out/transition.sv:5134$1898_Y $xor$/out/transition.sv:5134$1892_Y $xor$/out/transition.sv:5134$1886_Y $xor$/out/transition.sv:5134$1880_Y $xor$/out/transition.sv:5134$1874_Y $xor$/out/transition.sv:5134$1868_Y $xor$/out/transition.sv:5134$1862_Y $xor$/out/transition.sv:5134$1856_Y $xor$/out/transition.sv:5134$1850_Y $xor$/out/transition.sv:5134$1844_Y $xor$/out/transition.sv:5134$1838_Y $xor$/out/transition.sv:5134$1832_Y $xor$/out/transition.sv:5134$1826_Y $xor$/out/transition.sv:5134$1820_Y $xor$/out/transition.sv:5134$1814_Y $xor$/out/transition.sv:5134$1808_Y $xor$/out/transition.sv:5134$1802_Y $xor$/out/transition.sv:5134$1796_Y $xor$/out/transition.sv:5134$1790_Y $xor$/out/transition.sv:5134$1784_Y $xor$/out/transition.sv:5134$1778_Y $xor$/out/transition.sv:5134$1772_Y $xor$/out/transition.sv:5134$1766_Y $xor$/out/transition.sv:5134$1760_Y $xor$/out/transition.sv:5134$1754_Y $xor$/out/transition.sv:5134$1748_Y $xor$/out/transition.sv:5134$1742_Y $xor$/out/transition.sv:5134$1736_Y $xor$/out/transition.sv:5134$1730_Y $xor$/out/transition.sv:5134$1724_Y $xor$/out/transition.sv:5134$1718_Y $xor$/out/transition.sv:5134$1712_Y $xor$/out/transition.sv:5134$1706_Y $xor$/out/transition.sv:5134$1700_Y $xor$/out/transition.sv:5134$1694_Y $xor$/out/transition.sv:5134$1688_Y $xor$/out/transition.sv:5134$1682_Y $xor$/out/transition.sv:5134$1676_Y $xor$/out/transition.sv:5134$1670_Y $xor$/out/transition.sv:5134$1664_Y $xor$/out/transition.sv:5134$1658_Y $xor$/out/transition.sv:5134$1652_Y $xor$/out/transition.sv:5134$1646_Y $xor$/out/transition.sv:5134$1640_Y $xor$/out/transition.sv:5134$1634_Y $xor$/out/transition.sv:5134$1628_Y $xor$/out/transition.sv:5134$1627_Y $xor$/out/transition.sv:5134$1626_Y $xor$/out/transition.sv:5134$1625_Y $xor$/out/transition.sv:5134$1624_Y $xor$/out/transition.sv:5134$1623_Y $xor$/out/transition.sv:5134$1622_Y $xor$/out/transition.sv:5134$1621_Y $xor$/out/transition.sv:5134$1620_Y $xor$/out/transition.sv:5134$1619_Y $xor$/out/transition.sv:5134$1618_Y $xor$/out/transition.sv:5134$1617_Y $xor$/out/transition.sv:5134$1616_Y $xor$/out/transition.sv:5134$1615_Y $xor$/out/transition.sv:5134$1614_Y $xor$/out/transition.sv:5134$1613_Y $xor$/out/transition.sv:5134$1612_Y $xor$/out/transition.sv:5134$1611_Y $xor$/out/transition.sv:5134$1610_Y $xor$/out/transition.sv:5134$1609_Y $xor$/out/transition.sv:5134$1608_Y $xor$/out/transition.sv:5134$1607_Y $xor$/out/transition.sv:5134$1606_Y $xor$/out/transition.sv:5134$1605_Y $xor$/out/transition.sv:5134$1604_Y $xor$/out/transition.sv:5134$1603_Y $xor$/out/transition.sv:5134$1602_Y $xor$/out/transition.sv:5134$1601_Y $xor$/out/transition.sv:5134$1600_Y $xor$/out/transition.sv:5134$1599_Y $xor$/out/transition.sv:5134$1598_Y $xor$/out/transition.sv:5134$1597_Y $xor$/out/transition.sv:5134$1596_Y $xor$/out/transition.sv:5134$1595_Y $xor$/out/transition.sv:5134$1594_Y $xor$/out/transition.sv:5134$1593_Y $xor$/out/transition.sv:5134$1592_Y $xor$/out/transition.sv:5134$1591_Y $xor$/out/transition.sv:5134$1590_Y $xor$/out/transition.sv:5134$1589_Y $xor$/out/transition.sv:5134$1588_Y $xor$/out/transition.sv:5134$1587_Y $xor$/out/transition.sv:5134$1586_Y $xor$/out/transition.sv:5134$1585_Y $xor$/out/transition.sv:5134$1584_Y $xor$/out/transition.sv:5134$1583_Y $xor$/out/transition.sv:5134$1582_Y $xor$/out/transition.sv:5134$1581_Y $xor$/out/transition.sv:5134$1580_Y $xor$/out/transition.sv:5134$1579_Y $xor$/out/transition.sv:5134$1578_Y $xor$/out/transition.sv:5134$1577_Y $xor$/out/transition.sv:5134$1576_Y $xor$/out/transition.sv:5134$1575_Y $xor$/out/transition.sv:5134$1574_Y $xor$/out/transition.sv:5134$1573_Y $xor$/out/transition.sv:5134$1572_Y $xor$/out/transition.sv:5134$1571_Y $xor$/out/transition.sv:5134$1570_Y $xor$/out/transition.sv:5134$1569_Y $xor$/out/transition.sv:5134$1568_Y $xor$/out/transition.sv:5134$1567_Y $xor$/out/transition.sv:5134$1566_Y $xor$/out/transition.sv:5134$1565_Y $xor$/out/transition.sv:5134$1564_Y $xor$/out/transition.sv:5134$1563_Y $xor$/out/transition.sv:5134$1562_Y $xor$/out/transition.sv:5134$1561_Y $xor$/out/transition.sv:5134$1560_Y $xor$/out/transition.sv:5134$1559_Y $xor$/out/transition.sv:5134$1558_Y $xor$/out/transition.sv:5134$1557_Y $xor$/out/transition.sv:5134$1556_Y $xor$/out/transition.sv:5134$1555_Y $xor$/out/transition.sv:5134$1554_Y $xor$/out/transition.sv:5134$1553_Y $xor$/out/transition.sv:5134$1552_Y $xor$/out/transition.sv:5134$1551_Y $xor$/out/transition.sv:5134$1550_Y $xor$/out/transition.sv:5134$1549_Y $xor$/out/transition.sv:5134$1548_Y $xor$/out/transition.sv:5134$1547_Y $xor$/out/transition.sv:5134$1546_Y $xor$/out/transition.sv:5134$1545_Y $xor$/out/transition.sv:5134$1544_Y $xor$/out/transition.sv:5134$1543_Y $xor$/out/transition.sv:5134$1542_Y $xor$/out/transition.sv:5134$1541_Y $xor$/out/transition.sv:5134$1540_Y $xor$/out/transition.sv:5134$1539_Y $xor$/out/transition.sv:5134$1538_Y $xor$/out/transition.sv:5134$1537_Y $xor$/out/transition.sv:5134$1536_Y $xor$/out/transition.sv:5134$1535_Y $xor$/out/transition.sv:5134$1534_Y $xor$/out/transition.sv:5134$1533_Y $xor$/out/transition.sv:5134$1532_Y $xor$/out/transition.sv:5134$1531_Y $xor$/out/transition.sv:5134$1530_Y $xor$/out/transition.sv:5134$1529_Y $xor$/out/transition.sv:5134$1528_Y $xor$/out/transition.sv:5134$1527_Y $xor$/out/transition.sv:5134$1526_Y $xor$/out/transition.sv:5134$1525_Y $xor$/out/transition.sv:5134$1524_Y $xor$/out/transition.sv:5134$1523_Y $xor$/out/transition.sv:5134$1522_Y $xor$/out/transition.sv:5134$1521_Y $xor$/out/transition.sv:5134$1520_Y $xor$/out/transition.sv:5134$1519_Y $xor$/out/transition.sv:5134$1518_Y $xor$/out/transition.sv:5134$1517_Y $xor$/out/transition.sv:5134$1516_Y $xor$/out/transition.sv:5134$1515_Y $xor$/out/transition.sv:5134$1514_Y $xor$/out/transition.sv:5134$1513_Y $xor$/out/transition.sv:5134$1512_Y $xor$/out/transition.sv:5134$1511_Y $xor$/out/transition.sv:5134$1510_Y $xor$/out/transition.sv:5134$1509_Y $xor$/out/transition.sv:5134$1508_Y $xor$/out/transition.sv:5134$1507_Y $xor$/out/transition.sv:5134$1506_Y $xor$/out/transition.sv:5134$1505_Y $xor$/out/transition.sv:5134$1504_Y $xor$/out/transition.sv:5134$1503_Y $xor$/out/transition.sv:5134$1502_Y $xor$/out/transition.sv:5134$1501_Y $xor$/out/transition.sv:5134$1500_Y $xor$/out/transition.sv:5134$1499_Y $xor$/out/transition.sv:5134$1498_Y $xor$/out/transition.sv:5134$1497_Y $xor$/out/transition.sv:5134$1496_Y $xor$/out/transition.sv:5134$1495_Y $xor$/out/transition.sv:5134$1494_Y $xor$/out/transition.sv:5134$1493_Y $xor$/out/transition.sv:5134$1492_Y $xor$/out/transition.sv:5134$1491_Y $xor$/out/transition.sv:5134$1490_Y $xor$/out/transition.sv:5134$1489_Y $xor$/out/transition.sv:5134$1488_Y $xor$/out/transition.sv:5134$1487_Y $xor$/out/transition.sv:5134$1486_Y $xor$/out/transition.sv:5134$1469_Y $xor$/out/transition.sv:5134$1461_Y }
+  Optimizing cells in module \record32_transition.
+Performed a total of 1 changes.
+
+2.8.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\record32_transition'.
+Computing hashes of 2749 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 2352 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 1955 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 1884 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 1878 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 1872 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 1865 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 1858 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 1853 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 1848 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Computing hashes of 1847 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+<suppressed ~2706 debug messages>
+Removed a total of 902 cells.
+
+2.8.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \record32_transition..
+Removed 0 unused cells and 803 unused wires.
+<suppressed ~1 debug messages>
+
+2.8.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module record32_transition.
+
+2.8.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.8.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \record32_transition..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~1285 debug messages>
+
+2.8.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \record32_transition.
+Performed a total of 0 changes.
+
+2.8.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\record32_transition'.
+Computing hashes of 1847 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Removed a total of 0 cells.
+
+2.8.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \record32_transition..
+
+2.8.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module record32_transition.
+
+2.8.14. Finished fast OPT passes. (There is nothing left to do.)
+
+2.9. Executing WREDUCE pass (reducing word size of cells).
+
+2.10. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \record32_transition..
+
+2.11. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.12. Executing OPT pass (performing simple optimizations).
+
+2.12.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module record32_transition.
+
+2.12.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\record32_transition'.
+Computing hashes of 1847 cells of `\record32_transition'.
+Finding duplicate cells in `\record32_transition'.
+Removed a total of 0 cells.
+
+2.12.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \record32_transition..
+
+2.12.4. Finished fast OPT passes.
+
+2.13. Executing SORT pass.
+
+2.14. Printing statistics.
+
+=== record32_transition ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     3499 wires
+     4040 wire bits
+     2568 public wires
+     3109 public wire bits
+        2 ports
+      543 port bits
+     1847 cells
+      234   $and
+      871   $mux
+       39   $not
+      160   $or
+        1   $reduce_or
+      542   $xor
+
+2.15. Executing CHECK pass (checking for obvious problems).
+Checking module record32_transition...
+Found and reported 0 problems.
+
+3. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up SAT problem:
+Final constraint equation: { } = { }
+Import def constraint for this timestep: \v
+Imported 1847 cells to SAT database.
+Import proof-constraint: \bad = 1'0
+Final proof equation: \bad = 1'0
+
+Solving problem with 35975 variables and 95741 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
+End of script. Logfile hash: 09d49c4d80, time: 0.82s, user: 0.82s, system: 0.05s, MEM: 58.12 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 35% 2x read_verilog (0 sec), 20% 1x sat (0 sec), ...
