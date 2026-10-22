@@ -14,6 +14,11 @@ T0=$(date +%s); BRC=0
 if [ "${REUSE:-0}" = 1 ] && [ -x "$OUT/obj/Vtb_hbm_slice" ]; then echo "REUSE build $OUT/obj"; else
   python3 flatten_masters.py --bundle . --views views.json --hier ${HIERMARK:-1} --nohier "${NOHIER-hfd_vms_bank_native_q0_faces}" --verilator "$VL" > "$OUT/flatten.log" 2>&1 || { cat "$OUT/flatten.log"; exit 3; }
   sed 's#^#masters/#; s#$#.sv#' slice/masters.txt | grep -v '^masters/ot_hbm3e_phy_rc_e8p5\.sv$' > slice/masters.f
+  SLICE_V=slice/slice.v
+  # HIERWRAP=1 (HBMc/TOKEN2 10-22): Verilator does not substitute PARAMETERISED hier blocks in the top pass (the top was
+  # elaborated flat: PV r18 109 GB, r18 source > 330 GB); wrap each (master, parameter set) in a parameter-free hier block.
+  if [ "${HIERWRAP:-0}" = 1 ]; then python3 hier_param_wrap.py --bundle . > "$OUT/hier_param_wrap.log" 2>&1 || { cat "$OUT/hier_param_wrap.log"; exit 5; }
+    cat "$OUT/hier_param_wrap.log"; echo slice/hier_wraps.sv >> slice/masters.f; SLICE_V=slice/slice_hw.v; fi
   for f in $(cat slice/masters.f); do [ -f "$f" ] || { echo "MISSING $f"; exit 4; }; done
   # Verilate WITHOUT --build: the hier blocks are verilated serially (make -j1 hier_verilation) -- Verilator 5.050's
   # _hier.mk two-target rule runs a block twice under make -j (PCH race + double memory, HBM-TKM3 47debc90b) -- then
@@ -23,9 +28,9 @@ if [ "${REUSE:-0}" = 1 ] && [ -x "$OUT/obj/Vtb_hbm_slice" ]; then echo "REUSE bu
     -Wno-fatal -Wno-lint -Wno-style -Wno-MODDUP -Wno-PINMISSING -Wno-UNOPTFLAT -Wno-MULTIDRIVEN -Wno-TIMESCALEMOD \
     -Wno-INITIALDLY -Wno-COMBDLY -Wno-BLKANDNBLK -Wno-SELRANGE -Wno-WIDTH -Wno-CASEINCOMPLETE \
     --x-initial unique --x-assign unique \
-    -f slice/masters.f rtl/test/hbm_layer/ot_hbm3e_phy_rc_e8p5_dram_model.sv slice/slice.v slice/tb_slice.sv &&
+    -f slice/masters.f rtl/test/hbm_layer/ot_hbm3e_phy_rc_e8p5_dram_model.sv $3 slice/tb_slice.sv &&
     make -C "$2/obj" -f Vtb_hbm_slice_hier.mk -j1 hier_verilation &&
-    make -C "$2/obj" -f Vtb_hbm_slice_hier.mk -j "$1" hier_build' "$VL" "$JOBS" "$OUT" > "$OUT/build.log" 2>&1
+    make -C "$2/obj" -f Vtb_hbm_slice_hier.mk -j "$1" hier_build' "$VL" "$JOBS" "$OUT" "$SLICE_V" > "$OUT/build.log" 2>&1
   BRC=$?
 fi
 T1=$(date +%s); RRC=-1
