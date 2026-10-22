@@ -59,6 +59,13 @@ module dsdv_tx_copy #(parameter integer W=1,RESET=0,ID=0)(
 endmodule
 
 // Existing predicate producers and register consumers have separate ABC boundaries.
+// STW-S81c-COLLA 10-22 (t gate census: the rf_pop NAND 35 loads): two keep_hierarchy instances of the pop predicate,
+// one for the 9 kept read-select copies, one for the rest.  Same function, same edge.
+(* keep_hierarchy="yes" *)
+module dsdv_tx_pop_pred #(parameter integer ID=0)(
+ input wire any,armed,hdr_q,fin,wv,r_in,flush_ok,output wire pop);
+ assign pop=any&&armed&&hdr_q&&!fin&&(!wv||r_in||flush_ok);
+endmodule
 (* keep_hierarchy="yes" *)
 module dsdv_tx_score_enable #(parameter integer ID=0)(
  input wire accept,onehot,output wire en);
@@ -266,7 +273,8 @@ module dsdv_idx_tx_n32 #(
         eph <= {16{n_ep0}};
     end
     always @(posedge ck or negedge rl[2])
-        if (!rl[2]) okk <= 17'd0; else okk <= {17{n_octl}};
+        if (!rl[2]) okk[15:0] <= 16'd0; else okk[15:0] <= {16{n_octl}};
+    always @(posedge ck or negedge rl[3]) if (!rl[3]) okk[16] <= 1'b0; else okk[16] <= n_octl;   // own reset leaf (rl[2] at 33)
 
     reg [7:0] fc_set, fc;
 
@@ -387,6 +395,7 @@ module dsdv_idx_tx_n32 #(
         for (bi_ = 0; bi_ < 16; bi_ = bi_ + 1) lk_s = lk_s | (m_rd[16 * bi_ +: 16] & {16{sel_f == 4'(bi_)}});
     end
     wire        rf_pop;
+    wire        rf_pop_r;               // read-select copy feed (second pop predicate instance)
     wire        lk_idle = !iw_v && fw == 2'b00 && lp_v == '0 && ib_r == ib_w;
     always @(posedge ck or negedge rl[0])
         if (!rl[0]) begin
@@ -428,7 +437,7 @@ module dsdv_idx_tx_n32 #(
     reg  [15:0] tc; reg [2:0] rc; reg [11:0] sn;
     reg         slot_q;                      // = the grid slot of this cycle (precomputed from the next state)
     wire[35:0]rh;
-    wire[2:0]rf_read_next=rf_r+3'(rf_pop),rf_write_next=rf_w+3'(lp_v[LP-1]);
+    wire[2:0]rf_read_next=rf_r+3'(rf_pop_r),rf_write_next=rf_w+3'(lp_v[LP-1]);
     generate for(genvar c=0;c<9;c=c+1)begin:g_rf_read
         wire[2:0]sel;
         dsdv_tx_copy #(.W(3),.RESET(1),.ID(3000+c))u(.ck(ck),.rn(rl[5+(c>=5)]),.d(rf_read_next),.q(sel));
@@ -448,7 +457,10 @@ module dsdv_idx_tx_n32 #(
     wire        r_in = wv && r_i[19:4] == w0c[19:4];
     wire        pop  = slot_q && bq_n != 3'd0;
     wire        flush_ok = (bq_n == 3'd0 && !pop) || (bq_n == 3'd1 && pop);
-    assign      rf_pop = rf_n != 4'd0 && armed && hdr_q && !fin && (!wv || r_in || flush_ok);
+    dsdv_tx_pop_pred #(.ID(7000)) u_popa (.any(rf_n != 4'd0), .armed(armed), .hdr_q(hdr_q), .fin(fin), .wv(wv), .r_in(r_in),
+        .flush_ok(flush_ok), .pop(rf_pop));
+    dsdv_tx_pop_pred #(.ID(7001)) u_popb (.any(rf_n != 4'd0), .armed(armed), .hdr_q(hdr_q), .fin(fin), .wv(wv), .r_in(r_in),
+        .flush_ok(flush_ok), .pop(rf_pop_r));
     wire        in_done = in_end && lk_idle && rf_n == 4'd0;
     wire        fl  = armed && hdr_q && !fin && flush_ok && ((rf_pop && wv && !r_in) || (in_done && rf_n == 4'd0));
     wire        o_ctl_c = okk[7];            // control copy
