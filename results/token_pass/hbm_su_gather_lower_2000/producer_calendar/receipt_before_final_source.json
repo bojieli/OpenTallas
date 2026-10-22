@@ -1,0 +1,27 @@
+{
+  "scope": "Actual missing-authority replay; no producer dates or execution qualified",
+  "host": "ot-gold1",
+  "unit": "oth-ubuntu-2650321-1792645105",
+  "status": "PASS",
+  "result": "PARTIAL",
+  "source_sha256": "b4b4d624049bdd73bfae60aa5c26bcdf204bd7fb8ecf80c2ee7e6c566a396b07",
+  "sources": {
+    "diagnostic_graph": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
+    "diagnostic_source_ref": "57cd9d54d"
+  },
+  "implementation_owner": "/root/s81_kv_lower",
+  "active_source_owners": {
+    "IDX_and_gather_endpoint": "/root/hbm/idxsu",
+    "GSC_producer": "/root/hbm/coll",
+    "whole_route_composition": "/root/hbm/chain"
+  },
+  "final_partial_unit": "oth-ubuntu-3057569-1792645526",
+  "programme_mapping": {
+    "unit": "oth-ubuntu-3012297-1792645472",
+    "status": "PASS",
+    "actual_commands": 288,
+    "programme_tp": 96,
+    "selected_diagnostic_source_tp": 192,
+    "scope": "logical W.even ownership only; physical mapping and all dates null"
+  }
+}

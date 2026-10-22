@@ -1,0 +1,12 @@
+[
+  "/home/ubuntu/bin/ot-run",
+  "--mem",
+  "192",
+  "--threads",
+  "2",
+  "--dir",
+  "/srv/opentallas-scratch/claude/codex-tok-head-b-resume-2245",
+  "--",
+  "bash",
+  "launch_continue.sh"
+]

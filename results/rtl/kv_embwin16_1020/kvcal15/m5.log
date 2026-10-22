@@ -1,0 +1,10 @@
+FAIL header: last word edge 489 + 1 > row_tx slot 489
+FAIL header: last word edge 489 + 1 > row_tx slot 489
+FAIL header: last word edge 489 + 1 > row_tx slot 489
+FAIL header: last word edge 489 + 1 > row_tx slot 489
+FAIL header: last word edge 489 + 1 > row_tx slot 489
+FAIL MUT 0 errors 5
+- rtl/test/qwen_static_kv/tb_kvcal15_emb_die.sv:180: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 9us; walltime 1.083 s; speed 8.744 us/s
+- Verilator: cpu 1.079 s on 1 threads; allocated 9 MB

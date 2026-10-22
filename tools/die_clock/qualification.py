@@ -1,6 +1,12 @@
 """Carry explicit unqualified clock sources through reports; never grant qualification."""
 
 
+def require_measured_input_boundaries(artifact):
+    """A model input boundary cannot acquire a native target through absent-R fallback."""
+    if artifact.get('unmeasured_input_boundaries'):
+        raise ValueError('UNMEASURED input-boundary ETM has no native clock insertion target')
+
+
 def carry_unqualified(*artifacts):
     sources, models = [], {}
     for artifact in artifacts:

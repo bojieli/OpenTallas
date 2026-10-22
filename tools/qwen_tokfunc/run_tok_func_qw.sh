@@ -14,16 +14,19 @@
 #                  (compute die.v/rom_bind.vh/die.v.params.json; KV die.v) instead of source RTL; grade "die-netlist".
 #   --collect-only skip assembly/launch; fetch RUNROOT/<stage>/result.json from the fleet hosts and compose.
 #   --no-wait      launch and exit (re-run later with --collect-only).
+#   --stage-dir S=D collect stage S from RUNROOT/D instead of RUNROOT/S (repeatable; e.g. stg=stg3 = the STG rerun on the
+#                  LAST-K tail-fixed rebuild, stage_stg.sh --stage stg3 --overlay ...)
 set -uo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 REPO=${OT_REPO:-/home/ubuntu/OpenTallas}
 ASM=$(python3 -c "import json;print(json.load(open('$HERE/asm_recipe.json'))['commit'])")
 RUNROOT=/srv/opentallas-scratch/claude/tokfunc-qw-1021
 HOSTS=${TOKFUNC_HOSTS:-"ot-gold1 ot-gold2"}     # staging targets only (ot-run picks among hosts that have RUNROOT)
-STAGES=""; DIE=""; COLLECT=0; NOWAIT=0; OUT=""
+STAGES=""; DIE=""; COLLECT=0; NOWAIT=0; OUT=""; declare -A SDIR=()
 while [ $# -gt 0 ]; do case $1 in
   --asm) ASM=$2; shift;; --die-netlist) DIE=$2; shift;; --stages) STAGES=$2; shift;; --runroot) RUNROOT=$2; shift;;
-  --collect-only) COLLECT=1;; --no-wait) NOWAIT=1;; --out) OUT=$2; shift;; *) echo "unknown $1"; exit 2;; esac; shift; done
+  --collect-only) COLLECT=1;; --no-wait) NOWAIT=1;; --out) OUT=$2; shift;;
+  --stage-dir) SDIR[${2%%=*}]=${2#*=}; shift;; *) echo "unknown $1"; exit 2;; esac; shift; done
 ASM=$(git -C "$REPO" rev-parse --short=9 "$ASM^{commit}") || { echo "asm commit not found"; exit 2; }
 GRADE="RTL-functional (source assembly)"; [ -n "$DIE" ] && GRADE="die-netlist"
 OUT=${OUT:-$HOME/scratch/tokfunc-qw-1021/run_$ASM${DIE:+_die}}
@@ -60,20 +63,44 @@ if [ $COLLECT = 0 ]; then
 fi
 
 # 3. collect RUNROOT/<stage>/ (result.json + logs named in it) from the host with the NEWEST result.json
+install_collection() {
+  local incoming=$1 stage=$2 prior
+  if [ -e "$OUT/results/$stage" ]; then
+    prior=$(mktemp -d "$OUT/results/.prior_${stage}.XXXXXX") || return 1
+    rmdir "$prior" && mv "$OUT/results/$stage" "$prior" || return 1
+  fi
+  mv "$incoming" "$OUT/results/$stage"
+}
 for s in ${STAGES//,/ }; do
-  best=""; bt=0
+  best=""; bt=0; sd=${SDIR[$s]:-$s}
   for h in $HOSTS; do
-    t=$(ssh "$h" "stat -c %Y $RUNROOT/$s/result.json 2>/dev/null") || true
+    t=$(ssh "$h" "stat -c %Y $RUNROOT/$sd/result.json 2>/dev/null") || true
     [ -n "$t" ] && [ "$t" -gt "$bt" ] && { bt=$t; best=$h; }
   done
   if [ -n "$best" ]; then
-    mkdir -p "$OUT/results/$s"
+    incoming=$(mktemp -d "$OUT/results/.collect_${s}.XXXXXX")
     files="$OUT/logs/$s.files"
-    if ssh "$best" "python3 - '$RUNROOT/$s'" < "$HERE/collect_files.py" > "$files" &&
-      ssh "$best" "cd '$RUNROOT/$s' && tar --null -c -T -" < "$files" | tar -x -C "$OUT/results/$s"; then
-      echo "$s collected from $best"
-    else echo "$s: collection failed"; exit 4; fi
-  else echo "$s: NO result.json yet"; fi
+    if ssh "$best" "cat '$RUNROOT/$sd/result.json'" > "$incoming/remote_result.raw.json" &&
+      ssh "$best" "python3 - '$RUNROOT/$sd'" < "$HERE/collect_files.py" > "$files" &&
+      ssh "$best" "cd '$RUNROOT/$sd' && tar -h --null -c -T -" < "$files" | tar -x -C "$incoming"; then
+      # Never fill missing evidence from an earlier collection. Preserve the
+      # previous folder and install this fetch as one fresh local snapshot.
+      install_collection "$incoming" "$s" || exit 4
+      echo "$s collected from $best:$RUNROOT/$sd"
+      if [ "$s" = stg ]; then
+        python3 "$HERE/normalize_collected_stg.py" "$OUT/results/$s" "$ASM" "$REPO" || exit 4
+      fi
+    else
+      python3 "$HERE/normalize_collected_stg.py" --unavailable "$incoming" "$s" 'required remote evidence could not be collected' || exit 4
+      install_collection "$incoming" "$s" || exit 4
+      echo "$s: collection INCOMPLETE"
+    fi
+  else
+    incoming=$(mktemp -d "$OUT/results/.collect_${s}.XXXXXX")
+    python3 "$HERE/normalize_collected_stg.py" --unavailable "$incoming" "$s" 'no remote result.json available' || exit 4
+    install_collection "$incoming" "$s" || exit 4
+    echo "$s: no remote result; INCOMPLETE"
+  fi
 done
 # 4. compose the token (1u) and the 4-user frame; report vs the MODEL 4,403.2 / 11,750.6 tok/s
 python3 -I "$HERE/compose_tokfunc.py" --results "$OUT/results" --out "$OUT/compose" --asm "$ASM" --grade "$GRADE" --repo "$REPO"

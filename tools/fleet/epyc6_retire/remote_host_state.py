@@ -32,6 +32,13 @@ def pstat(pid):
     return s[s.find("(") + 1:i], int(f[1]), time.time() - (BOOT + int(f[19]) / HZ)
 
 
+def start_ticks(pid):
+    try:
+        return int(rd(f"/proc/{pid}/stat", 1024).rsplit(")", 1)[1].split()[19])
+    except (ValueError, IndexError):
+        return None
+
+
 def argv(pid):
     return " ".join(a for a in rd(f"/proc/{pid}/cmdline", 4096).split("\0") if a)
 
@@ -52,13 +59,14 @@ def inventory():
         st = pstat(procs[0])
         if not st:
             continue
-        rec = dict(unit=os.path.basename(d)[:-6], age=int(st[2]), cwd=cwd(procs[0]), argv=argv(procs[0])[:400], nproc=len(procs))
+        rec = dict(unit=os.path.basename(d)[:-6], age=int(st[2]), cwd=cwd(procs[0]), argv=argv(procs[0])[:400], nproc=len(procs), cg_inode=os.stat(d).st_ino,
+                   leader_pid=int(procs[0]), start_ticks=start_ticks(procs[0]))
         (out["stale"] if st[2] > STALE_S else out["units"]).append(rec)
     
     try:
         ids = subprocess.run(["docker", "ps", "-q", "--no-trunc"], capture_output=True, text=True, timeout=30).stdout.split()
         if ids:
-            fmt = "{{.Name}}\t{{.State.StartedAt}}\t{{range .Mounts}}{{.Source}} {{end}}"
+            fmt = "{{.Name}}\t{{.State.StartedAt}}\t{{range .Mounts}}{{.Source}} {{end}}\t{{.Id}}"
             for l in subprocess.run(["docker", "inspect", "--format", fmt] + ids, capture_output=True, text=True, timeout=60).stdout.splitlines():
                 f = l.split("\t")
                 if len(f) < 3:
@@ -68,7 +76,7 @@ def inventory():
                     t0 = calendar.timegm(time.strptime(f[1][:19], "%Y-%m-%dT%H:%M:%S"))
                 except ValueError:
                     t0 = time.time()
-                rec = dict(name=f[0].lstrip("/"), age=int(time.time() - t0), mounts=f[2].split())
+                rec = dict(name=f[0].lstrip("/"), age=int(time.time() - t0), mounts=f[2].split(), id=f[3] if len(f) > 3 else None, started_at=f[1])
                 (out["stale"] if rec["age"] > STALE_S else out["docker"]).append(rec)
     except Exception as e:  # docker unavailable -> report, the caller treats it as "unknown" (blocking)
         out["docker_error"] = str(e)[:200]
@@ -89,7 +97,7 @@ def inventory():
         if not a or SKIP_ARGS.search(a) or comm in ("sshd", "sshd-session", "systemd", "(sd-pam)", "sleep", "dbus-daemon", "ps", "tmux: server", "tmux"):
             continue
         if TOOLS.match(comm) or "/srv/opentallas-scratch" in a or "/srv/opentallas-scratch" in cwd(pid) or "ref_gate" in a or "closure-loop" in a:
-            rec = dict(pid=int(pid), ppid=ppid, comm=comm, age=int(age), args=a[:300], cwd=cwd(pid))
+            rec = dict(pid=int(pid), ppid=ppid, comm=comm, age=int(age), args=a[:300], cwd=cwd(pid), start_ticks=start_ticks(pid))
             (out["stale"] if age > STALE_S else out["procs"]).append(rec)
     return out
 

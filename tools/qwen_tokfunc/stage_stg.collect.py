@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """TOK-FUNC-QW stage stg: fold RUNROOT/stg/{rel,pos,mut}/runs/*/bench.out + fixtures into RUNROOT/stg/result.json.
-usage: stage_stg.collect.py RUNROOT"""
+usage: stage_stg.collect.py RUNROOT [STAGE (default stg)]"""
 import json
 import re
 import sys
@@ -22,9 +22,12 @@ def parse(out):
             info = json.loads(first[first.find('{'):])
         except ValueError:
             pass
-    sp = re.search(r'span_cycles[=:"\s]+(\d+)', first)
+    sp = re.search(r'(?<![A-Za-z0-9_])span_cycles[=:"\s]+(\d+)', first)
     r['span_cycles'] = info.get('span_cycles', int(sp.group(1)) if sp else None)
     r['delivery_span_cycles'] = info.get('delivery_span_cycles')
+    r['legacy_schedule_anchor_span_cycles'] = info.get('legacy_schedule_anchor_span_cycles')
+    for key in ('first_vm_write_edge', 'last_vm_write_edge'):
+        r[key] = info.get(key)
     ig = re.search(r'isa_gold_words=(\d+)/(\d+)', first)
     r['isa_gold_words'] = f'{ig.group(1)}/{ig.group(2)}' if ig else None
     if r['verdict'] != 'PASS':
@@ -32,9 +35,20 @@ def parse(out):
     return r
 
 
+def calibration(out, mutant=False):
+    text = out.read_text(errors='replace') if out.exists() else ''
+    lines = text.splitlines()
+    rc = next((int(line[3:]) for line in reversed(lines) if re.fullmatch(r'rc=-?\d+', line)), None)
+    failed = 'CALIBRATE FAIL' in text or (rc is not None and rc != 0)
+    return dict(rc=rc, verdict='FAIL' if failed else 'PASS' if rc == 0 else 'NOT_RECORDED',
+                scope='mutant-configuration diagnostic; not credited as a causal negative' if mutant else 'required nominal calibration',
+                raw_output=str(out), summary=lines[-3:])
+
+
 def main():
     R = Path(sys.argv[1]).resolve()
-    S = R / 'stg'
+    ST = sys.argv[2] if len(sys.argv) > 2 else 'stg'
+    S = R / ST
     src_commit = (R / 'src' / 'ASM_COMMIT').read_text().strip() if (R / 'src' / 'ASM_COMMIT').exists() else None
     layers_req = list(range(36))
     fx = {}
@@ -58,10 +72,15 @@ def main():
                   calibrate={f: (d / f).read_text(errors='replace').strip().splitlines()[-2:]
                              for f in ('build/slice_calibrate.out', 'build/calibrate.out', 'cal_mat/calibrate.out')
                              if (d / f).exists()},
-                  vec_ages=f'stg/{c}/build/vec_ages.json' if (d / 'build/vec_ages.json').exists() else None,
-                  stn_ages=f'stg/{c}/cal_mat/stn_ages.json' if (d / 'cal_mat/stn_ages.json').exists() else None,
-                  slice_ages=f'stg/{c}/build/slice_ages.json' if (d / 'build/slice_ages.json').exists() else None,
+                  vec_ages=f'{ST}/{c}/build/vec_ages.json' if (d / 'build/vec_ages.json').exists() else None,
+                  stn_ages=f'{ST}/{c}/cal_mat/stn_ages.json' if (d / 'cal_mat/stn_ages.json').exists() else None,
+                  slice_ages=f'{ST}/{c}/build/slice_ages.json' if (d / 'build/slice_ages.json').exists() else None,
                   stages=st)
+        cc['calibration_results'] = {phase: calibration(d / name, mutant=c == 'mut') for phase, name in
+                                     (('slice', 'build/slice_calibrate.out'), ('vec', 'build/calibrate.out'),
+                                      ('mat', 'cal_mat/calibrate.out'))}
+        for value in cc['calibration_results'].values():
+            value['raw_output'] = str(Path(value['raw_output']).relative_to(R))
         cfgs[c] = cc
         cy = {f: {} for f in FAMS}
         for name, r in st.items():
@@ -98,6 +117,9 @@ def main():
         missing = required - set(cfgs.get(c, {}).get('stages', {}))
         if missing:
             bad.append(f'{c} missing {len(missing)} required stages: {sorted(missing)[:8]}')
+        for phase, result in cfgs.get(c, {}).get('calibration_results', {}).items():
+            if result['verdict'] != 'PASS':
+                bad.append(f'{c}/{phase} required calibration {result["verdict"]} rc={result["rc"]}')
     for line in (S / 'runlist.txt').read_text().splitlines() if (S / 'runlist.txt').exists() else []:
         c, name, *_ = line.split()
         if name not in cfgs.get(c, {}).get('stages', {}):
@@ -109,9 +131,24 @@ def main():
         bad.append('mut build failed')
     if missing_fx:
         bad.append(f'fixtures missing for layers {missing_fx}')
+    # Numeric checks at the cluster-output cut do not observe the internal VM
+    # write timestamps. Keep this timing obligation separate from functional PASS.
+    unknown_delivery = [f'{c}/{name}' for c, cfg in cfgs.items() for name, row in cfg['stages'].items()
+                        if re.match(r'^L\d+_(qkv|gu)$', name)
+                        and any(type(row.get(k)) is not int for k in
+                                ('first_vm_write_edge', 'last_vm_write_edge'))]
     verdict = 'PASS' if not bad else 'FAIL'
-    res = dict(
-        stage='stg', grade='RTL-functional (source assembly)', src_commit=src_commit, verdict=verdict,
+    numeric_cases = [(c, name, row) for c, cfg in cfgs.items() for name, row in cfg['stages'].items()]
+    numeric_unmet = [f'{c}/{name}' for c, name, row in numeric_cases
+                     if row['verdict'] != ('FAIL' if EXPECT_FAIL.match(name) else 'PASS')]
+    res = dict(delivery_timing_qualified=not unknown_delivery,
+               unknown_delivery_cases=unknown_delivery,
+               delivery_timing_scope='actual VM-write edges required; legacy schedule anchors are not delivery measurements',
+               numeric_case_summary=dict(cases=len(numeric_cases), expected_outcomes_met=len(numeric_cases) - len(numeric_unmet),
+                                         unmet_cases=numeric_unmet),
+               calibration_gate=dict(required_nominal=['rel', 'pos'], mutant_diagnostic=['mut'],
+                                     mutant_calibration_negative_credit=False),
+        stage=ST, grade='RTL-functional (source assembly)', src_commit=src_commit, verdict=verdict,
         golden=(f'per layer L0..L35 (TP4 36-layer ISA golden at P8191 re-executed per layer, reproduction-checked, '
                 f'cut to TP8 compute die 0): bench hdc_golden expectation bit-exact on the RTL outputs AND == ISA gold '
                 f'words; ISA-gold words matched {gold_ok}/{gold_n} (resid 4097, qk 768, silu 1536, qkv 768, gu 3072 per '
@@ -131,8 +168,11 @@ def main():
             'operands from the TP4 golden (TP4-folded all-reduce returns) applied to the TP8 die-0 cut; stage functions TP-agnostic',
         ],
         notes='rel params per brief (-GMU_NU=4 -GSU_LT=1); physical/ref_tile/qfd_dv_slice2_w/kit.env at c0f8097f3 has PARAMS=()',
-        logs=['stg/runs.log', 'stg/fixtures.log', 'stg/timing.txt', 'stg/runlist.txt'] +
-             [f'stg/{c}/runs/<name>/bench.out' for c in cfgs] + [f'stg/build_{c}.log' for c in cfgs],
+        logs=[f'{ST}/runs.log', f'{ST}/fixtures.log', f'{ST}/timing.txt', f'{ST}/runlist.txt'] +
+             [f'{ST}/{c}/runs/<name>/bench.out' for c in cfgs] + [f'{ST}/build_{c}.log' for c in cfgs] +
+             [f'{ST}/{c}/{name}' for c in cfgs for name in ('vtb.sha256', 'vflags.txt')] +
+             [f'{ST}/{c}/{name}' for c in cfgs for name in ('build/slice_calibrate.out', 'build/calibrate.out', 'cal_mat/calibrate.out')] +
+             [f'{ST}/mat_contract_sources.sha256'],
         configs=cfgs)
     (S / 'result.json').write_text(json.dumps(res, indent=1) + '\n')
     print('STG', verdict, 'gold', f'{gold_ok}/{gold_n}', 'bad', len(bad), bad[:8])

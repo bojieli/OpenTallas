@@ -40,8 +40,13 @@ if [ -z "$SCHED" ]; then
   CDV=${OT_COMPUTE_DIE_V:-$FXS/die.v}
   CST=${OT_COMPUTE_RELAY_STAGES:-$( [ -z "${OT_COMPUTE_DIE_V:-}" ] && echo $FXS/relay_stages.json || echo $SRC/results/rtl/qwen_layer_tput_1018/compiled_L1/die_run/compute_dv2f14bn_relay_stages.json)}
   CPR=; [ -s "${CDV}.params.json" ] && CPR=${CDV}.params.json
+  # KV-INTEG18 10-21: TXDP C is read at the compute RTL commit (layer_compile rtl_txdp).  Its default 0a9c93921 is the
+  # pre-QXF-LINK literal-TXDP RTL ([3,3,1,4]), so a compute die.v.params.json (the TXDP the compute GEN binds) was
+  # never consulted -> false "TXDP C" FAIL.  Default = this die's source commit (required-parameter RTL, so the params
+  # file decides); override OT_COMPUTE_COMMIT.  OT_KV_EMB_WIN: compile the programme at the window the pair binds.
+  CCM=${OT_COMPUTE_COMMIT:-$COMMIT}
   (cd "$SRC" && python3 tools/qwen_layerbench/layer_compile.py --out "$R/layer_compile" --compute-stages "$CST" \
-     --compute-die-v "$CDV" ${CPR:+--compute-params "$CPR"} \
+     --compute-die-v "$CDV" ${CPR:+--compute-params "$CPR"} --compute-commit "$CCM" ${OT_KV_EMB_WIN:+--emb-window "$OT_KV_EMB_WIN"} \
      --kv-stages "$RUNT" --kv-commit "$COMMIT" ${KSM:+--kv-static-model "$KSM" --kv-die-v "$B/die_bound.v" --kv-case-die-v "$C/die.v"} ${FWDL:+--kv-fwd-lanes "$FWDL"}) || { echo "RELAY_CHECK FAIL calendar compiler (layer_compile.py) failed on this die"; exit 1; }
   SCHED=$(ls "$R"/layer_compile/relay_schedule/kv_compiled.json* | head -1)
 fi

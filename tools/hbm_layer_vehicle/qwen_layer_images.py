@@ -175,10 +175,12 @@ NATIVE_TIMING = None   # TOK-FUNC-HBM 10-21: die SU READ/WRITE_RETURN (native_pr
 
 # --------------------------------------------------------------------------------------------------------- compile
 def compile_rank(stage, rank, vm, out, boundary=BOUNDARY, variant="landed", quarter=0, load_gap=16,
-                 reload_gap=600, img=None, disp_raw=None):
+                 reload_gap=600, img=None, disp_raw=None, safe_calendar=False):
     """emit replay.json + manifest.json for one rank of one stage.  vm: FullVM | SparseVM.  disp_raw: optional
     {j: raw hex} of the dispatches (the fleet run's Ref with the die's VM tables) to cross-check the local Ref."""
     import su_bench as SB
+    if safe_calendar and NATIVE_TIMING is None:
+        raise ValueError('safe Qwen calendar requires actual native read/write return timing')
     img, prog_path = img or programme(stage)
     disp, _ = dispatches(img, rank)
     rows = align(stage, disp, variant)
@@ -204,7 +206,9 @@ def compile_rank(stage, rank, vm, out, boundary=BOUNDARY, variant="landed", quar
         written0 = set(place.written)
         try:
             su = LI.su_record(raw, quarter, rng, data=VMData(chained, vm.before(j)), place=place,
-                              tag=f"{r['tag']}@L{L}", timing=NATIVE_TIMING)
+                              tag=f"{r['tag']}@L{L}", timing=NATIVE_TIMING,
+                              absent_readers_identity=safe_calendar,
+                              identity_inactive_terms=safe_calendar, drain_guard=int(safe_calendar))
         except AssertionError as ex:
             place.written = written0
             ent.update(status="adapter_refused", reasons=[f"su_program_inventory.decode: {ex}"])
@@ -242,7 +246,7 @@ def compile_rank(stage, rank, vm, out, boundary=BOUNDARY, variant="landed", quar
                                                             expect=su["expect"], data=su["data"]), indent=0))
             pending.append((r, ent, su))
         manifest.append(ent)
-    events, cfgs, t0 = pack(pending, out, quarter, load_gap, reload_gap)
+    events, cfgs, t0 = pack(pending, out, quarter, load_gap, reload_gap, safe_calendar=safe_calendar)
     for p in {e["port"] for e in events if e["k"] == "D"}:
         assert p in inports, f"replay drives {p}, not a slice input port"
     pre_conf = preload_conflicts(events)
@@ -262,6 +266,13 @@ def compile_rank(stage, rank, vm, out, boundary=BOUNDARY, variant="landed", quar
                records=manifest, placement_conflicts=place.conflicts, preload_conflicts=pre_conf,
                placed_sectors=len(place.map), su_programmes=cfgs, t0_serial=t0, priced_layer_cycles=layer_cyc,
                counts={k: sum(1 for m in manifest if m["status"] == k) for k in sorted({m["status"] for m in manifest})})
+    if safe_calendar:
+        contract = dict(absent_readers='live A own-bank address', inactive_terms='identity when A.m=1',
+                        output_drain_guard=1, record_overlap=False, execution_qualified=False,
+                        inherited_layer_price_qualified=False)
+        man['safe_calendar'] = contract
+        rep['safe_calendar'] = contract
+        (out / 'replay.json').write_text(json.dumps(rep) + '\n')
     (out / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
     return man, rep
 
@@ -278,7 +289,7 @@ def preload_conflicts(events):
     return bad
 
 
-def pack(pending, out, quarter, load_gap, reload_gap):
+def pack(pending, out, quarter, load_gap, reload_gap, safe_calendar=False):
     """SU programme packing + replay events: the same rule as layer_images.main (adjacent SU records share one pgp
     programme when they fit EDGES and the gap is too short to reload; load while idle, CFG_LEAD before start)."""
     Q_W, QLine = LI.Q_W, LI.QLine
@@ -286,10 +297,14 @@ def pack(pending, out, quarter, load_gap, reload_gap):
     for r, ent, su in pending:
         want0 = LI.serial(r["start"]) - su["setup_edge"]
         P = progs[-1] if progs else None
-        if P is None or want0 - P["end"] >= reload_gap or want0 - P["base"] + len(su["lines"]) > LI.EDGES_MAX:
+        if (P is None or want0 - P["end"] >= reload_gap or
+                want0 - P["base"] + len(su["lines"]) > LI.EDGES_MAX or
+                (safe_calendar and P['end']-P['base']+len(su['lines']) > LI.EDGES_MAX)):
             P = dict(base=want0, end=want0, ql=QLine(), recs=[])
             progs.append(P)
         o = max(0, want0 - P["base"])
+        if safe_calendar:
+            o = max(o, P['end'] - P['base'])
         while any((o + e) in P["ql"].f[fld] and (P["ql"].f[fld][o + e] & v) for fld in Q_W
                   for e, v in su["ql"].f[fld].items()):
             o += 1
@@ -493,6 +508,37 @@ def cmd_snap(a):
     print("QWEN_LAYER_IMAGES", json.dumps(summary))
 
 
+def sm_lower_rank(a, man, rdir):
+    """opt-in (TOK-FUNC2-HBM-SM 10-21, --sm-kv): every SM.MATVEC record of rank 0 lowered onto the slice's real SM chain
+    (sm_slice_lower.lower_qwen: INT8 packed svg programme + xl_SW_ctl + smw_SW), one component replay per (layer, tag)
+    at rdir/sm_L<L>_<tag>/replay.json, SM count reduced only where the replay exceeds --sm-nev."""
+    from hbm_layer_vehicle import sm_slice_lower as SML
+    bnd = json.loads(Path(a.boundary).read_text())
+    kv = a.sm_kv / a.stage
+    done = {}
+    for m in man["records"]:
+        if m["op"] != "SM.MATVEC":
+            continue
+        key = (int(m.get("L") or 0), m["tag"])
+        if key not in done:
+            for nsm in (4, 2, 1):
+                comps = [SML.compile_qwen_sm(kv, key[0], k, tags=(key[1],)) for k in range(nsm)]
+                rep_sm, per, summ = SML.lower_comps(comps, key[0], bnd, design="qwen",
+                                                    provenance="captured_qwen_sm_operands (qwen_sm_mv_kv, rank 0)")
+                if summ["events"] + 1 <= a.sm_nev:
+                    break
+            d = rdir / f"sm_L{key[0]}_{key[1]}"
+            d.mkdir(parents=True, exist_ok=True)
+            (d / "replay.json").write_text(json.dumps(rep_sm) + "\n")
+            done[key] = dict(replay=str(d.relative_to(rdir) / "replay.json"), summary=summ, record=per[0])
+        m.update(status="emitted", reasons=[], lowering="sm_slice_v1 (Qwen INT8 packed)", replay=done[key]["replay"],
+                 sm_record=done[key]["record"], sm_summary=done[key]["summary"])
+    man["counts"] = {k: sum(1 for x in man["records"] if x["status"] == k)
+                     for k in sorted({x["status"] for x in man["records"]})}
+    (rdir / "manifest.json").write_text(json.dumps(man, indent=1) + "\n")
+    return man
+
+
 def cmd_emit(a):
     out = {}
     for r in [int(x) for x in a.ranks.split(",")]:
@@ -501,7 +547,10 @@ def cmd_emit(a):
         if dr.exists():
             draw = {int(k): v for k, v in json.loads(dr.read_text()).items()}
         man, rep = compile_rank(a.stage, r, SparseVM(a.operands, r), a.out / a.stage / f"r{r}",
-                                boundary=a.boundary, variant=a.variant, disp_raw=draw)
+                                boundary=a.boundary, variant=a.variant, disp_raw=draw,
+                                safe_calendar=a.safe_calendar)
+        if getattr(a, "sm_kv", None) and r == 0:
+            man = sm_lower_rank(a, man, a.out / a.stage / f"r{r}")
         out[r] = dict(counts=man["counts"], events=len(rep["events"]),
                       replay_sha256=sha((a.out / a.stage / f"r{r}" / "replay.json").read_bytes()))
     print("QWEN_LAYER_IMAGES", json.dumps(dict(stage=a.stage, ranks_out=out)))
@@ -519,10 +568,15 @@ def main():
         p.add_argument("--out", type=Path, required=True)
         p.add_argument("--native-read-return", type=int, help="die SU READ_RETURN (MULTIRATE pgslice); with --native-write-return")
         p.add_argument("--native-write-return", type=int, help="die SU WRITE_RETURN")
+        p.add_argument('--safe-calendar', action='store_true', help='own-bank absent readers, identity scalar terms, '
+                       'OLD-read drain guard and nonoverlapping record calendars; source execution still required')
         if n == "snap":
             p.add_argument("--fix", type=Path, required=True, help="fixture dir of the stage (program.hgi1, die*.u8...)")
         else:
             p.add_argument("--operands", type=Path, required=True)
+            p.add_argument("--sm-kv", type=Path, help="opt-in: qwen_sm_mv_kv root (holds <stage>/sm_mv.json): lower rank 0 "
+                           "SM.MATVEC onto the slice SM chain (sm_slice_lower)")
+            p.add_argument("--sm-nev", type=int, default=11651, help="event capacity of the slice TB the replays target")
     a = ap.parse_args()
     global NATIVE_TIMING
     if (a.native_read_return is None) != (a.native_write_return is None):

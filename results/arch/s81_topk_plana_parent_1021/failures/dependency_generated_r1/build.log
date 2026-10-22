@@ -1,0 +1,161 @@
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:453:24: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  453 |     wire lpr_core_c0;  ot_pl_land_rst_copy #(.ID(0)) u_lpr_core_c0 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c0));    
+      |                        ^~~~~~~~~~~~~~~~~~~
+                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.050
+                   ... This may be because there's no search path specified with -I<dir>.
+                   ... Looked in:
+                        ot_pl_land_rst_copy
+                        ot_pl_land_rst_copy.v
+                        ot_pl_land_rst_copy.sv
+                        /srv/opentallas-scratch/claude/codex-s81-topk-plana-parent-1021/bench_gen_r1/obj/ot_pl_land_rst_copy
+                        /srv/opentallas-scratch/claude/codex-s81-topk-plana-parent-1021/bench_gen_r1/obj/ot_pl_land_rst_copy.v
+                        /srv/opentallas-scratch/claude/codex-s81-topk-plana-parent-1021/bench_gen_r1/obj/ot_pl_land_rst_copy.sv
+                   ... With current working directory '/srv/opentallas-scratch/claude/codex-s81-topk-plana-parent-1021/src_gen_r1'
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:454:24: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  454 |     wire lpr_core_c1;  ot_pl_land_rst_copy #(.ID(1)) u_lpr_core_c1 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c1));    
+      |                        ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:455:24: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  455 |     wire lpr_core_c2;  ot_pl_land_rst_copy #(.ID(2)) u_lpr_core_c2 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c2));    
+      |                        ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:456:24: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  456 |     wire lpr_core_c3;  ot_pl_land_rst_copy #(.ID(3)) u_lpr_core_c3 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c3));    
+      |                        ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:457:24: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  457 |     wire lpr_core_c4;  ot_pl_land_rst_copy #(.ID(4)) u_lpr_core_c4 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c4));    
+      |                        ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:458:24: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  458 |     wire lpr_core_c5;  ot_pl_land_rst_copy #(.ID(5)) u_lpr_core_c5 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c5));    
+      |                        ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:459:24: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  459 |     wire lpr_core_c6;  ot_pl_land_rst_copy #(.ID(6)) u_lpr_core_c6 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c6));    
+      |                        ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:460:24: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  460 |     wire lpr_core_c7;  ot_pl_land_rst_copy #(.ID(7)) u_lpr_core_c7 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c7));    
+      |                        ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:461:24: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  461 |     wire lpr_core_c8;  ot_pl_land_rst_copy #(.ID(8)) u_lpr_core_c8 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c8));    
+      |                        ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:462:24: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  462 |     wire lpr_core_c9;  ot_pl_land_rst_copy #(.ID(9)) u_lpr_core_c9 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c9));    
+      |                        ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:463:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  463 |     wire lpr_core_c10;  ot_pl_land_rst_copy #(.ID(10)) u_lpr_core_c10 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c10));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:464:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  464 |     wire lpr_core_c11;  ot_pl_land_rst_copy #(.ID(11)) u_lpr_core_c11 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c11));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:465:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  465 |     wire lpr_core_c12;  ot_pl_land_rst_copy #(.ID(12)) u_lpr_core_c12 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c12));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:466:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  466 |     wire lpr_core_c13;  ot_pl_land_rst_copy #(.ID(13)) u_lpr_core_c13 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c13));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:467:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  467 |     wire lpr_core_c14;  ot_pl_land_rst_copy #(.ID(14)) u_lpr_core_c14 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c14));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:468:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  468 |     wire lpr_core_c15;  ot_pl_land_rst_copy #(.ID(15)) u_lpr_core_c15 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c15));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:469:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  469 |     wire lpr_core_c16;  ot_pl_land_rst_copy #(.ID(16)) u_lpr_core_c16 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c16));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:470:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  470 |     wire lpr_core_c17;  ot_pl_land_rst_copy #(.ID(17)) u_lpr_core_c17 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c17));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:471:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  471 |     wire lpr_core_c18;  ot_pl_land_rst_copy #(.ID(18)) u_lpr_core_c18 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c18));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:472:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  472 |     wire lpr_core_c19;  ot_pl_land_rst_copy #(.ID(19)) u_lpr_core_c19 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c19));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:473:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  473 |     wire lpr_core_c20;  ot_pl_land_rst_copy #(.ID(20)) u_lpr_core_c20 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c20));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:474:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  474 |     wire lpr_core_c21;  ot_pl_land_rst_copy #(.ID(21)) u_lpr_core_c21 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c21));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:475:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  475 |     wire lpr_core_c22;  ot_pl_land_rst_copy #(.ID(22)) u_lpr_core_c22 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c22));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:476:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  476 |     wire lpr_core_c23;  ot_pl_land_rst_copy #(.ID(23)) u_lpr_core_c23 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c23));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:477:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  477 |     wire lpr_core_c24;  ot_pl_land_rst_copy #(.ID(24)) u_lpr_core_c24 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c24));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:478:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  478 |     wire lpr_core_c25;  ot_pl_land_rst_copy #(.ID(25)) u_lpr_core_c25 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c25));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:479:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  479 |     wire lpr_core_c26;  ot_pl_land_rst_copy #(.ID(26)) u_lpr_core_c26 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c26));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:480:25: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  480 |     wire lpr_core_c27;  ot_pl_land_rst_copy #(.ID(27)) u_lpr_core_c27 (.ck(ck_core), .d(lpr_core_p), .q(lpr_core_c27));    
+      |                         ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:482:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  482 |     wire lpr_r1_c0;  ot_pl_land_rst_copy #(.ID(28)) u_lpr_r1_c0 (.ck(ck_r1), .d(lpr_r1_p), .q(lpr_r1_c0));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:483:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  483 |     wire lpr_r1_c1;  ot_pl_land_rst_copy #(.ID(29)) u_lpr_r1_c1 (.ck(ck_r1), .d(lpr_r1_p), .q(lpr_r1_c1));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:484:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  484 |     wire lpr_r1_c2;  ot_pl_land_rst_copy #(.ID(30)) u_lpr_r1_c2 (.ck(ck_r1), .d(lpr_r1_p), .q(lpr_r1_c2));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:485:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  485 |     wire lpr_r1_c3;  ot_pl_land_rst_copy #(.ID(31)) u_lpr_r1_c3 (.ck(ck_r1), .d(lpr_r1_p), .q(lpr_r1_c3));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:486:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  486 |     wire lpr_r1_c4;  ot_pl_land_rst_copy #(.ID(32)) u_lpr_r1_c4 (.ck(ck_r1), .d(lpr_r1_p), .q(lpr_r1_c4));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:487:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  487 |     wire lpr_r1_c5;  ot_pl_land_rst_copy #(.ID(33)) u_lpr_r1_c5 (.ck(ck_r1), .d(lpr_r1_p), .q(lpr_r1_c5));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:488:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  488 |     wire lpr_r1_c6;  ot_pl_land_rst_copy #(.ID(34)) u_lpr_r1_c6 (.ck(ck_r1), .d(lpr_r1_p), .q(lpr_r1_c6));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:489:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  489 |     wire lpr_r1_c7;  ot_pl_land_rst_copy #(.ID(35)) u_lpr_r1_c7 (.ck(ck_r1), .d(lpr_r1_p), .q(lpr_r1_c7));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:490:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  490 |     wire lpr_r1_c8;  ot_pl_land_rst_copy #(.ID(36)) u_lpr_r1_c8 (.ck(ck_r1), .d(lpr_r1_p), .q(lpr_r1_c8));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:491:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  491 |     wire lpr_r1_c9;  ot_pl_land_rst_copy #(.ID(37)) u_lpr_r1_c9 (.ck(ck_r1), .d(lpr_r1_p), .q(lpr_r1_c9));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:493:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  493 |     wire lpr_r2_c0;  ot_pl_land_rst_copy #(.ID(38)) u_lpr_r2_c0 (.ck(ck_r2), .d(lpr_r2_p), .q(lpr_r2_c0));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:494:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  494 |     wire lpr_r2_c1;  ot_pl_land_rst_copy #(.ID(39)) u_lpr_r2_c1 (.ck(ck_r2), .d(lpr_r2_p), .q(lpr_r2_c1));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:495:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  495 |     wire lpr_r2_c2;  ot_pl_land_rst_copy #(.ID(40)) u_lpr_r2_c2 (.ck(ck_r2), .d(lpr_r2_p), .q(lpr_r2_c2));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:496:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  496 |     wire lpr_r2_c3;  ot_pl_land_rst_copy #(.ID(41)) u_lpr_r2_c3 (.ck(ck_r2), .d(lpr_r2_p), .q(lpr_r2_c3));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:497:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  497 |     wire lpr_r2_c4;  ot_pl_land_rst_copy #(.ID(42)) u_lpr_r2_c4 (.ck(ck_r2), .d(lpr_r2_p), .q(lpr_r2_c4));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:498:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  498 |     wire lpr_r2_c5;  ot_pl_land_rst_copy #(.ID(43)) u_lpr_r2_c5 (.ck(ck_r2), .d(lpr_r2_p), .q(lpr_r2_c5));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:499:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  499 |     wire lpr_r2_c6;  ot_pl_land_rst_copy #(.ID(44)) u_lpr_r2_c6 (.ck(ck_r2), .d(lpr_r2_p), .q(lpr_r2_c6));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:500:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  500 |     wire lpr_r2_c7;  ot_pl_land_rst_copy #(.ID(45)) u_lpr_r2_c7 (.ck(ck_r2), .d(lpr_r2_p), .q(lpr_r2_c7));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:501:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  501 |     wire lpr_r2_c8;  ot_pl_land_rst_copy #(.ID(46)) u_lpr_r2_c8 (.ck(ck_r2), .d(lpr_r2_p), .q(lpr_r2_c8));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:502:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  502 |     wire lpr_r2_c9;  ot_pl_land_rst_copy #(.ID(47)) u_lpr_r2_c9 (.ck(ck_r2), .d(lpr_r2_p), .q(lpr_r2_c9));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:504:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  504 |     wire lpr_r3_c0;  ot_pl_land_rst_copy #(.ID(48)) u_lpr_r3_c0 (.ck(ck_r3), .d(lpr_r3_p), .q(lpr_r3_c0));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error-MODMISSING: rtl/dsrom_sys/s81_dv/unit/bk/plana/lp/dsdv_bk_sel_pa_lp.sv:505:22: Cannot find file containing module: 'ot_pl_land_rst_copy'
+  505 |     wire lpr_r3_c1;  ot_pl_land_rst_copy #(.ID(49)) u_lpr_r3_c1 (.ck(ck_r3), .d(lpr_r3_p), .q(lpr_r3_c1));    
+      |                      ^~~~~~~~~~~~~~~~~~~
+%Error: Exiting due to too many errors encountered; --error-limit=50

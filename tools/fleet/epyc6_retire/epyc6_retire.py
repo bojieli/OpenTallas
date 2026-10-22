@@ -562,7 +562,35 @@ def copy_roots(roots, final):
             payload[DEST + root] = [[a, b if b == "L" else int(b), h] for a, b, h in items]
         if payload:
             ver = agi_py("list", payload, timeout=3 * 3600)
+    if final:
+        # Recheck real free bytes after the hash pass; its duration may be long.
+        free = run(SSH_A + [AGI, "df -B1 --output=avail /archive | tail -1"],
+                   timeout=60).stdout.strip()
+        archive_free_bytes = int(free) if free.isdigit() else None
+        errs = retain_copy_errors(errs, summ, ver, archive_free_bytes)
+        jsave(f"{STATE}/final_archive_verification.json",
+              dict(at=now(), verification=ver, copy_errors=errs,
+                   archive_free_bytes=archive_free_bytes, floor_bytes=AGI_FLOOR))
     return summ, errs, ver
+
+
+def retain_copy_errors(errs, summ, ver, archive_free_bytes):
+    """A complete final SHA verification supersedes only a no-copy space estimate."""
+    retained = dict(errs)
+    for root, error in errs.items():
+        proof = ver.get(DEST + root, {})
+        source = summ.get(root, {})
+        # This estimate subtracts the whole source even if it is already archived.
+        # Never forgive rsync failures, incomplete receipts or non-final copies.
+        if (type(archive_free_bytes) is int and archive_free_bytes >= AGI_FLOOR
+                and error.startswith("AGIdock /archive free ") and error.endswith(" GB (copy held)")
+                and source.get("exists") is True
+                and proof.get("ok") is True
+                and proof.get("n") == source.get("files", -1) + source.get("links", -1)
+                and all(proof.get(key) == 0
+                        for key in ("missing", "size_mismatch", "hash_mismatch"))):
+            retained.pop(root)
+    return retained
 
 
 def note_pending(roots_map, summ):
@@ -575,7 +603,7 @@ def note_pending(roots_map, summ):
         if root in done or not summ.get(root, {}).get("exists"):
             continue
         lanes = sorted({r.get("lane") or "?" for r in refs})
-        src = "; ".join(f"{r['src']}:{r['line_no']}" for r in refs[:4]) if refs and "src" in refs[0] else "live job work dir"
+        src = "; ".join(f"{r.get('src') or 'work dir'}:{r.get('line_no', '-')}" for r in refs[:4]) if refs else "live job work dir"
         s = summ[root]
         lines.append(f"agidock:{DEST}{root} | EPYC6-RETIRE copy of ot-epyc6:{root} ({s['files']} files, "
                      f"{s['bytes'] / 1e9:.2f} GB; regenerable src/obj bulk skipped; host terminated) for {src} | "
@@ -591,6 +619,45 @@ def note_pending(roots_map, summ):
         log(f"C3: noted {len(lines)} archived path(s) in pending_results.txt")
 
 
+def check_required_archive_inputs():
+    """Known recovered source/input sets are part of C3, including their exact hashes."""
+    cfg = jload(f"{STATE}/required_archive_inputs.json", None)
+    expected_jobs = {"hcoll_v7_tkm_tile_e86v4b-v4b-39d901240",
+                     "qfd_dv_s5_sc2b-sc2bk-dc13647fb",
+                     "s81sl_ve_r5-s81sl_ve_r5-f51f4ec42"}
+    if (not isinstance(cfg, dict) or not isinstance(cfg.get("jobs"), dict) or
+            set(cfg["jobs"]) != expected_jobs):
+        return ["required recovered source/input manifest must contain exactly E86, SC2b and VE"]
+    payload = {}
+    try:
+        for job, entry in cfg["jobs"].items():
+            if (not isinstance(entry, dict) or not isinstance(entry.get("missing_inputs"), list) or
+                    entry["missing_inputs"] or not isinstance(entry.get("roots"), dict) or not entry["roots"]):
+                raise ValueError(f"{job}: required input closure incomplete")
+            for root, rows in entry["roots"].items():
+                if (not isinstance(root, str) or not root.startswith(DEST.rstrip("/") + "/") or
+                        os.path.normpath(root) != root or not isinstance(rows, list) or not rows):
+                    raise ValueError(f"{job}: invalid/empty archive root")
+                for row in rows:
+                    if not isinstance(row, (list, tuple)) or len(row) != 3:
+                        raise ValueError(f"{job}: malformed required file row")
+                    rel, size, digest = row
+                    if (not isinstance(rel, str) or not rel or os.path.isabs(rel) or ".." in rel.split("/") or
+                            type(size) is not int or size < 0 or
+                            not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)):
+                        raise ValueError(f"{job}: invalid required file identity")
+                if root in payload:
+                    payload[root].extend(rows)
+                else:
+                    payload[root] = list(rows)
+        verified = agi_py("list", payload)
+        jsave(f"{STATE}/required_archive_inputs_verified.json", dict(at=now(), verification=verified))
+        return [f"required archived input hash verification failed: {root}"
+                for root in payload if not verified.get(root, {}).get("ok")]
+    except (KeyError, TypeError, ValueError, RuntimeError) as exc:
+        return [f"required recovered source/input verification: {exc}"]
+
+
 def check_pending(idle, st, args):
     why = []
     obs_p = f"{STATE}/observed_dirs.json"
@@ -601,18 +668,23 @@ def check_pending(idle, st, args):
         obs.setdefault(d, now())
     jsave(obs_p, obs)
     cand = pending_roots()
+    required = set(jload(f"{STATE}/required_roots.json", {}).get("roots", []))
+    cand += [dict(path=d, src="required_roots.json", lane="owner-required preservation") for d in required]
     res = resolve({c["path"] for c in cand} | set(obs))
     roots_map = {}
     skipped = []
     for c in cand + [dict(path=d) for d in obs]:
         v = res.get(c["path"]) or {}
         d = v.get("dir")
+        if c["path"] in required and d != c["path"].rstrip("/"):
+            why.append(f"required preservation root not resolved exactly: {c['path']}")
+            continue
         if not d:
             continue                           # not on ot-epyc6 (another host's path)
         if v.get("depth", 0) < 5:              # resolved to an umbrella dir /srv/<root>/<user>/<proj>
             if d.rstrip("/") != c["path"].rstrip("/"):
                 continue                       # walked up: the named path is on another host
-            if v.get("kb", 0) * 1024 > TOP_CAP_BYTES:
+            if d not in required and v.get("kb", 0) * 1024 > TOP_CAP_BYTES:
                 skipped.append(f"{d} ({v.get('kb', 0) / 1e6:.0f} GB umbrella dir)")
                 continue
         roots_map.setdefault(d, [])
@@ -642,6 +714,7 @@ def check_pending(idle, st, args):
     for dst, v in ver.items():
         if not v["ok"]:
             why.append(f"AGIdock copy {dst}: {v['missing']} missing / {v['size_mismatch']} size / {v.get('hash_mismatch', 0)} hash mismatch of {v['n']} e.g. {v['examples'][:2]}")
+    why.extend(check_required_archive_inputs())
     if not why:
         note_pending(roots_map, summ)
     return not why, why

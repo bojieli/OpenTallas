@@ -339,12 +339,9 @@ proc ot_die_repeaters {cfg} {
   # Q-DIE9 10-17: the escaped STA lookup misses bus-bit nets ('n_clk_r0[0]': dv2f11 matched 2 of 51 skip nets and
   # repair_design buffered 44 clock nets).  Every skip net is also marked do-not-touch on the odb net itself (the
   # resizer honours dbNet::isDoNotTouch), and the count reported is the odb count.
-  foreach n $skip_names {
-    set o [get_nets -quiet [string map {\[ \\[ \] \\]} $n]]
-    if {![llength $o]} { set o [get_nets -quiet $n] }
-    if {[llength $o]} { lappend dt {*}$o }
-  }
-  if {[llength $dt]} { set_dont_touch $dt }
+  # S81-DIE10 10-21: the per-name STA get_nets lookup scanned every die net per skip name (SdcNetwork findNetsMatching,
+  # O(skip x nets)): G8IQ (45k inst, 14381 skip names) spent >5 h here.  rsz set_dont_touch only sets
+  # dbNet::setDoNotTouch, which the odb loop below sets on every skip net directly, so the STA pass is dropped.
   set n_dt_odb 0
   foreach n $skip_names {
     set net [$blk findNet $n]

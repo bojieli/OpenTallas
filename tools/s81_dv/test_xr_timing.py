@@ -1,7 +1,7 @@
 import tempfile
 import unittest
 from pathlib import Path
-from xr_timing import QUALIFIED, XR_PATH, inject_cycles, check_run_source
+from xr_timing import QUALIFIED, XR_PATH, XRT_PATH, XRT_MODEL, inject_cycles, check_run_source
 
 class TimingTest(unittest.TestCase):
     def contract(self): return dict(xr_source_sha256=next(iter(QUALIFIED)), v_ctl_inject=7)
@@ -21,5 +21,25 @@ class TimingTest(unittest.TestCase):
             c=self.contract();c['v_ctl_inject']=6
             (Path(d)/'sources.sha256').write_text(c['xr_source_sha256']+'  src/'+XR_PATH+'\n')
             with self.assertRaises(ValueError): check_run_source(c,d)
+    def test_old_xr_pin_cannot_qualify_xrt_kit(self):
+        with tempfile.TemporaryDirectory() as d:
+            c=self.contract()
+            (Path(d)/'sources.sha256').write_text(c['xr_source_sha256']+'  src/'+XR_PATH+'\n'+
+                next(iter(XRT_MODEL))+'  src/'+XRT_PATH+'\n')
+            with self.assertRaisesRegex(ValueError, 'selected-wrapper contract required'):
+                check_run_source(c,d)
+    def test_selected_xrt_requires_its_source_and_actual_runtime_proof(self):
+        sha=next(iter(XRT_MODEL))
+        c=dict(schema='opentallas.s81.selected_transport_timing.v2',v_ctl_inject=7,
+               selected_transports={'u_s_0N':dict(master='ot_s81sl_xrt1',family='XRT',
+                   source_path=XRT_PATH,source_sha256=sha)},transport_sources={XRT_PATH:sha})
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d)/'sources.sha256'
+            p.write_text(self.contract()['xr_source_sha256']+'  src/'+XR_PATH+'\n')
+            with self.assertRaisesRegex(ValueError,'does not match simulator source'):
+                check_run_source(c,d)
+            p.write_text(sha+'  src/'+XRT_PATH+'\n')
+            with self.assertRaisesRegex(ValueError,'runtime proof remains PENDING'):
+                check_run_source(c,d)
 
 if __name__ == "__main__": unittest.main()

@@ -76,8 +76,8 @@ def hw_landed(n, E):
 
 
 # straps as the hardware rule wants them: K = (E + h0(n)) mod 8 (G = R0)
-GOOD = [('a', 36, 1, (planned_e(1) + 1) % 8), ('b', 36, 3, planned_e(3) % 8), ('c', 528, 15, planned_e(15) % 8),
-        ('d', 1, 2, planned_e(2) % 8)]
+GOOD = [(name, width, n, (planned_e(n)+1) % 8) for name,width,n in
+        [('a',36,1),('b',36,3),('c',528,15),('d',1,2)]]
 
 
 class KvCheck(unittest.TestCase):
@@ -107,7 +107,7 @@ class KvCheck(unittest.TestCase):
     @staticmethod
     def canonical(fl):
         for r in fl['lanes']:
-            r.update(E=r['E_planned'], cal=int(r['n']==1), h0=int(r['n']==1),
+            r.update(E=r['E_planned'], cal=1, h0=1,
                      cal_basis='G-R0+h0', reset_cal=0,
                      age_contract='KVR-FWDAGE: G=R0; source-to-landing-output age E+1')
 
@@ -133,7 +133,7 @@ class KvCheck(unittest.TestCase):
                 self.assertEqual(report['verdict'], 'PASS', report)
                 row = formed['rep']['lanes'][0]
                 self.assertEqual(row['cal_basis'], 'G-R0+h0')
-                self.assertEqual(report['crossings_detail'][0]['cal_total'], int(n == 1))
+                self.assertEqual(report['crossings_detail'][0]['cal_total'], 1)
                 row['cal_basis'] = 'total'  # producer/consumer schema drift must refuse
                 (d/'lanes.json').write_text(json.dumps(formed['rep']))
                 self.assertEqual(LLS.kv_check(d/'die.v',d/'lanes.json')['verdict'],'FAIL')
@@ -160,13 +160,23 @@ class KvCheck(unittest.TestCase):
 
     def test_mutant_one_landing_age_off_by_one(self):
         # one landing's K strap one edge late -> its age is off by one: strap + latency FAIL, only that crossing
-        rc, r, out = self.run_check(GOOD, kfix={'b': (planned_e(3) + 1) % 8})
+        rc, r, out = self.run_check(GOOD, kfix={'b': (planned_e(3) + 2) % 8})
         self.assertEqual(rc, 1)
         self.assertEqual(r['verdict'], 'FAIL')
         self.assertEqual(r['failing_crossings'], 1)
         self.assertEqual(r['fail_counts']['strap'], 1)
         self.assertEqual(r['fail_counts']['latency'], 1)
         self.assertIn('rly_b_2__s0', r['fails']['strap'][0])
+
+    def test_legacy_n1_only_epoch_is_refused(self):
+        legacy = [(nm, width, n, (planned_e(n) + int(n == 1)) % 8)
+                  for nm, width, n, _ in GOOD]
+        rc, report, _ = self.run_check(legacy)
+        self.assertEqual(rc, 1)
+        self.assertEqual(report['failing_crossings'], 3)
+        self.assertEqual(report['fail_counts']['strap'], 3)
+        by = {r['landing']: r for r in report['crossings_detail']}
+        self.assertEqual(by['rly_a_0__s0']['verdict'], 'PASS')
 
     def test_mutant_compiled_age_off_by_one(self):
         def edit(fl):
@@ -193,11 +203,11 @@ class KvCheck(unittest.TestCase):
         gen = [(nm, S, n, planned_e(n) % 8) for nm, S, n, _ in GOOD]
         rc, r, _ = self.run_check(gen, landed_of=gen_landed)
         self.assertEqual(rc, 1)
-        self.assertEqual(r['fail_counts']['strap'], 1)           # the n = 1 landing
-        self.assertEqual(r['fail_counts']['window'], 1)          # E_hw 1 < the pilot minimum 2
+        self.assertEqual(r['fail_counts']['strap'], 4)           # every FIRST=1 epoch capture
+        self.assertEqual(r['fail_counts']['window'], 4)          # E_hw -1 leaves the minimum window
         self.assertEqual(r['fail_counts']['latency'], 4)         # n = 1: 2 vs 3; n > 1: E + 1 vs ceil(st + E + 1)
         by = {x['landing']: x for x in r['crossings_detail']}
-        self.assertEqual(by['rly_c_14__s0']['compiled_age'] - by['rly_c_14__s0']['L_hw'], math.ceil(1 + 13 / 2))
+        self.assertEqual(by['rly_c_14__s0']['compiled_age'] - by['rly_c_14__s0']['L_hw'], math.ceil(1 + 13 / 2)+1)
 
     def test_structure(self):
         def edit(fl):
