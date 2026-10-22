@@ -59,7 +59,7 @@ def test_block_regions_kinds():
               dict(name='tall', master='u', x=9000, y=10000, w=1253, h=6739),   # slice-like: own root
               dict(name='phy', master='phy', x=12000, y=100, w=8500, h=1177)]   # fixed clock_port
     reg, info = GC.block_regions(blocks, g, TABLE)
-    assert info['fr']['kind'] == 'table_clock' and reg['fr'] == 'g0_0'
+    assert info['fr']['kind'] == 'table_clock' and reg['fr'] == 'frame_fr_r0' and info['fr']['cell'] == 'g0_0'
     assert reg['small'] == 'g1_0' and info['small']['kind'] == 'grid'
     assert reg['col'] == 'b_col' and info['col']['why'] == 'cut by a region edge'
     assert reg['colin'] == 'g3_1' and info['colin']['kind'] == 'grid'

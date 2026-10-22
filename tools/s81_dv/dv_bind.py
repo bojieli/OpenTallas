@@ -287,7 +287,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         reg = {b['name']: region_of(b, pitch) for b in blocks}
     else:
         raise SystemExit(f"dv_bind: clock_regions mode {cr_['mode']!r} (geometric | logical)")
-    regions = sorted(set(reg.values()))
+    regions = sorted({r for r in reg.values() if f'ck_{r}' not in T.get('clock_domains', {})})   # table roots declared below
     M = T['masters']
     # Validate optional endpoint contracts even when a forwarded clock or an
     # equal-depth calendar would bypass clock selection during emission.

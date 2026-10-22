@@ -17,8 +17,9 @@ nearest block: one root spread over up to 20.7 x 23.9 mm, G9d) with roots of a f
                3300 x 4333 cells model 80.3 ps, 4125 x 4333 89 ps > 80.  The 80 ps is then MEASURED by die STA +
                die_clock_check per region (the model only sizes the cell).
   * blocks     a block whose own clock comes from the bind table (frames: ck_frame_<f>_r{0,1,2}; LEP slices:
-               ck_ep_*; masters with a fixed clock_port, e.g. the PHY ck_hbm) keeps it; its grid region is the cell of
-               its centre (used only by the region-root fallbacks).  Every other block takes the root of the cell
+               ck_ep_*; masters with a fixed clock_port, e.g. the PHY ck_hbm) keeps it; the region-root fallbacks of
+               dv_bind (gate / landing calendar stations beside the block) use its main instance clock root (frames,
+               LEP slices) or, for a fixed clock_port master, the cell of its centre.  Every other block takes the root of the cell
                containing its centre when it lies WHOLLY inside that cell.  A block larger than the cell target (the
                1.25 x 6.7 mm slices) or cut by a region edge gets ONE root of its own, ck_b_<block>, at its clock pin
                (its sinks: the block, its landings and gate-calendar stations, all on its own outline); recorded as
@@ -174,7 +175,14 @@ def block_regions(blocks, grid, table):
     for b in blocks:
         cx, cy = b['x'] + b['w'] / 2.0, b['y'] + b['h'] / 2.0
         cell = grid.region(cx, cy)
-        if own_clock(table, b):
+        icp = table.get('instance_clock_ports', {}).get(b['name'])
+        main = icp.get(table['masters'][b['master']]['clk']) if icp else None
+        if main and main.startswith('ck_'):
+            # frames / LEP slices: the region-root fallbacks (gate / landing calendar stations beside the block) take
+            # the block's own main clock root, the root of the gate / landing they feed
+            reg[b['name']] = main[3:]
+            info[b['name']] = dict(kind='table_clock', cell=cell, root=main)
+        elif own_clock(table, b):
             reg[b['name']] = cell
             info[b['name']] = dict(kind='table_clock', cell=cell)
         elif b['w'] > grid.maxc[0] + 1e-6 or b['h'] > grid.maxc[1] + 1e-6 or not inside(grid.box(cell), b):
