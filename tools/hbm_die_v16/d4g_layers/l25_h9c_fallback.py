@@ -115,6 +115,25 @@ def review(a):
     drift = [p for p, s in r['source_sha256'].items() if sha(ROOT / p) != s]
     if drift:
         raise SystemExit(f'L25_REVIEW REFUSED: unreviewed drift {drift} -> new semantic delta review owed')
+    # HBMc/CHAIN 10-22: exact added entries (new die-level outputs a reviewed split exposed); fail-closed on source bytes,
+    # never a union with an existing entry, approved_bits recounted.
+    add = []
+    for ap_ in (a.add_entries or []):
+        if not (ROOT / ap_).is_file():
+            continue
+        ad = json.loads((ROOT / ap_).read_text())
+        for p, s in ad['source_sha256'].items():
+            assert sha(ROOT / p) == s, ('added-entry review source drift', p)
+        have = {(e['instance'], e['port']) for e in r['approved_entries']}
+        for e in ad['added_entries']:
+            assert (e['instance'], e['port']) not in have, ('added entry already reviewed', e['instance'], e['port'])
+            assert e['source'] in ad['source_sha256'], ('added entry source not pinned', e['source'])
+            r['approved_entries'].append(e); add.append(dict(instance=e['instance'], port=e['port'], bits=e['bit_count']))
+            r['approved_bits'] += e['bit_count']
+            r['source_sha256'].setdefault(e['source'], ad['source_sha256'][e['source']])
+        if 'remaining_unadmitted_bits' in r:
+            r['remaining_unadmitted_bits'] = max(0, int(r['remaining_unadmitted_bits']) - sum(x['bits'] for x in add))
+        r.setdefault('delta_review_added', []).append(dict(review=ap_, review_sha256=sha(ROOT / ap_), entries=add))
     r['delta_review_h9r11'] = dict(predecessor_review_sha256=pred, admitted_review=a.admitted, admitted_review_sha256=sha(a.admitted),
                                   admitted_manifest='ea87fbac3af9bb682d93d98d14fcbdd8588275708461d4dac91f26caa65aad4e',
                                   repinned_sources=rec, renewed_drift_repins=ren, entries_changed=0, approved_bits=r['approved_bits'],
@@ -122,7 +141,7 @@ def review(a):
                                         'h9c fallback controller has no reviewed entry; no physical/native/token qualification granted')
     r['reviewer'] = r.get('reviewer', '') + ' | HBM-H9R11: H9BIND delta review (543ecfcb, admitted) re-applied, identical source deltas'
     Path(a.out).write_text(json.dumps(r, indent=1) + '\n')
-    print('L25_REVIEW PASS repinned', len(rec), 'renewed', len(ren), 'entries', len(r['approved_entries']), 'bits', r['approved_bits'], 'sha', sha(a.out))
+    print('L25_REVIEW PASS repinned', len(rec), 'renewed', len(ren), 'added', len(add), 'entries', len(r['approved_entries']), 'bits', r['approved_bits'], 'sha', sha(a.out))
 
 
 def main():
@@ -133,7 +152,11 @@ def main():
     s.add_argument('--admitted', default='results/arch/hbm_die11_portage_1020/h9bind/review_h9bind.json')
     s.add_argument('--renewed', action='append', default=None,
                    help='renewed drift review JSON (repeatable); default results/arch/hbm_release_r16_1021/l25_renew_r17/review_drift_r17.json')
+    s.add_argument('--add-entries', action='append', default=None,
+                   help='added-entry review JSON (repeatable); default results/arch/hbm_release_r16_1021/l25_renew_r17/review_add_r18_qdq_ordinal.json')
     a = ap.parse_args()
+    if a.cmd == 'review' and a.add_entries is None:
+        a.add_entries = ['results/arch/hbm_release_r16_1021/l25_renew_r17/review_add_r18_qdq_ordinal.json']
     if a.cmd == 'review' and a.renewed is None:
         a.renewed = ['results/arch/hbm_release_r16_1021/l25_renew_r17/review_drift_r17.json']
     (swap if a.cmd == 'swap' else review)(a)

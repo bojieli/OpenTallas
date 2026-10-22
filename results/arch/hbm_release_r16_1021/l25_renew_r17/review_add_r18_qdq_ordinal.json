@@ -1,0 +1,34 @@
+{
+ "schema": "ot_l25_added_unread_entries_v1",
+ "reviewer": "HBMc/CHAIN 2026-10-22 (semantic review; LEAD digest admission still required, as for every renewed review)",
+ "scope": "r18 qdq r3 split (efae01023) exposes the NW programme leaf at die level; its 32-bit ordinal output was already unread INSIDE the monolith/split parents (ot_hgi_qdq_host_split_r2/r3: 'wire [31:0] ordinal' connected, never read). No hardware or interface change; release freeze class (2) bind closure.",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_nw_program_leaf.sv": "d0db2ee8ec70a6ee9f4f54ae13dc951bfdbf000e6ae39163e1668bb090251c87",
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_split_r3.sv": "85d72a952d25a4562fd5e977d114daca01c621da62d9d072a60a4aa064911200"
+ },
+ "added_entries": [
+  {
+   "instance": "hb_quant_NW__program_leaf",
+   "master": "ot_hgi_qdq_nw_program_leaf",
+   "port": "ordinal",
+   "net": "hb_quant_NW__program_leaf__ordinal",
+   "width": 32,
+   "unread_ranges": [
+    [
+     0,
+     31
+    ]
+   ],
+   "bit_count": 32,
+   "source": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_nw_program_leaf.sv",
+   "classification": "counter_or_ordinal_export",
+   "reason": "COMPACT=1 record_programme: ordinal = 'issued' command counter (observation only). Consumers use command/command_v/active/done/configured/fault (relayed to the qdq ctl/host status); the same ordinal was unread inside the split parents r2/r3 and the monolith, so dropping its reader is not a functional loss. Same class as the 16 reviewed calendar/vmfc/epcal ordinals.",
+   "evidence": [
+    "ot_hgi_qdq_nw_program_leaf.sv:62-70 issued<=0 on start_v, +1 on command_v; assign ordinal=issued",
+    "ot_hgi_qdq_host_split_r3.sv:32-36 wire [31:0] ordinal; .ordinal(ordinal) -- no reader",
+    "r18 08c0635c3 S5 strict replay unread_nets == {hb_quant_NW__program_leaf__ordinal: 32} only; r18d 57cd9d54d identical"
+   ],
+   "allowlist_candidate": true
+  }
+ ]
+}
