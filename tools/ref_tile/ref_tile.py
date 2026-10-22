@@ -1958,8 +1958,8 @@ def multiport_spine(s: dict) -> bool:
     distribution = s.get("clock_distribution")
     if distribution is None:
         return False
-    if distribution != "spine" or s.get("clock") != "multiple_cts_roots" or s.get("kind") != "tile":
-        raise SpecError("clock_distribution=spine requires a multiple_cts_roots leaf tile")
+    if distribution != "spine" or s.get("clock") != "multiple_cts_roots" or s.get("kind") not in ("tile", "cluster"):
+        raise SpecError("clock_distribution=spine requires multiple_cts_roots on a tile or hard-child cluster")
     return True
 
 
@@ -1992,6 +1992,18 @@ def gen_hooks(s: dict, kd: str) -> dict:
             pre_cts += ["set ::env(OT_SPINE_PORTS) {" + ",".join(clock_ports(s)) + "}",
                         "set ::env(OT_SPINE_CTS_REST) 0",
                         "source /src/physical/common_flow/clock_spine.tcl"]
+            if s["kind"] == "cluster":
+                # Each real macro clock pin gets its own physical leaf. Targets
+                # include the exact child boundary insertion; raw PMA pins have
+                # no internal offset. This adds real buffers, without SDC shifts.
+                pre_cts += ["set ::env(OT_SPINE_MACRO_LEAF) 1",
+                            "set ::env(OT_SPINE_MACRO_PIN_LEAF) 1",
+                            f"source /src/{kd}/spine_ins.tcl"]
+                ins = child_insertions(s)
+                tk = lambda k: "{" + k + "}" if re.search(r"[\[\]$\\{}\s;\"]", k) else k
+                files["spine_ins.tcl"] = SPINE_INS.format(
+                    ins=" ".join(f"{tk(k)} {v}" for k, v in sorted(ins.items())),
+                    pinlookup=SPINE_PIN_LOOKUP if s.get("child_clock_ref") == "pin" else "")
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
         # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
@@ -2398,6 +2410,8 @@ def referenced_paths(s: dict, kd: str) -> list:
     out += clock_entry_constraints.single_clock_contract.evidence_paths(s)
     if multiport_spine(s):
         out += ["physical/common_flow/clock_spine.tcl", "physical/common_flow/native_pg_binding.tcl"]
+        if s["kind"] == "cluster":
+            out.append(f"{kd}/spine_ins.tcl")
     out += [p for p, _, _ in clock_entry_constraints.gray_fifo_cdc_constraints.tech_cell_libraries(s, ROOT)]
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]

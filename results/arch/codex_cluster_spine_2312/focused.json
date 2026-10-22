@@ -1,0 +1,19 @@
+{
+  "scope": "Explicit multiple-root physical spine for validated hard-child clusters; timing wrappers and default path unchanged.",
+  "baseline": "27f4ddaca",
+  "focused_statistics": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "3",
+    "tests": "34",
+    "time": "5.138",
+    "timestamp": "2026-10-21T23:18:47.809695-07:00",
+    "hostname": "ubuntu"
+  },
+  "files": {
+    "tools/ref_tile/ref_tile.py": "1d5e1ceffbbe8f33cdaa2c2e5d39a0caf9f66fbd92a70d42ec3788da547d18ec",
+    "tools/ref_tile/test_multiport_spine.py": "03aae971e8fe362102b67e7a844a8319b4de68b1bb1268547af273c1440d24c0"
+  },
+  "full_comparison": "PENDING fleet baseline/candidate; no main publication yet"
+}
