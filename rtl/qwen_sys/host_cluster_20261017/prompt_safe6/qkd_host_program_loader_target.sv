@@ -46,12 +46,13 @@ module qkd_host_program_loader_target # (parameter integer MUT=0)(
  wire p_rd=rst_n&&!begin_image&&!fault&&state==REPLAY_P&&!execution_active;
  // N37: accepted program writes land before the SRAM control/data interface. The seal and
  // authorization transitions drain this one-entry pipeline before the first replay read.
+ // Once accepted, a write must commit even if execution_active changes on the next edge.
  // External digest, fault, authorization and replay output edges are unchanged.
  reg p_write_valid; reg[9:0]p_write_addr; reg[63:0]p_write_data;
  always @(posedge ck or negedge rst_n)
   if(!rst_n)p_write_valid<=1'b0;else p_write_valid<=p_wr;
  always @(posedge ck)begin p_write_addr<=word_addr;p_write_data<=word_data;end
- wire p_commit=p_write_valid&&rst_n&&!begin_image&&!fault&&!execution_active;
+ wire p_commit=p_write_valid&&rst_n&&(MUT!=5||!execution_active);
  wire[9:0] p_addr=p_commit?p_write_addr:index_p[9:0];
  wire[63:0] p_q[0:3];
  genvar gb;

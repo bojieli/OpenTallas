@@ -39,7 +39,7 @@ module tb_program_n37_eq;
   scoring=0;rst_n=0;begin_image=0;word_v=0;word_desc=0;seal=0;auth_v=0;execution_active=0;
   repeat(3)tick();rst_n=1;repeat(3)tick();
  endtask
- task automatic run_image(input integer target,input integer np,input integer nd);
+ task automatic run_image(input integer target,input integer np,input integer nd,input integer pause_after_words=0);
   reg[63:0]dg;integer limit;
   image_epoch=image_epoch+1;image_target=4'(target);auth_target=4'(target);pw_count=11'(np);dw_count=4'(nd);
   begin_image=1;tick();begin_image=0;
@@ -48,6 +48,7 @@ module tb_program_n37_eq;
    word_v=1;word_desc=0;word_addr=10'(k);word_data=pattern(k,0);
    dg={dg[56:0],dg[63:57]} ^ word_data ^ {53'b0,word_desc,word_addr};tick();
   end
+  if(pause_after_words)begin word_v=0;execution_active=1;tick();execution_active=0;end
   for(integer k=0;k<nd;k=k+1)begin
    word_v=1;word_desc=1;word_addr=10'(k);word_data=pattern(k,1);
    dg={dg[56:0],dg[63:57]} ^ word_data ^ {53'b0,word_desc,word_addr};tick();
@@ -64,13 +65,13 @@ module tb_program_n37_eq;
  endtask
  initial begin
   reset_all();run_image(3,4,0);reset_all();run_image(12,1024,0);
-  reset_all();run_image(0,33,3);reset_all();run_image(0,1024,8);
+  reset_all();run_image(0,33,3);reset_all();run_image(0,1024,8);reset_all();run_image(3,4,0,1);
   reset_all();image_target=3;pw_count=4;dw_count=0;begin_image=1;tick();begin_image=0;
   word_v=1;word_addr=0;word_data=pattern(0,0);tick();reset_all();run_image(3,4,0);
   reset_all();image_target=3;pw_count=4;dw_count=0;begin_image=1;tick();begin_image=0;
   word_v=1;word_addr=1;word_data=pattern(1,0);tick();word_v=0;
   if(!fault0)$fatal(1,"N37_PROGRAM_EQ FAIL malformed word not rejected");
   repeat(3)tick();
-  $display("N37_PROGRAM_EQ PASS cycles=%0d images=%0d program_writes=%0d descriptor_writes=%0d reset_pending=1 bad_order=1",cycles,images,total_program,total_desc);$finish;
+  $display("N37_PROGRAM_EQ PASS cycles=%0d images=%0d program_writes=%0d descriptor_writes=%0d reset_pending=1 bad_order=1 active_after_accept=1",cycles,images,total_program,total_desc);$finish;
  end
 endmodule
