@@ -99,6 +99,7 @@ def build(binding, ledger, requests, receipt_root):
         raise ValueError('control transport receipt names a different selected engine source')
     profile=phases(binding['parameters']['READ_SAMPLE'],binding['parameters']['WRITE_COMMIT'])
     epoch=integer(binding['calendar_epoch'],'actual calendar epoch',0,2**31-1)
+    release_tail=integer(binding['ownership_release_tail'],'actual routed ownership release tail',2,65535)
     available=integer(binding['port_free'],'actual bank ownership availability',0,2**31-1)
     if available>epoch:raise ValueError('programme selects native bank ports before their actual owner releases them')
     host_launch=epoch-binding['launch_to_calendar_zero']
@@ -128,7 +129,7 @@ def build(binding, ledger, requests, receipt_root):
         done=start+profile['done']
         for key in ('index','run0','run1','run2','run3'):
             integer(producers[key]['release_edge'],'actual retained producer lifetime',done,2**31-1)
-        integer(output['release_edge'],'actual output allocation lifetime',done+2,2**31-1)
+        integer(output['release_edge'],'actual output allocation lifetime',done+release_tail,2**31-1)
         job=dict(index_ready=producers['index']['ready_edge'],
                  score_ready=max(producers[k]['ready_edge'] for k in ('run0','run1','run2','run3')),
                  port_free=start,index_release=producers['index']['release_edge'],
@@ -136,7 +137,7 @@ def build(binding, ledger, requests, receipt_root):
                  output_release=output['release_edge'],descriptor=deepcopy(d),producer_receipts=producers)
         jobs[tag]=job
         plans.append(dict(status='native_gather_emitted',native_gather=dict(tag=tag,descriptor=d,start=start,done=done)))
-        free=done+2
+        free=done+release_tail
     selected=deepcopy(binding);selected['jobs']=jobs
     replay=programme_replay(plans,selected)
     result.update(status='SOURCE_PROGRAMME',jobs=jobs,plans=plans,source_binding=selected,replay=replay,
