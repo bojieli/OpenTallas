@@ -1125,6 +1125,13 @@ def place_lane(rule, e, es, bl):
     """-> (lane index, RTL port, lane width, (clock port, bit) or None)"""
     lw = rule['lane']
     if rule.get('kind') == 'xc':    # x chains: 0/1 down W/E (row nearer the slice bottom), 2/3 up; lane by link suffix
+        if 'lane_by_link' in rule:
+            # Physical pin movement must not change the logical streamer lane.
+            # An explicit table is complete: missing entries fail closed.
+            idx = rule['lane_by_link'][e[3]]
+            if not isinstance(idx, int) or not 0 <= idx < 16:
+                raise ValueError(f'xc logical lane outside 0..15: {e[3]}={idx}')
+            return idx, rule['port'], lw, (rule['ck'], idx) if rule.get('ck') else None
         peer = e[6]
         side = 0 if peer[3] == 'L' else 1
         cy = bl['y'] + bl['h'] / 2
