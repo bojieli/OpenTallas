@@ -57,6 +57,22 @@ LINK_RE = re.compile(r'^w_(.+)_(src|dst|lnd)$')
 _FULL_CONST = re.compile(r"\s*(\d+)'[sS]?([bBhHdDoO])([0-9a-fA-F_]+)\s*")
 
 
+def forwarded_payload_width(master):
+    """Exact source families whose forwarded payload is the complete i bus.
+
+    Landing reset, selector and receiver clock inputs belong to separate trees;
+    tracing them as payload can falsely demand dozens of clock buffers.
+    """
+    for pattern in (r'dsfd_dvrlyh?_(\d+)_[A-Z]+', r'dsfd_dvland_(\d+)l?',
+                    r'dsdv_svc_busland_(\d+)', r'dsdv_pv_local_land_(\d+)'):
+        match = re.fullmatch(pattern, master)
+        if match:
+            return int(match[1])
+    if master == 'dsfd_dvland_pvrd':
+        return 562
+    return None
+
+
 def clock_sdc(table, top_ports):
     """Declare core and off-die PHY domains from the same binding contract."""
     domains = table.get('clock_domains', {})
@@ -1033,9 +1049,9 @@ def main():
     if a.die_repair:
         contracts = []
         for master in sorted({m for m, _, _, _ in insts}):
-            match = re.fullmatch(r'dsfd_dvrlyh?_(\d+)_[A-Z]+', master)
-            if match:
-                contracts.append(f'{{{master}}} {{{{i\\[*\\]}} {int(match[1])}}}')
+            width = forwarded_payload_width(master)
+            if width:
+                contracts.append(f'{{{master}}} {{{{i\\[*\\]}} {width}}}')
         repair = ('set ::ot_die_rep_fclk_data_ports [dict create ' + ' '.join(contracts) + ']\n' + repair)
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
