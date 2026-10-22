@@ -92,6 +92,15 @@ def pin(port, bits, k):
     return f'{port}[{k}]' if bits > 1 else port
 
 
+def view_pin_key(p, cports, vpins_c):
+    """Contract pin name carried by view pin p (HBMc/CHAIN 10-22): a view that declares a 1-bit port [0:0] has the
+    LEF pin 'p[0]' while pin() names the 1-bit contract port scalar 'p'."""
+    mm_ = re.fullmatch(r'(\w+)\[0\]', p)
+    if mm_ and cports.get(mm_.group(1)) == 1 and f'{mm_.group(1)}[1]' not in vpins_c:
+        return mm_.group(1)
+    return p
+
+
 def validate_view_coverage(instances, views, allow_param_alias=False):
     """A missing receipt may be diagnostic; stale instance membership is an error.
     allow_param_alias: parameter aliases (same master/ports, different params) are RETURNED as an explicit
@@ -1529,13 +1538,7 @@ def main():
     # pin(), but a view declaring it [0:0] has the LEF pin 'pw_we[0]' -> the net was never emitted (col_idx/col_su pw_we,
     # collar c_fault x5 left nc_).  view_key() maps a view pin to the contract pin name it carries.
     def view_key(n, c, p):
-        mm_ = re.fullmatch(r'(\w+)\[0\]', p)
-        if mm_ and ports[c].get(mm_.group(1)) == 1 and f'{mm_.group(1)}[1]' not in vpins[c]:
-            return (n, mm_.group(1))
-        mm_ = re.fullmatch(r'(\w+)', p)
-        if mm_ and (ports[c].get(p) or 0) > 1:
-            return (n, f'{p}[0]')
-        return (n, p)
+        return (n, view_pin_key(p, ports[c], vpins[c]))
     connected = set()
     open_bits = []           # (inst, port, bit) of every view pin bit emitted unconnected (bus nc_ or omitted scalar)
     for n in sorted(inst):
