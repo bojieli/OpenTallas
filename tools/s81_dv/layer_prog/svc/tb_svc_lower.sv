@@ -21,6 +21,9 @@
 // the quarter-ST P.V: 160 words at the half-PVH entry pins, back to back, FIRST WORD AT THE COMPILED CYCLE, every value
 // bit-exact; one jd done per entry AT THE COMPILED CYCLE, no jd fault, no slice fault, HBM credits <= 8; the PV frame
 // after the last fold score.
+// RTLGAP-SO (10-21): meta [15] ALLQ (CFG [54], slices built -DOT_SVC_ALLQ): every slice owns its tile's P.V -- the E
+// entry emits tiles 0..7 and the W entry tiles 8..15, 320 words each, back to back from the SAME compiled first cycle;
+// all 512 dims x 16 heads bit-exact vs fixture attn.pv, both jd done pulses at the compiled cycle (pv_last + 1).
 `ifndef RS_OBS
 `define RS_OBS
 `endif
@@ -44,7 +47,7 @@ module tb_svc_lower;
     reg [255:0] hbm [longint];
     reg [1023:0] dir;
     integer seed = 1, lat = 40;
-    integer NQ, T, JW, JE, NH, EXP_PV0, EXP_DONE, EXP_DONE_W, GO_C, PV_C, i, PMODE, NPW;
+    integer NQ, T, JW, JE, NH, EXP_PV0, EXP_DONE, EXP_DONE_W, GO_C, PV_C, i, PMODE, NPW, ALLQ;
     reg [511:0] pexp [0:511];
     reg [32:0] JWORD;
     function automatic integer tile_of(input integer sd); reg [21:0] r; r = rs_role(4'(sd)); tile_of = r[3:0]; endfunction
@@ -55,7 +58,7 @@ module tb_svc_lower;
         $readmemh({dir, "/meta.hex"}, meta);
         NQ = meta[0]; T = meta[1]; JW = meta[2]; JE = meta[3]; JWORD = {meta[5][0], meta[4]}; NH = meta[6];
         EXP_PV0 = meta[7]; EXP_DONE = meta[8]; GO_C = meta[9]; PV_C = meta[10]; EXP_DONE_W = meta[12];
-        PMODE = meta[13]; NPW = meta[14];
+        PMODE = meta[13]; NPW = meta[14]; ALLQ = meta[15];
         if (PMODE != 0) $readmemh({dir, "/pexp.hex"}, pexp, 0, NPW - 1);
         if (meta[11] != ST) begin $display("image ST %0d != bench ST %0d", meta[11], ST); $finish; end
         $readmemh({dir, "/qcyc.hex"}, qcyc, 0, NQ - 1);
@@ -180,6 +183,8 @@ module tb_svc_lower;
     integer qi = 0, late_q = 0, rt_beats = 0, sc_err = 0, sc_chk = 0, ord_err = 0;
     integer se_rows [0:15], se_err = 0, se_chk = 0, wrows [0:15];
     integer pv_err = 0, pv_chk = 0, pv_first = -1, pv_last = -1, pv_gap = 0, pv_other = 0, pv_n = 0;
+    integer aq_n [0:1], aq_first [0:1], aq_last [0:1];                 // ALLQ: per entry (0 = W, 1 = E)
+    initial for (i = 0; i < 2; i = i + 1) begin aq_n[i] = 0; aq_first[i] = -1; aq_last[i] = -1; end
     reg [7:0] pvc [0:15]; reg [63:0] pvf [0:15];
     integer first_rt = -1, last_rt = -1, done_c [0:1], n_done [0:1];
     integer p_first = -1, p_last = -1, p_beats = 0, p_err = 0, p_chk = 0, pf_err = 0, we_first [0:15], we_last [0:15];
@@ -249,7 +254,34 @@ module tb_svc_lower;
                 se_rows[s] = se_rows[s] + 1;
             end
             if (w_v[s]) wrows[s] = wrows[s] + 1;
-            if (pv_v[s]) begin
+            if (pv_v[s] && ALLQ != 0) begin
+                integer wi, t, dm, h, k;
+                k = (s == RS_ENTRY_E) ? 1 : 0;
+                if (s != RS_ENTRY_E && s != RS_ENTRY_W) pv_other = pv_other + 1;
+                else begin
+                    t = (k == 1 ? 0 : 8) + aq_n[k] / 40; wi = aq_n[k] % 5;
+                    if (aq_first[k] < 0) aq_first[k] = cyc; else if (cyc != aq_last[k] + 1) pv_gap = pv_gap + 1;
+                    aq_last[k] = cyc;
+                    if (aq_n[k] >= 320) pv_err = pv_err + 1;
+                    else if (wi == 0) begin
+                        if (!pv_d[s][512]) pv_err = pv_err + 1;
+                        pvc[s] = pv_d[s][71:64]; pvf[s] = pv_d[s][63:0];
+                    end else begin
+                        if (pv_d[s][512]) pv_err = pv_err + 1;
+                        dm = 32 * t + 8 * (wi - 1) + pvc[s];
+                        for (h = 0; h < H; h = h + 1) begin
+                            pv_chk = pv_chk + 1;
+                            if (pv_d[s][32*h +: 32] !== pvm[dm][h*33 +: 32] || pvf[s][16 * (wi - 1) + h] !== pvm[dm][h*33 + 32]) begin
+                                pv_err = pv_err + 1;
+                                if (pv_err < 8) $display("PV MISMATCH entry %0d tile %0d dim %0d head %0d got %08x f%0d exp %08x f%0d", s, t, dm, h,
+                                    pv_d[s][32*h +: 32], pvf[s][16 * (wi - 1) + h], pvm[dm][h*33 +: 32], pvm[dm][h*33 + 32]);
+                            end
+                        end
+                    end
+                    aq_n[k] = aq_n[k] + 1; pv_n = pv_n + 1;
+                    if (pv_first < 0 || cyc < pv_first) pv_first = cyc; if (cyc > pv_last) pv_last = cyc;
+                end
+            end else if (pv_v[s]) begin
                 integer wi, t, dm, h;
                 if (s != ((PVH == 1) ? RS_ENTRY_E : RS_ENTRY_W)) pv_other = pv_other + 1;
                 else begin
@@ -304,8 +336,12 @@ module tb_svc_lower;
                 fl[s] = sflt[s]; if (sflt[s] && fc0 == 0) fc0 = afc[s];
             end
             pv_early = (PMODE == 0 && last_rt >= PV_C) ? 1 : 0;
-            sched_bad = (pv_first != EXP_PV0) + (pv_last != EXP_PV0 + 159) + (done_c[0] != EXP_DONE_W) + (done_c[1] != EXP_DONE) +
+            sched_bad = (pv_first != EXP_PV0) + (pv_last != EXP_PV0 + ((ALLQ != 0) ? 319 : 159)) + (done_c[0] != EXP_DONE_W) + (done_c[1] != EXP_DONE) +
                         (late_q != 0) + (qi != NQ) + pv_early;
+            if (ALLQ != 0) sched_bad = sched_bad + (aq_first[0] != EXP_PV0) + (aq_first[1] != EXP_PV0) +
+                                       (aq_last[0] != EXP_PV0 + 319) + (aq_last[1] != EXP_PV0 + 319);
+            if (ALLQ != 0) $display("SVCLOW_ALLQ W first=%0d last=%0d words=%0d E first=%0d last=%0d words=%0d exp_first=%0d exp_last=%0d",
+                aq_first[0], aq_last[0], aq_n[0], aq_first[1], aq_last[1], aq_n[1], EXP_PV0, EXP_PV0 + 319);
             $display("SVCLOW_SCHED go=%0d pv_frame=%0d first_score=%0d last_score=%0d pv_first=%0d exp_pv_first=%0d pv_last=%0d done_W=%0d exp_done_W=%0d done_E=%0d exp_done_E=%0d n_done=%0d/%0d q_sent=%0d/%0d late_q=%0d pv_early=%0d hbm_wr=%0d hbm_rd=%0d sched_bad=%0d",
                 GO_C, PV_C, first_rt, last_rt, pv_first, EXP_PV0, pv_last, done_c[0], EXP_DONE_W, done_c[1], EXP_DONE, n_done[0], n_done[1],
                 qi, NQ, late_q, pv_early, hbm_wr, hbm_rd, sched_bad);
@@ -318,11 +354,13 @@ module tb_svc_lower;
                 $display("SVCLOW_P pmode=%0d go=%0d p_nominal=%0d erow_first=%0d erow_last_min=%0d erow_last_max=%0d p_beat_first=%0d p_beat_last=%0d pf_W=%0d pf_E=%0d pf_n=%0d/%0d p_beats=%0d p_checked=%0d p_errors=%0d pf_errors=%0d npw=%0d",
                     PMODE, GO_C, PV_C, wf_min, wl_min, wl_max, p_first, p_last, pf_c[0], pf_c[1], pf_n[0], pf_n[1], p_beats, p_chk, p_err, pf_err, NPW);
             end
-            $display("SVCLOW die=%0d st=%0d T=%0d root_beats=%0d sc_checked=%0d sc_errors=%0d order_errors=%0d se_checked=%0d se_errors=%0d se_bad_slices=%0d sm_rows_bad=%0d pv_checked=%0d pv_errors=%0d pv_words=%0d pv_gaps=%0d pv_other_entry=%0d jd_fault=%0d root_fault=%0d slice_faults=%04x first_fault_code=%08x cred_err=%0d sched_bad=%0d cycles=%0d verdict=%s",
-                DIE, ST, T, rt_beats, sc_chk, sc_err, ord_err, se_chk, se_err, bad_se, bad_w, pv_chk, pv_err, pv_n, pv_gap, pv_other,
+            $display("SVCLOW die=%0d st=%0d allq=%0d T=%0d root_beats=%0d sc_checked=%0d sc_errors=%0d order_errors=%0d se_checked=%0d se_errors=%0d se_bad_slices=%0d sm_rows_bad=%0d pv_checked=%0d pv_errors=%0d pv_words=%0d pv_gaps=%0d pv_other_entry=%0d jd_fault=%0d root_fault=%0d slice_faults=%04x first_fault_code=%08x cred_err=%0d sched_bad=%0d cycles=%0d verdict=%s",
+                DIE, ST, ALLQ, T, rt_beats, sc_chk, sc_err, ord_err, se_chk, se_err, bad_se, bad_w, pv_chk, pv_err, pv_n, pv_gap, pv_other,
                 jdx[0][1] | jdx[1][1], rfx != 0, fl, fc0, cred_err, sched_bad, cyc,
                 (sc_err == 0 && ord_err == 0 && rt_beats == (T + 3) / 4 && sc_chk == T * H && se_err == 0 && se_chk == 16 * T &&
-                 bad_se == 0 && bad_w == 0 && pv_err == 0 && pv_chk == 4 * 8 * 4 * 16 && pv_n == 160 && pv_gap == 0 &&
+                 bad_se == 0 && bad_w == 0 && pv_err == 0 &&
+                 ((ALLQ == 0 && pv_chk == 4 * 8 * 4 * 16 && pv_n == 160) ||
+                  (ALLQ != 0 && pv_chk == D * H && pv_n == 640 && aq_n[0] == 320 && aq_n[1] == 320)) && pv_gap == 0 &&
                  pv_other == 0 && n_done[0] == 1 && n_done[1] == 1 && !jdx[0][1] && !jdx[1][1] && rfx == 0 && fl == 0 &&
                  cred_err == 0 && sched_bad == 0 && cyc < MAXCYC &&
                  (PMODE == 0 || (p_err == 0 && pf_err == 0 && p_beats == (T + 3) / 4 && p_chk == 64 * ((T + 3) / 4) &&

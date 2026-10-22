@@ -116,10 +116,17 @@ module dsdv_svc_rs_c #(
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
-    reg [21:0] role; reg [7:0] pvs, pf;
     wire [1:0] a_st;                                  // stack position (dsdv_svc_att: CFG [31:30] or the parameter ST)
+`ifdef OT_SVC_ALLQ
+    // RTLGAP-SO (10-21): CFG [54] ALLQ -> every slice drains its tile's P.V in its all-owner window (rs_pvslot_all)
+    reg [21:0] role; reg [9:0] pvs; reg [7:0] pf; wire a_allq;
+    always @(posedge ck or negedge rn) if (!rn) begin role <= '0; pvs <= 10'd1023; pf <= 8'h00; end
+        else begin role <= rs_role(sid); pvs <= a_allq ? rs_pvslot_all(sid) : {2'b00, rs_pvslot(a_st, sid)}; pf <= rs_pface(sid); end
+`else
+    reg [21:0] role; reg [7:0] pvs, pf;
     always @(posedge ck or negedge rn) if (!rn) begin role <= '0; pvs <= 8'd255; pf <= 8'h00; end
         else begin role <= rs_role(sid); pvs <= rs_pvslot(a_st, sid); pf <= rs_pface(sid); end
+`endif
     wire [3:0] tile = role[3:0], chm = role[7:4];
     wire [2:0] par = role[10:8];
 `ifdef RS_MUT_GD
@@ -205,7 +212,11 @@ module dsdv_svc_rs_c #(
         .l_v(l_v), .l_d(l_d), .pv_ov(a_pv_v), .pv_od(a_pv_d),
         .sm_st(sm_st), .sm_kind(sm_kind), .sm_jid(sm_jid), .sm_rv(sm_rv), .sm_rp(sm_rp), .sm_rj(sm_rj), .sm_rd(sm_rd),
         .go_o(go), .tjob_o(tjob), .done(done), .tagj(tagj), .hcr(hcr), .hack(hack), .fault(a_f), .fault_code(a_fc),
-        .pio_o(pio), .pvo_o(pvo_j), .jc_o(jcs), .st_o(a_st));
+        .pio_o(pio), .pvo_o(pvo_j), .jc_o(jcs), .st_o(a_st)
+`ifdef OT_SVC_ALLQ
+        , .allq_o(a_allq)
+`endif
+        );
 
     // ------------------------------------------------------------------ score exchange
     wire rt_v, t_v, x_f; wire [2131:0] rt_d; wire [19:0] t_tag; wire [127:0] t_y; wire [3:0] t_f;

@@ -13,7 +13,7 @@ mkdir -p "$O"
 "$VL" --version > "$O/verilator.version"
 COMMON=(-Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --output-split 20000 --output-split-cfuncs 2000 -fno-inline
         --unroll-count 16 --unroll-limit 131072 -MAKEFLAGS OPT_SLOW=-O0 -CFLAGS -O1 -I$D -DRS_OBS -DSVCQ_ENG_FG3
-        "${RS_DEF[@]}" -DMUT=0 ${MUTDEF:+-D$MUTDEF})
+        "${RS_DEF[@]}" -DMUT=0 ${MUTDEF:+-D$MUTDEF} ${SVC_DEFS:-})   # SVC_DEFS: e.g. -DOT_SVC_ALLQ (RTLGAP-SO)
 lib() {
   local L=$O/pl_$1
   [ -f "$L/lib$1_pl.a" ] && return 0
@@ -39,6 +39,6 @@ run() {  # $1 image, $2 seed
 }
 if [ -n "${MUTDEF:-}" ]; then run base 1; echo "all done $(date)"; exit 0; fi
 run base 1 & run base 2 & run slot 1 &
-for m in late pio_early; do [ -d "$IMG/$m" ] && run $m 1 & done
+for m in late pio_early allq_off; do [ -d "$IMG/$m" ] && run $m 1 & done
 wait
 echo "all done $(date)"

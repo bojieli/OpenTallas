@@ -21,6 +21,10 @@
 // q frames (SVC FRAME PROTOCOL v1.1 header; payload as svc_c unless stated):
 //   12 CFG      [29:0] WB (window ring base); TOK-S81-GAPS/SVCP (10-19, G10): [32] ST valid, [31:30] ST = the die's HBM
 //               stack position (P.V quarter / held-row stack); [32] = 0 keeps the parameter ST (legacy frames)
+//               RTLGAP-SO (10-21, -DOT_SVC_ALLQ only): [54] ALLQ = every slice is a P.V owner (all 4 quarters on THIS
+//               die: the slice's tile P.V is a per-dim sum over rows inside the tile, its window rows are in its own 2 PCs
+//               and its p store holds the job's P, so no other die is needed); every selected row is then needed by
+//               every tile (ROWS for all pairs), and the drain slot pvs is the 10-b all-owner slot (rs_pvslot_all)
 //    3 OWN_ROW  [479:459] pos, [458:449] user; payload block b = {scale 8, codes 256}: block t is written (2 writes)
 //    2 WIN_LOAD as svc_c ([29:0] SB, [88:81] wcount, [98:89] nsel, [119:99] first window pos, [458:449] user, tag)
 //    7 SEL_IDS  as svc_c; the slice records per rank whether the row is this stack's (held) and fetches its own rows
@@ -79,7 +83,11 @@ module dsdv_svc_att #(
     input  wire [3:0]           sid,
     input  wire [3:0]           tile,
     input  wire [7:0]           gd,
+`ifdef OT_SVC_ALLQ
+    input  wire [9:0]           pvs,               // compiled P.V drain slot after the job's PVO (ALLQ: rs_pvslot_all)
+`else
     input  wire [7:0]           pvs,               // compiled P.V drain slot after the job's PVO (255: not an owner)
+`endif
     input  wire                 root,
     // the slice's copy of the broadcast stream (centre register)
     input  wire                 q_v,
@@ -124,6 +132,9 @@ module dsdv_svc_att #(
     output wire [15:0]          pvo_o,
     output wire [15:0]          jc_o,
     output wire [1:0]           st_o
+`ifdef OT_SVC_ALLQ
+    , output wire               allq_o             // CFG [54] (RTLGAP-SO): all-quarter P.V ownership of the job
+`endif
 );
     localparam integer H = 16, D = 32, TD = 32, NL = 4, NT = NL * (D / TD), R = TD / H;
     localparam integer PFW = $clog2(PFIFO);
@@ -155,6 +166,16 @@ module dsdv_svc_att #(
     // ------------------------------------------------------------------ CFG / job state
     reg [29:0] wb, sb;
     reg [1:0] st_r;                                 // stack position: CFG [31:30] when [32], else the parameter ST
+`ifdef OT_SVC_ALLQ
+    reg allq_r;                                     // RTLGAP-SO: CFG [54], all 16 slices own their tile's P.V
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) allq_r <= 1'b0;
+        else if (hdr_mine && h_type == 4'd12) allq_r <= q_d[54];
+    assign allq_o = allq_r;
+    wire allq = allq_r;
+`else
+    wire allq = 1'b0;
+`endif
     reg [7:0] wcount; reg [9:0] nsel; reg [20:0] wfirst; reg [9:0] wuser;
     reg job_open, job_active;                       // job_open: WIN_LOAD seen, engine program not yet done
     wire start = hdr_mine && h_type == 4'd2;
@@ -310,7 +331,7 @@ module dsdv_svc_att #(
             row = 4 * (32'(rc) - 1) + j; need = 1'b0; ok = 1'b0;
             if (row < 32'(tjob)) begin
                 kc_m[j] = 1'b1;
-                need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r;
+                need = (row < 32'(wcount)) || sel_held[row - 32'(wcount)] || tile[3:2] == st_r || allq;
                 ok = pres[row] && (row >= 32'(wcount) || spres[7'(wfirst[6:0] + 7'(row)) >> 5]);
                 kc_w[265*j +: 265] = rowword(row, land[row], wsc, wcount, wfirst, need);
                 rel_bad[j] = need && !ok;
@@ -324,10 +345,15 @@ module dsdv_svc_att #(
     wire [PFW:0] pcnt = pw - pr;
     reg [15:0] p_left;
     wire [1:0] pstep = (p_left >= 16'd2) ? 2'd2 : 2'(p_left);
-    wire pvown = tile[3:2] == st_r;
+    wire pvown = tile[3:2] == st_r || allq;
     wire ep_v = job_active && p_left != 0 && jc >= po;          // static: from PO, a step every cycle
     wire ep_ready;
-    wire [2*TD*16-1:0] ep_w = pvown ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
+`ifdef RTLGAP_MUT_ALLQ_NOP
+    wire pvown_p = tile[3:2] == st_r;                           // RTL MUTANT: ALLQ drains, but P stays gated to quarter ST
+`else
+    wire pvown_p = pvown;
+`endif
+    wire [2*TD*16-1:0] ep_w = pvown_p ? {(pstep == 2'd2) ? pmem[pr[PFW-1:0] + 1'b1] : {TD*16{1'b1}}, pmem[pr[PFW-1:0]]} : '0;
 
     // ------------------------------------------------------------------ engine (unchanged, D = 32: S = 1, LS = 0)
     wire sc_v; wire [15:0] sc_row; wire [NL-1:0] sc_m; wire [NL*H*32-1:0] sc_y; wire [NL*H-1:0] sc_f;

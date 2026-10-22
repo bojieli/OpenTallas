@@ -60,6 +60,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -73,6 +74,7 @@ for p in (ROOT / 'tools', ROOT / 'tools/s81_dv', ROOT):
 OPS = [r'^attn\.(own_row_write|window_load|scores|max|exp|den|sink|pv|normalize)$']
 BENCH = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc'
 BENCH_P = 'results/rtl/s81_layer_tput_1018/compiler/bench_svc_p'   # TOK-S81-GAPS/SVCP: on-die P path (PPATH)
+BENCH_ALLQ = 'results/rtl/s81_rtlgap_so_1021/bench_allq'           # RTLGAP-SO: all-quarter P.V on one die (-DOT_SVC_ALLQ)
 UNIT = 'svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4'
 INSTS = [f'u_rsv_{i:02d}' for i in range(16)] + ['u_seqhost']
 
@@ -81,6 +83,11 @@ WB, SB, USER = 0x100, 0x1000, 3
 ST = 0                       # the die's stack position, sent in the CFG frame ([32] valid, [31:30]) -- G10
 PVS0, KPV, PV_LAT = 150, 55, 56
 PPATH = True                 # TOK-S81-GAPS/SVCP: P is produced on-die (GO PIO != 0); False = legacy host PV frame
+# RTLGAP-SO (10-21): ALLQ = CFG [54]: every one of the 16 slices owns its tile's P.V (die built with -DOT_SVC_ALLQ):
+# the rank's 512 dims leave THIS die -- E entry tiles 0..7 (quarters 0, 1), W entry tiles 8..15 (quarters 2, 3), 320
+# words each from the same pv_first (rs_pvslot_all: window k = tile % 8).  No cross-die G10 exchange exists or is needed.
+ALLQ = os.environ.get('OT_SVC_ALLQ', '0') == '1'
+NPVQ = 160                   # P.V words of one quarter at one entry (4 tiles x 8 beats x 5 words)
 # on-die P path constants (share cycles; measured by tb_svc_lower, results/rtl/s81_layer_tput_1018/compiler/bench_svc_p):
 #   PIO = PIO0 + 5 ceil(T / 4) / 4 ... see p_sched(); PO = PIO + P_ARR + ceil(n / 2) + P_PO_M; PVO = PO + 8 ceil(T / 32) + KPV
 # measured 10-19 (bench_svc_p sweep, out_p1 build src 85340f61a, T 128, GO 1555): SM e rows land GO+283..GO+305; the
@@ -145,11 +152,12 @@ def hdr(typ, ln, tag, spec=0, pos=777, user=USER, end=False, mask=1):
     return w | (pos & ((1 << 21) - 1)) << 459 | (user & 1023) << 449 | (spec & ((1 << 449) - 1))
 
 
-def cfg_spec(wb=WB, stack=ST, owner=None, tag=0, user=USER):
-    """Optional source launch identity, disjoint from legacy CFG bits [32:0]."""
+def cfg_spec(wb=WB, stack=ST, owner=None, tag=0, user=USER, allq=False):
+    """Optional source launch identity, disjoint from legacy CFG bits [32:0]; [54] = ALLQ (RTLGAP-SO, dsdv_svc_att
+    -DOT_SVC_ALLQ: allq_r <= q_d[54] on every CFG header)"""
     if not 0 <= wb < 2**30 or stack not in range(4):
         raise ValueError('CFG window base or stack outside source field')
-    spec = wb | (1 << 32) | (stack << 30)
+    spec = wb | (1 << 32) | (stack << 30) | (int(bool(allq)) << 54)
     if owner is not None:
         if type(owner) is not int or not 0 <= owner < 2**20:
             raise ValueError('SO source owner must be epoch2/user10/tag8')
@@ -173,7 +181,7 @@ def f32bits(x):
 class Job:
     """the layer's svc attention job, built once per (layer, fixtures, tag, mutant)"""
 
-    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None):
+    def __init__(self, fx, tag=0, mutant=None, owner_epoch=None, allq=None):
         import rtl_hdc_v41x_attn_campaign as C
         self.C, V = C, C.V
         fx = Path(fx)
@@ -220,6 +228,7 @@ class Job:
         assert files['weights/attn_sink.bin']['rows'] == [h0, h1]
         self.sinkw = sw
         self.tag, self.mutant = tag, mutant
+        self.allq = ALLQ if allq is None else bool(allq)
         if owner_epoch is not None and owner_epoch not in range(4):
             raise ValueError('Static allocation epoch outside two bits')
         self.owner = None if owner_epoch is None else (owner_epoch << 18) | (USER << 8) | tag
@@ -229,7 +238,9 @@ class Job:
     def _frames(self):
         C, T, tag, mut = self.C, self.T, self.tag, self.mutant
         fr = []
-        fr.append(('CFG', [hdr(12, 0, tag, spec=cfg_spec(owner=self.owner, tag=tag))]))
+        # MUTANT 'allq_off': the ALLQ bit dropped from CFG (only quarter ST drains; the bench expects all 512 dims)
+        fr.append(('CFG', [hdr(12, 0, tag, spec=cfg_spec(owner=self.owner, tag=tag,
+                                                         allq=self.allq and mut != 'allq_off'))]))
         ow = []
         pos = self.pos - 1 if mut == 'slot' else self.pos             # MUTANT 'slot': wrong OWN_ROW pos field
         ow.append(hdr(3, 16, tag, pos=pos))
@@ -313,9 +324,10 @@ class Job:
         j_pin = t_q0 - Q_ARM
         s_j = j_pin - max(j_age_w, j_age_e)
         pv_first = self.go + self.pvo + PV_LAT
+        npv = 2 * NPVQ if self.allq else NPVQ           # ALLQ: 8 tiles a half, both entries in parallel
         return dict(at=at, words=words, frame_words=fw, s_j=s_j, j_w=s_j + j_age_w, j_e=s_j + j_age_e, go=self.go, pvs=self.pvs,
-                    po=self.po, pvo=self.pvo, pv_first=pv_first, pv_last=pv_first + 159,
-                    done=pv_first + 160 - 1 + JD_LAT, done_nopv=pv_first + JD_NOPV, nframes=len(self.frames))
+                    po=self.po, pvo=self.pvo, pv_first=pv_first, pv_last=pv_first + npv - 1, npv=npv, allq=self.allq,
+                    done=pv_first + npv - 1 + JD_LAT, done_nopv=pv_first + JD_NOPV, nframes=len(self.frames))
 
     # ------------------------------------------------------------------ HBM window image (the 127 rows before pos)
     def hbm_image(self):
@@ -338,7 +350,7 @@ class Job:
         return sc, pv
 
 
-def pv_words(job, s):
+def pv_words(job, s, entry=None):
     """the quarter-ST P.V stream at the P.V entry's {pv_d 513, pv_v} pins: 160 words back to back from pv_first (the
     register set at edge pv_first - 1): per tile t (4 ST + w // 40) 8 beats of 5 words; word 0 = header {1, 440'd0,
     pv_c 8, flags 64} (dsdv_svc_att.sv:349-350), words 1..4 = {0, 16 heads x 32 b} of dims 32 t + 8 (wi - 1) + pv_c
@@ -350,8 +362,10 @@ def pv_words(job, s):
     out, e0 = [], s['pv_first'] - 1
     hm = 1 | (1 << 513) | (((1 << 441) - 1) << 73)                 # v, pv_d[512], pv_d[511:72]
     dm = 1 | (1 << 513)
-    for w in range(160):
-        t, b, wi = 4 * ST + w // 40, (w % 40) // 5, w % 5
+    n = s.get('npv', NPVQ)
+    t0 = (8 if entry == 'u_rsv_05' else 0) if s.get('allq') else 4 * ST   # ALLQ: E entry tiles 0..7, W entry 8..15
+    for w in range(n):
+        t, b, wi = t0 + w // 40, (w % 40) // 5, w % 5
         if wi == 0:
             d = (1 << 512) | (b << 64)
             if job.owner is not None:
@@ -364,7 +378,7 @@ def pv_words(job, s):
                 d |= int(vals[h, 32 * t + 8 * (wi - 1) + b]) << (32 * h)
             m = dm
         out.append([e0 + w, f'{(d << 1) | 1:x}', f'{m:x}'])
-    out.append([e0 + 160, '0', '1'])                                # valid low after the last word
+    out.append([e0 + n, '0', '1'])                                  # valid low after the last word
     return out
 
 
@@ -382,9 +396,9 @@ def _op_t(sched, name, key):
     return None
 
 
-def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None):
+def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, allq=None):
     """the job + its static schedule at the layer's cycles (layer entry = 0)"""
-    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch)
+    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq)
     ag = _ages(die)
     t_own = int(np.ceil(_op_t(sched, 'attn.own_row_write', 'start') or 1805))
     t_q = int(np.ceil(_op_t(sched, 'attn.q_rope', 'end') or 3001))
@@ -393,6 +407,8 @@ def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None):
     from dv_layer_compile import SEQ
     s['issue'] = s['s_j'] - SEQ['svc_to_sj']
     dw, de = (s['done_nopv'], s['done']) if ST < 2 else (s['done'], s['done_nopv'])
+    if job.allq:                                     # both entries drain 320 words from the same pv_first
+        dw = de = s['done']
     s['done_w'], s['done_e'] = dw, de
     s['ls'] = max(dw + ag['jd_w'], de + ag['jd_e']) - s['s_j']
     s['ages'] = ag
@@ -409,7 +425,7 @@ def bench_image(job, s, out, base=60):
     arg, jw = job_word(s['nframes'], job.tag)
     pv_c = s['at']['PV'] + off if 'PV' in s['at'] else s['go'] + job.pio + off      # PPATH: nominal P start (GO + PIO)
     meta = [len(w), job.T, s['j_w'] + off, s['j_e'] + off, jw & 0xFFFFFFFF, jw >> 32, 0, s['pv_first'] + off,
-            s['done_e'] + off, s['go'] + off, pv_c, ST, s['done_w'] + off, int(PPATH), len(job.p_words), 0]
+            s['done_e'] + off, s['go'] + off, pv_c, ST, s['done_w'] + off, int(PPATH), len(job.p_words), int(job.allq)]
     img = job.hbm_image()
     meta[6] = len(img)
     sc, pv = job.expected_hex()
@@ -424,7 +440,7 @@ def bench_image(job, s, out, base=60):
                j_arg=arg, j_word=f'{jw:09x}', frames={k: v + off for k, v in s['at'].items()},
                go=s['go'] + off, pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pio=job.pio, ppath=PPATH, pv_first=s['pv_first'] + off,
                pv_last=s['pv_last'] + off, done_w=s['done_w'] + off, done_e=s['done_e'] + off, anchors=job.anchor, T=job.T, heads=[job.h0, job.h0 + H],
-               st=ST, sha256={k: hashlib.sha256(v.encode()).hexdigest() for k, v in files.items()})
+               st=ST, allq=job.allq, npv=s['npv'], sha256={k: hashlib.sha256(v.encode()).hexdigest() for k, v in files.items()})
     (out / 'image.json').write_text(json.dumps(rec, indent=1) + '\n')
     return rec
 
@@ -477,13 +493,16 @@ def lower(die, op, ctx):
                 ev.append(dict(cycle=t, inst=inst, port='q', ports=['q'], dir='in', kind='QF', tag=f'attn.{fname}',
                                payload=f'frame {fname}: {len(ws)} q words {{2\'d0, d 512, v}} (producer u_s_3S / u_s_4S '
                                        f'xr band bo)', words=ws, valid_bit=0, producer_gap=QF_PRODUCER_GAP))
-        pvh = 'u_rsv_11' if ST < 2 else 'u_rsv_05'
-        ev.append(dict(cycle=s['pv_first'], inst=pvh, port='pv_v / pv_d', ports=['pv_v', 'pv_d'], dir='out', kind='PV',
-                       tag='attn.pv', payload=f'160 words (quarter {ST}: 4 x 40-cycle windows) to '
-                       f'u_s_{"4" if pvh == "u_rsv_11" else "3"}S bi', words=pv_words(job, s), valid_bit=0,
-                       data_masked='P.V values + header flags / pv_c (engine data, bit-exact in bench_svc; the cut '
-                                   'bench has no HBM window image): checked = valid, the header marker pv_d[512] '
-                                   'and the header zero field pv_d[511:72] on every compiled edge'))
+        pvhs = ['u_rsv_11', 'u_rsv_05'] if s.get('allq') else ['u_rsv_11' if ST < 2 else 'u_rsv_05']
+        for pvh in pvhs:
+            what = (f'{s["npv"]} words (ALLQ: tiles {"0..7" if pvh == "u_rsv_11" else "8..15"}, 8 x 40-cycle windows)'
+                    if s.get('allq') else f'160 words (quarter {ST}: 4 x 40-cycle windows)')
+            ev.append(dict(cycle=s['pv_first'], inst=pvh, port='pv_v / pv_d', ports=['pv_v', 'pv_d'], dir='out', kind='PV',
+                         tag='attn.pv', payload=f'{what} to '
+                         f'u_s_{"4" if pvh == "u_rsv_11" else "3"}S bi', words=pv_words(job, s, pvh), valid_bit=0,
+                         data_masked='P.V values + header flags / pv_c (engine data, bit-exact in bench_svc; the cut '
+                                     'bench has no HBM window image): checked = valid, the header marker pv_d[512] '
+                                     'and the header zero field pv_d[511:72] on every compiled edge'))
         for inst, t in (('u_rsv_05', s['done_w']), ('u_rsv_11', s['done_e'])):
             ev.append(dict(cycle=t, inst=inst, port='jd', ports=['jd'], dir='out', kind='SVCDONE', tag='attn.job',
                            payload='done {fault, done} = 01 one edge', words=[[t - 1, '1', '3'], [t, '0', '3']]))
@@ -504,6 +523,10 @@ def lower(die, op, ctx):
     elif name in ('attn.den', 'attn.sink') and PPATH:
         st = 'PARTIAL'
         r['gap'] = dict(SO_INPUT_GAP)
+    elif name == 'attn.pv' and job.allq:
+        # RTLGAP-SO (10-21): all 512 dims of the rank leave this die (E tiles 0..7, W tiles 8..15); bench_allq
+        st = 'LOWERED'
+        r['bench'] = BENCH_ALLQ
     elif name == 'attn.pv':
         st = 'PARTIAL'
         r['gap'] = dict(module='dsdv_svc_att quarter ST (pvown) -- die gap G10 (cross-die part)',
@@ -535,7 +558,7 @@ def main(argv=None):
         die = DC.Die(DC.die_tree(DC.DIE_REF))
     except Exception as e:    # noqa: BLE001 -- the link ages fall back to the bind9 values
         print('die model unavailable, bind9 link ages:', e)
-    for mut in (None, 'slot', 'pio_early' if PPATH else 'late'):
+    for mut in (None, 'slot', 'pio_early' if PPATH else 'late') + (('allq_off',) if ALLQ else ()):
         job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut)
         rec = bench_image(job, s, Path(a.out) / (mut or 'base'))
         print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done_w', 'done_e', 'frames')}))
