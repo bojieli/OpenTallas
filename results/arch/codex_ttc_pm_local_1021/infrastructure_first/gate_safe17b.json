@@ -1,0 +1,23 @@
+{
+ "verdict": "FAIL",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 26% = (macros/children 186457 + std 12890) / outline 780088 um2 (pin-bound: qfd_tt_ctlm_dv_safe17b: bounded netlist std ~12270 um2 + hard (2 SRAM + 3 OPROM + 2 ROM266 + H16ZA 345.6x302.4 + wtn) / outline: low total fill by construction (enlarged for the bigger closed head, never squeezed); see gen fill WARN for the figure.  Prior: qfd_tt_ctlm_dv_safe17b: bounded netlist std ~12270 um2 + hard 139614 (2 SRAM + 3 OPROM + 2 ROM266 + h16c + wtn) / outline = 27% (14a) / 24% (14b) total fill: the 4 FIFO SRAMs left (FQREG flop rings), geometry kept on purpose; std density ~4%, height added for the S pin band (clock_rule), not area.)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'ot_qfd_tt_ctlm_static_hr_safe32_native32_1r': 'M5', 'qfd_tt_ctlm_dv_wtn': 'M5'}",
+   "fix": ""
+  },
+  {
+   "severity": "FAIL",
+   "check": "sources",
+   "message": "1 committed input(s) absent from the working-tree archive: ['tools/w18/corner_sta_ref.py']",
+   "fix": "materialize the referenced files in the sparse checkout before rerunning the gate"
+  }
+ ]
+}
