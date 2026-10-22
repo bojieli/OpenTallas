@@ -500,17 +500,31 @@ module ot_s81dv_xstop #(
         //   [2NBY+2] dl copies 2..NF-1, [2NBY+3] jv/jb   (NENG = 2*NBY+4)
         // Every copy is a function-identical same-edge register of the original; no edge moves.
         localparam integer NBY = NCH * 4;
+`ifdef OT_S81DV_XFIN_N12
+        // N12 (STW-S81c-COLLA-SLICE): iv1c / iv2c get their own reset leaves (N11 census: xr[0] leaf 45 loads)
+        wire [4:0] xr;
+        ot_s81dv_finish_reset2 #(.LEAVES(5)) u_xrst (.clk(clk), .rst_n(rst_n), .q(xr));
+`else
         wire [2:0] xr;
         ot_s81dv_finish_reset2 #(.LEAVES(3)) u_xrst (.clk(clk), .rst_n(rst_n), .q(xr));
+`endif
         reg iv0, iv1, iv2; reg [3:0] ih1, ih2; reg [7:0] ib0, ib1, ib2; reg [K*32-1:0] id0, id1, id2;
         (* keep *) reg [NBY+1:0] iv1c, iv2c; (* keep *) reg [4*(NBY+2)-1:0] ih1c, ih2c;
         (* keep *) reg [NF*3-1:0] dlv_c; (* keep *) reg [NF*24-1:0] dlb_c;
+`ifdef OT_S81DV_XFIN_N12
+        always @(posedge clk or negedge xr[3]) if (!xr[3]) iv1c <= {(NBY+2){1'b0}}; else iv1c <= {(NBY+2){wi_v}};
+        always @(posedge clk or negedge xr[4]) if (!xr[4]) iv2c <= {(NBY+2){1'b0}}; else iv2c <= {(NBY+2){ei_v}};
+        always @(posedge clk or negedge xr[0])
+            if (!xr[0]) begin iv0 <= 1'b0; iv1 <= 1'b0; iv2 <= 1'b0; end
+            else begin iv0 <= eng[2*NBY] ? ej_v : inj_v; iv1 <= wi_v; iv2 <= ei_v; end
+`else
         always @(posedge clk or negedge xr[0])
             if (!xr[0]) begin iv0 <= 1'b0; iv1 <= 1'b0; iv2 <= 1'b0; iv1c <= {(NBY+2){1'b0}}; iv2c <= {(NBY+2){1'b0}}; end
             else begin
                 iv0 <= eng[2*NBY] ? ej_v : inj_v; iv1 <= wi_v; iv2 <= ei_v;
                 iv1c <= {(NBY+2){wi_v}}; iv2c <= {(NBY+2){ei_v}};
             end
+`endif
         integer c;
         always @(posedge clk or negedge xr[1])
             if (!xr[1]) dlv_c <= {(NF*3){1'b0}};
@@ -699,7 +713,15 @@ module ot_s81dv_xfin #(
     always @(posedge clk or negedge rt[0]) if (!rt[0]) ev_q <= 1'b0; else ev_q <= sv_c && mdc[NENG];
     always @(posedge clk) begin ebad_q <= e1_bad; evec_q <= e1_vec; el_q <= e1_l; ed_q <= s_c; end
     // same-edge one-hot forms of the same decode (N32): ew_q[v] = ev && !bad && vec == v, el_oh = 1 << leaf
+`ifdef OT_S81DV_XFIN_N12
+    // N12: el_oh is two kept same-edge copies, vectors 0..NE/2-1 read el_oh, NE/2.. read el_oh2 (N11 census 36 loads)
+    reg [NE-1:0] ew_q; (* keep *) reg [NVL-1:0] el_oh; (* keep *) reg [NVL-1:0] el_oh2;
+    always @(posedge clk) el_oh2 <= {{(NVL-1){1'b0}}, 1'b1} << e1_l;
+`define OT_XFIN_ELOH(v) (((v) < NE / 2) ? el_oh : el_oh2)
+`else
     reg [NE-1:0] ew_q; reg [NVL-1:0] el_oh;
+`define OT_XFIN_ELOH(v) el_oh
+`endif
     always @(posedge clk or negedge rt[2]) if (!rt[2]) ew_q <= {NE{1'b0}};
         else ew_q <= (sv_c && mdc[NENG] && !e1_bad) ? ({{(NE-1){1'b0}}, 1'b1} << e1_vec) : {NE{1'b0}};
     always @(posedge clk) el_oh <= {{(NVL-1){1'b0}}, 1'b1} << e1_l;
@@ -759,8 +781,8 @@ module ot_s81dv_xfin #(
     always @(*) begin
         rep = 1'b0;
         for (c2 = 0; c2 < NE; c2 = c2 + 1) begin
-            pset[c2] = ew_q[c2] && ((emsk[c2] | el_oh) == {NVL{1'b1}}) && emsk[c2] != {NVL{1'b1}};
-            if (ew_q[c2] && (|(emsk[c2] & el_oh))) rep = 1'b1;
+            pset[c2] = ew_q[c2] && ((emsk[c2] | `OT_XFIN_ELOH(c2)) == {NVL{1'b1}}) && emsk[c2] != {NVL{1'b1}};
+            if (ew_q[c2] && (|(emsk[c2] & `OT_XFIN_ELOH(c2)))) rep = 1'b1;
         end
     end
     // per vector v: pend[v], its NPC copies and emsk[v] on leaf rt[RV] and go-clear copy gcc[GV] (N8: one leaf and
@@ -781,7 +803,7 @@ module ot_s81dv_xfin #(
                 pend[vv] <= (ejc[NPC] ? (pend[vv] & ~psel[vv]) : pend[vv]) | pset[vv];
                 for (cc3 = 0; cc3 < NPC; cc3 = cc3 + 1)
                     pendc[cc3*NE + vv] <= (ejc[cc3] ? (pendc[cc3*NE + vv] & ~psel[vv]) : pendc[cc3*NE + vv]) | pset[vv];
-                if (ew_q[vv]) emsk[vv] <= emsk[vv] | el_oh;
+                if (ew_q[vv]) emsk[vv] <= emsk[vv] | `OT_XFIN_ELOH(vv);
             end
     end
     always @(posedge clk or negedge rt[0])
