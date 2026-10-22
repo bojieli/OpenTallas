@@ -376,8 +376,10 @@ def derive(die_v, root=ROOT, existing=None, pins=None):
 
     def tail_name_ok(inst, prefix):
         mt = re.fullmatch(prefix + r'_(WS|WN|ES|EN)_(\d+)', inst)
-        # SQC-KDIE2 10-22: OT_KV_KC_INNER=1 wires the S stacks like the N stacks (kick pc31 -> pc0): every stack ends at pc0
-        kc_inner = os.environ.get('OT_KV_KC_INNER', '0') == '1'
+        # SQC-KDIE2 10-22: OT_KV_KC_INNER=1 wires the S-stack kc kick chain like the N stacks (kick pc31 -> pc0): every
+        # kvpc ko chain ends at pc0.  SQC-KDIE3 10-22: ONLY the kc chain (prefix kvpc); the HOST slice boot / ingest chains
+        # (hsl bgo / fo) are wired by the HOST generator and keep their S-stack end at slice 31 (sqcpcm PREP refused hsl_tail)
+        kc_inner = prefix == 'kvpc' and os.environ.get('OT_KV_KC_INNER', '0') == '1'
         return bool(mt) and int(mt.group(2)) == (31 if (mt.group(1)[1] == 'S' and not kc_inner) else 0)
 
     def traces_to(net_bits, master, port):
