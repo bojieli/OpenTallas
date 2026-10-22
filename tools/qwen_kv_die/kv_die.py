@@ -1249,7 +1249,16 @@ def _d2d_view_pins(m, M):
     hf = 'N' if d.y >= h.y + h.h - 1.0 else 'S' if d.y + d.h <= h.y + 1.0 else ('E' if d.x > h.x else 'W')
     L = hm.w if hf in 'NS' else hm.h
     want = []
+    fpin_ = os.environ.get('OT_KV_HOST_D2D_FORK_PINS', '0') == '1'
     for bid, cl, bits, eps in m['buses']:
+        if fpin_ and len(eps) > 2 and eps[0][0] in ('host', 'd2d_kv') and \
+                sum(1 for e in eps if e[0] in ('host', 'd2d_kv')) == 2 and {e[0] for e in eps} >= {'host', 'd2d_kv'}:
+            # KDIE4-RLY 10-22 (OT_KV_HOST_D2D_FORK_PINS=1, default off): after the relay pass a fork's branch loads join the
+            # trunk's source net (hsvc + seq / ctl / emb, hrec_rx + kvs_emb / kvnc), so the host <-> d2d trunk has > 2
+            # endpoints and its HOST stand-in word was left to the auto-pin pass, which drew host.rec_rx / host.svc on the
+            # HOST's W face in the pin-hinted re-plan (ovm: hrec_rx trunk 2 W-bound stations, hsvc 4, through the S-face
+            # window).  The trunk's HOST word stays level with its d2d anchor, as a 2-endpoint word does.
+            eps = [e for e in eps if e[0] in ('host', 'd2d_kv')]
         if len(eps) != 2 or {e[0] for e in eps} != {'host', 'd2d_kv'}:
             continue
         hp = next(e[1] for e in eps if e[0] == 'host').lstrip('*')
@@ -3146,6 +3155,20 @@ def _relays(m):
             for inst_, _p in eps_[1:]:
                 ckdom.setdefault(inst_, bid_)
     seams = m.setdefault('clock_seams', [])
+    CHROW_ = None
+    if os.environ.get('OT_KV_D2D_CHAN_ROWS', '0') == '1' and 'host' in by and 'd2d_kv' in by:
+        # KDIE4-RLY 10-22 (OT_KV_D2D_CHAN_ROWS=1, default off): the HOST-top / D2D-bottom channel (218 um at apron 86.4)
+        # holds two 82-um relay rows only if every station hugs its bottom or top edge (block halo 21.6, relay gap 4.32);
+        # the path-relative lattice (py + k * 21.6 - fh / 2) put stations mid-channel, one row deep (dbg ovf: rx_payload's
+        # 2nd station in the S-face window).  Spots there are snapped to the two edge rows; free() / reach are unchanged.
+        h_, d_ = by['host'], by['d2d_kv']
+        if h_.y + h_.h < d_.y:
+            CHROW_ = (h_.x - 216.0, max(h_.x + h_.w, d_.x + d_.w), h_.y + h_.h + 21.6, d_.y - 21.6)
+            m.setdefault('geo', {})['d2d_chan_rows'] = [round(v_, 2) for v_ in CHROW_]
+    RES_, CUR_ = {}, dict(bid=None)        # OT_KV_D2D_SLOTS: word key -> reserved slot rect; the bus being planned
+
+    def owns_(bid_, key_):
+        return bid_ is not None and (bid_ == key_ or bid_.startswith(key_ + '__f'))
     SP = dict(on=False)        # v1.1: set for a chain's retry: route around cells other chains' relays hold
 
     def free(x, y, w, h, gap=4.32, bgap=21.6):
@@ -3153,6 +3176,9 @@ def _relays(m):
         # master's legal track / row lattice: a 16 k-pin row engine moved 15.1 um, so a relay must not hug a block)
         if x - gap < 0 or y - gap < 0 or x + w + gap > Wd or y + h + gap > Hd:
             return False
+        for k_, r_ in RES_.items():           # OT_KV_D2D_SLOTS: another word's reserved S-face terminal slot
+            if not owns_(CUR_['bid'], k_) and r_[0] < x + w + gap and x - gap < r_[2] and r_[1] < y + h + gap and y - gap < r_[3]:
+                return False
         for gx in range(int((x - bgap) // G) - 1, int((x + w + bgap) // G) + 2):
             for gy in range(int((y - bgap) // G) - 1, int((y + h + bgap) // G) + 2):
                 for q in rocc.get((gx, gy), ()):
@@ -3544,12 +3570,146 @@ def _relays(m):
                       and any(e_[0] == 'd2d_kv' for e_ in b_[3])), default=-1)
             order_ = rest_[:j_ + 1] + dfk_ + rest_[j_ + 1:]
             m['d2d_forks_last'] = sorted(ids_)
+    # KDIE4-RLY 10-22 (OT_KV_FORK_TAP=<trunk>[,<trunk>..], default off; RoPE OVL successor): a fork branch of a listed trunk
+    # TAPS an already planned registered chain of the same word -- the trunk's relay chain, or an earlier branch's -- at the
+    # station whose output is nearest its load, instead of leaving the trunk driver's pins with a station of its own.  The
+    # D2D S-face words are spread 312-470 um, so with the 548-b reach (340 um to the FARTHEST pin) every first / last
+    # station of att_tx_payload / rx_payload / rec_rx sits in a ~100-um-deep window under the face centre; the RoPE OVL
+    # record forks hrec_rx__f0 -> kvs_emb.i_head_record and __f1 -> kvnc.head (552 b, both W of the D2D) took two more
+    # stations in that window (dbg ovm/ovf: attn tx_payload / hrec_rx__f1 stage 0 'no spot').  Tapped, one 552-b record
+    # chain leaves the face and splits next to its consumers (full width: both loads take the whole record).  A branch
+    # taps unless its load is within half a reach of the driver's pins.  Reach / safety rules unchanged: every hop
+    # from the tap is measured pin-to-pin from the tap station's output; branch age = tap stages + own stages
+    # (m['fork_stages'], detail in m['fork_taps']); the branch's first segment joins the tap station's output net.
+    tap_src_ = {}
+    # '<trunk>:first' taps the source chain's FIRST station (only the driver-side window is relieved; the trunk keeps
+    # every later hop exclusive -- kv_bundle_eq pads a bundle member's own hops: seqst_rx tapped at its last station left
+    # 'shared downstream' only); a plain '<trunk>' taps the station nearest the branch's load
+    tap_first_ = {x_.strip().split(':')[0] for x_ in os.environ.get('OT_KV_FORK_TAP', '').split(',')
+                  if x_.strip().endswith(':first')}
+    tap_l_ = [x_.strip().split(':')[0] for x_ in os.environ.get('OT_KV_FORK_TAP', '').split(',') if x_.strip()]
+    tdt_ = [b_ for b_ in order_ if b_[0] in tap_l_ and len(b_[3]) == 2 and any(e_[0] == 'd2d_kv' for e_ in b_[3])]
+    if tdt_:
+        # a listed D2D-sourced trunk (seqst_rx 535 b: its corner-wrapped srx pins, W face y 0-331 + S face x 0-184, leave a
+        # first-station window of ~15 x 20 um in the pocket W of the D2D end -- cf4 frame -- that the pocket's other relays
+        # otherwise fill) is planned AHEAD of the wide D2D words, so the trunk's station, which every branch then taps,
+        # takes that window first
+        ids_ = {b_[0] for b_ in tdt_}
+        rest_ = [b_ for b_ in order_ if b_[0] not in ids_]
+        j_ = min((i_ for i_, b_ in enumerate(rest_) if b_[2] >= 548 and b_[1] not in ABUT and len(b_[3]) == 2
+                  and any(e_[0] == 'd2d_kv' for e_ in b_[3]) and b_[0] not in forks_), default=len(rest_))
+        order_ = rest_[:j_] + tdt_ + rest_[j_:]
+    for t_ in tap_l_:
+        brs_ = sorted((n_ for n_, tr_ in forks_.items() if tr_ == t_), key=lambda n_: int(n_.rsplit('__f', 1)[1]))
+        if any((m.get('fork_slices') or {}).get(n_) for n_ in brs_):
+            raise ValueError(f'kv die OT_KV_FORK_TAP {t_}: narrowed branches cannot tap (full-width loads only)')
+        for i_, n_ in enumerate(brs_):
+            tap_src_[n_] = [t_] + brs_[:i_]       # tap sources: the trunk's chain, then the earlier branches' chains
+        pos_ = {b_[0]: i_ for i_, b_ in enumerate(order_)}
+        if brs_ and (any(pos_[n_] < pos_[t_] for n_ in brs_) or any(pos_[x_] > pos_[y_] for x_, y_ in zip(brs_, brs_[1:]))):
+            # (OT_KV_D2D_FORKS_LAST moves D2D-sourced branches ahead of a narrower trunk): the branches follow the trunk
+            br_set_ = set(brs_)
+            brl_ = sorted((b_ for b_ in order_ if b_[0] in br_set_), key=lambda b_: brs_.index(b_[0]))
+            rest_ = [b_ for b_ in order_ if b_[0] not in br_set_]
+            j_ = max(next(i_ for i_, b_ in enumerate(rest_) if b_[0] == t_),
+                     max((i_ for i_, b_ in enumerate(rest_) if pos_[b_[0]] < min(pos_[n_] for n_ in brs_)), default=-1))
+            order_ = rest_[:j_ + 1] + brl_ + rest_[j_ + 1:]
+    fork_taps_ = {}
+    res_left_ = {}
+    if os.environ.get('OT_KV_D2D_SLOTS', '0') == '1' and CHROW_ is not None and D2D_PINS:
+        # KDIE4-RLY 10-22 (OT_KV_D2D_SLOTS=1, default off; needs OT_KV_D2D_CHAN_ROWS): the S-face words of the D2D end
+        # (att_tx_payload / rec_tx in, rx_payload / rec_rx out, 312-470 um spread each) can only take their terminal
+        # station where every bit is within the wide-word reach of it: a ~50-170-um x-window per channel row, att / rec_tx
+        # in the top row only.  The windows overlap under the face centre, and the greedy chains took them in planning
+        # order (dbg ovm/ovf: the record fork, rec_tx's 2 stations or rx's 2nd station sat in att's window).  Here the
+        # terminal slots are assigned up front by earliest-deadline interval packing over the two edge rows and reserved
+        # for their word (a word's fork branches share it); every other chain's free() treats them as taken.  Reach and
+        # spacing rules are unchanged (a slot is a legal free() spot inside the word's own reach window).
+        dv_ = by['d2d_kv']
+        V_ = d2d_view_ports()
+        import kv_rly_std as RS_
+        items_ = []
+        for bid_s, cl_s, bits_s, eps_s in order_:
+            if cl_s in ABUT or cl_s in ('clock_trunk', 'reset', 'constant') or len(eps_s) != 2 or bits_s < 296 \
+                    or bid_s in forks_:
+                continue
+            de_ = [e_ for e_ in eps_s if e_[0] == 'd2d_kv']
+            if len(de_) != 1:
+                continue
+            v_ = V_.get(de_[0][1].lstrip('*').split('[')[0])
+            if v_ is None or v_[0] != 'S' or dv_.orient != 'R0':
+                continue
+            xs_ = [dv_.x + q_[0] for q_ in v_[4]]
+            if os.environ.get('OT_KV_RLY_STD', '0') == '1':
+                fw_s, fh_s, _ = RS_.layout(bits_s, RS_.frame_rev(bid_s))
+                sp_s = bits_s * 0.048 + 4.0
+                fw_s, fh_s = fw_s + SHAVE, max(fh_s + SHAVE, sp_s if bits_s > 512 else 0.0)
+                fh_s = up(fh_s, GY) if fh_s > RS_.STD[528][1] + SHAVE else fh_s
+            else:
+                fw_s, fh_s = (52.68, 30.24) if bits_s <= 512 else (52.68, up(bits_s * 0.048 + 4.0, GY))
+            R_s = min(width_reach(bits_s), HOP_REACH if HOP else PIN_REACH) - 1.0
+            src_s = eps_s[0][0] == 'd2d_kv'
+            rows_ = []
+            hi_y = CHROW_[3] - fh_s
+            hi_y -= hi_y % GY
+            for qy_ in (hi_y, up(CHROW_[2], GY)):
+                sl_ = R_s - (dv_.y - (qy_ + fh_s / 2))
+                lo_x, hi_x = max(xs_) - sl_, min(xs_) + sl_          # the pin's x window
+                off_ = 0.0 if src_s else fw_s - SHAVE                  # source: in-pin a on the W face; sink: out-pin b E
+                if hi_x >= lo_x:
+                    rows_.append((qy_, lo_x - off_, hi_x - off_))
+            if rows_:
+                items_.append((min(r_[2] for r_ in rows_), bid_s, fw_s, fh_s, rows_))
+        cur_ = {}
+        for _, bid_s, fw_s, fh_s, rows_ in sorted(items_):
+            got_ = None
+            for qy_, lo_x, hi_x in rows_:
+                qx_ = up(max(lo_x, cur_.get(qy_, -1e9)), GX)
+                while qx_ <= hi_x and got_ is None:
+                    if free(qx_, qy_, fw_s, fh_s) and all(r_[2] + 4.32 <= qx_ or qx_ + fw_s + 4.32 <= r_[0] or
+                                                          r_[3] + 4.32 <= qy_ or qy_ + fh_s + 4.32 <= r_[1]
+                                                          for r_ in RES_.values()):
+                        got_ = (qx_, qy_)
+                    qx_ = up(qx_ + 4.32, GX)
+                if got_:
+                    cur_[qy_] = got_[0] + fw_s + 4.32
+                    break
+            if got_:
+                RES_[bid_s] = (got_[0], got_[1], got_[0] + fw_s, got_[1] + fh_s)
+                res_left_[bid_s] = 1 + sum(1 for n_, t_ in forks_.items() if t_ == bid_s)
+        m['d2d_slots'] = {k_: [round(v_, 2) for v_ in r_] for k_, r_ in RES_.items()}
+        m['d2d_slots_unplaced'] = sorted(set(i_[1] for i_ in items_) - set(RES_))
+        print(f'kv die D2D_SLOTS: {m["d2d_slots"]} unplaced {m["d2d_slots_unplaced"]}', file=sys.stderr)
     for bid, cl, bits, eps in order_:
+        CUR_['bid'] = bid
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
             stages[bid] = 0
             continue
         (a, pa), (b, pb) = eps
+        root_a_, root_pa_, tap_pt_ = a, pa, None
+        cands_ = [(s_, j_) for s_ in tap_src_.get(bid, []) for j_ in range(stages.get(s_, 0))]
+        if forks_.get(bid) in tap_first_:
+            cands_ = [c_ for c_ in cands_ if c_[1] == 0][:1]
+        if cands_:
+            lr_ = by[b]
+
+            def tap_score_(s_, j_):
+                r_ = by[f'rly_{s_}_{j_}']
+                pt_ = (r_.x if r_.orient == 'MY' else r_.x + r_.w, r_.y + r_.h / 2)
+                d_ = max(0.0, lr_.x - pt_[0], pt_[0] - lr_.x - lr_.w) + max(0.0, lr_.y - pt_[1], pt_[1] - lr_.y - lr_.h)
+                age_ = j_ + 1 + fork_taps_.get(s_, {}).get('tap_stages', 0)
+                return (d_, age_, j_), pt_, s_     # the station nearest the load (split next to it), then the youngest
+            sc_ = min(tap_score_(s_, j_) for s_, j_ in cands_)
+            dp_ = _leaf_pin(by[a], pa) or (by[a].x + by[a].w / 2, by[a].y + by[a].h / 2)
+            d_drv_ = max(0.0, lr_.x - dp_[0], dp_[0] - lr_.x - lr_.w) + max(0.0, lr_.y - dp_[1], dp_[1] - lr_.y - lr_.h)
+            # a branch always taps (a station of its own at the driver would need the whole spread word within reach:
+            # the S-face window), unless the driver's pins are within one relay reach of the load (no station at all)
+            if d_drv_ > width_reach(bits) / 2:
+                src_b_, jt_ = sc_[2], sc_[0][2]
+                a, pa, tap_pt_ = f'rly_{src_b_}_{jt_}', 'b', sc_[1]
+                fork_taps_[bid] = dict(via=src_b_, tap=a, tap_stages=sc_[0][1], tap_out=[round(v_, 2) for v_ in tap_pt_],
+                                       load_dist_um=round(sc_[0][0], 1), driver_dist_um=round(d_drv_, 1))
         path = None
         lane = _kv_lane(m, bid) if m['geo'].get('lanes') else None
         if lane is not None:
@@ -3725,7 +3885,7 @@ def _relays(m):
                     return d_ep(fb, a, pa)
                 return near_d(rect(by[a]), rect(by[b]))
             return d_ep(prev_pt, b, pb)
-        st_ = dict(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0, path=path, wide=bid in tree_meta)
+        st_ = dict(prev_pt=tap_pt_, prev_ep=(a, pa), k=0, idx0=0, path=path, wide=bid in tree_meta)
         if V144_R6 and bid.startswith('pvrq_'):
             # kvs13d: WP = PV_W - O; spread over the path (hop <= length / (WP + 1)), the rest padded at the V port end
             st_['min_k'] = max(0, PV_W - (stages.get('pvin_' + bid[5:], 0) + 1 + stages.get('pvh_' + bid[5:], 0) if PV_T
@@ -3788,7 +3948,7 @@ def _relays(m):
         # KVPLAN3 0230 (OT_KV_SEAM): which hop of this chain crosses core clock trees.  A tree hop's relays run on the
         # leader's tree, so its seam is the FIRST hop (HOST / parent -> first station); a data chain's relays run on its
         # driver's tree, so its seam is the LAST hop (last relay -> load)
-        src_dom = ckdom.get(tree_meta[bid].get('rdrv', a) if bid in tree_meta else a)
+        src_dom = ckdom.get(tree_meta[bid].get('rdrv', a) if bid in tree_meta else root_a_)
         dst_dom = ckdom.get(b)
         seam_first = SEAM and bid in tree_meta and src_dom and dst_dom and src_dom != dst_dom
         seam_last = SEAM and bid not in tree_meta and src_dom and dst_dom and src_dom != dst_dom
@@ -3846,13 +4006,22 @@ def _relays(m):
         def _spot(idxs, offl_, prev_pt_, rch, pad_, at_end):
             got = None
             path_ = st_['path']
+            own_ = [r_ for k_, r_ in RES_.items() if owns_(bid, k_)]
             for idx in idxs:
                 px, py = path_[idx]
                 best_ = None
-                for dx_, dy_ in offl_:
+                # OT_KV_D2D_SLOTS: the word's own reserved terminal slot is tried first at every path point
+                for dx_, dy_ in [(r_[0] - px + fw / 2 - 1e-6, r_[1] - py + fh / 2 - 1e-6) for r_ in own_] + list(offl_):
                     if st_.get('offmax') and abs(dx_) + abs(dy_) > st_['offmax']:
                         continue      # Q-KVSYS-HOP retry: a spot stays near its path point (no stranded off-path hop)
                     qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
+                    if CHROW_ is not None and CHROW_[0] - 1e-6 <= qx and qx + fw <= CHROW_[1] + 1e-6 and \
+                            CHROW_[2] - fh < qy < CHROW_[3]:
+                        # OT_KV_D2D_CHAN_ROWS: a station in the HOST-top / D2D-bottom channel hugs its bottom or top edge
+                        lo_, hi_ = up(CHROW_[2], GY), CHROW_[3] - fh
+                        hi_ -= hi_ % GY
+                        if hi_ >= lo_:
+                            qy = lo_ if abs(qy - lo_) <= abs(qy - hi_) else hi_
                     # Exact S6C output launches may travel west. A real MY
                     # standard row captures on E and launches on W; forcing
                     # R0 spends the row width before the first capture and
@@ -3950,10 +4119,10 @@ def _relays(m):
                         reason='actual selected group face; native row input toward source'))
                 m['insts'].append(it)
                 by[nm] = it                       # v1.4.2: a tree's next-level chain starts at this relay
-                rly_ends[nm] = (tree_meta[bid]['rdrv'] if bid in tree_meta else a, b)   # tree: the HOST's trunk
+                rly_ends[nm] = (tree_meta[bid]['rdrv'] if bid in tree_meta else root_a_, b)   # tree: the HOST's trunk
                 if KSD.DOMSPLIT and bid not in tree_meta:
                     import kv_pin_repair as _kpr
-                    rly_dom[nm] = _kpr.launch_domain(by, (a, pa), (b, pb))
+                    rly_dom[nm] = _kpr.launch_domain(by, (root_a_, root_pa_), (b, pb))
                 if SEAM and bid in tree_meta:
                     rly_ends[nm] = (b, b)          # KVPLAN3 0230: a reset station runs on the tree of the tiles it feeds
                 for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
@@ -3973,7 +4142,7 @@ def _relays(m):
             for cell, r_ in cells_added:
                 rocc[cell].remove(r_)
             cells_added.clear()
-            st_.update(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0)
+            st_.update(prev_pt=tap_pt_, prev_ep=(a, pa), k=0, idx0=0)
         # Q-KVSYS-HOP 2026-10-16 (OT_KV_RLY_STD=1 case: rst_die_t0_6 stage 19 found no spot): the std relay rows
         # (up to 118.8 x 106 um) fill the channels, and the wide (24-cell) spot search strands a chain off its path, so a
         # chain that fails BOTH attempts gets up to three more (below).  Reached only where the planner raised before:
@@ -4049,6 +4218,11 @@ def _relays(m):
             m.setdefault('pvt_chunk_mismatch', []).append(dict(bus=bid, stages=n, need=st_['exact_k'], route_um=lengths.get(bid),
                                                                a=f'{a}.{pa}', b=f'{b}.{pb}'))
         stages[bid] = n
+        for k_ in [k_ for k_ in res_left_ if owns_(bid, k_)]:
+            res_left_[k_] -= 1
+            if res_left_[k_] <= 0 or n:       # the word (and its branches) planned, or its slot taken: release it
+                RES_.pop(k_, None)
+                res_left_.pop(k_)
         if bid in tree_meta:
             tm = tree_meta[bid]
             src_ = st_['prev_ep'] if n else (a, pa)
@@ -4072,7 +4246,7 @@ def _relays(m):
                 continue          # an inner node's leader is only an aim point: it takes its reset in its own leaf cluster
             m['tree_depth'][(tm['root'], tm['lead'])] = tm['depth']
         if n == 0:
-            nb.append((bid, cl, bits, eps))
+            nb.append((bid, cl, bits, [(a, pa), (b, pb)] if bid in fork_taps_ else eps))
             continue
         nb.append((f'{bid}__r{n}', cl, bits, [st_['prev_ep'], (b, pb)]))
     # el1011-q-kvd 2026-10-12 (region-DRT pilot, results/physical/die_region_drt_1012/README.md): a relay is a register
@@ -4145,12 +4319,30 @@ def _relays(m):
                 if ef_[0] != et_[0]:
                     raise ValueError(f'kv die fork {nm_f}: driver {ef_[0]} != trunk driver {et_[0]}')
                 continue            # narrowed branch: its first segment stays its own bus (true pin widths); netlist slices
+            if nm_f in fork_taps_:
+                # KDIE4-RLY (OT_KV_FORK_TAP): the branch's first segment joins the net its tap station drives
+                tep_ = (fork_taps_[nm_f]['tap'], 'b')
+                if tuple(ef_[0]) != tep_ or wf_ != wt_:
+                    raise ValueError(f'kv die fork {nm_f}: tapped segment driver {ef_[0]} != tap {tep_}')
+                jn_ = [i_ for i_, e_ in enumerate(nb) if i_ not in drop_ and e_[0] not in fork_taps_ and e_[3]
+                       and tuple(e_[3][0]) == tep_]
+                if len(jn_) != 1:
+                    raise ValueError(f'kv die fork {nm_f}: tap net of {tep_} not unique ({len(jn_)})')
+                bj_, cj_, wj_, ej_ = nb[jn_[0]]
+                nb[jn_[0]] = (bj_, cj_, wj_, list(ej_) + [e_ for e_ in ef_[1:] if e_ not in ej_])
+                drop_.add(idx_[nm_f])
+                continue
             if ef_[0] != et_[0]:
                 raise ValueError(f'kv die fork {nm_f}: driver {ef_[0]} != trunk driver {et_[0]}')
             nb[idx_[bid_f]] = (bt_, ct_, wt_, list(et_) + [e_ for e_ in ef_[1:] if e_ not in et_])
             drop_.add(idx_[nm_f])
         nb = [e_ for i_, e_ in enumerate(nb) if i_ not in drop_]
-        m['fork_stages'] = {nm_f: stages.get(nm_f, 0) for nm_f in forks_}
+        m['fork_stages'] = {nm_f: stages.get(nm_f, 0) + (fork_taps_[nm_f]['tap_stages'] if nm_f in fork_taps_ else 0)
+                            for nm_f in forks_}
+        if fork_taps_:
+            for nm_f, t_ in fork_taps_.items():
+                t_['own_stages'] = stages.get(nm_f, 0)
+            m['fork_taps'] = fork_taps_
     trunk = {}
     for i, (bid_, cl_, _b, eps_) in enumerate(nb):
         if cl_ == 'clock_trunk' and bid_.startswith('clk_core_'):

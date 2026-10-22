@@ -2582,8 +2582,17 @@ def place(m, K, geo, F):
         # OT_KV_EMB_WEST=2: the row of the HOST root's centre instead (W of the HOST, below the channel): the four stack
         # roots' o_emb returns then end W of the HOST without entering the HOST-top / D2D channel (d17n: ES o_emb stage 72)
         ey_ = (host.y + host.h / 2) if EMB_WEST_MODE == '2' else anchors['kvs_emb'][1]
-        anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - ew_ / 2), ey_)
-        emb_keep = [('emb_west_pocket', host.x - 21.6, host.y + host.h, d2d.x - (host.x - 21.6), d2d.y + d2d.h - host.y - host.h)]
+        # KDIE4-RLY 10-22 (OT_KV_EMB_WEST_GAP_UM, default 0, multiple of 21.6): kvs_emb this much further W, so the pocket
+        # W of the D2D end (its W-face srx / emb_tx / kvi words, the kvnc context leaf, the record / service fork splits and
+        # the S-face words' W approach) holds relay stations instead of one 151-194-um slot
+        eg_ = float(os.environ.get('OT_KV_EMB_WEST_GAP_UM', '0'))
+        if eg_ < 0 or abs(eg_ / 21.6 - round(eg_ / 21.6)) > 1e-6:
+            raise ValueError('OT_KV_EMB_WEST_GAP_UM must be a nonnegative multiple of 21.6 um')
+        anchors['kvs_emb'] = (min(anchors['kvs_emb'][0], host.x - 21.6 - eg_ - ew_ / 2), ey_)
+        emb_keep = [('emb_west_pocket', host.x - 21.6 - eg_, host.y + host.h, d2d.x - (host.x - 21.6 - eg_),
+                     d2d.y + d2d.h - host.y - host.h)]
+        if eg_:
+            m['geo']['emb_west_gap_um'] = eg_
         m['geo']['emb_west'] = dict(pocket=list(emb_keep[0][1:]), anchor=list(anchors['kvs_emb']))
     central_keep = []
     if os.environ.get('OT_KV_CTL_CENTRAL', '0') == '1':
