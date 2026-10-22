@@ -1,0 +1,38 @@
+{
+  "source_ref": "cb73b3e99a77afc0ea65e847fb5509b3da664b87",
+  "archive_sha256": "21461ae9cf4801cac4de73999d25ff1b376cb98d8eeec9df4ea45d83512b6615",
+  "manifest_sha256": "1b511577fd92f689656a904e51ef3c7bf69c1c57164e887d014fc58db2ee9c8a",
+  "floorplan_sha256": "8e46eb328d043170d76dae0bd33581ca66a0436d041ccc97233fa9ae11fb0f29",
+  "file_sha256": {
+    "gate5_selcpn_d.json": "95c77819e689147eeeffc9bf2b27996d0016707c23c2197a3b5a021582ad0f51",
+    "floorplan.json.gz": "a8232aad22a3661a767c476b3a7e6bd29cf2b89684f4f5690e7a606d5801b15d",
+    "ck.log": "a50aa713e7a1c8ceb5b8221a11e922f5f13922211f5899136b835f1d3bb42882",
+    "placed.json.gz": "d6f0eab445b26b87d87bde0830ce6841ca0f6f8c37411ed46ea28bc81c8aba92",
+    "density.png": "1610c13097eef525b760195c405e5c1300d021fa297dc00ec59d9412ea0ebcb5",
+    "ref_gate_s81dvbk_selcpn_d_20261021-132442.source_snapshot.json.gz": "e17f5af463347ba2d14b6a421331a60a6c91f9cc504f6a6e7801210729500467",
+    "pc.log": "ecc9a0e5d088aeec89774e12eace8666e8d1cadcda3bac9e11119baf76b5a88f",
+    "floorplan.png": "ef66ed732eee33b7b7579e9384182fbcfacf38086546e67c894d1f3d406f25ae",
+    "ck.json": "4cc0569880a9e2a8da33f7757a588fcf9cbcd1e099daf835be3bbeabf01754ba",
+    "textbook.json": "09b371fc32e7fee398e70f91ad82eeba667f560212df247bd7fa696d14706093",
+    "pin_geometry.json": "b64f775d208e07fe9ddb1cb444ca68b220ead0eb7b55dcd07ebfdfbef6b15d10",
+    "grt.log": "bc17a5c00cbb918cefd4971650fd6b6eee9c76df154cd43cbc239942b5069c98",
+    "gate5_selcpn_d.log": "84159d7f582d9816745a451f589600b551c7eb945862aa882acac33e64a25cfd"
+  },
+  "master": "dsdv_bksel_c_pa_n32",
+  "outline_um": [
+    0.0,
+    0.0,
+    475.2,
+    302.4
+  ],
+  "signal_clock_pins": 6072,
+  "all_pins_with_supplies": 6248,
+  "supply_pins": 176,
+  "functional_faces": {
+    "S": 2573,
+    "N": 2572,
+    "W": 413,
+    "E": 514
+  },
+  "status": "FAIL_NOT_APPROVED_NO_SUBMIT"
+}
