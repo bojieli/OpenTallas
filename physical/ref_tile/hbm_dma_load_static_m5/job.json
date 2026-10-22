@@ -1,5 +1,5 @@
 {
- "name": "hbm_dma_load_static_m5-hbm_dma_load_static_m5-COMMIT",
+ "name": "hbm_dma_load_static_m5-hbm_dma_load_static_m5-c50447e9d",
  "block": "ot_hbm_svc_vmdel_lane_load_static",
  "ref_tile": true,
  "owner": "Codex HBM DMA.FRONT 2000",
@@ -7,8 +7,8 @@
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "codex/hbm-dmafront-2000-1021",
-  "commit": "COMMIT",
+  "branch": "codex/hbm-dmafront-main5-route-2000-1021",
+  "commit": "c50447e9d",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_dma_load_static_m5/hbm_dma_load_static_m5-hbm_dma_load_static_m5-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_dma_load_static_m5/hbm_dma_load_static_m5-hbm_dma_load_static_m5-c50447e9d"
   }
  ],
  "cycles_added": 0,
