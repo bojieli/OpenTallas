@@ -32,10 +32,10 @@ module tb_tx_miter;
   for(integer epoch=0;epoch<2;epoch=epoch+1)begin
    @(negedge ck);rn=0;vi=0;vo=0;idle(8);
    @(negedge ck);rn=1;epochs=epochs+1;idle(16);
-   // Write four lane ranges, two 16-score windows each, with distinct fields and a real lane-valid mask.
+   // Write all eight physical score banks, two widely separated 16-score windows per lane, with distinct fields and a real lane-valid mask.
    for(integer lane=0;lane<4;lane=lane+1)begin
-    a=0;a[0]=1;a[3:1]=4;a[5:4]=2'(lane);a[7]=1;a[19:16]=1;a[39:20]=20'(lane*32);drive(a,0);idle(3);
     for(integer win=0;win<2;win=win+1)begin
+     a=0;a[0]=1;a[3:1]=4;a[5:4]=2'(lane);a[7]=1;a[19:16]=win==0?1:6;a[39:20]=20'(lane*32768+win*16384);drive(a,0);idle(3);
      a=0;a[0]=1;a[3:1]=4;a[5:4]=2'(lane);
      for(integer x=0;x<16;x=x+1)a[20+16*x+:16]=16'(epoch*8192+lane*1024+win*256+x*7+1);
      drive(a,0);a=0;a[0]=1;a[3:1]=4;a[5:4]=2'(lane);a[6]=1;a[35:20]=16'hffff;drive(a,0);idle(4);
@@ -46,14 +46,14 @@ module tb_tx_miter;
    a=0;a[0]=1;a[3:1]=0;a[21+:186]=p;drive(0,a);idle(8);
    for(integer idxword=0;idxword<4;idxword=idxword+1)begin
     w=0;w[511:508]=3;w[507:500]=8'h45;w[335:320]=16'hffff;
-    for(integer x=0;x<16;x=x+1)w[20*x+:20]=20'(idxword*16+x);
+    for(integer x=0;x<16;x=x+1)w[20*x+:20]=20'(((idxword*16+x)/8)*16384+2*((idxword*16+x)%8)+(epoch%2));
     packet(w);
    end
    w=0;w[511:508]=4;w[507:500]=8'h45;packet(w);idle(1100);
    if(!st[3]||st[0])$fatal(1,"TX_JOB_COVERAGE_FAIL epoch=%0d st=%h",epoch,st);
   end
   $display("TX_STATS cycles %0d checks %0d epochs %0d beats %0d done_edges %0d",cycle,checks,epochs,beats,done_n);
-  if(beats<10||done_n<2)$fatal(1,"TX_TRAFFIC_COVERAGE_FAIL");
+  if(beats<40||done_n<2)$fatal(1,"TX_TRAFFIC_COVERAGE_FAIL");
   $display("TX_MITER_PASS");$finish;
  end
 endmodule
