@@ -98,17 +98,87 @@ def prepare(J, leaf, fw, fh):
     # Place all actual relay/tap/glue rectangles in remaining slots. Anchor
     # each to its source owner, then choose the nearest legal lattice position.
     # This is geometry only: measured pin reach/clock/STA remains a die gate.
-    for n in sorted(pending):
+    spread=stage_spread_targets(J,cells,placed,leaf,pending) if STAGE_SPREAD else {}
+    order=sorted(pending,key=lambda n:(n not in spread,n))
+    for n in order:
         t=cells[n]['type'].lstrip('\\')
         if t not in leaf:raise ValueError(f'{n}: missing native closed leaf {t}')
         w,h=leaf[t]['size'];e=re.search(r'g_(?:ep|owner)\[(\d+)\]',n)
         anchor=center(int(e[1])) if e else fh-237.6
-        candidates=((abs(y+h/2-anchor),x,y)
-                    for y in (i*54.0 for i in range(int(fh/54)))
-                    for x in (i*27.0 for i in range(int(fw/27))))
+        if n in spread:
+            ty,tx=spread[n]
+            candidates=((abs(y+h/2-ty)+0.25*abs(x+w/2-tx),x,y)
+                        for y in (i*54.0 for i in range(int(fh/54)))
+                        for x in (i*27.0 for i in range(int(fw/27))))
+        else:
+            candidates=((abs(y+h/2-anchor),x,y)
+                        for y in (i*54.0 for i in range(int(fh/54)))
+                        for x in (i*27.0 for i in range(int(fw/27))))
         if not any(put(n,x,y) for _,x,y in sorted(candidates)):
             raise ValueError(f'{n}: no legal slot for actual native leaf outline {w}x{h}')
     return lambda cell,fw,fh:placed[cell]
+
+
+# SQC-KDIE5 10-22 (OT_KV_ASTK_STAGE_SPREAD=1, default off): the strip's delay-line relay stages (qkd_astk_delay /
+# _nrst g_stage[s].g_chunk[c].u_r) were all anchored at their OWNER's centre, so the D stages of every owner-to-owner hop
+# sat bunched at one end and the hop itself (qi / ro 572 b in 2 x 296-b chunks, er_chain owners) ran ~1.3-1.7 mm
+# unrelayed down the strip (GEN-safety W1 astk hops 1.4-1.7 mm; GRT hot spots = n_astk_*__u_strip_u_strip_{qi,ro}_k on
+# the strip columns x 3.5 / 10.0 mm).  With the knob each relay chain is walked in netlist order; relays whose output is
+# tapped by a placed leaf are anchored at that leaf, the chain head at its placed driver, and the stages in between are
+# spread evenly along the segment (stage j of n at j/(n) between the two anchors).  Netlist, latency and stage count are
+# unchanged: geometry only.
+STAGE_SPREAD=__import__('os').environ.get('OT_KV_ASTK_STAGE_SPREAD','0')=='1'
+
+
+def stage_spread_targets(J,cells,placed,leaf,pending):
+    drv,loads={},{}
+    for n,c in J['cells'].items():
+        n=n.lstrip('\\')
+        pd=c.get('port_directions') or {}
+        for p,bits in c.get('connections',{}).items():
+            d=pd.get(p)
+            for b in bits:
+                if not isinstance(b,int):continue
+                if d=='output':drv[b]=(n,p)
+                elif d=='input':loads.setdefault(b,[]).append((n,p))
+    relays={n for n in pending if 'g_stage[' in n}
+    def ctr(n):
+        x,y,_=placed[n];t=cells[n]['type'].lstrip('\\');w,h=leaf[t]['size'];return (y+h/2,x+w/2)
+    def bits(n,port):
+        return [b for b in J['cells'][('\\'+n) if ('\\'+n) in J['cells'] else n]['connections'].get(port,[]) if isinstance(b,int)]
+    def succ(n):
+        out=set()
+        for b in bits(n,'b'):
+            for m,p in loads.get(b,()):
+                if m in relays and p=='a':out.add(m)
+        return sorted(out)
+    def pred(n):
+        for b in bits(n,'a'):
+            if b in drv:return drv[b][0]
+        return None
+    def taps(n):
+        ys=[ctr(m) for b in bits(n,'b') for m,p in loads.get(b,()) if m in placed and m not in relays]
+        return (sum(y for y,_ in ys)/len(ys),sum(x for _,x in ys)/len(ys)) if ys else None
+    target={}
+    heads=[r for r in relays if pred(r) not in relays]
+    for h0 in sorted(heads):
+        chain=[h0];seen={h0}
+        while True:
+            s=[m for m in succ(chain[-1]) if m not in seen]
+            if len(s)!=1:break
+            chain.append(s[0]);seen.add(s[0])
+        p0=pred(h0)
+        known={-1:ctr(p0)} if p0 in placed else {}
+        for i,r in enumerate(chain):
+            t=taps(r)
+            if t:known[i]=t
+        ks=sorted(known)
+        for a,b in zip(ks,ks[1:]):
+            (ya,xa),(yb,xb)=known[a],known[b]
+            for j in range(max(a+1,0),b+1):
+                f=(j-a)/(b-a)
+                target[chain[j]]=(ya+f*(yb-ya),xa+f*(xb-xa))
+    return target
 
 
 def provenance(root):
