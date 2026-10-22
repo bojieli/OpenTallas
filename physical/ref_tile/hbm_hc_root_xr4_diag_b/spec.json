@@ -1,0 +1,187 @@
+{
+ "name": "hbm_hc_root_xr4_diag_b",
+ "top": "ot_hbm_hc_root_static",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static_hc/native/ot_hbm_hc_root_xr4_p40_native.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M6",
+ "recipe": 4,
+ "hold_budget": "die",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "c86937",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "c86938",
+   "at": [
+    475.2,
+    43.2
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "c86932",
+   "at": [
+    259.2,
+    172.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "c86933",
+   "at": [
+    388.79999999999995,
+    172.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "c86934",
+   "at": [
+    518.4,
+    172.8
+   ],
+   "orient": "R0",
+   "at_exact": true
+  }
+ ],
+ "outline": {
+  "w": 950.4,
+  "h": 777.6,
+  "exact": true
+ },
+ "route": {
+  "pd": 0.45,
+  "period_ps": 833.333,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 10.8,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_x_um": 10.8
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Native graph retains RTL registered interfaces. No extra pin-edge; current parameter/source identity in assembly.json."
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "rst_n",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "configured",
+   "program_active",
+   "program_done",
+   "fault"
+  ],
+  "N": [
+   "qd_v",
+   "qd_ss",
+   "qd_nv",
+   "qd_wa",
+   "qd_xa",
+   "qi_v",
+   "qi_kind",
+   "qi_slot",
+   "qi_lo",
+   "qi_w",
+   "qi_cnt",
+   "qi_word",
+   "qps_v",
+   "qps",
+   "qps_f",
+   "q_fault"
+  ],
+  "E": [
+   "result_v",
+   "result_position",
+   "result"
+  ],
+  "S": [
+   "gathered_mix_v",
+   "gathered_mix_row",
+   "gathered_mix_pos",
+   "gathered_mix_data"
+  ]
+ },
+ "inter": [],
+ "structural_change": "DIAGNOSTIC stand-ins only, NEVER SUBMIT. Current QCHX12/SAFE1/TAILC1/PTFS1/SDIV17/TTPIPE1/SKP2 native graph passed max24/92023roots/role0; 2 tailchildren, 3mix SRAM and 2programme/table SRAM placed in larger parent. Actual source args and provenance in assembly receipt. Child stand-ins are explicit assumed timing; replace with actual k4 view for qualification. Compiled XR11 and per-quarter smoke latencies remain conditional pending die geometry reprice.",
+ "job": {
+  "owner": "CODEX-HBM-HC-2000",
+  "branch": "codex/hbm-hc-root-xr4-2000",
+  "tag": "diag",
+  "purpose": "DIAGNOSTIC stand-ins only, NEVER SUBMIT. Current QCHX12/SAFE1/TAILC1/PTFS1/SDIV17/TTPIPE1/SKP2 native graph passed max24/92023roots/role0; 2 tailchildren, 3mix SRAM and 2programme/table SRAM placed in larger parent. Actual source args and provenance in assembly receipt. Child stand-ins are explicit assumed timing; replace with actual k4 view for qualification. Compiled XR11 and per-quarter smoke latencies remain conditional pending die geometry reprice.",
+  "benches": [],
+  "extra_paths": [
+   "results/rtl/hbm_hc_xr4_assembly_1021"
+  ]
+ },
+ "children": [
+  {
+   "view": "physical/ref_tile/hbm_hc_root_xr4_diag/standins/ot_hbm_hc_tail_child_static",
+   "count": 1,
+   "inst": "c86935",
+   "at": [
+    43.2,
+    259.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hbm_hc_root_xr4_diag/standins/ot_hbm_hc_tail_child_static",
+   "count": 1,
+   "inst": "c86936",
+   "at": [
+    475.2,
+    259.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "std_area_um2": 14052.99132
+}

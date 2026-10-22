@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "max_dynamic_loads": 24,
+  "roots_examined": 92023,
+  "role_errors": [],
+  "netlist": {
+    "path": "out_fold/retained.v",
+    "sha256": "801291a2bd263ed007a7641ce17718d8c5f7e1c0c2ad9c1fc6de8773f8ca6722"
+  },
+  "std_area_um2": 14052.99132,
+  "compacted_sha256": "3c884fe5107f9634ffe202d784255eb7015674d459d826535ad572cf8730d6f4",
+  "source_params": {
+    "QDRLY": 2,
+    "QCHX": 12,
+    "SAFE": 1,
+    "TAILC": 1,
+    "PTFS": 1,
+    "TSDIV": 17,
+    "TTPIPE": 1,
+    "TSKP": 2,
+    "XRD": 11,
+    "XRU": 11,
+    "XRDQ": 101385739,
+    "XRUQ": 84543243
+  },
+  "child_counts": {
+    "ot_hbm_hc_tail_child_static": 2,
+    "ot_sram_1r1w_1024x256_m2_r2c2": 2,
+    "ot_sram_1r1w_128x256_m1_r2c2": 3
+  }
+}
