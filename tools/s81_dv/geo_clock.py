@@ -4,26 +4,26 @@
 Replaces the LOGICAL cluster roots ck_cl0N..ck_cl7S / ck_south<c> / ck_void<c> / ck_edge<c> (plan 'group' of the
 nearest block: one root spread over up to 20.7 x 23.9 mm, G9d) with roots of a fixed geometric grid:
 
-  * grid       nx x ny equal cells over the die outline, origin = die origin (the floorplan's coordinate frame);
-               region g<i>_<j> = cell column i (x), row j (y); top port ck_g<i>_<j>.  Cell target CELL_UM =
-               (3000, 4334) um -> 33 x 26 mm die: 11 x 6 cells of 3000 x 4333 um.  The rows are tall enough for the
-               die's 3.8-4.2 mm column blocks (svc_rs 3802, SerDes 3845, bk_sel 4190 um) to sit whole in one region,
-               the columns narrow enough for the spread model below.
+  * grid       nx x ny cells over the die outline, origin = die origin (the floorplan's coordinate frame); region
+               g<i>_<j> = cell column i (x), row j (y); top port ck_g<i>_<j>.  Cells <= CELL_UM = (3000, 4334) um,
+               edges FLOORPLAN-ALIGNED (Grid.aligned, below); the uniform reference grid is 11 x 6 cells of
+               3000 x 4333 um on the 33 x 26 mm die.  Tall rows keep the die's 3.8-4.2 mm column blocks (svc_rs 3802,
+               SerDes 3845, bk_sel 4190 um) inside one row where an edge does not cut them.
   * sizing     die_clock_check's wire model (tools/die_clock_check.wire_ps = H-DIE stage_ps 25 + 8.6e-4 L^2 per
                420-um BUFx24/M8 stage) of a region tree fed at the cell centre: the root -> farthest-sink wire is
-               cw/2 + ch/2 = 3667 um -> modelled insertion wire_ps(3667) = 1543 ps.  Two sinks of one region differ at
+               cw/2 + ch/2 <= 3667 um -> modelled insertion wire_ps(3667) = 1543 ps.  Two sinks of one region differ at
                most by their NON-COMMON path (<= the insertion); at a TT/FF de-tracking of TRACK_DERATE = 5 % of that
                path the in-region spread bound is 77.1 ps <= the owner's 80 ps (rule 10-20: 80 ps WITHIN a region).
-               10 x 6 (3300 x 4333) models 80.3 ps and 8 x 6 89 ps > 80; 9 x 7 (77.6 ps) splits the 3.8 mm column
-               blocks into own roots (G9 plan: 215 vs 148 cross-root 0-stage pairs, legacy logical roots 141).  The
-               80 ps is then MEASURED by die STA + die_clock_check per region (the model only sizes the cell).
+               3300 x 4333 cells model 80.3 ps, 4125 x 4333 89 ps > 80.  The 80 ps is then MEASURED by die STA +
+               die_clock_check per region (the model only sizes the cell).
   * blocks     a block whose own clock comes from the bind table (frames: ck_frame_<f>_r{0,1,2}; LEP slices:
                ck_ep_*; masters with a fixed clock_port, e.g. the PHY ck_hbm) keeps it; its grid region is the cell of
                its centre (used only by the region-root fallbacks).  Every other block takes the root of the cell
-               containing its centre and BELONGS WHOLLY to that region (regions are snapped to whole blocks: a block
-               is never split between two roots).  A block larger than a cell (w > cw or h > ch: the 1.25 x 6.7 mm
-               slices, the 3.8 mm SerDes / svc_rs columns, bk_sel) gets ONE root of its own, ck_b_<block>, at its clock
-               pin (its sinks: the block, its landings and gate-calendar stations); recorded as `own_root`.
+               containing its centre when it lies WHOLLY inside that cell.  A block larger than the cell target (the
+               1.25 x 6.7 mm slices) or cut by a region edge gets ONE root of its own, ck_b_<block>, at its clock pin
+               (its sinks: the block, its landings and gate-calendar stations, all on its own outline); recorded as
+               `own_root` with the reason.  The edges are FLOORPLAN-ALIGNED (Grid.aligned): per axis the cuts (cells
+               <= the target) that cut the fewest blocks (weight BLOCK_CUT_W) and 0-stage neighbour pairs (weight 1).
   * reset      every reset station (street cell / lane companion) is clocked by the root of the cell holding its
                point.  A reset-tree edge whose two stations are in different regions is a RESET RELEASE CROSSING:
                the child gets ONE EXTRA registered stage <child>_xk (dsfd_rly_1 on the RECEIVING region's root,
@@ -40,9 +40,11 @@ nearest block: one root spread over up to 20.7 x 23.9 mm, G9d) with roots of a f
 """
 from __future__ import annotations
 
+import bisect
 import math
 
 CELL_UM = (3000.0, 4334.0)   # target cell (x, y) edge (see grid / sizing above)
+BLOCK_CUT_W = 10          # a cut block (region tree stretched over two cells) outweighs a cut 0-stage neighbour pair
 TRACK_DERATE = 0.05       # TT/FF de-tracking of a non-common clock path (sizing assumption; STA measures the result)
 SPREAD_PS = 80.0          # owner 10-20: spread budget WITHIN a region
 REACH_UM = 405.0          # owner reach (registered hop)
@@ -65,25 +67,54 @@ def region_spread_ps(cw, ch, derate=TRACK_DERATE):
 
 
 class Grid:
-    def __init__(self, W, H, cell=CELL_UM):
+    """Regions = the cells between edges xs[0] = 0 < ... < xs[-1] = W and ys likewise (g<i>_<j>: column i, row j)."""
+
+    def __init__(self, W, H, cell=CELL_UM, xs=None, ys=None):
         cx, cy = (cell, cell) if isinstance(cell, (int, float)) else cell
         if W <= 0 or H <= 0 or cx <= 0 or cy <= 0:
             raise ValueError(f'geo_clock: bad grid {W} x {H} / {cell}')
         self.W, self.H = float(W), float(H)
-        self.nx, self.ny = int(math.ceil(W / cx - 1e-9)), int(math.ceil(H / cy - 1e-9))
-        self.cw, self.ch = self.W / self.nx, self.H / self.ny
+        self.maxc = (float(cx), float(cy))          # cell target: blocks larger than it get their own root
+        if xs is None:
+            n = int(math.ceil(W / cx - 1e-9)); xs = [self.W * k / n for k in range(n + 1)]
+        if ys is None:
+            n = int(math.ceil(H / cy - 1e-9)); ys = [self.H * k / n for k in range(n + 1)]
+        self.xs, self.ys = [float(v) for v in xs], [float(v) for v in ys]
+        if (self.xs[0], self.ys[0]) != (0.0, 0.0) or abs(self.xs[-1] - self.W) > 1e-6 or abs(self.ys[-1] - self.H) > 1e-6 \
+                or any(b <= a for a, b in zip(self.xs, self.xs[1:])) or any(b <= a for a, b in zip(self.ys, self.ys[1:])):
+            raise ValueError(f'geo_clock: bad grid edges {self.xs} / {self.ys}')
+        self.nx, self.ny = len(self.xs) - 1, len(self.ys) - 1
+        self.cw = max(b - a for a, b in zip(self.xs, self.xs[1:]))     # largest cell (the oversize test / model)
+        self.ch = max(b - a for a, b in zip(self.ys, self.ys[1:]))
+
+    @classmethod
+    def aligned(cls, W, H, blocks, table, cell=CELL_UM, step=50.0, pairs=()):
+        """Floorplan-aligned grid: per axis, the cut positions (cells <= cell) that cut the fewest (a) whole blocks
+        that take a region root (no table clock, not oversize: a cut block stretches its region's tree over both cells,
+        its landings / calendar stations sit on its whole outline) and (b) 0-stage block pairs (`pairs`: abutted
+        neighbours without a landing ring, which a cut turns into an unlanded cross-root pair), then the fewest cells."""
+        cx, cy = (cell, cell) if isinstance(cell, (int, float)) else cell
+        grid_b = {b['name']: b for b in blocks if not own_clock(table, b) and b['w'] <= cx + 1e-6 and b['h'] <= cy + 1e-6}
+        cen = {n: (b['x'] + b['w'] / 2.0, b['y'] + b['h'] / 2.0) for n, b in grid_b.items()}
+        pr = [(cen[a], cen[b]) for a, b in pairs if a in cen and b in cen and a != b]
+        xs = _cuts(float(W), [(b['x'], b['x'] + b['w'], BLOCK_CUT_W) for b in grid_b.values()] +
+                   [(min(p[0], q[0]), max(p[0], q[0]), 1) for p, q in pr], cx, step)
+        ys = _cuts(float(H), [(b['y'], b['y'] + b['h'], BLOCK_CUT_W) for b in grid_b.values()] +
+                   [(min(p[1], q[1]), max(p[1], q[1]), 1) for p, q in pr], cy, step)
+        return cls(W, H, (cx, cy), xs, ys)
 
     @classmethod
     def from_spec(cls, spec):
         """the grid a bind recorded (bind_case.json clock_regions.grid)"""
-        g = cls.__new__(cls)
-        g.W, g.H = (float(v) for v in spec['die_um'])
-        g.nx, g.ny = int(spec['nx']), int(spec['ny'])
-        g.cw, g.ch = g.W / g.nx, g.H / g.ny
-        return g
+        W, H = (float(v) for v in spec['die_um'])
+        cell = tuple(spec.get('cell_target_um', CELL_UM))
+        if 'xs' in spec:
+            return cls(W, H, cell, xs=spec['xs'], ys=spec['ys'])
+        return cls(W, H, cell, xs=[W * k / spec['nx'] for k in range(spec['nx'] + 1)], ys=[H * k / spec['ny'] for k in range(spec['ny'] + 1)])
 
     def ij(self, x, y):
-        return (min(max(int(x // self.cw), 0), self.nx - 1), min(max(int(y // self.ch), 0), self.ny - 1))
+        return (min(max(bisect.bisect_right(self.xs, x) - 1, 0), self.nx - 1),
+                min(max(bisect.bisect_right(self.ys, y) - 1, 0), self.ny - 1))
 
     def region(self, x, y):
         i, j = self.ij(x, y)
@@ -91,12 +122,38 @@ class Grid:
 
     def box(self, region):
         i, j = (int(t) for t in region[1:].split('_'))
-        return (i * self.cw, j * self.ch, (i + 1) * self.cw, (j + 1) * self.ch)
+        return (self.xs[i], self.ys[j], self.xs[i + 1], self.ys[j + 1])
 
     def spec(self):
-        return dict(nx=self.nx, ny=self.ny, cell_um=[round(self.cw, 3), round(self.ch, 3)], die_um=[self.W, self.H],
+        return dict(nx=self.nx, ny=self.ny, xs=[round(v, 3) for v in self.xs], ys=[round(v, 3) for v in self.ys],
+                    max_cell_um=[round(self.cw, 3), round(self.ch, 3)], cell_target_um=list(self.maxc), die_um=[self.W, self.H],
                     model_spread_ps=round(region_spread_ps(self.cw, self.ch), 1), budget_ps=SPREAD_PS,
-                    model='TRACK_DERATE x die_clock_check.wire_ps(cw/2 + ch/2)')
+                    model='TRACK_DERATE x die_clock_check.wire_ps(cw/2 + ch/2) of the largest cell')
+
+
+def _cuts(L, intervals, maxc, step):
+    """edges 0 < ... < L, gaps <= maxc, minimising (weighted intervals strictly cut, number of cells); intervals =
+    (lo, hi, weight); candidates = just outside
+    every block edge + a `step` lattice"""
+    cand = {0.0, L} | {float(k * step) for k in range(1, int(L // step) + 1) if k * step < L}
+    for lo, hi, _ in intervals:
+        cand |= {v for v in (lo - 1.0, hi + 1.0) if 0.0 < v < L}
+    cand = sorted(cand)
+    cost = [sum(w for lo, hi, w in intervals if lo < c < hi) for c in cand]
+    best = [None] * len(cand)
+    best[0] = (0, 0, None)
+    lo_k = 0
+    for k in range(1, len(cand)):
+        while cand[k] - cand[lo_k] > maxc + 1e-6:
+            lo_k += 1
+        opts = [(best[p][0] + (cost[k] if k < len(cand) - 1 else 0), best[p][1] + 1, p) for p in range(lo_k, k) if best[p]]
+        best[k] = min(opts) if opts else None
+    if best[-1] is None:
+        raise ValueError(f'geo_clock: no cut sequence for {L} at cell {maxc}')
+    out, k = [], len(cand) - 1
+    while k is not None:
+        out.append(cand[k]); k = best[k][2]
+    return out[::-1]
 
 
 def own_clock(table, block):
@@ -105,9 +162,14 @@ def own_clock(table, block):
     return block['name'] in table.get('instance_clock_ports', {}) or bool(m.get('clock_port'))
 
 
+def inside(box, b, tol=1.0):
+    return box[0] - tol <= b['x'] and b['x'] + b['w'] <= box[2] + tol and box[1] - tol <= b['y'] and b['y'] + b['h'] <= box[3] + tol
+
+
 def block_regions(blocks, grid, table):
-    """{block: region}, {block: info}.  Region = grid cell of the centre; an oversize block without its own table
-    clock gets its own root region b_<block>."""
+    """{block: region}, {block: info}.  Region = grid cell of the centre; a block without its own table clock that is
+    larger than the cell target or cut by a region edge gets its own root region b_<block> (its tree spans only its
+    own outline, <= the cell target or its own size), so every grid region's tree stays inside its cell."""
     reg, info = {}, {}
     for b in blocks:
         cx, cy = b['x'] + b['w'] / 2.0, b['y'] + b['h'] / 2.0
@@ -115,24 +177,28 @@ def block_regions(blocks, grid, table):
         if own_clock(table, b):
             reg[b['name']] = cell
             info[b['name']] = dict(kind='table_clock', cell=cell)
-        elif b['w'] > grid.cw + 1e-6 or b['h'] > grid.ch + 1e-6:
+        elif b['w'] > grid.maxc[0] + 1e-6 or b['h'] > grid.maxc[1] + 1e-6 or not inside(grid.box(cell), b):
             reg[b['name']] = f'b_{b["name"]}'
-            info[b['name']] = dict(kind='own_root', cell=cell, bbox=[b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']])
+            info[b['name']] = dict(kind='own_root', cell=cell, bbox=[b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']],
+                                   why='oversize' if b['w'] > grid.maxc[0] + 1e-6 or b['h'] > grid.maxc[1] + 1e-6
+                                   else 'cut by a region edge')
         else:
             reg[b['name']] = cell
             info[b['name']] = dict(kind='grid', cell=cell)
     return reg, info
 
 
-def extents(grid, blocks, reg):
-    """{region: (x0, y0, x1, y1)}: grid cells grown by the whole blocks they own; own-root regions = their block."""
+def extents(grid, blocks, reg, table_clocked=()):
+    """{region: (x0, y0, x1, y1)}: grid cells grown by the whole blocks they own (blocks clocked by a table clock
+    are not grown into the cell); own-root regions = their block."""
+    own_clock_kind = {n: True for n in table_clocked}
     ext = {}
     for b in blocks:
         r = reg[b['name']]
         bb = (b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h'])
         if r.startswith('b_'):
             ext[r] = bb
-        elif r.startswith('g'):
+        elif r.startswith('g') and not own_clock_kind.get(b['name']):
             e = ext.get(r, grid.box(r))
             ext[r] = (min(e[0], bb[0]), min(e[1], bb[1]), max(e[2], bb[2]), max(e[3], bb[3]))
     for i in range(grid.nx):

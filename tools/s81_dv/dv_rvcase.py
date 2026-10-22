@@ -484,7 +484,7 @@ def clock_regions_report(insts, ibits, T, mod2master, top, loc, links, LP, plan,
     if cr.get('mode') == 'geometric':
         grid = GC.Grid.from_spec(cr['grid'])
         reg = {b: (f'b_{b}' if r['kind'] == 'own_root' else r['cell']) for b, r in cr['blocks'].items()}
-        ext = GC.extents(grid, plan['blocks'], reg)
+        ext = GC.extents(grid, plan['blocks'], reg, [b for b, r in cr['blocks'].items() if r['kind'] == 'table_clock'])
         spec = grid.spec()
     else:
         ext, spec = {}, dict(mode=cr.get('mode', 'logical (bind before S81.CLK)'))

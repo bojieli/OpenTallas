@@ -278,7 +278,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     blocks = plan['blocks']
     cr_ = T.get('clock_regions') or {}
     if cr_.get('mode', 'geometric') == 'geometric':
-        grid = GC.Grid(W, H, cr_.get('cell_um', GC.CELL_UM))
+        zero = [(blocks[l['e'][0][0]]['name'], blocks[l['e'][1][0]]['name']) for l in plan['links']
+                if not chains_pts.get(l['i'].replace('-', '_'))]     # 0-stage (abutted neighbour) block pairs
+        grid = GC.Grid.aligned(W, H, blocks, T, cr_.get('cell_um', GC.CELL_UM), pairs=zero)
         reg, reg_info = GC.block_regions(blocks, grid, T)
     elif cr_['mode'] == 'logical':
         grid, reg_info = None, {}

@@ -41,7 +41,9 @@ def test_grid_regions_and_clamp():
     x0, y0, x1, y1 = g.box('g1_0')
     assert x0 <= 3100.0 < x1 and y0 <= 4300.0 < y1
     h = GC.Grid.from_spec(g.spec())
-    assert (h.nx, h.ny, h.cw, h.ch) == (g.nx, g.ny, g.cw, g.ch)
+    assert (h.nx, h.ny, h.maxc) == (g.nx, g.ny, g.maxc)
+    assert h.xs == pytest.approx(g.xs, abs=1e-3) and h.ys == pytest.approx(g.ys, abs=1e-3)
+    assert h.region(3100.0, 4300.0) == 'g1_0'
 
 
 TABLE = {'masters': {'f': {'clk': 'ck_r0'}, 'u': {'clk': 'clk'}, 'phy': {'clk': 'ck', 'clock_port': 'ck_hbm'}},
@@ -52,20 +54,48 @@ def test_block_regions_kinds():
     g = GC.Grid(33000.0, 26000.0)
     blocks = [dict(name='fr', master='f', x=100, y=100, w=1500, h=5000),        # table clock (frame), oversize anyway
               dict(name='small', master='u', x=4000, y=100, w=400, h=300),
-              dict(name='col', master='u', x=9134, y=2724, w=1728, h=3802),     # svc_rs-like column: fits a row
+              dict(name='col', master='u', x=9134, y=2724, w=1728, h=3802),     # svc_rs-like column cut by y 4333
+              dict(name='colin', master='u', x=9134, y=4400, w=1728, h=3802),   # the same column inside row 1
               dict(name='tall', master='u', x=9000, y=10000, w=1253, h=6739),   # slice-like: own root
               dict(name='phy', master='phy', x=12000, y=100, w=8500, h=1177)]   # fixed clock_port
     reg, info = GC.block_regions(blocks, g, TABLE)
     assert info['fr']['kind'] == 'table_clock' and reg['fr'] == 'g0_0'
     assert reg['small'] == 'g1_0' and info['small']['kind'] == 'grid'
-    assert reg['col'] == 'g3_1' and info['col']['kind'] == 'grid'
+    assert reg['col'] == 'b_col' and info['col']['why'] == 'cut by a region edge'
+    assert reg['colin'] == 'g3_1' and info['colin']['kind'] == 'grid'
+    assert info['tall']['why'] == 'oversize'
     assert reg['tall'] == 'b_tall' and info['tall']['kind'] == 'own_root'
     assert info['phy']['kind'] == 'table_clock'
     ext = GC.extents(g, blocks, reg)
     assert ext['b_tall'] == (9000, 10000, 10253, 16739)
     assert ext['g1_0'] == g.box('g1_0')                 # 'small' lies inside its cell
-    assert ext['g3_1'] == (9000.0, 2724, 12000.0, 2 * g.ch)   # the cell grown by its whole column block
+    assert ext['g3_1'] == g.box('g3_1')                 # every grid region's blocks lie inside its cell
+    assert ext['b_col'] == (9134, 2724, 10862, 6526)
     assert len([r for r in ext if r.startswith('g')]) == 66
+
+
+def test_aligned_grid_avoids_cutting_blocks_and_pairs():
+    # a uniform 3 x 1 grid on 9 x 4 mm cuts 'mid' (x 2900-3100) and the 0-stage pair p/q across x 6000
+    blocks = [dict(name='mid', master='u', x=2900.0, y=1000.0, w=200.0, h=200.0),
+              dict(name='p', master='u', x=5700.0, y=1000.0, w=200.0, h=200.0),
+              dict(name='q', master='u', x=6100.0, y=1000.0, w=200.0, h=200.0)]
+    uni = GC.Grid(9000.0, 4000.0, (3000.0, 4334.0))
+    reg_u, _ = GC.block_regions(blocks, uni, TABLE)
+    assert reg_u['mid'] == 'b_mid' and reg_u['p'] != reg_u['q']
+    g = GC.Grid.aligned(9000.0, 4000.0, blocks, TABLE, (3000.0, 4334.0), step=50.0, pairs=[('p', 'q')])
+    assert g.nx >= 3 and max(b - a for a, b in zip(g.xs, g.xs[1:])) <= 3000.0
+    reg, info = GC.block_regions(blocks, g, TABLE)
+    assert all(v['kind'] == 'grid' for v in info.values())
+    assert reg['p'] == reg['q']
+    assert GC.region_spread_ps(g.cw, g.ch) <= GC.SPREAD_PS
+    # cost first, cells second: the block b (x 2905-3100) is never cut; a third cell is added so the pair p/q is not cut
+    # either (2 cells would need one edge in x 2900-3000, between p and q)
+    g2 = GC.Grid.aligned(5900.0, 4000.0, [dict(name='b', master='u', x=2905.0, y=0.0, w=195.0, h=200.0),
+                                          dict(name='p', master='u', x=2800.0, y=1000.0, w=100.0, h=100.0),
+                                          dict(name='q', master='u', x=3100.0, y=1000.0, w=100.0, h=100.0)],
+                         TABLE, (3000.0, 4334.0), pairs=[('p', 'q')])
+    assert g2.nx == 3 and not any(2905.0 < x < 3100.0 for x in g2.xs)
+    assert not any(2850.0 < x < 3150.0 for x in g2.xs)
 
 
 def test_root_gate():
