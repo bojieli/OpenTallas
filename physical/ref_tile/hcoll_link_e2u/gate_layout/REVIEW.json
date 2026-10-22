@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "hcoll_link_e2u",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-21T07:48:00-07:00",
+ "gate_commit": "66a0f93e6",
+ "checklist": {
+  "lattice": "2 SRAM 64x512 on the lattice, centred row",
+  "std_cell_band": "moderate std density, pin-register stripes along W/E/S faces, no hot spot",
+  "pin_spread": "W/E/S faces, clk S centre",
+  "clock_entry": "spread TT 46.7 / FF 40.8 ps",
+  "shape": "475.2x172.8, fill 0.37, trial GRT overflow 0; reg->reg +78.7 hold +42.7"
+ },
+ "notes": "COORD 10-21 07:50 APPROVED coll link e2u (CRC/seq depth fix); e2v fallback dropped unless e2u fails",
+ "geometry_sha256": "1e77410071f67aeb6d0d4edb5845083531d90d6ec4fd5c4e0f3b995bc0cc58e9"
+}

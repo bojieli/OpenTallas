@@ -121,7 +121,9 @@ module ot_hgi_coll_link_e1(
  input wire phy_up,output wire tx_pin_v,output wire [611:0] tx_pin_flit,
  input wire rx_pin_v,input wire [611:0] rx_pin_flit,output wire rx_v,output wire [544:0] rx_flit,
  output wire epoch_abort,retry_requested,output wire [10:0] fault_cause);
- ot_hgi_coll_link_e u(.ck({5{clk}}),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch_new(epoch_new),.held_epoch(held_epoch),
+ // HBM-COLLQ6-LINK 10-20: body = ot_hgi_coll_link_e2 (edge- and bit-identical to ot_hgi_coll_link_e: 2 x 282-b retry
+ // banks instead of 4 x 141-b, kept fan-out copies; tb_hfd_coll_<v>_lpf_ars_eq compares it against v8x's link_e).
+ ot_hgi_coll_link_e2 u(.clk(clk),.rst_n(rst_n),.epoch_begin(epoch_begin),.epoch_new(epoch_new),.held_epoch(held_epoch),
   .wr_v(wr_v),.wr_observed_v(wr_observed_v),.wr_seq(wr_seq),.wr_flit(wr_flit),.rd_v(rd_v),.rd_seq(rd_seq),
   .rx_expect_v(rx_expect_v),.rx_expect_seq(rx_expect_seq),.phy_up(phy_up),.tx_pin_v(tx_pin_v),.tx_pin_flit(tx_pin_flit),
   .rx_pin_v(rx_pin_v),.rx_pin_flit(rx_pin_flit),.rx_v(rx_v),.rx_flit(rx_flit),.epoch_abort(epoch_abort),
@@ -731,5 +733,275 @@ module ot_hgi_coll_fj_core_s128 #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18,RC
  always @(posedge clk or negedge rst_q)
   if(!rst_q)begin fault<=1'b0;fault_cause<=16'd0;end
   else begin fault<=fault | (|cause_now);fault_cause<=fault_cause | cause_now;end
+endmodule
+// ---------------------------------------------------------------------------------------------------------------
+// HBM-COLLQ6-LINK 10-20: ot_hgi_coll_link_e2 = the SAFE body of the hard rail leaf ot_hgi_coll_link_e1.
+// Edge- and bit-identical to ot_hgi_coll_link_e (ot_hgi_coll_capture_ctl_e -> static_capture_ctl -> static_pinreg_ctl
+// -> static_seq_ctl, 4 x ot_hgi_coll_static_pinreg_store / ot_qkvd_llr_replay_sram_leaf #(W 141)); the same registers on
+// the same edges, restructured for the pre-gate native census (e1 gate 10-19 mapped netlist: hit_age0/1 1,122 loads
+// (yosys merged the four banks' copies), epoch_begin_pin 267, s1 80, aq 86, reset 212):
+//  * the 564-b retry payload is 2 banks x 282 b (one 64x512 SRAM each; was 4 x 141 b) -- same address, same write
+//    enable, same read-before-write bypass ages, so the split is a pure width split (halves macro area / count);
+//  * per bank the bypass selects hit_age0/hit_age1 are 24 KEPT copies, each selecting 12 (last 6) dout bits;
+//  * epoch_begin_pin is 15 KEPT copies, each owning one register group's epoch clear / hold (<= 17 flops);
+//  * s1 / cmd_ws (the 64-entry written-map decode / select) have KEPT per-quarter decode and select copies (the s1
+//    copies are plain flops: they are read only under v1, which reset / epoch_begin clear, so their hold is unobservable);
+//  * every bank keeps its own (KEPT) write-pin stage so no address / enable flop is shared between the two SRAMs.
+// No cycle is added or removed anywhere (static link calendar unchanged; nothing to price).  Bench: the parent lockstep
+// tb_hfd_coll_<v>_lpf_ars_eq (ot_hfd_coll_<v>_hard_v8x with the original link_e vs lpf_ars with link_e1 = this body);
+// mutant OT_COLL_LINK2_MUT_DATA (bank 1 stores bit 140 of its slice inverted) must FAIL it.
+module ot_hgi_coll_link_e2_store(
+ input wire clk,we,input wire [5:0] wa,ra,input wire [281:0] din,
+ output wire [281:0] dout);
+ // = ot_hgi_coll_static_pinreg_store (din/wa/ra/we pin stage) at W 282
+ (* keep = "true" *) reg we_pin;
+ (* keep = "true" *) reg [5:0] wa_pin,ra_pin;
+ reg [281:0] din_pin;
+ always @(posedge clk)begin
+  we_pin<=we;wa_pin<=wa;ra_pin<=ra;din_pin<=din;
+ end
+ ot_hgi_coll_link_e2_replay u_native(.ck(clk),.we(we_pin),.wa(wa_pin),.ra(ra_pin),.din(din_pin),.dout(dout));
+endmodule
+
+module ot_hgi_coll_link_e2_replay(
+ input wire ck,we,input wire [5:0] wa,ra,input wire [281:0] din,
+ output reg [281:0] dout);
+ // = ot_qkvd_llr_replay_sram_leaf #(.W(282),.QD(64),.MUT(0)) with the two bypass-age selects replicated (24 kept copies)
+ localparam integer W=282,NC=24,G=12;
+ (* keep = "true" *) reg wq;
+ (* keep = "true" *) reg [5:0] aq;
+ (* keep = "true" *) reg [NC-1:0] hit_age0,hit_age1;
+ reg [W-1:0] dq,dqq;
+ wire [511:0] mr;
+ always @(posedge ck)begin
+  wq<=we;aq<=wa;dq<=din;
+  dqq<=dq;
+  hit_age0<={NC{we && wa==ra}};
+  hit_age1<={NC{wq && aq==ra}};
+ end
+ ot_sram_1r1w_64x512_m1_r2c2 u_sram(
+  .clk(ck),.r_ce_in(1'b1),.r_addr_in(ra),.rd_out(mr),
+  .w_ce_in(wq),.w_addr_in(aq),.wd_in({{(512-W){1'b0}},dq}),
+  .w_mask_in({{(512-W){1'b0}},{W{1'b1}}}),
+  .rr_en(2'd0),.rr_addr(12'd0),.cr_en(2'd0),.cr_sel(18'd0));
+ integer i;
+ always @(posedge ck)
+  for(i=0;i<W;i=i+1)
+   dout[i]<=hit_age0[i/G] ? dq[i] : hit_age1[i/G] ? dqq[i] : mr[i];
+endmodule
+
+// = ot_hgi_coll_static_seq_ctl, epoch_begin as 11 kept copies (eb[10:0]) by register group, kept s1 / cmd_ws decode copies.
+module ot_hgi_coll_link_e2_seq(
+ input wire clk,rst_n,input wire [10:0] eb,
+ input wire abort_in,input wire [1:0] abort_cause,
+ input wire [15:0] rd_seq,rx_expect_seq,input wire [7:0] epoch,
+ input wire wr_v,wr_observed_v,input wire [5:0] wr_slot,input wire [560:0] q_data,
+ input wire rd_v,input wire [5:0] rd_slot,input wire rx_expect_v,input wire [5:0] rx_expect_slot,
+ input wire p_tx_up,output reg p_tx_v,output reg [611:0] p_tx_flit,
+ input wire p_rx_v,input wire [611:0] p_rx_flit,output reg rx_v,output reg [560:0] rx_flit,
+ output reg epoch_abort,output reg [10:0] fault_cause);
+ localparam integer FW=561,CW=32,PW=612;
+ reg [15:0] ts1,ts2,ts3,rs;
+ reg [63:0] written;
+ reg v1,v2,v3,v4,cmd_wv;
+ reg cmd_ov;
+ reg [5:0] cmd_ws;                       // compares + collision checks
+ (* keep = "true" *) reg [5:0] cmd_ws_d[0:3];  // written-map set decode, one copy per 16-entry quarter
+ (* keep = "true" *) reg [5:0] cmd_ws_m[0:3];  // written[cmd_ws] select, one copy per 16-entry quarter
+ reg [5:0] s1,s2,s3,s4;                  // s1: pipeline + compares (reset 0, held on epoch_begin, as s1)
+ (* keep = "true" *) reg [5:0] s1_d[0:3];      // written-map clear decode copies of s1
+ (* keep = "true" *) reg [5:0] s1_m[0:3];      // written[s1] select copies, one per 16-entry quarter
+ reg [7:0] e1,e2,e3;
+ reg [560:0] q_pin;
+ wire [FW+18:0] body={1'b0,e3,1'b0,1'b1,2'b00,s3,q_pin};
+ reg rv,ev;
+ reg [5:0] es;
+ reg [7:0] re;
+ reg [611:0] rf;
+ wire [CW-1:0] tx_crc,rx_crc;
+ ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_tx_crc(.d(body),.q(tx_crc));
+ // FAM-HBM-A/COLLQ10 10-21 (e2s/e2t routes TT -139.7/-109.5: rf -> 580-b CRC XOR tree -> 32-b compare -> OR reduce ->
+ // fault/valid in ONE cycle, ~22 levels): the RX CRC is computed one edge EARLIER from the pin stage (p_rx_flit =
+ // rx_pin_flit_pin, the value rf captures this edge) and its 32 per-bit mismatches are registered BESIDE rf.
+ // crc_bad = |rx_crc_mm is bit- and edge-identical to (crc(rf) != rf[611:580]); 0 added cycles.
+ ot_qwen_crc_parallel #(.DW(FW+19),.CW(CW)) u_rx_crc(.d(p_rx_flit[FW+18:0]),.q(rx_crc));
+ reg [CW-1:0] rx_crc_mm;
+ always @(posedge clk) rx_crc_mm<=rx_crc ^ p_rx_flit[PW-1-:CW];
+ wire crc_bad=rv && ev && (|rx_crc_mm);
+ wire slot_bad=rv && ev && (rf[FW+7:FW]!=={2'b00,es} || rf[FW+17-:8]!==re ||
+                      rf[FW+8]!==1'b1 || rf[FW+9]!==1'b0 || rf[FW+18]!==1'b0);
+ wire tx_seq_bad=v3 && (q_pin[560:545]!==ts3);
+ wire rx_seq_bad=rv && ev && (rf[560:545]!==rs);
+ // written[cmd_ws] / written[s1] as 4 quarter selects (each by its own copy) + a 4:1 on bits [5:4]
+ wire [3:0] wq_c,wq_s;
+ for(genvar q=0;q<4;q=q+1)begin:g_wsel
+  assign wq_c[q]=written[q*16+cmd_ws_m[q][3:0]];
+  assign wq_s[q]=written[q*16+s1_m[q][3:0]];
+ end
+ wire wsel_c=wq_c[cmd_ws_m[0][5:4]],wsel_s=wq_s[s1_m[0][5:4]];
+ wire write_collision=cmd_wv && ((v2 && cmd_ws==s2)||(v3 && cmd_ws==s3)||(v4 && cmd_ws==s4)||
+     (wsel_c && !(v1 && s1==cmd_ws)));
+ wire unread_slot=v1 && !wsel_s && !(cmd_wv && cmd_ws==s1);
+ wire [7:0] new_fault={cmd_wv && (cmd_ov!==1'b1),write_collision,unread_slot,v3 && !p_tx_up,
+                       rv && !ev,ev && !rv,slot_bad,crc_bad};
+ wire [10:0] full_fault={rx_seq_bad,abort_cause[1],
+     tx_seq_bad|abort_cause[0]|(abort_in && !(|abort_cause)),new_fault};
+ integer k;
+ always @(posedge clk)begin
+  cmd_ws<=wr_slot;for(k=0;k<4;k=k+1)begin cmd_ws_d[k]<=wr_slot;cmd_ws_m[k]<=wr_slot;s1_d[k]<=rd_slot;s1_m[k]<=rd_slot;end
+  cmd_ov<=wr_observed_v;
+  ts1<=rd_seq;ts2<=ts1;ts3<=ts2;rs<=rx_expect_seq;
+  q_pin<=q_data;
+  rf<=p_rx_flit;
+  p_tx_flit<={tx_crc,body};
+  rx_flit<=rf[560:0];
+ end
+ // written map: quarter q (entries 16q..16q+15) owns eb copy q
+ genvar q;
+ for(q=0;q<4;q=q+1)begin:g_wq
+  integer j;
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)written[q*16+:16]<=16'd0;
+   else if(eb[q])written[q*16+:16]<=16'd0;
+   else for(j=0;j<16;j=j+1)begin
+    if(cmd_wv && !epoch_abort && cmd_ws_d[q]==q*16+j)written[q*16+j]<=1'b1;
+    if(v1 && !epoch_abort && s1_d[q]==q*16+j)written[q*16+j]<=1'b0;
+   end
+  end
+ end
+ // valid / fault group (eb[4])
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin
+   cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;p_tx_v<=0;rx_v<=0;epoch_abort<=0;fault_cause<=0;
+  end else if(eb[4])begin
+   cmd_wv<=0;v1<=0;v2<=0;v3<=0;v4<=0;rv<=0;ev<=0;p_tx_v<=0;rx_v<=0;epoch_abort<=0;fault_cause<=0;
+  end else begin
+   cmd_wv<=wr_v && !epoch_abort;
+   v1<=rd_v && !epoch_abort;v2<=v1;v3<=v2;v4<=v3;
+   p_tx_v<=v3 && !epoch_abort && !abort_in && !(|full_fault);
+   rv<=p_rx_v;ev<=rx_expect_v;
+   rx_v<=ev && rv && !slot_bad && !crc_bad && !rx_seq_bad && !epoch_abort && !abort_in && !(|full_fault);
+   if(!epoch_abort)begin
+    fault_cause<=fault_cause|full_fault;
+    if(abort_in || |full_fault)epoch_abort<=1'b1;
+   end
+  end
+ end
+ // slot pipeline (eb[5] s1/s2, eb[6] s3/s4): reset 0, HELD on epoch_begin (as the original's epoch_begin branch)
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin s1<=0;s2<=0;end
+  else if(!eb[5])begin s1<=rd_slot;s2<=s1;end
+ end
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin s3<=0;s4<=0;end
+  else if(!eb[6])begin s3<=s2;s4<=s3;end
+ end
+ // epoch pipeline (eb[7] e1, eb[8] e2, eb[9] e3) and rx expectation (eb[10]): held on epoch_begin
+ always @(posedge clk or negedge rst_n) if(!rst_n)e1<=0;else if(!eb[7])e1<=epoch;
+ always @(posedge clk or negedge rst_n) if(!rst_n)e2<=0;else if(!eb[8])e2<=e1;
+ always @(posedge clk or negedge rst_n) if(!rst_n)e3<=0;else if(!eb[9])e3<=e2;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin es<=0;re<=0;end
+  else if(!eb[10])begin es<=rx_expect_slot;re<=epoch;end
+ end
+endmodule
+
+module ot_hgi_coll_link_e2(
+ input wire clk,rst_n,epoch_begin,input wire [7:0] epoch_new,held_epoch,
+ input wire wr_v,wr_observed_v,input wire [15:0] wr_seq,input wire [544:0] wr_flit,
+ input wire rd_v,input wire [15:0] rd_seq,input wire rx_expect_v,input wire [15:0] rx_expect_seq,
+ input wire phy_up,output wire tx_pin_v,output wire [611:0] tx_pin_flit,
+ input wire rx_pin_v,input wire [611:0] rx_pin_flit,output wire rx_v,output wire [544:0] rx_flit,
+ output wire epoch_abort,retry_requested,output wire [10:0] fault_cause);
+ // ---- = ot_hgi_coll_capture_ctl_e / ot_hgi_coll_static_capture_ctl: every input captured at the pin
+ //      (epoch_begin_pin as 15 kept copies: eb[3:0] pinreg_ctl groups, eb[14:4] -> seq eb[10:0])
+ (* keep = "true" *) reg [14:0] eb;
+ reg [7:0] epoch_pin;
+ reg wr_v_pin,wr_observed_v_pin,rd_v_pin,rx_expect_v_pin,phy_up_pin,rx_pin_v_pin;
+ reg [15:0] wr_seq_pin,rd_seq_pin,rx_expect_seq_pin;
+ reg [544:0] wr_flit_pin;
+ reg [611:0] rx_pin_flit_pin;
+ always @(posedge clk)begin
+  epoch_pin<=epoch_begin?epoch_new:held_epoch;
+  wr_seq_pin<=wr_seq;wr_flit_pin<=wr_flit;rd_seq_pin<=rd_seq;rx_expect_seq_pin<=rx_expect_seq;
+  phy_up_pin<=phy_up;rx_pin_flit_pin<=rx_pin_flit;
+ end
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin eb<=0;wr_v_pin<=0;wr_observed_v_pin<=0;rd_v_pin<=0;rx_expect_v_pin<=0;rx_pin_v_pin<=0;end
+  else begin eb<={15{epoch_begin}};wr_v_pin<=wr_v;wr_observed_v_pin<=wr_observed_v;rd_v_pin<=rd_v;
+   rx_expect_v_pin<=rx_expect_v;rx_pin_v_pin<=rx_pin_v;end
+ end
+ // ---- = ot_hgi_coll_static_pinreg_ctl (MUT 0)
+ reg [16:0] write_sequence,tx_sequence,rx_sequence;
+ reg [7:0] active_epoch;
+ reg epoch_active;
+ // HBM-COLLECT10/LINK 10-21 (e2u/e2v gates: rx_v cone = 16-b sequence compares -> abort_in -> fault -> rx_v across the
+ // tile, ~9 levels + ~300 ps wire, TT -72/-105): seq_bad / epoch_bad are RETIMED across the pin stage -- computed from
+ // the ports and the NEXT state of the counters / epoch registers, registered as seq_bad_q / epoch_bad_q.  Edge- and
+ // bit-identical to the old (pin-register compare) form: reset 0 = the old value with every *_v_pin 0; 0 added cycles.
+ wire [16:0] write_sequence_nx=eb[0]?17'd0:(wr_v_pin && !write_sequence[16])?write_sequence+1'b1:write_sequence;
+ wire [16:0] tx_sequence_nx=eb[1]?17'd0:(rd_v_pin && !tx_sequence[16])?tx_sequence+1'b1:tx_sequence;
+ wire [16:0] rx_sequence_nx=eb[2]?17'd0:(rx_expect_v_pin && !rx_sequence[16])?rx_sequence+1'b1:rx_sequence;
+ wire [7:0] epoch_pin_nx=epoch_begin?epoch_new:held_epoch;
+ wire epoch_active_nx=eb[3]?1'b1:epoch_active;
+ wire [7:0] active_epoch_nx=eb[3]?epoch_pin:active_epoch;
+ wire seq_bad_nx=(wr_v && (write_sequence_nx[16] || wr_seq!==write_sequence_nx[15:0])) ||
+                 (rd_v && (tx_sequence_nx[16] || rd_seq!==tx_sequence_nx[15:0])) ||
+                 (rx_expect_v && (rx_sequence_nx[16] || rx_expect_seq!==rx_sequence_nx[15:0]));
+ wire epoch_bad_nx=(epoch_active_nx && epoch_pin_nx!=active_epoch_nx) ||
+                   (!epoch_active_nx && (wr_v||rd_v||rx_expect_v||rx_pin_v));
+ reg seq_bad,epoch_bad;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin seq_bad<=0;epoch_bad<=0;end else begin seq_bad<=seq_bad_nx;epoch_bad<=epoch_bad_nx;end
+ wire abort_in=seq_bad|epoch_bad;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)write_sequence<=0;else if(eb[0])write_sequence<=0;
+  else if(wr_v_pin && !write_sequence[16])write_sequence<=write_sequence+1'b1;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)tx_sequence<=0;else if(eb[1])tx_sequence<=0;
+  else if(rd_v_pin && !tx_sequence[16])tx_sequence<=tx_sequence+1'b1;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)rx_sequence<=0;else if(eb[2])rx_sequence<=0;
+  else if(rx_expect_v_pin && !rx_sequence[16])rx_sequence<=rx_sequence+1'b1;
+ assign retry_requested=epoch_abort;
+ wire [560:0] raw_rx_flit;
+ assign rx_flit=raw_rx_flit[544:0];
+ reg bank_we;reg [5:0] bank_wa,bank_ra;reg [563:0] bank_data;
+ reg [1:0] wv,wo,rv;
+ reg [15:0] readseq[0:1];reg [5:0] writeslot[0:1];
+ wire [563:0] stored;
+ always @(posedge clk)begin
+  bank_wa<=wr_seq_pin[5:0];bank_ra<=rd_seq_pin[5:0];
+  bank_data<={3'b0,wr_seq_pin,wr_flit_pin};
+  writeslot[0]<=wr_seq_pin[5:0];writeslot[1]<=writeslot[0];
+  readseq[0]<=rd_seq_pin;readseq[1]<=readseq[0];
+ end
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin active_epoch<=0;epoch_active<=0;bank_we<=0;wv<=0;wo<=0;rv<=0;end
+  else if(eb[3])begin active_epoch<=epoch_pin;epoch_active<=1;bank_we<=0;wv<=0;wo<=0;rv<=0;end
+  else begin
+   bank_we<=wr_v_pin && !epoch_abort && !abort_in;
+   wv<={wv[0],wr_v_pin};wo<={wo[0],wr_observed_v_pin};rv<={rv[0],rd_v_pin};
+  end
+ end
+ // ---- retry store: 2 banks x 282 b (bank b = bits 282b..282b+281 of {3'b0, seq, flit})
+ for(genvar b=0;b<2;b=b+1)begin:g_bank
+  wire [281:0] d_in;
+`ifdef OT_COLL_LINK2_MUT_DATA
+  // bench mutant: bank 1 stores bit 140 of its slice inverted (must FAIL the parent lockstep)
+  assign d_in=bank_data[b*282+:282] ^ ((b==1)?{141'd0,1'b1,140'd0}:282'd0);
+`else
+  assign d_in=bank_data[b*282+:282];
+`endif
+  ot_hgi_coll_link_e2_store u_store(.clk(clk),.we(bank_we),.wa(bank_wa),.ra(bank_ra),.din(d_in),.dout(stored[b*282+:282]));
+ end
+ ot_hgi_coll_link_e2_seq u_codec(
+  .clk(clk),.rst_n(rst_n),.eb(eb[14:4]),.q_data(stored[560:0]),.epoch(epoch_pin),
+  .abort_in(abort_in),.abort_cause({epoch_bad,seq_bad}),.rd_seq(readseq[1]),.rx_expect_seq(rx_expect_seq_pin),
+  .wr_v(wv[1]),.wr_observed_v(wo[1]),.wr_slot(writeslot[1]),
+  .rd_v(rv[1]),.rd_slot(readseq[1][5:0]),.rx_expect_v(rx_expect_v_pin),.rx_expect_slot(rx_expect_seq_pin[5:0]),
+  .p_tx_up(phy_up_pin),.p_tx_v(tx_pin_v),.p_tx_flit(tx_pin_flit),
+  .p_rx_v(rx_pin_v_pin),.p_rx_flit(rx_pin_flit_pin),.rx_v(rx_v),.rx_flit(raw_rx_flit),
+  .epoch_abort(epoch_abort),.fault_cause(fault_cause));
 endmodule
 `default_nettype wire
