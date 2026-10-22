@@ -174,7 +174,10 @@ def main():
                     pads.append(dict(sink=s, stages=dmax - depth[i], x=round(hp[0], 1), y=round(hp[1], 1)))
                     tiles[f'hbfd_rly_{master[0]}'] += (dmax - depth[i]) * master[1]
         rows.append(dict(driver=f'{di}.{dp}', driver_master=pl[di]['master'], bits=bits, cls=cls,
-                         domain=dom_of.get(di, 'UNKNOWN'), depth=dmax, sinks=sinks,
+                         # HBM-DIE17 10-21: a clockless (combinational) driver tile, e.g. ot_hbm_kqs_fault_or4 hcollks_<q>, has no
+                         # clock entry; its relay chain runs in the sinks' domain when they agree (r16q S5 splice KeyError UNKNOWN).
+                         domain=dom_of.get(di) or (lambda d_: d_.pop() if len(d_) == 1 else 'UNKNOWN')({dom_of.get(s_) for s_ in sinks} - {None} if all(dom_of.get(s_) for s_ in sinks) else {None, 'x'}),
+                         depth=dmax, sinks=sinks,
                          sink_depths=depth, stations=stations, branch_points=branch, pads=pads,
                          hop_violations=(rviol if a.route_grid > 0 and (di, sk, _rf) in routed else []),
                          nets=b['nets'] if bits <= 4 else f"{len(b['nets'])} nets ({b['nets'][0]}..)"))
