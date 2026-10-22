@@ -56,8 +56,8 @@
 //   Extra bench mutants: MUT 8 = stream-side strap ignored, MUT 7 = hbm-side strap ignored (MUT 5 both, MUT 6 KRL1 depth 2).
 // R4 NATIVE-CENSUS SLICING (STEWARD-HBM/COLL-KS 2026-10-21; r3 mapped netlist: 301 drivers > 32 loads, max 1088):
 //   every wide store is bit-sliced with private kept control copies (ot_hbm_svc_kshare_sl.sv): pin skids A/B/D/E 16-bit
-//   slices, KRL1 response ring 16-bit slices, fill CDC FIFO = 40 lockstep 7-bit instances of the reviewed
-//   ot_hbm_svc_async_fifo per lane, VM / WB command FIFOs 6 / 15 lockstep 7-bit instances; the request mux B selects
+//   slices, KRL1 response ring 12-bit slices, fill CDC FIFO = 93 lockstep 3-bit instances of the reviewed
+//   ot_hbm_svc_async_fifo per lane, VM / WB command FIFOs 8 / 21 lockstep 5-bit instances; the request mux B selects
 //   per 16-bit slice by REGISTERED kept copies of (next st == ISSUE / WB); the VM command is captured per lane (4 kept
 //   copies, was one cmd_q fanning to 4 lanes' fill data); the window/command capture enables and take strobes reach their
 //   registers through kept per-group ANDs; we2/wb2/wt2 have one kept copy per lane pair; resets land in a 2-level kept
@@ -95,8 +95,8 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  // payload, so wend_q is a 1:1 copy of FIFO read bits (no adder on the async payload; same latency).
  localparam integer WQW=31+WQB;            // {end,base,total,n3,n2,n1,n0}
  localparam[2:0]NORM=0,PEND=1,ISSUE=2,WAIT=3,WPEND=4,WB=5;
- localparam integer FSW=7,NFS=(FW+FSW-1)/FSW;      // fill FIFO slices (40)
- localparam integer NCS=(CMW+6)/7,NWS=(WQW+6)/7;   // VM / WB command FIFO slices (6 / 15)
+ localparam integer FSW=3,NFS=(FW+FSW-1)/FSW;      // fill FIFO slices (93; r4a census: 7-bit DEPTH8 slices 44..60 pins on rd_bin)
+ localparam integer CSW=5,NCS=(CMW+CSW-1)/CSW,NWS=(WQW+CSW-1)/CSW;   // VM / WB command FIFO slices (8 / 21)
  localparam integer SBW=16,NBS=(KW+SBW-1)/SBW;     // request mux B select slices (22)
  localparam integer NWG=(WQW+14)/15;               // WB window capture groups (7)
  // local reset release per domain at the pins (H-SM 2026-10-16, native capture rule): each reset pin lands on ONE
@@ -105,17 +105,17 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  reg srst_q,hrst_q;
  always @(posedge stream_clk or negedge stream_rst_n)if(!stream_rst_n)srst_q<=1'b0;else srst_q<=1'b1;
  always @(posedge hbm_clk or negedge hbm_rst_n)if(!hbm_rst_n)hrst_q<=1'b0;else hrst_q<=1'b1;
- // R1: hbm [3l]/[3l+1] fill-FIFO writer leaves of lane l, [3l+2] lane l misc, [12] command FIFO readers, [13] misc;
- //     stream [2l]/[2l+1] fill-FIFO reader leaves of lane l, [8] command FIFO writers, [9] misc.
- wire[13:0]hr1;wire[9:0]sr1;
- ot_rst_fanout #(.N(14)) u_hr1(.clk(hbm_clk),.rst_n_in(hrst_q),.rst_n(hr1));
- ot_rst_fanout #(.N(10)) u_sr1(.clk(stream_clk),.rst_n_in(srst_q),.rst_n(sr1));
+ // R1: hbm [4l..4l+2] fill-FIFO writer leaves of lane l, [4l+3] lane l misc, [16] command FIFO readers, [17] misc;
+ //     stream [3l..3l+2] fill-FIFO reader leaves of lane l, [12] command FIFO writers, [13] misc.
+ wire[17:0]hr1;wire[13:0]sr1;
+ ot_rst_fanout #(.N(18)) u_hr1(.clk(hbm_clk),.rst_n_in(hrst_q),.rst_n(hr1));
+ ot_rst_fanout #(.N(14)) u_sr1(.clk(stream_clk),.rst_n_in(srst_q),.rst_n(sr1));
  wire[NCS+NWS-1:0]hcl,scl;wire[0:0]hm;wire[1:0]sm;wire[NWG-1:0]hwg;
- ot_rst_fanout #(.N(NCS+NWS)) u_hcl(.clk(hbm_clk),.rst_n_in(hr1[12]),.rst_n(hcl));
- ot_rst_fanout #(.N(NCS+NWS)) u_scl(.clk(stream_clk),.rst_n_in(sr1[8]),.rst_n(scl));
- ot_rst_fanout #(.N(1)) u_hm(.clk(hbm_clk),.rst_n_in(hr1[13]),.rst_n(hm));
- ot_rst_fanout #(.N(NWG)) u_hwg(.clk(hbm_clk),.rst_n_in(hr1[13]),.rst_n(hwg));
- ot_rst_fanout #(.N(2)) u_sm(.clk(stream_clk),.rst_n_in(sr1[9]),.rst_n(sm));
+ ot_rst_fanout #(.N(NCS+NWS)) u_hcl(.clk(hbm_clk),.rst_n_in(hr1[16]),.rst_n(hcl));
+ ot_rst_fanout #(.N(NCS+NWS)) u_scl(.clk(stream_clk),.rst_n_in(sr1[12]),.rst_n(scl));
+ ot_rst_fanout #(.N(1)) u_hm(.clk(hbm_clk),.rst_n_in(hr1[17]),.rst_n(hm));
+ ot_rst_fanout #(.N(NWG)) u_hwg(.clk(hbm_clk),.rst_n_in(hr1[17]),.rst_n(hwg));
+ ot_rst_fanout #(.N(2)) u_sm(.clk(stream_clk),.rst_n_in(sr1[13]),.rst_n(sm));
  reg[2:0]sm_s,sm_h;
  always @(posedge stream_clk)sm_s<=((MUT==5)||(MUT==8))?3'd0:sm_stream;   // MUT 5/8: strap ignored
  always @(posedge hbm_clk)sm_h<=((MUT==5)||(MUT==7))?3'd0:sm_hbm;
@@ -125,7 +125,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  always @(posedge stream_clk or negedge sm[0])if(!sm[0])cv_q<=0;else cv_q<=vm_v;
  wire cf_wr_ready,cf_ov,cf_rd_valid,cf_un;wire[CMW-1:0]cf_rd_data;wire all_norm;
  wire take_pre=cf_rd_valid&&all_norm;
- ot_hbm_svc_afifo_sl #(.WIDTH(CMW),.DEPTH(4),.SW(7)) u_cmd(
+ ot_hbm_svc_afifo_sl #(.WIDTH(CMW),.DEPTH(4),.SW(CSW)) u_cmd(
   .wr_clk(stream_clk),.wr_rst_n(scl[NCS-1:0]),.wr_valid(cv_q),.wr_ready(cf_wr_ready),.wr_data(cd_q),.wr_overflow(cf_ov),
   .rd_clk(hbm_clk),.rd_rst_n(hcl[NCS-1:0]),.rd_valid(cf_rd_valid),.rd_ready(take_pre),.rd_data(cf_rd_data),.rd_underflow(cf_un));
  // ---------------------------------------------------------------- stream side: WB window command -> lane counts -> CDC
@@ -153,7 +153,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  always @(posedge stream_clk or negedge sm[0])if(!sm[0])begin wv1<=0;wv2<=0;wv3<=0;end else begin wv1<=wbw_v;wv2<=wv1;wv3<=wv2;end
  wire wf_wr_ready,wf_ov,wf_rd_valid,wf_un;wire[WQW-1:0]wf_rd_data;
  wire wb_pre=wf_rd_valid&&all_norm&&!cf_rd_valid;
- ot_hbm_svc_afifo_sl #(.WIDTH(WQW),.DEPTH(4),.SW(7)) u_wcmd(
+ ot_hbm_svc_afifo_sl #(.WIDTH(WQW),.DEPTH(4),.SW(CSW)) u_wcmd(
   .wr_clk(stream_clk),.wr_rst_n(scl[NCS+:NWS]),.wr_valid(wv3),.wr_ready(wf_wr_ready),.wr_data(wq3),.wr_overflow(wf_ov),
   .rd_clk(hbm_clk),.rd_rst_n(hcl[NCS+:NWS]),.rd_valid(wf_rd_valid),.rd_ready(wb_pre),.rd_data(wf_rd_data),.rd_underflow(wf_un));
  // {wend_q, wcmd_q} captured in NWG groups of <= 15 bits, each enable through its own kept AND
@@ -172,22 +172,24 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  genvar l;
  generate for(l=0;l<4;l=l+1)begin:lane
   wire[4:0]P={sm_h,2'(l)};
-  // lane reset leaves (hr1[3l+2]): [1:0] A, [3:2] B, [5:4] E, [7:6] D, [13:8] C ring / skid, [15:14] B selects,
-  // [17:16] window FSM, [18] c_rdy, [19] take strobes + VM command capture
-  wire[19:0]hl;wire[NFS-1:0]hfl,sfl;
-  ot_rst_fanout #(.N(20)) u_hl(.clk(hbm_clk),.rst_n_in(hr1[3*l+2]),.rst_n(hl));
-  ot_rst_fanout #(.N(20)) u_hfl0(.clk(hbm_clk),.rst_n_in(hr1[3*l]),.rst_n(hfl[19:0]));
-  ot_rst_fanout #(.N(NFS-20)) u_hfl1(.clk(hbm_clk),.rst_n_in(hr1[3*l+1]),.rst_n(hfl[NFS-1:20]));
-  ot_rst_fanout #(.N(20)) u_sfl0(.clk(stream_clk),.rst_n_in(sr1[2*l]),.rst_n(sfl[19:0]));
-  ot_rst_fanout #(.N(NFS-20)) u_sfl1(.clk(stream_clk),.rst_n_in(sr1[2*l+1]),.rst_n(sfl[NFS-1:20]));
+  // lane reset leaves (hr1[4l+3]): [1:0] A, [3:2] B, [5:4] E, [7:6] D, [14:8] C ring / skid, [16:15] B selects,
+  // [18:17] window FSM, [19] c_rdy, [20] take strobes + VM command capture
+  wire[20:0]hl;wire[NFS-1:0]hfl,sfl;
+  ot_rst_fanout #(.N(21)) u_hl(.clk(hbm_clk),.rst_n_in(hr1[4*l+3]),.rst_n(hl));
+  ot_rst_fanout #(.N(31)) u_hfl0(.clk(hbm_clk),.rst_n_in(hr1[4*l]),.rst_n(hfl[30:0]));
+  ot_rst_fanout #(.N(31)) u_hfl1(.clk(hbm_clk),.rst_n_in(hr1[4*l+1]),.rst_n(hfl[61:31]));
+  ot_rst_fanout #(.N(NFS-62)) u_hfl2(.clk(hbm_clk),.rst_n_in(hr1[4*l+2]),.rst_n(hfl[NFS-1:62]));
+  ot_rst_fanout #(.N(31)) u_sfl0(.clk(stream_clk),.rst_n_in(sr1[3*l]),.rst_n(sfl[30:0]));
+  ot_rst_fanout #(.N(31)) u_sfl1(.clk(stream_clk),.rst_n_in(sr1[3*l+1]),.rst_n(sfl[61:31]));
+  ot_rst_fanout #(.N(NFS-62)) u_sfl2(.clk(stream_clk),.rst_n_in(sr1[3*l+2]),.rst_n(sfl[NFS-1:62]));
   // per-lane take strobes and VM command copy (was one cmd_q driving the fill data of all four lanes)
   wire take_cmd,take_wb;wire[2:0]ccap;
-  (* keep="true" *) ot_hbm_svc_ks_and2 u_tk(.a(take_pre),.b(hl[19]),.y(take_cmd));
-  (* keep="true" *) ot_hbm_svc_ks_and2 u_twb(.a(wb_pre),.b(hl[19]),.y(take_wb));
+  (* keep="true" *) ot_hbm_svc_ks_and2 u_tk(.a(take_pre),.b(hl[20]),.y(take_cmd));
+  (* keep="true" *) ot_hbm_svc_ks_and2 u_twb(.a(wb_pre),.b(hl[20]),.y(take_wb));
   reg[CMW-1:0]cmd_q;
   genvar cg;
   for(cg=0;cg<3;cg=cg+1)begin:g_ccap
-   (* keep="true" *) ot_hbm_svc_ks_and2 u_cap(.a(take_cmd),.b(hl[19]),.y(ccap[cg]));
+   (* keep="true" *) ot_hbm_svc_ks_and2 u_cap(.a(take_cmd),.b(hl[20]),.y(ccap[cg]));
    always @(posedge hbm_clk)if(ccap[cg])cmd_q[cg*12+:12]<=cf_rd_data[cg*12+:12];
   end
   wire cm_bank=cmd_q[CMW-1];wire[15:0]cm_epoch=cmd_q[34:19];wire[14:0]cm_row=cmd_q[18:4];wire[3:0]cm_col=cmd_q[3:0];
@@ -221,8 +223,8 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   for(bs=0;bs<NBS;bs=bs+1)begin:g_bsel
    localparam integer B=(KW-bs*SBW<SBW)?KW-bs*SBW:SBW;
    (* keep="true" *) reg vsel,wsel;
-   always @(posedge hbm_clk or negedge hl[14+bs/11])
-    if(!hl[14+bs/11])begin vsel<=1'b0;wsel<=1'b0;end else begin vsel<=st_nx==ISSUE;wsel<=st_nx==WB;end
+   always @(posedge hbm_clk or negedge hl[15+bs/11])
+    if(!hl[15+bs/11])begin vsel<=1'b0;wsel<=1'b0;end else begin vsel<=st_nx==ISSUE;wsel<=st_nx==WB;end
    assign b_in_d[bs*SBW+:B]=vsel?vm_d[bs*SBW+:B]:wsel?wb_d[bs*SBW+:B]:a_d[bs*SBW+:B];
   end
   assign e_r=w_more&&b_in_r;
@@ -241,11 +243,11 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   wire c_ring_fault;
   if(KRL1!=0)begin:g_c_rl1
    reg c_rdy_q,c_rdy_seen; wire[2:0]c_cnt,c_cnt_next;
-   ot_hbm_svc_ring_sl #(.WIDTH(RW),.DEPTH((MUT==6)?2:3)) u_c(.clk(hbm_clk),.rst_n(hl[13:8]),.in_v(c_kr_v[l]&&c_rdy_seen),
+   ot_hbm_svc_ring_sl #(.WIDTH(RW),.DEPTH((MUT==6)?2:3)) u_c(.clk(hbm_clk),.rst_n(hl[14:8]),.in_v(c_kr_v[l]&&c_rdy_seen),
     .in_data({c_kr_tag[17*l+:17],c_kr_beat[4*l+:4],c_kr_data[256*l+:256]}),.out_v(c_v),.pop(c_v&&c_r),.out_data(c_d),
     .cnt(c_cnt),.cnt_next(c_cnt_next),.fault(c_ring_fault));
    always @(posedge hbm_clk)
-    if(!hl[18])begin c_rdy_q<=1'b0;c_rdy_seen<=1'b0;end
+    if(!hl[19])begin c_rdy_q<=1'b0;c_rdy_seen<=1'b0;end
     else begin c_rdy_q<=c_cnt_next<=3'd1; c_rdy_seen<=c_rdy_q; end
    assign c_kr_rdy[l]=c_rdy_q;
   end else begin:g_c_rl0
@@ -284,8 +286,8 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
    endcase
    if(c_pop_vm&&got==7'd63)st_nx=NORM;
   end
-  always @(posedge hbm_clk or negedge hl[16])begin
-   if(!hl[16])begin st<=NORM;j<=0;got<=0;g_rd_out<=0;hf<=0;end
+  always @(posedge hbm_clk or negedge hl[17])begin
+   if(!hl[17])begin st<=NORM;j<=0;got<=0;g_rd_out<=0;hf<=0;end
    else begin
     st<=st_nx;
     g_rd_out<=g_rd_out+rd_beats[7:0]-{7'd0,c_pop_grp};
@@ -299,8 +301,8 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
     if(c_pop_vm)got<=got+1'b1;
    end
   end
-  always @(posedge hbm_clk or negedge hl[17])begin
-   if(!hl[17])begin g_wr_out<=0;wsent<=0;wdone<=0;g_k_wr_done[l]<=0;w_k_wr_done[l]<=0;end
+  always @(posedge hbm_clk or negedge hl[18])begin
+   if(!hl[18])begin g_wr_out<=0;wsent<=0;wdone<=0;g_k_wr_done[l]<=0;w_k_wr_done[l]<=0;end
    else begin
     g_wr_out<=g_wr_out+{5'd0,b_pop_grp&&b_d[KW-1]}-{5'd0,g_done};
     if(st==NORM&&!take_cmd&&take_wb)begin wsent<=0;wdone<=0;end

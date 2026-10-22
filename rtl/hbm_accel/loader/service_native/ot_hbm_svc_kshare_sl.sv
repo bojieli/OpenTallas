@@ -39,29 +39,30 @@ module ot_hbm_svc_skid2_sl #(parameter integer WIDTH=1,SW=16,NS=(WIDTH+SW-1)/SW,
   (* keep="true" *) ot_hbm_svc_ks_and2 u_pop(.a(out_r),.b(head_valid),.y(pop));
   assign hv[s]=head_valid;assign tv[s]=tail_valid;
   assign out_data[s*SW+:B]=head_data;
+  // valid bits: async clear from the slice leaf; data registers are unreset and outside the reset block (a reset-
+  // qualified data enable would hang every data bit on the leaf: r4a census 56..58 pins per leaf)
   always @(posedge clk or negedge rst_n[s/11])begin
    if(!rst_n[s/11])begin head_valid<=0;tail_valid<=0;end
    else case({push,pop})
-    2'b10:begin
-     if(!head_valid)begin head_data<=in_data[s*SW+:B];head_valid<=1;end
-     else begin tail_data<=in_data[s*SW+:B];tail_valid<=1;end
-    end
-    2'b01:begin
-     if(tail_valid)head_data<=tail_data;
-     head_valid<=tail_valid;tail_valid<=0;
-    end
-    2'b11:begin head_data<=in_data[s*SW+:B];head_valid<=1;tail_valid<=0;end
+    2'b10:if(!head_valid)head_valid<=1;else tail_valid<=1;
+    2'b01:begin head_valid<=tail_valid;tail_valid<=0;end
+    2'b11:begin head_valid<=1;tail_valid<=0;end
     default:;
    endcase
+  end
+  always @(posedge clk)begin
+   if(push&&(pop||!head_valid))head_data<=in_data[s*SW+:B];
+   else if(pop&&tail_valid)head_data<=tail_data;
+   if(push&&!pop&&head_valid)tail_data<=in_data[s*SW+:B];
   end
  end endgenerate
 endmodule
 
 // DEPTH-entry response ring, exact ot_hbm_svc_ring_h9b_ff behaviour (synchronous reset, write at wp on in_v, read at rp,
-// cnt / cnt_next / fault from one control copy), sliced: each SW-bit slice owns kept wp/rp copies; the shared in_v / pop
+// cnt / cnt_next / fault from one control copy), sliced: each SW-bit (12: r4a census 16-bit rp / write decode 33..35) slice owns kept wp/rp copies; the shared in_v / pop
 // reach a slice through one kept AND with the slice's reset leaf (reset-gated: while a leaf is low the slice pointers
 // clear anyway and the unreset entries are don't-care).  rst_n[0] = control; slice s on leaf 1+s/4 (<= 4 slices x 6 pins).
-module ot_hbm_svc_ring_sl #(parameter integer WIDTH=1,DEPTH=3,SW=16,NS=(WIDTH+SW-1)/SW,NR=1+(NS+3)/4)(
+module ot_hbm_svc_ring_sl #(parameter integer WIDTH=1,DEPTH=3,SW=12,NS=(WIDTH+SW-1)/SW,NR=1+(NS+3)/4)(
  input wire clk,input wire [NR-1:0]rst_n,
  input wire in_v,input wire [WIDTH-1:0]in_data,
  output wire out_v,input wire pop,output wire [WIDTH-1:0]out_data,
