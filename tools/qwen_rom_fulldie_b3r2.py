@@ -3477,6 +3477,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     import numpy as np
     from scipy.spatial import cKDTree
     terminal_receipts = set()  # immutable named occupancy evidence; no search or acceptance change
+    unreachable_terminal_receipts = set()
     site_cache = {}
     grid0 = {}
     for it in m['insts']:              # sites ignore relays (ok() re-checks every site against the live grid)
@@ -3612,8 +3613,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         p2p_on = GATE and P2P_REACH
         RCH = RELAY_REACH_OK - 5.0
 
+        bfs_diagnostic = {}
         def bfs(De, mono):
             if not _relay_terminal_possible(ctr, P1, De, ok, hop_chk[0]):
+                if _os.environ.get('OT_RELAY_SITE_FAILURE') and pl['bid'] == 'dvw_st_wi':
+                    bfs_diagnostic.clear()
+                    bfs_diagnostic.update(frontier=[],visited=0,budget=BFS_MAX,stop_reason='terminal_precheck')
                 return None, {}, []
             start = [i for i in tree.query_ball_point(P0, De, p=1) if ok(i) and (not p2p_on or _e_pin(P0, i) <= RCH) and (
                 hop_chk[0] is None or hop_chk[0](P0, (float(ctr[i][0]), float(ctr[i][1]))))]
@@ -3638,6 +3643,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                             nxt.append(j)
                 nxt.sort(key=lambda j: dP1[j])
                 front = nxt[:4000]
+            if _os.environ.get('OT_RELAY_SITE_FAILURE') and pl['bid'] == 'dvw_st_wi':
+                bfs_diagnostic.clear()
+                bfs_diagnostic.update(frontier=list(front),visited=len(par),budget=BFS_MAX,
+                    stop_reason='hit' if hit is not None else ('budget' if len(par)>=BFS_MAX else 'frontier_exhausted'))
             return hit, par, start
 
         def chain_of(hit, par):
@@ -3736,11 +3745,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                             hit, par, start = bfs(De, mono)
                             if hit is None:
                                 _e = tree.query_ball_point(P1, De, p=1)     # sites at the load end: all / free / reached
-                                if (_os.environ.get('OT_RELAY_SITE_FAILURE') and _e and
-                                        not any(ok(i_) for i_ in _e) and pl['bid'] not in terminal_receipts):
+                                capture_unreachable = bool(_os.environ.get('OT_RELAY_SITE_FAILURE') and _e and
+                                    pl['bid'] == 'dvw_st_wi' and pl['bid'] not in unreachable_terminal_receipts and
+                                    a_ == 0 and b_ == nfr and r_ is None and lim is None and not mono and
+                                    any(ok(i_) for i_ in _e) and not any(i_ in par for i_ in _e))
+                                if ((_os.environ.get('OT_RELAY_SITE_FAILURE') and _e and
+                                        not any(ok(i_) for i_ in _e) and pl['bid'] not in terminal_receipts) or capture_unreachable):
                                     # Preserve the first all-occupied terminal neighbourhood, before later rip-ups
                                     # change ownership. This extends the existing source-bound failure receipt only.
-                                    terminal_receipts.add(pl['bid'])
+                                    (unreachable_terminal_receipts if capture_unreachable else terminal_receipts).add(pl['bid'])
                                     named = {tuple((it.x,it.y,it.x+it.w,it.y+it.h)):it.name for it in m['insts']}
                                     for owner_, plan_ in plans.items():
                                         for fk_, frame_ in enumerate(plan_['frames']):
@@ -3756,15 +3769,46 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                                                     if (q_[0]<rect_[2]-1e-6 and rect_[0]<q_[2]-1e-6 and
                                                             q_[1]<rect_[3]-1e-6 and rect_[1]<q_[3]-1e-6):
                                                         overlaps_.add(tuple(q_))
-                                        rows_.append(dict(site=rect_,corridor_allowed=near is None or bool(near[i_]),
-                                                          occupied_by=[dict(rect=q_,owner=named.get(q_,'reserved relay/pad'))
-                                                                       for q_ in sorted(overlaps_)]))
+                                        row_ = dict(site=rect_,corridor_allowed=near is None or bool(near[i_]),
+                                                    occupied_by=[dict(rect=q_,owner=named.get(q_,'reserved relay/pad'))
+                                                                 for q_ in sorted(overlaps_)])
+                                        if capture_unreachable:
+                                            point_ = (float(ctr[i_][0]),float(ctr[i_][1]))
+                                            row_.update(site_index=int(i_),center=point_,free=bool(ok(i_)),reached=i_ in par,
+                                                end_L1=float(abs(point_[0]-P1[0])+abs(point_[1]-P1[1])),
+                                                end_pin_distance=float(_e_pin(P1,i_)),
+                                                end_pin_reach_ok=not p2p_on or _e_pin(P1,i_)<=RCH,
+                                                end_load_ok=hop_chk[0] is None or bool(hop_chk[0](point_,P1)))
+                                            if ok(i_):
+                                                adjacent_=[]
+                                                for j_ in tree.query_ball_point(ctr[i_],D,p=1):
+                                                    if j_ not in par:continue
+                                                    prior_=(float(ctr[j_][0]),float(ctr[j_][1]))
+                                                    adjacent_.append(dict(site_index=int(j_),
+                                                        frame_distance=float(_e_ff(j_,i_)),
+                                                        monotone_ok=not mono or bool(dP1[i_]<dP1[j_]),
+                                                        frame_reach_ok=not p2p_on or _e_ff(j_,i_)<=RCH,
+                                                        nonoverlap_ok=not GATE or bool(abs(arr[i_][0]-arr[j_][0])>=W or abs(arr[i_][1]-arr[j_][1])>=H),
+                                                        load_ok=hop_chk[0] is None or bool(hop_chk[0](prior_,point_))))
+                                                row_['reachable_predecessors_within_D']=adjacent_
+                                                row_['nearest_reached_L1']=min((float(abs(ctr[j_][0]-point_[0])+abs(ctr[j_][1]-point_[1])) for j_ in par),default=None)
+                                        rows_.append(row_)
                                     base_ = _os.environ['OT_RELAY_SITE_FAILURE']
-                                    dst_ = base_ + '.' + str(pl['bid']) + '.terminal.json'
+                                    dst_ = base_ + '.' + str(pl['bid']) + ('.unreachable_terminal.json' if capture_unreachable else '.terminal.json')
+                                    payload_ = dict(bid=pl['bid'],bits=bits,frame=[W,H],P0=P0,P1=P1,
+                                                    D=D,De=De,span=[a_,b_],terminal_sites=rows_,
+                                                    source_rule='same free()/corridor predicate; diagnostics only')
+                                    if capture_unreachable:
+                                        import hashlib as _diagnostic_hashlib
+                                        payload_.update(scope='failed full-span unconstrained attempt; later attempts/GEN remain authority',
+                                            source_sha256=_diagnostic_hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                                            bfs=dict(bfs_diagnostic,starts=[int(j_)for j_ in start],
+                                                reached=[dict(site_index=int(j_),parent=int(par[j_]),center=[float(ctr[j_][0]),float(ctr[j_][1])])for j_ in sorted(par)],
+                                                frontier_limit=4000,mono=mono,corridor=r_,load_limit=lim,
+                                                p2p_on=p2p_on,RCH=RCH,gate=GATE,
+                                                edge_tests='unchanged start/end L1<=De; frame L1<=D; pin/frame distance<=RCH when p2p; free/corridor; monotone; nonoverlap when GATE; existing hop_fits'))
                                     with open(dst_,'w') as receipt_:
-                                        json.dump(dict(bid=pl['bid'],bits=bits,frame=[W,H],P0=P0,P1=P1,
-                                                       D=D,De=De,span=[a_,b_],terminal_sites=rows_,
-                                                       source_rule='same free()/corridor predicate; diagnostics only'),receipt_,indent=2)
+                                        json.dump(payload_,receipt_,indent=2)
                                 why = (f"span {a_}-{b_} of {nfr}, start {len(start)}, visited {len(par)}, sites {len(arr)}, "
                                        f"D {D:.0f}, De {De:.0f}, corridor {r_}, load {lim}, end sites {len(_e)} / free "
                                        f"{sum(1 for i_ in _e if ok(i_))} / reached {sum(1 for i_ in _e if i_ in par)}, "
