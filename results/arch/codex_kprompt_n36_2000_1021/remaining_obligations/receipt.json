@@ -1,0 +1,32 @@
+{
+ "source_commit": "00384d01f",
+ "source_archive_sha256": "1b2b1be3004d52556d97d5e7665732456c60e4f1dccb9be0e7b82e598cdab045",
+ "host": "ot-gold1",
+ "tool": "Verilator5.050",
+ "memory_suite": {
+  "unit": "oth-ubuntu-748589-1792641110",
+  "exit_code": 0,
+  "positives": 2,
+  "positive_cycles_each": 20000,
+  "causal_mutants_rejected": 2,
+  "mutant_failure_cycles": [
+   2,
+   3
+  ],
+  "verdict": "PASS"
+ },
+ "AXI": {
+  "unit": "oth-ubuntu-748561-1792641110",
+  "exit_code": 0,
+  "checks": 36,
+  "verdict": "PASS"
+ },
+ "scope": "Existing mandatory memory and AXI component obligations run once on exact prompt_safe5 source; no physical, current assembled-token or schedule adoption claim",
+ "raw_log_sha256": {
+  "mem_pass.log": "a512f8d332e373f3a2eae892524525a05179cae4f07ed05180c3171684687eb3",
+  "mem_bypass.log": "098bae7667ce4210feb12ffb437292d5f41ca5ebc4e185b880729676dc3b8205",
+  "mem_wide.log": "f502bac1f73a14231c3134e5430e29be67a85df56ee754caa36e14309343d824",
+  "axi.log": "81f423472749e02bd53f1c838e7960c00425ba0bbb09d067e945300577e4c4cf",
+  "mem_addr.log": "7b3dca7cfca178897b5aee4663e3ed367e582af6fe6fc7cddf0eb66d42490f8d"
+ }
+}

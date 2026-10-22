@@ -1,0 +1,18 @@
+Verilator 5.050 2026-07-01 rev v5.050
+PROMPT_MEM PASS cycles=20000 pops=5744 head_ok=8511
+- rtl/test/qwen_host/tb_hkv_prompt_mem_r.sv:22: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.180 s; speed 1.112 ms/s
+- Verilator: cpu 0.180 s on 1 threads; allocated 7 MB
+PROMPT_MEM PASS cycles=20000 pops=6125 head_ok=7749
+- rtl/test/qwen_host/tb_hkv_prompt_mem_r.sv:22: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 200us; walltime 0.515 s; speed 388.251 us/s
+- Verilator: cpu 0.515 s on 1 threads; allocated 7 MB
+[50000] %Fatal: tb_hkv_prompt_mem_r.sv:13: Assertion failed in tb_hkv_prompt_mem_r.unnamedblk1_2: PROMPT_MEM FAIL cycle=2 n=1
+%Error: rtl/test/qwen_host/tb_hkv_prompt_mem_r.sv:13: Verilog $stop
+Aborting...
+[60000] %Fatal: tb_hkv_prompt_mem_r.sv:13: Assertion failed in tb_hkv_prompt_mem_r.unnamedblk1_2: PROMPT_MEM FAIL cycle=3 n=2
+%Error: rtl/test/qwen_host/tb_hkv_prompt_mem_r.sv:13: Verilog $stop
+Aborting...
+PROMPT_MEM_SUITE PASS 2 positive 2 causal mutants
