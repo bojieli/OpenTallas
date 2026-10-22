@@ -273,7 +273,37 @@ proc ot_sp_sym_build {ids lins rx ry} {
   set late {}; set early {}
   foreach i $ids { if {[dict exists $lins $i] && [dict get $lins $i] > 0} { lappend early $i } else { lappend late $i } }
   if {![llength $late]} { set late $early; set early {} }
-  set sub [ot_sp_split_bb $late]
+  # OT_SPINE_BANDS=N (STW-S81c-COLLA2-VP 2026-10-22, ot_s81sl_vp r9; PD-AUDIT C2 "row-band regional roots"): the flop
+  # leaves are split into N equal-height row bands first; each band gets its own bisection subtree (a regional root at
+  # its band's centre) and the band roots hang on ONE fork at the centre of all flop leaves, so the top/bottom band trunks
+  # are equal by construction and the band-level imbalance is padded once at the band root (tree pad), not per leaf.
+  # Why (s81sl_vp8_fb, 730 x 860 um, 12,983 sinks): the count-free bisection split neighbour flops (lfr -> lfa,
+  # g_hq[0] -> g_hq[1], k_cfe2 -> cf) at the 2nd level (~200 ps common of ~700-870 ps insertion) and padded 1,788
+  # leaves with HB4 chains: routed spread TT 90 / FF 83, FF hold -37.7, TT setup -71 (-51 of it skew).  Default 1 = off.
+  set nb [ot_sp_env OT_SPINE_BANDS 1]
+  if {$nb > 1 && [llength $late] >= 2 * $nb} {
+    set ys {}; set xs {}
+    foreach i $late { lassign [dict get $::ot_sp_pos $i] x y; lappend xs $x; lappend ys $y }
+    set by0 [tcl::mathfunc::min {*}$ys]; set bh [expr {double([tcl::mathfunc::max {*}$ys] - $by0) / $nb}]
+    set bl [dict create]
+    foreach i $late {
+      set y [lindex [dict get $::ot_sp_pos $i] 1]
+      set b [expr {$bh > 0 ? min($nb - 1, int(($y - $by0) / $bh)) : 0}]
+      dict lappend bl $b $i
+    }
+    set broots {}
+    foreach b [lsort -integer [dict keys $bl]] { lappend broots [ot_sp_split_bb [dict get $bl $b]] }
+    set sub "N[incr ::ot_sp_nn]"
+    set fx [expr {int(([tcl::mathfunc::min {*}$xs] + [tcl::mathfunc::max {*}$xs]) / 2)}]
+    set fy [expr {int(($by0 + [tcl::mathfunc::max {*}$ys]) / 2)}]
+    dict set ::ot_sp_pos $sub [ot_sp_free $fx $fy]
+    set fsw 0; foreach i $late { incr fsw [dict get $::ot_sp_cnt $i] }
+    dict set ::ot_sp_cnt $sub $fsw
+    dict set ::ot_sp_kids $sub $broots
+    puts "OT_SPINE bands: [llength $broots] row-band regional roots ([join [lmap b [lsort -integer [dict keys $bl]] {llength [dict get $bl $b]}] /] flop leaves, band height [format %.1f [expr {$bh / $u}]] um) on one centre fork"
+  } else {
+    set sub [ot_sp_split_bb $late]
+  }
   set top "N[incr ::ot_sp_nn]"
   dict set ::ot_sp_pos $top [list $rx $ry]
   set sw 0; foreach i $ids { incr sw [dict get $::ot_sp_cnt $i] }
