@@ -189,7 +189,14 @@
         "source_commit": "0c55c33fc",
         "scope": "Existing actual two1024x256 SRAM install/readiness benchmark, default parameters."
       },
-      "qualification": "Component only. Actual final die source/epoch, producer arrival, launch and owner calendar ages remain unbound."
+      "qualification": "Component only. Actual final die source/epoch, producer arrival, launch and owner calendar ages remain unbound.",
+      "current_main_cohort": {
+        "publication_commit": "3e5e49fc9",
+        "manifest_path": "results/arch/hbm_indexed_gather_binding_2000/current_main_cohort/manifest.json",
+        "manifest_sha256": "a254826e453f71983a5c17a80d10d82c7aa515635d5ab6d65c9a149ab8e54e1b",
+        "actual_unit": "oth-ubuntu-1316613-1792648535",
+        "scope": "Exact imported source cohort and native-bank replay only; final die identity and producer/control epochs remain unbound."
+      }
     },
     "bank_calendars": {
       "SW": {
@@ -273,6 +280,20 @@
       "receipt_path": "results/token_pass/hbm_su_gather_lower_2000/topk_native_commit/receipt.json",
       "source_scope": "Exact selected d76 source preserved; six readset files differ main. Three384-score component inputs with controlled RR64 support and native shared-hub commit/readback. No upstream, whole-host clock epoch or production row-lease qualification.",
       "readiness_qualified": false
+    },
+    "aggregation_transport_obligation": {
+      "status": "UNIMPLEMENTED",
+      "ordinary_packet_words": 16,
+      "ordinary_delivery_partial_mask": false,
+      "receiver_destination_source": "Actual programmed del_obase40; frame index is not added.",
+      "source_owned_words_per_TP192_shard": 2,
+      "required_authorities": [
+        "Executable source-word staging and compaction programme",
+        "Hashed receiver configuration and scheduled slots",
+        "Actual native write, readable and retained-through observations",
+        "Actual physical rank/group configuration and shared clock epoch"
+      ],
+      "scope": "Local SU mask8 preserves selected words but does not compact ordinary full16 packets."
     }
   },
   "obligations": [
