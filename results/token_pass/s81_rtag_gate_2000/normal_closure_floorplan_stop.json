@@ -1,0 +1,48 @@
+{
+  "name": "s81bf_front_five_roots_n32_soq-srcfix-107e64f6c",
+  "status": "FLOORPLAN_MARGIN",
+  "reason": "util: utilisation 64.8% > 60% (std 14152 + macro 0 um2 in 21835 um2): grow the outline to <= 55-60%",
+  "host": "ot-epyc9",
+  "run": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_five_roots_n32_soq-srcfix-107e64f6c",
+  "events": [
+    "2026-10-21T21:51:09-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81bf_front_five_roots_n32_soq-srcfix-107e64f6c.json",
+    "2026-10-21T21:51:12-07:00 CLOSED-STANDS PASS: dsfd_bf_front_roots is CLOSED with a published view (s81bf_front_five_roots_nlock_h03-ref-392d7efcb @ 392d7efcb); reroute_reason rtl_change: 6 of 45 RTL source file(s) differ from 392d7efcb: rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv, rtl/s81/ot_s81_bf_front_roots.sv, rtl/s81/ot_s81_bf_seam_roots.sv (verified)",
+    "2026-10-21T21:51:35-07:00 CLOCK-RULE at submit: 17,685 sinks on the largest root; measured TT insertion 244.2 ps, FF insertion 195.7 ps, TT pin-flop spread 10.1 ps, FF pin-flop spread 9.3 ps; WARN: 17,685 sinks on one clock root > 15,000 (guidance)",
+    "2026-10-21T21:51:35-07:00 REF_GATE WARN (refuse): sources: 21 referenced file(s) do not exist: ['physical/common_flow/anchor_row_packing.tcl', 'physical/common_flow/cg_pushdown.tcl', 'physical/common_flow/clk_net_protect.tcl', 'physical/common_flow/clock_entries.tcl', 'physical/common_flow/grt_macro_top_layer.tcl', 'physical/common_flow/link_budget_consistent.sdc'] (fix: commit them / fix the path) | clock_rule: 17,685 sinks on the largest root; measured TT insertion 244.2 ps, FF insertion 195.7 ps, TT pin-flop spread 10.1 ps, FF pin-flop spread 9.3 ps; WARN: 17,685 sinks on one clock root > 15,000 (guidance) (fix: guidance only (owner 10-17 0dq): the check is pin-flop spread <= 80 ps at TT and FF plus a neighbour-matched boundary)",
+    "2026-10-21T21:51:48-07:00 benches run in parallel with calibrate/route (4 benches; spec bench_first opts out)",
+    "2026-10-21T21:52:50-07:00 git-mirror sync 107e64f6c39a via upstream in 2s + extract 51s; 9762 views / 23.1 GB hard-linked from the host view store",
+    "2026-10-21T21:52:52-07:00 source 107e64f6c39a synced to ot-epyc9:/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_five_roots_n32_soq-srcfix-107e64f6c/src",
+    "2026-10-21T21:52:54-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-21T21:53:02-07:00 launched route (attempt 1) on ot-epyc9",
+    "2026-10-21T21:54:47-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-21T21:54:50-07:00 bench track: launched bench_n32soq_front_full_shape (bench_n32soq_front_full_shape.a1b1) beside route",
+    "2026-10-21T21:58:48-07:00 bench track: bench_n32soq_front_full_shape PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-21T21:58:50-07:00 bench track: bench_mutant_n32_read_copy_stall waiting for capacity on artifact host ot-epyc9: EPYC9 MemAvailable 72 GB - snapshot launches 56 GB < 16+16",
+    "2026-10-21T21:58:51-07:00 TEXTBOOK-LINT route.a1: WARN dsfd_bf_front_roots cells 100,968 flops 22,680 depth 520.1 ps util 0.6481 reach 0.0 um (6.5 s) || INFO reset_landing {\"max\":2,\"ports\":[{\"port\":\"rs\",\"sinks\":1,\"flops\":1,\"macros\":0}]} || INFO clock_roots max_root_sinks=17685 root=port:ck rule=PASS: 17,685 sinks on the largest root; measured TT insertion 244.2 ps, FF insertion 195.7 ps, TT pin-flop spread 10.1 ps, FF pin-flop spread 9.3 ps; WARN: 17,685 sinks on one clock root > 15,000 (guidance) || WARN clock_domain: clock root port ck: 17,685 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. u_ot_pr_core.u_view.g_hc.c_lk[0]$_DLATCH_N_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine || WARN util_channel: utilisation 64.8% > 60% (std 14152 + macro 0 um2 in 21835 um2; target 40%-60%): enlarge the outline || WARN clock_guidance: clock root port:ck: 17,685 sinks on the largest root; measured TT insertion 244.2 ps, FF insertion 195.7 ps, TT pin-flop spread 10.1 ps, FF pin-flop spread 9.3 ps; WARN: 17,685 sinks on one clock root > 15,000 (guidance)",
+    "2026-10-21T21:58:55-07:00 FLOORPLAN_MARGIN: util: utilisation 64.8% > 60% (std 14152 + macro 0 um2 in 21835 um2): grow the outline to <= 55-60%",
+    "2026-10-21T21:59:26-07:00 auto-react: block dsfd_bf_front_roots has a live or closed sibling job; no action"
+  ],
+  "commit_full": "107e64f6c39ae0fb552cb72653678e30ae524ae9",
+  "btrack": {
+    "bench_lint": {
+      "state": "done",
+      "tag": "bench_lint.a1b1",
+      "host": "ot-epyc9",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_five_roots_n32_soq-srcfix-107e64f6c",
+      "n": 1,
+      "started": "2026-10-21T21:52:54-07:00",
+      "stage_source": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_five_roots_n32_soq-srcfix-107e64f6c/bench_src_a1",
+      "wd_checked": 1792644802.2481627
+    },
+    "bench_n32soq_front_full_shape": {
+      "state": "done",
+      "tag": "bench_n32soq_front_full_shape.a1b1",
+      "host": "ot-epyc9",
+      "run": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_five_roots_n32_soq-srcfix-107e64f6c",
+      "n": 1,
+      "started": "2026-10-21T21:54:50-07:00",
+      "stage_source": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_five_roots_n32_soq-srcfix-107e64f6c/bench_src_a1",
+      "wd_checked": 1792644951.0812452
+    }
+  }
+}
