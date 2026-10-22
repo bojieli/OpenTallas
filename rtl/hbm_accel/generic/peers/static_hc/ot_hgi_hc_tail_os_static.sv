@@ -35,6 +35,8 @@ module ot_hgi_hc_tail_os_static #(
     // (ot_hdc_sinkhorn_cp; the caller's step period SDIV must be >= 16; no multicycle path).
     // HBM-ELEM13/HC-TAIL 10-21: SKP 2 = SKP 1 + the steady-step quotient output cut (ot_hdc_sinkhorn_cp SQO 1: the k3
     // fault-OR / st-write cone starts at registers); SDIV must be >= 17.
+    // HBMc/HC-TAIL 10-22: SKP 3 = SKP 2 + ot_hdc_sinkhorn_cp SC2 1 (step-0 B quotient cut QS, step-0 A normalise cut,
+    // decoded state registers); steady D unchanged, SDIV >= 17, calendar unchanged.
     parameter integer SKP=0,
     // FAM-HBM-B/HCTAIL 10-21: TPIPE 1 = every tail cone <= ~600 ps a stage (the k2b gate's ~2,100 single-period paths,
     // ~38 levels): (a) the AND-OR operand selects land in an operand register before every unit (+1 edge per unit);
@@ -173,7 +175,7 @@ module ot_hgi_hc_tail_os_static #(
     reg sink_fault;
     // HCTAIL: the SKP form is g_skcp; the multicycle form keeps g_skce (the kit SDC's sk_ tag = g_skce.sink.)
     if (SKCE != 0 && SKP != 0) begin : g_skcp
-        ot_hdc_sinkhorn_cp #(.ITERS(ITERS),.EPS(HC_EPS),.CUT(1),.SQO(SKP >= 2 ? 1 : 0)) sink(
+        ot_hdc_sinkhorn_cp #(.ITERS(ITERS),.EPS(HC_EPS),.CUT(1),.SQO(SKP >= 2 ? 1 : 0),.SC2(SKP >= 3 ? 1 : 0)) sink(
             .clk(clk),.rst_n(rst_n),.ce(sink_clk),.in_valid(sink_launch),.in_ready(sr),
             .in_e(se),.out_valid(sv),.y(sy),.fault(sf),.busy(sbusy));
         always @(posedge clk or negedge rst_n)begin

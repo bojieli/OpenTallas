@@ -15,12 +15,23 @@
 // equality (z1/z2) + carry select + mf mux + exponent range compare -> range -> 16-way s_bad OR -> flt / fault, 1,938 cut
 // flops spread over the tile; with QO the st write and the fault OR start at registers.  Steady step D = 16, so the
 // caller's STEP_CYC must be >= 17.  SQO 0 = unchanged (D 15, STEP_CYC >= 16).
+// HBMc/HC-TAIL 10-22 (k4 CTS, TT 833 ps propagated: WNS -177 / 1,175 endpoints, 1,146 in the Sinkhorn): SC2 1 adds three
+// structural fixes, none on the steady critical chain (steady D stays 16, STEP_CYC >= 17 unchanged, latency unchanged):
+//   (a) step 0 B quotients (SUBN 1) cut QS (ot_hdc_skc_quot CUTS 1): the -177 ps class (1,000+ u_q2 endpoints, cone =
+//       a_xm/a_tm compare -> E -> subnormal shift amount -> 24/27-bit shifts, plus the 53-bit product sum) is split in two;
+//       step 0 B D 10 -> 11.
+//   (b) step 0 A: the row-sum normalise (nt_m / nt_e) and a_bad_sum land in a cut (the -156 ps flt endpoint: X3 ->
+//       sk_norm zero/LZC -> 4 x 4 OR -> flt); step 0 A D 7 -> 8.
+//   (c) decoded state registers sd_e / sd_m / sd_z written with st (same ce edge, same function as the g_srow decode),
+//       so the steady P1 / P3 precompute and Q1 partial products start at registers instead of behind the exponent==0
+//       decode of st (the -44 / -31 ps classes: 3-5 decode levels + fanout ahead of the adder / CSA tree).
 // ---------------------------------------------------------------------------
 module ot_hdc_sinkhorn_cp #(
     parameter integer ITERS = 20,
     parameter [31:0]  EPS = 32'h358637BD,      // hc_eps = 1e-6 in binary32
     parameter integer CUT = 1,                 // 1 = registered stages (needs STEP_CYC >= 16); 0 = combinational step
-    parameter integer SQO = 0                  // 1 = steady-step quotient output cut QO (needs STEP_CYC >= 17)
+    parameter integer SQO = 0,                 // 1 = steady-step quotient output cut QO (needs STEP_CYC >= 17)
+    parameter integer SC2 = 0                  // 1 = step-0 cuts QS / A-normalise + decoded state registers (above)
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -43,6 +54,9 @@ module ot_hdc_sinkhorn_cp #(
     reg        flt;
     reg [31:0] er [0:15];                      // step-0 inputs
     reg [31:0] st [0:15];                      // the matrix, transposed every step
+    reg [7:0]  sd_e [0:15];                    // SC2: decoded st (exponent, 1 for a subnormal / zero)
+    reg [23:0] sd_m [0:15];                    // SC2: decoded st significand (hidden bit made explicit)
+    reg        sd_z [0:15];                    // SC2: st exponent field == 0
     // step-0 registers between A and B
     reg [23:0]       a_xm [0:15];
     reg signed [9:0] a_xe [0:15];
@@ -87,8 +101,10 @@ module ot_hdc_sinkhorn_cp #(
             ot_hdc_skc_add #(.CUT(CUT)) u_a3 (.clk(clk), .ea(g2), .ua(u2), .ma(m2), .eb(ee[3]), .mb(mm[3]),
                                 .eg(g3), .up(u3), .e(e3), .m(m3), .ovf(o3));
             wire [30:0] sum = {m3[23] ? e3 : 8'd0, m3[22:0]};
-            ot_hdc_sk_norm u_nt (.x(sum), .m(nt_m[r]), .e(nt_e[r]), .z(tz));
-            assign a_bad_sum[r] = o1 | o2 | o3 | tz;
+            wire [23:0] nt_mn; wire signed [9:0] nt_en;
+            ot_hdc_sk_norm u_nt (.x(sum), .m(nt_mn), .e(nt_en), .z(tz));
+            ot_hdc_skc_cut #(.W(24 + 10 + 1), .EN(CUT != 0 && SC2 != 0)) u_na (.clk(clk),
+                .d({nt_mn, nt_en, o1 | o2 | o3 | tz}), .q({nt_m[r], nt_e[r], a_bad_sum[r]}));
         end
     endgenerate
 
@@ -102,7 +118,7 @@ module ot_hdc_sinkhorn_cp #(
             for (c = 0; c < 4; c = c + 1) begin : g_bel
                 wire [30:0] q;
                 wire rng, ov;
-                ot_hdc_skc_quot #(.SUBN(1), .CUT(CUT), .CUTO(1)) u_q (.clk(clk), .xm(a_xm[4*r + c]), .xe(a_xe[4*r + c]), .xz(a_xz[4*r + c]),
+                ot_hdc_skc_quot #(.SUBN(1), .CUT(CUT), .CUTO(1), .CUTS(SC2)) u_q (.clk(clk), .xm(a_xm[4*r + c]), .xe(a_xe[4*r + c]), .xz(a_xz[4*r + c]),
                                                 .tm(a_tm[r]), .te(a_te[r]), .r(rs), .y(q), .range(rng));
                 wire [7:0]  qe = (q[30:23] == 8'd0) ? 8'd1 : q[30:23];
                 wire [23:0] qm = {q[30:23] != 8'd0, q[22:0]};
@@ -127,10 +143,16 @@ module ot_hdc_sinkhorn_cp #(
             wire [23:0] mm [0:3];
             wire [3:0]  sub;
             for (c = 0; c < 4; c = c + 1) begin : g_dec
-                wire [31:0] w = st[4*r + c];
-                assign ee[c]  = (w[30:23] == 8'd0) ? 8'd1 : w[30:23];
-                assign mm[c]  = {w[30:23] != 8'd0, w[22:0]};
-                assign sub[c] = (w[30:23] == 8'd0);
+                if (SC2 != 0) begin : g_sd
+                    assign ee[c]  = sd_e[4*r + c];
+                    assign mm[c]  = sd_m[4*r + c];
+                    assign sub[c] = sd_z[4*r + c];
+                end else begin : g_st
+                    wire [31:0] w = st[4*r + c];
+                    assign ee[c]  = (w[30:23] == 8'd0) ? 8'd1 : w[30:23];
+                    assign mm[c]  = {w[30:23] != 8'd0, w[22:0]};
+                    assign sub[c] = (w[30:23] == 8'd0);
+                end
             end
             wire [7:0] e1, e2, e3, et, g1, g2, g3, gt;
             wire [23:0] m1, m2, m3, mt;
@@ -211,6 +233,17 @@ module ot_hdc_sinkhorn_cp #(
             end
             if (ph == P_B) st[k] <= b_out[k];
             else if (ph == P_RUN) st[k] <= s_out[k];
+            if (SC2 != 0) begin
+                if (ph == P_B) begin
+                    sd_e[k] <= (b_out[k][30:23] == 8'd0) ? 8'd1 : b_out[k][30:23];
+                    sd_m[k] <= {b_out[k][30:23] != 8'd0, b_out[k][22:0]};
+                    sd_z[k] <= (b_out[k][30:23] == 8'd0);
+                end else if (ph == P_RUN) begin
+                    sd_e[k] <= (s_out[k][30:23] == 8'd0) ? 8'd1 : s_out[k][30:23];
+                    sd_m[k] <= {s_out[k][30:23] != 8'd0, s_out[k][22:0]};
+                    sd_z[k] <= (s_out[k][30:23] == 8'd0);
+                end
+            end
         end
         for (k = 0; k < 4; k = k + 1) if (ph == P_A) begin
             a_tm[k] <= nt_m[k];

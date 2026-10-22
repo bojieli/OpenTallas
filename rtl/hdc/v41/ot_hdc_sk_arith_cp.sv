@@ -19,6 +19,10 @@
 //   ot_hdc_skc_seed  S1 after the two ROMs, S2 after the 31-row carry-save tree, S3 on r.
 //   ot_hdc_skc_quot  Q1 after the 29-row carry-save tree of X'R, Q2 after the product select / subnormal shift
 //                    (ms, xs), Q3 after the 27-row remainder tree; QO (optional) on the outputs y / range.
+//                    QS (optional, CUTS 1; HBMc/HC-TAIL 10-22, the k4 CTS TT worst class -177 ps = the step-0 B SUBN 1
+//                    Q2 cone: compare -> E -> subnormal shift amount -> 24/27-bit shifts) registers the product sum
+//                    pr[51:27] and the input-side lt / E / s / zero_s, so Q2 is the two shifts only.  +1 cut on the
+//                    quotient (D + 1); CUTS 0 = byte-identical function and structure.
 // ---------------------------------------------------------------------------
 module ot_hdc_skc_cut #(
     parameter integer W  = 1,
@@ -175,7 +179,8 @@ endmodule
 module ot_hdc_skc_quot #(
     parameter integer SUBN = 0,
     parameter integer CUT  = 1,
-    parameter integer CUTO = 0                               // QO: register y / range as well
+    parameter integer CUTO = 0,                              // QO: register y / range as well
+    parameter integer CUTS = 0                               // QS: register pr / lt / E / s before the Q2 shifts
 ) (
     input  wire              clk,
     input  wire [23:0]       xm,
@@ -208,25 +213,29 @@ module ot_hdc_skc_quot #(
     ot_hdc_skc_cut #(.W(2 * MW), .EN(CUT)) u_q1 (.clk(clk), .d({ps_n, pc_n}), .q({ps, pc}));
     wire [MW:0] pr0, pr1;
     ot_hdc_sk_cadd #(.W(MW)) u_pcpa (.a(ps), .b(pc), .s0(pr0), .s1(pr1));
-    wire [52:0] pr = pr0[MW-1:0];
-    wire [23:0] mp = lt ? pr[50:27] : pr[51:28];
-    wire [24:0] xp = lt ? {xm, 1'b0} : {1'b0, xm};
-    wire [4:0]  s_n;
-    wire        zero_s_n;
+    wire [52:0] pr_n = pr0[MW-1:0];
+    wire [4:0]  s_p;
+    wire        zero_s_p;
     generate
         if (SUBN != 0) begin : g_sub
             wire signed [10:0] sfull = -11'sd126 - E_n;
-            assign zero_s_n = (sfull > 11'sd24);
-            assign s_n = (sfull <= 11'sd0) ? 5'd0 : (zero_s_n ? 5'd0 : sfull[4:0]);
+            assign zero_s_p = (sfull > 11'sd24);
+            assign s_p = (sfull <= 11'sd0) ? 5'd0 : (zero_s_p ? 5'd0 : sfull[4:0]);
         end else begin : g_nosub
-            assign zero_s_n = 1'b0;
-            assign s_n = 5'd0;
+            assign zero_s_p = 1'b0;
+            assign s_p = 5'd0;
         end
     endgenerate
+    // QS (CUTS 1): product bits [51:27] and the input-side lt / E / s / zero_s land in a cut; EN 0 = wires.
+    wire [24:0] prq; wire ltq; wire signed [10:0] Eq; wire [4:0] s_n; wire zero_s_n;
+    ot_hdc_skc_cut #(.W(25 + 1 + 11 + 5 + 1), .EN(CUT != 0 && CUTS != 0)) u_qs (.clk(clk),
+        .d({pr_n[51:27], lt, E_n, s_p, zero_s_p}), .q({prq, ltq, Eq, s_n, zero_s_n}));
+    wire [23:0] mp = ltq ? prq[23:0] : prq[24:1];
+    wire [24:0] xp = ltq ? {xm, 1'b0} : {1'b0, xm};
     wire [23:0] ms_n = mp >> s_n;
     wire [26:0] xs_n = {2'b00, xp} << (5'd24 - s_n);
     wire [23:0] ms; wire [26:0] xs; wire signed [10:0] E; wire [4:0] s; wire zero_s;
-    ot_hdc_skc_cut #(.W(24 + 27 + 11 + 5 + 1), .EN(CUT)) u_q2 (.clk(clk), .d({ms_n, xs_n, E_n, s_n, zero_s_n}),
+    ot_hdc_skc_cut #(.W(24 + 27 + 11 + 5 + 1), .EN(CUT)) u_q2 (.clk(clk), .d({ms_n, xs_n, Eq, s_n, zero_s_n}),
         .q({ms, xs, E, s, zero_s}));
     // remainder signs: 27-row tree -> Q3
     localparam integer W = 27;
