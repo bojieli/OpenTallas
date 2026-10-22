@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-s81-pipeline-producer-2000
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-s81-pipeline-producer-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-s81-pipeline-producer-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-s81-pipeline-producer-2000
+ot-run: ot-gold1       admits   337 GB (avail 678, growth 442, headroom 0, waiters 0/0 GB) load 194/112 running 51 disk 1590 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-s81-pipeline-producer-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-s81-pipeline-producer-2000
+ot-run: -> ot-gold1
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-2247195-1792644305 after 0 s
+PASS relative observation extraction; 12 causal refusals; no hardware qualification
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-2247195-1792644305): exit 0
