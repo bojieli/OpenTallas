@@ -62,8 +62,8 @@ set cx0 [expr {double([$ot_mpf_core xMin]) / $ot_mpf_dbu}]; set cx1 [expr {doubl
 set cy0 [expr {double([$ot_mpf_core yMin]) / $ot_mpf_dbu}]; set cy1 [expr {double([$ot_mpf_core yMax]) / $ot_mpf_dbu}]
 set ot_mpf_list {}; set ot_mpf_seen [dict create]; set ot_mpf_na 0; set ot_mpf_nb 0
 proc ot_mpf_anchor {ff mac px py} {
-  upvar ot_mpf_list lst ot_mpf_seen seen
-  global ot_mpf_dbu ot_mpf_halo ot_mpf_gap cx0 cx1 cy0 cy1
+  # the hook may be sourced inside an ORFS proc: take the caller's variables, never globals
+  upvar 1 ot_mpf_list lst ot_mpf_seen seen ot_mpf_dbu ot_mpf_dbu ot_mpf_halo ot_mpf_halo ot_mpf_gap ot_mpf_gap cx0 cx0 cx1 cx1 cy0 cy0 cy1 cy1
   set mb [$mac getBBox]
   set mx0 [expr {double([$mb xMin]) / $ot_mpf_dbu}]; set mx1 [expr {double([$mb xMax]) / $ot_mpf_dbu}]
   set my0 [expr {double([$mb yMin]) / $ot_mpf_dbu}]; set my1 [expr {double([$mb yMax]) / $ot_mpf_dbu}]
