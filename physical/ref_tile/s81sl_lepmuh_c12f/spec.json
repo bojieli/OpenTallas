@@ -341,7 +341,7 @@
     "threads": 8,
     "peak_ram_gb": 16,
     "fail_regex": "^FAIL lep_muh: ok 1 rx 0 tx [1-9]",
-    "fail_witness": "results/rtl/s81_lep_c12_1021/h/lepmuh_mut_tagdrop.log"
+    "fail_witness": "results/rtl/s81_lep_c12_1021/h/source_f1b5f7583/lepmuh_mut_tagdrop.log"
    },
    {
     "name": "lepmuh_mut_landcut",
@@ -350,7 +350,7 @@
     "threads": 8,
     "peak_ram_gb": 16,
     "fail_regex": "^FAIL lep_muh: ok 0 rx [1-9]",
-    "fail_witness": "results/rtl/s81_lep_c12_1021/h/lepmuh_mut_landcut.log"
+    "fail_witness": "results/rtl/s81_lep_c12_1021/h/source_f1b5f7583/lepmuh_mut_landcut.log"
    }
   ],
   "views_to": "physical/ref_tile/s81sl_lepmuh_c12f/views",

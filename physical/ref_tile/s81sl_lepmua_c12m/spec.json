@@ -329,7 +329,7 @@
     "threads": 8,
     "peak_ram_gb": 12,
     "fail_regex": "^FAIL lep_mu: .*mismatches [1-9]",
-    "fail_witness": "results/rtl/s81_lep_c12_1021/a/lepmua_mut_tagdrop.log"
+    "fail_witness": "results/rtl/s81_lep_c12_1021/a/source_f1b5f7583/lepmua_mut_tagdrop.log"
    },
    {
     "name": "lepmua_mut_landcut",
@@ -338,7 +338,7 @@
     "threads": 8,
     "peak_ram_gb": 12,
     "fail_regex": "^FAIL lep_mu: .*mismatches [1-9]",
-    "fail_witness": "results/rtl/s81_lep_c12_1021/a/lepmua_mut_landcut.log"
+    "fail_witness": "results/rtl/s81_lep_c12_1021/a/source_f1b5f7583/lepmua_mut_landcut.log"
    }
   ],
   "views_to": "physical/ref_tile/s81sl_lepmua_c12m/views",
