@@ -33,7 +33,7 @@ wbq() {   # wbq <label> <expect pass|fail> <verilator -G args...>
  "$vl" --binary --timing -j "${JOBS:-8}" -O1 -Wno-fatal -Wno-lint -Wno-style \
   --top-module tb_hbm_svc_wb_kshare_qh --Mdir "$out/obj-$L" -o sim "$@" "${wbsrc[@]}" > "$out/build-$L.log" 2>&1
  local rc=0; "$out/obj-$L/sim" ${SIMARGS:-} > "$out/$L.log" 2>&1 || rc=$?
- rm -rf "$out/obj-$L"
+ if [[ "${WBK_KEEP_OBJECTS:-0}" != 1 ]]; then rm -rf "$out/obj-$L"; fi
  cat "$out/$L.log" | tail -20
  if [[ $E == pass ]]; then test "$rc" = 0 && grep -q '^PASS tb_hbm_svc_wb_kshare_qh' "$out/$L.log" && echo "STK_WBQ PASS $L"
  else test "$rc" != 0 && grep -q 'WB_INTEGRITY\|FAIL tb_hbm_svc_wb_kshare_qh' "$out/$L.log" && echo "STK_WBQ MUTANT_REJECTED $L"; fi
