@@ -79,6 +79,7 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  localparam integer NS0=(143+SS-1)/SS;
  localparam integer NAK=(200+SS-1)/SS,NPK=NAK+4,NSK=NS0+(QW+SS-1)/SS;                      // empty-stage load-enable copies (<= 32 data bits each)
  (* keep="true",dont_touch="true" *) reg[NAK-1:0]av_k;      // = a_v
+ (* keep="true",dont_touch="true" *) reg av_s;              // = a_v: the id-select copies' own load enable (HBMc/TILES 10-22)
  (* keep="true",dont_touch="true" *) reg[NPK-1:0]pv_k;      // = p_v
  (* keep="true",dont_touch="true" *) reg[NSK-1:0]sv_k;      // = st_v
  wire[3:0]a_sel=a[176:173];
@@ -200,7 +201,7 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
  always @(posedge clk or negedge rst_n[1])
   if(!rst_n[1])run_cohort_q<=0;else run_cohort_q<=cohort_n;
  always @(posedge clk or negedge ar[0])
-  if(!ar[0])av_k<=0;else av_k<={NAK{a_v_n}};
+  if(!ar[0])begin av_k<=0;av_s<=0;end else begin av_k<={NAK{a_v_n}};av_s<=a_v_n;end
  always @(posedge clk or negedge psr[0])
   if(!psr[0])pv_k<=0;else pv_k<={NPK{p_v_n}};
  always @(posedge clk or negedge psr[1])
@@ -263,7 +264,7 @@ module ot_hbm_svc_sm_issuer_rel_h #(parameter integer LBANKS=4, parameter intege
   // stage registers: load while the stage is empty (the KEPT copy of its valid gates each <= 32-bit slice)
   for(ab=0;ab<200;ab=ab+1)begin
    if(!av_k[ab/SS])a[ab]<=rd[ab];
-   if(ab>=173&&ab<=176&&!av_k[ab/SS])begin asel_lo[ab-173]<=rd[ab];asel_mid[ab-173]<=rd[ab];asel_m2[ab-173]<=rd[ab];asel_hi[ab-173]<=rd[ab];end
+   if(ab>=173&&ab<=176&&!av_s)begin asel_lo[ab-173]<=rd[ab];asel_mid[ab-173]<=rd[ab];asel_m2[ab-173]<=rd[ab];asel_hi[ab-173]<=rd[ab];end
    if(!pv_k[ab/SS])p[ab]<=a[ab];
   end
   for(ab=0;ab<24;ab=ab+1)begin
