@@ -1,0 +1,30 @@
+{
+  "source": "e8a4ce865",
+  "scope": "south fallback half only",
+  "execution_host": "ot-epyc5",
+  "unit": "oth-ubuntu-3583531-1792645267",
+  "positive": {
+    "compared": 5486,
+    "mismatches": 0,
+    "verdict": "PASS"
+  },
+  "causal_mutant": {
+    "MUT": 1,
+    "compared": 5486,
+    "mismatches": 2743,
+    "verdict": "EXPECTED_REJECTION"
+  },
+  "compiler": "Verilator 5.050",
+  "backend_flags": "MAKEFLAGS=OPT_FAST=-O0 OPT_SLOW=-O0",
+  "output_edges_vs_r6": {
+    "rout_s": 9,
+    "gout": 27
+  },
+  "full_frame_gout_candidate_edges": 36,
+  "full_frame_qualification": "PENDING",
+  "native_and_physical_qualification": "PENDING",
+  "witness_sha256": {
+    "s_f_m0.log": "e9e38c6b067c23507e53ffff4b68c8f0294d892a39b1208d8477d08908ec1b74",
+    "s_f_m1.log": "0c27ebe9c33694f0ca8861fec0c3b2b70d5824da7c1bcf1c848f2519953d882c"
+  }
+}

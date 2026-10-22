@@ -1,0 +1,12 @@
+`timescale 1ns/1ps
+// Diagnostic reference implementation: isolates ring storage from the retiming solve.
+// Not a physical implementation or a qualified source candidate.
+module ot_rp7_delay_ring #(parameter integer W=1,N=3)
+ (input wire clk,rst_n,input wire [W-1:0] d,output wire [W-1:0] q);
+ reg [W-1:0] delay[0:N-1];
+ always @(posedge clk) begin
+ delay[0]<=d;
+ for(integer k=1;k<N;k=k+1) delay[k]<=delay[k-1];
+ end
+ assign q=delay[N-1];
+endmodule

@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 module tb_ot_hbm_smh_rp7n_f_retime #(parameter integer MUT=0);
-reg clk=0; always #5 clk=~clk; reg rst_n=0; integer cyc,bad=0,nc=0;
+reg clk=0; always #5 clk=~clk; reg rst_n=0; reg ref_rst_n=0;
+always @(posedge clk) ref_rst_n<=rst_n; // priced r7 boot +1
+integer cyc,bad=0,nc=0;
 reg [8:0] xs_a1=0;
 reg [4:0] xs_g1=0;
 reg [6:0] xs_a2=0;
@@ -24,7 +26,7 @@ always @(posedge clk) begin expected_xo_g0[0]<=old_xo_g0; for(integer j=1;j<=9;j
 wire [99:0] old_xo_gp,new_xo_gp;
 reg [99:0] expected_xo_gp[0:9];
 always @(posedge clk) begin expected_xo_gp[0]<=old_xo_gp; for(integer j=1;j<=9;j=j+1) expected_xo_gp[j]<=expected_xo_gp[j-1]; end
-ot_hbm_smh_rp6n_f #(.MUT(0)) u_old (.ck_u(clk), .ck_t(clk), .ck_c(clk), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2), .attn(attn), .rin_n(rin_n), .bin(bin), .gin(gin), .rout_n(old_rout_n), .bout(old_bout), .xo_b(old_xo_b), .xo_g0(old_xo_g0), .xo_gp(old_xo_gp));
+ot_hbm_smh_rp6n_f #(.MUT(0)) u_old (.ck_u(clk), .ck_t(clk), .ck_c(clk), .rst_n(ref_rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2), .attn(attn), .rin_n(rin_n), .bin(bin), .gin(gin), .rout_n(old_rout_n), .bout(old_bout), .xo_b(old_xo_b), .xo_g0(old_xo_g0), .xo_gp(old_xo_gp));
 ot_hbm_smh_rp7n_f #(.MUT(MUT)) u_new (.ck_c(clk), .ck_t(clk), .ck_tpw(clk), .ck_tpe(clk), .ck_cpw(clk), .ck_cw(clk), .ck_ce(clk), .ck_cpe(clk), .ck_u(clk), .ck_xs(clk), .rst_n(rst_n), .xs_a1(xs_a1), .xs_g1(xs_g1), .xs_a2(xs_a2), .xs_g2(xs_g2), .attn(attn), .rin_n(rin_n), .bin(bin), .gin(gin), .rout_n(new_rout_n), .bout(new_bout), .xo_b(new_xo_b), .xo_g0(new_xo_g0), .xo_gp(new_xo_gp));
 initial begin for(cyc=0;cyc<3000;cyc=cyc+1) begin @(negedge clk); if(cyc==32) rst_n=1;
 xs_a1<={$urandom};

@@ -1,0 +1,14 @@
+{
+  "source": "ring candidate from 44980c412, with only compensation storage replaced in a private diagnostic copy",
+  "reference_reset": "one edge later, matching the already priced boot depth",
+  "actual_execution_host": "ot-epyc5",
+  "unit": "oth-ubuntu-1257011-1792642552",
+  "root": "/srv/opentallas-scratch2/claude/codex-smh-r7-fb-register-probe-2118-1021",
+  "positive": "FAIL",
+  "compared": 5486,
+  "mismatches": 144,
+  "bit": 38,
+  "conclusion": "The ordinary registered compensation reproduces the ring mismatch. Ring storage is not the cause.",
+  "next_action": "Collect the admitted internal child-output trace and repair its earliest divergence.",
+  "physical_qualification": false
+}

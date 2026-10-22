@@ -68,6 +68,12 @@ def generate(h, v):
     edges = [(a,b,n,add-oldedges[a,b,n,pin],pin,add,oldedges[a,b,n,pin])
              for a,b,n,add,land,pin in newplan['edges']]
     offsets = {node:0 for edge in edges for node in edge[:2]}
+    # The fallback exposed numerical state in the hard TCL leaf's unreset
+    # eight-edge feedback interleave. Preserve its phase relative to r6.
+    # 24 is the common multiple of that eight-edge loop and three-edge
+    # landing compensation. The full-width miter must validate this candidate.
+    phase_constraints = {'u_h01': 24, 'u_h11': 24} if (h,v)==('s','f') else {}
+    offsets.update(phase_constraints)
     for it in range(len(offsets)+1):
         changed = False
         for a,b,n,delta,pin,na,oa in edges:
@@ -159,7 +165,7 @@ def generate(h, v):
                            'rtl/common/landed_parent/ot_pl_land_field_copies.sv']
     ns['regions'] = [dict(name=r,insts=sorted(i for i in new if new[i]==r),centre=centres[r])
                      for r in dict.fromkeys(new.values())]
-    ns['r7'] = dict(output_offsets={n[5:]:o for n,o in offsets.items() if n.startswith('port:') and p.ports[n[5:]]['dir']=='out'},
+    ns['r7'] = dict(phase_constraints=phase_constraints,output_offsets={n[5:]:o for n,o in offsets.items() if n.startswith('port:') and p.ports[n[5:]]['dir']=='out'},
                     edge_proof=proof,compensation=pads_to_json(pads),child_offsets=offsets,
                     reset_note='consumer reset age retimed locally; new regional forest boot depth recorded by lp')
     (ROOT/REC).mkdir(parents=True,exist_ok=True)
