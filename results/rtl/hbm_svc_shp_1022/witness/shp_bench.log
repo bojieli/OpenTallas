@@ -3,13 +3,13 @@ fill8: SHP_LOCKSTEP PASS WIDTH=279 DEPTH=8 SW=7 checks=445584 pops=143900
 fill8s3: SHP_INVARIANT checks=41439219 errors=0 release_to_first_fire_min_wr_edges=1
 fill8s3: SHP_LOCKSTEP PASS WIDTH=279 DEPTH=8 SW=3 checks=445583 pops=143685
 cmd4: SHP_INVARIANT checks=3564672 errors=0 release_to_first_fire_min_wr_edges=0
-cmd4: SHP_LOCKSTEP PASS WIDTH=36 DEPTH=4 SW=5 checks=445584 pops=126911
+cmd4: SHP_LOCKSTEP PASS WIDTH=36 DEPTH=4 SW=5 checks=445584 pops=126880
 wq4: SHP_INVARIANT checks=9357264 errors=0 release_to_first_fire_min_wr_edges=0
 wq4: SHP_LOCKSTEP PASS WIDTH=105 DEPTH=4 SW=5 checks=445584 pops=127136
 w1: SHP_INVARIANT checks=445584 errors=0 release_to_first_fire_min_wr_edges=0
 w1: SHP_LOCKSTEP PASS WIDTH=1 DEPTH=8 SW=7 checks=445584 pops=143949
 mut1: SHP_INVARIANT checks=17823360 errors=214755 release_to_first_fire_min_wr_edges=0
-mut1: SHP_LOCKSTEP FAIL MUT=1 errors=480754 checks=445584 pops=143900
+mut1: SHP_LOCKSTEP FAIL MUT=1 errors=480521 checks=445584 pops=143900
 mut_RS_DEEP: SHP_INVARIANT checks=17823360 errors=3999640 release_to_first_fire_min_wr_edges=0
 mut_RS_DEEP: SHP_LOCKSTEP FAIL MUT=0 errors=4152401 checks=445584 pops=143900
 mut_RS_DEEP: SHP_INVARIANT checks=17823360 errors=3999640 release_to_first_fire_min_wr_edges=0

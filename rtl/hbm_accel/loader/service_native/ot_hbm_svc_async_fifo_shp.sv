@@ -9,7 +9,10 @@
 // have crossed, i.e. long after every group sync released).  rd_data slice = mem_s[ra] (FWFT, as mem[rd_bin]).
 // Why: r4/r4c used NS lockstep copies of the whole reviewed FIFO per lane (80 x 4 CDC FIFOs) only to keep every pointer
 // / decode net <= 32 loads; here ONE pointer pair crosses per FIFO and the fan-out is carried by same-domain copies.
-// Census shape: wr_fire -> NG kept group ANDs -> one kept AND per slice; ra bit 0 -> 4 x B mux pins (B <= 7: 28);
+// Census shape: wr_fire -> NG kept group ANDs -> one kept AND per slice; read select rs[d] -> B AND pins + 1 (B <= 7);
+// v4 (r5a gate 10-22, census max 57): a binary read index ra[AW-1:0] -> mem[ra] is flattened by abc into AOI terms that
+// reuse every ra bit up to 2 x DEPTH/2 x B times (ra[2] QN 57 loads at DEPTH 8, B 7); the read slot is now a kept
+// one-hot ring rs (rs == 1 << rd_bin[AW-1:0] every edge) and rd_data = OR_d (rs[d] & mem[d]).
 // group reset sync -> GS slices x (AW + 1) <= 32.
 (* keep_hierarchy = "yes" *)
 module ot_hbm_svc_shp_and2(input wire a,b,output wire y); assign y=a&b; endmodule
@@ -95,12 +98,17 @@ module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)
   // purpose as the per-slice kept driver, so each group fire net drives GS AND pins, not GS x (B write enables + AW).
   (* keep="true" *) ot_hbm_svc_shp_and2 u_wf(.a(gw_fire[s/GS]),.b(gw_reset[s/GS]),.y(wf));
   (* keep="true" *) ot_hbm_svc_shp_and2 u_rf(.a(gr_fire[s/GS]),.b(gr_reset[s/GS]),.y(rf));
-  (* keep="true",dont_touch="true" *) reg [AW-1:0] wa,ra;   // per-slice copies: must not be merged
+  (* keep="true",dont_touch="true" *) reg [AW-1:0] wa;   // per-slice copy: must not be merged
+  // per-slice one-hot read slot (v4): rs == 1 << rd_bin[AW-1:0]; each rs[d] drives B AND pins + the next ring stage
+  (* keep="true",dont_touch="true",fsm_encoding="none" *) reg [DEPTH-1:0] rs;
   (* mem2reg *) reg [B-1:0] mem[0:DEPTH-1];   // explicit flops, like the reviewed FIFO (async_fifo_hierarchy_audit)
   always @(posedge wr_clk or negedge gw_reset[s/GS]) if(!gw_reset[s/GS]) wa<=0; else if(wf) wa<=wa+1'b1;
   always @(posedge wr_clk) if(wf) mem[wa]<=wr_data[s*SW+:B];
-  always @(posedge rd_clk or negedge gr_reset[s/GS]) if(!gr_reset[s/GS]) ra<=0; else if(rf) ra<=ra+1'b1;
-  assign rd_data[s*SW+:B]=mem[ra];
+  always @(posedge rd_clk or negedge gr_reset[s/GS]) if(!gr_reset[s/GS]) rs<={{(DEPTH-1){1'b0}},1'b1};
+   else if(rf) rs<={rs[DEPTH-2:0],rs[DEPTH-1]};
+  reg [B-1:0] rdm; integer d;
+  always @* begin rdm={B{1'b0}}; for(d=0;d<DEPTH;d=d+1) rdm=rdm|({B{rs[d]}}&mem[d]); end
+  assign rd_data[s*SW+:B]=rdm;
  end endgenerate
 endmodule
 `default_nettype wire
