@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.qwen.s6c-parent-inputs.v1",
+  "status": "INCOMPLETE_NO_ACTUAL_GEN",
+  "source_revision": "de062539ea7f2bb14f63948f637497b6958d9713",
+  "profile": {
+    "S6C": 1,
+    "ROPE": 1,
+    "ROPE_OVL": 1,
+    "PC_SRAM": 1,
+    "PC_RLAND": 1,
+    "DOMSPLIT": 1
+  },
+  "epoch": null,
+  "gen": {
+    "path": null,
+    "sha256": null
+  },
+  "gen_params": {
+    "path": null,
+    "sha256": null
+  },
+  "gen_ages": {
+    "path": null,
+    "sha256": null
+  },
+  "clock_authority": {
+    "path": null,
+    "sha256": null
+  },
+  "driver_authority": {
+    "path": null,
+    "sha256": null
+  },
+  "sources": [
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_ds_rl_sr_gs2_g6c_rope_ovl.sv",
+      "sha256": "5292c0d1631cd60f5a3dd2a76370b0e40fbb10cf5310b6c85f975835f37ac606"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv",
+      "sha256": "b612b7382ac23346ec75edf1501e6fdb23267d870aa433322a38c1b0429f2a00"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv",
+      "sha256": "6e1b7fd0daf74439afac1064ace66c91cb1836bf17635575aa46d3287ecacdb1"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv",
+      "sha256": "11d27a69443b998136e424f93bbac4c5f986734f20c262c31f41b1087b54702e"
+    },
+    {
+      "path": "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv",
+      "sha256": "f5b97a6e1a23b855cc4cf4f6c52973ba6d5d117f9da85cea275a2d6cfa8bdf53"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_ovl_rope.sv",
+      "sha256": "19e590cef6129070a76516580cab9e1d7d27686224e257b9f081cc4e43036614"
+    },
+    {
+      "path": "rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_ovl_rope.sv",
+      "sha256": "438fac1cac5cf76a3b2c7bf81613f96e97904e0932864632c07c7fb9f6aad25a"
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v",
+      "sha256": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e"
+    }
+  ],
+  "source_readset_status": "Known authentic assets frozen; complete ordered source/include/model readset must come from actual current GEN",
+  "instances": [],
+  "clocks": [],
+  "parameters": {
+    "pc_parent_MU": 1,
+    "kvnc_MUT_USER": 0,
+    "kvnc_MUT_STALE": 0,
+    "PC_SRAM": 1,
+    "PC_RLAND": 1,
+    "DOMSPLIT": 1
+  }
+}
