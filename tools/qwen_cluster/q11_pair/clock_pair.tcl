@@ -17,6 +17,9 @@ proc q11_pair::join {a b} {
   set x [find $a]; set y [find $b]
   if {$x ne $y} {dict set parent $y $x}
 }
+proc q11_pair::logical_name {n} {
+  return [string map [list [format %c 92] ""] $n]
+}
 proc q11_pair::data_net {net} {
   expr {$net ne "NULL" && $net ne "" && [$net getSigType] ni {POWER GROUND CLOCK}}
 }
@@ -92,23 +95,16 @@ proc ot_sp_sym_build {ids lins rx ry} {
   }
   set reset_count 0; set reset_targets 0
   dict for {n inst} $::q11_pair::insts {
-    if {![regexp {g_rsg\[[0-9]+\].*u_rs[/\.]s\[1\]} $n]} continue
+    if {![regexp {g_rsg\[[0-9]+\].*u_rs[/\.]s\[1\]} [q11_pair::logical_name $n]]} continue
     incr reset_count; q11_pair::join $n $n
     foreach it [$inst getITerms] {
       if {[$it getIoType] eq "OUTPUT"} {incr reset_targets [llength [q11_pair::walk $n [$it getNet] forward]]}
     }
   }
   set cc 0; set od 0
-  foreach n [dict keys $launches] {if {[regexp {^cc\[[0-9]+\]} $n]} {incr cc}}
-  foreach n [dict keys $captures] {if {[regexp {^out_data\[[0-9]+\]} $n]} {incr od}}
+  foreach n [dict keys $launches] {if {[regexp {(^|[/\.])cc\[[0-9]+\]} [q11_pair::logical_name $n]]} {incr cc}}
+  foreach n [dict keys $captures] {if {[regexp {(^|[/\.])(out_data|od_q)\[[0-9]+\]} [q11_pair::logical_name $n]]} {incr od}}
   puts "Q11_ROLE_TRACE clock_instances=[dict size $::q11_pair::clocks] launches=[dict size $launches] captures=[dict size $captures]"
-  set sample 0
-  foreach n [dict keys $::q11_pair::clocks] {
-    if {[string match *cc* $n] || [string match *out_data* $n] || [string match *rsg* $n] || $sample<3} {
-      puts "Q11_ROLE_NAME [list $n]";incr sample
-      if {$sample>35}break
-    }
-  }
   if {$cc != 9 || $od != 128 || !$reset_count || !$reset_targets} {
     error "Q11 incomplete exact source coverage: cc=$cc out_data=$od reset_sources=$reset_count reset_targets=$reset_targets"
   }
