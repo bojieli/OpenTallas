@@ -61,6 +61,13 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
     always @(posedge ck or negedge rst_n)
       if(!rst_n)rope_phase<=0;
       else if(start_local[3])rope_phase<=0;else if(rope_start)rope_phase<=1;
+    // SQ-KATTN2 10-21 (native census): the px_tok / px_tep RoPE selects are two kept registered copies of
+    // (rope_start || rope_phase), each computed from the next values of both, so no shared OR fans to 34 mux pins.
+    wire rope_start_nx=!(start_local[3]&&ROPE)&&rope_pending&&rope_count==0;
+    wire rope_phase_nx=start_local[3]?1'b0:(rope_start?1'b1:rope_phase);
+    (* keep=1,dont_touch=1 *)reg [1:0] rope_sel;
+    always @(posedge ck or negedge rst_n)
+      if(!rst_n)rope_sel<=0;else rope_sel<={2{rope_start_nx||rope_phase_nx}};
     wire [17:0] tok;
     wire [15:0] tep;
     wire        cf, jf, rf, row_open;
@@ -88,8 +95,8 @@ module qkd_kvs_emb_ctx #(parameter integer NATIVE32 = 0, parameter integer PIPE_
     end endgenerate
     assign px_st = sweep_start;
     // native census: the 18 / 16 output selects ride their own registered start copies (st itself = px_st, sweep, fill)
-    assign px_tok = (!start_local[4]&&(rope_start||rope_phase))?rope_id:tok;
-    assign px_tep = (!start_local[5]&&(rope_start||rope_phase))?rope_epoch:tep;
+    assign px_tok = (!start_local[4]&&rope_sel[0])?rope_id:tok;
+    assign px_tep = (!start_local[5]&&rope_sel[1])?rope_epoch:tep;
     reg ovl_fault;
     always @(posedge ck or negedge rst_n)
       if(!rst_n)ovl_fault<=0;

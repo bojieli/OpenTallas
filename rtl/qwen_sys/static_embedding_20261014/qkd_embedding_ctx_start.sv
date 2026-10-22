@@ -114,8 +114,12 @@ module qkd_embedding_ctx_start #(
         // later. Pending-owner forwarding preserves consecutive repeat vetoes.
         (* keep=1,dont_touch=1 *)reg [6:0] admit_q;
         always @(posedge ck or negedge reset_region[0])
-            if(!reset_region[0])begin admit_q<=0;pending_valid<=0;start_delayed<=0;start_banks<=0;fault_delayed<=0;end
-            else begin admit_q<={7{admit}};pending_valid<={4{admit}};start_delayed<=start_state;start_banks<={LOCAL{start_state}};fault_delayed<=fault_state;end
+            if(!reset_region[0])begin admit_q<=0;pending_valid<=0;fault_delayed<=0;end
+            else begin admit_q<={7{admit}};pending_valid<={4{admit}};fault_delayed<=fault_state;end
+        // SQ-KATTN2 10-21: start copies on owner region 4 (13 owner bits): region 0 reached 33 reset loads with LOCAL 6
+        always @(posedge ck or negedge reset_region[4])
+            if(!reset_region[4])begin start_delayed<=0;start_banks<=0;end
+            else begin start_delayed<=start_state;start_banks<={LOCAL{start_state}};end
         for(genvar group=0;group<4;group=group+1)begin:g_owner
             localparam integer LO=group*16;
             localparam integer WIDTH=(61-LO<16)?61-LO:16;
