@@ -1,0 +1,22 @@
+Verilator 5.050 2026-07-01 rev v5.050
+COLLQ_IA_CHECK vm_rt=74 N=1..3 sequences=1200 (DS shapes + random F<=120, R 1/2) conflicts=0 []
+COLLQ_IA_BENCH ia=1 vm_rt=74 period=871 exposed_sum=617 exposed=[13, 115, 37, 12, 70, 21, 85, 33, 43, 86, 10, 92] why=['first', 'serial', 'slot', 'raw:2', 'slot', 'slot', 'slot', 'slot', 'slot', 'slot', 'slot', 'slot']
+COLLQ VM q0 b3 unreserved read cyc205 sector 1053 (exp 1 100b)
+COLLQ VM q1 b0 unreserved read cyc205 sector 3060 (exp 1 3018)
+COLLQ VM q1 b3 unreserved read cyc205 sector 3053 (exp 1 300b)
+COLLQ unexpected fault gq1111 ra0000 rb0000 rs0000 ks0000
+COLLQ_IA EXPOSED pair 0->1 measured 192 compiler 13  MISMATCH
+COLLQ_IA EXPOSED pair 1->2 measured -869 compiler 115  MISMATCH
+COLLQ_IA EXPOSED pair 2->3 measured -667 compiler 37  MISMATCH
+COLLQ_IA EXPOSED pair 3->4 measured -477 compiler 12  MISMATCH
+COLLQ_IA EXPOSED pair 4->5 measured 489 compiler 70  MISMATCH
+COLLQ_IA EXPOSED pair 5->6 measured -870 compiler 21  MISMATCH
+COLLQ_IA EXPOSED pair 6->7 measured -870 compiler 85  MISMATCH
+COLLQ_IA EXPOSED pair 7->8 measured -1011 compiler 33  MISMATCH
+COLLQ_IA EXPOSED pair 8->9 measured -1008 compiler 43  MISMATCH
+COLLQ_IA EXPOSED pair 9->10 measured -1130 compiler 86  MISMATCH
+COLLQ_IA EXPOSED pair 10->11 measured -919 compiler 10  MISMATCH
+COLLQ_IA EXPOSED pair 11->0 measured -1665 compiler 92  MISMATCH
+COLLQ_IA EXPOSED_SUM ia=1 gq_ia=1 vm_rt=74 period=871 exposed_sum=-8805 (12 records, one loop + boundary)
+COLLQ FAIL errors=6181
+COLLQ_IA ia1 FAIL scenario 0
