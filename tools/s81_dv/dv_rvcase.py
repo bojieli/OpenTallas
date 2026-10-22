@@ -1021,7 +1021,14 @@ def main():
         return CONST_RE.sub(rep, e)
     body = []
     for mst, nm, prm, cm in insts:
-        cs = ', '.join(f'.{p}({detie(e, nm, kind[nm] != "standin")})' for p, e in cm.items())
+        # STW-S81c-DIE 10-22 (cap18/CLK2 fclk pairing_errors=2): a stand-in LANDING whose forwarded payload is a
+        # declared i-bus contract (forwarded_payload_width) receives its zero padding from the die top
+        # (pvso_*_local_l2 = {tz[265:0], 10 real bits}); those padding pins are real boundary pins of the stand-in LEF,
+        # so drive them with physical TIELO/TIEHI cells like any bound instance. A floating 1-pin wire left 266 of the
+        # 276 contracted bits untraced -> data_port_contract_ERROR. Straps (k, sid ...) of stand-ins stay internal.
+        payload_w = forwarded_payload_width(mst)
+        cs = ', '.join(f'.{p}({detie(e, nm, kind[nm] != "standin" or (p == "i" and bool(payload_w)))})'
+                       for p, e in cm.items())
         if kind[nm] == 'standin':
             body.append(f'  {scell[nm]} {nm} ({cs});')
         else:
