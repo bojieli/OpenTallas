@@ -44077,8 +44077,8 @@
     "h": 388.8
    },
    "origin": {
-    "x": 5508.0,
-    "y": 20761.92,
+    "x": 5503.68,
+    "y": 21228.48,
     "orient": "R0"
    },
    "pins": [],
@@ -44088,7 +44088,7 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; CLOSED LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual). | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required.",
+   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; CLOSED LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual). | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required. | r18d: move north of actual split QDQ bodies; 25-um body halo and all root keepouts clear on actual current source manifest; GEN/P/relay proof required.",
    "instance": "cxij_NW_q",
    "physical_view": "physical/ref_tile/hbm_su_cx_ijq_1019t/views/ot_hbm_su_static_cxport_ij_q"
   },
@@ -44102,8 +44102,8 @@
     "h": 388.8
    },
    "origin": {
-    "x": 5724.0,
-    "y": 20761.92,
+    "x": 5719.68,
+    "y": 21228.48,
     "orient": "R0"
    },
    "pins": [],
@@ -44113,7 +44113,7 @@
    "signal_max_layer": "M5",
    "pg_layer": "M5",
    "strap_layer": "M6",
-   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; ij_s SYNTH at the CLOSED ij_s LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual). | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required.",
+   "notes": "l32 abutted cxport ij pair (ij_q W | ij_s E), pair 324.0 x 388.8; ij_s SYNTH at the CLOSED ij_s LEF outline HBM-DIE17/BIND r17: pair moved y-313.2 (Codex r17_cxij_fit_proposal, clear of su_<q>1/fcx_NW bodies and all 45 root keepouts on P actual). | Takeover r18c: exact r17c outboard origin; preserves current r18 source, outline and ports. Current-source GEN and reach remain required. | r18d: move north of actual split QDQ bodies; 25-um body halo and all root keepouts clear on actual current source manifest; GEN/P/relay proof required.",
    "instance": "cxij_NW_s"
   },
   {
