@@ -17,7 +17,9 @@ UNIT = 'ot_s81sl_kv_leaf / ot_s81_su_kv (KV, GK, CN, IK, CP)'
 BENCH = 'results/rtl/s81_rtlgap_sukv_1021'
 KINDS = dict(KV=1, GK=7, CN=12, IK=13, CP=14)
 # Measured at the adapter's VLAT4 command boundary, NOT the issuer boundary.
-ADAPTER_DONE = dict(KV=1131, GK=1026, CN=1219, IK=1059, CP=391)
+ADAPTER_DONE = dict(KV=1130, GK=1025, CN=1218, IK=1058, CP=390)
+# Bench reports count the first pin capture edge: pin-to-done subtracts one.
+# ctl_path includes RSTOP2; XRT pin->c_v5 plus DL and VP/KV3 gives +DL+6.
 
 
 def _integer(v, label, lo=0, hi=None):
@@ -142,15 +144,16 @@ def lower(die, op, ctx):
         return result
     C = _dvc()
     cp = C.ctl_path(die, 'u_s_3N')
-    if job['capture_offset'] < cp['edges']:
-        raise ValueError('receipt capture offset is earlier than actual selected CTL route')
+    if job['capture_offset'] != cp['edges'] + _integer(job['leaf_downrelay'], 'source leaf DL') + 6:
+        raise ValueError('capture offset differs from actual CTL/XRT/DL/VP/KV source path')
     sid = die.slices()['u_s_3N']['sid']
     result.update(atomic=True, lifetime_qualified=False,
                   source_contract=sukv_contract(), fused_command=job['owner'])
     if job['owner'] != op['id']:
         result['events'] = [dict(cycle=job['issue']+job['capture_offset']+job['done_age'],
-                                inst='u_s_3N', port='leaf0', dir='int', kind='KV', tag=op['op'],
+                                inst='u_s_3N', port='(fused completion)', dir='int', kind='KV', tag=op['op'], plan_only=True,
                                 payload=f"Physical fused {job['kind']} command owned by {job['owner']}")]
+        result['gap']['missing'] = 'Fused operation is explicitly covered by '+job['owner']+'; current source/binding remains unqualified.'
         return result
     def emit(issue, target, body, what):
         ix = len(result['templates'])
@@ -158,8 +161,8 @@ def lower(die, op, ctx):
         result['rows'].append(dict(eng=C.ENG['VN'], issue=issue, arg=(ix & 127) | (command['context'] << 7), template_index=ix, what=what))
     owned = [j for j in program['jobs'] if j['owner'] == op['id']]
     for command in owned:
-        if command['capture_offset'] < cp['edges']:
-            raise ValueError('prerequisite capture offset is earlier than selected CTL route')
+        if command['capture_offset'] != cp['edges'] + _integer(command['leaf_downrelay'], 'source leaf DL') + 6:
+            raise ValueError('prerequisite capture offset differs from selected source path')
         for wr in command.get('writes', []):
             emit(wr['issue'], 5, row_write(wr['row'], wr['mask'], int(wr['word128'], 16)),
                  f"SUKV input {wr['producer']} row{wr['row']}")

@@ -24,7 +24,7 @@ def program(kind):
     name = dict(KV='attn.kv_rope_qdq', CN='attn.cmp.row_qdq', IK='attn.cmp.k_rope_qdq', CP='attn.cmp.pool')[kind]
     op = dict(id='op1', op=name)
     j = dict(kind=kind, owner='op1', covers=['op1'], issue=100, context=2,
-             capture_offset=10, done_age=K.ADAPTER_DONE[kind], release_edge=2000,
+             capture_offset=19, leaf_downrelay=4, done_age=K.ADAPTER_DONE[kind], release_edge=2000,
              source_receipt='synthetic compiler test only', residency=[], gain_set=3 if kind == 'CN' else 0,
              jid=19, drain_age=1024,
              gain_residency=dict(gain_set=3 if kind == 'CN' else 0, ready_edge=99, release_edge=2000, source_receipt='synthetic gain'))
@@ -59,7 +59,7 @@ def run():
         assert payload&65535==1<<6 and (payload>>21)&31==1
         assert cmd&15==15 and (cmd>>24)&255==32 and (cmd>>32)&15==K.KINDS[kind]
         reject(p,s,lambda j:j['residency'].pop())
-        reject(p,s,lambda j:j['residency'][0].update(ready_edge=110))
+        reject(p,s,lambda j:j['residency'][0].update(ready_edge=119))
         reject(p,s,lambda j:j.update(done_age=0))
         reject(p,s,lambda j:j.update(context=4))
         reject(p,s,lambda j:j.update(kind='IK' if kind!='IK' else 'CN'))
@@ -78,12 +78,12 @@ def run():
     # Exercise a real gain upload prerequisite using its qualified finite bases.
     p,s,o=program('CN')
     gain=copy.deepcopy(p['jobs'][0])
-    gain.update(kind='GK', covers=[], issue=1, capture_offset=10,
-                done_age=1026, release_edge=1037, parameter_base=528, operand_base=896)
-    gain['residency']=[dict(lo=a,hi=b,ready_edge=0,release_edge=1037,producer='gain input',source_receipt='synthetic')
+    gain.update(kind='GK', covers=[], issue=1, capture_offset=19,
+                done_age=1025, release_edge=1045, parameter_base=528, operand_base=896)
+    gain['residency']=[dict(lo=a,hi=b,ready_edge=0,release_edge=1045,producer='gain input',source_receipt='synthetic')
                        for a,b in ((528,531),(896,1023))]
     p['jobs'][0].update(issue=1100,release_edge=2400)
-    p['jobs'][0]['gain_residency'].update(ready_edge=1037,release_edge=2400)
+    p['jobs'][0]['gain_residency'].update(ready_edge=1045,release_edge=2400)
     for res in p['jobs'][0]['residency']: res['release_edge']=2400
     p['jobs'].insert(0,gain)
     r=K.lower(Die(),o,dict(sched=s,kv_program=p))
