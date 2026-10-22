@@ -1321,9 +1321,13 @@
    "rtl/common/landed_parent",
    "tools/landed_parent",
    "results/arch/landed_parent_1018/collq",
-   "physical/asap7_memory_macros",
-   "physical/asap7_memory_macros_v2",
-   "results/rtl/hbm_coll_lp256_1021"
+   "results/rtl/hbm_coll_lp256_1021",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1rw_128x64_m2_r2c2_p192_mir",
+   "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2"
   ],
   "benches": [
    {
