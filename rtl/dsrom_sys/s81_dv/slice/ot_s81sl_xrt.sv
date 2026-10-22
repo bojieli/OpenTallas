@@ -180,20 +180,48 @@ module ot_s81sl_xrt #(
     // later on these registers, so every CTL / RD / lo / V / SC consequence moves +1 cycle (partials and rstd do not).
     reg [15:0] sid_oh;
     always @(posedge clk) sid_oh <= 16'd1 << sid_c;          // sid is a strap: static from reset
+`ifdef OT_S81SL_XR_PDC
+    // XR8 (STW-S81c-COLLA 10-22, xrt3 / xrt3_b NEEDS_RTL TT -117 / -83: eb -> decode -> rdv0 / rl0 / tgt0 -> 640 rwe_c +
+    // 160 rwr_c kept copies, 578 paths): the kind / owner predicates are decoded from the input PINS into kept flags at
+    // the SAME edge as eb / wb / vb (input-to-reg slack +365 ps).  sid_oh is a static strap, so mine_* from dl_* equals
+    // mine_* from the registered words; the flags reset with ev / wv / vv (rs_c).  Same values, same edges.
+    (* keep *) reg pq_ectl, pq_wctl, pq_vctl, pq_erd, pq_wrd, pq_vrd, pq_me, pq_mw, pq_mv;
+    always @(posedge clk or negedge rs_c)
+        if (!rs_c) begin pq_ectl <= 1'b0; pq_wctl <= 1'b0; pq_vctl <= 1'b0; pq_erd <= 1'b0; pq_wrd <= 1'b0; pq_vrd <= 1'b0; end
+        else begin
+            pq_ectl <= dl_ev && dl_e[3:1] == K_CTL; pq_wctl <= dl_wv && dl_w[3:1] == K_CTL; pq_vctl <= dl_vv && dl_vb[3:1] == K_CTL;
+            pq_erd <= dl_ev && (dl_e[3:1] == K_RD || dl_e[3:1] == K_CL); pq_wrd <= dl_wv && (dl_w[3:1] == K_RD || dl_w[3:1] == K_CL);
+            pq_vrd <= dl_vv && dl_vb[3:1] == K_RD;
+        end
+    always @(posedge clk) begin
+        pq_me <= |(dl_e[36:21] & sid_oh); pq_mw <= |(dl_w[36:21] & sid_oh); pq_mv <= |(dl_vb[36:21] & sid_oh);
+    end
+    wire e_ctl = pq_ectl, w_ctl = pq_wctl, v_ctl = pq_vctl;
+    wire e_rd = pq_erd, w_rd = pq_wrd;
+`else
     wire e_ctl = ev && eb[3:1] == K_CTL, w_ctl = wv && wb[3:1] == K_CTL, v_ctl = vv && vb[3:1] == K_CTL;
     wire e_rd = ev && (eb[3:1] == K_RD || eb[3:1] == K_CL), w_rd = wv && (wb[3:1] == K_RD || wb[3:1] == K_CL);
+`endif
     wire b_so = bv && bb[3:1] == 3'd2;                            // S81-SMWIRE: SO gather word (landing kind 2)
     wire b_rd = bv && !b_so;
     wire e_sc = ev && eb[3:1] == K_SC, w_sc = wv && wb[3:1] == K_SC;
     wire [185:0] pe = eb[21 +: 186], pw = wb[21 +: 186], pvv = vb[21 +: 186];
+`ifdef OT_S81SL_XR_PDC
+    wire mine_e = pq_me, mine_w = pq_mw, mine_v = pq_mv;
+`else
     wire mine_e = |(pe[15:0] & sid_oh), mine_w = |(pw[15:0] & sid_oh), mine_v = |(pvv[15:0] & sid_oh);
+`endif
     wire ce = e_ctl && mine_e, cw = w_ctl && mine_w, cv = v_ctl && mine_v;
     wire [185:0] cp = ce ? pe : cw ? pw : pvv;
     wire [4:0] tgt0 = cp[20:16], lmask0 = cp[25:21];
     wire re = e_rd && mine_e, rw_ = w_rd && mine_w;
     // RG-FFN transport (241f7b963): typed V row-pair word (partner only) and the in-XR registered ci loop-back (local copy)
     reg ci_v; reg [W-2:0] ci_r; reg s_local;
+`ifdef OT_S81SL_XR_PDC
+    wire v_rd = pq_vrd;
+`else
     wire v_rd = vv && vb[3:1] == K_RD;
+`endif
     wire local_rd = ci_v && s_local && ci_dir == 3'd0 && ci_r[2:0] == K_RD;
     wire rdv0 = re || rw_ || b_rd || v_rd || local_rd;
     wire [W-1:0] rdb0 = local_rd ? {ci_r, ci_v} : re ? eb : rw_ ? wb : bb;
