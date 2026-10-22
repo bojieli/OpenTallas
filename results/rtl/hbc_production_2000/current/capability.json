@@ -11,7 +11,8 @@
     "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_seqhost_mux.sv": "b3a5534a2f452b613fd89534772b930a85cb8c14133dcb750ec687d8b9d914c4",
     "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv": "ab2345cfab6981548fc6fdd6b70ff21bd7d6c91005beb04f90fe2e024e1c1140",
     "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_return.sv": "c866c2d9b9d5d672cda854afb2b3db49d310e39d79260874177274a21739e6af",
-    "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_hbc_prod_mu_72.sv": "cb8b6e932fe02c969f3571fe7d7258fef45bd68ef5186f059867054937c9d4f8"
+    "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_hbc_prod_mu_72.sv": "cb8b6e932fe02c969f3571fe7d7258fef45bd68ef5186f059867054937c9d4f8",
+    "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72.sv": "8e1ba9a79fb332f5ae4746fe6f63c406e96f04650628e824c9436404dee03e8d"
   },
   "component_parameters": {
     "ENABLE": 1,
@@ -69,5 +70,18 @@
     "check_problems": 0,
     "derived_profile_path": "results/rtl/hbc_production_2000/elaboration/derived_hbc_profile.json",
     "derived_profile_sha256": "cc6287df68de5536ac12c261480c7a9bab1a3564e4246264b4f318cc78d68e71"
+  },
+  "paired_region_successor": {
+    "assembly": "ot_s81sl_slice_lepw_mab_hbc_r4d_mu_72",
+    "source": "ba450af5d",
+    "parent_source": "b361a14e6",
+    "unit": "oth-ubuntu-593849-1792641567",
+    "host": "ot-gold2",
+    "ports": 53,
+    "cells": 26,
+    "check_problems": 0,
+    "clocks": "K unchanged HBC region; KA lanes0/1, KB lanes2/3",
+    "transport": "DIRECT pair-region path, original S/K and K/ML rings preserved",
+    "physical_qualified": false
   }
 }
