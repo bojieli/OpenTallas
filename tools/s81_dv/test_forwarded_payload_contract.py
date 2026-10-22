@@ -16,3 +16,13 @@ def test_selected_landing_and_relay_payloads():
 def test_no_inferred_contract_for_unknown_or_near_match():
     for master in ['dsfd_dvland_new', 'dsfd_dvland_276_wrong', 'some_tile_276', 'dsdv_hostb_landing']:
         assert forwarded_payload_width(master) is None
+
+
+def test_contract_uses_emitted_standin_cell_and_exact_closed_master():
+    from dv_rvcase import forwarded_payload_contracts
+    insts = [('dsdv_svc_busland_805','ld_dn',{},{}),
+             ('dsfd_dvland_276l','ld_xr',{},{}),
+             ('unknown','u_other',{},{})]
+    kinds = {'ld_dn':'standin','ld_xr':'closed','u_other':'standin'}
+    assert forwarded_payload_contracts(insts,kinds,{'ld_dn':'rv_ld_dn','u_other':'rv_other'}) == {
+        'rv_ld_dn':805,'dsfd_dvland_276l':276}

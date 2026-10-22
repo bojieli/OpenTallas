@@ -75,6 +75,18 @@ def forwarded_payload_width(master):
     return None
 
 
+def forwarded_payload_contracts(insts, kind, standin_cells):
+    result = {}
+    for master, name, _, _ in insts:
+        width = forwarded_payload_width(master)
+        if width:
+            cell = standin_cells[name] if kind[name] == 'standin' else master
+            if cell in result and result[cell] != width:
+                raise ValueError(f'inconsistent forwarded payload width for {cell}')
+            result[cell] = width
+    return result
+
+
 def clock_sdc(table, top_ports):
     """Declare core and off-die PHY domains from the same binding contract."""
     domains = table.get('clock_domains', {})
@@ -1059,10 +1071,9 @@ def main():
     # so a missing/disconnected payload bit fails the structural audit.
     if a.die_repair:
         contracts = []
-        for master in sorted({m for m, _, _, _ in insts}):
-            width = forwarded_payload_width(master)
-            if width:
-                contracts.append(f'{{{master}}} {{{{i\\[*\\]}} {width}}}')
+        payload_contracts = forwarded_payload_contracts(insts, kind, scell)
+        for master, width in sorted(payload_contracts.items()):
+            contracts.append(f'{{{master}}} {{{{i\\[*\\]}} {width}}}')
         repair = ('set ::ot_die_rep_fclk_data_ports [dict create ' + ' '.join(contracts) + ']\n' + repair)
     post = ('estimate_parasitics -global_routing\n'
             'if {[llength [info procs ot_die_rep_post_grt_audit]]} { ot_die_rep_post_grt_audit /work/die_repeaters.post_grt.json }\n'
