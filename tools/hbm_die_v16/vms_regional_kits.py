@@ -19,6 +19,8 @@ def make(k):
  top=f'hfd_hgi_vms_glue_{k}_t3'; name=f'hfd_hgi_vms_glue_{k}_g8r'
  s.update(name=name,top=top,clock='multiple_cts_roots',clock_port='clk',clock_ports=['clk','clk_s','clk_n'],orfs_vars={})
  s['sources']=[RTL+'hfd_hgi_vms_glue_tiles_r3.sv',RTL+'hfd_hgi_vms_glue_lr.sv']+s['sources']
+ s['clock_data_paths']='related_same_frequency'
+ s['clock_relationship']=dict(kind='same_pll_fixed_phase',ratio=[1,1],phase_ps=0)
  face=K.M[k]['ring']; items=[(p,dict(K.ports(K.M[k]['top']))[p]) for p in s['pins'][face]]
  for clock,target in [('clk_s',290.0),('clk_n',1265.0)]:
   total=sum(w for _,w in items); cumulative=K.MARGIN; candidates=[]
