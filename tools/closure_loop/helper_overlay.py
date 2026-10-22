@@ -226,7 +226,7 @@ RULE_COMMITS = {
     # job OOM probe/adjust value (-1000 -> -999, -1000 processes left untouched); no gate verdict or route helper changes.
     "ded87247b93bc390636bc661eaec6ecbdcb198d7": dict(
         kind="neutral",
-        what="closure_loop die oom_score_adj -1000 -> -999; process protection only, no gate check"),
+        what="closure_loop die OOM adjust moved to -999 (was minus one thousand); process protection only, no gate check"),
     # STW-S81c-COLLA2 10-22 (STEWARD-S81c decision (A), seq (B) parents): clock_entry_constraints multi_root_children is
     # opt-in through the spec key (absent = byte-identical SDC: 34/34 landed specs on origin/main regenerate identical);
     # it only lifts the one-child-one-root ownership assertion for declared CLOSED children -> no older gate changes.
