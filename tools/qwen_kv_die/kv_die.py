@@ -899,6 +899,10 @@ SLICE_W, SLICE_H = 129.6, 345.6
 # between the two head columns: sqcgm GRT hot spots (demand/tracks 3.0-3.8, cap>0 = 73% of reported overflow) sit on the
 # astk faces where the 1,559-b head buses (tg_/tt_/th_) cross the astk er_chain / ep chunk relays (channels 32-43 um)
 ASTK_CHAN = float(__import__('os').environ.get('OT_KV_ASTK_CHAN', '0') or 0)
+# OT_KV_ASTK_CHAN_SIDES=1: the channel only on the head-column-0 (landing) side of the astk, where 10 of the 14 astk hot
+# spots sit; the column-1 heads / ECTL keep abutting the astk (their krq routes are unchanged: a both-sides channel moved
+# the col-1 ectl rq first hop to 1.26 mm)
+ASTK_CHAN_R = 0.0 if __import__('os').environ.get('OT_KV_ASTK_CHAN_SIDES', '2') == '1' else ASTK_CHAN
 SLICE_GAP = 21.6 + float(__import__('os').environ.get('OT_KV_STRIP_EXTRA', '0') or 0)   # SQC-KDIE2 10-22: HOST slice strip widening (PC sr13 slots)
 # KVJ-A 10-17 (0cx COORD decision, kv_static_join_plan item 3): the die's HOST root master is qkd_host_root_admission, the
 # successor of qkd_host_root_pt (same generated partition: qkd_host_ingest_chain_pt + the 128 die slices; adds the HOST
@@ -2234,7 +2238,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     x_grp = up(x_land + leaf_shift + LAND_W + CHAN, GX)
     slice_w = SLICE_W + SLICE_GAP if (split and HOST_V14['on']) else 0.0     # v1.4: the HOST slice column (CDC column | landing channel)
     x_grp += slice_w
-    grp_w = 2 * RENG[0] + ASTK_W + 2 * GX + 2 * ASTK_CHAN
+    grp_w = 2 * RENG[0] + ASTK_W + 2 * GX + ASTK_CHAN + ASTK_CHAN_R
     centre_w = max(UCIE[1], FRAMES["qkd_ahub"][0]) + 4 * CHAN   # re-cut H engines are 1,953 um: the centre relay channel needs 2 x 259 (was 2 x 130)
     if split:
         centre_w = max(UCIE[1], FRAMES['qkd_ahub'][0], FRAMES['qkd_d2d'][0]) + 4 * CHAN
@@ -2292,7 +2296,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             'MY' if side == 'E' else 'R0', 'attn_stack', 'attn')
         for e in range(r):
             col = (e // 4) if side == 'W' else 1 - e // 4      # physical column: 0 = the landing side on the W stacks
-            ex = gx if col == 0 else gx + RENG[0] + ASTK_W + 2 * GX + 2 * ASTK_CHAN
+            ex = gx if col == 0 else gx + RENG[0] + ASTK_W + 2 * GX + ASTK_CHAN + ASTK_CHAN_R
             ey = gy + (e % 4) * (RENG[1] + GY)
             o_up, o_dn = ('R0', 'MX') if col == 0 else ('MY', 'R180')
             # split (kvs1 real case: 'qkd_rhead MX y has no legal origin'): the closed head_hs view has horizontal pins on
