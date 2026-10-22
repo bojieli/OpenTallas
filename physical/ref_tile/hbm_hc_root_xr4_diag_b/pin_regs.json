@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_hc_root_static",
+ "enable": false,
+ "reason": "Native graph retains RTL registered interfaces. No extra pin-edge; current parameter/source identity in assembly.json."
+}
