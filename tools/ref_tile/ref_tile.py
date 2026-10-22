@@ -63,7 +63,7 @@ CORE_MARGIN = 2.16
 CHANNEL_UM = 20.0       # macro-macro and macro-core-edge channel
 PIN_EDGE_UM = 20.0      # no macro within this distance of a face that carries pins
 HALO_UM = 2.16          # placement halo around every macro (hard blockage)
-UTIL_LO, UTIL_HI = 0.45, 0.60
+UTIL_LO, UTIL_HI = 0.40, 0.60   # OWNER 10-19/10-21: target fill 40-60%; below = roomy (INFO), never shrink
 FILL_MAX = 0.90         # sanity bound on total (cells + macros) / core of a kit with macros
 UTIL_TARGET = 0.52
 FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
@@ -692,6 +692,7 @@ def load_spec(path: str) -> dict:
     # child gets its clock from its OWN port on the cluster face ("clock_ports": one scalar port per child clock pin, the
     # RTL wires port -> child clock pin).  The die delivers phi - R_i at each entry (R_i = entry wire + the child's routed
     # boundary insertion).  "clock_port" stays the first entry (kit CLKPORT, legacy readers).
+    multiport_spine(s)
     if s.get("cdc_synchronizers") is not None and (s.get("clock") != "multiple_cts_roots" or s["kind"] != "tile"):
         raise SpecError("cdc_synchronizers (reviewed CDC mode, cdc_sync_constraints.py) requires a multiple_cts_roots leaf tile")
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
@@ -1279,15 +1280,17 @@ def util_metrics(std_area, blocks, core, halo=HALO_UM, halo_x=None):
 
 
 def util_severity(m):
-    """-> (severity, in_band).  Density gate: old band UTIL_LO..UTIL_HI+0.05, FAIL above 0.70 (kits without macros
-    unchanged); with macros only the upper side applies (a macro-dominated tile is placed sparsely by construction) plus
-    the total-fill sanity bound."""
+    """-> (severity, in_band).  Density gate: WARN above UTIL_HI (enlarge the outline), FAIL above 0.70; below UTIL_LO is
+    INFO only (outline roomy; acceptable -- OWNER 10-19/10-21 never shrink for area); with macros only the upper side
+    applies (a macro-dominated tile is placed sparsely by construction) plus the total-fill sanity bound."""
     u = m["density"]
     if m["macro_um2"] > 0:
         if m["total_fill"] > FILL_MAX:
             return "FAIL", False
-        return ("INFO", True) if u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
-    return ("INFO", True) if UTIL_LO <= u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
+        return ("INFO", True) if u <= UTIL_HI else ("FAIL" if u > 0.70 else "WARN", False)
+    if u < UTIL_LO:
+        return "INFO", False                 # roomy: informational, no shrink advice
+    return ("INFO", True) if u <= UTIL_HI else ("FAIL" if u > 0.70 else "WARN", False)
 
 
 PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
@@ -1326,12 +1329,15 @@ def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
 
 
 FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 2026-10-15: parent / cluster kits
+FILL_ROOMY, FILL_HI = 0.40, 0.60       # OWNER 10-19/10-21: target 40-60%; below = roomy (INFO), above = WARN enlarge
 
 
 def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | None:
     """(severity, 'fill', message, fix) for a parent / cluster kit (kind cluster, hardened children, or >= 4 macros):
-    fill = (hard macro + child area + synthesized std-cell area) / outline.  WARN < 50 %, FAIL < 35 % unless the spec
-    records "fill_reason": {"pin_bound": "..."} (the pre-route gate prints the measured pin demand per face)."""
+    fill = (hard macro + child area + synthesized std-cell area) / outline.  FAIL < 35 % unless the spec records
+    "fill_reason": {"pin_bound": "..."} (the pre-route gate prints the measured pin demand per face; a recorded reason
+    below 50 % is a WARN); otherwise < 40 % is INFO (outline roomy; acceptable), > 60 % WARNs toward enlarging.  Never
+    advise shrinking (OWNER 10-19/10-21)."""
     if not (s.get("kind") == "cluster" or s.get("children") or len(s.get("macros") or []) >= 4):
         return None
     if not std_area:
@@ -1356,9 +1362,14 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
-                "shrink the outline / regroup macros, or record fill_reason.pin_bound with the measured pin demand")
-    if fill < FILL_WARN:
-        return ("WARN", "fill", msg + (f" ({reason_kind}: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
+                "do not shrink for area: regroup the macros / children so links stay short, or record "
+                "fill_reason.pin_bound with the measured pin demand")
+    if reason and fill < FILL_WARN:
+        return ("WARN", "fill", msg + f" ({reason_kind}: {reason})", "")
+    if fill < FILL_ROOMY:
+        return ("INFO", "fill", msg + f" < {FILL_ROOMY:.0%}: outline roomy; acceptable", "")
+    if fill > FILL_HI:
+        return ("WARN", "fill", msg + f" > {FILL_HI:.0%}", "enlarge the outline toward fill 0.50-0.55")
     return None
 
 
@@ -1640,11 +1651,12 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
         sev, ok = util_severity(um)
         if not ok:
             msg = (f"utilisation: std-cell density {um['density']:.0%} of placeable {um['placeable_um2']:.0f} um2, total fill "
-                   f"{um['total_fill']:.0%} (limits {UTIL_HI + 0.05:.0%} density, {FILL_MAX:.0%} fill; std {std_area:.0f} + "
+                   f"{um['total_fill']:.0%} (limits {UTIL_HI:.0%} density, {FILL_MAX:.0%} fill; std {std_area:.0f} + "
                    f"macro {um['macro_um2']:.0f} in core {core:.0f} um2)") if um["macro_um2"] else \
                 (f"utilisation {um['util']:.0%} outside {UTIL_LO:.0%}-{UTIL_HI:.0%} (std {std_area:.0f} + macro 0 "
-                 f"in core {core:.0f} um2)")
-            out.append((sev, "util", msg, "resize the outline to util 0.50-0.55 (drop 'outline', set util)"))
+                 f"in core {core:.0f} um2)" + ("; outline roomy; acceptable" if um["util"] < UTIL_LO else ""))
+            out.append((sev, "util", msg, "" if sev == "INFO" else
+                        "enlarge the outline to util 0.50-0.55 (drop 'outline', set util); never shrink for area"))
     long_side = max(W, H)
     if long_side > 600 and s["kind"] == "tile":
         out.append(("WARN", "clock_span", f"{W} x {H} um: one clock root over > 600 um",
@@ -1941,12 +1953,23 @@ SPINE_PIN_LOOKUP = """        regexp {[^/]+$} [get_full_name $pin] pn
 HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
 
+def multiport_spine(s: dict) -> bool:
+    """Opt-in physical trees; domain ownership and timing remain with clock_entries."""
+    distribution = s.get("clock_distribution")
+    if distribution is None:
+        return False
+    if distribution != "spine" or s.get("clock") != "multiple_cts_roots" or s.get("kind") != "tile":
+        raise SpecError("clock_distribution=spine requires a multiple_cts_roots leaf tile")
+    return True
+
+
 def gen_hooks(s: dict, kd: str) -> dict:
     try:
         raw_bindings, _ = raw_macro_clocks.contract(s, ROOT)
     except (ValueError, OSError) as error:
         raise SpecError(str(error)) from error
     fwd = bool(s.get("forwarded_clock"))
+    entry_sdc = ce_generate(s) if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else None
     spine = s.get("clock", "spine" if s["kind"] == "cluster" else "cts") == "spine"
     pre_cts = ["# ref_tile PRE_CTS: io_ref boundary switch after the tree (qwen_die_masters/pre_cts_skew.tcl)"
                + (" + forwarded-clock subtree kept (hbm_w2_rb_station forwarded_subtree.tcl)" if fwd else "")
@@ -1962,10 +1985,23 @@ def gen_hooks(s: dict, kd: str) -> dict:
                 pre_cts.append("set ::ot_ce_landed_cluster 1")
                 pre_cts.extend(clock_entry_constraints.landed_pre_cts_tcl(s, ROOT))
             pre_cts.extend(raw_macro_clocks.tcl(raw_bindings))
+        pre_cts.extend(clock_entry_constraints.forwarded_pre_cts_tcl(s, entry_sdc))
+        if multiport_spine(s):
+            # Install FIRST: clock_entries must still wrap the physical builder,
+            # validate every source root and measure every domain after its tree.
+            pre_cts += ["set ::env(OT_SPINE_PORTS) {" + ",".join(clock_ports(s)) + "}",
+                        "set ::env(OT_SPINE_CTS_REST) 0",
+                        "source /src/physical/common_flow/clock_spine.tcl"]
         pre_cts.append("source /src/physical/common_flow/clock_entries.tcl")
         # HF-4d 10-19: raw SRAM clock pins of a landed cluster's hard child get their record-signed-off delay AFTER CTS
         # (wraps clock_entries' CTS; the boundary wrapper below then re-applies clock_entry.sdc = the RAW_PIN verdict)
         pre_cts.extend(clock_entry_constraints.landed_raw_tcl(s, ROOT))
+        # HBM-ELEM13/SU-PSLICE14 10-21 (opt-in "child_centre_tap"): centre a hard child's boundary range on its root's soft
+        # registers after CTS (wraps the CTS above; the boundary wrapper below re-applies clock_entry.sdc after it)
+        try:
+            pre_cts.extend(clock_entry_constraints.child_centre_tcl(s, ROOT))
+        except (ValueError, OSError) as error:
+            raise SpecError(str(error)) from error
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
@@ -1990,7 +2026,7 @@ def gen_hooks(s: dict, kd: str) -> dict:
     btcl = [f"source /src/{f}" for f in s.get("boundary_tcl", [])
             if not (s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") and "set ::ot_wc_entry_mode 1" in (ROOT / f).read_text())]
     if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots"):
-        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + ce_generate(s)
+        files["clock_entry.sdc"] = "set ::ot_ce_require_wire 1\n" + entry_sdc
         btcl.append(f"source /src/{kd}/clock_entry.sdc")
     if btcl:
         # pre_cts_skew installs a CTS wrapper that re-reads the single-domain IO
@@ -2360,6 +2396,8 @@ def referenced_paths(s: dict, kd: str) -> list:
            f"{QDM}/pre_ref_skew.tcl", f"{QDM}/post_plain.tcl",
            "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl", "physical/common_flow/grt_macro_top_layer.tcl"]
     out += clock_entry_constraints.single_clock_contract.evidence_paths(s)
+    if multiport_spine(s):
+        out += ["physical/common_flow/clock_spine.tcl", "physical/common_flow/native_pg_binding.tcl"]
     out += [p for p, _, _ in clock_entry_constraints.gray_fifo_cdc_constraints.tech_cell_libraries(s, ROOT)]
     if macro_edge_guard(s):
         out += [MACRO_EDGE_GUARD_TCL, "physical/common_flow/macro_edge_via_guard.tcl"]
@@ -2406,6 +2444,8 @@ def referenced_paths(s: dict, kd: str) -> list:
                 out += ["physical/common_flow/landed_raw_tap.tcl"] + sorted({v["record"] for v in raw.values()})
                 out += sorted({f"{ch['view']}/port_latency.json" for ch in s["children"]})
                 out += sorted({v["verdict"] for v in raw.values()})
+            if s.get("child_centre_tap") is not None:
+                out += ["physical/common_flow/child_centre_tap.tcl", "physical/common_flow/native_pg_binding.tcl"]
     for it in s["macros"] + s["children"]:
         v = it["view"]
         out += [f"{v}/{view_name(v)}.lef"] + [f"{v}/{view_name(v)}_{c}.lib" for c in ("ss", "ff", "tt")]
