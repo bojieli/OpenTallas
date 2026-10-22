@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hbm_dma_load_static.v1",
-  "status": "COMPONENT_V10_PASS_NATIVE6_PENDING",
+  "status": "COMPONENT_V10_PASS_NATIVE6_PASS_CTS_RUNNING",
   "required_formats": {
     "0": "FP32",
     "1": "BF16",
@@ -80,7 +80,7 @@
     "storage": "same existing SRAM payload, no new large flop storage",
     "pins": "same landing input/output registerband",
     "reach": "new fixed registered route required; die lead owns actual geometry",
-    "fanout": "Prior source db8c16103 native5 MAIN and fallback passed max32/zero violations; current source independent address select needs fresh native6 measurement.",
+    "fanout": "Native6 MAIN and fallback both PASS on fb9122ac6: max32, zero violations among78,733 roots.",
     "depth": "fb9122ac6 removes ownership/validation reconvergence at source address selectors; no added register edge. Five local edges measured by V10; native6 CTS pending.",
     "floorplan": "MAIN/fallback outlines and macro channels unchanged. Native5 MAIN gate WARN, overflow0, TT/FF pin-flop76.9/74.3 ps; TT setup -114.4 ps at macro read CE. Fallback clock105.7/99.0 ps fails. Native6 fallback uses8-sink20um CTS clusters. New area/timing pending.",
     "clock": "one local streamclock; external crossings landed by die",
