@@ -60,7 +60,7 @@ def measure(case, tt_source_receipt=None):
                        rtl_sha256=row['rtl_sha256'],lp_record_sha256=row['lp_record_sha256'])
     selected=[]
     for base in ('qfd_native59_dv_headprep','qfd_sys_face_ovl','qfd_d2d_static_ovl_sf7'):
-        names=set(re.findall(r'\b'+base+r'(?:_obs1|_fault1)?\b',text))
+        names=set(re.findall(r'\b'+base+r'(?:_obs1|_fault1|_lctx1)?\b',text))
         if len(names)!=1:
             raise ValueError('selected GEN must have one exact head-prepare master for '+base+': '+str(sorted(names)))
         selected.append(next(iter(names)))

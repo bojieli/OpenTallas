@@ -49,6 +49,8 @@ HEAD_PREP = os.environ.get('OT_QWEN_HEAD_PREP', '0') == '1'
 STATUS_OBS = os.environ.get('OT_QWEN_STATUS_OBS', '0') == '1'
 FAULT_FACE = os.environ.get('OT_QWEN_FAULT_FACE', '0') == '1'
 SF_MASTER = 'qfd_sys_face_ovl_fault1' if FAULT_FACE else 'qfd_sys_face_ovl'
+from qwen_split.sysface_lctx_source import select as select_lctx_source, enabled as lctx_enabled
+SF_MASTER, _SF_SOURCE = select_lctx_source((SF_MASTER,'rtl/qwen_split/'+SF_MASTER+'.sv'),ROOT)
 if STATUS_OBS and not HEAD_PREP:
     raise ValueError('STATUS observer v1 requires coherent head-prepare source')
 NATIVE_MASTER = 'qfd_native59_dv_headprep_obs1' if STATUS_OBS else 'qfd_native59_dv_headprep'
@@ -211,6 +213,9 @@ def gen_params(insts, hr_rows, image=IMAGE):
             out[NATIVE_MASTER].update(SVC_RECV=1, SVC_LOCAL32=1)
             rec['native_svc5'] = dict(SVC_RECV=1, SVC_LOCAL32=1)
         out.setdefault(SF_MASTER, {}).update(MU=int(nu>1), MU_HEAD=int(nu>1), ROPE=1)
+        if lctx_enabled():
+            out[SF_MASTER]['L_CONTEXTS'] = 1
+            rec['sysface_l_contexts'] = dict(master=SF_MASTER,L_CONTEXTS=1,scope='source candidate; final image and physical qualification required')
         rec['head_prepare'] = dict(source='c_emb stored token/position/user, never RESULT',
                                   transport='derive both bundle ages from actual GEN; no zero default')
     if D2D_MASTER in masters:
@@ -294,6 +299,8 @@ def audit(die_v, port_bind, params=None, lanes=None, image=IMAGE, src=ROOT, comp
                 fails.append(f'{mst}.NU {prm.get(mst, {}).get("NU")} != {TT_MASTER}.NU {prm.get(TT_MASTER, {}).get("NU")}')
         if mst == NATIVE_MASTER and os.environ.get('OT_QWEN_NATIVE_QB_ALIGN', '0') == '1' and prm.get(mst, {}).get('QB_ALIGN') != 1:
             fails.append(f'{mst}: selected aligned qbank candidate requires explicit QB_ALIGN 1')
+        if mst == SF_MASTER and lctx_enabled() and prm.get(mst, {}).get('L_CONTEXTS') != 1:
+            fails.append(f'{mst}: L-context candidate requires explicit L_CONTEXTS 1')
         tp = trapped_params(mods[mst])
         if not tp:
             continue

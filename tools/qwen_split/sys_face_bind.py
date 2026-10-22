@@ -33,6 +33,8 @@ if FAULT_FACE:
         raise ValueError('fault1 requires the coherent head-prepare source')
     MASTER = 'qfd_sys_face_ovl_fault1'
     SOURCE = 'rtl/qwen_split/qfd_sys_face_ovl_fault1.sv'
+from qwen_split.sysface_lctx_source import select as select_lctx_source
+MASTER, SOURCE = select_lctx_source((MASTER,SOURCE),ROOT)
 INST = 'sys_face'
 WH_HIST = (302.4, 216.0)
 

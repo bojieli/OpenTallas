@@ -85,6 +85,8 @@ if HEAD_PREP:
         WCOL_RTL['sys_face'] = ('qfd_sys_face_ovl_fault1', 'rtl/qwen_split/qfd_sys_face_ovl_fault1.sv')
     if STATUS_OBS:
         WCOL_RTL['native59'] = ('qfd_native59_dv_headprep_obs1', 'rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv')
+    from qwen_split.sysface_lctx_source import select as select_lctx_source
+    WCOL_RTL['sys_face'] = select_lctx_source(WCOL_RTL['sys_face'], Path(__file__).resolve().parents[2])
 # the embedding provider is CLOSED (rr1, native audit PASS): its die master is drawn as the closed view (outline + pins)
 WCOL_VIEW = {'embed_prov': ('qfd_embedding_word_provider', 'rtl/qwen_split/qfd_embedding_word_provider.sv')}
 # QW-GRT4 10-20 (Q.GRT, rN die_repeaters over_reach 544 > 425 um, 391 of them on sys_face nets): the die binds the CLOSED

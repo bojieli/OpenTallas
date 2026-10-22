@@ -9,6 +9,8 @@ from qwen_split.source_pin_plan import rtl_ports
 
 MASTER='qfd_sys_face_ovl_fault1'
 SOURCE='rtl/qwen_split/qfd_sys_face_ovl_fault1.sv'
+from qwen_split.sysface_lctx_source import select as select_lctx_source
+MASTER,SOURCE=select_lctx_source((MASTER,SOURCE),Path(__file__).resolve().parents[2])
 
 def install(v, model, fault):
     for flag in ('OT_QWEN_HEAD_PREP','OT_QWEN_ROPE','OT_QWEN_STATUS_OBS','OT_SPLIT_FAULT_SOURCE_BITS','OT_SPLIT_FAULT_EMIT'):
