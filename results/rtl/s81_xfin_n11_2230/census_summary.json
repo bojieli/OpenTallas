@@ -1,0 +1,26 @@
+[
+  {
+    "file": "xfin_n9_native.json.gz",
+    "raw_sha256": "ae540a74a3218692558fd9154511592c7a37c523ee861a4ec399a671d6da874e",
+    "status": "FAIL",
+    "max_dynamic_loads": 160,
+    "violations": 136,
+    "role_errors": [],
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_s81dv_xfin_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "c6f3e56fceefe1e5ca514a74217d4db892b4382e0a92e478a9ce1c3fb597f32a"
+    }
+  },
+  {
+    "file": "xfin_n10_native.json.gz",
+    "raw_sha256": "438e161770a207f597f7487f37bc2b5d66f2f53b99f712ee611539d3b56cf63c",
+    "status": "FAIL",
+    "max_dynamic_loads": 160,
+    "violations": 108,
+    "role_errors": [],
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_ot_s81dv_xfin_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "d7fc7ff5a6de58d9a3d15608211280aba42c4a5447794133493232d088c981a0"
+    }
+  }
+]
