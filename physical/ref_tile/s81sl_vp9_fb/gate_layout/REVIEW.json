@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "s81sl_vp9_fb",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T11:50:00-07:00",
+ "gate_commit": "32e5398ed01b2430edd802d8cae83b38ac38ca25",
+ "geometry_sha256": "bdd59bb2c40f0a0cc439af4c5f4942d51a145a23f8210b826241af93291c87aa",
+ "checklist": {
+  "lattice": "same 4x4 hcpost lattice + 2 SRAMs as vp9 MAIN",
+  "std_cell_band": "logic in channels, low density",
+  "pin_spread": "N/W/E ~98% span",
+  "clock_entry": "13.0k sinks TT/FF spread 15.8/25.8 ps",
+  "shape": "734 x 864 um, GRT 0, reg->reg +6.2, reg->macro +23.5"
+ },
+ "notes": "COORD 10-22 11:50 APPROVED (u_vp FB); first CLOSED of vp9/vp9_fb binds"
+}
