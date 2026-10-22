@@ -81,6 +81,18 @@ module ot_bf6_kand (
 endmodule
 
 // ot_bf6_kor: a 2-input OR kept as its own instance (see ot_bf6_kand).
+// ot_bf6_kao: y = a | (b & c), kept as its own instance (RTAG re-closure 10-21: the x FIFO write enable S = Z || (G && Tr)
+// is formed after the Z / G / Tr flops, so the go crossing is a direct latch -> flop path).
+(* keep_hierarchy *)
+module ot_bf6_kao (
+    input  wire a,
+    input  wire b,
+    input  wire c,
+    output wire y
+);
+    assign y = a | (b & c);
+endmodule
+
 (* keep_hierarchy *)
 module ot_bf6_kor (
     input  wire a,

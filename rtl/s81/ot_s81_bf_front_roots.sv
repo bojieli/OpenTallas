@@ -248,6 +248,7 @@ module ot_s81_bf_front_roots #(
     wire [47:0] cfg_d_i;
     wire go_i;
     wire go_n_i;
+    wire [2:0] go_w_i;
     wire go_bf_i;
     wire xs_v_i;
     wire [7:0] xs_p_i;
@@ -354,25 +355,28 @@ module ot_s81_bf_front_roots #(
         (* keep *) reg r_lc_go;          // kept: N32 adds a same-function copy (r_lc_go_n) that must stay a separate latch
         reg r_lc_go_bf;
         (* keep *) reg r_lc_go_n;       // N32 (S81-BF6): a kept copy of the go lockup latch for the core's enable pools
+        (* keep *) reg [2:0] r_lc_go_w; // N32 RTAG re-closure (10-21): kept go lockup-latch copies for the x FIFO write G flops
         reg r_lc_xs_v;
         reg r_lc_xb_v;
         if (STATIC_PROGRAM != 0 && PINLAT != 0) begin : g_lat_ctl
             always_latch if (!pin_clk) begin
 `ifdef BF_CTL_LAT_MUTANT_GO
-                r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = 1'b0; r_lc_go_n = 1'b0; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v;   // negative control: go lost
+                r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = 1'b0; r_lc_go_n = 1'b0; r_lc_go_w = 3'b0; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v;   // negative control: go lost
 `else
                 r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = r_go; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v;
                 r_lc_go_n = (N32 != 0) ? r_go : 1'b0;
+                r_lc_go_w = (N32 != 0) ? {3{r_go}} : 3'b0;
 `endif
             end
         end else begin : g_nolat_ctl
-            always @* begin r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = r_go; r_lc_go_n = (N32 != 0) ? r_go : 1'b0; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v; end
+            always @* begin r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = r_go; r_lc_go_n = (N32 != 0) ? r_go : 1'b0; r_lc_go_w = (N32 != 0) ? {3{r_go}} : 3'b0; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v; end
         end
         assign cfg_v_i = r_lc_cfg_v;
         assign cfg_a_i = r_lc_cfg_a;
         assign cfg_d_i = r_lc_cfg_d;
         assign go_i = r_lc_go;
         assign go_n_i = r_lc_go_n;
+        assign go_w_i = r_lc_go_w;
         assign go_bf_i = r_lc_go_bf;
         assign xs_v_i = r_lc_xs_v;
         assign xs_p_i = r_lxs_p;
@@ -396,6 +400,7 @@ module ot_s81_bf_front_roots #(
         assign cfg_d_i = cfg_d;
         assign go_i = go;
         assign go_n_i = go;
+        assign go_w_i = {3{go}};
         assign go_bf_i = go_bf;
         assign xs_v_i = xs_v;
         assign xs_p_i = xs_p;
@@ -431,7 +436,7 @@ module ot_s81_bf_front_roots #(
             .prog_issue_pin(programme_lat[0]), .prog_addr_pin(programme_lat[14:1]),
             .prog_operand_pin(programme_lat[29:15]), .prog_segment_pin(programme_lat[32:30]),
             .prog_half_pin(programme_lat[33]), .prog_chain_pin(programme_lat[37:34]),
-            .clk(eclk), .rst_n_pin(core_rst), .rst_n_pin_k(core_rst_k), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_i), .go_pin_n(go_n_i),
+            .clk(eclk), .rst_n_pin(core_rst), .rst_n_pin_k(core_rst_k), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_i), .go_pin_n(go_n_i), .go_pin_w(go_w_i),
             .go_bf_pin(go_bf_i), .xs_v_pin(xs_v_i), .xs_p_pin(xs_p_i), .xs_b_pin(xs_b_i), .xs_sv_pin(xs_sv_i),
             .xs_q0_pin(xs_q0_i), .xs_e0_pin(xs_e0_i), .xs_q1_pin(xs_q1_i), .xs_e1_pin(xs_e1_i), .xs_pos_pin(xs_pos_i),
             .xb_pos_pin(xb_pos_i), .xb_v_pin(xb_v_i), .xb_b_pin(xb_b_i), .xb_sv_pin(xb_sv_i), .xb_u_pin(xb_u_i),

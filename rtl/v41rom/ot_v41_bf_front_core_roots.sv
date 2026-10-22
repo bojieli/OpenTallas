@@ -231,6 +231,7 @@ module ot_v41_bf_front_core_roots #(
     input  wire [47:0]  cfg_d_pin,
     input  wire         go_pin,
     input  wire         go_pin_n,         // N32: a kept copy of go_pin (the gate-enable copy pools' ze_d terms)
+    input  wire [2:0]   go_pin_w,         // N32 (RTAG re-closure 10-21): kept copies of go_pin for the x FIFO write G flops
     input  wire         go_bf_pin,        // the phase's family: 0 = FP8/FP4 (shared FP8 x stream), 1 = BF16
     input  wire         xs_v_pin,
     input  wire [7:0]   xs_p_pin,
@@ -2223,11 +2224,16 @@ module ot_v41_bf_front_core_roots #(
         // that edge, formed from the next states of the gate enable (ze_d, from kept copies of u_z), fw_v, bm_r and
         // f_wr.  Per write slice a kept copy of each S drives only that slice's 16 bits.  No reset is needed on S:
         // under reset fw_v, bm_r (and so every next-state term) are 0, so S is 0 from the first reset edge on.
-        wire [3:0] zfw;
+        // RTAG re-closure (STEWARD-TOKb-RATE1 10-21).  Gate 4 (515864134) FAILED cross_clock ot_entry_1 -> ot_entry_0:
+        // 456 endpoints, worst -38.1 ps, go lockup latch r_lc_go_n -> kor (go || z) -> decode AND -> sb* / sf flops
+        // (logic on a related-root crossing).  Same function, 0 cycles: S = (go || zq) && T is split into
+        // Z <= zq && T and Tr <= T (eclk-only next-state logic) plus G <= go (a DIRECT latch -> flop crossing, as the
+        // closed u_cen leaves), and the write enable is formed AFTER the flops inside the eclk domain: S = Z || (G && Tr)
+        // (one kept AO cell per enable, driving the same 15/16-bit slice loads S drove).  G: 2 per q0 slice + 1 per q1
+        // slice = 56 kept flops on 3 kept parent latch copies go_pin_w (<= 19 loads each).
+        wire [3:0] zq4;
         for (genvar za = 0; za < 4; za = za + 1) begin : g_zfw
-            wire zq;
-            ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_za (.clk(clk), .arst_n(rst_n_pin_k[3]), .d(z_d_n32), .q(zq));
-            ot_bf6_kor u_or (.a(go_pin_n), .b(zq), .y(zfw[za]));
+            ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_za (.clk(clk), .arst_n(rst_n_pin_k[3]), .d(z_d_n32), .q(zq4[za]));
         end
         // next states (exactly the D of each original register, with the copies' enables)
         wire nfwv_a = cen[13] ? (hit_q && !gok[GFW + 2]) : fw_v;
@@ -2241,15 +2247,20 @@ module ot_v41_bf_front_core_roots #(
         assign nbp[1] = XW'(nbm[0]);
         assign nbp[2] = nbp[1] + XW'(nbm[1]);
         assign nbp[3] = nbp[2] + XW'(nbm[2]);
-        (* keep *) wire [XF-1:0] sfa_d, sfb_d;
-        (* keep *) wire [XF-1:0] sbk_d0, sbk_d1, sbk_d2, sbk_d3;
+        (* keep *) wire [XF-1:0] sfa_d, sfb_d, tfa_d, tfb_d;
+        (* keep *) wire [XF-1:0] sbk_d0, sbk_d1, sbk_d2, sbk_d3, tbk_d0, tbk_d1, tbk_d2, tbk_d3;
         wire [XF-1:0] sbk_d [0:3];
+        wire [XF-1:0] tbk_d [0:3];
         assign sbk_d0 = sbk_d[0]; assign sbk_d1 = sbk_d[1]; assign sbk_d2 = sbk_d[2]; assign sbk_d3 = sbk_d[3];
+        assign tbk_d0 = tbk_d[0]; assign tbk_d1 = tbk_d[1]; assign tbk_d2 = tbk_d[2]; assign tbk_d3 = tbk_d[3];
         for (genvar e = 0; e < XF; e = e + 1) begin : g_dec
-            assign sfa_d[e] = zfw[e % 2] && nfwv_a && nwr_a == XW'(e);
-            assign sfb_d[e] = zfw[2 + e % 2] && nfwv_b && nwr_b == XW'(e);
+            assign tfa_d[e] = nfwv_a && nwr_a == XW'(e);
+            assign tfb_d[e] = nfwv_b && nwr_b == XW'(e);
+            assign sfa_d[e] = zq4[e % 2] && tfa_d[e];
+            assign sfb_d[e] = zq4[2 + e % 2] && tfb_d[e];
             for (genvar b = 0; b < 4; b = b + 1) begin : g_b
-                assign sbk_d[b][e] = zfw[b] && nbm[b] && XW'(nwr_a + nbp[b]) == XW'(e);
+                assign tbk_d[b][e] = nbm[b] && XW'(nwr_a + nbp[b]) == XW'(e);
+                assign sbk_d[b][e] = zq4[b] && tbk_d[b][e];
             end
         end
         wire [255:0] fd_q0 = fw_q0, fd_q1 = fw_q1;
@@ -2258,17 +2269,30 @@ module ot_v41_bf_front_core_roots #(
         // q0: 18 slices of 15 bits (the last 1 bit); identity: slice 18 (fw + 4 BF16 writers, a later writer wins)
         for (genvar ws = 0; ws < 19; ws = ws + 1) begin : g_wq0
             localparam integer QL = 15 * ws, QW = (ws == 17) ? 1 : 15;
-            (* keep *) reg [XF-1:0] sf;
-            (* keep *) reg [XF-1:0] sb0, sb1, sb2, sb3;
+            (* keep *) reg [XF-1:0] zf, zb0, zb1, zb2, zb3;     // Z: zq && T
+            (* keep *) reg [XF-1:0] tf, tb0, tb1, tb2, tb3;     // Tr: T
+            (* keep *) reg g0, g1;                              // G: go (direct latch -> flop); g0: sf/sb0/sb1, g1: sb2/sb3
+            always @(posedge gclk) begin g0 <= go_pin_w[(2 * ws) % 3]; g1 <= go_pin_w[(2 * ws + 1) % 3]; end
 `ifdef OT_BF6_MUT_WSEL
             // negative control: slice 0 misses the BF16 slice-1 write enable
-            always @(posedge gclk) begin sf <= sfa_d; sb0 <= sbk_d0; sb1 <= (ws == 0) ? '0 : sbk_d1; sb2 <= sbk_d2; sb3 <= sbk_d3; end
+            always @(posedge gclk) begin zf <= sfa_d; zb0 <= sbk_d0; zb1 <= (ws == 0) ? '0 : sbk_d1; zb2 <= sbk_d2; zb3 <= sbk_d3;
+                                         tf <= tfa_d; tb0 <= tbk_d0; tb1 <= (ws == 0) ? '0 : tbk_d1; tb2 <= tbk_d2; tb3 <= tbk_d3; end
 `elsif OT_BF6_MUT_WSELF
             // negative control: slice 0 misses the FP8 beat write enable
-            always @(posedge gclk) begin sf <= (ws == 0) ? '0 : sfa_d; sb0 <= sbk_d0; sb1 <= sbk_d1; sb2 <= sbk_d2; sb3 <= sbk_d3; end
+            always @(posedge gclk) begin zf <= (ws == 0) ? '0 : sfa_d; zb0 <= sbk_d0; zb1 <= sbk_d1; zb2 <= sbk_d2; zb3 <= sbk_d3;
+                                         tf <= (ws == 0) ? '0 : tfa_d; tb0 <= tbk_d0; tb1 <= tbk_d1; tb2 <= tbk_d2; tb3 <= tbk_d3; end
 `else
-            always @(posedge gclk) begin sf <= sfa_d; sb0 <= sbk_d0; sb1 <= sbk_d1; sb2 <= sbk_d2; sb3 <= sbk_d3; end
+            always @(posedge gclk) begin zf <= sfa_d; zb0 <= sbk_d0; zb1 <= sbk_d1; zb2 <= sbk_d2; zb3 <= sbk_d3;
+                                         tf <= tfa_d; tb0 <= tbk_d0; tb1 <= tbk_d1; tb2 <= tbk_d2; tb3 <= tbk_d3; end
 `endif
+            wire [XF-1:0] sf, sb0, sb1, sb2, sb3;               // = the former S registers' values, exactly
+            for (genvar e = 0; e < XF; e = e + 1) begin : g_ao
+                ot_bf6_kao u_f (.a(zf[e]), .b(g0), .c(tf[e]), .y(sf[e]));
+                ot_bf6_kao u_0 (.a(zb0[e]), .b(g0), .c(tb0[e]), .y(sb0[e]));
+                ot_bf6_kao u_1 (.a(zb1[e]), .b(g0), .c(tb1[e]), .y(sb1[e]));
+                ot_bf6_kao u_2 (.a(zb2[e]), .b(g1), .c(tb2[e]), .y(sb2[e]));
+                ot_bf6_kao u_3 (.a(zb3[e]), .b(g1), .c(tb3[e]), .y(sb3[e]));
+            end
             if (ws < 18) begin : g_q
                 always @(posedge gclk) for (int e = 0; e < XF; e++) begin
                     if (sf[e])  fq0_n[256*e + QL +: QW] <= fd_q0[QL +: QW];
@@ -2289,8 +2313,13 @@ module ot_v41_bf_front_core_roots #(
         end
         // q1: 16 slices of 16 bits, then e0 and e1 (fw only, decode copy b)
         for (genvar ws = 0; ws < 18; ws = ws + 1) begin : g_wq1
-            (* keep *) reg [XF-1:0] sf;
-            always @(posedge gclk) sf <= sfb_d;
+            (* keep *) reg [XF-1:0] zf, tf;
+            (* keep *) reg g0;
+            always @(posedge gclk) begin zf <= sfb_d; tf <= tfb_d; g0 <= go_pin_w[(38 + ws) % 3]; end
+            wire [XF-1:0] sf;
+            for (genvar e = 0; e < XF; e = e + 1) begin : g_ao
+                ot_bf6_kao u_f (.a(zf[e]), .b(g0), .c(tf[e]), .y(sf[e]));
+            end
             if (ws < 16) begin : g_q
                 always @(posedge gclk) for (int e = 0; e < XF; e++) if (sf[e]) fq1_n[256*e + 16*ws +: 16] <= fd_q1[16*ws +: 16];
             end else if (ws == 16) begin : g_e0
