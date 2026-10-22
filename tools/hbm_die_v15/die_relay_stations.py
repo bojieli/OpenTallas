@@ -10,7 +10,14 @@ per sink instance); stations every REACH of tree distance from the driver (stati
 multicast tree flagged (H-ELEM relay4 node).  Classes:
   p2p              one sink instance: depth = ceil(L / REACH) - 1
   equal_age_pad    data multicast: every sink sees the deepest depth; near sinks get pad stations at their pins
-  cfg_no_pad       host configuration fan-out (host_static_ingress cfg_*/desc_*): addressed writes, no pads
+  cfg_no_pad       host configuration fan-out (host_static_ingress cfg_*/desc_*; HBMb/NW 10-21: also the per-quadrant host
+                   cfg leaves ot_hbm_host_cfg_leaf_* a_/b_ cfg_*/desc_*): addressed writes, no pads -- every sink keeps its
+                   own depth (per-sink arrival in the static calendar); the leaf's [ab]_launch_v strobe is split into its
+                   OWN bus (key flag 'launch') and stays equal_age_pad (one 48-b lane).  Safety (receiver audit,
+                   lanes/STEWARD-HBM.md HBMb/NW): the ingress refuses cfg/desc from an accepted launch until the programme
+                   is inactive and launches only after block_ready + guard, so every cfg/desc word precedes the launch at
+                   each receiver as long as (a) all cfg/desc rows of one leaf copy reach a sink at ONE age (relay_layer_d4f
+                   PORT-AGE 'cfgword' group) and (b) the launch age >= that age (relay_layer_d4f CFG-LAUNCH-ORDER check).
 Station master: <= 48 b -> hbfd_rly_48 x ceil(bits/48); else hbfd_rly_624 x ceil(bits/624) (the native-PASS widths);
 the flow letter (EW/WE/NS/SN) follows the hop direction.  Clock domain = the driver's (manifest clock_entry_map).
 Geometry only: station points are route positions; die_case places each tile at the nearest legal free area
@@ -22,6 +29,32 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import die_relay_pass as RP  # noqa: E402
 
 CFG = re.compile(r'ot_hbm_host_static_ingress\.(cfg_|desc_)')
+# HBMb/NW 10-21: host cfg leaf (ot_hbm_host_cfg_leaf_{sw,se,nw,ne}[2], leaf2) copy buses: cfg/desc word -> cfg_no_pad,
+# launch strobe -> its own equal-age bus.  --cfg-leaf-class legacy restores the old equal_age_pad for the whole copy bus.
+CFG_LEAF = re.compile(r'ot_hbm_host_cfg_leaf\w*$')
+CFG_LEAF_WORD = re.compile(r'[ab]_(cfg_|desc_)')
+CFG_LEAF_LAUNCH = re.compile(r'[ab]_launch_v$')
+RESET_PORT = re.compile(r'(por_|rst|reset)')
+
+
+def bus_flag(master, port, cfg_leaf=True):
+    """third bus-key element: True = reset port (own bus), 'launch' = cfg-leaf launch strobe (own bus), False = data"""
+    if RESET_PORT.match(port):
+        return True
+    if cfg_leaf and CFG_LEAF.match(master or '') and CFG_LEAF_LAUNCH.match(port):
+        return 'launch'
+    return False
+
+
+def bus_class(master, ports, nsinks, cfg_leaf=True):
+    """p2p / cfg_no_pad / equal_age_pad for one bus (master = driver master, ports = driver port base names)"""
+    if nsinks == 1:
+        return 'p2p'
+    if CFG.match(f'{master}.{sorted(ports)[0]}'):
+        return 'cfg_no_pad'
+    if cfg_leaf and CFG_LEAF.match(master or '') and ports and all(CFG_LEAF_WORD.match(p) for p in ports):
+        return 'cfg_no_pad'
+    return 'equal_age_pad'
 
 
 def tree(root, pts):
@@ -80,7 +113,10 @@ def main():
                     help='>0: obstacle-aware routed stations on this grid (relay_router.py, d4b-r); 0: legacy L-route points')
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--root-keepouts', help='DIE-CLOCK regional root sites (opentallas.die_clock.root_sites.v1): keepout boxes are station-free')
+    ap.add_argument('--cfg-leaf-class', choices=('no_pad', 'legacy'), default='no_pad',
+                    help='host cfg leaf copy buses: no_pad (HBMb/NW 10-21: cfg/desc cfg_no_pad, launch own equal-age bus) | legacy')
     a = ap.parse_args()
+    CL = a.cfg_leaf_class == 'no_pad'
     c = Path(a.case); R = a.reach
     contract = json.loads(Path(a.contract).read_text())
     man = json.loads((c / 'manifest.json').read_text())
@@ -105,7 +141,7 @@ def main():
         # HBM-GENREACH 10-20: reset ports form their OWN bus (key flag): a reset port grouped with data ports of the same
         # sink set made the whole bus 'reset_forest' and dropped its data stations (GEN2c: hc_<q> rstb_s+wc_s+xb_d5..7 ->
         # hcb_<q>6, 787 b, 13 mm with no relay; 2,598 never-inserted buses in fp_hops_classified.json)
-        key = (d[0], tuple(sorted({l[0] for l in lds})), bool(re.match(r'(por_|rst|reset)', RP.base(d[1]))))
+        key = (d[0], tuple(sorted({l[0] for l in lds})), bus_flag(pl[d[0]]['master'], RP.base(d[1]), CL))
         b = buses[key]; b['bits'] += 1; b['dpts'].append(d[2]); b['nets'].append(n); b.setdefault('ports', set()).add(RP.base(d[1]))
         for l in lds:
             b['spts'][l[0]].append(l[2])
@@ -142,14 +178,13 @@ def main():
         dmax = max(depth)
         if dmax == 0:
             continue
-        fam = f"{pl[di]['master']}.{sorted(b['ports'])[0]}"
         if any(re.match(r'(por_|rst|reset)', p_) for p_ in b['ports']):
             skipped['reset_forest (reset relays/sync per region, not data stations)'].append(f"{di}.{dp} ({b['bits']} b, {len(sinks)} sinks)")
             continue
         if pl[di]['master'] == 'ot_hbm_su_programme':
             skipped['superseded: partitioned su_programme (H-SU b82db77f9, pslice slots 92282bfcb)'].append(f'{di}.{dp}')
             continue
-        cls = 'p2p' if len(sinks) == 1 else ('cfg_no_pad' if CFG.match(fam) else 'equal_age_pad')
+        cls = bus_class(pl[di]['master'], b['ports'], len(sinks), CL)
         bits = b['bits']
         master = (48, math.ceil(bits / 48)) if bits <= 48 else (624, math.ceil(bits / 624))
         stations = []
