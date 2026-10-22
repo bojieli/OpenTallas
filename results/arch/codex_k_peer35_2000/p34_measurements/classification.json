@@ -1,0 +1,19 @@
+{
+  "p34a": {
+    "gate_verdict": "WARN",
+    "trial_overflow": 0,
+    "internal_setup_ps": -118.9,
+    "internal_hold_ps": 0.7072,
+    "endpoint": "lifecycle hc_tag[43] head capture"
+  },
+  "p34b": {
+    "gate_verdict": "WARN",
+    "trial_overflow": 0,
+    "internal_setup_ps": -93.1,
+    "internal_hold_ps": 14.1,
+    "other_internal_macro_setup_ps": -52.9,
+    "endpoint": "lifecycle hc_tag[43] and RX metadata write"
+  },
+  "action": "No normal submission based on WARN. Exact p35 structural source and native proofs are progressing; cold exact already passes, causal copy negatives remain active.",
+  "qualification": false
+}
