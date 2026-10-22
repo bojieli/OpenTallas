@@ -188,6 +188,9 @@ def _wcol_rebind(v, m, M, keep, out, wrtl):
                 e2.append((i_, p_))
         out[j] = (bid, cl, bits, e2)
     out[:] = [b for b in out if len(b[3]) > 1]
+    if HEAD_PREP:
+        from qwen_split.hp13_clock_bind import apply as bind_hp13_clocks
+        bind_hp13_clocks(m, out, keep, wrtl['tt_ctlm'][2])
     used = {(i_, p_) for b in out for i_, p_ in b[3]}
     for inst, (mst, src, rp) in wrtl.items():
         pj = m.get('port_join', {})
