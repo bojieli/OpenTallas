@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81hd_lane_adp",
+ "enable": false,
+ "reason": "Source-registered, unchanged RTL (release freeze): core face tx_d -> txd_p, tx_v -> 2 kept ot_s81hd_kf flops, rx_v / rx_d / flt from flops; lane face lo_v / lo_d (slice lv / ld) and li_r (cr_q) and r_lane / r_misc_o (relay leaves) leave flops, lo_r -> 2 kept kf flops, li_d -> rd_q, lf -> flt_q; only li_v feeds the 4-bit sender-credit check before its flop. A recipe pin stage would change the frozen latency contract."
+}

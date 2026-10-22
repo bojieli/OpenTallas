@@ -1,0 +1,202 @@
+{
+ "name": "s81hd_lane_adp_p8f",
+ "top": "ot_s81hd_lane_adp",
+ "kind": "tile",
+ "params": {},
+ "sources": [
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_util.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_lane_ha.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 108.0,
+  "h": 583.2,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "lo_d",
+   "lo_v",
+   "lo_r",
+   "r_misc_o",
+   "r_lane",
+   "li_v",
+   "li_r",
+   "lf",
+   "li_d"
+  ],
+  "E": [
+   "tx_d",
+   "tx_v",
+   "ck",
+   "rst_n",
+   "rx_v",
+   "flt",
+   "rx_d"
+  ]
+ },
+ "pin_ranges": {
+  "lo_d": [
+   2.16,
+   274.32
+  ],
+  "lo_v": [
+   276.48,
+   277.56
+  ],
+  "lo_r": [
+   278.64,
+   279.72
+  ],
+  "r_misc_o": [
+   284.04,
+   285.12
+  ],
+  "r_lane": [
+   302.4,
+   304.56
+  ],
+  "li_v": [
+   306.72,
+   307.8
+  ],
+  "li_r": [
+   308.88,
+   309.96
+  ],
+  "lf": [
+   312.12,
+   315.36
+  ],
+  "li_d": [
+   317.52,
+   581.04
+  ],
+  "tx_d": [
+   2.16,
+   274.32
+  ],
+  "tx_v": [
+   276.48,
+   277.56
+  ],
+  "ck": [
+   298.08,
+   300.24
+  ],
+  "rst_n": [
+   302.4,
+   304.56
+  ],
+  "rx_v": [
+   306.72,
+   307.8
+  ],
+  "flt": [
+   310.0,
+   315.36
+  ],
+  "rx_d": [
+   317.52,
+   581.04
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 1,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_s81hd_kf",
+   "ot_s81hd_lane_txs"
+  ],
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered, unchanged RTL (release freeze): core face tx_d -> txd_p, tx_v -> 2 kept ot_s81hd_kf flops, rx_v / rx_d / flt from flops; lane face lo_v / lo_d (slice lv / ld) and li_r (cr_q) and r_lane / r_misc_o (relay leaves) leave flops, lo_r -> 2 kept kf flops, li_d -> rd_q, lf -> flt_q; only li_v feeds the 4-bit sender-credit check before its flop. A recipe pin stage would change the frozen latency contract."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "clock": "ck",
+  "reason": "rst_n lands in 2 ck flops at the core face, then ot_rst_relay_tree3 (35 slice leaves + lane + rx + misc, every leaf <= ~32 reset pins); the child lands its own rs (tree3 inside the closed view)"
+ },
+ "fill_reason": {
+  "pin_bound": "pin-bound: 1,1xx pins per face over the lane child's 583.2-um E face (W) and the parent's core face (E); std ~2.6k um2; never shrink."
+ },
+ "structural_change": "s81hd_lane_adp (STW-S81c-COLLA2-VP 10-22, HEAD lane design (b), steward decision): the static core adapter of ot_s81hd_lane hardened as its OWN child with its own CTS (p3m..p7m: one parent root could not land the adapter's pin flops on the child's routed boundary at both TT and FF -- 698.4 TT 28 / FF 115, 743.4 61.5 / 85.2, p7m FF 91). Same registers and edges (rtl/dsrom_sys/s81_head/ot_s81hd_lane_ha.sv: hierarchy only; bench PASS, OVF/RP mutants caught). The parent becomes 2 hard children (lane view + this view) with a register->register landed seam on facing W/E pins at identical y; no soft pin flops under the parent root. FB: 108-um wide adapter (lower std/pin-flop density, wider rows for the 35 slices).",
+ "job": {
+  "owner": "Claude:STW-S81c-COLLA2-VP",
+  "branch": "claude/s81-head-lane-p8-1022",
+  "tag": "s81hd_lane_adp_p8f",
+  "purpose": "HEAD lane (b): hardened static adapter child (FB) for s81hd_lane_p8m/p8f",
+  "views_to": "physical/ref_tile/s81hd_lane_adp_p8f/views",
+  "record_to": "results/rtl/ref_tile/s81hd_lane_adp_p8f",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/link",
+   "rtl/common",
+   "rtl/dsrom_sys/s81_ph",
+   "rtl/dsrom_sys/s81_head",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1",
+   "results/rtl/s81_head_ctlgate_1021",
+   "physical/ref_tile/dscoll_lane_w_s8ng/views",
+   "results/rtl/s81_head_lane_ha_1022"
+  ],
+  "benches": [
+   {
+    "name": "hd_lane_base",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_ha_bench.sh {RUN}/lane base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane flits \\d+/\\d+ exact, overflow flagged",
+    "pass_witness": "results/rtl/s81_head_lane_ha_1022/base.log"
+   },
+   {
+    "name": "hd_lane_mut_ovf",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_ha_bench.sh {RUN}/lane OVF",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane",
+    "fail_regex": "^FAIL hd_lane static overflow not flagged",
+    "fail_witness": "results/rtl/s81_head_lane_ha_1022/mut_OVF.log"
+   },
+   {
+    "name": "hd_lane_mut_rp",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_lane_ha_bench.sh {RUN}/lane RP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_lane",
+    "fail_regex": "^FAIL hd_lane data: errors [1-9]",
+    "fail_witness": "results/rtl/s81_head_lane_ha_1022/mut_RP.log"
+   }
+  ]
+ }
+}
