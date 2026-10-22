@@ -29,7 +29,7 @@
 // the window command {wbw_v, wbw_base[29:0] stack-local first sector, wbw_total[11:0] sectors} on the fixed stream edge
 // it derives from the DMA's compiled fill start).  Stream side: pin capture, base+total-1, then each lane's EXACT sector
 // count n_l = |{s in [base, base+total) : s[6:2]^s[11:7]^s[16:12] == 4*sm+l}| (head chunk + tail chunk + 4 per whole
-// 128-sector chunk; <= 68 for total <= 2048) -> 74-bit Gray SPSC FIFO -> hbm side.  Per lane:
+// 128-sector chunk; <= 68 for total <= 2048) -> 105-bit Gray SPSC FIFO -> hbm side.  Per lane:
 //   WPEND: the group's next requests stay in the group skid; the lane waits until every group WRITE already accepted by
 //          the controller has signalled k_wr_done (write completions carry no tag; outstanding group READS may keep
 //          returning during the window -- their responses carry tags and stay steered to the group);
@@ -81,7 +81,10 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  localparam integer RW=17+4+256;            // {tag,beat,data}
  localparam integer FW=1+16+6+256;          // {bank,epoch,slot,data}
  localparam integer CMW=1+16+15+4;          // {bank,epoch,row,col}
- localparam integer WQW=30+12+32;          // {base,total,n3,n2,n1,n0}
+ localparam integer WQB=30+12+32;          // {base,total,n3,n2,n1,n0}
+ // HBM-ELEM13/COLL-KS 10-21: the window end base+total (31 b) is computed on the stream side and carried in the CDC
+ // payload, so wend_q is a 1:1 copy of FIFO read bits (no adder on the async payload; same latency).
+ localparam integer WQW=31+WQB;            // {end,base,total,n3,n2,n1,n0}
  localparam[2:0]NORM=0,PEND=1,ISSUE=2,WAIT=3,WPEND=4,WB=5;
  // local reset release per domain at the pins (H-SM 2026-10-16, native capture rule): each reset pin lands on ONE
  // async-clear flop (assert async, release synchronous one edge later); every other flop / FIFO / skid clears from it.
@@ -116,10 +119,10 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
    wcnt=n[7:0];
   end
  endfunction
- reg wv1,wv2,wv3;reg[29:0]wb1,wb2;reg[11:0]wt1,wt2;reg[29:0]we2;reg[WQW-1:0]wq3;
+ reg wv1,wv2,wv3;reg[29:0]wb1,wb2;reg[11:0]wt1,wt2;reg[29:0]we2;reg[30:0]wz2;reg[WQW-1:0]wq3;
  always @(posedge stream_clk)begin
-  wb1<=wbw_base;wt1<=wbw_total;wb2<=wb1;wt2<=wt1;we2<=wb1+30'(wt1)-30'd1;
-  wq3<={wb2,wt2,wcnt({sm_s,2'd3},wb2,we2,wt2),wcnt({sm_s,2'd2},wb2,we2,wt2),wcnt({sm_s,2'd1},wb2,we2,wt2),wcnt({sm_s,2'd0},wb2,we2,wt2)};
+  wb1<=wbw_base;wt1<=wbw_total;wb2<=wb1;wt2<=wt1;we2<=wb1+30'(wt1)-30'd1;wz2<={1'b0,wb1}+31'(wt1);
+  wq3<={wz2,wb2,wt2,wcnt({sm_s,2'd3},wb2,we2,wt2),wcnt({sm_s,2'd2},wb2,we2,wt2),wcnt({sm_s,2'd1},wb2,we2,wt2),wcnt({sm_s,2'd0},wb2,we2,wt2)};
  end
  always @(posedge stream_clk or negedge srst_q)if(!srst_q)begin wv1<=0;wv2<=0;wv3<=0;end else begin wv1<=wbw_v;wv2<=wv1;wv3<=wv2;end
  wire wf_wr_ready,wf_ov,wf_rd_valid,wf_un;wire[WQW-1:0]wf_rd_data;
@@ -127,9 +130,9 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  ot_hbm_svc_async_fifo #(.WIDTH(WQW),.DEPTH(4)) u_wcmd(
   .wr_clk(stream_clk),.wr_rst_n(srst_q),.wr_valid(wv3),.wr_ready(wf_wr_ready),.wr_data(wq3),.wr_overflow(wf_ov),
   .rd_clk(hbm_clk),.rd_rst_n(hrst_q),.rd_valid(wf_rd_valid),.rd_ready(take_wb),.rd_data(wf_rd_data),.rd_underflow(wf_un));
- reg[WQW-1:0]wcmd_q;reg[30:0]wend_q;
- always @(posedge hbm_clk)if(take_wb)begin wcmd_q<=wf_rd_data;wend_q<={1'b0,wf_rd_data[WQW-1-:30]}+31'(wf_rd_data[43:32]);end
- wire[29:0]wc_base=wcmd_q[WQW-1-:30];
+ reg[WQB-1:0]wcmd_q;reg[30:0]wend_q;
+ always @(posedge hbm_clk)if(take_wb)begin wcmd_q<=wf_rd_data[WQB-1:0];wend_q<=wf_rd_data[WQW-1-:31];end
+ wire[29:0]wc_base=wcmd_q[WQB-1-:30];
  wire cm_bank=cmd_q[CMW-1];wire[15:0]cm_epoch=cmd_q[34:19];wire[14:0]cm_row=cmd_q[18:4];wire[3:0]cm_col=cmd_q[3:0];
  // ---------------------------------------------------------------- per lane
  wire[3:0]norm_l,hfault_l;
