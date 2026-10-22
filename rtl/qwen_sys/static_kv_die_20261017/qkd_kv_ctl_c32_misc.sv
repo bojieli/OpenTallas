@@ -483,10 +483,12 @@ end else begin : g_mu
         wire en2 = !stop_bank[2] && we_q && addr_q == 2;
         wire [95:0] s0 = {data_q - 32'd2, data_q - ((MUT == 1) ? 32'd2 : 32'd1), data_q};
         // KV-CTL3: banks 1 / 2 read a KEPT second copy of the cfg data pin flop (data_q bit: 34 loads)
+        // SQ-COLLECT 10-21 (c32e census: dq2[0] 36 loads): bank 1 and bank 2 each read their OWN kept copy
         (* keep *) reg [31:0] dq2;
-        always @(posedge ck) dq2 <= cfg_data;
+        (* keep *) reg [31:0] dq3;
+        always @(posedge ck) begin dq2 <= cfg_data; dq3 <= cfg_data; end
         wire [95:0] s1 = {dq2 - 32'd2, dq2 - 32'd1, dq2};
-        wire [63:0] s2 = {dq2 - 32'd1, dq2};
+        wire [63:0] s2 = {dq3 - 32'd1, dq3};
         reg [95:0] b0, b1; reg [63:0] b2; wire [95:0] n0, n1; wire [63:0] n2;
         genvar gs;
         // ot_s32_sel leaves (rtl/lib/ot_s32_cells.sv): kept hierarchy, so the bank enable cannot be folded into every bit

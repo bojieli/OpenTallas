@@ -91,17 +91,28 @@ endmodule
 // qkd_static_kv_boot_observe for the c32 ctl tile.  Reset only control / valid bits (safe rule 8): the 960 synchroniser
 // data flops (a1 a2 f1 f2 c1 c2) carry NO reset; a 2-flop valid shift (v1 v2, reset, local to this block) masks the two
 // stale stages after reset release, so applied_core / fault_core equal the original on every edge (original: a2/f2/c2 = 0
-// for the first two edges after release, then the first post-release samples).  Reset load of the block 1123 -> 163 flops.
+// for the first two edges after release, then the first post-release samples).  Reset load of the block 1123 -> 168 flops.
 module qkd_static_kv_boot_observe_c32(
  input wire ck,rst_n,input wire[159:0]applied_hbm,fault_hbm,fault_leaf_core,
  output reg[159:0]applied_core,output reg fault_core
 );
  (* async_reg="true" *)reg[159:0]a1,a2,f1,f2,c1,c2;
- reg v1,v2;
+ // SQ-COLLECT 10-21 (c32e/c32f native census FAIL: v2 drove 161 loads): v2 = 5 KEPT identical copies (one per
+ // 32-bit applied_core slice, <=32 loads each) + v2f for the fault term.  Same value every edge (all reset 0, all
+ // load v1), so applied_core / fault_core are unchanged.
+ reg v1;
+ (* keep *) reg[4:0] v2;
+ (* keep *) reg v2f;
  always @(posedge ck)begin a1<=applied_hbm;a2<=a1;f1<=fault_hbm;f2<=f1;c1<=fault_leaf_core;c2<=c1;end
+ genvar gv;
+ generate for(gv=0;gv<5;gv=gv+1)begin:g_v2
+  always @(posedge ck or negedge rst_n)
+   if(!rst_n)begin v2[gv]<=1'b0;applied_core[32*gv+:32]<=32'd0;end
+   else begin v2[gv]<=v1;applied_core[32*gv+:32]<=v2[gv]?a2[32*gv+:32]:32'd0;end
+ end endgenerate
  always @(posedge ck or negedge rst_n)begin
- if(!rst_n)begin v1<=0;v2<=0;applied_core<=0;fault_core<=0;end
- else begin v1<=1'b1;v2<=v1;
-  applied_core<=v2?a2:160'd0;fault_core<=fault_core||(v2&&((|f2)||(|c2)));end
+ if(!rst_n)begin v1<=0;v2f<=0;fault_core<=0;end
+ else begin v1<=1'b1;v2f<=v1;
+  fault_core<=fault_core||(v2f&&((|f2)||(|c2)));end
  end
 endmodule
