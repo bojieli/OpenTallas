@@ -46,6 +46,18 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
    for sn,sc in sub['cells'].items():
     cc=copy.deepcopy(sc);cc['connections']={p:[mapping[b] if isinstance(b,int) else b for b in bs] for p,bs in sc['connections'].items()};cells[n+'/'+sn]=cc
  cells={n:c for n,c in cells.items() if c['type']!='$scopeinfo'}
+ # Synchronous-reset enable-priority FFs: exact Yosys simcells truth table.
+ # if(Eactive) Q <= Ractive ? reset_value : D; otherwise Q holds.
+ for n,c in list(cells.items()):
+  import re
+  mt=re.fullmatch(r'\$_SDFFCE_P([NP])([01])([NP])_',c['type'])
+  if not mt:continue
+  q=list(c['connections']['Q']);d=list(c['connections']['D']);e=list(c['connections']['E']);rb=list(c['connections']['R'])
+  rst=nextbit;nextbit+=1;en=nextbit;nextbit+=1;value=[mt[2]]
+  cells[n+'__sync_reset_mux']={'type':'$_MUX_','connections':{'A':d if mt[1]=='P' else value,'B':value if mt[1]=='P' else d,'S':rb,'Y':[rst]},'port_directions':{'A':'input','B':'input','S':'input','Y':'output'}}
+  cells[n+'__enable_mux']={'type':'$_MUX_','connections':{'A':q if mt[3]=='P' else [rst],'B':[rst] if mt[3]=='P' else q,'S':e,'Y':[en]},'port_directions':{'A':'input','B':'input','S':'input','Y':'output'}}
+  c['type']='$_DFF_P_';c['connections']['D']=[en]
+  for field in ('E','R'):del c['connections'][field];del c['port_directions'][field]
  # Plain enabled FFs (calendar table writes) preserve the same capture edge.
  for n,c in list(cells.items()):
   if c['type'] not in ('$_DFFE_PP_','$_DFFE_PN_'):continue
