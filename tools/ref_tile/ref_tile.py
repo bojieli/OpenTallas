@@ -759,20 +759,24 @@ def literal_pin_bits(s: dict) -> bool:
 
 
 def validate_literal_pin_plan(s: dict, ports=None, root=None) -> dict:
-    """Narrow exact-bit admission: real widths + exhaustive IO Tcl + named M6 grant.
+    """Narrow exact-bit admission: real widths + exhaustive IO Tcl + named M6 grant when M6 pins exist.
 
     Base-only plans retain the existing path. Scalar [0] aliases and ranges stay
     forbidden. The post-synthesis caller supplies the measured port bounds too;
     raw-DEF/LEF geometry, PG/vias and native timing still need their normal gates.
+    An M5-only plan (no M6 line in io_tcl) needs no m6_pin_grant (coordinator 10-22,
+    SQC-SLICE option a): with no grant, granted is empty, so any M6 line still fails.
     """
     root = Path(root or ROOT)
-    if not s.get("io_tcl") or not s.get("m6_pin_grant"):
-        raise SpecError("literal pin bits require exact io_tcl and a named M6 contact grant; scalar [0] aliases remain forbidden")
-    import m6_pin_grant as M6
-    try:
-        granted = M6.validate(s["m6_pin_grant"], s["top"])
-    except ValueError as e:
-        raise SpecError(f"literal pin grant: {e}") from e
+    if not s.get("io_tcl"):
+        raise SpecError("literal pin bits require exact io_tcl (and a named M6 contact grant if any pin is M6); scalar [0] aliases remain forbidden")
+    granted = {}
+    if s.get("m6_pin_grant"):
+        import m6_pin_grant as M6
+        try:
+            granted = M6.validate(s["m6_pin_grant"], s["top"])
+        except ValueError as e:
+            raise SpecError(f"literal pin grant: {e}") from e
     if ports is None:
         if s.get("defines"):
             raise SpecError("literal pin plan needs resolved actual port widths; conditional interfaces are not admitted by this parser")
