@@ -1,0 +1,1 @@
+Actual source4 assembly witness: EP9 unit 429572-1792646617, exit 0. Native hardware 42afc37bb and source4 wrapper 251e829be. Three phase cases retain active age 18, K16 faults, missing external reset2 fails. This does not qualify physical clock, placement or production dates.

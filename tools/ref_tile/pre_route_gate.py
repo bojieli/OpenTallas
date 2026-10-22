@@ -1446,6 +1446,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
 
 
 FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 10-15 (parent / cluster kits)
+FILL_ROOMY, FILL_HI = RT.FILL_ROOMY, RT.FILL_HI   # OWNER 10-19/10-21: < 40% roomy (INFO), > 60% WARN enlarge; never shrink
 
 
 def is_parent_kit(spec: dict) -> bool:
@@ -1546,11 +1547,16 @@ def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
                 g.add("FAIL", "measured_band_fill", "; ".join(measured["errors"]),
                       "fix actual placement/row envelope; preserve this failed receipt")
         if fill < FILL_FAIL and not reason:
-            g.add("FAIL", "fill", msg + f" (< {FILL_FAIL:.0%})", "shrink the outline / regroup the macros, or record "
+            g.add("FAIL", "fill", msg + f" (< {FILL_FAIL:.0%})", "do not shrink for area: regroup the macros / children "
+                  "so links stay short, or record "
                   "\"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin "
                   "demand above shows the edges are full")
-        elif fill < FILL_WARN:
-            g.add("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" (< {FILL_WARN:.0%})"))
+        elif reason and fill < FILL_WARN:
+            g.add("WARN", "fill", msg + f" (pin-bound: {reason})")
+        elif fill < FILL_ROOMY:
+            g.add("INFO", "fill", msg + f" (< {FILL_ROOMY:.0%}: outline roomy; acceptable)")
+        elif fill > FILL_HI:
+            g.add("WARN", "fill", msg + f" (> {FILL_HI:.0%})", "enlarge the outline toward fill 0.50-0.55")
         else:
             g.add("INFO", "fill", msg)
     if "GATE_GRT_RC=" in out:
@@ -1756,13 +1762,15 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
         area = synthesis_std_area(area, fp["blocks"])
         halo = float(spec["route"].get("macro_halo_um", RT.HALO_UM)) if spec.get("recipe", 1) >= 2 else RT.HALO_UM
         um = RT.util_metrics(area, fp["blocks"], core, halo)
-        # high util is a closure risk (FAIL > 70%); low util only costs wire / area (closed blocks sit at 6-22%): WARN
+        # high util is a closure risk (WARN > 60%, FAIL > 70%: enlarge); low util is INFO (outline roomy; acceptable --
+        # closed blocks sit at 6-22%; OWNER 10-19/10-21 never shrink for area)
         sev, _ok = RT.util_severity(um)
         mac = um["macro_um2"]
         g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {um['util']:.0%}"
               + (f" (std-cell density {um['density']:.1%} of placeable {um['placeable_um2']:.0f} um2; total fill "
                  f"{um['total_fill']:.1%})" if mac else ""),
-              f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
+              (f"enlarge: set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO"
+               else ("outline roomy; acceptable (do not shrink)" if not _ok and um["util"] < RT.UTIL_LO else "")))
     check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     check_memory_ff(g, out)
     check_keep_modules(g, kd, spec, out)
@@ -2650,7 +2658,8 @@ TEXTBOOK_FIX = {
     "boundary": "register every boundary: pin flop in, flop out; never an ICG enable from a port",
     "logic_depth": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration",
     "wire_reach": "relay flops every <= 500 um, or move the logic next to its pins/macros",
-    "util_channel": "size the outline to util 0.50-0.55 with >= 20 um macro channels",
+    "util_channel": "above 60% enlarge the outline toward util 0.50-0.55; keep >= 20 um macro channels (a roomy outline "
+                    "is acceptable: never shrink for area)",
     "reset_landing": "land every reset input at its face in 2 registered stages, then fan out at equal depth: kit "
                      "\"reset_landing\": {\"enable\": true} (ref_tile inserts rst_l0 -> rst_l1 at synthesis) or the RTL's own "
                      "rst_l0 / rst_l1 (one relay copy per region); reset release latency is a scheduled constant",

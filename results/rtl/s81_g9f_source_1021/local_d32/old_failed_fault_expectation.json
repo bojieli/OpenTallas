@@ -1,0 +1,121 @@
+{
+  "verdict": "PASS",
+  "kind": "actual_D32_positive_D8_wrong_data_causal",
+  "note": "Old D8 aliases K17 modulo2D and can produce wrong data without its fault flag; scoreboard catches it. Original runner exit1 was an overly strong expectation that the D8 fault flag must rise; original logs retained.",
+  "rows": [
+    {
+      "file": "d32_115_0.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 0,
+        "dl": 115,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 18,
+        "chk": 228,
+        "mism": 0,
+        "fault": 0
+      }
+    },
+    {
+      "file": "d32_115_700.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 700,
+        "dl": -585,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 18,
+        "chk": 228,
+        "mism": 0,
+        "fault": 0
+      }
+    },
+    {
+      "file": "d32_815_0.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 815,
+        "lr": 0,
+        "dl": 815,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 18,
+        "chk": 228,
+        "mism": 0,
+        "fault": 0
+      }
+    },
+    {
+      "file": "d8_115_0.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 0,
+        "dl": 115,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 2,
+        "chk": 228,
+        "mism": 228,
+        "fault": 0
+      }
+    },
+    {
+      "file": "d8_115_700.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 700,
+        "dl": -585,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 2,
+        "chk": 228,
+        "mism": 228,
+        "fault": 0
+      }
+    },
+    {
+      "file": "d8_815_0.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 815,
+        "lr": 0,
+        "dl": 815,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 2,
+        "chk": 228,
+        "mism": 228,
+        "fault": 0
+      }
+    }
+  ]
+}

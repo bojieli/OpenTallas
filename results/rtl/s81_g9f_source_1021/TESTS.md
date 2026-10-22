@@ -1,0 +1,1 @@
+Source 67e6525d4: 61 focused Python/Tcl tests passed in 0.66 seconds. Coverage includes endpoint reset homes, malformed short windows, copied source lane ordering, inactive service faces, exact emitted-cell payload contracts, missing/changed payload negatives and clock root assignment. Physical controller Tcl replay remains independent and pending.

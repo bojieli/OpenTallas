@@ -1,0 +1,119 @@
+{
+  "verdict": "PASS",
+  "actual_d32_positive_and_d8_overwrite_causal": [
+    {
+      "file": "out3/d32_115_0.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 0,
+        "dl": 115,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 18,
+        "chk": 228,
+        "mism": 0,
+        "fault": 0
+      }
+    },
+    {
+      "file": "out3/d32_115_700.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 700,
+        "dl": -585,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 18,
+        "chk": 228,
+        "mism": 0,
+        "fault": 0
+      }
+    },
+    {
+      "file": "out3/d32_815_0.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 815,
+        "lr": 0,
+        "dl": 815,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 18,
+        "chk": 228,
+        "mism": 0,
+        "fault": 0
+      }
+    },
+    {
+      "file": "out3/d8_115_0.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 0,
+        "dl": 115,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 2,
+        "chk": 228,
+        "mism": 228,
+        "fault": 0
+      }
+    },
+    {
+      "file": "out3/d8_115_700.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 700,
+        "dl": -585,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 2,
+        "chk": 228,
+        "mism": 228,
+        "fault": 0
+      }
+    },
+    {
+      "file": "out3/d8_815_0.log",
+      "result": {
+        "w": 276,
+        "n": 0,
+        "dh": 815,
+        "lr": 0,
+        "dl": 815,
+        "k": 17,
+        "rl": 0,
+        "gs": 0,
+        "slip": 0,
+        "pred": 18,
+        "meas": 2,
+        "chk": 228,
+        "mism": 228,
+        "fault": 0
+      }
+    }
+  ]
+}

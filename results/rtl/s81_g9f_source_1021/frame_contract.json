@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.s81_dv.frame_contract.v1",
+ "wrapper": {
+  "masters": [
+   "col_h9",
+   "col_h9_MX",
+   "col_h10"
+  ],
+  "owner": "S81U-3",
+  "note": "Plan-master keys. Actual LP rst_n -> two FRL stages -> crs4 two-stage rsync; xk relay reset adds two receiver edges separately.",
+  "receiver_reset_edges": 4
+ },
+ "members": [
+  {
+   "master": "ot_s81_cfg7_seq_bfp",
+   "ref": "origin/main",
+   "path": "rtl/v41die/ot_s81_cfg7_seq_bfp.sv",
+   "view": "s81coll_cfg7_seq_bfp_pr-pr1-ef2866774 (CLOSED TT +244.3 / FF +23.9; native PASS)"
+  },
+  {
+   "master": "dsfd_cfifo_crs4",
+   "ref": "HEAD",
+   "path": "rtl/dsrom_sys/s81_dv/land/dsfd_cfifo_crs4.sv",
+   "view": null,
+   "ref_sha": "a039fca0169fad1b326ddca21cfa178811cd0fb6",
+   "kind": "real",
+   "ports_missing": [
+    "xl0",
+    "xl1",
+    "xl2",
+    "xl3"
+   ],
+   "params_missing": [],
+   "clock_ties": [],
+   "params": {},
+   "reset": null
+  },
+  {
+   "master": "dsfd_bf_front_roots",
+   "ref": "origin/main",
+   "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv",
+   "view": "h03-392d7efcb (CLOSED TT +0.00 / FF +18.20; native PASS)"
+  },
+  {
+   "master": "dsfd_bf_col",
+   "ref": "origin/main",
+   "path": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv",
+   "view": null
+  },
+  {
+   "master": "ot_v41_rom_elem_q_qxpq_w10",
+   "ref": "21b97190eba0b3b306026f23a2408867cd099726",
+   "path": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
+   "view": "dsrom-qelem-qs5f-rstp-35152e3e1-tc-hm10-cl (SUBMITTED)",
+   "ref_sha": "21b97190eba0b3b306026f23a2408867cd099726",
+   "kind": "real",
+   "ports_missing": [],
+   "params_missing": [],
+   "clock_ties": [],
+   "params": {
+    "RSTP": 1
+   },
+   "reset": "rst_n released ONE regional edge earlier: the frame reset pin reads the PARENT station of its cell (co 0co 14:25)"
+  }
+ ],
+ "problems": [
+  "ot_s81_cfg7_seq_bfp: rtl/v41die/ot_s81_cfg7_seq_bfp.sv not at origin/main",
+  "dsfd_cfifo_crs4: ports ['xl0', 'xl1', 'xl2', 'xl3'] params [] not in RTL",
+  "dsfd_bf_front_roots: rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv not at origin/main",
+  "dsfd_bf_col: rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv not at origin/main"
+ ],
+ "verdict": "FAIL"
+}

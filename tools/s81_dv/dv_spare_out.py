@@ -102,7 +102,7 @@ def declare(lines, pads, root):
 
     # ---- A: svc_rs role faces
     for inst, (mod, ps) in sorted(insts.items()):
-        if mod not in ('dsdv_svc_rs', 'dsdv_svc_rs_entry'):
+        if mod not in ('dsdv_svc_rs', 'dsdv_svc_rs_entry', 'dsdv_svc_rs_pvso_entry'):
             continue
         sid = int(inst.split('_')[2])
         t, r = tree[str(sid)], emb[str(sid)]
@@ -127,9 +127,11 @@ def declare(lines, pads, root):
                     rec['gaps'].append(dict(inst=inst, port=port, face=FACES[f], why='role-inactive face wired (plan vs role ROM)'))
     # ---- B: lane quantisation landing outputs
     for st, e in list(pads.items()):
-        if not (st.startswith('st_') and st.endswith('_0') and e.get('reason', '').startswith('lane quantisation')):
+        direct = st.startswith('ld_')
+        relay = st.startswith('st_') and st.endswith('_0')
+        if not ((direct or relay) and e.get('reason', '').startswith('lane quantisation')):
             continue
-        nm = st[3:-2]
+        nm = st[3:] if direct else st[3:-2]
         ld = f'ld_{nm}'
         if ld not in insts:
             continue
@@ -137,6 +139,23 @@ def declare(lines, pads, root):
         if not ps.get('o', '').startswith(f'w_{nm}_lnd'):
             continue
         for lo, hi in e['ports']['i']:
+            if direct:
+                # A direct crossing has no relay station. Its landing input itself
+                # carries the declared padding: require the exact emitted zero range,
+                # never a declaration over any live payload bit.
+                pos, zero = 0, []
+                expr = ps.get('i', '')
+                parts = (expr[1:-1] if expr.startswith('{') and expr.endswith('}') else expr).split(',')
+                for part in reversed(parts):
+                    part = part.strip()
+                    match = re.fullmatch(r"(\d+)'d0", part)
+                    width = int(match[1]) if match else sum(h-l+1 for l,h,_ in _segments(part,decl))
+                    if match:
+                        zero.append((pos,pos+width-1))
+                    pos += width
+                if not any(a <= lo <= hi <= b for a,b in zero):
+                    rec['gaps'].append(dict(inst=ld,port='o',lo=lo,hi=hi,why='direct landing spare range is not literal zero padding'))
+                    continue
             add(ld, mst, f'lane quantisation: landing output bits [{lo}, {hi}] carry the zero pads tied at {st}.i', 'o', lo, hi,
                 'B_lane_quantisation')
     # ---- C: forwarded-clock taps
