@@ -151,7 +151,7 @@ def context_slot(txl, phy, host_stages, host_req):
 
 
 def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None, mu=False,
-                    host_req=None, emb_fill=None, status_delay=0, attn_tx_shift=0, rope=False, layer_period_min=0):
+                    host_req=None, emb_fill=None, status_delay=0, attn_tx_shift=0, rope=False, layer_period_min=0, head_prepare_edges=None):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
     run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles).
@@ -423,6 +423,7 @@ def main():
     ap.add_argument("--emb-window", type=int, default=None,
                     help="KV-EMBWIN16 10-20: token-run embedding window in edges (>= the priced embed node); L0, every later "
                          "layer and the token period move by the growth; default = the priced window (images unchanged)")
+    ap.add_argument("--head-prepare-edges",type=int,help="actual composed earliest safe all-user C->K head O61 slot; includes source prepare/hold+measured local transport and user0 HOST-context match; never infer zero hops")
     ap.add_argument("--layer-period-min",type=int,default=0,help="RoPE shared2003-edge kernel frame; grow every layer to at least this many edges")
     ap.add_argument("--rope", action="store_true", help="actual RoPE HBM second sweep and73 row records; requires EW>=1627")
     ap.add_argument("--attn-tx-shift", type=int, default=0, help="KV-BIND4: edges the KV attention tile adds before RESULT (r16 TX_SHIFT); K RESULT/STATUS and attn_kv +N per layer")
@@ -456,7 +457,7 @@ def main():
                                         st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff, mu=a.mu,
                                         host_req=a.ctx_host_req, emb_fill=a.emb_fill_edges, emb_window=a.emb_window,
                                         status_delay=a.status_delay,
-                                        attn_tx_shift=a.attn_tx_shift, rope=a.rope, layer_period_min=a.layer_period_min)   # STATUS capture after the (+2) KVN captures
+                                        attn_tx_shift=a.attn_tx_shift, rope=a.rope, layer_period_min=a.layer_period_min,head_prepare_edges=a.head_prepare_edges)   # STATUS capture after the (+2) KVN captures
         if a.host_stages:
             txd["K"][1] += a.host_stages   # HOST record words reach the end's capture edge host_stages later
     elif a.profile == "dies_token":
