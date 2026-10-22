@@ -63,7 +63,7 @@ CORE_MARGIN = 2.16
 CHANNEL_UM = 20.0       # macro-macro and macro-core-edge channel
 PIN_EDGE_UM = 20.0      # no macro within this distance of a face that carries pins
 HALO_UM = 2.16          # placement halo around every macro (hard blockage)
-UTIL_LO, UTIL_HI = 0.45, 0.60
+UTIL_LO, UTIL_HI = 0.40, 0.60   # OWNER 10-19/10-21: target fill 40-60%; below = roomy (INFO), never shrink
 FILL_MAX = 0.90         # sanity bound on total (cells + macros) / core of a kit with macros
 UTIL_TARGET = 0.52
 FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
@@ -1279,15 +1279,17 @@ def util_metrics(std_area, blocks, core, halo=HALO_UM, halo_x=None):
 
 
 def util_severity(m):
-    """-> (severity, in_band).  Density gate: old band UTIL_LO..UTIL_HI+0.05, FAIL above 0.70 (kits without macros
-    unchanged); with macros only the upper side applies (a macro-dominated tile is placed sparsely by construction) plus
-    the total-fill sanity bound."""
+    """-> (severity, in_band).  Density gate: WARN above UTIL_HI (enlarge the outline), FAIL above 0.70; below UTIL_LO is
+    INFO only (outline roomy; acceptable -- OWNER 10-19/10-21 never shrink for area); with macros only the upper side
+    applies (a macro-dominated tile is placed sparsely by construction) plus the total-fill sanity bound."""
     u = m["density"]
     if m["macro_um2"] > 0:
         if m["total_fill"] > FILL_MAX:
             return "FAIL", False
-        return ("INFO", True) if u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
-    return ("INFO", True) if UTIL_LO <= u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
+        return ("INFO", True) if u <= UTIL_HI else ("FAIL" if u > 0.70 else "WARN", False)
+    if u < UTIL_LO:
+        return "INFO", False                 # roomy: informational, no shrink advice
+    return ("INFO", True) if u <= UTIL_HI else ("FAIL" if u > 0.70 else "WARN", False)
 
 
 PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
@@ -1326,12 +1328,15 @@ def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
 
 
 FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 2026-10-15: parent / cluster kits
+FILL_ROOMY, FILL_HI = 0.40, 0.60       # OWNER 10-19/10-21: target 40-60%; below = roomy (INFO), above = WARN enlarge
 
 
 def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | None:
     """(severity, 'fill', message, fix) for a parent / cluster kit (kind cluster, hardened children, or >= 4 macros):
-    fill = (hard macro + child area + synthesized std-cell area) / outline.  WARN < 50 %, FAIL < 35 % unless the spec
-    records "fill_reason": {"pin_bound": "..."} (the pre-route gate prints the measured pin demand per face)."""
+    fill = (hard macro + child area + synthesized std-cell area) / outline.  FAIL < 35 % unless the spec records
+    "fill_reason": {"pin_bound": "..."} (the pre-route gate prints the measured pin demand per face; a recorded reason
+    below 50 % is a WARN); otherwise < 40 % is INFO (outline roomy; acceptable), > 60 % WARNs toward enlarging.  Never
+    advise shrinking (OWNER 10-19/10-21)."""
     if not (s.get("kind") == "cluster" or s.get("children") or len(s.get("macros") or []) >= 4):
         return None
     if not std_area:
@@ -1356,9 +1361,14 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
     msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
     if fill < FILL_FAIL and not reason:
         return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
-                "shrink the outline / regroup macros, or record fill_reason.pin_bound with the measured pin demand")
-    if fill < FILL_WARN:
-        return ("WARN", "fill", msg + (f" ({reason_kind}: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
+                "do not shrink for area: regroup the macros / children so links stay short, or record "
+                "fill_reason.pin_bound with the measured pin demand")
+    if reason and fill < FILL_WARN:
+        return ("WARN", "fill", msg + f" ({reason_kind}: {reason})", "")
+    if fill < FILL_ROOMY:
+        return ("INFO", "fill", msg + f" < {FILL_ROOMY:.0%}: outline roomy; acceptable", "")
+    if fill > FILL_HI:
+        return ("WARN", "fill", msg + f" > {FILL_HI:.0%}", "enlarge the outline toward fill 0.50-0.55")
     return None
 
 
@@ -1640,11 +1650,12 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
         sev, ok = util_severity(um)
         if not ok:
             msg = (f"utilisation: std-cell density {um['density']:.0%} of placeable {um['placeable_um2']:.0f} um2, total fill "
-                   f"{um['total_fill']:.0%} (limits {UTIL_HI + 0.05:.0%} density, {FILL_MAX:.0%} fill; std {std_area:.0f} + "
+                   f"{um['total_fill']:.0%} (limits {UTIL_HI:.0%} density, {FILL_MAX:.0%} fill; std {std_area:.0f} + "
                    f"macro {um['macro_um2']:.0f} in core {core:.0f} um2)") if um["macro_um2"] else \
                 (f"utilisation {um['util']:.0%} outside {UTIL_LO:.0%}-{UTIL_HI:.0%} (std {std_area:.0f} + macro 0 "
-                 f"in core {core:.0f} um2)")
-            out.append((sev, "util", msg, "resize the outline to util 0.50-0.55 (drop 'outline', set util)"))
+                 f"in core {core:.0f} um2)" + ("; outline roomy; acceptable" if um["util"] < UTIL_LO else ""))
+            out.append((sev, "util", msg, "" if sev == "INFO" else
+                        "enlarge the outline to util 0.50-0.55 (drop 'outline', set util); never shrink for area"))
     long_side = max(W, H)
     if long_side > 600 and s["kind"] == "tile":
         out.append(("WARN", "clock_span", f"{W} x {H} um: one clock root over > 600 um",
