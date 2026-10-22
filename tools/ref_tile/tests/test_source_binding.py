@@ -30,6 +30,36 @@ class SourceBindingTest(unittest.TestCase):
         self.git(root, 'commit', '-m', 'before')
         return SB.git_head(root)
 
+    def test_minimal_gate_exports_and_binds_allcorner_patch_helper(self):
+        helper = 'tools/orfs_allcorner_spef.py'
+        abi = 'tools/run_abi3_physical.py'
+        payload = (HERE.parent.parent / helper).read_bytes()
+        abi_payload = (HERE.parent.parent / abi).read_bytes()
+        with tempfile.TemporaryDirectory() as td:
+            root, daemon = Path(td) / 'repo', Path(td) / 'daemon'
+            start = self.init(root)
+            (root / 'tools').mkdir()
+            (root / abi).write_bytes(abi_payload)
+            (daemon / 'tools').mkdir(parents=True)
+            (daemon / helper).write_bytes(payload)
+            with patch.object(PG, 'ROOT', root), patch.object(PG, 'DAEMON_TREE', daemon):
+                data = PG.ship_tar({'kit', abi}, overlay_payloads={helper: payload},
+                                   overlay_modes={helper: 0o755})
+                files = SB.archive_contents(data)
+                self.assertEqual(files[helper], payload)
+                consumed = SB.consumed_closure(files, [abi], [], PG.PATH_RE)
+                self.assertIn(helper, consumed)
+                export = Path(td) / 'export'
+                (export / 'tools').mkdir(parents=True)
+                (export / helper).write_bytes(files[helper])
+                run = subprocess.run([sys.executable, str(export / helper), '--help'],
+                                     capture_output=True, text=True)
+                self.assertEqual(run.returncode, 0, run.stderr)
+                binding = SB.snapshot(data, root, start, daemon, None, (helper,))
+                self.assertTrue(SB.validate(binding, root, daemon)[0])
+                (daemon / helper).write_bytes(payload + b'\n# changed helper\n')
+                self.assertFalse(SB.validate(binding, root, daemon)[0])
+
     def test_gate_completion_after_head_advances_remains_bound_to_staged_bytes(self):
         with tempfile.TemporaryDirectory() as td:
             root, daemon = Path(td) / 'repo', Path(td) / 'daemon'

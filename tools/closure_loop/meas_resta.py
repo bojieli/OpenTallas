@@ -65,6 +65,7 @@ def main():
     ap.add_argument("--orfs", type=Path, required=True)
     ap.add_argument("--src", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--image", default=IMAGE)
     ap.add_argument("--insert", action="append", default=[])
     ap.add_argument("--replace", action="append", default=[])
     ap.add_argument("--append", action="append", default=[])
@@ -129,7 +130,7 @@ def main():
         tcl = d / f"meas_{corner}.tcl"
         tcl.write_text(text)
         r = subprocess.run(["timeout", "5400", "docker", "run", "--rm", "-v", f"{a.orfs}:/work:ro", "-v", f"{a.src}:/src:ro",
-                            "-v", f"{d}:/meas:ro", IMAGE, "bash", "-lc",
+                            "-v", f"{d}:/meas:ro", a.image, "bash", "-lc",
                             f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /meas/{tcl.name}"],
                            capture_output=True, text=True)
         s = r.stdout + r.stderr
