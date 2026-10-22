@@ -1,0 +1,7 @@
+# Selected CALREG calendar source pack
+
+The selected safe15/safe16 CTLM netlist is the CALREG=15 revision from 1ab5f68ae. Its branch carries the mapped lp9f netlist but retains older high-level source. This bounded current-main pack brings the exact qfd_dv_cmd_cal_mu source, its three missing direct RTL dependencies, and existing minimal CALR port/TABLE_REL benches from 1ab5f68ae. It does not import the full parent graph or claim that main now contains the selected parent source composition. The selected parent high-level files qfd_tt_ctlm_dv_lpf.sv and qfd_tt_ctlm_dv_lpf_parts.sv remain identified at 1ab5f68ae for die/token owners.
+
+CALREG defaults to zero; selected mapped CTLM uses 15. Bit0 replaces per-playhead FIFO SRAM by a 1kb flop ring/registered next head; bit1 registers segment start and shifts other start consumers uniformly by one edge; bit2 flattens issue select logic; bit3 is a parent output-register control. Existing source-scoped evidence at 1ab5f68ae results/rtl/qe3_ctlm3_1021/witness/cp.log: CALREG0/1/5 positives matched 1,059,923 edges, mutants2/34 failed; bench10 flat==netlist passes including TLOAD producer and mutants. Added price: at most38 start edges/token, TLOAD11->12, native token/position/context outputs +1 edge.
+
+No new simulation is launched for this packaging step. Token owner has exact current revision identities and retains current-source functional runs. PM-read-address structural successor is separate unimplemented work; no extra edge or timing claim from that proposal is adopted here.
