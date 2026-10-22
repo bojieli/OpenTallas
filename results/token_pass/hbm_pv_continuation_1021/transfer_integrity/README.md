@@ -1,0 +1,5 @@
+The original EP5 PV build ended in GCC internal compiler errors on three generated C++ translation units. Its source tree was preserved. A single exact-object continuation, with an unlimited compiler stack and unchanged generated source, was admitted on EP7 after the scheduler-managed spill.
+
+The compact receipt verifies every one of the 9,388 existing object files by byte size and SHA256 against the original EP5 snapshot. None is missing or changed. The three previously failed C++ inputs and the RTL source manifest also match exactly. Resumed make had already produced 48 additional attention-tile objects during the destination snapshot; these are recorded separately and do not replace originals.
+
+The execution identity records the actual EP7 host, unlimited stack and GCC 15.2.0. Full original and received per-object manifests are retained at the absolute paths and SHA256 values listed in comparison.json. This is transfer integrity and continuation identity evidence only. The build and subsequent functional replay are still separate obligations; the receipt is not a build or simulation PASS.

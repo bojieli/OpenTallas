@@ -1,5 +1,5 @@
 {
-  "observed_at": "2026-10-21T21:49:14-07:00",
+  "observed_at": "2026-10-21T21:56:24-07:00",
   "selected_r18_source": "d76bf51b4",
   "next_physical_revision": {
     "source": "57cd9d54d",
@@ -9,7 +9,13 @@
     "change": "NW pair moves north to fix nine actual GEN overlaps; other r18c outboard pairs and d76 RTL remain unchanged",
     "artifact_root": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r18d_2000_1021/plansM",
     "final_post_S8b_contract": "pending",
-    "candidate_dma_or_gather_promotion": false
+    "candidate_dma_or_gather_promotion": false,
+    "initial_graph_sha256": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
+    "initial_die_v_sha256": "13f95969a0f8bbdf69bcf719bf1b0c10bc90ba86cd344cc5860bfd6cd4dd564d",
+    "initial_die_v": "pb17/die.v",
+    "gen_A_host": "ot-epyc5",
+    "gen_A_unit": "oth-ubuntu-3448821-1792644556",
+    "initial_graph_vs_d76": "byte identical; placement only"
   },
   "full_token_status": "INCOMPLETE",
   "candidate_sfu_r24": {
@@ -110,5 +116,15 @@
   ],
   "current_graph_census": "3acc18541:results/rtl/hbm_dma_integrated_1021/r18_intermediate_census.json; all1264 original sources/deps/params unchanged at intermediate only",
   "source_byte_availability": "57786618d: independently recovered actual input bytes for all22 LOAD fixture records; no source bytes derived from fixture O",
-  "published_model_fix": "main94c4b7a14; pre-fix live binaries retain INIT.hex workaround"
+  "published_model_fix": "main94c4b7a14; pre-fix live binaries retain INIT.hex workaround",
+  "pv_continuation": {
+    "unit": "oth-ubuntu-3204411-1792644783",
+    "host": "ot-epyc7",
+    "state": "active exact-object make after managed spill; no completed build or simulation result",
+    "original_objects_verified": 9388,
+    "failed_cpp_inputs_verified": 3,
+    "source_manifest_sha256": "64bb832617079f0759ca5a527f587d5caaf98c372a5571a40d66949fefb649ce",
+    "execution_stack": "unlimited",
+    "comparison_receipt": "results/token_pass/hbm_pv_continuation_1021/transfer_integrity/comparison.json"
+  }
 }
