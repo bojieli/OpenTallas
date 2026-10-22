@@ -62,7 +62,9 @@ RULES = {
          'edge short; bench rtl/test/hbm_layer/tb_xl_cl2_banklat_ref.sv: 6 FAIL, 7 PASS); list = per-bank vector '
          '(HBM-BANKLAT-XL: element b = registers rq pin -> bank b -> rr pin; ctl staggers bank b issue by max - l_b)')],
     'ot_hgi_sm_xload_cl2p_ctlx': [
-        ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'cl2p (x_fmt 3) ctlx: same RD_LAT contract as cl2 ctlx; SCALAR only until its '
+        ('rq', 'rd', 'RD_LAT', 6, 7, BANK_RD, 'cl2p (x_fmt 3) ctlx: same RD_LAT contract as cl2 ctlx -- RD_LAT 7 at '
+         'ot_vms_bank_static direct (STEWARD-TOKb-HBM 10-21, measured: same raw rr pin capture + md[RD_LAT+1] check as cl2; '
+         'bench rtl/test/hbm_layer/tb_xl_cl2p_banklat_ref.sv: 6 FAIL resp_bad on the first wave, 7 PASS); SCALAR only until its '
          'ctl gets the cl2 per-bank stagger')],
     'ot_hbm_idx_vm_query_static_n12': [
         ('vm_rq', 'rd', 'VM_RT_EXTRA', 4, 4, BANK_RD + 2, 'header: VM_RT_EXTRA 4 = 2 shell pins + 2 die edges (1 relay each way)')],

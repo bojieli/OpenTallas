@@ -82,6 +82,10 @@ def test():
     assert status(c)[0] == 'FAIL'
     c['instances']['xl']['params']['RD_LAT'] = 13
     assert status(c)[0] == 'FAIL'                                                             # scalar, unequal lanes
+    c = contract(6, 0, 0, bank='ot_vms_bank_static'); c['instances']['xl']['master'] = 'ot_hgi_sm_xload_cl2p_ctlx'
+    assert status(c)[:2] == ('FAIL', 7)                                                       # cl2p: same ref 7 (tb_xl_cl2p_banklat_ref)
+    c['instances']['xl']['params']['RD_LAT'] = 7
+    assert status(c)[:2] == ('PASS', 7)
     import contract_die_v as CV                                                                # list -> packed Verilog
     assert CV.vparam([10, 13, 23, 25, 26, 29, 39, 41]) == "{8'd41, 8'd39, 8'd29, 8'd26, 8'd25, 8'd23, 8'd13, 8'd10}"
     assert CV.vparam(6) == '6'
