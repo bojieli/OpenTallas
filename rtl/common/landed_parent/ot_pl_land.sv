@@ -163,7 +163,7 @@ endmodule
 // wide mux; the one-hot register advances ahead of the capture edge so K and the
 // reset age remain exactly the original contract.
 module ot_pl_land_local_w #(
-    parameter integer W = 24, D = 4,
+    parameter integer W = 24, D = 4, KEPT_ENABLE = 0,
     parameter integer AW = (D <= 2) ? 1 : $clog2(D)
 ) (
     input wire ck, rsi,
@@ -188,7 +188,7 @@ module ot_pl_land_local_w #(
         end
     genvar s;
     generate for (s=0;s<D;s=s+1) begin:g_slot
-        always @(posedge ck) if (rq && write_oh[s]) begin data[s] <= i; epoch[s] <= wc; end
+        always @(posedge ck) if (KEPT_ENABLE ? write_oh[s] : (rq && write_oh[s])) begin data[s] <= i; epoch[s] <= wc; end
         assign bank[s*W+:W] = data[s];
         assign epo[s*(AW+1)+:AW+1] = epoch[s];
     end endgenerate
@@ -248,7 +248,8 @@ endmodule
 // reset: they only delay a word (bubbles included), exactly like a relay stage.
 module ot_pl_pad #(
     parameter integer W = 1,
-    parameter integer N = 1
+    parameter integer N = 1,
+    parameter integer RESET_COPIES = 1
 ) (
     input  wire         ck,
     input  wire [W-1:0] d,
@@ -256,6 +257,12 @@ module ot_pl_pad #(
 );
     generate if (N == 0) begin : g_wire
         assign q = d;
+    end else if (RESET_COPIES > 1 && W == 1) begin : g_reset_copies
+        wire pre;
+        ot_pl_pad #(.W(1), .N(N-1)) u_pre (.ck(ck), .d(d), .q(pre));
+        (* keep="true",dont_touch="true",ot_rst_split=1 *) reg [RESET_COPIES-1:0] copies;
+        always @(posedge ck) copies <= {RESET_COPIES{pre}};
+        assign q = copies[0];
     end else begin : g_reg
         reg [W-1:0] r [0:N-1];
         integer j;
