@@ -1,0 +1,14 @@
+{
+  "start_commit": "d0f5b01284ead65754afb25675b6b6d090e995e3",
+  "identity": "exact_content_snapshot",
+  "archive_sha256": "43a656acba8d59eb469d782594ce12fcc94e08c271fe56679f1dc66e4d1dfbdb",
+  "manifest_sha256": "363bd0800186ca732bbeda9d61001acdbd6935170a35557e25bbeb660d86b32a",
+  "captured": "2026-10-21T20:08:50-0700",
+  "remote_host": "ot-epyc9",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/s81bf_front_five_roots_n32_soq_pd66-20261021-200813",
+  "verdict": "WARN",
+  "native_max_load": 32,
+  "native_violations": 0,
+  "closure_submitted": false,
+  "reason": "MAIN normal closure already running; preserve alternate gate without duplicate route."
+}

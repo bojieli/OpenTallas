@@ -1,0 +1,209 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: RTL already registers every data port at the pin (inputs: PINREG pin flops on io_clk -> lockup latch -> core; f_prog programme_pin_q; qy0/qy1 dedicated face capture; outputs: CPIN seam flops on io_clk for c0/c1, st from registered busy/fault through source-ck lockups). A synthesis pin register would",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-run selected ot-agidock128 for 40 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "source_binding",
+   "message": "immutable shipping manifest /tmp/ref_gate_s81bf_front_five_roots_n32_soq_pd66_20261021-200813.source_snapshot.json",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "ot-agidock128 did not admit the gate within 900 s; same archive re-shipped to ot-epyc9",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "remote log /tmp/ref_gate_s81bf_front_five_roots_n32_soq_pd66_20261021-200813.log; host dir ot-epyc9:/srv/opentallas-scratch/claude/ref_gate/s81bf_front_five_roots_n32_soq_pd66-20261021-200813",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "native_census",
+   "message": "mapped dynamic load limit32 PASS; max=32",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "remote",
+   "message": "synth + floorplan + PDN OK on ot-epyc9 in 430 s (gate total 6519 s)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "floorplan.pin_geometry",
+   "message": "actual pin geometry PASS: {'signal_clock_pins': 3272, 'pin_rectangles': 3272, 'pin_track_checked': 3272, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 0e5876501d5e024ac9f8cbcafdc008f6a446cddacfb131d6331f2c287b452741",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 13504 um2 + macros 0 in core 21835: util 62%",
+   "fix": "enlarge: set \"std_area_um2\": 13504 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "INFO",
+   "check": "textbook",
+   "message": "WARN dsfd_bf_front_roots cells 100,968 flops 22,680 depth 520.1 ps util 0.6116 reach 0.0 um (4.1 s)",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_domain",
+   "message": "clock root port ck: 17,685 flops > 15,000 on one root (+0 ICGs, 0 macro clock pins; e.g. u_ot_pr_core.u_view.g_hc.c_lk[0]$_DLATCH_N_): split into hierarchical sub-blocks (hardened elements with their own CTS) or a clock mesh / H-tree spine",
+   "fix": "hardened sub-tiles with local roots and registered seams (kind cluster), <= ~15k sinks / 600 um a root"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 61.2% > 60% (std 13355 + macro 0 um2 in 21835 um2; target 40%-60%): enlarge the outline",
+   "fix": "above 60% enlarge the outline toward util 0.50-0.55; keep >= 20 um macro channels (a roomy outline is acceptable: never shrink for area)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.clock_guidance",
+   "message": "clock root port:ck: 17,685 sinks on the largest root; no measured clock tree (no --cts gate evidence); WARN: 17,685 sinks on one clock root > 15,000 (guidance); no measured spread: run the --cts gate",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cts_calibration",
+   "message": "ss insertion all 281.7..330.7 ps (spread 49.0), boundary mean 294.5; tt insertion all 213.5..244.2 ps (spread 30.7), boundary mean 224.7; ff insertion all 172.6..195.7 ps (spread 23.1), boundary mean 182.6; macro_clk flag False",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "density",
+   "message": "effective global-placement target density 0.660 vs spec PD 0.66",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "constraints signoff /src/physical/ref_tile/s81bf_front_five_roots_n32_soq_pd66/signoff.sdc (TT placement RC; diagnostic)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->reg     1800 paths, worst slack 0.0 ps (e.g. u_ot_pr_core.u_view.g_hc.c_lk[336]$_DLATCH_N_/D)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "reg->out      602 paths, worst slack 271.8 ps (e.g. c1[29])",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "path_classes",
+   "message": "setup WNS 0.0 hold WNS 4.142419740560399e-11",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_1 max: 2 undeclared timed path(s), worst 191.7 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_1 min: 2 undeclared timed path(s), worst 346.4 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_3 max: 776 undeclared timed path(s), worst 92.6 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_3 min: 776 undeclared timed path(s), worst 363.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_4 max: 776 undeclared timed path(s), worst 76.7 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_0->ot_entry_4 min: 776 undeclared timed path(s), worst 349.3 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_0 max: 1379 undeclared timed path(s), worst 0.0 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_1->ot_entry_0 min: 1379 undeclared timed path(s), worst 345.1 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_0 max: 1024 undeclared timed path(s), worst 156.5 ps (uncertainty 150.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "ot_entry_2->ot_entry_0 min: 1024 undeclared timed path(s), worst 354.2 ps (uncertainty 100.0 ps)",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "cross_clock",
+   "message": "5 register clocks (ot_entry_0,ot_entry_1,ot_entry_2,ot_entry_3,ot_entry_4): no undeclared cross-clock reg->reg setup violation under signoff.sdc",
+   "fix": ""
+  },
+  {
+   "severity": "WARN",
+   "check": "clock_rule",
+   "message": "root port:ck: 17,685 sinks on the largest root; measured TT insertion 244.2 ps, FF insertion 195.7 ps, TT pin-flop spread 10.1 ps, FF pin-flop spread 9.3 ps; WARN: 17,685 sinks on one clock root > 15,000 (guidance)",
+   "fix": "guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link"
+  },
+  {
+   "severity": "INFO",
+   "check": "layout_images",
+   "message": "LOOK at these before submitting: floorplan /home/ubuntu/wt/codex-tok-rate-2000-1021/physical/ref_tile/s81bf_front_five_roots_n32_soq_pd66/gate_layout/floorplan.png; density /home/ubuntu/wt/codex-tok-rate-2000-1021/physical/ref_tile/s81bf_front_five_roots_n32_soq_pd66/gate_layout/density.png",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "trial_route",
+   "message": "trial GRT: total overflow 0; worst layer M3 58.83% used; GRT 595 s",
+   "fix": ""
+  }
+ ]
+}
