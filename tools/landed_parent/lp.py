@@ -119,6 +119,19 @@ LIB_PORTS['ot_pl_land_reset_forest'] = dict(LIB_PORTS['ot_pl_pad'])
 
 
 # ----------------------------------------------------------------------------------------------------- verilog parsing
+def sticky_history_ref(name: str, offset: int, lag: int) -> str:
+    """Bits asserted throughout the allowed sticky lag window, across reset epochs.
+
+    An endpoint-only AND treats a pre-reset assertion as continuous when the
+    same bit reasserts after reset. Require every intervening sample instead;
+    the configured lag and the no-early-assertion bound stay unchanged.
+    """
+    return "(" + " & ".join(
+        f"dlo_{name}[{age - 1}]" if age > 0 else f"fo_{name}"
+        for age in range(offset, offset + lag + 1)
+    ) + ")"
+
+
 def preprocess(text: str, defines) -> str:
     """comments stripped, `ifdef / `ifndef / `elsif / `else / `endif resolved (as pre_route_gate._vlog_preprocess)"""
     text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
@@ -1230,8 +1243,8 @@ class Parent:
             off = t.get(f"port:{n}", 0)
             ref = f"dlo_{n}[{off - 1}]" if off > 0 else f"fo_{n}"
             if n in sticky:
-                lagref = f"dlo_{n}[{off + sticky[n] - 1}]" if off + sticky[n] > 0 else f"fo_{n}"
-                L.append(f"                nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & {ref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
+                lagref = sticky_history_ref(n, off, sticky[n])
+                L.append(f"                nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
                          f"if (bad <= 5) $display(\"LP_MISMATCH sticky port={n} cycle=%0d flat=%h landed=%h\", cyc, {ref}, lo_{n}); end")
                 continue
             L.append(f"                nc = nc + 1; if (lo_{n} !== {ref}) begin bad = bad + 1; "
@@ -1276,8 +1289,8 @@ class Parent:
             off = t.get(f"port:{n}", 0)
             ref = f"dlo_{n}[{off - 1}]" if off > 0 else f"fo_{n}"
             if n in sticky:
-                lagref = f"dlo_{n}[{off + sticky[n] - 1}]" if off + sticky[n] > 0 else f"fo_{n}"
-                L.append(f"            nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & {ref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
+                lagref = sticky_history_ref(n, off, sticky[n])
+                L.append(f"            nc = nc + 1; if (((lo_{n} & ~{ref}) | ({lagref} & ~lo_{n})) !== 0) begin bad = bad + 1; "
                          f"if (bad <= 5) $display(\"LP_MISMATCH sticky port={n} cycle=%0d flat=%h landed=%h\", cyc, {ref}, lo_{n}); end")
             else:
                 L.append(f"            nc = nc + 1; if (lo_{n} !== {ref}) begin bad = bad + 1; "
