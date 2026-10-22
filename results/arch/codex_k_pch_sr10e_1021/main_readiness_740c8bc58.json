@@ -174,5 +174,41 @@
     "physical/ref_tile/qkd_kvs_pc_h_sr10e/gate_layout/floorplan.png",
     "physical/ref_tile/qkd_kvs_pc_h_sr10e/gate_layout/density.png"
   ],
-  "route_status": "RUNNING route.a1, EP9; all 26 declared benches qualified; no CLOSED packet"
+  "route_status": "RUNNING route.a1, EP9; all 26 declared benches qualified; no CLOSED packet",
+  "current_main_source_equivalent": false,
+  "canonical_source_adoption": false,
+  "historical_experiment_only": true,
+  "kit_commit": "1b36b2643567be2cd53641e8b3faad1a180dce87",
+  "frozen_snapshot_paths": {
+    "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds_rl_sr.sv": "results/arch/codex_k_pch_sr10e_1021/frozen_source/rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_mu_ds_rl_sr.sv",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv": "results/arch/codex_k_pch_sr10e_1021/frozen_source/rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_1019.sv",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv": "results/arch/codex_k_pch_sr10e_1021/frozen_source/rtl/qwen_sys/static_kv_20261014/qkd_kvpc_sram_clones_1019.sv"
+  },
+  "kit_file_sha256": {
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/README.md": "8ab48f9e1cdda79cadded1e66f9e00ec251f151a6f9a12bd1d717cc539fca9ce",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/clock.sdc": "5de360f707efa1e1a811b460dff3d574208a7f4c658677fd85ee2aa32614af25",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/floorplan.json": "11a62c2a28f919b6cf895b9ae82d041aff31c975d5259b4313a6b9d3afc25979",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/gate_layout/REVIEW.json": "7fc0cf889baf22918d1f798c451d332902b9a45c2f10877b8d57ebd9ab11fa5e",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/gate_layout/density.png": "d06210af368f0bd0759ca30219cdf394c42ca9b89ba54efa30e8b0188fd4f262",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/gate_layout/floorplan.png": "ec0d53ecaf2a363cbe420d88cce2aa8768ed119152025daf1219c6f2238c44b5",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/gate_result.json": "fc2375abfcb52041fdb3b52d011a13e2852b92693c3521fee389621d5aefb415",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/job.json": "391e285a56b7a2ce391cbe39d738b4bae3bb046a49133d5eea6187e8b83a14dc",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/kit.env": "3c9aea19d88b4a147af3c2c6b599816f80c014f743beb0c4eb9d29eca432c15a",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/pdn.tcl": "5fa079246663aea6d47d671acaaa301ea693231ef3b02cb3ef04dc5499de1865",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/pin_regs.json": "f520b117448985dfff877fa630a8e66eb22211533231eb19d5445244139efec0",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/place.tcl": "baa77f0d58dbbd1ec1f50a39ec1a570b50b64018ff2c9d75fb5f6936308e8d51",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/post_cts.tcl": "c1d3b1d239f15485c86efb74cd1829f29df84916470467de83b034632585908f",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/post_drt.tcl": "54c13aa893d3c9acc5e507dd5ea420c1b138221cfa4be289e360d1f419178f4c",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/post_fill.tcl": "c1d3b1d239f15485c86efb74cd1829f29df84916470467de83b034632585908f",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/post_grt.tcl": "c1d3b1d239f15485c86efb74cd1829f29df84916470467de83b034632585908f",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/pre_cts.tcl": "b29b2f113a4aa1a3736466893ac06c15f258da3190942d4787a847847e016ed5",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/pre_dpl.tcl": "c668b3677a80a60029982fd74af121c738a52d3010947134539610b2bde0c8d9",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/pre_drt.tcl": "b5efc68dcd942a021d6021c927e8ffa3b840b3405e1394ee9a190b6a9ecb867c",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/pre_fill.tcl": "b5efc68dcd942a021d6021c927e8ffa3b840b3405e1394ee9a190b6a9ecb867c",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/pre_gpl.tcl": "868665071710eb4ce5d4af172b346032f605b49500c67093b5f6f3229928b739",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/pre_grt.tcl": "e148c8e1fb955e8044a585d89d5c3ff7e3fca7500833d885fa7262b8530e074e",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/reset_landing.json": "8d5a46c33d6dd98f89511c1432db4d2645c882e108dc4ecacf5b6c2b54cac311",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/signoff.sdc": "737fd68dcbb1d340d3456a65d29c61aead3c472473d5f5d66343695ed23f7a66",
+    "physical/ref_tile/qkd_kvs_pc_h_sr10e/spec.json": "e6ad4c1e632b1db86d8587c59a0ce1ffb71c230e0eb64e7a857a401b82a0aace"
+  }
 }
