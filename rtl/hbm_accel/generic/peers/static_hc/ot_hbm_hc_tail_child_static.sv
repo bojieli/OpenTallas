@@ -30,6 +30,8 @@ module ot_hbm_hc_tail_child_static #(
     // sink launch window opens at TR = EREADY + 1); SKP 1 = the Sinkhorn step in registered stages (ot_hdc_sinkhorn_cp,
     // needs SDIV >= 16, no multicycle path).  Kits: k3 = TPIPE 1 SKP 1 SDIV 16 (L 947, +451 edges over L 496);
     // k3b = TPIPE 1 SKP 0 SDIV 12 + MCP 12 (L 779, +283 edges).  Defaults = the k2 form (L 496).
+    // HBM-ELEM13/HC-TAIL 10-21: k4 = TPIPE 1 SKP 2 SDIV 17 (steady quotient output cut, no multicycle): CAP 699, L 989,
+    // +493 edges over L 496 (the root TAILC emit offset TE 2 -> 495).
     parameter integer TPIPE = 0,
     parameter integer SKP = 0,
     parameter integer TR = TPIPE ? 271 : 198,          // os EREADY + 1 (ot_hgi_hc_tail_os_static calendar)

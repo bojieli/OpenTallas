@@ -10,11 +10,17 @@
 //   step 0 B     S1 S2 S3 Q1 Q2 Q3 QO  P M X (the + eps add)                             D = 10
 // The caller's ce period STEP_CYC (the tail child's SDIV) must be >= D + 1 = 16.  Every path is then single-period
 // (no multicycle SDC): segments between cuts are <= ~16 ASAP7 logic levels (~600 ps at TT).  CUT = 0 = ot_hdc_sinkhorn_ce.
+// HBM-ELEM13/HC-TAIL 10-21 (k3 gate: TT placement -300 ps / CTS SS -363 ps at the sticky fault flop): SQO 1 registers the
+// steady-step quotient outputs y / range too (QO, as step 0 B already does).  The k3 worst cone was Q3 -> remainder
+// equality (z1/z2) + carry select + mf mux + exponent range compare -> range -> 16-way s_bad OR -> flt / fault, 1,938 cut
+// flops spread over the tile; with QO the st write and the fault OR start at registers.  Steady step D = 16, so the
+// caller's STEP_CYC must be >= 17.  SQO 0 = unchanged (D 15, STEP_CYC >= 16).
 // ---------------------------------------------------------------------------
 module ot_hdc_sinkhorn_cp #(
     parameter integer ITERS = 20,
     parameter [31:0]  EPS = 32'h358637BD,      // hc_eps = 1e-6 in binary32
-    parameter integer CUT = 1                  // 1 = registered stages (needs STEP_CYC >= 16); 0 = combinational step
+    parameter integer CUT = 1,                 // 1 = registered stages (needs STEP_CYC >= 16); 0 = combinational step
+    parameter integer SQO = 0                  // 1 = steady-step quotient output cut QO (needs STEP_CYC >= 17)
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -145,7 +151,7 @@ module ot_hdc_sinkhorn_cp #(
             for (c = 0; c < 4; c = c + 1) begin : g_sel
                 wire [30:0] q;
                 wire rng;
-                ot_hdc_skc_quot #(.SUBN(0), .CUT(CUT), .CUTO(0)) u_q (.clk(clk), .xm(mm[c]), .xe($signed({2'b00, ee[c]}) - 10'sd127), .xz(1'b0),
+                ot_hdc_skc_quot #(.SUBN(0), .CUT(CUT), .CUTO(SQO)) u_q (.clk(clk), .xm(mm[c]), .xe($signed({2'b00, ee[c]}) - 10'sd127), .xz(1'b0),
                                                 .tm(mt), .te(te), .r(rs), .y(q), .range(rng));
                 assign s_out[4*c + r] = {1'b0, q};
                 assign s_bad[4*r + c] = rng | sub[c] | o1 | o2 | o3 | ot | !mt[23];
