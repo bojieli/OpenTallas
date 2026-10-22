@@ -157,17 +157,16 @@ def synth_lef(name, w, h, pins, path, keepout=(), pin_window=None, mouth_free=Fa
                 ok_ = lambda t: (t not in used[face] and 0 < 0.012 + 0.048 * t < Lf_
                                  and not any(a_ <= 0.012 + 0.048 * t <= b_ for a_, b_ in mouths[face]))
                 in_mouth = any(a_ <= 0.012 + 0.048 * tr <= b_ for a_, b_ in mouths[face])
-                if in_mouth:
+                nt_ = int(Lf_ / 0.048) + 2
+                if in_mouth or not ok_(tr):
+                    # nearest free track outside every mouth, either direction (a face with a mouth may be packed
+                    # right up to its end: upward-only search ran off the N face of hfd_hgi_vms_glue_sw_t)
                     t0, d_ = tr, 0
                     while not ok_(t0 + d_) and not ok_(t0 - d_):
                         d_ += 1
-                        assert d_ < 10 ** 6, (name, pn, face)
+                        assert d_ <= nt_, (name, pn, face, 'face full outside mouths')
                     tr = t0 + d_ if ok_(t0 + d_) else t0 - d_
-                    moved += 1
-                else:
-                    while not ok_(tr):
-                        tr += 1
-                        assert 0.012 + 0.048 * tr < Lf_, (name, pn, face, 'face full outside mouths')
+                    moved += int(in_mouth)
             else:
                 while tr in used[face]:
                     tr += 1
