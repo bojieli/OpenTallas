@@ -313,7 +313,7 @@ def lower_qslots(contract, messages, *, allow_test=False):
          'QSLOT pulse and beat must use the actual coherent two-field GEN bundle')
     need(contract.get('params') == dict(QB_ALIGN=1, QB_LOCAL32=0, SVC_RECV=0, SVC_LOCAL32=0),
          'only the explicitly qualified aligned, flags-off source ABI is supported')
-    for name in ('qbank', 'wrapper', 'service', 'macro'):
+    for name in ('qbank', 'wrapper', 'service', 'macro', 'sysface'):
         need(re.fullmatch('[0-9a-f]{64}', contract.get('source_sha256', {}).get(name, '')) is not None,
              'missing source identity: ' + name)
     for name in ('commit_identity', 'sysface_bundle', 'qbank_read', 'svc_codec_wire', 'tx_retire'):
@@ -434,7 +434,8 @@ def read_qslot_contract(path, compute_commit, compute_params, compute_die_v=None
     sources = dict(qbank='rtl/qwen_split/qfd_native59_qbank.sv',
                    wrapper='rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv',
                    service='rtl/qwen_split/qfd_native59_svc_obs1.sv',
-                   macro='physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.v')
+                   macro='physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.v',
+                   sysface='rtl/qwen_split/qfd_sys_face_ovl_fault1.sv')
     for name, src in sources.items():
         digest = hashlib.sha256(git_show(compute_commit, src).encode()).hexdigest()
         if c.get('source_sha256', {}).get(name) != digest:
