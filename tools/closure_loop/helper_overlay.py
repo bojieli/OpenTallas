@@ -192,6 +192,12 @@ LINT_ONLY = ("tools/textbook_lint.py",)
 # relaxing / neutral keep the gate; a tightening keeps it only when it does not apply to the tile, or its "requires" is
 # met by the gate report.  Add an entry only with a reason a reviewer can check.
 RULE_COMMITS = {
+    # ROOT-MERGE-1022 10-22: claude/hbm-pslice-lp15-1021 b6940eee2 (HBMb/IDXSU-PS15). Its child_centre_tap.tcl r15 was
+    # resolved to main's copy (58622b026, Gate-Rule: neutral), which already carries the r15 child-scoped corner fix
+    # and the per-mode propagation; the rest are NEW pgcol_l r6a/r6b and pslice_c5_r15 kit files.
+    "b6940eee26c1db9b96ffca27e11586cb54093df4": dict(
+        kind="neutral",
+        what="pslice lp15: new kit files; child_centre_tap.tcl = main's copy (58622b026)"),
     # ROOT-MERGE-1022 10-22: claude/hbm-pslice-lp14-1021 17f38120b (HBM-ELEM13/SU-PSLICE14). The merge resolved
     # physical/common_flow/child_centre_tap.tcl to main's newer copy (58622b026, Gate-Rule: neutral), its ref_tile.py
     # hunk is byte-identical to main's, and the rest are NEW pslice_c5 lp14a/b kit spec/pin/fence files -> no gate rule
