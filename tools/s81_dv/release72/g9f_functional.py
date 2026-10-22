@@ -66,9 +66,15 @@ def prepare(plan,table,manifest,wrapper_ref):
                 plan['links'].append(dict(i=f'pvso_{label}_{kind}_l{lane}',c='attn',b=276,d=1,
                     e=[[si,outport,sx,s['y']+s['h'],'box'],[di,'pvlocal' if kind=='local' else 'pvpeer',dx,d['y']+d['h'],'box']],
                     endpoint_faces=['N','N'],n='Actual P.V broadcast; three parallel lanes, 562 live bits plus 266 declared spares'))
+    # The selected CPR0 frame wrapper and frozen schedule are pinned together.
+    # Current-main q supports optional CPR1 but is not this frame's source.
+    frame_ref='21b97190eba0b3b306026f23a2408867cd099726'
+    qpath='rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv'
+    table['rtl_refs'].setdefault(frame_ref,[]).append(qpath)
+    table['prefer']=[v for v in table['prefer'] if not v.endswith('/'+qpath)]+[frame_ref+'/'+qpath]
     table['functional_successor']={'so_source':SO,'sukv_raw_source':KV,'sukv_wrapper_ref':wrapper_ref,
         'pv_layout':'{pv_x48,pv_d513,pv_v1}','added_ingress_sram_macros':272,'added_ingress_sram_bits':557056,
-        'new_parent_views_qualified':False,'body_area':'stand-in pending mapped logic and ingress placement; not inherited closure',
+        'frame_element_source':{'ref':frame_ref,'path':qpath,'CPR':0,'authority':'Exact frozen CPR0 frame/schedule; no CPR1 view alias'},'new_parent_views_qualified':False,'body_area':'stand-in pending mapped logic and ingress placement; not inherited closure',
         'hbc':'Not selected until real stage/rank, clock/reset origin and upstream arrival authority exist'}
 def hbc_disabled(plan,table,source_ref,regional_manifest):
     """Bind real HBC and fixed transport while production enable stays off."""
