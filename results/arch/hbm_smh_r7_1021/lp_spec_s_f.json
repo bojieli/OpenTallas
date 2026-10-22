@@ -139,7 +139,19 @@
     "u_pub1",
     "u_qk1",
     "u_r7p_0",
+    "u_r7p_1",
+    "u_r7p_10",
+    "u_r7p_11",
+    "u_r7p_12",
+    "u_r7p_13",
+    "u_r7p_14",
+    "u_r7p_15",
+    "u_r7p_2",
     "u_r7p_3",
+    "u_r7p_4",
+    "u_r7p_5",
+    "u_r7p_6",
+    "u_r7p_9",
     "u_r7rst_u_bdc1",
     "u_r7rst_u_cap1",
     "u_r7rst_u_g1p",
@@ -205,7 +217,7 @@
    "insts": [
     "u_bk1",
     "u_oh1",
-    "u_r7p_4",
+    "u_r7p_16",
     "u_r7rst_u_xq1",
     "u_rl1",
     "u_st1",
@@ -219,9 +231,9 @@
   {
    "name": "xs",
    "insts": [
-    "u_r7p_5",
-    "u_r7p_6",
-    "u_r7p_7",
+    "u_r7p_17",
+    "u_r7p_18",
+    "u_r7p_19",
     "u_r7rst_u_xs1",
     "u_xs1"
    ],
@@ -234,8 +246,8 @@
    "name": "mpse",
    "insts": [
     "u_gs",
-    "u_r7p_1",
-    "u_r7p_2",
+    "u_r7p_7",
+    "u_r7p_8",
     "u_r7rst_u_gs"
    ],
    "centre": [
@@ -291,9 +303,13 @@
   "tau_merge": 3
  },
  "r7": {
+  "phase_constraints": {
+   "u_h01": 24,
+   "u_h11": 24
+  },
   "output_offsets": {
    "rout_s": 9,
-   "gout": 15
+   "gout": 27
   },
   "edge_proof": [
    {
@@ -772,9 +788,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -782,9 +798,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -792,9 +808,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -802,9 +818,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -812,9 +828,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -822,9 +838,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -832,9 +848,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -842,9 +858,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -852,9 +868,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -862,9 +878,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -872,9 +888,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_h01",
@@ -883,8 +899,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_h11",
@@ -893,8 +909,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_h01",
@@ -903,8 +919,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_h11",
@@ -913,8 +929,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -922,9 +938,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -932,9 +948,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -942,9 +958,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -952,9 +968,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_xq1",
@@ -962,9 +978,9 @@
     "net": "fb1",
     "old": 3,
     "new": 3,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_h01",
@@ -973,8 +989,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_h11",
@@ -983,8 +999,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_as",
@@ -1023,8 +1039,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_cap1",
@@ -1033,8 +1049,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_cap1",
@@ -1043,8 +1059,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_pub1",
@@ -1052,9 +1068,9 @@
     "net": "pst1",
     "old": 0,
     "new": 0,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_pub1",
@@ -1062,9 +1078,9 @@
     "net": "psl1",
     "old": 0,
     "new": 0,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_fp1",
@@ -1072,9 +1088,9 @@
     "net": "pfp1",
     "old": 0,
     "new": 0,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_fp1",
@@ -1082,9 +1098,9 @@
     "net": "pfp1",
     "old": 0,
     "new": 0,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_fp1",
@@ -1092,9 +1108,9 @@
     "net": "pfp1",
     "old": 0,
     "new": 0,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_as",
@@ -1102,9 +1118,9 @@
     "net": "at_m",
     "old": 0,
     "new": 0,
-    "pad": 12,
+    "pad": 24,
     "src_offset": 0,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_bdc1",
@@ -1112,9 +1128,9 @@
     "net": "bov1",
     "old": 0,
     "new": 0,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_bdc1",
@@ -1122,9 +1138,9 @@
     "net": "by1",
     "old": 0,
     "new": 0,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_bdc1",
@@ -1132,9 +1148,9 @@
     "net": "bt1",
     "old": 0,
     "new": 0,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_bdc1",
@@ -1142,9 +1158,9 @@
     "net": "bf1",
     "old": 0,
     "new": 0,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_qk1",
@@ -1153,8 +1169,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_qk1",
@@ -1163,8 +1179,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_qk1",
@@ -1173,8 +1189,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_qk1",
@@ -1183,8 +1199,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_mg1",
@@ -1193,8 +1209,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_mg1",
@@ -1203,8 +1219,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_mg1",
@@ -1213,8 +1229,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_mg1",
@@ -1223,8 +1239,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_mg1",
@@ -1233,8 +1249,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_pub1",
@@ -1242,9 +1258,9 @@
     "net": "ph1",
     "old": 0,
     "new": 0,
-    "pad": 0,
+    "pad": 12,
     "src_offset": 12,
-    "dst_offset": 12
+    "dst_offset": 24
    },
    {
     "src": "u_go1",
@@ -1253,8 +1269,8 @@
     "old": 0,
     "new": 0,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 12
+    "src_offset": 24,
+    "dst_offset": 24
    },
    {
     "src": "u_g1p",
@@ -1263,8 +1279,8 @@
     "old": 0,
     "new": 3,
     "pad": 0,
-    "src_offset": 12,
-    "dst_offset": 15
+    "src_offset": 24,
+    "dst_offset": 27
    },
    {
     "src": "u_xg2",
@@ -1272,9 +1288,9 @@
     "net": "xg2o",
     "old": 0,
     "new": 3,
-    "pad": 12,
+    "pad": 24,
     "src_offset": 0,
-    "dst_offset": 15
+    "dst_offset": 27
    },
    {
     "src": "u_xp2",
@@ -1282,30 +1298,90 @@
     "net": "xp2",
     "old": 0,
     "new": 3,
-    "pad": 12,
+    "pad": 24,
     "src_offset": 0,
-    "dst_offset": 15
+    "dst_offset": 27
    }
   ],
   "compensation": [
    {
+    "inst": "u_cap1",
+    "net": "fb1",
+    "stages": 12
+   },
+   {
     "inst": "u_go1",
     "net": "at_m",
+    "stages": 24
+   },
+   {
+    "inst": "u_go1",
+    "net": "bf1",
+    "stages": 12
+   },
+   {
+    "inst": "u_go1",
+    "net": "bov1",
+    "stages": 12
+   },
+   {
+    "inst": "u_go1",
+    "net": "bt1",
+    "stages": 12
+   },
+   {
+    "inst": "u_go1",
+    "net": "by1",
+    "stages": 12
+   },
+   {
+    "inst": "u_go1",
+    "net": "ph1",
     "stages": 12
    },
    {
     "inst": "u_gs",
     "net": "xg2o",
-    "stages": 12
+    "stages": 24
    },
    {
     "inst": "u_gs",
     "net": "xp2",
+    "stages": 24
+   },
+   {
+    "inst": "u_h01",
+    "net": "fb1",
+    "stages": 12
+   },
+   {
+    "inst": "u_h11",
+    "net": "fb1",
+    "stages": 12
+   },
+   {
+    "inst": "u_mg1",
+    "net": "pfp1",
+    "stages": 12
+   },
+   {
+    "inst": "u_mg1",
+    "net": "psl1",
+    "stages": 12
+   },
+   {
+    "inst": "u_mg1",
+    "net": "pst1",
     "stages": 12
    },
    {
     "inst": "u_pub1",
     "net": "at_m",
+    "stages": 12
+   },
+   {
+    "inst": "u_qk1",
+    "net": "fb1",
     "stages": 12
    },
    {
@@ -1361,18 +1437,18 @@
    "u_xs1": 9,
    "u_xq1": 12,
    "u_bdc1": 12,
-   "u_h01": 12,
-   "u_h11": 12,
-   "u_qk1": 12,
-   "u_cap1": 12,
+   "u_h01": 24,
+   "u_h11": 24,
+   "u_qk1": 24,
+   "u_cap1": 24,
    "u_pub1": 12,
    "u_fp1": 12,
-   "u_mg1": 12,
-   "u_go1": 12,
-   "u_g1p": 12,
-   "u_gs": 15,
+   "u_mg1": 24,
+   "u_go1": 24,
+   "u_g1p": 24,
+   "u_gs": 27,
    "port:rout_s": 9,
-   "port:gout": 15
+   "port:gout": 27
   },
   "reset_note": "consumer reset age retimed locally; new regional forest boot depth recorded by lp"
  }

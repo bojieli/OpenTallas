@@ -549,7 +549,7 @@
   "5_storage": "Landings are D4 rings. Additional delay compensation is a fixed-throughput chain of three-slot rings in kept eight-bit chunks; no indexed wide flop store or long shift pipeline. Same 3/6/9/12 data-edge ages; phase reset copies are bounded.",
   "6_floorplan": "Unchanged 691.2x1252.8 pin-bound outline; original hard children and 43.2 lattice retained. Face groups never shrink the qualified macros.",
   "7_clock": "11 landed regional roots; face pins separated from hard-child insertion, x-store on own root; child centring taps; TT/FF within-region spread <=80 remains required. Hold margins 0.03.",
-  "8_schedule": "Static retiming against r6, interface output offsets {'rout_s': 9, 'gout': 15}; regional reset depth 4. Edge equality recorded for every source/read pair; exact miter and priced composition required."
+  "8_schedule": "Static retiming against r6, interface output offsets {'rout_s': 9, 'gout': 27}; regional reset depth 4. Edge equality recorded for every source/read pair; exact miter and priced composition required."
  },
  "landed": {
   "record": "results/arch/hbm_smh_r7_1021/ot_hbm_smh_rp7s_f_record.json",

@@ -26,7 +26,7 @@ a += ['endmodule']
 # Keep the predecessor production stimulus, including the zero reset interval.
 b=(ROOT/'rtl/hbm_accel/sm/repack/h2a6/tb_ot_hbm_smh_rp6_2.sv').read_text()
 b=b.replace('module tb_ot_hbm_smh_rp6_2;','module tb_ot_hbm_smh_rp7_frame;')
-b=re.sub(r'    localparam integer DG = .*?\n','    localparam integer DN=VAR==0 ? 6:9, DS=VAR==0 ? 15:18, DB=6, DG=VAR==0 ? 21:24;\n',b)
+b=re.sub(r'    localparam integer DG = .*?\n','    localparam integer DN=VAR==0 ? 6:9, DS=VAR==0 ? 15:18, DB=6, DG=VAR==0 ? 21:36;\n',b)
 b=b.replace('reg [3:0] rst_dl;','reg [0:0] rst_dl;').replace('wire rst_f = rst_dl[3];','wire rst_f = rst_dl[0];').replace('rst_dl <= {rst_dl[2:0], rst};','rst_dl <= rst;')
 b=b.replace('ot_hbm_smh_rp4a_flat u_flat','ot_hbm_smh_rp6_2 #(.VAR(VAR)) u_flat').replace('ot_hbm_smh_rp6_2 #(.VAR(VAR), .HMUT(HMUT), .MUT(0)) u_lp','ot_hbm_smh_rp7_2 #(.VAR(VAR), .HMUT(HMUT), .MUT(MUT)) u_lp')
 for n,d in [('rout_n','DN'),('rout_s','DS'),('bout','DB')]:

@@ -3,7 +3,7 @@
 module tb_ot_hbm_smh_rp7_frame;
     parameter integer VAR = 0;            // r6: 0 MAIN (n t/u/c/m, s u/c/m bands), 1 FB (n t/u/c, s t/u/c)
     parameter integer HMUT = 0;           // r6 half mutants: 1 xb crossing +1, 2 gpm crossing +1, 3 rl1 pad short, 5 n attn row off, 6 rl1 relay short
-    localparam integer DN=VAR==0 ? 6:9, DS=VAR==0 ? 15:18, DB=6, DG=VAR==0 ? 21:24;
+    localparam integer DN=VAR==0 ? 6:9, DS=VAR==0 ? 15:18, DB=6, DG=VAR==0 ? 21:36;
     parameter integer MUT = 0;
     parameter integer SOFTBEAT = 1;
     parameter integer GN = 2;             // n gather relays (kit default)

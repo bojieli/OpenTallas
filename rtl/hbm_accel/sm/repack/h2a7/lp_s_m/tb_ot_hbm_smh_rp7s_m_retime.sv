@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 module tb_ot_hbm_smh_rp7s_m_retime #(parameter integer MUT=0);
-reg clk=0; always #5 clk=~clk; reg rst_n=0; integer cyc,bad=0,nc=0;
+reg clk=0; always #5 clk=~clk; reg rst_n=0; reg ref_rst_n=0;
+always @(posedge clk) ref_rst_n<=rst_n; // priced r7 boot +1
+integer cyc,bad=0,nc=0;
 reg [8:0] xss_a1=0;
 reg [4:0] xss_g1=0;
 reg [6:0] xss_a2=0;
@@ -16,7 +18,7 @@ always @(posedge clk) begin expected_rout_s[0]<=old_rout_s; for(integer j=1;j<=6
 wire [199:0] old_gout,new_gout;
 reg [199:0] expected_gout[0:12];
 always @(posedge clk) begin expected_gout[0]<=old_gout; for(integer j=1;j<=12;j=j+1) expected_gout[j]<=expected_gout[j-1]; end
-ot_hbm_smh_rp6s_m #(.MUT(0)) u_old (.ck_c(clk), .ck_u(clk), .ck_m(clk), .rst_n(rst_n), .xss_a1(xss_a1), .xss_g1(xss_g1), .xss_a2(xss_a2), .xss_g2(xss_g2), .attn(attn), .rin_s(rin_s), .xi_b(xi_b), .xi_g0(xi_g0), .xi_gp(xi_gp), .rout_s(old_rout_s), .gout(old_gout));
+ot_hbm_smh_rp6s_m #(.MUT(0)) u_old (.ck_c(clk), .ck_u(clk), .ck_m(clk), .rst_n(ref_rst_n), .xss_a1(xss_a1), .xss_g1(xss_g1), .xss_a2(xss_a2), .xss_g2(xss_g2), .attn(attn), .rin_s(rin_s), .xi_b(xi_b), .xi_g0(xi_g0), .xi_gp(xi_gp), .rout_s(old_rout_s), .gout(old_gout));
 ot_hbm_smh_rp7s_m #(.MUT(MUT)) u_new (.ck_u(clk), .ck_upn(clk), .ck_upne(clk), .ck_c(clk), .ck_m(clk), .ck_cpw(clk), .ck_cpe(clk), .ck_xs(clk), .ck_mpse(clk), .rst_n(rst_n), .xss_a1(xss_a1), .xss_g1(xss_g1), .xss_a2(xss_a2), .xss_g2(xss_g2), .attn(attn), .rin_s(rin_s), .xi_b(xi_b), .xi_g0(xi_g0), .xi_gp(xi_gp), .rout_s(new_rout_s), .gout(new_gout));
 initial begin for(cyc=0;cyc<3000;cyc=cyc+1) begin @(negedge clk); if(cyc==32) rst_n=1;
 xss_a1<={$urandom};

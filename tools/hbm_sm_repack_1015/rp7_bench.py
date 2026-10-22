@@ -18,8 +18,17 @@ def emit(h,v):
         'rtl/common/landed_parent/ot_pl_land_field_copies.sv',
         'rtl/hbm_accel/sm/repack/h2a5/ot_rp5_land_reset_split.sv',
         olds,f'{s["out_dir"]}/{top}.sv']))
+    # r7's geometric reset distribution has one more boot edge than r6.
+    # Compare against that explicit contract; arithmetic/data ages stay as
+    # declared by the edge-retiming solve, with no output masking.
+    new_record=json.loads((ROOT/f'results/arch/hbm_smh_r7_1021/{top}_record.json').read_text())
+    old_record=json.loads((ROOT/f'results/arch/hbm_smh_r6_1021/{old["top_lp"]}_record.json').read_text())
+    boot=new_record['reset']['depth']-old_record['reset']['depth']
+    assert boot==1
     lines=['`timescale 1ns/1ps',f'module tb_{top}_retime #(parameter integer MUT=0);',
-           'reg clk=0; always #5 clk=~clk; reg rst_n=0; integer cyc,bad=0,nc=0;']
+           'reg clk=0; always #5 clk=~clk; reg rst_n=0; reg ref_rst_n=0;',
+           'always @(posedge clk) ref_rst_n<=rst_n; // priced r7 boot +1',
+           'integer cyc,bad=0,nc=0;']
     ins=[x for x in ports if x['dir']=='in' and x['name'] not in ('clk','rst_n')]
     outs=[x for x in ports if x['dir']=='out']
     for x in ins: lines.append(f'reg {x["range"] or ""} {x["name"]}=0;')
@@ -28,7 +37,7 @@ def emit(h,v):
         lines.extend([f'wire {r} old_{n},new_{n};',f'reg {r} expected_{n}[0:{k}];',
                       f'always @(posedge clk) begin expected_{n}[0]<=old_{n}; for(integer j=1;j<={k};j=j+1) expected_{n}[j]<=expected_{n}[j-1]; end'])
     for name,sp,prefix in [(old['top_lp'],old,'old'),(top,s,'new')]:
-        cs=[f'.ck_{r["name"]}(clk)' for r in sp['regions']]+['.rst_n(rst_n)']
+        cs=[f'.ck_{r["name"]}(clk)' for r in sp['regions']]+[f'.rst_n({"ref_rst_n" if prefix=="old" else "rst_n"})']
         cs += [f'.{x["name"]}({x["name"]})' for x in ins]
         cs += [f'.{x["name"]}({prefix}_{x["name"]})' for x in outs]
         lines.append(f'{name} #(.MUT({"0" if prefix=="old" else "MUT"})) u_{prefix} ('+', '.join(cs)+');')
