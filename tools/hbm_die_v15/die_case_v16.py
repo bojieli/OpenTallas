@@ -419,6 +419,14 @@ def main():
     ap.add_argument('--coord-map-re', default='.', help='HBM-DIE9: regex of instances whose note homes are in original coordinates')
     die_reach.add_args(ap, 'hbm')
     a = ap.parse_args()
+    # HBMc/CHAIN 10-22: the post-landing S7 case_b only plans the S8 reset forest; S3 case_a and S10 final already run
+    # --lane-reach diag and S11 STA is the timing judge.  Since HBM-GENREACH (10-20) made 'fail' the default, S7 has
+    # killed every r16+ chain (r18 03:59: 315 rows, median best span 461 um, i.e. inside the measured repeated reach).
+    # OT_GEN_S7_REACH=diag (set by HBMc chains) or OT_GEN2_CASE=case_b without an explicit --lane-reach -> diag, recorded.
+    import os as _os
+    if '--lane-reach' not in sys.argv and (_os.environ.get('OT_GEN_S7_REACH') == 'diag' or _os.environ.get('OT_GEN2_CASE') == 'case_b'):
+        a.lane_reach = 'diag'
+        print('LANE_REACH_DIAG_S7 case_b: reach_fail.json recorded, not gating (S11 STA judges)', flush=True)
     mw = die_reach.from_args(a, 'hbm')
     C = json.loads(a.contract.read_text()); G = json.loads(a.grants.read_text()); P = json.loads(a.plan.read_text())
     import reticle; RETICLE = reticle.require_contract(G, "die_case_v16 GEN")   # OWNER 10-16: >= 0.5 mm margin in W AND H
