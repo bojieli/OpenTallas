@@ -479,7 +479,16 @@ module dsdv_mu_hwin_capture_1019 #(parameter integer NSLOT = 47, parameter integ
     generate for(se=0;se<NEV;se=se+1) begin:g_event_mem
         wire [NSLOT-1:0] pe_r;
         reg [SI-1:0] pb_r; reg fresh_r;
-        assign pe[se]=pe_r; assign pbi[se]=pb_r; assign h_fr[se]=fresh_r;
+        assign pe[se]=pe_r; assign h_fr[se]=fresh_r;
+        // STW-S81-COLLB 10-21 (c22r native: g_event_mem[7].pb_r[0] 34 loads): with SAFE_NATIVE the event SRAM read address
+        // comes from a kept same-edge copy of pb_r (same reset/update), so pb_r only feeds the ra_* precompute.
+        if(SAFE_NATIVE!=0) begin:g_pb_mem_copy
+            (* keep *) reg [SI-1:0] pb_m;
+            always @(posedge ck or negedge rr[se+1])
+                if(!rr[se+1]) pb_m<=SI'(0);
+                else if(adv[se]) pb_m<=((|(pe_r&lm_event[se])) || pe_r[NSLOT-1])?SI'(0):pb_m+1'b1;
+            assign pbi[se]=pb_m;
+        end else begin:g_pb_direct assign pbi[se]=pb_r; end
         if(COMPACT_PTR!=0) begin:g_binary_head
             // pb_r was the exact same-edge shadow of the original one-hot pe_r.
             // Decode its current state; the SRAM read and event edges stay fixed.
