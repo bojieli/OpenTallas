@@ -1,0 +1,29 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "qfd_n59_svc5",
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qfd_native59_svc_obs1_asap7_ref_census/base/1_2_yosys.v",
+    "sha256": "d3eb7f9a87f116a7a3d18bf5f62fe3e07351011f561eb2306c978a14c211a25c"
+  },
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 76071,
+  "max_dynamic_loads": 40,
+  "role_errors": [],
+  "violations": [
+    {
+      "driver": "u_ot_pr_core.emb_act$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_019701_",
+      "loads": 40
+    },
+    {
+      "driver": "u_ot_pr_core.g_hp_publication[11].g_local.u[1]$_DFF_PN0_/QN",
+      "driver_role": "sequential",
+      "net": "_015739_",
+      "loads": 34
+    }
+  ],
+  "raw_report_sha256": "503091481a557a60c9397b3175d5e16946feabdcc32fac6c204a9b43caabbfb6",
+  "raw_report_preserved": "gold2:/srv/opentallas-scratch/claude/codex-n59-fanout-native-2000/native_v1/census/work/orfs/native_census.json"
+}

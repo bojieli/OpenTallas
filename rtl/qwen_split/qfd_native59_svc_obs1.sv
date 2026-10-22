@@ -438,7 +438,13 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[13:0]hp_seq;
  generate if(FANOUT_LOCAL)begin:g_hp_seq_local
   wire[13:0]lo=fstart[hp_user_pub[10]]?fseq[hp_user_pub[10]]+14'd1:fseq[hp_user_pub[10]];
-  wire[13:0]hi=fstart[hp_user_pub[11]]?fseq[hp_user_pub[11]]+14'd1:fseq[hp_user_pub[11]];
+  wire[3:0]user_select;
+  for(genvar us=0;us<4;us=us+1)begin:g_user_decode
+   qfd_n59_final_decode #(.N(2)) u_select(.a({hp_user_pub[11][1]==1'((us>>1)&1),hp_user_pub[11][0]==1'(us&1)}),.y(user_select[us]));
+  end
+  wire[13:0]hi_value=({14{user_select[0]}}&fseq[0])|({14{user_select[1]}}&fseq[1])|({14{user_select[2]}}&fseq[2])|({14{user_select[3]}}&fseq[3]);
+  wire hi_started=|(user_select&fstart);
+  wire[13:0]hi=hi_started?hi_value+14'd1:hi_value;
   assign hp_seq={hi[13:7],lo[6:0]};
  end else begin:g_hp_seq_legacy
   assign hp_seq=fstart[hp_u1]?fseq[hp_u1]+14'd1:fseq[hp_u1];
@@ -819,12 +825,14 @@ wire rst_fmt,rst_x3,rst_svc,rst_rec,rst_ctx,rst_land,rst_pin,rst_top;
  wire[6:0]emb_k_pub[0:1];
  generate for(genvar ek=0;ek<2;ek=ek+1)begin:g_emb_index_pub
   if(FANOUT_LOCAL)begin:g_local
-   (* keep = "true" *) reg[6:0]q;
+   (* keep = "true" *) reg[6:0]q;(* keep = "true" *) reg act;
+   // Same set/clear edge as emb_act; its local copy drives only this index.
    always @(posedge ck or negedge rst_top)
-    if(!rst_top)q<=0;
+    if(!rst_top)begin q<=0;act<=0;end
     else begin
-     if(emb_go&&!emb_act&&!cmd_bad)q<=0;
-     if(emb_act)q<=q+7'd1;
+     if(emb_go&&!emb_act&&!cmd_bad)begin q<=0;act<=1;end
+     if(emb_act&&emb_k==(ROPE?7'(ROPE_FIRST+7):7'd64))act<=0;
+     if(act)q<=q+7'd1;
     end
    assign emb_k_pub[ek]=q;
   end else begin:g_alias assign emb_k_pub[ek]=emb_k;end
