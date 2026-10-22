@@ -1,0 +1,160 @@
+{
+ "name": "qfd_n59_svc5-sv5-COMMIT",
+ "block": "qfd_native59_svc_obs1",
+ "ref_tile": true,
+ "owner": "Claude:SQ-C2-N59",
+ "purpose": "SQ-C2-N59 (10-21) Q.STA.N59 bound service child qfd_native59_svc_obs1 (MAIN): regional clock roots (we) replace svc4's single waived root; no waiver, no outline shrink.",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/sq-c2-n59-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "results/arch/sqc2_n59_1021",
+   "rtl/qwen_split/qfd_native59_svc.sv",
+   "rtl/qwen_split/qfd_native59_static_service.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_native59_svc_obs1 #(.HEAD_PREP(1), .NU(4), .ROPE(1), .USER_BIND(1), .MCTX(1), .EMB_RELAY(1), .RECV_INPUTS(1), .LOCAL32(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_native59_svc_obs1.sv rtl/qwen_split/qfd_native59_static_service_obs1.sv rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv rtl/qwen_split/qfd_native59_mctx_helpers.sv rtl/qwen_split/qfd_native59_command_context.sv rtl/qwen_split/qfd_native59_q_export_control.sv rtl/qwen_split/qfd_native59_record_endpoint.sv rtl/qwen_split/qfd_kvn_static_transport.sv rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "obs1_s1",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh s1 {RUN}/bench/s1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59OBS_CASE s1 PASS$"
+   },
+   {
+    "name": "obs1_s2",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh s2 {RUN}/bench/s2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59OBS_CASE s2 PASS$"
+   },
+   {
+    "name": "obs1_m_hpseq",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh m_hpseq {RUN}/bench/m_hpseq",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59OBS_MUTANT_REJECTED m_hpseq$",
+    "fail_witness": "results/arch/sqc2_n59_1021/receipts/m_hpseq.log"
+   },
+   {
+    "name": "obs1_m_hpdrop",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh m_hpdrop {RUN}/bench/m_hpdrop",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59OBS_MUTANT_REJECTED m_hpdrop$",
+    "fail_witness": "results/arch/sqc2_n59_1021/receipts/m_hpdrop.log"
+   },
+   {
+    "name": "obs1_m_ret",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh m_ret {RUN}/bench/m_ret",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59OBS_MUTANT_REJECTED m_ret$",
+    "fail_witness": "results/arch/sqc2_n59_1021/receipts/m_ret.log"
+   },
+   {
+    "name": "obs1_m_hosttag",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh m_hosttag {RUN}/bench/m_hosttag",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59OBS_MUTANT_REJECTED m_hosttag$",
+    "fail_witness": "results/arch/sqc2_n59_1021/receipts/m_hosttag.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_n59_svc5/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_n59_svc5/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_n59_svc5 --out {RUN}/record/views/qfd_native59_svc_obs1  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_n59_svc5/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_n59_svc5/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_n59_svc5/qfd_n59_svc5-sv5-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "SQ-C2-N59 (10-21) MAIN: successor of qfd_n59_svc4 for the master the Q die actually binds (qfd_native59_dv_headprep_obs1 b8f883e7 -> u_svc qfd_native59_svc_obs1, HEAD_PREP 1 NU 4 ROPE 1 USER_BIND 1 MCTX 1 EMB_RELAY 1; + RECV_INPUTS 1 LOCAL32 1 as svc3/svc4).  svc4 = qfd_native59_svc, ONE clock root 21,950 sinks, pin-flop spread TT 84.6 ps (> 80) closed only under a coordinator waiver; owner 10-21: no waiver, no shrink.  Fix: physical/common_flow/clock_regions_2lvl.tcl mode we: 2 regional roots W/E (seam x 259.2, under the N-face ck pin) x 6 k-means leaf roots per region; no leaf cluster or CTS subtree crosses a seam; seam crossings are flop -> flop between regional trees of one synchronous clock (fixed latency 1 edge).  Same outline 518.4 x 216, PDN, layer contract, reach relocation hooks and cycles as svc4.  Face pins/um {'N': 3.54, 'E': 4.78, 'W': 3.21, 'S': 2.08}."
+}

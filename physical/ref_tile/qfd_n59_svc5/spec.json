@@ -1,0 +1,485 @@
+{
+ "kind": "tile",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "recipe": 4,
+ "layer_cap": "M5",
+ "hold_budget": "die",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": false,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is flop-first at every pin (QW-N59-4 split children: every input lands in a p_* pin register, every output is a flop or a 2-slot AND-OR of slot flops as in the r1 block; the split edge contract is benched with these edges); OT_PIN_REGS would add a second edge and break it"
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "copies": {
+   "rst_n": 32
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 32,
+  "re": "(^|\\.)(u_rst_relay|u_fl_rst_[A-Za-z0-9_]+)\\.rst_n$|__ot_rlv$|__ot_rl0v$|(^|\\.)rst_cp_[a-z0-9]+$"
+ },
+ "name": "qfd_n59_svc5",
+ "top": "qfd_native59_svc_obs1",
+ "sources": [
+  "rtl/qwen_split/qfd_native59_svc_obs1.sv",
+  "rtl/qwen_split/qfd_native59_static_service_obs1.sv",
+  "rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv",
+  "rtl/qwen_split/qfd_native59_mctx_helpers.sv",
+  "rtl/qwen_split/qfd_native59_command_context.sv",
+  "rtl/qwen_split/qfd_native59_q_export_control.sv",
+  "rtl/qwen_split/qfd_native59_record_endpoint.sv",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv"
+ ],
+ "params": {
+  "HEAD_PREP": 1,
+  "NU": 4,
+  "ROPE": 1,
+  "USER_BIND": 1,
+  "MCTX": 1,
+  "EMB_RELAY": 1,
+  "RECV_INPUTS": 1,
+  "LOCAL32": 1
+ },
+ "outline": {
+  "w": 518.4,
+  "h": 216.0,
+  "exact": true
+ },
+ "pins": {
+  "N": [
+   "native_rx_v",
+   "native_rx_payload",
+   "rx_slot",
+   "rx_slot_kind",
+   "rx_slot_beat",
+   "rx_user",
+   "kv_x3_slot",
+   "kv_word_slot",
+   "kv_word_index",
+   "x3_identity",
+   "x3_generation",
+   "head_descriptor_v",
+   "head_descriptor_tag",
+   "head_descriptor_generation",
+   "completed_tag",
+   "ck",
+   "x3",
+   "tx_slot",
+   "tx_slot_kind",
+   "tx_slot_beat",
+   "tx_user",
+   "native_tx_v",
+   "native_tx_payload"
+  ],
+  "E": [
+   "emb_code_q",
+   "dr_o"
+  ],
+  "W": [
+   "native_cmd",
+   "native_token",
+   "native_position",
+   "head_prepare_v",
+   "head_prepare_user",
+   "head_prepare_token",
+   "head_prepare_position",
+   "native_ret",
+   "host_epoch_valid",
+   "host_fused_capability",
+   "host_epoch",
+   "host_tag",
+   "host_generation",
+   "emb_code_re",
+   "emb_code_addr",
+   "emb_scale_re",
+   "emb_scale_addr",
+   "emb_scale_q",
+   "visibility_slot",
+   "complete_slot",
+   "completed",
+   "fault",
+   "rst_n"
+  ],
+  "S": [
+   "qb_row",
+   "qb_v",
+   "qb_beat",
+   "qb_full",
+   "qb_committed",
+   "qb_bad",
+   "layer_context_v",
+   "command_stage",
+   "dd_i"
+  ]
+ },
+ "pin_ranges": {
+  "native_rx_v": [
+   1.05,
+   2.25
+  ],
+  "native_rx_payload": [
+   2.35,
+   184.78
+  ],
+  "rx_slot": [
+   184.88,
+   186.08
+  ],
+  "rx_slot_kind": [
+   186.18,
+   187.512
+  ],
+  "rx_slot_beat": [
+   187.612,
+   189.276
+  ],
+  "rx_user": [
+   189.376,
+   190.576
+  ],
+  "kv_x3_slot": [
+   190.676,
+   191.876
+  ],
+  "kv_word_slot": [
+   191.976,
+   193.176
+  ],
+  "kv_word_index": [
+   193.276,
+   194.476
+  ],
+  "x3_identity": [
+   194.576,
+   214.218
+  ],
+  "x3_generation": [
+   214.318,
+   215.518
+  ],
+  "head_descriptor_v": [
+   215.618,
+   216.818
+  ],
+  "head_descriptor_tag": [
+   216.918,
+   236.559
+  ],
+  "head_descriptor_generation": [
+   236.659,
+   237.859
+  ],
+  "completed_tag": [
+   237.959,
+   257.6
+  ],
+  "ck": [
+   257.7,
+   260.7
+  ],
+  "x3": [
+   260.8,
+   382.977
+  ],
+  "tx_slot": [
+   383.077,
+   384.277
+  ],
+  "tx_slot_kind": [
+   384.377,
+   385.577
+  ],
+  "tx_slot_beat": [
+   385.677,
+   386.877
+  ],
+  "tx_user": [
+   386.977,
+   388.177
+  ],
+  "native_tx_v": [
+   388.277,
+   389.477
+  ],
+  "native_tx_payload": [
+   389.577,
+   517.35
+  ],
+  "native_cmd": [
+   1.05,
+   111.306
+  ],
+  "native_token": [
+   111.406,
+   116.629
+  ],
+  "native_position": [
+   116.729,
+   121.951
+  ],
+  "head_prepare_v": [
+   122.051,
+   123.251
+  ],
+  "head_prepare_user": [
+   123.351,
+   124.551
+  ],
+  "head_prepare_token": [
+   124.651,
+   129.874
+  ],
+  "head_prepare_position": [
+   129.974,
+   135.196
+  ],
+  "native_ret": [
+   135.296,
+   162.86
+  ],
+  "host_epoch_valid": [
+   162.96,
+   164.16
+  ],
+  "host_fused_capability": [
+   164.26,
+   165.46
+  ],
+  "host_epoch": [
+   165.56,
+   170.203
+  ],
+  "host_tag": [
+   170.303,
+   187.421
+  ],
+  "host_generation": [
+   187.521,
+   188.721
+  ],
+  "emb_code_re": [
+   188.821,
+   190.021
+  ],
+  "emb_code_addr": [
+   190.121,
+   197.085
+  ],
+  "emb_scale_re": [
+   197.185,
+   198.385
+  ],
+  "emb_scale_addr": [
+   198.485,
+   203.708
+  ],
+  "emb_scale_q": [
+   203.808,
+   208.45
+  ],
+  "visibility_slot": [
+   208.55,
+   209.75
+  ],
+  "complete_slot": [
+   209.85,
+   211.05
+  ],
+  "completed": [
+   211.15,
+   212.35
+  ],
+  "fault": [
+   212.45,
+   213.65
+  ],
+  "rst_n": [
+   213.75,
+   214.95
+  ],
+  "emb_code_q": [
+   1.05,
+   107.121
+  ],
+  "dr_o": [
+   107.221,
+   214.95
+  ],
+  "qb_row": [
+   1.05,
+   244.62
+  ],
+  "qb_v": [
+   244.72,
+   245.92
+  ],
+  "qb_beat": [
+   246.02,
+   248.399
+  ],
+  "qb_full": [
+   248.499,
+   249.699
+  ],
+  "qb_committed": [
+   249.799,
+   250.999
+  ],
+  "qb_bad": [
+   251.099,
+   252.299
+  ],
+  "layer_context_v": [
+   252.399,
+   253.599
+  ],
+  "command_stage": [
+   253.699,
+   256.553
+  ],
+  "dd_i": [
+   256.653,
+   517.35
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": {
+  "reason": "QW-N59-4 hardened split: service child of native59 (all std cells; pin-bound: 4,690 pins); N part of the 518.4 x 648 native59 slot above a 43.2 um landing band and the Q-seat bank child",
+  "requested_outline_um": [
+   518.4,
+   216.0
+  ]
+ },
+ "job": {
+  "owner": "Claude:SQ-C2-N59",
+  "branch": "claude/sq-c2-n59-1021",
+  "tag": "sv5",
+  "purpose": "SQ-C2-N59 (10-21) Q.STA.N59 bound service child qfd_native59_svc_obs1 (MAIN): regional clock roots (we) replace svc4's single waived root; no waiver, no outline shrink.",
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "results/arch/sqc2_n59_1021",
+   "rtl/qwen_split/qfd_native59_svc.sv",
+   "rtl/qwen_split/qfd_native59_static_service.sv"
+  ],
+  "benches": [
+   {
+    "name": "obs1_s1",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh s1 {RUN}/bench/s1",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59OBS_CASE s1 PASS$"
+   },
+   {
+    "name": "obs1_s2",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh s2 {RUN}/bench/s2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^N59OBS_CASE s2 PASS$"
+   },
+   {
+    "name": "obs1_m_hpseq",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh m_hpseq {RUN}/bench/m_hpseq",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59OBS_MUTANT_REJECTED m_hpseq$",
+    "fail_witness": "results/arch/sqc2_n59_1021/receipts/m_hpseq.log"
+   },
+   {
+    "name": "obs1_m_hpdrop",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh m_hpdrop {RUN}/bench/m_hpdrop",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59OBS_MUTANT_REJECTED m_hpdrop$",
+    "fail_witness": "results/arch/sqc2_n59_1021/receipts/m_hpdrop.log"
+   },
+   {
+    "name": "obs1_m_ret",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh m_ret {RUN}/bench/m_ret",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59OBS_MUTANT_REJECTED m_ret$",
+    "fail_witness": "results/arch/sqc2_n59_1021/receipts/m_ret.log"
+   },
+   {
+    "name": "obs1_m_hosttag",
+    "cmd": "bash results/arch/sqc2_n59_1021/bench.sh m_hosttag {RUN}/bench/m_hosttag",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^N59OBS_MUTANT_REJECTED m_hosttag$",
+    "fail_witness": "results/arch/sqc2_n59_1021/receipts/m_hosttag.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/qfd_n59_svc5/views",
+  "record_to": "results/rtl/ref_tile/qfd_n59_svc5"
+ },
+ "pin_hook_before_flops": [
+  "physical/qwen_die_masters/reach_reloc_arm.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/qwen_die_masters/reach_reloc.tcl"
+ ],
+ "pre_cts_extra": [
+  "physical/common_flow/clock_regions_2lvl.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKRG_MODE": "we",
+  "OT_CKRG_LEAVES": "6",
+  "OT_CKRG_PORT": "ck"
+ },
+ "fill_reason": {
+  "pin_bound": "slot-driven (owner PD-AUDIT 10-21: no outline shrink): 518.4 x 216 is the N part of the 518.4 x 648 native59 slot (svc4 outline); 4,648 pins on a 1,469 um perimeter (face pins/um {'N': 3.54, 'E': 4.78, 'W': 3.21, 'S': 2.08}); std-cell only, ~13 % fill"
+ },
+ "structural_change": "SQ-C2-N59 (10-21) MAIN: successor of qfd_n59_svc4 for the master the Q die actually binds (qfd_native59_dv_headprep_obs1 b8f883e7 -> u_svc qfd_native59_svc_obs1, HEAD_PREP 1 NU 4 ROPE 1 USER_BIND 1 MCTX 1 EMB_RELAY 1; + RECV_INPUTS 1 LOCAL32 1 as svc3/svc4).  svc4 = qfd_native59_svc, ONE clock root 21,950 sinks, pin-flop spread TT 84.6 ps (> 80) closed only under a coordinator waiver; owner 10-21: no waiver, no shrink.  Fix: physical/common_flow/clock_regions_2lvl.tcl mode we: 2 regional roots W/E (seam x 259.2, under the N-face ck pin) x 6 k-means leaf roots per region; no leaf cluster or CTS subtree crosses a seam; seam crossings are flop -> flop between regional trees of one synchronous clock (fixed latency 1 edge).  Same outline 518.4 x 216, PDN, layer contract, reach relocation hooks and cycles as svc4.  Face pins/um {'N': 3.54, 'E': 4.78, 'W': 3.21, 'S': 2.08}."
+}
