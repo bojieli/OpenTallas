@@ -56,8 +56,14 @@ RULES = {
         ('lg_rq', 'rd', 'READ_RETURN', 10, 10, BANK_RD, 'ot_hbm_vm_lg_static_bank: near SU 10 = 4 own + bank read 6'),
         ('lg_wq', 'wr', 'WRITE_RETURN', 7, 7, BANK_WR, 'near SU 7 = 4 own + bank commit 3')],
     'ot_hgi_sm_xload_cl2_ctlx': [
-        ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'RD_LAT 6 = ot_vms_bank_static rq->rr n+6, zero die stages; list = per-bank vector '
-         '(HBM-BANKLAT-XL: element b = registers rq pin -> bank b -> rr pin; ctl staggers bank b issue by max - l_b)')],
+        # TOK-FUNC3-HBM-XL 10-21: ref 7, not 6.  The ctl compares its issue pipe md[RLM+1] with rr registered once
+        # (rr_c), so RD_LAT = rq LAUNCH edge -> rr LAUNCH edge; ot_vms_bank_static samples rq one edge after launch
+        # ("n") and answers at n+6 = launch+7 (same convention as the DMA RR_RT 7 rule below).  Bench (real ctlx + aq
+        # trees + 8 banks, rslot 2): ot_vms_bank_static direct faults resp_bad at RD_LAT 6, clean at 7; faces banks
+        # behind hbfd_pad N_b fault at N_b+7 (the d4g bind) and are clean at N_b+8 with the emitted ds/qw xl tables.
+        ('rq', 'rd', 'RD_LAT', 6, 7, BANK_RD, 'RD_LAT 7 = ot_vms_bank_static direct (rq launch -> rr launch = sample n+6 + 1), '
+         'zero die stages; list = per-bank vector (HBM-BANKLAT-XL: element b = registers rq pin -> bank b -> rr pin; ctl '
+         'staggers bank b issue by max - l_b)')],
     'ot_hgi_sm_xload_cl2p_ctlx': [
         ('rq', 'rd', 'RD_LAT', 6, 6, BANK_RD, 'cl2p (x_fmt 3) ctlx: same RD_LAT contract as cl2 ctlx; SCALAR only until its '
          'ctl gets the cl2 per-bank stagger')],
