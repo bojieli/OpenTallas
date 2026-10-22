@@ -1,0 +1,648 @@
+{
+  "status": "PASS",
+  "contract_sha256": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
+  "encoder_sha256": "895f4d9ba354f26a016b4f41c20963dc16c84b995ba8c464a1865ec1811b2e39",
+  "scope": "64 graph-derived PC-to-landing placements and VM window command fanout; no source producer or physical transport execution claim",
+  "rows": [
+    {
+      "origin": "SW",
+      "sm": 0,
+      "pc": 0,
+      "landing_quarter": "SW",
+      "lane": 0,
+      "group": 0,
+      "fill_edge": "l3_00921",
+      "window_command_edge": "vmsm_265__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 2,
+      "pc": 8,
+      "landing_quarter": "SW",
+      "lane": 0,
+      "group": 1,
+      "fill_edge": "l3_00926",
+      "window_command_edge": "vmsm_319__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 0,
+      "pc": 1,
+      "landing_quarter": "SW",
+      "lane": 1,
+      "group": 0,
+      "fill_edge": "l3_00957",
+      "window_command_edge": "vmsm_265__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 2,
+      "pc": 9,
+      "landing_quarter": "SW",
+      "lane": 1,
+      "group": 1,
+      "fill_edge": "l3_00962",
+      "window_command_edge": "vmsm_319__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 0,
+      "pc": 2,
+      "landing_quarter": "SW",
+      "lane": 2,
+      "group": 0,
+      "fill_edge": "l3_00993",
+      "window_command_edge": "vmsm_265__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 2,
+      "pc": 10,
+      "landing_quarter": "SW",
+      "lane": 2,
+      "group": 1,
+      "fill_edge": "l3_00998",
+      "window_command_edge": "vmsm_319__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 0,
+      "pc": 3,
+      "landing_quarter": "SW",
+      "lane": 3,
+      "group": 0,
+      "fill_edge": "l3_01029",
+      "window_command_edge": "vmsm_265__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 2,
+      "pc": 11,
+      "landing_quarter": "SW",
+      "lane": 3,
+      "group": 1,
+      "fill_edge": "l3_01034",
+      "window_command_edge": "vmsm_319__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 1,
+      "pc": 4,
+      "landing_quarter": "SW",
+      "lane": 4,
+      "group": 0,
+      "fill_edge": "l3_01065",
+      "window_command_edge": "vmsm_292__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 3,
+      "pc": 12,
+      "landing_quarter": "SW",
+      "lane": 4,
+      "group": 1,
+      "fill_edge": "l3_01070",
+      "window_command_edge": "vmsm_346__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 1,
+      "pc": 5,
+      "landing_quarter": "SW",
+      "lane": 5,
+      "group": 0,
+      "fill_edge": "l3_01101",
+      "window_command_edge": "vmsm_292__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 3,
+      "pc": 13,
+      "landing_quarter": "SW",
+      "lane": 5,
+      "group": 1,
+      "fill_edge": "l3_01106",
+      "window_command_edge": "vmsm_346__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 1,
+      "pc": 6,
+      "landing_quarter": "SW",
+      "lane": 6,
+      "group": 0,
+      "fill_edge": "l3_01137",
+      "window_command_edge": "vmsm_292__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 3,
+      "pc": 14,
+      "landing_quarter": "SW",
+      "lane": 6,
+      "group": 1,
+      "fill_edge": "l3_01142",
+      "window_command_edge": "vmsm_346__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 1,
+      "pc": 7,
+      "landing_quarter": "SW",
+      "lane": 7,
+      "group": 0,
+      "fill_edge": "l3_01173",
+      "window_command_edge": "vmsm_292__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 3,
+      "pc": 15,
+      "landing_quarter": "SW",
+      "lane": 7,
+      "group": 1,
+      "fill_edge": "l3_01178",
+      "window_command_edge": "vmsm_346__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 4,
+      "pc": 16,
+      "landing_quarter": "SE",
+      "lane": 0,
+      "group": 0,
+      "fill_edge": "l3_01209",
+      "window_command_edge": "vmsm_373__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 6,
+      "pc": 24,
+      "landing_quarter": "SE",
+      "lane": 0,
+      "group": 1,
+      "fill_edge": "l3_01214",
+      "window_command_edge": "vmsm_427__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 4,
+      "pc": 17,
+      "landing_quarter": "SE",
+      "lane": 1,
+      "group": 0,
+      "fill_edge": "l3_01244",
+      "window_command_edge": "vmsm_373__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 6,
+      "pc": 25,
+      "landing_quarter": "SE",
+      "lane": 1,
+      "group": 1,
+      "fill_edge": "l3_01249",
+      "window_command_edge": "vmsm_427__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 4,
+      "pc": 18,
+      "landing_quarter": "SE",
+      "lane": 2,
+      "group": 0,
+      "fill_edge": "l3_01279",
+      "window_command_edge": "vmsm_373__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 6,
+      "pc": 26,
+      "landing_quarter": "SE",
+      "lane": 2,
+      "group": 1,
+      "fill_edge": "l3_01284",
+      "window_command_edge": "vmsm_427__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 4,
+      "pc": 19,
+      "landing_quarter": "SE",
+      "lane": 3,
+      "group": 0,
+      "fill_edge": "l3_01314",
+      "window_command_edge": "vmsm_373__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 6,
+      "pc": 27,
+      "landing_quarter": "SE",
+      "lane": 3,
+      "group": 1,
+      "fill_edge": "l3_01319",
+      "window_command_edge": "vmsm_427__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 5,
+      "pc": 20,
+      "landing_quarter": "SE",
+      "lane": 4,
+      "group": 0,
+      "fill_edge": "l3_01349",
+      "window_command_edge": "vmsm_400__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 7,
+      "pc": 28,
+      "landing_quarter": "SE",
+      "lane": 4,
+      "group": 1,
+      "fill_edge": "l3_01354",
+      "window_command_edge": "vmsm_454__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 5,
+      "pc": 21,
+      "landing_quarter": "SE",
+      "lane": 5,
+      "group": 0,
+      "fill_edge": "l3_01384",
+      "window_command_edge": "vmsm_400__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 7,
+      "pc": 29,
+      "landing_quarter": "SE",
+      "lane": 5,
+      "group": 1,
+      "fill_edge": "l3_01389",
+      "window_command_edge": "vmsm_454__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 5,
+      "pc": 22,
+      "landing_quarter": "SE",
+      "lane": 6,
+      "group": 0,
+      "fill_edge": "l3_01419",
+      "window_command_edge": "vmsm_400__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 7,
+      "pc": 30,
+      "landing_quarter": "SE",
+      "lane": 6,
+      "group": 1,
+      "fill_edge": "l3_01424",
+      "window_command_edge": "vmsm_454__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 5,
+      "pc": 23,
+      "landing_quarter": "SE",
+      "lane": 7,
+      "group": 0,
+      "fill_edge": "l3_01454",
+      "window_command_edge": "vmsm_400__bank_client"
+    },
+    {
+      "origin": "SW",
+      "sm": 7,
+      "pc": 31,
+      "landing_quarter": "SE",
+      "lane": 7,
+      "group": 1,
+      "fill_edge": "l3_01459",
+      "window_command_edge": "vmsm_454__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 0,
+      "pc": 0,
+      "landing_quarter": "NW",
+      "lane": 0,
+      "group": 0,
+      "fill_edge": "l3_01489",
+      "window_command_edge": "vmsm_842__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 2,
+      "pc": 8,
+      "landing_quarter": "NW",
+      "lane": 0,
+      "group": 1,
+      "fill_edge": "l3_01494",
+      "window_command_edge": "vmsm_896__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 0,
+      "pc": 1,
+      "landing_quarter": "NW",
+      "lane": 1,
+      "group": 0,
+      "fill_edge": "l3_01525",
+      "window_command_edge": "vmsm_842__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 2,
+      "pc": 9,
+      "landing_quarter": "NW",
+      "lane": 1,
+      "group": 1,
+      "fill_edge": "l3_01530",
+      "window_command_edge": "vmsm_896__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 0,
+      "pc": 2,
+      "landing_quarter": "NW",
+      "lane": 2,
+      "group": 0,
+      "fill_edge": "l3_01561",
+      "window_command_edge": "vmsm_842__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 2,
+      "pc": 10,
+      "landing_quarter": "NW",
+      "lane": 2,
+      "group": 1,
+      "fill_edge": "l3_01566",
+      "window_command_edge": "vmsm_896__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 0,
+      "pc": 3,
+      "landing_quarter": "NW",
+      "lane": 3,
+      "group": 0,
+      "fill_edge": "l3_01597",
+      "window_command_edge": "vmsm_842__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 2,
+      "pc": 11,
+      "landing_quarter": "NW",
+      "lane": 3,
+      "group": 1,
+      "fill_edge": "l3_01602",
+      "window_command_edge": "vmsm_896__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 1,
+      "pc": 4,
+      "landing_quarter": "NW",
+      "lane": 4,
+      "group": 0,
+      "fill_edge": "l3_01633",
+      "window_command_edge": "vmsm_869__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 3,
+      "pc": 12,
+      "landing_quarter": "NW",
+      "lane": 4,
+      "group": 1,
+      "fill_edge": "l3_01638",
+      "window_command_edge": "vmsm_923__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 1,
+      "pc": 5,
+      "landing_quarter": "NW",
+      "lane": 5,
+      "group": 0,
+      "fill_edge": "l3_01669",
+      "window_command_edge": "vmsm_869__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 3,
+      "pc": 13,
+      "landing_quarter": "NW",
+      "lane": 5,
+      "group": 1,
+      "fill_edge": "l3_01674",
+      "window_command_edge": "vmsm_923__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 1,
+      "pc": 6,
+      "landing_quarter": "NW",
+      "lane": 6,
+      "group": 0,
+      "fill_edge": "l3_01705",
+      "window_command_edge": "vmsm_869__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 3,
+      "pc": 14,
+      "landing_quarter": "NW",
+      "lane": 6,
+      "group": 1,
+      "fill_edge": "l3_01710",
+      "window_command_edge": "vmsm_923__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 1,
+      "pc": 7,
+      "landing_quarter": "NW",
+      "lane": 7,
+      "group": 0,
+      "fill_edge": "l3_01741",
+      "window_command_edge": "vmsm_869__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 3,
+      "pc": 15,
+      "landing_quarter": "NW",
+      "lane": 7,
+      "group": 1,
+      "fill_edge": "l3_01746",
+      "window_command_edge": "vmsm_923__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 4,
+      "pc": 16,
+      "landing_quarter": "NE",
+      "lane": 0,
+      "group": 0,
+      "fill_edge": "l3_01777",
+      "window_command_edge": "vmsm_950__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 6,
+      "pc": 24,
+      "landing_quarter": "NE",
+      "lane": 0,
+      "group": 1,
+      "fill_edge": "l3_01782",
+      "window_command_edge": "vmsm_1004__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 4,
+      "pc": 17,
+      "landing_quarter": "NE",
+      "lane": 1,
+      "group": 0,
+      "fill_edge": "l3_01812",
+      "window_command_edge": "vmsm_950__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 6,
+      "pc": 25,
+      "landing_quarter": "NE",
+      "lane": 1,
+      "group": 1,
+      "fill_edge": "l3_01817",
+      "window_command_edge": "vmsm_1004__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 4,
+      "pc": 18,
+      "landing_quarter": "NE",
+      "lane": 2,
+      "group": 0,
+      "fill_edge": "l3_01847",
+      "window_command_edge": "vmsm_950__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 6,
+      "pc": 26,
+      "landing_quarter": "NE",
+      "lane": 2,
+      "group": 1,
+      "fill_edge": "l3_01852",
+      "window_command_edge": "vmsm_1004__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 4,
+      "pc": 19,
+      "landing_quarter": "NE",
+      "lane": 3,
+      "group": 0,
+      "fill_edge": "l3_01882",
+      "window_command_edge": "vmsm_950__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 6,
+      "pc": 27,
+      "landing_quarter": "NE",
+      "lane": 3,
+      "group": 1,
+      "fill_edge": "l3_01887",
+      "window_command_edge": "vmsm_1004__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 5,
+      "pc": 20,
+      "landing_quarter": "NE",
+      "lane": 4,
+      "group": 0,
+      "fill_edge": "l3_01917",
+      "window_command_edge": "vmsm_977__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 7,
+      "pc": 28,
+      "landing_quarter": "NE",
+      "lane": 4,
+      "group": 1,
+      "fill_edge": "l3_01922",
+      "window_command_edge": "vmsm_1031__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 5,
+      "pc": 21,
+      "landing_quarter": "NE",
+      "lane": 5,
+      "group": 0,
+      "fill_edge": "l3_01952",
+      "window_command_edge": "vmsm_977__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 7,
+      "pc": 29,
+      "landing_quarter": "NE",
+      "lane": 5,
+      "group": 1,
+      "fill_edge": "l3_01957",
+      "window_command_edge": "vmsm_1031__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 5,
+      "pc": 22,
+      "landing_quarter": "NE",
+      "lane": 6,
+      "group": 0,
+      "fill_edge": "l3_01987",
+      "window_command_edge": "vmsm_977__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 7,
+      "pc": 30,
+      "landing_quarter": "NE",
+      "lane": 6,
+      "group": 1,
+      "fill_edge": "l3_01992",
+      "window_command_edge": "vmsm_1031__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 5,
+      "pc": 23,
+      "landing_quarter": "NE",
+      "lane": 7,
+      "group": 0,
+      "fill_edge": "l3_02022",
+      "window_command_edge": "vmsm_977__bank_client"
+    },
+    {
+      "origin": "NW",
+      "sm": 7,
+      "pc": 31,
+      "landing_quarter": "NE",
+      "lane": 7,
+      "group": 1,
+      "fill_edge": "l3_02027",
+      "window_command_edge": "vmsm_1031__bank_client"
+    }
+  ]
+}
