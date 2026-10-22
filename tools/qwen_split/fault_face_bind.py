@@ -22,15 +22,23 @@ def install(v, model, fault):
     source=Path(__file__).resolve().parents[2]/SOURCE
     if rtl_ports(source,MASTER).get('obs_fault')!=(1,'input'):
         raise ValueError('fault1 actual source input is missing or differs')
-    # The current instance-owner clock follower cannot select a particular
-    # clock port of a multi-clock TT. cf is produced by the hr/go domain, not
-    # by an arbitrary first clock. Refuse that case until an explicit actual
-    # per-port owner/landing contract is installed in the generator.
-    tt_clocks = {bid for bid,kind,width,endpoints in model['buses']
-                 if kind == 'clock_trunk'
-                 and any(inst == 'tt_ctlm' for inst,pin in endpoints)}
-    if len(tt_clocks) != 1:
-        raise ValueError('fault1 TT.cf requires exact hr-clock owner and real crossing; ambiguous multi-clock TT is not admitted')
+    if model.get('hp13_clock_bind'):
+        # Source ownership is known before regional roots exist. Revalidate the
+        # exact source proof here; common acceptance must discharge the real
+        # endpoints and every deferred fault follower after regional rebuild.
+        from qwen_split.fault_emit import _tt_cf_clock_guard
+        _tt_cf_clock_guard(model, {'tt_ctlm': ['cf']})
+        info = model['hp13_clock_bind']
+        if (model['hp13_cf_clock']['owner'] != ['tt_ctlm', 'ck_hr']
+                or info['targets'].get('ck_hr') != ['dvs_W5', 'ck']
+                or model.get('hp13_deferred_follow', {}).get(('tt_ctlm', 'ck_hr')) != ('dvs_W5', 'ck')):
+            raise ValueError('fault1 HP13 cf lacks exact deferred HR endpoint ownership')
+    else:
+        tt_clocks = {bid for bid,kind,width,endpoints in model['buses']
+                     if kind == 'clock_trunk'
+                     and any(inst == 'tt_ctlm' for inst,pin in endpoints)}
+        if len(tt_clocks) != 1:
+            raise ValueError('fault1 TT.cf requires exact hr-clock owner and real crossing; ambiguous multi-clock TT is not admitted')
     root=fault['roots']['sys_face']['inst']
     if root not in by or not by[root].master.startswith('qfd_fault_or_n'):
         raise ValueError('fault1 source is not the actual registered fault root')
