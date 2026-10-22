@@ -2,6 +2,7 @@
 # Full production-top hierarchy/port elaboration. Child body semantics belong
 # to their pinned sources; -lib loads actual child interfaces, never fake RTL.
 set -euo pipefail
+[ -f prior/LIBRARIES.txt ] || python3 -I tools/s81_dv/hbc_production_2000/prepare_prior.py prior
 out=${1:?output};top=${2:-ot_s81sl_slice_lepw_mab_hbc_prod_mu_72};mkdir -p "$out"
 python3 - "$out" "$top" <<'PY'
 from pathlib import Path
