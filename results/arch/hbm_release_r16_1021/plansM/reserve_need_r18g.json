@@ -16,13 +16,13 @@
   "nw_root_box": {
    "box": [
     9300,
-    29300,
-    14000,
+    28300,
+    15000,
     32983
    ],
    "pitch": 108,
    "need_radius": 54,
-   "added": 47
+   "added": 63
   }
  },
  "sites": [
@@ -2813,6 +2813,20 @@
    ]
   },
   {
+   "name": "rhn_098_268",
+   "x": 10658.8,
+   "y": 29098.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
+   "lattice_xy": [
+    10656.2,
+    29057.36
+   ]
+  },
+  {
    "name": "rhn_098_276",
    "x": 10658.8,
    "y": 29968.8,
@@ -2820,7 +2834,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 50 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 50 um without)",
    "lattice_xy": [
     10656.2,
     29921.36
@@ -2834,7 +2848,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
    "lattice_xy": [
     9792.2,
     30137.36
@@ -2848,7 +2862,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
    "lattice_xy": [
     10224.2,
     30137.36
@@ -2862,7 +2876,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 40 um without)",
    "lattice_xy": [
     9792.2,
     30245.36
@@ -2876,7 +2890,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 40 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 40 um without)",
    "lattice_xy": [
     10224.2,
     30245.36
@@ -2890,7 +2904,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 40 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 40 um without)",
    "lattice_xy": [
     9792.2,
     30461.36
@@ -2904,7 +2918,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 140 um with relays, 50 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 140 um with relays, 50 um without)",
    "lattice_xy": [
     9360.2,
     30785.36
@@ -2918,7 +2932,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
    "lattice_xy": [
     10116.2,
     30785.36
@@ -2932,9 +2946,23 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 20 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 20 um without)",
    "lattice_xy": [
     10980.2,
+    30785.36
+   ]
+  },
+  {
+   "name": "rhn_138_284",
+   "x": 14958.8,
+   "y": 30788.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 140 um with relays, 20 um without)",
+   "lattice_xy": [
+    14976.2,
     30785.36
    ]
   },
@@ -2946,7 +2974,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 230 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 230 um with relays, 0 um without)",
    "lattice_xy": [
     9360.2,
     30893.36
@@ -2960,7 +2988,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
    "lattice_xy": [
     9468.2,
     30893.36
@@ -2974,7 +3002,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
    "lattice_xy": [
     9576.2,
     30893.36
@@ -2988,7 +3016,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
    "lattice_xy": [
     9684.2,
     30893.36
@@ -3002,7 +3030,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
    "lattice_xy": [
     9792.2,
     30893.36
@@ -3016,7 +3044,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
    "lattice_xy": [
     9900.2,
     30893.36
@@ -3030,7 +3058,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
    "lattice_xy": [
     10440.2,
     30893.36
@@ -3044,7 +3072,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 150 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 150 um with relays, 0 um without)",
    "lattice_xy": [
     10656.2,
     30893.36
@@ -3058,7 +3086,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 130 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 130 um with relays, 0 um without)",
    "lattice_xy": [
     10764.2,
     30893.36
@@ -3072,7 +3100,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 230 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 230 um with relays, 0 um without)",
    "lattice_xy": [
     10872.2,
     30893.36
@@ -3086,7 +3114,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 170 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 170 um with relays, 0 um without)",
    "lattice_xy": [
     10980.2,
     30893.36
@@ -3100,7 +3128,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 110 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 110 um with relays, 0 um without)",
    "lattice_xy": [
     11088.2,
     30893.36
@@ -3114,7 +3142,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 0 um without)",
    "lattice_xy": [
     11196.2,
     30893.36
@@ -3128,7 +3156,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 10 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 10 um without)",
    "lattice_xy": [
     11304.2,
     30893.36
@@ -3142,7 +3170,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 0 um without)",
    "lattice_xy": [
     11520.2,
     30893.36
@@ -3156,7 +3184,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
    "lattice_xy": [
     12276.2,
     30893.36
@@ -3170,7 +3198,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 100 um with relays, 30 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 100 um with relays, 30 um without)",
    "lattice_xy": [
     12384.2,
     30893.36
@@ -3184,9 +3212,107 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
    "lattice_xy": [
     12492.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_132_285",
+   "x": 14328.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 0 um without)",
+   "lattice_xy": [
+    14328.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_133_285",
+   "x": 14438.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 0 um without)",
+   "lattice_xy": [
+    14436.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_134_285",
+   "x": 14548.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "lattice_xy": [
+    14544.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_135_285",
+   "x": 14628.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 130 um with relays, 20 um without)",
+   "lattice_xy": [
+    14652.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_136_285",
+   "x": 14748.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 150 um with relays, 10 um without)",
+   "lattice_xy": [
+    14760.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_137_285",
+   "x": 14868.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 170 um with relays, 0 um without)",
+   "lattice_xy": [
+    14868.2,
+    30893.36
+   ]
+  },
+  {
+   "name": "rhn_138_285",
+   "x": 14978.8,
+   "y": 30888.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 240 um with relays, 0 um without)",
+   "lattice_xy": [
+    14976.2,
     30893.36
    ]
   },
@@ -3198,7 +3324,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 50 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 50 um without)",
    "lattice_xy": [
     9360.2,
     31001.36
@@ -3212,7 +3338,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 0 um without)",
    "lattice_xy": [
     9468.2,
     31001.36
@@ -3226,7 +3352,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 10 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 10 um without)",
    "lattice_xy": [
     9684.2,
     31001.36
@@ -3240,7 +3366,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 10 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 10 um without)",
    "lattice_xy": [
     10872.2,
     31001.36
@@ -3254,9 +3380,37 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 50 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 50 um without)",
    "lattice_xy": [
     11628.2,
+    31001.36
+   ]
+  },
+  {
+   "name": "rhn_132_286",
+   "x": 14278.8,
+   "y": 30998.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 100 um with relays, 50 um without)",
+   "lattice_xy": [
+    14328.2,
+    31001.36
+   ]
+  },
+  {
+   "name": "rhn_137_286",
+   "x": 14838.8,
+   "y": 30998.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 30 um without)",
+   "lattice_xy": [
+    14868.2,
     31001.36
    ]
   },
@@ -3268,7 +3422,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 50 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 50 um without)",
    "lattice_xy": [
     9360.2,
     31109.36
@@ -3282,7 +3436,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 10 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 10 um without)",
    "lattice_xy": [
     10872.2,
     31109.36
@@ -3296,9 +3450,23 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 50 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 50 um without)",
    "lattice_xy": [
     11628.2,
+    31109.36
+   ]
+  },
+  {
+   "name": "rhn_132_287",
+   "x": 14328.8,
+   "y": 31158.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 50 um without)",
+   "lattice_xy": [
+    14328.2,
     31109.36
    ]
   },
@@ -3310,9 +3478,23 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 40 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 80 um with relays, 40 um without)",
    "lattice_xy": [
     11844.2,
+    31217.36
+   ]
+  },
+  {
+   "name": "rhn_132_288",
+   "x": 14328.8,
+   "y": 31218.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "lattice_xy": [
+    14328.2,
     31217.36
    ]
   },
@@ -3324,7 +3506,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 110 um with relays, 40 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 110 um with relays, 40 um without)",
    "lattice_xy": [
     10656.2,
     31325.36
@@ -3338,7 +3520,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 20 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 20 um without)",
    "lattice_xy": [
     10872.2,
     31325.36
@@ -3352,7 +3534,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 0 um without)",
    "lattice_xy": [
     12924.2,
     31325.36
@@ -3366,9 +3548,23 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 10 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 10 um without)",
    "lattice_xy": [
     10872.2,
+    31433.36
+   ]
+  },
+  {
+   "name": "rhn_132_290",
+   "x": 14278.8,
+   "y": 31428.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 100 um with relays, 50 um without)",
+   "lattice_xy": [
+    14328.2,
     31433.36
    ]
   },
@@ -3380,7 +3576,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 50 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 120 um with relays, 50 um without)",
    "lattice_xy": [
     9360.2,
     31541.36
@@ -3394,9 +3590,37 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 0 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 0 um without)",
    "lattice_xy": [
     12816.2,
+    31541.36
+   ]
+  },
+  {
+   "name": "rhn_132_291",
+   "x": 14278.8,
+   "y": 31538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 90 um with relays, 50 um without)",
+   "lattice_xy": [
+    14328.2,
+    31541.36
+   ]
+  },
+  {
+   "name": "rhn_137_291",
+   "x": 14838.8,
+   "y": 31538.8,
+   "w": 32.4,
+   "h": 32.4,
+   "kind": "hop",
+   "slide_um": 108.0,
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 60 um with relays, 30 um without)",
+   "lattice_xy": [
+    14868.2,
     31541.36
    ]
   },
@@ -3408,7 +3632,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 160 um with relays, 20 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 160 um with relays, 20 um without)",
    "lattice_xy": [
     12600.2,
     31649.36
@@ -3422,7 +3646,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 180 um with relays, 20 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 180 um with relays, 20 um without)",
    "lattice_xy": [
     12708.2,
     31649.36
@@ -3436,7 +3660,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 50 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 70 um with relays, 50 um without)",
    "lattice_xy": [
     13896.2,
     31649.36
@@ -3450,7 +3674,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 200 um with relays, 30 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 200 um with relays, 30 um without)",
    "lattice_xy": [
     12600.2,
     31757.36
@@ -3464,7 +3688,7 @@
    "h": 32.4,
    "kind": "hop",
    "slide_um": 108.0,
-   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3 tries) | need-only reset home: no free home within 54.0 um (lane relays filled it; 190 um with relays, 30 um without)",
+   "why": "NW root pocket: need-home pitch 108 / radius 54 (r18g S8 NW rc=3, 53 root sites) | need-only reset home: no free home within 54.0 um (lane relays filled it; 190 um with relays, 30 um without)",
    "lattice_xy": [
     12708.2,
     31757.36
