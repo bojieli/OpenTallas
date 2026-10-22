@@ -27,6 +27,13 @@ module ot_s81eng_xq_n32 #(
         ot_s81eng_rr_kq8 u_i(.ck(ck),.d(o_d[263:256]),.q(id_scale_c[8*sc+:8]));
         ot_s81eng_rr_kq8 u_w(.ck(ck),.d(wl_rd[263:256]),.q(wl_scale_c[8*sc+:8]));
     end
+    // STW-S81-COLLB 10-21: native census a8b1002b9 FAIL 32 nets x 33 loads = id_code[4+8k] feeding both byte decoders
+    // (32 loads) and the wait-line SRAM write port. The SRAM write data now comes from its own kept capture copy
+    // (same edge, same value), so every id_code bit drives the decoders only (<=32). No cycle/age change.
+    wire [255:0] id_code_w;
+    for(genvar wc=0;wc<32;wc=wc+1)begin:g_wl_capture
+        ot_s81eng_rr_kq8 u_c(.ck(ck),.d(o_d[8*wc+:8]),.q(id_code_w[8*wc+:8]));
+    end
     wire [511:0] bf_x, bf_d;
     wire [263:0] wl;                       // wait line read: the beat 12 edges ago
     genvar g;
@@ -50,7 +57,7 @@ module ot_s81eng_xq_n32 #(
     always @(posedge ck or negedge rl[0]) if (!rl[0]) wp <= 6'd0; else wp <= wp + 6'd1;
     wire [511:0] wl_rd;
     ot_sram_1r1w_64x512_m1_r2c2 u_wl (.clk(ck), .r_ce_in(1'b1), .r_addr_in(wp - 6'd9), .rd_out(wl_rd),
-        .w_ce_in(1'b1), .w_addr_in(wp), .wd_in({248'd0, id}), .w_mask_in({512{1'b1}}),
+        .w_ce_in(1'b1), .w_addr_in(wp), .wd_in({248'd0, id_scale_c[7:0], id_code_w}), .w_mask_in({512{1'b1}}),
         .rr_en(2'b00), .rr_addr(12'd0), .cr_en(2'b00), .cr_sel(18'd0));
     reg[255:0] wl_code;
     always @(posedge ck)wl_code<=wl_rd[255:0];
