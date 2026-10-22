@@ -15,7 +15,7 @@
     "TAP_WR": 11
   },
   "vehicle": "Existing d76 canonical full-Qswiglu split-equivalence component vehicle, with a wires-only bus slicing adapter into exact selected split3. Reference lane sources retain the normal closed ae589 manifest. The target is the exact full scoped source closure, not generic peers or the predecessor tap parameters.",
-  "status": "STAGED_NOT_RUN",
+  "status": "FIRST_BUILD_NBA_GUARD_REFUSED_RERUN_PENDING",
   "selected_view_manifest": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r18d_2000_1021/plansM/vplan_r17/views.json",
   "selected_view_manifest_sha256": "d26d70363a593e13192681f3bd1f5442fa9f18f1bbbd1617e59bd9e748dd9ade",
   "selected_view_env": {},
@@ -30,5 +30,17 @@
   "unforced_target_defines": [
     "OT_SFU_SYNC_RST",
     "OT_SU_RST_RELAY"
-  ]
+  ],
+  "first_controller": 2268101,
+  "first_unit": "Gold1 3644453-1792646390",
+  "first_exit": 86,
+  "first_guard": "16 surviving 100-trip rd loops; no simulation run or PASS",
+  "replacement_controller": 2644203,
+  "replacement_tool_flags": [
+    "--unroll-count",
+    "256",
+    "--unroll-stmts",
+    "100000"
+  ],
+  "guard_policy": "Required zero surviving in-place NBA loops before execution; guard remains fully enabled."
 }

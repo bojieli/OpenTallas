@@ -1,0 +1,12 @@
+ot-run: ot-epyc5       admits    -1 GB (avail 560, growth 561, headroom 0, waiters 3/496 GB) load 66/128 running 34 disk 819 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-sfu-selected-r18d-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-sfu-selected-r18d-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-sfu-selected-r18d-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-sfu-selected-r18d-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-sfu-selected-r18d-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-sfu-selected-r18d-2000
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-sfu-selected-r18d-2000 (0.0 GB) ot-epyc5 -> ot-gold1 (no host with --dir admits 48 GB now)
+ot-run: SPILL: copied 944 changed entries in 21 s; running on ot-gold1; written files go back to ot-epyc5 after the run
+ot-heavy: admitted on ot-gold1 as oth-ubuntu-3644453-1792646390 after 2 s
+ot-run: RAN on ot-gold1 (unit oth-ubuntu-3644453-1792646390): exit 86
+ot-run: SPILL: outputs copied back ot-gold1 -> ot-epyc5; RAN on ot-gold1: exit 86

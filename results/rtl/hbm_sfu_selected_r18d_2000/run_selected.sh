@@ -62,7 +62,7 @@ rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" 
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
 defs+=(-DSFU_IO_ROWS=$rows -DSFU_SCALAR_EDGE=$sedge)
 sha256sum "${sources[@]}" "$0" > "$OUT/sources.sha256"
-"${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}" --binary --timing -O2 -j 8 -CFLAGS -O0 -Wno-fatal -Wno-TIMESCALEMOD "${defs[@]}" --top-module tb_hgi_sfu_split_equiv --Mdir "$OUT/obj" "${sources[@]}" > "$OUT/build.log" 2>&1
+"${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}" --binary --timing -O2 --unroll-count 256 --unroll-stmts 100000 -j 8 -CFLAGS -O0 -Wno-fatal -Wno-TIMESCALEMOD "${defs[@]}" --top-module tb_hgi_sfu_split_equiv --Mdir "$OUT/obj" "${sources[@]}" > "$OUT/build.log" 2>&1
 set +e
 "$OUT/obj/Vtb_hgi_sfu_split_equiv" > "$OUT/run.log" 2>&1
 rc=$?
