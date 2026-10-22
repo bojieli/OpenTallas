@@ -2,9 +2,14 @@
 `default_nettype none
 // Real dual-clock SRAM replaces each >2kb D4 landing bank. Only rows0..3 are used.
 // Source/destination pointer epochs use equal-depth regional reset forests.
+// Real boundary FFs isolate read/write domain ownership; fixed latency=5 edges.
 // No ready/credit. q is data-unreset; downstream static valid/calendar owns warmup.
 module ot_hidx_col8_sram_land #(parameter integer W=1210,K=2)(input wire cw,cr,rst_n,input wire[W-1:0]d,output wire[W-1:0]q);
  localparam integer B=(W+515)/516;
+ reg[W-1:0] d_pin;reg[W-1:0]q_pin;wire[W-1:0]qm;
+ always@(posedge cw)d_pin<=d;
+ always@(posedge cr)q_pin<=qm;
+ assign q=q_pin;
  wire[0:0] rw,rr;
  ot_hidx_rst_tree_f32 #(.REGIONS(1)) u_rw(.clk(cw),.rst_n_in(rst_n),.rst_n(rw));
  ot_hidx_rst_tree_f32 #(.REGIONS(1)) u_rr(.clk(cr),.rst_n_in(rst_n),.rst_n(rr));
@@ -14,10 +19,23 @@ module ot_hidx_col8_sram_land #(parameter integer W=1210,K=2)(input wire cw,cr,r
  wire[1:0]ra=rc-2'(K);
  for(genvar b=0;b<B;b=b+1)begin:g_bank
   localparam integer N=(W-516*b<516)?W-516*b:516;
-  wire[515:0]din;wire[515:0]dout;
-  assign din={{(516-N){1'b0}},d[516*b+:N]};
-  ot_sram_1r1w2c_64x516_m1 u_mem(.wclk(cw),.rclk(cr),.r_ce_in(1'b1),.r_addr_in({4'd0,ra}),.rd_out(dout),.w_ce_in(wq),.w_addr_in({4'd0,wc}),.wd_in(din),.w_mask_in({516{1'b1}}));
-  assign q[516*b+:N]=dout[N-1:0];
+  wire[515:0]din;wire[515:0]dout;wire[515:0]mask;
+  assign din[N-1:0]=d_pin[516*b+:N];
+`ifdef SYNTHESIS
+  for(genvar g=0;g<33;g=g+1)begin:g_one
+   wire one;(*keep=1,dont_touch=1*)TIEHIx1_ASAP7_75t_R u_t(.H(one));
+   for(genvar k=0;k<16;k=k+1)if(g*16+k<516)begin:g_bit assign mask[g*16+k]=one;end
+  end
+  for(genvar g=0;g<(516-N+15)/16;g=g+1)begin:g_zero
+   wire zero;(*keep=1,dont_touch=1*)TIELOx1_ASAP7_75t_R u_t(.L(zero));
+   for(genvar k=0;k<16;k=k+1)if(N+g*16+k<516)begin:g_bit assign din[N+g*16+k]=zero;end
+  end
+`else
+  assign mask={516{1'b1}};
+  if(N<516)assign din[515:N]=0;
+`endif
+  ot_sram_1r1w2c_64x516_m1 u_mem(.wclk(cw),.rclk(cr),.r_ce_in(1'b1),.r_addr_in({4'd0,ra}),.rd_out(dout),.w_ce_in(wq),.w_addr_in({4'd0,wc}),.wd_in(din),.w_mask_in(mask));
+  assign qm[516*b+:N]=dout[N-1:0];
  end
 endmodule
 module ot_hidx_col8_sram_landed(input wire ctl,input wire[3:0] cp,input wire rst_n,

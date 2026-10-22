@@ -14,7 +14,8 @@
    "rtl/common/landed_parent",
    "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1",
    "tools/orfs_allcorner_spef.py",
-   "rtl/test/hbm_idx_static"
+   "rtl/test/hbm_idx_static",
+   "results/arch/hbm_col8_parent_1021"
   ]
  },
  "stages": {
@@ -36,6 +37,15 @@
     "threads": 4,
     "peak_ram_gb": 8,
     "pass_regex": "COL8_SRAM_LAND_PASS checks=256"
+   },
+   {
+    "name": "wrong_read_offset",
+    "cmd": "bash rtl/test/hbm_idx_static/run_col8_sram_land.sh {RUN}/phase_k3 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "COL8_SRAM_LAND_FAIL cycle=",
+    "fail_witness": "results/arch/hbm_col8_parent_1021/landing_phase_sram5_k3_fail.log"
    }
   ],
   "calibrate": {

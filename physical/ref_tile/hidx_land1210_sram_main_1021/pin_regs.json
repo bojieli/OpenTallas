@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "ot_hidx_col8_sram_land",
  "enable": false,
- "reason": "Source d is captured by the real macro write edge; q launches from the real read clock. Additional pin layers change the fixed3edge ring contract."
+ "reason": "Explicit source d_pin and destination q_pin register banks land actual clock ownership; auto flops would duplicate the fixed5edge crossing."
 }

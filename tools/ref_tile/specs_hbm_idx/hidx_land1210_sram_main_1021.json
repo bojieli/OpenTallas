@@ -147,7 +147,7 @@
   "outhold": false,
   "pin_regs": {
     "enable": false,
-    "reason": "Source d is captured by the real macro write edge; q launches from the real read clock. Additional pin layers change the fixed3edge ring contract."
+    "reason": "Explicit source d_pin and destination q_pin register banks land actual clock ownership; auto flops would duplicate the fixed5edge crossing."
   },
   "reset_landing": {
     "enable": false,
@@ -164,7 +164,8 @@
       "rtl/common/landed_parent",
       "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1",
       "tools/orfs_allcorner_spef.py",
-      "rtl/test/hbm_idx_static"
+      "rtl/test/hbm_idx_static",
+      "results/arch/hbm_col8_parent_1021"
     ],
     "benches": [
       {
@@ -174,17 +175,26 @@
         "threads": 4,
         "peak_ram_gb": 8,
         "pass_regex": "COL8_SRAM_LAND_PASS checks=256"
+      },
+      {
+        "name": "wrong_read_offset",
+        "cmd": "bash rtl/test/hbm_idx_static/run_col8_sram_land.sh {RUN}/phase_k3 3",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "fail_regex": "COL8_SRAM_LAND_FAIL cycle=",
+        "fail_witness": "results/arch/hbm_col8_parent_1021/landing_phase_sram5_k3_fail.log"
       }
     ]
   },
   "safe_design_checklist": {
-    "1_pins": "Macro write capture and read Q are actual region-boundary registers; no data reset",
+    "1_pins": "Real kept source/destination clock-boundary FFs plus SRAM write/read capture; datapath unreset",
     "2_reach": "3macro input/output slices onfull north/south faces; controlcentre toedge macro<=~300um",
-    "3_fanout": "2bitpointer drives3macros andincrementlogic; resetforest1leaf perroot; mappednative required",
+    "3_fanout": "Pointer drives3macros; explicit per16bit TIEHI masks and TIELO padcells bound constants; actualnative required",
     "4_depth": "One2bitpointerincrement, no width-dependent logic; realmacroread clock-Q mustmeasure",
     "5_storage": "3real64x516dualclockSRAMs,4rowsused. No newECC academic rule. 99072physicalbits for4840activeringbits; nofloparray",
     "6_floorplan": "691.2x432, macros43.2lattice, fullwidthstdcellband; areaunfilled honestlyreported",
     "7_clock": "2regionalroots explicitlybound torealwclk/rclk; pointertree and macroclockdelivery measuredTT/FF",
-    "8_schedule": "StaticD4K2,3edges phasebenchPASS; noflowcontrol; boot epochsreset beforevalidcalendar"
+    "8_schedule": "StaticD4K2: inputFF1 + SRAMring3 + outputFF1 =5edges perwidecrossing. Fullchunk4*5+smallreturn3=23edges, candidate pending"
   }
 }

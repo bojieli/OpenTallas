@@ -3,7 +3,7 @@
   "W": 1210,
   "words_active": 4,
   "read_offset": 2,
-  "latency_edges": 3,
+  "latency_edges": 5,
   "throughput_bits_per_cycle": 1210,
   "clock_roots": 2,
   "macro_master": "ot_sram_1r1w2c_64x516_m1",
@@ -28,7 +28,9 @@
   "macros_per_quarter": 384,
   "extra_data_flop_delay_arrays": 0,
   "interface_bits_in_out": 2420,
-  "clock_estimated_sinks": 20,
+  "clock_estimated_sinks": 2440,
   "routing": "three fullwidth macro slices, inputN outputS <=1.75pins/um; local pointercentre<=~300um per bank",
-  "status": "phase2ns PASS256; native/CTS/layout pending; no final quarter fit or adoption"
+  "status": "5edge SRAM phase PASS256/K3FAIL41; baseline hierarchicalchunk PASS2339/1063validnonzero; native/CTS/layout pending, quarterfitopen",
+  "explicit_boundary_flops": 2420,
+  "full_chunk_active_age_delta": 23
 }
