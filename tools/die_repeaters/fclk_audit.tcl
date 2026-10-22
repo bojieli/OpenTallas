@@ -80,7 +80,12 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
   #     no per-hop meaning there).
   #   FAIL CLOSED: fclk nets present but zero judged hops (all broadcast or no data pairs) -> the return value counts
   #     it as a violation (vacuous = fail), as do mismatches (|f - d| > 1) and broadcasts.
-  global ot_die_rep_fclk_old ot_die_rep_fclk_data_ports
+  global ot_die_rep_fclk_old ot_die_rep_fclk_data_ports ot_die_rep_fclk_aux_capture_masters
+  # STW-S81c-DIE-C21 10-22: optional ::ot_die_rep_fclk_aux_capture_masters = masters of die-level captures that share a
+  # forwarded clock but carry no forwarded payload (S81 co-forwarded relay reset retimers DFFHQNx1 on fck[k]).  Their
+  # hops are listed (pairing aux_capture) and never judged, padded or counted as broadcast; the die STA times them.
+  set auxm {}
+  if {[info exists ot_die_rep_fclk_aux_capture_masters]} { set auxm $ot_die_rep_fclk_aux_capture_masters }
   if {![array exists ot_die_rep_fclk_old]} { error "ot_die_rep_fclk_audit: call ot_die_rep_fclk_snapshot before the repair" }
   set blk [ord::get_db_block]
   set nets {}
@@ -109,6 +114,7 @@ proc ot_die_rep_fclk_audit {prefix globs {bufs {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_7
       set same {}; set any {}; set declared {}; set selected 0; set aux 0; set const 0
       set contract {}
       set master [[$li getMaster] getName]
+      if {[lsearch -exact $auxm $master] >= 0} { lappend rows [list $load $fdepth {} aux_capture 0 0]; continue }
       if {[info exists ot_die_rep_fclk_data_ports] && [dict exists $ot_die_rep_fclk_data_ports $master]} {
         set contract [dict get $ot_die_rep_fclk_data_ports $master]
         lassign $contract pattern expected

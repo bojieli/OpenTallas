@@ -642,6 +642,14 @@ def main():
                          'geometric extent + reach, e.g. a pre-S81.CLK logical bind) as a labelled diagnostic')
     ap.add_argument('--reach-um', type=float, default=DSG.REACH_UM, help='GEN safety planning reach (owner 405 um)')
     ap.add_argument('--no-ir', metavar='REASON', help='skip the die IR-drop step in run_all.sh (labelled NOT_A_DIE_RESULT)')
+    ap.add_argument('--rfw', action='store_true',
+                    help='STW-S81c-DIE-C21 cap21: co-forwarded relay reset -- every forwarded relay stage k>=1 takes rs from a '
+                         'die-level retimer clocked by its own forwarded clock fck[k], fed from the retimer of stage k-1 '
+                         '(the reset travels the lane with its clock; was a regional-root reset grid flop -> per-stage CDC)')
+    ap.add_argument('--hold-eco', action='store_true',
+                    help='STW-S81c-DIE-C21 cap21: post-GRT die hold ECO session (hold_eco.sh) before the die STA: hold buffers '
+                         'on die data nets only (clock / reset-distribution / special / skip nets dont_touch; closed views are '
+                         'macros and cannot be edited)')
     a = ap.parse_args()
     # ROOT14 10-20 (COORD 21:29 (a)): TT setup + FF hold on every die build, diagnostic ones included
     a.corners = DSC.required(a.corners)
@@ -1019,6 +1027,43 @@ def main():
                 ties.append(f'  {mst_} tie_{n}_{k} (.{pin_}({n}[{k}]));')
             return n
         return CONST_RE.sub(rep, e)
+    # ------------------------------------------------------------------ STW-S81c-DIE-C21 co-forwarded relay reset (--rfw)
+    # MAIN4 die STA: relay_reset hold -23.2 ns on 7459 of 7953 relay rs pins.  Stage k of a forwarded lane is clocked by
+    # n<lane>_fck[k] (stage k-1 ck_o; ~245 ps per hop, 23.4 ns at stage 94) while its rs came from a reset grid flop
+    # st_rs_* on an IDEAL regional root ck_g*: an uncontrolled phase per stage = a reset CDC, not a buffering problem.
+    # Fix (die glue only, no block interface / topology change): rfw_<lane>_<k> (DFFHQNx1, CLK = fck[k]) +
+    # rfwi_<lane>_<k> (INVx1) per stage k>=1; D(k) = rfwq(k-1) (stage 1: its own former grid rs, local), rs(stage k) =
+    # rfwq(k).  Reset release reaches stage k k cycles after stage 1, exactly as the data wave does; hop = the relay hop.
+    rfw_cells, rfw_rows, rfw_rs = [], [], {}
+    if a.rfw:
+        fck_re = re.compile(r'^n(\w+)_fck\[(\d+)\]$')
+        lanes_ = collections.defaultdict(dict)
+        for i_, (mst, nm, prm, cm) in enumerate(insts):
+            if not mst.startswith('dsfd_dvrly') or kind.get(nm) == 'standin' or 'rs' not in cm or 'ck' not in cm:
+                continue
+            m_ = fck_re.match(cm['ck'].strip())
+            if m_:
+                lanes_[m_.group(1)][int(m_.group(2))] = i_
+        for lane_, st_ in sorted(lanes_.items()):
+            prevq = None
+            for k_ in sorted(st_):
+                i_ = st_[k_]
+                mst, nm, prm, cm = insts[i_]
+                if k_ == 0:
+                    prevq = None
+                    continue
+                d_ = prevq if (prevq is not None and (k_ - 1) in st_) else cm['rs'].strip()
+                if CONST_RE.search(d_) or CONST_RE.search(cm['rs']):
+                    prevq = None            # constant reset (tied stage): leave it as bound
+                    continue
+                qn, q = f'rfwn_{lane_}_{k_}', f'rfwq_{lane_}_{k_}'
+                decl.append(f'  wire {qn};'); decl.append(f'  wire {q};')
+                rfw_cells.append(f'  DFFHQNx1_ASAP7_75t_R rfw_{lane_}_{k_} (.CLK({cm["ck"].strip()}), .D({d_}), .QN({qn}));')
+                rfw_cells.append(f'  INVx1_ASAP7_75t_R rfwi_{lane_}_{k_} (.A({qn}), .Y({q}));')
+                rfw_rows.append((f'rfw_{lane_}_{k_}', f'rfwi_{lane_}_{k_}', nm))
+                rfw_rs[nm] = q          # body-only override: insts / ibits (gen safety, clock regions) stay the bind netlist
+                prevq = q
+        print(f'RFW co-forwarded relay reset: lanes={len(lanes_)} stages_rewired={len(rfw_rows)} cells={len(rfw_cells)}', flush=True)
     body = []
     for mst, nm, prm, cm in insts:
         # STW-S81c-DIE 10-22 (cap18/CLK2 fclk pairing_errors=2): a stand-in LANDING whose forwarded payload is a
@@ -1027,6 +1072,8 @@ def main():
         # so drive them with physical TIELO/TIEHI cells like any bound instance. A floating 1-pin wire left 266 of the
         # 276 contracted bits untraced -> data_port_contract_ERROR. Straps (k, sid ...) of stand-ins stay internal.
         payload_w = forwarded_payload_width(mst)
+        if nm in rfw_rs:
+            cm = dict(cm, rs=rfw_rs[nm])
         cs = ', '.join(f'.{p}({detie(e, nm, kind[nm] != "standin" or (p == "i" and bool(payload_w)))})'
                        for p, e in cm.items())
         if kind[nm] == 'standin':
@@ -1038,6 +1085,7 @@ def main():
             raise SystemExit('dv_rvcase: constant assign has no physical load to place its tie at -- bind it to a port')
         body.append('  ' + s_ + ';')
     body += ties
+    body += rfw_cells
     hdr = [f'// S81-DIE7 REAL-VIEW die case netlist from {a.bind_dir / "die.v"} (tools/s81_dv/dv_rvcase.py): bound instances, '
            'stand-in cells rv_* where no closed view, constant bits driven by TIEHI/TIELO cells tie_tz_*',
            f'module dv_die ({", ".join(sorted(top))});']
@@ -1154,6 +1202,41 @@ proc ot_rv_place_ties {report} {
 ''')
     tie_step = ('source /work/die_repeaters.tcl\nsource /work/tie_place.tcl\n'
                 'if {[ot_rv_place_ties /work/out/tie_spread.json] != 0} { puts "OT_TIE_PLACE_FAIL"; exit 4 }\n') if ties else '# no tie cells\n'
+    if rfw_rows:
+        if not a.die_repair:
+            raise SystemExit('dv_rvcase: --rfw needs --die-repair (the retimer spread uses the die repeater legaliser)')
+        # STW-S81c-DIE-C21: each retimer pair starts at its relay stage's rs pin; the die repeater legaliser spreads them
+        # to the nearest free slots (the relay macros and channels are obstacles), then its caches are cleared as for ties.
+        (out / 'rfw_place.txt').write_text(''.join(f'{d} {i} {s_}\n' for d, i, s_ in rfw_rows))
+        (out / 'rfw_place.tcl').write_text('''# STW-S81c-DIE-C21 co-forwarded relay reset retimer placement (tools/s81_dv/dv_rvcase.py --rfw)
+proc ot_rv_place_rfw {listfile report} {
+  set blk [ord::get_db_block]; set cells {}; set bad 0
+  set fh [open $listfile]
+  while {[gets $fh line] >= 0} {
+    lassign $line dff inv stage
+    set si [$blk findInst $stage]
+    if {$si eq "NULL" || $si eq ""} { incr bad; continue }
+    set it [$si findITerm rs]
+    set b [expr {$it eq "NULL" || $it eq "" ? [$si getBBox] : [$it getBBox]}]
+    set x [expr {([$b xMin] + [$b xMax]) / 2}]; set y [expr {([$b yMin] + [$b yMax]) / 2}]
+    foreach c [list $dff $inv] {
+      set ci [$blk findInst $c]
+      if {$ci eq "NULL" || $ci eq ""} { incr bad; continue }
+      $ci setLocation $x $y; $ci setPlacementStatus PLACED; lappend cells $ci
+    }
+  }
+  close $fh
+  set left [ot_die_rep_spread $cells $report 0.30 8.64 0.60 3]
+  foreach v {::ot_die_rep_slw ::ot_die_rep_obs ::ot_die_rep_occ ::ot_die_rep_onobs ::ot_die_rep_maxdisp} { unset -nocomplain $v }
+  array unset ::ot_die_rep_ob
+  puts "OT_RFW placed=[llength $cells] missing=$bad unplaced=$left"; flush stdout
+  return [expr {$bad + $left}]
+}
+''')
+        tie_step += ('source /work/die_repeaters.tcl\nsource /work/rfw_place.tcl\n'
+                     'if {[ot_rv_place_rfw /work/rfw_place.txt /work/out/rfw_spread.json] != 0} { puts "OT_RFW_PLACE_FAIL"; exit 4 }\n')
+        # the forwarded-clock audit lists the retimer captures on fck[k] but does not judge them as payload hops
+        repair = 'set ::ot_die_rep_fclk_aux_capture_masters {DFFHQNx1_ASAP7_75t_R}\n' + repair
     if ties and not a.die_repair:
         raise SystemExit('dv_rvcase: tie cells need --die-repair (the tie spread uses the die repeater legaliser)')
     reserve_tcl = ''
@@ -1308,6 +1391,67 @@ rc=$?
 python3 $D/classify.py $D {' '.join(a.corners)} > $D/sta/classes.txt 2>&1
 echo $rc > $D/sta/run.exit; exit $rc
 ''')
+    # STW-S81c-DIE-C21 10-22 (--hold-eco): post-GRT die hold ECO session before the die STA.  MAIN4 diag STA: hold on
+    # every forwarded hop class (relay_data x_frame/hbm/idx/coll/unit/attn/xtier/ret -64..-181 ps), landing data, die
+    # nets into closed views (iqf qs, bk_col vi_s, ctrl k_rdy/kr_data/rq from the PHY on ck_hbm) -- the die flow had no
+    # hold repair.  Hold buffers go on die data nets only: special top nets and the repeater step's skip list (clock /
+    # sigtype nets) are dont_touch, and closed views are macros (nothing inside them is editable).  Corner: TT, the
+    # worse hold corner on this die (relay_data TT -180.7 vs FF -142.6 ps), margin 10 ps; FF hold is then judged by the
+    # STA.  New cells are legalised by the die repeater spread.  Fail-soft: on any failure the pre-ECO grt.odb is kept.
+    if a.hold_eco:
+        std_tt = ' '.join(STD_CORNERS['tt'])
+        (out / 'hold_eco.tcl').write_text(f'''# STW-S81c-DIE-C21 post-GRT die hold ECO (tools/s81_dv/dv_rvcase.py --hold-eco)
+foreach f {{{std_tt}}} {{ read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_$f }}
+foreach f [glob /work/views/sta/*_tt.lib] {{ read_liberty $f }}
+foreach f [glob /work/views/rv_*.lib] {{ read_liberty $f }}
+read_db /work/out/grt_prehold.odb
+source {PLAT}/setRC.tcl
+set_wire_rc -signal -layer {M8['sta_wire_rc_layer']}
+{clocks_sdc}
+set_propagated_clock [all_clocks]
+set_clock_uncertainty -setup 60 [all_clocks]
+set_clock_uncertainty -hold 25 [all_clocks]
+set_false_path -from [get_ports rst_n]
+source /work/landing.sdc
+if {{[catch {{estimate_parasitics -global_routing}} e]}} {{ puts "OT_HOLD_PARA placement ($e)"; estimate_parasitics -placement }} else {{ puts "OT_HOLD_PARA global_routing" }}
+set blk [ord::get_db_block]
+set ndt 0
+foreach n [$blk getNets] {{ if {{[$n isSpecial]}} {{ $n setDoNotTouch 1; incr ndt }} }}
+if {{[file exists /work/die_repeaters.skip_nets.txt]}} {{
+  set fh [open /work/die_repeaters.skip_nets.txt]
+  foreach nm [split [string trim [read $fh]] "\n"] {{ set n [$blk findNet $nm]; if {{$n ne "NULL" && $n ne ""}} {{ $n setDoNotTouch 1; incr ndt }} }}
+  close $fh
+}}
+set maxid 0; foreach i [$blk getInsts] {{ if {{[$i getId] > $maxid}} {{ set maxid [$i getId] }} }}
+puts "OT_HOLD_DONT_TOUCH nets=$ndt pre_max_inst_id=$maxid"
+puts "OT_HOLD_PRE"; report_worst_slack -min -digits 1; report_tns -min -digits 1
+set t0 [clock seconds]
+if {{[catch {{repair_timing -hold -hold_margin 10 -allow_setup_violations -max_buffer_percent 20}} e]}} {{ puts "OT_HOLD_FAIL repair_timing: $e"; exit 5 }}
+puts "OT_HOLD_REPAIR_S [expr {{[clock seconds]-$t0}}]"
+set new {{}}; foreach i [$blk getInsts] {{ if {{[$i getId] > $maxid}} {{ lappend new $i }} }}
+source /work/die_repeaters.tcl
+set left [ot_die_rep_spread $new /work/out/hold_spread.json 0.30 8.64 0.60 3]
+puts "OT_HOLD_CELLS new=[llength $new] unplaced=$left"
+if {{$left != 0}} {{ puts "OT_HOLD_FAIL unplaced hold cells $left"; exit 6 }}
+estimate_parasitics -placement
+puts "OT_HOLD_POST"; report_worst_slack -min -digits 1; report_tns -min -digits 1
+write_db /work/out/grt.odb
+puts OT_HOLD_DONE
+''')
+        (out / 'hold_eco.sh').write_text('''#!/bin/bash
+# STW-S81c-DIE-C21 post-GRT die hold ECO: out/grt.odb -> out/grt_prehold.odb, ECO writes a new out/grt.odb; any failure restores it
+D=$(cd $(dirname $0) && pwd); N=dvrvhold-$$
+[ -f $D/out/grt.odb ] || exit 3
+mv $D/out/grt.odb $D/out/grt_prehold.odb || exit 3
+timeout ${HOLD_TIMEOUT:-5h} docker run --rm --name $N --cpus=${CPUS:-8} --memory=${MEMG:-96}g -v $D:/work -w /work openroad/orfs:asap7lock \
+  bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/hold_eco.tcl > /work/out/hold_eco.log 2>&1; rc=\$?; chmod -R a+rwX /work/out; exit \$rc"
+rc=$?
+if [ $rc -ne 0 ] || ! grep -q OT_HOLD_DONE $D/out/hold_eco.log 2>/dev/null; then
+  docker rm -f $N >/dev/null 2>&1; rm -f $D/out/grt.odb; mv $D/out/grt_prehold.odb $D/out/grt.odb; echo "HOLD_ECO_FAILED rc=$rc (pre-ECO grt.odb kept)" > $D/out/hold_eco.exit; exit $rc
+fi
+echo "HOLD_ECO_OK" > $D/out/hold_eco.exit; exit 0
+''')
+        (out / 'hold_eco.sh').chmod(0o755)
     # ROOT14 10-20: die IR-drop check with the M8 signal routes present (tools/die_safety/ir_step.sh, copied into the case);
     # FAIL / NOT_RUN = chain exit 1 + OWNER_REPORT line in run_all.log (the coordinator tells the owner)
     shutil.copytree(ROOT / 'tools/die_safety', out / 'die_safety', dirs_exist_ok=True,
@@ -1322,7 +1466,8 @@ set -u; D=$(cd $(dirname $0) && pwd); date > $D/run_all.start
 CPUS=${CPUS:-16} MEMG=${MEMG_GRT:-96} bash $D/run.sh; grt_rc=$?; echo "grt rc $grt_rc" >> $D/run_all.log
 [ $grt_rc -eq 0 ] || { date > $D/run_all.done; exit $grt_rc; }
 [ -f $D/out/grt.odb ] || { echo "NO grt.odb" >> $D/run_all.log; date > $D/run_all.done; exit 3; }
-CPUS=${CPUS:-16} MEMG=${MEMG_STA:-64} bash $D/sta.sh; sta_rc=$?; echo "sta rc $sta_rc" >> $D/run_all.log
+''' + ('''CPUS=${CPUS:-16} MEMG=${MEMG_HOLD:-96} bash $D/hold_eco.sh; hold_rc=$?; echo "hold_eco rc $hold_rc $(cat $D/out/hold_eco.exit 2>/dev/null)" >> $D/run_all.log
+''' if a.hold_eco else '') + '''CPUS=${CPUS:-16} MEMG=${MEMG_STA:-64} bash $D/sta.sh; sta_rc=$?; echo "sta rc $sta_rc" >> $D/run_all.log
 ''' + ir_block + '''date > $D/run_all.done; [ $sta_rc -eq 0 ] || exit $sta_rc; exit ${ir_rc:-0}
 ''')
     for f in ('run.sh', 'sta.sh', 'run_all.sh'):
@@ -1348,7 +1493,7 @@ CPUS=${CPUS:-16} MEMG=${MEMG_STA:-64} bash $D/sta.sh; sta_rc=$?; echo "sta rc $s
                 closed_views={m: f'{r}:{d}' for m, (r, d) in views.items() if m in {x[0] for x in insts}},
                 standin_instances=sum(1 for v in kind.values() if v == 'standin'),
                 closed_instances=sum(1 for v in kind.values() if v == 'closed'), std_instances=sum(1 for v in kind.values() if v == 'std'),
-                tie_wires=tz[0], tie_cells=len(ties), fwd_moves_over_20um={k: v for k, v in fwd_moves.items() if v[0] > 20}, placement_moves=dict(moved), placement_far=far[:50], landing_windows=dict(collections.Counter(v['model'] for v in lrows.values())),
+                tie_wires=tz[0], tie_cells=len(ties), rfw=dict(enabled=bool(a.rfw), stages_rewired=len(rfw_rows), cells=len(rfw_cells)), hold_eco=bool(a.hold_eco), fwd_moves_over_20um={k: v for k, v in fwd_moves.items() if v[0] > 20}, placement_moves=dict(moved), placement_far=far[:50], landing_windows=dict(collections.Counter(v['model'] for v in lrows.values())),
                 land_plan_links_without_model=no_model, regional_roots='IDEAL top ports ck_<region> (DIE-CLOCK trees not built in this case)',
                 clock_regions=ckr,
                 label=('NOT_A_DIE_RESULT: real-view case; stand-ins = ' + ', '.join(sorted({m.split(':', 1)[1] for m in census if m.startswith('standin:')}))
