@@ -1,0 +1,20 @@
+{
+ "scope": "Exact byte-owner component capture/reset equivalence only; full mapped XFIN native still running",
+ "source_commit": "195f97e90",
+ "source_sha256": "5b71f5a3806da9b0afa29bc8567a0da995717d0e17a44e8db87d53d4d55e0b3d",
+ "positive": "COLLECTOR_N9_PASS checks9997",
+ "negative": "COLLECTOR_N9_MISMATCH en cyc11",
+ "verilator": "5.050",
+ "full_native_status": "pending",
+ "model": {
+  "groups": 24,
+  "vectors_per_group": 2,
+  "bytes_per_group": 1,
+  "per_output_enable_payload_bits": 8,
+  "data_bit_consumers": 10,
+  "control_reset_loads_per_leaf": 11,
+  "capture_edges": 2,
+  "data_edges_added": 0,
+  "payload_reset": false
+ }
+}
