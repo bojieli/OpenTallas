@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       admits   158 GB (avail 303, growth 192, headroom 0, waiters 0/0 GB) load 53/128 running 28 disk 731 GB 
+ot-run: ot-epyc7       admits   274 GB (avail 312, growth 120, headroom 0, waiters 0/0 GB) load 315/96 running 63 disk 4145 GB 
+ot-run: ot-epyc9       admits   453 GB (avail 479, growth 162, headroom 0, waiters 0/0 GB) load 106/128 running 36 disk 1712 GB 
+ot-run: ot-gold2       admits    -1 GB (avail 425, growth 425, headroom 0, waiters 0/0 GB) load 27/112 running 20 disk 2689 GB 
+ot-run: ot-gold1       admits   303 GB (avail 508, growth 296, headroom 0, waiters 0/0 GB) load 278/112 running 61 disk 1519 GB 
+ot-run: ot-pve1        admits   -29 GB (avail 163, growth 183, headroom 0, waiters 0/0 GB) load 45/28 running 9 disk 1097 GB 
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-kfirst-2000-1021
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1990685-1792648085 after 1 s
+Verilator 5.050 2026-07-01 rev v5.050
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 5.153 MB sources in 90 modules, into 0.021 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 3.766 s (elab=0.518, cvt=3.112, bld=0.000); cpu 3.763 s on 1 threads; allocated 273.391 MB
+lint-ok
+A0_RC16_PRODUCTION_ELAB_PASS
+KFIRST_PREDICATE_PASS checks8422784 exhaustive_W16_K65536_split64_modes2 W1_W8_exhaustive W32_unsigned_boundaries
+ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560 leaves'{'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00}
+[6508000] %Fatal: tb_qwen_romleaf_parent_nk_native.sv:72: Assertion failed in tb_qwen_romleaf_parent_nk_native: ROMLEAF_PARENT_NK_NATIVE_FAIL MUT4 errors1200 checks6399 valids2560 nonzero2560
+A0_RC16_REQUIRED_NATIVE_OBLIGATIONS_PASS
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1990685-1792648085): exit 0

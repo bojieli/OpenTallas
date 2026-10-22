@@ -47,5 +47,13 @@
     "same-edge clocked kl flag sequence, source-pinned existing parent positive and MUT4",
     "actual native/load census, geometry and strict MAIN/fallback gates"
   ],
-  "phase_authority": "Final original CTS clocks and successor actual clocks; no constraints change. XM9 remains separate."
+  "phase_authority": "Final original CTS clocks and successor actual clocks; no constraints change. XM9 remains separate.",
+  "validation_status": {
+    "production_elaboration": "PASS",
+    "predicate_checks": 8422784,
+    "parent_native_checks": 6399,
+    "same_binary_MUT4": "expected FAIL errors1200",
+    "request_hook_replay": "PASS actual predecessor ODB, ten gates, 250x row capacity per gate",
+    "physical": "pending"
+  }
 }

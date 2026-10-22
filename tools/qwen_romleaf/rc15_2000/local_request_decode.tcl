@@ -4,6 +4,14 @@
 set qr15_block [ord::get_db_block]
 set qr15_dbu [$qr15_block getDbUnitsPerMicron]
 set qr15_members [dict create]
+# OpenDB preserves Verilog escapes in hard-instance names. Decoder matching
+# strips them, so index the hard leaves using that same normalized spelling.
+set qr15_hard_leaves [dict create]
+foreach inst [$qr15_block getInsts] {
+ if {[[$inst getMaster] isBlock]} {
+  dict set qr15_hard_leaves [string map [list "\\" ""] [$inst getName]] $inst
+ }
+}
 foreach inst [$qr15_block getInsts] {
  set name [string map [list "\\" ""] [$inst getName]]
  if {![regexp {^(.*g_rph\.g_rb\[([0-9]+)\]\.g_single\.g_col\[([01])\])\.u_req_any[/.]} $name -> scope bank col]} {continue}
@@ -12,8 +20,9 @@ foreach inst [$qr15_block getInsts] {
 }
 if {[dict size $qr15_members] != 10} {error "A0 local request decoders: expected 10 physical leaves, found [dict size $qr15_members]"}
 foreach scope [dict keys $qr15_members] {
- set leaf [$qr15_block findInst ${scope}.u_leaf]
- if {$leaf eq "NULL" || $leaf eq ""} {error "A0 request decoder has no matching hard leaf: $scope"}
+ set leaf_name ${scope}.u_leaf
+ if {![dict exists $qr15_hard_leaves $leaf_name]} {error "A0 request decoder has no matching hard leaf: $scope"}
+ set leaf [dict get $qr15_hard_leaves $leaf_name]
  set bb [$leaf getBBox]
  regexp {g_rb\[([0-9]+)\]\.g_single\.g_col\[([01])\]$} $scope -> bank col
  # ROM any_d is at local y=21.564 um; MY changes X only.

@@ -1,0 +1,5 @@
+KFIRST_PREDICATE_PASS checks8422784 exhaustive_W16_K65536_split64_modes2 W1_W8_exhaustive W32_unsigned_boundaries
+- tools/qwen_romleaf/rc16_2000/tb_kfirst_predicate.sv:51: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 8ms; walltime 1.584 s; speed 5.316 ms/s
+- Verilator: cpu 1.584 s on 1 threads; allocated 7 MB

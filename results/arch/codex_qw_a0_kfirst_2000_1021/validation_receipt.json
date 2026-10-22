@@ -1,0 +1,28 @@
+{
+  "source": "239a19eac",
+  "native_unit": "ot-epyc9:oth-ubuntu-1990685-1792648085",
+  "native_exit": 0,
+  "verilator": "5.050",
+  "production_elaboration": "PASS",
+  "predicate_checks": 8422784,
+  "predicate_scope": "NW16 all K x 64 six-bit shifts x 2 modes; NW1/NW8 exhaustive; NW32 unsigned boundaries. Actual source split_i is four bits zero-extended to six.",
+  "existing_parent_positive": {
+    "checks": 6399,
+    "valids": 2560,
+    "nonzero": 2560,
+    "status": "PASS"
+  },
+  "same_binary_mut4": {
+    "errors": 1200,
+    "status": "expected FAIL"
+  },
+  "source_files_verified": 31,
+  "hook_replay_unit": "ot-epyc9:oth-ubuntu-2063154-1792648320",
+  "hook_exit": 0,
+  "hook_source_sha256": "bfd58099399eca2be411b529b2c3982959e78a3febf609ce98e22e6b6a28d050",
+  "hook_predecessor": "rc15a NL main 3_2_place_iop.odb; GPL hook failure writes no failed ODB",
+  "hook_scope": "Normalized hard-leaf lookup and measured decoder row margin only; no new PNR/timing report. Ten actual private decoder gates, circuit instance/net counts unchanged.",
+  "request_decoder_cell_area_um2": 0.11664,
+  "request_decoder_row_capacity_um2": 29.16,
+  "physical_status": "Not qualified; strict source-specific gates remain required."
+}

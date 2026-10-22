@@ -1,0 +1,29 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-kfirst-2000-1021/hook_replay
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-kfirst-2000-1021/hook_replay
+ot-run: ot-epyc9       admits    18 GB (avail 453, growth 440, headroom 0, waiters 0/0 GB) load 116/128 running 40 disk 1709 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-kfirst-2000-1021/hook_replay
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-kfirst-2000-1021/hook_replay
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-kfirst-2000-1021/hook_replay
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-kfirst-2000-1021/hook_replay
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-2063154-1792648320 after 1 s
+3f570c33d5df6f2d1cc62f821befedb548d9c4a0881d63f2ca9ad1b66cc99a89  pre_gpl.odb
+bfd58099399eca2be411b529b2c3982959e78a3febf609ce98e22e6b6a28d050  local_request_decode_fixed.tcl
+c0932286b10022a0c9c7ff2b80c62ab20c52cc129b2bf270e1f844bc6a35650a  check_local_request.tcl
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+A0_LOCAL_REQUEST_DECODE bank=0 col=0 cells=1 area=0.11664 capacity=29.16000000000006 box=232.2,62.06400000000001,237.6,67.46400000000001
+A0_LOCAL_REQUEST_DECODE bank=0 col=1 cells=1 area=0.11664 capacity=29.15999999999991 box=583.2,62.06400000000001,588.6,67.46400000000001
+A0_LOCAL_REQUEST_DECODE bank=1 col=0 cells=1 area=0.11664 capacity=29.159999999999897 box=232.2,234.864,237.6,240.26399999999998
+A0_LOCAL_REQUEST_DECODE bank=1 col=1 cells=1 area=0.11664 capacity=29.159999999999748 box=583.2,234.864,588.6,240.26399999999998
+A0_LOCAL_REQUEST_DECODE bank=2 col=0 cells=1 area=0.11664 capacity=29.159999999999908 box=232.2,407.66400000000004,237.6,413.064
+A0_LOCAL_REQUEST_DECODE bank=2 col=1 cells=1 area=0.11664 capacity=29.159999999999755 box=583.2,407.66400000000004,588.6,413.064
+A0_LOCAL_REQUEST_DECODE bank=3 col=0 cells=1 area=0.11664 capacity=29.16000000000051 box=232.2,580.4639999999999,237.6,585.864
+A0_LOCAL_REQUEST_DECODE bank=3 col=1 cells=1 area=0.11664 capacity=29.160000000000366 box=583.2,580.4639999999999,588.6,585.864
+A0_LOCAL_REQUEST_DECODE bank=4 col=0 cells=1 area=0.11664 capacity=29.16000000000051 box=232.2,753.2639999999999,237.6,758.664
+A0_LOCAL_REQUEST_DECODE bank=4 col=1 cells=1 area=0.11664 capacity=29.160000000000366 box=583.2,753.2639999999999,588.6,758.664
+A0_LOCAL_REQUEST_DECODE_PASS leaves=10 state_added=0 edges_added=0
+A0_REQUEST_HOOK_REPLAY_PASS insts=196306 nets=151858 decoders=10 state_added=0 edges_added=0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-2063154-1792648320): exit 0
