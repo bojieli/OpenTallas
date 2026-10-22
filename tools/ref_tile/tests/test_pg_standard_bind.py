@@ -10,6 +10,9 @@ then a CTS-like clkbuf_* buffer is created on a CLOCK net (unbound PG, as Triton
 runs, then the final global_connect. Checks: every native PG terminal is bound and the buffer is dont_touch.
 Mutant (OLD ordering, ot_pg_standard_bind replaced by a no-op): the buffer's PG terminals stay unbound -> FAIL.
 Also checks that standard mode adds no strict-mode refusal (no OT_PG_*_REFUSED). Skipped without docker/ORFS image.
+
+ROOT11 10-20 (PVM9 r6b EST-0104): with placement RC estimated BEFORE the hook (as cts.tcl does), the standard bind must
+re-estimate so the following repair_timing sees a consistent parasitics state. Mutant: re-estimate replaced by a no-op.
 """
 import os
 import re
@@ -57,8 +60,10 @@ foreach it [$ckn getITerms] { if {[[$it getInst] getName] ne "clkbuf_0"} { $it d
 [$b findITerm A] connect $ckn
 [$b findITerm Y] connect $nn
 source /src/physical/common_flow/clk_net_protect.tcl
+%(pre)s
 %(mutant)s
 ot_protect_clock_tree
+%(post)s
 global_connect
 set unb 0; set tot 0
 foreach i [$blk getInsts] {
@@ -72,6 +77,15 @@ puts "RESULT pg_total $tot pg_unbound $unb clkbuf_dont_touch [$b isDoNotTouch]"
 """
 
 MUTANT = "proc ot_pg_standard_bind {where} { return 0 }"
+# Placed flops + placement RC estimated before the CTS-like hook (cts.tcl order), then the repair after it.
+PRE_EST = r"""
+source $P/setRC.tcl
+set x 12000
+foreach i [$blk getInsts] { if {[$i getName] ne "clkbuf_0"} { $i setLocation $x 20000; $i setPlacementStatus PLACED; incr x 3000 } }
+estimate_parasitics -placement
+"""
+POST_REPAIR = "repair_timing -setup -setup_margin 0\nreport_checks -path_delay max\nputs REPAIR_DONE"
+MUTANT_EST = "proc ot_pg_standard_reestimate {blk where} { return }"
 
 
 def docker_ok():
@@ -82,15 +96,17 @@ def docker_ok():
 
 @unittest.skipUnless(docker_ok(), "docker + ORFS image needed")
 class PgStandardBind(unittest.TestCase):
-    def run_or(self, mutant=False):
+    def run_or(self, mutant="", pre="", post="", need_result=True):
         with tempfile.TemporaryDirectory() as w:
             os.chmod(w, 0o777)
             (Path(w) / "t.v").write_text(NETLIST)
-            (Path(w) / "run.tcl").write_text(FLOW % {"mutant": MUTANT if mutant else ""})
+            (Path(w) / "run.tcl").write_text(FLOW % {"mutant": mutant or "", "pre": pre, "post": post})
             r = subprocess.run(["docker", "run", "--rm", "-v", f"{w}:/w", "-v", f"{ROOT}:/src:ro", IMAGE, OR,
                                 "-no_init", "-exit", "/w/run.tcl"], capture_output=True, text=True, timeout=600)
         out = r.stdout + r.stderr
         m = re.search(r"RESULT pg_total (\d+) pg_unbound (\d+) clkbuf_dont_touch (\d)", out)
+        if not need_result:
+            return r.returncode, out
         self.assertIsNotNone(m, out[-3000:])
         return r.returncode, out, int(m.group(1)), int(m.group(2)), int(m.group(3))
 
@@ -104,10 +120,24 @@ class PgStandardBind(unittest.TestCase):
         self.assertEqual(dt, 1)
 
     def test_mutant_old_ordering_leaves_clkbuf_unbound(self):
-        rc, out, tot, unb, dt = self.run_or(mutant=True)
+        rc, out, tot, unb, dt = self.run_or(mutant=MUTANT)
         self.assertEqual(dt, 1)
         self.assertGreater(unb, 0, out[-3000:])
         self.assertIn("UNBOUND clkbuf_0/", out)
+
+    def test_standard_bind_reestimates_before_repair(self):
+        rc, out, tot, unb, dt = self.run_or(pre=PRE_EST, post=POST_REPAIR)
+        self.assertEqual(rc, 0, out[-3000:])
+        self.assertIn("OT_PG_STANDARD_REESTIMATE protect_clock_tree model=placement", out)
+        self.assertIn("REPAIR_DONE", out)
+        self.assertNotIn("EST-0104", out)
+        self.assertEqual(unb, 0, out[-3000:])
+
+    def test_mutant_no_reestimate_hits_est0104(self):
+        rc, out = self.run_or(mutant=MUTANT_EST, pre=PRE_EST, post=POST_REPAIR, need_result=False)
+        self.assertNotEqual(rc, 0, out[-3000:])
+        self.assertIn("EST-0104", out)                   # the PVM9 r6b failure, reproduced
+        self.assertNotIn("REPAIR_DONE", out)
 
 
 if __name__ == "__main__":

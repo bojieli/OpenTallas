@@ -28,8 +28,9 @@ Checks (each names the offending nets / registers; thresholds in THRESHOLDS, cal
   wire_reach     a register whose combinational fan-in and fan-out reach FIXED terminals (placed IO pins, macro pins) that
                  no single point lies within reach_um (Manhattan) of, or a fixed-to-fixed combinational path longer than
                  reach_um: such a stage needs relay flops (504 um per stage at SS)
-  util_channel   (std + macro) / core outside util_min..util_max, and macro-to-macro channels narrower than channel_um
-                 that are not fully blocked for placement
+  util_channel   (std + macro) / core above util_max (enlarge the outline), and macro-to-macro channels narrower than
+                 channel_um that are not fully blocked for placement.  Below util_min is informational only (metric
+                 util_note "outline roomy; acceptable"): OWNER 10-19/10-21, target fill 40-60%, never shrink for area
 Mode: WARN (findings are logged to the job and the daemon log; the flow continues) until the validation set shows zero
 false positives, then REFUSE (the flow stops with "TEXTBOOK_LINT: ..." and the loop finishes the job FLOORPLAN_MARGIN).
 Per-check modes: REFUSE applies to the checks in refuse_checks only; the others stay WARN.
@@ -73,6 +74,12 @@ THRESHOLDS = {
     "bnd_out_levels_refuse": 3,    # REFUSE register->output (closed max 2; tt_ctlm 5)
     "bnd_in_to_out_refuse": 1,     # REFUSE any combinational input->output bit (closed: none)
     "bnd_icg_port_refuse": 1,      # REFUSE an ICG enable combinational from a port (closed: none)
+    # OWNER 10-20 ~09:05 PIN REGISTERS: required only at region crossings (landing rings) and on wires over the 405 um
+    # reach; touching same-region tiles may connect directly when the combined path meets timing (die / parent STA
+    # judges it).  So input->register / register->output LEVELS are a WARN (reported), never a boundary REFUSE, unless
+    # the strict 10-15 "every pin registered" form is asked for (--set bnd_strict_pin_regs=1).  A combinational
+    # input->output bit and an ICG enable from a port stay REFUSE; a stage beyond reach_um stays a wire_reach REFUSE.
+    "bnd_strict_pin_regs": 0,
     # logic_depth: raw ASAP7 weight sum x depth_scale = ps.  depth_scale calibrated so the closed set's worst stage
     # (P6 tu_retry_phy_port, 15 levels) estimates <= ~610 ps against the 700 ps budget at 1.2 GHz
     "depth_scale": 1.667,
@@ -82,8 +89,9 @@ THRESHOLDS = {
     "reach_um": 500.0,             # REFUSE (504 um per stage at SS)
     "reach_min_count": 1,
     # util / channels: WARN only (closed blocks at 6-58% util and 0.07 / 17 um channels)
-    "util_min": 0.45,
-    "util_max": 0.65,              # std-cell density over the placeable area (core - macros - halos) when macros exist
+    "util_min": 0.40,              # below: informational "outline roomy; acceptable" (OWNER 10-21: never shrink for area)
+    "util_max": 0.60,              # above: WARN, enlarge the outline; std-cell density over the placeable area (core -
+                                   # macros - halos) when macros exist
     "fill_max": 0.90,              # total (std + macro) / core sanity bound, macros only
     "macro_halo_um": 2.16,
     "channel_um": 20.0,
@@ -234,9 +242,16 @@ def clock_rule_eval(max_sinks, evidence=None):
 
 
 CLOCK_WAIVER_MAX_PS = 2.0     # HANDOFF 0ga 2026-10-18: largest recorded per-pair excess over CLK_SPREAD_MAX_PS
+# COORD 10-20 19:25 (rule freeze; spread accepted for route, route timing decides, fail -> regional root split):
+# SCOPED caps above limit + CLOCK_WAIVER_MAX_PS, one tile each.  A waiver uses one only when it names the tile in
+# "scope" and its recorded tt_ps/ff_ps stay within the cap.  Never a general relaxation.
+SCOPED_CLOCK_WAIVER_CAPS = {
+    "qkd_pv_fin_s32": {"tt": 88.4, "ff": 84.6},     # KV PVFIN R15c, 38k-sink single root, COORD 10-20 19:25
+    "qfd_native59_svc": {"tt": 84.6},               # Qwen N59 svc4 (TT 84.6 / FF 77.5), 21,950-sink root, COORD 10-20 17:33
+}
 
 
-def clock_waiver_eval(evidence, waiver):
+def clock_waiver_eval(evidence, waiver, tile=None):
     """HANDOFF 0ga 2026-10-18 (s81lk_kp4_dec syn-dly 80.5 FF vs 80): a coordinator-recorded per-pair excess, the job
     spec's "clock_rule_waiver" {"pair": "a-b", "ff_ps"|"tt_ps": measured, "limit_ps", "by"}.  Applies only when every
     over-limit corner spread of the evidence is <= limit + CLOCK_WAIVER_MAX_PS, <= the recorded value, and (child-pair
@@ -265,7 +280,14 @@ def clock_waiver_eval(evidence, waiver):
         rec_ps = waiver.get(f"{c}_ps")
         if not _num(rec_ps) or v > float(rec_ps) + 1e-6:
             why.append(f"{c.upper()} {v:.1f} ps not recorded in the waiver ({c}_ps={rec_ps})")
-        if v > lim + CLOCK_WAIVER_MAX_PS:
+        scope = str(waiver.get("scope", ""))
+        cap = SCOPED_CLOCK_WAIVER_CAPS.get(scope, {}).get(c)
+        if cap is not None and tile is not None and str(tile) != scope:
+            why.append(f"scoped waiver {scope} does not apply to tile {tile}")
+        if cap is not None:
+            if v > cap + 1e-6:
+                why.append(f"{c.upper()} {v:.1f} ps exceeds the scoped cap {cap} of {waiver.get('scope')}")
+        elif v > lim + CLOCK_WAIVER_MAX_PS:
             why.append(f"{c.upper()} {v:.1f} ps exceeds limit + {CLOCK_WAIVER_MAX_PS:.0f}")
         if basis == "pin-flop" and ev.get(f"{c}_pin_spread_basis") == "child_pair":
             bad = [p for p in ev.get("child_pairs") or () if p.get("corner") == c and float(p.get("ps", 0)) > lim
@@ -1099,10 +1121,11 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
     M["icg_enable_from_port"] = len(icg_en)
     if T["bnd_in_to_out_refuse"] and len(in2out) >= T["bnd_in_to_out_refuse"]:
         RF.setdefault("boundary", []).append(f"{len(in2out)} combinational input->output bit(s)")
-    if in2reg and in2reg[0][0] > T["bnd_in_levels_refuse"]:
+    strict_pins = bool(T.get("bnd_strict_pin_regs"))
+    if strict_pins and in2reg and in2reg[0][0] > T["bnd_in_levels_refuse"]:
         RF.setdefault("boundary", []).append(f"input->register {in2reg[0][0]} levels > {T['bnd_in_levels_refuse']} "
                                              f"({in2reg[0][1]} -> {in2reg[0][2]})")
-    if r2o and r2o[0][0] > T["bnd_out_levels_refuse"]:
+    if strict_pins and r2o and r2o[0][0] > T["bnd_out_levels_refuse"]:
         RF.setdefault("boundary", []).append(f"register->output {r2o[0][0]} levels > {T['bnd_out_levels_refuse']} "
                                              f"({r2o[0][1]} -> {r2o[0][2]})")
     if T["bnd_icg_port_refuse"] and len(icg_en) >= T["bnd_icg_port_refuse"]:
@@ -1123,7 +1146,10 @@ def analyse(g: Graph, dump: dict | None, th: dict) -> dict:
         bad.append(f"{len(icg_en)} clock-gate enable(s) combinational from input ports (e.g. "
                    + ", ".join(f"{p}->{c} {l} lv" for l, p, c in icg_en[:3]) + "): register the enable first")
     if bad:
-        F["boundary"] = [b + ": register the boundary (pin flops / registered outputs)" for b in bad]
+        F["boundary"] = [b + (": register the boundary (pin flops / registered outputs)" if strict_pins else
+                              ": allowed as a same-region direct connection when the die / parent path meets timing "
+                              "(owner 10-20); register it if the pin is a region crossing or its wire exceeds 405 um")
+                         for b in bad]
 
     # ---- 4. logic depth reg -> reg
     worst = (0.0, None, None)
@@ -1362,10 +1388,12 @@ def util_findings(dump, T, F, M):
         if util > T["fill_max"]:
             bad.append(f"total fill {util:.1%} > {T['fill_max']:.0%} (std {std:.0f} + macro {mac:.0f} um2 in {core_area:.0f} um2): "
                        "grow the outline")
-    elif util < T["util_min"] or util > T["util_max"]:
-        bad.append(f"utilisation {util:.1%} outside {T['util_min']:.0%}-{T['util_max']:.0%} (std {std:.0f} + macro "
-                   f"{mac:.0f} um2 in {core_area:.0f} um2): " + ("shrink the outline (long wires / sparse placement)"
-                                                                if util < T["util_min"] else "grow the outline"))
+    elif util > T["util_max"]:
+        bad.append(f"utilisation {util:.1%} > {T['util_max']:.0%} (std {std:.0f} + macro {mac:.0f} um2 in "
+                   f"{core_area:.0f} um2; target {T['util_min']:.0%}-{T['util_max']:.0%}): enlarge the outline")
+    elif util < T["util_min"]:
+        # OWNER 10-19/10-21: never squeeze a tile for area; a roomy outline is acceptable (informational, no finding)
+        M["util_note"] = (f"utilisation {util:.1%} < {T['util_min']:.0%}: outline roomy; acceptable (do not shrink)")
     macros = dump.get("macros", [])
     if len(macros) > 1:
         try:
