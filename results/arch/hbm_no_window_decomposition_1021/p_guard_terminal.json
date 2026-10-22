@@ -1,0 +1,52 @@
+{
+  "status": "FAIL",
+  "intended": 74,
+  "mismatches": [
+    {
+      "instance": "svg_NW1",
+      "field": "x",
+      "expected": 9721.08,
+      "actual": 9764.28
+    }
+  ],
+  "placement_problems": [
+    [
+      "overlap",
+      "cij_SW",
+      "hb_coll_SW"
+    ],
+    [
+      "overlap",
+      "cij_NW",
+      "hb_coll_NW"
+    ],
+    [
+      "overlap",
+      "svg_NW1",
+      "vmks_NW1"
+    ],
+    [
+      "overlap",
+      "hb_coll_NE",
+      "cij_NE"
+    ],
+    [
+      "overlap",
+      "hb_coll_SE",
+      "cij_SE"
+    ]
+  ],
+  "model_sha256": "e61725f71530cc6fae0b0520ad05515bc40a2e2d373ae060ed7501224831032b",
+  "manifest_sha256": "95f52b0eb682a317757a8dbf20f4aa53158cffe1a700edfdcf52265903554719",
+  "scope": "Actual selected homes/source-body consistency only; no capacity/native/physical qualification",
+  "source": "dc3fdb749",
+  "controller": 155802,
+  "unit": "3490762-1792627015",
+  "controller_exit": 25,
+  "no_PQ_S4": true,
+  "source_causes": {
+    "SVG": "PC band placement ignores singleton SVG slot; must move actual pc_NW1 plan box",
+    "COLL": "separating Cij frees canonical singleton COLL slots; SYNTH sizing changes from mapped-area outline to stale region grant outline"
+  },
+  "next_candidate": "Exact original O mapped COLL body/home in distinct explicit slots, actual PC band shift; ROOT disposition required/no retry"
+}
