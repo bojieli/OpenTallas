@@ -1,0 +1,23 @@
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator -DOT_S81PH_SEL_INDEXED13 -DOT_S81PH_FIFO_SRAM -DOT_SRAM_P192 -DOT_S81PH_SEL_SUCC -DOT_S81PH_SEL_RST64 -DOT_S81PH_SEL_FAN32 -DOT_S81PH_SEL_ACC32 -DOT_S81PH_SEL_ACC32_MUT --binary --timing -j 16 -Wno-fatal -Wno-lint -Wno-style -Wno-WIDTH -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-PINMISSING -Wno-IMPLICIT -Wno-SELRANGE --top-module tb_bk_layer rtl/lib/ot_sram_showahead_1r1w.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_queue_store.sv physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1_p192_rc/ot_sram_1r1w_32x128_m1_p192_rc.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir/ot_sram_1r1w_128x256_m1_r2c2_p192_mir.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v rtl/common/ot_fwd_link_stage.sv rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv tools/s81_dv/layer_prog/bk/tb_bk_layer.sv -Mdir /srv/opentallas-scratch/claude/s81-topk3-1019/out/build_mut_acc/obj"
+	User time (seconds): 302.84
+	System time (seconds): 21.66
+	Percent of CPU this job got: 469%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:09.09
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2957716
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 6855580
+	Voluntary context switches: 1222
+	Involuntary context switches: 609
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 764624
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
