@@ -137,6 +137,41 @@ class QslotLowering(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'aligned'):
             LC.lower_qslots(bad, m, allow_test=True)
 
+    def test_dual_l_composition_books_each_context_in_its_own_origin(self):
+        c, messages = fixture()
+        c['l_player'] = dict(master='qfd_sys_face_ovl_lctx1',
+                            source='rtl/qwen_split/qfd_sys_face_ovl_lctx1.sv', contexts=1)
+        c['segments'][0]['paired_segment_start_epoch_edge'] = 2200
+        c['segments'][0]['l_start_driver_event'][0] = 2199
+        for m in messages:
+            if m['seg'] == 1: m['wr'] += 2
+        booking = LC.lower_qslots(c, messages, allow_test=True)
+        for seg in (0, 1):
+            base = 1000 * seg
+            messages += [dict(seg=seg, src='C', tx_port=3, kind=4, beat=b, cyc=base+300+10*b)
+                         for b in range(4)]
+            messages += [dict(seg=seg, src='K', tx_port=0, kind=3, beat=b,
+                              cyc=base+400+b, arrive=base+400+b) for b in range(32)]
+        program = dict(program=dict(layers=[dict(start=1096)], emb_send=[10]), messages=messages)
+        starts = sum((0 if i == 0 else 2196 if i == 1 else 2300+100*i) << (20*i) for i in range(36))
+        with tempfile.TemporaryDirectory() as tmp:
+            image = Path(tmp) / 'calendar.svh'
+            image.write_text("D2D_TOKEN_PERIOD = 10000; D2D_FIRST_TOKEN = 1000; " +
+                             "D2D_CAL_START = 720'h" + format(starts, 'x') + ';')
+            result = LC.sys_face_events(program, image, dict(CS_X3S=3, CS_RXV=2), {}, 0, 8, booking)
+        self.assertNotIn('L', result)
+        self.assertNotIn('L_compiled', result)
+        self.assertEqual(result['L0'][0][0], result['L1'][0][0] + 2)
+        _, record = SFI.build(result, SFI.bench_program())
+        self.assertEqual(record['l_contexts']['segment1_base'], 7)
+        bad = copy.deepcopy(booking); bad['bookings'][0]['l_start_driver_event'][0] += 1
+        with tempfile.TemporaryDirectory() as tmp:
+            image = Path(tmp) / 'calendar.svh'
+            image.write_text("D2D_TOKEN_PERIOD = 10000; D2D_FIRST_TOKEN = 1000; " +
+                             "D2D_CAL_START = 720'h" + format(starts, 'x') + ';')
+            with self.assertRaisesRegex(ValueError, 'executing T programme'):
+                LC.sys_face_events(program, image, dict(CS_X3S=3, CS_RXV=2), {}, 0, 8, bad)
+
     def test_l_start_requires_explicit_stage_and_matching_origin(self):
         c, messages = fixture()
         for change in ('mark', 'origin', 'stage'):

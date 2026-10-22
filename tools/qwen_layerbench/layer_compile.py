@@ -428,9 +428,8 @@ def sys_face_events(prog_cal, svh, S, ex, txd, n59_land_edges, qslot_booking=Non
     q_by_seg = {}
     if qslot_booking is not None:
         q_by_seg = {str(b['segment']): b['events'] for b in qslot_booking['bookings']}
-        # The selected system-face L player always starts at base zero. It cannot
-        # silently choose a different token/decode programme. Different patterns
-        # therefore need an explicit source successor, not an unused JSON list.
+        # Legacy source always starts at base zero; a distinct qualified source
+        # is required before the token/decode patterns may differ.
         if set(q_by_seg) != {'0', '1'}:
             raise ValueError('QSLOT: both token/L0 and decode patterns need explicit bookings')
         if qslot_booking['source_contract']['l_player']['contexts'] == 0 and q_by_seg['0'] != q_by_seg['1']:
@@ -438,9 +437,10 @@ def sys_face_events(prog_cal, svh, S, ex, txd, n59_land_edges, qslot_booking=Non
         for b in qslot_booking['bookings']:
             if tuple(b['l_start_driver_event']) not in T:
                 raise ValueError('QSLOT: L start authority is not an event in the executing T programme')
-        Lev = sorted(Lev + q_by_seg['0'])
-        if len({e[0] for e in Lev}) != len(Lev):
-            raise ValueError('QSLOT: event collides with another system-face L event')
+        if qslot_booking['source_contract']['l_player']['contexts'] == 0:
+            Lev = sorted(Lev + q_by_seg['0'])
+            if len({e[0] for e in Lev}) != len(Lev):
+                raise ValueError('QSLOT: event collides with another system-face L event')
         missing_q = []
     result = dict(first_token=first - c0, d2d_first_token=first, go_ofs=c0, T=T, L_compiled=Lev,
                 L_missing=missing_q,
@@ -451,6 +451,8 @@ def sys_face_events(prog_cal, svh, S, ex, txd, n59_land_edges, qslot_booking=Non
         if qslot_booking['source_contract']['l_player']['contexts'] == 0:
             result['L'] = Lev
         else:
+            # No ambiguous legacy pattern is emitted for the dual-context source.
+            result.pop('L_compiled')
             # Source ABI: STAGE1 -> L segment0, STAGE2..36 -> segment1.
             # Paired-link segment1 is token/L0; paired segment0 is decode.
             result['L_QSLOT_contexts'] = dict(L0=q_by_seg['1'], L1=q_by_seg['0'],
