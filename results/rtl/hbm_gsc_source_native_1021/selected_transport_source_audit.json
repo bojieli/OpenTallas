@@ -1,0 +1,837 @@
+{
+  "schema": "opentallas.hbm.gsc_selected_transport_source_audit.v1",
+  "collected_local_time": "2026-10-21T23:19:33.143911",
+  "selected_source_commit": "57cd9d54d",
+  "graph_sha256": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
+  "source_files_byte_match_selected_commit": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv": "f41ec9893198864d4a101c6b183c7091c8f4fa11f7550f9ff3090f4ca14cb8bc",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv": "f50bc60bfb5d3da810fc50007154aa9ceb90f86e60c757031c0bb7293c855c76",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv": "6a419f79c71a5d4d556411ba392262c79dd112bcf0863af4cd8fc0c4eacf8cb8",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv": "d24045a84d64fdd69ab9f15ad9ccc3f8d6b5ccad712da8df51ac2d67db001326",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv": "21a88e901f304638f66eaf743dfa4ef8555670db66bbe44ba2c489983b719c89",
+    "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv": "3ac68eac827f4357b47640631fea8fbbdb3082d8c5d4374544ab1384ac9e9f90",
+    "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv": "4f6087fb92df129fd5462561111155cbcf2fe3c088e56e2eb1407428f002ef3d",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv": "7da7a72a62b76ae316804b05da26f15322854cfaa696354797c338d89d3ca2bd",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv": "c5d90d5dcd02e7bdbbc99755225f053d1a5ab4ce2c1a8969ebe7898d2b8f7abd",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv": "ee1d2707287a9acefe01e46d061771b7293a91e5dd1893c3e3f5e29d7df196d4",
+    "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv": "62565a0bc080f3d4127580e59e3430d8b14e1c7c91559bd50dac757c70444e63"
+  },
+  "selected_instances": {
+    "hb_coll_SW": {
+      "master": "ot_hfd_coll_q3_hard_v8x",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+      "params": {
+        "NLINK": 2,
+        "TP": 192,
+        "AR_ITER": 1,
+        "ROWS": 256
+      },
+      "slot": "coll_SW",
+      "owner": "H-COLL+IDX",
+      "region": "d4g_gen2_l6_collq",
+      "note": "v16 master CHANGE (was ot_hfd_coll_q3_static in v15): H-COLL production parent (tb_hgi_coll_sw_slice_parent.sv:3 \"WHOLE production COLL parent\"; slice-parent gate PASS el1014-hbm-p2p-coll.log 13:11) = program_target(52+QID) + ot_hfd_coll_q3_static_v4 (ALL-input-capture TX6/RX2 link endpoints ot_hgi_coll_static_link_capture x3 INSIDE, 612-b pin frame per link) ; QID is a parameter (no qid port) | coll_hardv7_d4f: remastered ot_hfd_coll_q3_static_host_v4 -> ot_hfd_coll_q3_hard_v7x | d4g_gen2_l6_collq: ot_hfd_coll_q3_hard_v7x -> ot_hfd_coll_q3_hard_v8x; MASTER SWAP (was ot_hfd_coll_q3_hard_v7x / ot_hfd_coll_q2_hard_v5): same body, u_ring = ot_hgi_coll_ring_ag (ring-A control root view physical/ref_tile/hcoll_ring_ag_ctl_1017/views/ot_hgi_coll_ring_ag",
+      "replaces_v15": "ot_hfd_coll_q3_static",
+      "rtl_deps": [
+        "physical/asap7_memory_macros/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.v",
+        "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+        "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+        "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.v",
+        "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+        "physical/asap7_memory_macros/ot_sram_1rw_256x64_m4_r2c2/ot_sram_1rw_256x64_m4_r2c2.v",
+        "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv",
+        "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv",
+        "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+        "rtl/dsrom_sys/s81_link/ot_s81_kp4_bm.sv",
+        "rtl/dsrom_sys/s81_link/ot_s81_kp4_common.sv",
+        "rtl/dsrom_sys/s81_link/ot_s81_kp4_dchn.sv",
+        "rtl/dsrom_sys/s81_link/ot_s81_kp4_ddly.sv",
+        "rtl/dsrom_sys/s81_link/ot_s81_kp4_dec.sv",
+        "rtl/dsrom_sys/s81_link/ot_s81_kp4_dout.sv",
+        "rtl/dsrom_sys/s81_link/ot_s81_kp4_dsyn.sv",
+        "rtl/dsrom_sys/s81_link/ot_s81_kp4_enc.sv",
+        "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+        "rtl/hbm_accel/generic/collective/ot_hgi_coll_amerge.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_static_host_v4.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static_v4.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_argmax_static.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_issuer_m256v8.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots_capture_pin_v2.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_capture_ctl.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v5.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v6.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v7.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_link_capture.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_ctl.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_pinreg_store.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_program_target.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_seq_ctl.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+        "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+        "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm.sv",
+        "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_buffer.sv",
+        "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static.sv",
+        "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+        "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+        "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+        "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+        "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv",
+        "rtl/hdc/ot_hdc_delay.sv",
+        "rtl/hdc/ot_hdc_fastfp.sv",
+        "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "rtl/hdc/ot_hdc_fpu.sv",
+        "rtl/hdc/ot_hdc_prefix.sv",
+        "rtl/hdc/v41/ot_hdc_actquant.sv",
+        "rtl/lib/ot_rst_relay.sv",
+        "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+        "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
+      ],
+      "ports": {
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "qid": {
+          "direction": "input",
+          "bits": 2
+        },
+        "clk_program": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_control": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_vmasm": {
+          "direction": "input",
+          "bits": 16
+        },
+        "clk_upipe": {
+          "direction": "input",
+          "bits": 16
+        },
+        "clk_issue": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_qslots": {
+          "direction": "input",
+          "bits": 28
+        },
+        "clk_ring": {
+          "direction": "input",
+          "bits": 17
+        },
+        "clk_reduce": {
+          "direction": "input",
+          "bits": 33
+        },
+        "clk_arg": {
+          "direction": "input",
+          "bits": 1
+        },
+        "clk_vmwrite": {
+          "direction": "input",
+          "bits": 16
+        },
+        "clk_link": {
+          "direction": "input",
+          "bits": 10
+        },
+        "cfg_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cfg_target": {
+          "direction": "input",
+          "bits": 8
+        },
+        "cfg_addr": {
+          "direction": "input",
+          "bits": 12
+        },
+        "cfg_data": {
+          "direction": "input",
+          "bits": 256
+        },
+        "desc_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "desc_base": {
+          "direction": "input",
+          "bits": 12
+        },
+        "desc_limit": {
+          "direction": "input",
+          "bits": 13
+        },
+        "desc_loops": {
+          "direction": "input",
+          "bits": 16
+        },
+        "launch_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "program_configured": {
+          "direction": "output",
+          "bits": 1
+        },
+        "program_init_busy": {
+          "direction": "output",
+          "bits": 1
+        },
+        "program_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hgi_busy": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hgi_done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "hgi_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "inj_rd": {
+          "direction": "output",
+          "bits": 2
+        },
+        "inj_idx": {
+          "direction": "output",
+          "bits": 32
+        },
+        "hgi_inj_addr": {
+          "direction": "output",
+          "bits": 160
+        },
+        "inj_d": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "del_valid": {
+          "direction": "output",
+          "bits": 4
+        },
+        "del_flit": {
+          "direction": "output",
+          "bits": 2180
+        },
+        "hgi_del_obase": {
+          "direction": "output",
+          "bits": 160
+        },
+        "rc_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rc_tag": {
+          "direction": "input",
+          "bits": 3
+        },
+        "rc_d": {
+          "direction": "input",
+          "bits": 256
+        },
+        "rr_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rr_tag": {
+          "direction": "output",
+          "bits": 3
+        },
+        "rr_d": {
+          "direction": "output",
+          "bits": 256
+        },
+        "phy_up": {
+          "direction": "input",
+          "bits": 2
+        },
+        "tx_pin_v": {
+          "direction": "output",
+          "bits": 2
+        },
+        "tx_pin_flit": {
+          "direction": "output",
+          "bits": 1224
+        },
+        "rx_pin_v": {
+          "direction": "input",
+          "bits": 2
+        },
+        "rx_pin_flit": {
+          "direction": "input",
+          "bits": 1224
+        },
+        "retry_requested": {
+          "direction": "output",
+          "bits": 2
+        },
+        "pr_cw_i": {
+          "direction": "input",
+          "bits": 280
+        },
+        "pr_ccw_i": {
+          "direction": "input",
+          "bits": 280
+        },
+        "pr_cw_o": {
+          "direction": "output",
+          "bits": 280
+        },
+        "pr_ccw_o": {
+          "direction": "output",
+          "bits": 280
+        },
+        "isa_ring": {
+          "direction": "output",
+          "bits": 58
+        },
+        "isa_lp_data": {
+          "direction": "output",
+          "bits": 256
+        },
+        "ra_lp_we": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_lp_tag": {
+          "direction": "input",
+          "bits": 3
+        },
+        "ra_lp_data": {
+          "direction": "input",
+          "bits": 256
+        },
+        "ra_state_read_add": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_state_read_tx": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_state_read_rr": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_state_add_tag": {
+          "direction": "input",
+          "bits": 3
+        },
+        "ra_state_tx_tag": {
+          "direction": "input",
+          "bits": 3
+        },
+        "ra_state_rr_tag": {
+          "direction": "input",
+          "bits": 3
+        },
+        "ra_state_add_src": {
+          "direction": "input",
+          "bits": 2
+        },
+        "ra_state_add_rhs_acc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_state_tx_acc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_add_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_add_tag": {
+          "direction": "input",
+          "bits": 3
+        },
+        "ra_add_src": {
+          "direction": "input",
+          "bits": 2
+        },
+        "ra_add_rhs_acc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_tx_inject": {
+          "direction": "input",
+          "bits": 2
+        },
+        "ra_tx_forward": {
+          "direction": "input",
+          "bits": 2
+        },
+        "ra_tx_tag": {
+          "direction": "input",
+          "bits": 3
+        },
+        "ra_tx_dst": {
+          "direction": "input",
+          "bits": 2
+        },
+        "ra_tx_result": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_tx_acc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_tx_gather": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_tx_ttl": {
+          "direction": "input",
+          "bits": 4
+        },
+        "ra_rx_slot": {
+          "direction": "input",
+          "bits": 2
+        },
+        "ra_rx_kind": {
+          "direction": "input",
+          "bits": 4
+        },
+        "ra_rx_src": {
+          "direction": "input",
+          "bits": 4
+        },
+        "ra_rx_tag": {
+          "direction": "input",
+          "bits": 6
+        },
+        "ra_rr_local": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ra_rr_local_tag": {
+          "direction": "input",
+          "bits": 3
+        },
+        "ag_v": {
+          "direction": "output",
+          "bits": 2
+        },
+        "ag_src": {
+          "direction": "output",
+          "bits": 4
+        },
+        "ag_tag": {
+          "direction": "output",
+          "bits": 6
+        },
+        "ag_d": {
+          "direction": "output",
+          "bits": 512
+        },
+        "vm_rq": {
+          "direction": "output",
+          "bits": 136
+        },
+        "vm_rr": {
+          "direction": "input",
+          "bits": 2056
+        },
+        "vm_kq": {
+          "direction": "output",
+          "bits": 2248
+        },
+        "tkx_start": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tkx_arg_mode": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tkx_cfg_n": {
+          "direction": "output",
+          "bits": 12
+        },
+        "tkx_cfg_k": {
+          "direction": "output",
+          "bits": 13
+        },
+        "tkx_cfg_nout": {
+          "direction": "output",
+          "bits": 13
+        },
+        "tkx_cfg_g": {
+          "direction": "output",
+          "bits": 8
+        },
+        "tkx_cfg_gbase": {
+          "direction": "output",
+          "bits": 8
+        },
+        "tkx_cfg_pf": {
+          "direction": "output",
+          "bits": 16
+        },
+        "tkx_cfg_obase": {
+          "direction": "output",
+          "bits": 40
+        },
+        "tkx_cfg_rbase": {
+          "direction": "output",
+          "bits": 40
+        },
+        "tkx_cfg_has_r": {
+          "direction": "output",
+          "bits": 1
+        },
+        "tkx_del_slot": {
+          "direction": "output",
+          "bits": 4
+        },
+        "tkx_del_valid": {
+          "direction": "output",
+          "bits": 4
+        },
+        "tkx_del_flit": {
+          "direction": "output",
+          "bits": 2180
+        },
+        "tkx_w_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tkx_w_addr": {
+          "direction": "input",
+          "bits": 40
+        },
+        "tkx_w_mask": {
+          "direction": "input",
+          "bits": 16
+        },
+        "tkx_w_data": {
+          "direction": "input",
+          "bits": 512
+        },
+        "tkx_busy": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tkx_done": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tkx_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault_cause": {
+          "direction": "output",
+          "bits": 16
+        },
+        "done": {
+          "direction": "output",
+          "bits": 1
+        },
+        "stat_cycles": {
+          "direction": "output",
+          "bits": 32
+        }
+      },
+      "synthesis_roots": [
+        "ot_hgi_coll_issuer_m256v8"
+      ],
+      "compile_defines": [
+        "OT_COLL_ISSUER256_NATIVE32"
+      ]
+    },
+    "cxdl_SW0_s": {
+      "master": "ot_hbm_su_static_cxport_dl_s",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+      "params": {
+        "QID": 0,
+        "G": 0
+      },
+      "slot": null,
+      "owner": "HBM-SU6/HH-1",
+      "region": "d4g_gen2c_l9",
+      "note": "d4g_gen2c_l9: one-root half s of cxdl_SW0 (ot_hbm_su_static_cxport_dl); abut with its pair (seam faces equal ranges)",
+      "replaces_v15": null,
+      "rtl_deps": [],
+      "ports": {
+        "clk_s": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_s_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "del_valid": {
+          "direction": "input",
+          "bits": 1
+        },
+        "del_flit": {
+          "direction": "input",
+          "bits": 545
+        },
+        "del_obase": {
+          "direction": "input",
+          "bits": 40
+        },
+        "b0": {
+          "direction": "output",
+          "bits": 524
+        },
+        "b1": {
+          "direction": "output",
+          "bits": 524
+        },
+        "v0": {
+          "direction": "output",
+          "bits": 8
+        },
+        "v1": {
+          "direction": "output",
+          "bits": 8
+        },
+        "sfault_s": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "split_of": "cxdl_SW0"
+    },
+    "cxdl_SW0_q": {
+      "master": "ot_hbm_su_static_cxport_dl_q",
+      "source": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+      "params": {},
+      "slot": null,
+      "owner": "HBM-SU6/HH-1",
+      "region": "d4g_gen2c_l9",
+      "note": "d4g_gen2c_l9: one-root half q of cxdl_SW0 (ot_hbm_su_static_cxport_dl); abut with its pair (seam faces equal ranges)",
+      "replaces_v15": null,
+      "rtl_deps": [],
+      "ports": {
+        "clk_q": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_q_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "b0": {
+          "direction": "input",
+          "bits": 524
+        },
+        "b1": {
+          "direction": "input",
+          "bits": 524
+        },
+        "v0": {
+          "direction": "input",
+          "bits": 8
+        },
+        "v1": {
+          "direction": "input",
+          "bits": 8
+        },
+        "sfault_s": {
+          "direction": "input",
+          "bits": 1
+        },
+        "dw_v": {
+          "direction": "output",
+          "bits": 2
+        },
+        "dw_row": {
+          "direction": "output",
+          "bits": 18
+        },
+        "dw_d": {
+          "direction": "output",
+          "bits": 1024
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "split_of": "cxdl_SW0"
+    },
+    "ep_S0": {
+      "master": "hfd_ep_static",
+      "source": "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+      "params": {},
+      "slot": "ep_S0",
+      "owner": "H-LKEP",
+      "region": "idxcoll",
+      "note": "link endpoint of hb_coll_SW link 0 <-> lk_S0: 613-b static frame <-> 512-b SerDes beat gearbox (4 slots / 5 beats, marker + IDLE), RX marker hunt, off-die elastic RX pingpong (0az); every port pin-registered (H-LKEP); latency tx pin -> SerDes 2 edges, SerDes -> pingpong 2 edges",
+      "replaces_v15": null,
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "tx_frame": {
+          "direction": "input",
+          "bits": 612
+        },
+        "rx_arm_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_arm_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_block_words": {
+          "direction": "input",
+          "bits": 7
+        },
+        "rx_release_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_release_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_slot_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_slot_bank": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rx_slot_index": {
+          "direction": "input",
+          "bits": 6
+        },
+        "rx_pin_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "rx_pin_flit": {
+          "direction": "output",
+          "bits": 612
+        },
+        "rx_block_ready": {
+          "direction": "output",
+          "bits": 2
+        },
+        "phy_up": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault_cause": {
+          "direction": "output",
+          "bits": 11
+        },
+        "sd_tx": {
+          "direction": "output",
+          "bits": 512
+        },
+        "sd_rx": {
+          "direction": "input",
+          "bits": 512
+        },
+        "sd_st": {
+          "direction": "input",
+          "bits": 2
+        }
+      }
+    }
+  },
+  "frame612_fields": {
+    "611:580": "CRC32",
+    "579": "reserved0",
+    "578:571": "epoch8",
+    "570": "reserved0",
+    "569": "present1",
+    "568:567": "reserved00",
+    "566:561": "slot6",
+    "560:545": "full_sequence16",
+    "544:0": "original_flit545"
+  },
+  "flit545": {
+    "payload": "511:0,16 words of32 bits",
+    "metadata": "544:512,33 opaque programme bits; publication convention {fp32,scale8,source8,index16}",
+    "native_word_mask": null,
+    "native_payload_count": null,
+    "carried_destination_address": null
+  },
+  "ordinary_su_delivery": {
+    "selected_edges": [
+      "hb_coll_SW.del_valid[j] -> cxdl_SWj_s.del_valid",
+      "hb_coll_SW.del_flit[545*j+:545] -> cxdl_SWj_s.del_flit",
+      "hb_coll_SW.hgi_del_obase[40*j+:40] -> cxdl_SWj_s.del_obase"
+    ],
+    "physical_operation": "All16 payload words write into one selected SU store half; no per-word enables.",
+    "address": "Separate compiled del_obase40; address bits3:0=0,17:16=QID,39:18=0,5:4=G,6=half,15:7=row; flit bit544 must1. Flit index is not added.",
+    "phase": "No stream phase2 delivery; actual serial/stream reset epoch required.",
+    "relative_store_contract": "Serial edge n registers dw signals; pins sample n+1, store commit n+2. Not a native VM write.",
+    "packing_or_compaction_programme": null
+  },
+  "ordinary_rgx_to_vm": {
+    "selected_source": "ot_hgi_coll_static_vmwrite_roots_v6",
+    "actual_mask_assignment": "im={tkw_d[527:512],64'hffffffffffffffff}; m0[63:0]<=64'hffffffffffffffff",
+    "operation": "Each RGX input writes all16 words as two full8-word VM writes. Only distinct TKM input carries16 word-enable bits.",
+    "two_word_mask_preserved": false
+  },
+  "endpoint_mechanism": {
+    "source": "hfd_ep_static",
+    "pins": "tx_v+tx_frame612,512-bit SerDes beats, static RX arm/release/slot calendar",
+    "block_controls": "Frame-storage ownership, not GSC word-valid masks.",
+    "actual_gsc_source_binding": null,
+    "observed_gsc_arrival_epoch": null
+  },
+  "existing_small_vehicles": [
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_link_capture.sv",
+    "rtl/hbm_accel/tu/ep_static_20261015/tb_hfd_ep_static.sv",
+    "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_cxport_split.sv"
+  ],
+  "required_caller_work": "Executable real packing/compaction from actual paired two-word rank shards into dense96-word runs, or a separately proven masked transport path. Local SU mask8 drain preserves positions and does not itself shuffle data into different destination mask positions. Include sender/receiver config hashes and actual slot/epoch/retention receipts.",
+  "readiness_qualified": false,
+  "owner_of_executable_caller": "/root/token/hbm"
+}
