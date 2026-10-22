@@ -1,0 +1,11 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-dma-integrated-2108
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-dma-integrated-2108
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-dma-integrated-2108
+ot-run: ot-gold2       admits    28 GB (avail 434, growth 415, headroom 0, waiters 0/0 GB) load 34/112 running 19 disk 2740 GB 
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-dma-integrated-2108
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-dma-integrated-2108
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-dma-integrated-2108
+ot-run: -> ot-gold2
+ot-heavy: admitted on ot-gold2 as oth-ubuntu-610996-1792642089 after 1 s
+DMA_INTEGRATED_PASS words384 packets48 routed48 commits48 SRAM_readback48 source_windows2 command_sample_to_bank_packet10/10 command_drive_to_bank_packet11/11 native_read_return7
+ot-run: RAN on ot-gold2 (unit oth-ubuntu-610996-1792642089): exit 0

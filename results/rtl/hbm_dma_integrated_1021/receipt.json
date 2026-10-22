@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "observed_at": "2026-10-21T21:11:00-07:00",
+  "fleet_host": "ot-gold2",
+  "unit": "oth-ubuntu-610996-1792642089",
+  "converter_rev": "0a9f055cfee1ab841d6d0a10f41fc4e5050b9981",
+  "route_rev": "394f2083a",
+  "source_windows": 2,
+  "input_format": "BF16",
+  "source_bank": 0,
+  "destination_quadrant": 0,
+  "words": 384,
+  "packets": 48,
+  "route_checks": 48,
+  "actual_native_vm_commits": 48,
+  "physical_sram_readbacks": 48,
+  "command_sample_to_bank_packet_edges": 10,
+  "preceding_negedge_drive_to_bank_packet_cycles": 11,
+  "native_read_return_edges": 7,
+  "same_binary_destination_bank_mutant": "rejected ROUTE_MISMATCH packet0 bank1",
+  "binary_sha256": "d71de683da1deb45feb7375507b2afb45f11c076cd035aae0948357c691f4300",
+  "scope": "Minimum actual q_norm.gain 384/1280 subset; actual landing SRAM -> converter -> 5-edge route -> selected nativeVM bank -> actual SRAM readback. Same stimulus clock on clock domains; physical die crossings, source-window producer, full tensor, full token and physical source admission not qualified.",
+  "evidence_sha256": {
+    "current/binary.sha256": "3c3a1027f64bf1c9333de59932706c5e0cfd3f07550cebab77f8aa847ec931ec",
+    "current/build.log": "f2a2aa601f2aa90000ac23ba15bc18677d1b0280aa672b326500041c48d29186",
+    "current/client.log": "66b101d77ecc35e56429ea5182d575587f84b1f965def1b6009d253d1d53245b",
+    "current/mutant.log": "a6b3b52ad628f2eadbbf52bcf36cf479984703e136bdc560ed10b0ea32eaf38b",
+    "current/positive.log": "3198187a8b52dce83c728541fb8c5e4089b729ce1fdb322b7d4faa4d7c700d41",
+    "current/tool_version.txt": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d"
+  }
+}
