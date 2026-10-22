@@ -1,0 +1,41 @@
+{
+  "status": "ASSEMBLY_STARTED_VIEW_PENDING",
+  "parent": "ot_hbm_hc_root_static",
+  "root_source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static.sv",
+  "params": {
+    "QDRLY": 2,
+    "QCHX": 12,
+    "SAFE": 1,
+    "TAILC": 1,
+    "PTFS": 1,
+    "TSDIV": 17,
+    "TTPIPE": 1,
+    "TSKP": 2,
+    "XRD": 11,
+    "XRU": 11,
+    "XRDQ": 101385739,
+    "XRUQ": 84543243
+  },
+  "tail_child": "ot_hbm_hc_tail_child_static",
+  "tail_main_kit": "hbm_hc_tail_child_k4",
+  "tail_fallback_kit": "hbm_hc_tail_child_k4b",
+  "tail_child_latency": 989,
+  "root_emit_extra": 495,
+  "root_extra_rule": "989-496+2=495",
+  "root_child_instances": [
+    "g_tail[0].g_c.u_t",
+    "g_tail[1].g_c.u_t"
+  ],
+  "native_parent_interface_stub": "results/rtl/hbm_hc_root_safe_1020/root_fs/tail_child_stub_tt.lib",
+  "gates_running": [
+    665735,
+    665736
+  ],
+  "physical_view": "UNQUALIFIED_STANDIN_PENDING",
+  "NEXT": "Regenerate xr4 MAIN and fallback from two-SRAM xr3 adding three SAFE mix SRAMs and two k4 tail child views; native parent proves counts before physical submission.",
+  "parent_macros": {
+    "programme_1024x256": 1,
+    "table_1024x256": 1,
+    "mix_128x256": 3
+  }
+}
