@@ -1,0 +1,198 @@
+{
+  "source_ref": "3357546231ff4576aaabce56426b5967a92b5b4b",
+  "evidence_ref": "00d2ade78fc128e24e1b15aa0b9d060b89c09ef0",
+  "latest_abi_ref": "c1cce16ef",
+  "main_compared": "bd897cdf2339be9a43a80e58e309943a5089d2d4",
+  "implementation": [
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_r32.sv",
+      "sha256": "6eca11c97a3bce9a08bc1767ca5325bb3d29795d3c854d8e608860c188427c81",
+      "main_status": "ABSENT_ON_MAIN",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_owner_rel_h.sv",
+      "sha256": "6bf68bd8214d56a119416d5c292bbe8954e3847b9b4fcd40cbe6f1ea15be0096",
+      "main_status": "ABSENT_ON_MAIN",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_h.sv",
+      "sha256": "011b3a0e410f6334c3a177b74e57911ea184015a0915d476cbf69bf5be085411",
+      "main_status": "ABSENT_ON_MAIN",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_h.sv",
+      "sha256": "c78efdb677dbcb433e787b53e6831a2fd78f0650d809ee98d7243cc91e89239c",
+      "main_status": "ABSENT_ON_MAIN",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_rel_h.sv",
+      "sha256": "9e84a0eecaddedb8e8b209d09a583edf087904d264287c81afa6533d1dd54f49",
+      "main_status": "ABSENT_ON_MAIN",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel_h.sv",
+      "sha256": "507ebaae27f6924661439155665011022783dd22287337c5e3aa717876da9d27",
+      "main_status": "ABSENT_ON_MAIN",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_h.sv",
+      "sha256": "7aac2426bebb0b55f9ebac3eb79cb43ae73e70fe35db4c9b57532cb32574f674",
+      "main_status": "ABSENT_ON_MAIN",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/hbm_accel/sm/static/ot_smh_calendar_static_xh.sv",
+      "sha256": "3e9a2cb60bcf2d8bd1b2bc65a2d29cf7ba7455d7233da6c9fc21aa4449c63e39",
+      "main_status": "ABSENT_ON_MAIN",
+      "main_sha256": null
+    }
+  ],
+  "full_spec_source_closure": [
+    {
+      "path": "rtl/lib/ot_reset_sync.sv",
+      "exact_main_match": true,
+      "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+      "main_status": "EXACT_MATCH"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "exact_main_match": true,
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "main_status": "EXACT_MATCH"
+    },
+    {
+      "path": "rtl/lib/ot_rst_fanout.sv",
+      "exact_main_match": false,
+      "sha256": "77912e0ee9665af95478c423749e7b0816c6cadc80df619cf4d5769e03537a4b",
+      "main_status": "ABSENT_ON_MAIN"
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+      "exact_main_match": true,
+      "sha256": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
+      "main_status": "EXACT_MATCH"
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_r32.sv",
+      "exact_main_match": false,
+      "sha256": "6eca11c97a3bce9a08bc1767ca5325bb3d29795d3c854d8e608860c188427c81",
+      "main_status": "ABSENT_ON_MAIN"
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_owner_rel_h.sv",
+      "exact_main_match": false,
+      "sha256": "6bf68bd8214d56a119416d5c292bbe8954e3847b9b4fcd40cbe6f1ea15be0096",
+      "main_status": "ABSENT_ON_MAIN"
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank_h.sv",
+      "exact_main_match": false,
+      "sha256": "c78efdb677dbcb433e787b53e6831a2fd78f0650d809ee98d7243cc91e89239c",
+      "main_status": "ABSENT_ON_MAIN"
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_h.sv",
+      "exact_main_match": false,
+      "sha256": "011b3a0e410f6334c3a177b74e57911ea184015a0915d476cbf69bf5be085411",
+      "main_status": "ABSENT_ON_MAIN"
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136_h.sv",
+      "exact_main_match": false,
+      "sha256": "7aac2426bebb0b55f9ebac3eb79cb43ae73e70fe35db4c9b57532cb32574f674",
+      "main_status": "ABSENT_ON_MAIN"
+    },
+    {
+      "path": "rtl/hbm_accel/sm/static/ot_smh_calendar_static_xh.sv",
+      "exact_main_match": false,
+      "sha256": "3e9a2cb60bcf2d8bd1b2bc65a2d29cf7ba7455d7233da6c9fc21aa4449c63e39",
+      "main_status": "ABSENT_ON_MAIN"
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_rel_h.sv",
+      "exact_main_match": false,
+      "sha256": "9e84a0eecaddedb8e8b209d09a583edf087904d264287c81afa6533d1dd54f49",
+      "main_status": "ABSENT_ON_MAIN"
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel_h.sv",
+      "exact_main_match": false,
+      "sha256": "507ebaae27f6924661439155665011022783dd22287337c5e3aa717876da9d27",
+      "main_status": "ABSENT_ON_MAIN"
+    },
+    {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_h.sv",
+      "exact_main_match": false,
+      "sha256": "6092dccb1401379f2c0f6b00c4f8c81abaf9405b7e6b2953d6b245d1d2fac2cf",
+      "main_status": "ABSENT_ON_MAIN"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+      "exact_main_match": true,
+      "sha256": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+      "main_status": "EXACT_MATCH"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+      "exact_main_match": true,
+      "sha256": "682dcf8d41ea74d6a20276117ab47851fae0150cdc84862f442ea39fd38a6f01",
+      "main_status": "EXACT_MATCH"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+      "exact_main_match": true,
+      "sha256": "2c59e6878c71304d05b6c79378604d0125de62df5dc84c5c1e7829f1b81ecb3a",
+      "main_status": "EXACT_MATCH"
+    }
+  ],
+  "verification_source": "rtl/hbm_accel/loader/service_native/tb_hbm_svg_circular_skid_equiv.sv",
+  "candidate_specs": [
+    "tools/ref_tile/specs_hbm_pu_svg_1021/hdie_svg_rel8e.json",
+    "tools/ref_tile/specs_hbm_pu_svg_1021/hdie_svg_rel8f.json"
+  ],
+  "official_library": "physical/asap7_stdcell_native_models/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+  "compiler_publication": "Apply only upstream ec8356ed5825135764c50f4fe787e9a7ba402a7b RES_LINE hook to current main defaults; do not replace smb_unit.py wholesale from this branch (ours preserves491 opt-in defaults).",
+  "receipts": [
+    "results/rtl/codex_hbm_pu_svg_1021/BINDING_ABI.json",
+    "results/rtl/codex_hbm_pu_svg_1021/SOURCE_REVIEW.md",
+    "results/rtl/codex_hbm_pu_svg_1021/SVG_INDEPENDENT_SOURCE_REVIEW_335754623.json",
+    "results/rtl/codex_hbm_pu_svg_1021/f28_native/census.json.gz",
+    "results/rtl/codex_hbm_pu_svg_1021/f28_native/run.log",
+    "results/rtl/codex_hbm_pu_svg_1021/f28_native/summary.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_66_fail/binary.sha256",
+    "results/rtl/codex_hbm_pu_svg_1021/final_66_fail/images.sha256",
+    "results/rtl/codex_hbm_pu_svg_1021/final_66_fail/out/successor_head320.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_66_fail/work_smb_head320/run_successor_head320/run.log",
+    "results/rtl/codex_hbm_pu_svg_1021/final_mutants/causal_summary.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_mutants/out/final_m1.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_mutants/out/final_m1.log",
+    "results/rtl/codex_hbm_pu_svg_1021/final_mutants/out/final_m3.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_mutants/out/final_m3.log",
+    "results/rtl/codex_hbm_pu_svg_1021/final_mutants/out/final_m6.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_mutants/out/final_m6.log",
+    "results/rtl/codex_hbm_pu_svg_1021/final_mutants/work/build_die_TOKSIM_SAFE_PC_SVG_H_SVGH_MUT1.log",
+    "results/rtl/codex_hbm_pu_svg_1021/final_mutants/work/build_die_TOKSIM_SAFE_PC_SVG_H_SVGH_MUT3.log",
+    "results/rtl/codex_hbm_pu_svg_1021/final_mutants/work/build_die_TOKSIM_SAFE_PC_SVG_H_SVGH_MUT6.log",
+    "results/rtl/codex_hbm_pu_svg_1021/final_positive/out/final_bw.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_positive/out/final_bw.log",
+    "results/rtl/codex_hbm_pu_svg_1021/final_positive/out/final_ds.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_positive/out/final_ds.log",
+    "results/rtl/codex_hbm_pu_svg_1021/final_positive/out/final_q8.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_positive/out/final_q8.log",
+    "results/rtl/codex_hbm_pu_svg_1021/final_positive/out/production_source_alignment.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_positive/out/source_scope.json",
+    "results/rtl/codex_hbm_pu_svg_1021/final_positive/work/build_die_TOKSIM_SAFE_PC_SVG_H.log",
+    "results/rtl/codex_hbm_pu_svg_1021/successor_ready_model/compile400_300.json",
+    "results/rtl/codex_hbm_pu_svg_1021/successor_ready_model/images.sha256",
+    "results/rtl/codex_hbm_pu_svg_1021/successor_ready_model/out/successor_ready400_300.json",
+    "results/rtl/codex_hbm_pu_svg_1021/successor_ready_model/prepared_receipt.json",
+    "results/rtl/codex_hbm_pu_svg_1021/successor_ready_model/work/run_successor_ready400_300/run.log"
+  ],
+  "pending": "Generated rel8e/f kits/keyed receipts/physical gates not yet ready; source-specific candidate only, leave selected H158 legacy graph/rates unchanged."
+}

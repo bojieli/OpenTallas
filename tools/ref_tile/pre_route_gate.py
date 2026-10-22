@@ -2201,10 +2201,12 @@ def parent_link_graph(spec: dict | None) -> dict | None:
             i = balanced(st, k)
             if i is None:
                 continue
-        m = re.match(r"\s*([A-Za-z_]\w*)\s*(?=\()", st[i:])
+        # QE3-CTLM2 10-21: a native (flat) parent names its hard children with ESCAPED identifiers
+        # (\u_gi.g_wtn.u_wtn ); the name is the text after the backslash up to the whitespace
+        m = re.match(r"\s*(\\\S+|[A-Za-z_]\w*)\s*(?=\()", st[i:])
         if not m:
             continue
-        inst, k = m[1], i + m.end()
+        inst, k = m[1].lstrip("\\"), i + m.end()
         e = balanced(st, k)
         if e is None or st[e:].strip():
             continue
@@ -2509,7 +2511,8 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             if rec is not None:
                 binding = {**binding, "consumed": rec}
                 d["source_binding"] = binding
-        if isinstance(binding, dict) and binding.get("schema") == SB.SCHEMA and binding.get("files"):
+        if isinstance(binding, dict) and binding.get("schema") == SB.SCHEMA and binding.get("files") \
+                and binding.get("execution_kind") != "metadata-classification":
             try:
                 binding = narrow_consumed_tools(binding, gate_executed_tools(binding, kd))
                 d["source_binding"] = binding        # the relaxing-rule allowlist record is read from here
@@ -2549,7 +2552,13 @@ def kit_gate_evidence(kd: Path, source_commit=None, why: list | None = None, not
             reason += f"; {n_tools} staged tool file(s) outside the gate-executed closure not bound (ROOT8-CONSUMED)"
         if note is not None:
             note.append(reason)
-        if binding.get("staged_remeasurement"):
+        if binding.get("execution_kind") == "metadata-classification":
+            issues = SB.metadata_classification_issues(binding, ROOT, kd.name, d, source_commit)
+            if issues:
+                return no("; ".join(issues))
+            if note is not None:
+                note.append("verified typed metadata classification; original physical archive remains separate")
+        elif binding.get("staged_remeasurement"):
             log = binding.get("staged_measurement_log")
             if not isinstance(log, str) or not SB.staged_remeasurement_matches_log(binding, log.encode()):
                 return no("staged remeasurement persisted log missing or receipt mismatch")

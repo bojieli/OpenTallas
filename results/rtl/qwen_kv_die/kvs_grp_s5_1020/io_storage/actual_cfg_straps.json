@@ -1,0 +1,455 @@
+{
+ "scope": "READ-ONLY diagnostic actual d5p bound graph; strict diagnostic source index FAIL, not production qualification",
+ "path": "/srv/opentallas-scratch/claude/ref_gate/codex_health_parameters_1020/actual_d5p/diagnostic_run/port_bind_v2/die_bound.v",
+ "sha256": "a0d53d0c0685a0e66802445f820ae169a8aa34e3e0b941e44cccb9bc618d37fc",
+ "groups": [
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WS_0",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b0}",
+     "value": 0
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b0, 1'b0}",
+     "value": 0
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WS_1",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b0}",
+     "value": 0
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b0, 1'b1}",
+     "value": 1
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WS_2",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b0}",
+     "value": 0
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b1, 1'b0}",
+     "value": 2
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WS_3",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b0}",
+     "value": 0
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b1, 1'b1}",
+     "value": 3
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp_h",
+   "instance": "slg_WS_4",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b0}",
+     "value": 0
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b0, 1'b0}",
+     "value": 4
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WS_5",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b0}",
+     "value": 0
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b0, 1'b1}",
+     "value": 5
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WS_6",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b0}",
+     "value": 0
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b1, 1'b0}",
+     "value": 6
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WS_7",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b0}",
+     "value": 0
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b1, 1'b1}",
+     "value": 7
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WN_0",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b1}",
+     "value": 1
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b0, 1'b0}",
+     "value": 0
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WN_1",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b1}",
+     "value": 1
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b0, 1'b1}",
+     "value": 1
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WN_2",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b1}",
+     "value": 1
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b1, 1'b0}",
+     "value": 2
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WN_3",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b1}",
+     "value": 1
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b1, 1'b1}",
+     "value": 3
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp_h",
+   "instance": "slg_WN_4",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b1}",
+     "value": 1
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b0, 1'b0}",
+     "value": 4
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WN_5",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b1}",
+     "value": 1
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b0, 1'b1}",
+     "value": 5
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WN_6",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b1}",
+     "value": 1
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b1, 1'b0}",
+     "value": 6
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_WN_7",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b0, 1'b1}",
+     "value": 1
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b1, 1'b1}",
+     "value": 7
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_ES_0",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b0}",
+     "value": 2
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b0, 1'b0}",
+     "value": 0
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_ES_1",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b0}",
+     "value": 2
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b0, 1'b1}",
+     "value": 1
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_ES_2",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b0}",
+     "value": 2
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b1, 1'b0}",
+     "value": 2
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_ES_3",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b0}",
+     "value": 2
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b1, 1'b1}",
+     "value": 3
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp_h",
+   "instance": "slg_ES_4",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b0}",
+     "value": 2
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b0, 1'b0}",
+     "value": 4
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_ES_5",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b0}",
+     "value": 2
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b0, 1'b1}",
+     "value": 5
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_ES_6",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b0}",
+     "value": 2
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b1, 1'b0}",
+     "value": 6
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_ES_7",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b0}",
+     "value": 2
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b1, 1'b1}",
+     "value": 7
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_EN_0",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b1}",
+     "value": 3
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b0, 1'b0}",
+     "value": 0
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_EN_1",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b1}",
+     "value": 3
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b0, 1'b1}",
+     "value": 1
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_EN_2",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b1}",
+     "value": 3
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b1, 1'b0}",
+     "value": 2
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_EN_3",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b1}",
+     "value": 3
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b0, 1'b1, 1'b1}",
+     "value": 3
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp_h",
+   "instance": "slg_EN_4",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b1}",
+     "value": 3
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b0, 1'b0}",
+     "value": 4
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_EN_5",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b1}",
+     "value": 3
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b0, 1'b1}",
+     "value": 5
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_EN_6",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b1}",
+     "value": 3
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b1, 1'b0}",
+     "value": 6
+    }
+   }
+  },
+  {
+   "module": "qkd_kvs_grp",
+   "instance": "slg_EN_7",
+   "ports": {
+    "cfg_stack": {
+     "actual_expression": "{1'b1, 1'b1}",
+     "value": 3
+    },
+    "cfg_group": {
+     "actual_expression": "{1'b1, 1'b1, 1'b1}",
+     "value": 7
+    }
+   }
+  }
+ ]
+}

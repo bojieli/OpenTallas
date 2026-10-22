@@ -1,0 +1,45 @@
+{
+ "aig": null,
+ "aig_sha256": "9c91830c66130ff01fe7e6cbb0d2375e314aaebd5f3c82fe13122975a4c577a2",
+ "engine": {
+  "abc_cmd": "read_aiger lec.aig; print_stats; strash; dprove -v -T 10800",
+  "abc_log_sha256": "98cbfe2af90bdef84964793b6a3d9c63e854bda308476ef6d5dbf9153ffad983",
+  "abc_tail": "======== ABC command line \"read_aiger lec.aig; print_stats; strash; dprove -v -T 10800\"\n\u001b[1;37mlec                           :\u001b[0m i/o = 1565/    1  lat = 6250  and =  17200  lev = 16\nRunning \"bmc2\". AIG:  PI/PO/Reg = 1565/1/6250.  Node =  17200. Lev =    16.\nParams: FramesMax = 20. NodesDelta = 2000. ConfMaxOne = 2000. ConfMaxAll = 0.\n   0 : F =   19. O =   0.  And =   10886. Var =    3762. Conf =   2001.    2 MB     0.16 sec\nNo output failed in 0 frames.  Time =     0.16 sec\nReached local conflict limit (2000).\nOriginal miter:       Latches =  6250. Nodes =  17200.\nSequential cleanup:   Latches =  2346. Nodes =  14018. Time =     0.02 sec\nForward retiming:     Latches =  1560. Nodes =  14018. Time =     0.01 sec\nLatch-corr (I=  4):   Latches =     0. Nodes =      0. Time =     0.27 sec\nFraiging:             Latches =     0. Nodes =      0. Time =     0.00 sec\nNetworks are equivalent.  Time =     0.30 sec\n",
+  "rc": 0,
+  "seconds": [
+   0.4,
+   20.0,
+   0.8
+  ],
+  "tool": "yosys 0.68 miter -equiv + ABC dprove"
+ },
+ "expect": "pass",
+ "gate": "/srv/opentallas-scratch/claude/kv-hstk11-lec-1020/hroot/6_final.v",
+ "gate_sha256": "3488481727921080a77fd03aacc79dd9c62d27f43419babff51cf6b37a038dab",
+ "gate_stats": {
+  "flops": 3894,
+  "instances": 30290,
+  "macros": {}
+ },
+ "gate_top": "qkd_kvs_hroot",
+ "gold_opt": false,
+ "gold_ys_sha256": "a30bb7adb32416c4f02071d605b86dc502b2fb22fc515d419404226e40bab68e",
+ "lec_ys_sha256": "bdadf139dba28347195b3f87fa70f4839afcff9cbeaced282a3ce9fbd744d42b",
+ "module": "qkd_kvs_hroot",
+ "ok": true,
+ "parameters": {},
+ "reset": {
+  "active": 0,
+  "cycles": 16,
+  "once": false,
+  "port": "rst_n"
+ },
+ "schema": "opentallas.kv_leaf_lec.v1",
+ "sources": {
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_ctl_half_root_b.sv": "9f9a016fcf25162786b6660b2cbb3aec8b2af3caa20a2bc15e02f3bc6991ac2e",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kv_hroot_land.sv": "7fded0aa5be4bdf94f73d83ef307c0480e65c5c740cb97de5ba097c547c3a0bd",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl.sv": "008c98675ddc14ceab6a64ef2410f796dd8bcc7a8f8ab1cd1c110b96b57dba4f"
+ },
+ "verdict": "EQUIVALENT",
+ "wrapper": null
+}

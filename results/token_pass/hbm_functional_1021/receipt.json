@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.hbm_functional_takeover.v1",
+  "captured": "2026-10-21T09:40-07:00",
+  "grade": "RTL-functional (source assembly)",
+  "source": "1fe61477b",
+  "assembly_base": "8a15641f4",
+  "contract": "/home/ubuntu/scratch/tok-func-hbm/r14sw/contract_func.json",
+  "verdict": "INCOMPLETE",
+  "qualifies_full_token": false,
+  "build": {
+    "host": "ot-gold1",
+    "dir": "/srv/opentallas-scratch/claude/tok-func-hbm/r14sw",
+    "unit": "oth-ubuntu-1235336-1792598222",
+    "state": "progressing; preserve objects"
+  },
+  "scope": "SW quadrant SU component probes, not full layers or full tokens",
+  "blocking_findings": [
+    "SU replay calendar_SW grants now emitted by reserve-component; RTL execution pending existing build completion. Exclusive owner0 reservation qualifies component probes only.",
+    "Most operators format_open/unsupported, no end-to-end token measured",
+    "Current r14 COLL defaults ROWS64 AR_ITER0 cannot run production RS",
+    "ROWS128 AR_ITER1 still cannot hold DS_RS144 programme (218 rows)",
+    "Mapped die netlist is not simulated by GEN top plus source children"
+  ],
+  "emission": {
+    "ds_l0": {
+      "scope": "component_probe",
+      "counts": {
+        "blocked:format_open": 57,
+        "blocked:unsupported_lowering": 3,
+        "blocked:v1_unsupported": 1,
+        "emitted": 8,
+        "emitted_unparameterised": 1,
+        "unsupported_lowering": 11,
+        "v1_unsupported": 10
+      },
+      "qualifies_native_layer": false,
+      "qualifies_native_chain": false
+    },
+    "ds_l14": {
+      "scope": "component_probe",
+      "counts": {
+        "blocked:format_open": 117,
+        "blocked:unsupported_lowering": 3,
+        "blocked:v1_unsupported": 1,
+        "emitted": 10,
+        "emitted_unparameterised": 2,
+        "unsupported_lowering": 14,
+        "v1_unsupported": 17
+      },
+      "qualifies_native_layer": false,
+      "qualifies_native_chain": false
+    },
+    "ds_l2": {
+      "scope": "component_probe",
+      "counts": {
+        "blocked:format_open": 64,
+        "blocked:unsupported_lowering": 3,
+        "blocked:v1_unsupported": 1,
+        "emitted": 9,
+        "emitted_unparameterised": 2,
+        "unsupported_lowering": 11,
+        "v1_unsupported": 11
+      },
+      "qualifies_native_layer": false,
+      "qualifies_native_chain": false
+    }
+  },
+  "calendar_fix": {
+    "source_commits": [
+      "80e2e3a98",
+      "09e968f79"
+    ],
+    "generation_receipt": "results/rtl/tok_hbm_calendar_1021/emission.json",
+    "existing_build_capacity": 11633,
+    "fits_existing_binary": [
+      "ds_l0",
+      "ds_l2",
+      "ds_l14",
+      "qw_l0_r0",
+      "qw_l0_r5"
+    ],
+    "chain_required_capacity": 11651,
+    "preservation": "Existing in-flight r14 sources/TB untouched; reuse five fitting cases after build; chain remains pending larger TB."
+  }
+}

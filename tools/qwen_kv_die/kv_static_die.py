@@ -104,6 +104,30 @@ if GRP_PRIVATE0 and not (ON and HROOT and FANFOLD and KITS and
         os.environ.get('OT_KV_MU', '0') == '1' and os.environ.get('OT_KV_BOOT_AGES', '0') == '1' and
         os.environ.get('OT_KV_DOMSPLIT', '0') != '1'):
     raise ValueError('GRP_PRIVATE0 requires selected static HROOT/FANFOLD/KITS/MU/BOOT_AGES without DOMSPLIT')
+# KV-GRP2 10-19 (OT_KV_GRP_SAFE2=1; default off): the 32 groups bind the structurally safe tiles qkd_kvs_grp_s2 /
+# qkd_kvs_grp_h_s2 (tools/qwen_kv_die/kv_grp_safe2.py: Stage 1 private ABI + registered faces + landed resets + p192 rows
+# + LD ring on the DOMSPLIT MU/BOOT_AGES point).  Added ages (die schedule): control fan word +1 core edge per group hop,
+# gather +1 per hop, EST +1, boot cfg +1, reset release +2 / +2 (lanes/KV-GEN9.md KV-GRP2 inbox).
+GRP_SAFE2 = os.environ.get('OT_KV_GRP_SAFE2', '0') == '1'
+if GRP_SAFE2 and (GRP_PRIVATE0 or not (ON and HROOT and FANFOLD and KITS and os.environ.get('OT_KV_MU', '0') == '1' and
+                                        os.environ.get('OT_KV_BOOT_AGES', '0') == '1' and
+                                        os.environ.get('OT_KV_DOMSPLIT', '0') == '1')):
+    raise ValueError('GRP_SAFE2 requires static HROOT/FANFOLD/KITS/MU/BOOT_AGES WITH DOMSPLIT (and not GRP_PRIVATE0)')
+# QKC-GRP 10-21 (OT_KV_GRP_S6C=1; default off; needs OT_KV_GRP_SAFE2=1 + OT_KV_NATIVE_SLOTS=1): the 32 groups bind the
+# CLOSED structural successors qkd_kvs_grp_s6c / qkd_kvs_grp_h_s6c (claude/kv-grp8-1020 @71f891b9b: kv_grp_safe6 SRAM
+# response ring + kv_grp_safe5 bounded-driver copies; same ports and ages as the s2 tiles, +0 cycles, pin_regs off,
+# reset landing in RTL).  Views: grp = route qkd_kvs_grp_s7d-grp_s7d-71f891b9b (388.8 x 432, record 53710f1e4),
+# grp_h = qkd_kvs_grp_h_s7c-grp_h_s7c-71f891b9b (388.8 x 388.8, record 4cf422280), both recorded under
+# physical/ref_tile/qkd_kvs_grp{,_h}_s6a/views/<master> (the closure job's block kit; kv_tile_views binds them by top).
+# Native group slots: grp_h 388.8 square, grp 388.8 x OT_KV_GRP_SLOT_H (default 432 = the closed s7d outline).
+GRP_S6C = os.environ.get('OT_KV_GRP_S6C', '0') == '1'
+if GRP_S6C and not (GRP_SAFE2 and os.environ.get('OT_KV_NATIVE_SLOTS', '0') == '1'):
+    raise ValueError('GRP_S6C requires OT_KV_GRP_SAFE2=1 (DS private ABI + parent connections) and OT_KV_NATIVE_SLOTS=1 '
+                     '(the closed group tiles are 388.8 wide; the legacy group frame is narrower)')
+GRP_S6C_RTL = dict(grp='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s6c.sv',
+                   grp_h='rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_h_s6c.sv')
+GROUP_SLOT = dict(grp=(388.8, float(os.environ.get('OT_KV_GRP_SLOT_H', '432.0')) if GRP_S6C else 388.8),
+                  grp_h=(388.8, 388.8))
 KVS_CK1 = KITS
 CK1_KINDS = ('ctl', 'attn', 'emb')
 KIT_HARD = ('qkd_embedding_row_tx',)
@@ -156,10 +180,14 @@ PUBLIC_RTL_FILE = ('rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles' + ('_hroo
             (('_hs' if HROOT_S32 else '_hl') if HROOT_LAND else '') +   # HKV-HROOTK2 10-19 (kit qkd_kvs_hroot_k1-da14c0bdf); KV-BIND7 _hs = safe32
             ('_mu' if os.environ.get('OT_KV_MU', '0') == '1' else '') +
             ('_ba' if os.environ.get('OT_KV_BOOT_AGES', '0') == '1' else '') +   # MU-ADOPT-KV 10-19 (kv_static.MU); KV-BOOTAGE
+            ('_n32' if os.environ.get('OT_KV_EMB_N32', '0') == '1' else '') +   # KV-EMB4 10-20: kvs_emb u_join NATIVE32=1 (kv_static emb_join)
+            ('_pj' if os.environ.get('OT_KV_EMB_PJ', '0') == '1' else '') +   # KV-EMB4 10-20: kvs_emb u_join PIPE_JOIN=1 (+1 word-stream edge)
             ('_ds' if DOMSPLIT else '') + ('_rl' if PC_RLAND else '') + ('_sr' if PC_SRAM else '') +
             '.sv')   # KV-DOMSPLIT; KV-PC
-RTL_FILE = PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + '.sv'
+RTL_FILE = (PUBLIC_RTL_FILE[:-3] + ('_gp0' if GRP_PRIVATE0 else '') + ('_gs2' if GRP_SAFE2 else '') +
+            ('_g6c' if GRP_S6C else '') + '.sv')
 GRP_PRIVATE0_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_private0.sv'
+GRP_SAFE2_RTL = 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_grp_s2.sv'
 AGES = 'results/arch/qwen_kv_static_programme_1017/die_ages.json'
 STACKS = ('WS', 'WN', 'ES', 'EN')
 ORDER = (4, 5, 0, 1, 2, 3, 6, 7)          # kv_static.template: group g holds PCs 4 * ORDER.index(g) + q
@@ -203,6 +231,10 @@ KIND_MASTER = dict(fan='qkd_kvs_fan', grp='qkd_kvs_grp', grp_h='qkd_kvs_grp_h', 
                    emb='qkd_kvs_emb', hroot='qkd_kvs_hroot')
 if GRP_PRIVATE0:
     KIND_MASTER.update(grp='qkd_kvs_grp_private0', grp_h='qkd_kvs_grp_h_private0')
+if GRP_SAFE2:
+    KIND_MASTER.update(grp='qkd_kvs_grp_s2', grp_h='qkd_kvs_grp_h_s2')
+if GRP_S6C:
+    KIND_MASTER.update(grp='qkd_kvs_grp_s6c', grp_h='qkd_kvs_grp_h_s6c')
 GEN_KINDS = tuple(KIND_MASTER)
 CTL_LOCAL = dict(layer_programme='lprg', wprg='wprg', wrn='wrn', ownership='own', own_obs='oobs', boot='boot',
                  boot_obs='bobs', diecfg='dcfg')
@@ -1652,6 +1684,9 @@ def all_tiles():
         if GRP_PRIVATE0:
             import kv_grp_private0
             kv_grp_private0.apply_tiles(t_, module_text)
+        if GRP_SAFE2:
+            import kv_grp_safe2
+            kv_grp_safe2.apply_tiles(t_, module_text)
         _G['tiles'] = t_
     return _G['tiles']
 
@@ -1660,6 +1695,11 @@ def rtl_text():
     """one module per tile kind; every replica must produce the identical text"""
     mods = OrderedDict()
     for d, t in all_tiles().items():
+        # S6C modules are registered native RTL, not the wires-only tile model.
+        # Keep the tile for placement/connections, but never emit a second body
+        # with the same module name into the active compilation unit.
+        if GRP_S6C and t['kind'] in GRP_S6C_RTL:
+            continue
         name = KIND_MASTER[t['kind']]
         txt = module_text(t, name)
         if name in mods and mods[name][0] != txt:
@@ -1682,6 +1722,8 @@ def sources():
     for t in all_tiles().values():
         for n in t['members']:
             s.add(ins()[n]['source'])
+    if GRP_S6C:
+        s.update(GRP_S6C_RTL.values())
     s.update(K.pc_emb_sources())
     if BOOT:
         s.update(BOOT_PC_DEPS)
@@ -1709,7 +1751,9 @@ def bindings():
         seen[mst] = d
         ports = {pn: [pn] for pn, v in t['ports'].items() if v['cls'] != 'pad'}
         cls = {'por_n': 'by_design: package POR pad (off-chip signal)'} if 'por_n' in t['ports'] else {}
-        source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else PUBLIC_RTL_FILE
+        source_file = GRP_PRIVATE0_RTL if GRP_PRIVATE0 and t['kind'] in ('grp', 'grp_h') else RTL_FILE
+        if GRP_SAFE2 and t['kind'] in ('grp', 'grp_h'):
+            source_file = GRP_S6C_RTL[t['kind']] if GRP_S6C else GRP_SAFE2_RTL
         if PC_SRAM and KITS and t['kind'] in PC_RLAND_KINDS:
             ports['pc__hfx'] = ['pc__hfx']      # KV-BIND4: pc_hfx_text port; read by the health plane (PC family)
         out[mst] = dict(module=mst, file=source_file, ports=ports, sliced={}, classed=cls)
@@ -2308,7 +2352,7 @@ def place(m, K, geo, F):
             if NATIVE_SLOTS:
                 # Reserve the complete square before wires are planned. Never squeeze the
                 # hardened group into the legacy narrow/1188-um frame or ignore keepouts.
-                slot_w = slot_h = 388.8
+                slot_w, slot_h = GROUP_SLOT['grp_h' if (FANFOLD and idx == 0) else 'grp']
                 x_slot, y_slot = free_spot(m, slot_w, slot_h,
                                           (x_g + gw / 2, y0 + GH / 2), GX, GY)
             m['insts'].append(F.Inst(f'slg_{st}_{g}', KIND_MASTER['grp_h' if (FANFOLD and idx == 0) else 'grp'], round(x_slot, 4), round(y_slot, 4), slot_w - SH, slot_h - SH,
@@ -2323,6 +2367,34 @@ def place(m, K, geo, F):
         ky = cy - kh - 10.8 if st[1] == 'S' else cy + PC_PITCH * NPC + 10.8
         m['insts'].append(F.Inst(f'kc_{st}', 'qkd_ctrl_kc', round(up(x_pc + pcw / 2 - kw / 2, GX), 4), round(up(ky, GY), 4),
                                  kw - SH, kh - SH, 'R0', kind='static', region='strip', domain='hbm'))
+    if os.environ.get('OT_KV_KRT_ES6_HOME', '0') == '1':
+        # The ES6 round trip exceeded the hardened 80-edge budget by one.
+        # Move the actual issuer beside its group, reserving its full frame and
+        # halo before allocating any relay. Keep the fixed response budget.
+        es6 = next(i for i in m['insts'] if i.name == f'ectl_ES_{ectl_frame(6)}')
+        grp6 = next(i for i in m['insts'] if i.name == 'slg_ES_6')
+        old = [es6.x, es6.y]
+        m['insts'].remove(es6)
+        try:
+            # LEAD-KV 10-21: es6p3/p4 left a 579 um krs_ES_6 hop with no relay site (21.6 um halo boxed the 1062-b
+            # response word in): OT_KV_KRT_ES6_HALO reserves a relay / landing corridor around the re-homed frame.
+            halo6 = float(os.environ.get('OT_KV_KRT_ES6_HALO', '21.6'))
+            rmax6 = float(os.environ.get('OT_KV_KRT_ES6_RMAX', '2000'))
+            anc6 = (grp6.x + grp6.w / 2, grp6.y + grp6.h / 2)
+            d_old = abs(old[0] + es6.w / 2 - anc6[0]) + abs(old[1] + es6.h / 2 - anc6[1])
+            es6.x, es6.y = free_spot(m, es6.w + SH, es6.h + SH, anc6, GX, GY, halo=halo6, rmax=rmax6)
+            d_new = abs(es6.x + es6.w / 2 - anc6[0]) + abs(es6.y + es6.h / 2 - anc6[1])
+            print(f'kv_static_die: KRT_ES6_HOME distance to slg_ES_6 centre {d_old:.1f} -> {d_new:.1f} um', file=sys.stderr)
+            if d_new > d_old - float(os.environ.get('OT_KV_KRT_ES6_GAIN', '400')):
+                raise ValueError(f'kv_static_die: KRT_ES6_HOME no corridor spot (halo {halo6}) at least one relay stage '
+                                 f'closer: {d_old:.1f} -> {d_new:.1f} um')
+        finally:
+            m['insts'].append(es6)
+        m.setdefault('geo', {})['krt_es6_home'] = dict(
+            instance=es6.name, old=old, new=[es6.x, es6.y],
+            group='slg_ES_6', response_budget=80, halo=halo6)
+        print(f"kv_static_die: KRT_ES6_HOME {es6.name} {old} -> {[es6.x, es6.y]} size {es6.w}x{es6.h} halo {halo6}; "
+              f"slg_ES_6 at {[grp6.x, grp6.y]} size {grp6.w}x{grp6.h}", file=sys.stderr)
     # centre tiles: free spots nearest their anchors
     d2d = by['d2d_kv']
     host = by['host']
@@ -2333,6 +2405,13 @@ def place(m, K, geo, F):
     sq = by['seq']
     anchors = dict(kvs_ctl=(host.x + host.w / 2, (sq.y + sq.h + host.y) / 2), kvs_emb=(d2d.x - 40.0, d2d.y + d2d.h / 2),
                    kvs_attn=((pv.x - 500.0) if pv else d2d.x, (pv.y + pv.h - 200.0) if pv else d2d.y - 400.0))   # W of the N pair's top: the pair-top gap stays a crossing
+    if ATTN_DXY:
+        # KV-D2D3 10-20 (OT_KV_ATTN_DXY='dx,dy' um, default off): move the kvs_attn anchor toward the D2D end so the K seam
+        # bundles (K.rx_record / K.tx_slot / K.tx_record) fit the pair image's recorded die stages (OT_KV_SEAM_PIN pads them
+        # up to it; route A d22bu with D2D_PINS lands 13 / 9 / 11 > the K22 image's 11 / 9 / 9)
+        ax_, ay_ = anchors['kvs_attn']
+        anchors['kvs_attn'] = (ax_ + ATTN_DXY[0], ay_ + ATTN_DXY[1])
+        m.setdefault('geo', {})['attn_dxy'] = dict(dxy=list(ATTN_DXY), anchor=list(anchors['kvs_attn']))
     hro = []
     if HROOT:
         # KV-PLAN decision 1: the S half root at the stack seam (where the S stacks' PC 31 chain ends sit), W of the PV
@@ -2350,6 +2429,19 @@ def place(m, K, geo, F):
             anchors[f'kvs_hroot_{st}'] = (gd.x + gd.w / 2, pc.y + pc.h + 400.0)
         hro = [(f'kvs_hroot_{st}', 'hroot') for st in ('WS', 'ES', 'WN', 'EN')]
     order = [('kvs_ctl', 'ctl'), ('kvs_emb', 'emb'), ('kvs_attn', 'attn')]
+    if os.environ.get('OT_KV_ATTN_WEST_HOST', '0') == '1':
+        if ATTN_DXY or ATTN_AT_D2D:
+            raise ValueError('ATTN_WEST_HOST is an explicit corridor plan; do not combine with ATTN_DXY/ATTN_AT_D2D')
+        # Keep the K22 record source beside its real D2D endpoint and leave a
+        # full 129.6-um cell-row approach between attention and HOST. The
+        # south-going start/control words approach from the west of CTL,
+        # rather than squeezing between HOST and the D2D payload pins.
+        aw, ah = FRAME['attn']
+        anchors['kvs_attn'] = (host.x - 129.6 - aw / 2, d2d.y - 43.2 - ah / 2)
+        order = [('kvs_ctl', 'ctl'), ('kvs_attn', 'attn'), ('kvs_emb', 'emb')]
+        m.setdefault('geo', {})['attn_west_host'] = dict(
+            anchor=list(anchors['kvs_attn']), host_approach_um=129.6,
+            d2d_approach_um=43.2, geometry_only=True, qualified=False)
     if ATTN_AT_D2D:
         # QXF-SEAMK 10-18 (TOKEN-XDIE-QWEN F6 placement): kvs_attn against the D2D end's W face, kvs_emb W of it
         anchors.update(d2d_side_anchors(d2d, FRAME['attn'], FRAME['emb']))
@@ -2377,7 +2469,7 @@ def place(m, K, geo, F):
                                  region='io', domain='core'))
     if NATIVE_SLOTS:
         m['geo']['native_slot_reservations'] = dict(
-            group_um=[388.8, 388.8], ctl_um=list(FRAME['ctl']),
+            group_um=list(GROUP_SLOT['grp']), group_h_um=list(GROUP_SLOT['grp_h']), ctl_um=list(FRAME['ctl']),
             geometry_only=True, qualified=False,
             obligation='Replan physical relays and derive ages from the actual placed pins; '
                        'no source/view/native-census or calendar qualification implied.')
@@ -2410,6 +2502,7 @@ ATTN_AT_D2D = os.environ.get('OT_KV_ATTN_AT_D2D', '0') == '1'
 EMB_WEST_MODE = os.environ.get('OT_KV_EMB_WEST', '0')
 EMB_WEST = EMB_WEST_MODE in ('1', '2')      # KV-BIND12 10-20: kvs_emb W of the HOST root (see the anchors)
 ATTN_D2D_TOP = float(os.environ.get('OT_KV_ATTN_D2D_TOP', '0.0'))
+ATTN_DXY = tuple(float(v) for v in os.environ['OT_KV_ATTN_DXY'].split(',')) if os.environ.get('OT_KV_ATTN_DXY') else None
 
 
 def d2d_side_anchors(d2d, attn_wh, emb_wh, halo=21.6, top=None):

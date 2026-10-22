@@ -78,32 +78,111 @@ generate if(MU==0)begin:g_plain
  qkd_host_ctrl_token_service_packet_collected #(.DIE(DIE),.MUT(MUT),.STRAPPED(STRAPPED),.ENABLE_SERVICE(ENABLE_SERVICE),.ENABLE_TOKEN(ENABLE_TOKEN)) u_plain(.ck(ck),.rst_n(rst_n),.die_id(die_id),.rx_v(rx_v),.rx_d(rx_d),.rx_cr(w_rx_cr),.tx_v(w_tx_v),.tx_d(w_tx_d),.tx_cr(tx_cr),.local_tk(local_tk),.local_kst(local_kst),.local_boot(local_boot),.cmd_v(cmd_v),.cmd_hc(cmd_hc),.cmd_cr(w_cmd_cr),.hc(w_hc),.tk8(w_tk8),.kst8(w_kst8),.boot8(w_boot8),.seen(w_seen),.fault(w_fault),.startup_allowed(startup_allowed),.local_service_ready(local_service_ready),.local_service_epoch(local_service_epoch),.begin_v(begin_v),.begin_epoch(begin_epoch),.begin_cr(w_begin_cr),.begin_available(w_begin_available),.service_begin_v(w_service_begin_v),.service_begin_epoch(w_service_begin_epoch),.pending_advertised(w_pending_advertised),.pending_epoch(w_pending_epoch),.service_ready8(w_service_ready8),.pending_ack8(w_pending_ack8),.service_epoch8(w_service_epoch8),.ingest_permission(w_ingest_permission),.por_n(por_n),.token_wrap_fence_valid(token_wrap_fence_valid),.token_wrap_drained(token_wrap_drained),.token_wrap_link_reset_seen(token_wrap_link_reset_seen),.token_wrap_retraining_done(token_wrap_retraining_done),.token_allocator_fault(token_allocator_fault),.package_abort(package_abort),.abort_drained(abort_drained),.token_request_valid(w_token_request_valid),.token_request_ready(token_request_ready),.token_request_token(w_token_request_token),.token_request_position(w_token_request_position),.token_request_generation(w_token_request_generation),.token_grant_valid(token_grant_valid),.token_grant_ready(w_token_grant_ready),.token_grant_epoch(token_grant_epoch),.token_grant_token(token_grant_token),.token_grant_position(token_grant_position),.token_grant_generation(token_grant_generation),.token_grant_tag(token_grant_tag),.allocated_valid(allocated_valid),.allocated_delivered(allocated_delivered),.allocated_epoch(allocated_epoch),.allocated_token(allocated_token),.allocated_position(allocated_position),.allocated_generation(allocated_generation),.token_epoch_valid(w_token_epoch_valid),.token_epoch(w_token_epoch),.cancel_valid(w_cancel_valid),.cancel_tag(w_cancel_tag),.cancel_generation(w_cancel_generation),.cancel_done(w_cancel_done),.cancel_fault(w_cancel_fault),.cancel_drained(w_cancel_drained),.terminal_accepted(terminal_accepted));
  always @*begin rx_cr=w_rx_cr;tx_v=w_tx_v;tx_d=w_tx_d;cmd_cr=w_cmd_cr;hc=w_hc;tk8=w_tk8;kst8=w_kst8;boot8=w_boot8;seen=w_seen;fault=w_fault;begin_cr=w_begin_cr;begin_available=w_begin_available;service_begin_v=w_service_begin_v;service_begin_epoch=w_service_begin_epoch;pending_advertised=w_pending_advertised;pending_epoch=w_pending_epoch;service_ready8=w_service_ready8;pending_ack8=w_pending_ack8;service_epoch8=w_service_epoch8;ingest_permission=w_ingest_permission;token_request_valid=w_token_request_valid;token_request_token=w_token_request_token;token_request_position=w_token_request_position;token_request_generation=w_token_request_generation;token_grant_ready=w_token_grant_ready;token_epoch_valid=w_token_epoch_valid;token_epoch=w_token_epoch;cancel_valid=w_cancel_valid;cancel_tag=w_cancel_tag;cancel_generation=w_cancel_generation;cancel_done=w_cancel_done;cancel_fault=w_cancel_fault;cancel_drained=w_cancel_drained;end
 end else begin:g_mu
- reg[3:0]rr,u_granted;reg rr_seen;reg[17:0]job_tok[0:3],job_pos[0:3];reg[1:0]job_gen[0:3];reg[15:0]u_ep[0:3];
- reg[3:0]pe_seen;reg[13:0]pe_last[0:3];
- wire retained_request=|rr;
- wire[1:0]cu=rr[0]?2'd0:rr[1]?2'd1:rr[2]?2'd2:2'd3;   // the retained user an abort cancels next
- wire cu_latest=allocated_token_q==job_tok[cu]&&allocated_position_q==job_pos[cu]&&allocated_generation_q==job_gen[cu];
- wire[15:0]cu_epoch=cu_latest?allocated_epoch_q:u_ep[cu];
-
- reg[2:0]did_q,die_capture;reg role_valid,die_sampled;
- wire[2:0]role=STRAPPED?did_q:3'(DIE);
- reg rv,tc,cv;reg[511:0]rd;reg[181:0]cd;reg[92:0]lt;reg[9:0]lk;reg[1:0]lb;
- reg[511:0]q[0:3];reg[1:0]wp,rp;reg[2:0]count;
- reg[181:0]cq[0:3];reg[1:0]cw,cr;reg[2:0]cn;
- reg[7:0]credits;reg[15:0]seq_tx;reg[127:0]seq_rx;reg[7:0]seq_seen;
- reg lready,biv,startup_q;reg[15:0]lepoch,bepoch,epoch,last_epoch;
+ // KV-PEER13: g_mu declarations hoisted before first use (Yosys declare-before-use; tools/qwen_kv_die/mu_peer/hoist_gmu_decls.py)
+ reg[3:0] rr,u_granted;
+ reg rr_seen;
+ reg[17:0] job_tok[0:3],job_pos[0:3];
+ reg[1:0] job_gen[0:3];
+ reg[15:0] u_ep[0:3];
+ reg[3:0] pe_seen;
+ reg[13:0] pe_last[0:3];
+ wire retained_request;
+ wire[1:0] cu;
+ wire cu_latest;
+ wire[15:0] cu_epoch;
+ reg[2:0] did_q,die_capture;
+ reg role_valid,die_sampled;
+ wire[2:0] role;
+ reg rv,tc,cv;
+ reg[511:0] rd;
+ reg[181:0] cd;
+ reg[92:0] lt;
+ reg[9:0] lk;
+ reg[1:0] lb;
+ reg[511:0] q[0:3];
+ reg[1:0] wp,rp;
+ reg[2:0] count;
+ reg[181:0] cq[0:3];
+ reg[1:0] cw,cr;
+ reg[2:0] cn;
+ reg[7:0] credits;
+ reg[15:0] seq_tx;
+ reg[127:0] seq_rx;
+ reg[7:0] seq_seen;
+ reg lready,biv,startup_q;
+ reg[15:0] lepoch,bepoch,epoch,last_epoch;
  reg last_ready,begin_pending,begin_busy,epoch_active;
  reg permit_pending,permit_busy,permit_sent,peer_permit;
- // All allocator/abort faces captured before comparisons, enables or outputs.
  reg abort_q,abort_seen,request_ready_q,grant_valid_q,grant_low,allocated_vq,allocated_dq,terminal_ack_q;
- reg[3:0]drain_q;reg[15:0]grant_epoch_q,allocated_epoch_q;
- reg[17:0]grant_token_q,grant_position_q,allocated_token_q,allocated_position_q;
- reg[1:0]grant_generation_q,allocated_generation_q;reg[58:0]grant_tag_q;
- reg allocator_fault_q,local_emitted;reg allocator_sampled;reg wrap_vq,wrap_dq,wrap_rq,wrap_tq;reg peer_epoch_seen;reg[15:0]peer_last_epoch;
- wire peer_epoch_fresh=MUT==11||!pe_seen[h[231:230]]||h[245:232]>pe_last[h[231:230]];
- wire peer_service_fresh=MUT==20||(!ENABLE_SERVICE?h[262:247]==0:(h[262:247]==epoch&&lepoch==epoch&&lready&&((!epoch_active&&startup_q)||pending_ack8[role]))&&(MUT==21||!ENABLE_SERVICE||!epoch_active||peer_permit));
- wire peer_token_frame=ENABLE_TOKEN&&role!=0&&src==0&&h[7:0]==8'h22&&h[15:8]==2&&h[86]&&h[246]&&h[511:263]==0&&h[63:61]==0&&h[231:230]==h[65:64]&&h[83:66]<18'd151936;
- wire peer_token_accept=rst_n&&take&&hdr&&sequence_ok&&peer_token_frame&&peer_epoch_fresh&&peer_service_fresh&&!(abort_seen||abort_q||reset_abort_seen);
+ reg[3:0] drain_q;
+ reg[15:0] grant_epoch_q,allocated_epoch_q;
+ reg[17:0] grant_token_q,grant_position_q,allocated_token_q,allocated_position_q;
+ reg[1:0] grant_generation_q,allocated_generation_q;
+ reg[58:0] grant_tag_q;
+ reg allocator_fault_q,local_emitted;
+ reg allocator_sampled;
+ reg wrap_vq,wrap_dq,wrap_rq,wrap_tq;
+ reg peer_epoch_seen;
+ reg[15:0] peer_last_epoch;
+ wire peer_epoch_fresh;
+ wire peer_service_fresh;
+ wire peer_token_frame;
+ wire peer_token_accept;
+ reg grant_wait,request_accepted,cancel_consumed;
+ reg reset_abort_seen;
+ reg[15:0] active_epoch;
+ reg active_epoch_valid;
+ reg[15:0] active_service_epoch;
+ wire tuple_ok;
+ wire allocated_match;
+ wire grant_take;
+ reg busy;
+ reg[3:0] dst;
+ reg[181:0] active;
+ reg[92:0] last_tk;
+ reg[9:0] last_kst;
+ reg[1:0] last_boot;
+ reg sent_once;
+ wire[511:0] h;
+ wire[2:0] src;
+ wire[7:0] target;
+ wire[15:0] rs;
+ wire hdr;
+ wire take;
+ wire sequence_ok;
+ wire stale_service;
+ wire send;
+ wire load_begin;
+ wire load_permit;
+ wire load_cmd;
+ wire status_changed;
+
+ 
+ 
+ assign retained_request=|rr;
+ assign cu=rr[0]?2'd0:rr[1]?2'd1:rr[2]?2'd2:2'd3;   // the retained user an abort cancels next
+ assign cu_latest=allocated_token_q==job_tok[cu]&&allocated_position_q==job_pos[cu]&&allocated_generation_q==job_gen[cu];
+ assign cu_epoch=cu_latest?allocated_epoch_q:u_ep[cu];
+
+ 
+ assign role=STRAPPED?did_q:3'(DIE);
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ // All allocator/abort faces captured before comparisons, enables or outputs.
+ 
+ 
+ 
+ 
+ 
+ assign peer_epoch_fresh=MUT==11||!pe_seen[h[231:230]]||h[245:232]>pe_last[h[231:230]];
+ assign peer_service_fresh=MUT==20||(!ENABLE_SERVICE?h[262:247]==0:(h[262:247]==epoch&&lepoch==epoch&&lready&&((!epoch_active&&startup_q)||pending_ack8[role]))&&(MUT==21||!ENABLE_SERVICE||!epoch_active||peer_permit));
+ assign peer_token_frame=ENABLE_TOKEN&&role!=0&&src==0&&h[7:0]==8'h22&&h[15:8]==2&&h[86]&&h[246]&&h[511:263]==0&&h[63:61]==0&&h[231:230]==h[65:64]&&h[83:66]<18'd151936;
+ assign peer_token_accept=rst_n&&take&&hdr&&sequence_ok&&peer_token_frame&&peer_epoch_fresh&&peer_service_fresh&&!(abort_seen||abort_q||reset_abort_seen);
  always @(posedge ck or negedge por_n)begin
   if(!por_n)begin rr<=0;rr_seen<=0;u_granted<=0;reset_abort_seen<=0;for(integer k=0;k<4;k=k+1)begin job_tok[k]<=0;job_pos[k]<=0;job_gen[k]<=0;u_ep[k]<=0;end end
   else begin
@@ -127,25 +206,25 @@ end else begin:g_mu
   else if(ENABLE_TOKEN&&wrap_vq&&wrap_dq&&wrap_rq&&wrap_tq)begin peer_epoch_seen<=0;pe_seen<=0;end
   else if(peer_token_accept)begin peer_epoch_seen<=1;peer_last_epoch<=h[245:230];pe_seen[h[231:230]]<=1;pe_last[h[231:230]]<=h[245:232];end
  end
- reg grant_wait,request_accepted,cancel_consumed;reg reset_abort_seen;reg[15:0]active_epoch;
- reg active_epoch_valid;reg[15:0]active_service_epoch;
- wire tuple_ok=grant_token_q==active[35:18]&&grant_position_q==active[17:0]&&grant_generation_q==active[37:36]&&
+ 
+ 
+ assign tuple_ok=grant_token_q==active[35:18]&&grant_position_q==active[17:0]&&grant_generation_q==active[37:36]&&
   grant_tag_q=={grant_epoch_q,6'd0,active[35:18],active[12:0],6'd0};
- wire allocated_match=allocated_token_q==job_tok[active[17:16]]&&allocated_position_q==job_pos[active[17:16]]&&allocated_generation_q==job_gen[active[17:16]];
- wire grant_take=ENABLE_TOKEN&&grant_wait&&request_accepted&&grant_valid_q&&grant_low&&!fault&&(MUT==12||!(abort_seen||abort_q||reset_abort_seen))&&
+ assign allocated_match=allocated_token_q==job_tok[active[17:16]]&&allocated_position_q==job_pos[active[17:16]]&&allocated_generation_q==job_gen[active[17:16]];
+ assign grant_take=ENABLE_TOKEN&&grant_wait&&request_accepted&&grant_valid_q&&grant_low&&!fault&&(MUT==12||!(abort_seen||abort_q||reset_abort_seen))&&
   !(MUT!=10&&(!tuple_ok||!allocated_vq||allocated_dq||!allocated_match||allocated_epoch_q!=grant_epoch_q||grant_epoch_q[1:0]!=active[17:16]));
- reg busy;reg[3:0]dst;reg[181:0]active;
- reg[92:0]last_tk;reg[9:0]last_kst;reg[1:0]last_boot;reg sent_once;
- wire[511:0]h=q[rp];wire[2:0]src=h[18:16];wire[7:0]target=h[31:24];
- wire[15:0]rs=h[47:32];wire hdr=(h[15:8]==1||((ENABLE_SERVICE||ENABLE_TOKEN)&&h[15:8]==2))&&h[23:19]==0&&target==(8'd1<<role);
- wire take=count!=0&&!fault;
- wire sequence_ok=(!seq_seen[src]&&rs==0)||(seq_seen[src]&&rs==seq_rx[src*16+:16]+16'd1);
- wire stale_service=ENABLE_SERVICE&&h[7:0]==8'h21&&h[15:8]==2&&role==0&&src!=0&&h[511:170]==0&&(h[169:154]!=epoch||(!epoch_active&&!startup_q));
- wire send=!fault&&credits!=0&&!tx_v;
- wire load_begin=ENABLE_SERVICE&&role==0&&!busy&&!begin_busy&&!permit_busy&&cn==0&&!cv&&begin_pending&&!fault;
- wire load_permit=ENABLE_TOKEN&&ENABLE_SERVICE&&role==0&&!busy&&!begin_busy&&!permit_busy&&!load_begin&&permit_pending&&!fault;
- wire load_cmd=(role==0)&&!busy&&!begin_busy&&!permit_busy&&!load_begin&&!load_permit&&cn!=0&&!fault;
- wire status_changed=!sent_once||lt[92:32]!=last_tk[92:32]||lb!=last_boot||lk!=last_kst||(ENABLE_SERVICE&&(lready!=last_ready||lepoch!=last_epoch));
+ 
+ 
+ assign h=q[rp];assign src=h[18:16];assign target=h[31:24];
+ assign rs=h[47:32];assign hdr=(h[15:8]==1||((ENABLE_SERVICE||ENABLE_TOKEN)&&h[15:8]==2))&&h[23:19]==0&&target==(8'd1<<role);
+ assign take=count!=0&&!fault;
+ assign sequence_ok=(!seq_seen[src]&&rs==0)||(seq_seen[src]&&rs==seq_rx[src*16+:16]+16'd1);
+ assign stale_service=ENABLE_SERVICE&&h[7:0]==8'h21&&h[15:8]==2&&role==0&&src!=0&&h[511:170]==0&&(h[169:154]!=epoch||(!epoch_active&&!startup_q));
+ assign send=!fault&&credits!=0&&!tx_v;
+ assign load_begin=ENABLE_SERVICE&&role==0&&!busy&&!begin_busy&&!permit_busy&&cn==0&&!cv&&begin_pending&&!fault;
+ assign load_permit=ENABLE_TOKEN&&ENABLE_SERVICE&&role==0&&!busy&&!begin_busy&&!permit_busy&&!load_begin&&permit_pending&&!fault;
+ assign load_cmd=(role==0)&&!busy&&!begin_busy&&!permit_busy&&!load_begin&&!load_permit&&cn!=0&&!fault;
+ assign status_changed=!sent_once||lt[92:32]!=last_tk[92:32]||lb!=last_boot||lk!=last_kst||(ENABLE_SERVICE&&(lready!=last_ready||lepoch!=last_epoch));
  always @(posedge ck)begin
   rd<=rx_d;cd<=cmd_hc;
   if(rv&&count<4)q[wp]<=rd;

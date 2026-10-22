@@ -1,0 +1,4 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job dsdv_sh_lk_s10hq-dsdv_sh_lk_s10hq-649101c0d bench bench_seqhost_mut10 host ot-gold2 run /srv/opentallas-scratch/claude/closure-loop/dsdv_sh_lk_s10hq-dsdv_sh_lk_s10hq-649101c0d log cl/bench_seqhost_mut10.a1b1.log captured 2026-10-21T10:57:43-07:00
+# fail_regex '^SEQHOST FAIL( |$)'
+SEQHOST FAIL timeout (launch0=-1 hsp=320/320 sealed=0/1)

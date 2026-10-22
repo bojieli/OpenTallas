@@ -70,12 +70,14 @@ def spec_params(view_dir):
         return None
 
 
-def real_view(m, ports=None, params=None):
+def real_view(m, ports=None, params=None, physical_view=None):
     """H-DIE-R8b 10-17: a master with several hardened parameter variants (ot_hbm_static_cfg_collar = col_sfu / col_su /
     col_idx) has one routed view per variant tile; pick the candidate whose LEF pins equal this variant's ports and whose
     tile spec params (when recorded) agree with the instance's.  The first sorted candidate used to win for every
     variant (col_su and col_sfu were planned against col_idx's view and fell back to SYNTH)."""
     cands = real_views(m)
+    if physical_view:
+        cands = [rv for rv in cands if str(Path(rv[0]).relative_to(ROOT)) == physical_view]
     if not cands or ports is None:
         return cands[0] if cands else None
     for rv in cands:
@@ -107,19 +109,20 @@ def main():
     groups = defaultdict(list)
     for n, i in C['instances'].items():
         groups[(i['master'], json.dumps(i['ports'], sort_keys=True),
-                json.dumps(i.get('params', {}), sort_keys=True))].append(n)
+                json.dumps(i.get('params', {}), sort_keys=True), i.get('physical_view'))].append(n)
     nvar = defaultdict(int)
-    for (m, _, _) in groups:
+    for (m, _, _, _) in groups:
         nvar[m] += 1
     views, jobs, k_of = {}, [], defaultdict(int)
-    for (m, sig, _params), insts in sorted(groups.items()):
+    for (m, sig, _params, _view), insts in sorted(groups.items(), key=lambda kv: str(kv[0])):
         rep = C['instances'][insts[0]]
         k = k_of[m]; k_of[m] += 1
         cell = m if nvar[m] == 1 else f'{m}__pv{k}'
         ports = {p: v['bits'] for p, v in rep['ports'].items()}
-        rv = real_view(m, ports, rep['params'])
+        rv = real_view(m, ports, rep['params'], rep.get('physical_view'))
         ent = dict(master=m, cell=cell, instances=insts, representative=insts[0], params=rep['params'],
-                   source=rep['source'], ports=len(ports), port_bits=sum(ports.values()))
+                   source=rep['source'], ports=len(ports), port_bits=sum(ports.values()),
+                   requested_physical_view=rep.get('physical_view'), closed_record=rep.get('closed_record'))
         if rv:
             lp = lef_ports(rv[1])
             mism = {p: (lp.get(p), w) for p, w in ports.items() if lp.get(p) != w}

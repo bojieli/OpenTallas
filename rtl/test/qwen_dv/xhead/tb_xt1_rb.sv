@@ -12,6 +12,7 @@
 // every tile ROM_TILE -1 -> empty code ROMs -> must FAIL).
 module tb_xt1 (input wire ck);
     parameter integer CID = 1;
+    parameter integer MU_NU = 1;   // MU-DQ-TOK 10-19: the MU slice (qfd_dv_slice2 MU_NU 4 = the dv2f18mu release-die build); user 0 must be identical
     reg rst_n = 1'b0;
     reg  [115:0]  cmd0;
     reg  [452:0]  hr0;
@@ -19,7 +20,7 @@ module tb_xt1 (input wire ck);
     wire [515:0]  cw_s0, cw_s1, cw_s2, cw_s3;
     wire [513:0]  rs, rs_o;
     wire [106:0]  st;
-    qfd_dv_slice2 #(.MUT(0)) u_s (.ck(ck), .rst_n(rst_n), .cmd_i(cmd0), .cmd_o(), .hr_i(hr0), .hr_o(),
+    qfd_dv_slice2 #(.MUT(0), .MU_NU(MU_NU)) u_s (.ck(ck), .rst_n(rst_n), .cmd_i(cmd0), .cmd_o(), .hr_i(hr0), .hr_o(),
         .rs_s(1028'd0), .rs_n(1028'd0), .l9_i(514'd0), .l9_o(),
         .st_up_i(swi), .st_up_o(), .st_dn_i(1088'd0), .st_dn_o(),
         .sc_up_i(48'd0), .sc_up_o(), .sc_dn_i(48'd0), .sc_dn_o(),
@@ -29,7 +30,9 @@ module tb_xt1 (input wire ck);
     qfd_c_b16_dv c16_W5_1 (
         .ck_c0r0(ck), .ck_c0r1(ck), .ck_c0r2(ck), .ck_c0r3(ck), .ck_c1r0(ck), .ck_c1r1(ck), .ck_c1r2(ck), .ck_c1r3(ck),
         .ck_c2r0(ck), .ck_c2r1(ck), .ck_c2r2(ck), .ck_c2r3(ck), .ck_c3r0(ck), .ck_c3r1(ck), .ck_c3r2(ck), .ck_c3r3(ck),
-        .rst_n(rst_n), .far(1'b0), .cid(12'(CID)),
+        // dv2f18mu: c_b16 has 16 regional reset pins (GEN16); all driven by the bench reset (die: n_rst_field__t* fan-out)
+        .rst_c0r0(rst_n), .rst_c0r1(rst_n), .rst_c0r2(rst_n), .rst_c0r3(rst_n), .rst_c1r0(rst_n), .rst_c1r1(rst_n), .rst_c1r2(rst_n), .rst_c1r3(rst_n), .rst_c2r0(rst_n), .rst_c2r1(rst_n), .rst_c2r2(rst_n), .rst_c2r3(rst_n), .rst_c3r0(rst_n), .rst_c3r1(rst_n), .rst_c3r2(rst_n), .rst_c3r3(rst_n),
+        .far(1'b0), .cid(12'(CID)),
         .bc0(cw_s0), .bco0(), .bc1(cw_s1), .bco1(), .bc2(cw_s2), .bco2(), .bc3(cw_s3), .bco3(),
         .rs(rs), .rs_i(514'd0), .rs_o(rs_o), .tie_hi(), .tie_lo());
 `ifndef OT_XT1_NOBIND

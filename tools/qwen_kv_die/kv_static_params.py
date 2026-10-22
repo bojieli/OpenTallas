@@ -40,7 +40,10 @@ sys.path.insert(0, str(ROOT / 'tools'))
 SCHEMA_MODEL = 'opentallas.qwen_kv.static_model.v1'
 SCHEMA = 'opentallas.qwen_kv.static_params.v1'
 AHUB_DEFAULT = dict(AP_OFS=[2, 2, 2, 2], FR_OFS=0)          # rtl/hdc/nearhbm/qkd_ahub_static_dw.sv parameter defaults
-AHUB_KIT_SPEC = 'tools/ref_tile/specs_kvahubdw/qkd_ahub_sdw.json'
+# KV-AHUB8 10-20: the HARDENED kit spec (its params = what the bound view qkd_ahub_sdw-a7-c6c412b4c was synthesised at:
+# AP_OFS 64'hffddffdeffdcffdc, FR_OFS 32'hfffffff9, Z_IN_STRIDE 4).  The generator copy under tools/ref_tile/specs_kvahubdw
+# carries params {} and made AHUB_OFS_BOUND compare the table with the RTL defaults {4{2}} / 0, not the view.
+AHUB_KIT_SPEC = 'physical/ref_tile/qkd_ahub_sdw/spec.json'
 
 
 def _ksd():
@@ -302,8 +305,21 @@ def _vals(pr):
     if 'AP_OFS' in pr:
         got['AP_OFS'] = _ap_list(pr['AP_OFS'])
     if 'FR_OFS' in pr:
-        got['FR_OFS'] = int(str(pr['FR_OFS']), 0)
+        got['FR_OFS'] = _int_lit(pr['FR_OFS'])
     return got
+
+
+def _int_lit(v):
+    """an integer parameter value: int, '-7', or a sized Verilog literal such as 32'hfffffff9 (two's complement; the closed
+    a7 kit spec form, KV-AHUB8 10-20)"""
+    if isinstance(v, int):
+        return v
+    s = str(v).strip()
+    mm = re.fullmatch(r"(\d+)'s?([hdbo])([0-9a-fA-F_]+)", s)
+    if not mm:
+        return int(s, 0)
+    w, x = int(mm.group(1)), int(mm.group(3).replace('_', ''), {'h': 16, 'd': 10, 'b': 2, 'o': 8}[mm.group(2)])
+    return x - (1 << w) if x >> (w - 1) & 1 else x
 
 
 def _ap_list(v):
@@ -314,7 +330,7 @@ def _ap_list(v):
     if fs:                                           # {s3, s2, s1, s0} MSB first
         vals = [int(x, 16) for x in reversed(fs)]
         return [x - 0x10000 if x & 0x8000 else x for x in vals]
-    x = int(s, 0)
+    x = _int_lit(s) & ((1 << 64) - 1)               # also one sized literal 64'h... (the a7 kit spec form)
     return [((x >> (16 * k)) & 0xffff) - (0x10000 if (x >> (16 * k)) & 0x8000 else 0) for k in range(4)]
 
 

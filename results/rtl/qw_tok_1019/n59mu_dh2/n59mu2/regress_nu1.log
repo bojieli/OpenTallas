@@ -1,0 +1,18 @@
+positive OK (pass)
+N59DV_PASS x3=4 tx=33(1 CMD+32 Q) ar=32 bit-exact vs OLD (+1/+1/+2 edges), native_ret every edge, done 214->215, emb group-1 words=65 at cmd+6..+70
+bad_q OK (pass)
+N59DV_ERR cycle 125: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 126: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 127: native_ret(NEW,t+1) != native_ret(OLD,t)
+mut1_q_lane OK (mutant fails)
+N59DV_ERR cycle 129: native_tx_payload differs from OLD (or not +1 edge)
+N59DV_ERR cycle 129: Q beat != element values (packing)
+N59DV_ERR cycle 130: native_tx_payload differs from OLD (or not +1 edge)
+mut2_kv_addr OK (mutant fails)
+N59DV_ERR cycle 31: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 32: native_ret(NEW,t+1) != native_ret(OLD,t)
+N59DV_ERR cycle 33: native_ret(NEW,t+1) != native_ret(OLD,t)
+mut3_emb_word OK (mutant fails)
+N59DV_ERR cycle 298: embedding code word
+N59DV_ERR cycle 299: embedding code word
+N59DV_ERR cycle 300: embedding code word
