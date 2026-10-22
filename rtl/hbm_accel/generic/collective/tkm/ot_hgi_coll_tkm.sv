@@ -684,6 +684,28 @@ module ot_tkm_lt_chunked #(parameter integer W=85, G=5)
  assign lt=|term;
 endmodule
 
+// E86 V6 (STEWARD-HBM/IDX-E86 2026-10-21): kept replica leaves.  v5 standalone mapped census FAIL 2573 / max 2064: every
+// CREP select copy (same D, same edge) was folded by opt_merge into one flop per region (u.g_crep.dsel_face[0][k] ->
+// 1,376-2,064 loads).  A (* keep *) on a reg reaches only the wire; a parameterised keep list misses $paramod names.
+// These NON-parameterised leaves are instantiated with (* keep_hierarchy *): opt_merge never merges two user-module
+// instances, in any flow (standalone synth -flatten or ORFS + ot_keep_regs), so each copy stays its own flop(s).
+// Function = the plain register(s) / decode they replace, same clock edge.
+module ot_tkm_kff1 (input wire clk, input wire d, output reg q);
+    always @(posedge clk) q <= d;
+endmodule
+module ot_tkm_kff3 (input wire clk, input wire [2:0] d, output reg [2:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+module ot_tkm_kff4 (input wire clk, input wire [3:0] d, output reg [3:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+// one select-source copy: registered {clr, conv, v} and its one-hot decode {hold, ins, shift, clr} (= g_pc32 c0/c1/v)
+module ot_tkm_sel_src (input wire clk, input wire clr, input wire conv, input wire v, output wire [3:0] sel);
+    reg c0, c1, rv;
+    always @(posedge clk) begin c0 <= clr; c1 <= conv; rv <= v; end
+    assign sel = {!c0 && !c1 && !rv, !c0 && !c1 && rv, !c0 && c1, c0};
+endmodule
+
 // ot_tkm_gn_leaf (HBM-E86-5 2026-10-20, e86 FAN32 V3): the GN next-state of one position from ITS OWN kept count
 // copies (cg/cv: gt / valid copies of positions d-0..d-4), the four-position compare outputs g2 (g2f of d-k) and the
 // group block compares gb. Logic = the FAN32 1 g_gn32 g_new block, verbatim; DMIN = min(d, 5) carries the d >= k and
@@ -742,7 +764,8 @@ endmodule
 module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT = 64, parameter integer TW = 6,
                                  parameter integer LW = 7, parameter integer PRE = 0,
                                  parameter integer CREP = 0, parameter integer CMUT = 0, parameter integer FAN32 = 0,
-                                 parameter integer SEAM = 0, parameter integer LT_GROUP = 0, parameter integer GCFOLD = 0) (
+                                 parameter integer SEAM = 0, parameter integer LT_GROUP = 0, parameter integer GCFOLD = 0,
+                                 parameter integer KLEAF = 0) (
     input  wire              clk, clk_r0, clk_r1, clk_r2, clk_r3,
     input  wire [TW-1:0]     tid,
     input  wire              clr, conv,
@@ -783,7 +806,10 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         end
         assign i_clr = s_clr; assign i_conv = s_conv; assign i_v = s_v; assign i_tid = s_tid; assign i_tt = s_tt;
         assign i_tl = s_tl; assign i_b = s_b;
-        if (FAN32 >= 2) begin : g_s2
+        if (FAN32 >= 2 && KLEAF != 0) begin : g_s2k
+            // V6: second pin-stage copy as a kept leaf (v5 standalone folded s_*2 into s_* -> one select source)
+            (* keep_hierarchy *) ot_tkm_kff3 u_s2 (.clk(clk), .d({clr, conv, ins_v}), .q({i_clr2, i_conv2, i_v2}));
+        end else if (FAN32 >= 2) begin : g_s2
             (* keep="true", dont_touch="true" *) reg s_clr2, s_conv2, s_v2;
             always @(posedge clk) begin s_clr2 <= clr; s_conv2 <= conv; s_v2 <= ins_v; end
             assign i_clr2 = s_clr2; assign i_conv2 = s_conv2; assign i_v2 = s_v2;
@@ -935,6 +961,7 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     wire [4*NP-1:0]    g2f;
     wire [4*NP-1:0]    g2s;   // SEAM: compares of seam positions on the consumer root (= g2f elsewhere)
     wire [16*NGR-1:0]  gbf;
+    wire [16*NGR-1:0]  gbf_h [0:1];   // V6 KLEAF: block compares per position half (h = (pos % GP) / 4); gbf = half 0
     wire [2:0] cp [0:NP-1];
     for (gp = 0; gp < NP; gp = gp + 1) begin : g_seam_pos
         if (seam_p(gp)) begin : g_on
@@ -976,12 +1003,21 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                 wire [KT-1:0] ka = q_bg[gg][EW*gj + 1 +: KT];
                 wire [KT-1:0] kb = p_bg[gg][EW*gk + 1 +: KT];
                 wire lt_;
-                if(LT_GROUP!=0)begin:g_chunked
+                if(KLEAF!=0&&LT_GROUP!=0)begin:g_khalf
+                    // V6: one kept compare per position half: v5 one u_b.lt fed 8 positions x 3 GN variants (42-48 loads)
+                    wire lt_h1;
+                    (* keep_hierarchy *) ot_tkm_lt_chunked #(.W(KT),.G(LT_GROUP)) u_b0 (.a(ka),.b(kb),.lt(lt_));
+                    (* keep_hierarchy *) ot_tkm_lt_chunked #(.W(KT),.G(LT_GROUP)) u_b1 (.a(ka),.b(kb),.lt(lt_h1));
+                    assign gbf_h[1][16*gg + 4*gj + gk] = lt_h1;
+                end else if(LT_GROUP!=0)begin:g_chunked
                     ot_tkm_lt_chunked #(.W(KT),.G(LT_GROUP)) u_b (.a(ka),.b(kb),.lt(lt_));
+                    assign gbf_h[1][16*gg + 4*gj + gk] = lt_;
                 end else begin:g_binary
                     ot_tkm_lt_live #(.W(KT)) u_b (.a(ka),.b(kb),.lt(lt_));
+                    assign gbf_h[1][16*gg + 4*gj + gk] = lt_;
                 end
                 assign gbf[16*gg + 4*gj + gk] = lt_;
+                assign gbf_h[0][16*gg + 4*gj + gk] = lt_;
             end
         end
     end
@@ -1022,10 +1058,10 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
                 assign g2_[4*k+:4]=(d>=k&&!(CMUT==3&&d==20&&v==1&&k==1))?g2src:4'd0;  // CMUT 3 (bench only): V3 variant-1 GN of position 20 drops its k=1 compare leg
             end
             if(FAN32==2)begin:g_kh
-                (* keep_hierarchy *) ot_tkm_gn_leaf #(.DMIN((d<5)?d:5),.FOLD(GCFOLD)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]),.gn_next(gnv_next[d][v]),
+                (* keep_hierarchy *) ot_tkm_gn_leaf #(.DMIN((d<5)?d:5),.FOLD(GCFOLD)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf_h[(d%GP)/4][16*(d/GP)+:16]),.gn(gnv[d][v]),.gn_next(gnv_next[d][v]),
                  .clear((CMUT==6&&d==20&&v==1)?1'b1:clear_copy[d][FN+v][0]),.flags(pflags_w[d][v]));
             end else begin:g_flat
-                ot_tkm_gn_leaf #(.DMIN((d<5)?d:5),.FOLD(GCFOLD)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf[16*(d/GP)+:16]),.gn(gnv[d][v]),.gn_next(gnv_next[d][v]),
+                ot_tkm_gn_leaf #(.DMIN((d<5)?d:5),.FOLD(GCFOLD)) u_gn (.cg(cg_),.cv(cv_),.g2(g2_),.gb(gbf_h[(d%GP)/4][16*(d/GP)+:16]),.gn(gnv[d][v]),.gn_next(gnv_next[d][v]),
                  .clear((CMUT==6&&d==20&&v==1)?1'b1:clear_copy[d][FN+v][0]),.flags(pflags_w[d][v]));
             end
         end
@@ -1099,7 +1135,17 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     end
     wire [3:0] dsel_position[0:NGR-1][0:1];
     wire [3:0] dsel_face[0:1];
-    if(FAN32!=0)begin:g_pc32
+    if(FAN32!=0&&KLEAF!=0)begin:g_pc32k
+        // V6: every select-source copy is its own kept leaf (v5 standalone folded all 20 into one)
+        for(genvar g=0;g<NGR;g=g+1)begin:g_g
+            for(genvar c=0;c<2;c=c+1)begin:g_c
+                (* keep_hierarchy *) ot_tkm_sel_src u_ss (.clk(clk),.clr(i_clr2),.conv(i_conv2),.v(i_v2),.sel(dsel_position[g][c]));
+            end
+        end
+        for(genvar f=0;f<2;f=f+1)begin:g_face
+            (* keep_hierarchy *) ot_tkm_sel_src u_ss (.clk(clk),.clr(i_clr),.conv(i_conv),.v(i_v),.sel(dsel_face[f]));
+        end
+    end else if(FAN32!=0)begin:g_pc32
         for(genvar g=0;g<NGR;g=g+1)begin:g_g
             for(genvar c=0;c<2;c=c+1)begin:g_c
                 (* keep="true",dont_touch="true" *) reg c0,c1,v;
@@ -1126,10 +1172,16 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
         for (gj = 0; gj < NXS; gj = gj + 1) begin : g_s
             localparam integer LO = gj * XS;
             localparam integer W = (EW - LO < XS) ? EW - LO : XS;
-            (* keep *) reg [3:0] m;                     // {hold, ins, shift, clr}
-            always @(posedge ckr[rg(gp / GP)])
-                m <= (CMUT == 1 && gp == 13 && gj == 1) ? {dsel_position[gp / GP][(gp % GP)/4][1] | dsel_position[gp / GP][(gp % GP)/4][3], dsel_position[gp / GP][(gp % GP)/4][2], 1'b0, dsel_position[gp / GP][(gp % GP)/4][0]}
+            wire [3:0] md = (CMUT == 1 && gp == 13 && gj == 1) ? {dsel_position[gp / GP][(gp % GP)/4][1] | dsel_position[gp / GP][(gp % GP)/4][3], dsel_position[gp / GP][(gp % GP)/4][2], 1'b0, dsel_position[gp / GP][(gp % GP)/4][0]}
                                                          : dsel_position[gp / GP][(gp % GP)/4];
+            wire [3:0] m;                               // {hold, ins, shift, clr}
+            if (KLEAF != 0) begin : g_mk
+                (* keep_hierarchy *) ot_tkm_kff4 u_m (.clk(ckr[rg(gp / GP)]), .d(md), .q(m));
+            end else begin : g_mr
+                (* keep *) reg [3:0] mr;
+                always @(posedge ckr[rg(gp / GP)]) mr <= md;
+                assign m = mr;
+            end
             assign xn[LO +: W] = ({W{m[1]}} & xa[LO +: W]) | ({W{m[2]}} & ins[gp][LO +: W]) | ({W{m[3]}} & X[gp][LO +: W]);
         end
     end
@@ -1143,10 +1195,18 @@ module ot_hgi_coll_tkm_tile_rg #(parameter integer EW = 86, parameter integer PT
     for (gj = 0; gj < NUS; gj = gj + 1) begin : g_us
         localparam integer LO = gj * US;
         localparam integer W = (4 * EW - LO < US) ? 4 * EW - LO : US;
-        (* keep *) reg [3:0] mu;                        // up_out: group 0 select
-        (* keep *) reg mo;                              // ovf_b: last group's "ins" select (clr / conv / idle hold ovf_b)
-        always @(posedge ckr[rg(0)]) mu <= dsel_face[0];
-        always @(posedge ckr[rg(NGR - 1)]) mo <= dsel_face[1][2];
+        wire [3:0] mu;                                  // up_out: group 0 select
+        wire mo;                                        // ovf_b: last group's "ins" select (clr / conv / idle hold ovf_b)
+        if (KLEAF != 0) begin : g_uk
+            (* keep_hierarchy *) ot_tkm_kff4 u_mu (.clk(ckr[rg(0)]), .d(dsel_face[0]), .q(mu));
+            (* keep_hierarchy *) ot_tkm_kff1 u_mo (.clk(ckr[rg(NGR - 1)]), .d(dsel_face[1][2]), .q(mo));
+        end else begin : g_ur
+            (* keep *) reg [3:0] mur;
+            (* keep *) reg mor;
+            always @(posedge ckr[rg(0)]) mur <= dsel_face[0];
+            always @(posedge ckr[rg(NGR - 1)]) mor <= dsel_face[1][2];
+            assign mu = mur; assign mo = mor;
+        end
         assign un[LO +: W] = ({W{mu[1]}} & ua[LO +: W]) | ({W{mu[2]}} & ub[LO +: W]) | ({W{mu[3]}} & up_out[LO +: W]);
         assign on[LO +: W] = mo ? oi[LO +: W] : ovf_b[LO +: W];
     end
