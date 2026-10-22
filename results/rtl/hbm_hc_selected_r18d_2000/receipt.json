@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "scope": "Exact selected d76 HC quarter reader component minimum, not hub/root or full-token execution.",
+  "source": "d76bf51b48d2fec173c70ea1d358d48a3e025ea5",
+  "source_ledger": "sources.json",
+  "controller": 2616379,
+  "host": "ot-gold2",
+  "unit": "1669151-1792647730",
+  "simulator": "Icarus Verilog 12.0",
+  "parameters": {
+    "RD_CAPTURE": 23,
+    "GATHER_PHASE": 23,
+    "DONE_LAT": 19,
+    "XW_BEATS": 4,
+    "pair_leaves": 4,
+    "tap_READ_RETURN": 18,
+    "tap_WRITE_RETURN": 15
+  },
+  "positive": {
+    "waves": 160,
+    "gathered_mix_words": 72,
+    "stores": 12
+  },
+  "negative_controls": {
+    "MUT1_residual_word": 5120,
+    "MUT2_store_sector": 5,
+    "MUT3_capture_edge": 5121,
+    "MUT4_tap_reservation": 1
+  },
+  "positive_binary_sha256": "822c3487dd88ddd198fee6203742b2e820a5c743039b562e0445e8e4f979c699",
+  "objects_retained": "ot-gold2:/srv/opentallas-scratch/claude/codex-hc-selected-r18d-2000/out",
+  "note": "The existing canonical run_hc_q_static.sh ran unchanged with the entire 15-file closure extracted from selected revision. Selected hub DRLY 2 / CHX 11 has the same reader defaults; this receipt does not qualify that centre, whole HC root or produced tensor caller."
+}
