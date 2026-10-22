@@ -104,9 +104,24 @@ module ot_hidx_score_pair8 #(parameter integer RID=0)(
                 always @(posedge clk) begin cs_o <= seed_d[31:0]; cf_o <= seed_d[32]; end
             end else begin : g_sum
                 wire [1:0] err; wire vo_unused; wire [31:0] sum; wire pf;
+                // HBM-ELEM13/IDX 10-21 native32: the 16 zero pad bits of b were ONE hilomap -singleton TIELO
+                // feeding 172 dont_touch native-adder pins (repair_tie_fanout skips dont_touch loads at
+                // floorplan). One kept TIELO per pad bit -> <= 6 loads each. Logic value unchanged (0).
+                wire [15:0] zpad;
+`ifdef SYNTHESIS
+                if (`OT_IDX_FAN32_SAFE != 0) begin : g_zt
+                    for (k = 0; k < 16; k = k + 1) begin : g_z
+                        (* keep = 1, dont_touch = 1 *) TIELOx1_ASAP7_75t_R u_tlo (.L(zpad[k]));
+                    end
+                end else begin : g_zc
+                    assign zpad = 16'd0;
+                end
+`else
+                assign zpad = 16'd0;
+`endif
                 (* keep_hierarchy *) ot_hdc_fp32_add_lat_fan32 #(.LAT(FPL), .DRST(0), .SAFE_DIST(`OT_IDX_FAN32_SAFE)) u_a (
                     .clk(clk), .rst_n(srr[1 + hh * NB]), .valid_in(1'b1),
-                    .a(csi_p), .b({tm, 16'd0}), .y(sum), .err(err), .valid_out(vo_unused));
+                    .a(csi_p), .b({tm, zpad}), .y(sum), .err(err), .valid_out(vo_unused));
                 ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(clk), .rst_n(1'b1), .d(cfi_p || tf), .q(pf));
                 always @(posedge clk) begin cs_o <= sum; cf_o <= pf || (err != 2'd0); end
             end

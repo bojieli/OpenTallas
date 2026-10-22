@@ -20,9 +20,9 @@
  "inter": [],
  "hold_budget": "die",
  "job": {
-  "owner": "Codex CODEX-HBM-IDX-1021",
+  "owner": "Claude HBM-ELEM13/IDX",
   "purpose": "Critical IDX-SCORE COL8 two-head arithmetic region; four distinct global-head-delay masters, no active-cycle change, boot +1",
-  "branch": "codex/hbm-col7-struct-1021",
+  "branch": "claude/hbm-col8-tie-1021",
   "benches": [
    {
     "name": "chunk_rt_c_pos",
@@ -73,7 +73,7 @@
     "fail_witness": "results/rtl/hbm_idx_static/score_col8_1021/qlate1.log"
    }
   ],
-  "tag": "r1",
+  "tag": "zt1",
   "extra_paths": [
    "rtl/hdc",
    "rtl/lib",
@@ -101,7 +101,7 @@
   "rst_n"
  ],
  "params": {},
- "structural_change": "COL7 actual GRTFAIL96,168overflow/38.83% after30iterations; red N ingress strip/all-N1216pins, 70k-floproot. COL8 cuts exact two-head regions into distinct RID masters with their own CTS and queryN/keyS split; parent2x2 serpentine SW-SE-NE-NW,43.2channels,561.6x475.2 planned. Existing arithmetic/query/head-delay/seam edges unchanged; one extra boot-online edge from hierarchical bounded reset, explicit bench ONL_LAG+1. Native32 required before layout. No knob-only retry.",
+ "structural_change": "HBM-ELEM13/IDX 10-21 native32 successor of 005325591: Col8R1 post-ECO strict native FAIL TIELO _29601_ 172 direct/188 transitive sinks (R0/R2 same shared TIELO). Root cause: col8.sv b={tm,16'd0} into the dont_touch native fp32 adder; hilomap -singleton makes one TIELO, floorplan repair_tie_fanout skips dont_touch loads. Fix: one kept TIELO per pad bit (32 cells/tile, <=6 loads each, value 0). No latency, port, clock, reset or geometry change. COL7 actual GRTFAIL96,168overflow/38.83% after30iterations; red N ingress strip/all-N1216pins, 70k-floproot. COL8 cuts exact two-head regions into distinct RID masters with their own CTS and queryN/keyS split; parent2x2 serpentine SW-SE-NE-NW,43.2channels,561.6x475.2 planned. Existing arithmetic/query/head-delay/seam edges unchanged; one extra boot-online edge from hierarchical bounded reset, explicit bench ONL_LAG+1. Native32 required before layout. No knob-only retry.",
  "reset_landing": {
   "enable": false,
   "reason": "the RTL lands it: rst_n reaches only the 2 synchroniser flops of each region's ot_rst_relay_l (copies clear from the last stage)"
