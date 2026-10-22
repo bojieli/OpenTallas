@@ -32,6 +32,14 @@ c = json.load(open(sys.argv[1]))
 m = {k: dict(view=v['view'], source='insertion.json (kvsys clocks.json measured)',
              insertion_per_clock_pin_ps={p: [v['R_ps'].get('ss', {}).get(p, v['R_ps']['tt'][p]), v['R_ps'].get('ff', {}).get(p, v['R_ps']['tt'][p]),
                                              v['R_ps']['tt'][p]] for p in v['R_ps'].get('tt', {})}) for k, v in c['measured'].items()}
+# SQC-KDIE4 10-22: since 18782a1900 die_clock/build.py refuses a sink master without an insertion R.  clocks.json lists
+# the frames / stand-in masters it times as IDEAL (rule 'frames ideal (R 0)', key assumed_ideal); carry exactly that
+# assumption explicitly (R 0 at every corner, labelled) instead of omitting them (sqc3s DIECLK CTS build FAIL:
+# missing native insertion R for ot_qkvd_ucie_x64_phy/clk).  Measured views keep their measured R.
+for k in c.get('assumed_ideal', []):
+    if k not in m:
+        m[k] = dict(view=None, source='clocks.json assumed_ideal (frame / stand-in: ideal, R 0 -- same as the STA)',
+                    insertion_in_arcs_ps=[0.0, 0.0, 0.0])
 json.dump(dict(schema='opentallas.die_clock.targets.v1', masters=m), open(sys.argv[2], 'w'), indent=1)
 PY
 ROOTS=pll/pll_c,pll/pll_WS,pll/pll_WN,pll/pll_ES,pll/pll_EN,pll/pll_hbm_WS,pll/pll_hbm_WN,pll/pll_hbm_ES,pll/pll_hbm_EN
