@@ -1,0 +1,5 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job dsdv_sh_lk_s10hq-dsdv_sh_lk_s10hq-649101c0d bench bench_n32_lockstep_mutkind host ot-gold2 run /srv/opentallas-scratch/claude/closure-loop/dsdv_sh_lk_s10hq-dsdv_sh_lk_s10hq-649101c0d log cl/bench_n32_lockstep_mutkind.a1b1.log captured 2026-10-21T11:06:45-07:00
+# fail_regex '^FAIL LOCKSTEP seed=\\d+ mismatches=[1-9]|%Fatal: ot_s81_ing_stream_n32\\.sv:\\d+: Assertion failed'
+FAIL LOCKSTEP seed=1 mismatches=246 cycles=146682 consumed=42253/42253
+LOCKSTEP_GATE FAIL

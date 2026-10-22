@@ -133,7 +133,22 @@ cd "$T" || exit 3
 if ! grep -q 'producer_words_per_cluster_per_round' rtl/test/qwen_dv/dv_lower_mat_bench.py; then
   patch -p1 < "$HERE/stg_mat_running.patch" > "$S/mat_contract_patch.log" 2>&1 || exit 3
 fi
-sha256sum tools/qwen_layerbench/dv_lower_mat.py rtl/test/qwen_dv/dv_lower_mat_bench.py > "$S/mat_contract_sources.sha256"
+# TOK-FUNC3-QW-STG4 10-21: the nominal rel/pos MAT calibration needs the protocol-correct XC framer pre-arms
+# (codex/qw-tok-func2-1021 1b29dcd28 / 02d9818ec: one root arm per 8-word AR probe, a 1-word arm for the AMAX/ARX
+# gather, CC measured on its unique 0x55 marker; PASSed on the STG3 binaries). Calibration stimulus only, no RTL.
+if ! grep -q 'Probe pre-arms produce earlier CC pulses' rtl/test/qwen_dv/dv_lower_mat_bench.py; then
+  patch -p1 < "$HERE/stg_cal_prearm.patch" >> "$S/mat_contract_patch.log" 2>&1 || exit 3
+fi
+# TOK-FUNC3-QW-STG4 10-21: testbench VM-write probe (tb_qfd_dv2 S<k>VW = station-result st_vm writes) + its parse in
+# dv_lower_mat_bench (first/last_vm_write_edge, delivery_span_cycles); testbench only, the slice RTL is untouched.
+# Applied BEFORE the prospective build-source snapshot, so the tb change is part of the bound build identity.
+if ! grep -q 'S%0dVW' rtl/test/qwen_dv/tb_qfd_dv2.sv; then
+  patch -p1 < "$HERE/stg_vm_probe.patch" >> "$S/mat_contract_patch.log" 2>&1 || exit 3
+fi
+grep -q 'S%0dVW' rtl/test/qwen_dv/tb_qfd_dv2.sv && grep -q 'def vm_writes' rtl/test/qwen_dv/dv_lower_mat_bench.py &&
+  grep -q 'Probe pre-arms produce earlier CC pulses' rtl/test/qwen_dv/dv_lower_mat_bench.py ||
+  { echo "STG bench contract incomplete (pre-arm calibration / VM-write probe)"; exit 3; }
+sha256sum tools/qwen_layerbench/dv_lower_mat.py rtl/test/qwen_dv/dv_lower_mat_bench.py rtl/test/qwen_dv/tb_qfd_dv2.sv > "$S/mat_contract_sources.sha256"
 t0=$(date +%s)
 
 # ---------------------------------------------------------------- 1. fixtures (background) + 3 builds (background)
