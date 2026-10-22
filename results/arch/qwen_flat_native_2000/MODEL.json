@@ -34,12 +34,22 @@
     "external_ports": "Full original ABI preserved",
     "internal_data_reset_fanout_cap": 24,
     "clock_fanout": "Native clock qualification required, clock is never duplicated as data",
-    "external_input_overload": "Refuse and report exact source input; no added input buffers or phantom copies"
+    "external_input_overload": "Refuse and report exact source input; no added input buffers or phantom copies",
+    "external_input_fanout_cap": 32
   },
   "latency": {
     "functional_execution_delta_edges": 0,
     "reset_release_delta_edges": 3
   },
   "area": "Actual copied FF and logic count generated before native; no timing or area closure claim",
-  "scope": "One selected lane0; exact authentic SRAM; no LT1/safe2 switch, no threshold waiver"
+  "scope": "One selected lane0; exact authentic SRAM; no LT1/safe2 switch, no threshold waiver",
+  "measured_source_construction": {
+    "original_generic_cells": 239128,
+    "final_generic_cells": 241071,
+    "plain_data_ff_copies": 349,
+    "async_ff_copies": 1,
+    "reset_forest_nodes": 76,
+    "reset_functional_terminal_count": 1721,
+    "macro_instances": 1
+  }
 }

@@ -189,7 +189,7 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
       else:ends.append((*sink,inv))
     terminal_sinks[b]=ends
   else:terminal_sinks={b:[(*sink,0) for sink in x] for b,x in sinks.items()}
-  overloaded=[(b,x) for b,x in terminal_sinks.items() if sum(v[0] for v in x)>load_cap]
+  overloaded=[(b,x) for b,x in terminal_sinks.items() if sum(v[0] for v in x)>(load_cap if b in drivers else 32)]
   if not overloaded:break
   # Reverse cell order helps process a downstream copy before its parents.
   for b,x in reversed(overloaded):
@@ -262,7 +262,8 @@ def build(raw,top,new,drop=(),collapse=False,load_cap=32,transparent_inverters=F
  for idx,(n,c) in enumerate(cells.items()):
   typ=c['type']
   if typ in MACROS:
-   con=','.join('.'+p+'('+bus(bs)+')' for p,bs in c['connections'].items());lines.append(f"{typ} hard_rom_{idx}({con});");continue
+   lines.extend(['`ifdef OT_TLS_MUT',f'wire [6:0] tls_read_{idx} = '+bus(c['connections']['r_addr_in'])+" - 7'd1;",'`else',f'wire [6:0] tls_read_{idx} = '+bus(c['connections']['r_addr_in'])+';','`endif'])
+   con=','.join('.'+p+'('+(f'tls_read_{idx}' if p=='r_addr_in' else bus(bs))+')' for p,bs in c['connections'].items());lines.append(f"{typ} hard_sram_{idx}({con});");continue
   if typ=='$_QFD_RING_':
    x=c['connections'];lines.append(f"qfd_dv_ring_delay #(.W({c['width']}),.D({c['depth']})) u_{idx}(.clk({bus(x['C'])}),.rst_n({bus(x['R'])}),.d({bus(x['D'])}),.q({bus(x['Q'])}));");continue
   retain_driver=any(b in retain_bits for p,bs in c['connections'].items() if c['port_directions'][p]=='output' for b in bs)

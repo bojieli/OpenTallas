@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_flat_ml1_native_bounded",
+ "enable": false,
+ "reason": "Actual source owns three clocked async-assert reset-release levels; startup+3 priced; no added wrapper reset."
+}

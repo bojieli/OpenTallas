@@ -1,0 +1,165 @@
+{
+ "name": "qfd_flat_native_alt",
+ "top": "qfd_flat_ml1_native_bounded",
+ "kind": "tile",
+ "recipe": 4,
+ "sources": [
+  "rtl/qwen_flat_native_2000/qfd_flat_ml1_native_bounded.sv",
+  "rtl/qwen_flat_native_2000/qfd_flat_ml1_native_helpers.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock": "cts",
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 302.4,
+  "h": 259.2
+ },
+ "children": [],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "hard_sram_239127",
+   "at": [
+    129.6,
+    108
+   ],
+   "orient": "R0"
+  }
+ ],
+ "inter": [],
+ "pins": {
+  "W": [
+   "clk",
+   "i",
+   "curb0",
+   "asi",
+   "asrc",
+   "md",
+   "dst",
+   "imm2",
+   "va_re",
+   "vb_addr",
+   "vc_q",
+   "crom_re",
+   "vm_waddr",
+   "kv_wdata",
+   "l_redsq",
+   "l_fault",
+   "sy_exp_vo",
+   "sy_rcp_y",
+   "sy_rsq_y"
+  ],
+  "E": [
+   "rst_n",
+   "fin_th",
+   "curc0",
+   "bsi",
+   "bsrc",
+   "redsq",
+   "red",
+   "cls",
+   "va_addr",
+   "vb_q",
+   "wrom_re",
+   "crom_addr",
+   "vm_wdata",
+   "l_ov",
+   "l_raddr",
+   "sx_exp_v",
+   "sy_exp_f",
+   "sy_rcp_f",
+   "sy_rsq_f"
+  ],
+  "N": [
+   "emit0",
+   "i_last_r",
+   "curd0",
+   "csi",
+   "csrc",
+   "ma",
+   "ad",
+   "accept",
+   "va_q",
+   "vc_re",
+   "wrom_addr",
+   "crom_q",
+   "kv_we",
+   "l_out",
+   "l_last",
+   "sx_exp_x",
+   "sx_rcp_v",
+   "sx_rsq_v"
+  ],
+  "S": [
+   "live",
+   "cura0",
+   "rrow",
+   "dsi",
+   "mc",
+   "mb",
+   "imm1",
+   "i_sfu",
+   "vb_re",
+   "vc_addr",
+   "wrom_q",
+   "vm_we",
+   "kv_waddr",
+   "l_red",
+   "retire",
+   "sy_exp_y",
+   "sx_rcp_x",
+   "sx_rsq_x"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Exact selected flat lane already captures its source interface; preserve current service edges. Actual all-pin native/physical proof remains open."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Actual source owns three clocked async-assert reset-release levels; startup+3 priced; no added wrapper reset."
+ },
+ "layer_cap": "M5",
+ "job": {
+  "owner": "CODEX-QFLAT-NATIVE-2000",
+  "branch": "codex/qflat-native-2000",
+  "tag": "bounded1alt",
+  "purpose": "Selected ML1/TLS1 lane0 same-edge graph successor; actual native32 authority; priced reset startup+3",
+  "extra_paths": [
+   "tools/qwen_flat_native_2000",
+   "results/arch/qwen_flat_native_2000"
+  ],
+  "benches": []
+ },
+ "safe_design_checklist": {
+  "pins": "Actual registered source interface; no added edges.",
+  "reach": "Single259.2/302.4um lane outline; no die transport claim.",
+  "fanout": "Same-edge source FF/Boolean duplication cap24 internal, strict32 external; actual native census required.",
+  "depth": "Actual embedded SFU math LA3 LM3 retained; real timing decides structural pipeline needs.",
+  "storage": "One real128x256 SRAM ring plus actual source delays/SFUs; full census required.",
+  "floorplan": "Real SRAM view, full-face pins, continuous standard-cell area.",
+  "clock": "All state uses original clk; reset forest76FF with3-edge release, no alternate clock or threshold.",
+  "schedule": "CurrentML1/TLS1 class formulas unchanged; no safe2 latency transfer."
+ },
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}
