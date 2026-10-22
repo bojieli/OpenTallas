@@ -5,7 +5,7 @@
   "origin": "paired_segment_start",
   "params": {
     "QB_ALIGN": 1,
-    "QB_LOCAL32": 0,
+    "QB_LOCAL32": 1,
     "SVC_RECV": 0,
     "SVC_LOCAL32": 0
   },
@@ -118,7 +118,18 @@
       "request_capture_edge": null,
       "retire_pin_edge": null,
       "next_begin_pin_edge": null,
-      "l_calendar_start_edge": null
+      "l_calendar_start_edge": null,
+      "identity": {
+        "epoch": null,
+        "generation": null,
+        "user": null,
+        "layer": null,
+        "token": null,
+        "position": null
+      },
+      "paired_segment_start_epoch_edge": null,
+      "l_start_decode_edges": null,
+      "l_start_driver_event": null
     },
     {
       "segment": 1,
@@ -199,7 +210,18 @@
       "request_capture_edge": null,
       "retire_pin_edge": null,
       "next_begin_pin_edge": null,
-      "l_calendar_start_edge": null
+      "l_calendar_start_edge": null,
+      "identity": {
+        "epoch": null,
+        "generation": null,
+        "user": null,
+        "layer": null,
+        "token": null,
+        "position": null
+      },
+      "paired_segment_start_epoch_edge": null,
+      "l_start_decode_edges": null,
+      "l_start_driver_event": null
     }
   ],
   "source_revision": null,
@@ -213,5 +235,10 @@
       "q_slot",
       "q_slot_beat"
     ]
+  },
+  "l_player": {
+    "master": "qfd_sys_face_ovl_fault1",
+    "source": "rtl/qwen_split/qfd_sys_face_ovl_fault1.sv",
+    "contexts": 0
   }
 }

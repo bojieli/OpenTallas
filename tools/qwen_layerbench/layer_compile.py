@@ -306,12 +306,23 @@ def lower_qslots(contract, messages, *, allow_test=False):
     status = contract.get('status')
     need(status == 'QUALIFIED_SOURCE_GEN_EDGES' or
          (allow_test and status == 'SYNTHETIC_COMPILER_TEST'), 'actual source/GEN edge qualification required')
+    if not allow_test:
+        need(bool(contract.get('_verified_authorities')), 'typed immutable authorities were not verified')
     need(contract.get('clock') == 'ck_core' and contract.get('origin') == 'paired_segment_start',
          'source and paired programme must share a named core-edge origin')
     need(contract.get('endpoint_bundle') == dict(id='SF.q_slot', source='sys_face', destination='native59',
                                                 members=['q_slot', 'q_slot_beat']),
          'QSLOT pulse and beat must use the actual coherent two-field GEN bundle')
-    need(contract.get('params') == dict(QB_ALIGN=1, QB_LOCAL32=0, SVC_RECV=0, SVC_LOCAL32=0),
+    l_player = contract.get('l_player', {})
+    players = {
+        0: dict(master='qfd_sys_face_ovl_fault1', source='rtl/qwen_split/qfd_sys_face_ovl_fault1.sv', contexts=0),
+        1: dict(master='qfd_sys_face_ovl_lctx1', source='rtl/qwen_split/qfd_sys_face_ovl_lctx1.sv', contexts=1),
+    }
+    need(l_player.get('contexts') in players and l_player == players[l_player['contexts']],
+         'unknown L-player source/context ABI')
+    local = contract.get('params', {}).get('QB_LOCAL32')
+    need(type(local) is int and local in (0, 1) and
+         contract.get('params') == dict(QB_ALIGN=1, QB_LOCAL32=local, SVC_RECV=0, SVC_LOCAL32=0),
          'only the explicitly qualified aligned, flags-off source ABI is supported')
     for name in ('qbank', 'wrapper', 'service', 'macro', 'sysface'):
         need(re.fullmatch('[0-9a-f]{64}', contract.get('source_sha256', {}).get(name, '')) is not None,
@@ -329,6 +340,11 @@ def lower_qslots(contract, messages, *, allow_test=False):
         seen.add(seg)
         need(bool(row.get('context_identity')) and bool(row.get('commit_id')),
              'Q writes, commit and request need an explicit context identity')
+        identity = row.get('identity', {})
+        limits = dict(epoch=65536, generation=4, user=4, layer=36, token=151936, position=8192)
+        need(set(identity) == set(limits) and all(type(identity[k]) is int and 0 <= identity[k] < limit
+                                               for k, limit in limits.items()),
+             'concrete epoch/generation/user/layer/token/position identity required')
         writes = row.get('q_dd_pin_edges')
         need(isinstance(writes, list) and len(writes) == 64 and
              all(type(v) is int and v >= 0 for v in writes) and writes == sorted(set(writes)),
@@ -343,6 +359,15 @@ def lower_qslots(contract, messages, *, allow_test=False):
         retire = edge(row, 'retire_pin_edge')
         next_begin = edge(row, 'next_begin_pin_edge')
         l_start = edge(row, 'l_calendar_start_edge')
+        anchor = edge(row, 'paired_segment_start_epoch_edge')
+        decode_age = edge(row, 'l_start_decode_edges')
+        driver = row.get('l_start_driver_event')
+        need(isinstance(driver, list) and len(driver) == 3 and all(type(v) is int for v in driver) and
+             driver[1] == 0 and bool(driver[2] & 64) and
+             ((seg == 1 and driver[2] & 63 == 1) or (seg == 0 and 2 <= driver[2] & 63 <= 36)),
+             'L start must be explicit STAGE1 or STAGE2..36; MARK-L has no booked context')
+        need(anchor + l_start == driver[0] + decode_age,
+             'L start origin does not match its executing T event and source decode age')
         need(begin < writes[0] and commit == writes[-1] + commit_age,
              'commit does not follow this context\'s final Q write')
         need(request > commit, 'request captures before committed Q is visible')
@@ -352,6 +377,11 @@ def lower_qslots(contract, messages, *, allow_test=False):
         need(len(q) == 32 and [m['beat'] for m in q] == list(range(32)),
              'paired programme must contain exactly 32 ordered Q beats')
         captures = [edge(m, 'wr') for m in q]
+        if not allow_test:
+            wire_proof = next(p for p in contract['_verified_authorities']['svc_codec_wire']['segments']
+                              if p['segment'] == seg)
+            need(wire_proof.get('d2d_write_capture_edges') == captures,
+                 'service/codec authority does not match the executing paired Q programme')
         need(captures == list(range(captures[0], captures[0] + 32)),
              'aligned source requires the selected contiguous Q burst')
         qbank = [v - wire - read for v in captures]
@@ -365,6 +395,7 @@ def lower_qslots(contract, messages, *, allow_test=False):
         bookings.append(dict(segment=seg, context_identity=row['context_identity'], commit_id=row['commit_id'],
                              events=[[v, 2, b] for b, v in enumerate(l_events)],
                              sysface_pin_edges=face, l_calendar_start_edge=l_start, qbank_pin_edges=qbank,
+                             l_start_driver_event=driver,
                              qbank_emit_edges=[v + read for v in qbank], d2d_write_capture_edges=captures,
                              committed_edge=commit, request_capture_edge=request, retire_pin_edge=retire,
                              cadence=1, extra_idle_edges=0))
@@ -400,8 +431,13 @@ def sys_face_events(prog_cal, svh, S, ex, txd, n59_land_edges, qslot_booking=Non
         # The selected system-face L player always starts at base zero. It cannot
         # silently choose a different token/decode programme. Different patterns
         # therefore need an explicit source successor, not an unused JSON list.
-        if set(q_by_seg) != {'0', '1'} or q_by_seg['0'] != q_by_seg['1']:
+        if set(q_by_seg) != {'0', '1'}:
+            raise ValueError('QSLOT: both token/L0 and decode patterns need explicit bookings')
+        if qslot_booking['source_contract']['l_player']['contexts'] == 0 and q_by_seg['0'] != q_by_seg['1']:
             raise ValueError('QSLOT: selected L player requires identical segment 0/1 pin patterns')
+        for b in qslot_booking['bookings']:
+            if tuple(b['l_start_driver_event']) not in T:
+                raise ValueError('QSLOT: L start authority is not an event in the executing T programme')
         Lev = sorted(Lev + q_by_seg['0'])
         if len({e[0] for e in Lev}) != len(Lev):
             raise ValueError('QSLOT: event collides with another system-face L event')
@@ -411,7 +447,29 @@ def sys_face_events(prog_cal, svh, S, ex, txd, n59_land_edges, qslot_booking=Non
                 E_missing=['E calendar (EMBW / FILL): the KV embedding provider row timing is not compiled here'],
                 land_edges_used=n59_land_edges)
     if qslot_booking is not None:
-        result.update(L=Lev, QSLOT_by_segment=q_by_seg)
+        result.update(QSLOT_by_segment=q_by_seg)
+        if qslot_booking['source_contract']['l_player']['contexts'] == 0:
+            result['L'] = Lev
+        else:
+            # Source ABI: STAGE1 -> L segment0, STAGE2..36 -> segment1.
+            # Paired-link segment1 is token/L0; paired segment0 is decode.
+            result['L_QSLOT_contexts'] = dict(L0=q_by_seg['1'], L1=q_by_seg['0'],
+                                             paired_to_source={'1': 0, '0': 1})
+            for booking in qslot_booking['bookings']:
+                seg = booking['segment']; start = booking['l_calendar_start_edge']
+                skv = sorted((m for m in tab if m.get('seg', 0) == seg and m['src'] == 'C' and
+                              m['tx_port'] == 3), key=lambda m: m['cyc'])
+                sr = sorted((m for m in tab if m.get('seg', 0) == seg and m['src'] == 'K' and
+                             m['tx_port'] == 0 and m['kind'] == 3), key=lambda m: m['beat'])
+                if len(skv) != 4 or len(sr) != 32:
+                    raise ValueError('QSLOT: complete per-segment KV/result programme required for dual L image')
+                sv = sr[-1]['arrive'] + 2 + S['CS_RXV'] + 4 + n59_land_edges + 2 - start
+                pattern = sorted(booking['events'] +
+                                 [[m['cyc'] + S['CS_X3S'] - 3 - start, 3, i] for i, m in enumerate(skv)] +
+                                 [[sv, 4, 0], [sv + 2, 4, 1]])
+                if len({e[0] for e in pattern}) != len(pattern):
+                    raise ValueError('QSLOT: dual L pattern has a pin-event collision')
+                result['L0' if seg == 1 else 'L1'] = pattern
     return result
 
 
@@ -431,11 +489,18 @@ def read_qslot_contract(path, compute_commit, compute_params, compute_die_v=None
         raise ValueError('QSLOT: contract source revision differs from selected compute source')
     if not compute_die_v or sha(compute_die_v) != c.get('gen_sha256'):
         raise ValueError('QSLOT: actual compute GEN identity required')
+    player = c.get('l_player', {})
+    allowed_players = {
+        0: dict(master='qfd_sys_face_ovl_fault1', source='rtl/qwen_split/qfd_sys_face_ovl_fault1.sv', contexts=0),
+        1: dict(master='qfd_sys_face_ovl_lctx1', source='rtl/qwen_split/qfd_sys_face_ovl_lctx1.sv', contexts=1),
+    }
+    if player.get('contexts') not in allowed_players or player != allowed_players[player['contexts']]:
+        raise ValueError('QSLOT: unknown actual L-player source/ABI')
     sources = dict(qbank='rtl/qwen_split/qfd_native59_qbank.sv',
                    wrapper='rtl/qwen_split/qfd_native59_dv_headprep_obs1.sv',
                    service='rtl/qwen_split/qfd_native59_svc_obs1.sv',
                    macro='physical/asap7_memory_macros/ot_sram_1r1w_32x512_m1/ot_sram_1r1w_32x512_m1.v',
-                   sysface='rtl/qwen_split/qfd_sys_face_ovl_fault1.sv')
+                   sysface=player['source'])
     for name, src in sources.items():
         digest = hashlib.sha256(git_show(compute_commit, src).encode()).hexdigest()
         if c.get('source_sha256', {}).get(name) != digest:
@@ -445,10 +510,21 @@ def read_qslot_contract(path, compute_commit, compute_params, compute_die_v=None
     if sha(compute_params) != c.get('gen_params_sha256'):
         raise ValueError('QSLOT: actual compute GEN parameter identity differs')
     masters = json.loads(Path(compute_params).read_text()).get('masters', {})
+    if player['master'] not in masters or masters[player['master']].get('L_CONTEXTS', 0) != player['contexts']:
+        raise ValueError('QSLOT: actual GEN L-player context mode differs')
     params = masters.get('qfd_native59_dv_headprep_obs1', {})
-    expected = dict(QB_ALIGN=1, QB_LOCAL32=0, SVC_RECV=0, SVC_LOCAL32=0)
-    if c.get('params') != expected or any(params.get(k, 0) != v for k, v in expected.items()):
+    local = c.get('params', {}).get('QB_LOCAL32')
+    expected = dict(QB_ALIGN=1, QB_LOCAL32=local, SVC_RECV=0, SVC_LOCAL32=0)
+    if type(local) is not int or local not in (0, 1) or c.get('params') != expected or any(
+            params.get(k, 0) != v for k, v in expected.items()):
         raise ValueError('QSLOT: actual elaborated source is not the qualified aligned flags-off mode')
+    authorities = {}
+    fields = dict(commit_identity=('begin_pin_edge', 'q_dd_pin_edges', 'q_committed_pin_edge',
+                                   'commit_after_last_dd_edges', 'next_begin_pin_edge'),
+                  sysface_bundle=('sysface_to_qbank_edges', 'l_calendar_start_edge',
+                                  'paired_segment_start_epoch_edge', 'l_start_decode_edges', 'l_start_driver_event'),
+                  svc_codec_wire=('svc_codec_to_wire_edges', 'request_capture_edge'),
+                  tx_retire=('retire_pin_edge', 'next_begin_pin_edge'))
     for name in ('commit_identity', 'sysface_bundle', 'qbank_read', 'svc_codec_wire', 'tx_retire'):
         proof = c.get('proofs', {}).get(name, {})
         proof_path = Path(proof.get('path', ''))
@@ -456,16 +532,39 @@ def read_qslot_contract(path, compute_commit, compute_params, compute_die_v=None
             proof_path = path.parent / proof_path
         if not proof_path.is_file() or sha(proof_path) != proof.get('sha256'):
             raise ValueError('QSLOT: missing or changed immutable proof: ' + name)
+        pin = json.loads(proof_path.read_text())
         if name == 'qbank_read':
-            pin = json.loads(proof_path.read_text())
-            if (pin.get('qbank_sha256') != c['source_sha256']['qbank'] or
+            if (pin.get('schema') != 'opentallas.qwen.qbank-pin-edges.v1' or
+                    pin.get('status') != 'QUALIFIED_COMPONENT_SOURCE_PIN_EDGES_ONLY' or
+                    pin.get('qbank_sha256') != c['source_sha256']['qbank'] or
                     pin.get('macro_sha256') != c['source_sha256']['macro'] or
-                    pin.get('params') != dict(QB_ALIGN=1, QB_LOCAL32=0)):
+                    pin.get('params') != dict(QB_ALIGN=1, QB_LOCAL32=c['params']['QB_LOCAL32'])):
                 raise ValueError('QSLOT: qbank pin-edge proof names another source or mode')
             for row in c.get('segments', []):
                 if (row.get('qbank_read_edges') != pin.get('slot_to_emit_edges') or
                         row.get('commit_after_last_dd_edges') != pin.get('last_dd_to_committed_edges')):
                     raise ValueError('QSLOT: declared source-intrinsic age differs from measured qbank proof')
+            continue
+        if (pin.get('schema') != 'opentallas.qwen.qslot-authority.v1' or
+                pin.get('authority') != name or pin.get('status') != 'QUALIFIED_SOURCE_GEN_EDGES'):
+            raise ValueError('QSLOT: unqualified or wrong typed authority: ' + name)
+        for key in ('source_revision', 'gen_sha256', 'gen_params_sha256', 'source_sha256',
+                    'clock', 'origin', 'params', 'endpoint_bundle', 'l_player'):
+            if pin.get(key) != c.get(key):
+                raise ValueError(f'QSLOT: {name} authority has mismatched {key}')
+        proof_rows = pin.get('segments')
+        if not isinstance(proof_rows, list) or len(proof_rows) != len(c.get('segments', [])):
+            raise ValueError('QSLOT: authority lacks exact segment coverage: ' + name)
+        keyed = {r.get('segment'): r for r in proof_rows}
+        if len(keyed) != len(proof_rows):
+            raise ValueError('QSLOT: authority duplicates a segment: ' + name)
+        for row in c['segments']:
+            proof_row = keyed.get(row.get('segment'), {})
+            for key in ('context_identity', 'commit_id', 'identity', *fields[name]):
+                if key not in row or proof_row.get(key) != row[key]:
+                    raise ValueError(f'QSLOT: {name} authority disagrees on segment {row.get("segment")} {key}')
+        authorities[name] = pin
+    c['_verified_authorities'] = authorities
     return c
 
 
