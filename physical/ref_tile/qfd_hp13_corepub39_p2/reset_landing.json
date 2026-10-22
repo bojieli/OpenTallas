@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qfd_hp13_corepub39",
+ "enable": false,
+ "reason": "data publisher has no reset port; sourceGIvalid reset is retained and startup must warm sample+publisher edges"
+}
