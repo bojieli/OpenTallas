@@ -113,7 +113,7 @@ module dsdv_bk_sel_vmtx_n32 #(
     input  wire          rst_n_r37,
     input  wire          rst_n_r38
 );
-    // One raw-reset consumer; the unchanged component reset chains release after three total edges.
+    // One raw-reset consumer; VMUX and VDLY release after three total edges; TX releases after four.
     wire common_reset_n;
     dsdv_topk_reset_entry u_reset_entry (.ck(clk), .rst_n(rst_n), .q(common_reset_n));
     wire [V-1:0] vi_m, vi_t;
@@ -127,7 +127,7 @@ module dsdv_bk_sel_vmtx_n32 #(
         .ck(clk), .rst(common_reset_n), .vi(vi_t), .vo(vo_s), .lo(tl_o), .st(tx_st));
 endmodule
 
-// One actual asynchronous entry register precedes the existing two-edge local chains.
+// One actual asynchronous entry register precedes the unchanged local chains: VMUX/VDLY two edges, TX three.
 // MUT=1 is a missing-stage negative control for the release-age witness only.
 (* keep_hierarchy="yes" *)
 module dsdv_topk_reset_entry #(parameter integer MUT=0)(

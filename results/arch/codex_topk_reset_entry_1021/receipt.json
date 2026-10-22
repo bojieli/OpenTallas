@@ -1,0 +1,51 @@
+{
+  "sources": [
+    {
+      "path": "rtl/dsrom_sys/s81_dv/idx/dsdv_bk_sel_vmtx_n32.sv",
+      "sha256": "22dc43e11e6bde60d84eeaa6fe1da603ccd0479587816ba70a8a35dc514bf4e3",
+      "tested_commit_matches": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_vmux_n32.sv",
+      "sha256": "cc18147e4a5e6dcf184a569d4ec7755e31b0897d0d4cb566a705d4ee75add503",
+      "tested_commit_matches": true
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "tested_commit_matches": true
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v",
+      "sha256": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+      "tested_commit_matches": true
+    },
+    {
+      "path": "tools/s81_dv/topk_reset_entry_1021/tb_reset.sv",
+      "sha256": "a5d2b0d0b6ec23000bc57461007cf9c99e5494616efcb59008735bcd889673f0",
+      "tested_commit_matches": true
+    }
+  ],
+  "generated": "2026-10-21T21:33:50.046345-07:00",
+  "source_commit": "86f1196f8",
+  "host": "ot-epyc5",
+  "unit": "oth-ubuntu-1332886-1792643577",
+  "positive": {
+    "epochs": 12,
+    "checks": 111,
+    "async_checks": 13,
+    "errors": 0
+  },
+  "missing_entry_mutant": {
+    "age_errors": 26,
+    "caught": true
+  },
+  "release_edges": {
+    "VMUX": 3,
+    "VDLY": 3,
+    "TX": 4
+  },
+  "extra_boot_edges": 1,
+  "data_path_delta_edges": 0,
+  "scope": "Actual shared entry plus unchanged actual VMUX/VDLY and exact TX reset primitive. No full TX data path, composed functional parent or parent native qualification claimed."
+}

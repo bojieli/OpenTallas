@@ -1,0 +1,6 @@
+TOPK_RESET_AGE epochs=12 checks=111 async_checks=13 errors=0 VMUX=3 VDLY=3 TX=4 extra_boot_edges=1
+TOPK_RESET_ENTRY_PASS
+- tools/s81_dv/topk_reset_entry_1021/tb_reset.sv:46: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.000 s; speed 14.171 ms/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
