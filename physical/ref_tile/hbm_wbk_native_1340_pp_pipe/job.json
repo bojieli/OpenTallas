@@ -1,14 +1,14 @@
 {
- "name": "hbm_wbk_native_1340_pp_pipe-q8c-630245fe5",
+ "name": "hbm_wbk_native_1340_pp_pipe-q8c-637eead39",
  "block": "ot_hbm_svc_wb_kport_q",
  "ref_tile": true,
- "owner": "Claude:DRIVE-HBM/HBM-WBK8",
+ "owner": "CODEX-HBM-SVGSMH-2000",
  "purpose": "HBM die d4g wbk_<q> x4 = ot_hbm_svc_wb_kport_q (per-quadrant DMA write-back -> 16 HBM K ports, quad strap); HBM-WBK8 census-safe successor (kq8 core: 16-b ping-pong reviewed FIFO crossing, lockstep registered pops, K pin rings; SRAM rows on the 43.2 lattice)",
  "threads": 16,
  "peak_ram_gb": 96,
  "source": {
-  "branch": "claude/hbm-wbk8-1020",
-  "commit": "630245fe5270491a32198b353e337ec7eea1603a",
+  "branch": "codex/hbm-wbk-physical-2255-1021",
+  "commit": "637eead39",
   "extra_paths": [
    "rtl/hbm_accel/loader/service_native/run_stk_quadrant_bench.sh",
    "rtl/hbm_accel/loader/service_native/tb_hbm_svc_wb_kshare_qh.sv",
@@ -51,7 +51,7 @@
     ],
     "pass_regex": "STK_WBQ PASS wbq_e",
     "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
-    "pass_witness": "results/rtl/hbm_wbk8_1020/wbq_e.stdout",
+    "pass_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_e.log",
     "note": "E quadrant lockstep vs GEN0 wb_kport"
    },
    {
@@ -65,7 +65,7 @@
     ],
     "pass_regex": "STK_WBQ PASS wbq_w",
     "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
-    "pass_witness": "results/rtl/hbm_wbk8_1020/wbq_w.stdout",
+    "pass_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_w.log",
     "note": "W quadrant lockstep"
    },
    {
@@ -79,7 +79,7 @@
     ],
     "pass_regex": "STK_WBQ PASS wbq_e_wopen",
     "min_count_regex": "^PASS tb_hbm_svc_wb_kshare_qh .*sectors=(\\d+)",
-    "pass_witness": "results/rtl/hbm_wbk8_1020/wbq_e_wopen.stdout",
+    "pass_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_e_wopen.log",
     "note": "E quadrant WOPEN=1 lockstep"
    },
    {
@@ -93,7 +93,7 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
     "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
-    "fail_witness": "results/rtl/hbm_wbk8_1020/wbq_mut_quad.log",
+    "fail_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_mut_quad.log",
     "note": "fold ignores the quad strap"
    },
    {
@@ -107,7 +107,7 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
     "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
-    "fail_witness": "results/rtl/hbm_wbk8_1020/wbq_mut_span.log",
+    "fail_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_mut_span.log",
     "note": "window total = ordinal total"
    },
    {
@@ -121,7 +121,7 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
     "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
-    "fail_witness": "results/rtl/hbm_wbk8_1020/wbq_mut_premature.log",
+    "fail_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_mut_premature.log",
     "note": "premature wa"
    },
    {
@@ -135,7 +135,7 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
     "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
-    "fail_witness": "results/rtl/hbm_wbk8_1020/wbq_mut_ksaddr.log",
+    "fail_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_mut_ksaddr.log",
     "note": "kshare address mutant"
    },
    {
@@ -149,7 +149,7 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
     "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
-    "fail_witness": "results/rtl/hbm_wbk8_1020/wbq_mut_slice.log",
+    "fail_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_mut_slice.log",
     "note": "kq2: data slice 3 selects lane l^1"
    },
    {
@@ -163,7 +163,7 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
     "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
-    "fail_witness": "results/rtl/hbm_wbk8_1020/wbq_mut_commit.log",
+    "fail_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_mut_commit.log",
     "note": "kq2: lanes read past the committed watermark"
    },
    {
@@ -177,7 +177,7 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
     "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
-    "fail_witness": "results/rtl/hbm_wbk8_1020/wbq_mut_credit.log",
+    "fail_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_mut_credit.log",
     "note": "kq2: arbiter ignores the FIFO credit"
    },
    {
@@ -191,7 +191,7 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
     "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
-    "fail_witness": "results/rtl/hbm_wbk8_1020/wbq_mut_pp.log",
+    "fail_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_mut_pp.log",
     "note": "kq8: ping-pong read toggle of data slice 5 stuck"
    },
    {
@@ -205,7 +205,7 @@
     ],
     "pass_regex": "^PASS tb_hbm_svc_wb_kshare_qh",
     "fail_regex": "Assertion failed in tb_hbm_svc_wb_kshare_qh: WB_INTEGRITY",
-    "fail_witness": "results/rtl/hbm_wbk8_1020/wbq_mut_lock.log",
+    "fail_witness": "results/arch/hbm_wbk_rv_1021/fanout630/bench/wbq_mut_lock.log",
     "note": "kq8: lockstep pop ignores the K ring room"
    }
   ],
@@ -259,7 +259,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_wbk_q8c_1020/hbm_wbk_native_1340_pp_pipe-q8c-630245fe5"
+   "to": "results/rtl/ref_tile/hbm_wbk_q8c_1020/hbm_wbk_native_1340_pp_pipe-q8c-637eead39"
   }
  ],
  "cycles_added": 0,
