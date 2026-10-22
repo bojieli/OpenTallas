@@ -1,0 +1,102 @@
+[
+ {
+  "chain": "r18e",
+  "stage": "S5",
+  "manifest": "/home/ubuntu/artifacts/hdie-d4/hbmc_r18e_1021/plansM/unread/S5/manifest_proposal.json",
+  "manifest_sha256": "3beca15f15500000a37f541ec48e0e4cdfc29f467a6d21fac767ddb126952dab",
+  "entries": 310,
+  "bits": 65098,
+  "class_histogram": {
+   "checked_request_observation": 16,
+   "counter_or_ordinal_export": 13,
+   "duplicate_checker_feed": 96,
+   "inactive_record_interface": 10,
+   "internally_checked_arithmetic_fault_observation": 4,
+   "internally_checked_ordinal_export": 8,
+   "propagated_zero_padding": 148,
+   "redundant_vm_status_aggregate": 1,
+   "reserved_operand_abi": 5,
+   "reserved_record_abi": 1,
+   "unused_alternate_representation": 8
+  },
+  "admitted_classes": [
+   "counter_or_ordinal_export",
+   "reserved_record_abi",
+   "inactive_record_interface",
+   "reserved_operand_abi",
+   "internally_checked_arithmetic_fault_observation",
+   "propagated_zero_padding",
+   "internally_checked_ordinal_export",
+   "checked_request_observation",
+   "duplicate_checker_feed",
+   "redundant_vm_status_aggregate",
+   "unused_alternate_representation"
+  ],
+  "unused_alternate_representation_ports": [
+   "ot_hbm_xp_aq_tree13_fmt.y (xl y BF16)"
+  ],
+  "status": "ADMITTED",
+  "admitted_by": "admitted by coordinator 2026-10-22 07:50",
+  "condition": "only the admitted classes; any new class or non-reserved payload/data-port entry needs a separate coordinator review",
+  "verified_by": "STEWARD-HBMc class histogram (0 new classes, 0 non-candidates)"
+ },
+ {
+  "chain": "r18g",
+  "stage": "S5",
+  "manifest": "/home/ubuntu/artifacts/hdie-d4/hbmc_r18g_1021/plansM/unread/S5/manifest_proposal.json",
+  "manifest_sha256": "1f08309594f5cbdd083e3cf3f059e506e93f7d159b2955d8e9e04717e324221a",
+  "entries": 310,
+  "bits": 65098,
+  "class_histogram": {
+   "checked_request_observation": 16,
+   "counter_or_ordinal_export": 13,
+   "duplicate_checker_feed": 96,
+   "inactive_record_interface": 10,
+   "internally_checked_arithmetic_fault_observation": 4,
+   "internally_checked_ordinal_export": 8,
+   "propagated_zero_padding": 148,
+   "redundant_vm_status_aggregate": 1,
+   "reserved_operand_abi": 5,
+   "reserved_record_abi": 1,
+   "unused_alternate_representation": 8
+  },
+  "admitted_classes": [
+   "counter_or_ordinal_export",
+   "reserved_record_abi",
+   "inactive_record_interface",
+   "reserved_operand_abi",
+   "internally_checked_arithmetic_fault_observation",
+   "propagated_zero_padding",
+   "internally_checked_ordinal_export",
+   "checked_request_observation",
+   "duplicate_checker_feed",
+   "redundant_vm_status_aggregate",
+   "unused_alternate_representation"
+  ],
+  "unused_alternate_representation_ports": [
+   "ot_hbm_xp_aq_tree13_fmt.y (xl y BF16)"
+  ],
+  "status": "ADMITTED",
+  "admitted_by": "admitted by coordinator 2026-10-22 07:50",
+  "condition": "only the admitted classes; any new class or non-reserved payload/data-port entry needs a separate coordinator review",
+  "verified_by": "STEWARD-HBMc class histogram (0 new classes, 0 non-candidates)"
+ },
+ {
+  "manifest_sha256_prefix": "2c70a3aba557e79e",
+  "status": "ADMITTED",
+  "admitted_by": "admitted by coordinator 2026-10-22 07:50",
+  "note": "earlier r18e/r18f proposal; file overwritten by the 07:27 relaunch, histogram not re-verifiable (same 13-class tool output)"
+ },
+ {
+  "manifest_sha256_prefix": "8415d5b7fa26521b",
+  "status": "ADMITTED",
+  "admitted_by": "admitted by coordinator 2026-10-22 07:50",
+  "note": "earlier r18e/r18f proposal; file overwritten by the 07:27 relaunch, histogram not re-verifiable (same 13-class tool output)"
+ },
+ {
+  "manifest_sha256_prefix": "2b670331bac16ec7",
+  "status": "ADMITTED",
+  "admitted_by": "admitted by coordinator 2026-10-22 07:50",
+  "note": "earlier r18e/r18f proposal; file overwritten by the 07:27 relaunch, histogram not re-verifiable (same 13-class tool output)"
+ }
+]
