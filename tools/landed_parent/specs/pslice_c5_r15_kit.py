@@ -112,12 +112,12 @@ ROOT = Path(__file__).resolve().parents[3]
 VARIANT = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] in ("a", "b") else sys.exit("usage: pslice_c5_r14_kit.py a|b")
 NAME = "hbm_su_pslice_c5_lp15" + VARIANT
 import os
-LEAF = os.environ.get("LEAF", "r6a" if VARIANT == "a" else "r6b")
+LEAF = os.environ.get("LEAF", "r9b")
 FLIP = set()   # r15: lp13a orientation (bottom R0, top MX): every leaf's (now single) interface face meets its strip   # r14: leaves whose CFG face is turned to the parent boundary strip
 TALL = False
 RELEASE = True   # r14: both variants release the fences before DPL/CTS (lp13a: every S root passed; lp13b kept = worse)
 W, H = 1900.8, 1036.8   # r13: +86.4 (both command strips 43.2 -> 86.4)
-VS = "physical/ref_tile/hbm_su_pgcol_s_r5/views/ot_hbm_su_programme_pgcol_s"
+VS = "physical/ref_tile/hbm_su_pgcol_s_r5_pinaccess/views/ot_hbm_su_programme_pgcol_s"
 VL = f"physical/ref_tile/hbm_su_pgcol_l_{LEAF}/views/ot_hbm_su_programme_pgcol_l"
 VH = "physical/ref_tile/hbm_su_pghead_r5/views/ot_hbm_su_programme_pghead"
 LS, LL, HS = (302.4, 259.2), (345.6, 453.6), (86.4, 86.4)
@@ -357,8 +357,8 @@ def main():
     rec = json.loads((ROOT / rec_path).read_text())
     fence = f"tools/ref_tile/specs_hbm_su/{name}_fences.tcl"
     (ROOT / fence).write_text(fence_tcl(name, rec))
-    W5 = "results/arch/landed_parent_1018/pslice_c5_r14/bench_v5050/bench_summary.log"
-    W8 = "results/arch/landed_parent_1018/pslice_c5_r14/bench_v5050/flat14_eq_summary.log"   # flat14 == pslice_c5 #(.SB(2470))
+    W5 = "results/arch/landed_parent_1018/pslice_c5_r8_ncx/lp14/mut1.log"
+    W8 = "results/arch/landed_parent_1018/pslice_c5_r8_ncx/flat14/eq_mut1.log"   # flat14 == pslice_c5 #(.SB(2470))
     benches = [
         dict(name="lp_lockstep_mut0", cmd=f"MUTS=0 SIM=verilator bash {LDIR}/ot_hbm_su_programme_pslice_c5_lp14_bench.sh {{RUN}}/bench/lp0",
              expect="pass", pass_regex="MUT 0: LP_LOCKSTEP PASS", threads=8, peak_ram_gb=24, needs=["verilator"]),
@@ -367,7 +367,7 @@ def main():
              fail_witness=W5),
         dict(name="lp_mut2_read_k1", cmd=f"MUTS=2 SIM=verilator bash {LDIR}/ot_hbm_su_programme_pslice_c5_lp14_bench.sh {{RUN}}/bench/lp2",
              expect="fail", fail_regex="MUT 2: LP_LOCKSTEP FAIL", threads=8, peak_ram_gb=24, needs=["verilator"],
-             fail_witness=W5),
+             fail_witness="results/arch/landed_parent_1018/pslice_c5_r8_ncx/lp14/mut2.log"),
         dict(name="flat14_eq_mut0", cmd=f"ONLY=0 LP_ROOT=. bash {LDIR}/pslice_c5_flat14_eq_bench.sh {{RUN}}/bench/eq0",
              expect="pass", pass_regex="EQ MUT 0: FLAT_EQ PASS", threads=8, peak_ram_gb=24, needs=["verilator"]),
         dict(name="flat14_eq_mut1_phase", cmd=f"ONLY=1 LP_ROOT=. bash {LDIR}/pslice_c5_flat14_eq_bench.sh {{RUN}}/bench/eq1",
@@ -443,17 +443,17 @@ def main():
                       "entry, reset port and (cfg) pins; fences released before DPL/CTS (lp13a)",
         landed=dict(record=rec_path, landings=len(rec["landings"]), landing_flops=rec["flops"]["landing"],
                     reset_depth=rec["reset"]["depth"], lp_spec="tools/landed_parent/specs/pslice_c5_r14.json"),
-        structural_change="HBMb/IDXSU-PS15 10-21 r15: the L leaves are pgcol_l " + LEAF + " (r5 re-pinned: every port on the S face) placed R0 "
+        structural_change="HBMb/IDXSU-PS15 10-21 r15: the L leaves are pgcol_l " + LEAF + " (current NCX1 R9b CLOSED: every port on the S face) placed R0 "
                           "as lp13a, so no single-cycle net or clock crosses a macro (lp13a cfg -216 TT / lp14a L clock 167-224); "
                           "child_centre_tap r15 (corner fix + TT/FF minimax) on " + ",".join(taps) + ". Variant " + VARIANT + (
-                              ": MAIN (r6a leaf, taps head + L)" if VARIANT == "a" else ": FALLBACK (r6b leaf, taps every child)"),
-        job=dict(owner="Claude:HBMb/IDXSU-PS15", branch="claude/hbm-pslice-lp15-1021", tag="r15" + VARIANT,
+                              ": MAIN (R9b NCX leaf, taps head + L)" if VARIANT == "a" else ": FALLBACK (R9b NCX leaf, taps every child)"),
+        job=dict(reroute_reason=dict(kind="rtl_change", source=f"{LDIR}/ot_hbm_su_programme_pslice_c5_lp14.sv", fix="Current die-width SB2470 and NCX1 CLOSED R9b leaves replace older source; exact fixed-cycle functional proofs retained."), owner="CODEX-HBM-IDXSU-2000", branch="codex/hbm-lp15-2000-1021", tag="ncx15" + VARIANT,
                  purpose="landed per-quarter SU programme cluster pslice_c5 (pgp_<q>, SB 2470), r15 SAFE: " + FL + " + minimax centre taps, outline 1900.8 x 1036.8",
                  views_to=f"physical/ref_tile/{NAME}/views", record_to=f"results/rtl/ref_tile/{NAME}",
                  extra_paths=["tools/landed_parent", "rtl/common/landed_parent", "rtl/lib",
                               "rtl/hbm_accel/generic/adapters/static_su/programme",
                               "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
-                              "results/arch/landed_parent_1018/pslice_c5_r14", f"physical/ref_tile/hbm_su_pgcol_l_{LEAF}"],
+                              "results/arch/landed_parent_1018/pslice_c5_r14", "results/arch/landed_parent_1018/pslice_c5_r8_ncx", f"physical/ref_tile/hbm_su_pgcol_l_{LEAF}"],
                  benches=benches))
     name = NAME
     out = ROOT / f"tools/ref_tile/specs_hbm_su/{name}.json"
