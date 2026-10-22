@@ -14,8 +14,9 @@ No added cycles, no RTL change: only child origins move.  Objective: station dis
 import gzip, json, os, pathlib, sys
 from ortools.sat.python import cp_model
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-G = ROOT / 'results/arch/qw_cb16_legal_bays_1020/grid43'
-d = json.load(gzip.open(G / 'qfd_c_b16_fullm_bank_inputs.json.gz'))
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); import qc_cluster_cfg as CF   # SQC-CB8: OT_QC_CLUSTER
+G = ROOT / CF.PLAN
+d = json.load(gzip.open(G / f'{CF.FULLM}_bank_inputs.json.gz'))
 out_p = pathlib.Path(sys.argv[1]); REACH = float(sys.argv[2]) if len(sys.argv) > 2 else 405.0
 U = 43200; R = round(REACH * 1000); TW, TH = 108000, 43200
 MOVE = round(float(os.environ.get('OT_RTPB_MOVE_UM', 432)) * 1000)
@@ -26,12 +27,12 @@ R_IO = round(float(os.environ.get('OT_RTPB_IO_REACH_UM', REACH)) * 1000)
 IO_CAP = {k: round(float(v) * 1000) for k, v in (e.split(':') for e in os.environ.get('OT_RTPB_IO_CAPS', '').split(',') if e)}   # per-station override
 W, H = [round(x * 1000) for x in d['outline']]
 nm = lambda v: round(v * 1000)
-J = json.loads((G / 'qfd_c_b16_fullm_joint_solution.json').read_text())   # fulln child origins (= joint solution), not the bank-input ones
+J = json.loads((G / f'{CF.FULLM}_joint_solution.json').read_text())   # fulln child origins (= joint solution), not the bank-input ones
 hard = {n: dict(h, X=nm(J['hard'][n][0]), Y=nm(J['hard'][n][1]), Wd=nm(h['width']), Ht=nm(h['height'])) for n, h in d['hard'].items()}
 free = sorted(n for n, h in hard.items() if h['kind'] in ('qfd_c_stn514', 'qfd_c_stn516'))
 rings = sorted({n[:-2] for n in d['halves']})
 sites = []; old = {}
-for l in (ROOT / 'physical/qcluster/qfd_c_b16_fullm_sites.tsv').read_text().splitlines():
+for l in (ROOT / f'physical/qcluster/{CF.FULLM}_sites.tsv').read_text().splitlines():
     f = l.split('\t')
     if l.startswith('#'): continue
     if len(f) == 5:

@@ -7,7 +7,8 @@ Writes physical/qcluster/<name>_sites.tsv and updates the children 'at' of tools
 Refuses unless the data replay and the control replay are PASS for exactly these solution files.
 """
 import json, sys, hashlib, pathlib
-ROOT = pathlib.Path(__file__).resolve().parents[2]; G = ROOT / "results/arch/qw_cb16_legal_bays_1020/grid43"
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); import qc_cluster_cfg as CF   # SQC-CB8: OT_QC_CLUSTER
+ROOT = pathlib.Path(__file__).resolve().parents[2]; G = ROOT / CF.PLAN
 sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
 REG = "--regions" in sys.argv          # fallback: every scalar FF as its own 4.32-um EXCLUSIVE legal region (no FIRM cells)
 for name in [a for a in sys.argv[1:] if not a.startswith("--")]:
@@ -54,7 +55,7 @@ for name in [a for a in sys.argv[1:] if not a.startswith("--")]:
         "reset/control FF at an arc-consistent legal site (all control edges <=385 planned, replay PASS); no data multicycle.")
     if REG:
         spec["name"] = out_name; spec["orfs_vars"]["OT_QC_SITES"] = f"physical/qcluster/{out_name}_sites.tsv"
-        spec["job"]["tag"] = out_name[10:]
+        spec["job"]["tag"] = out_name[len(CF.PRE) + 1:]
         spec["structural_change"] += " FALLBACK r: every scalar FF in its own 4.32-um EXCLUSIVE region (no FIRM cells at all)."
         spec_p = ROOT / "tools/ref_tile/specs_qcluster" / f"{out_name}.json"
     spec_p.write_text(json.dumps(spec, indent=1) + "\n")

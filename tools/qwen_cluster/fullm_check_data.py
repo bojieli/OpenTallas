@@ -1,6 +1,7 @@
 """Independent all-bit/all-corner physical data-reach replay of a candidate."""
 import json,pathlib,sys,math,itertools,hashlib
-root=pathlib.Path('results/arch/qw_cb16_legal_bays_1020/grid43');name=sys.argv[1];d=json.loads((root/(name+'_bank_inputs.json')).read_text());s=json.loads((root/(name+'_joint_solution.json')).read_text());assert s['status'] in ['OPTIMAL','FEASIBLE'];hard=s['hard'];bays=s['bays'];errors=[]
+import sys as _s, pathlib as _p; _s.path.insert(0, str(_p.Path(__file__).resolve().parent)); import qc_cluster_cfg as CF   # SQC-CB8: OT_QC_CLUSTER
+root=pathlib.Path(CF.PLAN);name=sys.argv[1];d=json.loads((root/(name+'_bank_inputs.json')).read_text());s=json.loads((root/(name+'_joint_solution.json')).read_text());assert s['status'] in ['OPTIMAL','FEASIBLE'];hard=s['hard'];bays=s['bays'];errors=[]
 def corners(r):x,y,w,h=r;return [(x,y),(x+w,y),(x,y+h),(x+w,y+h)]
 def far(a,b):return max(abs(x-xx)+abs(y-yy) for x,y in corners(a) for xx,yy in corners(b))
 def overlap(a,b,pad=0):x,y,w,h=a;xx,yy,ww,hh=b;return x-pad<xx+ww-1e-6 and xx<x+w+pad-1e-6 and y-pad<yy+hh-1e-6 and yy<y+h+pad-1e-6
