@@ -23930,7 +23930,7 @@
    },
    "origin": {
     "x": 18951.84,
-    "y": 20601.0,
+    "y": 20751.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -23950,7 +23950,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-B: ot_hbm_su_static_pgslice (slice g at bank pair {2g,2g+1})",
-   "notes": "SU port-group slice G=1 of quarter NE (banks 2,3); LG ports on W at the bank windows, core/command ports on E (toward sucore_NE), 12 clock/reset ports (658 bits: per-lane/bank/macro roots) on N M5; die feedthrough column+row reserved (no master cells/pins there)",
+   "notes": "SU port-group slice G=1 of quarter NE (banks 2,3); LG ports on W at the bank windows, core/command ports on E (toward sucore_NE), 12 clock/reset ports (658 bits: per-lane/bank/macro roots) on N M5; die feedthrough column+row reserved (no master cells/pins there) | HBMb/CHAIN r17b (fix a, = r18 7edde6abc): +150 um in y to open the E-W lane channel beside the l32 cxij pair.",
    "pin_windows": [
     {
      "face": "W",
@@ -24810,7 +24810,7 @@
    },
    "origin": {
     "x": 5860.944,
-    "y": 20601.0,
+    "y": 20751.0,
     "orient": "R0"
    },
    "clock_entry": {
@@ -24830,7 +24830,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-B: ot_hbm_su_static_pgslice (slice g at bank pair {2g,2g+1})",
-   "notes": "SU port-group slice G=1 of quarter NW (banks 2,3); LG ports on W at the bank windows, core/command ports on E (toward sucore_NW), 12 clock/reset ports (658 bits: per-lane/bank/macro roots) on N M5; die feedthrough column+row reserved (no master cells/pins there)",
+   "notes": "SU port-group slice G=1 of quarter NW (banks 2,3); LG ports on W at the bank windows, core/command ports on E (toward sucore_NW), 12 clock/reset ports (658 bits: per-lane/bank/macro roots) on N M5; die feedthrough column+row reserved (no master cells/pins there) | HBMb/CHAIN r17b (fix a, = r18 7edde6abc): +150 um in y to open the E-W lane channel beside the l32 cxij pair.",
    "pin_windows": [
     {
      "face": "W",
@@ -26120,7 +26120,7 @@
    },
    "origin": {
     "x": 18951.84,
-    "y": 12841.2,
+    "y": 12991.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -26140,7 +26140,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-B: ot_hbm_su_static_pgslice (slice g at bank pair {2g,2g+1})",
-   "notes": "SU port-group slice G=3 of quarter SE (banks 6,7); LG ports on W at the bank windows, core/command ports on E (toward sucore_SE), 12 clock/reset ports (658 bits: per-lane/bank/macro roots) on N M5; die feedthrough column+row reserved (no master cells/pins there)",
+   "notes": "SU port-group slice G=3 of quarter SE (banks 6,7); LG ports on W at the bank windows, core/command ports on E (toward sucore_SE), 12 clock/reset ports (658 bits: per-lane/bank/macro roots) on N M5; die feedthrough column+row reserved (no master cells/pins there) | HBMb/CHAIN r17b (fix a, = r18 7edde6abc): +150 um in y to open the E-W lane channel beside the l32 cxij pair.",
    "pin_windows": [
     {
      "face": "W",
@@ -27000,7 +27000,7 @@
    },
    "origin": {
     "x": 5671.944,
-    "y": 12841.2,
+    "y": 12991.2,
     "orient": "R0"
    },
    "clock_entry": {
@@ -27020,7 +27020,7 @@
    "version": 6,
    "grant": "real_rtl_pins_1405",
    "rtl_owner": "H-ELEM-B: ot_hbm_su_static_pgslice (slice g at bank pair {2g,2g+1})",
-   "notes": "SU port-group slice G=3 of quarter SW (banks 6,7); LG ports on W at the bank windows, core/command ports on E (toward sucore_SW), 12 clock/reset ports (658 bits: per-lane/bank/macro roots) on N M5; die feedthrough column+row reserved (no master cells/pins there)",
+   "notes": "SU port-group slice G=3 of quarter SW (banks 6,7); LG ports on W at the bank windows, core/command ports on E (toward sucore_SW), 12 clock/reset ports (658 bits: per-lane/bank/macro roots) on N M5; die feedthrough column+row reserved (no master cells/pins there) | HBMb/CHAIN r17b (fix a, = r18 7edde6abc): +150 um in y to open the E-W lane channel beside the l32 cxij pair.",
    "pin_windows": [
     {
      "face": "W",
@@ -41907,7 +41907,7 @@
    },
    "origin": {
     "x": 18858.528,
-    "y": 15688.168,
+    "y": 15838.168,
     "orient": "R0"
    },
    "clock_entry": {
@@ -41930,7 +41930,7 @@
    "kit": "physical/ref_tile/hcoll_kqs_leaf_1018",
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py) | HBMb/CHAIN r17b (fix a, = r18 7edde6abc): +150 um in y to open the E-W lane channel beside the l32 cxij pair."
   },
   {
    "name": "collks2_SE",
@@ -41943,7 +41943,7 @@
    },
    "origin": {
     "x": 18858.528,
-    "y": 15860.968,
+    "y": 16010.968,
     "orient": "R0"
    },
    "clock_entry": {
@@ -41966,7 +41966,7 @@
    "kit": "physical/ref_tile/hcoll_kqs_leaf_1018",
    "pins": [],
    "pin_status": "FACES_ONLY",
-   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py)"
+   "notes": "H-D4G GEN2 10-18: COLLQ / ring-B slot abutting coll_SE at 21.6 um (tools/hbm_die_v16/d4g_gen2_grants_collq.py) | HBMb/CHAIN r17b (fix a, = r18 7edde6abc): +150 um in y to open the E-W lane channel beside the l32 cxij pair."
   },
   {
    "name": "collks3_SE",
