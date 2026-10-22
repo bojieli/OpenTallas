@@ -2,12 +2,12 @@
  "name": "s81dvbk_selcpn_e-cpne-COMMIT",
  "block": "dsdv_bksel_c_pa_n32",
  "ref_tile": true,
- "owner": "Claude:S81-ELEM/ELEM-BKG",
- "purpose": "SOURCE/MODEL only: square388 four-face capacity and balanced CTS successor of actual cb73 MAIN clock/GRT/pin-capacity refusal. No gate admitted.",
+ "owner": "Claude:S81-ELEM2-BKSEL",
+ "purpose": "MAIN square388 four-face successor of cb73 MAIN clock/GRT/pin-capacity refusal (TritonCTS -balance_levels); gate MAIN with FB s81dvbk_selcpn_f (spine clock) in parallel.",
  "threads": 16,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "codex/s81-topk-main-refusal-1625",
+  "branch": "claude/s81-bksel-sq-1021",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys/s81_ph",
