@@ -25,8 +25,12 @@ def capture(snapshot, fixtures, out):
     out.mkdir(parents=True, exist_ok=True)
     rows = {}
     for fixture in fixtures:
-        layer = json.loads(fixture.read_text())['layer']
-        for tag, suffix in TENSORS.items():
+        document = json.loads(fixture.read_text())
+        layer = document['layer']
+        wanted = dict(TENSORS)
+        if any(r['tag'] == 'engram.wgt' for r in document['records']['0']):
+            wanted.update(_engram_q='engram.q_weight', _engram_k='engram.k_weight')
+        for tag, suffix in wanted.items():
             name = f'layers.{layer}.{suffix}'
             file = snapshot / wm[name]
             with file.open('rb') as h:
@@ -74,6 +78,17 @@ def emit(tensors, fixtures, config, out):
             elif tag == 'route.one':
                 raw = struct.pack('<f', 1.0)
                 provenance = dict(source='ds_native.build_tables ONE=np.ones(1,F)')
+            elif tag == 'engram.wgt':
+                from hdc_golden import mul
+                operands, provenance = [], []
+                for name in ('_engram_q', '_engram_k'):
+                    meta = source['tensors'][f'{layer}:{name}']
+                    data = (tensors / meta['file']).read_bytes()
+                    if meta['dtype'] != 'BF16' or hashlib.sha256(data).hexdigest() != meta['sha256']:
+                        raise ValueError('Engram checkpoint source mismatch')
+                    operands.append((np.frombuffer(data, '<u2').astype(np.uint32) << 16).view(np.float32))
+                    provenance.append(meta)
+                raw = np.asarray(mul(*operands), dtype='<f4').tobytes()
             elif tag == 'kv_rope.table':
                 compressed = c['compress_ratios'][layer] > 0
                 f = V.rope_freqs(c['rope_head_dim'], c['original_seq_len'] if compressed else 0,
