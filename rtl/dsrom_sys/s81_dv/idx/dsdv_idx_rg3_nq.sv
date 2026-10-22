@@ -10,7 +10,9 @@ module dsdv_idx_rg3_nq #(
     parameter integer IQD = 512,
     parameter integer SQD = 256,
     parameter integer LFD = 256,
-    parameter integer EL = 124
+    parameter integer EL = 124,
+    parameter integer IH = 0,           // STW-S81c-COLLA 10-22: input relay hops (see dsdv_idx_rg3)
+    parameter integer KR = 0            // engine-input relay hops
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -23,6 +25,6 @@ module dsdv_idx_rg3_nq #(
     output wire [9:0]    st
 );
     wire [512:0] qo_end;      // chain end: no downstream reader
-    dsdv_idx_rg3_nq_native #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .IQD(IQD), .SQD(SQD), .LFD(LFD), .EL(EL)) u_rg3 (
+    dsdv_idx_rg3_nq_native #(.MUT(MUT), .SRAM_MACRO(SRAM_MACRO), .DQR(DQR), .IQD(IQD), .SQD(SQD), .LFD(LFD), .EL(EL), .IH(IH), .KR(KR)) u_rg3 (
         .ck(ck), .rst(rst), .sid(sid), .qi(qi), .qo(qo_end), .si(si), .so(so), .rqo(rqo), .rri(rri), .st(st));
 endmodule

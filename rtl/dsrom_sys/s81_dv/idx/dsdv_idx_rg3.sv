@@ -39,7 +39,16 @@ module dsdv_idx_rg3 #(
     // a reader on the q / s chains, +RH edges on the response lane (both static; the lane latency is absorbed by the
     // run-ahead window T0 like the die's relay stations s; the chain shift is uniform, so slot alignment is unchanged).
     parameter integer OH = 2,
-    parameter integer RH = 2
+    parameter integer RH = 2,
+    // STW-S81c-COLLA 10-22 (idx rg3 pipeline, OWNER freeze item (1) / STEWARD-S81c ruling: ports identical, edges priced
+    // in MU.S81.CAL): IH = input relay hops on qi / si before the pin landing (q / s chains +IH edges a reader, uniform
+    // like OH: the W-face pin flop no longer drives the mid-tile control cone, q_v -> tk0/tk1 was -594 ps);
+    // KR = engine-input relay hops: the 544-b key word, the query codes / head / scale / valid enter the four chunk
+    // columns through KR kept stages a column (engine latency EL + KR; the metadata ring reads EL + KR - 1 behind), and
+    // the query codes are one kept copy a chunk column (ql_c was merged by synthesis into the OH relay qh[0] next to the
+    // E pins: qo[*] -> hslice ql_codes -624 ps over 1,286 paths).
+    parameter integer IH = 0,
+    parameter integer KR = 0
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -77,12 +86,25 @@ module dsdv_idx_rg3 #(
     always @(posedge ck) me <= {sid[3:1], 1'b0};
 
     // ================================================================== pin registers
+    wire [512:0] qih;
+    wire [275:0] sih;
+    generate if (IH == 0) begin : g_ihz
+        assign qih = qi; assign sih = si;
+    end else begin : g_ihp
+        (* keep = "true" *) reg [512:0] qx [0:IH-1];
+        (* keep = "true" *) reg [275:0] sx [0:IH-1];
+        always @(posedge ck) begin
+            qx[0] <= qi; sx[0] <= si;
+            for (int k = 1; k < IH; k++) begin qx[k] <= qx[k - 1]; sx[k] <= sx[k - 1]; end
+        end
+        assign qih = qx[IH - 1]; assign sih = sx[IH - 1];
+    end endgenerate
     reg [512:0] qr;
     reg [275:0] sr;
     reg [3:0][271:0] rrr;                           // response lanes at the pin
     always @(posedge ck or negedge rl[0])
         if (!rl[0]) begin qr[0] <= 1'b0; sr[0] <= 1'b0; end
-        else begin qr[0] <= qi[0]; sr[0] <= si[0]; end
+        else begin qr[0] <= qih[0]; sr[0] <= sih[0]; end
     // S81-COLLECT2/L20KIT: RH response relay hops (rh[0] = the pin flops, rh[RH-1] -> rrr at the landing logic)
     wire [1087:0] rrh;
     generate if (RH == 0) begin : g_khrz
@@ -101,7 +123,7 @@ module dsdv_idx_rg3 #(
             rrr[0][1:0] <= rrh[1:0]; rrr[1][1:0] <= rrh[273:272]; rrr[2][1:0] <= rrh[545:544]; rrr[3][1:0] <= rrh[817:816];
         end
     always @(posedge ck) begin
-        qr[512:1] <= qi[512:1]; sr[275:1] <= si[275:1];
+        qr[512:1] <= qih[512:1]; sr[275:1] <= sih[275:1];
         rrr[0][271:2] <= rrh[271:2]; rrr[1][271:2] <= rrh[543:274]; rrr[2][271:2] <= rrh[815:546]; rrr[3][271:2] <= rrh[1087:818];
     end
     // pin copies: pop (budget counter + copies), query valid (payload counters)
@@ -109,7 +131,7 @@ module dsdv_idx_rg3 #(
     (* keep = "true" *) reg [2:0]  qvk;             // [2]: leftk replica (S81-IDXRD-1021)
     always @(posedge ck) begin
         rkc <= {rrh[817], rrh[545], rrh[273], rrh[1]};
-        qvk <= {3{qi[0]}};
+        qvk <= {3{qih[0]}};
     end
     // S81-COLLECT2/L20KIT: qo / so internal stages (unchanged logic) + OH output relay hops (oh[OH-1] = the pin flops)
     reg [512:0] qoi;
@@ -869,8 +891,30 @@ module dsdv_idx_rg3 #(
     wire [3:0]       cfl;
     genvar gc;
     generate for (gc = 0; gc < 4; gc = gc + 1) begin : g_ch
-        dsdv_idx_rg2_chunk u_c (.clk(ck), .rst_n(rl[26 + gc]), .hb(8'(8 * gc)), .ql_v(ql_v), .ql_head(ql_h),
-            .ql_codes(ql_c), .ql_sc(ql_sw[31:0]), .ql_w(ql_sw[47:32]), .k_key(k_key), .c_sum(csum[gc]), .c_fault(cfl[gc]));
+        // per-column engine inputs: one kept query-code copy a column (D = qoi, same edge as ql_c), then KR kept relay
+        // stages on {key, query codes, head, scale/w} and the query valid (reset copies) -- the column sees exactly the
+        // ql_c / k_key sequence of before, KR edges later.
+        (* keep = "true" *) reg [511:0] qlc_c;
+        always @(posedge ck) qlc_c <= qoi[512:1];
+        wire [543:0] kk_c; wire [511:0] qc_c; wire [7:0] qh_c; wire [47:0] qs_c; wire qv_c;
+        if (KR == 0) begin : g_krz
+            assign kk_c = k_key; assign qc_c = qlc_c; assign qh_c = ql_h; assign qs_c = ql_sw; assign qv_c = ql_v;
+        end else begin : g_krp
+            (* keep = "true" *) reg [543:0] kr [0:KR-1];
+            (* keep = "true" *) reg [511:0] cr [0:KR-1];
+            (* keep = "true" *) reg [55:0]  hr [0:KR-1];
+            (* keep = "true" *) reg [KR-1:0] vr;
+            always @(posedge ck) begin
+                kr[0] <= k_key; cr[0] <= qlc_c; hr[0] <= {ql_h, ql_sw};
+                for (int k = 1; k < KR; k++) begin kr[k] <= kr[k - 1]; cr[k] <= cr[k - 1]; hr[k] <= hr[k - 1]; end
+            end
+            always @(posedge ck or negedge rl[26 + gc])
+                if (!rl[26 + gc]) vr <= '0; else vr <= KR'({vr, ql_v});
+            assign kk_c = kr[KR - 1]; assign qc_c = cr[KR - 1]; assign qh_c = hr[KR - 1][55:48]; assign qs_c = hr[KR - 1][47:0];
+            assign qv_c = vr[KR - 1];
+        end
+        dsdv_idx_rg2_chunk u_c (.clk(ck), .rst_n(rl[26 + gc]), .hb(8'(8 * gc)), .ql_v(qv_c), .ql_head(qh_c),
+            .ql_codes(qc_c), .ql_sc(qs_c[31:0]), .ql_w(qs_c[47:32]), .k_key(kk_c), .c_sum(csum[gc]), .c_fault(cfl[gc]));
     end endgenerate
     wire [15:0] o_s;
     wire        o_f;
@@ -881,13 +925,13 @@ module dsdv_idx_rg3 #(
     reg  [7:0]  warm_n; reg warm;
     wire [255:0] mq_q;
     dsdv_idx_rg2_m1k #(.SRAM_MACRO(SRAM_MACRO)) u_mq (
-        .ck(ck), .re(1'b1), .ra(mw - 10'(EL - 1)), .rd(mq_q), .we(1'b1), .wa(mw),
+        .ck(ck), .re(1'b1), .ra(mw - 10'(EL + KR - 1)), .rd(mq_q), .we(1'b1), .wa(mw),
         .wd({{(256-MW-1){1'b0}}, k_v, k_it[24:3]}));
     always @(posedge ck or negedge rl[30])
         if (!rl[30]) begin mw <= 10'd0; warm_n <= 8'd0; warm <= 1'b0; end
         else begin
             mw <= mw + 10'd1;
-            if (!warm) begin warm_n <= warm_n + 8'd1; if (warm_n == 8'(EL + 2)) warm <= 1'b1; end
+            if (!warm) begin warm_n <= warm_n + 8'd1; if (warm_n == 8'(EL + KR + 2)) warm <= 1'b1; end
         end
     reg         o_v1; reg [MW-1:0] o_m1; reg [15:0] o_s1; reg o_f1;
     always @(posedge ck or negedge rl[30]) if (!rl[30]) o_v1 <= 1'b0; else o_v1 <= mq_q[MW] && warm;
