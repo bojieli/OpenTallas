@@ -192,7 +192,7 @@ CACHE16=/home/ubuntu/artifacts/hdie-d4/codex_hbm_r16e_full_1021/planeM/vplan_cha
 J=/srv/opentallas-scratch/claude/codex-hbm-r16j-s4q-1021/chainjM
 if [ -z "${RESUME_S4:-}" ]; then
 step S3_STAGE exact_source_colh
-R18_ALLOWED="tools/hbm_die_v15/die_relay_stations.py rtl/hbm_accel/die_glue/hbfd_exact_tail_classes.sv tools/hbm_die_v16/d4g_bank_latency.py tools/hbm_die_v16/test_d4g_bank_latency.py rtl/test/hbm_layer/tb_xl_cl2_banklat_ref.sv tools/hbm_die_v15/v16_views.py tools/hbm_die_v16/d4g_layers/l1_bind_check.sh tools/hbm_die_v16/d4g_layers/l12_banklat.py tools/hbm_die_v16/d4g_layers/l7_wire.py tools/hbm_die_v16/d4g_layers/l25_h9c_fallback.py ${R18_EXTRA_ALLOWED:-}"
+R18_ALLOWED="tools/hbm_die_v15/die_relay_stations.py rtl/hbm_accel/die_glue/hbfd_exact_tail_classes.sv tools/hbm_die_v16/d4g_bank_latency.py tools/hbm_die_v16/test_d4g_bank_latency.py rtl/test/hbm_layer/tb_xl_cl2_banklat_ref.sv tools/hbm_die_v15/v16_views.py tools/hbm_die_v16/d4g_layers/l1_bind_check.sh tools/hbm_die_v16/d4g_layers/l12_banklat.py tools/hbm_die_v16/d4g_layers/l7_wire.py tools/hbm_die_v16/d4g_layers/l25_h9c_fallback.py tools/hbm_die_v16/relay_layer_d4f.py tools/hbm_die_v16/test_cfg_leaf_no_pad.py ${R18_EXTRA_ALLOWED:-}"
 CHG=$(git diff --name-only 1b4077277 HEAD -- rtl tools | grep -v -x $(for f in $R18_ALLOWED; do printf -- '-e %s ' $f; done))
 [ -z "$CHG" ] || { echo "SOURCE_READSET_CHANGED_REFUSED $CHG"; exit 12; }
 python3 - "$CACHED/reuse.json" "$CACHED/pre_relay_colm.json" "$W/$PD/corridor_model.json" <<'PYREADY'
