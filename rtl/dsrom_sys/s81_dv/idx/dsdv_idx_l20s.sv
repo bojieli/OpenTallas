@@ -412,7 +412,7 @@ module dsdv_idx_tx_n32 #(
     (* keep = "true" *) reg [31:0] shs;      // [8 l + c]: lane l one-hot for m_wd[32 c +: 32]
     (* keep = "true" *) reg [3:0]  scl_m, scl_w;
     (* keep = "true" *) reg [15:0] eph;      // e_lo[32 c +: 32] load
-    (* keep = "true" *) reg [16:0] okk;      // [16]: second sn copy (t/u census okk[12] 34 loads)
+    (* keep = "true" *) reg [17:0] okk;      // [16]: second sn copy (t/u census okk[12] 34 loads); [17]: nx_sm[5:0] (x census okk[14] 38)
          // the CTL (o_ctl) copies, see the job block
     always @(posedge ck) begin : g_pre
         integer l_, c_;
@@ -428,6 +428,7 @@ module dsdv_idx_tx_n32 #(
     always @(posedge ck or negedge rl[2])
         if (!rl[2]) okk[15:0] <= 16'd0; else okk[15:0] <= {16{n_octl}};
     always @(posedge ck or negedge rl[3]) if (!rl[3]) okk[16] <= 1'b0; else okk[16] <= n_octl;   // own reset leaf (rl[2] at 33)
+    always @(posedge ck or negedge rl[3]) if (!rl[3]) okk[17] <= 1'b0; else okk[17] <= n_octl;
 
     reg [7:0] fc_set, fc;
 
@@ -556,10 +557,17 @@ module dsdv_idx_tx_n32 #(
     reg  [35:0] rf [0:7];
     reg  [2:0]  rf_w, rf_r; reg [3:0] rf_n;
     wire [3:0]  sel_f = (MUT == 1) ? lp_i[LP-1][3:0] + 4'd1 : lp_i[LP-1][3:0];
+    // STW-S81c-TOK4 10-22 (x gate native census: lp_i[LP-1][3:0] drove the 16-way decode, 80..125 loads): with RIL the
+    // beat select is a REGISTERED one-hot formed from lp_i[LP-2] on the same edge that loads lp_i[LP-1] (0 cycles, each
+    // bit 16 loads).
+    wire [3:0]  sel_p = (MUT == 1) ? lp_i[LP-2][3:0] + 4'd1 : lp_i[LP-2][3:0];
+    (* keep = "true" *) reg [15:0] sel_oh;
+    always @(posedge ck) sel_oh <= 16'd1 << sel_p;
     reg  [15:0] lk_s;
     always @* begin
         lk_s = 16'd0;
-        for (bi_ = 0; bi_ < 16; bi_ = bi_ + 1) lk_s = lk_s | (m_rd[16 * bi_ +: 16] & {16{sel_f == 4'(bi_)}});
+        for (bi_ = 0; bi_ < 16; bi_ = bi_ + 1)
+            lk_s = lk_s | (m_rd[16 * bi_ +: 16] & {16{(RIL != 0) ? sel_oh[bi_] : sel_f == 4'(bi_)}});
     end
     wire        rf_pop;
     wire        rf_pop_r;               // read-select copy feed (second pop predicate instance)
@@ -606,6 +614,7 @@ module dsdv_idx_tx_n32 #(
     wire[35:0]rh;
     wire[2:0]rf_read_next=rf_r+3'(rf_pop_r),rf_write_next=rf_w+3'(lp_v[LP-1]);
     wire rf_pop_h;                      // RHP: third pop predicate instance (head select of fields 5..8)
+    wire rf_pop_k;                      // RIL: fourth pop predicate instance (head select of fields 6..8)
     wire [71:0] rf_go;                  // RHP: entry a field c write enable of this edge (the g_rf_write go copies)
     generate for(genvar c=0;c<9;c=c+1)begin:g_rf_read
         wire[2:0]sel;
@@ -632,7 +641,9 @@ module dsdv_idx_tx_n32 #(
                 end
             end
             (* keep = "true" *) reg[3:0]hq;
-            always @(posedge ck) hq <= (MUT != 6 && ((c<5)?rf_pop_r:rf_pop_h)) ? c1 : c0;   // MUT 6: prefetch ignores the pop
+            // RIL (x gate census u_popb 52 loads): fields 0..2 popb, 3..5 poph, 6..8 popk
+            wire pp = (RIL != 0) ? ((c<3)?rf_pop_r:(c<6)?rf_pop_h:rf_pop_k) : ((c<5)?rf_pop_r:rf_pop_h);
+            always @(posedge ck) hq <= (MUT != 6 && pp) ? c1 : c0;   // MUT 6: prefetch ignores the pop
             assign rh[4*c+:4]=hq;
         end
     end
@@ -659,6 +670,12 @@ module dsdv_idx_tx_n32 #(
     end else begin : g_poph0
         assign rf_pop_h = rf_pop_r;
     end endgenerate
+    generate if (RHP != 0 && RIL != 0) begin : g_popk
+        dsdv_tx_pop_pred #(.ID(7003)) u_popk (.any(rf_n != 4'd0), .armed(armed), .hdr_q(hdr_q), .fin(fin), .wv(wv), .r_in(r_in),
+            .flush_ok(flush_ok), .pop(rf_pop_k));
+    end else begin : g_popk0
+        assign rf_pop_k = rf_pop_h;
+    end endgenerate
     wire        in_done = in_end && lk_idle && rf_n == 4'd0;
     wire        fl  = armed && hdr_q && !fin && flush_ok && ((rf_pop && wv && !r_in) || (in_done && rf_n == 4'd0));
     wire        o_ctl_c = okk[7];            // control copy
@@ -668,8 +685,10 @@ module dsdv_idx_tx_n32 #(
     dsdv_tx_copy #(.W(1),.RESET(1),.ID(6010))u_ctp(.ck(ck),.rn(rl[6]),.d(n_octl),.q(ct_tick_pred));
     dsdv_tx_copy #(.W(1),.RESET(1),.ID(6011))u_cdh(.ck(ck),.rn(rl[6]),.d(n_octl),.q(ct_delay_hi));
     dsdv_tx_copy #(.W(1),.RESET(1),.ID(6012))u_hlc(.ck(ck),.rn(rl[6]),.d(nx_hdr_q),.q(hdr_lcur));
-    wire [15:0] nx_tc_pred = ct_tick_pred ? 16'd0 :
-        ((armed&&tc!=16'hffff)?tc+16'd1:tc);
+    wire ct_tick_lo;                    // RIL (x census u_ctp 34 loads): nx_tc_pred[7:0] clear copy
+    dsdv_tx_copy #(.W(1),.RESET(1),.ID(6013))u_ctq(.ck(ck),.rn(rl[6]),.d(n_octl),.q(ct_tick_lo));
+    wire [15:0] nx_tc_inc = (armed&&tc!=16'hffff)?tc+16'd1:tc;
+    wire [15:0] nx_tc_pred = {ct_tick_pred ? 8'd0 : nx_tc_inc[15:8], ((RIL != 0) ? ct_tick_lo : ct_tick_pred) ? 8'd0 : nx_tc_inc[7:0]};
     wire fl_lcur = armed&&hdr_lcur&&!fin&&flush_ok&&
         ((rf_pop&&wv&&!r_in)||(in_done&&rf_n==4'd0));
     wire [19:0] nx_lcur_private = (armed&&!hdr_lcur&&!okk[8]) ? j_hb :
@@ -718,7 +737,7 @@ module dsdv_idx_tx_n32 #(
         if (rf_pop && !r_in) begin nx_wv = 1'b1; nx_w0c = {r_i[19:4], 4'd0}; nx_act = nb_t; end
         if (fin && bq_n == 3'd0 && armed && !done) begin nx_done = 1'b1; nx_busy = 1'b0; end
         // the next cycle's grid slot
-        nx_dly = {ct_delay_hi?cp[84:77]:j_dly[15:8],okk[13]?cp[76:69]:j_dly[7:0]}; nx_sm = okk[14] ? cp[99:88] : j_sm; nx_r = okk[15] ? cp[87:85] : j_r;
+        nx_dly = {ct_delay_hi?cp[84:77]:j_dly[15:8],okk[13]?cp[76:69]:j_dly[7:0]}; nx_sm = {okk[14] ? cp[99:94] : j_sm[11:6], ((RIL != 0) ? okk[17] : okk[14]) ? cp[93:88] : j_sm[5:0]}; nx_r = okk[15] ? cp[87:85] : j_r;
         nx_snlt = (SCS != 0) ? (sn_inc ? (sn_i < nx_sm) : (sn_h < nx_sm)) : (nx_sn < nx_sm);
         nx_slot = nx_armed && nx_tc_pred >= nx_dly + ((MUT == 3) ? 16'(nx_r) : 16'd0) && nx_rc == 3'd0 && nx_snlt && !nx_done;
     end

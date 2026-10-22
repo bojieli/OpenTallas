@@ -14,3 +14,7 @@ its own clock root, column B banks 5-7 in the parent; parent registers pa|pb int
 Bench gap closed (STEWARD 10-22): tb_tx_miter now rewrites lane 0 window 0 under partial mask 16'h5a5a before the
 lookups (masked-out positions must keep the first write). wmask/: x, y and v MUT0 PASS (56,074 checks); MUT4 (write
 mask) now CAUGHT on x, y and v; x and y MUT1/2/3/5/6 all caught on the new bench.
+Census fix (STW-S81c-TOK4 10-22, x gate native census FAIL: 7 drivers > 32 loads): with RIL the beat select is a
+registered one-hot sel_oh (lp_i[LP-1][3:0] 80..125 loads), fourth pop predicate u_popk (fields 0..2/3..5/6..8;
+u_popb 52), okk[17] = nx_sm[5:0] clear copy (okk[14] 38), u_ctq = nx_tc_pred[7:0] clear copy (u_ctp 34); 0 cycles.
+census/: x and y MUT0 PASS (56,074 checks), MUT1..6 all caught on x and y; v MUT0 PASS (RIL=0 path unchanged).
