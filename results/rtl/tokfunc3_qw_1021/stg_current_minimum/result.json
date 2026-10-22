@@ -1,0 +1,36 @@
+{
+ "current_revision": "2eaaa79c7",
+ "grade": "minimum current component rerun; exact28input match to stg4pos",
+ "binary_sha256": "6df53648fb792b3ce0d88be40356e5679eb33d29810575807035685dd0e77866",
+ "cases": {
+  "L0_qk": {
+   "exit": 0,
+   "expected_failure": false,
+   "matched": true
+  },
+  "L0_od": {
+   "exit": 0,
+   "expected_failure": false,
+   "matched": true
+  },
+  "lm": {
+   "exit": 0,
+   "expected_failure": false,
+   "matched": true
+  },
+  "emb": {
+   "exit": 0,
+   "expected_failure": false,
+   "matched": true
+  },
+  "LGPOS_qk_roperx_ropelate": {
+   "exit": 1,
+   "expected_failure": true,
+   "matched": true
+  }
+ },
+ "verdict": "PASS",
+ "actual_host": "ot-epyc7",
+ "actual_unit": "oth-ubuntu-3963631-1792639902",
+ "scope": "Minimum flat-slice source component rerun; actual selected physicalS8 parent ages/last-stage variant remain separate"
+}
