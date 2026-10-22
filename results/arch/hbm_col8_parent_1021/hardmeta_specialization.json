@@ -1,0 +1,18 @@
+{
+  "functional_source": "rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_col8_control.sv",
+  "functional_sha256": "59ab5af4843e11d52bffc4564ce95095a66121693431d9f7eebe253d147d58a0",
+  "physical_source": "rtl/hdc/v41x/col8_parent_1021/quarter_control_hardmeta.v",
+  "physical_sha256": "19bb904b869ebd52f5d28fb6dc01040132bc7cf7cb5fc29c32fc724ef38df0dc",
+  "exact_transform": {
+    "before": "ot_hidx_meta_sram146 #(.D(146)) md(",
+    "after": "ot_hidx_meta_sram146 md(",
+    "sites": 1,
+    "instances_after_elaboration": 2
+  },
+  "master": "ot_hidx_meta_sram146",
+  "D": 146,
+  "closed_record": "06d0f5e44",
+  "closed_main": "6a5b95375",
+  "metadata_functional_sha256": "e6546dff0e32e203f3a61bc7d2e755305d179f662daadda0dddcb19ede71d24f",
+  "ports": "Unchanged, including clk and clk_mem; both driven by clk_meta[e]. No data or clock/reset wiring changes."
+}

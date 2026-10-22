@@ -4,6 +4,7 @@ out=${1:?};mkdir -p "$out"
 readset=results/arch/hbm_col8_parent_1021/residual_sources.txt
 args=(); sources=(); while IFS= read -r p; do
  if [[ "$p" == rtl/hdc/v41x/ot_hidx_meta_sram146.sv ]]; then p=rtl/hdc/v41x/col8_parent_1021/meta_hard_interface.v; fi
+ if [[ "$p" == rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_col8_control.sv ]]; then p=rtl/hdc/v41x/col8_parent_1021/quarter_control_hardmeta.v; fi
  sources+=("$p"); args+=(--source "$p");
 done < "$readset"
 sha256sum "$readset" "${sources[@]}" > "$out/source_receipt.txt"
