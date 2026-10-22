@@ -1,0 +1,56 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+PLAN ck_c0r0 R {129.60000000000002 86.39999999999999 673.9200000000001 1339.2} P 3594.24 sE 301.404 smax 18 cmax 3 tot 23
+PLAN ck_c0r1 R {129.60000000000002 1425.6 673.9200000000001 2678.3999999999996} P 3594.24 sE 3003.539999999999 smax 18 cmax 3 tot 24
+PLAN ck_c0r2 R {129.60000000000002 2764.8 673.9200000000001 4017.6} P 3594.24 sE 2991.0119999999993 smax 18 cmax 3 tot 24
+PLAN ck_c0r3 R {129.60000000000002 4104.0 673.9200000000001 5356.8} P 3594.24 sE 2022.6120000000005 smax 18 cmax 3 tot 24
+PLAN ck_c1r0 R {907.1999999999999 86.39999999999999 1451.52 1339.2} P 3594.24 sE 140.12400000000014 smax 18 cmax 3 tot 23
+PLAN ck_c1r1 R {907.1999999999999 1425.6 1451.52 2678.3999999999996} P 3594.24 sE 0.0 smax 18 cmax 3 tot 32
+PLAN ck_c1r2 R {907.1999999999999 2764.8 1451.52 4017.6} P 3594.24 sE 2341.44 smax 18 cmax 3 tot 32
+PLAN ck_c1r3 R {907.1999999999999 4104.0 1451.52 5356.8} P 3594.24 sE 2155.8600000000006 smax 18 cmax 3 tot 24
+PLAN ck_c2r0 R {1641.6 86.39999999999999 2185.9199999999996 1339.2} P 3594.2399999999993 sE 229.596 smax 18 cmax 3 tot 23
+PLAN ck_c2r1 R {1641.6 1425.6 2185.9199999999996 2678.3999999999996} P 3594.239999999999 sE 544.3199999999997 smax 18 cmax 3 tot 31
+PLAN ck_c2r2 R {1641.6 2764.8 2185.9199999999996 4017.6} P 3594.24 sE 1797.12 smax 18 cmax 3 tot 31
+PLAN ck_c2r3 R {1641.6 4104.0 2185.9199999999996 5356.8} P 3594.24 sE 2129.508 smax 18 cmax 3 tot 24
+PLAN ck_c3r0 R {2376.0 86.39999999999999 2920.3199999999997 1339.2} P 3594.2399999999993 sE 228.7800000000002 smax 18 cmax 3 tot 23
+PLAN ck_c3r1 R {2376.0 1425.6 2920.3199999999997 2678.3999999999996} P 3594.239999999999 sE 1118.8919999999998 smax 18 cmax 3 tot 24
+PLAN ck_c3r2 R {2376.0 2764.8 2920.3199999999997 4017.6} P 3594.24 sE 1063.8839999999996 smax 18 cmax 3 tot 24
+PLAN ck_c3r3 R {2376.0 4104.0 2920.3199999999997 5356.8} P 3594.24 sE 2232.8999999999996 smax 18 cmax 3 tot 24
+CKB BUILD ck_c0r0 sinks=89 leaves=73 shared_root=ot_ckb_ck_c0r0_n1 trunk=2
+CKB BUILD ck_c0r1 sinks=84 leaves=67 shared_root=ot_ckb_ck_c0r1_n146 trunk=3
+CKB BUILD ck_c0r2 sinks=84 leaves=70 shared_root=ot_ckb_ck_c0r2_n279 trunk=3
+CKB BUILD ck_c0r3 sinks=81 leaves=67 shared_root=ot_ckb_ck_c0r3_n418 trunk=3
+CKB BUILD ck_c1r0 sinks=115 leaves=97 shared_root=ot_ckb_ck_c1r0_n551 trunk=2
+CKB BUILD ck_c1r1 sinks=107 leaves=96 shared_root=ot_ckb_ck_c1r1_n744 trunk=11
+CKB BUILD ck_c1r2 sinks=117 leaves=100 shared_root=ot_ckb_ck_c1r2_n935 trunk=11
+CKB BUILD ck_c1r3 sinks=87 leaves=75 shared_root=ot_ckb_ck_c1r3_n1134 trunk=3
+CKB BUILD ck_c2r0 sinks=102 leaves=86 shared_root=ot_ckb_ck_c2r0_n1283 trunk=2
+CKB BUILD ck_c2r1 sinks=107 leaves=91 shared_root=ot_ckb_ck_c2r1_n1454 trunk=10
+CKB BUILD ck_c2r2 sinks=117 leaves=99 shared_root=ot_ckb_ck_c2r2_n1635 trunk=10
+CKB BUILD ck_c2r3 sinks=88 leaves=73 shared_root=ot_ckb_ck_c2r3_n1832 trunk=3
+CKB BUILD ck_c3r0 sinks=80 leaves=65 shared_root=ot_ckb_ck_c3r0_n1977 trunk=2
+CKB BUILD ck_c3r1 sinks=108 leaves=87 shared_root=ot_ckb_ck_c3r1_n2106 trunk=3
+CKB BUILD ck_c3r2 sinks=104 leaves=86 shared_root=ot_ckb_ck_c3r2_n2279 trunk=3
+CKB BUILD ck_c3r3 sinks=93 leaves=79 shared_root=ot_ckb_ck_c3r3_n2450 trunk=3
+SMOKE groups 1311 pads 0 blocked 0
+SMOKE ckr insts 0
+SMOKE ck_c0r0 leaf sinks 89
+SMOKE ck_c0r1 leaf sinks 84
+SMOKE ck_c0r2 leaf sinks 84
+SMOKE ck_c0r3 leaf sinks 81
+SMOKE ck_c1r0 leaf sinks 115
+SMOKE ck_c1r1 leaf sinks 107
+SMOKE ck_c1r2 leaf sinks 117
+SMOKE ck_c1r3 leaf sinks 87
+SMOKE ck_c2r0 leaf sinks 102
+SMOKE ck_c2r1 leaf sinks 107
+SMOKE ck_c2r2 leaf sinks 117
+SMOKE ck_c2r3 leaf sinks 88
+SMOKE ck_c3r0 leaf sinks 80
+SMOKE ck_c3r1 leaf sinks 108
+SMOKE ck_c3r2 leaf sinks 104
+SMOKE ck_c3r3 leaf sinks 93
+SMOKE root depth histogram (stages port->group root): 50 16 48 41 49 35 46 51 45 46 47 49 53 25 51 25 69 1 67 7 68 7 72 5 70 7 60 28 62 18 61 30 59 36 31 30 30 22 33 36 34 42 29 23 27 31 26 26 32 25 28 25 40 24 38 30 42 39 35 30 37 18 36 16 58 37 56 25 55 27 71 5 64 13 52 24 17 17 16 4 19 20 18 11 13 5 15 3 21 14 20 13 39 32 43 41 41 21 57 25 54 17 44 33 63 16 25 17 22 6 24 9 66 7 65 9 73 3 78 1 75 2 23 5 74 3 79 1 76 1
+BRANCH_SMOKE ports=16 branches=2606 leaves=1311 pads=0 failures=0

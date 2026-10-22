@@ -1,0 +1,33 @@
+{
+  "source_commit": "db20990b2",
+  "unit": "oth-ubuntu-4133923-1792639359",
+  "host": "ot-epyc9",
+  "fixture": "/srv/opentallas-scratch/claude/ref_gate/qfd_c_b16_rgxg-20261021-172754/routes/gate/work/orfs/results/asap7/opentallas_qfd_c_b16_rgx_asap7_ref_gate/base/3_place.odb",
+  "consumer": "diagnostic A0 stand-in CB16 (unchanged RTL/SDC and16ports/69landing macros)",
+  "checks": {
+    "rgi": {
+      "ports": 16,
+      "nodes": 2520,
+      "leaves": 1268,
+      "blocked": 0,
+      "initial_padding_cells": 0,
+      "failures": 0
+    },
+    "rgj": {
+      "ports": 16,
+      "nodes": 2606,
+      "leaves": 1311,
+      "blocked": 0,
+      "initial_padding_cells": 0,
+      "failures": 0
+    }
+  },
+  "hashes": {
+    "tools/qwen_cluster/cb16_km/cb16_ckbranch.tcl": "8444e1955b8d30be1cc6f32d7d5b61e72926519ce7626cf56cc4cfcc62b0cb7f",
+    "tools/qwen_cluster/cb16_km/cb16_ckring3.tcl": "700134bc63f4d492684375e5d9d15e26d9139f2d175ed4fd3c141c56f156e9cc",
+    "results/arch/cb16_local_tree_1021/smoke_a3.log": "a898afced40abc85332e29efafc41c0b479a9d03060c6526ffd709a621aa2f64",
+    "results/arch/cb16_local_tree_1021/smoke_b3.log": "d16c5924d1760fc8b626cdafc8cbdf3c0323b03471d33806c93efe0e8ef7d48b",
+    "results/arch/cb16_local_tree_1021/branch_smoke.tcl": "a296a69abd1f687b32ca97c3db5d11f0ed73ca298ba0fe95e6448b32997849cb"
+  },
+  "scope": "OpenDB wiring/control geometry smoke only; actual CTS/GRT/STA TT+FF pending parallel gates; no final clock/area/power claims"
+}
