@@ -26,7 +26,7 @@ def emit(m,prefix,is_new):
     if c['port_directions'][p]=='output':
      for b,old in zip(bs,original['connections'][p]):
       if isinstance(b,int):lines.append(f'assign {prefix}{b}=v[{indices[old]}];')
-    elif is_new:neq.append(f'({bus("a",original["connections"][p])} != {bus(prefix,bs)})')
+    elif is_new:neq.append(f'({bus("a",original["connections"][p])} !== {bus(prefix,bs)})')
   elif typ in FFS:
    if is_new and name.startswith('$reset_forest_'):lines.append(f'assign {prefix}{x["Q"][0]}=1\'b1;');continue
    source=orig['cells'][origins[name]] if is_new else c
@@ -45,9 +45,9 @@ def transition(prefix,c):
 emit(orig,'a',False);emit(new,'b',True)
 for name,c in new['cells'].items():
  if c['type']in FFS and not name.startswith('$reset_forest_'):
-  neq.append('('+transition('a',orig['cells'][origins[name]])+' != '+transition('b',c)+')')
+  neq.append('('+transition('a',orig['cells'][origins[name]])+' !== '+transition('b',c)+')')
 for name,p in orig['ports'].items():
- if p['direction']=='output':neq.append('('+bus('a',p['bits'])+' != '+bus('b',new['ports'][name]['bits'])+')')
+ if p['direction']=='output':neq.append('('+bus('a',p['bits'])+' !== '+bus('b',new['ports'][name]['bits'])+')')
 lines.append('assign bad=|'+'{'+','.join(neq)+'};endmodule');(out/'step_miter.sv').write_text('\n'.join(lines)+'\n')
 (out/'step_model.json').write_text(json.dumps(dict(arbitrary_variables=len(variables),next_state_and_boundary_comparisons=len(neq),assumption='Actual three-edge reset forest has released; all original reset terminals and reset forest Q=1; every other original FF state and macro output unconstrained',primitive_types=sorted({c['type']for c in orig['cells'].values()}),scope='One-edge full generic source correspondence; separate actual reset cold/dirty and emitted RTL lockstep required'),indent=2)+'\n')
 print(len(variables),len(neq))

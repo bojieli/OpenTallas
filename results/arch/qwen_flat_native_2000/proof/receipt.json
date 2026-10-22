@@ -1,0 +1,30 @@
+{
+  "source_commit": "703669f8c",
+  "source_sha256": {
+    "rtl/qwen_flat_native_2000/qfd_flat_ml1_native_bounded.sv": "98112ffd8ab4f4ebfa6469260b36dfaf513143a92ed18fe6613b6760d80c1092",
+    "rtl/qwen_flat_native_2000/qfd_flat_ml1_native_helpers.sv": "c18f83c2ebef85817fcc6b87a71d05619826d31449ae4f7598b1b907e0c66c58",
+    "tools/qwen_flat_native_2000/bound_flat_graph.py": "a9b3f7c9a0d3d0bbaf3539a3d8d2784b331fa98d95e411d800f8d2bf43d5e76d",
+    "tools/qwen_flat_native_2000/prove_step.py": "626c2d6160823734fccc08c20e77cdef09ed465c68730cf9866f31845532b079",
+    "tools/qwen_flat_native_2000/prove_reset_forest.py": "6802cc17a00153be13f21cf0ddd6d0e9990467164111c86693a4868101330e7f"
+  },
+  "step": {
+    "status": "PASS",
+    "unit": "oth-ubuntu-2694963-1792649447",
+    "arbitrary_variables": 23835,
+    "comparisons": 23108,
+    "scope": "Defined binary inputs and arbitrary original FF state, macro outputs unconstrained; corresponding value and definedness of every next state/public output/macro input after actual reset-release forest is high; one explicit original X constant retained",
+    "sat_flags": "-enable_undef -set-def-inputs -verify -prove bad 0"
+  },
+  "reset": {
+    "status": "PASS",
+    "unit": "oth-ubuntu-2796423-1792649562",
+    "checks": 1900,
+    "nodes": 76,
+    "release_edges": 3,
+    "dirty_async": true,
+    "scope": "Exact emitted FF instance lines and actual emitted FF helper; actual source clock"
+  },
+  "functional_rtl": "RUNNING, no credit until selected original-source lockstep and96-value causal proof finishes",
+  "native_qualified": false,
+  "physical_qualified": false
+}

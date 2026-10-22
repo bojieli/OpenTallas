@@ -1,0 +1,21 @@
+{
+  "arbitrary_variables": 23835,
+  "next_state_and_boundary_comparisons": 23108,
+  "assumption": "Actual three-edge reset forest has released; all original reset terminals and reset forest Q=1; every other original FF state and macro output unconstrained",
+  "primitive_types": [
+    "$_AND_",
+    "$_DFF_PN0_",
+    "$_DFF_P_",
+    "$_MUX_",
+    "$_NOT_",
+    "$_OR_",
+    "$_SDFF_PN0_",
+    "$_SDFF_PN1_",
+    "$_SDFF_PP0_",
+    "$_SDFF_PP1_",
+    "$_XOR_",
+    "$scopeinfo",
+    "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "scope": "One-edge full generic source correspondence; separate actual reset cold/dirty and emitted RTL lockstep required"
+}
