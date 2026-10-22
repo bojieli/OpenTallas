@@ -1,0 +1,11 @@
+{
+  "time": "2026-10-21T20:48:34.647124-07:00",
+  "source_commit": "37ce59ffc",
+  "current_qa2_commit": "bda737f0a",
+  "scale_source_sha256": "6c26623237848f611f1cd12ab59dff91173c293297de205e049018ef50e81d15",
+  "positive": "SCALE13R_EQ PASS checks=2097152 subnormal_results=52693",
+  "causal_mutant": "OT_GQ_MUT_S2TOP_K: SCALE13R_EQ FAIL errors=129317 checks=2097152",
+  "insensitive_mutant": "OT_GQ_MUT_SCALE_DATA changes discarded low output byte under MUL8; actual PASS preserved and not claimed causal",
+  "compiler": "Verilator5.050",
+  "qa2_control_qualification": "separate current IA1/IA2/QARD bench pending"
+}

@@ -156,7 +156,7 @@
     "cmd": "OT_GQ_P192=1 OT_GQ_N32=1 OT_GQ_XDEFS='-DOT_GQ_QA2 -DOT_GQ_MUL8 -DOT_COLLQ_SRAM_WR2 -DOT_GQ_SHN32 -DOT_GQ_R13N -DOT_GQ_TLN -DOT_GQ_S9P' bash rtl/hbm_accel/generic/collective/p2p/run_aq_s2top_exact.sh {RUN}/aq_s2top_mut 1",
     "expect": "fail",
     "fail_regex": "SCALE13R_EQ FAIL errors=[1-9]",
-    "fail_witness": "results/rtl/gqissue_sram_1019/k4_s2top/s2top_mutk_fail.log",
+    "fail_witness": "results/rtl/hbm_coll_gq_mul8_1021/threshold_mutant_fail.log",
     "threads": 4,
     "peak_ram_gb": 8
    },
@@ -301,7 +301,8 @@
    "rtl/hbm_accel/generic/collective/p2p/run_coll_gq_ia.sh",
    "physical/asap7_memory_macros/ot_sram_1r1w_64x16_m1",
    "results/rtl/hbm_vmearly_k4_1020",
-   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir"
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+   "results/rtl/hbm_coll_gq_mul8_1021"
   ],
   "views_to": "physical/ref_tile/hcoll_gq_issue_k14x_1021/views",
   "record_to": "results/rtl/ref_tile/hcoll_gq_issue_k14x_1021"
