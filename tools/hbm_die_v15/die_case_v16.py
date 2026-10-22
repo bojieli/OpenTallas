@@ -1646,11 +1646,16 @@ puts OT_DONE
                 die_repeaters_step.tcl_call('hbm', '/work/out/die_repeaters.json', reach_um=mw['value_um'],
                                             repair_args='-buffer_gain 4.0', max_wire_um=a.repeater_max_wire_um,
                                             signal_top_layer=a.signal_top_layer).rstrip())
+    # HBMc 10-22: the repeater spread sees carved feedthrough channels as free (solid = master bbox minus channels)
+    rep_carved = ('set ::ot_die_rep_carved [dict create' + ''.join(
+        f" {m} {{{' '.join('{%.4f %.4f %.4f %.4f}' % (k['x_um'][0], k['y_um'][0], k['x_um'][1], k['y_um'][1]) for k in ko)}}}"
+        for m, ko in sorted(carved.items())) + ']') if carved else ''
     rep_ = '' if not a.die_repeaters else f'''{clocks}
 {groups}
 estimate_parasitics -placement
 set_dont_touch [get_nets -quiet {{dk?_* n_dk?_* ckg_*}}]
 set r0 [clock seconds]
+{rep_carved}
 {rep_call}
 puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'''
     if a.hold_budget == 'die':
