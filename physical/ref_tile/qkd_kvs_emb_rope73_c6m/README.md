@@ -1,0 +1,3 @@
+Replace c5f macro clock slew 322 ps and TT/FF spread 96.3/99.1 ps: actual clock ITerm coordinates, isolated same-depth SRAM final drivers, horizontal separated SRAM row and full-face balanced bus pins. Payload RTL and its edges unchanged; same one core clock, no timing waiver.
+
+Safe-design checklist: exact c5 hardware source retained; one original clock and no masks; macro clock entries use actual ITerm geometry and same-depth dedicated final drivers; SRAM origins are on the 43.2 by 21.6 lattice with more than 20 um separation; full-face per-bus pin intervals and per-bit balance are explicit. Placement, density, fanout, reach, actual TT/FF clock spread and SRAM slew remain unqualified until this candidate finishes its normal gate.

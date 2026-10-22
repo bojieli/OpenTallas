@@ -1,0 +1,323 @@
+{
+ "name": "qkd_kvs_emb_rope73_c6f",
+ "top": "qkd_kvs_emb_rope_ovl",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join_fan32.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4_cal.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join4.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_join.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_ctx_start.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_ctx.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_ctx_native32.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_row_tx_rope.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_kvs_emb_ctx.sv",
+  "rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k_hl_mu_ba_n32_pj_rope_ovl.sv"
+ ],
+ "params": {},
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "i_head_record",
+   "i_ovl_users",
+   "i_kvn_fault",
+   "i_ovl_adm"
+  ],
+  "S": [
+   "ck",
+   "rst_n",
+   "i_ctl",
+   "i_hroot_ES",
+   "i_hroot_EN"
+  ],
+  "E": [
+   "d2d__svc",
+   "d2d__emb_tx_slot",
+   "rowtx__emb_tx_v",
+   "rowtx__emb_tx_payload",
+   "px_tok",
+   "px_tep",
+   "o_ctx_svc",
+   "emb_fault"
+  ],
+  "W": [
+   "i_hroot_WS",
+   "i_hroot_WN"
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "KV-EMB4 z1 10-20: the KV die static schedule charges 0 edges at every kvs_emb face (kv_tile_views EDGES rule; i2 reason: every tile<->tile / die-master hop is priced in the compiled join ages with the die relays only). Owner 10-20 09:05: pin registers only at region crossings / wires > 405 um; the e1 recipe-3 pin registers (+1 in / +1 out on every pin) made the e1 view unbindable (tile_views edges, LEC != die RTL). Crossings land at die level (die relays / landing slots, priced)."
+ },
+ "kind": "tile",
+ "clock_port": "ck",
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "*u_context.g_rope.u_rowtx.u_row",
+   "at": [
+    43.2,
+    172.8
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "*u_context.g_rope.u_rowtx.u_rope",
+   "at": [
+    280.8,
+    172.8
+   ]
+  }
+ ],
+ "inhold": true,
+ "outhold": true,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_min_tracks": 3,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.03,
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 40
+  },
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "recipe": 3,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "outline": {
+  "w": 518.4,
+  "h": 432.0,
+  "exact": true
+ },
+ "structural_change": "Replace c5f macro clock slew 322 ps and TT/FF spread 96.3/99.1 ps: actual clock ITerm coordinates, isolated same-depth SRAM final drivers, horizontal separated SRAM row and full-face balanced bus pins. Payload RTL and its edges unchanged; same one core clock, no timing waiver.",
+ "job": {
+  "owner": "Codex:CODEX-KELEMENTS-2000",
+  "branch": "codex/k-emb-clock6-2000",
+  "tag": "c6f",
+  "purpose": "Replace c5f macro clock slew 322 ps and TT/FF spread 96.3/99.1 ps: actual clock ITerm coordinates, isolated same-depth SRAM final drivers, horizontal separated SRAM row and full-face balanced bus pins. Payload RTL and its edges unchanged; same one core clock, no timing waiver.",
+  "benches": [
+   {
+    "name": "emb_rope_ovl",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "emb_rope_ovl_m1",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   },
+   {
+    "name": "emb_rope_ovl_m2",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   },
+   {
+    "name": "emb_rope_ovl_m3",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   },
+   {
+    "name": "emb_rope_ovl_m4",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m4 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   },
+   {
+    "name": "emb_rope_ovl_m5",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh {RUN}/bench/m5 5",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^KVS_EMB_ROPE_OVL PASS ",
+    "fail_regex": "^KVS_EMB_ROPE_OVL FAIL "
+   },
+   {
+    "name": "row_tx_rope_eq",
+    "cmd": "bash tools/qwen_kv_die/kvs_emb_rope_rowtx_eq.sh {RUN}/bench/eq",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^EQ PASS "
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/lib",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "rtl/qwen_sys/static_kv_die_20261017",
+   "tools/qwen_kv_die/kvs_emb_rope_ovl_bench.sh",
+   "tools/qwen_kv_die/kvs_emb_rope_rowtx_eq.sh"
+  ],
+  "views_to": "physical/ref_tile/qkd_kvs_emb_rope73_c6f/views",
+  "record_to": "results/rtl/ref_tile/qkd_kvs_emb_rope73_c6f",
+  "cycles_added": 1,
+  "structural_change": "Replace c5f macro clock slew 322 ps and TT/FF spread 96.3/99.1 ps: actual clock ITerm coordinates, isolated same-depth SRAM final drivers, horizontal separated SRAM row and full-face balanced bus pins. Payload RTL and its edges unchanged; same one core clock, no timing waiver."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "first_copies": {
+   "rst_n": 2
+  },
+  "copies": {
+   "rst_n": 64
+  }
+ },
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_RST_COPIES_WIDE": "1"
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "fill_reason": {
+  "pin_bound": "Enlarged full-face pin perimeter, two SRAMs in a horizontal row with a center routing channel and wide north/south bands; no area shrink."
+ },
+ "slot_change_request": "Enlarged candidate outline requires explicit die slot adoption after physical qualification; no live die change.",
+ "children": [],
+ "inter": [],
+ "pre_cts_extra": [
+  "physical/ref_tile/qkd_kvs_emb_rope73_c6f/clock_tree.tcl"
+ ],
+ "purpose": "Replace c5f macro clock slew 322 ps and TT/FF spread 96.3/99.1 ps: actual clock ITerm coordinates, isolated same-depth SRAM final drivers, horizontal separated SRAM row and full-face balanced bus pins. Payload RTL and its edges unchanged; same one core clock, no timing waiver.",
+ "safe_design_checklist": "see physical/ref_tile/qkd_kvs_emb_rope73_c6f/README.md",
+ "pin_ranges": {
+  "i_head_record": [
+   5.4,
+   504.3368
+  ],
+  "i_ovl_users": [
+   505.4168,
+   509.0323
+  ],
+  "i_kvn_fault": [
+   510.1123,
+   511.0161
+  ],
+  "i_ovl_adm": [
+   512.0961,
+   513.0
+  ],
+  "ck": [
+   5.4,
+   6.1478
+  ],
+  "rst_n": [
+   7.2278,
+   7.9756
+  ],
+  "i_ctl": [
+   9.0556,
+   63.6462
+  ],
+  "i_hroot_ES": [
+   64.7262,
+   288.3231
+  ],
+  "i_hroot_EN": [
+   289.4031,
+   513.0
+  ],
+  "d2d__svc": [
+   5.4,
+   82.5419
+  ],
+  "d2d__emb_tx_slot": [
+   83.6219,
+   84.0652
+  ],
+  "rowtx__emb_tx_v": [
+   85.1452,
+   85.5886
+  ],
+  "rowtx__emb_tx_payload": [
+   86.6686,
+   329.6211
+  ],
+  "px_tok": [
+   330.7011,
+   338.6813
+  ],
+  "px_tep": [
+   339.7613,
+   346.8548
+  ],
+  "o_ctx_svc": [
+   347.9348,
+   425.0767
+  ],
+  "emb_fault": [
+   426.1567,
+   426.6
+  ],
+  "i_hroot_WS": [
+   5.4,
+   215.46
+  ],
+  "i_hroot_WN": [
+   216.54,
+   426.6
+  ]
+ }
+}
