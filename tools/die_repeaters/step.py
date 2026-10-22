@@ -41,6 +41,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 
 TCL = HERE / 'die_repeaters.tcl'
 BOUNDS_TCL = ROOT / 'tools/die_cluster/cluster_bounds.tcl'
+RESIZE_LADDER = ('BUFx8_ASAP7_75t_R', 'BUFx12f_ASAP7_75t_R', 'BUFx16f_ASAP7_75t_R')   # die_repeaters.tcl resize_cells default
 BUFFERS = ('BUFx4_ASAP7_75t_R', 'BUFx4f_ASAP7_75t_R', 'BUFx5_ASAP7_75t_R', 'BUFx6f_ASAP7_75t_R', 'BUFx8_ASAP7_75t_R')
 DEFAULTS = dict(max_wire_um=160.0, slew_ps=260.0, over_reach='report', rc_layer='M4', legalize='spread',
                 long_wire_scan=5000)
@@ -177,10 +178,14 @@ def tcl_call(design, report, tcl_dir='/work', fail_exit=3, **kw):
     elif fa:
         bufs = c.get('buffers') or list(BUFFERS)
         prefix = str(Path(report).with_suffix('')) + '.fclk'
+        # post-GRT upsizing replaces new repeaters in place along the resize ladder (BUFx8 -> BUFx12f -> BUFx16f, stage
+        # count unchanged): the post-GRT re-audit must still see them as repeaters, else its traces stop at the first
+        # upsized cell and report false fclk/data depth mismatches (S81 HEAD H4 tail 41/2813, STW-S81-HEAD 10-21).
+        bufs_post = list(dict.fromkeys(list(bufs) + list(c.get('resize_cells') or RESIZE_LADDER)))
         pre = f'source {tcl_dir}/fclk_audit.tcl\not_die_rep_fclk_snapshot\n'
         post = ((f'ot_die_rep_fclk_equalize {{{prefix}.pre_eq}} {_tcl_list(fg)} {_tcl_list(bufs)}\n' if fe else '') +
                 f'set ot_die_rep_fb [ot_die_rep_fclk_audit {{{prefix}}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
-                f'set ::ot_die_rep_fclk_args [list {{{prefix}.post_grt}} {_tcl_list(fg)} {_tcl_list(bufs)}]\n'
+                f'set ::ot_die_rep_fclk_args [list {{{prefix}.post_grt}} {_tcl_list(fg)} {_tcl_list(bufs_post)}]\n'
                 + (f'if {{$ot_die_rep_fb != 0}} {{ puts "OT_DIE_REP FAIL fclk_mismatch_hops=$ot_die_rep_fb"; flush stdout; '
                    f'write_db {{{prefix}.fail.odb}}; exit {fail_exit} }}\n' if fp == 'fail' else ''))
     return (f'# shared die-net repeater step (tools/die_repeaters/step.py, design {design})\n'

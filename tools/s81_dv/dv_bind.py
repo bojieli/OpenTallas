@@ -18,7 +18,10 @@ dv_<inst> stand-ins of the diagnostic case, then runs the STRICT tools/die_port_
                  its parent's output (async assert, release one regional clock edge per hop).  Release depth per leaf is
                  recorded for the reset release calendar.  No global reset net.
   * clocks       one regional root input ck_<region> per region (DIE-CLOCK neighbour-relative roots); blocks clock on
-                 their region root; link hop 0 forwarded clock = the source master's real forwarded-clock output where
+                 their region root.  S81.CLK (10-21): regions are GEOMETRIC (tools/s81_dv/geo_clock.py: grid cells
+                 ck_g<i>_<j>, oversize blocks ck_b_<block>, reset stations on the root of their own cell, reset-tree
+                 crossings re-registered by one <child>_xk stage in the receiving region); bind table
+                 "clock_regions": {"mode": "logical"} restores the plan-group roots ck_cl*; link hop 0 forwarded clock = the source master's real forwarded-clock output where
                  its RTL has one (slice ck_line / ck_v / ck_xc), else a clock-forward cell (BUFx8) on the source
                  region's root at the source pin.  Station k+1 ck = station k ck_o (F1).
   * hop-0 gate   S81-LBGAP/G1 (10-18, LANDING-CONTRACT L3): on every LANDED lane the hop-0 forward cell is a clock gate
@@ -39,6 +42,7 @@ import re
 import subprocess
 
 from frame_bind import instance_clocks
+import geo_clock as GC
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -272,8 +276,18 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     W, H = plan['facts']['die_um']
     pitch = plan['facts']['cluster_pitch_um']
     blocks = plan['blocks']
-    reg = {b['name']: region_of(b, pitch) for b in blocks}
-    regions = sorted(set(reg.values()))
+    cr_ = T.get('clock_regions') or {}
+    if cr_.get('mode', 'geometric') == 'geometric':
+        zero = [(blocks[l['e'][0][0]]['name'], blocks[l['e'][1][0]]['name']) for l in plan['links']
+                if not chains_pts.get(l['i'].replace('-', '_'))]     # 0-stage (abutted neighbour) block pairs
+        grid = GC.Grid.aligned(W, H, blocks, T, cr_.get('cell_um', GC.CELL_UM), pairs=zero)
+        reg, reg_info = GC.block_regions(blocks, grid, T)
+    elif cr_['mode'] == 'logical':
+        grid, reg_info = None, {}
+        reg = {b['name']: region_of(b, pitch) for b in blocks}
+    else:
+        raise SystemExit(f"dv_bind: clock_regions mode {cr_['mode']!r} (geometric | logical)")
+    regions = sorted({r for r in reg.values() if f'ck_{r}' not in T.get('clock_domains', {})})   # table roots declared below
     M = T['masters']
     # Validate optional endpoint contracts even when a forwarded clock or an
     # equal-depth calendar would bypass clock selection during emission.
@@ -455,7 +469,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         for s in m.get('straps', []):
             straps.append([mod, s])
     # ------------------------------------------------------------------ reset tree
-    rst = reset_tree(plan, reg, chains_pts, sdir, master=T.get('reset_master'))
+    rst = reset_tree(plan, reg, chains_pts, sdir, master=T.get('reset_master'), grid=grid)
+    if grid is not None:
+        regions = sorted(set(regions) | set(rst['summary'].get('clock_regions', [])))   # pruned to the used roots at the end
     early = {m.get('master') for m in T.get('frame_members', []) if m.get('reset')}
     fw = set(T.get('frame_wrapper', {}).get('masters', []))
     # TOK-S81-GAPS/G8R (10-18): frame x-chain read epoch.  A frame x lane lands in the RECEIVING frame's dsfd_cfifo_crs4
@@ -942,6 +958,17 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         rst['place'] = [r for r in rst['place'] if r['inst'] not in removed]
         rst['summary']['pruned_unused_reset_stations'] = removed
         rst['summary']['stations'] -= len(removed)
+    if grid is not None:
+        # S81.CLK: a candidate region root with no load (a cell holding only table-clocked blocks) is not a top port
+        text = '\n'.join(v)
+        used = [r for r in regions if re.search(r'\(ck_' + re.escape(r) + r'\)', text)]
+        drop = {f'ck_{r}' for r in regions if r not in used}
+        if drop:
+            hdr = next(k for k, x in enumerate(v) if x.startswith('module dv_die ('))
+            names_ = [x for x in v[hdr][len('module dv_die ('):-2].split(', ') if x not in drop]
+            v[hdr] = f'module dv_die ({", ".join(names_)});'
+            v = [x for x in v if not (x.startswith('  input wire ck_') and x[len('  input wire '):-1] in drop)]
+        regions = used
     (out / 'die.v').write_text('\n'.join(v) + '\n')
     (out / 'cells_used.v').write_text(CELL_MODELS)
     (out / 'straps.json').write_text(json.dumps({'straps': straps}, indent=1))
@@ -979,6 +1006,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     lrc = landing_reset_check(T, {r['master'] for r in land_rows})
     (out / 'landing_reset_check.json').write_text(json.dumps(lrc, indent=1))
     rec = dict(schema='opentallas.s81_dv.bind_case.v1', regions=regions, open_bindings=open_bind,
+               clock_regions=(dict(mode='geometric', grid=grid.spec(), blocks=reg_info) if grid is not None
+                              else dict(mode='logical')),
                instance_clock_ports=T.get('instance_clock_ports', {}),
                clock_source_entries=T.get('clock_domains', {}),
                instance_orientations=T.get('instance_orientations', {}),
@@ -1162,7 +1191,7 @@ def reset_reach_gate(blocks, nodes, sinks, edges, reach=RESET_REACH_UM, mode=Non
     return rec
 
 
-def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
+def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM, grid=None):
     """Regional synchronous-release reset tree (die standard item 2).
     Nodes: one reset station per 400-um block-free street cell (as before) PLUS, S81-DIE5 (coordinator 0dt+ / ROOT
     4f7440ccf), the RESET BIT CARRIED IN THE LANE STATIONS: every relay station of a planned lane may hold a 1-b
@@ -1172,7 +1201,14 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
     station's rs reads its own cell station when that is on the tree and within reach (unchanged p4j wiring), else its
     own companion.  A block reset pin sits on the block perimeter point nearest a tree node (the S-face centre when
     that is reachable; top-down pin assignment for the unclosed blocks) and reads that node.  The release depth of
-    every sink (edges after rst_n release) is recorded for the reset calendar."""
+    every sink (edges after rst_n release) is recorded for the reset calendar.
+    S81.CLK (10-21), grid = geo_clock.Grid: each station is clocked by the root of the GEOMETRIC cell holding its point
+    (else, legacy, the logical region of the nearest block centre).  A tree edge whose parent and child stations lie in
+    different cells is a RESET RELEASE CROSSING: one extra registered stage <child>_xk (the reset master, clocked by
+    the RECEIVING cell's root, placed at the child) re-registers the released level in the receiving region before the
+    child station (two flops of the receiving clock: a landed crossing of a monotonic 1-bit level).  The release depth
+    is +1 per crossing on the path from the root, and every depth the calendars read (station / block leaves, gate
+    and frame-epoch calendars) includes it.  The crossings are listed in summary['crossings']."""
     rr = {d: master for d in RST_RLY} if master else RST_RLY
     W, H = plan['facts']['die_um']
     blocks = plan['blocks']
@@ -1330,12 +1366,24 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
         while s is not None and s not in tree:
             tree.add(s); s = par[s]
     gate = reset_reach_gate(geo, {n: pos[n] for n in par}, sinks, [(c, par[c]) for c in tree], reach=reach)
-    # nearest block region for each tree node (station clock = that region's root)
+    # station clock: the geometric cell of the station point (S81.CLK), legacy: the nearest block region's root
     cen = [(b['x'] + b['w'] / 2, b['y'] + b['h'] / 2, reg[b['name']]) for b in blocks]
 
     def creg(c):
         x, y = pos[c]
+        if grid is not None:
+            return grid.region(x, y)
         return min(cen, key=lambda t: abs(t[0] - x) + abs(t[1] - y))[2]
+
+    def crossing(c):
+        return int(grid is not None and par[c] is not None and creg(c) != creg(par[c]))
+    reld = {}
+
+    def rel(c):
+        """release edges of node c after rst_sync1 minus 1 (= dep(c) + the crossing stages on its path)"""
+        if c not in reld:
+            reld[c] = 0 if par[c] is None else rel(par[c]) + 1 + crossing(c)
+        return reld[c]
     v = ['  // ---- regional synchronous-release reset relay tree: one dsfd_rly_1 station per 400-um street cell + the reset',
          '  //      bit carried in the lane stations (dsfd_rly_1 companion at the station point, S81-DIE5)',
          '  wire rst_sync0, rst_sync1;',
@@ -1344,7 +1392,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
     name = {}
     for c in sorted(tree, key=lambda n: (dep(n), str(n))):
         name[c] = (f'rs_{c[1]}_{c[2]}' + (f'_{c[3]}' if c[3] else '')) if c[0] == 'c' else f'rsl_{c[1]}_{c[2]}'
-    place = []
+    place, xings = [], []
     for c in sorted(tree, key=lambda n: (dep(n), str(n))):
         p = par[c]
         up = 'rst_sync1' if p is None else name[p]
@@ -1353,25 +1401,43 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
         else:
             dx, dy = pos[c][0] - pos[p][0], pos[c][1] - pos[p][1]
             d = ('WE' if dx > 0 else 'EW') if abs(dx) >= abs(dy) else ('SN' if dy > 0 else 'NS')
+        if crossing(c):
+            # S81.CLK reset release crossing: one extra stage on the RECEIVING cell's root, beside the child station
+            xk = f'{name[c]}_xk'
+            v.append(f'  wire {xk};')
+            v.append(f'  {rr[d]} st_{xk} (.ck(ck_{creg(c)}), .rs({up}), .i({up}), .o({xk}));   '
+                     f'// reset release crossing {creg(p)} -> {creg(c)}')
+            place.append(dict(inst=f'st_{xk}', master=rr[d], orient=ORIENT[d] if master else ('MX' if d == 'SN' else 'R0'),
+                              xy=pos[c], kind='reset_crossing'))
+            xings.append(dict(parent=f'st_{name[p]}', stage=f'st_{xk}', child=f'st_{name[c]}',
+                              src_region=creg(p), dst_region=creg(c)))
+            up = xk
         v.append(f'  wire {name[c]};')
         v.append(f'  {rr[d]} st_{name[c]} (.ck(ck_{creg(c)}), .rs({up}), .i({up}), .o({name[c]}));')
         place.append(dict(inst=f'st_{name[c]}', master=rr[d], orient=ORIENT[d] if master else ('MX' if d == 'SN' else 'R0'),
                           xy=pos[c], kind='street' if c[0] == 'c' else 'lane'))
     leaves = collections.Counter(list(station_srv.values()) + list(block_srv.values()))
-    depths = [dep(c) + 2 for c in tree]
+    depths = [rel(c) + 2 for c in tree]
     ncomp = sum(1 for c in tree if c[0] == 's')
-    summary = dict(grid_um=GRID, root_cell=list(root[1:]), root_xy=pos[root], stations=len(tree) + 2,
+    summary = dict(grid_um=GRID, root_cell=list(root[1:]), root_xy=pos[root], stations=len(tree) + 2 + len(xings),
                    street_stations=len(tree) - ncomp, lane_reset_bits=ncomp, max_release_depth=max(depths),
                    min_release_depth=min(depths), max_relay_fanout=max(leaves.values()),
-                   region_release_depth={r: max(dep(c) + 2 for c in tree if creg(c) == r) for r in set(map(creg, tree))},
-                   block_release_depth={b: dep(s) + 3 for b, s in block_srv.items() if s is not None},
+                   region_release_depth={r: max(rel(c) + 2 for c in tree if creg(c) == r) for r in set(map(creg, tree))},
+                   block_release_depth={b: rel(s) + 3 for b, s in block_srv.items() if s is not None},
+                   clock_regions=sorted(set(map(creg, tree)) | {creg(root)}),
+                   release_crossings=len(xings), crossings=xings,
+                   max_crossings_on_path=max((rel(c) - dep(c) for c in tree), default=0),
+                   crossing_rule=('S81.CLK: a reset-tree edge between two geometric regions = one extra registered '
+                                  'stage <child>_xk on the receiving region root; release depth +1 per crossing'
+                                  if grid is not None else 'logical regions: no crossing stages'),
                    block_pin_moved={b: [round(xy[0], 1), round(xy[1], 1)] for b, xy in block_pin.items()
                                     if xy != (next(bb for bb in blocks if bb['name'] == b)['x'] + next(bb for bb in blocks if bb['name'] == b)['w'] / 2,
                                               next(bb for bb in blocks if bb['name'] == b)['y'])},
                    unreachable_cells=sum(1 for c in free if ('c',) + c not in par), components=len(set(comp.values())),
                    reach_gate=gate)
     nm_ = lambda s: name.get(s, 'rst_sync1') if s is not None else 'rst_sync1'
-    rdepth = {name[c]: dep(c) + 2 for c in tree}
+    rdepth = {name[c]: rel(c) + 2 for c in tree}
+    rdepth.update({x['stage'][3:]: rdepth[x['child'][3:]] - 1 for x in xings})
     rdepth['rst_sync1'] = 1
     return dict(verilog=v, depth=rdepth, station_leaf={k: nm_(s) for k, s in station_srv.items()},
                 block_leaf={b: nm_(s) for b, s in block_srv.items()},
