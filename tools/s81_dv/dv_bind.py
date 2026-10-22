@@ -113,6 +113,41 @@ def endpoint_clock(table, blocks, regions, link, source):
     block = blocks[link['e'][0 if source else 1][0]]
     return clock if clock is not None else regional_clock(table, {block['name']: block}, regions, block['name'])
 
+def reset_local_leaf(rst, leaf, clock, xy, master, consumer, enabled=True):
+    """Land a reset release on its consuming root before pricing its calendar.
+
+    The street tree is geometric; a block, frame calendar, or landing may use
+    a different root from the nearest street station. Reuse one receiving
+    stage per leaf/root and record its extra release edge explicitly.
+    """
+    if not enabled:
+        return leaf
+    source = rst['net_clocks'][leaf]
+    if source == clock:
+        return leaf
+    key = (leaf, clock)
+    taps = rst.setdefault('local_leaf_taps', {})
+    if key not in taps:
+        net = 'rsleaf_' + re.sub(r'[^A-Za-z0-9_]', '_', leaf + '_' + clock)
+        taps[key] = net
+        rst['verilog'] += [f'  wire {net};',
+            f'  {master} st_{net} (.ck({clock}), .rs({leaf}), .i({leaf}), .o({net}));   '
+            f'// local reset release crossing {source} -> {clock}']
+        rst['depth'][net] = rst['depth'][leaf] + 1
+        rst['net_clocks'][net] = clock
+        rst['place'].append(dict(inst=f'st_{net}', master=master, orient='R0',
+                                 xy=[round(xy[0], 3), round(xy[1], 3)], kind='reset_leaf_crossing'))
+        summary = rst['summary']
+        summary['stations'] += 1
+        summary['release_crossings'] += 1
+        summary.setdefault('leaf_crossings', []).append(dict(parent=('rst_root1' if leaf == 'rst_sync1' else f'st_{leaf}'), stage=f'st_{net}',
+            src_region=source.removeprefix('ck_'), dst_region=clock.removeprefix('ck_'), consumer=consumer,
+            release_src=rst['depth'][leaf], release_dst=rst['depth'][net]))
+        summary['crossings'].append(summary['leaf_crossings'][-1])
+        summary['max_release_depth'] = max(summary['max_release_depth'], rst['depth'][net])
+    return taps[key]
+
+
 def region_of(bl, pitch):
     g = bl['group']
     if g.startswith('cl'):
@@ -486,6 +521,16 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     bname = {b['name']: b for b in blocks}
     base_leaf = {n: (rst['block_parent'][n] if early and bname[n]['master'] in fw
                       else rst['block_leaf'][n]) for n in bname}
+    # A street station can be geometrically close while using another root.
+    # Localise BEFORE epoch solving, so every added edge reaches the compiler.
+    for n, leaf in list(base_leaf.items()):
+        local = reset_local_leaf(rst, leaf, regional_clock(T, bname, reg, n), rst['block_pin'][n],
+                                 T.get('reset_master') or RST_RLY['EW'], f'u_{n}', grid is not None)
+        base_leaf[n] = local
+        if local != leaf:
+            rst['summary']['block_release_depth'][n] += rst['depth'][local] - rst['depth'][leaf]
+        target = 'block_parent' if early and bname[n]['master'] in fw else 'block_leaf'
+        rst[target][n] = local
     base_epoch = {n: rst['depth'][leaf] for n, leaf in base_leaf.items()}
     dependencies = collections.defaultdict(list)
     for n_, cps in sorted(ckin.items()):
@@ -511,6 +556,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 frame_cal_place.append(dict(inst=f'st_{wn}', master=rm_, orient='R0', xy=[round(xy_[0], 3), round(xy_[1], 3)],
                                             kind='frame_epoch_calendar'))
                 rst['depth'][wn] = rst['depth'][up] + 1
+                rst['net_clocks'][wn] = regional_clock(T, bname, reg, n_)
                 up = wn
             frame_rst[n_] = up
             frame_delay[n_] = need
@@ -773,6 +819,10 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         l_ = lsrc[nm]
         a_ = blocks[l_['e'][0][0]]['name']
         sleaf, rleaf = frame_rst.get(a_, rst['block_leaf'].get(a_, 'rst_sync1')), rst['block_leaf'][n]
+        sleaf = reset_local_leaf(rst, sleaf, endpoint_clock(T, blocks, reg, l_, True), l_['e'][0][2:4],
+                                 rmst, f'fwd_{nm}', grid is not None)
+        rleaf = reset_local_leaf(rst, rleaf, endpoint_clock(T, blocks, reg, l_, False), l_['e'][1][2:4],
+                                 rmst, f'ld_{nm}', grid is not None)
         pr = land_rows_plan.get(nm, {})
         long_ = (not ad) and pr.get('master') == f'dsfd_dvland_{b}l'
         lm_ = ad[0] if ad else (f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}')
@@ -1446,7 +1496,10 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM, g
     rdepth = {name[c]: rel(c) + 2 for c in tree}
     rdepth.update({x['stage'][3:]: rdepth[x['child'][3:]] - 1 for x in xings})
     rdepth['rst_sync1'] = 1
-    return dict(verilog=v, depth=rdepth, station_leaf={k: nm_(s) for k, s in station_srv.items()},
+    net_clocks = {name[c]: f'ck_{creg(c)}' for c in tree}
+    net_clocks.update({x['stage'][3:]: f"ck_{x['dst_region']}" for x in xings})
+    net_clocks['rst_sync1'] = f'ck_{creg(root)}'
+    return dict(verilog=v, depth=rdepth, net_clocks=net_clocks, station_leaf={k: nm_(s) for k, s in station_srv.items()},
                 block_leaf={b: nm_(s) for b, s in block_srv.items()},
                 block_parent={b: (name[par[s]] if s is not None and par[s] is not None else 'rst_sync1') for b, s in block_srv.items()},
                 block_pin=block_pin, summary=summary, place=place)
