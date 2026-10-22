@@ -2331,9 +2331,50 @@ MULTI_ROOT_FILTER = ('    set ot_ce_mr_keep {}\n'
                      '    set pins $ot_ce_mr_keep\n')
 
 
+# STW-S81c-COLLA3 10-22 rev3 (b1f2 regate 14:55 'OT_MULTI_ROOT: duplicate clock ownership u_blk'): the leaf ownership
+# proof (ot_ce_leaf_ownership) keys every register CELL to one domain.  A declared multi-root child is one cell whose ETM
+# clock pins sit on several region roots, so it owns the SET of those domains: a data/IO path to or from it is in-domain
+# when the domain sets meet (each pin's own timing stays ordinary STA on its own root, and the child's record closed it).
+# Every other cell keeps the single-domain rules; only multi_root_children instances get a set.
+MULTI_ROOT_LEAF_SUBS = [
+    ("proc ot_ce_leaf_ownership {inputs outputs} {\n",
+     "proc ot_ce_mr_doms {mrd cells c} {\n"
+     "  if {[dict exists $mrd $c]} {return [lsort -unique [dict get $mrd $c]]}\n"
+     "  return [list [dict get $cells $c]]\n"
+     "}\n"
+     "proc ot_ce_mr_meet {la lb} {foreach x $la {if {[lsearch -exact $lb $x] >= 0} {return 1}}; return 0}\n"
+     "proc ot_ce_leaf_ownership {inputs outputs} {\n"),
+    ("  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}\n",
+     "  set cells {}; set clocks {}; set crossing_pairs {}; set domain_roots {}\n  set ot_ce_mrd {}\n"),
+    ('      if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain || ',
+     '      if {[lsearch -exact $::ot_ce_multi_root_children $cell] >= 0} {\n'
+     '        if {[ot_ce_net_root_port $pin] eq $root} {\n'
+     '          dict lappend ot_ce_mrd $cell $domain\n'
+     '          if {![dict exists $cells $cell]} {dict set cells $cell $domain}\n'
+     '        }\n'
+     '        continue\n'
+     '      }\n'
+     '      if {[dict exists $cells $cell] && ([dict get $cells $cell] ne $domain || '),
+    ("        if {![dict exists $inputs $name] || [dict get $inputs $name] ne $expected} {\n",
+     "        if {![dict exists $inputs $name] || ([dict get $inputs $name] ne $expected && "
+     "![ot_ce_mr_meet [list [dict get $inputs $name]] [ot_ce_mr_doms $ot_ce_mrd $cells $cell]])} {\n"),
+    ("        if {$source_domain ne $expected} {\n",
+     "        if {$source_domain ne $expected && "
+     "![ot_ce_mr_meet [ot_ce_mr_doms $ot_ce_mrd $cells $source] [ot_ce_mr_doms $ot_ce_mrd $cells $cell]]} {\n"),
+    ("      if {![dict exists $cells $source] || [dict get $cells $source] ne $domain} {\n",
+     "      if {![dict exists $cells $source] || ([dict get $cells $source] ne $domain && "
+     "![ot_ce_mr_meet [ot_ce_mr_doms $ot_ce_mrd $cells $source] [list $domain]])} {\n"),
+]
+
+
 def multi_root_body(body):
     if body.count(MULTI_ROOT_OWNER) != 1 or body.count(MULTI_ROOT_SINK) != 1:
         raise ValueError("landed body changed; revalidate multi_root_children")
     body = body.replace(MULTI_ROOT_SINK, MULTI_ROOT_FILTER + MULTI_ROOT_SINK)
+    if 'proc ot_ce_leaf_ownership {inputs outputs} {' in body:
+        for a, b in MULTI_ROOT_LEAF_SUBS:
+            if body.count(a) != 1:
+                raise ValueError("leaf ownership body changed; revalidate multi_root_children")
+            body = body.replace(a, b)
     return body.replace(MULTI_ROOT_OWNER, MULTI_ROOT_OWNER[:-3] +
                         ' && [lsearch -exact $::ot_ce_multi_root_children $cname] < 0} {')
