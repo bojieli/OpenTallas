@@ -30,7 +30,8 @@
     "peak_ram_gb": 4,
     "needs": [
      "verilator"
-    ]
+    ],
+    "git_fallback": "Committed tools/hwin_private_package_1019 fixture is already included in source.extra_paths; the exported source has this directory, so fallback git archive is never executed. Missing fixture is a staging failure; source hashes are explicitly checked before simulation."
    },
    {
     "name": "c22_ns47",
@@ -39,7 +40,8 @@
     "threads": 4,
     "peak_ram_gb": 8,
     "pass_regex": "^MUWIN PASS$",
-    "min_count_regex": "^MUWIN starts (\\d+) fires \\d+ expected \\d+ K \\d+ t_mf 0000 hslot 0000 hwin 00$"
+    "min_count_regex": "^MUWIN starts (\\d+) fires \\d+ expected \\d+ K \\d+ t_mf 0000 hslot 0000 hwin 00$",
+    "git_fallback": "Committed tools/hwin_private_package_1019 fixture is already included in source.extra_paths; the exported source has this directory, so fallback git archive is never executed. Missing fixture is a staging failure; source hashes are explicitly checked before simulation."
    },
    {
     "name": "c22_ns2",
@@ -47,7 +49,8 @@
     "expect": "pass",
     "threads": 4,
     "peak_ram_gb": 8,
-    "pass_regex": "^MUWIN PASS$"
+    "pass_regex": "^MUWIN PASS$",
+    "git_fallback": "Committed tools/hwin_private_package_1019 fixture is already included in source.extra_paths; the exported source has this directory, so fallback git archive is never executed. Missing fixture is a staging failure; source hashes are explicitly checked before simulation."
    },
    {
     "name": "c22_norelay",
@@ -56,7 +59,8 @@
     "threads": 4,
     "peak_ram_gb": 8,
     "fail_regex": "EARLY_MITER|CBREF_MITER",
-    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/norelay/run.log"
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/norelay/run.log",
+    "git_fallback": "Committed tools/hwin_private_package_1019 fixture is already included in source.extra_paths; the exported source has this directory, so fallback git archive is never executed. Missing fixture is a staging failure; source hashes are explicitly checked before simulation."
    },
    {
     "name": "c22_eastcopy",
@@ -65,7 +69,8 @@
     "threads": 4,
     "peak_ram_gb": 8,
     "fail_regex": "EARLY_MITER|CBREF_MITER",
-    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/eastcopy/run.log"
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/eastcopy/run.log",
+    "git_fallback": "Committed tools/hwin_private_package_1019 fixture is already included in source.extra_paths; the exported source has this directory, so fallback git archive is never executed. Missing fixture is a staging failure; source hashes are explicitly checked before simulation."
    },
    {
     "name": "c22_mut2",
@@ -74,7 +79,8 @@
     "threads": 4,
     "peak_ram_gb": 8,
     "fail_regex": "EARLY_MITER|CBREF_MITER",
-    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/mut2/run.log"
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/mut2/run.log",
+    "git_fallback": "Committed tools/hwin_private_package_1019 fixture is already included in source.extra_paths; the exported source has this directory, so fallback git archive is never executed. Missing fixture is a staging failure; source hashes are explicitly checked before simulation."
    },
    {
     "name": "c22_eastdue",
@@ -83,7 +89,8 @@
     "threads": 4,
     "peak_ram_gb": 16,
     "fail_regex": "event boot count differs",
-    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/eastdue/run.log"
+    "fail_witness": "results/arch/s81_hwin_struct_1021/benches/eastdue/run.log",
+    "git_fallback": "Committed tools/hwin_private_package_1019 fixture is already included in source.extra_paths; the exported source has this directory, so fallback git archive is never executed. Missing fixture is a staging failure; source hashes are explicitly checked before simulation."
    }
   ],
   "calibrate": {
