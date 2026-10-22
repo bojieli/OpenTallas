@@ -70,6 +70,12 @@ module ot_s81svc8_hgrp_s81 #(
     always @(posedge clk) begin rl0 <= rst_n; rl1 <= rl0; end
     wire rst_l = rl1;
 
+    // -- R0: ld_w2v captured ONCE for every head (STW-S81c-COLLA 10-22, svc7_bound_graph BLOCKED: port ld_w2v 46 loads >
+    //    32, 'unregistered port needs RTL distribution').  Every former per-head R0 capture of ld_w2v (u_pf p_w2v,
+    //    u_rc r_ld_w2v) took the port on the same edge, so one shared R0 flop is identical (+0 edges); its loads are
+    //    a register's, which the mapped-graph replicator clones in equal-age copies.
+    (* keep *) reg w2v_r0;
+    always @(posedge clk) w2v_r0 <= ld_w2v;
     // -- R0: boundary registers
     reg              r_iv;
     reg [BW-1:0]     r_ibank;
@@ -188,8 +194,9 @@ module ot_s81svc8_hgrp_s81 #(
             wire       p_v, p_mode, p_w2v;
             wire [7:0] p_grp, p_gid;
             ot_hdc_v41x_kreg #(.W(1), .R(1)) u_pv (.clk(clk), .rst_n(rst_l), .d(ld_v), .q(p_v));
-            ot_hdc_v41x_kreg #(.W(1 + 8 + 1 + 8), .R(0)) u_pf (.clk(clk), .rst_n(rst_l),
-                .d({ld_mode, ld_grp, ld_w2v, gid_m}), .q({p_mode, p_grp, p_w2v, p_gid}));
+            ot_hdc_v41x_kreg #(.W(1 + 8 + 8), .R(0)) u_pf (.clk(clk), .rst_n(rst_l),
+                .d({ld_mode, ld_grp, gid_m}), .q({p_mode, p_grp, p_gid}));
+            assign p_w2v = w2v_r0;              // shared R0 capture (same edge)
             wire [7:0] p_head = p_gid * HG + gh;
             assign write_normal = p_v && !p_mode && (p_grp == p_head);
             for (gk = 0; gk < TD/R; gk = gk + 1) begin : g_wdecode
@@ -234,8 +241,9 @@ module ot_s81svc8_hgrp_s81 #(
             wire [7:0]       r_ld_grp;
             wire             r_ld_w2v;
             ot_hdc_v41x_kreg #(.W(1), .R(1)) u_rv (.clk(clk), .rst_n(rst_l), .d(ld_v), .q(r_ld_v));
-            ot_hdc_v41x_kreg #(.W(1 + BW + 8 + 1), .R(0)) u_rc (.clk(clk), .rst_n(rst_l),
-                .d({ld_mode, ld_bank, ld_grp, ld_w2v}), .q({r_ld_mode, r_ld_bank, r_ld_grp, r_ld_w2v}));
+            ot_hdc_v41x_kreg #(.W(1 + BW + 8), .R(0)) u_rc (.clk(clk), .rst_n(rst_l),
+                .d({ld_mode, ld_bank, ld_grp}), .q({r_ld_mode, r_ld_bank, r_ld_grp}));
+            assign r_ld_w2v = w2v_r0;           // shared R0 capture (same edge)
             ot_hdc_v41x_kreg #(.W(PWORDS*TD*16), .R(0)) u_rw (.clk(clk), .rst_n(rst_l), .d(ld_w), .q(r_ld_w));
             reg [7:0] hh;
             always @(posedge clk) hh <= gid_m * HG + gh;
