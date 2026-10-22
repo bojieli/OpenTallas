@@ -1,0 +1,148 @@
+{
+ "name": "s81dv_idxtxga",
+ "top": "dsdv_idx_txm_grp",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_tree.sv",
+  "rtl/dsrom_sys/s81_dv/idx/dsdv_idx_l20s.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "params": {
+  "D": 8192,
+  "B0": 0,
+  "NG": 5,
+  "RDL": 1,
+  "WDL": 1,
+  "RIL": 1,
+  "RIL_MUT": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 313.2,
+  "h": 561.6,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_b[0].u_mem",
+   "at": [
+    72.576,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_b[1].u_mem",
+   "at": [
+    72.576,
+    138.24
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_b[2].u_mem",
+   "at": [
+    72.576,
+    233.28
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_b[3].u_mem",
+   "at": [
+    72.576,
+    328.32
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "inst": "g_b[4].u_mem",
+   "at": [
+    72.576,
+    423.36
+   ]
+  }
+ ],
+ "pins": {
+  "E": [
+   "re",
+   "ra",
+   "we",
+   "wa",
+   "wd",
+   "wm_next",
+   "p"
+  ],
+  "W": [
+   "ck"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered child of dsdv_idx_tx_n32 SPLIT (TOPK TX y): every input lands in a flop at the pin (RIL re_l/ra_l + ra_q, WDL we_l/wa_l/wd_l, wm_next mask copies); the output p is a 2-level AND-OR of flops (RDL q_l AND bank-select bsk1) registered by the parent rd (pa|pb). A pin stage would add a lookup edge (reference LPX 3) and move the compiled slot grid (lower_bk job_rank_tree_rd)."
+ },
+ "keep_pin_regs": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "No reset input: every register of the score-store group is reset-free data (landings, captures, bank-select copies, mask copies with rn tied 1), exactly as in the x/v store; the parent owns the TX reset."
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "inter": [],
+ "structural_change": "s81dv_idxtxga (TOPK TX y FB child, STW-S81c-TOK4 10-22): column A of the TX score store (banks 0-4, 5 x ot_sram_1r1w_1024x256) as its own hardened tile with its own clock root, so the y parent spans only the other half with its root (v/w: one root over 626 x 562 um). Same per-bank structure as x (WDL write landing, RIL read landing, RDL capture, macro_pin_flops anchors), bank-select copies local. RTL 20f1e4be0, lockstep y == reference LPX=2.",
+ "why_floorplan": "Left half of the x/v outline (313.2 x 561.6): col A x 72.576 as in v, rows pitch 95.04; W band 72.6 (read pins + wd low half), E band 65.9 (mask/wd high half, flops, 556 data pins on E toward the parent core).",
+ "job": {
+  "owner": "STW-S81c-TOK4",
+  "branch": "claude/s81-topk-tx-x-1022",
+  "tag": "ga",
+  "purpose": "TX y FB child: score-store column A (5 banks), own clock root",
+  "views_to": "physical/ref_tile/s81dv_idxtxga/views",
+  "record_to": "results/rtl/ref_tile/s81dv_idxtxga",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/idx",
+   "rtl/lib",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "children": [],
+ "hold_budget": "die",
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0",
+  "OT_SPINE_LEAF_N": "16",
+  "OT_SPINE_BIN": "32",
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_SEG": "80",
+  "OT_SPINE_SYM_MERGE": "60",
+  "OT_SPINE_SYM_FAN": "8",
+  "OT_MEG_OUT_UM": "1.2",
+  "OT_MEG_DEPTH_UM": "2.4"
+ },
+ "clock": "spine",
+ "pin_hook_before_flops": [
+  "physical/common_flow/macro_pin_flops.tcl"
+ ],
+ "pre_dpl_extra": [
+  "physical/common_flow/macro_pin_flops_release.tcl"
+ ]
+}

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsdv_idx_txm_grp",
+ "enable": false,
+ "reason": "Source-registered child of dsdv_idx_tx_n32 SPLIT (TOPK TX y): every input lands in a flop at the pin (RIL re_l/ra_l + ra_q, WDL we_l/wa_l/wd_l, wm_next mask copies); the output p is a 2-level AND-OR of flops (RDL q_l AND bank-select bsk1) registered by the parent rd (pa|pb). A pin stage would add a lookup edge (reference LPX 3) and move the compiled slot grid (lower_bk job_rank_tree_rd)."
+}
