@@ -40,7 +40,8 @@ proc find_timing_paths {args} {
   if {$::mode eq "allnonfinite"} {return bad}
   # A grouped query returns L1's finite path and masks L2 at the same endpoint.
   if {[llength $from] > 1 || $from eq "L1"} {return good}
-  if {$::mode eq "missing"} {return {}}
+  set kind [lindex $args [expr {[lsearch -exact $args -path_delay]+1}]]
+  if {$::mode eq "missing" || ($::mode eq "missing_min" && $kind eq "min")} {return {}}
   if {$::mode eq "nonfinite"} {return bad}
   return good
 }
@@ -76,6 +77,9 @@ puts "EXCEPTIONS $::exceptions"
 
     def test_missing_launch_is_not_masked_by_another_launch(self):
         self.assertIn("VERDICT FAIL OT_GF: missing finite bounded max path L2 -> T", self.run_case("missing"))
+
+    def test_missing_min_launch_is_not_masked_by_another_launch(self):
+        self.assertIn("VERDICT FAIL OT_GF: missing finite bounded min path L2 -> T", self.run_case("missing_min"))
 
     def test_nonfinite_launch_is_not_masked_by_another_launch(self):
         self.assertIn("VERDICT FAIL OT_GF: missing finite bounded max path L2 -> T", self.run_case("nonfinite"))
