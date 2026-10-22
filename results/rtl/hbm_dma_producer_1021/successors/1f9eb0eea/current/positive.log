@@ -1,0 +1,5 @@
+DMA_PRODUCER_INTEGRATED_PASS words384 packets48 routed48 commits48 SRAM_readback48 source_windows2 command_sample_to_bank_packet10/10 command_drive_to_bank_packet11/11 native_read_return7
+- tb_dma_integrated.sv:2252: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 736ns; walltime 0.167 s; speed 4.399 us/s
+- Verilator: cpu 0.167 s on 1 threads; allocated 14 MB
