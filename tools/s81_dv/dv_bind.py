@@ -872,7 +872,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         lm, ow, ast = (ad[0], ad[1], ad[2]) if ad else ((f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}'), b, {})
         v.append(f'  wire [{ow - 1}:0] w_{nm}_lnd;')
         xs_ = ''.join(f', .{sp}({sv})' for sp, sv in ast.items())
-        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i({dname(nm)}), .ck({endpoint_clock(T, blocks, reg, l_, False)}), .rs({land_rs[nm]}), '
+        input_wire = dname(nm)
+        if not chains_pts[nm] and nm in lane_spare:
+            cov = lane_spare[nm]
+            input_wire = f"{{{b - cov}'d0, {input_wire}[{cov - 1}:0]}}"
+            why = f'lane quantisation: {cov}-b RTL payload on a {b}-b landing (spare bits never consumed)'
+            pads.setdefault(f'ld_{nm}', dict(master=lm, reason=why, ports={}))['ports']['i'] = [[cov, b - 1]]
+            pad_rows.append(dict(inst=f'ld_{nm}', master=lm, port='i', bits=b-cov, lo=cov, hi=b-1, reason=why))
+        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i({input_wire}), .ck({endpoint_clock(T, blocks, reg, l_, False)}), .rs({land_rs[nm]}), '
                  f".k({kw_}'d{k_}){xs_}, .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
         for sp in ast:
             if [lm, sp] not in straps:
@@ -943,7 +950,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         src = f'w_{root_nm}_src'
         if not pts and nm not in gate_en:
             continue
-        if root_nm in lane_spare:
+        if root_nm in lane_spare and pts:
             # lane quantised onto a relay master wider than its RTL payload: the spare top bits enter hop 0 as declared
             # pads (tied 0 at the station input, never read by the receiver)
             cov = lane_spare[root_nm]

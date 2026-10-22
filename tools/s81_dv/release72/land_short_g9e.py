@@ -39,6 +39,9 @@ def main():
    r.update(K=K,D=8 if K>7 else 4,master=f'dsfd_dvland_{r["bits"]}'+('l' if K>7 else ''))
    changed.append(r['link'])
  d['links']=list(rows.values());d['g9e_short_crossings']=dict(added=added,equal_age_links=changed,
+  payload_bits=sum(rows[n]['bits'] for n in added),ring_storage_bits=sum(rows[n]['D']*rows[n]['bits'] for n in added),
+  registered_read_bits=sum(rows[n]['bits'] for n in added),area_model_um2=sum((rows[n]['D']+1)*rows[n]['bits']*.29/.45 for n in added),
+  model='same ring model as dv_rvcase: (D+1)*W flops, .29um2 per flop/.45 placement; one word/cycle; no new credit',
   short_zero_age_cycles=3,ring_slots=4,closed_widths=[70,276,512,562,682],no_zero_station_exemption=True)
  Path(out).write_text(json.dumps(d,indent=1)+'\n');print(json.dumps(d['g9e_short_crossings']))
 if __name__=='__main__':main()
