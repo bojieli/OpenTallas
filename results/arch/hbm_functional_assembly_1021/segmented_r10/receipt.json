@@ -1,0 +1,28 @@
+{
+  "source_commit": "0f6fc3cfa",
+  "status": "STRUCTURAL_DIAGNOSTIC_SOURCE",
+  "unread_bits": 65098,
+  "physical_dates": "OPEN",
+  "files": {
+    "functional_contract_r10.json": {
+      "sha256": "5fee19fd189242a98f7284d4315360b713d52459a8ad47233377edb48c87e127",
+      "artifact": "contract.json.gz"
+    },
+    "functional_bind_r10/die.v": {
+      "sha256": "d339344c0674b95e5a9d7f7b2ed708741f714dac5d36ef32af61b51bc44296e2",
+      "artifact": "die.v"
+    },
+    "functional_bind_r10/port_bind.json": {
+      "sha256": "54b4024b4270f2e3d9ab3f289ea1061adf35b9e8b0537ff97c039e5db3abb2a6",
+      "artifact": "structural_bind.json.gz"
+    },
+    "functional_bind_r10/port_bind.log": {
+      "sha256": "420bf0c922ded6c9475d4fc02509da94d39d853b1914ca6ce0f9a25ac5f612a1",
+      "artifact": "bind.log"
+    },
+    "gather_native_cut_report.json": {
+      "sha256": "f7bd627081b385b37f5374bae1264851ee495afaf21c634d75ecd3472c711001",
+      "artifact": "gather_native_cut_report.json"
+    }
+  }
+}
