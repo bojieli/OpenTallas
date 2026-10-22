@@ -49,7 +49,7 @@ always @(negedge clk) begin
     if (fo_rr_v) s_rr = s_rr + 1;
     if (fo_tx_pin_v != 0) s_tx = s_tx + 1;
     if (u_flat.u_ariter.prod != 0) s_it = s_it + 1;
-    if (u_flat.u_rdc.out_v && u_flat.u_rdc.pub_bf_q) s_bf = s_bf + 1;
+    if (u_flat.u_rdc.pub_read && u_flat.u_rdc.pub_bf16) s_bf = s_bf + 1;
 end
 task s_frame(input [7:0] tgt, input integer row, input integer seg, input [255:0] v);
     begin @(negedge clk); fi_cfg_v = 1'b1; fi_cfg_target = tgt; fi_cfg_addr = 12'(row * 8 + seg); fi_cfg_data = v; end
@@ -79,7 +79,10 @@ initial begin : s_main
     s_ar = 0; s_ar[0] = 1; s_pack_ar(15, s_ar);
     s_ar = 0; s_ar[5] = 1; s_pack_ar(16, s_ar);
     s_ar = 0; s_ar[10] = 1; s_pack_ar(17, s_ar);
-    s_ar = 0; s_ar[11] = 1; s_ar[21] = 1; s_ar[23 +: 8] = 8'd7; s_ar[31 +: 16] = 16'd13; s_pack_ar(26, s_ar);
+    // HBMc/TILES 10-22: row 26 (pub_read) publishes BF16 (ar[20] pub_bf16; tags a = b = 0, both valid), so the BF16
+    // rail (out_flit = bf16(pub_a/pub_b), the hi rail MUT 6 cuts) reaches del_flit.  The programme is loaded by the
+    // descriptor scan, so a row rewrite after that scan never executes (the 10-22 2nd-launch rewrite was inert).
+    s_ar = 0; s_ar[11] = 1; s_ar[20] = 1; s_ar[21] = 1; s_ar[23 +: 8] = 8'd7; s_ar[31 +: 16] = 16'd13; s_pack_ar(26, s_ar);
     s_ar = 0; s_ar[22] = 1; s_pack_ar(27, s_ar);
     for (row = 15; row <= 26; row = row + 1) s_code[row][714 +: 4] = 4'(S_STEP);   // iter_ar_tag_step
     s_code[28][S_RED] = 1;
@@ -113,18 +116,6 @@ initial begin : s_main
     @(negedge clk); fi_desc_v = 1; fi_cfg_target = S_TGT;
     @(negedge clk); fi_desc_v = 0; repeat (270) @(negedge clk);
     for (l = 0; l < 2; l = l + 1) begin
-        if (l == 1) begin
-            // HBMc/COLL-LP 10-22: the 2nd launch publishes BF16 (ar[20] pub_bf16 on the pub_read row 26), so the BF16
-            // publication rail (out_flit = bf16(pub_a/pub_b), the hi rail MUT 6 cuts) reaches the compared ports; the
-            // 1st launch keeps the FP32 publication.  Row 26 is rewritten with the same frames / meta as above.
-            s_ar = 0; s_ar[11] = 1; s_ar[20] = 1; s_ar[21] = 1; s_ar[23 +: 8] = 8'd7; s_ar[31 +: 16] = 16'd13; s_pack_ar(26, s_ar);
-            row = 26; s_nx = S_B + row + 1; md = 0; md[5:0] = s_nx[5:0]; md[51] = s_nx[6]; md[54] = s_nx[7]; md[50:45] = 6'd1;
-            s_nx = S_B + 15; md[43:12] = 32'(S_LOOP); md[11:6] = s_nx[5:0]; md[52] = s_nx[6]; md[55] = s_nx[7];
-            for (seg = 0; seg < 6; seg = seg + 1) s_frame(S_TGT, S_B + row, seg, s_code[row][seg * 256 +: 256]);
-            s_frame(S_TGT, S_B + row, 6, {192'b0, md});
-            @(negedge clk); fi_cfg_v = 0;
-            repeat (55) @(negedge clk);
-        end
         @(negedge clk); fi_launch_v = 1;
         @(negedge clk); fi_launch_v = 0;
         repeat (260) @(negedge clk);
@@ -132,7 +123,7 @@ initial begin : s_main
     // a second reset pulse under live random ring traffic: every region's reset run must release on its documented
     // edge (MUT 4 delays one child's run by one stage; an idle release would hide it)
     @(negedge clk); rst = 1'b0; repeat (6) @(negedge clk); rst = 1'b1; repeat (200) @(negedge clk);
-    $display("LP_ACTIVITY del_valid_cycles=%0d vm_kq_changes=%0d rr_v_cycles=%0d tx_v_cycles=%0d ariter_step_cycles=%0d bf16_pub_cycles=%0d fault=%0d cause=%h",
+    $display("LP_ACTIVITY del_valid_cycles=%0d vm_kq_changes=%0d rr_v_cycles=%0d tx_v_cycles=%0d ariter_step_cycles=%0d bf16_pub_read_cycles=%0d fault=%0d cause=%h",
              s_del, s_kq, s_rr, s_tx, s_it, s_bf, fo_fault, fo_fault_cause);
     lp_finish("n1s0ar_v5prog_vm_writer_ring_random");
 end
