@@ -5,7 +5,7 @@ Only opt-in per-link force_landing changes the legacy zero-station behavior.
 Existing modeled lane ages stay equal within each receiving bundle.
 Usage: land_short_g9e.py PLAN TABLE LAND_IN LAND_OUT
 """
-import json, math, re, sys
+import collections, json, math, re, sys
 from pathlib import Path
 
 def main():
@@ -42,6 +42,6 @@ def main():
   payload_bits=sum(rows[n]['bits'] for n in added),ring_storage_bits=sum(rows[n]['D']*rows[n]['bits'] for n in added),
   registered_read_bits=sum(rows[n]['bits'] for n in added),area_model_um2=sum((rows[n]['D']+1)*rows[n]['bits']*.29/.45 for n in added),
   model='same ring model as dv_rvcase: (D+1)*W flops, .29um2 per flop/.45 placement; one word/cycle; no new credit',
-  short_zero_age_cycles=3,ring_slots=4,closed_widths=[70,276,512,562,682],no_zero_station_exemption=True)
+  base_short_zero_age_cycles=3,zero_station_age_histogram=dict(collections.Counter(math.ceil(rows[n].get('stages',0)/2)+rows[n]['K']+1 for n in added)),ring_slots=4,closed_widths=[70,276,512,562,682],no_zero_station_exemption=True)
  Path(out).write_text(json.dumps(d,indent=1)+'\n');print(json.dumps(d['g9e_short_crossings']))
 if __name__=='__main__':main()
