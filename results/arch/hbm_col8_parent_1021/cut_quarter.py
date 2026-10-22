@@ -16,7 +16,7 @@ def repair_residual(s):
  import re
  s=re.sub(r' wire rst_c;\n ot_rst_relay #\(\.REGIONS\(1\),\.SYNC_STAGES\(2\),\.TREE_STAGES\(1\)\) u_rst\(\.clk\(clk_ctl\),\.rst_n_in\(rst_n\),\.rst_n\(rst_c\)\);', ' wire[12:0]rst_regions;\n ot_hidx_rst_tree_3e_f32 #(.REGIONS(13)) u_rst(.clk(clk_ctl),.rst_n_in(rst_n),.rst_n(rst_regions));\n wire rst_c=rst_regions[12];',s)
  assert 'wire[12:0]rst_regions' in s
- s=s.replace(' // ---------------- W glue',' wire bitmap_bit;\n ot_hidx_keep171_f32 keep_select(.clk(clk_ctl),.kb_registered(kb_r),.index_registered(bi_r),.index_next(beat_index[3:0]),.q(bitmap_bit));\n // ---------------- W glue')
+ s=s.replace(' // ---------------- W glue',' // Same input edge as bi_r; isolate bitmap high-index loads from ordinal arithmetic.\n (*keep="true",dont_touch="true"*)reg[3:0]bi_keep_hi;\n always@(posedge clk_ctl)bi_keep_hi<=beat_index[7:4];\n wire bitmap_bit;\n ot_hidx_keep171_f32 keep_select(.clk(clk_ctl),.kb_registered(kb_r),.index_registered({bi_keep_hi,bi_r[3:0]}),.index_next(beat_index[3:0]),.q(bitmap_bit));\n // ---------------- W glue')
  s=s.replace('!ke_r||kb_r[bi_r]','!ke_r||bitmap_bit').replace('.rst_n(rst_c), .hb(8', '.rst_n(rst_regions[e*4+c]), .hb(8')
  start=s.index('  // ---------------- E glue');end=s.index(' // ---------------- output pin flops')
  middle=s[start:end].replace('rst_c','rst_e').replace('wire eclk=clk_engine[e];','wire eclk=clk_engine[e];\n  wire rst_e=rst_regions[8+e],rst_t=rst_regions[10+e];').replace('ot_hbm_idx_tail_native u_t','ot_hbm_idx_tail_col8_f32 u_t').replace('.rst_n(rst_e), .i_v','.rst_n(rst_t), .i_v')

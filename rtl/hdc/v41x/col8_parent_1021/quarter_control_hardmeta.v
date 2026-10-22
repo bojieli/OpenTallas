@@ -47,8 +47,11 @@ module ot_hbm_idx_score_quarter_col8_control #(parameter integer TP=96,RANK_W=(T
   qv_r<=ql_v;qh_r<=ql_head;qc_r<=ql_codes;qs_r<=ql_sc;qw_r<=ql_w;
   bv_r<=beat_v;bi_r<=beat_index;kl_r<=key_lines;
  end
+ // Same input edge as bi_r; isolate bitmap high-index loads from ordinal arithmetic.
+ (*keep="true",dont_touch="true"*)reg[3:0]bi_keep_hi;
+ always@(posedge clk_ctl)bi_keep_hi<=beat_index[7:4];
  wire bitmap_bit;
- ot_hidx_keep171_f32 keep_select(.clk(clk_ctl),.kb_registered(kb_r),.index_registered(bi_r),.index_next(beat_index[3:0]),.q(bitmap_bit));
+ ot_hidx_keep171_f32 keep_select(.clk(clk_ctl),.kb_registered(kb_r),.index_registered({bi_keep_hi,bi_r[3:0]}),.index_next(beat_index[3:0]),.q(bitmap_bit));
  // ---------------- W glue (cluster W glue on the registered inputs; this quarter's 4 key lines)
  wire[19:0]g0=20'(8*TP)*20'(fo_r)+20'(8)*20'(rk_r)+20'(16*TP)*20'(bi_r);
  reg wf;

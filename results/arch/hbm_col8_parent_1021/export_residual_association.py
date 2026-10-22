@@ -4,6 +4,7 @@ from pathlib import Path
 import json,collections,sys,gzip,hashlib,re
 p=Path(sys.argv[1]);d=json.load(open(p));mods=d['modules'];top='ot_hbm_idx_score_quarter_col8_control';counts=collections.Counter();ffclocks=collections.Counter();areascope=collections.Counter();rows=[];hard=[]
 def group(path):
+ if re.fullmatch(r'_\d+_',path):return 'anonymous_mapped_logic'
  m=re.match(r'(ge\[[01]\]\.gc\[[0-3]\]\.leaf)(?:[./]|$)',path)
  if m:return m[1]
  m=re.match(r'(ge\[[01]\]\.(?:md|u_t|keep_pipe))(?:[./]|$)',path)
@@ -23,13 +24,40 @@ def walk(mod,prefix,bindings):
    if len(a)==1:
     x=ck(a[0]);return 'inverted('+x+')' if c['type'].startswith('INV') else x
   return prefix+'local_net_'+str(b)
+ owner={n:group(prefix+n) for n,c in m['cells'].items() if 'DFF' in c['type'] or c['type'] in mods or c['type']=='ot_hidx_meta_sram146'}
+ bybit=collections.defaultdict(set);drv=collections.defaultdict(set)
+ def outputs(c):
+  if c['type'] in mods:return {pn for pn,pv in mods[c['type']]['ports'].items() if pv['direction']=='output'}
+  if c['type']=='ot_hidx_meta_sram146':return {'q'}
+  return {'Y','QN','Q','H','L'}
+ for nn,cc in m['cells'].items():
+  for pn,bs in cc['connections'].items():
+   for b in bs:(drv if pn in outputs(cc) else bybit)[b].add(nn)
+ cache={};active=set()
+ def endpoint_groups(n,up=False):
+  if n in owner:return {owner[n]}
+  key=(n,up)
+  if key in cache:return cache[key]
+  assert key not in active, ('combinational cycle',prefix,n,up)
+  active.add(key);ss=set();cc=m['cells'][n]
+  for pn,bs in cc['connections'].items():
+   if (pn in outputs(cc)) != up:
+    for b in bs:
+     for nxt in (drv if up else bybit).get(b,()):
+      if nxt!=n:ss.update(endpoint_groups(nxt,up))
+  active.remove(key);cache[key]=ss;return ss
  for n,c in m['cells'].items():
   path=prefix+n;t=c['type']
   if t in mods and mods[t].get('cells'):
    binds={b:ck(c['connections'][pn][i]) for pn,pv in mods[t]['ports'].items() for i,b in enumerate(pv['bits']) if pn in c['connections']}
    walk(t,path+'/',binds);continue
   row={'instance':path,'master':t,'source_group':group(path)}
-  counts[t]+=1;areascope[row['source_group']]+=1
+  counts[t]+=1
+  if row['source_group']=='anonymous_mapped_logic':
+   ds=sorted(endpoint_groups(n));us=sorted(endpoint_groups(n,True)) if not ds else [];owners=ds or us
+   row['actual_downstream_source_groups']=ds;row['actual_upstream_groups_when_no_sinks']=us
+   row['source_group']=owners[0] if len(owners)==1 else ('shared_mapped_logic' if owners else 'unassigned_mapped_logic')
+  areascope[row['source_group']]+=1
   if 'DFF' in t:
    row['clock']=ck(c['connections']['CLK'][0]);ffclocks[row['clock']]+=1
   if t=='ot_hidx_meta_sram146':
@@ -39,7 +67,7 @@ bindings={b:(pn if len(pv['bits'])==1 else f'{pn}[{i}]') for pn,pv in mods[top][
 walk(top,'',bindings)
 assert len(hard)==2,hard
 for h in hard:assert h['clock_terminals']['clk']==h['clock_terminals']['clk_mem']
-r={'schema':'col8.residual_mapped_cells.v1','functional_source':'b056ec205','physical_specialization':'a08546f1e','top':top,'cell_counts':dict(counts),'source_group_cells':dict(areascope),'ff_clock_counts':dict(ffclocks),'hard_metadata_instances':hard,'cells':rows,'notes':['Actual source group associations only, no residual detailed placement or footprint qualification.','Source groups retain exact mapped hierarchy. Cell connections remain in lossless Verilog and JSON.','Two metadata hard cells per controller, eight across four quarters, preserve literal clk/clk_mem.','Controller active clocks and the 128 separate pair clocks together retain 143 external clocks per quarter. Inverted clock roots preserve negative source edges and are not additional external clocks.']}
+r={'schema':'col8.residual_mapped_cells.v1','functional_source':'b056ec205','physical_specialization':'a08546f1e','physical_mapping_source':'6fa118416','top':top,'cell_counts':dict(counts),'source_group_cells':dict(areascope),'ff_clock_counts':dict(ffclocks),'hard_metadata_instances':hard,'cells':rows,'notes':['Actual source group associations only, no residual detailed placement or footprint qualification.','Source groups retain exact mapped hierarchy. Cell connections remain in lossless Verilog and JSON.','Two metadata hard cells per controller, eight across four quarters, preserve literal clk/clk_mem.','Controller active clocks and the 128 separate pair clocks together retain 143 external clocks per quarter. Inverted clock roots preserve negative source edges and are not additional external clocks.']}
 q=p.parent/'residual_cell_association.json.gz'
 with gzip.GzipFile(filename=str(q),mode='wb',mtime=0) as z:z.write((json.dumps(r,indent=2)+'\n').encode())
 print(json.dumps({k:v for k,v in r.items() if k!='cells'},indent=2))
