@@ -1,0 +1,18 @@
+ot-run: ot-epyc5       admits    -8 GB (avail 493, growth 499, headroom 0, waiters 3/96 GB) load 105/128 running 38 disk 1038 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-r24-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-r24-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-r24-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-r24-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-r24-2000
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-r24-2000
+ot-run: SPILL: copying /srv/opentallas-scratch/claude/codex-sfuc-k11-eq-r24-2000 (0.1 GB) ot-epyc5 -> ot-epyc7 (no host with --dir admits 48 GB now)
+ot-run: SPILL: copied 1899 changed entries in 13 s; running on ot-epyc7; written files go back to ot-epyc5 after the run
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-1954152-1792642838 after 1 s
+SFU_SPLIT_EQUIV PASS edges=6687 active_output_edges=6519 delay_core=3 delay_status=2 lg_path=24 wq_extra=1
+- rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv:368: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 287.059 s; speed 19.535 ns/s
+- Verilator: cpu 279.095 s on 1 threads; allocated 154 MB
+SFU_SPLIT_GATE POSITIVE PASS
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-1954152-1792642838): exit 0
+ot-run: SPILL: outputs copied back ot-epyc7 -> ot-epyc5; RAN on ot-epyc7: exit 0
