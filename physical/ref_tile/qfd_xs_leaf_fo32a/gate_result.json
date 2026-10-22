@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_xs_leaf_fo32a",
  "verdict": "PASS",
- "generated": "2026-10-22T07:52:41-0700",
+ "generated": "2026-10-22T08:18:05-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "72b13a80ccd726df489f66e91ec53564573a564b",
+  "start_commit": "e9f982d5900234a34362d350ad3ac1d191ce60ab",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -26,8 +26,8 @@
    "tools/ref_tile/ref_route.sh",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "fac9b2726d85c057ea17fbb357bb4c5f1c18aea6dd707290c58236f2efe901ac",
-  "manifest_sha256": "e4d01cc745ded01c0d7f0ffc47a113a300d559bd5fada825823b2a6ac9f8a316",
+  "archive_sha256": "fc360c81584ec701a805e9448c6dd0a929bd074d34f1d4e66fb7e8784e193a4a",
+  "manifest_sha256": "cea31a3063611f5c5b5577639e256682a96e5d0c9bf53373eb3f81b5fef93d8c",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -17376,8 +17376,8 @@
    {
     "path": "physical/ref_tile/qfd_xs_leaf_fo32a/floorplan.json",
     "kind": "file",
-    "sha256": "69ea87b3ba45906576f00cb1bf13f169fa30e475ae8261e2c85646fa6f088f89",
-    "git_blob": "8ddaadcf94bf8eb2d448207cb3acbfe00bdbee05",
+    "sha256": "404755f67d6b227ccba67f67aeb1248875b05de0dee28335e8e77f2fdbeb23c1",
+    "git_blob": "47324624e6e38a5d9f2db071ed87d7bc838f61eb",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17392,8 +17392,8 @@
    {
     "path": "physical/ref_tile/qfd_xs_leaf_fo32a/kit.env",
     "kind": "file",
-    "sha256": "0b28c05d4822c6b8415017045bfcd938c3b622117df3ba80e0ed17f4855a62ba",
-    "git_blob": "12a3f6f90acbb51039f2d9828bf97b1a0390f35a",
+    "sha256": "c35579f7f120983946f4e8c213ca173b71beedee4a177257f667bd96e271c6a7",
+    "git_blob": "a027d311f6e9da4cb1498cf85f24ea6ec8b37fe4",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17512,8 +17512,8 @@
    {
     "path": "physical/ref_tile/qfd_xs_leaf_fo32a/spec.json",
     "kind": "file",
-    "sha256": "034c2fad5520333f6a8f3403e7ee2a98f6cae43eecec3960f4866ff8962e6619",
-    "git_blob": "302460bd1e3c94b6be2ad6e31cbd9a23ca24de86",
+    "sha256": "57c51bbd2285a18fb366934aac4f95a889ed390dc930acad7c0d0ca3c45e54f5",
+    "git_blob": "4114a824de27477c699d12b2c6171ff870c668ff",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -150240,7 +150240,7 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 155215475,
+   "archive_bytes": 155216416,
    "unpacked_bytes": 922689536,
    "pick_gb": 23,
    "runtime_gb": 22
@@ -151292,8 +151292,8 @@
     "physical/qwen_die_masters/repair_budget.tcl": "e4337df071032ad4326542391a7745a487b9f97975e65f1ff8cd51a5306c2692",
     "physical/ref_tile/qfd_xs_leaf_fo32a/assigned_pins.tcl": "b478541421bc5be388a2e80ebbd6836176192db5d375ffef36d30fc6b0239dfa",
     "physical/ref_tile/qfd_xs_leaf_fo32a/clock.sdc": "658e4d393ccf19642ff0895ce7fdd7a4694cae8a186b18a959a65ab42b3fd1e6",
-    "physical/ref_tile/qfd_xs_leaf_fo32a/floorplan.json": "69ea87b3ba45906576f00cb1bf13f169fa30e475ae8261e2c85646fa6f088f89",
-    "physical/ref_tile/qfd_xs_leaf_fo32a/kit.env": "0b28c05d4822c6b8415017045bfcd938c3b622117df3ba80e0ed17f4855a62ba",
+    "physical/ref_tile/qfd_xs_leaf_fo32a/floorplan.json": "404755f67d6b227ccba67f67aeb1248875b05de0dee28335e8e77f2fdbeb23c1",
+    "physical/ref_tile/qfd_xs_leaf_fo32a/kit.env": "c35579f7f120983946f4e8c213ca173b71beedee4a177257f667bd96e271c6a7",
     "physical/ref_tile/qfd_xs_leaf_fo32a/pdn.tcl": "1d4d78c714f50485762fadcba6d082eafd9756d27ee886113d029662132e5ea6",
     "physical/ref_tile/qfd_xs_leaf_fo32a/pin_regs.json": "a8178c8df891a2737f0944aea30c8136f3f745bd437b7543b962bcb5887e4db3",
     "physical/ref_tile/qfd_xs_leaf_fo32a/post_cts.tcl": "29b39bbe8e35409d82f878e19c0b596c9b117175b8efc14b249939c1099b0cd8",
@@ -151308,7 +151308,7 @@
     "physical/ref_tile/qfd_xs_leaf_fo32a/pre_grt.tcl": "7a4a8cb6aef83160c9b8e910ab2c5b5d2d00ccdbd315290c0b54bc0723fdd169",
     "physical/ref_tile/qfd_xs_leaf_fo32a/reset_landing.json": "0247b108ecd93d0ee5b871e9345ccbd7809c7ecaa55d358790b8a2a8959925a3",
     "physical/ref_tile/qfd_xs_leaf_fo32a/signoff.sdc": "cb5bb731620a8ed6a0fc78f066a7154ee8edc975ad3430078976e3371d60f30a",
-    "physical/ref_tile/qfd_xs_leaf_fo32a/spec.json": "034c2fad5520333f6a8f3403e7ee2a98f6cae43eecec3960f4866ff8962e6619",
+    "physical/ref_tile/qfd_xs_leaf_fo32a/spec.json": "57c51bbd2285a18fb366934aac4f95a889ed390dc930acad7c0d0ca3c45e54f5",
     "rtl/common/landed_parent/ot_pl_land.sv": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
     "rtl/common/landed_parent/ot_pl_land_field_copies.sv": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
     "rtl/common/landed_parent/ot_pl_land_reset_forest.sv": "6c8d60d1f1d6a9b91a8a6a39015fe94811a14fb5f59f7bba17b0934678c68b71",
@@ -151876,16 +151876,16 @@
    },
    "digest": "494193b3015e1d03d36f482f92dd43eb915e9692e23a173a962b8428988b9537"
   },
-  "captured": "2026-10-22T07:37:47-0700",
+  "captured": "2026-10-22T08:04:04-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qfd_xs_leaf_fo32a/signoff.sdc"
   },
-  "remote_script_sha256": "d265a7b81c423519c1b08b1a524a979efd3dfb8f7d8ea172ed29f836ce421bb3",
+  "remote_script_sha256": "024f3119a15df889c81e34c00c01fc312a8496828e07d9beebcb7b81b4965749",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_xs_leaf_fo32a-20261022-073647",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_xs_leaf_fo32a-20261022-080302",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -151896,12 +151896,12 @@
   "max_root_sinks": 7704,
   "root": "port:clk",
   "cts": true,
-  "tt_insertion_ps": 176.3,
-  "tt_spread_ps": 12.6,
-  "tt_pin_spread_ps": 9.8,
-  "ff_insertion_ps": 143.6,
-  "ff_spread_ps": 11.2,
-  "ff_pin_spread_ps": 8.9,
+  "tt_insertion_ps": 179.3,
+  "tt_spread_ps": 15.5,
+  "tt_pin_spread_ps": 11.5,
+  "ff_insertion_ps": 146.2,
+  "ff_spread_ps": 13.8,
+  "ff_pin_spread_ps": 10.1,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -151918,15 +151918,15 @@
      },
      "boundary": {
       "n": 2750,
-      "mean": 170.9,
-      "min": 166.5,
-      "max": 176.3
+      "mean": 173.0,
+      "min": 167.8,
+      "max": 179.3
      },
      "all": {
       "n": 7700,
-      "mean": 169.6,
-      "min": 163.7,
-      "max": 176.3
+      "mean": 171.6,
+      "min": 163.8,
+      "max": 179.3
      },
      "errors": [],
      "macros": null,
@@ -151935,15 +151935,15 @@
     "ff": {
      "boundary": {
       "n": 2750,
-      "mean": 138.8,
-      "min": 134.7,
-      "max": 143.6
+      "mean": 140.7,
+      "min": 136.1,
+      "max": 146.2
      },
      "all": {
       "n": 7700,
-      "mean": 137.7,
+      "mean": 139.4,
       "min": 132.4,
-      "max": 143.6
+      "max": 146.2
      },
      "child_flop": null,
      "macros": null
@@ -151952,7 +151952,7 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "7,704 sinks on the largest root; measured TT insertion 176.3 ps, FF insertion 143.6 ps, TT pin-flop spread 9.8 ps, FF pin-flop spread 8.9 ps (spread <= 80 ps)",
+  "text": "7,704 sinks on the largest root; measured TT insertion 179.3 ps, FF insertion 146.2 ps, TT pin-flop spread 11.5 ps, FF pin-flop spread 10.1 ps (spread <= 80 ps)",
   "other_roots": []
  },
  "items": [],
@@ -151962,7 +151962,7 @@
   "kind": "tile",
   "skip_incremental_repair": true,
   "rc": "0",
-  "grt_s": 241,
+  "grt_s": 225,
   "layers": [
    {
     "layer": "M1",
@@ -151973,36 +151973,36 @@
    },
    {
     "layer": "M2",
-    "capacity": 254311,
-    "usage": 131760,
-    "pct": 51.81,
+    "capacity": 286498,
+    "usage": 137088,
+    "pct": 47.85,
     "overflow": 0
    },
    {
     "layer": "M3",
-    "capacity": 309889,
-    "usage": 195990,
-    "pct": 63.25,
+    "capacity": 348502,
+    "usage": 210784,
+    "pct": 60.48,
     "overflow": 0
    },
    {
     "layer": "M4",
-    "capacity": 238967,
-    "usage": 70368,
-    "pct": 29.45,
+    "capacity": 268735,
+    "usage": 61026,
+    "pct": 22.71,
     "overflow": 0
    },
    {
     "layer": "M5",
-    "capacity": 229202,
-    "usage": 38619,
-    "pct": 16.85,
+    "capacity": 257750,
+    "usage": 33111,
+    "pct": 12.85,
     "overflow": 0
    }
   ],
   "worst_layer_usage": [
    "M3",
-   63.25
+   60.48
   ],
   "hotspot": null,
   "congestion_png": null
