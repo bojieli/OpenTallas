@@ -7,9 +7,12 @@ TXL=${TXL:-6}; PHY=${PHY:-5}
 mkdir -p "$OUT"
 CTXL=$TXL; [ "$MUT" = 4 ] && CTXL=$((TXL-1))
 python3 "$R/tools/qwen_split/d2d_link_calendar.py" --out "$OUT/cal" --txl "$CTXL" --phy "$PHY" --profile dies_token --txd-c 1,2,1,2 --txd-k $((1 + ${KDLY:-0})),2,1,1 $([ "${PR:-1}" = 1 ] && echo --pinreg) > "$OUT/calendar.log"
+DREF=$W/qwen_sys/d2d_static_20261015
+# SQC-KDIE4 10-22: OVLM=1 reads the as-built OVL reference from the bench-only frozen copy (see d2d_ovl_asbuilt_ref/README.txt)
+[ "${OVLM:-0}" = 1 ] && DREF=$W/test/qwen_split/d2d_ovl_asbuilt_ref
 SRC=("$W/lib/ot_rst_pipe.sv" "$W/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv" "$W/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv"
  "$W/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv" "$W/qwen_sys/split_20261014/qkd_native_attention_record.sv"
- "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_ovl.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe_fo.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_sfo.sv" "$W/qwen_split/qfd_kvn_static_transport.sv"
+ "$DREF/ot_qwen_d2d_static.sv" "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv" "$DREF/ot_qwen_d2d_dies.sv" "$DREF/ot_qwen_d2d_dies_ovl.sv" $([ "${OVLM:-0}" = 1 ] && echo "$DREF/ot_qwen_d2d_dies_sfo.sv") "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_safe_fo.sv" $([ "${OVLM:-0}" = 1 ] || echo "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies_sfo.sv") "$W/qwen_split/qfd_kvn_static_transport.sv"
  "$R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv"
  "$R/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v"
  $([ "${KSF:-0}" = 3 ] && echo "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm3.sv") $([ "${KSF:-0}" -ge 2 ] && echo "$W/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv $R/physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.v $R/physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p288/d2d_sram_1r1w_64x137_m1_r2c2_p288.v")
