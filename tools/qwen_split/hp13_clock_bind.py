@@ -51,11 +51,14 @@ def data_clock_owner(model, inst, port):
             if hashlib.sha256((root / dependency['rtl']).read_bytes()).hexdigest() != dependency['sha256']:
                 raise ValueError('HP13 data clock supporting source differs: '+dependency['rtl'])
         model['hp13_data_clock_proof'] = proof
+        model['hp13_clock_bind']['data_clock_inventory'] = dict(
+            path=str(path.relative_to(root)), sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+            selected_master=master, rtl_sha256=proof['rtl_sha256'], supporting_sources_verified=True)
     row = proof['ports'].get(port, {})
     clock_port = row.get('clock_port')
     if row.get('status') != 'PROVEN' or clock_port not in ('ck_core', 'ck_hr') or not row.get('basis'):
         raise ValueError('HP13 data endpoint clock is unresolved: '+str((inst,port,row)))
-    model.setdefault('hp13_data_clock_uses', {})[port] = row
+    model.setdefault('hp13_data_clock_uses', {})[port] = dict(clock_port=clock_port, basis=row['basis'])
     return inst, clock_port
 
 
@@ -110,6 +113,8 @@ def finalize(model, per, record, by):
         if f not in locations:per[k].append(f);locations[f]=[k]
         legacy[f]=e[0];explicit[f]=e
         resolved[str(f)]=dict(source_owner=list(mapping[f]),terminal=list(e),region=k)
+        if f in model.get('hp13_deferred_data', {}):
+            resolved[str(f)].update(model['hp13_deferred_data'][f])
     from qwen_split.clock_follow_port import apply as resolve
     resolve(model,per,record)
     info.update(status='REGIONAL_ENDPOINTS_RESOLVED',domains=domains,followers=resolved)
@@ -140,5 +145,6 @@ def audit_final(model):
     if model.get('hp13_cf_clock'):
         model['hp13_cf_clock'].update(status='ACTUAL_CLOCK_NET_RESOLVED_PHYSICAL_PHASE_UNMEASURED',
             actual_clock=receipt['ck_hr'])
-    info.update(status='ACTUAL_CLOCK_NETS_RESOLVED',actual_pins=receipt)
+    info.update(status='ACTUAL_CLOCK_NETS_RESOLVED',actual_pins=receipt,
+                data_port_owners=model.get('hp13_data_clock_uses', {}))
     print('HP13_CLOCK_BIND_FINAL',info,flush=True)
