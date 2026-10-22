@@ -1,0 +1,7 @@
+This source snapshot replaces the four old quarter scoring bodies with four real residual controllers and 128 real Col8 columns. Each column retains four pair masters and twelve raw SRAMs. The accepted physical model is carried as individual rectangles, with all 36 displaced bodies and inherited root cases retained. Column envelopes are soft hierarchy boundaries, not opaque qualified hard views.
+
+All eight D146 metadata children and four QID-specific SAFE_STREAM1 IJS views have exact CLOSED records. DMA uses db8c16103 and route394f2083a. The flat gather engine is retained only as diagnostic source; segmented96 production addressing and endpoint native qualification are owned separately.
+
+The actual 1,497-instance bind has no structural or unresolved-child failures, with unchanged baseline unread65098. Adding the metadata placement bindings leaves the emitted die.v byte-identical to that bind. The source-bound reset builder preserves each registered cut-reset bit and records added delivery as boot edges. The 38 reset/config tests passed. These checks do not qualify placement, CTS, reset phases, routed data ages, GSC readiness or full-token execution.
+
+Next construction consumes the actual whole-column mapped hierarchy, preserves its exact pair/SRAM pins, builds legal clocks and reset delivery, and regenerates all displaced data routes and their equal-age padding. The long NW column delivery/return must be measured before a calendar or rate is claimed.
