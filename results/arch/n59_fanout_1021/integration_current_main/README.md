@@ -1,0 +1,9 @@
+N59 bounded current-main readset
+
+Source candidate: 1185d10f4. Current-main comparison: 27f4ddaca71c12fc0d47535cbcf5bf1022e52d96. All three repaired RTL files are absent from that main. SOURCE_CURRENT_MAIN.patch contains only those three added files. It carries no ancestor or physical-helper changes.
+
+The source needs an explicit dependency decision before it compiles on this main. qfd_native59_mctx_helpers.sv is also absent. command_context and q_export_control are byte-identical. record_endpoint, kvn_static_transport, kv_static_posted and native_attention_record differ: the candidate uses existing LOCAL32 publication/control APIs plus RX_FREE/TX_FREE options that this main lacks. DEPENDENCIES_CURRENT_MAIN.patch records those differences for review only; applying them is not implicit authorization to overwrite newer helpers. READSET.json binds all ten actual source files and hashes. The copied three-file patch alone is not advertised as a complete current-main build.
+
+Default FANOUT_LOCAL=0 aliases the original user/valid/index signals, keeps original capture predicates and instantiates no new publication/index state; FINAL_DECODE defaults 0. The fanout option adds 52 FFs at unchanged data/reset edges only when enabled. The source audit is against the authentic 0e64aa8f3 predecessor because this main has no obs1 source. Minimum selected-source proof paths and limits are in READSET.json. No standalone whole-module default-0 formal proof is claimed.
+
+Qualification is restricted to the exact RECV_INPUTS=1 / LOCAL32=1 profile in READSET.json. Selected die RECV_INPUTS=0 remains separate and cannot use these source/physical receipts. Physical MAIN and fallback are pending. Optional exact kit snapshots are physical/ref_tile/qfd_n59_svc5 and svc5b at 1185d10f4; they intentionally opt in to FANOUT_LOCAL=1. Use current-main physical helpers. Never import execution-only c4d88049d.

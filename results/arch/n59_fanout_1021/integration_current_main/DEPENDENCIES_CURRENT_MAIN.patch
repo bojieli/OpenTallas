@@ -1,0 +1,754 @@
+diff --git a/rtl/qwen_split/qfd_kvn_static_transport.sv b/rtl/qwen_split/qfd_kvn_static_transport.sv
+index 82c7ead2c..77ea69911 100644
+--- a/rtl/qwen_split/qfd_kvn_static_transport.sv
++++ b/rtl/qwen_split/qfd_kvn_static_transport.sv
+@@ -2,11 +2,12 @@
+ // KVN-only fixed-slot transport. Each seat retains the actual producer's
+ // TAG59 and HOSTgen2 with its word; a future context cannot relabel queued data.
+ // Occupancy checks expose a malformed compiled schedule without rescheduling.
+-module qfd_kvn_static_transport(
++module qfd_kvn_static_transport #(parameter integer LOCAL32=0,LOCAL_MUT=0)(
+  input wire ck,rst_n,
+  input wire word_v,input wire[10:0]word_tag,input wire[511:0]word_data,
+  input wire[58:0]word_identity,input wire[1:0]word_generation,
+  input wire slot_v,
++ input wire[39:0]word_ctl_pub,input wire[9:0]slot_pub,
+  output reg[523:0]x3,output reg[58:0]x3_identity,output reg[1:0]x3_generation,
+  output reg fault
+ );
+@@ -14,13 +15,50 @@ module qfd_kvn_static_transport(
+  wire pop=slot_v&&n!=0&&!fault;
+  wire push=word_v&&(n<2||pop)&&!fault;
+  always @(posedge ck or negedge rst_n)begin
+-  if(!rst_n)begin rp<=0;wp<=0;n<=0;x3<=0;x3_identity<=0;x3_generation<=0;fault<=0;end
++  if(!rst_n)begin rp<=0;wp<=0;n<=0;x3[523]<=0;fault<=0;end
+   else begin
+    x3[523]<=pop;
+    if((slot_v&&n==0)||(word_v&&!push)||(word_v&&word_tag[10:8]!=2))fault<=1;
+-   if(push)begin seat[wp]<={word_generation,word_identity,word_tag,word_data};wp<=!wp;end
+-   if(pop)begin {x3_generation,x3_identity,x3[522:0]}<=seat[rp];rp<=!rp;end
++   if(push)wp<=!wp;
++   if(pop)rp<=!rp;
+    case({push,pop})2'b10:n<=n+1'b1;2'b01:n<=n-1'b1;default:;endcase
+   end
+  end
++ // Fixed 11-bit payload groups each own their pointer, occupancy and fault feedback.
++ // The ten incoming control publications are captured at the ORIGINAL producer edge.
++ generate if(LOCAL32)begin:g_local
++  wire[583:0]data_in={word_generation,word_identity,word_tag,word_data};
++  wire[583:0]data_out;
++  for(genvar g=0;g<54;g=g+1)begin:g_word
++   localparam integer LO=11*g,W=(584-LO<11)?584-LO:11,R=g/6;
++   (* keep = "true" *) reg lr,lw,lf;
++   (* keep = "true" *) reg[1:0]ln;
++   reg[W-1:0]s0,s1,out_q;
++   wire sv=slot_pub[R],wv=(LOCAL_MUT==2&&g==0)?1'b0:word_ctl_pub[4*R+3];
++   wire lp=sv&&ln!=0&&!lf;
++   wire lpush=wv&&(ln<2||lp)&&!lf;
++   wire rsel=(LOCAL_MUT==1&&g==0)?!lr:lr;
++   always @(posedge ck or negedge rst_n)begin
++    if(!rst_n)begin lr<=0;lw<=0;lf<=0;ln<=0;out_q<=0;end
++    else begin
++     if((sv&&ln==0)||(wv&&!lpush)||(wv&&word_ctl_pub[4*R+:3]!=2))lf<=1;
++     if(lpush)lw<=!lw;
++     if(lp)begin out_q<=rsel?s1:s0;lr<=!lr;end
++     case({lpush,lp})2'b10:ln<=ln+1'b1;2'b01:ln<=ln-1'b1;default:;endcase
++    end
++   end
++   always @(posedge ck)begin
++    if(rst_n&&lpush&&!lw)s0<=data_in[LO+:W];
++    if(rst_n&&lpush&&lw)s1<=data_in[LO+:W];
++   end
++   assign data_out[LO+:W]=out_q;
++  end
++  assign {x3_generation,x3_identity,x3[522:0]}=data_out;
++ end else begin:g_legacy
++  always @(posedge ck or negedge rst_n)begin
++   if(!rst_n)begin x3[522:0]<=0;x3_identity<=0;x3_generation<=0;end
++   else if(pop){x3_generation,x3_identity,x3[522:0]}<=seat[rp];
++  end
++  always @(posedge ck)if(rst_n&&push)seat[wp]<={word_generation,word_identity,word_tag,word_data};
++ end endgenerate
+ endmodule
+diff --git a/rtl/qwen_split/qfd_native59_mctx_helpers.sv b/rtl/qwen_split/qfd_native59_mctx_helpers.sv
+new file mode 100644
+index 000000000..61192e7cb
+--- /dev/null
++++ b/rtl/qwen_split/qfd_native59_mctx_helpers.sv
+@@ -0,0 +1,121 @@
++`timescale 1ns/1ps
++// Exact 75b9fe42b modern LOCAL32 helpers; only module names changed to
++// coexist with main legacy DV definitions. No duplicate legacy wrapper.
++
++module qfd_native59_dr_landing_local32 #(parameter integer LAND_EDGES=8,LOCAL32=0)(
++ input wire ck,rst_n,
++ input wire request_slot,input wire[58:0]request_tag59,
++ input wire emit_v,input wire[4:0]emit_beat,input wire[58:0]emit_tag59,
++ input wire visibility_slot,
++ output reg vm_commit_v,output reg[4:0]vm_commit_beat,output reg[58:0]vm_commit_tag59,
++ output wire complete,output reg fault,
++ // R3e (QW-N59-6 10-20) opt-in same-edge publications (LOCAL32; 0 ignores / aliases): request_pub[k] == request_slot,
++ // emit_beat_pub == emit_beat on every edge; vm_commit_beat_pub is a kept copy of vm_commit_beat.
++ input wire[7:0]request_pub,input wire[4:0]emit_beat_pub,output wire[4:0]vm_commit_beat_pub,vm_commit_beat_pub2,
++ input wire[4:0]emit_beat_pub2,output wire[4:0]vm_commit_beat_pub3,vm_commit_beat_pub4   // R3i
++);
++ reg active;reg[58:0]tag;reg[31:0]issued,covered;
++ reg[LAND_EDGES-1:0]pending;reg[4:0]beat_pipe[0:LAND_EDGES-1];reg[58:0]tag_pipe[0:LAND_EDGES-1];
++ integer i;
++ wire[4:0]lb=beat_pipe[LAND_EDGES-1];
++ assign complete=active&&(&covered)&&!fault;
++ // R3e: kept copies of the last pipe stage (lb_c == beat_pipe[LAND_EDGES-1], pend_c[k] == pending[LAND_EDGES-1]: same D,
++ // same reset) and of vm_commit_beat, so the commit capture (65 flops) and the covered decode each take their own driver.
++ // R3f: groups of <= 16 enable bits (2 mapped loads per DFFE bit): request_pub [0..3] tag quarters, [4]/[5] issued
++ // halves, [6]/[7] covered halves; pend_c [0..3] vm_commit_tag quarters, [4] vm_commit_v / beat, [5] covered decode.
++ (* keep = "true" *) reg[4:0]lb_c,lb_c2;(* keep = "true" *) reg[5:0]pend_c;(* keep = "true" *) reg[4:0]vcb_c,vcb_c2,vcb_c3,vcb_c4;   // R3g/i
++ wire[7:0]rp=LOCAL32?request_pub:{8{request_slot}};
++ wire[4:0]ebp=LOCAL32?emit_beat_pub:emit_beat,lbc=LOCAL32?lb_c:lb;
++ wire[5:0]pc=LOCAL32?pend_c:{6{pending[LAND_EDGES-1]}};
++ assign vm_commit_beat_pub=LOCAL32?vcb_c:vm_commit_beat;
++ assign vm_commit_beat_pub2=LOCAL32?vcb_c2:vm_commit_beat;
++ assign vm_commit_beat_pub3=LOCAL32?vcb_c3:vm_commit_beat;assign vm_commit_beat_pub4=LOCAL32?vcb_c4:vm_commit_beat;
++ wire[4:0]ebp2=LOCAL32?emit_beat_pub2:emit_beat;
++ wire[4:0]lbc2=LOCAL32?lb_c2:lb;
++ wire commit_bad=!active||request_slot||tag_pipe[LAND_EDGES-1]!=tag||covered[lb];
++ always @(posedge ck or negedge rst_n)
++  if(!rst_n)begin
++   active<=0;tag<=0;issued<=0;covered<=0;pending<=0;vm_commit_v<=0;vm_commit_beat<=0;vm_commit_tag59<=0;fault<=0;
++   for(i=0;i<LAND_EDGES;i=i+1)begin beat_pipe[i]<=0;tag_pipe[i]<=0;end
++   lb_c<=0;lb_c2<=0;pend_c<=0;vcb_c<=0;vcb_c2<=0;vcb_c3<=0;vcb_c4<=0;
++  end else begin
++   vm_commit_v<=0;
++   pending<={pending[LAND_EDGES-2:0],emit_v};
++   beat_pipe[0]<=emit_beat;tag_pipe[0]<=emit_tag59;
++   lb_c<=beat_pipe[LAND_EDGES-2];lb_c2<=beat_pipe[LAND_EDGES-2];pend_c<={6{pending[LAND_EDGES-2]}};
++   for(i=1;i<LAND_EDGES;i=i+1)begin beat_pipe[i]<=beat_pipe[i-1];tag_pipe[i]<=tag_pipe[i-1];end
++   if(request_slot)begin
++    if((active&&!(&covered))||(|pending)||emit_v)fault<=1;
++    active<=1;
++   end
++   if(rp[0])tag[14:0]<=request_tag59[14:0];
++   if(rp[1])tag[29:15]<=request_tag59[29:15];
++   if(rp[2])tag[44:30]<=request_tag59[44:30];
++   if(rp[3])tag[58:45]<=request_tag59[58:45];
++   if(rp[4])issued[15:0]<=0;
++   if(rp[5])issued[31:16]<=0;
++   if(rp[6])covered[15:0]<=0;
++   if(rp[7])covered[31:16]<=0;
++   if(emit_v)begin
++    if(!active||request_slot||emit_tag59!=tag||(emit_beat[4]?issued[{1'b1,ebp2[3:0]}]:issued[{1'b0,emit_beat[3:0]}]))fault<=1;   // R3i: == issued[emit_beat]
++    issued[ebp]<=1;
++   end
++   if(pending[LAND_EDGES-1]&&commit_bad)fault<=1;
++   if(pc[5]&&!commit_bad)covered[lbc]<=1;
++   if(pc[0]&&!commit_bad&&!fault)vm_commit_tag59[14:0]<=tag_pipe[LAND_EDGES-1][14:0];
++   if(pc[1]&&!commit_bad&&!fault)vm_commit_tag59[29:15]<=tag_pipe[LAND_EDGES-1][29:15];
++   if(pc[2]&&!commit_bad&&!fault)vm_commit_tag59[44:30]<=tag_pipe[LAND_EDGES-1][44:30];
++   if(pc[3]&&!commit_bad&&!fault)vm_commit_tag59[58:45]<=tag_pipe[LAND_EDGES-1][58:45];
++   if(pc[4]&&!commit_bad&&!fault)begin vm_commit_v<=1;vm_commit_beat<=lbc2;vcb_c<=lbc2;vcb_c2<=lbc2;vcb_c3<=lbc2;vcb_c4<=lbc2;end
++   if(visibility_slot&&(!active||!(&issued)||!(&covered)||(|pending)))fault<=1;
++  end
++endmodule
++
++module qfd_native59_command_context_mu_local32 #(parameter integer NU=4,LOCAL32=0)(
++ input wire ck,rst_n,
++ input wire host_epoch_valid,host_fused_capability,input wire [15:0] host_epoch,
++ input wire [58:0] host_tag,input wire [1:0] host_generation,
++ input wire context_v,input wire [5:0] context_stage,
++ input wire [17:0] context_token,context_position,
++ input wire [379:0] native_cmd,input wire [5:0] command_stage,
++ input wire [17:0] command_token,command_position,
++ input wire service_active,
++ input wire [1:0] ctx_user,input wire [15:0] ctx_epoch,
++ output wire begin_slot,output wire [58:0] begin_tag,
++ output wire request_slot,output wire [58:0] request_tag,
++ output wire [19:0] result_base_word,output reg fault,
++ // R3e (QW-N59-6 10-20) opt-in: context_v_pub[k] == context_v on every edge (parent kept pin copies); the 59-bit
++ // context_tag capture halves take their own copy.  Unconnected / zero ports leave the original (default 0 = off).
++ input wire [3:0] context_v_pub
++);
++ wire[3:0]cvp=LOCAL32?context_v_pub:{4{context_v}};
++ localparam [379:0] TEMPLATE=380'h0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401;
++ reg valid,cap;reg [1:0] generation;reg [58:0] context_tag;reg [1:0] ctx_u;
++ wire host0=ctx_user==2'd0;
++ assign begin_slot=context_v;
++ assign begin_tag={ctx_epoch,context_stage,context_token,context_position[12:0],6'd0};
++ assign request_slot=native_cmd[0];
++ assign request_tag={context_tag[58:43],command_stage,command_token,command_position[12:0],6'd0};
++ assign result_base_word=native_cmd[299:280];
++ always @(posedge ck or negedge rst_n)begin
++  if(!rst_n)begin valid<=0;cap<=0;generation<=0;context_tag<=0;ctx_u<=0;fault<=0;end
++  else begin
++   if(context_v)begin
++    if(host_tag[58:43]!=host_epoch||host_tag[42:37]!=0||host_tag[5:0]!=0||
++       (host0&&(host_tag[36:19]!=context_token||host_tag[18:6]!=context_position||host_epoch[1:0]!=2'd0))||
++       service_active||!host_epoch_valid||!host_fused_capability||(valid&&begin_tag==context_tag)||context_stage<1||context_stage>36||context_token>=151936||context_position>=8192)fault<=1;
++    valid<=1;cap<=host_fused_capability;generation<=host_generation;ctx_u<=ctx_user;
++   end
++   if(cvp[0])context_tag[14:0]<=begin_tag[14:0];
++   if(cvp[1])context_tag[29:15]<=begin_tag[29:15];
++   if(cvp[2])context_tag[44:30]<=begin_tag[44:30];
++   if(cvp[3])context_tag[58:45]<=begin_tag[58:45];
++   if(request_slot)begin
++    if(host_tag[58:43]!=host_epoch||host_tag[42:37]!=0||host_tag[5:0]!=0||
++       (ctx_u==2'd0&&(host_tag[36:19]!=context_tag[36:19]||host_tag[18:6]!=context_tag[18:6]||host_epoch!=context_tag[58:43]))||
++       ctx_user!=ctx_u||host_generation!=generation||!valid||context_v||!host_epoch_valid||!cap||!host_fused_capability||request_tag!=context_tag||command_position>=8192||native_cmd!=TEMPLATE)fault<=1;
++   end
++  end
++ end
++ initial if(NU<2||NU>4)$fatal(1,"qfd_native59_command_context_mu_local32: NU %0d outside 2..4 (NU 1 binds qfd_native59_command_context)",NU);
++endmodule
+diff --git a/rtl/qwen_split/qfd_native59_record_endpoint.sv b/rtl/qwen_split/qfd_native59_record_endpoint.sv
+index d5bed14d2..b2a65a502 100644
+--- a/rtl/qwen_split/qfd_native59_record_endpoint.sv
++++ b/rtl/qwen_split/qfd_native59_record_endpoint.sv
+@@ -3,38 +3,76 @@
+ // the typed codec. Historical x3 Q is not a second attention-service source.
+ // operation_tag is captured at the actual accepted CMD, held through all
+ // returned results/done. Epoch/layer/beat are checked before restoring TAG59.
+-module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0)(
++module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0,RX_FREE=0,TX_FREE=0,LOCAL32=0)(  // RX_FREE / TX_FREE: qkd_native_attention_record (QW-N59-4)
+  input wire ck,rst_n,
+  input wire [58:0] operation_tag,
+- input wire kernel_request_v,input wire [58:0] kernel_request_tag,
++ input wire kernel_request_v,input wire[23:0]kernel_request_pub,input wire [58:0] kernel_request_tag,
+  input wire kernel_q_v,input wire [4:0] kernel_q_beat,input wire [58:0] kernel_q_tag,
+  input wire [511:0] kernel_q_data,
+  input wire tx_slot,input wire [3:0] tx_slot_kind,input wire [4:0] tx_slot_beat,
+  output wire tx_valid,output wire [547:0] tx_payload,
++ output wire tx_valid_pub,tx_valid_pub2,tx_valid_pub3,   // R3h/j/k: == tx_valid (LOCAL32 kept copies; else alias)
+  input wire rx_event,input wire [547:0] rx_payload,
+  input wire rx_slot,input wire [3:0] rx_slot_kind,input wire [4:0] rx_slot_beat,
+  output wire result_v,output wire [4:0] result_beat,output wire [58:0] result_tag,
+  output wire [511:0] result_data,
++ input wire[9:0]rx_result_pub,slot_back_pub,
++ output wire[75:0]result_slot_pub,
+  output reg result_slot,output reg [4:0] result_slot_beat,
+  output wire kernel_done,output wire [58:0] kernel_done_tag,
+  output wire fault
+ );
++ // Same original result_slot edge, independently kept per 8-bit service hold.
++ generate if(LOCAL32)begin:g_result_pub
++  for(genvar rc=0;rc<76;rc=rc+1)begin:g_copy
++   (* keep = "true" *) reg q;
++   always @(posedge ck or negedge rst_n)
++    if(!rst_n)q<=0;else q<=rx_result_pub[rc/8]&&slot_back_pub[rc/8];
++   assign result_slot_pub[rc]=q;
++  end
++ end else begin:g_result_alias
++  assign result_slot_pub={76{result_slot}};
++ end endgenerate
+  wire request=kernel_request_v;
+- wire [58:0] actual_tag=request?kernel_request_tag:kernel_q_tag;
++ // R3c (QW-CB16A0 10-20): the 512-bit tx_data and 59-bit tag selects use the service's kept same-edge request copies
++ // (kernel_request_pub[c] == kernel_request_v on every edge): [21:0] 24-bit tx_data segments, [22]/[23] tag low/high.
++ wire [58:0] actual_tag;
++ assign actual_tag[29:0]=kernel_request_pub[22]?kernel_request_tag[29:0]:kernel_q_tag[29:0];
++ assign actual_tag[58:30]=kernel_request_pub[23]?kernel_request_tag[58:30]:kernel_q_tag[58:30];
+  // Position is an18-bit count, zero-extended from the actual TAG59 position13.
+  wire [511:0] cmd_data={493'd0,5'd0,kernel_request_tag[18:6],1'b1};
++ wire [511:0] tx_sel_data;
++ for(genvar tb=0;tb<512;tb=tb+1)begin:g_txd
++  assign tx_sel_data[tb]=kernel_request_pub[tb/24]?cmd_data[tb]:kernel_q_data[tb];
++ end
+  wire rv;wire[3:0]rk;wire[15:0]re;wire[5:0]rl;wire[4:0]rb;wire[511:0]rd;
+  wire codec_fault;wire[3:0]fault_cause;reg local_fault;
+- qkd_native_attention_record #(.KV_SIDE(0),.MUT(CODEC_MUT))u_codec(
+- .ck(ck),.rst_n(rst_n),.tx_event(kernel_request_v||kernel_q_v),.tx_expected(tx_slot),
+- .tx_kind(request?4'd1:4'd2),.tx_expected_kind(tx_slot_kind),
+- .tx_epoch(actual_tag[58:43]),.tx_expected_epoch(operation_tag[58:43]),
+- .tx_layer(actual_tag[42:37]-6'd1),.tx_expected_layer(operation_tag[42:37]-6'd1),
+- .tx_beat(request?5'd0:kernel_q_beat),.tx_expected_beat(tx_slot_beat),
+- .tx_data(request?cmd_data:kernel_q_data),.tx_valid(tx_valid),.tx_payload(tx_payload),
+- .rx_event(rx_event),.rx_expected(rx_slot),.rx_payload(rx_payload),.rx_expected_kind(rx_slot_kind),
+- .rx_expected_epoch(operation_tag[58:43]),.rx_expected_layer(operation_tag[42:37]-6'd1),.rx_expected_beat(rx_slot_beat),
+- .rx_valid(rv),.rx_kind(rk),.rx_epoch(re),.rx_layer(rl),.rx_beat(rb),.rx_data(rd),.fault(codec_fault),.fault_cause(fault_cause));
++ wire tx_valid_b,tx_valid_c,tx_valid_d;
++ generate if(LOCAL32)begin:g_codec32
++  qkd_native_attention_record_n59 #(.KV_SIDE(0),.MUT(CODEC_MUT),.RX_FREE(RX_FREE),.TX_FREE(TX_FREE))u_codec(
++  .ck(ck),.rst_n(rst_n),.tx_event(kernel_request_v||kernel_q_v),.tx_expected(tx_slot),
++  .tx_kind(request?4'd1:4'd2),.tx_expected_kind(tx_slot_kind),
++  .tx_epoch(actual_tag[58:43]),.tx_expected_epoch(operation_tag[58:43]),
++  .tx_layer(actual_tag[42:37]-6'd1),.tx_expected_layer(operation_tag[42:37]-6'd1),
++  .tx_beat(request?5'd0:kernel_q_beat),.tx_expected_beat(tx_slot_beat),
++  .tx_data(tx_sel_data),.tx_valid(tx_valid),.tx_payload(tx_payload),
++  .rx_event(rx_event),.rx_expected(rx_slot),.rx_payload(rx_payload),.rx_expected_kind(rx_slot_kind),
++  .rx_expected_epoch(operation_tag[58:43]),.rx_expected_layer(operation_tag[42:37]-6'd1),.rx_expected_beat(rx_slot_beat),
++  .rx_valid(rv),.rx_kind(rk),.rx_epoch(re),.rx_layer(rl),.rx_beat(rb),.rx_data(rd),.fault(codec_fault),.fault_cause(fault_cause),.tx_valid_b(tx_valid_b),.tx_valid_c(tx_valid_c),.tx_valid_d(tx_valid_d));
++  assign tx_valid_pub=tx_valid_b;assign tx_valid_pub2=tx_valid_c;assign tx_valid_pub3=tx_valid_d;
++ end else begin:g_codec
++  qkd_native_attention_record #(.KV_SIDE(0),.MUT(CODEC_MUT),.RX_FREE(RX_FREE),.TX_FREE(TX_FREE))u_codec(
++  .ck(ck),.rst_n(rst_n),.tx_event(kernel_request_v||kernel_q_v),.tx_expected(tx_slot),
++  .tx_kind(request?4'd1:4'd2),.tx_expected_kind(tx_slot_kind),
++  .tx_epoch(actual_tag[58:43]),.tx_expected_epoch(operation_tag[58:43]),
++  .tx_layer(actual_tag[42:37]-6'd1),.tx_expected_layer(operation_tag[42:37]-6'd1),
++  .tx_beat(request?5'd0:kernel_q_beat),.tx_expected_beat(tx_slot_beat),
++  .tx_data(tx_sel_data),.tx_valid(tx_valid),.tx_payload(tx_payload),
++  .rx_event(rx_event),.rx_expected(rx_slot),.rx_payload(rx_payload),.rx_expected_kind(rx_slot_kind),
++  .rx_expected_epoch(operation_tag[58:43]),.rx_expected_layer(operation_tag[42:37]-6'd1),.rx_expected_beat(rx_slot_beat),
++  .rx_valid(rv),.rx_kind(rk),.rx_epoch(re),.rx_layer(rl),.rx_beat(rb),.rx_data(rd),.fault(codec_fault),.fault_cause(fault_cause));
++  assign tx_valid_pub=tx_valid;assign tx_valid_pub2=tx_valid;assign tx_valid_pub3=tx_valid;
++ end endgenerate
+  assign result_v=rv&&rk==3;
+  assign result_beat=rb;
+  assign result_tag=operation_tag;
+@@ -51,3 +89,93 @@ module qfd_native59_record_endpoint #(parameter integer CODEC_MUT=0)(
+   end
+  end
+ endmodule
++
++// R3h (QW-N59-6 10-20): native59-local copy of qkd_native_attention_record (rtl/qwen_sys/split_20261014, unchanged) with
++// one added output, tx_valid_b = a kept copy of tx_valid written by the same statements, so the native59 slot merge can
++// gate each payload half by its own register (R3f census: tx_valid 39 loads).  Every other line is the original module.
++module qkd_native_attention_record_n59 #(
++    parameter integer KV_SIDE=1,
++    parameter integer MUT=0,
++    // QW-N59-4 (10-19, default 0 = as built): RX_FREE 1 = rx_data captures rx_payload[511:0] on EVERY edge (no 512-bit
++    // enable from the record checks; native59 svc placed STA: rx header / legal() / tx checks -> 512-flop enable = -220 ps).
++    // Consumers read rx_data only on the edge after a valid, non-faulting rx_event (rx_valid / result slot), where both
++    // forms hold the same word; after a bad record the codec faults and no consumer uses rx_data again.
++    parameter integer RX_FREE=0,
++    // QW-N59-4 v3 (default 0 = as built): TX_FREE 1 = tx_payload captures {kind, layer, epoch, beat, data} on EVERY edge
++    // (no 548-bit enable from the tx record checks).  Only for a consumer that reads tx_payload qualified by tx_valid
++    // (native59 MCTX 1: the slot merge ORs a payload only with its tx_valid).
++    parameter integer TX_FREE=0
++)(
++    input wire ck,rst_n,
++    input wire tx_event,tx_expected,
++    input wire [3:0] tx_kind,tx_expected_kind,
++    input wire [15:0] tx_epoch,tx_expected_epoch,
++    input wire [5:0] tx_layer,tx_expected_layer,
++    input wire [4:0] tx_beat,tx_expected_beat,
++    input wire [511:0] tx_data,
++    output reg tx_valid,output reg [547:0] tx_payload,
++    (* keep = "true" *) output reg tx_valid_b,   // R3h: kept copy of tx_valid (same statements)
++    (* keep = "true" *) output reg tx_valid_c,   // R3j: second kept copy
++    (* keep = "true" *) output reg tx_valid_d,   // R3k: third kept copy
++    input wire rx_event,rx_expected,
++    input wire [547:0] rx_payload,
++    input wire [3:0] rx_expected_kind,
++    input wire [15:0] rx_expected_epoch,
++    input wire [5:0] rx_expected_layer,
++    input wire [4:0] rx_expected_beat,
++    output reg rx_valid,
++    output reg [3:0] rx_kind,
++    output reg [15:0] rx_epoch,
++    output reg [5:0] rx_layer,
++    output reg [4:0] rx_beat,
++    output reg [511:0] rx_data,
++    output reg fault,output reg [3:0] fault_cause
++);
++    localparam [3:0] CMD=1,Q=2,RESULT=3,STATUS=4;
++    function legal(input [3:0] kind,input [5:0] layer,input [4:0] beat,input [511:0] data);
++        begin
++            legal=layer<36 && ((kind==Q)||(kind==RESULT)||
++                (kind==CMD && beat==0 && data[511:19]==0 && data[18:1]<8192)||
++                (kind==STATUS && beat==0 && data[511:5]==0));
++        end
++    endfunction
++    function direction(input [3:0] kind,input bit transmit);
++        begin
++            if((KV_SIDE!=0)==transmit)direction=kind==RESULT||kind==STATUS;
++            else direction=kind==CMD||kind==Q;
++        end
++    endfunction
++    wire [3:0] rk=rx_payload[542:539];
++    wire [5:0] rl=rx_payload[538:533];
++    wire [15:0] re=rx_payload[532:517];
++    wire [4:0] rb=rx_payload[516:512];
++    wire tx_time_bad=MUT!=1 && tx_event!=tx_expected;
++    wire rx_time_bad=MUT!=1 && rx_event!=rx_expected;
++    wire tx_record_bad=tx_event && (!legal(tx_kind,tx_layer,tx_beat,tx_data)||!direction(tx_kind,1'b1)||
++        (MUT!=2 && {tx_kind,tx_epoch,tx_layer,tx_beat}!={tx_expected_kind,tx_expected_epoch,tx_expected_layer,tx_expected_beat}));
++    wire rx_record_bad=rx_event && (rx_payload[547:543]!=0||!legal(rk,rl,rb,rx_payload[511:0])||!direction(rk,1'b0)||
++        (MUT!=2 && {rk,re,rl,rb}!={rx_expected_kind,rx_expected_epoch,rx_expected_layer,rx_expected_beat}));
++    wire bad=tx_time_bad||rx_time_bad||tx_record_bad||rx_record_bad;
++    always @(posedge ck or negedge rst_n)begin
++        if(!rst_n)begin
++            tx_valid<=0;tx_valid_b<=0;tx_valid_c<=0;tx_valid_d<=0;tx_payload<=0;rx_valid<=0;rx_kind<=0;rx_epoch<=0;rx_layer<=0;rx_beat<=0;rx_data<=0;
++            fault<=0;fault_cause<=0;
++        end else begin
++            if(RX_FREE!=0)rx_data<=rx_payload[511:0];
++            if(TX_FREE!=0)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};
++            tx_valid<=0;tx_valid_b<=0;tx_valid_c<=0;tx_valid_d<=0;rx_valid<=0;
++            if(!fault)begin
++                if(bad)begin
++                    fault<=1;fault_cause<={rx_record_bad,tx_record_bad,rx_time_bad,tx_time_bad};
++                end else begin
++                    tx_valid<=tx_event;tx_valid_b<=tx_event;tx_valid_c<=tx_event;tx_valid_d<=tx_event;
++                    if(tx_event&&TX_FREE==0)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};
++                    rx_valid<=rx_event;
++                    if(rx_event)begin
++                        rx_kind<=rk;rx_epoch<=re;rx_layer<=rl;rx_beat<=rb;if(RX_FREE==0)rx_data<=rx_payload[511:0];
++                    end
++                end
++            end
++        end
++    end
++endmodule
+diff --git a/rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv b/rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv
+index 5c54c840b..364359130 100644
+--- a/rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv
++++ b/rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv
+@@ -9,7 +9,7 @@
+ // the existing KVN class wire. The receiver's layer/position descriptor must
+ // describe the SAME admitted epoch; this module does not fabricate that link.
+ module ot_qfd_su_kv_static_posted #(
+- parameter integer ENABLE=0, HEADS=1, KV_FP8=1, MUT_LANE=0, MUT_TAG=0, MUT_MASK=0
++ parameter integer ENABLE=0, HEADS=1, KV_FP8=1, MUT_LANE=0, MUT_TAG=0, MUT_MASK=0, SAFE=0, LOCAL_CTL=0
+ )(
+  input wire clk,rst_n,
+  input wire epoch_begin,input wire [17:0] epoch_pos,
+@@ -19,6 +19,10 @@ module ot_qfd_su_kv_static_posted #(
+  output wire epoch_idle,output wire drained,
+  output reg word_v,output reg [10:0] word_tag,output reg [511:0] word_data,
+  input wire word_slot,input wire [1:0] word_index,
++ output wire[39:0]word_ctl_pub,
++ input wire[15:0] word_index_pub, // opt-in same-age source copies; LOCAL_CTL=0 ignores
++ input wire[1:0] epoch_begin_pub, // R3d opt-in same-edge copies of epoch_begin (eb_r halves); LOCAL_CTL=0 ignores
++ input wire[1:0] word_slot_pub,   // R3f opt-in same-edge copies of word_slot (word_data group halves); LOCAL_CTL=0 ignores
+  output reg fault,output reg [7:0] fault_code
+ );
+  // Every arriving face bit is captured before decode/arbitration.
+@@ -44,6 +48,8 @@ module ot_qfd_su_kv_static_posted #(
+  localparam integer VBASE=HEADS*65536, NBYTES=HEADS*256, NWORDS=HEADS*4;
+  initial if(HEADS!=1||KV_FP8!=1)$fatal(1,"Static native formatter requires exact TP8 one-head FP8 profile");
+  reg active;reg [12:0] pos;
++ localparam integer EBC=(LOCAL_CTL!=0)?32:16, NB=NBYTES/EBC;   // R3d: 32 epoch-begin copies under LOCAL_CTL (8 seats each)
++ (* keep = "true" *) reg [EBC-1:0] eb_r;
+  reg [2:0] issued;
+  reg [NBYTES-1:0] seen,seen_n;
+  reg [NWORDS-1:0] sent,sent_n;
+@@ -55,6 +61,7 @@ module ot_qfd_su_kv_static_posted #(
+  wire take=word_v; // one-cycle pulse; delivery time belongs to the compiler
+  assign epoch_idle=ENABLE!=0&&!active&&!word_v&&!fault&&!eb_q;
+  assign drained=!active&&!word_v;
++ generate if(SAFE==0)begin:g_legacy
+  always_comb begin
+   seen_n=seen;sent_n=sent;bytes_n=bytes_r;err=0;
+   allowed=issued;
+@@ -83,26 +90,265 @@ module ot_qfd_su_kv_static_posted #(
+   if(choose)sent_n[selected]=1;
+ 
+  end
++ end else if(LOCAL_CTL==0)begin:g_safe
++  // Native59 has eight active lanes. Encode and validate each lane locally,
++  // then register its byte-seat address before the constant-index seat decode.
++  (* keep = "true" *) reg[7:0]dv[0:15];
++  (* keep = "true" *) reg[63:0]di[0:15],dc[0:15];reg[7:0]de;
++  integer j,seg;reg[23:0]da;reg[19:0]aa;reg[16:0]ww;reg[12:0]dp;
++  reg[7:0]ix;reg[8:0]co;reg[2:0]permit;
++  always @(posedge clk or negedge rst_n)begin
++   if(!rst_n)begin for(seg=0;seg<16;seg=seg+1)begin dv[seg]<=0;di[seg]<=0;dc[seg]<=0;end de<=0;end
++   else begin
++    for(seg=0;seg<16;seg=seg+1)dv[seg]<=we_q[7:0];de<=0;
++    permit=issued;if(iv_q&&ik_q<3)permit[ik_q]=1;
++    if(|we_q[63:8])de[0]<=1;
++    for(j=0;j<8;j=j+1)begin
++     da=wa_q[24*j+:24];aa=da[23:4];ww=aa-VBASE;co=encode(wd_q[32*j+:32]);
++     if(aa<VBASE)begin ix={1'b0,aa[6:0]};dp={aa[15:7],da[3:0]};end
++     else begin ix={1'b1,ww[2:0],da[3:0]};dp=ww[15:3];end
++     for(seg=0;seg<16;seg=seg+1)begin di[seg][8*j+:8]<=ix^8'(MUT_LANE!=0);dc[seg][8*j+:8]<=co[7:0];end
++     if(we_q[j])begin
++      if(!active||aa>=2*VBASE||(aa<VBASE?aa[16]:ww[16])||dp!=pos)de[0]<=1;
++      if(co[8]||KV_FP8==0)de[1]<=1;
++      if(!(aa<VBASE?permit[aa[6]?2:1]:permit[0]))de[2]<=1;
++     end
++    end
++   end
++  end
++  integer seat,lane;reg[7:0]hits;reg[7:0]value;
++  always_comb begin
++   seen_n=seen;sent_n=sent;bytes_n=bytes_r;err=de;
++   allowed=issued;e=0;a=0;w=0;pp=0;code=0;dim=0;head=0;kind=0;idx=0;halfidx=0;li=0;
++   hits=0;value=0;
++   for(seat=0;seat<NBYTES;seat=seat+1)begin
++    hits=0;value=bytes_r[8*seat+:8];
++    for(lane=0;lane<8;lane=lane+1)begin
++     hits[lane]=dv[seat/16][lane]&&(di[seat/16][8*lane+:8]==8'(seat));
++     if(hits[lane])value=dc[seat/16][8*lane+:8];
++    end
++    if(|hits)begin
++     if(seen[seat]||(|(hits&(hits-8'd1))))err[3]=1;
++     seen_n[seat]=1;bytes_n[8*seat+:8]=value;
++    end
++   end
++   choose=slot_q;selected=slot_index_q;
++   if(slot_q&&(!active||sent[selected]||!(&seen[64*selected+:64])))err[6]=1;
++   if(choose)sent_n[selected]=1;
++  end
++ end else begin:g_safe32
++  // R3d (QW-N59-6 10-20, LOCAL_CTL): the g_safe seat decode with the lane seat address PREDECODED at the same edge.
++  // g_safe registered per 16-seat segment the 8-bit seat address di and valid dv, then decoded di==seat for all 256
++  // seats: the shared partial decodes drove 41-57 mapped loads each (229 census nets).  Here each segment registers,
++  // per lane, hv = dv && (seat address[7:4] == segment) and lo = one-hot(seat address[3:0]) at the edge that captured
++  // di/dv, so hits[seat][lane] = hv[seat/16][lane] && lo[seat/16][lane][seat%16] == dv && (di == seat) on every edge
++  // (reset: hv 0 == dv 0).  Exact; 0 added edges.  Loads: hv 16 seats, lo 1, dc 16 seats.
++  // R3f: ABC re-merged hv into the 8-bit value muxes (hv 113 census nets > 32), so the valid is folded into the one-hot:
++  // ht[seg][lane] = (dv && seat address[7:4] == seg) ? one-hot(seat address[3:0]) : 0, i.e. one registered hit bit per
++  // seat and lane (hits[seat][lane] = ht[seat/16][lane][seat%16] == dv && di == seat on every edge, reset 0).
++  (* keep = "true" *) reg[15:0]ht[0:15][0:7];
++  // R3h: the ht D-side decode reads 4 kept copies (one per 4-segment group) of the face registers it needs -- we_q[7:0]
++  // and per lane wa_q {[23:20],[10:0]} -- captured from the same ports at the same edge as we_q / wa_q (reset 0): the
++  // R3f census had the shared partial address decodes at 36-44 loads (64 ht flops each).
++  (* keep = "true" *) reg[14:0]wac[0:3][0:7];(* keep = "true" *) reg[7:0]wec[0:3];
++  integer gq,jq;
++  always @(posedge clk or negedge rst_n)
++   if(!rst_n)begin for(gq=0;gq<4;gq=gq+1)begin wec[gq]<=0;for(jq=0;jq<8;jq=jq+1)wac[gq][jq]<=0;end end
++   else for(gq=0;gq<4;gq=gq+1)begin wec[gq]<=kv_we[7:0];for(jq=0;jq<8;jq=jq+1)wac[gq][jq]<={kv_waddr[24*jq+20+:4],kv_waddr[24*jq+:11]};end
++  function automatic [7:0] seat_ix(input [14:0] w);   // == ix of the original decode (aa = wa[23:4], da = wa[3:0])
++   seat_ix=(w[14:11]==4'd0)?{1'b0,w[10:4]}:{1'b1,w[6:4],w[3:0]};
++  endfunction
++  (* keep = "true" *) reg[63:0]dc[0:15];reg[7:0]de;
++  integer j,seg;reg[23:0]da;reg[19:0]aa;reg[16:0]ww;reg[12:0]dp;
++  reg[7:0]ix,ixg;reg[8:0]co;reg[2:0]permit;
++  always @(posedge clk or negedge rst_n)begin
++   if(!rst_n)begin for(seg=0;seg<16;seg=seg+1)begin dc[seg]<=0;for(j=0;j<8;j=j+1)ht[seg][j]<=0;end de<=0;end
++   else begin
++    de<=0;
++    permit=issued;if(iv_q&&ik_q<3)permit[ik_q]=1;
++    if(|we_q[63:8])de[0]<=1;
++    for(j=0;j<8;j=j+1)begin
++     da=wa_q[24*j+:24];aa=da[23:4];ww=aa-VBASE;co=encode(wd_q[32*j+:32]);
++     if(aa<VBASE)begin ix={1'b0,aa[6:0]};dp={aa[15:7],da[3:0]};end
++     else begin ix={1'b1,ww[2:0],da[3:0]};dp=ww[15:3];end
++     ix=ix^8'(MUT_LANE!=0);
++     for(seg=0;seg<16;seg=seg+1)begin
++      ixg=seat_ix(wac[seg/4][j])^8'(MUT_LANE!=0);
++      ht[seg][j]<=(wec[seg/4][j]&&(ixg[7:4]==4'(seg)))?(16'd1<<ixg[3:0]):16'd0;dc[seg][8*j+:8]<=co[7:0];
++     end
++     if(we_q[j])begin
++      if(!active||aa>=2*VBASE||(aa<VBASE?aa[16]:ww[16])||dp!=pos)de[0]<=1;
++      if(co[8]||KV_FP8==0)de[1]<=1;
++      if(!(aa<VBASE?permit[aa[6]?2:1]:permit[0]))de[2]<=1;
++     end
++    end
++   end
++  end
++  integer seat,lane;reg[7:0]hits;reg[7:0]value;
++  always_comb begin
++   seen_n=seen;sent_n=sent;bytes_n=bytes_r;err=de;
++   allowed=issued;e=0;a=0;w=0;pp=0;code=0;dim=0;head=0;kind=0;idx=0;halfidx=0;li=0;
++   hits=0;value=0;
++   for(seat=0;seat<NBYTES;seat=seat+1)begin
++    hits=0;value=bytes_r[8*seat+:8];
++    for(lane=0;lane<8;lane=lane+1)begin
++     hits[lane]=ht[seat/16][lane][seat%16];
++     if(hits[lane])value=dc[seat/16][8*lane+:8];
++    end
++    if(|hits)begin
++     if(seen[seat]||(|(hits&(hits-8'd1))))err[3]=1;
++     seen_n[seat]=1;bytes_n[8*seat+:8]=value;
++    end
++   end
++   choose=slot_q;selected=slot_index_q;
++   if(slot_q&&(!active||sent[selected]||!(&seen[64*selected+:64])))err[6]=1;
++   if(choose)sent_n[selected]=1;
++  end
++ end endgenerate
++ // R3d (LOCAL_CTL): 26 kept same-D copies of slot_q (D word_slot, async clear) -- 16 for the 4-byte word_data capture
++ // groups, 10 for the KVN control publications -- so the emission predicate is one distinct gate per <= 32 capture
++ // flops instead of one 528-load AND (R3c census).  cq[k] == slot_q == choose on every edge: exact.
++ // R3f: 32 data copies (2-byte word_data groups: a DFFE enable costs 2 mapped loads per bit), 16 from each parent
++ // word_slot publication, + 10 control copies from word_slot: cq[0..31] data, cq[32..41] control.
++ wire[41:0]cq;
++ generate if(LOCAL_CTL)begin:g_choose_pub
++  (* keep = "true" *) reg[41:0]q;
++  always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else q<={{10{word_slot}},{16{word_slot_pub[1]}},{16{word_slot_pub[0]}}};
++  assign cq=q;
++ end else begin:g_choose_alias
++  assign cq={42{slot_q}};
++ end endgenerate
++ generate if(LOCAL_CTL==0)begin:g_core
+  always @(posedge clk or negedge rst_n)begin
+-  if(!rst_n)begin active<=0;pos<=0;issued<=0;seen<=0;sent<=0;bytes_r<=0;word_v<=0;word_tag<=0;word_data<=0;fault<=0;fault_code<=0;end
+-  else if(ENABLE!=0)begin
+-   if(eb_q)begin
+-    if(active||word_v||fault||ep_q>=8192)begin fault<=1;fault_code[4]<=1;end
+-    else begin active<=1;pos<=ep_q[12:0];issued<=0;seen<=0;sent<=0;end
+-   end else begin
+-    seen<=seen_n;sent<=sent_n;bytes_r<=bytes_n;
+-    if(iv_q)begin
+-     if(!active||ik_q>=3||ino_q!=HEADS||ini_q!=(ik_q==0?128:64)||issued[ik_q])begin fault<=1;fault_code[5]<=1;end
+-     else issued[ik_q]<=1;
++   if(!rst_n)begin active<=0;pos<=0;issued<=0;sent<=0;word_v<=0;word_tag<=0;if(LOCAL_CTL==0)word_data<=0;fault<=0;fault_code<=0;end
++   else if(ENABLE!=0)begin
++    if(eb_q)begin
++     if(active||word_v||fault||ep_q>=8192)begin fault<=1;fault_code[4]<=1;end
++     else begin active<=1;pos<=ep_q[12:0];issued<=0;sent<=0;end
++    end else begin
++     sent<=sent_n;
++     if(iv_q)begin
++      if(!active||ik_q>=3||ino_q!=HEADS||ini_q!=(ik_q==0?128:64)||issued[ik_q])begin fault<=1;fault_code[5]<=1;end
++      else issued[ik_q]<=1;
++     end
++     if(|err)begin fault<=1;fault_code<=fault_code|err;end
++     if(!fault&&!(|err)&&choose&&(!word_v||take))begin
++      word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
++      if(LOCAL_CTL==0)begin
++      case(selected)
++       0:word_data<=bytes_r[0+:512];1:word_data<=bytes_r[512+:512];
++       2:word_data<=bytes_r[1024+:512];3:word_data<=bytes_r[1536+:512];
++       default:word_data<=0;
++      endcase
++      end
++      if(MUT_MASK!=0&&LOCAL_CTL==0)word_data[7:0]<=0;
++     end else if(take||fault||(|err))word_v<=0;
++     if(active&&(&sent)&&!word_v&&issued==3'b111)active<=0;
++    end
++   end
++  end
++ end else begin:g_core32
++  // R3g (QW-N59-6 10-20, LOCAL_CTL): the same core statements split by register group so no epoch-begin flop selects
++  // more than ~25 next-state bits (R3e census: eb_q 44): eb_q -> fault / fault_code / word_v / word_tag, eb_a (kept copy,
++  // D epoch_begin == eb_q) -> pos, eb_b (kept copy) -> active / issued / sent.  Every register keeps its original
++  // statements, conditions and order; exact.
++  (* keep = "true" *) reg eb_a,eb_b;
++  always @(posedge clk or negedge rst_n)if(!rst_n)begin eb_a<=0;eb_b<=0;end else begin eb_a<=epoch_begin;eb_b<=epoch_begin;end
++  wire eb_busy=active||word_v||fault||ep_q>=8192;
++  wire bad_issue=!active||ik_q>=3||ino_q!=HEADS||ini_q!=(ik_q==0?128:64)||issued[ik_q];
++  always @(posedge clk or negedge rst_n)begin
++   if(!rst_n)begin word_v<=0;word_tag<=0;fault<=0;fault_code<=0;end
++   else if(ENABLE!=0)begin
++    if(eb_q)begin
++     if(eb_busy)begin fault<=1;fault_code[4]<=1;end
++    end else begin
++     if(iv_q&&bad_issue)begin fault<=1;fault_code[5]<=1;end
++     if(|err)begin fault<=1;fault_code<=fault_code|err;end
++     if(!fault&&!(|err)&&choose&&(!word_v||take))begin
++      word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
++     end else if(take||fault||(|err))word_v<=0;
++    end
++   end
++  end
++  always @(posedge clk or negedge rst_n)begin
++   if(!rst_n)pos<=0;
++   else if(ENABLE!=0&&eb_a&&!eb_busy)pos<=ep_q[12:0];
++  end
++  always @(posedge clk or negedge rst_n)begin
++   if(!rst_n)begin active<=0;issued<=0;sent<=0;end
++   else if(ENABLE!=0)begin
++    if(eb_b)begin
++     if(!eb_busy)begin active<=1;issued<=0;sent<=0;end
++    end else begin
++     sent<=sent_n;
++     if(iv_q&&!bad_issue)issued[ik_q]<=1;
++     if(active&&(&sent)&&!word_v&&issued==3'b111)active<=0;
+     end
+-    if(|err)begin fault<=1;fault_code<=fault_code|err;end
+-    if(!fault&&!(|err)&&choose&&(!word_v||take))begin
+-     word_v<=1;word_tag<={3'b010,5'd0,({1'(selected/(HEADS*2)),1'((selected/2)%HEADS),1'(selected%2)}^3'(MUT_TAG!=0?1:0))};
+-     word_data<=bytes_r[512*selected+:512];
+-     if(MUT_MASK!=0)word_data[7:0]<=0;
+-    end else if(take||fault||(|err))word_v<=0;
+-    if(active&&(&sent)&&!word_v&&issued==3'b111)active<=0;
+    end
+   end
++ end endgenerate
++ // R3: one registered one-hot word selector per output byte. Source index
++ // copies are registered at the parent p_kvi edge; this is the old slot_index_q
++ // edge, so every payload capture/hold edge remains unchanged.
++ generate if(LOCAL_CTL)begin:g_word_sel32
++  for(genvar wb=0;wb<64;wb=wb+1)begin:g_byte
++   (* keep = "true" *) reg[3:0] sel;
++   always @(posedge clk or negedge rst_n)
++    if(!rst_n)sel<=4'b0001;
++    else sel<=4'b0001<<word_index_pub[2*(wb/8)+:2];
++   always @(posedge clk or negedge rst_n)
++    if(!rst_n)word_data[8*wb+:8]<=0;
++    // R3f: the data capture takes only registered same-edge copies (cq[g] == choose, eb_r[g] == eb_q; (!word_v||take)
++    // is identically 1).  !fault / !(|err) are dropped from the DATA enable only: on such an edge word_v / every KVN
++    // control publication stays clear and the fault is sticky from the next edge, so these data are never pushed
++    // (the KVN seat captures word_data only under its word_v publication): output-exact, no shared enable net.
++    else if(ENABLE!=0&&!eb_r[wb/2]&&cq[wb/2])begin
++     word_data[8*wb+:8]<=({8{sel[0]}}&bytes_r[8*wb+:8]) |
++                        ({8{sel[1]}}&bytes_r[512+8*wb+:8]) |
++                        ({8{sel[2]}}&bytes_r[1024+8*wb+:8]) |
++                        ({8{sel[3]}}&bytes_r[1536+8*wb+:8]);
++     if(MUT_MASK!=0&&wb==0)word_data[8*wb+:8]<=0;
++    end
++  end
++ end endgenerate
++ // Same-edge control publications for bounded KVN consumer groups (no new edge).
++ generate if(LOCAL_CTL)begin:g_ctl_pub
++  for(genvar cp=0;cp<10;cp=cp+1)begin:g_copy
++   (* keep = "true" *) reg[3:0]q;
++   always @(posedge clk or negedge rst_n)begin
++    if(!rst_n)q<=0;
++    else if(ENABLE!=0&&!eb_q)begin
++     if(!fault&&!(|err)&&cq[32+cp]&&(!word_v||take))q<={1'b1,3'b010};
++     else if(take||fault||(|err))q[3]<=0;
++    end
++   end
++   assign word_ctl_pub[4*cp+:4]=q;
++  end
++ end else begin:g_ctl_alias
++  assign word_ctl_pub={10{word_v,word_tag[10:8]}};
++ end endgenerate
++ // Epoch-begin broadcast replicated per byte segment (QW-N59 10-19): the 256-seat seen / bytes_r assembly bank took its
++ // clear / hold select from one eb_q flop (synthesis merged it with the service's iss[0]: 4,826 loads > 3,000).  EBC kept
++ // copies of the same register, one per NBYTES/EBC-byte segment; function unchanged (the same cycle and condition).
++ // (EBC / NB / eb_r are declared with the assembly state above: the R3f data groups use eb_r.)
++ genvar gs;
++ // R3d: under LOCAL_CTL each half of the copies takes its own parent publication of epoch_begin (same value, same edge),
++ // so no epoch_begin net drives more than 16 copy flops.
++ wire[EBC-1:0]eb_d;
++ for(gs=0;gs<EBC;gs=gs+1)begin:g_ebd
++  assign eb_d[gs]=(LOCAL_CTL!=0)?epoch_begin_pub[(gs*2)/EBC]:epoch_begin;
+  end
++ always @(posedge clk or negedge rst_n)if(!rst_n)eb_r<=0;else eb_r<=eb_d;
++ wire eb_clear_ok=!(active||word_v||fault||ep_q>=8192);
++ generate for(gs=0;gs<EBC;gs=gs+1)begin:g_ebseg
++  always @(posedge clk or negedge rst_n)
++   if(!rst_n)begin seen[NB*gs+:NB]<=0;bytes_r[8*NB*gs+:8*NB]<=0;end
++   else if(ENABLE!=0)begin
++    // R3e (LOCAL_CTL): the segment clears on its eb_r copy alone.  A begin with !eb_clear_ok sets the sticky formatter
++    // fault on this same edge; afterwards no word can be emitted (every emission / data / control publication requires
++    // !fault), so seen is unobservable then: output-exact, and eb_clear_ok no longer fans out to the 256 seat bits.
++    if(eb_r[gs])begin if(LOCAL_CTL!=0||eb_clear_ok)seen[NB*gs+:NB]<=0;end
++    else begin seen[NB*gs+:NB]<=seen_n[NB*gs+:NB];bytes_r[8*NB*gs+:8*NB]<=bytes_n[8*NB*gs+:8*NB];end
++   end
++ end endgenerate
+ endmodule
+diff --git a/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv b/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv
+index 4c1fe4dd4..5283da548 100644
+--- a/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv
++++ b/rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv
+@@ -6,7 +6,16 @@
+ // a separate mandatory real-RTL/compiled-phase integration obligation.
+ module qkd_native_attention_record #(
+     parameter integer KV_SIDE=1,
+-    parameter integer MUT=0
++    parameter integer MUT=0,
++    // QW-N59-4 (10-19, default 0 = as built): RX_FREE 1 = rx_data captures rx_payload[511:0] on EVERY edge (no 512-bit
++    // enable from the record checks; native59 svc placed STA: rx header / legal() / tx checks -> 512-flop enable = -220 ps).
++    // Consumers read rx_data only on the edge after a valid, non-faulting rx_event (rx_valid / result slot), where both
++    // forms hold the same word; after a bad record the codec faults and no consumer uses rx_data again.
++    parameter integer RX_FREE=0,
++    // QW-N59-4 v3 (default 0 = as built): TX_FREE 1 = tx_payload captures {kind, layer, epoch, beat, data} on EVERY edge
++    // (no 548-bit enable from the tx record checks).  Only for a consumer that reads tx_payload qualified by tx_valid
++    // (native59 MCTX 1: the slot merge ORs a payload only with its tx_valid).
++    parameter integer TX_FREE=0
+ )(
+     input wire ck,rst_n,
+     input wire tx_event,tx_expected,
+@@ -60,16 +69,18 @@ module qkd_native_attention_record #(
+             tx_valid<=0;tx_payload<=0;rx_valid<=0;rx_kind<=0;rx_epoch<=0;rx_layer<=0;rx_beat<=0;rx_data<=0;
+             fault<=0;fault_cause<=0;
+         end else begin
++            if(RX_FREE!=0)rx_data<=rx_payload[511:0];
++            if(TX_FREE!=0)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};
+             tx_valid<=0;rx_valid<=0;
+             if(!fault)begin
+                 if(bad)begin
+                     fault<=1;fault_cause<={rx_record_bad,tx_record_bad,rx_time_bad,tx_time_bad};
+                 end else begin
+                     tx_valid<=tx_event;
+-                    if(tx_event)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};
++                    if(tx_event&&TX_FREE==0)tx_payload<={5'd0,tx_kind,tx_layer,tx_epoch,tx_beat,tx_data};
+                     rx_valid<=rx_event;
+                     if(rx_event)begin
+-                        rx_kind<=rk;rx_epoch<=re;rx_layer<=rl;rx_beat<=rb;rx_data<=rx_payload[511:0];
++                        rx_kind<=rk;rx_epoch<=re;rx_layer<=rl;rx_beat<=rb;if(RX_FREE==0)rx_data<=rx_payload[511:0];
+                     end
+                 end
+             end

@@ -1,0 +1,118 @@
+{
+  "main_commit": "27f4ddaca71c12fc0d47535cbcf5bf1022e52d96",
+  "candidate_commit": "1185d10f429d279d43097c9a187ed72741c2e4fb",
+  "source_profile": {
+    "HEAD_PREP": 1,
+    "NU": 4,
+    "ROPE": 1,
+    "USER_BIND": 1,
+    "MCTX": 1,
+    "EMB_RELAY": 1,
+    "RECV_INPUTS": 1,
+    "LOCAL32": 1,
+    "FANOUT_LOCAL": 1
+  },
+  "files": [
+    {
+      "path": "rtl/qwen_split/qfd_native59_svc_obs1.sv",
+      "sha256": "3631537444af26a453d0b3f13c59b7bd45b6719b4b7a1978a1bd0fd11f99e85a",
+      "role": "repaired_source",
+      "current_main_status": "ABSENT",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/qwen_split/qfd_native59_static_service_obs1.sv",
+      "sha256": "ed7ffd0cb244af014fc988d282af4ef51be860406e0f7a0994cfdaae25bbb7e3",
+      "role": "repaired_source",
+      "current_main_status": "ABSENT",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv",
+      "sha256": "0af22a5efed16e6e752ea80c548475119a89995802c284c6e16de47bba53a068",
+      "role": "repaired_source",
+      "current_main_status": "ABSENT",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/qwen_split/qfd_native59_mctx_helpers.sv",
+      "sha256": "9815d406f5d5f073bd1e1a8db45e4727a0d1a4c90f87d6f9fa7ba2d9dc9b7857",
+      "role": "existing_dependency",
+      "current_main_status": "ABSENT",
+      "main_sha256": null
+    },
+    {
+      "path": "rtl/qwen_split/qfd_native59_command_context.sv",
+      "sha256": "33b133a4828cfaf47ad35ebbb9472c03fb04d87044eb89e13b559298e8a86c20",
+      "role": "existing_dependency",
+      "current_main_status": "IDENTICAL",
+      "main_sha256": "33b133a4828cfaf47ad35ebbb9472c03fb04d87044eb89e13b559298e8a86c20"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_native59_q_export_control.sv",
+      "sha256": "8d13fcf0ee24972c9c0c823330b005baddf76c87f67898f1ff8034a0f0fd091d",
+      "role": "existing_dependency",
+      "current_main_status": "IDENTICAL",
+      "main_sha256": "8d13fcf0ee24972c9c0c823330b005baddf76c87f67898f1ff8034a0f0fd091d"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_native59_record_endpoint.sv",
+      "sha256": "5a524a230d3605cd5d1c88488a002954c8e7ec2a9aa198ccd8e362d51bfe09ce",
+      "role": "existing_dependency",
+      "current_main_status": "DIFFERS",
+      "main_sha256": "d5f51560f5a562bf4982ede0c6a44c62575e2689ff6908eb0276ea1e526c4991"
+    },
+    {
+      "path": "rtl/qwen_split/qfd_kvn_static_transport.sv",
+      "sha256": "a1276d4a8d2534e3df6cd408a67c8468042681ebcfd17955771b85a1c9d1bab7",
+      "role": "existing_dependency",
+      "current_main_status": "DIFFERS",
+      "main_sha256": "1097a9cab6bbd7fb0e1a8688c8004a81c781bf7a8d1792fb62c2a091143dd5eb"
+    },
+    {
+      "path": "rtl/qwen_sys/redesign_qwen/ot_qfd_su_kv_static_posted.sv",
+      "sha256": "340d9c5d7b614bcf652956291ae45282b200ba092cd495a903b617adc4e2a77f",
+      "role": "existing_dependency",
+      "current_main_status": "DIFFERS",
+      "main_sha256": "e8dbf12c7223b1f05379b1f17b357f91c0b0504e0a38b7d52f2c97d8063b8c12"
+    },
+    {
+      "path": "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+      "sha256": "ca8dceffb315d2f0d91760f87cf9fb1477f200739b4dd28703b8877278fb1393",
+      "role": "existing_dependency",
+      "current_main_status": "DIFFERS",
+      "main_sha256": "8b05cb0bcd886af069d6d62026f05b3229edd568eab38ea97c92879ff6c425c0"
+    }
+  ],
+  "proofs": [
+    {
+      "path": "results/arch/n59_fanout_1021/MODEL.json",
+      "sha256": "d08eda3d8c3dda51dfe59446e170d9481adb1ab6fd34084f4964d6df86da8db0"
+    },
+    {
+      "path": "results/arch/n59_fanout_1021/bench_v3/RECEIPT.json",
+      "sha256": "f7fe0faf4d6f615b35e0a06531612cf4f1e67f4164e6c54bcb33edd8411da39c"
+    },
+    {
+      "path": "results/arch/n59_fanout_1021/COMPLETION_RECEIPT.json",
+      "sha256": "9edcf6667bc44b468b0b3e8b9729070e8e2a3178dd8a83c438971b4a380afc59"
+    },
+    {
+      "path": "results/arch/n59_fanout_1021/embedding/RECEIPT.json",
+      "sha256": "5dc6f19d1153486cacc3ba89eb4dd620c17edf28f4d72c4d10bd01bb6fc7e63a"
+    },
+    {
+      "path": "results/arch/n59_fanout_1021/native_v2/PASS_SUMMARY.json",
+      "sha256": "a4705f7f5b2b2fdff78ba689b20b32c78720ac124c502b5a450952d6a1b95280"
+    }
+  ],
+  "default_behavior": {
+    "FANOUT_LOCAL": 0,
+    "FINAL_DECODE": 0,
+    "meaning": "Original same-edge predicates and original user/index state are selected. New publication/index FFs and final-decode hierarchy elaborate only for FANOUT_LOCAL=1. Payload/reset edges and interfaces are unchanged.",
+    "evidence": "Source branch audit against 0e64aa8f3; selected opt-in output lockstep vs unchanged qfd_native59_svc, independent descriptor/embedding scoreboards, and static-service comparison vs frozen 0e64 source. No separate whole-module default-0 formal proof is claimed."
+  },
+  "qualification_scope": "Only HEAD_PREP=1 NU=4 ROPE=1 USER_BIND=1 MCTX=1 EMB_RELAY=1 RECV_INPUTS=1 LOCAL32=1 FANOUT_LOCAL=1 has the native and selected-source proofs. RECV_INPUTS=0/LOCAL32=0 remains unqualified for FANOUT_LOCAL=1; default-off exposure is permitted but must not adopt these views/ages.",
+  "physical_scope": "MAIN svc5 and fallback svc5b gates live; no timing/physical PASS yet",
+  "helpers_policy": "Preserve all current-main helpers; execution-only c4d88049d is excluded. Exact dependency hashes identify four nonmatching APIs and one absent helper. Do not replace those files silently."
+}
