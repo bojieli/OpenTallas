@@ -246,11 +246,15 @@ def rtl_txdp(compute_commit, kv_commit=None, compute_params=None):
         # `.TXDP(PR ? TXDP : {..})`, which the old `PR ?` test also matched, so the compute GEN's params were never used.
         if end == 'C' and compute_params and not re.search(
                 r"qfd_d2d_static_core\s*#\([^;]*?\.TXDP\(PR \? \{8'd", rtl, re.S):
-            v = json.loads(Path(compute_params).read_text()).get('masters', {}).get('qfd_d2d_static', {}).get('TXDP')
-            if v is None:
-                raise SystemExit(f'layer_compile: {compute_params} assigns no qfd_d2d_static TXDP')
+            pm = json.loads(Path(compute_params).read_text()).get('masters', {})
+            # SQC-QDIE4 10-22: the MU compute die binds d2d_rom as a qfd_d2d_static_* successor master
+            # (qfd_d2d_static_ovl_sf7_obs1); the TXDP die parameter is read from the ONE bound d2d master that carries it
+            cand = [k for k in pm if (k == 'qfd_d2d_static' or k.startswith('qfd_d2d_static_')) and pm[k].get('TXDP') is not None]
+            if len(cand) != 1:
+                raise SystemExit(f'layer_compile: {compute_params} assigns no unique qfd_d2d_static* TXDP ({cand})')
+            v = pm[cand[0]]['TXDP']
             out[end] = [(int(v) >> (8 * i)) & 0xff for i in range(4)]
-            src[end] = f'{compute_params} qfd_d2d_static.TXDP (die_parameter)'
+            src[end] = f'{compute_params} {cand[0]}.TXDP (die_parameter)'
             continue
         out[end], kind = txdp_bound(rtl, git_show_opt(commit, D2D_IMAGE), end)
         src[end] = f'{commit}:{D2D_RTL if kind == "rtl_literal" else D2D_IMAGE} ({kind})'
