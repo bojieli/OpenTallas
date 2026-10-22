@@ -1392,16 +1392,25 @@ module ot_s81dv_finish_banks #(parameter integer NV=80,K=5,P=3,TREES=1,NVP=(1<<$
     ahc[bank*4+:4]<={4{read_ha[bank]}};bhc[bank*4+:4]<={4{read_hb[bank]}};
   end
   wire[38:0] wp;
+  wire[63:0] leaf_mask;
   if(bank<P*K)begin:g_leaf
    ot_s81dv_finish_leafw #(.NV(NV),.K(K),.P(P),.TREES(TREES),.PB(bank/K),.R(bank%K)) u_w(
-     .da(dca),.db(dcb),.id(id),.wp(wp));
+     .da(dca),.db(dcb),.id(id),.wp(wp),.wm(leaf_mask));
   end else begin:g_internal
    assign wp={wr_v && wr_tag[6:0]!=1 && dw[10:6]==bank,dw[5:1],dw[0],wr_d};
   end
   wire[63:0] mask;
+`ifdef OT_S81DV_XFIN_N11
+  if(bank<P*K)begin:g_local_leaf_mask
+   assign mask=leaf_mask;
+  end else begin:g_internal_mask
+`endif
   for(genvar b=0;b<8;b=b+1)begin:g_mask
    ot_s81dv_finish_mask8 #(.UPPER(b>=4)) u_m(.en(wp[38]),.half(wp[32]),.m(mask[8*b+:8]));
   end
+`ifdef OT_S81DV_XFIN_N11
+  end
+`endif
   ot_sram_1r1w_32x64_m1 u_m(.clk(clk),.r_ce_in(ren),.r_addr_in(ra),.rd_out(rd[bank]),
     .w_ce_in(wp[38]),.w_addr_in(wp[37:33]),.wd_in({wp[31:0],wp[31:0]}),.w_mask_in(mask));
  end
@@ -1422,8 +1431,12 @@ endmodule
 //  slot = t*16 + j, sel[q] = OR_{t,j} w[t][j] && da[t][q][K*j] (== iv[q] && it[q] == it[PB] && ib[q] == bp).
 //  Data = OR sel & id; en = |w; slot from the one-hot.  Equal to the original leaf_write() for every input.  Half 0
 //  (data[15:0], en, slot) reads set da, half 1 reads set db (equal same-edge copies): every select drives 16 bits.
+`ifdef OT_S81DV_XFIN_N11
+// N11: each SRAM owns its complete write selector; prevent five-bank CSE.
+(* keep_hierarchy=1 *)
+`endif
 module ot_s81dv_finish_leafw #(parameter integer NV=80,K=5,P=3,TREES=1,PB=0,R=0)(
- input wire[TREES*P*NV-1:0] da,db,input wire[P*K*32-1:0] id,output wire[38:0] wp);
+ input wire[TREES*P*NV-1:0] da,db,input wire[P*K*32-1:0] id,output wire[38:0] wp,output wire[63:0] wm);
  localparam integer NJ=(NV+K-1)/K, NW=TREES*NJ;
  wire[NW-1:0] wa,wb;
  wire[P*K-1:0] sa,sb;
@@ -1474,6 +1487,24 @@ module ot_s81dv_finish_leafw #(parameter integer NV=80,K=5,P=3,TREES=1,PB=0,R=0)
  end
  wire en=|wa;
  assign wp={en,slot[5:1],slot[0],dhi,dlo};
+`ifdef OT_S81DV_XFIN_N11
+ // Each mask byte owns the combinational slot reduction, with no data edge.
+ for(genvar mb=0;mb<8;mb=mb+1)begin:g_mask_owner
+  ot_s81dv_finish_leaf_mask8 #(.NW(NW),.UPPER(mb>=4)) u_mask(.wa(wa),.m(wm[mb*8+:8]));
+ end
+`else
+ assign wm=64'b0;
+`endif
+endmodule
+(* keep_hierarchy=1 *) module ot_s81dv_finish_leaf_mask8 #(parameter integer NW=16,UPPER=0)(input wire[NW-1:0]wa,output wire[7:0]m);
+ wire[NW-1:0] odd;
+ for(genvar j=0;j<NW;j=j+1)begin:g_odd
+  assign odd[j]=(j%2)?wa[j]:1'b0;
+ end
+ // Every ENG tree starts at slot t*16; its low bit is exactly j%2.
+ wire half=|odd;
+ wire en=|wa;
+ assign m={8{en && (half==UPPER)}};
 endmodule
 // Leaf-match predecode: oh[x] = v && b == x from 16 + 16 nibble one-hots (each net <= 16 loads).
 (* keep_hierarchy=1 *) module ot_s81dv_fin_dec #(parameter integer N=80)(input wire v,input wire[7:0] b,output wire[N-1:0] oh);
