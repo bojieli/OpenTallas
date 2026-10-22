@@ -22,10 +22,10 @@ module ot_hbm_su_indexed_scalar_banked #(
  function automatic[4:0]bank_of(input[23:0]a);bank_of={a[17:16],a[5:3]};endfunction
  wire[PW-1:0]local_phase[0:5];
  for(genvar c=0;c<6;c=c+1)begin:phasecopy
-  ot_hbm_gather_phase_copy #(.PW(PW)) counter(.clk(clk),.rst_n(rrst[1+c]),.start(c<3?start:start_aux),.busy(running[1]),.q(local_phase[c]));
+  ot_hbm_gather_phase_copy #(.PW(PW)) counter(.clk(clk),.rst_n(rrst[1+c]),.start(c<3?start:start_aux),.busy(running[2]),.q(local_phase[c]));
  end
- wire[1:0]running;
- for(genvar c=0;c<2;c=c+1)begin:busycopy
+ wire[2:0]running;
+ for(genvar c=0;c<3;c=c+1)begin:busycopy
   ot_hbm_gather_busy_copy copy(.clk(clk),.rst_n(rrst[0]),.start(c==0?start:start_aux),.finish(phase==END),.q(running[c]));
  end
  wire rd_fire,wr_fire;
