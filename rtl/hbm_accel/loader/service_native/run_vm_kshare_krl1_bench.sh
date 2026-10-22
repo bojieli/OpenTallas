@@ -10,7 +10,7 @@
 set -u
 out=${1:?outdir}; only=${2:-all}; mkdir -p "$out"; R=$(cd "$(dirname "$0")/../../../.." && pwd)
 S=$R/rtl/hbm_accel/loader/service_native
-DEP="$S/ot_hbm_svc_pc_ctrl_leaf.sv $S/ot_hbm_svc_async_fifo.sv $S/ot_hbm_svc_kshare_sl.sv $R/rtl/lib/ot_rst_fanout.sv $S/ot_hbm_svc_ring_h9b.sv $S/ot_hbm_svc_ring_h9b_ff.sv $R/rtl/lib/ot_reset_sync.sv"
+DEP="$S/ot_hbm_svc_pc_ctrl_leaf.sv $S/ot_hbm_svc_async_fifo.sv $S/ot_hbm_svc_async_fifo_shp.sv $S/ot_hbm_svc_kshare_sl.sv $R/rtl/lib/ot_rst_fanout.sv $S/ot_hbm_svc_ring_h9b.sv $S/ot_hbm_svc_ring_h9b_ff.sv $R/rtl/lib/ot_reset_sync.sv"
 run(){ name=$1; shift; args=$1; shift
   [ "$only" = all ] || [ "$only" = "$name" ] || return 0
   iverilog -g2012 -s tb_hbm_svc_vm_kshare "$@" -o "$out/$name.vvp" $S/tb_hbm_svc_vm_kshare.sv $S/ot_hbm_svc_vm_kshare.sv $S/ot_hbm_svc_vm_kshare_splitstrap.sv $DEP > "$out/$name.build.log" 2>&1 || { echo "BUILD_FAIL $name"; cat "$out/$name.build.log"; return; }

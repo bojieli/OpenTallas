@@ -27,6 +27,22 @@ module tb_svc_async_fifo_shp;
   if({r_wrdy,r_rv,r_ov,r_un}!=={s_wrdy,s_rv,s_ov,s_un} || (r_rv && dmis)) begin errs=errs+1;
    if(errs<6) $display("SHP_MISMATCH t=%0t ctl ref=%b dut=%b data_eq=%0d xor=%h", $time, {r_wrdy,r_rv,r_ov,r_un},{s_wrdy,s_rv,s_ov,s_un}, r_rd===s_rd, r_rd^s_rd); if(errs<3) $display(" ref=%h dut=%h", r_rd, s_rd); end
  end endtask
+ // review 10:45 (a): the slot-index invariant itself, every edge: each slice wa == wr_bin[AW-1:0], ra == rd_bin[AW-1:0]
+ localparam integer AW=$clog2(DEPTH), NS=(WIDTH+SW-1)/SW;
+ integer inv_err=0, inv_chk=0;
+ genvar gs;
+ generate for(gs=0;gs<NS;gs=gs+1) begin:g_inv
+  always @(posedge wr_clk) #1 begin inv_chk=inv_chk+1;
+   if(u_dut.g_s[gs].wa!==u_dut.wr_bin[AW-1:0]) begin inv_err=inv_err+1; if(inv_err<4) $display("SHP_INV wa slice %0d t=%0t", gs, $time); end end
+  always @(posedge rd_clk) #1 begin inv_chk=inv_chk+1;
+   if(u_dut.g_s[gs].ra!==u_dut.rd_bin[AW-1:0]) begin inv_err=inv_err+1; if(inv_err<4) $display("SHP_INV ra slice %0d t=%0t", gs, $time); end end
+ end endgenerate
+ // reset-release margin: wr_clk edges from group-0 write reset release to the first write fire (min over reset epochs)
+ integer mg_cnt=-1, mg_min=1<<30;
+ always @(posedge wr_clk) begin
+  if(!u_dut.gw_reset[0]) mg_cnt=0; else if(mg_cnt>=0) begin
+   if(u_dut.wr_fire) begin if(mg_cnt<mg_min) mg_min=mg_cnt; mg_cnt=-1; end else mg_cnt=mg_cnt+1; end
+ end
  always @(posedge wr_clk) #1 chk; always @(posedge rd_clk) #1 chk;
  initial begin
   void'($urandom(SEED));
@@ -36,6 +52,8 @@ module tb_svc_async_fifo_shp;
   for(i=0;i<N/4;i=i+1) @(posedge wr_clk);
   #100 rd_rst_n=0; #2500 rd_rst_n=1;                    // reader-side reset mid-run
   for(i=0;i<N/4;i=i+1) @(posedge wr_clk);
+  $display("SHP_INVARIANT checks=%0d errors=%0d release_to_first_fire_min_wr_edges=%0d", inv_chk, inv_err, mg_min);
+  errs = errs + inv_err;
   if(errs==0 && pops>1000) $display("SHP_LOCKSTEP PASS WIDTH=%0d DEPTH=%0d SW=%0d checks=%0d pops=%0d", WIDTH, DEPTH, SW, checks, pops);
   else $display("SHP_LOCKSTEP FAIL MUT=%0d errors=%0d checks=%0d pops=%0d", MUT, errs, checks, pops);
   $finish;
