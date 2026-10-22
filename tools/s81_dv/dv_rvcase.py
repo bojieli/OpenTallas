@@ -951,6 +951,17 @@ def main():
                     help='STW-S81c-DIE-C23 cap23: a die clock root whose placed sink bbox has a side > this (or a half '
                          'perimeter > 1.5x this) is split into geometric sub-regions (bisection at the bbox middle) with '
                          'one entry buffer each, all in one build.py balance_group (shared TT/FF target); 0 = off')
+    ap.add_argument('--dieclk-pin-split', action='store_true',
+                    help='STW-S81c-DIE3-C28 cap28: the --dieclk-split-um bisection and every entry-buffer anchor use the '
+                         'REAL sink clock-pin positions (view LEF pin + placed orientation; small cells: centre) instead of '
+                         'the instance centre (cap24/26: a slice macro pin 3.2 mm from its macro centre gave '
+                         'ck_sl_s_2N_C_r2 a 3,644-um sink bbox / 5.2-ns model; 1-sink CAP roots sat on the macro centre)')
+    ap.add_argument('--dieclk-ckr-reserve', action='store_true',
+                    help='STW-S81c-DIE3-C28 cap28: every entry buffer ckr_* gets a reserved obstacle-free site at its region '
+                         'anchor before any spread: anchor pushed out of the macro / reserve it falls in, then the Python '
+                         'placer (blocks, reserves, stations, landings, resets, forwards) gives the nearest free site; '
+                         'Tcl places the ckr cells FIRST (before ties / rfw) and FIRM (cap24 MAIN: spread displaced the 918 '
+                         'roots mean 266 / max 1,431 um, 593 started on an obstacle)')
     a = ap.parse_args()
     # ROOT14 10-20 (COORD 21:29 (a)): TT setup + FF hold on every die build, diagnostic ones included
     a.corners = DSC.required(a.corners)
@@ -1480,21 +1491,76 @@ def main():
             else:
                 m_ = (max(ys_) + min(ys_)) / 2; A_ = [q for q in items if q[1][1] <= m_]; B_ = [q for q in items if q[1][1] > m_]
             return _bisect(A_) + _bisect(B_)
+        # C28 --dieclk-pin-split: real sink clock-pin position of instance o on root net p_ (LEF pin + orientation)
+        _lefc = {}
+        pin_src = collections.Counter()
+
+        def _sink_xy(o, p_):
+            cell = scell.get(o) if kind.get(o) == 'standin' else mst_of.get(o)
+            if not a.dieclk_pin_split or not cell or o not in loc:
+                return centre[o]
+            if cell not in _lefc:
+                lp_ = out / 'views' / f'{cell}.lef'
+                _lefc[cell] = lef_pins(lp_)[1] if lp_.exists() else None
+            pins_ = _lefc[cell]
+            if not pins_:
+                pin_src['centre'] += 1
+                return centre[o]
+            pts_ = []
+            for pn_, bl_ in ibits.get(o, {}).items():
+                w_ = len(bl_)
+                for k_, b_ in enumerate(bl_):
+                    if b_[0] != p_:
+                        continue
+                    q_ = pins_.get(f'{pn_}[{w_ - 1 - k_}]') or pins_.get(pn_)
+                    if q_:
+                        qx_, qy_ = orient_point(q_[0], q_[1], loc[o][2], loc[o][3], orientations.get(o, 'R0'))
+                        pts_.append((loc[o][0] + qx_, loc[o][1] + qy_))
+            if not pts_:
+                pin_src['centre_nopin'] += 1
+                return centre[o]
+            pin_src['pin'] += 1
+            return (sum(q[0] for q in pts_) / len(pts_), sum(q[1] for q in pts_) / len(pts_))
+        # C28 --dieclk-ckr-reserve: anchor -> outside every macro / reserve -> nearest free placer site
+        brect_ = [(b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']) for b in blocks.values()] + \
+                 [(r['x'], r['y'], r['x'] + r['w'], r['y'] + r['h']) for r in reserves]
+        CKW, CKH = 1.62, 0.27
+        ckr_res = []
+
+        def _anchor(x, y, g=3.0):
+            if not a.dieclk_ckr_reserve:
+                return x, y
+            x0_, y0_ = x, y
+            for _ in range(6):
+                hit = next((r for r in brect_ if r[0] - g < x < r[2] + g and r[1] - g < y < r[3] + g), None)
+                if hit is None:
+                    break
+                d_, f_ = min((x - (hit[0] - g), 'W'), ((hit[2] + g) - x, 'E'), (y - (hit[1] - g), 'S'), ((hit[3] + g) - y, 'N'))
+                if f_ == 'W': x = hit[0] - g
+                elif f_ == 'E': x = hit[2] + g
+                elif f_ == 'S': y = hit[1] - g
+                else: y = hit[3] + g
+            px_, py_, dd_ = placer.put(x - CKW / 2, y - CKH / 2, CKW, CKH, step=1.0, rmax=600.0)
+            cx_, cy_ = px_ + CKW / 2, py_ + CKH / 2
+            ckr_res.append((abs(cx_ - x0_) + abs(cy_ - y0_), dd_ is None))
+            return cx_, cy_
         for p_ in dieclk_ports:
             per = float(domains_.get(p_, {}).get('period_ps', T_PS))
-            items = sorted((o, centre[o]) for o in set(touch[p_]) if o in centre and o != f'ckr_{p_}')
+            items = sorted((o, _sink_xy(o, p_)) for o in set(touch[p_]) if o in centre and o != f'ckr_{p_}')
             parts = _bisect(items) if S_ > 0 and items else [items]
             if len(parts) == 1:
                 pts = sorted(q for _, q in items)
                 xs = sorted(q[0] for q in pts); ys = sorted(q[1] for q in pts)
-                rows_.append(f'ckr_{p_} {xs[len(xs) // 2]:.3f} {ys[len(ys) // 2]:.3f}\n')
+                ax_, ay_ = _anchor(xs[len(xs) // 2], ys[len(ys) // 2])
+                rows_.append(f'ckr_{p_} {ax_:.3f} {ay_:.3f}\n')
                 trees_.append(dict(name=p_, root=f'ckr_{p_}/Y', period=per, select='all'))
                 continue
             boxes = []
             for j, part in enumerate(parts):
                 xs = sorted(q[0] for _, q in part); ys = sorted(q[1] for _, q in part)
                 en = f'ckr_{p_}' if j == 0 else f'ckr_{p_}_r{j}'
-                rows_.append(f'{en} {xs[len(xs) // 2]:.3f} {ys[len(ys) // 2]:.3f}\n')
+                ax_, ay_ = _anchor(xs[len(xs) // 2], ys[len(ys) // 2])
+                rows_.append(f'{en} {ax_:.3f} {ay_:.3f}\n')
                 trees_.append(dict(name=p_ if j == 0 else f'{p_}_r{j}', root=f'{en}/Y', period=per, select='all', balance_group=p_))
                 boxes.append([round(xs[0], 1), round(ys[0], 1), round(xs[-1], 1), round(ys[-1], 1), len(part)])
                 for o, _ in part:
@@ -1516,14 +1582,24 @@ def main():
                         ln = re.sub(r'(?<![\w$])ckrn_' + re.escape(p_) + r'(?![\w$\[])', f'ckrn_{p_}_r{j}', ln)
                     body[k_] = ln
         (out / 'ckr_place.txt').write_text(''.join(rows_))
-        print('DIECLK_SPLIT', json.dumps(dict(split_um=S_, roots_split=len(split_info),
-                                              sub_regions=sum(len(v) for v in split_info.values()))), flush=True)
+        print('DIECLK_SPLIT', json.dumps(dict(split_um=S_, roots_split=len(split_info), pin_split=a.dieclk_pin_split,
+                                              sink_xy=dict(pin_src), sub_regions=sum(len(v) for v in split_info.values()))), flush=True)
+        ckr_reserve = None
+        if ckr_res:
+            dv_ = sorted(d for d, _ in ckr_res)
+            ckr_reserve = dict(entries=len(ckr_res), anchor_to_site_mean_um=round(sum(dv_) / len(dv_), 1),
+                               anchor_to_site_max_um=round(dv_[-1], 1), over_50um=sum(d > 50 for d in dv_),
+                               no_free_site=sum(f for _, f in ckr_res))
+            print('DIECLK_CKR_RESERVE', json.dumps(ckr_reserve), flush=True)
+            if ckr_reserve['no_free_site']:
+                raise SystemExit(f"dv_rvcase: --dieclk-ckr-reserve: {ckr_reserve['no_free_site']} entry buffers without a free site")
         (out / 'dieclk_spec.json').write_text(json.dumps(dict(
             trees=trees_, rc_layer=M8['sta_wire_rc_layer'], safe_tree=True, grid_center=True,
             note='C22 regional die clock trees: one tree per die clock root port, rooted at its entry buffer ckr_<root>; '
                  'no balance_group (regions are balanced inside; region crossings are landed / neighbour-judged)'), indent=1))
         dieclk_info = dict(roots=len(dieclk_ports), iters=a.dieclk_iters, spec='dieclk_spec.json', split_um=a.dieclk_split_um,
                            roots_split=len(split_info), entries=len(rows_), split=split_info,
+                           pin_split=a.dieclk_pin_split, ckr_reserve=ckr_reserve,
                            tool=f'{a.dcc_ref}:tools/die_clock/build.py (safe tree, grid_center, two-corner TT/FF trim)')
     hdr = [f'// S81-DIE7 REAL-VIEW die case netlist from {a.bind_dir / "die.v"} (tools/s81_dv/dv_rvcase.py): bound instances, '
            'stand-in cells rv_* where no closed view, constant bits driven by TIEHI/TIELO cells tie_tz_*',
@@ -1757,13 +1833,25 @@ proc ot_rv_place_ckr {listfile report} {
   set left [ot_die_rep_spread $cells $report 0.30 8.64 0.60 3]
   foreach v {::ot_die_rep_slw ::ot_die_rep_obs ::ot_die_rep_occ ::ot_die_rep_onobs ::ot_die_rep_maxdisp} { unset -nocomplain $v }
   array unset ::ot_die_rep_ob
-  puts "OT_CKR placed=[llength $cells] missing=$bad unplaced=$left"; flush stdout
+  set nfirm 0
+  if {[info exists ::ot_ckr_firm] && $::ot_ckr_firm} { foreach ci $cells { if {[$ci isPlaced]} { $ci setPlacementStatus FIRM; incr nfirm } } }
+  puts "OT_CKR placed=[llength $cells] missing=$bad unplaced=$left firm=$nfirm"; flush stdout
   return [expr {$bad + $left}]
 }
 ''')
-        ckr_step = ('source /work/die_repeaters.tcl\nsource /work/ckr_place.tcl\n'
+        ckr_step = (f'set ::ot_ckr_firm {int(bool(a.dieclk_ckr_reserve))}\n'
+                    'source /work/die_repeaters.tcl\nsource /work/ckr_place.tcl\n'
                     'if {[ot_rv_place_ckr /work/ckr_place.txt /work/out/ckr_spread.json] != 0} { puts "OT_CKR_PLACE_FAIL"; exit 4 }\n')
-        (out / 'run_place.tcl').write_text(head_ + ckr_step + sep_ + 'puts OT_PLACE_DONE\n')
+        if a.dieclk_ckr_reserve:
+            # C28: the reserved ckr sites are claimed FIRST (right after the legal cluster placement), before the tie and
+            # rfw spreads can take them, and stay FIRM
+            k_ = 'puts "OT_CLUSTER_LEGAL place"\n'
+            if head_.count(k_) != 1:
+                raise SystemExit('dv_rvcase: --dieclk-ckr-reserve: run.tcl has no single OT_CLUSTER_LEGAL split point')
+            h1_, _, h2_ = head_.partition(k_)
+            (out / 'run_place.tcl').write_text(h1_ + k_ + ckr_step + h2_ + sep_ + 'puts OT_PLACE_DONE\n')
+        else:
+            (out / 'run_place.tcl').write_text(head_ + ckr_step + sep_ + 'puts OT_PLACE_DONE\n')
         std_tt_ = ' '.join(STD_CORNERS['tt'])
         tcl = (f'''# S81-DIE7 REAL-VIEW die case, session 2 (C22 --dieclk): clocked ODB from tools/die_clock/build.py -> repeaters -> GRT
 foreach f {{{std_tt_}}} {{ read_liberty {PLAT}/lib/NLDM/asap7sc7p5t_$f }}
