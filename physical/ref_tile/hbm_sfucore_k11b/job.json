@@ -1,0 +1,220 @@
+{
+ "name": "hbm_sfucore_k11b-k11b-COMMIT",
+ "block": "ot_hgi_sfu_core_split3l",
+ "ref_tile": true,
+ "owner": "CODEX-HBM-HC-2000",
+ "purpose": "k11b (HBMb/HC-SFU 10-21, FALLBACK) = k10b + FPIPE=1 (PD-AUDIT (1)): k9y reg2reg -18.5 ns g_lane[15].u_sfu/rd_addr -> u_engine.u_memory store_fault = combinational 16-lane range/source/scalar gather into one flop across 1.9 mm; now per-lane registered partials + ot_hgi_sfu_fault_tree (lane -> pair -> side -> 2 relays, hops <= ~405 um) for the store fault AND the engine lane_fault/lane_coll gather; sticky diagnostic fault rises +5 edges, no data/schedule edge moves. Floorplan/pins/children/clock roots unchanged from k10b.",
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "codex/hbm-hc-sfu-2000",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/test/hbm_accel/generic",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/peers",
+   "rtl/hdc",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "tools/hbm_static",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/lib/ot_rst_kept_tree.sv"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_sfu_core_split3l #(.LWB(15), .LG_PATH(24), .BTREE(3), .BRING(0), .NATIVE32(1), .FPIPE(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_HARD_CHILDREN -DOT_SFU_SYNC_RST --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_arithmetic_grid.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_bcast_tree.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_engine.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_fault_tree.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_ring.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_c12.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_fdiv64.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fsqrt_c12.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split2.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split3.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_rst_kept_tree.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split3l.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_r23",
+    "cmd": "OUT={RUN}/bench/r23 SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_skip_pinreg",
+    "cmd": "OUT={RUN}/bench/skip SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/collect10_sfuc_1021/bench_witness/split_mutant_skip_pinreg.log"
+   },
+   {
+    "name": "split_mutant_clkpw",
+    "cmd": "OUT={RUN}/bench/clkpw SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=clkpw bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/clkpw/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/collect10_sfuc_1021/bench_witness/split_mutant_clkpw.log"
+   },
+   {
+    "name": "split_mutant_nodrainpipe",
+    "cmd": "OUT={RUN}/bench/nodrainpipe SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=nodrainpipe bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/nodrainpipe/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/collect10_sfuc_1021/bench_witness/split_mutant_nodrainpipe.log"
+   },
+   {
+    "name": "split_mutant_gclk",
+    "cmd": "OUT={RUN}/bench/gclk SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=gclk bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/gclk/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/collect10_sfuc_1021/bench_witness/split_mutant_gclk.log"
+   },
+   {
+    "name": "split_mutant_wpskew",
+    "cmd": "OUT={RUN}/bench/wpskew SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=wpskew bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/wpskew/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/collect10_sfuc_1021/bench_witness/split_mutant_wpskew.log"
+   },
+   {
+    "name": "split_mutant_wrot",
+    "cmd": "OUT={RUN}/bench/wrot SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=wrot bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/wrot/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/collect10_sfuc_1021/bench_witness/split_mutant_wrot.log"
+   },
+   {
+    "name": "split_mutant_rsttree",
+    "cmd": "OUT={RUN}/bench/rsttree SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=rsttree bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/rsttree/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/collect10_sfuc_1021/bench_witness/split_mutant_rsttree.log"
+   },
+   {
+    "name": "split_mutant_tree4",
+    "cmd": "OUT={RUN}/bench/tree4 SFU_LG_R=23 CORE3=1 CORE3L=1 SYNC_RST=1 K9X_BTREE=3 K9X_BRING=0 NATIVE32=1 FPIPE=1 EQ_MUT=tree4 bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/tree4/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ],
+    "fail_witness": "results/rtl/collect10_sfuc_1021/bench_witness/split_mutant_tree4.log"
+   },
+   {
+    "name": "fault_pipe",
+    "cmd": "OUT={RUN}/bench/fault_pipe bash tools/hbm_static/run_sfu_fault_pipe.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_FAULT_PIPE MUT_DROP13 REJECTED",
+    "min_count_regex": "PASS SFU_FAULT_PIPE episodes=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_sfucore_k11b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_sfucore_k11b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_sfucore_k11b --out {RUN}/record/views/ot_hgi_sfu_core_split3l --macro-view physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 --macro-view physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_sfucore_k11b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/ref_tile/sfu_lane_ring3_rt/views/ot_su12_sfu"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_sfucore_k11b/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_sfucore_k11b/hbm_sfucore_k11b-k11b-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "k11b (HBMb/HC-SFU 10-21, FALLBACK) = k10b + FPIPE=1 (PD-AUDIT (1)): k9y reg2reg -18.5 ns g_lane[15].u_sfu/rd_addr -> u_engine.u_memory store_fault = combinational 16-lane range/source/scalar gather into one flop across 1.9 mm; now per-lane registered partials + ot_hgi_sfu_fault_tree (lane -> pair -> side -> 2 relays, hops <= ~405 um) for the store fault AND the engine lane_fault/lane_coll gather; sticky diagnostic fault rises +5 edges, no data/schedule edge moves. Floorplan/pins/children/clock roots unchanged from k10b."
+}
