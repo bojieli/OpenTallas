@@ -24,7 +24,7 @@ class PortClockBind(unittest.TestCase):
  def link(self,port,source=True):
   ends=[[0,port,0,0,'box'],[1,'i',100,0,'box']] if source else [[1,'o',100,0,'box'],[0,port,0,0,'box']]
   return dict(i='clock_probe',e=ends)
- def emitted(self,wrong=False,zero=False,forwarded=False,prune=None):
+ def emitted(self,wrong=False,zero=False,forwarded=False,prune=None,force_zero=False):
   table=copy.deepcopy(self.table)
   table.setdefault('clock_regions', {'mode':'logical'})
   table['landing_reset_stages']={'dsfd_dvland_276':2}
@@ -73,7 +73,10 @@ class PortClockBind(unittest.TestCase):
   self.last_reset=reset
   with tempfile.TemporaryDirectory() as td:
    root=Path(td);tp=root/'table.json';tp.write_text(json.dumps(table))
-   with patch.object(D,'reset_tree',return_value=reset):D.emit(plan,root/'out',tp,dirs,chains,run_bind=False)
+   lp=None
+   if force_zero:
+    lp=root/'land.json';lp.write_text(json.dumps({'links':[{'link':l['i'],'E':2,'K':2,'D':4,'force_landing':True} for l in links]}))
+   with patch.object(D,'reset_tree',return_value=reset):D.emit(plan,root/'out',tp,dirs,chains,run_bind=False,land_plan=lp)
    return (root/'out/die.v').read_text()
  def test_production_emission_A_A_B_B_C(self):
   text=self.emitted()
@@ -85,6 +88,20 @@ class PortClockBind(unittest.TestCase):
   self.assertTrue(any('.ck(ck_A)' in line for line in calendars))
   self.assertTrue(any('.ck(ck_B)' in line for line in calendars))
   self.assertTrue(any('.ck(ck_C)' in line for line in calendars))
+ def test_zero_station_real_landing_uses_source_wire_and_gated_source_root(self):
+  text=self.emitted(zero=True,force_zero=True)
+  for i,root in enumerate(('ck_A','ck_A','ck_B','ck_B')):
+   self.assertRegex(text,rf'dsfd_dvland_276 ld_lo{i} .*\.i\(w_lo{i}_src\)')
+   self.assertRegex(text,rf'dsfd_dvland_276 ld_li{i} .*\.ck\({root}\)')
+   self.assertRegex(text,rf'fwd_lo{i} \(\.CLK\({root}\)')
+   self.assertIn(f'wire [0:0] nlo{i}_fck;',text)
+ def test_explicit_xc_lane_identity_is_invariant_under_physical_projection(self):
+  rule={'kind':'xc','port':'xc','lane':276,'ck':'ck_xc','lane_by_link':{'x_f_1L02_l0':8}}
+  e=('xf','o',276,'x_f_1L02_l0',10,5,'f_1L02')
+  for y in (0,10000):
+   moved=(*e[:5],y,e[6])
+   self.assertEqual(D.place_lane(rule,moved,[],{'y':0,'h':100}), (8,'xc',276,('ck_xc',8)))
+  with self.assertRaises(KeyError):D.place_lane(rule,(*e[:3],'missing',*e[4:]),[],{'y':0,'h':100})
  def test_production_zero_hop_forwarding_roots(self):
   text=self.emitted(zero=True)
   for i,root in enumerate(('ck_A','ck_A','ck_B','ck_B')):

@@ -291,6 +291,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     lp = land_plan or (ROOT / T['land_plan'] if T.get('land_plan') else None)
     land_rows_plan = {r['link']: r for r in json.load(open(lp))['links']} if lp else {}
     land_e = {k: r['E'] for k, r in land_rows_plan.items()}
+    force_land = {k for k, r in land_rows_plan.items() if r.get('force_landing')}
     # TOK-S81-GAPS/G8R2 (10-19): frame lk straps (one 3-bit K per x lane, crs4 landing inside the receiving frame) are
     # DERIVED from the supplied land plan: K = max over the frame's x lanes of the plan K (E), no-station lanes 1, every
     # lane of the bundle at that K (bind table frame_lk rule).  The table's static strap_values are only cross-checked.
@@ -431,7 +432,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                         link_src[e[3]] = (w, None)
                     else:
                         w = dname(e[3])
-                        if rule.get('land') and chains_pts[e[3]] and b in LAND_W:
+                        if rule.get('land') and (chains_pts[e[3]] or e[3] in force_land) and b in LAND_W:
                             landings.append((n, e[3], b)); w = f'w_{e[3]}_lnd'
                         for rport, rlo, plo, nb in lr['split']:
                             c[rport].append((rlo, rlo + nb - 1, f'{w}[{plo + nb - 1}:{plo}]', nb))
@@ -448,7 +449,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                     b = e[2]
                     assert d == 'i' and len(es) == 1, (n, p, d)
                     w = dname(e[3])
-                    if rule.get('land') and chains_pts[e[3]] and b in LAND_W:
+                    if rule.get('land') and (chains_pts[e[3]] or e[3] in force_land) and b in LAND_W:
                         landings.append((n, e[3], b)); w = f'w_{e[3]}_lnd'
                     for rport, rlo, plo, nb in rule['split']:
                         c[rport].append((rlo, rlo + nb - 1, f'{w}[{plo + nb - 1}:{plo}]', nb))
@@ -471,7 +472,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                         c[ck[0]]  # make sure the clock output is connected
                 else:
                     w = dname(e[3])
-                    if rule.get('adapter') and chains_pts[e[3]]:
+                    if rule.get('adapter') and (chains_pts[e[3]] or e[3] in force_land):
                         # S81-DIE5: a landing with a static fixed-latency format adapter (e.g. dsfd_dvland_pvrd: P.V word
                         # -> slice band RD beat); its o is the full RTL port
                         landings.append((n, e[3], b, rule['adapter'], rule['out_w'], rule.get('adapter_straps', {})))
@@ -479,7 +480,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                         c[rport].append((0, rule['out_w'] - 1, w, rule['out_w']))
                         link_dst[e[3]] = w
                         continue
-                    if rule.get('land') and chains_pts[e[3]] and b in LAND_W:
+                    if rule.get('land') and (chains_pts[e[3]] or e[3] in force_land) and b in LAND_W:
                         landings.append((n, e[3], b))
                         w = f'w_{e[3]}_lnd'          # the landing's o, abutted to the block input
                     elif rule.get('land') and chains_pts[e[3]]:
@@ -599,7 +600,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         if nm in abut_links:
             continue
         v.append(f'  wire [{b - 1}:0] w_{nm}_src, w_{nm}_dst;')
-        if chains_pts[nm]:
+        if chains_pts[nm] or nm in force_land:
             v.append(f'  wire [{len(chains_pts[nm])}:0] n{nm}_fck;')
     # abutted faces (e.g. regional controller <-> HBM PHY): one full-width wire per peer port; instance k drives /
     # reads its slice [k*lane +: lane] (k = x order of the instances of the master)
@@ -856,7 +857,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         lm, ow, ast = (ad[0], ad[1], ad[2]) if ad else ((f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}'), b, {})
         v.append(f'  wire [{ow - 1}:0] w_{nm}_lnd;')
         xs_ = ''.join(f', .{sp}({sv})' for sp, sv in ast.items())
-        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck({endpoint_clock(T, blocks, reg, l_, False)}), .rs({land_rs[nm]}), '
+        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i({dname(nm)}), .ck({endpoint_clock(T, blocks, reg, l_, False)}), .rs({land_rs[nm]}), '
                  f".k({kw_}'d{k_}){xs_}, .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
         for sp in ast:
             if [lm, sp] not in straps:
@@ -925,7 +926,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         root_nm = same_as.get(nm, nm)                     # S81-DIE5: a broadcast lane reads its source lane's wire
         src, ck = link_src.get(root_nm, (f'w_{root_nm}_src', None))
         src = f'w_{root_nm}_src'
-        if not pts:
+        if not pts and nm not in gate_en:
             continue
         if root_nm in lane_spare:
             # lane quantised onto a relay master wider than its RTL payload: the spare top bits enter hop 0 as declared
