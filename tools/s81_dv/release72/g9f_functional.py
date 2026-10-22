@@ -58,7 +58,7 @@ def prepare(plan,table,manifest,wrapper_ref):
             di,d=blocks[dest]
             for lane in range(3):
                 # Place ports along the upper face in an existing free corridor.
-                sx=s['x']+s['w']*.5+lane*43.2;dx=d['x']+d['w']*.5+lane*43.2
+                sx=s['x']+s['w']*.5+lane*43.2;dx=d['x']+d['w']*.5+lane*43.2+(86.4 if kind=='local' else 0)
                 plan['links'].append(dict(i=f'pvso_{label}_{kind}_l{lane}',c='attn',b=276,d=1,
                     e=[[si,outport,sx,s['y']+s['h'],'box'],[di,'pvlocal' if kind=='local' else 'pvpeer',dx,d['y']+d['h'],'box']],
                     endpoint_faces=['N','N'],n='Actual P.V broadcast; three parallel lanes, 562 live bits plus 266 declared spares'))
