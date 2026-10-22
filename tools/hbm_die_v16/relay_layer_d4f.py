@@ -65,28 +65,61 @@ DEPS_LANE = ['rtl/hbm_accel/die_glue/ot_hbm_lane.sv', 'rtl/qwen_split/qfd_fwd_la
 CFG_LEAF = re.compile(r'ot_hbm_host_cfg_leaf\w*$')
 CFG_LEAF_WORD = re.compile(r'([ab])_(cfg_|desc_)')
 CFG_LEAF_LAUNCH = re.compile(r'([ab])_launch_v$')
+# HBMc/CHAIN-ING 10-21: the host ingress itself (exact master, die_relay_stations.ING_OBS): its cfg_*/desc_* ports are one
+# word (copy letter 'i'), launch_v its launch; the status join (GUARD_SINKS) snooping the word must see it no earlier than
+# any target (CFG-GUARD floor + CFG-GUARD-ORDER), else its readiness GUARD expires before far targets re-validate.
+ING_OBS = 'ot_hbm_host_static_ingress_obs'
+ING_WORD = re.compile(r'(cfg_|desc_)')
+GUARD_SINKS = ('ot_hbm_status_join_fa', 'ot_hbm_status_join')
+
+
+def cfg_port(master, port):
+    """(copy letter, 'word' | 'launch') of a host cfg broadcast driver port, or None"""
+    if CFG_LEAF.match(master or ''):
+        mw, ml = CFG_LEAF_WORD.match(port), CFG_LEAF_LAUNCH.match(port)
+        if mw or ml:
+            return (mw or ml).group(1), 'word' if mw else 'launch'
+    elif master == ING_OBS:
+        if ING_WORD.match(port):
+            return 'i', 'word'
+        if port == 'launch_v':
+            return 'i', 'launch'
+    return None
 
 
 def port_key(master, cls, driver_port, sink_port):
     """(driver port, sink port) identity of one functional path for PORT-AGE alignment"""
-    m = CFG_LEAF_WORD.match(driver_port)
-    if cls == 'cfg_no_pad' and m and CFG_LEAF.match(master or ''):
-        return m.group(1) + '_cfgword', 'cfgword'
+    cp = cfg_port(master, driver_port)
+    if cls == 'cfg_no_pad' and cp and cp[1] == 'word':
+        return (cp[0] + '_cfgword' if cp[0] != 'i' else 'cfgword'), 'cfgword'
     return driver_port, sink_port
 
 
 def leaf_copy_rows(rows, master_of):
-    """{(leaf instance, copy letter): ([word row indices], [launch row indices])} for the host cfg leaf copy rows"""
+    """{(leaf/ingress instance, copy letter): ([word row indices], [launch row indices])} for the host cfg broadcast rows"""
     out = collections.defaultdict(lambda: ([], []))
     for bi, r in enumerate(rows):
         di, ps = r['driver'].split('.', 1)
-        if not CFG_LEAF.match(master_of.get(di) or ''):
-            continue
         for p in ps.split('+'):
-            mw, ml = CFG_LEAF_WORD.match(p), CFG_LEAF_LAUNCH.match(p)
-            if mw or ml:
-                out[di, (mw or ml).group(1)][0 if mw else 1].append(bi)
+            cp = cfg_port(master_of.get(di), p)
+            if cp:
+                out[di, cp[0]][0 if cp[1] == 'word' else 1].append(bi)
                 break
+    return out
+
+
+def guard_floor(words, eff, is_guard):
+    """pads the GUARD sink(s) of a cfg word need so that each sees every word row no earlier than the latest target.
+    eff as launch_floor; is_guard(sink) -> bool.  Returns {(row, guard sink): deficit}"""
+    tgt, out = 0, {}
+    for wb in words:
+        for s_, a_ in eff(wb):
+            if a_ is not None and not is_guard(s_):
+                tgt = max(tgt, a_)
+    for wb in words:
+        for s_, a_ in eff(wb):
+            if a_ is not None and is_guard(s_) and a_ < tgt:
+                out[wb, s_] = tgt - a_
     return out
 
 
@@ -111,15 +144,13 @@ def cfg_launch_order(consts, master_of, model=None):
     word, launch = collections.defaultdict(dict), collections.defaultdict(dict)
     for x in consts:
         di, ports = x['driver'].split('.', 1); ports = ports.split('+')
-        if not CFG_LEAF.match(master_of.get(di) or ''):
-            continue
         for p in ports:
-            mw, ml = CFG_LEAF_WORD.match(p), CFG_LEAF_LAUNCH.match(p)
-            tgt = word if mw else launch if ml else None
-            if tgt is None:
+            cp = cfg_port(master_of.get(di), p)
+            if cp is None:
                 continue
+            tgt = word if cp[1] == 'word' else launch
             for s_, e_ in (x.get('sink_edges') or {}).items():
-                key = (di, (mw or ml).group(1))
+                key = (di, cp[0])
                 if e_ is None and model:   # --land without E: the PORT-AGE-LAND diagnostic model (E = 1)
                     e_ = model.get((x.get('bus'), s_))
                 if e_ is not None:
@@ -129,9 +160,16 @@ def cfg_launch_order(consts, master_of, model=None):
         L = launch.get(key, {})
         for s_, a_ in sorted(w.items()):
             l_ = L.get(s_)
-            rows.append(dict(leaf=key[0], copy=key[1], sink=s_, word_edges=a_, launch_edges=l_))
+            rows.append(dict(leaf=key[0], copy=key[1], sink=s_, word_edges=a_, launch_edges=l_,
+                             guard=master_of.get(s_) in GUARD_SINKS))
             if l_ is not None and l_ < a_:   # no launch path = a cfg-only receiver (e.g. ot_hbm_pc_refresh_cfg): no order
                 probs.append(f'CFG-LAUNCH-ORDER {key[0]}.{key[1]}_launch_v -> {s_}: launch {l_} < cfg word {a_} edges')
+        # HBMc/CHAIN-ING 10-21 CFG-GUARD-ORDER: the status join (GUARD sink) sees the word no earlier than any target
+        g_ = {s_: a_ for s_, a_ in w.items() if master_of.get(s_) in GUARD_SINKS}
+        t_ = [a_ for s_, a_ in w.items() if s_ not in g_]
+        for s_, a_ in sorted(g_.items()):
+            if t_ and a_ < max(t_):
+                probs.append(f'CFG-GUARD-ORDER {key[0]}.{key[1]} word -> {s_}: guard join {a_} < latest target {max(t_)} edges')
     return probs, rows
 
 
@@ -332,7 +370,12 @@ def main():
         if s_ is None:
             return [(x_, port_eff[b_, x_] + port_pad[b_, x_]) for x_ in st['rows'][b_]['sinks'] if (b_, x_) in port_eff]
         return port_eff[b_, s_] + port_pad[b_, s_] if (b_, s_) in port_eff else None
+    _is_guard = lambda s_: (inst.get(s_) or {}).get('master') in GUARD_SINKS
     for (di_, c_), (wbs_, lbs_) in sorted(leaf_rows.items()):
+        # HBMc/CHAIN-ING CFG-GUARD floor first (the join's word age may rise), then the launch floor sees the final word ages
+        for (wb_, s_), d_ in guard_floor(wbs_, _plain_eff, _is_guard).items():
+            port_pad[wb_, s_] += d_
+            notes.append(f'CFG-GUARD floor: {st["rows"][wb_]["driver"]} -> {s_} +{d_} stages (plain)')
         for lb_, d_ in launch_floor(wbs_, lbs_, _plain_eff).items():
             for s_ in st['rows'][lb_]['sinks']:
                 port_pad[lb_, s_] += d_
@@ -640,6 +683,9 @@ def main():
                 return [(k_[1], age(k_)) for k_ in land_by_key if k_[0] == t_]
             return age((t_, s_)) if (t_, s_) in land_by_key else None
         for (di_, c_), (wbs_, lbs_) in sorted(leaf_rows.items()):
+            for (wb_, s_), d_ in guard_floor(wbs_, _land_eff, _is_guard).items():
+                extra[f'rf{wb_:04d}', s_] += d_
+                notes.append(f'CFG-GUARD floor: {st["rows"][wb_]["driver"]} -> {s_} +{d_} stages (landed)')
             for lb_, d_ in launch_floor(wbs_, lbs_, _land_eff).items():
                 for s_, _a in _land_eff(lb_):
                     extra[f'rf{lb_:04d}', s_] += d_
@@ -677,7 +723,7 @@ def main():
               for x in land_rows} if a.land else None
     cl_probs, cl_rows = cfg_launch_order(consts, {k: v.get('master') for k, v in inst.items()}, _model)
     problems += cl_probs
-    notes.append(f'CFG-LAUNCH-ORDER: {len(cl_rows)} leaf copy sinks checked, {len(cl_probs)} launch-before-word')
+    notes.append(f'CFG-LAUNCH-ORDER: {len(cl_rows)} leaf copy sinks checked, {len(cl_probs)} launch-before-word / guard-before-target')
     eq = collections.defaultdict(int)
     for x in consts:
         if x['cls'] == 'equal_age_pad':
