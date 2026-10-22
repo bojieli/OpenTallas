@@ -1,9 +1,9 @@
 # C7: adaptive <=40um leaf span and complete stage accounting for unequal tree depth.
 # PC15 structural full clock tree, includes real macro capture clock entries.
-set ::ot_sv_depth 7
+set ::ot_sv_depth 8
 set ::ot_sv_leaf_span_um 40
-set ::ot_sv_rep_um 80
-set ::ot_sv_eq_window_ps 35
+set ::ot_sv_rep_um 55
+set ::ot_sv_eq_window_ps 25
 # SQK-PROMPT 10-21: qkd_hr_core_prompt_n34a/n34b (MU4 ps3 native32, 475.2x432) boundary clock branch -- unchanged copy of
 # physical/ref_tile/qkd_hr_core_prompt/bnd_branch.tcl (p5..p8: count-median split depth 6 + leaf-delay equalisation; p8 TT/FF
 # pin-flop spread 44.9/41.6).  ck_core = core_clk in clock.sdc.
@@ -53,7 +53,7 @@ set ::ot_sv_eq_window_ps 35
 if {![info exists ::ot_sv_depth]}  { set ::ot_sv_depth 6 }
 if {![info exists ::ot_sv_port]}   { set ::ot_sv_port ck_core }
 if {![info exists ::ot_sv_gap_um]} { set ::ot_sv_gap_um 1000000 }
-if {![info exists ::ot_sv_rep_um]} { set ::ot_sv_rep_um 80 }
+if {![info exists ::ot_sv_rep_um]} { set ::ot_sv_rep_um 55 }
 if {![info exists ::ot_sv_master]} { set ::ot_sv_master BUFx24_ASAP7_75t_R }
 
 proc ot_sv_bnd_regs {clk} {
@@ -190,7 +190,7 @@ proc ot_sv_emit_root {t net x y} {
 }
 # KV-HROOT-PROMPT: leaf-delay equalization: after the geometric tree, pad every leaf that arrives earlier than (latest leaf - window)
 # with buffers at the leaf (measured step), so leaf arrivals differ by <= window instead of by the wire-length spread.
-if {![info exists ::ot_sv_eq_window_ps]} { set ::ot_sv_eq_window_ps 35 }
+if {![info exists ::ot_sv_eq_window_ps]} { set ::ot_sv_eq_window_ps 25 }
 if {![info exists ::ot_sv_eq_master]}    { set ::ot_sv_eq_master BUFx4_ASAP7_75t_R }
 if {![info exists ::ot_sv_eq_iters]}     { set ::ot_sv_eq_iters 4 }
 proc ot_sv_emit {t pnet px py budget} {
