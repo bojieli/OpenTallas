@@ -481,7 +481,8 @@
    "results/arch/codex_qw_a0_localreq_2000_1021",
    "tools/qwen_romleaf/rc16_2000",
    "rtl/physical/a0_rc16_selected_2000",
-   "results/arch/codex_qw_a0_kfirst_2000_1021"
+   "results/arch/codex_qw_a0_kfirst_2000_1021",
+   "results/arch/codex_qw_a0_fanout_2000_1021"
   ],
   "views_to": "physical/ref_tile/qfd_tile_nk_romleaf_rc17b/views",
   "record_to": "results/rtl/ref_tile/qfd_tile_nk_romleaf_rc17b",
@@ -496,7 +497,7 @@
      "verilator"
     ],
     "pass_regex": "^ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560",
-    "pass_witness": "results/arch/codex_qw_a0_kfirst_2000_1021/parent_native_PASS.log"
+    "pass_witness": "results/arch/codex_qw_a0_fanout_2000_1021/parent_native_PASS.log"
    },
    {
     "name": "parent_native_leaf_clock_4",
@@ -508,7 +509,7 @@
      "verilator"
     ],
     "fail_regex": "ROMLEAF_PARENT_NK_NATIVE_FAIL|ROMLEAF_PARENT_NK_MISMATCH",
-    "fail_witness": "results/arch/codex_qw_a0_kfirst_2000_1021/parent_native_clock_MUT4_FAIL.log"
+    "fail_witness": "results/arch/codex_qw_a0_fanout_2000_1021/parent_native_clock_MUT4_FAIL.log"
    },
    {
     "name": "kfirst_predicate",
@@ -520,7 +521,7 @@
      "verilator"
     ],
     "pass_regex": "^KFIRST_PREDICATE_PASS checks41977216",
-    "pass_witness": "results/arch/codex_qw_a0_kfirst_2000_1021/predicate_PASS.log"
+    "pass_witness": "results/arch/codex_qw_a0_fanout_2000_1021/predicate_PASS.log"
    }
   ],
   "cycles_added": 0,

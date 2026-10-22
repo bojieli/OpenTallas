@@ -1,0 +1,20 @@
+ot-run: ot-epyc5       admits   571 GB (avail 668, growth 268, headroom 0, waiters 0/0 GB) load 54/128 running 27 disk 642 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-fanout-final-2000-1021
+ot-run: ot-epyc9       admits   556 GB (avail 439, growth 50, headroom 0, waiters 0/0 GB) load 88/128 running 37 disk 1710 GB 
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-fanout-final-2000-1021
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-fanout-final-2000-1021
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-fanout-final-2000-1021
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-qw-a0-fanout-final-2000-1021
+ot-run: -> ot-epyc5
+Verilator 5.050 2026-07-01 rev v5.050
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2739581-1792649836 after 1 s
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 5.162 MB sources in 91 modules, into 0.021 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 2.853 s (elab=0.348, cvt=2.445, bld=0.000); cpu 2.853 s on 1 threads; allocated 274.383 MB
+lint-ok
+A0_RC16_PRODUCTION_ELAB_PASS
+KFIRST_PREDICATE_PASS checks41977216 exhaustive_W18_K262144_W16_K65536_split64_modes2 W1_W8_exhaustive W32_unsigned_boundaries
+ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560 leaves'{'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00, 'ha00}
+[6508000] %Fatal: tb_qwen_romleaf_parent_nk_native.sv:72: Assertion failed in tb_qwen_romleaf_parent_nk_native: ROMLEAF_PARENT_NK_NATIVE_FAIL MUT4 errors1200 checks6399 valids2560 nonzero2560
+A0_RC16_REQUIRED_NATIVE_OBLIGATIONS_PASS
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2739581-1792649836): exit 0

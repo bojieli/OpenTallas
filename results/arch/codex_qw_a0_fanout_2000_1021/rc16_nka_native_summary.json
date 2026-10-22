@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.pre_gate_native_census.v1",
+  "kit": "qfd_tile_nk_romleaf_rc16a",
+  "status": "FAIL",
+  "limit": 32,
+  "roots_examined": 147906,
+  "max_dynamic_loads": 36,
+  "netlist": {
+    "path": "/work/results/asap7/opentallas_qfd_tile_nk_rp2_romleaf_rr_asap7_ref_gate/base/1_2_yosys.v",
+    "sha256": "c62e09ccf356c75c02dd9acf4963fccbeabe51b0e23c087bdf2d5f6e56901638"
+  },
+  "violations": [
+    {
+      "driver": "_159878_/Y",
+      "net": "_084447_",
+      "loads": 36
+    }
+  ]
+}

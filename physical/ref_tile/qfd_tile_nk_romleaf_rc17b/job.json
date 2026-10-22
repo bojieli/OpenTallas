@@ -1,5 +1,5 @@
 {
- "name": "qfd_tile_nk_romleaf_rc17b-rc17b-COMMIT",
+ "name": "qfd_tile_nk_romleaf_rc17b-rc17b-46eeb8c61",
  "block": "qfd_tile_nk_rp2_romleaf_rr",
  "ref_tile": true,
  "owner": "Codex:CODEX-QW-A0-2000",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/qw-a0-fanout-2000-1021",
-  "commit": "COMMIT",
+  "commit": "46eeb8c61",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
@@ -44,7 +44,8 @@
    "results/arch/codex_qw_a0_localreq_2000_1021",
    "tools/qwen_romleaf/rc16_2000",
    "rtl/physical/a0_rc16_selected_2000",
-   "results/arch/codex_qw_a0_kfirst_2000_1021"
+   "results/arch/codex_qw_a0_kfirst_2000_1021",
+   "results/arch/codex_qw_a0_fanout_2000_1021"
   ]
  },
  "stages": {
@@ -69,7 +70,7 @@
      "verilator"
     ],
     "pass_regex": "^ROMLEAF_PARENT_NK_NATIVE_PASS checks6399 valids2560 nonzero2560",
-    "pass_witness": "results/arch/codex_qw_a0_kfirst_2000_1021/parent_native_PASS.log"
+    "pass_witness": "results/arch/codex_qw_a0_fanout_2000_1021/parent_native_PASS.log"
    },
    {
     "name": "parent_native_leaf_clock_4",
@@ -81,7 +82,7 @@
      "verilator"
     ],
     "fail_regex": "ROMLEAF_PARENT_NK_NATIVE_FAIL|ROMLEAF_PARENT_NK_MISMATCH",
-    "fail_witness": "results/arch/codex_qw_a0_kfirst_2000_1021/parent_native_clock_MUT4_FAIL.log"
+    "fail_witness": "results/arch/codex_qw_a0_fanout_2000_1021/parent_native_clock_MUT4_FAIL.log"
    },
    {
     "name": "kfirst_predicate",
@@ -93,7 +94,7 @@
      "verilator"
     ],
     "pass_regex": "^KFIRST_PREDICATE_PASS checks41977216",
-    "pass_witness": "results/arch/codex_qw_a0_kfirst_2000_1021/predicate_PASS.log"
+    "pass_witness": "results/arch/codex_qw_a0_fanout_2000_1021/predicate_PASS.log"
    }
   ],
   "calibrate": {
@@ -148,7 +149,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_nk_romleaf_rc17b/qfd_tile_nk_romleaf_rc17b-rc17b-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tile_nk_romleaf_rc17b/qfd_tile_nk_romleaf_rc17b-rc17b-46eeb8c61"
   }
  ],
  "cycles_added": 0,

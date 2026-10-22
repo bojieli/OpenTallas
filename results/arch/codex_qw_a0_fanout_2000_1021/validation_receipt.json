@@ -1,0 +1,14 @@
+{
+  "source": "46eeb8c61",
+  "fleet_host": "ot-epyc5",
+  "unit": "oth-ubuntu-2739581-1792649836",
+  "outer_exit": 0,
+  "production_elaboration": "PASS",
+  "predicate_checks": 41977216,
+  "mux_checks": 16384,
+  "parent_checks": 6399,
+  "parent_valid_nonzero": 2560,
+  "MUT4_expected_fail_errors": 1200,
+  "actual_native_source_hashes_matched": 31,
+  "scope": "Existing parent component and actual predicate/mux mechanism. Physical gates pending."
+}
