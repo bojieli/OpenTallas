@@ -29,11 +29,16 @@ write_json $d/mapped_$n.json
 write_verilog -noattr $d/mapped_$n.v
 tee -o $d/stat0_$n.txt stat
 YS
+# HBM-ELEM13/HC-TAIL 10-21: MAPPED=<base> reuses mapped_<base>.json (no re-synth); then the constant-identity fold
+# (tools/hbm_hc/const_identity_fold.py, native census rule 45386657d) before the cloner.
 date > $d/t_$n.txt
-yosys -q -l $d/a_$n.log a.ys > /dev/null 2>&1; echo "SYNTH_RC rc=$?" >> $d/a_$n.log; date >> $d/t_$n.txt
+if [ -n "${MAPPED:-}" ]; then cp $d/mapped_$MAPPED.json $d/mapped_$n.json; cp $d/mapped_$MAPPED.v $d/mapped_$n.v; else
+yosys -q -l $d/a_$n.log a.ys > /dev/null 2>&1; echo "SYNTH_RC rc=$?" >> $d/a_$n.log; fi; date >> $d/t_$n.txt
+LF=""; for f in $L/*.lib; do LF="$LF --liberty $f"; done
+python3 tools/hbm_hc/const_identity_fold.py $d/mapped_$n.json $d/folded_$n.json --top $top $LF > $d/fold_$n.log 2>&1; echo "FOLD_RC rc=$?" >> $d/fold_$n.log
 libs=""; for f in $L/*.lib; do libs="$libs --liberty $f"; done
 python3 tools/ref_tile/native_census.py --netlist $d/mapped_$n.v --top $top --out $d/census_p_$n.json $libs > $d/census_p_$n.log 2>&1; python3 $d/summ.py $d/census_p_$n.json > $d/summ_p_$n.txt 2>&1
-python3 tools/hbm_hc/bound_fanout_clone.py $d/mapped_$n.json --top $top --name ${top}_bfc --out $d/native_$n.v --limit 24 --tag sk_=g_skcp.sink. > $d/clone_$n.log 2>&1; echo "CLONE_RC rc=$?" >> $d/clone_$n.log; date >> $d/t_$n.txt
+python3 tools/hbm_hc/bound_fanout_clone.py $d/folded_$n.json --top $top --name ${top}_bfc --out $d/native_$n.v --limit 24 --tag sk_=g_skcp.sink. > $d/clone_$n.log 2>&1; echo "CLONE_RC rc=$?" >> $d/clone_$n.log; date >> $d/t_$n.txt
 cat > b.ys <<YS
 $RL
 read_verilog $d/native_$n.v
@@ -48,8 +53,8 @@ YS
 yosys -q -l $d/b_$n.log b.ys > /dev/null 2>&1; echo "RETAIN_RC rc=$?" >> $d/b_$n.log; date >> $d/t_$n.txt
 python3 tools/ref_tile/native_census.py --netlist $d/retained_$n.v --top ${top}_bfc --out $d/census_r_$n.json $libs > $d/census_r_$n.log 2>&1; python3 $d/summ.py $d/census_r_$n.json > $d/summ_r_$n.txt 2>&1
 python3 tools/hbm_hc/compact_netlist.py $d/retained_$n.v $d/tailc_$n.v --top $top --header "FAM-HBM-B/HCTAIL 10-21: GATE-LEVEL native netlist of ot_hbm_hc_tail_child_static SDIV $sdiv TPIPE $tp SKP $skp (SKCE 1). Cells sk_c<i> = the Sinkhorn (u_tail.g_skcp.sink).
-RTL @HCTAIL -> per-module ABC map (ASAP7 RVT TT) -> tools/hbm_hc/bound_fanout_clone.py --limit 24 --tag sk_=g_skcp.sink. -> retained re-synth -> tools/hbm_hc/compact_netlist.py.  Do not edit by hand: regenerate from the RTL." > $d/compact_$n.log 2>&1
+RTL @HCTAIL -> per-module ABC map (ASAP7 RVT TT) -> tools/hbm_hc/bound_fanout_clone.py --limit 24 --tag sk_=g_skcp.sink. -> constant-identity fold (tools/hbm_hc/const_identity_fold.py) before the cloner, retained re-synth -> tools/hbm_hc/compact_netlist.py.  Do not edit by hand: regenerate from the RTL." > $d/compact_$n.log 2>&1
 grep -c ' sk_c' $d/tailc_$n.v > $d/sk_count_$n.txt; grep -E '^\s+DFF\w+ sk_c' $d/tailc_$n.v | wc -l >> $d/sk_count_$n.txt; grep -o '\.CLK([^)]*)' $d/tailc_$n.v | sort | uniq -c > $d/clk_nets_$n.txt
 zcat results/rtl/fp32_add_native_clone_1020/final_packet/cells.v.gz > $d/cells_$n.v
 TC_OFF=$off TC_GAP=$gap BUILD_JOBS=16 bash rtl/test/run_hbm_hc_tail_child_eq.sh $d/out_nat_$n 0 48 1 $d/tailc_$n.v $d/cells_$n.v > $d/bench_nat_$n.log 2>&1; echo "BENCH_RC nat rc=$?" >> $d/bench_nat_$n.log
-cp $d/out_nat_$n/run.log $d/run_nat_$n.log 2>/dev/null; date >> $d/t_$n.txt; cd $d && rm -rf $d/s_$n $d/out_nat_$n; gzip -f $d/mapped_$n.json
+cp $d/out_nat_$n/run.log $d/run_nat_$n.log 2>/dev/null; date >> $d/t_$n.txt; cd $d && rm -rf $d/s_$n $d/out_nat_$n; gzip -f $d/mapped_$n.json $d/folded_$n.json
