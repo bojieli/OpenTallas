@@ -5470,6 +5470,23 @@
       32961.6,
       25617.600000000002
     ],
+    "runtime_placements": {
+      "mu_ctxrx": {
+        "before_xy": [
+          1555.2,
+          22809.6
+        ],
+        "after_xy": [
+          1555.2,
+          22852.8
+        ],
+        "wh": [
+          43.2,
+          97.2
+        ],
+        "knob": "CTXRX_XY / OT_SPLIT_DV_CTXRX_XY"
+      }
+    },
     "scope": "source geometry only; preserve reservations and clock endpoints; actual GEN decides all placement and transport",
     "source_plan_sha256": "251e22df8d5544019becc69bffd34fac285842523f8cf646c5f82923b8f317ba"
   }

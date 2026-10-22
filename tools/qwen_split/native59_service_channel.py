@@ -27,6 +27,7 @@ def expand(plan):
     out['native59_service_channel']=dict(schema='opentallas.qwen.native59_service_channel.v1',
         east_gap_um=[108,216],south_gap_um=[108,216],moved=moved,
         planned_die_um=outline,reticle_um=limits,source_instance_bounds_um=bounds,
+        runtime_placements={'mu_ctxrx':dict(before_xy=[1555.2,22809.6],after_xy=[1555.2,22852.8],wh=[43.2,97.2],knob='CTXRX_XY / OT_SPLIT_DV_CTXRX_XY')},
         scope='source geometry only; preserve reservations and clock endpoints; actual GEN decides all placement and transport')
     return out
 
@@ -47,6 +48,7 @@ def captured_model(plan,receipt):
         if i['n'] in ('d2d_rom','ucie_kv','ckb_rom','rs_bump','bump_fwd_epoch','bump_fwd_lrst'):y+=259.2
         if i['n']=='sys_face':x+=129.6
         macro.append((i['n'],(x,y,x+w,y+h)))
+    macro.append(('mu_ctxrx',(1555.2,22852.8,1598.4,22950.0)))
     rows=[]
     for s in receipt['terminal_sites']:
         a=s['site'];a=[a[0],a[1]+108,a[2],a[3]+108]
