@@ -40,7 +40,13 @@
       "1da5b6742"
     ],
     "physical_status": "live; no verdict",
-    "selected_die_profile": "LG_PATH15 unchanged; no candidate promotion"
+    "selected_die_profile": "LG_PATH15 unchanged; no candidate promotion",
+    "raw_evidence_sha256": {
+      "receipt.json": "914ec4e60d2436009f88103d0f9b83f4c8b81399ed07b60bf1cce937baf1324a",
+      "run.log": "b134cbec9906d3344d3cd1ff70ac7ab42844b0f505ab6d7fee606cf8306ff2ed",
+      "sources.sha256": "f7e5aab2ded9e95b56c75dc24994f64e233374d365056e2da9066bf7faf39d62",
+      "io_manifest.json": "3d55876dbabac6320feb37a3a459b06a44d66e2366246b838fc2fa5446786792"
+    }
   },
   "candidate_dma_load": {
     "latest_functional_source": "db8c1610329b89ec05ec25a4550edb42add3028c",
