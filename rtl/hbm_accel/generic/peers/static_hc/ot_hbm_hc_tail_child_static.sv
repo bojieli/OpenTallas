@@ -37,15 +37,22 @@ module ot_hbm_hc_tail_child_static #(
     parameter integer TPIPE = 0,
     parameter integer SKP = 0,
     parameter integer TR = TPIPE ? 271 : 198,          // os EREADY + 1 (ot_hgi_hc_tail_os_static calendar)
-    parameter integer L = TR + SDIV + CAP + 2
+    parameter integer L = TR + SDIV + CAP + 2,
+    // HBMc/HC-TAIL2 10-22 (k4b route, ORFS finish STA: core -> result[224] -487 ps, 252 of 770 output ports not anchored at
+    // their pins): result's low 256 bits come from final_result, a hold-mux register (D = capture ? t : Q) whose Q also
+    // feeds its own mux, so the IO-flop anchoring skips it and placement leaves it in the core (a 300 ps output wire).
+    // OPIPE 1 = one dedicated output pin stage: result / result_v / fault each land in a flop that drives only its pin.
+    // +1 edge: result_v at launch + L + 3 (k6: L 989 -> child offset over the unit 496 = root TX 494, TE 2).
+    // OPIPE 0 = unchanged.
+    parameter integer OPIPE = 0
 )(
     input  wire          clk, rst_n,
     input  wire          launch,
     input  wire [767:0]  mixes, bases,
     input  wire [95:0]   scales,
-    output reg           result_v,
+    output wire          result_v,
     output wire [767:0]  result,
-    output reg           fault
+    output wire          fault
 );
     // ---------------------------------------------------------------- regional reset (2-stage landing + kept roots)
     // HBM-HC7 10-20: the relay roots are async-reset by the port, so the gate-level cloner's copies of a relay root
@@ -80,14 +87,15 @@ module ot_hbm_hc_tail_child_static #(
     reg capture_q;
     ot_hgi_hc_tail_os_static #(.MUT_PRE(MUT_PRE), .MUT(MUT), .SKCE(SKCE), .SKP(SKP), .TPIPE(TPIPE)) u_tail (.clk(clk), .sink_clk(sclk), .rst_n(rst_core),
         .launch(launch_s), .mixes(i_mixes), .bases(i_bases), .scales(i_scales), .sink_launch(sl), .sink_capture(capture_q),
-        .e_ready(e_rdy), .result_v(tv), .result(result), .fault(tf));
+        .e_ready(e_rdy), .result_v(tv), .result(res_i), .fault(tf));
     reg own_fault, captured;
+    reg rv_i, flt_i; wire [767:0] res_i;
     always @(posedge clk or negedge rst_ctl) begin
-        if (!rst_ctl) begin active <= 0; sl <= 0; armed <= 0; age <= 0; sage <= 0; capture_q <= 0; result_v <= 0;
-                            own_fault <= 0; captured <= 0; fault <= 0; end
+        if (!rst_ctl) begin active <= 0; sl <= 0; armed <= 0; age <= 0; sage <= 0; capture_q <= 0; rv_i <= 0;
+                            own_fault <= 0; captured <= 0; flt_i <= 0; end
         else begin
-            capture_q <= 1'b0; result_v <= 1'b0;
-            fault <= own_fault | tf;
+            capture_q <= 1'b0; rv_i <= 1'b0;
+            flt_i <= own_fault | tf;
             if (active) age <= age + 1'b1;
             if (launch_s) begin
                 if (active) own_fault <= 1'b1;
@@ -101,10 +109,21 @@ module ot_hbm_hc_tail_child_static #(
                 if (sage == 10'(CAP)) begin capture_q <= 1'b1; captured <= 1'b1; end
             end
             if (active && age == 10'(L - 1)) begin
-                result_v <= 1'b1; active <= 1'b0;
+                rv_i <= 1'b1; active <= 1'b0;
                 if (!captured) own_fault <= 1'b1;
             end
         end
     end
+    // ---------------------------------------------------------------- output pin stage (OPIPE)
+    generate if (OPIPE != 0) begin : g_opin
+        reg [767:0] res_q; reg rv_q, flt_q;
+        always @(posedge clk) res_q <= res_i;
+        always @(posedge clk or negedge rst_ctl)
+            if (!rst_ctl) begin rv_q <= 1'b0; flt_q <= 1'b0; end
+            else begin rv_q <= rv_i; flt_q <= flt_i; end
+        assign result = res_q; assign result_v = rv_q; assign fault = flt_q;
+    end else begin : g_onone
+        assign result = res_i; assign result_v = rv_i; assign fault = flt_i;
+    end endgenerate
 endmodule
 `default_nettype wire

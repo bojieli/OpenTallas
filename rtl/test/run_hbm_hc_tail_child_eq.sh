@@ -22,4 +22,11 @@ set +e; "$out/obj/Vtc" +N=$n +SEED=$seed +GAP=${TC_GAP:-500} > "$out/run.log" 2>
 grep -E "TAILC" "$out/run.log" | head -20 || true
 grep -E "^TAILC (PASS|FAIL)" "$out/run.log" | tail -1 || true   # HBM-HCROOT8: the verdict line even after >20 ERR lines
 echo "HC_TAIL_CHILD_EQ MUT=$mut N=$n SEED=$seed rc=$rc"
+# HBMc/HC-TAIL2 10-22: TC_INITS='0 1 2:7 ...' (opt-in) re-runs the same binary under each Verilator init mode
+# (+verilator+rand+reset+<mode>[ +verilator+seed+<s>]) into run_init_<mode>[_<s>].log: power-up state robustness.
+for im in ${TC_INITS:-}; do
+  m=${im%%:*}; s=""; [ "$im" != "$m" ] && s=${im#*:}; tag=$m${s:+_$s}
+  set +e; "$out/obj/Vtc" +N=$n +SEED=$seed +GAP=${TC_GAP:-500} +verilator+rand+reset+$m ${s:++verilator+seed+$s} > "$out/run_init_$tag.log" 2>&1; set -e
+  echo "HC_TAIL_CHILD_EQ INIT=$tag $(grep -E '^TAILC (PASS|FAIL)' "$out/run_init_$tag.log" | tail -1)"
+done
 rm -rf "$out/obj"
