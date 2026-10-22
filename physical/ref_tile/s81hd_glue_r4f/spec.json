@@ -1,0 +1,256 @@
+{
+ "name": "s81hd_glue_r4f",
+ "top": "ot_s81hd_ctl_glue",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay_tree3.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_util.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_ctl.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_glue_rg.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_ctl_glue_r3.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n",
+  "seq_rst"
+ ],
+ "outline": {
+  "w": 2592.0,
+  "h": 4320.0
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xa0",
+   "at": [
+    1036.8,
+    1900.8
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xa1",
+   "at": [
+    1036.8,
+    2030.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xb0",
+   "at": [
+    1036.8,
+    2160.0
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "inst": "*u_xb1",
+   "at": [
+    1036.8,
+    2289.6
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "seq_f_cfg",
+   "seq_f_hg",
+   "seq_f_qd",
+   "seq_f_qv",
+   "seq_f_rd",
+   "seq_f_rv",
+   "seq_f_sg",
+   "seq_f_tg",
+   "seq_f_wd",
+   "seq_f_wv",
+   "seq_rst",
+   "seq_t_acc",
+   "seq_t_hd",
+   "seq_t_hv",
+   "seq_t_qg",
+   "seq_t_rg",
+   "seq_t_sd",
+   "seq_t_sv",
+   "seq_t_td",
+   "seq_t_tv",
+   "seq_t_wg",
+   "sn_i",
+   "sn_o"
+  ],
+  "S": [
+   "ss_i",
+   "ss_o"
+  ],
+  "W": [
+   "ck",
+   "ctl_f",
+   "hflt",
+   "hrx_d",
+   "hrx_v",
+   "htx_d",
+   "htx_v",
+   "lep_f",
+   "lw",
+   "mu_c",
+   "mu_rc",
+   "mu_rt",
+   "ri",
+   "ro",
+   "rst_n"
+  ],
+  "E": [
+   "mflt",
+   "mrx_d",
+   "mrx_v",
+   "mtx_d",
+   "mtx_v"
+  ],
+  "ANY": [
+   "dflt",
+   "drx_d",
+   "drx_v",
+   "dtx_d",
+   "dtx_v"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 10.8,
+  "io_hold_margin_ns": 0.03,
+  "synth_keep_modules": [
+   "ot_s81hd_kf",
+   "ot_s81hd_hreg32",
+   "ot_s81hd_cmp",
+   "ot_s81hd_pick",
+   "ot_s81hd_rs32",
+   "ot_s81hd_rs8",
+   "ot_s81hd_rv1",
+   "ot_s81hd_rr1",
+   "ot_s81hd_g_mtx",
+   "ot_s81hd_g_dtx"
+  ]
+ },
+ "structural_change": "R4 (r4f) = r3f + GPL_ROUTABILITY_DRIVEN=0: all four R3 kits (r3m/r3f/r3km/r3kf) were killed in 3_3 GPL (exit 247) after 3h46-5h22 stuck in routability iteration 1 (0.2% std-cell utilisation over 8.4-11.2 mm2, 1.02M instances incl. fixed; congestion is not a placement concern at this fill). Same RTL/pins/outline. Prev: R3 regional glue (STW-S81c-HEAD-GLUE 10-22) after s81hd_glue_m2/f2 FAIL (wire_reach: synthesis merged identical-D frame-header flops of different faces, core 856/999 um from pins; one-root spread 89.5/98.5). FROZEN interface (exact ot_s81hd_ctl_glue ports, ck, rst_n). Function by zone at its pins (WL lep / C core / N seq+spine / S spine / WH0 WH1 host / per-lane kept TX stages); every zone-to-zone signal on kept non-mergeable relay stages, hops <= 380 um, equal ages per bus group (relay_ledger.json); exact per-bit io_tcl at the H10 die link positions (draft 0/1 W as the die routes them), prove",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (HD-CTL): every input lands in a pin flop, every output leaves a flop (ot_s81hd_hreg32 / kf / grx pin stages); a recipe pin stage would add unpriced edges."
+ },
+ "job": {
+  "owner": "Claude:STW-S81c-HEAD-GLUE",
+  "branch": "claude/s81hd-glue-r3-1021",
+  "tag": "s81hd_glue_r4f",
+  "purpose": "S81.HEAD ctl glue R3 (frozen interface, relay-pipelined zones) to closure (TT setup / FF hold / DRC 0).",
+  "views_to": "physical/ref_tile/s81hd_glue_r4f/views",
+  "record_to": "results/rtl/ref_tile/s81hd_glue_r4f",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/common",
+   "rtl/dsrom_sys/mtp",
+   "rtl/dsrom_sys/s81_head",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "tools/s81_head",
+   "results/arch/s81_head_1021/glue_r3",
+   "results/arch/s81_head_1021/peer_pin_plan_m.json",
+   "results/arch/s81_head_1021/peer_pin_plan_f.json",
+   "results/rtl/s81_head_glue_r3_1022"
+  ],
+  "benches": [
+   {
+    "name": "hd_glue_r3_base",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_glue_r3_bench.sh {RUN}/ctl sim base",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "pass_witness": "results/rtl/s81_head_glue_r3_1022/base.log"
+   },
+   {
+    "name": "hd_glue_r3_mut_slice",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_glue_r3_bench.sh {RUN}/ctl sim SLICE",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "fail_regex": "^FAIL hd_ctl xa slice mismatch",
+    "fail_witness": "results/rtl/s81_head_glue_r3_1022/SLICE.log"
+   },
+   {
+    "name": "hd_glue_r3_mut_tie",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_glue_r3_bench.sh {RUN}/ctl sim TIE",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "fail_regex": "^FAIL hd_ctl local best",
+    "fail_witness": "results/rtl/s81_head_glue_r3_1022/TIE.log"
+   },
+   {
+    "name": "hd_glue_r3_mut_tkf",
+    "cmd": "bash rtl/dsrom_sys/s81_head/test/run_hd_glue_r3_bench.sh {RUN}/ctl sim TKF",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS hd_ctl streams 2 tokens 2 slices/stream 8248",
+    "fail_regex": "^FAIL hd_ctl token count",
+    "fail_witness": "results/rtl/s81_head_glue_r3_1022/TKF.log"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_km.tcl"
+ ],
+ "orfs_vars": {
+  "OT_CKKM_K": "16",
+  "OT_CKKM_PORT": "ck",
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "fill_reason": {
+  "pin_bound": "Pin-bound outline = the H10 die ctl reserve 2592 x 4320 (the die plan sized it so every face carries only the links that go that way: E 10008 pins = 2.32/um, W 1.56/um). Std cells (~20k um2 incl. ~48k relay flops) + 4 SRAM leave fill far below 40%: the reserve, not the area, sets the outline; a smaller outline re-creates the H4 star-hub funnel."
+ },
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "io_tcl": "physical/ref_tile/s81hd_glue_r4f/io_pins.tcl"
+}
