@@ -169,6 +169,33 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
 `endif
             ),.q(start_bank_v[g]));
     end endgenerate
+`ifdef OT_GQ_DESC3
+    // Actual k14z census found a 35-load descriptor accept root. Three private
+    // kept gates isolate the existing base/limit/loops capture enables (8/9/16
+    // bits). The body retains its control gate. Same edge and reset hold policy.
+    wire [2:0] desc_accept;
+    generate for(genvar g=0;g<3;g=g+1)begin:g_desc_accept
+        wire accepted;
+        (* keep="true" *)ot_gq_t16_desc_accept #(.MAX_DESC(MAX_DESC)) u_gate(
+            .reset_live(reset_live),.dv(dv),.target(target),.tid(tid),
+            .active(program_active),.scanning(scanning),.lv(lv),.cv(cv),
+            .loops(loops),.limit(limit),.base(base),.q(accepted));
+`ifdef OT_GQ_MUT_DESC_HOLD
+        assign desc_accept[g]=(g==1)?1'b0:accepted;
+`else
+        assign desc_accept[g]=accepted;
+`endif
+    end endgenerate
+    always @(posedge clk)begin
+        if(desc_accept[0])stored_base<=base[PCW-1:0];
+        if(desc_accept[1])stored_limit<=limit[PCW:0];
+        if(desc_accept[2])stored_loops<=loops;
+    end
+`ifdef OT_GQ_CHECK_INV
+    wire desc_expected=reset_live&&dv&&target==tid&&!program_active&&!scanning&&!lv&&!cv&&loops!=0&&limit>{1'b0,base}&&limit<=MAX_DESC;
+    always @(posedge clk)if(reset_live && desc_accept!=={3{desc_expected}})$fatal(1,"GQ_DESC3_INV_FAIL accepts=%b expected=%b",desc_accept,desc_expected);
+`endif
+`endif
     // Same observed write and generation semantics as the public target pins.
     always @(posedge clk or negedge reset_data)
         if(!reset_data)installed<=0;
@@ -205,7 +232,9 @@ module ot_hgi_coll_gq_target16 #(parameter [7:0] TARGET=8'd48,parameter integer 
                 armed<=0;validated<=0;configured<=0;install_open<=0;
                 if(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>MAX_DESC)fault<=1;
                 else begin
+`ifndef OT_GQ_DESC3
                     stored_base<=base[PCW-1:0];stored_limit<=limit[PCW:0];stored_loops<=loops;
+`endif
 `ifdef OT_GQ_N32
 `endif
                     armed<=1;missing<=0;
@@ -312,4 +341,13 @@ module ot_gq_t16_base_copy(input wire clk,en,input wire[3:0]d,output wire[3:0]q)
  (* keep="true",dont_touch="true" *)reg[3:0]r;
  always @(posedge clk)if(en)r<=d;
  assign q=r;
+endmodule
+
+// Descriptor field accept is private to one retained field-enable group.
+(* keep_hierarchy="yes" *)
+module ot_gq_t16_desc_accept #(parameter integer MAX_DESC=16)(
+ input wire reset_live,dv,input wire[7:0]target,tid,
+ input wire active,scanning,lv,cv,input wire[15:0]loops,
+ input wire[12:0]limit,input wire[11:0]base,output wire q);
+ assign q=reset_live&&dv&&target==tid&&!active&&!scanning&&!lv&&!cv&&loops!=0&&limit>{1'b0,base}&&limit<=MAX_DESC;
 endmodule
