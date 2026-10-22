@@ -4,7 +4,7 @@
   "unit": "oth-ubuntu-2650321-1792645105",
   "status": "PASS",
   "result": "PARTIAL",
-  "source_sha256": "b4b4d624049bdd73bfae60aa5c26bcdf204bd7fb8ecf80c2ee7e6c566a396b07",
+  "source_sha256": "b51cbf4f519e323c0e4d11bdb6635f8c3b7fa34663be24a5041a37b9822bc563",
   "sources": {
     "diagnostic_graph": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
     "diagnostic_source_ref": "57cd9d54d"
@@ -23,5 +23,6 @@
     "programme_tp": 96,
     "selected_diagnostic_source_tp": 192,
     "scope": "logical W.even ownership only; physical mapping and all dates null"
-  }
+  },
+  "bound_callback_scope": "Actual producer descriptor must match compiler physical placement. Positive calendar/whole-token execution is not qualified without real producer receipts."
 }

@@ -119,7 +119,7 @@ def build(binding, ledger, requests, receipt_root):
                  score_ready=max(producers[k]['ready_edge'] for k in ('run0','run1','run2','run3')),
                  port_free=start,index_release=producers['index']['release_edge'],
                  score_release=min(producers[k]['release_edge'] for k in ('run0','run1','run2','run3')),
-                 output_release=output['release_edge'],producer_receipts=producers)
+                 output_release=output['release_edge'],descriptor=deepcopy(d),producer_receipts=producers)
         jobs[tag]=job
         plans.append(dict(status='native_gather_emitted',native_gather=dict(tag=tag,descriptor=d,start=start,done=done)))
         free=done+2

@@ -115,6 +115,8 @@ def lower(raw, *, tag, source_window=None, binding=None, record_start=0, placeme
                       dest_word=8*(placement.map[o.base//8] if o.base//8 in placement.map else
                                    placement.get(o.base//8,0,tag+':indexed_O'))+o.base%8)
     if segmented:descriptor['segment_bases']=list(segments)
+    if job.get('descriptor')!=descriptor:
+        raise ValueError('compiler placement differs from the actual native producer receipt descriptor')
     for name in ('index_word','score_base','dest_word'):
         integer(descriptor[name],name)
     integer(descriptor['score_limit'],'physical score limit',descriptor['score_base']+1,APERTURE)
