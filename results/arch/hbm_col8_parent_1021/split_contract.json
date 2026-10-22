@@ -10668,7 +10668,7 @@
   "notes": [
     "No registers added or removed by the cut. All leaf W/E registers, shared glue, engine, metadata and tail remain in u_control.",
     "Connections of replicated query and head-ID fields are wires to the original shared glue outputs, not extra register copies.",
-    "All pair and SRAM bodies retain real masters. R3 is still an explicit stand-in.",
+    "All pair and SRAM bodies retain real masters. R3 is exact CLOSED record 32615a054, source cd4bb7587.",
     "Controller clock ports for pair hslice are retained but unused; all 128 active pair clocks go to real columns."
   ],
   "metadata_binding": "Eight real CLOSED D146 masters; exact source bytes and literal clk_meta connections. This is component binding, not parent delivery/return timing qualification."

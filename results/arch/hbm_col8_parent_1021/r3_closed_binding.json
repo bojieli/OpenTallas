@@ -1,0 +1,23 @@
+{
+  "record": "32615a054",
+  "source": "cd4bb7587",
+  "source_path": "rtl/hdc/v41x/ot_hbm_idx_score_col8.sv",
+  "source_sha256": "f84b916e9d75a746a558d0f5830d8d335a282e2530b36f1cf28ac372d94710b4",
+  "old_standin_lef_sha256": "32d77e6b3fc5bdc8222ed2acb30b2884ed46b8b1b3560ffc49985911cfb030f8",
+  "actual_lef": "physical/ref_tile/hidx_score_pair8_r3/views/ot_hidx_score_pair8_r3/ot_hidx_score_pair8_r3.lef",
+  "actual_lef_sha256": "fb960040caf6fa481bca36c690da0e0e80d403224f642cce61f1d573c4ee2a9d",
+  "dimensions_um": [
+    216.0,
+    172.8
+  ],
+  "old_pin_geometry_sha256": "1601bc7daf1f8654bfe9be05b60e9bca0e84d619e2a3fa922af6599f08b5c3f4",
+  "actual_pin_geometry_sha256": "d84c2db12f01cac126f3f9d5443eaf1efdd84da89e2a251b09b147d3db3e8af0",
+  "pin_count": 1200,
+  "identical_pin_geometry": false,
+  "changed_reach_endpoints": 1162,
+  "reach_net_count": 19036,
+  "max_band_corner_um": 400.776,
+  "violations": [],
+  "geometry": "Accepted 48 rectangles and all coordinates unchanged; exact R3 view replaces explicit stand-in, no alias.",
+  "qualification": "Local conservative geometry reach only; parent clocks/reset/routing/ages remain open."
+}

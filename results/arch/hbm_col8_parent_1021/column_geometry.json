@@ -85,15 +85,16 @@
       "orientation": "R0",
       "view": {
         "RID": 3,
-        "record": null,
-        "status": "STANDIN_NOT_A_VIEW",
-        "LEF": "physical/ref_tile/hidx_col8_standin_r3/views/ot_hidx_score_pair8_r3/ot_hidx_score_pair8_r3.lef",
-        "sha256": "32d77e6b3fc5bdc8222ed2acb30b2884ed46b8b1b3560ffc49985911cfb030f8",
+        "record": "32615a054",
+        "status": "CLOSED",
+        "LEF": "physical/ref_tile/hidx_score_pair8_r3/views/ot_hidx_score_pair8_r3/ot_hidx_score_pair8_r3.lef",
+        "sha256": "fb960040caf6fa481bca36c690da0e0e80d403224f642cce61f1d573c4ee2a9d",
         "width_um": 216.0,
         "height_um": 172.8,
         "count_per_leaf": 4,
         "count_per_quarter": 32,
-        "count_across_four_quarters": 128
+        "count_across_four_quarters": 128,
+        "source_commit": "cd4bb7587"
       }
     },
     {
@@ -720,11 +721,12 @@
     "max_center_um": 393.216,
     "max_band_corner_um": 400.776,
     "violations": [],
-    "hard_macro_halo_um": 5.4
+    "hard_macro_halo_um": 5.4,
+    "R3_record": "32615a054"
   },
   "source_bindings": {
     "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1/ot_sram_1r1w2c_64x516_m1.lef": "be0d1be8807e8a96b8a5927f1e6586d1619927ad740abf4633d0f88501ede2a6",
     "rtl/hdc/v41x/ot_hbm_idx_col8_sram_landed.sv": "2ce6212fb8984428ada4008b1e45b0b04d07ad98bc4fd077350341f319dfbbb6"
   },
-  "next": "Compose actual full-count placement and qualify clock/reset/timing. R3 remains a stand-in."
+  "next": "Construct actual clocks/reset/routing and source-bound parent ages. All four pair views are exact CLOSED masters."
 }

@@ -119,15 +119,16 @@
       "source": "ot_hidx_score_pair8_r3",
       "view": {
         "RID": 3,
-        "record": null,
-        "status": "STANDIN_NOT_A_VIEW",
-        "LEF": "physical/ref_tile/hidx_col8_standin_r3/views/ot_hidx_score_pair8_r3/ot_hidx_score_pair8_r3.lef",
-        "sha256": "32d77e6b3fc5bdc8222ed2acb30b2884ed46b8b1b3560ffc49985911cfb030f8",
+        "record": "32615a054",
+        "status": "CLOSED",
+        "LEF": "physical/ref_tile/hidx_score_pair8_r3/views/ot_hidx_score_pair8_r3/ot_hidx_score_pair8_r3.lef",
+        "sha256": "fb960040caf6fa481bca36c690da0e0e80d403224f642cce61f1d573c4ee2a9d",
         "width_um": 216.0,
         "height_um": 172.8,
         "count_per_leaf": 4,
         "count_per_quarter": 32,
-        "count_across_four_quarters": 128
+        "count_across_four_quarters": 128,
+        "source_commit": "cd4bb7587"
       },
       "ports_in": {
         "qv_b": 1,
@@ -320,7 +321,7 @@
     "used_clock_derivation": "128 pair clocks + 8 chunk glue clocks + 2 engine + 2 meta + 2 tail + 1 control. Column control clocks share their leaf chunk clock; do not count logical region occurrences as independent external clocks."
   },
   "qualification": {
-    "pair_views": "R0/R1/R2 CLOSED; R3 explicit stand-in pending closure",
+    "pair_views": "All four exact CLOSED views; R3 record 32615a054",
     "SRAM_row_MAIN": "Native PASS max5;2434flops;823um2 stdcells;GRT0;TT/FF clock spread29.4/28.4ps. Reset audit FAIL4rawsinks; fixing before adoption.",
     "SRAM_compact_MAIN": "Native PASS max5;CTS TT87.2ps FAIL; bank clock decomposition in progress.",
     "quarter_outline": "Not adopted. Compose actual region and macro geometry before fit or binding."
