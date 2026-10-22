@@ -100,6 +100,13 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  // all are ready), desc_rd_valid = &rd_valid (pop only when all are valid), so every instance fires on the same edges
  // and all heads are the same descriptor while desc_rd_valid; per-instance push/pop enables carry KEPT qualifier flops.
  localparam integer DSW=5,DSN=(DW+DSW-1)/DSW;
+ // second level: one KEPT reset leaf per descriptor slice (distinct both_reset per slice; see the landing bank)
+ wire [DSN-1:0] dws_rst,drs_rst;
+ for(genvar sg=0;sg<DRG;sg=sg+1)begin:g_dslice_leaf
+  localparam integer NS=(DSN-4*sg<4)?DSN-4*sg:4;
+  ot_rst_fanout #(.N(NS)) u_ws(.clk(stream_clk),.rst_n_in(dwr_leaf[sg]),.rst_n(dws_rst[4*sg+:NS]));
+  ot_rst_fanout #(.N(NS)) u_rs(.clk(hbm_clk),.rst_n_in(drd_leaf[sg]),.rst_n(drs_rst[4*sg+:NS]));
+ end
  wire [DW-1:0] desc_wd={reserve_pcs,reserve_row_base,reserve_base,reserve_total,reserve_bank,reserve_epoch};
  wire [DSN-1:0] ds_wr_ready,ds_rd_valid,ds_ov,ds_un;
  (* keep="true",dont_touch="true" *) reg [DSN-1:0] dwq_k;   // stream-side per-slice push qualifiers
@@ -112,9 +119,9 @@ module ot_hbm_svc_sm4pc_cdc_rel_h #(parameter integer OWNER_AW=5, parameter inte
  generate for(ds=0;ds<DSN;ds=ds+1)begin:dsl
   localparam integer W=(ds==DSN-1)?(DW-DSW*(DSN-1)):DSW;
   ot_hbm_svc_async_fifo #(.WIDTH(W),.DEPTH(4)) u_descriptor(
-   .wr_clk(stream_clk),.wr_rst_n(dwr_leaf[ds/4]),.wr_valid(rf_k[ds%2]&&dwq_k[ds]),.wr_ready(ds_wr_ready[ds]),
+   .wr_clk(stream_clk),.wr_rst_n(dws_rst[ds]),.wr_valid(rf_k[ds%2]&&dwq_k[ds]),.wr_ready(ds_wr_ready[ds]),
    .wr_data(desc_wd[ds*DSW+:W]),.wr_overflow(ds_ov[ds]),
-   .rd_clk(hbm_clk),.rd_rst_n(drd_leaf[ds/4]),.rd_valid(ds_rd_valid[ds]),.rd_ready(desc_rd_ready&&drq_k[ds]),
+   .rd_clk(hbm_clk),.rd_rst_n(drs_rst[ds]),.rd_valid(ds_rd_valid[ds]),.rd_ready(desc_rd_ready&&drq_k[ds]),
    .rd_data(desc_data[ds*DSW+:W]),.rd_underflow(ds_un[ds]));
  end endgenerate
  assign fault=stream_fault||hbf2||desc_ov||(|bank_fault);

@@ -61,6 +61,15 @@ module ot_hbm_svc_sm8_landing_bank_h #(
  wire [RRG-1:0] wr_leaf,rd_leaf;
  ot_rst_fanout #(.N(RRG)) u_wr_leaf(.clk(hbm_clk),.rst_n_in(hbm_rst_n),.rst_n(wr_leaf));
  ot_rst_fanout #(.N(RRG)) u_rd_leaf(.clk(stream_clk),.rst_n_in(sr[1]),.rst_n(rd_leaf));
+ // HBMc/TILES 10-22: one KEPT reset leaf per FIFO slice (second level, release +1 edge, boot only): every slice's
+ // both_reset / reviewed ot_reset_sync / online flags then have distinct inputs, so yosys cannot merge them across
+ // slices (rel8e: one merged reset_pipe drove 132-244 async pins).  No change to the reviewed FIFO source.
+ wire [RSN-1:0] wr_slice_rst,rd_slice_rst;
+ for(genvar sg=0;sg<RRG;sg=sg+1)begin:g_slice_leaf
+  localparam integer NS=(RSN-8*sg<8)?RSN-8*sg:8;
+  ot_rst_fanout #(.N(NS)) u_ws(.clk(hbm_clk),.rst_n_in(wr_leaf[sg]),.rst_n(wr_slice_rst[8*sg+:NS]));
+  ot_rst_fanout #(.N(NS)) u_rs(.clk(stream_clk),.rst_n_in(rd_leaf[sg]),.rst_n(rd_slice_rst[8*sg+:NS]));
+ end
  (* keep="true",dont_touch="true" *) reg [RSN-1:0] wq_k;   // hbm-side per-slice push qualifiers (1 after reset)
 
  assign in_ready=&rs_wr_ready;assign packet_v=&rs_rd_valid;
@@ -80,9 +89,9 @@ module ot_hbm_svc_sm8_landing_bank_h #(
   ot_hbm_svc_local_and2 u_wr_slice(.a(write_group[rs/16]),.b(wq_k[rs]),.y(write_slice));
   ot_hbm_svc_local_and2 u_rd_slice(.a(pop_group[rs/16]),.b(cq_k[rs]),.y(pop_slice));
   ot_hbm_svc_async_fifo #(.WIDTH(RSW),.DEPTH(RESPONSE_DEPTH)) u_response(
-   .wr_clk(hbm_clk),.wr_rst_n(wr_leaf[rs/8]),.wr_valid(write_slice),.wr_ready(rs_wr_ready[rs]),
+   .wr_clk(hbm_clk),.wr_rst_n(wr_slice_rst[rs]),.wr_valid(write_slice),.wr_ready(rs_wr_ready[rs]),
    .wr_data(in_data[rs*RSW+:RSW]),.wr_overflow(rs_ov[rs]),
-   .rd_clk(stream_clk),.rd_rst_n(rd_leaf[rs/8]),.rd_valid(rs_rd_valid[rs]),.rd_ready(pop_slice),
+   .rd_clk(stream_clk),.rd_rst_n(rd_slice_rst[rs]),.rd_valid(rs_rd_valid[rs]),.rd_ready(pop_slice),
    .rd_data(packet[rs*RSW+:RSW]),.rd_underflow(rs_un[rs]));
  end endgenerate
  // HBM-COLLECT10 2026-10-21 (rel8c): REGISTERED FIFO HEAD.  r2 decoded the identity check / seen / received / sticky
