@@ -19,8 +19,9 @@ endmodule
 // Two-entry pin skid, exact ot_hbm_svc_pin_skid2 behaviour (head/tail), sliced: NS = ceil(WIDTH/SW) slices, each with
 // its own head_valid/tail_valid copy; push_s = in_v & !tail_s, pop_s = out_r & head_s.  in_r / out_v leave from slice 0
 // (in_r also low during reset).
-// rst_n: NR = ceil(NS/11) reset leaves (each <= 22 flop clears), slice s on leaf s/11.
-module ot_hbm_svc_skid2_sl #(parameter integer WIDTH=1,SW=16,NS=(WIDTH+SW-1)/SW,NR=(NS+10)/11)(
+// SW 14 (r4b census: 16-bit slices put 33 pins on the tail enable).  rst_n: NR = ceil(NS/13) reset leaves (each <= 26
+// flop clears + in_r), slice s on leaf s/13.
+module ot_hbm_svc_skid2_sl #(parameter integer WIDTH=1,SW=14,NS=(WIDTH+SW-1)/SW,NR=(NS+12)/13)(
  input wire clk,input wire [NR-1:0]rst_n,input wire in_v,output wire in_r,
  input wire [WIDTH-1:0]in_data,output wire out_v,input wire out_r,
  output wire [WIDTH-1:0]out_data
@@ -41,8 +42,8 @@ module ot_hbm_svc_skid2_sl #(parameter integer WIDTH=1,SW=16,NS=(WIDTH+SW-1)/SW,
   assign out_data[s*SW+:B]=head_data;
   // valid bits: async clear from the slice leaf; data registers are unreset and outside the reset block (a reset-
   // qualified data enable would hang every data bit on the leaf: r4a census 56..58 pins per leaf)
-  always @(posedge clk or negedge rst_n[s/11])begin
-   if(!rst_n[s/11])begin head_valid<=0;tail_valid<=0;end
+  always @(posedge clk or negedge rst_n[s/13])begin
+   if(!rst_n[s/13])begin head_valid<=0;tail_valid<=0;end
    else case({push,pop})
     2'b10:if(!head_valid)head_valid<=1;else tail_valid<=1;
     2'b01:begin head_valid<=tail_valid;tail_valid<=0;end
