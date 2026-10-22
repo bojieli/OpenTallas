@@ -1,0 +1,6 @@
+MU72_LNLAND_STATS land 1 cred 12 mut 0 ph 0 | recv X->Y 630/630 ref 630, Y->X 630/630 ref 630 | mismatches 0 | added latency 13..15 mean_x100 1390 ok 1 | landing pulses 0/0 contract errors 0 | burst last arrival dut-ref X->Y 14 Y->X 13 (burst 600 beats @ 80%, ref span 802 / 804 cyc) | faults 0
+PASS mu72_lnland: 630 + 630 beats bit-exact in order both ways, every landed pulse exactly +3 (0 pulses), end-to-end +13..15 edges, burst rate equal to the unlanded CRED8 die (+14/+13)
+- rtl/dsrom_sys/s81_dv/slice/test/tb_s81_mu72_lnland.sv:299: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 22us; walltime 33.437 s; speed 645.454 ns/s
+- Verilator: cpu 33.432 s on 1 threads; allocated 24 MB

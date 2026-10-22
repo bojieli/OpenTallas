@@ -1,0 +1,45 @@
+{
+ "top": "ot_s81sl_slice_lepw_mab_r4d_mu_72",
+ "source_sha256": "86ef9ac68e77f86e5f6129d897bbd87793bbc79c3d3def83893f3db0d2d0449b",
+ "library_sha256": {
+  "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv": "058960ccd28c3f635d1dcf5abb6b022eee111a1cd86071ade0d21d65b20625b5",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_slice_lep.sv": "3106d0e1d6402b3212b05526e0ebbe5e636883caaf025820b0471e605aff82f2",
+  "rtl/dsrom_sys/s81_dv/slice/landed/c1x_k8_cap5r/ot_s81sl_slice_c1x_k8_cap5r_lp.sv": "fbbd94f494642f645e924f1f97df2bcdfbeff4170848da7c5616cca17dd71fa2",
+  "rtl/dsrom_sys/s81_dv/slice/dsdv_mu_land.sv": "bdd5fd48fe22e22e3206bcdc0bb1c41c2645fd29386fd587669c250b6bc9a089",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional.sv": "980c3c70832cdc01024d4649616d3a3dc76e7a510c8b2e64801e2e0b4ec29f9d",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r3r.sv": "2ee039c5a5e7d60ef256b000bf5b581534dc63a61dae6c4ba8789ee62fdf3d9a",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_lep_mu_ab_regional_r4l.sv": "a7b0c5769b36c5a2c8b88553cd644e28557b2461fe956bb9d257e96dc494a909",
+  "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv": "49a79b888cf0194f084055fb11c902d2c7e27878711f045cd9ce0eab332e54db",
+  "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_lnland.sv": "6f0b1eb0472686dfd3aae308ae0559f626ea05f20f6a22ebd315ab2e6db264c1",
+  "rtl/common/landed_parent/ot_pl_land.sv": "4521a15d63df248c84102a986cffb4ae64cfcb61170a0ed95e1a9ea5f227cb54",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
+  "rtl/common/landed_parent/ot_pl_land_kept_enable.sv": "025a6b50e3241d1fce3dbc1cebe210fea0d262c06ce3add491d7b7f1dd6194aa",
+  "rtl/common/landed_parent/ot_pl_land_n32.sv": "f65e61ea0f42b7eb10e3fa9af434e456927134504479043a0d8b3b1332bd1edf",
+  "rtl/common/landed_parent/ot_pl_land_physical.sv": "c90b74b5928d3a10bbe9fde674c6ee071c38a6cf513512bdaf03582e68bebe18",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv": "6c8d60d1f1d6a9b91a8a6a39015fe94811a14fb5f59f7bba17b0934678c68b71",
+  "rtl/common/landed_parent/ot_pl_land_rst_copy.sv": "9f60359e0747ac77ccf1a19d03ac43d76258cdd4cbc726bc56a0c21ea3bf360d",
+  "rtl/common/landed_parent/ot_pl_stream_land.sv": "5fefa666adf4533bf33e86601f40571cdf80f4755f60176ed65009e6034a7dab"
+ },
+ "cases": [
+  {
+   "case": "base",
+   "errors": [],
+   "expected": true
+  },
+  {
+   "case": "wrong_pair_clock",
+   "errors": [
+    "u_ln0 pair clock"
+   ],
+   "expected": true
+  },
+  {
+   "case": "wrong_credit",
+   "errors": [
+    "u_ln1 credit"
+   ],
+   "expected": true
+  }
+ ],
+ "scope": "Real full top elaboration and source contract only; physical closure and composed token integration remain owed"
+}
