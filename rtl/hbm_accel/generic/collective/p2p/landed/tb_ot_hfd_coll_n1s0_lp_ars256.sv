@@ -40,14 +40,14 @@ module tb_ot_hfd_coll_n1s0_lp_ars256;
     reg [0:0] dli_launch_v [0:0];  wire [0:0] li_launch_v = fi_launch_v;
     always @(posedge clk) begin : g_dli_launch_v integer j; dli_launch_v[0] <= fi_launch_v; for (j = 1; j <= 0; j = j + 1) dli_launch_v[j] <= dli_launch_v[j - 1]; end
     reg [1023:0] fi_inj_d;
-    reg [1023:0] dli_inj_d [0:3];  wire [1023:0] li_inj_d = dli_inj_d[2];
-    always @(posedge clk) begin : g_dli_inj_d integer j; dli_inj_d[0] <= fi_inj_d; for (j = 1; j <= 3; j = j + 1) dli_inj_d[j] <= dli_inj_d[j - 1]; end
+    reg [1023:0] dli_inj_d [0:1];  wire [1023:0] li_inj_d = dli_inj_d[0];
+    always @(posedge clk) begin : g_dli_inj_d integer j; dli_inj_d[0] <= fi_inj_d; for (j = 1; j <= 1; j = j + 1) dli_inj_d[j] <= dli_inj_d[j - 1]; end
     reg [0:0] fi_rc_v;
-    reg [0:0] dli_rc_v [0:3];  wire [0:0] li_rc_v = dli_rc_v[2];
-    always @(posedge clk) begin : g_dli_rc_v integer j; dli_rc_v[0] <= fi_rc_v; for (j = 1; j <= 3; j = j + 1) dli_rc_v[j] <= dli_rc_v[j - 1]; end
+    reg [0:0] dli_rc_v [0:2];  wire [0:0] li_rc_v = dli_rc_v[1];
+    always @(posedge clk) begin : g_dli_rc_v integer j; dli_rc_v[0] <= fi_rc_v; for (j = 1; j <= 2; j = j + 1) dli_rc_v[j] <= dli_rc_v[j - 1]; end
     reg [2:0] fi_rc_tag;
-    reg [2:0] dli_rc_tag [0:3];  wire [2:0] li_rc_tag = dli_rc_tag[2];
-    always @(posedge clk) begin : g_dli_rc_tag integer j; dli_rc_tag[0] <= fi_rc_tag; for (j = 1; j <= 3; j = j + 1) dli_rc_tag[j] <= dli_rc_tag[j - 1]; end
+    reg [2:0] dli_rc_tag [0:2];  wire [2:0] li_rc_tag = dli_rc_tag[1];
+    always @(posedge clk) begin : g_dli_rc_tag integer j; dli_rc_tag[0] <= fi_rc_tag; for (j = 1; j <= 2; j = j + 1) dli_rc_tag[j] <= dli_rc_tag[j - 1]; end
     reg [255:0] fi_rc_d;
     reg [255:0] dli_rc_d [0:0];  wire [255:0] li_rc_d = fi_rc_d;
     always @(posedge clk) begin : g_dli_rc_d integer j; dli_rc_d[0] <= fi_rc_d; for (j = 1; j <= 0; j = j + 1) dli_rc_d[j] <= dli_rc_d[j - 1]; end
@@ -157,8 +157,8 @@ module tb_ot_hfd_coll_n1s0_lp_ars256;
     reg [2:0] dli_ra_rr_local_tag [0:0];  wire [2:0] li_ra_rr_local_tag = fi_ra_rr_local_tag;
     always @(posedge clk) begin : g_dli_ra_rr_local_tag integer j; dli_ra_rr_local_tag[0] <= fi_ra_rr_local_tag; for (j = 1; j <= 0; j = j + 1) dli_ra_rr_local_tag[j] <= dli_ra_rr_local_tag[j - 1]; end
     reg [2055:0] fi_vm_rr;
-    reg [2055:0] dli_vm_rr [0:3];  wire [2055:0] li_vm_rr = dli_vm_rr[2];
-    always @(posedge clk) begin : g_dli_vm_rr integer j; dli_vm_rr[0] <= fi_vm_rr; for (j = 1; j <= 3; j = j + 1) dli_vm_rr[j] <= dli_vm_rr[j - 1]; end
+    reg [2055:0] dli_vm_rr [0:2];  wire [2055:0] li_vm_rr = dli_vm_rr[1];
+    always @(posedge clk) begin : g_dli_vm_rr integer j; dli_vm_rr[0] <= fi_vm_rr; for (j = 1; j <= 2; j = j + 1) dli_vm_rr[j] <= dli_vm_rr[j - 1]; end
     wire [0:0] fo_program_configured, lo_program_configured;  reg [0:0] dlo_program_configured [0:0];
     always @(posedge clk) begin : g_dlo_program_configured integer j; dlo_program_configured[0] <= fo_program_configured; for (j = 1; j <= 0; j = j + 1) dlo_program_configured[j] <= dlo_program_configured[j - 1]; end
     wire [0:0] fo_program_init_busy, lo_program_init_busy;  reg [0:0] dlo_program_init_busy [0:0];

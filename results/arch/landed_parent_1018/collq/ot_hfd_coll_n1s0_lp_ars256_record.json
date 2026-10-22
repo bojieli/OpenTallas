@@ -2513,8 +2513,35 @@
     "pads": 0,
     "reset": 2017,
     "out_regs": 5814,
+    "in_regs": 4108,
     "private_pub_mode": 64
   },
+  "in_regs": [
+    {
+      "port": "inj_d",
+      "stages": 2,
+      "region": "sw",
+      "inst": "u_lpi_inj_d"
+    },
+    {
+      "port": "rc_tag",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpi_rc_tag"
+    },
+    {
+      "port": "rc_v",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpi_rc_v"
+    },
+    {
+      "port": "vm_rr",
+      "stages": 1,
+      "region": "sw",
+      "inst": "u_lpi_vm_rr"
+    }
+  ],
   "out_regs": [
     {
       "port": "del_flit",
@@ -2705,9 +2732,9 @@
       "desc_limit": 0,
       "desc_loops": 0,
       "launch_v": 0,
-      "inj_d": 3,
-      "rc_v": 3,
-      "rc_tag": 3,
+      "inj_d": 1,
+      "rc_v": 2,
+      "rc_tag": 2,
       "rc_d": 0,
       "phy_up": 6,
       "rx_pin_v": 6,
@@ -2744,7 +2771,7 @@
       "ra_rx_tag": 0,
       "ra_rr_local": 0,
       "ra_rr_local_tag": 0,
-      "vm_rr": 3
+      "vm_rr": 2
     },
     "output_port_offset_edges": {
       "program_configured": 0,

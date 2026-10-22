@@ -12,10 +12,10 @@ python3 tools/landed_parent/lp.py audit results/arch/landed_parent_1018/collq/sp
   && { echo "AUDIT-UNLAND PASSED (should FAIL)"; rc=1; } || echo "AUDIT-UNLAND FAIL (expected)"
 for m in ${MUTS:-0 1 2 4}; do
   if [ "$SIM" = verilator ]; then
-    ${VERILATOR:-verilator} --binary -j ${VL_JOBS:-8} -I. -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 ${VL_EXTRA:-} --top-module tb_ot_hfd_coll_q3_lp_ars256 -GMUT=$m -DOT_COLL_LP_PUB32 $SRCS -Mdir "$OUT/obj$m" > "$OUT/build_$m.log" 2>&1 \
+    ${VERILATOR:-verilator} --binary -j ${VL_JOBS:-8} -I. -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT -O1 ${VL_EXTRA:-} --top-module tb_ot_hfd_coll_q3_lp_ars256 -GMUT=$m -DOT_COLL_LP_PUB32 -DOT_COLL_RING_ADD_N32 $SRCS -Mdir "$OUT/obj$m" > "$OUT/build_$m.log" 2>&1 \
       && "$OUT/obj$m/Vtb_ot_hfd_coll_q3_lp_ars256" > "$OUT/mut$m.log" 2>&1
   else
-    iverilog -g2012 -I. -o "$OUT/sim$m" -s tb_ot_hfd_coll_q3_lp_ars256 -Ptb_ot_hfd_coll_q3_lp_ars256.MUT=$m -DOT_COLL_LP_PUB32 $SRCS > "$OUT/build_$m.log" 2>&1 \
+    iverilog -g2012 -I. -o "$OUT/sim$m" -s tb_ot_hfd_coll_q3_lp_ars256 -Ptb_ot_hfd_coll_q3_lp_ars256.MUT=$m -DOT_COLL_LP_PUB32 -DOT_COLL_RING_ADD_N32 $SRCS > "$OUT/build_$m.log" 2>&1 \
       && vvp -n "$OUT/sim$m" > "$OUT/mut$m.log" 2>&1
   fi
   r=$(grep -o 'LP_LOCKSTEP [A-Z]*' "$OUT/mut$m.log" 2>/dev/null | head -1)

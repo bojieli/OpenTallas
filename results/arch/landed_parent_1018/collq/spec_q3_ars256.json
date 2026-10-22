@@ -53,7 +53,8 @@
   "rtl/common/landed_parent/ot_coll_lp_native_helpers.sv"
  ],
  "defines": [
-  "OT_COLL_LP_PUB32"
+  "OT_COLL_LP_PUB32",
+  "OT_COLL_RING_ADD_N32"
  ],
  "out_dir": "rtl/hbm_accel/generic/collective/p2p/landed",
  "record_dir": "results/arch/landed_parent_1018/collq",

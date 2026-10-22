@@ -1,0 +1,20 @@
+{
+  "source_closed_job": "hgi_coll_ring_add_r1-r1-d5597fc42",
+  "gate_source_snapshot": "f3ab258385b054bd9eb9ef20a6feaf5f880a632c",
+  "original_module_sha256": "338880f32128a5848e50b0674e9ee664866c213a203b98fd7caf48ec291f5ccd",
+  "selected_module_sha256": "1586ac3675403474eb3a5c041965ace1618868df434a1763045c1291c8233853",
+  "normalized_modules_equal": true,
+  "dependencies_match_actual_gate_snapshot": {
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+  },
+  "params": {
+    "LAT": 8
+  },
+  "clock": "ck_rg -> child clk, same regional edge",
+  "reset": "private regional reset forest leaf, t(child) unchanged at zero",
+  "age": "a and b captured at edge k; valid captured at edge k; ot_hdc_fp32_add_lat LAT7 DRST0; output at original LAT8 edge",
+  "view_rename": "physical/ref_tile/hgi_coll_ring_add_r1/views/ot_hgi_coll_pring_static_add_lane/renamed_from.json",
+  "binding_status": "NOT BOUND: normal gen rejected 28 signal access points, 0.048 < 0.072 um. Use existing source-native LAT8 n32 implementation instead."
+}

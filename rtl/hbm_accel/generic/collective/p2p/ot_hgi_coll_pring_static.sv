@@ -241,10 +241,21 @@ module ot_hgi_coll_pring_static_add_lane #(parameter integer LAT=8)(
     output wire [31:0] y,
     output wire valid_out
 );
+`ifdef OT_COLL_RING_ADD_N32
+    // Same LAT8 pin capture and output age as the original LAT7 arithmetic pipeline.
+    // The native32 implementation already used by reduce lanes cuts LAT6 and
+    // adds the seventh arithmetic output stage; no port edge is added.
+    generate if (LAT == 8) begin:g_n32
+        ot_hgi_coll_reduce_add_n32 u_native (.clk(clk),.rst_n(rst_n),.valid_in(valid_in),.a(a),.b(b),.y(y),.valid_out(valid_out));
+    end else begin:g_unsupported
+        ot_coll_ring_add_n32_requires_LAT8 u_bad ();
+    end endgenerate
+`else
     reg [31:0] ap,bp;reg vp;
     always @(posedge clk)begin ap<=a;bp<=b;end
     always @(posedge clk or negedge rst_n)if(!rst_n)vp<=0;else vp<=valid_in;
     ot_hdc_fp32_add_lat #(.LAT(LAT-1),.DRST(0)) u_add(
         .clk(clk),.rst_n(rst_n),.valid_in(vp),.a(ap),.b(bp),.y(y),.err(),.valid_out(valid_out));
+`endif
 endmodule
 `default_nettype wire
