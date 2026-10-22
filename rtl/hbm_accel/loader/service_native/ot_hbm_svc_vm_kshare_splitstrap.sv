@@ -110,7 +110,7 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  wire[17:0]hr1;wire[13:0]sr1;
  ot_rst_fanout #(.N(18)) u_hr1(.clk(hbm_clk),.rst_n_in(hrst_q),.rst_n(hr1));
  ot_rst_fanout #(.N(14)) u_sr1(.clk(stream_clk),.rst_n_in(srst_q),.rst_n(sr1));
- wire[NCS+NWS-1:0]hcl,scl;wire[0:0]hm;wire[1:0]sm;wire[NWG-1:0]hwg;
+ wire[NCS+NWS-1:0]hcl,scl;wire[0:0]hm;wire[1:0]sm;wire[NWG-1:0]hwg;   // r5a: only hcl/scl[0] (cmd) and [NCS] (wcmd) used
  ot_rst_fanout #(.N(NCS+NWS)) u_hcl(.clk(hbm_clk),.rst_n_in(hr1[16]),.rst_n(hcl));
  ot_rst_fanout #(.N(NCS+NWS)) u_scl(.clk(stream_clk),.rst_n_in(sr1[12]),.rst_n(scl));
  ot_rst_fanout #(.N(1)) u_hm(.clk(hbm_clk),.rst_n_in(hr1[17]),.rst_n(hm));
@@ -125,9 +125,9 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  always @(posedge stream_clk or negedge sm[0])if(!sm[0])cv_q<=0;else cv_q<=vm_v;
  wire cf_wr_ready,cf_ov,cf_rd_valid,cf_un;wire[CMW-1:0]cf_rd_data;wire all_norm;
  wire take_pre=cf_rd_valid&&all_norm;
- ot_hbm_svc_afifo_sl #(.WIDTH(CMW),.DEPTH(4),.SW(CSW)) u_cmd(
-  .wr_clk(stream_clk),.wr_rst_n(scl[NCS-1:0]),.wr_valid(cv_q),.wr_ready(cf_wr_ready),.wr_data(cd_q),.wr_overflow(cf_ov),
-  .rd_clk(hbm_clk),.rd_rst_n(hcl[NCS-1:0]),.rd_valid(cf_rd_valid),.rd_ready(take_pre),.rd_data(cf_rd_data),.rd_underflow(cf_un));
+ ot_hbm_svc_async_fifo_shp #(.WIDTH(CMW),.DEPTH(4),.SW(CSW)) u_cmd(
+  .wr_clk(stream_clk),.wr_rst_n(scl[0]),.wr_valid(cv_q),.wr_ready(cf_wr_ready),.wr_data(cd_q),.wr_overflow(cf_ov),
+  .rd_clk(hbm_clk),.rd_rst_n(hcl[0]),.rd_valid(cf_rd_valid),.rd_ready(take_pre),.rd_data(cf_rd_data),.rd_underflow(cf_un));
  // ---------------------------------------------------------------- stream side: WB window command -> lane counts -> CDC
  function automatic [2:0] ov(input [4:0] g,input [7:0] lo,input [7:0] hi);   // |[4g,4g+4) intersect [lo,hi)|
   reg[7:0]a,z;begin a=({1'b0,g,2'b00}>lo)?{1'b0,g,2'b00}:lo;z=({1'b0,g,2'b00}+8'd4<hi)?{1'b0,g,2'b00}+8'd4:hi;ov=(z>a)?3'(z-a):3'd0;end
@@ -153,9 +153,9 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
  always @(posedge stream_clk or negedge sm[0])if(!sm[0])begin wv1<=0;wv2<=0;wv3<=0;end else begin wv1<=wbw_v;wv2<=wv1;wv3<=wv2;end
  wire wf_wr_ready,wf_ov,wf_rd_valid,wf_un;wire[WQW-1:0]wf_rd_data;
  wire wb_pre=wf_rd_valid&&all_norm&&!cf_rd_valid;
- ot_hbm_svc_afifo_sl #(.WIDTH(WQW),.DEPTH(4),.SW(CSW)) u_wcmd(
-  .wr_clk(stream_clk),.wr_rst_n(scl[NCS+:NWS]),.wr_valid(wv3),.wr_ready(wf_wr_ready),.wr_data(wq3),.wr_overflow(wf_ov),
-  .rd_clk(hbm_clk),.rd_rst_n(hcl[NCS+:NWS]),.rd_valid(wf_rd_valid),.rd_ready(wb_pre),.rd_data(wf_rd_data),.rd_underflow(wf_un));
+ ot_hbm_svc_async_fifo_shp #(.WIDTH(WQW),.DEPTH(4),.SW(CSW)) u_wcmd(
+  .wr_clk(stream_clk),.wr_rst_n(scl[NCS]),.wr_valid(wv3),.wr_ready(wf_wr_ready),.wr_data(wq3),.wr_overflow(wf_ov),
+  .rd_clk(hbm_clk),.rd_rst_n(hcl[NCS]),.rd_valid(wf_rd_valid),.rd_ready(wb_pre),.rd_data(wf_rd_data),.rd_underflow(wf_un));
  // {wend_q, wcmd_q} captured in NWG groups of <= 15 bits, each enable through its own kept AND
  reg[WQW-1:0]wq_q;wire[NWG-1:0]wcap;
  genvar wg;
@@ -174,14 +174,11 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   wire[4:0]P={sm_h,2'(l)};
   // lane reset leaves (hr1[4l+3]): [1:0] A, [3:2] B, [5:4] E, [7:6] D, [14:8] C ring / skid, [16:15] B selects,
   // [18:17] window FSM, [19] c_rdy, [20] take strobes + VM command capture
-  wire[20:0]hl;wire[NFS-1:0]hfl,sfl;
+  wire[20:0]hl;wire[0:0]hfl,sfl;
   ot_rst_fanout #(.N(21)) u_hl(.clk(hbm_clk),.rst_n_in(hr1[4*l+3]),.rst_n(hl));
-  ot_rst_fanout #(.N(31)) u_hfl0(.clk(hbm_clk),.rst_n_in(hr1[4*l]),.rst_n(hfl[30:0]));
-  ot_rst_fanout #(.N(31)) u_hfl1(.clk(hbm_clk),.rst_n_in(hr1[4*l+1]),.rst_n(hfl[61:31]));
-  ot_rst_fanout #(.N(NFS-62)) u_hfl2(.clk(hbm_clk),.rst_n_in(hr1[4*l+2]),.rst_n(hfl[NFS-1:62]));
-  ot_rst_fanout #(.N(31)) u_sfl0(.clk(stream_clk),.rst_n_in(sr1[3*l]),.rst_n(sfl[30:0]));
-  ot_rst_fanout #(.N(31)) u_sfl1(.clk(stream_clk),.rst_n_in(sr1[3*l+1]),.rst_n(sfl[61:31]));
-  ot_rst_fanout #(.N(NFS-62)) u_sfl2(.clk(stream_clk),.rst_n_in(sr1[3*l+2]),.rst_n(sfl[NFS-1:62]));
+  // r5a: the fill FIFO is ot_hbm_svc_async_fifo_shp (one pointer pair, internal per-group reset syncs): one leaf per side
+  ot_rst_fanout #(.N(1)) u_hfl0(.clk(hbm_clk),.rst_n_in(hr1[4*l]),.rst_n(hfl[0]));
+  ot_rst_fanout #(.N(1)) u_sfl0(.clk(stream_clk),.rst_n_in(sr1[3*l]),.rst_n(sfl[0]));
   // per-lane take strobes and VM command copy (was one cmd_q driving the fill data of all four lanes)
   wire take_cmd,take_wb;wire[2:0]ccap;
   (* keep="true" *) ot_hbm_svc_ks_and2 u_tk(.a(take_pre),.b(hl[20]),.y(take_cmd));
@@ -266,9 +263,9 @@ module ot_hbm_svc_vm_kshare_splitstrap #(parameter integer MUT=0,KRL1=0) (
   wire tag_ok=rt=={cm_bank,cm_epoch[11:0],rt[3:0]}&&rb<4;
   wire[FW-1:0]f_d={cm_bank,cm_epoch,rt[3:0],rb[1:0],c_d[255:0]};
   wire f_ov,f_un;
-  ot_hbm_svc_afifo_sl #(.WIDTH(FW),.DEPTH(8),.SW(FSW)) u_fill(
-   .wr_clk(hbm_clk),.wr_rst_n(hfl),.wr_valid(c_pop_vm),.wr_ready(f_r),.wr_data(f_d),.wr_overflow(f_ov),
-   .rd_clk(stream_clk),.rd_rst_n(sfl),.rd_valid(rf_valid[l]),.rd_ready(rf_valid[l]),.rd_data(rf_data[FW*l+:FW]),.rd_underflow(f_un));
+  ot_hbm_svc_async_fifo_shp #(.WIDTH(FW),.DEPTH(8),.SW(7)) u_fill(
+   .wr_clk(hbm_clk),.wr_rst_n(hfl[0]),.wr_valid(c_pop_vm),.wr_ready(f_r),.wr_data(f_d),.wr_overflow(f_ov),
+   .rd_clk(stream_clk),.rd_rst_n(sfl[0]),.rd_valid(rf_valid[l]),.rd_ready(rf_valid[l]),.rd_data(rf_data[FW*l+:FW]),.rd_underflow(f_un));
   wire[8:0]rd_beats=b_pop_grp&&!b_d[KW-1]?{5'd0,b_d[KW-1-30-1-:4]}:9'd0;
   wire drained=!b_v&&g_rd_out==0&&g_wr_out==0;
   // Controller queue holds 32 writes and KREG holds two more: count needs six bits.
