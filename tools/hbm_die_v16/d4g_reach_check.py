@@ -86,7 +86,8 @@ def classify(case, contract, reach=405.0, tol=0.0, plan_tol=64.8, top=40):
         extra = math.ceil(b['span'] / reach) - 1
         rec = dict(bus=f'{di}.{dp} -> {li}.{lp}', cls=c, cause=why, span_um=round(b['span'], 1), planned_um=round(ps, 1),
                    bits=b['bits'], driver_master=dm, load_master=lm, driver_rule=pl[di].get('rule', '')[:90],
-                   load_rule=pl[li].get('rule', '')[:90])
+                   load_rule=pl[li].get('rule', '')[:90],
+                   dxy=[round(b['dxy'][0], 3), round(b['dxy'][1], 3)], lxy=[round(b['lxy'][0], 3), round(b['lxy'][1], 3)])
         fails.append(rec)
         fix.append(dict(bus=rec['bus'], cls=c, cause=why, span_um=rec['span_um'], extra_stations=extra,
                         extra_cycles=(extra * 0.5 if fwd else float(extra))))
