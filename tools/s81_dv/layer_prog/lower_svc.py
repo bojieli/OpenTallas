@@ -89,6 +89,25 @@ PPATH = True                 # TOK-S81-GAPS/SVCP: P is produced on-die (GO PIO !
 # words each from the same pv_first (rs_pvslot_all: window k = tile % 8).  No cross-die G10 exchange exists or is needed.
 ALLQ = os.environ.get('OT_SVC_ALLQ', '0') == '1'
 NPVQ = 160                   # P.V words of one quarter at one entry (4 tiles x 8 beats x 5 words)
+# RTLGAP-SUKV (10-22) G-NORMALIZE-SO: the die's slices are built SMT = 1 (S81-SMWIRE: dsdv_svc_sot + dsdv_sm_so_target +
+# dsdv_sm_gw in every dsdv_svc_rs_c, dsdv_sm_gx at both entries).  Every SM write then needs an installed SOT config
+# (dsdv_sm_so_target bad[4]); the legacy SE / P.V-only programme faults all 16 slices (allq_failed receipt, unit 407762).
+# ALLQ + SMT: the job emits SOT (type 14, right after WIN_LOAD, booked from this static schedule) AND the SO programme
+# (SMJ kind 5 + 16 operand frames, so_frames) after the P.V drain; the slices' targets gather the o rows on the P.V
+# return tree inside the booked entry window (pv_x stamp); the half's done waits for the booked retires (so_pend).
+SMT = os.environ.get('OT_SVC_SMT', '1') == '1'
+SO_GAP = 16                  # last P.V word at the entry pins -> SMJ_SO header on q (edges)
+SOT_W_LAT = 53               # q edge of operand row r - q edge of SOT payload word 1 + SOT_W_LAT = target-relative edge of
+                             # its o-row write (tb_so_sot: row + 56 - (pw1 + 3); att and dsdv_svc_sot both decode cs)
+SOT_SLACK = 4                # booked write window margin each side (static; bad[9] outside)
+SOT_INST = 6                 # entry q pin edge of SOT pw1 -> entry target install edge (qp, r1, cs + sot cfg_v + cp_v + 1)
+DN_HOP = UP_HOP = RT_HOP = 5 # dn / up / return tree hop ages (dsdv_svc_rs: p0 p1 cs/rm o0 o1)
+GW_ARR = 9                   # read edge -> first gather word at the entry pv pins, + RT_HOP per depth (target 6, gw, rm, pv)
+GW_SP = 48                   # entry arrival spacing of consecutive heads of a half (a head's 24 words span 31 edges)
+GW_MARGIN = 16               # booked entry stamp window margin each side
+SO_RETIRE = 40               # read -> retire (dsdv_sm_so_target: 8th beat at read + 34)
+JD_SO = 6                    # last booked retire (+ up tree) -> entry jd done pulse (bench_sot cal: 8 gave +2)
+SO_ORDER = [g for k in range(8) for g in (k, k + 8)]   # operand frames E / W interleaved (see Job._frames)
 # on-die P path constants (share cycles; measured by tb_svc_lower, results/rtl/s81_layer_tput_1018/compiler/bench_svc_p):
 #   PIO = PIO0 + 5 ceil(T / 4) / 4 ... see p_sched(); PO = PIO + P_ARR + ceil(n / 2) + P_PO_M; PVO = PO + 8 ceil(T / 32) + KPV
 # measured 10-19 (bench_svc_p sweep, out_p1 build src 85340f61a, T 128, GO 1555): SM e rows land GO+283..GO+305; the
@@ -242,6 +261,8 @@ class Job:
         self.sinkw = sw
         self.tag, self.mutant = tag, mutant
         self.allq = ALLQ if allq is None else bool(allq)
+        self.fx = fx
+        self.so = self.allq and SMT                    # SOT + SO programme (RTLGAP-SUKV G-NORMALIZE-SO)
         if owner_epoch is not None and owner_epoch not in range(4):
             raise ValueError('Static allocation epoch outside two bits')
         self.owner = None if owner_epoch is None else (owner_epoch << 18) | (USER << 8) | tag
@@ -263,6 +284,8 @@ class Job:
         fr.append(('OWN_ROW', ow))
         fr.append(('WIN_LOAD', [hdr(2, 0, tag, spec=SB | (T << 81) | (0 << 89) | (self.wfirst << 99),
                                       pos=self.pos if self.owner is not None else 777)]))
+        if self.so and mut != 'no_sot':              # MUTANT 'no_sot': the predecessor programme (no SOT, SMT = 1 die)
+            fr.append(('SOT', [0, 0, 0]))            # booked by build() from this job's schedule (same 3 words)
         qb = C.bf16_bits(self.q)                                                                       # [16, 512]
         for b in range(2):
             ws = [hdr(1, 128, tag, spec=b << 448)]
@@ -291,6 +314,17 @@ class Job:
         self.p_words = [hdr(5, n, tag, pos=0, user=0)] + pw    # the PV frame as the fold root packs it (on-die)
         if not PPATH:
             fr.append(('PV', [hdr(5, n, tag, end=True)] + pw))
+        if self.so:
+            # SO programme: operand payload = this rank's P.V (FP32 bits, bit-identical to the on-die ALLQ P.V words the
+            # same bench checks); on the die these 534 words are the entry PVSO ingress' output (dsdv_pv_so_ingress)
+            cos, sin = rope_cs_u32(self.fx)
+            pvu = np.asarray(self.pv, np.float32).view(np.uint32)
+            self.so_pv_u32 = pvu
+            # heads interleaved E (0..7) / W (8..15): both halves' last o rows land at the end of the programme, so
+            # neither entry's done (booked retires) can precede the job's last q frame (ot_s81_svc_job: a done
+            # before the job's q frames passed is a fault -- measured bench_sot cal run, E done 2962 < last q 3001)
+            fr += so_frames(tag, cos, sin, pvu, mutant='hm_shift' if mut == 'so_hm_shift' else None,
+                            order=SO_ORDER)
         return fr
 
     # ------------------------------------------------------------------ static schedule (cycles at the entry q pins)
@@ -327,6 +361,10 @@ class Job:
                 self.go, self.pvs, self.po, self.pvo = go, pvs, po, pvo
             if name == 'PV':
                 t = self.go + self.pvs + (40 if self.mutant == 'late' else 0)   # MUTANT 'late': PV frame 40 edges late
+            if name == 'SMJ_SO':                       # after the last P.V word (both entries) + SO_GAP
+                t = max(t, self.go + self.pvo + PV_LAT + (2 * NPVQ if self.allq else NPVQ) - 1 + SO_GAP)
+            if name.startswith('SMJ_OP') and not any(k.startswith('SMJ_OP') for k in at):   # first operand frame:
+                t = max(t, at['SMJ_SO'] + 6 + SO_CS_LEAD - 1)
             at[name] = t
             fw[name] = [(t + k, w) for k, w in enumerate(ws)]
             for k, w in enumerate(ws):
@@ -440,12 +478,13 @@ def so_operand_rows(pv_u32):
     return [[sum(int(pv_u32[g, 16 * r + i]) << (32 * i) for i in range(16)) for r in range(32)] for g in range(H)]
 
 
-def so_frames(tag, cos, sin, pv_u32, jid=SO_JID, obase=SO_OBASE, mutant=None):
-    """[(name, [512-b words])]: SMJ kind 5 (header + 5 parameter rows) then 16 operand frames (header + 32 rows)"""
+def so_frames(tag, cos, sin, pv_u32, jid=SO_JID, obase=SO_OBASE, mutant=None, order=None):
+    """[(name, [512-b words])]: SMJ kind 5 (header + 5 parameter rows) then 16 operand frames (header + 32 rows);
+    order = the heads' operand-frame order (default 0..15; the frame of head g is SMJ_OP<g> whatever its position)"""
     fr = [('SMJ_SO', [hdr(9, 5, tag, spec=1 | (5 << 1) | ((jid & 255) << 5))] +
            so_param_rows(cos, sin, obase, mutant))]
     ops = so_operand_rows(pv_u32)
-    for g in range(H):
+    for g in (order or range(H)):
         gm = (g + 1) % H if mutant == 'hm_shift' else g   # MUTANT: head mask one head off
         fr.append((f'SMJ_OP{g}', [hdr(9, 32, tag, spec=(1 << 13) | (1 << (14 + gm)))] + ops[g]))
     return fr
@@ -477,9 +516,59 @@ def _op_t(sched, name, key):
     return None
 
 
-def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None):
+def so_depth():
+    """slice -> (head tile, tree depth, half) from the role ROM (smwire_cal.ROLE, cross-checked with tile_of)"""
+    sys.path.insert(0, str(ROOT / 'tools/s81_dv/sm_target'))
+    import smwire_cal as SW
+    out = {}
+    for sd, (t, d) in SW.ROLE.items():
+        assert tile_of(sd) == t, (sd, t, tile_of(sd))
+        out[sd] = (t, d, 'W' if sd < 8 else 'E')
+    return out
+
+
+def sot_booking_for(job, s):
+    """the SOT booking of this job's own static schedule (all cycles = entry q-pin edges of the bench / layer):
+    per head: SO write window from its operand frame, read / retire from the half's gather order (GW_SP apart at the entry,
+    back-computed through dn + return depth), one entry stamp window covering both halves, the halves' done edges."""
+    from sot_program import booking
+    at = s['at']
+    pw1 = at['SOT'] + 2
+    depth = so_depth()
+    owner = job.owner if job.owner is not None else (USER << 8) | job.tag
+    wr = {}
+    for g in range(H):
+        r0 = at[f'SMJ_OP{g}'] + 1
+        wr[g] = (r0 - pw1 + SOT_W_LAT - SOT_SLACK, r0 + 31 - pw1 + SOT_W_LAT + SOT_SLACK)
+    heads, arr, done = {}, {}, {}
+    for half in ('W', 'E'):
+        hs = sorted(((t, d) for sd, (t, d, hf) in depth.items() if hf == half), key=lambda x: (wr[x[0]][1], x[0]))
+        # arrival (entry pv pins) of head k's first word = pw1 + SOT_INST + DN_HOP d + read + GW_ARR + RT_HOP d
+        lead = lambda d: SOT_INST + GW_ARR + (DN_HOP + RT_HOP) * d
+        a0 = max(pw1 + wr[t][1] + 2 + lead(d) - GW_SP * k for k, (t, d) in enumerate(hs))
+        last = 0
+        for k, (t, d) in enumerate(hs):
+            a = a0 + GW_SP * k
+            rd = a - pw1 - lead(d)
+            heads[t] = dict(first=pw1 + SOT_INST + wr[t][0], last=pw1 + SOT_INST + wr[t][1],
+                            read=pw1 + SOT_INST + rd, retire=pw1 + SOT_INST + rd + SO_RETIRE)
+            arr[t] = (a, a + 31, d, half)
+            last = max(last, pw1 + SOT_INST + DN_HOP * d + rd + SO_RETIRE + UP_HOP * d)
+        done[half] = last + JD_SO
+    install = pw1 + SOT_INST
+    gx0 = install - 1                                  # dsdv_sm_gx counts from the sot cfg_v edge (one before install)
+    gf = min(a for a, _, _, _ in arr.values()) - gx0 - GW_MARGIN
+    gl = max(b for _, b, _, _ in arr.values()) - gx0 + GW_MARGIN
+    if job.mutant == 'so_win_short':                   # MUTANT: head 0's booked SO-write window closes 8 edges early
+        heads[0]['last'] -= 8 + 2 * SOT_SLACK
+    rec = booking(owner, 0x21, SO_JID, SO_OBASE, 1, install, heads, install + gf, install + gl)
+    rec.update(arrival=arr, done=done, pw1=pw1, gx_zero=gx0, entry_window=(gx0 + gf, gx0 + gl))
+    return rec
+
+
+def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_booking=None, allq=None):
     """the job + its static schedule at the layer's cycles (layer entry = 0)"""
-    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch)
+    job = Job(fx, tag=tag, mutant=mutant, owner_epoch=owner_epoch, allq=allq)
     if sot_booking is not None:
         from sot_program import attach_to_job
         attach_to_job(job, sot_booking)
@@ -493,6 +582,18 @@ def build(fx, sched=None, die=None, tag=0, mutant=None, owner_epoch=None, sot_bo
     dw, de = (s['done_nopv'], s['done']) if ST < 2 else (s['done'], s['done_nopv'])
     if job.allq:                                     # both entries drain 320 words from the same pv_first
         dw = de = s['done']
+    if job.so and 'SOT' in s['at']:                  # SMT: book the SOT from this schedule (same 3 q words, same cycles)
+        rec = sot_booking_for(job, s)
+        i = [k for k, (n_, _) in enumerate(job.frames) if n_ == 'SOT'][0]
+        job.frames[i] = ('SOT', list(rec['words']))
+        c0 = s['at']['SOT']
+        s['frame_words']['SOT'] = [(c0 + k, w) for k, w in enumerate(rec['words'])]
+        pos = {c: k for k, (c, _) in enumerate(s['words'])}
+        for k, w in enumerate(rec['words']):
+            s['words'][pos[c0 + k]] = (c0 + k, w)
+        s['sot'] = rec
+        dw, de = rec['done']['W'], rec['done']['E']    # the halves' done wait for their booked retires (so_pend)
+        assert min(dw, de) > s['words'][-1][0] + 1, 'an entry done would precede the job\'s last q frame (job gate fault)'
     s['done_w'], s['done_e'] = dw, de
     s['ls'] = max(dw + ag['jd_w'], de + ag['jd_e']) - s['s_j']
     s['ages'] = ag
@@ -514,17 +615,36 @@ def bench_image(job, s, out, base=60):
     meta[6] = len(img)
     sc, pv = job.expected_hex()
     hx = lambda ws, bits: ''.join(f'{x:0{-(-bits // 4)}x}\n' for x in ws)
+    so_files = {}
+    if job.so:
+        # SO o rows the targets must write / gather: fixture attn.normalize.unrope (BF16), [g * 32 + k] 256 b
+        fx = Path(job.fx)
+        ops = json.loads((fx / 'ops.json').read_text())
+        un = np.fromfile(fx / 'ops/attn.normalize.unrope.bin', dtype=np.dtype(ops['attn.normalize.unrope']['dtype']))
+        un = np.asarray(un.reshape(ops['attn.normalize.unrope']['shape'])[job.h0:job.h0 + H], np.float32).view(np.uint32)
+        assert not (un & 0xFFFF).any(), 'attn.normalize.unrope not BF16'
+        ub = un >> 16
+        so_files['oexp.hex'] = hx([sum(int(ub[g, 16 * k + i]) << (16 * i) for i in range(16))
+                                   for g in range(H) for k in range(32)], 256)
+    meta += [int(job.so), SO_OBASE, (USER << 8) | job.tag if job.owner is None else job.owner]
     files = {'meta.hex': hx(meta + [0] * (32 - len(meta)), 32),
              'qcyc.hex': hx([c + off for c, _ in w], 32), 'qwd.hex': hx([x for _, x in w], 512),
              'hkey.hex': hx(sorted(img), 64), 'hdat.hex': hx([img[k] for k in sorted(img)], 256),
-             'sc.hex': hx(sc, 33 * H), 'pv.hex': hx(pv, 33 * H), 'pexp.hex': hx(job.p_words, 512)}
+             'sc.hex': hx(sc, 33 * H), 'pv.hex': hx(pv, 33 * H), 'pexp.hex': hx(job.p_words, 512), **so_files}
     for k, v in files.items():
         (out / k).write_text(v)
     rec = dict(schema='opentallas.s81_dv.svc_bench_image.v1', tb_offset=off, mutant=job.mutant, tag=job.tag,
                j_arg=arg, j_word=f'{jw:09x}', frames={k: v + off for k, v in s['at'].items()},
                go=s['go'] + off, pvs=s['pvs'], po=s['po'], pvo=s['pvo'], pio=job.pio, ppath=PPATH, pv_first=s['pv_first'] + off,
                pv_last=s['pv_last'] + off, done_w=s['done_w'] + off, done_e=s['done_e'] + off, anchors=job.anchor, T=job.T, heads=[job.h0, job.h0 + H],
-               st=ST, allq=job.allq, npv=s['npv'], sha256={k: hashlib.sha256(v.encode()).hexdigest() for k, v in files.items()})
+               st=ST, allq=job.allq, npv=s['npv'], so=job.so,
+               sot=None if 'sot' not in s else dict(
+                   install=s['sot']['install_edge'] + off, pw1=s['sot']['pw1'] + off, heads=s['sot']['heads'],
+                   gather_first=s['sot']['gather_first'], gather_last=s['sot']['gather_last'],
+                   entry_window=[x + off for x in s['sot']['entry_window']],
+                   arrival={t: [a + off, b + off, d, hf] for t, (a, b, d, hf) in s['sot']['arrival'].items()},
+                   done={k: v + off for k, v in s['sot']['done'].items()}, words=[f'{w:0128x}' for w in s['sot']['words']]),
+               sha256={k: hashlib.sha256(v.encode()).hexdigest() for k, v in files.items()})
     (out / 'image.json').write_text(json.dumps(rec, indent=1) + '\n')
     return rec
 
@@ -647,7 +767,10 @@ def main(argv=None):
         die = DC.Die(DC.die_tree(DC.DIE_REF))
     except Exception as e:    # noqa: BLE001 -- the link ages fall back to the bind9 values
         print('die model unavailable, bind9 link ages:', e)
-    for mut in (None, 'slot', 'pio_early' if PPATH else 'late') + (('allq_off',) if ALLQ else ()):
+    muts = (None, 'slot', 'pio_early' if PPATH else 'late') + (('allq_off',) if ALLQ else ())
+    if ALLQ and SMT:          # RTLGAP-SUKV: SOT programme negatives (each must FAIL with a target / gather fault)
+        muts += ('no_sot', 'so_win_short', 'so_hm_shift')
+    for mut in muts:
         job, s = build(a.fixtures, sched, die, tag=a.tag, mutant=mut)
         rec = bench_image(job, s, Path(a.out) / (mut or 'base'))
         print(mut or 'base', json.dumps({k: rec[k] for k in ('go', 'pv_first', 'done_w', 'done_e', 'frames')}))
