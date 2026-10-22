@@ -63,13 +63,15 @@ class LiteralPinPlan(unittest.TestCase):
         self.assertIn(RT.ASSIGNED_PIN_EXACT_TCL,RT.referenced_paths(s,'physical/ref_tile/dut'))
 
     def test_synthesized_gate_uses_actual_index_bounds(self):
-        import pre_route_gate as PG
-        old=PG.ROOT;PG.ROOT=self.root
+        # Other tests reload pre_route_gate; this imported function can retain
+        # the previous module globals. Patch the function we actually exercise.
+        context=check_pins.__globals__
+        old=context["ROOT"];context["ROOT"]=self.root
         try:
             for bounds,fail in [([4,7],False),([0,3],True)]:
                 g=Gate();p=PortMap({'clk':(1,False),'d':(4,True),'one':(1,True)},{'d':bounds,'one':[0,0]})
                 check_pins(g,self.s,p,where='synthesized netlist')
                 self.assertEqual(fail,any(i['severity']=='FAIL'for i in g.items))
-        finally:PG.ROOT=old
+        finally:context["ROOT"]=old
 
 if __name__=='__main__':unittest.main()

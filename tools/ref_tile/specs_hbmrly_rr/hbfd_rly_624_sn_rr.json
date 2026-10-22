@@ -39,13 +39,19 @@
   "threads": 4,
   "peak_ram_gb": 8,
   "m5_pg_pitch": 2.7,
-  "hold_margin_ns": 0.025,
-  "macro_halo_um": 5.4
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "io_hold_margin_ns": 0.03
  },
  "job": {
   "owner": "Claude:HBM-RSTROW-RTL",
   "branch": "claude/hbm-rstrow-rtl-1019",
-  "tag": "rr",
+  "tag": "rrpo",
   "purpose": "HBM d4g row-reset relay hbfd_rly_624_SN_rr (coordinator 0jp Proposal A): hbfd_rly_624_SN (same ot_hbm_rly stage, same RS_RELAY, same outline / recipe / pin faces) + one row-reset flop rso on the downstream face N beside o (assert async, release 1 edge after rs); rso drives rs of the data successor relay(s), only row heads take a reset-forest leaf",
   "benches": [
    {
@@ -129,17 +135,29 @@
   "OT_OFLOP_AUTO": "0",
   "OT_OFLOP_GAP": "4.3"
  },
- "structural_change": "HBM-RSTROW rr (2026-10-19, coordinator 0jp Proposal A, HANDOFF ~04:10): NEW master hbfd_rly_624_SN_rr = hbfd_rly_624_SN (ot_hbm_rly stage instantiated unchanged, same RS_RELAY: stage release 3 edges after rs) + ONE row-reset flop (rso <= 1 on posedge ck, async clear by rs: release exactly 1 edge after rs), output pin rso on the downstream face N beside o.  Kit derived from the closed base spec hbfd_rly_624_sn (outline 64.8 x 23.76, recipe 3, pin faces, inhold / outhold / pin_reg settings unchanged); route.hold_margin_ns 0.01 -> 0.025 (common brief: boundary hold margin >= 0.025); reset_landing opted out (max_sinks 6: the RTL lands rs, the row release must stay 1 edge per station); 0 data cycles.",
+ "structural_change": "HBM-RSTROW rr (2026-10-19, coordinator 0jp Proposal A, HANDOFF ~04:10): NEW master hbfd_rly_624_SN_rr = hbfd_rly_624_SN (ot_hbm_rly stage instantiated unchanged, same RS_RELAY: stage release 3 edges after rs) + ONE row-reset flop (rso <= 1 on posedge ck, async clear by rs: release exactly 1 edge after rs), output pin rso on the downstream face N beside o.  Kit derived from the closed base spec hbfd_rly_624_sn (outline 64.8 x 23.76, recipe 3, pin faces, inhold / outhold / pin_reg settings unchanged); route.hold_margin_ns 0.01 -> 0.025 (common brief: boundary hold margin >= 0.025); reset_landing opted out (max_sinks 6: the RTL lands rs, the row release must stay 1 edge per station); 0 data cycles. PIN ORDER (PO-LINK 10-19): route.pin_balance + equal ascending i / o pin_ranges, rso at the far end of the downstream face (abutted-joint audit handoff_hbm.md rows 1-3).",
  "reset_landing": {
   "enable": false,
   "max_sinks": 6,
   "reason": "the RTL lands rs (HBM-RSTROW row reset, coordinator 0jp Proposal A): rs drives the row-reset flop rq (rso = rs + exactly 1 edge) + the registered reset relay ot_rst_relay (2 sync + 3 relay flops, async assert) = 6 sinks inside the 64.8 x 23.76 um strip; a 2-stage kit landing would make every station of a relay row release 3 edges after its upstream instead of 1 (the row head-age condition head + k + S <= D + 1 + k fails on long rows)"
  },
  "reroute_reason": {
-  "kind": "rtl_change",
-  "cell": "hbfd_rly_624_SN_rr",
-  "base_kit": "hbfd_rly_624_sn",
-  "fix": "new master: one row-reset flop added (rso), coordinator 0jp Proposal A (HANDOFF ~04:10)",
-  "why_route": "new master hbfd_rly_624_SN_rr: no closed view exists; the base hbfd_rly_624_SN RTL is unchanged and its stage is instantiated unchanged; the row-reset flop and the rso pin are new (rtl_change / new master)"
+  "kind": "pin_order",
+  "source": "results/arch/abutted_joints_1019/handoff_hbm_rr.md",
+  "fix": "route.pin_balance {group_max 1, h M4, v M3 M5} + equal ascending per-port pin_ranges i = o = [0.6, 62.8] um (bit k at the same offset on the upstream and downstream faces), rso [63.4, 64.2] at the far end of the downstream face, replacing the closed view's PPL chunk-scrambled order inherited from the base kit (pin_order rule c81a8f458); RTL, outline, pin faces unchanged"
+ },
+ "pin_ranges": {
+  "i": [
+   0.6,
+   62.8
+  ],
+  "o": [
+   0.6,
+   62.8
+  ],
+  "rso": [
+   63.4,
+   64.2
+  ]
  }
 }

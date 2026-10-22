@@ -1,3 +1,12 @@
+# PG binding is required before protection in standard mode too. This is a
+# source-owned CTS boundary, not a native birth-callback capability.
+set ot_pg_helper [file join [file dirname [info script]] native_pg_binding.tcl]
+if {[info exists ::env(OT_PG_HELPER)]} {set ot_pg_helper $::env(OT_PG_HELPER)} elseif {![file exists $ot_pg_helper]} {set ot_pg_helper /src/physical/common_flow/native_pg_binding.tcl}
+source $ot_pg_helper
+ot_pg_install_final_write_guard
+ot_pg_install_rc_observers
+ot_pg_install_unsupported_birth_guards
+
 # CLAUDE setup-triage 2026-10-07: keep data-path timing repair off the clock tree.
 #
 # Triage evidence (setup-triage.md, hfd_svc_SE_s5 r18, -167 ps): the CTS-stage repair_timing in cts.tcl inserted
@@ -7,24 +16,83 @@
 # every CTS buffer dont_touch before each repair_timing_helper call, so resizer moves (rebuffer, buffer removal,
 # cloning) cannot restructure a balanced tree.  Clock-net DRV repair stays with CTS (-repair_clock_nets) and the
 # later repair_clock_nets / repair_design calls (dont_touch only binds resizer timing moves).  Constraints unchanged.
+# Standard mode: connected PG terminal count (cheap: PG nets only).
+proc ot_pg_standard_pg_iterm_count {blk} {
+  set c 0
+  foreach n [$blk getNets] {
+    if {[$n getSigType] in {POWER GROUND}} {incr c [llength [$n getITerms]]}
+  }
+  return $c
+}
+# Standard mode: re-establish the RC model the caller estimated (routed after
+# global_route, placement otherwise); no estimate before any cell is placed.
+proc ot_pg_standard_reestimate {blk where} {
+  if {[info commands grt::have_routes] ne "" && [grt::have_routes]} {
+    estimate_parasitics -global_routing
+    puts "OT_PG_STANDARD_REESTIMATE $where model=global_routing"
+    return
+  }
+  foreach i [$blk getInsts] {
+    if {[$i isPlaced] && ![$i isFixed]} {
+      estimate_parasitics -placement
+      puts "OT_PG_STANDARD_REESTIMATE $where model=placement"
+      return
+    }
+  }
+  puts "OT_PG_STANDARD_REESTIMATE $where skipped=unplaced"
+}
 proc ot_protect_clock_tree {} {
   set blk [ord::get_db_block]
+  if {[ot_pg_strict_enabled]} {
+    ot_pg_require_cts_placement_context
+    # Include open-output CTS loads, port/hold cells and physical-only masters.
+    # This fixes protection ordering; native CTS may already have estimated RC
+    # internally. The explicit refresh below establishes only new placement RC.
+    set pg_bound [ot_pg_bind_batch_before_protect $blk [$blk getInsts]]
+    ot_pg_assert_all_native $blk [ot_pg_prepare $blk]
+  } else {
+    set pg_before [ot_pg_standard_pg_iterm_count $blk]
+    set pg_bound [ot_pg_standard_bind protect_clock_tree]
+    # ROOT11 10-20 (PVM9 r6b EST-0104): binding PG on new CTS/repair cells
+    # after the caller's estimate leaves an inconsistent parasitics state for
+    # the repair_timing that follows. Refresh with the caller's own model, only
+    # when global_connect actually changed a PG binding.
+    if {[ot_pg_standard_pg_iterm_count $blk] != $pg_before} {ot_pg_standard_reestimate $blk protect_clock_tree}
+  }
   set k 0; set j 0
   foreach n [$blk getNets] {
     if {[$n getSigType] ne "CLOCK"} continue
-    if {![$n isDoNotTouch]} { $n setDoNotTouch 1; incr k }
     set d [$n getFirstOutput]
     if {$d ne "NULL" && $d ne ""} {
       set i [$d getInst]
       if {[regexp {^(clkbuf|delaybuf|clkload|wire|max_length|ot_fclk_root_buf)} [$i getName]] && ![$i isDoNotTouch]} { $i setDoNotTouch 1; incr j }
     }
+    if {![$n isDoNotTouch]} { $n setDoNotTouch 1; incr k }
   }
-  puts "OT_CLK_PROTECT dont_touch clock nets=$k clock buffers=$j"
+  # PG metadata changes invalidate an already estimated parasitics state. CTS
+  # invokes this hook immediately before timing repair, after its own estimate.
+  if {[ot_pg_strict_enabled] && [info exists ::ot_pg_bindings_dirty] && $::ot_pg_bindings_dirty > 0} {
+    # Earlier hooks may have changed bindings even when this hook adds none.
+    ot_pg_require_cts_placement_context
+    estimate_parasitics -placement
+  }
+  puts "OT_CLK_PROTECT dont_touch clock nets=$k clock buffers=$j pg_bound=$pg_bound scope=source_cts_before_protect"
 }
 if {[info procs repair_timing_helper] ne "" && [info procs ot_cp_repair_timing_helper] eq ""} {
   rename repair_timing_helper ot_cp_repair_timing_helper
   proc repair_timing_helper {args} {
     ot_protect_clock_tree
-    ot_cp_repair_timing_helper {*}$args
+    set result [ot_cp_repair_timing_helper {*}$args]
+    if {![ot_pg_strict_enabled]} {return $result}
+    # Repair inserts non-clock hold/setup cells. Bind the complete native cohort
+    # before the caller's next report/checkpoint and explicitly re-estimate RC.
+    # This does not cover analysis performed INSIDE the native repair command.
+    ot_pg_require_cts_placement_context
+    set block [ord::get_db_block]
+    set bound [ot_pg_bind_batch_before_protect $block [$block getInsts]]
+    if {$::ot_pg_bindings_dirty > 0} {estimate_parasitics -placement}
+    ot_pg_assert_all_native $block [ot_pg_prepare $block]
+    puts "OT_PG_POST_REPAIR bound=$bound scope=source_cts_return_boundary"
+    return $result
   }
 }

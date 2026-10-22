@@ -1,0 +1,95 @@
+{
+  "top": "ot_hidx_col8_region",
+  "why": "Real Col8 column inside TP192 quarter; control face own clock, four pair regions, all regional crossings landed. Not final quarter qualification.",
+  "sources": [
+    "rtl/hdc/v41x/col8_parent_1021/ot_hidx_col8_region.sv"
+  ],
+  "child_sources": [
+    "rtl/hdc/v41x/ot_hbm_idx_score_col8.sv",
+    "rtl/hdc/v41x/col8_parent_1021/ot_hidx_col8_join.sv"
+  ],
+  "defines": [],
+  "out_dir": "rtl/hdc/v41x/col8_parent_1021/lp",
+  "record_dir": "results/arch/hbm_col8_parent_1021/column",
+  "clock_ports": [
+    "clk"
+  ],
+  "clock_pins": [
+    "clk"
+  ],
+  "reset_port": "rst_n",
+  "reset_pins": [
+    "rst_n"
+  ],
+  "port_regions": {
+    "qv_b": "ctl",
+    "q_b": "ctl",
+    "key": "ctl",
+    "hid": "ctl",
+    "cs_out": "ctl",
+    "cf_out": "ctl",
+    "prdy0": "ctl",
+    "prdy1": "ctl",
+    "prdy2": "ctl",
+    "prdy3": "ctl"
+  },
+  "regions": [
+    {
+      "name": "ctl",
+      "insts": [
+        "u_join"
+      ],
+      "centre": [
+        388.8,
+        43.2
+      ]
+    },
+    {
+      "name": "p0",
+      "insts": [
+        "u_pair0"
+      ],
+      "centre": [
+        151.2,
+        172.8
+      ]
+    },
+    {
+      "name": "p1",
+      "insts": [
+        "u_pair1"
+      ],
+      "centre": [
+        410.4,
+        172.8
+      ]
+    },
+    {
+      "name": "p2",
+      "insts": [
+        "u_pair2"
+      ],
+      "centre": [
+        410.4,
+        388.8
+      ]
+    },
+    {
+      "name": "p3",
+      "insts": [
+        "u_pair3"
+      ],
+      "centre": [
+        151.2,
+        388.8
+      ]
+    }
+  ],
+  "landing_chunk_bits": 12,
+  "landing_reset_forest": true,
+  "bench": {
+    "cycles": 500,
+    "reset_cycles": 50,
+    "sim": "verilator"
+  }
+}

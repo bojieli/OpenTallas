@@ -97,7 +97,7 @@ source [lindex $argv 1]
     def test_gate_remote_script_formats(self):
         import pre_route_gate as G
         self.assertIn('GATE_PIN_REGS_B64', G.REMOTE_SH)
-        G.REMOTE_SH.format(R='r', COMMIT='c', CAP=1, KIT='k', IMG='i', RC='x', TOP='t', CTS=0, PGM=32, TRIAL=0,
+        G.REMOTE_SH.format(R='r', COMMIT='c', CAP=1, KIT='k', IMG='i', RC='x', TBX='', BRP='', TOP='t', CTS=0, PGM=32, TRIAL=0,
                            GRTX='', CLKS='ck', CLK='ck', ARCHIVE_SHA256='s', STEP_CAP=1)
 
     def test_trial_grt_single_tile_skips_incremental_repair(self):
@@ -106,7 +106,7 @@ source [lindex $argv 1]
         self.assertEqual(G.trial_grt_make_args({"top": "t"}), "SKIP_INCREMENTAL_REPAIR=1 ")
         for spec in ({"kind": "cluster"}, {"children": ["a"]}, {"macros": ["m"] * 4}):
             self.assertEqual(G.trial_grt_make_args(spec), "")
-        sh = G.REMOTE_SH.format(R='r', COMMIT='c', CAP=1, KIT='k', IMG='i', RC='x', TOP='t', CTS=0, PGM=32, TRIAL=1,
+        sh = G.REMOTE_SH.format(R='r', COMMIT='c', CAP=1, KIT='k', IMG='i', RC='x', TBX='', BRP='', TOP='t', CTS=0, PGM=32, TRIAL=1,
                                 GRTX=G.trial_grt_make_args({}), CLKS='ck', CLK='ck', ARCHIVE_SHA256='s', STEP_CAP=1)
         self.assertIn("GENERATE_ARTIFACTS_ON_FAILURE=1 SKIP_INCREMENTAL_REPAIR=1 grt", sh)
 

@@ -13,7 +13,13 @@ set X0 [$ot_ld_die xMin]; set Y0 [$ot_ld_die yMin]; set X1 [$ot_ld_die xMax]; se
 set nb [expr {[info exists ::env(OT_LAYOUT_BINS)] ? $::env(OT_LAYOUT_BINS) : 64}]
 set bw [expr {double($X1 - $X0) / $nb}]; set bh [expr {double($Y1 - $Y0) / $nb}]
 for {set i 0} {$i < $nb * $nb} {incr i} { set ot_ld_g($i) 0.0; set ot_ld_cov($i) 0 }
-set blocks {}; set std 0.0; set barea 0.0
+set blocks {}; set std 0.0; set barea 0.0; set std_cells {}; set rows {}
+# Actual instance/row census: density bins lose cells covered by macro bins.
+proc ot_ld_um_exact {v} { return [format %.6f [expr {$v / $::ot_ld_dbu}]] }
+foreach row [$ot_ld_block getRows] {
+  set bb [$row getBBox]
+  lappend rows "\[[ot_ld_q [$row getName]], [ot_ld_um_exact [$bb xMin]], [ot_ld_um_exact [$bb yMin]], [ot_ld_um_exact [$bb xMax]], [ot_ld_um_exact [$bb yMax]]\]"
+}
 foreach inst [$ot_ld_block getInsts] {
   set m [$inst getMaster]
   set bb [$inst getBBox]
@@ -31,6 +37,7 @@ foreach inst [$ot_ld_block getInsts] {
   if {[$m getType] ne "CORE" && ![string match "CORE*" [$m getType]]} { continue }
   if {[string match "TAPCELL*" [$m getName]] || [string match "FILLER*" [$m getName]] || [string match "DECAP*" [$m getName]]} { continue }
   set std [expr {$std + $a}]
+  lappend std_cells "\[[ot_ld_q [$inst getName]], [ot_ld_q [$m getName]], [ot_ld_q [$inst getPlacementStatus]], [ot_ld_um_exact [$bb xMin]], [ot_ld_um_exact [$bb yMin]], [ot_ld_um_exact [$bb xMax]], [ot_ld_um_exact [$bb yMax]]\]"
   if {[$inst getPlacementStatus] eq "NONE" || [$inst getPlacementStatus] eq "UNPLACED"} { continue }
   set i [expr {min($nb - 1, max(0, int((([$bb xMin] + [$bb xMax]) / 2.0 - $X0) / $bw)))}]
   set j [expr {min($nb - 1, max(0, int((([$bb yMin] + [$bb yMax]) / 2.0 - $Y0) / $bh)))}]
@@ -98,6 +105,9 @@ set top [expr {[info exists ::env(OT_LAYOUT_TOP)] ? $::env(OT_LAYOUT_TOP) : [$ot
 set f [open $::env(OT_LAYOUT_OUT) w]
 puts $f "{\"top\": [ot_ld_q $top], \"die\": \[[ot_ld_um $X0], [ot_ld_um $Y0], [ot_ld_um $X1], [ot_ld_um $Y1]\],"
 puts $f " \"stats\": {\"fill\": [format %.3f [expr {($std + $barea) / $dA}]], \"std_area\": [format %.1f [expr {$std / $ot_ld_dbu / $ot_ld_dbu}]], \"block_area\": [format %.1f [expr {$barea / $ot_ld_dbu / $ot_ld_dbu}]], \"die_area\": [format %.1f [expr {$dA / $ot_ld_dbu / $ot_ld_dbu}]]},"
+puts $f " \"occupancy_schema\": \"opentallas.layout.occupancy.v1\","
+puts $f " \"std_cells\": \[[join $std_cells ",\n  "]\],"
+puts $f " \"rows\": \[[join $rows ",\n  "]\],"
 puts $f " \"clocks\": \[[join $clocks ", "]\],"
 puts $f " \"blocks\": \[[join $blocks ",\n  "]\],"
 puts $f " \"pins\": \[[join $pins ",\n  "]\],"
