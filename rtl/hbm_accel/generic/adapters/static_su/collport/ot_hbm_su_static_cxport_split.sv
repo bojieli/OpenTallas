@@ -145,7 +145,7 @@ endmodule
 // phase, bit-exact (idl'[t] after p+1 == idl[t-1] after p). ins_coll (unreachable at SD=0: LMAX == LMIN) reports one
 // stream edge later. MUT 5 (OBR=1 only): bank select not re-timed (selects the bank of edge p+1).
 module ot_hbm_su_static_cxport_ij_s #(
- parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0, R=8, OBR=0
+ parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0, R=8, OBR=0, SAFE_STREAM=0
 )(
  input wire clk_s, rst_s_n,
  input wire [1:0] inj_rd,
@@ -196,6 +196,19 @@ module ot_hbm_su_static_cxport_ij_s #(
    nz_s[3*k+:3] = {|{a[2:0], a[17:16]^2'(QID), a[39]}, |a[28:18], |a[38:29]};
   end
  end
+ generate if(SAFE_STREAM) begin:g_safe_stream
+  wire [31:0] req = {nz_s, iv_s, ig_s, ib_s};
+  for(genvar c=0;c<4;c=c+1) begin:g_req
+   (* keep_hierarchy="yes" *) ot_hbm_cxijs_req_copy #(.COPY_ID(c)) u_req(
+    .clk(clk_s),.rst_n(rst_s_n),.d(req[8*c+:8]),.q0(jb0[8*c+:8]),.q1(jb1[8*c+:8]));
+  end
+  wire [127:0] collisions;
+  for(genvar c=0;c<128;c=c+1) begin:g_word
+   (* keep_hierarchy="yes" *) ot_hbm_cxijs_word_copy #(.COPY_ID(c),.K(K),.LMIN(LMIN),.LMAX(LMAX),.OBR(OBR),.MUT(MUT),.SD(SD)) u_word(
+    .clk(clk_s),.rst_n(rst_s_n),.ob0(ob0[8*c+:8]),.ob1(ob1[8*c+:8]),.q(inj_d[8*c+:8]),.collision(collisions[c]));
+  end
+  always @* ins_coll = |collisions;
+ end else begin:g_legacy_stream
  always @(posedge clk_s) if(sp!=2'd2) begin
   if(wp[0]) jb1 <= {nz_s, iv_s, ig_s, ib_s}; else jb0 <= {nz_s, iv_s, ig_s, ib_s};
  end
@@ -230,6 +243,7 @@ module ot_hbm_su_static_cxport_ij_s #(
  always @(posedge clk_s or negedge rst_s_n)
   if(!rst_s_n) ins_coll<=1'b0; else if(ins>OBR && (|idl[ins-1])) ins_coll<=1'b1;
  always @* inj_d = idl[K];
+ end endgenerate
 endmodule
 
 module ot_hbm_su_static_cxport_ij_q #(parameter integer SD=0, MUT=0, R=8, SAFE_GATHER=0)(
@@ -344,7 +358,7 @@ endmodule
 // composition with the old leaf ports (bench lockstep vs the hub; the die binds ij_s + ij_q as two abutted leaves)
 module ot_hbm_su_static_cxport_ij #(
  parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0, OBR=0,
- parameter integer SAFE_GATHER=0   // HBM-OWN/SU 10-21: closed ij_q view hbm_su_cx_ijq_1019t-t1-5a6486280 is SAFE_GATHER=1 (die binds with 1)
+ parameter integer SAFE_GATHER=0, SAFE_STREAM=0   // HBM-OWN/SU 10-21: closed ij_q view hbm_su_cx_ijq_1019t-t1-5a6486280 is SAFE_GATHER=1 (die binds with 1)
 )(
  input wire clk_s, clk_q, rst_s_n, rst_q_n,   // epoch reset per domain
  input wire [1:0] inj_rd,
@@ -354,7 +368,7 @@ module ot_hbm_su_static_cxport_ij #(
  output wire fault
 );
  wire [31:0] jb0, jb1; wire [1023:0] ob0, ob1; wire sfs, icl;
- ot_hbm_su_static_cxport_ij_s #(.QID(QID),.B39_NOOP(B39_NOOP),.INJ_RET(INJ_RET),.RQ(RQ),.RQC(RQC),.SD(SD),.MUT(MUT),.OBR(OBR)) u_s(
+ ot_hbm_su_static_cxport_ij_s #(.QID(QID),.B39_NOOP(B39_NOOP),.INJ_RET(INJ_RET),.RQ(RQ),.RQC(RQC),.SD(SD),.MUT(MUT),.OBR(OBR),.SAFE_STREAM(SAFE_STREAM)) u_s(
   .clk_s(clk_s),.rst_s_n(rst_s_n),.inj_rd(inj_rd),.inj_addr(inj_addr),.inj_d(inj_d),.jb0(jb0),.jb1(jb1),.ob0(ob0),.ob1(ob1),
   .sfault_s(sfs),.ins_coll(icl));
  ot_hbm_su_static_cxport_ij_q #(.SD(SD),.MUT(MUT),.SAFE_GATHER(SAFE_GATHER)) u_q(.clk_q(clk_q),.rst_q_n(rst_q_n),.jb0(jb0),.jb1(jb1),
@@ -531,7 +545,7 @@ endmodule
 // ------------------------------------------------------------------------------------------------ composition (bench)
 module ot_hbm_su_static_cxport_split #(
  parameter integer QID=0, B39_NOOP=0, INJ_RET=11, RQ=0, RQC=0, SD=0, MUT=0, OBR=0,
- parameter integer SAFE_GATHER=0   // HBM-OWN/SU 10-21: closed ij_q view hbm_su_cx_ijq_1019t-t1-5a6486280 is SAFE_GATHER=1 (die binds with 1)
+ parameter integer SAFE_GATHER=0, SAFE_STREAM=0   // HBM-OWN/SU 10-21: closed ij_q view hbm_su_cx_ijq_1019t-t1-5a6486280 is SAFE_GATHER=1 (die binds with 1)
 )(
  input wire clk_s, clk_q, rst_n,
  input wire [1:0] inj_rd, input wire [159:0] inj_addr, output wire [1023:0] inj_d,
@@ -551,7 +565,7 @@ module ot_hbm_su_static_cxport_split #(
    .del_valid(del_valid[g]),.del_flit(del_flit[545*g+:545]),.del_obase(del_obase[40*g+:40]),
    .dw_v(dw_v[2*g+:2]),.dw_row(dw_row[18*g+:18]),.dw_d(dw_d[1024*g+:1024]),.fault(f_dl[g]));
  end
- ot_hbm_su_static_cxport_ij #(.QID(QID),.B39_NOOP(B39_NOOP),.INJ_RET(INJ_RET),.RQ(RQ),.RQC(RQC),.SD(SD),.MUT(MUT),.OBR(OBR),.SAFE_GATHER(SAFE_GATHER)) u_ij(
+ ot_hbm_su_static_cxport_ij #(.QID(QID),.B39_NOOP(B39_NOOP),.INJ_RET(INJ_RET),.RQ(RQ),.RQC(RQC),.SD(SD),.MUT(MUT),.OBR(OBR),.SAFE_GATHER(SAFE_GATHER),.SAFE_STREAM(SAFE_STREAM)) u_ij(
   .clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_n),.rst_q_n(rst_n),.inj_rd(inj_rd),.inj_addr(inj_addr),.inj_d(inj_d),.inj_q0(inj_q[0+:1024]),.inj_q1(inj_q[1024+:1024]),.inj_q2(inj_q[2048+:1024]),.inj_q3(inj_q[3072+:1024]),.fault(f_ij));
  ot_hbm_su_static_cxport_rc #(.MUT(MUT)) u_rc(.clk_s(clk_s),.clk_q(clk_q),.rst_s_n(rst_n),.rst_q_n(rst_n),.rc_v(rc_v),.rc_tag(rc_tag),
   .rc_d(rc_d),.rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.red_sv(red_sv),.red_tag(red_tag),.red_x(red_x),.rr_wv(rr_wv),
@@ -579,4 +593,50 @@ endmodule
    end
   end
  end
+endmodule
+
+// Same-edge local control replication for the stream half. Kept autonomous
+// phase/bank state limits each decode and select to an eight-bit data slice.
+// No data, request, output or collision edge moves; SAFE_STREAM is opt-in.
+(* keep_hierarchy="yes" *)
+module ot_hbm_cxijs_req_copy #(parameter integer COPY_ID=0)(
+ input wire clk,rst_n,input wire[7:0] d,output reg[7:0] q0,q1);
+ (* keep="true" *) reg[1:0] sp;
+ (* keep="true" *) reg wp;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n) begin sp<=0;wp<=0;end
+  else begin sp<=sp+2'd1;if(sp!=2)wp<=~wp;end
+ always @(posedge clk) if(sp!=2) begin if(wp)q1<=d;else q0<=d;end
+endmodule
+(* keep_hierarchy="yes" *)
+module ot_hbm_cxijs_word_copy #(parameter integer COPY_ID=0,K=0,LMIN=8,LMAX=8,OBR=0,MUT=0,SD=0)(
+ input wire clk,rst_n,input wire[7:0] ob0,ob1,output wire[7:0] q,output reg collision);
+ (* keep="true" *) reg[1:0] sp;
+ (* keep="true" *) reg wp;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n) begin sp<=0;wp<=0;end
+  else begin sp<=sp+2'd1;if(sp!=2)wp<=~wp;end
+ function automatic integer lat_of(input integer ph);
+  integer a,n,m,pp;
+  begin a=40+ph;n=(3*a+6)/4;m=n+4+SD;pp=(4*m+5)/3;lat_of=pp-a;end
+ endfunction
+ function automatic integer ins_of(input integer rp);
+  integer ph,r;begin r=-1;for(ph=0;ph<4;ph=ph+1)
+   if(ph!=2&&((ph+lat_of(ph))%4)==rp)r=lat_of(ph)-LMIN;ins_of=r;end
+ endfunction
+ localparam integer I0=ins_of(0),I1=ins_of(1),I3=ins_of(3);
+ reg[7:0] obr0,obr1;
+ always @(posedge clk)begin obr0<=ob0;obr1<=ob1;end
+ wire sel=(MUT==5)?~wp:wp;
+ wire[7:0] ev_i=OBR?(sel?obr1:obr0):(wp?ob0:ob1);
+ reg[7:0] idl[0:K];integer ins;
+ always @* if(OBR==0)ins=(sp==0)?I0:(sp==1)?I1:(sp==3)?I3:-1;
+  else ins=(sp==1)?I0+1:(sp==2)?I1+1:(sp==0)?I3+1:-1;
+ always @(posedge clk)begin
+  for(integer t=0;t<=K;t=t+1)idl[t]<=(t==0)?8'd0:idl[t-1];
+  if(ins>=0)idl[ins]<=ev_i;
+ end
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)collision<=0;else if(ins>OBR&&(|idl[ins-1]))collision<=1;
+ assign q=idl[K];
 endmodule
