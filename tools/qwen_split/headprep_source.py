@@ -17,7 +17,8 @@ REQUIRED = {p:(w,'output') for p,_,w in PREP}
 REQUIRED.update(ck_core=(1,'input'),ck_hr=(1,'input'),hr=(453,'output'),ctx_x=(129,'input'),dh_user=(2,'input'))
 
 def validate_ports(master, ports):
-    if master != MASTER:
+    from qwen_split import headprep_corepub_source as CP
+    if master != MASTER and master not in {c['master'] for c in CP.CONTRACTS.values()}:
         raise ValueError('head prepare requires exact unique HP13 source master')
     for p, spec in REQUIRED.items():
         if ports.get(p) != spec:
@@ -36,6 +37,10 @@ def select(default, root, env=None):
             raise ValueError('HP13 source identity differs: '+path)
     from qwen_split.source_pin_plan import rtl_ports
     validate_ports(MASTER,rtl_ports(root/SOURCE,MASTER))
+    variant=env.get('OT_QWEN_HP13_COREPUB','0')
+    if variant != '0':
+        from qwen_split import headprep_corepub_source as CP
+        return CP.select(root,variant)
     return MASTER,SOURCE
 
 def prepare_joins(master, source_ports, native_ports):
@@ -47,3 +52,10 @@ def prepare_joins(master, source_ports, native_ports):
 
 def reject_unbound_hr_age():
     raise ValueError('HP13 fixed native has no parameter overrides: source construction XPF21 is not actual GEN transport; exact HR source/output age and fixed-XPF route reconciliation remain unqualified (never inherit old HR_PIN_REG1)')
+
+def selected_master(env=None):
+    env=os.environ if env is None else env
+    variant=env.get('OT_QWEN_HP13_COREPUB','0')
+    if variant=='0': return MASTER
+    from qwen_split import headprep_corepub_source as CP
+    return CP.contract(variant)['master']
