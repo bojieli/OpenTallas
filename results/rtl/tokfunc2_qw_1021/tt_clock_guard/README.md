@@ -1,0 +1,9 @@
+# TT clock availability refusal
+
+Canonical source correction45672c8d6eddfae16eac5ac721fa0bfb091eb872 supersedes the old numeric4/status for actual availability. The exact canonical and historical receipt bytes are preserved here. The historical SHA remains b5c16502741b342326300dc66ba5f808d49d8e01472332f908a037adec9a2ab3; its original status is not rewritten.
+
+All39 source producer QFFs sample ck_core, while all39 final EMB QFFs sample ck_hr through LP29–32. The original native/flat fixture ties both clocks to the same signal. Thus1+(output6−GI3)=4 is a COMMON-CLOCK REFERENCE count, not an actual elapsed core/HR availability age. The canonical status is COMMON_CLOCK_REFERENCE_ONLY_NOT_ACTUAL_AVAILABILITY; source_local_edges and actual_availability_edges are null, reference_source_local_edges is4, and actual_GEN_clock_relation is null.
+
+The compiler explicitly refuses that canonical status/unit. The older QUALIFIED_SOURCE_LOCAL_EDGES status cannot bypass a mandatory actual availability/selected-GEN clock-law gate. GI/reference arithmetic stays internally checked but no longer equals or supplies the actual intrinsic age. No positive clock-law exporter schema exists in the canonical source packet, so nonempty unrecognized objects are also refused rather than inventing a future qualification API. A genuine selected-GEN packet must define, bind and validate that future schema before generation can proceed.
+
+Three pure CLI checks assert exact diagnostics and absent output directories: actual canonical input, actual historical qualified-four receipt in an otherwise populated synthetic envelope, and an unrecognized nonempty clock-law object. The existing nine TT/GEN refusal checks also pass. No simulator, build, GEN, clock/phase repair, image or playback was run. Existing raw calibration/numeric receipts are unchanged. Final sole73 image and token price remain held;482 source GEN refusal is untouched.

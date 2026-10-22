@@ -88,9 +88,13 @@
  },
  "sole73": {
   "verdict": "NOT_GENERATED",
-  "reason": "Qualified selected TT/native intrinsic ledger and actual Q/K GEN transports/header ages absent; candidate local4/XPF20 does not qualify selected21",
+  "reason": "Selected GEN/transport/header ages absent; TT4 is common-clock-reference only across ck_core\u2192ck_hr, not actual availability. Canonical mixed-clock override forbids historical qualified-four fallback.",
   "kv_intermediate": "c6520b2ee EMB_WIN595; not final73",
-  "selected_slice_timing": "UNKNOWN; no old187/248 or projected192/253 substitution"
+  "selected_slice_timing": "UNKNOWN; no old187/248 or projected192/253 substitution",
+  "tt_clock_status": "COMMON_CLOCK_REFERENCE_ONLY_NOT_ACTUAL_AVAILABILITY",
+  "actual_tt_availability_edges": null,
+  "reference_tt_common_clock_edges": 4,
+  "tt_clock_canonical_commit": "45672c8d6eddfae16eac5ac721fa0bfb091eb872"
  },
  "calibration_repair": {
   "verdict": "PASS",

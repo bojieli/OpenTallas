@@ -30,6 +30,20 @@ def require_status_observation_ages(receipt):
             raise SystemExit(f'unknown required coherent STATUS GEN path: {key}')
 
 
+def require_actual_tt_clock_law(tt):
+    # Canonical correction45672: these offsets are common-clock-reference
+    # counts across ck_core -> ck_hr. Never use 1+(6-3) as elapsed availability.
+    if (type(tt.get('actual_availability_edges')) is not int
+            or tt['actual_availability_edges'] < 0
+            or not isinstance(tt.get('actual_GEN_clock_relation'), dict)
+            or not tt['actual_GEN_clock_relation']):
+        raise SystemExit('actual TT availability and selected GEN clock-law binding required; no historical four-edge fallback')
+    # No positive clock-law exporter schema exists in the canonical packet.
+    # A future genuine selected-GEN packet must define and validate that schema;
+    # merely supplying a nonempty object must not manufacture qualification.
+    raise SystemExit('unrecognized actual TT GEN clock-law schema; genuine selected exporter packet required')
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--source-dir', type=Path, required=True)
@@ -64,6 +78,9 @@ def main():
     if not isinstance(intrinsic, dict) or any(type(intrinsic.get(k)) is not int or intrinsic[k] < 1 for k in names):
         raise SystemExit('unknown source-bound TT/native/held-bank intrinsic edge ledger')
     tt = receipt.get('tt_source')
+    if isinstance(tt, dict) and (tt.get('status') == 'COMMON_CLOCK_REFERENCE_ONLY_NOT_ACTUAL_AVAILABILITY'
+                                or tt.get('clock_unit') == 'COMMON_CLOCK_REFERENCE_INDEX_ONLY'):
+        raise SystemExit('TT common-clock reference is not actual source availability; selected GEN clock law required')
     if not isinstance(tt, dict) or tt.get('producer_instance') != 'u_gi':
         raise SystemExit('actual selected TT source/GI qualification receipt required')
     if tt.get('status') != 'QUALIFIED_SOURCE_LOCAL_EDGES':
@@ -78,9 +95,11 @@ def main():
         if type(tt.get(key)) is not int or tt[key] < 0:
             raise SystemExit(f'unknown actual TT source-local age: {key}')
     if (tt['calendar_sample_edges'] != 1
-            or tt['output_offset_edges'] - tt['producer_offset_edges'] != tt['source_to_output_edges']
-            or tt['calendar_sample_edges'] + tt['source_to_output_edges'] != intrinsic['ct_lm_sample']):
-        raise SystemExit('TT intrinsic age disagrees with qualified producer-relative LP source ledger')
+            or tt['output_offset_edges'] - tt['producer_offset_edges'] != tt['source_to_output_edges']):
+        raise SystemExit('TT reference offsets disagree with producer-relative LP source ledger')
+    actual_tt_edges = require_actual_tt_clock_law(tt)
+    if actual_tt_edges != intrinsic['ct_lm_sample']:
+        raise SystemExit('TT intrinsic age disagrees with actual GEN clock-law availability')
     expected_head = sum(intrinsic[k] for k in names) + receipt['tt_to_native_edges'] + receipt['native_to_sysface_edges']
     if receipt['head_prepare_edges'] != expected_head:
         raise SystemExit('head_prepare_edges disagrees with actual source-intrinsic/GEN transport ledger')

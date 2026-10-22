@@ -1,0 +1,25 @@
+{
+ "verdict": "PASS",
+ "scope": "pure input refusal; no GEN/image/simulation",
+ "historical_input_sha256": "b5c16502741b342326300dc66ba5f808d49d8e01472332f908a037adec9a2ab3",
+ "cases": [
+  {
+   "case": "canonical_reference_only",
+   "refused": true,
+   "output_created": false,
+   "diagnostic": "TT common-clock reference is not actual source availability; selected GEN clock law required"
+  },
+  {
+   "case": "historical_qualified_four_fallback",
+   "refused": true,
+   "output_created": false,
+   "diagnostic": "actual TT availability and selected GEN clock-law binding required; no historical four-edge fallback"
+  },
+  {
+   "case": "unrecognized_clock_law",
+   "refused": true,
+   "output_created": false,
+   "diagnostic": "unrecognized actual TT GEN clock-law schema; genuine selected exporter packet required"
+  }
+ ]
+}
