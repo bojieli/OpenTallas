@@ -1,0 +1,2436 @@
+{
+ "status": "FIXED_OTHER_BODY_COMPOSITION_BLOCKED_ON_BOUNDED_GRID",
+ "input_manifest_sha256": "2ee25c47926bbe09e28881889bf7e445c3c5bd97f768dffa9e1f3af5c2e2e5dd",
+ "die_um": [
+  25988.8,
+  32983.12
+ ],
+ "body_area_before_mm2": 402.17375063584,
+ "body_area_after_mm2": 462.22422167584,
+ "grid_um": 388.8,
+ "clearance_um": 21.6,
+ "relay_bodies_requiring_replan": 632,
+ "attempts": {
+  "hb_idx__s_SW": {
+   "candidates": 1664,
+   "best": [
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 13608.0,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3309158.024639997,
+     "blockers": [
+      {
+       "instance": "col_su",
+       "master": "ot_hbm_static_cfg_collar__pv1",
+       "area_um2": 2687.385600000015
+      },
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_NE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 9420.312959999777
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_SE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_SE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv13",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_NE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 61819.20000000016
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_NE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 147596.2559999998
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_SE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 206219.52000000054
+      },
+      {
+       "instance": "hcb_NE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 15863.039999998924
+      },
+      {
+       "instance": "hcb_NE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 7931.519999999481
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 412439.04000000004
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    },
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 13219.2,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3399651.5356799965,
+     "blockers": [
+      {
+       "instance": "col_su",
+       "master": "ot_hbm_static_cfg_collar__pv1",
+       "area_um2": 2687.385600000015
+      },
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_SE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_SE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv13",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_SE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 95178.23999999888
+      },
+      {
+       "instance": "hcb_SE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 47589.11999999956
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    },
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 14774.4,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3428713.558079997,
+     "blockers": [
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_NE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999578
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_NE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_NE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv15",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_NE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_NE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_NE",
+       "master": "ot_hbm_fault_leaf__pv3",
+       "area_um2": 466.55999999993713
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_NE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 134835.8399999992
+      },
+      {
+       "instance": "hcb_NE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 269671.6799999977
+      },
+      {
+       "instance": "hcb_NE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3600000008
+      },
+      {
+       "instance": "hcb_NE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.68000000104
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 79315.20000000016
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 158630.3999999999
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    }
+   ]
+  },
+  "hb_idx__s_SE": {
+   "candidates": 1612,
+   "best": [
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 13608.0,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3309158.024639997,
+     "blockers": [
+      {
+       "instance": "col_su",
+       "master": "ot_hbm_static_cfg_collar__pv1",
+       "area_um2": 2687.385600000015
+      },
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_NE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 9420.312959999777
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_SE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_SE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv13",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_NE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 61819.20000000016
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_NE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 147596.2559999998
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_SE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 206219.52000000054
+      },
+      {
+       "instance": "hcb_NE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 15863.039999998924
+      },
+      {
+       "instance": "hcb_NE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 7931.519999999481
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 412439.04000000004
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    },
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 13219.2,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3399651.5356799965,
+     "blockers": [
+      {
+       "instance": "col_su",
+       "master": "ot_hbm_static_cfg_collar__pv1",
+       "area_um2": 2687.385600000015
+      },
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_SE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_SE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv13",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_SE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 95178.23999999888
+      },
+      {
+       "instance": "hcb_SE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 47589.11999999956
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    },
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 14774.4,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3428713.558079997,
+     "blockers": [
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_NE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999578
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_NE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_NE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv15",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_NE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_NE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_NE",
+       "master": "ot_hbm_fault_leaf__pv3",
+       "area_um2": 466.55999999993713
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_NE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 134835.8399999992
+      },
+      {
+       "instance": "hcb_NE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 269671.6799999977
+      },
+      {
+       "instance": "hcb_NE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3600000008
+      },
+      {
+       "instance": "hcb_NE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.68000000104
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 79315.20000000016
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 158630.3999999999
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    }
+   ]
+  },
+  "hb_idx__s_NW": {
+   "candidates": 1632,
+   "best": [
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 13608.0,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3309158.024639997,
+     "blockers": [
+      {
+       "instance": "col_su",
+       "master": "ot_hbm_static_cfg_collar__pv1",
+       "area_um2": 2687.385600000015
+      },
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_NE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 9420.312959999777
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_SE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_SE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv13",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_NE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 61819.20000000016
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_NE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 147596.2559999998
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_SE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 206219.52000000054
+      },
+      {
+       "instance": "hcb_NE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 15863.039999998924
+      },
+      {
+       "instance": "hcb_NE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 7931.519999999481
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 412439.04000000004
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    },
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 13219.2,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3399651.5356799965,
+     "blockers": [
+      {
+       "instance": "col_su",
+       "master": "ot_hbm_static_cfg_collar__pv1",
+       "area_um2": 2687.385600000015
+      },
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_SE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_SE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv13",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_SE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 95178.23999999888
+      },
+      {
+       "instance": "hcb_SE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 47589.11999999956
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    },
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 14774.4,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3428713.558079997,
+     "blockers": [
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_NE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999578
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_NE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_NE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv15",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_NE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_NE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_NE",
+       "master": "ot_hbm_fault_leaf__pv3",
+       "area_um2": 466.55999999993713
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_NE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 134835.8399999992
+      },
+      {
+       "instance": "hcb_NE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 269671.6799999977
+      },
+      {
+       "instance": "hcb_NE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3600000008
+      },
+      {
+       "instance": "hcb_NE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.68000000104
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 79315.20000000016
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 158630.3999999999
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    }
+   ]
+  },
+  "hb_idx__s_NE": {
+   "candidates": 1581,
+   "best": [
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 13608.0,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3309158.024639997,
+     "blockers": [
+      {
+       "instance": "col_su",
+       "master": "ot_hbm_static_cfg_collar__pv1",
+       "area_um2": 2687.385600000015
+      },
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_NE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 9420.312959999777
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_SE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_SE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv13",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_NE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 61819.20000000016
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_NE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 147596.2559999998
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_SE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 206219.52000000054
+      },
+      {
+       "instance": "hcb_NE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 15863.039999998924
+      },
+      {
+       "instance": "hcb_NE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 7931.519999999481
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 412439.04000000004
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    },
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 13219.2,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3399651.5356799965,
+     "blockers": [
+      {
+       "instance": "col_su",
+       "master": "ot_hbm_static_cfg_collar__pv1",
+       "area_um2": 2687.385600000015
+      },
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_SE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_SE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv13",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_SE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.6800000004
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3599999995
+      },
+      {
+       "instance": "hcb_SE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 95178.23999999888
+      },
+      {
+       "instance": "hcb_SE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 47589.11999999956
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    },
+    {
+     "rectangle": {
+      "x": 14774.4,
+      "y": 14774.4,
+      "w": 4147.2,
+      "h": 4147.2
+     },
+     "overlap_area_um2": 3428713.558079997,
+     "blockers": [
+      {
+       "instance": "hcollb_NE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollb_SE",
+       "master": "ot_hgi_coll_ring_b_stop",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollgi_NE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgi_SE",
+       "master": "ot_hgi_coll_gq_issue",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollgl_NE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999931
+      },
+      {
+       "instance": "hcollgl_SE",
+       "master": "ot_hgi_coll_gq_land",
+       "area_um2": 56453.75999999974
+      },
+      {
+       "instance": "hcollks_NE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p0",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p1",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p2",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 10973.491199999857
+      },
+      {
+       "instance": "hcollks_NE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.15999999962
+      },
+      {
+       "instance": "hcollks_SE_p3",
+       "master": "ot_hgi_coll_kq_share2_leaf",
+       "area_um2": 16796.159999999858
+      },
+      {
+       "instance": "hcollks_NE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollks_SE",
+       "master": "ot_hbm_kqs_fault_or4",
+       "area_um2": 1866.2400000000628
+      },
+      {
+       "instance": "hcollrs_NE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999578
+      },
+      {
+       "instance": "hcollrs_SE",
+       "master": "ot_hbm_idx_vm_share2_static_r",
+       "area_um2": 17360.697599999818
+      },
+      {
+       "instance": "cxdl_NE3_q",
+       "master": "ot_hbm_su_static_cxport_dl_q",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cxdl_NE3_s",
+       "master": "ot_hbm_su_static_cxport_dl_s__pv15",
+       "area_um2": 23328.0
+      },
+      {
+       "instance": "cij_NE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "cij_SE",
+       "master": "ot_hgi_coll_inj_idx_join_rg",
+       "area_um2": 93312.0
+      },
+      {
+       "instance": "hb_coll_NE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "hb_coll_SE",
+       "master": "ot_hfd_coll_q2_hard_v8g",
+       "area_um2": 229939.43040000042
+      },
+      {
+       "instance": "fr_NE",
+       "master": "ot_hbm_fault_leaf__pv3",
+       "area_um2": 466.55999999993713
+      },
+      {
+       "instance": "fr_SE",
+       "master": "ot_hbm_fault_leaf__pv0",
+       "area_um2": 466.5599999999764
+      },
+      {
+       "instance": "hb_argmax",
+       "master": "ot_hbm_argmax_static_sw_vm_r2",
+       "area_um2": 14113.439999999828
+      },
+      {
+       "instance": "hc_NE",
+       "master": "ot_hbm_hc_qhub_static",
+       "area_um2": 134835.8399999992
+      },
+      {
+       "instance": "hcb_NE4",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 269671.6799999977
+      },
+      {
+       "instance": "hcb_NE5",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 539343.3600000008
+      },
+      {
+       "instance": "hcb_NE6",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 269671.68000000104
+      },
+      {
+       "instance": "hcb_SE2",
+       "master": "ot_hbm_hc_bankq_ft_static",
+       "area_um2": 79315.20000000016
+      },
+      {
+       "instance": "hcb_SE3",
+       "master": "ot_hbm_hc_bankq_static",
+       "area_um2": 158630.3999999999
+      },
+      {
+       "instance": "host_N",
+       "master": "ot_pdie_ucie_col",
+       "area_um2": 403107.84000000084
+      },
+      {
+       "instance": "host_cp_rxs",
+       "master": "ot_hbm_host_cp_rxs",
+       "area_um2": 187837.05600000118
+      },
+      {
+       "instance": "host_ep",
+       "master": "hfd_ep_static",
+       "area_um2": 161507.17439999996
+      },
+      {
+       "instance": "hb_idx__ctl",
+       "master": "ot_hbm_idx_rootctl_static_am",
+       "area_um2": 95507.94240000067
+      },
+      {
+       "instance": "obs_SE",
+       "master": "ot_hbm_obs_leaf__pv0",
+       "area_um2": 494.78687999998124
+      }
+     ]
+    }
+   ]
+  },
+  "hc_eng": {
+   "candidates": 4290,
+   "best": [
+    {
+     "rectangle": {
+      "x": 15552.0,
+      "y": 15033.6,
+      "w": 907.2,
+      "h": 734.4
+     },
+     "overlap_area_um2": 0,
+     "blockers": []
+    },
+    {
+     "rectangle": {
+      "x": 15552.0,
+      "y": 15163.2,
+      "w": 907.2,
+      "h": 734.4
+     },
+     "overlap_area_um2": 0,
+     "blockers": []
+    },
+    {
+     "rectangle": {
+      "x": 16329.6,
+      "y": 15552.0,
+      "w": 907.2,
+      "h": 734.4
+     },
+     "overlap_area_um2": 0,
+     "blockers": []
+    }
+   ]
+  }
+ },
+ "placed": {
+  "hc_eng": {
+   "x": 15552.0,
+   "y": 15033.6,
+   "w": 907.2,
+   "h": 734.4
+  }
+ },
+ "explicit_open": [
+  "Relays covered by new bodies must be regenerated; none is silently dropped.",
+  "New hard parents need real feedthrough/corridor contracts, internal source clocks and full programme calendar.",
+  "This coarse bounded placement is neither a complete packing proof nor a physical signoff."
+ ],
+ "runtime_s": 2.606389284133911
+}

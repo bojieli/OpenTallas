@@ -1,0 +1,3639 @@
+{
+ "status": "SOURCE_GEOMETRY_INPUT_NOT_PLACEMENT_QUALIFICATION",
+ "manifest_sha256": "2ee25c47926bbe09e28881889bf7e445c3c5bd97f768dffa9e1f3af5c2e2e5dd",
+ "coordinate_map_sha256": "d57760fc9e8db787e9012e6ca402812338d18ff2c25abd76944033017f2b5a6d",
+ "coordinate_map_spec": {
+  "steps": [
+   {
+    "plan": "B",
+    "why": "HBM-DIE9 plan B (fallback, different layout): fewer WIDER channels -- both sides of each xq/xl stack (+345.6 each) and a centre spine (+432); no channel at the 100 um single gaps or the stripes; y channels as plan A (reticle-bound: H +691.2 max)",
+    "bands": [
+     {
+      "name": "stripe_S",
+      "y0": -1000000000.0,
+      "y1": 2050.0,
+      "shift": 1598.4
+     },
+     {
+      "name": "sm_S",
+      "y0": 2050.0,
+      "y1": 9020.0,
+      "cuts": [
+       [
+        2916,
+        345.6
+       ],
+       [
+        3427,
+        345.6
+       ],
+       [
+        7436,
+        345.6
+       ],
+       [
+        7946,
+        345.6
+       ],
+       [
+        10110,
+        432
+       ],
+       [
+        12254,
+        345.6
+       ],
+       [
+        12764,
+        345.6
+       ],
+       [
+        16771,
+        345.6
+       ],
+       [
+        17283,
+        345.6
+       ]
+      ]
+     },
+     {
+      "name": "mid",
+      "y0": 9020.0,
+      "y1": 22762.0,
+      "cuts": [
+       [
+        3050,
+        691.2
+       ],
+       [
+        7700,
+        691.2
+       ],
+       [
+        10110,
+        432
+       ],
+       [
+        12500,
+        691.2
+       ],
+       [
+        17148,
+        691.2
+       ]
+      ]
+     },
+     {
+      "name": "sm_N",
+      "y0": 22762.0,
+      "y1": 29719.0,
+      "cuts": [
+       [
+        2916,
+        345.6
+       ],
+       [
+        3427,
+        345.6
+       ],
+       [
+        7436,
+        345.6
+       ],
+       [
+        7946,
+        345.6
+       ],
+       [
+        10110,
+        432
+       ],
+       [
+        12254,
+        345.6
+       ],
+       [
+        12764,
+        345.6
+       ],
+       [
+        16771,
+        345.6
+       ],
+       [
+        17283,
+        345.6
+       ]
+      ]
+     },
+     {
+      "name": "stripe_N",
+      "y0": 29719.0,
+      "y1": 1000000000.0,
+      "shift": 1598.4
+     }
+    ],
+    "ycuts": [
+     [
+      2050.0,
+      86.4
+     ],
+     [
+      9020.0,
+      259.2
+     ],
+     [
+      22762.0,
+      259.2
+     ],
+     [
+      29719.0,
+      86.4
+     ]
+    ]
+   },
+   {
+    "plan": "R14_RELEASE_B_MARGIN",
+    "why": "Owner10-21 add real stations and margins after B340469failedrows/547missinghops; receiver IDX landing bays plus SFUS and VMB-COLL middle-band room; fixed child outlines; no Y growth",
+    "bands": [
+     {
+      "name": "stripe_S",
+      "y0": -1000000000.0,
+      "y1": 2136.4,
+      "cuts": [
+       [
+        7140,
+        864
+       ],
+       [
+        16200,
+        864
+       ]
+      ]
+     },
+     {
+      "name": "sm_S",
+      "y0": 2136.4,
+      "y1": 9365.6,
+      "shift": 864
+     },
+     {
+      "name": "mid",
+      "y0": 9365.6,
+      "y1": 23366.8,
+      "cuts": [
+       [
+        1700,
+        432
+       ],
+       [
+        8100,
+        648
+       ],
+       [
+        15400,
+        648
+       ]
+      ]
+     },
+     {
+      "name": "sm_N",
+      "y0": 23366.8,
+      "y1": 30410.2,
+      "shift": 864
+     },
+     {
+      "name": "stripe_N",
+      "y0": 30410.2,
+      "y1": 1000000000.0,
+      "cuts": [
+       [
+        7140,
+        864
+       ],
+       [
+        16200,
+        864
+       ]
+      ]
+     }
+    ],
+    "ycuts": []
+   },
+   {
+    "plan": "R16_dM",
+    "why": "HBM-OWN/DIE2 10-21 r16b: X cuts [[7300.0, 172.8], [17900.0, 172.8]] in every band; Y unchanged (reticle 500 um margin)",
+    "bands": [
+     {
+      "name": "all",
+      "y0": -1000000000.0,
+      "y1": 1000000000.0,
+      "cuts": [
+       [
+        7300.0,
+        172.8
+       ],
+       [
+        17900.0,
+        172.8
+       ]
+      ]
+     }
+    ],
+    "ycuts": []
+   },
+   {
+    "plan": "R16_E_FULL_RETICLE",
+    "why": "Owner10-21 drops500um margin; real SU row and outer xq corridors, no squeeze",
+    "bands": [
+     {
+      "name": "all",
+      "y0": -1000000000.0,
+      "y1": 1000000000.0,
+      "cuts": [
+       [
+        3950.0,
+        129.6
+       ],
+       [
+        4800.0,
+        129.6
+       ],
+       [
+        20300.0,
+        129.6
+       ],
+       [
+        21170.0,
+        129.6
+       ]
+      ]
+     }
+    ],
+    "ycuts": [
+     [
+      12480.0,
+      259.2
+     ],
+     [
+      19980.0,
+      259.2
+     ]
+    ]
+   }
+  ]
+ },
+ "last_step_postcut_bands": [
+  {
+   "axis": "x",
+   "start_um": 3950.0,
+   "end_um": 4079.6,
+   "width_um": 129.6
+  },
+  {
+   "axis": "x",
+   "start_um": 4929.6,
+   "end_um": 5059.2,
+   "width_um": 129.6
+  },
+  {
+   "axis": "x",
+   "start_um": 20559.2,
+   "end_um": 20688.8,
+   "width_um": 129.6
+  },
+  {
+   "axis": "x",
+   "start_um": 21558.8,
+   "end_um": 21688.4,
+   "width_um": 129.6
+  },
+  {
+   "axis": "y",
+   "start_um": 12480.0,
+   "end_um": 12739.2,
+   "width_um": 259.2
+  },
+  {
+   "axis": "y",
+   "start_um": 20239.2,
+   "end_um": 20498.4,
+   "width_um": 259.2
+  }
+ ],
+ "carved_feedthrough": {
+  "hfd_hgi_vms_glue_sw_t": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     214.056,
+     257.256
+    ],
+    "y_um": [
+     0,
+     471.96
+    ],
+    "owner": "die",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     471.312
+    ],
+    "y_um": [
+     214.38,
+     257.58
+    ],
+    "owner": "die",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_accel_smh_attn": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     353.376,
+     396.576
+    ],
+    "y_um": [
+     0,
+     6955.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     749.952,
+     793.152
+    ],
+    "y_um": [
+     0,
+     6955.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1146.528,
+     1189.728
+    ],
+    "y_um": [
+     0,
+     6955.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1543.104,
+     1586.304
+    ],
+    "y_um": [
+     0,
+     6955.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     394.2,
+     437.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     831.6,
+     874.8
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     1269.0,
+     1312.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     1706.4,
+     1749.6
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     2143.8,
+     2187.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     2581.2,
+     2624.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     3018.6,
+     3061.8
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     3456.0,
+     3499.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     3893.4,
+     3936.6
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     4330.8,
+     4374.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     4768.2,
+     4811.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     5205.6,
+     5248.8
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     5643.0,
+     5686.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     6080.4,
+     6123.6
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1939.68
+    ],
+    "y_um": [
+     6517.8,
+     6561.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_hc_bankq0_static": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     334.8,
+     399.6
+    ],
+    "y_um": [
+     0,
+     734.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     734.4
+    ],
+    "y_um": [
+     334.8,
+     399.6
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_hc_bankq_ft_static": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     334.8,
+     399.6
+    ],
+    "y_um": [
+     0,
+     734.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     734.4
+    ],
+    "y_um": [
+     334.8,
+     399.6
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_hc_bankq_static": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     334.8,
+     399.6
+    ],
+    "y_um": [
+     0,
+     734.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     734.4
+    ],
+    "y_um": [
+     334.8,
+     399.6
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_hc_bankq_term_static": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     334.8,
+     399.6
+    ],
+    "y_um": [
+     0,
+     734.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     734.4
+    ],
+    "y_um": [
+     334.8,
+     399.6
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_hc_qhub_static": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     345.6,
+     388.8
+    ],
+    "y_um": [
+     0,
+     734.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     734.4
+    ],
+    "y_um": [
+     345.6,
+     388.8
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_hc_root_static": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     226.8,
+     270.0
+    ],
+    "y_um": [
+     0,
+     540.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     496.8
+    ],
+    "y_um": [
+     248.4,
+     291.6
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_host_cp_rxs": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     195.696,
+     238.896
+    ],
+    "y_um": [
+     0,
+     432.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     434.72
+    ],
+    "y_um": [
+     194.4,
+     237.6
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_idx_score_quarter_static": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     329.4,
+     394.2
+    ],
+    "y_um": [
+     0,
+     1512.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     723.6,
+     788.4
+    ],
+    "y_um": [
+     0,
+     1512.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1117.8,
+     1182.6
+    ],
+    "y_um": [
+     0,
+     1512.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1512.0
+    ],
+    "y_um": [
+     329.4,
+     394.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1512.0
+    ],
+    "y_um": [
+     723.6,
+     788.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1512.0
+    ],
+    "y_um": [
+     1117.8,
+     1182.6
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_idx_selector_static_sel": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     278.424,
+     321.624
+    ],
+    "y_um": [
+     0,
+     450.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     600.0
+    ],
+    "y_um": [
+     203.472,
+     246.672
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_idx_topk_link_static": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     303.48,
+     346.68
+    ],
+    "y_um": [
+     0,
+     500.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     650.0
+    ],
+    "y_um": [
+     228.312,
+     271.512
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_programme_pslice_c5": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     284.472,
+     327.672
+    ],
+    "y_um": [
+     0,
+     760.32
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     611.928,
+     655.128
+    ],
+    "y_um": [
+     0,
+     760.32
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     939.6
+    ],
+    "y_um": [
+     358.56,
+     401.76
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv0": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv1": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv2": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv3": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv4": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv5": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv6": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv7": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv8": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv9": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv10": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv11": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv12": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv13": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv14": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_su_static_pgslice_lg__pv15": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     324.864,
+     368.064
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     692.928,
+     736.128
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1060.992,
+     1104.192
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1429.056,
+     1472.256
+    ],
+    "y_um": [
+     0,
+     2825.28
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     366.552,
+     409.752
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     776.304,
+     819.504
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1186.056,
+     1229.256
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     1596.024,
+     1639.224
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2005.776,
+     2048.976
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1797.12
+    ],
+    "y_um": [
+     2415.528,
+     2458.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_svc_sm_group_rel_id": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     215.352,
+     560.952
+    ],
+    "y_um": [
+     0,
+     646.92
+    ],
+    "owner": "die",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     776.304
+    ],
+    "y_um": [
+     215.46,
+     431.46
+    ],
+    "owner": "die",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hbm_svc_wb_kport_q": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     205.2,
+     270.0
+    ],
+    "y_um": [
+     0,
+     475.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     475.2
+    ],
+    "y_um": [
+     205.2,
+     270.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hgi_coll_tkm_m_tp192": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     365.472,
+     408.672
+    ],
+    "y_um": [
+     0,
+     2120.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     774.144,
+     817.344
+    ],
+    "y_um": [
+     0,
+     2120.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1182.816,
+     1226.016
+    ],
+    "y_um": [
+     0,
+     2120.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1591.272,
+     1634.472
+    ],
+    "y_um": [
+     0,
+     2120.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     2000.0
+    ],
+    "y_um": [
+     389.448,
+     432.648
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     2000.0
+    ],
+    "y_um": [
+     822.096,
+     865.296
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     2000.0
+    ],
+    "y_um": [
+     1254.744,
+     1297.944
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     2000.0
+    ],
+    "y_um": [
+     1687.392,
+     1730.592
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hgi_sfu_core_split3": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     351.0,
+     415.8
+    ],
+    "y_um": [
+     0,
+     1771.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     766.8,
+     831.6
+    ],
+    "y_um": [
+     0,
+     1771.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     1182.6,
+     1247.4
+    ],
+    "y_um": [
+     0,
+     1771.2
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1598.4
+    ],
+    "y_um": [
+     394.2,
+     459.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1598.4
+    ],
+    "y_um": [
+     853.2,
+     918.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1598.4
+    ],
+    "y_um": [
+     1312.2,
+     1377.0
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ],
+  "ot_hgi_sfu_programme_store_r10": [
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     316.872,
+     381.672
+    ],
+    "y_um": [
+     0,
+     950.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_column",
+    "x_um": [
+     698.328,
+     763.128
+    ],
+    "y_um": [
+     0,
+     950.4
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1080.0
+    ],
+    "y_um": [
+     273.672,
+     338.472
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   },
+   {
+    "kind": "feedthrough_relay_row",
+    "x_um": [
+     0,
+     1080.0
+    ],
+    "y_um": [
+     611.928,
+     676.728
+    ],
+    "owner": "die (relay stations, HBM-DIE13 ft grid)",
+    "master_keepout": "hard placement + M5/M6 route"
+   }
+  ]
+ },
+ "in_carved_channel": [
+  "hidxr_NE_rr0",
+  "hidxr_NE_rr1",
+  "hidxr_NE_rr2",
+  "hidxr_NW_rq",
+  "hidxr_NW_rr0",
+  "hidxr_NW_rr1",
+  "hidxr_NW_rr2",
+  "hidxr_SE_rr0",
+  "hidxr_SE_rr1",
+  "hidxr_SE_rr2",
+  "hidxr_SW_rq",
+  "hidxr_SW_rr2",
+  "sfr_NE0_b00",
+  "sfr_NE0_b01",
+  "sfr_NE0_b02",
+  "sfr_NE0_b08",
+  "sfr_NE0_b09",
+  "sfr_NE0_b10",
+  "sfr_NE0_b12",
+  "sfr_NE0_b13",
+  "sfr_NE0_f00",
+  "sfr_NE0_f02",
+  "sfr_NE0_f03",
+  "sfr_NE0_f04",
+  "sfr_NE0_f10",
+  "sfr_NE0_f11",
+  "sfr_NE1_b01",
+  "sfr_NE1_b02",
+  "sfr_NE1_b03",
+  "sfr_NE1_b04",
+  "sfr_NE1_b05",
+  "sfr_NE1_b06",
+  "sfr_NE1_b09",
+  "sfr_NE1_b10",
+  "sfr_NE1_b11",
+  "sfr_NE1_b12",
+  "sfr_NE1_b13",
+  "sfr_NE1_f00",
+  "sfr_NE1_f01",
+  "sfr_NE1_f04",
+  "sfr_NE1_f05",
+  "sfr_NE1_f06",
+  "sfr_NE1_f07",
+  "sfr_NE1_f08",
+  "sfr_NE1_f09",
+  "sfr_NE2_b00",
+  "sfr_NE2_b01",
+  "sfr_NE2_b05",
+  "sfr_NE2_b06",
+  "sfr_NE2_b13",
+  "sfr_NE2_f01",
+  "sfr_NE2_f02",
+  "sfr_NE2_f07",
+  "sfr_NE2_f08",
+  "sfr_NE3_b01",
+  "sfr_NE3_b02",
+  "sfr_NE3_b03",
+  "sfr_NE3_b13",
+  "sfr_NE3_f00",
+  "sfr_NE3_f02",
+  "sfr_NE3_f03",
+  "sfr_NE3_f04",
+  "sfr_NW0_b02",
+  "sfr_NW0_b03",
+  "sfr_NW0_b09",
+  "sfr_NW0_b10",
+  "sfr_NW0_b12",
+  "sfr_NW0_b13",
+  "sfr_NW0_f00",
+  "sfr_NW0_f02",
+  "sfr_NW0_f03",
+  "sfr_NW0_f09",
+  "sfr_NW0_f10",
+  "sfr_NW1_b02",
+  "sfr_NW1_b03",
+  "sfr_NW1_b04",
+  "sfr_NW1_b05",
+  "sfr_NW1_b06",
+  "sfr_NW1_b07",
+  "sfr_NW1_b10",
+  "sfr_NW1_b11",
+  "sfr_NW1_b12",
+  "sfr_NW1_b13",
+  "sfr_NW1_f00",
+  "sfr_NW1_f01",
+  "sfr_NW1_f04",
+  "sfr_NW1_f05",
+  "sfr_NW1_f06",
+  "sfr_NW1_f07",
+  "sfr_NW1_f08",
+  "sfr_NW2_b01",
+  "sfr_NW2_b02",
+  "sfr_NW2_b06",
+  "sfr_NW2_b07",
+  "sfr_NW2_b13",
+  "sfr_NW2_f01",
+  "sfr_NW2_f02",
+  "sfr_NW2_f06",
+  "sfr_NW2_f07",
+  "sfr_NW3_b01",
+  "sfr_NW3_b02",
+  "sfr_NW3_b03",
+  "sfr_NW3_b13",
+  "sfr_NW3_f00",
+  "sfr_NW3_f02",
+  "sfr_NW3_f03",
+  "sfr_NW3_f04",
+  "sfr_SE0_b00",
+  "sfr_SE0_b01",
+  "sfr_SE0_b02",
+  "sfr_SE0_b09",
+  "sfr_SE0_b10",
+  "sfr_SE0_b11",
+  "sfr_SE0_b13",
+  "sfr_SE0_f00",
+  "sfr_SE0_f02",
+  "sfr_SE0_f03",
+  "sfr_SE0_f04",
+  "sfr_SE0_f10",
+  "sfr_SE0_f11",
+  "sfr_SE0_f12",
+  "sfr_SE1_b02",
+  "sfr_SE1_b03",
+  "sfr_SE1_b04",
+  "sfr_SE1_b05",
+  "sfr_SE1_b06",
+  "sfr_SE1_b07",
+  "sfr_SE1_b11",
+  "sfr_SE1_b12",
+  "sfr_SE1_b13",
+  "sfr_SE1_f00",
+  "sfr_SE1_f01",
+  "sfr_SE1_f05",
+  "sfr_SE1_f06",
+  "sfr_SE1_f07",
+  "sfr_SE1_f08",
+  "sfr_SE1_f09",
+  "sfr_SE1_f10",
+  "sfr_SE1_f11",
+  "sfr_SE2_b00",
+  "sfr_SE2_b01",
+  "sfr_SE2_b06",
+  "sfr_SE2_b07",
+  "sfr_SE2_b13",
+  "sfr_SE2_f01",
+  "sfr_SE2_f02",
+  "sfr_SE2_f07",
+  "sfr_SE2_f08",
+  "sfr_SE3_b01",
+  "sfr_SE3_b02",
+  "sfr_SE3_b03",
+  "sfr_SE3_b13",
+  "sfr_SE3_f00",
+  "sfr_SE3_f02",
+  "sfr_SE3_f03",
+  "sfr_SE3_f04",
+  "sfr_SE3_f05",
+  "sfr_SW0_b02",
+  "sfr_SW0_b03",
+  "sfr_SW0_b09",
+  "sfr_SW0_b10",
+  "sfr_SW0_b11",
+  "sfr_SW0_b13",
+  "sfr_SW0_f00",
+  "sfr_SW0_f02",
+  "sfr_SW0_f03",
+  "sfr_SW0_f04",
+  "sfr_SW0_f09",
+  "sfr_SW0_f10",
+  "sfr_SW0_f11",
+  "sfr_SW1_b02",
+  "sfr_SW1_b03",
+  "sfr_SW1_b04",
+  "sfr_SW1_b05",
+  "sfr_SW1_b06",
+  "sfr_SW1_b07",
+  "sfr_SW1_b08",
+  "sfr_SW1_b11",
+  "sfr_SW1_b12",
+  "sfr_SW1_b13",
+  "sfr_SW1_f00",
+  "sfr_SW1_f01",
+  "sfr_SW1_f05",
+  "sfr_SW1_f06",
+  "sfr_SW1_f07",
+  "sfr_SW1_f08",
+  "sfr_SW1_f09",
+  "sfr_SW1_f10",
+  "sfr_SW2_b01",
+  "sfr_SW2_b02",
+  "sfr_SW2_b06",
+  "sfr_SW2_b07",
+  "sfr_SW2_b10",
+  "sfr_SW2_b13",
+  "sfr_SW2_f01",
+  "sfr_SW2_f02",
+  "sfr_SW2_f06",
+  "sfr_SW2_f07",
+  "sfr_SW3_b01",
+  "sfr_SW3_b02",
+  "sfr_SW3_b03",
+  "sfr_SW3_b07",
+  "sfr_SW3_b13",
+  "sfr_SW3_f00",
+  "sfr_SW3_f02",
+  "sfr_SW3_f03",
+  "sfr_SW3_f04",
+  "std_NE_00a",
+  "std_NE_00b",
+  "std_NE_13a",
+  "std_NE_13b",
+  "std_NW_00a",
+  "std_NW_00b",
+  "std_SE_00a",
+  "std_SE_00b",
+  "std_SW_00a",
+  "std_SW_00b",
+  "stu_NE_02",
+  "stu_NE_03",
+  "stu_NE_05",
+  "stu_NE_06",
+  "stu_NE_08",
+  "stu_NW_02",
+  "stu_NW_03",
+  "stu_NW_10",
+  "stu_NW_13",
+  "stu_SE_02",
+  "stu_SE_03",
+  "stu_SE_04",
+  "stu_SE_06",
+  "stu_SE_07",
+  "stu_SW_02",
+  "stu_SW_03",
+  "stu_SW_04",
+  "stu_SW_06",
+  "stu_SW_07",
+  "stu_SW_13"
+ ],
+ "census": {
+  "pairs_per_quarter": 128,
+  "quarters": 4,
+  "pairs_total": 512,
+  "columns_per_quarter": 32,
+  "regions_per_column": 5,
+  "regions_per_quarter": 160,
+  "regions_total": 640,
+  "external_clock_inputs_per_quarter": 143
+ },
+ "limitations": [
+  "Last-step insertion bands are transformed into final coordinates, but rigid bodies shift by centre and these bands are not assumed globally empty.",
+  "Earlier composition.json and repack.json used nominal pre-cut corridor coordinates and a provisional whole-quarter outline; neither result supports physical adoption or a global no-fit conclusion.",
+  "The selected structural continuation exports the existing five landed regions per actual column, preserves all pair replicas and prices actual seams."
+ ]
+}

@@ -1,0 +1,401 @@
+{
+ "status": "CONCRETE_REPACK_HAS_UNPLACED_BODIES",
+ "manifest_sha256": "2ee25c47926bbe09e28881889bf7e445c3c5bd97f768dffa9e1f3af5c2e2e5dd",
+ "die_um": [
+  25988.8,
+  32983.12
+ ],
+ "new_parents": {
+  "hb_idx__s_SW": {
+   "x": 7776.0,
+   "y": 14774.4,
+   "w": 4147.2,
+   "h": 4147.2
+  },
+  "hc_eng": {
+   "x": 15552.0,
+   "y": 15033.6,
+   "w": 907.2,
+   "h": 734.4
+  }
+ },
+ "replaced_other_bodies": {
+  "hc_NW": {
+   "m": "ot_hbm_hc_qhub_static",
+   "x": 9504.0,
+   "y": 19008.0,
+   "o": "R0",
+   "w": 734.4,
+   "h": 734.4,
+   "rule": "grant slot hc_NW"
+  },
+  "hcb_NW0": {
+   "m": "ot_hbm_hc_bankq0_static",
+   "x": 9504.0,
+   "y": 20304.0,
+   "o": "R0",
+   "w": 734.4,
+   "h": 734.4,
+   "rule": "grant slot hcb_NW0"
+  },
+  "hcb_NW6": {
+   "m": "ot_hbm_hc_bankq_ft_static",
+   "x": 14040.0,
+   "y": 16848.0,
+   "o": "R180",
+   "w": 734.4,
+   "h": 734.4,
+   "rule": "grant slot hcb_NW6"
+  },
+  "hcb_NW7": {
+   "m": "ot_hbm_hc_bankq_term_static",
+   "x": 9504.0,
+   "y": 21168.0,
+   "o": "R180",
+   "w": 734.4,
+   "h": 734.4,
+   "rule": "grant slot hcb_NW7"
+  },
+  "hcb_SW1": {
+   "m": "ot_hbm_hc_bankq_static",
+   "x": 9504.0,
+   "y": 13824.0,
+   "o": "R0",
+   "w": 734.4,
+   "h": 734.4,
+   "rule": "grant slot hcb_SW1"
+  },
+  "hcb_SW2": {
+   "m": "ot_hbm_hc_bankq_ft_static",
+   "x": 11232.0,
+   "y": 11664.0,
+   "o": "R0",
+   "w": 734.4,
+   "h": 734.4,
+   "rule": "grant slot hcb_SW2"
+  },
+  "hb_idx__link": {
+   "m": "ot_hbm_idx_topk_link_static",
+   "x": 6912.0,
+   "y": 16416.0,
+   "o": "R0",
+   "w": 650.16,
+   "h": 500.04,
+   "rule": "grant slot idx_link"
+  },
+  "hb_coll_SW": {
+   "m": "ot_hfd_coll_q3_hard_v8x",
+   "x": 7992.0,
+   "y": 14040.0,
+   "o": "R0",
+   "w": 560.088,
+   "h": 560.52,
+   "rule": "grant slot exact_q_hb_coll_SW"
+  },
+  "hb_idx__selector": {
+   "m": "ot_hbm_idx_selector_static_sel",
+   "x": 10800.0,
+   "y": 14256.0,
+   "o": "R0",
+   "w": 600.048,
+   "h": 450.36,
+   "rule": "grant slot idx_sel"
+  },
+  "hb_coll_NW": {
+   "m": "ot_hfd_coll_q2_hard_v8g",
+   "x": 7776.0,
+   "y": 19008.0,
+   "o": "R0",
+   "w": 479.52,
+   "h": 479.52,
+   "rule": "grant slot exact_q_hb_coll_NW"
+  },
+  "cij_NW": {
+   "m": "ot_hgi_coll_inj_idx_join_rg",
+   "x": 6480.0,
+   "y": 16848.0,
+   "o": "R0",
+   "w": 216.0,
+   "h": 432.0,
+   "rule": "grant slot exact_p_cij_NW"
+  },
+  "cij_SW": {
+   "m": "ot_hgi_coll_inj_idx_join_rg",
+   "x": 7560.0,
+   "y": 13608.0,
+   "o": "R0",
+   "w": 216.0,
+   "h": 432.0,
+   "rule": "grant slot exact_p_cij_SW"
+  },
+  "hcollgi_NW": {
+   "m": "ot_hgi_coll_gq_issue",
+   "x": 7344.0,
+   "y": 15984.0,
+   "o": "R0",
+   "w": 237.6,
+   "h": 237.6,
+   "rule": "grant slot collgi_NW"
+  },
+  "hcollgi_SW": {
+   "m": "ot_hgi_coll_gq_issue",
+   "x": 6912.0,
+   "y": 15984.0,
+   "o": "R0",
+   "w": 237.6,
+   "h": 237.6,
+   "rule": "grant slot collgi_SW"
+  },
+  "hcollgl_NW": {
+   "m": "ot_hgi_coll_gq_land",
+   "x": 8640.0,
+   "y": 19008.0,
+   "o": "R0",
+   "w": 237.6,
+   "h": 237.6,
+   "rule": "grant slot collgl_NW"
+  },
+  "hcollgl_SW": {
+   "m": "ot_hgi_coll_gq_land",
+   "x": 6480.0,
+   "y": 15984.0,
+   "o": "R0",
+   "w": 237.6,
+   "h": 237.6,
+   "rule": "grant slot collgl_SW"
+  },
+  "hb_idx__xqr": {
+   "m": "ot_hbm_idx_xq_node_static__pv1",
+   "x": 11448.0,
+   "y": 14472.0,
+   "o": "R0",
+   "w": 259.2,
+   "h": 216.0,
+   "rule": "grant slot hb_idx__xqr"
+  },
+  "cxdl_NW0_s": {
+   "m": "ot_hbm_su_static_cxport_dl_s__pv2",
+   "x": 8424.0,
+   "y": 19008.0,
+   "o": "R0",
+   "w": 108.0,
+   "h": 216.0,
+   "rule": "grant slot cxdl_NW0_s"
+  },
+  "hcollrs_NW": {
+   "m": "ot_hbm_idx_vm_share2_static_r",
+   "x": 7560.0,
+   "y": 17064.0,
+   "o": "R0",
+   "w": 131.76,
+   "h": 131.76,
+   "rule": "grant slot collrs_NW"
+  },
+  "hcollrs_SW": {
+   "m": "ot_hbm_idx_vm_share2_static_r",
+   "x": 7560.0,
+   "y": 15768.0,
+   "o": "R0",
+   "w": 131.76,
+   "h": 131.76,
+   "rule": "grant slot collrs_SW"
+  },
+  "hcollb_NW": {
+   "m": "ot_hgi_coll_ring_b_stop",
+   "x": 7344.0,
+   "y": 17064.0,
+   "o": "R0",
+   "w": 129.6,
+   "h": 129.6,
+   "rule": "grant slot collb_NW"
+  },
+  "hcollb_SW": {
+   "m": "ot_hgi_coll_ring_b_stop",
+   "x": 7560.0,
+   "y": 15552.0,
+   "o": "R0",
+   "w": 129.6,
+   "h": 129.6,
+   "rule": "grant slot collb_SW"
+  },
+  "hcollks_NW_p0": {
+   "m": "ot_hgi_coll_kq_share2_leaf",
+   "x": 9288.0,
+   "y": 19008.0,
+   "o": "R0",
+   "w": 129.6,
+   "h": 129.6,
+   "rule": "grant slot collks0_NW"
+  },
+  "hcollks_SW_p0": {
+   "m": "ot_hgi_coll_kq_share2_leaf",
+   "x": 9288.0,
+   "y": 14472.0,
+   "o": "R0",
+   "w": 129.6,
+   "h": 129.6,
+   "rule": "grant slot collks0_SW"
+  },
+  "hcollks_NW_p1": {
+   "m": "ot_hgi_coll_kq_share2_leaf",
+   "x": 10368.0,
+   "y": 19008.0,
+   "o": "R0",
+   "w": 129.6,
+   "h": 129.6,
+   "rule": "grant slot collks1_NW"
+  },
+  "hcollks_SW_p1": {
+   "m": "ot_hgi_coll_kq_share2_leaf",
+   "x": 9072.0,
+   "y": 14472.0,
+   "o": "R0",
+   "w": 129.6,
+   "h": 129.6,
+   "rule": "grant slot collks1_SW"
+  },
+  "hcollks_NW_p2": {
+   "m": "ot_hgi_coll_kq_share2_leaf",
+   "x": 9072.0,
+   "y": 19008.0,
+   "o": "R0",
+   "w": 129.6,
+   "h": 129.6,
+   "rule": "grant slot collks2_NW"
+  },
+  "hcollks_SW_p2": {
+   "m": "ot_hgi_coll_kq_share2_leaf",
+   "x": 9288.0,
+   "y": 14256.0,
+   "o": "R0",
+   "w": 129.6,
+   "h": 129.6,
+   "rule": "grant slot collks2_SW"
+  },
+  "hcollks_NW_p3": {
+   "m": "ot_hgi_coll_kq_share2_leaf",
+   "x": 9288.0,
+   "y": 19224.0,
+   "o": "R0",
+   "w": 129.6,
+   "h": 129.6,
+   "rule": "grant slot collks3_NW"
+  },
+  "hcollks_SW_p3": {
+   "m": "ot_hgi_coll_kq_share2_leaf",
+   "x": 8856.0,
+   "y": 14472.0,
+   "o": "R0",
+   "w": 129.6,
+   "h": 129.6,
+   "rule": "grant slot collks3_SW"
+  },
+  "hcollks_NW": {
+   "m": "ot_hbm_kqs_fault_or4",
+   "x": 10368.0,
+   "y": 19224.0,
+   "o": "R0",
+   "w": 43.2,
+   "h": 43.2,
+   "rule": "grant slot collks_fault_NW"
+  },
+  "hcollks_SW": {
+   "m": "ot_hbm_kqs_fault_or4",
+   "x": 9504.0,
+   "y": 14688.0,
+   "o": "R0",
+   "w": 43.2,
+   "h": 43.2,
+   "rule": "grant slot collks_fault_SW"
+  },
+  "obs_NW": {
+   "m": "ot_hbm_obs_leaf__pv3",
+   "x": 12096.0,
+   "y": 17928.0,
+   "o": "R0",
+   "w": 21.816,
+   "h": 22.68,
+   "rule": "grant slot obs_NW"
+  },
+  "obs_SW": {
+   "m": "ot_hbm_obs_leaf__pv2",
+   "x": 12096.0,
+   "y": 14904.0,
+   "o": "R0",
+   "w": 21.816,
+   "h": 22.68,
+   "rule": "grant slot obs_SW"
+  },
+  "fr_NW": {
+   "m": "ot_hbm_fault_leaf__pv1",
+   "x": 9072.0,
+   "y": 19224.0,
+   "o": "R0",
+   "w": 21.6,
+   "h": 21.6,
+   "rule": "grant slot fr_NW"
+  },
+  "fr_SW": {
+   "m": "ot_hbm_fault_leaf__pv2",
+   "x": 8856.0,
+   "y": 14688.0,
+   "o": "R0",
+   "w": 21.6,
+   "h": 21.6,
+   "rule": "grant slot fr_SW"
+  }
+ },
+ "evicted_bodies": [
+  "hcollb_NW",
+  "hcollb_SW",
+  "hcollgi_NW",
+  "hcollgi_SW",
+  "hcollgl_NW",
+  "hcollgl_SW",
+  "hcollks_NW_p0",
+  "hcollks_SW_p0",
+  "hcollks_NW_p1",
+  "hcollks_SW_p1",
+  "hcollks_NW_p2",
+  "hcollks_SW_p2",
+  "hcollks_NW_p3",
+  "hcollks_SW_p3",
+  "hcollks_NW",
+  "hcollks_SW",
+  "hcollrs_NW",
+  "hcollrs_SW",
+  "cxdl_NW0_s",
+  "cij_NW",
+  "cij_SW",
+  "hb_coll_NW",
+  "hb_coll_SW",
+  "fr_NW",
+  "fr_SW",
+  "hb_idx__xqr",
+  "hc_NW",
+  "hcb_NW0",
+  "hcb_NW6",
+  "hcb_NW7",
+  "hcb_SW1",
+  "hcb_SW2",
+  "hb_idx__link",
+  "hb_idx__selector",
+  "obs_NW",
+  "obs_SW"
+ ],
+ "unplaced": [
+  "hb_idx__s_SE",
+  "hb_idx__s_NW",
+  "hb_idx__s_NE"
+ ],
+ "unchanged_fixed_bodies": 48,
+ "unchanged_other_bodies": 543,
+ "auto_relay_rebuild_required": 632,
+ "elapsed_s": 1.1284098625183105,
+ "explicit_open": [
+  "All moved block phase and link ages need normal GEN/S4/S8 repricing.",
+  "All covered old relays must be regenerated, not dropped.",
+  "New parents must implement actual feedthrough corridors; bounding rectangles alone do not establish them.",
+  "No outline was changed or functional unit removed; this is one concrete composition attempt, not signoff."
+ ]
+}
