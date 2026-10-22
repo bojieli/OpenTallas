@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.tile_visual_review.v1",
+ "tile": "qfd_coll_split_q11a",
+ "reviewer": "coordinator",
+ "verdict": "APPROVED",
+ "time": "2026-10-22T01:45:00-07:00",
+ "gate_commit": "0626dcd6b",
+ "checklist": {
+  "lattice": "12 free-standing SRAMs in 3 columns, >=20 um channels",
+  "std_cell_band": "logic in inter-macro bands; a few bins ~1.0 in upper/lower bands, GRT ovf 0",
+  "pin_spread": "W/E/N/S pins over ~96-99% of faces",
+  "clock_entry": "18,744 sinks spread TT/FF 52.5/43.6 ps",
+  "shape": "248x277, fill 35%, outline kept"
+ },
+ "notes": "COORD 10-22 01:45 APPROVED q11a (Q.SAFE.COLL MAIN); watch band hotspots at route; FB q11b continues, first CLOSED binds",
+ "geometry_sha256": "f32af9f94c83de6f26b71ec5ae02e256407022cd45c88910b021711bffd67ff3"
+}
