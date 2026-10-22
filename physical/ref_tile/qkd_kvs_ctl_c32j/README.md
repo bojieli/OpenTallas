@@ -3,7 +3,7 @@
 The failed c32g attempt boxed an output-pin strip during GRT. Its target decode, accept checks and held payload mux formed the setup path. This opt-in version adds a register between the accepted word and held payload selection. MU GAP order validation retains its original edge; the complete layer write interface stages after its GAP mux. The compiler-visible boot write interface costs one additional edge, with zero production programme edges. Existing variants remain DSTG=0.
 
 Safe design review before the gate:
-1. Pins: input/output flow pin registers retained; W/E full-face pin plan uses <=3.1 pins/um. Native tied-port check is a prerequisite of the gate.
+1. Pins: input/output flow pin registers retained; W/E outline capacity is <=3.1 pins/um if fully spread; i/j automatic placement remains unverified. Explicit full-face k/l successors are separate kits. Native tied-port check is a prerequisite of the gate.
 2. Reach: outline enlarged; flow pin-register relocation and relay stages retained. Actual reach verdict pending; no reach waiver.
 3. Fanout: kept accepted-target stage; native census max32 prerequisite of the gate. Any violation gets RTL kept copies before layout.
 4. Depth: accept and held mux are separate stages. Actual mapped depth/setup pending.
