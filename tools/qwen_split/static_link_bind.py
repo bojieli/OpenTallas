@@ -135,6 +135,36 @@ def apply(model):
     return rec
 
 
+def _peer_pin_xy(model, by, Master):
+    """SQC-QDIE4 10-22 (OT_PIN_PEER_PIN=1): d2d_rom port -> die (x, y) of its ucie_kv peer's own LEF pin-group centroid
+    (the PHY abstract is fixed), so the FDI groups are assigned facing their real partner pins."""
+    from qwen_split.native_static_io_bind import phy_master
+    uk = by.get('ucie_kv')
+    if uk is None:
+        return {}
+    pm = phy_master(Master, 'ot_qkvd_ucie_x64_phy', 'physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy')
+    o = getattr(uk, 'orient', 'R0')
+    out = {}
+    for b, c, n, es in model['buses']:
+        if c in ('clock_trunk', 'reset') or len(es) != 2:
+            continue
+        for (i0, p0), (i1, p1) in ((es[0], es[1]), (es[1], es[0])):
+            if i0 != 'd2d_rom' or i1 != 'ucie_kv' or p1 not in pm.ports:
+                continue
+            _, nb, f, _, zs, _ = pm.ports[p1]
+            z = sum(zs) / len(zs)
+            if f in 'NS':
+                x = uk.x + (pm.w - z if o in ('MY', 'R180') else z)
+                y = uk.y + (pm.h if (f == 'N') != (o in ('MX', 'R180')) else 0.0)
+            else:
+                y = uk.y + (pm.h - z if o in ('MX', 'R180') else z)
+                x = uk.x + (pm.w if (f == 'E') != (o in ('MY', 'R180')) else 0.0)
+            out[('d2d_rom', p0)] = (round(x, 3), round(y, 3))
+    model.setdefault('static_link_bind', {})['peer_pin_wishes'] = {p: list(v) for (_, p), v in sorted(out.items())}
+    print(f'PEER_PIN d2d_rom -> ucie_kv pin wishes: {sorted(out.items())}', flush=True)
+    return out
+
+
 def install_masters(M, model, Master, partition_master):
     if 'static_link_bind' not in model:
         return
@@ -144,7 +174,8 @@ def install_masters(M, model, Master, partition_master):
         # Q-VIEWFRAME 10-16: every die port on the closed view's own pin (fails closed on any port without one)
         view_install(M, model, Master, by['d2d_rom'], MASTER, rtl_ports(ROOT / SOURCE, MASTER), partition_master)
     else:
-        assign_pins(M, model, Master, by['d2d_rom'], MASTER, SOURCE, peer_map(model), partition_master)
+        assign_pins(M, model, Master, by['d2d_rom'], MASTER, SOURCE, peer_map(model), partition_master,
+                    peer_xy=_peer_pin_xy(model, by, Master) if os.environ.get('OT_PIN_PEER_PIN', '0') == '1' else None)
     q = Master(BUMP, BUMP_WH, BUMP_WH, 3, 'package signal bump receiver (hard-macro model)')
     q.ports['o'] = ('pins', 1, 'N', 'M5', [round(.012 + round((BUMP_WH / 2 - .012) / .048) * .048, 4)], 1)
     q.order.append('o')
