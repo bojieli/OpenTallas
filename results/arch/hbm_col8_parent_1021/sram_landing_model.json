@@ -32,5 +32,14 @@
   "routing": "three fullwidth macro slices, inputN outputS <=1.75pins/um; local pointercentre<=~300um per bank",
   "status": "5edge SRAM phase PASS256/K3FAIL41; baseline hierarchicalchunk PASS2339/1063validnonzero; native/CTS/layout pending, quarterfitopen",
   "explicit_boundary_flops": 2420,
-  "full_chunk_active_age_delta": 23
+  "full_chunk_active_age_delta": 23,
+  "stack_main_outline_um": [
+    259.2,
+    432
+  ],
+  "stack_fb_outline_um": [
+    345.6,
+    432
+  ],
+  "stack_rationale": "Synthesis inventory:3macros39007um2 +2420FF; stacked3macro placement preserves fullwidthstandardcellband and <=405umwireplanning, MAINpinface5.61/um"
 }

@@ -1,0 +1,205 @@
+{
+ "name": "hidx_land1210_stack_main_1021",
+ "top": "ot_hidx_col8_sram_land",
+ "kind": "tile",
+ "layer_cap": "M5",
+ "params": {
+  "W": 1210,
+  "K": 2
+ },
+ "sources": [
+  "rtl/hdc/v41x/ot_hbm_idx_col8_sram_landed.sv",
+  "rtl/hdc/v41x/ot_hbm_idx_chunk_rt_c.sv"
+ ],
+ "defines": [],
+ "clock": "multiple_cts_roots",
+ "clock_port": "cw",
+ "clock_ports": [
+  "cw",
+  "cr"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cw"
+   ],
+   "inputs": [
+    "d",
+    "rst_n"
+   ],
+   "outputs": []
+  },
+  "read": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cr"
+   ],
+   "inputs": [],
+   "outputs": [
+    "q"
+   ]
+  }
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 432,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1",
+   "count": 1,
+   "inst": "g_bank[0].u_mem",
+   "at": [
+    43.2,
+    43.2
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1",
+   "count": 1,
+   "inst": "g_bank[1].u_mem",
+   "at": [
+    43.2,
+    172.8
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1",
+   "count": 1,
+   "inst": "g_bank[2].u_mem",
+   "at": [
+    43.2,
+    302.4
+   ]
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "soft_root_macro_masters": [
+  "ot_sram_1r1w2c_64x516_m1"
+ ],
+ "soft_root_macro_bindings": {
+  "g_bank[0].u_mem": {
+   "master": "ot_sram_1r1w2c_64x516_m1",
+   "clock_pins": {
+    "wclk": "cw",
+    "rclk": "cr"
+   }
+  },
+  "g_bank[1].u_mem": {
+   "master": "ot_sram_1r1w2c_64x516_m1",
+   "clock_pins": {
+    "wclk": "cw",
+    "rclk": "cr"
+   }
+  },
+  "g_bank[2].u_mem": {
+   "master": "ot_sram_1r1w2c_64x516_m1",
+   "clock_pins": {
+    "wclk": "cw",
+    "rclk": "cr"
+   }
+  }
+ },
+ "pins": {
+  "N": [
+   "d",
+   "cw",
+   "rst_n"
+  ],
+  "S": [
+   "q",
+   "cr"
+  ]
+ },
+ "route": {
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pd": 0.5,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.03
+ },
+ "recipe": 4,
+ "inhold": false,
+ "outhold": false,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Explicit source d_pin and destination q_pin register banks land actual clock ownership; auto flops would duplicate the fixed5edge crossing."
+ },
+ "reset_landing": {
+  "enable": false,
+  "reason": "Two regional kept reset forests, equal4edge release before registered pointer epochs."
+ },
+ "keep_pin_regs": true,
+ "job": {
+  "owner": "CODEX-HBM-COL8-PARENT-2000",
+  "branch": "codex/hbm-col8-parent-2000-1021",
+  "tag": "stack_main",
+  "purpose": "Structural vertical3macro landing: fullwidth standardcell bands, everyboundarywire<=405um planning; exact5edge SRAMinterface",
+  "extra_paths": [
+   "rtl/hdc/v41x",
+   "rtl/common/landed_parent",
+   "physical/asap7_memory_macros/ot_sram_1r1w2c_64x516_m1",
+   "tools/orfs_allcorner_spef.py",
+   "rtl/test/hbm_idx_static",
+   "results/arch/hbm_col8_parent_1021"
+  ],
+  "benches": [
+   {
+    "name": "phase",
+    "cmd": "bash rtl/test/hbm_idx_static/run_col8_sram_land.sh {RUN}/phase 2",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "COL8_SRAM_LAND_PASS checks=256"
+   },
+   {
+    "name": "wrong_read_offset",
+    "cmd": "bash rtl/test/hbm_idx_static/run_col8_sram_land.sh {RUN}/phase_k3 3",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "COL8_SRAM_LAND_FAIL cycle=",
+    "fail_witness": "results/arch/hbm_col8_parent_1021/landing_phase_sram5_k3_fail.log"
+   }
+  ]
+ },
+ "safe_design_checklist": {
+  "1_pins": "Real kept source/destination clock-boundary FFs plus SRAM write/read capture; datapath unreset",
+  "2_reach": "Vertical3macro stack at43.2/172.8/302.4; d north/q south, furthestsource/sinksegment<405um in432umtile",
+  "3_fanout": "Pointer drives3macros; explicit per16bit TIEHI masks and TIELO padcells bound constants; actualnative required",
+  "4_depth": "One2bitpointerincrement, no width-dependent logic; realmacroread clock-Q mustmeasure",
+  "5_storage": "3real64x516dualclockSRAMs,4rowsused. No newECC academic rule. 99072physicalbits for4840activeringbits; nofloparray",
+  "6_floorplan": "259.2x432,3macros on43.2lattice; fullwidth~50um top/bottom bands for2420boundaryFFs; pinfaceusable216um MAIN =>1212/216=5.61pins/um; no serialization",
+  "7_clock": "2regionalroots explicitlybound torealwclk/rclk; pointertree and macroclockdelivery measuredTT/FF",
+  "8_schedule": "StaticD4K2: inputFF1 + SRAMring3 + outputFF1 =5edges perwidecrossing. Fullchunk4*5+smallreturn3=23edges, candidate pending"
+ },
+ "hold_budget": "die",
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ }
+}
