@@ -24,7 +24,7 @@ class PortClockBind(unittest.TestCase):
  def link(self,port,source=True):
   ends=[[0,port,0,0,'box'],[1,'i',100,0,'box']] if source else [[1,'o',100,0,'box'],[0,port,0,0,'box']]
   return dict(i='clock_probe',e=ends)
- def emitted(self,wrong=False,zero=False,forwarded=False,prune=None,force_zero=False):
+ def emitted(self,wrong=False,zero=False,forwarded=False,prune=None,force_zero=False,quantized=False):
   table=copy.deepcopy(self.table)
   table.setdefault('clock_regions', {'mode':'logical'})
   table['landing_reset_stages']={'dsfd_dvland_276':2}
@@ -47,6 +47,9 @@ class PortClockBind(unittest.TestCase):
   table['masters']['regional']['ports']['ri.o'].update(port='ri',lane=276,clock_port='clk')
   table['masters']['legacy']['ports']['ri.i']={'port':'ri','lane':276,'land':True}
   table['rtl_widths']['legacy']={}
+  if quantized:
+   table['masters']['regional']['ports']['lo0.o']['lanes']=[{'split':[['lo0',0,0,237]]}]
+   table['masters']['legacy']['ports']['i0.i']['lanes']=[{'split':[['i0',0,0,237]]}]
   if forwarded:table['masters']['regional']['ports']['lo0.o']['ck']='forwarded'
   if zero:
    for i in range(4):
@@ -102,6 +105,10 @@ class PortClockBind(unittest.TestCase):
    moved=(*e[:5],y,e[6])
    self.assertEqual(D.place_lane(rule,moved,[],{'y':0,'h':100}), (8,'xc',276,('ck_xc',8)))
   with self.assertRaises(KeyError):D.place_lane(rule,(*e[:3],'missing',*e[4:]),[],{'y':0,'h':100})
+ def test_zero_station_quantized_payload_pads_ring_only_and_never_indexes_a_relay(self):
+  text=self.emitted(zero=True,force_zero=True,quantized=True)
+  self.assertIn(".i({39'd0, w_lo0_src[236:0]})",text)
+  self.assertNotIn('st_lo0_0 (',text)
  def test_unhardened_landing_reset_contract_is_source_bound_and_cannot_alias_view(self):
   import hashlib
   body=(Path(__file__).resolve().parents[2]/'rtl/dsrom_sys/s81_dv/land/dsdv_svc_busland.sv').read_text()
