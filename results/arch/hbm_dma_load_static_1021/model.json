@@ -44,10 +44,10 @@
     "command_to_routed_output_edges": 10,
     "note": "5 local +5 route; actual die command/wire/regional crossings additional",
     "integrated_producer_receipt": {
-      "commit": "e4bafbc0b",
-      "packet": "results/rtl/hbm_dma_producer_1021/successors/db8c16103/receipt.json",
-      "unit": "2111555-1792644115",
-      "source_commit": "db8c16103",
+      "commit": "6791d55e7",
+      "packet": "results/rtl/hbm_dma_producer_1021/successors/fb9122ac6/receipt.json",
+      "unit": "3161623-1792645642",
+      "source_commit": "fb9122ac6",
       "HBM_period_ns": 1.4,
       "stream_period_ns": 2,
       "words": 384,
@@ -59,7 +59,7 @@
         "wrong destination bank",
         "corrupt HBM source byte"
       ],
-      "scope": "Prior source db8c16103 passed producer; exact fb9122ac6 replay pending. Controller/PHY boundary modeled; group and WB idle; not native physical, die transport or full token."
+      "scope": "Eight actual KRL1 vmks and real CDC; controller/PHY boundary modeled; group and WB idle; not physical, full die transport or full-token qualification."
     }
   },
   "replicas": {
