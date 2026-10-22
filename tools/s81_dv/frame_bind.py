@@ -44,6 +44,39 @@ def orient_face(face, t, w, h, orient='R0'):
     return ({'S':'N', 'N':'S'}[face] if my else face), (w-t if mx else t)
 
 
+def planned_faces(plan):
+    """frame name -> {port: {physical faces}} from the selected plan's link endpoints."""
+    out = {}
+    for link in plan['links']:
+        faces = link.get('endpoint_faces') or [None, None]
+        for k, e in enumerate(link['e']):
+            b = plan['blocks'][e[0]]
+            if faces[k] in ('W', 'E', 'S', 'N'):
+                out.setdefault(b['name'], {}).setdefault(e[1], set()).add(faces[k])
+    return out
+
+
+def face_fit_orientation(name, base, pp, faces, w, h):
+    """Smallest extra reflection of `base` that puts every planned frame port on its
+    planned physical face (G9c 10-21: all 36 R-side frames were placed R0 with the kit's
+    E-face lane pins while the plan landed x/xo/ret on their W face -> 1.5-2 mm hops
+    around the frame, 10-13 repeaters, 9 fclk/data mismatches).  Raises when no
+    reflection fits (a plan/kit face contradiction is a planning defect, never placed)."""
+    want = []
+    for port, fs in sorted(faces.items()):
+        key = f'{port}[0]' if port in VECTOR_PORTS else port
+        if key not in pp['pins']:
+            raise ValueError(f'{name}: planned port {port} has no kit pin range')
+        if len(fs) != 1:
+            raise ValueError(f'{name}.{port}: plan lands it on several faces {sorted(fs)}')
+        want.append((port, pp['pins'][key][0], next(iter(fs))))
+    for extra in ('R0', 'MY', 'MX', 'R180'):
+        final = compose_orientation(base, extra)
+        if all(orient_face(nf, 0.0, w, h, final)[0] == pf for _, nf, pf in want):
+            return final, extra, want
+    raise ValueError(f'{name}: no frame orientation puts kit faces on planned faces {want}')
+
+
 def instance_clocks(table, block, region):
     """Ordered clock-port/net pairs; explicit maps are real declared top inputs."""
     m = table['masters'][block['master']]
@@ -132,16 +165,23 @@ def apply(plan, table, read, source_ref='21b97190e'):
             m.update(module=module,clk='ck_r0',clock_ports=['ck_r0','ck_r1','ck_r2'],clk_extra=[],
                      view=None,view_note=f'Actual reset-landed LP source; {kit} gate pending at {source_ref}; no closed view claimed.')
             m['instance_param']='INSTANCE'
+    faces=planned_faces(plan)
+    prior=(table.get('frame_lp_binding') or {}).get('legacy_chain_end_modules_removed') or []
+    meta['legacy_chain_end_modules_removed'].extend(prior)   # idempotent re-apply on an overlaid table
     for b in frames:
         name=b['name'];module=out['masters'][b['master']]['module'];pp=pin_plans[module]
         class_o='MX' if b['master']=='col_h9_MX' else 'R0'
         # The selected plan's orient is a die transform; the logical MX class
         # still needs its master-local mirror unless explicitly recorded there.
         die_o=b.get('orient','R0')
-        final=die_o if b.get('orientation_includes_master',False) else compose_orientation(die_o,class_o)
+        base=die_o if b.get('orientation_includes_master',False) else compose_orientation(die_o,class_o)
+        final,face_fit,want=face_fit_orientation(name,base,pp,faces.get(name,{}),b['w'],b['h'])
+        if face_fit!='R0' and 'orient' in b:
+            raise ValueError(f"{name}: explicit plan orient {die_o} contradicts its planned endpoint faces {want}")
         orients[name]=final;maps[name]={}
         entry=dict(logical_master=b['master'],module=module,programme_instance=f'u_{name}',
-                   die_orientation=die_o,class_orientation=class_o,orientation=final,
+                   die_orientation=die_o,class_orientation=class_o,face_fit_reflection=face_fit,
+                   planned_faces={p:f for p,_,f in want},orientation=final,
                    receiver_reset_edges=4,forwarded_reset_edges=2,clock_ports={})
         for i in range(3):
             cp=f'ck_r{i}';net=f'ck_frame_{name}_r{i}'
