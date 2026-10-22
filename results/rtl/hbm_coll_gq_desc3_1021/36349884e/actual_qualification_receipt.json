@@ -1,0 +1,40 @@
+{
+  "collected_local_time": "2026-10-21T22:27:55.767099",
+  "source_commit": "36349884e",
+  "actual_fleet_job": 1922509,
+  "actual_result": "both full IA cases passed, fault checks passed, causal mutant failed at named invariant; wrapper terminal exit 0",
+  "positive_cases": [
+    {
+      "case": "out_ia1",
+      "actual_logs_present": true,
+      "tail_markers": [
+        "out_ia1/f5.log",
+        "out_ia1/s0.log"
+      ]
+    },
+    {
+      "case": "out_ia2",
+      "actual_logs_present": true,
+      "tail_markers": [
+        "out_ia2/f5.log",
+        "out_ia2/s0.log"
+      ]
+    }
+  ],
+  "causal_mutant": "out_desc_mut",
+  "required_invariant": "GQ_DESC3_INV_FAIL",
+  "logs_sha256": {
+    "out_desc_mut_wrapper.log": "c7ae55a42cc51951025b218fe265fc7f2211ba12a48db76b15dc7e3acace64f5",
+    "out_desc_mut/sources.sha256": "634ab9a67f56fe07989cc53725824e0787a3d124c77ac78c63ab8a067266d1e6",
+    "out_desc_mut/ia_check.log": "94fe2799d8f3ece30e326e15e728763c2f158c2cf09923926de2eab5c1eb52f2",
+    "out_desc_mut/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "out_desc_mut/s0.log": "1a2ff75d6abfa874cbfef19278d6710f884412adce5cb9a1cfc37b312dcc2750",
+    "out_ia2/sources.sha256": "634ab9a67f56fe07989cc53725824e0787a3d124c77ac78c63ab8a067266d1e6",
+    "out_ia2/f5.log": "3f6b50357d6ada7f31f8bc30043520cd47fac6de63109d0ac7b13d28bae77b33",
+    "out_ia2/s0.log": "7692aa0771b6ac332a8ab3b3b157c27007d26453c61e3fde38dbe87b89eefeb9",
+    "out_ia1/sources.sha256": "634ab9a67f56fe07989cc53725824e0787a3d124c77ac78c63ab8a067266d1e6",
+    "out_ia1/f5.log": "c33a8452aaa081cfe2856cd83a298c048e55bb84e318a4e70f0a89f4cb0ae0af",
+    "out_ia1/verilator.version": "46aedd5b30efdd94426c9eebbcf4a6ae7a9680526cc90ce8fec95977c2d6b12d",
+    "out_ia1/s0.log": "20289a69b3569c414802d751a460a384dfd5b478c7180ef2bef107051c99c64b"
+  }
+}
