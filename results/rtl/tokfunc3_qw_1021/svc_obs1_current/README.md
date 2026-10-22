@@ -5,3 +5,5 @@ Source 91e9c3456. qdie confirms actual parameters NATIVE_PROFILE 0, LAND_QUALIFI
 This reuses qelements retained SQ-C2-N59 service bench, with precisely the two RECV_INPUTS / LOCAL32 instance arguments changed from 1 to 0 in both DUT and legacy reference. All production source files come from exact 91e9c3456 and are hashed. Both 6000-edge random seed positives pass, alongside the independent directed head-prepare descriptor scoreboard and completed-tag hold checks. Head-sequence and service-return mutants fail at runtime. Fleet EP7 unit 2408918-1792643430, client 1841762, Verilator 5.050.
 
 This is service-child evidence. It excludes qbank, wrapper parent, actual generated wire transport, current calendar placement and the complete physical token. The formatter independent all-byte scoreboard is the separate formatter_safe2_current receipt.
+
+Binary identity augmentation: the retained original bench deleted its output objects before recording hashes. A receipt replay on EP7 unit 2472081-1792643528, client 1851178, disables only that cleanup and retains a binary SHA for every case. All four outcomes passed again with identical production input hashes.

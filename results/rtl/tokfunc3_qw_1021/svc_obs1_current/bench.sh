@@ -37,6 +37,6 @@ abs=(); for f in "${SRCS[@]}"; do abs+=("$root/$f"); done
 "$run/obj/Vtb_n59_svc_obs1_hp" > "$run/sim.log" 2>&1; rc=$?
 cat "$run/sim.log" | grep -E '^N59OBS' | head -12
 sha256sum "$obs" "${abs[@]}" > "$run/source.sha256"
-rm -rf "$run/obj"
+sha256sum "$run/obj/Vtb_n59_svc_obs1_hp" > "$run/binary.sha256"
 if grep -q '^N59OBS_PASS' "$run/sim.log" && [ $rc = 0 ]; then echo "N59OBS_CASE $case_ PASS"; [ $expect = pass ] && exit 0 || { echo "N59OBS_MUTANT_SURVIVED $case_"; exit 0; }
 else echo "N59OBS_CASE $case_ FAIL"; [ $expect = fail ] && { echo "N59OBS_MUTANT_REJECTED $case_"; exit 1; } || exit 1; fi
