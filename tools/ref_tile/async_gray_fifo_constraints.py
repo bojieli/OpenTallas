@@ -41,9 +41,9 @@ RESET_SYNC_SOURCE = 'rtl/lib/ot_reset_sync.sv'
 # declare it is checked exactly as before).  Control is the reviewed FIFO's verbatim; one Gray pair crosses; per-slice
 # wa/ra are same-domain copies; payload = g_s[s].mem[slot][b] -> rd_data[s*SW+b].
 SHP_SOURCE = 'rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo_shp.sv'
-OPTIONAL_SOURCES = {SHP_SOURCE: ('08515683bb8e1187863c94f954fa34ab90c201a20731f15c5fd520e1fd63ee6b',)}
+OPTIONAL_SOURCES = {SHP_SOURCE: ('2ab76c06558bdeef73f3050ee9fa03a40cf41366b018458355eebfa749a7a084',)}
 FIFO_SRC_RANGE = {'ot_hbm_svc_async_fifo': (next(iter(SOURCES)), '6.1-51.10'),
-                  'ot_hbm_svc_async_fifo_shp': (SHP_SOURCE, '17.1-96.10')}
+                  'ot_hbm_svc_async_fifo_shp': (SHP_SOURCE, '25.1-105.10')}
 # destination period - 60 ps setup uncertainty (gray_fifo_cdc_constraints rule (c) reset bound)
 RESET_BOUND_PS = {'core': 773.333, 'hbm': 964.0}
 RELATIONSHIP = dict(kind='hbm_phy_async_gray_fifo', stream_period_ps=833.333,
@@ -160,10 +160,10 @@ def elaborate(root, top, sources, params):
                 raise ValueError('async_gray_fifo module identity does not bind reviewed source')
             if base=='ot_hbm_svc_async_fifo_shp':
                 # review (b): exactly the two reviewed syncs u_wr_reset / u_rd_reset (same module, same parameters), and
-                # the per-group release leaves are the kept same-domain ot_rst_fanout u_gw_leaf / u_gr_leaf behind them
+                # the per-group release leaves are the kept same-domain ot_hbm_svc_shp_leaf u_gw_leaf / u_gr_leaf behind them
                 cells=module.get('cells',{})
                 syncs={c:x['type']for c,x in cells.items()if 'reset_sync' in x['type']}
-                leaves={c:x['type']for c,x in cells.items()if 'rst_fanout' in x['type']}
+                leaves={c:x['type']for c,x in cells.items()if 'shp_leaf' in x['type']}
                 if (set(syncs)!={'u_wr_reset','u_rd_reset'} or len(set(syncs.values()))!=1
                         or set(leaves)!={'u_gw_leaf','u_gr_leaf'}):
                     raise ValueError('async_gray_fifo shp reset structure differs from the reviewed one: '+json.dumps([syncs,leaves],sort_keys=True)[:600])

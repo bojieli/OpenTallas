@@ -13,6 +13,14 @@
 // group reset sync -> GS slices x (AW + 1) <= 32.
 (* keep_hierarchy = "yes" *)
 module ot_hbm_svc_shp_and2(input wire a,b,output wire y); assign y=a&b; endmodule
+// Group release leaf: N kept copies of the side's own online flag (D = wr_online / rd_online, NOT a constant 1: a D=1
+// leaf on the same reset is logically identical to wr_online / rd_online and synthesis merged them, r5a gate 10-22).
+(* keep_hierarchy = "yes" *)
+module ot_hbm_svc_shp_leaf #(parameter integer N=1)(input wire clk,rst_n_in,d,output wire [N-1:0] rst_n);
+ (* keep="true",dont_touch="true" *) reg [N-1:0] q;
+ always @(posedge clk or negedge rst_n_in) if(!rst_n_in) q<={N{1'b0}}; else q<={N{d}};
+ assign rst_n=q;
+endmodule
 
 module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)(
  input wire wr_clk,wr_rst_n,wr_valid,output wire wr_ready,
@@ -62,13 +70,14 @@ module ot_hbm_svc_async_fifo_shp #(parameter integer WIDTH=32,DEPTH=8,SW=7,GS=7)
  genvar g,s;
  wire [NG-1:0] gw_reset,gr_reset,gw_fire,gr_fire;
  // Group reset leaves (r5a gate 10-22: per-group ot_reset_sync copies are logically identical and synthesis merged them
- // back into one 140-load flop): ONE ot_reset_sync per side (u_wr_reset / u_rd_reset, above) feeds a KEPT same-domain
- // ot_rst_fanout leaf per group (release = +1 edge after wr_reset / rd_reset; first fire is >= 2 edges after them, so
- // the slot-index copies are out of reset before any fire: bench invariant + release margin).  Bench-only mutant
- // OT_SHP_MUT_RS_DEEP adds one more leaf stage (review 10:45 (b)).
+ // back into one 140-load flop): ONE ot_reset_sync per side (u_wr_reset / u_rd_reset, above) resets a KEPT same-domain
+ // leaf per group that copies the side's online flag (release = wr_reset / rd_reset + 2 edges).  A write fire needs
+ // rd_online_w2, a read fire wr_online_r2: both are themselves reset by wr_reset / rd_reset, so they rise >= 2 own-clock
+ // edges after it and the slot-index copies are out of reset by the first fire (bench invariant + release margin).
+ // Bench-only mutant OT_SHP_MUT_RS_DEEP adds one more leaf stage (review 10:45 (b)).
  wire [NG-1:0] gw_l0,gr_l0;
- ot_rst_fanout #(.N(NG)) u_gw_leaf(.clk(wr_clk),.rst_n_in(wr_reset),.rst_n(gw_l0));
- ot_rst_fanout #(.N(NG)) u_gr_leaf(.clk(rd_clk),.rst_n_in(rd_reset),.rst_n(gr_l0));
+ ot_hbm_svc_shp_leaf #(.N(NG)) u_gw_leaf(.clk(wr_clk),.rst_n_in(wr_reset),.d(wr_online),.rst_n(gw_l0));
+ ot_hbm_svc_shp_leaf #(.N(NG)) u_gr_leaf(.clk(rd_clk),.rst_n_in(rd_reset),.d(rd_online),.rst_n(gr_l0));
 `ifdef OT_SHP_MUT_RS_DEEP
  ot_rst_fanout #(.N(1)) u_gw_mut[NG-1:0](.clk(wr_clk),.rst_n_in(gw_l0),.rst_n(gw_reset));
  ot_rst_fanout #(.N(1)) u_gr_mut[NG-1:0](.clk(rd_clk),.rst_n_in(gr_l0),.rst_n(gr_reset));
