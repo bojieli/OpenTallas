@@ -46,11 +46,19 @@ records=[];count=0
 for r in todo:
  drv=b.findInst(r['driver'][0]).findITerm(r['driver'][1]);sink=b.findInst(r['sink'][0]).findITerm(r['sink'][1]);net=drv.getNet();assert net==sink.getNet() and net.getName()==r['net']
  a,z=xy(drv),xy(sink);body=next(o for o in r['bbox_obstructions'] if o['name']==r['upstream_launch'][-1][0]);x0,y0,x1,y1=body['box']
- # Route outside the real controller rectangle. The measured failures have
- # one endpoint on E and one on N; fail closed if that source geometry changes.
- assert (a[0]>=x1 and z[1]>=y1) or (z[0]>=x1 and a[1]>=y1),(r['net'],a,z,body)
- corner=(max(a[0],z[0],x1+8),max(a[1],z[1],y1+8))
- path=[a,(corner[0],a[1]),corner,(z[0],corner[1]),z]
+ # Pick a legal perimeter detour, including the measured S-to-N cases.
+ # No segment may enter the actual hard controller rectangle.
+ def legal_segment(p,q):
+  if p[0]==q[0]:return not (x0<p[0]<x1 and min(p[1],q[1])<y1 and max(p[1],q[1])>y0)
+  if p[1]==q[1]:return not (y0<p[1]<y1 and min(p[0],q[0])<x1 and max(p[0],q[0])>x0)
+  return False
+ options=[[a,(x1+8,a[1]),(x1+8,z[1]),z],
+          [a,(x0-8,a[1]),(x0-8,z[1]),z],
+          [a,(a[0],y1+8),(z[0],y1+8),z],
+          [a,(a[0],y0-8),(z[0],y0-8),z]]
+ options=[p for p in options if all(legal_segment(p0,p1) for p0,p1 in zip(p,p[1:]))]
+ assert options,(r['net'],a,z,body)
+ path=min(options,key=lambda p:sum(abs(p0[0]-p1[0])+abs(p0[1]-p1[1]) for p0,p1 in zip(p,p[1:])))
  points=[]
  for p,q in zip(path,path[1:]):
   length=abs(p[0]-q[0])+abs(p[1]-q[1]);n=max(1,math.ceil(length/120))
