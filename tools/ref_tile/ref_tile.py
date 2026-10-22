@@ -1228,12 +1228,24 @@ def gen_pdn(s: dict, lc: dict) -> str:
               f"  define_pdn_grid -name {{hard_{top.lower()}}} -voltage_domains {{CORE}} -macro -cells $ot_c "
               f"-orient {{R0 R180 MX MY}} -halo {{2.0 2.0 2.0 2.0}}\n"
               f"  add_pdn_connect -grid {{hard_{top.lower()}}} -layers {{M{L} M{L + 1}}}\n}}\n")
-    srams = sorted({view_name(m["view"]) for m in s["macros"]})
-    if srams:
-        t += (f"set ot_s [ot_ref_present {{{' '.join(srams)}}}]\n"
+    macro_layers: dict = {}
+    macro_owner: dict = {}
+    for m in s["macros"]:
+        master = view_name(m["view"])
+        top = m.get("pg_layer", "M4")
+        L = metal(top)
+        if master in macro_owner and macro_owner[master] != top:
+            raise SpecError(f"macro {master} has conflicting PG layers")
+        macro_owner[master] = top
+        macro_layers.setdefault(top, set()).add(master)
+    for top, cells in sorted(macro_layers.items()):
+        L = metal(top)
+        grid = "sram" if top == "M4" else f"macro_{top.lower()}"
+        t += (f"set ot_s [ot_ref_present {{{' '.join(sorted(cells))}}}]\n"
               "if {[llength $ot_s]} {\n"
-              "  define_pdn_grid -name {sram} -voltage_domains {CORE} -macro -cells $ot_s -orient {R0 R180 MX MY} "
-              "-halo {2.0 2.0 2.0 2.0}\n  add_pdn_connect -grid {sram} -layers {M4 M5}\n}\n")
+              f"  define_pdn_grid -name {{{grid}}} -voltage_domains {{CORE}} -macro -cells $ot_s -orient {{R0 R180 MX MY}} "
+              "-halo {2.0 2.0 2.0 2.0}\n"
+              f"  add_pdn_connect -grid {{{grid}}} -layers {{M{L} M{L + 1}}}\n}}\n")
     return t
 
 
