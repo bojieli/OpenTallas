@@ -1,0 +1,29 @@
+{
+  "source_commit": "245706917",
+  "source_sha256": {
+    "rtl/qwen_sys/host_cluster_20261017/prompt_safe5/ot_host_if_pb2_observed_ps3.sv": "583214c705c08071537b37e0500ad2a45d30c6965c437c1ae067b56143d97528",
+    "rtl/qwen_sys/host_cluster_20261017/prompt_safe5/qkd_hr_core_prompt_mu4_ps5.v": "31e902017a3126fe589318069adca0a50f7f8310f7366e2c5c6440a95336975f",
+    "rtl/qwen_sys/host_cluster_20261017/prompt_safe5/ot_hkv_cnt_seg.sv": "b00ed3f3e03b9a23f7d38e08f443728b38a30250221e32ebe0c7f1282f61c0e3",
+    "rtl/qwen_sys/host_cluster_20261017/prompt_safe5/ot_hkv_prompt_mem_r.sv": "b4aded59495f6f883fd4cb086d5dea8918cab486c8cf80253a730891c9799f86",
+    "rtl/qwen_sys/host_cluster_20261017/prompt_safe5/qkd_host_program_loader_target.sv": "432f8f6d4544dd3b0eee1862d1febc6f68883210acc6c697da015c91e43b3174",
+    "rtl/qwen_sys/host_cluster_20261017/prompt_safe5/qkd_host_axi_packet_ps.sv": "235f851376dc8d9bc756133817c6e64ba8af1ba4f0179263d52042b4fcd22b4c",
+    "rtl/qwen_sys/host_cluster_20261017/prompt_safe5/qkd_host_record_port_mu.sv": "7b2d48ab3a346116fde6718c9cb701e80e0151906246a2e39faa2d318aa89d44",
+    "tools/qwen_kv_die/host_cluster/bench/prompt_n36_lifecycle.py": "c50f5860f95db71ace0827a61a0441736685f97aad64dfde748ea9eab118136b",
+    "rtl/test/qwen_host/tb_hkv_cnt_seg.sv": "fd44293136f5fc66994460ad0281653f75f27148de942f7cf8c3565e9241880d",
+    "rtl/test/qwen_host/tb_hkv_context_n36.sv": "67c1b2dc9eedd1d839cfe3cf3bcd0ef3b0aa01767f741cfa87bd8ee66e278828",
+    "tools/qwen_kv_die/host_cluster/bench/prompt_n36_context.py": "48f89d461495b82a5817a893502fba7bb0d5cee9ca7648325935e67a5cba92c4",
+    "rtl/qwen_sys/mu_qwen_20261018/qkd_host_record_port_mu.sv": "9842e6fe95f7c39f8c8bf38b29bbfe0e786ba3f1202ab604484e131fb29c0516"
+  },
+  "receipts": {
+    "lifecycle": "V5.050 actual4ctx NSLOT4 ENG_CTX4 PLB11 MU_OUT1: 18steps/12CQ maxout4 PASS; final1130 vs ps4baseline1124.",
+    "mutant": "raw_retire skips staging valid while retaining staged data: IDLE_FAIL preserved.",
+    "counter": "Segment8 production32/64 and smallcarry variants vs exact reference200000cycles0mismatch.",
+    "context": "Production4-user kind12 codec vs canonical unchanged original:64validrecords8rounds exact bits/edges PASS."
+  },
+  "source_synthesis": {
+    "host": "ot-gold2",
+    "path": "/srv/opentallas-scratch/claude/ref_gate/qkd_hr_core_prompt_mu4p5a-20261021-203414",
+    "status": "RUNNING; no mapped/native/physical result yet"
+  },
+  "scope": "Opt-in source mechanism qualification only; existing source-native derivation/census/correspondence/reset proof and MAIN/FB physical gates remain owed."
+}

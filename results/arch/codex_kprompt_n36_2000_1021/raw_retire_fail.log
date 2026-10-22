@@ -1,0 +1,15 @@
+IDLE_RESET_QUIESCENT PASS cycle=67
+IDLE_BOUNDARY_FIRST_EDGE PASS
+IDLE_READ_DRAIN cycles=9
+IDLE_WRITE_DRAIN cycles=9
+IDLE_RESPONSE_DRAIN PASS cycle=179
+ERR retire slot 0 pos 0/0 token 00000
+ERR retire slot 0 pos 0/1 token 20003
+IDLE_CONTEXT_PAUSE PASS starts=4 retires=4
+ERR start user 0 pos 1/2 busy 0 token 00106
+ERR retire slot 0 pos 1/2 token 20008
+ERR start user 0 pos 2/3 busy 0 token 20008
+IDLE_FINAL_CQ_DRAIN cycles=40
+[17308000] %Fatal: tb_hkv_mu4_idle.sv:163: Assertion failed in tb_hkv_mu4_idle: IDLE_FAIL four-context completion idle=0
+%Error: rtl/test/qwen_host/tb_hkv_mu4_idle.sv:163: Verilog $stop
+Aborting...
