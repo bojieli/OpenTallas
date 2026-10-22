@@ -279,5 +279,24 @@
   "E_tail_last_so_write_to_last_xs_arrival": 115,
   "W_tail_last_so_write_to_last_xs_arrival": 132,
   "end_delay": "entry END now waits for the slowest head retire (booked retire = read + 40): ~ +50 edges after the last SO write per half; the next job descriptor must not issue before it (static)"
+ },
+ "xgring_1021_delta": {
+  "note": "S81-ELEM2-XGRING 10-21: u_xg successor ot_s81sl_xgr (FB) / ot_s81sl_xgr2 (MAIN) adds relay stages: every ring-stop path +1 (xgr) / +2 (xgr2) edges per stop, gather port +1, slice x frame +2 vs xgt_xo; the measured values above are pre-XGRING (xgt_xo / xg). Apply the row of the bound kit; full table results/rtl/s81_xgring_1021/calendar_delta.json.",
+  "per_stop_edges": {
+   "xgr": 1,
+   "xgr2": 2
+  },
+  "gather_port_edges": 1,
+  "x_frame_edges": 2,
+  "line_far_extra_after": {
+   "xgr": {
+    "N": 52,
+    "S": 55
+   },
+   "xgr2": {
+    "N": 59,
+    "S": 62
+   }
+  }
  }
 }

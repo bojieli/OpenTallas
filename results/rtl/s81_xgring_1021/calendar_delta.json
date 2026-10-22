@@ -1,0 +1,20 @@
+{
+ "schema": "opentallas.s81_xgring_cal_delta.v1",
+ "owner": "S81-ELEM2-XGRING 10-21 (claude/s81-xgring-1021)",
+ "applies_to": "MU.S81.CAL (ring all-gather / head egress / slice x-chain calendar): u_xg master swap ot_s81sl_xgt_xo -> ot_s81sl_xgr (FB kit s81sl_xgr_b) or ot_s81sl_xgr2 (MAIN kit s81sl_xgr); whichever kit closes first is bound and its row applies",
+ "why": "xgt_xo gates (f5f35855d, ep9 3256858/60) failed placement timing TT -765 / -429 ps: one-cycle hops of 17-26 levels over 800-1,370 um; owner 10-21: add relays, extra cycles accepted",
+ "per_stop_edges_vs_xgt_xo": {
+  "ot_s81sl_xgr (FB)": {"line_in_to_line_out": 1, "v_fragment_to_v_out": 1, "own_beat_to_line": 1, "v_assembled_to_line": 1, "nx_delivery": 1, "dl_delivery": 1, "head_xb_egress_s0N_ro_w": 1, "gather_port_g": 1},
+  "ot_s81sl_xgr2 (MAIN)": {"line_in_to_line_out": 2, "v_fragment_to_v_out": 2, "own_beat_to_line": 2, "v_assembled_to_line": 2, "nx_delivery": 2, "dl_delivery": 2, "head_xb_egress_s0N_ro_w": 2, "gather_port_g": 1}
+ },
+ "absolute_edges": {
+  "line_pin_to_line_pin": {"xgt_xo": 2, "xgr": 3, "xgr2": 4},
+  "line_pin_to_xs_gather_port": {"xgt_xo": 2, "xgr": 3, "xgr2": 3},
+  "fourth_fragment_to_xs_gather_port": {"xgt_xo": 3, "xgr": 4, "xgr2": 4}
+ },
+ "slice_x_path_edges_vs_xgt_xo": {"issuer_word_or_gather_beat_to_xw_frame": 2, "frame_word": "production lane word + OFF - 1 (xgt_xo OFF - 3, xg_xo OFF - 4)", "fault": 2},
+ "ring_traversal": {"per_tier_line_8_stops_full_traversal": {"xgr": "+8 edges", "xgr2": "+16 edges"},
+                    "smwire_1019 priced line_far_extra (45 N / 48 S, 7 line hops)": {"xgr": "+7 -> 52 / 55", "xgr2": "+14 -> 59 / 62"},
+                    "smwire_1019 injector_or_partner arrival (16 / 18 / 22)": "+1 at the delivering stop (gather port) + per-stop row for every stop traversed before it"},
+ "evidence": "results/rtl/s81_xgring_1021/bench: xgr_bench (lockstep at ring pins, x path at +dextra 3 = main xg + 3), rstopr_bench (sid / egress / 16-stop ring, latency-agnostic windows), xs5_equiv (main xs + 2 exact every edge)"
+}
