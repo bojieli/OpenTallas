@@ -1,0 +1,41 @@
+diff --git a/home/ubuntu/scratch/codex-tok-qw-2000/frontend_analysis/kvattn_rel_dp.sv b/results/rtl/tokfunc3_qw_1021/r17_explicit_binding_proposal/kvattn_rel_dp_explicit.sv
+index 4200ad1e8..e12e49d5a 100644
+--- a/home/ubuntu/scratch/codex-tok-qw-2000/frontend_analysis/kvattn_rel_dp.sv
++++ b/results/rtl/tokfunc3_qw_1021/r17_explicit_binding_proposal/kvattn_rel_dp_explicit.sv
+@@ -83,8 +83,7 @@ module kvattn_rel_dp #(
+  generate for(s=0;s<4;s=s+1)begin:gs
+   wire [135:0] k_request;wire [8199:0] k_response;
+   wire [35:0] am_s={hub_am[36*s+:32],hub_am[36*s+32+:2],hub_am[36*s+34],hub_am[36*s+35]};
+-  ot_qwen_tp8_attention_native_stack_w4_cp #(.QK_ISSUE_AGE(QK_ISSUE_AGE),.ROW_RETURN_LAT(ROW_RETURN_LAT),
+-   .Z_STRIDE(Z_STRIDE)) u_stack(
++  ot_qwen_tp8_attention_native_stack_w4_cp_5 u_stack(
+    .cal(acal[48*s+:48]),.stack_id(2'(s)),.clk(clk),.rst_n(rst_n),.aq(aq),.am(am_s),.ap(ap_all[563*s+:563]),.active_layer_parity(layer[0]),
+    .k_request(k_request),.k_response(k_response),
+    .er_v(er_v[4*s+:4]),.er_addr(er_addr[44*s+:44]),.er_rsp_v(er_rsp_v[4*s+:4]),.er_rsp_addr(er_rsp_addr[44*s+:44]),
+@@ -128,7 +127,7 @@ module kvattn_rel_dp #(
+  end endgenerate
+  wire rz_valid,rz_publish,hub_fault;wire [1:0] rz_head;wire [31:0] rz_data;wire [15:0] rz_epoch;wire [127:0] rz_vector;
+  wire [15:0] LIN=LMAX_START_AGE+16'd2,ZIN=Z_START_AGE+16'd2;
+- ot_qkd_ahub_static_die_cal #(.Z_IN_STRIDE(Z_STRIDE),.Z_LEVEL_GAP(10),.ZW_RLY(0),.ZR_RLY(0),.RX_RLY(1),.RY_RLY(1)) u_hub(
++ ot_qkd_ahub_static_die_cal_3 u_hub(
+   .cal({HUB_RZ_PUBLISH_AGE,HUB_RECIP_ISSUE_AGE,HUB_Z_START_AGE,HUB_LMAX_ISSUE_AGE,ZIN,ZIN,ZIN,ZIN,LIN,LIN,LIN,LIN}),
+   .ck_core(clk),.ck_recip(clk),.ck_zh({4{clk}}),.rst_n(rst_n),.start(start_qk),.active_layer_parity(layer[0]),
+   .request_epoch(ep),.active_layer(layer),.T(ctx),
+@@ -177,7 +176,7 @@ module kvattn_rel_dp #(
+   always @(posedge clk or negedge rst_n)if(!rst_n)rqbad<=0;
+    else if(((rq[3:0]&~v_req_ready[4*s+:4])!=0)||((rq[7:4]&~v_req_ready[4*(s+2)+:4])!=0))rqbad<=1;
+   assign vf[s]=rqbad;
+-  ot_qwen_tp8_pv_wide_pair #(.PAIR(s),.FIRST_INPUT_AGE(FIRST_INPUT_AGE),.MUT(0)) u_pv(.clk(clk),.rst_n(rst_n),
++  kvattn_rel_pv_bound #(.PAIR(s),.FIRST_INPUT_AGE(FIRST_INPUT_AGE),.MUT(0)) u_pv(.clk(clk),.rst_n(rst_n),
+    .start(start_pv),.col_clk({33{clk}}),.context_len(pv_ctx),.epoch(pv_ep),
+    .in_valid(bv),.in_v(bvrow),.in_e(bexp),.in_t(bt),.in_epoch(bep),.req_valid(rq),.req_t(rqt),
+    .out_valid(pvalid[s]),.out_leaf(partial[16384*s+:16384]),.out_epoch(pep[16*s+:16]),.fault(pf[s]),
+@@ -199,7 +198,7 @@ module kvattn_rel_dp #(
+  reg [15:0] c_r;always @(posedge clk)if(fin_start)c_r<=R_AGE;
+  wire r_slot=pv_run&&pv_age+1==c_r;
+  wire [127:0] rz_final=rz_vector^((gmut[0])?128'd1:128'd0);
+- ot_qwen_tp8_pv256_finalize_static_cal u_final(.cal(pvfst[64:17]),
++ ot_qwen_tp8_pv256_finalize_static_cal_8 u_final(.cal(pvfst[64:17]),
+   .clk_control(clk),.clk_join({32{clk}}),.rst_n(rst_n),.start(fin_start),.epoch(fin_ep),
+   .reciprocal(rz_final),.reciprocal_valid(r_slot),.reciprocal_ready(),.reciprocal_epoch(rz_epoch),
+   .p0_valid(pvalid[0]),.p1_valid(pvalid[1]),.p0_ready(),.p1_ready(),.p0_epoch(pep[15:0]),.p1_epoch(pep[31:16]),
