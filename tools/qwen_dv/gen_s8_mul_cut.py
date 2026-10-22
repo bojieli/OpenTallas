@@ -19,6 +19,8 @@ from pathlib import Path
 R=Path(__file__).resolve().parents[2]
 F=R/'rtl/qwen_dv/s5/s8/qfd_dv_s8_station_math_g.sv'
 SRC,DST='qfd_dv_s8s_station_mul_data_g','qfd_dv_s8s_station_mul_data_g7'
+if '--z' in sys.argv:   # SQ-TAIL1 10-21: cut the b[15:0]==0 specialisation (gen_s8_mul_bz16.py) -> mul_data_g7z
+    sys.argv.remove('--z');SRC,DST='qfd_dv_s8s_station_mul_data_gz','qfd_dv_s8s_station_mul_data_g7z'
 OUTPINS=('Q','Y','q','y')
 NET=r'\bn_\d+(?:_[gs]\d+)*\b'
 PER=10
@@ -27,7 +29,8 @@ FRAC=float(sys.argv[1]) if len(sys.argv)>1 else 0.5
 def main():
     src=F.read_text()
     if f'module {DST}(' in src:
-        a=src.index(f'// QR-TAIL1 CUT BEGIN');b=src.index('// QR-TAIL1 CUT END')+len('// QR-TAIL1 CUT END\n')
+        m0=src.index(f'module {DST}(')
+        a=src.rindex('// QR-TAIL1 CUT BEGIN',0,m0);b=src.index('// QR-TAIL1 CUT END',m0)+len('// QR-TAIL1 CUT END\n')
         src=src[:a]+src[b:]
     a=src.index(f'module {SRC}(');b=src.index('endmodule',a)+len('endmodule')
     lines=src[a:b].split('\n')

@@ -104,10 +104,17 @@ end else begin:g_bad
 qfd_station_math_requires_fixed_ADD7_SCALE6_DRST0 u_fail();
 end endgenerate
 endmodule
-module qfd_dv_s8s_station_mul_bounded #(parameter integer LAT=6,DRST=0,CV=1,ID=0)(input wire clk,rst_n,valid_in,input wire[31:0] a,b,output wire[31:0] y,output wire[1:0] err,output wire valid_out);
+module qfd_dv_s8s_station_mul_bounded #(parameter integer LAT=6,DRST=0,CV=1,ID=0,BZ16=0)(input wire clk,rst_n,valid_in,input wire[31:0] a,b,output wire[31:0] y,output wire[1:0] err,output wire valid_out);
 generate if(LAT==6 && DRST==0) begin:g_exact
 qfd_dv_s8s_station_mul_data_g u_d(.clk(clk),.rst_n(rst_n),.a(a),.b(b),.y(y),.err(err));
 if(CV) begin:g_v qfd_dv_s8s_ring_delay #(.W(1),.D(6),.ID(ID)) u_v(.clk(clk),.rst_n(rst_n),.d(valid_in),.q(valid_out));end else begin:g_nv assign valid_out=0;end
+end else if(LAT==7 && DRST==0 && BZ16==1) begin:g_exact
+// SQ-TAIL1 10-21: b[15:0]==0 (bf16 scale) specialisation, constants folded at source (gen_s8_mul_bz16.py) + encode cut
+qfd_dv_s8s_station_mul_data_g7z u_d(.clk(clk),.rst_n(rst_n),.a(a),.b(b),.y(y),.err(err));
+if(CV) begin:g_v qfd_dv_s8s_ring_delay #(.W(1),.D(7),.ID(ID)) u_v(.clk(clk),.rst_n(rst_n),.d(valid_in),.q(valid_out));end else begin:g_nv assign valid_out=0;end
+`ifndef SYNTHESIS
+always @(posedge clk) if(valid_in && b[15:0]!==16'd0) $fatal(1,"MUL_BZ16_CONTRACT: b[15:0] must be zero");
+`endif
 end else if(LAT==7 && DRST==0) begin:g_exact
 // QR-TAIL1: +1 edge, encode cut (gen_s8_mul_cut.py)
 qfd_dv_s8s_station_mul_data_g7 u_d(.clk(clk),.rst_n(rst_n),.a(a),.b(b),.y(y),.err(err));

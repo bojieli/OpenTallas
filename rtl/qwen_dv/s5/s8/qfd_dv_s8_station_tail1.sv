@@ -262,7 +262,7 @@ end
     wire [2*NL-1:0]  es;
     localparam integer SCALE_DRST = 0;
     generate for (l = 0; l < NL; l = l + 1) begin : g_sc
-        qfd_dv_s8s_station_mul_bounded #(.LAT(SCALE_LAT), .DRST(SCALE_DRST),.CV(l==0),.ID(l)) u_mul (.clk(ck), .rst_n(math_reset[4*NL+l]), .valid_in(fv3),
+        qfd_dv_s8s_station_mul_bounded #(.LAT(SCALE_LAT), .DRST(SCALE_DRST),.CV(l==0),.ID(l),.BZ16(1)) u_mul (.clk(ck), .rst_n(math_reset[4*NL+l]), .valid_in(fv3),
             .a(fd3[32*l +: 32]), .b({ws_rep[l] ? 16'h3F80 : bt_q[16*l +: 16], 16'd0}),
             .y(y[32*l +: 32]), .err(es[2*l +: 2]), .valid_out(vs[l]));
     end endgenerate
