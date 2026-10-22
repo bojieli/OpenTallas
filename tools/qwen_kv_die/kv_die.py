@@ -1183,6 +1183,11 @@ _D2D_INST = {}
 def ep_far(inst, port, pt):
     """KV-BIND11: Manhattan distance from pt to the FARTHEST realized view pin of d2d word port (the hop every bit of
     the word makes), or None for any other end (callers keep their point distance)."""
+    if inst=='kvnc' and os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+        it=_D2D_INST.get('kvnc')
+        if it is not None:
+            import kv_context_frame as KCF
+            return KCF.far(ROOT,BINDINGS['qkd_kvnc'],it,port,pt)
     if KSD.GRP_S6C:
         import kv_group_view_pins as GP
         group_far = GP.far(inst, port, pt)
@@ -1416,6 +1421,11 @@ if ROPE_OVL:
         ports=dict(ck=['ck'],rst_n=['rst_n'],head=['head_record'],ovu=['ovl_users'],calrx=['calrx'],kad=['adm_done'],
           kvi=['compiled_identity','compiled_generation'],flt=['fault'],rld=['reseed']),sliced={},classed={})
     KVNC_WH=(86.4,86.4)
+    if os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+        import kv_context_frame as KCF
+        _ctx_frame=KCF.load(str(ROOT))
+        KCF.groups(ROOT,BINDINGS['qkd_kvnc'])
+        KVNC_WH=(_ctx_frame['w'],_ctx_frame['h'])
 else:
     BINDINGS['qkd_dcal']['ports']['lay'] = ['layer']
 BINDINGS['qkd_d2ds']['ports']['kvi'] = ['kvn_compiled_identity', 'kvn_compiled_generation']
@@ -2001,6 +2011,10 @@ def _leaf_pin(it, port):
         gp_ = GP.xy(it, port)
         if gp_ is not None:
             return gp_
+    if it.name=='kvnc' and os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+        import kv_context_frame as KCF
+        _D2D_INST['kvnc']=it
+        return KCF.xy(ROOT,BINDINGS['qkd_kvnc'],it,port)
     dp_ = _d2d_pin(it, port)
     if dp_ is not None:
         return dp_
@@ -3015,6 +3029,11 @@ def _d2ds_swap(m):
             dc_ = it
             kw_, kh_ = up(KVNC_WH[0] + SHAVE, GX), up(KVNC_WH[1] + SHAVE, GY)
             kt = F.Inst('kvnc', 'qkd_kvnc', dc_.x, up(dc_.y - 21.6 - kh_, GY), kw_ - SHAVE, kh_ - SHAVE, 'R0', kind='ctl', region='io')
+            if ROPE_OVL and os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+                # Source-bound E-facing KVI outputs abut the D2D W-face inputs;
+                # retain the free column between EMB and the context leaf.
+                kt.x=up(d_.x-21.6-kw_,GX)
+                kt.y=up(d_.y+d_.h*0.70-kh_/2,GY)
             m['insts'].append(kt)
             if ROPE_OVL:
                 add(('kvnc_adm', 'spine_local', 1, [('dcal','kad'),('kvnc','kad')]))
@@ -3026,7 +3045,14 @@ def _d2ds_swap(m):
             for i_, (bid, cl, bits, eps) in enumerate(B):
                 if bid == 'clk_core_c':
                     B[i_] = (bid, cl, bits, list(eps) + [('kvnc', 'ck')])
-            m['extra_conns']['kvnc'] = ['.calrx({n_dcal_cfg[7:6],n_dcal_cfg[3:2]})'] if ROPE_OVL else [f'.cs(n_dcal_cfg[{KVNC_CS_BIT}])']
+            if ROPE_OVL and os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+                # Transport the actual selected calendar bits to the moved leaf;
+                # the former direct tap had no planned wire or relay age.
+                m.setdefault('forks',{}).setdefault('dcal_cfg',[]).append(('kvnc','calrx'))
+                m.setdefault('fork_narrow',{}).setdefault('dcal_cfg',{})['kvnc.calrx']=4
+                m.setdefault('fork_bit_select',{}).setdefault('dcal_cfg',{})['kvnc.calrx']=[2,3,6,7]
+            else:
+                m['extra_conns']['kvnc'] = ['.calrx({n_dcal_cfg[7:6],n_dcal_cfg[3:2]})'] if ROPE_OVL else [f'.cs(n_dcal_cfg[{KVNC_CS_BIT}])']
             if SEQST:
                 # OT_KV_SEQ_STATIC: master swap of slot `seq`; the layer programme sits one channel W of the HOST root,
                 # level with its centre (HOST authority on abutting buses; tok_start rides kv_oneway relays from DCAL)
@@ -3448,6 +3474,11 @@ def _relays(m):
                 raise ValueError(f'kv die fork {nm_f}: narrow width {w_f} outside the trunk word {bits_f}')
             if w_f != bits_f:
                 m.setdefault('fork_slices', {})[nm_f] = (bid_f, w_f, tuple(src_f))
+                selected=(m.get('fork_bit_select') or {}).get(bid_f,{}).get(f'{ld_f[0]}.{ld_f[1]}')
+                if selected is not None:
+                    if len(selected)!=w_f or len(set(selected))!=w_f or any(not 0<=k<bits_f for k in selected):
+                        raise ValueError(f'kv die fork {nm_f}: invalid explicit source bit selection')
+                    m.setdefault('fork_slice_indices',{})[nm_f]=list(selected)
             br_ = (nm_f, 'kv_oneway', w_f, [src_f, ld_f])
             if __import__('os').environ.get('OT_KV_FORK_PRIO', '1' if _ectl_st_frame(True) else '0') == '1':
                 # DIE-KV-REPLACE 10-19: a fork branch is planned right after its trunk (it keeps the trunk's priority:
@@ -4417,8 +4448,12 @@ def masters(m, k=1, port_bits=None):
         M['qkd_d2ds'].area('serdes_up', 1, round(M['qkd_d2ds'].w / 2, 3), round(M['qkd_d2ds'].h / 2 - 9.6, 3), 1)   # v1.4 extra_conns tap
     if 'qkd_dcal' in M and 'ego' not in M['qkd_dcal'].ports:
         M['qkd_dcal'].face('ego', 1, 'W', 'M4', round(M['qkd_dcal'].h / 2, 3), 1)      # OT_KV_DCAL extra_conns tap
-    if 'qkd_kvnc' in M and 'cs' not in M['qkd_kvnc'].ports:
-        M['qkd_kvnc'].face('cs', 1, 'N', 'M5', round(M['qkd_kvnc'].w / 2, 3), 1)      # OT_KV_KVNC extra_conns tap (sequencer above)
+    if 'qkd_kvnc' in M:
+        # The recurring OVL context consumes the real four-bit user/start/seg
+        # calendar tap; the scalar legacy context consumes only cal_start.
+        tap, width = ('calrx', 4) if ROPE_OVL else ('cs', 1)
+        if tap not in M['qkd_kvnc'].ports:
+            M['qkd_kvnc'].face(tap, width, 'N', 'M5', round(M['qkd_kvnc'].w / 2, 3), 1)
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)
@@ -5057,6 +5092,10 @@ def _land_level_pins(m, mm, inst0, face_load, by):
 
 def pin_xy(it, mm, port):
     """qwen-1010/b: absolute centre of a face / area port of instance it (master mm), with the orientation applied."""
+    if it.name=='kvnc' and os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+        import kv_context_frame as KCF
+        _D2D_INST['kvnc']=it
+        return KCF.xy(ROOT,BINDINGS['qkd_kvnc'],it,port)
     if KSD.GRP_S6C:
         import kv_group_view_pins as GP
         gp_ = GP.xy(it, port)
@@ -5215,7 +5254,9 @@ def narrow_transports(m, text):
         if edit(lambda inst, body: re.sub(r',\s*' + re.escape(dup) + r'|' + re.escape(dup) + r',\s*', '', body)
                 if inst == drv and dup in body else body) != 1:
             raise ValueError(f'narrow_transports: driver {drv}.{dport} has no {net} connection')
-        if edit(lambda inst, body: body.replace(f'({net})', f'({tnet}[{w - 1}:0])')) < 1:
+        selected=(m.get('fork_slice_indices') or {}).get(nm_)
+        value=("{"+",".join(f'{tnet}[{k}]' for k in reversed(selected))+"}") if selected is not None else f'{tnet}[{w - 1}:0]'
+        if edit(lambda inst, body: body.replace(f'({net})', f'({value})')) < 1:
             raise ValueError(f'narrow_transports: {net} has no load')
     for bid, (drv, dport, full) in sorted((m.get('narrow_src') or {}).items()):
         w, net = bw[bid], f'n_{bid}'
@@ -5544,6 +5585,9 @@ def case(m, work):
         for directory in (work, work.parent):
             with (directory / 'NOT_A_DIE_RESULT').open('a') as marker:
                 marker.write('D2D_SOURCE_FRAME_DIAGNOSTIC_ONLY; actual closed leaf binding required\n')
+    if os.environ.get('OT_KV_KVNC_SOURCE_FRAME'):
+        import kv_context_frame as KCF
+        KCF.install_case(ROOT,BINDINGS['qkd_kvnc'],work)
     _case_ties(m, work / 'die.v')
     if KSD.ON and m['geo'].get('static_die'):
         # KVR-DERIVE 10-19: the case's die.v gets the per-instance parameter sidecar too (F.case_real writes die.v with the
