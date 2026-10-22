@@ -1,0 +1,76 @@
+{
+  "scope": "unselected receiving-reset mechanism; original book; no date qualification",
+  "cases": [
+    {
+      "file": "p_115_0.log",
+      "measurement": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 0,
+        "dl": 115,
+        "k": 17,
+        "rl": 2,
+        "gs": 4,
+        "slip": 0,
+        "pred": 18,
+        "meas": 16,
+        "chk": 224,
+        "mism": 224,
+        "fault": 0
+      }
+    },
+    {
+      "file": "p_115_700.log",
+      "measurement": {
+        "w": 276,
+        "n": 0,
+        "dh": 115,
+        "lr": 700,
+        "dl": -585,
+        "k": 17,
+        "rl": 2,
+        "gs": 4,
+        "slip": 0,
+        "pred": 18,
+        "meas": 16,
+        "chk": 224,
+        "mism": 224,
+        "fault": 0
+      }
+    },
+    {
+      "file": "p_815_0.log",
+      "measurement": {
+        "w": 276,
+        "n": 0,
+        "dh": 815,
+        "lr": 0,
+        "dl": 815,
+        "k": 17,
+        "rl": 2,
+        "gs": 4,
+        "slip": 0,
+        "pred": 18,
+        "meas": 16,
+        "chk": 224,
+        "mism": 224,
+        "fault": 0
+      }
+    }
+  ],
+  "semantic_verdict": "FAIL",
+  "execution": {
+    "host": "ot-epyc9",
+    "unit": "2266210-1792648823",
+    "source": "700c2f8a4",
+    "tar_sha256": "09641c2eee01c7c39c1c9fe1897242714e88a18501a8ebb7293c2395ce8f0d62",
+    "process_exit": 0,
+    "meaning": "measurement complete; original age-18 book rejected by actual age16 at all three offsets"
+  },
+  "log_hashes": {
+    "p_115_0.log": "d027ab87f879cebd8f7a8c1883fa5e202bf0152e09b573c2eb7627911833427c",
+    "p_115_700.log": "dc0876cb64b0ebe26cb456b58b6dfb3269fb877cc0adca40d9b3cd704b05d7c5",
+    "p_815_0.log": "9dfa93a22f3597515d5540d66b5a9310754ddd9207b34ac37e376decd85bee95"
+  }
+}
