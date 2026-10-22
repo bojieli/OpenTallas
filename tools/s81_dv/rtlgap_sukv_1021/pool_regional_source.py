@@ -106,22 +106,36 @@ LANE_OLD_SAFE = """    generate for (l = 0; l < 8; l = l + 1) begin : g_lane
             .clk(clk), .rst_n(rl[4 + l]), .i_v(l_v[l]), .i_role(l_role[2*l +: 2]), .i_d(l_d[32 * l +: 32]),
             .o_v(lo_v[l]), .o_y(lo_y[32 * l +: 32]), .o_y32(lo_y32[32 * l +: 32]), .fault(lf[l]));
     end endgenerate"""
-LANE_NEW_SAFE = (LANE_NEW.replace('ot_pool_reset_tree #(.N(8),.ID(40)) u_ors(clk,rst_n,ors);',
-                                  'ot_psf_rtree #(.N(8)) u_ors (.clk(clk), .rst_n(rst_n), .q(ors));')
+LANE_NEW_SAFE = (LANE_NEW.replace('    wire [7:0] ors;\n    ot_pool_reset_tree #(.N(8),.ID(40)) u_ors(clk,rst_n,ors);\n', '')
+                 .replace('wire lrs;', 'wire [3:0] lrs; wire [4:0] ors;')
                  .replace('ot_pool_reset_tree #(.N(1),.ID(48+l)) u_lrs(ck_l[l],rst_n,lrs);',
-                          'ot_psf_rtree #(.N(1)) u_lrs (.clk(ck_l[l]), .rst_n(rst_n), .q(lrs));')
+                          'ot_psf_rtree #(.N(4)) u_lrs (.clk(ck_l[l]), .rst_n(rst_n), .q(lrs));\n'
+                          '        ot_psf_rtree #(.N(5)) u_ors (.clk(clk), .rst_n(rst_n), .q(ors));')
                  .replace('wire [34:0] li_src = {l_v, l_role, l_d[32 * l +: 32]};',
                           'wire [34:0] li_src = {l_v[l], l_role[2*l +: 2], l_d[32 * l +: 32]};')
                  .replace('ot_s81sl_cmp_pool_lane_pooln', 'ot_s81sl_cmp_pool_lane')
-                 .replace('.clk(ck_l[l]), .rst_n(rst_n), .i_v', '.clk(ck_l[l]), .rst_n(lrs), .i_v'))
+                 .replace('.clk(ck_l[l]), .rst_n(rst_n), .i_v', '.clk(ck_l[l]), .rst_n(lrs[3]), .i_v'))
+
+
+def rings_rs(name, width, ck_f, ck, rs_fmt, i, o, f):
+    """rings() with a reset leaf per chunk: rs_fmt.format(n)"""
+    out, lo, n = [], 0, 0
+    while lo < width:
+        w = min(16, width - lo)
+        out.append(f"        ot_s81_land #(.W({w}), .D(4)) {name}{n} (.k(3'd1), .ck_f({ck_f}), .i({i}[{lo + w - 1}:{lo}]), "
+                   f".ck({ck}), .rs({rs_fmt.format(n)}), .o({o}[{lo + w - 1}:{lo}]), .fault({name}_f[{n}]));")
+        lo += w
+        n += 1
+    return f"        wire [{n - 1}:0] {name}_f;\n" + '\n'.join(out) + f"\n        assign {f} = |{name}_f;"
 
 
 def make_safe(variant):
     src = R / f'rtl/dsrom_sys/s81_dv/slice/pool_safe_{variant}.sv'
     t = src.read_text()
     assert t.count(LANE_OLD_SAFE) == 1, 'safe lane block'
-    new = LANE_NEW_SAFE.replace('@@IN@@', rings('u_li', 35, 'clk', 'ck_l[l]', 'lrs', 'li_src', 'li', 'lif[l]')) \
-                       .replace('@@OUT@@', rings('u_lo', 66, 'ck_l[l]', 'clk', 'ors[l]', 'lo_src', 'lo_l', 'lof[l]'))
+    # one reset leaf per landing ring (a shared per-lane relay drove all 5 rings' rs: 40 loads)
+    new = LANE_NEW_SAFE.replace('@@IN@@', rings_rs('u_li', 35, 'clk', 'ck_l[l]', 'lrs[{}]', 'li_src', 'li', 'lif[l]')) \
+                       .replace('@@OUT@@', rings_rs('u_lo', 66, 'ck_l[l]', 'clk', 'ors[{}]', 'lo_src', 'lo_l', 'lof[l]'))
     t = t.replace(LANE_OLD_SAFE, new)
     old_port = """    input  wire         clk,
     input  wire         rst_n,

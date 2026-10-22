@@ -160,6 +160,13 @@ module ot_psf_mx1 (input wire s, input wire a, input wire b, output wire y);
     assign y = s ? a : b;
 endmodule
 
+// a command-accept bit as its own kept hierarchy: start && !bad && !busy-copy, one per register group (ABC would
+// otherwise share start && !bad_cmd as one node enabling every group: 43 loads)
+(* keep_hierarchy = "yes" *)
+module ot_psf_go (input wire s, input wire bad, input wire b, output wire y);
+    assign y = s && !bad && !b;
+endmodule
+
 // one-hot of a 5-bit value (bits >= N never asserted) through kept 2-bit / 3-bit predecodes; en gates the high predecode
 (* keep_hierarchy = "yes" *)
 module ot_psf_oh5 #(parameter integer N = 32) (input wire en, input wire [4:0] x, output wire [N-1:0] oh);
@@ -1252,7 +1259,7 @@ module ot_s81sl_cmp_pool #(
     wire [NBZ-1:0] go;                                               // command accepted, one copy per register group
     genvar l;
     generate for (l = 0; l < NBZ; l = l + 1) begin : g_go
-        assign go[l] = start && !bz[l] && !bad_cmd;
+        ot_psf_go u_go (.s(start), .bad(bad_cmd), .b(bz[l]), .y(go[l]));
     end endgenerate
     // ---------------------------------------------------------------- lanes (per-lane response valid / role registers)
     (* keep *) reg [7:0] l_v; (* keep *) reg [15:0] l_role; (* keep *) reg [255:0] l_d;
