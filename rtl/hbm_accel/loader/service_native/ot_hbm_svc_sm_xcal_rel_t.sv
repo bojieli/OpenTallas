@@ -6,7 +6,7 @@
 // rule as ot_hbm_svc_sm_xcal_t: both collars latch the same global launch_v and issue run_v two edges later.
 // MUT: 1/2/3/4 pass to ot_hbm_svc_sm_xcal_rel; 5 = collar ignores the target id.
 module ot_hbm_svc_sm_xcal_rel_t #(parameter integer MUT = 0, parameter integer PAW = 11, parameter integer PREL = 1,
-    parameter integer DD = 256, parameter integer DAW = (DD > 128) ? 8 : 7) (
+    parameter integer DD = 256, parameter integer DAW = (DD > 128) ? 8 : 7, parameter integer XSLOT = 0) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [7:0]    tgt,
@@ -41,7 +41,7 @@ module ot_hbm_svc_sm_xcal_rel_t #(parameter integer MUT = 0, parameter integer P
         .a_we(a_we), .a_addr(a_addr), .a_data(a_data), .b_we(b_we), .b_addr(b_addr), .b_data(b_data),
         .run_v(run_v), .run_base(run_base), .run_count(run_count), .run_arg(run_arg),
         .configured(configured), .fault(fault), .active(active));
-    ot_hbm_svc_sm_xcal_rel #(.MUT((MUT >= 1 && MUT <= 4) ? MUT : 0), .PAW(PAW), .PREL(PREL), .DD(DD)) u_xcal (
+    ot_hbm_svc_sm_xcal_rel #(.MUT((MUT >= 1 && MUT <= 4) ? MUT : 0), .PAW(PAW), .PREL(PREL), .DD(DD), .XSLOT(XSLOT)) u_xcal (
         .clk(clk), .rst_n(rst_q), .cfg_we(a_we), .cfg_addr(a_addr), .cfg_data(a_data),
         .desc_we(b_we), .desc_addr(b_addr), .desc_data(b_data), .run_v(run_v), .run_base(run_base), .run_count(run_count),
         .cmd_ext(cmd_ext), .kv_desc(kv_desc), .active(x_active), .done(done), .fault(x_fault));

@@ -1,0 +1,299 @@
+#!/usr/bin/env python3
+"""TOKSIM-S81D/WQBP (10-20): the attn.wq_b slice x-streamer CALENDAR of the S81-DV layer-programme compiler
+(TOK.DS.BENCH.1, dv_layer_compile.py -> lower_xs -> xs_place.lower_placed).  One function, used by BOTH emitters:
+
+  * the die compiler (xs_place.lower_placed for attn.wq_b, and `xs_wqb_die.py die` for every layer class): per layer and
+    slice, the wq_b field phases of the die placement (xs_place.op_groups: head h -> slice h, 512 rows over the slice's
+    8 frames, 6 rows / phase -> 11 phases; sparse layers append the attn.idx.q phases of the same field, XS_OPS order),
+    their stream / phase words (frame_return_plan.plan_phase stream = x broadcast order) and the calendar below;
+  * the fullsix vehicle programme (qf_producer/retained_xs_program.py: the TOK2 6-frame sid6 selection, 15 phases).
+
+CALENDAR (default = PIPELINE, S81-RATEFIX xs_calendar.compile_pipeline): all phases of the op in ONE calendar segment,
+phase n launched at tg0 + n * P, tags 0/2 alternating (double-buffered element configuration), cfg = launch - cfg_lead,
+accept = cfg - 10, retire = last stream row + ADDR_LEAD + 6, one phase_end.  Defaults P 126 / cfg_lead 52: the lowest
+period measured PASS on the fullsix vehicle (S81-RATEFIX p126c52 625 words, TOKSIM-S81C/WQBG golden 625/625, 512/512);
+P 124 / 50 FAILS (element Q_LIFETIME faults, 44/625 words) and P 120..122 FAIL, so the compiler REFUSES P < 126 (a
+compile fault, never a stall) unless --allow-below-floor (negative-control images only).
+SERIAL (selectable, --calendar serial): one segment per phase at --epoch-period (measured floor 224, 223 FAILS).
+
+STATIC CHECKS (static_checks; every emission runs them and records them): calendar rows strictly time-ordered, unique,
+<= 4096 rows, t < 2^24; one stream request an edge, stream windows of consecutive phases disjoint; a tag is reused only
+after its retire (per-tag live windows [accept, retire] disjoint); stream addresses inside the stream ROM; is_d issuer
+words on distinct edges and the issuer delay line never holds more than ND words; period >= the measured floor;
+pipeline element constraints of compile_pipeline (period >= 88 replay, 2 P >= 195 + cfg_lead, cfg_lead >= 48).
+
+PREDICTED SPAN (compiler static, calibrated on the fullsix vehicle, definition of the DAG node attn.wq_b: first operand
+capture at a field element -> last frame-root return word): (n - 1) * P + 223.  Measured: P126 15 phases 1987,
+P130 2043, serial P224 3359, P600 8623 -- all equal the formula.  The 195-edge CAP / VP / die-wire tail is NOT in it.
+
+    xs_wqb_die.py die --fixtures-root D --contract C --out DIR [--layers L0 L2 L14 L20] [--calendar pipeline|serial]
+                      [--period P] [--cfg-lead C] [--allow-below-floor]
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import sys
+from pathlib import Path
+
+os.environ.setdefault('HDC_V41_ARITH', 'chunk8')
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+import xs_calendar as XC  # noqa: E402  (sys.path: tools, tools/s81_dv, tools/s81, tools/s81_static_control)
+
+PIPE_PERIOD, PIPE_CFG_LEAD = 126, 52
+PIPE_FLOOR = 126            # lowest measured PASS (p126c52); 124 / 50 FAIL (S81-RATEFIX, TOKSIM-S81C/WQBG)
+SERIAL_PERIOD = 224         # measured serial minimum (TOKSIM-S81/FIELD: 223 FAIL)
+SERIAL_FLOOR = 224
+PHASE_SPAN = 223            # first capture -> last return beyond (n - 1) * P (fullsix: P126/P130/P224/P600 all exact)
+ISD_BASE = 1100             # the vehicle's is_d time base (retained_xs_program: issuers at 1100 + t)
+EVIDENCE = dict(
+    p126_pass='claude/s81-ratefix-1019@ff8fa3745:results/rtl/s81_ratefix_1019/runs/p126c52/ratefix_result.json',
+    p124_fail='claude/s81-ratefix-1019@ff8fa3745:results/rtl/s81_ratefix_1019/runs/p124c50/ratefix_result.json',
+    golden='claude/toksim-s81c-wqbg-1019@c18b28c61:results/rtl/toksim_s81c_wqbg_1019/wqbg_compare.json')
+
+
+class CalendarFault(AssertionError):
+    pass
+
+
+def _t(w):
+    return w >> 75
+
+
+def static_checks(cal, allow_below_floor=False):
+    """the compiler's static schedule checks of one emitted calendar; raises CalendarFault (compile fault)"""
+    mode, P = cal['mode'], cal['period']
+    out, bad = {}, []
+
+    def need(name, ok, detail=None):
+        out[name] = bool(ok)
+        if not ok:
+            bad.append((name, detail))
+    segs = cal['segments']
+    need('rows_le_4096', len(cal['packed']) <= 4096, len(cal['packed']))
+    for s in segs:
+        ts = [_t(w) for w in cal['packed'][s[0]:s[0] + s[1]]]
+        if not (all(a < b for a, b in zip(ts, ts[1:])) and ts and ts[-1] < (1 << 24)):
+            need('rows_time_ordered_unique', False, s)
+            break
+    else:
+        need('rows_time_ordered_unique', True)
+    per = cal['phases']
+    # streams (absolute calendar time: pipeline = one segment; serial = each segment starts on its own START)
+    st = sorted((p['abs_stream'][0], p['abs_stream'][1], p['phase']) for p in per)
+    need('streams_disjoint', all(a[1] + XC.ADDR_LEAD < b[0] for a, b in zip(st, st[1:])), st[:3])
+    live = {}
+    for p in per:
+        live.setdefault(p['tag'], []).append((p['abs_accept'], p['abs_retire'], p['phase']))
+    ok = True
+    for tag, iv in live.items():
+        iv.sort()
+        ok &= all(a[1] < b[0] for a, b in zip(iv, iv[1:]))
+    need('tag_reuse_after_retire', ok, live if not ok else None)
+    need('tag0_even_x_parity', all(p['tag'] & 1 == 0 for p in per))
+    need('stream_addr_in_rom', all(p['sbase'] + p['nb'] <= cal['stream_words'] for p in per) and cal['stream_words'] <= 16384)
+    its = sorted(cal['issuers'])
+    need('isd_delay_line_le_ND', all(len([j for j in its if j <= i < j + XC.OFF + 2]) <= XC.ND for i in its))
+    if mode == 'pipeline':
+        need('pipe_replay_period_ge_88', P >= 88)
+        need('pipe_cfg_window_2P_ge_195_plus_cfg_lead', 2 * P >= 195 + cal['cfg_lead'], (P, cal['cfg_lead']))
+        need('pipe_cfg_lead_ge_48', cal['cfg_lead'] >= 48)
+        need('period_ge_measured_floor_126', P >= PIPE_FLOOR, P)
+        need('launch_spacing_eq_period', all(b['abs_launch'] - a['abs_launch'] == P for a, b in zip(per, per[1:])))
+    else:
+        need('period_ge_measured_floor_224', P >= SERIAL_FLOOR, P)
+    floor_names = {'period_ge_measured_floor_126', 'period_ge_measured_floor_224'}
+    hard = [b for b in bad if not (allow_below_floor and b[0] in floor_names)]
+    if hard:
+        raise CalendarFault(('wq_b calendar compile fault', hard))
+    return dict(checks=out, PASS=not bad, below_floor_negative_control=bool(bad) and not hard)
+
+
+def wqb_calendar(phase, stream, phases, slc=6, mode='pipeline', period=None, cfg_lead=None, isd_base=ISD_BASE,
+                 allow_below_floor=False):
+    """the slice xs calendar of the wq_b field phases.  phase / stream = pq_phase0 / pq_stream words (2 phase words
+    per phase).  Returns packed calendar rows, absolute is_d issuer words, per-phase records and the static checks."""
+    if mode == 'pipeline':
+        period = PIPE_PERIOD if period is None else period
+        cfg_lead = PIPE_CFG_LEAD if cfg_lead is None else cfg_lead
+        pipe = XC.compile_pipeline(phase, stream, list(phases), slc, period, cfg_lead=cfg_lead)
+        packed = list(pipe['packed'])
+        issuers = {isd_base + t: v for t, v in pipe['iss'].items()}
+        per = []
+        for p in pipe['phases']:
+            per.append(dict(p, abs_accept=p['accept'], abs_launch=p['launch'], abs_retire=p['retire'],
+                            abs_stream=list(p['stream']), sbase=XC.phase_word(phase, p['phase'])['sbase'],
+                            calendar_base=0))
+        segs = [(0, len(packed))]
+        extra = dict(acc_gap=pipe['acc_gap'], retire_gap=pipe['retire_gap'], tags=pipe['tags'], cal_rows=pipe['cal_rows'])
+    elif mode == 'serial':
+        period = SERIAL_PERIOD if period is None else period
+        packed, issuers, per, segs = [], {}, [], []
+        for n, i in enumerate(phases):
+            c = XC.compile_phase(phase, stream, i, slc)
+            base = len(packed)
+            packed.extend(c['packed'])
+            segs.append((base, c['cal_rows']))
+            shift = isd_base + period * n
+            for t, v in c['iss'].items():
+                if t == XC.GW_IT:
+                    continue      # single-owner retained window (one GW for the op, issued by the source programme)
+                if n and t == XC.T_OFFCFG:
+                    continue
+                if t in (XC.TS - 20, XC.TS):
+                    v = XC.isd(**({'prime': 1} if t == XC.TS - 20 else {'start': 1}), base=base, length=c['cal_rows'])
+                assert shift + t not in issuers, ('is_d edge reused', n, t)
+                issuers[shift + t] = v
+            o = shift - isd_base      # segment-local rows -> the op's time line (segment START at TS + shift)
+            per.append(dict(phase=i, tag=0, accept=XC.ACC, cfg=c['tc'], launch=c['tg'], stream=[c['ts'][0], c['ts'][-1]],
+                            retire=max(c['ts']) + XC.ADDR_LEAD + 30, nb=c['nb'], stall_edges=c['stall_edges'], D=c['D'],
+                            sbase=c['sbase'], calendar_base=base, abs_accept=o + XC.ACC, abs_launch=o + c['tg'],
+                            abs_retire=o + max(c['ts']) + XC.ADDR_LEAD + 30 + 4,
+                            abs_stream=[o + c['ts'][0], o + c['ts'][-1]]))
+        cfg_lead = None
+        extra = dict(epoch_period=period, cal_rows=len(packed))
+    else:
+        raise ValueError(mode)
+    cal = dict(mode=mode, period=period, cfg_lead=cfg_lead, packed=packed, issuers=issuers, phases=per, segments=segs,
+               stream_words=len(stream), nphases=len(per), **extra)
+    cal['static'] = static_checks(cal, allow_below_floor=allow_below_floor)
+    cal['predicted_span'] = (len(per) - 1) * period + PHASE_SPAN
+    return cal
+
+
+def calendar_record(cal):
+    """the JSON part of an emitted calendar (no packed words)"""
+    keep = ('mode', 'period', 'cfg_lead', 'nphases', 'cal_rows', 'acc_gap', 'retire_gap', 'tags', 'epoch_period',
+            'stream_words', 'static', 'predicted_span')
+    r = {k: cal[k] for k in keep if k in cal}
+    r['phases'] = [{k: p[k] for k in ('phase', 'tag', 'abs_accept', 'abs_launch', 'abs_retire', 'abs_stream', 'nb',
+                                      'stall_edges', 'calendar_base') if k in p} for p in cal['phases']]
+    r['predicted_span_definition'] = ('first operand capture at a field element -> last frame-root return word = '
+                                      f'(nphases - 1) x period + {PHASE_SPAN} (fullsix-calibrated); + priced tail 195 '
+                                      '(CAP EDLY 24 + VP hand-off 28 + die wire 143) not included')
+    r['floor'] = dict(pipeline=PIPE_FLOOR, serial=SERIAL_FLOOR, evidence=EVIDENCE)
+    return r
+
+
+def write_images(cal, phase, stream, out):
+    """pq_calendar_action / time, pq_phase0, pq_stream0..3 (via-map, ot_s81sl_xs ROMs) + is_d words"""
+    from pq_calendar import viamap
+    out = Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    cals = cal['packed']
+    (out / 'pq_calendar_action.viamap.hex').write_text(viamap([w & ((1 << 72) - 1) for w in cals] + [0] * (4096 - len(cals))))
+    (out / 'pq_calendar_time.viamap.hex').write_text(viamap([w >> 72 for w in cals] + [0] * (4096 - len(cals))))
+    (out / 'pq_phase0.viamap.hex').write_text(viamap(list(phase) + [0] * (4096 - len(phase))))
+    s = list(stream) + [0] * (16384 - len(stream))
+    for b in range(4):
+        (out / f'pq_stream{b}.viamap.hex').write_text(viamap(s[b * 4096:(b + 1) * 4096]))
+    (out / 'is_d.txt').write_text(''.join(f'{t} {v:040x}\n' for t, v in sorted(cal['issuers'].items())))
+    return {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.iterdir()) if p.is_file()}
+
+
+# ------------------------------------------------------------------------------------------------ die emission
+def layer_field(fx, layer, master, lk, iters=4000):
+    """the slice field phases of attn.wq_b (+ attn.idx.q on sparse layers) of the die placement and their stream:
+    returns phase words, stream words, per-phase op list, and per slice the rows / frame / phase"""
+    import xs_place as XP
+    import math
+    ops = ['attn.wq_b'] + (['attn.idx.q'] if 'attn.idx.q' in XP.XS_OPS.get(layer, []) else [])
+    seq = XP.phase_list(fx, ops)
+    phase, stream, plist = [], [], []
+    for k, (op, gi, c, nseg, R) in enumerate(seq):
+        grp = XP.op_groups(fx, op)[gi]
+        # stream = the x broadcast order of the phase (independent of the row placement, frame_return_plan.plan_phase):
+        # compiled on slice 0 frame 0's rows of the chunk (any frame of any slice gives the same words: asserted below
+        # on the last slice's last frame)
+        sel = XP.TP.chunk(grp, grp['groups'][0][0], c, R) or grp['groups'][0][0][:R]
+        m = XP.make_mat(fx, grp, sel, op)
+        import frame_bench as B
+        import lower_xs as LX
+        q, _ = B.frame_pairs(LX.base_master(master))
+        qa = q[:XP.NPAIRS]
+        qa = qa[:(len(qa) // nseg) * nseg]          # as xs_place.compile_frame
+        plan = XP.phase_plan(master, lk, qa, 0, m, grp['x'], nseg, iters)
+        assert plan['faults'] == 0, (layer, op, c, plan['faults'])
+        w = plan['stream']
+        sel2 = XP.TP.chunk(grp, grp['groups'][-1][-1], c, R)
+        if sel2:
+            p2 = XP.phase_plan(master, lk, qa, 0, XP.make_mat(fx, grp, sel2, op), grp['x'], nseg, max(200, iters // 20))
+            assert p2['stream'] == w, ('stream depends on the rows', layer, op, c)
+        rows = max(len(XP.TP.chunk(grp, fr, c, R)) for sl in grp['groups'] for fr in sl)
+        phase.extend([m.K << 1 | len(w) << 14 | len(stream) << 30 | rows << 46, 0])
+        stream.extend(w)
+        plist.append(dict(phase=k, op=op, chunk=c, nseg=nseg, rows_per_frame=rows, stream_words=len(w)))
+    slices = []
+    for g in range(XP.NSLICE):
+        n = {op: max(-(-len(fr) // seq[0][4]) for gi, grp in enumerate(XP.op_groups(fx, op)) for fr in grp['groups'][g])
+             for op in ops}
+        slices.append(dict(slice=g, phases_by_op=n))
+    import xs_topo as TP
+    if TP.TOPO is None:
+        assert all(s['phases_by_op'] == slices[0]['phases_by_op'] for s in slices), 'slices differ in phase count'
+    else:   # S81-RATE3: physical frames per slice; the die-wide sequence has the slowest slice's phases (others idle)
+        assert all(s['phases_by_op'][op] <= max(x['phases_by_op'][op] for x in slices) for s in slices for op in ops)
+    return ops, phase, stream, plist, slices
+
+
+def cmd_die(a):
+    import xs_place as XP
+    out = Path(a.out)
+    if out.exists():
+        raise SystemExit('REFUSE_EXISTING_RUN_DIR')
+    c = json.loads(Path(a.contract).read_text())
+    f0 = c['phase_contracts'][0]['frames'][0]
+    master, lk = f0['master'], f0['lk']
+    summary = dict(schema='opentallas.s81_dv.xs_wqb_die.v1', calendar=a.calendar, period=a.period, cfg_lead=a.cfg_lead,
+                   stream_frame=dict(master=master, lk=lk), layers={})
+    for L in a.layers:
+        fx = XP.Fix(str(Path(a.fixtures_root) / L))
+        ops, phase, stream, plist, slices = layer_field(fx, L, master, lk, iters=a.iters)
+        n_wqb = sum(1 for p in plist if p['op'] == 'attn.wq_b')
+        res = {}
+        for name, phs in (('wq_b', list(range(n_wqb))), ('wq_b+idx.q', list(range(len(plist))))):
+            if name == 'wq_b+idx.q' and len(plist) == n_wqb:
+                continue
+            cal = wqb_calendar(phase, stream, phs, slc=0, mode=a.calendar, period=a.period, cfg_lead=a.cfg_lead,
+                               allow_below_floor=a.allow_below_floor)
+            alt = wqb_calendar(phase, stream, phs, slc=0, mode='serial', period=SERIAL_PERIOD)
+            d = out / L / name
+            shas = write_images(cal, phase, stream, d)
+            rec = calendar_record(cal)
+            rec.update(layer=L, op_phases=name, images=shas, serial_p224_predicted_span=alt['predicted_span'],
+                       serial_static=alt['static'])
+            (d / 'calendar.json').write_text(json.dumps(rec, indent=1) + '\n')
+            res[name] = dict(nphases=cal['nphases'], cal_rows=len(cal['packed']), predicted_span=cal['predicted_span'],
+                             serial_p224_predicted_span=alt['predicted_span'], static_PASS=cal['static']['PASS'],
+                             negative_control=cal['static']['below_floor_negative_control'])
+        summary['layers'][L] = dict(ops=ops, field_phases=plist, slices=len(slices), phases_by_op=slices[0]['phases_by_op'],
+                                    identical_calendar_all_slices=True, calendars=res,
+                                    fixture_meta_sha256=hashlib.sha256((Path(a.fixtures_root) / L / 'meta.json').read_bytes()).hexdigest())
+        print('XS_WQB_DIE', L, json.dumps(res))
+    (out / 'die_wqb_calendar.json').write_text(json.dumps(summary, indent=1) + '\n')
+    print('XS_WQB_DIE_DONE', a.calendar, a.period, ' '.join(a.layers))
+    return 0
+
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sp = ap.add_subparsers(dest='cmd', required=True)
+    p = sp.add_parser('die')
+    p.add_argument('--fixtures-root', required=True)
+    p.add_argument('--contract', required=True, help='a frame contract (master / lk of the stream-compile frame)')
+    p.add_argument('--out', required=True)
+    p.add_argument('--layers', nargs='+', default=['L0', 'L2', 'L14', 'L20'])
+    p.add_argument('--calendar', choices=('pipeline', 'serial'), default='pipeline')
+    p.add_argument('--period', type=int, default=None)
+    p.add_argument('--cfg-lead', type=int, default=None)
+    p.add_argument('--iters', type=int, default=4000)
+    p.add_argument('--allow-below-floor', action='store_true')
+    a = ap.parse_args(argv)
+    return {'die': cmd_die}[a.cmd](a)
+
+
+if __name__ == '__main__':
+    sys.exit(main())

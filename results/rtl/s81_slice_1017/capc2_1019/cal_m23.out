@@ -1,0 +1,15 @@
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4096093-1792460379 after 0 s
+CAL_MISMATCH edge 271 valid dut 008 ref 000
+CAL_MISMATCH edge 297 valid dut 008 ref 000
+CAL_MISMATCH edge 303 valid dut 080 ref 000
+CAL_MISMATCH edge 305 valid dut 002 ref 000
+CAL_MISMATCH edge 306 valid dut 000 ref 002
+CAL_MISMATCH edge 311 valid dut 002 ref 000
+CAL_MISMATCH edge 325 valid dut 000 ref 002
+CAL_MISMATCH edge 337 valid dut 002 ref 000
+CAL_MISMATCH edge 343 valid dut 008 ref 002
+CAL_MISMATCH edge 346 valid dut 000 ref 008
+SLCAP_CAL DE 23 DL 16 writes dut 172 ref 166 expected_rows 1280 mismatches 129 fault dut 1 ref 1 fcause dut 043a ref 043a
+CAP_CAL_MUTANT_DETECTED DE=23 DL=16 slcap_vec_m23
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4096093-1792460379): exit 1

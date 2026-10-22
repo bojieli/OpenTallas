@@ -1,0 +1,2 @@
+IDXRD_CASE BAD m5/pass_m5: TB_IDXRD FAIL | TB_IDXRD_STATS gather 0 N 4096 keys 4096 words 257 T0 400 P 2 mut 5 sram 1 ckh 900 hdr_to_last 1021 end_to_last 956 nerr 0 qerr 0 slice_err 32 | maxrss_kb=261428 wall=1:19.04
+IDXRD_CAMPAIGN FAIL

@@ -1,0 +1,279 @@
+{
+ "name": "qkd_hr_cdc_pc_sram1",
+ "top": "qkd_hr_cdc_pc_sram",
+ "sources": [
+  "rtl/qwen_sys/host_cluster_20261017/qkd_hr_cdc_pc_sram.v",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/physical/ot_qwen_async_fifo_w.sv",
+  "rtl/physical/ot_qwen_die_cdc_ch.sv",
+  "rtl/physical/ot_host_async_fifo_sram.sv",
+  "rtl/physical/ot_host_die_cdc_sram.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir/ot_sram_1r1w_32x546_m1_p192_mir_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir/ot_sram_1r1w2c_32x546_m1_p192_mir_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck_core",
+ "reset_ports": [
+  "host_rst_n"
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 518.4
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_rx*g_ib_mem*g_32*u_ib",
+   "at": [
+    43.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_rx*g_afw*u_af*g_mm*g_pad32*u_m",
+   "at": [
+    259.2,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_tx*g_ib_mem*g_32*u_ib",
+   "at": [
+    43.2,
+    302.4
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w2c_32x546_m1_p192_mir",
+   "count": 1,
+   "inst": "*u_tx*g_afw*u_af*g_mm*g_pad32*u_m",
+   "at": [
+    259.2,
+    302.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "u_rank__raw_rx_d",
+   "service_faults_core",
+   "service_faults_phy",
+   "u_rank__raw_rx_cr",
+   "u_rank__raw_rx_v",
+   "u_rank__physical_tx_cr",
+   "u_rank__physical_tx_v"
+  ],
+  "S": [
+   "u_rank__d_cd",
+   "u_rank__d_ccr",
+   "u_rank__d_cv"
+  ],
+  "E": [
+   "u_rank__physical_tx_d",
+   "ck_phy_fam"
+  ],
+  "W": [
+   "u_rank__u_phy__pad_d",
+   "host_rst_n",
+   "ck_core",
+   "u_rank__u_phy__pad_cr",
+   "u_rank__u_phy__pad_v"
+  ]
+ },
+ "structural_change": "Two dedicated SRAM channels: effectiveIBUF4/AD8 kept; two macros/channel, zero steady edges. Miter3431transfers plus2mutants; full kit census/PG/clock/route outstanding.",
+ "kind": "tile",
+ "recipe": 4,
+ "hold_budget": "tile",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 10.8,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.03
+ },
+ "pin_regs": {
+  "enable": true,
+  "clock": "ck_core",
+  "reset": "^(host_rst_n)$",
+  "exclude": "^(u_rank__d_ccr|u_rank__u_phy__pad_d|u_rank__u_phy__pad_v|service_faults_phy|u_rank__d_cd|u_rank__d_cv|u_rank__u_phy__pad_cr)$",
+  "reason": "multi-family CDC leaf (core/phy): the recipe-3 pin register is single-clock, so core-family pins are registered on ck_core and the phy-family pins (u_rank__d_ccr, u_rank__u_phy__pad_d, u_rank__u_phy__pad_v, service_faults_phy, u_rank__d_cd, u_rank__d_cv, u_rank__u_phy__pad_cr) are excluded: their faces are the RTL credit channels of that family"
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "ck_core",
+  "ck_phy_fam"
+ ],
+ "clock_data_paths": "reviewed_gray_fifos",
+ "clock_relationship": {
+  "kind": "independent_clock_families",
+  "periods_ps": {
+   "core": 833.333,
+   "phy": 1043.0
+  }
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_core"
+   ],
+   "inputs": [
+    "host_rst_n",
+    "u_rank__raw_rx_cr",
+    "u_rank__physical_tx_d",
+    "u_rank__physical_tx_v"
+   ],
+   "outputs": [
+    "u_rank__raw_rx_d",
+    "u_rank__raw_rx_v",
+    "u_rank__physical_tx_cr",
+    "service_faults_core"
+   ]
+  },
+  "phy": {
+   "ratio": [
+    1043000,
+    833333
+   ],
+   "ports": [
+    "ck_phy_fam"
+   ],
+   "inputs": [
+    "u_rank__d_ccr",
+    "u_rank__u_phy__pad_d",
+    "u_rank__u_phy__pad_v"
+   ],
+   "outputs": [
+    "u_rank__d_cd",
+    "u_rank__d_cv",
+    "u_rank__u_phy__pad_cr",
+    "service_faults_phy"
+   ]
+  }
+ },
+ "hold_budget_reason": "CDC leaf: core/phy family pins; the non-core pins cannot take the single-clock recipe-3 pin register, so the tile repairs its own boundary hold",
+ "job": {
+  "owner": "CODEX:KV-HOST6",
+  "branch": "codex/kv-host-cdc-safe-1020",
+  "tag": "sram1",
+  "purpose": "SRAM-backed native-safe CDC PC successor; no steady-cycle change; expanded slot owed",
+  "benches": [
+   {
+    "name": "host_cdc_safe_exact",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/exact exact",
+    "pass_regex": "PASS HOST_CDC_SAFE exact-cycle miter"
+   },
+   {
+    "name": "host_cdc_safe_tput",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/tput tput",
+    "pass_regex": "PASS HOST_CDC_SAFE_TPUT"
+   },
+   {
+    "name": "host_cdc_safe_mutant_addr",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/mutant_addr mutant_addr",
+    "fail_regex": "^FAIL SRAM transfer value mismatch",
+    "fail_witness": "rtl/test/host_cdc_safe_1020/witnesses/mutant_addr.log"
+   },
+   {
+    "name": "host_cdc_safe_mutant_bypass",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 24,
+    "needs": [
+     "verilator"
+    ],
+    "cmd": "bash rtl/test/host_cdc_safe_1020/bench_case.sh . {RUN}/bench/mutant_bypass mutant_bypass",
+    "fail_regex": "^FAIL SRAM transfer value mismatch",
+    "fail_witness": "rtl/test/host_cdc_safe_1020/witnesses/mutant_bypass.log"
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "reset_landing": {
+  "enable": true,
+  "stages": 2
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "slot_change_request": "UNGRANTED 475.2x518.4 SRAM-safe PC successor vs151.2square; four177.768x160.392 SRAM macros at43.2 lattice; no fit claim pending parent repack.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "Mapped native census found ir2187/wq_row1092loads and runtime flop arrays above2kb. Dedicated opt-in SRAM channel preserves effective4/8 FIFO capacities and exact PIPE2 transfers, with kept source state/reset/select copies.",
+  "source": "results/arch/kv_host_cdc_safe_1020/old_gate_native/qkd_hr_cdc_pc.json"
+ },
+ "reviewed_gray_fifo_extensions": {
+  "dual_clock_srams": [
+   "ot_sram_1r1w2c_32x546_m1_p192_mir"
+  ],
+  "why": "Exact source/model/view fingerprints and actual Liberty per-pin read/write-clock role proof; Gray publication/synchronizer proof unchanged."
+ },
+ "std_area_um2": 2931.761156,
+ "pin_ranges": {
+  "ck_core": [
+   242,
+   260
+  ],
+  "ck_phy_fam": [
+   260,
+   278
+  ],
+  "u_rank__u_phy__pad_d": [
+   204,
+   302
+  ],
+  "u_rank__physical_tx_d": [
+   204,
+   302
+  ]
+ }
+}

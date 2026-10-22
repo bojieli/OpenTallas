@@ -1,0 +1,48 @@
+{
+ "schema": "opentallas.qwen.dv-layer-fixture-tp8w.v1",
+ "layer": 1,
+ "tp8_die": 0,
+ "image": "/srv/opentallas-scratch/claude/tokpass-qwen-1018/fx/realmem_tp8/stage/img/L1/die0",
+ "image_sha256": {
+  "program.hex": "44e0e715c33b14b6d630325e832c8fb94f7427c895c05df9b2be4207bd345dce",
+  "segments.hex": "3820291eeb96b71edb6851615aecc82b87f83c8bad92ec15cd527aa754ef5a46",
+  "crom.hex": "e34f31be589e941d6aa788332049dc247a7f51d9a854051b6eb658b0bbccf649",
+  "matrix_scale_bf16.hex": "0d23db625759e9c40fe85d870999218623556848ab067bc5c4e01ffd34f1884c",
+  "layer1_rom.json": "70b2eeaac2375cac841188c2ead2b0d1531ee9b5a11d851f54d8452263b25181"
+ },
+ "result": {
+  "qkv": {
+   "shape": [
+    768,
+    4096
+   ],
+   "weights_equal": true,
+   "scales_equal": true
+  },
+  "gu": {
+   "shape": [
+    3072,
+    4096
+   ],
+   "weights_equal": true,
+   "scales_equal": true
+  },
+  "o": {
+   "shape": [
+    4096,
+    512
+   ],
+   "weights_equal": true,
+   "scales_equal": true
+  },
+  "down": {
+   "shape": [
+    4096,
+    1536
+   ],
+   "weights_equal": true,
+   "scales_equal": true
+  }
+ },
+ "verdict": "PASS"
+}

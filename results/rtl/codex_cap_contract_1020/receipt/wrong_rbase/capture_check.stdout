@@ -1,0 +1,166 @@
+{
+  "scope": "CAP/CW/VP component only; consumer read/retirement/deadline proof OPEN",
+  "full_stage_qualified": false,
+  "component_capture_PASS": false,
+  "expected_rows": 512,
+  "cw_words": 476,
+  "vp_words": 476,
+  "missing": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      0,
+      5
+    ],
+    [
+      0,
+      86
+    ],
+    [
+      0,
+      87
+    ],
+    [
+      0,
+      88
+    ],
+    [
+      0,
+      89
+    ],
+    [
+      0,
+      90
+    ],
+    [
+      0,
+      91
+    ],
+    [
+      1,
+      22
+    ],
+    [
+      1,
+      23
+    ],
+    [
+      1,
+      24
+    ],
+    [
+      1,
+      25
+    ],
+    [
+      1,
+      26
+    ],
+    [
+      1,
+      27
+    ],
+    [
+      1,
+      107
+    ],
+    [
+      1,
+      108
+    ],
+    [
+      1,
+      109
+    ],
+    [
+      1,
+      110
+    ],
+    [
+      1,
+      111
+    ],
+    [
+      1,
+      112
+    ],
+    [
+      2,
+      44
+    ],
+    [
+      2,
+      45
+    ],
+    [
+      2,
+      46
+    ],
+    [
+      2,
+      47
+    ],
+    [
+      2,
+      48
+    ],
+    [
+      2,
+      49
+    ],
+    [
+      4,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      4,
+      3
+    ],
+    [
+      4,
+      4
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      4,
+      6
+    ]
+  ],
+  "extra": [],
+  "duplicates": [],
+  "bad_values": [],
+  "missing_commits": [],
+  "extra_commits": [],
+  "fault_observations": 863,
+  "source_assertions": [
+    "RETAINED_CONTROL_MISMATCH gos15 ends1 gws1 macwrites40 lastcommit1260",
+    "FULLSIX_SOURCE_CHECK errors=3 rawwrites=320 gathers=20 epochs=15",
+    "FULLSIX_PREPARATORY_TRACE_END CAPfault=1 landfaults=0000 otherVPfaults=00000 no_numeric_PASS nativephase_NULL"
+  ],
+  "simulator_exit": 1
+}

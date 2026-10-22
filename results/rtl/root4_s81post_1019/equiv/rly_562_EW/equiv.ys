@@ -1,0 +1,18 @@
+read_verilog -sv -DSYNTHESIS   gold_rly/rtl/dsrom_sys/s81_glue/ot_s81_rly.sv gold_rly/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv gold_rly/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv gold_rly/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv
+hierarchy -check -top dsfd_dvrlyh_562_EW
+proc; flatten; opt -full; opt_dff -sat; opt -full; opt_clean -purge; async2sync; opt_clean
+rename dsfd_dvrlyh_562_EW gold
+design -stash gold
+read_verilog -sv -DSYNTHESIS   new/rtl/dsrom_sys/s81_glue/ot_s81_rly.sv new/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv new/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvw.sv new/rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dvh.sv
+hierarchy -check -top dsfd_dvrlyh_562_EW
+proc; flatten; opt -full; opt_dff -sat; opt -full; opt_clean -purge; async2sync; opt_clean
+rename dsfd_dvrlyh_562_EW gate
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple -seq 8
+equiv_induct -seq 8
+tee -o out/rly_562_EW/equiv_status.txt equiv_status
+equiv_status -assert

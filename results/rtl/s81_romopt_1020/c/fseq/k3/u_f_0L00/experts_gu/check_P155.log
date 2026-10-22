@@ -1,0 +1,7 @@
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 1 mutant=None rows=9 fixture_rows=9 errors=0 END edges=3268 ret_words=114 xo_checked=3266 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 2 mutant=None rows=9 fixture_rows=9 errors=0 END edges=3268 ret_words=114 xo_checked=3266 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 3 mutant=None rows=9 fixture_rows=9 errors=0 END edges=3268 ret_words=114 xo_checked=3266 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 4 mutant=None rows=9 fixture_rows=9 errors=0 END edges=3268 ret_words=114 xo_checked=3266 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 5 mutant=None rows=9 fixture_rows=9 errors=0 END edges=3268 ret_words=114 xo_checked=3266 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.experts_gu phase 6 mutant=None rows=9 fixture_rows=9 errors=0 END edges=3268 ret_words=114 xo_checked=3266 fault=0
+TOKSIM_FGU_SEQ PASS op ffn.experts_gu PER 155 phases 6 rows 54 fixture_rows 54 go0 63 last_ret 1184 span 1121 errors 0 []

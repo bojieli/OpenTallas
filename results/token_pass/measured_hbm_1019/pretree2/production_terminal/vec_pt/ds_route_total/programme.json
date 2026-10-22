@@ -1,0 +1,46 @@
+{
+ "schema": "toksim.hbm.su_vop_record.v1",
+ "record": "ds_route_total",
+ "design": "ds_ar",
+ "N": 6,
+ "rows": 1,
+ "roles": {
+  "A": "vm"
+ },
+ "mods": {},
+ "red": "sum",
+ "sfu_lanes": false,
+ "lanes_per_quarter": 128,
+ "issues": 1,
+ "emissions": 1,
+ "issue_to_write": 28,
+ "RR": 12,
+ "WR": 10,
+ "fill_slack": 1,
+ "drain_slack": 2,
+ "dispatch_edge": 4,
+ "first_emit": 20,
+ "last_emit": 20,
+ "last_lg_write": 189,
+ "retire_edge": 199,
+ "cycles_serial": 195,
+ "cycles_stream_833ps": 260.0,
+ "edges": 207,
+ "expected_vm_writes": 1,
+ "expected_scalars": 1,
+ "reduction": {
+  "rows": 1,
+  "finals": {
+   "0": "3f4bc000"
+  },
+  "model_check": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)"
+ },
+ "golden": "hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT); reduction = the MODEL order (hdc_golden_v41.csum chunk8 / ordered canonical max), asserted on the lowered tree",
+ "pretree": {
+  "on": true,
+  "qpr": 1,
+  "quarter_run_words": 6,
+  "blocks_per_row": 1,
+  "pt_red": 80
+ }
+}

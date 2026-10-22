@@ -18,7 +18,12 @@
 // descriptor only after the whole block has RETURNED), kept for the measured ablation.  Steady 64-row stream at
 // OVERLAP=0: 139.3 ns/epoch = 52 B/cycle/SM vs the 99 B/cycle/SM price (tb_hbm_svc_sm_stack_steady).
 module ot_hbm_svc_sm4pc_cdc_rel_id #(parameter integer OWNER_AW=5, parameter integer RESPONSE_DEPTH=8, parameter integer OVERLAP=1,
- parameter integer LBANKS=2, parameter integer LB=(LBANKS>2)?2:1)(
+ parameter integer LBANKS=2, parameter integer LB=(LBANKS>2)?2:1,
+ // HBM-SMXL 2026-10-19 OPEN_IL (default 0 = unchanged): block_ready is withheld while a copy drains, so the issuer's
+ // (elastic, HBM-boundary) open of the next landed block waits for the drain instead of faulting.  Exposed once ops
+ // run back to back (x early issue): two blocks that land together are opened one retire apart (~63 edges) while a
+ // 60-line drain takes longer (xd_dsA_c / xl_dsA_c: open-while-draining stream fault).  The go stays a fixed slot.
+ parameter integer OPEN_IL=0)(
  input wire [1:0] id_stack,input wire [2:0] id_sm,
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [1:0] stream_bank_clk,input wire [1:0] hbm_fifo_clk,input wire [3:0] hbm_pc_clk,
@@ -74,7 +79,7 @@ module ot_hbm_svc_sm4pc_cdc_rel_id #(parameter integer OWNER_AW=5, parameter int
  .wr_data({reserve_pcs,reserve_row_base,reserve_base,reserve_total,reserve_bank,reserve_epoch}),.wr_overflow(desc_ov),
  .rd_clk(hbm_clk),.rd_rst_n(hrst),.rd_valid(desc_rd_valid),.rd_ready(desc_rd_ready),.rd_data(desc_data),.rd_underflow(desc_un));
  assign fault=stream_fault||hbf2||desc_ov||(|bank_fault);
- assign block_ready=ready_q;
+ assign block_ready=(OPEN_IL!=0)?(ready_q&{LBANKS{~draining}}):ready_q;
  reg h_active;reg [LB-1:0] h_bank;reg [15:0] h_epoch;reg [29:0] h_base;
  reg [11:0] h_total,h_received;reg [19:0] h_pcs;reg [14:0] h_row_base;
  reg [11:0] rx_left[0:LBANKS-1];reg h_fresh;wire [3:0] issue_done;integer rb;

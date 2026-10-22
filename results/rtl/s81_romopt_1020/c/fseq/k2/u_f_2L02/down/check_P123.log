@@ -1,0 +1,111 @@
+XS_PLACE_CHECK PASS u_f_2L02 ffn.down phase 1 mutant=None rows=6 fixture_rows=6 errors=0 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+XS_PLACE_CHECK PASS u_f_2L02 ffn.down phase 2 mutant=None rows=5 fixture_rows=5 errors=0 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 334 row 0 lo 0 k 1 got f3f9df9e/0 want bc2840d0/0
+MISMATCH edge 338 row 4 lo 2 k 1 got f51a16fb/0 want ba959060/0
+MISMATCH edge 339 row 5 lo 2 k 1 got f5e90d1e/0 want 3c7c421e/0
+MISMATCH edge 340 row 0 lo 2 k 1 got 729b5de8/0 want bba6f62c/0
+MISMATCH edge 341 row 1 lo 2 k 1 got 76b415ba/0 want bc857c04/0
+MISMATCH edge 342 row 4 lo 4 k 2 got f6fb58c0/0 want 3bbf4928/0
+MISMATCH edge 345 row 4 lo 0 k 1 got f89bae20/0 want 3b0084b0/0
+MISMATCH edge 348 row 2 lo 0 k 2 got f5ca1559/0 want bbfc7236/0
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 3 mutant=None rows=6 fixture_rows=6 errors=15 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 334 row 0 lo 0 k 1 got bc2840d0/0 want 3bd34228/0
+MISMATCH edge 338 row 2 lo 2 k 1 got ba959060/0 want 3bf75a48/0
+MISMATCH edge 339 row 3 lo 2 k 1 got 3c7c421e/0 want ba92e480/0
+MISMATCH edge 344 row 2 lo 0 k 1 got 3b3e0d60/0 want bc851f70/0
+MISMATCH edge 345 row 3 lo 0 k 1 got 3ba897c0/0 want 3c9219d2/0
+MISMATCH edge 346 row 0 lo 2 k 1 got bc7df577/0 want bb22a990/0
+MISMATCH edge 347 row 1 lo 2 k 1 got 37103000/0 want bb22ca18/0
+MISMATCH edge 356 row 0 lo 4 k 2 got ba0f25e0/0 want 37aa8000/0
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 4 mutant=None rows=5 fixture_rows=5 errors=11 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 339 row 4 lo 2 k 1 got bc123550/0 want bc021a0e/0
+MISMATCH edge 340 row 5 lo 2 k 1 got bc69c6d2/0 want 3c55eebc/0
+MISMATCH edge 341 row 0 lo 2 k 1 got 3b98815c/0 want bce12868/0
+MISMATCH edge 342 row 1 lo 2 k 1 got bb068458/0 want 3b8a0c0c/0
+MISMATCH edge 344 row 5 lo 4 k 2 got 3b10f8a0/0 want 3ab105e0/0
+MISMATCH edge 347 row 5 lo 0 k 1 got b9f93f80/0 want bc30ab4e/0
+MISMATCH edge 357 row 0 lo 4 k 2 got bb1c65b8/0 want bb7b9a80/0
+MISMATCH edge 358 row 1 lo 4 k 2 got bbefc274/0 want bb194930/0
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 5 mutant=None rows=6 fixture_rows=6 errors=14 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 339 row 2 lo 2 k 1 got bc021a0e/0 want 3b303630/0
+MISMATCH edge 343 row 2 lo 4 k 2 got ba9e6840/0 want bbcd2358/0
+MISMATCH edge 344 row 3 lo 4 k 2 got bb0368d8/0 want 3b319690/0
+MISMATCH edge 345 row 2 lo 0 k 1 got 3bc9ef10/0 want 3b45eee0/0
+MISMATCH edge 346 row 3 lo 0 k 1 got 3bbf32fc/0 want 3c964f83/0
+MISMATCH edge 347 row 0 lo 2 k 1 got bbb87774/0 want bac0fb70/0
+MISMATCH edge 355 row 4 lo 2 k 1 got 3c0cebe3/0 want 3cb985b8/0
+COVERAGE row 0 segments [2, 3] of 5
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 6 mutant=None rows=5 fixture_rows=5 errors=12 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 337 row 1 lo 0 k 1 got 3c16f204/0 want 3b1ec270/0
+MISMATCH edge 340 row 4 lo 2 k 1 got 37ce3400/0 want bc8b990e/0
+MISMATCH edge 341 row 5 lo 2 k 1 got bb9b1886/0 want 3c53ae54/0
+MISMATCH edge 342 row 0 lo 2 k 1 got bc0705bf/0 want bb08a83c/0
+MISMATCH edge 344 row 4 lo 4 k 2 got bc03a8a0/0 want bc177c4c/0
+MISMATCH edge 345 row 5 lo 4 k 2 got ba319180/0 want 3a5da940/0
+MISMATCH edge 347 row 4 lo 0 k 1 got bbcea03c/0 want 3b8c148c/0
+MISMATCH edge 348 row 5 lo 0 k 1 got 3c8ffcb0/0 want 3c0d2fee/0
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 7 mutant=None rows=6 fixture_rows=6 errors=14 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 337 row 1 lo 0 k 1 got bc15f548/0 want bba79bee/0
+MISMATCH edge 341 row 3 lo 2 k 1 got 3c53ae54/0 want bab77680/0
+MISMATCH edge 344 row 2 lo 4 k 2 got 3c152878/0 want ba55b000/0
+MISMATCH edge 345 row 3 lo 4 k 2 got 3b91d390/0 want 39ad8c00/0
+MISMATCH edge 346 row 2 lo 0 k 1 got bbb36640/0 want baf2ec60/0
+MISMATCH edge 347 row 3 lo 0 k 1 got 3bb6b736/0 want b8b65480/0
+MISMATCH edge 356 row 4 lo 2 k 1 got 3c038bcc/0 want 3c5f06c7/0
+COVERAGE row 0 segments [] of 5
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 8 mutant=None rows=5 fixture_rows=5 errors=12 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 337 row 0 lo 0 k 1 got 3c106d8a/0 want bc2eb420/0
+MISMATCH edge 338 row 1 lo 0 k 1 got bb286730/0 want bc194d90/0
+MISMATCH edge 341 row 4 lo 2 k 1 got 3bd7dd6a/0 want 3b0944c8/0
+MISMATCH edge 342 row 5 lo 2 k 1 got ba9d1d00/0 want bb400108/0
+MISMATCH edge 344 row 1 lo 2 k 1 got 3bae8998/0 want bbbc6084/0
+MISMATCH edge 345 row 4 lo 4 k 2 got bad00780/0 want 3b42f600/0
+MISMATCH edge 348 row 4 lo 0 k 1 got bc2359c2/0 want 3ba836be/0
+COVERAGE row 0 segments [0, 1] of 5
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 9 mutant=None rows=6 fixture_rows=6 errors=13 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 337 row 0 lo 0 k 1 got bc22dd8c/0 want bc416690/0
+MISMATCH edge 338 row 1 lo 0 k 1 got bb9b0bd0/0 want ba7eeda0/0
+MISMATCH edge 341 row 2 lo 2 k 1 got 3b0944c8/0 want bb89afc8/0
+MISMATCH edge 342 row 3 lo 2 k 1 got bb400108/0 want 3b887594/0
+MISMATCH edge 345 row 2 lo 4 k 2 got b9bdb500/0 want bb269630/0
+MISMATCH edge 346 row 3 lo 4 k 2 got 38596000/0 want ba93bb40/0
+MISMATCH edge 347 row 2 lo 0 k 1 got 3cd66c01/0 want 3bad9424/0
+COVERAGE row 0 segments [0, 1] of 5
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 10 mutant=None rows=5 fixture_rows=5 errors=12 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 338 row 0 lo 0 k 1 got 3c846650/0 want 391bf200/0
+MISMATCH edge 339 row 1 lo 0 k 1 got bce0e864/0 want bd092894/0
+MISMATCH edge 342 row 4 lo 2 k 1 got 3babd040/0 want bca350d4/0
+MISMATCH edge 344 row 0 lo 2 k 1 got 3ca3ac4c/0 want 39cd0100/0
+MISMATCH edge 345 row 1 lo 2 k 1 got bbe56750/0 want 3c791b64/0
+MISMATCH edge 347 row 5 lo 4 k 2 got 3a8152c0/0 want bc6f8b80/0
+COVERAGE row 0 segments [0, 1, 2, 3] of 5
+COVERAGE row 1 segments [0, 1, 2, 3] of 5
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 11 mutant=None rows=6 fixture_rows=6 errors=13 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 338 row 0 lo 0 k 1 got bc9b7fde/0 want bceedc10/0
+MISMATCH edge 339 row 1 lo 0 k 1 got bcbb9fa8/0 want 3c495034/0
+MISMATCH edge 342 row 2 lo 2 k 1 got bca350d4/0 want bb0c9fe0/0
+MISMATCH edge 343 row 3 lo 2 k 1 got 3c864a72/0 want bc4465b0/0
+MISMATCH edge 346 row 2 lo 4 k 2 got bc34c208/0 want 3ba78360/0
+MISMATCH edge 347 row 3 lo 4 k 2 got bb6df420/0 want bc2af200/0
+COVERAGE row 0 segments [0, 1] of 5
+COVERAGE row 1 segments [0, 1] of 5
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 12 mutant=None rows=5 fixture_rows=5 errors=12 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 339 row 0 lo 0 k 1 got bca33120/0 want bc57a944/0
+MISMATCH edge 340 row 1 lo 0 k 1 got 3953f580/0 want 3c1b46c2/0
+MISMATCH edge 344 row 5 lo 2 k 1 got bb284b30/0 want 3b2b1060/0
+MISMATCH edge 345 row 0 lo 2 k 1 got bbd44c60/0 want bb47eec0/0
+MISMATCH edge 347 row 4 lo 4 k 2 got 3bc49750/0 want 3b3119b0/0
+MISMATCH edge 348 row 5 lo 4 k 2 got 3ad7c0c0/0 want 3aef7340/0
+COVERAGE row 0 segments [0, 1, 2, 3] of 5
+COVERAGE row 1 segments [0, 1] of 5
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 13 mutant=None rows=6 fixture_rows=6 errors=13 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+MISMATCH edge 339 row 0 lo 0 k 1 got bc0636b1/0 want bc2fbcf5/0
+MISMATCH edge 343 row 2 lo 2 k 1 got 39bf3580/0 want 3998fe80/0
+MISMATCH edge 344 row 3 lo 2 k 1 got 3b2b1060/0 want b9e1b180/0
+MISMATCH edge 347 row 2 lo 4 k 2 got 3b019be0/0 want 3b3e5d60/0
+COVERAGE row 0 segments [0, 1] of 5
+COVERAGE row 1 segments [] of 5
+COVERAGE row 2 segments [2, 3, 4] of 5
+COVERAGE row 3 segments [2, 3] of 5
+XS_PLACE_CHECK FAIL u_f_2L02 ffn.down phase 14 mutant=None rows=5 fixture_rows=5 errors=10 END edges=4884 ret_words=219 xo_checked=4882 fault=4
+TOKSIM_FGU_SEQ FAIL op ffn.down PER 123 phases 14 rows 77 fixture_rows 77 go0 63 last_ret 1961 span 1898 errors 108 ['FAULT edge 398 status 11 lx 0', 'FAULT edge 399 status 11 lx 0', 'FAULT edge 400 status 11 lx 0']

@@ -1,0 +1,10 @@
+HOUSEKEEPING: fast-forward pushed 03404b427 to origin/codex/kv-qkh-gates-1020 (new branch)
+daemon submit check at 03404b427: REFUSE: source_binding: gate result is legacy, unverified, or differs from the route source/daemon overlay (gate-executed daemon overlay changed: tools/ref_tile/native_census.py, tools/ref_tile/native_census.tcl, tools/ref_tile/ref_route.sh [blob unknown]) (fix: preserve original as unqualified; regenerate the gate for this exact source)
+exact gate-binding differences:
+  (no per-file difference found; read the daemon message above)
+re-gate on the exact commit: /usr/bin/python3 /home/ubuntu/wt/codex-kv-qkh-gates-1020/tools/ref_tile/pre_route_gate.py physical/ref_tile/ot_qkh_lane8_nc32c --commit 03404b427c160e0f1e36d4a5d2d1ec9163afa9e1 --remote auto --cts --mem 24
+GATE INFO pin_regs: pin registers on every data input and output (+1 cycle each; kit pin_regs.json)
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE FAIL sources: 1 committed input(s) absent from the working-tree archive: ['physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl']  -> FIX: materialize the referenced files in the sparse checkout before rerunning the gate
+PRE_ROUTE_GATE: FAIL (1 fail, 0 warn)
+REFUSED LOCALLY: the gate failed; nothing was submitted

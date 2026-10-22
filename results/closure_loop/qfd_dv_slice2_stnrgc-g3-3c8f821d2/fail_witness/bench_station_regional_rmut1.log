@@ -1,0 +1,11 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qfd_dv_slice2_stnrgc-g3-3c8f821d2 bench bench_station_regional_rmut1 host ot-epyc9 run /srv/opentallas-scratch/claude/closure-loop/qfd_dv_slice2_stnrgc-g3-3c8f821d2 log cl/bench_station_regional_rmut1.a1b1.log captured 2026-10-19T19:26:23-07:00
+# fail_regex 'REGIONAL_STATION_MISMATCH'
+REGIONAL_MISMATCH edge239 front0 r_v0 r_idx0 r_last0 r_d1
+REGIONAL_MISMATCH edge240 front0 r_v0 r_idx0 r_last0 r_d1
+REGIONAL_MISMATCH edge241 front0 r_v0 r_idx0 r_last0 r_d1
+REGIONAL_MISMATCH edge242 front0 r_v0 r_idx0 r_last0 r_d1
+REGIONAL_MISMATCH edge247 front0 r_v0 r_idx0 r_last0 r_d1
+[2476000] %Fatal: tb_station_regional.sv:113: Assertion failed in tb_station_regional: REGIONAL_STATION_MISMATCH
+%Error: rtl/test/qwen_dv/safe_storage/tb_station_regional.sv:113: Verilog $stop
+Aborting...

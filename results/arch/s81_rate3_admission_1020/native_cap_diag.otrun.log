@@ -1,0 +1,14 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootcapdiag
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootcapdiag
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootcapdiag
+ot-run: ot-epyc9       admits   924 GB (avail 742, growth 95, headroom 0, waiters 0/0 GB) load 48/128 running 27 disk 99 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootcapdiag
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rate3-admission-1020/rootcapdiag
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3869652-1792508223 after 0 s
+NATIVE_CAP_REPLAY u_f_0R03 7 gold FAIL ['CAP_REPLAY_END edges=1100 writes=2 expected=4 errors=3 fault=1', 'FAIL actual_aproj_to_candidate_CAP']
+DIAGNOSTIC_ONLY u_f_0R03 False
+NATIVE_CAP_REPLAY u_f_7R00 4 gold PASS ['CAP_REPLAY_END edges=1100 writes=3 expected=3 errors=0 fault=0', 'PASS actual_aproj_to_candidate_CAP']
+DIAGNOSTIC_ONLY u_f_7R00 True
+NATIVE_CAP_DIAGNOSTIC_COMPLETE 2
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3869652-1792508223): exit 0

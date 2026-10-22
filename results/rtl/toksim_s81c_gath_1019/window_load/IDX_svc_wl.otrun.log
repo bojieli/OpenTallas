@@ -1,0 +1,19 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/toksim-s81-idx/src
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/toksim-s81-idx/src
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/toksim-s81-idx/src
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/toksim-s81-idx/src
+ot-run: ot-epyc9       admits  1254 GB (avail 961, growth 83, headroom 0, waiters 0/0 GB) load 41/128 running 18 disk 706 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/toksim-s81-idx/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/toksim-s81-idx/src
+ot-run: -> ot-epyc9
+ot-heavy: request 192G is charged 141G (class 'run_svc_bench.sh' measured peak 93.7G, n=2+0 proved); the cap stays 192G
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-245201-1792460502 after 0 s
+build start Mon Oct 19 18:41:42 PDT 2026
+build done Mon Oct 19 19:07:10 PDT 2026
+late s1: verdict=FAIL
+base s2: verdict=PASS
+base s1: verdict=PASS
+slot s1: verdict=FAIL
+all done Mon Oct 19 19:16:07 PDT 2026
+SVC_RC 0
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-245201-1792460502): exit 0

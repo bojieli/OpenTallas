@@ -1,0 +1,24 @@
+{
+  "cycles": 388,
+  "command_count": 320,
+  "rows": [
+    {
+      "n": 128,
+      "tag": 1,
+      "first_cmd": 0,
+      "export_cmd": 193,
+      "scalar_cycle": 202,
+      "span": 203
+    },
+    {
+      "n": 128,
+      "tag": 2,
+      "first_cmd": 194,
+      "export_cmd": 387,
+      "scalar_cycle": 396,
+      "span": 203
+    }
+  ],
+  "operand_rate": "oneFP32/cycle with compiler-visibleRAWspacing10; operand producer must supportsample-majorSRAMreads; no fullSFU throughputqualification",
+  "latency": 9
+}

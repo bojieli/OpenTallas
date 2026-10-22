@@ -1,0 +1,162 @@
+....................F............F...........FF.F.F.F......              [100%]
+=================================== FAILURES ===================================
+____________________ Umbrella.test_children_aged_one_by_one ____________________
+
+self = <test_ot_reaper.Umbrella testMethod=test_children_aged_one_by_one>
+
+    def test_children_aged_one_by_one(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td) / "claude"
+            u = root / "qwen-kvsys"
+            for c in ("old1", "old2", "kept", "young", "mentioned"):
+                mk(u / c / "data.bin", 1000)
+            mk(u / "kept/.keep")
+            age(u, 60)
+            age(u / "young", 1)
+            out = host_run(hand=[(str(root), R.HAND_NEVER)], umbrella_gb=1, mentions="wt mentioned is pending")
+>           self.assertFalse((u / "old1").exists(), out)
+E           AssertionError: True is not false : DF /tmp/tmpah8g3cb6/claude 541 -> 541 GB free
+E           TOTAL 0.0
+
+test_ot_reaper.py:97: AssertionError
+____________ Rebalance.test_requeue_moves_to_host_that_freed_memory ____________
+
+self = <test_ot_run_load_hold.Rebalance testMethod=test_requeue_moves_to_host_that_freed_memory>
+
+    def test_requeue_moves_to_host_that_freed_memory(self):
+        module = load(Path(__file__).with_name('ot-run'))
+        seq = [dict(a=row(40,10,128),b=row(10,10,128)), dict(a=row(40,10,128),b=row(200,10,128))]
+        calls = []
+        def probe(h, d):
+            return h, seq[min(len(calls), 1)][h]
+        def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False, quiet_notrun=False):
+            calls.append((host, max_wait))
+            return (75, False) if len(calls) == 1 else (0, True)
+        with patch.object(module, 'HOSTS', ['a','b']), patch.object(module, 'probe', side_effect=probe), \
+             patch.object(module, 'run', side_effect=run), patch.object(module.sys, 'argv', ['ot-run','--mem','80','--','true']), \
+             patch.dict(os.environ, {}, clear=True), contextlib.redirect_stderr(io.StringIO()) as err:
+            with self.assertRaises(SystemExit) as ex:
+>               module.main()
+
+test_ot_run_load_hold.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+ot-run:626: in main
+    raw = place(hosts, d, disk, mem, quiet=not first)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ot-run:1072: in place
+    res = dict(ex.map(lambda h: probe(h, d), hosts))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/concurrent/futures/_base.py:639: in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/concurrent/futures/_base.py:311: in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/concurrent/futures/_base.py:443: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/concurrent/futures/_base.py:395: in __get_result
+    raise self._exception
+/usr/lib/python3.14/concurrent/futures/thread.py:86: in run
+    result = ctx.run(self.task)
+             ^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/concurrent/futures/thread.py:73: in run
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+ot-run:1072: in <lambda>
+    res = dict(ex.map(lambda h: probe(h, d), hosts))
+                                ^^^^^^^^^^^
+/usr/lib/python3.14/unittest/mock.py:1176: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/unittest/mock.py:1180: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/unittest/mock.py:1247: in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def probe(h, d):
+>       return h, seq[min(len(calls), 1)][h]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'ot-epyc4'
+
+test_ot_run_load_hold.py:89: KeyError
+________________ Spill.test_back_copy_keeps_stamp_until_success ________________
+
+self = <test_ot_run_spill.Spill testMethod=test_back_copy_keeps_stamp_until_success>
+
+    def test_back_copy_keeps_stamp_until_success(self):
+        st = self.stamp()
+>       self.assertEqual(self.fwd("src", "dst", st).returncode, 0)
+E       AssertionError: 2 != 0
+
+test_ot_run_spill.py:168: AssertionError
+______________ Spill.test_concurrent_spills_of_one_lane_both_copy ______________
+
+self = <test_ot_run_spill.Spill testMethod=test_concurrent_spills_of_one_lane_both_copy>
+
+    def test_concurrent_spills_of_one_lane_both_copy(self):
+        """the MU-SLICE-GATE race: two spills of the same lane to the same host at once"""
+        out = {}
+        ts = [threading.Thread(target=lambda k: out.__setitem__(k, self.fwd("src", "dst", self.stamp())), args=(k,)) for k in (0, 1)]
+        [t.start() for t in ts]
+        [t.join() for t in ts]
+>       self.assertEqual([out[0].returncode, out[1].returncode], [0, 0], [out[0].stderr[-300:], out[1].stderr[-300:]])
+E       AssertionError: Lists differ: [2, 2] != [0, 0]
+E       
+E       First differing element 0:
+E       2
+E       0
+E       
+E       - [2, 2]
+E       + [0, 0] : ['/usr/bin/tar: OTSTROOT-otst-77sz49dh/lane: Unexpected inconsistency when making directory\n/usr/bin/tar: Exiting with failure status due to previous errors\n', 'cted inconsistency when making directory\n/usr/bin/tar: OTSTROOT-otst-77sz49dh/lane/d99/b: Unexpected inconsistency when making directory\n/usr/bin/tar: OTSTROOT-otst-77sz49dh/lane/d99/b/c: Unexpected inconsistency when making directory\n/usr/bin/tar: Exiting with failure status due to previous errors\n']
+
+test_ot_run_spill.py:131: AssertionError
+______________ Spill.test_incremental_respill_sends_only_changes _______________
+
+self = <test_ot_run_spill.Spill testMethod=test_incremental_respill_sends_only_changes>
+
+    def test_incremental_respill_sends_only_changes(self):
+        """v10 (FLEET-PLACE): a lane re-spilled to a host holding its copy sends only what changed"""
+        r = self.fwd("src", "dst", self.stamp())
+>       self.assertEqual(r.returncode, 0, r.stderr[-300:])
+E       AssertionError: 2 != 0 : /usr/bin/tar: OTSTROOT-otst-9n2n9d1e/lane: Unexpected inconsistency when making directory
+E       /usr/bin/tar: Exiting with failure status due to previous errors
+
+test_ot_run_spill.py:110: AssertionError
+________________ Spill.test_sweep_copies_back_for_a_dead_client ________________
+
+self = <test_ot_run_spill.Spill testMethod=test_sweep_copies_back_for_a_dead_client>
+
+    def test_sweep_copies_back_for_a_dead_client(self):
+        """a client killed while its spilled run went on (session limit): the sweep copies the outputs back"""
+        st = self.stamp()
+>       self.assertEqual(self.fwd("src", "dst", st).returncode, 0)
+E       AssertionError: 2 != 0
+
+test_ot_run_spill.py:188: AssertionError
+________ Spill.test_tar135_existing_directory_errors_are_not_a_failure _________
+
+self = <test_ot_run_spill.Spill testMethod=test_tar135_existing_directory_errors_are_not_a_failure>
+
+    def test_tar135_existing_directory_errors_are_not_a_failure(self):
+        """tar 1.35 + --keep-newer-files fails on every existing directory (the real MU-SLICE-GATE trigger: a second
+        spill of the lane to a host holding a copy); only that error, for a path that IS a directory, is forgiven"""
+        os.environ["OTST_TAR135"] = "tmp usr/bin"            # directories ("/tmp", "/usr/bin" exist)
+        r = self.fwd("src", "dst", self.stamp())
+>       self.assertEqual(r.returncode, 0, r.stderr[-300:])
+E       AssertionError: 2 != 0 : /usr/bin/tar: OTSTROOT-otst-kbaqrtk0/lane: Unexpected inconsistency when making directory
+E       /usr/bin/tar: Exiting with failure status due to previous errors
+
+test_ot_run_spill.py:140: AssertionError
+=========================== short test summary info ============================
+FAILED test_ot_reaper.py::Umbrella::test_children_aged_one_by_one - Assertion...
+FAILED test_ot_run_load_hold.py::Rebalance::test_requeue_moves_to_host_that_freed_memory
+FAILED test_ot_run_spill.py::Spill::test_back_copy_keeps_stamp_until_success
+FAILED test_ot_run_spill.py::Spill::test_concurrent_spills_of_one_lane_both_copy
+FAILED test_ot_run_spill.py::Spill::test_incremental_respill_sends_only_changes
+FAILED test_ot_run_spill.py::Spill::test_sweep_copies_back_for_a_dead_client
+FAILED test_ot_run_spill.py::Spill::test_tar135_existing_directory_errors_are_not_a_failure
+7 failed, 52 passed, 1 deselected in 8.61s

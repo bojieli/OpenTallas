@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.sysface32.calendar_scope_keep.v1",
+  "original_wrapper_sha256": "06942aeb5b205c8fad4d2c9a78c0c3ae9d78e074c4a83a9ee049c85da5daddc5",
+  "kept_wrapper_sha256": "53b67a899aa82d83d9d673f6d80d0685563863f03261dc4b783a0320ec681993",
+  "generic_calendar_source_sha256": "86f24f5ffca743777bafdc26dfe8541c81db28e446046bb3f70cf5345ab340b8",
+  "modules": [
+    "qfd_syscal16_n32",
+    "qfd_syscal32_n32",
+    "qfd_syscal64_n32"
+  ],
+  "only_changes": "Add keep_hierarchy=\"yes\" to each of three wrapper module declarations; stripping these three attributes reproduces original source byte-for-byte.",
+  "why": "Within NE64 a low address decode drives32 kept byte-write enables; NE32 drives16 and NE16 drives8. Across flattened wrapper scopes identical address decodes can merge into56 native loads. Keep scopes separate during technology mapping.",
+  "added_state_bits": 0,
+  "added_clock_edges": 0,
+  "ports_polarity_reset_and_event_phase": "Byte-identical after stripping attributes; original component lockstep and actual paired wrapper protocol remain applicable functionally.",
+  "status": "Attribute-only source repair proposed after first full parent mapped census55 dynamic violations/max108; full mapped census remains authoritative. This does not address separate parent generic-MUX select native-two-load issue owned by coordinator."
+}

@@ -35,7 +35,10 @@ import collections
 import json
 import math
 import os
+import re
 import subprocess
+
+from frame_bind import instance_clocks
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -59,10 +62,52 @@ endmodule
 '''
 
 
-def block_clock(table, master, region):
+def block_clock(table, master, region, instance=None):
     """Use the physical master's declared domain, including peer-clock ports."""
+    if instance is not None and instance in table.get('instance_clock_ports', {}):
+        return dict(instance_clocks(table, dict(name=instance, master=master), region))[table['masters'][master]['clk']]
     return table['masters'][master].get('clock_port', f'ck_{region}')
 
+
+def regional_clock(table, blocks, regions, name):
+    """Legacy regional source unless this instance explicitly declares its root."""
+    if name in table.get('instance_clock_ports', {}):
+        return block_clock(table, blocks[name]['master'], regions[name], name)
+    return f'ck_{regions[name]}'
+
+
+def endpoint_clock_override(table, blocks, regions, link, source):
+    """Optional declared clock of one packed plan-port; never guess A/B from names."""
+    end = link['e'][0 if source else 1]
+    block = blocks[end[0]]
+    master = table['masters'][block['master']]
+    port = f"{end[1]}.{'o' if source else 'i'}"
+    rule = master.get('ports', {}).get(port, {})
+    cp = rule.get('clock_port')
+    if cp is None:
+        if port in master.get('port_clock_required', []):
+            raise ValueError(f"{block['name']}.{port}: explicit clock_port required")
+        return None
+    if rule.get('ck'):
+        raise ValueError(f"{block['name']}.{port}: clock_port with a forwarded-clock output is unsupported")
+    declared = master.get('clock_ports') or [master['clk']] + list(master.get('clk_extra', []))
+    if not isinstance(cp, str) or cp not in declared:
+        raise ValueError(f"{block['name']}.{port}: unsupported clock_port {cp!r}")
+    width = table.get('rtl_widths', {}).get(master['module'], {}).get(cp)
+    if type(width) is not int or width != 1:
+        raise ValueError(f"{block['name']}.{port}: clock_port {cp} must be a declared scalar input")
+    if block['name'] not in table.get('instance_clock_ports', {}):
+        raise ValueError(f"{block['name']}.{port}: explicit distinct instance clock mapping required")
+    clocks = dict(instance_clocks(table, block, regions[block['name']]))
+    if cp not in clocks:
+        raise ValueError(f"{block['name']}.{port}: clock_port {cp} has no exact instance mapping")
+    return clocks[cp]
+
+
+def endpoint_clock(table, blocks, regions, link, source):
+    clock = endpoint_clock_override(table, blocks, regions, link, source)
+    block = blocks[link['e'][0 if source else 1][0]]
+    return clock if clock is not None else regional_clock(table, {block['name']: block}, regions, block['name'])
 
 def region_of(bl, pitch):
     g = bl['group']
@@ -78,6 +123,91 @@ def rly_master(b, d, prefix='dsfd_dvrly'):
 
 def git_show(ref, path):
     return subprocess.run(['git', '-C', os.environ.get('OT_GIT_DIR', str(ROOT)), 'show', f'{ref}:{path}'], capture_output=True, check=True).stdout
+
+
+def _read_at(ref, path):
+    """text of path at ref (None = absent); ref None = the worktree file, else HEAD of the worktree's git"""
+    if ref is None:
+        p = ROOT / path
+        if p.is_file():
+            return p.read_text()
+        ref = 'HEAD'
+        gd = str(ROOT)
+    else:
+        gd = os.environ.get('OT_GIT_DIR', str(ROOT))
+    r = subprocess.run(['git', '-C', gd, 'show', f'{ref}:{path}'], capture_output=True)
+    return r.stdout.decode() if r.returncode == 0 else None
+
+
+def land_view_reset_stages(master, view, read=_read_at):
+    """MU-DIE-S81/PO2 (10-19): reset-landing stage count RL of the CLOSED VIEW bound for landing master dsfd_dvland_<x>.
+    view = bind table land_views[master] ({"ref": <record commit/ref>, "kit": physical/ref_tile/<spec>}) or None (= the
+    worktree's kit view).  The view's abstract.json names its closure-loop job (orfs_dir .../closure-loop/<job>/...); the
+    job's source commit (verdict.json source_commit at the view ref, else the job name's trailing sha) holds the kit
+    spec.json the view was hardened from: RL = reset_landing.stages when reset_landing.enable, else 0.
+    Returns dict(rl=int|None, job, source, kit, error)."""
+    import re as _re
+    view = view or {}
+    ref = view.get('commit') or view.get('ref')
+    kit = view.get('kit') or f"physical/ref_tile/s81dv_land_{master[len('dsfd_dvland_'):]}"
+    row = dict(master=master, view_ref=ref, kit=kit, rl=None, job=None, source=None, error=None)
+    ab = read(ref, f'{kit}/views/{master}/abstract.json')
+    if ab is None:
+        row['error'] = f'no closed view {kit}/views/{master} at {ref or "worktree"}'
+        return row
+    try:
+        od = json.loads(ab).get('orfs_dir', '')
+    except ValueError:
+        od = ''
+    m = _re.search(r'closure-loop/([^/]+)/', od)
+    if not m:
+        row['error'] = f'view abstract names no closure-loop job (orfs_dir {od!r})'
+        return row
+    job = row['job'] = m.group(1)
+    if view.get('job') and view['job'] != job:
+        row['error'] = f'table names job {view["job"]} but the view at {ref} is {job}'
+        return row
+    src = None
+    vd = read(ref, f'results/closure_loop/{job}/verdict.json')
+    if vd:
+        try:
+            src = json.loads(vd).get('source_commit')
+        except ValueError:
+            src = None
+    if not src:
+        mm = _re.search(r'-([0-9a-f]{7,40})$', job)
+        src = mm.group(1) if mm else None
+    if not src:
+        row['error'] = f'no source commit for job {job}'
+        return row
+    row['source'] = src
+    sp = read(src, f'{kit}/spec.json')
+    if sp is None:
+        row['error'] = f'kit {kit}/spec.json not at source {src} (fetch it)'
+        return row
+    rl = json.loads(sp).get('reset_landing') or {}
+    row['rl'] = int(rl.get('stages', 0)) if rl.get('enable') else 0
+    return row
+
+
+def landing_reset_check(T, masters, read=_read_at):
+    """Strict-bind check: for every landing master bound on the die, the table's landing_reset_stages[master]
+    (absent = 0) must equal the stage count of the view actually bound (land_view_reset_stages).  A po2 view bound
+    without the key, or the key set on an old (no kit landing) view, shifts every lane of that master by RL cycles."""
+    tab = T.get('landing_reset_stages', {})
+    lv = T.get('land_views', {})
+    rows, mism, unres = [], [], []
+    for m in sorted(x for x in masters if x.startswith('dsfd_dvland')):
+        r = land_view_reset_stages(m, lv.get(m), read)
+        r['table'] = int(tab.get(m, 0))
+        rows.append(r)
+        if r['rl'] is None:
+            unres.append(f"{m}: {r['error']}")
+        elif r['rl'] != r['table']:
+            mism.append(f"{m}: table landing_reset_stages {r['table']} != view {r['job']} reset_landing {r['rl']}")
+    unused = sorted(k for k in tab if k not in masters)
+    return dict(verdict='PASS' if not (mism or unres) else 'FAIL', mismatch=mism, unresolved=unres,
+                unused_keys=unused, rows=rows)
 
 
 def bundle_age_unequal(land_rows):
@@ -145,6 +275,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     reg = {b['name']: region_of(b, pitch) for b in blocks}
     regions = sorted(set(reg.values()))
     M = T['masters']
+    # Validate optional endpoint contracts even when a forwarded clock or an
+    # equal-depth calendar would bypass clock selection during emission.
+    for link in plan['links']:
+        endpoint_clock_override(T, blocks, reg, link, True)
+        endpoint_clock_override(T, blocks, reg, link, False)
     # one net per 0-stage link (no top assigns: the strict checker resolves drivers through ports only)
     dname = lambda nm: f'w_{nm}_src' if not chains_pts[nm] else f'w_{nm}_dst'
     # ------------------------------------------------------------------ endpoints per instance (plan order)
@@ -154,6 +289,16 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         nm = l['i'].replace('-', '_')
         ends[blocks[a]['name']].append((pa, 'o', l['b'], nm, xa, ya, blocks[b]['name']))
         ends[blocks[b]['name']].append((pb, 'i', l['b'], nm, xb, yb, blocks[a]['name']))
+    # BIND/mu4 10-19: chain-end variants.  A master with "chain_end": {"plan_port": "xo", "dir": "o", "module": M'} binds
+    # every instance that has NO plan link on that plan port to M' (the same RTL without that output and its only drivers,
+    # e.g. col_h9_l4_nx), so a forward chain's last member carries no output without a consumer (no tie, no spare).
+    for mk, m in M.items():
+        ce = m.get('chain_end')
+        if not ce:
+            continue
+        for bl in blocks:
+            if bl['master'] == mk and not any(e[0] == ce['plan_port'] and e[1] == ce['dir'] for e in ends[bl['name']]):
+                m.setdefault('inst_module', {}).setdefault(bl['name'], ce['module'])
     # ------------------------------------------------------------------ port map -> per instance connections
     conn = {}                     # inst -> {rtl_port: [(lo, hi, expr)]}
     link_src = {}                 # link_nm -> (expr driving the link's input, fwd clock expr or None)
@@ -319,7 +464,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     # tree releases many receivers BEFORE their source (the x chain runs toward the tree root), and no net beside the
     # source releases earlier than the source's own leaf, so the RECEIVER's frame reset is delayed by calendar stations
     # (dsfd_rly_1 on the frame root, beside its reset pin): rst_n(frame) = max over its x lanes of G + h - FRAME_RSYNC.
-    FRAME_RSYNC = 2
+    FRAME_RSYNC = T.get('frame_wrapper', {}).get('receiver_reset_edges', 2)
     frame_rst, frame_cal_lines, frame_cal_place, frame_delay = {}, [], [], {}
     lsrc0 = {l['i'].replace('-', '_'): l for l in plan['links']}
     bname = {b['name']: b for b in blocks}
@@ -344,7 +489,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             up = rl0
             for k_ in range(need):
                 wn = f'rsx_{n_}_{k_}'
-                frame_cal_lines += [f'  wire {wn};', f'  {rm_} st_{wn} (.ck(ck_{reg[n_]}), .rs({up}), .i({up}), .o({wn}));   '
+                frame_cal_lines += [f'  wire {wn};', f'  {rm_} st_{wn} (.ck({regional_clock(T, bname, reg, n_)}), .rs({up}), .i({up}), .o({wn}));   '
                                     f'// frame x-chain read epoch (TOK-S81-GAPS/G8R): {n_} released after its x source']
                 xy_ = rst['block_pin'][n_]
                 frame_cal_place.append(dict(inst=f'st_{wn}', master=rm_, orient='R0', xy=[round(xy_[0], 3), round(xy_[1], 3)],
@@ -353,6 +498,16 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                 up = wn
             frame_rst[n_] = up
             frame_delay[n_] = need
+    # MU endpoint sticky faults share the die status boundary with land_fault.
+    # Keep each source visible; an external monitor can attribute the failed endpoint.
+    fault_masters = set(T.get('endpoint_fault_masters', []))
+    endpoint_faults = {b['name']: j for j, b in enumerate(b for b in blocks if b['master'] in fault_masters)}
+    # S81-DIECHAIN 10-19: the other blocks' sticky `fault` outputs (strict OUTPUT_OPEN before) -> die status vector block_fault
+    sf_masters = set(T.get('status_fault_masters', []))
+    _rw = T.get('rtl_widths', {})
+    status_faults = {b['name']: j for j, b in enumerate(
+        b for b in blocks if b['master'] in sf_masters and b['name'] not in endpoint_faults and
+        'fault' in _rw.get(M[b['master']].get('inst_module', {}).get(b['name'], M[b['master']]['module']), {}))}
     # ------------------------------------------------------------------ netlist
     v = ['// S81-DV REAL-VIEW bound die top (tools/s81_dv/dv_bind.py) -- strict die_port_bind gates it',
          'module dv_die (']
@@ -366,6 +521,12 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     if landings:
         io.append(f'  output wire [{len(landings) - 1}:0] land_fault')
         top_ports.append('land_fault')
+    if endpoint_faults:
+        io.append(f'  output wire [{len(endpoint_faults) - 1}:0] endpoint_fault')
+        top_ports.append('endpoint_fault')
+    if status_faults:
+        io.append(f'  output wire [{len(status_faults) - 1}:0] block_fault')
+        top_ports.append('block_fault')
     # non-ANSI header (the strict checker reads port widths from body declarations)
     names = [x.split()[-1] for x in io]
     v[-1] = f'module dv_die ({", ".join(names)});'
@@ -387,6 +548,8 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         if not ab or not mm.get('module'):
             continue
         insts = sorted((b for b in blocks if b['master'] == mname), key=lambda b: b['x'])
+        if not insts:
+            continue        # S81-IDX3M: an unused table master has no PHY abutment to wire
         peers = [b for b in blocks if b['master'] == ab['peer']]
         assert len(peers) == 1, (mname, ab['peer'])
         pn = peers[0]['name']
@@ -419,11 +582,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             v.append(f'  {bl["master"]} u_{n} ({", ".join(cs)});')
             continue
         mod = m.get('inst_module', {}).get(n, m['module'])
-        bc_ = block_clock(T, bl['master'], r)
-        cs = [f'.{m["clk"]}({bc_})'] + [f'.{x}({bc_})' for x in m.get('clk_extra', [])]
+        bc_ = block_clock(T, bl['master'], r, n)
+        cs = [f'.{port}({net})' for port, net in instance_clocks(T, bl, r)]
         for cp in m.get('clk_peer', []):     # a port clocked by a peer block's root (e.g. ckh = the PHY clock)
             pb_ = [b for b in blocks if b['master'] == cp['master']]
-            cs.append(f".{cp['port']}({block_clock(T, cp['master'], reg[pb_[0]['name']])})")
+            cs.append(f".{cp['port']}({block_clock(T, cp['master'], reg[pb_[0]['name']], pb_[0]['name'])})")
         cs += abut_conn.get(n, []) + peer_conn.get(n, [])
         for cport, lanes in ckin.get(n, {}).items():
             wd_ = rtl_widths.get(mod, {}).get(cport, max(lanes) + 1)
@@ -439,8 +602,9 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
                     bits_.append(link_src[lk][1])               # 0-stage: the source's forwarded clock
                 else:
                     src_ = [l for l in plan['links'] if l['i'].replace('-', '_') == lk][0]
-                    sreg = reg[blocks[src_['e'][0][0]]['name']]
-                    v.append(f'  wire ckf_{lk}; {FWD} fwdi_{lk} (.A(ck_{sreg}), .Y(ckf_{lk}));')
+                    sn = blocks[src_['e'][0][0]]['name']
+                    source_clock = endpoint_clock(T, blocks, reg, src_, True)
+                    v.append(f'  wire ckf_{lk}; {FWD} fwdi_{lk} (.A({source_clock}), .Y(ckf_{lk}));')
                     bits_.append(f'ckf_{lk}')
             cs.append(f'.{cport}({{{", ".join(reversed(bits_))}}})')
         if m.get('rst'):
@@ -547,6 +711,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             cs.append(f'.{rp}({{{", ".join(reversed(parts))}}})')
         for tp in m.get('top_ports', []):
             cs.append(f'.{tp["port"]}({n}_{tp["port"]})')
+        if n in endpoint_faults:
+            cs.append(f'.fault(endpoint_fault[{endpoint_faults[n]}])')
+        elif n in status_faults:
+            assert 'fault' not in conn[n], (n, 'fault already bound')
+            cs.append(f'.fault(block_fault[{status_faults[n]}])')
         pv = params.get(n) or {}
         ps = f' #({", ".join(f".{k}({vv})" for k, vv in pv.items())})' if pv else ''
         v.append(f'  {mod}{ps} u_{n} ({", ".join(cs)});')
@@ -572,13 +741,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
     gcal, gate_en, land_rs, cal_place = {}, {}, {}, []
     rmst = T.get('reset_master') or RST_RLY['EW']
 
-    def cal_tap(leaf, ckr, nd, xy, why):
-        ch = gcal.setdefault((leaf, ckr), [])
+    def cal_tap(leaf, ckr, nd, xy, why, clock_net=None):
+        clock_key = ckr if clock_net is None else clock_net
+        ch = gcal.setdefault((leaf, clock_key), [])
         while len(ch) < nd:
             up = ch[-1] if ch else leaf
-            wn = f'rsg_{leaf}_{ckr}_{len(ch)}'
+            wn = f'rsg_{leaf}_{clock_key}_{len(ch)}'
             v.append(f'  wire {wn};')
-            v.append(f'  {rmst} st_{wn} (.ck(ck_{ckr}), .rs({up}), .i({up}), .o({wn}));   // gate calendar ({why})')
+            v.append(f'  {rmst} st_{wn} (.ck({clock_net if clock_net is not None else f"ck_{ckr}"}), .rs({up}), .i({up}), .o({wn}));   // gate calendar ({why})')
             cal_place.append(dict(inst=f'st_{wn}', master=rmst, orient='R0', xy=[round(xy[0], 3), round(xy[1], 3)], kind='gate_calendar'))
             ch.append(wn)
         return ch[nd - 1]
@@ -594,11 +764,11 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         ds_, dr_ = rdep[sleaf], rdep[rleaf] + rl_
         h_ = len(chains_pts[nm]) % 2            # R0 - G = N mod 2: an odd half-cycle chain lands on the inverted phase
         if dr_ - ds_ > h_:
-            gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4], f'gate opens {h_} edges before the {n} landing rs')
+            gate_en[nm] = cal_tap(sleaf, reg[a_], dr_ - ds_ - h_, l_['e'][0][2:4], f'gate opens {h_} edges before the {n} landing rs', endpoint_clock_override(T, blocks, reg, l_, True))
             land_rs[nm] = rleaf
         elif dr_ - ds_ < h_:
             gate_en[nm] = sleaf
-            land_rs[nm] = cal_tap(rleaf, reg[n], ds_ + h_ - dr_, l_['e'][1][2:4], f'landing rs {h_} edges after the {a_} gate')
+            land_rs[nm] = cal_tap(rleaf, reg[n], ds_ + h_ - dr_, l_['e'][1][2:4], f'landing rs {h_} edges after the {a_} gate', endpoint_clock_override(T, blocks, reg, l_, False))
         else:
             gate_en[nm], land_rs[nm] = sleaf, rleaf
         st = len(chains_pts[nm])
@@ -620,7 +790,7 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         lm, ow, ast = (ad[0], ad[1], ad[2]) if ad else ((f'dsfd_dvland_{b}l' if long_ else f'dsfd_dvland_{b}'), b, {})
         v.append(f'  wire [{ow - 1}:0] w_{nm}_lnd;')
         xs_ = ''.join(f', .{sp}({sv})' for sp, sv in ast.items())
-        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck(ck_{reg[n]}), .rs({land_rs[nm]}), '
+        v.append(f'  {lm} ld_{nm} (.ck_f(n{nm}_fck[{st}]), .i(w_{nm}_dst), .ck({endpoint_clock(T, blocks, reg, l_, False)}), .rs({land_rs[nm]}), '
                  f".k({kw_}'d{k_}){xs_}, .o(w_{nm}_lnd), .fault(land_fault[{j}]));")
         for sp in ast:
             if [lm, sp] not in straps:
@@ -668,6 +838,18 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         straps.append([ICG, 'SE'])      # S81-LBGAP/G1: the hop-0 gate's scan enable is a test strap (no scan chain on the die)
     # relay chains (F1)
     nst = collections.Counter(); fwd_cells = 0; gate_cells = 0
+    # DRIVE-S81-IDX4 (10-20): a vertical relay direction with no closed view (e.g. dsfd_dvrlyh_562_NS: the --idxrd 4 hrrd
+    # lanes come DOWN into the reader N face) uses the closed opposite-direction view mirrored about X (MX): same module,
+    # i on the upstream face.  Opt-in per table (relay_mirror_vertical); the mirrored stations go to relay_mirror.json.
+    _rv_views = T.get('relay_views', {}); relay_mirror = {}
+    def rly_pick(b_, d_, inst_):
+        m_ = rly_master(b_, d_, T.get('relay_prefix', 'dsfd_dvrly'))
+        if T.get('relay_mirror_vertical') and m_ not in _rv_views and d_ in ('NS', 'SN'):
+            o_ = rly_master(b_, 'SN' if d_ == 'NS' else 'NS', T.get('relay_prefix', 'dsfd_dvrly'))
+            if o_ in _rv_views:
+                relay_mirror[inst_] = dict(master=o_, for_dir=d_, orient='MX')
+                return o_
+        return m_
     for l in plan['links']:
         nm = l['i'].replace('-', '_'); b = l['b']
         a = blocks[l['e'][0][0]]['name']
@@ -684,10 +866,10 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             # pads (tied 0 at the station input, never read by the receiver)
             cov = lane_spare[root_nm]
             src = f"{{{b - cov}'d0, {src}[{cov - 1}:0]}}"
-            pads.setdefault(f'st_{nm}_0', dict(master=rly_master(b, sdir[(nm, 0)], T.get('relay_prefix', 'dsfd_dvrly')),
+            pads.setdefault(f'st_{nm}_0', dict(master=rly_pick(b, sdir[(nm, 0)], f'st_{nm}_0'),
                                                reason=f'lane quantisation: {cov}-b RTL payload on a {b}-b relay master (spare top bits)',
                                                ports={}))['ports']['i'] = [[cov, b - 1]]
-            pad_rows.append(dict(inst=f'st_{nm}_0', master=rly_master(b, sdir[(nm, 0)], T.get('relay_prefix', 'dsfd_dvrly')),
+            pad_rows.append(dict(inst=f'st_{nm}_0', master=rly_pick(b, sdir[(nm, 0)], f'st_{nm}_0'),
                                  port='i', bits=b - cov, lo=cov, hi=b - 1, reason='lane quantisation spare bits'))
         if root_nm in lane_copy:
             segs_ = []          # (plo, nb, expr) covering the lane: own wire where bound, copied bits elsewhere
@@ -711,14 +893,14 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         gen = gate_en.get(nm)
         if gen:
             # S81-LBGAP/G1: landed lane -> hop-0 clock gate opened by the released reset on the calendar edge G = R0 - (N mod 2)
-            v.append(f'  {ICG} fwd_{nm} (.CLK({ck or "ck_" + reg[a]}), .ENA({gen}), .SE(1\'b0), .GCLK(n{nm}_fck[0]));   '
+            v.append(f'  {ICG} fwd_{nm} (.CLK({ck or endpoint_clock(T, blocks, reg, lsrc[nm], True)}), .ENA({gen}), .SE(1\'b0), .GCLK(n{nm}_fck[0]));   '
                      f'// hop 0: clock gate (LANDING-CONTRACT L3) on {"the source master forwarded clock" if ck else "the source region root"}')
             gate_cells += 1
             ck = None
         elif ck:
             v.append(f'  // hop 0: the source master forwards its root (F1): {ck}')
         else:
-            v.append(f'  {FWD} fwd_{nm} (.A(ck_{reg[a]}), .Y(n{nm}_fck[0]));   // hop 0: clock-forward cell on the source region root')
+            v.append(f'  {FWD} fwd_{nm} (.A({endpoint_clock(T, blocks, reg, lsrc[nm], True)}), .Y(n{nm}_fck[0]));   // hop 0: clock-forward cell on the source region root')
             fwd_cells += 1
         prev = src
         for k in range(st):
@@ -727,15 +909,51 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             if k < st - 1:
                 v.append(f'  wire [{b - 1}:0] {wn};')
             cki = ck if (k == 0 and ck) else f'n{nm}_fck[{k}]'
-            v.append(f'  {rly_master(b, d, T.get("relay_prefix", "dsfd_dvrly"))} st_{nm}_{k} (.i({prev}), .o({wn}), .ck({cki}), .ck_o(n{nm}_fck[{k + 1}]), '
+            rm_ = rly_pick(b, d, f'st_{nm}_{k}')
+            v.append(f'  {rm_} st_{nm}_{k} (.i({prev}), .o({wn}), .ck({cki}), .ck_o(n{nm}_fck[{k + 1}]), '
                      f'.rs({rst["station_leaf"][(nm, k)]}));')
-            nst[rly_master(b, d, T.get('relay_prefix', 'dsfd_dvrly'))] += 1
+            nst[rm_] += 1
             prev = wn
     v += rst['verilog']
     v.append('endmodule')
+    if T.get('prune_unused_reset_leaves'):
+        # Frame epoch roots may consume a station's parent instead of its leaf.
+        # Remove only generated reset stations with no reads after final wiring;
+        # iterate so entire unused twigs disappear. Surviving sink depths stay fixed.
+        removed = []
+        while True:
+            text = '\n'.join(v)
+            uses = collections.Counter(re.findall(r'\brs(?:l)?_[A-Za-z0-9_]+\b', text))
+            dead = []
+            for row in rst['place']:
+                inst = row['inst']
+                net = inst[3:]
+                if inst in removed:
+                    continue
+                if uses[net] == 2:
+                    dead.append(inst)  # one declaration + the station's own .o
+            if not dead:
+                break
+            for inst in dead:
+                net = inst[3:]
+                v = [line for line in v if not re.search(r'\b' + re.escape(inst) + r'\s*\(', line)
+                     and line.strip() != f'wire {net};']
+            removed.extend(dead)
+        rst['place'] = [r for r in rst['place'] if r['inst'] not in removed]
+        rst['summary']['pruned_unused_reset_stations'] = removed
+        rst['summary']['stations'] -= len(removed)
     (out / 'die.v').write_text('\n'.join(v) + '\n')
     (out / 'cells_used.v').write_text(CELL_MODELS)
     (out / 'straps.json').write_text(json.dumps({'straps': straps}, indent=1))
+    if T.get('spare_out_rules'):
+        # S81-DIECHAIN 10-19: provably role-unused output bits -> declared spare outputs (svc_rs role faces, lane
+        # quantisation landing bits, unbuilt forwarded-clock taps); a role-active face left open is a GAP (recorded, not declared)
+        import sys as _sys; _sys.path.insert(0, str(ROOT / 'tools/s81_dv'))
+        import dv_spare_out
+        spare_rec = dv_spare_out.declare(v, pads, ROOT)
+        (out / 'spare_out.json').write_text(json.dumps(spare_rec, indent=1))
+        print('SPARE_OUT', json.dumps(spare_rec['summary']))
+        assert not spare_rec['gaps'], spare_rec['gaps'][:10]
     (out / 'pads.json').write_text(json.dumps({'pads': {}, 'instances': pads}, indent=1))
     frame_rec = frame_contract(T)
     (out / 'frame_contract.json').write_text(json.dumps(frame_rec, indent=1))
@@ -757,19 +975,27 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
             dst.parent.mkdir(parents=True, exist_ok=True)
             dst.write_bytes(git_show(ref, p))
             extra.append(str(dst))
+    # MU-DIE-S81/PO2 (10-19): landing_reset_stages must match the reset landing of every bound landing VIEW (both ways)
+    lrc = landing_reset_check(T, {r['master'] for r in land_rows})
+    (out / 'landing_reset_check.json').write_text(json.dumps(lrc, indent=1))
     rec = dict(schema='opentallas.s81_dv.bind_case.v1', regions=regions, open_bindings=open_bind,
+               instance_clock_ports=T.get('instance_clock_ports', {}),
+               clock_source_entries=T.get('clock_domains', {}),
+               instance_orientations=T.get('instance_orientations', {}),
                plan_port_not_in_rtl=plan_not_in_rtl, relay_masters=dict(nst), clock_forward_cells=fwd_cells,
                hop0_clock_gates=gate_cells, gate_calendar_stations=len(cal_place),
                abutted_plan_lanes=abut_rows, reset=rst['summary'], straps=straps, mode_unused_pads=pad_rows, views=dict(views),
                frame_contract=dict(verdict=frame_rec['verdict'], members=len(frame_rec['members']), problems=frame_rec['problems']), rtl_extra=extra, top_offchip_ports=top_ports,
+               endpoint_fault_sources=endpoint_faults, status_fault_sources=status_faults,
+               landing_reset_check={k: lrc[k] for k in ('verdict', 'mismatch', 'unresolved', 'unused_keys')},
                landings=dict(count=len(land_rows), land_plan=str(lp) if lp else None,
                              by_master=dict(collections.Counter(r['master'] for r in land_rows)),
                              by_inst_kind=dict(collections.Counter(r['inst'].split('_')[0] for r in land_rows)),
                              no_E=[r['link'] for r in land_rows if r['E'] is None],
                              calendar_needs=[r for r in land_rows if r['calendar_stations']['n']],
                              bundle_age_unequal=bundle_age_unequal(land_rows), rows=land_rows),
-               frame_hop0_gates=dict(count=len(frame_gate_rows), rule='TOK-S81-GAPS/G8R: R0 = frame rst_n depth + 2 '
-                                     '(crs4 rsync), G = R0 - N mod 2', rows=frame_gate_rows,
+               frame_hop0_gates=dict(count=len(frame_gate_rows), rule=f'TOK-S81-GAPS/G8R: R0 = frame rst_n depth + {FRAME_RSYNC} '
+                                     '(receiver reset stages), G = R0 - N mod 2', rows=frame_gate_rows,
                                      frame_epoch_delay=frame_delay, frame_epoch_stations=len(frame_cal_place)),
                frame_lk=dict(count=len(frame_lk_val), source=str(lp) if lp else None,
                              rule='K = max land-plan K over the frame x lanes (no-station lanes 1), every lane at K',
@@ -793,18 +1019,31 @@ def emit(plan, out: Path, table_path: Path, sdir, chains_pts, run_bind=True, ext
         for d_ in T.get('defines', []):         # S81-DIE5: build defines of the bound RTL (e.g. DSFD_PQ_STATIC_X2)
             cmd += ['--define', d_]
         r = subprocess.run(cmd, capture_output=True, text=True)
-        (out / 'port_bind.log').write_text(r.stdout + r.stderr)
-        rec['port_bind_rc'] = r.returncode
+        log_, rc_ = r.stdout + r.stderr, r.returncode
+        nbad_ = len(lrc['mismatch']) + len(lrc['unresolved'])
+        # the landing reset check is a strict-bind counter: any mismatch / unresolved view FAILS the bind
+        log_ = '\n'.join((l.replace('DIE_PORT_BIND PASS', 'DIE_PORT_BIND FAIL', 1) if nbad_ else l) +
+                          (f' landing_reset_mismatch={len(lrc["mismatch"])} landing_reset_unresolved={len(lrc["unresolved"])}'
+                           if l.startswith('DIE_PORT_BIND ') else '') for l in log_.split('\n'))
+        log_ += ''.join(f'LANDING_RESET {x}\n' for x in lrc['mismatch'] + lrc['unresolved'])
+        if nbad_ and rc_ == 0:
+            rc_ = 3
+        (out / 'port_bind.log').write_text(log_)
+        rec['port_bind_rc'] = rc_
         rec['port_bind_cmd'] = cmd
     (out / 'bind_case.json').write_text(json.dumps(rec, indent=1))
     # S81-DIE7 (10-18): placement hints for the real-view physical case (dv_rvcase.py): reset stations of the regional
     # reset tree (street cells + lane companions at the station points), the root synchroniser point and the block reset
     # pin points (top-down pin assignment); landings / relays / forward cells are placed from the plan by dv_rvcase
+    (out / 'relay_mirror.json').write_text(json.dumps(relay_mirror, indent=1))
     (out / 'place_hints.json').write_text(json.dumps(dict(
         schema='opentallas.s81_dv.place_hints.v1', reset_place=rst['place'] + cal_place + frame_cal_place, reset_root_xy=rst['summary']['root_xy'],
         block_rst_pin={b: [round(x, 3), round(y, 3)] for b, (x, y) in rst['block_pin'].items()},
         landings=[dict(inst=f'ld_{r["link"]}', link=r['link'], dst=r['inst'], master=r['master'], bits=r['bits'], D=r['D'])
                   for r in land_rows]), indent=1))
+    if lrc['verdict'] != 'PASS':
+        raise SystemExit('dv_bind: STRICT bind FAIL, landing_reset_stages vs bound landing views:\n  ' +
+                         '\n  '.join(lrc['mismatch'] + lrc['unresolved']))
     return rec
 
 
@@ -937,16 +1176,18 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
     rr = {d: master for d in RST_RLY} if master else RST_RLY
     W, H = plan['facts']['die_um']
     blocks = plan['blocks']
+    # S81-LINKS gap reserves (geometry-only blockages, no pins): no reset street station inside them; they take no sink
+    geo = blocks + plan.get('blockages', [])
     nx, ny = int(math.ceil(W / GRID)), int(math.ceil(H / GRID))
 
     def inside(x, y):
-        for b in blocks:
+        for b in geo:
             if b['x'] - 5 <= x <= b['x'] + b['w'] + 5 and b['y'] - 5 <= y <= b['y'] + b['h'] + 5:
                 return True
         return False
     free = {}
     cellb = collections.defaultdict(list)          # blocks (inflated 5 um) touching each grid cell
-    for b in blocks:
+    for b in geo:
         for i in range(max(0, int((b['x'] - 5) // GRID)), min(nx, int((b['x'] + b['w'] + 5) // GRID) + 1)):
             for j in range(max(0, int((b['y'] - 5) // GRID)), min(ny, int((b['y'] + b['h'] + 5) // GRID) + 1)):
                 cellb[(i, j)].append(b)
@@ -1060,7 +1301,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
 
     def buried(x, y, own):
         return any(b['name'] != own and b['x'] + 0.5 < x < b['x'] + b['w'] - 0.5 and b['y'] + 0.5 < y < b['y'] + b['h'] - 0.5
-                   for b in blocks)
+                   for b in geo)
     block_srv, block_pin = {}, {}
     for b in blocks:
         cands = [(b['x'] + b['w'] / 2, b['y'])]          # default: S face centre
@@ -1088,7 +1329,7 @@ def reset_tree(plan, reg, chains_pts, sdir, master=None, reach=RESET_REACH_UM):
     for s in list(station_srv.values()) + list(block_srv.values()):
         while s is not None and s not in tree:
             tree.add(s); s = par[s]
-    gate = reset_reach_gate(blocks, {n: pos[n] for n in par}, sinks, [(c, par[c]) for c in tree], reach=reach)
+    gate = reset_reach_gate(geo, {n: pos[n] for n in par}, sinks, [(c, par[c]) for c in tree], reach=reach)
     # nearest block region for each tree node (station clock = that region's root)
     cen = [(b['x'] + b['w'] / 2, b['y'] + b['h'] / 2, reg[b['name']]) for b in blocks]
 

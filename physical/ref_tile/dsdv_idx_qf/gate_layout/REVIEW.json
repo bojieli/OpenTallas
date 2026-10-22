@@ -1,0 +1,28 @@
+{
+  "reviewer": "codex coordinator",
+  "time": "2026-10-21T14:48:09.839857-07:00",
+  "gate_commit": "ed9c179a2fbee72e877ca8595f1eae9368a6de45",
+  "geometry_sha256": "8545618f38ed6a6276f32f34acac6fe3e233ca9176846b50943047a92aeeb2c8",
+  "geometry": {
+    "schema": "opentallas.ref_tile.review_geometry.v1",
+    "sha256": "8545618f38ed6a6276f32f34acac6fe3e233ca9176846b50943047a92aeeb2c8",
+    "components": {
+      "outline": "0cb18493c3bb33fefcfa616e2e77f2e54e6d808aed4fd0347abdfb5685086c1e",
+      "macros": "643d5437104296e21d906ecb15b2c96ad278f20cfc4af53b12bb6069bd853726",
+      "pins": "9955b2ec394ec5a7ed5c30d18045c489c68b4ed80d1c1b99af038d0ced054da1",
+      "clock_entry": "ee4d667e029d69e2a7b068ebecb001bedb0eb80bc5d9842b2119649f7693e135"
+    }
+  },
+  "verdict": "APPROVED",
+  "checklist": {
+    "lattice": true,
+    "std_cell_band": true,
+    "pin_spread": true,
+    "clock_entry": true,
+    "shape": true
+  },
+  "authority": "ROOT current Codex coordinator personally viewed both PNGs/rawJSON and approved exact20887798d packet via /root/s81_lead. Worker transcribes explicit approval, not selfapproval.",
+  "packet": "results/rtl/codex_idxqf_n32fix_1021/main_review/REVIEW_PACKET.md",
+  "frozen_packet_geometry_sha256": "40274f760f79bc0ee8e8797a13710c365f9db04f4829b8c115c271a918476dde",
+  "limitations": "This259.2x432 release-slot lowfill1.57% accepted, not minimaloutline; parent405um/STA and detailedroute closure remain owed."
+}

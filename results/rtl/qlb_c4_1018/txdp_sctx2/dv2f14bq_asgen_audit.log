@@ -1,0 +1,4 @@
+FAIL qfd_d2d_static.TXDP 0x09010306 != image D2D_TXDP_C 0x09010308
+FAIL qfd_d2d_static.TXDP 0x09010306 != 0x09010308 = the layer compiler's TXD [8, 3, 1, 9] for this die (stages {'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 2, 'SC_TX': 2, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 11, 'SK_TXP': 11}); recompile the image: D2D_DIE_STAGES=<these stages> tools/qwen_split/d2d_cal_image_production.sh
+DIE_PARAM_AUDIT FAIL trapped=2 XPF_TRANSPORT_EDGES=15 TXDP=0x9010308 fails=2
+rc=1

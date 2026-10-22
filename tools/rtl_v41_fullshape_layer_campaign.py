@@ -624,10 +624,12 @@ def pack_fp8_ue8m0(rows):
     """Window KV rows (FP8 QDQ values) -> E4M3 codes [n, hd] uint8 + UE8M0 bytes [n, hd / 32] (bias 127)."""
     n, w = rows.shape
     v, e = _pow2_encode(rows, 32, 448.0, 3, -6)
-    codes = np.array([np.nonzero(V.E4M3 == t)[0][0] if t != 0 else (128 if np.signbit(t) else 0)
-                      for t in np.unique(v)], dtype=np.uint8)
-    lut = dict(zip(np.unique(v).tolist(), codes.tolist()))
-    c = np.vectorize(lut.get, otypes=[np.uint8])(v).reshape(n, w)
+    # magnitude code from the E4M3 table, sign from the sign bit: a dict keyed on the value merged -0 into +0 (10-18
+    # LB2-S81/MTP fix: rows holding a -0 failed the round trip below)
+    mag = {float(V.E4M3[i]): i for i in range(128) if np.isfinite(V.E4M3[i])}
+    u, inv = np.unique(np.abs(v).reshape(-1), return_inverse=True)
+    c = np.asarray([mag[float(t)] for t in u], np.uint8)[inv].reshape(n, w)
+    c = c | (np.signbit(np.asarray(rows, F)).astype(np.uint8) << 7)
     out = (c, (e + 127).astype(np.uint8).reshape(n, w // 32))
     dec = (V.E4M3[out[0]].reshape(-1, 32) * np.exp2(out[1].reshape(-1).astype(np.int64) - 127)[:, None]).astype(F)
     assert np.array_equal(dec.reshape(n, w).view(np.uint32), np.asarray(rows, F).view(np.uint32)), "fp8 round trip"

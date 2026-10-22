@@ -1,0 +1,309 @@
+{
+ "schema": "opentallas.kv_host_obs_map.v1",
+ "window": "0x1800-0x19FF (CSR system region)",
+ "NB": 1335,
+ "NF": 71,
+ "words": 44,
+ "word_base": "0x1900",
+ "obs": [
+  {
+   "name": "host_admission_open",
+   "lsb": 0,
+   "width": 1
+  },
+  {
+   "name": "host_deferred",
+   "lsb": 1,
+   "width": 1
+  },
+  {
+   "name": "package_abort",
+   "lsb": 2,
+   "width": 1
+  },
+  {
+   "name": "native_pr",
+   "lsb": 3,
+   "width": 143
+  },
+  {
+   "name": "service_ready",
+   "lsb": 146,
+   "width": 1
+  },
+  {
+   "name": "service_abort",
+   "lsb": 147,
+   "width": 1
+  },
+  {
+   "name": "ingest_permission",
+   "lsb": 148,
+   "width": 1
+  },
+  {
+   "name": "local_service_epoch",
+   "lsb": 149,
+   "width": 16
+  },
+  {
+   "name": "service_diag_raw",
+   "lsb": 165,
+   "width": 26
+  },
+  {
+   "name": "service_status",
+   "lsb": 191,
+   "width": 32
+  },
+  {
+   "name": "record_tx_v",
+   "lsb": 223,
+   "width": 1
+  },
+  {
+   "name": "record_fault",
+   "lsb": 224,
+   "width": 1
+  },
+  {
+   "name": "program_authorized_footer_v",
+   "lsb": 225,
+   "width": 1
+  },
+  {
+   "name": "program_authorized_footer64",
+   "lsb": 226,
+   "width": 64
+  },
+  {
+   "name": "program_auth_v",
+   "lsb": 290,
+   "width": 1
+  },
+  {
+   "name": "program_expected_pw",
+   "lsb": 291,
+   "width": 11
+  },
+  {
+   "name": "program_expected_dw",
+   "lsb": 302,
+   "width": 4
+  },
+  {
+   "name": "program_auth_epoch",
+   "lsb": 306,
+   "width": 16
+  },
+  {
+   "name": "program_auth_digest",
+   "lsb": 322,
+   "width": 64
+  },
+  {
+   "name": "hc",
+   "lsb": 386,
+   "width": 182
+  },
+  {
+   "name": "seen",
+   "lsb": 568,
+   "width": 8
+  },
+  {
+   "name": "irq",
+   "lsb": 576,
+   "width": 1
+  },
+  {
+   "name": "sys_ready",
+   "lsb": 577,
+   "width": 1
+  },
+  {
+   "name": "fault_src",
+   "lsb": 578,
+   "width": 32
+  },
+  {
+   "name": "source_cr",
+   "lsb": 610,
+   "width": 1
+  },
+  {
+   "name": "available",
+   "lsb": 611,
+   "width": 1
+  },
+  {
+   "name": "marker_v",
+   "lsb": 612,
+   "width": 1
+  },
+  {
+   "name": "marker",
+   "lsb": 613,
+   "width": 66
+  },
+  {
+   "name": "issued",
+   "lsb": 679,
+   "width": 32
+  },
+  {
+   "name": "landed",
+   "lsb": 711,
+   "width": 32
+  },
+  {
+   "name": "physical_ack_n",
+   "lsb": 743,
+   "width": 8
+  },
+  {
+   "name": "service_faults",
+   "lsb": 751,
+   "width": 25
+  },
+  {
+   "name": "peer_protocol_fault",
+   "lsb": 776,
+   "width": 1
+  },
+  {
+   "name": "dispatch_valid",
+   "lsb": 777,
+   "width": 1
+  },
+  {
+   "name": "dispatched",
+   "lsb": 778,
+   "width": 1
+  },
+  {
+   "name": "accepted_ranks",
+   "lsb": 779,
+   "width": 8
+  },
+  {
+   "name": "participant_trace",
+   "lsb": 787,
+   "width": 256
+  },
+  {
+   "name": "participant_token",
+   "lsb": 1043,
+   "width": 144
+  },
+  {
+   "name": "participant_pos",
+   "lsb": 1187,
+   "width": 144
+  },
+  {
+   "name": "engine_result_cr",
+   "lsb": 1331,
+   "width": 1
+  },
+  {
+   "name": "program_consensus",
+   "lsb": 1332,
+   "width": 1
+  },
+  {
+   "name": "coordinator_fault",
+   "lsb": 1333,
+   "width": 1
+  },
+  {
+   "name": "recovery_complete",
+   "lsb": 1334,
+   "width": 1
+  }
+ ],
+ "flt": [
+  {
+   "name": "package_abort",
+   "lsb": 1335,
+   "width": 1,
+   "sticky": true
+  },
+  {
+   "name": "service_abort",
+   "lsb": 1336,
+   "width": 1,
+   "sticky": true
+  },
+  {
+   "name": "record_fault",
+   "lsb": 1337,
+   "width": 1,
+   "sticky": true
+  },
+  {
+   "name": "peer_protocol_fault",
+   "lsb": 1338,
+   "width": 1,
+   "sticky": true
+  },
+  {
+   "name": "coordinator_fault",
+   "lsb": 1339,
+   "width": 1,
+   "sticky": true
+  },
+  {
+   "name": "irq",
+   "lsb": 1340,
+   "width": 1,
+   "sticky": true
+  },
+  {
+   "name": "seen",
+   "lsb": 1341,
+   "width": 8,
+   "sticky": true
+  },
+  {
+   "name": "service_faults",
+   "lsb": 1349,
+   "width": 25,
+   "sticky": true
+  },
+  {
+   "name": "fault_src",
+   "lsb": 1374,
+   "width": 32,
+   "sticky": true
+  }
+ ],
+ "ext": [],
+ "ext_pending": [
+  {
+   "port": "obs_dcal_adm_done",
+   "source": "dcal.adm_done",
+   "width": 1
+  },
+  {
+   "port": "obs_dcal_cal_ready",
+   "source": "dcal.cal_ready",
+   "width": 1
+  },
+  {
+   "port": "obs_dcal_running",
+   "source": "dcal.running",
+   "width": 1
+  },
+  {
+   "port": "obs_dcal_layer",
+   "source": "dcal.layer",
+   "width": 6
+  },
+  {
+   "port": "obs_d2d_recovery_cycles",
+   "source": "d2d_kv.recovery_cycles",
+   "width": 32
+  }
+ ]
+}

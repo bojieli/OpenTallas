@@ -1,0 +1,16 @@
+ot-run: -> ot-epyc7
+KVS_RVPAIR build B=r16 mut=0 RS=1 SD=213 verilator Verilator 5.050 2026-07-01 rev v5.050
+KVS_RVPAIR PASS mode=0 mut=0 checks=43236 errors=0 cmds=3 req=3 Q=96 TX=99 faultA=0 faultB=0
+KVS_RVPAIR PASS mode=1 mut=0 checks=14315 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=2 mut=0 checks=14354 errors=0 cmds=1 req=1 Q=6 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=3 mut=0 checks=14357 errors=0 cmds=1 req=1 Q=9 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=4 mut=0 checks=14380 errors=0 cmds=1 req=1 Q=32 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=5 mut=0 checks=14383 errors=0 cmds=1 req=1 Q=32 TX=3 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=6 mut=0 checks=14387 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=7 mut=0 checks=14391 errors=0 cmds=1 req=1 Q=32 TX=12 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=8 mut=0 checks=14352 errors=0 cmds=1 req=1 Q=4 TX=0 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=9 mut=0 checks=14387 errors=0 cmds=1 req=1 Q=32 TX=7 faultA=1 faultB=1
+KVS_RVPAIR PASS mode=10 mut=0 checks=371 errors=0 cmds=1 req=0 Q=0 TX=0 faultA=1 faultB=1
+KVS_RVPAIR_ALL PASS mut=0 modes=11 checks=172913 fails=0
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-648153-1792457468): exit 0
+EXIT 0

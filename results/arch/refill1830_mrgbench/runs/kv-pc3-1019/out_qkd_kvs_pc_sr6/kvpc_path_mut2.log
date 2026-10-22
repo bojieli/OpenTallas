@@ -1,0 +1,15 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=16293  ck out er
+MISMATCH t=16298  ck out er
+MISMATCH t=16298 pll out er
+MISMATCH t=16460 pll out er
+MISMATCH t=16461  ck out er
+MISMATCH t=16462 pll out er
+MISMATCH t=16463  ck out er
+OUT er mismatches=89
+KVPC_PATH FAIL edges=20000 checks=1161248 errors=89 active_out=233268 mut=2
+- /srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-pc3-1019/out_qkd_kvs_pc_sr6/kvpc_path_mut2/bench/kvpc_path_m2/tb.sv:235: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 0.580 s; speed 28.771 us/s
+- Verilator: cpu 0.580 s on 1 threads; allocated 7 MB
+

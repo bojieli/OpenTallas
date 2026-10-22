@@ -1,0 +1,96 @@
+{
+  "job": "hcoll_fj2_r128u3-native32-rc32-grid-a36c24de8",
+  "commit": "a36c24de86d0dceaca2ae2dfb115ae486326d34d",
+  "odb": "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj2_r128u3-native32-rc32-grid-a36c24de8/routes/hcoll_fj2_r128u3_native32_rc32_grid_a36c24de8/work/orfs/results/asap7/opentallas_ot_hgi_coll_fj_q2_r128_asap7_ref_hcoll_fj2_r128u3_native32_rc32_grid_a36c24de8/base/6_final.odb",
+  "before_sha256": "cf45b11ad7498b1a026ece0850ee16864d370112a3d8104a7efe75773ad2eed1",
+  "timing_scope": {
+    "corner_sta": [
+      "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj2_r128u3-native32-rc32-grid-a36c24de8/routes/hcoll_fj2_r128u3_native32_rc32_grid_a36c24de8/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj2_r128u3-native32-rc32-grid-a36c24de8/routes/hcoll_fj2_r128u3_native32_rc32_grid_a36c24de8/work/orfs/logs/asap7/opentallas_ot_hgi_coll_fj_q2_r128_asap7_ref_hcoll_fj2_r128u3_native32_rc32_grid_a36c24de8/base/5_2_route.json"
+    ],
+    "ff_ps": 23.16,
+    "clock_periods_ps": {
+      "core_clk": 833.333
+    },
+    "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj2_r128u3-native32-rc32-grid-a36c24de8/routes/hcoll_fj2_r128u3_native32_rc32_grid_a36c24de8/work/orfs",
+    "post_sdc": [
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "ss_sensitivity_ps": -145.77,
+    "ss_sensitivity_tns_ps": -624.8,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj2_r128u3-native32-rc32-grid-a36c24de8/routes/hcoll_fj2_r128u3_native32_rc32_grid_a36c24de8/corner_sta.json",
+    "ss_ps": 131.68,
+    "ss_tns_ps": 0.0,
+    "errors": [],
+    "drc": 0,
+    "routed_ioref": {
+      "key": "1|/srv/opentallas-scratch/claude/closure-loop/hcoll_fj2_r128u3-native32-rc32-grid-a36c24de8/routes/hcoll_fj2_r128u3_native32_rc32_grid_a36c24de8/work/orfs|0|ae0410-cecorner-1015-pfhc1019",
+      "at": "2026-10-20T04:55:23-07:00",
+      "available": true,
+      "meas_resta_sha256": "ac1e0ee1d4fa3a12cff3f942de76e0a39ab85c7b55146f5e06339dec45f22839",
+      "ioref_edge": {
+        "tt": {
+          "core_clk": {
+            "boundary": 483,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        },
+        "ff": {
+          "core_clk": {
+            "boundary": 483,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        }
+      },
+      "tt": 131.68,
+      "ff": 23.16,
+      "errors": [],
+      "ioref": {
+        "tt": {
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 161.5,
+            "min": 150.9,
+            "max": 168.5,
+            "n": 483,
+            "kind": "boundary"
+          }
+        },
+        "ff": {
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 130.8,
+            "min": 121.1,
+            "max": 137.6,
+            "n": 483,
+            "kind": "boundary"
+          }
+        }
+      },
+      "tt_i2r": 373.47,
+      "tt_out": 271.96,
+      "ff_i2r": 26.27,
+      "ff_out": 79.96,
+      "ff_r2r": 23.16,
+      "json": "/srv/opentallas-scratch/claude/closure-loop/hcoll_fj2_r128u3-native32-rc32-grid-a36c24de8/cl/routed_ioref.a1.json",
+      "registers": 3046,
+      "registers_clocked": 3046
+    },
+    "route_sdc_clock": {
+      "ss_ps": 131.68,
+      "ff_ps": 23.16
+    }
+  },
+  "status_at_launch": "CLOSED",
+  "after_sha256": "cf45b11ad7498b1a026ece0850ee16864d370112a3d8104a7efe75773ad2eed1",
+  "immutable": true
+}

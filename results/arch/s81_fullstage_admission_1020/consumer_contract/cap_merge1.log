@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact/tools/s81_dv/layer_prog/xs_calendar.py", line 553, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact/tools/s81_dv/layer_prog/xs_calendar.py", line 549, in main
+    return {'gen': cmd_gen, 'check': cmd_check, 'collect': cmd_collect, 'cap': cmd_cap}[a.cmd](a)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact/tools/s81_dv/layer_prog/xs_calendar.py", line 494, in cmd_cap
+    assert rows == list(range(rows[0], rows[0] + len(rows))), ('slice share not contiguous', op, g)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('slice share not contiguous', 'ffn.shared_gu', 0)

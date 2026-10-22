@@ -1,0 +1,297 @@
+{
+ "mode": "pipeline",
+ "period": 126,
+ "cfg_lead": 52,
+ "nphases": 11,
+ "cal_rows": 750,
+ "acc_gap": 10,
+ "retire_gap": 6,
+ "tags": [
+  0,
+  2
+ ],
+ "stream_words": 704,
+ "static": {
+  "checks": {
+   "rows_le_4096": true,
+   "rows_time_ordered_unique": true,
+   "streams_disjoint": true,
+   "tag_reuse_after_retire": true,
+   "tag0_even_x_parity": true,
+   "stream_addr_in_rom": true,
+   "isd_delay_line_le_ND": true,
+   "pipe_replay_period_ge_88": true,
+   "pipe_cfg_window_2P_ge_195_plus_cfg_lead": true,
+   "pipe_cfg_lead_ge_48": true,
+   "period_ge_measured_floor_126": true,
+   "launch_spacing_eq_period": true
+  },
+  "PASS": true,
+  "below_floor_negative_control": false
+ },
+ "predicted_span": 1483,
+ "phases": [
+  {
+   "phase": 0,
+   "tag": 0,
+   "abs_accept": 41,
+   "abs_launch": 103,
+   "abs_retire": 174,
+   "abs_stream": [
+    103,
+    166
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  },
+  {
+   "phase": 1,
+   "tag": 2,
+   "abs_accept": 167,
+   "abs_launch": 229,
+   "abs_retire": 300,
+   "abs_stream": [
+    229,
+    292
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  },
+  {
+   "phase": 2,
+   "tag": 0,
+   "abs_accept": 293,
+   "abs_launch": 355,
+   "abs_retire": 426,
+   "abs_stream": [
+    355,
+    418
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  },
+  {
+   "phase": 3,
+   "tag": 2,
+   "abs_accept": 419,
+   "abs_launch": 481,
+   "abs_retire": 552,
+   "abs_stream": [
+    481,
+    544
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  },
+  {
+   "phase": 4,
+   "tag": 0,
+   "abs_accept": 545,
+   "abs_launch": 607,
+   "abs_retire": 678,
+   "abs_stream": [
+    607,
+    670
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  },
+  {
+   "phase": 5,
+   "tag": 2,
+   "abs_accept": 671,
+   "abs_launch": 733,
+   "abs_retire": 804,
+   "abs_stream": [
+    733,
+    796
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  },
+  {
+   "phase": 6,
+   "tag": 0,
+   "abs_accept": 797,
+   "abs_launch": 859,
+   "abs_retire": 930,
+   "abs_stream": [
+    859,
+    922
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  },
+  {
+   "phase": 7,
+   "tag": 2,
+   "abs_accept": 923,
+   "abs_launch": 985,
+   "abs_retire": 1056,
+   "abs_stream": [
+    985,
+    1048
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  },
+  {
+   "phase": 8,
+   "tag": 0,
+   "abs_accept": 1049,
+   "abs_launch": 1111,
+   "abs_retire": 1182,
+   "abs_stream": [
+    1111,
+    1174
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  },
+  {
+   "phase": 9,
+   "tag": 2,
+   "abs_accept": 1175,
+   "abs_launch": 1237,
+   "abs_retire": 1308,
+   "abs_stream": [
+    1237,
+    1300
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  },
+  {
+   "phase": 10,
+   "tag": 0,
+   "abs_accept": 1301,
+   "abs_launch": 1363,
+   "abs_retire": 1434,
+   "abs_stream": [
+    1363,
+    1426
+   ],
+   "nb": 64,
+   "stall_edges": 0,
+   "calendar_base": 0
+  }
+ ],
+ "predicted_span_definition": "first operand capture at a field element -> last frame-root return word = (nphases - 1) x period + 223 (fullsix-calibrated); + priced tail 195 (CAP EDLY 24 + VP hand-off 28 + die wire 143) not included",
+ "floor": {
+  "pipeline": 126,
+  "serial": 224,
+  "evidence": {
+   "p126_pass": "claude/s81-ratefix-1019@ff8fa3745:results/rtl/s81_ratefix_1019/runs/p126c52/ratefix_result.json",
+   "p124_fail": "claude/s81-ratefix-1019@ff8fa3745:results/rtl/s81_ratefix_1019/runs/p124c50/ratefix_result.json",
+   "golden": "claude/toksim-s81c-wqbg-1019@c18b28c61:results/rtl/toksim_s81c_wqbg_1019/wqbg_compare.json"
+  }
+ },
+ "schema": "opentallas.s81_dv.xs_wqb_calendar.v1",
+ "layer": "L0",
+ "slice": "u_s_0S",
+ "slice_index": 0,
+ "ops": [
+  "attn.wq_b"
+ ],
+ "field_phases": [
+  {
+   "phase": 0,
+   "op": "attn.wq_b",
+   "chunk": 0,
+   "nseg": 3,
+   "rows_per_frame": 6,
+   "stream_words": 64
+  },
+  {
+   "phase": 1,
+   "op": "attn.wq_b",
+   "chunk": 1,
+   "nseg": 3,
+   "rows_per_frame": 6,
+   "stream_words": 64
+  },
+  {
+   "phase": 2,
+   "op": "attn.wq_b",
+   "chunk": 2,
+   "nseg": 3,
+   "rows_per_frame": 6,
+   "stream_words": 64
+  },
+  {
+   "phase": 3,
+   "op": "attn.wq_b",
+   "chunk": 3,
+   "nseg": 3,
+   "rows_per_frame": 6,
+   "stream_words": 64
+  },
+  {
+   "phase": 4,
+   "op": "attn.wq_b",
+   "chunk": 4,
+   "nseg": 3,
+   "rows_per_frame": 6,
+   "stream_words": 64
+  },
+  {
+   "phase": 5,
+   "op": "attn.wq_b",
+   "chunk": 5,
+   "nseg": 3,
+   "rows_per_frame": 6,
+   "stream_words": 64
+  },
+  {
+   "phase": 6,
+   "op": "attn.wq_b",
+   "chunk": 6,
+   "nseg": 3,
+   "rows_per_frame": 6,
+   "stream_words": 64
+  },
+  {
+   "phase": 7,
+   "op": "attn.wq_b",
+   "chunk": 7,
+   "nseg": 3,
+   "rows_per_frame": 6,
+   "stream_words": 64
+  },
+  {
+   "phase": 8,
+   "op": "attn.wq_b",
+   "chunk": 8,
+   "nseg": 3,
+   "rows_per_frame": 6,
+   "stream_words": 64
+  },
+  {
+   "phase": 9,
+   "op": "attn.wq_b",
+   "chunk": 9,
+   "nseg": 3,
+   "rows_per_frame": 6,
+   "stream_words": 64
+  },
+  {
+   "phase": 10,
+   "op": "attn.wq_b",
+   "chunk": 10,
+   "nseg": 3,
+   "rows_per_frame": 4,
+   "stream_words": 64
+  }
+ ],
+ "compiler_emitted": true
+}

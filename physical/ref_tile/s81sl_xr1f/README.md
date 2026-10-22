@@ -7,3 +7,25 @@ This kit has the same top, RTL, outline and pins as `s81sl_xr1`, built with `--p
 - SAFE checklist: identical to `../s81sl_xr1/README.md` (XR5 + XR6 tables). Item 1 differs: there is no pin_reg_split, and the fault pin flop is a plain flop->pin.
 - Benches: `results/rtl/s81_slice_1019/xr6/fb_*` (base) and `fm_*` (mutants), with `XR_FOREG=1`.
 - Bind whichever of s81sl_xr1 / s81sl_xr1f closes first under the checklist, and cancel the other. If this one wins, flip the `ot_s81sl_xr1` FOREG default to 1.
+
+## XR1F-PIN re-route (S81-SLICE3-XR1F, 10-19)
+
+The closed view 12b616b54 failed its native audit: launch was 286.1 ps against a 220 ps budget on 42 pins, all of them `x_eps`, `x_scale` or `x_mode`. The receipt is `results/closure_loop/s81sl_xr1f-s81sl_xr1f-12b616b54/native_pin_audit_tt.json`.
+
+- **Cause.** These outputs were enable-hold flops. In the netlist each is a DFFHQN whose QN drives the pin's INV and also a NAND2 -> OA21 hold mux that feeds back into D. Because the NAND2 output is not the flop's D net, `io_flop_at_pins` (`ot_of_fbonly`) did not treat the flop as a pin flop and did not anchor it, so the flops placed in the core.
+- **Fix.**
+  - KEPT masters `x_*_m` hold the value.
+  - The pins are driven by dedicated KEPT copies `x_*_q`. Each copy's D is the master's next state, `tg ? body : master`, and its Q drives only the pin.
+  - The copies are equal to the masters on every cycle.
+  - Cost: +65 flops, 0 cycles.
+- **Pin regions unchanged.** `x_s` has the same 5.9 pins/um density and is a plain DFF that is anchored; it launches in 126-145 ps.
+- **Bench.** The bench now checks the held value on every cycle. A new mutant, `OT_S81SL_XR_MUT_XHOLD`, must FAIL.
+- **Evidence.** Bench and witness logs are in `results/rtl/s81_xr1f_1019/` (Verilator 5.050).
+- **SAFE checklist.**
+
+  | Item | Result |
+  |---|---|
+  | 1 | Fixed: these output flops are now plain flop -> pin. |
+  | 3 | PASS: `tg1_c` drives 16 loads. |
+  | 2, 4-8 | As XR5/XR6/XR7: same outline, pins and clock (km16). |
+  | 8 | 0 cycles. |

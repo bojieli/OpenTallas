@@ -1,0 +1,7 @@
+# L20 pre-gate mapped census recipe
+
+Exact reader RTL/kit source is 57f81b048; no RTL changes. Pure synthesis in an admitted ORFS container, no layout gate. External idxrg_native_top reproduces every source pin and instantiates dsdv_idx_rg with SRAM_MACRO=1. The external wrapper avoids Yosys hierarchy -chparam duplicate-module assertion and chparam-renamed-top failure; both failed attempt logs remain under attempt1/attempt2 in the remote result root. Wrapper does not tie pins or replace functional logic.
+
+Launch: ot-run --mem 96 --threads 4 --disk 20 --dir /srv/opentallas-scratch/claude/codex-s81-l20-native-1020 -- bash run.sh. Source tar contains exact kit SRCS and tools/textbook_lint.py. prepare.py unpacks actual ORFS RVT TT libraries, reads source, elaborates and flattens, maps flops and combinational gates, writes mapped.v and mapped.json, then runs textbook with report/refusal thresholds32 and reach405. The source-level synthesis omits kit-injected pin landing registers: no positive pin-registration or reset-landing qualification follows from this recipe alone. Physical wire reach requires later placement evidence and source/kit path accounting.
+
+Attempt3 is live on ep5 unit oth-ubuntu-1363816-1792481896, local ot-run PID2587927, at this commit; no native PASS is claimed. Results remain in the remote directory, local admission log artifacts/codex-s81-l20-native-1020/otrun3.log. Next inspect full mapped census; repair any >32 load drivers including reset, >2kb storage arrays, tied functional ports and pin registration before layout.

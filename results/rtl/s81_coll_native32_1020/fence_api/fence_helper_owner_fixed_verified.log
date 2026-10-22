@@ -1,0 +1,204 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+[WARNING IFP-0028] Core area lower left (1.000, 1.000) snapped to (1.026, 1.080).
+[INFO IFP-0001] Added 140 rows of 1443 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 80.000 40.000 ) um
+[INFO IFP-0101] Core BBox: (  1.026  1.080 ) ( 78.948 38.880 ) um
+[INFO IFP-0102] Core area:                         2945.452 um^2
+[INFO IFP-0103] Total instances area:                11.664 um^2
+[INFO IFP-0104] Effective utilization:                0.004
+[INFO IFP-0105] Number of instances:                     40
+NATIVE_FENCE_CREATED name=left box=5 5 20 25 cells=20
+NATIVE_FENCE_CREATED name=right box=60 5 75 25 cells=20
+NATIVE_FENCE_OWNER_NEGATIVE_PASS rejected_before_mutation=1 old_group=left
+[INFO PPL-0070] Pin clk placed at (39.98um, 0.07um) instead of (40.00um, 0.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin d placed at (0.00um, 39.93um) instead of (0.00um, 20.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[INFO PPL-0070] Pin q placed at (80.02um, 39.93um) instead of (80.00um, 20.00um). Pin was snapped to a routing track, to the manufacturing grid or moved away from blocked region.
+[WARNING EST-0010] Signal horizontal wire resistance is 0.
+[WARNING EST-0011] Signal vertical wire resistance is 0.
+[WARNING EST-0012] Signal horizontal wire capacitance is 0.
+[WARNING EST-0013] Signal vertical wire capacitance is 0.
+[WARNING EST-0010] Clock horizontal wire resistance is 0.
+[WARNING EST-0011] Clock vertical wire resistance is 0.
+[WARNING EST-0012] Clock horizontal wire capacitance is 0.
+[WARNING EST-0013] Clock vertical wire capacitance is 0.
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  1.026  1.080 ) ( 78.948 38.880 ) um
+[INFO GPL-0016] Core area:                    2945.452 um^2
+[INFO GPL-0036] Movable instances area:         11.664 um^2
+[INFO GPL-0037] Total instances area:           11.664 um^2
+[INFO GPL-0035] Pin density area adjust:         0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:               150
+[INFO GPL-0007] Movable instances:                   0
+[INFO GPL-0008] Fixed instances:                     0
+[INFO GPL-0009] Dummy instances:                   150
+[INFO GPL-0010] Number of nets:                     42
+[INFO GPL-0011] Number of pins:                    123
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 80.000 40.000 ) um
+[INFO GPL-0013] Placement BBox: (  1.026  1.080 ) ( 78.948 38.880 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                  2945.452 um^2
+[INFO GPL-0017] Fixed instances area:          609.080 um^2
+[INFO GPL-0018] Movable instances area:          0.000 um^2
+[INFO GPL-0019] Utilization:                     0.000 %
+[INFO GPL-0020] Standard cells area:             0.000 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: left
+[INFO GPL-0006] Number of instances:                20
+[INFO GPL-0007] Movable instances:                  20
+[INFO GPL-0008] Fixed instances:                     0
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                     42
+[INFO GPL-0011] Number of pins:                    123
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 80.000 40.000 ) um
+[INFO GPL-0013] Placement BBox: (  5.000  5.000 ) ( 20.000 25.000 ) um
+[INFO GPL-0014] Region name: left.
+[INFO GPL-0015] Region area:                   300.000 um^2
+[INFO GPL-0017] Fixed instances area:            0.000 um^2
+[INFO GPL-0018] Movable instances area:          5.832 um^2
+[INFO GPL-0019] Utilization:                     1.944 %
+[INFO GPL-0020] Standard cells area:             5.832 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0032] ---- Initialize Region: right
+[INFO GPL-0006] Number of instances:                20
+[INFO GPL-0007] Movable instances:                  20
+[INFO GPL-0008] Fixed instances:                     0
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                     42
+[INFO GPL-0011] Number of pins:                    123
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 80.000 40.000 ) um
+[INFO GPL-0013] Placement BBox: ( 60.000  5.000 ) ( 75.000 25.000 ) um
+[INFO GPL-0014] Region name: right.
+[INFO GPL-0015] Region area:                   300.000 um^2
+[INFO GPL-0017] Fixed instances area:            0.000 um^2
+[INFO GPL-0018] Movable instances area:          5.832 um^2
+[INFO GPL-0019] Utilization:                     1.944 %
+[INFO GPL-0020] Standard cells area:             5.832 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[WARNING GPL-0123] No placeable instances in the top-level region. Removing it.
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 0	Region center = 40
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00000010 HPWL: 254027
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00000005 HPWL: 254230
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000010 HPWL: 239038
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00000006 HPWL: 232106
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000006 HPWL: 230249
+[INFO GPL-0033] ---- Initialize Nesterov Region: left
+[INFO GPL-0023] Placement target density:       0.3000
+[INFO GPL-0024] Movable insts average area:      0.292 um^2
+[INFO GPL-0025] Ideal bin area:                  0.972 um^2
+[INFO GPL-0026] Ideal bin count:                   308
+[INFO GPL-0027] Total bin area:                300.000 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,     16
+[INFO GPL-0029] Bin size (W * H):       0.938 *  1.250 um
+[INFO GPL-0030] Number of bins:                    256
+[INFO GPL-0033] ---- Initialize Nesterov Region: right
+[INFO GPL-0023] Placement target density:       0.3000
+[INFO GPL-0024] Movable insts average area:      0.292 um^2
+[INFO GPL-0025] Ideal bin area:                  0.972 um^2
+[INFO GPL-0026] Ideal bin count:                   308
+[INFO GPL-0027] Total bin area:                300.000 um^2
+[INFO GPL-0028] Bin count (X, Y):          16 ,     16
+[INFO GPL-0029] Bin size (W * H):       0.938 *  1.250 um
+[INFO GPL-0030] Number of bins:                    256
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+        0 |   0.7066 |  2.166260e+02 |   +0.00% |  3.10e-12 |  (left)
+        0 |   0.7066 |  2.166260e+02 |   +0.00% |  3.00e-12 |  (right)
+       10 |   0.4071 |  2.006510e+02 |   -7.37% |  5.05e-12 |  (left)
+       10 |   0.4083 |  2.006510e+02 |   -7.37% |  4.88e-12 |  (right)
+       20 |   0.2030 |  1.968920e+02 |   -1.87% |  7.74e-12 |  (left)
+       20 |   0.2035 |  1.968920e+02 |   -1.87% |  7.49e-12 |  (right)
+       30 |   0.1262 |  1.945680e+02 |   -1.18% |  1.14e-11 |  (left)
+       30 |   0.1265 |  1.945680e+02 |   -1.18% |  1.10e-11 |  (right)
+       34 |   0.0994 |  1.930910e+02 |          |  1.38e-11 |  left
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'left' placement finished at iteration 34
+[INFO GPL-1002] Placed Cell Area                5.8320
+[INFO GPL-1003] Available Free Area           300.0000
+[INFO GPL-1004] Minimum Feasible Density        0.0200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0216
+[INFO GPL-1008]     - For 80% usage of free space: 0.0243
+[INFO GPL-1009]     - For 50% usage of free space: 0.0389
+       34 |   0.0994 |  1.930910e+02 |          |  1.34e-11 | right
+---------------------------------------------------------------
+[INFO GPL-1016] Region 'right' placement finished at iteration 34
+[INFO GPL-1002] Placed Cell Area                5.8320
+[INFO GPL-1003] Available Free Area           300.0000
+[INFO GPL-1004] Minimum Feasible Density        0.0200 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0216
+[INFO GPL-1008]     - For 80% usage of free space: 0.0243
+[INFO GPL-1009]     - For 50% usage of free space: 0.0389
+[INFO GPL-1014] Final placement area: 11.66 (+0.00%)
+NATIVE_FENCE_CHECK_PASS name=left stage=GPL cells=20 box=5 5 20 25
+NATIVE_FENCE_CHECK_PASS name=right stage=GPL cells=20 box=60 5 75 25
+NATIVE_FENCE_GPL_PASS groups=2 cells=40
+NATIVE_FENCE_ADDED name=right cells=1
+NATIVE_FENCE_ADDED name=left cells=1
+NATIVE_FENCE_SEED name=left new_cells=1 max_move_um=26.35
+NATIVE_FENCE_SEED name=right new_cells=1 max_move_um=25.27
+[INFO DPL-0006] Core area: 2945.45 um^2
+[INFO DPL-0007] Movable instances area: 12.25 um^2
+[INFO DPL-0008] Fixed instances area within core: 0.00 um^2
+[INFO DPL-0009] Utilization: 0.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 42 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.01s
+Placement Analysis
+---------------------------------
+total displacement         14.2 u
+average displacement        0.3 u
+max displacement            0.8 u
+original HPWL             193.5 u
+legalized HPWL            207.0 u
+delta HPWL                    7 %
+
+NATIVE_FENCE_CHECK_PASS name=left stage=DP cells=21 box=5 5 20 25
+NATIVE_FENCE_CHECK_PASS name=right stage=DP cells=21 box=60 5 75 25
+NATIVE_FENCE_DP_PASS groups=2 cells=40
+NATIVE_FENCE_FIXED_NEGATIVE_PASS status=FIRM no_batch_mutation=1
+NATIVE_FENCE_FIXED_NEGATIVE_PASS status=LOCKED no_batch_mutation=1
+NATIVE_FENCE_FIXED_NEGATIVE_PASS status=COVER no_batch_mutation=1
+NATIVE_BAND_CHECK_PASS stage=FINAL cells=42 box=1 1 79 39
+NATIVE_FENCE_BIRTH_DP_PASS added=2 total=42
+NATIVE_FENCE_GPL_DP_PASS groups=2 cells=40

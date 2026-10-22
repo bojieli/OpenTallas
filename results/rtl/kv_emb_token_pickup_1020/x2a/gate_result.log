@@ -1,0 +1,28 @@
+GATE WARN macro_grid: qkd_embedding_row_tx_ctx#0: origin (86.424, 86.4) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)  -> FIX: build the child on the common lattice
+GATE WARN fill: parent kit without std_area_um2: fill not computed at gen (the gate measures it)  -> FIX: pass --area-um2 / std_area_um2 from the synthesis smoke
+GATE INFO layer: cluster: PG M7 stripes as pins, signals M2-M7, parent strap M8; children PG {'qkd_embedding_row_tx_ctx': 'M5'}
+GATE WARN pins: 1-bit vector ports ['d2d__emb_tx_slot', 'rowtx__emb_tx_v', 'px_st', 'emb_fault']: retain declared indices for literal clock entries; check actual mapped pin names for a hand pin list  -> FIX: use the actual RTL and mapped pin names
+GATE INFO remote: ot-run selected ot-epyc7 for 48 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_qkd_kvs_emb_x2a_20261020-022242.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_qkd_kvs_emb_x2a_20261020-022242.log; host dir ot-epyc7:/srv/opentallas-scratch/claude/ref_gate/qkd_kvs_emb_x2a-20261020-022242
+GATE INFO native_census: mapped dynamic load limit32 PASS; max=32
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc7 in 138 s (gate total 1202 s)
+GATE INFO floorplan.pin_geometry: actual pin geometry PASS: {'signal_clock_pins': 1956, 'pin_rectangles': 1956, 'pin_track_checked': 1956, 'pin_track_inaccessible': 0, 'pin_rectangles_outside': 0, 'missing_geometry': 0}; dump SHA256 fa6ebae6c6d80dfde5e54c17cb2402f2fdc88a3e4d81c684e9ae0e378bc87717
+GATE INFO util: synthesized std area 2364 um2 + macros 32659 in core 114606: util 3% (std-cell density 3.0% of placeable 77864 um2; total fill 30.6%)
+GATE INFO port_latency: elaborated pin registers: 8 input / 6 output ports +1 edge; 1 ports pass through (clock/reset/excluded/inout)
+GATE INFO textbook: PASS qkd_kvs_emb_ctx cells 15,264 flops 5,203 depth 480.1 ps util 0.3057 reach 0.0 um (0.6 s)
+GATE INFO cts_calibration: ss insertion all 147.4..533.8 ps (spread 386.4), boundary mean 503.3; tt insertion all 111.6..410.8 ps (spread 299.2), boundary mean 381.1; ff insertion all 90.4..337.7 ps (spread 247.3), boundary mean 307.8; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: spine built on port ck
+GATE INFO clock_spine: OT_SPINE iter 2 (fine) leaves 658 sinks 5204 cells 2122 leaf arrival 297.9..336.1 ps (spread 38.3) pad 66.2 / 15.4 ps
+GATE INFO clock_spine: OT_SPINE iter 3 (fine) leaves 658 sinks 5204 cells 2193 leaf arrival 308.4..336.1 ps (spread 27.7) pad 66.2 / 16.2 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/qkd_kvs_emb_x2a/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      335 paths, worst slack 151.5 ps (e.g. u_ot_pr_core.u_join.last[8]$_DFFE_PN0P_/D)
+GATE INFO path_classes: reg->out      265 paths, worst slack 276.3 ps (e.g. px_tep[5])
+GATE INFO path_classes: setup WNS 1.5146561782586332e-10 hold WNS 3.23812643365784e-11
+GATE WARN clock_rule: root port:ck: 5,204 sinks on the largest root; measured TT insertion 410.8 ps, FF insertion 337.7 ps, TT pin-flop spread 53.4 ps, FF pin-flop spread 52.5 ps; WARN: insertion 410.8 ps > 300 (guidance; boundary matched by parent compensation / landing)  -> FIX: guidance only (owner 10-17 0dq): match the boundary by parent compensation or a landed link
+GATE INFO layout_images: LOOK at these before submitting: floorplan /home/ubuntu/wt/kv-emb6-1020/physical/ref_tile/qkd_kvs_emb_x2a/gate_layout/floorplan.png; density /home/ubuntu/wt/kv-emb6-1020/physical/ref_tile/qkd_kvs_emb_x2a/gate_layout/density.png
+GATE WARN fill: fill 30% = (hard macros 32659.2 + synthesized std cells 2380.1) / outline 117573.1 um2; pin demand per face: S 673 pins over 186.5/388.8 um (48%), N 16 pins over 81.0/388.8 um (21%), W 626 pins over 88.9/302.4 um (29%), E 713 pins over 159.6/302.4 um (53%) (pin-bound: the outline is the exact KV die frame slot of the closed i2 view (388.8 x 302.4, kvs_tile_kits SEED_OUTLINE / kv_static_die FRAME; a smaller outline is a slot_change of the KV die plan). The height is set by the E face: 786 pins over 227.7 of 302.4 um (75%) at pin_min_tracks 3; the width by the 216 x 151.2 hard u_rowtx plus its channels and the S face 673 pins. Gate e1 3d52043cd fill 29% (macro 32659 + std 1890 um2))
+GATE INFO trial_route: trial GRT: total overflow 0; worst layer M3 6.35% used; GRT 400 s
+PRE_ROUTE_GATE: WARN (0 fail, 5 warn)
+GATE: qkd_kvs_emb_x2a/gate_result.json written (exact staged source binding; commit it with the kit)

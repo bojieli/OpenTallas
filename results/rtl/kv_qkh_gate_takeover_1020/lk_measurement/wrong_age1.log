@@ -1,0 +1,19 @@
+LK_AGE_MISMATCH edge=201 lag=1 expected=bf31c364 actual=3f0dcb34 flags=01/00
+LK_AGE_MISMATCH edge=202 lag=1 expected=40177116 actual=bf31c364 flags=00/01
+LK_AGE_MISMATCH edge=203 lag=1 expected=bf87e97d actual=40177116 flags=01/01
+LK_AGE_MISMATCH edge=204 lag=1 expected=be3761a1 actual=bf87e97d flags=00/00
+LK_AGE_MISMATCH edge=205 lag=1 expected=bea91f7b actual=be3761a1 flags=01/01
+LK_AGE lag=0 checked=898 mism=898
+LK_AGE lag=1 checked=899 mism=899
+LK_AGE lag=2 checked=900 mism=0
+LK_AGE lag=3 checked=900 mism=900
+LK_AGE lag=4 checked=900 mism=900
+LK_AGE lag=5 checked=900 mism=900
+LK_AGE lag=6 checked=900 mism=900
+LK_AGE lag=7 checked=900 mism=900
+LK_AGE lag=8 checked=900 mism=900
+LK_AGE_FAIL seed=-1172255673 expected_lag=1 checked=899 mism=899
+- /srv/opentallas-scratch/claude/codex/qkh-lk-wrapper-measure-1020/tb_lk_wrapper_age.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.926 s; speed 2.998 us/s
+- Verilator: cpu 0.926 s on 1 threads; allocated 35 MB

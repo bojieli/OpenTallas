@@ -1,0 +1,6 @@
+ot-run: ot-epyc5       admits   347 GB (avail 399, growth 156, headroom 0, waiters 1/400 GB) load 157/128 running 24 disk 1825 GB 
+ot-run: ot-pve1        admits   180 GB (avail 153, growth 27, headroom 0, waiters 0/0 GB) load 44/28 running 14 disk 1217 GB 
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-4074935-1792381202 after 0 s
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-4074935-1792381202): exit 0
+LAUNCH DONE 2026-10-18T20:40:16-07:00 host=ot-epyc5

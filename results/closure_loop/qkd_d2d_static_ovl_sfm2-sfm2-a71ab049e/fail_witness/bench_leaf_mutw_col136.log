@@ -1,0 +1,8 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_d2d_static_ovl_sfm2-sfm2-a71ab049e bench bench_leaf_mutw_col136 host ot-epyc7 run /srv/opentallas-scratch/claude/closure-loop/qkd_d2d_static_ovl_sfm2-sfm2-a71ab049e log cl/bench_leaf_mutw_col136.a1b1.log captured 2026-10-19T19:43:32-07:00
+# fail_regex '^LEAF_EQ_FAIL mismatches$'
+MISMATCH cycle 5 ref 1418e7524c00b8d83dfefabb33d277ec04d dut 0418e7524c00b8d83dfefabb33d277ec04d
+MISMATCH cycle 6 ref 10a77d74e535e591a88065d2ece181b85ca dut 00a77d74e535e591a88065d2ece181b85ca
+MISMATCH cycle 16 ref 113392d6c0646c709a7b32573e2f9708c05 dut 013392d6c0646c709a7b32573e2f9708c05
+LEAF_EQ_FAIL mismatches
+LEAF_EQ_FAIL

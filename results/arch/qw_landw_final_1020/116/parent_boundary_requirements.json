@@ -1,0 +1,54 @@
+{
+  "scope": "Per-clock candidate compensation; actual parent topology adoption and re-audit REQUIRED before bind",
+  "authority": "Per-clock routed insertion.json and ETMs; no cross-root averaging",
+  "roots": {
+    "tt": {
+      "ck": {
+        "proposed_parent_comp_ps": 97.1,
+        "boundary_min_ps": 93.8,
+        "boundary_max_ps": 100.1,
+        "spread_ps": 6.3,
+        "max_mismatch_at_proposed_ps": 3.3,
+        "clock_match_comp_interval_ps": [
+          20.1,
+          173.8
+        ]
+      },
+      "ck_s": {
+        "proposed_parent_comp_ps": 146.4,
+        "boundary_min_ps": 143.1,
+        "boundary_max_ps": 149.0,
+        "spread_ps": 5.9,
+        "max_mismatch_at_proposed_ps": 3.3,
+        "clock_match_comp_interval_ps": [
+          69.0,
+          223.1
+        ]
+      }
+    },
+    "ff": {
+      "ck": {
+        "proposed_parent_comp_ps": 77.9,
+        "boundary_min_ps": 74.5,
+        "boundary_max_ps": 81.0,
+        "spread_ps": 6.5,
+        "max_mismatch_at_proposed_ps": 3.4,
+        "clock_match_comp_interval_ps": [
+          1.0,
+          154.5
+        ]
+      },
+      "ck_s": {
+        "proposed_parent_comp_ps": 113.8,
+        "boundary_min_ps": 110.3,
+        "boundary_max_ps": 115.8,
+        "spread_ps": 5.5,
+        "max_mismatch_at_proposed_ps": 3.5,
+        "clock_match_comp_interval_ps": [
+          35.8,
+          190.3
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+ot-run: ot-epyc5       admits  1089 GB (avail 871, growth 109, headroom 0, waiters 0/0 GB) load 59/128 running 22 disk 322 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-epyc9       admits   944 GB (avail 720, growth 59, headroom 0, waiters 0/0 GB) load 108/128 running 22 disk 102 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-romopt-c
+ot-run: -> ot-epyc5
+ot-heavy: request 24G is charged 9G (class 'ksearch.sh:u_f_#L#' measured peak 0.1G, n=3+0 proved); the cap stays 24G
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-1429779-1792518228 after 0 s
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 0 best faults 8 root words 34 cfg (13, 60000, 10, 10) time 76
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 1 best faults 7 root words 32 cfg (1021, 60000, 10, 10) time 125
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 2 best faults 6 root words 32 cfg (2000, 60000, 20, 10) time 168
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 3 best faults 5 root words 32 cfg (3005, 60000, 10, 10) time 214
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 4 best faults 5 root words 32 cfg (3005, 60000, 10, 10) time 263
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 5 best faults 5 root words 32 cfg (3005, 60000, 10, 10) time 309
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 6 best faults 5 root words 32 cfg (3005, 60000, 10, 10) time 361
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 7 best faults 5 root words 32 cfg (3005, 60000, 10, 10) time 407
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 8 best faults 5 root words 32 cfg (3005, 60000, 10, 10) time 451
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 9 best faults 5 root words 32 cfg (3005, 60000, 10, 10) time 501
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 10 best faults 5 root words 32 cfg (3005, 60000, 10, 10) time 543
+KSLOT_SEARCH col_h10|fp4|5120|5|6|3|r12 round 11 best faults 5 root words 32 cfg (3005, 60000, 10, 10) time 588
+KSLOT_SEARCH_NO_LAYOUT col_h10|fp4|5120|5|6|3|r12 best faults 5
+KSLOT_SEARCH_DONE []
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-1429779-1792518228): exit 0

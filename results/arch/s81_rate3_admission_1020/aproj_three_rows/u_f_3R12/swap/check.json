@@ -1,0 +1,29 @@
+{
+ "frame": "u_f_3R12",
+ "master": "col_h9_MX_l4",
+ "slice": "u_s_3N",
+ "physical_frames": 8,
+ "mutant": "swap",
+ "rows": [
+  236,
+  237,
+  238
+ ],
+ "PASS": false,
+ "expected_PASS": false,
+ "errors": [
+  "MISMATCH edge 399 row 2 lo 0 k 2 got bd22daf8/0 want bce88b86/0",
+  "MISMATCH edge 410 row 0 lo 2 k 1 got 3bbfa0e7/0 want 3b8168b6/0",
+  "MISMATCH edge 411 row 1 lo 2 k 1 got 3d07a4b6/0 want 3d5d4dd4/0",
+  "PLAN_MISMATCH predicted 8 words, got 8; first diff ((399, 2, (0, 2, 5), 3169356678, 0), (399, 2, (0, 2, 5), 3173178104, 0))"
+ ],
+ "summary": {
+  "words": 8,
+  "rows": 3,
+  "complete_rows_at_root": 0,
+  "partial_words": 8,
+  "plan_exact": false,
+  "end": "END edges=2063 ret_words=8 xo_checked=2061 fault=0"
+ },
+ "spine_go_to_last_ret": 356
+}

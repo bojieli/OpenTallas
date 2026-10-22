@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.reset_landing.v1",
+ "top": "qkd_kvs_pc_h",
+ "enable": false,
+ "reason": "Landed in RTL (OT_KV_PC_RLAND=1, kv_static_die.pc_rland_text): rst_n -> ot_reset_sync u_rland_ck on ck, hrst_n -> ot_reset_sync u_rland_hck on hck, 2 registered stages each at the face, every child reset pin on the landed net.  The flow's OT_RST_LAND lands all reset_ports on ONE clock (it would move the hck reset release onto ck)."
+}

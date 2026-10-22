@@ -1,0 +1,4 @@
+XS_PLACE_CHECK PASS u_f_0L00 ffn.shared_gu phase 1 mutant=None rows=4 fixture_rows=4 errors=0 END edges=2288 ret_words=28 xo_checked=2286 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.shared_gu phase 2 mutant=None rows=3 fixture_rows=3 errors=0 END edges=2288 ret_words=28 xo_checked=2286 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.shared_gu phase 3 mutant=None rows=3 fixture_rows=3 errors=0 END edges=2288 ret_words=28 xo_checked=2286 fault=4
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 145 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 715 span 652 errors 4 ['FAULT edge 449 status 11 lx 0', 'FAULT edge 450 status 11 lx 0', 'FAULT edge 451 status 11 lx 0']

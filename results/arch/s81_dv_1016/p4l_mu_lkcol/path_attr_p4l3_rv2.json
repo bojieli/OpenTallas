@@ -1,0 +1,2707 @@
+{
+ "schema": "mu_die_s81.path_attr.v1",
+ "source": "case_p4l3_rv2 out/place.odb (pre-repeater), L-route min of HV/VH per driver-sink pair, macro bodies (isBlock), eps 0.5 um",
+ "nets_signal": 1179562,
+ "wire_bit_mm": 402916,
+ "over_block_bit_mm": 8593,
+ "est_obst_repeaters": 53704,
+ "by_class": {
+  "xring": 2510.2,
+  "unit": 1368.5,
+  "hbm": 1211.6,
+  "x_frame": 1014.6,
+  "coll": 892.8,
+  "nonplan:blk": 545.2,
+  "xtier": 486.6,
+  "ret": 280.3,
+  "nonplan:rs_": 164.9,
+  "nonplan:rsg_rs_": 67.0,
+  "attn": 42.1,
+  "reset:unit": 5.2,
+  "reset:xring": 1.7,
+  "reset:x_frame": 1.0,
+  "reset:hbm": 0.4,
+  "reset:coll": 0.3,
+  "reset:xtier": 0.3,
+  "reset:ret": 0.2,
+  "reset:attn": 0.0
+ },
+ "by_kind": {
+  "relay": 4518.1,
+  "OWN_END": 1790.2,
+  "landing": 1267.2,
+  "frame": 632.6,
+  "slice": 264.8,
+  "svc": 71.6,
+  "link": 19.3,
+  "ctrl": 16.7,
+  "unit": 12.2
+ },
+ "top_blocks": [
+  [
+   "u_f_4L02",
+   "rv_f_4L02",
+   47.9
+  ],
+  [
+   "ld_hrq_15",
+   "dsfd_dvland_682",
+   47.0
+  ],
+  [
+   "u_f_0L11",
+   "rv_f_0L11",
+   41.6
+  ],
+  [
+   "u_f_0L01",
+   "rv_f_0L01",
+   39.8
+  ],
+  [
+   "u_f_7R01",
+   "rv_f_7R01",
+   39.8
+  ],
+  [
+   "u_f_3R02",
+   "rv_f_3R02",
+   39.6
+  ],
+  [
+   "u_f_7R11",
+   "rv_f_7R11",
+   39.5
+  ],
+  [
+   "ld_hrq_13",
+   "dsfd_dvland_682",
+   34.7
+  ],
+  [
+   "u_f_7R12",
+   "rv_f_7R12",
+   30.5
+  ],
+  [
+   "u_f_7R02",
+   "rv_f_7R02",
+   29.8
+  ],
+  [
+   "u_f_0L02",
+   "rv_f_0L02",
+   27.8
+  ],
+  [
+   "u_f_0L12",
+   "rv_f_0L12",
+   26.4
+  ],
+  [
+   "u_s_0N",
+   "rv_s_0N",
+   26.1
+  ],
+  [
+   "ld_cw_seqhost",
+   "dsfd_dvland_276l",
+   25.1
+  ],
+  [
+   "u_rsv_06",
+   "rv_rsv_06",
+   22.2
+  ],
+  [
+   "u_s_0S",
+   "rv_s_0S",
+   20.9
+  ],
+  [
+   "u_s_2N",
+   "rv_s_2N",
+   20.6
+  ],
+  [
+   "u_s_7N",
+   "rv_s_7N",
+   19.9
+  ],
+  [
+   "ld_lr_lk_ES0",
+   "dsfd_dvland_562",
+   19.9
+  ],
+  [
+   "ld_lt_lk_WS1",
+   "dsfd_dvland_512",
+   19.6
+  ],
+  [
+   "ld_lr_lk_EN0",
+   "dsfd_dvland_562",
+   19.5
+  ],
+  [
+   "ld_lt_lk_WN1",
+   "dsfd_dvland_512",
+   19.5
+  ],
+  [
+   "u_s_5N",
+   "rv_s_5N",
+   19.5
+  ],
+  [
+   "u_s_6N",
+   "rv_s_6N",
+   18.3
+  ],
+  [
+   "ld_jd_W",
+   "dsfd_dvland_276l",
+   17.8
+  ],
+  [
+   "ld_hrd_12",
+   "dsfd_dvland_562",
+   17.3
+  ],
+  [
+   "ld_lr_lk_WN0",
+   "dsfd_dvland_562",
+   16.7
+  ],
+  [
+   "ld_hrd_15",
+   "dsfd_dvland_562",
+   16.7
+  ],
+  [
+   "u_s_1N",
+   "rv_s_1N",
+   16.6
+  ],
+  [
+   "ld_lr_lk_WS0",
+   "dsfd_dvland_562",
+   16.6
+  ],
+  [
+   "ld_hrd_11",
+   "dsfd_dvland_562",
+   16.6
+  ],
+  [
+   "ld_lt_lk_ES1",
+   "dsfd_dvland_512",
+   16.3
+  ],
+  [
+   "ld_lt_lk_EN1",
+   "dsfd_dvland_512",
+   16.2
+  ],
+  [
+   "u_ctrl_15",
+   "rv_ctrl_15",
+   16.0
+  ],
+  [
+   "u_s_1S",
+   "rv_s_1S",
+   15.9
+  ],
+  [
+   "ld_hrd_13",
+   "dsfd_dvland_562",
+   15.3
+  ],
+  [
+   "u_s_7S",
+   "rv_s_7S",
+   15.3
+  ],
+  [
+   "ld_xrE_0N_l3",
+   "dsfd_dvland_276",
+   15.2
+  ],
+  [
+   "ld_xrE_4S_l3",
+   "dsfd_dvland_276",
+   15.1
+  ],
+  [
+   "ld_xrE_5S_l3",
+   "dsfd_dvland_276",
+   15.1
+  ]
+ ],
+ "lanes": [
+  {
+   "key": "ht_7N",
+   "plan_link": true,
+   "cls": "unit",
+   "plan_bits": 276,
+   "plan_L": 24520.9,
+   "nets": 17035,
+   "bit_mm_over_block": 226.09,
+   "own_end_bit_mm": 0.0,
+   "est_obst_repeaters": 1413,
+   "wire_bit_mm": 6442.1,
+   "top_blocks": [
+    [
+     "ld_hf_7N_l2",
+     5.44
+    ],
+    [
+     "st_rsl_hf_7N_l2_58",
+     3.09
+    ],
+    [
+     "st_rsl_hf_7N_l2_48",
+     3.09
+    ],
+    [
+     "st_rsl_hf_7N_l2_47",
+     3.09
+    ]
+   ],
+   "by_kind": {
+    "relay": 220.64,
+    "landing": 5.44
+   },
+   "example": [
+    "nht_7N_fck[0]",
+    "fwd_ht_7N/GCLK@17692.21,16146.94",
+    "st_ht_7N_0/ck@17452.39,16296.96"
+   ]
+  },
+  {
+   "key": "jd_W",
+   "plan_link": true,
+   "cls": "unit",
+   "plan_bits": 276,
+   "plan_L": 13362.9,
+   "nets": 9161,
+   "bit_mm_over_block": 201.59,
+   "own_end_bit_mm": 0.28,
+   "est_obst_repeaters": 1260,
+   "wire_bit_mm": 3456.8,
+   "top_blocks": [
+    [
+     "u_f_4L02",
+     47.89
+    ],
+    [
+     "u_f_3R02",
+     39.57
+    ],
+    [
+     "st_rs_37_19_1",
+     2.62
+    ],
+    [
+     "st_rs_37_19_2",
+     2.62
+    ]
+   ],
+   "by_kind": {
+    "relay": 112.79,
+    "frame": 87.45,
+    "landing": 0.83,
+    "OWN_END": 0.28,
+    "unit": 0.25
+   },
+   "example": [
+    "njd_W_fck[10]",
+    "st_jd_W_9/ck_o@14506.71,7675.57",
+    "st_jd_W_10/ck@14809.57,7781.77"
+   ]
+  },
+  {
+   "key": "jw_W_l1",
+   "plan_link": true,
+   "cls": "unit",
+   "plan_bits": 276,
+   "plan_L": 13392.9,
+   "nets": 9474,
+   "bit_mm_over_block": 194.8,
+   "own_end_bit_mm": 0.45,
+   "est_obst_repeaters": 1218,
+   "wire_bit_mm": 3457.7,
+   "top_blocks": [
+    [
+     "st_rs_43_30_1",
+     3.39
+    ],
+    [
+     "st_rs_43_31_1",
+     3.26
+    ],
+    [
+     "st_rsl_jd_W_8",
+     3.09
+    ],
+    [
+     "st_rsl_jd_W_7",
+     3.09
+    ]
+   ],
+   "by_kind": {
+    "relay": 194.35,
+    "OWN_END": 0.45
+   },
+   "example": [
+    "njw_W_l1_fck[0]",
+    "fwd_jw_W_l1/GCLK@17706.20,13736.39",
+    "st_jw_W_l1_0/ck@17452.39,13620.40"
+   ]
+  },
+  {
+   "key": "hf_7N_l1",
+   "plan_link": true,
+   "cls": "unit",
+   "plan_bits": 276,
+   "plan_L": 24076.9,
+   "nets": 16903,
+   "bit_mm_over_block": 191.25,
+   "own_end_bit_mm": 11.5,
+   "est_obst_repeaters": 1195,
+   "wire_bit_mm": 6395.7,
+   "top_blocks": [
+    [
+     "ld_hf_7N_l0",
+     6.57
+    ],
+    [
+     "ld_hf_7N_l2",
+     5.21
+    ],
+    [
+     "st_rsl_hf_7N_l0_43",
+     3.09
+    ],
+    [
+     "st_rsl_hf_7N_l0_44",
+     3.09
+    ]
+   ],
+   "by_kind": {
+    "relay": 167.89,
+    "landing": 11.78,
+    "OWN_END": 11.5,
+    "unit": 0.08
+   },
+   "example": [
+    "nhf_7N_l1_fck[10]",
+    "st_hf_7N_l1_9/ck_o@28777.96,24759.44",
+    "st_hf_7N_l1_10/ck@28382.04,24775.47"
+   ]
+  },
+  {
+   "key": "hf_7N_l2",
+   "plan_link": true,
+   "cls": "unit",
+   "plan_bits": 276,
+   "plan_L": 24298.9,
+   "nets": 16647,
+   "bit_mm_over_block": 164.99,
+   "own_end_bit_mm": 0.97,
+   "est_obst_repeaters": 1031,
+   "wire_bit_mm": 6348.6,
+   "top_blocks": [
+    [
+     "ld_hf_7N_l1",
+     6.57
+    ],
+    [
+     "st_rsg_rs_45_33_1_void4_21",
+     4.51
+    ],
+    [
+     "st_rsg_rs_45_33_1_void4_2",
+     4.51
+    ],
+    [
+     "st_rsl_ht_7N_0",
+     3.13
+    ]
+   ],
+   "by_kind": {
+    "relay": 157.12,
+    "landing": 6.57,
+    "OWN_END": 0.97,
+    "unit": 0.33
+   },
+   "example": [
+    "nhf_7N_l2_fck[35]",
+    "st_hf_7N_l2_34/ck_o@18716.46,24809.44",
+    "st_hf_7N_l2_35/ck@18316.84,24825.47"
+   ]
+  },
+  {
+   "key": "jw_W_l0",
+   "plan_link": true,
+   "cls": "unit",
+   "plan_bits": 276,
+   "plan_L": 13392.9,
+   "nets": 9701,
+   "bit_mm_over_block": 141.68,
+   "own_end_bit_mm": 0.12,
+   "est_obst_repeaters": 885,
+   "wire_bit_mm": 3546.4,
+   "top_blocks": [
+    [
+     "st_jd_W_31",
+     6.88
+    ],
+    [
+     "st_rsl_jw_E_l1_14",
+     3.11
+    ],
+    [
+     "st_rsl_jw_E_l1_0",
+     3.09
+    ],
+    [
+     "st_rsl_jw_E_l1_10",
+     3.09
+    ]
+   ],
+   "by_kind": {
+    "relay": 141.37,
+    "landing": 0.19,
+    "OWN_END": 0.12
+   },
+   "example": [
+    "njw_W_l0_fck[0]",
+    "fwd_jw_W_l0/GCLK@17706.20,13705.33",
+    "st_jw_W_l0_0/ck@17468.39,13574.40"
+   ]
+  },
+  {
+   "key": "lr_lk_WS1",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 562,
+   "plan_L": 1510.5,
+   "nets": 2770,
+   "bit_mm_over_block": 114.01,
+   "own_end_bit_mm": 37.69,
+   "est_obst_repeaters": 713,
+   "wire_bit_mm": 866.2,
+   "top_blocks": [
+    [
+     "u_f_0L02",
+     25.4
+    ],
+    [
+     "ld_lt_lk_WS1",
+     19.51
+    ],
+    [
+     "u_s_0S",
+     15.47
+    ],
+    [
+     "st_rs_3_19_1",
+     2.54
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 37.69,
+    "frame": 25.4,
+    "landing": 19.51,
+    "relay": 15.94,
+    "slice": 15.47
+   },
+   "example": [
+    "nlr_lk_WS1_fck[0]",
+    "fwd_lr_lk_WS1/GCLK@261.77,7749.40",
+    "st_lr_lk_WS1_0/ck@634.37,7781.89"
+   ]
+  },
+  {
+   "key": "lr_lk_WN1",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 562,
+   "plan_L": 1510.5,
+   "nets": 2770,
+   "bit_mm_over_block": 105.63,
+   "own_end_bit_mm": 37.69,
+   "est_obst_repeaters": 660,
+   "wire_bit_mm": 866.2,
+   "top_blocks": [
+    [
+     "u_f_0L12",
+     26.12
+    ],
+    [
+     "ld_lt_lk_WN1",
+     19.51
+    ],
+    [
+     "u_s_0N",
+     15.47
+    ],
+    [
+     "st_rs_2_48",
+     2.54
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 37.69,
+    "frame": 26.12,
+    "landing": 19.51,
+    "slice": 15.47,
+    "relay": 6.84
+   },
+   "example": [
+    "nlr_lk_WN1_fck[0]",
+    "fwd_lr_lk_WN1/GCLK@261.77,19201.46",
+    "st_lr_lk_WN1_0/ck@634.37,19234.08"
+   ]
+  },
+  {
+   "key": "hrd_11",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 562,
+   "plan_L": 2132.2,
+   "nets": 3944,
+   "bit_mm_over_block": 92.68,
+   "own_end_bit_mm": 41.24,
+   "est_obst_repeaters": 579,
+   "wire_bit_mm": 1205.3,
+   "top_blocks": [
+    [
+     "st_hrq_11_0",
+     4.95
+    ],
+    [
+     "st_hrq_11_2",
+     4.93
+    ],
+    [
+     "st_hrq_11_3",
+     4.93
+    ],
+    [
+     "st_hrq_11_1",
+     4.93
+    ]
+   ],
+   "by_kind": {
+    "relay": 47.94,
+    "OWN_END": 41.24,
+    "svc": 3.45,
+    "landing": 0.04
+   },
+   "example": [
+    "nhrd_11_fck[0]",
+    "fwd_hrd_11/GCLK@17871.98,1455.70",
+    "st_hrd_11_0/ck@17685.07,1650.98"
+   ]
+  },
+  {
+   "key": "hrq_14",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 682,
+   "plan_L": 1012.8,
+   "nets": 2735,
+   "bit_mm_over_block": 91.33,
+   "own_end_bit_mm": 0.0,
+   "est_obst_repeaters": 571,
+   "wire_bit_mm": 739.0,
+   "top_blocks": [
+    [
+     "ld_hrq_15",
+     24.22
+    ],
+    [
+     "u_ctrl_15",
+     15.96
+    ],
+    [
+     "ld_hrd_14",
+     12.08
+    ],
+    [
+     "st_rs_48_3",
+     7.49
+    ]
+   ],
+   "by_kind": {
+    "relay": 39.07,
+    "landing": 36.3,
+    "ctrl": 15.96
+   },
+   "example": [
+    "nhrq_14_fck[1]",
+    "st_hrq_14_0/ck_o@20044.06,1515.60",
+    "st_hrq_14_1/ck@19711.77,1517.50"
+   ]
+  },
+  {
+   "key": "hf_7N_l0",
+   "plan_link": true,
+   "cls": "unit",
+   "plan_bits": 276,
+   "plan_L": 23854.9,
+   "nets": 16626,
+   "bit_mm_over_block": 91.08,
+   "own_end_bit_mm": 5.67,
+   "est_obst_repeaters": 569,
+   "wire_bit_mm": 6327.8,
+   "top_blocks": [
+    [
+     "ld_hf_7N_l1",
+     5.21
+    ],
+    [
+     "st_x_f_7L13_l2_0",
+     4.49
+    ],
+    [
+     "st_rs_73_55_2",
+     3.09
+    ],
+    [
+     "st_rs_43_61_1",
+     2.31
+    ]
+   ],
+   "by_kind": {
+    "relay": 79.95,
+    "OWN_END": 5.67,
+    "landing": 5.21,
+    "unit": 0.26
+   },
+   "example": [
+    "nhf_7N_l0_fck[10]",
+    "st_hf_7N_l0_9/ck_o@28647.56,24709.44",
+    "st_hf_7N_l0_10/ck@28248.64,24725.47"
+   ]
+  },
+  {
+   "key": "lr_lk_WS0",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 562,
+   "plan_L": 1510.5,
+   "nets": 2770,
+   "bit_mm_over_block": 88.09,
+   "own_end_bit_mm": 37.69,
+   "est_obst_repeaters": 551,
+   "wire_bit_mm": 866.0,
+   "top_blocks": [
+    [
+     "u_f_0L01",
+     30.58
+    ],
+    [
+     "ld_lt_lk_WS0",
+     7.69
+    ],
+    [
+     "u_s_0S",
+     3.45
+    ],
+    [
+     "st_rs_2_18",
+     2.56
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 37.69,
+    "frame": 30.58,
+    "relay": 8.68,
+    "landing": 7.69,
+    "slice": 3.45
+   },
+   "example": [
+    "nlr_lk_WS0_fck[0]",
+    "fwd_lr_lk_WS0/GCLK@264.31,7418.39",
+    "st_lr_lk_WS0_0/ck@634.37,7451.89"
+   ]
+  },
+  {
+   "key": "hrq_13",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 682,
+   "plan_L": 1838.8,
+   "nets": 4101,
+   "bit_mm_over_block": 87.84,
+   "own_end_bit_mm": 27.38,
+   "est_obst_repeaters": 549,
+   "wire_bit_mm": 1236.6,
+   "top_blocks": [
+    [
+     "ld_hrd_13",
+     15.33
+    ],
+    [
+     "st_hrd_13_3",
+     4.84
+    ],
+    [
+     "st_hrd_13_2",
+     4.84
+    ],
+    [
+     "st_hrd_13_1",
+     4.84
+    ]
+   ],
+   "by_kind": {
+    "relay": 45.13,
+    "OWN_END": 27.38,
+    "landing": 15.33
+   },
+   "example": [
+    "nhrq_13_fck[0]",
+    "fwd_hrq_13/GCLK@18784.63,3057.61",
+    "st_hrq_13_0/ck@18781.70,2788.40"
+   ]
+  },
+  {
+   "key": "lr_lk_WN0",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 562,
+   "plan_L": 1510.5,
+   "nets": 2770,
+   "bit_mm_over_block": 87.76,
+   "own_end_bit_mm": 37.69,
+   "est_obst_repeaters": 549,
+   "wire_bit_mm": 866.0,
+   "top_blocks": [
+    [
+     "u_f_0L11",
+     30.25
+    ],
+    [
+     "ld_lt_lk_WN0",
+     7.69
+    ],
+    [
+     "u_s_0N",
+     3.45
+    ],
+    [
+     "st_rsl_lr_lk_WN0_1",
+     2.54
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 37.69,
+    "frame": 30.25,
+    "relay": 8.68,
+    "landing": 7.69,
+    "slice": 3.45
+   },
+   "example": [
+    "nlr_lk_WN0_fck[0]",
+    "fwd_lr_lk_WN0/GCLK@264.31,18870.44",
+    "st_lr_lk_WN0_0/ck@634.37,18904.08"
+   ]
+  },
+  {
+   "key": "hrd_15",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 562,
+   "plan_L": 1819.4,
+   "nets": 3381,
+   "bit_mm_over_block": 85.38,
+   "own_end_bit_mm": 41.2,
+   "est_obst_repeaters": 534,
+   "wire_bit_mm": 1038.8,
+   "top_blocks": [
+    [
+     "st_hrq_14_0",
+     9.17
+    ],
+    [
+     "st_hrq_15_0",
+     4.95
+    ],
+    [
+     "st_hrq_15_3",
+     4.42
+    ],
+    [
+     "u_rsv_15",
+     3.45
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 41.2,
+    "relay": 40.72,
+    "svc": 3.45
+   },
+   "example": [
+    "nhrd_15_fck[0]",
+    "fwd_hrd_15/GCLK@19996.99,1455.70",
+    "st_hrd_15_0/ck@20170.60,1667.60"
+   ]
+  },
+  {
+   "key": "tvN_s_7S",
+   "plan_link": true,
+   "cls": "xtier",
+   "plan_bits": 276,
+   "plan_L": 6852.2,
+   "nets": 4993,
+   "bit_mm_over_block": 83.58,
+   "own_end_bit_mm": 29.21,
+   "est_obst_repeaters": 522,
+   "wire_bit_mm": 1848.6,
+   "top_blocks": [
+    [
+     "u_s_7N",
+     7.05
+    ],
+    [
+     "st_rs_74_26_3",
+     3.11
+    ],
+    [
+     "st_rs_74_25_3",
+     2.78
+    ],
+    [
+     "st_rsg_rs_74_13_cl7S_17",
+     2.77
+    ]
+   ],
+   "by_kind": {
+    "relay": 47.0,
+    "OWN_END": 29.21,
+    "slice": 7.05,
+    "landing": 0.32
+   },
+   "example": [
+    "ntvN_s_7S_fck[0]",
+    "fwd_tvN_s_7S/GCLK@29710.40,9887.53",
+    "st_tvN_s_7S_0/ck@29720.59,10285.86"
+   ]
+  },
+  {
+   "key": "hrd_12",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 562,
+   "plan_L": 653.3,
+   "nets": 1692,
+   "bit_mm_over_block": 83.33,
+   "own_end_bit_mm": 29.02,
+   "est_obst_repeaters": 521,
+   "wire_bit_mm": 402.9,
+   "top_blocks": [
+    [
+     "ld_hrq_13",
+     34.46
+    ],
+    [
+     "u_rsv_12",
+     12.3
+    ],
+    [
+     "st_hrq_12_0",
+     2.85
+    ],
+    [
+     "st_rsg_rs_47_3_1_south4_1",
+     1.3
+    ]
+   ],
+   "by_kind": {
+    "landing": 34.46,
+    "OWN_END": 29.02,
+    "svc": 13.42,
+    "relay": 6.43
+   },
+   "example": [
+    "nhrd_12_fck[1]",
+    "st_hrd_12_0/ck_o@18670.04,1549.12",
+    "ld_hrd_12/ck_f@18867.06,1650.01"
+   ]
+  },
+  {
+   "key": "hrd_14",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 562,
+   "plan_L": 952.8,
+   "nets": 2255,
+   "bit_mm_over_block": 75.14,
+   "own_end_bit_mm": 25.68,
+   "est_obst_repeaters": 470,
+   "wire_bit_mm": 561.9,
+   "top_blocks": [
+    [
+     "ld_hrq_15",
+     22.54
+    ],
+    [
+     "u_rsv_14",
+     11.35
+    ],
+    [
+     "st_hrq_14_0",
+     4.15
+    ],
+    [
+     "st_rsl_hrd_14_1",
+     2.54
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 25.68,
+    "landing": 22.54,
+    "relay": 15.56,
+    "svc": 11.35
+   },
+   "example": [
+    "nhrd_14_fck[1]",
+    "st_hrd_14_0/ck_o@19723.54,1549.12",
+    "st_hrd_14_1/ck@20029.37,1550.98"
+   ]
+  },
+  {
+   "key": "hrd_13",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 562,
+   "plan_L": 1832.8,
+   "nets": 3381,
+   "bit_mm_over_block": 71.55,
+   "own_end_bit_mm": 41.21,
+   "est_obst_repeaters": 447,
+   "wire_bit_mm": 1046.2,
+   "top_blocks": [
+    [
+     "st_hrq_13_0",
+     4.95
+    ],
+    [
+     "st_hrq_13_1",
+     4.93
+    ],
+    [
+     "st_hrq_13_3",
+     4.93
+    ],
+    [
+     "st_hrq_13_2",
+     4.93
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 41.21,
+    "relay": 26.85,
+    "svc": 3.45,
+    "landing": 0.04
+   },
+   "example": [
+    "nhrd_13_fck[0]",
+    "fwd_hrd_13/GCLK@18934.48,1455.70",
+    "st_hrd_13_0/ck@18808.60,1656.90"
+   ]
+  },
+  {
+   "key": "hrq_11",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 682,
+   "plan_L": 2138.2,
+   "nets": 4784,
+   "bit_mm_over_block": 68.02,
+   "own_end_bit_mm": 8.32,
+   "est_obst_repeaters": 425,
+   "wire_bit_mm": 1429.8,
+   "top_blocks": [
+    [
+     "ld_hrd_11",
+     16.59
+    ],
+    [
+     "st_hrd_11_2",
+     4.84
+    ],
+    [
+     "st_hrd_11_1",
+     4.84
+    ],
+    [
+     "st_hrd_11_4",
+     4.84
+    ]
+   ],
+   "by_kind": {
+    "relay": 43.11,
+    "landing": 16.59,
+    "OWN_END": 8.32
+   },
+   "example": [
+    "nhrq_11_fck[0]",
+    "fwd_hrq_11/GCLK@17422.64,3057.61",
+    "st_hrq_11_0/ck@17419.70,2799.80"
+   ]
+  },
+  {
+   "key": "lt_lk_ES0",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 512,
+   "plan_L": 1510.5,
+   "nets": 2568,
+   "bit_mm_over_block": 67.34,
+   "own_end_bit_mm": 35.54,
+   "est_obst_repeaters": 421,
+   "wire_bit_mm": 792.8,
+   "top_blocks": [
+    [
+     "ld_lr_lk_ES0",
+     19.43
+    ],
+    [
+     "u_lk_ES0",
+     3.3
+    ],
+    [
+     "st_rsl_lr_lk_ES0_0",
+     2.51
+    ],
+    [
+     "st_rsl_lr_lk_ES0_1",
+     2.51
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 35.54,
+    "landing": 19.43,
+    "relay": 9.07,
+    "link": 3.3
+   },
+   "example": [
+    "nlt_lk_ES0_fck[0]",
+    "fwd_lt_lk_ES0/GCLK@30199.74,7451.60",
+    "st_lt_lk_ES0_0/ck@30572.37,7479.81"
+   ]
+  },
+  {
+   "key": "lt_lk_EN0",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 512,
+   "plan_L": 1510.5,
+   "nets": 2568,
+   "bit_mm_over_block": 67.11,
+   "own_end_bit_mm": 35.54,
+   "est_obst_repeaters": 419,
+   "wire_bit_mm": 792.8,
+   "top_blocks": [
+    [
+     "ld_lr_lk_EN0",
+     19.43
+    ],
+    [
+     "u_lk_EN0",
+     3.3
+    ],
+    [
+     "st_rs_77_47_2",
+     2.51
+    ],
+    [
+     "st_rs_76_47_2",
+     2.38
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 35.54,
+    "landing": 19.43,
+    "relay": 8.84,
+    "link": 3.3
+   },
+   "example": [
+    "nlt_lk_EN0_fck[0]",
+    "fwd_lt_lk_EN0/GCLK@30199.74,18903.92",
+    "st_lt_lk_EN0_0/ck@30572.37,18932.01"
+   ]
+  },
+  {
+   "key": "hrq_03",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 682,
+   "plan_L": 2051.2,
+   "nets": 4784,
+   "bit_mm_over_block": 65.9,
+   "own_end_bit_mm": 8.33,
+   "est_obst_repeaters": 412,
+   "wire_bit_mm": 1370.3,
+   "top_blocks": [
+    [
+     "st_rs_32_7_1",
+     11.1
+    ],
+    [
+     "st_rs_33_3_2",
+     7.49
+    ],
+    [
+     "st_hrd_03_0",
+     4.14
+    ],
+    [
+     "st_hrd_03_3",
+     3.74
+    ]
+   ],
+   "by_kind": {
+    "relay": 57.57,
+    "OWN_END": 8.33
+   },
+   "example": [
+    "nhrq_03_fck[0]",
+    "fwd_hrq_03/GCLK@13184.61,3057.34",
+    "st_hrq_03_0/ck@13223.80,2781.30"
+   ]
+  },
+  {
+   "key": "tvS_s_2N",
+   "plan_link": true,
+   "cls": "xtier",
+   "plan_bits": 276,
+   "plan_L": 6852.2,
+   "nets": 4993,
+   "bit_mm_over_block": 63.84,
+   "own_end_bit_mm": 0.0,
+   "est_obst_repeaters": 399,
+   "wire_bit_mm": 1812.9,
+   "top_blocks": [
+    [
+     "ld_tvN_s_2S",
+     6.32
+    ],
+    [
+     "st_rs_25_40_1",
+     3.37
+    ],
+    [
+     "st_rs_25_30_1",
+     3.37
+    ],
+    [
+     "st_rs_25_29_1",
+     3.37
+    ]
+   ],
+   "by_kind": {
+    "relay": 57.52,
+    "landing": 6.32
+   },
+   "example": [
+    "ntvS_s_2N_fck[16]",
+    "st_tvS_s_2N_15/ck_o@10042.71,10280.43",
+    "ld_tvS_s_2N/ck_f@10033.68,9952.70"
+   ]
+  },
+  {
+   "key": "hrq_05",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 682,
+   "plan_L": 1751.7,
+   "nets": 4101,
+   "bit_mm_over_block": 59.51,
+   "own_end_bit_mm": 27.39,
+   "est_obst_repeaters": 372,
+   "wire_bit_mm": 1177.2,
+   "top_blocks": [
+    [
+     "st_hrd_05_0",
+     4.33
+    ],
+    [
+     "st_rsg_rs_36_3_south3_0",
+     2.79
+    ],
+    [
+     "st_rs_36_4_2",
+     2.7
+    ],
+    [
+     "st_hrd_05_2",
+     2.56
+    ]
+   ],
+   "by_kind": {
+    "relay": 32.12,
+    "OWN_END": 27.39
+   },
+   "example": [
+    "nhrq_05_fck[0]",
+    "fwd_hrq_05/GCLK@14546.60,3057.34",
+    "st_hrq_05_0/ck@14585.80,2772.80"
+   ]
+  },
+  {
+   "key": "xrE_6N_l2",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 57.43,
+   "own_end_bit_mm": 10.09,
+   "est_obst_repeaters": 359,
+   "wire_bit_mm": 815.7,
+   "top_blocks": [
+    [
+     "ld_xrE_6N_l1",
+     8.3
+    ],
+    [
+     "st_rs_65_47",
+     2.6
+    ],
+    [
+     "st_rs_67_47_1",
+     2.44
+    ],
+    [
+     "st_rs_67_47",
+     2.44
+    ]
+   ],
+   "by_kind": {
+    "relay": 35.29,
+    "OWN_END": 10.09,
+    "landing": 9.9,
+    "slice": 2.15
+   },
+   "example": [
+    "nxrE_6N_l2_fck[0]",
+    "fwd_xrE_6N_l2/GCLK@26309.26,18985.72",
+    "st_xrE_6N_l2_0/ck@26671.27,19008.97"
+   ]
+  },
+  {
+   "key": "xrE_3N_l2",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 3181.1,
+   "nets": 2497,
+   "bit_mm_over_block": 56.48,
+   "own_end_bit_mm": 10.06,
+   "est_obst_repeaters": 353,
+   "wire_bit_mm": 882.2,
+   "top_blocks": [
+    [
+     "ld_xrE_3N_l1",
+     8.3
+    ],
+    [
+     "st_rs_35_47",
+     2.62
+    ],
+    [
+     "st_rs_37_47_1",
+     2.44
+    ],
+    [
+     "st_rs_37_47",
+     2.44
+    ]
+   ],
+   "by_kind": {
+    "relay": 34.4,
+    "OWN_END": 10.06,
+    "landing": 9.87,
+    "slice": 2.15
+   },
+   "example": [
+    "nxrE_3N_l2_fck[0]",
+    "fwd_xrE_3N_l2/GCLK@14396.05,18985.72",
+    "st_xrE_3N_l2_0/ck@14788.17,19008.97"
+   ]
+  },
+  {
+   "key": "jw_E_l0",
+   "plan_link": true,
+   "cls": "unit",
+   "plan_bits": 276,
+   "plan_L": 9785.8,
+   "nets": 7175,
+   "bit_mm_over_block": 56.07,
+   "own_end_bit_mm": 0.0,
+   "est_obst_repeaters": 350,
+   "wire_bit_mm": 2575.0,
+   "top_blocks": [
+    [
+     "st_rs_44_12",
+     3.39
+    ],
+    [
+     "st_rs_43_18_3",
+     2.31
+    ],
+    [
+     "st_jd_W_31",
+     1.53
+    ],
+    [
+     "st_jd_W_20",
+     1.53
+    ]
+   ],
+   "by_kind": {
+    "relay": 55.87,
+    "landing": 0.19
+   },
+   "example": [
+    "njw_E_l0_fck[0]",
+    "fwd_jw_E_l0/GCLK@17704.20,13619.20",
+    "st_jw_E_l0_0/ck@17500.39,13444.90"
+   ]
+  },
+  {
+   "key": "jw_E_l1",
+   "plan_link": true,
+   "cls": "unit",
+   "plan_bits": 276,
+   "plan_L": 9877.8,
+   "nets": 6981,
+   "bit_mm_over_block": 55.47,
+   "own_end_bit_mm": 0.05,
+   "est_obst_repeaters": 347,
+   "wire_bit_mm": 2526.5,
+   "top_blocks": [
+    [
+     "st_rs_43_18_3",
+     2.23
+    ],
+    [
+     "ld_jd_E",
+     2.04
+    ],
+    [
+     "st_jw_E_l0_0",
+     1.53
+    ],
+    [
+     "st_jw_E_l0_21",
+     1.53
+    ]
+   ],
+   "by_kind": {
+    "relay": 53.38,
+    "landing": 2.04,
+    "OWN_END": 0.05
+   },
+   "example": [
+    "njw_E_l1_fck[10]",
+    "st_jw_E_l1_9/ck_o@17471.81,9925.83",
+    "st_jw_E_l1_10/ck@17484.39,9536.10"
+   ]
+  },
+  {
+   "key": "tvN_s_6S",
+   "plan_link": true,
+   "cls": "xtier",
+   "plan_bits": 276,
+   "plan_L": 6852.2,
+   "nets": 4993,
+   "bit_mm_over_block": 54.33,
+   "own_end_bit_mm": 29.14,
+   "est_obst_repeaters": 340,
+   "wire_bit_mm": 1848.6,
+   "top_blocks": [
+    [
+     "u_s_6N",
+     6.33
+    ],
+    [
+     "st_rsg_rs_64_13_cl6S_16",
+     2.77
+    ],
+    [
+     "st_rsg_rs_64_13_cl6S_11",
+     2.77
+    ],
+    [
+     "st_rsg_rs_64_13_cl6S_13",
+     2.77
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 29.14,
+    "relay": 18.54,
+    "slice": 6.33,
+    "landing": 0.32
+   },
+   "example": [
+    "ntvN_s_6S_fck[0]",
+    "fwd_tvN_s_6S/GCLK@25819.26,9887.53",
+    "st_tvN_s_6S_0/ck@25829.49,10285.86"
+   ]
+  },
+  {
+   "key": "lr_lk_EN1",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 562,
+   "plan_L": 1510.5,
+   "nets": 2770,
+   "bit_mm_over_block": 54.28,
+   "own_end_bit_mm": 0.02,
+   "est_obst_repeaters": 339,
+   "wire_bit_mm": 824.0,
+   "top_blocks": [
+    [
+     "u_f_7R12",
+     30.51
+    ],
+    [
+     "ld_lt_lk_EN1",
+     16.19
+    ],
+    [
+     "st_rs_77_48",
+     2.54
+    ],
+    [
+     "st_rs_76_48",
+     2.54
+    ]
+   ],
+   "by_kind": {
+    "frame": 30.51,
+    "landing": 16.19,
+    "relay": 7.55,
+    "OWN_END": 0.02
+   },
+   "example": [
+    "nlr_lk_EN1_fck[0]",
+    "fwd_lr_lk_EN1/GCLK@31663.96,19221.44",
+    "st_lr_lk_EN1_0/ck@31327.67,19234.08"
+   ]
+  },
+  {
+   "key": "lr_lk_ES1",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 562,
+   "plan_L": 1510.5,
+   "nets": 2770,
+   "bit_mm_over_block": 53.56,
+   "own_end_bit_mm": 0.02,
+   "est_obst_repeaters": 335,
+   "wire_bit_mm": 824.0,
+   "top_blocks": [
+    [
+     "u_f_7R02",
+     29.77
+    ],
+    [
+     "ld_lt_lk_ES1",
+     16.19
+    ],
+    [
+     "st_rs_77_19",
+     2.54
+    ],
+    [
+     "st_rs_76_19",
+     2.54
+    ]
+   ],
+   "by_kind": {
+    "frame": 29.77,
+    "landing": 16.19,
+    "relay": 7.57,
+    "OWN_END": 0.02
+   },
+   "example": [
+    "nlr_lk_ES1_fck[0]",
+    "fwd_lr_lk_ES1/GCLK@31663.96,7769.39",
+    "st_lr_lk_ES1_0/ck@31327.67,7781.89"
+   ]
+  },
+  {
+   "key": "xrE_5S_l0",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 53.3,
+   "own_end_bit_mm": 18.83,
+   "est_obst_repeaters": 333,
+   "wire_bit_mm": 800.0,
+   "top_blocks": [
+    [
+     "u_s_6S",
+     2.79
+    ],
+    [
+     "st_rs_56_18_2",
+     2.6
+    ],
+    [
+     "st_rs_57_18_1",
+     2.59
+    ],
+    [
+     "st_rs_57_18_3",
+     2.59
+    ]
+   ],
+   "by_kind": {
+    "relay": 31.65,
+    "OWN_END": 18.83,
+    "slice": 2.79,
+    "landing": 0.03
+   },
+   "example": [
+    "nxrE_5S_l0_fck[0]",
+    "fwd_xrE_5S_l0/GCLK@22418.18,7482.65",
+    "st_xrE_5S_l0_0/ck@22780.27,7496.77"
+   ]
+  },
+  {
+   "key": "hrq_00",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 682,
+   "plan_L": 421.5,
+   "nets": 2052,
+   "bit_mm_over_block": 52.68,
+   "own_end_bit_mm": 26.19,
+   "est_obst_repeaters": 329,
+   "wire_bit_mm": 354.0,
+   "top_blocks": [
+    [
+     "ld_hrd_00",
+     8.65
+    ],
+    [
+     "st_rsg_rs_29_3_3_south3_0",
+     7.5
+    ],
+    [
+     "st_hrd_00_0",
+     4.12
+    ],
+    [
+     "st_rsg_rs_29_3_3_south3_2",
+     2.54
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 26.19,
+    "relay": 17.59,
+    "landing": 8.65,
+    "ctrl": 0.25
+   },
+   "example": [
+    "nhrq_00_fck[1]",
+    "st_hrq_00_0/ck_o@11797.64,1515.60",
+    "ld_hrq_00/ck_f@11975.16,1513.40"
+   ]
+  },
+  {
+   "key": "xrE_1N_l2",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 52.61,
+   "own_end_bit_mm": 11.01,
+   "est_obst_repeaters": 329,
+   "wire_bit_mm": 814.5,
+   "top_blocks": [
+    [
+     "ld_xrE_1N_l1",
+     8.3
+    ],
+    [
+     "st_rs_17_47",
+     2.44
+    ],
+    [
+     "st_rs_18_47_1",
+     2.44
+    ],
+    [
+     "st_rs_19_47_1",
+     2.44
+    ]
+   ],
+   "by_kind": {
+    "relay": 29.58,
+    "OWN_END": 11.01,
+    "landing": 9.87,
+    "slice": 2.15
+   },
+   "example": [
+    "nxrE_1N_l2_fck[0]",
+    "fwd_xrE_1N_l2/GCLK@6613.90,18994.90",
+    "st_xrE_1N_l2_0/ck@6975.97,19008.97"
+   ]
+  },
+  {
+   "key": "lt_lk_EN1",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 512,
+   "plan_L": 1510.5,
+   "nets": 2568,
+   "bit_mm_over_block": 52.54,
+   "own_end_bit_mm": 35.58,
+   "est_obst_repeaters": 328,
+   "wire_bit_mm": 792.8,
+   "top_blocks": [
+    [
+     "ld_lr_lk_EN1",
+     9.51
+    ],
+    [
+     "u_lk_EN1",
+     6.36
+    ],
+    [
+     "st_rs_78_48",
+     1.06
+    ],
+    [
+     "st_lr_lk_EN1_2",
+     0.03
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 35.58,
+    "landing": 9.51,
+    "link": 6.36,
+    "relay": 1.1
+   },
+   "example": [
+    "nlt_lk_EN1_fck[0]",
+    "fwd_lt_lk_EN1/GCLK@30203.31,19171.76",
+    "st_lt_lk_EN1_0/ck@30572.37,19202.01"
+   ]
+  },
+  {
+   "key": "xrE_4N_l2",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 52.53,
+   "own_end_bit_mm": 11.01,
+   "est_obst_repeaters": 328,
+   "wire_bit_mm": 814.5,
+   "top_blocks": [
+    [
+     "ld_xrE_4N_l1",
+     8.3
+    ],
+    [
+     "st_rs_49_47_1",
+     2.6
+    ],
+    [
+     "st_rs_48_47_1",
+     2.44
+    ],
+    [
+     "st_rs_47_47",
+     2.44
+    ]
+   ],
+   "by_kind": {
+    "relay": 29.5,
+    "OWN_END": 11.01,
+    "landing": 9.87,
+    "slice": 2.14
+   },
+   "example": [
+    "nxrE_4N_l2_fck[0]",
+    "fwd_xrE_4N_l2/GCLK@18527.10,18994.90",
+    "st_xrE_4N_l2_0/ck@18889.17,19008.97"
+   ]
+  },
+  {
+   "key": "lt_lk_ES1",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 512,
+   "plan_L": 1510.5,
+   "nets": 2568,
+   "bit_mm_over_block": 52.51,
+   "own_end_bit_mm": 35.58,
+   "est_obst_repeaters": 328,
+   "wire_bit_mm": 792.8,
+   "top_blocks": [
+    [
+     "ld_lr_lk_ES1",
+     9.51
+    ],
+    [
+     "u_lk_ES1",
+     6.32
+    ],
+    [
+     "st_rs_78_19",
+     1.07
+    ],
+    [
+     "st_lr_lk_ES1_2",
+     0.03
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 35.58,
+    "landing": 9.51,
+    "link": 6.32,
+    "relay": 1.11
+   },
+   "example": [
+    "nlt_lk_ES1_fck[0]",
+    "fwd_lt_lk_ES1/GCLK@30203.31,7719.70",
+    "st_lt_lk_ES1_0/ck@30572.37,7749.81"
+   ]
+  },
+  {
+   "key": "hrd_05",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 562,
+   "plan_L": 1811.7,
+   "nets": 3381,
+   "bit_mm_over_block": 51.14,
+   "own_end_bit_mm": 0.0,
+   "est_obst_repeaters": 320,
+   "wire_bit_mm": 990.7,
+   "top_blocks": [
+    [
+     "u_rsv_06",
+     22.16
+    ],
+    [
+     "st_hrq_05_0",
+     4.93
+    ],
+    [
+     "st_hrq_05_3",
+     4.42
+    ],
+    [
+     "ld_hrq_05",
+     4.31
+    ]
+   ],
+   "by_kind": {
+    "relay": 24.66,
+    "svc": 22.16,
+    "landing": 4.31
+   },
+   "example": [
+    "nhrd_05_fck[0]",
+    "fwd_hrd_05/GCLK@14684.47,1455.70",
+    "st_hrd_05_0/ck@14612.70,1706.80"
+   ]
+  },
+  {
+   "key": "xrE_4S_l0",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 50.21,
+   "own_end_bit_mm": 18.82,
+   "est_obst_repeaters": 314,
+   "wire_bit_mm": 800.0,
+   "top_blocks": [
+    [
+     "st_rs_47_18_1",
+     2.59
+    ],
+    [
+     "st_rs_48_18_1",
+     2.59
+    ],
+    [
+     "st_rs_49_18_1",
+     2.59
+    ],
+    [
+     "st_rs_49_18_3",
+     2.59
+    ]
+   ],
+   "by_kind": {
+    "relay": 28.4,
+    "OWN_END": 18.82,
+    "slice": 2.55,
+    "landing": 0.43
+   },
+   "example": [
+    "nxrE_4S_l0_fck[0]",
+    "fwd_xrE_4S_l0/GCLK@18527.10,7482.65",
+    "st_xrE_4S_l0_0/ck@18889.17,7496.77"
+   ]
+  },
+  {
+   "key": "lr_lk_ES0",
+   "plan_link": true,
+   "cls": "coll",
+   "plan_bits": 562,
+   "plan_L": 1510.5,
+   "nets": 2770,
+   "bit_mm_over_block": 50.02,
+   "own_end_bit_mm": 0.0,
+   "est_obst_repeaters": 313,
+   "wire_bit_mm": 823.9,
+   "top_blocks": [
+    [
+     "u_f_7R01",
+     30.58
+    ],
+    [
+     "ld_lt_lk_ES0",
+     6.44
+    ],
+    [
+     "st_rs_79_18",
+     2.7
+    ],
+    [
+     "st_rs_77_18",
+     2.56
+    ]
+   ],
+   "by_kind": {
+    "frame": 30.58,
+    "relay": 12.99,
+    "landing": 6.44
+   },
+   "example": [
+    "nlr_lk_ES0_fck[0]",
+    "fwd_lr_lk_ES0/GCLK@31704.94,7418.39",
+    "st_lr_lk_ES0_0/ck@31327.67,7451.89"
+   ]
+  },
+  {
+   "key": "xrE_3S_l0",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 3181.1,
+   "nets": 2497,
+   "bit_mm_over_block": 48.52,
+   "own_end_bit_mm": 18.84,
+   "est_obst_repeaters": 303,
+   "wire_bit_mm": 866.4,
+   "top_blocks": [
+    [
+     "st_rs_36_18_3",
+     2.62
+    ],
+    [
+     "st_rs_37_18_3",
+     2.59
+    ],
+    [
+     "st_rs_38_18_3",
+     2.59
+    ],
+    [
+     "st_rs_39_18_3",
+     2.59
+    ]
+   ],
+   "by_kind": {
+    "relay": 26.14,
+    "OWN_END": 18.84,
+    "slice": 2.43,
+    "landing": 1.1
+   },
+   "example": [
+    "nxrE_3S_l0_fck[0]",
+    "fwd_xrE_3S_l0/GCLK@14396.05,7482.65",
+    "st_xrE_3S_l0_0/ck@14788.17,7496.77"
+   ]
+  },
+  {
+   "key": "tvN_s_2S",
+   "plan_link": true,
+   "cls": "xtier",
+   "plan_bits": 276,
+   "plan_L": 6852.2,
+   "nets": 4993,
+   "bit_mm_over_block": 48.13,
+   "own_end_bit_mm": 29.16,
+   "est_obst_repeaters": 301,
+   "wire_bit_mm": 1848.6,
+   "top_blocks": [
+    [
+     "u_s_2N",
+     6.17
+    ],
+    [
+     "st_rsg_rs_25_13_1_cl2S_14",
+     2.78
+    ],
+    [
+     "st_rsg_rs_25_13_1_cl2S_11",
+     2.78
+    ],
+    [
+     "st_rsg_rs_25_13_1_cl2S_26",
+     2.78
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 29.16,
+    "relay": 12.55,
+    "slice": 6.17,
+    "landing": 0.26
+   },
+   "example": [
+    "ntvN_s_2S_fck[0]",
+    "fwd_tvN_s_2S/GCLK@10015.08,9887.53",
+    "st_tvN_s_2S_0/ck@10025.29,10285.86"
+   ]
+  },
+  {
+   "key": "xrE_2N_l2",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 47.12,
+   "own_end_bit_mm": 11.01,
+   "est_obst_repeaters": 295,
+   "wire_bit_mm": 814.5,
+   "top_blocks": [
+    [
+     "ld_xrE_2N_l1",
+     8.3
+    ],
+    [
+     "st_rs_27_47",
+     2.44
+    ],
+    [
+     "st_rs_28_47",
+     2.44
+    ],
+    [
+     "st_rs_29_47",
+     2.44
+    ]
+   ],
+   "by_kind": {
+    "relay": 24.1,
+    "OWN_END": 11.01,
+    "landing": 9.87,
+    "slice": 2.14
+   },
+   "example": [
+    "nxrE_2N_l2_fck[0]",
+    "fwd_xrE_2N_l2/GCLK@10504.97,18994.90",
+    "st_xrE_2N_l2_0/ck@10867.07,19008.97"
+   ]
+  },
+  {
+   "key": "tvN_s_0S",
+   "plan_link": true,
+   "cls": "xtier",
+   "plan_bits": 276,
+   "plan_L": 6852.2,
+   "nets": 4993,
+   "bit_mm_over_block": 47.11,
+   "own_end_bit_mm": 29.16,
+   "est_obst_repeaters": 294,
+   "wire_bit_mm": 1848.6,
+   "top_blocks": [
+    [
+     "u_s_0N",
+     6.17
+    ],
+    [
+     "st_rsg_rs_5_13_cl0S_0",
+     2.78
+    ],
+    [
+     "st_rsg_rs_5_13_cl0S_5",
+     2.78
+    ],
+    [
+     "st_rsg_rs_5_13_cl0S_2",
+     2.78
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 29.16,
+    "relay": 11.53,
+    "slice": 6.17,
+    "landing": 0.26
+   },
+   "example": [
+    "ntvN_s_0S_fck[0]",
+    "fwd_tvN_s_0S/GCLK@2232.88,9887.53",
+    "st_tvN_s_0S_0/ck@2243.09,10285.86"
+   ]
+  },
+  {
+   "key": "tvN_s_5S",
+   "plan_link": true,
+   "cls": "xtier",
+   "plan_bits": 276,
+   "plan_L": 6852.2,
+   "nets": 4993,
+   "bit_mm_over_block": 47.11,
+   "own_end_bit_mm": 29.16,
+   "est_obst_repeaters": 294,
+   "wire_bit_mm": 1848.6,
+   "top_blocks": [
+    [
+     "u_s_5N",
+     6.17
+    ],
+    [
+     "st_rsg_rs_54_13_2_cl5S_27",
+     2.78
+    ],
+    [
+     "st_rsg_rs_54_13_2_cl5S_12",
+     2.78
+    ],
+    [
+     "st_rsg_rs_54_13_2_cl5S_15",
+     2.78
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 29.16,
+    "relay": 11.53,
+    "slice": 6.17,
+    "landing": 0.26
+   },
+   "example": [
+    "ntvN_s_5S_fck[0]",
+    "fwd_tvN_s_5S/GCLK@21928.29,9887.53",
+    "st_tvN_s_5S_0/ck@21938.49,10285.86"
+   ]
+  },
+  {
+   "key": "hrq_01",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 682,
+   "plan_L": 2350.6,
+   "nets": 4784,
+   "bit_mm_over_block": 45.78,
+   "own_end_bit_mm": 8.32,
+   "est_obst_repeaters": 286,
+   "wire_bit_mm": 1576.3,
+   "top_blocks": [
+    [
+     "ld_hrq_00",
+     8.29
+    ],
+    [
+     "st_hrd_01_1",
+     4.14
+    ],
+    [
+     "st_hrd_01_0",
+     4.14
+    ],
+    [
+     "st_hrd_01_3",
+     3.74
+    ]
+   ],
+   "by_kind": {
+    "relay": 29.17,
+    "OWN_END": 8.32,
+    "landing": 8.29
+   },
+   "example": [
+    "nhrq_01_fck[0]",
+    "fwd_hrq_01/GCLK@11822.68,3057.34",
+    "st_hrq_01_0/ck@11861.80,2731.40"
+   ]
+  },
+  {
+   "key": "xrE_0N_l2",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 45.46,
+   "own_end_bit_mm": 10.06,
+   "est_obst_repeaters": 284,
+   "wire_bit_mm": 813.1,
+   "top_blocks": [
+    [
+     "ld_xrE_0N_l1",
+     8.3
+    ],
+    [
+     "st_rs_10_47",
+     2.59
+    ],
+    [
+     "st_rs_11_47",
+     2.44
+    ],
+    [
+     "st_rs_12_47_1",
+     2.44
+    ]
+   ],
+   "by_kind": {
+    "relay": 23.38,
+    "OWN_END": 10.06,
+    "landing": 9.87,
+    "slice": 2.15
+   },
+   "example": [
+    "nxrE_0N_l2_fck[0]",
+    "fwd_xrE_0N_l2/GCLK@2722.87,18994.90",
+    "st_xrE_0N_l2_0/ck@3084.97,19008.97"
+   ]
+  },
+  {
+   "key": "xrE_0S_l0",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 44.81,
+   "own_end_bit_mm": 17.9,
+   "est_obst_repeaters": 280,
+   "wire_bit_mm": 798.7,
+   "top_blocks": [
+    [
+     "u_s_1S",
+     3.1
+    ],
+    [
+     "st_rs_10_18_1",
+     2.59
+    ],
+    [
+     "st_rs_11_18_1",
+     2.59
+    ],
+    [
+     "st_rs_10_18_3",
+     2.59
+    ]
+   ],
+   "by_kind": {
+    "relay": 23.39,
+    "OWN_END": 17.9,
+    "slice": 3.1,
+    "landing": 0.43
+   },
+   "example": [
+    "nxrE_0S_l0_fck[0]",
+    "fwd_xrE_0S_l0/GCLK@2722.87,7482.65",
+    "st_xrE_0S_l0_0/ck@3084.97,7496.77"
+   ]
+  },
+  {
+   "key": "xrE_5N_l2",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 44.08,
+   "own_end_bit_mm": 11.01,
+   "est_obst_repeaters": 276,
+   "wire_bit_mm": 814.5,
+   "top_blocks": [
+    [
+     "ld_xrE_5N_l1",
+     8.3
+    ],
+    [
+     "st_rs_57_47",
+     2.44
+    ],
+    [
+     "st_rs_58_47",
+     2.44
+    ],
+    [
+     "st_rs_59_47",
+     2.44
+    ]
+   ],
+   "by_kind": {
+    "relay": 21.05,
+    "OWN_END": 11.01,
+    "landing": 9.87,
+    "slice": 2.15
+   },
+   "example": [
+    "nxrE_5N_l2_fck[0]",
+    "fwd_xrE_5N_l2/GCLK@22418.18,18994.90",
+    "st_xrE_5N_l2_0/ck@22780.27,19008.97"
+   ]
+  },
+  {
+   "key": "x_f_4L10_l3",
+   "plan_link": true,
+   "cls": "x_frame",
+   "plan_bits": 276,
+   "plan_L": 3103.1,
+   "nets": 2216,
+   "bit_mm_over_block": 44.02,
+   "own_end_bit_mm": 0.17,
+   "est_obst_repeaters": 275,
+   "wire_bit_mm": 826.7,
+   "top_blocks": [
+    [
+     "ld_jd_W",
+     17.67
+    ],
+    [
+     "st_rsg_rs_45_33_1_void4_23",
+     4.49
+    ],
+    [
+     "st_jw_W_l1_0",
+     2.64
+    ],
+    [
+     "st_rsg_rs_43_34_1_cl4N_5",
+     2.46
+    ]
+   ],
+   "by_kind": {
+    "relay": 26.18,
+    "landing": 17.67,
+    "OWN_END": 0.17
+   },
+   "example": [
+    "nx_f_4L10_l3_fck[1]",
+    "st_x_f_4L10_l3_0/ck_o@17684.81,16055.23",
+    "st_x_f_4L10_l3_1/ck@17697.39,15672.70"
+   ]
+  },
+  {
+   "key": "xrE_6S_l0",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 43.65,
+   "own_end_bit_mm": 18.82,
+   "est_obst_repeaters": 273,
+   "wire_bit_mm": 800.0,
+   "top_blocks": [
+    [
+     "st_rs_66_18_1",
+     2.6
+    ],
+    [
+     "st_rs_67_18_1",
+     2.59
+    ],
+    [
+     "st_rs_68_18_1",
+     2.59
+    ],
+    [
+     "st_rs_67_18_3",
+     2.59
+    ]
+   ],
+   "by_kind": {
+    "relay": 21.85,
+    "OWN_END": 18.82,
+    "slice": 2.55,
+    "landing": 0.43
+   },
+   "example": [
+    "nxrE_6S_l0_fck[0]",
+    "fwd_xrE_6S_l0/GCLK@26309.26,7482.65",
+    "st_xrE_6S_l0_0/ck@26671.27,7496.77"
+   ]
+  },
+  {
+   "key": "hrq_15",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 682,
+   "plan_L": 1879.4,
+   "nets": 4101,
+   "bit_mm_over_block": 43.58,
+   "own_end_bit_mm": 0.03,
+   "est_obst_repeaters": 272,
+   "wire_bit_mm": 1257.2,
+   "top_blocks": [
+    [
+     "ld_hrd_15",
+     16.7
+    ],
+    [
+     "st_rs_49_4_2",
+     9.39
+    ],
+    [
+     "st_hrd_15_3",
+     4.84
+    ],
+    [
+     "st_hrd_15_0",
+     4.33
+    ]
+   ],
+   "by_kind": {
+    "relay": 26.85,
+    "landing": 16.7,
+    "OWN_END": 0.03
+   },
+   "example": [
+    "nhrq_15_fck[0]",
+    "fwd_hrq_15/GCLK@20146.62,3057.61",
+    "st_hrq_15_0/ck@20143.70,2780.30"
+   ]
+  },
+  {
+   "key": "xrE_6S_l3",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 42.95,
+   "own_end_bit_mm": 10.86,
+   "est_obst_repeaters": 268,
+   "wire_bit_mm": 822.1,
+   "top_blocks": [
+    [
+     "ld_xrE_6S_l2",
+     8.3
+    ],
+    [
+     "st_rsg_rs_64_13_cl6S_5",
+     2.62
+    ],
+    [
+     "st_rsg_rs_64_13_cl6S_0",
+     2.62
+    ],
+    [
+     "st_rs_68_18_2",
+     2.6
+    ]
+   ],
+   "by_kind": {
+    "relay": 21.29,
+    "OWN_END": 10.86,
+    "landing": 8.91,
+    "slice": 1.89
+   },
+   "example": [
+    "nxrE_6S_l3_fck[0]",
+    "fwd_xrE_6S_l3/GCLK@26309.26,7572.56",
+    "st_xrE_6S_l3_0/ck@26671.27,7586.77"
+   ]
+  },
+  {
+   "key": "xrE_2S_l0",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 42.58,
+   "own_end_bit_mm": 18.84,
+   "est_obst_repeaters": 266,
+   "wire_bit_mm": 800.0,
+   "top_blocks": [
+    [
+     "st_rs_27_18_1",
+     2.59
+    ],
+    [
+     "st_rs_28_18_1",
+     2.59
+    ],
+    [
+     "st_rs_29_18_1",
+     2.59
+    ],
+    [
+     "st_rs_29_18_3",
+     2.59
+    ]
+   ],
+   "by_kind": {
+    "relay": 20.77,
+    "OWN_END": 18.84,
+    "slice": 2.54,
+    "landing": 0.43
+   },
+   "example": [
+    "nxrE_2S_l0_fck[0]",
+    "fwd_xrE_2S_l0/GCLK@10504.97,7482.65",
+    "st_xrE_2S_l0_0/ck@10867.07,7496.77"
+   ]
+  },
+  {
+   "key": "xrE_5S_l3",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 42.58,
+   "own_end_bit_mm": 10.86,
+   "est_obst_repeaters": 266,
+   "wire_bit_mm": 822.1,
+   "top_blocks": [
+    [
+     "ld_xrE_5S_l2",
+     8.3
+    ],
+    [
+     "st_rsg_rs_54_13_2_cl5S_8",
+     2.62
+    ],
+    [
+     "st_rsg_rs_54_13_2_cl5S_3",
+     2.62
+    ],
+    [
+     "st_rsl_xrE_5S_l2_4",
+     1.94
+    ]
+   ],
+   "by_kind": {
+    "relay": 20.92,
+    "OWN_END": 10.86,
+    "landing": 8.91,
+    "slice": 1.89
+   },
+   "example": [
+    "nxrE_5S_l3_fck[0]",
+    "fwd_xrE_5S_l3/GCLK@22418.18,7572.56",
+    "st_xrE_5S_l3_0/ck@22780.27,7586.77"
+   ]
+  },
+  {
+   "key": "xrE_1S_l0",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 2941.1,
+   "nets": 2497,
+   "bit_mm_over_block": 41.59,
+   "own_end_bit_mm": 18.82,
+   "est_obst_repeaters": 260,
+   "wire_bit_mm": 800.0,
+   "top_blocks": [
+    [
+     "u_s_2S",
+     3.1
+    ],
+    [
+     "st_rs_17_18_1",
+     2.6
+    ],
+    [
+     "st_rs_18_18_1",
+     2.59
+    ],
+    [
+     "st_rs_20_18_1",
+     2.59
+    ]
+   ],
+   "by_kind": {
+    "relay": 19.24,
+    "OWN_END": 18.82,
+    "slice": 3.1,
+    "landing": 0.43
+   },
+   "example": [
+    "nxrE_1S_l0_fck[0]",
+    "fwd_xrE_1S_l0/GCLK@6613.90,7482.65",
+    "st_xrE_1S_l0_0/ck@6975.97,7496.77"
+   ]
+  },
+  {
+   "key": "hrd_00",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 562,
+   "plan_L": 481.5,
+   "nets": 1692,
+   "bit_mm_over_block": 41.44,
+   "own_end_bit_mm": 25.68,
+   "est_obst_repeaters": 259,
+   "wire_bit_mm": 296.3,
+   "top_blocks": [
+    [
+     "u_rsv_00",
+     11.43
+    ],
+    [
+     "st_hrq_00_0",
+     4.15
+    ],
+    [
+     "st_hrq_01_3",
+     0.13
+    ],
+    [
+     "ld_hrq_00",
+     0.04
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 25.68,
+    "svc": 11.43,
+    "relay": 4.28,
+    "landing": 0.04
+   },
+   "example": [
+    "nhrd_00_fck[0]",
+    "fwd_hrd_00/GCLK@12026.26,1450.58",
+    "st_hrd_00_0/ck@11855.87,1550.98"
+   ]
+  },
+  {
+   "key": "hrd_09",
+   "plan_link": true,
+   "cls": "hbm",
+   "plan_bits": 562,
+   "plan_L": 2205.9,
+   "nets": 3944,
+   "bit_mm_over_block": 40.19,
+   "own_end_bit_mm": 0.06,
+   "est_obst_repeaters": 251,
+   "wire_bit_mm": 1203.2,
+   "top_blocks": [
+    [
+     "st_hrq_09_0",
+     4.93
+    ],
+    [
+     "st_hrq_09_3",
+     4.93
+    ],
+    [
+     "st_hrq_09_2",
+     4.93
+    ],
+    [
+     "st_hrq_09_1",
+     4.93
+    ]
+   ],
+   "by_kind": {
+    "relay": 40.13,
+    "OWN_END": 0.06,
+    "svc": 0.0
+   },
+   "example": [
+    "nhrd_09_fck[0]",
+    "fwd_hrd_09/GCLK@16809.47,1455.70",
+    "st_hrd_09_0/ck@17005.57,1650.98"
+   ]
+  },
+  {
+   "key": "xrE_3S_l1",
+   "plan_link": true,
+   "cls": "xring",
+   "plan_bits": 276,
+   "plan_L": 3181.1,
+   "nets": 2497,
+   "bit_mm_over_block": 38.89,
+   "own_end_bit_mm": 16.23,
+   "est_obst_repeaters": 243,
+   "wire_bit_mm": 873.4,
+   "top_blocks": [
+    [
+     "ld_xrE_3S_l0",
+     4.85
+    ],
+    [
+     "st_jw_W_l1_23",
+     3.96
+    ],
+    [
+     "u_s_4S",
+     3.08
+    ],
+    [
+     "st_jw_W_l0_23",
+     2.42
+    ]
+   ],
+   "by_kind": {
+    "OWN_END": 16.23,
+    "relay": 14.41,
+    "landing": 5.17,
+    "slice": 3.08
+   },
+   "example": [
+    "nxrE_3S_l1_fck[0]",
+    "fwd_xrE_3S_l1/GCLK@14396.05,7512.61",
+    "st_xrE_3S_l1_0/ck@14788.17,7526.77"
+   ]
+  }
+ ],
+ "measured": {
+  "case": "ot-epyc4:/srv/opentallas-scratch/claude/die-s81-lead/case_p4l3_rv2",
+  "repeaters": 2596454,
+  "ideal_on_obstacle": 305046,
+  "post_slew": 36881,
+  "post_cap": 11728,
+  "spread_max_disp_um": 841.81
+ },
+ "reading": "Geometric replay of the pre-repeater place.odb (min-L MST per net, macro bodies, top-port nets skipped as in run.tcl) attributes ~53.7k of the 305k on-obstacle repeaters to wire over bodies: reset relays st_rs*/st_rsg* placed on lanes 1.42k bit-mm, neighbour-lane landings 1.22k, pins inside own endpoint body 1.79k, frames 0.63k (lr/lt_lk end-column lanes, jd_W), other-lane relays 0.42k, slices 0.23k. The remaining ~250k are inferred (not replayed) to be first-buffer positions at macro pin faces (repair_design ideal point on the body edge). Post-repair slew/cap violators were not attributable: the repaired db was never written (GRT killed).",
+ "plan_check": {
+  "rule": "realized band: max(bits x 0.096 + 3, relay across) um per hop + relay bodies",
+  "p4l_mu_lkcol_before": {
+   "bit_mm": 9741.1,
+   "est_on_body_repeaters": 60882,
+   "relay_overlaps": 794
+  },
+  "p4l_mu_lkcol_after": {
+   "bit_mm": 32.2,
+   "est_on_body_repeaters": 201,
+   "relay_overlaps": 74
+  }
+ }
+}

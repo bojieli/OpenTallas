@@ -8926,6 +8926,52 @@ def dsrom_s81_components(ctx=1048576):
     return build(ROOT, ctx=ctx)
 
 
+def s81_l20_idxrd2_recompose():
+    """S81 L20 idxrd2 (owner 12:42): 16 row-abutting readers cost ROM slots 1130 -> 1070 a die.  Integer recomposition
+    on the slot law of record (tools/s81_dv/dv_price.py: TP4 stages = ceil(89 x 1220 / slots)), the S81 die census of
+    record (results/arch/s81_balance_1018: 440 = 388 layer + 52 non-layer dies; MU = + 8 duplicated groups) and the
+    dv_price single-user rate on the CURRENT MU3 geometry with only rom_slots changed (stage-hop cost of the extra
+    stages).  Non-layer dies are not slot-law bound (held at 52; sensitivity: scaled + TP4-rounded).  A duplicated
+    group copies the dies holding one layer's weights: ceil(layer_dies / 40)."""
+    import subprocess, tempfile
+    plan = json.loads((ROOT / "results/arch/s81_l20_1019/parent_model/inputs/current_mu3_plan.json").read_text())
+    rows = {}
+    for slots in (1130, 1070):
+        stages = math.ceil(89 * 1220 / slots - 1e-9)
+        layer = 4 * stages
+        per_layer = layer / 40
+        dup = 8 * math.ceil(per_layer - 1e-9)
+        with tempfile.TemporaryDirectory() as td:
+            pl = dict(plan, facts=dict(plan["facts"], rom_slots=slots))
+            (Path(td) / "p.json").write_text(json.dumps(pl))
+            subprocess.run([sys.executable, str(ROOT / "tools/s81_dv/dv_price.py"), "--plan", str(Path(td) / "p.json"),
+                            "--out", str(Path(td) / "o.json")], check=True, capture_output=True)
+            pr = json.loads((Path(td) / "o.json").read_text())
+        assert pr["geometry"]["stages_from_slots"] == stages
+        w = pr["scenarios"]["dv_base"]["workloads"]
+        rows[slots] = dict(rom_slots=slots, tp=4, stages=stages, ranks=4, layer_dies=layer,
+                           dies_per_layer=round(per_layer, 3), su_dies=layer + 52, mu_dup_dies=dup,
+                           mu_dies=layer + 52 + dup, mu_dies_nonlayer_scaled=layer + 4 * math.ceil(52 * 1130 / slots / 4) + dup,
+                           dv_ar_tok_s=w["ar"]["dv_tok_s"], dv_mtp_tok_s=w["mtp"]["dv_tok_s"])
+    b, n = rows[1130], rows[1070]
+    rel = lambda k: round(100 * (n[k] / b[k] - 1), 2)
+    rec_ar, rec_mtp, users = 1217.2, 3622.2, 47          # record DS ROM single user (token_compose_xdie) / MU users
+    out = dict(schema="opentallas.s81.l20.idxrd2_recompose.v1", grade="modelled (slot law + dv_price); no fit/route claim",
+               rows=[b, n],
+               delta=dict(stages=n["stages"] - b["stages"], layer_dies=n["layer_dies"] - b["layer_dies"],
+                          su_dies=n["su_dies"] - b["su_dies"], mu_dies=n["mu_dies"] - b["mu_dies"],
+                          mu_dies_pct=rel("mu_dies"), ar_pct=rel("dv_ar_tok_s"), mtp_pct=rel("dv_mtp_tok_s"),
+                          record_ar_tok_s=round(rec_ar * n["dv_ar_tok_s"] / b["dv_ar_tok_s"], 1),
+                          record_mtp_tok_s=round(rec_mtp * n["dv_mtp_tok_s"] / b["dv_mtp_tok_s"], 1),
+                          mu_users=users, mu_agg_ar_pct=rel("dv_ar_tok_s"),
+                          static_energy_per_token_pct=round(100 * ((n["mu_dies"] / b["mu_dies"]) * (b["dv_ar_tok_s"] / n["dv_ar_tok_s"]) - 1), 2)),
+               notes=["MU users held at 47: the calendar II is the worst group occupancy; +1 die a duplicated layer copy "
+                      "lowers per-die field load, the 5 added stage hops lengthen T (users = floor(T/II) cannot drop).",
+                      "static energy/token scales with dies / rate; dynamic energy per token unchanged (same bits, same ops)",
+                      "accepted-cost rule: ar/mtp loss well inside 5%/unit; silicon +mu_dies_pct is the owner-accepted 5.3% capacity loss"])
+    return out
+
+
 def dsrom_s81_minimum_group(ctx=1048576):
     """Named minimum W11 construction branch, preserving the r4 historical floor."""
     from dsrom_s81_minimum_protected_group import build
@@ -9365,6 +9411,7 @@ def main(argv=None):
     ap.add_argument("--s81-collective-gearbox", action="store_true", help="size the exact registered-head collective gearbox candidate")
     ap.add_argument("--s81-collective-lane-width", type=float, help="size a default-off S81 collective lane footprint from measured congestion")
     ap.add_argument("--s81-collective-core-width", type=float, help="size an opt-in native OQPIPE core with four-track VM pins")
+    ap.add_argument("--s81-l20-idxrd2-recompose", action="store_true", help="S81 L20 idxrd2 1130->1070 ROM slots: integer stages/dies/rate")
     ap.add_argument("--dsrom-s81-minimum-group", action="store_true", help="selected W11 minimum protected group cuts/II/slot; target clocks, no fit or rate credit")
     ap.add_argument("--dsrom-s81-components", action="store_true", help="selected S81 measured component and finite VM r4 composition; no rate admission")
     ap.add_argument("--dsrom-s82", action="store_true", help="conditional S82 RD64 serial-path components; no full-token/physical admission")
@@ -9501,6 +9548,13 @@ def main(argv=None):
     if a.s81_collective_lane_width is not None:
         from s81_collective_lane_sizing import model
         payload = json.dumps(model(a.s81_collective_lane_width), indent=2, allow_nan=False) + "\n"
+        if a.out:
+            Path(a.out).parent.mkdir(parents=True, exist_ok=True)
+            Path(a.out).write_text(payload)
+        print(payload)
+        return
+    if a.s81_l20_idxrd2_recompose:
+        payload = json.dumps(s81_l20_idxrd2_recompose(), indent=2, sort_keys=True, allow_nan=False) + "\n"
         if a.out:
             Path(a.out).parent.mkdir(parents=True, exist_ok=True)
             Path(a.out).write_text(payload)

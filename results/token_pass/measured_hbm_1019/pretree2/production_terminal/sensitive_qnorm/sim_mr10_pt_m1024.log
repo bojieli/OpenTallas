@@ -1,0 +1,30 @@
+SU_TOP ERROR cyc=197 scalar q0 tag 00000180 got 4b800007 want edge 197 q0 tag 00000180 val 4b800006
+SU_TOP ERROR cyc=236 write data q0 p0 sec 1f20 got 000000000000000000000000000000000000000000000000000000004b800007 want 000000000000000000000000000000000000000000000000000000004b800006
+TOKSIM_LAST last_lg_write_edge=236 last_scalar_edge=197 RR=12 WR=10
+[3400000] %Fatal: tb_toksim_su_top.sv:124: Assertion failed in tb_toksim_su_top.unnamedblk2: SU_TOP FAIL errors=2 reads=160 writes=1 scalars=1
+%Error: tb_toksim_su_top.sv:124: Verilog $stop
+Aborting...
+Command exited with non-zero status 1
+	Command being timed: "/srv/opentallas-scratch/claude/hbm-pretree2/suvop/obj_mr10_pt_m1024/Vtb_toksim_su_top +DIR=/srv/opentallas-scratch/claude/hbm-pretree2/suvop/codex_qw4/pairing_qnorm +NE_RUN=254 +NW_RUN=1 +NS_RUN=1"
+	User time (seconds): 41.13
+	System time (seconds): 0.04
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:41.17
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 688320
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 35174
+	Voluntary context switches: 1
+	Involuntary context switches: 30
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

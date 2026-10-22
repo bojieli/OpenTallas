@@ -1,0 +1,19 @@
+MISMATCH edge 403 row 0 lo 0 k 2 got be267eb6/0 want be9cf1da/0
+MISMATCH edge 404 row 1 lo 0 k 2 got bf4e740e/0 want bf881d45/0
+MISMATCH edge 407 row 2 lo 0 k 1 got be14bfe0/0 want bd46db6e/0
+MISMATCH edge 408 row 3 lo 0 k 1 got be33f80c/0 want bd8cf46f/0
+PLAN_MISMATCH predicted 10 words, got 10; first diff ((403, 0, (0, 2, 5), 3197956570, 0), (403, 0, (0, 2, 5), 3190193846, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.shared_gu phase 1 mutant=None rows=4 fixture_rows=4 errors=5 END edges=2293 ret_words=30 xo_checked=2291 fault=0
+MISMATCH edge 403 row 0 lo 0 k 2 got beb126e4/0 want bc855ba8/0
+MISMATCH edge 404 row 1 lo 0 k 2 got 3e2618ee/0 want 3e2eadc2/0
+MISMATCH edge 407 row 2 lo 0 k 1 got 3d42a8b0/0 want 3d8f908a/0
+MISMATCH edge 408 row 3 lo 0 k 1 got bdd64239/0 want be86d536/0
+PLAN_MISMATCH predicted 10 words, got 10; first diff ((403, 0, (0, 2, 5), 3162856360, 0), (403, 0, (0, 2, 5), 3199280868, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.shared_gu phase 2 mutant=None rows=4 fixture_rows=4 errors=5 END edges=2293 ret_words=30 xo_checked=2291 fault=0
+MISMATCH edge 403 row 0 lo 0 k 2 got 3e15bd7e/0 want 3c9c265c/0
+MISMATCH edge 404 row 1 lo 0 k 2 got 3e048b56/0 want 3dfcb715/0
+MISMATCH edge 407 row 2 lo 0 k 1 got 3e49384e/0 want 3de9269a/0
+MISMATCH edge 408 row 3 lo 0 k 1 got bdb07e3b/0 want be43eb3e/0
+PLAN_MISMATCH predicted 10 words, got 10; first diff ((403, 0, (0, 2, 5), 1016866396, 0), (403, 0, (0, 2, 5), 1041612158, 0))
+XS_PLACE_CHECK FAIL u_f_2L00 ffn.shared_gu phase 3 mutant=None rows=4 fixture_rows=4 errors=5 END edges=2293 ret_words=30 xo_checked=2291 fault=0
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 146 phases 3 rows 12 fixture_rows 12 go0 63 last_ret 716 span 653 errors 3 ["PHASE_FAIL p1: ['MISMATCH edge 403 row 0 lo 0 k 2 got be267eb6/0 want be9cf1da/0', 'MISMATCH edge 404 row 1 lo 0 k 2 got bf4e740e/0 want bf881d45/0']", "PHASE_FAIL p2: ['MISMATCH edge 403 row 0 lo 0 k 2 got beb126e4/0 want bc855ba8/0', 'MISMATCH edge 404 row 1 lo 0 k 2 got 3e2618ee/0 want 3e2eadc2/0']", "PHASE_FAIL p3: ['MISMATCH edge 403 row 0 lo 0 k 2 got 3e15bd7e/0 want 3c9c265c/0', 'MISMATCH edge 404 row 1 lo 0 k 2 got 3e048b56/0 want 3dfcb715/0']"]

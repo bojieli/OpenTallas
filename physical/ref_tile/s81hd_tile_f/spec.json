@@ -1,0 +1,264 @@
+{
+ "name": "s81hd_tile_f",
+ "top": "ot_s81hd_tile",
+ "kind": "tile",
+ "sources": [
+  "rtl/common/ot_prefix.sv",
+  "rtl/v41rom/ot_v41_fadd.sv",
+  "rtl/v41rom/ot_v41_bmul2.sv",
+  "rtl/v41rom/ot_dsrom_bmul3.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv",
+  "rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv"
+ ],
+ "params": {
+  "IOREG": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 734.4,
+  "h": 734.4
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?0?.u_e.u_rom0",
+   "at": [
+    86.4,
+    563.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?0?.u_e.u_rom1",
+   "at": [
+    86.4,
+    626.736
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.u_b.u_rom0",
+   "at": [
+    302.4,
+    563.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.u_b.u_rom1",
+   "at": [
+    302.4,
+    626.736
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?1?.u_e.u_rom0",
+   "at": [
+    518.4,
+    563.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?1?.u_e.u_rom1",
+   "at": [
+    518.4,
+    626.736
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?2?.u_e.u_rom1",
+   "at": [
+    172.8,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?2?.u_e.u_rom0",
+   "at": [
+    172.8,
+    106.176
+   ],
+   "orient": "MX",
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?3?.u_e.u_rom1",
+   "at": [
+    432.0,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "inst": "*u_b.g_a?3?.u_e.u_rom0",
+   "at": [
+    432.0,
+    106.176
+   ],
+   "orient": "MX",
+   "at_exact": true
+  }
+ ],
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.045,
+  "io_hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "size": 24,
+   "diameter_um": 30,
+   "extra": "-distance_between_buffers 15 -balance_levels"
+  },
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
+ },
+ "pins": {
+  "W": [
+   "i",
+   "row0",
+   "ten",
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "o"
+  ]
+ },
+ "pin_ranges": {
+  "i": [
+   20.0,
+   714.4
+  ],
+  "o": [
+   20.0,
+   714.4
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin (inputs land in face flops, outputs leave flops); recipe pin_regs would add an unpriced stage."
+ },
+ "pre_cts_extra": [],
+ "orfs_vars": {},
+ "structural_change": "S81-HEAD HD-TILE 10-21 FALLBACK: new tile ot_s81hd_tile (SPEC v1 4e30e8f3a section 1: LM-head array tile, 253 a die) = census-safe bundle copy ot_s81hd_bundle (5 elements, 10 ROM4096, 128 rows; IOREG 1, SAFE 1) on bus B (565 b) with the chain-best merge.  Outline 734.4 x 734.4: each element's ROM pair is one abutted N-S stack (ROM pins sit on the W / E faces, lowest 14 um, M4; stack pin ends face the band): N stacks A0 / B / A1 at x 86.4 / 302.4 / 518.4 (y 563.76), S stacks A2 / A3 at x 172.8 / 432 (y 43.2); one full-width std-cell band y 169.1..563.76 plus the column channels; i on W, o on E, straps / ck / rst_n on W.",
+ "reset_landing": {
+  "enable": true,
+  "stages": 2,
+  "first_copies": {
+   "rst_n": 16
+  },
+  "copies": {
+   "rst_n": 320
+  }
+ },
+ "reset_relay_split": {
+  "max_loads": 32
+ },
+ "job": {
+  "owner": "Claude:S81-HEAD/HD-TILE",
+  "branch": "claude/s81-head-tile-1021",
+  "tag": "s81hd_tile_f",
+  "extra_paths": [
+   "rtl/common",
+   "rtl/v41rom",
+   "rtl/hdc",
+   "rtl/dsrom_sys/s81_head",
+   "tools/s81_head",
+   "results/rtl/s81_head_tile_1021",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8"
+  ],
+  "benches": [
+   {
+    "name": "hd_mini_all",
+    "cmd": "bash tools/s81_head/hd_tile_bench.sh {RUN}/hd_mini_all ALL none",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^BENCH_PASS s81hd_mini SCEN=ALL MUT=none \\(4/4\\)$"
+   },
+   {
+    "name": "hd_mut_tie_flip",
+    "cmd": "bash tools/s81_head/hd_tile_bench.sh {RUN}/hd_mut_tie_flip C TIE_FLIP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^C: TB_FAIL row 21946 != 21818$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_tie_flip.log"
+   },
+   {
+    "name": "hd_mut_go_drop",
+    "cmd": "bash tools/s81_head/hd_tile_bench.sh {RUN}/hd_mut_go_drop A GO_DROP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^A: TB_FAIL results 0 != positions 2$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_go_drop.log"
+   },
+   {
+    "name": "hd_mut_ten_ignored",
+    "cmd": "bash tools/s81_head/hd_tile_bench.sh {RUN}/hd_mut_ten_ignored B TEN_IGNORED",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^B: TB_FAIL row 21946 != 22141$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_ten_ignored.log"
+   },
+   {
+    "name": "hd_mut_flt_drop",
+    "cmd": "bash tools/s81_head/hd_tile_bench.sh {RUN}/hd_mut_flt_drop D FLT_DROP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^D: TB_FAIL flt 0 != 1$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_flt_drop.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81hd_tile_f/views",
+  "record_to": "results/rtl/ref_tile/s81hd_tile_f",
+  "purpose": "S81-HEAD (release head die): ot_s81hd_tile to closure (TT setup / FF hold / DRC 0 + native audit)."
+ },
+ "fill_reason": {
+  "macro_bound": "Macro-bound: 10 x ot_rom_4096x274_m8 (125.3 x 63.0 um, 78.9k um2, side-face pins needing >= 47-um column channels) as 5 abutted element stacks in a 734.4 x 734.4 square; std-cell fill under 40% is the price of the macro columns and the 565-b W / E faces, not a squeezed target (RULE FREEZE 10-20: tile fill is guidance)."
+ }
+}

@@ -1,0 +1,5475 @@
+{
+ "frame": "u_f_0L00",
+ "master": "col_h9_l4",
+ "lk": 2925,
+ "slice": "u_s_0S",
+ "slice_index": 0,
+ "frame_index": 0,
+ "pairs": [
+  0,
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11,
+  12,
+  14
+ ],
+ "q_pairs": [
+  0,
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11,
+  12,
+  14
+ ],
+ "bf_pairs": [
+  4,
+  8,
+  13
+ ],
+ "phases": [
+  {
+   "phase": 0,
+   "op": "attn.a_proj",
+   "mat": "wq_a",
+   "rows": 4,
+   "out_index": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "nseg": 5,
+   "nbeat": 80,
+   "faults": 0,
+   "ret_words": 10,
+   "calendar": "measured_class",
+   "ret": [
+    [
+     403,
+     134217797,
+     3178727794,
+     0
+    ],
+    [
+     404,
+     134225989,
+     1032675670,
+     0
+    ],
+    [
+     407,
+     134234149,
+     999887364,
+     0
+    ],
+    [
+     408,
+     134242341,
+     3165236459,
+     0
+    ],
+    [
+     413,
+     134234661,
+     1009957744,
+     0
+    ],
+    [
+     414,
+     134242853,
+     3142539696,
+     0
+    ],
+    [
+     420,
+     134235205,
+     3130426528,
+     0
+    ],
+    [
+     421,
+     134243397,
+     1004427600,
+     0
+    ],
+    [
+     423,
+     134218821,
+     3160061985,
+     0
+    ],
+    [
+     424,
+     134227013,
+     3155203690,
+     0
+    ]
+   ]
+  },
+  {
+   "phase": 1,
+   "op": "ffn.down",
+   "mat": "shared.w2",
+   "fmt": "fp8",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 11,
+   "row_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.shared.down",
+     0
+    ],
+    [
+     "ffn.shared.down",
+     1
+    ],
+    [
+     "ffn.shared.down",
+     2
+    ],
+    [
+     "ffn.shared.down",
+     3
+    ],
+    [
+     "ffn.shared.down",
+     4
+    ],
+    [
+     "ffn.shared.down",
+     5
+    ],
+    [
+     "ffn.shared.down",
+     6
+    ],
+    [
+     "ffn.shared.down",
+     7
+    ],
+    [
+     "ffn.shared.down",
+     8
+    ],
+    [
+     "ffn.shared.down",
+     9
+    ],
+    [
+     "ffn.shared.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 14,
+   "kslot": 3,
+   "nbeat": 80,
+   "sbase": 80,
+   "faults": 0,
+   "ret_words": 23,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp8",
+    1,
+    2,
+    3
+   ],
+   "ret": [
+    [
+     359,
+     134300741,
+     1013511282,
+     0
+    ],
+    [
+     360,
+     134218821,
+     981836768,
+     0
+    ],
+    [
+     361,
+     134227013,
+     1017886456,
+     0
+    ],
+    [
+     362,
+     134267973,
+     1025533900,
+     0
+    ],
+    [
+     363,
+     134276165,
+     1016887093,
+     0
+    ],
+    [
+     365,
+     134235205,
+     998417996,
+     0
+    ],
+    [
+     366,
+     134243397,
+     1024755758,
+     0
+    ],
+    [
+     367,
+     134217765,
+     3162757393,
+     0
+    ],
+    [
+     368,
+     134225957,
+     992321200,
+     0
+    ],
+    [
+     369,
+     134283365,
+     3184838040,
+     0
+    ],
+    [
+     370,
+     134291557,
+     3189621713,
+     0
+    ],
+    [
+     371,
+     134267429,
+     3179483610,
+     0
+    ],
+    [
+     372,
+     134275621,
+     1019087053,
+     0
+    ],
+    [
+     373,
+     134250597,
+     1033513068,
+     0
+    ],
+    [
+     374,
+     134258789,
+     3174184230,
+     0
+    ],
+    [
+     375,
+     134218277,
+     993928064,
+     0
+    ],
+    [
+     376,
+     134226469,
+     3174713300,
+     0
+    ],
+    [
+     378,
+     134266917,
+     3163664126,
+     0
+    ],
+    [
+     379,
+     134275109,
+     3183983923,
+     0
+    ],
+    [
+     380,
+     134234181,
+     1034982378,
+     0
+    ],
+    [
+     381,
+     134242373,
+     3187387417,
+     0
+    ],
+    [
+     382,
+     134300197,
+     3172018098,
+     0
+    ],
+    [
+     383,
+     134299685,
+     1024335750,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     0,
+     0,
+     0,
+     0,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     70,
+     72,
+     74,
+     76,
+     78
+    ],
+    "edges": {
+     "e0": [
+      286,
+      288,
+      276
+     ],
+     "e1": [
+      284,
+      288,
+      276
+     ],
+     "e10": [
+      294,
+      296,
+      288
+     ],
+     "e11": [
+      294,
+      296,
+      298
+     ],
+     "e12": [
+      296
+     ],
+     "e14": [
+      302,
+      290
+     ],
+     "e2": [
+      284,
+      288,
+      290
+     ],
+     "e3": [
+      284,
+      286,
+      288
+     ],
+     "e5": [
+      288,
+      294,
+      282
+     ],
+     "e6": [
+      290,
+      292,
+      282
+     ],
+     "e7": [
+      292,
+      294,
+      296
+     ]
+    },
+    "kslot": 3,
+    "layout": "col_h9|fp8|2304|5|6|3|r11|st2",
+    "slot_extra": {
+     "1": [
+      0
+     ],
+     "2": [
+      0,
+      0
+     ],
+     "3": [
+      0,
+      0,
+      0
+     ]
+    },
+    "elem_extra": [
+     0,
+     0,
+     0,
+     0,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 4,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 2,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 3,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 4,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 5,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 4,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 2,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 4,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 3,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 2,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 4,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 2,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 3,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 5,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 5,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 2,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 3,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 5,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 5,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 1
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 3,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 2
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 1,
+     "slots": 2
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "gi": 0
+  },
+  {
+   "phase": 2,
+   "op": "ffn.down",
+   "mat": "exp61.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 11,
+   "row_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.61.down",
+     0
+    ],
+    [
+     "ffn.experts.61.down",
+     1
+    ],
+    [
+     "ffn.experts.61.down",
+     2
+    ],
+    [
+     "ffn.experts.61.down",
+     3
+    ],
+    [
+     "ffn.experts.61.down",
+     4
+    ],
+    [
+     "ffn.experts.61.down",
+     5
+    ],
+    [
+     "ffn.experts.61.down",
+     6
+    ],
+    [
+     "ffn.experts.61.down",
+     7
+    ],
+    [
+     "ffn.experts.61.down",
+     8
+    ],
+    [
+     "ffn.experts.61.down",
+     9
+    ],
+    [
+     "ffn.experts.61.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 14,
+   "kslot": 3,
+   "nbeat": 80,
+   "sbase": 160,
+   "faults": 0,
+   "ret_words": 26,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2,
+    3
+   ],
+   "ret": [
+    [
+     352,
+     134299653,
+     1019381996,
+     0
+    ],
+    [
+     353,
+     134234149,
+     1009025856,
+     0
+    ],
+    [
+     354,
+     134242341,
+     1006732436,
+     0
+    ],
+    [
+     355,
+     134283301,
+     1005071816,
+     0
+    ],
+    [
+     356,
+     134291493,
+     3172026484,
+     0
+    ],
+    [
+     357,
+     134266949,
+     3167150626,
+     0
+    ],
+    [
+     358,
+     134275141,
+     3171654227,
+     0
+    ],
+    [
+     359,
+     134300197,
+     3156576026,
+     0
+    ],
+    [
+     360,
+     134250597,
+     1010674332,
+     0
+    ],
+    [
+     361,
+     134258789,
+     3137995648,
+     0
+    ],
+    [
+     362,
+     134235205,
+     981575232,
+     0
+    ],
+    [
+     363,
+     134243397,
+     3142472456,
+     0
+    ],
+    [
+     364,
+     134284357,
+     3133965920,
+     0
+    ],
+    [
+     365,
+     134292549,
+     3154938260,
+     0
+    ],
+    [
+     366,
+     134217797,
+     3157620204,
+     0
+    ],
+    [
+     367,
+     134225989,
+     1016898274,
+     0
+    ],
+    [
+     368,
+     134234661,
+     3146159180,
+     0
+    ],
+    [
+     369,
+     134242853,
+     3156829888,
+     0
+    ],
+    [
+     371,
+     134299909,
+     970898304,
+     0
+    ],
+    [
+     372,
+     134300741,
+     3139749184,
+     0
+    ],
+    [
+     373,
+     134283813,
+     1007816940,
+     0
+    ],
+    [
+     374,
+     134292005,
+     1005378184,
+     0
+    ],
+    [
+     375,
+     134218821,
+     968145920,
+     0
+    ],
+    [
+     376,
+     134227013,
+     989954924,
+     0
+    ],
+    [
+     377,
+     134267973,
+     3139945080,
+     0
+    ],
+    [
+     378,
+     134276165,
+     1000143712,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     70,
+     72,
+     74,
+     76,
+     78
+    ],
+    "edges": {
+     "e0": [
+      272,
+      274,
+      276
+     ],
+     "e1": [
+      274
+     ],
+     "e10": [
+      280,
+      286,
+      288
+     ],
+     "e11": [
+      282,
+      284,
+      288
+     ],
+     "e12": [
+      284,
+      286,
+      290
+     ],
+     "e14": [
+      282,
+      284,
+      290
+     ],
+     "e2": [
+      274,
+      278
+     ],
+     "e3": [
+      270,
+      272,
+      276
+     ],
+     "e5": [
+      274,
+      276,
+      280
+     ],
+     "e6": [
+      274,
+      276,
+      278
+     ],
+     "e7": [
+      276,
+      280,
+      282
+     ]
+    },
+    "kslot": 3,
+    "layout": "col_h9|fp4|2304|5|6|3|r11|st2",
+    "slot_extra": {
+     "1": [
+      0
+     ],
+     "2": [
+      0,
+      0
+     ],
+     "3": [
+      0,
+      0,
+      0
+     ]
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 3,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 2,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 3,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 1
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 2,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 2
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 4,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 2
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 4,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 5,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 3,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 2,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 4,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 3,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 5,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 2,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 4,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 5,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 5,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 4,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 3,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 5,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 2,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 2,
+     "slots": 3
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "gi": 1
+  },
+  {
+   "phase": 3,
+   "op": "ffn.down",
+   "mat": "exp69.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 11,
+   "row_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.69.down",
+     0
+    ],
+    [
+     "ffn.experts.69.down",
+     1
+    ],
+    [
+     "ffn.experts.69.down",
+     2
+    ],
+    [
+     "ffn.experts.69.down",
+     3
+    ],
+    [
+     "ffn.experts.69.down",
+     4
+    ],
+    [
+     "ffn.experts.69.down",
+     5
+    ],
+    [
+     "ffn.experts.69.down",
+     6
+    ],
+    [
+     "ffn.experts.69.down",
+     7
+    ],
+    [
+     "ffn.experts.69.down",
+     8
+    ],
+    [
+     "ffn.experts.69.down",
+     9
+    ],
+    [
+     "ffn.experts.69.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 14,
+   "kslot": 3,
+   "nbeat": 80,
+   "sbase": 240,
+   "faults": 0,
+   "ret_words": 26,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2,
+    3
+   ],
+   "ret": [
+    [
+     352,
+     134299653,
+     3144956808,
+     0
+    ],
+    [
+     353,
+     134234149,
+     3137446296,
+     0
+    ],
+    [
+     354,
+     134242341,
+     3141637320,
+     0
+    ],
+    [
+     355,
+     134283301,
+     995124216,
+     0
+    ],
+    [
+     356,
+     134291493,
+     991655332,
+     0
+    ],
+    [
+     357,
+     134266949,
+     1020393363,
+     0
+    ],
+    [
+     358,
+     134275141,
+     1010245466,
+     0
+    ],
+    [
+     359,
+     134300197,
+     1017888183,
+     0
+    ],
+    [
+     360,
+     134250597,
+     3119161536,
+     0
+    ],
+    [
+     361,
+     134258789,
+     1018232229,
+     0
+    ],
+    [
+     362,
+     134235205,
+     973213408,
+     0
+    ],
+    [
+     363,
+     134243397,
+     3157516404,
+     0
+    ],
+    [
+     364,
+     134284357,
+     1003784520,
+     0
+    ],
+    [
+     365,
+     134292549,
+     3120332224,
+     0
+    ],
+    [
+     366,
+     134217797,
+     1009898238,
+     0
+    ],
+    [
+     367,
+     134225989,
+     3165644718,
+     0
+    ],
+    [
+     368,
+     134234661,
+     1007021980,
+     0
+    ],
+    [
+     369,
+     134242853,
+     953233408,
+     0
+    ],
+    [
+     371,
+     134299909,
+     3129803712,
+     0
+    ],
+    [
+     372,
+     134300741,
+     3133691232,
+     0
+    ],
+    [
+     373,
+     134283813,
+     1007249522,
+     0
+    ],
+    [
+     374,
+     134292005,
+     3139257104,
+     0
+    ],
+    [
+     375,
+     134218821,
+     3146958736,
+     0
+    ],
+    [
+     376,
+     134227013,
+     3141552880,
+     0
+    ],
+    [
+     377,
+     134267973,
+     3131702688,
+     0
+    ],
+    [
+     378,
+     134276165,
+     3146228800,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     70,
+     72,
+     74,
+     76,
+     78
+    ],
+    "edges": {
+     "e0": [
+      272,
+      274,
+      276
+     ],
+     "e1": [
+      274
+     ],
+     "e10": [
+      280,
+      286,
+      288
+     ],
+     "e11": [
+      282,
+      284,
+      288
+     ],
+     "e12": [
+      284,
+      286,
+      290
+     ],
+     "e14": [
+      282,
+      284,
+      290
+     ],
+     "e2": [
+      274,
+      278
+     ],
+     "e3": [
+      270,
+      272,
+      276
+     ],
+     "e5": [
+      274,
+      276,
+      280
+     ],
+     "e6": [
+      274,
+      276,
+      278
+     ],
+     "e7": [
+      276,
+      280,
+      282
+     ]
+    },
+    "kslot": 3,
+    "layout": "col_h9|fp4|2304|5|6|3|r11|st2",
+    "slot_extra": {
+     "1": [
+      0
+     ],
+     "2": [
+      0,
+      0
+     ],
+     "3": [
+      0,
+      0,
+      0
+     ]
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 3,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 2,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 3,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 1
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 2,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 2
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 4,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 2
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 4,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 5,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 3,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 2,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 4,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 3,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 5,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 2,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 4,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 5,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 5,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 4,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 3,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 5,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 2,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 2,
+     "slots": 3
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "gi": 2
+  },
+  {
+   "phase": 4,
+   "op": "ffn.down",
+   "mat": "exp112.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 11,
+   "row_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.112.down",
+     0
+    ],
+    [
+     "ffn.experts.112.down",
+     1
+    ],
+    [
+     "ffn.experts.112.down",
+     2
+    ],
+    [
+     "ffn.experts.112.down",
+     3
+    ],
+    [
+     "ffn.experts.112.down",
+     4
+    ],
+    [
+     "ffn.experts.112.down",
+     5
+    ],
+    [
+     "ffn.experts.112.down",
+     6
+    ],
+    [
+     "ffn.experts.112.down",
+     7
+    ],
+    [
+     "ffn.experts.112.down",
+     8
+    ],
+    [
+     "ffn.experts.112.down",
+     9
+    ],
+    [
+     "ffn.experts.112.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 14,
+   "kslot": 3,
+   "nbeat": 80,
+   "sbase": 320,
+   "faults": 0,
+   "ret_words": 26,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2,
+    3
+   ],
+   "ret": [
+    [
+     352,
+     134299653,
+     998559808,
+     0
+    ],
+    [
+     353,
+     134234149,
+     1008488926,
+     0
+    ],
+    [
+     354,
+     134242341,
+     1002000474,
+     0
+    ],
+    [
+     355,
+     134283301,
+     1006937576,
+     0
+    ],
+    [
+     356,
+     134291493,
+     3162585895,
+     0
+    ],
+    [
+     357,
+     134266949,
+     994204388,
+     0
+    ],
+    [
+     358,
+     134275141,
+     1008085911,
+     0
+    ],
+    [
+     359,
+     134300197,
+     3166037968,
+     0
+    ],
+    [
+     360,
+     134250597,
+     3142434232,
+     0
+    ],
+    [
+     361,
+     134258789,
+     3152587230,
+     0
+    ],
+    [
+     362,
+     134235205,
+     999833792,
+     0
+    ],
+    [
+     363,
+     134243397,
+     3149289304,
+     0
+    ],
+    [
+     364,
+     134284357,
+     3112121600,
+     0
+    ],
+    [
+     365,
+     134292549,
+     1007847260,
+     0
+    ],
+    [
+     366,
+     134217797,
+     991748788,
+     0
+    ],
+    [
+     367,
+     134225989,
+     1004517742,
+     0
+    ],
+    [
+     368,
+     134234661,
+     3160542212,
+     0
+    ],
+    [
+     369,
+     134242853,
+     3141570232,
+     0
+    ],
+    [
+     371,
+     134299909,
+     1015390478,
+     0
+    ],
+    [
+     372,
+     134300741,
+     1011399808,
+     0
+    ],
+    [
+     373,
+     134283813,
+     3169196341,
+     0
+    ],
+    [
+     374,
+     134292005,
+     3152672870,
+     0
+    ],
+    [
+     375,
+     134218821,
+     996018496,
+     0
+    ],
+    [
+     376,
+     134227013,
+     3125648064,
+     0
+    ],
+    [
+     377,
+     134267973,
+     3142088832,
+     0
+    ],
+    [
+     378,
+     134276165,
+     990874336,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     70,
+     72,
+     74,
+     76,
+     78
+    ],
+    "edges": {
+     "e0": [
+      272,
+      274,
+      276
+     ],
+     "e1": [
+      274
+     ],
+     "e10": [
+      280,
+      286,
+      288
+     ],
+     "e11": [
+      282,
+      284,
+      288
+     ],
+     "e12": [
+      284,
+      286,
+      290
+     ],
+     "e14": [
+      282,
+      284,
+      290
+     ],
+     "e2": [
+      274,
+      278
+     ],
+     "e3": [
+      270,
+      272,
+      276
+     ],
+     "e5": [
+      274,
+      276,
+      280
+     ],
+     "e6": [
+      274,
+      276,
+      278
+     ],
+     "e7": [
+      276,
+      280,
+      282
+     ]
+    },
+    "kslot": 3,
+    "layout": "col_h9|fp4|2304|5|6|3|r11|st2",
+    "slot_extra": {
+     "1": [
+      0
+     ],
+     "2": [
+      0,
+      0
+     ],
+     "3": [
+      0,
+      0,
+      0
+     ]
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 3,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 2,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 3,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 1
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 2,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 2
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 4,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 2
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 4,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 5,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 3,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 2,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 4,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 3,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 5,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 2,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 4,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 5,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 5,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 4,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 3,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 5,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 2,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 2,
+     "slots": 3
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "gi": 3
+  },
+  {
+   "phase": 5,
+   "op": "ffn.down",
+   "mat": "exp170.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 11,
+   "row_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.170.down",
+     0
+    ],
+    [
+     "ffn.experts.170.down",
+     1
+    ],
+    [
+     "ffn.experts.170.down",
+     2
+    ],
+    [
+     "ffn.experts.170.down",
+     3
+    ],
+    [
+     "ffn.experts.170.down",
+     4
+    ],
+    [
+     "ffn.experts.170.down",
+     5
+    ],
+    [
+     "ffn.experts.170.down",
+     6
+    ],
+    [
+     "ffn.experts.170.down",
+     7
+    ],
+    [
+     "ffn.experts.170.down",
+     8
+    ],
+    [
+     "ffn.experts.170.down",
+     9
+    ],
+    [
+     "ffn.experts.170.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 14,
+   "kslot": 3,
+   "nbeat": 80,
+   "sbase": 400,
+   "faults": 0,
+   "ret_words": 26,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2,
+    3
+   ],
+   "ret": [
+    [
+     352,
+     134299653,
+     3145058576,
+     0
+    ],
+    [
+     353,
+     134234149,
+     1018512293,
+     0
+    ],
+    [
+     354,
+     134242341,
+     3153681152,
+     0
+    ],
+    [
+     355,
+     134283301,
+     1000769378,
+     0
+    ],
+    [
+     356,
+     134291493,
+     3162265248,
+     0
+    ],
+    [
+     357,
+     134266949,
+     1018879974,
+     0
+    ],
+    [
+     358,
+     134275141,
+     1019320936,
+     0
+    ],
+    [
+     359,
+     134300197,
+     3131284400,
+     0
+    ],
+    [
+     360,
+     134250597,
+     1005470958,
+     0
+    ],
+    [
+     361,
+     134258789,
+     3162714208,
+     0
+    ],
+    [
+     362,
+     134235205,
+     987276768,
+     0
+    ],
+    [
+     363,
+     134243397,
+     972739584,
+     0
+    ],
+    [
+     364,
+     134284357,
+     3134736064,
+     0
+    ],
+    [
+     365,
+     134292549,
+     3143010112,
+     0
+    ],
+    [
+     366,
+     134217797,
+     3156820361,
+     0
+    ],
+    [
+     367,
+     134225989,
+     3139620272,
+     0
+    ],
+    [
+     368,
+     134234661,
+     1012517679,
+     0
+    ],
+    [
+     369,
+     134242853,
+     991893576,
+     0
+    ],
+    [
+     371,
+     134299909,
+     979154656,
+     0
+    ],
+    [
+     372,
+     134300741,
+     983808192,
+     0
+    ],
+    [
+     373,
+     134283813,
+     1009046432,
+     0
+    ],
+    [
+     374,
+     134292005,
+     1005924272,
+     0
+    ],
+    [
+     375,
+     134218821,
+     933949440,
+     0
+    ],
+    [
+     376,
+     134227013,
+     3084390400,
+     0
+    ],
+    [
+     377,
+     134267973,
+     1000838400,
+     0
+    ],
+    [
+     378,
+     134276165,
+     3146646656,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     70,
+     72,
+     74,
+     76,
+     78
+    ],
+    "edges": {
+     "e0": [
+      272,
+      274,
+      276
+     ],
+     "e1": [
+      274
+     ],
+     "e10": [
+      280,
+      286,
+      288
+     ],
+     "e11": [
+      282,
+      284,
+      288
+     ],
+     "e12": [
+      284,
+      286,
+      290
+     ],
+     "e14": [
+      282,
+      284,
+      290
+     ],
+     "e2": [
+      274,
+      278
+     ],
+     "e3": [
+      270,
+      272,
+      276
+     ],
+     "e5": [
+      274,
+      276,
+      280
+     ],
+     "e6": [
+      274,
+      276,
+      278
+     ],
+     "e7": [
+      276,
+      280,
+      282
+     ]
+    },
+    "kslot": 3,
+    "layout": "col_h9|fp4|2304|5|6|3|r11|st2",
+    "slot_extra": {
+     "1": [
+      0
+     ],
+     "2": [
+      0,
+      0
+     ],
+     "3": [
+      0,
+      0,
+      0
+     ]
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 3,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 2,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 3,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 1
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 2,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 2
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 4,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 2
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 4,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 5,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 3,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 2,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 4,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 3,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 5,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 2,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 4,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 5,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 5,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 4,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 3,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 5,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 2,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 2,
+     "slots": 3
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "gi": 4
+  },
+  {
+   "phase": 6,
+   "op": "ffn.down",
+   "mat": "exp299.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 11,
+   "row_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.299.down",
+     0
+    ],
+    [
+     "ffn.experts.299.down",
+     1
+    ],
+    [
+     "ffn.experts.299.down",
+     2
+    ],
+    [
+     "ffn.experts.299.down",
+     3
+    ],
+    [
+     "ffn.experts.299.down",
+     4
+    ],
+    [
+     "ffn.experts.299.down",
+     5
+    ],
+    [
+     "ffn.experts.299.down",
+     6
+    ],
+    [
+     "ffn.experts.299.down",
+     7
+    ],
+    [
+     "ffn.experts.299.down",
+     8
+    ],
+    [
+     "ffn.experts.299.down",
+     9
+    ],
+    [
+     "ffn.experts.299.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 14,
+   "kslot": 3,
+   "nbeat": 80,
+   "sbase": 480,
+   "faults": 0,
+   "ret_words": 26,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2,
+    3
+   ],
+   "ret": [
+    [
+     352,
+     134299653,
+     3152799248,
+     0
+    ],
+    [
+     353,
+     134234149,
+     1020391534,
+     0
+    ],
+    [
+     354,
+     134242341,
+     3101506048,
+     0
+    ],
+    [
+     355,
+     134283301,
+     988179648,
+     0
+    ],
+    [
+     356,
+     134291493,
+     3168442394,
+     0
+    ],
+    [
+     357,
+     134266949,
+     1023693013,
+     0
+    ],
+    [
+     358,
+     134275141,
+     1007153140,
+     0
+    ],
+    [
+     359,
+     134300197,
+     3165073330,
+     0
+    ],
+    [
+     360,
+     134250597,
+     1025802100,
+     0
+    ],
+    [
+     361,
+     134258789,
+     3138631024,
+     0
+    ],
+    [
+     362,
+     134235205,
+     999872192,
+     0
+    ],
+    [
+     363,
+     134243397,
+     3166029948,
+     0
+    ],
+    [
+     364,
+     134284357,
+     1017107808,
+     0
+    ],
+    [
+     365,
+     134292549,
+     3156370736,
+     0
+    ],
+    [
+     366,
+     134217797,
+     1000485048,
+     0
+    ],
+    [
+     367,
+     134225989,
+     1018188842,
+     0
+    ],
+    [
+     368,
+     134234661,
+     3155070488,
+     0
+    ],
+    [
+     369,
+     134242853,
+     3167381780,
+     0
+    ],
+    [
+     371,
+     134299909,
+     1010722484,
+     0
+    ],
+    [
+     372,
+     134300741,
+     1019083444,
+     0
+    ],
+    [
+     373,
+     134283813,
+     3161667904,
+     0
+    ],
+    [
+     374,
+     134292005,
+     1012339196,
+     0
+    ],
+    [
+     375,
+     134218821,
+     3155401376,
+     0
+    ],
+    [
+     376,
+     134227013,
+     3132827904,
+     0
+    ],
+    [
+     377,
+     134267973,
+     1011274000,
+     0
+    ],
+    [
+     378,
+     134276165,
+     3159609336,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     70,
+     72,
+     74,
+     76,
+     78
+    ],
+    "edges": {
+     "e0": [
+      272,
+      274,
+      276
+     ],
+     "e1": [
+      274
+     ],
+     "e10": [
+      280,
+      286,
+      288
+     ],
+     "e11": [
+      282,
+      284,
+      288
+     ],
+     "e12": [
+      284,
+      286,
+      290
+     ],
+     "e14": [
+      282,
+      284,
+      290
+     ],
+     "e2": [
+      274,
+      278
+     ],
+     "e3": [
+      270,
+      272,
+      276
+     ],
+     "e5": [
+      274,
+      276,
+      280
+     ],
+     "e6": [
+      274,
+      276,
+      278
+     ],
+     "e7": [
+      276,
+      280,
+      282
+     ]
+    },
+    "kslot": 3,
+    "layout": "col_h9|fp4|2304|5|6|3|r11|st2",
+    "slot_extra": {
+     "1": [
+      0
+     ],
+     "2": [
+      0,
+      0
+     ],
+     "3": [
+      0,
+      0,
+      0
+     ]
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 3,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 2,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 3,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 1
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 2,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 2
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 4,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 2
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 4,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 5,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 3,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 2,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 4,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 3,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 5,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 2,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 4,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 5,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 5,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 4,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 3,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 5,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 2,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 2,
+     "slots": 3
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "gi": 5
+  },
+  {
+   "phase": 7,
+   "op": "ffn.down",
+   "mat": "exp357.w2",
+   "fmt": "fp4",
+   "K": 2304,
+   "chunk": 0,
+   "rows": 11,
+   "row_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "tie": [
+    [
+     "ffn.experts.357.down",
+     0
+    ],
+    [
+     "ffn.experts.357.down",
+     1
+    ],
+    [
+     "ffn.experts.357.down",
+     2
+    ],
+    [
+     "ffn.experts.357.down",
+     3
+    ],
+    [
+     "ffn.experts.357.down",
+     4
+    ],
+    [
+     "ffn.experts.357.down",
+     5
+    ],
+    [
+     "ffn.experts.357.down",
+     6
+    ],
+    [
+     "ffn.experts.357.down",
+     7
+    ],
+    [
+     "ffn.experts.357.down",
+     8
+    ],
+    [
+     "ffn.experts.357.down",
+     9
+    ],
+    [
+     "ffn.experts.357.down",
+     10
+    ]
+   ],
+   "nseg": 5,
+   "rows_per_phase": 14,
+   "kslot": 3,
+   "nbeat": 80,
+   "sbase": 560,
+   "faults": 0,
+   "ret_words": 26,
+   "calendar": "measured_class",
+   "elem_class": [
+    "fp4",
+    1,
+    2,
+    3
+   ],
+   "ret": [
+    [
+     352,
+     134299653,
+     1002274064,
+     0
+    ],
+    [
+     353,
+     134234149,
+     1008595384,
+     0
+    ],
+    [
+     354,
+     134242341,
+     1008301590,
+     0
+    ],
+    [
+     355,
+     134283301,
+     1001263632,
+     0
+    ],
+    [
+     356,
+     134291493,
+     1015593409,
+     0
+    ],
+    [
+     357,
+     134266949,
+     1008375619,
+     0
+    ],
+    [
+     358,
+     134275141,
+     3141726024,
+     0
+    ],
+    [
+     359,
+     134300197,
+     3152906536,
+     0
+    ],
+    [
+     360,
+     134250597,
+     3141001224,
+     0
+    ],
+    [
+     361,
+     134258789,
+     1008261047,
+     0
+    ],
+    [
+     362,
+     134235205,
+     3073359872,
+     0
+    ],
+    [
+     363,
+     134243397,
+     953492480,
+     0
+    ],
+    [
+     364,
+     134284357,
+     990914816,
+     0
+    ],
+    [
+     365,
+     134292549,
+     3128292032,
+     0
+    ],
+    [
+     366,
+     134217797,
+     3140058144,
+     0
+    ],
+    [
+     367,
+     134225989,
+     983188880,
+     0
+    ],
+    [
+     368,
+     134234661,
+     979965632,
+     0
+    ],
+    [
+     369,
+     134242853,
+     3135704640,
+     0
+    ],
+    [
+     371,
+     134299909,
+     1002186424,
+     0
+    ],
+    [
+     372,
+     134300741,
+     3149557056,
+     0
+    ],
+    [
+     373,
+     134283813,
+     979292992,
+     0
+    ],
+    [
+     374,
+     134292005,
+     3129641712,
+     0
+    ],
+    [
+     375,
+     134218821,
+     3117542912,
+     0
+    ],
+    [
+     376,
+     134227013,
+     960893952,
+     0
+    ],
+    [
+     377,
+     134267973,
+     3130341376,
+     0
+    ],
+    [
+     378,
+     134276165,
+     981856960,
+     0
+    ]
+   ],
+   "emission": {
+    "rule": "E(pair, seg) = e0 + last_beat(seg class) + off(pair) + seg_extra(seg)",
+    "e0": 212,
+    "off": {
+     "0": 0,
+     "1": 0,
+     "2": 2,
+     "3": 2,
+     "5": 6,
+     "6": 6,
+     "7": 8,
+     "9": 8,
+     "10": 12,
+     "11": 12,
+     "12": 14,
+     "14": 14
+    },
+    "seg_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ],
+    "cfifo": "dsfd_cfifo_crs4",
+    "land_e": 5,
+    "x_shift": -1,
+    "last_beat": [
+     70,
+     72,
+     74,
+     76,
+     78
+    ],
+    "edges": {
+     "e0": [
+      272,
+      274,
+      276
+     ],
+     "e1": [
+      274
+     ],
+     "e10": [
+      280,
+      286,
+      288
+     ],
+     "e11": [
+      282,
+      284,
+      288
+     ],
+     "e12": [
+      284,
+      286,
+      290
+     ],
+     "e14": [
+      282,
+      284,
+      290
+     ],
+     "e2": [
+      274,
+      278
+     ],
+     "e3": [
+      270,
+      272,
+      276
+     ],
+     "e5": [
+      274,
+      276,
+      280
+     ],
+     "e6": [
+      274,
+      276,
+      278
+     ],
+     "e7": [
+      276,
+      280,
+      282
+     ]
+    },
+    "kslot": 3,
+    "layout": "col_h9|fp4|2304|5|6|3|r11|st2",
+    "slot_extra": {
+     "1": [
+      0
+     ],
+     "2": [
+      0,
+      0
+     ],
+     "3": [
+      0,
+      0,
+      0
+     ]
+    },
+    "elem_extra": [
+     -14,
+     -14,
+     -14,
+     -14,
+     -14
+    ]
+   },
+   "placement": [
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 3,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 2,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 0,
+     "field_slot": 0,
+     "super_row": 1,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 1,
+     "field_slot": 1,
+     "super_row": 3,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 1
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 2,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 2
+    },
+    {
+     "pair": 2,
+     "field_slot": 2,
+     "super_row": 4,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 2
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 1,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 4,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 3,
+     "field_slot": 3,
+     "super_row": 5,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 3,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 2,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 5,
+     "field_slot": 4,
+     "super_row": 0,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 4,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 3,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 6,
+     "field_slot": 5,
+     "super_row": 5,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 2,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 0,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 7,
+     "field_slot": 6,
+     "super_row": 1,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 4,
+     "seg": 3,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 10,
+     "field_slot": 8,
+     "super_row": 0,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 0,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      0,
+      1
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 1,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 11,
+     "field_slot": 9,
+     "super_row": 5,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 5,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 4,
+     "seg": 2,
+     "nseg": 5,
+     "rows": [
+      8,
+      9
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 12,
+     "field_slot": 10,
+     "super_row": 3,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      6,
+      7
+     ],
+     "slot": 2,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 5,
+     "seg": 0,
+     "nseg": 5,
+     "rows": [
+      10,
+      11
+     ],
+     "slot": 0,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 1,
+     "seg": 1,
+     "nseg": 5,
+     "rows": [
+      2,
+      3
+     ],
+     "slot": 1,
+     "slots": 3
+    },
+    {
+     "pair": 14,
+     "field_slot": 11,
+     "super_row": 2,
+     "seg": 4,
+     "nseg": 5,
+     "rows": [
+      4,
+      5
+     ],
+     "slot": 2,
+     "slots": 3
+    }
+   ],
+   "sel": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "gi": 6
+  }
+ ],
+ "fill": [
+  216,
+  120,
+  176,
+  224,
+  216,
+  216,
+  224,
+  32,
+  216,
+  224,
+  160,
+  168,
+  0,
+  0,
+  0,
+  0
+ ],
+ "depth": 8192,
+ "nphases": 8,
+ "slots": [
+  0,
+  1,
+  2,
+  3,
+  5,
+  6,
+  7,
+  9,
+  10,
+  11,
+  12,
+  14
+ ],
+ "env": {
+  "OT_XS_QPAIRS": "12",
+  "OT_XS_GU_MERGE": "1",
+  "OT_XS_TOPO": "1",
+  "OT_XS_PROP": "1",
+  "OT_XS_CAL_SEGMENT": "1",
+  "OT_XS_KSLOT": "3",
+  "OT_XS_KSLOT_OPS": null
+ },
+ "topo": {
+  "enabled": true,
+  "frames_per_slice": [
+   8,
+   8,
+   8,
+   8,
+   7,
+   8,
+   6,
+   8,
+   6,
+   8,
+   7,
+   8,
+   8,
+   8,
+   8,
+   8
+  ],
+  "die_sha": "d0222e67dc3da5c5c163a959aafdbfe2858613d3c609e05eece77467cfbf7fc8"
+ }
+}

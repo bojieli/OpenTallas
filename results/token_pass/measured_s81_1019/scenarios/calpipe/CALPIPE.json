@@ -1,0 +1,51 @@
+{
+ "cls": "CALPIPE",
+ "written": "2026-10-20 PT",
+ "agent_branch": "claude/s81-calpipe-1020",
+ "ops": [
+  {
+   "op": "attn.wo_b",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 548.9,
+   "cycles": 901,
+   "serial_cycles": 1464,
+   "grade": "measured-release-RTL",
+   "bit_exact": true,
+   "definition": "per instance = max over the slice frames of the op's 4 FP8 field phases as ONE static go sequence at the compiled period P127 (go i = go0 + 127 i, xs_field_calendar), spine go of phase 0 -> last frame-root RET word: u_f_0L01 701 (u_f_0L00 699) + old DAG priced wire tail unchanged (146 r8 die wire + 28 s81_die_tiles) + 26 owed CAP edges = 901 (serial FWOA 1464)",
+   "shape": "4 phases x 10 rank-local rows per frame, fp8 K 2048, nseg 2; real L0 fixture rows + ROM images (TOKSIM-S81B/FWOA vectors p1..p4)",
+   "golden": "toksim_fgu_check.py seq: per-row golden segment tree bit-exact (hdc_golden_v41, released L0 fixture), coverage, cycle-exact calendar (gos at the compiled spacing)",
+   "floor": "P127 PASS both frames, P126 FAIL (4 words) .. P100 FAIL; negative control XCORRUPT (x sign flip) at P128 FAIL 4 errors both frames",
+   "rtl": {
+    "module": "frame masters col_h9_l4_nx_b / col_h10_l4_b (q elements ot_v41_rom_elem_q_qxpq_w10 + frame return tree; BF pairs dsfd_bf_front_roots + dsfd_bf_col) driven by ot_v41_spine_pq_static_w17w10 + dsfd_pq_lx",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (release GEN mu4c); exes v_h9nx_e5 / v_h10_e2 of TOKSIM-S81C/FSEQ",
+    "in_release_source": true
+   },
+   "bench": "results/rtl/s81_calpipe_1020/wob/run_wob_seq.sh (tb_toksim_fgu_seq +RETIRE, Verilator 5.050)",
+   "evidence": "results/rtl/s81_calpipe_1020/wob/*.otrun.log + evidence/",
+   "compiler": "xs_field_calendar.FLOORS attn.wo_b P127 (P<127 = compile fault)"
+  },
+  {
+   "op": "attn.wo_a",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 2222.0,
+   "cycles": 3531,
+   "serial_cycles": 4862,
+   "grade": "measured-release-RTL",
+   "bit_exact": true,
+   "definition": "per instance = max over the slice frames of the op's 12 BF16 phases as ONE static go sequence at the compiled period P231 (BF seg-label floor): 2893 (u_f_0L00; u_f_0L01 2886) + 584 r8 die wire + 28 s81_die_tiles + 26 owed CAP edges = 3531 (serial FWOA 4862)",
+   "shape": "12 BF16 pair phases per frame (8 x 6 + 4 x 4 rows), bseg1024, PHASE_VM (one K segment of x per phase)",
+   "golden": "toksim_fgu_check.py seq: golden segment tree bit-exact per row, 64/64 rows tied to the L0 fixture, cycle-exact calendar",
+   "floor": "P231 PASS both frames; P230/220/200/180 FAIL (second BF go relabels the open segment)",
+   "rtl": {
+    "module": "frame masters col_h9_l4_nx_b / col_h10_l4_b (q elements ot_v41_rom_elem_q_qxpq_w10 + frame return tree; BF pairs dsfd_bf_front_roots + dsfd_bf_col) driven by ot_v41_spine_pq_static_w17w10 + dsfd_pq_lx",
+    "source": "origin/claude/s81-bind-mu4-1019@19bf4121e (release GEN mu4c); exes v_h9nx_e5 / v_h10_e2 of TOKSIM-S81C/FSEQ",
+    "in_release_source": true
+   },
+   "bench": "results/rtl/s81_wqbp_1020/pipe3/run_woa_seq.sh @claude/s81-wqbp-1020 36163250c",
+   "evidence": "results/rtl/s81_wqbp_1020/pipe3/evidence",
+   "compiler": "xs_field_calendar.FLOORS attn.wo_a P231 + BF_SEG_LABEL_FLOOR"
+  }
+ ]
+}

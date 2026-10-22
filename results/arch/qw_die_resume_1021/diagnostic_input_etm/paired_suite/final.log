@@ -1,0 +1,161 @@
+..............................FF....F.............F......... [ 23%]
+.................................................................. [ 49%]
+....................................................F................... [ 78%]
+.......................................................                  [100%]
+=================================== FAILURES ===================================
+__________________ CollectiveCalendar.test_dv2f14bi_needs_378 __________________
+
+self = <test_collective_calendar.CollectiveCalendar testMethod=test_dv2f14bi_needs_378>
+
+    def test_dv2f14bi_needs_378(self):
+>       cll = json.loads((RL / 'gen_dv2f14bi/coll_lane_latency.json').read_text())
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tools/qwen_split/test_collective_calendar.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.14/pathlib/__init__.py:788: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021/src/results/rtl/qcollcal_rl_1018/gen_dv2f14bi/coll_lane_latency.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021/src/results/rtl/qcollcal_rl_1018/gen_dv2f14bi/coll_lane_latency.json'
+
+/usr/lib/python3.14/pathlib/__init__.py:772: FileNotFoundError
+__________________ CollectiveCalendar.test_dv2f14bq_needs_377 __________________
+
+self = <test_collective_calendar.CollectiveCalendar testMethod=test_dv2f14bq_needs_377>
+
+    def test_dv2f14bq_needs_377(self):
+>       cll = json.loads((RL / 'gen_dv2f14bq/coll_lane_latency.json').read_text())
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tools/qwen_split/test_collective_calendar.py:33: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.14/pathlib/__init__.py:788: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021/src/results/rtl/qcollcal_rl_1018/gen_dv2f14bq/coll_lane_latency.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021/src/results/rtl/qcollcal_rl_1018/gen_dv2f14bq/coll_lane_latency.json'
+
+/usr/lib/python3.14/pathlib/__init__.py:772: FileNotFoundError
+________________ CollectiveCalendar.test_strict_bind_witnesses _________________
+
+self = <test_collective_calendar.CollectiveCalendar testMethod=test_strict_bind_witnesses>
+
+    def test_strict_bind_witnesses(self):
+        """committed lane_latency_audit runs on the dv2f14bq / dv2f14bi netlists: period < need FAILS (negative at 376)."""
+        A = RL / 'calendar_audit'
+        want = {('bq', 'asbuilt'): 'FAIL', ('bq', '376'): 'FAIL', ('bq', '377'): 'PASS', ('bq', '378'): 'PASS',
+                ('bi', 'asbuilt'): 'FAIL', ('bi', '376'): 'FAIL', ('bi', '377'): 'FAIL', ('bi', '378'): 'PASS'}
+        for (g, ls), v in want.items():
+>           r = json.loads((A / f'dv2f14{g}_ls{ls}.json').read_text())
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tools/qwen_split/test_collective_calendar.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.14/pathlib/__init__.py:788: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021/src/results/rtl/qcollcal_rl_1018/calendar_audit/dv2f14bq_lsasbuilt.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021/src/results/rtl/qcollcal_rl_1018/calendar_audit/dv2f14bq_lsasbuilt.json'
+
+/usr/lib/python3.14/pathlib/__init__.py:772: FileNotFoundError
+______________________ test_producer_law_matches_compiler ______________________
+
+    def test_producer_law_matches_compiler():
+        assert pr(L.producer_txd(L.parse_stages(DIE), kv_codec=1))['K'] == [23, 4, 3, 3]
+        got = pr(L.producer_txd(L.parse_stages(DIE), kv_codec=2))
+        assert got == {'C': [8, 3, 1, 9], 'K': [24, 4, 3, 3]}, got
+        l1 = pr(L.producer_txd(L.parse_stages(L1_DIE), kv_codec=2))
+        assert l1 == {'C': [8, 3, 1, 10], 'K': [24, 4, 3, 3]}, l1
+>       assert l1 == json.loads(PROG.read_text())['txd']
+E       AssertionError: assert {'C': [8, 3, ...[24, 4, 3, 3]} == {'C': [8, 3, ...[23, 4, 3, 3]}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'K': [24, 4, 3, 3]} != {'K': [23, 4, 3, 3]}
+E         Use -v to get more diff
+
+tools/qwen_split/test_d2d_txdp.py:41: AssertionError
+_____ RecordBundles.test_bhd_land_plan_asbuilt_and_collcal_fail_fix_passes _____
+
+self = <test_record_bundles.RecordBundles testMethod=test_bhd_land_plan_asbuilt_and_collcal_fail_fix_passes>
+
+    def test_bhd_land_plan_asbuilt_and_collcal_fail_fix_passes(self):
+>       rows, cal, h0 = lp_rows()
+                        ^^^^^^^^^
+
+tools/qwen_split/test_record_bundles.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/qwen_split/test_record_bundles.py:33: in lp_rows
+    fl = json.loads((CC / 'gen_bhd_asbuilt/fwd_lanes.json').read_text())
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.14/pathlib/__init__.py:788: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021/src/results/rtl/q_collcal_1018/gen_bhd_asbuilt/fwd_lanes.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/codex-q-diag-etm-suite-1021/src/results/rtl/q_collcal_1018/gen_bhd_asbuilt/fwd_lanes.json'
+
+/usr/lib/python3.14/pathlib/__init__.py:772: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tools/qwen_split/test_collective_calendar.py::CollectiveCalendar::test_dv2f14bi_needs_378
+FAILED tools/qwen_split/test_collective_calendar.py::CollectiveCalendar::test_dv2f14bq_needs_377
+FAILED tools/qwen_split/test_collective_calendar.py::CollectiveCalendar::test_strict_bind_witnesses
+FAILED tools/qwen_split/test_d2d_txdp.py::test_producer_law_matches_compiler
+FAILED tools/qwen_split/test_record_bundles.py::RecordBundles::test_bhd_land_plan_asbuilt_and_collcal_fail_fix_passes
+5 failed, 248 passed, 18 subtests passed in 45.55s

@@ -1,0 +1,25 @@
+MISMATCH ktree.sc_d cycle 32 ref 00000000fd9d7095 nc 00000000fc2d6264
+MISMATCH ktree.sc_d cycle 33 ref 00000000fd9d7095 nc 00000000fc2d6264
+MISMATCH ktree.sc_d cycle 34 ref 00000000fd9d7095 nc 00000000fc2d62be
+MISMATCH ktree.sc_d cycle 35 ref 00000000fd9d7095 nc 00000000fc2d62be
+MISMATCH ktree.sc_d cycle 36 ref 00000000fd9d7095 nc 00000000fc2d62be
+MISMATCH ktree.sc_d cycle 37 ref 000000006b8aed48 nc 000000006abf8c2b
+MISMATCH ktree.sc_d cycle 38 ref 00000000fd6837a2 nc 00000000fc4ccb70
+MISMATCH ktree.sc_d cycle 39 ref 000000007d530ae5 nc 000000007bf02f92
+MISMATCH ktree.sc_d cycle 40 ref 00000000fd8e6670 nc 00000000fb54572e
+MISMATCH ktree.sc_d cycle 41 ref 00000000f5be5357 nc 00000000f1d228ed
+MISMATCH ktree.sc_d cycle 42 ref 00000000781a0291 nc 000000007691f6d6
+MISMATCH ktree.sc_d cycle 43 ref 00000000fdb23e20 nc 00000000fd2ec247
+MISMATCH ktree.sc_d cycle 44 ref 00000000cdda1f4f nc 00000000cc9467f0
+MISMATCH ktree.sc_d cycle 45 ref 000000007d4833c3 nc 000000007afbd013
+MISMATCH ktree.sc_d cycle 46 ref 000000007d73815f nc 000000007b89d97d
+MISMATCH ktree.sc_d cycle 47 ref 000000007cbaf954 nc 000000007685d24c
+MISMATCH ktree.sc_d cycle 48 ref 000000006ed57c37 nc 000000006c9cb558
+MISMATCH ktree.sc_d cycle 49 ref 00000000f69279be nc 00000000f5dfdd12
+MISMATCH ktree.sc_d cycle 50 ref 00000000f2ae07a3 nc 00000000f2270a52
+MISMATCH ktree.sc_d cycle 51 ref 00000000f5b9c9ee nc 00000000f2787375
+TB_QKH_KT32C FAIL ktree errors 191209 of 400080 checks
+- /srv/opentallas-scratch2/claude/kv-params4-qkh-kt32c7-1020/results/rtl/kv_params4_qkh_1020/tb_qkh_kt32c.sv:100: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 400us; walltime 11.121 s; speed 35.978 us/s
+- Verilator: cpu 10.774 s on 1 threads; allocated 10 MB

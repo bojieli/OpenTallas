@@ -1,0 +1,29 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-root-integration-final-2210-1020
+ot-run: ot-epyc6       admits   182 GB (avail 241, growth 113, headroom 0, waiters 0/0 GB) load 58/128 running 33 disk 2255 GB 
+ot-run: ot-epyc7       admits  1055 GB (avail 798, growth 60, headroom 0, waiters 0/0 GB) load 53/96 running 16 disk 5032 GB 
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-root-integration-final-2210-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-root-integration-final-2210-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-root-integration-final-2210-1020
+ot-run: -> ot-epyc7
+ot-heavy: admitted on ot-epyc7 as oth-ubuntu-2918503-1792559741 after 0 s
+fixturebase closure_loop rc=1 19 failed, 1151 passed, 17 skipped, 195 subtests passed in 108.39s (0:01:48)
+fixturecand closure_loop rc=1 19 failed, 1151 passed, 17 skipped, 195 subtests passed in 108.43s (0:01:48)
+NEW closure_loop []
+FIXED closure_loop []
+fixturebase ref_tile rc=1 112 failed, 779 passed, 24 skipped, 418 subtests passed in 303.28s (0:05:03)
+fixturecand ref_tile rc=1 112 failed, 782 passed, 24 skipped, 418 subtests passed in 307.95s (0:05:07)
+NEW ref_tile []
+FIXED ref_tile []
+fixturebase fleet rc=1 7 failed, 55 passed, 1 deselected in 9.25s
+fixturecand fleet rc=1 7 failed, 55 passed, 1 deselected in 8.41s
+NEW fleet []
+FIXED fleet []
+fixturebase landed_parent rc=1 2 failed, 10 passed in 0.34s
+fixturecand landed_parent rc=1 2 failed, 10 passed in 0.34s
+NEW landed_parent []
+FIXED landed_parent []
+....................................................................................................                                       [100%]
+100 passed, 6 subtests passed in 6.15s
+
+
+ot-run: RAN on ot-epyc7 (unit oth-ubuntu-2918503-1792559741): exit 0

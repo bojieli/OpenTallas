@@ -33,7 +33,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('slice_json')
     ap.add_argument('--out', required=True)
+    ap.add_argument('--src', action='append', default=[], help='REGEX=NAME[@HALF_NS]: clock / reset input source override')
     a = ap.parse_args()
+    srcs = []
+    for x in a.src:
+        rx, nm = x.split('=', 1)
+        nm, _, half = nm.partition('@')
+        srcs.append((re.compile(rx), nm, half))
     r = json.loads(Path(a.slice_json).read_text())
     top = r['top']
     ins = [p for p in r['ports'] if p['dir'] == 'input']
@@ -51,6 +57,8 @@ def main():
          '    integer cyc = 0, errs = 0, rel_cyc = -1; always @(posedge ck) cyc <= cyc + 1;',
          '    task automatic smoke_err(input [8*120-1:0] msg); begin errs = errs + 1;',
          '        if (errs < 30) $display("SMOKE_ERR @%0d %0s", cyc, msg); end endtask']
+    for nm, half in dict((n, h) for _, n, h in srcs).items():
+        L.append(f'    reg {nm} = 0;' + (f' always #{half} {nm} = ~{nm};' if half else '   // driven by SLICE_DRIVE'))
     for p in ins:
         w = p['width']
         if p['role'] == 'data':
@@ -61,6 +69,10 @@ def main():
     for p in ins:
         w = p['width']
         src = {'clock': f'{{{w}{{ck}}}}', 'reset': f'{{{w}{{rst_n}}}}'}.get(p['role'], f'drv_{p["port"]}')
+        for rx, nm, _ in srcs:
+            if p['role'] in ('clock', 'reset') and rx.fullmatch(p['port']):
+                src = f'{{{w}{{{nm}}}}}'
+                break
         conns.append(f'.{p["port"]}({src})')
     conns += [f'.{p["port"]}({p["port"]})' for p in outs]
     L.append(f'    {top} dut (' + ',\n        '.join(conns) + ');')

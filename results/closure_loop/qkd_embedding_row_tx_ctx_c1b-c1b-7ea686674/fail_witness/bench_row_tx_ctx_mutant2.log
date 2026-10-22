@@ -1,0 +1,10 @@
+# fail witness captured by the closure loop (GATE-FRICTION auto-capture)
+# job qkd_embedding_row_tx_ctx_c1b-c1b-7ea686674 bench bench_row_tx_ctx_mutant2 host ot-epyc5 run /srv/opentallas-scratch/claude/closure-loop/qkd_embedding_row_tx_ctx_c1b-c1b-7ea686674 log cl/bench_row_tx_ctx_mutant2.a1b1.log captured 2026-10-19T22:46:33-07:00
+# fail_regex '^FAIL'
+Verilator 5.050 2026-07-01 rev v5.050
+== MUT 2
+POSITIVE tokens=24 items=1560 headers_ok=24 words_ok=1536 fault=0
+ROW_OPEN high_samples=5675 falls=24
+FAIL negative case 'missing word' did not fault
+NEGATIVE cases=6 faulted=5
+FAIL kvjc row_tx_ctx errors=1

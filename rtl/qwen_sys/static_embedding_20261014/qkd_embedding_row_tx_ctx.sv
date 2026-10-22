@@ -22,7 +22,11 @@
 // exists only at the d2d boundary (the link's own replay layer), never here.
 // Size: 1 macro, 548 + 64 + 16 + 18 + 16 + 7 + ~6 flops + 1 reset pin flop.  Edges: 0 added on the d2d path (the port's codec edge).
 // MUT (bench only): 1 = code word index field off by one; 2 = no residency check at the header slot;
-//                   3 = word n + 1 read one item late (the payload repeats the previous word).
+//                   3 = word n + 1 read one item late (the payload repeats the previous word);
+//                   4 = row_open reports only the resident-unsent window (KV-EMB4 hardened-child bench).
+// KV-EMB4 10-19: hardened as its own child kit physical/ref_tile/qkd_embedding_row_tx_ctx (pin regs: row_open leaves
+// through one output pin register, so the parent sees armed one edge late on both edges; ctx_start's MIN_GAP covers the
+// rise, the fall makes the next admissible new owner >= 2 edges after the 65th send slot -- priced in the GEN9 calendar).
 // ---------------------------------------------------------------------------------------------------------------------
 module qkd_embedding_row_tx_ctx #(
     parameter integer MUT = 0
@@ -56,7 +60,7 @@ module qkd_embedding_row_tx_ctx #(
     reg [6:0]   n;                           // items sent: 0 = none, 1 = header, 1 + w = word w, 65 = done
     wire        resident = armed && (&filled) && scale_filled;
     assign row_ready = resident && n == 7'd0;
-    assign row_open = armed;
+    assign row_open = (MUT == 4) ? row_ready : armed;   // MUT 4 (bench only): row_open = resident-and-unsent only
     // SRAM read address: the next item's word (item n + 1 is word n; sent on the slot after this one)
     wire [6:0]  rd_w = (MUT == 3) ? ((n == 7'd0) ? 7'd0 : n - 7'd1) : n;
     wire        rd_ce = emb_tx_slot && n < 7'd64;

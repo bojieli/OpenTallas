@@ -40,7 +40,9 @@
    "xs_a1",
    "xs_a2",
    "xs_g1",
-   "xs_g2"
+   "xs_g2",
+   "o_iw",
+   "o_ix"
   ],
   "S": [
    "bk1",
@@ -52,10 +54,6 @@
    "o_ilast_e",
    "o_itag_e",
    "o_iv_f"
-  ],
-  "ANY": [
-   "o_iw",
-   "o_ix"
   ]
  },
  "clock_port": "clk",
@@ -113,7 +111,14 @@
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "fill",
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  ]
+ ],
  "referenced": [
   "rtl/hdc/ot_hdc_prefix.sv",
   "rtl/v41rom/ot_v41_bterm.sv",
@@ -149,11 +154,17 @@
   "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
   "rtl/lib/ot_hdly.sv",
   "rtl/lib/ot_rst_relay.sv",
+  "physical/ref_tile/smh_xs_ref_p45m/bnd_branch.tcl",
   "physical/ref_tile/smh_xs_ref_p45m/kit.env",
   "physical/ref_tile/smh_xs_ref_p45m/clock.sdc",
   "physical/ref_tile/smh_xs_ref_p45m/signoff.sdc",
   "physical/ref_tile/smh_xs_ref_p45m/pdn.tcl",
   "physical/ref_tile/smh_xs_ref_p45m/pre_cts.tcl",
+  "physical/ref_tile/smh_xs_ref_p45m/post_cts.tcl",
+  "physical/ref_tile/smh_xs_ref_p45m/post_grt.tcl",
+  "physical/ref_tile/smh_xs_ref_p45m/pre_drt.tcl",
+  "physical/ref_tile/smh_xs_ref_p45m/pre_fill.tcl",
+  "physical/ref_tile/smh_xs_ref_p45m/post_fill.tcl",
   "physical/ref_tile/smh_xs_ref_p45m/pre_grt.tcl",
   "physical/ref_tile/smh_xs_ref_p45m/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",

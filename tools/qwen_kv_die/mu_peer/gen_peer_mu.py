@@ -164,12 +164,15 @@ CO_HEAD = '''`timescale 1ns/1ps
 //   MU 1: the same coordinator with qkd_host_peer_coordinator_codec_mu #(MU 1) and qkd_host_coordinator_services_mu
 //         #(MU 1) (lifecycle_mu: allocator_mu + cohort_mu + terminal/POST queues; post_collector_mu).  The codec's
 //         terminal identity is the lifecycle's accepted terminal (acknowledged_*), not the latest grant.
+//   POST_UID_SLOT (KV-BIND4-GUARD 10-19, default 0 = unchanged): passed to qkd_host_coordinator_services_mu (KV-HOST2
+//         f5cdb27df); 1 = the real-observer POST decode (checked slot UID, raw positions), used by the KV die HOST root.
 '''
+CO_EXTRA = 'parameter integer MU=1,parameter integer POST_UID_SLOT=0'
 CO_EDITS = [
  (' qkd_host_peer_coordinator_codec u_peer(', ' qkd_host_peer_coordinator_codec_mu #(.MU(1)) u_peer('),
  ('.terminal_accepted(terminal_accepted),.terminal_tag(terminal_tag),.terminal_gen(token_grant_gen),',
   '.terminal_accepted(terminal_accepted),.terminal_tag(acknowledged_tag),.terminal_gen(acknowledged_gen),'),
- (' qkd_host_coordinator_services u_lifecycle(', ' qkd_host_coordinator_services_mu #(.MU(1)) u_lifecycle('),
+ (' qkd_host_coordinator_services u_lifecycle(', ' qkd_host_coordinator_services_mu #(.MU(1),.POST_UID_SLOT(POST_UID_SLOT)) u_lifecycle('),
 ]
 
 def main():
@@ -187,9 +190,10 @@ def main():
      ('qkd_host_ctrl_token_service_packet_collected', TS_HEAD, TS_EDITS, TS_PREFIX),
      ('qkd_host_tp8_coordinator', CO_HEAD, CO_EDITS, ''),
     ]
+    extra = dict(qkd_host_tp8_coordinator=CO_EXTRA)
     for mod, head, edits, prefix in jobs:
         src = (HI / f'{mod}.sv').read_text()
-        out = build(src, mod, head, edits, body_prefix=prefix)
+        out = build(src, mod, head, edits, body_prefix=prefix, extra_param=extra.get(mod, 'parameter integer MU=1'))
         (OUT / f'{mod}_mu.sv').write_text(out)
         print('wrote', OUT / f'{mod}_mu.sv')
 

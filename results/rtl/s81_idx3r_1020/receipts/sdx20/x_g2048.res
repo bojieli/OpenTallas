@@ -1,0 +1,1 @@
+IDXRD_CASE OK sdx20/x_g2048: TB_IDXRD PASS | TB_IDXRD_STATS gather 1 N 2048 keys 16384 words 1024 T0 1500 P 4 mut 0 sram 1 ckh 900 hdr_to_last 5834 end_to_last 5641 nerr 0 nopen 0 qerr 0 slice_err 0 | maxrss_kb=213580 wall=2:21.15

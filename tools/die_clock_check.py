@@ -26,13 +26,21 @@ PAIRS.json: [[instA, instB], ...] or {"pairs": [[instA, instB, note?], ...]} (ti
 The optional "entry_pairs" list names literal inst/clock_pin nodes, so related
 clock entries within one tile and specific same-domain branches can be measured.
 """
-import argparse, json, os, statistics, sys
+import argparse, json, os, re, statistics, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "hbm_die_v15"))
 from die_clock_tree import stage_ps  # H-DIE's measured-calibrated repeater stage model (9bcff2c0b)
 
 SPAN = 420.0   # um per modelled repeater stage, as clock_alt_model.py
+# OWNER 10-20 ~08:50 CLOCK RULE (supersedes the 10-16 80 ps neighbour boundary-match form): every region crossing lands
+# in a fixed-latency mesochronous landing ring (offset set at reset, no flow control); the 80 ps limit applies WITHIN a
+# region only, and across a ring-landed crossing the ring's tolerance window governs.  A cross-region pair is LANDED
+# when its net, either tile instance or either master matches LANDED_RE (OT_LANDED / land8 / landing-ring cells), or
+# the --landed JSON lists it ({"pairs": [[a, b], ...], "regions": [[ga, gb], ...]}).  Landed pairs are reported, judged
+# only against --ring-window-ps when given; a NON-landed cross-region pair stays judged at --budget-ps.
+# --strict-neighbour restores the 10-16 form (landed crossings judged at the budget too).
+LANDED_RE = re.compile(r"(?i)(ot_landed|land8|land_?ring|landing|qfd_landh|qfd_rlyrl_|hbfd_land|hbfd_lh|(^|[/_])landh?\d*($|[/_\[]))")
 
 
 def wire_ps(L):
@@ -151,7 +159,7 @@ def load_targets(path):
 
 
 def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False, budget=None, region_map=None,
-           families=None, ff_dump=None):
+           families=None, ff_dump=None, per_region=False, landed=None, ring_window_ps=None, strict_neighbour=False):
     nodes, pairs, summ = load(dump)
     model = model_arrivals(nodes)
     R = load_targets(targets)
@@ -266,7 +274,8 @@ def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False
     inter_summary["by_pair"] = {k: stats(v) for k, v in sorted(inter_summary["by_pair"].items())}
     neighbour = None
     if budget is not None:
-        neighbour = neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes)
+        neighbour = neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes, per_region,
+                                      landed=landed, ring_window_ps=ring_window_ps, strict_neighbour=strict_neighbour)
     out = dict(
         neighbour_check=neighbour,
         schema="opentallas.die_clock_check.v1", dump=os.path.abspath(dump), dump_summary=summ,
@@ -282,10 +291,29 @@ def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False
                     roots=[n for n, d in nodes.items() if d["kind"] == "root"]),
         regions=regions, inter_region=inter_summary,
         tiles=tiles, pairs=prs, unmatched_pairs=missing[:200])
+    if targets:
+        from die_clock.qualification import carry_unqualified
+        qualification = carry_unqualified(json.load(open(targets)))
+        if qualification:
+            out.update(qualification)
+            if neighbour and neighbour["verdict"] == "PASS":
+                neighbour["verdict"] = "MODEL_ONLY"
     return out
 
 
-def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
+def load_landed(path):
+    """--landed JSON -> (set of frozenset inst pairs, set of frozenset region pairs)"""
+    if not path:
+        return set(), set()
+    j = json.load(open(path))
+    if isinstance(j, list):
+        j = {"pairs": j}
+    return ({frozenset(map(str, e[:2])) for e in j.get("pairs", [])},
+            {frozenset(map(str, e[:2])) for e in j.get("regions", [])})
+
+
+def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes, per_region=False, landed=None,
+                      ring_window_ps=None, strict_neighbour=False):
     """OWNER 2026-10-16 neighbour-relative clocking: every COMMUNICATING pair (die netlist data nets / bus list) whose
     two clock entries belong to one synchronous family must be within `budget` ps of flop-arrival skew at TT (this dump)
     and FF (--ff-dump, the same die at the FF corner).  Pairs are classed by region pair (region = balance group of the
@@ -313,6 +341,12 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
             return 0.0
         return R(nodes[e]["cell"], e) if ci == 2 else R_ff(nodes[e]["cell"], e)
     R_ff = getattr(R, "ff", None) or (lambda m, p: 0.0)
+    landed_pairs, landed_regions = load_landed(landed)
+    def is_landed(p, ea, eb, ga, gb):
+        if frozenset((str(p["a"]), str(p["b"]))) in landed_pairs or frozenset((str(ga), str(gb))) in landed_regions:
+            return True
+        net = str(p.get("net", "")).split("|")[0]
+        return any(LANDED_RE.search(str(x or "")) for x in (net, p["a"], p["b"], nodes[ea]["cell"], nodes[eb]["cell"]))
     classes = {}
     worst = []
     for p in prs:
@@ -322,18 +356,38 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
         ra, rb = root_of(ea), root_of(eb)
         fa, fb = fam.get(ra, ra if families else "one"), fam.get(rb, rb if families else "one")
         ga = gmap.get(p.get("region_a"), p.get("region_a")); gb = gmap.get(p.get("region_b"), p.get("region_b"))
+        if per_region:
+            # QW-DIECLK 10-19 landed-regions standard: every region is its own synchronous family even when a forwarded
+            # spine feeds several (one common ancestor); cross-region pairs are mesochronous and must be LANDED
+            # (judged by qwen_landed_pairs / regional_verdict), never by skew here
+            fa, fb = ga, gb
         if fa != fb:
             k = "async:" + "|".join(sorted((str(fa), str(fb))))
             c = classes.setdefault(k, dict(pairs=0, judged=False))
             c["pairs"] += 1
             continue
-        k = ("intra:" + str(ga)) if ga == gb else ("neighbour:" + "|".join(sorted((str(ga), str(gb)))))
-        c = classes.setdefault(k, dict(pairs=0, judged=True, tt=[], ff=[], over=0))
-        c["pairs"] += 1
         tt = p.get("flop_skew_ps", p.get("sta_skew_ps"))
         f_ = None
         if ff is not None and ff.get(ea) is not None and ff.get(eb) is not None:
             f_ = abs(ff[ea] + Rf(ea, 1) - ff[eb] - Rf(eb, 1))
+        if ga != gb and not strict_neighbour and is_landed(p, ea, eb, ga, gb):
+            # OWNER 10-20: ring-landed crossing -> exempt from the 80 ps budget; the ring tolerance window governs
+            k = "landed:" + "|".join(sorted((str(ga), str(gb))))
+            c = classes.setdefault(k, dict(pairs=0, judged=False, tt=[], ff=[], ring_window_ps=ring_window_ps,
+                                           over_window=0))
+            c["pairs"] += 1
+            c["tt"].append(tt); c["ff"].append(f_)
+            m = max(x for x in (tt, f_, 0.0) if x is not None)
+            if ring_window_ps is not None:
+                c["window_margin_ps"] = round(min(c.get("window_margin_ps", float("inf")), ring_window_ps - m), 1)
+                if m > ring_window_ps:
+                    c["over_window"] += 1
+                    worst.append(dict(a=p["a"], b=p["b"], cls=k, tt_ps=tt, ff_ps=None if f_ is None else round(f_, 1),
+                                      ring_window_ps=ring_window_ps))
+            continue
+        k = ("intra:" + str(ga)) if ga == gb else ("neighbour:" + "|".join(sorted((str(ga), str(gb)))))
+        c = classes.setdefault(k, dict(pairs=0, judged=True, tt=[], ff=[], over=0))
+        c["pairs"] += 1
         c["tt"].append(tt); c["ff"].append(f_)
         # SIGNED capture-minus-launch flop clock difference (FLOW-HOLD 10-16: die FF hold sizes cells from delta's
         # sign): only for directed rows (geom dump --pairs: launch = the net's block driver, written first)
@@ -348,17 +402,25 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
             c["over"] += 1
             worst.append(dict(a=p["a"], b=p["b"], cls=k, tt_ps=tt, ff_ps=None if f_ is None else round(f_, 1)))
     for k, c in classes.items():
-        if c.get("judged"):
+        if "tt" in c:
             c["tt_ps"] = stats(c.pop("tt")); c["ff_ps"] = stats(c.pop("ff"))
+        if c.get("judged"):
             for kk in ("delta_tt", "delta_ff"):
                 if kk in c:
                     v = c.pop(kk)
                     c[kk + "_signed_ps"] = dict(stats(v), positive=sum(1 for x in v if x > 0))
     judged = [c for c in classes.values() if c.get("judged")]
+    ring_over = sum(c.get("over_window", 0) for c in classes.values())
     worst.sort(key=lambda w: -max(w["tt_ps"] or 0, w["ff_ps"] or 0))
     return dict(budget_ps=budget, ff_measured=ff is not None,
-                verdict=("PASS" if judged and all(c["over"] == 0 for c in judged) and ff is not None else
-                         "FAIL" if any(c["over"] for c in judged) else "INCOMPLETE"),
+                rule=("strict 10-16: every same-family pair judged at the budget" if strict_neighbour else
+                      "owner 10-20: budget within a region and on non-landed crossings; ring-landed crossings exempt"
+                      + (f" (ring window {ring_window_ps} ps)" if ring_window_ps is not None else " (reported)")),
+                landed_pairs=sum(c["pairs"] for k, c in classes.items() if k.startswith("landed:")),
+                landed_over_window=ring_over,
+                verdict=("FAIL" if ring_over or any(c["over"] for c in judged) else
+                         "PASS" if (judged or any(k.startswith("landed:") for k in classes)) and ff is not None else
+                         "INCOMPLETE"),
                 pairs_judged=sum(c["pairs"] for c in judged), pairs_over=sum(c["over"] for c in judged),
                 classes=dict(sorted(classes.items())), worst=worst[:200])
 
@@ -366,6 +428,8 @@ def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
 def table(r, top=20):
     L = []
     c, ins, nc = r["counts"], r["insertion"], r["noncommon"]
+    if r.get("physical_qualification_eligible") is False:
+        L.append("QUALIFICATION: MODEL_ONLY; no native physical receiver view; release eligibility false")
     L.append(f"die clock check: {c['tiles']} tiles / {c['tile_entries']} clock entries, {c['clock_cells']} die clock cells, "
              f"{c['die_flops']} die flops, roots {', '.join(c['roots'])}")
     def s(x):
@@ -423,13 +487,19 @@ def main():
     r.add_argument("--budget-ps", type=float, help="neighbour-relative check: max flop-arrival skew of communicating pairs")
     r.add_argument("--ff-dump", help="the same die dumped at the FF corner (hold side of the neighbour check)")
     r.add_argument("--region-map", help="tools/die_clock build spec: tree name -> balance_group = region")
+    r.add_argument("--per-region", action="store_true", help="each region (balance group) is its own family")
     r.add_argument("--families", help='JSON {family: [root node, ...]}: synchronous families; pairs across are async')
+    r.add_argument("--landed", help='JSON {"pairs": [[a, b], ...], "regions": [[ga, gb], ...]}: ring-landed crossings '
+                                    '(also detected by name: OT_LANDED / land8 / landing-ring cells)')
+    r.add_argument("--ring-window-ps", type=float, help="landing-ring tolerance window: landed crossings judged against it")
+    r.add_argument("--strict-neighbour", action="store_true", help="10-16 form: landed crossings judged at --budget-ps too")
     sub.add_parser("tcl")
     a = ap.parse_args()
     if a.cmd == "tcl":
         print(os.path.join(HERE, "die_clock_check.tcl"))
         return
-    res = report(a.dump, a.pairs, a.top, a.targets, a.strict_entry_pairs, a.budget_ps, a.region_map, a.families, a.ff_dump)
+    res = report(a.dump, a.pairs, a.top, a.targets, a.strict_entry_pairs, a.budget_ps, a.region_map, a.families, a.ff_dump,
+                 getattr(a, "per_region", False), a.landed, a.ring_window_ps, a.strict_neighbour)
     txt = table(res, a.top)
     if a.out:
         with open(a.out, "w") as fh:

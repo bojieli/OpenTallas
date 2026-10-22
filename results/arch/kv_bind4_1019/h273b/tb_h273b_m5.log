@@ -1,0 +1,9 @@
+Verilator 5.050 2026-07-01 rev v5.050
+H273B_MISMATCH cyc 314 h273b 0 h273 1
+H273B_CALENDAR_MISMATCH cyc 314 0 ref 1
+H273B_MISMATCH cyc 349 h273b 1 h273 0
+H273B_MISMATCH cyc 622 h273b 0 h273 1
+H273B_FAIL errors=4 mismatches=3
+[675000] %Fatal: tb_qkd_rst_region_pr_h273b.sv:38: Assertion failed in tb_qkd_rst_region_pr_h273b
+%Error: rtl/test/qwen_split/tb_qkd_rst_region_pr_h273b.sv:38: Verilog $stop
+Aborting...

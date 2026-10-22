@@ -1,0 +1,27 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg
+ot-run: ot-epyc9       admits   923 GB (avail 806, growth 160, headroom 0, waiters 0/0 GB) load 123/128 running 43 disk 80 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-rom12-1020/rootseg
+ot-run: LOAD SPILL not possible (command names /srv/opentallas-scratch/codex/s81-rom12-1020/out/calendar_seg outside a scratch lane); running on ot-epyc9 at 1.50 x cores
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-1148840-1792494380 after 1 s
+XS_FIELD_LAYER_FAULT L0 ('segmented calendar compile fault', "('no fixed PRIME gap', 'ffn.shared_gu', 0, 211, 209)")
+XS_FIELD_CAL L0 {"attn.wq_b": [8, 126, 1105], "attn.wo_b": [4, 127, 701], "ffn.shared_gu": [3, 146, 652], "ffn.experts_gu": [18, 145, 2810], "ffn.down": [21, 130, 2889], "attn.wo_a": [12, 231, 2893], "ffn.router": [5, 231, 1269]} layer_rows 5278 mu [('ar', True, 0), ('mtp', True, 0)]
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/rootseg/tools/s81_dv/layer_prog/xs_field_calendar.py", line 458, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/rootseg/tools/s81_dv/layer_prog/xs_field_calendar.py", line 454, in main
+    return {'die': cmd_die, 'selftest': cmd_selftest}[a.cmd](a)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/rootseg/tools/s81_dv/layer_prog/xs_field_calendar.py", line 343, in cmd_die
+    lc = layer_calendar(r['cals'])
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/rootseg/tools/s81_dv/layer_prog/xs_field_calendar.py", line 173, in layer_calendar
+    v = XC.isd(**({'prime': 1} if t == XC.TS - 20 else {'start': 1}), base=base, length=len(c['packed']))
+  File "/srv/opentallas-scratch/codex/s81-rom12-1020/rootseg/tools/s81_dv/layer_prog/xs_calendar.py", line 83, in isd
+    assert 0 <= v < (1 << wd), (k, v)
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: ('base', 4102)
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-1148840-1792494380): exit 1

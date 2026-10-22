@@ -1,0 +1,101 @@
+{
+  "status": "R7_DIAGNOSTIC_PARTIAL_TWO64LOAD_PREFIX_VIOLATIONS",
+  "source_commit": "7bf0df545",
+  "host": "ot-epyc5",
+  "unit": "oth-ubuntu-1802021-1792432296",
+  "raw_netlist": "/srv/opentallas-scratch/claude/codex-safe-qw-slice/census_station_r7/station.json",
+  "netlist_sha256": "f75066d0dd68b1bcc6bde6d4f87e351d97f1f7f2dd218f127e3d4640552c167d",
+  "kept_soft_hierarchy_expanded": true,
+  "primitive_cells": 431980,
+  "cell_types": {
+    "$_DFF_P_": 44561,
+    "$_DFFE_PN0P_": 151,
+    "$_DFFE_PN1P_": 34,
+    "$_DFF_PN0_": 630,
+    "$_NOT_": 20142,
+    "$_AND_": 129102,
+    "$_XOR_": 38175,
+    "$_OR_": 82237,
+    "$_MUX_": 70024,
+    "$scopeinfo": 3295,
+    "$_SDFF_PN0_": 16880,
+    "$_SDFFE_PN0P_": 859,
+    "$_SDFF_PN1_": 1780,
+    "$_DFFE_PP_": 21300,
+    "$_SDFF_PP0_": 2672,
+    "$_SDFF_PP1_": 96,
+    "ot_sram_1r1w_32x64_m1": 42
+  },
+  "flops": 88963,
+  "max_reset_loads": 32,
+  "max_reset_all_pin_loads": 32,
+  "issues": [],
+  "all_register_outputs_over32": [
+    {
+      "bit": 8309,
+      "loads": 64,
+      "names": [
+        "g_l7[0].u_lo.g_exact.g_rep.g_v.u_v.stage[0]",
+        "g_l7[1].u_lo.g_exact.g_rep.g_nv.u_v.stage[0]",
+        "g_l7[2].u_lo.g_exact.g_rep.g_nv.u_v.stage[0]",
+        "g_l7[3].u_lo.g_exact.g_rep.g_nv.u_v.stage[0]",
+        "g_l7[4].u_lo.g_exact.g_rep.g_nv.u_v.stage[0]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$114293",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    },
+    {
+      "bit": 125870,
+      "loads": 64,
+      "names": [
+        "g_l8[0].u_add.g_exact.g_rep.g_v.u_v.stage[0]",
+        "g_l8[1].u_add.g_exact.g_rep.g_nv.u_v.stage[0]",
+        "g_l8[2].u_add.g_exact.g_rep.g_nv.u_v.stage[0]",
+        "g_l8[3].u_add.g_exact.g_rep.g_nv.u_v.stage[0]",
+        "g_l8[4].u_add.g_exact.g_rep.g_nv.u_v.stage[0]"
+      ],
+      "driver": {
+        "cell": "$auto$ff.cc:337:slice$163968",
+        "type": "$_DFF_P_"
+      },
+      "register_output": true
+    }
+  ],
+  "driven_nets_over32_count": 2,
+  "worst_generic_depth": [
+    {
+      "cell": "g_sc[0].u_mul.g_exact.u_d.u_289.$auto$ff.cc:337:slice$323057",
+      "pin": "D",
+      "bit": 247911,
+      "generic_levels": 32,
+      "names": [
+        "g_sc[0].u_mul.g_exact.u_d.n[681]",
+        "g_sc[0].u_mul.g_exact.u_d.u_289.D"
+      ]
+    },
+    {
+      "cell": "g_sc[0].u_mul.g_exact.u_d.u_290.$auto$ff.cc:337:slice$323056",
+      "pin": "D",
+      "bit": 247912,
+      "generic_levels": 32,
+      "names": [
+        "g_sc[0].u_mul.g_exact.u_d.n[682]",
+        "g_sc[0].u_mul.g_exact.u_d.u_290.D"
+      ]
+    },
+    {
+      "cell": "g_sc[0].u_mul.g_exact.u_d.u_293.$auto$ff.cc:337:slice$323053",
+      "pin": "D",
+      "bit": 247915,
+      "generic_levels": 32,
+      "names": [
+        "g_sc[0].u_mul.g_exact.u_d.n[685]",
+        "g_sc[0].u_mul.g_exact.u_d.u_293.D"
+      ]
+    }
+  ],
+  "scope": "Generic retained-hierarchy primitive audit only; native TT/FF mapping/area/clock/placement pending; prefix-copy repair required before adoption"
+}

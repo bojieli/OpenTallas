@@ -26,5 +26,62 @@ OT_IOREF clock-port ck (core_clk): data input delays dropped
 OT_IOREF clock-port ck_o (ck_o_fwd): data input delays dropped
 OT_IOREF_EDGE core_clk boundary 71 negedge 0 noarc 0 inverted 0
 OT_IOREF ot_lb_v_core_clk core_clk mean 89.2 min 87.8 max 90.9 n 71 boundary
+OT_IOREF clock-port ck (core_clk): data input delays dropped
+OT_IOREF clock-port ck_o (ck_o_fwd): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 71 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 89.2 min 87.8 max 90.9 n 71 boundary
 OT_WS max 3.527593495089576e-10 min 3.4269712068102365e-11
+OT_FC_LIB BUFx2_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_SS_nldm_211120 A
+OT_FC_ROLE BUFx2_ASAP7_75t_R output144 A Y A 0
+OT_FC_CHAIN BUFx2_ASAP7_75t_R output144
+OT_FC_LIB INVx3_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_SS_nldm_211120 !A
+OT_FC_ROLE INVx3_ASAP7_75t_R u_st.g_half.u_ck0/_0_ A Y !A 1
+OT_FC_CHAIN INVx3_ASAP7_75t_R u_st.g_half.u_ck0/_0_
+OT_FC_LIB BUFx4_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_SS_nldm_211120 A
+OT_FC_ROLE BUFx4_ASAP7_75t_R clkbuf_3_7__f_ck A Y A 0
+OT_FC_CHAIN BUFx4_ASAP7_75t_R clkbuf_3_7__f_ck
+OT_FC_LIB BUFx4_ASAP7_75t_R asap7sc7p5t_INVBUF_RVT_SS_nldm_211120 A
+OT_FC_ROLE BUFx4_ASAP7_75t_R clkbuf_0_ck A Y A 0
+OT_FC_CHAIN BUFx4_ASAP7_75t_R clkbuf_0_ck
+OT_FC_SENSE negative_unate
+OT_FC_DRIVER BUFx2_ASAP7_75t_R output144
+OT_FC_WAVE 0.0 416.66650851770913
+OT_FC_CLOCK core_clk
+OT_FC_OUTPUT_CLOCK ck_o_fwd
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_FC_INPUT_METRIC arrival_max_rise 0.000000
+OT_FC_ABSOLUTE_METRIC arrival_max_rise 552.893188
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_max_rise 552.813660
+OT_FC_PHASE arrival_max_rise 1 416.66650851770913
+OT_FC_METRIC arrival_max_rise 136.22667948229088
+OT_FC_DRIVER_METRIC arrival_max_rise 136.1471514822909
+OT_FC_INPUT_METRIC arrival_min_rise 0.000000
+OT_FC_ABSOLUTE_METRIC arrival_min_rise 544.886047
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_min_rise 544.806519
+OT_FC_PHASE arrival_min_rise 1 416.66650851770913
+OT_FC_METRIC arrival_min_rise 128.21953848229083
+OT_FC_DRIVER_METRIC arrival_min_rise 128.14001048229085
+OT_FC_INPUT_METRIC arrival_max_fall 416.666504
+OT_FC_ABSOLUTE_METRIC arrival_max_fall 128.260712
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_max_fall 128.181213
+OT_FC_PHASE arrival_max_fall 0 0.0
+OT_FC_METRIC arrival_max_fall 128.260712
+OT_FC_DRIVER_METRIC arrival_max_fall 128.181213
+OT_FC_INPUT_METRIC arrival_min_fall 416.666504
+OT_FC_ABSOLUTE_METRIC arrival_min_fall 119.445663
+OT_FC_DRIVER_ABSOLUTE_METRIC arrival_min_fall 119.366173
+OT_FC_PHASE arrival_min_fall 0 0.0
+OT_FC_METRIC arrival_min_fall 119.445663
+OT_FC_DRIVER_METRIC arrival_min_fall 119.366173
+OT_FC_INPUT_METRIC slew_max_rise 0.000000
+OT_FC_ABSOLUTE_METRIC slew_max_rise 11.117721
+OT_FC_DRIVER_ABSOLUTE_METRIC slew_max_rise 11.115322
+OT_FC_METRIC slew_max_rise 11.117721
+OT_FC_DRIVER_METRIC slew_max_rise 11.115322
+OT_FC_INPUT_METRIC slew_max_fall 0.000000
+OT_FC_ABSOLUTE_METRIC slew_max_fall 10.896608
+OT_FC_DRIVER_ABSOLUTE_METRIC slew_max_fall 10.893996
+OT_FC_METRIC slew_max_fall 10.896608
+OT_FC_DRIVER_METRIC slew_max_fall 10.893996
+OT_FC_ROOT ck
 OT_EXPORT_DONE

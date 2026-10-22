@@ -1,0 +1,38 @@
+KU c678 user 0 pos 0
+KU c742 user 1 pos 0
+KU c806 user 2 pos 0
+KU c870 user 3 pos 0
+KU c934 user 4 pos 0
+KU c998 user 5 pos 0
+KU c1062 user 6 pos 0
+KU c1126 user 7 pos 0
+KU c1190 user 0 pos 1
+KU c1254 user 1 pos 1
+KU c1318 user 2 pos 1
+KU c1382 user 3 pos 1
+KU c1446 user 4 pos 1
+KU c1510 user 5 pos 1
+KU c1574 user 6 pos 1
+KU c1638 user 7 pos 1
+KU c1702 user 0 pos 2
+KU c1766 user 1 pos 2
+KU c1830 user 2 pos 2
+KU c1894 user 3 pos 2
+KU c1958 user 4 pos 2
+KU c2022 user 5 pos 2
+KU c2086 user 6 pos 2
+KU c2150 user 7 pos 2
+KU c2214 user 0 pos 3
+KU c2278 user 1 pos 3
+KU c2342 user 2 pos 3
+KU c2406 user 3 pos 3
+KU c2470 user 4 pos 3
+KU c2534 user 5 pos 3
+KU c2598 user 6 pos 3
+KU c2662 user 7 pos 3
+MUWIN starts 32 fires 80 expected 80 K 2 t_mf 0000 hslot 0000 hwin 00
+MUWIN PASS
+- /srv/opentallas-scratch/claude/mu-s81-2-die/src/rtl/dsrom_sys/s81_dv/unit/test/tb_dsdv_mu_hwin.sv:106: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.001 s; speed 2.170 ms/s
+- Verilator: cpu 0.001 s on 1 threads; allocated 7 MB

@@ -1,0 +1,15 @@
+ot-run: ot-epyc5       admits  1173 GB (avail 912, growth 91, headroom 0, waiters 0/0 GB) load 34/128 running 19 disk 345 GB 
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/root-code-1245-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/root-code-1245-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/root-code-1245-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/root-code-1245-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/root-code-1245-1020
+ot-run: -> ot-epyc5
+ot-heavy: admitted on ot-epyc5 as oth-ubuntu-2448589-1792525679 after 1 s
+NATIVE45 PASS
+EXPECTED_REJECT missing receipt
+EXPECTED_REJECT changed raw
+EXPECTED_REJECT master identity
+EXPECTED_REJECT phase relabel
+EXPECTED_REJECT nonfinite mirrored receipts
+ot-run: RAN on ot-epyc5 (unit oth-ubuntu-2448589-1792525679): exit 0

@@ -1,0 +1,21 @@
+# case PE_1 env X=0 args a b c d e f g i j k q --vflags -GSU_LT=1 -GHD_W130=1 -GMU_NU=1 -GFACE=2 --work /srv/opentallas-scratch/claude/mu-dq-slicekc/r2/work/PE_1 host regular-crane 2026-10-19T04:39:39-07:00 commit 549e8e808256d8cc3d7d337799727f2be775fcdd Verilator 5.050 2026-07-01 rev v5.050
+  (measured) fused root: last PSUM out of slice 1 -> r out of the root = [61] cycles
+bench2 (a) MUT=0: PASS 24/24
+bench2 (b) MUT=0: PASS 8192/8192
+bench2 (c) MUT=0: PASS 640/640
+bench2 (d) MUT=0: PASS 256/256
+  (info) ROM-golden SiLU vs IEEE-divide SiLU: 440/1024 values differ
+bench2 (e) MUT=0: PASS 1024/1024
+bench2 (f) MUT=0: PASS 3/3
+  op                                     priced beats  measured span  issue->last out
+  residual + sum of squares (6 x 128)          96             96         183
+  consumer norm / scale (683 rows)             86             86         134
+  QK sum of squares (128)                      16             16         104
+  QK norm (128)                                16             16          64
+  SiLU * up (128)                              16             16         190
+bench2 (g) MUT=0: PASS 5/5
+bench2 (i) MUT=0: PASS 3/3
+bench2 (j) MUT=0: PASS 3/3
+bench2 (k) MUT=0: PASS 512/512
+bench2 (q) MUT=0: PASS 512/512
+# exit 0

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/kv-attn-safe-control-1019/tools/qwen_kv_die/attn_safe_control_1019/check_emitted.py", line 31, in <module>
+    assert sorted(actual)==sorted(expected),'public port binding'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: public port binding

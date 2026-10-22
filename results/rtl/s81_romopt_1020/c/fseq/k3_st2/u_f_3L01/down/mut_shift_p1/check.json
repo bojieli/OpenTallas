@@ -1,0 +1,19 @@
+{
+ "summary": {
+  "words": 30,
+  "rows": 11,
+  "complete_rows_at_root": 0,
+  "partial_words": 30,
+  "plan_exact": false,
+  "end": "END edges=1051 ret_words=30 xo_checked=1049 fault=0"
+ },
+ "fixture_rows": 11,
+ "errors": [
+  "PLAN_MISMATCH predicted 30 words, got 30; first diff ((357, 2, (4, 2, 5), 1019448260, 0), (356, 2, (4, 2, 5), 1019448260, 0))"
+ ],
+ "frame": "u_f_3L01",
+ "op": "ffn.down",
+ "field_phase": 1,
+ "mutant": "shift",
+ "pass": false
+}

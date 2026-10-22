@@ -1,0 +1,25 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-epyc9       admits   340 GB (avail 394, growth 156, headroom 0, waiters 0/0 GB) load 53/128 running 32 disk 170 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-native-census-1020
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-252962-1792484663 after 1 s
+combinedbase closure_loop rc=1 19 failed, 1151 passed, 17 skipped, 195 subtests passed in 122.93s (0:02:02)
+combinedcand closure_loop rc=1 19 failed, 1151 passed, 17 skipped, 195 subtests passed in 122.99s (0:02:02)
+NEW closure_loop []
+FIXED closure_loop []
+combinedbase ref_tile rc=1 93 failed, 611 passed, 24 skipped, 291 subtests passed in 234.30s (0:03:54)
+combinedcand ref_tile rc=1 114 failed, 611 passed, 24 skipped, 271 subtests passed in 230.65s (0:03:50)
+NEW ref_tile ['FAILED test_gray_fifo_cdc_constraints.py::ActualGraph::test_actual_graph_normal_and_mutants', 'FAILED test_gray_fifo_cdc_constraints.py::EventLint::test_without_events_sdc_unchanged', 'FAILED test_gray_fifo_cdc_constraints.py::Lint::test_actual_kv_cdc_channel', 'FAILED test_gray_fifo_cdc_constraints.py::Lint::test_admitted_and_bounded_only', 'FAILED test_gray_fifo_cdc_constraints.py::Lint::test_existing_modes_unchanged', 'FAILED test_gray_fifo_cdc_constraints.py::Lint::test_launch_aliases_carry_launch_roles_only', 'FAILED test_gray_fifo_cdc_constraints.py::Lint::test_reviewed_source_mutants_refused', 'FAILED test_gray_fifo_cdc_constraints.py::Lint::test_schema_refused', 'FAILED test_gray_fifo_cdc_constraints.py::Lint::test_structural_mutants_refused', 'FAILED test_gray_fifo_cdc_constraints.py::Lint::test_two_family_phy_leaf', 'FAILED test_gray_fifo_cdc_constraints.py::MergedOnline::test_broken_partner_refused', 'FAILED test_gray_fifo_cdc_constraints.py::MergedOnline::test_merged_online_chain_admitted_once', 'FAILED test_gray_fifo_cdc_constraints.py::MergedOnline::test_real_missing_synchroniser_still_fails', 'FAILED test_host_sram_gray_fifo.py::HostSramTests::test_actual_corner_roles', 'FAILED test_host_sram_gray_fifo.py::HostSramTests::test_actual_source_and_model_fingerprints', 'FAILED test_host_sram_gray_fifo.py::HostSramTests::test_actual_top_proof_and_wrong_writer_clock', 'FAILED test_host_sram_gray_fifo.py::HostSramTests::test_missing_clock', 'FAILED test_host_sram_gray_fifo.py::HostSramTests::test_no_implicit_dual_clock_admission', 'FAILED test_host_sram_gray_fifo.py::HostSramTests::test_receipt_pins_blackbox_even_if_not_in_sources', 'FAILED test_host_sram_gray_fifo.py::HostSramTests::test_wrong_bus_width', 'FAILED test_host_sram_gray_fifo.py::HostSramTests::test_wrong_related_clock']
+FIXED ref_tile []
+combinedbase fleet rc=1 7 failed, 52 passed, 1 deselected in 8.97s
+combinedcand fleet rc=1 7 failed, 52 passed, 1 deselected in 8.50s
+NEW fleet []
+FIXED fleet []
+combinedbase landed_parent rc=0 12 passed in 0.27s
+combinedcand landed_parent rc=0 12 passed in 0.26s
+NEW landed_parent []
+FIXED landed_parent []
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-252962-1792484663): exit 0

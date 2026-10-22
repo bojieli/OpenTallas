@@ -1,0 +1,8 @@
+{
+  "original_sha256": "f3e4623c40ee2384099ee243de1d2e229b5f23ab6fbbcc2d2a1e99bbd3086f2c",
+  "mutated_sha256": "542ae87a8eafeba34f4c32b112a8518614246159f3a3a7e3c8802907136cd1e3",
+  "actual_source": "u_7159",
+  "D": "n_589 = prog_witness_slot",
+  "Q": "n_8985 -> actual record.witness_slot",
+  "mutation": "actual producer FF posedge to negedge only; no comparator/fixture/output change"
+}

@@ -1,0 +1,616 @@
+{
+ "VERDICT": "FAIL",
+ "frame": "u_f_3L01",
+ "op": "ffn.down",
+ "env": {
+  "OT_XS_QPAIRS": "12",
+  "OT_XS_GU_MERGE": "1",
+  "OT_XS_TOPO": "1",
+  "OT_XS_PROP": "1",
+  "OT_XS_CAL_SEGMENT": "1",
+  "OT_XS_KSLOT": "2",
+  "OT_XS_KSLOT_OPS": null
+ },
+ "topo": {
+  "enabled": true,
+  "frames_per_slice": [
+   8,
+   8,
+   8,
+   8,
+   7,
+   8,
+   6,
+   8,
+   6,
+   8,
+   7,
+   8,
+   8,
+   8,
+   8,
+   8
+  ],
+  "die_sha": "d0222e67dc3da5c5c163a959aafdbfe2858613d3c609e05eece77467cfbf7fc8"
+ },
+ "runs": [
+  {
+   "phase": 1,
+   "rows": 6,
+   "rc": 0,
+   "pv_words": 30,
+   "bad": [
+    [
+     "seg mismatch",
+     4,
+     0,
+     "1",
+     4
+    ],
+    [
+     "seg mismatch",
+     4,
+     1,
+     "1",
+     4
+    ]
+   ],
+   "faults": [],
+   "end": "END edges=1034 ret_words=16 xo_checked=1032 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 2,
+   "rows": 5,
+   "rc": 0,
+   "pv_words": 25,
+   "bad": [
+    [
+     "seg mismatch",
+     9,
+     2,
+     "0",
+     4
+    ],
+    [
+     "seg mismatch",
+     9,
+     3,
+     "0",
+     4
+    ]
+   ],
+   "faults": [],
+   "end": "END edges=1035 ret_words=15 xo_checked=1033 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 3,
+   "rows": 6,
+   "rc": 0,
+   "pv_words": 30,
+   "bad": [
+    [
+     "seg mismatch",
+     0,
+     0,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     0,
+     1,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     4,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     5,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     7,
+     4,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     7,
+     5,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     12,
+     2,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     12,
+     3,
+     "0",
+     3
+    ]
+   ],
+   "faults": [],
+   "end": "END edges=1025 ret_words=18 xo_checked=1023 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 4,
+   "rows": 5,
+   "rc": 0,
+   "pv_words": 25,
+   "bad": [],
+   "faults": [],
+   "end": "END edges=1021 ret_words=15 xo_checked=1019 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 5,
+   "rows": 6,
+   "rc": 0,
+   "pv_words": 30,
+   "bad": [
+    [
+     "seg mismatch",
+     0,
+     0,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     0,
+     1,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     4,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     5,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     7,
+     4,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     7,
+     5,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     12,
+     2,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     12,
+     3,
+     "0",
+     3
+    ]
+   ],
+   "faults": [],
+   "end": "END edges=1025 ret_words=18 xo_checked=1023 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 6,
+   "rows": 5,
+   "rc": 0,
+   "pv_words": 25,
+   "bad": [],
+   "faults": [],
+   "end": "END edges=1021 ret_words=15 xo_checked=1019 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 7,
+   "rows": 6,
+   "rc": 0,
+   "pv_words": 30,
+   "bad": [
+    [
+     "seg mismatch",
+     0,
+     0,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     0,
+     1,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     4,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     5,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     7,
+     4,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     7,
+     5,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     12,
+     2,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     12,
+     3,
+     "0",
+     3
+    ]
+   ],
+   "faults": [],
+   "end": "END edges=1025 ret_words=18 xo_checked=1023 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 8,
+   "rows": 5,
+   "rc": 0,
+   "pv_words": 25,
+   "bad": [],
+   "faults": [],
+   "end": "END edges=1021 ret_words=15 xo_checked=1019 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 9,
+   "rows": 6,
+   "rc": 0,
+   "pv_words": 30,
+   "bad": [
+    [
+     "seg mismatch",
+     0,
+     0,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     0,
+     1,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     4,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     5,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     7,
+     4,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     7,
+     5,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     12,
+     2,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     12,
+     3,
+     "0",
+     3
+    ]
+   ],
+   "faults": [],
+   "end": "END edges=1025 ret_words=18 xo_checked=1023 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 10,
+   "rows": 5,
+   "rc": 0,
+   "pv_words": 25,
+   "bad": [],
+   "faults": [],
+   "end": "END edges=1021 ret_words=15 xo_checked=1019 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 11,
+   "rows": 6,
+   "rc": 0,
+   "pv_words": 30,
+   "bad": [
+    [
+     "seg mismatch",
+     0,
+     0,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     0,
+     1,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     4,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     5,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     7,
+     4,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     7,
+     5,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     12,
+     2,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     12,
+     3,
+     "0",
+     3
+    ]
+   ],
+   "faults": [],
+   "end": "END edges=1025 ret_words=18 xo_checked=1023 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 12,
+   "rows": 5,
+   "rc": 0,
+   "pv_words": 25,
+   "bad": [],
+   "faults": [],
+   "end": "END edges=1021 ret_words=15 xo_checked=1019 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 13,
+   "rows": 6,
+   "rc": 0,
+   "pv_words": 30,
+   "bad": [
+    [
+     "seg mismatch",
+     0,
+     0,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     0,
+     1,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     4,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     3,
+     5,
+     "1",
+     3
+    ],
+    [
+     "seg mismatch",
+     7,
+     4,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     7,
+     5,
+     "0",
+     2
+    ],
+    [
+     "seg mismatch",
+     12,
+     2,
+     "0",
+     3
+    ],
+    [
+     "seg mismatch",
+     12,
+     3,
+     "0",
+     3
+    ]
+   ],
+   "faults": [],
+   "end": "END edges=1025 ret_words=18 xo_checked=1023 fault=0 spine_fault=0"
+  },
+  {
+   "phase": 14,
+   "rows": 5,
+   "rc": 0,
+   "pv_words": 25,
+   "bad": [],
+   "faults": [],
+   "end": "END edges=1021 ret_words=15 xo_checked=1019 fault=0 spine_fault=0"
+  }
+ ],
+ "table": {
+  "1": {
+   "0": {
+    "d": [
+     0
+    ],
+    "words": 130,
+    "by_seg": {
+     "0": [
+      0
+     ],
+     "1": [
+      0
+     ],
+     "2": [
+      0
+     ],
+     "3": [
+      0
+     ],
+     "4": [
+      0
+     ]
+    }
+   }
+  },
+  "2": {
+   "0": {
+    "d": [
+     0
+    ],
+    "words": 72,
+    "by_seg": {
+     "0": [
+      0
+     ],
+     "1": [
+      0
+     ],
+     "2": [
+      0
+     ],
+     "3": [
+      0
+     ]
+    }
+   },
+   "1": {
+    "d": [
+     -4,
+     -3,
+     0,
+     1,
+     8,
+     9
+    ],
+    "words": 183,
+    "by_seg": {
+     "2": [
+      -3,
+      0
+     ],
+     "3": [
+      -4,
+      -3,
+      0,
+      1
+     ],
+     "4": [
+      0,
+      8,
+      9
+     ]
+    }
+   }
+  }
+ },
+ "rule": "d = PV edge - (e0 + last_beat(seg) + off(pair) + seg_extra(seg)) per (slots n in the element, slot j)",
+ "binary_sha256": "3a407cc9ef3a476a6b5b69184e19f2f6beade91ad8f7399751fceaab766959b9",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050"
+}

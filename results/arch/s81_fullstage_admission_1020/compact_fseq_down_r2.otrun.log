@@ -1,0 +1,90 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact
+ot-run: ot-epyc6       skipped: no /srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact
+ot-run: ot-epyc9       admits   805 GB (avail 680, growth 117, headroom 0, waiters 0/0 GB) load 55/128 running 35 disk 163 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-stage-admission-1020/rootcompact
+ot-run: -> ot-epyc9
+ot-heavy: admitted on ot-epyc9 as oth-ubuntu-3026382-1792497872 after 0 s
+ALLOC ffn.down fill [160, 160, 144, 160, 184, 176, 160, 160, 136, 152, 152, 136, 0, 0, 0, 0] phases [(1, 4, 10), (2, 4, 10), (3, 2, 5), (4, 4, 10), (5, 4, 10), (6, 2, 5), (7, 4, 10), (8, 4, 10), (9, 2, 5), (10, 4, 10), (11, 4, 10), (12, 2, 5), (13, 4, 10), (14, 4, 10), (15, 2, 5), (16, 4, 10), (17, 4, 10), (18, 2, 5), (19, 4, 10), (20, 4, 10), (21, 2, 5)]
+FSEQ12 ffn.down 130 run 0 check 0 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 1 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 2 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 3 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 4 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 5 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 6 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 7 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 8 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 9 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 10 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 11 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 12 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 13 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 14 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 15 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 16 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 17 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 18 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 19 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 20 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 21 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6893 ret_words=206 xo_checked=6891 fault=0
+TOKSIM_FGU_SEQ PASS op ffn.down PER 130 phases 21 rows 70 fixture_rows 70 go0 63 last_ret 2959 span 2896 errors 0 []
+FSEQ12 ffn.down 125 run 0 check 1 XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 1 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 2 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 358 row 0 lo 0 k 1 got bc47cef0/0 want bda32152/0
+MISMATCH edge 359 row 1 lo 0 k 1 got 3da8d941/0 want 3c606a88/0
+PLAN_MISMATCH predicted 6 words, got 6; first diff ((358, 0, (0, 1, 5), 3181584722, 0), (358, 0, (0, 1, 5), 3158822640, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 3 mutant=None rows=2 fixture_rows=2 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 346 row 0 lo 0 k 1 got f4dd5d38/0 want bc7afa40/0
+MISMATCH edge 347 row 1 lo 0 k 1 got f4877f40/0 want 3c83d8ce/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((346, 0, (0, 1, 5), 3162176064, 0), (346, 0, (0, 1, 5), 4108148024, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 4 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 5 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 6 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 361 row 2 lo 4 k 2 got 3bc4b668/0 want 3a020ee0/0
+MISMATCH edge 362 row 3 lo 4 k 2 got 3aaa19d0/0 want bc33e074/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((361, 2, (4, 2, 5), 973213408, 0), (361, 2, (4, 2, 5), 1002747496, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 7 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 361 row 2 lo 4 k 2 got 3a020ee0/0 want baa9fda0/0
+MISMATCH edge 362 row 3 lo 4 k 2 got bc33e074/0 want bb87a440/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((361, 2, (4, 2, 5), 3131702688, 0), (361, 2, (4, 2, 5), 973213408, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 8 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 358 row 0 lo 2 k 0 got bbb958e4/0 want 3c504ab0/0
+MISMATCH edge 359 row 1 lo 2 k 0 got bac0ec80/0 want 3ba276d0/0
+PLAN_MISMATCH predicted 8 words, got 8; first diff ((358, 0, (2, 0, 5), 1011894960, 0), (358, 0, (2, 0, 5), 3149486308, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 9 mutant=None rows=2 fixture_rows=2 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 357 row 0 lo 2 k 1 got 3a518360/0 want 3c189cf9/0
+MISMATCH edge 358 row 1 lo 2 k 1 got 3bcd1c3a/0 want 3b18dd68/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((357, 0, (2, 1, 5), 1008246009, 0), (357, 0, (2, 1, 5), 978420576, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 10 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 11 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 12 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 13 mutant=None rows=4 fixture_rows=4 errors=0 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 353 row 0 lo 4 k 2 got 3994f100/0 want 3b54aa80/0
+MISMATCH edge 354 row 1 lo 4 k 2 got 3b230120/0 want 3c0d2b60/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((353, 0, (4, 2, 5), 995404416, 0), (353, 0, (4, 2, 5), 966062336, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 14 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 15 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 346 row 0 lo 0 k 1 got bc0ec660/0 want bcad8908/0
+MISMATCH edge 347 row 1 lo 0 k 1 got 3b59cc60/0 want 3c44b2a8/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((346, 0, (0, 1, 5), 3165489416, 0), (346, 0, (0, 1, 5), 3155084896, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 16 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 351 row 0 lo 0 k 2 got 3cfa2ca8/0 want 3a30c580/0
+MISMATCH edge 352 row 1 lo 0 k 2 got 3d033739/0 want 3c534f48/0
+PLAN_MISMATCH predicted 10 words, got 10; first diff ((351, 0, (0, 2, 5), 976274816, 0), (351, 0, (0, 2, 5), 1023028392, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 17 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+XS_PLACE_CHECK PASS u_f_0L00 ffn.down phase 18 mutant=None rows=2 fixture_rows=2 errors=0 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 361 row 2 lo 4 k 2 got 3b22c100/0 want b72fc000/0
+MISMATCH edge 362 row 3 lo 4 k 2 got 3a89e480/0 want 38d52400/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((361, 2, (4, 2, 5), 3073359872, 0), (361, 2, (4, 2, 5), 992133376, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 19 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 361 row 2 lo 4 k 2 got b72fc000/0 want ba953800/0
+MISMATCH edge 362 row 3 lo 4 k 2 got 38d52400/0 want 3a85f2c0/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((361, 2, (4, 2, 5), 3130341376, 0), (361, 2, (4, 2, 5), 3073359872, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 20 mutant=None rows=4 fixture_rows=4 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+MISMATCH edge 358 row 0 lo 2 k 0 got 3bd5d500/0 want 3b602260/0
+MISMATCH edge 359 row 1 lo 2 k 0 got 3aea2b50/0 want 3bb07004/0
+PLAN_MISMATCH predicted 8 words, got 8; first diff ((358, 0, (2, 0, 5), 996156000, 0), (358, 0, (2, 0, 5), 1003869440, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.down phase 21 mutant=None rows=2 fixture_rows=2 errors=3 END edges=6688 ret_words=206 xo_checked=6686 fault=4
+TOKSIM_FGU_SEQ FAIL op ffn.down PER 125 phases 21 rows 70 fixture_rows 70 go0 63 last_ret 2859 span 2796 errors 16 ['FAULT edge 417 status 11 lx 0', 'FAULT edge 418 status 11 lx 0', 'FAULT edge 419 status 11 lx 0']
+ot-run: RAN on ot-epyc9 (unit oth-ubuntu-3026382-1792497872): exit 0

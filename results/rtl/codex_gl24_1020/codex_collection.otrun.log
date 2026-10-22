@@ -1,0 +1,21 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-gl24-1020
+ot-run: ot-epyc6       admits   829 GB (avail 693, growth 113, headroom 0, waiters 0/0 GB) load 63/128 running 39 disk 4748 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-gl24-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-gl24-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-gl24-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-gl24-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3213858-1792486729 after 1 s
+{
+  "scope": "Exact four measured layers; all16owner views; existing GATH binary and released fixture anchors",
+  "exe_sha256": "72b85d0205302141e4909d455e7e5d272a81d9cb407f581e77c479e60446f9fb",
+  "per_layer": {
+    "L24": 626,
+    "L28": 625,
+    "L32": 605,
+    "L36": 649
+  },
+  "all64_PASS": true,
+  "full_layer_token_qualification": false
+}
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3213858-1792486729): exit 0

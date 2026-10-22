@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.toksim_s81c.gath_case.v1",
+ "layer": "L24",
+ "kind": "ratio1+indexer",
+ "rank": 0,
+ "heads": [
+  0,
+  16
+ ],
+ "fixture": "fixtures/L24",
+ "fixture_shard": {
+  "path": "/home/ubuntu/w17work/ref/ctx1048576_seed20260930/ctx1048576_L24.npz",
+  "sha256": "c7c2809d84a259425632856d9a942858c0da49a944788e69d49be098a88b9592",
+  "input_sha256": "40b071ebb28e1d66a9993eaef1d3aaccfd7166ceffc5da96baa9c0b35efdfae2",
+  "output_sha256": "19fb0c1d775b4b3393a70f51cfab8e7e9cbc57bba8b8dfaa996df5bfe642a560",
+  "l20_shard": "/home/ubuntu/w17work/ref/ctx1048576_seed20260930/ctx1048576_L20.npz"
+ },
+ "checkpoint": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "view": {
+  "die": 2,
+  "stack": 2
+ },
+ "compressed_rows": 1048576,
+ "n_sel": 512,
+ "T": 640,
+ "owned_rows": 39,
+ "owned_pc": [
+  20,
+  19
+ ],
+ "held_rows": 150,
+ "neighbour_rows": 2026,
+ "hbm_sectors": 22842,
+ "anchors": {
+  "window_rows": true,
+  "gathered_rows": true,
+  "rows_allgather": true,
+  "scores": true,
+  "pv": true,
+  "q_bf16": true
+ },
+ "counts": {
+  "NJOB": 1,
+  "NKV": 640,
+  "NP": 320,
+  "NSC": 640,
+  "NPV": 512
+ },
+ "expected": {
+  "scores": 10240,
+  "pv": 8192,
+  "score_faults": 0,
+  "pv_faults": 0,
+  "macs": 10485760
+ },
+ "golden": "fixture ops attn.gather / attn.window_load / attn.rows_allgather (stored rows, bitwise), attn.scores (x attn_scale) and attn.pv of heads 0..15 (bitwise)",
+ "images": {
+  "cfg.hex": "14ed8d856cea8fdea2d9cb7678662423b99aeccf5b0956d6d5d456a6a638f625",
+  "hdat.hex": "0f77244d5dfe83b42b036a92d38cfb11c72597543c182fd2079437104d86c8c0",
+  "hkey.hex": "7de30d9c1a56f1dec1d99004af687937f5f27491b3cc5815ab514de42e9b98e9",
+  "jobs.hex": "8a754202f63b32bcb40c54ceb1114d1ba874374c01ffad4aeb76b26ebc4d5e43",
+  "kv.hex": "482e156b96ee663aaac763713ca91e47e16a27eeb9ff1f87af7e806f67337ccf",
+  "p.hex": "fb8c051b56d70106344c29240ce7793ba3401c4c5f176b40ac3b15ed1f5c64c3",
+  "pv.hex": "5e8e969276fd3f46331a079f40f116de9db3dd264f795f82c6e8a7151c3308c5",
+  "q.hex": "da8ecec0407e2519a2ba986efea9a4de4c2dd3e9614dc537cf748127839fd3bb",
+  "sc.hex": "d441a6651bd64411e9f1f34717f74104382eb3b132d0d5952cf52c06ae27be2f",
+  "sel.hex": "ad14b2b2f21e187d45a5211852f89eb6886cb96dfc93d98543d72cdf2179500c",
+  "win.hex": "a3ca11bf8f730ccc8fbeb4fec412f6c36b74d8b0e6dac44c2cdca5371c00b15a"
+ }
+}

@@ -1,0 +1,300 @@
+{
+ "cls": "FIELD",
+ "written": "2026-10-19 19:35 PT",
+ "agent_branch": "claude/toksim-s81-field-1019@3d55d499a",
+ "ops": [
+  {
+   "op": "ffn.experts_gu",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 1752.8,
+   "old_per_instance_values": [
+    1238.9,
+    1239.8,
+    1852.8,
+    1856.9,
+    1857.9,
+    2470.7
+   ],
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "ROM field: L3.ffn.experts_gu: one-region full-shape ROM field RTL (S81 canonical placement), 6912 rows exact=True, + r8 die wire 840 cyc over 6 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.000",
+   "job": null,
+   "edges_owed": null,
+   "note": "no current-RTL full-shape bench exists for this phase: fullsix covers only the wq_b sid6 phase; frame benches (frame_bench.f/r1skew) are 6-row K2048 phases; cut replays (cut_0S/3S/7) check only boundary lanes, with 0 expected on q_W field outputs. The same frames/elements execute this op, so the wq_b law (231 + 224 per epoch of <=36 rows/slice at K1280) is the structure to bench next; it is not applied here (no repricing). Next: a fullsix-style vehicle with this op's rows/K (needs the retained-XS model for that op: image writer + placements)"
+  },
+  {
+   "op": "attn.wo_a",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 2222.0,
+   "old_per_instance_values": [
+    2222.0
+   ],
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "ROM field: L3.attn.wo_a: one-region full-shape ROM field RTL (S81 canonical placement), 2048 rows exact=True, + r8 die wire 584 cyc over 4 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S8",
+   "job": null,
+   "edges_owed": null,
+   "note": "no current-RTL full-shape bench exists for this phase: fullsix covers only the wq_b sid6 phase; frame benches (frame_bench.f/r1skew) are 6-row K2048 phases; cut replays (cut_0S/3S/7) check only boundary lanes, with 0 expected on q_W field outputs. The same frames/elements execute this op, so the wq_b law (231 + 224 per epoch of <=36 rows/slice at K1280) is the structure to bench next; it is not applied here (no repricing). Next: a fullsix-style vehicle with this op's rows/K (needs the retained-XS model for that op: image writer + placements)"
+  },
+  {
+   "op": "ffn.down",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 1954.2,
+   "old_per_instance_values": [
+    1516.3,
+    1517.7,
+    1540.7,
+    2028.2,
+    2050.7,
+    3071.5
+   ],
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "ROM field: L3.ffn.down: one-region full-shape ROM field RTL (S81 canonical placement), 8960 rows exact=True, + r8 die wire 867 cyc over 6 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81",
+   "job": null,
+   "edges_owed": null,
+   "note": "no current-RTL full-shape bench exists for this phase: fullsix covers only the wq_b sid6 phase; frame benches (frame_bench.f/r1skew) are 6-row K2048 phases; cut replays (cut_0S/3S/7) check only boundary lanes, with 0 expected on q_W field outputs. The same frames/elements execute this op, so the wq_b law (231 + 224 per epoch of <=36 rows/slice at K1280) is the structure to bench next; it is not applied here (no repricing). Next: a fullsix-style vehicle with this op's rows/K (needs the retained-XS model for that op: image writer + placements)"
+  },
+  {
+   "op": "attn.wq_b",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 1299.8,
+   "old_per_instance_values": [
+    1039.9,
+    1559.6
+   ],
+   "cycles": 3359,
+   "grade": "measured-newest-element-RTL",
+   "definition": "first operand capture at a field element (ACTUAL tag capture t=1573) -> last result word at the frame roots (frame_return_words); 15 epochs at the minimum passing epoch period 224 edges (834 ps edges)",
+   "shape": "one slice (sid6): 6 real frames (2x col_h10_l4, 2x col_h9_MX_l4, 2x col_h9_l4), 72 q pairs ot_v41_rom_elem_q_qxpq_w10, real ROM images (1012), all 512 rank-local wq_b rows 3072..3583, K 1280, epochs 14x36+8 rows; L0/rank0 fixture ctx 1048576. All 16 slices run their 512 rows in parallel (8192 rows per rank)",
+   "bit_exact": null,
+   "golden": "all 625 return words (row, row16, value) are identical to the TOK2 P=600 baseline; 512 rows, 0 missing, 0 unknown, source errors 0. Value-vs-gold is shown only by the takeover3 QF model (codex/takeover3-qf-structural-1019: 1536 leaf PVs reproduce 652 partials / 512 CW in exact FP32 tree order on the 757 run). The bench itself makes no numeric PASS: CAP is in the reset-F9 diagnostic with 0 CW",
+   "rtl": {
+    "module": "ot_v41_rom_elem_q_qxpq_w10 + col_h9_l4/col_h9_MX_l4/col_h10_l4 + dsfd_bf_col + ot_s81sl_xs/vp/vq/rstop/cap_rt/cap_tr",
+    "source": "claude/tok2-capld-1019@e9ed82c83 (fullsix src = ceaed19c4 selection + cap EDLY24/WL3DLY16)",
+    "blob": "123/126 RTL files byte-identical to release 19bf4121e; differ: ot_s81sl_cap (successor 6057a82f + cap_ed 8a675348 + cap_ld 9fee99b2; release 483edc8a), ot_s81sl_slice (e2959d3b vs 9178c730), ot_s81sl_xr (5757b990 vs 34a34ab1); every field element/frame blob = release",
+    "in_release_source": false
+   },
+   "bench": "claude/toksim-s81-field-1019@3d55d499a:results/rtl/toksim_s81_field_1019/run_period.sh (TOK2 exe sha256 63eccd91, epoch calendar 1100+P*i)",
+   "evidence": "claude/toksim-s81-field-1019@3d55d499a:results/rtl/toksim_s81_field_1019/sweep.json + runs/field_p224.otrun.log \"TOKSIM_FIELD_P224 returns 625 missing 0 unknown 0 srcerr 0 ... first_capture 1573 ... last_ret 4932 words_equal_600 True\"; run dir ot-epyc9:/srv/opentallas-scratch/claude/toksim-s81-field/p224",
+   "job": "ot-run unit oth-ubuntu-207632-1792460328 (ot-epyc9), done; sweep of 16 periods done",
+   "edges_owed": "TOK2 20:00 CAP EDLY24/WL3DLY16 (+16 R01, +24 R02/R03) is in the bench but falls AFTER the retire point (frame root -> CAP); xg successor +1 (xw/ro) is not in the bench and not on this path. Not included: CAP tree + CW (source contract bound <= lastARR+64), VP/QR hand-off, die wire (old 143 + 28 tiles)",
+   "note": "Law: per-epoch latency 231 edges (36 rows, 44 words), minimum epoch period 224 (P<=223: epoch 1 source issues no reads, srcerr 16; P>=224 PASS). T = 231 + 224 x (epochs - 1) + 1; 512 rows -> 3,359 edges, so 6.2 edges/row/slice in steady state. The old law of 1039.9/1559.6 for 8192 rows per rank (incl. 143 wire + 28) is 2.03-3.05 cyc per slice row: the measured value is 2.2-3.2x the old price. At TOK2 default spacing P=600 the span is 8,623. The epoch floor comes from the XS source/element cfg->go (not the frame return window, which is 31 edges/epoch)."
+  },
+  {
+   "op": "ffn.router",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 977.2,
+   "old_per_instance_values": [
+    977.2
+   ],
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "ROM field: L3.ffn.router: one-region full-shape ROM field RTL (S81 canonical placement), 96 rows exact=True, + r8 die wire 122 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S81",
+   "job": null,
+   "edges_owed": null,
+   "note": "no current-RTL full-shape bench exists for this phase: fullsix covers only the wq_b sid6 phase; frame benches (frame_bench.f/r1skew) are 6-row K2048 phases; cut replays (cut_0S/3S/7) check only boundary lanes, with 0 expected on q_W field outputs. The same frames/elements execute this op, so the wq_b law (231 + 224 per epoch of <=36 rows/slice at K1280) is the structure to bench next; it is not applied here (no repricing). Next: a fullsix-style vehicle with this op's rows/K (needs the retained-XS model for that op: image writer + placements)"
+  },
+  {
+   "op": "attn.a_proj",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 1858.9,
+   "old_per_instance_values": [
+    628.0,
+    1858.1,
+    1859.2,
+    3090.3
+   ],
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "ROM field: L3.attn.a_proj: one-region full-shape ROM field RTL (S81 canonical placement), 448 rows exact=True, + r8 die wire 142 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S",
+   "job": null,
+   "edges_owed": null,
+   "note": "no current-RTL full-shape bench exists for this phase: fullsix covers only the wq_b sid6 phase; frame benches (frame_bench.f/r1skew) are 6-row K2048 phases; cut replays (cut_0S/3S/7) check only boundary lanes, with 0 expected on q_W field outputs. The same frames/elements execute this op, so the wq_b law (231 + 224 per epoch of <=36 rows/slice at K1280) is the structure to bench next; it is not applied here (no repricing). Next: a fullsix-style vehicle with this op's rows/K (needs the retained-XS model for that op: image writer + placements)"
+  },
+  {
+   "op": "attn.wo_b",
+   "dag_cls": "field",
+   "n_crit": 40,
+   "old_cycles_per_instance": 548.9,
+   "old_per_instance_values": [
+    548.9
+   ],
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "ROM field: L3.attn.wo_b: one-region full-shape ROM field RTL (S81 canonical placement), 5120 rows exact=True, + r8 die wire 146 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (S8",
+   "job": null,
+   "edges_owed": null,
+   "note": "no current-RTL full-shape bench exists for this phase: fullsix covers only the wq_b sid6 phase; frame benches (frame_bench.f/r1skew) are 6-row K2048 phases; cut replays (cut_0S/3S/7) check only boundary lanes, with 0 expected on q_W field outputs. The same frames/elements execute this op, so the wq_b law (231 + 224 per epoch of <=36 rows/slice at K1280) is the structure to bench next; it is not applied here (no repricing). Next: a fullsix-style vehicle with this op's rows/K (needs the retained-XS model for that op: image writer + placements)"
+  },
+  {
+   "op": "attn.idx.q",
+   "dag_cls": "field",
+   "n_crit": 8,
+   "old_cycles_per_instance": 93.0,
+   "old_per_instance_values": [
+    93.0
+   ],
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "su_swiglu: ot_dsrom_su_qbank NB32 ROPE 1 QLAT5 (index-q RoPE front on ot_dsrom_su_rope_el, then FP4 QDQ): 89 cyc at 1.2 GHz incl. the 33 / 23 hub traverse, exact L20/L24 golden + random (dpi_beh NB32 full shape, bit-level RTL NB8) + r8 hub-",
+   "job": null,
+   "edges_owed": null,
+   "note": "not a frame op on p4l (SU qbank RoPE/QDQ chain / Engram HDC SU chain): belongs to SU-side measurement; old number kept"
+  },
+  {
+   "op": "eng.dot",
+   "dag_cls": "field",
+   "n_crit": 2,
+   "old_cycles_per_instance": 269.6,
+   "old_per_instance_values": [
+    269.6
+   ],
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "Engram SU chain: ot_hdc_v41x_vec N1024/M256 MLAT5/ALAT4 at 0.9 GHz, wired BCAST 22 / RET 15 (unit 0.17222 us); Engram chain on operands rebuilt from the released checkpoint, bit-exact vs golden + shard + r8 hub-slab stations 3.333 ns + s81_",
+   "job": null,
+   "edges_owed": null,
+   "note": "not a frame op on p4l (SU qbank RoPE/QDQ chain / Engram HDC SU chain): belongs to SU-side measurement; old number kept"
+  },
+  {
+   "op": "ffn.shared_gu",
+   "dag_cls": "field",
+   "n_crit": 0,
+   "old_cycles_per_instance": 634.0,
+   "old_per_instance_values": [
+    634.0
+   ],
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "ROM field: L3.ffn.shared_gu: one-region full-shape ROM field RTL (S81 canonical placement), 1152 rows exact=True, + r8 die wire 142 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000",
+   "job": null,
+   "edges_owed": null,
+   "note": "not on the AR critical path (n_crit 0); old number kept"
+  },
+  {
+   "op": "attn.cmp.wk",
+   "dag_cls": "field",
+   "n_crit": 0,
+   "old_cycles_per_instance": 608.6,
+   "old_per_instance_values": [
+    608.6
+   ],
+   "cycles": null,
+   "grade": "measured-old-RTL",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "ROM field: L20.attn.cmp.wk: one-region full-shape ROM field RTL (S81 canonical placement), 128 rows exact=True, + r8 die wire 123 cyc over 1 phase(s) (per-region round trip + hub return stations, f183.60) + s81_die_tiles: 28 cyc / x1.0000 (",
+   "job": null,
+   "edges_owed": null,
+   "note": "not on the AR critical path (n_crit 0); old number kept"
+  },
+  {
+   "op": "E1.wkv",
+   "dag_cls": "field",
+   "n_crit": 0,
+   "old_cycles_per_instance": 1876.0,
+   "old_per_instance_values": [
+    1876.0
+   ],
+   "cycles": null,
+   "grade": "priced",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "engram.wkv [25,600 x 6,144] FP8 matvec on the home die's ROM field (the composition's E{L}.wkv; weights in that stage's field)",
+   "job": null,
+   "edges_owed": null,
+   "note": "old DAG entry is a composition price (no RTL bench named); n_crit 0; kept"
+  },
+  {
+   "op": "E14.wkv",
+   "dag_cls": "field",
+   "n_crit": 0,
+   "old_cycles_per_instance": 530.0,
+   "old_per_instance_values": [
+    530.0
+   ],
+   "cycles": null,
+   "grade": "priced",
+   "definition": "old DAG: one-region full-shape ROM field RTL phase + r8 die wire + s81_die_tiles",
+   "shape": null,
+   "bit_exact": null,
+   "golden": null,
+   "rtl": null,
+   "bench": null,
+   "evidence": "engram.wkv [25,600 x 6,144] FP8 matvec on the home die's ROM field (the composition's E{L}.wkv; weights in that stage's field)",
+   "job": null,
+   "edges_owed": null,
+   "note": "old DAG entry is a composition price (no RTL bench named); n_crit 0; kept"
+  }
+ ],
+ "summary": "1 of 9 crit field ops measured on (near-)release RTL: attn.wq_b 3,359 edges (old 1039.9/1559.6). Others keep old 10-08 numbers: no full-shape bench exists for them on p4l-MU RTL."
+}

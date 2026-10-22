@@ -1,0 +1,54 @@
+{
+ "stages": {
+  "CS_TXS": 2,
+  "CS_RXV": 2,
+  "CS_RXP": 2,
+  "CS_X3S": 3,
+  "SC_TX": 2,
+  "SC_X3": 2
+ },
+ "bundles": {
+  "C.tx_slot": {
+   "cycles": 2,
+   "members": {
+    "lnk_native_tx_slot": 2,
+    "lnk_native_tx_slot_beat": 2,
+    "lnk_native_tx_slot_kind": 2
+   }
+  },
+  "C.rx_record": {
+   "cycles": 2,
+   "members": {
+    "lnk_native_rx_slot": 2,
+    "lnk_native_rx_slot_beat": 2,
+    "lnk_native_rx_slot_kind": 2,
+    "lnk_native_rx_v": 2,
+    "lnk_rx_payload": 2
+   }
+  },
+  "C.tx_record": {
+   "cycles": 2,
+   "members": {
+    "lnk_native_tx_payload": 2,
+    "lnk_native_tx_v": 2
+   }
+  },
+  "C.x3_record": {
+   "cycles": 2,
+   "members": {
+    "lnk_x3": 2,
+    "lnk_x3_generation": 2,
+    "lnk_x3_identity": 2
+   }
+  },
+  "C.x3_slot": {
+   "cycles": 3,
+   "members": {
+    "lnk_kv_x3_slot": 3
+   }
+  }
+ },
+ "source": "/srv/opentallas-scratch/claude/mu-dq-txdp/xdie2/cdie/die.v + /srv/opentallas-scratch/claude/mu-dq-txdp/xdie2/cdie/fwd_lanes.json",
+ "rule": "record_bundles.seam_stages: lane cycles per seam bundle as built (fwd E + 1, plain n, direct 0)",
+ "problems": []
+}

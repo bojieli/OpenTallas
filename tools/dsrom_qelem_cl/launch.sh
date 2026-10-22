@@ -103,12 +103,18 @@ EXTRA=(); [ -n "${CTSA:-}" ] && EXTRA=(--orfs-var "CTS_ARGS=$CTSA")
 # pins on its N face); on the N face each bit crossed the frame and took a 2-bit hop relay that filled the packed S81
 # frame bands (m221pq_r4c GEN_FAIL rt_0_8a_y1).  Pin placement only: RTL, cycles, outline unchanged.
 if [ "${OT_Q_EF_SOUTH:-0}" = 1 ]; then QEF_TOP=; QEF_BOT='|bank_free|sh_free'; else QEF_TOP='|bank_free|sh_free'; QEF_BOT=; fi
+# OT_Q_CK_NORTH=1 (HF-1 2026-10-18, default off = closed recipe unchanged): the clock pin moves from the S-face input
+# cluster to the N-face centre (x 249.42-261.42, M5), the face the S81 hier contract names for clock_entry (s81.json slot
+# rep/q_elem: ck/N).  Pin placement only: RTL, cycles, outline, other pins unchanged.  Judged on pin-flop spread <=80 ps at
+# TT and FF (owner 10-17 clock rule); the frame then taps the q element's clock from its N-side region tree.
+CKS='clk|'; CKN=()
+if [ "${OT_Q_CK_NORTH:-0}" = 1 ]; then CKS=; CKN=(--pin-region "^clk$=top:249.42-261.42"); fi
 exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track-gate-record $J/macro_gate.json \
  --persistent-workdir $J/work --launch-receipt $J/receipt.json \
  --view asap7 --top ot_v41_rom_elem_q_qxpq_w10 $SRCS \
  --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns ${UNC:-0.06} --io-delay-fraction 0.2 --stages pnr \
  --die-area 0 0 510.84 ${FH:?frame height} --core-area 0 0.27 510.84 $(python3 -c "print(round(${FH}-0.27,3))") --place-density ${PD:-0.6} --macro-place-halo 2 2 \
- --pin-region "^(p|busy|fault|walking${QEF_TOP}).*=top:136.08-374.76" --pin-region "^(clk|rst|cfg|go|xs_v|xs_p|xs_b|xs_sv|xs_q0|xs_e0|xs_q1|xs_e1${QEF_BOT}).*=bottom:${XLO:-136.08}-${XHI:-374.76}" \
+ --pin-region "^(p|busy|fault|walking${QEF_TOP}).*=top:136.08-374.76" "${CKN[@]}" --pin-region "^(${CKS}rst|cfg|go|xs_v|xs_p|xs_b|xs_sv|xs_q0|xs_e0|xs_q1|xs_e1${QEF_BOT}).*=bottom:${XLO:-136.08}-${XHI:-374.76}" \
  --max-transition-ns 0.32 --slew-margin-percent 40 --hold-margin-ns ${HM:-0.02} \
  --step-tcl POST_MACRO_PLACE=physical/abi3/dsrom_qtiming_D_place.tcl --step-tcl POST_DETAIL_PLACE=${PDH:-physical/abi3/dsrom_q_pin_keepout2.tcl} \
  --orfs-var PDN_TCL=/src/tools/chip_assembly/tcl/pdn_w10_elem_m7_ir.tcl --nickname-tag dsrom_qx10qm_${RUN}_20261006 \
@@ -116,6 +122,6 @@ exec python3 tools/run_abi3_physical_aligned.py --macro-track-gate --macro-track
  --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 \
  --param MTP=1 --param EARLY=1 --param NB=2 --param FAST=1 --param PP=1 --param QTIMING_FIX=1 \
  --param QPIPE=1 --param QP_XS=1 --param QP_CAP=$CAP --param QP_P1=1 --param QP_CSAM=10 \
- --param QZ=1 --param QZ_NS=8 --param QZ_NE=4 --param QY=1 --param QX=${QX:-5} --param PQ=${PQ:-1} --param QW=${QW:-0} --param QM=${QM:-1} --param QS=${QS:-0} ${RSTP:+--param RSTP=$RSTP} --orfs-var ROUTING_LAYER_ADJUSTMENT=${RLA:-0.22} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --orfs-var CTS_CLUSTER_SIZE=${CS:-30} --orfs-var CTS_CLUSTER_DIAMETER=${CD:-50} --orfs-var CTS_BUF_DISTANCE=${BD:-60} --hold-corners WC,BC \
+ --param QZ=1 --param QZ_NS=8 --param QZ_NE=4 --param QY=1 --param QX=${QX:-5} --param PQ=${PQ:-1} --param QW=${QW:-0} --param QM=${QM:-1} --param QS=${QS:-0} ${RSTP:+--param RSTP=$RSTP} ${CPR:+--param CPR=$CPR} --orfs-var ROUTING_LAYER_ADJUSTMENT=${RLA:-0.22} --orfs-var SETUP_SLACK_MARGIN=${SM:-15} --orfs-var CTS_CLUSTER_SIZE=${CS:-30} --orfs-var CTS_CLUSTER_DIAMETER=${CD:-50} --orfs-var CTS_BUF_DISTANCE=${BD:-60} --hold-corners WC,BC \
  --pnr-stop-after $STOP --orfs-corner WC --clock-uncertainty-hold-ns 0.025 \
  --core-input-delay-min-ns 0.36 --core-input-delay-max-ns ${INMAX:-$(python3 -c "print(round(${PER:-0.770}-0.106,3))")} --output-delay-min-ns -0.322 --output-delay-max-ns -0.193 "${EXTRA[@]}" > $J/launch.log 2>&1

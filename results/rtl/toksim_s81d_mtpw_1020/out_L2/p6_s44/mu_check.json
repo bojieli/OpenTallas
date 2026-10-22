@@ -1,0 +1,31 @@
+{
+ "ok": false,
+ "errs": [
+  "(a) user 0 differs from the single-user run at event 1 (multi None vs single ('VO S', 416, '000000000000000000000000000000000000000000000000000000200fc0000200801'))"
+ ],
+ "users": 6,
+ "shifts": [
+  0,
+  44,
+  88,
+  132,
+  176,
+  220
+ ],
+ "ks": [
+  360,
+  404,
+  448,
+  492,
+  536,
+  580
+ ],
+ "user0_identical": false,
+ "user0_events": 9,
+ "events_per_user": 9,
+ "ctx_beats_per_user": 1,
+ "events_total": 54,
+ "missing": 0,
+ "extra": 0,
+ "faults": []
+}

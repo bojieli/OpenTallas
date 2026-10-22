@@ -1,0 +1,140 @@
+{
+ "name": "s81hd_tile_m-s81hd_tile_m-COMMIT",
+ "block": "ot_s81hd_tile",
+ "ref_tile": true,
+ "owner": "Claude:S81-HEAD/HD-TILE",
+ "purpose": "S81-HEAD (release head die): ot_s81hd_tile to closure (TT setup / FF hold / DRC 0 + native audit).",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/s81-head-tile-1021",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/common",
+   "rtl/v41rom",
+   "rtl/hdc",
+   "rtl/dsrom_sys/s81_head",
+   "tools/s81_head",
+   "results/rtl/s81_head_tile_1021",
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8",
+   "physical/asap7_memory_macros/ot_rom_4096x274_m8"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81hd_tile #(.IOREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/common/ot_prefix.sv rtl/v41rom/ot_v41_fadd.sv rtl/v41rom/ot_v41_bmul2.sv rtl/v41rom/ot_dsrom_bmul3.sv rtl/hdc/ot_hdc_delay.sv physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v rtl/dsrom_sys/s81_head/ot_s81hd_elem.sv rtl/dsrom_sys/s81_head/ot_s81hd_bundle.sv rtl/dsrom_sys/s81_head/ot_s81hd_tile.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "hd_mini_all",
+    "cmd": "bash tools/s81_head/hd_tile_bench.sh {RUN}/hd_mini_all ALL none",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "^BENCH_PASS s81hd_mini SCEN=ALL MUT=none \\(4/4\\)$"
+   },
+   {
+    "name": "hd_mut_tie_flip",
+    "cmd": "bash tools/s81_head/hd_tile_bench.sh {RUN}/hd_mut_tie_flip C TIE_FLIP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^C: TB_FAIL row 21946 != 21818$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_tie_flip.log"
+   },
+   {
+    "name": "hd_mut_go_drop",
+    "cmd": "bash tools/s81_head/hd_tile_bench.sh {RUN}/hd_mut_go_drop A GO_DROP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^A: TB_FAIL results 0 != positions 2$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_go_drop.log"
+   },
+   {
+    "name": "hd_mut_ten_ignored",
+    "cmd": "bash tools/s81_head/hd_tile_bench.sh {RUN}/hd_mut_ten_ignored B TEN_IGNORED",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^B: TB_FAIL row 21946 != 22141$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_ten_ignored.log"
+   },
+   {
+    "name": "hd_mut_flt_drop",
+    "cmd": "bash tools/s81_head/hd_tile_bench.sh {RUN}/hd_mut_flt_drop D FLT_DROP",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "^D: TB_FAIL flt 0 != 1$",
+    "fail_witness": "results/rtl/s81_head_tile_1021/witness_flt_drop.log"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.045 OT_MM_FF_SDC='physical/ref_tile/s81hd_tile_m/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hd_tile_m/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81hd_tile_m --out {RUN}/record/views/ot_s81hd_tile --macro-view physical/asap7_memory_macros_v2/ot_rom_4096x274_m8 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81hd_tile_m/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81hd_tile_m/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81hd_tile_m/s81hd_tile_m-s81hd_tile_m-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.045,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "S81-HEAD HD-TILE 10-21 MAIN: new tile ot_s81hd_tile (SPEC v1 4e30e8f3a section 1: LM-head array tile, 253 a die) = census-safe bundle copy ot_s81hd_bundle (5 elements, 10 ROM4096, 128 rows; IOREG 1, SAFE 1) on bus B (565 b) with the chain-best merge.  Outline 648.0 x 648.0: each element's ROM pair is one abutted N-S stack (ROM pins sit on the W / E faces, lowest 14 um, M4; stack pin ends face the band): N stacks A0 / B / A1 at x 86.4 / 259.2 / 432 (y 477.36), S stacks A2 / A3 at x 172.8 / 345.6 (y 43.2); one full-width std-cell band y 169.1..477.36 plus the column channels; i on W, o on E, straps / ck / rst_n on W."
+}

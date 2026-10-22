@@ -22,6 +22,7 @@ programme + qkd_attn_cal_gen + qkd_attn_service_root + qkd_attn_result_face):
 Bench + mutants: tools/qwen_kv_die/attn_result_face_gate.py.  Never a die netlist.
 """
 import os
+import kv_qkh_safe32 as QKH32
 import kv_static as K
 import kv_static_boot_join as B
 import kv_static_kvjf_join as F
@@ -76,7 +77,7 @@ CALGEN_M = ('rtl/qwen_sys/split_20261014/qkd_attn_cal_gen.sv', 'qkd_attn_cal_gen
 # 34, d_rl = RL 95 - 19, service_end 1777, compiled_rx_cmd 2; G3S2 = the v1.4.3 staged head ingress)
 # KV-ECTL4 10-18: D_QK = the die's QK_ISSUE_AGE (K_RT_BUDGET + 11, one K round trip for every ECTL frame) - 34
 import kv_static_ages as _AGES   # noqa: E402
-CALGEN_P = dict(G3S2=1, RX_CMD=2, STRETCH=1, D_QK=_AGES.K_RT_BUDGET + _AGES.QK_WRITE_BEFORE_READ - _AGES.QK_ISSUE_AGE_KIT,
+CALGEN_P = dict(G3S2=1, RX_CMD=2, STRETCH=1, D_QK=QKH32.calendar_d_qk(_AGES.K_RT_BUDGET + _AGES.QK_WRITE_BEFORE_READ, _AGES.QK_ISSUE_AGE_KIT),
                 D_RL=76, SERVICE_END=1777, MUT=0)
 PROG_FROM_CALGEN = (('compiled_calendar', 'cal'), ('compiled_rx_cmd', 'rx_cmd'), ('compiled_tx_first', 'tx_first'),
                     ('compiled_end', 'end_age'))

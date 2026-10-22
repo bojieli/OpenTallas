@@ -1,0 +1,39 @@
+{
+ "cell": "ot_s81sl_xr1",
+ "view": "physical/ref_tile/s81sl_xr1f/views/ot_s81sl_xr1",
+ "lib_cell": "ot_s81sl_xr1",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 414.1,
+ "spread_ps": 67.3,
+ "outputs": 3116,
+ "inputs": 4441,
+ "launch_ps": 286.1,
+ "launch_pin": "x_eps[6]",
+ "capture_ps": 127.3,
+ "capture_pin": "lo_v[4]",
+ "launch_over": 42,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "ff_spread_ps": 63.9,
+ "ff_launch_min_ps": 66.4,
+ "ff_hold_need_ps": -13.4,
+ "pass": false,
+ "fail_why": "launch 286.08036 > 220 (42 pins)",
+ "audit": {
+  "tool": "tools/hier_contract/native_pin_audit.py --view physical/ref_tile/s81sl_xr1f/views/ot_s81sl_xr1 --cell ot_s81sl_xr1",
+  "main": "83edff91e",
+  "time": "2026-10-19 23:10 PT",
+  "lane": "S81-SLICE3-XR1F"
+ },
+ "over_200_ps": {
+  "x_eps": "32 of 32 (186.6..286.1, 27 > 200)",
+  "x_scale": "32 of 32 (208.4..270.7)",
+  "x_mode": "204.4",
+  "x_s (same 5.4 um / 32 b density, plain DFF)": "126.2..144.5"
+ },
+ "cause": "x_eps / x_scale / x_mode are enable-hold flops: 1_2_yosys.v x_eps[6]$_DFFE_PP_ = DFFHQNx1, QN _11616_ -> INVx1 -> port AND -> NAND2 _64380_ -> OA21 _64381_ -> D: the hold-mux load's output is not the D net, so io_flop_at_pins.tcl ot_of_fbonly rejects the chain and the flop is not anchored (3_3 log: 189 ports not single-flop); the flops place in the core"
+}

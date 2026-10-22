@@ -1,0 +1,90 @@
+{
+ "schema": "opentallas.hbm_smbudget_unit.v1",
+ "name": "s_down_p96",
+ "mut": null,
+ "defines": [],
+ "rtl": "cp_svg ot_static_run_target -> ot_hbm_svc_sm_group_rel_id #(ID_COHORT 1) -> ot_hbm_svc_vm_kshare_splitstrap #(KRL1 1) -> 4 x ot_hbm_svc_pc_ctrl_leaf_cfg_safe (HBM-MC2 successor, NOT bound) -> DRAM timing fixture; xc ot_hbm_svc_sm_xcal_rel_t; SM ot_hbm_accel_smh_attn #(ENABLE_INT8 1); tb_toksim_smhbm.sv, Verilator 5.050 (GEN2e3 die composition)",
+ "budget": {
+  "descriptors": 192,
+  "table_rows": 256,
+  "programme_words_matvec": 24,
+  "attention_reserved": 1019,
+  "store_top": 1043,
+  "store_words": 2048,
+  "distinct_programmes": 3,
+  "per_kind": [
+   {
+    "name": "qwen",
+    "layer": 0,
+    "descriptors": 192,
+    "nonexpert_blocks": 192,
+    "routed_expert_descriptors": 0,
+    "lstride": 192,
+    "kbase": 0,
+    "estride": 0,
+    "expert_ids": {},
+    "ids_at_rc": null,
+    "rc_end": 20586
+   }
+  ],
+  "install_ingress_edges": 432,
+  "per_layer_ingress_edges_this_sm": 3,
+  "blocks_addressed": 192
+ },
+ "events": {
+  "NI": 435,
+  "NX": 624,
+  "ND": 0,
+  "END": 22241
+ },
+ "fault": null,
+ "done": "DONE cycles=22241 results=256 gos=192 runs=1 ing=435/435 xw=624/624 ids=0/0 dram_reads=52224",
+ "runs_done": [
+  21041
+ ],
+ "gos": 192,
+ "go_slots_exact": true,
+ "sim_s": 226.9,
+ "run_rc": 0,
+ "run_log_sha256": "b73ff9c3eee34c57b3f0eb3e19b44df48c10cb2864557df3a8755355deae4893",
+ "ops": [
+  {
+   "layer": "qwen",
+   "k": 0,
+   "tag": "down",
+   "fmt": "BF16",
+   "O_fmt": "FP32",
+   "m": 256,
+   "R": 256,
+   "Gn": 6,
+   "slot": null,
+   "eid": null,
+   "blocks": 192,
+   "lines": 12288,
+   "priced": null,
+   "first_cmd_abs": 1114,
+   "last_cmd_abs": 21041,
+   "verdict": "PASS",
+   "results": 256,
+   "n_bad": 0,
+   "bad": [],
+   "n_missing": 0,
+   "span_first_cmd_to_last_result": 20060
+  }
+ ],
+ "verdict": "PASS",
+ "static_schedule": {
+  "first_go": 520,
+  "op_gap": 256,
+  "x_gap": 16,
+  "pace_num": 96,
+  "pace_den": 64,
+  "pace_add": 8,
+  "fetch": 96,
+  "expert_first": 260,
+  "ids_lag": 200,
+  "bscale": 1,
+  "pc": "safe"
+ },
+ "source_revision": "fe805b2b98ce94121a7395373d8afb5862fc15a3"
+}

@@ -1,0 +1,17 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-epyc6       admits   214 GB (avail 263, growth 113, headroom 0, waiters 0/0 GB) load 70/128 running 37 disk 2186 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-kv-relay-plan-2210
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-4123019-1792559969 after 1 s
+test_39_stage_bank_physical (__main__.RowBank.test_39_stage_bank_physical) ... ok
+test_no_bank_inside_block_or_keepout (__main__.RowBank.test_no_bank_inside_block_or_keepout) ... ok
+test_unreachable_endpoints_are_refused (__main__.RowBank.test_unreachable_endpoints_are_refused) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.043s
+
+OK
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-4123019-1792559969): exit 0

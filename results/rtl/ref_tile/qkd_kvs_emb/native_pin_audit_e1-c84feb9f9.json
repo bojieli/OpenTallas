@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.native_pin_audit.view_receipt.v1",
+ "verdict": "FAIL",
+ "job": "qkd_kvs_emb-e1-c84feb9f9",
+ "closure": "CLOSED (record 27387b406, view on main physical/ref_tile/qkd_kvs_emb/views/qkd_kvs_emb)",
+ "view": "physical/ref_tile/qkd_kvs_emb/views/qkd_kvs_emb",
+ "view_sha256": {
+  "qkd_kvs_emb.lef": "a169dd67d7ca370f75c8f97100e349098938cee1c87227d0469a41475ae59ee3",
+  "qkd_kvs_emb_tt.lib": "0456e831179ff3720f8fa67db5a143320a104c0cd0fb3ab67aa55294b8ffc0b8",
+  "qkd_kvs_emb_ff.lib": "11fa5785e545a8341419fdd2dd1f7bb7cf35348bd3cea4cb9b4565bc300dac5f",
+  "qkd_kvs_emb_ss.lib": "7ed1ae3770c05741cacf364c74b60cb912c3f3aebf6318ad4474629f24e7c684",
+  "insertion.json": "8190ee6bf6c32a4c40bbbfcd5505fcb913a12f66041d253813a2449a5cdc7956",
+  "abstract.json": "54650466eca42314fad05bf5cf1df9d3bf75203e4a3047f05aae21685f7afd68"
+ },
+ "tool": "tools/hier_contract/native_pin_audit.py --view physical/ref_tile/qkd_kvs_emb/views/qkd_kvs_emb --cell qkd_kvs_emb --relative-to physical/ref_tile/qkd_kvs_emb/views/qkd_kvs_emb/insertion.json",
+ "tool_source": "6e5312fa72a8bcb200f8908a253e0381d3b15d46",
+ "record": {
+  "cell": "qkd_kvs_emb",
+  "view": "physical/ref_tile/qkd_kvs_emb/views/qkd_kvs_emb",
+  "lib_cell": "qkd_kvs_emb",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json child_flop boundary mean -> relative C 869.9"
+  ],
+  "R_ps": 869.9,
+  "spread_ps": 149.9,
+  "relative_to": "neighbour physical/ref_tile/qkd_kvs_emb/views/qkd_kvs_emb/insertion.json boundary mean",
+  "outputs": 583,
+  "inputs": 1263,
+  "launch_ps": 299.5,
+  "launch_pin": "rowtx__emb_tx_payload[446]",
+  "capture_ps": 261.8,
+  "capture_pin": "i_hroot_ES[228]",
+  "launch_over": 583,
+  "capture_over": 1238,
+  "comb_pins": 0,
+  "comb_first": [],
+  "ff_spread_ps": 66.7,
+  "ff_launch_min_ps": 175.6,
+  "ff_hold_need_ps": -85.5,
+  "relative": {
+   "tt": {
+    "clock_pin": "ck",
+    "rel_min_ps": -77.6,
+    "rel_max_ps": 72.3,
+    "mismatch_ps": 77.6,
+    "offset_ps": 0.0,
+    "comp_ps": 869.9
+   },
+   "ff": {
+    "clock_pin": "ck",
+    "rel_min_ps": -30.3,
+    "rel_max_ps": 36.4,
+    "mismatch_ps": 36.4,
+    "offset_ps": 0.0,
+    "comp_ps": 660.6
+   }
+  },
+  "pass": false,
+  "fail_why": "launch 299.49783 > 220 (583 pins); capture 261.7623 > 190 (1238 pins); TT pin-flop spread 149.9 > 80"
+ },
+ "classification": "KV-CLKFIX 10-19 per-flop census of the routed 6_final.odb (results/arch/kv_clkfix_1019/emb_e1_census.txt): the TT pin-flop spread 792.3..942.2 is ONE early single-flop spine leaf (rst_n__ot_q 792.3, pad chain HB4xp67) and two late 6-flop i_hroot_ES leaves at the S face x 80-88 um (905 / 942 ps, pad chains HB4xp67 / BUFx2); every other pin flop arrives 835..900. The gate measured 28.7 TT at CTS on placement parasitics: the spine's per-leaf pad chains (cell delay) do not track the routed wire RC (clock_spine.tcl OT_SPINE_SYM note: 28.8 -> 102 ps). Fix = spine topology (OT_SPINE_SYM / OT_SPINE_TREE_PAD) + RC-CAL leaf balancing, same RTL / pins / outline.",
+ "options": {}
+}

@@ -17,6 +17,11 @@
 //     w wraps at the strap nw (words per job, compiler: 4 owner slices x 40 = 160).
 //   fault (sticky, assertion only -- never reschedules): the ring's slot epoch check, or a head flag on a word that is
 //     not word 0 of a 5-word beat (calendar slip).
+// S81-SMWIRE (10-19): SO gather words.  A landed word with i[561] = 1 (the svc entry's pv_x[47] stamp: the word is
+//   inside the entry's booked SO gather window) is NOT a P.V word: it bypasses the P.V address calendar (w / lv / row
+//   unchanged) and leaves as an SO band word for ot_s81sl_xr's B port: o[0] v, o[3:1] kind 2 (XB), o[4] = word head flag
+//   (d bit 512: the gather header word), o[6:5] route (i[558:557]), o[563:52] word, everything else 0.  An SO word while a
+//   P.V drain is part-way (w != 0) is a fault (the windows are disjoint by the compiler).
 // Straps (identity, die ties): k (ring K), nw, rb.  MUT (bench negative controls only): 1 leaf calendar off by one.
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_dvland_pvrd #(parameter integer MUT = 0) (
@@ -33,7 +38,8 @@ module dsfd_dvland_pvrd #(parameter integer MUT = 0) (
     wire [561:0] l;
     wire lf;
     ot_s81_land #(.W(562), .D(4)) u_land (.ck_f(ck_f), .i(i), .ck(ck), .rs(rs), .k(k), .o(l), .fault(lf));
-    wire v = l[0];
+    wire so = l[561];
+    wire v = l[0] && !so, sv = l[0] && so;
     wire hd = l[513];
     wire [511:0] d = l[512:1];
     reg [7:0] w;
@@ -43,7 +49,9 @@ module dsfd_dvland_pvrd #(parameter integer MUT = 0) (
     wire [2:0] lv_o = (MUT == 1) ? ((lv == 3'd4) ? 3'd0 : lv + 3'd1) : lv;
     always @(posedge ck or negedge rs)
         if (!rs) begin w <= 8'd0; lv <= 3'd0; row <= 10'd0; ff <= 1'b0; end
-        else if (v) begin
+        else if (sv) begin
+            if (w != 8'd0) ff <= 1'b1;
+        end else if (v) begin
             if (hd != (lv == 3'd0)) ff <= 1'b1;
             if (w == nw - 8'd1) begin w <= 8'd0; lv <= 3'd0; row <= 10'd0; end
             else begin
@@ -54,10 +62,12 @@ module dsfd_dvland_pvrd #(parameter integer MUT = 0) (
         end
     always @(posedge ck or negedge rs)
         if (!rs) o[0] <= 1'b0;
-        else o[0] <= v;
+        else o[0] <= v || sv;
     always @(posedge ck) begin
-        o[3:1] <= 3'd4; o[8:4] <= 5'd0; o[12:9] <= 4'd0; o[20:13] <= 8'd0; o[36:21] <= 16'd0;
-        o[39:37] <= lv_o; o[49:40] <= rb + row; o[51:50] <= 2'd1; o[563:52] <= d; o[1103:564] <= 540'd0;
+        o[3:1] <= so ? 3'd2 : 3'd4; o[4] <= so && hd; o[6:5] <= so ? l[558:557] : 2'd0; o[8:7] <= 2'd0;
+        o[12:9] <= 4'd0; o[20:13] <= 8'd0; o[36:21] <= 16'd0;
+        o[39:37] <= so ? 3'd0 : lv_o; o[49:40] <= so ? 10'd0 : rb + row; o[51:50] <= so ? 2'd0 : 2'd1; o[563:52] <= d;
+        o[1103:564] <= 540'd0;
     end
     assign fault = lf | ff;
 endmodule

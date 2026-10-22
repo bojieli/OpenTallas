@@ -1,0 +1,17 @@
+SIM Verilator 5.050 2026-07-01 rev v5.050
+MISMATCH t=2 pll out ko 000000000/147225f70
+MISMATCH t=2 pll out fo 0/1
+MISMATCH t=3  ck out ko 000000000/147225f70
+MISMATCH t=3  ck out fo 0/1
+MISMATCH t=3 pll out ko 147225f70/15df24724
+MISMATCH t=4  ck out ko 147225f70/15df24724
+MISMATCH t=5  ck out ko 15df24724/0bf9a7f8d
+OUT po mismatches=73
+OUT ko mismatches=36281
+OUT fo mismatches=5
+KVPC_PATH FAIL edges=20000 checks=1161248 errors=36359 active_out=233268 mut=5
+- /srv/opentallas-scratch/claude/kv-pc3/out-b26999d6d/w_path_m5/tb.sv:235: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 17us; walltime 0.356 s; speed 46.839 us/s
+- Verilator: cpu 0.356 s on 1 threads; allocated 7 MB
+

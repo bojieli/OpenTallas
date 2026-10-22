@@ -1,0 +1,83 @@
+{
+ "evidence": {
+  "audit": "qkd_astk_rly_296_fl.audit.json",
+  "audit_sha256": "41e290e791e65e9d450a9f2da88c5921b44399dabc16b332e817ba1b798192a1",
+  "closed_commit": "1b69760953024d643dd556e23c8b2426ca94f893",
+  "closed_job": "qkd_astk_rly_296-rc1-1b6976095",
+  "closed_lef_sha256": "e13b4224d333cdc977641fc4b6cb99e7665f6da439f132c1351e04adf65c9b87",
+  "equiv_cells": 596,
+  "equiv_log_sha256": "06773beeef39d2f70fa869ed90dd8b75c38c172115b547a17b0ee741ded3a5b7",
+  "final_v_sha256": "5e6c3e9766d22bf33b5c53e644154fdc87565951bf12b29c54756824b34c3230",
+  "method": "equiv_make (ports + routed-flop-name state), equiv_simple -seq 2, equiv_induct",
+  "observe_zero": null,
+  "reset_base": null,
+  "sources": {
+   "rtl/lib/face_land/qkd_astk_rly_296_fl.sv": "5bc0e385388c96472fa62651c15f8ea489ceda3d4ce12671a07e7a1d63b49904",
+   "rtl/lib/ot_pin_land.sv": "5bc60d8c895f48b03d3aee69e82e90770071d51984fda5ff821256c291900a75",
+   "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "rtl/qwen_sys/split_20261014/qkd_astk_phys.sv": "5ee9ea58b745976317976492caab21541487c247c7e953733c359f7c9bec18de"
+  },
+  "state": {
+   "gate_only": 10,
+   "gate_only_sample": [
+    "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c0",
+    "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c1",
+    "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c2",
+    "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c3",
+    "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c4",
+    "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c5",
+    "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c6",
+    "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c7",
+    "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c8",
+    "ot_rrs__u_ot_pr_core_g_rrel_rst_n_u_fl_rst_rst_n_rst_n__c9"
+   ],
+   "gold_only": 10,
+   "gold_only_sample": [
+    "u_ot_pr_core.fl_rst__rst_n",
+    "u_ot_pr_core.g_rrel_rst_n.fl_rstc__rst_n[1]",
+    "u_ot_pr_core.g_rrel_rst_n.fl_rstc__rst_n[2]",
+    "u_ot_pr_core.g_rrel_rst_n.fl_rstc__rst_n[3]",
+    "u_ot_pr_core.g_rrel_rst_n.fl_rstc__rst_n[4]",
+    "u_ot_pr_core.g_rrel_rst_n.fl_rstc__rst_n[5]",
+    "u_ot_pr_core.g_rrel_rst_n.fl_rstc__rst_n[6]",
+    "u_ot_pr_core.g_rrel_rst_n.fl_rstc__rst_n[7]",
+    "u_ot_pr_core.g_rrel_rst_n.fl_rstc__rst_n[8]",
+    "u_ot_pr_core.g_rrel_rst_n.fl_rstc__rst_n[9]"
+   ],
+   "gold_regs": 310,
+   "paired": 300
+  },
+  "view_tie": "view TT/FF liberty bytes == closed final liberty"
+ },
+ "identity": {
+  "artifacts": {
+   "abstract.json": "c049881a42557f4a62a7eba9768e460752e014cf2f00f2bc1f12c2274a6f6a8f",
+   "child_lint.json": "bf3cc2e94f818b71fe2971bc2206714e82833021930405645e3f41352e5e5c53",
+   "export_ff.log": "af499dc65ad2b232d777c016457c2025c004746f56ccdaa9e88e352fb5f8ba4c",
+   "export_ff.tcl": "c9dbd12b7ebd87629cb60a742ecf81e460233c86ee7e284a5a8aaf79e78dde2a",
+   "export_ss.log": "d809d34c8842323144a672bc9d1326fe2626b64edfa09d73befb40013a652565",
+   "export_ss.tcl": "9d3ae805574ed25b54485c0323f364aacf4c19d520fef7ecd8173374d4a0d93d",
+   "export_tt.log": "f3c1f66de06d3c07b0021285688f6263d51f26ba2c0eea86da360c86f85edec2",
+   "export_tt.tcl": "792b778e7e647635724d0a97913e0bc9bacf97a0dfc927716cefcb3bbbcbdd16",
+   "insertion.json": "df0d4fa565e5451936a0509479e4ed2d0ec1f73ff70f203860f4b4d03c1af62e",
+   "provenance/abstract_pin_stub.json": "889584add2d884c301895e569933d921649fed8a2fd73b9c7971946105feb81c",
+   "provenance/raw/qkd_astk_rly_296_fl.lef": "e13b4224d333cdc977641fc4b6cb99e7665f6da439f132c1351e04adf65c9b87",
+   "provenance/view_export.abstract.json": "fd4b0af713e0a1b8d3ff7e777b2eb6684b8f199bd23a59f59cdc9fec692a648f",
+   "qkd_astk_rly_296_fl.lef": "5a75a96fc874a4ae98f38ddb4cc9bc08b0a90c826a747c9aff9a5c3ffd73e39c",
+   "qkd_astk_rly_296_fl_ff.lib": "41802de77e4400e813df2969db1ae3eec8d24a62cf72a50ce486e54d8598fb6e",
+   "qkd_astk_rly_296_fl_ss.lib": "55b69d7fc71278d1e9b43cf3279087c2b50723e123c30dcd07f746d33c3915e6",
+   "qkd_astk_rly_296_fl_tt.lib": "7d9fe1cede01252b97cda7e990971541bad5a34d90df428c92493ac0d5b9c5a5"
+  },
+  "rtl": {
+   "path": "rtl/lib/face_land/qkd_astk_rly_296_fl.sv",
+   "sha256": "5bc0e385388c96472fa62651c15f8ea489ceda3d4ce12671a07e7a1d63b49904"
+  },
+  "view": "physical/ref_tile/qkd_astk_rly_296/views/qkd_astk_rly_296_fl"
+ },
+ "module": "qkd_astk_rly_296_fl",
+ "native_qualified": true,
+ "parameters": {
+  "MUT": 0
+ },
+ "schema": "opentallas.native_parameter_profile.v1"
+}

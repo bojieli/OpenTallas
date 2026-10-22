@@ -1,0 +1,56 @@
+{
+ "job": "/srv/opentallas-scratch/claude/refill-1830/MRGBENCH/kv-host2-1019/host2_job.json",
+ "verilator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "results": [
+  {
+   "name": "exact",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "neg_slot4",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "neg_poshi",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "neg_uidx",
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "legacy_rawpos",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "m2",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  },
+  {
+   "name": "m3",
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "input_error": false
+  }
+ ],
+ "unexpected": 0
+}

@@ -1,0 +1,14 @@
+MISMATCH edge 402 row 0 lo 0 k 1 got 3dd713db/0 want 3e3a917a/0
+MISMATCH edge 403 row 1 lo 0 k 1 got 3de8877e/0 want 3dc30733/0
+MISMATCH edge 412 row 2 lo 4 k 2 got 3d1d05e4/0 want bd3e4ff6/0
+MISMATCH edge 413 row 3 lo 4 k 2 got bd17913b/0 want bd66641d/0
+PLAN_MISMATCH predicted 12 words, got 12; first diff ((402, 0, (0, 1, 5), 1044025722, 0), (402, 0, (0, 1, 5), 1037505499, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.shared_gu phase 1 mutant=None rows=4 fixture_rows=4 errors=5 END edges=2293 ret_words=28 xo_checked=2291 fault=0
+MISMATCH edge 407 row 2 lo 0 k 3 got 3b503c20/0 want bdc27067/0
+PLAN_MISMATCH predicted 7 words, got 7; first diff ((407, 2, (0, 3, 5), 3183636583, 0), (407, 2, (0, 3, 5), 995114016, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.shared_gu phase 2 mutant=None rows=3 fixture_rows=3 errors=2 END edges=2293 ret_words=28 xo_checked=2291 fault=0
+MISMATCH edge 402 row 2 lo 0 k 1 got 3c371770/0 want bba9f898/0
+MISMATCH edge 406 row 2 lo 2 k 1 got bc911650/0 want 3e2abd49/0
+PLAN_MISMATCH predicted 9 words, got 9; first diff ((402, 2, (0, 1, 5), 3148478616, 0), (402, 2, (0, 1, 5), 1010243440, 0))
+XS_PLACE_CHECK FAIL u_f_0L00 ffn.shared_gu phase 3 mutant=None rows=3 fixture_rows=3 errors=3 END edges=2293 ret_words=28 xo_checked=2291 fault=0
+TOKSIM_FGU_SEQ FAIL op ffn.shared_gu PER 146 phases 3 rows 10 fixture_rows 10 go0 63 last_ret 717 span 654 errors 3 ["PHASE_FAIL p1: ['MISMATCH edge 402 row 0 lo 0 k 1 got 3dd713db/0 want 3e3a917a/0', 'MISMATCH edge 403 row 1 lo 0 k 1 got 3de8877e/0 want 3dc30733/0']", "PHASE_FAIL p2: ['MISMATCH edge 407 row 2 lo 0 k 3 got 3b503c20/0 want bdc27067/0', 'PLAN_MISMATCH predicted 7 words, got 7; first diff ((407, 2, (0, 3, 5), 3183636583, 0), (407, 2, (0, 3, 5), 995114016, 0))']", "PHASE_FAIL p3: ['MISMATCH edge 402 row 2 lo 0 k 1 got 3c371770/0 want bba9f898/0', 'MISMATCH edge 406 row 2 lo 2 k 1 got bc911650/0 want 3e2abd49/0']"]

@@ -1,0 +1,6 @@
+QXPQ_CPR cycles=1759872 windows=49 rel_ref=2 rel_dut=2 rel_bad=0 mism=0 first_mism=-1 ctl_mism=0 ctl_first=-1 busy_dut=1754626 phases=300 resets=48 early=24 go=300 cfg=7515 xs=136783 pv_cycles=2722 busy=1754626 fault=181131 bank_free=1746488 walking=1737831
+QXPQ_CPR PASS
+- /srv/opentallas-scratch/claude/s81-pinreg4/qbench/src/tools/dsrom_qelem_cl/tb_qxpq_cpr.sv:194: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2ms; walltime 60.616 s; speed 29.033 us/s
+- Verilator: cpu 59.410 s on 1 threads; allocated 8 MB

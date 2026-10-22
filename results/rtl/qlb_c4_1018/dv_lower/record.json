@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.qlb_c4.dv_lower.v1",
+ "lane": "QLB-C4 (Q-LBGAP2) 10-18, gap G-C4 (DV slice lowering)",
+ "compiler": "tools/qwen_layerbench/dv_lower.py (+ ctlm_image.py --dv-lower attaches it to ctlm_image.json)",
+ "lowered": {
+  "slice_map": "12 slices W5..W0,E0..E5 from the die model x order, cmd hops and sc hops checked in the dv2f14bq die-run relay table (all direct): SETID id k = chain position k, cmd lands at slice k 2k edges after dvs_W5.cmd_wi",
+  "ownership": "every matrix (qkv / o / gu / down / lm_head, token_source_plan) -> 128-row blocks -> finishing slice by split level (256: L8 quad t; 128: L7 quad t//2 pair t%2; 512: L9 receiver 2t); residual = o/down rows: slices 0..7 own blocks {s, s+12, s+24}, 8..11 own {s, s+12}",
+  "vm_map": "X 0..383, SSX 384, RX 400 (slice-local FP32)",
+  "prog": "per slice ONE SSQ SU word (nout = owned blocks, nin 128, red + redsq to the PSUM window, r_base = first block, r_so = 12) as kind-3 stream table words",
+  "commands": "SETID 0, ROOT cfg of 12 slices (root = dvs_W5 fused r: k 12 = log2(1/imm1), eps = imm2 of the programme's rsqrt), 12 per-slice SSQ commands far first at compiled edges with a collision-free downward scalar chain (25 commands)",
+  "ages": "slice_ages.json measured on the RTL: PSUM j leaves dn_o 83 + 16 j edges after the cmd lands; sc hop 2 edges (= compiler SC_HOP)"
+ },
+ "bench": {
+  "vehicle": "rtl/test/qwen_dv/dv_lower_bench.py on tb_qfd_dv2 N 12 (qfd_dv_slice2 x 12, the die chain), Verilator 5.050, ot-epyc5 (build ~40 GB: run with --mem 160)",
+  "m0": "DV_LOWER PASS 13/13: r = 0x3ffa8944 bit-exact (hdc_golden rsqrt(reduce_chunked(x*x) 2^-12 + eps), block sums over decades) in the RB word at all 12 slices + all 160 PSUM words on their compiled edge and tag, no fault",
+  "mutant_rso1": "FAIL (PSUM tags 1 apart: r 0x4035818c at every slice) -- witness run_rso1.log / bench.out, fail regex '^DV_LOWER FAIL'",
+  "mutant_broadcast": "FAIL (the SSQ as ONE dst-15 command = what the ctlm decode calendar issues today: scalar-chain collisions, sc fault on slices 1..7, no r) -- witness run_broadcast.log / bench.out",
+  "sources": "source.sha256 (remote files == committed)"
+ },
+ "not_lowered": ["norm apply h = (x r) g + BF16 stream (needs CROM gains)", "residual adds (AR landings, PORTS)", "QK-norm / RoPE", "STN commands of the matvecs", "XC collectives", "SiLU x up", "LM-head AMAX", "stage-0 slice commands (embedding em_base)", "splicing the per-slice SSQ entries into the ctlm decode calendar (it still issues SU PC0/15/23 broadcast)"],
+ "gaps_found": [
+  "DIE GAP: dvs_W5.st_wi is tied 1088'h0 on the die (tools/qwen_split/dv_case.py chain-end idle rule; dv2f14bq die.v) and no master emits stream table words (kinds 1..3): the slice PROG / CROM / BTAB stores have NO load path on the die. The bench drives W5.st_wi directly. Needs a table-word source on W5.st_wi (e.g. sys_face config ROM / tt_ctlm program copy -> kind-3 words) -> Q-DIE14 / DV slice owner",
+  "RTL GAP (LM head): ot_qfd_tt_ctlm_split_static / head_static_rk start u_fixed_issue only at prog_base 0 and PW976..983 hold one 8-row calendar per image: an LM-head ME programme (25 rounds, AMAX) at another base cannot issue on a compiled cycle -> needs a per-segment calendar (or a second image) -> tt_ctlm owner decision"
+ ]
+}

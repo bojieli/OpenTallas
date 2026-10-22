@@ -33,6 +33,7 @@ import json
 import math
 import re
 from pathlib import Path
+from mu_check import read_log, evaluate
 
 # DAG op -> vehicle collective (n per token from the DAG; the switch crossing applies to every one of them)
 DAG_MAP = {
@@ -97,11 +98,11 @@ def token_compose_terms(coll, dags, commit_note):
 
 def parse(run):
     rows = []
-    for ln in Path(run).read_text(errors="replace").splitlines():
+    for ln in read_log(run).splitlines():
         if ln.startswith("LAND "):
             rows.append(tuple(int(x) for x in ln.split()[1:]))
-    stats = next((ln for ln in Path(run).read_text(errors="replace").splitlines() if ln.startswith("XDIE_STATS")), "")
-    verdict = next((ln for ln in Path(run).read_text(errors="replace").splitlines()
+    stats = next((ln for ln in read_log(run).splitlines() if ln.startswith("XDIE_STATS")), "")
+    verdict = next((ln for ln in read_log(run).splitlines()
                     if ln.startswith("PASS xdie_s81") or ln.startswith("FAIL xdie_s81")), "NO VERDICT")
     return rows, stats, verdict
 
@@ -124,7 +125,7 @@ def inst_metrics(rows):
 def mu_summary(g, run, single):
     """MU run: per user, E_meas per collective and of its h message; invariance against user 0 and the single-user run."""
     rows, stats, verdict = parse(run)
-    ln = Path(run).read_text(errors="replace").splitlines()
+    ln = read_log(run).splitlines()
     by = collections.defaultdict(list)
     for r in rows:
         by[r[0]].append(r)
@@ -162,6 +163,7 @@ def mu_summary(g, run, single):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--win", type=int, default=2, help="two-sided deadline window (guard2 jobs use3)")
     ap.add_argument("--golden", required=True)
     ap.add_argument("--run", required=True)
     ap.add_argument("--name", required=True)
@@ -175,6 +177,19 @@ def main():
     ap.add_argument("--extra-run", action="append", default=[], help="NAME=RUN_LOG: verdict/stats of another run of this record")
     a = ap.parse_args()
     g = json.loads(Path(a.golden).read_text())
+    verdict_check = evaluate(g, read_log(a.run), a.win)
+    if not verdict_check["qualified"]:
+        print("REFUSED functional input: " + str(verdict_check), file=__import__("sys").stderr)
+        raise SystemExit(1)
+    for spec in a.mu:
+        gd, rl = spec.split("=", 1)[1].split(":", 1)
+        mg = json.loads((Path(gd) / "golden.json").read_text())
+        if not evaluate(mg, read_log(rl), a.win)["qualified"]:
+            raise SystemExit("REFUSED functional MU input " + spec.split("=", 1)[0])
+    for spec in a.extra_run:
+        name, rl = spec.split("=", 1)
+        if not evaluate(g, read_log(rl), a.win)["qualified"]:
+            raise SystemExit("REFUSED functional extra input " + name)
     rows, stats, verdict = parse(a.run)
     by = collections.defaultdict(list)
     for r in rows:
@@ -258,7 +273,7 @@ def main():
         for spec in a.extra_run:
             nm, rl = spec.split("=", 1)
             _, st, vd = parse(rl)
-            ln = Path(rl).read_text(errors="replace").splitlines()
+            ln = read_log(rl).splitlines()
             out["runs"][nm] = dict(verdict=vd, stats=st, link=next((x for x in ln if x.startswith("XDIE_LINK")), ""),
                                    mu=next((x for x in ln if x.startswith("XDIE_MU")), ""),
                                    cfg=next((x for x in ln if x.startswith("XDIE2_CFG")), ""))

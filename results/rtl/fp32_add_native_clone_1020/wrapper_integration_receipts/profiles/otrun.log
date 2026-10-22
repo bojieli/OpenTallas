@@ -1,0 +1,16 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-fp32-wrapper-1020
+ot-run: ot-epyc6       admits   191 GB (avail 247, growth 113, headroom 0, waiters 0/0 GB) load 114/128 running 40 disk 4753 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-fp32-wrapper-1020
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-fp32-wrapper-1020
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-fp32-wrapper-1020
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/codex-fp32-wrapper-1020
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-2971159-1792486320 after 0 s
+FAN32_PROFILES_PASS checks=98967 released32+native1 no-warm firstvalid/inflightreset
+FAN32_PROFILES_PASS checks=98967 released32+native1 no-warm firstvalid/inflightreset
+FAN32_PROFILES_PASS checks=98967 released32+native1 no-warm firstvalid/inflightreset
+FAN32_PROFILE_REFUSED lat5
+FAN32_PROFILE_REFUSED drst1
+FAN32_PROFILE_REFUSED cuts15
+FAN32_PROFILE_REFUSED safe2
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-2971159-1792486320): exit 0

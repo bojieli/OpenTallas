@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       skipped: no /srv/opentallas-scratch/claude/mu-dq-txdp/xdie
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/mu-dq-txdp/xdie
+ot-run: ot-epyc6       admits   368 GB (avail 425, growth 168, headroom 0, waiters 0/0 GB) load 52/128 running 24 disk 6246 GB 
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/mu-dq-txdp/xdie
+ot-run: ot-epyc8       skipped: no /srv/opentallas-scratch/claude/mu-dq-txdp/xdie
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/mu-dq-txdp/xdie
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/mu-dq-txdp/xdie
+ot-run: -> ot-epyc6
+ot-heavy: admitted on ot-epyc6 as oth-ubuntu-3393497-1792415862 after 0 s
+XDIE_TXDP compute seam 2,2,2,3,2,2 (from /srv/opentallas-scratch/claude/mu-dq-txdp/xdie/cdie/die.v) | KV seam 11,11,9,9,9,9,9 | image TXDP C [8,3,1,10] K [21,4,3,3] | image die stages {'CS_TXS': 2, 'CS_RXV': 2, 'CS_RXP': 2, 'CS_X3S': 3, 'SC_TX': 2, 'SC_X3': 2, 'KS_RXV': 11, 'KS_RXP': 11, 'KS_TXS': 9, 'KS_TXK': 9, 'KS_TXB': 9, 'SK_TXV': 9, 'SK_TXP': 9}
+XDIE_TXDP compiled {'C': [8, 3, 1, 10], 'K': [21, 4, 3, 3]} image {'C': [8, 3, 1, 10], 'K': [21, 4, 3, 3]}
+pair expect=PASS got=PASS -> OK
+pair_gen_txdp expect=PASS got=PASS -> OK
+pair_l0 expect=PASS got=PASS -> OK
+pair_l0_phy9 expect=PASS got=PASS -> OK
+pair_mut_kseam_rx_torn expect=FAIL got=FAIL -> OK
+pair_mut_kseam_tx_torn expect=FAIL got=FAIL -> OK
+pair_mut_phy_bit expect=FAIL got=FAIL -> OK
+pair_mut_result_bit expect=FAIL got=FAIL -> OK
+pair_mut_status_done expect=FAIL got=FAIL -> OK
+pair_mut_txdp_c_off1 expect=FAIL got=FAIL -> OK
+pair_phy9 expect=PASS got=PASS -> OK
+pair_t8192 expect=PASS got=PASS -> OK
+pair_gen_txdp expect=FAIL got=FAIL -> OK
+pair_gen_txdp expect=FAIL got=FAIL -> OK
+XDIE_TXDP_PASS
+ot-run: RAN on ot-epyc6 (unit oth-ubuntu-3393497-1792415862): exit 0

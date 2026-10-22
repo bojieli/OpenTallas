@@ -1,0 +1,57 @@
+ot-run: ot-epyc4       admits   980 GB (avail 799, growth 113, headroom 0, waiters 0/0 GB) load 66/128 running 44 disk 316 GB 
+ot-run: ot-epyc5       admits   960 GB (avail 786, growth 113, headroom 0, waiters 0/0 GB) load 76/128 running 27 disk 748 GB 
+ot-run: ot-epyc6       admits  1146 GB (avail 915, growth 113, headroom 0, waiters 0/0 GB) load 78/128 running 36 disk 5505 GB 
+ot-run: ot-epyc7       admits   609 GB (avail 527, growth 101, headroom 0, waiters 0/0 GB) load 86/96 running 22 disk 6093 GB 
+ot-run: ot-epyc8       admits  1182 GB (avail 903, growth 76, headroom 0, waiters 0/0 GB) load 30/128 running 14 disk 34 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/s81-sm-so-target-1020/attempt1
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/s81-sm-so-target-1020/attempt1
+ot-run: -> ot-epyc8
+ot-heavy: admitted on ot-epyc8 as oth-ubuntu-306475-1792456901 after 0 s
+- rtl/dsrom_sys/s81_dv/sm_target/test/tb_sm_so_target.sv:306: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 38us; walltime 139.953 s; speed 268.554 ns/s
+- Verilator: cpu 139.951 s on 1 threads; allocated 44 MB
+- rtl/dsrom_sys/s81_dv/sm_target/test/tb_sm_so_target.sv:306: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 38us; walltime 138.625 s; speed 271.127 ns/s
+- Verilator: cpu 138.612 s on 1 threads; allocated 44 MB
+- rtl/dsrom_sys/s81_dv/sm_target/test/tb_sm_so_target.sv:306: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 38us; walltime 148.983 s; speed 252.277 ns/s
+- Verilator: cpu 147.253 s on 1 threads; allocated 44 MB
+- rtl/dsrom_sys/s81_dv/sm_target/test/tb_sm_so_target.sv:306: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 38us; walltime 154.716 s; speed 242.929 ns/s
+- Verilator: cpu 154.657 s on 1 threads; allocated 44 MB
+- rtl/dsrom_sys/s81_dv/sm_target/test/tb_sm_so_target.sv:306: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 38us; walltime 156.758 s; speed 239.765 ns/s
+- Verilator: cpu 156.703 s on 1 threads; allocated 44 MB
+- rtl/dsrom_sys/s81_dv/sm_target/test/tb_sm_so_target.sv:306: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 38us; walltime 148.514 s; speed 253.074 ns/s
+- Verilator: cpu 148.501 s on 1 threads; allocated 44 MB
+	Command being timed: "bash tools/s81_dv/sm_target/run.sh"
+	User time (seconds): 2023.13
+	System time (seconds): 42.40
+	Percent of CPU this job got: 165%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 20:48.82
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 16925544
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 6
+	Minor (reclaiming a frame) page faults: 14013068
+	Voluntary context switches: 881
+	Involuntary context switches: 7128
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 2377096
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+ot-run: RAN on ot-epyc8 (unit oth-ubuntu-306475-1792456901): exit 0

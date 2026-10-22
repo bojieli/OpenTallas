@@ -1,0 +1,14 @@
+MUCTX_SLOT cycle=203 run=0
+MUCTX_SLOT cycle=204 run=0
+MUCTX_HOST_TX cycle=205 run=0 owner=002080003280540 gen=1
+MUCTX_HOST_TX cycle=206 run=0 owner=002000003200500 gen=0
+MUCTX_SU_REF cycle=206 run=0 identical=1
+MUCTX_WIRE cycle=221 run=0 n=0 user=1 owner=002080003280540 gen=1
+MUCTX_WIRE cycle=222 run=0 n=1 user=0 owner=002000003200500 gen=0
+MUCTX_LOAD cycle=222 user=1 ctx=14d431000000000000000000001940015
+MUCTX_END run=0 n=2 loads=1 native=00 abort=11 transport=80/04 host=0 face=0 mu=0 faceowner=002000003200500 facegen=0
+MUCTX_FULL_STREAM_DIAGNOSTIC_NATIVE_FAULT expected unsupported later producer scope
+- rtl/test/qwen_split/tb_mu_context_real_link.sv:246: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 216ns; walltime 0.006 s; speed 33.719 us/s
+- Verilator: cpu 0.006 s on 1 threads; allocated 7 MB

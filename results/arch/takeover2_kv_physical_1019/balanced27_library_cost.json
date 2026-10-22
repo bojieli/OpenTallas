@@ -1,0 +1,5567 @@
+{
+  "TT": {
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+      "library_sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+      "cell_sha256": "6ba2cd49113a05de578b2d1189042d93ba6292b50475b5f6276974eeea10ef7d",
+      "area": 0.37908,
+      "pin_capacitance": {
+        "CLK": {
+          "capacitance": 0.462899,
+          "rise_capacitance": 0.462899,
+          "fall_capacitance": 0.461096
+        },
+        "D": {
+          "capacitance": 0.561679,
+          "rise_capacitance": 0.561679,
+          "fall_capacitance": 0.558755
+        },
+        "RESETN": {
+          "capacitance": 0.73979,
+          "rise_capacitance": 0.73979,
+          "fall_capacitance": 0.737324
+        },
+        "SETN": {
+          "capacitance": 1.07945,
+          "rise_capacitance": 1.07724,
+          "fall_capacitance": 1.07945
+        }
+      },
+      "leakage_power": [
+        294.465,
+        0.0,
+        282.96,
+        0.0,
+        260.222,
+        0.0,
+        267.506,
+        0.0,
+        274.03,
+        0.0,
+        266.951,
+        0.0,
+        315.2,
+        0.0,
+        292.462,
+        0.0,
+        239.993,
+        0.0,
+        246.517,
+        0.0,
+        340.003,
+        0.0,
+        294.777,
+        0.0,
+        259.202,
+        0.0,
+        338.428,
+        0.0,
+        291.483,
+        0.0,
+        316.006,
+        0.0,
+        329.075,
+        0.0,
+        280.19,
+        0.0,
+        295.467,
+        0.0,
+        286.165,
+        0.0,
+        288.555,
+        0.0
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.560232,
+          "maximum": 0.621662
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.562314,
+          "maximum": 0.608053
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.655688,
+          "maximum": 0.715225
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.650512,
+          "maximum": 0.698269
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.602797,
+          "maximum": 0.658458
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.474198,
+          "maximum": 0.532006
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.381476,
+          "maximum": 0.422233
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.256406,
+          "maximum": 0.297819
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.379189,
+          "maximum": 0.420082
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.255107,
+          "maximum": 0.296593
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.60135,
+          "maximum": 0.6342
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.398014,
+          "maximum": 0.431542
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.198737,
+          "maximum": 0.240658
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.373289,
+          "maximum": 0.421794
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.45024,
+          "maximum": 0.492028
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.117683,
+          "maximum": 0.168596
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.42376,
+          "maximum": 0.451892
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.218832,
+          "maximum": 0.248097
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.157895,
+          "maximum": 0.195533
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.324066,
+          "maximum": 0.355994
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.388369,
+          "maximum": 0.424092
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0906018,
+          "maximum": 0.125109
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.532495,
+          "maximum": 0.609637
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.281262,
+          "maximum": 0.358233
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.258448,
+          "maximum": 0.336635
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.416647,
+          "maximum": 0.499261
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.533898,
+          "maximum": 0.610162
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.137914,
+          "maximum": 0.221782
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.545179,
+          "maximum": 0.60063
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.433919,
+          "maximum": 0.488392
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.251813,
+          "maximum": 0.29294
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.361895,
+          "maximum": 0.410196
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.347246,
+          "maximum": 0.388401
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.266311,
+          "maximum": 0.314852
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.451367,
+          "maximum": 0.496376
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.526927,
+          "maximum": 0.581244
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.568642,
+          "maximum": 0.613566
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.409734,
+          "maximum": 0.463927
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.323081,
+          "maximum": 0.368095
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.417919,
+          "maximum": 0.472711
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.402822,
+          "maximum": 0.448087
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.338192,
+          "maximum": 0.393008
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.251798,
+          "maximum": 0.292828
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.37203,
+          "maximum": 0.419388
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.347832,
+          "maximum": 0.388807
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.275883,
+          "maximum": 0.323277
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.638302,
+          "maximum": 0.684263
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.536801,
+          "maximum": 0.582925
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.373522,
+          "maximum": 0.410517
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.480828,
+          "maximum": 0.535944
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.490288,
+          "maximum": 0.527145
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.364195,
+          "maximum": 0.419804
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.256019,
+          "maximum": 0.296351
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.36974,
+          "maximum": 0.416585
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.357137,
+          "maximum": 0.397783
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.268381,
+          "maximum": 0.315319
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0412593,
+          "maximum": -0.040914
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0432635,
+          "maximum": 0.0455587
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0689107,
+          "maximum": 0.0691341
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0674711,
+          "maximum": -0.0638244
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.187864,
+          "maximum": 0.235728
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.290061,
+          "maximum": 0.348273
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.300034,
+          "maximum": 0.347097
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.177848,
+          "maximum": 0.236909
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0682504,
+          "maximum": 0.120696
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.190092,
+          "maximum": 0.250114
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.222595,
+          "maximum": 0.274543
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0361774,
+          "maximum": 0.096893
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0536407,
+          "maximum": -0.0535643
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.053912,
+          "maximum": 0.0549389
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0829566,
+          "maximum": 0.0832106
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0815604,
+          "maximum": -0.0801368
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.120902,
+          "maximum": 0.163679
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.246553,
+          "maximum": 0.29676
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.313189,
+          "maximum": 0.355648
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0542933,
+          "maximum": 0.105427
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0521037,
+          "maximum": -0.0485935
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0533084,
+          "maximum": 0.0552598
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0836268,
+          "maximum": 0.0860327
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0819433,
+          "maximum": -0.0795716
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0220715,
+          "maximum": 0.0475853
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.108886,
+          "maximum": 0.145358
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.184157,
+          "maximum": 0.210114
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0530217,
+          "maximum": -0.0159226
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0496242,
+          "maximum": -0.049508
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0498131,
+          "maximum": 0.05083
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0868598,
+          "maximum": 0.0872119
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0855654,
+          "maximum": -0.0842056
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0880426,
+          "maximum": -0.0879406
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0882318,
+          "maximum": 0.0890828
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.102159,
+          "maximum": 0.102445
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.10058,
+          "maximum": -0.0992955
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0846748,
+          "maximum": -0.0845779
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0850351,
+          "maximum": 0.0863793
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.105663,
+          "maximum": 0.106107
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.104064,
+          "maximum": -0.102079
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.00928478,
+          "maximum": 0.0488573
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.199911,
+          "maximum": 0.248768
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.24501,
+          "maximum": 0.284093
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0343832,
+          "maximum": 0.0150877
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "INVx1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "library_sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+      "cell_sha256": "a33e4e2e7259d716057b2639e2a15d7dcd6b932e49a8681b555792a3b8229a1d",
+      "area": 0.04374,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.619928,
+          "rise_capacitance": 0.619928,
+          "fall_capacitance": 0.619647
+        }
+      },
+      "leakage_power": [
+        48.9923,
+        0.0,
+        53.3254,
+        0.0,
+        51.1588,
+        0.0
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.0672524,
+          "maximum": 0.199292
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0303707,
+          "maximum": 0.0458214
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0356956,
+          "maximum": 0.0483755
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0964683,
+          "maximum": 0.196318
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "AND4x1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "library_sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+      "cell_sha256": "58dc5fd740ce091573a4c9eba23f7af8b80d678d6370ec5bcc2ec6da800dad37",
+      "area": 0.10206,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.59462,
+          "rise_capacitance": 0.593463,
+          "fall_capacitance": 0.59462
+        },
+        "B": {
+          "capacitance": 0.552521,
+          "rise_capacitance": 0.552521,
+          "fall_capacitance": 0.541169
+        },
+        "C": {
+          "capacitance": 0.549304,
+          "rise_capacitance": 0.549304,
+          "fall_capacitance": 0.53609
+        },
+        "D": {
+          "capacitance": 0.567779,
+          "rise_capacitance": 0.567779,
+          "fall_capacitance": 0.554802
+        }
+      },
+      "leakage_power": [
+        249.297,
+        0.0,
+        97.5798,
+        0.0,
+        99.8427,
+        0.0,
+        74.5465,
+        0.0,
+        102.531,
+        0.0,
+        75.6215,
+        0.0,
+        76.6858,
+        0.0,
+        70.3246,
+        0.0,
+        106.919,
+        0.0,
+        77.2023,
+        0.0,
+        78.3086,
+        0.0,
+        71.5255,
+        0.0,
+        79.4055,
+        0.0,
+        72.1285,
+        0.0,
+        72.8173,
+        0.0,
+        69.309,
+        0.0,
+        92.1278,
+        0.0
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.0826259,
+          "maximum": 0.165377
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.290504,
+          "maximum": 0.362989
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.279713,
+          "maximum": 0.352559
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0947004,
+          "maximum": 0.185449
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0863772,
+          "maximum": 0.149842
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.320415,
+          "maximum": 0.393476
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.315922,
+          "maximum": 0.378736
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0945773,
+          "maximum": 0.184395
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0859391,
+          "maximum": 0.14766
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.351833,
+          "maximum": 0.426639
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.353618,
+          "maximum": 0.411789
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0927708,
+          "maximum": 0.167114
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0845643,
+          "maximum": 0.143895
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.383197,
+          "maximum": 0.459949
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.398074,
+          "maximum": 0.453051
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0839374,
+          "maximum": 0.159343
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0625195,
+          "maximum": -0.0613252
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0613252,
+          "maximum": 0.0625195
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0156472,
+          "maximum": 0.0160015
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0160015,
+          "maximum": -0.0156153
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0626419,
+          "maximum": -0.0614816
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0614816,
+          "maximum": 0.0626419
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0156419,
+          "maximum": 0.0160162
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0160162,
+          "maximum": -0.0156184
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0626418,
+          "maximum": -0.0614082
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0614744,
+          "maximum": 0.0626418
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0156508,
+          "maximum": 0.0160081
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.015963,
+          "maximum": -0.0156231
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0439502,
+          "maximum": -0.0429967
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0434689,
+          "maximum": 0.044085
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0154949,
+          "maximum": 0.0158149
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0158149,
+          "maximum": -0.0154762
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0438293,
+          "maximum": -0.0430465
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0433298,
+          "maximum": 0.0438548
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0154931,
+          "maximum": 0.0158143
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0158143,
+          "maximum": -0.0154758
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0432717,
+          "maximum": -0.0429332
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0434715,
+          "maximum": 0.0456455
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.053925,
+          "maximum": 0.0546265
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0523056,
+          "maximum": -0.0490329
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0436498,
+          "maximum": -0.0428735
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0436863,
+          "maximum": 0.0446931
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0154209,
+          "maximum": 0.0157321
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0157321,
+          "maximum": -0.0154209
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0438137,
+          "maximum": -0.0429758
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0433017,
+          "maximum": 0.0438137
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0154386,
+          "maximum": 0.015739
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.015739,
+          "maximum": -0.0154386
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0434602,
+          "maximum": -0.0426233
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0426599,
+          "maximum": 0.0434602
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0154928,
+          "maximum": 0.0158071
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0158002,
+          "maximum": -0.0154373
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0428845,
+          "maximum": -0.0426093
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0428409,
+          "maximum": 0.043383
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0541389,
+          "maximum": 0.0544768
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0523122,
+          "maximum": -0.0491044
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0434443,
+          "maximum": -0.0428184
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0429675,
+          "maximum": 0.0434443
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0154384,
+          "maximum": 0.0157177
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0157177,
+          "maximum": -0.0154384
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0434071,
+          "maximum": -0.0426439
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0430884,
+          "maximum": 0.0435538
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0517897,
+          "maximum": 0.0521948
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0511034,
+          "maximum": -0.0418847
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0432605,
+          "maximum": -0.0427568
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0428689,
+          "maximum": 0.0435643
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0154172,
+          "maximum": 0.0157246
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0157246,
+          "maximum": -0.0154172
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0430401,
+          "maximum": -0.0426246
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0426246,
+          "maximum": 0.0434148
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0538761,
+          "maximum": 0.0542278
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0523111,
+          "maximum": -0.0492926
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0434568,
+          "maximum": -0.0427266
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.042829,
+          "maximum": 0.0434568
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0154379,
+          "maximum": 0.0157205
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0157205,
+          "maximum": -0.0154379
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0441624,
+          "maximum": -0.0437151
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.043834,
+          "maximum": 0.0445513
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0599199,
+          "maximum": 0.0605483
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0580671,
+          "maximum": -0.0563954
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0445472,
+          "maximum": -0.0438338
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0438338,
+          "maximum": 0.0445472
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0580098,
+          "maximum": 0.0587907
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0568639,
+          "maximum": -0.0514577
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.044177,
+          "maximum": -0.0438405
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0439868,
+          "maximum": 0.0445945
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0597171,
+          "maximum": 0.0607354
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0580623,
+          "maximum": -0.0565565
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0445655,
+          "maximum": -0.0437599
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0439191,
+          "maximum": 0.0445655
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0570141,
+          "maximum": 0.0578018
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0565044,
+          "maximum": -0.0499213
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0442126,
+          "maximum": -0.0438461
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0439876,
+          "maximum": 0.0445944
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0597796,
+          "maximum": 0.0607592
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0580604,
+          "maximum": -0.0565409
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0445967,
+          "maximum": -0.0438268
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0439658,
+          "maximum": 0.0445967
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0577258,
+          "maximum": 0.0584404
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0568536,
+          "maximum": -0.0513801
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "AND3x1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "library_sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+      "cell_sha256": "cc3edd5f60853e5b3e482a9229055a62b97703a39bf864700d60fedaab0283f3",
+      "area": 0.08748,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.589755,
+          "rise_capacitance": 0.589102,
+          "fall_capacitance": 0.589755
+        },
+        "B": {
+          "capacitance": 0.553015,
+          "rise_capacitance": 0.553015,
+          "fall_capacitance": 0.541101
+        },
+        "C": {
+          "capacitance": 0.55229,
+          "rise_capacitance": 0.55229,
+          "fall_capacitance": 0.539277
+        }
+      },
+      "leakage_power": [
+        200.304,
+        0.0,
+        98.3092,
+        0.0,
+        100.998,
+        0.0,
+        75.152,
+        0.0,
+        105.385,
+        0.0,
+        76.7748,
+        0.0,
+        77.8718,
+        0.0,
+        71.2836,
+        0.0,
+        100.76,
+        0.0
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.082511,
+          "maximum": 0.172373
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.281588,
+          "maximum": 0.361555
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.261537,
+          "maximum": 0.340184
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.103405,
+          "maximum": 0.189404
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0853819,
+          "maximum": 0.161789
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.312087,
+          "maximum": 0.394303
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.29747,
+          "maximum": 0.367236
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.103791,
+          "maximum": 0.188774
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0858151,
+          "maximum": 0.186755
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.342175,
+          "maximum": 0.42689
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.340091,
+          "maximum": 0.405827
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0964085,
+          "maximum": 0.184333
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0620426,
+          "maximum": -0.0609976
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0609976,
+          "maximum": 0.0620426
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0159356,
+          "maximum": 0.016623
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0165969,
+          "maximum": -0.0159179
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0620417,
+          "maximum": -0.0610765
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0610768,
+          "maximum": 0.0620417
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0159414,
+          "maximum": 0.016631
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.016631,
+          "maximum": -0.0159182
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0451173,
+          "maximum": -0.0442056
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0443252,
+          "maximum": 0.0451885
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0148934,
+          "maximum": 0.0152687
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0152464,
+          "maximum": -0.01488
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0444972,
+          "maximum": -0.0442005
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0446921,
+          "maximum": 0.0464829
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0536051,
+          "maximum": 0.054044
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0516946,
+          "maximum": -0.0493211
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0450471,
+          "maximum": -0.0442722
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0444108,
+          "maximum": 0.0450471
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0148387,
+          "maximum": 0.0151566
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0150522,
+          "maximum": -0.0148387
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.043527,
+          "maximum": -0.04319
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0434411,
+          "maximum": 0.0440259
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0586617,
+          "maximum": 0.059302
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0567317,
+          "maximum": -0.0544333
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0438966,
+          "maximum": -0.0434496
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0435524,
+          "maximum": 0.0439024
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0566838,
+          "maximum": 0.0573731
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0555472,
+          "maximum": -0.0495747
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0435767,
+          "maximum": -0.0432547
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0432988,
+          "maximum": 0.0440755
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0584369,
+          "maximum": 0.0594066
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0567249,
+          "maximum": -0.0544643
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "AND2x2_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "library_sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+      "cell_sha256": "06b3b6dffffa626dc45da0ac6ea7a7792823b88bc93e8b25b7ddb75ff9391f75",
+      "area": 0.08748,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.483326,
+          "rise_capacitance": 0.483326,
+          "fall_capacitance": 0.470103
+        },
+        "B": {
+          "capacitance": 0.526322,
+          "rise_capacitance": 0.526025,
+          "fall_capacitance": 0.526322
+        }
+      },
+      "leakage_power": [
+        173.001,
+        0.0,
+        152.723,
+        0.0,
+        148.335,
+        0.0,
+        125.087,
+        0.0,
+        149.786,
+        0.0
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.168586,
+          "maximum": 0.30458
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.359282,
+          "maximum": 0.442365
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.343702,
+          "maximum": 0.4094
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.186313,
+          "maximum": 0.317393
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.163465,
+          "maximum": 0.247639
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.332113,
+          "maximum": 0.41175
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.303348,
+          "maximum": 0.37718
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.191941,
+          "maximum": 0.300313
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0303462,
+          "maximum": -0.0301873
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0305851,
+          "maximum": 0.03205
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0590129,
+          "maximum": 0.0598098
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0569466,
+          "maximum": -0.0544778
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0496832,
+          "maximum": -0.0488291
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0489501,
+          "maximum": 0.04972
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0170553,
+          "maximum": 0.0176215
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0176215,
+          "maximum": -0.0170116
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "OR4x1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "library_sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+      "cell_sha256": "35e374ed32fce73d43547eb91d06c4cc52065a05a043b11c4a69b8252a007c6f",
+      "area": 0.10206,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.596175,
+          "rise_capacitance": 0.596175,
+          "fall_capacitance": 0.592498
+        },
+        "B": {
+          "capacitance": 0.551855,
+          "rise_capacitance": 0.541074,
+          "fall_capacitance": 0.551855
+        },
+        "C": {
+          "capacitance": 0.547777,
+          "rise_capacitance": 0.537029,
+          "fall_capacitance": 0.547777
+        },
+        "D": {
+          "capacitance": 0.567232,
+          "rise_capacitance": 0.554792,
+          "fall_capacitance": 0.567232
+        }
+      },
+      "leakage_power": [
+        65.4137,
+        0.0,
+        66.6338,
+        0.0,
+        66.4963,
+        0.0,
+        71.175,
+        0.0,
+        66.3445,
+        0.0,
+        70.9297,
+        0.0,
+        70.6848,
+        0.0,
+        103.414,
+        0.0,
+        66.2599,
+        0.0,
+        70.7417,
+        0.0,
+        70.4991,
+        0.0,
+        101.082,
+        0.0,
+        70.3351,
+        0.0,
+        99.903,
+        0.0,
+        99.0195,
+        0.0,
+        262.298,
+        0.0,
+        88.8269,
+        0.0
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.0901164,
+          "maximum": 0.157099
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.284309,
+          "maximum": 0.359253
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.286584,
+          "maximum": 0.349497
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.08723,
+          "maximum": 0.177346
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.089993,
+          "maximum": 0.178141
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.323424,
+          "maximum": 0.384305
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.316086,
+          "maximum": 0.379456
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0924632,
+          "maximum": 0.165369
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0861838,
+          "maximum": 0.164631
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.362263,
+          "maximum": 0.416495
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.3478,
+          "maximum": 0.412796
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0927117,
+          "maximum": 0.179075
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0872811,
+          "maximum": 0.180682
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.398181,
+          "maximum": 0.445926
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.389342,
+          "maximum": 0.457282
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0828677,
+          "maximum": 0.136312
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -7.52501e-05,
+          "maximum": 1.41957e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.26075e-05,
+          "maximum": 9.02988e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.076302,
+          "maximum": 0.0773382
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0772976,
+          "maximum": -0.0762211
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -7.29404e-05,
+          "maximum": -3.56487e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.76749e-05,
+          "maximum": 0.000126235
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0762386,
+          "maximum": 0.0773165
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0773165,
+          "maximum": -0.0761689
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000115817,
+          "maximum": -5.80469e-07
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 4.41757e-05,
+          "maximum": 0.000186874
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0759624,
+          "maximum": 0.0772927
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0772927,
+          "maximum": -0.0759624
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -6.05699e-05,
+          "maximum": -9.71867e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.85739e-05,
+          "maximum": 6.065e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0578749,
+          "maximum": 0.0586373
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0582519,
+          "maximum": -0.0575703
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.82115e-05,
+          "maximum": -2.38567e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.38567e-05,
+          "maximum": 5.82115e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0581135,
+          "maximum": 0.0606866
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0580686,
+          "maximum": -0.0573907
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -6.41794e-05,
+          "maximum": 3.25061e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.03168e-05,
+          "maximum": 7.03907e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0577338,
+          "maximum": 0.0582953
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0582482,
+          "maximum": -0.0575657
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -9.20609e-05,
+          "maximum": 4.43648e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.22756e-05,
+          "maximum": 0.000100076
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0576531,
+          "maximum": 0.0583737
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0582243,
+          "maximum": -0.0575503
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -6.27352e-05,
+          "maximum": -2.3193e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.3193e-05,
+          "maximum": 6.27352e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0573625,
+          "maximum": 0.0582659
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0579118,
+          "maximum": -0.0572331
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0379958,
+          "maximum": -0.0348428
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0393355,
+          "maximum": 0.0402421
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0572448,
+          "maximum": 0.0580693
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0574555,
+          "maximum": -0.056925
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.42314e-05,
+          "maximum": -2.23188e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.23188e-05,
+          "maximum": 5.42314e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0574611,
+          "maximum": 0.0583571
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0577037,
+          "maximum": -0.0569348
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0368314,
+          "maximum": -0.025902
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.03762,
+          "maximum": 0.0381096
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.057218,
+          "maximum": 0.0585205
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0573395,
+          "maximum": -0.0567012
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -7.68297e-05,
+          "maximum": -1.50991e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.52941e-05,
+          "maximum": 7.68297e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0574307,
+          "maximum": 0.0582356
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0579041,
+          "maximum": -0.0572259
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0379387,
+          "maximum": -0.0338696
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0399415,
+          "maximum": 0.0407219
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0572139,
+          "maximum": 0.0580614
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.057407,
+          "maximum": -0.056821
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000120904,
+          "maximum": 4.34264e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.1771e-05,
+          "maximum": 0.000120904
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0571893,
+          "maximum": 0.0578474
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0577987,
+          "maximum": -0.0571282
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0336175,
+          "maximum": -0.0315647
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0355924,
+          "maximum": 0.0362846
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0680446,
+          "maximum": 0.0691089
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0685105,
+          "maximum": -0.0679996
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0326158,
+          "maximum": -0.0252224
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0347191,
+          "maximum": 0.0355372
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0682873,
+          "maximum": 0.0692626
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0689351,
+          "maximum": -0.067621
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0321953,
+          "maximum": -0.0237937
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0335515,
+          "maximum": 0.0341819
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0682885,
+          "maximum": 0.0692554
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0689068,
+          "maximum": -0.0678351
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0336428,
+          "maximum": -0.0315845
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0356279,
+          "maximum": 0.0360746
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0683109,
+          "maximum": 0.0692983
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0684861,
+          "maximum": -0.0680507
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0326164,
+          "maximum": -0.0252454
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0350056,
+          "maximum": 0.0358506
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0678867,
+          "maximum": 0.0692288
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0687086,
+          "maximum": -0.0678867
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0336051,
+          "maximum": -0.0311184
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0360287,
+          "maximum": 0.0364017
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0683149,
+          "maximum": 0.0692832
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0688304,
+          "maximum": -0.0680178
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "OR5x1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+      "library_sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+      "cell_sha256": "c87e107e0e48305899cb659e9076f6c7b0d28aa3deada7971aac937aca8c146f",
+      "area": 0.11664,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.516661,
+          "rise_capacitance": 0.516661,
+          "fall_capacitance": 0.515297
+        },
+        "B": {
+          "capacitance": 0.469667,
+          "rise_capacitance": 0.458156,
+          "fall_capacitance": 0.469667
+        },
+        "C": {
+          "capacitance": 0.468006,
+          "rise_capacitance": 0.456165,
+          "fall_capacitance": 0.468006
+        },
+        "D": {
+          "capacitance": 0.468636,
+          "rise_capacitance": 0.457041,
+          "fall_capacitance": 0.468636
+        },
+        "E": {
+          "capacitance": 0.505944,
+          "rise_capacitance": 0.493509,
+          "fall_capacitance": 0.505944
+        }
+      },
+      "leakage_power": [
+        63.0788,
+        0.0,
+        63.7343,
+        0.0,
+        63.6386,
+        0.0,
+        65.4656,
+        0.0,
+        63.5376,
+        0.0,
+        65.3281,
+        0.0,
+        65.1915,
+        0.0,
+        70.5181,
+        0.0,
+        63.4262,
+        0.0,
+        65.1764,
+        0.0,
+        65.0392,
+        0.0,
+        70.2728,
+        0.0,
+        64.8878,
+        0.0,
+        70.0279,
+        0.0,
+        69.7835,
+        0.0,
+        103.268,
+        0.0,
+        63.3716,
+        0.0,
+        65.0917,
+        0.0,
+        64.9548,
+        0.0,
+        70.0848,
+        0.0,
+        64.8038,
+        0.0,
+        69.8422,
+        0.0,
+        69.6,
+        0.0,
+        100.936,
+        0.0,
+        64.7223,
+        0.0,
+        69.6782,
+        0.0,
+        69.4371,
+        0.0,
+        99.7572,
+        0.0,
+        69.2843,
+        0.0,
+        98.8737,
+        0.0,
+        98.1296,
+        0.0,
+        227.366,
+        0.0,
+        76.8221,
+        0.0
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.0918937,
+          "maximum": 0.157743
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.288223,
+          "maximum": 0.346632
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.265947,
+          "maximum": 0.316193
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.109389,
+          "maximum": 0.169574
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0930322,
+          "maximum": 0.151965
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.327185,
+          "maximum": 0.371747
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.295976,
+          "maximum": 0.344876
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.118998,
+          "maximum": 0.164354
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0905327,
+          "maximum": 0.151916
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.366492,
+          "maximum": 0.402478
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.328842,
+          "maximum": 0.377825
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.114486,
+          "maximum": 0.15986
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0871053,
+          "maximum": 0.141972
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.405382,
+          "maximum": 0.437115
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.36027,
+          "maximum": 0.410869
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.119988,
+          "maximum": 0.159857
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0879812,
+          "maximum": 0.151508
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.440983,
+          "maximum": 0.470154
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.405887,
+          "maximum": 0.45871
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.102891,
+          "maximum": 0.14845
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -6.22627e-05,
+          "maximum": 2.43685e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.30125e-05,
+          "maximum": 8.16574e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0615307,
+          "maximum": 0.0624626
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0623973,
+          "maximum": -0.0615307
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.95182e-05,
+          "maximum": -1.13682e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.60609e-05,
+          "maximum": 9.36386e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0613726,
+          "maximum": 0.0623477
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0623477,
+          "maximum": -0.0613726
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -7.68e-05,
+          "maximum": -3.35828e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.13638e-05,
+          "maximum": 0.000125863
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0617333,
+          "maximum": 0.0624256
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0624256,
+          "maximum": -0.0616162
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000102653,
+          "maximum": -8.93346e-07
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 4.71547e-05,
+          "maximum": 0.000170807
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0617956,
+          "maximum": 0.0623586
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0623141,
+          "maximum": -0.0615222
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -4.16309e-05,
+          "maximum": -1.76447e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.76447e-05,
+          "maximum": 4.65584e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0419687,
+          "maximum": 0.0425903
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.042153,
+          "maximum": -0.0416659
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -4.26614e-05,
+          "maximum": -1.35311e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.85441e-05,
+          "maximum": 4.26614e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0423186,
+          "maximum": 0.0445647
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0419762,
+          "maximum": -0.0415466
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.89697e-05,
+          "maximum": -2.0117e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.0117e-05,
+          "maximum": 5.89697e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0423178,
+          "maximum": 0.0452724
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0418503,
+          "maximum": -0.041496
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -3.835e-05,
+          "maximum": 6.47709e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.86534e-05,
+          "maximum": 4.75521e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0416387,
+          "maximum": 0.0422225
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0421527,
+          "maximum": -0.0416387
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -4.67812e-05,
+          "maximum": 4.92686e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.11156e-05,
+          "maximum": 6.31234e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0417831,
+          "maximum": 0.0421898
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0421412,
+          "maximum": -0.0416544
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.94229e-05,
+          "maximum": 8.61766e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.15477e-05,
+          "maximum": 8.10701e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0417748,
+          "maximum": 0.0421651
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0421246,
+          "maximum": -0.0415643
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -4.25185e-05,
+          "maximum": -9.04717e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.77214e-05,
+          "maximum": 4.33988e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0416793,
+          "maximum": 0.042093
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0418403,
+          "maximum": -0.0415076
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -4.88449e-05,
+          "maximum": -2.26711e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.26711e-05,
+          "maximum": 4.88449e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0413369,
+          "maximum": 0.0422824
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0419111,
+          "maximum": -0.0413369
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -4.70433e-05,
+          "maximum": -1.22491e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.74194e-05,
+          "maximum": 4.70433e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0416321,
+          "maximum": 0.0423327
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0417977,
+          "maximum": -0.0414639
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.93312e-05,
+          "maximum": -2.39785e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.39785e-05,
+          "maximum": 5.93312e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0417731,
+          "maximum": 0.0425215
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0419554,
+          "maximum": -0.0414491
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -4.66671e-05,
+          "maximum": -9.01306e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.93069e-05,
+          "maximum": 4.87289e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.041352,
+          "maximum": 0.0420016
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0419889,
+          "maximum": -0.041352
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.07221e-05,
+          "maximum": -2.41655e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.41655e-05,
+          "maximum": 5.07221e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0416584,
+          "maximum": 0.0423032
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0418408,
+          "maximum": -0.0412973
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.02045e-05,
+          "maximum": 5.79287e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.14825e-05,
+          "maximum": 5.93782e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0415155,
+          "maximum": 0.0419622
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0418987,
+          "maximum": -0.0414145
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -7.26193e-05,
+          "maximum": 8.96632e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.10616e-05,
+          "maximum": 8.90749e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0415107,
+          "maximum": 0.0419195
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0418703,
+          "maximum": -0.0413976
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -6.02476e-05,
+          "maximum": -2.21204e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.21204e-05,
+          "maximum": 6.02476e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0419583,
+          "maximum": 0.0426784
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0424689,
+          "maximum": -0.0419583
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0380201,
+          "maximum": -0.0348017
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0393656,
+          "maximum": 0.0399746
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0419447,
+          "maximum": 0.042535
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0419335,
+          "maximum": -0.0415973
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.27504e-05,
+          "maximum": -2.17665e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.17665e-05,
+          "maximum": 5.27504e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0421147,
+          "maximum": 0.0427309
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0424098,
+          "maximum": -0.0417187
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0368567,
+          "maximum": -0.0261118
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0371328,
+          "maximum": 0.0378173
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0419146,
+          "maximum": 0.0424946
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0421178,
+          "maximum": -0.0418041
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.69841e-05,
+          "maximum": -2.24321e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.24321e-05,
+          "maximum": 5.69841e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0422046,
+          "maximum": 0.0428998
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0423568,
+          "maximum": -0.0418829
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0363827,
+          "maximum": -0.0236569
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0375701,
+          "maximum": 0.0381464
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.041818,
+          "maximum": 0.0425943
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0422749,
+          "maximum": -0.0417164
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -7.04896e-05,
+          "maximum": -2.41286e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.41286e-05,
+          "maximum": 7.04896e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0419708,
+          "maximum": 0.0427702
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0424628,
+          "maximum": -0.0419708
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0380248,
+          "maximum": -0.0347838
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0394116,
+          "maximum": 0.0400904
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.041941,
+          "maximum": 0.0425297
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0419543,
+          "maximum": -0.0416466
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -5.84673e-05,
+          "maximum": -2.30496e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.30496e-05,
+          "maximum": 5.84673e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0421158,
+          "maximum": 0.0427122
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0422942,
+          "maximum": -0.0417071
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0368613,
+          "maximum": -0.02607
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0374956,
+          "maximum": 0.0382426
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0419179,
+          "maximum": 0.0424776
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0420961,
+          "maximum": -0.0417146
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -8.66326e-05,
+          "maximum": -1.34727e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.54614e-05,
+          "maximum": 8.66326e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0421648,
+          "maximum": 0.0427444
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0424548,
+          "maximum": -0.0419662
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0379684,
+          "maximum": -0.0339791
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0398573,
+          "maximum": 0.0408163
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0419453,
+          "maximum": 0.0425086
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0420301,
+          "maximum": -0.0416624
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -9.9888e-05,
+          "maximum": 6.50218e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.12508e-05,
+          "maximum": 0.000111152
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0420852,
+          "maximum": 0.0424209
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.042333,
+          "maximum": -0.0418072
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0336541,
+          "maximum": -0.0316001
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0356051,
+          "maximum": 0.0362767
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0580559,
+          "maximum": 0.0589069
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0585416,
+          "maximum": -0.0578626
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0326371,
+          "maximum": -0.0251693
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0347537,
+          "maximum": 0.0355055
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0580349,
+          "maximum": 0.058887
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0585797,
+          "maximum": -0.0579151
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.032213,
+          "maximum": -0.0237504
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0333593,
+          "maximum": 0.0340151
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0580262,
+          "maximum": 0.0588558
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0585753,
+          "maximum": -0.0579122
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0318985,
+          "maximum": -0.0234767
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0323174,
+          "maximum": 0.0329576
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0580285,
+          "maximum": 0.0588467
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0585456,
+          "maximum": -0.0576412
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0336609,
+          "maximum": -0.0316053
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0356142,
+          "maximum": 0.0359968
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0580516,
+          "maximum": 0.0588947
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0582968,
+          "maximum": -0.0578144
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0326346,
+          "maximum": -0.0252179
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0348173,
+          "maximum": 0.0356975
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.057889,
+          "maximum": 0.0588626
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0585713,
+          "maximum": -0.0576811
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.032213,
+          "maximum": -0.023781
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0335824,
+          "maximum": 0.0342116
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0580263,
+          "maximum": 0.0588292
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0585465,
+          "maximum": -0.0576327
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0336663,
+          "maximum": -0.0316101
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0356564,
+          "maximum": 0.0359958
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0580466,
+          "maximum": 0.058879
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0581086,
+          "maximum": -0.0578421
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.032634,
+          "maximum": -0.025234
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0351149,
+          "maximum": 0.0357735
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0579209,
+          "maximum": 0.0588346
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0585737,
+          "maximum": -0.0578227
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0336272,
+          "maximum": -0.0311285
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0361166,
+          "maximum": 0.036426
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0580514,
+          "maximum": 0.0588612
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0584138,
+          "maximum": -0.0576992
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "increment_13ff_13inv": {
+      "area_um2": 5.496659999999999,
+      "clock_pins": 13,
+      "clock_cap_lib_units": 6.0176870000000005,
+      "reset_cap_lib_units": 9.61727,
+      "set_cap_lib_units": 14.03285,
+      "d_cap_lib_units": 7.301827,
+      "inv_a_cap_lib_units": 8.059064000000001
+    }
+  },
+  "FF": {
+    "DFFASRHQNx1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+      "library_sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+      "cell_sha256": "d54ebc4f754a3fda1bfe4d288dcfdb32b088f697a5cf721b52a89ae30cc13935",
+      "area": 0.37908,
+      "pin_capacitance": {
+        "CLK": {
+          "capacitance": 0.503152,
+          "rise_capacitance": 0.503152,
+          "fall_capacitance": 0.502958
+        },
+        "D": {
+          "capacitance": 0.623429,
+          "rise_capacitance": 0.623429,
+          "fall_capacitance": 0.620511
+        },
+        "RESETN": {
+          "capacitance": 0.802909,
+          "rise_capacitance": 0.802909,
+          "fall_capacitance": 0.800303
+        },
+        "SETN": {
+          "capacitance": 1.16446,
+          "rise_capacitance": 1.16211,
+          "fall_capacitance": 1.16446
+        }
+      },
+      "leakage_power": [
+        210.406,
+        0.0,
+        161.455,
+        0.0,
+        148.542,
+        0.0,
+        195.674,
+        0.0,
+        200.818,
+        0.0,
+        195.221,
+        0.0,
+        173.071,
+        0.0,
+        160.158,
+        0.0,
+        180.488,
+        0.0,
+        185.633,
+        0.0,
+        220.297,
+        0.0,
+        181.6,
+        0.0,
+        162.259,
+        0.0,
+        216.823,
+        0.0,
+        189.031,
+        0.0,
+        214.49,
+        0.0,
+        200.254,
+        0.0,
+        199.835,
+        0.0,
+        202.972,
+        0.0,
+        214.384,
+        0.0,
+        190.671,
+        0.0
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.72342,
+          "maximum": 0.872613
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.722669,
+          "maximum": 0.852301
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.852444,
+          "maximum": 1.00495
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.841372,
+          "maximum": 0.975252
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.795619,
+          "maximum": 0.946851
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.623218,
+          "maximum": 0.780332
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.508445,
+          "maximum": 0.601848
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.337708,
+          "maximum": 0.439771
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.505725,
+          "maximum": 0.602706
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.335921,
+          "maximum": 0.439311
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.785204,
+          "maximum": 0.914137
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.515347,
+          "maximum": 0.646988
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.262962,
+          "maximum": 0.38143
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.483791,
+          "maximum": 0.625945
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.593667,
+          "maximum": 0.710887
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.148799,
+          "maximum": 0.290818
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.560267,
+          "maximum": 0.656848
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.287909,
+          "maximum": 0.385983
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.210113,
+          "maximum": 0.309916
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.423959,
+          "maximum": 0.523282
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.512658,
+          "maximum": 0.61227
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.117858,
+          "maximum": 0.220941
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.697654,
+          "maximum": 0.937609
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.369612,
+          "maximum": 0.611372
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.345936,
+          "maximum": 0.57479
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.54025,
+          "maximum": 0.783287
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.704287,
+          "maximum": 0.932277
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.177993,
+          "maximum": 0.423157
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.70543,
+          "maximum": 0.872377
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.55855,
+          "maximum": 0.724595
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.315983,
+          "maximum": 0.443145
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.469752,
+          "maximum": 0.619208
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.443704,
+          "maximum": 0.570887
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.34204,
+          "maximum": 0.491538
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.578276,
+          "maximum": 0.720457
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.678325,
+          "maximum": 0.845799
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.732653,
+          "maximum": 0.874791
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.524062,
+          "maximum": 0.691503
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.407414,
+          "maximum": 0.546543
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.5432,
+          "maximum": 0.711776
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.515954,
+          "maximum": 0.655153
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.434965,
+          "maximum": 0.603526
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.319205,
+          "maximum": 0.446646
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.481324,
+          "maximum": 0.629357
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.447872,
+          "maximum": 0.575391
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.352813,
+          "maximum": 0.500657
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.820782,
+          "maximum": 0.968407
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.68466,
+          "maximum": 0.832667
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.472057,
+          "maximum": 0.59632
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.615665,
+          "maximum": 0.777077
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.626388,
+          "maximum": 0.750741
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.461514,
+          "maximum": 0.623308
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.324079,
+          "maximum": 0.453461
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.478516,
+          "maximum": 0.625228
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.459182,
+          "maximum": 0.588693
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.343235,
+          "maximum": 0.490079
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0584286,
+          "maximum": -0.057792
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0600322,
+          "maximum": 0.0624967
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0919981,
+          "maximum": 0.0922969
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.090763,
+          "maximum": -0.0869405
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.239603,
+          "maximum": 0.40128
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.382444,
+          "maximum": 0.567628
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.392688,
+          "maximum": 0.553786
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.228919,
+          "maximum": 0.415301
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0882693,
+          "maximum": 0.258493
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.249531,
+          "maximum": 0.436236
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.293375,
+          "maximum": 0.463094
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0445347,
+          "maximum": 0.232396
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0733298,
+          "maximum": -0.0732286
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0734837,
+          "maximum": 0.0746104
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.109058,
+          "maximum": 0.109261
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.107708,
+          "maximum": -0.106173
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.158967,
+          "maximum": 0.306495
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.316281,
+          "maximum": 0.477931
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.410795,
+          "maximum": 0.557917
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0645531,
+          "maximum": 0.227316
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.071562,
+          "maximum": -0.0677057
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0723914,
+          "maximum": 0.0747676
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.109768,
+          "maximum": 0.112529
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.108311,
+          "maximum": -0.105669
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0284287,
+          "maximum": 0.111822
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.142227,
+          "maximum": 0.245359
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.242548,
+          "maximum": 0.326782
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0721402,
+          "maximum": 0.0319626
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0685106,
+          "maximum": -0.06834
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.068731,
+          "maximum": 0.069658
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.113838,
+          "maximum": 0.114158
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.112641,
+          "maximum": -0.111092
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.117745,
+          "maximum": -0.117677
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.117847,
+          "maximum": 0.11876
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.135316,
+          "maximum": 0.135525
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.133653,
+          "maximum": -0.132332
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.113708,
+          "maximum": -0.113574
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.113844,
+          "maximum": 0.115377
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.139481,
+          "maximum": 0.139819
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.13785,
+          "maximum": -0.135813
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.0129805,
+          "maximum": 0.138175
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.259481,
+          "maximum": 0.402193
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.321879,
+          "maximum": 0.447408
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0483529,
+          "maximum": 0.0950204
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "INVx1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "library_sha256": "806848fed619856aa96f4965a2e6cc3d5a3b9bb39494bbdad5abd0cc6219ea26",
+      "cell_sha256": "09c247fb44f8f767e08a56e2207a8645f4a2cf198857162654997dfa79a9fd3e",
+      "area": 0.04374,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.683716,
+          "rise_capacitance": 0.683678,
+          "fall_capacitance": 0.683716
+        }
+      },
+      "leakage_power": [
+        19.4442,
+        0.0,
+        45.7882,
+        0.0,
+        32.6162,
+        0.0
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.107795,
+          "maximum": 0.39335
+        },
+        {
+          "kind": "fall_power",
+          "minimum": -0.0426369,
+          "maximum": 0.177558
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0492842,
+          "maximum": 0.191066
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.117214,
+          "maximum": 0.379223
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "AND4x1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz",
+      "library_sha256": "8b8959a1e5a0ab6cd5cc001d23abcda45fac637fa8f160831beca81abf0a80bb",
+      "cell_sha256": "79771c82e4be4dddfea12e0e98dd5c77c4582f202b185b83bc5607a7d499d2b7",
+      "area": 0.10206,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.65759,
+          "rise_capacitance": 0.656388,
+          "fall_capacitance": 0.65759
+        },
+        "B": {
+          "capacitance": 0.613859,
+          "rise_capacitance": 0.613859,
+          "fall_capacitance": 0.603316
+        },
+        "C": {
+          "capacitance": 0.612111,
+          "rise_capacitance": 0.612111,
+          "fall_capacitance": 0.600632
+        },
+        "D": {
+          "capacitance": 0.630056,
+          "rise_capacitance": 0.630056,
+          "fall_capacitance": 0.617848
+        }
+      },
+      "leakage_power": [
+        126.498,
+        62.6766,
+        64.5424,
+        51.0521,
+        66.9624,
+        51.7537,
+        53.168,
+        49.1881,
+        72.5381,
+        54.3858,
+        55.894,
+        51.5388,
+        57.3833,
+        52.293,
+        53.2297,
+        50.4797,
+        60.849
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.376594,
+          "maximum": 0.718821
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.60077,
+          "maximum": 0.948428
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.338777,
+          "maximum": 0.664234
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.733532,
+          "maximum": 1.09305
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.336072,
+          "maximum": 0.67039
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.825798,
+          "maximum": 1.20398
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.336792,
+          "maximum": 0.697953
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.911275,
+          "maximum": 1.32021
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.167817,
+          "maximum": -0.16616
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.166306,
+          "maximum": 0.168032
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.167784,
+          "maximum": -0.166195
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.166377,
+          "maximum": 0.168074
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.167832,
+          "maximum": -0.166061
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.166235,
+          "maximum": 0.168026
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.167817,
+          "maximum": -0.16616
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.166377,
+          "maximum": 0.168074
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.121033,
+          "maximum": -0.11979
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.120306,
+          "maximum": 0.121304
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.121125,
+          "maximum": -0.119796
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.12017,
+          "maximum": 0.121417
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.120928,
+          "maximum": -0.12032
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.121317,
+          "maximum": 0.125251
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.121104,
+          "maximum": -0.120228
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.121704,
+          "maximum": 0.124375
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.121126,
+          "maximum": -0.120132
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.120209,
+          "maximum": 0.121288
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.120928,
+          "maximum": -0.12017
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.12017,
+          "maximum": 0.121417
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.120428,
+          "maximum": -0.11909
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.119373,
+          "maximum": 0.120713
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.120351,
+          "maximum": -0.119606
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.119649,
+          "maximum": 0.120644
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.120616,
+          "maximum": -0.119481
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.119481,
+          "maximum": 0.120754
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.120505,
+          "maximum": -0.119743
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.119876,
+          "maximum": 0.120587
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.120612,
+          "maximum": -0.119662
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.119751,
+          "maximum": 0.120982
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.120457,
+          "maximum": -0.119558
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.119558,
+          "maximum": 0.120637
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.120639,
+          "maximum": -0.119524
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.119524,
+          "maximum": 0.120778
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.120505,
+          "maximum": -0.119743
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.119876,
+          "maximum": 0.120587
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.123292,
+          "maximum": -0.122129
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.122135,
+          "maximum": 0.123377
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.123268,
+          "maximum": -0.122039
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.122039,
+          "maximum": 0.123451
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.123208,
+          "maximum": -0.122228
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.122228,
+          "maximum": 0.123448
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.123337,
+          "maximum": -0.122037
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.122037,
+          "maximum": 0.12338
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.123342,
+          "maximum": -0.122164
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.122164,
+          "maximum": 0.123448
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.123337,
+          "maximum": -0.122218
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.122218,
+          "maximum": 0.12344
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.123208,
+          "maximum": -0.122218
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.122218,
+          "maximum": 0.12344
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "AND3x1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz",
+      "library_sha256": "8b8959a1e5a0ab6cd5cc001d23abcda45fac637fa8f160831beca81abf0a80bb",
+      "cell_sha256": "22b7d8c1ea39b8b795b203a43bc7c8cd1dfa092ad869291a1fa364a7679e947e",
+      "area": 0.08748,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.653322,
+          "rise_capacitance": 0.652422,
+          "fall_capacitance": 0.653322
+        },
+        "B": {
+          "capacitance": 0.612447,
+          "rise_capacitance": 0.612447,
+          "fall_capacitance": 0.601276
+        },
+        "C": {
+          "capacitance": 0.645417,
+          "rise_capacitance": 0.645417,
+          "fall_capacitance": 0.633478
+        }
+      },
+      "leakage_power": [
+        106.467,
+        62.4958,
+        64.9158,
+        51.1214,
+        70.4916,
+        53.8474,
+        55.3367,
+        51.1832,
+        64.4823
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.371959,
+          "maximum": 0.756013
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.583565,
+          "maximum": 0.974131
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.337226,
+          "maximum": 0.714836
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.712969,
+          "maximum": 1.12204
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.34154,
+          "maximum": 0.7468
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.799686,
+          "maximum": 1.24014
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.166522,
+          "maximum": -0.164903
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.165075,
+          "maximum": 0.166766
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.166487,
+          "maximum": -0.164758
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.164951,
+          "maximum": 0.166766
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.166522,
+          "maximum": -0.164903
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.165075,
+          "maximum": 0.166766
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.122088,
+          "maximum": -0.120749
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.121146,
+          "maximum": 0.12229
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.121767,
+          "maximum": -0.121024
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.121767,
+          "maximum": 0.125329
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.122087,
+          "maximum": -0.121066
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.121176,
+          "maximum": 0.122357
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.122088,
+          "maximum": -0.120749
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.121146,
+          "maximum": 0.12229
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.129263,
+          "maximum": -0.128108
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.128181,
+          "maximum": 0.129507
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.129344,
+          "maximum": -0.128274
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.128325,
+          "maximum": 0.12952
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.129343,
+          "maximum": -0.12815
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.12815,
+          "maximum": 0.129491
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.129344,
+          "maximum": -0.12815
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.12815,
+          "maximum": 0.129491
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "AND2x2_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz",
+      "library_sha256": "8b8959a1e5a0ab6cd5cc001d23abcda45fac637fa8f160831beca81abf0a80bb",
+      "cell_sha256": "27ca043986661c150e9c3ec8c098108b368e70e902050f02dea0d6cf8497d0e5",
+      "area": 0.08748,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.565527,
+          "rise_capacitance": 0.565527,
+          "fall_capacitance": 0.554236
+        },
+        "B": {
+          "capacitance": 0.577011,
+          "rise_capacitance": 0.576139,
+          "fall_capacitance": 0.577011
+        }
+      },
+      "leakage_power": [
+        121.222,
+        88.3863,
+        82.8105,
+        73.1396,
+        91.3895
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.529247,
+          "maximum": 0.915592
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.875262,
+          "maximum": 1.29276
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.557753,
+          "maximum": 0.909363
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.751889,
+          "maximum": 1.1467
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0926858,
+          "maximum": -0.0912228
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0928961,
+          "maximum": 0.0948704
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0926858,
+          "maximum": -0.0912228
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0928961,
+          "maximum": 0.0948704
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.13053,
+          "maximum": -0.128338
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.128694,
+          "maximum": 0.130675
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.13053,
+          "maximum": -0.128338
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.128694,
+          "maximum": 0.130675
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "OR4x1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz",
+      "library_sha256": "8b8959a1e5a0ab6cd5cc001d23abcda45fac637fa8f160831beca81abf0a80bb",
+      "cell_sha256": "249b494316e2bb0fb2857b92edce7083be4d59cf9ca219e372d7ba87012f3758",
+      "area": 0.10206,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.65693,
+          "rise_capacitance": 0.65693,
+          "fall_capacitance": 0.65538
+        },
+        "B": {
+          "capacitance": 0.613645,
+          "rise_capacitance": 0.602144,
+          "fall_capacitance": 0.613645
+        },
+        "C": {
+          "capacitance": 0.612334,
+          "rise_capacitance": 0.599666,
+          "fall_capacitance": 0.612334
+        },
+        "D": {
+          "capacitance": 0.630443,
+          "rise_capacitance": 0.61667,
+          "fall_capacitance": 0.630443
+        }
+      },
+      "leakage_power": [
+        56.8704,
+        55.7495,
+        55.6526,
+        55.6529,
+        55.587,
+        55.4928,
+        55.3366,
+        67.2292,
+        56.634,
+        56.5118,
+        56.3537,
+        67.0648,
+        57.3578,
+        67.5177,
+        68.0928,
+        205.538,
+        68.2901
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.2341,
+          "maximum": 0.541588
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.738653,
+          "maximum": 1.10473
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.230234,
+          "maximum": 0.555649
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.847144,
+          "maximum": 1.17415
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.222129,
+          "maximum": 0.569524
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.957467,
+          "maximum": 1.27668
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.306128,
+          "maximum": 0.685013
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.961999,
+          "maximum": 1.28204
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000175821,
+          "maximum": -4.97468e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 4.97468e-06,
+          "maximum": 0.000175821
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.00021147,
+          "maximum": -8.6175e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 8.6175e-06,
+          "maximum": 0.000239341
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000268183,
+          "maximum": -3.20157e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.48905e-05,
+          "maximum": 0.0003332
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.00021147,
+          "maximum": -8.6175e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 8.6175e-06,
+          "maximum": 0.000239341
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.00013485,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.00013485
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000145428,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000145428
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000167592,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000167592
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000151981,
+          "maximum": -8.70709e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 8.70709e-06,
+          "maximum": 0.00024066
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000167592,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000167592
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000149321,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000149321
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.107541,
+          "maximum": -0.100515
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.109601,
+          "maximum": 0.110868
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000147454,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000147454
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.10511,
+          "maximum": -0.0764499
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.105179,
+          "maximum": 0.10642
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000179815,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000179815
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.107513,
+          "maximum": -0.098958
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.110945,
+          "maximum": 0.112103
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000220863,
+          "maximum": -4.8943e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 4.8943e-06,
+          "maximum": 0.000241352
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000220863,
+          "maximum": -4.8943e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 4.8943e-06,
+          "maximum": 0.000241352
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0973745,
+          "maximum": -0.091788
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.10012,
+          "maximum": 0.100699
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0952222,
+          "maximum": -0.0759746
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0959737,
+          "maximum": 0.0965899
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0942339,
+          "maximum": -0.0715205
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0945545,
+          "maximum": 0.0955463
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0973779,
+          "maximum": -0.0918164
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.100314,
+          "maximum": 0.100856
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.095207,
+          "maximum": -0.0760158
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0964871,
+          "maximum": 0.0970356
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0973586,
+          "maximum": -0.0906654
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.101682,
+          "maximum": 0.101987
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.095207,
+          "maximum": -0.0760158
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0964871,
+          "maximum": 0.0970356
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "OR5x1_ASAP7_75t_R": {
+      "path": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz",
+      "library_sha256": "8b8959a1e5a0ab6cd5cc001d23abcda45fac637fa8f160831beca81abf0a80bb",
+      "cell_sha256": "c3e2f62f294f16fc8bb8d483b360c8c30678e08eb063a5a213da115f0638d4bf",
+      "area": 0.11664,
+      "pin_capacitance": {
+        "A": {
+          "capacitance": 0.56734,
+          "rise_capacitance": 0.56734,
+          "fall_capacitance": 0.565436
+        },
+        "B": {
+          "capacitance": 0.522478,
+          "rise_capacitance": 0.511084,
+          "fall_capacitance": 0.522478
+        },
+        "C": {
+          "capacitance": 0.520474,
+          "rise_capacitance": 0.508527,
+          "fall_capacitance": 0.520474
+        },
+        "D": {
+          "capacitance": 0.52088,
+          "rise_capacitance": 0.508005,
+          "fall_capacitance": 0.52088
+        },
+        "E": {
+          "capacitance": 0.561649,
+          "rise_capacitance": 0.547954,
+          "fall_capacitance": 0.561649
+        }
+      },
+      "leakage_power": [
+        55.1747,
+        54.423,
+        54.3562,
+        53.9828,
+        54.2972,
+        53.8858,
+        53.7923,
+        54.5669,
+        54.2658,
+        53.8202,
+        53.7258,
+        54.4068,
+        53.6658,
+        54.2506,
+        54.0985,
+        66.8239,
+        55.3139,
+        54.8673,
+        54.7712,
+        55.4258,
+        54.706,
+        55.2677,
+        55.1134,
+        66.6595,
+        55.733,
+        56.2718,
+        56.1151,
+        67.1124,
+        57.1045,
+        67.6876,
+        68.3133,
+        176.06,
+        60.5018
+      ],
+      "power_table_ranges": [
+        {
+          "kind": "rise_power",
+          "minimum": 0.23916,
+          "maximum": 0.502204
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.749834,
+          "maximum": 1.04524
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.237204,
+          "maximum": 0.479241
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.858729,
+          "maximum": 1.11355
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.230424,
+          "maximum": 0.486769
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.969832,
+          "maximum": 1.20332
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.306569,
+          "maximum": 0.575877
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.07984,
+          "maximum": 1.29147
+        },
+        {
+          "kind": "rise_power",
+          "minimum": 0.307593,
+          "maximum": 0.582123
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.08444,
+          "maximum": 1.2803
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000177919,
+          "maximum": -4.91016e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 4.91016e-06,
+          "maximum": 0.000177919
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000182955,
+          "maximum": -6.26578e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 6.26578e-06,
+          "maximum": 0.000185053
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.00024414,
+          "maximum": -1.5144e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.5144e-05,
+          "maximum": 0.00024414
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000298546,
+          "maximum": -4.25155e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 4.25155e-05,
+          "maximum": 0.000344862
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.00024414,
+          "maximum": -1.5144e-05
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 1.5144e-05,
+          "maximum": 0.00024414
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000112323,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000112323
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000103142,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000103142
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000107522,
+          "maximum": -3.8297e-07
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.8297e-07,
+          "maximum": 0.000107522
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000130989,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000130989
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000118343,
+          "maximum": -3.18762e-07
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.18762e-07,
+          "maximum": 0.000165288
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000147227,
+          "maximum": -2.22736e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.22736e-06,
+          "maximum": 0.000242284
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000130989,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000130989
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000111168,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000111168
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -8.92717e-05,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 8.92717e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -9.66124e-05,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 9.66124e-05
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000182691,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000182691
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000131003,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000131003
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000152467,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000152467
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000164116,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000164116
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000126405,
+          "maximum": -7.70309e-06
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 7.70309e-06,
+          "maximum": 0.000236991
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000131003,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000152467
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000126249,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000126249
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.107557,
+          "maximum": -0.100454
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.109537,
+          "maximum": 0.110842
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000109836,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000109836
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.105246,
+          "maximum": -0.0765594
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.104872,
+          "maximum": 0.106245
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000107528,
+          "maximum": -2.80663e-07
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 2.80663e-07,
+          "maximum": 0.000107528
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.104273,
+          "maximum": -0.0689663
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.103769,
+          "maximum": 0.105263
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.00014562,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.00014562
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.107541,
+          "maximum": -0.100444
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.109628,
+          "maximum": 0.110911
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000155209,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000155209
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.105268,
+          "maximum": -0.0765132
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.105317,
+          "maximum": 0.106667
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000177318,
+          "maximum": 0.0
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0,
+          "maximum": 0.000177318
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.107583,
+          "maximum": -0.0988861
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.110988,
+          "maximum": 0.1122
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0002183,
+          "maximum": -3.41223e-07
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.41223e-07,
+          "maximum": 0.000250077
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.000250077,
+          "maximum": -3.41223e-07
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 3.41223e-07,
+          "maximum": 0.000250077
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0974452,
+          "maximum": -0.0919192
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.100335,
+          "maximum": 0.100898
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0952341,
+          "maximum": -0.0759654
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0960004,
+          "maximum": 0.0966334
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0942364,
+          "maximum": -0.0714782
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0944346,
+          "maximum": 0.0952795
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0936277,
+          "maximum": -0.0703979
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0935233,
+          "maximum": 0.0944191
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0974236,
+          "maximum": -0.0919272
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.100379,
+          "maximum": 0.100671
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0952914,
+          "maximum": -0.075994
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0960457,
+          "maximum": 0.0966571
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0942789,
+          "maximum": -0.0715602
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0947771,
+          "maximum": 0.0955714
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.097427,
+          "maximum": -0.0919233
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.100461,
+          "maximum": 0.100835
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0952684,
+          "maximum": -0.0760356
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0965693,
+          "maximum": 0.097098
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0974301,
+          "maximum": -0.0907816
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.101744,
+          "maximum": 0.102146
+        },
+        {
+          "kind": "rise_power",
+          "minimum": -0.0952684,
+          "maximum": -0.0760356
+        },
+        {
+          "kind": "fall_power",
+          "minimum": 0.0965693,
+          "maximum": 0.097098
+        }
+      ],
+      "units": {
+        "current_unit": "1mA",
+        "leakage_power_unit": "1pW",
+        "time_unit": "1ps",
+        "voltage_unit": "1V"
+      },
+      "capacitive_load_unit": [
+        "1,ff"
+      ]
+    },
+    "increment_13ff_13inv": {
+      "area_um2": 5.496659999999999,
+      "clock_pins": 13,
+      "clock_cap_lib_units": 6.540976000000001,
+      "reset_cap_lib_units": 10.437816999999999,
+      "set_cap_lib_units": 15.13798,
+      "d_cap_lib_units": 8.104577,
+      "inv_a_cap_lib_units": 8.888308
+    }
+  }
+}
