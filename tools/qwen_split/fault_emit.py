@@ -476,6 +476,31 @@ def pre(v, m, G):
     if missing:
         raise ValueError(f'fault emit: plan owners not on this GEN: {missing[:10]}')
     ckx, rsx = _bus_index(m, 'clock_trunk'), _reset_index(m)
+    # SQC-QDIE4 10-22 (r41cxc 'rly_lnk_fdi_tx_0.fault clock ucie_kv has no region root (plan stale)'): the plan's owners
+    # are the landing owners of the base GEN; a block whose links were direct there (ucie_kv <-> d2d_rom before the
+    # D2D_DY 518.4 north channel) but are relayed on THIS GEN gets hop-0 / landing stations that follow it, with no root.
+    # OT_SPLIT_FAULT_AUTO_OWNERS=1 (default): every clocked block that is an endpoint of a data bus longer than the
+    # 405-um reach on this GEN (certainly relayed) is an owner (xy = those pins' centroid, no landings) -> a primary root as for the
+    # hard fault blocks.  No gate changes: post still fails closed on a source without a root.
+    if os.environ.get('OT_SPLIT_FAULT_AUTO_OWNERS', '1') == '1':
+        auto = collections.defaultdict(list)
+        for bid, cl, bits, eps in m['buses']:
+            if cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
+                continue
+            p0, p1 = pos(eps[0][0], eps[0][1].lstrip('*')), pos(eps[1][0], eps[1][1].lstrip('*'))
+            if _man(p0, p1) <= float(os.environ.get('OT_SPLIT_FAULT_AUTO_OWNER_UM', '405')):   # relayed for sure
+                continue
+            for e, p_ in ((eps[0], p0), (eps[1], p1)):
+                if e[0] in owners or e[0] not in by or getattr(by[e[0]], 'kind', None) in ('fault', 'relay', 'reset_rep'):
+                    continue
+                auto[e[0]].append(p_)
+        added = []
+        for o, ps in sorted(auto.items()):
+            if _fault_clock_bus(m, ckx, o) is None:
+                continue
+            owners[o] = dict(xy=[sum(q[0] for q in ps) / len(ps), sum(q[1] for q in ps) / len(ps)], landings=0)
+            added.append(o)
+        print(f'FAULT_EMIT auto owners: {len(added)} relayed-link blocks without a plan owner added: {added[:20]}', flush=True)
     # rfs try 11: plan pts carry the landing's receiving clock net (n_<bid>); a c16 cluster's _clock_bus pick is NOT the
     # clock its landings land on, so cover roots go per (owner, clock)
     cknet = {}
