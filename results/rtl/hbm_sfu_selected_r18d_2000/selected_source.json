@@ -15,7 +15,7 @@
     "TAP_WR": 11
   },
   "vehicle": "Existing d76 canonical full-Qswiglu split-equivalence component vehicle, with a wires-only bus slicing adapter into exact selected split3. Reference lane sources retain the normal closed ae589 manifest. The target is the exact full scoped source closure, not generic peers or the predecessor tap parameters.",
-  "status": "FIRST_BUILD_NBA_GUARD_REFUSED_RERUN_PENDING",
+  "status": "EXACT_SOURCE_UNROLL_RERUN_ADMITTED",
   "selected_view_manifest": "/home/ubuntu/artifacts/hdie-d4/codex_hbm_r18d_2000_1021/plansM/vplan_r17/views.json",
   "selected_view_manifest_sha256": "d26d70363a593e13192681f3bd1f5442fa9f18f1bbbd1617e59bd9e748dd9ade",
   "selected_view_env": {},
@@ -35,12 +35,20 @@
   "first_unit": "Gold1 3644453-1792646390",
   "first_exit": 86,
   "first_guard": "16 surviving 100-trip rd loops; no simulation run or PASS",
-  "replacement_controller": 2644203,
+  "replacement_controller": 2686797,
   "replacement_tool_flags": [
     "--unroll-count",
     "256",
     "--unroll-stmts",
     "100000"
   ],
-  "guard_policy": "Required zero surviving in-place NBA loops before execution; guard remains fully enabled."
+  "guard_policy": "Required zero surviving in-place NBA loops before execution; guard remains fully enabled.",
+  "replacement_unit": "EP9 2158176-1792648524",
+  "replacement_mem_gib": 40,
+  "replacement_root": "/srv/opentallas-scratch2/claude/codex-sfu-selected-r18d-unroll-2000",
+  "memory_basis": "First exact selected build allocated 19.1 GiB; source and simulated design are unchanged; only test compiler unroll capacity increased.",
+  "unadmitted_replacements": [
+    2644203,
+    2670647
+  ]
 }
