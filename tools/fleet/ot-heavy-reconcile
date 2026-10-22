@@ -97,6 +97,10 @@ tasks as soon as possible"):
   its AST phase keeps the full declared charge (13:01 TP192 grew again after a plateau); other units keep v13 (stable 0;
   rising 2 x rate x 600 s, already under the v14 charge below 5 GB/10 min), so v14 never charges more than v13.
   Young units, the host floor, the settled floor, the admit lock and the 5 x 64 GB replay regression are unchanged.
+  v15 BUILD WAIT (SCHED-TUNE2 10-22 05:38: ep9 charged 253 GB to a 1.8 h K_cut_7 whose frontend had peaked at 234 GB
+  and only waited on eight 2-11 GB cc1plus): the build-waiting charge applies from GROW_WINDOW_S (OLD_S 7200 -> 600);
+  growth >= OLD_SLOW_GB/10 min is charged the v13 rate rule min(margin, 2 x rate x 600 s) instead of the full remainder.
+  AST-phase frontends (incl. hierarchical sub-frontends under make) still keep their full declared charge.
   Safety stays with the per-job caps (scope MemoryMax, docker --memory via ot-heavy-docker), swap and earlyoom.
   DIE-FIRST unchanged: a waiting die trial's request is held free against non-die requests.
 
@@ -690,7 +694,7 @@ YOUNG_S, MID_S, PLENTY, GONE_S = 300, 1800, 0.35, 20
 DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v8 (owner 2026-10-17), see the module text
                 GROW_WINDOW_S=600, GROWING_FACTOR=1.0, LAUNCH_HOLD_S=120,    # v12 GROWING RESERVATION (SCHED-MEM 10-21)
                 RATE_HORIZON_S=600, RATE_MULT=2.0, SETTLED_FLOOR_FRAC=0.02,  # v13 GROWTH RATE (SCHED-TUNE 10-21)
-                OLD_S=7200, OLD_SLOW_GB=5.0, OLD_MULT=3.0, OLD_HORIZON_S=1800, OLD_CAP_GB=32.0,
+                OLD_S=600, OLD_SLOW_GB=5.0, OLD_MULT=3.0, OLD_HORIZON_S=1800, OLD_CAP_GB=32.0,
                 OLD_MIN_SPAN_S=200)                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
 
 
@@ -740,12 +744,11 @@ def books(rows, total, avail, table, gf=None):
             continue
         now = r["now"]
         margin = max(0.0, r["ceil"] - now)
-        # v14 OLD SLOW: old, measured, and growing slower than OLD_SLOW_GB per 10 min
+        # v14 OLD SLOW / v15 BUILD WAIT: past GROW_WINDOW_S (v14: 2 h), measured, frontend only waiting on its --build
         orate = max(r.get("slow", 0.0), r.get("rate", 0.0))
-        old_slow = (r["age"] >= conf("OLD_S") and r.get("sampled", True) and
-                    (r.get("slow_span", 0.0) >= conf("OLD_MIN_SPAN_S") or r.get("rate", 0.0) > 0) and
-                    orate * 600 < conf("OLD_SLOW_GB"))
-        if r.get("frontend_pids") and not (old_slow and r.get("frontend_waiting")):
+        build_wait = (r.get("frontend_waiting") and r["age"] >= max(win, conf("OLD_S")) and r.get("sampled", True) and
+                      (r.get("slow_span", 0.0) >= conf("OLD_MIN_SPAN_S") or r.get("rate", 0.0) > 0))
+        if r.get("frontend_pids") and not build_wait:
             # A real Verilator frontend can grow again after a long AST/DFG plateau. Its declared budget
             # stays pending until that executable exits, even when class reconciliation lowered res.
             r["grow"], r["pending"] = max(0.0, r.get("declared", r["req"]) - now), True
@@ -756,7 +759,11 @@ def books(rows, total, avail, table, gf=None):
         elif r.get("frontend_pids"):
             # v14: an old, slowly growing --build job whose frontend only waits on the C++ compile (cc1plus RSS is
             # what grows): 3 x the growth its measured rate gives over the next 30 min, at most 32 GB, <= the margin
-            r["grow"], r["pending"] = min(margin, conf("OLD_MULT") * orate * conf("OLD_HORIZON_S"), conf("OLD_CAP_GB")), True
+            if orate * 600 < conf("OLD_SLOW_GB"):
+                r["grow"] = min(margin, conf("OLD_MULT") * orate * conf("OLD_HORIZON_S"), conf("OLD_CAP_GB"))
+            else:                                      # v15: a fast -j cc1plus burst: the v13 rate rule
+                r["grow"] = min(margin, conf("RATE_MULT") * orate * conf("RATE_HORIZON_S"))
+            r["pending"] = True
         elif r.get("rate", 0.0) > 0:
             # v13: RSS rose > 5 % between the last two cron samples: RATE_MULT x the measured rate over RATE_HORIZON_S
             r["grow"], r["pending"] = min(margin, conf("RATE_MULT") * r["rate"] * conf("RATE_HORIZON_S")), True
@@ -990,7 +997,7 @@ def selftest():
     chk("v12 not started 60 s, launcher alive: still held", one(800, active=False, res=64, file_age=60, launcher_alive=True), 64)
     chk("v12 not started 60 s, launcher gone: nothing", one(800, active=False, res=64, file_age=60, launcher_alive=False), 0)
     chk("gone for 30 s: nothing", one(800, active=False, res=64, file_age=30), 0)
-    os.environ.update(OLD_S="7200", OLD_SLOW_GB="5", OLD_MULT="3", OLD_HORIZON_S="1800", OLD_CAP_GB="32", OLD_MIN_SPAN_S="200")
+    os.environ.update(OLD_S="600", OLD_SLOW_GB="5", OLD_MULT="3", OLD_HORIZON_S="1800", OLD_CAP_GB="32", OLD_MIN_SPAN_S="200")
     # v14 OLD SLOW: gold2 10-22, 15 h cc1plus at 83 of 200 GB growing ~4e-5 GB/s: 3 x rate x 1800 s (v13 frontend: 117)
     g2 = dict(age=54000, req=200.0, res=200, now=83.0, obs=160.0, slow_span=1200.0, declared=200,
               frontend_pids=[1], frontend_waiting=True)
@@ -998,8 +1005,9 @@ def selftest():
     chk("v14 old slow 3 GB/10 min: 27", one(300, slow=0.005, **g2), 27)
     chk("v14 old slow 4.7 GB/10 min: capped at 32", one(300, slow=0.0079, **g2), 32)
     chk("v14 old slow: never above the margin", one(300, slow=0.0079, **dict(g2, now=190.0)), 10)
-    chk("v14 old but >= 5 GB/10 min: frontend rule (full)", one(300, rate=0.01, slow=0.01, **g2), 117)
-    chk("v14 1.4 h old: frontend rule (full)", one(300, slow=0.005, **dict(g2, age=5000)), 117)
+    chk("v15 build wait >= 5 GB/10 min: v13 2 x rate x 600", one(300, rate=0.01, slow=0.01, **g2), 12)
+    chk("v15 1.4 h build wait: 3 x 30-min growth", one(300, slow=0.005, **dict(g2, age=5000)), 27)
+    chk("v15 build wait inside GROW_WINDOW_S: frontend rule (full)", one(300, slow=0.005, **dict(g2, age=500)), 117)
     chk("v14 window too short: frontend rule (full)", one(300, slow=0.005, **dict(g2, slow_span=120.0)), 117)
     chk("v14 frontend still in its AST phase: full declared", one(300, slow=4e-5, **dict(g2, frontend_waiting=False)), 117)
     chk("v14 non-frontend old slow stable: v13 0", one(300, slow=0.005, **dict(g2, frontend_pids=[])), 0)
