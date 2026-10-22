@@ -1,0 +1,47 @@
+{
+  "descriptors": 4,
+  "beats": 40,
+  "sectors": 195,
+  "added_stream_cases": [
+    {
+      "mode": "RAW",
+      "sectors": 3,
+      "base": 838860800
+    },
+    {
+      "mode": "ROWS",
+      "first": 16,
+      "rows": 2,
+      "ring": 0,
+      "pitch": 31,
+      "base": 4026531840,
+      "stride": 1342177280,
+      "stacks": 2
+    },
+    {
+      "mode": "ROWS",
+      "first": 127,
+      "rows": 2,
+      "ring": 128,
+      "pitch": 31,
+      "base": 889192448,
+      "stride": 0,
+      "stacks": 1
+    },
+    {
+      "mode": "IKEY",
+      "first": 1008,
+      "keys": 32,
+      "cross_superblock": true,
+      "base": 905969664
+    }
+  ],
+  "original_fixture_sha256": {
+    "desc.mem": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pay.mem": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native.mem": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fixture.json": "3e18ebb5097de75ace494cda07ff84e2d107832c929743eee74f4c6d94dc9bcd"
+  },
+  "golden_reference_sha256": "9cc66372dac0b82d24ea0c02a7af1e71fbfa37d743bfcd476eba71ab33c111a2",
+  "scope": "single bounded actual engine cold/occupied reset fixture, frozen original RTL vs fresh native copy; not arbitrary-state/full-state proof"
+}

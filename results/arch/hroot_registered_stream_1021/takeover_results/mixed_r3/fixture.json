@@ -1,0 +1,106 @@
+{
+  "heads": 2,
+  "descriptors": 13,
+  "beats": 1768,
+  "sectors": 1923,
+  "spans": [
+    [
+      0,
+      0,
+      5,
+      13
+    ],
+    [
+      0,
+      128,
+      0,
+      16
+    ],
+    [
+      0,
+      8176,
+      4,
+      16
+    ],
+    [
+      17,
+      0,
+      5,
+      13
+    ],
+    [
+      17,
+      128,
+      0,
+      16
+    ],
+    [
+      17,
+      8176,
+      4,
+      16
+    ],
+    [
+      35,
+      0,
+      5,
+      13
+    ],
+    [
+      35,
+      128,
+      0,
+      16
+    ],
+    [
+      35,
+      8176,
+      4,
+      16
+    ]
+  ],
+  "wire": "original QKV BF16 descriptors, CTX8192,HD128",
+  "map": "original qkd_kv_wq sec_of + PC q/G; no old K tile data accepted as native rows",
+  "added_stream_cases": [
+    {
+      "mode": "RAW",
+      "sectors": 3,
+      "base": 855703550
+    },
+    {
+      "mode": "ROWS",
+      "first": 16,
+      "rows": 2,
+      "ring": 0,
+      "pitch": 31,
+      "base": 4026531840,
+      "stride": 1342177280,
+      "stacks": 2
+    },
+    {
+      "mode": "ROWS",
+      "first": 127,
+      "rows": 2,
+      "ring": 128,
+      "pitch": 31,
+      "base": 889192448,
+      "stride": 0,
+      "stacks": 1
+    },
+    {
+      "mode": "IKEY",
+      "first": 1008,
+      "keys": 32,
+      "cross_superblock": true,
+      "base": 905969664
+    }
+  ],
+  "original_fixture_sha256": {
+    "desc.mem": "3dfff8f025ac9f0ed945041f6fde99bc3ba1c636fe2ab3307d7a2957041cf533",
+    "pay.mem": "a416cdcccf660a614ff140cbae51cc8c804058657b4699c4db2620205c842acc",
+    "native.mem": "6a4ebddb018c4d8aeffb9b2980be16a58758e1b3035ddd158a8eec92503bc535",
+    "fixture.json": "e60bb7fa3dd2386d375f681050162e892ff97da67a771a916cc1f9d15157389a"
+  },
+  "golden_reference_sha256": "9cc66372dac0b82d24ea0c02a7af1e71fbfa37d743bfcd476eba71ab33c111a2",
+  "scope": "single bounded actual engine cold/occupied reset fixture, frozen original RTL vs fresh native copy; not arbitrary-state/full-state proof"
+}

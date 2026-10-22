@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-qk-hroot-spipe6-2000/causal/check.py", line 5, in <module>
+    assert a==b, 'ORDERED_TRANSACTION_MISMATCH'
+           ^^^^
+AssertionError: ORDERED_TRANSACTION_MISMATCH
