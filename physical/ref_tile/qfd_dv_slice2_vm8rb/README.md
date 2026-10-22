@@ -11,3 +11,4 @@ Price vs flat vm8rf (== vm8fh offsets of P3): VM answers +3 (writes +3: write->r
 reset release +5.  Kit generator: tools/qwen_dv/s5_vm8r_kit.py.  SAFE review: lanes/QW2-VM8P4.md + spec safe_design_checklist.
 Benches (Verilator 5.050, fleet): lp lockstep rtl/qwen_dv/s5/p4/lp/qfd_dv_s5_vm8r_bench.sh (MUT0 PASS, MUT1-4 FAIL, audit PASS,
 unland audit FAIL); flat vs vm8fh rtl/qwen_dv/s5/p4/qfd_dv_s5_vm8rf_p3_bench.sh (PASS). Witnesses results/arch/qw2_vm8p4_1021/bench/.
+QE3-SLICE2 10-21 17:30: d5a1c25bf pre-gate native census FAIL (155 drivers = landing writer rq 56-120 loads, max 120) -> lp spec "landing_writer": "n32": 21 chunk writers -> ot_pl_land_n32_chunk_w, the 1024-b split writer (tw_data) -> new ot_pl_land_n32_split_w (rtl/common/landed_parent/ot_pl_land_n32.sv); slot enable = kept one-hot copies per 12 b, rq resets copies + valid only (<= 12 loads). Same slots / K / offsets / ports / flops; lp audit PASS.

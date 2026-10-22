@@ -1,5 +1,5 @@
 {
- "why": "QW2-VM8P4 10-21 Q.STA.SLICE.2: VM8 leaf group P4 = landed parent (P3 vm8q one 1.43 mm clock root: post-CTS setup -460/-522 SS from parent-flop vs hard-child clock skew). One region per leaf column (leaf + its kept relay copies + its d_out relays) + S-face regions for broadcast / row-2 traffic (table-write pins moved beside PROG = region pg, so PROG reads stay +0; fv VM writes, fc CROM reads + cr_q capture, fb BTAB reads + bs_q capture); D 4 / E 2, landing_chunk_bits 24, share_rings, regional_reset_copies (census-safe library as QW-S5-LP s6 / S81-CAPC5).",
+ "why": "QW2-VM8P4 10-21 Q.STA.SLICE.2: VM8 leaf group P4 = landed parent (P3 vm8q one 1.43 mm clock root: post-CTS setup -460/-522 SS from parent-flop vs hard-child clock skew). One region per leaf column (leaf + its kept relay copies + its d_out relays) + S-face regions for broadcast / row-2 traffic (table-write pins moved beside PROG = region pg, so PROG reads stay +0; fv VM writes, fc CROM reads + cr_q capture, fb BTAB reads + bs_q capture); D 4 / E 2, landing_chunk_bits 24, share_rings, regional_reset_copies (census-safe library as QW-S5-LP s6 / S81-CAPC5). QE3-SLICE2 10-21 17:20: landing_writer n32 (ot_pl_land_n32_chunk_w: slot enable = kept one-hot selector copies per 12 data bits, rq resets copies/valid only) -- P4 census FAIL 155 drivers = writer rq 56-120 loads; same ports/slots/K/read contract, no edge change.",
  "top": "qfd_dv_s5_vm8rf",
  "top_lp": "qfd_dv_s5_vm8r",
  "sources": [
@@ -29,6 +29,7 @@
  "E": 2,
  "share_rings": true,
  "landing_chunk_bits": 24,
+ "landing_writer": "n32",
  "regional_reset_copies": true,
  "reset_region": "pg",
  "regions": [

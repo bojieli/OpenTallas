@@ -6,7 +6,7 @@
 set -u
 cd "${LP_ROOT:-$(git -C "$(dirname "$0")" rev-parse --show-toplevel 2>/dev/null || (cd "$(dirname "$0")/../../../../.." && pwd))}"
 OUT=${1:-lp_bench_out}; mkdir -p "$OUT"; SIM=${SIM:-iverilog}; rc=0
-SRCS="rtl/qwen_dv/s5/p4/qfd_dv_s5_vm8rf.sv rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv rtl/test/qwen_dv/s5/sram_models_nofatal.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_rst_copy.sv rtl/common/landed_parent/ot_pl_land_split.sv rtl/qwen_dv/s5/p4/lp/qfd_dv_s5_vm8r.sv rtl/qwen_dv/s5/p4/lp/tb_qfd_dv_s5_vm8r.sv"
+SRCS="rtl/qwen_dv/s5/p4/qfd_dv_s5_vm8rf.sv rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv rtl/qwen_dv/s5/qfd_dv_s5_vm8out.sv rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv rtl/test/qwen_dv/s5/sram_models_nofatal.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_n32.sv rtl/common/landed_parent/ot_pl_land_rst_copy.sv rtl/common/landed_parent/ot_pl_land_split.sv rtl/qwen_dv/s5/p4/lp/qfd_dv_s5_vm8r.sv rtl/qwen_dv/s5/p4/lp/tb_qfd_dv_s5_vm8r.sv"
 python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/qfd_dv_s5_vm8r.json > "$OUT/audit.log" 2>&1 && echo "AUDIT PASS" || { echo "AUDIT FAIL"; rc=1; }
 python3 tools/landed_parent/lp.py audit tools/landed_parent/specs/qfd_dv_s5_vm8r.json --rtl "$OUT/unland.sv" --make-unland > "$OUT/audit_unland.log" 2>&1 \
   && { echo "AUDIT-UNLAND PASSED (should FAIL)"; rc=1; } || echo "AUDIT-UNLAND FAIL (expected)"

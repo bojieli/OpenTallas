@@ -105,6 +105,7 @@ def main():
         s["top"] = TOP
         s["params"] = {"MUT": 0}
         s["sources"] = [f"rtl/qwen_dv/s5/p4/lp/{TOP}.sv", "rtl/common/landed_parent/ot_pl_land.sv",
+                        "rtl/common/landed_parent/ot_pl_land_n32.sv",
                         "rtl/common/landed_parent/ot_pl_land_rst_copy.sv", "rtl/common/landed_parent/ot_pl_land_split.sv",
                         "rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv"] + [p for p in base["sources"] if p != "rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv"]
         s["clock"] = "multiple_cts_roots"
@@ -145,28 +146,30 @@ def main():
             "capture flop in its region; lp offsets are the compiler record")}
         s["landed"] = dict(record=REC, landings=len(rec["landings"]), landing_flops=rec["flops"]["landing"],
                            reset_depth=rec["reset"]["depth"], lp_spec=LP_SPEC, D=rec["D"], E=rec["E"],
-                           landing_chunk_bits=24, regional_reset_copies=True,
+                           landing_chunk_bits=24, regional_reset_copies=True, landing_writer="n32",
                            offsets=rec["compiler"]["output_port_offset_edges"])
         s["structural_change"] = (
             "QW2-VM8P4 10-21 P4 successor of P3 vm8q / vm8qb (in-flow ep6: ONE clock root over 1.43 mm, parent flop arrival "
             "1.2..2.2 ns vs hard-child insertion 333-485 ps -> post-CTS setup -460 / -522 ps SS on ~9.6k endpoints, repair "
-            "0 buffers = skew). P4 = landed parent: 10 regional CTS roots (va vb vc pg | cl ch bt | fc fb fv), every "
+            "0 buffers = skew). QE3-SLICE2 10-21: P4 d5a1c25bf native census FAIL 155 drivers (landing writer rq 56-120 loads) -> "
+            "NATIVE32 landing writer (ot_pl_land_n32_chunk_w / n32_split_w: slot enable = kept one-hot copies per 12 b, rq only "
+            "resets copies + valid); same slots / K / offsets / ports. P4 = landed parent: 10 regional CTS roots (va vb vc pg | cl ch bt | fc fb fv), every "
             "cross-region net an lp landing (D4/E2, chunk 24, shared rings), regional reset runs with kept copies. Lockstep "
             "landed == flat qfd_dv_s5_vm8rf (lp bench) and flat == vm8fh (P3 tb). Price vs flat vm8rf: VM answers +3 "
             "(writes +3, write->read distance unchanged), PROG +0, BTAB / CROM +6, reset release +5. " + v["why"])
         s["safe_design_checklist"] = {
             "1_pins": "every port lands on a flop of its own small region beside its S pin range; outputs flop-last",
             "2_reach": "row-2 / broadcast traffic only through landings (multicycle 2 per window); no pin -> far-leaf wire",
-            "3_fanout": "kept per-leaf relay copies; landing_chunk_bits 24 + shared rings + reset copies <= 32; census in gate",
+            "3_fanout": "kept per-leaf relay copies; n32 landing writers (rq <= 12 loads, kept one-hot copies per 12 b); landing_chunk_bits 24 + shared rings + reset copies <= 32; census in gate",
             "4_depth": "relays + ring select only",
             "5_storage": "all arrays inside the 7 closed hard children",
             "6_floorplan": "P3 lattice placement (MAIN) / enlarged (FALLBACK)",
             "7_clock": "10 regional roots, child clock pins sinks of their region root (landed_cluster), crossings landed",
             "8_reset": "lp regional reset runs, leaf rst_n only; datapath unreset"}
         j = s["job"]
-        j["owner"] = "Claude:QW2-VM8P4"
+        j["owner"] = "Claude:QE3-SLICE2"
         j["tag"] = name
-        j["branch"] = "claude/qw2-vm8p4-1021"
+        j["branch"] = "claude/qe3-vm8r-n32-1021"
         j["purpose"] = "slice2 VM8 leaf group P4 (landed regions): critical, gate only -> COORD-REVIEW-QUEUE"
         j["hold_merge"] = "QW2-VM8P4 proof vehicle; the slice2 W parent (w6 VM8Q_VIEW) absorbs it"
         j["extra_paths"] = ["rtl/test/qwen_dv/s5", "rtl/qwen_dv/s5/p3", "rtl/qwen_dv/s5/p4", "rtl/common/landed_parent",
