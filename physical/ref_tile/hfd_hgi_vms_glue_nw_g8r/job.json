@@ -1,5 +1,5 @@
 {
- "name": "hfd_hgi_vms_glue_nw_g8r-g8r-15816d1b9",
+ "name": "hfd_hgi_vms_glue_nw_g8r-g8r-e58124307",
  "block": "hfd_hgi_vms_glue_nw_t3",
  "ref_tile": true,
  "owner": "CODEX-HBM-SVGSMH-2000",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 64,
  "source": {
   "branch": "codex/hbm-vm-regions-2225-1021",
-  "commit": "15816d1b9",
+  "commit": "e58124307",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm",
    "rtl/lib",
@@ -103,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hfd_hgi_vms_glue_nw_g8r/hfd_hgi_vms_glue_nw_g8r-g8r-15816d1b9"
+   "to": "results/rtl/ref_tile/hfd_hgi_vms_glue_nw_g8r/hfd_hgi_vms_glue_nw_g8r-g8r-e58124307"
   }
  ],
  "cycles_added": 0,
