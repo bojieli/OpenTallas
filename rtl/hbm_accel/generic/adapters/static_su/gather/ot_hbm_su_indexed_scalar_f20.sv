@@ -16,9 +16,8 @@ module ot_hbm_su_indexed_scalar_f20 #(
  output reg[15:0]edge_index,output wire engine_busy,engine_done,
  output wire engine_start,output wire[119:0]descriptor,output wire active0,active1,reservation_active
 );
- wire we,raw_sv,sv,sv_tables;
+ wire we,raw_sv,sv;
  ot_hbm_gather_reserve_bit sv0(.clk(clk),.d(raw_sv),.q(sv));
- ot_hbm_gather_reserve_bit sv1(.clk(clk),.d(raw_sv),.q(sv_tables));
  wire[2:0]resets;
  ot_rst_relay #(.REGIONS(3),.SYNC_STAGES(2),.TREE_STAGES(1)) reset_tree(.clk(clk),.rst_n_in(rst_n),.rst_n(resets));
  reg[1:0]tail;
@@ -32,18 +31,23 @@ module ot_hbm_su_indexed_scalar_f20 #(
   .program_start_v(raw_sv),.program_start_base(sb),.program_start_limit(sl),.program_start_loops(loops),
   .configured(configured),.fault(target_fault));
  reg[2:0]pc;reg[3:0]last;wire[223:0]row;
- wire advance=active&&(edge_index>=2)&&(edge_index==row[151:136]-16'd2);
+ wire advance=active&&(edge_index>=2)&&(edge_index==row[151:136]-16'd3);
  wire final_row=({1'b0,pc}+1'b1==last);
  wire clear_active=active&&(edge_index>=2)&&(edge_index==row[151:136]-1'b1)&&final_row;
  wire set_active=sv&&!active&&sb<6&&sl<=6&&sl>sb&&loops==1;
  ot_hbm_gather_active_copy copy0(.clk(clk),.rst_n(resets[1]),.set(set_active),.clear(clear_active),.q(active0));
  ot_hbm_gather_active_copy copy1(.clk(clk),.rst_n(resets[1]),.set(set_active),.clear(clear_active),.q(active1));
  if(NATIVE_BANKED!=0)begin:g_local_rows
-  for(genvar f=0;f<28;f=f+1)begin:field
-   ot_hbm_gather_field_table field0(.clk(clk),.we(we),.wa(wa),.wd(wd[f*8+:8]),
-    .sv(sv_tables),.start_row(sb[2:0]),.advance(advance),.q(row[f*8+:8]));
-  end
- end else begin:g_flat_rows
+  for(genvar g=0;g<2;g=g+1)begin:group
+   wire we_g,sv_g,adv_g;wire[7:0]wa_g;wire[111:0]wd_g;wire[2:0]start_g;
+   ot_hbm_gather_field_group group0(.clk(clk),.we(we),.wa(wa),.wd(wd[g*112+:112]),
+    .sv(raw_sv),.start_row(sb[2:0]),.advance(advance),.we_q(we_g),.wa_q(wa_g),.wd_q(wd_g),
+    .sv_q(sv_g),.start_q(start_g),.advance_q(adv_g));
+   for(genvar f=0;f<28;f=f+1)begin:field
+    ot_hbm_gather_field_table field0(.clk(clk),.we(we_g),.wa(wa_g),.wd(wd_g[f*4+:4]),
+     .sv(sv_g),.start_row(start_g),.advance(adv_g),.q(row[g*112+f*4+:4]));
+   end
+  end end else begin:g_flat_rows
   reg[223:0]rows[0:5];
   always @(posedge clk)if(we&&wa<6&&!active)rows[wa]<=wd[223:0];
   assign row=rows[pc];
@@ -134,14 +138,19 @@ endmodule
  always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else if(set)q<=1;else if(clear)q<=0;
 endmodule
 (* keep_hierarchy *) module ot_hbm_gather_field_table(
- input wire clk,we,sv,advance,input wire[7:0]wa,wd,input wire[2:0]start_row,output wire[7:0]q);
- reg we_q,sv_q,advance_q;reg[7:0]wa_q,wd_q;reg[2:0]start_q,pc;
- reg[7:0]mem[0:5];
+ input wire clk,we,sv,advance,input wire[7:0]wa,input wire[3:0]wd,input wire[2:0]start_row,output wire[3:0]q);
+ reg we_q,sv_q,advance_q;reg[7:0]wa_q;reg[3:0]wd_q;reg[2:0]start_q,pc;
+ reg[3:0]mem[0:5];
  always @(posedge clk)begin
   we_q<=we;wa_q<=wa;wd_q<=wd;sv_q<=sv;start_q<=start_row;advance_q<=advance;
   if(we_q&&wa_q<6)mem[wa_q]<=wd_q;
   if(sv_q)pc<=start_q;else if(advance_q)pc<=pc+1'b1;
  end
  assign q=mem[pc];
+endmodule
+(* keep_hierarchy *) module ot_hbm_gather_field_group(
+ input wire clk,we,sv,advance,input wire[7:0]wa,input wire[111:0]wd,input wire[2:0]start_row,
+ output reg we_q,sv_q,advance_q,output reg[7:0]wa_q,output reg[111:0]wd_q,output reg[2:0]start_q);
+ always @(posedge clk)begin we_q<=we;sv_q<=sv;advance_q<=advance;wa_q<=wa;wd_q<=wd;start_q<=start_row;end
 endmodule
 `default_nettype wire
