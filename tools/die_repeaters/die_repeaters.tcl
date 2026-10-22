@@ -85,18 +85,52 @@ proc ot_die_rep_spread {insts report {util 0.30} {bin_um 8.64} {util_hard 0.60} 
   set BR [expr {max(1, int(round($bin_um * $dbu / double($rh))))}]
   set BS [expr {max(1, int(round($bin_um * $dbu / double($slw))))}]
   # obstacles: every placed instance that is not one of ours (macros + pre-existing cells), coarse 200-um buckets
-  set cb 200000; set obs {}
+  set cb 200000; set obs {}; set ncarved 0; set ncarved_rot 0
   array set ob {}
   foreach inst [$blk getInsts] {
     if {[dict exists $mine [$inst getName]]} { continue }
     if {![$inst isPlaced]} { continue }
     set bb [$inst getBBox]
-    set m [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
-    set k [llength $obs]; lappend obs $m
-    for {set i [expr {[lindex $m 0] / $cb}]} {$i <= [lindex $m 2] / $cb} {incr i} {
-      for {set j [expr {[lindex $m 1] / $cb}]} {$j <= [lindex $m 3] / $cb} {incr j} { lappend ob($i,$j) $k }
+    set rects [list [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]]
+    # HBMc 10-22: a master with carved feedthrough channels (::ot_die_rep_carved, master -> {x0 y0 x1 y1} um in the
+    # master frame, written by the die GEN from manifest carved_feedthrough) is solid MINUS its channels -- the channels
+    # are free slots for repeaters, as for the relays the GEN already places there (r18f probe: 4.68M ideal points
+    # on obstacles, max displacement 1593 um with every carved block treated as one solid rectangle).
+    if {[info exists ::ot_die_rep_carved] && [dict exists $::ot_die_rep_carved [[$inst getMaster] getName]]} {
+      set o [$inst getOrient]
+      if {$o in {R0 MX MY R180}} {
+        lassign [lindex $rects 0] bx0 by0 bx1 by1
+        set bw [expr {$bx1 - $bx0}]; set bh [expr {$by1 - $by0}]
+        foreach ch [dict get $::ot_die_rep_carved [[$inst getMaster] getName]] {
+          lassign $ch u0 v0 u1 v1
+          set x0 [expr {round($u0 * $dbu)}]; set x1 [expr {round($u1 * $dbu)}]
+          set y0 [expr {round($v0 * $dbu)}]; set y1 [expr {round($v1 * $dbu)}]
+          if {$o in {MY R180}} { lassign [list [expr {$bw - $x1}] [expr {$bw - $x0}]] x0 x1 }
+          if {$o in {MX R180}} { lassign [list [expr {$bh - $y1}] [expr {$bh - $y0}]] y0 y1 }
+          set cx0_ [expr {$bx0 + $x0}]; set cx1_ [expr {$bx0 + $x1}]; set cy0_ [expr {$by0 + $y0}]; set cy1_ [expr {$by0 + $y1}]
+          set nxt {}
+          foreach r $rects {
+            lassign $r x0 y0 x1 y1
+            if {$cx1_ <= $x0 || $cx0_ >= $x1 || $cy1_ <= $y0 || $cy0_ >= $y1} { lappend nxt $r; continue }
+            if {$x0 < $cx0_} { lappend nxt [list $x0 $y0 $cx0_ $y1] }
+            if {$cx1_ < $x1} { lappend nxt [list $cx1_ $y0 $x1 $y1] }
+            set ix0 [expr {max($x0, $cx0_)}]; set ix1 [expr {min($x1, $cx1_)}]
+            if {$y0 < $cy0_} { lappend nxt [list $ix0 $y0 $ix1 $cy0_] }
+            if {$cy1_ < $y1} { lappend nxt [list $ix0 $cy1_ $ix1 $y1] }
+          }
+          set rects $nxt
+        }
+        incr ncarved
+      } else { incr ncarved_rot }
+    }
+    foreach m $rects {
+      set k [llength $obs]; lappend obs $m
+      for {set i [expr {[lindex $m 0] / $cb}]} {$i <= [lindex $m 2] / $cb} {incr i} {
+        for {set j [expr {[lindex $m 1] / $cb}]} {$j <= [lindex $m 3] / $cb} {incr j} { lappend ob($i,$j) $k }
+      }
     }
   }
+  if {[info exists ::ot_die_rep_carved]} { ot_die_rep_log "spread obstacles: carved masters=[dict size $::ot_die_rep_carved] instances_carved=$ncarved rotated_skipped=$ncarved_rot rects=[llength $obs]" }
   if {![info exists ::ot_die_rep_obs]} { set ::ot_die_rep_obs $obs; array set ::ot_die_rep_ob [array get ob] }
   if {![info exists ::ot_die_rep_occ]} { set ::ot_die_rep_occ [dict create] }
   array set cap {}; array set hcap {}; array set used {}; array set fl {}; array set memoS {}; array set memoH {}; set nhard 0; set onobs 0
