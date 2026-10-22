@@ -100,7 +100,6 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
   end else begin
    out_v<=raw_issue && !landing_fault;
    if(load_v&&!command_ok)sticky<=1;
-   if(lv3&&out_v)sticky<=1;
    if(command_ok&&load_cmd[56])owned[load_cmd[0]]<=0;
    if(begin_v) begin
     if(owned[begin_bank] || (lstart && start_bank==begin_bank)) sticky<=1;
@@ -122,6 +121,14 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
   if(!reset_copy[6])begin out_group<=0;out_slot<=0;end
   else begin out_group<=rg;out_slot<=rs;end
  end
+ wire[NPC*2-1:0]local_lstart,local_start_ok,local_raw_done;
+ for(genvar c=0;c<NPC*2;c=c+1)begin:window_decode
+  (* keep_hierarchy="yes" *) ot_hbm_dma_window_decode #(.NPC(NPC),.COPY_ID(c)) u(
+   .start(start),.base(start_base_sector),.bad(bad),.running(running),.owned(owned),.ready(block_ready_c),
+   .bank(start_bank),.epoch_bank(start_bank_epoch),.epoch(start_epoch),.epoch0(epoch0),.epoch1(epoch1),
+   .landing_fault(landing_fault),.slot(slot_q),.group_id(group_q),
+   .lstart(local_lstart[c]),.start_ok(local_start_ok[c]),.raw_done(local_raw_done[c]));
+ end
  // ---- the four PCs of this lane ----
  wire [256*NPC-1:0] macro_data; wire [NPC-1:0] f0,f1,bad_v;
  genvar g;
@@ -139,7 +146,7 @@ module ot_hbm_svc_vmdel_lane_load_static #(parameter integer NPC = 4, MUT = 0) (
    wire unused_clear0,unused_clear1;
    (* keep_hierarchy="yes" *) ot_hbm_dma_seen8 #(.COPY_ID(g*8+part),.BLOCK(part)) u(.clk(clk),.rst_n(rst_n),
     .begin_v_i(begin_v_i),.begin_bank_i(begin_bank_i),.start_bank_i(start_bank_i),.fill_bank_i(fill_bank_i[g]),.fill_slot_i(fill_slot_i[g*6+:6]),
-    .load_bank_i(load_cmd_i[0]),.lstart(lstart),.start_ok(start_ok),.raw_done(running&&slot_q==63&&group_q==GLAST),
+    .load_bank_i(load_cmd_i[0]),.lstart(local_lstart[(g*8+part)/4]),.start_ok(local_start_ok[(g*8+part)/4]),.raw_done(local_raw_done[(g*8+part)/4]),
     .load_release(command_ok&&load_cmd[56]),.fill_ok(fill_ok),.seen_current(seen_part[part]),.clear0(clear_counts0[part]),.clear1(clear_counts1[part]));
   end
   wire fb=fill_bank[g]; wire [5:0] fs=fill_slot[g*6+:6];
@@ -333,6 +340,18 @@ module ot_hbm_dma_seen8 #(parameter COPY_ID=0,BLOCK=0)(
  end
  assign clear0=clear_bank&&!bb;assign clear1=clear_bank&&bb;
  assign seen_current=(fs[5:3]==BLOCK)&&(fb?seen1[fs[2:0]]:seen0[fs[2:0]]);
+endmodule
+
+
+(* keep_hierarchy="yes" *)
+module ot_hbm_dma_window_decode #(parameter NPC=2,COPY_ID=0)(
+ input wire start,bad,running,bank,epoch_bank,landing_fault,
+ input wire[15:0]base,epoch,epoch0,epoch1,input wire[1:0]owned,ready,
+ input wire[5:0]slot,input wire[1:0]group_id,output wire lstart,start_ok,raw_done);
+ wire aperture_ok=base[4:0]==0&&base[12:0]<=13'(8192-512*NPC)&&(!base[15]||base[14:13]==0);
+ assign lstart=start&&aperture_ok&&!bad;
+ assign start_ok=lstart&&!running&&owned[bank]&&ready[bank]&&epoch==(epoch_bank?epoch1:epoch0)&&!landing_fault;
+ assign raw_done=running&&slot==63&&group_id==NPC-1;
 endmodule
 
 `default_nettype wire
