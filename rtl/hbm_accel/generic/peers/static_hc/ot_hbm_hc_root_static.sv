@@ -63,6 +63,9 @@ module ot_hbm_hc_root_static #(
     parameter integer TSDIV = 7,
     parameter integer TTPIPE = 0,
     parameter integer TSKP = 0,
+    // HBMc/TILES4 10-22: TOPIPE passes the tail child's OPIPE (k6/k6b = 1: one output pin stage, child L 496 -> 497);
+    // like TX it is not a root delay line: the compiler adds it to --tail-x.  0 = previous root, byte-identical.
+    parameter integer TOPIPE = 0,
     parameter integer MUT  = 0
 )(
     input  wire           clk, rst_n,
@@ -433,7 +436,7 @@ module ot_hbm_hc_root_static #(
                 .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
                 .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
         end else begin : g_c
-            ot_hbm_hc_tail_child_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0), .SDIV(TSDIV), .TPIPE(TTPIPE), .SKP(TSKP)) u_t (.clk(clk), .rst_n(rst_tail),
+            ot_hbm_hc_tail_child_static #(.MUT_PRE((MUT == 2 && gu == 0) ? 1 : 0), .SDIV(TSDIV), .TPIPE(TTPIPE), .SKP(TSKP), .OPIPE(TOPIPE)) u_t (.clk(clk), .rst_n(rst_tail),
                 .launch(go), .mixes(mix_at), .bases(t_bases), .scales(t_scales),
                 .result_v(tv[gu]), .result(tres[gu*768 +: 768]), .fault(tfl[gu]));
         end
