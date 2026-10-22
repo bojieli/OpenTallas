@@ -1,0 +1,60 @@
+ot-run: ot-epyc5       skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-2000
+ot-run: ot-epyc7       skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-2000
+ot-run: ot-epyc9       skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-2000
+ot-run: ot-gold2       skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-2000
+ot-run: ot-gold1       skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-2000
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/codex-q11-pair-2000
+ot-run: ot-agidock128  admits    26 GB (avail 30, growth 12, headroom 0, waiters 0/0 GB) load 33/64 running 18 disk 170 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-3344697-1792647898 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+Q11_BASELINE_PLACEMENT_PASS
+REF_TILE spine: child insertion targets 
+Q11 clock pairs installed: authentic same-edge SRAM/control/capture and local reset groups
+Q11_ROLE_TRACE clock_instances=18734 launches=949 captures=1704
+Q11_PAIR_GROUP REST leaves=2069
+Q11_PAIR_GROUP g_xf_fan32.u_xf/g_st\[2\].genblk1.genblk1.g_dr.u_dr.g_b\[0\].u_m leaves=299
+Q11_PAIR_GROUP g_xf_fan32.u_xf/g_rsg\[3\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=3
+Q11_PAIR_GROUP g_pf_fan32.u_pf/g_rsg\[1\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=2
+Q11_PAIR_GROUP g_pf_fan32.u_pf/g_rsg\[3\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=3
+Q11_PAIR_GROUP g_pf_fan32.u_pf/g_rsg\[2\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=4
+Q11_PAIR_GROUP g_xf_fan32.u_xf/g_rsg\[1\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=2
+Q11_PAIR_GROUP g_xf_fan32.u_xf/g_rsg\[2\].g_l.u_rs/s\[1\]$_DFF_PN0_ leaves=3
+Q11_PAIR_COVERAGE endpoints=18746 SRAMs=12 counter_bits=9 output_bits=128 reset_sources=6 reset_targets=112 components=8
+Q11_PAIR_ARRIVAL group=g_pf_fan32.u_pf/g_rsg\[1\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=15 min=312.844 max=313.469 spread=0.625 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_pf_fan32.u_pf/g_rsg\[3\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=22 min=318.253 max=351.078 spread=32.825 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_pf_fan32.u_pf/g_rsg\[2\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=22 min=338.783 max=353.039 spread=14.256 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=REST sinks=16463 min=603.906 max=664.998 spread=61.091 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_xf_fan32.u_xf/g_rsg\[1\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=15 min=308.721 max=309.086 spread=0.365 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_xf_fan32.u_xf/g_rsg\[3\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=22 min=310.571 max=335.343 spread=24.772 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_xf_fan32.u_xf/g_st\[2\].genblk1.genblk1.g_dr.u_dr.g_b\[0\].u_m sinks=2165 min=536.483 max=588.324 spread=51.840 ps (diagnostic)
+Q11_PAIR_ARRIVAL group=g_xf_fan32.u_xf/g_rsg\[2\].g_l.u_rs/s\[1\]$_DFF_PN0_ sinks=22 min=309.234 max=333.031 spread=23.796 ps (diagnostic)
+OT_SPINE iter 0 (coarse) leaves 2385 sinks 18746 cells 4771 leaf arrival 308.8..665.0 ps (spread 356.2) pad 60.0 / 14.0 ps
+OT_PG_STANDARD_BIND clock_spine rules=5
+OT_SPINE legal: check_placement clean after 4771 spine cells
+OT_SPINE done port clk buffers 4771
+Q11_SMOKE_PASS original_clock_pins=18746 preserved_data_connections=307858 buffers_added=4771 leaves=2385
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-3344697-1792647898): exit 0

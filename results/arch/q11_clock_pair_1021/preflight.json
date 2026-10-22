@@ -1,0 +1,23 @@
+{
+ "verdict": "WARN",
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "fill",
+   "message": "fill 35% = (macros/children 13159 + std 10989) / outline 68678 um2 < 50%",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: RTL registers every pin at the face: inputs land in exactly one flop (ir_q/dpr_q/drr_q/srr_q, u_tok c_tok, pk_q/di_q straps), outputs leave a flop (upd_q/urd_q/face sx regs/od_q/q_pe/q_xe); flow pin registers would add unpriced cycles",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  }
+ ]
+}

@@ -1,0 +1,17 @@
+{
+  "status": "PASS_CONSTRUCTION_AND_DATA_CONNECTIVITY_ONLY",
+  "source_commit": "29fdb2848",
+  "unit": "oth-ubuntu-3344697-1792647898",
+  "host": "ot-agidock128",
+  "fixture": "qfd_coll_split_q10a-20261021-193331/3_place.odb",
+  "fixture_sha256": "b6e8d47ac26c2c486f6b6a4178e494392c771042115b5901f05dab105d6236a0",
+  "baseline_placement": "PASS",
+  "final_placement": "PASS",
+  "original_clock_pins": 18746,
+  "preserved_functional_data_connections": 307858,
+  "buffers_added": 4771,
+  "leaves": 2385,
+  "balancing_iterations": 0,
+  "timing_qualification": false,
+  "next": "Normal MAIN gate with stock full balancing and unchanged actual timing constraints"
+}
