@@ -1,0 +1,34 @@
+{
+  "g-20261021-231934": {
+    "remote_path": "/srv/opentallas-scratch/claude/ref_gate/qfd_n59_qbank_align1g-20261021-231934/routes/gate/work/orfs/native_census.json",
+    "raw_sha256": "4093d2c0209569316008dfc7dd95f6e73bb4b11aca3f29aa1f527dac4cfccb7b",
+    "status": "PASS",
+    "roots_examined": 50440,
+    "max_dynamic_loads": 32,
+    "limit": 32,
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_qfd_native59_qbank_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "1e01c740651ac4e73650371eb290f8b2364606082c7d725651748342800a9644"
+    },
+    "functional_pin_contract": "NOT_EVALUATED",
+    "storage_contract": "NOT_EVALUATED",
+    "violations": 0,
+    "role_errors": 0
+  },
+  "h-20261021-231940": {
+    "remote_path": "/srv/opentallas-scratch/claude/ref_gate/qfd_n59_qbank_align1h-20261021-231940/routes/gate/work/orfs/native_census.json",
+    "raw_sha256": "0bb31f908a592c7432761156f1f19484d5d65263bd3d3df829783e14b138085d",
+    "status": "PASS",
+    "roots_examined": 50440,
+    "max_dynamic_loads": 32,
+    "limit": 32,
+    "netlist": {
+      "path": "/work/results/asap7/opentallas_qfd_native59_qbank_asap7_ref_gate/base/1_2_yosys.v",
+      "sha256": "1e01c740651ac4e73650371eb290f8b2364606082c7d725651748342800a9644"
+    },
+    "functional_pin_contract": "NOT_EVALUATED",
+    "storage_contract": "NOT_EVALUATED",
+    "violations": 0,
+    "role_errors": 0
+  }
+}

@@ -1,0 +1,379 @@
+{
+  "scope": "Actual canonical mapped macro role binding only; no general functional equivalence claim",
+  "netlist_remote_path": "/srv/opentallas-scratch/claude/ref_gate/qfd_n59_qbank_align1g-20261021-231934/routes/gate/work/orfs/results/asap7/opentallas_qfd_native59_qbank_asap7_ref_gate/base/1_2_yosys.v",
+  "netlist_sha256": "1e01c740651ac4e73650371eb290f8b2364606082c7d725651748342800a9644",
+  "macro_count": 8,
+  "role_count": 64,
+  "status": "PASS",
+  "errors": [],
+  "macros": [
+    {
+      "instance": "\\u_ot_pr_core.u_qseat.g_writer[0].u_mem",
+      "ports": {
+        "clk": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "d93beca6efd0421b314c081066064ac0e371b306f715cc0935b2879e249ba9df",
+          "exact_expr": "ck"
+        },
+        "r_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "a12669c553fa518eb51002f0e7af112819662b466766751a3c05cd7a254ae607"
+        },
+        "r_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "71ff3a5ceea094ffa907b2b88c0ce2ae6ac498280c4b23b83829530fffc1b384"
+        },
+        "rd_out": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "9659f233e0d84da0259fc4c2604759b7e293fbe021690df7265531a7ae4532a1"
+        },
+        "w_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "4c76e13c55edefef8761e6c5d1999216186dc2f88b5d874ef291dae0d68e9655"
+        },
+        "w_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "003361a603e7639c015fc581b49db133368a5746f9bfe27cc622de5f036dbd06"
+        },
+        "w_mask_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "5bf94b83c6dfea8d396248bf5a464a9af02071cb654def3de0a0caf527b1f366"
+        },
+        "wd_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "0998f9c6fa810c9f85f443080aad3491bfc82c32b0ef9d6deb067815a6dd52bf"
+        }
+      }
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_qseat.g_writer[1].u_mem",
+      "ports": {
+        "clk": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "d93beca6efd0421b314c081066064ac0e371b306f715cc0935b2879e249ba9df",
+          "exact_expr": "ck"
+        },
+        "r_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "11322a8cdc58e25890308d4db642a072ee1ad5d7ce7690bc184c0e830ee24dc3"
+        },
+        "r_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "0cb6b7337b1820120861752c25411b638530a7291ccd9c8f0cad22898db68212"
+        },
+        "rd_out": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "a923043d1a0250742a4087212067050c8a3836ca58aa635ab4054dff6a03a392"
+        },
+        "w_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "8197cb0998f69b34d5601711e27b96037b56b02d6fc620cc114d9706cef62115"
+        },
+        "w_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "2f46ce7d2a1093e553ddd55a680dd710c3b8e288ceb7b4853b85707ed1c4a6b6"
+        },
+        "w_mask_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "09ba7f1d71397639b59c734f3985865fa5365b88e872efb1a626c7cf687187e5"
+        },
+        "wd_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "ae760e808747dd67197c549c399058943da67697801948c7ae9b5cd130fca653"
+        }
+      }
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_qseat.g_writer[2].u_mem",
+      "ports": {
+        "clk": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "d93beca6efd0421b314c081066064ac0e371b306f715cc0935b2879e249ba9df",
+          "exact_expr": "ck"
+        },
+        "r_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "c5c6da47eb5dc963c514c0b530c78163fc8ff3208187d828618e325e633b3d78"
+        },
+        "r_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "f3cb0db981fd699ea9df8bf59a5c4517d25ae5b7aa706a2088b00db565cfa561"
+        },
+        "rd_out": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "1abeb25b2d94af4e420cd8bcf4ed354788390025688c21ee1deb5c42f9a27f36"
+        },
+        "w_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "01b00d19543044d3ab85084324688cf44c33c38352a8966156e3dade8ea2feb2"
+        },
+        "w_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "57512b18ac3c79248e939830512f8d0bd1c2a64c6cf4bca43274cc900a3a4a46"
+        },
+        "w_mask_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "a6e45f0c482b82cca1d467f82d65ebbc6f19fa33eaea80570af30a07c75f51af"
+        },
+        "wd_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "28224424d967b2189bdd8e0dc0d9e6254b3d232fd16b771862e921f0787fd2be"
+        }
+      }
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_qseat.g_writer[3].u_mem",
+      "ports": {
+        "clk": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "d93beca6efd0421b314c081066064ac0e371b306f715cc0935b2879e249ba9df",
+          "exact_expr": "ck"
+        },
+        "r_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "052002dce3d23ce1f6ef6f7ec1eb195a9dd6eed66b10dcb90af864c8ddc511be"
+        },
+        "r_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "b501bde6913182773c86e1afe0784ad93694e619295f33263c9b7a5d36a73ba0"
+        },
+        "rd_out": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "052149b548ac2906540918aaa4a877baad823de8ce25e9434b048dc1954b1bbd"
+        },
+        "w_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "44d106b99e48acb3465c9cab749ce53a5124ba8c082912814a44d8df5fea005f"
+        },
+        "w_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "876e37ab1a40d90553a9feb6a666783e7d0c96bbd47374d63ab20c6d837db8e7"
+        },
+        "w_mask_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "8a4094045f605537aa7f662fce56e904a1df54948d843b61a837d923b918ac90"
+        },
+        "wd_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "57cfb94a606948017a0758c15d31c0c414683f195a36cbb9f5de5ba0a43eaf3b"
+        }
+      }
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_qseat.g_writer[4].u_mem",
+      "ports": {
+        "clk": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "d93beca6efd0421b314c081066064ac0e371b306f715cc0935b2879e249ba9df",
+          "exact_expr": "ck"
+        },
+        "r_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "645850935b88f616bd0850c86601cc6d5510ca0df2b30238b30999d472670dd6"
+        },
+        "r_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "8fea6ac4f22d3fc5dc6de8c1cc44e4f2783edffaf3af94e1d9ac4689bac55027"
+        },
+        "rd_out": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "c95eca439c709ea14fd15591827edec3463c4fe7db1059925672e2ee3942af54"
+        },
+        "w_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "3ea08240623276fbfdd4332a683767b276b7b0eba287e154b1b09c4d13e7fe0f"
+        },
+        "w_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "d26176c9b82d28ae2052dcd6d0dff32a854f6749c2400c3592673cd95bbe039b"
+        },
+        "w_mask_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "e4a890ef478b5a2d0b05b2c469923e0f6647e9a44c96d90ae8d19150474906b1"
+        },
+        "wd_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "522d2aafd032de1b98339128fb56878a6e9b9387a76e22d615ff662bcfa33d42"
+        }
+      }
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_qseat.g_writer[5].u_mem",
+      "ports": {
+        "clk": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "d93beca6efd0421b314c081066064ac0e371b306f715cc0935b2879e249ba9df",
+          "exact_expr": "ck"
+        },
+        "r_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "ac4a46cc94826e343701800d295d9d0bed5a271c7c698419a3b3a38f5ad534a1"
+        },
+        "r_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "c8d1f500d0b6442abbe613d3880f474f7bb3818921d596dfad29972560676319"
+        },
+        "rd_out": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "515391011a1575391eced06ec9d6587b5ec67adbabc8e5d6614082542719b3b4"
+        },
+        "w_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "5112cf4d74b7a52730d7f063655c99fbea6604730b61cad8aab6e20d0b722358"
+        },
+        "w_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "67df81b06b5ebb1da77523dece916117db0081a3b6f909b1a5f9b1cd3edafe93"
+        },
+        "w_mask_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "2745e6faa03ad70eb485dd54d7883b99e699be5dc372bb774a95df169db9ef96"
+        },
+        "wd_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "1c6f8292ab3e7467f73167ee408eba68e2d90be0eb68fbaaf46db80d2558a578"
+        }
+      }
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_qseat.g_writer[6].u_mem",
+      "ports": {
+        "clk": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "d93beca6efd0421b314c081066064ac0e371b306f715cc0935b2879e249ba9df",
+          "exact_expr": "ck"
+        },
+        "r_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "c8c20ed4de97b5da6f64b327a3201320732b1a110c8e1ec048e47380aa6803a7"
+        },
+        "r_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "9c7372bbb42f77630ec85561ec78d954d99c385ba505a5f511b7c9e8c1fde9e4"
+        },
+        "rd_out": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "c25266868286f9dd7083844ba34cda3f0d4462ee6bb5b82e84c7de494c5b7643"
+        },
+        "w_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "5d213393d83c53f300211ef1ca8ae1caaa7700bc6d94a2eb3f73ee31b75f4415"
+        },
+        "w_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "99f33cb4500b67a320f9b3c2edd57120a69db048496ec07aa0d64b4cb90cef64"
+        },
+        "w_mask_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "d38b83685882bb3d9a05881a2d413dbd56c71288f116c66d89b42bea4aca5017"
+        },
+        "wd_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "654604a130c645d4d65b631e5c631587f34c40a4d85ca741b6e10ef976acd820"
+        }
+      }
+    },
+    {
+      "instance": "\\u_ot_pr_core.u_qseat.g_writer[7].u_mem",
+      "ports": {
+        "clk": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "d93beca6efd0421b314c081066064ac0e371b306f715cc0935b2879e249ba9df",
+          "exact_expr": "ck"
+        },
+        "r_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "80b8665bc8df85a141e43c821080d669d6fa15d16d6703eedf4d4f9c3a32a044"
+        },
+        "r_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "cd3319fd2815448b5ea364e8b6c601fd12461b2ceba4fbf5e25fbfa19cf8fcd2"
+        },
+        "rd_out": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "048f46221c353b7ef5ebe61b84a44e89af1585c5e29c2fef7b2e36b1abe7935f"
+        },
+        "w_addr_in": {
+          "bits": 5,
+          "literal_bits": 0,
+          "expr_sha256": "19624beac8c4388858ed5b7cb982a4d3cf64355c16c951742ff35b470a0ae6f0"
+        },
+        "w_ce_in": {
+          "bits": 1,
+          "literal_bits": 0,
+          "expr_sha256": "e59624ee78df12d53505326aa98fe30dbdfbc2fa6aa25f7b4cc69b3a714e978c"
+        },
+        "w_mask_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "ee5bc9ed3b1597ca564d8db5f8ae57e161dc98f0c12b9d18b31943849e765d09"
+        },
+        "wd_in": {
+          "bits": 512,
+          "literal_bits": 0,
+          "expr_sha256": "e7effbb8b52d37dec35e039b26357f2ebccbae9555769b66cd6fc831fbd286fa"
+        }
+      }
+    }
+  ]
+}
