@@ -88,12 +88,24 @@ module ot_s81dv_rsqrt_n32 #(
     // N8 (STW-S81-COLLA-XFIN 10-21): the squaring m_yy reads its two operands and the d_y line from three KEPT
     // same-edge copies of each y_k (census R33: y0 / m_y.y drove both multiplier inputs + d_y, 59-62 loads); h_k
     // likewise feeds m_hm and the next h line from two copies.  Same values, same edges.
-    (* keep *) reg [31:0] y0, y0b, y0c;
+    (* keep *) reg [31:0] y0;
+`ifdef OT_S81DV_XFIN_N10
+    wire [31:0] y0b,y0c;
+`else
+    (* keep *) reg [31:0] y0b,y0c;
+`endif
     wire [31:0] y0_n;
     wire        unused_cy;
+`ifdef OT_S81DV_XFIN_N10
+    ot_s81dv_seed_sub32 u_seed(.x(xk),.y(y0_n));
+    always @(posedge clk)y0<=y0_n;
+    ot_s81dv_xfin_owned_capture #(.W(32),.CUT(1)) u_y0b(.clk(clk),.d(y0_n),.q(y0b));
+    ot_s81dv_xfin_owned_capture #(.W(32),.CUT(1)) u_y0c(.clk(clk),.d(y0_n),.q(y0c));
+`else
     ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_y0 (.a(32'h5F3759DF), .b(~{1'b0, xk[31:1]}), .cin(1'b1), .s(y0_n),
                                                       .cout(unused_cy));
     always @(posedge clk) begin y0 <= y0_n; y0b <= y0_n; y0c <= y0_n; end
+`endif
     wire [31:0] half;
     wire [31:0] hd [0:2];
     wire [31:0] yi [0:3];
@@ -532,7 +544,13 @@ module ot_s81dv_xfin_fp_add_n32 #(
     wire[26:0] add_val;
     for(genvar g=0;g<7;g=g+1)begin:g_add_val
       localparam integer W=(g==6)?3:4;
+`ifdef OT_S81DV_XFIN_N10
+      wire[51:0] owned;
+      ot_s81dv_xfin_owned_capture #(.W(52),.CUT(K1)) u_pick_capture(.clk(clk),.d({pick_big,pick_small}),.q(owned));
+      ot_s81dv_xfin_fp_add_pick #(.LO(4*g),.W(W)) u_p(.a({1'b0,owned[51:28],3'b000}),.b(owned[27:0]),.sum(sum),.y(add_val[4*g+:W]));
+`else
       ot_s81dv_xfin_fp_add_pick #(.LO(4*g),.W(W)) u_p(.a(big28),.b(s1_small),.sum(sum),.y(add_val[4*g+:W]));
+`endif
     end
     wire [7:0]  room = t_exp - 8'd1;
     wire [26:0] sentinel = (room <= 8'd26) ? (27'd1 << (5'd26 - room[4:0])) : 27'd0;
@@ -611,9 +629,13 @@ module ot_s81dv_xfin_fp_add_n32 #(
       ot_s81dv_xfin_fp_out_byte u_e(.byp(byp_cp[g]),.zero(u_zero),.over(over),.nz(nz),.code(code[8*g+:8]),.bc(u_code[8*g+:8]),.y(nd));
       always @(posedge clk or negedge rst_n[g+1]) if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
     for(genvar c=0;c<NYC;c=c+1)begin:g_yc
+`ifdef OT_S81DV_XFIN_N10
+        ot_s81dv_xfin_owned_output8 u_copy(.clk(clk),.rst_n(rst_n[g+1]),.d(nd),.q(yc[32*c+8*g+:8]));
+`else
         (* keep *) reg[7:0] r;
         always @(posedge clk or negedge rst_n[g+1]) if(!rst_n[g+1])r<=0;else r<=nd;
         assign yc[32*c+8*g+:8]=r;
+`endif
       end
     end
     if(NYC==0)begin:g_noyc assign yc=32'd0; end
@@ -862,9 +884,13 @@ module ot_s81dv_xfin_fp_mul_n32 #(
       ot_s81dv_xfin_fp_out_zero u_e(.byp(o_byp),.over(over),.nz(nz),.code(code[8*g+:8]),.y(nd));
       always @(posedge clk or negedge rst_n[g+1])if(!rst_n[g+1])y[8*g+:8]<=0;else y[8*g+:8]<=nd;
     for(genvar c=0;c<NYC;c=c+1)begin:g_yc
+`ifdef OT_S81DV_XFIN_N10
+        ot_s81dv_xfin_owned_output8 u_copy(.clk(clk),.rst_n(rst_n[g+1]),.d(nd),.q(yc[32*c+8*g+:8]));
+`else
         (* keep *) reg[7:0] r;
         always @(posedge clk or negedge rst_n[g+1]) if(!rst_n[g+1])r<=0;else r<=nd;
         assign yc[32*c+8*g+:8]=r;
+`endif
       end
     end
     if(NYC==0)begin:g_noyc assign yc=32'd0; end
@@ -1047,4 +1073,25 @@ endmodule
    assign hit[b]=x[b] && (sh>LO+b+1);
  end
  assign st=|hit;
+endmodule
+
+// N10 capsules preserve capture edges and prevent identical operand owners
+// from collapsing into a single mapped register during flattening.
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_owned_capture #(parameter integer W=32,CUT=1)(input wire clk,input wire[W-1:0]d,output wire[W-1:0]q);
+ if(CUT)begin:g_r reg[W-1:0]r;always @(posedge clk)r<=d;assign q=r;end
+ else assign q=d;
+endmodule
+(* keep_hierarchy=1 *) module ot_s81dv_xfin_owned_output8(input wire clk,rst_n,input wire[7:0]d,output reg[7:0]q);
+ always @(posedge clk or negedge rst_n)if(!rst_n)q<=0;else q<=d;
+endmodule
+// A constant subtract in four bounded byte cones; carry remains combinational.
+(* keep_hierarchy=1 *) module ot_s81dv_seed_subbyte #(parameter integer A=0)(input wire[7:0]b,input wire ci,output wire[7:0]s,output wire co);
+ assign {co,s}={1'b0,8'(A)}+{1'b0,b}+9'(ci);
+endmodule
+module ot_s81dv_seed_sub32(input wire[31:0]x,output wire[31:0]y);
+ localparam logic[31:0]MAGIC=32'h5f3759df;
+ wire[31:0]b=~{1'b0,x[31:1]};wire[4:0]c;assign c[0]=1;
+ for(genvar g=0;g<4;g=g+1)begin:g_b
+  ot_s81dv_seed_subbyte #(.A(MAGIC[8*g+:8]))u(.b(b[8*g+:8]),.ci(c[g]),.s(y[8*g+:8]),.co(c[g+1]));
+ end
 endmodule

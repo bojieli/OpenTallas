@@ -610,12 +610,21 @@ module ot_s81dv_eng_finish_sram #(
     // like av / u_t, so rwl[r][b] == (wr_v && wr_n == root r) on every cycle (both 0 after reset); each enables 8 bits
     // (census R33: one root enable drove 32 capture muxes, 64-73 loads)
     wire [11:0] rwl;
+`ifdef OT_S81DV_XFIN_N10
+    wire[11:0] rwl_reset;
+    ot_s81dv_finish_reset2 #(.LEAVES(12))u_root_capture_reset(.clk(clk),.rst_n(rst_n),.q(rwl_reset));
+`endif
     genvar rr, rb;
     for (rr = 0; rr < T; rr = rr + 1) begin : g_root
         wire hit0 = f_q && t_q == rr * NVP + 1;
         for (rb = 0; rb < 4; rb = rb + 1) begin : g_b
             (* keep *) reg [LAV-1:0] l;
+`ifdef OT_S81DV_XFIN_N10
+            wire local_reset=rwl_reset[rr*4+rb];
+            always @(posedge clk or negedge local_reset) if (!local_reset) l <= {LAV{1'b0}}; else l <= {l[LAV-2:0],hit0};
+`else
             always @(posedge clk or negedge rc[5]) if (!rc[5]) l <= {LAV{1'b0}}; else l <= {l[LAV-2:0], hit0};
+`endif
             assign rwl[rr * 4 + rb] = l[LAV-1];
         end
     end
