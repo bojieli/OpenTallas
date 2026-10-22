@@ -67,9 +67,18 @@ class FrontendPhase(unittest.TestCase):
         with patch.object(R, 'sizes', return_value={}), patch.object(R, 'meminfo', return_value=(1008, 268)), \
              patch.object(R, 'read_units', return_value=rows), patch.object(R, 'die_like', return_value=True), \
              patch.object(R, 'holds_admit_lock', return_value=True), contextlib.redirect_stdout(out):
-            R.gate(200, ['bash', 'run_head_die.sh'])
+            with patch.dict(R.os.environ, {'HARD_INVARIANT': '0'}):
+                R.gate(200, ['bash', 'run_head_die.sh'])
         # v16: a die job is admitted when MemAvailable - fresh - 64 GB >= its request (268 - 64 = 204 >= 200)
         self.assertTrue(out.getvalue().startswith('OK '), out.getvalue())
+        out = io.StringIO()
+        with patch.object(R, 'sizes', return_value={}), patch.object(R, 'meminfo', return_value=(1008, 268)), \
+             patch.object(R, 'read_units', return_value=rows), patch.object(R, 'die_like', return_value=True), \
+             patch.object(R, 'holds_admit_lock', return_value=True), contextlib.redirect_stdout(out):
+            R.gate(200, ['bash', 'run_head_die.sh'])
+        # v17 HARD INVARIANT: committed = other 264 + held 476 + reserve 67 = 807; 807 + 200 > 1008 - 64 -> die refused too
+        self.assertTrue(out.getvalue().startswith('NO '), out.getvalue())
+        self.assertIn('headroom 137 GB', out.getvalue())
         out = io.StringIO()
         with patch.dict(R.os.environ, {'MEASURED_RESERVE': '0'}), patch.object(R, 'sizes', return_value={}), \
              patch.object(R, 'meminfo', return_value=(1008, 268)), patch.object(R, 'read_units', return_value=rows), \

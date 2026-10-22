@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""ot-heavy-reconcile v13: keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
+"""ot-heavy-reconcile v17 (hard invariant, see below; header text from v13): keep ot-heavy reservations at MEASURED memory use, and learn sizes per command class.
 
 ot-heavy charges every running job `reservation - current use` of future growth.  This pass (cron, every 5 min, all
 hosts) lowers a reservation to ceil(max(peak * 1.25, peak + 4 GB)) once the job is provably past its memory peak:
@@ -104,6 +104,16 @@ tasks as soon as possible"):
   Safety stays with the per-job caps (scope MemoryMax, docker --memory via ot-heavy-docker), swap and earlyoom.
   DIE-FIRST unchanged: a waiting die trial's request is held free against non-die requests.
 
+v17 HARD INVARIANT (S81c coordinator / TOKc-ADM 2026-10-22: earlyoom killed 44 GB cc1plus on ep5 11:54-11:56 and
+14:15-14:22 and on gold2 13:07 at MemAvailable 3 % / swap 100 % while every scope was under its own cap; ep5 14:12:15-30
+admitted five run_dv_slice.sh builds, 896 GB declared, against 291-279 GB available because v16 put the fresh charges
+inside the 25 %-of-MemAvailable growth cap).  On top of every rule above, for non-die AND die requests:
+    committed = other + sum(max(now, peak so far)) + reserve (v16 running growth) + fresh (unstarted / < 5 min)
+    admit(RES) only if committed + RES <= MemTotal - INV_HEADROOM_GB (64); nothing while committed > MemTotal - 64
+  (see invariant()).  --free reports admit_gb / die_admit_gb already bounded by it, plus inv_free_gb and committed_gb.
+  HARD_INVARIANT=0 in /etc/ot-heavy.conf disables it.  --exit-report (called by ot-heavy-exit inside every scope when the
+  command ends non-zero) prints EARLYOOM / MEMCG-OOM lines for kills of the job's processes.
+
 v9 (owner 2026-10-18 ~01:05 "NEVER hold jobs on CPU load; keep the fleet busy; never hold important jobs"; memory 10-08:
 priority must never leave a host idle):
   DIE-FIRST v2 = ORDER, not reservation: a non-die request yields only to a waiting die job that the host admits NOW
@@ -122,6 +132,7 @@ usage: ot-heavy-reconcile [--dry-run] [--verbose]     one pass
        ot-heavy-reconcile --selftest                   the charge and admission rules on synthetic units
        ot-heavy-reconcile --free [DIR]                 JSON: memory free after reservations, waiters, disk (for ot-run)
        ot-heavy-reconcile --sizes                      print the learned table
+       ot-heavy-reconcile --exit-report UNIT T0 RC PIDFILE [CG]   EARLYOOM / MEMCG-OOM lines for a finished job (v17)
        ot-heavy-reconcile --size MEM -- CMD...         print a warning line if MEM > 2x the measured peak of CMD's class
        ot-heavy-reconcile --admit MEM -- CMD...        print "<GB> <why>" when MEM is charged less than requested
 """
@@ -137,7 +148,7 @@ FAST = re.compile(r"^(ref_gate_|view_export|run_case|relay_)")
 SEED = {"ref_gate_": 10}          # GB charged at first sight when the exact class has no measurement yet
 GB = 1 << 30
 WRAPPERS = {"bash", "sh", "dash", "tee", "tail", "time", "env", "timeout", "stdbuf", "nice", "cat", "sleep", "docker",
-            "tini", "docker-init"}
+            "tini", "docker-init", "ot-heavy-exit", "sort"}   # v17: ot-heavy-exit + its pid sampler sit in every scope
 BUILD = {"cc1plus", "cc1", "g++", "gcc", "c++", "clang", "clang++", "ld", "collect2", "lto1", "as", "ar", "make", "ninja",
          "cmake", "verilator", "verilator_bin", "iverilog", "ivl", "yosys", "yosys-abc", "abc"}
 DRY, VERBOSE = "--dry-run" in sys.argv, "--verbose" in sys.argv or "--dry-run" in sys.argv
@@ -697,7 +708,8 @@ DEFAULTS = dict(GROWTH_FACTOR=0.5, NEED_FACTOR=0.7, MIN_AVAIL_FRAC=0.05,     # v
                 OLD_S=600, OLD_SLOW_GB=5.0, OLD_MULT=3.0, OLD_HORIZON_S=1800, OLD_CAP_GB=32.0,
                 OLD_MIN_SPAN_S=200,                                          # v14 OLD SLOW (SCHED-TUNE2 10-22)
                 MEASURED_RESERVE=1.0, RESERVE_K=1.5, RESERVE_HORIZON_S=1800,  # v16 MEASURED RESERVE (coordinator 10-22)
-                GROWTH_CAP_AVAIL_FRAC=0.25, DIE_HEADROOM_GB=64.0)
+                GROWTH_CAP_AVAIL_FRAC=0.25, DIE_HEADROOM_GB=64.0,
+                HARD_INVARIANT=1.0, INV_HEADROOM_GB=64.0)                    # v17 HARD INVARIANT (S81c/TOKc-ADM 10-22)
 
 
 def conf(key):
@@ -838,6 +850,52 @@ def die_admissible(avail, b, floor, need, can):
     return max(can, avail - b.get("fresh_gb", b.get("unstarted", 0.0)) - conf("DIE_HEADROOM_GB"))
 
 
+def invariant(rows, total, avail, b):
+    """v17 HARD INVARIANT (S81c coordinator / TOKc-ADM 2026-10-22; ep5 14:12-14:22 and gold2 13:07 earlyoom cc1plus kills at
+    mem 3 % / swap 100 % while every scope sat under its own cap): the host's committed memory, never above physical RAM
+    minus INV_HEADROOM_GB (64):
+      committed = (MemTotal - MemAvailable) + sum over running units of (max(now, measured peak so far, <= MemoryMax) - now)
+                = other + sum(max(now, peak)) when the units' memory is all in use
+                  + reserve (the v16 running-growth charge, incl. settled floor) + fresh (unstarted / < YOUNG_S units'
+                  charge beyond what they already hold or peaked at)
+      other     = (MemTotal - MemAvailable) - sum(now): memory held outside ot-heavy units (closure-daemon docker,
+                  sessions; ep5 10-22 ~540 GB), so committed >= physical memory in use
+    A request is admitted only when committed + request <= MemTotal - INV_HEADROOM_GB; die jobs too.  free < 0 -> nothing
+    is admitted.  The running units' own growth cannot be stopped here; this keeps NEW admissions off an exhausted host."""
+    used = max(0.0, total - avail)
+    act = [r for r in rows if r["active"]]
+    now = sum(r["now"] for r in act)
+    held = 0.0
+    fresh = 0.0
+    for r in rows:
+        if not r["active"]:
+            fresh += r.get("grow", 0.0)
+            continue
+        h = max(r["now"], min(r.get("obs", r["now"]), r.get("req", r.get("obs", r["now"]))))
+        held += h
+        if r["age"] < YOUNG_S:                         # its fresh charge counts beyond what max(now, peak) already holds
+            fresh += max(0.0, r["now"] + r.get("grow", 0.0) - h)
+    reserve = max(0.0, b["grow"] - b.get("fresh_gb", 0.0))
+    other = max(0.0, used - now)
+    # = other + held when the units' memory.current is all in use; when it holds reclaimable page cache (now > what
+    # MemAvailable says is in use) the cache is not counted twice: in use + every unit's peak above what it holds now
+    committed = used + (held - now) + reserve + fresh
+    limit = total - conf("INV_HEADROOM_GB")
+    return dict(committed=committed, free=limit - committed, limit=limit, other=other, held=held, now=now, used=used,
+                reserve=reserve, fresh=fresh, on=bool(conf("HARD_INVARIANT")))
+
+
+def inv_cap(x, inv):
+    """v17: an admission capacity bounded by the hard invariant headroom"""
+    return min(x, inv["free"]) if inv["on"] else x
+
+
+def inv_text(inv):
+    return (f"invariant: committed {inv['committed']:.0f} GB (in use {inv['used']:.0f}, other {inv['other']:.0f}, units max(now, peak) {inv['held']:.0f}, "
+            f"+ reserve {inv['reserve']:.0f} + fresh {inv['fresh']:.0f}) vs physical - {conf('INV_HEADROOM_GB'):g} = "
+            f"{inv['limit']:.0f} GB -> headroom {inv['free']:.0f} GB" + ("" if inv["on"] else " (HARD_INVARIANT=0: not enforced)"))
+
+
 def holds_admit_lock(fd=8):
     """v12: True when our caller (ot-heavy: `exec 8>>admit.lock; flock 8`) passed us the admission lock on fd 8"""
     try:
@@ -877,7 +935,9 @@ def gate_locked(mem, argv):
     # v9: a die job is admitted on current memory alone; v12: memory promised to units admitted in the last
     # GROW_WINDOW_S / still growing (b["pending"]) is not current memory, so it is charged to die jobs too
     # v13: and the settled floor (die jobs still never pay the settled units' growth itself)
-    can_die = die_admissible(avail, b, floor, need, can)
+    inv = invariant(rows, total, avail, b)
+    can = inv_cap(can, inv)                            # v17: committed + request <= physical - 64 GB, die jobs too
+    can_die = inv_cap(die_admissible(avail, b, floor, need, can), inv)
     me_die = os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(argv, os.getcwd())
     if me_die and can < res <= can_die:
         note = (note + "; " if note else "") + f"DIE: admitted on current memory ({avail:.0f} GB available, {b.get('pending', 0.0):.0f} GB pending charged, settled growth not charged)"
@@ -887,7 +947,7 @@ def gate_locked(mem, argv):
         ok, note = False, (note + "; " if note else "") + f"DIE-FIRST: {held:.0f} GB held for a waiting die trial"
     print(f"{'OK' if ok else 'NO'} {res} {cls} | need {need:g} x {res} = {need * res:.0f} GB, admissible {can:.0f} GB: "
           f"available {avail:.0f} GB, growth charged {charged_growth(b, total):.0f} GB ({('v16 measured reserve, running growth cap ' + format(100 * conf('GROWTH_CAP_AVAIL_FRAC'), 'g') + ' % of available') if conf('MEASURED_RESERVE') else 'v13 rate rule, uncapped sum'}, settled floor {b.get('settled_floor', 0.0):.0f} GB; pending {b.get('pending', 0.0):.0f} GB at x{conf('GROWING_FACTOR'):g}), young {b['young']:.0f} GB, "
-          f"floor {floor:.0f} GB" + (f"; {note}" if note else ""))
+          f"floor {floor:.0f} GB; {inv_text(inv)}" + (f"; {note}" if note else ""))
 
 
 DIE_RE = re.compile(r"(?i)(die[_-]?(sta|gen\d*|grt\d*|chain|trial|place|bind)|(sta|gen\d*|grt\d*)[_-]die\b)")
@@ -970,8 +1030,10 @@ def free(path):
     rows = read_units()
     b = books(rows, total, avail, table)
     head, floor = 0, floor_gb(total)
-    can = admissible(total, avail, b, floor)
-    can_die = die_admissible(avail, b, floor, conf("NEED_FACTOR"), can)
+    can_v16 = admissible(total, avail, b, floor)
+    inv = invariant(rows, total, avail, b)
+    can = inv_cap(can_v16, inv)                         # v17: admit_gb / die_admit_gb already include the invariant
+    can_die = inv_cap(die_admissible(avail, b, floor, conf("NEED_FACTOR"), can), inv)
     wait, req = waiters(table)
     try:
         v = os.statvfs(path)
@@ -984,7 +1046,9 @@ def free(path):
                           young_gb=round(b["young"]), plenty=b["plenty"], headroom_gb=head, floor_gb=round(floor),
                           cpu_load1=float(open("/proc/loadavg").read().split()[0]), ncpu=os.cpu_count(), running=b["running"],
                           fresh=b["fresh"], waiting=len(wait), waiting_gb=sum(wait), waiting_req_gb=sum(req), disk_gb=disk,
-                          admit_gb=round(can), free_gb=round(can) - sum(wait), die_admit_gb=round(can_die))))
+                          admit_gb=math.floor(can), free_gb=math.floor(can) - sum(wait), die_admit_gb=math.floor(can_die),
+                          inv_free_gb=math.floor(inv["free"]), committed_gb=round(inv["committed"]),
+                          inv_limit_gb=round(inv["limit"]), other_gb=round(inv["other"]), admit_gb_v16=round(can_v16))))
 
 
 def units():
@@ -1001,8 +1065,8 @@ def units():
     floor = floor_gb(total)
     print(f"host {os.uname().nodename}: RAM {total:.0f} GB, MemAvailable {avail:.0f} GB ({100 * avail / total:.0f} %), units hold "
           f"{b['used']:.0f} GB, growth charged {b['grow']:.0f} GB (young {b['young']:.0f} GB, plenty={b['plenty']}), reservations "
-          f"{b['reserved']} GB, floor {floor:.0f} GB -> admits a declared {admissible(total, avail, b, floor):.0f} GB "
-          f"(GROWTH_FACTOR {conf('GROWTH_FACTOR'):g}, NEED_FACTOR {conf('NEED_FACTOR'):g})")
+          f"{b['reserved']} GB, floor {floor:.0f} GB -> admits a declared {inv_cap(admissible(total, avail, b, floor), invariant(rows, total, avail, b)):.0f} GB "
+          f"(GROWTH_FACTOR {conf('GROWTH_FACTOR'):g}, NEED_FACTOR {conf('NEED_FACTOR'):g}); {inv_text(invariant(rows, total, avail, b))}")
 
 
 def selftest():
@@ -1019,7 +1083,8 @@ def selftest():
     # v12/v13: admitted < GROW_WINDOW_S ago or not sampled yet -> whole remaining; rising -> 2 x rate x 10 min; else 0
     keys = ("GROW_WINDOW_S", "GROWING_FACTOR", "LAUNCH_HOLD_S", "RATE_HORIZON_S", "RATE_MULT", "SETTLED_FLOOR_FRAC",
             "OLD_S", "OLD_SLOW_GB", "OLD_MULT", "OLD_HORIZON_S", "OLD_CAP_GB", "OLD_MIN_SPAN_S", "MEASURED_RESERVE",
-            "RESERVE_K", "RESERVE_HORIZON_S", "GROWTH_CAP_AVAIL_FRAC", "DIE_HEADROOM_GB")
+            "RESERVE_K", "RESERVE_HORIZON_S", "GROWTH_CAP_AVAIL_FRAC", "DIE_HEADROOM_GB", "HARD_INVARIANT", "INV_HEADROOM_GB",
+            "REAL_FLOOR_GB")
     saved = {k: os.environ.get(k) for k in keys}
     os.environ.update(GROW_WINDOW_S="600", GROWING_FACTOR="1.0", LAUNCH_HOLD_S="120", RATE_HORIZON_S="600",
                       RATE_MULT="2", SETTLED_FLOOR_FRAC="0", MEASURED_RESERVE="0")
@@ -1096,6 +1161,57 @@ def selftest():
     chk("v16 die pays unstarted admissions: 632 - 200 - 64", die_admissible(632, bn, 50.4, 0.7, 0), 368)
     os.environ.update(MEASURED_RESERVE="0")
     chk("v16 off: ep7 legacy uncapped growth", books(ep7, 1008, 632, tab)["grow"], 1020)
+    # v17 HARD INVARIANT (TOKc-ADM 10-22): committed + request <= MemTotal - 64, for non-die and die requests
+    os.environ.update(MEASURED_RESERVE="1", HARD_INVARIANT="1", INV_HEADROOM_GB="64", SETTLED_FLOOR_FRAC="0.02")
+
+    def gate_sim(rows, total, avail, res, die=False):
+        b = books(rows, total, avail, tab)
+        inv = invariant(rows, total, avail, b)
+        can = inv_cap(admissible(total, avail, b, floor_gb(total), 0.7), inv)
+        return (inv_cap(die_admissible(avail, b, floor_gb(total), 0.7, can), inv) if die else can) >= res, inv
+    # ep5 14:12:15 replay (admit.log, journal): MemTotal 1133, MemAvailable 291 GB (842 GB in use: ~540 GB closure-daemon
+    # docker outside ot-heavy + units), v16 growth charged 43 GB; three S81 CUT-B run_bfl.sh builds (pos 130 GB peak, slice /
+    # flmut 51 GB) compiling with 44 GB cc1plus.  14:12:15-30 v16 admitted five run_dv_slice.sh (160, 192, 160, 192, 192 =
+    # 896 GB declared): v16 capped the fresh charges inside 25 % x 291 = 72 GB ("grow 43 -> 72 -> 71 -> 70 -> 70").
+    bfl = [u(unit="pos", age=12347, req=160.0, res=160, now=100.0, obs=130.0, rate=0.01),
+           u(unit="slc", age=6682, req=160.0, res=160, now=50.0, obs=50.7, rate=0.01),
+           u(unit="flm", age=6682, req=160.0, res=160, now=50.0, obs=50.8, rate=0.01)]
+    burst, admitted = [160, 192, 160, 192, 192], []
+    for i, req in enumerate(burst):
+        rows = bfl + [u(unit=f"dv{j}", active=False, res=r, file_age=3, launcher_alive=True) for j, r in enumerate(admitted)]
+        ok, inv5 = gate_sim(rows, 1133, 291 - 3 * i, req)
+        if ok:
+            admitted.append(req)
+    chk("v17 ep5 14:12 replay: headroom ~160 GB -> at most one 160 GB dv_slice (v16 admitted all 896 GB)", sum(admitted) <= 160, 1)
+    chk("v17 ep5 14:12 replay: headroom = 1069 - (842 in use + 31.5 peak above now + 36 reserve)", gate_sim(bfl, 1133, 291, 1)[1]["free"], 1069 - 842 - 31.5 - 36)
+    chk("v17 ep5 14:12 replay: committed + request stays <= 1133 - 64",
+        invariant(bfl + [u(unit="d", active=False, res=160, file_age=3)], 1133, 291,
+                  books(bfl + [u(unit="d", active=False, res=160, file_age=3)], 1133, 291, tab))["committed"] <= 1069, 1)
+    ok, inv5 = gate_sim(bfl, 1133, 291, 192, die=True)
+    chk("v17 ep5 14:12: a 192 GB DIE request is bound too (v16 die: 291 - 64 >= 192)", ok, 0)
+    chk("v17 ep5 14:15:44 (MemAvailable 32 GB): committed over physical - 64 -> nothing admitted, even 1 GB",
+        gate_sim(bfl, 1133, 32, 1)[0] or gate_sim(bfl, 1133, 32, 1, die=True)[0], 0)
+    # ep7 15:30 (--units): MemTotal 1008, MemAvailable 106 GB; S81 H11 run_h11r 239/300 GB, run_slice_vehicle 275/400 GB,
+    # three run_h11.sh at 44 GB now / 130 GB peak, the rest small: the invariant must keep >= 64 GB clear -> admit 0
+    e7 = [u(unit="h11r", age=8903, req=300.0, res=300, now=239.0, obs=239.0, rate=0.002),
+          u(unit="veh", age=12426, req=400.0, res=400, now=275.0, obs=275.0, rate=0.002)] + \
+         [u(unit=f"h{i}", age=11300, req=160.0, res=160, now=44.0, obs=130.0) for i in range(3)] + \
+         [u(unit="misc", age=20000, req=600.0, res=600, now=170.0, obs=180.0)]
+    ok, inv7 = gate_sim(e7, 1008, 106, 1)
+    chk("v17 ep7: committed > 1008 - 64 -> a 1 GB non-die request is refused", ok, 0)
+    chk("v17 ep7: a 1 GB die request is refused too", gate_sim(e7, 1008, 106, 1, die=True)[0], 0)
+    chk("v17 ep7: headroom is negative", inv7["free"] < 0, 1)
+    chk("v17 ep7: v16 alone would admit (106 - 26.5) / 0.7 non-die", admissible(1008, 106, books(e7, 1008, 106, tab), 50.4, 0.7) > 0, 1)
+    # an idle host: the invariant does not bind below physical - 64
+    idle = [u(unit="i", age=5000, req=64.0, res=64, now=20.0, obs=30.0)]
+    ok, invi = gate_sim(idle, 1008, 900, 400)
+    chk("v17 idle host: 400 GB admitted", ok, 1)
+    chk("v17 idle host: committed = in use 108 + peak gap 10 + settled floor 20.16", invi["committed"], 108 + 10 + 20.16)
+    chk("v17 young unit: fresh counted beyond its held peak", invariant(
+        [u(unit="y", age=60, req=100.0, res=100, now=10.0, obs=10.0, grow=90.0)], 1008, 900, dict(grow=90.0, fresh_gb=90.0))["committed"],
+        98 + 0 + 10 + 90)
+    os.environ.update(HARD_INVARIANT="0")
+    chk("v17 HARD_INVARIANT=0: ep7 gate back to v16", gate_sim(e7, 1008, 106, 1)[0], 1)
     for k, v in saved.items():
         if v is None:
             os.environ.pop(k, None)
@@ -1107,10 +1223,65 @@ def selftest():
     return 1 if bad else 0
 
 
+def journal(args):
+    """journalctl lines (short-iso); the system journal needs adm or sudo -n"""
+    for pre in ([], ["sudo", "-n"]):
+        try:
+            r = subprocess.run(pre + ["journalctl", "--no-pager", "-q", "-o", "short-iso", *args], capture_output=True,
+                               text=True, timeout=30)
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        if r.returncode == 0 and r.stdout.strip():
+            return r.stdout.splitlines()
+    return []
+
+
+EO_RE = re.compile(r"^(\S+) .*earlyoom\[\d+\]: sending (SIG\w+) to process (\d+) uid \d+ \"([^\"]*)\".*?VmRSS (\d+) MiB")
+EO_MEM = re.compile(r"^(\S+) .*earlyoom\[\d+\]: mem avail: .*?\(\s*([\d.]+)%\), swap free: .*?\(\s*([\d.]+)%\)")
+
+
+def exit_report(unit, t0, rc, pidfile, cg=""):
+    """v17 (TOKc-ADM 10-22): why did this job's command end?  EARLYOOM when earlyoom signalled one of the scope's processes
+    (pids sampled into pidfile by ot-heavy-exit) since t0; MEMCG-OOM when the scope's memory.events counts an oom_kill"""
+    host = os.uname().nodename
+    pids = set()
+    for ln in rd(pidfile).split():
+        if ln.isdigit():
+            pids.add(int(ln))
+    out = []
+    since = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(t0) - 5))
+    mem = ""
+    for ln in journal(["-u", "earlyoom", "--since", since]):
+        m = EO_MEM.match(ln)
+        if m:
+            mem = f"host mem avail {m[2]} %, swap free {m[3]} %"
+            continue
+        m = EO_RE.match(ln)
+        if m and int(m[3]) in pids:
+            out.append(f"ot-heavy: EARLYOOM on {host} at {m[1]}: earlyoom {m[2]} pid {m[3]} {m[4]} VmRSS {int(m[5]) / 1024:.1f} GiB"
+                       f" ({mem or 'host memory exhausted'}); unit {unit}, job exit {rc}.  Host-level kill, not this job's cap: "
+                       f"the host was over-committed (see ot-heavy-reconcile --free inv_free_gb)")
+    ev = rd(f"{cg}/memory.events") if cg else ""
+    k = re.search(r"^oom_kill (\d+)", ev, re.M)
+    if k and int(k[1]) > 0:
+        out.append(f"ot-heavy: MEMCG-OOM on {host} at {time.strftime('%Y-%m-%dT%H:%M:%S%z')}: {k[1]} process(es) of unit {unit} "
+                   f"killed at the scope's own MemoryMax ({rd(cg + '/memory.max').strip()} B, peak "
+                   f"{num(cg + '/memory.peak') / GB:.1f} GiB); job exit {rc}: raise --mem or lower -j")
+    for ln in out:
+        print(ln)
+        try:
+            open(f"{D}/exit.log", "a").write(f"{time.strftime('%Y-%m-%dT%H:%M:%S%z')} {ln}\n")
+        except OSError:
+            pass
+    return 0
+
+
 if __name__ == "__main__":
     # DIE_WATCHDOG_1021: classifier query only; no reconciliation or admission changes.
     if sys.argv[1:2] == ["--is-die"]:
         sys.exit(0 if os.environ.get("OT_HEAVY_PRIO") == "die" or die_like(sys.argv[3:], os.getcwd()) else 1)
+    if sys.argv[1:2] == ["--exit-report"]:
+        sys.exit(exit_report(*sys.argv[2:7]))
     if sys.argv[1:2] == ["--admit"]:
         a = admit_size(int(sys.argv[2]), classify(sys.argv[4:]))
         if a:
