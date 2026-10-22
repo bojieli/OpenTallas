@@ -33,6 +33,21 @@
       "rtl/dsrom_sys/s81_dv/pv_so/dsdv_svc_rs_pvso_entry.sv": "8965bf445d890bdc294067a7fc1e9f9d2dfae208e38de0fccbbed3b229d99e3f",
       "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_att.sv": "e61202b083280b7b083ab46dc9f72b7f428d5077091decb977318fb62292e2ab",
       "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_rs.sv": "43842c7dd3766072479b0604ed9498a1003d8d8b4a02f51525371b906a2acffa"
+    },
+    "added_ingress_storage": {
+      "entries": 2,
+      "macro": "ot_sram_1r1w_32x64_m1",
+      "rows_per_macro": 32,
+      "bits_per_row": 64,
+      "head_macros_per_entry": 128,
+      "parameter_macros_per_entry": 8,
+      "macros_per_entry": 136,
+      "bits_per_entry": 278528,
+      "kib_per_entry": 34,
+      "total_macros": 272,
+      "total_kib": 68,
+      "existing_sm_target_storage_included": false,
+      "mapped_area_qualified": false
     }
   },
   "sukv_raw": {
