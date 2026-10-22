@@ -123,7 +123,12 @@ module dsdv_idx_txm_n32 #(
     // banks 6/7): WDC = 1 feeds banks >= WCB (column B) from a second, identical write-port register (we_b/wa_b/wd_b,
     // same D, same edge); 0 cycles.
     parameter integer WDC = 0,
-    parameter integer WCB = 5
+    parameter integer WCB = 5,
+    // STW-S81c-COLLA2 10-22 (TX v/w REJECTED: reg -> macro r_ce_in -65.8): RIL = 1 lands the read port (r_ce_in bank
+    // decode + r_addr_in) in a kept register per bank beside its macro: the read is issued one edge later (+1 lookup
+    // edge, the bank select and the consumer pipe in dsdv_idx_tx_n32 follow RIL like RDL)
+    parameter integer RIL = 0,
+    parameter integer RIL_MUT = 0   // bench mutant (tb_tx_miter MUT 5): the bank select ignores the landed read address
 ) (
     input  wire                 ck,
     input  wire                 re,
@@ -169,8 +174,16 @@ module dsdv_idx_txm_n32 #(
                 assign we_m = we_c && (NB == 1 || wa_c[AW-1:10] == b); assign wa_m = wa_c[9:0]; assign wd_m = wd_c;
             end
             wire [255:0] q_raw;
+            wire re_m; wire [9:0] ra_m;
+            if (RIL != 0) begin : g_ril
+                (* keep = "true" *) reg re_l; (* keep = "true" *) reg [9:0] ra_l;
+                always @(posedge ck) begin re_l <= re && (NB == 1 || ra[AW-1:10] == b); ra_l <= ra[9:0]; end
+                assign re_m = re_l; assign ra_m = ra_l;
+            end else begin : g_ri0
+                assign re_m = re && (NB == 1 || ra[AW-1:10] == b); assign ra_m = ra[9:0];
+            end
             ot_sram_1r1w_1024x256_m2_r2c2 u_mem (
-                .clk(ck), .r_ce_in(re && (NB == 1 || ra[AW-1:10] == b)), .r_addr_in(ra[9:0]), .rd_out(q_raw),
+                .clk(ck), .r_ce_in(re_m), .r_addr_in(ra_m), .rd_out(q_raw),
                 .w_ce_in(we_m), .w_addr_in(wa_m), .wd_in(wd_m), .w_mask_in(wm_bank),
                 .rr_en(2'b0), .rr_addr(18'b0), .cr_en(2'b0), .cr_sel(16'b0));
             if (RDL != 0) begin : g_rl
@@ -184,9 +197,17 @@ module dsdv_idx_txm_n32 #(
         // bank select of the read issued at edge t: valid in cycle t + 1 (the only cycle the consumer samples rd at
         // edge t + 2).  Loaded every edge from ra (no enable), 8 kept copies a bank, each gating 32 data bits.
         (* keep = "true" *) reg [NB*8-1:0] bsk0;
+        wire [AW-1:0] ra_bs;
+        if (RIL != 0) begin : g_rabs
+            reg [AW-1:0] ra_q;                       // RIL: the read reaches the macros one edge later
+            always @(posedge ck) ra_q <= ra;
+            assign ra_bs = (RIL_MUT != 0) ? ra : ra_q;
+        end else begin : g_rabs0
+            assign ra_bs = ra;
+        end
         always @(posedge ck) begin : g_bs
             integer k_;
-            for (k_ = 0; k_ < NB * 8; k_ = k_ + 1) bsk0[k_] <= (NB == 1) ? 1'b1 : (ra[AW-1:10] == (k_ / 8));
+            for (k_ = 0; k_ < NB * 8; k_ = k_ + 1) bsk0[k_] <= (NB == 1) ? 1'b1 : (ra_bs[AW-1:10] == (k_ / 8));
         end
         wire [NB*8-1:0] bsk;
         if (RDL != 0) begin : g_bsl
@@ -239,7 +260,9 @@ module dsdv_idx_tx_n32 #(
     parameter integer RDL = 0,      // STW-S81c-COLLA 10-22: score-store read capture at the macro pins (+1 lookup edge)
     parameter integer WDL = 0,      // score-store write landing per bank (+1 write edge)
     parameter integer WDC = 0,      // STW-S81c-COLLA2-TX 10-22: column-B copy of the score-store write port (0 cycles)
-    parameter integer SCS = 0       // STW-S81c-COLLA2-TX 10-22: grid-slot count compare carry-selected off slot_q (0 cycles)
+    parameter integer SCS = 0,      // STW-S81c-COLLA2-TX 10-22: grid-slot count compare carry-selected off slot_q (0 cycles)
+    parameter integer RIL = 0,      // STW-S81c-COLLA2 10-22: score-store read issue landed at the macro pins (+1 lookup edge)
+    parameter integer RHP = 0       // STW-S81c-COLLA2 10-22: result-FIFO head prefetched into a register (0 cycles)
 ) (
     input  wire          ck,
     input  wire          rst,       // active low (as dsdv_idx_tx / the bk_sel rst_n)
@@ -408,10 +431,10 @@ module dsdv_idx_tx_n32 #(
         if(lk_go)lvl_next[ne]=1'b0;
     end
     wire [255:0] m_rd;
-    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
+    dsdv_idx_txm_n32 #(.D(D), .SRAM_MACRO(SRAM_MACRO), .RDL(RDL), .WDL(WDL), .WDC(WDC), .RIL(RIL), .RIL_MUT(MUT == 5)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_mem_idx[19:4])), .rd(m_rd),
         .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm),.wm_next((MUT==4)?16'hffff:vi_r[35:20]),
         .we_b(m_we_b), .wa_b(m_wa_b), .wd_b(m_wd_b));
-    localparam integer LP = 2 + ((RDL != 0) ? 1 : 0);   // lookup pipe: issue -> rd valid
+    localparam integer LP = 2 + ((RDL != 0) ? 1 : 0) + ((RIL != 0) ? 1 : 0);   // lookup pipe: issue -> rd valid
     reg  [LP-1:0] lp_v; reg [19:0] lp_i [0:LP-1];
     reg  [35:0] rf [0:7];
     reg  [2:0]  rf_w, rf_r; reg [3:0] rf_n;
@@ -465,17 +488,42 @@ module dsdv_idx_tx_n32 #(
     reg         slot_q;                      // = the grid slot of this cycle (precomputed from the next state)
     wire[35:0]rh;
     wire[2:0]rf_read_next=rf_r+3'(rf_pop_r),rf_write_next=rf_w+3'(lp_v[LP-1]);
+    wire rf_pop_h;                      // RHP: third pop predicate instance (head select of fields 5..8)
+    wire [71:0] rf_go;                  // RHP: entry a field c write enable of this edge (the g_rf_write go copies)
     generate for(genvar c=0;c<9;c=c+1)begin:g_rf_read
         wire[2:0]sel;
         dsdv_tx_copy #(.W(3),.RESET(1),.ID(3000+c))u(.ck(ck),.rn(rl[5+(c>=5)]),.d(rf_read_next),.q(sel));
-        reg[3:0]part;
-        always @*begin part=0;for(integer a=0;a<8;a=a+1)part=part|(rf[a][4*c+:4]&{4{sel==3'(a)}});end
-        assign rh[4*c+:4]=part;
+        if (RHP == 0) begin : g_comb
+            reg[3:0]part;
+            always @*begin part=0;for(integer a=0;a<8;a=a+1)part=part|(rf[a][4*c+:4]&{4{sel==3'(a)}});end
+            assign rh[4*c+:4]=part;
+        end else begin : g_pf
+            // STW-S81c-COLLA2 10-22 (TX v/w REJECTED: reg->reg -164.6 on the 16-level sel -> rf read mux -> r_in compare
+            // -> pop -> next state -> srb stage): the head rh = rf[sel] after every edge is REGISTERED.  In the cycle
+            // before, both candidates rf'[sel] and rf'[sel + 1] are formed (rf' = rf with this edge's write go/data
+            // bypassed in) and the pop of this cycle (sel' = sel + pop) only selects: rh_q == rf'[sel'] == the old
+            // combinational rh after the edge -> same values at the same edges (0 cycles).
+            wire[2:0]sel1;
+            dsdv_tx_copy #(.W(3),.RESET(1),.ID(3100+c))u1(.ck(ck),.rn(rl[5+(c>=5)]),.d(rf_read_next+3'd1),.q(sel1));
+            wire[35:0]wdat={lp_i[LP-1],lk_s};
+            reg[3:0]c0,c1;
+            always @*begin
+                c0=0;c1=0;
+                for(integer a=0;a<8;a=a+1)begin
+                    c0=c0|((rf_go[a*9+c]?wdat[4*c+:4]:rf[a][4*c+:4])&{4{sel==3'(a)}});
+                    c1=c1|((rf_go[a*9+c]?wdat[4*c+:4]:rf[a][4*c+:4])&{4{sel1==3'(a)}});
+                end
+            end
+            (* keep = "true" *) reg[3:0]hq;
+            always @(posedge ck) hq <= (MUT != 6 && ((c<5)?rf_pop_r:rf_pop_h)) ? c1 : c0;   // MUT 6: prefetch ignores the pop
+            assign rh[4*c+:4]=hq;
+        end
     end
     for(genvar a=0;a<8;a=a+1)begin:g_rf_write
         for(genvar c=0;c<9;c=c+1)begin:g_field
             wire go;
             dsdv_tx_copy #(.W(1),.ID(4000+a*9+c))u(.ck(ck),.rn(1'b1),.d(lp_v[LP-2]&&(rf_write_next==3'(a))),.q(go));
+            assign rf_go[a*9+c]=go;
             wire[35:0]data={lp_i[LP-1],lk_s};
             always @(posedge ck)if(go)rf[a][4*c+:4]<=data[4*c+:4];
         end
@@ -488,6 +536,12 @@ module dsdv_idx_tx_n32 #(
         .flush_ok(flush_ok), .pop(rf_pop));
     dsdv_tx_pop_pred #(.ID(7001)) u_popb (.any(rf_n != 4'd0), .armed(armed), .hdr_q(hdr_q), .fin(fin), .wv(wv), .r_in(r_in),
         .flush_ok(flush_ok), .pop(rf_pop_r));
+    generate if (RHP != 0) begin : g_poph
+        dsdv_tx_pop_pred #(.ID(7002)) u_poph (.any(rf_n != 4'd0), .armed(armed), .hdr_q(hdr_q), .fin(fin), .wv(wv), .r_in(r_in),
+            .flush_ok(flush_ok), .pop(rf_pop_h));
+    end else begin : g_poph0
+        assign rf_pop_h = rf_pop_r;
+    end endgenerate
     wire        in_done = in_end && lk_idle && rf_n == 4'd0;
     wire        fl  = armed && hdr_q && !fin && flush_ok && ((rf_pop && wv && !r_in) || (in_done && rf_n == 4'd0));
     wire        o_ctl_c = okk[7];            // control copy

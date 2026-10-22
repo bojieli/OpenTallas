@@ -162,7 +162,10 @@ module dsdv_idx_tx #(
     parameter integer D = 8192,         // score windows
     parameter integer IB = 64,          // IDX words buffered (<= 32 + 4 a job)
     parameter bit SRAM_MACRO = 0,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // STW-S81c-TOK4 10-22: LPX extra score-store lookup edges (default 0 = this reference unchanged).  The reference
+    // for a production block whose read is issued/captured LPX edges later (n32 RIL): the same lookup pipe, LPX longer.
+    parameter integer LPX = 0
 ) (
     input  wire          ck,
     input  wire          rst,
@@ -172,6 +175,7 @@ module dsdv_idx_tx #(
     output reg  [15:0]   st
 );
     localparam integer AW = $clog2(D), IW = $clog2(IB);
+    localparam integer LP = 2 + LPX;
     reg [1:0] rs;
     always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rn = rs[1];
@@ -265,23 +269,27 @@ module dsdv_idx_tx #(
     wire        lk_go = iw_v && ne_v && rq_room;
     reg         m_re; reg [AW-1:0] m_ra;
     wire [255:0] m_rd;
-    dsdv_idx_txm #(.D(D), .SRAM_MACRO(SRAM_MACRO)) u_sm (.ck(ck), .re(lk_go), .ra(AW'(ne_idx[19:4])), .rd(m_rd),
+    // LPX: the read reaches the store LPX edges after the issue (the data then arrives at lookup stage LP-1 as before)
+    reg [LPX:0] re_x; reg [AW-1:0] ra_x [0:LPX];
+    always @* begin re_x[0] = lk_go; ra_x[0] = AW'(ne_idx[19:4]); end
+    always @(posedge ck) for (int k_ = 1; k_ <= LPX; k_ = k_ + 1) begin re_x[k_] <= re_x[k_ - 1]; ra_x[k_] <= ra_x[k_ - 1]; end
+    dsdv_idx_txm #(.D(D), .SRAM_MACRO(SRAM_MACRO)) u_sm (.ck(ck), .re(re_x[LPX]), .ra(ra_x[LPX]), .rd(m_rd),
         .we(m_we), .wa(m_wa), .wd(m_wd), .wm(m_wm));
-    reg  [1:0]  lp_v; reg [19:0] lp_i [0:1];
+    reg  [LP-1:0] lp_v; reg [19:0] lp_i [0:LP-1];
     // result FIFO (8 x {idx 20, score 16})
     reg  [35:0] rf [0:7];
     reg  [2:0]  rf_w, rf_r; reg [3:0] rf_n;
-    wire [3:0]  sel_f = (MUT == 1) ? lp_i[1][3:0] + 4'd1 : lp_i[1][3:0];
+    wire [3:0]  sel_f = (MUT == 1) ? lp_i[LP-1][3:0] + 4'd1 : lp_i[LP-1][3:0];
     reg  [15:0] lk_s;
     always @* begin
         lk_s = 16'd0;
         for (bi = 0; bi < 16; bi = bi + 1) if (sel_f == 4'(bi)) lk_s = m_rd[16 * bi +: 16];
     end
     wire        rf_pop;
-    wire        lk_idle = !iw_v && fw == 2'b00 && lp_v == 2'b00 && ib_r == ib_w;
+    wire        lk_idle = !iw_v && fw == 2'b00 && lp_v == '0 && ib_r == ib_w;
     always @(posedge ck or negedge rn)
         if (!rn) begin
-            fw <= 2'b00; iw_v <= 1'b0; lvl <= 16'd0; lp_v <= 2'b00; rf_w <= 0; rf_r <= 0; rf_n <= 0; ib_r <= 0;
+            fw <= 2'b00; iw_v <= 1'b0; lvl <= 16'd0; lp_v <= '0; rf_w <= 0; rf_r <= 0; rf_n <= 0; ib_r <= 0;
         end else begin
             fw <= {fw[0], ib_re};
             if (ib_re) ib_r <= ib_r + 1'b1;
@@ -291,13 +299,16 @@ module dsdv_idx_tx #(
                 if ((lvl & ~(16'd1 << ne)) == 16'd0) iw_v <= 1'b0;
             end
             if (iw_v && !ne_v) iw_v <= 1'b0;                              // a word with no valid element
-            lp_v <= {lp_v[0], lk_go};
-            lp_i[0] <= ne_idx; lp_i[1] <= lp_i[0];
-            if (lp_v[1]) begin rf[rf_w] <= {lp_i[1], lk_s}; rf_w <= rf_w + 1'b1; end
+            lp_v <= LP'({lp_v, lk_go});
+            lp_i[0] <= ne_idx; for (int k_ = 1; k_ < LP; k_ = k_ + 1) lp_i[k_] <= lp_i[k_ - 1];
+            if (lp_v[LP-1]) begin rf[rf_w] <= {lp_i[LP-1], lk_s}; rf_w <= rf_w + 1'b1; end
             if (rf_pop) rf_r <= rf_r + 1'b1;
-            rf_n <= rf_n + (lp_v[1] ? 4'd1 : 4'd0) - (rf_pop ? 4'd1 : 4'd0);
+            rf_n <= rf_n + (lp_v[LP-1] ? 4'd1 : 4'd0) - (rf_pop ? 4'd1 : 4'd0);
         end
-    always @* rq_n = rf_n + 4'(lp_v[0]) + 4'(lp_v[1]);
+    always @* begin : g_rqn
+        integer q_; rq_n = rf_n;
+        for (q_ = 0; q_ < LP; q_ = q_ + 1) rq_n = rq_n + 4'(lp_v[q_]);
+    end
 
     // ------------------------------------------------------------------ grouping + beat staging (<= 3 beats)
     reg         wv;                         // window open
@@ -407,7 +418,7 @@ module dsdv_idx_tx #(
             if (fin && bq_n == 3'd0 && armed && !done) begin done <= 1'b1; busy <= 1'b0; end
             if (armed && !done && sn == j_sm && g_on) fc_set[5] <= 1'b1;   // grid exhausted, job not done
             if (cap_unal) fc_set[6] <= 1'b1;
-            if (rf_n == 4'd8 && lp_v[1] && !rf_pop) fc_set[7] <= 1'b1;
+            if (rf_n == 4'd8 && lp_v[LP-1] && !rf_pop) fc_set[7] <= 1'b1;
         end
     always @(posedge ck) lo[V-1:1] <= bq_pop ? bq[0][V-1:1] : '0;
     always @(posedge ck or negedge rn)
