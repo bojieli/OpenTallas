@@ -114,7 +114,7 @@
     "pass_regex": "TKM_TP192_STATIC_GATE_PASS",
     "min_count_regex": "TKM_STATIC PASS words=([0-9]+) cycles=",
     "threads": 8,
-    "peak_ram_gb": 160,
+    "peak_ram_gb": 330,
     "timeout_s": 21600,
     "needs": [
      "verilator"
@@ -127,7 +127,7 @@
     "expect": "fail",
     "fail_regex": "TKM_STATIC FAIL",
     "threads": 8,
-    "peak_ram_gb": 160,
+    "peak_ram_gb": 330,
     "timeout_s": 21600,
     "needs": [
      "verilator"
@@ -140,7 +140,7 @@
     "expect": "fail",
     "fail_regex": "TKM_STATIC FAIL",
     "threads": 8,
-    "peak_ram_gb": 160,
+    "peak_ram_gb": 330,
     "timeout_s": 21600,
     "needs": [
      "verilator"
