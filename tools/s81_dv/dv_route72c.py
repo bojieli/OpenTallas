@@ -11,7 +11,10 @@ Same macro-free construction, same output format and the same 350-um station cho
     and re-route.  CAP_BPU 150.9 = the chan.py repeater model at 0.55 of the 0.30 soft cap (bits x 0.175/160/0.30 um2 per
     um of length <= 0.55 x channel width).
 The router never crosses a padded body (macro-free), so congestion can only move a route to a parallel line / channel.
-Usage: dv_route72c.py PLAN_UNROUTED OUT [--iter 4]
+STW-S81c-DIE-CAP 10-22: --hop-max H re-chops a link with one more station until every station-to-station arc (incl. the
+corner-avoidance shifts) is <= H um (W1 relay site within reach; default off = the historical rule); --dump J writes the
+over-capacity edges with the link classes that load them; --cap-margin M routes against M x capacity (target ratio).
+Usage: dv_route72c.py PLAN_UNROUTED OUT [--iter 4] [--hop-max 380] [--dump overfull.json]
 """
 import argparse, heapq, json, math
 from pathlib import Path
@@ -24,6 +27,8 @@ PRES, HIST = 4.0, 1.0
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('plan'); ap.add_argument('out'); ap.add_argument('--iter', type=int, default=4)
+    ap.add_argument('--hop-max', type=float, default=None); ap.add_argument('--dump', default=None)
+    ap.add_argument('--cap-margin', type=float, default=1.0)
     a = ap.parse_args(); p = json.load(open(a.plan)); bs = p['blocks']; W, H = p['facts']['die_um']; pad = 43.2; stub = 43.2
     rect = [(b['x'] - pad, b['y'] - pad, b['x'] + b['w'] + pad, b['y'] + b['h'] + pad) for b in bs + p.get('blockages', [])]
 
@@ -59,6 +64,7 @@ def main():
         return min(lo, LAT / 2) + min(hi, LAT / 2)
     rb = np.array([band(ys, j) for j in range(ny)]); cb = np.array([band(xs, i) for i in range(nx)])
     hcap = np.repeat((rb * CAP_BPU)[:, None], nx - 1, axis=1); vcap = np.repeat((cb * CAP_BPU)[None, :], ny - 1, axis=0)
+    hcap_true, vcap_true = hcap.copy(), vcap.copy(); hcap = hcap * a.cap_margin; vcap = vcap * a.cap_margin
     huse = np.zeros((ny, nx - 1)); vuse = np.zeros((ny - 1, nx)); hhis = np.zeros_like(huse); vhis = np.zeros_like(vuse)
     dxs = np.diff(xa); dys = np.diff(ya)
     print('GRID', nx, ny, 'cap_bpu', round(CAP_BPU, 1), flush=True)
@@ -119,12 +125,17 @@ def main():
         legs = []; length = 0.; corners = []
         for u, v in zip(clean, clean[1:]):
             ll = abs(v[0] - u[0]) + abs(v[1] - u[1]); legs.append((length, length + ll, u, v)); length += ll; corners.append(length)
-        n = max(1, math.ceil(length / 350.)); cuts = []
-        for kk in range(1, n):
-            t = kk * length / n
-            for c in corners[:-1]:
-                if abs(t - c) < 50: t = c - 50 if t <= c else c + 50
-            cuts.append(t)
+        n = max(1, math.ceil(length / 350.))
+        while True:
+            cuts = []
+            for kk in range(1, n):
+                t = kk * length / n
+                for c in corners[:-1]:
+                    if abs(t - c) < 50: t = c - 50 if t <= c else c + 50
+                cuts.append(t)
+            arcs = [hi - lo for lo, hi in zip([0.] + sorted(cuts), sorted(cuts) + [length])]
+            if a.hop_max is None or max(arcs) <= a.hop_max or n > 4 * length / a.hop_max + 8: break
+            n += 1
 
         def at(t):
             for lo, hi, u, v in legs:
@@ -135,10 +146,24 @@ def main():
         for lo, hi in zip(marks, marks[1:]): hops.append([*at(lo), *at(hi), l['b']])
         l.update(h=hops, sp=sp, s=len(sp), L=round(length, 3)); stations += sp
         for u, v in zip(clean[1:-1], clean[2:-1]): channels.append([min(u[0], v[0]) - 16.2, min(u[1], v[1]) - 16.2, max(u[0], v[0]) + 16.2, max(u[1], v[1]) + 16.2])
+    hcap, vcap = hcap_true, vcap_true
     ho = huse / hcap; vo = vuse / vcap
+    if a.dump:
+        import collections
+        hot = {}
+        for k, q in paths.items():
+            for (x0, y0), (x1, y1) in zip(q, q[1:]):
+                key = ('h', y0, min(x0, x1)) if y0 == y1 else ('v', min(y0, y1), x0)
+                r = ho[key[1], key[2]] if key[0] == 'h' else vo[key[1], key[2]]
+                if r > 0.9:
+                    e = hot.setdefault(key, dict(o=key[0], ratio=round(float(r), 3), cap=round(float((hcap if key[0] == 'h' else vcap)[key[1], key[2]]), 1),
+                        seg=[xs[key[2]], ys[key[1]], xs[key[2] + 1], ys[key[1]]] if key[0] == 'h' else [xs[key[2]], ys[key[1]], xs[key[2]], ys[key[1] + 1]],
+                        cls=collections.Counter(), links=[]))
+                    e['cls'][links[k]['c']] += links[k]['b']; e['links'].append(links[k]['i'])
+        Path(a.dump).write_text(json.dumps(sorted(hot.values(), key=lambda e: -e['ratio'])))
     p['facts']['physical72'].update(routing='CONSTRUCTION_FAILED' if failed else 'CONSTRUCTED_PENDING_REAL_PIN_PROJECTION_AND_SOURCE_GEN',
                                     routing_failures=failed, grid=[nx, ny], relay_station_count=len(stations),
-                                    router=dict(tool='dv_route72c.py', lattice_um=LAT, cap_bits_per_um=round(CAP_BPU, 2), iterations=a.iter,
+                                    router=dict(tool='dv_route72c.py', lattice_um=LAT, cap_bits_per_um=round(CAP_BPU, 2), iterations=a.iter, hop_max_um=a.hop_max, cap_margin=a.cap_margin,
                                                 overflow_edges=int((ho > 1).sum() + (vo > 1).sum()), max_edge_ratio=round(float(max(ho.max(), vo.max())), 3)),
                                     relay_cell_packing='PENDING exact master bodies/station collision legalization; no fictitious cell-site claim')
     p['facts']['physical72']['package_ports'] = dict(placement_model='package bumps over/along actual existing interior PMA pin faces; no outer-shoreline path assumed', source_ports='retain all existing PMA external connections; actual kit/view pin manifest owed')
