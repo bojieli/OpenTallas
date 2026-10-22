@@ -107,6 +107,10 @@ def main(argv=None):
     ap.add_argument('--prefer-list', action='append', default=None)
     ap.add_argument('--strip-param', action='append', default=[], help='MASTER:PARAM:VALUE')
     ap.add_argument('--extra-file', action='append', default=[], help='repo path (at the ref) added to the index')
+    ap.add_argument('--select', action='append', default=[], metavar='FILE[:SHA256]',
+                    help='pin EVERY module defined in FILE (a kit path: rtl/... at the ref or rtl_extra/<sha>/...) to that '
+                         'file, over any prefer list, e.g. the GEN-selected physical die source when the strict bind and '
+                         'the GEN case resolved a module differently (S81 G9 XS4); optional :SHA256 must match the file')
     a = ap.parse_args(argv)
     repo, ref, out = Path(a.repo), a.ref, Path(a.out).resolve()
     sha = git(repo, 'rev-parse', ref).strip()
@@ -223,6 +227,16 @@ def main(argv=None):
     for p, mod in parsed:
         defs[mod.name].append((p, mod))
 
+    selected, select_rec = set(), []
+    for sv in a.select:
+        f, _, want = sv.partition(':')
+        assert f in texts, ('--select file not in the index (rtl/... at the ref or a bind rtl_extra path)', f)
+        got = hashlib.sha256(texts[f]).hexdigest()
+        assert not want or got == want, ('--select sha256 mismatch', f, got, want)
+        mods = sorted(by_path_sel for by_path_sel, ds in defs.items() if any(q == f for q, _ in ds))
+        assert mods, ('--select file defines no module', f)
+        selected.add(f)
+        select_rec.append(dict(file=f, sha256=got, modules=mods))
     # ---- prefer sources, in priority order: --prefer-list files, the bind table's prefer / rtl_files, then the
     #      sources of every hardened tile (physical/ref_tile/*/spec.json `sources`) whose top is in the closure
     pref_order = []                  # [(path, label)]
@@ -300,6 +314,10 @@ def main(argv=None):
                 return None
             if len(ds) == 1:
                 return ds[0]
+            sel = [d for d in ds if d[0] in selected]
+            if sel:
+                choices[name] = dict(file=sel[0][0], by='explicit --select', others=[d[0] for d in ds if d[0] != sel[0][0]])
+                return sel[0]
             pd = [d for d in ds if d[0] in pref_of]
             if pd:
                 best = min(pd, key=lambda d: pref_of[d[0]][0])
@@ -462,7 +480,7 @@ def main(argv=None):
     rec = dict(schema='opentallas.s81_dv.rtl_kit.v1', ref=ref, sha=sha, port_bind=a.port_bind, top_v=a.top_v,
                executed_bind_index=bind_index,
                top=a.top, top_sha256=hashlib.sha256(top_text.encode()).hexdigest(), masters=len(masters),
-               modules=len(seen), files=rec_files, prefer_lists=prefer_lists, variant_choices=choices, ref_tile_specs_used=used_specs, moddup_identical=sorted(set(moddup_same)), snapshot_differs=snapshot_differs, prefer_conflicts=conflicts, bench_defines_not_applied=bench_defines,
+               modules=len(seen), files=rec_files, prefer_lists=prefer_lists, variant_choices=choices, selected=select_rec, ref_tile_specs_used=used_specs, moddup_identical=sorted(set(moddup_same)), snapshot_differs=snapshot_differs, prefer_conflicts=conflicts, bench_defines_not_applied=bench_defines,
                stripped_params=dict(stripped), defines=sorted(defines), problems=problems,
                verdict='PASS' if not problems else 'FAIL')
     (out / 'kit.json').write_text(json.dumps(rec, indent=1) + '\n')
