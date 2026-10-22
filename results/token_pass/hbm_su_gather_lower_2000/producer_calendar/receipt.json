@@ -4,7 +4,7 @@
   "unit": "oth-ubuntu-2650321-1792645105",
   "status": "PASS",
   "result": "PARTIAL",
-  "source_sha256": "a6ceb92efe4550646500f2e82259df560be08884b53e46802e13767292e1371a",
+  "source_sha256": "827f640f7613d25839ff6ac5799ac7780ff987ef2f16f5785af88d08e39588f0",
   "sources": {
     "diagnostic_graph": "449230e9fade24a3f886b3ccb3a9693c3b96b75fa953839be4d2d07b6c439a62",
     "diagnostic_source_ref": "57cd9d54d"
@@ -15,7 +15,7 @@
     "GSC_producer": "/root/hbm/coll",
     "whole_route_composition": "/root/hbm/chain"
   },
-  "final_partial_unit": "oth-ubuntu-3339038-1792645892",
+  "final_partial_unit": "oth-ubuntu-69133-1792647723",
   "programme_mapping": {
     "unit": "oth-ubuntu-3012297-1792645472",
     "status": "PASS",
@@ -26,9 +26,16 @@
   },
   "bound_callback_scope": "Actual producer descriptor must match compiler physical placement. Positive calendar/whole-token execution is not qualified without real producer receipts.",
   "exact_final_inputs": {
-    "binding.json": "bd66447bd28b05524e496a492062e449bb3a21242af707dba3d22856775bf7c0",
+    "binding.json": "ad5a2dbf29cd7c83edd964f2616aadf6b1b7181a17cf6c05058532369e0613ec",
     "ledger.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
     "requests.json": "6d4134ebbaa170c78650628e25e33f12a9ab1a8711f20c1720ed9c6a01857323",
-    "manifest.json": "788ecfec5a3f9a075926ef333b13fd5b01e011d176d472c6a90ed366385dbe15"
+    "manifest.json": "57155a2ced7a9ce6626e0c4c0db9081952cd31e7b63ea2dc0bc6e005f24eb56a"
+  },
+  "caller_accepts_complete_calendar_manifest": {
+    "unit": "oth-ubuntu-3571402-1792646317",
+    "status": "PASS",
+    "records": 6,
+    "candidates": 6,
+    "events": 0
   }
 }

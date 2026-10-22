@@ -6,11 +6,26 @@ engine, real bank-port ownership, source clocks and producer leases are bound.
 """
 from __future__ import annotations
 import math
+from copy import deepcopy
+import json
+from pathlib import Path
 
 ENGINE = 'ot_hbm_su_indexed_scalar'
+BANKED_ENGINE = 'ot_hbm_su_indexed_scalar_banked'
 SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar.sv'
+BANKED_SOURCE = 'rtl/hbm_accel/generic/adapters/static_su/gather/ot_hbm_su_indexed_scalar_banked.sv'
 SOURCE_REF = '865ad748e'
 APERTURE = 1 << 18
+
+
+def load_binding(path):
+    record=json.loads(Path(path).read_text())
+    if record.get('schema')!='opentallas.hbm.gather_calendar.v1':return record
+    binding=deepcopy(record['source_binding'])
+    if record.get('status')!='SOURCE_PROGRAMME':
+        binding['status']='PARTIAL'
+        binding['missing_producer_calendar_authorities']=record.get('missing',[])
+    return binding
 
 
 def integer(value, name, lo=0, hi=APERTURE-1):
@@ -64,7 +79,7 @@ def lower(raw, *, tag, source_window=None, binding=None, record_start=0, placeme
     descriptor['score_limit']=hi
     base['native_gather']['logical_descriptor']=dict(descriptor)
     base['native_gather']['address_space']='logical HGI; actual producer placement not yet bound'
-    if not binding:
+    if not binding or binding.get('status')!='PASS':
         base['reasons']=['existing indexed-scalar engine needs selected VM RG0/WG0 binding, clock, return ages and producer leases']
         return base
     if placement is None:
@@ -89,8 +104,13 @@ def lower(raw, *, tag, source_window=None, binding=None, record_start=0, placeme
         if mapped!=list(range(mapped[0],mapped[0]+len(mapped))):
             base['reasons']=['runtime score window needs a contiguous producer allocation; existing VM placement is scattered']
             return base
-    if binding.get('engine')!=ENGINE or binding.get('status')!='PASS' or binding.get('clock')!='stream':
+    if binding.get('engine') not in (ENGINE,BANKED_ENGINE) or binding.get('status')!='PASS' or binding.get('clock')!='stream':
         raise ValueError('actual selected stream-clock indexed engine binding PASS required')
+    if segmented and (binding['engine']!=BANKED_ENGINE or binding['parameters'].get('NATIVE_BANKED')!=1):
+        raise ValueError('SEGMENTED96 requires actual banked implementation and NATIVE_BANKED=1')
+    base['native_gather'].update(engine=binding['engine'],
+        source=BANKED_SOURCE if binding['engine']==BANKED_ENGINE else SOURCE,
+        source_ref=binding.get('source_ref'),source_sha256=binding.get('source_sha256'))
     if binding.get('read_client')!=0 or binding.get('write_client')!=0:
         raise ValueError('selected engine requires actual RG0/WG0 ownership')
     if not binding.get('source_sha256') or not binding.get('die_sha256'):
@@ -188,14 +208,44 @@ def programme_replay(plans, binding):
             raise ValueError('segmented descriptor requires the actual enabled source parameter')
         rows.append(encode_programme_row(rec['descriptor'],start=start,release=release,row_identity=ix))
         previous_release=release
-    events,launch,free=cp_frames(integer(binding['target_id'],'actual target ID',0,255),rows,
-                               integer(binding['configuration_start'],'actual CP configuration start',0,2**31-1))
+    from hbm_layer_vehicle.sm_images import cal_word,prog_row
+    expected_launch=epoch-integer(binding['launch_to_calendar_zero'],'actual target launch phase',1,65535)
+    if expected_launch<0:raise ValueError('actual calendar epoch precedes host launch')
+    native=binding.get('bank_calendars',{})
+    if set(native)!=set(('SW','SE','NW','NE')):raise ValueError('four actual native bank calendars required')
+    end=epoch+previous_release+selector_tail
+    events=[];calendar_plans=[]
+    free=integer(binding['configuration_start'],'actual CP configuration start',0,2**31-1)
+    first_owner=epoch;last_owner=end;targets={binding['target_id']}
+    for quarter in ('SW','SE','NW','NE'):
+        cal=native[quarter];target=integer(cal['target_id'],'actual native calendar target',0,255)
+        if target in targets or not cal.get('source_sha256'):raise ValueError('unique source-bound native calendar target required')
+        targets.add(target)
+        ages=cal['launch_to_bank_owner_edges']
+        if len(ages)!=8:raise ValueError('actual owner publication age required for all eight native banks')
+        owner_edges=[expected_launch+integer(age,'actual launch to native owner pin',1,65535) for age in ages]
+        if max(owner_edges)>min(p['native_gather']['start'] for p in plans):
+            raise ValueError('gather starts before native bank calendar ownership is published')
+        first=min(owner_edges)
+        if binding['port_free']>first:raise ValueError('native calendar preempts a live previous bank owner')
+        span=max(1,end-first);nrows=(span+65534)//65535
+        if nrows>1024:raise ValueError('native owner calendar exceeds source PCW10 capacity')
+        loops=(span+nrows-1)//nrows
+        words=[prog_row(i,cal_word(rslot_v=255,wslot_v=255),187) for i in range(nrows)]
+        cp,_,free=cp_frames(target,words,free,loops=loops,launch=False);events+=cp
+        final=max(owner_edges)+nrows*loops
+        first_owner=min(first_owner,first);last_owner=max(last_owner,final)
+        calendar_plans.append(dict(quarter=quarter,target=target,owner=0,rows=nrows,loops=loops,
+            first_owner_edges=owner_edges,last_owner_exclusive=final,
+            programme_rows=[f'{word:064x}' for word in words],source_profile=cal))
+    cp,launch,free=cp_frames(integer(binding['target_id'],'actual target ID',0,255),rows,free)
+    events+=cp
     if launch+integer(binding['launch_to_calendar_zero'],'actual target launch phase',1,65535)!=epoch:
         raise ValueError('host CP launch and actual selected programme epoch differ')
     return dict(schema='opentallas.hbm_slice_replay.v1',scope='component_probe',
         qualifies_native_layer=False,qualifies_native_chain=False,events=events,
         programme_rows=[f'{v:064x}'for v in rows],configuration_next_free=free,
-        calendar_epoch=epoch,source_binding=binding,
-        port_reservations=[dict(client=client,banks=list(range(32)),first=epoch,
-                                last_exclusive=epoch+previous_release+selector_tail) for client in ('RG0','WG0')],
+        calendar_epoch=epoch,source_binding=binding,native_owner_calendars=calendar_plans,
+        port_reservations=[dict(client=client,banks=list(range(32)),first=first_owner,
+                                last_exclusive=last_owner) for client in ('RG0','WG0')],
         assumptions=['actual runtime producers retain I and complete score window; no resolved index encoded'])

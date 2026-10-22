@@ -812,10 +812,12 @@ def su_lower2(raw, a, r, fx, vm_data, place, timing, bnd, fr, sfu_layout=None, n
                 prefix=place.q<<13
                 window['segment_bases']=[8*(prefix|gsc['src'])]+[8*(prefix|(gsc['dst']+rank*gsc['stride'])) for rank in (1,2,3)]
                 window['placement_source']='actual active COLL GSC component allocation'
-        binding = json.loads(a.gather_binding.read_text()) if getattr(a,'gather_binding',None) else None
-        if binding:
+        binding = G.load_binding(a.gather_binding) if getattr(a,'gather_binding',None) else None
+        if binding and binding.get('status')=='PASS':
             if binding.get('instance') not in bnd['instances']:
                 raise ValueError('indexed gather engine is not an actual selected slice instance')
+            if any(cal.get('instance') not in bnd['instances'] for cal in binding.get('bank_calendars',{}).values()):
+                raise ValueError('native gather bank calendar is not an actual selected slice instance')
         result = G.lower(raw,tag=tag,source_window=window,binding=binding,record_start=r['start'],placement=place)
         result['su_lower2_attempts']=[dict(lowering='native_indexed_scalar',status=result['status'],reasons=result['reasons'])]
         return result
@@ -1192,7 +1194,7 @@ def main():
     gather_records=[m for m in manifest if m.get('native_gather')]
     if getattr(a,'gather_binding',None) and gather_records:
         from hbm_layer_vehicle import su_indexed_gather_2000 as G
-        binding=json.loads(a.gather_binding.read_text())
+        binding=G.load_binding(a.gather_binding)
         if len(gather_records)==6 and all(m['status']=='native_gather_emitted' for m in gather_records):
             replay=G.programme_replay([dict(status=m['status'],native_gather=m['native_gather']) for m in gather_records],binding)
             for event in replay['events']:
