@@ -19,7 +19,7 @@ module ot_sram_showahead_1r1w #(
  wire [AW-1:0] mwa=(WREG!=0) ? waddr : wa;
  wire [W-1:0] mwd=(WREG!=0) ? wdata : wd;
  wire [NB*128-1:0] padded={{(NB*128-W){1'b0}},mwd}, raw;
- genvar b,s;
+ genvar b,s,h;
  generate for(b=0;b<NB;b=b+1) begin:g_bank
 `ifdef OT_SHOWAHEAD_FLOP
   // flop variant: storage lives in g_fs below (raw driven there)
@@ -42,17 +42,24 @@ module ot_sram_showahead_1r1w #(
  // so q is identical.  Write enables decode from per-slice kept copies of wv / waddr (same D, same edge, same reset).
  for(s=0;s<NS;s=s+1) begin:g_fs
   localparam integer LO=s*16, SW=(W-LO<16)?W-LO:16;
-  // per-slice copies live in keep_hierarchy instances (plain keep regs were merged by synthesis: 1432 loads)
-  wire [AW-1:0] rap_s, wa_s; wire wv_s;
-  ot_sa_copy #(.W(2*AW),.ID(s)) u_ac (.clk(clk),.d({ra,wa}),.q({rap_s,wa_s}));
+  // per-slice copies live in keep_hierarchy instances (plain keep regs were merged by synthesis: 1432 loads).
+  // Each slice is stored as two 8-bit halves with their own address copy (one copy per 16 bits: wa MSB 64 loads).
+  wire wv_s;
   if (s % 2 == 0) begin : g_wv
    ot_sa_rcopy #(.ID(s)) u_vc (.clk(clk),.rst_n(rst_n[s]),.d(we),.q(wv_s));   // one landing-write copy per 2 slices
   end else begin : g_wvs
    assign wv_s = g_fs[s-1].wv_s;
   end
-  reg [SW-1:0] mfs [0:(1<<AW)-1];
-  always @(posedge clk) if(wv_s) mfs[wa_s]<=wdata[LO+:SW];
-  assign raw[LO+:SW]=mfs[rap_s];
+  for(h=0;h<2;h=h+1) begin:g_h
+   localparam integer HLO=LO+h*8, HW=(SW-h*8<=0)?1:((SW-h*8<8)?SW-h*8:8);
+   if (SW>h*8) begin : g_on
+    wire [AW-1:0] rap_h, wa_h;
+    ot_sa_copy #(.W(2*AW),.ID(2*s+h)) u_ac (.clk(clk),.d({ra,wa}),.q({rap_h,wa_h}));
+    reg [HW-1:0] mfh [0:(1<<AW)-1];
+    always @(posedge clk) if(wv_s) mfh[wa_h]<=wdata[HLO+:HW];
+    assign raw[HLO+:HW]=mfh[rap_h];
+   end
+  end
  end
 `endif
  for(s=0;s<NS;s=s+1) begin:g_slice
