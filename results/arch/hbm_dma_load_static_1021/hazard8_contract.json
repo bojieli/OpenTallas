@@ -1,5 +1,5 @@
 {
-  "status": "UNQUALIFIED_CANDIDATE",
+  "status": "COMPONENT_PASS_NATIVE_AND_PRODUCER_PENDING",
   "baseline_RTL_commit": "fb9122ac6",
   "change": "Fill hazard is an active raw or LOAD request for the same bank, independently of complete read validation.",
   "data_edges_expected": {
@@ -17,5 +17,7 @@
     "Exact fb912 valid-schedule differential replay: opposite-bank fills plus six-format LOADs or full raw drains across eight images",
     "Malformed same-bank LOAD and raw-start conflicts: sticky faults, zero reads and zero valid outputs",
     "Exact real producer replay and mapped native32 admission before physical successor"
-  ]
+  ],
+  "source_commit": "1f9eb0eea",
+  "component_receipt": "results/rtl/hbm_dma_load_static_1021/v11/receipt.json"
 }

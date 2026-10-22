@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hbm_dma_load_static.v1",
-  "status": "HAZARD8_UNQUALIFIED_SOURCE_REPLAY_PENDING",
+  "status": "HAZARD8_COMPONENT_PASS_NATIVE_AND_PRODUCER_PENDING",
   "required_formats": {
     "0": "FP32",
     "1": "BF16",
@@ -36,7 +36,7 @@
   },
   "latency": {
     "load_pin_to_output_edges_expected": 5,
-    "measurement": "EP9 unit89173-1792645335, source fb9122ac6: both banks 1480 commands each, six formats, II 1, five local edges; full release/reuse/mutant/raw/checkpoint/overlap checks pass.",
+    "measurement": "EP9 unit 3079428-1792649864, exact source 1f9eb0eea: both banks 1480 commands each, six formats, II 1, five local edges. Full release/reuse/mutant/raw/checkpoint/overlap and baseline differential tests PASS.",
     "HBM_window_latency": "real vmks CDC and drain dependent; not104",
     "load_pin_to_output_edges_measured": 5,
     "route_extra_edges": 5,
@@ -59,7 +59,8 @@
         "wrong destination bank",
         "corrupt HBM source byte"
       ],
-      "scope": "Eight actual KRL1 vmks and real CDC; controller/PHY boundary modeled; group and WB idle; not physical, full die transport or full-token qualification."
+      "scope": "Eight actual KRL1 vmks and real CDC; controller/PHY boundary modeled; group and WB idle; not physical, full die transport or full-token qualification.",
+      "status": "PRIOR_SOURCE_ONLY_NEW_REPLAY_PENDING"
     }
   },
   "replicas": {
@@ -86,5 +87,5 @@
     "clock": "Native6 MAIN TT/FF pin spreads96.9/92.0 ps; fallback85.2/80.2 ps, both fail80. Native7 keeps body/SRAM CTS and gives actual1744 boundary flops a five-level geometric BUFx24 tree, equal repeater count, repeat beyond80um. No data age change; actual insertions/spreads pending.",
     "reset": "new pipeline valid reset only; datapath unreset"
   },
-  "source_commit": "WORKING_TREE_HAZARD8"
+  "source_commit": "1f9eb0eea"
 }
