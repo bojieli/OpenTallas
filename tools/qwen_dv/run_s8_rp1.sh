@@ -2,7 +2,7 @@
 set -euo pipefail
 out=${1:-bench_s8_rp1}
 mkdir -p "$out"
-srcs=(rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv rtl/test/qwen_dv/s5/sram_models_nofatal.sv rtl/test/qwen_dv/s8/tb_rp1_crh.sv)
+srcs=(rtl/qwen_dv/s5/s8/qfd_dv_s8_rp1.sv rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv rtl/qwen_dv/s5/s8/qfd_dv_s8_kept.sv rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv rtl/test/qwen_dv/s5/sram_models_nofatal.sv rtl/test/qwen_dv/s8/tb_rp1_crh.sv)
 iverilog -g2012 -s tb_rp1_crh -o "$out/primary" "${srcs[@]}" > "$out/build.log" 2>&1
 vvp "$out/primary" > "$out/primary.log" 2>&1
 # Mutants preserve the actual source in the immutable snapshot.

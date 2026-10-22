@@ -24,3 +24,5 @@ python3 tools/qwen_dv/ctlm6_bound_macro.py "$out/tap.json" --top qfd_dv_s8_tap_s
 # rtl/qwen_dv/s5/qfd_dv_s5_ctl_repair4_helpers.sv, which the same s8 parent also reads -> Yosys -defer refused the
 # re-definition (w12c/w12cb census). Rename only; cells, IDs and keep_hierarchy are unchanged.
 sed -i 's/\bqfd_bmath_/qfd_s8tap_bmath_/g' "$out/qfd_dv_s8_tap_bounded.sv" "$out/qfd_dv_s8_tap_bounded_helpers.sv"
+# QE3-SLICE2B 10-21: kept same-edge copies of the flops replicated into >3 hw bits (census u_114..u_118 48/96 loads).
+python3 tools/qwen_dv/s8_tap_hw_copies.py "$out/qfd_dv_s8_tap_bounded.sv" 3

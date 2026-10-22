@@ -2,7 +2,7 @@
 set -euo pipefail
 out=$1
 mkdir -p "$out"
-srcs=(rtl/test/qwen_dv/s8/tb_fdn_kept_selectors.sv rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_n32.sv rtl/common/landed_parent/ot_pl_land_split.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv)
+srcs=(rtl/test/qwen_dv/s8/tb_fdn_kept_selectors.sv rtl/qwen_dv/s5/s8/qfd_dv_s8_fdn_arf1.sv rtl/qwen_dv/s5/s8/qfd_dv_s8_kept.sv rtl/qwen_dv/s5/s6/qfd_dv_s6_leaves.sv rtl/common/landed_parent/ot_pl_land.sv rtl/common/landed_parent/ot_pl_land_n32.sv rtl/common/landed_parent/ot_pl_land_split.sv rtl/common/landed_parent/ot_pl_land_field_copies.sv)
 for d in 4 8;do
  for phase in -80 0 80;do
   tag=d${d}p${phase}

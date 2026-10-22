@@ -12,7 +12,7 @@ ROOT=g7.ROOT
 OUT_DIR='rtl/qwen_dv/s5/s8/lp'
 REC_DIR='results/arch/codex_slice2_native_1021/s8'
 CHILD_SOURCES=[x for x in g7.CHILD_SOURCES if x not in ['rtl/qwen_dv/s5/p3/qfd_dv_s5_suvm_su8p3.sv','rtl/qwen_dv/s5/p3/qfd_dv_s5_vm8q.sv']]+[
-    'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1','qfd_dv_s8_station_tail1','qfd_dv_s8_tap_bounded','qfd_dv_s8_tap_bounded_helpers']]+['rtl/common/landed_parent/ot_pl_land_field_copies.sv']
+    'rtl/qwen_dv/s5/s8/'+x+'.sv' for x in ['qfd_dv_s8_suvm_rp1','qfd_dv_s8_vm8q_rp1','qfd_dv_s8_crh_rp1','qfd_dv_s8_rp1','qfd_dv_s8_fdn_arf1','qfd_dv_s8_station_tail1','qfd_dv_s8_tap_bounded','qfd_dv_s8_tap_bounded_helpers','qfd_dv_s8_kept']]+['rtl/common/landed_parent/ot_pl_land_field_copies.sv']
 
 def make_flat():
     import gen_slice8_rp_source
@@ -47,6 +47,21 @@ def make_flat():
     sub=text[a:b]
     for port in ['tw_we','tw_kind','tw_addr','tw_data']:sub=sub.replace('.'+port+'('+port+')','.'+port+'(rp_'+port+')')
     text=text[:a]+sub+text[b:]
+    # QE3-SLICE2B 10-21 (w13cb census: rs_s/rs_n[1027,1026,513,512] 57/64 loads, l9_i[513,512] 64 loads = the same
+    # shared control bits copied into 8 per-station nets -> 8 landing rings x D slots on one input pin). The shared
+    # bits now leave as ONE net each (rss_c/rsn_c/nb_c): share_rings gives one write ring per (net, source region),
+    # read by every station region. Same bits, same regions, same landing ages; per-station nets keep their data.
+    old_decl='wire [8*132-1:0] rss_r, rsn_r; wire [8*66-1:0] nb_r; wire [131:0] rss_r0, rsn_r0, rss_r1, rsn_r1, rss_r2, rsn_r2, rss_r3, rsn_r3, rss_r4, rsn_r4, rss_r5, rsn_r5, rss_r6, rsn_r6, rss_r7, rsn_r7; wire [65:0] nb_r0, nb_r1, nb_r2, nb_r3, nb_r4, nb_r5, nb_r6, nb_r7;'
+    assert text.count(old_decl)==1
+    text=text.replace(old_decl,old_decl.replace('8*132','8*128').replace('8*66','8*64').replace('[131:0]','[127:0]').replace('[65:0]','[63:0]')
+                      +' wire [3:0] rss_c, rsn_c; wire [1:0] nb_c;')
+    for o,n in [('qfd_dv_s5_fn u_fn (','qfd_dv_s8_fn u_fn (.rs_n_c(rsn_c), '),('qfd_dv_s5_frs u_frs (','qfd_dv_s8_frs u_frs (.rs_s_c(rss_c), '),
+                ('.l9_i(l9_i), .l9_r0(nb_r0),','.l9_i(l9_i), .l9_c(nb_c), .l9_r0(nb_r0),')]:
+        assert text.count(o)==1,o;text=text.replace(o,n)
+    for k in range(8):
+        for o,n in [(f'.rs_s_c_p(rss_r{k}[131:128])','.rs_s_c_p(rss_c)'),(f'.rs_n_c_p(rsn_r{k}[131:128])','.rs_n_c_p(rsn_c)'),
+                    (f'.nb_c_p(nb_r{k}[65:64])','.nb_c_p(nb_c)')]:
+            assert text.count(o)==1,o;text=text.replace(o,n)
     path=ROOT/'rtl/qwen_dv/s5/s8/qfd_dv_s8_flat.sv' ;path.parent.mkdir(parents=True,exist_ok=True)
     path.write_text('// Opt-in s8: actual CLOSED hard-leaf1/1 simulation; physical baked1/1.\n'+text)
 
@@ -106,6 +121,28 @@ def kept_tap_copies(path):
     text=text.replace(key,code+key,1).replace(old,'.xt_vcopies(tap_xtv_copies)')
     path.write_text(text)
 
+def kept_rp_copies(path,D):
+    """QE3-SLICE2B 10-21 (census rp_w 1052/527 loads): 89 kept copies each of chd_q[519]/[518] for u_rp, captured on the
+    SAME landing as u_rp.chd_q (ring 12 bank/vld/epo, same D/K as the r_ctl reader, rsi = a new kept copy of the same
+    lpr_r_ctl_p stage as the reader's rsi copies) -> bit-identical to chd_q__l_r_ctl[519]/[518] every cycle."""
+    import re
+    text=path.read_text()
+    m=re.search(r'ot_pl_land_split_r #\(\.W\(\(\(1037\) - \(0\) \+ 1\)\), \.D\((\d+)\), \.K\(([^)]*\)?)\), \.CHUNK_BITS\(24\)\) u_lpl_(\d+)_r \(\.ck\(ck_r_ctl\), \.rsi\(\{[^}]*\}\), \.bank\(lpl_(\d+)_bank\)',text)
+    assert m,'chd_q r_ctl landing not found'
+    Dm,K,n,ring=m[1],m[2],m[3],m[4];assert int(Dm)==D
+    assert f'assign chd_q__l_r_ctl = lpl_{n}_o;' in text
+    assert 'wire lpr_r_ctl_p;' in text
+    code=f'    // u_rp write-select copies on landing {n} (ring {ring}): same bank/vld/epo, D/K, reader reset stage.\n'
+    code+='    wire rp_w_rst; ot_pl_land_rst_copy #(.ID(9003)) u_rp_w_rst(.ck(ck_r_ctl),.d(lpr_r_ctl_p),.q(rp_w_rst));\n'
+    for bit in (519,518):
+        code+=f'    wire [88:0] rp_c{bit};\n'
+        code+=(f'    ot_pl_land_field_copies #(.COPIES(89),.D({D}),.K({K})) u_rp_c{bit} (.ck(ck_r_ctl),.rsi(rp_w_rst),.bank({{'
+               +', '.join(f'lpl_{ring}_bank[{s}*1038+{bit}]' for s in reversed(range(D)))+f'}}),.vld(lpl_{ring}_vld[{bit//24}*{D}+:{D}]),.epo(lpl_{ring}_epo),.o(rp_c{bit}));\n')
+    key='    qfd_dv_s8_rp1 u_rp ('
+    assert text.count(key)==1
+    text=text.replace(key,code+'    qfd_dv_s8_rp1 #(.USE_W_COPIES(1)) u_rp (.w519_cp(rp_c519), .w518_cp(rp_c518), ',1)
+    path.write_text(text)
+
 def main():
     make_flat()
     for name,D,E in [('qfd_dv_s8b',8,4),('qfd_dv_s8',4,2)]:
@@ -116,6 +153,7 @@ def main():
             d=ROOT/OUT_DIR
             kept_fdn_selectors(d/f'{name}_lp.sv',D,E)
             kept_tap_copies(d/f'{name}_lp.sv')
+            kept_rp_copies(d/f'{name}_lp.sv',D)
             # Generated shell intentionally receives exact-source simulation flag.
             f=d/f'{name}_lp_bench.sh';f.write_text(f.read_text().replace('-DOT_S5_HARD','-DOT_S5_HARD -DOT_S8_SIM'))
             if name!='qfd_dv_s8':

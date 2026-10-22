@@ -32,18 +32,20 @@ module qfd_dv_s8_fdn_arf1 #(parameter integer USE_SEL_COPIES=0) (
     input  wire [49:0]    cc_c,
     output wire [49:0]    cc_o,
     input  wire [513:0]   l9_i,
-    output wire [65:0]    l9_r0, l9_r1, l9_r2, l9_r3, l9_r4, l9_r5, l9_r6, l9_r7,
+    output wire [63:0]    l9_r0, l9_r1, l9_r2, l9_r3, l9_r4, l9_r5, l9_r6, l9_r7,
+    output wire [1:0]     l9_c,
     output wire [8:0]     treq_c
 );
     assign st_dn_o = st_dn_c; assign sc_dn_o = sc_dn_c; assign st = st_c; assign cc_o = cc_c;
-    assign l9_r0 = {l9_i[513:512], l9_i[63:0]};
-    assign l9_r1 = {l9_i[513:512], l9_i[127:64]};
-    assign l9_r2 = {l9_i[513:512], l9_i[191:128]};
-    assign l9_r3 = {l9_i[513:512], l9_i[255:192]};
-    assign l9_r4 = {l9_i[513:512], l9_i[319:256]};
-    assign l9_r5 = {l9_i[513:512], l9_i[383:320]};
-    assign l9_r6 = {l9_i[513:512], l9_i[447:384]};
-    assign l9_r7 = {l9_i[513:512], l9_i[511:448]};
+    assign l9_c = l9_i[513:512];
+    assign l9_r0 = {l9_i[63:0]};
+    assign l9_r1 = {l9_i[127:64]};
+    assign l9_r2 = {l9_i[191:128]};
+    assign l9_r3 = {l9_i[255:192]};
+    assign l9_r4 = {l9_i[319:256]};
+    assign l9_r5 = {l9_i[383:320]};
+    assign l9_r6 = {l9_i[447:384]};
+    assign l9_r7 = {l9_i[511:448]};
     assign treq_c = treq_i;
     wire [3:0] rst;
     qfd_dv_s6_rst2x4 u_rl (.ck(ck), .rst_n(rst_n), .rst(rst));
@@ -76,8 +78,18 @@ module qfd_dv_s8_fdn_arf1 #(parameter integer USE_SEL_COPIES=0) (
       else if(setid) begin arf_sid<=cmd_q[7:4];arf_sid_ok<=1;end
     wire go=cmd_q[0] && arf_sid_ok && (cmd_q[115:112]==arf_sid || cmd_q[115:112]==4'hf) && cmd_q[3:1]!=3'd7;
     reg arf_arm;reg[31:0]arf_tag;reg[15:0]arf_wm1,arf_cnt;
-    wire c_xcc=go && cmd_q[3:1]==0 && cmd_q[5:4]==0;
+    // QE3-SLICE2B 10-21 (census c_xcc 80/34, !arf_fr 68 loads): kept same-edge decode / AND copies, <=12 b each.
+    // c_xcc_k: [0] arm/bad, [1..4] tag bytes, [5..6] wm1 bytes, [7..8] cnt bytes. arf_fr_k: [0..2] stamp mux, [3..4] cnt bytes.
+    wire [8:0] c_xcc_k;
+    generate for(genvar k=0;k<9;k=k+1) begin:g_xdec
+      (* keep_hierarchy = "yes" *) qfd_s8k_arf_dec u_d(.c0(cmd_q[0]),.op(cmd_q[3:1]),.sub(cmd_q[5:4]),.dst(cmd_q[115:112]),.sid(arf_sid),.sid_ok(arf_sid_ok),.c_xcc(c_xcc_k[k]));
+    end endgenerate
+    wire c_xcc=c_xcc_k[0];
     wire arf_fr=arf_arm && ch_raw[1094];wire arf_last=arf_cnt==arf_wm1;
+    wire [4:0] arf_fr_k;
+    generate for(genvar k=0;k<5;k=k+1) begin:g_frk
+      (* keep_hierarchy = "yes" *) qfd_s8k_and2 u_a(.a(arf_arm),.b(ch_raw[1094]),.y(arf_fr_k[k]));
+    end endgenerate
     wire arf_bad=(c_xcc && arf_arm && !(arf_fr && arf_last)) || (ch_raw[1094] && !arf_arm && arf_sid==0);
     // Payload/tag/counter are meaningful only while arf_arm. Control reset uses
     // the existing independent kept copy1, preserving original copy0's20loads.
@@ -85,10 +97,22 @@ module qfd_dv_s8_fdn_arf1 #(parameter integer USE_SEL_COPIES=0) (
       if(!rst[1])arf_arm<=0;
       else if(c_xcc)arf_arm<=1;
       else if(arf_fr && arf_last)arf_arm<=0;
-    always @(posedge ck)
-      if(c_xcc)begin arf_tag<=cmd_q[54:23];arf_wm1<=cmd_q[22:7]-16'd1;arf_cnt<=0;end
-      else if(arf_fr)arf_cnt<=arf_cnt+16'd1;
-    wire[546:0]ar_out=arf_fr ? {1'b1,arf_tag,ch_raw[1061],arf_last,ch_raw[1059:548]} : ch_raw[1094:548];
+    wire [15:0] arf_wm1_d=cmd_q[22:7]-16'd1;
+    wire [15:0] arf_cnt_inc=arf_cnt+16'd1;
+    always @(posedge ck) begin
+      for(integer j=0;j<4;j=j+1) if(c_xcc_k[1+j]) arf_tag[j*8+:8]<=cmd_q[23+j*8+:8];
+      for(integer j=0;j<2;j=j+1) if(c_xcc_k[5+j]) arf_wm1[j*8+:8]<=arf_wm1_d[j*8+:8];
+      for(integer j=0;j<2;j=j+1)
+        if(c_xcc_k[7+j]) arf_cnt[j*8+:8]<=8'd0;
+        else if(arf_fr_k[3+j]) arf_cnt[j*8+:8]<=arf_cnt_inc[j*8+:8];
+    end
+    wire [31:0] arf_tag_sel;
+    generate for(genvar t=0;t<32;t=t+1) begin:g_tag_sel
+      assign arf_tag_sel[t]=arf_fr_k[t/12] ? arf_tag[t] : ch_raw[1062+t];
+    end endgenerate
+    wire arf_last_sel=arf_fr_k[2] ? arf_last : ch_raw[1060];
+    // == arf_fr ? {1'b1,arf_tag,ch_raw[1061],arf_last,ch_raw[1059:548]} : ch_raw[1094:548]
+    wire[546:0]ar_out={arf_fr ? 1'b1 : ch_raw[1094],arf_tag_sel,ch_raw[1061],arf_last_sel,ch_raw[1059:548]};
     wire[1094:0]ch_m={ar_out,ch_raw[547:0]};
     always @(posedge ck or negedge rst[0])
         if (!rst[0]) begin ch_dn_o[1094] <= 1'b0; ch_dn_o[547] <= 1'b0; ag_dn_o <= 10'd0; end
