@@ -1,0 +1,328 @@
+{
+  "source_commit": "258f333ce",
+  "source": "rtl/hdc/v41x/ot_hbm_idx_col8_sram_landed.sv",
+  "sha256": "2ce6212fb8984428ada4008b1e45b0b04d07ad98bc4fd077350341f319dfbbb6",
+  "scope": "ONE actual key column, not a leaf or quarter",
+  "region_types": [
+    {
+      "type": "CTL",
+      "clock": "ctl",
+      "source": "ot_hidx_col8_sram_landed plus column interface of ot_hidx_chunk_glue",
+      "ports_in": {
+        "qv_b": 1,
+        "q_b": 568,
+        "key": 544,
+        "hid": 64,
+        "rst_n": 1
+      },
+      "ports_out": {
+        "cs_out": 32,
+        "cf_out": 1,
+        "prdy": 4
+      },
+      "physical_obligations": "S0 source FF band, return/status ring readers, reset control, local root next to register mass. Four column CTL ports share one leaf chunk clock."
+    },
+    {
+      "type": "PAIR_R0",
+      "clock": "cp[0]",
+      "source": "ot_hidx_score_pair8_r0",
+      "view": {
+        "RID": 0,
+        "record": "97c58e235",
+        "status": "CLOSED",
+        "LEF": "physical/ref_tile/hidx_score_pair8_r0/views/ot_hidx_score_pair8_r0/ot_hidx_score_pair8_r0.lef",
+        "sha256": "90ad40af560824b2df4115aa9d6e223820844d7048e45d0d5398d9fa3670f494",
+        "width_um": 216.0,
+        "height_um": 172.8,
+        "count_per_leaf": 4,
+        "count_per_quarter": 32,
+        "count_across_four_quarters": 128
+      },
+      "ports_in": {
+        "qv_b": 1,
+        "q_b": 568,
+        "key": 544,
+        "hid": 16
+      },
+      "ports_out": {
+        "cs_out": 32,
+        "cf_out": 1,
+        "prdy": 1
+      },
+      "physical_obligations": "Keep exact pair LEF 216 x172.8. Incoming wide-ring read FFs and outgoing wide-ring write FFs belong to this local clock region. Raw SRAM banks live in the seam channel. Measure composed pair and seam clock delivery."
+    },
+    {
+      "type": "PAIR_R1",
+      "clock": "cp[1]",
+      "source": "ot_hidx_score_pair8_r1",
+      "view": {
+        "RID": 1,
+        "record": "4c5e0ced5",
+        "status": "CLOSED",
+        "LEF": "physical/ref_tile/hidx_score_pair8_r1/views/ot_hidx_score_pair8_r1/ot_hidx_score_pair8_r1.lef",
+        "sha256": "bc550c99c6cffde14d2bc3e7777361cdf43ff969c833b644a259212107846a9e",
+        "width_um": 216.0,
+        "height_um": 172.8,
+        "count_per_leaf": 4,
+        "count_per_quarter": 32,
+        "count_across_four_quarters": 128
+      },
+      "ports_in": {
+        "qv_b": 1,
+        "q_b": 568,
+        "key": 544,
+        "hid": 16,
+        "cs_in": 32,
+        "cf_in": 1
+      },
+      "ports_out": {
+        "cs_out": 32,
+        "cf_out": 1,
+        "prdy": 1
+      },
+      "physical_obligations": "Keep exact pair LEF 216 x172.8. Incoming wide-ring read FFs and outgoing wide-ring write FFs belong to this local clock region. Raw SRAM banks live in the seam channel. Measure composed pair and seam clock delivery."
+    },
+    {
+      "type": "PAIR_R2",
+      "clock": "cp[2]",
+      "source": "ot_hidx_score_pair8_r2",
+      "view": {
+        "RID": 2,
+        "record": "b2651c581",
+        "status": "CLOSED",
+        "LEF": "physical/ref_tile/hidx_score_pair8_r2/views/ot_hidx_score_pair8_r2/ot_hidx_score_pair8_r2.lef",
+        "sha256": "a8865e0bf389ab2e3ae30067af42abd6b7ec2fcedfd66563c5791c67fed92eb5",
+        "width_um": 216.0,
+        "height_um": 172.8,
+        "count_per_leaf": 4,
+        "count_per_quarter": 32,
+        "count_across_four_quarters": 128
+      },
+      "ports_in": {
+        "qv_b": 1,
+        "q_b": 568,
+        "key": 544,
+        "hid": 16,
+        "cs_in": 32,
+        "cf_in": 1
+      },
+      "ports_out": {
+        "cs_out": 32,
+        "cf_out": 1,
+        "prdy": 1
+      },
+      "physical_obligations": "Keep exact pair LEF 216 x172.8. Incoming wide-ring read FFs and outgoing wide-ring write FFs belong to this local clock region. Raw SRAM banks live in the seam channel. Measure composed pair and seam clock delivery."
+    },
+    {
+      "type": "PAIR_R3",
+      "clock": "cp[3]",
+      "source": "ot_hidx_score_pair8_r3",
+      "view": {
+        "RID": 3,
+        "record": null,
+        "status": "STANDIN_NOT_A_VIEW",
+        "LEF": "physical/ref_tile/hidx_col8_standin_r3/views/ot_hidx_score_pair8_r3/ot_hidx_score_pair8_r3.lef",
+        "sha256": "32d77e6b3fc5bdc8222ed2acb30b2884ed46b8b1b3560ffc49985911cfb030f8",
+        "width_um": 216.0,
+        "height_um": 172.8,
+        "count_per_leaf": 4,
+        "count_per_quarter": 32,
+        "count_across_four_quarters": 128
+      },
+      "ports_in": {
+        "qv_b": 1,
+        "q_b": 568,
+        "key": 544,
+        "hid": 16,
+        "cs_in": 32,
+        "cf_in": 1
+      },
+      "ports_out": {
+        "cs_out": 32,
+        "cf_out": 1,
+        "prdy": 1
+      },
+      "physical_obligations": "Keep exact pair LEF 216 x172.8. Incoming wide-ring read FFs and outgoing wide-ring write FFs belong to this local clock region. Raw SRAM banks live in the seam channel. Measure composed pair and seam clock delivery."
+    }
+  ],
+  "seams": [
+    {
+      "name": "S0",
+      "from": "CTL",
+      "to": "PAIR_R0",
+      "bits": 1177,
+      "fields": {
+        "qv": 1,
+        "query": 568,
+        "key": 544,
+        "head_ids": 64
+      },
+      "active_edges": 5,
+      "implementation": "Source FF + D4/K2 dual-clock SRAM ring + destination FF",
+      "SRAM_count": 3,
+      "SRAM_master": "ot_sram_1r1w2c_64x516_m1",
+      "each_macro_um": [
+        169.56,
+        76.68
+      ]
+    },
+    {
+      "name": "S1",
+      "from": "PAIR_R0",
+      "to": "PAIR_R1",
+      "bits": 1210,
+      "fields": {
+        "qv": 1,
+        "query": 568,
+        "key": 544,
+        "head_ids": 64,
+        "sum": 32,
+        "fault": 1
+      },
+      "active_edges": 5,
+      "implementation": "Source FF + D4/K2 dual-clock SRAM ring + destination FF",
+      "SRAM_count": 3,
+      "SRAM_master": "ot_sram_1r1w2c_64x516_m1",
+      "each_macro_um": [
+        169.56,
+        76.68
+      ]
+    },
+    {
+      "name": "S2",
+      "from": "PAIR_R1",
+      "to": "PAIR_R2",
+      "bits": 1210,
+      "fields": {
+        "qv": 1,
+        "query": 568,
+        "key": 544,
+        "head_ids": 64,
+        "sum": 32,
+        "fault": 1
+      },
+      "active_edges": 5,
+      "implementation": "Source FF + D4/K2 dual-clock SRAM ring + destination FF",
+      "SRAM_count": 3,
+      "SRAM_master": "ot_sram_1r1w2c_64x516_m1",
+      "each_macro_um": [
+        169.56,
+        76.68
+      ]
+    },
+    {
+      "name": "S3",
+      "from": "PAIR_R2",
+      "to": "PAIR_R3",
+      "bits": 1210,
+      "fields": {
+        "qv": 1,
+        "query": 568,
+        "key": 544,
+        "head_ids": 64,
+        "sum": 32,
+        "fault": 1
+      },
+      "active_edges": 5,
+      "implementation": "Source FF + D4/K2 dual-clock SRAM ring + destination FF",
+      "SRAM_count": 3,
+      "SRAM_master": "ot_sram_1r1w2c_64x516_m1",
+      "each_macro_um": [
+        169.56,
+        76.68
+      ]
+    },
+    {
+      "name": "RETURN",
+      "from": "PAIR_R3",
+      "to": "CTL",
+      "bits": 33,
+      "active_edges": 3,
+      "implementation": "D4/K2 flop ring;132 storage bits"
+    },
+    {
+      "name": "READY0",
+      "from": "PAIR_R0",
+      "to": "CTL",
+      "bits": 1,
+      "active_edges": 3,
+      "implementation": "D4/K2 flop ring; status and boot only"
+    },
+    {
+      "name": "READY1",
+      "from": "PAIR_R1",
+      "to": "CTL",
+      "bits": 1,
+      "active_edges": 3,
+      "implementation": "D4/K2 flop ring; status and boot only"
+    },
+    {
+      "name": "READY2",
+      "from": "PAIR_R2",
+      "to": "CTL",
+      "bits": 1,
+      "active_edges": 3,
+      "implementation": "D4/K2 flop ring; status and boot only"
+    },
+    {
+      "name": "READY3",
+      "from": "PAIR_R3",
+      "to": "CTL",
+      "bits": 1,
+      "active_edges": 3,
+      "implementation": "D4/K2 flop ring; status and boot only"
+    }
+  ],
+  "physical_seam_obligations": [
+    "Each wide seam has three raw SRAM LEFs plus real write/read FF bands; place macros at the seam on the43.2um lattice.",
+    "Do not reserve the experimental whole standalone landing outline as a fixed quarter block.",
+    "Keep relay corridors and <=405um source/sink reach; pin faces <=6pins/um; centre-feed each local region.",
+    "Price additional die relay hops only after the actual region/reticle placement."
+  ],
+  "schedule": {
+    "active_delta_edges": 23,
+    "equation": "4wide seams x5 + return3 =23",
+    "full_chunk_positive": "2344checks,1063valid/nonzero,0errors;gold1unit769565-1792641345",
+    "meta_old_new": [
+      123,
+      146
+    ],
+    "keep_old_new": [
+      106,
+      129
+    ],
+    "extra_die_hops": "OPEN; depend on actual placement"
+  },
+  "replication": {
+    "per_leaf": {
+      "columns": 4,
+      "pairs": 16,
+      "region_occurrences": 20
+    },
+    "per_quarter": {
+      "leaves": 8,
+      "columns": 32,
+      "pairs": 128,
+      "region_occurrences": 160,
+      "new_wide_ring_SRAMs": 384
+    },
+    "four_quarters": {
+      "columns": 128,
+      "pairs": 512,
+      "region_occurrences": 640,
+      "new_wide_ring_SRAMs": 1536
+    }
+  },
+  "clock_scope": {
+    "declared_clock_input_bits_per_quarter": 271,
+    "used_clock_input_bits_per_quarter": 143,
+    "legacy_unused_odd_hslice_clock_bits": 128,
+    "used_clock_derivation": "128 pair clocks + 8 chunk glue clocks + 2 engine + 2 meta + 2 tail + 1 control. Column control clocks share their leaf chunk clock; do not count logical region occurrences as independent external clocks."
+  },
+  "qualification": {
+    "pair_views": "R0/R1/R2 CLOSED; R3 explicit stand-in pending closure",
+    "SRAM_row_MAIN": "Native PASS max5;2434flops;823um2 stdcells;GRT0;TT/FF clock spread29.4/28.4ps. Reset audit FAIL4rawsinks; fixing before adoption.",
+    "SRAM_compact_MAIN": "Native PASS max5;CTS TT87.2ps FAIL; bank clock decomposition in progress.",
+    "quarter_outline": "Not adopted. Compose actual region and macro geometry before fit or binding."
+  }
+}
