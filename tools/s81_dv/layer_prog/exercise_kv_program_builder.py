@@ -93,6 +93,19 @@ def run(root):
     path=root/'short_gain.json';path.write_text(json.dumps(rec))
     short['producers'][key]=dict(rec,receipt_path=path.name,receipt_sha256=B.sha(path))
     expect('gain_lease_expires_before_consumer',lambda:B.build(*args,short,tr,unit))
+    ko=next(g['owner'] for g in groups if g['kind']=='KV')
+    relative=dict(schema='opentallas.s81.native_producer_ledger.v1',run_id='TEST_ONLY_PARTIAL_SOURCE',
+        source_relative_only=True,edge_convention='replay_native_command_epoch_relative_sampled_edges',
+        physical_projection_applied=False,physical_epoch_mapping=None,native_clock_domain='TEST_ONLY',source_sha256={},
+        row_availability=[dict(instance='TEST_DEST',row=row,known_mask=15,ready_edge=300,
+            intended_consumer_owner=ko,future_consumer_release_edge=None) for row in (692,693)])
+    constraints=B.relative_constraints(schedule,relative)
+    kv=next(g for g in constraints['groups'] if g['kind']=='KV')
+    assert kv['observed_input_values']==8 and kv['missing_input_values']==504
+    assert kv['complete_input_ready_edge'] is None and constraints['native_command_epoch_seq_edge'] is None
+    assert not constraints['jobs'] and not constraints['production_enabled']
+    changed=deepcopy(relative);changed['physical_projection_applied']=True
+    expect('unproved_component_to_physical_projection',lambda:B.relative_constraints(schedule,changed))
     result=dict(status='PASS',scope='ACTUAL_L2_IDS_AND_MEASURED_SOURCE_PROFILE_WITH_SYNTHETIC_ROUTE_AND_ROW_DATES',
         builder_sha256=B.sha(B.__file__),schedule_sha256=B.sha(root/'schedule.json'),
         selected_operations=sum(len(g['covers']) for g in groups),
